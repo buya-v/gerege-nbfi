@@ -2,15 +2,16 @@
   "squad": "loan-schedule",
   "context": "tier0-harness-schedule-poc",
   "run_id": "2026-08-17-run1-harness-schedule-poc",
-  "current_item": "T2 retry deliverable landed; awaiting re-review, then T5",
-  "step": "T2 attempt 2 wrote docs/analysis/progressive-schedule-behavior.md (81763 bytes, 19:53:50). T3 had REJECTED attempt 1 on 3 money-path defects; the corrected document has NOT been re-reviewed.",
-  "branch": "main (ISOLATION VIOLATION — every worker this fire ran with isolation NONE in the main tree; no softhouse/* branch exists)",
-  "next_action": "Re-review the corrected T2 document against the T3 review at .softhouse/reviews/T3-progressive-schedule-behavior-review.md (confirm the 3 rejection grounds are fixed and the 4 bad citations corrected), then dispatch T5 (independent review of DEC-1).",
-  "blocked_on": null,
+  "current_item": "T3b + T5 + T16 dispatched in parallel, in flight",
+  "step": "Cloud catch-up fire 20260817-2000. Three opus workers running, each in a PROPER isolated worktree (the isolation violation recorded by the previous fire is not repeated): T3b re-review of the corrected T2 analysis, T5 review of DEC-1, T16 vector-capture-plan mining. Reviews land in .softhouse/reviews/, the plan in docs/analysis/.",
+  "branch": "softhouse/T3b-progressive-schedule-rereview | softhouse/T5-dec1-contract-review | softhouse/T16-tier0-vector-capture-plan",
+  "next_action": "Collect the three worker branches, merge their deliverables to main, then route on the verdicts: if T3b ACCEPTS, mark T2 done; if T5 ACCEPTS DEC-1, surface the T6 ratification gate for Buyan; if T5 REJECTS, dispatch a T4 retry to correct the DRAFT (amending an UNRATIFIED draft is agent work - only a RATIFIED DEC-n is a user gate). Dispatch T17 (paired reviewer for T16) if budget allows.",
+  "blocked_on": "T6 user gate blocks T7/T10 and therefore every other context in program.json - all 16 remaining contexts declare tier0 as a transitive dependency.",
   "open_questions": [
-    "DEC-1 defines IntermediatePrecisionDigits as SIGNIFICANT DIGITS, but T3 found Fineract's setScale(mc.getPrecision(), ...) truncates rate factors at a fixed SCALE. T5 must settle this against source — a significant-digits/scale mismatch passes review and then fails bit-exact parity.",
-    "T2 attempt 2 still carries 5 [UNVERIFIED] markers — T3's brief rejects any [UNVERIFIED] claim in a money path."
+    "Precision-vs-scale: DEC-1 defines IntermediatePrecisionDigits as SIGNIFICANT DIGITS, but ProgressiveEMICalculator.java:1959-1962 feeds mc.getPrecision() into setScale()'s DECIMAL-PLACES slot. T5 is tasked to settle it from source and propose exact field wording.",
+    "T2 attempt 2 still carries 5 [UNVERIFIED] markers (2 of which are the legend, not claims); T3b adjudicates whether any sits in a money path."
   ],
-  "gate_pending": "T6 — ratify DEC-1 (blocks T7, T8, T10)",
-  "last_checkpoint": "2026-08-17T11:56:00Z — reconstructed BY HAND: the fire exited rc=0 without running the checkpoint protocol"
+  "gate_pending": "T6 - ratify DEC-1 (blocks T7, T10, and transitively the whole program)",
+  "oracle": "UNREACHABLE from this cloud sandbox (no docker socket, :5432 closed, actuator/health silent). T8 parked with reason oracle_unreachable. No vector synthesised.",
+  "last_checkpoint": "2026-08-17T12:20:00Z - interim, written BEFORE waiting on in-flight workers so a session death does not lose the dispatch record"
 }
