@@ -151,10 +151,36 @@ Never synthesise a vector you did not observe from the oracle, and never let con
 You hold the repo lock at .softhouse/LOCK; the wrapper releases it when you exit. Checkpoint at the ~90% token soft limit per the skill, push .softhouse/ state, and stop cleanly."
 
 log "invoking driver"
-"$CLAUDE_BIN" -p "$PROMPT" \
-  --permission-mode bypassPermissions \
-  --add-dir "$FINERACT_SRC" \
-  --output-format text
-RC=$?
+
+# Stream progress instead of going dark until the end: raw events land in
+# fire-<stamp>.jsonl, a one-line-per-step digest goes to the human log. Without
+# this the log shows "invoking driver" and nothing else for hours.
+RAW="$LOG_DIR/fire-$STAMP.jsonl"
+DIGEST='
+  if .type=="assistant" then
+    (.message.content[]? | select(.type=="tool_use")
+      | "TOOL " + .name + " :: " + ((.input | tostring)[0:160]))
+  elif .type=="result" then
+    "RESULT " + (.subtype // "?") + " :: " + (((.result // "") | tostring)[0:600])
+  elif .type=="system" and .subtype=="init" then "INIT session " + (.session_id // "?")
+  else empty end'
+
+if [[ -x /usr/bin/jq ]]; then
+  "$CLAUDE_BIN" -p "$PROMPT" \
+    --permission-mode bypassPermissions \
+    --add-dir "$FINERACT_SRC" \
+    --output-format stream-json --verbose \
+  | tee "$RAW" \
+  | /usr/bin/jq -r --unbuffered "$DIGEST" 2>/dev/null
+  RC=${pipestatus[1]}
+  log "raw event stream: $RAW"
+else
+  "$CLAUDE_BIN" -p "$PROMPT" \
+    --permission-mode bypassPermissions \
+    --add-dir "$FINERACT_SRC" \
+    --output-format text
+  RC=$?
+fi
+
 log "driver exited rc=$RC"
 exit $RC
