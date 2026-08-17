@@ -121,7 +121,9 @@ git push -q origin main 2>/dev/null || log "WARN: could not push lock — cloud 
 release_lock() {
   cd "$REPO" || return
   rm -f "$LOCK"
-  git add -A .softhouse >/dev/null 2>&1  # lock file is tracked; its deletion is staged here
+  # Stage ONLY the lock's deletion — the driver commits its own state changes.
+  git add -A -- "$LOCK" >/dev/null 2>&1
+  git diff --cached --quiet && { log "lock already released"; return; }
   git -c user.name="Buyan" -c user.email="buya.vol@gmail.com" commit -q -m "softhouse: release local fire lock ($STAMP)" >/dev/null 2>&1
   git push -q origin main 2>/dev/null || log "WARN: could not push lock release"
   log "lock released"
