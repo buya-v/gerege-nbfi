@@ -66,6 +66,14 @@ nc -z -G 2 "$PG_HOST" 1521 2>/dev/null && PROHIBITED="$PROHIBITED oracle-db:1521
 nc -z -G 2 "$PG_HOST" 3306 2>/dev/null && PROHIBITED="$PROHIBITED mysql:3306"
 [[ -n "$PROHIBITED" ]] && log "WARN: prohibited engine port(s) open —$PROHIBITED. PostgreSQL is the only permitted database; do not point the oracle at these."
 
+# Docker available? Decides whether a down oracle is "bring it up" or "park it".
+if docker info >/dev/null 2>&1; then
+  DOCKER_STATUS="running ($(docker version --format '{{.Server.Version}}' 2>/dev/null))"
+else
+  DOCKER_STATUS="NOT running — the driver cannot start the reference-oracle stack this fire"
+fi
+log "docker: $DOCKER_STATUS"
+
 # Fineract reference oracle up?
 if curl -sk --max-time 8 "$FINERACT_HEALTH_URL" >/dev/null 2>&1; then
   ORACLE_STATUS="REACHABLE at $FINERACT_HEALTH_URL"
@@ -106,14 +114,14 @@ cat > "$LOCK" <<EOF
   "postgres": "$PG_STATUS"
 }
 EOF
-git add "$LOCK" >/dev/null 2>&1
+git add -f "$LOCK" >/dev/null 2>&1
 git -c user.name="Buyan" -c user.email="buya.vol@gmail.com" commit -q -m "softhouse: local fire lock ($STAMP)" >/dev/null 2>&1
 git push -q origin main 2>/dev/null || log "WARN: could not push lock — cloud fire may not see it"
 
 release_lock() {
   cd "$REPO" || return
   rm -f "$LOCK"
-  git add -A .softhouse >/dev/null 2>&1
+  git add -A .softhouse >/dev/null 2>&1  # lock file is tracked; its deletion is staged here
   git -c user.name="Buyan" -c user.email="buya.vol@gmail.com" commit -q -m "softhouse: release local fire lock ($STAMP)" >/dev/null 2>&1
   git push -q origin main 2>/dev/null || log "WARN: could not push lock release"
   log "lock released"
@@ -126,12 +134,17 @@ PROMPT="/softhouse-program
 Local fire on Buyan's Mac at $(date -u +%Y-%m-%dT%H:%M:%SZ). Environment facts for THIS fire — treat as given, do not re-probe unless something contradicts them:
 - Fineract REFERENCE ORACLE: $ORACLE_STATUS
 - PostgreSQL: $PG_STATUS
+- Docker: $DOCKER_STATUS
 - Fineract source checkout: $FINERACT_SRC (pinned commit of record 426a23544)
 - Prohibited-engine ports open: ${PROHIBITED:-none}
 
 DATABASE RULE (non-negotiable, CLAUDE.md): PostgreSQL is the only database, for the reference oracle, the Go module, vector capture and shadow runs alike. Bring the oracle up with the postgresql compose profile only. Oracle Database, MySQL and MariaDB are prohibited — no ojdbc / oracle.jdbc / :1521, no com.mysql.cj / mariadb / go-sql-driver/mysql. Go connects via pgx. 'The oracle' means the Fineract reference implementation, never Oracle Database.
 
-If the reference oracle is UNREACHABLE: do not synthesise vectors and never let conformance report PASS (exit 2 is not a pass). Park vector/conformance tasks with reason oracle_unreachable, then spend this fire on work that does not need it — source analysis, DEC/spec drafts, the Tier-C gap audit, Tier-D corpus mining. If it is REACHABLE, prioritise the vector capture and conformance work that only this local fire can do.
+Oracle handling, in this order:
+- REACHABLE → prioritise the vector-capture and conformance work that ONLY this local fire can do.
+- UNREACHABLE but Docker RUNNING → this is task T1's job, not a reason to park: bring the reference-oracle stack up yourself with the PostgreSQL compose profile (\`docker-compose-postgresql.yml\` / \`config/docker/compose/postgresql.yml\` in $FINERACT_SRC — never the mysql/mariadb compose files), assert driverClassName == org.postgresql.Driver and a jdbc:postgresql:// URL, record the connection facts + Postgres server version + pinned Fineract commit in .softhouse/reference-oracle.md, then continue with vector work. If the stack genuinely cannot be brought up (build failure, image pull failure, port conflict), record exactly what failed in .softhouse/reference-oracle.md and THEN park.
+- UNREACHABLE and Docker NOT running → park vector/conformance tasks with reason oracle_unreachable.
+Never synthesise a vector you did not observe from the oracle, and never let conformance report PASS when the oracle is down (exit 2 is not a pass). When parked, spend the fire on work that needs no oracle — source analysis, DEC/spec drafts, the Tier-C gap audit, Tier-D corpus mining.
 
 You hold the repo lock at .softhouse/LOCK; the wrapper releases it when you exit. Checkpoint at the ~90% token soft limit per the skill, push .softhouse/ state, and stop cleanly."
 
