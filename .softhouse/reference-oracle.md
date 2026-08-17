@@ -8,12 +8,35 @@ Recorded by task **T1** of run `2026-08-17-run1-harness-schedule-poc`, local fir
 Buyan's Mac, **2026-08-17T11:30Z (19:30 +08)**. Every vector capture must cite this file's
 pin; a capture made against a different build is not comparable.
 
-## Status: **UP** ✅
+## Status: **UP** ✅ — *on the local fire's host only*
 
 ```
 GET https://localhost:8443/fineract-provider/actuator/health
 {"status":"UP","groups":["liveness","readiness"]}
 ```
+
+## Reachability by fire — read this before planning vector work
+
+The running instance is bound to **`localhost` on Buyan's Mac**. "UP" above is a fact about
+that host, not about the program. Which fire you are determines whether vector work is
+possible at all:
+
+| Fire | Reaches this instance? | May capture vectors / run conformance? |
+|---|---|---|
+| **Local launchd** (08:00, 14:00 Asia/Ulaanbaatar) | **Yes** | **Yes** — the only fire that can |
+| **Cloud routine** (20:00 Asia/Ulaanbaatar) | **No** | **No** — park with `oracle_unreachable` |
+| By hand | depends where it runs | probe first, never assume |
+
+Probe result from the **cloud sandbox, 2026-08-17 20:00 +08** — unreachable on every path:
+no Docker daemon (`/var/run/docker.sock` absent), PostgreSQL not listening on `:5432`,
+`actuator/health` returns nothing. The Fineract **source** checkout is present and pinned
+in the cloud sandbox (at `/home/user/fineract`, not the Mac path below), so source analysis,
+spec work and corpus mining all proceed there — only the **live instance** is missing.
+
+**The rule this table exists to enforce:** an unreachable oracle makes conformance **exit 2**,
+which is not a PASS and never becomes one. A vector that was not observed from this instance
+is not a vector. No fire may synthesise, derive or extrapolate an expected value to fill the
+gap — it parks the task and moves to work that needs no live instance.
 
 ## Pinned build
 
@@ -24,7 +47,7 @@ GET https://localhost:8443/fineract-provider/actuator/health
 | Build version | `1.16.0-SNAPSHOT` |
 | Branch | `develop` |
 | Commit date | 2026-08-12T12:59+0000 |
-| Source checkout | `/Users/buv/fineract` (read-only for workers) |
+| Source checkout | `/Users/buv/fineract` on the local fire's host; `/home/user/fineract` in the cloud sandbox — same commit, verified per fire (read-only for workers) |
 | JVM | Zulu **21.0.11**+10-LTS (`azul/zulu-openjdk-alpine:21`) |
 | JVM flags | `-Duser.home=/tmp -Dfile.encoding=UTF-8 -Duser.timezone=UTC -Djava.security.egd=file:/dev/./urandom` |
 
