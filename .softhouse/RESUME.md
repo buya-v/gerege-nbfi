@@ -5,7 +5,8 @@ Written by the orchestrator at every checkpoint; read by the next fire of `/soft
 ## Current state
 
 - **Program**: `fineract-to-go-full-codebase` — active
-- **Driver**: `/softhouse-program` (scheduled daily; also runnable by hand)
+- **Driver**: `/softhouse-program` — fires daily at **08:00 Asia/Ulaanbaatar** (cron `0 0 * * *` UTC) as cloud routine [`trig_01J7a66YFD7mzSLiKiFsj5XV`](https://claude.ai/code/routines/trig_01J7a66YFD7mzSLiKiFsj5XV); also runnable by hand any time
+- **Oracle reachability**: cloud fires cannot see a Fineract oracle on Buyan's machine — vector/conformance tasks park `oracle_unreachable` there and advance on a local fire (or once the oracle is deployed at a reachable address)
 - **Program state**: `.softhouse/program.json` (authoritative context list, tiers, per-context status)
 - **Active run**: `2026-08-17-run1-harness-schedule-poc` — planned, not yet executed
 - **Active squads**: none (no worker has started)

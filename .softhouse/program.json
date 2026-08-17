@@ -8,6 +8,16 @@
     "pinned_commit": "426a23544",
     "note": "Commit measured 17 Aug 2026 [VERIFIED: git log -1 in that checkout]. T1 of run 1 re-pins it into .softhouse/oracle.md together with the running-instance connection facts. LOC figures below are measured from THIS checkout (find+wc over src/main/**.java) — re-measure if the pin moves."
   },
+  "scheduler": {
+    "substrate": "claude.ai scheduled cloud routine",
+    "routine_id": "trig_01J7a66YFD7mzSLiKiFsj5XV",
+    "url": "https://claude.ai/code/routines/trig_01J7a66YFD7mzSLiKiFsj5XV",
+    "cron_utc": "0 0 * * *",
+    "local_time": "08:00 Asia/Ulaanbaatar, daily",
+    "model": "claude-opus-5",
+    "sources": ["https://github.com/buya-v/gerege-nbfi", "https://github.com/apache/fineract"],
+    "limitation": "The cloud sandbox cannot reach a Fineract oracle running on Buyan's machine. Vector capture and conformance therefore park with reason `oracle_unreachable` on cloud fires and advance only when the driver runs somewhere that can reach the oracle (locally, or against a deployed oracle endpoint). Cloud fires still advance analysis, specs, the Tier-C gap audit and Tier-D corpus mining. To unblock conformance unattended, deploy the oracle at a reachable address and record it in .softhouse/oracle.md."
+  },
   "policy": {
     "one_context_per_run": true,
     "auto_plan_next": true,
