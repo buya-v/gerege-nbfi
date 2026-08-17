@@ -70,6 +70,18 @@ Auto-approval replaces the human "approve this plan?" prompt in `/softhouse` STE
 ## STEP 3 — Execute
 Run `/softhouse resume` against the fresh plan. All of `/softhouse` STEP 3–9 applies unchanged: worktree-isolated workers, the verbatim worker prompt, independent re-deriving reviewers, conformance gate, merge, postmortem.
 
+### Worker isolation is not optional
+Every `executor: "agent"` task is spawned **`isolation: "worktree"`**, with `model: task.model`, and commits its handoff to branch `softhouse/<taskid>-<slug>`. This is not ceremony — three later steps depend on the branch existing:
+- the reviewer reads the upstream handoff from the branch (`git show <branch>:.softhouse/handoff/...`), which is what keeps it independent of the coder's working tree;
+- the scope check is `git diff --stat main..<branch>` against `files_hint`;
+- parallel workers would otherwise collide in one tree.
+
+A worker spawned without a worktree, or given an absolute path into the main checkout, is an **isolation violation**. When you detect one (task `in_progress`/`done` with no `softhouse/<taskid>-*` branch):
+1. Keep the output — do not discard finished work.
+2. Record `isolation_violation` in the task `note` and in the postmortem; this is a process defect worth measuring.
+3. If the task's `target` is `code` or `test`, **redo it in a proper worktree before review** — a money-path diff that never existed on a branch cannot be reviewed the way this pipeline requires.
+4. If `target` is `docs`, the output may stand, but tell the reviewer explicitly that the handoff is on disk rather than on a branch, so "independent" still means re-deriving from source rather than reading the author's conclusions.
+
 ## STEP 4 — Never-halt policy (the point of this skill)
 
 | Event | Program response |
