@@ -106,6 +106,19 @@ Append to `.softhouse/gates.md`, one block per gate: gate id, context, what was 
 - Regulatory acceptance / parallel-run sign-off (FRC, external audit).
 - Deposit-taking ACTIVATION (FRC / Bank of Mongolia licensing). Porting savings code proceeds; enabling it does not.
 
+## STEP 5.5 — Exit protocol (MANDATORY on every exit path)
+
+Applies to **every** way this driver ends — success, soft limit, gate, park, error, or "nothing left I can do right now". A fire that ends without this has destroyed work, because the next fire is a fresh session that knows only what is committed.
+
+Before returning, in this order:
+1. **Commit every deliverable a worker produced.** An uncommitted file is invisible to the next fire and to the cloud fire. `git status --porcelain` must come back empty.
+2. **Make `tasks.json` truthful** — no task left claiming `in_progress` without a `note` saying what actually landed and what has not. If a retry ran at a different model than planned, record it; the `model` field alone becomes stale and misleads the postmortem's cost accounting.
+3. **Write `.softhouse/state/<squad>.STATE.json`** for every task not in a terminal state: current item, step, branch, next_action, blocked_on, open_questions, gate_pending.
+4. **Rewrite `.softhouse/RESUME.md`** with the real task table, the concrete next action, and an honest `Pause reason`. Leaving a stale manifest is worse than leaving none — the next fire will act on it.
+5. **Push.** Then print the report.
+
+Exiting because you are *waiting* on something (a review to be re-run, a gate, a build) is still an exit: checkpoint it. "I'll pick this up in a moment" is not a state the next session can see.
+
 ## STEP 6 — Persist and push (every fire, even a no-op)
 1. Update `.softhouse/program.json`: `cursor`, per-context `status`/`run_id`/`slices`, `gates_pending`, `history` (one entry per closed run: run id, context, tasks, reviewer catches, UAT result, tokens spent).
 2. Commit `.softhouse/` and push. Only the orchestrator pushes.

@@ -183,4 +183,30 @@ else
 fi
 
 log "driver exited rc=$RC"
+
+# ------------------------------------------------------- exit-protocol guard ---
+# The driver is required to checkpoint on EVERY exit path (skill STEP 5.5). It has
+# been observed exiting rc=0 mid-run with deliverables uncommitted and RESUME.md
+# stale, which makes the work invisible to the next fire. Detect and rescue.
+DIRTY=$(git status --porcelain | grep -v '^?? \.softhouse/LOCK' || true)
+if [[ -n "$DIRTY" ]]; then
+  log "WARN: exit-protocol violation — driver left uncommitted work:"
+  print -r -- "$DIRTY" | head -20
+  git add -A -- . ':!.softhouse/LOCK' >/dev/null 2>&1
+  git -c user.name="Buyan" -c user.email="buya.vol@gmail.com" \
+      commit -q -m "softhouse: rescue uncommitted deliverables left by fire $STAMP (exit-protocol violation)" >/dev/null 2>&1
+  log "rescued: committed the leftovers so the next fire can see them"
+fi
+
+# RESUME.md must have been rewritten during this fire, or a fresh session resumes
+# from a stale manifest — worse than none, because it looks authoritative.
+if [[ -f .softhouse/RESUME.md ]]; then
+  RESUME_AGE=$(( $(date +%s) - $(/usr/bin/stat -f %m .softhouse/RESUME.md) ))
+  FIRE_AGE=$(( $(date +%s) - $(/usr/bin/stat -f %m "$LOG") ))
+  if (( RESUME_AGE > FIRE_AGE + 60 )); then
+    log "WARN: exit-protocol violation — .softhouse/RESUME.md was NOT updated this fire (${RESUME_AGE}s old). The next fire may act on stale state; review it by hand."
+  fi
+fi
+
+git push -q origin main 2>/dev/null || log "WARN: could not push after exit-protocol guard"
 exit $RC
