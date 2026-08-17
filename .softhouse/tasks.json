@@ -185,7 +185,7 @@
       ],
       "status": "parked",
       "attempts": 0,
-      "note": "Vector capture is orchestrator-only (touches the oracle). || PARKED cloud fire 20260817-2000: reason=oracle_unreachable. No live Fineract instance from the cloud sandbox (no docker daemon, PostgreSQL not listening on :5432, actuator/health unreachable). NOT synthesised - conformance exit 2 is not a PASS. Unpark precondition: a fire that reaches the live reference oracle. T16 (this fire) prepares the capture plan so this task is execute-ready."
+      "note": "Vector capture is orchestrator-only (touches the oracle). || PARKED cloud fire 20260817-2000: reason=oracle_unreachable. No live Fineract instance from the cloud sandbox (no docker daemon, PostgreSQL not listening on :5432, actuator/health unreachable). NOT synthesised - conformance exit 2 is not a PASS. Unpark precondition: a fire that reaches the live reference oracle. T16 (this fire) prepares the capture plan so this task is execute-ready. || T16 FINDINGS THAT CHANGE HOW THIS TASK MUST BE RUN (pending T17 confirmation): (1) MoneyHelper is a HIDDEN SECOND MathContext - PRECISION=19 in production [MoneyHelper.java:35] but MOCKED TO 12 in the tests, so a live capture runs a different precision than produced the transcribed literals; the capture must assert the tenant rounding mode and precision actually in force, never assume them. (2) The seam has a dependency-free shadowJar entry point with a documented Main.java, so MOST Tier-0 capture needs only a JDK >= 17 - not a running server and not PostgreSQL. (3) Run the C-00 calibration capture FIRST: it must reproduce an already-transcribed literal test expectation exactly, else no other capture is trustworthy."
     },
     {
       "id": "T9",
@@ -348,9 +348,9 @@
       "dependencies": [
         "T3"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "DISPATCHED cloud fire 20260817-2000, isolation=worktree, branch softhouse/T16-tier0-vector-capture-plan. Scope-guarded to the progressive-loan schedule seam. HARD RULE given to the worker: transcribe literals with citations, never synthesise an expected value; uncovered behaviour is marked TO_BE_CAPTURED. Feeds T8 (parked, oracle_unreachable)."
+      "note": "DISPATCHED cloud fire 20260817-2000, isolation=worktree, branch softhouse/T16-tier0-vector-capture-plan. Scope-guarded to the progressive-loan schedule seam. HARD RULE given to the worker: transcribe literals with citations, never synthesise an expected value; uncovered behaviour is marked TO_BE_CAPTURED. Feeds T8 (parked, oracle_unreachable). || LANDED cloud fire 20260817-2000: docs/analysis/tier0-vector-capture-plan.md (861 lines), branch softhouse/T16-tier0-vector-capture-plan @1fd1517, merged to main (scope clean - 1 commit, 1 new file under docs/). 16 vectors transcribed from literals with file:line; ~808 further checkPeriod rows indexed; 9 TO_BE_CAPTURED capture runs specified; 3 [UNVERIFIED]. STATUS IS 'done' ONLY IN THE SENSE THAT THE DELIVERABLE LANDED - it is NOT accepted until T17 passes."
     },
     {
       "id": "T17",
@@ -367,9 +367,9 @@
       "dependencies": [
         "T16"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "Paired reviewer for T16 - no analyst task ships unreviewed. Dispatch as soon as T16 lands (this fire if budget allows, else next fire)."
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Paired reviewer for T16 - no analyst task ships unreviewed. Dispatch as soon as T16 lands (this fire if budget allows, else next fire). || DISPATCHED cloud fire 20260817-2000, isolation=worktree, branch softhouse/T17-vector-capture-plan-review. Auditing every transcribed value against its cited file:line; a value not literally in source is an automatic rejection."
     }
   ]
 }
