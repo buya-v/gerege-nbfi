@@ -6,17 +6,39 @@
   "oracle": {
     "source_checkout": "/Users/buv/fineract",
     "pinned_commit": "426a23544",
-    "note": "Commit measured 17 Aug 2026 [VERIFIED: git log -1 in that checkout]. T1 of run 1 re-pins it into .softhouse/oracle.md together with the running-instance connection facts. LOC figures below are measured from THIS checkout (find+wc over src/main/**.java) — re-measure if the pin moves."
+    "note": "Commit measured 17 Aug 2026 [VERIFIED: git log -1 in that checkout]. T1 of run 1 re-pins it into .softhouse/reference-oracle.md together with the running-instance connection facts. LOC figures below are measured from THIS checkout (find+wc over src/main/**.java) — re-measure if the pin moves."
   },
   "scheduler": {
-    "substrate": "claude.ai scheduled cloud routine",
-    "routine_id": "trig_01J7a66YFD7mzSLiKiFsj5XV",
-    "url": "https://claude.ai/code/routines/trig_01J7a66YFD7mzSLiKiFsj5XV",
-    "cron_utc": "0 0 * * *",
-    "local_time": "08:00 Asia/Ulaanbaatar, daily",
-    "model": "claude-opus-5",
-    "sources": ["https://github.com/buya-v/gerege-nbfi", "https://github.com/apache/fineract"],
-    "limitation": "The cloud sandbox cannot reach a Fineract oracle running on Buyan's machine. Vector capture and conformance therefore park with reason `oracle_unreachable` on cloud fires and advance only when the driver runs somewhere that can reach the oracle (locally, or against a deployed oracle endpoint). Cloud fires still advance analysis, specs, the Tier-C gap audit and Tier-D corpus mining. To unblock conformance unattended, deploy the oracle at a reachable address and record it in .softhouse/oracle.md."
+    "primary": {
+      "substrate": "local launchd agent on Buyan's Mac",
+      "label": "mn.gerege.nbfi.softhouse-program",
+      "plist": "~/Library/LaunchAgents/mn.gerege.nbfi.softhouse-program.plist (copy of record: .softhouse/launchd/)",
+      "wrapper": ".softhouse/bin/fire-program.sh",
+      "times_local": [
+        "08:00 Asia/Ulaanbaatar",
+        "14:00 Asia/Ulaanbaatar"
+      ],
+      "reaches_reference_oracle": true,
+      "why": "Vector capture and conformance need the Fineract reference oracle + PostgreSQL on localhost. Only this fire can advance them.",
+      "logs": "~/Library/Logs/gerege-nbfi/fire-*.log",
+      "probe": ".softhouse/bin/fire-program.sh --probe",
+      "manage": "launchctl bootout|bootstrap gui/501 ~/Library/LaunchAgents/mn.gerege.nbfi.softhouse-program.plist"
+    },
+    "catchup": {
+      "substrate": "claude.ai scheduled cloud routine",
+      "routine_id": "trig_01J7a66YFD7mzSLiKiFsj5XV",
+      "url": "https://claude.ai/code/routines/trig_01J7a66YFD7mzSLiKiFsj5XV",
+      "cron_utc": "0 12 * * *",
+      "local_time": "20:00 Asia/Ulaanbaatar, daily",
+      "model": "claude-opus-5",
+      "sources": [
+        "https://github.com/buya-v/gerege-nbfi",
+        "https://github.com/apache/fineract"
+      ],
+      "reaches_reference_oracle": false,
+      "role": "Catch-up when the Mac was off: source analysis, DEC/spec drafts, Tier-C gap audit, Tier-D corpus mining. Parks vector/conformance work as oracle_unreachable."
+    },
+    "mutual_exclusion": ".softhouse/LOCK — repo-level lock, pushed so both fires see it. A fire finding a lock under 6h old exits without dispatching. Stale locks (>6h) are taken over."
   },
   "policy": {
     "one_context_per_run": true,
@@ -45,7 +67,9 @@
       "id": "tier0-harness-schedule-poc",
       "tier": 0,
       "title": "Conformance harness, DEC-1 frozen contract, progressive-loan schedule-generator PoC",
-      "fineract_paths": ["fineract-progressive-loan-embeddable-schedule-generator"],
+      "fineract_paths": [
+        "fineract-progressive-loan-embeddable-schedule-generator"
+      ],
       "main_loc": 182,
       "go_target": "nexus/internal/apps/loanschedule",
       "dependencies": [],
@@ -58,10 +82,18 @@
       "id": "tierA-gl-accounting",
       "tier": "A",
       "title": "General Ledger / accounting — double-entry posting, chart of accounts, journal entries, accruals, product-account mapping",
-      "fineract_paths": ["fineract-accounting", "fineract-provider/src/main/java/org/apache/fineract/accounting/journalentry", "fineract-provider/src/main/java/org/apache/fineract/accounting/accrual", "fineract-provider/src/main/java/org/apache/fineract/accounting/productaccountmapping", "fineract-provider/src/main/java/org/apache/fineract/accounting/common"],
+      "fineract_paths": [
+        "fineract-accounting",
+        "fineract-provider/src/main/java/org/apache/fineract/accounting/journalentry",
+        "fineract-provider/src/main/java/org/apache/fineract/accounting/accrual",
+        "fineract-provider/src/main/java/org/apache/fineract/accounting/productaccountmapping",
+        "fineract-provider/src/main/java/org/apache/fineract/accounting/common"
+      ],
       "main_loc": 24000,
       "go_target": "nexus/internal/apps/ledger",
-      "dependencies": ["tier0-harness-schedule-poc"],
+      "dependencies": [
+        "tier0-harness-schedule-poc"
+      ],
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
@@ -71,10 +103,15 @@
       "id": "tierA-loan-product-schedule",
       "tier": "A",
       "title": "Loan products, interest methods, schedule generation (full progressive-loan module)",
-      "fineract_paths": ["fineract-progressive-loan", "fineract-provider/src/main/java/org/apache/fineract/portfolio/loanproduct"],
+      "fineract_paths": [
+        "fineract-progressive-loan",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/loanproduct"
+      ],
       "main_loc": 20461,
       "go_target": "nexus/internal/apps/loanproduct",
-      "dependencies": ["tier0-harness-schedule-poc"],
+      "dependencies": [
+        "tier0-harness-schedule-poc"
+      ],
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
@@ -84,10 +121,16 @@
       "id": "tierA-loan-lifecycle",
       "tier": "A",
       "title": "Loan account lifecycle — disbursement, repayment, penalties, rescheduling, write-off, delinquency",
-      "fineract_paths": ["fineract-loan", "fineract-provider/src/main/java/org/apache/fineract/portfolio/loanaccount"],
+      "fineract_paths": [
+        "fineract-loan",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/loanaccount"
+      ],
       "main_loc": 106246,
       "go_target": "nexus/internal/apps/loan",
-      "dependencies": ["tierA-gl-accounting", "tierA-loan-product-schedule"],
+      "dependencies": [
+        "tierA-gl-accounting",
+        "tierA-loan-product-schedule"
+      ],
       "status": "pending",
       "main_loc_note": "66,375 + 39,871 [VERIFIED: measured]. LARGEST context — must be split across several runs by sub-behavior (disbursement | repayment allocation | penalties/charges application | rescheduling | write-off/delinquency). A single plan over all of it will exhaust every worker.",
       "run_id": null,
@@ -98,10 +141,19 @@
       "id": "tierA-charges-rates-tax",
       "tier": "A",
       "title": "Charges, rates, tax — including VAT / e-Barimt tie-in",
-      "fineract_paths": ["fineract-charge", "fineract-rates", "fineract-tax", "fineract-provider/src/main/java/org/apache/fineract/portfolio/charge", "fineract-provider/src/main/java/org/apache/fineract/portfolio/rate", "fineract-provider/src/main/java/org/apache/fineract/portfolio/tax"],
+      "fineract_paths": [
+        "fineract-charge",
+        "fineract-rates",
+        "fineract-tax",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/charge",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/rate",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/tax"
+      ],
       "main_loc": 10333,
       "go_target": "nexus/internal/apps/charges",
-      "dependencies": ["tierA-gl-accounting"],
+      "dependencies": [
+        "tierA-gl-accounting"
+      ],
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
@@ -111,10 +163,17 @@
       "id": "tierA-cob-batch",
       "tier": "A",
       "title": "Close-of-business batch — daily accrual/aging/posting, idempotency, restart-after-failure",
-      "fineract_paths": ["fineract-cob", "fineract-provider/src/main/java/org/apache/fineract/cob", "fineract-provider/src/main/java/org/apache/fineract/batch"],
+      "fineract_paths": [
+        "fineract-cob",
+        "fineract-provider/src/main/java/org/apache/fineract/cob",
+        "fineract-provider/src/main/java/org/apache/fineract/batch"
+      ],
       "main_loc": 13471,
       "go_target": "nexus/internal/apps/cob",
-      "dependencies": ["tierA-loan-lifecycle", "tierA-charges-rates-tax"],
+      "dependencies": [
+        "tierA-loan-lifecycle",
+        "tierA-charges-rates-tax"
+      ],
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
@@ -124,10 +183,17 @@
       "id": "tierA-provisioning-reporting",
       "tier": "A",
       "title": "Provisioning + FRC reporting feeds (Tier-A completion)",
-      "fineract_paths": ["fineract-provider/src/main/java/org/apache/fineract/accounting/provisioning", "fineract-report", "fineract-provider/src/main/java/org/apache/fineract/spm", "fineract-provider/src/main/java/org/apache/fineract/infrastructure/dataqueries"],
+      "fineract_paths": [
+        "fineract-provider/src/main/java/org/apache/fineract/accounting/provisioning",
+        "fineract-report",
+        "fineract-provider/src/main/java/org/apache/fineract/spm",
+        "fineract-provider/src/main/java/org/apache/fineract/infrastructure/dataqueries"
+      ],
       "main_loc": 11400,
       "go_target": "nexus/internal/apps/provisioning",
-      "dependencies": ["tierA-cob-batch"],
+      "dependencies": [
+        "tierA-cob-batch"
+      ],
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
@@ -137,10 +203,17 @@
       "id": "tierB-savings-deposits",
       "tier": "B",
       "title": "Savings / deposits / recurring deposits / interest rate charts — ported DISABLED",
-      "fineract_paths": ["fineract-savings", "fineract-provider/src/main/java/org/apache/fineract/portfolio/savings", "fineract-provider/src/main/java/org/apache/fineract/portfolio/interestratechart", "fineract-provider/src/main/java/org/apache/fineract/portfolio/accountdetails"],
+      "fineract_paths": [
+        "fineract-savings",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/savings",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/interestratechart",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/accountdetails"
+      ],
       "main_loc": 61910,
       "go_target": "nexus/internal/apps/savings",
-      "dependencies": ["tierA-gl-accounting"],
+      "dependencies": [
+        "tierA-gl-accounting"
+      ],
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
@@ -151,10 +224,14 @@
       "id": "tierB-working-capital-loan",
       "tier": "B",
       "title": "Working-capital loan module",
-      "fineract_paths": ["fineract-working-capital-loan"],
+      "fineract_paths": [
+        "fineract-working-capital-loan"
+      ],
       "main_loc": 34244,
       "go_target": "nexus/internal/apps/workingcapital",
-      "dependencies": ["tierA-loan-lifecycle"],
+      "dependencies": [
+        "tierA-loan-lifecycle"
+      ],
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
@@ -164,10 +241,14 @@
       "id": "tierB-loan-origination",
       "tier": "B",
       "title": "Loan origination workflow",
-      "fineract_paths": ["fineract-loan-origination"],
+      "fineract_paths": [
+        "fineract-loan-origination"
+      ],
       "main_loc": 3966,
       "go_target": "nexus/internal/apps/origination",
-      "dependencies": ["tierA-loan-lifecycle"],
+      "dependencies": [
+        "tierA-loan-lifecycle"
+      ],
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
@@ -177,10 +258,14 @@
       "id": "tierB-investor",
       "tier": "B",
       "title": "Investor / external asset owner module",
-      "fineract_paths": ["fineract-investor"],
+      "fineract_paths": [
+        "fineract-investor"
+      ],
       "main_loc": 6250,
       "go_target": "nexus/internal/apps/investor",
-      "dependencies": ["tierA-loan-lifecycle"],
+      "dependencies": [
+        "tierA-loan-lifecycle"
+      ],
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
@@ -190,10 +275,14 @@
       "id": "tierB-branch",
       "tier": "B",
       "title": "Branch / teller / cash management",
-      "fineract_paths": ["fineract-branch"],
+      "fineract_paths": [
+        "fineract-branch"
+      ],
       "main_loc": 3937,
       "go_target": "nexus/internal/apps/branch",
-      "dependencies": ["tierA-gl-accounting"],
+      "dependencies": [
+        "tierA-gl-accounting"
+      ],
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
@@ -203,10 +292,15 @@
       "id": "tierB-shares",
       "tier": "B",
       "title": "Share accounts + share products (SCC member shares)",
-      "fineract_paths": ["fineract-provider/src/main/java/org/apache/fineract/portfolio/shareaccounts", "fineract-provider/src/main/java/org/apache/fineract/portfolio/shareproducts"],
+      "fineract_paths": [
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/shareaccounts",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/shareproducts"
+      ],
       "main_loc": 9412,
       "go_target": "nexus/internal/apps/shares",
-      "dependencies": ["tierA-gl-accounting"],
+      "dependencies": [
+        "tierA-gl-accounting"
+      ],
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
@@ -216,10 +310,16 @@
       "id": "tierB-collateral",
       "tier": "B",
       "title": "Collateral + collateral management + post-dated cheques",
-      "fineract_paths": ["fineract-provider/src/main/java/org/apache/fineract/portfolio/collateral", "fineract-provider/src/main/java/org/apache/fineract/portfolio/collateralmanagement", "fineract-provider/src/main/java/org/apache/fineract/portfolio/repaymentwithpostdatedchecks"],
+      "fineract_paths": [
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/collateral",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/collateralmanagement",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/repaymentwithpostdatedchecks"
+      ],
       "main_loc": 5511,
       "go_target": "nexus/internal/apps/collateral",
-      "dependencies": ["tierA-loan-lifecycle"],
+      "dependencies": [
+        "tierA-loan-lifecycle"
+      ],
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
@@ -229,10 +329,27 @@
       "id": "tierB-clients-groups",
       "tier": "B",
       "title": "Clients, groups, centres, meetings, calendar, collection sheet, addresses, notes, transfers, funds",
-      "fineract_paths": ["fineract-provider/src/main/java/org/apache/fineract/portfolio/client", "fineract-provider/src/main/java/org/apache/fineract/portfolio/group", "fineract-provider/src/main/java/org/apache/fineract/portfolio/collectionsheet", "fineract-provider/src/main/java/org/apache/fineract/portfolio/meeting", "fineract-provider/src/main/java/org/apache/fineract/portfolio/calendar", "fineract-provider/src/main/java/org/apache/fineract/portfolio/address", "fineract-provider/src/main/java/org/apache/fineract/portfolio/note", "fineract-provider/src/main/java/org/apache/fineract/portfolio/transfer", "fineract-provider/src/main/java/org/apache/fineract/portfolio/fund", "fineract-provider/src/main/java/org/apache/fineract/portfolio/account", "fineract-provider/src/main/java/org/apache/fineract/portfolio/accounts", "fineract-provider/src/main/java/org/apache/fineract/portfolio/products", "fineract-provider/src/main/java/org/apache/fineract/portfolio/search", "fineract-provider/src/main/java/org/apache/fineract/portfolio/common"],
+      "fineract_paths": [
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/client",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/group",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/collectionsheet",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/meeting",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/calendar",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/address",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/note",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/transfer",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/fund",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/account",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/accounts",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/products",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/search",
+        "fineract-provider/src/main/java/org/apache/fineract/portfolio/common"
+      ],
       "main_loc": 42000,
       "go_target": "nexus/internal/apps/parties",
-      "dependencies": ["tierA-gl-accounting"],
+      "dependencies": [
+        "tierA-gl-accounting"
+      ],
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
@@ -242,10 +359,33 @@
       "id": "tierC-platform-map-first",
       "tier": "C",
       "title": "Platform layer — MAP onto Nexus, port only demonstrated gaps",
-      "fineract_paths": ["fineract-core", "fineract-security", "fineract-validation", "fineract-command", "fineract-command-jdbc", "fineract-command-async", "fineract-command-audit", "fineract-command-disruptor", "fineract-provider/src/main/java/org/apache/fineract/infrastructure", "fineract-provider/src/main/java/org/apache/fineract/organisation", "fineract-provider/src/main/java/org/apache/fineract/useradministration", "fineract-provider/src/main/java/org/apache/fineract/notification", "fineract-provider/src/main/java/org/apache/fineract/template", "fineract-provider/src/main/java/org/apache/fineract/adhocquery", "fineract-provider/src/main/java/org/apache/fineract/interoperation", "fineract-provider/src/main/java/org/apache/fineract/commands", "fineract-document", "fineract-db", "fineract-client", "fineract-avro-schemas"],
+      "fineract_paths": [
+        "fineract-core",
+        "fineract-security",
+        "fineract-validation",
+        "fineract-command",
+        "fineract-command-jdbc",
+        "fineract-command-async",
+        "fineract-command-audit",
+        "fineract-command-disruptor",
+        "fineract-provider/src/main/java/org/apache/fineract/infrastructure",
+        "fineract-provider/src/main/java/org/apache/fineract/organisation",
+        "fineract-provider/src/main/java/org/apache/fineract/useradministration",
+        "fineract-provider/src/main/java/org/apache/fineract/notification",
+        "fineract-provider/src/main/java/org/apache/fineract/template",
+        "fineract-provider/src/main/java/org/apache/fineract/adhocquery",
+        "fineract-provider/src/main/java/org/apache/fineract/interoperation",
+        "fineract-provider/src/main/java/org/apache/fineract/commands",
+        "fineract-document",
+        "fineract-db",
+        "fineract-client",
+        "fineract-avro-schemas"
+      ],
       "main_loc": 180000,
       "go_target": "nexus/internal/platform",
-      "dependencies": ["tierA-provisioning-reporting"],
+      "dependencies": [
+        "tierA-provisioning-reporting"
+      ],
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
@@ -255,10 +395,17 @@
       "id": "tierD-test-corpus-to-vectors",
       "tier": "D",
       "title": "Mine Fineract's test corpus + e2e suites into golden vectors",
-      "fineract_paths": ["integration-tests", "fineract-e2e-tests-core", "fineract-e2e-tests-runner", "**/src/test"],
+      "fineract_paths": [
+        "integration-tests",
+        "fineract-e2e-tests-core",
+        "fineract-e2e-tests-runner",
+        "**/src/test"
+      ],
       "main_loc": 321000,
       "go_target": ".softhouse/vectors",
-      "dependencies": ["tier0-harness-schedule-poc"],
+      "dependencies": [
+        "tier0-harness-schedule-poc"
+      ],
       "status": "pending",
       "run_id": null,
       "cutover_gate": false,
@@ -266,5 +413,17 @@
     }
   ],
   "gates_pending": [],
-  "history": []
+  "history": [],
+  "database": {
+    "engine": "PostgreSQL",
+    "rule": "PostgreSQL is the ONLY database for every environment: the Fineract reference oracle, the Go module, vector capture, shadow/differential runs and CI. Fineract's shipped default is already Postgres [VERIFIED: fineract-provider/src/main/resources/application.properties -> org.postgresql.Driver, jdbc:postgresql://localhost:5432/fineract_tenants]. Bring the oracle up with the postgresql compose profile only.",
+    "prohibited": [
+      "Oracle Database (ojdbc, oracle.jdbc, OracleDialect, :1521, tnsnames)",
+      "MySQL (com.mysql.cj, docker-compose-mysql*.yml)",
+      "MariaDB (docker-compose-mariadb*.yml)"
+    ],
+    "go_driver": "github.com/jackc/pgx/v5",
+    "money_columns": "bigint minor units — never float/double precision/real/money",
+    "terminology": "'The oracle' in this program means the Fineract REFERENCE IMPLEMENTATION (.softhouse/reference-oracle.md), never Oracle Database."
+  }
 }

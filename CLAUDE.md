@@ -20,6 +20,11 @@ Grep diffs against these. Violating one is a rejection, not a discussion.
 - **National ID is 10 characters** — 2 Cyrillic letters + 8 digits; month +20 for births from 2000 onward; check digit unpublished — validate structurally.
 - **Two time zones, no DST** — `Asia/Ulaanbaatar` (+08) and `Asia/Hovd` (+07). Never hard-code an offset.
 - **No US payment rails / vendors.** Mongolia: RTGS (Banksuljee) above MNT 5,000,000, ACH+ at or below, NETC for cards; threshold from config, never hard-coded. No Stripe/Plaid/Lithic/Persona.
+- **PostgreSQL is the only database.** Every environment — the Fineract reference instance, the Go module, vector capture, shadow/differential runs, CI — runs on **PostgreSQL**. Fineract's own default is already Postgres (`org.postgresql.Driver`, `jdbc:postgresql://…:5432/fineract_tenants`); bring it up with the `postgresql` compose profile, never `docker-compose-mysql*.yml` / `docker-compose-mariadb*.yml`. **Oracle Database is prohibited** — no `ojdbc`, no `oracle.jdbc.*`, no Oracle dialect, no port 1521 anywhere in this program. Go talks to Postgres via `pgx`; a diff introducing a MySQL/MariaDB/Oracle driver or dialect is a rejection. Parity is only meaningful when oracle-instance and Go module read the *same PostgreSQL schema*.
+
+### Terminology — "oracle" (read this before writing any task)
+
+In this project **"the oracle" means the Fineract reference implementation** we grade Go output against (test-oracle sense), recorded in `.softhouse/reference-oracle.md`. It has **nothing to do with Oracle Database**, which is prohibited (above). When writing tasks, docs or prompts, say "**reference oracle (Fineract)**" for the reference implementation and "**Oracle Database**" only to name the prohibited product.
 
 ## Migration scope — the whole Fineract codebase, in tiers
 

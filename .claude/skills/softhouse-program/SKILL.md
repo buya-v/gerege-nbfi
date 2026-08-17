@@ -15,7 +15,18 @@ It changes **nothing** about correctness: every gate, every reviewer, every vect
 - `/softhouse-program park <context-id> <reason>` — park a context by hand
 - `/softhouse-program unpark <context-id>` — return a parked context to `pending`
 
+## Fires — who runs this driver
+
+| Fire | When | Reaches the reference oracle? | Role |
+|---|---|---|---|
+| **Local launchd** `mn.gerege.nbfi.softhouse-program` → `.softhouse/bin/fire-program.sh` | 08:00 and 14:00 Asia/Ulaanbaatar | **Yes** — Fineract + PostgreSQL on localhost | **Primary.** The only fire that can capture vectors or run conformance. |
+| **Cloud routine** `trig_01J7a66YFD7mzSLiKiFsj5XV` | 20:00 Asia/Ulaanbaatar (12:00 UTC) | No | Catch-up: source analysis, specs, Tier-C gap audit, Tier-D mining when the Mac was off. |
+| **By hand** `/softhouse-program` | any time | depends where you run it | Same driver, same state. |
+
+Logs: `~/Library/Logs/gerege-nbfi/fire-*.log`. Probe the environment without running anything: `.softhouse/bin/fire-program.sh --probe`.
+
 ## STEP 0 — Pre-flight (read, never assume)
+0. **Take the lock.** Read `.softhouse/LOCK`. If it exists and `started_at` is under 6 h old and it is not yours, print it and **exit** — never run two orchestrators over one repo. Otherwise write it (`holder`, `host`, `pid`, `started_at`) and delete it before you finish. The local wrapper does this for you and pushes it so the cloud fire sees it; a hand-run must honour it too.
 1. `git status` — if dirty, commit `.softhouse/` state only; never stash worker WIP.
 2. `git pull --ff-only` — a scheduled fire may be a fresh clone/session; the repo is the only memory.
 3. Read `CLAUDE.md`, `.softhouse/patterns.md`, `.softhouse/program.json`, `.softhouse/tasks.json`, `.softhouse/RESUME.md`, `.softhouse/state/*.STATE.json`, `.softhouse/gates.md`, newest `.softhouse/runs/*.json`.
@@ -89,7 +100,9 @@ Append to `.softhouse/gates.md`, one block per gate: gate id, context, what was 
 3. Print: what this fire did, program progress (`contexts done / total`, LOC ported / LOC total), what the next fire will pick up, and every pending gate.
 
 ## Invariants this driver may never relax
-- Fineract stays the oracle and fallback; no context is correct until its vectors match.
+- **PostgreSQL is the only database** — reference oracle, Go module, vector capture, shadow runs, CI. Postgres compose profile only. Oracle Database / MySQL / MariaDB are prohibited (`ojdbc`, `oracle.jdbc`, `:1521`, `com.mysql.cj`, `mariadb`, `go-sql-driver/mysql` are grep rejections); Go uses `pgx`; money columns are `bigint` minor units. Shadow parity across two different engines is not parity.
+- **"The oracle" = the Fineract reference implementation** (`.softhouse/reference-oracle.md`), never Oracle Database. Use "reference oracle (Fineract)" in tasks and prompts.
+- Fineract stays the reference oracle and fallback; no context is correct until its vectors match.
 - The reviewer **re-derives** money math; a money conflict is settled by re-derivation from source, never by vote.
 - Integer minor units, append-only ledger, derived balances, holds→available only, `Idempotency-Key` on money-movement POSTs.
 - One bounded context per run; the per-run scope guard is unaffected by the program's full-codebase goal.

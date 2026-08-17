@@ -13,13 +13,13 @@
   "tasks": [
     {
       "id": "T1",
-      "title": "Stand up + pin the Fineract oracle",
-      "description": "Bring up the Fineract oracle reachable for this run and pin it: exact release tag/commit, JVM + PostgreSQL versions, tenant/loan-product seed data, and the local source checkout path for fineract-progressive-loan-embeddable-schedule-generator. Record all of it in .softhouse/oracle.md (connection facts + pinned version) so every later vector capture is reproducible against the SAME oracle build. If the oracle cannot be brought up, STOP the run here — conformance must never report a false PASS (exit 2 on unreachable).",
+      "title": "Stand up + pin the Fineract reference oracle (on PostgreSQL)",
+      "description": "Bring up the Fineract reference oracle reachable for this run and pin it: exact release tag/commit, JVM version, tenant/loan-product seed data, and the local source checkout path for fineract-progressive-loan-embeddable-schedule-generator. DATABASE IS POSTGRESQL, mandatory: start it with the postgresql compose profile (docker-compose-postgresql.yml / config/docker/compose/postgresql.yml) — never the mysql or mariadb compose files — and ASSERT the running config before recording it: driverClassName == org.postgresql.Driver, jdbcUrl starts jdbc:postgresql://, and no ojdbc / oracle.jdbc / port 1521 anywhere in the stack. Record all of it in .softhouse/reference-oracle.md (connection facts, Postgres server version, pinned Fineract commit, the driver assertion result) so every later vector capture is reproducible against the SAME oracle build on the SAME engine. Terminology: 'oracle' here means the Fineract reference implementation; Oracle Database is prohibited by CLAUDE.md. If the reference oracle cannot be brought up, STOP the run here — conformance must never report a false PASS (exit 2 on unreachable).",
       "agent_role": "verifier",
       "executor": "orchestrator",
       "model": "sonnet",
       "target": "infra",
-      "files_hint": [".softhouse/oracle.md"],
+      "files_hint": [".softhouse/reference-oracle.md"],
       "context": "harness",
       "dependencies": [],
       "status": "pending",
@@ -119,7 +119,7 @@
     {
       "id": "T8",
       "title": "Capture golden vectors from the live Fineract oracle",
-      "description": "Orchestrator task: drive the pinned oracle from T1 to produce the T2/T3-approved config matrix and write the captured request/response pairs into .softhouse/vectors/loan-schedule/ in T7's schema, one file per case, each stamped with the oracle version from .softhouse/oracle.md. Capture the raw oracle output verbatim (full scale/precision as returned) alongside the contract-shaped form so rounding can be re-derived later. No Go implementation exists yet — these are oracle-only captures. If the oracle is unreachable, fail loudly; do not synthesise vectors.",
+      "description": "Orchestrator task: drive the pinned oracle from T1 to produce the T2/T3-approved config matrix and write the captured request/response pairs into .softhouse/vectors/loan-schedule/ in T7's schema, one file per case, each stamped with the oracle version from .softhouse/reference-oracle.md. Capture the raw oracle output verbatim (full scale/precision as returned) alongside the contract-shaped form so rounding can be re-derived later. No Go implementation exists yet — these are oracle-only captures. If the oracle is unreachable, fail loudly; do not synthesise vectors.",
       "agent_role": "test_writer",
       "executor": "orchestrator",
       "model": "sonnet",
