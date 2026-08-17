@@ -2,7 +2,7 @@
   "run_id": "2026-08-17-run1-harness-schedule-poc",
   "feature": "Run 1 — golden-vector conformance harness + progressive-loan schedule-generator PoC port",
   "requirement": "Prove the Fineract→Go migration pipeline end-to-end on the smallest real slice, harness-first. IN SCOPE for THIS run only: (1) Build the golden-vector conformance harness (.softhouse/conformance.sh) and a vector store, capturing vectors for the progressive-loan schedule generator from the live Fineract oracle. (2) Define the minimal frozen adapter interface needed to invoke a schedule generator (spec_writer) — mark its ratification a user gate. (3) Port fineract-progressive-loan-embeddable-schedule-generator (~182 LOC) to Go behind that interface (coder), integer-minor-units only, no float in any path. (4) Verify via /softhouse-uat: go build + the schedule-generator conformance vectors must pass, and property invariants (schedule principal amortizes to exactly zero, rounding matches Fineract) must hold. Every coder/analyst task gets a paired INDEPENDENT reviewer that RE-DERIVES the schedule arithmetic against the Fineract vector, not reads it. SCOPE GUARD: Minimum Portable Core, PoC slice only — do NOT plan GL posting logic, COB, charges/rates/tax, provisioning, or ANY context cutover in this run; record them to backlog in strangler order (GL → loan lifecycle → charges/rates/tax → COB → provisioning). Route as user gates: adapter-contract ratification and any cutover. This run also exercises the token-limit checkpoint/resume once.",
-  "status": "executing",
+  "status": "blocked_on_gate",
   "backlog": [
     "Run 2 — General Ledger / accounting (double-entry posting rules, chart of accounts, journal entries/items) behind the frozen contract; GL vectors + trial-balance invariants. Cutover = separate user gate.",
     "Run 3 — Loan product + schedule + lifecycle (products, interest methods, disbursement, repayment, penalties, rescheduling, write-off), reusing the Run 1 schedule generator. Cutover = separate user gate.",
@@ -43,9 +43,9 @@
       "dependencies": [
         "T1"
       ],
-      "status": "in_progress",
+      "status": "parked",
       "attempts": 2,
-      "note": "REJECTED by T3 on attempt 1; single retry dispatched at opus per policy.retry_model. Reviewer re-derivation CONFIRMED EMI=17.01 and splits p1 16.43/0.58, p2 16.52/0.49, p3 16.62/0.39, and strengthened the recurrence claim (recurrence 6.08818353993 vs closed-form 6.08818353806 — NOT bit-equal, so the Go port must implement the recurrence). REJECTED on: (1) month-end stepping refuted by DefaultScheduledDateGenerator.adjustDate:168-176 (re-anchors to seed day; ls-008 is 02-28,03-31,04-30,05-31,06-30,07-31, term 181d not 178d); (2) setScale(mc.getPrecision(),..) mis-described as a redundant clamp when it feeds precision into the scale slot and truncates every rate factor; (3) 'calendar days cancel to exactly 1' false at BigDecimal level; (4) 4 of 24 spot-checked citations did not support their claims. | Attempt-2 deliverable landed 19:53:50 (81763 bytes, 5 [UNVERIFIED] remaining) but the fire exited without committing it or re-reviewing it; committed by hand 19:56. NOT yet re-reviewed against the T3 verdict. Retry ran on opus (the model field below still reads sonnet — stale). | isolation_violation: worker spawned with isolation NONE in the main working tree; no softhouse/* branch exists, so branch-based handoff and `git diff main..<branch>` scope checks were unavailable this run."
+      "note": "REJECTED by T3 on attempt 1; single retry dispatched at opus per policy.retry_model. Reviewer re-derivation CONFIRMED EMI=17.01 and splits p1 16.43/0.58, p2 16.52/0.49, p3 16.62/0.39, and strengthened the recurrence claim (recurrence 6.08818353993 vs closed-form 6.08818353806 — NOT bit-equal, so the Go port must implement the recurrence). REJECTED on: (1) month-end stepping refuted by DefaultScheduledDateGenerator.adjustDate:168-176 (re-anchors to seed day; ls-008 is 02-28,03-31,04-30,05-31,06-30,07-31, term 181d not 178d); (2) setScale(mc.getPrecision(),..) mis-described as a redundant clamp when it feeds precision into the scale slot and truncates every rate factor; (3) 'calendar days cancel to exactly 1' false at BigDecimal level; (4) 4 of 24 spot-checked citations did not support their claims. | Attempt-2 deliverable landed 19:53:50 (81763 bytes, 5 [UNVERIFIED] remaining) but the fire exited without committing it or re-reviewing it; committed by hand 19:56. NOT yet re-reviewed against the T3 verdict. Retry ran on opus (the model field below still reads sonnet — stale). | isolation_violation: worker spawned with isolation NONE in the main working tree; no softhouse/* branch exists, so branch-based handoff and `git diff main..<branch>` scope checks were unavailable this run. || cloud fire 20260817-2000: REJECTED AGAIN by T3b (attempt 2). PARKED per policy.max_retries_per_task=1 + park_after_retries=true - attempt 1 and its one retry are both spent. FAILURE MODE IS SYSTEMATIC AND DIAGNOSABLE: the analyst corrected each section the review named but NOT the other sections restating the same claim - month-end fixed in SS4.4, left wrong in SS7.4 and the vector matrix; 'cancels to 1' fixed in SS4.2, left wrong in SS7.4. A reader building the Go port still meets the original wrong instruction. NEW money-path defect found: allowFullTermForTranche is caller-settable and the guard at ProgressiveEMICalculator.java:142-144 never consults isMultiDisburseLoan() - INDEPENDENTLY corroborated by T5 from a different artefact. Plus a 4th MoneyHelper fallback at :182 that SS5.2's list omits. Non-negotiables CLEAN; 47 citations checked, 45 held. UNPARK PRECONDITION: gate G-2 - Buyan's permission for a third attempt with a DIFFERENT task shape (apply T3b's 10 enumerated edits surgically, then a mechanical grep sweep for restatements of each corrected claim elsewhere in the document), since a third free-form rewrite would likely repeat the leak."
     },
     {
       "id": "T3",
@@ -82,9 +82,9 @@
         "T2",
         "T3"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "DISPATCHED cloud fire 20260817-2000, isolation=worktree, branch softhouse/T3b-progressive-schedule-rereview. Exists because a re-review after a REJECT is itself a reviewed step - T2 must not be marked done on the analyst's own say-so. Reviewer forbidden from editing the analysis document."
+      "note": "DISPATCHED cloud fire 20260817-2000, isolation=worktree, branch softhouse/T3b-progressive-schedule-rereview. Exists because a re-review after a REJECT is itself a reviewed step - T2 must not be marked done on the analyst's own say-so. Reviewer forbidden from editing the analysis document. || DONE cloud fire 20260817-2000. VERDICT: **REJECTED**. Branch softhouse/T3b-progressive-schedule-rereview @5a51c92, merged. 12 adjudications: 6 LANDED, 4 PARTIAL, 3 NOT LANDED (item 8 split a/b/c). Rejection grounds: month-end correction landed in SS4.4 but SS7.4 and the vector matrix still carry rev-1 text; 'cancels to 1' same; mc still unpinned in SS8 with a HALF_UP example that conflicts with SS5.2's own HALF_EVEN finding; SS9 int64 guidance unchanged. Confirmed correct: setScale(precision-as-scale) now stated as value-changing; the three MoneyHelper paths; repaymentEvery-vs-periodRatio; the recurrence divergence (all four denominators reproduced exactly); the [VERIFIED]-hedge ban honoured. NEW money-path defect: allowFullTermForTranche caller-settable, guard at ProgressiveEMICalculator.java:142-144 never consults isMultiDisburseLoan() - independently corroborated by T5. Plus a 4th MoneyHelper fallback at :182. [UNVERIFIED]: 5 occurrences - 2 are the legend, :709 resolved correctly (hosted default MathContext(19, HALF_EVEN)), :954 genuinely open and honestly scoped, :1087 STALE and self-contradicting. Non-negotiables CLEAN. Citations: 47 checked, 45 held."
     },
     {
       "id": "T4",
@@ -350,7 +350,7 @@
       ],
       "status": "done",
       "attempts": 1,
-      "note": "DISPATCHED cloud fire 20260817-2000, isolation=worktree, branch softhouse/T16-tier0-vector-capture-plan. Scope-guarded to the progressive-loan schedule seam. HARD RULE given to the worker: transcribe literals with citations, never synthesise an expected value; uncovered behaviour is marked TO_BE_CAPTURED. Feeds T8 (parked, oracle_unreachable). || LANDED cloud fire 20260817-2000: docs/analysis/tier0-vector-capture-plan.md (861 lines), branch softhouse/T16-tier0-vector-capture-plan @1fd1517, merged to main (scope clean - 1 commit, 1 new file under docs/). 16 vectors transcribed from literals with file:line; ~808 further checkPeriod rows indexed; 9 TO_BE_CAPTURED capture runs specified; 3 [UNVERIFIED]. STATUS IS 'done' ONLY IN THE SENSE THAT THE DELIVERABLE LANDED - it is NOT accepted until T17 passes."
+      "note": "DISPATCHED cloud fire 20260817-2000, isolation=worktree, branch softhouse/T16-tier0-vector-capture-plan. Scope-guarded to the progressive-loan schedule seam. HARD RULE given to the worker: transcribe literals with citations, never synthesise an expected value; uncovered behaviour is marked TO_BE_CAPTURED. Feeds T8 (parked, oracle_unreachable). || LANDED cloud fire 20260817-2000: docs/analysis/tier0-vector-capture-plan.md (861 lines), branch softhouse/T16-tier0-vector-capture-plan @1fd1517, merged to main (scope clean - 1 commit, 1 new file under docs/). 16 vectors transcribed from literals with file:line; ~808 further checkPeriod rows indexed; 9 TO_BE_CAPTURED capture runs specified; 3 [UNVERIFIED]. STATUS IS 'done' ONLY IN THE SENSE THAT THE DELIVERABLE LANDED - it is NOT accepted until T17 passes. || ACCEPTED by T17 (transcription audit clean, 418/418). Execution is gated on the T16b corrections below."
     },
     {
       "id": "T17",
@@ -367,9 +367,28 @@
       "dependencies": [
         "T16"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "Paired reviewer for T16 - no analyst task ships unreviewed. Dispatch as soon as T16 lands (this fire if budget allows, else next fire). || DISPATCHED cloud fire 20260817-2000, isolation=worktree, branch softhouse/T17-vector-capture-plan-review. Auditing every transcribed value against its cited file:line; a value not literally in source is an automatic rejection."
+      "note": "Paired reviewer for T16 - no analyst task ships unreviewed. Dispatch as soon as T16 lands (this fire if budget allows, else next fire). || DISPATCHED cloud fire 20260817-2000, isolation=worktree, branch softhouse/T17-vector-capture-plan-review. Auditing every transcribed value against its cited file:line; a value not literally in source is an automatic rejection. || DONE cloud fire 20260817-2000. VERDICT: **ACCEPTED** with 6 corrections that block EXECUTION of the plan, not the merge. Branch softhouse/T17-vector-capture-plan-review @661117e, merged. 418 values audited: 418 TRANSCRIBED-OK, 0 ALTERED, 0 NOT-IN-SOURCE, 0 MISCITED - no synthesised vector. 310/310 minor-unit conversions exact scale-2; no float on any money path; all 16 principals-sum invariants recomputed independently, none failed; no unpinned MathContext row. All 4 coverage gaps confirmed real, 2 TOTAL: installmentAmountInMultiplesOf null in 97/97 in-seam declarations; largest literal principal 245000.0, ~20x short of MNT 5,000,000. Settled the 182-LOC provenance: src/main 92 + misc/Main.java 90 = 182 exactly (the getLoanTermInDays()==182 'coincidence' is a red herring). BONUS: found a THIRD attestation of V-01's per-period figures at ProgressiveEMICalculatorTest.java:3259-3265 via a different entry point under HALF_EVEN rather than HALF_UP - strengthens C-00 as a calibration gate across both rounding modes."
+    },
+    {
+      "id": "T16b",
+      "title": "Apply T17's 6 mandatory corrections to the vector capture plan",
+      "description": "Blocks EXECUTION of the capture plan (not its merge). T17 found no bad vector value but three high-severity defects in the supporting evidence, each [VERIFIED]-tagged and false: (D1) SS3.2 claims DefaultScheduledDateGenerator is instantiated in only three in-scope places - there are FOUR, the fourth at ProgressiveEMICalculatorTest.java:72; this is the stated proof of the program's most important coverage gap, so the proof is invalid even though the conclusion survives re-derivation. (D2) SS2.5 claims V-10's tests all set FEB_29_PERIOD_ONLY - ProgressiveEMICalculatorTest.java:3209 sets FULL_LEAP_YEAR, which has NO absolute literal anywhere (only relational asserts at :3219/:3226) and is missing from the coverage map entirely - a real uncaptured behaviour. (D3/D4) off-by-one citations: DefaultScheduledDateGenerator.java 167-175 -> 168-176; LoanRepaymentScheduleModelData.java 31-38 -> 32-39; build.gradle 27-31 -> 28-32; and LSG:56 is day 15, not day 1. (D5) drop the 182-LOC 'discrepancy' - settled as src/main 92 + misc/Main.java 90. (D6) SS2.8 directs mechanical transcription from groups containing NINE shadowed-MathContext tests (EMI:2072,2121,2166,2253,2290,2364,2401,2438,2470) with no warning; 11 shadows exist and only 2 are flagged - transcribing a shadowed test without its local (12, HALF_UP) is a reproducibility error. Also fold in T17's bonus finding: a third attestation of V-01 at EMI:3259-3265 under HALF_EVEN, which lets C-00 calibrate across both rounding modes.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        "docs/analysis/tier0-vector-capture-plan.md"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T17"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by cloud fire 20260817-2000 from T17's required-changes list. Needs no reference oracle - pure source correction. Good first work for any fire. Add FULL_LEAP_YEAR to the coverage map as a TO_BE_CAPTURED gap."
     }
   ]
 }
