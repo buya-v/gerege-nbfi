@@ -2,7 +2,7 @@
   "run_id": "2026-08-17-run1-harness-schedule-poc",
   "feature": "Run 1 — golden-vector conformance harness + progressive-loan schedule-generator PoC port",
   "requirement": "Prove the Fineract→Go migration pipeline end-to-end on the smallest real slice, harness-first. IN SCOPE for THIS run only: (1) Build the golden-vector conformance harness (.softhouse/conformance.sh) and a vector store, capturing vectors for the progressive-loan schedule generator from the live Fineract oracle. (2) Define the minimal frozen adapter interface needed to invoke a schedule generator (spec_writer) — mark its ratification a user gate. (3) Port fineract-progressive-loan-embeddable-schedule-generator (~182 LOC) to Go behind that interface (coder), integer-minor-units only, no float in any path. (4) Verify via /softhouse-uat: go build + the schedule-generator conformance vectors must pass, and property invariants (schedule principal amortizes to exactly zero, rounding matches Fineract) must hold. Every coder/analyst task gets a paired INDEPENDENT reviewer that RE-DERIVES the schedule arithmetic against the Fineract vector, not reads it. SCOPE GUARD: Minimum Portable Core, PoC slice only — do NOT plan GL posting logic, COB, charges/rates/tax, provisioning, or ANY context cutover in this run; record them to backlog in strangler order (GL → loan lifecycle → charges/rates/tax → COB → provisioning). Route as user gates: adapter-contract ratification and any cutover. This run also exercises the token-limit checkpoint/resume once.",
-  "status": "planning",
+  "status": "executing",
   "backlog": [
     "Run 2 — General Ledger / accounting (double-entry posting rules, chart of accounts, journal entries/items) behind the frozen contract; GL vectors + trial-balance invariants. Cutover = separate user gate.",
     "Run 3 — Loan product + schedule + lifecycle (products, interest methods, disbursement, repayment, penalties, rescheduling, write-off), reusing the Run 1 schedule generator. Cutover = separate user gate.",
@@ -19,12 +19,14 @@
       "executor": "orchestrator",
       "model": "sonnet",
       "target": "infra",
-      "files_hint": [".softhouse/reference-oracle.md"],
+      "files_hint": [
+        ".softhouse/reference-oracle.md"
+      ],
       "context": "harness",
       "dependencies": [],
-      "status": "pending",
-      "attempts": 0,
-      "note": "Orchestrator-only: running/refreshing the oracle is never an agent task."
+      "status": "done",
+      "attempts": 1,
+      "note": "DONE 2026-08-17 local fire. Oracle UP on PostgreSQL 18.3; Fineract commit 426a23544 (== pinned commit of record), JVM Zulu 21.0.11. Driver assertions passed against the RUNNING container: org.postgresql.Driver + jdbc:postgresql://. Prohibited engines: 0 ojdbc/oracle.jdbc/mysql/mariadb entries in the jar, no :1521 listener. Host had no JVM/brew, so the image is built from the pinned checkout inside eclipse-temurin:21-jdk via .softhouse/bin/build-oracle-image.sh. Facts in .softhouse/reference-oracle.md."
     },
     {
       "id": "T2",
@@ -34,12 +36,16 @@
       "executor": "agent",
       "model": "sonnet",
       "target": "docs",
-      "files_hint": ["docs/analysis/progressive-schedule-behavior.md"],
+      "files_hint": [
+        "docs/analysis/progressive-schedule-behavior.md"
+      ],
       "context": "loan-schedule",
-      "dependencies": ["T1"],
-      "status": "pending",
-      "attempts": 0,
-      "note": ""
+      "dependencies": [
+        "T1"
+      ],
+      "status": "done",
+      "attempts": 1,
+      "note": "DONE 2026-08-17. docs/analysis/progressive-schedule-behavior.md: EMI via RECURRENCE (not closed form), 30/360 day count, BigDecimal intermediates at caller MathContext (prec 12 HALF_UP in test / 19 in prod), currency rounding once per Money.of(). 16-row vector matrix ls-001..ls-016. 3 declared [UNVERIFIED] items. Awaiting T3 re-derivation review."
     },
     {
       "id": "T3",
@@ -49,11 +55,15 @@
       "executor": "agent",
       "model": "opus",
       "target": "docs",
-      "files_hint": ["docs/analysis/progressive-schedule-behavior.md"],
+      "files_hint": [
+        "docs/analysis/progressive-schedule-behavior.md"
+      ],
       "context": "loan-schedule",
-      "dependencies": ["T2"],
-      "status": "pending",
-      "attempts": 0,
+      "dependencies": [
+        "T2"
+      ],
+      "status": "in_progress",
+      "attempts": 1,
       "note": "Paired independent reviewer for T2 — mandatory."
     },
     {
@@ -64,11 +74,16 @@
       "executor": "agent",
       "model": "opus",
       "target": "docs",
-      "files_hint": ["docs/adr/DEC-1-schedule-generator-adapter.md", "nexus/internal/apps/loanschedule/contract/contract.go"],
+      "files_hint": [
+        "docs/adr/DEC-1-schedule-generator-adapter.md",
+        "nexus/internal/apps/loanschedule/contract/contract.go"
+      ],
       "context": "contract",
-      "dependencies": ["T2"],
-      "status": "pending",
-      "attempts": 0,
+      "dependencies": [
+        "T2"
+      ],
+      "status": "in_progress",
+      "attempts": 1,
       "note": "opus — ratified DEC-n touching schedule math."
     },
     {
@@ -79,9 +94,14 @@
       "executor": "agent",
       "model": "opus",
       "target": "docs",
-      "files_hint": ["docs/adr/DEC-1-schedule-generator-adapter.md", "nexus/internal/apps/loanschedule/contract/contract.go"],
+      "files_hint": [
+        "docs/adr/DEC-1-schedule-generator-adapter.md",
+        "nexus/internal/apps/loanschedule/contract/contract.go"
+      ],
       "context": "contract",
-      "dependencies": ["T4"],
+      "dependencies": [
+        "T4"
+      ],
       "status": "pending",
       "attempts": 0,
       "note": "Contract is the boundary — reviewed before the user gate."
@@ -94,9 +114,13 @@
       "executor": "user",
       "model": "n/a",
       "target": "docs",
-      "files_hint": ["docs/adr/DEC-1-schedule-generator-adapter.md"],
+      "files_hint": [
+        "docs/adr/DEC-1-schedule-generator-adapter.md"
+      ],
       "context": "contract",
-      "dependencies": ["T5"],
+      "dependencies": [
+        "T5"
+      ],
       "status": "pending",
       "attempts": 0,
       "note": "DECISION GATE — blocks all dependents."
@@ -109,9 +133,17 @@
       "executor": "agent",
       "model": "opus",
       "target": "test",
-      "files_hint": [".softhouse/conformance.sh", ".softhouse/vectors/README.md", ".softhouse/vectors/loan-schedule/", "nexus/internal/apps/loanschedule/conformance_test.go"],
+      "files_hint": [
+        ".softhouse/conformance.sh",
+        ".softhouse/vectors/README.md",
+        ".softhouse/vectors/loan-schedule/",
+        "nexus/internal/apps/loanschedule/conformance_test.go"
+      ],
       "context": "harness",
-      "dependencies": ["T3", "T6"],
+      "dependencies": [
+        "T3",
+        "T6"
+      ],
       "status": "pending",
       "attempts": 0,
       "note": "Harness-first: the coder task depends on this."
@@ -124,9 +156,13 @@
       "executor": "orchestrator",
       "model": "sonnet",
       "target": "test",
-      "files_hint": [".softhouse/vectors/loan-schedule/"],
+      "files_hint": [
+        ".softhouse/vectors/loan-schedule/"
+      ],
       "context": "harness",
-      "dependencies": ["T7"],
+      "dependencies": [
+        "T7"
+      ],
       "status": "pending",
       "attempts": 0,
       "note": "Vector capture is orchestrator-only (touches the oracle)."
@@ -139,9 +175,15 @@
       "executor": "agent",
       "model": "opus",
       "target": "test",
-      "files_hint": [".softhouse/conformance.sh", ".softhouse/vectors/loan-schedule/", "nexus/internal/apps/loanschedule/conformance_test.go"],
+      "files_hint": [
+        ".softhouse/conformance.sh",
+        ".softhouse/vectors/loan-schedule/",
+        "nexus/internal/apps/loanschedule/conformance_test.go"
+      ],
       "context": "harness",
-      "dependencies": ["T8"],
+      "dependencies": [
+        "T8"
+      ],
       "status": "pending",
       "attempts": 0,
       "note": "A harness nobody proved can fail is not a harness."
@@ -154,9 +196,17 @@
       "executor": "agent",
       "model": "opus",
       "target": "code",
-      "files_hint": ["nexus/internal/apps/loanschedule/generator.go", "nexus/internal/apps/loanschedule/emi.go", "nexus/internal/apps/loanschedule/rounding.go"],
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/generator.go",
+        "nexus/internal/apps/loanschedule/emi.go",
+        "nexus/internal/apps/loanschedule/rounding.go"
+      ],
       "context": "loan-schedule",
-      "dependencies": ["T6", "T7", "T8"],
+      "dependencies": [
+        "T6",
+        "T7",
+        "T8"
+      ],
       "status": "pending",
       "attempts": 0,
       "note": "opus — interest/schedule math and rounding."
@@ -169,9 +219,13 @@
       "executor": "agent",
       "model": "opus",
       "target": "code",
-      "files_hint": ["nexus/internal/apps/loanschedule/"],
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/"
+      ],
       "context": "loan-schedule",
-      "dependencies": ["T10"],
+      "dependencies": [
+        "T10"
+      ],
       "status": "pending",
       "attempts": 0,
       "note": "Paired independent reviewer for T10 — mandatory, re-derives."
@@ -184,9 +238,14 @@
       "executor": "orchestrator",
       "model": "sonnet",
       "target": "infra",
-      "files_hint": [".softhouse/RESUME.md", ".softhouse/state/"],
+      "files_hint": [
+        ".softhouse/RESUME.md",
+        ".softhouse/state/"
+      ],
       "context": "harness",
-      "dependencies": ["T10"],
+      "dependencies": [
+        "T10"
+      ],
       "status": "pending",
       "attempts": 0,
       "note": "Required by the run requirement; orchestrator-only."
@@ -199,9 +258,16 @@
       "executor": "agent",
       "model": "sonnet",
       "target": "test",
-      "files_hint": [".softhouse/conformance.sh", "nexus/internal/apps/loanschedule/"],
+      "files_hint": [
+        ".softhouse/conformance.sh",
+        "nexus/internal/apps/loanschedule/"
+      ],
       "context": "loan-schedule",
-      "dependencies": ["T9", "T11", "T12"],
+      "dependencies": [
+        "T9",
+        "T11",
+        "T12"
+      ],
       "status": "pending",
       "attempts": 0,
       "note": "Run gate — must PASS before the run completes."
@@ -214,9 +280,13 @@
       "executor": "user",
       "model": "n/a",
       "target": "docs",
-      "files_hint": [".softhouse/runs/"],
+      "files_hint": [
+        ".softhouse/runs/"
+      ],
       "context": "loan-schedule",
-      "dependencies": ["T13"],
+      "dependencies": [
+        "T13"
+      ],
       "status": "pending",
       "attempts": 0,
       "note": "DECISION GATE — not a cutover; cutover is a later, separate gate."
@@ -229,9 +299,14 @@
       "executor": "orchestrator",
       "model": "sonnet",
       "target": "docs",
-      "files_hint": [".softhouse/runs/", ".softhouse/patterns.md"],
+      "files_hint": [
+        ".softhouse/runs/",
+        ".softhouse/patterns.md"
+      ],
       "context": "harness",
-      "dependencies": ["T14"],
+      "dependencies": [
+        "T14"
+      ],
       "status": "pending",
       "attempts": 0,
       "note": "Only the orchestrator pushes."

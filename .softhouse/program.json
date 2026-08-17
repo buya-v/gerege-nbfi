@@ -6,7 +6,16 @@
   "oracle": {
     "source_checkout": "/Users/buv/fineract",
     "pinned_commit": "426a23544",
-    "note": "Commit measured 17 Aug 2026 [VERIFIED: git log -1 in that checkout]. T1 of run 1 re-pins it into .softhouse/reference-oracle.md together with the running-instance connection facts. LOC figures below are measured from THIS checkout (find+wc over src/main/**.java) — re-measure if the pin moves."
+    "note": "Commit measured 17 Aug 2026 [VERIFIED: git log -1 in that checkout]. T1 of run 1 re-pins it into .softhouse/reference-oracle.md together with the running-instance connection facts. LOC figures below are measured from THIS checkout (find+wc over src/main/**.java) — re-measure if the pin moves.",
+    "status": "UP",
+    "verified_at": "2026-08-17T11:30Z",
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "postgres_version": "18.3",
+    "jvm": "Zulu 21.0.11+10-LTS",
+    "base_url": "https://localhost:8443/fineract-provider/api/v1",
+    "facts_file": ".softhouse/reference-oracle.md",
+    "driver_assertion": "org.postgresql.Driver / jdbc:postgresql:// — PASSED against running container",
+    "prohibited_engines": "none (0 ojdbc/oracle.jdbc/mysql/mariadb jar entries, no :1521 listener)"
   },
   "scheduler": {
     "primary": {
