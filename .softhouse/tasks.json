@@ -67,6 +67,26 @@
       "note": "DONE 2026-08-17. Verdict REJECTED. Independently re-derived EMI + all 6 periods and matched the shipped golden test; caught 3 rejection-grade money-path defects and 4 bad citations. Review: .softhouse/reviews/T3-progressive-schedule-behavior-review.md | isolation_violation: worker spawned with isolation NONE in the main working tree; no softhouse/* branch exists, so branch-based handoff and `git diff main..<branch>` scope checks were unavailable this run."
     },
     {
+      "id": "T3b",
+      "title": "Independent RE-review of the corrected schedule-behavior extraction",
+      "description": "T3 REJECTED T2 attempt 1 on 3 money-path defects + 4 bad citations and issued a 12-item required-changes list. T2 attempt 2 landed and was never reviewed. Adjudicate each of the 12 items LANDED/PARTIAL/NOT LANDED/WRONGLY-FIXED by re-deriving from Fineract source (no live oracle, no Java - exact-decimal emulator validated against the shipped golden test first). Regression-check what attempt 1 got right. Adjudicate the 5 remaining [UNVERIFIED] markers. Run an independent citation spot-check and re-derive claims the prior review never examined.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/reviews/T3b-progressive-schedule-behavior-rereview.md"
+      ],
+      "context": "schedule-behavior",
+      "dependencies": [
+        "T2",
+        "T3"
+      ],
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "DISPATCHED cloud fire 20260817-2000, isolation=worktree, branch softhouse/T3b-progressive-schedule-rereview. Exists because a re-review after a REJECT is itself a reviewed step - T2 must not be marked done on the analyst's own say-so. Reviewer forbidden from editing the analysis document."
+    },
+    {
       "id": "T4",
       "title": "Draft DEC-1: minimal frozen adapter interface for schedule generation",
       "description": "Write docs/adr/DEC-1-schedule-generator-adapter.md plus the Go interface stub it ratifies (nexus/internal/apps/loanschedule/contract/contract.go): the SMALLEST boundary that lets either Fineract-JVM or the Go module answer 'generate a repayment schedule'. Money strictly int64 minor units (MNT, ISO 4217 numeric 496, minor unit 2) in every request/response field; rates as basis points or explicit rational, never float; dates as civil dates plus an explicit IANA tz (Asia/Ulaanbaatar | Asia/Hovd, never an offset); deterministic ordering; no Fineract internal types leaking through. Document the switch mechanism (config, per context) and state explicitly that ratification of DEC-1 and ANY later change to it is a user gate. Do not implement the generator here.",
@@ -102,9 +122,9 @@
       "dependencies": [
         "T4"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "Contract is the boundary — reviewed before the user gate. | MUST review DEC-1 against the CORRECTED T2 document (attempt 1 was rejected; T4 drafted against the uncorrected version — check specifically that the day-count/rounding policy fields survive the T3 corrections). || ORCHESTRATOR FLAG for the T5 reviewer: DEC-1 defines IntermediatePrecisionDigits as SIGNIFICANT DECIMAL DIGITS, but T3 found Fineract's setScale(mc.getPrecision(),..) feeds precision into the SCALE slot (decimal places), truncating rate factors. Significant-digits vs scale is a possible contract defect that would break bit-exact parity — T5 must settle it against source."
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Contract is the boundary — reviewed before the user gate. | MUST review DEC-1 against the CORRECTED T2 document (attempt 1 was rejected; T4 drafted against the uncorrected version — check specifically that the day-count/rounding policy fields survive the T3 corrections). || ORCHESTRATOR FLAG for the T5 reviewer: DEC-1 defines IntermediatePrecisionDigits as SIGNIFICANT DECIMAL DIGITS, but T3 found Fineract's setScale(mc.getPrecision(),..) feeds precision into the SCALE slot (decimal places), truncating rate factors. Significant-digits vs scale is a possible contract defect that would break bit-exact parity — T5 must settle it against source. || DISPATCHED cloud fire 20260817-2000, isolation=worktree, branch softhouse/T5-dec1-contract-review. Reviewer briefed to settle precision-vs-scale FIRST and forbidden from editing DEC-1/contract.go (contract amendment is a user gate)."
     },
     {
       "id": "T6",
@@ -163,9 +183,9 @@
       "dependencies": [
         "T7"
       ],
-      "status": "pending",
+      "status": "parked",
       "attempts": 0,
-      "note": "Vector capture is orchestrator-only (touches the oracle)."
+      "note": "Vector capture is orchestrator-only (touches the oracle). || PARKED cloud fire 20260817-2000: reason=oracle_unreachable. No live Fineract instance from the cloud sandbox (no docker daemon, PostgreSQL not listening on :5432, actuator/health unreachable). NOT synthesised - conformance exit 2 is not a PASS. Unpark precondition: a fire that reaches the live reference oracle. T16 (this fire) prepares the capture plan so this task is execute-ready."
     },
     {
       "id": "T9",
@@ -264,13 +284,15 @@
       ],
       "context": "loan-schedule",
       "dependencies": [
-        "T9",
         "T11",
-        "T12"
+        "T12",
+        "T17",
+        "T3b",
+        "T9"
       ],
       "status": "pending",
       "attempts": 0,
-      "note": "Run gate — must PASS before the run completes."
+      "note": "Run gate — must PASS before the run completes. || cloud fire 20260817-2000: dependencies extended to T3b and T17 - the re-review and the capture-plan review are run gates too."
     },
     {
       "id": "T14",
@@ -310,6 +332,44 @@
       "status": "pending",
       "attempts": 0,
       "note": "Only the orchestrator pushes."
+    },
+    {
+      "id": "T16",
+      "title": "Mine the Fineract test corpus into an executable golden-vector capture plan",
+      "description": "Oracle-free preparation for the parked T8. Inventory the progressive-loan schedule-generation test corpus; transcribe (never derive) literal expected values with file:line; map corpus coverage against the behaviours parity needs; emit an ordered capture plan with fully pinned inputs (MathContext precision AND rounding mode explicit) that a fire reaching the live reference oracle can execute without redoing the analysis. First capture run must reproduce an already-transcribed literal test expectation as the harness calibration check. All money in integer minor units.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        "docs/analysis/tier0-vector-capture-plan.md"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T3"
+      ],
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "DISPATCHED cloud fire 20260817-2000, isolation=worktree, branch softhouse/T16-tier0-vector-capture-plan. Scope-guarded to the progressive-loan schedule seam. HARD RULE given to the worker: transcribe literals with citations, never synthesise an expected value; uncovered behaviour is marked TO_BE_CAPTURED. Feeds T8 (parked, oracle_unreachable)."
+    },
+    {
+      "id": "T17",
+      "title": "Independent review of the vector capture plan (transcription audit)",
+      "description": "Paired independent reviewer for T16 - mandatory. Open every transcribed expected value at its cited file:line and confirm it is literally there and unaltered; any value present in the plan but NOT literally in the source is a synthesised vector and an automatic rejection. Confirm every capture row has a fully pinned input set (an unpinned MathContext makes intermediates undefined), that money is integer minor units throughout with no float, that the calibration-check-first ordering is present, and that the coverage gaps are honestly marked TO_BE_CAPTURED rather than filled in.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/reviews/T17-vector-capture-plan-review.md"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T16"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Paired reviewer for T16 - no analyst task ships unreviewed. Dispatch as soon as T16 lands (this fire if budget allows, else next fire)."
     }
   ]
 }
