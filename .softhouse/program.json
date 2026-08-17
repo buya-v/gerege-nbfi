@@ -69,7 +69,8 @@
     "current_context": "tier0-harness-schedule-poc",
     "current_run_id": "2026-08-17-run1-harness-schedule-poc",
     "completed_contexts": [],
-    "parked_contexts": []
+    "parked_contexts": [],
+    "note": "tier 0 is blocked_on_gate, not parked. No other context is READY: all 16 remaining contexts declare tier0-harness-schedule-poc as a transitive dependency, so gate G-1 gates the entire program. This is the decision table's one legitimate idle stop - it was reached only after spending the fire on every piece of work that needed no live oracle."
   },
   "contexts": [
     {
@@ -82,10 +83,10 @@
       "main_loc": 182,
       "go_target": "nexus/internal/apps/loanschedule",
       "dependencies": [],
-      "status": "in_progress",
+      "status": "blocked_on_gate",
       "run_id": "2026-08-17-run1-harness-schedule-poc",
       "cutover_gate": false,
-      "notes": "Planned. Everything else depends on the harness existing."
+      "notes": "Planned. Everything else depends on the harness existing. || cloud fire 20260817-2000: BLOCKED at gate G-1 (ratify DEC-1), which is NOT YET ANSWERABLE - the draft was independently REJECTED (T5) and the defect it turns on is one the current corpus provably cannot detect. Every other context in this program declares tier 0 as a transitive dependency, so the whole program is behind this gate. Measured this fire against the pin: the module is src/main 92 LOC + misc/Main.java 90 = 182, which settles the '~182 LOC' figure on record."
     },
     {
       "id": "tierA-gl-accounting",
@@ -421,8 +422,76 @@
       "notes": "~321k test LOC. Runs OPPORTUNISTICALLY — whenever a Tier A/B context is planned, its slice of this corpus is mined in the same run's test_writer task. Kept as a distinct context so residual suites are not forgotten. Never ported one-for-one into Go tests."
     }
   ],
-  "gates_pending": [],
-  "history": [],
+  "gates_pending": [
+    {
+      "id": "G-1",
+      "class": "CONTRACT",
+      "task": "T6",
+      "context": "tier0-harness-schedule-poc",
+      "title": "Ratify DEC-1 frozen adapter contract",
+      "state": "NOT_YET_ANSWERABLE",
+      "why": "DEC-1 was independently REJECTED by T5. Ratifying as drafted would freeze a precision-vs-scale ambiguity that provably changes payable amounts (189 of 560 grid configurations diverge across precisions; first money divergence at 18 installments / 18.5%/ principal 87,654,321). The shipped conformance vector does NOT discriminate between the two readings, so the corpus cannot currently detect this defect class.",
+      "unblocked_by": [
+        "Capture a DISCRIMINATING vector from the reference oracle (needs an oracle-reaching fire; T5 supplies the exact config)",
+        "Run the T4 retry (attempt 2 of 2) against T5's 9 required changes",
+        "Re-review, then re-present the gate"
+      ],
+      "decisions_reserved_for_user": [
+        "IntermediatePrecisionDigits: rename to IntermediatePrecision + document both senses normatively, or keep the name and carry the dual sense in the doc comment",
+        "Ordering rule: (a) reproduce the oracle's emitted order, or (b) reject a request whose disbursement lands exactly on a repayment due date",
+        "Must the discriminating vector be captured BEFORE ratification? (T5 recommends yes; orchestrator concurs)",
+        "Does DayCountActualActual stay in the Run-1 contract domain while unvectored?",
+        "Accept allowFullTermForTranche as a pinned-false conformance obligation rather than a dead field",
+        "State the Mongolian tenant's actual rounding mode - unresolvable from source (properties default 6/HALF_EVEN, tests mock HALF_UP; production MoneyHelper.PRECISION=19 vs 12 mocked)"
+      ],
+      "raised_by": "cloud fire 20260817-2000",
+      "recorded_in": ".softhouse/gates.md"
+    },
+    {
+      "id": "G-2",
+      "class": "POLICY",
+      "task": "T2",
+      "context": "tier0-harness-schedule-poc",
+      "title": "Permit a third, differently-shaped attempt at the schedule behaviour extraction?",
+      "state": "OPEN",
+      "why": "T2 exhausted policy.max_retries_per_task=1 (attempt 1 and its retry both REJECTED) and is parked by policy, not judgement. The failure is systematic: corrections land in the section the review named but not in the sections that restate the same claim.",
+      "asking_for": "One more attempt with a different task shape - apply T3b's 10 enumerated edits surgically, then a mechanical grep sweep for restatements of each corrected claim elsewhere in the document. If declined, the alternative is to treat T3b's review as the specification of record and grade the port on vectors alone.",
+      "raised_by": "cloud fire 20260817-2000",
+      "recorded_in": ".softhouse/gates.md"
+    }
+  ],
+  "history": [
+    {
+      "fire": "cloud-routine 20260817-2000 (catch-up, no live oracle)",
+      "run_id": "2026-08-17-run1-harness-schedule-poc",
+      "context": "tier0-harness-schedule-poc",
+      "oracle_reachable": false,
+      "oracle_probe": "no docker daemon, PostgreSQL not listening on :5432, actuator/health silent - T8 parked with reason oracle_unreachable; no vector synthesised",
+      "tasks_dispatched": [
+        "T3b",
+        "T5",
+        "T16",
+        "T17"
+      ],
+      "worker_isolation": "all 4 workers in real worktrees on softhouse/* branches - the previous fire's isolation violation was NOT repeated",
+      "verdicts": {
+        "T3b": "REJECTED",
+        "T5": "REJECTED",
+        "T16": "delivered",
+        "T17": "ACCEPTED w/ 6 execution-blocking corrections"
+      },
+      "reviewer_catches": [
+        "T5: the precision-vs-scale ambiguity CHANGES MONEY - 189/560 grid configs diverge; a one-minor-unit error appears in period 5 and never heals. The shipped conformance vector cannot discriminate.",
+        "T5 + T3b INDEPENDENTLY, from different artefacts: allowFullTermForTranche is caller-settable and the guard at ProgressiveEMICalculator.java:142-144 never consults isMultiDisburseLoan() - refuting a 'dead field' claim used to drop an input from a frozen contract.",
+        "T3b: attempt 2's corrections leaked - fixed in the named sections, left wrong in the sections restating the same claims.",
+        "T3b: a 4th MoneyHelper fallback at ProgressiveEMICalculator.java:182 that the analysis's own list denies.",
+        "T17: 418/418 transcribed values verified literally present - zero synthesised vectors reached the plan.",
+        "T17: two [VERIFIED]-tagged supporting claims false, incl. FULL_LEAP_YEAR which has no absolute literal anywhere and was missing from the coverage map."
+      ],
+      "uat": "NOT RUN - conformance needs the reference oracle, which this fire could not reach. go build + go vet verified clean independently.",
+      "outcome": "Program blocked at gate G-1. Two artefacts rejected before they could be ratified; one accepted. No bar was lowered and no vector invented."
+    }
+  ],
   "database": {
     "engine": "PostgreSQL",
     "rule": "PostgreSQL is the ONLY database for every environment: the Fineract reference oracle, the Go module, vector capture, shadow/differential runs and CI. Fineract's shipped default is already Postgres [VERIFIED: fineract-provider/src/main/resources/application.properties -> org.postgresql.Driver, jdbc:postgresql://localhost:5432/fineract_tenants]. Bring the oracle up with the postgresql compose profile only.",
