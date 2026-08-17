@@ -180,6 +180,15 @@ Append between the markers in `.softhouse/patterns.md`:
 4. Commit `.softhouse/` and push.
 5. Report: tasks by executor, reviewer findings, verifier state, contexts at parity, backlog, patterns learned.
 
+## STEP 10 — Program continuation (do not stop at the run boundary)
+If `.softhouse/program.json` exists and `status == "active"`:
+1. Mark this run's context `done` (or `parked`, if UAT ended red after its retry — never `done` on red), set `run_id`, append the run to `program.history`.
+2. Advance `cursor` and **immediately hand control to `/softhouse-program`**, which plans and starts the next READY context in the same session if budget remains. Reaching the end of a run is not a reason to idle.
+3. If the token soft limit was hit, do the checkpoint protocol instead and stop cleanly — the scheduled fire calls `/softhouse-program`, which resumes.
+4. A pending `user` gate parks that context only. Move to the next READY context; never cross the gate.
+
+Without a `program.json`, a completed run still ends here.
+
 ## Error handling
 - Catastrophic agent failure → mark `failed`, continue independent tasks, **mark every dependent task `blocked`** with the blocking id in `note`.
 - >50% of tasks failed → abort and report.

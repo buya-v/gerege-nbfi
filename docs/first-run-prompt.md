@@ -39,7 +39,13 @@ Review the task graph it prints, then execute with `/softhouse resume`.
 
 ---
 
-## Follow-on runs (one `/softhouse-plan` each, after the prior run is green)
+## Superseded (17 Aug 2026): the follow-on runs are now driven automatically
+
+The scope was ratified as **the whole Fineract codebase**, and `/softhouse-program` now plans and starts the next context itself the moment a run goes terminal — see `.softhouse/program.json` (17 contexts, ~533k main LOC excl. the test corpus) and `.claude/skills/softhouse-program/SKILL.md`. A scheduled task fires the driver daily, so you no longer paste a prompt per run.
+
+The prompts below are kept as the reference wording for Runs 2–6 (Tier A) — useful if you want to plan one by hand, or to check what the driver generates. Tier B (savings/deposits, working-capital, investor, branch, origination, shares, collateral, clients/groups), Tier C (platform, map-first) and Tier D (test corpus → vectors) are in `program.json` rather than written out here.
+
+## Follow-on runs (reference wording — the driver now generates these)
 
 Plan these in strangler order — each ends at a `user` cutover gate, and each reuses the harness, the frozen contract, and the scheduler from Run 1.
 

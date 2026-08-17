@@ -24,11 +24,13 @@ Rules a worker agent must not violate. These get grepped against diffs during re
 - **Schema-first:** adopt/prune Fineract's PostgreSQL schema; a shared DB enables shadow/differential testing.
 - **Cutover is a `user` gate**, never an `agent` task — requires vectors passing + a clean shadow-parity window + regulatory/parallel-run sign-off.
 
-### Scope (new)
+### Scope (amended 17 August 2026 — full-codebase program)
 
-- **Minimum Portable Core only:** GL/accounting, loan product + schedule + lifecycle, charges/rates/tax, COB, provisioning/reporting. Port these.
-- **Do NOT port:** savings/deposits (SCC deposit-taking is prohibited — repurpose only tiny internal control-account logic), working-capital-loan, investor, branch — deferred; a requirement needing them surfaces a `user` task.
-- Much of `fineract-core` is platform plumbing (auth, tenancy, command bus) that Nexus already provides — map onto Nexus, do not port.
+- **The program target is the WHOLE Fineract codebase**, ported in tiers in strangler order. `.softhouse/program.json` is authoritative for the context list, tier, measured LOC, dependencies and per-context state. Tier 0 harness/PoC → Tier A money core → Tier B remaining business contexts (savings/deposits, working-capital-loan, investor, branch, loan-origination, shares, collateral, clients/groups) → Tier C platform → Tier D test corpus as vectors.
+- **Scope guard is per RUN, not per program.** One bounded context per run; a diff touching files outside the run context's `fineract_paths` is a rejection. "Everything is in scope eventually" is never a licence to widen a task.
+- **Tier C is map-first.** `fineract-core` and `fineract-provider/infrastructure` are largely plumbing (auth, tenancy, command bus, jobs) that Nexus already provides. Port only a demonstrated gap, and the handoff must say what Nexus lacks. An unjustified plumbing port is a rejection.
+- **Deposit-taking: port yes, activate no.** Savings/deposit code is portable and must ship **disabled by config**; enabling deposit-taking behavior in a live environment is a `user` licensing gate (FRC / Bank of Mongolia). The "never insured/protected/guaranteed" rule below is unchanged and applies to every string this code returns.
+- **Tier D is a vector source, not a port target.** Fineract's ~321k test LOC and the e2e suites are mined into golden vectors; do not port JUnit into Go tests one-for-one.
 
 ### Mongolia rules (inherited)
 

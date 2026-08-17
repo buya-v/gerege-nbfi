@@ -21,12 +21,19 @@ Grep diffs against these. Violating one is a rejection, not a discussion.
 - **Two time zones, no DST** — `Asia/Ulaanbaatar` (+08) and `Asia/Hovd` (+07). Never hard-code an offset.
 - **No US payment rails / vendors.** Mongolia: RTGS (Banksuljee) above MNT 5,000,000, ACH+ at or below, NETC for cards; threshold from config, never hard-coded. No Stripe/Plaid/Lithic/Persona.
 
-## Migration scope — Minimum Portable Core
+## Migration scope — the whole Fineract codebase, in tiers
 
-**Port:** GL/accounting, loan product + schedule + lifecycle, charges/rates/tax, COB, provisioning/reporting.
-**Do NOT port:** savings/deposits (deposit-taking prohibited for an SCC/NBFI — only tiny internal control-account logic), working-capital-loan, investor, branch (deferred). Much of `fineract-core` is plumbing Nexus already provides — map, don't port.
+**Ratified 17 August 2026 (supersedes the earlier "Minimum Portable Core only" scope).** The target is the **complete Fineract codebase** ported to Go behind the frozen adapter contract, worked in strangler order. Nothing is out of scope for *porting*; the tiers set the ORDER, and the gates below control what may be *switched on*.
 
-Proof-of-concept first port: `fineract-progressive-loan-embeddable-schedule-generator` (~182 LOC) against the golden-vector harness.
+Authoritative context inventory, LOC and per-context state: **`.softhouse/program.json`** (measured from the pinned Fineract checkout — ~544k main Java LOC, 5,317 files).
+
+- **Tier 0 — harness + PoC.** Golden-vector conformance rig, frozen contract DEC-1, `fineract-progressive-loan-embeddable-schedule-generator` (~182 LOC).
+- **Tier A — money core.** GL/accounting, loan product + schedule + lifecycle, charges/rates/tax, COB, provisioning/reporting.
+- **Tier B — remaining business contexts.** Savings/deposits, working-capital-loan, investor, branch, loan-origination, share accounts/products, collateral, clients/groups/collection sheet, transfers, funds. **Porting is in scope; see the activation gate below.**
+- **Tier C — platform.** `fineract-core`, `fineract-provider/infrastructure`, security, command bus, organisation, user administration, notification, documents, interoperation, batch, SPM, DB migrations. **Map onto Nexus first; port only the genuine gaps** — re-porting plumbing Nexus already provides is waste, and the reviewer treats an unjustified plumbing port as a rejection.
+- **Tier D — test corpus.** Fineract's ~321k test LOC and e2e suites are converted into golden vectors, not ported as tests.
+
+**Scope guard, still enforced per run:** one bounded context per run. A worker that wanders outside its assigned context's `fineract_paths` is a rejection. "All of Fineract is in scope" is a statement about the *program*, never about a single task.
 
 ## Blocking questions — `user` decision gates
 
@@ -34,10 +41,13 @@ Do not let an agent decide these; route as `executor: "user"`:
 - Any context CUTOVER from Fineract to the Go module.
 - Any change to a ratified DEC-n or the frozen adapter contract.
 - Regulatory acceptance / parallel-run sign-off (FRC, external audit).
+- **Deposit-taking ACTIVATION.** Porting `fineract-savings` / deposit code is in scope; **enabling deposit-taking behavior in any live environment is not**, until the FRC/Bank of Mongolia licensing position is signed off. Ported deposit code ships disabled by config, and the "never insured/protected/guaranteed" rule applies to every string it returns. This is a licensing gate on the *activation*, not a scope block on the *port*.
 
 ## How work is executed
 
 Via the `softhouse` pipeline (`/softhouse`, `/softhouse-plan`, `/softhouse-uat`) — parallel isolated-worktree agents, independent adversarial review that re-derives money math, golden-vector conformance vs the Fineract oracle, and a token-limit-aware scheduler that checkpoints and resumes. See `docs/softhouse-migration-pipeline.md` and `docs/agent-squad-delivery-and-scheduler.md`. Learned patterns and the full constraint list live in `.softhouse/patterns.md`.
+
+**The program does not stop at a run boundary.** `/softhouse-program` is the driver above `/softhouse`: it plans the next context from `.softhouse/program.json` the moment a run goes terminal, resumes after a token-limit checkpoint, and keeps advancing until every context is `done`. It **never** crosses a `user` gate — a pending gate parks that one context in `.softhouse/gates.md` and the driver moves to the next unblocked context instead of halting. A scheduled task fires it daily so the migration advances unattended. Stop conditions are exactly three: program complete, a `user` gate is the *only* remaining work, or the oracle is unreachable for vector work (analysis/spec tasks continue).
 
 ## Verification
 
