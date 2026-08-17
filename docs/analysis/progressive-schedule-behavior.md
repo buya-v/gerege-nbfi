@@ -6,11 +6,20 @@ dependency chain (`ProgressiveLoanScheduleGenerator` → `ProgressiveEMICalculat
 `/Users/buv/fineract`, commit `426a23544e8426a38ae43ae404670a0a7e85b9eb`. GL/accounting posting, COB, charges/
 rates/tax, provisioning, and any cutover plan are explicitly out of scope (see Backlog at the end).
 
-Every material claim below is tagged `[VERIFIED: /absolute/path:LINE]` against source actually read in this
-checkout, or `[UNVERIFIED: reason]` where it could not be traced. Several of the core money-path formulas (EMI,
-rate factor, per-period interest/principal split for periods 1–3) were independently re-derived by hand against
-`EmbeddableProgressiveLoanScheduleGeneratorTest.testGenerate()`'s golden expected values and matched to the cent
-— see §9.
+Every material claim below is tagged `[VERIFIED: /absolute/path:LINE]` against source **opened at that line in
+this checkout during this revision**, or `[UNVERIFIED: reason]` where it could not be traced. A `[VERIFIED]` tag
+may never carry a hedge inside it; if a claim was not re-read, it is `[UNVERIFIED]`. All 70 citations in this
+document were re-opened at their cited lines for **revision 2** (see the Correction log at the end).
+
+The whole money path (rate factors, `fn` recurrence, EMI, per-period split, residual absorption) and the whole
+date path (`plusMonths` + `adjustDate` re-anchoring) were re-derived independently in an exact-decimal emulator
+of `BigDecimal`+`MathContext` and reproduce `EmbeddableProgressiveLoanScheduleGeneratorTest.testGenerate()`
+digit for digit for all six periods — see §9.
+
+> **Revision 2 (post-review).** Revision 1 was rejected by independent review on four grounds: a factually wrong
+> month-end date rule, a real rounding step described as redundant, a false "day counts cancel to 1" claim, and
+> four citations that did not support their claim. All four are fixed below and recorded in the Correction log.
+> **Do not re-litigate those from revision 1's text.**
 
 ---
 
@@ -74,17 +83,33 @@ This is a first-class Go-port hazard — see §9.
 
 ### 2.1 Call chain from the embeddable entry point
 
+Two module paths recur below; they are written in full on first use and abbreviated afterwards **only** as the
+bare file name (never as `.../`, which hides which module a file lives in):
+
+- `PLSG` = `/Users/buv/fineract/fineract-progressive-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/ProgressiveLoanScheduleGenerator.java`
+- `PEMI` = `/Users/buv/fineract/fineract-progressive-loan/src/main/java/org/apache/fineract/portfolio/loanproduct/calc/ProgressiveEMICalculator.java`
+
+Note `ProgressiveLoanScheduleGenerator.java` lives in **`fineract-progressive-loan`**, not `fineract-loan`
+(where `DefaultScheduledDateGenerator.java`, `LoanApplicationTerms.java` and `LoanRepaymentScheduleModelData.java`
+live).
+
 `EmbeddableProgressiveLoanScheduleGenerator.generate(mc, modelData)` →
 `ProgressiveLoanScheduleGenerator.generate(mc, modelData)`
-`[VERIFIED: .../ProgressiveLoanScheduleGenerator.java:81-84]` (builds `LoanApplicationTerms.assembleFrom(modelData, mc)`
+`[VERIFIED: PLSG:81-84]` (builds `LoanApplicationTerms.assembleFrom(modelData, mc)`
 then calls the full `generate(mc, loanApplicationTerms, null, null)` overload) →
-main period loop `[VERIFIED: .../ProgressiveLoanScheduleGenerator.java:87-165]` → per-disbursement
-`emiCalculator.addDisbursement(...)` `[VERIFIED: .../ProgressiveEMICalculator.java:126-153]` →
-`calculateEMIValueAndRateFactors` → `calculateEMIValueAndRateFactorsForDecliningBalanceInterestMethod`
-`[VERIFIED: .../ProgressiveEMICalculator.java:718-751]` → `calculateEMIOnActualModel` (dispatcher)
-`[VERIFIED: .../ProgressiveEMICalculator.java:1674-1683]` →
-`calculateEMIOnActualModelWithDecliningBalanceInterestMethod`
-`[VERIFIED: .../ProgressiveEMICalculator.java:1722-1742]`.
+`generate(mc, loanApplicationTerms, loanCharges, holidayDetailDTO)` `[VERIFIED: PLSG:86-99]`, whose
+per-period loop is `[VERIFIED: PLSG:116-145]` → per-disbursement
+`emiCalculator.addDisbursement(...)` `[VERIFIED: PEMI:126-135]` (private overload `[VERIFIED: PEMI:137-153]`) →
+`calculateEMIValueAndRateFactors` (dispatcher on `InterestMethod`) `[VERIFIED: PEMI:718-728]` →
+`calculateEMIValueAndRateFactorsForDecliningBalanceInterestMethod` `[VERIFIED: PEMI:730-751]` →
+`calculateEMIOnActualModel` (dispatcher) `[VERIFIED: PEMI:1674-1683]` →
+`calculateEMIOnActualModelWithDecliningBalanceInterestMethod` `[VERIFIED: PEMI:1722-1742]`.
+
+Note the fixed post-order inside `:730-751`: `calculateRateFactorForPeriods` → `calculateOutstandingBalance` →
+`calculateEMIOnActualModel` → `applyPrincipalMoratoriumIfRequired` → `calculateOutstandingBalance` →
+`calculateLastUnpaidRepaymentPeriodEMI` (§6) → `checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods`
+`[VERIFIED: PEMI:737-750]`. A Go port must preserve this order; the two `calculateOutstandingBalance` passes
+are not redundant (the second one consumes the EMI just assigned).
 
 ### 2.2 The EMI formula, exactly as implemented
 
@@ -142,11 +167,42 @@ BigDecimal fnValue(final BigDecimal previousFnValue, final BigDecimal currentRat
 ```
 `[VERIFIED: ProgressiveEMICalculator.java:1822-1828, 1982-1993]`
 
-This is algebraically the standard amortization formula `P·i(1+i)^N / ((1+i)^N − 1)` generalized to
-per-period-varying rate factors (it reduces to that identity when all `r_i` are equal, via the geometric-series
-identity `Σr^k = (r^N−1)/(r−1)`, but **the code never computes the denominator that way** — it always uses the
-`fn` recurrence, which is what a Go port must replicate bit-for-bit, not the closed-form geometric sum, to avoid
-drift under time-varying rates, interest-rate changes, or interest-pause periods).
+#### The recurrence is NOT interchangeable with the closed form — at any precision
+
+Algebraically this is the standard amortization formula `P·i(1+i)^N / ((1+i)^N − 1)` generalized to
+per-period-varying rate factors: for constant `r`, `fn_N = Σ_{j=0}^{N-1} r^j = (r^N − 1)/(r − 1)`. **The code
+never computes the denominator that way** — it always uses the `fn` recurrence.
+
+The equivalence holds **only in exact arithmetic**. Under `MathContext(12, HALF_UP)`, with a *constant* rate,
+the golden test's own inputs already diverge — measured in the exact-decimal emulator (§9):
+
+| denominator `fn_6` | value | resulting raw EMI |
+|---|---|---|
+| recurrence, as Fineract computes it (`PEMI:1822-1828` + `:1991-1993`) | **`6.08818353993`** | **`17.0085937321`** |
+| closed form `(rateFactorPlus1N − 1)/(r − 1)`, reusing the already-computed `Π r_i` | `6.08818353806` | `17.0085937373` |
+| closed form `(r^6 − 1)/(r − 1)` with `r^6` via a single `pow` | `6.08818353978` | `17.0085937325` |
+| exact rational value (60-digit reference) | `6.088183539935125…` | — |
+
+They diverge at the **10th significant digit in the simplest possible case**, and the recurrence is the one that
+lands on the correctly-rounded value. All three happen to round to `EMI = 17.01` here; nothing guarantees that,
+and the residual-absorption step (§6) will *hide* small EMI drift on the last period while corrupting every
+earlier period's split.
+
+> **Go port requirement (mandatory, not advisory): implement the `fn` recurrence, iteratively, rounding to the
+> `MathContext` precision after each `multiply` and each `add`, in that order. Do not "optimise" it into a
+> closed-form geometric sum or a `pow`.** This is not only about time-varying rates, interest-rate changes or
+> interest-pause periods — it is wrong for constant rates too.
+
+Two further order-of-operations details a Go port must copy exactly:
+
+- **`getRateFactorPlus1()` adds the `1` with `BigDecimal::add` and NO `MathContext`** — that addition is
+  **exact**, not rounded to `mc` precision `[VERIFIED: /Users/buv/fineract/fineract-progressive-loan/src/main/java/org/apache/fineract/portfolio/loanproduct/calc/data/RepaymentPeriod.java:216-218]`.
+  With a 12-decimal-place rate factor `0.005833333333`, `r = 1.005833333333` carries **13** significant digits
+  into the next `multiply(…, mc)`. Rounding the `+1` to 12 significant digits instead (`1.00583333333`) changes
+  `fn_6` to `6.0881835399` and is wrong.
+- **`MathUtil.stripTrailingZeros` is a re-parse, not a no-op flag:** `new BigDecimal(value.stripTrailingZeros().toPlainString())`
+  `[VERIFIED: /Users/buv/fineract/fineract-core/src/main/java/org/apache/fineract/infrastructure/core/service/MathUtil.java:499-501]`,
+  applied to `rateFactorN` and `fnResult` before the final EMI division `[VERIFIED: PEMI:1725-1726]`.
 
 `getRateFactorPlus1ForEmi` substitutes `1` (i.e. a zero-rate factor) for any period flagged
 `isInterestPaymentGrace()` when `scheduleModel.isInterestPauseForEmiCalculationEnabled()`:
@@ -209,12 +265,51 @@ public void calculateRateFactorForRepaymentPeriod(final RepaymentPeriod repaymen
 ```
 `[VERIFIED: ProgressiveEMICalculator.java:636-644]`
 
-- `rateFactor` (from `calculateRateFactorPerPeriod`, `[VERIFIED: ProgressiveEMICalculator.java:1486-1540]`) feeds
+- `rateFactor` (from `calculateRateFactorPerPeriod`, `[VERIFIED: PEMI:1486-1540]`) feeds
   the **compounding EMI product** in §2.2.
 - `rateFactorTillPeriodDueDate` (from `calculateRateFactorPerPeriodForInterest`,
-  `[VERIFIED: ProgressiveEMICalculator.java:1355-1417]`) feeds the **actual booked interest** for the sub-period,
-  below. Structurally near-identical (same day-count dispatch tree, §4), but note it is a genuinely separate call
-  with its own dispatch, not a cached re-use of `rateFactor`.
+  `[VERIFIED: PEMI:1355-1417]`) feeds the **actual booked interest** for the sub-period,
+  below.
+
+**These two are NOT the same formula with different dates. They differ in the `repaymentEvery` slot, and that
+difference is load-bearing.** (Revision 1 called them "structurally near-identical"; that was wrong.)
+
+| | EMI rate factor (`calculateRateFactorPerPeriod`) | interest rate factor (`calculateRateFactorPerPeriodForInterest`) |
+|---|---|---|
+| `DAYS_30` dispatch | `calculateRateFactorPerPeriodBasedOnRepaymentFrequency(..., repaymentEvery, daysInMonth, ...)` — passes the **configured `repaymentEvery`** `[VERIFIED: PEMI:1536-1537]` | `calculateRateFactorPerPeriodBasedOnRepaymentFrequency(..., periodRatio, BigDecimal.valueOf(30), ...)` — passes a **computed `periodRatio`** `[VERIFIED: PEMI:1403-1413]` |
+| `daysInMonth` | `30` if `DAYS_30`, else `calculatedDaysInRepaymentPeriod` `[VERIFIED: PEMI:1508]` | hard-wired `BigDecimal.valueOf(30)` `[VERIFIED: PEMI:1413]` |
+| result type | always an integer multiplier | may be **fractional** `[VERIFIED: PEMI:1453-1454]` |
+
+`calculatePeriodRatio` `[VERIFIED: PEMI:1419-1459]` reconstructs "how many whole repayment-frequency units this
+repayment period spans, counted from a seed date", by:
+
+1. `calculateSeedDate` `[VERIFIED: PEMI:1461-1481]` — returns the schedule's own start date if stepping it a
+   whole number of months lands exactly on this period's `dueDate` *and* one step back lands exactly on its
+   `fromDate`; otherwise it degrades to the period's own `fromDate`.
+2. counting whole `ChronoUnit.MONTHS` from that seed to `fromDate` — **with an explicit month-end correction**:
+```java
+// In case target date is the last day of the month and the seed date day is later than the target date
+// day, we need to move it by 1 days
+if (targetDateLastDay == targetDateDay && seedDateDay > targetDateDay) {
+    yield DateUtils.getExactDifference(seedDate, repaymentPeriod.getFromDate().plusDays(1), chronoUnit);
+}
+```
+`[VERIFIED: PEMI:1425-1437]`
+3. walking `seedDate.plus(k, unit)` forward until it passes `dueDate`, then returning either the whole count
+   `[VERIFIED: PEMI:1457-1458]` or, if the period ends mid-unit, `wholeUnits + (daysToDue / daysInFullUnit)`
+   computed at `mc` precision `[VERIFIED: PEMI:1443-1455]`.
+
+**This month-end correction is not cosmetic.** Re-derived in the emulator (§9) for a 2026-01-31 disbursement,
+period 2 = `2026-02-28 → 2026-03-31`: with the `plusDays(1)` branch, `periodRatio = 1` (correct); with the
+branch removed, `periodRatio = 2` — i.e. **double interest** for that period. A Go port that reimplements only
+`calculateRateFactorPerPeriod` and reuses it for booked interest will be right on regular schedules and wrong
+on every month-end one.
+
+In a regular, non-stub monthly schedule `periodRatio` evaluates to exactly `repaymentEvery`, so the two rate
+factors coincide numerically (confirmed in the emulator for the golden test and for `ls-008`, `ls-009`, `ls-010`
+— all periods, `periodRatio = 1`). They can diverge wherever the period grid is not a clean multiple of the seed
+step: `fixedLength` overriding the final due date (§4.4), stub/irregular first periods, or a mid-period
+disbursement or rate change splitting the repayment period into several interest sub-periods.
 
 ### 3.2 Interest for a sub-period, from outstanding balance
 
@@ -241,8 +336,13 @@ i.e. for `DECLINING_BALANCE`:
 `getLength()` = `ChronoUnit.DAYS.between(fromDate, dueDate)` of the interest sub-period
 `[VERIFIED: InterestPeriod.java:160-162]`; `getLengthTillPeriodDueDate()` = days from the sub-period's `fromDate`
 to the *repayment period's* `dueDate` `[VERIFIED: InterestPeriod.java:164-166]`. In the common case (one interest
-period per repayment period, no mid-period disbursement/rate-change split) `length == lengthTillPeriodDueDate`, so
-the ratio collapses to `1` and `interest = outstandingBalance × rateFactorTillPeriodDueDate` exactly.
+period per repayment period, no mid-period disbursement/rate-change split) `length == lengthTillPeriodDueDate`.
+
+**But `divide(L, mc)` followed by `multiply(L, mc)` is two separately-rounded `MathContext` operations, and they
+are not mutually inverse.** They cancel *in exact arithmetic only*. Do not "simplify" this to
+`interest = outstandingBalance × rateFactorTillPeriodDueDate` in the Go port: reproduce the three operations, in
+this order, each rounded to `mc` precision. (In the golden test the two spellings agree to the cent for all six
+periods, but that is an accident of the numbers, not an identity — the same hazard as §4.2, which does bite.)
 
 Outstanding balance roll-forward for a `DECLINING_BALANCE` interest sub-period (`updateOutstandingLoanBalance`):
 for the **first** interest period of a repayment period, it pulls forward the previous repayment period's closing
@@ -366,18 +466,45 @@ calendar days of the whole repayment period) `[VERIFIED: ProgressiveEMICalculato
 `DateUtils.getDifferenceInDays` = `ChronoUnit.DAYS.between(...)`
 `[VERIFIED: /Users/buv/fineract/fineract-core/src/main/java/org/apache/fineract/infrastructure/core/service/DateUtils.java:319-321]`.
 
-In the ordinary case where the interest sub-period coincides exactly with the repayment period (no mid-period
-disbursement, rate change, or reschedule split), `actualDaysInPeriod == calculatedDaysInPeriod`, so that ratio is
-exactly `1` and the **real calendar-day counts cancel out**, leaving the pure fixed 30/360 result:
-`interestRate × 30 × repaymentEvery / 360`. Real calendar days only matter as a correction ratio for *partial*
-sub-periods (e.g. a disbursement or interest-rate change landing mid-repayment-period) — they never replace the
-30/360 constants in the default configuration.
+#### The calendar days do NOT "cancel to exactly 1" — the `setScale` step is what flattens them
 
-**A February with 28 days, or January with 31 days, is treated identically to any other month under `DAYS_30` —
-the calendar length of the specific month is irrelevant** when the sub-period spans a whole repayment period; the
-formula always uses the literal constant `30`. This is the classic banking "30/360" convention (specifically the
-30-fixed / 360-fixed variant, not 30E/360 or 30/360 US day-adjustment rules — no end-of-month day-shifting logic
-was found in `rateFactorByRepaymentPeriod` itself).
+In the ordinary case where the interest sub-period coincides exactly with the repayment period (no mid-period
+disbursement, rate change, or reschedule split), `actualDaysInPeriod == calculatedDaysInPeriod`. **In exact
+arithmetic that ratio is 1. In Fineract's arithmetic it is not**, because `multiply(actual, mc)` and
+`divide(calculated, mc)` are two separately-rounded operations and are not mutually inverse.
+
+Re-derived in the emulator (§9) for the golden test — same inputs, same convention, only the month length
+differs — the value **before** the final `setScale`:
+
+| period length | `interestRate × interestFractionPerPeriod` @mc | × actual, ÷ calculated @mc (pre-`setScale`) |
+|---|---|---|
+| 31 days | `0.00583333333333` | `0.00583333333332` |
+| 29 days | `0.00583333333333` | `0.00583333333334` |
+| 30 days | `0.00583333333333` | `0.00583333333333` |
+
+Three *different* values from identical inputs. What makes the six periods share one rate factor is the
+`.setScale(mc.getPrecision(), mc.getRoundingMode())` at `[VERIFIED: PEMI:1962]` — precision `12` used as a
+**decimal-place scale** — which truncates all three to `0.005833333333` (see §5.1). It is a rounding step, not a
+clamp, and it is the *only* reason the 30/360 convention behaves like a fixed convention here.
+
+> **Go port requirement:** reproduce `multiply(actual)` → `divide(calculated)` → `setScale(precision-as-scale)`
+> as three distinct rounded steps. Skipping the multiply/divide pair "because it's ×1" or skipping the
+> `setScale` "because it's redundant" both produce **month-varying rate factors under a supposedly fixed 30/360
+> convention**, which is exactly the bug this section exists to prevent.
+
+Subject to that: **a February with 28 days and a January with 31 days produce the same post-`setScale` rate
+factor under `DAYS_30`** — the calendar length of the month does not enter the numerator; the formula always
+uses the literal constant `30`. This is the classic banking "30/360" convention (specifically the 30-fixed /
+360-fixed variant, not 30E/360 or 30/360 US day-adjustment rules — no end-of-month day-shifting logic exists in
+`rateFactorByRepaymentPeriod` itself; the month-end logic lives in the *date generator* (§4.4) and in
+`calculatePeriodRatio` (§3.1)). Real calendar days matter as a genuine correction ratio only for *partial*
+sub-periods (a disbursement or rate change landing mid-repayment-period).
+
+**Corollary — the capture `MathContext` is not a free parameter.** Because `setScale` consumes
+`mc.getPrecision()` as a scale, changing the capture precision changes the intermediates non-trivially. At
+precision 19 the pre-`setScale` values are `0.005833333333333333332` / `…334` / `…333`, and `setScale(19)`
+happens to flatten them again — but that is luck, not design, and it is *not* guaranteed for other rates or
+period lengths. §8 therefore pins one `MathContext` for the whole vector matrix.
 
 ### 4.3 The `ACTUAL`/`ACTUAL` alternative (present in code, not the default)
 
@@ -400,29 +527,134 @@ overrides a computed `366` down to `365`/`366` depending on whether Feb-29 liter
 `[VERIFIED: ProgressiveEMICalculator.java:1342-1353]`; it is only reachable when `numberOfDays == 366`, which
 fixed `DAYS_360` never produces, so it's irrelevant to the default config.
 
-### 4.4 Period-boundary date generation (separate from day-count arithmetic)
+### 4.4 Period-boundary date generation — `plusMonths` **then a seed re-anchor**
 
-`DefaultScheduledDateGenerator.generateRepaymentPeriods` steps `repaymentPeriodNumber` from `1` to
-`numberOfRepayments`, each iteration computing the next due date via `startDate.plusMonths/plusWeeks/plusDays/
-plusYears(repaidEvery)` dispatched on `PeriodFrequencyType`
-`[VERIFIED: /Users/buv/fineract/fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/DefaultScheduledDateGenerator.java:50-75, 117-161, 311-333]`
-— this uses `java.time.LocalDate`'s native calendar arithmetic (which itself correctly clamps month-end
-overflow, e.g. `Jan 31 + 1 month = Feb 28/29`, per `LocalDate.plusMonths` semantics), independent of the
-`DaysInMonthType`/`DaysInYearType` day-count convention used for *interest* math above. `fixedLength` can override
-the final due date `[VERIFIED: DefaultScheduledDateGenerator.java:61-67]`.
+`DSDG` = `/Users/buv/fineract/fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/DefaultScheduledDateGenerator.java`.
+
+`generateRepaymentPeriods` steps `repaymentPeriodNumber` from `1` to `numberOfRepayments`, carrying
+`lastRepaymentDate` forward and calling `generateNextRepaymentDate` each iteration
+`[VERIFIED: DSDG:50-75]`. `fixedLength` can override the final due date `[VERIFIED: DSDG:61-67]`.
+
+`generateNextRepaymentDate` does **two** things, not one `[VERIFIED: DSDG:116-161]`:
+
+```java
+dueRepaymentPeriodDate = getRepaymentPeriodDate(loanApplicationTerms.getRepaymentPeriodFrequencyType(),
+        loanApplicationTerms.getRepaymentEvery(), lastRepaymentDate);          // :128-129  → plusMonths/Weeks/Days/Years
+dueRepaymentPeriodDate = (LocalDate) adjustDate(dueRepaymentPeriodDate,
+        loanApplicationTerms.getSeedDate(),
+        loanApplicationTerms.getRepaymentPeriodFrequencyType());                // :130-131  ← the re-anchor
+```
+`[VERIFIED: DSDG:128-131]`
+
+1. `getRepaymentPeriodDate` = plain `LocalDate.plusDays/plusWeeks/plusMonths/plusYears(repaidEvery)` dispatched
+   on `PeriodFrequencyType` `[VERIFIED: DSDG:311-333]` — Java's `plusMonths` clamps month-end overflow
+   (`Jan 31 + 1 month = Feb 28/29`).
+2. **`adjustDate` then re-anchors the clamped day back to the seed day-of-month** — the step revision 1 missed:
+```java
+private Temporal adjustDate(final Temporal date, final Temporal seedDate, final PeriodFrequencyType frequencyType) {
+    if (frequencyType.isMonthly() && seedDate.get(ChronoField.DAY_OF_MONTH) > 28 && date.get(ChronoField.DAY_OF_MONTH) >= 28) {
+        int noOfDaysInCurrentMonth = YearMonth.from(date).lengthOfMonth();
+        int seedDay = seedDate.get(ChronoField.DAY_OF_MONTH);
+        int adjustedDay = Math.min(noOfDaysInCurrentMonth, seedDay);
+        return date.with(ChronoField.DAY_OF_MONTH, adjustedDay);
+    }
+    return date;
+}
+```
+`[VERIFIED: DSDG:168-176]`
+
+**The rule, stated for a Go implementer:**
+
+> `next = last.plusMonths(repaymentEvery)` (with Java clamping). **Then**, if the frequency is `MONTHS`
+> (`PeriodFrequencyType.isMonthly()` is `this.equals(MONTHS)` — weeks/days/years are untouched
+> `[VERIFIED: /Users/buv/fineract/fineract-core/src/main/java/org/apache/fineract/portfolio/common/domain/PeriodFrequencyType.java:70-72]`)
+> **and** `seedDate.dayOfMonth > 28` **and** `next.dayOfMonth >= 28`, set
+> `next.dayOfMonth = min(lengthOfMonth(next), seedDate.dayOfMonth)`.
+>
+> `seedDate` is the **disbursement date** — `assembleFrom` sets `seedDate = modelData.disbursementDate()`, falling
+> back to `scheduleGenerationStartDate()` only when the disbursement date is null
+> `[VERIFIED: /Users/buv/fineract/fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/LoanApplicationTerms.java:583-589]`,
+> passed to the Builder at `[VERIFIED: LoanApplicationTerms.java:602]` and stored at
+> `[VERIFIED: LoanApplicationTerms.java:324]`. **The seed never advances** — every period re-anchors to the
+> original disbursement day-of-month, so the day-of-month cannot drift.
+>
+> The rule applies **from period 1**: the `isFirstRepayment` shortcut at `[VERIFIED: DSDG:119-122]` only fires
+> when `getCalculatedRepaymentsStartingFromLocalDate()` is non-null, and the Builder used by
+> `assembleFrom(modelData, mc)` has **no** `calculatedRepaymentsStartingFromDate` setter (the field is assigned
+> only in the unrelated non-Builder constructor at `[VERIFIED: LoanApplicationTerms.java:803]`), so it is `null`
+> on this path.
+
+**Worked consequences (re-derived independently, §9):**
+
+| disbursement (seed) | due dates Fineract actually produces | days per period | term (days) |
+|---|---|---|---|
+| 2026-01-31, 6 × MONTHS (`ls-008`) | 02-28, **03-31**, **04-30**, **05-31**, **06-30**, **07-31** | 28, 31, 30, 31, 30, 31 | **181** |
+| 2027-11-30, 6 × MONTHS (`ls-010`) | 12-30, 01-30, 02-29, **03-30**, **04-30**, **05-30** | 30, 31, 30, 30, 31, 30 | **182** |
+| 2028-02-29, 12 × MONTHS (`ls-009`) | 03-29 … 2029-01-29, 2029-02-28 | 29,31,30,31,30,31,31,30,31,30,31,30 | 365 |
+| 2024-01-01, 6 × MONTHS (golden test) | 02-01 … 07-01 | 31,29,31,30,31,30 | 182 |
+
+Revision 1 asserted the opposite — that `2026-01-31 + 1M → 2026-02-28`, then `→ 2026-03-28`, "because `LocalDate`
+does not remember the original day-of-month". **That is wrong.** Fineract does remember it, in `seedDate`. The
+naive semantics would give `02-28, 03-28, 04-28, 05-28, 06-28, 07-28` and a **178**-day term for `ls-008`.
+
+Two more consequences worth pinning:
+
+- **`ls-009` (seed day 29) cannot detect this bug** — `min(lengthOfMonth, 29)` equals the `plusMonths` clamp in
+  every month, so both semantics agree. Neither can the shipped golden test (seed day 1, the `> 28` guard never
+  fires). **`ls-008` and `ls-010` are the rows that catch it**; a suite without them passes while being wrong on
+  every month-end loan.
+- **The schedule's start date is `scheduleGenerationStartDate`, but the seed is `disbursementDate`.**
+  `ProgressiveLoanScheduleGenerator` computes
+  `periodStartDate = RepaymentStartDateType.DISBURSEMENT_DATE.equals(getRepaymentStartDateType()) ? expectedDisbursementDate : submittedOnDate`
+  `[VERIFIED: PLSG:94-96]`, and `repaymentStartDateType` has **no Builder setter** on the `assembleFrom(modelData, mc)`
+  path (the field is a bare Lombok `@Getter` at `[VERIFIED: LoanApplicationTerms.java:278-279]`, and the Builder
+  exposes no setter for it — the complete setter list is `[VERIFIED: LoanApplicationTerms.java:393-577]`), so it is `null`, `equals(null)` is
+  `false`, and `periodStartDate = submittedOnDate = modelData.scheduleGenerationStartDate()`
+  `[VERIFIED: LoanApplicationTerms.java:602]`.
+  If `scheduleGenerationStartDate != disbursementDate`, period 1 starts on the former while the month-end
+  re-anchor uses the latter's day-of-month. The golden test sets both to 2024-01-01
+  `[VERIFIED: /Users/buv/fineract/fineract-progressive-loan-embeddable-schedule-generator/src/test/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/EmbeddableProgressiveLoanScheduleGeneratorTest.java:48-49]`
+  and therefore cannot distinguish them. §8 pins them equal for every row and adds one row that deliberately
+  separates them.
 
 ---
 
 ## 5. Rounding
 
-### 5.1 Two rounding layers, by construction
+### 5.1 Three rounding layers, by construction
 
 1. **Intermediate `BigDecimal` arithmetic** (rate factors, `fn`, `rateFactorPlus1N`, raw EMI value) — every
    `.multiply(..., mc)` / `.divide(..., mc)` in §2–§4 uses the single caller-supplied `MathContext` (precision +
-   `RoundingMode` both from that one object) — `[VERIFIED: ProgressiveEMICalculator.java:1950-1963, 1838-1841,
-   1816-1828]` and the `.setScale(mc.getPrecision(), mc.getRoundingMode())` redundant clamp at the end of every
-   rate-factor leaf `[VERIFIED: ProgressiveEMICalculator.java:1962-1963, 1979-1980]`.
-2. **Final currency-scale rounding** — happens exactly once, inside `Money`'s private constructor, whenever a raw
+   `RoundingMode` both from that one object) — `[VERIFIED: PEMI:1950-1963, 1838-1841, 1816-1828]`. Precision here
+   means **significant digits**.
+2. **A precision-as-scale truncation at every rate-factor leaf.** ⚠️ **This is a real, value-changing rounding
+   step. Revision 1 called it a "redundant clamp"; that was wrong and a Go port built on that description will
+   diverge.**
+```java
+return interestRate.multiply(interestFractionPerPeriod, mc).multiply(actualDaysInPeriod, mc)
+        .divide(calculatedDaysInPeriod, mc).setScale(mc.getPrecision(), mc.getRoundingMode());
+```
+   `[VERIFIED: PEMI:1959-1962]`, and identically in the partial-period leaf `[VERIFIED: PEMI:1976-1979]`.
+
+   `mc.getPrecision()` is a count of **significant digits**; `BigDecimal.setScale(n, …)` takes **decimal
+   places**. Fineract feeds the precision straight into the scale slot. For a rate factor of magnitude 10⁻³, 12
+   significant digits *is* 14 decimal places, so `setScale(12, HALF_UP)` **removes two digits from every rate
+   factor**:
+
+   | | value |
+   |---|---|
+   | after `.divide(calculatedDaysInPeriod, mc)` | `0.00583333333332` (14 dp, 12 sig) |
+   | after `.setScale(12, HALF_UP)` | `0.005833333333` (12 dp, 10 sig) |
+
+   Its effects: it is what collapses the three month-length-dependent pre-values of §4.2 onto one number, and it
+   is what makes the resulting `r = 1 + rateFactor` a 13-significant-digit value feeding §2.2.
+
+   > **Go port requirement:** at each rate-factor leaf, after the divide, round to **`precision` decimal places**
+   > (not significant digits) using the same `RoundingMode`. Do not skip it, do not merge it into the
+   > divide's rounding, and do not "fix" the precision/scale confusion — reproducing the oracle means
+   > reproducing this.
+
+3. **Final currency-scale rounding** — happens exactly once, inside `Money`'s private constructor, whenever a raw
    `BigDecimal` is wrapped into a `Money`:
 ```java
 private Money(final CurrencyData currency, final BigDecimal amount, final MathContext mc) {
@@ -467,23 +699,74 @@ public static MathContext getMathContext() {
 }
 ```
 `[VERIFIED: MoneyHelper.java:35, 74-82, 91-94]` — `RoundingMode` is populated per-tenant at startup via
-`initializeTenantRoundingMode(tenantIdentifier, roundingModeValue)` (an int `0-6` mapped to `RoundingMode.valueOf`)
-`[VERIFIED: MoneyHelper.java:54-65]` and **is not hard-coded in this class**; calling `getRoundingMode()`/
-`getMathContext()` before tenant initialization throws `IllegalStateException`.
-`[UNVERIFIED: the actual production default RoundingMode value passed into `initializeTenantRoundingMode` at
-platform bootstrap — lives in tenant/DB config outside this module, not traced.]`
+`initializeTenantRoundingMode(tenantIdentifier, roundingModeValue)` (an int `0-6` validated then mapped by
+`RoundingMode.valueOf(int)` `[VERIFIED: MoneyHelper.java:182-189]`) `[VERIFIED: MoneyHelper.java:54-65]` and **is
+not hard-coded in this class**; calling `getRoundingMode()`/`getMathContext()` before tenant initialization throws
+`IllegalStateException`.
 
-**Go-port-relevant consequence:** the embeddable generator is documented as Spring-free
-`[VERIFIED: EmbeddableProgressiveLoanScheduleGenerator.java:38-43]`, but there is exactly one path where it still
-transitively reaches the tenant-scoped `MoneyHelper` — see §5.3.
+#### The hosted-platform default IS traceable, and it is **not** `HALF_UP`
+
+Revision 1 marked this `[UNVERIFIED]`. It is reachable in this checkout; chased and resolved:
+
+`MoneyHelperStartupInitializationService.afterPropertiesSet()` initializes every tenant on
+`ApplicationReadyEvent` `[VERIFIED: /Users/buv/fineract/fineract-core/src/main/java/org/apache/fineract/infrastructure/configuration/service/MoneyHelperStartupInitializationService.java:50-71]`
+→ `MoneyHelperInitializationService.initializeTenantRoundingMode(tenant)`
+`[VERIFIED: /Users/buv/fineract/fineract-core/src/main/java/org/apache/fineract/infrastructure/configuration/service/MoneyHelperInitializationService.java:57-80]`
+→ `getRoundingModeFromConfiguration()`, which reads the global configuration row named
+`GlobalConfigurationConstants.ROUNDING_MODE` = `"rounding-mode"`
+`[VERIFIED: MoneyHelperInitializationService.java:102-106]`,
+`[VERIFIED: /Users/buv/fineract/fineract-core/src/main/java/org/apache/fineract/infrastructure/configuration/api/GlobalConfigurationConstants.java:41]`.
+
+That row is seeded by Liquibase from the parameter `${fineract.tenant.rounding-mode}`
+`[VERIFIED: /Users/buv/fineract/fineract-provider/src/main/resources/db/changelog/tenant/parts/0002_initial_data.xml:219-220]`,
+wired to `spring.liquibase.parameters.fineract.tenant.rounding-mode=${fineract.tenant.config.rounding-mode}`
+`[VERIFIED: /Users/buv/fineract/fineract-provider/src/main/resources/application.properties:514]`, whose default is
+`fineract.tenant.config.rounding-mode=${FINERACT_CONFIG_ROUNDING_MODE:6}`
+`[VERIFIED: /Users/buv/fineract/fineract-provider/src/main/resources/application.properties:77]`.
+
+`RoundingMode.valueOf(6)` is the legacy `BigDecimal.ROUND_HALF_EVEN` ordinal — confirmed by Fineract's own seed
+comment `0 - UP, 1 - DOWN, 2 - CEILING, 3 - FLOOR, 4 - HALF_UP, 5 - HALF_DOWN, 6 - HALF_EVEN`
+`[VERIFIED: /Users/buv/fineract/fineract-provider/src/main/resources/sql/migrations/sample_data/barebones_db.sql:295]`.
+
+> **So the hosted Fineract default is `MathContext(19, HALF_EVEN)`, while the embeddable unit test and the CI
+> smoke test both pass `MathContext(12, HALF_UP)`.** These are different rounding regimes and they will produce
+> different vectors on ties. **Which one the reference-oracle capture pins is a `user` decision** (it drives every
+> golden vector and, downstream, the Go port's rounding mode) — see §8 and the Backlog. Do not let it default
+> implicitly.
+
+**Go-port-relevant consequence:** the embeddable generator wires its collaborators by hand — no Spring
+annotations, no injection, a plain no-arg constructor building `DefaultScheduledDateGenerator`,
+`ProgressiveEMICalculator` and a `NoopInterestScheduleModelRepositoryWrapper`
+`[VERIFIED: /Users/buv/fineract/fineract-progressive-loan-embeddable-schedule-generator/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/EmbeddableProgressiveLoanScheduleGenerator.java:38-43]`.
+(Revision 1 cited these lines for the claim that the class is "*documented* as Spring-free" — there is no javadoc
+anywhere in that file; the citation supported a claim it could not support. The structural claim above is what
+those lines do support.)
+
+It is **not** `MoneyHelper`-free, however. There are at least **three** paths by which this supposedly
+self-contained generator can still reach the tenant-scoped `MoneyHelper`:
+
+1. `Money.of(currency, amount)` — the **2-arg** overload — is `of(currency, amount, MoneyHelper.getMathContext())`
+   `[VERIFIED: Money.java:102-104]`; likewise 2-arg `Money.zero` `[VERIFIED: Money.java:118-120, 130-132]`.
+2. `roundToMultiplesOf(BigDecimal, Integer)` hard-wires `MoneyHelper.getRoundingMode()` with no `mc` in sight
+   `[VERIFIED: Money.java:150-157]` — and it is called from `Money`'s **own private constructor** at
+   `[VERIFIED: Money.java:48-51]` whenever the currency has `decimalPlaces == 0` and a positive `inMultiplesOf`.
+3. `Money.getMc()` silently substitutes the tenant context when the instance's `mc` is null:
+   `return mc != null ? mc : MoneyHelper.getMathContext();` `[VERIFIED: Money.java:494-496]` — and `getMc()` is
+   what the currency-scale `setScale` in the constructor uses `[VERIFIED: Money.java:52]`, plus ~15 convenience
+   arithmetic overloads (`plus`, `minus`, `add`, `dividedBy`, `multipliedBy`, `isZero`, …)
+   `[VERIFIED: Money.java:237, 250, 270, 282, 294, 306, 356-357, 361, 381, 419, 443, 455, 468, 479, 487]`.
+
+Revision 1 said there was "exactly one path". That was false. See §5.3 for the one that actually fires in this
+call chain.
 
 ### 5.3 `installmentAmountInMultiplesOf` rounding — two call sites, two different `MathContext` sources
 
-- **Down payment** (`ProgressiveLoanScheduleGenerator.java`) uses the **3-arg** `Money.roundToMultiplesOf`
+- **Down payment** (`PLSG`) uses the **3-arg** `Money.roundToMultiplesOf`
   overload with the explicit threaded `mc`:
   `Money.roundToMultiplesOf(downPaymentAmount, loanApplicationTerms.getInstallmentAmountInMultiplesOf(), mc)`
-  `[VERIFIED: ProgressiveLoanScheduleGenerator.java:336-337]`.
-- **EMI** (`ProgressiveEMICalculator.java`) uses the **2-arg** overload, which silently falls back to
+  `[VERIFIED: PLSG:335-338]` (and the same 3-arg call for the down payment held on
+  `LoanApplicationTerms` itself `[VERIFIED: LoanApplicationTerms.java:333-335]`).
+- **EMI** (`PEMI`) uses the **2-arg** overload, which silently falls back to
   `MoneyHelper.getMathContext()` (the tenant-global mode) instead of the model's own `mc`:
 ```java
 private Money safeRoundingForEMI(final Money unRoundedEMI, final Integer multiplesOf) {
@@ -492,22 +775,40 @@ private Money safeRoundingForEMI(final Money unRoundedEMI, final Integer multipl
     return roundedEMI;
 }
 ```
-`[VERIFIED: ProgressiveEMICalculator.java:1761-1776]`
+`[VERIFIED: PEMI:1770-1776]`, reached from `applyInstallmentAmountInMultiplesOf` `[VERIFIED: PEMI:1761-1766]`.
 
-Both variants of `roundToMultiplesOf` do the same arithmetic — `amountScaled.divide(inMultiplesOfValue, 0,
-mc.getRoundingMode()).multiply(inMultiplesOfValue)` — i.e. round to the **nearest** multiple under whatever
-`RoundingMode` is in force (not simply "always up" or "always down")
-`[VERIFIED: Money.java:150-170]`. The `safeRoundingForEMI` fallback guard means a positive EMI is never rounded
-down to zero even if `multiplesOf` exceeds it.
+**There are three overloads, and they do NOT do the same arithmetic.** Revision 1 said "both variants … use
+`mc.getRoundingMode()`"; that was wrong:
+
+| overload | rounding source for the `divide` | final wrap |
+|---|---|---|
+| `roundToMultiplesOf(BigDecimal, Integer)` `[VERIFIED: Money.java:150-157]` | **`MoneyHelper.getRoundingMode()`** — hard-wired, no `mc` parameter exists | returns a bare `BigDecimal` |
+| `roundToMultiplesOf(Money, Integer)` `[VERIFIED: Money.java:159-161]` | delegates to the 3-arg with `MoneyHelper.getMathContext()` | — |
+| `roundToMultiplesOf(Money, Integer, MathContext)` `[VERIFIED: Money.java:163-170]` | `mc.getRoundingMode()` | **`Money.of(currencyData, amountScaled)`** — the **2-arg** `of`, i.e. `MoneyHelper.getMathContext()` again `[VERIFIED: Money.java:102-104]` |
+
+So even the "explicit `mc`" down-payment path lands in `MoneyHelper` for its final currency-scale rounding. There
+is also a **`double`** overload `roundToMultiplesOf(double, Integer)` `[VERIFIED: Money.java:134-148]` — it is not
+on this call path, but it must never be the model for the Go port (see §9 item 10).
+
+The shared shape of the `BigDecimal`/`Money` overloads is `amountScaled.divide(inMultiplesOfValue, 0,
+<someRoundingMode>).multiply(inMultiplesOfValue)` — i.e. round to the **nearest** multiple under whatever
+`RoundingMode` is in force (not "always up" or "always down"). The `safeRoundingForEMI` fallback guard means a
+positive EMI is never rounded down to zero even if `multiplesOf` exceeds it.
 
 **This is a real parity risk for the Go port and for golden-vector capture:** if `installmentAmountInMultiplesOf`
 is set and the embeddable generator is invoked outside an initialized Fineract tenant context, EMI-multiples
 rounding throws `IllegalStateException` from `MoneyHelper`. The shipped unit test avoids this entirely by setting
 `installmentAmountInMultiplesOf = null`
 `[VERIFIED: EmbeddableProgressiveLoanScheduleGeneratorTest.java:60]`. Any golden-vector case that exercises
-`installmentAmountInMultiplesOf` must therefore either avoid it, or the oracle-capture harness must initialize a
-`MoneyHelper` tenant with a known `RoundingMode` first — otherwise EMI rounding and down-payment rounding could
-silently diverge in mode even when both notionally use "the same" `MathContext`.
+`installmentAmountInMultiplesOf` must therefore either avoid it, or the reference-oracle capture harness must
+initialize a `MoneyHelper` tenant with a known `RoundingMode` first — otherwise EMI rounding and down-payment
+rounding could silently diverge in mode even when both notionally use "the same" `MathContext`. Because the
+`Money` constructor itself calls `getMc()` (§5.2 path 3), this hazard is **not** limited to
+`installmentAmountInMultiplesOf`: any `Money` built without an explicit `mc` inherits the tenant context.
+
+> **`user` gate.** Which `MathContext` is canonical for EMI-multiples rounding — the threaded `mc` or
+> `MoneyHelper`'s tenant-global one — is a behavioural choice, not an implementation detail. It must be decided
+> and recorded before any vector row uses `installmentAmountInMultiplesOf`, not silently picked in the port.
 
 ### 5.4 `CurrencyData.decimalPlaces`
 
@@ -547,9 +848,19 @@ Money adjustedEmi = repaymentPeriod.getEmi().add(diff, mc);
 ...
 repaymentPeriod.setEmi(adjustedEmi);
 ```
-`[VERIFIED: /Users/buv/fineract/fineract-progressive-loan/src/main/java/org/apache/fineract/portfolio/loanproduct/calc/ProgressiveEMICalculator.java:1160-1219]` (the guard clauses around this snippet are at lines
-1162-1174, 1178-1181, 1206-1215 — a floor so the adjustment never drops the period's EMI below its already-paid
-principal+interest, recursing once if the floor is hit).
+`[VERIFIED: PEMI:1160-1219]`.
+
+**The code around this snippet is not "guard clauses"** (revision 1's description). Three of the four surrounding
+blocks actively mutate EMI:
+
+| lines | what it actually is |
+|---|---|
+| `[VERIFIED: PEMI:1162-1174]` | **An active EMI-reduction pass, run before anything else.** For *every* period whose `getOutstandingPrincipal()` exceeds `totalDuePrincipal − totalPaidPrincipal`, it subtracts the excess from that period's EMI (`rp.setEmi(rp.getEmi().minus(delta))`), then floors the result at `minimumEMI = paidInterest + paidPrincipal`. Inert for a fresh single-disbursement schedule; not inert after payments. |
+| `[VERIFIED: PEMI:1176-1181]` | Selection, plus a fallback: if no unpaid period exists *and* nothing has been paid, fall back to the last period provided it has interest periods and a positive outstanding balance. |
+| `[VERIFIED: PEMI:1206-1209]` | A floor specific to `fixedInterest`: if the period carries fixed interest and the adjusted EMI would fall below `paidPrincipal + fixedInterest`, raise it to that. |
+| `[VERIFIED: PEMI:1211-1215]` | A floor at `totalPaidAmount − totalCreditedAmount`, and **re-entrant**: hitting it calls `calculateLastUnpaidRepaymentPeriodEMI` again (unbounded recursion in principle; it terminates because the floor is idempotent once applied). |
+
+A Go port must implement `:1162-1174` as an EMI-mutating pass, not skip it as validation.
 
 **Mechanically: `diff` is a single running-total residual (plain `Money`/`BigDecimal` subtraction of cumulative
 sums), and it is added *entirely* onto the last unpaid period's EMI — not redistributed proportionally across
@@ -561,11 +872,14 @@ accumulated across the earlier periods. This method is invoked after every princ
 in `ProgressiveEMICalculator.java`), always as the last step, so it is the single, unconditional zeroing mechanism
 for the whole schedule, not merely a last-period special case invoked only once at generation time.
 
+For the golden test this is exactly the `−0.01` re-derived in §9: `100.00 + 2.05 − (6 × 17.01 = 102.06) = −0.01`,
+landed wholly on period 6, taking its EMI from `17.01` to `17.00` and its principal to `16.90`.
+
 A related but distinct mechanism, `checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods`
-`[VERIFIED: ProgressiveEMICalculator.java:1258-1309]`, re-levels EMI across a set of not-yet-due periods to keep
-them equal after certain events, iterating up to 3 times (`adjustCounter <= 3`, line 1308); it always calls
-`calculateLastUnpaidRepaymentPeriodEMI` again afterward (line ~1288 area), so exact zeroing always ultimately
-happens in the mechanism quoted above, never in the leveling step itself.
+`[VERIFIED: PEMI:1258-1309]`, re-levels EMI across a set of not-yet-due periods to keep
+them equal after certain events, iterating up to 3 times (`adjustCounter <= 3` `[VERIFIED: PEMI:1308]`); it always
+calls `calculateLastUnpaidRepaymentPeriodEMI` again inside the loop `[VERIFIED: PEMI:1288]`, so exact zeroing
+always ultimately happens in the mechanism quoted above, never in the leveling step itself.
 
 ---
 
@@ -589,18 +903,19 @@ last period, which is worth an explicit golden-vector row (see §8, `ls-003`/`ls
 ### 7.2 Multi-disbursement (tranche)
 
 Tranche machinery exists in `ProgressiveLoanScheduleGenerator`/`ProgressiveEMICalculator`
-(`processDisbursements` iterates a `disbursementDataList`
-`[VERIFIED: ProgressiveLoanScheduleGenerator.java:294-353]`, a post-loop tranche pass runs when
-`isMultiDisburseLoan()` `[VERIFIED: ProgressiveLoanScheduleGenerator.java:147-150]`, and
-`addFullTermTrancheDisbursement` re-amortizes over the full remaining term when
-`isAllowFullTermForTranche()` `[VERIFIED: ProgressiveEMICalculator.java:142-174]`), but it is **not reachable
+(`processDisbursements` iterates a `disbursementDataList` `[VERIFIED: PLSG:294-353]`, a post-loop tranche pass
+runs when `isMultiDisburseLoan()` `[VERIFIED: PLSG:147-150]`, and
+`addFullTermTrancheDisbursement` re-amortizes over the full remaining term when `isAllowFullTermForTranche()`
+`[VERIFIED: PEMI:142-144, 155-174]`), but it is **not reachable
 from `LoanRepaymentScheduleModelData`**: that record has only single `disbursementAmount`/`disbursementDate`
-fields (§1.2, no list), `LoanApplicationTerms.assembleFrom(modelData, mc)` always sets an empty
-`disbursementDatas()` list `[VERIFIED: /Users/buv/fineract/fineract-loan/.../LoanApplicationTerms.java:600 — cited
-by upstream research agent, not independently re-read in this session]`, and `isMultiDisburseLoan()` defaults to
-`false` for any `LoanApplicationTerms` built via the `Builder`-based `assembleFrom(modelData, mc)` path used here
-(no setter for it on that `Builder`). **Multi-disbursement is genuinely out of scope for the embeddable
-single-disbursement generator** — do not build a golden-vector row for it against this entry point.
+fields (§1.2, no list), and `LoanApplicationTerms.assembleFrom(modelData, mc)` always sets an empty
+`disbursementDatas()` list — `.inArrearsTolerance(Money.zero(modelData.currency(), mc)).disbursementDatas(new ArrayList<>())`
+`[VERIFIED: LoanApplicationTerms.java:600]`. Stronger: `multiDisburseLoan` has **no Builder setter at all** (the
+complete setter list is `[VERIFIED: LoanApplicationTerms.java:393-577]`; the field is assigned only in the
+non-Builder constructor `[VERIFIED: LoanApplicationTerms.java:812]`), so `isMultiDisburseLoan()`
+`[VERIFIED: LoanApplicationTerms.java:1774-1776]` is `false` on this path. **Multi-disbursement is genuinely out
+of scope for the embeddable single-disbursement generator** — do not build a golden-vector row for it against
+this entry point.
 
 ### 7.3 Principal that does not divide evenly by the term
 

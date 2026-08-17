@@ -45,7 +45,7 @@
       ],
       "status": "in_progress",
       "attempts": 2,
-      "note": "REJECTED by T3 on attempt 1; single retry dispatched at opus per policy.retry_model. Reviewer re-derivation CONFIRMED EMI=17.01 and splits p1 16.43/0.58, p2 16.52/0.49, p3 16.62/0.39, and strengthened the recurrence claim (recurrence 6.08818353993 vs closed-form 6.08818353806 — NOT bit-equal, so the Go port must implement the recurrence). REJECTED on: (1) month-end stepping refuted by DefaultScheduledDateGenerator.adjustDate:168-176 (re-anchors to seed day; ls-008 is 02-28,03-31,04-30,05-31,06-30,07-31, term 181d not 178d); (2) setScale(mc.getPrecision(),..) mis-described as a redundant clamp when it feeds precision into the scale slot and truncates every rate factor; (3) 'calendar days cancel to exactly 1' false at BigDecimal level; (4) 4 of 24 spot-checked citations did not support their claims."
+      "note": "REJECTED by T3 on attempt 1; single retry dispatched at opus per policy.retry_model. Reviewer re-derivation CONFIRMED EMI=17.01 and splits p1 16.43/0.58, p2 16.52/0.49, p3 16.62/0.39, and strengthened the recurrence claim (recurrence 6.08818353993 vs closed-form 6.08818353806 — NOT bit-equal, so the Go port must implement the recurrence). REJECTED on: (1) month-end stepping refuted by DefaultScheduledDateGenerator.adjustDate:168-176 (re-anchors to seed day; ls-008 is 02-28,03-31,04-30,05-31,06-30,07-31, term 181d not 178d); (2) setScale(mc.getPrecision(),..) mis-described as a redundant clamp when it feeds precision into the scale slot and truncates every rate factor; (3) 'calendar days cancel to exactly 1' false at BigDecimal level; (4) 4 of 24 spot-checked citations did not support their claims. | Attempt-2 deliverable landed 19:53:50 (81763 bytes, 5 [UNVERIFIED] remaining) but the fire exited without committing it or re-reviewing it; committed by hand 19:56. NOT yet re-reviewed against the T3 verdict. Retry ran on opus (the model field below still reads sonnet — stale). | isolation_violation: worker spawned with isolation NONE in the main working tree; no softhouse/* branch exists, so branch-based handoff and `git diff main..<branch>` scope checks were unavailable this run."
     },
     {
       "id": "T3",
@@ -64,7 +64,7 @@
       ],
       "status": "done",
       "attempts": 1,
-      "note": "DONE 2026-08-17. Verdict REJECTED. Independently re-derived EMI + all 6 periods and matched the shipped golden test; caught 3 rejection-grade money-path defects and 4 bad citations. Review: .softhouse/reviews/T3-progressive-schedule-behavior-review.md"
+      "note": "DONE 2026-08-17. Verdict REJECTED. Independently re-derived EMI + all 6 periods and matched the shipped golden test; caught 3 rejection-grade money-path defects and 4 bad citations. Review: .softhouse/reviews/T3-progressive-schedule-behavior-review.md | isolation_violation: worker spawned with isolation NONE in the main working tree; no softhouse/* branch exists, so branch-based handoff and `git diff main..<branch>` scope checks were unavailable this run."
     },
     {
       "id": "T4",
@@ -84,7 +84,7 @@
       ],
       "status": "done",
       "attempts": 1,
-      "note": "DONE 2026-08-17. DEC-1 DRAFT + contract.go (534 lines) + nexus/go.mod (module github.com/gerege/nexus). Orchestrator verified after installing Go 1.23.4: go build ./... OK, go vet ./... OK, and a comment-stripped known-bad scan PASSES (no float32/float64/big.Float, no first_name/last_name, no insured/guaranteed, no FixedZone or hard-coded +07/+08 in executable code). Money int64 minor units; rates exact integer rational Rate{Num,Den} not basis points; rounding expressed as Rounding{IntermediatePrecisionDigits,Mode} instead of a Java MathContext."
+      "note": "DONE 2026-08-17. DEC-1 DRAFT + contract.go (534 lines) + nexus/go.mod (module github.com/gerege/nexus). Orchestrator verified after installing Go 1.23.4: go build ./... OK, go vet ./... OK, and a comment-stripped known-bad scan PASSES (no float32/float64/big.Float, no first_name/last_name, no insured/guaranteed, no FixedZone or hard-coded +07/+08 in executable code). Money int64 minor units; rates exact integer rational Rate{Num,Den} not basis points; rounding expressed as Rounding{IntermediatePrecisionDigits,Mode} instead of a Java MathContext. | isolation_violation: worker spawned with isolation NONE in the main working tree; no softhouse/* branch exists, so branch-based handoff and `git diff main..<branch>` scope checks were unavailable this run."
     },
     {
       "id": "T5",

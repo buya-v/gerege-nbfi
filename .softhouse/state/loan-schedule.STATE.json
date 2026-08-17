@@ -1,0 +1,16 @@
+{
+  "squad": "loan-schedule",
+  "context": "tier0-harness-schedule-poc",
+  "run_id": "2026-08-17-run1-harness-schedule-poc",
+  "current_item": "T2 retry deliverable landed; awaiting re-review, then T5",
+  "step": "T2 attempt 2 wrote docs/analysis/progressive-schedule-behavior.md (81763 bytes, 19:53:50). T3 had REJECTED attempt 1 on 3 money-path defects; the corrected document has NOT been re-reviewed.",
+  "branch": "main (ISOLATION VIOLATION — every worker this fire ran with isolation NONE in the main tree; no softhouse/* branch exists)",
+  "next_action": "Re-review the corrected T2 document against the T3 review at .softhouse/reviews/T3-progressive-schedule-behavior-review.md (confirm the 3 rejection grounds are fixed and the 4 bad citations corrected), then dispatch T5 (independent review of DEC-1).",
+  "blocked_on": null,
+  "open_questions": [
+    "DEC-1 defines IntermediatePrecisionDigits as SIGNIFICANT DIGITS, but T3 found Fineract's setScale(mc.getPrecision(), ...) truncates rate factors at a fixed SCALE. T5 must settle this against source — a significant-digits/scale mismatch passes review and then fails bit-exact parity.",
+    "T2 attempt 2 still carries 5 [UNVERIFIED] markers — T3's brief rejects any [UNVERIFIED] claim in a money path."
+  ],
+  "gate_pending": "T6 — ratify DEC-1 (blocks T7, T8, T10)",
+  "last_checkpoint": "2026-08-17T11:56:00Z — reconstructed BY HAND: the fire exited rc=0 without running the checkpoint protocol"
+}
