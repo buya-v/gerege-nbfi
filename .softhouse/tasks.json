@@ -43,9 +43,9 @@
       "dependencies": [
         "T1"
       ],
-      "status": "done",
-      "attempts": 1,
-      "note": "DONE 2026-08-17. docs/analysis/progressive-schedule-behavior.md: EMI via RECURRENCE (not closed form), 30/360 day count, BigDecimal intermediates at caller MathContext (prec 12 HALF_UP in test / 19 in prod), currency rounding once per Money.of(). 16-row vector matrix ls-001..ls-016. 3 declared [UNVERIFIED] items. Awaiting T3 re-derivation review."
+      "status": "in_progress",
+      "attempts": 2,
+      "note": "REJECTED by T3 on attempt 1; single retry dispatched at opus per policy.retry_model. Reviewer re-derivation CONFIRMED EMI=17.01 and splits p1 16.43/0.58, p2 16.52/0.49, p3 16.62/0.39, and strengthened the recurrence claim (recurrence 6.08818353993 vs closed-form 6.08818353806 — NOT bit-equal, so the Go port must implement the recurrence). REJECTED on: (1) month-end stepping refuted by DefaultScheduledDateGenerator.adjustDate:168-176 (re-anchors to seed day; ls-008 is 02-28,03-31,04-30,05-31,06-30,07-31, term 181d not 178d); (2) setScale(mc.getPrecision(),..) mis-described as a redundant clamp when it feeds precision into the scale slot and truncates every rate factor; (3) 'calendar days cancel to exactly 1' false at BigDecimal level; (4) 4 of 24 spot-checked citations did not support their claims."
     },
     {
       "id": "T3",
@@ -62,9 +62,9 @@
       "dependencies": [
         "T2"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "Paired independent reviewer for T2 — mandatory."
+      "note": "DONE 2026-08-17. Verdict REJECTED. Independently re-derived EMI + all 6 periods and matched the shipped golden test; caught 3 rejection-grade money-path defects and 4 bad citations. Review: .softhouse/reviews/T3-progressive-schedule-behavior-review.md"
     },
     {
       "id": "T4",
@@ -104,7 +104,7 @@
       ],
       "status": "pending",
       "attempts": 0,
-      "note": "Contract is the boundary — reviewed before the user gate."
+      "note": "Contract is the boundary — reviewed before the user gate. | MUST review DEC-1 against the CORRECTED T2 document (attempt 1 was rejected; T4 drafted against the uncorrected version — check specifically that the day-count/rounding policy fields survive the T3 corrections)."
     },
     {
       "id": "T6",
