@@ -82,9 +82,9 @@
       "dependencies": [
         "T2"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "opus — ratified DEC-n touching schedule math."
+      "note": "DONE 2026-08-17. DEC-1 DRAFT + contract.go (534 lines) + nexus/go.mod (module github.com/gerege/nexus). Orchestrator verified after installing Go 1.23.4: go build ./... OK, go vet ./... OK, and a comment-stripped known-bad scan PASSES (no float32/float64/big.Float, no first_name/last_name, no insured/guaranteed, no FixedZone or hard-coded +07/+08 in executable code). Money int64 minor units; rates exact integer rational Rate{Num,Den} not basis points; rounding expressed as Rounding{IntermediatePrecisionDigits,Mode} instead of a Java MathContext."
     },
     {
       "id": "T5",
@@ -104,7 +104,7 @@
       ],
       "status": "pending",
       "attempts": 0,
-      "note": "Contract is the boundary — reviewed before the user gate. | MUST review DEC-1 against the CORRECTED T2 document (attempt 1 was rejected; T4 drafted against the uncorrected version — check specifically that the day-count/rounding policy fields survive the T3 corrections)."
+      "note": "Contract is the boundary — reviewed before the user gate. | MUST review DEC-1 against the CORRECTED T2 document (attempt 1 was rejected; T4 drafted against the uncorrected version — check specifically that the day-count/rounding policy fields survive the T3 corrections). || ORCHESTRATOR FLAG for the T5 reviewer: DEC-1 defines IntermediatePrecisionDigits as SIGNIFICANT DECIMAL DIGITS, but T3 found Fineract's setScale(mc.getPrecision(),..) feeds precision into the SCALE slot (decimal places), truncating rate factors. Significant-digits vs scale is a possible contract defect that would break bit-exact parity — T5 must settle it against source."
     },
     {
       "id": "T6",
