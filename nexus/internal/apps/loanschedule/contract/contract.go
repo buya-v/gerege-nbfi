@@ -242,11 +242,23 @@ const (
 	// calculateRateFactorPerPeriodBasedOnRepaymentFrequency, whose per-frequency
 	// switch (:1602-1610) handles DAYS, WEEKS and MONTHS and throws
 	// UnsupportedOperationException for anything else — so FrequencyYears under
-	// DayCountFixed30Over360 throws. The ACTUAL arm at :1534-1535 NEVER reaches
-	// that dispatch: it calls rateFactorByRepaymentPeriod directly, and
+	// DayCountFixed30Over360 throws. NEITHER ACTUAL path reaches that dispatch
+	// (revision 3 named the wrong arm here; corrected in revision 4, P1-T26-1):
+	// for an ANNUAL period, partialPeriodCalculationNeeded (:1505-1507) requires
+	// daysInYearType == ACTUAL && numberOfYearsDifferenceInPeriod > 0, and an
+	// annual period ALWAYS crosses a calendar-year boundary, so the method
+	// returns at :1526-1531 through rateFactorByRepaymentPartialPeriod and the
+	// switch at :1533 is never evaluated. The case ACTUAL arm at :1534-1535 —
+	// which calls rateFactorByRepaymentPeriod directly — is UNREACHABLE for
+	// FrequencyYears, and is reached only for sub-annual periods that stay
+	// within one calendar year. This is consistent with what DayCountActualActual
+	// says below. Either way
 	// DefaultScheduledDateGenerator.getRepaymentPeriodDate (:311-333) handles
-	// case YEARS with plusYears, so the schedule generates. Observed on the
-	// pinned oracle, MNT 1,200,000, 3 annual installments, 21.6%:
+	// case YEARS with plusYears, so the schedule generates. The conclusion is
+	// unaffected — only the arm cited was wrong — but note that the observation
+	// below therefore came out of the cross-year partial-period arm, which DEC-1
+	// section 8 item 5 names as the largest un-re-derived hole in the evidence.
+	// Observed on the pinned oracle, MNT 1,200,000, 3 annual installments, 21.6%:
 	// DayCountFixed30Over360 throws "Invalid repayment frequency"; DayCountActualActual
 	// returns a complete schedule (loan term 1096 days, total interest 551,982.62).
 	//
@@ -468,7 +480,9 @@ type Rounding struct {
 	//	SignificantDigits 19: period 5 principal 4,531,420.26, interest 1,082,346.52,
 	//	                      outstanding 65,674,840.82, total interest 13,393,481.04
 	//
-	// seventeen per-period divergences that never heal.
+	// ALL EIGHTEEN per-period rows diverge, and never heal. (Revision 3 and
+	// earlier said "seventeen"; the committed capture files show every one of the
+	// 18 repayment rows differing — corrected in revision 4, P1-T26-3.)
 	//
 	// There is NO principal size below which this is safe. The oracle's own
 	// 12-vs-19 pair diverges at a principal of 4.00 on a 36-period 16.8% shape
@@ -630,7 +644,6 @@ type Disbursement struct {
 //	Rounding.RateFactorScale          == 19
 //	Rounding.Mode                     == RoundingHalfUp
 //	len(Disbursements)                == 1
-//	NumberOfRepayments                >= 1
 //	RepaymentEvery                    == 1
 //	RepaymentFrequencyUnit            == FrequencyMonths
 //	InterestMethod                    == InterestMethodDecliningBalance
@@ -638,6 +651,17 @@ type Disbursement struct {
 //	DownPaymentPercentage             == Rate{0, 1}
 //	InstallmentRoundingMultipleMinor  == 0
 //	ScheduleStartDate <= Disbursements[0].Date < the last repayment DueDate
+//
+// NumberOfRepayments >= 1 was listed here in revision 3 and is NOT a
+// graded-domain predicate (revision 4, P2-T26-1): it is a WELL-FORMEDNESS
+// condition, so NumberOfRepayments < 1 is ErrInvalidRequest, which by the
+// precedence rule on the error variables below wins over any graded-domain
+// refusal. This list and the one in DEC-1 section 3.1 are now identical.
+// NumberOfRepayments == 1 is well formed and inside the graded domain; note
+// that the EMI re-adjust loop (see Period) cannot fire on a one-period
+// schedule, because getEmiAdjustment's scan requires idx > 0
+// (ProgressiveEMICalculator.java:1779) and the degenerate branch at :1788
+// yields a zero emiDifference.
 //
 // The last predicate is SEMANTIC, not a static field comparison (added in
 // revision 3, P0-2). The last repayment due date is derived from
@@ -795,8 +819,9 @@ type GenerateRequest struct {
 	Disbursements []Disbursement
 
 	// NumberOfRepayments is the count of repayment installments in the loan
-	// term. It must be >= 1. A down-payment period, if any, is not counted
-	// here.
+	// term. It must be >= 1; a value below 1 is not well formed and is
+	// ErrInvalidRequest, not a graded-domain refusal (revision 4, P2-T26-1). A
+	// down-payment period, if any, is not counted here.
 	NumberOfRepayments int32
 
 	// RepaymentEvery is the step multiplier: a repayment falls due every
@@ -1018,14 +1043,131 @@ const (
 // failure this contract exists to prevent. Reproducing the loop is therefore a
 // conformance obligation, not backlog.
 //
+// ## What the loop DOES (normative; revision 4, P0-T26-1)
+//
+// Revision 3 stated only WHEN the loop fires. That is not enough to determine
+// money: two loop bodies consistent with everything revision 3 said return
+// different installments on the majority of in-graded-domain shapes where the
+// guard fires. The body is therefore specified here, step by step, each step
+// with its source. All quantities are int64 MINOR UNITS. n is the number of
+// related repayment periods, which inside the graded domain is
+// NumberOfRepayments (ProgressiveLoanInterestScheduleModel.java:191-194).
+// rows is the schedule as it stands after the level installment and the
+// final-period residual have been applied; rows[i].emi is period i's
+// installment, 0-based.
+//
+//	adjustCounter := 1                                        // :1262
+//	loop {                          // do { … } while (adjustCounter <= 3)  :1265, :1307-1308
+//
+//	  // 1. The pair the adjustment is measured on.       :1266 -> :1778-1785
+//	  //    getEmiAdjustment scans from the END for the last ADJACENT pair in
+//	  //    which NEITHER period is fully paid. Nothing is paid on a schedule
+//	  //    this contract generates, so that pair is (n-2, n-1).
+//	  if n < 2 { break }        // the scan at :1779 requires idx > 0, so n == 1
+//	                            // falls to the degenerate branch :1788, whose
+//	                            // emiDifference is copy(0.0) == 0
+//	  original      := rows[n-2].emi        // the PENULTIMATE installment  :1781, :1784
+//	  emiDifference := rows[n-1].emi - original                 // SIGNED   :1783
+//
+//	  // 2. Guard — ALL THREE conjuncts.    :1267-1269, EmiAdjustment.java:31-36
+//	  lowerHalf := n / 2                    // integer division = floor(n/2)  EmiAdjustment.java:32
+//	  if !( lowerHalf > 0                                     // EmiAdjustment.java:33
+//	        && emiDifference != 0                             // EmiAdjustment.java:33
+//	        && abs(emiDifference)*100 > lowerHalf*10^MinorUnitDigits ) {  // :34-35
+//	      break
+//	  }
+//
+//	  // 3. Adjustment magnitude.   EmiAdjustment.java:38-40, Money.java:352-358, :52
+//	  uncountablePeriods := count(i : rows[i].totalPaid > original)   // :2027-2031
+//	                            // == 0 on every schedule this contract generates
+//	  d := max(1, n - uncountablePeriods)   // == n in the graded domain  EmiAdjustment.java:39
+//	  adjustment := emiDifference / d, rounded to a whole minor unit under Rounding.Mode
+//	             //  = sign(emiDifference) * (2*abs(emiDifference) + d) / (2*d)
+//	             //    [integer division; HALF_UP = nearest, ties away from zero]
+//
+//	  // 4. Candidate level installment.               EmiAdjustment.java:42-44
+//	  adjusted := original + adjustment
+//	  adjusted  = applyInstallmentAmountInMultiplesOf(adjusted)  // :1270 -> :1761-1766;
+//	                            // the IDENTITY inside the graded domain, where
+//	                            // InstallmentRoundingMultipleMinor is 0
+//
+//	  // 5. Break when the candidate is not a change.               :1271-1273
+//	  if adjusted == original { break }
+//
+//	  // 6. TRIAL schedule, built on a copy — never in place.       :1274-1288
+//	  //    Every related period's installment is overwritten with `adjusted`
+//	  //    (:1279-1286 — inside the graded domain that is ALL n periods),
+//	  //    balances are recomputed (:1287), and the final-period residual is
+//	  //    re-applied (:1288 -> :1160-1219).
+//	  trial := split(principal, rateFactors, level = adjusted)
+//	  applyFinalPeriodResidual(trial)
+//
+//	  // 7. ADOPTION TEST — strict; failure DISCARDS the trial.     :1289-1291,
+//	  //                                             EmiAdjustment.java:46-48
+//	  newDifference := trial[n-1].emi - trial[n-2].emi
+//	  if !( abs(newDifference) < abs(emiDifference) ) { break }  // keep rows UNCHANGED
+//
+//	  // 8. Adopt, then bound the iteration.                        :1293-1306
+//	  rows = trial
+//	  adjustCounter++
+//	  if adjustCounter > 3 { break }                               // :1307-1308
+//	}
+//
+// Seven things an implementation can get wrong while still satisfying every
+// sentence of revision 3:
+//
+//  1. THE DIVISOR IS n, NOT 1. The gap is spread across all related periods
+//     (EmiAdjustment.java:39), so the level installment moves by roughly 1/n of
+//     it per iteration; it does NOT absorb the whole gap. uncountablePeriods is
+//     a payment-history term (ProgressiveEMICalculator.java:2027-2031),
+//     identically zero here, written into the rule so the rule stays true when
+//     payment history enters the contract.
+//  2. THE ADJUSTMENT IS ROUNDED TO A WHOLE MINOR UNIT, AND IS SIGNED.
+//     Money.dividedBy(long) (Money.java:352-358) divides at the threaded
+//     MathContext and the Money constructor then re-scales to the currency's
+//     decimal places under the same mode (Money.java:52). The integer form above
+//     reproduces both steps for every amount this contract can express: the
+//     quotient is a rational with denominator d <= n, so it either sits exactly
+//     on a half-minor-unit boundary (both forms then round away from zero under
+//     HALF_UP) or lies at least 1/(2n) of a minor unit from one — far outside the
+//     SignificantDigits-19 intermediate error for any |emiDifference| below
+//     10^17/n minor units. The form is written for HALF_UP, the only mode in the
+//     graded domain. dividedBy also short-circuits at d == 1 (Money.java:353-355),
+//     which the integer form matches.
+//  3. THE TRIAL IS A REBUILD, NOT A PATCH. Every related period gets the
+//     candidate installment and the whole schedule is recomputed from it —
+//     balances (:1287), then the residual (:1288). Moving the level installment
+//     and leaving the per-period split alone is wrong.
+//  4. THE ADOPTION TEST IS STRICT AND ITS FAILURE DISCARDS. hasLessEmiDifference
+//     is |newDiff| < |oldDiff| (EmiAdjustment.java:46-48); equality is NOT
+//     adoption. On failure the loop breaks at :1290 BEFORE the copy-back at
+//     :1293-1305, so the live schedule keeps its PRE-TRIAL values. This single
+//     omission changes the money returned on most shapes where the guard fires.
+//  5. break MEANS STOP. All four exits — degenerate pair, guard, no-change,
+//     failed adoption — terminate the loop; none skips to the next iteration.
+//  6. AT MOST THREE ITERATIONS, AND THE COUNTER ADVANCES ONLY ON ADOPTION.
+//     adjustCounter starts at 1 (:1262), is incremented only after a trial is
+//     adopted (:1307), and is tested by while (adjustCounter <= 3) at :1308.
+//  7. THE ONLY STATE CARRIED BETWEEN ITERATIONS IS rows. The oracle reuses one
+//     deep copy (:1274-1276) and copies adopted values back (:1293-1306), so the
+//     two models agree at the top of every iteration; inside the graded domain
+//     the trial is fully determined by (principal, rateFactors, adjusted), and no
+//     port needs the copy machinery.
+//
+// SPECIFIED BUT UNGRADED. No Run-1 capture trips the guard, and none separates
+// the adoption test, so conformance cannot yet detect a wrong body. No
+// conformance PASS for this context may be read as evidence that a port
+// implements this rule; see the capture obligation in DEC-1 section 8 item 3/3a.
+//
 // EXACT-INTEGER ARITHMETIC, NEVER A FLOAT. Math.floor(n/2.0) and the
 // BigDecimal.valueOf(double) inside Money.copy(double) operate on values that
 // are always exact small integers (floor(n/2) and 0.0). A Go port reproduces
 // the guard with integer arithmetic — n/2 in int, compared as
 // |lastEMI - penultimateEMI| * 100 > floor(n/2) * 10^MinorUnitDigits in int64
-// minor units. The doubles in the Java source are an artefact of the reference
-// implementation and MUST NOT be reproduced as float32/float64 here; a float on
-// a money path is a non-negotiable rejection.
+// minor units — and every step of the body above is stated in whole minor units
+// for the same reason. The doubles in the Java source are an artefact of the
+// reference implementation and MUST NOT be reproduced as float32/float64/
+// big.Float here; a float on a money path is a non-negotiable rejection.
 type Period struct {
 	// Kind discriminates this row. See PeriodKind.
 	Kind PeriodKind
