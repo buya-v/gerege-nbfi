@@ -655,7 +655,7 @@
     },
     {
       "id": "T31",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -670,11 +670,11 @@
         ".softhouse/reviews/t31-probe/",
         ".softhouse/handoff/"
       ],
-      "note": "Raised and dispatched by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T31-dec1-v5-corrections. Needs no live oracle. Required to prove the fix DISCRIMINATES: its spec-check must reproduce all 13 committed observations AND show that both wrong readings T29 found (textbook balance x rateFactor, and n = NumberOfRepayments) now FAIL against the corrected text - a spec that cannot tell the wrong answer from the right one has not been fixed. Must also widen ADR §8's vector binding from two items to four (3b separates the interest round-trip, 3c a later-disbursement guard-tripping shape), still bound to conformance PASS and cutover rather than to ratification."
+      "note": "Delivered by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T31-dec1-v5-corrections (cc3abb7), merged to main. DEC-1 bumped to revision v5. Both T29 P0s FIXED. P0-T29-1: new normative definition of RELATED REPAYMENT PERIODS in both artefacts - n = relatedRepaymentPeriods.size(), equal to NumberOfRepayments IFF the disbursement is strictly inside period 1; step 6's 'ALL n periods' deleted, step 3's uncountablePeriods scoped to the related list, the :191-194 citation corrected to :195-197. P0-T29-2: new ADR §4.3.2 plus a matching normative section on Period plus a §9 obligation clause (a)-(h) covering base amount, the exact-zero short circuit, the THREE separately mc-rounded operations in order, interest-period segmentation, sum-then-money, cap, balancing principal, clamped roll-forward and exact-decimal-never-float. P1s and the P2 applied; ADR §8's vector binding widened to 3, 3a, 3b, 3c, still gating conformance PASS and cutover rather than ratification. VALIDATION - the part that matters: t31_spec_check.py transcribes revision 5's own text and (A) reproduces 13/13 committed observations digit-for-digit including Q0b, (B1) shows both wrong-n arms now FAIL 3/3, (B2) shows the textbook balance x rateFactor reading now FAILS 3/3. Orchestrator re-ran it independently: SPEC CHECK PASSES. CONTROL, and this is the finding to remember: n-alone and textbook each still reproduce 13/13, which is exactly why the corpus is blind to both P0s - but revision 4's reading IN FULL is caught at 12/13 by Q0b, so half of P0-T29-1 was already refuted by a committed observation nobody had checked against it. T31 also caught that its worktree was one commit behind main and REBASED rather than silently reverting the driver's gates.md and tasks.json. No regression of P0-2/P0-3; T28's loop steps and ~20 citations preserved verbatim - T31 changed what the loop is PARAMETERISED BY, not its steps. NEW UNGRADED SHAPE RECORDED: a disbursement dated strictly inside a repayment period, the only in-graded-domain shape producing two non-degenerate interest periods in one repayment period - admissible under §3.1, covered by no committed observation and no probe in this program. NOT ratified - T32 decides."
     },
     {
       "id": "T32",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -687,7 +687,7 @@
         ".softhouse/reviews/",
         ".softhouse/handoff/"
       ],
-      "note": "Raised by cloud catch-up fire cloud-20260818-2000. G-1 closes ONLY via T31 -> T32 CLEAN -> driver ratifies under standing policy P-2. NOTE THE PATTERN, which the next reviewer should be told: three consecutive independent re-reviews (T23, T26, T29) have each found NEW P0s in areas the previous review did not examine, and in every case the committed corpus passed BOTH the right and the wrong reading. The contract is converging - T29 verified the whole of T28's loop spec exactly - but 'the last reviewer found nothing here' has not yet been evidence of correctness in this document."
+      "note": "Raised by cloud catch-up fire cloud-20260818-2000. G-1 closes ONLY via T31 -> T32 CLEAN -> driver ratifies under standing policy P-2. NOTE THE PATTERN, which the next reviewer should be told: three consecutive independent re-reviews (T23, T26, T29) have each found NEW P0s in areas the previous review did not examine, and in every case the committed corpus passed BOTH the right and the wrong reading. The contract is converging - T29 verified the whole of T28's loop spec exactly - but 'the last reviewer found nothing here' has not yet been evidence of correctness in this document. || Dispatched by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T32-dec1-v5-rereview. Told the three-consecutive-P0 pattern explicitly, told that T31's spec-check shares an author with revision 5's text so a shared misreading could pass its own check, and pointed at the highest-yield unexamined surface - period/date generation and the month-end re-anchor, the down-payment path, the balance roll-forward and its zero clamp, multi-interest-period segmentation, and above all T31's new strictly-inside-a-period shape."
     }
   ]
 }
