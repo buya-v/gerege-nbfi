@@ -154,3 +154,47 @@ about multi-disbursement behaviour; or show the tenant rounding mode is safe to 
    API against PostgreSQL. That is a materially larger capture rig than Tier 0 assumed.
 2. DEC-1 must state explicitly, for every input in its domain, whether the *seam* honours it — an input the
    contract exposes but the grading path ignores is unconformance-testable by construction.
+
+---
+
+# CORRECTIONS — imposed by the T19 independent audit
+
+`.softhouse/reviews/T19-capture-pass2-audit.md`, verdict **ACCEPTED WITH REQUIRED CHANGES**. The audit
+re-ran `Capture2.java` unmodified in the pinned image and got byte-identical output, so **everything this
+report observed is sound**. What follows are errors in the *reasoning*, not in the numbers. They are
+recorded here rather than silently edited away, because the report was cited in `.softhouse/gates.md`.
+
+**1. Finding 2's headline argument was wrong.** This report claimed "a 100-unit loan whose `17.01` EMI
+could not survive rounding to multiples of 100 unchanged". It can, by design:
+`ProgressiveEMICalculator.safeRoundingForEMI` (`:1770-1776`) returns the **unrounded** EMI when rounding
+would zero it, and `roundToMultiplesOf(17.01, 100) = 0.00` (verified at runtime). Two of the four evidence
+rows in Finding 2 are therefore **non-probative**. The conclusion survives on the other two — `T-IM1-he`
+(`17.01` → `17.00`, which would have moved) and the MNT pair (`320,221.91` → `320,200.00`).
+
+**2. "Wiring ruled out — supplied through both available channels" was wrong.** `CurrencyData.inMultiplesOf`
+is gated on `decimalPlaces == 0` (`Money.java:48-51`) and this harness hard-codes `2`, so that channel was
+**structurally inert** and corroborates nothing. At `decimalPlaces = 0` it *does* move the schedule
+(`763,994` → `764,100`), so this report's "uncapturable through this seam" is **too broad as written**.
+
+**3. The "server path honours it" citations were misattributed** — they point at the **cumulative**
+generator, not the **progressive** one being ported.
+
+**4. Finding 1's warrant was weaker than it needed to be.** The claim that `allowFullTermForTranche` takes a
+different code path should rest on the direct source branch at `ProgressiveEMICalculator.java:142-144`,
+not on inference from pass 1's exception. The exception's actual cause is `Money.zero(CurrencyData)` at
+`:182`.
+
+**5. A SECOND silently dropped input, which this report missed.** `daysInYearCustomStrategy` **is** read by
+`assembleFrom` (`:604`) — so it passes this report's "sole component never read" test — but the
+`Builder` **copy-constructor** (`:304-351`) never copies it out. Reflective read returns `null`, and a
+leap-year differential confirms `FULL_LEAP_YEAR` == `FEB_29_PERIOD_ONLY` == `null`. **This reframes the
+defect from one field to a class**: an unchecked, hand-maintained builder copy. The seam accepts a
+19-component contract and honours **17**.
+
+**6. None of pass 2 is a parity vector.** All 13 captures ran at `MathContext(12, HALF_UP)`; production is
+`(19, HALF_UP)`. This report did not say so substantively. **Already remediated** — capture **pass 3**
+(`PASS3-REPORT.md`) re-captured at production settings later the same fire.
+
+**What the audit strengthened.** The core conclusion is no longer inferred from a null result: the auditor
+assembled `LoanApplicationTerms` through the seam's own overload and read the field reflectively as `null`.
+That is stronger evidence than this report offered.
