@@ -1,0 +1,8 @@
+{
+  "holder": "cloud-routine",
+  "fire": "cloud-20260818-2000",
+  "started_at": "2026-08-18T12:35:00Z",
+  "host": "claude-code-remote-sandbox",
+  "oracle": "UNREACHABLE from cloud sandbox (expected)",
+  "note": "Catch-up fire. Local fire 20260818-200001 exited cleanly and released its lock at ca256c6."
+}
