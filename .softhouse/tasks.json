@@ -535,9 +535,9 @@
       "dependencies": [
         "T23"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 0,
-      "note": "Raised fire 20260818-173900 from T23's P0 list. NEXT FIRE'S FIRST TASK. Needs the reference oracle - P0-1 and P0-3 both turn on observed behaviour, and P0-1 explicitly requires capturing vectors that trip the re-adjust loop, which the corpus currently cannot. Sequence to close G-1: T24 -> re-review (raise T25) -> driver ratifies under P-2. || DISPATCHED fire 20260818-200001: opus worker, isolation=worktree, oracle REACHABLE (verified this fire: actuator/health UP, postgres:18.3 container healthy). Branch softhouse/T24-dec1-v3-p0-corrections. Runs CONCURRENTLY with T25, which owns .softhouse/capture/ - T24 must not edit files under .softhouse/capture/."
+      "note": "Delivered by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T24-dec1-v3-p0-corrections (92b2f77), merged to main. DEC-1 bumped to revision v3; all three T23 P0s applied. CORRECTION TO THE PRIOR FIRE'S PREMISE: T24 did NOT need the live oracle. T23 P0-1 requires re-scoping BACKLOG item 8.3 to 'vectors that trip the guard inside the graded domain' - it does not require capturing them now. Every figure cited was already observed and committed by T23 under .softhouse/reviews/t23-probe/; revision 3 introduces no new oracle value. Verified independently by the orchestrator: scope clean (docs/adr + contract.go + handoff only), refuted sentence struck, loop now in ADR §9 obligation list and in contract.go outside a pinned-to-zero field doc, go build + go vet + gofmt clean, no float in money paths, no prohibited DB token. NOT ratified - T26 decides."
     },
     {
       "id": "T25",
@@ -555,9 +555,9 @@
         "T21",
         "T22"
       ],
-      "status": "in_progress",
+      "status": "done_partial",
       "attempts": 0,
-      "note": "Raised fire 20260818-173900 from the T21 and T22 P0 lists. Contract-independent: corrects RAW observed capture and its provenance, stores nothing contract-shaped, so it may run while G-1 is open. Needs the reference oracle for the re-runs. Until this lands NO capture may be promoted to the vector store - the eleven (19, HALF_UP) pass-3 captures are promotable only after T21's P0 closes. || DISPATCHED fire 20260818-200001: opus worker, isolation=worktree, oracle REACHABLE (verified this fire: actuator/health UP, postgres:18.3 container healthy). Branch softhouse/T25-capture-corpus-p0-corrections. Runs CONCURRENTLY with T24, which owns docs/adr/ + contract.go - T25 must not edit those.",
+      "note": "Oracle-INDEPENDENT slice delivered by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T25-corpus-corrections-oracle-indep (f8b9d52), merged to main. DONE: T21 P0-1 (refuted size-threshold finding replaced with the observed statement in both PASS3 reports), T21 P1-5 (t21-probe-threshold.py, t21-probe-rederive.py, t21-probe-rederive2.py + outputs retracted with banners; t21-probe-invariants.py X2 replaced with position-aware roll-forward A3), T21 P1-6 (tasks.json capture count: 11 at (19,HALF_UP) + 1 calibration at (12,HALF_UP)), T22 P1-13 (pathb invariants.py I5 no longer hard-coded PASS), T22 P0-1/P0-2/P1-7 (round-up rule corrected to round-to-nearest-under-tenant-mode; HALF_EVEN provenance recorded; FULL_LEAP_YEAR = field-unset). SKIPPED: T21 P1-7 (RESUME.md already correct). PARKED oracle_unreachable: T21 P0-2, P0-3, P0-4, P1-8, P1-9, P1-11; T22 P0-3/4/5/6 and capture-bearing P1s - all need a live oracle. NO VECTOR PROMOTED. Status is done_partial, NOT done: the parked P0s still block promotion and are the local fire's work.",
       "contract_independent": true
     },
     {
@@ -575,9 +575,9 @@
       "dependencies": [
         "T24"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "attempts": 0,
-      "note": "Raised fire 20260818-200001. Gate G-1 closes only via: T24 -> T26 clean -> driver ratifies under standing policy P-2. A verdict of ACCEPTED WITH REQUIRED CHANGES is NOT clean and does NOT license ratification - that is exactly the call the previous fire made correctly."
+      "note": "Dispatched by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T26-dec1-v3-rereview. Independent adversarial re-review of DEC-1 v3: re-derives from the pinned Fineract source (426a23544), forbidden from reusing the defective t21-probe-rederive.py, and cannot make new observations (no oracle in the cloud sandbox). Must also give the driver a view on whether ratification should wait on capturing vectors that trip the EMI re-adjust guard. G-1 closes ONLY on a clean verdict under P-2."
     },
     {
       "id": "T27",
@@ -594,10 +594,10 @@
       "dependencies": [
         "T25"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "attempts": 0,
       "contract_independent": true,
-      "note": "Raised fire 20260818-200001. Contract-independent: audits RAW observed capture. No vector may be promoted to the store until this is clean - T25 fixing its own homework is not sufficient evidence."
+      "note": "Dispatched by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T27-corpus-corrections-review. Promotability audit of T25's oracle-independent slice: re-runs the invariant scripts, re-checks every corrected claim against the committed artifact it cites, and must state which captures (if any) are promotable today vs still blocked by a parked P0."
     }
   ]
 }
