@@ -1,0 +1,49 @@
+{
+  "artifact": "RC-6 attestation — Path B round-down probe, tenant `gerege`",
+  "closes": "T27 review RC-6, attestation half (T27 §7 item 10)",
+  "whatWasUnattested": "PATHB-REPORT.md attributed the round-down probe to (19, HALF_UP) on the strength of the filename and prose. No attestation existed.",
+  "attestedNow": {
+    "precision": 19,
+    "precisionSource": "MoneyHelper.PRECISION is a compile-time constant [fineract-core/.../MoneyHelper.java:35]; getMathContext() = new MathContext(PRECISION, getRoundingMode()) [:91-93]. It is not tenant-configurable, so no runtime reading can contradict it.",
+    "roundingMode": "HALF_UP",
+    "roundingModeOrdinal": 4,
+    "roundingModeSources": [
+      "the tenant's own global configuration `rounding-mode` = 4, read live from GET /configurations under Fineract-Platform-TenantId: gerege",
+      "the reference oracle's OWN startup log lines for tenant `gerege`, all HALF_UP",
+      "MoneyHelperInitializationService.getRoundingModeFromConfiguration() reads exactly this key [fineract-core/.../MoneyHelperInitializationService.java:102-106], and GlobalConfigurationConstants.ROUNDING_MODE = \"rounding-mode\" [.../api/GlobalConfigurationConstants.java:41]",
+      "MoneyHelper.updateTenantRoundingMode has NO production caller in the pinned checkout (only its declaration at MoneyHelper.java:104 and test callers), so the cached per-tenant mode cannot have drifted from the startup value without a restart"
+    ],
+    "serverMoneyHelperLogLinesForTenant": [
+      "2026-08-18 09:51:18.175 - INFO 1  [         gerege] --- [           main] o.a.f.o.monetary.domain.MoneyHelper      : Initialized rounding mode for tenant `gerege`: HALF_UP",
+      "2026-08-18 09:53:01.711 - INFO 1  [         gerege] --- [           main] o.a.f.o.monetary.domain.MoneyHelper      : Initialized rounding mode for tenant `gerege`: HALF_UP"
+    ],
+    "otherTenantsForContrast": [
+      "2026-08-17 11:31:58.845 - INFO 1  [        default] --- [           main] o.a.f.o.monetary.domain.MoneyHelper      : Initialized rounding mode for tenant `default`: HALF_EVEN",
+      "2026-08-18 09:51:17.967 - INFO 1  [        default] --- [           main] o.a.f.o.monetary.domain.MoneyHelper      : Initialized rounding mode for tenant `default`: HALF_EVEN",
+      "2026-08-18 09:53:01.504 - INFO 1  [        default] --- [           main] o.a.f.o.monetary.domain.MoneyHelper      : Initialized rounding mode for tenant `default`: HALF_EVEN"
+    ]
+  },
+  "reRunOfTheProbe": {
+    "method": "POST /loans?command=calculateLoanSchedule (schedule PREVIEW — creates nothing, writes nothing)",
+    "request": "committed, unmodified: .softhouse/capture/pathb/t22-audit/req/calc-prounddown.json",
+    "requestSha256": "1f55c922122c3b8e1cd4e9d61060edd1546adda65addbded78a5153891548a04",
+    "committedObservation": ".softhouse/capture/pathb/t22-audit/out-rounddown/rounddown-gerege-raw.json",
+    "committedObservationSha256": "a9e2900c1e5914e57e37bb7d29d1f0a0c9d2170ca0957d13c136bdda62f20834",
+    "reRunOutput": ".softhouse/capture/out/t35-rc6-rounddown-gerege-rerun.json",
+    "reRunOutputSha256": "a9e2900c1e5914e57e37bb7d29d1f0a0c9d2170ca0957d13c136bdda62f20834",
+    "verdict": "AGREES with the committed observation to the minor unit on every period column and every plan total. Compared as integer minor units with NO tolerance.",
+    "distinctInstallmentTotalsPeriods1to11_minorUnits": [
+      11110000
+    ],
+    "observedEmiPeriods1to11": "111100.00"
+  },
+  "whatThisDoesAndDoesNotEstablish": {
+    "does": "The round-down probe's environment is now attested: tenant `gerege` runs at (19, HALF_UP), RoundingMode ordinal 4, and the probe reproduces on that attested environment today.",
+    "doesNot": "It does not promote anything. It does not retroactively attest the ORIGINAL run's environment — it attests THIS run's, and shows the observation is unchanged. The round-down conclusion was already known to be mode-robust (at 111,148.35 the nearest multiple of 100 is 111,100 under HALF_UP and HALF_EVEN alike), so nothing about the conclusion turns on this; the RECORD is what was missing.",
+    "pathBP0sStillOpen": [
+      "T22 P0-3 attestation sidecar for the four B-0n captures",
+      "T22 P0-4 fail-the-run preconditions in REPRODUCE.md",
+      "T22 P0-6 re-point the four captures at a production-settings tenant"
+    ]
+  }
+}

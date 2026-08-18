@@ -1,0 +1,11 @@
+2026-08-17 11:31:58.845 - INFO 1  [        default] --- [           main] o.a.f.o.monetary.domain.MoneyHelper      : Initialized rounding mode for tenant `default`: HALF_EVEN
+2026-08-17 11:31:58.848 - INFO 1  [        default] --- [           main] .MoneyHelperStartupInitializationService : Starting MoneyHelper initialization for all tenants...
+2026-08-17 11:31:58.849 - INFO 1  [        default] --- [           main] .MoneyHelperStartupInitializationService : MoneyHelper initialization completed
+2026-08-18 09:51:17.967 - INFO 1  [        default] --- [           main] o.a.f.o.monetary.domain.MoneyHelper      : Initialized rounding mode for tenant `default`: HALF_EVEN
+2026-08-18 09:51:18.175 - INFO 1  [         gerege] --- [           main] o.a.f.o.monetary.domain.MoneyHelper      : Initialized rounding mode for tenant `gerege`: HALF_UP
+2026-08-18 09:51:18.177 - INFO 1  [         gerege] --- [           main] .MoneyHelperStartupInitializationService : Starting MoneyHelper initialization for all tenants...
+2026-08-18 09:51:18.177 - INFO 1  [         gerege] --- [           main] .MoneyHelperStartupInitializationService : MoneyHelper initialization completed
+2026-08-18 09:53:01.504 - INFO 1  [        default] --- [           main] o.a.f.o.monetary.domain.MoneyHelper      : Initialized rounding mode for tenant `default`: HALF_EVEN
+2026-08-18 09:53:01.711 - INFO 1  [         gerege] --- [           main] o.a.f.o.monetary.domain.MoneyHelper      : Initialized rounding mode for tenant `gerege`: HALF_UP
+2026-08-18 09:53:01.713 - INFO 1  [         gerege] --- [           main] .MoneyHelperStartupInitializationService : Starting MoneyHelper initialization for all tenants...
+2026-08-18 09:53:01.714 - INFO 1  [         gerege] --- [           main] .MoneyHelperStartupInitializationService : MoneyHelper initialization completed
