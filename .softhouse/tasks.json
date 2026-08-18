@@ -710,7 +710,7 @@
   },
   {
    "id": "T34",
-   "status": "in_progress",
+   "status": "done",
    "executor": "agent",
    "model": "opus",
    "target": "docs",
@@ -723,12 +723,12 @@
     ".softhouse/reviews/",
     ".softhouse/handoff/"
    ],
-   "note": "Raised by cloud catch-up fire cloud-20260818-2000. THE NEXT FIRE'S FIRST CONTRACT TASK. G-1 closes ONLY via T33 -> T34 CLEAN -> driver ratifies under P-2. Tell the reviewer the pattern: FOUR consecutive independent re-reviews (T23, T26, T29, T32) have each found NEW P0s in areas the previous review had not examined, and in every case the committed corpus passed BOTH the right and the wrong reading - by T32 the corpus was blind to THREE distinct wrong readings at 13/13 each. Highest-yield unexamined surface remaining, per T32: period/date generation and the month-end re-anchor, the down-payment path, the balance roll-forward and its zero clamp, and currency/scale handling. Convergence is real - T32 verified T28's loop steps preserved byte-for-byte and T29's P0s genuinely resolved - so a CLEAN verdict is a live possibility and must be stated plainly if reached. || DISPATCHED by local fire 20260818-230002 at 2026-08-18T15:05Z on branch softhouse/T34-dec1-v6-rereview, isolation=worktree, model=opus. Orchestrator WILL await this worker before exiting (STEP 5.5).",
+   "note": "Raised by cloud catch-up fire cloud-20260818-2000. THE NEXT FIRE'S FIRST CONTRACT TASK. G-1 closes ONLY via T33 -> T34 CLEAN -> driver ratifies under P-2. Tell the reviewer the pattern: FOUR consecutive independent re-reviews (T23, T26, T29, T32) have each found NEW P0s in areas the previous review had not examined, and in every case the committed corpus passed BOTH the right and the wrong reading - by T32 the corpus was blind to THREE distinct wrong readings at 13/13 each. Highest-yield unexamined surface remaining, per T32: period/date generation and the month-end re-anchor, the down-payment path, the balance roll-forward and its zero clamp, and currency/scale handling. Convergence is real - T32 verified T28's loop steps preserved byte-for-byte and T29's P0s genuinely resolved - so a CLEAN verdict is a live possibility and must be stated plainly if reached. || DISPATCHED by local fire 20260818-230002 at 2026-08-18T15:05Z on branch softhouse/T34-dec1-v6-rereview, isolation=worktree, model=opus. Orchestrator WILL await this worker before exiting (STEP 5.5). || COMPLETE, merged (045e3ed). VERDICT: ACCEPTED WITH REQUIRED CHANGES - the FIFTH consecutive re-review to find a NEW P0, again on a surface no prior round examined. NOT RATIFIABLE. P0-T34-1: DEC-1 4.3.2 and contract.go:1455-1459 state the rate factor as (rate x 30 x RepaymentEvery / 360); the oracle's per-period-interest entry point calculateRateFactorPerPeriodForInterest passes periodRatio - NOT repaymentEvery - into that slot [ProgressiveEMICalculator.java:1404-1413], while only the recurrence entry point passes repaymentEvery [:1536-1537]. ORCHESTRATOR RE-DERIVED AND CONFIRMED from the pinned checkout: :1404-1413 computes periodRatio via calculatePeriodRatio() and passes it plus a hard-coded BigDecimal.valueOf(30), where :1536-1537 passes repaymentEvery plus daysInMonth - TWO arguments differ, not one; calculatePeriodRatio [:1419-1440] is a seed-date-to-fromDate unit difference carrying a month-end special case, equal to RepaymentEvery only under regular anchoring. periodRatio/calculatePeriodRatio appear NOWHERE in DEC-1, contract.go, or any probe of T23/T26/T29/T31/T32/T33. T34 re-derived 55/5767 (0.95%) same-month (start, disbursement) pairs drift, and on those 480/480 (100%) swept requests return different money, worst total-interest gap MNT 398,967.73; 0 of 12 captures and 0 of 13 observations can see it. P1-T34-1: 4.3.2 step 4 contradicts its own segmentation table on OutstandingPrincipalMinor when disbursement falls on a period DueDate - INDEPENDENTLY CORROBORATED BY OBSERVATION the same fire (T37 F-1). P1-T34-2: the 'disbursement row balance is graded' claim was false at review time - T35's Capture3b now emits it, so revision 7 must reconcile rather than simply accept. P2-T34-1: '13 of 13' compares three scalars per shape, never a due date or outstanding balance. VERIFIED CLEAN: every T33 4.1.1 file:line exact; the false ratio-is-1 clause deletion complete; 4.3.1 steps 1-8 and 4.3.2's three-operation block BYTE-IDENTICAL to revision 5 (SHA-256); n=|related| intact; item 3d and the five-vector binding present and still gating conformance PASS and cutover but NOT ratification. From-text model reproduced 13/13 observations and 11/12 captures row-by-row. No oracle contacted.",
    "branch": "softhouse/T34-dec1-v6-rereview"
   },
   {
    "id": "T35",
-   "status": "in_progress",
+   "status": "done",
    "executor": "agent",
    "model": "opus",
    "target": "test",
@@ -746,12 +746,12 @@
     ".softhouse/reviews/t21v2/",
     ".softhouse/handoff/"
    ],
-   "note": "Raised by local fire 20260818-230002 (oracle REACHABLE). Path A / embeddable-seam side only. MUST NOT touch .softhouse/capture/pathb/, .softhouse/reference-oracle.md, .softhouse/program.json, .softhouse/tasks.json, .softhouse/RESUME.md, docs/adr/, nexus/. || DISPATCHED by local fire 20260818-230002 at 2026-08-18T15:05Z on branch softhouse/T35-patha-admissibility, isolation=worktree, model=opus. Orchestrator WILL await this worker before exiting (STEP 5.5).",
+   "note": "Raised by local fire 20260818-230002 (oracle REACHABLE). Path A / embeddable-seam side only. MUST NOT touch .softhouse/capture/pathb/, .softhouse/reference-oracle.md, .softhouse/program.json, .softhouse/tasks.json, .softhouse/RESUME.md, docs/adr/, nexus/. || DISPATCHED by local fire 20260818-230002 at 2026-08-18T15:05Z on branch softhouse/T35-patha-admissibility, isolation=worktree, model=opus. Orchestrator WILL await this worker before exiting (STEP 5.5). || COMPLETE, merged (7230db2). All five Path A items closed against LIVE runs of the pinned reference oracle. T21 P0-2: Capture3b.java emits an in-container attestation block + machine-readable sidecar - image sha256:e596339626bf...0459a, the jar's own git.properties reporting Fineract 426a23544 with git.dirty=false (the pin MEASURED, not assumed), Zulu 21.0.11+10-LTS with zero JVM input flags, MoneyHelper.PRECISION=19, effective MathContext (19, HALF_UP) ordinal 4 - the ratified production setting, so NO adverse finding; 350 classpath entries digested (postgresql-42.7.11.jar present, zero Oracle/MySQL/MariaDB). T21 P0-3 + P1-9: same twelve cases input-for-input plus periodFromDate/feeAmount/penaltyAmount and four plan totals, all toPlainString(). BYTE-IDENTITY CLEAN - the headline risk: unmodified Capture3.java first reproduced the committed capture byte-for-byte on this fire, then pass 3b vs pass 3 gave 1560/1560 published values IDENTICAL, 0 VALUE CHANGED, 0 DROPPED, 0 rendering-only; the 12 additions are `balance` on DISBURSEMENT rows that pass 3 never emitted. Run-stable digest 02e94174...aa38ec over three runs. T21 P0-4: src/run-pass3b.sh validated by running it three times; fails the run on image-id mismatch, seam-class drift, dirty/wrong pin, non-zero exit, non-empty stderr, null/error observations, or an effective MathContext that is not (19, HALF_UP); checked against the T22 P0-5 glob defect class. T27 RC-5 and RC-6 closed (RC-6 attested three ways incl. that MoneyHelper.updateTenantRoundingMode has no production caller, so the cached mode cannot drift without a restart). NEW FINDING: totalOutstandingAmount is '0' at scale 0 on all twelve while every other money string is scale 2 - not rounding, it is `final BigDecimal totalOutstanding = BigDecimal.ZERO` [ProgressiveLoanScheduleGenerator.java:157] passed straight through; and all fees/penalties are 0.00, so the corpus has ZERO discriminating power over charges. ADMISSIBILITY: Path A P0s closed, records moved from 'audited observations' to ATTESTED audited observations, still NOT admissible as parity vectors and NOTHING PROMOTED - blocked by G-1, by the seam's blind spots, and by open T21 P1-8/P1-11.",
    "branch": "softhouse/T35-patha-admissibility"
   },
   {
    "id": "T36",
-   "status": "in_progress",
+   "status": "done",
    "executor": "agent",
    "model": "opus",
    "target": "test",
@@ -762,12 +762,12 @@
     ".softhouse/capture/pathb/",
     ".softhouse/handoff/"
    ],
-   "note": "Raised by local fire 20260818-230002 (oracle REACHABLE). Path B / running-server side only, and the ONLY task this fire that mutates reference-oracle server state. MUST NOT touch .softhouse/capture/{src,out}, .softhouse/reference-oracle.md, program.json, tasks.json, RESUME.md, docs/adr/, nexus/. || DISPATCHED by local fire 20260818-230002 at 2026-08-18T15:05Z on branch softhouse/T36-pathb-admissibility, isolation=worktree, model=opus. Orchestrator WILL await this worker before exiting (STEP 5.5).",
+   "note": "Raised by local fire 20260818-230002 (oracle REACHABLE). Path B / running-server side only, and the ONLY task this fire that mutates reference-oracle server state. MUST NOT touch .softhouse/capture/{src,out}, .softhouse/reference-oracle.md, program.json, tasks.json, RESUME.md, docs/adr/, nexus/. || DISPATCHED by local fire 20260818-230002 at 2026-08-18T15:05Z on branch softhouse/T36-pathb-admissibility, isolation=worktree, model=opus. Orchestrator WILL await this worker before exiting (STEP 5.5). || COMPLETE, merged (b1d42dc). All four Path B P0s closed against the LIVE oracle. T22 P0-3: t36/attest.py emits attestation.json with every field read from the running server, its container, its DEPLOYED BYTECODE or its PostgreSQL rows - tenant gerege, timezone_id Asia/Ulaanbaatar, c_configuration.rounding-mode = 4 (HALF_UP), empty schema_connection_parameters, MoneyHelper.PRECISION=19 read by javap from the deployed fineract-core jar, effective MathContext (19, HALF_UP), image digest + git.commit.id + git.dirty=false, PostgreSQL 18.3, per-capture request/response SHA-256 + HTTP status + UTC timestamp; money serialised as exact text, no float. NO adverse wrong-setting finding. T22 P0-4: t36/preconditions.sh, 15 assertions, exits non-zero naming the breach; REPRODUCE.md:105-110's drafted-open block replaced. PROVEN FAILABLE - on the stock `default` tenant it exits 1 with five breaches (Kolkata, mode 6, HALF_EVEN in force, MySQL-era connection params, canary 20925.04), exactly the defects that made the corpus inadmissible; adds two assertions beyond T22's three because a DB row is not proof of the arithmetic in force - the JVM's own MoneyHelper init line and a behavioural half-cent canary (must return 20925.05). T22 P0-6: re-point + re-capture done TWICE (byte-verbatim requests against gerege's existing products, then against four products this task re-created, ids 13-16, with four re-issued applications); all four responses BYTE-IDENTICAL to the committed corpus all eight times; number-by-number diff over every JSON leaf in exact integer minor units gives 0 numbers moved, 0 scale-only, 0 structural; T30's from-source re-derivation of B-03/B-04 re-checked at both modes CONSISTENT. No tenant created, no restart, no drop; both containers still healthy. T22 P1-11 second clause - THE NEW RESULT: found and captured shapes that make the EMI re-adjust loop ACTUALLY FIRE. At n=12 the entry condition needs |residual| > 0.06 (RHS is Money(6.00) - the Money.copy(double) trap respected). Six observed captures REFUTE the no-loop model by one minor unit on all of periods 1-11 (principal 1,200,001 -> observed EMI 112,082.46 vs no-loop model 112,082.47); two further captures enter the loop and back out at hasLessEmiDifference, pinning that guard too. Ten invariants pass on all nine. VERDICT: Path B is now ADMISSIBLE AS A CAPTURE PATH; it is NOT a parity vector store and NOTHING was promoted (G-1 blocks it), and coverage is still narrow - clean unpaid single-disbursement schedules only, Asia/Hovd unexercised, no clock-sensitive capture.",
    "branch": "softhouse/T36-pathb-admissibility"
   },
   {
    "id": "T37",
-   "status": "in_progress",
+   "status": "done",
    "executor": "agent",
    "model": "opus",
    "target": "test",
@@ -778,8 +778,30 @@
     ".softhouse/capture/dec1-binding/",
     ".softhouse/handoff/"
    ],
-   "note": "Raised by local fire 20260818-230002 (oracle REACHABLE). DEC-1 is at v6 and UNRATIFIED (gate G-1), so captures are stored in RAW OBSERVED form only - never contract-shaped, never promoted to the parity vector store. Self-contained under .softhouse/capture/dec1-binding/ (its own capture program copy) so it cannot collide with T35's Capture3 re-emission or T36's server path. Uses the Path A embeddable seam at MathContext (19, HALF_UP), the ratified production setting. || DISPATCHED by local fire 20260818-230002 at 2026-08-18T15:05Z on branch softhouse/T37-dec1-binding-captures, isolation=worktree, model=opus. Orchestrator WILL await this worker before exiting (STEP 5.5).",
+   "note": "Raised by local fire 20260818-230002 (oracle REACHABLE). DEC-1 is at v6 and UNRATIFIED (gate G-1), so captures are stored in RAW OBSERVED form only - never contract-shaped, never promoted to the parity vector store. Self-contained under .softhouse/capture/dec1-binding/ (its own capture program copy) so it cannot collide with T35's Capture3 re-emission or T36's server path. Uses the Path A embeddable seam at MathContext (19, HALF_UP), the ratified production setting. || DISPATCHED by local fire 20260818-230002 at 2026-08-18T15:05Z on branch softhouse/T37-dec1-binding-captures, isolation=worktree, model=opus. Orchestrator WILL await this worker before exiting (STEP 5.5). || COMPLETE, merged (bf6efc1). ALL FIVE of DEC-1 section 8's BINDING shapes CAPTURED from the live oracle, and ALL FIVE SEPARATE THE READINGS. Eleven captures through the Path A embeddable seam against the pinned image in a throwaway docker run --rm; the shared containers were never touched. Discrimination measured by taking only the cells on which the two readings disagree: item 3 (17 and 122 cells), 3a (39), 3b (4 and 9), 3c (14 and 14), 3d (25 and 145) - in EVERY case the observation agrees with DEC-1 rev 6 on all discriminating cells and with the wrong reading on NONE. Headline: 3d is the widest - a port hard-coding the day-count ratio to 1 charges period-1 interest 21,600.00 where the oracle returned 11,845.16, an OBSERVED MNT 10,195.09 gap in total interest on a MNT 1.2M loan, settling T32's P0-T32-1 empirically. 3b turns on ONE MINOR UNIT (654.38 vs 654.39) - which is the point, it is payable. Controls both passed: T37-CAL reproduces the shipped test literal digit-for-digit at (12, HALF_UP), T37-CTL-Q0a reproduces committed observation Q0a through a DIFFERENT harness; run byte-identical on re-execution; MathContext attested twice from the oracle itself (its own SLF4J log 11/11 HALF_UP, and MoneyHelper.getMathContext() = precision 19 HALF_UP); seam-class diff empty. Stored RAW OBSERVED FORM ONLY per the G-1-open rule; nothing promoted; DEC-1 not edited. NEW P0 (handoff F-1), the first OBSERVED rather than re-derived defect in DEC-1: 4.3.2 step 4 mis-states OutstandingPrincipalMinor on a PRE-DISBURSEMENT repayment row - transcribed literally it gives T37-3c row 1 a balance of 10,548,069.00 where the oracle returned 0.00, corroborated by already-committed Q0b. It survived T33's from-text experiment because that experiment compares only (level, final, total interest) and this cell is in none of them; FULL-ROW comparison is what found it. Mechanism from source: the per-row balance is set during that period's own iteration [ProgressiveLoanScheduleGenerator.java:132] while the disbursement is registered only at :351 inside processDisbursements, which fires on [from, due) - from-INCLUSIVE, due-EXCLUSIVE [:307-309], a THIRD date-membership rule DEC-1 states nowhere. Item 3c's separation is unaffected, but T37-3c is not a clean end-to-end conformance vector until this resolves. Reported, not self-applied. Also F-2, F-3, F-4, F-5.",
    "branch": "softhouse/T37-dec1-binding-captures"
+  },
+  {
+   "id": "T38",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "title": "Apply T34's P0/P1s and T37's OBSERVED P0 to DEC-1 v6 -> v7 (periodRatio; the pre-disbursement balance and the third date-membership rule; fold in the five captured binding vectors)",
+   "dependencies": [
+    "T34",
+    "T37",
+    "T36",
+    "T35"
+   ],
+   "contract_independent": true,
+   "files_hint": [
+    "docs/adr/DEC-1-schedule-generator-adapter.md",
+    "nexus/internal/apps/loanschedule/contract/contract.go",
+    ".softhouse/reviews/t38-probe/",
+    ".softhouse/handoff/"
+   ],
+   "note": "Raised by local fire 20260818-230002 after T34 came back ACCEPTED WITH REQUIRED CHANGES (fifth consecutive re-review to find a new P0) and T37 found the first OBSERVED defect in DEC-1. Revision 7 is agent work, not a user gate: T34 states no type, field set or graded-domain predicate moves."
   }
  ]
 }
