@@ -41,11 +41,26 @@ Logs: `~/Library/Logs/gerege-nbfi/fire-*.log`. Probe the environment without run
 | A run is active and terminal (all tasks `done`/`approved`/`parked`, UAT PASS) | Close it: STEP 8/9 of `/softhouse` (postmortem → archive → cleanup), set that context `done`, append to `program.history`, then **fall through to the next row in the same fire** — do not stop to be asked. |
 | A run is active and terminal but UAT FAILED after its retry | Park the context with the verifier output, then fall through. Never mark a red UAT `done`. |
 | No active run, and ≥1 context is READY | Plan it (STEP 2), then execute it (STEP 3). |
-| No active run, no READY context, ≥1 blocked on a `user` gate | STEP 5 — surface the gates and exit. This is the only legitimate idle stop. |
+| No active run, no READY context, but ≥1 **READY-FOR-ANALYSIS** context | Plan and run its **contract-independent slice** (analysis / corpus mining / raw capture / Tier-C gap audit). Keep going while the gate waits. |
+| No active run, no READY context, no contract-independent work left anywhere, ≥1 blocked on a `user` gate | STEP 5 — surface the gates and exit. This is the only legitimate idle stop, and it now means *every* non-gated task in the program is genuinely exhausted. |
 | No active run, every context `done` | Set `program.status = "complete"`, final report, exit. |
 | No active run, remaining contexts all `parked` | Print each park reason with its retry precondition and exit. |
 
 **READY** = `status == "pending"` AND every `dependencies` entry is `done` AND it is not blocked by a pending `user` gate of its own.
+
+**READY-FOR-ANALYSIS** = `status == "pending"` AND its unmet dependencies are only `blocked_on_gate` (not `failed`, not `parked`) — meaning the blocker is a human decision, not missing work. A gate on a *contract* blocks work that **consumes** the contract; it does not block work that produces knowledge the contract decision will need anyway.
+
+Runnable in this state (contract-independent):
+- `analyst` — behaviour extraction from the pinned source, with citations.
+- `test_writer` — mining the Fineract test corpus into a capture plan; capturing **raw observed** oracle output on an oracle-reaching fire.
+- `spec_writer` — the Tier-C platform gap audit (what Nexus already provides).
+
+Forbidden in this state — these are exactly what the gate is for:
+- Any `coder` task, or anything writing under `nexus/`. No Go is written against an unratified contract.
+- Storing captures in **contract-shaped** form (raw observed form only), since the shape is what is being ratified.
+- Amending the gated DEC-n to unblock yourself.
+
+Mark such tasks `"contract_independent": true` so the postmortem can show what advanced during a gate. **An open gate must never mean an idle factory** — it means the factory works on everything the gate does not touch.
 
 **Context selection among several READY:** lowest tier first; within a tier, the one unblocking the most dependents; tie-break on smaller `main_loc` (get a parity win banked before a monster).
 

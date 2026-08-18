@@ -63,14 +63,15 @@
     "daily_soft_limit_pct": 90,
     "max_retries_per_task": 1,
     "retry_model": "opus",
-    "park_after_retries": true
+    "park_after_retries": true,
+    "gate_scope": "A gate on a CONTRACT blocks work that CONSUMES the contract (any coder task, anything under the go_target), not work that produces knowledge the decision needs anyway. While tier0 is blocked_on_gate, every other context is READY-FOR-ANALYSIS: analyst behaviour extraction from pinned source, test-corpus mining into capture plans, RAW observed vector capture on an oracle-reaching fire, and the Tier-C gap audit may all proceed. Contract-shaped storage, Go code, and amending the gated DEC-n may not. An open gate must never mean an idle factory."
   },
   "cursor": {
     "current_context": "tier0-harness-schedule-poc",
     "current_run_id": "2026-08-17-run1-harness-schedule-poc",
     "completed_contexts": [],
     "parked_contexts": [],
-    "note": "tier 0 is blocked_on_gate, not parked. No other context is READY: all 16 remaining contexts declare tier0-harness-schedule-poc as a transitive dependency, so gate G-1 gates the entire program. This is the decision table's one legitimate idle stop - it was reached only after spending the fire on every piece of work that needed no live oracle."
+    "note": "tier 0 is blocked_on_gate (G-1). Under policy.gate_scope the other 16 contexts are READY-FOR-ANALYSIS, not blocked: their analysis/corpus-mining/gap-audit slices are contract-independent and should be running. Immediate contract-independent work: T16b (apply T17's 6 corrections, no oracle needed), Tier-D corpus mining per context, Tier-C platform gap audit, and analyst extraction for tierA-gl-accounting and tierA-loan-product-schedule from the pinned source."
   },
   "contexts": [
     {
@@ -107,7 +108,8 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "12,752 LOC in fineract-accounting + 11,224 in provider/accounting [VERIFIED: measured]. Split by run if a single plan exceeds worker context: journal posting | accruals | COA + product mapping."
+      "notes": "12,752 LOC in fineract-accounting + 11,224 in provider/accounting [VERIFIED: measured]. Split by run if a single plan exceeds worker context: journal posting | accruals | COA + product mapping.",
+      "analysis_ready": true
     },
     {
       "id": "tierA-loan-product-schedule",
@@ -125,7 +127,8 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "14,308 + 6,153 LOC. 7,863 test LOC in fineract-progressive-loan is the richest vector seam in the codebase."
+      "notes": "14,308 + 6,153 LOC. 7,863 test LOC in fineract-progressive-loan is the richest vector seam in the codebase.",
+      "analysis_ready": true
     },
     {
       "id": "tierA-loan-lifecycle",
@@ -145,7 +148,8 @@
       "main_loc_note": "66,375 + 39,871 [VERIFIED: measured]. LARGEST context — must be split across several runs by sub-behavior (disbursement | repayment allocation | penalties/charges application | rescheduling | write-off/delinquency). A single plan over all of it will exhaust every worker.",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "Split mandatory. 679 + ~380 files."
+      "notes": "Split mandatory. 679 + ~380 files.",
+      "analysis_ready": true
     },
     {
       "id": "tierA-charges-rates-tax",
@@ -167,7 +171,8 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "3,694 + 1,926 + 2,262 + 947 + 1,089 + 415 [VERIFIED: measured]. Mongolian VAT / e-Barimt is additive, not a Fineract port — spec it, do not invent parity vectors for it."
+      "notes": "3,694 + 1,926 + 2,262 + 947 + 1,089 + 415 [VERIFIED: measured]. Mongolian VAT / e-Barimt is additive, not a Fineract port — spec it, do not invent parity vectors for it.",
+      "analysis_ready": true
     },
     {
       "id": "tierA-cob-batch",
@@ -187,7 +192,8 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "3,190 + 4,881 + 5,400 [VERIFIED: measured]. Reuse Nexus's scheduler; do not port Fineract's job framework."
+      "notes": "3,190 + 4,881 + 5,400 [VERIFIED: measured]. Reuse Nexus's scheduler; do not port Fineract's job framework.",
+      "analysis_ready": true
     },
     {
       "id": "tierA-provisioning-reporting",
@@ -207,7 +213,8 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "Tier-A cutover + regulatory acceptance are user gates; parallel run required. Compliance-spine capital and 30%/70% limits must reconcile to the native GL."
+      "notes": "Tier-A cutover + regulatory acceptance are user gates; parallel run required. Compliance-spine capital and 30%/70% limits must reconcile to the native GL.",
+      "analysis_ready": true
     },
     {
       "id": "tierB-savings-deposits",
@@ -228,7 +235,8 @@
       "run_id": null,
       "cutover_gate": true,
       "activation_gate": "user — deposit-taking activation requires FRC / Bank of Mongolia licensing sign-off. Ships behind a config flag defaulting to OFF. Never render deposits as insured/protected/guaranteed.",
-      "notes": "25,331 + 31,890 + 3,729 + 960 [VERIFIED: measured]. Split by run: savings account lifecycle | interest posting | recurring/fixed deposits | rate charts."
+      "notes": "25,331 + 31,890 + 3,729 + 960 [VERIFIED: measured]. Split by run: savings account lifecycle | interest posting | recurring/fixed deposits | rate charts.",
+      "analysis_ready": true
     },
     {
       "id": "tierB-working-capital-loan",
@@ -245,7 +253,8 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "355 files, 6,138 test LOC [VERIFIED: measured]. Split by sub-behavior."
+      "notes": "355 files, 6,138 test LOC [VERIFIED: measured]. Split by sub-behavior.",
+      "analysis_ready": true
     },
     {
       "id": "tierB-loan-origination",
@@ -262,7 +271,8 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "1,657 test LOC available as vectors."
+      "notes": "1,657 test LOC available as vectors.",
+      "analysis_ready": true
     },
     {
       "id": "tierB-investor",
@@ -279,7 +289,8 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "3,748 test LOC — good vector density."
+      "notes": "3,748 test LOC — good vector density.",
+      "analysis_ready": true
     },
     {
       "id": "tierB-branch",
@@ -296,7 +307,8 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": ""
+      "notes": "",
+      "analysis_ready": true
     },
     {
       "id": "tierB-shares",
@@ -314,7 +326,8 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "6,203 + 3,209 [VERIFIED: measured]. Member share capital feeds the compliance-spine capital figure — reconcile against the native GL."
+      "notes": "6,203 + 3,209 [VERIFIED: measured]. Member share capital feeds the compliance-spine capital figure — reconcile against the native GL.",
+      "analysis_ready": true
     },
     {
       "id": "tierB-collateral",
@@ -333,7 +346,8 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "Pledged-collateral hold math: holds alter available only, never posted balance. This is the exact defect that failed adversarial review twice on the sister project — force the sign when re-deriving."
+      "notes": "Pledged-collateral hold math: holds alter available only, never posted balance. This is the exact defect that failed adversarial review twice on the sister project — force the sign when re-deriving.",
+      "analysis_ready": true
     },
     {
       "id": "tierB-clients-groups",
@@ -363,7 +377,8 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "Names are ovog / patronymic / given name — a diff introducing first_name/last_name is a rejection. National ID validated structurally, 10 chars. Match on registration number, never on name. Split by run; clients and groups are separate slices."
+      "notes": "Names are ovog / patronymic / given name — a diff introducing first_name/last_name is a rejection. National ID validated structurally, 10 chars. Match on registration number, never on name. Split by run; clients and groups are separate slices.",
+      "analysis_ready": true
     },
     {
       "id": "tierC-platform-map-first",
@@ -399,7 +414,8 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "First run in this context is an ANALYST GAP AUDIT, not a port: for each subsystem (auth, tenancy, command bus, jobs, hooks, events, bulk import, campaigns, data queries, credit bureau, SMS/GCM, surveys, reporting mail) state what Nexus already provides and what is a real gap. Only audited gaps get coder tasks. ~72k core + ~81k provider/infrastructure + ~10k organisation [VERIFIED: measured]. Unjustified plumbing ports are rejections."
+      "notes": "First run in this context is an ANALYST GAP AUDIT, not a port: for each subsystem (auth, tenancy, command bus, jobs, hooks, events, bulk import, campaigns, data queries, credit bureau, SMS/GCM, surveys, reporting mail) state what Nexus already provides and what is a real gap. Only audited gaps get coder tasks. ~72k core + ~81k provider/infrastructure + ~10k organisation [VERIFIED: measured]. Unjustified plumbing ports are rejections.",
+      "analysis_ready": true
     },
     {
       "id": "tierD-test-corpus-to-vectors",
@@ -419,7 +435,8 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": false,
-      "notes": "~321k test LOC. Runs OPPORTUNISTICALLY — whenever a Tier A/B context is planned, its slice of this corpus is mined in the same run's test_writer task. Kept as a distinct context so residual suites are not forgotten. Never ported one-for-one into Go tests."
+      "notes": "~321k test LOC. Runs OPPORTUNISTICALLY — whenever a Tier A/B context is planned, its slice of this corpus is mined in the same run's test_writer task. Kept as a distinct context so residual suites are not forgotten. Never ported one-for-one into Go tests.",
+      "analysis_ready": true
     }
   ],
   "gates_pending": [
