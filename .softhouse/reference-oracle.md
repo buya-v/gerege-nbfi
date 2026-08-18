@@ -197,10 +197,46 @@ see `.softhouse/capture/PASS2-REPORT.md`, Finding 2. Multi-disbursement behaviou
 
 ### Path B — the running server (REST + PostgreSQL)
 
-The connection facts at the top of this file. Not yet used for capture. It is the **only** path that can
-close Path A's blind spot, and it is a materially larger rig than Tier 0 assumed: it needs tenants
-provisioned with the right timezones (see finding 1 above), and every capture must stamp the tz actually
-in force.
+The connection facts at the top of this file. **FIRST USED FOR CAPTURE, fire `20260818-170002`** — four raw
+observed captures under `.softhouse/capture/pathb/`, recipe in that directory's `REPRODUCE.md`, findings in
+`PATHB-REPORT.md`. Raw observed only; **not audited**, nothing promoted to the vector store.
+
+It is the **only** path that can close Path A's blind spot, and it is a materially larger rig than Tier 0
+assumed: it needs tenants provisioned with the right timezones (see finding 1 above), and every capture must
+stamp the tz actually in force.
+
+**Path A's blind spot is now measured, not merely suspected.** Both inputs Path A drops are **honoured by
+the server and move money**:
+
+| Input | Path A | Path B | Observed effect |
+|---|---|---|---|
+| `installmentAmountInMultiplesOf` | dropped (never read by `assembleFrom`) | **honoured** | `100` → EMI `112,082.37` → `112,100.00`; 12/12 periods differ; final installment absorbs the residual (`111,866.22`) |
+| `daysInYearCustomStrategy` | dropped (never copied by `Builder` copy-ctor `:304-351`) | **honoured** | `FULL_LEAP_YEAR` `144,659.21` vs `FEB_29_PERIOD_ONLY` `145,011.43` total interest; 12/12 periods differ |
+
+Consequence for the harness: **a conformance suite built on Path A alone cannot grade either field.** It
+would score a Go port identically whether it implemented them or ignored them. Contract clauses touching
+these fields require Path-B vectors.
+
+Path B also **corroborates** Path A: capture `B-01` reproduces pass-3 `P-MNT-1M2` to the minor unit
+(`144,988.47` / `1,344,988.47`) through an entirely different seam into the same pinned image digest. The
+Path A corpus is therefore not an artefact of the embeddable seam.
+
+**Path B capture facts, fire `20260818-170002`:**
+
+| Fact | Value |
+|---|---|
+| Endpoint | `POST /loans?command=calculateLoanSchedule` |
+| Auth | Basic, stock demo `mifos:password` |
+| Tenant | `default` — timezone **`Asia/Kolkata`** (stock demo, NOT a Mongolian tz) |
+| PostgreSQL | 18.3 (Debian 18.3-1.pgdg13+1), aarch64 |
+| Driver asserted | `org.postgresql.Driver`, `jdbc:postgresql://db:5432/fineract_tenants` |
+| Image digest | `sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a` (identical to Path A) |
+| Currency | MNT enabled, decimalPlaces 2 |
+
+**Two Path B gaps that must close before it yields parity vectors:** (1) the tenant timezone is
+`Asia/Kolkata`, so no clock-sensitive capture is valid until a Mongolian tenant exists; (2) tenant rounding
+mode and precision are **not asserted per capture** the way Path A pins `(19, HALF_UP)` — until they are,
+Path B captures are discrimination evidence, not production-settings parity vectors.
 
 ## Reproducibility rule, extended
 
