@@ -1,0 +1,99 @@
+T29 validation of the source-faithful model against COMMITTED observations
+(no live oracle was contacted; expectations are quoted, not re-taken)
+
+  PASS  P=100       n=6     7.0%                      level/final/interest = ('17.01', '17.00', '2.05')
+  PASS  P=1014632   n=6     7.0%                      level/final/interest = ('172574.64', '172574.62', '20815.82')
+  PASS  P=127704    n=36   16.8%                      level/final/interest = ('4540.30', '4540.06', '35746.56')
+  PASS  P=135623    n=6     7.0%                      level/final/interest = ('23067.56', '23067.59', '2782.39')
+  PASS  P=2345024   n=6     7.0%                      level/final/interest = ('398855.60', '398855.63', '48109.63')
+  PASS  P=167299    n=6    21.6%                      level/final/interest = ('29665.91', '29665.94', '10696.49')
+  PASS  P=64352     n=12   21.6%                      level/final/interest = ('6010.61', '6010.55', '7775.26')
+  PASS  P=1000      n=18   18.5%                      level/final/interest = ('64.04', '64.14', '152.82')
+  PASS  P=246489    n=18   18.5%                      level/final/interest = ('15786.24', '15786.14', '37663.22')
+  PASS  P=16838     n=36   16.8%                      level/final/interest = ('598.65', '598.46', '4713.21')
+  PASS  P=40595     n=36   16.8%                      level/final/interest = ('1443.28', '1443.47', '11363.27')
+  PASS  P=1200000   n=6    21.6%                      level/final/interest = ('212787.28', '212787.30', '76723.70')
+  PASS  P=1200000   n=6    21.6%  disb=2024-02-01     level/final/interest = ('253114.12', '253114.10', '65570.58')
+
+  13 pass, 0 fail, out of 13
+
+T29 -- under-determination sweeps over DEC-1 revision 4's own graded domain.
+
+*** NO LIVE ORACLE. ***  No Fineract instance is reachable in this sandbox (no
+Docker, no PostgreSQL).  Everything below is a re-derivation from the pinned
+checkout 426a23544 through `t29_rederive.py`, whose source-faithful arm is
+validated against 13 already-committed observations by `t29_validate.py`.
+No figure printed here is an observation; none may enter the vector store.
+
+Three experiments:
+
+  A  `n` in the EMI re-adjust loop.  DEC-1 4.3.1 and contract.go's `Period` doc
+     both assert "n is the number of related repayment periods, which inside
+     the graded domain is NumberOfRepayments
+     (ProgressiveLoanInterestScheduleModel.java:191-194)".  Re-derived from
+     source, n == relatedRepaymentPeriods.size()
+     (EmiAdjustment.java:54-56, ProgressiveEMICalculator.java:732, :749,
+     :250-263, ProgressiveLoanInterestScheduleModel.java:191-198), which equals
+     NumberOfRepayments only when the disbursement lands inside the FIRST
+     repayment period and not on its due date.  The graded domain admits
+     ScheduleStartDate <= D < last DueDate and the Run-1 corpus samples exactly
+     such a shape (t23-probe Q0b: start 2024-01-01, disbursement 2024-02-01).
+     Only the value of `n` is varied; the rebuild semantics are identical in
+     both arms, so any divergence is attributable to `n` alone.
+
+  B  The actualDays/calcDays correction in the RATE FACTOR
+     (ProgressiveEMICalculator.java:1500-1503, :1961-1962): performed, versus
+     skipped because contract.go says it "is exactly 1".
+
+  C  The `/ lengthTillPeriodDueDate * length` round-trip inside the PER-PERIOD
+     INTEREST computation (InterestPeriod.java:145-158), which DEC-1 never
+     mentions: performed, versus the textbook `balance * rateFactor` that the
+     document's own prose describes.
+
+==============================================================================
+A -- n == NumberOfRepayments (DEC-1 text) vs n == |related| (source)
+==============================================================================
+  shapes compared 120000, DIVERGENT 2143 (1.79%)
+   P=43180339  n=6    12.0%  disbursement on period 1's due date
+      source n=|related|=5: level     8896868.40 final     8896868.38 interest     1304002.98
+      text   n=NumberOfRepayments=6: level     8896868.39 final     8896868.42 interest     1304002.98
+   P=47427883  n=6    15.0%  disbursement on period 1's due date
+      source n=|related|=5: level     9844231.40 final     9844231.38 interest     1793273.98
+      text   n=NumberOfRepayments=6: level     9844231.39 final     9844231.42 interest     1793273.98
+   P=10548069  n=6    16.8%  disbursement on period 1's due date
+      source n=|related|=5: level     2199038.75 final     2199038.73 interest      447124.73
+      text   n=NumberOfRepayments=6: level     2199038.74 final     2199038.77 interest      447124.73
+   P=1222552   n=6    18.5%  disbursement on period 1's due date
+      source n=|related|=5: level      255934.34 final      255934.32 interest       57119.68
+      text   n=NumberOfRepayments=6: level      255934.33 final      255934.36 interest       57119.68
+   P=13549647  n=6    21.6%  disbursement on period 1's due date
+      source n=|related|=5: level     2858005.77 final     2858005.75 interest      740381.83
+      text   n=NumberOfRepayments=6: level     2858005.76 final     2858005.79 interest      740381.83
+   P=58996364  n=6    24.0%  disbursement on period 1's due date
+      source n=|related|=5: level    12516573.85 final    12516573.83 interest     3586505.23
+      text   n=NumberOfRepayments=6: level    12516573.84 final    12516573.87 interest     3586505.23
+   P=43659588  n=6    30.0%  disbursement on period 1's due date
+      source n=|related|=5: level     9397589.26 final     9397589.28 interest     3328358.32
+      text   n=NumberOfRepayments=6: level     9397589.27 final     9397589.24 interest     3328358.32
+   P=14924628  n=6     7.0%  disbursement on period 1's due date
+      source n=|related|=5: level     3037364.34 final     3037364.36 interest      262193.72
+      text   n=NumberOfRepayments=6: level     3037364.35 final     3037364.32 interest      262193.72
+
+==============================================================================
+B -- rate-factor actualDays/calcDays correction: performed vs skipped
+==============================================================================
+  shapes compared 22740, divergent 0  -> NOT a money-relevant under-determination at (19, HALF_UP)
+
+==============================================================================
+C -- per-period interest: balance*rf/lengthTillDue*length (oracle) vs balance*rf
+==============================================================================
+   P=13202 n=6 16.8% start=2024-01-01
+      oracle arithmetic : final 2309.38  total interest 654.38
+      textbook reading  : final 2309.39  total interest 654.39
+   P=3924149 n=6 16.8% start=2024-01-31
+      oracle arithmetic : final 686443.28  total interest 194510.78
+      textbook reading  : final 686443.29  total interest 194510.79
+   P=1814727 n=6 21.6% start=2024-01-31
+      oracle arithmetic : final 321792.34  total interest 116027.14
+      textbook reading  : final 321792.35  total interest 116027.15
+  shapes compared 43992, DIVERGENT 699 (1.59%)
