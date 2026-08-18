@@ -1,19 +1,32 @@
 {
   "squad": "loan-schedule",
-  "context": "tier0-harness-schedule-poc",
   "run_id": "2026-08-17-run1-harness-schedule-poc",
-  "current_item": "Run blocked at gate G-1 (ratify DEC-1) - not yet answerable",
-  "step": "Cloud catch-up fire 20260817-2000 complete. Four opus workers dispatched, all in real isolated worktrees. T3b REJECTED the corrected behaviour extraction; T5 REJECTED DEC-1 after proving the precision-vs-scale ambiguity changes payable amounts; T16 delivered the vector capture plan; T17 ACCEPTED it after auditing 418/418 transcribed values as literally present. All four branches merged to main.",
-  "branch": "merged: softhouse/T3b-progressive-schedule-rereview, softhouse/T5-dec1-contract-review, softhouse/T16-tier0-vector-capture-plan, softhouse/T17-vector-capture-plan-review",
-  "next_action": "1) T16b - apply T17's 6 corrections to docs/analysis/tier0-vector-capture-plan.md (no oracle needed, any fire). 2) On an oracle-reaching fire: capture the discriminating vector for the precision-vs-scale question (T5 SS1 gives the config), then run C-00 calibration. 3) T4 retry (attempt 2 of 2) against T5's 9 required changes - only after Buyan answers the G-1 decision list.",
-  "blocked_on": "Gate G-1 - ratify DEC-1. NOT YET ANSWERABLE: the draft was rejected, and the defect class it turns on is one the current corpus provably cannot detect. Every other context in program.json declares tier 0 as a transitive dependency, so this gates the whole program.",
+  "updated_at": "2026-08-18T08:15Z",
+  "updated_by": "local fire 20260818-152328",
+  "current_item": "T21 — independent audit of capture pass 3",
+  "step": "queued; not yet dispatched",
+  "branch": null,
+  "next_action": "Dispatch T21 (opus, worktree) as the FIRST task of the next fire. Pass 3 is the only production-settings corpus and is unaudited; it was generated from Capture2.java and inherits the defects T19 found. Then run T4's retry — every decision feeding DEC-1 is now answered.",
+  "blocked_on": null,
   "open_questions": [
-    "SETTLED this fire: precision-vs-scale. Fineract threads one MathContext and consumes it in two incompatible senses - significant digits in multiply/divide(.., mc), decimal places in setScale(mc.getPrecision(), ..) at ProgressiveEMICalculator.java:1962 and :1979. 189 of 560 grid configs diverge; the shipped conformance vector does NOT discriminate.",
-    "OPEN, needs Buyan: the six G-1 decisions in .softhouse/gates.md, incl. the Mongolian tenant's actual rounding mode - unresolvable from source (properties default 6/HALF_EVEN, tests mock HALF_UP; production MoneyHelper.PRECISION=19 vs 12 mocked).",
-    "OPEN, needs Buyan: G-2 - a third, differently shaped attempt at T2, or treat T3b's review as the specification of record.",
-    "LEAD, unexplored: the seam has a dependency-free shadowJar entry point and this sandbox has JDK 21 + gradle, so Tier-0 capture may need no server and no PostgreSQL. Not attempted - gradle would have written build/ into the module three reviewers were grepping. A jar from a different JVM is not automatically the pinned oracle; C-00 must calibrate first and promoting it is Buyan's call."
+    "Does the orchestrator's claim that precision is load-bearing only above a size threshold survive an independent check? (T21)",
+    "Do the two dropped inputs behave the same at production settings (19, HALF_UP) as at 12? (T21)",
+    "Path B (server + PostgreSQL) capture is now a prerequisite for the parity corpus — who plans it, and does it belong inside Tier 0 at all? The orchestrator recommends NOT inside Tier 0."
   ],
-  "gate_pending": "G-1 (CONTRACT, ratify DEC-1) and G-2 (POLICY, third attempt at T2) - both in .softhouse/gates.md",
-  "oracle": "UNREACHABLE from the cloud sandbox (no docker socket, :5432 closed, actuator/health silent). T8 parked with reason oracle_unreachable. No vector synthesised; conformance NOT run and NOT reported as a pass.",
-  "last_checkpoint": "2026-08-17T13:05:00Z - clean exit, full checkpoint protocol run"
+  "gate_pending": "G-1 — ratification signature on the corrected DEC-1. Every decision feeding it is answered; T4 retry + re-review are the remaining agent work.",
+  "artefacts": {
+    "captures": [
+      ".softhouse/capture/out/capture-raw.json (pass 1, 9 captures, probes, audited T18)",
+      ".softhouse/capture/out/capture-tenant-raw.json (pass 2, 13 captures, probes, audited T19)",
+      ".softhouse/capture/out/capture-prod-raw.json (pass 3, 12 captures, PARITY CANDIDATES at (19, HALF_UP), UNAUDITED)"
+    ],
+    "reports": [".softhouse/capture/PASS2-REPORT.md", ".softhouse/capture/PASS3-REPORT.md"],
+    "reviews": [".softhouse/reviews/T18-capture-audit.md", ".softhouse/reviews/T19-capture-pass2-audit.md"],
+    "run_recipe": ".softhouse/capture/README-pass2.md (covers passes 2 and 3; pass 1 has NO committed recipe — T18 P0)"
+  },
+  "hard_rules_still_in_force": [
+    "No vector has been promoted to the store. Contract-shaped storage stays forbidden while G-1 is open.",
+    "Passes 1 and 2 are PROBES, not parity vectors — they ran at precision 12/8, which production never runs.",
+    "The capture seam honours 17 of the contract's 19 inputs. Never let a conformance PASS imply coverage of the other two."
+  ]
 }

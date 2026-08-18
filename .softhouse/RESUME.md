@@ -2,61 +2,81 @@
 
 Written by the orchestrator at every checkpoint; read by the next fire of `/softhouse-program` (and by a human) to see exactly where the factory paused. **The repo is the only memory** — never rely on an agent's session state.
 
-> **This file was written MID-FIRE on purpose.** Both 2026-08-18 fires before this one were killed by the Mac sleeping and left stale state behind. It is rewritten again at clean exit; if it still says "in flight" below, this fire died too and the branches named are where the work is.
+## Current state (local fire `20260818-152328`, oracle REACHABLE, clean exit)
 
-## Current state (local fire `20260818-152328`, oracle REACHABLE)
+- **Program**: `fineract-to-go-full-codebase` — **active, blocked at gate G-1 (ratification signature only)**
+- **Active run**: `2026-08-17-run1-harness-schedule-poc` — `blocked_on_gate`; contract-independent work advanced all fire
+- **Contexts**: 0 done / 17. Tier 0 `blocked_on_gate`; the other 16 are **READY-FOR-ANALYSIS**.
+- **Reference oracle**: **REACHABLE**. Image `sha256:e596339626bf…`, commit **build-attested** by the jar's own `git.properties` (`git.dirty=false`), Zulu 21.0.11, PostgreSQL 18.3. `caffeinate` held sleep off — the first fire today to exit cleanly.
+- **Production `MathContext` = `(19, HALF_UP)`** — ratified. `MoneyHelper.PRECISION = 19` is a compile-time constant; only the mode was ever a choice.
 
-- **Program**: `fineract-to-go-full-codebase` — **active, blocked at gate G-1**
-- **Active run**: `2026-08-17-run1-harness-schedule-poc` — `blocked_on_gate`, but contract-independent work is running
-- **Contexts**: 0 done / 17. Tier 0 is `blocked_on_gate`; the other 16 are **READY-FOR-ANALYSIS** under `policy.gate_scope`.
-- **Reference oracle**: **REACHABLE** — image `sha256:e596339626bf…`, Fineract `426a23544`, Zulu 21.0.11, PostgreSQL 18.3 on `:5432`. `caffeinate` now holds sleep off during a fire.
+## The headline: G-1 is now one signature away
 
-### What this fire did
+Buyan answered every G-1 decision this fire (`.softhouse/gates-proposed-answers.md`) and ratified **HALF_UP** and the **NBFI (ББСБ) licence** — which also closes the deposit-taking activation gate as *prohibited* (Art. 12.1.3 / 12.1.4): savings code ports, ships disabled, no endpoint exposed.
 
-**1. Rescued and processed the previous fire's abandoned work.** Fire `20260818-080003` built a golden-vector capture harness and ran it against the pinned oracle, then died mid-run; its output was committed by the wrapper but never read by anyone. It turned out to contain **the discriminating vector gate G-1 was waiting for**.
+What remains before the signature is agent work, not human: **T4's retry**, then a re-review.
 
-**2. Ran capture pass 2** (orchestrator, oracle-only work) adding a tenant context, which pass 1 lacked.
+## What this fire did
 
-**3. Dispatched three opus reviewers in worktrees** — nothing produced this fire is accepted on its author's say-so.
+**1. Rescued the previous fire's abandoned work.** Fire `20260818-080003` built a capture harness, ran it against the oracle and died mid-run; the wrapper committed its output but nobody had read it. It contained **the discriminating vector G-1 had been waiting for**.
 
-### Findings that matter
+**2. Ran two more capture passes** (orchestrator-only — capture touches the oracle):
+- **Pass 2** added a tenant context, closing pass 1's `D-04` error.
+- **Pass 3** re-captured at production settings after the ratification — **12 parity candidates**, the first that exist.
 
-1. **Precision is load-bearing, observed.** Pass 1 ran T5's exact configuration (18 × 18.5 %, principal 87,654,321) at precisions 8 / 12 / 19. p8 vs p12 differ in **every period** (EMI `5,613,766.95` vs `5,613,766.78`); p12 vs p19 differ by one minor unit in period 5 and in the final period. The shipped corpus cannot see this; the oracle can.
-2. **`installmentAmountInMultiplesOf` is silently dropped by the capture seam.** `LoanApplicationTerms.assembleFrom(LoanRepaymentScheduleModelData, MathContext)` reads 18 of the record's 19 components and never reads that one. The server path honours it. **A Go port could honour or ignore it and score identically against every vector this path can produce** — the same undiscriminable-input defect class T5 found for precision, in a second field, on a parameter Mongolian products would routinely use. Raised as **G-1 decision 7**.
-3. **`allowFullTermForTranche` is live — confirmed by the running oracle**, a third independent confirmation and the first that is not a source reading. Pass 1's `D-04` crashed for want of a tenant, proving the `true` branch reaches `MoneyHelper`; with a tenant it runs and is schedule-identical to `false` on single-disbursement loans.
-4. **C-00 calibration passes** from two independent harnesses, with and without a tenant.
-5. **Two capture paths are now distinguished** in `.softhouse/reference-oracle.md`: **Path A** (embeddable seam, in-process, no database — what both passes used, and which has the proven blind spot above) and **Path B** (running server + PostgreSQL, unused, the only way to reach what Path A drops).
+**3. Dispatched three opus reviewers in worktrees.** Nothing produced this fire was accepted on its author's say-so — including the orchestrator's own captures, which were audited and found wanting in three places.
 
-### Task state
+## Findings that matter
+
+1. **DEC-1 as drafted is empirically wrong by one minor unit** (T18, re-derived independently at p8/p12/p19 and reproduced against the oracle exactly). At precision 12 the oracle emits period-5 principal `4,531,420.25`; the significant-digits-only reading DEC-1's text describes emits `…26`. This is no longer arguable.
+2. **The conformance rig has a structural defect.** The capture seam accepts a **19-component contract and honours 17**. `installmentAmountInMultiplesOf` is never read by `assembleFrom`; `daysInYearCustomStrategy` is read but never copied by the `Builder` copy-constructor (`:304-351`). For both, the corpus has **zero discriminating power** — a Go port could honour or ignore them and score identically. Buyan's answer: expose them, specify server semantics normatively, and **refuse** with "unsupported: no discriminating vector" until Path-B vectors exist. Never silently drop.
+3. **Two capture paths are now distinguished** (`.softhouse/reference-oracle.md`): **Path A** (embeddable seam, in-process, no database — all three passes) and **Path B** (running server + PostgreSQL, unused). Path B is now a *prerequisite* for the parity corpus, not an optimisation.
+4. **Precision is load-bearing only above a size threshold** — the same precision change that is a no-op on a 100-unit loan moves money at principal 87,654,321. A corpus topping out at 245,000 could never have caught it. **Unaudited orchestrator claim — T21 should test it.**
+5. **The rig is calibrated across three independent harnesses**, and all 12 pass-3 captures satisfy all six property invariants, integer-exact.
+
+### Three errors the reviewers caught in the orchestrator's own work
+
+Recorded because they are the reason the review step exists, and because the write-ups were cited in `gates.md`:
+
+- **An over-claim about the precision sweep** (T18): it cannot separate the two `MathContext` *senses* — one integer drives both — and the sense-1 schedule at p12 is *identical* to the oracle's at p19, so reading the `D-01`/`D-01-p19` delta as "the sense difference" is wrong. `gates.md` corrected.
+- **A false headline argument** (T19): "a `17.01` EMI rounded to multiples of 100 cannot be a no-op" — it can; `safeRoundingForEMI` returns the unrounded EMI when rounding would zero it.
+- **A false corroboration** (T19): the `CurrencyData.inMultiplesOf` channel is gated on `decimalPlaces == 0` and the harness hard-codes `2`, so it proved nothing.
+
+The conclusions survived — and the central one was upgraded from *inferred* to *proved* by the auditor's reflective read — but the arguments did not, and are withdrawn on the record.
+
+## Task state
 
 | Task | State | Note |
 |---|---|---|
 | T1 pin reference oracle | done | |
-| T2 extract schedule behavior | **parked** | Retries exhausted. Unpark = gate **G-2** |
+| T2 extract schedule behavior | **parked** | Retries exhausted. Unpark = gate **G-2** (Buyan: *yes, once, reshaped*) |
 | T3 / T3b independent reviews | done | Both REJECTED their subject |
-| T4 DEC-1 draft | **needs_retry** | 1 retry left. Blocked on Buyan answering G-1 decisions 1–7 |
+| **T4 DEC-1 draft** | **needs_retry — NOW UNBLOCKED** | 1 retry left. Every decision feeding it is answered. **This is the next fire's main event.** |
 | T5 review DEC-1 | done | REJECTED, 9 required changes |
-| T6 **USER GATE** ratify DEC-1 | **blocked** | **Gate G-1 — still not answerable, but the evidence now exists** |
+| T6 **USER GATE** ratify DEC-1 | **blocked** | **G-1 — signature only, once T4's retry is re-reviewed** |
 | T7, T9–T12, T14, T15 | pending | Behind T6 |
-| T8 capture golden vectors | **in_progress** | Unparked. Passes 1 + 2 captured, raw observed, **no vector promoted** |
-| T13 verify (UAT) | pending | Now also gated on T18, T19 |
+| T8 capture golden vectors | in_progress | 3 passes captured; passes 1–2 audited; **no vector promoted to the store** |
+| T13 verify (UAT) | pending | Gated on T9/T11/T12/T18/T19/T21 |
 | T16 / T17 capture plan + audit | done | |
-| **T16b** apply T17's 6 corrections | **in flight** | branch `softhouse/T16b-capture-plan-corrections`; WIP commit `1a9c3c8` has ~5 of 6; correction #2 (FULL_LEAP_YEAR) verifiably not applied |
-| **T18** audit capture pass 1 | **in flight** | opus, worktree |
-| **T19** audit capture pass 2 | **in flight** | opus, worktree — audits the orchestrator's own work |
+| T16b apply T17's corrections | **done, merged** | Arrival state was 1.5 of 6, not the ~5 estimated |
+| T18 audit capture pass 1 | **done** | ACCEPTED WITH REQUIRED CHANGES (4 P0 blockers) |
+| T19 audit capture pass 2 | **done** | ACCEPTED WITH REQUIRED CHANGES (10 required changes) |
+| **T21** audit capture pass 3 | **pending** | **Run this first next fire** — pass 3 is the corpus conformance would grade against |
+| T20 fold F2–F6 into the harness | pending | Behind T7 |
 
-### Next action, in order
+## Next action, in order
 
-1. **Land T18 / T19 / T16b**; act on their verdicts. A REJECTED capture means the finding above is not yet fact.
-2. **Buyan answers G-1 decisions 1–7** (`.softhouse/gates.md`). Decision 7 is new this fire and is the most consequential.
-3. **T4 retry** (attempt 2 of 2) once 1–7 are answered.
-4. Re-review, re-present G-1.
-5. **Not before someone decides it:** Path B capture (server + PostgreSQL) is the only way to close what Path A drops. The orchestrator recommends **against** building it inside Tier 0 — Tier 0 exists to prove the pipeline on the smallest real slice.
+1. **T21** — audit capture pass 3. It inherits `Capture2.java`'s defects and is unaudited; nothing should be graded against it until this lands.
+2. **T4 retry** (attempt 2 of 2) against T5's nine required changes **plus** every answer in `gates-proposed-answers.md`. Nothing human blocks it any more.
+3. **Re-review T4**, then present G-1 for signature.
+4. **G-2**: Buyan approved one reshaped T2 attempt — surgical edits plus a mechanical restatement sweep. T16b just proved that shape works.
+5. **Apply T18's P0 list and T19's ten required changes** to all three passes before any capture becomes a vector: environment-attestation block, `fromDate`/`fee`/`penalty` emission, committed run recipes, retained stack traces.
+6. **Path B** (server + PostgreSQL capture) — now a prerequisite for the parity corpus. Not started; needs planning, not just execution.
 
-### Open decisions for Buyan — `.softhouse/gates.md`
+## Open decisions for Buyan
 
-- **G-1 CONTRACT** — now **seven** decisions. Four of the original six are newly evidenced by observation; decision 7 (`installmentAmountInMultiplesOf` inert on the grading path) is new and the orchestrator recommends (b) or (c) over (a).
-- **G-2 POLICY** — permit a third, differently-shaped attempt at T2, or treat T3b's review as the specification of record.
+- **G-1** — only the **ratification signature** on the corrected DEC-1 remains. Everything feeding it is answered.
+- **RESERVED, still open**: none blocking Run 1. (Licence and rounding mode are both now decided.)
 
 ## Checkpoint protocol (what a real pause looks like here)
 
@@ -68,4 +88,4 @@ Written by the orchestrator at every checkpoint; read by the next fire of `/soft
 
 ## Pause reason
 
-`In flight at time of writing — three reviewers running (T16b, T18, T19). Rewritten at clean exit. If this text survives, the fire died mid-run and the work is on the branches named above.`
+`Clean exit. All three dispatched workers landed and merged; all deliverables committed; no worker WIP outstanding. Not an idle stop — the fire ended with work queued (T21, then T4's retry), and the next fire should start on T21 immediately. No vector was promoted, no bar lowered, no gate crossed.`
