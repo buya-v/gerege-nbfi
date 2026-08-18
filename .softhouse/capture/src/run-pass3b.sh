@@ -125,10 +125,10 @@ fi
 
 # --- 8/9. structural + settings validation, and the attestation sidecar ---------------------------
 python3 - "$JSON" "$ATT" "$LOG" "$ACTUAL_IMAGE_ID" "$EXPECTED_IMAGE_REF" "$ACTUAL_COMMIT" "$PINNED_FINERACT" \
-        "$SEAM_SHA" "$HARNESS_SHA" "$RUN_ID" "$CPD" <<'PY'
-import hashlib, json, subprocess, sys
+        "$SEAM_SHA" "$HARNESS_SHA" "$RUN_ID" "$CPD" "$ERR" "$RAW" <<'PY'
+import hashlib, json, os, sys
 
-jsonp, attp, logp, image_id, image_ref, commit, pinned, seam_sha, harness_sha, run_id, cpd = sys.argv[1:12]
+jsonp, attp, logp, image_id, image_ref, commit, pinned, seam_sha, harness_sha, run_id, cpd, errp, rawp = sys.argv[1:14]
 
 raw = open(jsonp, 'rb').read()
 try:
@@ -197,7 +197,11 @@ sidecar = {
     "producedBy": ".softhouse/capture/src/run-pass3b.sh",
     "runId": run_id,
     "capturedAtUtc": att['capturedAtUtc'],
-    "files": {},
+    "files": {p: hashlib.sha256(open(p, 'rb').read()).hexdigest()
+              for p in (jsonp, logp, errp, cpd, rawp) if os.path.isfile(p)},
+    "filesNote": "sha256 of every output of this run except this sidecar itself. The capture JSON's "
+                 "digest moves between runs because the attestation carries a UTC timestamp; use "
+                 "capturesCanonicalSha256 to check a re-run.",
     "capturesCanonicalSha256": captures_digest,
     "capturesCanonicalSha256Definition":
         "sha256 of json.dumps(doc['captures'], sort_keys=True, separators=(',',':')).encode('utf-8') — "

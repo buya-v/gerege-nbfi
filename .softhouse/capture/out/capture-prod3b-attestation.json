@@ -2,9 +2,16 @@
   "artifact": "Path A capture pass 3b",
   "capturePath": "Path A — embeddable progressive-loan schedule-generator seam, in-process. No Fineract server is started and no database connection is opened.",
   "producedBy": ".softhouse/capture/src/run-pass3b.sh",
-  "runId": "pass3b-20260818T151242Z",
-  "capturedAtUtc": "2026-08-18T15:12:43.613923970Z",
-  "files": {},
+  "runId": "pass3b-20260818T152052Z",
+  "capturedAtUtc": "2026-08-18T15:20:53.441500460Z",
+  "files": {
+    ".softhouse/capture/out/capture-prod3b-raw.json": "8d23c48fa13c04677b51bacdf07d101d6a061c79815d76b4983eccdbac945c79",
+    ".softhouse/capture/out/capture-prod3b-log.txt": "d993a1f8a39e62de4923bc94dc4c4eafd549e169e85014f98bbc408e2ab963f6",
+    ".softhouse/capture/out/capture-prod3b-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".softhouse/capture/out/capture-prod3b-classpath-sha256.txt": "8738dbaec1c242f10f28be685706b40bd46c16ff3afff696335f7e0653efa011",
+    ".softhouse/capture/out/capture-prod3b-raw.txt": "9705af111a239a32fe035c5e3a5cd104167523159f5dbea0b01c89f368c810ed"
+  },
+  "filesNote": "sha256 of every output of this run except this sidecar itself. The capture JSON's digest moves between runs because the attestation carries a UTC timestamp; use capturesCanonicalSha256 to check a re-run.",
   "capturesCanonicalSha256": "02e94174cda26540e882d6da0f0ac3aabc02923ddf501a4dde90fd7d60aa38ec",
   "capturesCanonicalSha256Definition": "sha256 of json.dumps(doc['captures'], sort_keys=True, separators=(',',':')).encode('utf-8') — stable across runs; the whole-file sha256 is NOT, because the attestation carries a UTC timestamp",
   "measuredByRunnerOnHost": {
@@ -19,7 +26,7 @@
   },
   "measuredInsideContainer": {
     "capturePath": "Path A — embeddable progressive-loan schedule-generator seam, in-process. No Fineract server is started and no database connection is opened.",
-    "capturedAtUtc": "2026-08-18T15:12:43.613923970Z",
+    "capturedAtUtc": "2026-08-18T15:20:53.441500460Z",
     "fineract": {
       "gitPropertiesSource": "BOOT-INF/classes/git.properties inside /app/fineract-provider.jar",
       "gitCommitId": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
@@ -84,23 +91,23 @@
       "dockerImageId": "sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a",
       "pinnedFineractCommit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
       "pinnedFineractPath": "/Users/buv/fineract",
-      "runId": "pass3b-20260818T151242Z"
+      "runId": "pass3b-20260818T152052Z"
     }
   },
   "oracleOwnMoneyHelperLogLines": [
-    "15:12:43.842 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `attest_probe`: HALF_UP",
-    "15:12:43.974 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_cal`: HALF_UP",
-    "15:12:44.014 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_00`: HALF_UP",
-    "15:12:44.020 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_01`: HALF_UP",
-    "15:12:44.028 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_02`: HALF_UP",
-    "15:12:44.030 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_02b`: HALF_UP",
-    "15:12:44.032 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_03`: HALF_UP",
-    "15:12:44.033 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_04f`: HALF_UP",
-    "15:12:44.034 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_04t`: HALF_UP",
-    "15:12:44.036 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_mnt5m`: HALF_UP",
-    "15:12:44.039 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_mnt1m2`: HALF_UP",
-    "15:12:44.041 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_mnt50m`: HALF_UP",
-    "15:12:44.048 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_mnt4m999`: HALF_UP"
+    "15:20:53.646 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `attest_probe`: HALF_UP",
+    "15:20:53.779 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_cal`: HALF_UP",
+    "15:20:53.814 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_00`: HALF_UP",
+    "15:20:53.820 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_01`: HALF_UP",
+    "15:20:53.827 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_02`: HALF_UP",
+    "15:20:53.829 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_02b`: HALF_UP",
+    "15:20:53.830 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_03`: HALF_UP",
+    "15:20:53.832 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_04f`: HALF_UP",
+    "15:20:53.834 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_04t`: HALF_UP",
+    "15:20:53.836 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_mnt5m`: HALF_UP",
+    "15:20:53.838 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_mnt1m2`: HALF_UP",
+    "15:20:53.840 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_mnt50m`: HALF_UP",
+    "15:20:53.847 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_mnt4m999`: HALF_UP"
   ],
   "captureCount": 12,
   "captureIds": [

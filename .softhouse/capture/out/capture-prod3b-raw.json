@@ -5,7 +5,7 @@
   "moneyHelperPrecision": 19,
   "attestation": {
     "capturePath": "Path A — embeddable progressive-loan schedule-generator seam, in-process. No Fineract server is started and no database connection is opened.",
-    "capturedAtUtc": "2026-08-18T15:12:43.613923970Z",
+    "capturedAtUtc": "2026-08-18T15:20:53.441500460Z",
     "fineract": {
       "gitPropertiesSource": "BOOT-INF/classes/git.properties inside /app/fineract-provider.jar",
       "gitCommitId": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
@@ -64,7 +64,7 @@
       "dockerImageId": "sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a",
       "pinnedFineractCommit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
       "pinnedFineractPath": "/Users/buv/fineract",
-      "runId": "pass3b-20260818T151242Z"
+      "runId": "pass3b-20260818T152052Z"
     }
   },
   "captures": [
