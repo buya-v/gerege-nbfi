@@ -68,14 +68,45 @@ curl -sk "$B/loanproducts/3" -H "$A" -H "$T" | grep -o '"daysInYearCustomStrateg
 
 ## The captures
 
+> **CORRECTED per T22 audit P0-5 (applied by T30, 2026-08-18 — no oracle required).** The loop below
+> previously wrote `-o out/B-$n-*-raw.json`. A shell glob in an output path does **not** do what it looks like
+> it does: `*` cannot expand against a file that does not exist yet, so `curl` creates files named literally
+> `B-01-*-raw.json` — never the committed names. Running the old recipe verbatim could not reproduce the
+> corpus. The loop now names each output file explicitly. It also captures **`%{http_code}`** and **fails the
+> capture on any status other than `200`**: `curl -s … -o file` discards the status entirely, so before this
+> fix a `400` error body would land in `out/` looking exactly like a capture.
+
 ```sh
-for n in 01 02 03 04; do
-  case $n in 01) f=calc-B-01-baseline;;          02) f=calc-B-02-multiplesof100;;
-             03) f=calc-B-03-diycs-fullleapyear;; 04) f=calc-B-04-diycs-feb29only;; esac
-  curl -sk -X POST "$B/loans?command=calculateLoanSchedule" \
-       -H "$A" -H "$T" -H "$CT" -d @req/$f.json -o out/B-$n-*-raw.json
+set -e
+for pair in "01:calc-B-01-baseline:B-01-baseline" \
+            "02:calc-B-02-multiplesof100:B-02-multiplesof100" \
+            "03:calc-B-03-diycs-fullleapyear:B-03-diycs-fullleapyear" \
+            "04:calc-B-04-diycs-feb29only:B-04-diycs-feb29only"; do
+  n=${pair%%:*}; rest=${pair#*:}; req=${rest%%:*}; outname=${rest#*:}
+  code=$(curl -sk -X POST "$B/loans?command=calculateLoanSchedule" \
+              -H "$A" -H "$T" -H "$CT" -d @req/$req.json \
+              -o "out/$outname-raw.json" -w '%{http_code}')
+  echo "B-$n  HTTP $code  -> out/$outname-raw.json"
+  if [ "$code" != "200" ]; then
+    echo "CAPTURE FAILED: B-$n returned HTTP $code — the file in out/ is an ERROR BODY, not a capture." >&2
+    echo "Do not commit it, and do not treat it as an observation." >&2
+    exit 1
+  fi
 done
+
+# The committed corpus, for a byte-identity check after the run:
+#   713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009  out/B-01-baseline-raw.json
+#   9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8  out/B-02-multiplesof100-raw.json
+#   892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf  out/B-03-diycs-fullleapyear-raw.json
+#   c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80  out/B-04-diycs-feb29only-raw.json
+sha256sum out/B-0*-raw.json
 ```
+
+**Still open on this recipe, and NOT fixed here** — T22 P0-4: the Preconditions block above does not yet
+*fail the run* on the two settings that actually decide the arithmetic (`c_configuration.rounding-mode` must
+be **4** = HALF_UP; `tenants.timezone_id` must be `Asia/Ulaanbaatar` or `Asia/Hovd`) nor assert that
+`tenant_server_connections.schema_connection_parameters` is empty. Those assertions are written against a
+running server and are parked with the re-point (T22 P0-6) for the next oracle-reaching fire.
 
 `out/*.json` are the **raw response bytes**. The server emits money as JSON *numbers*, not strings, so any
 tooling that reads these must treat them as text or exact decimal — parsing to a binary float before

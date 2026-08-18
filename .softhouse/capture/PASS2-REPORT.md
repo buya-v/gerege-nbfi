@@ -2,8 +2,14 @@
 
 **Fire:** local `20260818-152328` (Buyan's Mac), 2026-08-18
 **Executed by:** the orchestrator (vector capture is orchestrator-only — it touches the oracle)
-**Status:** RAW OBSERVED, **NOT YET INDEPENDENTLY AUDITED** — pending task T19. Nothing here may be
-promoted into the vector store, and no gate may be answered on it, until that audit lands.
+**Status:** RAW OBSERVED, **INDEPENDENTLY AUDITED by T19 (2026-08-18) — ACCEPTED WITH REQUIRED CHANGES**.
+The audit re-ran `Capture2.java` unmodified in the pinned image and got byte-identical output, so every
+*observation* here is sound; six errors of *reasoning* it found are recorded verbatim in the **CORRECTIONS**
+section at the end of this report. **Nothing here may be promoted into the vector store, and no gate may be
+answered on it** — independently of the audit, all 13 captures ran at `MathContext(12, HALF_UP)`, so by
+CLAUDE.md they are **discrimination probes and can never be parity vectors**. *(Status line corrected by T30,
+2026-08-18: it previously read "NOT YET INDEPENDENTLY AUDITED — pending task T19" in a document that already
+carried the T19 corrections — the same self-contradiction T27 RC-1 found in the pass-3 and Path B reports.)*
 
 ## Provenance
 
@@ -144,7 +150,9 @@ at equal decimal places.
 live; establish that `installmentAmountInMultiplesOf` is inert through the capture seam and *why*; add a
 first MNT-scale observation; confirm the ambient `MathContext` is `precision=19` + tenant mode.
 
-**Does not:** license any vector into the store (T19 audit pending); answer any G-1 decision; say anything
+**Does not:** license any vector into the store (the T19 audit has since landed — ACCEPTED WITH REQUIRED
+CHANGES, see CORRECTIONS below — and pass 2's precision-12 captures are probes, never parity vectors);
+answer any G-1 decision; say anything
 about multi-disbursement behaviour; or show the tenant rounding mode is safe to leave unspecified.
 
 **New work this raises:**
