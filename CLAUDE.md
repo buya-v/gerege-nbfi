@@ -51,6 +51,16 @@ Do not let an agent decide these; route as `executor: "user"`:
   - **SCC (ХЗХ)** — a licensed savings and credit cooperative may take savings **from members only**, and lend to members only (Law on Savings and Credit Cooperatives).
   - Which licensed entity operates a given deployment is a `user` fact, and it decides which of the two applies.
 
+## Ratified tenant parameters (Buyan, 18 August 2026)
+
+Decided by the user; not re-decidable by an agent. Any change is a `user` gate.
+
+- **Licence: NBFI (ББСБ).** So deposit-taking activation is **prohibited** — Law on Non-Banking Financial Activities Art. 12.1.3 / 12.1.4. Savings/deposit code may be ported (full-codebase scope) but ships disabled, and an NBFI deployment exposes **no deposit endpoint**. The SCC members-only exception does not apply to us.
+- **Rounding mode: `HALF_UP`** for MNT. Fineract stores this per tenant as a `RoundingMode` ordinal — `HALF_UP` = **4** — via `MoneyHelper.initializeTenantRoundingMode`. Pin it explicitly in tenant config; never inherit a default.
+- **Significant digits: 19 — not a choice.** `MoneyHelper.PRECISION = 19` is a compile-time constant and `getMathContext()` = `new MathContext(19, tenantRoundingMode)` [VERIFIED: `fineract-core/.../MoneyHelper.java:35,91-93`]. Only the mode is tenant-configurable. **The production `MathContext` is therefore `(19, HALF_UP)`**, and any Go port or vector claiming parity must run at that setting. Precision 12 appears only in mocked tests.
+
+**Consequence for the vector store:** captures taken at precision 12 or 8 (`C-00`, `D-01`, `D-02`, `D-03`, `D-04`, `D-01-p8`, `D-01-mnt`) are **discrimination probes, not parity vectors** — they document how the arithmetic responds to precision, but none of them is production-representative. The parity corpus must be re-captured at `(19, HALF_UP)`, starting with a new C-00 calibration. `D-01-p19` is the only existing capture at the production precision.
+
 ## Answering gates
 
 When a `user` gate is raised, the driver **first attempts a grounded answer** and escalates only what genuinely cannot be answered. Classify every gate item:

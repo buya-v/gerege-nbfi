@@ -80,3 +80,29 @@ Previously deferred as "port yes, activate no". The statute makes the first half
 - **RESERVED:** which licensed entity actually operates this platform. The two answers differ, so the deployment must know which it is.
 
 Unchanged either way: never render member savings as insured, protected or guaranteed.
+
+---
+
+# DECIDED by Buyan — 18 August 2026
+
+- **Rounding mode: `HALF_UP`.** Closes G-1 item 6's reserved half. All nine existing captures already used HALF_UP, so no re-capture is needed on mode grounds.
+- **Licence: NBFI (ББСБ).** Closes the deposit-taking activation gate: **activation prohibited** (Art. 12.1.3 / 12.1.4). Savings code ports but ships disabled with no endpoint exposed. The SCC members-only path does not apply.
+
+## What that resolved on its own, and what it exposed
+
+Precision was left open. It is **not** a business choice: `MoneyHelper.PRECISION = 19` is a compile-time constant and `getMathContext()` returns `new MathContext(19, tenantRoundingMode)` [VERIFIED: `fineract-core/src/main/java/org/apache/fineract/organisation/monetary/domain/MoneyHelper.java:35, 91-93`]. Only the mode is per-tenant. **Production `MathContext` = `(19, HALF_UP)`.**
+
+So the answer to "significant digits vs scale" is settled empirically rather than by preference: whatever the Go port does, it must reproduce Fineract at precision 19 with HALF_UP, and `SignificantDigits`/`RateFactorScale` are both fed from that one `MathContext` exactly as Fineract feeds them.
+
+**This invalidates most of the current capture set as parity evidence.** `C-00`, `D-01`, `D-02`, `D-02b`, `D-03`, `D-04`, `D-01-p8` and `D-01-mnt` were captured at precision 12 or 8 — precisions production never runs. They remain valuable as *discrimination probes* (they are what proved the ambiguity moves money), but they are not parity vectors. Only `D-01-p19` sits at the production precision.
+
+### Required follow-on work
+
+1. **Re-capture the parity corpus at `(19, HALF_UP)`**, beginning with a fresh `C-00` calibration at those settings. Until that exists, no conformance run can claim production parity.
+2. **Re-label the existing captures** in the vector store as `probe` rather than `parity`, so nobody later mistakes a precision-12 vector for evidence.
+3. **Pin `(19, HALF_UP)` in tenant configuration explicitly** — never inherit a default that a future Fineract release could move.
+4. **T4 retry** may now proceed against T5's nine required changes plus every ENGINEERING answer above; nothing in DEC-1 is blocked on a human any more except the signature itself.
+
+### Still with Buyan
+
+Only the **ratification signature** on the corrected DEC-1 (T6). Every decision feeding it is now answered. When T4's retry and its re-review land clean, DEC-1 is a one-word confirmation away.
