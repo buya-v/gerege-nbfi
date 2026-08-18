@@ -47,17 +47,35 @@ each period's principal + interest equals its total; and disbursed + interest eq
 **12 of 12 PASS, no exceptions.** These are integer-exact checks on the emitted decimal strings — no
 tolerance was applied, because none should be needed.
 
-## Finding — precision is load-bearing, but only above a size threshold
+## Finding — precision sensitivity is a rounding-boundary property, NOT a size threshold
+
+> **CORRECTED by T21 audit (2026-08-18), P0 item 1.** An earlier version of this section claimed precision
+> is "load-bearing, but only above a size threshold" — that a 100-unit loan cannot show a p12-vs-p19
+> divergence while an 87-million-unit loan does. **The oracle refutes that claim.** The corrected,
+> oracle-observed statement follows. Every value below is quoted from the committed oracle transcript
+> `.softhouse/reviews/t21v2/t21v2-probe2-oracle-out.txt`; none is re-run or derived here.
 
 `P-00` (the calibration loan at precision **19**) is **identical** to `P-CAL` (the same loan at precision
-**12**), every period, every column. Yet at principal 87,654,321 the same precision change moves money —
-pass 1 recorded p12 `13,393,481.05` vs p19 `13,393,481.04`, and p8 diverging in *every* period.
+**12**), every period, every column. But precision sensitivity is a **rounding-boundary property of the
+`(principal, n, rate)` triple, not a function of principal magnitude.** The oracle, run at
+`MathContext(12, HALF_UP)` vs `MathContext(19, HALF_UP)` with everything else fixed, shows:
 
-So the honest statement is narrower than "precision changes the schedule": **precision changes the schedule
-once the principal is large enough that 12 significant digits stop covering the intermediate products.**
-A 100-unit loan cannot show it; an 87-million-unit loan does. This matters directly for Mongolia, where
-ordinary principals are exactly in the range where it starts to bite — and it is a good illustration of why
-a corpus whose largest principal is 245,000 could never have caught this.
+- On the `36 × 16.8 %` shape — the shape of `P-MNT-50M` — the two precisions **diverge at principal 4.00**
+  (p12 total interest `1.13` vs p19 `1.14`), and diverge again at 59, 72, 340, 426, 6,940 — yet are
+  **identical at principal 50,000,000** (`13,995,886.40` on both). Divergence at 4.00 and identity at
+  50,000,000 on the *same shape* is the direct contradiction of any size threshold.
+- On the `6 × 7.0 %` shape the two are **identical at principal 87,654,321** (`1,798,283.07` on both) and
+  at 43,811 and 131,432, but **diverge at 131,433**. The 87-million divergence the old text cited belongs to
+  the `18 × 18.5 %` shape (`13,393,481.05` p12 vs `13,393,481.04` p19 — `P-01`), not to magnitude.
+- **All four MNT captures are p12/p19-identical** (1,200,000; 4,999,999; 5,000,000; 50,000,000). Pass 3
+  therefore supplies **no evidence** that Mongolian loan sizes are precision-sensitive; the earlier sentence
+  claiming they are "exactly in the range where it starts to bite" is contradicted by pass 3's own captures.
+
+The port consequence is the opposite of reassuring: **no "small loans are safe" heuristic exists** — a Go
+implementation that gets the precision seam wrong can diverge on a 4-unit loan. The conformance corpus must
+cover *shape* (number of periods, rate) as deliberately as it covers size. `P-01` is a witness that
+sensitivity occurs at realistic sizes; `P-MNT-50M` is a witness that it does not always. Both are in the
+corpus, which is correct — the corpus is fine; only the earlier prose about it was wrong.
 
 ## The MNT-scale parity candidates
 

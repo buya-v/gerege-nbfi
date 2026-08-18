@@ -1,3 +1,11 @@
+!!!!!!!!!! RETRACTED — output of a DEFECTIVE model. DO NOT USE. !!!!!!!!!!
+Retracted by the T21 independent audit (T21-v2), 2026-08-18.
+See .softhouse/reviews/T21-capture-pass3-audit.md §9. The generating
+script's model never applies the EMI smoothing pass and misreads
+Money.copy(double) as a multiply, so any divergence/threshold reported
+below is NOT the oracle's answer. Oracle-observed values are committed at
+.softhouse/reviews/t21v2/t21v2-probe2-oracle-out.txt.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ### C-00 shape (6 x 7.0%): n=6 rate=7.0%  — first divergence per decade (model-located)
   1e2   divergent   0/225 sampled (  0.0%)   first: []

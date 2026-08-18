@@ -1,5 +1,20 @@
 #!/usr/bin/env python3
 """
+================================ RETRACTED ================================
+RETRACTED by the T21 independent audit (T21-v2), 2026-08-18. DO NOT REUSE.
+See `.softhouse/reviews/T21-capture-pass3-audit.md` §9.
+
+This model is correct ONLY on inputs where the EMI smoothing pass does not
+fire: it never executes `checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods`
+(ProgressiveEMICalculator.java:1258-1309), and its adjustment trigger misreads
+`Money.copy(double)` (Money.java:216-222 REPLACES the amount) as a multiply.
+It happens to match the 12 pass-3 captures (the smoothing pass fires on none
+of them), but it is unreliable off that set and drives the equally-retracted
+`t21-probe-threshold.py`. The audit's own from-source model
+(`.softhouse/reviews/t21v2/t21v2-rederive.py`) supersedes it. Kept on-disk
+only as a record of the retracted approach.
+==========================================================================
+
 T21 AUDIT PROBE — INDEPENDENT re-derivation of the Fineract progressive-loan
 amortization, written from the pinned source at /Users/buv/fineract
 (commit 426a23544e8426a38ae43ae404670a0a7e85b9eb) and NOT from any capture output.

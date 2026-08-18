@@ -1,5 +1,17 @@
 #!/usr/bin/env python3
 """
+================================ RETRACTED ================================
+RETRACTED by the T21 independent audit (T21-v2), 2026-08-18. DO NOT REUSE.
+See `.softhouse/reviews/T21-capture-pass3-audit.md` §9.
+
+Companion to the retracted `t21-probe-rederive.py`; it shares the same
+defective amortization model (no EMI smoothing pass; `Money.copy(double)`
+misread as a multiply). Its date-sequence and P-03 structural readings were
+independently CONFIRMED against source by the audit (§4), but its schedule
+arithmetic must not be relied on. Superseded by
+`.softhouse/reviews/t21v2/t21v2-rederive.py`. Kept only as a record.
+==========================================================================
+
 T21 AUDIT PROBE (part 2) — re-derivation of P-02, P-02b, P-03, which my first probe
 did not cover because their repayment-date sequences are not plain 1st-of-month.
 

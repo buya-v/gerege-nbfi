@@ -1,5 +1,23 @@
 #!/usr/bin/env python3
 """
+================================ RETRACTED ================================
+RETRACTED by the T21 independent audit (T21-v2), 2026-08-18. DO NOT REUSE.
+See `.softhouse/reviews/T21-capture-pass3-audit.md` §9.
+
+This script's re-derivation model is DEFECTIVE on the exact code path that
+decides these cases: it never applies the EMI smoothing pass
+(`checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods`,
+ProgressiveEMICalculator.java:1258-1309), and its trigger formula misreads
+`Money.copy(double)` (Money.java:216-222, which REPLACES the amount) as a
+multiply, so its threshold RHS is `EMI × floor(n/2)` where the oracle uses
+the bare `Money(floor(n/2))`. Consequently the divergences it reports do not
+match the oracle: e.g. its headline "6 × 7.0 % smallest divergent principal
+≤ 400000: 43811" is WRONG — the oracle emits IDENTICAL schedules at 43,811
+(first true divergence on that shape is 131,433). The refuting oracle values
+are committed at `.softhouse/reviews/t21v2/t21v2-probe2-oracle-out.txt`.
+Kept on-disk only as a record of the retracted approach.
+==========================================================================
+
 T21 AUDIT PROBE — search for the p12-vs-p19 divergence threshold.
 
 This uses my re-derivation model (t21-probe-rederive.py), which matched the pinned
