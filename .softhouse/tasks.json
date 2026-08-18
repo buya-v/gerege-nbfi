@@ -575,9 +575,9 @@
       "dependencies": [
         "T24"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 0,
-      "note": "Dispatched by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T26-dec1-v3-rereview. Independent adversarial re-review of DEC-1 v3: re-derives from the pinned Fineract source (426a23544), forbidden from reusing the defective t21-probe-rederive.py, and cannot make new observations (no oracle in the cloud sandbox). Must also give the driver a view on whether ratification should wait on capturing vectors that trip the EMI re-adjust guard. G-1 closes ONLY on a clean verdict under P-2."
+      "note": "Delivered by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T26-dec1-v3-rereview (256cced), merged to main. VERDICT: ACCEPTED WITH REQUIRED CHANGES - NOT ratifiable. Driver did NOT ratify; G-1 stays open (standing policy P-2 permits ratification only on a CLEAN review). T23's three P0s re-derived from source: P0-1 substantively correct but INCOMPLETE, P0-2 fully resolved (no restatement of the deleted ordering clause survives anywhere), P0-3 resolved. ONE NEW P0 (P0-T26-1): the EMI re-adjust loop is specified by its TRIGGER but never by its EFFECT - adjustment magnitude, apply-and-recompute, the |newDiff|<|oldDiff| adoption test, break-on-equal, and the guard's floor(n/2)>0 / emiDifference!=0 conjuncts are all absent. Over 24,000 in-graded-domain shapes the guard fires on 2,855; omitting the adoption test diverges on 2,156, absorbing the whole residual on 699 - up to 0.13 in total interest on DEC-1's own worked example, and NO Run-1 vector trips the guard, so the corpus cannot catch it. Plus P1-T26-1 (wrong ACTUAL arm cited: for an annual period partialPeriodCalculationNeeded is always true so :1526-1531 runs and :1534-1535 is unreachable) and P1-T26-2 (revision 3 self-contradicts on Money.java:220-222). Build/vet/gofmt clean, non-negotiable scan PASS. Reviewer's view on the vector question: do NOT gate ratification on guard-tripping vectors - bind them to conformance/cutover instead; the SPECIFICATION fix needs no oracle and must precede the freeze."
     },
     {
       "id": "T27",
@@ -598,6 +598,41 @@
       "attempts": 0,
       "contract_independent": true,
       "note": "Dispatched by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T27-corpus-corrections-review. Promotability audit of T25's oracle-independent slice: re-runs the invariant scripts, re-checks every corrected claim against the committed artifact it cites, and must state which captures (if any) are promotable today vs still blocked by a parked P0."
+    },
+    {
+      "id": "T28",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "title": "Apply T26's P0 and two P1s to DEC-1 v3 -> v4 (specify the EMI re-adjust loop's EFFECT)",
+      "dependencies": [
+        "T26"
+      ],
+      "files_hint": [
+        "docs/adr/DEC-1-schedule-generator-adapter.md",
+        "nexus/internal/apps/loanschedule/contract/contract.go",
+        ".softhouse/handoff/"
+      ],
+      "contract_independent": true,
+      "note": "Raised and dispatched by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T28-dec1-v4-readjust-effect. Needs NO live oracle - T26 states the specification fix must precede the freeze and needs no observation. Transcribes the loop semantics from the reviewer's reference model .softhouse/reviews/t26-probe/t26_rederive.py::readjust_loop, re-verified against the pinned Java source. Must not regress T24's P0-2/P0-3, which T26 confirmed clean."
+    },
+    {
+      "id": "T29",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "title": "Independent re-review of DEC-1 v4 (the last step before ratification)",
+      "dependencies": [
+        "T28"
+      ],
+      "files_hint": [
+        ".softhouse/reviews/",
+        ".softhouse/handoff/"
+      ],
+      "contract_independent": true,
+      "note": "Raised by cloud catch-up fire cloud-20260818-2000. G-1 closes ONLY via T28 -> T29 CLEAN -> driver ratifies under standing policy P-2. ACCEPTED WITH REQUIRED CHANGES is not clean. Must re-derive from the pinned source rather than checklist-check T28, and must confirm T24's P0-2/P0-3 were not regressed."
     }
   ]
 }
