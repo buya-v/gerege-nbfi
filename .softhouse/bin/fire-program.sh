@@ -205,6 +205,26 @@ if [[ -n "$DIRTY" ]]; then
   log "rescued: committed the leftovers so the next fire can see them"
 fi
 
+# The main tree is not the only place work hides. A worker killed mid-flight
+# (the fire exiting while its background agents still run) leaves everything
+# uncommitted INSIDE its worktree, where the main-tree sweep above cannot see it.
+# Observed 2026-08-18 17:22: three workers killed, 4,482 insertions stranded.
+for W in $(git worktree list --porcelain | awk '/^worktree/{print $2}' | tail -n +2); do
+  [[ -d "$W" ]] || continue
+  WD=$(git -C "$W" status --porcelain | wc -l | tr -d ' ')
+  (( WD == 0 )) && continue
+  WN=$(basename "$W")
+  WB="softhouse/rescued-$WN-$STAMP"
+  log "WARN: worktree $WN left $WD uncommitted path(s) — rescuing to $WB"
+  git -C "$W" checkout -q -b "$WB" 2>/dev/null
+  git -C "$W" add -A >/dev/null 2>&1
+  git -C "$W" -c user.name="Buyan" -c user.email="buya.vol@gmail.com" \
+      commit -q -m "RESCUED: WIP from a worker that never signalled done (fire $STAMP)
+
+Committed by the orchestrator's worktree sweep. Completeness UNVERIFIED — no handoff was written. Treat as partial until re-reviewed." >/dev/null 2>&1
+  log "rescued $WN -> $WB"
+done
+
 # RESUME.md must have been rewritten during this fire, or a fresh session resumes
 # from a stale manifest — worse than none, because it looks authoritative.
 if [[ -f .softhouse/RESUME.md ]]; then

@@ -146,6 +146,17 @@ Before returning, in this order:
 
 Exiting because you are *waiting* on something (a review to be re-run, a gate, a build) is still an exit: checkpoint it. "I'll pick this up in a moment" is not a state the next session can see.
 
+### NEVER exit with live workers — they die with you
+
+A background worker is a child of your session. When your turn ends, it is **killed**, and everything it had not committed is lost inside its worktree where the main-tree sweep cannot see it. This happened on 2026-08-18 at 17:22: the fire ended saying *"three workers are running in locked worktrees, none has committed yet"* and stranded 4,482 insertions — including the entire T4 DEC-1 retry.
+
+Before ending a fire, for every worker you dispatched:
+
+1. **Await it.** Do not end your turn while a dispatch is outstanding. "Holding capacity deliberately" is not a reason to exit — an unfinished worker is not paused, it is dead.
+2. If you must stop (token soft limit, quota error), **first** make each worker commit its WIP to its `softhouse/<taskid>-<slug>` branch and write its `.softhouse/state/<squad>.STATE.json`, then verify each branch actually has a commit (`git -C <worktree> log --oneline main..HEAD`).
+3. Only dispatch what you have the budget to see through. Dispatching three workers with 10 % of budget left destroys three workers' output.
+4. A task whose worker you killed is **not** `in_progress` — mark it `needs_retry` with `note: worker killed mid-flight; rescued WIP on <branch>, completeness unverified`. Leaving it `in_progress` tells the next fire that work is happening when nothing is.
+
 ## STEP 6 — Persist and push (every fire, even a no-op)
 1. Update `.softhouse/program.json`: `cursor`, per-context `status`/`run_id`/`slices`, `gates_pending`, `history` (one entry per closed run: run id, context, tasks, reviewer catches, UAT result, tokens spent).
 2. Commit `.softhouse/` and push. Only the orchestrator pushes.
