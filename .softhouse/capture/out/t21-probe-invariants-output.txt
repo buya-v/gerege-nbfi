@@ -1,0 +1,15 @@
+capture         I1  I2  I3  I4  I5  I6  X1  X2   verdict
+P-CAL          OK  OK  OK  OK  OK  OK  OK  OK   PASS
+P-00           OK  OK  OK  OK  OK  OK  OK  OK   PASS
+P-01           OK  OK  OK  OK  OK  OK  OK  OK   PASS
+P-02           OK  OK  OK  OK  OK  OK  OK  OK   PASS
+P-02b          OK  OK  OK  OK  OK  OK  OK  OK   PASS
+P-03           OK  OK  OK  OK  OK  OK  OK  !!   FAIL
+P-04f          OK  OK  OK  OK  OK  OK  OK  OK   PASS
+P-04t          OK  OK  OK  OK  OK  OK  OK  OK   PASS
+P-MNT-5M       OK  OK  OK  OK  OK  OK  OK  OK   PASS
+P-MNT-1M2      OK  OK  OK  OK  OK  OK  OK  OK   PASS
+P-MNT-50M      OK  OK  OK  OK  OK  OK  OK  OK   PASS
+P-MNT-4M999    OK  OK  OK  OK  OK  OK  OK  OK   PASS
+
+FAILURES PRESENT
