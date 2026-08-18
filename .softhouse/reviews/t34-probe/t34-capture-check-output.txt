@@ -1,0 +1,18 @@
+moneyHelperPrecision recorded in the capture file: 19
+
+P-CAL          SKIPPED (precision 12, not a parity setting)
+P-00           rows=6   totInt 2.05 (capture 2.05)  term_ok=True  OK
+P-01           rows=18  totInt 13393481.04 (capture 13393481.04)  term_ok=True  OK
+P-02           rows=6   totInt 2.05 (capture 2.05)  term_ok=True  OK
+P-02b          rows=6   totInt 2.05 (capture 2.05)  term_ok=True  OK
+P-03           rows=6   totInt 1.76 (capture 1.76)  term_ok=True  MISMATCH
+    period 1: got ('2024-02-01', '0.00', '0.00', '100.00')
+              exp ('2024-02-01', '0.00', '0.00', '0.00')
+P-04f          rows=6   totInt 2.05 (capture 2.05)  term_ok=True  OK
+P-04t          rows=6   totInt 2.05 (capture 2.05)  term_ok=True  OK
+P-MNT-5M       rows=18  totInt 763994.33 (capture 763994.33)  term_ok=True  OK
+P-MNT-1M2      rows=12  totInt 144988.47 (capture 144988.47)  term_ok=True  OK
+P-MNT-50M      rows=36  totInt 13995886.40 (capture 13995886.40)  term_ok=True  OK
+P-MNT-4M999    rows=18  totInt 763994.20 (capture 763994.20)  term_ok=True  OK
+
+captures with a mismatch: 1

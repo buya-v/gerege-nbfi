@@ -1,0 +1,49 @@
+==============================================================================
+T34 (C) -- DEC-1 rev 6's `RepaymentEvery` multiplier vs the pinned
+source's `periodRatio` [ProgressiveEMICalculator.java:1404-1413].
+RE-DERIVATION ONLY.  NO ORACLE WAS CONTACTED.
+==============================================================================
+
+(1) date shapes in the graded domain where periodRatio != RepaymentEvery
+    (schedule start and disbursement both in January 2024, 6 monthly
+     periods, single disbursement, ScheduleStart <= D):
+    6 of the 496 admissible (start day, disbursement day) pairs
+      start 2024-01-28  disb 2024-01-29  non-unit ratios: [(1, '1.03448275862068965517')]
+      start 2024-01-28  disb 2024-01-30  non-unit ratios: [(1, '1.03448275862068965517'), (2, '1.03225806451612903226')]
+      start 2024-01-28  disb 2024-01-31  non-unit ratios: [(1, '1.03448275862068965517'), (2, '1.06451612903225806452'), (4, '1.03225806451612903226'), (6, '1.03225806451612903226')]
+      start 2024-01-29  disb 2024-01-30  non-unit ratios: [(2, '1.03225806451612903226')]
+      start 2024-01-29  disb 2024-01-31  non-unit ratios: [(2, '1.06451612903225806452'), (4, '1.03225806451612903226'), (6, '1.03225806451612903226')]
+      start 2024-01-30  disb 2024-01-31  non-unit ratios: [(2, '1.06451612903225806452'), (4, '1.03225806451612903226'), (6, '1.03225806451612903226')]
+
+(2) money divergence over those date shapes x 4 terms x 4 rates x 5 principals:
+    480 of 480 shapes return DIFFERENT MONEY (100.0%)
+
+    worst total-interest gap:
+      start 2024-01-28, disbursement 2024-01-31, 50,000,000 major units, 36 x 21.6%
+      DEC-1 as written : total interest 18260183.72
+      pinned source    : total interest 18659151.45
+      gap              : 398967.73
+
+    first divergent shapes:
+      start 2024-01-28 disb 2024-01-29        100   6 x   7.0%   DEC-1           2.04   source           2.05   gap 0.01
+      start 2024-01-28 disb 2024-01-29    127,704   6 x   7.0%   DEC-1        2596.31   source        2621.56   gap 25.25
+      start 2024-01-28 disb 2024-01-29  1,200,000   6 x   7.0%   DEC-1       24396.81   source       24634.06   gap 237.25
+      start 2024-01-28 disb 2024-01-29  5,000,000   6 x   7.0%   DEC-1      101653.36   source      102641.90   gap 988.54
+      start 2024-01-28 disb 2024-01-29 50,000,000   6 x   7.0%   DEC-1     1016533.57   source     1026418.95   gap 9885.38
+      start 2024-01-28 disb 2024-01-29        100   6 x  16.8%   DEC-1           4.91   source           4.95   gap 0.04
+
+(3) the worked shape, row by row
+    MNT 1,200,000 / 6 x 21.6%, schedule start 2024-01-28, single disbursement 2024-01-31
+    periodRatio per period: ['1.03448275862068965517', '1.06451612903225806452', '1', '1.03225806451612903226', '1', '1.03225806451612903226']
+     period        from         due    DEC-1 prin    DEC-1 int |      src prin      src int
+          1  2024-01-28  2024-02-29     192859.52     19575.00 |     192580.67     20250.00
+          2  2024-02-29  2024-03-31     194305.99     18128.53 |     193527.22     19303.45
+          3  2024-03-31  2024-04-30     197803.50     14631.02 |     198180.61     14650.06
+          4  2024-04-30  2024-05-31     201363.96     11070.56 |     201390.35     11440.32
+          5  2024-05-31  2024-06-30     204988.51      7446.01 |     205372.89      7457.78
+          6  2024-06-30  2024-07-31     208678.52      3756.21 |     208948.26      3882.39
+    total interest: DEC-1 74607.33   pinned source 76984.00   gap 2376.67
+
+Every figure above is a RE-DERIVATION from the pinned checkout and is
+recorded as a CANDIDATE SHAPE TO CAPTURE.  None may be promoted to the
+vector store.  No live oracle was contacted by task T34.

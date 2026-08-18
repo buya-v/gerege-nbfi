@@ -1,0 +1,26 @@
+T34 (C2) -- width of the region where the pinned source's periodRatio
+differs from DEC-1 revision 6's normative `RepaymentEvery`.
+RE-DERIVATION ONLY.  NO ORACLE WAS CONTACTED.
+
+  year 2024, 6 monthly periods: 55 of 5767 admissible same-month (ScheduleStartDate, Disbursement.Date) pairs -> 0.95%
+      by ScheduleStartDate day-of-month: {28: 30, 29: 18, 30: 7}
+  year 2024, 12 monthly periods: 55 of 5767 admissible same-month (ScheduleStartDate, Disbursement.Date) pairs -> 0.95%
+      by ScheduleStartDate day-of-month: {28: 30, 29: 18, 30: 7}
+  year 2025, 6 monthly periods: 54 of 5738 admissible same-month (ScheduleStartDate, Disbursement.Date) pairs -> 0.94%
+      by ScheduleStartDate day-of-month: {28: 29, 29: 18, 30: 7}
+  year 2025, 12 monthly periods: 54 of 5738 admissible same-month (ScheduleStartDate, Disbursement.Date) pairs -> 0.94%
+      by ScheduleStartDate day-of-month: {28: 29, 29: 18, 30: 7}
+
+  first ten divergent shapes (year 2024, 6 periods):
+      start 2024-01-28  disb 2024-01-29  non-unit periodRatio on periods [1]
+      start 2024-01-28  disb 2024-01-30  non-unit periodRatio on periods [1, 2]
+      start 2024-01-28  disb 2024-01-31  non-unit periodRatio on periods [1, 2, 4, 6]
+      start 2024-01-29  disb 2024-01-30  non-unit periodRatio on periods [2]
+      start 2024-01-29  disb 2024-01-31  non-unit periodRatio on periods [2, 4, 6]
+      start 2024-01-30  disb 2024-01-31  non-unit periodRatio on periods [2, 4, 6]
+      start 2024-02-28  disb 2024-02-29  non-unit periodRatio on periods [1]
+      start 2024-03-28  disb 2024-03-29  non-unit periodRatio on periods [1]
+      start 2024-03-28  disb 2024-03-30  non-unit periodRatio on periods [1]
+      start 2024-03-28  disb 2024-03-31  non-unit periodRatio on periods [1, 2, 4]
+
+  Every figure is a RE-DERIVATION from the pinned checkout.
