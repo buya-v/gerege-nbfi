@@ -68,7 +68,7 @@ All established against the pinned checkout and re-derived independently at leas
 - Intermediates are exact decimals rounded to a caller-supplied significant-digit count under a caller-supplied tie rule; **and the per-period rate factor is additionally quantized to that same integer read as a decimal-place count** [`:1959-1962`]. Currency-scale rounding happens where a quantity becomes money [`Money.java:40-53`].
 - The addition `1 + rateFactor` is **exact** — performed with no `MathContext` at all [`RepaymentPeriod.java:216-218`].
 - The default day count is a **fixed 30/360** with an actual/actual arm also present [`ProgressiveEMICalculator.java:1533-1539`].
-- Per period, **interest is computed first and capped at the installment; principal is the balancing non-negative remainder** [`RepaymentPeriod.java:272-286`, `:345-350`].
+- Per period, **interest is computed first and capped at the installment; principal is the balancing non-negative remainder** [`RepaymentPeriod.java:272-286`, `:345-350`]. **How the interest itself is produced is not the textbook `balance × rateFactor`** — the oracle performs three separately rounded operations whose middle pair cancels algebraically but not numerically [`InterestPeriod.java:145-158`]. That is specified normatively in **§4.3.2**, added in revision 5; no sentence of this document may be read as licensing the textbook form.
 - **The last period absorbs the entire accumulated residual onto its installment** (§4.3), which is what forces total principal repaid to equal total principal advanced to the minor unit.
 
 ### 2.2 The fact that shaped this revision: the capture seam honours 17 of 19 components
@@ -128,7 +128,7 @@ InstallmentRoundingMultipleMinor == 0
 ScheduleStartDate ≤ Disbursements[0].Date < the last repayment period's DueDate
 ```
 
-**This block and `contract.go`'s are now identical** (revision 4, P2-T26-1). Revision 3's `contract.go` carried a thirteenth line, `NumberOfRepayments >= 1`, which the ADR did not; it is not a graded-domain predicate but a **well-formedness** condition, so `NumberOfRepayments < 1` is **`ErrInvalidRequest`**, which the §4.11 precedence puts ahead of any graded-domain refusal. It has been removed from the graded-domain block in both artefacts and stated on the field. `NumberOfRepayments == 1` is well formed and graded; the EMI re-adjust loop simply cannot fire on it (§4.3.1, step 1).
+**This block and `contract.go`'s are now identical** (revision 4, P2-T26-1). Revision 3's `contract.go` carried a thirteenth line, `NumberOfRepayments >= 1`, which the ADR did not; it is not a graded-domain predicate but a **well-formedness** condition, so `NumberOfRepayments < 1` is **`ErrInvalidRequest`**, which the §4.11 precedence puts ahead of any graded-domain refusal. It has been removed from the graded-domain block in both artefacts and stated on the field. `NumberOfRepayments == 1` is well formed and graded; the EMI re-adjust loop cannot fire on it (§4.3.1, step 1). **Revision 5 corrects the sufficient condition** (P0-T29-1): what makes the loop's pair degenerate is that the **related** repayment period list holds a single element, which `NumberOfRepayments == 1` implies but does not exhaust — a disbursement dated on repayment period `N−1`'s due date leaves one related period on a schedule of any length, and is equally degenerate. See §4.3.1.
 
 The last line is a **semantic** predicate, not a static field comparison, added in revision 3 (P0-2): the last due date is derived from `ScheduleStartDate`, `NumberOfRepayments`, `RepaymentEvery`, the frequency and the month-end rule (§4.2), all of which the implementation already computes, so the predicate is checkable without asking the oracle. A single disbursement dated **before `ScheduleStartDate`** or **on/after the last computed due date** is *observed* to be silently discarded by the seam into an all-zero schedule (§4.6), so it is outside the graded domain and **refused with `ErrNoDiscriminatingVector`**, matching the standing G-1 "refuse rather than guess" disposition — never answered with the oracle's degenerate all-zero output. When multi-tranche vectors later exist the window widens with no amendment (it is behaviour, not shape).
 
@@ -278,7 +278,40 @@ Revision 1's phrase "final **unpaid** period" was also a dangling term: this con
 
 Revision 3 said *when* the loop fires and stopped there. That is not enough to determine money: re-review T26 re-derived, over 24,000 in-graded-domain shapes, that the guard fires on **2,855** of them, and that two loop bodies each consistent with every sentence of revision 3 — one omitting the adoption test, one absorbing the whole gap into the level installment — return **different** installments on 2,156 and 699 of those respectively [`.softhouse/reviews/T26-DEC-1-v3-rereview.md` §1.5; re-derivation only, no oracle contacted]. The loop is therefore specified here to the same standard §4.3 already applies to the final-period residual.
 
-**Normative.** All quantities are `int64` **minor units**; `n` is the number of related repayment periods, which inside the graded domain is `NumberOfRepayments` [`ProgressiveLoanInterestScheduleModel.java:191-194`]; `rows` is the schedule as it stands after the level installment and the §4.3 residual have been applied; `rows[i].emi` is period *i*'s installment, 0-based. The oracle's `Money` operations are two-step — an operation at the threaded `MathContext` (`SignificantDigits`, `Rounding.Mode`) followed by the `Money` constructor's `setScale(decimalPlaces, mode)` [`Money.java:52`] — and every step below states the exact-integer form that reproduces both steps.
+##### Related repayment periods — the normative definition (P0-T29-1, added in revision 5)
+
+Revision 4 parameterised the whole loop by `n` and then defined `n` wrongly, in a sentence whose own citation refuted it. `n` is **not** `NumberOfRepayments`. The notion it actually depends on is defined here, once, and is referenced from §4.3.1, §4.3.2 and §9.
+
+**Definition (normative).** The **related repayment periods** of a generation are the repayment periods whose `DueDate` is **not before** the *effective due date* [`ProgressiveLoanInterestScheduleModel.java:195-197`]:
+
+```
+relatedRepaymentPeriods = [ p ∈ repaymentPeriods : ¬ (p.DueDate < effectiveDueDate) ]
+```
+
+The **effective due date** is derived from the single disbursement date `D` in two steps [`ProgressiveEMICalculator.java:149-151` → `:250-263`]:
+
+1. Find the repayment period **containing** `D`. Membership is `[FromDate, DueDate]` **inclusive at both ends for the FIRST repayment period** and `(FromDate, DueDate]` — from-exclusive, due-inclusive — for every later one [`ProgressiveLoanInterestScheduleModel.java:238-245`, `LoanRepaymentScheduleProcessingWrapper.java:251-254`].
+2. If that period's `DueDate` **equals** `D`, the effective due date is the **next** period's `DueDate`; otherwise it is the matched period's own `DueDate` [`ProgressiveEMICalculator.java:252-262`]. (When the matched period is the last one there is no next period and the effective due date stays the matched period's own — but that case is a disbursement on the last due date, which §3.1 places outside the graded domain and §4.6 refuses.)
+
+Writing `N = NumberOfRepayments` and numbering periods 1…`N`, the consequence inside the graded domain is:
+
+| where the single disbursement falls | related periods | `n = |related|` |
+|---|---|---|
+| strictly inside period 1 (including on `ScheduleStartDate`) | 1 … `N` | `N` |
+| on period *j*'s due date, `j < N` | *j+1* … `N` | `N − j` |
+| strictly inside period *j*, `j > 1` | *j* … `N` | `N − j + 1` |
+
+**Every one of those rows is inside the graded domain**, whose disbursement window is `ScheduleStartDate ≤ Disbursements[0].Date < the last repayment period's DueDate` (§3.1) — and the second row is *observed* in the Run-1 corpus (§5: "one schedule whose disbursement falls on a later repayment due date"; raw capture `.softhouse/reviews/t23-probe/t23-probe-output.txt` case Q0b, schedule start 2024-01-01, disbursement 2024-02-01, MNT 1,200,000 / 6 × 21.6 %, which returns installments over **five** periods with repayment row 1 entirely zero).
+
+**The call path can never take the `null` branch.** `getRelatedRepaymentPeriods` returns *all* periods only when its argument is `null` [`ProgressiveLoanInterestScheduleModel.java:191-194`]; the argument on this path is `getEffectiveRepaymentDueDate(...)` [`ProgressiveEMICalculator.java:149-151`], which always returns a `LocalDate` [`:250-263`]. Revision 4 cited `:191-194` — precisely the unreachable branch — in support of `n == NumberOfRepayments`. The citation is corrected to `:195-197` and the claim is corrected below.
+
+**Three further rules follow from the same definition, and each was stated wrongly or not at all in revision 4:**
+
+- **The level installment is computed over, and written to, the related periods only.** `calculateEMIOnActualModel` is handed `relatedRepaymentPeriods` [`ProgressiveEMICalculator.java:741`, list built at `:732`] and `calculateEMIOnActualModelWithDecliningBalanceInterestMethod` takes its starting balance from `repaymentPeriods.getFirst()` of *that* list and writes the installment back onto *that* list only [`:1722-1741`]. Repayment rows before the first related period therefore keep a **zero** installment and produce an all-zero row — which is exactly the Q0b row already *observed*.
+- **The trial rebuild overwrites the related periods only** (step 6 below), not "all `n` periods".
+- **`uncountablePeriods` is counted over the related list** (step 3 below), not over the whole schedule.
+
+**Normative.** All quantities are `int64` **minor units**; `n` is the number of **related repayment periods** as defined immediately above — `relatedRepaymentPeriods.size()` [`EmiAdjustment.java:54-56`, list at `ProgressiveEMICalculator.java:732`, passed at `:749`]. **`n == NumberOfRepayments` if and only if the disbursement falls strictly inside the first repayment period; otherwise `n` is strictly smaller.** `rows` is the schedule as it stands after the level installment and the §4.3 residual have been applied. Index `rows` **over the related periods**, 0-based, so `rows[0]` is the first related period and `rows[n-1]` the last repayment period of the schedule; rows before the first related period carry a zero installment, take no part in the loop, and are never overwritten by it. The oracle's `Money` operations are two-step — an operation at the threaded `MathContext` (`SignificantDigits`, `Rounding.Mode`) followed by the `Money` constructor's `setScale(decimalPlaces, mode)` [`Money.java:52`] — and every step below states the exact-integer form that reproduces both steps.
 
 ```
 adjustCounter := 1                                    # :1262
@@ -290,7 +323,10 @@ loop {                                                # do { … } while (adjust
   #    this contract generates, so that pair is (n-2, n-1).      :1779-1785
   if n < 2 { break }                # the loop at :1779 requires idx > 0, so n == 1 falls to
                                     # the degenerate branch :1788, whose emiDifference is
-                                    # copy(0.0) == 0 — the guard's second conjunct cannot pass
+                                    # copy(0.0) == 0 — the guard's second conjunct cannot pass.
+                                    # n == 1 is NOT the same as NumberOfRepayments == 1: a
+                                    # disbursement on period N-1's due date leaves one related
+                                    # period on a schedule of any length (P0-T29-1).
   original      := rows[n-2].emi                    # the PENULTIMATE installment   :1781, :1784
   emiDifference := rows[n-1].emi - original         # SIGNED                               :1783
 
@@ -302,9 +338,11 @@ loop {                                                # do { … } while (adjust
      { break }
 
   # 3. Adjustment magnitude.                    EmiAdjustment.java:38-40, Money.java:352-358
-  uncountablePeriods := count(i : rows[i].totalPaid > original)        # :2027-2031
-                                    # == 0 on every schedule this contract generates: nothing
-                                    # is paid, and the test is originalEmi < totalPaidAmount
+  uncountablePeriods := count(i ∈ 0…n-1 : rows[i].totalPaid > original)   # :2027-2031, argument
+                                    # at :1785 — counted over the RELATED list, NOT over the
+                                    # whole schedule (P0-T29-1). == 0 on every schedule this
+                                    # contract generates: nothing is paid, and the test is
+                                    # originalEmi < totalPaidAmount
   d          := max(1, n - uncountablePeriods)       # == n in the graded domain   EmiAdjustment.java:39
   adjustment := emiDifference / d, rounded to a whole minor unit under Rounding.Mode
              #  = sign(emiDifference) * (2*abs(emiDifference) + d) / (2*d)   [integer division,
@@ -320,19 +358,26 @@ loop {                                                # do { … } while (adjust
   if adjusted == original { break }
 
   # 6. Build a TRIAL schedule on the candidate — on a copy, never in place.  :1274-1288
-  #    Every related period's installment is overwritten with `adjusted`
-  #    (:1279-1286: from-date and due-date at or after the first related
-  #    period's, candidate not below the period's paid amount, period not a
-  #    re-aged early-repayment holder — inside the graded domain that is ALL n
-  #    periods), then balances are recomputed (:1287) and the §4.3
+  #    The installment `adjusted` is written onto exactly the RELATED periods
+  #    (:1279-1286: from-date not before the first related period's from-date AND
+  #    due-date not before its due-date, candidate not below the period's paid
+  #    amount, period not a re-aged early-repayment holder) — that is the n rows
+  #    of `rows` and NOT the whole schedule (P0-T29-1, revision 5). Repayment
+  #    rows before the first related period are NOT overwritten and keep their
+  #    zero installment. Balances are then recomputed (:1287) and the §4.3
   #    final-period residual is re-applied (:1288 -> :1160-1219).
-  trial := split(principal, rateFactors, level = adjusted)   # the §4.3 interest-first /
-                                                             # principal-balancing split
+  trial := split(principal, rateFactors, level = adjusted)   # §4.3.2's per-period split,
+                                                             # applied to the related periods
   applyFinalPeriodResidual(trial)                            # the §4.3 rule, unchanged
 
   # 7. ADOPTION TEST — strict, and a failure DISCARDS the trial.  :1289-1291,
   #                                                     EmiAdjustment.java:46-48
   newDifference := trial[n-1].emi - trial[n-2].emi
+  #  The oracle re-measures with getEmiAdjustment over the trial model's FULL
+  #  period list (:1289), not the related sublist; because nothing is paid the
+  #  scan at :1779-1785 returns the last ADJACENT pair of the whole schedule,
+  #  which for n >= 2 is the last two RELATED rows — the pair written above.
+  #  Only |newDifference| is read here, so the differing list does not matter.
   if !( abs(newDifference) < abs(emiDifference) ) { break }   # keep `rows` UNCHANGED and stop
 
   # 8. Adopt, then bound the iteration.                                :1293-1306
@@ -342,7 +387,7 @@ loop {                                                # do { … } while (adjust
 }
 ```
 
-Seven consequences worth stating explicitly, because each is a way an implementation can be wrong while still satisfying revision 3:
+Eight consequences worth stating explicitly, because each is a way an implementation can be wrong while still satisfying revision 3 (the eighth, while still satisfying revision 4):
 
 1. **The divisor is `n`, not 1 and not `n − 1`.** The gap is spread across all related periods [`EmiAdjustment.java:39`], so the level installment moves by roughly `1/n` of it per iteration — it does **not** absorb the whole gap. `uncountablePeriods` is a payment-history term [`ProgressiveEMICalculator.java:2027-2031`] and is identically zero here; it is written into the rule so the rule stays true when payment history enters the contract, not because it can be non-zero today.
 2. **The adjustment is rounded to a whole minor unit, and it is signed.** `Money.dividedBy(long)` [`Money.java:352-358`] divides at the threaded `MathContext` and then the `Money` constructor re-scales to the currency's decimal places under the same rounding mode [`Money.java:52`]. The integer form above reproduces both steps exactly for every amount this contract can express: the quotient is a rational with denominator `d ≤ n`, so it either sits exactly on a half-minor-unit boundary — where both forms round away from zero under `HALF_UP` — or lies at least `1/(2n)` of a minor unit away from one, which is far outside the `SignificantDigits`-19 intermediate error for any `|emiDifference|` below `10^17 / n` minor units. The integer form is written for `HALF_UP`, the only mode in the graded domain; `HALF_EVEN` is refused (§4.1) and would need the tie rule restated. `dividedBy` also short-circuits at `d == 1` and returns the value unchanged [`Money.java:353-355`], which the integer form matches.
@@ -351,10 +396,62 @@ Seven consequences worth stating explicitly, because each is a way an implementa
 5. **`break` means stop, not continue.** Every one of the four exits — degenerate pair, guard, no-change, failed adoption — terminates the loop; none skips to the next iteration.
 6. **At most three iterations, and the counter advances only on adoption.** `adjustCounter` starts at 1 [`:1262`] and is incremented only after a trial is adopted [`:1307`], with the `while (adjustCounter <= 3)` test at `:1308`. So the level installment can move at most three times.
 7. **The state carried between iterations is only `rows`.** The oracle reuses one deep copy across iterations [`:1274-1276`] and copies adopted values back into the live model [`:1293-1306`], so the two models agree at the top of every iteration; inside the graded domain the trial is fully determined by `(principal, rateFactors, adjusted)`, and no port needs the copy machinery.
+8. **`n` is the related-period count, and a port that reads `NumberOfRepayments` returns different money** (P0-T29-1, revision 5). Both the guard threshold `floor(n/2)` and the divisor `max(1, n − uncountablePeriods)` read `n`, so a wrong `n` changes *whether* the loop fires **and** *by how much* it moves the installment; the trial's overwrite set moves with it as well. Re-review T29 isolated `n` alone — identical rebuild semantics in both arms — over 120,000 random in-graded-domain requests with the disbursement on period 1's or period 2's due date and found **2,143 (1.79 %)** returning different money, with divergences in **total interest** as well as in the per-period split. Those counts and the shapes behind them are **re-derivations, not observations**, and none may be promoted to the vector store; the shape class itself, however, is *observed* in the corpus (Q0b, §5), so this is not a hypothetical region of the graded domain. A vector in it is §8 item **3c**.
 
-**Reproducing all of this requires exact-integer arithmetic, not a float.** `Math.floor(n / 2.0)` and the `BigDecimal.valueOf(double)` inside `Money.copy(double)` operate on values that are always exact small integers (`floor(n/2)` and `0.0`), so a Go port reproduces the guard with integer arithmetic — `n/2` in `int`, compared as `|lastEMI − penultimateEMI| × 100 > floor(n/2) × 10^MinorUnitDigits` in `int64` minor units — and every step of the body above is stated in whole minor units for the same reason. **No `float32`/`float64` may appear anywhere on this path**; the doubles in the Java source are an artefact of the reference implementation, never a licence to introduce one here (a float on a money path is a non-negotiable rejection). A vector that trips the guard inside the graded domain is backlogged (§8 item 3), and so is a vector that separates the adoption test (§8 item 3a) — until both land, **this rule is specified but ungraded, and no conformance PASS for `loanschedule` may be read as evidence that a port implements it.**
+**Reproducing all of this requires exact-integer arithmetic, not a float.** `Math.floor(n / 2.0)` and the `BigDecimal.valueOf(double)` inside `Money.copy(double)` operate on values that are always exact small integers (`floor(n/2)` and `0.0`), so a Go port reproduces the guard with integer arithmetic — `n/2` in `int`, compared as `|lastEMI − penultimateEMI| × 100 > floor(n/2) × 10^MinorUnitDigits` in `int64` minor units — and every step of the body above is stated in whole minor units for the same reason. **No `float32`/`float64` may appear anywhere on this path**; the doubles in the Java source are an artefact of the reference implementation, never a licence to introduce one here (a float on a money path is a non-negotiable rejection). Vectors that trip the guard inside the graded domain (§8 item 3), that separate the adoption test (§8 item 3a), that separate the per-period interest round-trip (§8 item **3b**, added in revision 5) and that trip the guard in the **later-disbursement** window, separating `n = |related|` from `n = NumberOfRepayments` (§8 item **3c**, added in revision 5) are all backlogged — until all four land, **this rule is specified but ungraded, and no conformance PASS for `loanschedule` may be read as evidence that a port implements it.**
 
-**Provenance of this subsection.** Every step above was re-derived by task T28 from the pinned checkout and carries its own `file:line`; the reference model `.softhouse/reviews/t26-probe/t26_rederive.py::readjust_loop` — which reproduces both of the *observed* figures cited above, and only with the loop body present — was used as a cross-check, not as the source. **The specification above was then transcribed back out, literally and in pure integer minor units, and re-checked**: `.softhouse/reviews/t28-probe/t28_spec_check.py` implements steps 1–8 exactly as written, with no float and no decimal type anywhere in the loop, and reproduces all three *observed* triples already committed by T23 (100 / 6 × 7.0 %, 1,014,632 / 6 × 7.0 %, 127,704 / 36 × 16.8 %). That is the test this subsection has to pass: the text alone, with nothing else supplied, determines the money. **No new oracle observation was taken or implied**, and no figure in this subsection is an observation: the 2,855 / 2,156 / 699 counts are re-derivations from source over synthetic shapes, not captures, and must never be promoted to the vector store; no live oracle was reachable when this revision was written.
+**Provenance of this subsection.** Steps 1–8 were re-derived by task T28 from the pinned checkout and each carries its own `file:line`; independent re-review T29 verified every one of those citations against the pinned checkout and confirmed the loop body's effect. **The correction in revision 5 is to what the loop is parameterised by, not to its steps.** The related-period definition, the level-installment scope, the overwrite set and the `uncountablePeriods` scope above were re-derived by task T31 from the pinned checkout and carry their own citations.
+
+**The standard this subsection is held to is the from-text transcription experiment**: the text alone, with nothing else supplied, determines the money. Revision 4 failed it, on the value of `n` and on the missing §4.3.2. Revision 5 was re-checked the same way — `.softhouse/reviews/t31-probe/t31_spec_check.py` transcribes §4.3.1 (with the corrected `n`, overwrite set and `uncountablePeriods`) **and** §4.3.2 literally, in exact integer minor units with no float anywhere, and reproduces **13 of 13** already-committed observations digit-for-digit, including Q0b's later-disbursement shape. The same script also shows the corrected text now **discriminates**: the wrong-`n` reading and the textbook-interest reading each FAIL against it on the shapes T29 cited. A specification that cannot tell the wrong answer from the right one has not been fixed.
+
+**No new oracle observation was taken or implied**, and **no figure in this subsection is an observation**: the 2,855 / 2,156 / 699 counts from T26, and T29's 2,143 / 120,000 and 699 / 43,992, are re-derivations from source over synthetic shapes, not captures, and must never be promoted to the vector store. No live oracle was reachable when this revision was written.
+
+#### 4.3.2 The per-period interest computation, specified rather than assumed (P0-T29-2, added in revision 5)
+
+Revisions 1–4 said, in §2.1 and on `Period.PrincipalMinor`, only that "interest is computed first and capped at the installment; principal is the balancing non-negative remainder". **They never said how the interest is produced.** The multiplication by the rate factor was never written down, the point at which the quantity becomes money was never written down, and the order of operations was delegated to a phrase — "in the order the reference oracle performs them" — which is the one thing an implementer reading only DEC-1 cannot see. Meanwhile §4.1 spells the *rate factor* out to four operations plus a `setScale` and §4.3.1 spells the *loop* out to eight steps. The step that produces **every number in the response** got one clause.
+
+That is not a cosmetic gap. The oracle's arithmetic and the textbook `balance × rateFactor` an implementer would otherwise write **return different money on 699 of 43,992 (1.59 %) in-graded-domain shapes** (re-derived by T29; a re-derivation, not a capture), and **all thirteen committed observations are consistent with both readings** — so the corpus is entirely blind to the difference. This subsection removes the ambiguity.
+
+**Normative — the interest of one interest period.**
+
+A repayment period is partitioned into one or more **interest periods**. A repayment period is created carrying exactly one interest period spanning its whole window [`RepaymentPeriod.java:149`]; a balance change *strictly inside* the window splits it in two at the change date [`ProgressiveLoanInterestScheduleModel.java:280-296`], with the changed amount recorded on the **earlier** segment and entering the balance of the **later** one [`InterestPeriod.java:168-188`]. Inside the graded domain there is exactly one balance change — the single disbursement — so a repayment period carries **two** interest periods when the disbursement falls strictly inside it and **one** otherwise.
+
+For an interest period with base amount `B` (an exact decimal in **major** units), let
+
+- `length` = whole days from the **interest period's** `FromDate` to its `DueDate` [`InterestPeriod.java:160-162`];
+- `lengthTillPeriodDueDate` = whole days from the **interest period's** `FromDate` to the **enclosing repayment period's** `DueDate` [`InterestPeriod.java:164-166`];
+- `rateFactorTillPeriodDueDate` = the §4.1 rate factor computed over `[interest period FromDate, repayment period DueDate]` [`ProgressiveEMICalculator.java:641-642` → `:1355-…`].
+
+Then, with `InterestMethod == InterestMethodDecliningBalance` [`InterestPeriod.java:145-158`]:
+
+```
+if lengthTillPeriodDueDate == 0 { interest := 0 }              # :146-148, exactly zero
+else {
+  B  := the OUTSTANDING PRINCIPAL BALANCE carried into this interest period   # :151
+  t1 := round_mc( B  × rateFactorTillPeriodDueDate )           # :155   operation (1)
+  t2 := round_mc( t1 ÷ lengthTillPeriodDueDate    )            # :156   operation (2)
+  t3 := round_mc( t2 × length                     )            # :157   operation (3)
+  interest := t3
+}
+```
+
+where `round_mc(·)` is rounding to **`Rounding.SignificantDigits` significant digits** under `Rounding.Mode` — the same `MathContext` sense §4.1 defines, applied **separately to each of the three operations, in that order**.
+
+**Operations (2) and (3) cancel algebraically and do NOT cancel numerically.** Inside the graded domain `lengthTillPeriodDueDate == length` on every interest period that carries a balance, so `÷ L × L` is the identity in exact arithmetic — and is *not* the identity once each step is rounded to 19 significant digits. **A port must perform all three.** Collapsing them to `round_mc(B × rateFactor)` is the divergence measured above; skipping only the rounding between them is the same defect in a different disguise. This is a **conformance obligation** (§9), not an optimisation the compiler may take.
+
+**Normative — from interest period to row.**
+
+1. **Sum, then make it money.** A repayment period's *calculated due interest* is the sum of its interest periods' `t3` values, converted to money exactly once — `Money.of(currency, Σ t3, mc)`, whose constructor applies `setScale(Currency.MinorUnitDigits, Rounding.Mode)` [`RepaymentPeriod.java:252-257`, `Money.java:40-53`, scale at `:52`] — and clamped at zero [`RepaymentPeriod.java:264`]. The sum happens **before** the currency-scale rounding, not after: rounding each interest period separately to the minor unit and then adding is a different function.
+2. **Cap at the installment.** `InterestMinor = min(calculated due interest, the period's installment)` [`RepaymentPeriod.java:272-286`, the `MathUtil.min` at `:280`].
+3. **Principal is the balancing non-negative remainder.** `PrincipalMinor = max(0, installment − InterestMinor)` [`RepaymentPeriod.java:345-350`].
+4. **Roll the balance forward, clamped at zero.** `OutstandingPrincipalMinor = max(0, balance carried in + amounts disbursed in this period − PrincipalMinor)` [`RepaymentPeriod.java:389-403`, the `negativeToZero` at `:399`]. The clamp is why §4.5 carries this field instead of deriving it.
+5. **The final period's installment is then adjusted by the §4.3 residual**, and its principal recomputed from step 3 — the order is: split every row, then absorb the residual, never the reverse.
+
+**Exact arithmetic, never a float.** `B` is an `int64` count of minor units rendered as an exact decimal; `rateFactorTillPeriodDueDate` is an exact decimal of at most `Rounding.RateFactorScale` fractional digits (§4.1); `length` and `lengthTillPeriodDueDate` are exact small integers. Every one of the three operations is therefore an exact-decimal operation followed by an explicit rounding to a stated number of significant digits, and every one of steps 1–5 is exact integer arithmetic in minor units. **A port must use an arbitrary-precision decimal (or an exact rational with explicit rounding at each of the three points) and never `float32`, `float64` or `big.Float`** — a float on a money path is a non-negotiable rejection, and here it would additionally destroy the very non-cancellation this subsection exists to specify.
+
+**What is graded, and what is not.** Every committed observation exercises the one-interest-period-per-repayment-period case, and all thirteen reproduce under this rule (`.softhouse/reviews/t31-probe/t31_spec_check.py`). **No committed observation covers a disbursement dated strictly inside a repayment period**, so the two-segment case is specified from source and **ungraded**; it is admissible under §3.1's window predicate, so a capture for it belongs with §8 item 3c's later-disbursement work. And no committed observation separates the three-operation form from the textbook one — that is §8 item **3b**. Until 3b lands, this subsection is **specified but ungraded**, on exactly the terms §4.3.1 states for the loop.
+
+**Provenance.** Re-derived by task T31 from the pinned checkout; every `file:line` above was read in this checkout, not taken from the review. The 699 / 43,992 count is T29's re-derivation over synthetic shapes and is **not** an observation. T29's worked example — MNT 13,202 / 6 × 16.8 %, schedule start = disbursement 2024-01-01, final installment **2,309.38** and total interest **654.38** under this subsection's arithmetic versus 2,309.39 / 654.39 under the textbook reading — is likewise a **re-derivation**, recorded here as a *candidate shape to capture* (§8 item 3b) and never as an oracle output. No live oracle was reachable when this revision was written.
 
 ### 4.4 The six pinned oracle inputs, each with the reason it is safe
 
