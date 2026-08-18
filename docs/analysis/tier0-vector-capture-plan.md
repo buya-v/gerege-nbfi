@@ -50,15 +50,18 @@ find fineract-progressive-loan/src/test -name '*.java' | xargs wc -l    →  786
 The "~7,863 test LOC in `fineract-progressive-loan`" figure on record is **confirmed exactly**: 7863.
 `[VERIFIED: find /home/user/fineract/fineract-progressive-loan/src/test -name '*.java' | xargs wc -l → 7863 total]`
 
-The embeddable module is 92 main LOC + 123 test LOC across exactly 6 files.
-`[VERIFIED: find /home/user/fineract/fineract-progressive-loan-embeddable-schedule-generator -type f (6 files); wc -l on both .java files → 92 and 123]`
+The embeddable module is **92 main LOC** (`src/main/java/.../EmbeddableProgressiveLoanScheduleGenerator.java`)
+plus **90 LOC** of sample driver (`misc/Main.java`) plus **123 test LOC**, across exactly 6 files.
+`[VERIFIED: find /home/user/fineract/fineract-progressive-loan-embeddable-schedule-generator -type f → 6 files; wc -l on the three .java files → 92, 90, 123]`
 
-Note: the Tier-0 figure of "~182 LOC" recorded in `CLAUDE.md` for this module does **not** match either the
-92-LOC main file or the 215-LOC main+test total. `182` *is* the value of `plan.getLoanTermInDays()` asserted at
-`EmbeddableProgressiveLoanScheduleGeneratorTest.java:74`, which is a suspicious coincidence, but this document
-does not assert that the two are related.
-`[VERIFIED: /home/user/fineract/fineract-progressive-loan-embeddable-schedule-generator/src/test/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/EmbeddableProgressiveLoanScheduleGeneratorTest.java:74]`
-`[UNVERIFIED: how the 182 figure in CLAUDE.md was originally measured — not traceable from the checkout]`
+**The Tier-0 "~182 LOC" figure reconciles exactly — no discrepancy exists.** The module's *non-test* Java is
+`92` (`src/main`) + `90` (`misc/Main.java`) = **182** lines, which is precisely the figure
+`.softhouse/program.json` records for this context as `"main_loc": 182`. An earlier draft of this document
+compared `182` only against the 92-line main file and the 215-line main+test total, omitted `misc/Main.java`
+from the arithmetic, and floated a coincidence with `plan.getLoanTermInDays() == 182`. That coincidence is a
+red herring and is **struck**; the figure is settled.
+`[VERIFIED: wc -l /home/user/fineract/fineract-progressive-loan-embeddable-schedule-generator/misc/Main.java → 90; …/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/EmbeddableProgressiveLoanScheduleGenerator.java → 92; 92 + 90 = 182, and these are the only two non-test .java files in the module]`
+`[VERIFIED: .softhouse/program.json — the Tier-0 context whose fineract_paths is ["fineract-progressive-loan-embeddable-schedule-generator"] carries "main_loc": 182]`
 
 ### 1.2 Test classes in scope
 
@@ -104,7 +107,7 @@ are listed only so the capture fire knows they exist; they are a *second-wave* s
 **The schedule-generation seam has a standalone, dependency-free Java entry point.** The embeddable module
 builds a shadowJar bundling only `fineract-core`, `fineract-loan`, `fineract-progressive-loan`, with a documented
 sample `Main.java` and a documented expected stdout.
-`[VERIFIED: /home/user/fineract/fineract-progressive-loan-embeddable-schedule-generator/build.gradle:27-31 (requiredModuleNames) and README.md "There is no extra dependency."]`
+`[VERIFIED: /home/user/fineract/fineract-progressive-loan-embeddable-schedule-generator/build.gradle:28-32 (the `requiredModuleNames` list — `fineract-core`, `fineract-loan`, `fineract-progressive-loan`) and README.md "There is no extra dependency."]`
 `[VERIFIED: /home/user/fineract/fineract-progressive-loan-embeddable-schedule-generator/misc/Main.java:40-67]`
 
 Consequence: **most Tier-0 capture does not require a running server or PostgreSQL** — only a JDK ≥ 17 and
@@ -154,7 +157,7 @@ File: `/home/user/fineract/fineract-progressive-loan-embeddable-schedule-generat
 
 `[VERIFIED: all rows above, EmbeddableProgressiveLoanScheduleGeneratorTest.java:44-70]`
 `[VERIFIED: CurrencyData positional argument order (code, name, decimalPlaces, inMultiplesOf, displaySymbol, nameCode) — /home/user/fineract/fineract-core/src/main/java/org/apache/fineract/organisation/monetary/data/CurrencyData.java:58-67]`
-`[VERIFIED: LoanRepaymentScheduleModelData field order — /home/user/fineract/fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/LoanRepaymentScheduleModelData.java:31-38]`
+`[VERIFIED: LoanRepaymentScheduleModelData field order — /home/user/fineract/fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/LoanRepaymentScheduleModelData.java:32-39 (the record header; the type declares 19 components ending in `allowFullTermForTranche`)]`
 
 **TRANSCRIBED outputs.**
 
@@ -580,7 +583,7 @@ vs `4634327` — note the last EMI is *smaller* here, the opposite direction fro
 The rule exists in production code: for monthly frequency, when the seed day-of-month is `> 28` and the
 candidate date's day is `>= 28`, the day is set to `min(lengthOfMonth(date), seedDay)` — i.e. Jan 31 → Feb 29 →
 **back to** Mar 31, rather than Java's `plusMonths` clamping which would stick at Mar 29.
-`[VERIFIED: /home/user/fineract/fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/DefaultScheduledDateGenerator.java:167-175]`
+`[VERIFIED: /home/user/fineract/fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/DefaultScheduledDateGenerator.java:168-176 — method `adjustDate`; the `> 28` condition is at :169 and the re-anchoring body at :170-173]`
 
 **No test in the seam exercises it as a derived output:**
 - `DefaultScheduledDateGenerator` is instantiated in only three places in scope: `LoanScheduleGeneratorTest.java:70`
@@ -593,7 +596,7 @@ candidate date's day is `>= 28`, the day is set to `min(lengthOfMonth(date), see
   generator is used only for interest sub-period splitting, not for deriving these boundaries.
 
 **Therefore: the re-anchoring rule is unpinned by any golden vector and must be captured.** Given the rule lives
-in `fineract-loan` and is bundled into the embeddable shadowJar (`build.gradle:27-31`), it is capturable through
+in `fineract-loan` and is bundled into the embeddable shadowJar (`build.gradle:28-32`), it is capturable through
 the embeddable entry point by setting `scheduleGenerationStartDate` / `disbursementDate` to a day > 28.
 
 ### 3.3 Leap-year Feb 29 — **PINNED**
