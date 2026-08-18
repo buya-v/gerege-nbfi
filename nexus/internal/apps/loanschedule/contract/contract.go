@@ -1344,7 +1344,7 @@ const (
 //     to the ENCLOSING REPAYMENT period's DueDate (InterestPeriod.java:164-166);
 //   - rateFactorTillPeriodDueDate = the rate factor (see Rounding) computed over
 //     [interest period FromDate, repayment period DueDate]
-//     (ProgressiveEMICalculator.java:641-642 -> :1355 and following).
+//     (ProgressiveEMICalculator.java:641-642 -> :1355-1356).
 //
 // Then, with InterestMethodDecliningBalance (InterestPeriod.java:145-158):
 //
