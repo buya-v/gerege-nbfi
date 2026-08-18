@@ -106,3 +106,20 @@ So the answer to "significant digits vs scale" is settled empirically rather tha
 ### Still with Buyan
 
 Only the **ratification signature** on the corrected DEC-1 (T6). Every decision feeding it is now answered. When T4's retry and its re-review land clean, DEC-1 is a one-word confirmation away.
+
+---
+
+## New G-1 item (raised by pass-2 Finding 2): `installmentAmountInMultiplesOf` → **ENGINEERING: expose it, honour server semantics, refuse until Path-B vectored**
+
+Pass 2 proved the field is **inert through the embeddable seam** (`LoanApplicationTerms.assembleFrom` reads 18 of the record's 19 components; the accessor is never called) while the **server path honours it** (`LoanApplicationTerms.java:1301-1305, 1617-1618`; `Money.java:154`). So the corpus cannot discriminate between a port that honours it and one that ignores it.
+
+Treat it exactly as `DayCountActualActual`:
+
+1. **Keep the field in DEC-1.** Removing it would be a contract change later, and rounding installments to the nearest 100 ₮ is an ordinary Mongolian product feature — a contract that cannot express it is wrong for this market.
+2. **Specify server semantics normatively** in DEC-1, citing the source lines, so the intended behaviour is unambiguous even though Path A cannot show it.
+3. **The Go port returns "unsupported: no discriminating vector" when the field is non-null**, until a Path-B (server API) vector exists. Never silently drop it — silent drop is the seam's accident, not a specification.
+4. **Mark the capture plan's proposal to close this gap through Path A as impossible**, not merely pending.
+
+Rationale: the failure mode this project exists to prevent is a port that passes its corpus and is wrong. Two fields now demonstrably sit in that blind spot (this one and precision-vs-scale). An explicit refusal converts a silent wrong answer into a loud missing feature — the only honest option while the evidence is out of reach.
+
+**Consequence for Run 1's verification:** `/softhouse-uat` conformance can no longer claim to grade DEC-1 from Path A alone. Path B (captures through the running server API on `:8443`) becomes a prerequisite for the parity corpus, not an optimisation. The oracle is already up and reachable on local fires, so this is schedulable work, not a new blocker.
