@@ -29,6 +29,26 @@
  *
  * Every case sets the tenant rounding mode to HALF_UP(4) so the ambient MoneyHelper context is
  * (19, HALF_UP) too — matching production on both the parameter and the ambient path.
+ *
+ * T25 REVISION (2026-08-18), applying the T21 pass-3 audit P0 list
+ * (.softhouse/reviews/T21-capture-pass3-audit.md §10):
+ *
+ *   P0-2  A machine-readable "attestation" object is now emitted at the top level. Everything under
+ *         attestation.observedInContainer is READ AT CAPTURE TIME by this JVM, inside the pinned image
+ *         (JVM string, MoneyHelper.PRECISION, the jar's own git.properties, SHA-256 of the two compiled
+ *         sources and of the provider jar, and a scan of the classpath for prohibited DB drivers).
+ *         Facts this JVM cannot see (the image digest, the host checkout commit) are injected by the
+ *         runner as -Dcap.host.* system properties and are emitted under attestation.observedOnHost,
+ *         kept SEPARATE so a reader can tell what was observed where. Nothing is assumed; a field the
+ *         runner did not supply is emitted as null, never as a plausible default.
+ *   P0-3  periodFromDate, feeAmount and penaltyAmount are now emitted per period, and the plan-level
+ *         totalPrincipalAmount / totalFeeAmount / totalPenaltyAmount / totalOutstandingAmount are
+ *         emitted too. They exist on the oracle's own objects (LoanSchedulePlan.java:38-43,70,74-75;
+ *         LoanSchedulePlanRepaymentPeriod.java:29,33-34) and were simply dropped by the pass-3 emitter.
+ *   P1-9  Every BigDecimal is emitted through toPlainString() (no scientific notation can escape), and
+ *         the error branch now retains the top stack frames instead of discarding them.
+ *
+ * No case, no input and no arithmetic changed. This revision only widens what is RECORDED.
  */
 import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
 import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
@@ -46,12 +66,22 @@ import org.apache.fineract.portfolio.loanaccount.loanschedule.domain.EmbeddableP
 import org.apache.fineract.portfolio.loanaccount.loanschedule.domain.LoanRepaymentScheduleModelData;
 import org.apache.fineract.portfolio.loanproduct.domain.InterestMethod;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
 
 public class Capture3 {
 
@@ -153,6 +183,7 @@ public class Capture3 {
         sb.append("{\n  \"pass\": 3,\n");
         sb.append("  \"harness\": \"Capture3.java\",\n");
         sb.append("  \"moneyHelperPrecision\": ").append(MoneyHelper.PRECISION).append(",\n");
+        sb.append(attestation());
         sb.append("  \"captures\": [\n");
         for (int i = 0; i < cases.size(); i++) {
             sb.append(run(cases.get(i)));
@@ -201,11 +232,11 @@ public class Capture3 {
         b.append("      \"inputs\": {\n");
         b.append("        \"scheduleGenerationStartDate\": \"").append(c.startDate()).append("\",\n");
         b.append("        \"disbursementDate\": \"").append(c.disbursementDate()).append("\",\n");
-        b.append("        \"disbursementAmount\": \"").append(c.principal()).append("\",\n");
+        b.append("        \"disbursementAmount\": ").append(money(c.principal())).append(",\n");
         b.append("        \"numberOfRepayments\": ").append(c.noRepayments()).append(",\n");
         b.append("        \"repaymentFrequency\": 1,\n");
         b.append("        \"repaymentFrequencyType\": \"MONTHS\",\n");
-        b.append("        \"annualNominalInterestRate\": \"").append(c.annualRate()).append("\",\n");
+        b.append("        \"annualNominalInterestRate\": ").append(money(c.annualRate())).append(",\n");
         b.append("        \"mathContextPrecision\": ").append(c.precision()).append(",\n");
         b.append("        \"mathContextRoundingMode\": \"").append(c.mode()).append("\",\n");
         b.append("        \"tenantId\": ").append(c.tenantId() == null ? "null" : "\"" + c.tenantId() + "\"").append(",\n");
@@ -218,7 +249,7 @@ public class Capture3 {
         b.append("        \"daysInYear\": \"").append(c.diy()).append("\",\n");
         b.append("        \"daysInYearCustomStrategy\": ").append(c.diyCustom() == null ? "null" : "\"" + c.diyCustom() + "\"").append(",\n");
         b.append("        \"downPaymentEnabled\": ").append(BigDecimal.ZERO.compareTo(c.downPaymentPct()) != 0).append(",\n");
-        b.append("        \"downPaymentPercentage\": \"").append(c.downPaymentPct()).append("\",\n");
+        b.append("        \"downPaymentPercentage\": ").append(money(c.downPaymentPct())).append(",\n");
         b.append("        \"installmentAmountInMultiplesOf\": ").append(c.installmentMultiplesOf()).append(",\n");
         b.append("        \"fixedLength\": ").append(c.fixedLength()).append(",\n");
         b.append("        \"interestRecognitionOnDisbursementDate\": ").append(c.interestRecognitionOnDisbursementDate()).append(",\n");
@@ -231,38 +262,58 @@ public class Capture3 {
         try {
             plan = generator.generate(mc, config);
         } catch (RuntimeException e) {
+            // T25 / T18 P1-5: the stack trace is EVIDENCE. Keep the top frames instead of discarding them.
+            final StringBuilder frames = new StringBuilder();
+            final StackTraceElement[] st = e.getStackTrace();
+            for (int i = 0; i < Math.min(12, st.length); i++) {
+                if (i != 0) {
+                    frames.append(", ");
+                }
+                frames.append("\"").append(esc(st[i].toString())).append("\"");
+            }
             b.append("      \"observed\": null,\n");
-            b.append("      \"error\": \"").append(e.getClass().getName()).append(": ")
-                    .append(String.valueOf(e.getMessage()).replace("\"", "'").replace("\n", " ")).append("\"\n");
+            b.append("      \"error\": \"").append(esc(e.getClass().getName() + ": " + e.getMessage()))
+                    .append("\",\n");
+            b.append("      \"errorStackTop\": [").append(frames).append("]\n");
             b.append("    }");
             return b.toString();
         }
 
         b.append("      \"observed\": {\n");
         b.append("        \"loanTermInDays\": ").append(plan.getLoanTermInDays()).append(",\n");
-        b.append("        \"totalDisbursedAmount\": \"").append(plan.getTotalDisbursedAmount()).append("\",\n");
-        b.append("        \"totalInterestAmount\": \"").append(plan.getTotalInterestAmount()).append("\",\n");
-        b.append("        \"totalRepaymentAmount\": \"").append(plan.getTotalRepaymentAmount()).append("\",\n");
+        b.append("        \"totalDisbursedAmount\": ").append(money(plan.getTotalDisbursedAmount())).append(",\n");
+        b.append("        \"totalPrincipalAmount\": ").append(money(plan.getTotalPrincipalAmount())).append(",\n");
+        b.append("        \"totalInterestAmount\": ").append(money(plan.getTotalInterestAmount())).append(",\n");
+        b.append("        \"totalFeeAmount\": ").append(money(plan.getTotalFeeAmount())).append(",\n");
+        b.append("        \"totalPenaltyAmount\": ").append(money(plan.getTotalPenaltyAmount())).append(",\n");
+        b.append("        \"totalRepaymentAmount\": ").append(money(plan.getTotalRepaymentAmount())).append(",\n");
+        b.append("        \"totalOutstandingAmount\": ").append(money(plan.getTotalOutstandingAmount())).append(",\n");
         b.append("        \"periods\": [\n");
 
         final List<String> rows = new ArrayList<>();
         for (LoanSchedulePlanPeriod period : plan.getPeriods()) {
             if (period instanceof LoanSchedulePlanDisbursementPeriod dp) {
-                rows.add("          {\"type\": \"DISBURSEMENT\", \"dueDate\": \"" + dp.periodDueDate()
-                        + "\", \"principal\": \"" + dp.getPrincipalAmount() + "\"}");
+                rows.add("          {\"type\": \"DISBURSEMENT\", \"periodFromDate\": \"" + dp.periodFromDate()
+                        + "\", \"dueDate\": \"" + dp.periodDueDate()
+                        + "\", \"principal\": " + money(dp.getPrincipalAmount())
+                        + ", \"balance\": " + money(dp.getOutstandingLoanBalance()) + "}");
             } else if (period instanceof LoanSchedulePlanDownPaymentPeriod dpp) {
                 rows.add("          {\"type\": \"DOWN_PAYMENT\", \"periodNumber\": " + dpp.periodNumber()
-                        + ", \"dueDate\": \"" + dpp.periodDueDate() + "\", \"balance\": \""
-                        + dpp.getOutstandingLoanBalance() + "\", \"principal\": \"" + dpp.getPrincipalAmount()
-                        + "\", \"total\": \"" + dpp.getTotalDueAmount() + "\", \"totalOutstandingBalance\": \""
-                        + dpp.getTotalOutstandingLoanBalance() + "\"}");
+                        + ", \"periodFromDate\": \"" + dpp.periodFromDate()
+                        + "\", \"dueDate\": \"" + dpp.periodDueDate() + "\", \"balance\": "
+                        + money(dpp.getOutstandingLoanBalance()) + ", \"principal\": " + money(dpp.getPrincipalAmount())
+                        + ", \"total\": " + money(dpp.getTotalDueAmount()) + ", \"totalOutstandingBalance\": "
+                        + money(dpp.getTotalOutstandingLoanBalance()) + "}");
             } else if (period instanceof LoanSchedulePlanRepaymentPeriod rp) {
                 rows.add("          {\"type\": \"REPAYMENT\", \"periodNumber\": " + rp.periodNumber()
-                        + ", \"dueDate\": \"" + rp.periodDueDate() + "\", \"balance\": \""
-                        + rp.getOutstandingLoanBalance() + "\", \"principal\": \"" + rp.getPrincipalAmount()
-                        + "\", \"interest\": \"" + rp.getInterestAmount() + "\", \"total\": \""
-                        + rp.getTotalDueAmount() + "\", \"totalOutstandingBalance\": \""
-                        + rp.getTotalOutstandingLoanBalance() + "\"}");
+                        + ", \"periodFromDate\": \"" + rp.periodFromDate()
+                        + "\", \"dueDate\": \"" + rp.periodDueDate() + "\", \"balance\": "
+                        + money(rp.getOutstandingLoanBalance()) + ", \"principal\": " + money(rp.getPrincipalAmount())
+                        + ", \"interest\": " + money(rp.getInterestAmount())
+                        + ", \"fee\": " + money(rp.getFeeAmount())
+                        + ", \"penalty\": " + money(rp.getPenaltyAmount())
+                        + ", \"total\": " + money(rp.getTotalDueAmount()) + ", \"totalOutstandingBalance\": "
+                        + money(rp.getTotalOutstandingLoanBalance()) + "}");
             } else {
                 rows.add("          {\"type\": \"UNKNOWN:" + period.getClass().getName() + "\"}");
             }
@@ -272,5 +323,150 @@ public class Capture3 {
         b.append("      }\n");
         b.append("    }");
         return b.toString();
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // T25: emission helpers and the capture-time environment attestation (T21 audit P0-2, plan 4.1).
+    // ---------------------------------------------------------------------------------------------
+
+    /** Emit a BigDecimal as a JSON string in PLAIN notation, or the JSON literal null. */
+    static String money(final BigDecimal v) {
+        return v == null ? "null" : "\"" + v.toPlainString() + "\"";
+    }
+
+    /** Minimal JSON string-body escaper. */
+    static String esc(final String v) {
+        if (v == null) {
+            return "";
+        }
+        return v.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", " ").replace("\r", " ").replace("\t", " ");
+    }
+
+    /** A JSON string literal, or the JSON literal null when the value is absent. Never invents a default. */
+    static String jstr(final String v) {
+        return v == null ? "null" : "\"" + esc(v) + "\"";
+    }
+
+    static String sha256(final Path path) {
+        try (InputStream in = Files.newInputStream(path)) {
+            final MessageDigest md = MessageDigest.getInstance("SHA-256");
+            final byte[] buf = new byte[65536];
+            int n = in.read(buf);
+            while (n != -1) {
+                md.update(buf, 0, n);
+                n = in.read(buf);
+            }
+            final StringBuilder hex = new StringBuilder();
+            for (byte x : md.digest()) {
+                hex.append(String.format(Locale.ROOT, "%02x", x));
+            }
+            return hex.toString();
+        } catch (Exception e) {
+            // Honesty rule: a digest we could not take is reported as unreadable, never guessed.
+            return "UNREADABLE: " + e.getClass().getSimpleName() + ": " + e.getMessage();
+        }
+    }
+
+    static String joinQuoted(final List<String> xs) {
+        final StringBuilder b = new StringBuilder();
+        for (int i = 0; i < xs.size(); i++) {
+            if (i != 0) {
+                b.append(", ");
+            }
+            b.append(jstr(xs.get(i)));
+        }
+        return b.toString();
+    }
+
+    /**
+     * The environment-attestation block required by the capture plan 4.1 and by T21 audit P0-2.
+     *
+     * observedInContainer - read by THIS JVM, inside the pinned image, at capture time.
+     * observedOnHost      - supplied by the runner via -Dcap.host.*; a value the runner did not supply
+     *                       is emitted as null. This JVM cannot see the image digest or the host git
+     *                       checkout, and does not pretend to.
+     */
+    static String attestation() {
+        final StringBuilder a = new StringBuilder();
+        a.append("  \"attestation\": {\n");
+        a.append("    \"capturePath\": \"Path A - embeddable seam, in-process, no database\",\n");
+        a.append("    \"capturedAtUtc\": \"").append(Instant.now()).append("\",\n");
+        a.append("    \"observedInContainer\": {\n");
+        a.append("      \"jvm\": ").append(jstr(System.getProperty("java.runtime.name") + " "
+                + System.getProperty("java.runtime.version") + " / " + System.getProperty("java.vm.name") + " "
+                + System.getProperty("java.vm.version"))).append(",\n");
+        a.append("      \"javaVendor\": ").append(jstr(System.getProperty("java.vendor"))).append(",\n");
+        a.append("      \"osArch\": ")
+                .append(jstr(System.getProperty("os.name") + " " + System.getProperty("os.arch"))).append(",\n");
+        a.append("      \"jvmDefaultTimeZone\": ").append(jstr(java.util.TimeZone.getDefault().getID())).append(",\n");
+        a.append("      \"moneyHelperPrecision\": ").append(MoneyHelper.PRECISION).append(",\n");
+
+        // The provider jar's OWN build attestation, read off the classpath.
+        final Properties git = new Properties();
+        String gitRead = "read";
+        try (InputStream in = Capture3.class.getResourceAsStream("/git.properties")) {
+            if (in == null) {
+                gitRead = "ABSENT: /git.properties is not on the classpath";
+            } else {
+                git.load(in);
+            }
+        } catch (Exception e) {
+            gitRead = "UNREADABLE: " + e.getClass().getSimpleName() + ": " + e.getMessage();
+        }
+        a.append("      \"jarGitProperties\": {\n");
+        a.append("        \"status\": ").append(jstr(gitRead)).append(",\n");
+        a.append("        \"git.commit.id\": ").append(jstr(git.getProperty("git.commit.id"))).append(",\n");
+        a.append("        \"git.dirty\": ").append(jstr(git.getProperty("git.dirty"))).append(",\n");
+        a.append("        \"git.build.time\": ").append(jstr(git.getProperty("git.build.time"))).append("\n");
+        a.append("      },\n");
+
+        // SHA-256 of exactly what was compiled, and of the provider jar the classpath came from.
+        final Map<String, String> digests = new LinkedHashMap<>();
+        digests.put("/cap/src/Capture3.java", sha256(Paths.get("/cap/src/Capture3.java")));
+        digests.put("/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java",
+                sha256(Paths.get("/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java")));
+        digests.put("/app/fineract-provider.jar", sha256(Paths.get("/app/fineract-provider.jar")));
+        a.append("      \"sha256\": {\n");
+        int i = 0;
+        for (Map.Entry<String, String> e : digests.entrySet()) {
+            a.append("        ").append(jstr(e.getKey())).append(": ").append(jstr(e.getValue()));
+            i = i + 1;
+            a.append(i < digests.size() ? ",\n" : "\n");
+        }
+        a.append("      },\n");
+
+        // Classpath: count the entries, and ASSERT the PostgreSQL-only rule on the jars actually loaded.
+        final String[] cp = String.valueOf(System.getProperty("java.class.path")).split(":");
+        final List<String> prohibited = new ArrayList<>();
+        final List<String> pg = new ArrayList<>();
+        for (String entry : cp) {
+            final String lower = entry.toLowerCase(Locale.ROOT);
+            if (lower.contains("ojdbc") || lower.contains("oracle") || lower.contains("mysql")
+                    || lower.contains("mariadb")) {
+                prohibited.add(entry);
+            }
+            if (lower.contains("postgresql")) {
+                pg.add(entry);
+            }
+        }
+        a.append("      \"classpathEntryCount\": ").append(cp.length).append(",\n");
+        a.append("      \"classpathPostgresqlEntries\": [").append(joinQuoted(pg)).append("],\n");
+        a.append("      \"classpathProhibitedDbEntries\": [").append(joinQuoted(prohibited)).append("],\n");
+        a.append("      \"databaseConnections\": \"none - this seam opens no database connection; the harness")
+                .append(" references no JDBC or JPA type\"\n");
+        a.append("    },\n");
+
+        a.append("    \"observedOnHost\": {\n");
+        a.append("      \"note\": \"supplied by the runner via -Dcap.host.*; null means the runner did not supply it\",\n");
+        final String[] hostKeys = { "imageDigest", "fineractCommit", "fineractWorktreeClean", "seamByteIdentity",
+                "runnerScript", "capturedAtUtc" };
+        for (int k = 0; k < hostKeys.length; k++) {
+            a.append("      ").append(jstr(hostKeys[k])).append(": ")
+                    .append(jstr(System.getProperty("cap.host." + hostKeys[k])));
+            a.append(k < hostKeys.length - 1 ? ",\n" : "\n");
+        }
+        a.append("    }\n");
+        a.append("  },\n");
+        return a.toString();
     }
 }

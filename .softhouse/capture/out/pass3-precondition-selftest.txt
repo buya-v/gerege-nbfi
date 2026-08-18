@@ -1,0 +1,10 @@
+== precondition self-test: every check below MUST fail, and MUST write no capture ==
+  ok  [mutated seam] exit 1 :: PRECONDITION FAILED: SEAM IS NOT BYTE-IDENTICAL TO THE PINNED ORACLE. copy=0726a47472ce472b69dbe750d01c71e977a8c4152d0aa7c78499792f28c364e3 pinned=bf397f0b29e6d6f347c286f563875495635128f9cba80fe59881ffe0fea80714 -- this capture would not be an observation of the oracle
+  ok  [missing seam] exit 1 :: PRECONDITION FAILED: seam copy missing: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.x8sXWCgv4B/absent.java
+  ok  [wrong image digest] exit 1 :: PRECONDITION FAILED: image digest is sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a, expected sha256:0000000000000000000000000000000000000000000000000000000000000000
+  ok  [wrong oracle commit] exit 1 :: PRECONDITION FAILED: reference oracle checkout is at 426a23544e8426a38ae43ae404670a0a7e85b9eb, expected 0000000000000000000000000000000000000000
+  ok  [no oracle checkout] exit 1 :: PRECONDITION FAILED: no git checkout at /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.x8sXWCgv4B
+  ok  [missing harness] exit 1 :: PRECONDITION FAILED: harness missing: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.x8sXWCgv4B/absent.java
+-- nothing may have been written --
+  ok  no capture-selftest-never-written-* artefact exists
+== self-test PASSED: all 6 preconditions fail the run ==

@@ -1,0 +1,10 @@
+== precondition self-test: every check below MUST fail, and MUST write no capture ==
+  ok  [wrong image digest] exit 1 :: PRECONDITION FAILED: image digest is sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a, expected sha256:0000000000000000000000000000000000000000000000000000000000000000
+  ok  [wrong oracle commit] exit 1 :: PRECONDITION FAILED: running server was built from 426a23544e8426a38ae43ae404670a0a7e85b9eb, expected 0000000000000000000000000000000000000000
+  ok  [wrong rounding mode] exit 1 :: PRECONDITION FAILED: tenant 'gerege' rounding-mode is 4, expected 999 (HALF_UP)
+  ok  [wrong timezone] exit 1 :: PRECONDITION FAILED: tenant 'gerege' timezone is Asia/Ulaanbaatar; allowed: Antarctica/Troll
+  ok  [HALF_EVEN tenant 'default'] exit 1 :: PRECONDITION FAILED: tenant 'default' timezone is Asia/Kolkata; allowed: Asia/Ulaanbaatar Asia/Hovd
+  ok  [nonexistent tenant] exit 1 :: PRECONDITION FAILED: tenant 'no_such_tenant' does not exist in the tenant store
+-- nothing may have been written --
+  ok  no capture artefact was written
+== self-test PASSED: all 6 preconditions fail the run ==
