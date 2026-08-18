@@ -292,11 +292,12 @@
         "T18",
         "T19",
         "T21",
-        "T22"
+        "T22",
+        "T23"
       ],
       "status": "pending",
       "attempts": 0,
-      "note": "Run gate \u2014 must PASS before the run completes. || cloud fire 20260817-2000: dependencies extended to T3b and T17 - the re-review and the capture-plan review are run gates too. || fire 20260818-152328: dependencies extended to T18 and T19 - the two capture audits are run gates too."
+      "note": "Run gate \u2014 must PASS before the run completes. || cloud fire 20260817-2000: dependencies extended to T3b and T17 - the re-review and the capture-plan review are run gates too. || fire 20260818-152328: dependencies extended to T18 and T19 - the two capture audits are run gates too. || fire 20260818-173900: dependencies extended to T21, T22, T23 - all three audits are run gates."
     },
     {
       "id": "T14",
@@ -510,9 +511,50 @@
       "dependencies": [
         "T4"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "Raised fire 20260818-173900. A re-review after a REJECT is itself a reviewed step - DEC-1 must not be ratified on the drafter's own say-so. DISPATCHED fire 20260818-173900: opus, isolation=worktree."
+      "note": "Raised fire 20260818-173900. A re-review after a REJECT is itself a reviewed step - DEC-1 must not be ratified on the drafter's own say-so. DISPATCHED fire 20260818-173900: opus, isolation=worktree. || DONE fire 20260818-173900, merged to main. VERDICT: ACCEPTED WITH REQUIRED CHANGES - explicitly NOT ratifiable as it stands under P-2, so G-1 does NOT close. Reviewer's own framing: not a REJECT in T5's sense - three normative paragraphs are wrong, not the whole document. T5's nine: 8 SATISFIED, #3 (ordering) PARTIAL. THE SPLIT SURVIVES: widening the graded domain genuinely needs no amendment of a ratified DEC-n, so it is not a loophole around a hard gate (P1 only: the recording MECHANISM is unspecified). THE PAIR CLAIM IS EXACT: the reviewer mechanically diffed all 37 Builder fields against the 36 copied and all 19 record components - there is NO third dropped component, which retires the 'defect class' worry T19 raised. BUT the inference 'therefore the blind spot is empty' is OVERCLAIMED and refuted by two observed defects. P0-1: the EMI re-adjust loop is LIVE inside the graded domain (section 4.3 says reachable only outside; section 9's obligation list omits it) - called at ProgressiveEMICalculator.java:749 on EVERY generation, and its guard compares |dEMI|*100 against a Money of amount floor(n/2) because Money.copy(double) REPLACES the amount, so it does not depend on installment rounding at all; 7 of 10 graded-domain requests diverge from the contract as specified (MNT 1,014,632 / 6 x 7.0% -> oracle 172,574.64 vs 172,574.63; MNT 127,704 / 36 x 16.8% -> total interest 35,746.56 vs 35,746.69) and NO vector in the corpus trips it. P0-2: a disbursement outside [ScheduleStartDate, last due date) is SILENTLY DISCARDED - observed zero disbursement rows and an all-zero schedule - and the ordering rule's third clause describes a row the seam never emits. P0-3: FrequencyYears does NOT always throw - it throws on the 30/360 arm only; under DayCountActualActual the oracle returned a full 3-period schedule (term 1096, interest 551,982.62), so the refusal's normative justification is false and no error-precedence rule exists. Judgement call (a) omitting InterestCalculationPeriod/PartialPeriodInterest is CORRECT; (b) refusing FrequencyYears is REFUTED. Citation audit: 101/101 resolve, ZERO progressive-vs-cumulative misattribution (5 dangling bare :N antecedents -> P1). Go artefact clean on every non-negotiable; errors.Is wrapping executed and correct. Reviewer's from-scratch re-derivation matches 8 of 12 captures to the minor unit."
+    },
+    {
+      "id": "T24",
+      "title": "Apply T23's three P0 corrections to DEC-1 v2 (then re-review, then ratify)",
+      "description": "T23 accepted DEC-1 v2 with required changes and judged it NOT ratifiable. The fix is scoped: three normative paragraphs, not a rewrite. P0-1: correct section 4.3 and section 9 - the EMI re-adjust loop (ProgressiveEMICalculator.java:1258-1308, called at :749) is LIVE inside the graded domain on every generation, its guard does not depend on installment rounding, and 7 of 10 graded-domain requests diverge from the contract as specified; either bring it into the specified behaviour or shrink the graded domain to exclude it, and say which. Capture vectors that trip it - none currently do. P0-2: specify what happens to a disbursement outside [ScheduleStartDate, last due date), which the seam silently discards; fix the ordering rule's third clause, which describes a row the seam never emits. P0-3: FrequencyYears throws on the 30/360 arm only - under DayCountActualActual the oracle returns a full schedule - so restate the refusal on true grounds and add the missing error-precedence rule. Also apply T23's P1 list, including the graded-domain widening MECHANISM (the split survives, but how a widening is recorded is unspecified) and the 5 dangling bare :N citation antecedents. Do NOT re-litigate anything T23 marked SATISFIED.",
+      "agent_role": "spec_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        "docs/adr/DEC-1-schedule-generator-adapter.md",
+        "nexus/internal/apps/loanschedule/contract/contract.go"
+      ],
+      "context": "contract",
+      "dependencies": [
+        "T23"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised fire 20260818-173900 from T23's P0 list. NEXT FIRE'S FIRST TASK. Needs the reference oracle - P0-1 and P0-3 both turn on observed behaviour, and P0-1 explicitly requires capturing vectors that trip the re-adjust loop, which the corpus currently cannot. Sequence to close G-1: T24 -> re-review (raise T25) -> driver ratifies under P-2."
+    },
+    {
+      "id": "T25",
+      "title": "Apply the T21 and T22 P0 lists to the capture corpus before any vector is promoted",
+      "description": "Both capture audits landed ACCEPTED WITH REQUIRED CHANGES and both P0 lists block promotion to the vector store. T21 P0: correct or delete the size-threshold section of PASS3-REPORT.md:50-60 and PASS3-REPORT-shared.md (the claim is refuted); attach the environment-attestation block; emit periodFromDate/fee/penalty and re-run; commit an executable pass-3 run recipe with the seam byte-identity check as a FAILING precondition. T22 P0: retract the false round-up rule (the oracle rounds to the NEAREST multiple under the tenant mode, Money.java:163-171); record that the Path B captures ran at HALF_EVEN (c_configuration.rounding-mode=6) not the ratified HALF_UP, and that mode-insensitivity was established by re-observation not assumption; attach a machine-readable attestation sidecar; make REPRODUCE.md preconditions FAIL the run and add rounding-mode + timezone assertions; fix the capture loop's -o out/B-$n-*-raw.json glob, which cannot produce the committed filenames, and capture HTTP status; re-point Path B at the gerege tenant and stop capturing on default. Also retract the killed worker's defective scripts on main: t21-probe-threshold.py and t21-probe-rederive.py (model never applies the EMI smoothing pass, misreads Money.copy(double) as a multiply) and t22-probe/invariants.py (I5 hard-coded to PASS).",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/capture/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T21",
+        "T22"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised fire 20260818-173900 from the T21 and T22 P0 lists. Contract-independent: corrects RAW observed capture and its provenance, stores nothing contract-shaped, so it may run while G-1 is open. Needs the reference oracle for the re-runs. Until this lands NO capture may be promoted to the vector store - the eleven (19, HALF_UP) pass-3 captures are promotable only after T21's P0 closes.",
+      "contract_independent": true
     }
   ]
 }

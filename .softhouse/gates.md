@@ -174,3 +174,63 @@ The failure is systematic and diagnosable: **the analyst corrected each section 
 ## Resolved
 
 _(none yet)_
+
+---
+
+## G-1 update — fire `20260818-173900` (local, oracle REACHABLE)
+
+**Status: still open, but no longer waiting on a question. It is waiting on three named corrections.**
+
+The driver did **not** ratify. Standing policy **P-2** permits ratification on a *clean* independent
+review; T23's verdict is `ACCEPTED WITH REQUIRED CHANGES — NOT ratifiable as it stands`. Ratifying
+anyway would have been exactly the move the policy exists to prevent.
+
+### What this fire settled
+
+- **DEC-1 v2 exists** and answers the defect that rejected v1. It splits the **contract domain** (every
+  value the types admit, frozen by ratification) from the **graded domain** (the subset a capture can
+  actually discriminate). §5 now states, for every input, whether the corpus can discriminate it and by
+  which capture.
+- **The split survived adversarial review.** T23 answered the question that mattered most — can the graded
+  domain widen *without* amending a ratified DEC-n? — as **yes**. It is not a loophole around a hard gate.
+  Only the *mechanism* for recording a widening is unspecified (P1).
+- **The "silently dropped component" worry is closed as a class.** T23 mechanically diffed all 37 `Builder`
+  fields against the 36 copied, and all 19 record components: **there is no third dropped component.**
+  T19's fear that this was an open-ended defect class is retired.
+- **Path B works and grades what Path A drops** (T22). `installmentAmountInMultiplesOf` moves 12/12 periods
+  (`B-02`); `daysInYearCustomStrategy` moves the schedule via `FEB_29_PERIOD_ONLY` (`B-04`) — but
+  `FULL_LEAP_YEAR` is byte-identical to the field being *unset*, so it remains undiscriminated.
+- **A false rounding rule was caught before it froze.** The oracle rounds the EMI to the **nearest**
+  multiple under the tenant mode, not up (`Money.java:163-171`), observed rounding **down** at principal
+  1,190,000: `111,148.35 → 111,100.00`. DEC-1 would have inherited the error.
+- **The size-threshold claim is refuted** (T21). p12/p19 divergence appears at principal **4.00** on the
+  36×16.8% shape and is **absent** at 50,000,000 and 87,654,321. There is no threshold, and no shortcut
+  may be justified by loan size.
+
+### The three P0 defects that block ratification
+
+1. **The EMI re-adjust loop is live inside the graded domain.** §4.3 says it is reachable only *outside*;
+   §9's obligation list omits it. It is called at `ProgressiveEMICalculator.java:749` on **every**
+   generation, and its guard compares `|ΔEMI|×100` against a `Money` of amount `floor(n/2)` — because
+   `Money.copy(double)` **replaces** the amount — so it does not depend on installment rounding at all.
+   **7 of 10 graded-domain requests diverge from the contract as specified**, and **no vector in the corpus
+   trips it.** Observed: MNT 1,014,632 / 6 × 7.0% → oracle `172,574.64` vs specified `172,574.63`;
+   MNT 127,704 / 36 × 16.8% → total interest `35,746.56` vs `35,746.69`.
+2. **A disbursement outside `[ScheduleStartDate, last due date)` is silently discarded** — observed as zero
+   disbursement rows and an all-zero schedule. The ordering rule's third clause describes a row the seam
+   never emits.
+3. **`FrequencyYears` does not always throw.** It throws on the 30/360 arm only; under
+   `DayCountActualActual` the oracle returned a full 3-period schedule (term 1096, interest `551,982.62`).
+   The refusal's normative justification is false and there is no error-precedence rule.
+
+### What unblocks G-1
+
+`T24` (apply the three P0s + T23's P1 list) → an independent re-review → the driver ratifies under P-2.
+**Nothing here needs Buyan.** All three are ENGINEERING, answerable from source and observation, and the
+oracle is reachable on the local fire. P0-1 additionally requires *capturing vectors that trip the
+re-adjust loop*, which the corpus currently cannot do — that is capture work, not a decision.
+
+### Still RESERVED (unchanged)
+
+Nothing blocking Run 1. Licence (NBFI ББСБ) and rounding mode (HALF_UP) are decided. Cutover, regulatory
+sign-off and deposit-taking activation remain hard `user` gates and are not in Run 1's path.

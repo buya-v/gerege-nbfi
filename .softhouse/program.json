@@ -18,7 +18,7 @@
     "prohibited_engines": "none (0 ojdbc/oracle.jdbc/mysql/mariadb jar entries, no :1521 listener)",
     "image_digest": "sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a",
     "commit_attestation": "the image jar's own BOOT-INF/classes/git.properties carries git.commit.id=426a23544e8426a38ae43ae404670a0a7e85b9eb with git.dirty=false [VERIFIED by the T18 audit] - build-attested, not self-reported",
-    "capture_paths": "Path A = embeddable seam, in-process, NO database (all three passes so far). Path B = running server + PostgreSQL, UNUSED, and the only path that can reach what Path A drops. See .softhouse/reference-oracle.md.",
+    "capture_paths": "Path A = embeddable seam, in-process, NO database. Path B = running server + PostgreSQL - BUILT and now AUDITED (T22): it does grade both inputs Path A silently drops. installmentAmountInMultiplesOf moves 12/12 periods (capture B-02); daysInYearCustomStrategy moves the schedule only via FEB_29_PERIOD_ONLY (capture B-04), since FULL_LEAP_YEAR was proved byte-identical to the field being unset. Both verified persisted in PostgreSQL. Path B captures ran at HALF_EVEN (rounding-mode=6), not the ratified HALF_UP, though the four are mode-insensitive by re-observation. Tenant 'gerege' (fineract_gerege, Asia/Ulaanbaatar, rounding-mode 4) was provisioned by the T22 auditor. See .softhouse/reference-oracle.md.",
     "production_math_context": "(19, HALF_UP) - MoneyHelper.PRECISION=19 is a compile-time constant; only the mode is per-tenant, and Buyan ratified HALF_UP on 2026-08-18."
   },
   "scheduler": {
@@ -75,7 +75,7 @@
     "current_run_id": "2026-08-17-run1-harness-schedule-poc",
     "completed_contexts": [],
     "parked_contexts": [],
-    "note": "tier 0 is blocked_on_gate (G-1), but the gate moved a long way this fire. Buyan has now answered every G-1 decision except the ratification signature itself, and ratified HALF_UP + NBFI licence. Three capture passes exist against the pinned oracle; passes 1-2 are audited (both ACCEPTED WITH REQUIRED CHANGES), pass 3 is NOT audited and T21 should be the next fire's first task. Immediate contract-independent work: T21, then T4's retry (now unblocked - every decision feeding DEC-1 is answered), then the Tier-C gap audit and per-context analyst extraction for the 16 READY-FOR-ANALYSIS contexts."
+    "note": "tier 0 remains blocked_on_gate (G-1) but the gate is now a SPECIFIED, SCOPED piece of work rather than an open question. Fire 20260818-173900 ran four opus workers to completion and merged all four. T21 and T22 (the capture audits) are DONE - both ACCEPTED WITH REQUIRED CHANGES. T4 attempt 2 delivered DEC-1 v2. T23 re-reviewed it: ACCEPTED WITH REQUIRED CHANGES, explicitly NOT ratifiable, so the driver did NOT ratify under P-2 - three P0s, all observed against the oracle. Next fire's order: T24 (apply T23's three P0s) -> re-review -> ratify. T25 (apply the T21/T22 P0 lists) is contract-independent and can run alongside. NO capture has been promoted to the vector store; the eleven (19, HALF_UP) pass-3 captures become promotable only once T21's P0 list closes."
   },
   "contexts": [
     {
@@ -91,7 +91,7 @@
       "status": "blocked_on_gate",
       "run_id": "2026-08-17-run1-harness-schedule-poc",
       "cutover_gate": false,
-      "notes": "Planned. Everything else depends on the harness existing. || cloud fire 20260817-2000: BLOCKED at gate G-1 (ratify DEC-1), which is NOT YET ANSWERABLE - the draft was independently REJECTED (T5) and the defect it turns on is one the current corpus provably cannot detect. Every other context in this program declares tier 0 as a transitive dependency, so the whole program is behind this gate. Measured this fire against the pin: the module is src/main 92 LOC + misc/Main.java 90 = 182, which settles the '~182 LOC' figure on record."
+      "notes": "Planned. Everything else depends on the harness existing. || cloud fire 20260817-2000: BLOCKED at gate G-1 (ratify DEC-1), which is NOT YET ANSWERABLE - the draft was independently REJECTED (T5) and the defect it turns on is one the current corpus provably cannot detect. Every other context in this program declares tier 0 as a transitive dependency, so the whole program is behind this gate. Measured this fire against the pin: the module is src/main 92 LOC + misc/Main.java 90 = 182, which settles the '~182 LOC' figure on record. || fire 20260818-173900: four workers landed and merged. The two capture audits are done; DEC-1 v2 was drafted and independently re-reviewed. G-1 did NOT close - T23 found three P0 defects, the sharpest being that the EMI re-adjust loop is LIVE inside the graded domain (7 of 10 graded-domain requests diverge from the contract as specified, and no vector in the corpus trips it). The contract-domain / graded-domain split itself SURVIVED review, and the reviewer proved mechanically that there is no third silently-dropped component beyond the known two."
     },
     {
       "id": "tierA-gl-accounting",
@@ -546,6 +546,36 @@
       ],
       "uat": "NOT RUN - T13 is gated on T9/T11/T12/T18/T19/T21 and the harness (T7) does not exist yet. No conformance run was claimed.",
       "outcome": "Major advance without crossing a gate. The evidence G-1 was waiting on now exists and is audited; Buyan answered every G-1 decision except the ratification signature and ratified HALF_UP + NBFI. Three capture passes, 12 production-settings parity candidates, and a structural defect found in the conformance rig itself: the capture seam silently drops 2 of the contract's 19 inputs, so the corpus has zero discriminating power on them. No vector promoted, no bar lowered, no gate crossed."
+    },
+    {
+      "fire": "20260818-173900",
+      "host": "local (Buyan's Mac)",
+      "oracle": "REACHABLE",
+      "context": "tier0-harness-schedule-poc",
+      "run_id": "2026-08-17-run1-harness-schedule-poc",
+      "workers_dispatched": 4,
+      "workers_completed": 4,
+      "workers_killed": 0,
+      "tasks_closed": [
+        "T21",
+        "T22",
+        "T4",
+        "T23"
+      ],
+      "tasks_raised": [
+        "T24",
+        "T25"
+      ],
+      "merges": 4,
+      "reviewer_catches": [
+        "T21 refuted the orchestrator's size-threshold claim (divergence at principal 4.00, absent at 50,000,000) and showed the killed worker's own X2 invariant failure was a false alarm from an invalid check",
+        "T22 retracted a FALSE rounding rule before it reached DEC-1 (nearest multiple under the tenant mode, not up; observed rounding DOWN 111,148.35 -> 111,100.00) and found the Path B captures ran at HALF_EVEN, not the ratified HALF_UP",
+        "T23 found the EMI re-adjust loop live inside the graded domain with 7 of 10 requests diverging, a silently discarded out-of-window disbursement, and that FrequencyYears does not always throw - blocking a ratification the driver would otherwise have taken under P-2"
+      ],
+      "uat": "not run - the run is still blocked at G-1",
+      "gate_status": "G-1 still open; now scoped to T23's three P0 corrections plus a re-review",
+      "vectors_promoted": 0,
+      "note": "Also rescued and PUSHED the previous fire's three stranded branches, which existed only locally, and salvaged their probe artifacts onto main."
     }
   ],
   "database": {
