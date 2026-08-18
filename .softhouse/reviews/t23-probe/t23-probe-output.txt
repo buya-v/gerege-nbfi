@@ -1,0 +1,169 @@
+10:49:35.863 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t23_probe`: HALF_UP
+MoneyHelper.PRECISION      = 19
+MoneyHelper.getMathContext = precision=19 roundingMode=HALF_UP
+
+### Q0a CONTROL  disbursement on the schedule start (ordinary)
+    start=2024-01-01 disb=2024-01-01 P=1200000 n=6 rate=21.6 freq=MONTHS dim=DAYS_30 diy=DAYS_360
+    OK  loanTermInDays=182 totalDisbursed=1200000.00 totalInterest=76723.70 totalRepayment=1276723.70
+      DISBURSEMENT           due=2024-01-01 principal=1200000.00
+      REPAYMENT     #1 from=2024-01-01 due=2024-02-01 principal=191187.28 interest=21600.00 total=212787.28 balance=1008812.72
+      REPAYMENT     #2 from=2024-02-01 due=2024-03-01 principal=194628.65 interest=18158.63 total=212787.28 balance=814184.07
+      REPAYMENT     #3 from=2024-03-01 due=2024-04-01 principal=198131.97 interest=14655.31 total=212787.28 balance=616052.10
+      REPAYMENT     #4 from=2024-04-01 due=2024-05-01 principal=201698.34 interest=11088.94 total=212787.28 balance=414353.76
+      REPAYMENT     #5 from=2024-05-01 due=2024-06-01 principal=205328.91 interest=7458.37 total=212787.28 balance=209024.85
+      REPAYMENT     #6 from=2024-06-01 due=2024-07-01 principal=209024.85 interest=3762.45 total=212787.30 balance=0.00
+    rows: disbursement=1 downPayment=0 repayment=6
+
+### Q0b CONTROL  disbursement exactly on repayment 1's due date (DEC-1 §4.6 observed case)
+    start=2024-01-01 disb=2024-02-01 P=1200000 n=6 rate=21.6 freq=MONTHS dim=DAYS_30 diy=DAYS_360
+    OK  loanTermInDays=182 totalDisbursed=1200000.00 totalInterest=65570.58 totalRepayment=1265570.58
+      REPAYMENT     #1 from=2024-01-01 due=2024-02-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+      DISBURSEMENT           due=2024-02-01 principal=1200000.00
+      REPAYMENT     #2 from=2024-02-01 due=2024-03-01 principal=231514.12 interest=21600.00 total=253114.12 balance=968485.88
+      REPAYMENT     #3 from=2024-03-01 due=2024-04-01 principal=235681.37 interest=17432.75 total=253114.12 balance=732804.51
+      REPAYMENT     #4 from=2024-04-01 due=2024-05-01 principal=239923.64 interest=13190.48 total=253114.12 balance=492880.87
+      REPAYMENT     #5 from=2024-05-01 due=2024-06-01 principal=244242.26 interest=8871.86 total=253114.12 balance=248638.61
+      REPAYMENT     #6 from=2024-06-01 due=2024-07-01 principal=248638.61 interest=4475.49 total=253114.10 balance=0.00
+    rows: disbursement=1 downPayment=0 repayment=6
+
+### Q1a  disbursement EXACTLY on the last repayment due date (2024-07-01)
+    start=2024-01-01 disb=2024-07-01 P=1200000 n=6 rate=21.6 freq=MONTHS dim=DAYS_30 diy=DAYS_360
+    OK  loanTermInDays=182 totalDisbursed=0.00 totalInterest=0.00 totalRepayment=0.00
+      REPAYMENT     #1 from=2024-01-01 due=2024-02-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+      REPAYMENT     #2 from=2024-02-01 due=2024-03-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+      REPAYMENT     #3 from=2024-03-01 due=2024-04-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+      REPAYMENT     #4 from=2024-04-01 due=2024-05-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+      REPAYMENT     #5 from=2024-05-01 due=2024-06-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+      REPAYMENT     #6 from=2024-06-01 due=2024-07-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+    rows: disbursement=0 downPayment=0 repayment=6
+
+### Q1b  disbursement AFTER the last repayment due date (2024-09-01)
+    start=2024-01-01 disb=2024-09-01 P=1200000 n=6 rate=21.6 freq=MONTHS dim=DAYS_30 diy=DAYS_360
+    OK  loanTermInDays=182 totalDisbursed=0.00 totalInterest=0.00 totalRepayment=0.00
+      REPAYMENT     #1 from=2024-01-01 due=2024-02-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+      REPAYMENT     #2 from=2024-02-01 due=2024-03-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+      REPAYMENT     #3 from=2024-03-01 due=2024-04-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+      REPAYMENT     #4 from=2024-04-01 due=2024-05-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+      REPAYMENT     #5 from=2024-05-01 due=2024-06-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+      REPAYMENT     #6 from=2024-06-01 due=2024-07-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+    rows: disbursement=0 downPayment=0 repayment=6
+
+### Q2   disbursement BEFORE the schedule start (2023-11-15)
+    start=2024-01-01 disb=2023-11-15 P=1200000 n=6 rate=21.6 freq=MONTHS dim=DAYS_30 diy=DAYS_360
+    OK  loanTermInDays=182 totalDisbursed=0.00 totalInterest=0.00 totalRepayment=0.00
+      REPAYMENT     #1 from=2024-01-01 due=2024-02-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+      REPAYMENT     #2 from=2024-02-01 due=2024-03-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+      REPAYMENT     #3 from=2024-03-01 due=2024-04-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+      REPAYMENT     #4 from=2024-04-01 due=2024-05-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+      REPAYMENT     #5 from=2024-05-01 due=2024-06-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+      REPAYMENT     #6 from=2024-06-01 due=2024-07-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+    rows: disbursement=0 downPayment=0 repayment=6
+
+### Q3a  RepaymentFrequencyUnit=YEARS on the 30/360 arm (DAYS_30)
+    start=2024-01-01 disb=2024-01-01 P=1200000 n=3 rate=21.6 freq=YEARS dim=DAYS_30 diy=DAYS_360
+    THREW java.lang.UnsupportedOperationException: Invalid repayment frequency
+
+### Q3b  RepaymentFrequencyUnit=YEARS on the ACTUAL/ACTUAL arm
+    start=2024-01-01 disb=2024-01-01 P=1200000 n=3 rate=21.6 freq=YEARS dim=ACTUAL diy=ACTUAL
+    OK  loanTermInDays=1096 totalDisbursed=1200000.00 totalInterest=551982.62 totalRepayment=1751982.62
+      DISBURSEMENT           due=2024-01-01 principal=1200000.00
+      REPAYMENT     #1 from=2024-01-01 due=2025-01-01 principal=324792.27 interest=259201.94 total=583994.21 balance=875207.73
+      REPAYMENT     #2 from=2025-01-01 due=2026-01-01 principal=394949.34 interest=189044.87 total=583994.21 balance=480258.39
+      REPAYMENT     #3 from=2026-01-01 due=2027-01-01 principal=480258.39 interest=103735.81 total=583994.20 balance=0.00
+    rows: disbursement=1 downPayment=0 repayment=3
+
+### Q3c  RepaymentFrequencyUnit=DAYS on the 30/360 arm (contract says computable)
+    start=2024-01-01 disb=2024-01-01 P=1200000 n=6 rate=21.6 freq=DAYS dim=DAYS_30 diy=DAYS_360
+    OK  loanTermInDays=6 totalDisbursed=1200000.00 totalInterest=2521.26 totalRepayment=1202521.26
+      DISBURSEMENT           due=2024-01-01 principal=1200000.00
+      REPAYMENT     #1 from=2024-01-01 due=2024-01-02 principal=199700.21 interest=720.00 total=200420.21 balance=1000299.79
+      REPAYMENT     #2 from=2024-01-02 due=2024-01-03 principal=199820.03 interest=600.18 total=200420.21 balance=800479.76
+      REPAYMENT     #3 from=2024-01-03 due=2024-01-04 principal=199939.92 interest=480.29 total=200420.21 balance=600539.84
+      REPAYMENT     #4 from=2024-01-04 due=2024-01-05 principal=200059.89 interest=360.32 total=200420.21 balance=400479.95
+      REPAYMENT     #5 from=2024-01-05 due=2024-01-06 principal=200179.92 interest=240.29 total=200420.21 balance=200300.03
+      REPAYMENT     #6 from=2024-01-06 due=2024-01-07 principal=200300.03 interest=120.18 total=200420.21 balance=0.00
+    rows: disbursement=1 downPayment=0 repayment=6
+
+### Q4a  principal 4.00, 36 x 16.8% at (19, HALF_UP) — in the graded domain
+    start=2024-01-01 disb=2024-01-01 P=4 n=36 rate=16.8 freq=MONTHS dim=DAYS_30 diy=DAYS_360
+    OK  loanTermInDays=1096 totalDisbursed=4.00 totalInterest=1.14 totalRepayment=5.14
+      DISBURSEMENT           due=2024-01-01 principal=4.00
+      REPAYMENT     #1 from=2024-01-01 due=2024-02-01 principal=0.08 interest=0.06 total=0.14 balance=3.92
+      REPAYMENT     #2 from=2024-02-01 due=2024-03-01 principal=0.09 interest=0.05 total=0.14 balance=3.83
+      REPAYMENT     #3 from=2024-03-01 due=2024-04-01 principal=0.09 interest=0.05 total=0.14 balance=3.74
+      REPAYMENT     #4 from=2024-04-01 due=2024-05-01 principal=0.09 interest=0.05 total=0.14 balance=3.65
+      REPAYMENT     #5 from=2024-05-01 due=2024-06-01 principal=0.09 interest=0.05 total=0.14 balance=3.56
+      REPAYMENT     #6 from=2024-06-01 due=2024-07-01 principal=0.09 interest=0.05 total=0.14 balance=3.47
+      REPAYMENT     #7 from=2024-07-01 due=2024-08-01 principal=0.09 interest=0.05 total=0.14 balance=3.38
+      REPAYMENT     #8 from=2024-08-01 due=2024-09-01 principal=0.09 interest=0.05 total=0.14 balance=3.29
+      REPAYMENT     #9 from=2024-09-01 due=2024-10-01 principal=0.09 interest=0.05 total=0.14 balance=3.20
+      REPAYMENT     #10 from=2024-10-01 due=2024-11-01 principal=0.10 interest=0.04 total=0.14 balance=3.10
+      REPAYMENT     #11 from=2024-11-01 due=2024-12-01 principal=0.10 interest=0.04 total=0.14 balance=3.00
+      REPAYMENT     #12 from=2024-12-01 due=2025-01-01 principal=0.10 interest=0.04 total=0.14 balance=2.90
+      REPAYMENT     #13 from=2025-01-01 due=2025-02-01 principal=0.10 interest=0.04 total=0.14 balance=2.80
+      REPAYMENT     #14 from=2025-02-01 due=2025-03-01 principal=0.10 interest=0.04 total=0.14 balance=2.70
+      REPAYMENT     #15 from=2025-03-01 due=2025-04-01 principal=0.10 interest=0.04 total=0.14 balance=2.60
+      REPAYMENT     #16 from=2025-04-01 due=2025-05-01 principal=0.10 interest=0.04 total=0.14 balance=2.50
+      REPAYMENT     #17 from=2025-05-01 due=2025-06-01 principal=0.10 interest=0.04 total=0.14 balance=2.40
+      REPAYMENT     #18 from=2025-06-01 due=2025-07-01 principal=0.11 interest=0.03 total=0.14 balance=2.29
+      REPAYMENT     #19 from=2025-07-01 due=2025-08-01 principal=0.11 interest=0.03 total=0.14 balance=2.18
+      REPAYMENT     #20 from=2025-08-01 due=2025-09-01 principal=0.11 interest=0.03 total=0.14 balance=2.07
+      REPAYMENT     #21 from=2025-09-01 due=2025-10-01 principal=0.11 interest=0.03 total=0.14 balance=1.96
+      REPAYMENT     #22 from=2025-10-01 due=2025-11-01 principal=0.11 interest=0.03 total=0.14 balance=1.85
+      REPAYMENT     #23 from=2025-11-01 due=2025-12-01 principal=0.11 interest=0.03 total=0.14 balance=1.74
+      REPAYMENT     #24 from=2025-12-01 due=2026-01-01 principal=0.12 interest=0.02 total=0.14 balance=1.62
+      REPAYMENT     #25 from=2026-01-01 due=2026-02-01 principal=0.12 interest=0.02 total=0.14 balance=1.50
+      REPAYMENT     #26 from=2026-02-01 due=2026-03-01 principal=0.12 interest=0.02 total=0.14 balance=1.38
+      REPAYMENT     #27 from=2026-03-01 due=2026-04-01 principal=0.12 interest=0.02 total=0.14 balance=1.26
+      REPAYMENT     #28 from=2026-04-01 due=2026-05-01 principal=0.12 interest=0.02 total=0.14 balance=1.14
+      REPAYMENT     #29 from=2026-05-01 due=2026-06-01 principal=0.12 interest=0.02 total=0.14 balance=1.02
+      REPAYMENT     #30 from=2026-06-01 due=2026-07-01 principal=0.13 interest=0.01 total=0.14 balance=0.89
+      REPAYMENT     #31 from=2026-07-01 due=2026-08-01 principal=0.13 interest=0.01 total=0.14 balance=0.76
+      REPAYMENT     #32 from=2026-08-01 due=2026-09-01 principal=0.13 interest=0.01 total=0.14 balance=0.63
+      REPAYMENT     #33 from=2026-09-01 due=2026-10-01 principal=0.13 interest=0.01 total=0.14 balance=0.50
+      REPAYMENT     #34 from=2026-10-01 due=2026-11-01 principal=0.13 interest=0.01 total=0.14 balance=0.37
+      REPAYMENT     #35 from=2026-11-01 due=2026-12-01 principal=0.13 interest=0.01 total=0.14 balance=0.24
+      REPAYMENT     #36 from=2026-12-01 due=2027-01-01 principal=0.24 interest=0.00 total=0.24 balance=0.00
+    rows: disbursement=1 downPayment=0 repayment=36
+
+### Q4b  principal 1.00, 36 x 16.8% at (19, HALF_UP) — in the graded domain
+    start=2024-01-01 disb=2024-01-01 P=1 n=36 rate=16.8 freq=MONTHS dim=DAYS_30 diy=DAYS_360
+    OK  loanTermInDays=1096 totalDisbursed=1.00 totalInterest=0.22 totalRepayment=1.22
+      DISBURSEMENT           due=2024-01-01 principal=1.00
+      REPAYMENT     #1 from=2024-01-01 due=2024-02-01 principal=0.03 interest=0.01 total=0.04 balance=0.97
+      REPAYMENT     #2 from=2024-02-01 due=2024-03-01 principal=0.03 interest=0.01 total=0.04 balance=0.94
+      REPAYMENT     #3 from=2024-03-01 due=2024-04-01 principal=0.03 interest=0.01 total=0.04 balance=0.91
+      REPAYMENT     #4 from=2024-04-01 due=2024-05-01 principal=0.03 interest=0.01 total=0.04 balance=0.88
+      REPAYMENT     #5 from=2024-05-01 due=2024-06-01 principal=0.03 interest=0.01 total=0.04 balance=0.85
+      REPAYMENT     #6 from=2024-06-01 due=2024-07-01 principal=0.03 interest=0.01 total=0.04 balance=0.82
+      REPAYMENT     #7 from=2024-07-01 due=2024-08-01 principal=0.03 interest=0.01 total=0.04 balance=0.79
+      REPAYMENT     #8 from=2024-08-01 due=2024-09-01 principal=0.03 interest=0.01 total=0.04 balance=0.76
+      REPAYMENT     #9 from=2024-09-01 due=2024-10-01 principal=0.03 interest=0.01 total=0.04 balance=0.73
+      REPAYMENT     #10 from=2024-10-01 due=2024-11-01 principal=0.03 interest=0.01 total=0.04 balance=0.70
+      REPAYMENT     #11 from=2024-11-01 due=2024-12-01 principal=0.03 interest=0.01 total=0.04 balance=0.67
+      REPAYMENT     #12 from=2024-12-01 due=2025-01-01 principal=0.03 interest=0.01 total=0.04 balance=0.64
+      REPAYMENT     #13 from=2025-01-01 due=2025-02-01 principal=0.03 interest=0.01 total=0.04 balance=0.61
+      REPAYMENT     #14 from=2025-02-01 due=2025-03-01 principal=0.03 interest=0.01 total=0.04 balance=0.58
+      REPAYMENT     #15 from=2025-03-01 due=2025-04-01 principal=0.03 interest=0.01 total=0.04 balance=0.55
+      REPAYMENT     #16 from=2025-04-01 due=2025-05-01 principal=0.03 interest=0.01 total=0.04 balance=0.52
+      REPAYMENT     #17 from=2025-05-01 due=2025-06-01 principal=0.03 interest=0.01 total=0.04 balance=0.49
+      REPAYMENT     #18 from=2025-06-01 due=2025-07-01 principal=0.03 interest=0.01 total=0.04 balance=0.46
+      REPAYMENT     #19 from=2025-07-01 due=2025-08-01 principal=0.03 interest=0.01 total=0.04 balance=0.43
+      REPAYMENT     #20 from=2025-08-01 due=2025-09-01 principal=0.03 interest=0.01 total=0.04 balance=0.40
+      REPAYMENT     #21 from=2025-09-01 due=2025-10-01 principal=0.03 interest=0.01 total=0.04 balance=0.37
+      REPAYMENT     #22 from=2025-10-01 due=2025-11-01 principal=0.03 interest=0.01 total=0.04 balance=0.34
+      REPAYMENT     #23 from=2025-11-01 due=2025-12-01 principal=0.04 interest=0.00 total=0.04 balance=0.30
+      REPAYMENT     #24 from=2025-12-01 due=2026-01-01 principal=0.04 interest=0.00 total=0.04 balance=0.26
+      REPAYMENT     #25 from=2026-01-01 due=2026-02-01 principal=0.04 interest=0.00 total=0.04 balance=0.22
+      REPAYMENT     #26 from=2026-02-01 due=2026-03-01 principal=0.04 interest=0.00 total=0.04 balance=0.18
+      REPAYMENT     #27 from=2026-03-01 due=2026-04-01 principal=0.04 interest=0.00 total=0.04 balance=0.14
+      REPAYMENT     #28 from=2026-04-01 due=2026-05-01 principal=0.04 interest=0.00 total=0.04 balance=0.10
+      REPAYMENT     #29 from=2026-05-01 due=2026-06-01 principal=0.04 interest=0.00 total=0.04 balance=0.06
+      REPAYMENT     #30 from=2026-06-01 due=2026-07-01 principal=0.04 interest=0.00 total=0.04 balance=0.02
+      REPAYMENT     #31 from=2026-07-01 due=2026-08-01 principal=0.02 interest=0.00 total=0.02 balance=0.00
+      REPAYMENT     #32 from=2026-08-01 due=2026-09-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+      REPAYMENT     #33 from=2026-09-01 due=2026-10-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+      REPAYMENT     #34 from=2026-10-01 due=2026-11-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+      REPAYMENT     #35 from=2026-11-01 due=2026-12-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+      REPAYMENT     #36 from=2026-12-01 due=2027-01-01 principal=0.00 interest=0.00 total=0.00 balance=0.00
+    rows: disbursement=1 downPayment=0 repayment=36
