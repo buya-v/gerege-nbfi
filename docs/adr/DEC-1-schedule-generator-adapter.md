@@ -1,15 +1,21 @@
 # DEC-1 — Schedule-generator adapter contract
 
-**Status: DRAFT (revision 2) — awaiting independent re-review, then ratification**
+**Status: DRAFT (revision 3) — awaiting independent re-review, then ratification**
 
 | | |
 |---|---|
 | Decision id | DEC-1 |
 | Bounded context | `loanschedule` (loan repayment schedule generation) |
-| Run | `2026-08-17-run1-harness-schedule-poc`, task T4 (attempt 2) |
+| Run | `2026-08-17-run1-harness-schedule-poc`, task T4 (attempt 2); revision 3 by task T24 |
 | Artefact specified | `nexus/internal/apps/loanschedule/contract/contract.go` |
 | Reference oracle | Fineract, pinned checkout `426a23544e8426a38ae43ae404670a0a7e85b9eb` |
-| Supersedes | DEC-1 revision 1 (rejected by review T5) |
+| Supersedes | DEC-1 revision 1 (rejected by review T5); DEC-1 revision 2 (accepted-with-required-changes by re-review T23) |
+
+**Revision history.**
+
+- **Revision 3 (task T24)** applies the three P0 corrections required by independent re-review T23 (`.softhouse/reviews/T23-DEC-1-v2-rereview.md`, §10). All three were normative statements in revision 2 that observation against the pinned oracle refuted or left incomplete; each is fixed in place, none changes a type or a field set. **P0-1 (§4.3, §9):** the EMI re-adjust loop `checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods` fires *inside* the graded domain and moves money on ordinary loans — the revision-2 claim that it "is reachable only outside the graded domain" is struck, and reproducing it is now a recorded Go-module obligation. **P0-2 (§4.6):** a single disbursement dated on/after the last repayment due date or before `ScheduleStartDate` is silently discarded by the seam (all-zero schedule); the disbursement window is added to the graded-domain predicate and refused outside it, and the ordering rule's third clause — which described a disbursement row this seam never emits — is removed. **P0-3 (§4.10, §4.11):** `FrequencyYears` throws only on the fixed-30/360 arm; on the ACTUAL arm the oracle returns a complete schedule, so the "cannot answer at all" justification is corrected, and an error-precedence rule is added so a multiply-refusable request yields one deterministic sentinel. Every figure cited in these corrections is an observation already captured and committed by T23 under `.softhouse/reviews/t23-probe/`; revision 3 introduces no new oracle value.
+- **Revision 2 (task T4 attempt 2)** rebuilt revision 1 to satisfy review T5's nine required changes.
+- **Revision 1** rejected by review T5.
 
 **Terminology.** In this document "the reference oracle" always means **the Fineract reference implementation** at the pinned commit — the implementation this program grades Go output against. It never means **Oracle Database**, which is a prohibited product in this program.
 
@@ -117,7 +123,10 @@ InterestMethod                   == InterestMethodDecliningBalance
 DayCount                         == DayCountFixed30Over360
 DownPaymentPercentage            == Rate{0, 1}
 InstallmentRoundingMultipleMinor == 0
+ScheduleStartDate ≤ Disbursements[0].Date < the last repayment period's DueDate
 ```
+
+The last line is a **semantic** predicate, not a static field comparison, added in revision 3 (P0-2): the last due date is derived from `ScheduleStartDate`, `NumberOfRepayments`, `RepaymentEvery`, the frequency and the month-end rule (§4.2), all of which the implementation already computes, so the predicate is checkable without asking the oracle. A single disbursement dated **before `ScheduleStartDate`** or **on/after the last computed due date** is *observed* to be silently discarded by the seam into an all-zero schedule (§4.6), so it is outside the graded domain and **refused with `ErrNoDiscriminatingVector`**, matching the standing G-1 "refuse rather than guess" disposition — never answered with the oracle's degenerate all-zero output. When multi-tranche vectors later exist the window widens with no amendment (it is behaviour, not shape).
 
 Rates, principals, terms and dates are continuous or unbounded; a corpus cannot enumerate them, so they are graded by **sampling**, and §5 lists what is sampled. **No claim is made that an un-sampled value is safe** — §4.1 records why loan size in particular licenses nothing.
 
@@ -252,7 +261,16 @@ It is emphatically **not** "the last principal is whatever balance remains". `di
 
 Revision 1's phrase "final **unpaid** period" was also a dangling term: this contract has no notion of payment. The Go artefact says "the last period".
 
-**A second smoothing pass exists and is unpinned.** `checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods` [`:1258-1308`, at most three iterations, gated on `EmiAdjustment.shouldBeAdjusted` at `EmiAdjustment.java:31-36`] re-rounds an adjusted installment and adopts it if the last-vs-penultimate gap shrinks. It fires on none of the twelve Run-1 captures, but it **does** fire on nearby inputs, and it can absorb an installment-multiple rounding difference entirely — *observed* converging two different rounding modes to one identical schedule. It is named here because an implementation that implements the multiple-rounding but not this loop will diverge; it is reachable only outside the graded domain, and a vector that forces it to iterate is backlogged (§8).
+**A second smoothing pass exists, fires inside the graded domain, and is a Go-module obligation (P0-1, corrected in revision 3).** `checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods` [`ProgressiveEMICalculator.java:1258-1308`, at most three iterations] re-rounds an adjusted installment and adopts it if the last-vs-penultimate gap shrinks. Revision 2 stated it "is reachable only outside the graded domain"; **that is struck — it is refuted by observation.** The loop runs on **every** ordinary generation: it is called at `ProgressiveEMICalculator.java:749`, gated on `onlyOnActualModelShouldApply`, which is `true` whenever `scheduleModel.isEmpty()` — i.e. on the initial disbursement of every loan. Whether it *changes* the schedule is decided by its guard `EmiAdjustment.shouldBeAdjusted` [`EmiAdjustment.java:31-36`], which compares `|lastEMI − penultimateEMI| × 100` against a `Money` whose amount is `floor(n/2)` currency units — 3.00 for a 6-period loan, 18.00 for 36. Crucially `Money.copy(double)` [`Money.java:220-222`] **replaces** the amount rather than scaling it, so that threshold is `floor(n/2)` units flat and **the guard has no dependence on `InstallmentRoundingMultipleMinor` whatever**: it fires whenever the final-period residual exceeds `floor(n/2)/100` of a currency unit, installment rounding or none.
+
+*Observed* on the pinned oracle at `(19, HALF_UP)`, both requests strictly inside the graded domain (one disbursement on the schedule start, `RepaymentEvery` 1, MONTHS, declining balance, 30/360, no down payment, `installmentAmountInMultiplesOf` null, MNT 2 decimals) — the loop moves money that the specification-without-the-loop gets wrong:
+
+- **MNT 1,014,632 / 6 × 7.0 %** — an ordinary Mongolian retail loan — oracle level installment **172,574.64**, the no-loop model **172,574.63**; every period and both totals shift.
+- **MNT 127,704 / 36 × 16.8 %** — oracle total interest **35,746.56**, the no-loop model **35,746.69** — a 0.13 divergence in a document that grades to the minor unit.
+
+(These are two of the seven divergent cases of ten that T23 put to the oracle; the full table is `.softhouse/reviews/T23-DEC-1-v2-rereview.md` §6.1, raw observations `.softhouse/reviews/t23-probe/t23-probe2-output.txt`, comparison `t23_compare.py`.) None of the twelve Run-1 captures trips the guard, so the corpus **cannot** catch a port that omits the loop — precisely the "passes its corpus and is wrong" failure this contract exists to prevent. Reproducing it is therefore a conformance obligation on the Go module (§9), not backlog.
+
+**Reproducing it requires exact-integer arithmetic, not a float.** `Math.floor(n / 2.0)` and the `BigDecimal.valueOf(double)` inside `Money.copy(double)` operate on values that are always exact small integers (`floor(n/2)` and `0.0`), so a Go port reproduces the guard with integer arithmetic — `n/2` in `int`, compared as `|lastEMI − penultimateEMI| × 100 > floor(n/2) × 10^MinorUnitDigits` in `int64` minor units. **No `float32`/`float64` may appear on this path**; the doubles in the Java source are an artefact of the reference implementation, never a licence to introduce one here (a float on a money path is a non-negotiable rejection). A vector that trips the guard inside the graded domain is backlogged (§8 item 3).
 
 ### 4.4 The six pinned oracle inputs, each with the reason it is safe
 
@@ -302,7 +320,9 @@ repayment 2 (due 2024-03-01) … repayment 6 (due 2024-07-01)
 
 Revision 1's rule puts the disbursement first, and is wrong.
 
-**The corrected rule** assigns each row a **window key**: a repayment row's key is its own `DueDate`; a disbursement or down-payment row's key is the `DueDate` of the repayment period whose half-open window `[FromDate, DueDate)` contains its date, or a key after every repayment row if its date is on or after the last due date. Rows sort by ascending key, then by `Kind` (disbursement, down payment, repayment), then by ascending `InstallmentNumber`, then by ascending row date.
+**The corrected rule** assigns each row a **window key**: a repayment row's key is its own `DueDate`; a disbursement or down-payment row's key is the `DueDate` of the repayment period whose half-open window `[FromDate, DueDate)` contains its date. Rows sort by ascending key, then by `Kind` (disbursement, down payment, repayment), then by ascending `InstallmentNumber`, then by ascending row date.
+
+Revision 2's rule carried a third clause — *"or a key after every repayment row if its date is on or after the last due date"*. **That clause is deleted in revision 3 (P0-2): it described a disbursement row this seam never emits.** *Observed* on the pinned oracle at `(19, HALF_UP)`, all inside the stated graded domain: a single disbursement dated exactly on the last repayment due date (`2024-07-01`), or after it (`2024-09-01`), or before `ScheduleStartDate` (`2023-11-15`), yields **no disbursement row at all** — an all-zero schedule, `totalDisbursed = 0.00`, principal amortized nowhere. The mechanism is not subtle: the after-maturity arm is gated on `includeDisbursementsAfterMaturityDate` [`ProgressiveLoanScheduleGenerator.java:305-306`], true only in a post-loop call gated in turn on `isMultiDisburseLoan()`, which is `false` on this single-disbursement seam [`:147-150`], so `emiCalculator.addDisbursement` [`:351`] is never called and the principal vanishes. (Raw observations: `.softhouse/reviews/t23-probe/t23-probe-output.txt`, cases Q1a/Q1b/Q2; analysis `.softhouse/reviews/T23-DEC-1-v2-rereview.md` §2.3.) A disbursement in that position is therefore **outside the graded domain and refused** (§3.1), so the ordering rule never has to key such a row.
 
 The key is **derivable from the response itself** — the repayment rows carry the windows — so two implementations agree on it without mirroring each other's control flow, which was the property revision 1 claimed and did not have. It reproduces both the observed pre-disbursement case above and the ordinary case where the disbursement opens the schedule.
 
@@ -320,7 +340,7 @@ amountScaled = amountScaled.divide(inMultiplesOfValue, 0, mc.getRoundingMode()).
 - **Zero guard**: if rounding would take a positive installment to zero, the *unrounded* installment is used [`:1772-1774`]. The rounding is not unconditional.
 - **The last period still absorbs the residual**, so its total is deliberately not a multiple. *Observed*: installments 112,100.00 for periods 1–11 and a final 111,866.22.
 - **The tie rule comes from the tenant-global context** (the two-argument overload), which is why §4.1's adapter obligation is stated as widely as it is.
-- **The EMI re-adjust loop can absorb the rounding entirely** (§4.3). Unpinned; named.
+- **The EMI re-adjust loop can absorb the rounding entirely** (§4.3). It is a Go-module obligation (§9) and fires inside the graded domain independently of this field; it is *not* specific to installment rounding.
 - **Representable domain**: the oracle's counterpart is an `Integer` count of **MAJOR** units [`LoanRepaymentScheduleModelData.java:36`, consumed at `Money.java:150-157` and `:163-170`], so the value must be `0` or a positive exact multiple of 10^`MinorUnitDigits`. `5000` (50.00 ₮) and `1` (0.01 ₮) have **no** representation the adapter can render and are `ErrUnsupportedConfiguration` rather than silently rounded — the same honesty the `Rate{1,3}` limit gets in §4.8.
 
 **Disposition for Run 1: launch WITHOUT it.** Products ship with no installment rounding; a non-zero value is refused with `ErrNoDiscriminatingVector`. Rounding to whole 100 ₮ is a legitimate Mongolian feature, but the seam this corpus is captured through cannot grade it (§2.2), and shipping it now would mean shipping an unvectored money path. Four server-path captures exist in which a multiple of 100 major units *observed* moves all twelve periods; when those become admissible vectors, the value enters the graded domain **with no amendment**.
@@ -354,9 +374,21 @@ The pair is load-bearing: it selects between materially different arms [`Progres
 
 **One consistency result, and it is what lets two different capture seams grade one contract.** For **monthly** repayment, and only monthly, the oracle's 30/360 arm and its same-as-repayment-period arm compute the identical interest fraction: `30 × RepaymentEvery ÷ 360` and `RepaymentEvery ÷ 12` are the same rational evaluated at the same precision [`:1513-1515` versus `:1536` through `:1922-1927`]. *Observed*: a 12-period MNT 1,200,000 loan at 21.6 % captured through the embeddable seam under 30/360 and through a running server under same-as-repayment-period agrees on all twelve periods and all three totals **to the minor unit**. For **weekly** the two arms disagree (`RepaymentEvery ÷ 52` versus `7 × RepaymentEvery ÷ 360`), which is one more reason `FrequencyWeeks` is outside the graded domain.
 
-### 4.10 Repayment frequency: one value the oracle cannot answer
+### 4.10 Repayment frequency: `FrequencyYears` throws on the fixed-30/360 arm only (P0-3, corrected in revision 3)
 
-`FrequencyMonths` is graded. `FrequencyDays` and `FrequencyWeeks` are computable but uncaptured → `ErrNoDiscriminatingVector`. **`FrequencyYears` the oracle cannot answer at all**: its per-frequency dispatch handles DAYS, WEEKS and MONTHS and throws `UnsupportedOperationException` for anything else [`ProgressiveEMICalculator.java:1602-1610`]. It is refused with `ErrUnsupportedConfiguration` — not `ErrNoDiscriminatingVector`, because the problem is not a missing vector but a missing answer. It is retained in the enum so an annual product is expressible the day the oracle grows support, and because removing a member is a narrowing.
+`FrequencyMonths` is graded. `FrequencyDays` and `FrequencyWeeks` are computable but uncaptured → `ErrNoDiscriminatingVector`.
+
+**`FrequencyYears`: the revision-2 claim that "the oracle cannot answer it at all" is false and is corrected here.** The oracle throws **only on the fixed-30/360 arm**. The day-count switch at `ProgressiveEMICalculator.java:1533-1539` sends `DAYS_30` [`:1536`] through `calculateRateFactorPerPeriodBasedOnRepaymentFrequency`, whose per-frequency `switch` [`:1602-1610`] handles DAYS, WEEKS and MONTHS and throws `UnsupportedOperationException` for anything else — so `FrequencyYears` under `DayCountFixed30Over360` throws. But the **`ACTUAL` arm at `:1534-1535` never reaches that dispatch**: it calls `rateFactorByRepaymentPeriod` directly, and `DefaultScheduledDateGenerator.getRepaymentPeriodDate` [`:311-333`] handles `case YEARS` with `plusYears`, so the schedule generates. *Observed* on the pinned oracle (`.softhouse/reviews/t23-probe/t23-probe-output.txt`, cases Q3a/Q3b; MNT 1,200,000, 3 annual installments, 21.6 %):
+
+- **Q3a** — `FrequencyYears`, `DayCountFixed30Over360` → `UnsupportedOperationException: Invalid repayment frequency`.
+- **Q3b** — `FrequencyYears`, `DayCountActualActual` → a complete 3-period schedule: **loan term 1096 days, total interest 551,982.62**, total repayment 1,751,982.62.
+
+**Consequent refusal.** The refusal depends on the day-count arm, and the taxonomy still refuses every `FrequencyYears` request — but for the honest reason:
+
+- On the fixed-30/360 arm the oracle genuinely cannot be asked → **`ErrUnsupportedConfiguration`** (a missing *answer*).
+- On the `DayCountActualActual` arm the oracle answers, but `DayCountActualActual` is itself outside the graded domain (§4.9) → **`ErrNoDiscriminatingVector`** (a missing *vector*). This wraps `ErrUnsupportedConfiguration`, so a caller checking `errors.Is(err, ErrUnsupportedConfiguration)` sees a refusal either way; the sentinel differs, which is exactly why §4.11 now fixes a precedence.
+
+`FrequencyYears` is retained in the enum so an annual product is expressible the day the graded domain reaches it, and because removing a member is a narrowing.
 
 ### 4.11 The error taxonomy is three-valued, and the third value is the point
 
@@ -367,6 +399,14 @@ The pair is load-bearing: it selects between materially different arms [`Progres
 | `ErrNoDiscriminatingVector` | Well formed and computable, but outside the **graded domain**. |
 
 `ErrNoDiscriminatingVector` **wraps** `ErrUnsupportedConfiguration`, so `errors.Is(err, ErrUnsupportedConfiguration)` is true and a caller that does not care sees two cases. The distinction records *why* a request was refused, which decides how the refusal is retired: a missing vector is retired by capturing one, which is behaviour and needs no amendment.
+
+**Error precedence (normative, added in revision 3 — P0-3).** A single request can be refusable for more than one reason — e.g. `FrequencyYears` on the fixed-30/360 arm (`ErrUnsupportedConfiguration`) combined with `RoundingHalfEven` (outside the graded domain, `ErrNoDiscriminatingVector`). Without a precedence rule two conforming implementations could return **different** sentinels for the identical request, and `contract.go`'s own requirement that "two implementations must reject the same requests" (the equal-rejection requirement quoted at the error declarations) would be violated: a request one implementation refuses as unsupported and the other as ungraded is indistinguishable from a conformance failure. The precedence, from strongest obstruction to weakest, is:
+
+1. **`ErrInvalidRequest`** — the request is not well formed. Checked first; nothing downstream is meaningful on a malformed request, so this always wins.
+2. **`ErrUnsupportedConfiguration`** — well formed, but this contract does not admit it or the oracle cannot be asked at all. Wins over `ErrNoDiscriminatingVector`, because "cannot be answered" is a stronger and more permanent statement than "answerable but not yet graded", and because the vector sentinel wraps this one — collapsing to the stronger claim is consistent with the wrapping.
+3. **`ErrNoDiscriminatingVector`** — well formed and computable, but outside the graded domain.
+
+So an implementation evaluates refusal reasons in that order and returns the **first** applicable sentinel. Under this rule the two-reason example above returns `ErrUnsupportedConfiguration`, deterministically, from both implementations.
 
 ---
 
@@ -441,7 +481,7 @@ Found while designing this contract; recorded, not acted on.
 
 1. **Promote the eleven `(19, HALF_UP)` captures to the vector store** — needs the attestation block, the three missing per-period columns (`fromDate`, fee, penalty), and a committed run recipe.
 2. **Server-path vectors for `InstallmentRoundingMultipleMinor`** on a tenant provisioned at `(19, HALF_UP)` with a Mongolian time zone, plus a machine-readable attestation sidecar. Retires the §4.7 refusal.
-3. **A vector that forces the EMI re-adjust loop to iterate** [`ProgressiveEMICalculator.java:1258-1308`]. Currently unpinned behaviour that can absorb an installment-multiple rounding difference entirely.
+3. **Vectors that trip the EMI re-adjust guard INSIDE the graded domain** [`ProgressiveEMICalculator.java:1258-1308`, guard `EmiAdjustment.java:31-36`]. Re-scoped in revision 3 (P0-1): this is no longer framed as an installment-rounding concern — the loop fires on ordinary single-disbursement loans with no installment rounding, and reproducing it is already a Go-module obligation (§9). What is backlogged is the *capture* work: promoting discriminating vectors so the corpus can grade the obligation. The ten `(19, HALF_UP)` cases in `.softhouse/reviews/T23-DEC-1-v2-rereview.md` §6.1 (seven of which diverge, e.g. MNT 1,014,632 / 6 × 7.0 % and MNT 127,704 / 36 × 16.8 %) are ready-made candidates.
 4. **Down-payment vectors.** No capture has ever produced a down-payment row; the path additionally reaches the multiple-rounding call site at `ProgressiveLoanScheduleGenerator.java:335-338`.
 5. **`DayCountActualActual` vectors**, and an independent source re-derivation of the cross-year partial-period arm [`:1505-1507`, `:1526-1531`] — the largest un-re-derived hole in the evidence.
 6. **Vectors for the uncaptured frequency and cardinality corners**: `FrequencyDays`, `FrequencyWeeks`, `RepaymentEvery > 1`, zero interest rate, `HALF_EVEN`.
@@ -472,6 +512,6 @@ Found while designing this contract; recorded, not acted on.
 **Obligations created:**
 
 - The **Fineract-JVM adapter** must pin the six constants in §4.4, must initialise its tenant rounding mode to `Rounding.Mode` before every call, must upper-case the currency code, and must convert `int64` minor units and `Rate` to the oracle's decimal inputs without a float ever existing at the boundary.
-- The **Go module** must reproduce the recurrence (not the closed-form annuity formula), both rounding senses at the specified points and in the specified order, the exact `1 + rateFactor` addition, the fixed-30/360 convention, the month-end re-anchor to the disbursement seed, the window-key ordering, and the final-period residual absorption — and must refuse, not guess, outside the graded domain.
+- The **Go module** must reproduce the recurrence (not the closed-form annuity formula), both rounding senses at the specified points and in the specified order, the exact `1 + rateFactor` addition, the fixed-30/360 convention, the month-end re-anchor to the disbursement seed, the window-key ordering, the final-period residual absorption, and **the EMI re-adjust smoothing loop `checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods` (§4.3), which fires on every ordinary generation and whose guard `EmiAdjustment.shouldBeAdjusted` compares `|lastEMI − penultimateEMI| × 100` against `floor(n/2)` currency units with no dependence on `InstallmentRoundingMultipleMinor` — reproduced with exact-integer arithmetic, never a float** — and must refuse, not guess, outside the graded domain (including refusing a disbursement dated before `ScheduleStartDate` or on/after the last computed due date, §4.6).
 - The **capture programme** must close §8 items 1 and 2 before any claim of production parity, and must never route an amount through a floating-point type.
 - **A PASS on conformance means "matches the reference oracle on captured vectors, inside the graded domain". It never means "safe to cut over".**
