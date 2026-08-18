@@ -619,7 +619,7 @@
     },
     {
       "id": "T29",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -632,7 +632,7 @@
         ".softhouse/handoff/"
       ],
       "contract_independent": true,
-      "note": "Cloud catch-up fire cloud-20260818-2000, branch softhouse/T29-dec1-v4-rereview. ATTEMPT 1 WAS KILLED MID-FLIGHT by a transient infrastructure error (API 521, origin down) at 13:13Z, before reaching any verdict - an INFRASTRUCTURE failure, NOT a task failure, so it does not consume the max_retries_per_task budget. Its unvalidated WIP (t29_from_text.py, t29_n_sweep.py) was rescued and committed to the branch at e9c950d, clearly marked UNVALIDATED / no verdict reached, rather than discarded. ATTEMPT 2 dispatched with the same mandate plus one new input that landed after T28 wrote revision 4: T30's from-source re-derivation of B-03/B-04 through the cross-year partial-period arm, and the two normative facts it raises - the FEB_29_PERIOD_ONLY dual effect (which T30 says qualifies v4 §4.10's FrequencyYears reasoning) and the exact-multiply partial-arm formula. T29 must judge for itself whether either is a P0 against revision 4. Attempt 2 is instructed to commit early and often so an infrastructure kill cannot destroy the work twice."
+      "note": "Cloud catch-up fire cloud-20260818-2000, branch softhouse/T29-dec1-v4-rereview. ATTEMPT 1 WAS KILLED MID-FLIGHT by a transient infrastructure error (API 521, origin down) at 13:13Z, before reaching any verdict - an INFRASTRUCTURE failure, NOT a task failure, so it does not consume the max_retries_per_task budget. Its unvalidated WIP (t29_from_text.py, t29_n_sweep.py) was rescued and committed to the branch at e9c950d, clearly marked UNVALIDATED / no verdict reached, rather than discarded. ATTEMPT 2 dispatched with the same mandate plus one new input that landed after T28 wrote revision 4: T30's from-source re-derivation of B-03/B-04 through the cross-year partial-period arm, and the two normative facts it raises - the FEB_29_PERIOD_ONLY dual effect (which T30 says qualifies v4 §4.10's FrequencyYears reasoning) and the exact-multiply partial-arm formula. T29 must judge for itself whether either is a P0 against revision 4. Attempt 2 is instructed to commit early and often so an infrastructure kill cannot destroy the work twice. || ATTEMPT 2 COMPLETE, merged to main (c2f73a9/5ed01c5). VERDICT: ACCEPTED WITH REQUIRED CHANGES - NOT ratifiable. Driver did NOT ratify; G-1 stays open. TWO NEW P0s. P0-T29-1: ADR §4.3.1:280 and contract.go:1052-1054 define n as NumberOfRepayments - FALSE. n is relatedRepaymentPeriods.size() [EmiAdjustment.java:54-56; list built ProgressiveEMICalculator.java:732, passed :749, filter ProgressiveLoanInterestScheduleModel.java:195-197]. The ADR's own citation :191-194 is the null branch, the one branch this path can never take. A disbursement on period j's due date - inside the graded-domain window and SAMPLED by the corpus (t23-probe Q0b) - gives n = N-j. Isolating only n: 2,143/120,000 (1.79%) in-graded-domain shapes return different money. P0-T29-2, the more serious: THE PER-PERIOD INTEREST COMPUTATION IS SPECIFIED NOWHERE IN DEC-1. The oracle does balance x rateFactorTillPeriodDueDate / lengthTillPeriodDueDate x length - THREE separately mc-rounded operations [InterestPeriod.java:145-158] that cancel algebraically but NOT numerically. The textbook balance x rateFactor that the prose actually describes diverges on 699/43,992 (1.59%) in-graded-domain shapes, and ALL 13 committed observations pass EITHER WAY - the corpus is blind to it. FROM-TEXT TRANSCRIPTION RESULT: the text alone does NOT determine the money; but where explicit it is RIGHT - T29's independently written model (no code shared with the t26/t28 probes) reproduces 13 of 13 committed observations digit-for-digit, and only with the §4.3.1 loop body present. Orchestrator re-ran t29_validate.py independently: 13 pass, 0 fail. All ~20 of T28's file:line citations verify exactly. A third under-determination candidate (the rate factor's x actualDays / calcDays round-trip) came back CLEAN, 0/22,740. NO REGRESSION of P0-2/P0-3. T30's two facts re-derived independently and confirmed: FEB_29 dual effect graded P1 (not P0 - the field is pinned null and both DayCountActualActual and FrequencyYears are refused, so no DEC-1 statement is false about anything the contract can be ASKED), partial-arm formula graded P2. VECTOR QUESTION: agrees with T26 - do NOT bind ratification to captures - but asks to WIDEN the binding from two vectors to FOUR, adding 3b (separates the interest round-trip) and 3c (later-disbursement shape tripping the guard), both P0 classes the corpus cannot currently see. Build/vet/gofmt clean; non-negotiable scan clean; no live oracle contacted."
     },
     {
       "id": "T30",
@@ -652,6 +652,42 @@
       ],
       "contract_independent": true,
       "note": "Delivered by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T30-corpus-remainder-oracle-free (1b65b1c), merged to main. HEADLINE: B-03/B-04 re-derived FROM SOURCE through the DAILY / ACTUAL-ACTUAL cross-year partial-period arm - T27 called this the largest remaining hole in the Path B evidence - and both reproduce DIGIT-FOR-DIGIT, 12/12 periods and both totals, at (19, HALF_EVEN) and (19, HALF_UP). Verdict CONSISTENT; orchestrator re-ran the script independently: OVERALL PASS. TWO NORMATIVE FACTS NOBODY HAD RECORDED: (1) FEB_29_PERIOD_ONLY does TWO things - besides the days-in-year cap it SUPPRESSES the cross-year partial-period calculation for a period containing no 29 Feb, so a port implementing only the cap fails B-04, the corpus's only vector for that field; (2) the partial arm is sum(days(segment)/Year.length(year)) split at 31 December, and its fraction multiply is deliberately EXACT, outside the MathContext. ALSO DONE: T22 P1-12 (the item T25 silently dropped) stated normatively; T22 P0-5 CLOSED (broken -o glob replaced with explicit filenames, %{http_code} added, capture now exits 1 on non-200 so an error body cannot masquerade as a capture); P1-8 2nd half, P1-9, P1-10, P1-11 first clause folded in; the stale NOT-YET-AUDITED banners fixed in five documents including reference-oracle.md:202; PATHB-REPORT.md:150-151's FALSE 'invariants were not mechanically re-checked' retracted in place; the honesty defect fixed - the round-down banner now separates OBSERVED 111,100.00 from DERIVED, NOT OBSERVED 111,148.35. Found and fixed one extra itself: PASS2-REPORT.md:5 carried the same defect. PASS3 twins verified byte-identical. OUTSTANDING P0 COUNT NOW 6, DOWN FROM 7. Nothing promotable today. FOUR DEC-1 RECOMMENDATIONS deliberately NOT applied because T28 owned those files - see .softhouse/handoff/T30-corpus-remainder.md; the most consequential is that v4 §8 item 5's named 'largest un-re-derived hole' is now CLOSED, and that the FEB_29 dual effect qualifies v4 §4.10's FrequencyYears reasoning because that arm becomes reachable again under FEB_29_PERIOD_ONLY."
+    },
+    {
+      "id": "T31",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "title": "Apply T29's two P0s to DEC-1 v4 -> v5 (correct n; specify the per-period interest computation)",
+      "dependencies": [
+        "T29"
+      ],
+      "contract_independent": true,
+      "files_hint": [
+        "docs/adr/DEC-1-schedule-generator-adapter.md",
+        "nexus/internal/apps/loanschedule/contract/contract.go",
+        ".softhouse/reviews/t31-probe/",
+        ".softhouse/handoff/"
+      ],
+      "note": "Raised and dispatched by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T31-dec1-v5-corrections. Needs no live oracle. Required to prove the fix DISCRIMINATES: its spec-check must reproduce all 13 committed observations AND show that both wrong readings T29 found (textbook balance x rateFactor, and n = NumberOfRepayments) now FAIL against the corrected text - a spec that cannot tell the wrong answer from the right one has not been fixed. Must also widen ADR §8's vector binding from two items to four (3b separates the interest round-trip, 3c a later-disbursement guard-tripping shape), still bound to conformance PASS and cutover rather than to ratification."
+    },
+    {
+      "id": "T32",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "title": "Independent re-review of DEC-1 v5 (the last step before ratification)",
+      "dependencies": [
+        "T31"
+      ],
+      "contract_independent": true,
+      "files_hint": [
+        ".softhouse/reviews/",
+        ".softhouse/handoff/"
+      ],
+      "note": "Raised by cloud catch-up fire cloud-20260818-2000. G-1 closes ONLY via T31 -> T32 CLEAN -> driver ratifies under standing policy P-2. NOTE THE PATTERN, which the next reviewer should be told: three consecutive independent re-reviews (T23, T26, T29) have each found NEW P0s in areas the previous review did not examine, and in every case the committed corpus passed BOTH the right and the wrong reading. The contract is converging - T29 verified the whole of T28's loop spec exactly - but 'the last reviewer found nothing here' has not yet been evidence of correctness in this document."
     }
   ]
 }

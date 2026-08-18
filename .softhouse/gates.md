@@ -234,3 +234,42 @@ re-adjust loop*, which the corpus currently cannot do — that is capture work, 
 
 Nothing blocking Run 1. Licence (NBFI ББСБ) and rounding mode (HALF_UP) are decided. Cutover, regulatory
 sign-off and deposit-taking activation remain hard `user` gates and are not in Run 1's path.
+
+---
+
+### G-1 · UPDATE from cloud catch-up fire `cloud-20260818-2000` — still open, and now precisely scoped
+
+**Nothing in G-1 needs Buyan.** Every remaining item is ENGINEERING, and the cloud fire proved most of it needs no
+live oracle at all. The gate is open because the contract is not yet correct — not because a question is unanswered.
+
+**What this fire established.** DEC-1 went **v2 → v3 → v4** and is mid-flight to **v5**, under three independent
+re-reviews. The driver did **not** ratify at any point, because standing policy **P-2** licenses ratification only
+on a *clean* review and no review came back clean:
+
+| Review | Subject | Verdict | New P0s found |
+|---|---|---|---|
+| T23 (earlier fire) | DEC-1 v2 | ACCEPTED WITH REQUIRED CHANGES | 3 |
+| **T26** (this fire) | DEC-1 v3 | ACCEPTED WITH REQUIRED CHANGES | **1** — the EMI re-adjust loop was specified by its *trigger*, never its *effect* |
+| **T29** (this fire) | DEC-1 v4 | ACCEPTED WITH REQUIRED CHANGES | **2** — `n` misdefined; **the per-period interest computation specified nowhere** |
+
+**The pattern worth recording, because it is the whole argument for this pipeline.** Each round the corpus passed
+*both* the right and the wrong reading. T26's finding: 2,855 of 24,000 in-graded-domain shapes trip the guard and
+no Run-1 vector trips it. T29's: the textbook interest reading diverges on 699 of 43,992 shapes and **all 13
+committed observations pass either way**. Three times now, "the golden test passes" has been no evidence at all.
+This is precisely the failure DEC-1 exists to prevent — a port that passes its corpus and is wrong.
+
+**Convergence, not thrash.** T29 independently verified the *entire* T28 loop specification and all ~20 of its
+`file:line` citations, and its from-scratch model reproduces **13 of 13** committed observations digit-for-digit.
+Each new P0 has been in an area the previous review had not examined, not a re-opening of settled ground.
+
+**What unblocks ratification** — all agent-decidable, none needing Buyan and none needing the oracle:
+1. **T31** applies T29's two P0s → DEC-1 **v5** (in flight at this fire's close).
+2. **T32** re-reviews v5. If clean, the driver ratifies under P-2 and **G-1 closes without reaching Buyan**.
+
+**What is NOT a ratification precondition** — the reviewers agree, and the driver concurs: capturing the vectors
+that trip the EMI re-adjust guard and separate the interest round-trip. Those are bound to **conformance PASS and
+cutover** (ADR §8 items 3, 3a, and now 3b/3c), not to the freeze. No `loanschedule` PASS and no cutover proposal
+until all four exist. They need a live oracle, which only the local fire can reach.
+
+**Still RESERVED for Buyan, and untouched by any of this:** cutover authorization, regulatory / parallel-run
+sign-off, deposit-taking activation, and licence facts. **None of them is in Run 1's path.**
