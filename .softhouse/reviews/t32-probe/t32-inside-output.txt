@@ -1,0 +1,22 @@
+T32 -- disbursement STRICTLY INSIDE a repayment period
+(re-derivation from the pinned source; NOT an oracle observation)
+
+shape                                              DEC-1 text (ratio 1)          source (prorated)
+MNT 1,200,000/6x21.6% start 2024-01-01 disb 2024-01-15
+   level / final / total interest            212786.91/212789.26/76723.81 211087.95/211088.97/66528.72   DIVERGE
+MNT 1,014,632/6x7.0% start 2024-01-01 disb 2024-01-15
+   level / final / total interest            172574.63/172574.67/20815.82 172122.64/172122.63/18103.83   DIVERGE
+MNT 127,704/36x16.8% start 2024-01-01 disb 2024-01-20
+   level / final / total interest              4538.79/4608.60/35762.25   4500.95/4543.82/34373.07   DIVERGE
+MNT 1,200,000/6x21.6% start 2024-01-01 disb 2024-02-10
+   level / final / total interest            253113.90/253115.02/65570.62 251725.10/251725.46/58625.86   DIVERGE
+MNT 50,000,000/12x18.5% start 2024-01-01 disb 2024-01-02
+   level / final / total interest            4595856.19/4596505.72/5150923.81 4593653.38/4593674.35/5123861.53   DIVERGE
+
+Period-1 detail for MNT 1,200,000 / 6 x 21.6%, start 2024-01-01, disb 2024-01-15:
+  text    interest=    21600.00  principal=   191186.91  outstanding=    1008813.09  emi=   212786.91
+            ip [2024-01-01 .. 2024-01-15] balance_in=        0.00 rateFactor=0.0180000000000000000 rfTillDue=0.0180000000000000000
+            ip [2024-01-15 .. 2024-02-01] balance_in=  1200000.00 rateFactor=0.0180000000000000000 rfTillDue=0.0180000000000000000
+  source  interest=    11845.16  principal=   199242.79  outstanding=    1000757.21  emi=   211087.95
+            ip [2024-01-01 .. 2024-01-15] balance_in=        0.00 rateFactor=0.0081290322580645161 rfTillDue=0.0180000000000000000
+            ip [2024-01-15 .. 2024-02-01] balance_in=  1200000.00 rateFactor=0.0098709677419354839 rfTillDue=0.0098709677419354839
