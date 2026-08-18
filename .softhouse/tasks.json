@@ -601,7 +601,7 @@
     },
     {
       "id": "T28",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -615,11 +615,11 @@
         ".softhouse/handoff/"
       ],
       "contract_independent": true,
-      "note": "Raised and dispatched by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T28-dec1-v4-readjust-effect. Needs NO live oracle - T26 states the specification fix must precede the freeze and needs no observation. Transcribes the loop semantics from the reviewer's reference model .softhouse/reviews/t26-probe/t26_rederive.py::readjust_loop, re-verified against the pinned Java source. Must not regress T24's P0-2/P0-3, which T26 confirmed clean."
+      "note": "Delivered by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T28-dec1-v4-readjust-effect (eb67b19), merged to main. DEC-1 bumped to revision v4. P0-T26-1 APPLIED: the EMI re-adjust loop's EFFECT is now normative in three places - new ADR §4.3.1, the ADR §9 obligation list (expanded into nine enumerated sub-obligations so it cannot be met partially), and contract.go's Period type doc (NOT a pinned-to-zero field). Eight-step pseudocode in int64 minor units plus seven numbered 'ways to be wrong while still satisfying rev 3'; the adoption test, which contract.go never mentioned at all, is now explicit. P1-T26-1 and P1-T26-2 applied, plus P1-T26-3, P2-T26-1, P2-T26-2. VALIDATION - and this is the part that matters: t28_spec_check.py transcribes §4.3.1 steps 1-8 LITERALLY in pure integer minor units (no float, no Decimal inside the loop) and reproduces all three committed T23 observations - 172,574.64/172,574.62/20,815.82; 4,540.30/4,540.06/35,746.56; 17.01/17.00/2.05 (the shipped conformance literal). Orchestrator re-ran it independently: ALL MATCH. Both branches exercised - one case stops on the guard, one on the adoption test discarding iteration 2. go build / go vet / gofmt clean, non-negotiable scan clean, no type/field/enum/sentinel changed (prose and doc comments only). T24's confirmed-correct P0-2 and P0-3 NOT regressed - orchestrator verified the deleted ordering-rule clause did not return. NOT ratified - T29 decides."
     },
     {
       "id": "T29",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -632,7 +632,7 @@
         ".softhouse/handoff/"
       ],
       "contract_independent": true,
-      "note": "Raised by cloud catch-up fire cloud-20260818-2000. G-1 closes ONLY via T28 -> T29 CLEAN -> driver ratifies under standing policy P-2. ACCEPTED WITH REQUIRED CHANGES is not clean. Must re-derive from the pinned source rather than checklist-check T28, and must confirm T24's P0-2/P0-3 were not regressed."
+      "note": "Dispatched by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T29-dec1-v4-rereview. Independent adversarial re-review of DEC-1 v4. Central test: transcribe the spec FROM THE DOCUMENT TEXT ALONE, without consulting the Java while transcribing, and check whether the text alone determines the committed observations - i.e. whether two independent implementers reading only DEC-1 produce byte-identical money. Also asked to consider whether T28's spec-check sharing T26's surrounding machinery could mask a specification error, and to confirm P0-2/P0-3 were not regressed. G-1 closes ONLY on a CLEAN verdict under P-2."
     },
     {
       "id": "T30",
