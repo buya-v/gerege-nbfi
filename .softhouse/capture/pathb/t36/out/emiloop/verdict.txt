@@ -1,0 +1,22 @@
+principal  model EMI    resid    loop EMI     resid    OBSERVED EMI OBS last    
+1200000    112082.37    0.03     112082.37    0.03     112082.37    112082.40   
+    -> no discrimination (both models agree)
+1200001    112082.47    -0.07    112082.46    0.05     112082.46    112082.51   
+    -> LOOP FIRED — observation matches the loop model and REFUTES the no-loop model
+1200004    112082.75    -0.07    112082.74    0.06     112082.74    112082.80   
+    -> LOOP FIRED — observation matches the loop model and REFUTES the no-loop model
+1200027    112084.89    0.08     112084.90    -0.06    112084.90    112084.84   
+    -> LOOP FIRED — observation matches the loop model and REFUTES the no-loop model
+1200033    112085.45    0.07     112085.45    0.07     112085.45    112085.52   
+    -> no discrimination (both models agree)
+1200039    112086.01    0.09     112086.02    -0.06    112086.02    112085.96   
+    -> LOOP FIRED — observation matches the loop model and REFUTES the no-loop model
+1200045    112086.58    -0.07    112086.58    -0.07    112086.58    112086.51   
+    -> no discrimination (both models agree)
+1200054    112087.42    -0.07    112087.41    0.06     112087.41    112087.47   
+    -> LOOP FIRED — observation matches the loop model and REFUTES the no-loop model
+1200189    112100.03    -0.08    112100.02    0.04     112100.02    112100.06   
+    -> LOOP FIRED — observation matches the loop model and REFUTES the no-loop model
+
+captures where the EMI re-adjust loop demonstrably FIRED: 1200001, 1200004, 1200027, 1200039, 1200054, 1200189
+captures where observation matched neither model: NONE
