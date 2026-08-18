@@ -165,6 +165,10 @@ previously captured vectors are stale and must be re-captured — never re-inter
 | local `20260818-080003` | **yes** | capture pass 1 executed (killed mid-run by the Mac sleeping; output rescued) |
 | local `20260818-140004` | yes | killed by sleep before dispatching work |
 | local `20260818-152328` | **yes** | capture pass 2 executed; `caffeinate` now holds sleep off |
+| local `20260818-170002` | **yes** | Path B first used for capture (B-01…B-04) |
+| local `20260818-173900`, `20260818-200001` | yes | **workers killed by the harness's 600 s background-task ceiling**, not by the oracle — see the root-cause note below |
+| cloud `20260818-2000` | **no** | expected; spent entirely on oracle-free contract work |
+| local `20260818-230002` | **yes** | **the fire that closed every open admissibility P0**: Path A attested + re-emitted (T35), Path B attested, re-pointed and re-captured (T36), and DEC-1 §8's five binding shapes captured (T37). Ceiling fix landed in `fire-program.sh`. |
 
 ## Two distinct capture paths — do not conflate them
 
@@ -201,9 +205,11 @@ The connection facts at the top of this file. **FIRST USED FOR CAPTURE, fire `20
 observed captures under `.softhouse/capture/pathb/`, recipe in that directory's `REPRODUCE.md`, findings in
 `PATHB-REPORT.md`. **INDEPENDENTLY AUDITED by T22 (2026-08-18) — ACCEPTED WITH REQUIRED CHANGES**, the audit
 re-checked by T27 and its oracle-independent corrections applied; `B-03`/`B-04` additionally re-derived from
-the pinned source by T30 (`.softhouse/reviews/t30-probe/`). **Three P0 admissibility items are still open**
-(T22 §10 P0-3 attestation sidecar, P0-4 fail-the-run preconditions, P0-6 re-point at a production-settings
-tenant), each needing a live oracle. So: audited observations, **nothing promoted to the vector store**.
+the pinned source by T30 (`.softhouse/reviews/t30-probe/`). ~~Three P0 admissibility items are still open~~ — **ALL FOUR T22 P0s ARE NOW CLOSED** by task **T36**
+on local fire `20260818-230002` (P0-3 attestation sidecar, P0-4 fail-the-run preconditions, P0-5 already
+closed by T30, P0-6 re-point at a production-settings tenant + re-capture). See the T36 block below.
+Still: audited observations, **nothing promoted to the vector store** — gate **G-1** (DEC-1 unratified)
+is the remaining blocker, and promotion is not a capture task's call.
 
 It is the **only** path that can close Path A's blind spot, and it is a materially larger rig than Tier 0
 assumed: it needs tenants provisioned with the right timezones (see finding 1 above), and every capture must
@@ -247,3 +253,100 @@ Path B captures are discrimination evidence, not production-settings parity vect
 A capture is only comparable to another capture from the **same path, same image digest, same commit**.
 A jar built on a different JVM is not the pinned oracle. Promoting a new capture path to a trusted source
 is a `user` decision, not an agent's.
+
+---
+
+## Attested capture facts — local fire `20260818-230002`
+
+This fire moved the corpus from *audited* observations to **attested** observations on both paths, and
+captured DEC-1 §8's five binding shapes. Every value below was **measured from the running oracle, its
+container, its deployed bytecode, or its PostgreSQL rows** — none is inferred from the source tree.
+
+### Provenance, now measured rather than assumed
+
+| Fact | Value | How it was read |
+|---|---|---|
+| Fineract commit | `426a23544e8426a38ae43ae404670a0a7e85b9eb`, `git.dirty=false` | the deployed jar's own `git.properties` (T35); `git.commit.id` via the server (T36) |
+| Image | `sha256:e596339626bf…0459a` | `docker image inspect`, asserted by the runner |
+| Jar sha256 | `60fb6dbd…f4c9` | inside the container (T35) |
+| JVM | Zulu OpenJDK `21.0.11+10-LTS`, **zero JVM input flags** | inside the container (T35) |
+| `MoneyHelper.PRECISION` | **19** | `javap` on the deployed `fineract-core` jar (T36); read in-process (T35) |
+| Effective `MathContext` | **(19, HALF_UP)** — ordinal **4** | the oracle's own SLF4J init lines *and* `MoneyHelper.getMathContext()` |
+| PostgreSQL | **18.3** | server row (T36) |
+| Classpath | 350 entries digested individually — contains `postgresql-42.7.11.jar`, **zero** Oracle/MySQL/MariaDB | T35 |
+
+**This is the ratified production setting**, so there is no adverse "ran at the wrong precision or mode"
+finding on either path this fire.
+
+### The `gerege` tenant is the production-representative one
+
+`timezone_id = Asia/Ulaanbaatar`, `c_configuration.rounding-mode = 4` (HALF_UP), empty
+`schema_connection_parameters`. Finding 1 above (the seeded `default` tenant is `Asia/Kolkata`) still
+stands and is now *enforced* rather than merely warned about: T36's `preconditions.sh` (15 assertions)
+**exits non-zero and names the breach**, and is **proven failable** — run against stock `default` it exits 1
+with five breaches (Kolkata, mode 6, HALF_EVEN in force, MySQL-era connection params, and a behavioural
+half-cent canary returning `20925.04` instead of `20925.05`). Those five are exactly the defects that made
+the earlier corpus inadmissible. A DB row is not proof of the arithmetic in force; the canary is.
+
+`MoneyHelper.updateTenantRoundingMode` has **no production caller**, so a cached tenant rounding mode
+cannot drift without a container restart (T35, T27 RC-6).
+
+### Re-capture result — the committed Path B corpus is stable
+
+T36 re-captured `B-01`…`B-04` **twice** on the `gerege` tenant (byte-verbatim requests against the existing
+products, then again against four products it re-created). **All four responses byte-identical to the
+committed corpus, all eight times**; a number-by-number diff over every JSON leaf in exact integer minor
+units gives **0 numbers moved, 0 scale-only, 0 structural**. T30's from-source re-derivation of `B-03`/`B-04`
+re-checked at both rounding modes: **consistent, no contradiction.**
+
+Path A likewise: unmodified `Capture3.java` reproduced the committed capture **byte for byte** on this fire,
+and the re-emitted pass 3b gave **1560 / 1560 published values identical, 0 changed, 0 dropped** — the only
+additions being `balance` on `DISBURSEMENT` rows, which pass 3 never emitted at all. Switching emissions to
+`toPlainString()` changed nothing, not even rendering. Run-stable digest `02e94174…aa38ec` over three runs.
+
+### New behavioural facts observed this fire
+
+- **The EMI re-adjust loop can be made to fire, and now has been.** At `n = 12` the entry condition needs
+  `|residual| > 0.06`, because the right-hand side is `Money(6.00)` — `Money.copy(double)` **replaces** the
+  amount (`Money.java:219-221` → `:215-217`), it does not scale it. Six captures refute the no-loop model by
+  one minor unit on all of periods 1–11 (principal `1,200,001₮` → observed EMI **112,082.46**, no-loop model
+  `112,082.47`); two more enter the loop and back out at `hasLessEmiDifference`, pinning that guard too.
+- **`totalOutstandingAmount` carries no information on this path** — `"0"` at **scale 0** while every other
+  money string is scale 2. Not rounding: `final BigDecimal totalOutstanding = BigDecimal.ZERO`
+  (`ProgressiveLoanScheduleGenerator.java:157`), passed straight through.
+- **The corpus has zero discriminating power over charges** — every fee and penalty in it is `0.00`.
+
+### Path C in all but name — the DEC-1 binding captures
+
+`.softhouse/capture/dec1-binding/` holds eleven captures taken through the Path A seam that exist to
+**separate readings**, not to sample behaviour. Both controls passed (a shipped test literal reproduced
+digit-for-digit at `(12, HALF_UP)`; committed observation `Q0a` reproduced through a *different* harness),
+the run is byte-identical on re-execution, and the seam-class `diff` was empty.
+
+The widest single observation in the program to date: a port hard-coding the rate-factor day-count ratio to
+1 charges period-1 interest **21,600.00** where the oracle returned **11,845.16** — an **observed** gap of
+**MNT 10,195.09** in total interest on a MNT 1.2 M loan.
+
+**Stored in raw observed form only.** Gate G-1 is open, so contract-shaped storage and promotion to the
+parity vector store both remain forbidden.
+
+---
+
+## Root cause of the "lost local fire" pattern — fixed 2026-08-18
+
+Four local fires (`20260817-191707`, `20260818-080003`, `-170002`, `-200001`) stranded worker output. The
+diagnosis carried in `RESUME.md` — *"`fire-program.sh` dispatches and exits without awaiting its workers"* —
+was **wrong**. Every one of those logs carries the harness line:
+
+```
+Background tasks still running after 600s; terminating.
+Set CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0 to wait indefinitely.
+```
+
+`claude -p` waits only 600 s for background tasks after the driver's final response and then **kills them**.
+The driver awaited its workers correctly; the harness killed them underneath it. An opus worker re-deriving
+money math or building a capture container routinely needs 20–25 minutes, so the ceiling is removed, not
+raised: `fire-program.sh` now exports `CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0` before invoking the driver.
+
+**This has nothing to do with the reference oracle**, and it is recorded here only because it repeatedly
+destroyed oracle work that no other fire can redo.
