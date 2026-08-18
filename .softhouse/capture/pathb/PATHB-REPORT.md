@@ -4,12 +4,22 @@
 **Executed by:** the orchestrator (vector capture touches the oracle, so it is orchestrator-only)
 **Status:** RAW OBSERVED, **INDEPENDENTLY AUDITED by T22 (2026-08-18) — ACCEPTED WITH REQUIRED CHANGES**;
 the audit's oracle-independent corrections are applied in this document (see the CORRECTED / CLARIFIED banners
-below), and **three P0 admissibility items remain open** (T22 §10 P0-3 attestation sidecar, P0-4 fail-the-run
-preconditions, P0-6 re-point at a production-settings tenant — each needs a live oracle). The fourth, **P0-5**
-(the `REPRODUCE.md` capture-loop defect), **is closed** — fixed by T30, no oracle required. The T22 audit was
-itself re-checked by T27
-(2026-08-18) and its corrections machine-verified against the committed artifacts.
-**No vector promoted to the store; no gate answered.**
+below). **All four T22 P0 admissibility items are now CLOSED**: P0-5 by T30 (the `REPRODUCE.md` capture-loop
+defect, no oracle required), and **P0-3, P0-4 and P0-6 by T36 on fire `20260818-230002` against the live
+oracle**:
+
+- **P0-3 — attestation sidecar:** `t36/out/recapture-gerege/attestation.json`, every field read from the
+  running server, its deployed bytecode and its PostgreSQL rows. Effective `MathContext(19, HALF_UP)`.
+- **P0-4 — fail-the-run preconditions:** `t36/preconditions.sh`, 15 assertions, wired into `REPRODUCE.md`;
+  demonstrably failable (exits 1 with five breaches on the stock `default` tenant).
+- **P0-6 — production-settings re-point:** all four sets re-captured on tenant `gerege`
+  (`Asia/Ulaanbaatar`, `rounding-mode = 4` HALF_UP), twice — once on the existing products and once on four
+  products T36 re-created from the same payloads. **Every response byte-identical to the committed corpus,
+  all eight times**; no number moved (`t36/out/diff-vs-committed.txt`).
+
+The T22 audit was itself re-checked by T27 (2026-08-18) and its corrections machine-verified against the
+committed artifacts. **No vector promoted to the store; no gate answered** — DEC-1 is at revision 6 and
+UNRATIFIED (gate G-1), so promotion is a separate decision and is not an agent's to make here.
 
 ## Why Path B exists
 
@@ -290,8 +300,8 @@ re-observation cited under Caveats instead of resting on it alone.
   capture by one minor unit and confirming they FAIL (`.softhouse/reviews/t27-probe/t27_mutate.py`). Note the
   rescued WIP checker `t22-probe/invariants.py` had `I5` hard-coded to PASS (T22 P1-13); it is fixed, and its
   `PROVENANCE-NOTE.md` records the defect.
-- **The EMI re-adjust loop is real, and no vector pins it** (T22 P1-11, first clause — recorded here; the
-  capture that would pin it is still open and needs an oracle).
+- **The EMI re-adjust loop is real, and it is now PINNED BY OBSERVATION** (T22 P1-11 — first clause recorded
+  here, **second clause closed by T36** on fire `20260818-230002`; see the block immediately below).
   `checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods` (`ProgressiveEMICalculator.java:1258-1308`, at most
   **3** iterations) re-rounds `EmiAdjustment.adjustedEmi()` through `applyInstallmentAmountInMultiplesOf` and
   adopts the new schedule only if the last-vs-penultimate EMI gap *shrinks* (`:1289-1291`). It can therefore
@@ -304,6 +314,37 @@ re-observation cited under Caveats instead of resting on it alone.
   `5 > 6` is false and the loop does not fire — which is why the from-source re-derivations reproduce them
   without modelling it. **A Go port that implements the rounding but not the loop will diverge on inputs this
   corpus does not yet contain.**
+
+  > **T22 P1-11, SECOND CLAUSE — CLOSED by T36 (2026-08-18, live oracle). The corpus now contains those
+  > inputs.** The entry condition needs `|residual| > 0.06` at `n = 12`. Six principals were put to the
+  > oracle where it is crossed, on the production-settings tenant `gerege` at `(19, HALF_UP)`, product 1
+  > (baseline, no `multiplesOf`), everything else byte-identical to `B-01`:
+  >
+  > | principal (MNT) | no-loop model EMI | **OBSERVED EMI** | observed final installment | verdict |
+  > |---|---|---|---|---|
+  > | 1,200,000 (control) | 112,082.37 | 112,082.37 | 112,082.40 | loop cannot fire (residual `+0.03`) |
+  > | **1,200,001** | 112,082.47 | **112,082.46** | 112,082.51 | **LOOP FIRED** |
+  > | **1,200,004** | 112,082.75 | **112,082.74** | 112,082.80 | **LOOP FIRED** |
+  > | **1,200,027** | 112,084.89 | **112,084.90** | 112,084.84 | **LOOP FIRED** |
+  > | 1,200,033 | 112,085.45 | 112,085.45 | 112,085.52 | enters, does not adopt (gap would not shrink) |
+  > | **1,200,039** | 112,086.01 | **112,086.02** | 112,085.96 | **LOOP FIRED** |
+  > | 1,200,045 | 112,086.58 | 112,086.58 | 112,086.51 | enters, does not adopt |
+  > | **1,200,054** | 112,087.42 | **112,087.41** | 112,087.47 | **LOOP FIRED** |
+  > | **1,200,189** | 112,100.03 | **112,100.02** | 112,100.06 | **LOOP FIRED** |
+  >
+  > The "no-loop model" column is T22's audited from-source re-derivation, which stops before `:1258-1308`.
+  > On the six marked rows **the oracle REFUTES it by one minor unit on every one of periods 1–11**, and
+  > matches a model that does implement the loop. That is the observation the corpus lacked: the loop is not
+  > a theoretical branch, it moves money on a plain 12-month MNT loan one tugrik away from `B-01`.
+  > The adopted adjustment is `Money(residual / n)` at 2 dp (`EmiAdjustment.adjustment()`), applied to every
+  > period from the related range, after which the final installment is recomputed; adoption is conditional
+  > on `hasLessEmiDifference` (`:1289-1291`), which is why 1,200,033 and 1,200,045 enter and back out.
+  >
+  > Raw captures `t36/out/emiloop/`, attestation `t36/out/emiloop/attestation.json`, verdict transcript
+  > `t36/out/emiloop/verdict.txt`, ten property invariants **ALL PASS on all nine**
+  > (`t36/out/emiloop/invariants.txt`). Candidate principals were *selected* by
+  > `t36/t36_emiloop_search.py`; **every number in the table above is observed from the oracle**, none
+  > authored.
 - Fineract's client model splits names; the fixture clients use `fullname` to avoid asserting a
   `first_name`/`last_name` shape. This is the oracle's own schema and is not a Gerege contract surface.
 
