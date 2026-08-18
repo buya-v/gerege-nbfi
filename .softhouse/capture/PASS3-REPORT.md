@@ -2,7 +2,12 @@
 
 **Fire:** local `20260818-152328` (Buyan's Mac), 2026-08-18
 **Executed by:** the orchestrator (vector capture touches the oracle, so it is orchestrator-only)
-**Status:** RAW OBSERVED, **NOT YET INDEPENDENTLY AUDITED**. No vector promoted to the store; no gate answered.
+**Status:** RAW OBSERVED, **INDEPENDENTLY AUDITED by T21 (2026-08-18) — ACCEPTED WITH REQUIRED CHANGES**;
+the audit's oracle-independent corrections are applied in this document (see the CORRECTED banners below), and
+**three P0 admissibility items remain open** (T21 §10 P0-2 attestation block, P0-3 the three missing per-period
+columns, P0-4 the executable run recipe — all three need a live oracle). The T21 audit was itself re-checked by
+T27 (2026-08-18), which machine-verified every corrected number against the committed oracle transcript.
+**No vector promoted to the store; no gate answered.**
 
 ## Why pass 3 exists
 
@@ -65,7 +70,10 @@ tolerance was applied, because none should be needed.
   **identical at principal 50,000,000** (`13,995,886.40` on both). Divergence at 4.00 and identity at
   50,000,000 on the *same shape* is the direct contradiction of any size threshold.
 - On the `6 × 7.0 %` shape the two are **identical at principal 87,654,321** (`1,798,283.07` on both) and
-  at 43,811 and 131,432, but **diverge at 131,433**. The 87-million divergence the old text cited belongs to
+  at 43,811 and 131,432, but **diverge at 131,433** — and that divergence is **per-period; the two
+  total-interest figures are equal at `2696.43`** (the transcript's `IDENTICAL`/`DIFFERENT` verdict is a
+  **full-schedule** string comparison, `T21v2Probe2.java:63-66`, not a totals comparison — T21 §6.2's own
+  annotation, restored here per T27 RC-4). The 87-million divergence the old text cited belongs to
   the `18 × 18.5 %` shape (`13,393,481.05` p12 vs `13,393,481.04` p19 — `P-01`), not to magnitude.
 - **All four MNT captures are p12/p19-identical** (1,200,000; 4,999,999; 5,000,000; 50,000,000). Pass 3
   therefore supplies **no evidence** that Mongolian loan sizes are precision-sensitive; the earlier sentence
@@ -111,8 +119,13 @@ config and is never hard-coded.
 the rig from a third harness; confirm two harnesses agree at `(19, HALF_UP)`; supply the first
 MNT-scale observations; and demonstrate all six property invariants hold on every capture.
 
-**Does not:** promote anything into the vector store — pass 3 has not been independently audited, and the
-audits of passes 1 and 2 (T18, T19) were still in flight when it was captured. It also inherits Path A's
+**Does not:** promote anything into the vector store. Pass 3 **has** since been independently audited — T21
+(2026-08-18) ACCEPTED WITH REQUIRED CHANGES, and T27 re-checked that audit's corrections — but three P0
+admissibility items are still open (T21 §10 P0-2/P0-3/P0-4: no environment-attestation block on
+`capture-prod-raw.json`, the per-period `periodFromDate`/`feeAmount`/`penaltyAmount` columns not emitted, no
+executable run recipe), and each needs a live oracle. Until they close, the eleven `(19, HALF_UP)` records are
+**audited observations, not admissible parity vectors**. (Pass 3 was captured while the audits of passes 1 and
+2 — T18, T19 — were still in flight.) It also inherits Path A's
 proven blind spot untouched: `installmentAmountInMultiplesOf` is still dropped, and multi-disbursement is
 still unreachable. Buyan's answer to that (expose the field, specify server semantics, **refuse** with
 "unsupported: no discriminating vector" until a Path-B vector exists) stands unaffected by this pass.
