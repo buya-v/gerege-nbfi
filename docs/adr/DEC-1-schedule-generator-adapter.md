@@ -1,19 +1,21 @@
 # DEC-1 — Schedule-generator adapter contract
 
-**Status: DRAFT (revision 2) — awaiting independent re-review, then ratification**
+**Status: DRAFT (revision 3) — awaiting independent re-review, then ratification**
 
 | | |
 |---|---|
 | Decision id | DEC-1 |
 | Bounded context | `loanschedule` (loan repayment schedule generation) |
-| Run | `2026-08-17-run1-harness-schedule-poc`, task T4 (attempt 2) |
+| Run | `2026-08-17-run1-harness-schedule-poc`, task T24 (revision 3; revision 2 was T4 attempt 2) |
 | Artefact specified | `nexus/internal/apps/loanschedule/contract/contract.go` |
 | Reference oracle | Fineract, pinned checkout `426a23544e8426a38ae43ae404670a0a7e85b9eb` |
-| Supersedes | DEC-1 revision 1 (rejected by review T5) |
+| Supersedes | DEC-1 revision 2 (ACCEPTED WITH REQUIRED CHANGES by re-review T23), which superseded revision 1 (rejected by review T5) |
 
 **Terminology.** In this document "the reference oracle" always means **the Fineract reference implementation** at the pinned commit — the implementation this program grades Go output against. It never means **Oracle Database**, which is a prohibited product in this program.
 
-**Every `file:line` citation in this document is to that pinned checkout, and every citation naming the schedule algorithm is to the PROGRESSIVE generator (`fineract-progressive-loan/…`), never the cumulative one.** Every numeric figure is either an observed capture from the pinned oracle (labelled *observed*) or a re-derivation from source that is shown (labelled *re-derived*). Nothing is asserted from memory.
+**Every `file:line` citation in this document is to that pinned checkout, and every citation naming the schedule algorithm is to the PROGRESSIVE generator (`fineract-progressive-loan/…`), never the cumulative one.** A bare `` `:N-M` `` always inherits the file named immediately before it; where revision 2 left five such citations inheriting the wrong antecedent, revision 3 names the file explicitly. Every numeric figure is either an observed capture from the pinned oracle (labelled *observed*) or a re-derivation from source that is shown (labelled *re-derived*). Nothing is asserted from memory.
+
+**What revision 3 changed, and why.** Independent re-review T23 (`.softhouse/reviews/T23-DEC-1-v2-rereview.md`) accepted revision 2's structure, verified all 101 distinct source citations, and reproduced eight of the twelve captures from scratch — but found three normative statements that observation contradicts. Revision 3 corrects exactly those three (§4.3 and §9 on the EMI re-adjust loop; §3.1/§4.6 on the disbursement window; §4.10 on `FrequencyYears`), adds the two rules their correction requires (the error-precedence rule, §4.12; the graded-domain widening mechanism, §5.1), and applies T23's seven P1 corrections. New observations taken for revision 3 are in `.softhouse/reviews/t24-probe/`; the re-derivation that proves the corrected §4.3 is `t24_rederive_with_loop.py`.
 
 ---
 
@@ -27,7 +29,7 @@
 2. **The contract is the golden-vector encoding.** Each captured vector is a `GenerateRequest` and its oracle-produced `Schedule`. A field added, removed, renamed or retyped invalidates the corpus, and every parity claim already made is void until re-capture.
 3. **The contract is what a regulator is shown.** The parity argument for FRC / parallel-run sign-off is "these two implementations answer the same question identically". That argument is auditable only if the question stopped moving.
 
-**Widening the graded domain (§3) is NOT an amendment.** It is behaviour, not shape: no type changes, no vector's field set moves, no ratified sentence is contradicted. This distinction is the single most important structural decision in this revision, and §3 exists to make it precise.
+**Widening the graded domain (§3) is NOT an amendment.** It is behaviour, not shape: no type changes, no vector's field set moves, no ratified sentence is contradicted. This distinction is the single most important structural decision in this revision, and §3 exists to make it precise. Re-review T23 attacked it and confirmed it holds: widening admits a value the frozen types already accept, so none of the three triggers above fires, and a vector captured before a widening remains a legal encoding after it. **Because the licence is real, it needs a procedure**, and revision 2 had none — §5.1 supplies it. A widening recorded any other way is not a widening; it is an undocumented change to what the port is allowed to answer.
 
 **Unchanged and untouched by ratification:** cutover from Fineract to Go, regulatory / parallel-run sign-off, and licence facts remain hard `user` gates. A conformance PASS means "matches the reference oracle on captured vectors, inside the graded domain". It never means "safe to cut over".
 
@@ -43,13 +45,13 @@ The reference oracle's own entry point is:
 LoanSchedulePlan generate(MathContext mc, LoanRepaymentScheduleModelData modelData)
 ```
 
-— a 19-component input record [`LoanRepaymentScheduleModelData.java:32-39`] and a plan carrying a heterogeneous list of disbursement / down-payment / repayment rows plus eight aggregate totals [`LoanSchedulePlan.java:32-97`]. That signature is unusable as a migration boundary as it stands:
+— a 19-component input record [`LoanRepaymentScheduleModelData.java:32-39`] and a plan carrying a heterogeneous list of disbursement / down-payment / repayment rows plus **seven** aggregate `BigDecimal` totals [`LoanSchedulePlan.java:34-43`: `periods`, `currency`, `loanTermInDays`, then `totalDisbursedAmount`, `totalPrincipalAmount`, `totalInterestAmount`, `totalFeeAmount`, `totalPenaltyAmount`, `totalRepaymentAmount`, `totalOutstandingAmount` — **ten members in all**; revision 2 said eight totals and eleven members, and both were one too many]. That signature is unusable as a migration boundary as it stands:
 
 - **`MathContext`** is a Java type. What it carries is a real input to the answer; the class is not portable — and, as §4.1 shows, its single integer is consumed in two different senses.
 - **`BigDecimal` principal and a percentage-shaped `BigDecimal` rate** are the oracle's money and rate representations. This program's non-negotiable is integer minor units and no floating point anywhere on a money path, including intermediates.
 - **`CurrencyData`, `DaysInMonthType`, `DaysInYearType`, `DaysInYearCustomStrategyType`, `InterestMethod`, `PeriodFrequencyType`** are Fineract types and enum names.
 - **Six components are behaviour switches or overrides** rather than loan terms; they must be pinned, and *why* each is safe to pin is load-bearing (§4.4).
-- **Eight aggregate totals in the response**, every one a sum or a span over the period rows.
+- **Seven aggregate totals in the response**, every one a sum or a span over the period rows.
 - **No time zone anywhere**, only bare `LocalDate`.
 
 ### 2.1 The behavioural facts the contract must accommodate
@@ -62,6 +64,7 @@ All established against the pinned checkout and re-derived independently at leas
 - The default day count is a **fixed 30/360** with an actual/actual arm also present [`ProgressiveEMICalculator.java:1533-1539`].
 - Per period, **interest is computed first and capped at the installment; principal is the balancing non-negative remainder** [`RepaymentPeriod.java:272-286`, `:345-350`].
 - **The last period absorbs the entire accumulated residual onto its installment** (§4.3), which is what forces total principal repaid to equal total principal advanced to the minor unit.
+- **A bounded EMI re-adjust loop then runs on EVERY generation** and, when its guard trips, moves the level installment by one minor unit and re-splits every period [`ProgressiveEMICalculator.java:1258-1308`, called unconditionally at `ProgressiveEMICalculator.java:749`]. Revision 2 called it reachable only outside the graded domain; that was **false**, and §4.3 now specifies it. It is the last step of the algorithm, not an optional smoothing.
 
 ### 2.2 The fact that shaped this revision: the capture seam honours 17 of 19 components
 
@@ -117,9 +120,20 @@ InterestMethod                   == InterestMethodDecliningBalance
 DayCount                         == DayCountFixed30Over360
 DownPaymentPercentage            == Rate{0, 1}
 InstallmentRoundingMultipleMinor == 0
+Disbursements[0].Date            is ScheduleStartDate, or one of the computed
+                                 repayment due dates other than the last
 ```
 
 Rates, principals, terms and dates are continuous or unbounded; a corpus cannot enumerate them, so they are graded by **sampling**, and §5 lists what is sampled. **No claim is made that an un-sampled value is safe** — §4.1 records why loan size in particular licenses nothing.
+
+**Two constraints of the CONTRACT domain — refusals that a vector cannot retire.** These are `ErrUnsupportedConfiguration`, not `ErrNoDiscriminatingVector`, because capturing a vector would not make them admissible; only a decision would (§4.12):
+
+```
+ScheduleStartDate ≤ Disbursements[0].Date < the last computed repayment due date   (§4.6)
+RepaymentFrequencyUnit != FrequencyYears while DayCount == DayCountFixed30Over360  (§4.10)
+```
+
+The disbursement-window constraint is the last one added, and §4.6 shows the observation that forced it: outside that half-open window the Run-1 oracle binding **silently discards the principal** and returns an all-zero schedule.
 
 ### 3.2 The structural result that makes this contract capturable
 
@@ -128,7 +142,14 @@ The two components the seam drops are **exactly the two the graded domain pins t
 - `installmentAmountInMultiplesOf` ← pinned by `InstallmentRoundingMultipleMinor == 0`;
 - `daysInYearCustomStrategy` ← pinned `null`, and **provably inert** under `DayCountFixed30Over360` (§4.4).
 
-**Therefore, inside the graded domain, the seam's blind spot is empty:** every admissible request is faithfully rendered, and a Path-A capture grades everything the request carries. That is what licenses freezing this contract on a seam-captured corpus.
+**Therefore, inside the graded domain, the two dropped components are not a blind spot:** each is pinned to the value the seam forces, so an admissible request is rendered to the oracle without loss, and no answer depends on a component the seam silently discarded. That is what licenses freezing this contract on a seam-captured corpus.
+
+**That is all it licenses, and revision 2 claimed more.** Revision 2 concluded that "a Path-A capture grades everything the request carries". Faithful rendering is not full grading, and re-review T23 broke the inference twice, both times by observation:
+
+- **Rendered but not graded.** The EMI re-adjust loop [`ProgressiveEMICalculator.java:1258-1308`] moves money on ordinary graded-domain requests and **no capture in the Run-1 corpus trips its guard** — *observed*: all nine in-scope `(19, HALF_UP)` captures exit the loop at its first test. A port that omitted the loop entirely would have scored a clean corpus. §4.3 now specifies the loop, and §5 records vectors that discriminate it.
+- **Rendered but answered degenerately.** A request can be rendered perfectly and still get an answer that amortizes nothing, because the *generator* discards a disbursement outside the period windows. §4.6.
+
+So the corpus is not dense enough to grade its own graded domain by construction; it is dense enough only where a vector exists that would fail a wrong implementation, and §5 states that field by field.
 
 It also states the price precisely: **widening the graded domain to a non-zero installment multiple requires re-binding the Fineract-JVM adapter to the running-server path** (which does honour the field) *and* capturing there. That is a scheduling fact, not a contract change.
 
