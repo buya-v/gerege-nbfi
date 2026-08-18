@@ -314,11 +314,23 @@ const (
 	//
 	// This is the fixed-30 / fixed-360 variant. It is NOT 30E/360 and NOT
 	// 30/360 US: no end-of-month day-shifting rule is applied to the DAYS
-	// count. Real calendar days do enter, but only as the proportional
-	// correction actualDaysInPeriod / calculatedDaysInPeriod
-	// (ProgressiveEMICalculator.java:1500-1503, :1961-1962), which is exactly 1
-	// when the interest sub-period spans the whole repayment period — which is
-	// every period in the graded domain.
+	// count. Real calendar days do enter, as the proportional correction
+	// actualDaysInPeriod / calculatedDaysInPeriod
+	// (ProgressiveEMICalculator.java:1500-1503, :1961-1962). That ratio is 1
+	// ONLY when the interest period spans the whole enclosing repayment period,
+	// which a disbursement dated STRICTLY INSIDE a repayment period makes false;
+	// on such a period the correction is days(span) / days(repayment period) and
+	// is strictly less than 1. Both day counts are defined normatively on
+	// Rounding.RateFactorScale under "The two day counts in the ratio", which is
+	// the authoritative statement.
+	//
+	// (Revision 6, P0-T32-1: revision 5 said the ratio is "exactly 1 ... which
+	// is every period in the graded domain". That clause was FALSE — a
+	// strictly-inside-a-period disbursement is admissible under the graded
+	// domain's window predicate and produces a ratio below 1 — and it is
+	// deleted. Re-review T32 re-derived that hard-coding the ratio to 1 changes
+	// the money on 2,913 of 2,913 such shapes, up to MNT 1,816,050.11 in total
+	// interest; a re-derivation, not an observation.)
 	//
 	// This is the only convention in the graded domain. All twelve Run-1
 	// captures use it.
@@ -445,10 +457,26 @@ const (
 //
 // Two facts about what is NOT rounded, both load-bearing:
 //
-//   - The addition 1 + rateFactor that forms each period's growth factor is
-//     EXACT. The reference oracle performs it with no MathContext at all
-//     (RepaymentPeriod.java:216-218), so the quantized rate factor's full width
+//   - The additions that form each repayment period's growth factor are EXACT.
+//     A repayment period's growth factor is 1 PLUS THE SUM OF ITS INTEREST
+//     PERIODS' RATE FACTORS, not 1 + a single rate factor: the reference oracle
+//     computes it as interestPeriods.stream().map(InterestPeriod::getRateFactor)
+//     .reduce(BigDecimal.ONE, BigDecimal::add) (RepaymentPeriod.java:216-217) —
+//     one addition per interest period, every one of them performed with no
+//     MathContext at all (:216-218), so the quantized rate factors' full width
 //     propagates unrounded into the recurrence.
+//
+//     (Revision 6, P1-T32-1: revisions 1-5 wrote the singular "1 + rateFactor",
+//     which is correct only for a repayment period carrying exactly ONE interest
+//     period. A disbursement dated inside a repayment period gives it two — see
+//     the segmentation table on Period — and the singular form then leaves an
+//     implementer to invent a composition rule. Re-review T32 measured the two
+//     forms INERT on today's graded domain: 0 divergences over 2,913 re-derived
+//     strictly-inside shapes, because under the day counts above the segment
+//     factors sum to the whole-period factor at scale 19 on those shapes. It
+//     stops being inert the moment an interest pause, a mid-term rate change or
+//     a multi-tranche disbursement enters the domain.)
+//
 //   - The residual sums of the final-period adjustment (see Period) are
 //     accumulated at CURRENCY scale, not at SignificantDigits: each term is
 //     already money before it is added (ProgressiveEMICalculator.java:1190-1203).
@@ -507,6 +535,59 @@ type Rounding struct {
 	// The three mc-qualified operations are SignificantDigits; the trailing
 	// setScale is RateFactorScale. setScale takes a SCALE, not a precision, so
 	// one integer is being read in two senses.
+	//
+	// # The two day counts in the ratio (NORMATIVE; revision 6, P0-T32-1)
+	//
+	// The snippet's last two operations are a PRORATION, and revision 5 defined
+	// neither of its day counts anywhere in either artefact. Both are whole-day
+	// counts, both are exact integers, and they are NOT taken from the same
+	// interval:
+	//
+	//   - actualDaysInPeriod is the NUMERATOR: whole days across THE SPAN THE
+	//     RATE FACTOR IS COMPUTED OVER —
+	//     DateUtils.getDifferenceInDays(interestPeriodFromDate, interestPeriodDueDate),
+	//     both of them the routine's own parameters, so this is the span the
+	//     caller passed (ProgressiveEMICalculator.java:1367-1368 for
+	//     rateFactorTillPeriodDueDate, :1500-1501 for the recurrence's rate
+	//     factor).
+	//   - calculatedDaysInPeriod is the DENOMINATOR: whole days from the
+	//     ENCLOSING REPAYMENT PERIOD's FromDate to its DueDate —
+	//     DateUtils.getDifferenceInDays(repaymentPeriod.getFromDate(), repaymentPeriod.getDueDate())
+	//     (ProgressiveEMICalculator.java:1369-1370; the same pair spelled
+	//     calculatedDaysInRepaymentPeriod at :1502-1503). IT IS NEVER THE SPAN'S
+	//     OWN LENGTH, and never a function of the span at all.
+	//
+	// The ratio is applied as .multiply(actualDaysInPeriod, mc)
+	// .divide(calculatedDaysInPeriod, mc) (:1961-1962), and a guard returns
+	// exactly BigDecimal.ZERO when calculatedDaysInPeriod is zero (:1953-1955),
+	// before any of the four operations runs.
+	//
+	// THE RATIO IS 1 IF AND ONLY IF THE SPAN IS EXACTLY THE ENCLOSING REPAYMENT
+	// PERIOD'S OWN WINDOW. It is strictly less than 1 whenever the span starts
+	// after that period's FromDate — which is exactly what a disbursement dated
+	// STRICTLY INSIDE a repayment period produces (see "The per-period interest
+	// computation" on Period, third segmentation row), an in-graded-domain shape
+	// under GenerateRequest's window predicate. This term is the whole mechanism
+	// by which a mid-period disbursement is charged less than a full period's
+	// interest.
+	//
+	// The two call sites pass two different spans
+	// (ProgressiveEMICalculator.java:638-643), so an interest period's two rate
+	// factors share a denominator and differ in numerator:
+	//
+	//	rateFactor              span = the interest period's own [FromDate, DueDate]   (:639-640)
+	//	                        ratio = days(interest period) / days(repayment period)
+	//	                        used by the fn recurrence (see the Rounding doc above)
+	//	rateFactorTillPeriodDueDate
+	//	                        span = [interest period FromDate, repayment period DueDate] (:641-642)
+	//	                        ratio = days(that span) / days(repayment period)
+	//	                        used by the per-period interest (see Period)
+	//
+	// When a repayment period carries ONE interest period — every committed
+	// observation — both numerators equal the denominator and both ratios are 1.
+	// That is why NO CAPTURE IN THE CORPUS CAN GRADE THIS RULE, and why it is
+	// specified from source with a named missing vector (DEC-1 section 8 item
+	// 3d) rather than left to a phrase.
 	//
 	// Because a rate factor is a small number (of order 0.005 to 0.02), a scale
 	// is strictly lossier than the same count of significant digits on this
@@ -1008,11 +1089,30 @@ const (
 	// FromDate and DueDate are both the disbursement date, its PrincipalMinor
 	// is the amount advanced, its InterestMinor is 0, and its
 	// InstallmentNumber is 0 because it is not payable.
+	//
+	// Its OutstandingPrincipalMinor IS THE AMOUNT ADVANCED — equal to this row's
+	// PrincipalMinor (normative; revision 6, P1-T32-2). The reference oracle
+	// passes disbursementPeriod.getPrincipalDisbursed().getAmount() as BOTH the
+	// plan row's principalAmount and its outstandingLoanBalance
+	// (LoanSchedulePlan.java:52-56; the record's field order is
+	// LoanSchedulePlanDisbursementPeriod.java:28-31). Every committed capture
+	// contains a disbursement row, so this is GRADED. Revision 5 fixed the other
+	// five fields of this row and left this one unstated.
 	PeriodKindDisbursement
 
 	// PeriodKindDownPayment is the down payment taken on the disbursement date.
 	// Its FromDate and DueDate are both the disbursement date, its
 	// PrincipalMinor is the amount taken, and its InterestMinor is 0.
+	//
+	// Its OutstandingPrincipalMinor is the balance outstanding immediately
+	// before the disbursement, plus the amount disbursed, minus the down payment
+	// taken — outstandingBalance.plus(disbursedAmount, mc).minus(downPaymentAmount, mc)
+	// (ProgressiveLoanScheduleGenerator.java:340-343), carried to the plan at
+	// LoanSchedulePlan.java:57-65 (record field
+	// LoanSchedulePlanDownPaymentPeriod.java:33). UNGRADED: DownPaymentPercentage
+	// is pinned to Rate{0, 1} in the graded domain and no capture has ever
+	// produced a row of this kind, so the value is specified from source and
+	// refused rather than exercised (revision 6, P1-T32-2).
 	//
 	// No capture in the Run-1 corpus produces a row of this kind; see
 	// GenerateRequest.DownPaymentPercentage.
@@ -1343,8 +1443,45 @@ const (
 //   - lengthTillPeriodDueDate = whole days from the INTEREST period's FromDate
 //     to the ENCLOSING REPAYMENT period's DueDate (InterestPeriod.java:164-166);
 //   - rateFactorTillPeriodDueDate = the rate factor (see Rounding) computed over
-//     [interest period FromDate, repayment period DueDate]
+//     the span [interest period FromDate, repayment period DueDate]
 //     (ProgressiveEMICalculator.java:641-642 -> :1355-1356).
+//
+// THE RATE FACTOR IS PRORATED, AND THE DENOMINATOR IS THE REPAYMENT PERIOD, NOT
+// THE SPAN (normative; revision 6, P0-T32-1 — the full definitions are on
+// Rounding.RateFactorScale under "The two day counts in the ratio"). Written out
+// for this call site:
+//
+//	actualDaysInPeriod     = days(interest period FromDate -> repayment period DueDate)   // :1367-1368
+//	calculatedDaysInPeriod = days(repayment period FromDate -> repayment period DueDate)  // :1369-1370
+//	rateFactorTillPeriodDueDate =
+//	    setScale( (rate * 30 * RepaymentEvery / 360)
+//	              * actualDaysInPeriod / calculatedDaysInPeriod, RateFactorScale )        // :1961-1962
+//
+// so the ratio is 1 ONLY when the interest period opens on the enclosing
+// repayment period's FromDate — rows 1 and 2 of the segmentation table above,
+// and every shape the corpus samples. On ROW 3, the strictly-inside case, IT IS
+// STRICTLY LESS THAN 1 on the segment carrying the balance. The same denominator
+// applies to the interest period's own rateFactor (:639-640 -> :1500-1503),
+// which the growth factor sums (see Rounding).
+//
+// Re-derived, NOT OBSERVED — MNT 1,200,000 / 6 x 21.6%, schedule start
+// 2024-01-01, single disbursement 2024-01-15. Repayment period 1 is
+// [2024-01-01, 2024-02-01], 31 days, splitting into [01-01, 01-15] (zero
+// balance) and [01-15, 02-01] (carrying MNT 1,200,000):
+//
+//	this rule (17/31):        segment rate factor 0.0098709677419354839,
+//	                          period-1 interest 11,845.16, level 211,087.95,
+//	                          final 211,088.97, total interest 66,528.72
+//	the deleted ratio-1 form: segment rate factor 0.0180000000000000000,
+//	                          period-1 interest 21,600.00, level 212,786.91,
+//	                          final 212,789.26, total interest 76,723.81
+//
+// — a full month's interest charged on a 17-day exposure. Re-review T32
+// re-derived that the two readings diverge on 2,913 of 2,913 (100%)
+// strictly-inside-a-period in-graded-domain shapes, worst total-interest gap MNT
+// 1,816,050.11. EVERY FIGURE HERE IS A RE-DERIVATION FROM THE PINNED CHECKOUT,
+// recorded as a candidate shape to capture (DEC-1 section 8 item 3d), and NONE
+// may be promoted to the vector store.
 //
 // Then, with InterestMethodDecliningBalance (InterestPeriod.java:145-158):
 //
@@ -1388,8 +1525,16 @@ const (
 //     PrincipalMinor) (:389-403, the clamp at :399). That clamp is why
 //     OutstandingPrincipalMinor is carried rather than derived.
 //  5. THE FINAL PERIOD'S INSTALLMENT IS THEN ADJUSTED BY THE RESIDUAL and its
-//     principal recomputed from step 3. The order is: split every row, then
-//     absorb the residual — never the reverse.
+//     SPLIT RECOMPUTED FROM STEPS 2-4. The order is: split every row, then
+//     absorb the residual — never the reverse. (Revision 6, P2-T32-1: revision 5
+//     said "its principal recomputed from step 3", which understates the
+//     recomputation. getDueInterest is memoised on the period's emi
+//     (RepaymentPeriod.java:272-286), so a residual that moved the installment
+//     re-evaluates the CAP at step 2 as well, and the roll-forward at step 4
+//     with it. T32 measured that the cap never actually bites on the final row
+//     over 1,500 in-graded-domain schedules — a re-derivation, not an
+//     observation — so this is editorial precision, not a money change; a port
+//     that recomputes only the principal is nonetheless under-specified.)
 //
 // EXACT ARITHMETIC, NEVER A FLOAT. B is an int64 count of minor units rendered
 // as an exact decimal; rateFactorTillPeriodDueDate is an exact decimal of at
@@ -1403,12 +1548,21 @@ const (
 // a money path is a non-negotiable rejection, and here it would additionally
 // destroy the very non-cancellation this section exists to specify.
 //
-// SPECIFIED BUT UNGRADED, in two places. No committed observation separates the
-// three-operation form from the textbook one (DEC-1 section 8 item 3b), and no
-// committed observation covers a disbursement dated STRICTLY INSIDE a repayment
-// period — the only in-graded-domain shape that produces two interest periods in
-// one repayment period (DEC-1 section 8 item 3c). Both are specified from source
-// and ungraded, on the same terms as the loop above.
+// SPECIFIED BUT UNGRADED, in three places:
+//
+//   - the DAY-COUNT PRORATION above. No committed observation places a
+//     disbursement anywhere but on a repayment-period boundary, so on all
+//     thirteen the ratio is 1 either way and the corpus cannot separate this
+//     rule from the reading revision 6 deletes. DEC-1 section 8 item 3d.
+//   - the STRICTLY-INSIDE-A-PERIOD SEGMENTATION (row 3), the only
+//     in-graded-domain shape that gives one repayment period two interest
+//     periods. The same capture settles it. DEC-1 section 8 item 3d.
+//   - the THREE-OPERATION ROUND-TRIP against the textbook balance * rateFactor.
+//     DEC-1 section 8 item 3b.
+//
+// All three are specified from source and ungraded, on the same terms as the
+// loop above: until 3b and 3d land, no conformance PASS for loanschedule may be
+// read as evidence that a port implements this section.
 type Period struct {
 	// Kind discriminates this row. See PeriodKind.
 	Kind PeriodKind
@@ -1480,6 +1634,22 @@ type Period struct {
 	// per-period amortization invariant is checked without summing the whole
 	// schedule. It is observably 0 on a repayment row that falls entirely
 	// before the disbursement.
+	//
+	// "After this row is applied" is defined for EVERY kind of row, not only
+	// repayment rows (revision 6, P1-T32-2 — revision 5 left the other two
+	// unstated):
+	//
+	//	PeriodKindRepayment     max(0, balance carried in + amounts disbursed in
+	//	                        this period - PrincipalMinor)
+	//	                        (RepaymentPeriod.java:389-403, clamp at :399)
+	//	PeriodKindDisbursement  the amount advanced, == this row's PrincipalMinor
+	//	                        (LoanSchedulePlan.java:52-56)          [GRADED]
+	//	PeriodKindDownPayment   balance before the disbursement + amount disbursed
+	//	                        - down payment taken
+	//	                        (ProgressiveLoanScheduleGenerator.java:340-343)
+	//	                                                             [UNGRADED]
+	//
+	// See the PeriodKind constants for the full citation of each.
 	OutstandingPrincipalMinor int64
 }
 
