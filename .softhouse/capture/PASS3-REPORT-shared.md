@@ -3,11 +3,22 @@
 **Fire:** local `20260818-152328` (Buyan's Mac), 2026-08-18
 **Executed by:** the orchestrator (vector capture touches the oracle, so it is orchestrator-only)
 **Status:** RAW OBSERVED, **INDEPENDENTLY AUDITED by T21 (2026-08-18) — ACCEPTED WITH REQUIRED CHANGES**;
-the audit's oracle-independent corrections are applied in this document (see the CORRECTED banners below), and
-**three P0 admissibility items remain open** (T21 §10 P0-2 attestation block, P0-3 the three missing per-period
-columns, P0-4 the executable run recipe — all three need a live oracle). The T21 audit was itself re-checked by
-T27 (2026-08-18), which machine-verified every corrected number against the committed oracle transcript.
+the audit's oracle-independent corrections are applied in this document (see the CORRECTED banners below).
+The T21 audit was itself re-checked by T27 (2026-08-18), which machine-verified every corrected number
+against the committed oracle transcript.
 **No vector promoted to the store; no gate answered.**
+
+> **SUPERSEDED FOR ADMISSIBILITY PURPOSES BY PASS 3b — `PASS3B-REPORT.md` (T35, 2026-08-18).**
+> The three P0 admissibility items this document used to list as open — T21 §10 **P0-2** (attestation
+> block), **P0-3** (the missing `periodFromDate` / `feeAmount` / `penaltyAmount` columns and the plan
+> totals), **P0-4** (the executable run recipe) — plus **P1-9** (`toPlainString()`, stack frames on the
+> error branch) are **CLOSED**, against a live run of the pinned image on a local oracle-reaching fire.
+> Pass 3b re-runs the SAME twelve cases through the SAME seam: **1560 of 1560 values pass 3 published are
+> byte-identical, 0 changed**, and `capture-prod-raw.json` itself reproduced byte for byte
+> (`sha256 11c5c74a…a732e2`) on that fire. **This document and its capture are unchanged and remain
+> valid**; the admissible-form artefacts are `out/capture-prod3b-raw.json` and its sidecar
+> `out/capture-prod3b-attestation.json`. **Still nothing is promoted** — see `PASS3B-REPORT.md` §6 for
+> what continues to block the eleven `(19, HALF_UP)` records.
 
 ## Why pass 3 exists
 
@@ -120,12 +131,14 @@ the rig from a third harness; confirm two harnesses agree at `(19, HALF_UP)`; su
 MNT-scale observations; and demonstrate all six property invariants hold on every capture.
 
 **Does not:** promote anything into the vector store. Pass 3 **has** since been independently audited — T21
-(2026-08-18) ACCEPTED WITH REQUIRED CHANGES, and T27 re-checked that audit's corrections — but three P0
-admissibility items are still open (T21 §10 P0-2/P0-3/P0-4: no environment-attestation block on
+(2026-08-18) ACCEPTED WITH REQUIRED CHANGES, and T27 re-checked that audit's corrections. The three P0
+admissibility items that used to be open here (T21 §10 P0-2/P0-3/P0-4: no environment-attestation block on
 `capture-prod-raw.json`, the per-period `periodFromDate`/`feeAmount`/`penaltyAmount` columns not emitted, no
-executable run recipe), and each needs a live oracle. Until they close, the eleven `(19, HALF_UP)` records are
-**audited observations, not admissible parity vectors**. (Pass 3 was captured while the audits of passes 1 and
-2 — T18, T19 — were still in flight.) It also inherits Path A's
+executable run recipe) were **closed by T35 in pass 3b** — see `PASS3B-REPORT.md`. Closing them did **not**
+promote anything: DEC-1 is at revision 6 and UNRATIFIED (gate G-1), and the seam's blind spots are unchanged,
+so the eleven `(19, HALF_UP)` records remain **attested observations, not promoted parity vectors**.
+(Pass 3 was captured while the audits of passes 1 and 2 — T18, T19 — were still in flight.) It also inherits
+Path A's
 proven blind spot untouched: `installmentAmountInMultiplesOf` is still dropped, and multi-disbursement is
 still unreachable. Buyan's answer to that (expose the field, specify server semantics, **refuse** with
 "unsupported: no discriminating vector" until a Path-B vector exists) stands unaffected by this pass.
