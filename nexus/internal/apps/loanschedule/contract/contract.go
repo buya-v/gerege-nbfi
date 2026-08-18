@@ -235,15 +235,37 @@ const (
 
 	// FrequencyYears steps by calendar years.
 	//
-	// The reference oracle CANNOT answer it on this path: its per-frequency
-	// rate-factor dispatch handles DAYS, WEEKS and MONTHS and throws
-	// UnsupportedOperationException for anything else
-	// (ProgressiveEMICalculator.java:1602-1610). It is retained in the value
-	// domain so that an annual product is expressible the day the oracle grows
-	// support, and because removing an enum member later is a narrowing.
-	// Until then it must be rejected with ErrUnsupportedConfiguration — not
-	// ErrNoDiscriminatingVector, because the problem is not a missing vector
-	// but a missing answer.
+	// The reference oracle throws ONLY on the fixed-30/360 arm — the revision-2
+	// claim that it "cannot answer it at all" was refuted by observation and is
+	// corrected here (P0-3). The day-count switch at
+	// ProgressiveEMICalculator.java:1533-1539 sends DAYS_30 (:1536) through
+	// calculateRateFactorPerPeriodBasedOnRepaymentFrequency, whose per-frequency
+	// switch (:1602-1610) handles DAYS, WEEKS and MONTHS and throws
+	// UnsupportedOperationException for anything else — so FrequencyYears under
+	// DayCountFixed30Over360 throws. The ACTUAL arm at :1534-1535 NEVER reaches
+	// that dispatch: it calls rateFactorByRepaymentPeriod directly, and
+	// DefaultScheduledDateGenerator.getRepaymentPeriodDate (:311-333) handles
+	// case YEARS with plusYears, so the schedule generates. Observed on the
+	// pinned oracle, MNT 1,200,000, 3 annual installments, 21.6%:
+	// DayCountFixed30Over360 throws "Invalid repayment frequency"; DayCountActualActual
+	// returns a complete schedule (loan term 1096 days, total interest 551,982.62).
+	//
+	// The refusal therefore depends on the day-count arm, and both arms still
+	// refuse, for the honest reason:
+	//
+	//   - with DayCountFixed30Over360 the oracle genuinely cannot be asked, so
+	//     reject with ErrUnsupportedConfiguration (a missing ANSWER);
+	//   - with DayCountActualActual the oracle answers, but DayCountActualActual
+	//     is itself outside the graded domain, so reject with
+	//     ErrNoDiscriminatingVector (a missing VECTOR), which wraps
+	//     ErrUnsupportedConfiguration.
+	//
+	// When a request is refusable for more than one reason, the sentinel is
+	// chosen by the precedence rule stated on the error variables below, so both
+	// implementations return the same one. FrequencyYears is retained in the
+	// value domain so that an annual product is expressible the day the graded
+	// domain reaches it, and because removing an enum member later is a
+	// narrowing.
 	FrequencyYears
 )
 
@@ -615,6 +637,21 @@ type Disbursement struct {
 //	DayCount                          == DayCountFixed30Over360
 //	DownPaymentPercentage             == Rate{0, 1}
 //	InstallmentRoundingMultipleMinor  == 0
+//	ScheduleStartDate <= Disbursements[0].Date < the last repayment DueDate
+//
+// The last predicate is SEMANTIC, not a static field comparison (added in
+// revision 3, P0-2). The last repayment due date is derived from
+// ScheduleStartDate, NumberOfRepayments, RepaymentEvery, the frequency and the
+// month-end rule (see Disbursement.Date) — all of which an implementation
+// already computes — so the predicate is checkable without asking the oracle. A
+// single disbursement dated BEFORE ScheduleStartDate, or ON OR AFTER the last
+// computed due date, is silently discarded by the reference oracle into an
+// all-zero schedule (no disbursement row, no amortized principal;
+// ProgressiveLoanScheduleGenerator.java:305-308 with isMultiDisburseLoan()
+// false). Rather than reproduce that degenerate answer, such a request is
+// OUTSIDE the graded domain and must be refused with ErrNoDiscriminatingVector,
+// matching the standing "refuse rather than guess" disposition. When
+// multi-tranche vectors later exist this window widens with no amendment.
 //
 // AnnualNominalInterestRate, the principal, the dates and NumberOfRepayments
 // are continuous or unbounded inputs; a corpus cannot enumerate them, so they
@@ -869,14 +906,14 @@ type GenerateRequest struct {
 	//     not from the threaded one (the two-argument
 	//     Money.roundToMultiplesOf at Money.java:159-161), which is why
 	//     Rounding.Mode carries the adapter obligation it does.
-	//   - An EMI re-adjust loop runs afterwards
-	//     (ProgressiveEMICalculator.java:1258-1308, at most three iterations,
-	//     gated on EmiAdjustment.shouldBeAdjusted at EmiAdjustment.java:31-36).
-	//     It re-rounds an adjusted installment and adopts it if that shrinks the
-	//     gap between the last and penultimate installments, and it CAN absorb a
+	//   - The EMI re-adjust smoothing loop also runs afterwards
+	//     (ProgressiveEMICalculator.java:1258-1308) and CAN absorb a
 	//     multiple-rounding difference entirely — observed converging two
-	//     different rounding modes to one identical schedule. An implementation
-	//     that implements the rounding but not the loop will diverge.
+	//     different rounding modes to one identical schedule. But that loop is
+	//     NOT specific to installment rounding: it fires on every ordinary
+	//     generation and its guard has no dependence on this field. It is a
+	//     Go-module obligation in its own right, specified normatively on Period,
+	//     NOT here — do not read it as conditional on a non-zero multiple.
 	//
 	// # Representable domain
 	//
@@ -943,6 +980,52 @@ const (
 // an implementation be simultaneously right about the split and wrong about the
 // sum, and because a derived total's meaning changes silently the moment
 // charges are introduced.
+//
+// # EMI re-adjust smoothing loop (normative, and an obligation on the Go module)
+//
+// The per-period PrincipalMinor/InterestMinor split depends on the level
+// installment, and the level installment is produced by TWO steps that a port
+// must both reproduce: the recurrence that yields the raw installment (see
+// Rounding), and then a smoothing loop that adjusts it. The loop
+// checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods
+// (ProgressiveEMICalculator.java:1258-1308, at most three iterations) runs on
+// EVERY ordinary generation — it is called at ProgressiveEMICalculator.java:749
+// gated on onlyOnActualModelShouldApply, true whenever the schedule model is
+// empty, i.e. on the initial disbursement of every loan. It is NOT specific to
+// installment rounding and it fires INSIDE the graded domain.
+//
+// Whether it changes the schedule is decided by its guard
+// EmiAdjustment.shouldBeAdjusted (EmiAdjustment.java:31-36), which compares
+// |lastEMI - penultimateEMI| * 100 against a Money whose amount is floor(n/2)
+// currency units (3.00 for a 6-period loan, 18.00 for 36). Money.copy(double)
+// (Money.java:220-222) REPLACES the amount rather than scaling it, so the
+// threshold is floor(n/2) units flat and the guard has NO dependence on
+// InstallmentRoundingMultipleMinor: it fires whenever the final-period residual
+// exceeds floor(n/2)/100 of a currency unit, installment rounding or none.
+//
+// This moves money on ordinary loans. Observed on the pinned oracle at
+// (19, HALF_UP), strictly inside the graded domain (single disbursement on the
+// schedule start, RepaymentEvery 1, MONTHS, declining balance, 30/360, no down
+// payment, no installment rounding, MNT 2 decimals):
+//
+//	MNT 1,014,632 / 6 * 7.0%:  oracle level installment 172,574.64;
+//	                           no-loop model 172,574.63 (every period shifts).
+//	MNT 127,704 / 36 * 16.8%:  oracle total interest 35,746.56;
+//	                           no-loop model 35,746.69.
+//
+// None of the twelve Run-1 captures trips this guard, so the corpus cannot
+// catch a port that omits the loop — the exact "passes its corpus and is wrong"
+// failure this contract exists to prevent. Reproducing the loop is therefore a
+// conformance obligation, not backlog.
+//
+// EXACT-INTEGER ARITHMETIC, NEVER A FLOAT. Math.floor(n/2.0) and the
+// BigDecimal.valueOf(double) inside Money.copy(double) operate on values that
+// are always exact small integers (floor(n/2) and 0.0). A Go port reproduces
+// the guard with integer arithmetic — n/2 in int, compared as
+// |lastEMI - penultimateEMI| * 100 > floor(n/2) * 10^MinorUnitDigits in int64
+// minor units. The doubles in the Java source are an artefact of the reference
+// implementation and MUST NOT be reproduced as float32/float64 here; a float on
+// a money path is a non-negotiable rejection.
 type Period struct {
 	// Kind discriminates this row. See PeriodKind.
 	Kind PeriodKind
@@ -1028,9 +1111,20 @@ type Schedule struct {
 	//   - a PeriodKindRepayment row's key is its own DueDate;
 	//   - a PeriodKindDisbursement or PeriodKindDownPayment row's key is the
 	//     DueDate of the repayment period whose HALF-OPEN window
-	//     [FromDate, DueDate) contains that row's date; if the row's date is on
-	//     or after the last repayment period's DueDate, its key sorts after
-	//     every repayment row.
+	//     [FromDate, DueDate) contains that row's date.
+	//
+	// Revision 2 carried a third clause here — "if the row's date is on or after
+	// the last repayment period's DueDate, its key sorts after every repayment
+	// row". That clause is DELETED in revision 3 (P0-2): it described a
+	// disbursement row this seam never emits. A single disbursement dated on or
+	// after the last repayment DueDate, or before ScheduleStartDate, is silently
+	// discarded by the reference oracle into an all-zero schedule with no
+	// disbursement row (ProgressiveLoanScheduleGenerator.java:305-308, the
+	// after-maturity arm being gated on isMultiDisburseLoan() == false on this
+	// seam). Such a disbursement is therefore OUTSIDE the graded domain and
+	// refused with ErrNoDiscriminatingVector (see GenerateRequest), so the
+	// ordering rule never has to key a row in that position. Every disbursement
+	// this rule orders falls within some repayment period's half-open window.
 	//
 	// Rows are ordered by ascending window key; ties are broken by Kind, with
 	// PeriodKindDisbursement before PeriodKindDownPayment before
@@ -1104,6 +1198,32 @@ type ScheduleGenerator interface {
 //
 // The taxonomy is three-valued and no finer: is the request well formed, can it
 // be answered at all, and has anyone ever checked the answer.
+//
+// # Error precedence (normative, added in revision 3 — P0-3)
+//
+// A single request can be refusable for more than one reason — for example
+// FrequencyYears on the fixed-30/360 arm (ErrUnsupportedConfiguration) together
+// with RoundingHalfEven (outside the graded domain, ErrNoDiscriminatingVector).
+// Without a precedence rule, two conforming implementations could return
+// DIFFERENT sentinels for the identical request, violating the equal-rejection
+// requirement above: a request one refuses as unsupported and the other as
+// ungraded is indistinguishable from a conformance failure. An implementation
+// MUST evaluate refusal reasons in this order and return the FIRST applicable
+// sentinel, strongest obstruction first:
+//
+//  1. ErrInvalidRequest      — not well formed. Nothing downstream is
+//     meaningful on a malformed request, so this always wins.
+//  2. ErrUnsupportedConfiguration — well formed, but this contract does not
+//     admit it or the oracle cannot be asked at all. Wins over
+//     ErrNoDiscriminatingVector because "cannot be answered" is a stronger and
+//     more permanent statement than "answerable but not yet graded", and
+//     because ErrNoDiscriminatingVector wraps this one — collapsing to the
+//     stronger claim is consistent with the wrapping.
+//  3. ErrNoDiscriminatingVector — well formed and computable, but outside the
+//     graded domain.
+//
+// So the two-reason example above returns ErrUnsupportedConfiguration,
+// deterministically, from both implementations.
 var (
 	// ErrInvalidRequest reports a request that is not well formed: a zero or
 	// out-of-range enum, a non-canonical or non-positive-denominator Rate, an
@@ -1114,7 +1234,9 @@ var (
 	// ErrUnsupportedConfiguration reports a well-formed request this contract
 	// does not admit, or that the reference oracle cannot be asked at all:
 	// an interest method other than declining balance; a Disbursements slice
-	// whose length is not one; FrequencyYears, which the oracle throws on;
+	// whose length is not one; FrequencyYears on the fixed-30/360 arm, which the
+	// oracle throws on (on the ACTUAL arm the oracle answers but the request is
+	// ungraded — see FrequencyYears and the precedence rule above);
 	// a Rounding whose RateFactorScale differs from its SignificantDigits;
 	// a Rate whose reduced denominator is not a product of 2s and 5s; an
 	// InstallmentRoundingMultipleMinor that is not a whole number of major
