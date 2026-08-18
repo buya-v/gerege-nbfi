@@ -26,7 +26,11 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 PATHB = os.path.normpath(os.path.join(HERE, '..'))
 TENANT = sys.argv[1] if len(sys.argv) > 1 else 'gerege'
-OUT = os.path.join(HERE, 'out', 'recapture-%s' % TENANT)
+# Which capture set to attest.  'pathb' = the four committed B-0x sets (T22 P0-6 re-capture);
+# 'emiloop' = the T36 EMI re-adjust-loop probes (T22 P1-11, second clause).
+CAPTURE_SET = sys.argv[2] if len(sys.argv) > 2 else 'pathb'
+OUT = os.path.join(HERE, 'out',
+                   'recapture-%s' % TENANT if CAPTURE_SET == 'pathb' else CAPTURE_SET)
 FIN, DB = 'fineract-fineract-1', 'fineract-db-1'
 BASE = 'https://localhost:8443/fineract-provider'
 
@@ -38,12 +42,19 @@ WANT_PRECISION = 19                # MoneyHelper.PRECISION
 ROUNDING_ORDINALS = {0: 'UP', 1: 'DOWN', 2: 'CEILING', 3: 'FLOOR',
                      4: 'HALF_UP', 5: 'HALF_DOWN', 6: 'HALF_EVEN'}
 
-CAPTURES = [
-    ('B-01', 'baseline',            'calc-B-01-baseline.json',           'B-01-baseline-raw.json'),
-    ('B-02', 'multiplesOf 100',     'calc-B-02-multiplesof100.json',     'B-02-multiplesof100-raw.json'),
-    ('B-03', 'DIYCS FULL_LEAP_YEAR','calc-B-03-diycs-fullleapyear.json', 'B-03-diycs-fullleapyear-raw.json'),
-    ('B-04', 'DIYCS FEB_29_PERIOD_ONLY', 'calc-B-04-diycs-feb29only.json','B-04-diycs-feb29only-raw.json'),
+PATHB_CAPTURES = [
+    ('B-01', 'baseline',            'req', 'calc-B-01-baseline.json',           'B-01-baseline-raw.json'),
+    ('B-02', 'multiplesOf 100',     'req', 'calc-B-02-multiplesof100.json',     'B-02-multiplesof100-raw.json'),
+    ('B-03', 'DIYCS FULL_LEAP_YEAR','req', 'calc-B-03-diycs-fullleapyear.json', 'B-03-diycs-fullleapyear-raw.json'),
+    ('B-04', 'DIYCS FEB_29_PERIOD_ONLY', 'req', 'calc-B-04-diycs-feb29only.json','B-04-diycs-feb29only-raw.json'),
 ]
+# T22 P1-11 second clause: principals selected so the EMI re-adjust loop's entry condition
+# |emiDifference| * 100 > Money(floor(n/2)) is crossed (n = 12 -> 6.00).
+EMILOOP_PRINCIPALS = [1200000, 1200001, 1200004, 1200027, 1200033, 1200039, 1200045, 1200054, 1200189]
+EMILOOP_CAPTURES = [('EL-%d' % p, 'EMI re-adjust-loop probe, principal %d MNT' % p,
+                     't36/req-emiloop', 'calc-emiloop-%d.json' % p, 'emiloop-%d-raw.json' % p)
+                    for p in EMILOOP_PRINCIPALS]
+CAPTURES = PATHB_CAPTURES if CAPTURE_SET == 'pathb' else EMILOOP_CAPTURES
 
 notes = []
 
@@ -204,15 +215,15 @@ for pid in (1, 2, 3, 4):
 
 # ------------------------------------------------------------------- the captures
 committed_digests = {}
-for cid, _l, _rq, resp in CAPTURES:
+for cid, _l, _rd, _rq, resp in CAPTURES:
     p = os.path.join(PATHB, 'out', resp)
     if os.path.exists(p):
         with open(p, 'rb') as fh:
             committed_digests[cid] = sha256(fh.read())
 
 captures = []
-for cid, label, reqname, respname in CAPTURES:
-    reqpath = os.path.join(PATHB, 'req', reqname)
+for cid, label, reqdir, reqname, respname in CAPTURES:
+    reqpath = os.path.join(PATHB, reqdir, reqname)
     with open(reqpath, 'rb') as fh:
         reqbytes = fh.read()
     resppath = os.path.join(OUT, respname)
@@ -232,13 +243,16 @@ for cid, label, reqname, respname in CAPTURES:
         'id': cid, 'label': label,
         'endpoint': 'POST /loans?command=calculateLoanSchedule',
         'http_status': int(code),
-        'request_file': 'req/%s' % reqname, 'request_sha256': sha256(reqbytes),
+        'request_file': '%s/%s' % (reqdir, reqname), 'request_sha256': sha256(reqbytes),
         'request_bytes': len(reqbytes),
         'response_file': os.path.relpath(resppath, PATHB), 'response_sha256': rsha,
         'response_bytes': len(respbytes),
         'captured_at_utc': started,
         'committed_corpus_sha256': committed_digests.get(cid),
-        'matches_committed_corpus_bytes': committed_digests.get(cid) == rsha,
+        # None, not False, when there is no committed counterpart — absence of a prior
+        # capture is not a mismatch, and must not read as one.
+        'matches_committed_corpus_bytes': (None if committed_digests.get(cid) is None
+                                           else committed_digests[cid] == rsha),
     })
 
 att = {
@@ -247,7 +261,7 @@ att = {
                'vector store; DEC-1 is at revision 6 and UNRATIFIED (gate G-1).',
     '_closes': ['T22 P0-3 (attestation sidecar)', 'T22 P0-4 (fail-the-run preconditions)',
                 'T22 P0-6 (production-settings tenant re-capture)'],
-    'capture_set': 'pathb-B01..B04',
+    'capture_set': 'pathb-B01..B04' if CAPTURE_SET == 'pathb' else 'pathb-emiloop-probes',
     'capture_path': 'Path B — running Fineract server (REST + PostgreSQL)',
     'produced_by': {'task': 'T36', 'branch': 'softhouse/T36-pathb-admissibility',
                     'generated_at_utc': now(),
