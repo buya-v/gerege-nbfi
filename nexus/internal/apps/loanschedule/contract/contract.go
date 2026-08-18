@@ -1,33 +1,79 @@
 // Package contract defines the frozen adapter contract for the loan-schedule
 // bounded context: the single question "generate a repayment schedule", asked
-// in a form that either the Fineract JVM reference oracle or the Go native
-// module can answer identically.
+// in a form that either the Fineract reference oracle or the Go native module
+// can answer identically.
 //
-// This package is ratified by ADR DEC-1
+// This package is specified by ADR DEC-1
 // (docs/adr/DEC-1-schedule-generator-adapter.md). It is the strangler boundary
-// for the loan-schedule context of the Fineract -> Go migration.
+// for the loan-schedule context of the Fineract -> Go migration. The doc
+// comments in this file ARE the specification: where a behaviour is stated
+// here, an implementation that does something else is wrong, whatever any
+// prose elsewhere says.
+//
+// "The reference oracle" in this package always means the Fineract reference
+// implementation at pinned commit 426a23544e8426a38ae43ae404670a0a7e85b9eb,
+// which this program grades Go output against. It never means Oracle Database,
+// which is a prohibited product in this program.
 //
 // # Amendment gate
 //
-// DEC-1 and this package are a `user` decision gate. No agent may add, remove,
-// rename, retype or re-document any identifier here. A change to this file is a
-// change to the frozen contract and requires human ratification, because every
-// captured golden vector is expressed in these types and a shape change
-// invalidates the conformance corpus.
+// Ratifying DEC-1 is a decision the driver may take on a clean independent
+// review (standing policy P-1..P-3, .softhouse/gates-proposed-answers.md).
+// Once DEC-1 is RATIFIED, amending it — adding, removing, renaming, retyping
+// or re-documenting any identifier in this package, or changing any behaviour
+// the doc comments below specify — requires raising a gate. It is not an
+// agent's call, because every captured golden vector is expressed in these
+// types and a shape change invalidates the conformance corpus.
+//
+// Widening the GRADED DOMAIN (see below) is not an amendment. It is behaviour,
+// not shape: no type changes, no vector's field set moves, and no ratified
+// sentence is contradicted.
+//
+// # The two domains, and why there are two
+//
+// This contract distinguishes:
+//
+//   - The CONTRACT DOMAIN — every value these types admit as well formed. It
+//     is frozen by ratification.
+//   - The GRADED DOMAIN — the strict subset of the contract domain for which a
+//     capture from the reference oracle exists that can actually tell a correct
+//     implementation from an incorrect one. It is listed on GenerateRequest and
+//     it grows as vectors land.
+//
+// A value inside the contract domain but outside the graded domain must be
+// REFUSED with ErrNoDiscriminatingVector, never silently accepted and never
+// silently dropped. The failure mode this program exists to prevent is a port
+// that passes its corpus and is wrong; an explicit refusal converts a silent
+// wrong answer into a loud missing feature.
+//
+// This is not hypothetical. The capture seam the Run-1 corpus is taken through
+// accepts a 19-component input record and honours 17 of them: it never reads
+// installmentAmountInMultiplesOf (the field exists at
+// LoanApplicationTerms.java:217, but its Builder has no setter for it and
+// assembleFrom builds exclusively through the Builder,
+// LoanApplicationTerms.java:579-607), and it never copies daysInYearCustomStrategy
+// out of its Builder (set at LoanApplicationTerms.java:604, stored by the
+// Builder at :380/:567-568, and absent from the private Builder copy
+// constructor at :304-351, whose only sibling assignment is in a positional
+// constructor at :881). For both fields that seam has ZERO discriminating
+// power: an implementation honouring them and one ignoring them score
+// identically. Both facts were re-confirmed differentially and reflectively at
+// the production MathContext (19, HALF_UP).
 //
 // # Invariants this package enforces by construction
 //
 //   - All monetary quantities are int64 counts of the currency's minor unit.
 //     There is no float32, float64, big.Float, decimal string or float-backed
-//     decimal type in this package, and none is implied by any field.
+//     decimal type in this package, and none is implied by any field —
+//     including for intermediate calculation.
 //   - All rates are exact integer rationals. There is no percentage-shaped
 //     float and no lossy basis-point truncation.
 //   - All dates are civil dates (year/month/day) interpreted in one explicit
-//     IANA time zone carried by the request. There is no time.Time, no UTC
-//     offset, and no instant anywhere in this package.
-//   - The response's period list has a total, derivable order (see Schedule).
-//     No map, and therefore no map iteration, appears in the contract or its
-//     semantics.
+//     IANA time zone carried by the request. There is no time.Time, no fixed
+//     zone, no UTC offset and no instant anywhere in this package.
+//   - The response's period list has a total order derivable from the response
+//     itself (see Schedule). No map, and therefore no map iteration order,
+//     appears in the contract or its semantics.
 //   - No Fineract type, class, enum name or Java concept (Money, MathContext,
 //     BigDecimal, CurrencyData, DaysInMonthType, DaysInYearType,
 //     DaysInYearCustomStrategyType, PeriodFrequencyType,
@@ -39,34 +85,56 @@
 //     to know who the borrower is. Should a party ever be required, DEC-1
 //     mandates three name fields (ovog, patronymic, given name); first_name /
 //     last_name are prohibited.
+//   - No persistence, no ledger posting, no money movement. Generate is pure,
+//     so no Idempotency-Key is carried; that mandate is on money-movement
+//     requests.
 package contract
 
 import (
 	"context"
 	"errors"
+	"fmt"
 )
 
 // Currency identifies the unit in which every ...Minor field in a request or
 // response is denominated, and supplies the scale at which the generator
-// rounds a computed amount to a payable amount.
+// rounds a computed quantity into a payable amount.
 //
-// Only the two properties that change the arithmetic are carried. Display name,
+// Only the properties that change the arithmetic are carried. Display name,
 // symbol and label are presentation concerns and are deliberately absent.
 type Currency struct {
-	// Code is the ISO 4217 alpha-3 code, upper case. For Mongolian tugrik this
-	// is "MNT" (ISO 4217 numeric 496). It is carried so that an int64 minor-unit
-	// amount is never ambiguous and so a captured golden vector is
-	// self-describing; it is not itself an input to the arithmetic.
+	// Code is the ISO 4217 alpha-3 code, upper case. For the Mongolian tugrik
+	// this is "MNT" (ISO 4217 numeric 496, minor unit 2).
+	//
+	// It is carried so that an int64 minor-unit amount is never ambiguous and
+	// so a captured golden vector is self-describing. It is NOT an input to the
+	// arithmetic: the reference oracle's currency record reaches the
+	// calculation only through its decimal places and its inMultiplesOf
+	// (Money.java:40-53), never through its code, name or symbol.
+	//
+	// Normalisation, because it is observable in a captured vector: the
+	// reference oracle's shipped conformance fixture spells its currency code
+	// in lower case ("usd", EmbeddableProgressiveLoanScheduleGeneratorTest.java:47).
+	// This contract requires upper case, and an adapter MUST upper-case on the
+	// way in and MUST NOT let the oracle's spelling leak back out, so that two
+	// capture runs of the same loan are structurally equal.
 	Code string
 
-	// MinorUnitDigits is the ISO 4217 minor unit exponent: the number of decimal
-	// places at which a computed amount becomes a payable amount. MNT is 2, so
-	// 1,250,000.00 MNT is the int64 125000000.
+	// MinorUnitDigits is the ISO 4217 minor unit exponent: the number of
+	// decimal places at which a computed quantity becomes a payable amount.
+	// MNT is 2, so 1,250,000.00 MNT is the int64 125000000.
 	//
-	// This is the scale of the contract's currency-rounding layer (see
-	// Rounding). Storage is always 2 decimal places for MNT; presentation at 0
-	// decimal places with a postfix symbol is a UI concern outside this
-	// contract.
+	// This is the scale of the currency-rounding layer (see Rounding). Storage
+	// is 2 decimal places for MNT; the 0-decimal postfix presentation
+	// (1,250,000₮) is a UI concern outside this contract.
+	//
+	// It is a field rather than a constant because it is a genuine input to the
+	// oracle and because the shipped conformance fixtures are in USD. Graded
+	// domain: 2 only. No capture in the corpus varies it, and at 0 decimal
+	// places a second, entirely different rounding channel switches on inside
+	// the oracle (Money.java:48-51 applies the currency's own inMultiplesOf
+	// only when decimal places are 0) — a channel that was measured to move
+	// money and that this contract deliberately does not expose.
 	MinorUnitDigits int32
 }
 
@@ -93,6 +161,17 @@ type Currency struct {
 // exact for every rate the reference oracle can consume, and it is closed under
 // the divisions the generator performs on it, so no rounding decision is forced
 // at the boundary itself; rounding happens only where Rounding says it happens.
+// Rationals rather than a float: a float rate is prohibited on any money path,
+// and it would diverge from the oracle after enough compounding periods.
+//
+// One representable-domain limit, stated rather than hidden. The Fineract-JVM
+// adapter must render the rate as the decimal percentage the oracle's input
+// record expects, which the oracle then divides by 100 under its own rounding
+// policy (ProgressiveEMICalculator.java:1318-1320). A rate whose reduced
+// denominator has a prime factor other than 2 or 5 — Rate{1, 3} — has no exact
+// terminating decimal percentage and cannot be handed over without a rounding
+// decision the contract has not specified. Such a request must be rejected with
+// ErrUnsupportedConfiguration, never silently rounded.
 type Rate struct {
 	Numerator   int64
 	Denominator int64
@@ -104,39 +183,90 @@ type Rate struct {
 //
 // Deliberately not time.Time: a time.Time carries a location and an instant,
 // either of which can silently reintroduce a UTC offset or a midnight-boundary
-// bug. Mongolia observes no daylight saving time, so a civil day is unambiguous
-// once its zone is named.
+// bug. Deliberately not a formatted string: parsing is a second place to
+// disagree.
 //
 // The Go zero value CivilDate{} is invalid and must be rejected with
-// ErrInvalidRequest.
+// ErrInvalidRequest, as is any triple that is not a real calendar date.
 type CivilDate struct {
 	Year  int32 // e.g. 2026
 	Month int32 // 1..12
-	Day   int32 // 1..31, valid for Year and Month
+	Day   int32 // 1..31, and valid for Year and Month
 }
 
 // RepaymentFrequencyUnit is the calendar unit in which repayment periods are
-// stepped.
+// stepped, and it also selects which day-count expansion converts the annual
+// nominal rate into a per-period interest fraction.
 type RepaymentFrequencyUnit int32
 
 const (
 	// FrequencyUnspecified is the zero value and is never valid in a request.
 	FrequencyUnspecified RepaymentFrequencyUnit = iota
+
+	// FrequencyDays steps by calendar days.
+	//
+	// Computable by the reference oracle
+	// (ProgressiveEMICalculator.java:1603-1604, interest fraction
+	// RepaymentEvery / days-in-year), but no capture in the corpus uses it:
+	// every capture is monthly. Outside the graded domain — refuse with
+	// ErrNoDiscriminatingVector.
 	FrequencyDays
+
+	// FrequencyWeeks steps by calendar weeks.
+	//
+	// Computable by the reference oracle
+	// (ProgressiveEMICalculator.java:1605-1606, interest fraction
+	// 7 * RepaymentEvery / days-in-year), but no capture uses it. Outside the
+	// graded domain — refuse with ErrNoDiscriminatingVector.
+	//
+	// Note for whoever grades it later: weekly is the frequency at which the
+	// oracle's two internal rate-factor branches DISAGREE. Under a
+	// same-as-repayment-period interest configuration the weekly fraction is
+	// RepaymentEvery / 52 (ProgressiveEMICalculator.java:1517-1519); under a
+	// 30/360 day count it is 7 * RepaymentEvery / 360. Those are different
+	// numbers. Monthly is the frequency at which they coincide (see
+	// GenerateRequest.DayCount).
 	FrequencyWeeks
+
+	// FrequencyMonths steps by calendar months, with the month-end rule
+	// specified on Disbursement.Date. This is the only unit in the graded
+	// domain.
 	FrequencyMonths
+
+	// FrequencyYears steps by calendar years.
+	//
+	// The reference oracle CANNOT answer it on this path: its per-frequency
+	// rate-factor dispatch handles DAYS, WEEKS and MONTHS and throws
+	// UnsupportedOperationException for anything else
+	// (ProgressiveEMICalculator.java:1602-1610). It is retained in the value
+	// domain so that an annual product is expressible the day the oracle grows
+	// support, and because removing an enum member later is a narrowing.
+	// Until then it must be rejected with ErrUnsupportedConfiguration — not
+	// ErrNoDiscriminatingVector, because the problem is not a missing vector
+	// but a missing answer.
 	FrequencyYears
 )
 
 // DayCountConvention selects the market day-count convention used to convert
 // the annual nominal rate into a per-period interest fraction.
 //
-// This is one field, not a (days-in-month, days-in-year) pair. The pair form
-// admits combinations no product uses and no vector covers, and it is the shape
-// of the reference implementation rather than the shape of the question. Adding
-// a further named convention later widens this enum's value domain without
-// changing any struct, which is the cheapest form of contract evolution
+// This is one field, not the reference oracle's (days-in-month, days-in-year)
+// pair plus a leap-day override. The pair form admits combinations no product
+// uses and no vector covers, and it is the shape of the implementation rather
+// than the shape of the question. Adding a further named convention widens this
+// enum without changing any struct — the cheapest form of contract evolution
 // available.
+//
+// The mapping onto the reference oracle's enums is NORMATIVE, so that the
+// Fineract-JVM adapter is fully determined by this contract:
+//
+//	DayCountFixed30Over360 -> (DaysInMonthType.DAYS_30, DaysInYearType.DAYS_360)
+//	DayCountActualActual   -> (DaysInMonthType.ACTUAL,  DaysInYearType.ACTUAL)
+//
+// The pair is load-bearing: it selects between materially different arms of
+// ProgressiveEMICalculator.calculateRateFactorPerPeriod
+// (ProgressiveEMICalculator.java:1533-1539, and the cross-year partial-period
+// arm at :1505-1507 and :1526-1531 which only ACTUAL can reach).
 type DayCountConvention int32
 
 const (
@@ -145,24 +275,44 @@ const (
 
 	// DayCountFixed30Over360 treats every month as exactly 30 days and every
 	// year as exactly 360 days. The real calendar length of the month is
-	// irrelevant: February and January are treated identically, and a leap year
-	// changes nothing.
+	// irrelevant to the fraction: February and January are treated identically,
+	// and a leap year changes nothing.
 	//
 	// This is the fixed-30 / fixed-360 variant. It is NOT 30E/360 and NOT
-	// 30/360 US: no end-of-month day-shifting rule is applied. Real calendar
-	// days enter only as a proportional correction when an interest sub-period
-	// covers less than a whole repayment period; when the sub-period spans the
-	// whole repayment period that correction is exactly 1.
+	// 30/360 US: no end-of-month day-shifting rule is applied to the DAYS
+	// count. Real calendar days do enter, but only as the proportional
+	// correction actualDaysInPeriod / calculatedDaysInPeriod
+	// (ProgressiveEMICalculator.java:1500-1503, :1961-1962), which is exactly 1
+	// when the interest sub-period spans the whole repayment period — which is
+	// every period in the graded domain.
+	//
+	// This is the only convention in the graded domain. All twelve Run-1
+	// captures use it.
 	DayCountFixed30Over360
 
 	// DayCountActualActual uses the real length of each calendar year (365 or
 	// 366) and the real number of days elapsed. Where an interest sub-period
-	// crosses a calendar-year boundary, the fraction is accumulated per calendar
-	// year segment, each over that year's own length.
+	// crosses a calendar-year boundary, the reference oracle stops using the
+	// day-count fraction entirely and accumulates a per-calendar-year fraction
+	// instead (ProgressiveEMICalculator.java:1505-1507 selecting :1526-1531).
+	//
+	// Outside the graded domain — refuse with ErrNoDiscriminatingVector. No
+	// capture in the corpus exercises it, and the arm it selects is the one
+	// arm of the algorithm that no independent re-derivation has yet
+	// reproduced from source. A code path returning plausible numbers nobody
+	// has compared against the oracle is exactly the unverifiable promise this
+	// contract exists to prevent.
+	//
+	// Admitting it later is behaviour, not shape. It carries one consequence
+	// that IS shape, and that consequence is the reason it is named here: under
+	// an actual-days year the oracle's daysInYearCustomStrategy leap-day
+	// override stops being inert (see GenerateRequest, "pinned oracle inputs"),
+	// so admitting this convention requires either a new field or a new
+	// DayCountConvention member for the override — and that is an amendment.
 	DayCountActualActual
 )
 
-// InterestMethod selects how interest is derived from the balance.
+// InterestMethod selects how interest is derived from the outstanding balance.
 type InterestMethod int32
 
 const (
@@ -173,21 +323,22 @@ const (
 	// InterestMethodDecliningBalance computes each period's interest from the
 	// outstanding principal balance carried into that period.
 	//
-	// This is the only value currently legal. A request naming any other
-	// interest method must be rejected with ErrUnsupportedConfiguration. The
-	// field exists so that a response and its golden vector are self-describing
-	// about which method produced them, and so that admitting a further method
-	// later is a value-domain widening rather than a struct change.
+	// This is the only value currently legal; anything else must be rejected
+	// with ErrUnsupportedConfiguration. The field exists so that a response and
+	// its golden vector are self-describing about which method produced them,
+	// and so that admitting flat interest later is a value-domain widening
+	// rather than a struct change.
 	InterestMethodDecliningBalance
 )
 
-// RoundingMode is the tie-breaking rule applied by both rounding layers
+// RoundingMode is the tie-breaking rule applied by every rounding layer
 // described on Rounding.
 //
 // The value domain is deliberately narrow. Each admitted mode is a distinct
 // tie-breaking behaviour that both implementations must prove identical against
-// captured vectors, so a mode is admitted only when a product or a vector
-// requires it.
+// captured vectors, so a mode is admitted only when a product or a deployment
+// requires it. The remaining five Java rounding modes are not admitted; each
+// would be contract surface carrying an unproven claim.
 type RoundingMode int32
 
 const (
@@ -195,89 +346,370 @@ const (
 	RoundingModeUnspecified RoundingMode = iota
 
 	// RoundingHalfUp rounds to the nearest neighbour; a tie rounds away from
-	// zero.
+	// zero. This is Gerege's ratified tenant mode (Fineract RoundingMode
+	// ordinal 4) and the only mode in the graded domain: all twelve Run-1
+	// captures were taken at it.
 	RoundingHalfUp
 
-	// RoundingHalfEven rounds to the nearest neighbour; a tie rounds towards the
-	// even neighbour.
+	// RoundingHalfEven rounds to the nearest neighbour; a tie rounds towards
+	// the even neighbour.
+	//
+	// It is admitted because it is the reference oracle's own stock
+	// configuration default (a tenant seeded from FINERACT_CONFIG_ROUNDING_MODE
+	// with default ordinal 6), so a deployment that inherits that default must
+	// be expressible rather than unrepresentable. It is outside the graded
+	// domain — refuse with ErrNoDiscriminatingVector — because no capture in
+	// the corpus was taken at it.
+	//
+	// The mode is demonstrably live, so this is not a theoretical distinction:
+	// the same request put to two tenants of one running oracle differing only
+	// in rounding mode returned period-1 interest 20,925.05 under HALF_UP and
+	// 20,925.04 under HALF_EVEN on a principal of MNT 1,162,502.50, the tie
+	// being taken at Money.java:52.
 	RoundingHalfEven
 )
 
 // Rounding is the precision and rounding policy under which the schedule is
 // computed. It is an input to the arithmetic, not a deployment constant,
-// because it changes the answer: the same loan computed at 12 significant
-// digits and at 19 significant digits can differ by a minor unit, and a golden
-// vector is only meaningful if it records the policy it was captured under.
+// because it changes the answer, and a golden vector is only meaningful if it
+// records the policy it was captured under.
 //
-// The contract defines two rounding layers and exactly one mode shared by both:
+// # Why two integers and not one
+//
+// The reference oracle threads a single java.math.MathContext through the
+// calculation and consumes it in TWO INCOMPATIBLE SENSES:
+//
+//  1. as a count of SIGNIFICANT DECIMAL DIGITS, at every MathContext-qualified
+//     multiplication and division; and
+//  2. as a count of DECIMAL PLACES — a scale — applied once to the fully
+//     computed per-period rate factor.
+//
+// A single integer documented with a single sentence is exactly the ambiguity
+// that put a one-minor-unit error into the first draft of this contract, so the
+// two senses are two fields. They are constrained to be equal (see
+// RateFactorScale), which is why splitting them adds no configuration the
+// oracle cannot produce.
+//
+// # The three rounding layers, and one mode shared by all of them
 //
 //  1. Intermediate layer. Every dimensionless intermediate — the per-period
-//     interest fraction, its running product, the recurrence that yields the
-//     level installment, and the level installment before it becomes money — is
-//     carried as an exact decimal quantity that is rounded to
-//     IntermediatePrecisionDigits significant decimal digits under Mode after
-//     each multiplication and each division, in the order the reference oracle
-//     performs them. Intermediates are ratios, not money: they are never
-//     represented as int64 minor units.
+//     interest fraction, the running product of the per-period growth factors,
+//     the recurrence that yields the level installment, and the level
+//     installment before it becomes money — is carried as an exact decimal
+//     quantity that is rounded to SignificantDigits significant decimal digits
+//     under Mode after each multiplication and each division, in the order the
+//     reference oracle performs them. Intermediates are ratios, not money:
+//     they are never represented as int64 minor units, and never as a float.
 //
-//  2. Currency layer. A quantity becomes money exactly once, when it is scaled
-//     to Currency.MinorUnitDigits decimal places under the same Mode and
-//     recorded as an int64 count of minor units. Money is never re-rounded
-//     after that point.
+//  2. Rate-factor quantization. The per-period rate factor, and only it, is
+//     additionally quantized to RateFactorScale decimal places under Mode once
+//     it is fully computed and before it enters anything else.
 //
-// Expressing the policy this way replaces the reference oracle's Java
-// MathContext without importing it: the pair (significant digits, tie rule) is
-// the whole of what MathContext carries, while the ORDER of rounding operations
-// is fixed by the schedule algorithm itself and is a conformance obligation
-// proven by golden vectors, not a field.
+//  3. Currency layer. A quantity becomes money when it is scaled to
+//     Currency.MinorUnitDigits decimal places under Mode and recorded as an
+//     int64 count of minor units.
+//
+// Two facts about what is NOT rounded, both load-bearing:
+//
+//   - The addition 1 + rateFactor that forms each period's growth factor is
+//     EXACT. The reference oracle performs it with no MathContext at all
+//     (RepaymentPeriod.java:216-218), so the quantized rate factor's full width
+//     propagates unrounded into the recurrence.
+//   - The residual sums of the final-period adjustment (see Period) are
+//     accumulated at CURRENCY scale, not at SignificantDigits: each term is
+//     already money before it is added (ProgressiveEMICalculator.java:1190-1203).
+//
+// The ORDER of rounding operations is not a field. It is fixed by the algorithm,
+// it is a conformance obligation, and it is proven by golden vectors. A field
+// for it would be a licence to disagree.
 type Rounding struct {
-	// IntermediatePrecisionDigits is the number of significant decimal digits
-	// retained by the intermediate layer. It must be > 0. The reference oracle's
-	// hosted configuration uses 19; its shipped conformance test uses 12.
-	IntermediatePrecisionDigits int32
+	// SignificantDigits is the number of significant decimal digits retained
+	// after each multiplication and each division of a dimensionless
+	// intermediate. It must be > 0.
+	//
+	// Gerege's production value is 19, and it is not a choice:
+	// MoneyHelper.PRECISION is the compile-time constant 19
+	// (MoneyHelper.java:35) and getMathContext() returns
+	// new MathContext(19, tenantRoundingMode) (MoneyHelper.java:91-93), so only
+	// the mode is tenant-configurable. 19 is the only value in the graded
+	// domain.
+	//
+	// The reference oracle's shipped conformance test uses 12
+	// (EmbeddableProgressiveLoanScheduleGeneratorTest.java:44). A capture at 12
+	// is a rig calibration and can never be a parity vector, because production
+	// never runs at 12 — and the difference is not cosmetic. Observed on the
+	// pinned oracle, 18 monthly installments at 18.5% p.a. on principal
+	// 87,654,321 major units, HALF_UP:
+	//
+	//	SignificantDigits 12: period 5 principal 4,531,420.25, interest 1,082,346.53,
+	//	                      outstanding 65,674,840.83, total interest 13,393,481.05
+	//	SignificantDigits 19: period 5 principal 4,531,420.26, interest 1,082,346.52,
+	//	                      outstanding 65,674,840.82, total interest 13,393,481.04
+	//
+	// seventeen per-period divergences that never heal.
+	//
+	// There is NO principal size below which this is safe. The oracle's own
+	// 12-vs-19 pair diverges at a principal of 4.00 on a 36-period 16.8% shape
+	// and is identical at 50,000,000 on that same shape. Sensitivity is a
+	// rounding-boundary property of the (principal, term, rate) triple, not a
+	// magnitude property of the principal, and no implementation may shortcut
+	// on the basis of loan size.
+	SignificantDigits int32
 
-	// Mode is the tie-breaking rule for both layers. One mode, not two: the
-	// reference oracle derives its currency-scale tie rule from the same source
-	// as its intermediate tie rule, and two independently settable modes would
-	// admit combinations no deployment can produce.
+	// RateFactorScale is the number of DECIMAL PLACES to which the fully
+	// computed per-period rate factor is quantized under Mode, before it is
+	// used anywhere else. It must be > 0.
+	//
+	// The reference oracle performs this at ProgressiveEMICalculator.java:1959-1962
+	// (and, on the cross-year partial-period arm, at :1976-1979):
+	//
+	//	interestRate.multiply(interestFractionPerPeriod, mc)
+	//	            .multiply(actualDaysInPeriod, mc)
+	//	            .divide(calculatedDaysInPeriod, mc)
+	//	            .setScale(mc.getPrecision(), mc.getRoundingMode())
+	//
+	// The three mc-qualified operations are SignificantDigits; the trailing
+	// setScale is RateFactorScale. setScale takes a SCALE, not a precision, so
+	// one integer is being read in two senses.
+	//
+	// Because a rate factor is a small number (of order 0.005 to 0.02), a scale
+	// is strictly lossier than the same count of significant digits on this
+	// quantity — the leading zeros buy nothing — and the loss reaches a payable
+	// amount. Re-derived from source at SignificantDigits 12, HALF_UP, 7% p.a.,
+	// 30/360, a 31-day period: the mc-qualified operations alone yield
+	// 0.00583333333332 (14 decimal places, 12 significant digits); the trailing
+	// setScale then yields 0.005833333333, and 0.005833333333 is the value that
+	// must enter the recurrence. Without the quantization the six periods of
+	// that schedule carry three DIFFERENT rate factors tracking 31/29/30-day
+	// months; with it they collapse to one. The two readings are not a fixed
+	// offset apart, they have different shape.
+	//
+	// An implementation that applies only the significant-digit sense still
+	// passes the reference oracle's shipped conformance vector — the difference
+	// is absorbed by the currency layer on a 100.00 principal — and then
+	// misprices an ordinary loan.
+	//
+	// RateFactorScale MUST equal SignificantDigits. The oracle derives both
+	// from one integer, so a request in which they differ describes a
+	// configuration no deployment of the reference oracle can produce and must
+	// be rejected with ErrUnsupportedConfiguration. They are nonetheless two
+	// fields: one integer with two documented meanings is the defect this pair
+	// exists to make unrepeatable, and a captured vector must echo both so it
+	// can never be replayed under a policy it was not captured at.
+	RateFactorScale int32
+
+	// Mode is the tie-breaking rule for all three layers. One mode, not three.
+	//
+	// The reference oracle takes every tie rule from one of two places — the
+	// threaded MathContext where one is passed, and the tenant-global
+	// MathContext where one is not (Money.java:52; Money.java:102-104;
+	// Money.java:150-157; Money.java:159-161 and :163-170, whose return path
+	// goes through the two-argument Money.of and therefore reads the
+	// tenant-global context even though its own division used the threaded
+	// one). Independently settable modes would admit combinations no deployment
+	// can produce and would double the vector matrix.
+	//
+	// ADAPTER OBLIGATION, and it is wider than a single call site: the
+	// Fineract-JVM adapter MUST initialise the tenant rounding mode to Mode
+	// before EVERY call, because every path that constructs Money without an
+	// explicit MathContext reads the tenant-global one, and outside an
+	// initialised tenant those paths throw IllegalStateException
+	// (MoneyHelper.java:74-82).
+	//
+	// The tenant PRECISION cannot be pinned the same way — it is the
+	// compile-time constant 19 (MoneyHelper.java:35). Within the graded domain
+	// that is harmless, and the evidence is direct: the calibration capture ran
+	// with a threaded precision of 12 while the ambient tenant context was 19,
+	// and it reproduced the oracle's shipped conformance literal exactly, so no
+	// reached call site consulted the tenant-global PRECISION. An
+	// implementation must not assume that survives widening the graded domain.
 	Mode RoundingMode
 }
 
 // Disbursement is one advance of principal to the borrower.
 type Disbursement struct {
 	// Date is the civil date on which the principal is advanced.
+	//
+	// It is ALSO the seed of the month-end date rule, which is why the rule is
+	// specified here rather than on GenerateRequest.ScheduleStartDate.
+	//
+	// # Month-end rule (normative, monthly frequency only)
+	//
+	// Repayment due dates are produced in two steps:
+	//
+	//  1. Step: add RepaymentEvery calendar months to the previous boundary,
+	//     clamping the day to the target month's length (31 January + 1 month
+	//     = 28 or 29 February).
+	//  2. Re-anchor: if the frequency is monthly AND the SEED day-of-month is
+	//     greater than 28 AND the stepped date's day-of-month is at least 28,
+	//     set the day to min(days in the target month, seed day).
+	//
+	// The seed is THIS field — the disbursement date — not ScheduleStartDate
+	// (LoanApplicationTerms.java:583-589 selects the disbursement date as the
+	// seed; DefaultScheduledDateGenerator.java:128-131 passes it to the
+	// re-anchor at :168-176).
+	//
+	// The clamped day IS remembered, in the seed. A schedule seeded on 31
+	// January therefore returns to the 31st whenever the month is long enough.
+	// Observed on the pinned oracle, 6 monthly periods, seed and schedule start
+	// 2024-01-31:
+	//
+	//	2024-02-29, 2024-03-31, 2024-04-30, 2024-05-31, 2024-06-30, 2024-07-31
+	//	loan term 182 days
+	//
+	// and for seed 2024-01-30:
+	//
+	//	2024-02-29, 2024-03-30, 2024-04-30, 2024-05-30, 2024-06-30, 2024-07-30
+	//	loan term 182 days
+	//
+	// An implementation that merely clamps and forgets returns 2024-03-29 for
+	// the second period of the first schedule and a loan term of 180 days.
+	// Month-end disbursement is routine in retail lending; this is not an edge
+	// case. Graded by two captures (seed day 31 and seed day 30, both spanning
+	// a leap February).
 	Date CivilDate
 
 	// AmountMinor is the principal advanced, in minor units of
 	// GenerateRequest.Currency. It must be > 0.
+	//
+	// The reference oracle takes a decimal in MAJOR units; converting an
+	// integer count of minor units into that decimal is exact, and is the
+	// adapter's job. No float may exist at that conversion, in either
+	// direction, and no capture harness may route an amount through a
+	// floating-point type — the oracle's own Money class exposes double-typed
+	// overloads (Money.java:134-148) and its shipped test helper converts
+	// through doubleValue (EmbeddableProgressiveLoanScheduleGeneratorTest.java:120-122),
+	// both of which are traps for a harness author rather than parts of the
+	// calculation.
 	AmountMinor int64
 }
 
 // GenerateRequest is the complete input to schedule generation. Two
 // implementations given an equal GenerateRequest must return an equal Schedule.
 //
-// Every field changes the numeric output. Anything that a schedule can be
-// generated without — the borrower, the loan account, the product catalogue,
-// charges, taxes, ledger accounts, business dates, tenants — is absent by
-// design.
+// Every field changes the numeric output. Anything a schedule can be generated
+// without — the borrower, the loan account, the product catalogue, charges,
+// taxes, ledger accounts, business dates, tenants — is absent by design.
 //
 // The Go zero value of GenerateRequest is invalid: every enum has an
 // Unspecified zero value, every Rate requires a positive denominator, and every
 // CivilDate requires a real date. A request that was never populated therefore
 // fails loudly rather than defaulting to some implementation's idea of normal.
+//
+// # The graded domain
+//
+// A request is in the GRADED DOMAIN when all of the following hold. Outside it,
+// an implementation must return ErrNoDiscriminatingVector (or, where the
+// oracle cannot answer at all, ErrUnsupportedConfiguration) rather than a
+// number:
+//
+//	Currency.MinorUnitDigits          == 2
+//	Rounding.SignificantDigits        == 19
+//	Rounding.RateFactorScale          == 19
+//	Rounding.Mode                     == RoundingHalfUp
+//	len(Disbursements)                == 1
+//	NumberOfRepayments                >= 1
+//	RepaymentEvery                    == 1
+//	RepaymentFrequencyUnit            == FrequencyMonths
+//	InterestMethod                    == InterestMethodDecliningBalance
+//	DayCount                          == DayCountFixed30Over360
+//	DownPaymentPercentage             == Rate{0, 1}
+//	InstallmentRoundingMultipleMinor  == 0
+//
+// AnnualNominalInterestRate, the principal, the dates and NumberOfRepayments
+// are continuous or unbounded inputs; a corpus cannot enumerate them, so they
+// are graded by sampling rather than by enumeration. The Run-1 corpus samples
+// terms of 6, 12, 18 and 36 monthly installments; rates of 7.0%, 16.8%, 18.5%
+// and 21.6%; principals of 100, 1,200,000, 4,999,999, 5,000,000, 50,000,000 and
+// 87,654,321 major units in USD and MNT; schedule starts on the 1st, the 30th
+// and the 31st of a month; and one schedule whose disbursement falls on a later
+// repayment due date. No claim is made that any un-sampled value is safe — see
+// Rounding.SignificantDigits on why loan size in particular licenses nothing.
+//
+// # Pinned oracle inputs (normative, and an obligation on the Go module)
+//
+// The Fineract-JVM adapter must construct a 19-component input record. Six of
+// those components have no counterpart in this contract, and the Go module must
+// behave exactly as if these constants held:
+//
+//	allowFullTermForTranche               = false
+//	allowPartialPeriodInterestCalculation = true
+//	interestRecognitionOnDisbursementDate = false
+//	fixedLength                           = null
+//	daysInYearCustomStrategy              = null
+//	currency.inMultiplesOf                = null
+//	(and interestCalculationPeriodMethod is left unset, which the seam's
+//	 assembler never populates, LoanApplicationTerms.java:579-607)
+//
+// Each pin, with the reason it is safe — the reasons matter, because a future
+// reader will use them to decide whether a pin can be relaxed:
+//
+//   - allowFullTermForTranche = false is a REAL BEHAVIOURAL PIN, not a dead
+//     field. Its Builder setter is reached (LoanApplicationTerms.java:606, copied
+//     out at :348) and the guard that consumes it never consults multi-disbursement
+//     at all: isAllowFullTermForTranche() && numberOfRepayments > 0 &&
+//     action == DISBURSEMENT (ProgressiveEMICalculator.java:142-144). Setting it
+//     true on an ordinary single disbursement routes into a full re-amortization
+//     through a synthetic terms object and a temporary schedule model (:155-174).
+//     Fineract forbids the combination only at PRODUCT validation, a layer this
+//     entry point does not pass through. Graded: two captures differing only in
+//     this flag were taken at (19, HALF_UP) and are identical, so on this shape
+//     the alternative path coincides — which is a measurement, not a licence to
+//     ignore the flag.
+//   - allowPartialPeriodInterestCalculation = true is inert here, but NOT for
+//     the reason a reader might guess. Its only calculation-path uses
+//     (ProgressiveEMICalculator.java:130 and the interest-period variant) sit
+//     behind a guard that first requires interestCalculationPeriodMethod to be
+//     non-null and same-as-repayment-period (:128-130). That field has no
+//     initialiser and is never set by the seam's assembler, so it is null and
+//     the branch short-circuits.
+//   - interestRecognitionOnDisbursementDate = false shifts the year-end
+//     fraction boundary and is reachable only on the actual/actual arm, which is
+//     outside the graded domain.
+//   - fixedLength = null is a real pin: a non-null value overrides the final
+//     due date (DefaultScheduledDateGenerator.java:61-66, :108-111, :184-189).
+//   - daysInYearCustomStrategy = null is PROVABLY inert within the graded
+//     domain, twice over. Its only effect is to substitute a 365/366-day year
+//     for a period containing 29 February, and that substitution requires the
+//     year length to be 366 in the first place (ProgressiveEMICalculator.java:1346-1352);
+//     under a fixed 360-day year it never is. The oracle also rejects the field
+//     at product creation unless days-in-year is ACTUAL (LoanProduct.java:462-472).
+//     It is NOT inert in general — through a running server, at a daily interest
+//     calculation with an actual/actual year, FEB_29_PERIOD_ONLY moves all
+//     twelve periods of a one-year schedule — so it becomes a contract question
+//     the moment DayCountActualActual enters the graded domain, and not before.
+//     Note also that the seam this contract's corpus is captured through drops
+//     this field silently, so no Path-A capture could ever grade it.
+//   - currency.inMultiplesOf = null is inert because the oracle applies it only
+//     when the currency has zero decimal places (Money.java:48-51) and MNT has
+//     two. It was measured to move money at zero decimal places, which is a
+//     second reason Currency.MinorUnitDigits is pinned to 2 in the graded
+//     domain. It is a different thing from InstallmentRoundingMultipleMinor.
+//
+// Also absent, and never to be added here: borrower or party identity of any
+// kind, loan or account identifiers, product references, tenant identifiers,
+// business dates, charges, taxes, ledger accounts, and any notion of insurance,
+// protection or guarantee.
 type GenerateRequest struct {
 	// TimeZone is the IANA zone name in which every CivilDate in this request
 	// and in the resulting Schedule is interpreted as a calendar day, and in
 	// which the loan's due days are reckoned. Mongolia uses "Asia/Ulaanbaatar"
-	// (+08) and "Asia/Hovd" (+07), neither of which observes daylight saving
-	// time.
+	// (UTC+08) and "Asia/Hovd" (UTC+07), neither of which observes daylight
+	// saving time; Gerege operates in both.
 	//
 	// It must be an IANA zone name. A fixed offset ("+08:00", "UTC+8", "GMT+8")
-	// is invalid and must be rejected with ErrInvalidRequest. The generation
-	// arithmetic itself is zone-free civil-date arithmetic; the zone is carried
+	// is invalid and must be rejected with ErrInvalidRequest: an offset literal
+	// encodes a fact about a zone into a field that should name the zone.
+	//
+	// The generation arithmetic itself is zone-free civil-date arithmetic, and
+	// no capture can discriminate this field — deliberately so. It is carried
 	// so that no caller can smuggle an implicit offset across the boundary and
-	// so that downstream contexts inherit an explicit zone rather than guessing
-	// one.
+	// so that downstream contexts (aging, COB, delinquency) inherit an explicit
+	// zone rather than guessing one. Measured rather than assumed: the same
+	// four server-path captures were re-taken on a tenant whose zone was
+	// changed to Asia/Ulaanbaatar and came back byte-identical, because every
+	// date in them is an explicit civil date. That equivalence will NOT hold
+	// for any later operation that depends on "today".
 	TimeZone string
 
 	// Currency denominates every ...Minor field in this request and in the
@@ -289,52 +721,82 @@ type GenerateRequest struct {
 	Rounding Rounding
 
 	// ScheduleStartDate is the civil date from which repayment period
-	// boundaries are stepped. The first repayment period runs from this date;
-	// the nth period's due date is this date advanced by n * RepaymentEvery
-	// units of RepaymentFrequencyUnit.
+	// boundaries are stepped: the first repayment period runs from this date,
+	// and the nth period's due date is this date advanced by n * RepaymentEvery
+	// units of RepaymentFrequencyUnit, subject to the month-end rule specified
+	// on Disbursement.Date.
 	//
-	// It is a separate input from a disbursement date because the two can
-	// legitimately differ, and because collapsing them would make the boundary
-	// unable to express a loan whose repayments start on a date other than the
-	// advance.
+	// It is a separate input from Disbursement.Date, and the separation is real
+	// rather than decorative: the two reach different places in the reference
+	// oracle. This date becomes the schedule generation start
+	// (ProgressiveLoanScheduleGenerator.java:94-96 resolves the period start to
+	// it, since the seam never sets a repayment-start-date type), while the
+	// disbursement date becomes the month-end seed. It is also the anchor from
+	// which the loan's term in days is measured: the oracle measures term as
+	// the span from the FIRST period's from-date to the LAST period's due date,
+	// so a loan disbursed after its schedule starts still reports a term
+	// measured from the schedule start.
 	//
-	// Month-end stepping clamps: advancing 31 January by one month yields
-	// 28 February (29 February in a leap year), and advancing that result by a
-	// further month yields 28 March, not 31 March. The clamped day is not
-	// remembered. Both implementations must reproduce this exactly; it is
-	// covered by golden vectors.
+	// Graded: one capture separates them (schedule start 2024-01-01,
+	// disbursement 2024-02-01), and it reports a 182-day term measured from
+	// 2024-01-01 with a first repayment period that is entirely zero.
 	ScheduleStartDate CivilDate
 
 	// Disbursements are the advances of principal, ordered ascending by Date.
 	//
 	// This is a slice, not a scalar pair, although exactly one element is
 	// currently legal: a request carrying zero or more than one element must be
-	// rejected with ErrUnsupportedConfiguration. Multi-tranche disbursement is a
-	// known, already-implemented behaviour of the reference oracle that arrives
-	// with the loan lifecycle, and widening a cardinality is a value-domain
-	// change whereas turning a scalar into a list is a shape change that would
-	// invalidate every captured vector.
+	// rejected with ErrUnsupportedConfiguration. Multi-tranche disbursement is
+	// already-built oracle behaviour merely unreachable from this entry point
+	// (the seam's assembler hands it a fixed empty list at
+	// LoanApplicationTerms.java:600, and the generator then synthesises exactly
+	// one tranche from the expected disbursement date and the principal at
+	// ProgressiveLoanScheduleGenerator.java:285-292), and it arrives with the
+	// loan lifecycle. Widening a cardinality is a value-domain change; turning
+	// a scalar into a list later would be a shape change invalidating every
+	// captured vector.
 	Disbursements []Disbursement
 
 	// NumberOfRepayments is the count of repayment installments in the loan
-	// term. It must be >= 1. A down-payment period, if any, is not counted here.
+	// term. It must be >= 1. A down-payment period, if any, is not counted
+	// here.
 	NumberOfRepayments int32
 
 	// RepaymentEvery is the step multiplier: a repayment falls due every
 	// RepaymentEvery units of RepaymentFrequencyUnit. It must be >= 1. Monthly
 	// repayment is RepaymentEvery 1 with FrequencyMonths.
+	//
+	// Graded domain: 1. It is kept separate from the unit so that "every 2
+	// weeks" needs no new enum member, and it enters the interest fraction
+	// directly (ProgressiveEMICalculator.java:1956-1958), so a value other than
+	// 1 changes every period's interest and needs its own vector.
 	RepaymentEvery int32
 
 	// RepaymentFrequencyUnit is the calendar unit stepped by RepaymentEvery. It
-	// also determines which day-count expansion the interest fraction uses.
+	// also determines which day-count expansion the interest fraction uses. See
+	// RepaymentFrequencyUnit.
+	//
+	// The reference oracle takes this as a String and parses it by name — a
+	// stringly-typed input this contract refuses to inherit.
 	RepaymentFrequencyUnit RepaymentFrequencyUnit
 
 	// AnnualNominalInterestRate is the nominal annual rate as a dimensionless
 	// fraction: 24% per annum is Rate{24, 100}. It is nominal, not effective:
-	// the conversion to a per-period fraction is performed by DayCount, not by
-	// compounding this value.
+	// the conversion to a per-period fraction is performed by DayCount and
+	// RepaymentFrequencyUnit, not by compounding this value.
 	//
-	// Zero interest is Rate{0, 1} and is a supported, non-special-cased case.
+	// Explicitly a FRACTION, not the reference oracle's percentage-shaped
+	// decimal where 7.0 means 7% — that shape has produced a factor-of-100
+	// error in every system that has ever carried it. The oracle divides the
+	// percentage by 100 under its own rounding policy
+	// (ProgressiveEMICalculator.java:1318-1320); a Rate reaches that arithmetic
+	// with zero prior loss.
+	//
+	// Zero interest is Rate{0, 1} and is not special-cased by the algorithm:
+	// every rate factor is 0, every growth factor is exactly 1, the recurrence
+	// yields exactly the installment count, and the installment is the
+	// principal divided by that count. It is nonetheless outside the graded
+	// domain, because no capture exercises it.
 	AnnualNominalInterestRate Rate
 
 	// InterestMethod selects how interest is derived from the balance. See
@@ -342,36 +804,106 @@ type GenerateRequest struct {
 	InterestMethod InterestMethod
 
 	// DayCount selects the day-count convention converting
-	// AnnualNominalInterestRate into a per-period interest fraction.
+	// AnnualNominalInterestRate into a per-period interest fraction. See
+	// DayCountConvention.
+	//
+	// One consistency result worth recording, because it is what lets a capture
+	// taken through the embeddable seam and a capture taken through a running
+	// server grade the same contract: for MONTHLY repayment, and only for
+	// monthly, the oracle's 30/360 arm and its same-as-repayment-period arm
+	// compute the identical interest fraction — 30 * RepaymentEvery / 360 and
+	// RepaymentEvery / 12 are the same rational evaluated at the same
+	// precision (ProgressiveEMICalculator.java:1513-1515 versus :1536 through
+	// :1922-1927). Observed: a 12-period MNT 1,200,000 loan at 21.6% captured
+	// through the seam at 30/360 and through the server at
+	// same-as-repayment-period agrees on all twelve periods and all three
+	// totals to the minor unit. For WEEKLY repayment the two arms disagree
+	// (RepaymentEvery / 52 against 7 * RepaymentEvery / 360), which is one more
+	// reason FrequencyWeeks is outside the graded domain.
 	DayCount DayCountConvention
 
 	// DownPaymentPercentage is the fraction of the disbursed principal taken as
-	// a down payment on the disbursement date. Rate{0, 1} means no down
-	// payment and no down-payment period in the response; Rate{1, 10} means
-	// 10%. It must be < 1.
+	// a down payment on the disbursement date. Rate{0, 1} means no down payment
+	// and no down-payment period in the response; Rate{1, 10} means 10%. It
+	// must be >= 0 and < 1.
 	//
-	// A non-zero value adds a PeriodKindDownPayment period to the response and
-	// reduces the principal amortized across the repayment periods. It is a
-	// single field: a separate enabled/disabled boolean would admit the
-	// contradictory state "enabled with a zero percentage".
+	// A non-zero value adds a PeriodKindDownPayment row to the response and
+	// reduces the principal amortized across the repayment periods
+	// (ProgressiveLoanScheduleGenerator.java:331-351). It is a single field: the
+	// oracle carries both a boolean and a percentage, admitting the
+	// contradictory state "enabled at 0%", and its own shipped fixture derives
+	// the boolean from the percentage anyway.
+	//
+	// The request must be able to ask for a down payment because the response
+	// must be able to describe one; but a non-zero value is outside the graded
+	// domain — refuse with ErrNoDiscriminatingVector. Every capture in the
+	// Run-1 corpus has down payments disabled, so no vector has ever produced a
+	// PeriodKindDownPayment row, and the down-payment path additionally reaches
+	// a rounding call site this contract has pinned away (the multiple-rounding
+	// of the down payment at ProgressiveLoanScheduleGenerator.java:335-338).
 	DownPaymentPercentage Rate
 
 	// InstallmentRoundingMultipleMinor rounds the level installment (and the
-	// down payment, if any) to the nearest whole multiple of this many minor
-	// units, under Rounding.Mode. 0 means no such rounding. A Mongolian retail
-	// product rounding installments to whole 100 MNT sets this to 10000 (100.00
-	// MNT expressed in minor units).
+	// down payment, if any) to a whole multiple of this many minor units.
+	// 0 means no such rounding. A Mongolian retail product rounding
+	// installments to whole 100 ₮ sets this to 10000.
 	//
-	// Rounding is to the NEAREST multiple under Rounding.Mode, not always up and
-	// not always down. A positive installment is never rounded down to zero: if
-	// the multiple exceeds the installment, the unrounded installment stands.
+	// # Semantics (normative, and stated here because they are counter-intuitive)
 	//
-	// This field is a known parity hazard against the reference oracle, which
-	// sources the tie rule for the installment and for the down payment from two
-	// different places. The contract resolves that here: both use
-	// Rounding.Mode, and the reference-oracle adapter is responsible for
-	// configuring its tenant so that its two call sites agree with
-	// Rounding.Mode. See DEC-1.
+	//   - The installment is rounded to the NEAREST multiple under
+	//     Rounding.Mode. It is NOT raised to the next multiple and NOT floored.
+	//     The oracle divides by the multiple at scale 0 under the rounding mode
+	//     and multiplies back (Money.java:163-170, reached from
+	//     ProgressiveEMICalculator.java:1770-1776 via :1761-1766). Observed
+	//     rounding DOWN on a running oracle: principal MNT 1,190,000 with a
+	//     multiple of 100 major units takes an unrounded installment of
+	//     111,148.35 to an applied installment of 111,100.00.
+	//   - There is a ZERO GUARD: if rounding would take a positive installment
+	//     to zero, the UNROUNDED installment is used instead
+	//     (ProgressiveEMICalculator.java:1772-1774). So the rounding is not
+	//     unconditional.
+	//   - The rounded installment is the installment for every period except
+	//     the last, which absorbs the residual as usual (see Period). The last
+	//     period's total is therefore deliberately NOT a multiple.
+	//   - The tie rule for this rounding comes from the TENANT-GLOBAL context,
+	//     not from the threaded one (the two-argument
+	//     Money.roundToMultiplesOf at Money.java:159-161), which is why
+	//     Rounding.Mode carries the adapter obligation it does.
+	//   - An EMI re-adjust loop runs afterwards
+	//     (ProgressiveEMICalculator.java:1258-1308, at most three iterations,
+	//     gated on EmiAdjustment.shouldBeAdjusted at EmiAdjustment.java:31-36).
+	//     It re-rounds an adjusted installment and adopts it if that shrinks the
+	//     gap between the last and penultimate installments, and it CAN absorb a
+	//     multiple-rounding difference entirely — observed converging two
+	//     different rounding modes to one identical schedule. An implementation
+	//     that implements the rounding but not the loop will diverge.
+	//
+	// # Representable domain
+	//
+	// The oracle's counterpart is a whole number of MAJOR units, not minor
+	// units. So the value must be 0, or a positive exact multiple of
+	// 10^Currency.MinorUnitDigits; 5000 (50.00 ₮) and 1 (0.01 ₮) have no
+	// representation the adapter can render and must be rejected with
+	// ErrUnsupportedConfiguration rather than silently rounded or dropped.
+	//
+	// # Grading
+	//
+	// Outside the graded domain: a non-zero value must be refused with
+	// ErrNoDiscriminatingVector. Run-1 products launch without installment
+	// rounding. The seam this corpus is captured through DROPS this field
+	// silently — it has no Builder setter at all
+	// (LoanApplicationTerms.java:217, :579-607) — so no Path-A capture can ever
+	// grade it, and a port that honours it and a port that ignores it score
+	// identically. A running server does honour it (four server-path captures
+	// exist in which a multiple of 100 major units moves all twelve periods),
+	// and when those captures become admissible vectors this value can enter
+	// the graded domain with no contract amendment.
+	//
+	// The field stays in the contract regardless, for two reasons: rounding
+	// installments to whole 100 ₮ is an ordinary Mongolian product feature and
+	// a contract that cannot express it is wrong for this market; and it
+	// changes the value of every row, so it could never be layered on later
+	// without re-capturing every vector.
 	InstallmentRoundingMultipleMinor int64
 }
 
@@ -383,13 +915,17 @@ const (
 	PeriodKindUnspecified PeriodKind = iota
 
 	// PeriodKindDisbursement is an advance of principal to the borrower. Its
-	// FromDate and DueDate are both the disbursement date, its PrincipalMinor is
-	// the amount advanced, and its InterestMinor is 0.
+	// FromDate and DueDate are both the disbursement date, its PrincipalMinor
+	// is the amount advanced, its InterestMinor is 0, and its
+	// InstallmentNumber is 0 because it is not payable.
 	PeriodKindDisbursement
 
 	// PeriodKindDownPayment is the down payment taken on the disbursement date.
 	// Its FromDate and DueDate are both the disbursement date, its
 	// PrincipalMinor is the amount taken, and its InterestMinor is 0.
+	//
+	// No capture in the Run-1 corpus produces a row of this kind; see
+	// GenerateRequest.DownPaymentPercentage.
 	PeriodKindDownPayment
 
 	// PeriodKindRepayment is an ordinary scheduled installment.
@@ -398,63 +934,73 @@ const (
 
 // Period is one row of the generated schedule.
 //
-// Only the quantities that cannot be recomputed from the others are carried.
-// The total due for a period is PrincipalMinor + InterestMinor; the level
-// installment is that sum on any ordinary period; the remaining total
-// repayable is the sum over later periods; the loan term in days is the span
-// from the first date to the last. None of these is a field, because a derived
-// total in the response is a second source of truth that lets an implementation
-// be simultaneously right about the split and wrong about the sum, and because
-// a derived total's meaning silently changes the moment charges are introduced.
+// Only quantities that cannot be recomputed from the others are carried. The
+// total due for a period is PrincipalMinor + InterestMinor; the level
+// installment is that sum on any ordinary repayment row; the remaining total
+// repayable is the sum over later rows; the loan term in days is the span from
+// the first row's FromDate to the last row's DueDate. None of these is a field,
+// because a derived total in the response is a second source of truth that lets
+// an implementation be simultaneously right about the split and wrong about the
+// sum, and because a derived total's meaning changes silently the moment
+// charges are introduced.
 type Period struct {
 	// Kind discriminates this row. See PeriodKind.
 	Kind PeriodKind
 
 	// InstallmentNumber is the payable-installment sequence number: a dense,
-	// 1-based counter running across down-payment and repayment periods in
-	// order. It is 0 for a PeriodKindDisbursement period, which is not payable
-	// and carries no installment number.
+	// 1-based counter running across down-payment and repayment rows in order.
+	// The reference oracle increments one shared counter for both
+	// (ProgressiveLoanScheduleGenerator.java:123, :143 for repayments and :341,
+	// :346 for down payments).
+	//
+	// It is 0 for a PeriodKindDisbursement row, which is not payable and which
+	// the oracle leaves null. This is the one place a Java null is normalised,
+	// and it is normalised to a value that cannot collide with a real
+	// installment number.
 	InstallmentNumber int32
 
 	// FromDate is the civil date on which the period opens, interpreted in
-	// GenerateRequest.TimeZone. Interest accrues over [FromDate, DueDate).
+	// GenerateRequest.TimeZone. Interest accrues over [FromDate, DueDate) —
+	// the window is half-open, which is what decides where a disbursement
+	// dated exactly on a due date lands (see Schedule).
 	FromDate CivilDate
 
 	// DueDate is the civil date on which the period's amount falls due,
 	// interpreted in GenerateRequest.TimeZone.
 	DueDate CivilDate
 
-	// PrincipalMinor is this period's principal component, in minor units of
+	// PrincipalMinor is this row's principal component, in minor units of
 	// GenerateRequest.Currency. It is never negative.
 	//
-	// For PeriodKindDisbursement it is the principal advanced TO the borrower;
-	// for the other kinds it is the principal repaid BY the borrower. The sign
-	// convention is the row's Kind, not a negative number, so that no consumer
-	// can sum the column without first deciding what it is summing.
+	// For PeriodKindDisbursement it is principal advanced TO the borrower; for
+	// the other kinds it is principal repaid BY the borrower. The direction is
+	// the row's Kind, never a sign bit, so that no consumer can sum the column
+	// without first deciding what it is summing. This is the same discipline
+	// the ledger non-negotiable enforces elsewhere.
 	//
-	// On a repayment period, principal is the balancing remainder of the level
-	// installment after interest, never an independently computed figure. The
-	// final unpaid period additionally absorbs the whole accumulated rounding
-	// residual, so its PrincipalMinor + InterestMinor generally differs from the
-	// other periods'. That residual is expressible without loss precisely
-	// because this contract carries the per-period split and carries no
-	// separate installment field that could contradict it.
+	// On a repayment row, principal is the BALANCING REMAINDER of the
+	// installment after interest, never an independently computed figure:
+	// interest is taken first, capped at the installment, and principal is the
+	// non-negative remainder (RepaymentPeriod.java:272-286 and :345-350).
 	PrincipalMinor int64
 
-	// InterestMinor is this period's interest component, in minor units of
-	// GenerateRequest.Currency. It is never negative, and is 0 for
-	// PeriodKindDisbursement and PeriodKindDownPayment periods.
+	// InterestMinor is this row's interest component, in minor units of
+	// GenerateRequest.Currency. It is never negative, and it is 0 on
+	// PeriodKindDisbursement and PeriodKindDownPayment rows.
 	InterestMinor int64
 
 	// OutstandingPrincipalMinor is the principal balance remaining after this
-	// period is applied, in minor units of GenerateRequest.Currency. It is never
-	// negative, and it is 0 on the final period of a fully amortizing schedule.
+	// row is applied, in minor units of GenerateRequest.Currency. It is never
+	// negative, and it is 0 on the final row of a fully amortizing schedule.
 	//
-	// It is carried rather than derived because the reference oracle clamps this
-	// roll-forward at zero rather than computing it as a pure running
-	// difference, so the two are not provably identical in every configuration,
-	// and because it is the field against which the per-period amortization
-	// invariant is checked without summing the whole schedule.
+	// It is carried rather than derived — the one deliberate exception to this
+	// contract's "derive what can be derived" rule — because the oracle clamps
+	// this roll-forward at zero rather than computing a pure running difference
+	// (RepaymentPeriod.java:389-403), so the two are not provably identical in
+	// every configuration; and because it is the field against which the
+	// per-period amortization invariant is checked without summing the whole
+	// schedule. It is observably 0 on a repayment row that falls entirely
+	// before the disbursement.
 	OutstandingPrincipalMinor int64
 }
 
@@ -464,40 +1010,80 @@ type Period struct {
 // can gain a field in some later ratified version without changing the
 // interface's return type.
 type Schedule struct {
-	// Periods are the schedule's rows in a total, derivable order:
-	// non-decreasing by DueDate; ties broken by Kind with
-	// PeriodKindDisbursement before PeriodKindDownPayment before
-	// PeriodKindRepayment; remaining ties broken by ascending
-	// InstallmentNumber.
+	// Periods are the schedule's rows in the order specified below. Two
+	// Schedules are equal when their Periods are element-wise equal in that
+	// order. No map appears in this contract and no map iteration order is ever
+	// observable through it.
 	//
-	// The order is a property of the values, not of any implementation's loop
-	// structure, so two implementations agree on it without mirroring each
-	// other's control flow. Two Schedules are equal when their Periods are
-	// element-wise equal in this order. No map appears in this contract and no
-	// map iteration order is ever observable through it.
+	// # Ordering (normative)
+	//
+	// The order REPRODUCES the reference oracle's emitted order rather than
+	// imposing a tidier one, because the oracle is this program's fallback and
+	// its shadow-parity partner: a boundary that reordered or refused what the
+	// oracle emits could not be run against the same traffic, and that is what
+	// shadow testing is.
+	//
+	// Assign each row a window key:
+	//
+	//   - a PeriodKindRepayment row's key is its own DueDate;
+	//   - a PeriodKindDisbursement or PeriodKindDownPayment row's key is the
+	//     DueDate of the repayment period whose HALF-OPEN window
+	//     [FromDate, DueDate) contains that row's date; if the row's date is on
+	//     or after the last repayment period's DueDate, its key sorts after
+	//     every repayment row.
+	//
+	// Rows are ordered by ascending window key; ties are broken by Kind, with
+	// PeriodKindDisbursement before PeriodKindDownPayment before
+	// PeriodKindRepayment; remaining ties by ascending InstallmentNumber, then
+	// by ascending row date.
+	//
+	// The key is derivable from the response itself — the repayment rows carry
+	// the windows — so two implementations agree on it without mirroring each
+	// other's control flow.
+	//
+	// # Why the window key, and not simply DueDate
+	//
+	// A naive "sort by date, disbursement first" rule is REFUTED at a reachable
+	// boundary. The oracle tests disbursement membership against a half-open
+	// window (ProgressiveLoanScheduleGenerator.java:307-308) and emits
+	// disbursements at the TOP of each period's iteration while appending that
+	// period's repayment row at the BOTTOM (:121 versus :141). A disbursement
+	// dated exactly on period k's due date therefore belongs to period k+1 and
+	// is emitted AFTER repayment k. Observed on the pinned oracle, schedule
+	// start 2024-01-01 and disbursement 2024-02-01, six monthly periods:
+	//
+	//	repayment 1 (due 2024-02-01, all zero), disbursement (2024-02-01),
+	//	repayment 2 (due 2024-03-01), ... , repayment 6 (due 2024-07-01)
+	//
+	// The naive rule puts the disbursement first and is wrong. The window-key
+	// rule reproduces the observed order, and also reproduces the ordinary case
+	// where the disbursement opens the schedule.
 	Periods []Period
 }
 
 // ScheduleGenerator answers exactly one question: given the terms of a loan,
 // what is its repayment schedule?
 //
-// It is implemented twice — once as an adapter onto the Fineract JVM reference
+// It is implemented twice — once as an adapter onto the Fineract reference
 // oracle, once by the Go native module — and callers depend only on this
 // interface. Which implementation a deployment resolves is a per-bounded-context
 // configuration decision described in DEC-1; changing it in a live environment
-// is a separate `user` gate and is not expressible through this interface.
+// is a CUTOVER, which is a hard user gate and is not expressible through this
+// interface.
 //
 // Generation is a pure function of its request: it moves no money, writes no
-// ledger entry and has no side effect. It therefore carries no Idempotency-Key
-// — that mandate applies to money-movement requests, and a request that can be
-// replayed freely without consequence needs no deduplication key. Any later
-// operation that commits a schedule to an account is a different operation
-// under a different contract.
+// ledger entry, posts nothing and has no side effect. It therefore carries no
+// Idempotency-Key — that mandate applies to money-movement requests, and a
+// request that can be replayed freely without consequence needs no
+// deduplication key. Any later operation that commits a schedule to an account
+// is a different operation under a different contract.
 //
 // Implementations must be deterministic: an equal GenerateRequest yields an
 // equal Schedule, on every call, in every process, forever. Conformance is
 // judged by replaying captured golden vectors through both implementations and
-// comparing the resulting Schedules element-wise.
+// comparing the resulting Schedules element-wise. A conformance PASS means
+// "matches the reference oracle on captured vectors, within the graded domain".
+// It never means "safe to cut over".
 type ScheduleGenerator interface {
 	// Generate returns the repayment schedule for req, or an error.
 	//
@@ -516,19 +1102,39 @@ type ScheduleGenerator interface {
 // request accepted by one and refused by the other would be indistinguishable
 // from a conformance failure.
 //
-// The taxonomy is deliberately two-valued — is the request well formed, and can
-// it be answered — because golden vectors compare successful schedules, and a
-// finer error vocabulary would be contract surface no vector exercises.
+// The taxonomy is three-valued and no finer: is the request well formed, can it
+// be answered at all, and has anyone ever checked the answer.
 var (
 	// ErrInvalidRequest reports a request that is not well formed: a zero or
 	// out-of-range enum, a non-canonical or non-positive-denominator Rate, an
-	// impossible CivilDate, a non-IANA TimeZone, a non-positive precision, a
-	// non-positive amount or count.
+	// impossible CivilDate, a TimeZone that is not an IANA zone name, a
+	// non-positive precision or scale, a non-positive amount or count.
 	ErrInvalidRequest = errors.New("loanschedule: invalid request")
 
-	// ErrUnsupportedConfiguration reports a well-formed request whose values lie
-	// outside what this contract currently admits or what this implementation
-	// can answer identically to its counterpart: an interest method other than
-	// declining balance, or a Disbursements slice whose length is not one.
+	// ErrUnsupportedConfiguration reports a well-formed request this contract
+	// does not admit, or that the reference oracle cannot be asked at all:
+	// an interest method other than declining balance; a Disbursements slice
+	// whose length is not one; FrequencyYears, which the oracle throws on;
+	// a Rounding whose RateFactorScale differs from its SignificantDigits;
+	// a Rate whose reduced denominator is not a product of 2s and 5s; an
+	// InstallmentRoundingMultipleMinor that is not a whole number of major
+	// units.
 	ErrUnsupportedConfiguration = errors.New("loanschedule: unsupported configuration")
+
+	// ErrNoDiscriminatingVector reports a well-formed request that this
+	// contract admits and the reference oracle can compute, but for which no
+	// capture exists that could tell a correct implementation from an incorrect
+	// one — a request outside the GRADED DOMAIN listed on GenerateRequest.
+	//
+	// It is deliberately distinct from ErrUnsupportedConfiguration in meaning
+	// and deliberately indistinguishable from it to a caller that does not
+	// care: it wraps it, so errors.Is(err, ErrUnsupportedConfiguration) is
+	// true. The distinction records WHY the request was refused, which decides
+	// how the refusal is retired: a missing vector is retired by capturing one,
+	// which is behaviour and needs no amendment.
+	//
+	// Returning a number here instead would be the exact failure this program
+	// exists to prevent — a port that passes its corpus and is wrong.
+	ErrNoDiscriminatingVector = fmt.Errorf(
+		"loanschedule: unsupported: no discriminating vector: %w", ErrUnsupportedConfiguration)
 )
