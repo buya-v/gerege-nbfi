@@ -388,9 +388,9 @@
       "dependencies": [
         "T17"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "Raised by cloud fire 20260817-2000 from T17's required-changes list. Needs no reference oracle - pure source correction. Good first work for any fire. Add FULL_LEAP_YEAR to the coverage map as a TO_BE_CAPTURED gap. || fire 20260818-152328: fire 20260818-080003 got ~5 of the 6 applied before the Mac slept; that WIP was rescued onto branch softhouse/T16b-capture-plan-corrections (commit 1a9c3c8). Correction #2 (FULL_LEAP_YEAR) is verifiably NOT applied - the token appears nowhere in the document. Re-dispatched at opus in a worktree, starting from that branch, with a mandatory mechanical consistency sweep per correction (the T2 failure mode: corrections land in the named section and leak in the sections restating the same claim)."
+      "note": "Raised by cloud fire 20260817-2000 from T17's required-changes list. Needs no reference oracle - pure source correction. Good first work for any fire. Add FULL_LEAP_YEAR to the coverage map as a TO_BE_CAPTURED gap. || fire 20260818-152328: fire 20260818-080003 got ~5 of the 6 applied before the Mac slept; that WIP was rescued onto branch softhouse/T16b-capture-plan-corrections (commit 1a9c3c8). Correction #2 (FULL_LEAP_YEAR) is verifiably NOT applied - the token appears nowhere in the document. Re-dispatched at opus in a worktree, starting from that branch, with a mandatory mechanical consistency sweep per correction (the T2 failure mode: corrections land in the named section and leak in the sections restating the same claim). || DONE fire 20260818-152328, merged 7d10557 from branch worktree-agent-ae38dc474761e45b4 (commit 66aadaa). Arrival state was 1.5 of 6 applied, not the ~5 the orchestrator estimated - the worker was told not to trust that count and verified instead. The consistency sweeps caught three restatements T17 never named, all in the coverage map. One re-verified divergence from T17: all seven tests set FEB_29_PERIOD_ONLY, the sixth re-stubbing to FULL_LEAP_YEAR at EMI:3209; T17's conclusion unaffected. Doc 861 -> 1245 lines. Raises follow-up F2 as a separate task (non-blocking defect the worker declined to fold in)."
     },
     {
       "agent_role": "reviewer",
