@@ -2,67 +2,61 @@
 
 Written by the orchestrator at every checkpoint; read by the next fire of `/softhouse-program` (and by a human) to see exactly where the factory paused. **The repo is the only memory** — never rely on an agent's session state.
 
-## Current state (cloud catch-up fire `20260817-2000`, 20:00 Asia/Ulaanbaatar)
+> **This file was written MID-FIRE on purpose.** Both 2026-08-18 fires before this one were killed by the Mac sleeping and left stale state behind. It is rewritten again at clean exit; if it still says "in flight" below, this fire died too and the branches named are where the work is.
+
+## Current state (local fire `20260818-152328`, oracle REACHABLE)
 
 - **Program**: `fineract-to-go-full-codebase` — **active, blocked at gate G-1**
-- **Active run**: `2026-08-17-run1-harness-schedule-poc` — `blocked_on_gate`
-- **Contexts**: 0 done / 17. Tier 0 is `blocked_on_gate`; **all 16 others declare tier 0 as a transitive dependency**, so G-1 gates the entire program.
-- **Reference oracle**: **NOT reachable from the cloud sandbox** — no Docker daemon, PostgreSQL not listening on `:5432`, `actuator/health` silent. Reachability is now recorded **per fire** in `.softhouse/reference-oracle.md`; the "Status: UP" line was a fact about localhost on Buyan's Mac, not about the program.
-- **Fineract source**: pinned and verified at `426a23544e8426a38ae43ae404670a0a7e85b9eb` (`/home/user/fineract` in the cloud sandbox).
-- **Worker isolation**: all four workers ran in **real worktrees** on `softhouse/*` branches. The previous fire's isolation violation was not repeated.
+- **Active run**: `2026-08-17-run1-harness-schedule-poc` — `blocked_on_gate`, but contract-independent work is running
+- **Contexts**: 0 done / 17. Tier 0 is `blocked_on_gate`; the other 16 are **READY-FOR-ANALYSIS** under `policy.gate_scope`.
+- **Reference oracle**: **REACHABLE** — image `sha256:e596339626bf…`, Fineract `426a23544`, Zulu 21.0.11, PostgreSQL 18.3 on `:5432`. `caffeinate` now holds sleep off during a fire.
 
 ### What this fire did
 
-Dispatched four opus workers; every analyst task had a paired independent reviewer that re-derived rather than read.
+**1. Rescued and processed the previous fire's abandoned work.** Fire `20260818-080003` built a golden-vector capture harness and ran it against the pinned oracle, then died mid-run; its output was committed by the wrapper but never read by anyone. It turned out to contain **the discriminating vector gate G-1 was waiting for**.
 
-| Task | Verdict | Outcome |
-|---|---|---|
-| **T3b** re-review of the corrected behaviour extraction | **REJECTED** | 6 of 12 required changes landed; corrections leaked (see below) |
-| **T5** review of DEC-1 | **REJECTED** | Found a money defect the corpus cannot detect |
-| **T16** vector-capture plan | delivered | 16 vectors transcribed, 9 capture runs specified |
-| **T17** transcription audit of T16 | **ACCEPTED** | 418/418 values literally present; zero synthesised |
+**2. Ran capture pass 2** (orchestrator, oracle-only work) adding a tenant context, which pass 1 lacked.
 
-### The two findings that matter most
+**3. Dispatched three opus reviewers in worktrees** — nothing produced this fire is accepted on its author's say-so.
 
-1. **DEC-1 would have frozen an ambiguity that changes money.** Fineract threads **one** `MathContext` and consumes it in **two incompatible senses** — significant digits in every `multiply/divide(…, mc)`, and **decimal places** in `setScale(mc.getPrecision(), …)` (`ProgressiveEMICalculator.java:1962`, `:1979`). Over a 560-config grid, **189 configurations diverge**; the first money divergence is at 18 installments / 18.5 % / principal 87,654,321, where a one-minor-unit error appears in period 5 and **never heals**. **The shipped conformance vector does not discriminate between the two readings** — so "the golden test passes" is not evidence here.
-2. **Two reviewers converged independently.** T3b (reviewing the analysis) and T5 (reviewing the contract), with no shared context, both refuted the claim that `allowFullTermForTranche` is a dead field. The builder setter reaches it (`LoanApplicationTerms.java:606`) and the guard (`ProgressiveEMICalculator.java:142-144`) never consults `isMultiDisburseLoan()`.
+### Findings that matter
+
+1. **Precision is load-bearing, observed.** Pass 1 ran T5's exact configuration (18 × 18.5 %, principal 87,654,321) at precisions 8 / 12 / 19. p8 vs p12 differ in **every period** (EMI `5,613,766.95` vs `5,613,766.78`); p12 vs p19 differ by one minor unit in period 5 and in the final period. The shipped corpus cannot see this; the oracle can.
+2. **`installmentAmountInMultiplesOf` is silently dropped by the capture seam.** `LoanApplicationTerms.assembleFrom(LoanRepaymentScheduleModelData, MathContext)` reads 18 of the record's 19 components and never reads that one. The server path honours it. **A Go port could honour or ignore it and score identically against every vector this path can produce** — the same undiscriminable-input defect class T5 found for precision, in a second field, on a parameter Mongolian products would routinely use. Raised as **G-1 decision 7**.
+3. **`allowFullTermForTranche` is live — confirmed by the running oracle**, a third independent confirmation and the first that is not a source reading. Pass 1's `D-04` crashed for want of a tenant, proving the `true` branch reaches `MoneyHelper`; with a tenant it runs and is schedule-identical to `false` on single-disbursement loans.
+4. **C-00 calibration passes** from two independent harnesses, with and without a tenant.
+5. **Two capture paths are now distinguished** in `.softhouse/reference-oracle.md`: **Path A** (embeddable seam, in-process, no database — what both passes used, and which has the proven blind spot above) and **Path B** (running server + PostgreSQL, unused, the only way to reach what Path A drops).
 
 ### Task state
 
 | Task | State | Note |
 |---|---|---|
-| T1 pin reference oracle | **done** | |
-| T2 extract schedule behavior | **parked** | Retries exhausted (policy 1). Rejected twice. Unpark = gate **G-2** |
-| T3 / T3b independent reviews | **done** | Both REJECTED their subject |
-| T4 DEC-1 draft | **needs_retry** | 1 retry left. Deliberately not run this fire — see below |
-| T5 review DEC-1 | **done** | REJECTED, 9 required changes |
-| T6 **USER GATE** ratify DEC-1 | **blocked** | **Gate G-1 — not yet answerable** |
-| T7, T9–T15 | pending | Behind T6 |
-| T8 capture golden vectors | **parked** | `oracle_unreachable`. Nothing synthesised |
-| T16 capture plan / T17 audit | **done** | Accepted; execution gated on T16b |
-| T16b apply T17's 6 corrections | **pending** | **Needs no oracle — good first work for any fire** |
+| T1 pin reference oracle | done | |
+| T2 extract schedule behavior | **parked** | Retries exhausted. Unpark = gate **G-2** |
+| T3 / T3b independent reviews | done | Both REJECTED their subject |
+| T4 DEC-1 draft | **needs_retry** | 1 retry left. Blocked on Buyan answering G-1 decisions 1–7 |
+| T5 review DEC-1 | done | REJECTED, 9 required changes |
+| T6 **USER GATE** ratify DEC-1 | **blocked** | **Gate G-1 — still not answerable, but the evidence now exists** |
+| T7, T9–T12, T14, T15 | pending | Behind T6 |
+| T8 capture golden vectors | **in_progress** | Unparked. Passes 1 + 2 captured, raw observed, **no vector promoted** |
+| T13 verify (UAT) | pending | Now also gated on T18, T19 |
+| T16 / T17 capture plan + audit | done | |
+| **T16b** apply T17's 6 corrections | **in flight** | branch `softhouse/T16b-capture-plan-corrections`; WIP commit `1a9c3c8` has ~5 of 6; correction #2 (FULL_LEAP_YEAR) verifiably not applied |
+| **T18** audit capture pass 1 | **in flight** | opus, worktree |
+| **T19** audit capture pass 2 | **in flight** | opus, worktree — audits the orchestrator's own work |
 
 ### Next action, in order
 
-1. **T16b** — apply T17's six corrections to `docs/analysis/tier0-vector-capture-plan.md`. Pure source work, no oracle needed. Any fire can do this immediately.
-2. **On an oracle-reaching fire only:** capture the **discriminating vector** for the precision-vs-scale question (T5 §1 gives the exact configuration), then run the **C-00 calibration capture** — which must reproduce an already-transcribed literal expectation before any other capture is trusted.
-3. **T4 retry (attempt 2 of 2)** against T5's nine required changes — but only after Buyan answers the G-1 decision list, since several changes are choices reserved for him.
-4. Re-review, then re-present gate G-1.
-
-### Why the T4 retry was NOT dispatched this fire
-
-Three reasons, all recorded on the task: (a) T3b had not landed, so the factual basis could still move; (b) T5 recommends the discriminating vector be captured **before** ratification and the corpus provably cannot detect this defect class — that capture needs the oracle; (c) several of the nine changes are choices T5 explicitly reserved for the human ratifier, and an agent picking them would pre-empt Buyan.
-
-**Routing fact worth restating:** DEC-1 is an **unratified DRAFT**, so correcting it is agent work. Only a **ratified** DEC-n is a user gate.
+1. **Land T18 / T19 / T16b**; act on their verdicts. A REJECTED capture means the finding above is not yet fact.
+2. **Buyan answers G-1 decisions 1–7** (`.softhouse/gates.md`). Decision 7 is new this fire and is the most consequential.
+3. **T4 retry** (attempt 2 of 2) once 1–7 are answered.
+4. Re-review, re-present G-1.
+5. **Not before someone decides it:** Path B capture (server + PostgreSQL) is the only way to close what Path A drops. The orchestrator recommends **against** building it inside Tier 0 — Tier 0 exists to prove the pipeline on the smallest real slice.
 
 ### Open decisions for Buyan — `.softhouse/gates.md`
 
-- **G-1 CONTRACT** — six decisions listed, including whether to rename `IntermediatePrecisionDigits`, which of two ordering fixes to take, and what rounding mode the Mongolian tenant will actually run (unresolvable from source: properties default `6`/`HALF_EVEN`, tests mock `HALF_UP`; production `MoneyHelper.PRECISION = 19` vs `12` mocked).
-- **G-2 POLICY** — permit a third, *differently shaped* attempt at T2 (surgical edits + a mechanical sweep for restated claims), or treat T3b's review as the specification of record.
-
-### Lead worth following up (not acted on)
-
-The seam has a **dependency-free shadowJar entry point** with a documented `Main.java`, and this sandbox has **JDK 21.0.10 and gradle**. Most Tier-0 capture may need only a JDK — **not a running server and not PostgreSQL** — which would remove the single-machine bottleneck for Tier-0 vectors. **Not attempted this fire on purpose:** gradle writes `build/` into the very module three reviewers were grepping, and polluting a review in flight was not worth the information. Worth a clean attempt on a fire with no reviewers running. Note that a jar built on a different JVM is *not* automatically the pinned oracle — `.softhouse/reference-oracle.md` says a capture against a different build is not comparable, so promoting it to a capture path is Buyan's call, and C-00 calibration would have to pass first.
+- **G-1 CONTRACT** — now **seven** decisions. Four of the original six are newly evidenced by observation; decision 7 (`installmentAmountInMultiplesOf` inert on the grading path) is new and the orchestrator recommends (b) or (c) over (a).
+- **G-2 POLICY** — permit a third, differently-shaped attempt at T2, or treat T3b's review as the specification of record.
 
 ## Checkpoint protocol (what a real pause looks like here)
 
@@ -74,4 +68,4 @@ The seam has a **dependency-free shadowJar entry point** with a documented `Main
 
 ## Pause reason
 
-`Gate G-1 reached and not answerable; no READY context remains (all 16 declare tier 0 as a transitive dependency). This is the decision table's one legitimate idle stop — reached only after spending the fire on every piece of work that needed no live oracle. No bar was lowered, no vector invented, no gate crossed.`
+`In flight at time of writing — three reviewers running (T16b, T18, T19). Rewritten at clean exit. If this text survives, the fire died mid-run and the work is on the branches named above.`
