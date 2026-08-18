@@ -594,10 +594,10 @@
       "dependencies": [
         "T25"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 0,
       "contract_independent": true,
-      "note": "Dispatched by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T27-corpus-corrections-review. Promotability audit of T25's oracle-independent slice: re-runs the invariant scripts, re-checks every corrected claim against the committed artifact it cites, and must state which captures (if any) are promotable today vs still blocked by a parked P0."
+      "note": "Delivered by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T27-corpus-corrections-review (4302db0), merged to main. VERDICT: ACCEPTED WITH REQUIRED CHANGES. Every correction T25 applied is CORRECT, verified by re-derivation and MUTATION TESTING rather than agreement: all 16 oracle numbers in the rewritten PASS3 section machine-matched to t21v2-probe2-oracle-out.txt; both 'fake PASS' defects confirmed genuinely failable by corrupting committed captures by one minor unit; round-to-nearest re-derived from Money.java:163-171 and numerically. BUT T27 found T25 (a) SILENTLY DROPPED T22 P1-12 - so T25's 'nothing silently dropped' claim is false; (b) MIS-PARKED as oracle_unreachable several items needing no oracle (T22 P0-5, P1-8 2nd half, P1-9, P1-11 1st clause, P1-14 1st clause); (c) left the reports self-contradictory - PASS3-REPORT.md:5,114 (+twin), PATHB-REPORT.md:5,128-130,150-151, tasks.json:188 and reference-oracle.md:202 still say 'NOT YET INDEPENDENTLY AUDITED' beside the audits' own correction banners, and PATHB-REPORT.md:150-151 is now factually FALSE. Also flagged an honesty defect: the round-down banner presents the model-derived 111,148.35 as a committed observation. PROMOTABILITY: NOTHING may be promoted today. 7 P0s outstanding. Blocked Path A candidates P-00, P-01, P-02, P-02b, P-03, P-04f, P-04t, P-MNT-5M, P-MNT-1M2, P-MNT-50M, P-MNT-4M999 (T21 P0-2/3/4); Path B B-01..B-04 (T22 P0-3/4/5/6). NEVER promotable as parity vectors: P-CAL at (12,HALF_UP) and every pass-1/2 capture at precision 12 or 8 - discrimination probes only."
     },
     {
       "id": "T28",
@@ -633,6 +633,25 @@
       ],
       "contract_independent": true,
       "note": "Raised by cloud catch-up fire cloud-20260818-2000. G-1 closes ONLY via T28 -> T29 CLEAN -> driver ratifies under standing policy P-2. ACCEPTED WITH REQUIRED CHANGES is not clean. Must re-derive from the pinned source rather than checklist-check T28, and must confirm T24's P0-2/P0-3 were not regressed."
+    },
+    {
+      "id": "T30",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "title": "Oracle-free corpus remainder: T27's dropped and mis-parked items, B-03/B-04 source re-derivation",
+      "dependencies": [
+        "T27"
+      ],
+      "files_hint": [
+        ".softhouse/capture/",
+        ".softhouse/reviews/t30-probe/",
+        ".softhouse/handoff/",
+        ".softhouse/reference-oracle.md"
+      ],
+      "contract_independent": true,
+      "note": "Raised and dispatched by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T30-corpus-remainder-oracle-free. Picks up exactly what T27 proved needs no oracle: the dropped T22 P1-12 residual-absorption rule, the mis-parked T22 P0-5 / P1-8 / P1-9 / P1-11 / P1-14 items, the from-source re-derivation of B-03/B-04 through the DAILY cross-year arm (T27: 'the largest remaining hole in the Path B evidence, and it needs no server'), the stale NOT-YET-AUDITED banners, and the derived-vs-observed provenance defect. Forbidden from editing docs/adr or contract.go (T28 owns them) and from editing tasks.json (orchestrator owns it)."
     }
   ]
 }
