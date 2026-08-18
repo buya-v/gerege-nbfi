@@ -1,0 +1,12 @@
+07:31:08.597 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_t00_he`: HALF_EVEN
+07:31:08.601 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_t00_hu`: HALF_UP
+07:31:08.604 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_t04f`: HALF_EVEN
+07:31:08.606 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_t04t`: HALF_EVEN
+07:31:08.608 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_t04fb`: HALF_EVEN
+07:31:08.613 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_t04tb`: HALF_EVEN
+07:31:08.618 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_im100_he`: HALF_EVEN
+07:31:08.620 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_im100_hu`: HALF_UP
+07:31:08.621 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_im1_he`: HALF_EVEN
+07:31:08.623 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_mnt5m_he`: HALF_EVEN
+07:31:08.626 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_mnt5m_hu`: HALF_UP
+07:31:08.630 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_mnt5mp_he`: HALF_EVEN
