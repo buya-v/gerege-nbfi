@@ -150,7 +150,7 @@ final BigDecimal totalOutstanding   = BigDecimal.ZERO;
 ```
 
 and that constant is passed straight through to `LoanScheduleModel.from(...)`
-[`ProgressiveLoanScheduleGenerator.java:159-165`] and out via `LoanSchedulePlan.totalOutstandingAmount`
+[`ProgressiveLoanScheduleGenerator.java:159-164`] and out via `LoanSchedulePlan.totalOutstandingAmount`
 [`LoanSchedulePlan.java:43, 85-96`]. [VERIFIED: pinned checkout, both files.]
 
 Two consequences worth carrying forward:
