@@ -4,35 +4,63 @@ Unlike Path A (in-process seam, no database), Path B drives the **running Finera
 PostgreSQL**. The PostgreSQL-only rule governs it directly: the stack must be the `postgresql` compose
 profile, and the assertions below are part of the recipe, not optional checks.
 
-## Preconditions — assert, do not assume
+## Preconditions — FAIL THE RUN, do not assume
+
+> **CLOSED per T22 audit P0-4 (applied by T36, 2026-08-18, against the running server).** These were
+> previously prose checks a reader could skip, and they did not cover the two settings that actually decide
+> the arithmetic. They are now an **executable script that exits non-zero on a breach and names it**, and the
+> capture recipe below refuses to run unless it exits 0.
 
 ```sh
-# 1. The pinned image, same digest all Path A passes used
-docker image inspect fineract:latest --format '{{.Id}}'
-# must be sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a
-
-# 2. PostgreSQL, and ONLY PostgreSQL
-docker inspect fineract-fineract-1 --format '{{range .Config.Env}}{{println .}}{{end}}' \
-  | grep -iE 'driver|jdbc'
-# must show org.postgresql.Driver and jdbc:postgresql://db:5432/fineract_tenants
-# must show NO ojdbc / oracle.jdbc / :1521 / com.mysql.cj / mariadb
-
-# 3. Server healthy
-curl -sk https://localhost:8443/fineract-provider/actuator/health   # {"status":"UP",...}
-
-# 4. Postgres server version, recorded with the capture
-docker exec fineract-db-1 psql -U postgres -t -c 'select version();'
+# 15 assertions, every one read from the running server, its deployed bytecode, or its
+# PostgreSQL rows.  Exits 0 only if ALL hold; exits 1 and prints each breach otherwise.
+CANARY_REQ=t22-audit/req/calc-pmode2-gerege.json \
+  sh t36/preconditions.sh gerege  ||  exit 1     # <- a breach ABORTS; do not capture
 ```
 
-Any mismatch **invalidates the capture** — it would mean the run did not execute the pinned oracle, or did
-not execute it on the mandated engine.
+What it asserts, and why each one can invalidate a capture:
+
+| # | Assertion | Breach means |
+|---|---|---|
+| P1 | `fineract:latest` digest = `sha256:e596339626bf…` | not the pinned oracle |
+| P2 | jar `git.commit.id` = `426a23544e…`, `git.dirty=false` | different build, or built from a dirty tree |
+| P3 | **`MoneyHelper.PRECISION` = 19**, read by `javap` from the **deployed** `fineract-core` jar | the `MathContext` is not the ratified one |
+| P4 | `actuator/health` = `UP` | the server is not serving |
+| P5 | `org.postgresql.Driver` + `jdbc:postgresql://…`, and **0** hits for `ojdbc\|oracle.jdbc\|:1521\|com.mysql.cj\|mariadb\|go-sql-driver` in the container env | a prohibited engine (Oracle Database / MySQL / MariaDB) is in play |
+| P6 | 0 prohibited driver jars inside `fineract-provider.jar`; a PostgreSQL driver present | ditto |
+| P7 | PostgreSQL server version starts `PostgreSQL 18.3` | different engine build |
+| P8 | the tenant row exists | capturing against a tenant that is not there |
+| P9 | **`tenants.timezone_id` ∈ {`Asia/Ulaanbaatar`, `Asia/Hovd`}** | a non-Mongolian zone; fatal for any clock-sensitive capture. The **zone id** is asserted — never an offset |
+| P10 | **`c_configuration.rounding-mode` = 4 (HALF_UP)** and the row enabled | `6` = HALF_EVEN is not production-representative |
+| P11 | **`tenant_server_connections.schema_connection_parameters` is empty** | the stock `default` row carries MySQL-era JDBC parameters |
+| P12 | tenant `schema_server_port` = `5432` | `1521` = Oracle Database, `3306` = MySQL — both prohibited |
+| P13 | **this JVM run logged `Initialized rounding mode for tenant …: HALF_UP`** since `State.StartedAt` | `MoneyHelper` caches the mode per tenant at startup, so a DB row edited after boot is **inert** |
+| P14 | **effective-mode canary**: the half-cent tie request returns period-1 interest `20925.05` | the arithmetic in force is not HALF_UP (`20925.04` = HALF_EVEN) |
+| P15 | MNT seeded `decimal_places = 2` and enabled for the tenant | wrong minor unit |
+
+P13 and P14 exist because P10 alone is **not** proof: configuration is not behaviour. P14 is the strongest of
+the fifteen — it is the arithmetic itself answering.
+
+**The script is demonstrably failable.** Run against the stock `default` tenant it exits 1 with five
+breaches — Kolkata timezone, `rounding-mode = 6`, HALF_EVEN in force, MySQL-era `schema_connection_parameters`,
+and canary `20925.04`. Transcript: `t36/out/preconditions-default-NEGATIVE.txt`. Those five are exactly the
+defects that made the original Path B corpus inadmissible.
+
+Any breach **invalidates the capture** — it would mean the run did not execute the pinned oracle, did not
+execute it on the mandated engine, or did not execute it at the ratified `MathContext(19, HALF_UP)`.
+
+## Which tenant to capture on
+
+**`gerege`** — `Asia/Ulaanbaatar`, `rounding-mode = 4` (HALF_UP), empty `schema_connection_parameters`.
+**Never `default`**: it is `Asia/Kolkata` at HALF_EVEN and fails P9/P10/P11/P13/P14.
 
 ## Environment
 
 ```sh
 B=https://localhost:8443/fineract-provider/api/v1
 A='Authorization: Basic bWlmb3M6cGFzc3dvcmQ='          # mifos:password, stock demo credentials
-T='Fineract-Platform-TenantId: default'
+# CHANGED by T36 (T22 P0-6): captures are taken on the production-settings tenant, never `default`.
+T='Fineract-Platform-TenantId: gerege'
 CT='Content-Type: application/json'
 ```
 
@@ -102,11 +130,22 @@ done
 sha256sum out/B-0*-raw.json
 ```
 
-**Still open on this recipe, and NOT fixed here** — T22 P0-4: the Preconditions block above does not yet
-*fail the run* on the two settings that actually decide the arithmetic (`c_configuration.rounding-mode` must
-be **4** = HALF_UP; `tenants.timezone_id` must be `Asia/Ulaanbaatar` or `Asia/Hovd`) nor assert that
-`tenant_server_connections.schema_connection_parameters` is empty. Those assertions are written against a
-running server and are parked with the re-point (T22 P0-6) for the next oracle-reaching fire.
+**CLOSED, 2026-08-18 by T36 against the running server** — what stood here was T22 P0-4: the Preconditions
+block did not *fail the run* on `c_configuration.rounding-mode = 4` (HALF_UP), on
+`tenants.timezone_id ∈ {Asia/Ulaanbaatar, Asia/Hovd}`, or on an empty
+`tenant_server_connections.schema_connection_parameters`. All three are now assertions **P10, P9 and P11** of
+`t36/preconditions.sh`, which the Preconditions section above runs and which **exits non-zero and names the
+breach**. Two assertions T22 did not ask for were added because a DB row is not proof of the arithmetic in
+force: **P13** (this JVM run's own `MoneyHelper` init line for this tenant) and **P14** (a behavioural
+half-cent canary). The script is demonstrably failable — it exits 1 with five breaches on the stock `default`
+tenant (`t36/out/preconditions-default-NEGATIVE.txt`).
+
+**Re-point CLOSED too (T22 P0-6).** The capture set was re-taken on tenant `gerege`
+(`Asia/Ulaanbaatar`, HALF_UP) at the ratified `MathContext(19, HALF_UP)`, twice — once against the products
+already there and once against four products this task re-created from the same payloads. **All four
+responses came back byte-identical to the committed corpus, all eight times.** Machine-readable attestation
+(T22 P0-3): `t36/out/recapture-gerege/attestation.json`. Number-by-number diff:
+`t36/out/diff-vs-committed.txt`.
 
 `out/*.json` are the **raw response bytes**. The server emits money as JSON *numbers*, not strings, so any
 tooling that reads these must treat them as text or exact decimal — parsing to a binary float before
@@ -122,5 +161,25 @@ storing would corrupt the vector.
 - `submittedOnDate` must be **≥ the client's activation date** and **≤ the current business date**. This is
   why the leap-year captures need a separately activated client — the stock fixture client cannot back-date
   to 2024, and 2028 is rejected as future.
+
+- **A tenant cannot be added without restarting the server.** `MoneyHelper` caches the rounding mode per
+  tenant at startup, and the only runtime re-init endpoint (`InternalConfigurationsApiResource:87-92`) is
+  `@Profile(TEST)` and absent from this image. So provisioning a new tenant costs a restart — which is why
+  T36 reused the already-provisioned `gerege` rather than creating another while a second worker depended on
+  the server staying up. Adding **products** and issuing **loan applications** need no restart.
+
+## The whole recipe, executable (T36)
+
+```sh
+sh   t36/preconditions.sh gerege     # 15 fail-the-run assertions        (T22 P0-4)
+python3 t36/attest.py gerege pathb   # preconditions + capture + attestation.json (T22 P0-3, P0-6)
+sh   t36/rundiff.sh                  # number-by-number diff vs the committed corpus
+sh   t36/run-invariants.sh           # T22's ten property invariants
+python3 t36/t36_rederive_check.py    # re-checks T30's from-source re-derivation of B-03/B-04
+sh   t36/mutation-test.sh            # proves the comparator can fail
+sh   t36/recreate-products.sh        # re-creates the four products and re-issues the four applications
+sh   t36/emiloop-probe.sh            # EMI re-adjust-loop probes           (T22 P1-11, 2nd clause)
+python3 t36/t36_emiloop_verdict.py   # loop-fired verdict vs the no-loop model
+```
 
 Findings and their evidence: `PATHB-REPORT.md`.
