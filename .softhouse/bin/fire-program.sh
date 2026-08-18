@@ -153,6 +153,20 @@ You hold the repo lock at .softhouse/LOCK; the wrapper releases it when you exit
 
 log "invoking driver"
 
+# ROOT CAUSE OF EVERY LOST LOCAL FIRE (found 2026-08-18 by fire 20260818-230002).
+# `claude -p` waits only 600s for background tasks after the driver's final
+# response, then TERMINATES them:
+#   "Background tasks still running after 600s; terminating.
+#    Set CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0 to wait indefinitely."
+# That exact line appears in fire-20260817-191707, -20260818-080003, -170002 and
+# -200001 — i.e. in EVERY fire that stranded work. The diagnosis recorded in
+# RESUME.md ("fire-program.sh dispatches and exits without awaiting its workers")
+# was WRONG: the driver did await; the harness killed the workers under it.
+# An opus worker re-deriving money math or building a capture container routinely
+# needs far more than 10 minutes, so the ceiling must be removed, not raised.
+export CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0
+log "background-task wait ceiling: disabled (CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0)"
+
 # Stream progress instead of going dark until the end: raw events land in
 # fire-<stamp>.jsonl, a one-line-per-step digest goes to the human log. Without
 # this the log shows "invoking driver" and nothing else for hours.
