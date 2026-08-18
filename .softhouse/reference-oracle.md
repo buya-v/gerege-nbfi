@@ -199,7 +199,11 @@ see `.softhouse/capture/PASS2-REPORT.md`, Finding 2. Multi-disbursement behaviou
 
 The connection facts at the top of this file. **FIRST USED FOR CAPTURE, fire `20260818-170002`** — four raw
 observed captures under `.softhouse/capture/pathb/`, recipe in that directory's `REPRODUCE.md`, findings in
-`PATHB-REPORT.md`. Raw observed only; **not audited**, nothing promoted to the vector store.
+`PATHB-REPORT.md`. **INDEPENDENTLY AUDITED by T22 (2026-08-18) — ACCEPTED WITH REQUIRED CHANGES**, the audit
+re-checked by T27 and its oracle-independent corrections applied; `B-03`/`B-04` additionally re-derived from
+the pinned source by T30 (`.softhouse/reviews/t30-probe/`). **Three P0 admissibility items are still open**
+(T22 §10 P0-3 attestation sidecar, P0-4 fail-the-run preconditions, P0-6 re-point at a production-settings
+tenant), each needing a live oracle. So: audited observations, **nothing promoted to the vector store**.
 
 It is the **only** path that can close Path A's blind spot, and it is a materially larger rig than Tier 0
 assumed: it needs tenants provisioned with the right timezones (see finding 1 above), and every capture must
