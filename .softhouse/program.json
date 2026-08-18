@@ -1,12 +1,12 @@
 {
   "program_id": "fineract-to-go-full-codebase",
-  "goal": "Port the complete Fineract codebase to Go behind the frozen adapter contract, one bounded context per run, continuously, until every context below is done. Ratified 17 August 2026 \u2014 supersedes the Minimum-Portable-Core-only scope.",
+  "goal": "Port the complete Fineract codebase to Go behind the frozen adapter contract, one bounded context per run, continuously, until every context below is done. Ratified 17 August 2026 — supersedes the Minimum-Portable-Core-only scope.",
   "status": "active",
   "driver": "/softhouse-program",
   "oracle": {
     "source_checkout": "/Users/buv/fineract",
     "pinned_commit": "426a23544",
-    "note": "Commit measured 17 Aug 2026 [VERIFIED: git log -1 in that checkout]. T1 of run 1 re-pins it into .softhouse/reference-oracle.md together with the running-instance connection facts. LOC figures below are measured from THIS checkout (find+wc over src/main/**.java) \u2014 re-measure if the pin moves.",
+    "note": "Commit measured 17 Aug 2026 [VERIFIED: git log -1 in that checkout]. T1 of run 1 re-pins it into .softhouse/reference-oracle.md together with the running-instance connection facts. LOC figures below are measured from THIS checkout (find+wc over src/main/**.java) — re-measure if the pin moves.",
     "status": "UP",
     "verified_at": "2026-08-18T07:31Z",
     "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
@@ -14,7 +14,7 @@
     "jvm": "Zulu 21.0.11+10-LTS",
     "base_url": "https://localhost:8443/fineract-provider/api/v1",
     "facts_file": ".softhouse/reference-oracle.md",
-    "driver_assertion": "org.postgresql.Driver / jdbc:postgresql:// \u2014 PASSED against running container",
+    "driver_assertion": "org.postgresql.Driver / jdbc:postgresql:// — PASSED against running container",
     "prohibited_engines": "none (0 ojdbc/oracle.jdbc/mysql/mariadb jar entries, no :1521 listener)",
     "image_digest": "sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a",
     "commit_attestation": "the image jar's own BOOT-INF/classes/git.properties carries git.commit.id=426a23544e8426a38ae43ae404670a0a7e85b9eb with git.dirty=false [VERIFIED by the T18 audit] - build-attested, not self-reported",
@@ -51,7 +51,7 @@
       "reaches_reference_oracle": false,
       "role": "Catch-up when the Mac was off: source analysis, DEC/spec drafts, Tier-C gap audit, Tier-D corpus mining. Parks vector/conformance work as oracle_unreachable."
     },
-    "mutual_exclusion": ".softhouse/LOCK \u2014 repo-level lock, pushed so both fires see it. A fire finding a lock under 6h old exits without dispatching. Stale locks (>6h) are taken over."
+    "mutual_exclusion": ".softhouse/LOCK — repo-level lock, pushed so both fires see it. A fire finding a lock under 6h old exits without dispatching. Stale locks (>6h) are taken over."
   },
   "policy": {
     "one_context_per_run": true,
@@ -96,7 +96,7 @@
     {
       "id": "tierA-gl-accounting",
       "tier": "A",
-      "title": "General Ledger / accounting \u2014 double-entry posting, chart of accounts, journal entries, accruals, product-account mapping",
+      "title": "General Ledger / accounting — double-entry posting, chart of accounts, journal entries, accruals, product-account mapping",
       "fineract_paths": [
         "fineract-accounting",
         "fineract-provider/src/main/java/org/apache/fineract/accounting/journalentry",
@@ -137,7 +137,7 @@
     {
       "id": "tierA-loan-lifecycle",
       "tier": "A",
-      "title": "Loan account lifecycle \u2014 disbursement, repayment, penalties, rescheduling, write-off, delinquency",
+      "title": "Loan account lifecycle — disbursement, repayment, penalties, rescheduling, write-off, delinquency",
       "fineract_paths": [
         "fineract-loan",
         "fineract-provider/src/main/java/org/apache/fineract/portfolio/loanaccount"
@@ -149,7 +149,7 @@
         "tierA-loan-product-schedule"
       ],
       "status": "pending",
-      "main_loc_note": "66,375 + 39,871 [VERIFIED: measured]. LARGEST context \u2014 must be split across several runs by sub-behavior (disbursement | repayment allocation | penalties/charges application | rescheduling | write-off/delinquency). A single plan over all of it will exhaust every worker.",
+      "main_loc_note": "66,375 + 39,871 [VERIFIED: measured]. LARGEST context — must be split across several runs by sub-behavior (disbursement | repayment allocation | penalties/charges application | rescheduling | write-off/delinquency). A single plan over all of it will exhaust every worker.",
       "run_id": null,
       "cutover_gate": true,
       "notes": "Split mandatory. 679 + ~380 files.",
@@ -158,7 +158,7 @@
     {
       "id": "tierA-charges-rates-tax",
       "tier": "A",
-      "title": "Charges, rates, tax \u2014 including VAT / e-Barimt tie-in",
+      "title": "Charges, rates, tax — including VAT / e-Barimt tie-in",
       "fineract_paths": [
         "fineract-charge",
         "fineract-rates",
@@ -175,13 +175,13 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "3,694 + 1,926 + 2,262 + 947 + 1,089 + 415 [VERIFIED: measured]. Mongolian VAT / e-Barimt is additive, not a Fineract port \u2014 spec it, do not invent parity vectors for it.",
+      "notes": "3,694 + 1,926 + 2,262 + 947 + 1,089 + 415 [VERIFIED: measured]. Mongolian VAT / e-Barimt is additive, not a Fineract port — spec it, do not invent parity vectors for it.",
       "analysis_ready": true
     },
     {
       "id": "tierA-cob-batch",
       "tier": "A",
-      "title": "Close-of-business batch \u2014 daily accrual/aging/posting, idempotency, restart-after-failure",
+      "title": "Close-of-business batch — daily accrual/aging/posting, idempotency, restart-after-failure",
       "fineract_paths": [
         "fineract-cob",
         "fineract-provider/src/main/java/org/apache/fineract/cob",
@@ -223,7 +223,7 @@
     {
       "id": "tierB-savings-deposits",
       "tier": "B",
-      "title": "Savings / deposits / recurring deposits / interest rate charts \u2014 ported DISABLED",
+      "title": "Savings / deposits / recurring deposits / interest rate charts — ported DISABLED",
       "fineract_paths": [
         "fineract-savings",
         "fineract-provider/src/main/java/org/apache/fineract/portfolio/savings",
@@ -238,7 +238,7 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "activation_gate": "user \u2014 deposit-taking activation requires FRC / Bank of Mongolia licensing sign-off. Ships behind a config flag defaulting to OFF. Never render deposits as insured/protected/guaranteed.",
+      "activation_gate": "user — deposit-taking activation requires FRC / Bank of Mongolia licensing sign-off. Ships behind a config flag defaulting to OFF. Never render deposits as insured/protected/guaranteed.",
       "notes": "25,331 + 31,890 + 3,729 + 960 [VERIFIED: measured]. Split by run: savings account lifecycle | interest posting | recurring/fixed deposits | rate charts.",
       "analysis_ready": true
     },
@@ -293,7 +293,7 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "3,748 test LOC \u2014 good vector density.",
+      "notes": "3,748 test LOC — good vector density.",
       "analysis_ready": true
     },
     {
@@ -330,7 +330,7 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "6,203 + 3,209 [VERIFIED: measured]. Member share capital feeds the compliance-spine capital figure \u2014 reconcile against the native GL.",
+      "notes": "6,203 + 3,209 [VERIFIED: measured]. Member share capital feeds the compliance-spine capital figure — reconcile against the native GL.",
       "analysis_ready": true
     },
     {
@@ -350,7 +350,7 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "Pledged-collateral hold math: holds alter available only, never posted balance. This is the exact defect that failed adversarial review twice on the sister project \u2014 force the sign when re-deriving.",
+      "notes": "Pledged-collateral hold math: holds alter available only, never posted balance. This is the exact defect that failed adversarial review twice on the sister project — force the sign when re-deriving.",
       "analysis_ready": true
     },
     {
@@ -381,13 +381,13 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "Names are ovog / patronymic / given name \u2014 a diff introducing first_name/last_name is a rejection. National ID validated structurally, 10 chars. Match on registration number, never on name. Split by run; clients and groups are separate slices.",
+      "notes": "Names are ovog / patronymic / given name — a diff introducing first_name/last_name is a rejection. National ID validated structurally, 10 chars. Match on registration number, never on name. Split by run; clients and groups are separate slices.",
       "analysis_ready": true
     },
     {
       "id": "tierC-platform-map-first",
       "tier": "C",
-      "title": "Platform layer \u2014 MAP onto Nexus, port only demonstrated gaps",
+      "title": "Platform layer — MAP onto Nexus, port only demonstrated gaps",
       "fineract_paths": [
         "fineract-core",
         "fineract-security",
@@ -439,7 +439,7 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": false,
-      "notes": "~321k test LOC. Runs OPPORTUNISTICALLY \u2014 whenever a Tier A/B context is planned, its slice of this corpus is mined in the same run's test_writer task. Kept as a distinct context so residual suites are not forgotten. Never ported one-for-one into Go tests.",
+      "notes": "~321k test LOC. Runs OPPORTUNISTICALLY — whenever a Tier A/B context is planned, its slice of this corpus is mined in the same run's test_writer task. Kept as a distinct context so residual suites are not forgotten. Never ported one-for-one into Go tests.",
       "analysis_ready": true
     }
   ],
@@ -576,6 +576,48 @@
       "gate_status": "G-1 still open; now scoped to T23's three P0 corrections plus a re-review",
       "vectors_promoted": 0,
       "note": "Also rescued and PUSHED the previous fire's three stranded branches, which existed only locally, and salvaged their probe artifacts onto main."
+    },
+    {
+      "fire": "cloud-20260818-2000",
+      "host": "cloud sandbox (Claude Code Remote)",
+      "oracle": "UNREACHABLE - expected; all vector-capture and conformance work parked oracle_unreachable, and this fire spent itself entirely on work needing no live oracle",
+      "context": "tier0-harness-schedule-poc",
+      "run_id": "2026-08-17-run1-harness-schedule-poc",
+      "workers_dispatched": 8,
+      "workers_completed": 7,
+      "workers_killed": 1,
+      "tasks_closed": [
+        "T24",
+        "T25 (partial)",
+        "T26",
+        "T27",
+        "T28",
+        "T29",
+        "T30",
+        "T31"
+      ],
+      "tasks_raised": [
+        "T28",
+        "T29",
+        "T30",
+        "T31",
+        "T32"
+      ],
+      "merges": 7,
+      "opened_by_finding": "The PRIOR local fire 20260818-200001 dispatched T24 and T25 at 20:01:23 and checkpointed 104 seconds later with both still marked in_flight. No softhouse/T24-* or softhouse/T25-* branch was ever created. Two opus workers cannot complete in 104 seconds: both died and their work was lost. This is the SECOND consecutive recurrence of the dispatch-and-exit failure mode that SKILL.md STEP 5.5 exists to prevent (first: 17:22, which stranded 4,482 insertions). This cloud fire re-did both tasks properly, awaiting every worker.",
+      "premise_corrected": "RESUME.md asserted T24 'needs the oracle' because T23's P0-1 mentions capturing vectors. That was an over-read: P0-1 requires RE-SCOPING backlog item 8.3, not capturing the vectors now. Every figure T24 needed was already observed and committed by T23. All eight tasks this fire ran turned out to need no live oracle.",
+      "reviewer_catches": [
+        "T26 re-reviewed DEC-1 v3 and found a NEW P0 the drafter and T23 both missed: the EMI re-adjust loop was specified by its TRIGGER but never by its EFFECT. Over 24,000 in-graded-domain shapes the guard fires on 2,855; an implementation omitting the adoption test differs on 2,156 of them. No Run-1 vector trips the guard, so the corpus could not catch it.",
+        "T27 caught T25 SILENTLY DROPPING an item (T22 P1-12) while claiming nothing was dropped, MIS-PARKING five oracle-free items as oracle_unreachable, and leaving five documents asserting 'NOT YET INDEPENDENTLY AUDITED' beside the audits' own corrections - one of which (PATHB-REPORT.md:150-151) had become factually false. It verified the two 'fake PASS' invariant defects were genuinely fixed by MUTATION TESTING, corrupting committed captures by one minor unit to confirm the checks now fail.",
+        "T29 re-reviewed DEC-1 v4 and found TWO more P0s, the second serious: the PER-PERIOD INTEREST COMPUTATION - the core money calculation of the entire contract - was specified NOWHERE. The oracle performs three separately mc-rounded operations that cancel algebraically but not numerically; the textbook single-multiply reading the prose actually described diverges on 699 of 43,992 in-graded-domain shapes. ALL 13 COMMITTED OBSERVATIONS PASS EITHER WAY.",
+        "T30 closed what T27 called the largest remaining hole in the Path B evidence WITHOUT an oracle, re-deriving B-03/B-04 from source through the cross-year partial-period arm - digit-for-digit, 12/12 periods, both totals, at two rounding modes - and surfaced two normative facts nobody had recorded, including that FEB_29_PERIOD_ONLY does TWO things, so a port implementing only the days-in-year cap fails B-04, the corpus's only vector for that field. It also fixed an honesty defect: a report presented a model-DERIVED figure as an OBSERVED one.",
+        "T31 caught that its own worktree was a commit behind main and REBASED rather than silently reverting the driver's gate record - then proved its fix DISCRIMINATES, showing both wrong readings now fail while the corpus still passes them 13/13."
+      ],
+      "pattern_recorded": "THREE consecutive independent re-reviews (T23, T26, T29) each found NEW P0s in areas the previous review had not examined, and in EVERY case the committed corpus passed both the right and the wrong reading. 'The golden vectors pass' has so far been no evidence of correctness in this contract. The document is nonetheless converging: T29 verified the whole of T28's loop specification and ~20 of its citations exactly, and each new P0 has been fresh ground rather than re-opened ground.",
+      "uat": "not run - Run 1's UAT (T13) is gated on the harness and on conformance, which need the live oracle",
+      "gates_crossed": "none. G-1 remains OPEN and unratified - the driver declined to ratify three times (after T26, T29, and pending T32), because standing policy P-2 licenses ratification only on a CLEAN review and none came back clean.",
+      "vectors_promoted": "none. Nothing was promoted to the parity store; T27's promotability audit says nothing is promotable today, with 6 P0 admissibility items outstanding, every one needing a live oracle.",
+      "invariants_held": "PostgreSQL only; no vector synthesised; no contract-shaped capture storage while G-1 is open; no cutover; no user gate crossed"
     }
   ],
   "database": {
@@ -587,7 +629,7 @@
       "MariaDB (docker-compose-mariadb*.yml)"
     ],
     "go_driver": "github.com/jackc/pgx/v5",
-    "money_columns": "bigint minor units \u2014 never float/double precision/real/money",
+    "money_columns": "bigint minor units — never float/double precision/real/money",
     "terminology": "'The oracle' in this program means the Fineract REFERENCE IMPLEMENTATION (.softhouse/reference-oracle.md), never Oracle Database."
   }
 }
