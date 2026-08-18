@@ -112,7 +112,19 @@ A worker spawned without a worktree, or given an absolute path into the main che
 
 A parked context is never abandoned: every fire re-evaluates parks and unparks any whose precondition now holds (oracle back up, dependency now `done`, conflict resolved).
 
-## STEP 5 — Gates: surface, then wait (only if nothing else is runnable)
+## STEP 5 — Gates: answer what you can, escalate only what you cannot
+
+Before treating a gate as a stop, **triage every item in it** (CLAUDE.md § Answering gates):
+
+- **LEGAL** — settled by statute/regulation. Cite the article and apply it. Read `.softhouse/gates-proposed-answers.md` first; the deposit-taking position is already settled there.
+- **ENGINEERING** — answerable from source, captured vectors, or design reasoning. Propose, record the reasoning, act.
+- **RESERVED** — needs a business/licensing/regulatory fact no source can supply. Escalate **these only**.
+
+A gate with no RESERVED items is not a stop. A gate with some RESERVED items still lets every non-reserved item proceed — and the rest of the program keeps running under READY-FOR-ANALYSIS.
+
+Never dress a RESERVED item as ENGINEERING to keep moving. The test is simple: *could any amount of reading source, statute or vectors answer this?* If the answer depends on what Gerege intends to sell, which licence a deployment runs under, or what a regulator has accepted — it is RESERVED.
+
+### Surfacing what remains
 Append to `.softhouse/gates.md`, one block per gate: gate id, context, what was proven (conformance table, reviewer re-derivations), what is being asked, what unblocks it, and — for a cutover — the shadow-parity window status and the regulatory sign-off state. Then exit with a one-screen summary of what Buyan must decide.
 
 **Gates that no automation may cross, ever:**

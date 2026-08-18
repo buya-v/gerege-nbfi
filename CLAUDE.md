@@ -46,7 +46,20 @@ Do not let an agent decide these; route as `executor: "user"`:
 - Any context CUTOVER from Fineract to the Go module.
 - Any change to a ratified DEC-n or the frozen adapter contract.
 - Regulatory acceptance / parallel-run sign-off (FRC, external audit).
-- **Deposit-taking ACTIVATION.** Porting `fineract-savings` / deposit code is in scope; **enabling deposit-taking behavior in any live environment is not**, until the FRC/Bank of Mongolia licensing position is signed off. Ported deposit code ships disabled by config, and the "never insured/protected/guaranteed" rule applies to every string it returns. This is a licensing gate on the *activation*, not a scope block on the *port*.
+- **Deposit-taking ACTIVATION.** Porting `fineract-savings` / deposit code is in scope; **enabling deposit-taking behavior in any live environment is not**, until the licensing position is settled. Ported deposit code ships disabled by config, and the "never insured/protected/guaranteed" rule applies to every string it returns. This is a licensing gate on the *activation*, not a scope block on the *port*. The statutory position, which no agent may re-litigate:
+  - **NBFI (ББСБ)** — accepting deposits or opening deposit accounts is **prohibited**: Law on Non-Banking Financial Activities, **Art. 12.1.3**, and **Art. 12.1.4** (no deposits via cheques, cards or promissory notes). <https://legalinfo.mn/mn/detail/103>
+  - **SCC (ХЗХ)** — a licensed savings and credit cooperative may take savings **from members only**, and lend to members only (Law on Savings and Credit Cooperatives).
+  - Which licensed entity operates a given deployment is a `user` fact, and it decides which of the two applies.
+
+## Answering gates
+
+When a `user` gate is raised, the driver **first attempts a grounded answer** and escalates only what genuinely cannot be answered. Classify every gate item:
+
+- **LEGAL** — settled by statute or regulation. Cite the article. Not a preference, and not re-decidable by a later agent.
+- **ENGINEERING** — answerable from source, captured vectors, or design reasoning. Propose it with the reasoning, and act on it.
+- **RESERVED** — needs a business, licensing or regulatory fact no source can supply (what Gerege intends to sell, which licence a deployment runs under, what a regulator has accepted). **Escalate these and only these.**
+
+Standing answers live in `.softhouse/gates-proposed-answers.md`. A gate whose every item is LEGAL or ENGINEERING is not a stop — answer it, record the reasoning, and keep working.
 
 ## How work is executed
 
