@@ -165,8 +165,14 @@ DIGEST='
   elif .type=="system" and .subtype=="init" then "INIT session " + (.session_id // "?")
   else empty end'
 
+# Both 2026-08-18 fires died mid-response with "your computer went to sleep":
+# launchd fires it, the Mac idles, the driver is killed with the run mid-flight.
+# caffeinate holds off idle/disk/system sleep for exactly the driver's lifetime.
+CAFFEINATE=()
+[[ -x /usr/bin/caffeinate ]] && CAFFEINATE=(/usr/bin/caffeinate -i -m -s)
+
 if [[ -x /usr/bin/jq ]]; then
-  "$CLAUDE_BIN" -p "$PROMPT" \
+  "${CAFFEINATE[@]}" "$CLAUDE_BIN" -p "$PROMPT" \
     --permission-mode bypassPermissions \
     --add-dir "$FINERACT_SRC" \
     --output-format stream-json --verbose \
@@ -175,7 +181,7 @@ if [[ -x /usr/bin/jq ]]; then
   RC=${pipestatus[1]}
   log "raw event stream: $RAW"
 else
-  "$CLAUDE_BIN" -p "$PROMPT" \
+  "${CAFFEINATE[@]}" "$CLAUDE_BIN" -p "$PROMPT" \
     --permission-mode bypassPermissions \
     --add-dir "$FINERACT_SRC" \
     --output-format text
