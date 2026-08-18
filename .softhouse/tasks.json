@@ -490,9 +490,9 @@
       "dependencies": [
         "T8"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "Raised fire 20260818-170002 by the orchestrator, which produced the captures under audit. Contract-independent: audits RAW observed capture. Path B is now a prerequisite for any contract clause touching the two fields Path A drops, so this audit gates that part of the parity corpus.",
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Raised fire 20260818-170002 by the orchestrator, which produced the captures under audit. Contract-independent: audits RAW observed capture. Path B is now a prerequisite for any contract clause touching the two fields Path A drops, so this audit gates that part of the parity corpus. || DISPATCHED fire 20260818-170002: opus worker, isolation=worktree, branch softhouse/T22-pathb-capture-audit.",
       "contract_independent": true
     }
   ]
