@@ -39,6 +39,7 @@ done
 
 mkdir -p "$LOG_DIR"
 STAMP="$(date +%Y%m%d-%H%M%S)"
+FIRE_START_EPOCH=$(date +%s)
 LOG="$LOG_DIR/fire-$STAMP.log"
 exec > >(tee -a "$LOG") 2>&1
 
@@ -207,10 +208,9 @@ fi
 # RESUME.md must have been rewritten during this fire, or a fresh session resumes
 # from a stale manifest — worse than none, because it looks authoritative.
 if [[ -f .softhouse/RESUME.md ]]; then
-  RESUME_AGE=$(( $(date +%s) - $(/usr/bin/stat -f %m .softhouse/RESUME.md) ))
-  FIRE_AGE=$(( $(date +%s) - $(/usr/bin/stat -f %m "$LOG") ))
-  if (( RESUME_AGE > FIRE_AGE + 60 )); then
-    log "WARN: exit-protocol violation — .softhouse/RESUME.md was NOT updated this fire (${RESUME_AGE}s old). The next fire may act on stale state; review it by hand."
+  RESUME_MTIME=$(/usr/bin/stat -f %m .softhouse/RESUME.md)
+  if (( RESUME_MTIME < FIRE_START_EPOCH )); then
+    log "WARN: exit-protocol violation — .softhouse/RESUME.md predates this fire's start; the next fire may act on stale state. Review it by hand."
   fi
 fi
 
