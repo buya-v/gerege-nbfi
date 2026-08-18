@@ -1,20 +1,20 @@
 {
   "run_id": "2026-08-17-run1-harness-schedule-poc",
-  "feature": "Run 1 — golden-vector conformance harness + progressive-loan schedule-generator PoC port",
-  "requirement": "Prove the Fineract→Go migration pipeline end-to-end on the smallest real slice, harness-first. IN SCOPE for THIS run only: (1) Build the golden-vector conformance harness (.softhouse/conformance.sh) and a vector store, capturing vectors for the progressive-loan schedule generator from the live Fineract oracle. (2) Define the minimal frozen adapter interface needed to invoke a schedule generator (spec_writer) — mark its ratification a user gate. (3) Port fineract-progressive-loan-embeddable-schedule-generator (~182 LOC) to Go behind that interface (coder), integer-minor-units only, no float in any path. (4) Verify via /softhouse-uat: go build + the schedule-generator conformance vectors must pass, and property invariants (schedule principal amortizes to exactly zero, rounding matches Fineract) must hold. Every coder/analyst task gets a paired INDEPENDENT reviewer that RE-DERIVES the schedule arithmetic against the Fineract vector, not reads it. SCOPE GUARD: Minimum Portable Core, PoC slice only — do NOT plan GL posting logic, COB, charges/rates/tax, provisioning, or ANY context cutover in this run; record them to backlog in strangler order (GL → loan lifecycle → charges/rates/tax → COB → provisioning). Route as user gates: adapter-contract ratification and any cutover. This run also exercises the token-limit checkpoint/resume once.",
+  "feature": "Run 1 \u2014 golden-vector conformance harness + progressive-loan schedule-generator PoC port",
+  "requirement": "Prove the Fineract\u2192Go migration pipeline end-to-end on the smallest real slice, harness-first. IN SCOPE for THIS run only: (1) Build the golden-vector conformance harness (.softhouse/conformance.sh) and a vector store, capturing vectors for the progressive-loan schedule generator from the live Fineract oracle. (2) Define the minimal frozen adapter interface needed to invoke a schedule generator (spec_writer) \u2014 mark its ratification a user gate. (3) Port fineract-progressive-loan-embeddable-schedule-generator (~182 LOC) to Go behind that interface (coder), integer-minor-units only, no float in any path. (4) Verify via /softhouse-uat: go build + the schedule-generator conformance vectors must pass, and property invariants (schedule principal amortizes to exactly zero, rounding matches Fineract) must hold. Every coder/analyst task gets a paired INDEPENDENT reviewer that RE-DERIVES the schedule arithmetic against the Fineract vector, not reads it. SCOPE GUARD: Minimum Portable Core, PoC slice only \u2014 do NOT plan GL posting logic, COB, charges/rates/tax, provisioning, or ANY context cutover in this run; record them to backlog in strangler order (GL \u2192 loan lifecycle \u2192 charges/rates/tax \u2192 COB \u2192 provisioning). Route as user gates: adapter-contract ratification and any cutover. This run also exercises the token-limit checkpoint/resume once.",
   "status": "blocked_on_gate",
   "backlog": [
-    "Run 2 — General Ledger / accounting (double-entry posting rules, chart of accounts, journal entries/items) behind the frozen contract; GL vectors + trial-balance invariants. Cutover = separate user gate.",
-    "Run 3 — Loan product + schedule + lifecycle (products, interest methods, disbursement, repayment, penalties, rescheduling, write-off), reusing the Run 1 schedule generator. Cutover = separate user gate.",
-    "Run 4 — Charges / rates / tax including the VAT / e-Barimt tie-in; thresholds from config. Cutover = separate user gate.",
-    "Run 5 — Close-of-business batch (daily accrual/aging/posting, idempotency, restart-after-failure) on Nexus's scheduler, EOD day-over-day parity. Cutover = separate user gate.",
-    "Run 6 — Provisioning + FRC reporting feeds (Tier-A completion); compliance-spine capital and 30%/70% limits reconcile to the native GL. Tier-A cutover + regulatory acceptance = user gates, parallel run required."
+    "Run 2 \u2014 General Ledger / accounting (double-entry posting rules, chart of accounts, journal entries/items) behind the frozen contract; GL vectors + trial-balance invariants. Cutover = separate user gate.",
+    "Run 3 \u2014 Loan product + schedule + lifecycle (products, interest methods, disbursement, repayment, penalties, rescheduling, write-off), reusing the Run 1 schedule generator. Cutover = separate user gate.",
+    "Run 4 \u2014 Charges / rates / tax including the VAT / e-Barimt tie-in; thresholds from config. Cutover = separate user gate.",
+    "Run 5 \u2014 Close-of-business batch (daily accrual/aging/posting, idempotency, restart-after-failure) on Nexus's scheduler, EOD day-over-day parity. Cutover = separate user gate.",
+    "Run 6 \u2014 Provisioning + FRC reporting feeds (Tier-A completion); compliance-spine capital and 30%/70% limits reconcile to the native GL. Tier-A cutover + regulatory acceptance = user gates, parallel run required."
   ],
   "tasks": [
     {
       "id": "T1",
       "title": "Stand up + pin the Fineract reference oracle (on PostgreSQL)",
-      "description": "Bring up the Fineract reference oracle reachable for this run and pin it: exact release tag/commit, JVM version, tenant/loan-product seed data, and the local source checkout path for fineract-progressive-loan-embeddable-schedule-generator. DATABASE IS POSTGRESQL, mandatory: start it with the postgresql compose profile (docker-compose-postgresql.yml / config/docker/compose/postgresql.yml) — never the mysql or mariadb compose files — and ASSERT the running config before recording it: driverClassName == org.postgresql.Driver, jdbcUrl starts jdbc:postgresql://, and no ojdbc / oracle.jdbc / port 1521 anywhere in the stack. Record all of it in .softhouse/reference-oracle.md (connection facts, Postgres server version, pinned Fineract commit, the driver assertion result) so every later vector capture is reproducible against the SAME oracle build on the SAME engine. Terminology: 'oracle' here means the Fineract reference implementation; Oracle Database is prohibited by CLAUDE.md. If the reference oracle cannot be brought up, STOP the run here — conformance must never report a false PASS (exit 2 on unreachable).",
+      "description": "Bring up the Fineract reference oracle reachable for this run and pin it: exact release tag/commit, JVM version, tenant/loan-product seed data, and the local source checkout path for fineract-progressive-loan-embeddable-schedule-generator. DATABASE IS POSTGRESQL, mandatory: start it with the postgresql compose profile (docker-compose-postgresql.yml / config/docker/compose/postgresql.yml) \u2014 never the mysql or mariadb compose files \u2014 and ASSERT the running config before recording it: driverClassName == org.postgresql.Driver, jdbcUrl starts jdbc:postgresql://, and no ojdbc / oracle.jdbc / port 1521 anywhere in the stack. Record all of it in .softhouse/reference-oracle.md (connection facts, Postgres server version, pinned Fineract commit, the driver assertion result) so every later vector capture is reproducible against the SAME oracle build on the SAME engine. Terminology: 'oracle' here means the Fineract reference implementation; Oracle Database is prohibited by CLAUDE.md. If the reference oracle cannot be brought up, STOP the run here \u2014 conformance must never report a false PASS (exit 2 on unreachable).",
       "agent_role": "verifier",
       "executor": "orchestrator",
       "model": "sonnet",
@@ -45,12 +45,12 @@
       ],
       "status": "parked",
       "attempts": 2,
-      "note": "REJECTED by T3 on attempt 1; single retry dispatched at opus per policy.retry_model. Reviewer re-derivation CONFIRMED EMI=17.01 and splits p1 16.43/0.58, p2 16.52/0.49, p3 16.62/0.39, and strengthened the recurrence claim (recurrence 6.08818353993 vs closed-form 6.08818353806 — NOT bit-equal, so the Go port must implement the recurrence). REJECTED on: (1) month-end stepping refuted by DefaultScheduledDateGenerator.adjustDate:168-176 (re-anchors to seed day; ls-008 is 02-28,03-31,04-30,05-31,06-30,07-31, term 181d not 178d); (2) setScale(mc.getPrecision(),..) mis-described as a redundant clamp when it feeds precision into the scale slot and truncates every rate factor; (3) 'calendar days cancel to exactly 1' false at BigDecimal level; (4) 4 of 24 spot-checked citations did not support their claims. | Attempt-2 deliverable landed 19:53:50 (81763 bytes, 5 [UNVERIFIED] remaining) but the fire exited without committing it or re-reviewing it; committed by hand 19:56. NOT yet re-reviewed against the T3 verdict. Retry ran on opus (the model field below still reads sonnet — stale). | isolation_violation: worker spawned with isolation NONE in the main working tree; no softhouse/* branch exists, so branch-based handoff and `git diff main..<branch>` scope checks were unavailable this run. || cloud fire 20260817-2000: REJECTED AGAIN by T3b (attempt 2). PARKED per policy.max_retries_per_task=1 + park_after_retries=true - attempt 1 and its one retry are both spent. FAILURE MODE IS SYSTEMATIC AND DIAGNOSABLE: the analyst corrected each section the review named but NOT the other sections restating the same claim - month-end fixed in SS4.4, left wrong in SS7.4 and the vector matrix; 'cancels to 1' fixed in SS4.2, left wrong in SS7.4. A reader building the Go port still meets the original wrong instruction. NEW money-path defect found: allowFullTermForTranche is caller-settable and the guard at ProgressiveEMICalculator.java:142-144 never consults isMultiDisburseLoan() - INDEPENDENTLY corroborated by T5 from a different artefact. Plus a 4th MoneyHelper fallback at :182 that SS5.2's list omits. Non-negotiables CLEAN; 47 citations checked, 45 held. UNPARK PRECONDITION: gate G-2 - Buyan's permission for a third attempt with a DIFFERENT task shape (apply T3b's 10 enumerated edits surgically, then a mechanical grep sweep for restatements of each corrected claim elsewhere in the document), since a third free-form rewrite would likely repeat the leak."
+      "note": "REJECTED by T3 on attempt 1; single retry dispatched at opus per policy.retry_model. Reviewer re-derivation CONFIRMED EMI=17.01 and splits p1 16.43/0.58, p2 16.52/0.49, p3 16.62/0.39, and strengthened the recurrence claim (recurrence 6.08818353993 vs closed-form 6.08818353806 \u2014 NOT bit-equal, so the Go port must implement the recurrence). REJECTED on: (1) month-end stepping refuted by DefaultScheduledDateGenerator.adjustDate:168-176 (re-anchors to seed day; ls-008 is 02-28,03-31,04-30,05-31,06-30,07-31, term 181d not 178d); (2) setScale(mc.getPrecision(),..) mis-described as a redundant clamp when it feeds precision into the scale slot and truncates every rate factor; (3) 'calendar days cancel to exactly 1' false at BigDecimal level; (4) 4 of 24 spot-checked citations did not support their claims. | Attempt-2 deliverable landed 19:53:50 (81763 bytes, 5 [UNVERIFIED] remaining) but the fire exited without committing it or re-reviewing it; committed by hand 19:56. NOT yet re-reviewed against the T3 verdict. Retry ran on opus (the model field below still reads sonnet \u2014 stale). | isolation_violation: worker spawned with isolation NONE in the main working tree; no softhouse/* branch exists, so branch-based handoff and `git diff main..<branch>` scope checks were unavailable this run. || cloud fire 20260817-2000: REJECTED AGAIN by T3b (attempt 2). PARKED per policy.max_retries_per_task=1 + park_after_retries=true - attempt 1 and its one retry are both spent. FAILURE MODE IS SYSTEMATIC AND DIAGNOSABLE: the analyst corrected each section the review named but NOT the other sections restating the same claim - month-end fixed in SS4.4, left wrong in SS7.4 and the vector matrix; 'cancels to 1' fixed in SS4.2, left wrong in SS7.4. A reader building the Go port still meets the original wrong instruction. NEW money-path defect found: allowFullTermForTranche is caller-settable and the guard at ProgressiveEMICalculator.java:142-144 never consults isMultiDisburseLoan() - INDEPENDENTLY corroborated by T5 from a different artefact. Plus a 4th MoneyHelper fallback at :182 that SS5.2's list omits. Non-negotiables CLEAN; 47 citations checked, 45 held. UNPARK PRECONDITION: gate G-2 - Buyan's permission for a third attempt with a DIFFERENT task shape (apply T3b's 10 enumerated edits surgically, then a mechanical grep sweep for restatements of each corrected claim elsewhere in the document), since a third free-form rewrite would likely repeat the leak."
     },
     {
       "id": "T3",
       "title": "Independent review of the extracted schedule behavior (re-derive)",
-      "description": "Spawned fresh, without planning context. RE-DERIVE the EMI and the first three periods' interest/principal split directly from the Fineract source conventions and compare to T2's document — do not accept T2's arithmetic as read. Verify: rounding mode + scale claims are traceable to source, day-count convention is not assumed, no floating-point is implied anywhere in the described pipeline, and the proposed vector matrix covers the uneven-division / 0% / month-end / leap-year cases. REJECT on any [UNVERIFIED] claim in a money path.",
+      "description": "Spawned fresh, without planning context. RE-DERIVE the EMI and the first three periods' interest/principal split directly from the Fineract source conventions and compare to T2's document \u2014 do not accept T2's arithmetic as read. Verify: rounding mode + scale claims are traceable to source, day-count convention is not assumed, no floating-point is implied anywhere in the described pipeline, and the proposed vector matrix covers the uneven-division / 0% / month-end / leap-year cases. REJECT on any [UNVERIFIED] claim in a money path.",
       "agent_role": "reviewer",
       "executor": "agent",
       "model": "opus",
@@ -109,7 +109,7 @@
     {
       "id": "T5",
       "title": "Independent review of DEC-1 adapter contract",
-      "description": "Adversarial review of DEC-1 and the interface stub: is it minimal (nothing in it that only one implementation needs)? Any float, any decimal-string money, any hard-coded tz offset, any first_name/last_name, any Fineract type leak, any field that would force a contract change once GL and loan lifecycle arrive in Runs 2–3? Re-derive that the response shape can express Fineract's per-period split and final-period balancing WITHOUT loss. Findings must be actionable before ratification.",
+      "description": "Adversarial review of DEC-1 and the interface stub: is it minimal (nothing in it that only one implementation needs)? Any float, any decimal-string money, any hard-coded tz offset, any first_name/last_name, any Fineract type leak, any field that would force a contract change once GL and loan lifecycle arrive in Runs 2\u20133? Re-derive that the response shape can express Fineract's per-period split and final-period balancing WITHOUT loss. Findings must be actionable before ratification.",
       "agent_role": "reviewer",
       "executor": "agent",
       "model": "opus",
@@ -124,12 +124,12 @@
       ],
       "status": "done",
       "attempts": 1,
-      "note": "Contract is the boundary — reviewed before the user gate. | MUST review DEC-1 against the CORRECTED T2 document (attempt 1 was rejected; T4 drafted against the uncorrected version — check specifically that the day-count/rounding policy fields survive the T3 corrections). || ORCHESTRATOR FLAG for the T5 reviewer: DEC-1 defines IntermediatePrecisionDigits as SIGNIFICANT DECIMAL DIGITS, but T3 found Fineract's setScale(mc.getPrecision(),..) feeds precision into the SCALE slot (decimal places), truncating rate factors. Significant-digits vs scale is a possible contract defect that would break bit-exact parity — T5 must settle it against source. || DISPATCHED cloud fire 20260817-2000, isolation=worktree, branch softhouse/T5-dec1-contract-review. Reviewer briefed to settle precision-vs-scale FIRST and forbidden from editing DEC-1/contract.go (contract amendment is a user gate). || DONE cloud fire 20260817-2000. VERDICT: **REJECTED**. Branch softhouse/T5-dec1-contract-review @ef0a960, merged. SETTLED the precision-vs-scale question against source: Fineract threads ONE MathContext and consumes it in TWO incompatible senses - significant digits in every multiply/divide(.., mc), and DECIMAL PLACES in setScale(mc.getPrecision(), ..) at ProgressiveEMICalculator.java:1962 and :1979 (the only two such sites in main code, both on the per-period rate factor). Proved it CHANGES MONEY: over a 560-config grid at precision 12, three configs diverge in a payable amount - first at 18 installments / 18.5%% / principal 87,654,321, where period-5 principal is 4,531,420.25 vs .26 and the one-minor-unit error never heals, ending in a different final principal. Across precisions 8/10/12/15/16/19, 189 configs diverge. CRITICAL: the shipped conformance vector does NOT discriminate between the two readings - the corpus cannot currently detect this defect class. Also REFUTED DEC-1's allowFullTermForTranche unreachability ground (builder setter reaches it at LoanApplicationTerms.java:606; the guard at ProgressiveEMICalculator.java:142-144 has no multi-disburse condition) - the pin to false is right but it is a behavioural obligation, not a dead field. No non-negotiable violated (7 grep hits are all prohibition text in doc comments). go build + go vet PASS. Golden test round-trips completely; principal 100 encodes as 10000 minor units. 9 required changes issued."
+      "note": "Contract is the boundary \u2014 reviewed before the user gate. | MUST review DEC-1 against the CORRECTED T2 document (attempt 1 was rejected; T4 drafted against the uncorrected version \u2014 check specifically that the day-count/rounding policy fields survive the T3 corrections). || ORCHESTRATOR FLAG for the T5 reviewer: DEC-1 defines IntermediatePrecisionDigits as SIGNIFICANT DECIMAL DIGITS, but T3 found Fineract's setScale(mc.getPrecision(),..) feeds precision into the SCALE slot (decimal places), truncating rate factors. Significant-digits vs scale is a possible contract defect that would break bit-exact parity \u2014 T5 must settle it against source. || DISPATCHED cloud fire 20260817-2000, isolation=worktree, branch softhouse/T5-dec1-contract-review. Reviewer briefed to settle precision-vs-scale FIRST and forbidden from editing DEC-1/contract.go (contract amendment is a user gate). || DONE cloud fire 20260817-2000. VERDICT: **REJECTED**. Branch softhouse/T5-dec1-contract-review @ef0a960, merged. SETTLED the precision-vs-scale question against source: Fineract threads ONE MathContext and consumes it in TWO incompatible senses - significant digits in every multiply/divide(.., mc), and DECIMAL PLACES in setScale(mc.getPrecision(), ..) at ProgressiveEMICalculator.java:1962 and :1979 (the only two such sites in main code, both on the per-period rate factor). Proved it CHANGES MONEY: over a 560-config grid at precision 12, three configs diverge in a payable amount - first at 18 installments / 18.5%% / principal 87,654,321, where period-5 principal is 4,531,420.25 vs .26 and the one-minor-unit error never heals, ending in a different final principal. Across precisions 8/10/12/15/16/19, 189 configs diverge. CRITICAL: the shipped conformance vector does NOT discriminate between the two readings - the corpus cannot currently detect this defect class. Also REFUTED DEC-1's allowFullTermForTranche unreachability ground (builder setter reaches it at LoanApplicationTerms.java:606; the guard at ProgressiveEMICalculator.java:142-144 has no multi-disburse condition) - the pin to false is right but it is a behavioural obligation, not a dead field. No non-negotiable violated (7 grep hits are all prohibition text in doc comments). go build + go vet PASS. Golden test round-trips completely; principal 100 encodes as 10000 minor units. 9 required changes issued."
     },
     {
       "id": "T6",
-      "title": "USER GATE — ratify DEC-1 frozen adapter contract",
-      "description": "Human decision gate. Buyan ratifies (or amends) DEC-1. Nothing downstream may proceed on an unratified contract, and no agent may change it afterwards — a later change is a new user task. Blocks T7, T8 and T10.",
+      "title": "USER GATE \u2014 ratify DEC-1 frozen adapter contract",
+      "description": "Human decision gate. Buyan ratifies (or amends) DEC-1. Nothing downstream may proceed on an unratified contract, and no agent may change it afterwards \u2014 a later change is a new user task. Blocks T7, T8 and T10.",
       "agent_role": "spec_writer",
       "executor": "user",
       "model": "n/a",
@@ -143,7 +143,7 @@
       ],
       "status": "pending",
       "attempts": 0,
-      "note": "DECISION GATE — blocks all dependents."
+      "note": "DECISION GATE \u2014 blocks all dependents."
     },
     {
       "id": "T7",
@@ -171,7 +171,7 @@
     {
       "id": "T8",
       "title": "Capture golden vectors from the live Fineract oracle",
-      "description": "Orchestrator task: drive the pinned oracle from T1 to produce the T2/T3-approved config matrix and write the captured request/response pairs into .softhouse/vectors/loan-schedule/ in T7's schema, one file per case, each stamped with the oracle version from .softhouse/reference-oracle.md. Capture the raw oracle output verbatim (full scale/precision as returned) alongside the contract-shaped form so rounding can be re-derived later. No Go implementation exists yet — these are oracle-only captures. If the oracle is unreachable, fail loudly; do not synthesise vectors.",
+      "description": "Orchestrator task: drive the pinned oracle from T1 to produce the T2/T3-approved config matrix and write the captured request/response pairs into .softhouse/vectors/loan-schedule/ in T7's schema, one file per case, each stamped with the oracle version from .softhouse/reference-oracle.md. Capture the raw oracle output verbatim (full scale/precision as returned) alongside the contract-shaped form so rounding can be re-derived later. No Go implementation exists yet \u2014 these are oracle-only captures. If the oracle is unreachable, fail loudly; do not synthesise vectors.",
       "agent_role": "test_writer",
       "executor": "orchestrator",
       "model": "sonnet",
@@ -183,14 +183,14 @@
       "dependencies": [
         "T7"
       ],
-      "status": "parked",
+      "status": "in_progress",
       "attempts": 0,
-      "note": "Vector capture is orchestrator-only (touches the oracle). || PARKED cloud fire 20260817-2000: reason=oracle_unreachable. No live Fineract instance from the cloud sandbox (no docker daemon, PostgreSQL not listening on :5432, actuator/health unreachable). NOT synthesised - conformance exit 2 is not a PASS. Unpark precondition: a fire that reaches the live reference oracle. T16 (this fire) prepares the capture plan so this task is execute-ready. || T16 FINDINGS THAT CHANGE HOW THIS TASK MUST BE RUN (pending T17 confirmation): (1) MoneyHelper is a HIDDEN SECOND MathContext - PRECISION=19 in production [MoneyHelper.java:35] but MOCKED TO 12 in the tests, so a live capture runs a different precision than produced the transcribed literals; the capture must assert the tenant rounding mode and precision actually in force, never assume them. (2) The seam has a dependency-free shadowJar entry point with a documented Main.java, so MOST Tier-0 capture needs only a JDK >= 17 - not a running server and not PostgreSQL. (3) Run the C-00 calibration capture FIRST: it must reproduce an already-transcribed literal test expectation exactly, else no other capture is trustworthy."
+      "note": "Vector capture is orchestrator-only (touches the oracle). || PARKED cloud fire 20260817-2000: reason=oracle_unreachable. No live Fineract instance from the cloud sandbox (no docker daemon, PostgreSQL not listening on :5432, actuator/health unreachable). NOT synthesised - conformance exit 2 is not a PASS. Unpark precondition: a fire that reaches the live reference oracle. T16 (this fire) prepares the capture plan so this task is execute-ready. || T16 FINDINGS THAT CHANGE HOW THIS TASK MUST BE RUN (pending T17 confirmation): (1) MoneyHelper is a HIDDEN SECOND MathContext - PRECISION=19 in production [MoneyHelper.java:35] but MOCKED TO 12 in the tests, so a live capture runs a different precision than produced the transcribed literals; the capture must assert the tenant rounding mode and precision actually in force, never assume them. (2) The seam has a dependency-free shadowJar entry point with a documented Main.java, so MOST Tier-0 capture needs only a JDK >= 17 - not a running server and not PostgreSQL. (3) Run the C-00 calibration capture FIRST: it must reproduce an already-transcribed literal test expectation exactly, else no other capture is trustworthy. || UNPARKED fire 20260818-152328: oracle REACHABLE. Two capture passes now exist, both raw observed via Path A (embeddable seam, in-process, no database). Pass 1 (fire 20260818-080003, rescued): 9 captures incl. the G-1 discriminating precision family and the D-03 ordering boundary; D-04 errored for want of a tenant context. Pass 2 (this fire): 13 captures with a tenant supplied - closes D-04 and establishes that installmentAmountInMultiplesOf is silently DROPPED by the capture seam. NEITHER pass is audited yet (T18, T19) and NO vector has been promoted to the store. Contract-shaped storage stays forbidden while G-1 is open."
     },
     {
       "id": "T9",
       "title": "Independent review of harness + captured vectors (re-derive + mutation check)",
-      "description": "Fresh reviewer. (a) Hand re-derive at least three captured vectors — one uneven-division principal, one 0% rate, one month-end/leap-year date — from the Fineract conventions in T2 and confirm the captured numbers, digit for digit; a vector that cannot be re-derived is rejected, not explained. (b) Mutation-test the harness: perturb one rounding step / one period split in a scratch copy and confirm conformance.sh goes RED and that a stopped oracle yields exit 2, not PASS. (c) Confirm no float appears in any vector JSON and that vector coverage matches the approved matrix.",
+      "description": "Fresh reviewer. (a) Hand re-derive at least three captured vectors \u2014 one uneven-division principal, one 0% rate, one month-end/leap-year date \u2014 from the Fineract conventions in T2 and confirm the captured numbers, digit for digit; a vector that cannot be re-derived is rejected, not explained. (b) Mutation-test the harness: perturb one rounding step / one period split in a scratch copy and confirm conformance.sh goes RED and that a stopped oracle yields exit 2, not PASS. (c) Confirm no float appears in any vector JSON and that vector coverage matches the approved matrix.",
       "agent_role": "reviewer",
       "executor": "agent",
       "model": "opus",
@@ -211,7 +211,7 @@
     {
       "id": "T10",
       "title": "Port the progressive-loan schedule generator to Go behind DEC-1",
-      "description": "Implement nexus/internal/apps/loanschedule (generator.go + emi.go + rounding.go) as a faithful port of fineract-progressive-loan-embeddable-schedule-generator behind the ratified DEC-1 interface. int64 minor units only — no float32/float64, no float-backed decimal, not even in intermediates; integer/rational arithmetic with the rounding mode and scale documented in T2 applied at exactly the same points Fineract applies it. Deterministic, no wall-clock reads, tz from the request. Acceptance criteria are the .softhouse/vectors/loan-schedule/ vectors from T8 plus T7's property invariants — the port is done when conformance.sh is green for this context, not when it looks right. If a vector cannot be matched without changing DEC-1, STOP and report: a contract change is a user task.",
+      "description": "Implement nexus/internal/apps/loanschedule (generator.go + emi.go + rounding.go) as a faithful port of fineract-progressive-loan-embeddable-schedule-generator behind the ratified DEC-1 interface. int64 minor units only \u2014 no float32/float64, no float-backed decimal, not even in intermediates; integer/rational arithmetic with the rounding mode and scale documented in T2 applied at exactly the same points Fineract applies it. Deterministic, no wall-clock reads, tz from the request. Acceptance criteria are the .softhouse/vectors/loan-schedule/ vectors from T8 plus T7's property invariants \u2014 the port is done when conformance.sh is green for this context, not when it looks right. If a vector cannot be matched without changing DEC-1, STOP and report: a contract change is a user task.",
       "agent_role": "coder",
       "executor": "agent",
       "model": "opus",
@@ -229,12 +229,12 @@
       ],
       "status": "pending",
       "attempts": 0,
-      "note": "opus — interest/schedule math and rounding."
+      "note": "opus \u2014 interest/schedule math and rounding."
     },
     {
       "id": "T11",
       "title": "Independent adversarial review of the Go port (re-derives the arithmetic)",
-      "description": "Spawned fresh without planning context. RE-DERIVE the EMI, every period's interest/principal split, and the final-period balancing from the Fineract source conventions and the captured vector inputs — compute independently, then compare to the Go output. Do NOT read the Go code and confirm it looks equivalent; that is the exact failure mode this project has already been burned by. Then HARD checks on the diff: no float type or float-backed decimal anywhere; no balance written directly; no hard-coded tz offset or hard-coded MNT 5,000,000-class threshold; no first_name/last_name; no member-savings insured/protected/guaranteed string; no wall-clock or locale dependence. Verdict APPROVED / MICRO-FIX / REJECTED with the re-derived numbers shown.",
+      "description": "Spawned fresh without planning context. RE-DERIVE the EMI, every period's interest/principal split, and the final-period balancing from the Fineract source conventions and the captured vector inputs \u2014 compute independently, then compare to the Go output. Do NOT read the Go code and confirm it looks equivalent; that is the exact failure mode this project has already been burned by. Then HARD checks on the diff: no float type or float-backed decimal anywhere; no balance written directly; no hard-coded tz offset or hard-coded MNT 5,000,000-class threshold; no first_name/last_name; no member-savings insured/protected/guaranteed string; no wall-clock or locale dependence. Verdict APPROVED / MICRO-FIX / REJECTED with the re-derived numbers shown.",
       "agent_role": "reviewer",
       "executor": "agent",
       "model": "opus",
@@ -248,7 +248,7 @@
       ],
       "status": "pending",
       "attempts": 0,
-      "note": "Paired independent reviewer for T10 — mandatory, re-derives."
+      "note": "Paired independent reviewer for T10 \u2014 mandatory, re-derives."
     },
     {
       "id": "T12",
@@ -272,8 +272,8 @@
     },
     {
       "id": "T13",
-      "title": "Verify: /softhouse-uat — build, tests, conformance, invariants",
-      "description": "Run /softhouse-uat against merged state: go build ./..., go test ./..., .softhouse/conformance.sh for the loan-schedule vectors (must be all-PASS; exit 2 is NOT a pass), and the property invariants (principal amortizes to exactly zero, splits sum to the period total, rounding matches Fineract per vector). Report the per-vector table verbatim. A PASS here means 'builds, tests green, known-bad patterns absent, matches the oracle on captured vectors' — explicitly NOT 'safe to cut over'.",
+      "title": "Verify: /softhouse-uat \u2014 build, tests, conformance, invariants",
+      "description": "Run /softhouse-uat against merged state: go build ./..., go test ./..., .softhouse/conformance.sh for the loan-schedule vectors (must be all-PASS; exit 2 is NOT a pass), and the property invariants (principal amortizes to exactly zero, splits sum to the period total, rounding matches Fineract per vector). Report the per-vector table verbatim. A PASS here means 'builds, tests green, known-bad patterns absent, matches the oracle on captured vectors' \u2014 explicitly NOT 'safe to cut over'.",
       "agent_role": "verifier",
       "executor": "agent",
       "model": "sonnet",
@@ -288,15 +288,17 @@
         "T12",
         "T17",
         "T3b",
-        "T9"
+        "T9",
+        "T18",
+        "T19"
       ],
       "status": "pending",
       "attempts": 0,
-      "note": "Run gate — must PASS before the run completes. || cloud fire 20260817-2000: dependencies extended to T3b and T17 - the re-review and the capture-plan review are run gates too."
+      "note": "Run gate \u2014 must PASS before the run completes. || cloud fire 20260817-2000: dependencies extended to T3b and T17 - the re-review and the capture-plan review are run gates too. || fire 20260818-152328: dependencies extended to T18 and T19 - the two capture audits are run gates too."
     },
     {
       "id": "T14",
-      "title": "USER GATE — accept the PoC slice; no cutover in this run",
+      "title": "USER GATE \u2014 accept the PoC slice; no cutover in this run",
       "description": "Human decision gate. Buyan reviews the conformance table, the reviewer's re-derivations, and the checkpoint/resume drill, and accepts (or rejects) the PoC as proof of the pipeline. Explicitly recorded: NOTHING is cut over from Fineract to Go in this run. Cutover of the schedule/loan context remains a separate user gate requiring vectors passing + a clean shadow-parity window + regulatory / parallel-run sign-off.",
       "agent_role": "verifier",
       "executor": "user",
@@ -311,12 +313,12 @@
       ],
       "status": "pending",
       "attempts": 0,
-      "note": "DECISION GATE — not a cutover; cutover is a later, separate gate."
+      "note": "DECISION GATE \u2014 not a cutover; cutover is a later, separate gate."
     },
     {
       "id": "T15",
       "title": "Archive run, record strangler backlog, append postmortem patterns",
-      "description": "Archive tasks.json to .softhouse/runs/2026-08-17-run1-harness-schedule-poc.json preserving the backlog (GL → loan lifecycle → charges/rates/tax → COB → provisioning, each ending at a user cutover gate). Append to .softhouse/patterns.md between the LEARNED PATTERNS markers: what the re-derivation review caught, any harness gap the mutation test exposed, the checkpoint/resume drill result, and the measured token cost per task class for scheduler budgeting. Push.",
+      "description": "Archive tasks.json to .softhouse/runs/2026-08-17-run1-harness-schedule-poc.json preserving the backlog (GL \u2192 loan lifecycle \u2192 charges/rates/tax \u2192 COB \u2192 provisioning, each ending at a user cutover gate). Append to .softhouse/patterns.md between the LEARNED PATTERNS markers: what the re-derivation review caught, any harness gap the mutation test exposed, the checkpoint/resume drill result, and the measured token cost per task class for scheduler budgeting. Push.",
       "agent_role": "spec_writer",
       "executor": "orchestrator",
       "model": "sonnet",
@@ -386,9 +388,49 @@
       "dependencies": [
         "T17"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "Raised by cloud fire 20260817-2000 from T17's required-changes list. Needs no reference oracle - pure source correction. Good first work for any fire. Add FULL_LEAP_YEAR to the coverage map as a TO_BE_CAPTURED gap."
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Raised by cloud fire 20260817-2000 from T17's required-changes list. Needs no reference oracle - pure source correction. Good first work for any fire. Add FULL_LEAP_YEAR to the coverage map as a TO_BE_CAPTURED gap. || fire 20260818-152328: fire 20260818-080003 got ~5 of the 6 applied before the Mac slept; that WIP was rescued onto branch softhouse/T16b-capture-plan-corrections (commit 1a9c3c8). Correction #2 (FULL_LEAP_YEAR) is verifiably NOT applied - the token appears nowhere in the document. Re-dispatched at opus in a worktree, starting from that branch, with a mandatory mechanical consistency sweep per correction (the T2 failure mode: corrections land in the named section and leak in the sections restating the same claim)."
+    },
+    {
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "context": "harness",
+      "status": "in_progress",
+      "attempts": 1,
+      "id": "T18",
+      "title": "Independent audit of capture pass 1 (provenance, calibration, discrimination)",
+      "description": "A capture nobody audited is not a vector. Pass 1 was produced by fire 20260818-080003, which was killed mid-run by the Mac sleeping; its output was rescued into the repo unreviewed. The audit must independently establish provenance (image digest, JVM, and that the copied seam class is byte-identical to the pinned original), prove Capture.java synthesises nothing, verify C-00 calibration digit-for-digit against the source literals, and judge whether the D-01 precision family genuinely discriminates T5's precision-vs-scale finding - specifically whether varying mathContextPrecision settles a question about the two SENSES of one MathContext, which is a related but distinct question and must not be conflated. Also: D-02/D-02b month-end, D-03 ordering boundary (observe, do not recommend a horn - that decision is reserved for the ratifier), and why D-04 errored.",
+      "files_hint": [
+        ".softhouse/reviews/T18-capture-audit.md"
+      ],
+      "dependencies": [
+        "T8"
+      ],
+      "note": "DISPATCHED fire 20260818-152328, isolation=worktree, opus. Contract-independent: audits RAW observed capture, stores nothing contract-shaped, so it is permitted while G-1 is open.",
+      "contract_independent": true
+    },
+    {
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "context": "harness",
+      "status": "in_progress",
+      "attempts": 1,
+      "id": "T19",
+      "title": "Independent audit of capture pass 2 (tenant-context captures)",
+      "description": "Audits the orchestrator's own pass-2 capture and write-up - the author both ran the capture and drew the conclusions, so it is explicitly not a neutral party. Must attack Finding 2 hardest: the claim that LoanApplicationTerms.assembleFrom(LoanRepaymentScheduleModelData, MathContext) reads 18 of the record's 19 components and silently drops installmentAmountInMultiplesOf, making that input inert on the capture path while the server path honours it - which would put a second contract input in the same undiscriminable class T5 found for precision. Must also test Finding 1 (allowFullTermForTranche live but schedule-neutral on single disbursement), the Finding 3 rounding-mode null result and whether its narrow reading is warranted, MNT-scale invariants, and sweep the report for overclaim.",
+      "files_hint": [
+        ".softhouse/reviews/T19-capture-pass2-audit.md"
+      ],
+      "dependencies": [
+        "T8"
+      ],
+      "note": "DISPATCHED fire 20260818-152328, isolation=worktree, opus. Reviews orchestrator-produced work, so independence matters more than usual.",
+      "contract_independent": true
     }
   ]
 }
