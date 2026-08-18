@@ -414,7 +414,22 @@ That is not a cosmetic gap. The oracle's arithmetic and the textbook `balance ×
 
 **Normative — the interest of one interest period.**
 
-A repayment period is partitioned into one or more **interest periods**. A repayment period is created carrying exactly one interest period spanning its whole window [`RepaymentPeriod.java:149`]; a balance change *strictly inside* the window splits it in two at the change date [`ProgressiveLoanInterestScheduleModel.java:280-296`], with the changed amount recorded on the **earlier** segment and entering the balance of the **later** one [`InterestPeriod.java:168-188`]. Inside the graded domain there is exactly one balance change — the single disbursement — so a repayment period carries **two** interest periods when the disbursement falls strictly inside it and **one** otherwise.
+A repayment period is partitioned into one or more **interest periods**. It is created carrying exactly one, spanning its whole window [`RepaymentPeriod.java:149`]. A balance change on date `D` inside the period is then registered like this [`ProgressiveLoanInterestScheduleModel.java:251-262`, `:264-296`, `:439-442`]:
+
+- if some interest period already **ends exactly on `D`**, no split occurs and the amount is recorded on that interest period [`:275-277`];
+- otherwise the interest period containing `D` has its `DueDate` moved back to `D` (clamped into its own window) and receives the amount, and a **new** interest period `[D, the original DueDate]` is inserted after it [`:280-296`].
+
+**The amount enters the balance of the LATER segment, never the earlier one** [`InterestPeriod.java:168-188`, the `plus(previousInterestPeriod.getDisbursementAmount())` at `:174` and `:186`].
+
+Inside the graded domain the only balance change is the single disbursement, so exactly three shapes occur, and the third is the only one the Run-1 corpus has never sampled:
+
+| disbursement `D` | interest periods of the affected repayment period *j* |
+|---|---|
+| on period *j*'s `FromDate` (the ordinary "disbursement opens the schedule" case) | a **zero-length** `[FromDate, FromDate]` holding the amount, then `[FromDate, DueDate]` carrying it as balance |
+| on period *j*'s `DueDate` | **one**, unchanged; the amount is recorded on it and enters period *j+1*'s balance [`InterestPeriod.java:169-179`] |
+| **strictly inside** period *j* | `[FromDate, D]` with a zero balance, then `[D, DueDate]` carrying the amount |
+
+In every one of the three, **every interest period that carries a non-zero balance has `lengthTillPeriodDueDate == length`**, and every interest period where they differ carries a zero balance and therefore exactly zero interest. That is why the `÷ L × L` round-trip below is an identity in exact arithmetic inside the graded domain — and it is still **not** an identity numerically.
 
 For an interest period with base amount `B` (an exact decimal in **major** units), let
 
@@ -437,7 +452,7 @@ else {
 
 where `round_mc(·)` is rounding to **`Rounding.SignificantDigits` significant digits** under `Rounding.Mode` — the same `MathContext` sense §4.1 defines, applied **separately to each of the three operations, in that order**.
 
-**Operations (2) and (3) cancel algebraically and do NOT cancel numerically.** Inside the graded domain `lengthTillPeriodDueDate == length` on every interest period that carries a balance, so `÷ L × L` is the identity in exact arithmetic — and is *not* the identity once each step is rounded to 19 significant digits. **A port must perform all three.** Collapsing them to `round_mc(B × rateFactor)` is the divergence measured above; skipping only the rounding between them is the same defect in a different disguise. This is a **conformance obligation** (§9), not an optimisation the compiler may take.
+**Operations (2) and (3) cancel algebraically and do NOT cancel numerically.** As shown above, inside the graded domain `lengthTillPeriodDueDate == length` on every interest period that carries a balance, so `÷ L × L` is the identity in exact arithmetic — and is *not* the identity once each step is rounded to 19 significant digits. **A port must perform all three.** Collapsing them to `round_mc(B × rateFactor)` is the divergence measured above; skipping only the rounding between them is the same defect in a different disguise. This is a **conformance obligation** (§9), not an optimisation the compiler may take.
 
 **Normative — from interest period to row.**
 
@@ -449,7 +464,7 @@ where `round_mc(·)` is rounding to **`Rounding.SignificantDigits` significant d
 
 **Exact arithmetic, never a float.** `B` is an `int64` count of minor units rendered as an exact decimal; `rateFactorTillPeriodDueDate` is an exact decimal of at most `Rounding.RateFactorScale` fractional digits (§4.1); `length` and `lengthTillPeriodDueDate` are exact small integers. Every one of the three operations is therefore an exact-decimal operation followed by an explicit rounding to a stated number of significant digits, and every one of steps 1–5 is exact integer arithmetic in minor units. **A port must use an arbitrary-precision decimal (or an exact rational with explicit rounding at each of the three points) and never `float32`, `float64` or `big.Float`** — a float on a money path is a non-negotiable rejection, and here it would additionally destroy the very non-cancellation this subsection exists to specify.
 
-**What is graded, and what is not.** Every committed observation exercises the one-interest-period-per-repayment-period case, and all thirteen reproduce under this rule (`.softhouse/reviews/t31-probe/t31_spec_check.py`). **No committed observation covers a disbursement dated strictly inside a repayment period**, so the two-segment case is specified from source and **ungraded**; it is admissible under §3.1's window predicate, so a capture for it belongs with §8 item 3c's later-disbursement work. And no committed observation separates the three-operation form from the textbook one — that is §8 item **3b**. Until 3b lands, this subsection is **specified but ungraded**, on exactly the terms §4.3.1 states for the loop.
+**What is graded, and what is not.** Every committed observation falls in the first two rows of the segmentation table, and all thirteen reproduce under this rule (`.softhouse/reviews/t31-probe/t31_spec_check.py`). **No committed observation covers a disbursement dated strictly inside a repayment period**, so the two-segment case is specified from source and **ungraded**; it is admissible under §3.1's window predicate, so a capture for it belongs with §8 item 3c's later-disbursement work. And no committed observation separates the three-operation form from the textbook one — that is §8 item **3b**. Until 3b lands, this subsection is **specified but ungraded**, on exactly the terms §4.3.1 states for the loop.
 
 **Provenance.** Re-derived by task T31 from the pinned checkout; every `file:line` above was read in this checkout, not taken from the review. The 699 / 43,992 count is T29's re-derivation over synthetic shapes and is **not** an observation. T29's worked example — MNT 13,202 / 6 × 16.8 %, schedule start = disbursement 2024-01-01, final installment **2,309.38** and total interest **654.38** under this subsection's arithmetic versus 2,309.39 / 654.39 under the textbook reading — is likewise a **re-derivation**, recorded here as a *candidate shape to capture* (§8 item 3b) and never as an oracle output. No live oracle was reachable when this revision was written.
 

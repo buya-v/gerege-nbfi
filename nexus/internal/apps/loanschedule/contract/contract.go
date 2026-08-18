@@ -1306,16 +1306,35 @@ const (
 //
 // ## The interest of one interest period
 //
-// A repayment period is partitioned into one or more INTEREST PERIODS. A
-// repayment period is created carrying exactly one interest period spanning its
-// whole window (RepaymentPeriod.java:149); a balance change STRICTLY INSIDE the
-// window splits it in two at the change date
-// (ProgressiveLoanInterestScheduleModel.java:280-296), with the changed amount
-// recorded on the EARLIER segment and entering the balance of the LATER one
-// (InterestPeriod.java:168-188). Inside the graded domain there is exactly one
-// balance change — the single disbursement — so a repayment period carries TWO
-// interest periods when the disbursement falls strictly inside it and ONE
-// otherwise.
+// A repayment period is partitioned into one or more INTEREST PERIODS. It is
+// created carrying exactly one, spanning its whole window
+// (RepaymentPeriod.java:149). A balance change on date D inside the period is
+// then registered like this (ProgressiveLoanInterestScheduleModel.java:251-262,
+// :264-296, :439-442):
+//
+//   - if some interest period already ENDS EXACTLY ON D, no split occurs and the
+//     amount is recorded on that interest period (:275-277);
+//   - otherwise the interest period containing D has its DueDate moved back to D
+//     (clamped into its own window) and receives the amount, and a NEW interest
+//     period [D, the original DueDate] is inserted after it (:280-296).
+//
+// The amount enters the balance of the LATER segment, never the earlier one
+// (InterestPeriod.java:168-188, the plus(disbursementAmount) at :174 and :186).
+//
+// Inside the graded domain the only balance change is the single disbursement,
+// so exactly three shapes occur:
+//
+//	D on period j's FromDate    -> a ZERO-LENGTH [FromDate, FromDate] holding the
+//	                               amount, then [FromDate, DueDate] carrying it
+//	                               as balance
+//	D on period j's DueDate     -> ONE, unchanged; the amount is recorded on it
+//	                               and enters period j+1's balance (:169-179)
+//	D strictly inside period j  -> [FromDate, D] with a ZERO balance, then
+//	                               [D, DueDate] carrying the amount
+//
+// In every one of the three, every interest period that carries a NON-ZERO
+// balance has lengthTillPeriodDueDate == length, and every interest period where
+// they differ carries a zero balance and therefore exactly zero interest.
 //
 // For an interest period, let
 //
@@ -1343,9 +1362,9 @@ const (
 // applied SEPARATELY TO EACH OF THE THREE OPERATIONS, IN THAT ORDER.
 //
 // OPERATIONS (2) AND (3) CANCEL ALGEBRAICALLY AND DO NOT CANCEL NUMERICALLY.
-// Inside the graded domain lengthTillPeriodDueDate == length on every interest
-// period that carries a balance, so "/ L * L" is the identity in exact
-// arithmetic — and is NOT the identity once each step is rounded to 19
+// As shown above, inside the graded domain lengthTillPeriodDueDate == length on
+// every interest period that carries a balance, so "/ L * L" is the identity in
+// exact arithmetic — and is NOT the identity once each step is rounded to 19
 // significant digits. A PORT MUST PERFORM ALL THREE. Collapsing them to
 // round_mc(B * rateFactor) is the divergence measured above; dropping only the
 // rounding between them is the same defect in a different disguise.
