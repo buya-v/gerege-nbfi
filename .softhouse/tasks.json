@@ -674,7 +674,7 @@
     },
     {
       "id": "T32",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -687,7 +687,43 @@
         ".softhouse/reviews/",
         ".softhouse/handoff/"
       ],
-      "note": "Raised by cloud catch-up fire cloud-20260818-2000. G-1 closes ONLY via T31 -> T32 CLEAN -> driver ratifies under standing policy P-2. NOTE THE PATTERN, which the next reviewer should be told: three consecutive independent re-reviews (T23, T26, T29) have each found NEW P0s in areas the previous review did not examine, and in every case the committed corpus passed BOTH the right and the wrong reading. The contract is converging - T29 verified the whole of T28's loop spec exactly - but 'the last reviewer found nothing here' has not yet been evidence of correctness in this document. || Dispatched by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T32-dec1-v5-rereview. Told the three-consecutive-P0 pattern explicitly, told that T31's spec-check shares an author with revision 5's text so a shared misreading could pass its own check, and pointed at the highest-yield unexamined surface - period/date generation and the month-end re-anchor, the down-payment path, the balance roll-forward and its zero clamp, multi-interest-period segmentation, and above all T31's new strictly-inside-a-period shape."
+      "note": "Raised by cloud catch-up fire cloud-20260818-2000. G-1 closes ONLY via T31 -> T32 CLEAN -> driver ratifies under standing policy P-2. NOTE THE PATTERN, which the next reviewer should be told: three consecutive independent re-reviews (T23, T26, T29) have each found NEW P0s in areas the previous review did not examine, and in every case the committed corpus passed BOTH the right and the wrong reading. The contract is converging - T29 verified the whole of T28's loop spec exactly - but 'the last reviewer found nothing here' has not yet been evidence of correctness in this document. || Dispatched by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T32-dec1-v5-rereview. Told the three-consecutive-P0 pattern explicitly, told that T31's spec-check shares an author with revision 5's text so a shared misreading could pass its own check, and pointed at the highest-yield unexamined surface - period/date generation and the month-end re-anchor, the down-payment path, the balance roll-forward and its zero clamp, multi-interest-period segmentation, and above all T31's new strictly-inside-a-period shape. || COMPLETE, merged to main. VERDICT: ACCEPTED WITH REQUIRED CHANGES - NOT ratifiable. Driver did NOT ratify; G-1 stays open. ONE NEW P0 (P0-T32-1): calculatedDaysInPeriod in the §4.1 rate factor is the ENCLOSING repayment period's day count [ProgressiveEMICalculator.java:1367-1370, :1500-1503], never the span's own - the ADR defines NEITHER day count anywhere, and contract.go:317-321 asserts the ratio is 'exactly 1 ... which is every period in the graded domain', which is FALSE under revision 5's OWN §4.3.2 because that admits a disbursement strictly inside a repayment period. Over 2,913 such in-graded-domain shapes the two readings the artefacts license diverge on 2,913 - 100% - worst total-interest gap MNT 1,816,050.11. Worked case (RE-DERIVATION, not an observation): MNT 1,200,000/6x21.6%, start 2024-01-01, disb 2024-01-15 gives period-1 interest 11,845.16 under source semantics vs 21,600.00 under contract.go's reading - a full month's interest charged on a 17-day exposure. Orchestrator independently re-ran t32_validate.py (13/13) and t32_inside_period.py (divergence reproduced). FROM-TEXT TRANSCRIPTION: T32's model, sharing no code with the t26/t28/t29/t31 probes, reproduces 13/13 - but so do BOTH wrong readings, 13/13 each. The corpus is blind to TWO questions, not one: revision 5 closed the interest round-trip and left the day ratio, and closed it in contract.go in the WRONG DIRECTION. Plus P1-T32-1 (growth factor is 1 + SUM rateFactor over interest periods [RepaymentPeriod.java:216-217], not the singular form the text states - measured INERT today, 0 divergences in 2,913 shapes, hence P1), P1-T32-2 (OutstandingPrincipalMinor unspecified on disbursement/down-payment rows though every capture grades it), and P2-T32-1. NO REGRESSIONS: T29's two P0s genuinely resolved with every cited file:line verified exact, T28's loop steps 1-8 preserved BYTE-FOR-BYTE, the deleted revision-2 ordering clause has not returned. Reviewer agrees the vector items gate conformance PASS and cutover rather than ratification, and draws the boundary precisely: a MISSING VECTOR is a conformance gate, a WRONG NORMATIVE SENTENCE is a ratification blocker, and P0-T32-1 is the latter. Recommends breaking the strictly-inside shape out as item 3d."
+    },
+    {
+      "id": "T33",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "title": "Apply T32's P0 to DEC-1 v5 -> v6 (define the rate-factor day counts; delete the false ratio-is-1 clause)",
+      "dependencies": [
+        "T32"
+      ],
+      "contract_independent": true,
+      "files_hint": [
+        "docs/adr/DEC-1-schedule-generator-adapter.md",
+        "nexus/internal/apps/loanschedule/contract/contract.go",
+        ".softhouse/reviews/t33-probe/",
+        ".softhouse/handoff/"
+      ],
+      "note": "Raised and dispatched by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T33-dec1-v6-daycount. Needs no live oracle. Instructed to take T32's Arm A (define both day counts normatively and delete the false clause) unless its own source re-derivation contradicts it. Its spec-check must reproduce 13/13 committed observations AND show that all THREE wrong readings found across this fire - ratio-is-always-1, textbook balance x rateFactor, and wrong-n - now FAIL, since T32 showed all three pass the corpus 13/13."
+    },
+    {
+      "id": "T34",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "title": "Independent re-review of DEC-1 v6 (the last step before ratification)",
+      "dependencies": [
+        "T33"
+      ],
+      "contract_independent": true,
+      "files_hint": [
+        ".softhouse/reviews/",
+        ".softhouse/handoff/"
+      ],
+      "note": "Raised by cloud catch-up fire cloud-20260818-2000. THE NEXT FIRE'S FIRST CONTRACT TASK. G-1 closes ONLY via T33 -> T34 CLEAN -> driver ratifies under P-2. Tell the reviewer the pattern: FOUR consecutive independent re-reviews (T23, T26, T29, T32) have each found NEW P0s in areas the previous review had not examined, and in every case the committed corpus passed BOTH the right and the wrong reading - by T32 the corpus was blind to THREE distinct wrong readings at 13/13 each. Highest-yield unexamined surface remaining, per T32: period/date generation and the month-end re-anchor, the down-payment path, the balance roll-forward and its zero clamp, and currency/scale handling. Convergence is real - T32 verified T28's loop steps preserved byte-for-byte and T29's P0s genuinely resolved - so a CLEAN verdict is a live possibility and must be stated plainly if reached."
     }
   ]
 }
