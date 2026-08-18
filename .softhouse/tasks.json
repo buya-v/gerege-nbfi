@@ -431,6 +431,27 @@
       ],
       "note": "DISPATCHED fire 20260818-152328, isolation=worktree, opus. Reviews orchestrator-produced work, so independence matters more than usual.",
       "contract_independent": true
+    },
+    {
+      "id": "T20",
+      "title": "Fold T17's non-blocking findings F2-F6 into the conformance harness as structural rules",
+      "description": "T17 raised six non-blocking findings; T16b applied F1 only (it was needed to write SS3.3 accurately) and correctly declined the rest as out of its scope. They belong in the HARNESS, not the plan document: F2 scope SS4.0's acceptance check 4 to the nine columns the README actually reports, so a partial match is not read as a full one. F3 assert MoneyHelper is never statically initialised on the embeddable path - NOTE this prediction is now partly REFUTED by observation: capture pass 1's D-04 proved allowFullTermForTranche=true DOES reach MoneyHelper on this path, so F3 must be restated as 'never reached when the flag is false' before it is implemented. F4 carry forward that every rate-variation vector comes via changeInterestRate on an existing model and none exists for a product configured with a rate schedule from origination (Tier-A design question). F5 make the scale>2 classification a hard structural assertion in the rig - any value with scale>2 routed to a money column is a harness bug. F6 record rate factors as TRANSCRIBED-ROUNDED and treat exact rate-factor parity as TO_BE_CAPTURED, since a transcribed factor is a 12-dp rounding and a Go divergence in digits 13+ would pass silently.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        ".softhouse/conformance.sh",
+        ".softhouse/vectors/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T7"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised fire 20260818-152328 from T17 F2-F6 + T16b's handoff. Depends on T7 (the harness) existing. F3 must be restated before implementation - observation refuted its original form.",
+      "contract_independent": true
     }
   ]
 }
