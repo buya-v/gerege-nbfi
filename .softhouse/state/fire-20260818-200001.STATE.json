@@ -1,0 +1,17 @@
+{
+  "fire": "20260818-200001",
+  "host": "Buyanmunkhs-Mac-mini",
+  "started_at": "2026-08-18T12:00:12Z",
+  "oracle": "REACHABLE - actuator/health UP, fineract-fineract-1 healthy, postgres:18.3 healthy, verified this fire",
+  "run_id": "2026-08-17-run1-harness-schedule-poc",
+  "dispatched": [
+    {"task": "T24", "model": "opus", "isolation": "worktree", "branch": "softhouse/T24-dec1-v3-p0-corrections", "owns": ["docs/adr/", "nexus/internal/apps/loanschedule/contract/contract.go", ".softhouse/reviews/t24-probe/"], "status": "in_flight"},
+    {"task": "T25", "model": "opus", "isolation": "worktree", "branch": "softhouse/T25-capture-corpus-p0-corrections", "owns": [".softhouse/capture/"], "status": "in_flight"}
+  ],
+  "raised_this_fire": ["T26 (independent re-review of DEC-1 v3)", "T27 (independent review of the corpus corrections)"],
+  "next_action": "Await T24 and T25. Merge each. Then dispatch T26 and T27. G-1 closes ONLY if T26 comes back clean; ACCEPTED WITH REQUIRED CHANGES is not clean.",
+  "blocked_on": "nothing - G-1's remaining work is all ENGINEERING and the oracle is up",
+  "open_questions": [],
+  "gate_pending": "G-1 (ratify DEC-1) - agent-decidable under standing policy P-2, pending a clean re-review",
+  "invariants_held": "no vector promoted to the store; no contract-shaped capture storage while G-1 is open; no cutover; PostgreSQL only"
+}

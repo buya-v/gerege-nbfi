@@ -293,11 +293,15 @@
         "T19",
         "T21",
         "T22",
-        "T23"
+        "T23",
+        "T24",
+        "T25",
+        "T26",
+        "T27"
       ],
       "status": "pending",
       "attempts": 0,
-      "note": "Run gate — must PASS before the run completes. || cloud fire 20260817-2000: dependencies extended to T3b and T17 - the re-review and the capture-plan review are run gates too. || fire 20260818-152328: dependencies extended to T18 and T19 - the two capture audits are run gates too. || fire 20260818-173900: dependencies extended to T21, T22, T23 - all three audits are run gates."
+      "note": "Run gate — must PASS before the run completes. || cloud fire 20260817-2000: dependencies extended to T3b and T17 - the re-review and the capture-plan review are run gates too. || fire 20260818-152328: dependencies extended to T18 and T19 - the two capture audits are run gates too. || fire 20260818-173900: dependencies extended to T21, T22, T23 - all three audits are run gates. || fire 20260818-200001: dependencies extended to T24, T25, T26, T27."
     },
     {
       "id": "T14",
@@ -555,6 +559,45 @@
       "attempts": 0,
       "note": "Raised fire 20260818-173900 from the T21 and T22 P0 lists. Contract-independent: corrects RAW observed capture and its provenance, stores nothing contract-shaped, so it may run while G-1 is open. Needs the reference oracle for the re-runs. Until this lands NO capture may be promoted to the vector store - the eleven (19, HALF_UP) pass-3 captures are promotable only after T21's P0 closes. || DISPATCHED fire 20260818-200001: opus worker, isolation=worktree, oracle REACHABLE (verified this fire: actuator/health UP, postgres:18.3 container healthy). Branch softhouse/T25-capture-corpus-p0-corrections. Runs CONCURRENTLY with T24, which owns docs/adr/ + contract.go - T25 must not edit those.",
       "contract_independent": true
+    },
+    {
+      "id": "T26",
+      "title": "Independent re-review of DEC-1 v3 (re-derive; the last step before ratification)",
+      "description": "Re-review DEC-1 v3 as produced by T24. A re-review after REQUIRED CHANGES is itself a reviewed step - DEC-1 must not be ratified on the drafter's own say-so. Read T23's review and confirm each of its three P0s is genuinely CLOSED by observation, not by rewording. Pay hardest attention to P0-1: whether the EMI re-adjust loop is now either specified or excluded from the graded domain, and whether the drafter actually captured vectors from the reference oracle that TRIP the loop. Re-derive the money math from Fineract source and from raw observed captures, never from the drafter's arithmetic. Verdict must state explicitly whether DEC-1 v3 is RATIFIABLE.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/reviews/T26-DEC-1-v3-rereview.md"
+      ],
+      "context": "contract",
+      "dependencies": [
+        "T24"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised fire 20260818-200001. Gate G-1 closes only via: T24 -> T26 clean -> driver ratifies under standing policy P-2. A verdict of ACCEPTED WITH REQUIRED CHANGES is NOT clean and does NOT license ratification - that is exactly the call the previous fire made correctly."
+    },
+    {
+      "id": "T27",
+      "title": "Independent review of the T25 capture-corpus corrections (promotability audit)",
+      "description": "Audit T25's corrections to the pass-3 and Path B capture corpus. Confirm every T21 and T22 P0 is closed by RE-OBSERVATION rather than by editing prose: that the refuted size-threshold claim is gone, that the false round-up rule is retracted and the nearest-multiple behaviour is what the oracle actually does, that the re-runs really emitted periodFromDate/fee/penalty, that the run recipe's preconditions can actually FAIL, that Path B now runs on the gerege tenant at the observed rounding mode, and that the three defective scripts are retracted with a reason. Re-run at least one capture yourself and compare byte-for-byte. State explicitly whether the corpus is now PROMOTABLE to the vector store.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/reviews/T27-capture-corpus-corrections-review.md"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T25"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "contract_independent": true,
+      "note": "Raised fire 20260818-200001. Contract-independent: audits RAW observed capture. No vector may be promoted to the store until this is clean - T25 fixing its own homework is not sufficient evidence."
     }
   ]
 }
