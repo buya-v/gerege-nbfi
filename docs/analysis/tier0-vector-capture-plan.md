@@ -24,6 +24,7 @@ Two — and only two — kinds of numeric content appear below:
 |---|---|---|
 | `TRANSCRIBED` | A literal that a Fineract source file already asserts, copied with `file:line`. | Usable as a vector **only after** the calibration run in §4.0 confirms the harness reproduces it. |
 | `TO_BE_CAPTURED` | Not present in the source. A run against the oracle must produce it. | No number is stated. |
+| `OBSERVED, PENDING AUDIT` | A capture run against the pinned reference oracle (Fineract) has produced output for this behaviour, but that output has **not yet passed independent audit**. | **None.** The label records only that a candidate exists and where. **No value from a pending-audit capture is reproduced in this document, and no gap is downgraded on its strength.** A gap stays `TO_BE_CAPTURED` until the audit accepts. |
 
 Nothing here was computed, extrapolated, interpolated or inferred. Where a behaviour has no literal in the
 corpus, this document says so and stops — it does not supply a plausible number. The one arithmetic operation
@@ -50,15 +51,18 @@ find fineract-progressive-loan/src/test -name '*.java' | xargs wc -l    →  786
 The "~7,863 test LOC in `fineract-progressive-loan`" figure on record is **confirmed exactly**: 7863.
 `[VERIFIED: find /home/user/fineract/fineract-progressive-loan/src/test -name '*.java' | xargs wc -l → 7863 total]`
 
-The embeddable module is 92 main LOC + 123 test LOC across exactly 6 files.
-`[VERIFIED: find /home/user/fineract/fineract-progressive-loan-embeddable-schedule-generator -type f (6 files); wc -l on both .java files → 92 and 123]`
+The embeddable module is **92 main LOC** (`src/main/java/.../EmbeddableProgressiveLoanScheduleGenerator.java`)
+plus **90 LOC** of sample driver (`misc/Main.java`) plus **123 test LOC**, across exactly 6 files.
+`[VERIFIED: find /home/user/fineract/fineract-progressive-loan-embeddable-schedule-generator -type f → 6 files; wc -l on the three .java files → 92, 90, 123]`
 
-Note: the Tier-0 figure of "~182 LOC" recorded in `CLAUDE.md` for this module does **not** match either the
-92-LOC main file or the 215-LOC main+test total. `182` *is* the value of `plan.getLoanTermInDays()` asserted at
-`EmbeddableProgressiveLoanScheduleGeneratorTest.java:74`, which is a suspicious coincidence, but this document
-does not assert that the two are related.
-`[VERIFIED: /home/user/fineract/fineract-progressive-loan-embeddable-schedule-generator/src/test/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/EmbeddableProgressiveLoanScheduleGeneratorTest.java:74]`
-`[UNVERIFIED: how the 182 figure in CLAUDE.md was originally measured — not traceable from the checkout]`
+**The Tier-0 "~182 LOC" figure reconciles exactly — no discrepancy exists.** The module's *non-test* Java is
+`92` (`src/main`) + `90` (`misc/Main.java`) = **182** lines, which is precisely the figure
+`.softhouse/program.json` records for this context as `"main_loc": 182`. An earlier draft of this document
+compared `182` only against the 92-line main file and the 215-line main+test total, omitting `misc/Main.java`
+from the arithmetic, and left the figure carrying an `[UNVERIFIED]` marker. **That marker is withdrawn and the
+figure is settled**; nothing about it needs chasing (§6, §7).
+`[VERIFIED: wc -l /home/user/fineract/fineract-progressive-loan-embeddable-schedule-generator/misc/Main.java → 90; …/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/EmbeddableProgressiveLoanScheduleGenerator.java → 92; 92 + 90 = 182, and these are the only two non-test .java files in the module]`
+`[VERIFIED: .softhouse/program.json — the Tier-0 context whose fineract_paths is ["fineract-progressive-loan-embeddable-schedule-generator"] carries "main_loc": 182]`
 
 ### 1.2 Test classes in scope
 
@@ -104,7 +108,7 @@ are listed only so the capture fire knows they exist; they are a *second-wave* s
 **The schedule-generation seam has a standalone, dependency-free Java entry point.** The embeddable module
 builds a shadowJar bundling only `fineract-core`, `fineract-loan`, `fineract-progressive-loan`, with a documented
 sample `Main.java` and a documented expected stdout.
-`[VERIFIED: /home/user/fineract/fineract-progressive-loan-embeddable-schedule-generator/build.gradle:27-31 (requiredModuleNames) and README.md "There is no extra dependency."]`
+`[VERIFIED: /home/user/fineract/fineract-progressive-loan-embeddable-schedule-generator/build.gradle:28-32 (the requiredModuleNames list — fineract-core, fineract-loan, fineract-progressive-loan) and README.md "There is no extra dependency."]`
 `[VERIFIED: /home/user/fineract/fineract-progressive-loan-embeddable-schedule-generator/misc/Main.java:40-67]`
 
 Consequence: **most Tier-0 capture does not require a running server or PostgreSQL** — only a JDK ≥ 17 and
@@ -154,7 +158,7 @@ File: `/home/user/fineract/fineract-progressive-loan-embeddable-schedule-generat
 
 `[VERIFIED: all rows above, EmbeddableProgressiveLoanScheduleGeneratorTest.java:44-70]`
 `[VERIFIED: CurrencyData positional argument order (code, name, decimalPlaces, inMultiplesOf, displaySymbol, nameCode) — /home/user/fineract/fineract-core/src/main/java/org/apache/fineract/organisation/monetary/data/CurrencyData.java:58-67]`
-`[VERIFIED: LoanRepaymentScheduleModelData field order — /home/user/fineract/fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/LoanRepaymentScheduleModelData.java:31-38]`
+`[VERIFIED: LoanRepaymentScheduleModelData field order — /home/user/fineract/fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/LoanRepaymentScheduleModelData.java:32-39 (the record header; the type declares 19 components ending in allowFullTermForTranche)]`
 
 **TRANSCRIBED outputs.**
 
@@ -188,7 +192,29 @@ Repayment periods (lines 81–92). Column order follows the `checkPeriod` overlo
 **Independent second attestation of the same outputs.** The module README documents the CI sample run's stdout
 with the identical figures (`Total Interest Amount: 2.05`, per-period `16.43 / 0.58 / 17.01` … `16.90 / 0.10 / 17.00`).
 `[VERIFIED: /home/user/fineract/fineract-progressive-loan-embeddable-schedule-generator/README.md — "This code has the following output" block]`
-Two independent statements of the same expected output in the repository make V-01 the strongest anchor in the
+**A third attestation exists, through a different entry point and under a different rounding mode.**
+`ProgressiveEMICalculatorTest.test_leap_year_only_actual_no_effect_on_360_loan` (`EMI:3231`, inside the V-10
+nested class) runs the same shape — `100.0` disbursed `2024-01-01`, rate `7.0`, `DAYS_360`/`DAYS_30`, six monthly
+periods `2024-01-01 … 2024-07-01` — and asserts the same per-period figures via `checkPeriod` at `EMI:3259-3265`.
+Read with the same column labels §2.5 uses (emi, …, interestDue, duePrincipal, outstanding):
+
+| repaymentIdx | emi | interestDue | duePrincipal | outstanding | line |
+|---:|---:|---:|---:|---:|---|
+| 0 | `17.01` | `0.58` | `16.43` | `83.57` | 3259, 3260 |
+| 1 | `17.01` | `0.49` | `16.52` | `67.05` | 3261 |
+| 2 | `17.01` | `0.39` | `16.62` | `50.43` | 3262 |
+| 3 | `17.01` | `0.29` | `16.72` | `33.71` | 3263 |
+| 4 | `17.01` | `0.2` | `16.81` | `16.90` | 3264 |
+| 5 | `17.00` | `0.1` | `16.9` | `0.0` | 3265 |
+
+These are V-01's rows exactly (`16.43/0.58/17.01/83.57` … `16.90/0.10/17.00/0.0`, §2.1 table above). It reaches them
+through `ProgressiveEMICalculator` directly rather than the embeddable generator, and under the class `mc`
+(12, **`HALF_EVEN`**) rather than V-01's local (12, `HALF_UP`) — so it also demonstrates that this particular
+schedule is insensitive to the rounding-mode difference between the two harnesses. It does **not** license
+transcribing V-01 under `HALF_EVEN` generally; it is corroboration of these figures only.
+`[VERIFIED: ProgressiveEMICalculatorTest.java:3231-3265 — inputs at :3232-3251 (periods 2024-01-01…2024-07-01, rate 7.0, DAYS_360, DAYS_30, MONTHS, repayEvery 1), disbursement toMoney(100.0) at 2024-01-01 (:3255-3256), checkPeriod rows at :3259-3265; no local MathContext shadow in this method, so the class field at :76 (12, HALF_EVEN) governs]`
+
+Three independent statements of the same expected output in the repository make V-01 the strongest anchor in the
 corpus. **This is why it is the calibration vector.**
 
 **Invariant check on the transcribed set** (a check, not a source of new numbers): the six principals sum to
@@ -270,7 +296,7 @@ Class-level fixtures — these apply to **every** vector in §2.5 unless a test 
 
 | Fixture | Value | Line |
 |---|---|---|
-| `mc` (class field) | **precision 12, `RoundingMode.HALF_EVEN`** | 76 |
+| `mc` (class field) | **precision 12, `RoundingMode.HALF_EVEN`** — but **eleven test methods shadow it** with a local `MathContext(12, HALF_UP)` at `EMI:2072, 2121, 2166, 2216, 2253, 2290, 2327, 2364, 2401, 2438, 2470`; see the warning in §2.8 | 76 |
 | `currency` | `CurrencyData("USD","USD", decimalPlaces=2, inMultiplesOf=1, "$","USD")` | 79 |
 | `MoneyHelper.getRoundingMode()` | mocked → `HALF_EVEN` | 97 |
 | `MoneyHelper.getMathContext()` | mocked → `MathContext(12, HALF_EVEN)` | 98 |
@@ -485,12 +511,42 @@ expression here rather than resolved, so nothing in this document is a derived v
 
 #### V-10 — `LeapYear366OnlyForPeriodWith29thOfFebruaryTest` (nested class, line 2976)
 
-Seven tests, S1–S5 plus `test_feb29_period_only_cross_year_quarterly_period_containing_feb29` (3183) and
-`test_leap_year_only_actual_no_effect_on_360_loan` (3231). `[VERIFIED: grep of test method names, lines 2983-3231]`
+Seven tests: S1–S5 (2983, 3024, 3060, 3101, 3141) plus
+`test_feb29_period_only_cross_year_quarterly_period_containing_feb29` (3183) and
+`test_leap_year_only_actual_no_effect_on_360_loan` (3231).
+`[VERIFIED: grep -n "public void test_leap_year\|public void test_feb29" ProgressiveEMICalculatorTest.java → exactly those seven methods at :2983, :3024, :3060, :3101, :3141, :3183, :3231, all inside the nested class opened at :2976]`
 
-All set `DaysInYearCustomStrategyType.FEB_29_PERIOD_ONLY` — this is the **only** place in the corpus where
-`getDaysInYearCustomStrategy()` is non-null; everywhere else it is `null` (class default at line 110).
-`[VERIFIED: lines 2997-2998, 3036-3037, 3074-3075 and the class default at :110]`
+**`FEB_29_PERIOD_ONLY` does NOT exhaust the custom-strategy dimension — `FULL_LEAP_YEAR` also appears here.**
+An earlier draft of this document said "all set `FEB_29_PERIOD_ONLY`" while citing only three of the seven
+tests; the sentence told a capture fire that the dimension was exhausted, and it is not. Precisely, on
+re-verification at the pinned commit:
+
+- All seven tests do stub `FEB_29_PERIOD_ONLY` once each — one stubbing per test, at 2998, 3037, 3075, 3117,
+  3156, 3197 and 3250 respectively.
+- **The sixth test, `test_feb29_period_only_cross_year_quarterly_period_containing_feb29` (3183), then re-stubs
+  mid-test to `DaysInYearCustomStrategyType.FULL_LEAP_YEAR` at 3209** and builds a **second** schedule over the
+  same four quarterly boundaries, so it can compare the two strategies against each other.
+
+(T17 recorded this as "six of the seven set `FEB_29_PERIOD_ONLY`"; the mechanics are that all seven set it and
+one of them re-stubs. The consequence — `FULL_LEAP_YEAR` is a live, uncovered strategy value — is identical.)
+`[VERIFIED: grep -n "FULL_LEAP_YEAR\|FEB_29_PERIOD_ONLY" ProgressiveEMICalculatorTest.java → FEB_29_PERIOD_ONLY thenReturn at :2998, :3037, :3075, :3117, :3156, :3197, :3250; FULL_LEAP_YEAR thenReturn at :3209; the remaining hits at :3179, :3193, :3208, :3223 are comments. Method boundaries at :2983, :3024, :3060, :3101, :3141, :3183, :3231 put exactly one FEB_29_PERIOD_ONLY stubbing in each of the seven, and :3209 inside the sixth.]`
+
+**The surviving half of the claim is verified.** This nested class is the only place in the corpus where
+`getDaysInYearCustomStrategy()` is stubbed non-null: all **eight** non-null stubbings (seven
+`FEB_29_PERIOD_ONLY`, one `FULL_LEAP_YEAR`) lie between lines 2997 and 3250, inside
+`LeapYear366OnlyForPeriodWith29thOfFebruaryTest`. Everywhere else the value is `null` — the class default at
+line 110, restated at :3415 and :3608.
+`[VERIFIED: grep -n "getDaysInYearCustomStrategy" ProgressiveEMICalculatorTest.java → 11 hits — thenReturn(null) at :110, :3415, :3608; non-null stubbings at :2997, :3036, :3074, :3116, :3155, :3196, :3209, :3249]`
+
+⚠ **`FULL_LEAP_YEAR` has no absolute literal expectation anywhere in the corpus — it is a total GAP. Nothing
+about it may be transcribed. See §3.3, §3.10 and capture run C-06b (§4.2).** The only assertions on the
+`FULL_LEAP_YEAR` schedule are **relational**, against the `FEB_29_PERIOD_ONLY` schedule built beside it:
+`assertEquals` on period 1's due interest at **3219** (the cross-year period 2023-12-01 → 2024-03-01 does contain
+2024-02-29, so both strategies are expected to use 366 days) and `assertNotEquals` on period 2's at **3226**
+(2024-03-01 → 2024-06-01 contains no Feb 29, so the two are expected to differ, 365 vs 366). Neither states a
+number, and no `checkPeriod` row is ever taken against that schedule.
+`[VERIFIED: ProgressiveEMICalculatorTest.java:3219 → Assertions.assertEquals(toDouble(fullLeapPeriod1.getDueInterest()), toDouble(feb29Period1.getDueInterest()), …); :3226 → Assertions.assertNotEquals(toDouble(fullLeapPeriod2.getDueInterest()), toDouble(feb29Period2.getDueInterest()), …)]`
+`[VERIFIED: grep -n "fullLeapSchedule" ProgressiveEMICalculatorTest.java → only :3211 (construction), :3213 (addDisbursement), :3218 and :3225 (repaymentPeriods().get(1) / .get(2) for the two relational asserts). No checkPeriod call.]`
 
 Fully transcribed here — **S1** (line 2983, February split across periods): rate `9.482` (2992), `ACTUAL`/`ACTUAL`
 (2996, 2999), `MONTHS`/`1` (3000–3001), `allowFullTermForTranche=false` (3003), multiples `null` (2993),
@@ -547,14 +603,32 @@ strongest form of expectation in the corpus, and the right first target for a Go
 ### 2.8 Index of the remaining ProgressiveEMICalculatorTest expectations (NOT transcribed here)
 
 898 `checkPeriod` rows exist; the sections above transcribe roughly 90 of them. The remainder are indexed by
-test-method line so the capture fire can transcribe mechanically without re-analysing. Groups, by first line:
+test-method line so the capture fire can transcribe mechanically without re-analysing.
+
+> ⚠ **STOP — read before transcribing anything from the index below.**
+> **Eleven test methods in this file shadow the class `mc` with a local `MathContext(12, RoundingMode.HALF_UP)`:**
+> `EMI:2072, 2121, 2166, 2216, 2253, 2290, 2327, 2364, 2401, 2438, 2470`.
+> **Nine of them fall inside the groups indexed below** — `2071/2120/2165` (multi-year),
+> `2252/2289/2363/2400` (near-month-end and 2-monthly), `2437/2469`
+> (`interestRecognitionFromDisbursementDate` pair). The other two are V-06 (`2216`) and V-07 (`2327`), already
+> flagged in §2.5.
+> **Any vector transcribed from those groups MUST record `HALF_UP`, not the class default `HALF_EVEN`.**
+> Open the first line of the test method body and check before transcribing; the shadow is always the first
+> statement. Recording the wrong rounding mode here produces a vector that a correct Go implementation fails.
+> `[VERIFIED: grep -n "MathContext mc = new MathContext" ProgressiveEMICalculatorTest.java → 12 hits: the class
+> field at :76 (precision 12, HALF_EVEN) and exactly the eleven local HALF_UP shadows listed above at :2072,
+> :2121, :2166, :2216, :2253, :2290, :2327, :2364, :2401, :2438, :2470]`
+
+Groups, by first line:
 
 `262` emi-adjustment · `334` multi-disbursement on due date · `380/422/471/519` mid-term rate change ·
 `565` balance correction · `681/763` payoff · `851/900/949` multi-disbursement variants · `996` actual/actual ·
 `1032` total repay 1st · `1113/1149` weekly · `1179` 15-day · `1215` due-principal after payments ·
 `1336/1403` daily-interest chargeback / 2-month · `1473–1906` interest pause (13 tests) ·
-`1942/1985/2029` reschedule · `2071/2120/2165` multi-year · `2252/2289/2363/2400` near-month-end and 2-monthly ·
-`2437/2469` `interestRecognitionFromDisbursementDate` false/true pair · `2501` nested chargeback (3) ·
+`1942/1985/2029` reschedule · `2071/2120/2165` multi-year **[⚠ HALF_UP shadow at 2072/2121/2166]** ·
+`2252/2289/2363/2400` near-month-end and 2-monthly **[⚠ HALF_UP shadow at 2253/2290/2364/2401]** ·
+`2437/2469` `interestRecognitionFromDisbursementDate` false/true pair **[⚠ HALF_UP shadow at 2438/2470]** ·
+`2501` nested chargeback (3) ·
 `2692–2917` chargeback (5) · `2976` nested leap year (7) · `3270` S5 chargeback · `3335` model serialization ·
 `3409` nested FLAT+DAILY (5) · `3602` nested FLAT+SAME_AS_REPAYMENT (9) · `3972` nested DECLINING+SAME_AS_REPAYMENT (4) ·
 `4161` nested reschedule/extend term (4) · `4380` nested re-age equal amortization (11) · `5099` nested equal
@@ -566,7 +640,8 @@ amortization (3) · `5285/5317` principal/interest grace · `5348` full-term tra
 ## 3. Coverage map — what parity needs vs what the corpus pins
 
 Legend: **PINNED** = a literal expectation exists in the corpus. **GAP** = no literal anywhere in the seam;
-must be captured.
+must be captured. A `[OBSERVED, PENDING AUDIT: …]` tag on a GAP means a candidate capture exists but has not
+been accepted (§0); the gap remains a GAP and remains `TO_BE_CAPTURED` until it has.
 
 ### 3.1 Uneven principal division — **PARTIALLY PINNED**
 
@@ -580,27 +655,70 @@ vs `4634327` — note the last EMI is *smaller* here, the opposite direction fro
 The rule exists in production code: for monthly frequency, when the seed day-of-month is `> 28` and the
 candidate date's day is `>= 28`, the day is set to `min(lengthOfMonth(date), seedDay)` — i.e. Jan 31 → Feb 29 →
 **back to** Mar 31, rather than Java's `plusMonths` clamping which would stick at Mar 29.
-`[VERIFIED: /home/user/fineract/fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/DefaultScheduledDateGenerator.java:167-175]`
+`[VERIFIED: /home/user/fineract/fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/DefaultScheduledDateGenerator.java:168-176 — method adjustDate; the > 28 condition is at :169 and the re-anchoring body at :170-173]`
 
-**No test in the seam exercises it as a derived output:**
-- `DefaultScheduledDateGenerator` is instantiated in only three places in scope: `LoanScheduleGeneratorTest.java:70`
-  and `:108`, and `EmbeddableProgressiveLoanScheduleGenerator.java:39`.
-  `[VERIFIED: grep -rn "DefaultScheduledDateGenerator" over both in-scope src trees]`
-- V-01/V-02/V-03 all use seed day-of-month `1` (`2024-01-01`), so the `> 28` branch is never taken.
-  `[VERIFIED: EmbeddableProgressiveLoanScheduleGeneratorTest.java:48; LoanScheduleGeneratorTest.java:56,65,104]`
-- V-06/V-07/S3 contain the Jan-31 → Feb-29 → Mar-31 sequence but **supply it as input literals**
-  (`ProgressiveEMICalculatorTest.java:2217-2223, 2328-2334, 3061-3067`); `ProgressiveEMICalculatorTest`'s own
-  generator is used only for interest sub-period splitting, not for deriving these boundaries.
+**No test in the seam exercises it as a derived output.** The conclusion is sound; the proof an earlier draft
+of this document gave for it was not, and is replaced here.
+
+- **Correction to the count.** `DefaultScheduledDateGenerator` is instantiated in **four** places in scope, not
+  three. An earlier draft named `LoanScheduleGeneratorTest.java:70`, `:108` and
+  `EmbeddableProgressiveLoanScheduleGenerator.java:39` and stopped. The fourth is
+  **`ProgressiveEMICalculatorTest.java:72`** — a `private static` field
+  `emiCalculator = new ProgressiveEMICalculator(new DefaultScheduledDateGenerator())`, which hands **every** test
+  in that 5,414-line file a real, non-mocked date generator. A count of generators was never the right proof, and
+  this one was wrong.
+  `[VERIFIED: grep -rn "DefaultScheduledDateGenerator" fineract-progressive-loan/src fineract-progressive-loan-embeddable-schedule-generator/src → 5 hits — an import at ProgressiveEMICalculatorTest.java:41 and instantiations at LoanScheduleGeneratorTest.java:70, LoanScheduleGeneratorTest.java:108, ProgressiveEMICalculatorTest.java:72, EmbeddableProgressiveLoanScheduleGenerator.java:39]`
+
+- **The proof that does hold — no in-seam path derives a month-end boundary.** The question is not how many
+  generators exist but which *paths* produce repayment boundaries. In `ProgressiveEMICalculatorTest` the only
+  path that derives boundaries at all is the test's own helper
+  `generateExpectedRepaymentPeriods(disbursementDate)` (declared at `EMI:5143`), which dispatches to
+  `expectedRepaymentsMonthly` (`:5162`), `expectedRepaymentWeeks` (`:5170`) or `expectedRepaymentDays` (`:5155`).
+  All three build each boundary with a plain `LocalDate.plusMonths` / `.plusWeeks` / `.plusDays` fed straight into
+  `periodData(...)` (`:5177`) — **`adjustDate` is never reached.** That helper has **21 call sites**
+  (`EMI:3435, 3456, 3496, 3536, 3576, 3630, 3692, 3724, 3758, 3790, 3829, 3871, 3946, 3998, 4036, 4073, 4132,
+  4179, 4213, 4255, 4316`), and **every one of them passes a day-of-month-`1` disbursement date** — `2024-01-01`
+  or `2024-06-01`. The `> 28` seed-day condition is unreachable from all 21.
+  `[VERIFIED: grep -n "generateExpectedRepaymentPeriods" ProgressiveEMICalculatorTest.java → the declaration at :5143 plus exactly the 21 call sites listed above]`
+  `[VERIFIED: grep -n "LocalDate disbursementDate" ProgressiveEMICalculatorTest.java, lines 3400-4350 → LocalDate.of(2024, 1, 1) at :3426, :3446, :3485, :3525, :3565, :3623, :3649, :3684, :3714, :3748, :3782, :3821, :3863, :3937 and LocalDate.of(2024, 6, 1) at :3988, :4026, :4063, :4122, :4178, :4212, :4251, :4308 — day-of-month 1 in every case]`
+  `[VERIFIED: ProgressiveEMICalculatorTest.java:5162-5168 → expectedRepaymentsMonthly does periodData(disbursementDate.plusMonths(i * length), disbursementDate.plusMonths((i + 1) * length)); :5177-5179 → periodData is a bare LoanScheduleModelRepaymentPeriod.repayment(0, fromDate, dueDate, …) — no ScheduledDateGenerator on either path]`
+
+- **Every month-end test supplies its boundaries as `periodData(...)` input literals.** V-06/V-07/S3 contain the
+  Jan-31 → Feb-29 → Mar-31 sequence, but hand it in rather than derive it
+  (`ProgressiveEMICalculatorTest.java:2217-2223, 2328-2334, 3061-3067`). The real generator held by
+  `emiCalculator` (`EMI:72`) is used only for interest sub-period splitting inside those already-given
+  boundaries, never for producing them. **Therefore no test in the seam asserts a derived month-end boundary.**
+  `[VERIFIED: lines 2217-2223, 2328-2334, 3061-3067 — each is a List.of(periodData(LocalDate.of(…), LocalDate.of(…)), …) writing out all six period boundary pairs as literals]`
+
+- **Seed days in the three schedule-level vectors are all ≤ 28.** V-01 and V-03 use `2024-01-01`; **V-02 uses
+  `scheduleGenerationStartDate = 2024-01-01` with `disbursementDate = 2024-01-15`** — day **15**, not day 1, as
+  an earlier draft of this document asserted while citing `LoanScheduleGeneratorTest.java:56`, which does not say
+  that. Both `1` and `15` are ≤ 28, so the `> 28` branch is never taken in any of the three; the conclusion
+  survives, and the evidence now matches the sentence.
+  `[VERIFIED: EmbeddableProgressiveLoanScheduleGeneratorTest.java:48 → final LocalDate startDate = LocalDate.of(2024, 1, 1); and :49 → final LocalDate disbursementDate = LocalDate.of(2024, 1, 1);]`
+  `[VERIFIED: LoanScheduleGeneratorTest.java:56 → private static final LocalDate DISBURSEMENT_DATE = LocalDate.of(2024, 1, 15); — day 15]`
+  `[VERIFIED: LoanScheduleGeneratorTest.java:65 (V-02) → new LoanRepaymentScheduleModelData(LocalDate.of(2024, 1, 1), CURRENCY, DISBURSEMENT_AMOUNT, DISBURSEMENT_DATE, …) — component 1 is scheduleGenerationStartDate, component 4 is disbursementDate, per the record header at LoanRepaymentScheduleModelData.java:32-39]`
+  `[VERIFIED: LoanScheduleGeneratorTest.java:103-104 (V-03) → new LoanRepaymentScheduleModelData(LocalDate.of(2024, 1, 1), CURRENCY, DISBURSEMENT_AMOUNT_100, LocalDate.of(2024, 1, 1), …) — both dates day 1]`
 
 **Therefore: the re-anchoring rule is unpinned by any golden vector and must be captured.** Given the rule lives
-in `fineract-loan` and is bundled into the embeddable shadowJar (`build.gradle:27-31`), it is capturable through
+in `fineract-loan` and is bundled into the embeddable shadowJar (`build.gradle:28-32`), it is capturable through
 the embeddable entry point by setting `scheduleGenerationStartDate` / `disbursementDate` to a day > 28.
 
-### 3.3 Leap-year Feb 29 — **PINNED**
+**Status of the gap: still `TO_BE_CAPTURED`.** A *candidate* capture of exactly this behaviour now exists and is
+**under independent audit — not accepted, and no number from it is reproduced in this document.**
+`[OBSERVED, PENDING AUDIT: .softhouse/capture/out/capture-raw.json → D-02 ("month-end re-anchor vs clamp-and-carry"), D-02b ("month-end: 30 Jan seed, sharper discriminator")]`
+Until that audit accepts it, C-02/C-03 below remain the plan of record and this gap stays open.
 
-Seven tests under `FEB_29_PERIOD_ONLY` (§2.5 V-10) plus the V-06/V-07 month-end schedules that traverse
-`2024-02-29`. **GAP:** Feb 29 with `daysInYearCustomStrategy = null` under `DAYS_365` (the leap tests all pair
-Feb-29 handling with `ACTUAL`, or with `DAYS_360` in the no-effect test at 3231).
+### 3.3 Leap-year Feb 29 — **PARTIALLY PINNED** (`FEB_29_PERIOD_ONLY` pinned; `FULL_LEAP_YEAR` a total GAP)
+
+| `daysInYearCustomStrategy` | Status | Evidence |
+|---|---|---|
+| `FEB_29_PERIOD_ONLY` | **PINNED** | **Six** of the seven tests in §2.5 V-10 carry full literal `checkPeriod` schedules under this strategy: S1–S5 (rows at `EMI:3011-3016`, `3050-3053`, `3088-3093`, `3129-3134`, `3169-3174`, all `ACTUAL`) and `test_leap_year_only_actual_no_effect_on_360_loan` (rows at `EMI:3259-3265`, `DAYS_360`/`DAYS_30`). The seventh (3183) carries none. Plus the V-06/V-07 month-end schedules that traverse `2024-02-29`. `[VERIFIED: grep -n "checkPeriod(" ProgressiveEMICalculatorTest.java, lines 2976-3268 → rows at 3011-3016, 3050-3053, 3088-3093, 3129-3134, 3169-3174, 3259-3265 and nowhere else in the nested class]` |
+| `FULL_LEAP_YEAR` | **GAP (total)** | **No absolute literal expectation exists anywhere in the corpus.** The single occurrence (`EMI:3209`, inside `test_feb29_period_only_cross_year_quarterly_period_containing_feb29`) is pinned only *relative* to the `FEB_29_PERIOD_ONLY` schedule built beside it — `assertEquals` at `EMI:3219`, `assertNotEquals` at `EMI:3226`. Neither states a number, and no `checkPeriod` row is taken against that schedule. See §2.5 V-10. **Closed by capture run C-06b (§4.2), `TO_BE_CAPTURED` until then.** |
+| `null` under `DAYS_365` | **GAP** | The leap tests all pair Feb-29 handling with `ACTUAL`, or with `DAYS_360` in the no-effect test at 3231. Partially closed by C-06 (§4.2), which traverses two Feb-29s with the strategy `null`. |
+
+The earlier "seven tests under `FEB_29_PERIOD_ONLY`, PINNED" formulation was a restatement of the §2.5 error
+corrected above — it implied the custom-strategy dimension was closed. It is replaced by the split above.
 
 ### 3.4 Multi-period rate variation — **PINNED, structurally**
 
@@ -660,13 +778,24 @@ arithmetic.** No extrapolation is offered here.
 |---|---|
 | Uneven principal division | PARTIAL (primitive only) |
 | 0% rate | PINNED (even division only) |
-| Month-end disbursement (Jan 31) + re-anchoring | **GAP** (rule exists in code, no vector) |
-| Leap-year Feb 29 | PINNED (under `FEB_29_PERIOD_ONLY` / `ACTUAL`) |
+| Month-end disbursement (Jan 31) + re-anchoring | **GAP** (rule exists in code, no vector; candidate capture under audit — §3.2) |
+| Leap-year Feb 29 | PARTIAL — PINNED under `FEB_29_PERIOD_ONLY` (6 of the 7 V-10 tests carry literal rows) |
+| `daysInYearCustomStrategy = FULL_LEAP_YEAR` | **GAP (total)** — only relational assertions exist (`EMI:3219`, `:3226`); no literal. Run C-06b |
+| `daysInYearCustomStrategy = null` under `DAYS_365` | GAP (partly closed by C-06) |
 | Multi-period rate variation | PINNED (as mid-term change) |
 | `installmentAmountInMultiplesOf` set | **GAP (total)** |
 | Single installment | PINNED |
 | Long terms | PARTIAL (FLAT only ≥ 12; declining balance capped at 6) |
 | MNT-scale principals | **GAP (total)** |
+
+**Candidate captures exist for two of these gaps and are NOT yet accepted.** A capture fire produced raw
+observed output from the pinned reference oracle (Fineract) covering the month-end re-anchoring rule and the
+disbursement-on-a-due-date ordering boundary. It is **under independent audit and has not been accepted**, so
+**no gap above is downgraded on its strength and no number from it appears in this document**.
+`[OBSERVED, PENDING AUDIT: .softhouse/capture/out/capture-raw.json → D-02 "month-end re-anchor vs clamp-and-carry", D-02b "month-end: 30 Jan seed, sharper discriminator" — bear on the §3.2 / §3.10 month-end gap]`
+`[OBSERVED, PENDING AUDIT: .softhouse/capture/out/capture-raw.json → D-03 "disbursement exactly on a repayment due date (ordering boundary)" — bears on the multi-disbursement-on-due-date group indexed at EMI:334 in §2.8, a dimension this coverage map does not otherwise carry a row for]`
+If the audit accepts that capture, C-02/C-03 may be satisfied by it rather than re-run; if the audit rejects it,
+the plan below stands unchanged. Either way the decision belongs to the audit, not to this document.
 
 ---
 
@@ -704,9 +833,9 @@ Purpose: make every later capture reproducible. Record, and store alongside ever
 |---|---|
 | Fineract commit | `git rev-parse HEAD` — must be `426a23544e8426a38ae43ae404670a0a7e85b9eb` |
 | JDK version | `java -version` |
-| `MathContext` parameter | explicit in the harness — precision AND rounding mode, both logged |
-| `MoneyHelper.PRECISION` | `19` in source (§2.4); log the value observed at runtime |
-| tenant `rounding-mode` | `SELECT value FROM c_configuration WHERE name = 'rounding-mode'` on the PostgreSQL tenant DB; default is `6` = `HALF_EVEN` (§2.4 point 2) |
+| `MathContext` parameter | explicit in the harness — precision AND rounding mode. **Assert** both against the run's own row in the §4.2 table and record them; a mismatch voids the run. |
+| `MoneyHelper.PRECISION` | `19` in source (§2.4). **Assert the value observed at runtime and record it — do not merely log it. A value other than the one C-00 ran under voids the run.** `[VERIFIED: /home/user/fineract/fineract-core/src/main/java/org/apache/fineract/organisation/monetary/domain/MoneyHelper.java:35 → public static final int PRECISION = 19; :91-93 → getMathContext() returns new MathContext(PRECISION, getRoundingMode())]` |
+| tenant `rounding-mode` | `SELECT value FROM c_configuration WHERE name = 'rounding-mode'` on the PostgreSQL tenant DB; default is `6` = `HALF_EVEN` (§2.4 point 2). **Assert the observed value and record it, on the same terms: a value other than the one C-00 ran under voids the run.** Logging it is not sufficient — it is an input to `MoneyHelper.getMathContext()` and to `installmentAmountInMultiplesOf` rounding (§2.4 points 2 and 4). |
 | DB engine | must be **PostgreSQL** — `postgresql` compose profile. Never MySQL/MariaDB. Oracle Database is prohibited. |
 | Harness path used | `embeddable-jar` or `live-server` |
 
@@ -714,27 +843,32 @@ A vector captured without this block attached is not admissible.
 
 ### 4.2 Runs C-02 … C-10 — Gap closure via the embeddable jar
 
-Each run: **`MathContext` explicitly pinned (precision 12, `RoundingMode.HALF_UP`, matching C-00 unless the run
-says otherwise); currency `MNT` with `decimalPlaces = 2`; `interestMethod = DECLINING_BALANCE`;
+**The `MathContext` is carried per row, in its own column, deliberately.** It is not bound once for the table
+and inherited: a row appended later must state its own precision and rounding mode, and a row that does not
+state them is not runnable. Every row below currently reads precision 12 / `HALF_UP`, matching C-00 — that is a
+fact about each row, not a table-level default.
+
+Other per-run defaults: **currency `MNT` with `decimalPlaces = 2`; `interestMethod = DECLINING_BALANCE`;
 `allowPartialPeriodInterestCalculation = true`; `interestRecognitionOnDisbursementDate = false`;
 `daysInYearCustomStrategy = null`; `fixedLength = null`; `allowFullTermForTranche = false`; down payment
 disabled — unless the run's row overrides.** Record every period: `periodNumber`, `fromDate`, `dueDate`,
 `principal`, `interest`, `fee`, `penalty`, `totalDue`, `outstandingBalance`, `totalOutstandingBalance`, plus the
 four plan-level fields.
 
-| Run | Closes gap | Distinguishing inputs | Acceptance check |
-|---|---|---|---|
-| **C-02** | §3.2 month-end re-anchoring | `startDate = disbursementDate = 2024-01-31`; 6 monthly; principal `MNT 1,000,000` → `100000000`; rate `9.99`; `DAYS_30`/`DAYS_360` | Derived due dates are `2024-02-29, 2024-03-31, 2024-04-30, 2024-05-31, 2024-06-30, 2024-07-31` — i.e. period 3 **re-anchors to 31**, not 29. If it stops at 29 the harness bypassed `adjustDate` (§3.2) and the run is void. Principals sum to `100000000`. |
-| **C-03** | §3.2 near-miss control | identical to C-02 but `2024-01-30` | Due dates `…-02-29, -03-30, -04-30, -05-30, -06-30, -07-30`. Differential vs C-02 isolates the `seedDay > 28` branch. |
-| **C-04** | §3.9 MNT scale | `2024-01-01`; 6 monthly; principal `MNT 5,000,000` → `500000000`; rate `9.4822`; `DAYS_30`/`DAYS_360` (same shape as V-04, only the principal changes) | Principals sum to `500000000`; final `outstandingBalance == 0`. Records whether precision-12 behaves at ~10 significant digits (§3.9). |
-| **C-05** | §3.9 + §3.7 | `2024-01-01`; **36** monthly; principal `MNT 20,000,000` → `2000000000`; rate `18.0`; `DAYS_30`/`DAYS_360` | 37 periods; principals sum to `2000000000`; final balance `0`. |
-| **C-06** | §3.7 long declining balance | `2024-01-01`; **60** monthly; principal `MNT 50,000,000` → `5000000000`; rate `24.0`; `ACTUAL`/`ACTUAL` | 61 periods; principals sum to `5000000000`; final balance `0`; traverses two Feb-29s (2028 is a leap year) with `daysInYearCustomStrategy = null` — also closes part of §3.3. |
-| **C-07** | §3.5 `installmentAmountInMultiplesOf` | as C-04 but `installmentAmountInMultiplesOf = 100000` (= `MNT 1,000`) | Every EMI except the last is an exact multiple of `100000` minor units; principals still sum to `500000000`. **Also record the tenant `rounding-mode` in force — this path reads it (§2.4 point 4).** |
-| **C-08** | §3.5 × §3.1 | as C-07 but principal `MNT 5,000,001` → `500000100` (deliberately not divisible) | Residual is absorbed in exactly one period; principals sum to `500000100`. |
-| **C-09** | §3.1 + §3.8 | `2024-01-01`; 7 monthly; principal `MNT 1,000,000` → `100000000`; **rate `0`** | Zero interest in every period; principals sum to `100000000` with the residual visible (7 does not divide `100000000` evenly). |
-| **C-10** | §3.6 MNT single installment | `2024-01-01`; **1** period; principal `MNT 5,000,000` → `500000000`; rate `7.0`; `DAYS_30`/`DAYS_360` | 2 periods (disbursement + 1); principal = full amount; balance `0`. |
+| Run | Closes gap | `MathContext` | Distinguishing inputs | Acceptance check |
+|---|---|---|---|---|
+| **C-02** | §3.2 month-end re-anchoring | precision 12 / `HALF_UP` | `startDate = disbursementDate = 2024-01-31`; 6 monthly; principal `MNT 1,000,000` → `100000000`; rate `9.99`; `DAYS_30`/`DAYS_360` | Derived due dates are `2024-02-29, 2024-03-31, 2024-04-30, 2024-05-31, 2024-06-30, 2024-07-31` — i.e. period 3 **re-anchors to 31**, not 29. If it stops at 29 the harness bypassed `adjustDate` (§3.2) and the run is void. Principals sum to `100000000`. |
+| **C-03** | §3.2 near-miss control | precision 12 / `HALF_UP` | identical to C-02 but `2024-01-30` | Due dates `…-02-29, -03-30, -04-30, -05-30, -06-30, -07-30`. Differential vs C-02 isolates the `seedDay > 28` branch. |
+| **C-04** | §3.9 MNT scale | precision 12 / `HALF_UP` | `2024-01-01`; 6 monthly; principal `MNT 5,000,000` → `500000000`; rate `9.4822`; `DAYS_30`/`DAYS_360` (same shape as V-04, only the principal changes) | Principals sum to `500000000`; final `outstandingBalance == 0`. Records whether precision-12 behaves at ~10 significant digits (§3.9). |
+| **C-05** | §3.9 + §3.7 | precision 12 / `HALF_UP` | `2024-01-01`; **36** monthly; principal `MNT 20,000,000` → `2000000000`; rate `18.0`; `DAYS_30`/`DAYS_360` | 37 periods; principals sum to `2000000000`; final balance `0`. |
+| **C-06** | §3.7 long declining balance | precision 12 / `HALF_UP` | `2024-01-01`; **60** monthly; principal `MNT 50,000,000` → `5000000000`; rate `24.0`; `ACTUAL`/`ACTUAL` | 61 periods; principals sum to `5000000000`; final balance `0`; traverses two Feb-29s (2028 is a leap year) with `daysInYearCustomStrategy = null` — also closes part of §3.3. |
+| **C-06b** | §3.3 `FULL_LEAP_YEAR` | precision 12 / `HALF_UP` | **identical to C-06 in every input except `daysInYearCustomStrategy = FULL_LEAP_YEAR`** (C-06 runs it `null`) | 61 periods; principals sum to `5000000000`; final balance `0`. Recorded as a **differential against C-06** — the pair isolates the custom-strategy flag with everything else held fixed. This is the only way `FULL_LEAP_YEAR` acquires an absolute expectation; the corpus has none (§2.5 V-10, §3.3). Cross-check the *direction* against the corpus's own relational assertions: a period containing 2024-02-29 or 2028-02-29 should match the `FEB_29_PERIOD_ONLY` result, a period not containing one should differ (`EMI:3219`, `:3226`). |
+| **C-07** | §3.5 `installmentAmountInMultiplesOf` | precision 12 / `HALF_UP` | as C-04 but `installmentAmountInMultiplesOf = 100000` (= `MNT 1,000`) | Every EMI except the last is an exact multiple of `100000` minor units; principals still sum to `500000000`. **Also record the tenant `rounding-mode` in force — this path reads it (§2.4 point 4).** |
+| **C-08** | §3.5 × §3.1 | precision 12 / `HALF_UP` | as C-07 but principal `MNT 5,000,001` → `500000100` (deliberately not divisible) | Residual is absorbed in exactly one period; principals sum to `500000100`. |
+| **C-09** | §3.1 + §3.8 | precision 12 / `HALF_UP` | `2024-01-01`; 7 monthly; principal `MNT 1,000,000` → `100000000`; **rate `0`** | Zero interest in every period; principals sum to `100000000` with the residual visible (7 does not divide `100000000` evenly). |
+| **C-10** | §3.6 MNT single installment | precision 12 / `HALF_UP` | `2024-01-01`; **1** period; principal `MNT 5,000,000` → `500000000`; rate `7.0`; `DAYS_30`/`DAYS_360` | 2 periods (disbursement + 1); principal = full amount; balance `0`. |
 
-Cross-cutting acceptance checks applied to **every** run C-02…C-10:
+Cross-cutting acceptance checks applied to **every** run C-02…C-10 (C-06b included):
 - Sum of period principals equals the disbursed amount, in integer minor units, exactly.
 - Final `outstandingLoanBalance` is exactly `0`.
 - `totalRepaymentAmount == totalDisbursedAmount + totalInterestAmount`, in integer minor units.
@@ -754,8 +888,10 @@ resulting schedule. Deferred here rather than specified, because they are Tier-A
 
 ### 4.4 Ordering
 
-`C-00` → `C-01` → `C-02` → `C-03` → `C-04` → `C-05` → `C-06` → `C-07` → `C-08` → `C-09` → `C-10` → `C-11+`.
-C-00 gates everything. C-02/C-03 are a matched pair and must both run or neither.
+`C-00` → `C-01` → `C-02` → `C-03` → `C-04` → `C-05` → `C-06` → `C-06b` → `C-07` → `C-08` → `C-09` → `C-10`
+→ `C-11+`.
+C-00 gates everything. C-02/C-03 are a matched pair and must both run or neither; **C-06/C-06b are likewise a
+matched pair** — C-06b is meaningless except as a differential against C-06.
 
 ---
 
@@ -834,7 +970,10 @@ projection, and must never emit a `float`/`double` into the vector store.
 - `MoneyHelper`'s tenant-scoped, globally-configured rounding mode is ambient state reached from many call sites.
   Porting it as an implicit global into Go would be a mistake; it should become an explicit parameter. Flagging
   only — a design decision for the Tier-C mapping, not this task.
-- The `CLAUDE.md` "~182 LOC" figure for the Tier-0 module does not reconcile with the measured 92/123/215 (§1.1).
+- ~~The "~182 LOC" figure for the Tier-0 module does not reconcile with the measured LOC.~~ **Struck — not a
+  backlog item and never was.** It reconciles exactly: `92` (`src/main`) + `90` (`misc/Main.java`) = `182`,
+  which is the `"main_loc": 182` recorded in `.softhouse/program.json`. The earlier arithmetic omitted
+  `misc/Main.java`. Nothing to chase. See §1.1.
 - `MoneyHelper.PRECISION = 19` vs the tests' mocked precision 12 is a discrepancy that will resurface in every
   live-server capture, not just this seam.
 
@@ -842,12 +981,13 @@ projection, and must never emit a `float`/`double` into the vector store.
 
 ## 7. Evidence ledger
 
-**`[UNVERIFIED]` count: 3.**
+**`[UNVERIFIED]` count: 2.** (Was 3. Marker 1 — the provenance of the "~182 LOC" Tier-0 figure — is
+**resolved and withdrawn**: `92` + `90` = `182` = `.softhouse/program.json`'s `"main_loc"`, §1.1. It was never
+irreconcilable; the earlier arithmetic omitted `misc/Main.java`.)
 
-1. The provenance of the "~182 LOC" Tier-0 figure in `CLAUDE.md` (§1.1) — not traceable from the checkout.
-2. The assertion style of the nine `*Progressive*` integration-test classes (§1.3) — not opened; doing so would
+1. The assertion style of the nine `*Progressive*` integration-test classes (§1.3) — not opened; doing so would
    leave the seam.
-3. That no `MoneyHelper` call is reached anywhere in the embeddable `generate()` call tree (§1.4). What **is**
+2. That no `MoneyHelper` call is reached anywhere in the embeddable `generate()` call tree (§1.4). What **is**
    verified is that `ProgressiveEMICalculator.java` contains zero `MoneyHelper` references and that the
    calculator takes `MathContext` as a parameter. Proving the negative for the whole transitive call tree
    requires executing the jar, which this sandbox cannot do — this is exactly what calibration run C-00 settles.
@@ -859,3 +999,247 @@ assertion, since no claim is made about its contents beyond its existence and si
 Every other factual claim in this document carries a `[VERIFIED: …]` tag naming either a file and line opened in
 this session or a command run in this session against `/home/user/fineract` at
 `426a23544e8426a38ae43ae404670a0a7e85b9eb`.
+
+---
+
+## Correction log (T16b)
+
+Applied 2026-08-18 against the six required changes in
+`.softhouse/reviews/T17-vector-capture-plan-review.md` §10. Every line citation written or repaired below was
+re-opened in the pinned checkout at `426a23544e8426a38ae43ae404670a0a7e85b9eb` during this session; the
+document cites the tree as `/home/user/fineract/...` (its original path convention), which is the same tree
+read here as `/Users/buv/fineract/...`.
+
+**Method note.** Each correction was followed by a mechanical sweep of the *whole* document for every
+restatement of the claim — the numbers, the file names, the line cites and the prose formulation — not only the
+section the review named. Sections 3.3, 3.10 and the §2.8 index are covered explicitly below, because a
+correction that fixes the prose and leaves the coverage table wrong still hands a capture fire the original
+wrong instruction. Two of the six had already been applied in part by an interrupted earlier run; those are
+recorded as such with the evidence.
+
+---
+
+### #1 — Repair the §3.2 proof (D1)
+
+**T17 asked for:** replace "instantiated in only three places in scope" with the true count of four, naming
+`ProgressiveEMICalculatorTest.java:72` as the fourth, and replace the broken argument with the
+`generateExpectedRepaymentPeriods` / 21-call-site argument. Keep the conclusion.
+
+**State on arrival:** **not applied.** §3.2 still read "instantiated in only three places in scope".
+
+**Changed:** §3.2's "No test in the seam exercises it as a derived output" block rewritten as four bullets —
+the corrected count of four (naming `EMI:72`, and saying plainly that a count of generators was never the right
+proof), the 21-call-site argument, the "boundaries are supplied as `periodData(...)` literals" argument, and the
+seed-day bullet (see #4).
+
+**Re-verified citations:**
+- `[VERIFIED: grep -rn "DefaultScheduledDateGenerator" fineract-progressive-loan/src fineract-progressive-loan-embeddable-schedule-generator/src → 5 hits: import at ProgressiveEMICalculatorTest.java:41; instantiations at LoanScheduleGeneratorTest.java:70, :108, ProgressiveEMICalculatorTest.java:72, EmbeddableProgressiveLoanScheduleGenerator.java:39. Four instantiations, not three.]`
+- `[VERIFIED: ProgressiveEMICalculatorTest.java:72 → private static ProgressiveEMICalculator emiCalculator = new ProgressiveEMICalculator(new DefaultScheduledDateGenerator());]`
+- `[VERIFIED: grep -n "generateExpectedRepaymentPeriods" ProgressiveEMICalculatorTest.java → declaration at :5143 and exactly 21 call sites at :3435, 3456, 3496, 3536, 3576, 3630, 3692, 3724, 3758, 3790, 3829, 3871, 3946, 3998, 4036, 4073, 4132, 4179, 4213, 4255, 4316 — matching T17's list exactly]`
+- `[VERIFIED: every disbursementDate reaching those call sites is LocalDate.of(2024,1,1) (:3426, 3446, 3485, 3525, 3565, 3623, 3649, 3684, 3714, 3748, 3782, 3821, 3863, 3937) or LocalDate.of(2024,6,1) (:3988, 4026, 4063, 4122, 4178, 4212, 4251, 4308) — day-of-month 1 throughout]`
+- `[VERIFIED: the helper never reaches adjustDate — ProgressiveEMICalculatorTest.java:5155 expectedRepaymentDays, :5162 expectedRepaymentsMonthly, :5170 expectedRepaymentWeeks all build boundaries with plain LocalDate.plusDays/plusMonths/plusWeeks fed into periodData at :5177]`
+- `[VERIFIED: DefaultScheduledDateGenerator.java:168-176 adjustDate; > 28 condition at :169; re-anchoring body :170-173 — the citation the earlier run had already repaired from ":167-175", re-checked here]`
+
+**Sweep run:** `grep -n "three places\|instantiat\|DefaultScheduledDateGenerator"` over the whole document.
+Remaining hits are §1.2 row 2 ("incl. real `DefaultScheduledDateGenerator` date derivation" — a true statement
+about `LoanScheduleGeneratorTest`), §2.2's "it constructs a real `DefaultScheduledDateGenerator` (line 70)" —
+verified true at `LoanScheduleGeneratorTest.java:70` — and the §6 Backlog ownership bullet. **No other
+restatement of the count of three exists in the document.**
+
+---
+
+### #2 — Correct the `FULL_LEAP_YEAR` claim and add it to the coverage map (D2)
+
+**T17 asked for:** change §2.5 V-10's "All set `FEB_29_PERIOD_ONLY`"; retain the surviving half of the claim;
+add a `FULL_LEAP_YEAR` — GAP row to §3.3 and the §3.10 summary; add a capture run C-06b.
+
+**State on arrival:** **not applied at all.** The token `FULL_LEAP_YEAR` appeared nowhere in the document.
+
+**Changed:** four places, not one.
+1. **§2.5 V-10** — the "All set `FEB_29_PERIOD_ONLY`" sentence replaced; the surviving half (all eight non-null
+   stubbings inside the nested class, `null` elsewhere per `EMI:110`) retained with a complete citation; a
+   `⚠ FULL_LEAP_YEAR is a total GAP` block added covering the two relational assertions.
+2. **§3.3** — heading changed from **PINNED** to **PARTIALLY PINNED**, and the section turned into a three-row
+   table: `FEB_29_PERIOD_ONLY` PINNED, `FULL_LEAP_YEAR` **GAP (total)**, `null` under `DAYS_365` GAP.
+3. **§3.10 summary table** — new row `daysInYearCustomStrategy = FULL_LEAP_YEAR` | **GAP (total)**; the existing
+   "Leap-year Feb 29 | PINNED" row downgraded to PARTIAL; a `null`-under-`DAYS_365` row added.
+4. **§4.2 / §4.4** — capture run **C-06b** added (C-06's inputs with `daysInYearCustomStrategy = FULL_LEAP_YEAR`,
+   as a differential against C-06's `null`), and the ordering line updated to make C-06/C-06b a matched pair.
+
+**One divergence from T17's wording, on re-verification.** T17 wrote "six of the seven set
+`FEB_29_PERIOD_ONLY`". The mechanics are slightly different: **all seven set it** (one stubbing each, at
+`EMI:2998, 3037, 3075, 3117, 3156, 3197, 3250`, one falling inside each of the seven test methods that start at
+`:2983, 3024, 3060, 3101, 3141, 3183, 3231`), and the **sixth test re-stubs mid-method** to `FULL_LEAP_YEAR` at
+`:3209` to build a second schedule. The document states this explicitly rather than repeating T17's count. The
+consequence T17 drew is unchanged and is the load-bearing part: `FEB_29_PERIOD_ONLY` does not exhaust the
+custom-strategy dimension, and `FULL_LEAP_YEAR` is uncovered.
+
+**Re-verified citations:**
+- `[VERIFIED: grep -n "FULL_LEAP_YEAR\|FEB_29_PERIOD_ONLY" ProgressiveEMICalculatorTest.java → FEB_29_PERIOD_ONLY thenReturn at :2998, 3037, 3075, 3117, 3156, 3197, 3250; FULL_LEAP_YEAR thenReturn at :3209; :3179, :3193, :3208, :3223 are comments]`
+- `[VERIFIED: grep -n "getDaysInYearCustomStrategy" ProgressiveEMICalculatorTest.java → 11 hits — null at :110, :3415, :3608; the eight non-null stubbings at :2997, 3036, 3074, 3116, 3155, 3196, 3209, 3249, all inside LeapYear366OnlyForPeriodWith29thOfFebruaryTest (opened :2976)]`
+- `[VERIFIED: ProgressiveEMICalculatorTest.java:3219 → Assertions.assertEquals(toDouble(fullLeapPeriod1.getDueInterest()), toDouble(feb29Period1.getDueInterest()), …); :3226 → assertNotEquals on period 2. Relational only; no literal.]`
+- `[VERIFIED: grep -n "fullLeapSchedule" ProgressiveEMICalculatorTest.java → :3211, 3213, 3218, 3225 only. No checkPeriod is ever taken against the FULL_LEAP_YEAR schedule, so no absolute expectation for it exists anywhere in the corpus.]`
+- `[VERIFIED: grep -n "checkPeriod(" ProgressiveEMICalculatorTest.java restricted to the nested class (2976-3267) → rows at 3011-3016, 3050-3053, 3088-3093, 3129-3134, 3169-3174, 3259-3265; the test at :3183 has none]`
+
+**Sweep run:** `grep -n "FEB_29\|FULL_LEAP_YEAR\|[Ll]eap\|CustomStrateg\|customStrateg"` over the whole
+document. **The sweep caught two restatements the review's own change list did not name:**
+- **§3.3's opening sentence "Seven tests under `FEB_29_PERIOD_ONLY`"** — an independent restatement of the same
+  false generalisation, sitting in the coverage map, which is where a capture fire actually reads. Corrected.
+- **§3.10's row "Leap-year Feb 29 | PINNED (under `FEB_29_PERIOD_ONLY` / `ACTUAL`)"** — carried the same
+  "dimension is closed" implication in a single word. Downgraded to PARTIAL.
+
+The sweep also caught a **second-order error introduced during this correction itself**: the first draft of the
+§3.3 table said six tests "carry full literal `checkPeriod` schedules" and listed `3183` among them. `3183`
+carries **none**. The six that do are S1–S5 and `test_leap_year_only_actual_no_effect_on_360_loan` (`:3231`).
+Fixed before commit. Remaining sweep hits (the `daysInYearCustomStrategy = null` fixture rows for `EMB:63`,
+`LSG:67` and `EMI:110`, the C-06 row, the §4.2 preamble default) are correct as written and were left alone.
+
+---
+
+### #3 — Add a shadow warning to §2.8 (D6)
+
+**T17 asked for:** insert, immediately before the §2.8 index, a warning naming the eleven test methods that
+shadow the class `mc` with a local `MathContext(12, HALF_UP)`, and stating that nine of them fall inside the
+indexed groups.
+
+**State on arrival:** **not applied.** §2.8 went straight from its preamble into the index.
+
+**Changed:** a blockquoted **STOP** warning inserted immediately before the index, listing all eleven lines,
+naming which three indexed groups the nine fall in, naming V-06/V-07 as the other two, and instructing the fire
+to open the first line of the test method body before transcribing.
+
+**Re-verified citations:**
+- `[VERIFIED: grep -n "MathContext mc = new MathContext" ProgressiveEMICalculatorTest.java → 12 hits: the class field at :76 (precision 12, HALF_EVEN) and exactly eleven local (12, HALF_UP) shadows at :2072, 2121, 2166, 2216, 2253, 2290, 2327, 2364, 2401, 2438, 2470 — matching T17's list exactly, including :2216 and :2327]`
+
+**Sweep run:** `grep -n "HALF_UP\|HALF_EVEN\|shadow"` over the whole document. **The sweep caught two places the
+review did not name:**
+- **The §2.8 index itself** — the group entries `2071/2120/2165`, `2252/2289/2363/2400` and `2437/2469` are what
+  a fire actually copies from, and a warning several lines above is easy to scroll past. Each of the three group
+  entries now carries an inline `[⚠ HALF_UP shadow at …]` marker naming the exact shadowed lines.
+- **§2.4's class-fixture table**, whose `mc` row asserted "precision 12, `HALF_EVEN`" as *the* class context with
+  only a generic "unless a test shadows them" caveat in the preamble above it. The row now names all eleven
+  shadowing lines and points at §2.8.
+
+§2.5's V-06 (`2216`) and V-07 (`2327`) warnings were already present and are correct; left as-is.
+
+---
+
+### #4 — Fix the three off-by-one citations and the `LSG:56` mis-description (D3, D4)
+
+**T17 asked for:** `DefaultScheduledDateGenerator.java:167-175` → `:168-176`;
+`LoanRepaymentScheduleModelData.java:31-38` → `:32-39`; `build.gradle:27-31` → `:28-32`; and the §3.2 seed-day
+sentence restated so that it says what `LSG:56` actually says.
+
+**State on arrival:** **the three line-range fixes were already applied** by the interrupted earlier run — §1.4
+and §3.2 read `build.gradle:28-32`, §2.1 reads `LoanRepaymentScheduleModelData.java:32-39`, §3.2 reads
+`DefaultScheduledDateGenerator.java:168-176`. All three were re-verified here rather than trusted. **The
+`LSG:56` mis-description was NOT applied** — §3.2 still said "V-01/V-02/V-03 all use seed day-of-month `1`
+(`2024-01-01`)" while citing `LoanScheduleGeneratorTest.java:56`.
+
+**Changed:** the seed-day bullet in §3.2 restated to distinguish V-01/V-03 (`2024-01-01`) from V-02
+(`scheduleGenerationStartDate = 2024-01-01`, `disbursementDate = 2024-01-15`), with the conclusion — both 1 and
+15 are ≤ 28, so the `> 28` branch is never taken — kept and now actually supported by the evidence cited.
+
+**Re-verified citations (all four, read at the pinned commit this session):**
+- `[VERIFIED: DefaultScheduledDateGenerator.java:168 → private Temporal adjustDate(final Temporal date, final Temporal seedDate, final PeriodFrequencyType frequencyType) {; :169 → the frequencyType.isMonthly() && seedDate DAY_OF_MONTH > 28 && date DAY_OF_MONTH >= 28 condition; :170-173 → lengthOfMonth / seedDay / Math.min / date.with; :176 → closing brace. The range is 168-176, not 167-175.]`
+- `[VERIFIED: LoanRepaymentScheduleModelData.java:32 → public record LoanRepaymentScheduleModelData(@NotNull LocalDate scheduleGenerationStartDate, …; :39 → @NotNull boolean allowFullTermForTranche) {. 19 components. The range is 32-39, not 31-38.]`
+- `[VERIFIED: build.gradle:28 → var requiredModuleNames = [; :29-31 → fineract-core, fineract-loan, fineract-progressive-loan; :32 → ]. The range is 28-32, not 27-31.]`
+- `[VERIFIED: LoanScheduleGeneratorTest.java:56 → private static final LocalDate DISBURSEMENT_DATE = LocalDate.of(2024, 1, 15); — day 15. :65 (V-02) passes LocalDate.of(2024,1,1) as component 1 (scheduleGenerationStartDate) and DISBURSEMENT_DATE as component 4 (disbursementDate). :103-104 (V-03) passes LocalDate.of(2024,1,1) for both. EmbeddableProgressiveLoanScheduleGeneratorTest.java:48 startDate and :49 disbursementDate are both LocalDate.of(2024,1,1).]`
+
+**Sweep run:** `grep -n "167-175\|:31-38\|gradle:27-31\|LSG:56\|2024-01-15"` over the whole document. **No stale
+range survives anywhere.** The remaining `2024-01-15` hits are §2.2's V-02 inputs (the "`disbursementDate` |
+`2024-01-15` | 56" fixture row, the "`scheduleGenerationStartDate` … **differ** from `disbursementDate`"
+sentence, and the disbursement-period row). Those were already correct — and they are in fact the internal
+contradiction that made the §3.2 sentence detectably wrong. §3.2 now agrees with §2.2.
+
+---
+
+### #5 — Restate the `MathContext` per row and upgrade `MoneyHelper` from logged to asserted (D9)
+
+**T17 asked for:** an explicit `MathContext` column on the C-02…C-10 table carrying `precision 12 / HALF_UP` on
+every row; and in §4.1, change `MoneyHelper.PRECISION` from logged to asserted, applying the same to tenant
+`rounding-mode`.
+
+**State on arrival:** **not applied.** The table had four columns, and §4.1 read "log the value observed at
+runtime".
+
+**Changed:**
+- §4.2's table gained a third column, **`MathContext`**, carrying `precision 12 / HALF_UP` explicitly on all ten
+  rows (C-02…C-10 plus the new C-06b). The §4.2 preamble no longer binds the context once for the table; it now
+  states that the column is per row by design and that a row not stating its own precision and rounding mode is
+  not runnable.
+- §4.1's `MoneyHelper.PRECISION` row now says **assert and record, do not merely log; a value other than the one
+  C-00 ran under voids the run**, and carries the source citation.
+- §4.1's tenant `rounding-mode` row upgraded on the same terms, with the reason stated (it feeds
+  `MoneyHelper.getMathContext()` and `installmentAmountInMultiplesOf` rounding, §2.4 points 2 and 4).
+- §4.1's `MathContext` parameter row upgraded from "both logged" to asserted against the run's own §4.2 row.
+
+**Re-verified citations:**
+- `[VERIFIED: MoneyHelper.java:35 → public static final int PRECISION = 19; :91-93 → getMathContext() returns mathContextCache.computeIfAbsent(tenantId, k -> new MathContext(PRECISION, getRoundingMode()))]`
+
+**Sweep run:** `grep -n "MathContext\|rounding-mode\|log the value"` over the whole document. The phrase "log the
+value" no longer occurs. §4.0's C-00 already pinned `precision 12, HALF_UP` explicitly and needed no change. The
+cross-cutting acceptance-check line was extended to read "C-06b included", so the new row is not silently
+outside it.
+
+---
+
+### #6 — Strike the 182-LOC discrepancy (D5)
+
+**T17 asked for:** replace the §1.1 note and the §6 Backlog bullet with the settled fact
+(`92 + 90 = 182 = program.json`'s `main_loc`); remove the `getLoanTermInDays()` coincidence remark; downgrade
+`[UNVERIFIED]` marker 1 to resolved, taking the count to 2.
+
+**State on arrival:** **applied in §1.1 only — and that is exactly the failure mode this task exists to
+catch.** §1.1 had been rewritten with the correct arithmetic, but §6's Backlog still read "The `CLAUDE.md`
+'~182 LOC' figure for the Tier-0 module does not reconcile with the measured 92/123/215 (§1.1)", and §7's
+evidence ledger still read "`[UNVERIFIED]` count: 3" with item 1 being the provenance of the 182 figure. A
+reader reaching either section still met the original wrong claim. §1.1 also still carried the
+`getLoanTermInDays()` coincidence remark T17 asked to have removed.
+
+**Changed:**
+- **§1.1** — the `getLoanTermInDays() == 182` coincidence remark removed entirely (that section no longer
+  mentions it at all); the paragraph now records that the earlier arithmetic omitted `misc/Main.java` and that
+  the `[UNVERIFIED]` marker is withdrawn.
+- **§6 Backlog** — the bullet struck, with the settled arithmetic in its place and an explicit "not a backlog
+  item and never was".
+- **§7 Evidence ledger** — `[UNVERIFIED]` count **3 → 2**; marker 1 removed and its resolution recorded;
+  markers 2 and 3 renumbered to 1 and 2.
+
+**Re-verified citations:**
+- `[VERIFIED: wc -l on the module's only two non-test .java files → misc/Main.java 90, src/main/java/.../EmbeddableProgressiveLoanScheduleGenerator.java 92; 90 + 92 = 182]`
+- `[VERIFIED: find fineract-progressive-loan-embeddable-schedule-generator -type f → exactly 6 files: dependencies.gradle, README.md, build.gradle, misc/Main.java, the test .java, the main .java]`
+- `[VERIFIED: .softhouse/program.json — the context whose fineract_paths is ["fineract-progressive-loan-embeddable-schedule-generator"] is tier0-harness-schedule-poc and carries main_loc: 182]`
+
+**Sweep run:** `grep -n "182\|UNVERIFIED\|getLoanTermInDays\|92/123/215"` over the whole document. Every
+surviving `182` is now either the settled LOC statement (§1.1, §6), the genuine
+`plan.getLoanTermInDays() == 182` test assertion (§2.1 table, §4.0 acceptance check 2, §5.3 "counts and dates"
+example) — a real Fineract expectation that must stay — or this correction log. The string `92/123/215` no
+longer occurs. The only remaining `[UNVERIFIED]` tag in the body is §1.3's integration-test assertion style,
+consistent with the ledger's new count of 2.
+
+---
+
+### Additional changes made, and why
+
+- **T17 follow-up F1 (non-blocking) applied**, because the §3.3 correction could not be written accurately
+  without it. `test_leap_year_only_actual_no_effect_on_360_loan` (`EMI:3231`) is a **third attestation of V-01's
+  per-period figures**, reached through `ProgressiveEMICalculator` rather than the embeddable generator, and
+  under the class `mc` (12, **`HALF_EVEN`**) rather than V-01's local (12, `HALF_UP`). Recorded in §2.1 as a
+  table with its own line cites, and "two independent statements" corrected to "three".
+  `[VERIFIED: ProgressiveEMICalculatorTest.java:3232-3251 → six monthly periods 2024-01-01…2024-07-01, rate 7.0, DAYS_360, DAYS_30, MONTHS, repayEvery 1, multiplesOf null; :3255-3256 → toMoney(100.0) disbursed 2024-01-01; :3259-3265 → the checkPeriod rows; no local MathContext in the method, so the class field at :76 governs]`
+- **Candidate captures noted; no gap closed.** §3.2 and §3.10 now carry
+  `[OBSERVED, PENDING AUDIT: .softhouse/capture/out/capture-raw.json → D-02, D-02b, D-03]` tags, and §0 defines
+  the label. **Both gaps remain `TO_BE_CAPTURED`, no captured number is reproduced anywhere in this document,
+  and C-02/C-03 remain the plan of record** — that capture is under independent audit and has not been accepted.
+  `[VERIFIED: .softhouse/capture/out/capture-raw.json contains captures C-00, D-01, D-01-p19, D-01-p8, D-01-mnt, D-02, D-02b, D-03, D-04; D-02/D-02b are the month-end runs, D-03 the disbursement-on-a-due-date ordering boundary]`
+- **Rendering fix.** Nine `[VERIFIED: …]` tags — six written in this session and three written by the
+  interrupted earlier run — contained backticks nested inside the outer code span, which breaks the span. The
+  inner backticks were stripped. No citation content changed.
+
+### Not done, and why
+
+**T17 follow-ups F2, F3, F4, F5 and F6 are not applied.** They are explicitly non-blocking in the review, and
+none of the six required changes depends on them. F2 in particular is a real defect — §4.0's acceptance check 4
+asks the capture to match the README stdout, but `README.md` reports nine of the ten period columns, with no
+`totalOutstandingBalance` — and it deserves its own task rather than being folded in here.
