@@ -1,6 +1,15 @@
 #!/usr/bin/env python3
 """T22 audit probe — mechanical invariant check over Path B raw captures.
 
+DEFECT CORRECTED, 2026-08-18 (T22 independent audit, P1 item 13). The I5
+verdict was hard-coded `verdict("I5", True, ...)` and could never fail — it
+printed a per-period "!! I5 FAIL" line above it but the returned verdict was
+always PASS. This is now a genuinely failable check driven by an `i5_fail`
+list. See `.softhouse/reviews/T22-pathb-capture-audit.md` §9 / §10 P1-13.
+The audit did NOT rely on this script; its own from-scratch checker is
+`.softhouse/capture/pathb/t22-audit/t22_invariants.py`.
+
+
 Money is read as EXACT DECIMAL (json.loads(parse_float=Decimal)), never as a
 binary float, and every comparison is done in INTEGER MINOR UNITS (value * 100
 must be integral for a 2-decimal currency). No tolerance is applied anywhere.
@@ -56,6 +65,7 @@ def check(path, label):
 
     rows = [p for p in j["periods"] if "period" in p]
     sp = si = st = sf = spen = 0
+    i5_fail = []
     print("  per   fromDate     dueDate      days   principal      interest       total          balance")
     prev_bal = disb
     s2_fail = []
@@ -72,6 +82,7 @@ def check(path, label):
             s2_fail.append((p["period"], prev_bal - pr, bal))
         prev_bal = bal
         if pr + it + fe + pe != td:
+            i5_fail.append(p["period"])
             print("    !! I5 FAIL period %s" % p["period"])
         print("  %3d   %-12s %-12s %4s   %12d   %12d   %12d   %12d"
               % (p["period"], "-".join(str(x) for x in p["fromDate"]),
@@ -90,7 +101,9 @@ def check(path, label):
                      "sum(interest)=%d  totalInterestCharged=%d" % (si, tint))
     allok &= verdict("I4", st == trep,
                      "sum(total)=%d  totalRepaymentExpected=%d" % (st, trep))
-    allok &= verdict("I5", True, "per-period principal+interest+fee+penalty==total")
+    allok &= verdict("I5", not i5_fail,
+                     "per-period principal+interest+fee+penalty==total (%d break(s))"
+                     % len(i5_fail))
     allok &= verdict("I6", disb + tint + tfee + tpen == trep,
                      "disbursed+interest+fee+penalty=%d  totalRepayment=%d"
                      % (disb + tint + tfee + tpen, trep))
