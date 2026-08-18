@@ -185,7 +185,7 @@
       ],
       "status": "in_progress",
       "attempts": 0,
-      "note": "Vector capture is orchestrator-only (touches the oracle). || PARKED cloud fire 20260817-2000: reason=oracle_unreachable. No live Fineract instance from the cloud sandbox (no docker daemon, PostgreSQL not listening on :5432, actuator/health unreachable). NOT synthesised - conformance exit 2 is not a PASS. Unpark precondition: a fire that reaches the live reference oracle. T16 (this fire) prepares the capture plan so this task is execute-ready. || T16 FINDINGS THAT CHANGE HOW THIS TASK MUST BE RUN (pending T17 confirmation): (1) MoneyHelper is a HIDDEN SECOND MathContext - PRECISION=19 in production [MoneyHelper.java:35] but MOCKED TO 12 in the tests, so a live capture runs a different precision than produced the transcribed literals; the capture must assert the tenant rounding mode and precision actually in force, never assume them. (2) The seam has a dependency-free shadowJar entry point with a documented Main.java, so MOST Tier-0 capture needs only a JDK >= 17 - not a running server and not PostgreSQL. (3) Run the C-00 calibration capture FIRST: it must reproduce an already-transcribed literal test expectation exactly, else no other capture is trustworthy. || UNPARKED fire 20260818-152328: oracle REACHABLE. Two capture passes now exist, both raw observed via Path A (embeddable seam, in-process, no database). Pass 1 (fire 20260818-080003, rescued): 9 captures incl. the G-1 discriminating precision family and the D-03 ordering boundary; D-04 errored for want of a tenant context. Pass 2 (this fire): 13 captures with a tenant supplied - closes D-04 and establishes that installmentAmountInMultiplesOf is silently DROPPED by the capture seam. NEITHER pass is audited yet (T18, T19) and NO vector has been promoted to the store. Contract-shaped storage stays forbidden while G-1 is open. || Pass 3 added this fire after Buyan ratified HALF_UP + NBFI: 12 captures at PRODUCTION settings (19, HALF_UP), the first parity candidates. Rig calibration holds across a third harness (P-CAL == pass-1 C-00) and P-01 == pass-1 D-01-p19 cross-harness. All 12 pass all six property invariants. Pass 3 is NOT yet audited (T21). Passes 1-2 are probes, not parity vectors - they ran at precision 12/8, which production never runs."
+      "note": "Vector capture is orchestrator-only (touches the oracle). || PARKED cloud fire 20260817-2000: reason=oracle_unreachable. No live Fineract instance from the cloud sandbox (no docker daemon, PostgreSQL not listening on :5432, actuator/health unreachable). NOT synthesised - conformance exit 2 is not a PASS. Unpark precondition: a fire that reaches the live reference oracle. T16 (this fire) prepares the capture plan so this task is execute-ready. || T16 FINDINGS THAT CHANGE HOW THIS TASK MUST BE RUN (pending T17 confirmation): (1) MoneyHelper is a HIDDEN SECOND MathContext - PRECISION=19 in production [MoneyHelper.java:35] but MOCKED TO 12 in the tests, so a live capture runs a different precision than produced the transcribed literals; the capture must assert the tenant rounding mode and precision actually in force, never assume them. (2) The seam has a dependency-free shadowJar entry point with a documented Main.java, so MOST Tier-0 capture needs only a JDK >= 17 - not a running server and not PostgreSQL. (3) Run the C-00 calibration capture FIRST: it must reproduce an already-transcribed literal test expectation exactly, else no other capture is trustworthy. || UNPARKED fire 20260818-152328: oracle REACHABLE. Two capture passes now exist, both raw observed via Path A (embeddable seam, in-process, no database). Pass 1 (fire 20260818-080003, rescued): 9 captures incl. the G-1 discriminating precision family and the D-03 ordering boundary; D-04 errored for want of a tenant context. Pass 2 (this fire): 13 captures with a tenant supplied - closes D-04 and establishes that installmentAmountInMultiplesOf is silently DROPPED by the capture seam. NEITHER pass is audited yet (T18, T19) and NO vector has been promoted to the store. Contract-shaped storage stays forbidden while G-1 is open. || Pass 3 added this fire after Buyan ratified HALF_UP + NBFI: 12 captures at PRODUCTION settings (19, HALF_UP), the first parity candidates. Rig calibration holds across a third harness (P-CAL == pass-1 C-00) and P-01 == pass-1 D-01-p19 cross-harness. All 12 pass all six property invariants. Pass 3 is NOT yet audited (T21). Passes 1-2 are probes, not parity vectors - they ran at precision 12/8, which production never runs. || PATH B OPENED, fire 20260818-170002. Orchestrator built the Path B rig (running server + PostgreSQL 18.3, same pinned image digest) and took 4 raw captures: .softhouse/capture/pathb/. B-01 corroborates pass-3 P-MNT-1M2 to the minor unit cross-path. B-02 proves installmentAmountInMultiplesOf is HONOURED by the server (12/12 periods differ; EMI 112,082.37 -> 112,100.00; final installment absorbs residual 111,866.22). B-03/B-04 prove daysInYearCustomStrategy is HONOURED (FULL_LEAP_YEAR 144,659.21 vs FEB_29_PERIOD_ONLY 145,011.43 total interest; 12/12 differ). Both fields were previously believed unvectorable. NOT audited - T22 raised. Nothing promoted to the vector store; G-1 still open so contract-shaped storage stays forbidden."
     },
     {
       "id": "T9",
@@ -291,7 +291,8 @@
         "T9",
         "T18",
         "T19",
-        "T21"
+        "T21",
+        "T22"
       ],
       "status": "pending",
       "attempts": 0,
@@ -472,6 +473,26 @@
       "status": "in_progress",
       "attempts": 1,
       "note": "Raised fire 20260818-152328. Contract-independent: audits RAW observed capture. Next fire should run this first - pass 3 is the corpus a conformance run would grade against. || DISPATCHED fire 20260818-170002: opus worker, isolation=worktree, branch softhouse/T21-capture-pass3-audit. Oracle REACHABLE (health 200, fineract-fineract-1 up 22h, postgres:18.3).",
+      "contract_independent": true
+    },
+    {
+      "id": "T22",
+      "title": "Independent audit of Path B captures (running server + PostgreSQL)",
+      "description": "Path B is the first capture path that drives the RUNNING reference oracle over PostgreSQL, and the first that can grade installmentAmountInMultiplesOf and daysInYearCustomStrategy - both of which Path A silently drops and both of which Path B shows are load-bearing. Four raw captures exist (.softhouse/capture/pathb/), orchestrator-produced and unaudited. Re-run REPRODUCE.md end to end against a fresh tenant and diff byte-for-byte; assert the preconditions it lists (image digest, org.postgresql.Driver, jdbc:postgresql://, no prohibited engine); confirm products 1/2 differ ONLY in installmentAmountInMultiplesOf and 3/4 ONLY in daysInYearCustomStrategy, and that each field actually persisted; re-derive at least one schedule independently including the final-installment residual absorption rule; mechanically re-check the six property invariants on all four captures (the orchestrator did NOT do this); and verify the B-01 == pass-3 P-MNT-1M2 cross-path claim digit-for-digit. Then close the two named Path B gaps or state precisely what closing them requires: (a) tenant timezone is Asia/Kolkata, not a Mongolian tz; (b) tenant rounding mode and precision are not asserted per capture, so these are NOT production-settings parity vectors in the sense pass 3 is. Apply T18's P0 list and T19's ten required changes to Path B as well. Test the orchestrator's explicit non-claims too: it did NOT establish the isolated effect of daysInYearCustomStrategy under SAME_AS_REPAYMENT_PERIOD, and did NOT establish that daysInYearType/daysInMonthType affect a progressive schedule - confirm those abstentions were correct rather than over-cautious.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/reviews/T22-pathb-capture-audit.md"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T8"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised fire 20260818-170002 by the orchestrator, which produced the captures under audit. Contract-independent: audits RAW observed capture. Path B is now a prerequisite for any contract clause touching the two fields Path A drops, so this audit gates that part of the parity corpus.",
       "contract_independent": true
     }
   ]
