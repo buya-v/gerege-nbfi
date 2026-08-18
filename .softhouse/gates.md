@@ -126,6 +126,33 @@ contract-domain decision and therefore yours. Whichever you choose, DEC-1 should
 in its domain, whether the grading path honours it: an input the contract exposes but the corpus cannot
 test is unconformance-testable by construction, and that fact belongs in the frozen document.
 
+
+> **Update after the T19 audit — decision 7 is broader than first stated, and two of its arguments were wrong.**
+>
+> - **The seam honours 17 of the contract's 19 inputs, not 18.** A **second** input is silently dropped:
+>   `daysInYearCustomStrategy` **is** read by `assembleFrom` (`:604`), so it passes the "never read" test,
+>   but the `Builder` **copy-constructor** (`:304-351`) never copies it out. A reflective read returns
+>   `null` and a leap-year differential confirms `FULL_LEAP_YEAR` == `FEB_29_PERIOD_ONLY` == `null`.
+>   The defect is therefore a **class** — an unchecked, hand-maintained builder copy — not one field.
+>   Buyan's answer (expose, specify server semantics, refuse until Path-B vectored) applies unchanged to
+>   both fields, but it now covers two.
+> - **The claim is now proved rather than inferred.** The auditor assembled `LoanApplicationTerms` through
+>   the seam's own overload and read `installmentAmountInMultiplesOf` reflectively as `null`.
+> - **Two supporting arguments were wrong and are withdrawn.** (i) "A `17.01` EMI rounded to multiples of
+>   100 cannot be a no-op" — it can: `safeRoundingForEMI` (`:1770-1776`) returns the unrounded EMI when
+>   rounding would zero it. The conclusion survives on `T-IM1-he` and the MNT pair. (ii) "Ruled out through
+>   both channels" — `CurrencyData.inMultiplesOf` is gated on `decimalPlaces == 0` (`Money.java:48-51`) and
+>   the harness hard-codes `2`, so that channel was structurally inert. At `decimalPlaces = 0` it *does*
+>   move the schedule, so "uncapturable through this seam" was too broad as written.
+> - **The "server path honours it" citations were misattributed** — they point at the *cumulative*
+>   generator, not the *progressive* one being ported. The normative specification Buyan asked for must
+>   cite the progressive path.
+>
+> The auditor's own summary is the sharpest statement of why this blocks ratification: *the seam accepts a
+> 19-component contract and honours 17; for the other two the corpus has **zero discriminating power**,
+> which is a defect in the conformance rig itself and sufficient reason not to freeze DEC-1 on the premise
+> that seam-captured vectors cover the contract's input domain.*
+
 #### What still has to happen before the gate is answerable
 
 1. **T18 / T19 audits land** and the captures are either accepted or sent back. (In flight this fire.)
