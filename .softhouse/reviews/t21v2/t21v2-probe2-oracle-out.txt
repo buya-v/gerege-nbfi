@@ -1,0 +1,17 @@
+ 36 x 16.8   principal 4           p12 int=1.13         rep=5.13          | p19 int=1.14         rep=5.14          | DIFFERENT
+ 36 x 16.8   principal 59          p12 int=16.52        rep=75.52         | p19 int=16.51        rep=75.51         | DIFFERENT
+ 36 x 16.8   principal 72          p12 int=20.13        rep=92.13         | p19 int=20.14        rep=92.14         | DIFFERENT
+ 36 x 16.8   principal 340         p12 int=95.16        rep=435.16        | p19 int=95.15        rep=435.15        | DIFFERENT
+ 36 x 16.8   principal 426         p12 int=119.20       rep=545.20        | p19 int=119.18       rep=545.18        | DIFFERENT
+ 36 x 16.8   principal 6940        p12 int=1942.66      rep=8882.66       | p19 int=1942.65      rep=8882.65       | DIFFERENT
+ 36 x 16.8   principal 50000000    p12 int=13995886.40  rep=63995886.40   | p19 int=13995886.40  rep=63995886.40   | IDENTICAL
+  6 x 7.0    principal 43811       p12 int=898.82       rep=44709.82      | p19 int=898.82       rep=44709.82      | IDENTICAL
+  6 x 7.0    principal 131432      p12 int=2696.42      rep=134128.42     | p19 int=2696.42      rep=134128.42     | IDENTICAL
+  6 x 7.0    principal 131433      p12 int=2696.43      rep=134129.43     | p19 int=2696.43      rep=134129.43     | DIFFERENT
+  6 x 7.0    principal 100         p12 int=2.05         rep=102.05        | p19 int=2.05         rep=102.05        | IDENTICAL
+  6 x 7.0    principal 87654321    p12 int=1798283.07   rep=89452604.07   | p19 int=1798283.07   rep=89452604.07   | IDENTICAL
+ 18 x 18.5   principal 5000000     p12 int=763994.33    rep=5763994.33    | p19 int=763994.33    rep=5763994.33    | IDENTICAL
+ 18 x 18.5   principal 4999999     p12 int=763994.20    rep=5763993.20    | p19 int=763994.20    rep=5763993.20    | IDENTICAL
+ 18 x 18.5   principal 87654321    p12 int=13393481.05  rep=101047802.05  | p19 int=13393481.04  rep=101047802.04  | DIFFERENT
+ 12 x 21.6   principal 1200000     p12 int=144988.47    rep=1344988.47    | p19 int=144988.47    rep=1344988.47    | IDENTICAL
+ 18 x 18.5   principal 199999      p12 int=30559.63     rep=230558.63     | p19 int=30559.63     rep=230558.63     | IDENTICAL
