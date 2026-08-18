@@ -1,0 +1,43 @@
+
+[P-02] re-derived date sequence from source: ['2024-01-31', '2024-02-29', '2024-03-31', '2024-04-30', '2024-05-31', '2024-06-30', '2024-07-31']
+
+===== P-02 =====
+    1 2024-02-29  prin=     16.43 int=    0.58 tot=     17.01 bal=     83.57  OK
+    2 2024-03-31  prin=     16.52 int=    0.49 tot=     17.01 bal=     67.05  OK
+    3 2024-04-30  prin=     16.62 int=    0.39 tot=     17.01 bal=     50.43  OK
+    4 2024-05-31  prin=     16.72 int=    0.29 tot=     17.01 bal=     33.71  OK
+    5 2024-06-30  prin=     16.81 int=    0.20 tot=     17.01 bal=     16.90  OK
+    6 2024-07-31  prin=     16.90 int=    0.10 tot=     17.00 bal=      0.00  OK
+  derived  interest=2.05 repayment=102.05 term=182
+  observed interest=2.05 repayment=102.05 term=182
+  ==> P-02: FULL MATCH
+
+[P-02b] re-derived date sequence from source: ['2024-01-30', '2024-02-29', '2024-03-30', '2024-04-30', '2024-05-30', '2024-06-30', '2024-07-30']
+
+===== P-02b =====
+    1 2024-02-29  prin=     16.43 int=    0.58 tot=     17.01 bal=     83.57  OK
+    2 2024-03-30  prin=     16.52 int=    0.49 tot=     17.01 bal=     67.05  OK
+    3 2024-04-30  prin=     16.62 int=    0.39 tot=     17.01 bal=     50.43  OK
+    4 2024-05-30  prin=     16.72 int=    0.29 tot=     17.01 bal=     33.71  OK
+    5 2024-06-30  prin=     16.81 int=    0.20 tot=     17.01 bal=     16.90  OK
+    6 2024-07-30  prin=     16.90 int=    0.10 tot=     17.00 bal=      0.00  OK
+  derived  interest=2.05 repayment=102.05 term=182
+  observed interest=2.05 repayment=102.05 term=182
+  ==> P-02b: FULL MATCH
+
+[P-03] EMI runs over the 5 periods after the disbursement date: ['2024-02-01', '2024-03-01', '2024-04-01', '2024-05-01', '2024-06-01', '2024-07-01']
+  emitted REPAYMENT #1 (pre-disbursement snapshot): {'type': 'REPAYMENT', 'periodNumber': 1, 'dueDate': '2024-02-01', 'balance': '0.00', 'principal': '0.00', 'interest': '0.00', 'total': '0.00', 'totalOutstandingBalance': '101.76'}
+  NOTE: plan loanTermInDays is measured from the SCHEDULE start (2024-01-01), not the
+        disbursement date, so the 5-period derivation's own term (152) is not comparable.
+
+===== P-03 =====
+    2 2024-03-01  prin=     19.77 int=    0.58 tot=     20.35 bal=     80.23  OK
+    3 2024-04-01  prin=     19.88 int=    0.47 tot=     20.35 bal=     60.35  OK
+    4 2024-05-01  prin=     20.00 int=    0.35 tot=     20.35 bal=     40.35  OK
+    5 2024-06-01  prin=     20.11 int=    0.24 tot=     20.35 bal=     20.24  OK
+    6 2024-07-01  prin=     20.24 int=    0.12 tot=     20.36 bal=      0.00  OK
+  derived  interest=1.76 repayment=101.76 term=151
+  observed interest=1.76 repayment=101.76 term=182
+  ==> P-03: FULL MATCH
+
+ALL RE-DERIVED MATCH
