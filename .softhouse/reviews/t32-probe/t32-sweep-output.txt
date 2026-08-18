@@ -1,0 +1,10 @@
+strictly-inside-a-period shapes drawn: 2913
+  ratio-1 reading vs source day ratio DIVERGES on : 2913  (100.0%)
+  sum vs whole-period rate-factor composition     : 0  (0.0%)
+
+  largest total-interest gap seen: 1816050.11
+    MNT 82,836,233 / 36 x 21.6%, schedule start 2024-01-01, disbursement 2024-05-30
+      source day ratio : level/final/interest = 3369076.72/3461468.52/25066613.84
+      ratio-1 reading  : level/final/interest = 3425629.17/3524392.68/26882663.95
+
+(re-derivation from the pinned checkout; NOT an oracle observation)
