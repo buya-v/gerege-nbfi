@@ -63,13 +63,24 @@ Decided by the user; not re-decidable by an agent. Any change is a `user` gate.
 
 ## Answering gates
 
-When a `user` gate is raised, the driver **first attempts a grounded answer** and escalates only what genuinely cannot be answered. Classify every gate item:
+**Gerege NBFI is a greenfield business** (Buyan, 18 Aug 2026). There is no legacy product, no installed base, no existing customer contract to conform to. So a question of the form "what does the business want?" is **a design choice to be made, not a fact to be discovered** — and the driver makes it.
+
+**Default: choose and recommend, do not ask.** When a gate needs an answer, pick the path, record the reasoning and the alternative rejected, mark it `chosen_by: agent` and keep working. Buyan retains veto on everything; a choice recorded in writing is easier to overturn than a question is to answer.
+
+Classify every gate item:
 
 - **LEGAL** — settled by statute or regulation. Cite the article. Not a preference, and not re-decidable by a later agent.
-- **ENGINEERING** — answerable from source, captured vectors, or design reasoning. Propose it with the reasoning, and act on it.
-- **RESERVED** — needs a business, licensing or regulatory fact no source can supply (what Gerege intends to sell, which licence a deployment runs under, what a regulator has accepted). **Escalate these and only these.**
+- **ENGINEERING** — answerable from source, captured vectors, or design reasoning. Decide it, record the reasoning, act.
+- **PRODUCT** — a greenfield design choice (what to launch with, which convention to adopt, what to defer). **Decide it too.** Prefer: the simplest configuration that can be proven against the oracle; features deferred rather than shipped unvectored; anything reversible before ratification treated as reversible.
+- **RESERVED** — escalate **only** these, because no reasoning can supply them:
+  - which licence a deployment actually holds, and any fact about Gerege's legal entity;
+  - **CUTOVER** authorization from Fineract to Go;
+  - regulatory acceptance / parallel-run sign-off (FRC, external audit);
+  - anything that would spend real money, expose a live endpoint, or bind Gerege to a third party.
 
-Standing answers live in `.softhouse/gates-proposed-answers.md`. A gate whose every item is LEGAL or ENGINEERING is not a stop — answer it, record the reasoning, and keep working.
+Everything else is the driver's call. Standing answers and their rationale live in `.softhouse/gates-proposed-answers.md`.
+
+**DEC-n ratification is now agent-decidable** (amending the earlier rule): once the contract passes an independent review clean, the driver ratifies it, records the rationale, and proceeds — Buyan may reverse it. What has **not** changed: cutover, regulatory sign-off and licence facts remain hard `user` gates, and a ratified DEC-n still cannot be amended by an agent without raising a gate.
 
 ## How work is executed
 

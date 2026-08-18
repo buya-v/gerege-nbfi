@@ -123,3 +123,28 @@ Treat it exactly as `DayCountActualActual`:
 Rationale: the failure mode this project exists to prevent is a port that passes its corpus and is wrong. Two fields now demonstrably sit in that blind spot (this one and precision-vs-scale). An explicit refusal converts a silent wrong answer into a loud missing feature — the only honest option while the evidence is out of reach.
 
 **Consequence for Run 1's verification:** `/softhouse-uat` conformance can no longer claim to grade DEC-1 from Path A alone. Path B (captures through the running server API on `:8443`) becomes a prerequisite for the parity corpus, not an optimisation. The oracle is already up and reachable on local fires, so this is schedulable work, not a new blocker.
+
+---
+
+# Standing policy — greenfield (Buyan, 18 Aug 2026)
+
+Gerege NBFI is a new business: no legacy product, no installed base, no existing customer contract. So **the driver chooses and recommends** rather than asking. Only licence facts, CUTOVER, regulatory sign-off, and anything spending real money or exposing a live endpoint still come to Buyan. See CLAUDE.md § Answering gates.
+
+## Decisions taken under that policy
+
+### P-1 · Installment rounding to a multiple → **launch WITHOUT it**
+
+Run-1 loan products ship with `installmentAmountInMultiplesOf = null`. Rounding installments to the nearest 100 ₮ is a legitimate feature, but pass 2 proved the capture seam cannot grade it, so shipping it now would mean shipping an unvectored money path — precisely what this project forbids.
+
+- **Chosen:** launch without multiple-rounding; `installmentAmountInMultiplesOf` stays in DEC-1; the Go port **refuses** (explicit unsupported error) when it is non-null.
+- **Rejected:** launch with it and grade later — that certifies a money path no vector can discriminate.
+- **Reversible:** yes. Adding it later needs Path-B (server API) vectors and a port change, no contract amendment.
+- **Consequence:** Path-B captures drop from *urgent* to *normal* priority. They are still required before this feature can ever ship.
+
+### P-2 · DEC-1 ratification → **agent-decidable on a clean independent review**
+
+Under the greenfield policy, ratifying the first version of the contract is a design decision, not a business fact. When T4's retry passes independent re-review with no rejection-grade findings, the driver ratifies DEC-1, records the rationale, and proceeds to T7/T10. Buyan may reverse it at any point before cutover — and cutover remains a hard `user` gate regardless.
+
+### P-3 · Reporting cadence → **exceptions only**
+
+Routine fire activity is no longer narrated. Surfaced to Buyan: rejections, gates that reach RESERVED, failures that park a context, milestones (a context reaching parity), and anything that contradicts something previously reported as settled.
