@@ -4,24 +4,74 @@
   "started_at": "2026-08-18T12:35:00Z",
   "oracle": "UNREACHABLE - no docker daemon, no PostgreSQL on :5432. Expected for a cloud fire; all vector-capture and conformance work stayed parked oracle_unreachable.",
   "run_id": "2026-08-17-run1-harness-schedule-poc",
-  "workers_dispatched": 9,
-  "workers_completed": 8,
+  "workers_dispatched": 10,
+  "workers_completed": 9,
   "workers_killed_by_infrastructure": 1,
-  "merges": 8,
+  "merges": 9,
   "dispatched": [
-    {"task": "T24", "branch": "softhouse/T24-dec1-v3-p0-corrections", "status": "done_merged"},
-    {"task": "T25", "branch": "softhouse/T25-corpus-corrections-oracle-indep", "status": "done_partial_merged"},
-    {"task": "T26", "branch": "softhouse/T26-dec1-v3-rereview", "status": "done_merged"},
-    {"task": "T27", "branch": "softhouse/T27-corpus-corrections-review", "status": "done_merged"},
-    {"task": "T28", "branch": "softhouse/T28-dec1-v4-readjust-effect", "status": "done_merged"},
-    {"task": "T29", "branch": "softhouse/T29-dec1-v4-rereview", "status": "done_merged", "note": "attempt 1 killed by API 521 mid-flight; WIP rescued to the branch at e9c950d, attempt 2 completed"},
-    {"task": "T30", "branch": "softhouse/T30-corpus-remainder-oracle-free", "status": "done_merged"},
-    {"task": "T31", "branch": "softhouse/T31-dec1-v5-corrections", "status": "done_merged"},
-    {"task": "T32", "branch": "softhouse/T32-dec1-v5-rereview", "status": "done_merged"},
-    {"task": "T33", "branch": "softhouse/T33-dec1-v6-daycount", "status": "SEE_RESUME - last worker of the fire; next fire must VERIFY the branch has a commit before assuming the work exists"}
+    {
+      "task": "T24",
+      "branch": "softhouse/T24-dec1-v3-p0-corrections",
+      "status": "done_merged"
+    },
+    {
+      "task": "T25",
+      "branch": "softhouse/T25-corpus-corrections-oracle-indep",
+      "status": "done_partial_merged"
+    },
+    {
+      "task": "T26",
+      "branch": "softhouse/T26-dec1-v3-rereview",
+      "status": "done_merged"
+    },
+    {
+      "task": "T27",
+      "branch": "softhouse/T27-corpus-corrections-review",
+      "status": "done_merged"
+    },
+    {
+      "task": "T28",
+      "branch": "softhouse/T28-dec1-v4-readjust-effect",
+      "status": "done_merged"
+    },
+    {
+      "task": "T29",
+      "branch": "softhouse/T29-dec1-v4-rereview",
+      "status": "done_merged",
+      "note": "attempt 1 killed by API 521 mid-flight; WIP rescued to the branch at e9c950d, attempt 2 completed"
+    },
+    {
+      "task": "T30",
+      "branch": "softhouse/T30-corpus-remainder-oracle-free",
+      "status": "done_merged"
+    },
+    {
+      "task": "T31",
+      "branch": "softhouse/T31-dec1-v5-corrections",
+      "status": "done_merged"
+    },
+    {
+      "task": "T32",
+      "branch": "softhouse/T32-dec1-v5-rereview",
+      "status": "done_merged"
+    },
+    {
+      "task": "T33",
+      "branch": "softhouse/T33-dec1-v6-daycount",
+      "status": "done_merged",
+      "note": "landed 1f2ed62, merged; caught main advancing mid-task and rebased rather than reverting the driver record"
+    }
   ],
-  "raised_this_fire": ["T28", "T29", "T30", "T31", "T32", "T33", "T34"],
-  "next_action": "Verify T33 landed and is merged. Then dispatch T34, the independent re-review of DEC-1 v6. If T34 is CLEAN the driver ratifies under P-2 and G-1 closes without reaching Buyan. Neither task needs a live oracle.",
+  "raised_this_fire": [
+    "T28",
+    "T29",
+    "T30",
+    "T31",
+    "T32",
+    "T33",
+    "T34"
+  ],
+  "next_action": "T34 - independent re-review of DEC-1 v6. T33 landed and merged, so v6 is on main and reviewable. Needs no live oracle. If T34 is CLEAN the driver ratifies under P-2 and G-1 closes without reaching Buyan. The cloud fire has now exhausted the oracle-free contract queue down to T34.",
   "blocked_on": "nothing agent-decidable. G-1's remaining work is all ENGINEERING. The oracle-dependent queue (6 P0 admissibility items, backlog vectors 3/3a/3b/3c/3d) can only move on a local fire.",
   "open_questions": [],
   "gate_pending": "G-1 (ratify DEC-1) - agent-decidable under P-2, pending a CLEAN re-review. Four re-reviews this fire, none clean.",

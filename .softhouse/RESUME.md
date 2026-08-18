@@ -8,7 +8,7 @@ Written by the orchestrator at every checkpoint; read by the next fire of `/soft
 - **Active run**: `2026-08-17-run1-harness-schedule-poc` — `blocked_on_gate`
 - **Contexts**: 0 done / 17. Tier 0 `blocked_on_gate`; the other 16 are **READY-FOR-ANALYSIS**.
 - **Reference oracle**: **UNREACHABLE all fire** — expected for a cloud fire. Every vector-capture and conformance task stayed parked `oracle_unreachable`. **No vector was synthesised, promoted, or implied.**
-- **Nine workers dispatched, eight completed and merged, one killed by an infrastructure error and re-run.**
+- **Ten workers dispatched, nine completed and merged, one killed by an infrastructure error and re-run to completion.**
 
 ## Read this first: the local fire is losing its workers
 
@@ -16,7 +16,7 @@ The **local fire `20260818-200001` dispatched T24 and T25 at 20:01:23 and checkp
 
 This is the **second consecutive recurrence** of the failure mode `SKILL.md` STEP 5.5 exists to prevent (the first, at 17:22, stranded 4,482 insertions). **`.softhouse/bin/fire-program.sh` on the Mac appears to dispatch and exit without awaiting its workers.** Until that is fixed, every local fire burns opus budget and lands nothing. This cloud fire re-did both tasks from scratch and awaited every worker.
 
-**A premise in the last manifest was also wrong.** It said T24 "needs the oracle". It did not: T23's P0-1 requires *re-scoping* backlog item 8.3, not capturing the vectors now, and every figure T24 needed was already committed by T23. **All nine tasks this fire ran turned out to need no live oracle.** Before parking a task `oracle_unreachable`, check whether it needs a *new observation* or merely *an observation already committed*.
+**A premise in the last manifest was also wrong.** It said T24 "needs the oracle". It did not: T23's P0-1 requires *re-scoping* backlog item 8.3, not capturing the vectors now, and every figure T24 needed was already committed by T23. **All ten tasks this fire ran turned out to need no live oracle.** Before parking a task `oracle_unreachable`, check whether it needs a *new observation* or merely *an observation already committed*.
 
 ## The headline: DEC-1 went v2 → v6, and G-1 is still open — correctly
 
@@ -27,7 +27,8 @@ Four independent re-reviews ran this fire and **not one came back clean**, so th
 | T26 | DEC-1 v3 | ACCEPTED WITH REQUIRED CHANGES | 1 — EMI re-adjust loop specified by *trigger*, never *effect* |
 | T29 | DEC-1 v4 | ACCEPTED WITH REQUIRED CHANGES | 2 — `n` misdefined; **per-period interest specified nowhere** |
 | T32 | DEC-1 v5 | ACCEPTED WITH REQUIRED CHANGES | 1 — rate-factor **day counts** undefined; `contract.go` asserted a falsehood |
-| T34 | DEC-1 v6 | **not yet run — next fire's first contract task** | ? |
+| — | **DEC-1 v6 (T33)** | **applied, awaiting review** | v6 now discriminates **all three** readings the corpus is blind to |
+| T34 | DEC-1 v6 | **not yet run — NEXT FIRE'S FIRST CONTRACT TASK** | ? |
 
 ### The pattern that matters more than any single finding
 
@@ -57,15 +58,14 @@ T32's, on a shape revision 5 itself admits: a disbursement dated **strictly insi
 | **T30** corpus remainder | **done** | B-03/B-04 re-derived from source, **CONSISTENT**; T22 P0-5 closed |
 | **T31** DEC-1 v5 | **done** | `n` + interest computation specified; discriminates both wrong readings |
 | **T32** re-review v5 | **done** | NOT ratifiable — 1 new P0 |
-| **T33** DEC-1 v6 | **in flight at checkpoint** | See "unfinished business" below |
+| **T33** DEC-1 v6 | **done** | Day counts defined, false clause deleted; spec-check discriminates all three wrong readings |
 | **T34** re-review v6 | **pending** | **Next fire's first contract task** |
 
 ## Next action, in order
 
-1. **Verify T33 landed.** It was the last worker of this fire — check `softhouse/T33-dec1-v6-daycount` for a commit and whether it was merged to `main`. If the branch has no commit, treat T33 as `needs_retry` and re-dispatch it; **do not** assume the work exists.
-2. **T34** — independent re-review of DEC-1 v6. Needs **no oracle**. If clean, **the driver ratifies under P-2 and G-1 closes without ever reaching Buyan.**
-3. **Oracle work, local fire only** — the six outstanding P0 admissibility items (T21 P0-2/3/4, T22 P0-3/4/6) and backlog vectors **3, 3a, 3b, 3c, 3d**. Until those land, nothing is promotable and there is no `loanschedule` conformance PASS.
-4. **G-2** — Buyan approved one reshaped T2 attempt.
+1. **T34 — independent re-review of DEC-1 v6.** T33 landed and merged (`1f2ed62`), so v6 is on `main` and reviewable. T34 needs **no oracle**. If it comes back clean, **the driver ratifies under P-2 and G-1 closes without ever reaching Buyan.** Tell the reviewer the four-round pattern below, and point it at the surface T32 named as least examined: period/date generation and the month-end re-anchor, the down-payment path, the balance roll-forward and its zero clamp, and currency/scale handling.
+2. **Oracle work, local fire only** — the six outstanding P0 admissibility items (T21 P0-2/3/4, T22 P0-3/4/6) and backlog vectors **3, 3a, 3b, 3c, 3d**. Until those land, nothing is promotable and there is no `loanschedule` conformance PASS.
+3. **G-2** — Buyan approved one reshaped T2 attempt.
 
 ## What only the local fire can do
 
@@ -87,4 +87,4 @@ Everything needing a **new observation**: the attestation blocks, the missing ca
 
 ## Pause reason
 
-`Clean exit. Nine workers dispatched, eight completed and merged, one killed by a transient API 521 and re-run to completion — its WIP was rescued to its branch rather than discarded. Every deliverable is committed and pushed, on main and on every worker branch. The fire spent itself entirely on work needing no live oracle, as a cloud fire must, and exhausted that queue down to T34. G-1 was deliberately NOT closed four times over, because no re-review came back clean. No vector promoted, no bar lowered, no gate crossed.`
+`Clean exit. Ten workers dispatched, nine completed and merged, one killed by a transient API 521 and re-run to completion — its WIP was rescued to its branch rather than discarded. Every deliverable is committed and pushed, on main and on every worker branch. The fire spent itself entirely on work needing no live oracle, as a cloud fire must, and exhausted that queue down to T34. G-1 was deliberately NOT closed four times over, because no re-review came back clean. No vector promoted, no bar lowered, no gate crossed.`
