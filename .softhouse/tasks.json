@@ -710,7 +710,7 @@
   },
   {
    "id": "T34",
-   "status": "pending",
+   "status": "in_progress",
    "executor": "agent",
    "model": "opus",
    "target": "docs",
@@ -723,11 +723,12 @@
     ".softhouse/reviews/",
     ".softhouse/handoff/"
    ],
-   "note": "Raised by cloud catch-up fire cloud-20260818-2000. THE NEXT FIRE'S FIRST CONTRACT TASK. G-1 closes ONLY via T33 -> T34 CLEAN -> driver ratifies under P-2. Tell the reviewer the pattern: FOUR consecutive independent re-reviews (T23, T26, T29, T32) have each found NEW P0s in areas the previous review had not examined, and in every case the committed corpus passed BOTH the right and the wrong reading - by T32 the corpus was blind to THREE distinct wrong readings at 13/13 each. Highest-yield unexamined surface remaining, per T32: period/date generation and the month-end re-anchor, the down-payment path, the balance roll-forward and its zero clamp, and currency/scale handling. Convergence is real - T32 verified T28's loop steps preserved byte-for-byte and T29's P0s genuinely resolved - so a CLEAN verdict is a live possibility and must be stated plainly if reached."
+   "note": "Raised by cloud catch-up fire cloud-20260818-2000. THE NEXT FIRE'S FIRST CONTRACT TASK. G-1 closes ONLY via T33 -> T34 CLEAN -> driver ratifies under P-2. Tell the reviewer the pattern: FOUR consecutive independent re-reviews (T23, T26, T29, T32) have each found NEW P0s in areas the previous review had not examined, and in every case the committed corpus passed BOTH the right and the wrong reading - by T32 the corpus was blind to THREE distinct wrong readings at 13/13 each. Highest-yield unexamined surface remaining, per T32: period/date generation and the month-end re-anchor, the down-payment path, the balance roll-forward and its zero clamp, and currency/scale handling. Convergence is real - T32 verified T28's loop steps preserved byte-for-byte and T29's P0s genuinely resolved - so a CLEAN verdict is a live possibility and must be stated plainly if reached. || DISPATCHED by local fire 20260818-230002 at 2026-08-18T15:05Z on branch softhouse/T34-dec1-v6-rereview, isolation=worktree, model=opus. Orchestrator WILL await this worker before exiting (STEP 5.5).",
+   "branch": "softhouse/T34-dec1-v6-rereview"
   },
   {
    "id": "T35",
-   "status": "pending",
+   "status": "in_progress",
    "executor": "agent",
    "model": "opus",
    "target": "test",
@@ -745,11 +746,12 @@
     ".softhouse/reviews/t21v2/",
     ".softhouse/handoff/"
    ],
-   "note": "Raised by local fire 20260818-230002 (oracle REACHABLE). Path A / embeddable-seam side only. MUST NOT touch .softhouse/capture/pathb/, .softhouse/reference-oracle.md, .softhouse/program.json, .softhouse/tasks.json, .softhouse/RESUME.md, docs/adr/, nexus/."
+   "note": "Raised by local fire 20260818-230002 (oracle REACHABLE). Path A / embeddable-seam side only. MUST NOT touch .softhouse/capture/pathb/, .softhouse/reference-oracle.md, .softhouse/program.json, .softhouse/tasks.json, .softhouse/RESUME.md, docs/adr/, nexus/. || DISPATCHED by local fire 20260818-230002 at 2026-08-18T15:05Z on branch softhouse/T35-patha-admissibility, isolation=worktree, model=opus. Orchestrator WILL await this worker before exiting (STEP 5.5).",
+   "branch": "softhouse/T35-patha-admissibility"
   },
   {
    "id": "T36",
-   "status": "pending",
+   "status": "in_progress",
    "executor": "agent",
    "model": "opus",
    "target": "test",
@@ -760,11 +762,12 @@
     ".softhouse/capture/pathb/",
     ".softhouse/handoff/"
    ],
-   "note": "Raised by local fire 20260818-230002 (oracle REACHABLE). Path B / running-server side only, and the ONLY task this fire that mutates reference-oracle server state. MUST NOT touch .softhouse/capture/{src,out}, .softhouse/reference-oracle.md, program.json, tasks.json, RESUME.md, docs/adr/, nexus/."
+   "note": "Raised by local fire 20260818-230002 (oracle REACHABLE). Path B / running-server side only, and the ONLY task this fire that mutates reference-oracle server state. MUST NOT touch .softhouse/capture/{src,out}, .softhouse/reference-oracle.md, program.json, tasks.json, RESUME.md, docs/adr/, nexus/. || DISPATCHED by local fire 20260818-230002 at 2026-08-18T15:05Z on branch softhouse/T36-pathb-admissibility, isolation=worktree, model=opus. Orchestrator WILL await this worker before exiting (STEP 5.5).",
+   "branch": "softhouse/T36-pathb-admissibility"
   },
   {
    "id": "T37",
-   "status": "pending",
+   "status": "in_progress",
    "executor": "agent",
    "model": "opus",
    "target": "test",
@@ -775,7 +778,8 @@
     ".softhouse/capture/dec1-binding/",
     ".softhouse/handoff/"
    ],
-   "note": "Raised by local fire 20260818-230002 (oracle REACHABLE). DEC-1 is at v6 and UNRATIFIED (gate G-1), so captures are stored in RAW OBSERVED form only - never contract-shaped, never promoted to the parity vector store. Self-contained under .softhouse/capture/dec1-binding/ (its own capture program copy) so it cannot collide with T35's Capture3 re-emission or T36's server path. Uses the Path A embeddable seam at MathContext (19, HALF_UP), the ratified production setting."
+   "note": "Raised by local fire 20260818-230002 (oracle REACHABLE). DEC-1 is at v6 and UNRATIFIED (gate G-1), so captures are stored in RAW OBSERVED form only - never contract-shaped, never promoted to the parity vector store. Self-contained under .softhouse/capture/dec1-binding/ (its own capture program copy) so it cannot collide with T35's Capture3 re-emission or T36's server path. Uses the Path A embeddable seam at MathContext (19, HALF_UP), the ratified production setting. || DISPATCHED by local fire 20260818-230002 at 2026-08-18T15:05Z on branch softhouse/T37-dec1-binding-captures, isolation=worktree, model=opus. Orchestrator WILL await this worker before exiting (STEP 5.5).",
+   "branch": "softhouse/T37-dec1-binding-captures"
   }
  ]
 }
