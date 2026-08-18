@@ -1,0 +1,110 @@
+========================================================================================
+T36 B-01 baseline (gerege, 19/HALF_UP)  (B-01-baseline-raw.json)
+  currency=MNT scale=2 inMultiplesOf=0 loanTermInDays=365
+  per fromDate    dueDate     days  principal    interest   total        balance
+    1 2026-1-1    2026-2-1      31     9048237     2160000    11208237    110951763
+    2 2026-2-1    2026-3-1      28     9211105     1997132    11208237    101740658
+    3 2026-3-1    2026-4-1      31     9376905     1831332    11208237     92363753
+    4 2026-4-1    2026-5-1      30     9545689     1662548    11208237     82818064
+    5 2026-5-1    2026-6-1      31     9717512     1490725    11208237     73100552
+    6 2026-6-1    2026-7-1      30     9892427     1315810    11208237     63208125
+    7 2026-7-1    2026-8-1      31    10070491     1137746    11208237     53137634
+    8 2026-8-1    2026-9-1      31    10251760      956477    11208237     42885874
+    9 2026-9-1    2026-10-1     30    10436291      771946    11208237     32449583
+   10 2026-10-1   2026-11-1     31    10624145      584092    11208237     21825438
+   11 2026-11-1   2026-12-1     30    10815379      392858    11208237     11010059
+   12 2026-12-1   2027-1-1      31    11010059      198181    11208240            0
+  I1   sum(principal)=120000000 disbursed=120000000                     PASS
+  I2   final outstanding=0                                              PASS
+  I3   sum(interest)=14498847 totalInterestCharged=14498847             PASS
+  I4   sum(totalDue)=134498847 totalRepaymentExpected=134498847         PASS
+  I5   splits sum to whole (0 break(s))                                 PASS
+  I6   P+I+F+Pen=134498847 totalRepayment=134498847                     PASS
+  S1   all money literals integral in minor units (0 bad)               PASS
+  S2   running balance ties (0 break(s))                                PASS
+  S3   disbursement pseudo-period principal == totalPrincipalDisbursed  PASS
+  S4   loanTermInDays=365 span=365 sum(daysInPeriod)=365                PASS
+  RESULT: ALL PASS
+========================================================================================
+T36 B-02 multiplesOf100 (gerege, 19/HALF_UP)  (B-02-multiplesof100-raw.json)
+  currency=MNT scale=2 inMultiplesOf=0 loanTermInDays=365
+  per fromDate    dueDate     days  principal    interest   total        balance
+    1 2026-1-1    2026-2-1      31     9050000     2160000    11210000    110950000
+    2 2026-2-1    2026-3-1      28     9212900     1997100    11210000    101737100
+    3 2026-3-1    2026-4-1      31     9378732     1831268    11210000     92358368
+    4 2026-4-1    2026-5-1      30     9547549     1662451    11210000     82810819
+    5 2026-5-1    2026-6-1      31     9719405     1490595    11210000     73091414
+    6 2026-6-1    2026-7-1      30     9894355     1315645    11210000     63197059
+    7 2026-7-1    2026-8-1      31    10072453     1137547    11210000     53124606
+    8 2026-8-1    2026-9-1      31    10253757      956243    11210000     42870849
+    9 2026-9-1    2026-10-1     30    10438325      771675    11210000     32432524
+   10 2026-10-1   2026-11-1     31    10626215      583785    11210000     21806309
+   11 2026-11-1   2026-12-1     30    10817486      392514    11210000     10988823
+   12 2026-12-1   2027-1-1      31    10988823      197799    11186622            0
+  I1   sum(principal)=120000000 disbursed=120000000                     PASS
+  I2   final outstanding=0                                              PASS
+  I3   sum(interest)=14496622 totalInterestCharged=14496622             PASS
+  I4   sum(totalDue)=134496622 totalRepaymentExpected=134496622         PASS
+  I5   splits sum to whole (0 break(s))                                 PASS
+  I6   P+I+F+Pen=134496622 totalRepayment=134496622                     PASS
+  S1   all money literals integral in minor units (0 bad)               PASS
+  S2   running balance ties (0 break(s))                                PASS
+  S3   disbursement pseudo-period principal == totalPrincipalDisbursed  PASS
+  S4   loanTermInDays=365 span=365 sum(daysInPeriod)=365                PASS
+  RESULT: ALL PASS
+========================================================================================
+T36 B-03 FULL_LEAP_YEAR (gerege, 19/HALF_UP)  (B-03-diycs-fullleapyear-raw.json)
+  currency=MNT scale=2 inMultiplesOf=0 loanTermInDays=366
+  per fromDate    dueDate     days  principal    interest   total        balance
+    1 2024-1-1    2024-2-1      31     9010083     2195410    11205493    110989917
+    2 2024-2-1    2024-3-1      29     9305928     1899565    11205493    101683989
+    3 2024-3-1    2024-4-1      31     9345176     1860317    11205493     92338813
+    4 2024-4-1    2024-5-1      30     9570642     1634851    11205493     82768171
+    5 2024-5-1    2024-6-1      31     9691243     1514250    11205493     73076928
+    6 2024-6-1    2024-7-1      30     9911672     1293821    11205493     63165256
+    7 2024-7-1    2024-8-1      31    10049879     1155614    11205493     53115377
+    8 2024-8-1    2024-9-1      31    10233743      971750    11205493     42881634
+    9 2024-9-1    2024-10-1     30    10446277      759216    11205493     32435357
+   10 2024-10-1   2024-11-1     31    10612085      593408    11205493     21823272
+   11 2024-11-1   2024-12-1     30    10819114      386379    11205493     11004158
+   12 2024-12-1   2025-1-1      31    11004158      201340    11205498            0
+  I1   sum(principal)=120000000 disbursed=120000000                     PASS
+  I2   final outstanding=0                                              PASS
+  I3   sum(interest)=14465921 totalInterestCharged=14465921             PASS
+  I4   sum(totalDue)=134465921 totalRepaymentExpected=134465921         PASS
+  I5   splits sum to whole (0 break(s))                                 PASS
+  I6   P+I+F+Pen=134465921 totalRepayment=134465921                     PASS
+  S1   all money literals integral in minor units (0 bad)               PASS
+  S2   running balance ties (0 break(s))                                PASS
+  S3   disbursement pseudo-period principal == totalPrincipalDisbursed  PASS
+  S4   loanTermInDays=366 span=366 sum(daysInPeriod)=366                PASS
+  RESULT: ALL PASS
+========================================================================================
+T36 B-04 FEB_29_PERIOD_ONLY (gerege, 19/HALF_UP)  (B-04-diycs-feb29only-raw.json)
+  currency=MNT scale=2 inMultiplesOf=0 loanTermInDays=366
+  per fromDate    dueDate     days  principal    interest   total        balance
+    1 2024-1-1    2024-2-1      31     9007004     2201425    11208429    110992996
+    2 2024-2-1    2024-3-1      29     9308811     1899618    11208429    101684185
+    3 2024-3-1    2024-4-1      31     9343012     1865417    11208429     92341173
+    4 2024-4-1    2024-5-1      30     9569057     1639372    11208429     82772116
+    5 2024-5-1    2024-6-1      31     9689958     1518471    11208429     73082158
+    6 2024-6-1    2024-7-1      30     9910970     1297459    11208429     63171188
+    7 2024-7-1    2024-8-1      31    10049541     1158888    11208429     53121647
+    8 2024-8-1    2024-9-1      31    10233901      974528    11208429     42887746
+    9 2024-9-1    2024-10-1     30    10447025      761404    11208429     32440721
+   10 2024-10-1   2024-11-1     31    10613297      595132    11208429     21827424
+   11 2024-11-1   2024-12-1     30    10820917      387512    11208429     11006507
+   12 2024-12-1   2025-1-1      31    11006507      201917    11208424            0
+  I1   sum(principal)=120000000 disbursed=120000000                     PASS
+  I2   final outstanding=0                                              PASS
+  I3   sum(interest)=14501143 totalInterestCharged=14501143             PASS
+  I4   sum(totalDue)=134501143 totalRepaymentExpected=134501143         PASS
+  I5   splits sum to whole (0 break(s))                                 PASS
+  I6   P+I+F+Pen=134501143 totalRepayment=134501143                     PASS
+  S1   all money literals integral in minor units (0 bad)               PASS
+  S2   running balance ties (0 break(s))                                PASS
+  S3   disbursement pseudo-period principal == totalPrincipalDisbursed  PASS
+  S4   loanTermInDays=366 span=366 sum(daysInPeriod)=366                PASS
+  RESULT: ALL PASS
+========================================================================================
+OVERALL: PASS

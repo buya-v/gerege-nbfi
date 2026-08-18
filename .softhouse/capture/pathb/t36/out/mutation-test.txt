@@ -1,0 +1,12 @@
+============================================================================================
+B-01 MUTATED (one minor unit)
+  committed : /Users/buv/gerege-nbfi/.claude/worktrees/agent-aec1ae65c4c560a4e/.softhouse/capture/pathb/out/B-01-baseline-raw.json
+  recaptured: /Users/buv/gerege-nbfi/.claude/worktrees/agent-aec1ae65c4c560a4e/.softhouse/capture/pathb/t36/out/mutation/B-01-mutated.json
+  numeric leaves compared (exact, integer minor units): 319
+  bytes identical: NO
+  structural/non-numeric differences: NONE
+  scale-only differences: NONE
+  NUMBERS THAT MOVED: 1
+    * periods[12].totalOriginalDueForPeriod                112082.40 -> 112082.41   (delta +1 minor units)
+
+MUTATION TEST PASSED: the comparator exits non-zero on a one-minor-unit change.
