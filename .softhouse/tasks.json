@@ -185,7 +185,7 @@
       ],
       "status": "in_progress",
       "attempts": 0,
-      "note": "Vector capture is orchestrator-only (touches the oracle). || PARKED cloud fire 20260817-2000: reason=oracle_unreachable. No live Fineract instance from the cloud sandbox (no docker daemon, PostgreSQL not listening on :5432, actuator/health unreachable). NOT synthesised - conformance exit 2 is not a PASS. Unpark precondition: a fire that reaches the live reference oracle. T16 (this fire) prepares the capture plan so this task is execute-ready. || T16 FINDINGS THAT CHANGE HOW THIS TASK MUST BE RUN (pending T17 confirmation): (1) MoneyHelper is a HIDDEN SECOND MathContext - PRECISION=19 in production [MoneyHelper.java:35] but MOCKED TO 12 in the tests, so a live capture runs a different precision than produced the transcribed literals; the capture must assert the tenant rounding mode and precision actually in force, never assume them. (2) The seam has a dependency-free shadowJar entry point with a documented Main.java, so MOST Tier-0 capture needs only a JDK >= 17 - not a running server and not PostgreSQL. (3) Run the C-00 calibration capture FIRST: it must reproduce an already-transcribed literal test expectation exactly, else no other capture is trustworthy. || UNPARKED fire 20260818-152328: oracle REACHABLE. Two capture passes now exist, both raw observed via Path A (embeddable seam, in-process, no database). Pass 1 (fire 20260818-080003, rescued): 9 captures incl. the G-1 discriminating precision family and the D-03 ordering boundary; D-04 errored for want of a tenant context. Pass 2 (this fire): 13 captures with a tenant supplied - closes D-04 and establishes that installmentAmountInMultiplesOf is silently DROPPED by the capture seam. NEITHER pass is audited yet (T18, T19) and NO vector has been promoted to the store. Contract-shaped storage stays forbidden while G-1 is open."
+      "note": "Vector capture is orchestrator-only (touches the oracle). || PARKED cloud fire 20260817-2000: reason=oracle_unreachable. No live Fineract instance from the cloud sandbox (no docker daemon, PostgreSQL not listening on :5432, actuator/health unreachable). NOT synthesised - conformance exit 2 is not a PASS. Unpark precondition: a fire that reaches the live reference oracle. T16 (this fire) prepares the capture plan so this task is execute-ready. || T16 FINDINGS THAT CHANGE HOW THIS TASK MUST BE RUN (pending T17 confirmation): (1) MoneyHelper is a HIDDEN SECOND MathContext - PRECISION=19 in production [MoneyHelper.java:35] but MOCKED TO 12 in the tests, so a live capture runs a different precision than produced the transcribed literals; the capture must assert the tenant rounding mode and precision actually in force, never assume them. (2) The seam has a dependency-free shadowJar entry point with a documented Main.java, so MOST Tier-0 capture needs only a JDK >= 17 - not a running server and not PostgreSQL. (3) Run the C-00 calibration capture FIRST: it must reproduce an already-transcribed literal test expectation exactly, else no other capture is trustworthy. || UNPARKED fire 20260818-152328: oracle REACHABLE. Two capture passes now exist, both raw observed via Path A (embeddable seam, in-process, no database). Pass 1 (fire 20260818-080003, rescued): 9 captures incl. the G-1 discriminating precision family and the D-03 ordering boundary; D-04 errored for want of a tenant context. Pass 2 (this fire): 13 captures with a tenant supplied - closes D-04 and establishes that installmentAmountInMultiplesOf is silently DROPPED by the capture seam. NEITHER pass is audited yet (T18, T19) and NO vector has been promoted to the store. Contract-shaped storage stays forbidden while G-1 is open. || Pass 3 added this fire after Buyan ratified HALF_UP + NBFI: 12 captures at PRODUCTION settings (19, HALF_UP), the first parity candidates. Rig calibration holds across a third harness (P-CAL == pass-1 C-00) and P-01 == pass-1 D-01-p19 cross-harness. All 12 pass all six property invariants. Pass 3 is NOT yet audited (T21). Passes 1-2 are probes, not parity vectors - they ran at precision 12/8, which production never runs."
     },
     {
       "id": "T9",
@@ -290,7 +290,8 @@
         "T3b",
         "T9",
         "T18",
-        "T19"
+        "T19",
+        "T21"
       ],
       "status": "pending",
       "attempts": 0,
@@ -398,7 +399,7 @@
       "model": "opus",
       "target": "docs",
       "context": "harness",
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
       "id": "T18",
       "title": "Independent audit of capture pass 1 (provenance, calibration, discrimination)",
@@ -409,7 +410,7 @@
       "dependencies": [
         "T8"
       ],
-      "note": "DISPATCHED fire 20260818-152328, isolation=worktree, opus. Contract-independent: audits RAW observed capture, stores nothing contract-shaped, so it is permitted while G-1 is open.",
+      "note": "DISPATCHED fire 20260818-152328, isolation=worktree, opus. Contract-independent: audits RAW observed capture, stores nothing contract-shaped, so it is permitted while G-1 is open. || DONE fire 20260818-152328, merged from worktree-agent-a35b0ca6eecd2465b (3ff6b4d). Verdict ACCEPTED WITH REQUIRED CHANGES. Provenance verified harder than the harness claimed - the image jar's own BOOT-INF/classes/git.properties carries git.commit.id=426a23544e... with git.dirty=false. No synthesis. C-00 passes digit-for-digit vs both the shipped test and the README. Reviewer independently re-derived D-01 at p8/p12/p19 and reproduced the oracle exactly, including the EmiAdjustment convergence loop that only fires at p8. DECISIVE: DEC-1 as drafted is empirically wrong by one minor unit at p12. CAUGHT AN ORCHESTRATOR OVER-CLAIM: a precision sweep cannot separate the two SENSES (one integer drives both), and the sense-1 schedule at p12 equals the oracle's at p19, so reading the D-01/D-01-p19 delta as the sense difference is wrong; gates.md corrected. P0 blockers before these are vectors: no environment-attestation block, fromDate/fee/penalty never emitted, no committed pass-1 run recipe, D-04 stack trace discarded.",
       "contract_independent": true
     },
     {
@@ -418,7 +419,7 @@
       "model": "opus",
       "target": "docs",
       "context": "harness",
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
       "id": "T19",
       "title": "Independent audit of capture pass 2 (tenant-context captures)",
@@ -429,7 +430,7 @@
       "dependencies": [
         "T8"
       ],
-      "note": "DISPATCHED fire 20260818-152328, isolation=worktree, opus. Reviews orchestrator-produced work, so independence matters more than usual.",
+      "note": "DISPATCHED fire 20260818-152328, isolation=worktree, opus. Reviews orchestrator-produced work, so independence matters more than usual. || DONE fire 20260818-152328, merged from worktree-agent-a2462ccb706b83b7a (675e815). Verdict ACCEPTED WITH REQUIRED CHANGES. Re-ran Capture2.java unmodified in the pinned image and got byte-identical output (48,868 bytes, empty diff), excluding hand-editing and synthesis. Found THREE reasoning errors in the orchestrator's write-up: (1) the '17.01 cannot be a no-op' argument is false - safeRoundingForEMI :1770-1776 returns the unrounded EMI when rounding would zero it; (2) 'ruled out through both channels' is false - CurrencyData.inMultiplesOf is gated on decimalPlaces==0 and the harness hard-codes 2; (3) the 'server path honours it' citations point at the cumulative generator, not the progressive one. AND found a SECOND dropped input the orchestrator missed: daysInYearCustomStrategy is read by assembleFrom but never copied by the Builder copy-constructor (:304-351) - reframing the defect from one field to a class. The seam accepts a 19-component contract and honours 17. Conclusion nonetheless upgraded from inferred to PROVED via reflective read. Ten priority-ordered required changes listed in the audit.",
       "contract_independent": true
     },
     {
@@ -451,6 +452,26 @@
       "status": "pending",
       "attempts": 0,
       "note": "Raised fire 20260818-152328 from T17 F2-F6 + T16b's handoff. Depends on T7 (the harness) existing. F3 must be restated before implementation - observation refuted its original form.",
+      "contract_independent": true
+    },
+    {
+      "id": "T21",
+      "title": "Independent audit of capture pass 3 (production-settings parity candidates)",
+      "description": "Pass 3 is the first capture set at the ratified production MathContext (19, HALF_UP) and is therefore the first parity-candidate corpus. It is unaudited. The audit must apply everything T18 and T19 established: re-run Capture3.java unmodified in the pinned image and diff byte-for-byte; verify the P-CAL rig calibration reproduces the shipped literal (it runs at (12, HALF_UP) deliberately and is NOT a parity vector); verify P-01 == pass-1 D-01-p19; re-derive at least one MNT-scale schedule independently; and re-check the six property invariants rather than trusting the orchestrator's script. Apply T18's P0 list (environment attestation, fromDate/fee/penalty emission, committed run recipe) and T19's ten required changes to pass 3 as well - pass 3 was generated from Capture2.java and inherits its defects. Specifically re-test the two dropped inputs (installmentAmountInMultiplesOf, daysInYearCustomStrategy) at production settings, and check whether the orchestrator's claim that precision is load-bearing only above a size threshold survives scrutiny.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/reviews/T21-capture-pass3-audit.md"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T8"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised fire 20260818-152328. Contract-independent: audits RAW observed capture. Next fire should run this first - pass 3 is the corpus a conformance run would grade against.",
       "contract_independent": true
     }
   ]
