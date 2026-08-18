@@ -153,3 +153,57 @@ Rebuild the image after moving the pin: `/Users/buv/gerege-nbfi/.softhouse/bin/b
 Every file under `.softhouse/vectors/` must stamp the Fineract commit
 `426a23544e8426a38ae43ae404670a0a7e85b9eb` and PostgreSQL `18.3`. If this file's pin changes,
 previously captured vectors are stale and must be re-captured — never re-interpreted.
+
+---
+
+## Fire log — reachability is a per-fire fact, never a global one
+
+| Fire | Oracle reachable? | Evidence |
+|---|---|---|
+| local `20260817-*` | **yes** | server UP on PostgreSQL 18.3; driver assertions passed |
+| cloud `20260817-2000` | **no** | no Docker daemon, nothing on `:5432`, `actuator/health` silent → T8 parked `oracle_unreachable`; nothing synthesised |
+| local `20260818-080003` | **yes** | capture pass 1 executed (killed mid-run by the Mac sleeping; output rescued) |
+| local `20260818-140004` | yes | killed by sleep before dispatching work |
+| local `20260818-152328` | **yes** | capture pass 2 executed; `caffeinate` now holds sleep off |
+
+## Two distinct capture paths — do not conflate them
+
+Vector capture in this program can reach the oracle two ways, and they are **not equivalent**.
+Every captured vector must record which path produced it.
+
+### Path A — the embeddable seam (in-process library call)
+
+`fineract-progressive-loan-embeddable-schedule-generator` invoked in-process on the pinned image.
+**Reaches no database at all** — no server, no PostgreSQL. This is what capture passes 1 and 2 used.
+
+| Fact | Value |
+|---|---|
+| Image | `fineract:latest` = `sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a` |
+| Image created | `2026-08-17T11:29:56Z` |
+| JVM (read *inside* the container) | `openjdk 21.0.11 2026-04-21 LTS`, Zulu21.50+19-CA, build `21.0.11+10-LTS` |
+| Classpath | `BOOT-INF/classes` + `BOOT-INF/lib/*.jar` from `/app/fineract-provider.jar` |
+| Seam class | not bundled in that jar — compiled from source, and **must** be verified byte-identical to the pinned original before any run is trusted |
+| Ambient `MoneyHelper` context | `PRECISION = 19` + the tenant's configured rounding mode; read from the running oracle, not from source |
+| Tenant | must be supplied explicitly (`ThreadLocalContextUtil.setTenant` + `MoneyHelper.initializeTenantRoundingMode`); without one, any path touching `MoneyHelper` throws |
+
+Reproduction commands: `.softhouse/capture/README-pass2.md`.
+
+**Path A has a proven blind spot.** `LoanApplicationTerms.assembleFrom(LoanRepaymentScheduleModelData, MathContext)`
+(`LoanApplicationTerms.java:579-606`) reads 18 of the record's 19 components and never reads
+`installmentAmountInMultiplesOf`. That input is therefore **accepted and silently dropped** on this path,
+while the server path honours it. Any behaviour depending on it is **uncapturable through Path A** —
+see `.softhouse/capture/PASS2-REPORT.md`, Finding 2. Multi-disbursement behaviour is likewise out of reach
+(`disbursementDatas` is a fixed empty list at `LoanApplicationTerms.java:600`).
+
+### Path B — the running server (REST + PostgreSQL)
+
+The connection facts at the top of this file. Not yet used for capture. It is the **only** path that can
+close Path A's blind spot, and it is a materially larger rig than Tier 0 assumed: it needs tenants
+provisioned with the right timezones (see finding 1 above), and every capture must stamp the tz actually
+in force.
+
+## Reproducibility rule, extended
+
+A capture is only comparable to another capture from the **same path, same image digest, same commit**.
+A jar built on a different JVM is not the pinned oracle. Promoting a new capture path to a trusted source
+is a `user` decision, not an agent's.
