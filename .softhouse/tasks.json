@@ -1127,10 +1127,11 @@
         "T50",
         "T51"
       ],
-      "status": "pending",
-      "attempts": 0,
+      "status": "done",
+      "attempts": 1,
       "contract_independent": true,
-      "note": "Raised by local fire 20260819-140003. DISPATCHED, isolation=worktree, model=opus; orchestrator WILL await it."
+      "note": "Raised by local fire 20260819-140003. DISPATCHED, isolation=worktree, model=opus; orchestrator WILL await it. || COMPLETE, merged. DEC-1 is at REVISION 11. All six T49 items and all three Part-B findings applied as a BOUNDED ERRATUM - no type, field, enum member or graded-domain predicate moved, and T52 did not have to refuse anything as an amendment. P1-T49-2 was corrected at THREE sites, not the two T49 named: T52's own restatement grep found a third leak in contract.go's FrequencyYears comment ('section 8 item 5 names as the largest un-re-derived hole'), which section 8 item 5 has not said since revision 5. The refusal and ErrNoDiscriminatingVector are unchanged; only the stated reason moved to 'uncaptured AS A PROMOTED VECTOR'. B-1 used T51's scope correction rather than T49's text (global config -> product slot; wire from the global configuration, reproduce the 31-December boundary bug-for-bug), placed in 4.4, a new section 9 obligation, 6.7 and contract.go. B-2 judged an ERRATUM with the reasoning stated. B-3 filed T50-N1 as section 8 item 4a plus a 4.1.2 hazard bullet WITHOUT enlarging the graded domain, and T50-N2 in five places since the freeze argument depends on it. DRIVER-VERIFIED: contract.go 0 non-comment lines added and 0 removed (own diff parse). ONE HONEST GAP LEFT [UNVERIFIED]: the global flag's actual value on gerege was never read - T53 later closed it.",
+      "branch": "softhouse/T52-dec1-v11"
     },
     {
       "id": "T53",
@@ -1148,10 +1149,32 @@
       "dependencies": [
         "T52"
       ],
+      "status": "done",
+      "attempts": 1,
+      "contract_independent": true,
+      "note": "Raised by local fire 20260819-140003. v10 state = ab861fa689d0c484077fe73b26084a1351c6dc2a. DISPATCHED, isolation=worktree, model=opus; orchestrator WILL await it. || COMPLETE, merged. VERDICT: ACCEPTED WITH REQUIRED CHANGES - NO P0, NO P1, six P2 errata. ALL NINE ITEMS LANDED AND LANDED CORRECTLY. B-2 CONFIRMED AN ERRATUM, NOT AN AMENDMENT - tested three independent ways at source: the charge loci are unreachable from Path A (loanCharges hard-wired null at ProgressiveLoanScheduleGenerator.java:83), the N46-3 sites are all down-payment computations pinned to Rate{0,1}, and LoanScheduleAssembler:753/:765 thread the same cached object [MoneyHelper.java:91-93]. SECTIONS 3.1 AND 4.1 BYTE-IDENTICAL - the mechanical proof no predicate moved. THE DRIVER INDEPENDENTLY REPRODUCED THIS: sha256 of both sections equal across v10/v11 (3.1 42b978e2abb9, 3592 chars; 4.1 b88faca50f22, 1169 chars). So RATIFICATION NEEDS NO GATE on that account. P1-T49-3's arithmetic re-derived by hand and correct: 2,160,000 x 21,875 = 47,250,000,000, /10^8 = 472.5 minor units, exactly half a minor unit above 472, HALF_UP -> 473 -> 4.73; and 2,160,000 x 9,375 = 20,250,000,000 -> 202.5 -> 203 -> 2.03. Integer throughout, no float; the tie is genuine (exact multiply before an exactly-representable divide). contract.go comment-only proved A THIRD WAY with a string-aware Go lexer: 96 = 96 non-comment lines, IDENTICAL sha256 81f30828..., 0 diff, and no block comments exist in either revision so nothing could hide. All 47 named citations the diff adds are IN RANGE (32 ADR + 15 Go). Its own 7-pattern restatement grep finds NO FOURTH ACT/ACT LEAK and no surviving stale count. THE LAST OPEN [UNVERIFIED] IS CLOSED: a read-only SELECT shows c_configuration 'interest-charged-from-date-same-as-disbursal-date' has enabled = f on gerege, and ConfigurationDomainServiceJpa:296-300 reads property.isEnabled() - so THE TENANT-GLOBAL FLAG IS FALSE, exactly the 31-December branch T51 observed 6 of 6. Row counts identical before/after (74/21/18), no restart, pinned checkout clean. go build still impossible: no toolchain on the host. SIX P2s, each with exact sentence and replacement text: (1) the status line's 'It changes exactly ONE number' is FALSE - four numeric facts changed, three of them REQUIRED by T49 (17->16, two->three, FIVE->EIGHT); DRIVER-VERIFIED by grep. (2-3) four bare :NNN citations mis-resolve under the document's own last-named-file convention (:559 x4, :847 in 4.4) though all point at correct lines, and two 4.5.1 citations have no file anchor. (4) section 2.2 names getLoanProductRelatedDetail(), which does not exist on LoanApplicationTerms - DRIVER SETTLED THIS AT SOURCE: the method containing :1740 is toLoanProductRelatedDetail() at :1727, and getLoanProductRelatedDetail DOES exist elsewhere (354 codebase hits), which is what makes the wrong name dangerous - a porter following it lands somewhere real but wrong. (5) a stale TO_BE_CAPTURED label sits after its own [SUPERSEDED] marker. (6) the [UNVERIFIED] block now under-claims and renders broken. RECOMMENDATION: apply the six, then ratify. All are documentation-accuracy defects - none changes a number, predicate, pin or refusal - but P2-T53-1 is a false sentence in the paragraph a ratifier reads first.",
+      "branch": "softhouse/T53-dec1-v11-diffcheck"
+    },
+    {
+      "id": "T54",
+      "title": "DEC-1 v11 -> v12: apply T53's six P2 errata (documentation accuracy only; the last edit before ratification)",
+      "description": "T53's diff-scoped check returned NO P0 and NO P1 and confirmed all nine of revision 11's items landed correctly, then specified six P2 documentation-accuracy errata with exact replacement text. This applies exactly those six and nothing else. It is the last edit before the driver ratifies: no tenth review round follows, because these items carry ZERO money content and the driver verifies each one mechanically against T53's specified text.",
+      "agent_role": "analyst",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        "docs/adr/DEC-1-schedule-generator-adapter.md",
+        ".softhouse/handoff/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T53"
+      ],
       "status": "pending",
       "attempts": 0,
       "contract_independent": true,
-      "note": "Raised by local fire 20260819-140003. v10 state = ab861fa689d0c484077fe73b26084a1351c6dc2a. DISPATCHED, isolation=worktree, model=opus; orchestrator WILL await it."
+      "note": "Raised by local fire 20260819-140003. DISPATCHED, isolation=worktree, model=opus; orchestrator WILL await it and verify mechanically rather than commission a tenth review round."
     }
   ]
 }
