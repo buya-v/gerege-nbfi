@@ -2,7 +2,7 @@
   "run_id": "2026-08-17-run1-harness-schedule-poc",
   "feature": "Run 1 — golden-vector conformance harness + progressive-loan schedule-generator PoC port",
   "requirement": "Prove the Fineract→Go migration pipeline end-to-end on the smallest real slice, harness-first. IN SCOPE for THIS run only: (1) Build the golden-vector conformance harness (.softhouse/conformance.sh) and a vector store, capturing vectors for the progressive-loan schedule generator from the live Fineract oracle. (2) Define the minimal frozen adapter interface needed to invoke a schedule generator (spec_writer) — mark its ratification a user gate. (3) Port fineract-progressive-loan-embeddable-schedule-generator (~182 LOC) to Go behind that interface (coder), integer-minor-units only, no float in any path. (4) Verify via /softhouse-uat: go build + the schedule-generator conformance vectors must pass, and property invariants (schedule principal amortizes to exactly zero, rounding matches Fineract) must hold. Every coder/analyst task gets a paired INDEPENDENT reviewer that RE-DERIVES the schedule arithmetic against the Fineract vector, not reads it. SCOPE GUARD: Minimum Portable Core, PoC slice only — do NOT plan GL posting logic, COB, charges/rates/tax, provisioning, or ANY context cutover in this run; record them to backlog in strangler order (GL → loan lifecycle → charges/rates/tax → COB → provisioning). Route as user gates: adapter-contract ratification and any cutover. This run also exercises the token-limit checkpoint/resume once.",
-  "status": "blocked_on_gate",
+  "status": "active",
   "backlog": [
     "Run 2 — General Ledger / accounting (double-entry posting rules, chart of accounts, journal entries/items) behind the frozen contract; GL vectors + trial-balance invariants. Cutover = separate user gate.",
     "Run 3 — Loan product + schedule + lifecycle (products, interest methods, disbursement, repayment, penalties, rescheduling, write-off), reusing the Run 1 schedule generator. Cutover = separate user gate.",
@@ -164,9 +164,9 @@
         "T3",
         "T6"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "Harness-first: the coder task depends on this. || UNBLOCKED 2026-08-19 by the ratification of DEC-1 revision 12 (T6/G-1 closed). THIS IS NOW THE PROGRAM'S BOTTLENECK: T9-T15 sit behind it. TWO HARD CONSTRAINTS the harness author must not discover late: (1) T50-N2 - ProgressiveLoanScheduleGenerator.java:81 calls generate(mc, loanApplicationTerms, NULL, NULL), so the Path A embeddable seam CAN NEVER EXERCISE A CHARGE and charge conformance can only ever be graded on Path B; (2) NO GO TOOLCHAIN EXISTS ON THIS HOST, so go build/go test cannot run and a conformance harness cannot be executed end-to-end until one is installed (see .softhouse/reference-oracle.md). Design work is unblocked; execution against Go is not."
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Harness-first: the coder task depends on this. || UNBLOCKED 2026-08-19 by the ratification of DEC-1 revision 12 (T6/G-1 closed). THIS IS NOW THE PROGRAM'S BOTTLENECK: T9-T15 sit behind it. TWO HARD CONSTRAINTS the harness author must not discover late: (1) T50-N2 - ProgressiveLoanScheduleGenerator.java:81 calls generate(mc, loanApplicationTerms, NULL, NULL), so the Path A embeddable seam CAN NEVER EXERCISE A CHARGE and charge conformance can only ever be graded on Path B; (2) NO GO TOOLCHAIN EXISTS ON THIS HOST, so go build/go test cannot run and a conformance harness cannot be executed end-to-end until one is installed (see .softhouse/reference-oracle.md). Design work is unblocked; execution against Go is not. || TOOLCHAIN GAP CLOSED, fire 20260819-170001: a repo-local go1.26.6 darwin/arm64 (sha256-verified against go.dev's published value before extraction) is installed at GOROOT=.softhouse/toolchain/go, gitignored, activated by `. .softhouse/bin/go-env.sh`. THE EXECUTABLE HALF OF THIS TASK IS THEREFORE UNBLOCKED - the harness must actually RUN, not merely be designed. The driver compiled the ratified contract.go for the first time in the program: `go build ./...` exit 0 and `go vet ./...` exit 0, retiring [UNVERIFIED: that the package compiles]. ONE new constraint: `gofmt -l` flags the FROZEN contract.go (doc-comment list normalisation, semantically inert, NOT applied) - no task may gofmt -w that file, and the harness must not fail on it. See G-3."
     },
     {
       "id": "T8",
@@ -1176,6 +1176,26 @@
       "contract_independent": true,
       "note": "Raised by local fire 20260819-140003. DISPATCHED, isolation=worktree, model=opus; orchestrator WILL await it and verify mechanically rather than commission a tenth review round. || COMPLETE, merged. DEC-1 at REVISION 12: exactly T53's six P2 errata, 11 hunks, +14/-10, ONE file. DRIVER VERIFIED ALL SIX MECHANICALLY: (1) the status line no longer claims 'exactly ONE number' and names the four numeric facts, three attributed to T49 - the only surviving occurrences of the old phrasing are inside the revision-12 history bullet DESCRIBING the correction; (2-3) 0 bare :559 / :847 / :433-452 remain in the ADR, anchored forms present 4x/3x/1x; (4) getLoanProductRelatedDetail replaced by toLoanProductRelatedDetail with :1727, surviving only as a quotation in the history bullet; (5) the stale TO_BE_CAPTURED label removed with [SUPERSEDED] kept - T54 followed the DRIVER's instruction where it DIVERGED from T53's own remedy (T53 wanted the marker moved and the label kept), and the driver's was correct: a TO_BE_CAPTURED label on something T50 HAS captured is a false label even when marked superseded; (6) [UNVERIFIED] replaced by T53's read-only measurement plus the driver's three-part framing (alias EXISTS / slot LIVE / harm NEVER WITNESSED) plus the residual TO_BE_CAPTURED. GUARDRAILS HELD AND WERE REPRODUCED BY THE DRIVER: sections 3.1 and 4.1 BYTE-IDENTICAL across revisions 10, 11 AND 12 (sha256 42b978e2abb9 / b88faca50f22); contract.go NOT touched by T54; only the ADR plus the handoff changed; 24 distinct named citations on added lines, 0 out of range. T54's TWO further findings were DISPOSED OF, not deferred: finding 1 (contract.go:1229's fourth bare :559, correctly left alone because its brief forbade touching contract.go) WAS FIXED BY THE DRIVER AT RATIFICATION and anchored to LoanScheduleAssembler.java:559 after opening that line to confirm it passes isInterestChargedFromDateSameAsDisbursalDateEnabled, with the file re-proved comment-only afterwards; finding 2 (a present-tense phrase after its [SUPERSEDED] marker) was checked by the driver and is ALREADY ABSENT from revision 12. T54 also caught and fixed a markdown-parity bug of its own before commit (25 bold delimiters, odd) and cleared a near-miss citation (:567-568 vs :567-570) rather than leaving it a suspicion.",
       "branch": "softhouse/T54-dec1-v12"
+    },
+    {
+      "id": "T55",
+      "title": "Capture the leap-boundary discriminating vectors T48-N4's promotion trap requires",
+      "description": "ORACLE-LIVE, capture-only. T48-N4 established that the DayCountActualActual arm COINCIDES EXACTLY with the plain branch whenever both years are 365 days, so every existing capture of that arm inside a run of non-leap years grades the arm NOT AT ALL - promoting one would create a vector that passes for a wrong implementation. Capture, from the pinned reference oracle, schedule shapes that DO discriminate: the segment must cross a 29-February leap boundary AND have a non-zero first segment, so the ACT/ACT denominator differs from 365 on at least one period. Prove discrimination the only admissible way: two captures differing ONLY in the day-count setting must differ in at least one money cell, and you must report which cells and by how much. A shape you cannot show discriminating is recorded as NON-DISCRIMINATING, not promoted and not quietly kept. Same rules as every prior capture pass: raw observed output only, never a synthesised or extrapolated expected value; production settings (19, HALF_UP) on the tenant actually in force; an ATTESTATION/PROVENANCE/REPRODUCE trio; stamp the pinned oracle commit; assert PostgreSQL. Path selection is yours to determine from source and from T48/B-03/B-04's evidence about which seam honours the day-count setting - record the reasoning.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/capture/leapboundary/",
+        ".softhouse/handoff/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T48"
+      ],
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Raised by local fire 20260819-170001. ORACLE-ONLY work no cloud fire can do. Precondition for ever promoting the ACT/ACT arm to a parity vector; until it lands, that arm stays refused with ErrNoDiscriminatingVector, which is the CORRECT behaviour and not a defect to route around."
     }
   ]
 }
