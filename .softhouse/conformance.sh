@@ -537,8 +537,20 @@ prove() {
   ok19=1
   [ "$rc19a" = 2 ] || ok19=0
   [ "$rc19b" = 0 ] || ok19=0
-  printf '%s' "$out19a" | grep -q 'UNBACKED in_graded_domain claims: monthend.reanchor' || ok19=0
-  printf '%s' "$out19a" | grep -q 'killed by MONTHEND-CONTINUE-FROM-CLAMPED-DAY' && ok19=0
+  # NOT "the capability becomes UNBACKED": that was only true while P-02/P-02b were
+  # its ONLY backers. T58 promoted 16 more vectors, several of which legitimately
+  # back monthend.reanchor, so the old assertion failed because COVERAGE WAS ADDED
+  # (finding T58-N3, D-6's fourth recurrence -- in this very proof). Assert the
+  # PROPERTY F-1b protects instead: the vector whose cells were withdrawn is
+  # refused, by name, with the diagnostic that says why.
+  printf '%s' "$out19a" | grep -q 'WITHDRAWS from grading' || ok19=0
+  printf '%s' "$out19a" | grep -q 'P-02' || ok19=0
+  # DELIBERATELY NOT asserted: that the store-wide "killed by
+  # MONTHEND-CONTINUE-FROM-CLAMPED-DAY" line disappears. T58 promoted P-ME-* vectors
+  # that carry the SAME counterfactual id and legitimately back it, so that line is
+  # now printed by them and its presence says nothing about P-02. The store-wide
+  # aggregate is the wrong place to assert a PER-VECTOR refusal; the two greps above
+  # assert it where it actually lives, by vector name and with the diagnostic.
   printf '%s' "$out19b" | grep -q 'killed by MONTHEND-CONTINUE-FROM-CLAMPED-DAY' || ok19=0
   # NOT a frozen count: T57 moved the corpus 11 -> 13 and a literal here would go
   # stale on every promotion (finding D-6, third recurrence). Assert the PROPERTY --
