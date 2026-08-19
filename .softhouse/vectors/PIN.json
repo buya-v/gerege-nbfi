@@ -1,0 +1,50 @@
+{
+  "schema": "gerege.loanschedule.pin/v1",
+  "note": "Store-level comparability pin. Every constant that decides whether a capture is comparable at all lives HERE and not in each vector, so that re-stamping the corpus after a ratified amendment is one edit rather than N. Per-vector fields (dec1_revision, oracle.fineract_commit, oracle.threaded_mathcontext, oracle.ambient_mathcontext) are checked AGAINST this file, so a vector cannot quietly disagree with it.",
+
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+
+  "dec1_revision": 12,
+
+  "contract_file": "nexus/internal/apps/loanschedule/contract/contract.go",
+  "contract_sha256": "0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139",
+
+  "production_rounding": {
+    "significant_digits": 19,
+    "rate_factor_scale": 19,
+    "mode": "HALF_UP"
+  },
+
+  "never_promotable_capture_case_ids": [
+    "C-00",
+    "D-01",
+    "D-01-p8",
+    "D-01-mnt",
+    "D-02",
+    "D-02b",
+    "D-03",
+    "D-04",
+    "T-00-notenant",
+    "T-00-he",
+    "T-00-hu",
+    "T-04f",
+    "T-04t",
+    "T-04f-big",
+    "T-04t-big",
+    "T-IM100-he",
+    "T-IM100-hu",
+    "T-IM1-he",
+    "T-MNT5M-he",
+    "T-MNT5M-hu",
+    "T-MNT5M-plain-he",
+    "P-CAL",
+    "T37-CAL",
+    "T39-CAL",
+    "T42-CAL",
+    "T48-CAL-S1",
+    "T48-CAL-S2",
+    "T48-CAL-S3",
+    "T48-CAL-S4",
+    "T48-CAL-S5"
+  ]
+}

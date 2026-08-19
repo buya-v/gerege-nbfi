@@ -1,0 +1,102 @@
+{
+  "schema": "gerege.loanschedule.vector/v1",
+  "case_id": "SELFTEST-01-two-period-zero-rate",
+  "context": "_selftest",
+  "class": "selftest",
+  "title": "HAND-AUTHORED HARNESS SELF-TEST. NOT A PARITY VECTOR. NOT OBSERVED FROM THE ORACLE. Two zero-rate monthly periods on MNT 1,000.00, chosen so that every number in this file is trivially checkable by eye and so that no reader could mistake it for a captured observation. It exists to prove the harness can go green and red before any capture is promoted, and .softhouse/conformance.sh refuses to count it toward parity.",
+  "dec1_revision": 12,
+
+  "capabilities_required": ["schedule.core"],
+
+  "provenance": {
+    "kind": "hand-authored",
+    "note": "hand-authored, NOT observed from the oracle",
+    "capture_ref": "",
+    "capture_sha256": "",
+    "capture_case_id": "",
+    "citation": "task T7: 'one hand-authored fixture vector so the harness is testable before capture' — permitted ONLY as a self-test of the harness"
+  },
+
+  "oracle": {
+    "fineract_commit": "",
+    "seam": "none",
+    "captured_at": "",
+    "threaded_mathcontext": { "precision": 0, "rounding_mode": "" },
+    "ambient_mathcontext": { "precision": 0, "rounding_mode": "" }
+  },
+
+  "request": {
+    "time_zone": "Asia/Ulaanbaatar",
+    "currency": { "code": "MNT", "minor_unit_digits": 2 },
+    "rounding": { "significant_digits": 19, "rate_factor_scale": 19, "mode": "HALF_UP" },
+    "schedule_start_date": { "year": 2026, "month": 1, "day": 1 },
+    "disbursements": [
+      { "date": { "year": 2026, "month": 1, "day": 1 }, "amount_minor": "100000" }
+    ],
+    "number_of_repayments": 2,
+    "repayment_every": 1,
+    "repayment_frequency_unit": "MONTHS",
+    "annual_nominal_interest_rate": { "numerator": 0, "denominator": 1 },
+    "interest_method": "DECLINING_BALANCE",
+    "day_count": "FIXED_30_360",
+    "down_payment_percentage": { "numerator": 0, "denominator": 1 },
+    "installment_rounding_multiple_minor": "0"
+  },
+
+  "expect": {
+    "kind": "schedule",
+    "sentinel": "",
+    "last_repayment_due_date": { "year": 2026, "month": 3, "day": 1 },
+    "observed_total_interest_minor": "0",
+    "periods": [
+      {
+        "kind": "DISBURSEMENT",
+        "installment_number": 0,
+        "from_date": { "year": 2026, "month": 1, "day": 1 },
+        "due_date": { "year": 2026, "month": 1, "day": 1 },
+        "principal_minor": "100000",
+        "interest_minor": "0",
+        "outstanding_principal_minor": "100000",
+        "principal_major_text": "1000.00",
+        "interest_major_text": "0.00",
+        "outstanding_principal_major_text": "1000.00",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "100000"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 1,
+        "from_date": { "year": 2026, "month": 1, "day": 1 },
+        "due_date": { "year": 2026, "month": 2, "day": 1 },
+        "principal_minor": "50000",
+        "interest_minor": "0",
+        "outstanding_principal_minor": "50000",
+        "principal_major_text": "500.00",
+        "interest_major_text": "0.00",
+        "outstanding_principal_major_text": "500.00",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "50000"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 2,
+        "from_date": { "year": 2026, "month": 2, "day": 1 },
+        "due_date": { "year": 2026, "month": 3, "day": 1 },
+        "principal_minor": "50000",
+        "interest_minor": "0",
+        "outstanding_principal_minor": "0",
+        "principal_major_text": "500.00",
+        "interest_major_text": "0.00",
+        "outstanding_principal_major_text": "0.00",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "50000"
+      }
+    ]
+  },
+
+  "graded_against": [],
+
+  "retires_when_capability_graded": "",
+
+  "invariant_exemptions": []
+}

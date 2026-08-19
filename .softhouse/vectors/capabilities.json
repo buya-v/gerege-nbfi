@@ -1,0 +1,153 @@
+{
+  "schema": "gerege.loanschedule.capabilities/v1",
+  "dec1_revision": 12,
+  "note": "WHICH CAPABILITY CLASSES EACH CAPTURE SEAM STRUCTURALLY EXERCISES, AND WHICH IT SILENTLY IGNORES. This file, not any vector, is what refuses a vector on capability grounds. It is DATA on purpose: the Path A seam's blind spots have been found one at a time (charges T50-N2; holiday and non-working-day adjustment D-2; installmentAmountInMultiplesOf; daysInYearCustomStrategy) and nobody has exhaustively audited every input that seam drops, so a third and fourth blind spot should be expected. Recording one here immediately refuses every affected vector with NO vector file changing, no schema migration and no code change. Statuses: exercised (gradeable) | blind (structurally invisible: an implementation honouring it and one ignoring it score identically) | aliased (a value from another configuration scope is delivered into the slot) | partial (reached, but on a narrower subset than a reader would assume). ONLY 'exercised' permits grading. An ABSENT entry refuses too: default-deny, because an unaudited input is assumed invisible and never assumed wired.",
+
+  "capabilities": [
+    {
+      "name": "schedule.core",
+      "description": "Amortization proper: repayment period windows, per-period interest, the balancing principal remainder, the level installment and its final-period adjustment, the outstanding-balance roll-forward.",
+      "in_graded_domain": true,
+      "evidence": "the whole Run-1 corpus exercises it; contract.go GenerateRequest graded-domain list"
+    },
+    {
+      "name": "monthend.reanchor",
+      "description": "The monthly month-end rule: step by clamping to the target month's length, then re-anchor on the DISBURSEMENT-DATE seed when the seed day exceeds 28. The clamped day is remembered in the seed, so a schedule seeded on 31 January returns to the 31st.",
+      "in_graded_domain": true,
+      "evidence": "contract.go Disbursement.Date, 'Graded by two captures (seed day 31 and seed day 30, both spanning a leap February)' — capture case ids P-02 and P-02b"
+    },
+    {
+      "name": "charges",
+      "description": "Any fee or penalty charge on the schedule.",
+      "in_graded_domain": false,
+      "evidence": "finding T50-N2: ProgressiveLoanScheduleGenerator.java:83 passes loanCharges = null, so the charge sites at :445-446 and :464-465 are unreachable from the Path A seam. Charge conformance can only ever be graded on the server path. NOTE ALSO that the frozen contract carries no charge field at all, so a charge is outside the CONTRACT domain today and admitting one is an amendment, not a widening."
+    },
+    {
+      "name": "holiday.adjustment",
+      "description": "Adjustment of a due date that falls on a configured holiday.",
+      "in_graded_domain": false,
+      "evidence": "finding D-2: ProgressiveLoanScheduleGenerator.java:83 also passes holidayDetailDTO = null, and DefaultScheduledDateGenerator.adjustRepaymentDate's ENTIRE body is guarded by 'if (holidayDetailDTO != null)' at :224, returning the DTO unchanged otherwise. That null-guard is exactly why Path A captures run instead of throwing NPE: the seam's usability and its blindness have the same cause. Finding D-2a [UNVERIFIED: no Path B capture exists] adds that even on the server path this generator adjusts only the FINAL period, because the :66 call sits inside 'if (repaymentPeriodNumber == numberOfRepayments)' at :61 — so 'adjust every date that lands on a holiday' is the obvious and WRONG thing for a port to write, and it would pass the entire existing corpus silently."
+    },
+    {
+      "name": "workingday.adjustment",
+      "description": "Adjustment of a due date that falls on a configured non-working day.",
+      "in_graded_domain": false,
+      "evidence": "finding D-2, same chain and same null: the working-day rules reach the generator only through holidayDetailDTO, which is hard-wired null on the Path A seam."
+    },
+    {
+      "name": "installment.rounding.multiple",
+      "description": "installmentAmountInMultiplesOf: rounding the installment to a multiple of a whole number of major units.",
+      "in_graded_domain": false,
+      "evidence": "LoanApplicationTerms.assembleFrom (:579-607) contains zero occurrences of 'MultiplesOf' and the Builder has no setter, so every caller reaching the generator that way drops it; the REST path via LoanScheduleAssembler HONOURS it (capture B-02: period-1 total 112100.00 vs the B-01 baseline 112082.37). A capture seam's blind spot is a property of the CALLER. The contract keeps InstallmentRoundingMultipleMinor and refuses it for Run 1 (DEC-1 4.7) precisely because it is money-moving one call away."
+    },
+    {
+      "name": "daysinyear.custom.strategy",
+      "description": "daysInYearCustomStrategy, e.g. FEB_29_PERIOD_ONLY: substituting a 365/366-day year for a period containing 29 February, and suppressing the cross-year partial-period calculation for periods that contain none.",
+      "in_graded_domain": false,
+      "evidence": "set at LoanApplicationTerms.java:604 and stored by the Builder at :380/:567-568, but absent from the private Builder copy constructor at :304-351, so the Path A seam never copies it out. Both of its effects are gated on daysInYearType == ACTUAL and are therefore unreachable under DayCountFixed30Over360; it becomes a contract question the moment DayCountActualActual enters the graded domain, and not before."
+    },
+    {
+      "name": "daycount.actual.actual",
+      "description": "The ACT/ACT arm: real calendar year lengths, and the per-calendar-year fraction accumulation used where an interest sub-period crosses a year boundary.",
+      "in_graded_domain": false,
+      "evidence": "contract.go DayCountActualActual: refused with ErrNoDiscriminatingVector because no vector for the arm has been PROMOTED (the arm is both re-derived, task T30, and captured — 58 captures in .softhouse/capture/actualactual/, plus T55's 33 Path B leap-boundary captures). Task T48's finding N4 is the admissibility trap: where both calendar years have the same length the per-year fractions sum to the plain fraction EXACTLY, so a cross-year shape inside a run of non-leap years grades a port identically whether it implements the arm or not. PROMOTION CONDITION, CORRECTED: the period must SPAN TWO CALENDAR YEARS OF DIFFERING LENGTH. The older wording 'must cross a leap-year boundary WITH A NON-ZERO FIRST SEGMENT' is TOO STRONG and must not be used — finding T55-N1, driver-re-derived at (19, HALF_UP): LB-DEC31 has a ZERO first segment and still grades the arm by 6,015 minor units, because the PLAIN branch takes its single denominator from the PERIOD-START year (366) while the ARM assigns days to the year they actually fall in (365), so a zero-length first segment still moves the result. DEC-1's commentary still carries the old wording and amending it is GATE G-4, raised by the driver; this operational file uses the corrected condition. This status flag, not any hard-coded rule, is what makes the harness refuse the arm: setting it true retires the refusal vector automatically."
+    },
+    {
+      "name": "interest.recognition.on.disbursement.date",
+      "description": "interestRecognitionOnDisbursementDate: which side of the year end the fraction boundary falls on (1 January of the next year when true, 31 December when false).",
+      "in_graded_domain": false,
+      "evidence": "the Path A seam cannot express this input at all, and what reaches the slot is a DIFFERENT SETTING IN A DIFFERENT CONFIGURATION SCOPE: toLoanConfigurationDetails() (:1746-1756) never reads the field, and its 16th positional argument is the TENANT-GLOBAL isInterestChargedFromDateSameAsDisbursalDateEnabled (:1753) delivered into the parameter LoanConfigurationDetails names interestRecognitionOnDisbursementDate. A port cannot repair this by wiring the other product field. Observed by task T51: captures T48-AA-1 and T48-AA-2 differ only in this flag and are 0 of 87 cells apart on Path A."
+    },
+    {
+      "name": "fixed.length",
+      "description": "fixedLength: overriding the final due date.",
+      "in_graded_domain": false,
+      "evidence": "pinned null by DEC-1; a non-null value overrides the final due date (DefaultScheduledDateGenerator.java:61-66, :108-111, :184-189). No capture varies it."
+    },
+    {
+      "name": "downpayment",
+      "description": "A down payment taken on the disbursement date, and the DOWN_PAYMENT row it emits.",
+      "in_graded_domain": false,
+      "evidence": "contract.go PeriodKindDownPayment: 'UNGRADED: DownPaymentPercentage is pinned to Rate{0, 1} in the graded domain and no capture has ever produced a row of this kind, so the value is specified from source and refused rather than exercised'."
+    },
+    {
+      "name": "multi.tranche.disbursement",
+      "description": "More than one disbursement on one schedule.",
+      "in_graded_domain": false,
+      "evidence": "contract.go graded domain requires len(Disbursements) == 1; ErrUnsupportedConfiguration for any other length. No capture is multi-tranche."
+    },
+    {
+      "name": "currency.zero.decimals",
+      "description": "A currency with zero decimal places, at which the oracle's own inMultiplesOf rounding channel switches on.",
+      "in_graded_domain": false,
+      "evidence": "contract.go Currency.MinorUnitDigits: 'at 0 decimal places a second, entirely different rounding channel switches on inside the oracle (Money.java:48-51) — a channel that was measured to move money and that this contract deliberately does not expose'."
+    },
+    {
+      "name": "rounding.half.even",
+      "description": "The HALF_EVEN tie rule, which is the reference oracle's own stock configuration default.",
+      "in_graded_domain": false,
+      "evidence": "contract.go RoundingHalfEven: admitted to the contract domain so a deployment inheriting the oracle's default is expressible, outside the graded domain because no capture in the corpus was taken at it. Demonstrably live: period-1 interest 20,925.05 under HALF_UP vs 20,925.04 under HALF_EVEN on principal MNT 1,162,502.50, the tie taken at Money.java:52."
+    },
+    {
+      "name": "frequency.non.monthly",
+      "description": "DAYS, WEEKS or YEARS repayment frequency.",
+      "in_graded_domain": false,
+      "evidence": "contract.go RepaymentFrequencyUnit: every capture is monthly. Weekly is also the frequency at which the oracle's two internal rate-factor branches DISAGREE, and monthly is where they coincide — so a monthly corpus cannot grade the branch choice at all."
+    }
+  ],
+
+  "seams": [
+    {
+      "name": "path_a_embeddable",
+      "description": "Path A — the embeddable seam, in process, no server and no database. Entry point generate(mc, LoanRepaymentScheduleModelData) at ProgressiveLoanScheduleGenerator.java:81-84, which delegates with generate(mc, loanApplicationTerms, null, null) at :83. TWO hard-wired nulls, and each is a blind spot.",
+      "status": {
+        "schedule.core": "exercised",
+        "monthend.reanchor": "exercised",
+        "charges": "blind",
+        "holiday.adjustment": "blind",
+        "workingday.adjustment": "blind",
+        "installment.rounding.multiple": "blind",
+        "daysinyear.custom.strategy": "blind",
+        "interest.recognition.on.disbursement.date": "aliased",
+        "fixed.length": "blind",
+        "daycount.actual.actual": "exercised",
+        "downpayment": "exercised",
+        "multi.tranche.disbursement": "blind",
+        "currency.zero.decimals": "exercised",
+        "rounding.half.even": "exercised",
+        "frequency.non.monthly": "exercised"
+      }
+    },
+    {
+      "name": "path_a2_reflective",
+      "description": "Path A2 — the ProgressiveEMICalculator seam driven reflectively, in process (task T48, 27 captures). It reaches further in than Path A and therefore does NOT inherit Path A's blind spots automatically; nobody has audited which inputs it drops. Only the capabilities actually demonstrated are recorded, and every other capability is ABSENT, which refuses by default. Do not widen this map by assumption.",
+      "status": {
+        "schedule.core": "exercised",
+        "daycount.actual.actual": "exercised"
+      }
+    },
+    {
+      "name": "path_b_server",
+      "description": "Path B — the running Fineract server over REST (POST /loans?command=calculateLoanSchedule) against PostgreSQL, through LoanScheduleAssembler. The only seam that can ever grade a charge.",
+      "status": {
+        "schedule.core": "exercised",
+        "monthend.reanchor": "exercised",
+        "charges": "exercised",
+        "holiday.adjustment": "partial",
+        "workingday.adjustment": "partial",
+        "installment.rounding.multiple": "exercised",
+        "daysinyear.custom.strategy": "exercised",
+        "interest.recognition.on.disbursement.date": "exercised",
+        "daycount.actual.actual": "exercised",
+        "rounding.half.even": "exercised"
+      }
+    },
+    {
+      "name": "none",
+      "description": "No capture. Used by contract-refusal vectors, whose expectation is derived from the ratified contract's own normative text rather than observed, and by hand-authored self-test fixtures. Only schedule.core is listed, so a refusal vector that claimed to exercise anything else would be refused — which is correct: nothing was captured, so nothing was exercised.",
+      "status": {
+        "schedule.core": "exercised"
+      }
+    }
+  ]
+}
