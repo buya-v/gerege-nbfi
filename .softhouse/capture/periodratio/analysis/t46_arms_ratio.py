@@ -58,18 +58,24 @@ def plus(dt, n, unit):
     raise ValueError(unit)
 
 
+def _trunc_div(n, d):
+    """Java integer division: truncates TOWARD ZERO.  Pure integer arithmetic -- no float."""
+    q = abs(n) // abs(d)
+    return q if (n >= 0) == (d > 0) else -q
+
+
 def between(a, b, unit):
     """ChronoUnit.<unit>.between(a, b) -- the PACKED rule for MONTHS and YEARS."""
     if unit == "DAYS":
         return (b - a).days
     if unit == "WEEKS":
-        return int((b - a).days / 7) if (b - a).days >= 0 else -int((a - b).days / 7)
+        return _trunc_div((b - a).days, 7)
     if unit == "MONTHS":
         k = (b.year * 12 + b.month) - (a.year * 12 + a.month)
         packed = k * 32 + (b.day - a.day)
-        return int(packed / 32)  # java integer division truncates toward zero
+        return _trunc_div(packed, 32)
     if unit == "YEARS":
-        return int(between(a, b, "MONTHS") / 12)
+        return _trunc_div(between(a, b, "MONTHS"), 12)
     raise ValueError(unit)
 
 

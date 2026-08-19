@@ -4,12 +4,18 @@
 Six deliberately-wrong runs were executed by `src/run-negative-tests.sh`.
 **All six exited non-zero and named the breach.** Transcripts: `out/negative/*.txt`.
 
+**T46 added three more legs — N7, N8 and N9 — and corrected what N4 proves (audit finding M-8).
+Nine legs now; all nine exit 1 naming the breach, and each is paired with a control leg on the
+uncorrupted artefact that exits 0.** See the correction section below; N7, N8 and N9 are run by
+`src/t46-negative-vacuity.sh`, `src/t46-assert-pathb-slot.sh` and `src/t46-negative-identity.sh`
+respectively, not by `run-negative-tests.sh`.
+
 | # | breach injected | how | exit | first line of the breach |
 |---|---|---|---|---|
 | N1 | wrong pin | `T42_EXPECT_COMMIT=000…0` | **1** | `BREACH: pinned checkout is at 426a2354…, expected 000…0` |
 | N2 | wrong image id | `T42_EXPECT_IMAGE=sha256:111…1` | **1** | `BREACH: image id is sha256:e5963396…, expected sha256:111…1` |
 | N3 | **seam-class drift** | one comment line appended to `src/EmbeddableProgressiveLoanScheduleGenerator.java`, then restored from the pinned original | **1** | `BREACH: seam class under src/ has DRIFTED from the pinned original -- the run would not have executed the oracle's code` |
-| N4 | **the absence probe's own guard, inverted** | `T42_EXPECT_CANARY_THROWS=0` | **1** | `BREACH: negative run: the canary DID throw when the run asserted it would not: 'THREW java.lang.IllegalStateException: Rounding mode is not initialized for tenant: t42_canary_never_initialised'` |
+| N4 | **the absence probe's canary expectation, inverted** — *not* the vacuity guard; see the T46 correction below | `T42_EXPECT_CANARY_THROWS=0` | **1** | `BREACH: negative run: the canary DID throw when the run asserted it would not: 'THREW java.lang.IllegalStateException: Rounding mode is not initialized for tenant: t42_canary_never_initialised'` |
 | N5 | **the wiring, broken** | `-Dt42.breakWiring=true` silently turns the `PATH_B_AMBIENT_SOURCED_MC` cases into Path A cases | **1** | `BREACH: T42B-PB-ord1: PATH B wiring must hand the generator the AMBIENT context; ambient 'precision=19 roundingMode=DOWN' but effective 'precision=19 roundingMode=HALF_UP'` |
 | N6 | **the control suite** | `controls.py` pointed at a payload with `T42-CAL.totalInterestAmount` changed `2.05 → 2.06` | **1** | `MISMATCH  C1 T42-CAL.totalInterestAmount: expected '2.05', observed '2.06'` |
 
@@ -22,8 +28,6 @@ breach: non-zero container exit, non-empty stderr, unparseable JSON, a case echo
 context other than the one its id declares, a case echoing an ambient reading inconsistent with
 its tenant ordinal, and the classpath driver scan (which reports `ZERO Oracle Database / MySQL /
 MariaDB entries` from a real scan of the 348 classpath entries).
-
----
 
 ---
 
