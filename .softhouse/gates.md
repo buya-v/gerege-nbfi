@@ -171,6 +171,76 @@ The failure is systematic and diagnosable: **the analyst corrected each section 
 
 **Asking for:** permission for one more attempt with a *different task shape* — apply T3b's ten enumerated edits surgically, then run a mechanical consistency sweep that greps every corrected claim for restatements elsewhere in the document, rather than another free-form rewrite. If the answer is no, the alternative is to treat T3b's review as the specification of record and have the port graded against vectors alone.
 
+
+---
+
+## G-1 · **CLOSED — RATIFIED**, local fire `20260819-140003`, 19 August 2026
+
+**DEC-1 revision 12 is RATIFIED.** Closed by the `/softhouse-program` driver under `CLAUDE.md`'s amended
+rule (DEC-n ratification is agent-decidable) and policy P-2. **It never reached Buyan, because it never had
+a RESERVED item** — the triage of fire `20260819-080001` established `decisions_reserved_for_user` was
+empty, and this fire did not add one. **Buyan retains veto and may reverse this.**
+
+### The ten rounds, because the trend is the argument
+
+| round | revision | verdict |
+|---|---|---|
+| T5, T23, T26, T29, T32, T34, T37-observed | 1 – 6 | a **new P0 every round**, each on a surface no prior round had examined |
+| **T43** | 8 | **no P0** — driver **DECLINED** |
+| **T49** | 10 | **no P0**, 3 P1 — driver **DECLINED** |
+| **T53** | 11 | **no P0, no P1**, 6 P2 + *"apply the six, then ratify"* |
+| T54 applied the six; driver verified each | **12** | **RATIFIED** |
+
+### Why the driver declined twice and then did not
+
+One discriminator, applied consistently: **was a sentence known to be false about to be frozen?**
+
+- Revision 8 — **yes.** P1-T43-3 stated M4 decides which row a *charge* lands on; an `INSTALMENT_FEE`
+  consults no membership test and lands on every row (MNT 27,500 on FC-02). The corpus later refuted the old
+  reading 13-of-21 → 21-of-21.
+- Revision 10 — **yes.** P1-T49-2: `contract.go` and §4.9 both still said the ACT/ACT arm had *"no capture in
+  the corpus"* and was un-re-derived. False since revision 5; T48 had captured it on three seams. It sat in a
+  **`contract.go` doc comment**, where ratification freezes it.
+- Revision 12 — **no.** T53's six were applied and each verified by the driver; T54's two further findings
+  were **disposed of, not deferred** (one fixed by the driver before the freeze, one verified already absent).
+  **No known false sentence remains.**
+
+**Stated plainly: no round returned a bare CLEAN, and the ratification record does not claim one did.**
+T53's acceptance was *conditional*, its condition was met and verified, and the reviewer itself authorised
+ratification once it was.
+
+### The mechanical proofs, each reproduced by the driver rather than taken on report
+
+- **§3.1 and §4.1 byte-identical across revisions 10, 11 and 12** — sha256 `42b978e2abb9` (3,592 chars) and
+  `b88faca50f22` (1,169 chars). Those two sections *are* the graded domain and the rounding decision, so their
+  byte-identity proves **no graded-domain predicate moved** — which is why N46-1/N46-3 landing as errata
+  needed no gate.
+- **`contract.go`'s non-comment body byte-identical** — sha256 `2530f13ecad961f2` over 96 non-comment lines,
+  proved three independent ways (T52's count, T53's string-aware Go lexer, the driver's diff parse).
+- **0 out-of-range citations**, sustained across T49 (155 distinct / 329 occurrences), T52 (171), T53 (all 47
+  added) and T54 (24 on added lines).
+
+### What ratification does NOT mean — and none of this is now decided
+
+- **NOT that `contract.go` compiles.** No Go toolchain exists on this host; `go build ./...` has **never
+  run** against it. Ten rounds graded its comments and its shape against source and vectors; nothing has
+  graded whether it builds. `[UNVERIFIED]` — see `.softhouse/reference-oracle.md`.
+- **NOT parity with Fineract, and NOT a cutover.** No vector is promoted; `DayCountActualActual` is still
+  refused with `ErrNoDiscriminatingVector`; the ~60 captures of that arm are **CAPTURED, NOT PROMOTED**.
+- **NOT that the aliased input was witnessed delivering a wrong value.** It was not and cannot be on this
+  tenant — the tenant-global flag is `false`, so the alias delivers what a correct port would. The alias
+  exists and the slot is live, but **the harm is re-derived, not observed.** `TO_BE_CAPTURED`.
+
+### Consequence
+
+**T6 is done and T7 — the golden-vector conformance harness — is unblocked, along with T9–T15 behind it.**
+T7 carries two constraints its author must not discover late: charge conformance can only be graded on **Path
+B** (the Path A seam hard-wires `loanCharges` to `null`), and **no Go toolchain exists**, so the harness can
+be designed but not executed against Go until one is installed.
+
+**Still RESERVED and untouched:** cutover, regulatory / parallel-run sign-off, deposit-taking activation,
+licence facts.
+
 ## Resolved
 
 _(none yet)_

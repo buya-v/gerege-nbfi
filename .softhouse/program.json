@@ -88,10 +88,10 @@
       "main_loc": 182,
       "go_target": "nexus/internal/apps/loanschedule",
       "dependencies": [],
-      "status": "blocked_on_gate",
+      "status": "active",
       "run_id": "2026-08-17-run1-harness-schedule-poc",
       "cutover_gate": false,
-      "notes": "Planned. Everything else depends on the harness existing. || cloud fire 20260817-2000: BLOCKED at gate G-1 (ratify DEC-1), which is NOT YET ANSWERABLE - the draft was independently REJECTED (T5) and the defect it turns on is one the current corpus provably cannot detect. Every other context in this program declares tier 0 as a transitive dependency, so the whole program is behind this gate. Measured this fire against the pin: the module is src/main 92 LOC + misc/Main.java 90 = 182, which settles the '~182 LOC' figure on record. || fire 20260818-173900: four workers landed and merged. The two capture audits are done; DEC-1 v2 was drafted and independently re-reviewed. G-1 did NOT close - T23 found three P0 defects, the sharpest being that the EMI re-adjust loop is LIVE inside the graded domain (7 of 10 graded-domain requests diverge from the contract as specified, and no vector in the corpus trips it). The contract-domain / graded-domain split itself SURVIVED review, and the reviewer proved mechanically that there is no third silently-dropped component beyond the known two."
+      "notes": "Planned. Everything else depends on the harness existing. || cloud fire 20260817-2000: BLOCKED at gate G-1 (ratify DEC-1), which is NOT YET ANSWERABLE - the draft was independently REJECTED (T5) and the defect it turns on is one the current corpus provably cannot detect. Every other context in this program declares tier 0 as a transitive dependency, so the whole program is behind this gate. Measured this fire against the pin: the module is src/main 92 LOC + misc/Main.java 90 = 182, which settles the '~182 LOC' figure on record. || fire 20260818-173900: four workers landed and merged. The two capture audits are done; DEC-1 v2 was drafted and independently re-reviewed. G-1 did NOT close - T23 found three P0 defects, the sharpest being that the EMI re-adjust loop is LIVE inside the graded domain (7 of 10 graded-domain requests diverge from the contract as specified, and no vector in the corpus trips it). The contract-domain / graded-domain split itself SURVIVED review, and the reviewer proved mechanically that there is no third silently-dropped component beyond the known two. || G-1 CLOSED 2026-08-19: DEC-1 revision 12 RATIFIED by the driver under P-2 after ten independent rounds. T6 done; T7 (conformance harness) is now the bottleneck with T9-T15 behind it. TWO CONSTRAINTS FOR T7: charge conformance can only be graded on Path B (the Path A embeddable seam hard-wires loanCharges to null, T50-N2), and NO GO TOOLCHAIN EXISTS ON THIS HOST so go build/go test cannot run - the harness can be designed but not executed against Go until one is installed."
     },
     {
       "id": "tierA-gl-accounting",
@@ -444,23 +444,6 @@
     }
   ],
   "gates_pending": [
-    {
-      "id": "G-1",
-      "class": "CONTRACT",
-      "task": "T6",
-      "context": "tier0-harness-schedule-poc",
-      "title": "Ratify DEC-1 frozen adapter contract",
-      "state": "ENGINEERING_ONLY — no RESERVED item remains",
-      "why": "All six items once recorded as reserved for Buyan are ANSWERED - five inside DEC-1 revisions 3-6 (IntermediatePrecisionDigits replaced not renamed; the ordering rule settled by observation and its third clause deleted; DayCountActualActual kept in the value domain with the computation refused via ErrNoDiscriminatingVector; allowFullTermForTranche recorded as a real behavioural pin) and one by Buyan's ratified tenant parameters of 18 August 2026 (HALF_UP ordinal 4, precision 19, production MathContext (19, HALF_UP)). The 'capture a discriminating vector before ratification' item was decided YES and is SATISFIED: T37 captured all five of DEC-1 section 8's BINDING shapes from the live oracle and all five separate the readings. What still gates G-1 is one CLEAN independent re-review of DEC-1 - six consecutive rounds (T23, T26, T29, T32, T34, plus T37's observed defect) each found a NEW P0 on a surface no prior round had examined, so policy P-2 has never licensed ratification. Triaged per CLAUDE.md section 'Answering gates' by local fire 20260819-080001: G-1 is NOT a user gate.",
-      "unblocked_by": [
-        "T38 applies T34 P0/P1s + T37 OBSERVED P0 to DEC-1 v6 -> v7 (in flight)",
-        "One independent re-review of revision 7 returning CLEAN",
-        "Driver ratifies under P-2 and records the rationale; Buyan retains veto"
-      ],
-      "decisions_reserved_for_user": [],
-      "raised_by": "cloud fire 20260817-2000",
-      "recorded_in": ".softhouse/gates.md"
-    },
     {
       "id": "G-2",
       "class": "POLICY",
