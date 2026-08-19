@@ -92,6 +92,24 @@ earlier. **If Buyan prefers that trade, say so and it can be ratified now.**
 - **RESERVED and untouched:** cutover, regulatory / parallel-run sign-off, deposit-taking activation, licence
   facts. None is in Run 1's path.
 
+## Stranded work found during this fire's exit sweep — NOT merged, now durable
+
+Two branches from fire `20260818-200001` hold **23 files that are absent from `main`**, and they were
+**local to this Mac only** until this fire pushed them. They are now on `origin`:
+
+- `softhouse/rescued-agent-a2027f85cea4effc9-20260818-200001` — 8 files, the **T24 probe** harness and its
+  outputs (`t24-probe/T24Probe.java`, `t24_rederive_with_loop.py`, `t24_count_p12_p19_divergences.py`, …).
+  **Probably superseded**: T24 was re-done from scratch by the cloud fire.
+- `softhouse/rescued-agent-a353b03c0dea4dd41-20260818-200001` — 15 files: Path B **attestation** sidecars
+  (`B-01`…`B-04-attestation.json`), `pathb/capture.sh`, `run-pass3.sh`, `tools/compare-pass3-v1-v2.py`,
+  `tools/invariants-patha.py`, and two precondition self-tests. **The raw observations themselves are on
+  `main`** (`pathb/out/B-0*-raw.json`); what is stranded is attestation and tooling, and T35/T36 later
+  produced their own (`capture/src/run-pass3b.sh`, `capture/pathb/t36/`).
+
+**Not merged deliberately** — merging a stale attestation over T36's would be a regression, and T42's
+eight-point rule has since changed what an attestation must say. **Triage task for a future fire:** diff
+these against T35/T36's equivalents and either delete the branches or salvage the genuinely-unique tooling.
+
 ## If a fire dies mid-flight
 
 Check each `softhouse/T*` branch for commits — every worker is told to commit early and often. A branch with
