@@ -1,0 +1,78 @@
+== exact-text sidecars for the Path B captures ==
+  13 sidecars written, all with ZERO bare JSON numbers
+
+
+######## FULL_LEAP_YEAR vs the field being UNSET, on the PRODUCTION WIRING ########
+
+== PUREB: product 3 (FULL_LEAP_YEAR) vs product 7 (UNSET)   0 of  65 cells differ (expected identical)
+
+== YEAR: product 3 (FULL_LEAP_YEAR) vs product 7 (UNSET)   0 of 285 cells differ (expected identical)
+
+== QTR: product 3 (FULL_LEAP_YEAR) vs product 7 (UNSET)   0 of 109 cells differ (expected identical)
+
+== B-03 shape: product 3 (FULL_LEAP_YEAR) vs product 7 (UNSET)   0 of 285 cells differ (expected identical)
+
+
+######## FEB_29_PERIOD_ONLY, effect (b) in PURE isolation ########
+
+== PUREB: product 4 (FEB_29_PERIOD_ONLY) vs product 7 (UNSET)  23 of  65 cells differ (expected separate)
+     row1.principalDue                      594898.30        | 594897.82
+     row1.principalLoanBalanceOutstanding   605101.70        | 605102.18
+     row1.principalOriginalDue              594898.30        | 594897.82
+     row1.principalOutstanding              594898.30        | 594897.82
+     row1.totalDueForPeriod                 616202.41        | 616201.93
+     row1.totalInstallmentAmountForPeriod   616202.41        | 616201.93
+     row1.totalOriginalDueForPeriod         616202.41        | 616201.93
+     row1.totalOutstandingForPeriod         616202.41        | 616201.93
+     row1.totalOverdue                      616202.41        | 616201.93
+     row2.interestDue                       11100.72         | 11099.75
+     ... 13 more
+
+== YEAR: product 4 vs product 7                         157 of 285 cells differ (expected separate)
+     row1.interestDue                       22014.25         | 22012.31
+     row1.interestOriginalDue               22014.25         | 22012.31
+     row1.interestOutstanding               22014.25         | 22012.31
+     row1.principalDue                      90103.57         | 90080.92
+     row1.principalLoanBalanceOutstanding   1109896.43       | 1109919.08
+     row1.principalOriginalDue              90103.57         | 90080.92
+     row1.principalOutstanding              90103.57         | 90080.92
+     row1.totalActualCostOfLoanForPeriod    22014.25         | 22012.31
+     row1.totalDueForPeriod                 112117.82        | 112093.23
+     row1.totalInstallmentAmountForPeriod   112117.82        | 112093.23
+     ... 147 more
+
+== QTR: product 4 vs product 7                           49 of 109 cells differ (expected separate)
+     row1.principalDue                      2391079.67       | 2390923.40
+     row1.principalLoanBalanceOutstanding   7608920.33       | 7609076.60
+     row1.principalOriginalDue              2391079.67       | 2390923.40
+     row1.principalOutstanding              2391079.67       | 2390923.40
+     row1.totalDueForPeriod                 2690257.75       | 2690101.48
+     row1.totalInstallmentAmountForPeriod   2690257.75       | 2690101.48
+     row1.totalOriginalDueForPeriod         2690257.75       | 2690101.48
+     row1.totalOutstandingForPeriod         2690257.75       | 2690101.48
+     row1.totalOverdue                      2690257.75       | 2690101.48
+     row2.interestDue                       227225.29        | 227229.96
+     ... 39 more
+
+
+######## CONTROL -- the committed Path B observations B-03 / B-04 ########
+  T48B-B03SHAPE-p3       totalInterestCharged 144659.21    committed value 144659.21    REPRODUCED
+  T48B-B04SHAPE-p4       totalInterestCharged 145011.43    committed value 145011.43    REPRODUCED
+  T48B-B03SHAPE-p7       totalInterestCharged 144659.21    committed value 144659.21    REPRODUCED
+
+
+######## CROSS-SEAM -- Path B vs the Path A2 twins ########
+  T48B-PUREB-p7          Path B 32403.86         T48-F29-B-NULL         Path A2 32403.86        AGREE
+  T48B-PUREB-p3          Path B 32403.86         T48-F29-B-FULL         Path A2 32403.86        AGREE
+  T48B-PUREB-p4          Path B 32404.83         T48-F29-B-F29          Path A2 32404.83        AGREE
+  T48B-YEAR-p7           Path B 145118.81        T48-F29-Y-NULL         Path A2 145118.81       AGREE
+  T48B-YEAR-p3           Path B 145118.81        T48-F29-Y-FULL         Path A2 145118.81       AGREE
+  T48B-YEAR-p4           Path B 145413.87        T48-F29-Y-F29          Path A2 145413.87       AGREE
+  T48B-QTR-p7            Path B 760405.92        T48-F29-Q-NULL         Path A2 760405.92       AGREE
+  T48B-QTR-p3            Path B 760405.92        T48-F29-Q-FULL         Path A2 760405.92       AGREE
+  T48B-QTR-p4            Path B 761031.00        T48-F29-Q-F29          Path A2 761031.00       AGREE
+  T48B-B03SHAPE-p3       Path B 144659.21        T48-A2-CTL-B03         Path A2 144659.21       AGREE
+  T48B-B04SHAPE-p4       Path B 145011.43        T48-A2-CTL-B04         Path A2 145011.43       AGREE
+  T48B-B03SHAPE-p7       Path B 144659.21        T48-A2-CTL-B03NULL     Path A2 144659.21       AGREE
+
+== Path B cross-check PASS -- both seams agree cell for cell on every shared shape

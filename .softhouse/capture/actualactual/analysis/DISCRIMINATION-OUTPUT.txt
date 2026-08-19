@@ -1,0 +1,277 @@
+
+######## PATH A -- embeddable seam ########
+
+CALIBRATION T48-CAL vs the shipped literal [EmbeddableProgressiveLoanScheduleGeneratorTest.java:74-77]: MATCHES on all 4 asserted values
+CONTROL   T48-CTL-B03 vs committed Path B observation B-03: REPRODUCED (144659.21 / 1344659.21)
+== AA-1 vs AA-N3 (FEB_29 fed in, Path A)             0 of   87 cells differ   (expected identical)
+== AA-1 vs AA-N4 (FULL_LEAP fed in, Path A)          0 of   87 cells differ   (expected identical)
+== AA-1 vs AA-2 (interestRecognitionOnDisb)          0 of   87 cells differ   (expected identical)
+== AA-1 vs AA-N1 (DAYS_365, arm suppressed)         30 of   87 cells differ   (expected separate)
+     row1.balance                           1008552.46                 | 1008592.17
+     row1.interest                          21245.90                   | 21304.11
+     row1.principal                         191447.54                  | 191407.83
+     row1.total                             212693.44                  | 212711.94
+     row1.totalOutstandingBalance           1063467.19                 | 1063559.72
+     row2.balance                           814312.20                  | 814383.06
+     row2.interest                          18453.18                   | 18502.83
+     row2.principal                         194240.26                  | 194209.11
+     row2.total                             212693.44                  | 212711.94
+     row2.totalOutstandingBalance           850773.75                  | 850847.78
+     row3.balance                           616557.48                  | 616611.14
+     row3.interest                          14938.72                   | 14940.02
+     ... 18 more
+== AA-1 vs AA-11 (DAYS_30 + ACT/ACT)                28 of   87 cells differ   (expected separate)
+     row1.balance                           1008552.46                 | 1008552.71
+     row1.principal                         191447.54                  | 191447.29
+     row1.total                             212693.44                  | 212693.19
+     row1.totalOutstandingBalance           1063467.19                 | 1063465.99
+     row2.balance                           814312.20                  | 814312.71
+     row2.interest                          18453.18                   | 18453.19
+     row2.principal                         194240.26                  | 194240.00
+     row2.total                             212693.44                  | 212693.19
+     row2.totalOutstandingBalance           850773.75                  | 850772.80
+     row3.balance                           616557.48                  | 616076.36
+     row3.interest                          14938.72                   | 14456.84
+     row3.principal                         197754.72                  | 198236.35
+     ... 16 more
+
+######## PATH A2 -- ProgressiveEMICalculator seam ########
+
+CALIBRATION T48-CAL-S1   vs ProgressiveEMICalculatorTest.java:3012-3017 (test_leap_year_only_actual_for_loan_S1): ALL 6 PERIODS REPRODUCED DIGIT FOR DIGIT
+CALIBRATION T48-CAL-S2   vs ProgressiveEMICalculatorTest.java:3052-3055 (test_leap_year_only_actual_for_loan_S2): ALL 4 PERIODS REPRODUCED DIGIT FOR DIGIT
+CALIBRATION T48-CAL-S3   vs ProgressiveEMICalculatorTest.java:3090-3095 (test_leap_year_only_actual_for_loan_S3): ALL 6 PERIODS REPRODUCED DIGIT FOR DIGIT
+CALIBRATION T48-CAL-S4   vs ProgressiveEMICalculatorTest.java:3131-3136 (test_leap_year_only_actual_for_loan_S4): ALL 6 PERIODS REPRODUCED DIGIT FOR DIGIT
+CALIBRATION T48-CAL-S5   vs ProgressiveEMICalculatorTest.java:3172-3177 (test_leap_year_only_actual_for_loan_S5): ALL 6 PERIODS REPRODUCED DIGIT FOR DIGIT
+== F29-Q-NULL vs F29-Q-FULL                          0 of   79 cells differ   (expected identical)
+== F29-M-NULL vs F29-M-FULL                          0 of  115 cells differ   (expected identical)
+== F29-Y-NULL vs F29-Y-FULL                          0 of  223 cells differ   (expected identical)
+== F29-B-NULL vs F29-B-FULL                          0 of   43 cells differ   (expected identical)
+== F29-A-NULL vs F29-A-FULL                          0 of   61 cells differ   (expected identical)
+== F29-Q-NULL vs F29-Q-F29 (has Feb 29 period)      26 of   79 cells differ   (expected separate)
+     p0.duePrincipal                        2390923.40                 | 2391079.67
+     p0.emi                                 2690101.48                 | 2690257.75
+     p0.outstandingLoanBalance              7609076.60                 | 7608920.33
+     p1.calculatedDueInterest               227229.96                  | 227225.29
+     p1.dueInterest                         227229.96                  | 227225.29
+     p1.duePrincipal                        2462871.52                 | 2463032.46
+     p1.emi                                 2690101.48                 | 2690257.75
+     p1.ip0.calculatedDueInterest           227229.9587397260275       | 227225.2920465753426
+     p1.outstandingLoanBalance              5146205.08                 | 5145887.87
+     p2.calculatedDueInterest               155229.79                  | 155645.49
+     p2.dueInterest                         155229.79                  | 155645.49
+     p2.duePrincipal                        2534871.69                 | 2534612.26
+     ... 14 more
+== F29-M-NULL vs F29-M-F29 (both effects present)   42 of  115 cells differ   (expected separate)
+     p0.calculatedDueInterest               21245.90                   | 21304.11
+     p0.dueInterest                         21245.90                   | 21304.11
+     p0.duePrincipal                        191447.54                  | 191407.83
+     p0.emi                                 212693.44                  | 212711.94
+     p0.ip0.rateFactorTillPeriodDueDate     0.0177049180327868853      | 0.0177534246575342466
+     p0.ip1.calculatedDueInterest           21245.90163934426236       | 21304.10958904109592
+     p0.ip1.rateFactor                      0.0177049180327868853      | 0.0177534246575342466
+     p0.ip1.rateFactorTillPeriodDueDate     0.0177049180327868853      | 0.0177534246575342466
+     p0.outstandingLoanBalance              1008552.46                 | 1008592.17
+     p0.rateFactorPlus1                     1.0177049180327868853      | 1.0177534246575342466
+     p1.calculatedDueInterest               18453.18                   | 18502.83
+     p1.dueInterest                         18453.18                   | 18502.83
+     ... 30 more
+== F29-Y-NULL vs F29-Y-F29 (one-year schedule)     105 of  223 cells differ   (expected separate)
+     p0.calculatedDueInterest               22012.31                   | 22014.25
+     p0.dueInterest                         22012.31                   | 22014.25
+     p0.duePrincipal                        90080.92                   | 90103.57
+     p0.emi                                 112093.23                  | 112117.82
+     p0.ip0.rateFactorTillPeriodDueDate     0.0183435885919604761      | 0.0183452054794520548
+     p0.ip1.calculatedDueInterest           22012.30631035257132       | 22014.24657534246576
+     p0.ip1.rateFactor                      0.0183435885919604761      | 0.0183452054794520548
+     p0.ip1.rateFactorTillPeriodDueDate     0.0183435885919604761      | 0.0183452054794520548
+     p0.outstandingLoanBalance              1109919.08                 | 1109896.43
+     p0.rateFactorPlus1                     1.0183435885919604761      | 1.0183452054794520548
+     p1.calculatedDueInterest               20306.06                   | 20361.28
+     p1.dueInterest                         20306.06                   | 20361.28
+     ... 93 more
+== F29-B-NULL vs F29-B-F29 (EFFECT B PURE)          11 of   43 cells differ   (expected separate)
+     p0.duePrincipal                        594897.82                  | 594898.30
+     p0.emi                                 616201.93                  | 616202.41
+     p0.outstandingLoanBalance              605102.18                  | 605101.70
+     p1.calculatedDueInterest               11099.75                   | 11100.72
+     p1.dueInterest                         11099.75                   | 11100.72
+     p1.duePrincipal                        605102.18                  | 605101.70
+     p1.emi                                 616201.93                  | 616202.42
+     p1.ip0.calculatedDueInterest           11099.74544601841456       | 11100.71502246575343
+     p1.ip0.rateFactor                      0.0183435885919604761      | 0.0183452054794520548
+     p1.ip0.rateFactorTillPeriodDueDate     0.0183435885919604761      | 0.0183452054794520548
+     p1.rateFactorPlus1                     1.0183435885919604761      | 1.0183452054794520548
+== F29-A-NULL vs F29-A-F29 (EFFECT A PURE)          27 of   61 cells differ   (expected separate)
+     p0.calculatedDueInterest               21954.10                   | 22014.25
+     p0.dueInterest                         21954.10                   | 22014.25
+     p0.duePrincipal                        392611.60                  | 392591.59
+     p0.emi                                 414565.70                  | 414605.84
+     p0.ip0.rateFactorTillPeriodDueDate     0.0182950819672131148      | 0.0183452054794520548
+     p0.ip1.calculatedDueInterest           21954.09836065573776       | 22014.24657534246576
+     p0.ip1.rateFactor                      0.0182950819672131148      | 0.0183452054794520548
+     p0.ip1.rateFactorTillPeriodDueDate     0.0182950819672131148      | 0.0183452054794520548
+     p0.outstandingLoanBalance              807388.40                  | 807408.41
+     p0.rateFactorPlus1                     1.0182950819672131148      | 1.0183452054794520548
+     p1.calculatedDueInterest               14294.75                   | 14334.26
+     p1.dueInterest                         14294.75                   | 14334.26
+     ... 15 more
+== F29-C-NULL vs F29-C-F29 (Feb 29 IN a period)     24 of   61 cells differ   (expected separate)
+     p0.calculatedDueInterest               21954.10                   | 22014.25
+     p0.dueInterest                         21954.10                   | 22014.25
+     p0.duePrincipal                        392452.72                  | 392419.65
+     p0.emi                                 414406.82                  | 414433.90
+     p0.ip0.rateFactorTillPeriodDueDate     0.0182950819672131148      | 0.0183452054794520548
+     p0.ip1.calculatedDueInterest           21954.09836065573776       | 22014.24657534246576
+     p0.ip1.rateFactor                      0.0182950819672131148      | 0.0183452054794520548
+     p0.ip1.rateFactorTillPeriodDueDate     0.0182950819672131148      | 0.0183452054794520548
+     p0.outstandingLoanBalance              807547.28                  | 807580.35
+     p0.rateFactorPlus1                     1.0182950819672131148      | 1.0183452054794520548
+     p1.calculatedDueInterest               13820.97                   | 13821.54
+     p1.dueInterest                         13820.97                   | 13821.54
+     ... 12 more
+== A2-AA1 vs A2-AA2 (31 Dec vs 1 Jan boundary)      35 of  115 cells differ   (expected separate)
+     p0.duePrincipal                        191447.54                  | 191447.26
+     p0.emi                                 212693.44                  | 212693.16
+     p0.outstandingLoanBalance              1008552.46                 | 1008552.74
+     p1.calculatedDueInterest               18453.18                   | 18451.56
+     p1.dueInterest                         18453.18                   | 18451.56
+     p1.duePrincipal                        194240.26                  | 194241.60
+     p1.emi                                 212693.44                  | 212693.16
+     p1.ip0.calculatedDueInterest           18453.18063979160120       | 18451.55504655737710
+     p1.ip0.rateFactor                      0.0182966988547046935      | 0.0182950819672131148
+     p1.ip0.rateFactorTillPeriodDueDate     0.0182966988547046935      | 0.0182950819672131148
+     p1.outstandingLoanBalance              814312.20                  | 814311.14
+     p1.rateFactorPlus1                     1.0182966988547046935      | 1.0182950819672131148
+     ... 23 more
+
+RF  F29-Q-NULL vs F29-Q-F29                        6 of  14 rate-factor cells differ
+      p2.ip0.rateFactor                  0.0301639344262295082    | 0.0302465753424657534
+      p2.ip0.rateFactorTillPeriodDueDate 0.0301639344262295082    | 0.0302465753424657534
+      p2.rateFactorPlus1                 1.0301639344262295082    | 1.0302465753424657534
+      p3.ip0.rateFactor                  0.0301639344262295082    | 0.0302465753424657534
+      p3.ip0.rateFactorTillPeriodDueDate 0.0301639344262295082    | 0.0302465753424657534
+      p3.rateFactorPlus1                 1.0301639344262295082    | 1.0302465753424657534
+RF  F29-B-NULL vs F29-B-F29 (EFFECT B PURE)        3 of   8 rate-factor cells differ
+      p1.ip0.rateFactor                  0.0183435885919604761    | 0.0183452054794520548
+      p1.ip0.rateFactorTillPeriodDueDate 0.0183435885919604761    | 0.0183452054794520548
+      p1.rateFactorPlus1                 1.0183435885919604761    | 1.0183452054794520548
+RF  F29-A-NULL vs F29-A-F29 (EFFECT A PURE)       10 of  11 rate-factor cells differ
+      p0.ip0.rateFactorTillPeriodDueDate 0.0182950819672131148    | 0.0183452054794520548
+      p0.ip1.rateFactor                  0.0182950819672131148    | 0.0183452054794520548
+      p0.ip1.rateFactorTillPeriodDueDate 0.0182950819672131148    | 0.0183452054794520548
+      p0.rateFactorPlus1                 1.0182950819672131148    | 1.0183452054794520548
+      p1.ip0.rateFactor                  0.0177049180327868853    | 0.0177534246575342466
+      p1.ip0.rateFactorTillPeriodDueDate 0.0177049180327868853    | 0.0177534246575342466
+      p1.rateFactorPlus1                 1.0177049180327868853    | 1.0177534246575342466
+      p2.ip0.rateFactor                  0.0182950819672131148    | 0.0183452054794520548
+      p2.ip0.rateFactorTillPeriodDueDate 0.0182950819672131148    | 0.0183452054794520548
+      p2.rateFactorPlus1                 1.0182950819672131148    | 1.0183452054794520548
+RF  F29-C-NULL vs F29-C-F29 (Feb 29 in a period)   7 of  11 rate-factor cells differ
+      p0.ip0.rateFactorTillPeriodDueDate 0.0182950819672131148    | 0.0183452054794520548
+      p0.ip1.rateFactor                  0.0182950819672131148    | 0.0183452054794520548
+      p0.ip1.rateFactorTillPeriodDueDate 0.0182950819672131148    | 0.0183452054794520548
+      p0.rateFactorPlus1                 1.0182950819672131148    | 1.0183452054794520548
+      p2.ip0.rateFactor                  0.0182950819672131148    | 0.0183452054794520548
+      p2.ip0.rateFactorTillPeriodDueDate 0.0182950819672131148    | 0.0183452054794520548
+      p2.rateFactorPlus1                 1.0182950819672131148    | 1.0183452054794520548
+RF  F29-Y-NULL vs F29-Y-F29                       34 of  38 rate-factor cells differ
+      p0.ip0.rateFactorTillPeriodDueDate 0.0183435885919604761    | 0.0183452054794520548
+      p0.ip1.rateFactor                  0.0183435885919604761    | 0.0183452054794520548
+      p0.ip1.rateFactorTillPeriodDueDate 0.0183435885919604761    | 0.0183452054794520548
+      p0.rateFactorPlus1                 1.0183435885919604761    | 1.0183452054794520548
+      p1.ip0.rateFactor                  0.0182950819672131148    | 0.0183452054794520548
+      p1.ip0.rateFactorTillPeriodDueDate 0.0182950819672131148    | 0.0183452054794520548
+      p1.rateFactorPlus1                 1.0182950819672131148    | 1.0183452054794520548
+      p10.ip0.rateFactor                 0.0182950819672131148    | 0.0183452054794520548
+      p10.ip0.rateFactorTillPeriodDueDate 0.0182950819672131148    | 0.0183452054794520548
+      p10.rateFactorPlus1                1.0182950819672131148    | 1.0183452054794520548
+      p11.ip0.rateFactor                 0.0177049180327868853    | 0.0177534246575342466
+      p11.ip0.rateFactorTillPeriodDueDate 0.0177049180327868853    | 0.0177534246575342466
+      p11.rateFactorPlus1                1.0177049180327868853    | 1.0177534246575342466
+      p3.ip0.rateFactor                  0.0182950819672131148    | 0.0183452054794520548
+      p3.ip0.rateFactorTillPeriodDueDate 0.0182950819672131148    | 0.0183452054794520548
+      p3.rateFactorPlus1                 1.0182950819672131148    | 1.0183452054794520548
+      p4.ip0.rateFactor                  0.0177049180327868853    | 0.0177534246575342466
+      p4.ip0.rateFactorTillPeriodDueDate 0.0177049180327868853    | 0.0177534246575342466
+      p4.rateFactorPlus1                 1.0177049180327868853    | 1.0177534246575342466
+      p5.ip0.rateFactor                  0.0182950819672131148    | 0.0183452054794520548
+      p5.ip0.rateFactorTillPeriodDueDate 0.0182950819672131148    | 0.0183452054794520548
+      p5.rateFactorPlus1                 1.0182950819672131148    | 1.0183452054794520548
+      p6.ip0.rateFactor                  0.0177049180327868853    | 0.0177534246575342466
+      p6.ip0.rateFactorTillPeriodDueDate 0.0177049180327868853    | 0.0177534246575342466
+      p6.rateFactorPlus1                 1.0177049180327868853    | 1.0177534246575342466
+      p7.ip0.rateFactor                  0.0182950819672131148    | 0.0183452054794520548
+      p7.ip0.rateFactorTillPeriodDueDate 0.0182950819672131148    | 0.0183452054794520548
+      p7.rateFactorPlus1                 1.0182950819672131148    | 1.0183452054794520548
+      p8.ip0.rateFactor                  0.0182950819672131148    | 0.0183452054794520548
+      p8.ip0.rateFactorTillPeriodDueDate 0.0182950819672131148    | 0.0183452054794520548
+      p8.rateFactorPlus1                 1.0182950819672131148    | 1.0183452054794520548
+      p9.ip0.rateFactor                  0.0177049180327868853    | 0.0177534246575342466
+      p9.ip0.rateFactorTillPeriodDueDate 0.0177049180327868853    | 0.0177534246575342466
+      p9.rateFactorPlus1                 1.0177049180327868853    | 1.0177534246575342466
+RF  A2-AA1 vs A2-AA2 (boundary choice)             3 of  20 rate-factor cells differ
+      p1.ip0.rateFactor                  0.0182966988547046935    | 0.0182950819672131148
+      p1.ip0.rateFactorTillPeriodDueDate 0.0182966988547046935    | 0.0182950819672131148
+      p1.rateFactorPlus1                 1.0182966988547046935    | 1.0182950819672131148
+RF  A2-CTL-B03 vs A2-CTL-B04                      34 of  38 rate-factor cells differ
+      p0.ip0.rateFactorTillPeriodDueDate 0.0182950819672131148    | 0.0183452054794520548
+      p0.ip1.rateFactor                  0.0182950819672131148    | 0.0183452054794520548
+      p0.ip1.rateFactorTillPeriodDueDate 0.0182950819672131148    | 0.0183452054794520548
+      p0.rateFactorPlus1                 1.0182950819672131148    | 1.0183452054794520548
+      p10.ip0.rateFactor                 0.0177049180327868853    | 0.0177534246575342466
+      p10.ip0.rateFactorTillPeriodDueDate 0.0177049180327868853    | 0.0177534246575342466
+      p10.rateFactorPlus1                1.0177049180327868853    | 1.0177534246575342466
+      p11.ip0.rateFactor                 0.0182966988547046935    | 0.0183452054794520548
+      p11.ip0.rateFactorTillPeriodDueDate 0.0182966988547046935    | 0.0183452054794520548
+      p11.rateFactorPlus1                1.0182966988547046935    | 1.0183452054794520548
+      p2.ip0.rateFactor                  0.0182950819672131148    | 0.0183452054794520548
+      p2.ip0.rateFactorTillPeriodDueDate 0.0182950819672131148    | 0.0183452054794520548
+      p2.rateFactorPlus1                 1.0182950819672131148    | 1.0183452054794520548
+      p3.ip0.rateFactor                  0.0177049180327868853    | 0.0177534246575342466
+      p3.ip0.rateFactorTillPeriodDueDate 0.0177049180327868853    | 0.0177534246575342466
+      p3.rateFactorPlus1                 1.0177049180327868853    | 1.0177534246575342466
+      p4.ip0.rateFactor                  0.0182950819672131148    | 0.0183452054794520548
+      p4.ip0.rateFactorTillPeriodDueDate 0.0182950819672131148    | 0.0183452054794520548
+      p4.rateFactorPlus1                 1.0182950819672131148    | 1.0183452054794520548
+      p5.ip0.rateFactor                  0.0177049180327868853    | 0.0177534246575342466
+      p5.ip0.rateFactorTillPeriodDueDate 0.0177049180327868853    | 0.0177534246575342466
+      p5.rateFactorPlus1                 1.0177049180327868853    | 1.0177534246575342466
+      p6.ip0.rateFactor                  0.0182950819672131148    | 0.0183452054794520548
+      p6.ip0.rateFactorTillPeriodDueDate 0.0182950819672131148    | 0.0183452054794520548
+      p6.rateFactorPlus1                 1.0182950819672131148    | 1.0183452054794520548
+      p7.ip0.rateFactor                  0.0182950819672131148    | 0.0183452054794520548
+      p7.ip0.rateFactorTillPeriodDueDate 0.0182950819672131148    | 0.0183452054794520548
+      p7.rateFactorPlus1                 1.0182950819672131148    | 1.0183452054794520548
+      p8.ip0.rateFactor                  0.0177049180327868853    | 0.0177534246575342466
+      p8.ip0.rateFactorTillPeriodDueDate 0.0177049180327868853    | 0.0177534246575342466
+      p8.rateFactorPlus1                 1.0177049180327868853    | 1.0177534246575342466
+      p9.ip0.rateFactor                  0.0182950819672131148    | 0.0183452054794520548
+      p9.ip0.rateFactorTillPeriodDueDate 0.0182950819672131148    | 0.0183452054794520548
+      p9.rateFactorPlus1                 1.0182950819672131148    | 1.0183452054794520548
+RF  A2-CTL-B03 vs A2-CTL-B03NULL (FULL == unset)   0 of  38 rate-factor cells differ
+RF  F29-Q-NULL vs F29-Q-FULL                       0 of  14 rate-factor cells differ
+RF  F29-M-NULL vs F29-M-FULL                       0 of  20 rate-factor cells differ
+RF  F29-Y-NULL vs F29-Y-FULL                       0 of  38 rate-factor cells differ
+RF  F29-B-NULL vs F29-B-FULL                       0 of   8 rate-factor cells differ
+RF  F29-A-NULL vs F29-A-FULL                       0 of  11 rate-factor cells differ
+
+######## EXACTNESS PROBE -- ProgressiveEMICalculator.java:1975 ########
+
+probe sites (interest periods crossing a year boundary): 21
+sites where ONE.multiply(f) differs from ONE.multiply(f, mc): 0
+sites where the oracle's own rate factor equals setScale(prec, mode)(rate x f): 15
+sites where it does NOT (i.e. the arm did not fire there): 6
+     T48-CAL-S1       2023-12-12..2024-01-12  oracle 0.008053205479   arm-would-give 0.008044688075
+     T48-CAL-S3       2023-12-31..2024-01-31  oracle 0.038219178082   arm-would-give 0.038114754098
+     T48-F29-M-F29    2024-12-01..2025-01-01  oracle 0.0183452054794520548   arm-would-give 0.0182966988547046935
+     T48-F29-Y-F29    2023-12-01..2024-01-01  oracle 0.0183452054794520548   arm-would-give 0.0183435885919604761
+     T48-F29-B-F29    2023-12-01..2024-01-01  oracle 0.0183452054794520548   arm-would-give 0.0183435885919604761
+     T48-A2-CTL-B04   2024-12-01..2025-01-01  oracle 0.0183452054794520548   arm-would-give 0.0182966988547046935
+
+VACUITY CANARY (local construction, NOT an oracle output): 2 of 2 legs SEPARATE
+     multiplier=ONE, ratio wider than mc    bitIdentical=False   exact=0.1428571428571428571428571  rounded=0.1428571428571428571
+     multiplier=THREE, ratio wider than mc  bitIdentical=False   exact=0.4285714285714285714285713  rounded=0.4285714285714285714
+
+NOTE: AA-1 vs AA-11: 5 cells on the crossing row (row2) moved. The partial-period branch returns at :1526-1531, BEFORE the daysInMonthType switch at :1534-1541, so a rate factor computed by the arm cannot depend on daysInMonthType -- but downstream EMI levelling can still move the row.
+
+== analysis PASS -- every stated expectation held

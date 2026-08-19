@@ -1,0 +1,21 @@
+{
+ "clientId": 2,
+ "productId": 4,
+ "loanType": "individual",
+ "principal": 10000000,
+ "loanTermFrequency": 12,
+ "loanTermFrequencyType": 2,
+ "numberOfRepayments": 4,
+ "repaymentEvery": 3,
+ "repaymentFrequencyType": 2,
+ "interestRatePerPeriod": 12.0,
+ "interestRateFrequencyType": 3,
+ "amortizationType": 1,
+ "interestType": 0,
+ "interestCalculationPeriodType": 0,
+ "transactionProcessingStrategyCode": "advanced-payment-allocation-strategy",
+ "expectedDisbursementDate": "01 September 2023",
+ "submittedOnDate": "01 September 2023",
+ "locale": "en",
+ "dateFormat": "dd MMMM yyyy"
+}

@@ -1,0 +1,743 @@
+02:57:44.636 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_cal_s1`: HALF_EVEN
+02:57:44.667 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_cal_s2`: HALF_EVEN
+02:57:44.669 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_cal_s3`: HALF_EVEN
+02:57:44.671 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_cal_s4`: HALF_EVEN
+02:57:44.673 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_cal_s5`: HALF_EVEN
+02:57:44.674 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_f29_q_null`: HALF_UP
+02:57:44.675 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_f29_q_full`: HALF_UP
+02:57:44.676 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_f29_q_f29`: HALF_UP
+02:57:44.677 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_f29_m_null`: HALF_UP
+02:57:44.679 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_f29_m_full`: HALF_UP
+02:57:44.680 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_f29_m_f29`: HALF_UP
+02:57:44.681 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_f29_y_null`: HALF_UP
+02:57:44.683 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_f29_y_full`: HALF_UP
+02:57:44.685 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_f29_y_f29`: HALF_UP
+02:57:44.687 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_f29_b_null`: HALF_UP
+02:57:44.687 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_f29_b_full`: HALF_UP
+02:57:44.688 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_f29_b_f29`: HALF_UP
+02:57:44.688 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_f29_a_null`: HALF_UP
+02:57:44.688 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_f29_a_full`: HALF_UP
+02:57:44.689 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_f29_a_f29`: HALF_UP
+02:57:44.689 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_f29_c_null`: HALF_UP
+02:57:44.690 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_f29_c_f29`: HALF_UP
+02:57:44.690 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_a2_ctl_b03`: HALF_UP
+02:57:44.691 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_a2_ctl_b04`: HALF_UP
+02:57:44.692 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_a2_ctl_b03null`: HALF_UP
+02:57:44.694 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_a2_aa1`: HALF_UP
+02:57:44.695 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t48_a2_aa2`: HALF_UP
+{
+  "task": "T48",
+  "harness": "CaptureActualActual.java",
+  "set": "exact",
+  "question": "is the NO-MathContext multiply at ProgressiveEMICalculator.java:1975 observable at the sole call site",
+  "path": "A2 -- ProgressiveEMICalculator seam, in-process, no server, no database",
+  "capturesNotAdmits": "This pass records RAW OBSERVATIONS ONLY. It does NOT propose admitting DaysInYearCustomStrategy or ACTUAL/ACTUAL to DEC-1's graded domain; that is an amendment (DEC-1 s4.4) and a gate no agent may cross. Gate G-1 is open, so nothing here is contract-shaped or promoted.",
+  "fineractCommit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+  "moneyHelperPrecisionConstant": 19,
+  "javaVersion": "21.0.11",
+  "javaVmName": "OpenJDK 64-Bit Server VM",
+  "javaVmVersion": "21.0.11+10-LTS",
+  "javaVendor": "Azul Systems, Inc.",
+  "jvmUserTimezone": "null",
+  "jvmFileEncoding": "UTF-8",
+  "negativeTestTenantRoundingModeOrdinalOverride": null,
+  "negativeTestMathContextPrecisionOverride": null,
+  "negativeTestMathContextRoundingModeOverride": null,
+  "captures": [
+    {
+      "id": "T48-CAL-S1",
+      "seam": "PATH_A2",
+      "family": "CALIBRATION",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=12 roundingMode=HALF_EVEN",
+        "threadedMathContextPrecision": 12,
+        "threadedMathContextRoundingMode": "HALF_EVEN",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_cal_s1",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 6,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_EVEN",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": "FEB_29_PERIOD_ONLY",
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"fromDate": "2023-12-12", "dueDate": "2024-01-12", "yearSegments": [{"year": 2023, "from": "2023-12-12", "to": "2023-12-31", "days": 19, "yearLength": 365}, {"year": 2024, "from": "2023-12-31", "to": "2024-01-12", "days": 12, "yearLength": 366}], "cumulatedPeriodFractions": "0.0848416797664", "cumulatedPeriodFractionsPrecision": 12, "cumulatedPeriodFractionsScale": 13, "exactProduct_ONE_multiply_f": "0.0848416797664", "exactProductPrecision": 12, "roundedProduct_ONE_multiply_f_mc": "0.0848416797664", "roundedProductPrecision": 12, "productsBitIdentical": true, "productsNumericallyEqual": true, "rederivedRateFactorFromExactProduct": "0.008044688075", "rederivedRateFactorFromRoundedProduct": "0.008044688075", "rederivedRateFactorsIdentical": true, "oracleRateFactor": "0.008053205479", "oracleRateFactorMatchesExactRederivation": false}
+        ]
+      }
+    },
+    {
+      "id": "T48-CAL-S2",
+      "seam": "PATH_A2",
+      "family": "CALIBRATION",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=12 roundingMode=HALF_EVEN",
+        "threadedMathContextPrecision": 12,
+        "threadedMathContextRoundingMode": "HALF_EVEN",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_cal_s2",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 6,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_EVEN",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": "FEB_29_PERIOD_ONLY",
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"note": "no interest period on this case crosses a year boundary; the partial-period arm has no probe site here"}
+        ]
+      }
+    },
+    {
+      "id": "T48-CAL-S3",
+      "seam": "PATH_A2",
+      "family": "CALIBRATION",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=12 roundingMode=HALF_EVEN",
+        "threadedMathContextPrecision": 12,
+        "threadedMathContextRoundingMode": "HALF_EVEN",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_cal_s3",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 6,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_EVEN",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": "FEB_29_PERIOD_ONLY",
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"fromDate": "2023-12-31", "dueDate": "2024-01-31", "yearSegments": [{"year": 2023, "from": "2023-12-31", "to": "2023-12-31", "days": 0, "yearLength": 365}, {"year": 2024, "from": "2023-12-31", "to": "2024-01-31", "days": 31, "yearLength": 366}], "cumulatedPeriodFractions": "0.0846994535519", "cumulatedPeriodFractionsPrecision": 12, "cumulatedPeriodFractionsScale": 13, "exactProduct_ONE_multiply_f": "0.0846994535519", "exactProductPrecision": 12, "roundedProduct_ONE_multiply_f_mc": "0.0846994535519", "roundedProductPrecision": 12, "productsBitIdentical": true, "productsNumericallyEqual": true, "rederivedRateFactorFromExactProduct": "0.038114754098", "rederivedRateFactorFromRoundedProduct": "0.038114754098", "rederivedRateFactorsIdentical": true, "oracleRateFactor": "0.038219178082", "oracleRateFactorMatchesExactRederivation": false}
+        ]
+      }
+    },
+    {
+      "id": "T48-CAL-S4",
+      "seam": "PATH_A2",
+      "family": "CALIBRATION",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=12 roundingMode=HALF_EVEN",
+        "threadedMathContextPrecision": 12,
+        "threadedMathContextRoundingMode": "HALF_EVEN",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_cal_s4",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 6,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_EVEN",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": "FEB_29_PERIOD_ONLY",
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"fromDate": "2024-12-31", "dueDate": "2025-01-31", "yearSegments": [{"year": 2024, "from": "2024-12-31", "to": "2024-12-31", "days": 0, "yearLength": 366}, {"year": 2025, "from": "2024-12-31", "to": "2025-01-31", "days": 31, "yearLength": 365}], "cumulatedPeriodFractions": "0.0849315068493", "cumulatedPeriodFractionsPrecision": 12, "cumulatedPeriodFractionsScale": 13, "exactProduct_ONE_multiply_f": "0.0849315068493", "exactProductPrecision": 12, "roundedProduct_ONE_multiply_f_mc": "0.0849315068493", "roundedProductPrecision": 12, "productsBitIdentical": true, "productsNumericallyEqual": true, "rederivedRateFactorFromExactProduct": "0.008484657534", "rederivedRateFactorFromRoundedProduct": "0.008484657534", "rederivedRateFactorsIdentical": true, "oracleRateFactor": "0.008484657534", "oracleRateFactorMatchesExactRederivation": true}
+        ]
+      }
+    },
+    {
+      "id": "T48-CAL-S5",
+      "seam": "PATH_A2",
+      "family": "CALIBRATION",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=12 roundingMode=HALF_EVEN",
+        "threadedMathContextPrecision": 12,
+        "threadedMathContextRoundingMode": "HALF_EVEN",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_cal_s5",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 6,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_EVEN",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": "FEB_29_PERIOD_ONLY",
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"fromDate": "2022-12-29", "dueDate": "2023-02-28", "yearSegments": [{"year": 2022, "from": "2022-12-29", "to": "2022-12-31", "days": 2, "yearLength": 365}, {"year": 2023, "from": "2022-12-31", "to": "2023-02-28", "days": 59, "yearLength": 365}], "cumulatedPeriodFractions": "0.167123287671", "cumulatedPeriodFractionsPrecision": 12, "cumulatedPeriodFractionsScale": 12, "exactProduct_ONE_multiply_f": "0.167123287671", "exactProductPrecision": 12, "roundedProduct_ONE_multiply_f_mc": "0.167123287671", "roundedProductPrecision": 12, "productsBitIdentical": true, "productsNumericallyEqual": true, "rederivedRateFactorFromExactProduct": "0.011698630137", "rederivedRateFactorFromRoundedProduct": "0.011698630137", "rederivedRateFactorsIdentical": true, "oracleRateFactor": "0.011698630137", "oracleRateFactorMatchesExactRederivation": true}
+        ]
+      }
+    },
+    {
+      "id": "T48-F29-Q-NULL",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_f29_q_null",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": null,
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"fromDate": "2023-12-01", "dueDate": "2024-03-01", "yearSegments": [{"year": 2023, "from": "2023-12-01", "to": "2023-12-31", "days": 30, "yearLength": 365}, {"year": 2024, "from": "2023-12-31", "to": "2024-03-01", "days": 61, "yearLength": 366}], "cumulatedPeriodFractions": "0.2488584474885844749", "cumulatedPeriodFractionsPrecision": 19, "cumulatedPeriodFractionsScale": 19, "exactProduct_ONE_multiply_f": "0.2488584474885844749", "exactProductPrecision": 19, "roundedProduct_ONE_multiply_f_mc": "0.2488584474885844749", "roundedProductPrecision": 19, "productsBitIdentical": true, "productsNumericallyEqual": true, "rederivedRateFactorFromExactProduct": "0.0298630136986301370", "rederivedRateFactorFromRoundedProduct": "0.0298630136986301370", "rederivedRateFactorsIdentical": true, "oracleRateFactor": "0.0298630136986301370", "oracleRateFactorMatchesExactRederivation": true}
+        ]
+      }
+    },
+    {
+      "id": "T48-F29-Q-FULL",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_f29_q_full",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": "FULL_LEAP_YEAR",
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"fromDate": "2023-12-01", "dueDate": "2024-03-01", "yearSegments": [{"year": 2023, "from": "2023-12-01", "to": "2023-12-31", "days": 30, "yearLength": 365}, {"year": 2024, "from": "2023-12-31", "to": "2024-03-01", "days": 61, "yearLength": 366}], "cumulatedPeriodFractions": "0.2488584474885844749", "cumulatedPeriodFractionsPrecision": 19, "cumulatedPeriodFractionsScale": 19, "exactProduct_ONE_multiply_f": "0.2488584474885844749", "exactProductPrecision": 19, "roundedProduct_ONE_multiply_f_mc": "0.2488584474885844749", "roundedProductPrecision": 19, "productsBitIdentical": true, "productsNumericallyEqual": true, "rederivedRateFactorFromExactProduct": "0.0298630136986301370", "rederivedRateFactorFromRoundedProduct": "0.0298630136986301370", "rederivedRateFactorsIdentical": true, "oracleRateFactor": "0.0298630136986301370", "oracleRateFactorMatchesExactRederivation": true}
+        ]
+      }
+    },
+    {
+      "id": "T48-F29-Q-F29",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_f29_q_f29",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": "FEB_29_PERIOD_ONLY",
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"fromDate": "2023-12-01", "dueDate": "2024-03-01", "yearSegments": [{"year": 2023, "from": "2023-12-01", "to": "2023-12-31", "days": 30, "yearLength": 365}, {"year": 2024, "from": "2023-12-31", "to": "2024-03-01", "days": 61, "yearLength": 366}], "cumulatedPeriodFractions": "0.2488584474885844749", "cumulatedPeriodFractionsPrecision": 19, "cumulatedPeriodFractionsScale": 19, "exactProduct_ONE_multiply_f": "0.2488584474885844749", "exactProductPrecision": 19, "roundedProduct_ONE_multiply_f_mc": "0.2488584474885844749", "roundedProductPrecision": 19, "productsBitIdentical": true, "productsNumericallyEqual": true, "rederivedRateFactorFromExactProduct": "0.0298630136986301370", "rederivedRateFactorFromRoundedProduct": "0.0298630136986301370", "rederivedRateFactorsIdentical": true, "oracleRateFactor": "0.0298630136986301370", "oracleRateFactorMatchesExactRederivation": true}
+        ]
+      }
+    },
+    {
+      "id": "T48-F29-M-NULL",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_f29_m_null",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": null,
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"fromDate": "2024-12-01", "dueDate": "2025-01-01", "yearSegments": [{"year": 2024, "from": "2024-12-01", "to": "2024-12-31", "days": 30, "yearLength": 366}, {"year": 2025, "from": "2024-12-31", "to": "2025-01-01", "days": 1, "yearLength": 365}], "cumulatedPeriodFractions": "0.08470693914215135863", "cumulatedPeriodFractionsPrecision": 19, "cumulatedPeriodFractionsScale": 20, "exactProduct_ONE_multiply_f": "0.08470693914215135863", "exactProductPrecision": 19, "roundedProduct_ONE_multiply_f_mc": "0.08470693914215135863", "roundedProductPrecision": 19, "productsBitIdentical": true, "productsNumericallyEqual": true, "rederivedRateFactorFromExactProduct": "0.0182966988547046935", "rederivedRateFactorFromRoundedProduct": "0.0182966988547046935", "rederivedRateFactorsIdentical": true, "oracleRateFactor": "0.0182966988547046935", "oracleRateFactorMatchesExactRederivation": true}
+        ]
+      }
+    },
+    {
+      "id": "T48-F29-M-FULL",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_f29_m_full",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": "FULL_LEAP_YEAR",
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"fromDate": "2024-12-01", "dueDate": "2025-01-01", "yearSegments": [{"year": 2024, "from": "2024-12-01", "to": "2024-12-31", "days": 30, "yearLength": 366}, {"year": 2025, "from": "2024-12-31", "to": "2025-01-01", "days": 1, "yearLength": 365}], "cumulatedPeriodFractions": "0.08470693914215135863", "cumulatedPeriodFractionsPrecision": 19, "cumulatedPeriodFractionsScale": 20, "exactProduct_ONE_multiply_f": "0.08470693914215135863", "exactProductPrecision": 19, "roundedProduct_ONE_multiply_f_mc": "0.08470693914215135863", "roundedProductPrecision": 19, "productsBitIdentical": true, "productsNumericallyEqual": true, "rederivedRateFactorFromExactProduct": "0.0182966988547046935", "rederivedRateFactorFromRoundedProduct": "0.0182966988547046935", "rederivedRateFactorsIdentical": true, "oracleRateFactor": "0.0182966988547046935", "oracleRateFactorMatchesExactRederivation": true}
+        ]
+      }
+    },
+    {
+      "id": "T48-F29-M-F29",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_f29_m_f29",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": "FEB_29_PERIOD_ONLY",
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"fromDate": "2024-12-01", "dueDate": "2025-01-01", "yearSegments": [{"year": 2024, "from": "2024-12-01", "to": "2024-12-31", "days": 30, "yearLength": 366}, {"year": 2025, "from": "2024-12-31", "to": "2025-01-01", "days": 1, "yearLength": 365}], "cumulatedPeriodFractions": "0.08470693914215135863", "cumulatedPeriodFractionsPrecision": 19, "cumulatedPeriodFractionsScale": 20, "exactProduct_ONE_multiply_f": "0.08470693914215135863", "exactProductPrecision": 19, "roundedProduct_ONE_multiply_f_mc": "0.08470693914215135863", "roundedProductPrecision": 19, "productsBitIdentical": true, "productsNumericallyEqual": true, "rederivedRateFactorFromExactProduct": "0.0182966988547046935", "rederivedRateFactorFromRoundedProduct": "0.0182966988547046935", "rederivedRateFactorsIdentical": true, "oracleRateFactor": "0.0183452054794520548", "oracleRateFactorMatchesExactRederivation": false}
+        ]
+      }
+    },
+    {
+      "id": "T48-F29-Y-NULL",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_f29_y_null",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": null,
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"fromDate": "2023-12-01", "dueDate": "2024-01-01", "yearSegments": [{"year": 2023, "from": "2023-12-01", "to": "2023-12-31", "days": 30, "yearLength": 365}, {"year": 2024, "from": "2023-12-31", "to": "2024-01-01", "days": 1, "yearLength": 366}], "cumulatedPeriodFractions": "0.08492402125907627817", "cumulatedPeriodFractionsPrecision": 19, "cumulatedPeriodFractionsScale": 20, "exactProduct_ONE_multiply_f": "0.08492402125907627817", "exactProductPrecision": 19, "roundedProduct_ONE_multiply_f_mc": "0.08492402125907627817", "roundedProductPrecision": 19, "productsBitIdentical": true, "productsNumericallyEqual": true, "rederivedRateFactorFromExactProduct": "0.0183435885919604761", "rederivedRateFactorFromRoundedProduct": "0.0183435885919604761", "rederivedRateFactorsIdentical": true, "oracleRateFactor": "0.0183435885919604761", "oracleRateFactorMatchesExactRederivation": true}
+        ]
+      }
+    },
+    {
+      "id": "T48-F29-Y-FULL",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_f29_y_full",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": "FULL_LEAP_YEAR",
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"fromDate": "2023-12-01", "dueDate": "2024-01-01", "yearSegments": [{"year": 2023, "from": "2023-12-01", "to": "2023-12-31", "days": 30, "yearLength": 365}, {"year": 2024, "from": "2023-12-31", "to": "2024-01-01", "days": 1, "yearLength": 366}], "cumulatedPeriodFractions": "0.08492402125907627817", "cumulatedPeriodFractionsPrecision": 19, "cumulatedPeriodFractionsScale": 20, "exactProduct_ONE_multiply_f": "0.08492402125907627817", "exactProductPrecision": 19, "roundedProduct_ONE_multiply_f_mc": "0.08492402125907627817", "roundedProductPrecision": 19, "productsBitIdentical": true, "productsNumericallyEqual": true, "rederivedRateFactorFromExactProduct": "0.0183435885919604761", "rederivedRateFactorFromRoundedProduct": "0.0183435885919604761", "rederivedRateFactorsIdentical": true, "oracleRateFactor": "0.0183435885919604761", "oracleRateFactorMatchesExactRederivation": true}
+        ]
+      }
+    },
+    {
+      "id": "T48-F29-Y-F29",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_f29_y_f29",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": "FEB_29_PERIOD_ONLY",
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"fromDate": "2023-12-01", "dueDate": "2024-01-01", "yearSegments": [{"year": 2023, "from": "2023-12-01", "to": "2023-12-31", "days": 30, "yearLength": 365}, {"year": 2024, "from": "2023-12-31", "to": "2024-01-01", "days": 1, "yearLength": 366}], "cumulatedPeriodFractions": "0.08492402125907627817", "cumulatedPeriodFractionsPrecision": 19, "cumulatedPeriodFractionsScale": 20, "exactProduct_ONE_multiply_f": "0.08492402125907627817", "exactProductPrecision": 19, "roundedProduct_ONE_multiply_f_mc": "0.08492402125907627817", "roundedProductPrecision": 19, "productsBitIdentical": true, "productsNumericallyEqual": true, "rederivedRateFactorFromExactProduct": "0.0183435885919604761", "rederivedRateFactorFromRoundedProduct": "0.0183435885919604761", "rederivedRateFactorsIdentical": true, "oracleRateFactor": "0.0183452054794520548", "oracleRateFactorMatchesExactRederivation": false}
+        ]
+      }
+    },
+    {
+      "id": "T48-F29-B-NULL",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_f29_b_null",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": null,
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"fromDate": "2023-12-01", "dueDate": "2024-01-01", "yearSegments": [{"year": 2023, "from": "2023-12-01", "to": "2023-12-31", "days": 30, "yearLength": 365}, {"year": 2024, "from": "2023-12-31", "to": "2024-01-01", "days": 1, "yearLength": 366}], "cumulatedPeriodFractions": "0.08492402125907627817", "cumulatedPeriodFractionsPrecision": 19, "cumulatedPeriodFractionsScale": 20, "exactProduct_ONE_multiply_f": "0.08492402125907627817", "exactProductPrecision": 19, "roundedProduct_ONE_multiply_f_mc": "0.08492402125907627817", "roundedProductPrecision": 19, "productsBitIdentical": true, "productsNumericallyEqual": true, "rederivedRateFactorFromExactProduct": "0.0183435885919604761", "rederivedRateFactorFromRoundedProduct": "0.0183435885919604761", "rederivedRateFactorsIdentical": true, "oracleRateFactor": "0.0183435885919604761", "oracleRateFactorMatchesExactRederivation": true}
+        ]
+      }
+    },
+    {
+      "id": "T48-F29-B-FULL",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_f29_b_full",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": "FULL_LEAP_YEAR",
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"fromDate": "2023-12-01", "dueDate": "2024-01-01", "yearSegments": [{"year": 2023, "from": "2023-12-01", "to": "2023-12-31", "days": 30, "yearLength": 365}, {"year": 2024, "from": "2023-12-31", "to": "2024-01-01", "days": 1, "yearLength": 366}], "cumulatedPeriodFractions": "0.08492402125907627817", "cumulatedPeriodFractionsPrecision": 19, "cumulatedPeriodFractionsScale": 20, "exactProduct_ONE_multiply_f": "0.08492402125907627817", "exactProductPrecision": 19, "roundedProduct_ONE_multiply_f_mc": "0.08492402125907627817", "roundedProductPrecision": 19, "productsBitIdentical": true, "productsNumericallyEqual": true, "rederivedRateFactorFromExactProduct": "0.0183435885919604761", "rederivedRateFactorFromRoundedProduct": "0.0183435885919604761", "rederivedRateFactorsIdentical": true, "oracleRateFactor": "0.0183435885919604761", "oracleRateFactorMatchesExactRederivation": true}
+        ]
+      }
+    },
+    {
+      "id": "T48-F29-B-F29",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_f29_b_f29",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": "FEB_29_PERIOD_ONLY",
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"fromDate": "2023-12-01", "dueDate": "2024-01-01", "yearSegments": [{"year": 2023, "from": "2023-12-01", "to": "2023-12-31", "days": 30, "yearLength": 365}, {"year": 2024, "from": "2023-12-31", "to": "2024-01-01", "days": 1, "yearLength": 366}], "cumulatedPeriodFractions": "0.08492402125907627817", "cumulatedPeriodFractionsPrecision": 19, "cumulatedPeriodFractionsScale": 20, "exactProduct_ONE_multiply_f": "0.08492402125907627817", "exactProductPrecision": 19, "roundedProduct_ONE_multiply_f_mc": "0.08492402125907627817", "roundedProductPrecision": 19, "productsBitIdentical": true, "productsNumericallyEqual": true, "rederivedRateFactorFromExactProduct": "0.0183435885919604761", "rederivedRateFactorFromRoundedProduct": "0.0183435885919604761", "rederivedRateFactorsIdentical": true, "oracleRateFactor": "0.0183452054794520548", "oracleRateFactorMatchesExactRederivation": false}
+        ]
+      }
+    },
+    {
+      "id": "T48-F29-A-NULL",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_f29_a_null",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": null,
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"note": "no interest period on this case crosses a year boundary; the partial-period arm has no probe site here"}
+        ]
+      }
+    },
+    {
+      "id": "T48-F29-A-FULL",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_f29_a_full",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": "FULL_LEAP_YEAR",
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"note": "no interest period on this case crosses a year boundary; the partial-period arm has no probe site here"}
+        ]
+      }
+    },
+    {
+      "id": "T48-F29-A-F29",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_f29_a_f29",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": "FEB_29_PERIOD_ONLY",
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"note": "no interest period on this case crosses a year boundary; the partial-period arm has no probe site here"}
+        ]
+      }
+    },
+    {
+      "id": "T48-F29-C-NULL",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_f29_c_null",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": null,
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"note": "no interest period on this case crosses a year boundary; the partial-period arm has no probe site here"}
+        ]
+      }
+    },
+    {
+      "id": "T48-F29-C-F29",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_f29_c_f29",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": "FEB_29_PERIOD_ONLY",
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"note": "no interest period on this case crosses a year boundary; the partial-period arm has no probe site here"}
+        ]
+      }
+    },
+    {
+      "id": "T48-A2-CTL-B03",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_a2_ctl_b03",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": "FULL_LEAP_YEAR",
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"fromDate": "2024-12-01", "dueDate": "2025-01-01", "yearSegments": [{"year": 2024, "from": "2024-12-01", "to": "2024-12-31", "days": 30, "yearLength": 366}, {"year": 2025, "from": "2024-12-31", "to": "2025-01-01", "days": 1, "yearLength": 365}], "cumulatedPeriodFractions": "0.08470693914215135863", "cumulatedPeriodFractionsPrecision": 19, "cumulatedPeriodFractionsScale": 20, "exactProduct_ONE_multiply_f": "0.08470693914215135863", "exactProductPrecision": 19, "roundedProduct_ONE_multiply_f_mc": "0.08470693914215135863", "roundedProductPrecision": 19, "productsBitIdentical": true, "productsNumericallyEqual": true, "rederivedRateFactorFromExactProduct": "0.0182966988547046935", "rederivedRateFactorFromRoundedProduct": "0.0182966988547046935", "rederivedRateFactorsIdentical": true, "oracleRateFactor": "0.0182966988547046935", "oracleRateFactorMatchesExactRederivation": true}
+        ]
+      }
+    },
+    {
+      "id": "T48-A2-CTL-B04",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_a2_ctl_b04",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": "FEB_29_PERIOD_ONLY",
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"fromDate": "2024-12-01", "dueDate": "2025-01-01", "yearSegments": [{"year": 2024, "from": "2024-12-01", "to": "2024-12-31", "days": 30, "yearLength": 366}, {"year": 2025, "from": "2024-12-31", "to": "2025-01-01", "days": 1, "yearLength": 365}], "cumulatedPeriodFractions": "0.08470693914215135863", "cumulatedPeriodFractionsPrecision": 19, "cumulatedPeriodFractionsScale": 20, "exactProduct_ONE_multiply_f": "0.08470693914215135863", "exactProductPrecision": 19, "roundedProduct_ONE_multiply_f_mc": "0.08470693914215135863", "roundedProductPrecision": 19, "productsBitIdentical": true, "productsNumericallyEqual": true, "rederivedRateFactorFromExactProduct": "0.0182966988547046935", "rederivedRateFactorFromRoundedProduct": "0.0182966988547046935", "rederivedRateFactorsIdentical": true, "oracleRateFactor": "0.0183452054794520548", "oracleRateFactorMatchesExactRederivation": false}
+        ]
+      }
+    },
+    {
+      "id": "T48-A2-CTL-B03NULL",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_a2_ctl_b03null",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": null,
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"fromDate": "2024-12-01", "dueDate": "2025-01-01", "yearSegments": [{"year": 2024, "from": "2024-12-01", "to": "2024-12-31", "days": 30, "yearLength": 366}, {"year": 2025, "from": "2024-12-31", "to": "2025-01-01", "days": 1, "yearLength": 365}], "cumulatedPeriodFractions": "0.08470693914215135863", "cumulatedPeriodFractionsPrecision": 19, "cumulatedPeriodFractionsScale": 20, "exactProduct_ONE_multiply_f": "0.08470693914215135863", "exactProductPrecision": 19, "roundedProduct_ONE_multiply_f_mc": "0.08470693914215135863", "roundedProductPrecision": 19, "productsBitIdentical": true, "productsNumericallyEqual": true, "rederivedRateFactorFromExactProduct": "0.0182966988547046935", "rederivedRateFactorFromRoundedProduct": "0.0182966988547046935", "rederivedRateFactorsIdentical": true, "oracleRateFactor": "0.0182966988547046935", "oracleRateFactorMatchesExactRederivation": true}
+        ]
+      }
+    },
+    {
+      "id": "T48-A2-AA1",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_a2_aa1",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": null,
+        "interestRecognitionOnDisbursementDate": false
+      },
+      "observed": {
+        "probes": [
+          {"fromDate": "2024-12-01", "dueDate": "2025-01-01", "yearSegments": [{"year": 2024, "from": "2024-12-01", "to": "2024-12-31", "days": 30, "yearLength": 366}, {"year": 2025, "from": "2024-12-31", "to": "2025-01-01", "days": 1, "yearLength": 365}], "cumulatedPeriodFractions": "0.08470693914215135863", "cumulatedPeriodFractionsPrecision": 19, "cumulatedPeriodFractionsScale": 20, "exactProduct_ONE_multiply_f": "0.08470693914215135863", "exactProductPrecision": 19, "roundedProduct_ONE_multiply_f_mc": "0.08470693914215135863", "roundedProductPrecision": 19, "productsBitIdentical": true, "productsNumericallyEqual": true, "rederivedRateFactorFromExactProduct": "0.0182966988547046935", "rederivedRateFactorFromRoundedProduct": "0.0182966988547046935", "rederivedRateFactorsIdentical": true, "oracleRateFactor": "0.0182966988547046935", "oracleRateFactorMatchesExactRederivation": true}
+        ]
+      }
+    },
+    {
+      "id": "T48-A2-AA2",
+      "seam": "PATH_A2",
+      "family": "EXACTNESS-PROBE",
+      "purpose": "observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply(cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site [:1529-1530]",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "PATH_A2 -- handed to generatePeriodInterestScheduleModel and to calculatePeriodFractions(model, from, due, mc) [ProgressiveEMICalculator.java:1550]",
+        "tenantId": "t48_a2_aa2",
+        "tenantTimeZone": "Asia/Ulaanbaatar",
+        "tenantRoundingModeOrdinal": 4,
+        "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP",
+        "ambientIsNotTheArithmeticHere": true,
+        "daysInYear": "ACTUAL",
+        "daysInYearCustomStrategyFedIn": null,
+        "interestRecognitionOnDisbursementDate": true
+      },
+      "observed": {
+        "probes": [
+          {"fromDate": "2024-12-01", "dueDate": "2025-01-01", "yearSegments": [{"year": 2024, "from": "2024-12-01", "to": "2025-01-01", "days": 31, "yearLength": 366}, {"year": 2025, "from": "2025-01-01", "to": "2025-01-01", "days": 0, "yearLength": 365}], "cumulatedPeriodFractions": "0.08469945355191256831", "cumulatedPeriodFractionsPrecision": 19, "cumulatedPeriodFractionsScale": 20, "exactProduct_ONE_multiply_f": "0.08469945355191256831", "exactProductPrecision": 19, "roundedProduct_ONE_multiply_f_mc": "0.08469945355191256831", "roundedProductPrecision": 19, "productsBitIdentical": true, "productsNumericallyEqual": true, "rederivedRateFactorFromExactProduct": "0.0182950819672131148", "rederivedRateFactorFromRoundedProduct": "0.0182950819672131148", "rederivedRateFactorsIdentical": true, "oracleRateFactor": "0.0182950819672131148", "oracleRateFactorMatchesExactRederivation": true}
+        ]
+      }
+    },
+    {
+      "id": "T48-EXACT-CANARY",
+      "seam": "NONE -- local BigDecimal construction, NOT an oracle output",
+      "family": "EXACTNESS-CANARY",
+      "purpose": "prove the exactness comparison is capable of separating at all; a probe that can only ever say IDENTICAL measures nothing",
+      "inputs": {
+        "threadedMathContext": "precision=19 roundingMode=HALF_UP",
+        "threadedMathContextPrecision": 19,
+        "threadedMathContextRoundingMode": "HALF_UP",
+        "wiring": "NONE -- this block contacts no Fineract code",
+        "note": "operands constructed by this harness, never observed"
+      },
+      "observed": {
+        "probes": [
+          {"leg": "multiplier=ONE, ratio wider than mc", "ratio": "0.1428571428571428571428571", "ratioPrecision": 25, "exactProduct": "0.1428571428571428571428571", "roundedProduct": "0.1428571428571428571", "productsBitIdentical": false},
+          {"leg": "multiplier=THREE, ratio wider than mc", "ratio": "0.1428571428571428571428571", "ratioPrecision": 25, "exactProduct": "0.4285714285714285714285713", "roundedProduct": "0.4285714285714285714", "productsBitIdentical": false}
+        ]
+      }
+    }
+  ]
+}
+
