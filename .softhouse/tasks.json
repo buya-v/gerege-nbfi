@@ -1131,6 +1131,27 @@
       "attempts": 0,
       "contract_independent": true,
       "note": "Raised by local fire 20260819-140003. DISPATCHED, isolation=worktree, model=opus; orchestrator WILL await it."
+    },
+    {
+      "id": "T53",
+      "title": "DIFF-SCOPED check of DEC-1 revision 10 -> 11 (the last step before ratification)",
+      "description": "T49 returned no P0 on revision 10 and recommended ratifying after one bounded erratum pass, verified by a DIFF-SCOPED check rather than a ninth full re-derivation. T52 wrote revision 11. This is that check: it verifies the nine items landed and landed correctly, re-derives every money statement the diff introduces, and confirms the bound held (no type, field, enum member or graded-domain predicate moved; contract.go comment-only). A CLEAN verdict lets the driver ratify under policy P-2 and closes G-1 without it reaching Buyan.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/reviews/",
+        ".softhouse/handoff/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T52"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "contract_independent": true,
+      "note": "Raised by local fire 20260819-140003. v10 state = ab861fa689d0c484077fe73b26084a1351c6dc2a. DISPATCHED, isolation=worktree, model=opus; orchestrator WILL await it."
     }
   ]
 }
