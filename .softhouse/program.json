@@ -450,21 +450,14 @@
       "task": "T6",
       "context": "tier0-harness-schedule-poc",
       "title": "Ratify DEC-1 frozen adapter contract",
-      "state": "NOT_YET_ANSWERABLE",
-      "why": "DEC-1 was independently REJECTED by T5. Ratifying as drafted would freeze a precision-vs-scale ambiguity that provably changes payable amounts (189 of 560 grid configurations diverge across precisions; first money divergence at 18 installments / 18.5%/ principal 87,654,321). The shipped conformance vector does NOT discriminate between the two readings, so the corpus cannot currently detect this defect class.",
+      "state": "ENGINEERING_ONLY — no RESERVED item remains",
+      "why": "All six items once recorded as reserved for Buyan are ANSWERED - five inside DEC-1 revisions 3-6 (IntermediatePrecisionDigits replaced not renamed; the ordering rule settled by observation and its third clause deleted; DayCountActualActual kept in the value domain with the computation refused via ErrNoDiscriminatingVector; allowFullTermForTranche recorded as a real behavioural pin) and one by Buyan's ratified tenant parameters of 18 August 2026 (HALF_UP ordinal 4, precision 19, production MathContext (19, HALF_UP)). The 'capture a discriminating vector before ratification' item was decided YES and is SATISFIED: T37 captured all five of DEC-1 section 8's BINDING shapes from the live oracle and all five separate the readings. What still gates G-1 is one CLEAN independent re-review of DEC-1 - six consecutive rounds (T23, T26, T29, T32, T34, plus T37's observed defect) each found a NEW P0 on a surface no prior round had examined, so policy P-2 has never licensed ratification. Triaged per CLAUDE.md section 'Answering gates' by local fire 20260819-080001: G-1 is NOT a user gate.",
       "unblocked_by": [
-        "Capture a DISCRIMINATING vector from the reference oracle (needs an oracle-reaching fire; T5 supplies the exact config)",
-        "Run the T4 retry (attempt 2 of 2) against T5's 9 required changes",
-        "Re-review, then re-present the gate"
+        "T38 applies T34 P0/P1s + T37 OBSERVED P0 to DEC-1 v6 -> v7 (in flight)",
+        "One independent re-review of revision 7 returning CLEAN",
+        "Driver ratifies under P-2 and records the rationale; Buyan retains veto"
       ],
-      "decisions_reserved_for_user": [
-        "IntermediatePrecisionDigits: rename to IntermediatePrecision + document both senses normatively, or keep the name and carry the dual sense in the doc comment",
-        "Ordering rule: (a) reproduce the oracle's emitted order, or (b) reject a request whose disbursement lands exactly on a repayment due date",
-        "Must the discriminating vector be captured BEFORE ratification? (T5 recommends yes; orchestrator concurs)",
-        "Does DayCountActualActual stay in the Run-1 contract domain while unvectored?",
-        "Accept allowFullTermForTranche as a pinned-false conformance obligation rather than a dead field",
-        "State the Mongolian tenant's actual rounding mode - unresolvable from source (properties default 6/HALF_EVEN, tests mock HALF_UP; production MoneyHelper.PRECISION=19 vs 12 mocked)"
-      ],
+      "decisions_reserved_for_user": [],
       "raised_by": "cloud fire 20260817-2000",
       "recorded_in": ".softhouse/gates.md"
     },

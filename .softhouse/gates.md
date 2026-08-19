@@ -273,3 +273,29 @@ until all four exist. They need a live oracle, which only the local fire can rea
 
 **Still RESERVED for Buyan, and untouched by any of this:** cutover authorization, regulatory / parallel-run
 sign-off, deposit-taking activation, and licence facts. **None of them is in Run 1's path.**
+
+---
+
+### G-1 · UPDATE from local fire `20260819-080001` (oracle REACHABLE) — **the reserved list is now EMPTY**
+
+The gate record still carried six items under *"Decisions only Buyan can make"*. **All six have since been
+answered**, five inside DEC-1 revisions 3–6 and one by Buyan's own ratified tenant parameters. Triaged
+against CLAUDE.md § Answering gates, **G-1 contains zero RESERVED items.** It is not a `user` gate; it is
+an engineering convergence problem, and it closes when an independent re-review comes back clean (P-2).
+
+| # | Item as originally recorded | Class | Disposition |
+|---|---|---|---|
+| 1 | `IntermediatePrecisionDigits`: rename + document both senses, or keep the name | ENGINEERING | **Closed.** The field was replaced outright, not renamed; DEC-1 §4.2 states the defect it replaces and the two incompatible senses the oracle threads through one `MathContext` [`ProgressiveEMICalculator.java:1950-1963`]. |
+| 2 | Ordering rule: reproduce the oracle's order, or reject a disbursement on a repayment due date | ENGINEERING | **Closed by observation.** DEC-1 §4.6 reproduces the emitted order; revision 3's P0-2 deleted the third clause after observing that a disbursement on/after the last due date or before `ScheduleStartDate` yields **no disbursement row at all** (cases Q1a/Q1b/Q2). That shape is refused as outside the graded domain, so the rule never has to key such a row. |
+| 3 | Must a discriminating vector be captured *before* ratification? | PRODUCT | **Decided: yes** — and satisfied. T37 captured **all five** of DEC-1 §8's BINDING shapes from the live oracle at (19, HALF_UP), and **all five separate the readings**. |
+| 4 | Does `DayCountActualActual` stay in the Run-1 contract domain while unvectored? | ENGINEERING | **Closed.** DEC-1 §4.9: the member stays in the value domain and the *computation* is refused with `ErrNoDiscriminatingVector`. Keeping it costs nothing; removing it later would be a narrowing and therefore a gate. |
+| 5 | Accept `allowFullTermForTranche` as a pinned-false conformance obligation rather than a dead field | ENGINEERING | **Closed.** DEC-1 §4.4 records it as a real behavioural pin — the setter is reached [`LoanApplicationTerms.java:606`] and the guard never consults multi-disbursement [`ProgressiveEMICalculator.java:142-144`]. Two captures differing only in the flag were taken at (19, HALF_UP) and are *observed* identical. |
+| 6 | State the Mongolian tenant's actual rounding mode | RESERVED at the time | **Answered by Buyan, 18 August 2026**, and now a ratified tenant parameter in CLAUDE.md: **`HALF_UP`** (`RoundingMode` ordinal 4), precision **19** (a compile-time constant, `MoneyHelper.PRECISION`; only the mode is tenant-configurable). Production `MathContext` = **(19, HALF_UP)**. |
+
+**What actually gates G-1, therefore:** one clean independent re-review of DEC-1. Six consecutive
+re-reviews (T23, T26, T29, T32, T34) plus one capture (T37) have each found a **new** P0 on a surface no
+prior round examined, so the driver has never been licensed to ratify. Revision 7 is in flight as T38.
+
+**Nothing here is escalated to Buyan.** Per CLAUDE.md, DEC-n ratification is agent-decidable on a clean
+independent review; Buyan retains veto. **Still RESERVED and untouched:** cutover, regulatory /
+parallel-run sign-off, deposit-taking activation, and licence facts — none of which is in Run 1's path.
