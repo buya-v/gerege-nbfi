@@ -450,3 +450,72 @@ an assertion, so the payload it produced is identical and only the verdict diffe
 `count_cells.py` / `count_cells-output.txt` digests are omitted here because they were produced
 after this table was written; re-run the `find … | xargs shasum` command in `REPRODUCE.md` for
 the current full list.
+
+### 9.1 Digests of the T46 correction artefacts
+
+**Two T42 files changed and their digests moved. Both are stated here, with what changed and
+why no observation moved:**
+
+```
+f82f75b6f103655ee9b88e43c4a8fb7bc7c2ff6e72d361ca03147b10db035bcd  src/CaptureMathContext.java
+        (was c89366e75db269b8c120b473918ae6edcbbebb337ed52eec66f9bb66cf5d54be)
+        COMMENT-ONLY corrections for M-3 and M-9: the coverage claim on ambientProbeShapes(),
+        the installmentAmountInMultiplesOf justification, the case-family header, and two
+        file:line ranges.  No executable line changed, so no observation could move -- and the
+        T46 re-emission (section 2.6) is the proof: 147,630 of 147,634 leaves byte-identical.
+eb257639afabf648326a53104ad434c3e56f687fd3647794c9bcfd3a4af7d5ed  analysis/controls.py
+        (was e82aecfe130737cd1d722ec22e793a86f2fc8a6b6a5d2635daa75715ec72548d)
+        APPEND-ONLY verbose mode for M-11.  Default output is byte-identical:
+        analysis/controls-output.txt is unchanged at
+        4b847fc97fc5545bd0913f40ae50408a948101891f6b921b83e0c372d4988e1c, re-verified after
+        the edit.
+```
+
+**No `out/t42-*.json` payload was touched.** Every T42 digest in section 9 above still holds.
+
+```
+0fb101855d048ab7fb69afef33c288c05695167037fb49f195caf7c252ec9485  analysis/t46-controls-cells-output.txt
+48a845bbacdfca2bb3f2144cda2686dbfa23a08a629bffe19821c0658d625658  analysis/t46-m5-identity-proof.txt
+4938e948a652fdf9e3ab8ff21ac147dfb236f7faaf6106e6b1b2ad3117b28c53  analysis/t46-pathb-slot-assertion-output.txt
+dbbcf5efdc30f9355a54cfa39de4f91b30327048841db386d066f8c2a89a192f  analysis/t46_assert_pathb_slot.py
+dd9f33a774ae193eca2fcc4d3bfdca7b2209dfa2c4dc20879e51114ba6a3aa93  analysis/t46_distinct_coverage-output.txt
+58d564232dcd9fca40f237146682d56df314caf19fe520bfe39340593761c9a9  analysis/t46_distinct_coverage.py
+3c31631ee82b901807430ac3b426e1ef17be4aa6386aa2fa0f0cc2227e21a760  analysis/t46_m5_identity.py
+90668d7cb256f60ed0286ec34b1505267750122967449a16bb544faf09728da3  analysis/t46_make_capture3.py
+7d0527302f236d7e5fc884a1740475b54ae0fc3a494c9da4ae1df0cbc89530b2  analysis/t46_mathcontext_inventory-output.txt
+8009ccb822db5b801c6dd1c0cb8685e03742ac6d91d2e4ac1522e1b71083b916  analysis/t46_mathcontext_inventory.sh
+269f3f3ab3ea4b6b6d88d1b80230df482597db95931d10b78e81f061a5009fef  out/negative/t46-corrupted-canary-payload.json
+beec71e30ea440ebcfaf9baa7322f291b1f1785e0e89f69eeb2d99695da2db1d  out/negative/t46-n7-vacuity-guard.txt
+123c410f8057b3baf5c85cbd78a6e75b0f63d8a9a5ca86a30c152e25267a6267  out/negative/t46-n8-identity-check-rejects.txt
+6b9b5fb9074171d47b4accb0e89a569b7b5cf2aa8bb88ce73457c7ad88339ff1  out/negative/t46-n9-identity-check-failable.txt
+5461e7a46aaee4151365a161d1e0bae524f9d44e6219e7a50062e04d70404d0f  out/negative/t46-pathb-wiring-slot-drifted.txt
+caf8285cf3cdf89c6ffde89621b6ea6b1c38a05cea5517f953516e3282bee13a  out/negative/t46-perturbed-reemission.json
+68e681486ae5890f7cded85b4a3e2588672d66dd5e1380dd897ef72213b5f95f  out/t46-mathcontext3-classpath.txt
+9c2d836b83d756483acf052ec1d110af4b223b051ee506221c1616061c61e322  out/t46-mathcontext3-log.txt
+f9439f09b3ce94c35494601816b24c6d3dcd3ad27ce2cdd729d70359e66ffe06  out/t46-mathcontext3-oracle-identity.txt
+ad824f6e74a720656468252bc3dbbc931502b54527a5e232ccb7d25efa9cb601  out/t46-mathcontext3-raw.json
+b6c396b0209234f28733f69c164eab9dc5b9bd28fe6c0e18a07f93054ce31e0a  out/t46-mathcontext3-runlog.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  out/t46-mathcontext3-stderr.txt
+083fb71aa80697ccb5e0d2a8bc82ff31760332e1271a122a5b3e7a46b553f13c  out/t46-mathcontext3.json
+ee5cb89c671bca08bca698fd853c65089dca24245c2611d6254802c71dfb6b5e  out/t46-pathb-wiring-reread.txt
+27be89bd3df9a6ee476139a2af19eccb195cb096ba8d17c6a0cd6f269e2bef87  src/CaptureMathContext3.java
+9d6412445bbb050b48f14f6a080262a43bfb8f9ed3de3473b737000e89829568  src/run-mathcontext3.sh
+0ea9383d9ceea9c1bd3e397ff0c4d65b6d7967e2ad08bab016378a1a9d4fb0a6  src/t46-assert-pathb-slot.sh
+c711ebb99cd8cc9115ee89cefe278e8e04449df736e7de552a9ce2cd7083e9f7  src/t46-negative-identity.sh
+550c7794089501af18d5887045fdcc6f61e784639d7e0ee0bcf5b342a9e4bb1b  src/t46-negative-vacuity.sh
+```
+
+`out/t46-mathcontext3-classpath.txt` carries the **same** digest as T42's
+(`68e681486ae5…b5f95f`) and `out/t46-mathcontext3-oracle-identity.txt` the same as T42's
+(`f9439f09b3ce…6ffe06`) — the container the re-emission ran in is the container T42 ran in.
+`out/t46-mathcontext3-stderr.txt` is the empty-file digest.
+
+### 9.2 Containers used by T46
+
+Three more throwaway `docker run --rm` on the pinned image (`run-mathcontext3.sh` starts an
+identity container and a capture container per run, and ran twice — once rejected by the identity
+check, once admitted). `fineract-fineract-1` and `fineract-db-1` were **not** started, stopped,
+restarted, re-tenanted, reconfigured, dropped or written to. `src/t46-assert-pathb-slot.sh` does
+`docker exec` into the running `fineract-fineract-1` to run `unzip` and `javap` into its
+`/tmp/t46j`; it opens no database connection and changes no server state. Legs N7 and N9 start no
+container at all.
