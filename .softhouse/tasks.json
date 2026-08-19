@@ -914,11 +914,11 @@
       "dependencies": [
         "T41"
       ],
-      "status": "in_flight",
+      "status": "done",
       "attempts": 1,
       "contract_independent": true,
       "branch": "softhouse/T43-dec1-v8-rereview",
-      "note": "Raised by local fire 20260819-080001. THE task that closes G-1. DISPATCHED 2026-08-19T01:20Z, isolation=worktree, model=opus; orchestrator WILL await it."
+      "note": "Raised by local fire 20260819-080001. THE task that closes G-1. DISPATCHED 2026-08-19T01:20Z, isolation=worktree, model=opus; orchestrator WILL await it. || COMPLETE, merged (b0226c5). VERDICT: ACCEPTED WITH REQUIRED CHANGES, NO P0 - the first round in eight without one. The reviewer stated it found no reason not to ratify and RECOMMENDED ratification under P-2. THE DRIVER DECLINED (see gates.md): the written bar is 'clean', T43's own vocabulary distinguishes CLEAN from ACCEPTED WITH REQUIRED CHANGES, and decisively RATIFICATION FREEZES - P1-T43-3 is a known-wrong money sentence, so freezing it is exactly what ratification must not do. All three findings share one shape - the sentence is right, the evidence pinned under it is not - which is weaker than the previous seven rounds, every one of which was wrong about the money. P1-T43-1 AbstractCumulativeLoanScheduleGenerator.java:504 is cited 4x as where the generators DIFFER; it is character-for-character the line they SHARE (INDEPENDENTLY CONFIRMED by T44's A-2, no shared context). P1-T43-2 4.1.2's 'exactly these call sites' omits Money.java:130-132/:224-234/:261-267 and its closing bullet is false of :130-132 (reached on the allowFullTermForTranche arm - a 4.4 PIN, not a 3.1 predicate). P1-T43-3 M4 is stated as deciding which row a CHARGE lands on, but the isInstalmentFee() arm at :404-405 never reads isDue - an instalment fee lands on EVERY row, no membership test; MNT 27,500 on FC-02's shape. VERIFIED CLEAN: ~70 citations re-opened all correct incl. every line of 4.3.1's normative loop; ALL SEVEN binding items captured and separating (T41's claim verified item by item); contract.go zero non-comment lines; an independent from-text model reproduces T39-ME-B and T39-P0-A exactly and INDEPENDENTLY CONFIRMS T41's F-1; T32's least-examined list worked and clean."
     },
     {
       "id": "T44",
@@ -939,11 +939,58 @@
         "T40",
         "T42"
       ],
-      "status": "in_flight",
+      "status": "done",
       "attempts": 1,
       "contract_independent": true,
       "branch": "softhouse/T44-capture-audit",
-      "note": "Raised by local fire 20260819-080001 (oracle REACHABLE). DISPATCHED 2026-08-19T01:20Z, isolation=worktree, model=opus; orchestrator WILL await it."
+      "note": "Raised by local fire 20260819-080001 (oracle REACHABLE). DISPATCHED 2026-08-19T01:20Z, isolation=worktree, model=opus; orchestrator WILL await it. || COMPLETE, merged (42bc2e1). ALL THREE SETS ACCEPTED WITH REQUIRED CHANGES; none rejected; NO SYNTHESISED NUMBER IN ANY SET - the one thing this audit most needed to rule out. Shared failure mode: EACH PROVES SOMETHING NARROWER THAN ITS HANDOFF CLAIMS - every conclusion survives, three coverage claims do not. TWO findings reached independently by two audit legs with no shared context (M-1/M-2 and M-5), and A-2 independently confirms T43's P1-T43-1. F39-1 the month-end family grades a PAIR - the mis-port that omits the special case AND computes whole-months the obvious way is identical to the oracle on all 59,130 swept periods. F39-2 T39's own attestation has T37's exact two-ambient-witnesses defect, and T42's correction list named T35/T36/T37 but not T39. A-3 the charge money came from the REQUEST amount, not the attested definitions. A-4 C5 is a DISCRIMINATION PROBE not an invariant - shipped as-is a CORRECT Go port fails it 15/21. M-1/M-2 the MathContext inventory is miscounted (9 not 13) and two precision-8 sites were omitted, one in SHARE ACCOUNTS not savings - ALREADY CORRECTED in reference-oracle.md by the orchestrator this fire. M-4 (new oracle fact) LoanScheduleGeneratorServiceImpl:56,63 also drops installmentAmountInMultiplesOf. T44-X1 Path B captures are FLOAT-SHAPED ON THE WIRE - 9,122 bare JSON numbers vs 0 on Path A; 0 of 245 lose value today, 41 LOSE THEIR TEXT. CLEAN: seam identity across all three sets; payloads re-executed byte-identically; THREE RECIPES RUN IN FAILING CONFIGURATIONS, ALL THREE FAILED CORRECTLY; independent re-derivation confirms P0-T34-1; 110/110 published values traced. ADMISSIBILITY after G-1: the 8 drift shapes, the relabelled month-end four and T42B-PREC-30-p19 are promotable; charges only as (request bytes -> response bytes) with C5 removed; FC-17/FC-20 are NEGATIVE VECTORS ONLY - an adapter ignoring charges entirely passes both."
+    },
+    {
+      "id": "T45",
+      "title": "DEC-1 v8 -> v9: apply T43's errata and T44's A-2 (the ratification candidate, second attempt)",
+      "description": "Revision 9 is an ERRATUM, not a rewrite: T43 found NO P0 and all its findings share one shape - the sentence is right, the evidence pinned under it is not. Apply P1-T43-1 (the C-1 citation refutes the decision it supports; :504 is where the two generators AGREE - the real evidence is cumulative :352/:392 via ScheduleCurrentPeriodParams.fetchTotalAmountForPeriod() :144-146; INDEPENDENTLY CONFIRMED by T44's A-2), P1-T43-2 (4.1.2's ambient call-site list is not exhaustive - Money.java:130-132, :224-234, :261-267 are missing, and the closing bullet is FALSE of :130-132 which is reached from ProgressiveEMICalculator.java:182 on the allowFullTermForTranche arm, a 4.4 PIN and not a 3.1 predicate), P1-T43-3 (M4 is stated as deciding which row a CHARGE lands on, but getCumulativeAmountOfCharge computes isDue at :403 and the isInstalmentFee() arm at :404-405 NEVER READS IT - an instalment fee lands on EVERY row with no membership test; this is the one that would mis-price a charge port), and the three P2s. Also fold in T44's capture-audit results where they touch the document: the month-end family grades a PAIR not the special case (F39-1), so section 8 item 3f's discharge claim must narrow; and the charge corpus cannot see which of two inputs supplies the charge amount (A-3).",
+      "agent_role": "spec_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        "docs/adr/DEC-1-schedule-generator-adapter.md",
+        "nexus/internal/apps/loanschedule/contract/contract.go",
+        ".softhouse/reviews/t45-probe/",
+        ".softhouse/handoff/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T43",
+        "T44"
+      ],
+      "status": "in_flight",
+      "attempts": 1,
+      "contract_independent": true,
+      "branch": "softhouse/T45-dec1-v9",
+      "note": "Raised by local fire 20260819-080001 after the driver DECLINED to ratify revision 8. G-1 closes on revision 9 + ONE clean re-review. DISPATCHED 2026-08-19T01:55Z, isolation=worktree, model=opus; orchestrator WILL await it."
+    },
+    {
+      "id": "T46",
+      "title": "Apply T44's capture-audit findings to the three capture sets (narrow the claims, close the coverage gaps)",
+      "description": "T44 found no synthesised number and no wrong conclusion, but three coverage claims that do not hold. Fix them AT THE SOURCE - the handoffs, attestations, run recipes and analysis of .softhouse/capture/periodratio/, /charges/ and /mathcontext/ - and close the gaps with new captures where the oracle can settle them. Priorities: F39-1 the month-end family grades a PAIR (the mis-port that omits the special case AND computes whole-months the obvious way is invisible on all 59,130 swept periods) - CAPTURE a shape that separates the special case ALONE, or state plainly that none exists and why; F39-2 T39's attestation repeats T37's two-ambient-witnesses defect, so re-attest it under the T42 eight-point rule now in reference-oracle.md; A-3 the charge money came from the REQUEST amount not the attested definitions, so CAPTURE a shape that tells which governs; A-4 C5 must be relabelled a DISCRIMINATION PROBE, never shipped as an invariant, because a CORRECT Go port fails it on 15 of 21; A-5 section 11's 'no half-cent tie possible' is false (the oracle returned 0.41); M-3/M-5/M-10/M-11 the mathcontext set's coverage rationale, its rule-2 breach on capture 1, E2's replication presented as corroboration, and controls-output publishing 2 summary lines instead of the 172 compared cells; T44-X1 Path B captures are float-shaped on the wire (9,122 bare JSON numbers, 41 losing their text) - decide and implement an exact-text serialisation for Path B raw captures.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/capture/",
+        ".softhouse/handoff/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T44"
+      ],
+      "status": "in_flight",
+      "attempts": 1,
+      "contract_independent": true,
+      "branch": "softhouse/T46-capture-corrections",
+      "note": "Raised by local fire 20260819-080001 (oracle REACHABLE). Nothing promoted - G-1 still open. DISPATCHED 2026-08-19T01:55Z, isolation=worktree, model=opus; orchestrator WILL await it."
     }
   ]
 }
