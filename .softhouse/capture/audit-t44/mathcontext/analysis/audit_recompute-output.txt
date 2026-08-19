@@ -1,0 +1,157 @@
+=== capture 1: 214 cases; ambientCanary = 'THREW java.lang.IllegalStateException: Rounding mode is not initialized for tenant: t42_canary_never_initialised'
+=== moneyHelperPrecisionConstant = 19
+
+--- E1 : the 13-shape ambient/threaded matrix (audit recomputation) ---
+shape                            ambient DOWN   ambient UP   threaded DOWN  ambient ABSENT   dp  
+plain                            identical      identical    23 cells       generated        2   
+drift                            identical      identical    22 cells       generated        2   
+monthEnd                         identical      identical    23 cells       generated        2   
+downPayment25                    identical      identical    20 cells       generated        2   
+downPaymentAwkward               identical      identical    24 cells       generated        2   
+downPaymentMultiples1000         identical      identical    24 cells       generated        2   
+multiples1000                    identical      identical    23 cells       generated        2   
+zeroDpMultiples100               23 cells       identical    identical      THREW            0   
+zeroDpMultiples100DownPayment    27 cells       17 cells     identical      THREW            0   
+fixedLength6                     identical      identical    23 cells       generated        2   
+daysInYearActual                 identical      identical    18 cells       generated        2   
+actualActual                     identical      identical    23 cells       generated        2   
+interestRecognitionOnDisb        identical      identical    23 cells       generated        2   
+E1 cells compared (A-vs-{B,E,C} + A-vs-D where D generated): 3820
+alt: total cells present in all 65 MATRIX observations: 4814
+alt: sum of cells over the 4 non-baseline cases per shape (B,C,D,E): 3820
+
+--- absence cases: does the ABSENT run equal the ratified-ambient run? ---
+  plain                            A-vs-D moved 0 cells
+  drift                            A-vs-D moved 0 cells
+  monthEnd                         A-vs-D moved 0 cells
+  downPayment25                    A-vs-D moved 0 cells
+  downPaymentAwkward               A-vs-D moved 0 cells
+  downPaymentMultiples1000         A-vs-D moved 0 cells
+  multiples1000                    A-vs-D moved 0 cells
+  zeroDpMultiples100               THREW  err=java.lang.IllegalStateException: Rounding mode is not initialized for tenant: t42_t42_mx_07_d
+  zeroDpMultiples100DownPayment    THREW  err=java.lang.IllegalStateException: Rounding mode is not initialized for tenant: t42_t42_mx_08_d
+  fixedLength6                     A-vs-D moved 0 cells
+  daysInYearActual                 A-vs-D moved 0 cells
+  actualActual                     A-vs-D moved 0 cells
+  interestRecognitionOnDisb        A-vs-D moved 0 cells
+
+--- E1 behavioural canaries ---
+  plain threaded flip  A.totalInterest=76723.70  C(threaded DOWN).totalInterest=76723.65
+  0dp ambient flip     A=76900  B(DOWN)=76400  E(UP)=76900
+
+--- did installmentAmountInMultiplesOf=1000 change the schedule at all? ---
+  plain vs multiples1000 (identical base shape, only instMultiplesOf differs): 0 cells differ
+  multiples1000 p1 total: 212787.28 | plain p1 total: 212787.28
+  downPaymentAwkward(p=1000001) vs downPaymentMultiples1000(p=1200000): different principals, not comparable
+  downPaymentMultiples1000 p1 total: 399996.00
+  downPayment25 p1(DOWN_PAYMENT) principal: 300000.00
+
+--- capture 1 precision sweep ---
+  shapes: 48
+  separate 19-vs-12: 30 of 48
+  separate 19-vs-8 : 47 of 48
+  cells compared (48 shapes x 2 comparisons x cells-per-shape): 90528
+
+=== capture 2: 140 cases
+
+--- E2 : the two wirings, side by side ---
+  plain  4->1  PathA moved  0 cells | PathB moved 23 cells | PB int 76723.70 -> 76723.65 | PB effective mc 'precision=19 roundingMode=DOWN'
+  plain  4->0  PathA moved  0 cells | PathB moved 22 cells | PB int 76723.70 -> 76723.72 | PB effective mc 'precision=19 roundingMode=UP'
+  plain  4->6  PathA moved  0 cells | PathB moved  0 cells | PB int 76723.70 -> 76723.70 | PB effective mc 'precision=19 roundingMode=HALF_EVEN'
+  plain  PathA effective mc at ord4: 'precision=19 roundingMode=HALF_UP' ; ambient 'precision=19 roundingMode=HALF_UP' ; PA-vs-PB at ord4 moved 0
+  tie-   4->1  PathA moved  0 cells | PathB moved 42 cells | PB int 140457.89 -> 140457.81 | PB effective mc 'precision=19 roundingMode=DOWN'
+  tie-   4->0  PathA moved  0 cells | PathB moved 48 cells | PB int 140457.89 -> 140457.93 | PB effective mc 'precision=19 roundingMode=UP'
+  tie-   4->6  PathA moved  0 cells | PathB moved 28 cells | PB int 140457.89 -> 140457.88 | PB effective mc 'precision=19 roundingMode=HALF_EVEN'
+  tie-   PathA effective mc at ord4: 'precision=19 roundingMode=HALF_UP' ; ambient 'precision=19 roundingMode=HALF_UP' ; PA-vs-PB at ord4 moved 0
+  total cells present in the 16 WIRING observations: 1712
+
+--- (b) capture 2 precision bisection ---
+  shapes: 62
+  cells compared (62 shapes x 1 comparison): 147676
+
+  id               principal          n    rate   cells  p19 interest       p12 interest      
+  T42B-PREC-00     1200000            360  7.7    0      1879990.16         1879990.16        
+  T42B-PREC-01     2000000            360  7.7    0      3133316.93         3133316.93        
+  T42B-PREC-02     3000000            360  7.7    0      4699964.56         4699964.56        
+  T42B-PREC-03     5000000            360  7.7    0      7833281.95         7833281.95        
+  T42B-PREC-04     8000000            360  7.7    0      12533257.16        12533257.16       
+  T42B-PREC-05     10000000           360  7.7    0      15666563.48        15666563.48       
+  T42B-PREC-06     15000000           360  7.7    0      23499845.26        23499845.26       
+  T42B-PREC-07     20000000           360  7.7    0      31333137.35        31333137.35       
+  T42B-PREC-08     25000000           360  7.7    610    39166419.22        39166419.28       
+  T42B-PREC-09     30000000           360  7.7    0      46999701.44        46999701.44       
+  T42B-PREC-10     40000000           360  7.7    0      62666264.75        62666264.75       
+  T42B-PREC-11     50000000           360  7.7    0      78332828.28        78332828.28       
+  T42B-PREC-12     60000000           360  7.7    0      93999401.96        93999401.96       
+  T42B-PREC-13     70000000           360  7.7    0      109665965.62       109665965.62      
+  T42B-PREC-14     80000000           360  7.7    714    125332528.96       125332529.06      
+  T42B-PREC-15     100000000          360  7.7    456    156665666.95       156665666.96      
+  T42B-PREC-16     150000000          360  7.7    716    234998494.98       234998495.09      
+  T42B-PREC-17     200000000          360  7.7    723    313331322.65       313331322.71      
+  T42B-PREC-18     300000000          360  7.7    536    469996989.57       469996989.67      
+  T42B-PREC-19     400000000          360  7.7    666    626662645.39       626662645.54      
+  T42B-PREC-20     500000000          360  7.7    592    783328312.02       783328312.06      
+  T42B-PREC-21     700000000          360  7.7    770    1096659634.71      1096659635.02     
+  T42B-PREC-22     900000000          360  7.7    769    1409990968.23      1409990968.59     
+  T42B-PREC-23     1000000000         360  7.7    853    1566656623.93      1566656624.63     
+  T42B-PREC-24     1200000            360  21.6   0      6588758.27         6588758.27        
+  T42B-PREC-25     3000000            360  21.6   0      16471714.94        16471714.94       
+  T42B-PREC-26     5000000            360  21.6   0      27452728.68        27452728.68       
+  T42B-PREC-27     10000000           360  21.6   0      54905463.40        54905463.40       
+  T42B-PREC-28     20000000           360  21.6   0      109810918.27       109810918.27      
+  T42B-PREC-29     30000000           360  21.6   0      164716367.69       164716367.69      
+  T42B-PREC-30     50000000           360  21.6   861    274527298.56       274527296.51      
+  T42B-PREC-31     80000000           360  21.6   0      439243669.73       439243669.73      
+  T42B-PREC-32     100000000          360  21.6   0      549054564.61       549054564.61      
+  T42B-PREC-33     1200000            120  13     0      950074.47          950074.47         
+  T42B-PREC-34     5000000            120  13     0      3958644.42         3958644.42        
+  T42B-PREC-35     10000000           120  13     0      7917288.69         7917288.69        
+  T42B-PREC-36     20000000           120  13     0      15834577.64        15834577.64       
+  T42B-PREC-37     50000000           120  13     0      39586443.95        39586443.95       
+  T42B-PREC-38     100000000          120  13     0      79172887.78        79172887.78       
+  T42B-PREC-39     200000000          120  13     0      158345775.93       158345775.93      
+  T42B-PREC-40     500000000          120  13     228    395864439.78       395864439.71      
+  T42B-PREC-41     1000000000         120  13     241    791728879.39       791728879.33      
+  T42B-PREC-42     1000000000         36   13     0      212982272.15       212982272.15      
+  T42B-PREC-43     2000000000         36   13     72     425964544.20       425964544.19      
+  T42B-PREC-44     3000000000         36   13     73     638946816.37       638946816.36      
+  T42B-PREC-45     4000000000         36   13     60     851929088.48       851929088.45      
+  T42B-PREC-46     5000000000         36   13     143    1064911360.56      1064911360.56     
+  T42B-PREC-47     6000000000         36   13     87     1277893632.71      1277893632.64     
+  T42B-PREC-48     7000000000         36   13     60     1490875904.88      1490875904.87     
+  T42B-PREC-49     8000000000         36   13     82     1703858176.92      1703858176.88     
+  T42B-PREC-50     9000000000         36   13     77     1916840449.06      1916840449.03     
+  T42B-PREC-51     10000000000        36   13     84     2129822721.23      2129822721.16     
+  T42B-PREC-52     100000000000       6    21.6   0      6393641193.39      6393641193.39     
+  T42B-PREC-53     200000000000       6    21.6   15     12787282386.75     12787282386.76    
+  T42B-PREC-54     300000000000       6    21.6   17     19180923580.14     19180923580.12    
+  T42B-PREC-55     400000000000       6    21.6   19     25574564773.51     25574564773.52    
+  T42B-PREC-56     500000000000       6    21.6   6      31968205966.90     31968205966.90    
+  T42B-PREC-57     600000000000       6    21.6   24     38361847160.26     38361847160.24    
+  T42B-PREC-58     700000000000       6    21.6   23     44755488353.65     44755488353.61    
+  T42B-PREC-59     800000000000       6    21.6   22     51149129547.03     51149129547.08    
+  T42B-PREC-60     900000000000       6    21.6   26     57542770740.40     57542770740.39    
+  T42B-PREC-61     1000000000000      6    21.6   19     63936411933.77     63936411933.83    
+
+--- smallest separating principal per (n, rate) family ---
+  n=6 rate=21.6 -> smallest separating principal 200000000000 (15 cells) p19=12787282386.75 p12=12787282386.76
+  n=36 rate=13 -> smallest separating principal 2000000000 (72 cells) p19=425964544.20 p12=425964544.19
+  n=120 rate=13 -> smallest separating principal 500000000 (228 cells) p19=395864439.78 p12=395864439.71
+  n=360 rate=7.7 -> smallest separating principal 25000000 (610 cells) p19=39166419.22 p12=39166419.28
+  n=360 rate=21.6 -> smallest separating principal 50000000 (861 cells) p19=274527298.56 p12=274527296.51
+
+--- non-monotonicity check (ladder per family, SEP = separates 19 vs 12) ---
+  n=6 rate=21.6 : 100000000000:- 200000000000:SEP 300000000000:SEP 400000000000:SEP 500000000000:SEP 600000000000:SEP 700000000000:SEP 800000000000:SEP 900000000000:SEP 1000000000000:SEP
+  n=36 rate=13 : 1000000000:- 2000000000:SEP 3000000000:SEP 4000000000:SEP 5000000000:SEP 6000000000:SEP 7000000000:SEP 8000000000:SEP 9000000000:SEP 10000000000:SEP
+  n=120 rate=13 : 1200000:- 5000000:- 10000000:- 20000000:- 50000000:- 100000000:- 200000000:- 500000000:SEP 1000000000:SEP
+  n=360 rate=7.7 : 1200000:- 2000000:- 3000000:- 5000000:- 8000000:- 10000000:- 15000000:- 20000000:- 25000000:SEP 30000000:- 40000000:- 50000000:- 60000000:- 70000000:- 80000000:SEP 100000000:SEP 150000000:SEP 200000000:SEP 300000000:SEP 400000000:SEP 500000000:SEP 700000000:SEP 900000000:SEP 1000000000:SEP
+  n=360 rate=21.6 : 1200000:- 3000000:- 5000000:- 10000000:- 20000000:- 30000000:- 50000000:SEP 80000000:- 100000000:-
+
+=== CELL TOTALS ===
+  E1 matrix (my accounting)      : 3820
+  capture 1 precision sweep      : 90528
+  capture 2 precision bisection  : 147676
+  capture 2 wiring               : 1712
+  sum                            : 243736
+  T42 claims 3,820 + 90,528 + 147,676 + 1,284 = 243,308 ; and 238,204 for the precision search
+  my precision-only total (c1+c2): 238204

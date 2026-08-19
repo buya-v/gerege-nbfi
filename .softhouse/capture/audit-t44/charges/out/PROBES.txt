@@ -1,0 +1,4 @@
+HTTP 200  AP-1-sdd-pctinterest-inside-p1  ->  32c69475a19efa954ac324f80d44d873f8c9efaf87f3eb32e13dee7cf9042cbc
+HTTP 200  AP-2-sdd-pctinterest-on-p1-duedate  ->  32c69475a19efa954ac324f80d44d873f8c9efaf87f3eb32e13dee7cf9042cbc
+HTTP 200  AP-3-sdd-pctinterest-on-p3-duedate  ->  94ddeb09a8da4100be51fcd7dc72f1901609893d6612a04c988bd514a69dea98
+HTTP 200  AP-4-b02-pctamtint-instalment  ->  8063ad52e9049be62c05f5e15286f8c272b6939e50aa5e65caed08e75658ab2b
