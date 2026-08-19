@@ -135,4 +135,52 @@ Every worker prompt carries it; review enforces it. State only what you verified
 - **A parameter can be ratified and still unobservable.** Threaded precision 19 vs 12 is indistinguishable across all 16 shapes tried. That does not make the ratified value wrong; it makes it **ungraded**, and the honest move is to say so and mark a separating shape `TO_BE_CAPTURED` rather than let "attested" imply "witnessed".
 - **Two findings can look like one until you measure their shapes.** The `periodRatio` defect and the month-end special case seemed to be the same vector's job. Over 51,729 same-month pairs × 3 terms the special case fires on 210, and on **zero** of those does `start ≠ disbursement` — **disjoint**, so one vector cannot discharge both. Before writing "one vector covers X and Y", measure whether X and Y ever co-occur.
 
+
+### Run 1 — local fire `20260819-080001`, rounds 3–5 (eight workers, all merged)
+
+**The round where the pipeline started catching the orchestrator.**
+
+- **A worker refusing a wrong instruction is the control working, not friction.** The orchestrator's brief
+  to T47 stated the month-end consequence **transposed** — packed-without-the-special-case identical,
+  naive-with not. Both halves were backwards. T47 re-derived, found exactly one wrong combination of four
+  (`packed ∧ no special case`), **wrote what the measurement said and flagged the brief.** The orchestrator
+  then re-verified the direction from T46's committed output before merging. Write briefs that carry the
+  *evidence* and not only the *conclusion*, so a worker can catch you; and when one does, check its claim
+  against the artefact rather than against your own memory of it.
+- **The orchestrator's own files need auditing too.** `reference-oracle.md` was corrected **twice in one
+  fire** by workers auditing edits the orchestrator had folded in from a handoff — a miscounted
+  `MathContext` inventory (9 sites, not 13, with two precision-8 sites omitted, one of them in **share
+  accounts** rather than savings) and a wiring row citing two lines that do not call `generate`. A handoff
+  is a claim, not a fact; folding one into a durable file inherits its errors.
+- **Ratification freezes, so "no P0" is not the bar.** T43 returned ACCEPTED WITH REQUIRED CHANGES with no
+  P0 — the first such round in eight — and **recommended ratifying**. The driver declined, because a ratified
+  DEC-n cannot be amended by an agent without a gate and one finding was a **known-wrong sentence about
+  money**. Two revisions later the same finding was not merely corrected but **refuted by the corpus**
+  (revision 8's reading reproduces the charge rows on 13 of 21 captures, revision 9's on 21 of 21). *A
+  reviewer may recommend policy; it does not set it.*
+- **"Not captured" and "not capturable" are different facts, and shipping the first when the second is true
+  is a defect.** T46 proved the month-end special case cannot be separated at all — closed form (the special
+  case **is** the compensation for packed whole-months), an exhaustive sweep over all **112,147,776** ordered
+  date pairs 2000–2040 inside the pinned image, and observation closing the one escape route (the `YEARS` arm
+  could separate it but throws). Revision 10 **withdrew** the `TO_BE_CAPTURED`. A backlog item that can never
+  be closed is worse than no item: it reads as work remaining forever.
+- **A task that refutes its own premise has done its job.** T48 was told the "deliberate exactness" at
+  `:1969-1980` was the most interesting thing to confirm. It found the site **unreachable** — the sole caller
+  passes the literal `BigDecimal.ONE`, so a port that rounded there would not diverge — and said so, saving a
+  future fire from chasing it. Brief the hypothesis; reward the refutation.
+- **Every capture set proves something narrower than its handoff claims.** T44 audited three sets and found
+  no synthesised number and no wrong conclusion, but **three coverage claims** that did not hold. The
+  capturer is the worst-placed party to state the limits of its own capture.
+- **Independent convergence keeps being the strongest signal.** T43 and T44, with no shared context, both
+  found that a citation used four times to prove two generators *differ* points at the line they *share*.
+  T44 also reached two findings twice across its own legs.
+- **Absence beats difference as an evidentiary technique.** To test whether a context is read, do not change
+  it and look for movement — **remove it and see whether anything throws**. T42 registered a tenant but never
+  initialised its rounding mode, so any ambient read would fail; schedules still generated on 11 of 13 shapes.
+  That is a stronger statement than "changing it moved nothing", and it is what upgraded three later findings.
+- **A ratified parameter can still be unobservable — until someone looks harder.** Precision 19 vs 12 was
+  indistinguishable across 16 shapes (T39), then separated on an ordinary loan at 360 periods (T42). Note the
+  separation is **not monotone in principal**, so there is no threshold to reason from. "We could not find a
+  separating shape" is a statement about the search, not about the parameter.
+
 <!-- LEARNED PATTERNS END -->
