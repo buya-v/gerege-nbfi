@@ -1,0 +1,107 @@
+T45 PROBE - P1-T43-2: the COMPLETE set of ambient-context reads inside Money.java
+pinned checkout HEAD: 426a23544e8426a38ae43ae404670a0a7e85b9eb
+Money.java line count:      497
+
+== (a) every direct MoneyHelper read in Money.java
+103:        return of(currency, newAmount, MoneyHelper.getMathContext());
+115:        return of(currency, newAmount, MoneyHelper.getMathContext());
+119:        return zero(currency, MoneyHelper.getMathContext());
+131:        return zero(currency, MoneyHelper.getMathContext());
+154:            amountScaled = existingVal.divide(inMultiplesOfValue, 0, MoneyHelper.getRoundingMode()).multiply(inMultiplesOfValue);
+160:        return roundToMultiplesOf(existingVal, inMultiplesOf, MoneyHelper.getMathContext());
+495:        return mc != null ? mc : MoneyHelper.getMathContext();
+
+  103  Money.of(CurrencyData, BigDecimal)       -> getMathContext()     LISTED in rev 8
+  115  Money.of(MonetaryCurrency, BigDecimal)   -> getMathContext()     LISTED in rev 8
+  119  Money.zero(MonetaryCurrency)             -> getMathContext()     LISTED in rev 8
+  131  Money.zero(CurrencyData)                 -> getMathContext()     *** NOT LISTED in rev 8
+  154  roundToMultiplesOf(BigDecimal, Integer)  -> getRoundingMode()    LISTED in rev 8
+  160  roundToMultiplesOf(Money, Integer)       -> getMathContext()     LISTED in rev 8
+  495  getMc() null branch                      -> getMathContext()     LISTED in rev 8 (as the mechanism)
+
+== (b) every Money.of / Money.zero / roundToMultiplesOf call site inside Money.java, classified
+50:            amountScaled = roundToMultiplesOf(amountScaled, currency.getInMultiplesOf());
+134:    public static double roundToMultiplesOf(final double existingVal, final Integer inMultiplesOf) {
+150:    public static BigDecimal roundToMultiplesOf(final BigDecimal existingVal, final Integer inMultiplesOf) {
+159:    public static Money roundToMultiplesOf(final Money existingVal, final Integer inMultiplesOf) {
+160:        return roundToMultiplesOf(existingVal, inMultiplesOf, MoneyHelper.getMathContext());
+163:    public static Money roundToMultiplesOf(final Money existingVal, final Integer inMultiplesOf, final MathContext mc) {
+169:        return Money.of(existingVal.getCurrencyData(), amountScaled);
+233:        return Money.of(getCurrencyData(), total);
+258:        return Money.of(getCurrencyData(), newAmount, mc);
+266:        return Money.of(getCurrencyData(), newAmount);
+302:        return Money.of(getCurrencyData(), newAmount, mc);
+314:        return Money.of(getCurrencyData(), newAmount, mc);
+333:        return Money.of(getCurrencyData(), newAmount, mc);
+341:        return Money.of(getCurrencyData(), newAmount, mc);
+349:        return Money.of(getCurrencyData(), newAmount, mc);
+357:        return Money.of(getCurrencyData(), newAmount, getMc());
+369:        return Money.of(getCurrencyData(), newAmount, mc);
+377:        return Money.of(getCurrencyData(), newAmount);
+389:        return Money.of(getCurrencyData(), newAmount, mc);
+398:        return Money.of(getCurrencyData(), newAmount, mc);
+407:        return Money.of(getCurrencyData(), newAmount, mc);
+423:        return isEqualTo(Money.zero(getCurrencyData(), mc));
+447:        return isGreaterThan(Money.zero(getCurrencyData(), mc));
+459:        return isLessThan(Money.zero(getCurrencyData(), mc));
+475:        return Money.of(getCurrencyData(), this.amount.negate(), mc);
+491:        return Money.zero(getCurrencyData(), mc);
+
+  Of these, the ones that route through the TWO-ARGUMENT Money.of and so read the ambient
+  context regardless of the receiver's own mc:
+    169  roundToMultiplesOf(Money,Integer,MathContext) return path       LISTED in rev 8
+    233  plus(Iterable<? extends Money>)                                *** NOT LISTED in rev 8
+    266  plus(double)                                                   *** NOT LISTED in rev 8
+    377  multipliedBy(double)                                           LISTED in rev 8
+  Every other call site in the file passes an explicit mc or getMc().
+
+== the three omissions, in full
+  Money.java:130      public static Money zero(final CurrencyData currency) {
+  Money.java:131          return zero(currency, MoneyHelper.getMathContext());
+  Money.java:132      }
+
+  Money.java:224      public Money plus(final Iterable<? extends Money> moniesToAdd) {
+  Money.java:225          BigDecimal total = this.amount;
+  Money.java:226          for (final Money moneyProvider : moniesToAdd) {
+  Money.java:227              if (moneyProvider == null) {
+  Money.java:228                  continue;
+  Money.java:229              }
+  Money.java:230              final Money money = checkCurrencyEqual(moneyProvider);
+  Money.java:231              total = total.add(money.amount);
+  Money.java:232          }
+  Money.java:233          return Money.of(getCurrencyData(), total);
+  Money.java:234      }
+
+  Money.java:261      public Money plus(final double amountToAdd) {
+  Money.java:262          if (amountToAdd == 0) {
+  Money.java:263              return this;
+  Money.java:264          }
+  Money.java:265          final BigDecimal newAmount = this.amount.add(BigDecimal.valueOf(amountToAdd));
+  Money.java:266          return Money.of(getCurrencyData(), newAmount);
+  Money.java:267      }
+
+== reachability of :130-132 on the progressive call graph
+  ProgressiveEMICalculator.java:142          if (scheduleModel.loanProductRelatedDetail().isAllowFullTermForTranche() && numberOfRepayments > 0
+  ProgressiveEMICalculator.java:143                  && operation.getAction().equals(EmiChangeOperation.Action.DISBURSEMENT)) {
+  ProgressiveEMICalculator.java:144              addFullTermTrancheDisbursement(scheduleModel, operation);
+  ProgressiveEMICalculator.java:155      private void addFullTermTrancheDisbursement(final ProgressiveLoanInterestScheduleModel scheduleModel,
+  ProgressiveEMICalculator.java:156              final EmiChangeOperation operation) {
+  ProgressiveEMICalculator.java:157          final MathContext mc = scheduleModel.mc();
+  ProgressiveEMICalculator.java:158          final LocalDate disbursementDate = operation.getSubmittedOnDate();
+  ProgressiveEMICalculator.java:176      private LoanApplicationTerms buildLoanApplicationTerms(final ILoanConfigurationDetails loanProductRelatedDetail,
+  ProgressiveEMICalculator.java:177              final LocalDate firstDisbursedPeriodStartDate, final Money disbursedAmount, final MathContext mc) {
+  ProgressiveEMICalculator.java:178          return new LoanApplicationTerms.Builder()
+  ProgressiveEMICalculator.java:179                  // Loan basics
+  ProgressiveEMICalculator.java:180                  .currency(loanProductRelatedDetail.getCurrencyData()).principal(disbursedAmount)
+  ProgressiveEMICalculator.java:181                  .repaymentsStartingFromDate(firstDisbursedPeriodStartDate).downPaymentPercentage(ZERO)
+  ProgressiveEMICalculator.java:182                  .seedDate(firstDisbursedPeriodStartDate).inArrearsTolerance(Money.zero(loanProductRelatedDetail.getCurrencyData()))
+  -> :182 uses the ONE-ARGUMENT Money.zero(CurrencyData) = Money.java:130-132 -> :131 -> ambient.
+  -> gated on isAllowFullTermForTranche() at :142-144, which is a SS4.4 PIN, not a SS3.1 predicate.
+
+== reachability of :224-234 and :261-267 - grep only, NOT a call-graph proof
+  .plus( call sites in fineract-progressive-loan/src/main: 79
+  none of them passes a collection or a double (see t45-plus-callsites.txt)
+  [UNVERIFIED: reachability of Money.java:224-234 and :261-267 from generate(mc, modelData)]
+
+CONCLUSION: rev 8's list was short by three. Rev 9 states the list as a closed set over ONE FILE,
+and rests the graded-domain conclusion on T42's ABSENCE test rather than on the list.
