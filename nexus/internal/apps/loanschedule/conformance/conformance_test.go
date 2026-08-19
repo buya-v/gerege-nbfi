@@ -1,0 +1,628 @@
+package conformance
+
+import (
+	"bytes"
+	"context"
+	"go/scanner"
+	"go/token"
+	"os"
+	"path/filepath"
+	"strings"
+	"testing"
+)
+
+// repoRoot resolves the repository root once for every test in this file.
+func repoRoot(t *testing.T) string {
+	t.Helper()
+	root, err := FindRepoRoot(".")
+	if err != nil {
+		t.Fatalf("FindRepoRoot: %v", err)
+	}
+	return root
+}
+
+func storeRoot(t *testing.T) string {
+	t.Helper()
+	return filepath.Join(repoRoot(t), ".softhouse", "vectors")
+}
+
+// TestStoreIsAdmissible is the table-driven conformance test: every file in the
+// vector store is loaded, admitted and classified, and the test states what the
+// corpus contains. It fails on an INADMISSIBLE file, because an inadmissible
+// vector means the corpus cannot be trusted rather than merely that it is short.
+func TestStoreIsAdmissible(t *testing.T) {
+	root := repoRoot(t)
+	store := storeRoot(t)
+
+	pin, err := LoadPin(filepath.Join(store, "PIN.json"))
+	if err != nil {
+		t.Fatalf("LoadPin: %v", err)
+	}
+	if err := VerifyContractDigest(root, pin); err != nil {
+		t.Fatalf("the frozen contract's digest does not match the store pin: %v", err)
+	}
+	registry, err := LoadCapabilityRegistry(filepath.Join(store, "capabilities.json"))
+	if err != nil {
+		t.Fatalf("LoadCapabilityRegistry: %v", err)
+	}
+
+	vectors, loadErrs, err := LoadStore(store, "")
+	if err != nil {
+		t.Fatalf("LoadStore: %v", err)
+	}
+	for _, le := range loadErrs {
+		t.Errorf("%s could not be loaded as a vector: %v", le.Path, le.Err)
+	}
+	if len(vectors) == 0 {
+		t.Fatal("the vector store is empty; even before promotion it must hold the self-test fixture")
+	}
+
+	counts := map[VectorClass]int{}
+	for _, v := range vectors {
+		v := v
+		t.Run(v.CaseID, func(t *testing.T) {
+			if problems := Admit(v, pin, root); len(problems) > 0 {
+				for _, p := range problems {
+					t.Errorf("INADMISSIBLE: %s", p)
+				}
+			}
+			verdict := registry.Assess(v.Oracle.Seam, v.CapabilitiesRequired)
+			if !verdict.Gradeable {
+				t.Logf("REFUSED (%s): %s", verdict.Reason, strings.Join(verdict.Detail, "; "))
+			}
+			if v.Expect.Kind == "schedule" {
+				if ok, why := GradedDomain(v); !ok {
+					t.Logf("outside the graded domain: %s", strings.Join(why, "; "))
+				}
+			}
+		})
+		counts[v.Class]++
+	}
+	t.Logf("corpus: %d parity, %d contract-refusal, %d self-test",
+		counts[ClassParity], counts[ClassContractRefusal], counts[ClassSelfTest])
+
+	// The self-test fixture is not corpus. If this ever becomes the only thing
+	// in the store AND the store starts reporting parity, something has gone
+	// badly wrong upstream.
+	if counts[ClassSelfTest] == 0 {
+		t.Error("no self-test fixture found: the harness would have nothing to prove itself against")
+	}
+}
+
+// TestHarnessGoesGreenAndRed is the mutation proof, in process.
+//
+// The shell harness proves the same four things end to end with real exit codes
+// (.softhouse/conformance.sh --prove). This test proves them where a reviewer can
+// step through them, and it runs under plain `go test ./...`.
+func TestHarnessGoesGreenAndRed(t *testing.T) {
+	root := repoRoot(t)
+	pristine := storeRoot(t)
+
+	t.Run("green_on_pristine_store", func(t *testing.T) {
+		impl, n, err := NewReplayImplementation(pristine, "")
+		if err != nil {
+			t.Fatalf("NewReplayImplementation: %v", err)
+		}
+		if n == 0 {
+			t.Fatal("the replay implementation learned no answers")
+		}
+		s := mustRun(t, Options{
+			RepoRoot: root, StoreRoot: pristine,
+			Implementation: impl, ImplementationName: "replay", SelfTestMode: true,
+		})
+		if got := s.ExitCode(); got != 0 {
+			t.Errorf("self-test over the pristine store: exit %d, want 0\n%s", got, render(s))
+		}
+		if s.SelfTestPass == 0 {
+			t.Error("the self-test fixture did not pass")
+		}
+		if s.ParityPass != 0 {
+			t.Errorf("the store has no promoted capture yet, so ParityPass must be 0, got %d", s.ParityPass)
+		}
+	})
+
+	t.Run("red_when_an_expected_value_is_perturbed", func(t *testing.T) {
+		// A CONSISTENT one-minor-unit perturbation: both the integer and the
+		// oracle's wire text move together, so the vector stays admissible and the
+		// disagreement is between the vector and the implementation — which is
+		// exactly what a conformance FAIL means. Exit 1.
+		perturbed := copyStore(t, pristine)
+		fixture := filepath.Join(perturbed, SelfTestDir, "SELFTEST-01-two-period-zero-rate.json")
+		perturb(t, fixture, `"principal_minor": "50000",
+        "interest_minor": "0",
+        "outstanding_principal_minor": "50000",
+        "principal_major_text": "500.00",`, `"principal_minor": "50001",
+        "interest_minor": "0",
+        "outstanding_principal_minor": "50000",
+        "principal_major_text": "500.01",`)
+
+		impl, _, err := NewReplayImplementation(pristine, "")
+		if err != nil {
+			t.Fatalf("NewReplayImplementation: %v", err)
+		}
+		s := mustRun(t, Options{
+			RepoRoot: root, StoreRoot: perturbed,
+			Implementation: impl, ImplementationName: "replay", SelfTestMode: true,
+		})
+		if got := s.ExitCode(); got != 1 {
+			t.Errorf("a one-minor-unit perturbation must be exit 1, got %d\n%s", got, render(s))
+		}
+		if s.SelfTestFail != 1 {
+			t.Errorf("want exactly one failed vector, got SelfTestFail=%d", s.SelfTestFail)
+		}
+	})
+
+	t.Run("inadmissible_when_only_the_integer_is_perturbed", func(t *testing.T) {
+		// An INCONSISTENT perturbation: the integer moves and the oracle's own wire
+		// text does not. That is not a conformance failure, it is a transcription
+		// error, and the harness must say so — no other check in it could see one.
+		// Exit 2, because a corpus that disagrees with itself grades nothing.
+		perturbed := copyStore(t, pristine)
+		perturb(t, filepath.Join(perturbed, SelfTestDir, "SELFTEST-01-two-period-zero-rate.json"),
+			`"principal_minor": "50000"`, `"principal_minor": "50001"`)
+
+		impl, _, err := NewReplayImplementation(pristine, "")
+		if err != nil {
+			t.Fatalf("NewReplayImplementation: %v", err)
+		}
+		s := mustRun(t, Options{
+			RepoRoot: root, StoreRoot: perturbed,
+			Implementation: impl, ImplementationName: "replay", SelfTestMode: true,
+		})
+		if got := s.ExitCode(); got != 2 {
+			t.Errorf("a transcription mismatch must be exit 2, got %d\n%s", got, render(s))
+		}
+		if s.Inadmissible != 1 {
+			t.Errorf("want exactly one inadmissible vector, got %d", s.Inadmissible)
+		}
+	})
+
+	t.Run("exit_2_when_the_store_is_empty", func(t *testing.T) {
+		empty := t.TempDir()
+		copyFile(t, filepath.Join(pristine, "PIN.json"), filepath.Join(empty, "PIN.json"))
+		copyFile(t, filepath.Join(pristine, "capabilities.json"), filepath.Join(empty, "capabilities.json"))
+		impl, _, err := NewReplayImplementation(pristine, "")
+		if err != nil {
+			t.Fatalf("NewReplayImplementation: %v", err)
+		}
+		s := mustRun(t, Options{
+			RepoRoot: root, StoreRoot: empty,
+			Implementation: impl, ImplementationName: "replay", SelfTestMode: true,
+		})
+		if got := s.ExitCode(); got == 0 {
+			t.Errorf("an empty store must never be exit 0, got %d\n%s", got, render(s))
+		}
+	})
+
+	t.Run("exit_2_when_there_is_no_implementation", func(t *testing.T) {
+		s := mustRun(t, Options{RepoRoot: root, StoreRoot: pristine, OracleProbe: "up"})
+		if got := s.ExitCode(); got != 2 {
+			t.Errorf("no implementation must be exit 2, got %d\n%s", got, render(s))
+		}
+		if !containsSubstring(s.FatalReasons, "NO IMPLEMENTATION REGISTERED") {
+			t.Errorf("the report must say so in words, got %v", s.FatalReasons)
+		}
+	})
+
+	t.Run("exit_2_when_the_oracle_is_unreachable", func(t *testing.T) {
+		impl, _, err := NewReplayImplementation(pristine, "")
+		if err != nil {
+			t.Fatalf("NewReplayImplementation: %v", err)
+		}
+		s := mustRun(t, Options{
+			RepoRoot: root, StoreRoot: pristine,
+			Implementation: impl, ImplementationName: "replay", OracleProbe: "down",
+		})
+		if got := s.ExitCode(); got != 2 {
+			t.Errorf("an unreachable oracle must be exit 2, got %d\n%s", got, render(s))
+		}
+	})
+
+	t.Run("exit_2_when_the_caller_forgets_to_probe", func(t *testing.T) {
+		impl, _, err := NewReplayImplementation(pristine, "")
+		if err != nil {
+			t.Fatalf("NewReplayImplementation: %v", err)
+		}
+		s := mustRun(t, Options{
+			RepoRoot: root, StoreRoot: pristine,
+			Implementation: impl, ImplementationName: "replay",
+		})
+		if got := s.ExitCode(); got != 2 {
+			t.Errorf("an empty oracle-probe value must default to down and be exit 2, got %d", got)
+		}
+	})
+
+	t.Run("self_test_fixture_never_counts_toward_parity", func(t *testing.T) {
+		impl, _, err := NewReplayImplementation(pristine, SelfTestDir)
+		if err != nil {
+			t.Fatalf("NewReplayImplementation: %v", err)
+		}
+		s := mustRun(t, Options{
+			RepoRoot: root, StoreRoot: pristine, ContextFilter: SelfTestDir,
+			Implementation: impl, ImplementationName: "replay", OracleProbe: "up",
+		})
+		if s.SelfTestPass != 1 {
+			t.Errorf("want the fixture to pass, got SelfTestPass=%d", s.SelfTestPass)
+		}
+		if s.ParityPass != 0 {
+			t.Errorf("the fixture must not count toward parity, got ParityPass=%d", s.ParityPass)
+		}
+		if got := s.ExitCode(); got != 2 {
+			t.Errorf("a run whose only passing vector is the hand-authored fixture must not be exit 0, got %d",
+				got)
+		}
+		if !containsSubstring(s.FatalReasons, "NO PARITY VECTOR WAS GRADED") {
+			t.Errorf("the report must say no parity vector was graded, got %v", s.FatalReasons)
+		}
+	})
+}
+
+// TestProbeCannotMasqueradeAsParity is the structural probe guard.
+//
+// Passes 1 and 2 of the capture corpus ran at precision 12 or 8, and production
+// runs at (19, HALF_UP). Those captures are discrimination probes and may never
+// be promoted as parity vectors. The guard is not a label: the harness reads the
+// MathContext the numbers were produced at off the vector itself, so relabelling
+// a probe cannot smuggle it in.
+func TestProbeCannotMasqueradeAsParity(t *testing.T) {
+	root := repoRoot(t)
+	store := storeRoot(t)
+	pin, err := LoadPin(filepath.Join(store, "PIN.json"))
+	if err != nil {
+		t.Fatalf("LoadPin: %v", err)
+	}
+
+	base := func() *Vector {
+		return &Vector{
+			Schema:               VectorSchemaV1,
+			CaseID:               "FAKE-PROBE-AS-PARITY",
+			Context:              "loanschedule",
+			Class:                ClassParity,
+			DEC1Revision:         pin.DEC1Revision,
+			CapabilitiesRequired: []string{"schedule.core"},
+			Provenance: Provenance{
+				Kind:          ProvenanceOracleCapture,
+				CaptureRef:    ".softhouse/capture/out/capture-raw.json",
+				CaptureCaseID: "D-01",
+			},
+			Oracle: OracleStamp{
+				FineractCommit:      pin.FineractCommit,
+				Seam:                "path_a_embeddable",
+				ThreadedMathContext: MathContext{Precision: 12, RoundingMode: "HALF_UP"},
+				AmbientMathContext:  MathContext{Precision: 19, RoundingMode: "HALF_UP"},
+			},
+			Request: Request{
+				TimeZone:                         "Asia/Ulaanbaatar",
+				Currency:                         Currency{Code: "MNT", MinorUnitDigits: 2},
+				Rounding:                         Rounding{SignificantDigits: 12, RateFactorScale: 12, Mode: "HALF_UP"},
+				ScheduleStartDate:                Date{2024, 1, 1},
+				Disbursements:                    []Disbursement{{Date: Date{2024, 1, 1}, AmountMinor: "10000"}},
+				NumberOfRepayments:               6,
+				RepaymentEvery:                   1,
+				RepaymentFrequencyUnit:           "MONTHS",
+				AnnualNominalInterestRate:        Rate{Numerator: 7, Denominator: 100},
+				InterestMethod:                   "DECLINING_BALANCE",
+				DayCount:                         "FIXED_30_360",
+				DownPaymentPercentage:            Rate{Numerator: 0, Denominator: 1},
+				InstallmentRoundingMultipleMinor: "0",
+			},
+			Expect: Expect{
+				Kind: "schedule",
+				Periods: []ExpectPeriod{{
+					Kind: "REPAYMENT", InstallmentNumber: 1,
+					FromDate: Date{2024, 1, 1}, DueDate: Date{2024, 2, 1},
+					PrincipalMinor: "1643", InterestMinor: "58", OutstandingPrincipalMinor: "8357",
+				}},
+			},
+			Path: filepath.Join("loanschedule", "FAKE-PROBE-AS-PARITY.json"),
+		}
+	}
+
+	problems := Admit(base(), pin, root)
+	if len(problems) == 0 {
+		t.Fatal("a precision-12 capture was admitted as a parity vector; the probe guard is not working")
+	}
+	if !containsSubstring(problems, "DISCRIMINATION PROBE") {
+		t.Errorf("the refusal must name the reason, got %v", problems)
+	}
+	if !containsSubstring(problems, "never-promotable") {
+		t.Errorf("the never-promotable denylist must also catch capture case D-01, got %v", problems)
+	}
+
+	// The same vector at production settings, still hand-authored, is caught by
+	// the capture reference instead: a parity vector must point at a real capture
+	// artefact and name the case inside it.
+	v := base()
+	v.Oracle.ThreadedMathContext = MathContext{Precision: 19, RoundingMode: "HALF_UP"}
+	v.Request.Rounding = Rounding{SignificantDigits: 19, RateFactorScale: 19, Mode: "HALF_UP"}
+	v.Provenance.CaptureRef = ".softhouse/capture/does-not-exist.json"
+	v.Provenance.CaptureCaseID = "MADE-UP"
+	problems = Admit(v, pin, root)
+	if !containsSubstring(problems, "does not resolve to a file") {
+		t.Errorf("a parity vector citing a non-existent capture must be inadmissible, got %v", problems)
+	}
+}
+
+// TestSeamBlindnessRefuses proves the load-bearing property of the schema: a case
+// that needs a capability its capture seam cannot see is REFUSED, not passed.
+func TestSeamBlindnessRefuses(t *testing.T) {
+	store := storeRoot(t)
+	registry, err := LoadCapabilityRegistry(filepath.Join(store, "capabilities.json"))
+	if err != nil {
+		t.Fatalf("LoadCapabilityRegistry: %v", err)
+	}
+
+	cases := []struct {
+		name     string
+		seam     string
+		required []string
+		want     RefusalReason
+	}{
+		{"charges on path A is seam-blind", "path_a_embeddable", []string{"schedule.core", "charges"}, ReasonSeamBlind},
+		{"holidays on path A is seam-blind", "path_a_embeddable", []string{"holiday.adjustment"}, ReasonSeamBlind},
+		{"working days on path A is seam-blind", "path_a_embeddable", []string{"workingday.adjustment"}, ReasonSeamBlind},
+		{"installment multiple on path A is seam-blind", "path_a_embeddable",
+			[]string{"installment.rounding.multiple"}, ReasonSeamBlind},
+		{"holidays on path B are only partial", "path_b_server", []string{"holiday.adjustment"}, ReasonSeamBlind},
+		{"charges on path B are exercised but ungraded", "path_b_server",
+			[]string{"charges"}, ReasonUngradedCapability},
+		{"ACT/ACT is exercised by path A but ungraded", "path_a_embeddable",
+			[]string{"daycount.actual.actual"}, ReasonUngradedCapability},
+		{"an unaudited capability on path A2 defaults to deny", "path_a2_reflective",
+			[]string{"monthend.reanchor"}, ReasonUnknownCapability},
+		{"an unknown seam refuses", "path_z_imaginary", []string{"schedule.core"}, ReasonUnknownSeam},
+		{"an unknown capability refuses", "path_a_embeddable", []string{"telepathy"}, ReasonUnknownCapability},
+		{"no declared capability refuses", "path_a_embeddable", nil, ReasonUnknownCapability},
+		{"core on path A grades", "path_a_embeddable", []string{"schedule.core", "monthend.reanchor"}, ReasonNone},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			got := registry.Assess(c.seam, c.required)
+			if got.Reason != c.want {
+				t.Errorf("Assess(%q, %v) reason %q, want %q (detail: %v)",
+					c.seam, c.required, got.Reason, c.want, got.Detail)
+			}
+			if (c.want == ReasonNone) != got.Gradeable {
+				t.Errorf("Gradeable=%v with reason %q", got.Gradeable, got.Reason)
+			}
+		})
+	}
+}
+
+// TestFloatTokensAreRejected proves the float guard rejects a decimal number
+// anywhere in a vector document, including in a field a typed decode would drop.
+func TestFloatTokensAreRejected(t *testing.T) {
+	cases := []struct {
+		name string
+		doc  string
+		want bool
+	}{
+		{"integers pass", `{"a":1,"b":-20,"c":[3,4],"d":{"e":0}}`, false},
+		{"a decimal anywhere fails", `{"a":1,"b":21.6}`, true},
+		{"exponent notation fails", `{"a":1e3}`, true},
+		{"negative decimal fails", `{"periods":[{"interest":-0.01}]}`, true},
+		{"a decimal in an unmodelled field still fails", `{"nonsense":{"deep":[{"x":1.5}]}}`, true},
+		{"a decimal inside a string is fine", `{"principal_major_text":"112082.37"}`, false},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			err := RejectFloatTokens([]byte(c.doc))
+			if (err != nil) != c.want {
+				t.Fatalf("RejectFloatTokens(%s) error = %v, want error = %v", c.doc, err, c.want)
+			}
+		})
+	}
+}
+
+// TestMinorTextIsExact covers the money parsing and the transcription cross-check.
+func TestMinorTextIsExact(t *testing.T) {
+	t.Run("canonical integer strings", func(t *testing.T) {
+		cases := []struct {
+			in   MinorText
+			want int64
+			ok   bool
+		}{
+			{"0", 0, true},
+			{"100000", 100000, true},
+			{"-1", -1, true},
+			{"8765432100", 8765432100, true},
+			{"", 0, false},
+			{"007", 0, false},
+			{"+7", 0, false},
+			{"1.0", 0, false},
+			{"1e3", 0, false},
+			{"1 000", 0, false},
+		}
+		for _, c := range cases {
+			got, err := c.in.Int64()
+			if (err == nil) != c.ok {
+				t.Errorf("MinorText(%q).Int64() error = %v, want ok = %v", c.in, err, c.ok)
+				continue
+			}
+			if c.ok && got != c.want {
+				t.Errorf("MinorText(%q).Int64() = %d, want %d", c.in, got, c.want)
+			}
+		}
+	})
+
+	t.Run("major wire text converts exactly", func(t *testing.T) {
+		cases := []struct {
+			text   string
+			digits int32
+			want   int64
+			ok     bool
+		}{
+			{"112082.37", 2, 11208237, true},
+			{"1200000.00", 2, 120000000, true},
+			{"0.00", 2, 0, true},
+			{"0", 2, 0, true},
+			{"100.5", 2, 10050, true},
+			{"14814.000000", 2, 1481400, true}, // scale 6 with only zeros beyond scale 2
+			{"1200000.000000", 2, 120000000, true},
+			{"112082.375", 2, 0, false}, // a significant digit beyond the currency scale
+			{".50", 2, 0, false},
+			{"1,200.00", 2, 0, false},
+			{"", 2, 0, false},
+		}
+		for _, c := range cases {
+			got, err := MinorFromMajorText(c.text, c.digits)
+			if (err == nil) != c.ok {
+				t.Errorf("MinorFromMajorText(%q, %d) error = %v, want ok = %v", c.text, c.digits, err, c.ok)
+				continue
+			}
+			if c.ok && got != c.want {
+				t.Errorf("MinorFromMajorText(%q, %d) = %d, want %d", c.text, c.digits, got, c.want)
+			}
+		}
+	})
+}
+
+// TestNoFloatInTheLoanScheduleTree is the no-float guard, run as a test so it
+// cannot be forgotten.
+//
+// It scans the Go TOKEN STREAM and inspects only identifiers, deliberately, rather
+// than grepping the file's bytes. A byte grep reports the frozen contract.go on
+// every run, because its doc comments NAME the forbidden types in order to forbid
+// them — "There is no float32, float64, big.Float, decimal string or float-backed
+// decimal type in this package". A guard that fires on the sentence prohibiting
+// the thing is a guard somebody will switch off, and switching this one off would
+// remove the check that matters most in the whole repository.
+//
+// Identifiers only also means this test file's own assembled token strings are
+// string literals rather than identifiers, so there is no exemption list to rot.
+// And it proves the ABSENCE of known-bad patterns and nothing more: .softhouse/
+// patterns.md is explicit that a grep-based HARD check never proves correctness.
+func TestNoFloatInTheLoanScheduleTree(t *testing.T) {
+	root := filepath.Join(repoRoot(t), "nexus", "internal", "apps", "loanschedule")
+	forbidden := map[string]bool{
+		"float" + "32": true, "float" + "64": true,
+		"complex" + "64": true, "complex" + "128": true,
+		"Float": true, "Float" + "32": true, "Float" + "64": true,
+		"Parse" + "Float": true, "Format" + "Float": true, "Append" + "Float": true,
+		"Decimal": true,
+	}
+	scanned := 0
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() || !strings.HasSuffix(path, ".go") {
+			return nil
+		}
+		raw, rerr := os.ReadFile(path)
+		if rerr != nil {
+			return rerr
+		}
+		scanned++
+		fset := token.NewFileSet()
+		file := fset.AddFile(path, -1, len(raw))
+		var sc scanner.Scanner
+		sc.Init(file, raw, func(pos token.Position, msg string) {
+			t.Errorf("%s: scan error: %s", pos, msg)
+		}, 0) // mode 0: comments are skipped entirely
+		for {
+			pos, tok, lit := sc.Scan()
+			if tok == token.EOF {
+				break
+			}
+			if tok != token.IDENT || !forbidden[lit] {
+				continue
+			}
+			t.Errorf("%s: identifier %q: no floating-point type may appear on a money path, "+
+				"including for intermediate calculation", fset.Position(pos), lit)
+		}
+		return nil
+	})
+	if err != nil {
+		t.Fatalf("walking %s: %v", root, err)
+	}
+	if scanned == 0 {
+		t.Fatalf("scanned no Go files under %s: a guard that inspects nothing passes everything", root)
+	}
+	t.Logf("scanned %d Go files under %s for floating-point identifiers", scanned, root)
+}
+
+func mustRun(t *testing.T, opts Options) *Summary {
+	t.Helper()
+	s, err := Run(context.Background(), opts)
+	if err != nil {
+		t.Fatalf("Run: %v", err)
+	}
+	return s
+}
+
+func render(s *Summary) string {
+	var buf bytes.Buffer
+	WriteReport(&buf, s)
+	return buf.String()
+}
+
+func containsSubstring(haystack []string, needle string) bool {
+	for _, h := range haystack {
+		if strings.Contains(h, needle) {
+			return true
+		}
+	}
+	return false
+}
+
+func copyStore(t *testing.T, src string) string {
+	t.Helper()
+	dst := t.TempDir()
+	entries, err := os.ReadDir(src)
+	if err != nil {
+		t.Fatalf("ReadDir %s: %v", src, err)
+	}
+	for _, e := range entries {
+		from := filepath.Join(src, e.Name())
+		to := filepath.Join(dst, e.Name())
+		if !e.IsDir() {
+			copyFile(t, from, to)
+			continue
+		}
+		if err := os.MkdirAll(to, 0o755); err != nil {
+			t.Fatalf("MkdirAll: %v", err)
+		}
+		sub, serr := os.ReadDir(from)
+		if serr != nil {
+			t.Fatalf("ReadDir %s: %v", from, serr)
+		}
+		for _, f := range sub {
+			if f.IsDir() {
+				continue
+			}
+			copyFile(t, filepath.Join(from, f.Name()), filepath.Join(to, f.Name()))
+		}
+	}
+	return dst
+}
+
+func copyFile(t *testing.T, from, to string) {
+	t.Helper()
+	raw, err := os.ReadFile(from)
+	if err != nil {
+		t.Fatalf("ReadFile %s: %v", from, err)
+	}
+	if err := os.MkdirAll(filepath.Dir(to), 0o755); err != nil {
+		t.Fatalf("MkdirAll: %v", err)
+	}
+	if err := os.WriteFile(to, raw, 0o644); err != nil {
+		t.Fatalf("WriteFile %s: %v", to, err)
+	}
+}
+
+func perturb(t *testing.T, path, from, to string) {
+	t.Helper()
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("ReadFile %s: %v", path, err)
+	}
+	if !bytes.Contains(raw, []byte(from)) {
+		t.Fatalf("%s does not contain %q, so the perturbation would be a no-op and the proof vacuous",
+			path, from)
+	}
+	out := bytes.Replace(raw, []byte(from), []byte(to), 1)
+	if err := os.WriteFile(path, out, 0o644); err != nil {
+		t.Fatalf("WriteFile %s: %v", path, err)
+	}
+}

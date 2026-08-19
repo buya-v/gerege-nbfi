@@ -1,0 +1,55 @@
+{
+  "schema": "gerege.loanschedule.vector/v1",
+  "case_id": "REFUSE-04-disbursement-after-maturity",
+  "context": "loanschedule",
+  "class": "contract-refusal",
+  "title": "A single disbursement dated ON OR AFTER the last repayment due date. The reference oracle silently DISCARDS it into an all-zero schedule with no disbursement row (ProgressiveLoanScheduleGenerator.java:305-308, the after-maturity arm gated on isMultiDisburseLoan() == false on this seam). Rather than reproduce that degenerate answer, the contract puts the shape outside the graded domain and requires ErrNoDiscriminatingVector. This is the vector that stops a port from 'helpfully' returning zeros: a port that reproduced the oracle's degenerate schedule here would look right and would be wrong, and no money-bearing vector could tell.",
+  "dec1_revision": 12,
+
+  "capabilities_required": ["schedule.core"],
+
+  "provenance": {
+    "kind": "contract",
+    "note": "Derived from the ratified contract's own normative text. No oracle output is compared and no monetary value appears in this file.",
+    "capture_ref": "",
+    "capture_sha256": "",
+    "capture_case_id": "",
+    "citation": "nexus/internal/apps/loanschedule/contract/contract.go:1131 (the graded domain's window predicate) and :1149-1161 ('such a request is OUTSIDE the graded domain and must be refused with ErrNoDiscriminatingVector')"
+  },
+
+  "oracle": {
+    "fineract_commit": "",
+    "seam": "none",
+    "captured_at": "",
+    "threaded_mathcontext": { "precision": 0, "rounding_mode": "" },
+    "ambient_mathcontext": { "precision": 0, "rounding_mode": "" }
+  },
+
+  "request": {
+    "time_zone": "Asia/Ulaanbaatar",
+    "currency": { "code": "MNT", "minor_unit_digits": 2 },
+    "rounding": { "significant_digits": 19, "rate_factor_scale": 19, "mode": "HALF_UP" },
+    "schedule_start_date": { "year": 2026, "month": 1, "day": 1 },
+    "disbursements": [
+      { "date": { "year": 2026, "month": 7, "day": 1 }, "amount_minor": "120000000" }
+    ],
+    "number_of_repayments": 6,
+    "repayment_every": 1,
+    "repayment_frequency_unit": "MONTHS",
+    "annual_nominal_interest_rate": { "numerator": 27, "denominator": 125 },
+    "interest_method": "DECLINING_BALANCE",
+    "day_count": "FIXED_30_360",
+    "down_payment_percentage": { "numerator": 0, "denominator": 1 },
+    "installment_rounding_multiple_minor": "0"
+  },
+
+  "expect": {
+    "kind": "refusal",
+    "sentinel": "ErrNoDiscriminatingVector",
+    "last_repayment_due_date": { "year": 2026, "month": 7, "day": 1 },
+    "observed_total_interest_minor": null,
+    "periods": []
+  },
+
+  "invariant_exemptions": []
+}
