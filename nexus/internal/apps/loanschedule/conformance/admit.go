@@ -194,6 +194,49 @@ func Admit(v *Vector, pin *Pin, repoRoot string) []string {
 		bad("expect.kind %q is neither \"schedule\" nor \"refusal\"", v.Expect.Kind)
 	}
 
+	// graded_against: the named counterfactuals this vector kills.
+	if v.Class == ClassParity && len(v.GradedAgainst) == 0 {
+		bad("a parity vector must carry at least one graded_against entry naming a WRONG " +
+			"implementation it kills and the minor-unit margin. Gradeability is not a property of a " +
+			"capture pair — LB-DEC31 reports zero cells differing across the day-count setting and still " +
+			"kills a no-arm port by 6,015 minor units (finding T55-N1) — so a store that cannot name the " +
+			"candidate defects a vector separates cannot express what it grades")
+	}
+	seenCF := map[string]bool{}
+	for i, cf := range v.GradedAgainst {
+		if strings.TrimSpace(cf.ID) == "" {
+			bad("graded_against[%d] has no id", i)
+		} else if seenCF[cf.ID] {
+			bad("graded_against[%d] repeats counterfactual %q", i, cf.ID)
+		}
+		seenCF[cf.ID] = true
+		if strings.TrimSpace(cf.Description) == "" {
+			bad("graded_against[%d] (%s) has no description", i, cf.ID)
+		}
+		if strings.TrimSpace(cf.Evidence) == "" {
+			bad("graded_against[%d] (%s) cites no evidence for its margin", i, cf.ID)
+		}
+		if cf.Capability == "" {
+			bad("graded_against[%d] (%s) names no capability", i, cf.ID)
+		} else if !containsString(v.CapabilitiesRequired, cf.Capability) {
+			bad("graded_against[%d] (%s) grades capability %q, which is not in capabilities_required: "+
+				"a vector cannot grade a capability it does not claim to exercise", i, cf.ID, cf.Capability)
+		}
+		margin, merr := cf.MarginMinor.Int64()
+		switch {
+		case merr != nil:
+			bad("graded_against[%d] (%s) margin_minor: %v", i, cf.ID, merr)
+		case margin <= 0:
+			bad("graded_against[%d] (%s) margin_minor is %d: a candidate this vector separates by zero is "+
+				"a candidate it does NOT kill, and recording one would reintroduce the false confidence "+
+				"this field exists to remove", i, cf.ID, margin)
+		}
+	}
+
+	if v.RetiresWhenCapabilityGraded != "" && v.Class != ClassContractRefusal {
+		bad("retires_when_capability_graded is only meaningful on a contract-refusal vector")
+	}
+
 	problems = append(problems, admitRequest(&v.Request)...)
 	problems = append(problems, admitPeriods(v)...)
 	for _, ex := range v.InvariantExemptions {
@@ -456,6 +499,15 @@ func admitPeriods(v *Vector) []string {
 		bad("expect.last_repayment_due_date %s is not a real calendar date", v.Expect.LastRepaymentDueDate)
 	}
 	return problems
+}
+
+func containsString(haystack []string, needle string) bool {
+	for _, h := range haystack {
+		if h == needle {
+			return true
+		}
+	}
+	return false
 }
 
 func gradedPeriodField(f string) bool {

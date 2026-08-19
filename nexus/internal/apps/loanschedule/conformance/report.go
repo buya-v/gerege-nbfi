@@ -83,6 +83,30 @@ func WriteReport(w io.Writer, s *Summary) {
 		p("")
 	}
 
+	p("--- WHAT THIS RUN ACTUALLY GRADES (named wrong implementations killed) ---")
+	p("    Gradeability is NOT \"two captures differing only in a setting differ in some cell\". That test is")
+	p("    false in both directions: LB-DEC31 reports ZERO cells differing across the day-count setting and")
+	p("    still kills a no-arm port by 6,015 minor units (finding T55-N1). An all-products-identical capture")
+	p("    is therefore not evidence of non-gradeability.")
+	p("    counterfactuals named by admissible vectors: %d", s.CounterfactualsNamed)
+	if len(s.CounterfactualCoverage) == 0 {
+		p("    no graded capability is backed by a parity vector yet")
+	} else {
+		for capName, ids := range s.CounterfactualCoverage {
+			p("    %-42s killed by %s", capName, strings.Join(ids, ", "))
+		}
+	}
+	if len(s.UncoveredGradedCapabilities) > 0 {
+		p("    UNBACKED in_graded_domain claims: %s", strings.Join(s.UncoveredGradedCapabilities, ", "))
+	}
+	p("")
+	p("--- WHAT THIS RUN DOES NOT GRADE, EVEN THOUGH IT RECORDS IT ---")
+	p("    The MathContext every parity vector records — (19, HALF_UP) — is PROVENANCE AND COMPARABILITY,")
+	p("    not a graded claim. T55 witnessed no shape separating precision 19 from 12, or HALF_UP from")
+	p("    HALF_EVEN (29 of 36 periods agree at all of them; precision 8 does separate, 22 of 36). Recording")
+	p("    the setting stays mandatory; claiming a vector PROVES it would be false.")
+	p("")
+
 	p("--- INVARIANT COVERAGE (checked against what the implementation RETURNED) ---")
 	if len(s.Results) == 0 {
 		p("    nothing graded")

@@ -197,6 +197,66 @@ const (
 	ReasonUngradedRequest RefusalReason = "UNGRADED_REQUEST"
 )
 
+// IsGraded reports whether a capability is currently inside the graded domain.
+// It is the single data-driven answer used everywhere; nothing in this harness
+// hard-codes a capability's status, so admitting DayCountActualActual (or any
+// other arm) is one edit to capabilities.json.
+func (r *CapabilityRegistry) IsGraded(name string) (graded, defined bool) {
+	c, ok := r.byName[name]
+	if !ok {
+		return false, false
+	}
+	return c.InGradedDomain, true
+}
+
+// GradedCapabilities lists the capabilities currently inside the graded domain.
+func (r *CapabilityRegistry) GradedCapabilities() []string {
+	var out []string
+	for _, c := range r.Capabilities {
+		if c.InGradedDomain {
+			out = append(out, c.Name)
+		}
+	}
+	sort.Strings(out)
+	return out
+}
+
+// CounterfactualCoverage answers, for every capability inside the graded domain,
+// whether some ADMISSIBLE PARITY vector names a wrong implementation it kills.
+//
+// This is the honest form of "in the graded domain". A capability marked graded
+// with no vector killing a named candidate defect for it is an unbacked claim, and
+// it is exactly the situation the whole program exists to prevent: a port that
+// passes its corpus and is wrong. The check is expressed over named
+// counterfactuals rather than over capture pairs because pair difference is the
+// wrong filter — see the Counterfactual doc comment and finding T55-N1.
+//
+// Returned maps are capability -> the counterfactual ids covering it, and the
+// sorted list of graded capabilities with no coverage at all.
+func (r *CapabilityRegistry) CounterfactualCoverage(vectors []*Vector) (map[string][]string, []string) {
+	covered := map[string][]string{}
+	for _, v := range vectors {
+		if v.Class != ClassParity {
+			continue
+		}
+		for _, cf := range v.GradedAgainst {
+			if graded, defined := r.IsGraded(cf.Capability); defined && graded {
+				covered[cf.Capability] = append(covered[cf.Capability], cf.ID)
+			}
+		}
+	}
+	var uncovered []string
+	for _, name := range r.GradedCapabilities() {
+		if len(covered[name]) == 0 {
+			uncovered = append(uncovered, name)
+		}
+	}
+	for k := range covered {
+		sort.Strings(covered[k])
+	}
+	return covered, uncovered
+}
+
 // Assess answers whether a vector's required capabilities can be graded against
 // a capture from its seam.
 //

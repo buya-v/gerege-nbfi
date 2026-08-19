@@ -122,6 +122,85 @@ pads short fractions and accepts trailing zeros beyond the currency scale, and
 
 ---
 
+## Gradeability is NOT pair difference — `graded_against`
+
+The intuitive test for whether a vector grades a behaviour — *"two captures
+differing only in that setting differ in some money cell"* — **is false, in both
+directions.** Finding **T55-N1**, driver-re-derived at `(19, HALF_UP)` and confirmed
+digit for digit:
+
+* **`LB-DEC31` reports ZERO cells differing across the day-count setting** —
+  `22014.25` is observed identically on products p3, p4 and p7 — **yet that value
+  can only be produced by the ACT/ACT per-calendar-year arm.** Period
+  2024-12-31 → 2025-01-31; 2024 is leap (366), 2025 is not (365); the 31-December
+  segmentation boundary gives the 2024 segment **zero** days. The ARM computes
+  `0/366 + 31/365`, so `1200000 × 0.216 × 0.08493150684931506849` = **`22014.25`**
+  (observed). The PLAIN branch computes `31/366` = **`21954.10`**.
+  **Margin 6,015 minor units.** A no-arm port is caught by this single capture,
+  while the *setting pair* says "no discrimination".
+* **`LB-F29CROSS`** and **`LB-MULTI3F`** likewise report zero cells on every pair,
+  and grade two distinct naive ports by **17,850** and **71,014** minor units.
+
+The cause is structural: **the setting decides only *whether* the arm fires, never
+what its denominators are.** A promotion rule that kept only non-zero-pair shapes
+**would have discarded the three best graders in T55's set.**
+
+**Corollary, and the sentence to remember: an all-products-identical capture is not
+evidence of non-gradeability.**
+
+So a vector records **`graded_against`** — the named wrong implementations its
+observed value *kills*, and the minor-unit margin for each:
+
+```jsonc
+"graded_against": [
+  {
+    "id": "PLAIN-ACTACT-NO-PER-YEAR-SEGMENTATION",
+    "capability": "daycount.actual.actual",
+    "description": "takes one day-count denominator from the period-start year instead of assigning days to the year they fall in",
+    "margin_minor": "6015",
+    "evidence": "T55-N1, driver-re-derived at (19,HALF_UP): ARM 0/366+31/365 -> 22014.25 (observed); PLAIN 31/366 -> 21954.10"
+  }
+]
+```
+
+Enforced: **required and non-empty on a parity vector** (a parity vector that kills
+no named candidate defect is a capture, not a grader); the `capability` must be in
+the registry **and** in the vector's `capabilities_required`; `margin_minor` must
+be an integer string **> 0**, because a candidate separated by zero is a candidate
+the vector does **not** kill.
+
+`ErrNoDiscriminatingVector` therefore keys off **counterfactual coverage**, not off
+pair difference. The harness computes, for every capability marked
+`in_graded_domain`, whether some admissible parity vector kills a named wrong
+implementation for it — and **an `in_graded_domain` capability with no coverage is a
+fatal, reported, unbacked claim**, because "in the graded domain" is supposed to
+mean a vector exists that can tell a correct implementation from an incorrect one.
+
+### Nothing hard-codes a capability as refused
+
+`DayCountActualActual` is refused today because
+`capabilities.json → daycount.actual.actual.in_graded_domain` is `false` — **data**,
+not a rule in the harness. Flip it and the arm is graded. A `contract-refusal`
+vector carries **`retires_when_capability_graded`**, so the moment its capability
+enters the graded domain the harness reports that vector as
+`STALE REFUSAL VECTOR — retire it`, rather than a FAIL that sends a reader hunting
+for a defect in the port. (`REFUSE-03` deliberately leaves it empty: annual
+frequency on the fixed-30/360 arm makes the oracle **throw**, so that refusal
+stands on `ErrUnsupportedConfiguration` whatever the graded domain admits — what it
+grades is the error-*precedence* rule, and that does not retire.)
+
+### The MathContext is provenance, not a graded claim
+
+Recording `(19, HALF_UP)` in both dimensions stays **mandatory** — it is what makes
+a capture comparable and what stops a probe masquerading as parity. It is **not** a
+claim that the vector *grades* the precision or the mode: T55 witnessed no shape
+separating precision 19 from 12, or HALF_UP from HALF_EVEN (29 of 36 periods agree
+at all of them; precision **8** does separate, 22 of 36). The harness prints this
+in a `WHAT THIS RUN DOES NOT GRADE` section on every run, because a reader who sees
+the setting recorded will otherwise assume it was proven.
+
+---
+
 ## Capability classes — the load-bearing idea
 
 `capabilities_required` names the capability classes a case's inputs exercise.
@@ -180,13 +259,22 @@ seam can see it at all.
 
 Two live examples the store already encodes:
 
-* **`DayCountActualActual` is refused, correctly.** The arm is re-derived (T30) and
-  captured (58 captures in `.softhouse/capture/actualactual/`), but nothing is
-  promoted. T48's **finding N4** is why promotion is not a formality: where both
-  calendar years have the **same length** the per-year fractions sum to the plain
-  fraction **exactly**, so a cross-year shape inside a run of non-leap years grades
-  a port identically whether it implements the arm or not. **Any vector promoted
-  for this arm must cross a leap-year boundary with a non-zero first segment.**
+* **`DayCountActualActual` is refused today, from registry data.** The arm is
+  re-derived (T30) and captured (58 captures in `.softhouse/capture/actualactual/`
+  plus T55's 33 Path B leap-boundary captures), but nothing is promoted. T48's
+  **finding N4** is why promotion is not a formality: where both calendar years
+  have the **same length** the per-year fractions sum to the plain fraction
+  **exactly**, so a cross-year shape inside a run of non-leap years grades a port
+  identically whether it implements the arm or not.
+  **Promotion condition, corrected:** the period must **span two calendar years of
+  differing length**. The older wording *"must cross a leap-year boundary with a
+  non-zero first segment"* is **too strong and must not be used** — finding
+  **T55-N1**, driver-re-derived: `LB-DEC31` has a **zero** first segment and still
+  grades the arm by 6,015 minor units, because the PLAIN branch takes its single
+  denominator from the *period-start* year (366) while the ARM assigns days to the
+  year they actually fall in (365). DEC-1's commentary still carries the old
+  wording; amending it is a **gate the driver has raised**, so this file uses the
+  corrected condition and nothing here edits DEC-1 or `contract.go`.
 * **Holiday adjustment is refused even on Path B.** Finding **D-2a**
   `[UNVERIFIED: no Path B capture exists]`: this generator adjusts only the
   **final** period, because the `:66` call sits inside
@@ -228,7 +316,14 @@ artefact is rewriting the specification.
   "title": "...",                    // what this vector discriminates, in prose
   "dec1_revision": 12,               // must equal PIN.json
 
+  "_note": "",                       // free prose, never graded, never parsed
   "capabilities_required": ["schedule.core"],
+
+  "graded_against": [                // REQUIRED and non-empty on a parity vector
+    { "id": "...", "capability": "schedule.core", "description": "...",
+      "margin_minor": "6015", "evidence": "..." }
+  ],
+  "retires_when_capability_graded": "",   // contract-refusal vectors only
 
   "provenance": {
     "kind": "oracle-capture",        // oracle-capture | contract | hand-authored

@@ -82,6 +82,17 @@ type Summary struct {
 	Refused, Inadmissible, Errored int
 	GradedCells, UngradedCells     int
 	InvariantViolations            int
+
+	// CounterfactualsNamed is how many wrong implementations the admissible
+	// vectors between them claim to kill, and CounterfactualCoverage maps each
+	// graded capability to the counterfactual ids covering it.
+	CounterfactualsNamed   int
+	CounterfactualCoverage map[string][]string
+
+	// UncoveredGradedCapabilities are capabilities marked in_graded_domain for
+	// which no parity vector kills a named wrong implementation. An unbacked
+	// claim, and a fatal reason.
+	UncoveredGradedCapabilities []string
 }
 
 // ExitCode is the harness's verdict as a process exit status.
@@ -256,6 +267,31 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 		}
 	}
 
+	// Counterfactual coverage: is every capability we CALL graded actually backed
+	// by a parity vector that kills a named wrong implementation for it?
+	admissible := make([]*Vector, 0, len(vectors))
+	for i, v := range vectors {
+		if s.Results[i].Outcome != OutcomeInadmissible {
+			admissible = append(admissible, v)
+		}
+	}
+	covered, uncovered := registry.CounterfactualCoverage(admissible)
+	s.CounterfactualCoverage = covered
+	s.UncoveredGradedCapabilities = uncovered
+	for _, v := range admissible {
+		s.CounterfactualsNamed += len(v.GradedAgainst)
+	}
+	if len(uncovered) > 0 && !opts.SelfTestMode {
+		s.FatalReasons = append(s.FatalReasons, fmt.Sprintf(
+			"THESE CAPABILITIES ARE MARKED in_graded_domain BUT NO PARITY VECTOR KILLS A NAMED WRONG "+
+				"IMPLEMENTATION FOR THEM: %s. \"In the graded domain\" means a vector exists that can tell a "+
+				"correct implementation from an incorrect one, and pair difference is NOT that test — "+
+				"LB-DEC31 reports zero cells differing across the day-count setting and still kills a no-arm "+
+				"port by 6,015 minor units (T55-N1). Either promote a vector with a graded_against entry, or "+
+				"set in_graded_domain false in capabilities.json.",
+			strings.Join(uncovered, ", ")))
+	}
+
 	if !opts.SelfTestMode && s.ParityPass == 0 && len(vectors) > 0 {
 		s.FatalReasons = append(s.FatalReasons,
 			"NO PARITY VECTOR WAS GRADED. Self-test fixtures and contract-refusal vectors do not make a "+
@@ -280,6 +316,32 @@ func gradeVector(ctx context.Context, v *Vector, pin *Pin, registry *CapabilityR
 		r.Outcome = OutcomeInadmissible
 		r.Detail = problems
 		return r
+	}
+
+	// A refusal vector goes STALE the moment its capability enters the graded
+	// domain: "the implementation must refuse this" stops being the contract's
+	// instruction. Detect it here and say "retire this vector", rather than let it
+	// report FAIL and send a reader hunting for a defect in the port. This is also
+	// why nothing in the harness hard-codes DayCountActualActual as refused —
+	// flipping in_graded_domain retires the refusal by itself.
+	if v.RetiresWhenCapabilityGraded != "" {
+		graded, defined := registry.IsGraded(v.RetiresWhenCapabilityGraded)
+		switch {
+		case !defined:
+			r.Outcome = OutcomeInadmissible
+			r.Detail = []string{fmt.Sprintf(
+				"retires_when_capability_graded names %q, which is not in the capability registry",
+				v.RetiresWhenCapabilityGraded)}
+			return r
+		case graded:
+			r.Outcome = OutcomeInadmissible
+			r.Detail = []string{fmt.Sprintf(
+				"STALE REFUSAL VECTOR: capability %q is now in_graded_domain, so refusing this request is no "+
+					"longer what the contract requires. RETIRE THIS VECTOR and promote a parity vector in its "+
+					"place — this is not a defect in any implementation.",
+				v.RetiresWhenCapabilityGraded)}
+			return r
+		}
 	}
 
 	// Capability gating comes before the request's own graded-domain check,

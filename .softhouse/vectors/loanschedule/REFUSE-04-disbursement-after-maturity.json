@@ -51,5 +51,9 @@
     "periods": []
   },
 
+  "graded_against": [],
+
+  "retires_when_capability_graded": "",
+
   "invariant_exemptions": []
 }

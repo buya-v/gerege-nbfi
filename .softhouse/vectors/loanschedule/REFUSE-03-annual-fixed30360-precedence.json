@@ -51,5 +51,11 @@
     "periods": []
   },
 
+  "graded_against": [],
+
+  "_note": "retires_when_capability_graded is deliberately EMPTY here, unlike REFUSE-01 and REFUSE-02. Admitting non-monthly frequency to the graded domain would NOT retire this vector: YEARS on the fixed-30/360 arm makes the reference oracle THROW ('Invalid repayment frequency'), so the refusal stands on ErrUnsupportedConfiguration whatever the graded domain admits. What this vector grades is the contract's error-PRECEDENCE rule, and that rule does not retire.",
+
+  "retires_when_capability_graded": "",
+
   "invariant_exemptions": []
 }

@@ -339,6 +339,62 @@ type Expect struct {
 	LastRepaymentDueDate *Date `json:"last_repayment_due_date"`
 }
 
+// Counterfactual is one WRONG IMPLEMENTATION that a vector's observed value
+// kills, and the margin by which it kills it.
+//
+// This field exists because the intuitive test for whether a vector grades a
+// behaviour — "two captures differing only in that setting differ in some money
+// cell" — IS FALSE, and it is false in both directions. Finding T55-N1
+// (driver-re-derived at (19, HALF_UP), confirmed digit for digit):
+//
+//   - LB-DEC31 reports ZERO cells differing across the day-count setting: the
+//     value 22014.25 is observed identically on products p3, p4 and p7. Yet that
+//     value can only be produced by the ACT/ACT per-calendar-year arm. Period
+//     2024-12-31 -> 2025-01-31; 2024 is leap (366), 2025 is not (365); the
+//     31-December segmentation boundary gives the 2024 segment ZERO days. The ARM
+//     computes 0/366 + 31/365, so 1200000 x 0.216 x 0.08493150684931506849 =
+//     22014.25 (observed); the PLAIN branch computes 31/366 and yields 21954.10.
+//     MARGIN 6,015 minor units. A no-arm port is caught by this single capture,
+//     while the SETTING PAIR says "no discrimination".
+//   - LB-F29CROSS and LB-MULTI3F likewise report zero cells on every pair, and
+//     grade two distinct naive ports by 17,850 and 71,014 minor units.
+//
+// The reason is structural: the SETTING decides only WHETHER the arm fires, never
+// what its denominators are. A promotion rule that kept only non-zero-pair shapes
+// would have discarded the three best graders in the set.
+//
+// SO GRADEABILITY IS NOT A PROPERTY OF A CAPTURE PAIR. It is the question "which
+// candidate wrong implementations does this observed value distinguish from the
+// oracle, and by how much?" — and the corollary is that AN
+// ALL-PRODUCTS-IDENTICAL CAPTURE IS NOT EVIDENCE OF NON-GRADEABILITY. LB-DEC31
+// is the proof.
+type Counterfactual struct {
+	// ID names the wrong implementation, stably, so two vectors killing the same
+	// candidate defect can be seen to do so. Screaming-kebab by convention, e.g.
+	// "PLAIN-ACTACT-NO-PER-YEAR-SEGMENTATION".
+	ID string `json:"id"`
+
+	// Capability is the capability class this counterfactual belongs to. It must
+	// be defined in the registry and must appear in the vector's
+	// capabilities_required: a vector cannot grade a capability it does not claim
+	// to exercise.
+	Capability string `json:"capability"`
+
+	// Description says what the wrong implementation does differently, in a
+	// sentence a porter can act on.
+	Description string `json:"description"`
+
+	// MarginMinor is the largest absolute difference, in integer minor units,
+	// between the oracle's observed value and what the counterfactual would
+	// return on this vector. It must be > 0: a candidate the vector separates by
+	// zero is a candidate the vector does not kill, and recording one would
+	// reintroduce exactly the false-confidence this field exists to remove.
+	MarginMinor MinorText `json:"margin_minor"`
+
+	// Evidence is the re-derivation or observation behind the margin, cited.
+	Evidence string `json:"evidence"`
+}
+
 // Exemption disables one named invariant for one vector, with a reason. It
 // exists because an invariant that cannot be switched off gets deleted the
 // first time a legitimate shape violates it, and a deleted invariant protects
@@ -357,6 +413,12 @@ type Vector struct {
 	Title        string      `json:"title"`
 	DEC1Revision int         `json:"dec1_revision"`
 
+	// Note is free prose for a fact about this vector that has no structured home.
+	// It is never graded and never parsed. It exists so that a maintainer can
+	// record WHY a field is set the way it is next to the field, instead of in a
+	// document nobody opens.
+	Note string `json:"_note"`
+
 	// CapabilitiesRequired names the capability classes this case's inputs
 	// actually exercise. It is the load-bearing field of the whole schema.
 	//
@@ -373,6 +435,28 @@ type Vector struct {
 	// Unknown capability, or a capability the seam does not fully exercise =>
 	// REFUSED. Default-deny, in both directions.
 	CapabilitiesRequired []string `json:"capabilities_required"`
+
+	// GradedAgainst names the wrong implementations this vector's observed value
+	// kills, with the minor-unit margin for each. See Counterfactual: this, not
+	// any pair difference, is what "this vector grades that behaviour" means.
+	//
+	// Required to be non-empty on a parity vector. A parity vector that kills no
+	// named candidate defect is a capture, not a grader, and the store should not
+	// pretend otherwise.
+	GradedAgainst []Counterfactual `json:"graded_against"`
+
+	// RetiresWhenCapabilityGraded is for a contract-refusal vector: the capability
+	// whose admission to the graded domain makes this refusal WRONG.
+	//
+	// Without it a refusal vector goes silently stale. The moment a capability is
+	// promoted, "the implementation must refuse this" stops being the contract's
+	// instruction, and the vector would report FAIL — a real but badly-labelled
+	// signal that sends a reader looking for a defect in the port. With it the
+	// harness detects the staleness itself and says "retire this vector", which is
+	// the actual required action. It also means DayCountActualActual's handling is
+	// driven by registry DATA rather than hard-coded anywhere: flip
+	// in_graded_domain and the refusal retires itself.
+	RetiresWhenCapabilityGraded string `json:"retires_when_capability_graded"`
 
 	Provenance          Provenance  `json:"provenance"`
 	Oracle              OracleStamp `json:"oracle"`

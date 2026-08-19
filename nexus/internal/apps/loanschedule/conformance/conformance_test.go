@@ -343,6 +343,192 @@ func TestProbeCannotMasqueradeAsParity(t *testing.T) {
 	}
 }
 
+// TestGradeabilityIsNotPairDifference covers the schema change forced by finding
+// T55-N1.
+//
+// The intuitive test for whether a vector grades a behaviour — two captures
+// differing only in that setting differ in some money cell — is FALSE. LB-DEC31
+// reports ZERO cells differing across the day-count setting (22014.25 observed on
+// products p3, p4 and p7 alike) and yet that value can only be produced by the
+// ACT/ACT per-year arm: the 31-December boundary gives the 2024 segment zero days,
+// so the ARM computes 0/366 + 31/365 = 22014.25 while the PLAIN branch computes
+// 31/366 = 21954.10 — a margin of 6,015 minor units. A promotion rule that kept
+// only non-zero-pair shapes would have discarded the three best graders in T55's
+// set.
+//
+// So the store models gradeability as NAMED COUNTERFACTUALS with margins, and this
+// test proves the rules around that field hold.
+func TestGradeabilityIsNotPairDifference(t *testing.T) {
+	root := repoRoot(t)
+	store := storeRoot(t)
+	pin, err := LoadPin(filepath.Join(store, "PIN.json"))
+	if err != nil {
+		t.Fatalf("LoadPin: %v", err)
+	}
+	registry, err := LoadCapabilityRegistry(filepath.Join(store, "capabilities.json"))
+	if err != nil {
+		t.Fatalf("LoadCapabilityRegistry: %v", err)
+	}
+
+	// A parity vector with no named counterfactual is a capture, not a grader.
+	v := parityShell(pin)
+	problems := Admit(v, pin, root)
+	if !containsSubstring(problems, "at least one graded_against entry") {
+		t.Errorf("a parity vector naming no counterfactual must be inadmissible, got %v", problems)
+	}
+
+	// A zero margin is not a kill.
+	v = parityShell(pin)
+	v.GradedAgainst = []Counterfactual{{
+		ID: "ZERO-MARGIN", Capability: "schedule.core",
+		Description: "d", Evidence: "e", MarginMinor: "0",
+	}}
+	problems = Admit(v, pin, root)
+	if !containsSubstring(problems, "does NOT kill") {
+		t.Errorf("a zero-margin counterfactual must be inadmissible, got %v", problems)
+	}
+
+	// A counterfactual may not grade a capability the vector does not claim.
+	v = parityShell(pin)
+	v.GradedAgainst = []Counterfactual{{
+		ID: "OFF-PISTE", Capability: "daycount.actual.actual",
+		Description: "d", Evidence: "e", MarginMinor: "6015",
+	}}
+	problems = Admit(v, pin, root)
+	if !containsSubstring(problems, "not in capabilities_required") {
+		t.Errorf("a counterfactual outside capabilities_required must be inadmissible, got %v", problems)
+	}
+
+	// A well-formed one is accepted, and it covers its capability.
+	v = parityShell(pin)
+	v.GradedAgainst = []Counterfactual{{
+		ID:         "TEXTBOOK-BALANCE-TIMES-RATEFACTOR",
+		Capability: "schedule.core",
+		Description: "computes interest as balance * rateFactor instead of the oracle's three separately " +
+			"rounded operations",
+		Evidence:    "contract.go Period.InterestMinor; DEC-1 section 8 item 3b",
+		MarginMinor: "1",
+	}}
+	if problems := Admit(v, pin, root); len(problems) > 0 {
+		t.Errorf("a well-formed counterfactual must be admissible, got %v", problems)
+	}
+	covered, _ := registry.CounterfactualCoverage([]*Vector{v})
+	if len(covered["schedule.core"]) != 1 {
+		t.Errorf("schedule.core should be covered by one counterfactual, got %v", covered["schedule.core"])
+	}
+
+	// Today's real store has no parity vector at all, so every graded capability
+	// is an UNBACKED claim — and the harness must say so rather than imply the
+	// capability is proven.
+	vectors, _, err := LoadStore(store, "")
+	if err != nil {
+		t.Fatalf("LoadStore: %v", err)
+	}
+	_, uncovered := registry.CounterfactualCoverage(vectors)
+	if len(uncovered) == 0 {
+		t.Error("with no parity vector promoted, every in_graded_domain capability must be reported unbacked")
+	}
+	t.Logf("in_graded_domain but unbacked by any promoted vector: %v", uncovered)
+}
+
+// TestStaleRefusalVectorIsDetected proves that admitting a capability retires the
+// refusal vector that asserted it was ungraded — automatically, from registry data,
+// with no capability hard-coded anywhere in the harness.
+func TestStaleRefusalVectorIsDetected(t *testing.T) {
+	root := repoRoot(t)
+	store := storeRoot(t)
+
+	// Copy the store and flip daycount.actual.actual into the graded domain, as a
+	// later promotion task legitimately will.
+	widened := copyStore(t, store)
+	perturb(t, filepath.Join(widened, "capabilities.json"),
+		`"name": "daycount.actual.actual",
+      "description": "The ACT/ACT arm: real calendar year lengths, and the per-calendar-year fraction accumulation used where an interest sub-period crosses a year boundary.",
+      "in_graded_domain": false`,
+		`"name": "daycount.actual.actual",
+      "description": "The ACT/ACT arm: real calendar year lengths, and the per-calendar-year fraction accumulation used where an interest sub-period crosses a year boundary.",
+      "in_graded_domain": true`)
+
+	impl, _, err := NewReplayImplementation(store, "")
+	if err != nil {
+		t.Fatalf("NewReplayImplementation: %v", err)
+	}
+	s := mustRun(t, Options{
+		RepoRoot: root, StoreRoot: widened,
+		Implementation: impl, ImplementationName: "replay", SelfTestMode: true,
+	})
+	var found bool
+	for _, r := range s.Results {
+		if r.CaseID != "REFUSE-01-actual-actual-ungraded" {
+			continue
+		}
+		found = true
+		if r.Outcome != OutcomeInadmissible {
+			t.Errorf("REFUSE-01 outcome %s, want %s once its capability is graded", r.Outcome, OutcomeInadmissible)
+		}
+		if !containsSubstring(r.Detail, "STALE REFUSAL VECTOR") {
+			t.Errorf("the report must say the vector is stale and must be retired, got %v", r.Detail)
+		}
+		if !containsSubstring(r.Detail, "not a defect in any implementation") {
+			t.Errorf("the report must say this is not an implementation defect, got %v", r.Detail)
+		}
+	}
+	if !found {
+		t.Fatal("REFUSE-01 was not graded at all")
+	}
+	if got := s.ExitCode(); got == 0 {
+		t.Errorf("a stale refusal vector must not be exit 0, got %d", got)
+	}
+}
+
+// parityShell builds a minimal admissible parity vector pointing at a real capture
+// artefact, for tests that vary one thing about it.
+func parityShell(pin *Pin) *Vector {
+	return &Vector{
+		Schema:               VectorSchemaV1,
+		CaseID:               "SHELL",
+		Context:              "loanschedule",
+		Class:                ClassParity,
+		DEC1Revision:         pin.DEC1Revision,
+		CapabilitiesRequired: []string{"schedule.core"},
+		Provenance: Provenance{
+			Kind:          ProvenanceOracleCapture,
+			CaptureRef:    ".softhouse/capture/out/capture-prod3b-attestation.json",
+			CaptureCaseID: "P-01",
+		},
+		Oracle: OracleStamp{
+			FineractCommit:      pin.FineractCommit,
+			Seam:                "path_a_embeddable",
+			ThreadedMathContext: MathContext{Precision: 19, RoundingMode: "HALF_UP"},
+			AmbientMathContext:  MathContext{Precision: 19, RoundingMode: "HALF_UP"},
+		},
+		Request: Request{
+			TimeZone:                         "Asia/Ulaanbaatar",
+			Currency:                         Currency{Code: "MNT", MinorUnitDigits: 2},
+			Rounding:                         Rounding{SignificantDigits: 19, RateFactorScale: 19, Mode: "HALF_UP"},
+			ScheduleStartDate:                Date{2024, 1, 1},
+			Disbursements:                    []Disbursement{{Date: Date{2024, 1, 1}, AmountMinor: "10000"}},
+			NumberOfRepayments:               1,
+			RepaymentEvery:                   1,
+			RepaymentFrequencyUnit:           "MONTHS",
+			AnnualNominalInterestRate:        Rate{Numerator: 7, Denominator: 100},
+			InterestMethod:                   "DECLINING_BALANCE",
+			DayCount:                         "FIXED_30_360",
+			DownPaymentPercentage:            Rate{Numerator: 0, Denominator: 1},
+			InstallmentRoundingMultipleMinor: "0",
+		},
+		Expect: Expect{
+			Kind: "schedule",
+			Periods: []ExpectPeriod{{
+				Kind: "REPAYMENT", InstallmentNumber: 1,
+				FromDate: Date{2024, 1, 1}, DueDate: Date{2024, 2, 1},
+				PrincipalMinor: "10000", InterestMinor: "58", OutstandingPrincipalMinor: "0",
+			}},
+		},
+		Path: filepath.Join("loanschedule", "SHELL.json"),
+	}
+}
+
 // TestSeamBlindnessRefuses proves the load-bearing property of the schema: a case
 // that needs a capability its capture seam cannot see is REFUSED, not passed.
 func TestSeamBlindnessRefuses(t *testing.T) {
