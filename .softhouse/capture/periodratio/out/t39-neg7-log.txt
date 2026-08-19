@@ -1,0 +1,16 @@
+00:19:27.510 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_cal`: HALF_UP
+00:19:27.545 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_ctl_q0a`: HALF_UP
+00:19:27.549 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_ctl_1`: HALF_UP
+00:19:27.552 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_ctl_2`: HALF_UP
+00:19:27.554 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_p0_a`: HALF_UP
+00:19:27.558 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_p0_b`: HALF_UP
+00:19:27.560 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_p0_c`: HALF_UP
+00:19:27.565 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_p0_d`: HALF_UP
+00:19:27.585 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_p0_e`: HALF_UP
+00:19:27.587 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_p0_f`: HALF_UP
+00:19:27.588 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_p0_g`: HALF_UP
+00:19:27.590 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_p0_h`: HALF_UP
+00:19:27.591 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_me_a`: HALF_UP
+00:19:27.593 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_me_b`: HALF_UP
+00:19:27.594 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_me_c`: HALF_UP
+00:19:27.595 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t39_me_d`: HALF_UP
