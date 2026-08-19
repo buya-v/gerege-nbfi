@@ -273,7 +273,7 @@ Two live examples the store already encodes:
   grades the arm by 6,015 minor units, because the PLAIN branch takes its single
   denominator from the *period-start* year (366) while the ARM assigns days to the
   year they actually fall in (365). DEC-1's commentary still carries the old
-  wording; amending it is a **gate the driver has raised**, so this file uses the
+  wording; amending it is **gate G-4**, raised by the driver, so this file uses the
   corrected condition and nothing here edits DEC-1 or `contract.go`.
 * **Holiday adjustment is refused even on Path B.** Finding **D-2a**
   `[UNVERIFIED: no Path B capture exists]`: this generator adjusts only the
