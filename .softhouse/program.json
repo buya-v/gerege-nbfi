@@ -75,7 +75,7 @@
     "current_run_id": "2026-08-17-run1-harness-schedule-poc",
     "completed_contexts": [],
     "parked_contexts": [],
-    "note": "Local fire 20260819-200001 (oracle REACHABLE) - FIRST CONFORMANCE PASS IN THE PROGRAM. 13 parity vectors, 1350 cells, --prove 20/20, 6/6 invariants, all driver-re-run. Six workers dispatched, six completed, all merged, nothing lost. T8 promotion + T20 harness rules + T10 the first Go port + T9 the source-based review + T57 and T56 closing both of T9's P1s in the same fire. THE PASS IS NOT THE POINT: three money-moving mutations still survive all 13 vectors (textbook balance x rateFactor; rate factor without the trailing setScale; periodRatio -> RepaymentEvery) and T11 - IN FLIGHT AT CHECKPOINT - must decide from SOURCE whether each is a port defect or a corpus gap, since conformance cannot. NEXT FIRE STARTS AT: read and merge softhouse/T11-go-port-review, then capture the shapes that grade whatever T11 says is ungraded (oracle-only work), then T13 UAT, T14 (user gate: accept the PoC slice, NO cutover) and T15. Four gates open (G-2, G-3, G-4, G-5), NONE blocking, none RESERVED."
+    "note": "Local fire 20260819-200001 (oracle REACHABLE) COMPLETE, clean exit, eight workers dispatched and eight merged, nothing lost. THE PROGRAM WENT FROM ZERO PARITY VECTORS TO 29, AND FROM NO GO CODE TO A PORT THAT MATCHES THE ORACLE ON 2354 CELLS. conformance.sh VERDICT: PASS (exit 0), --prove 20/20, 6/6 invariants, 0 inadmissible - all driver-re-run, none accepted on report. THE PASS IS NOT THE POINT: at 13 vectors three money-moving mutations of the port still survived, and the fire was spent closing them. All four known mutations now die (8/2/1/10 vectors respectively). Two P1 review findings raised and BOTH closed in the same fire (F-1 the demonstrated false-PASS path; F-2 the ungraded EMI smoothing loop). NEXT FIRE NEEDS NO ORACLE: T59 (port cancellation checked only at entry, and cost ~n^2.4 - neither is graded by conformance, so add a test), T60 (balance_roll_forward grades a placeholder the README says nothing compares), then T12 drill, T13 UAT, T14 (user gate: accept the PoC slice, NO cutover) and T15. Five gates open (G-2, G-3, G-4, G-5), NONE blocking and NONE reserved. Cutover, regulatory sign-off, deposit-taking activation and licence facts remain untouched and are not in Run 1's path."
   },
   "contexts": [
     {
@@ -779,11 +779,11 @@
         "T9",
         "T10",
         "T57",
-        "T56"
+        "T56",
+        "T11",
+        "T58"
       ],
-      "tasks_in_flight_at_checkpoint": [
-        "T11"
-      ],
+      "tasks_in_flight_at_checkpoint": [],
       "headline": "FIRST CONFORMANCE PASS IN THE PROGRAM - and the fire was then spent proving how little it meant. conformance.sh VERDICT: PASS (exit 0), 13 parity vectors, 1350 cells, 6/6 invariants, 0 inadmissible, --prove 20/20, go build/vet/test green, gofmt -l only the frozen contract.go (G-3). EVERY NUMBER DRIVER-RE-RUN, none accepted on report.",
       "what_the_pass_does_not_mean": "T10 mutated its own port into each named wrong implementation and re-ran the real harness: FIVE died, FOUR survived, THREE of which move money. The worst - deleting the ENTIRE EMI re-adjust smoothing loop, which DEC-1 calls a normative obligation 'not backlog' - was reproduced INDEPENDENTLY BY THE DRIVER at 11/11 PASS, exit 0. T57 then captured the two shapes DEC-1 itself names, and the driver re-ran the IDENTICAL mutation: it now FAILS both new vectors with named cells and margins. That closed loop (mutate -> find the blind spot -> capture the shape -> prove the mutation now dies) is the fire's transferable result, recorded as pattern P-3.",
       "still_ungraded": [
@@ -798,13 +798,23 @@
         "D-4 the harness could not express a zero-money-margin structural kill, making its OWN 'UNBACKED monthend.reanchor' complaint unsatisfiable; spec corrected by T8-promote (it is a DECODE-time change via DisallowUnknownFields, so an admit.go-only fix would not have landed it)",
         "D-5/D-6 latent harness defects that detonate on first real use (three silent continue paths in the replay loader; a frozen ParityPass == 0 assertion)",
         "D-6 THIRD RECURRENCE found post-merge by the driver: --prove was 18/20, both failures stale proofs, one a hard-coded 'parity vectors PASS 11' that T57 moved to 13. Driver fixed both to assert the PROPERTY and verified proof 1 still discriminates (-impl=__none__ -> 2, -impl=loanschedule-go -> 0)",
-        "independent re-derivation of all 11 pass-3b candidates BEFORE any worker reported (11/11 digit for digit) plus a third-converter transcription audit of the promoted files (883 cells, 0 mismatches) and confirmation of P-01's 65,885,070 margin"
+        "independent re-derivation of all 11 pass-3b candidates BEFORE any worker reported (11/11 digit for digit) plus a third-converter transcription audit of the promoted files (883 cells, 0 mismatches) and confirmation of P-01's 65,885,070 margin",
+        "D-6 recurred a FOURTH time, found by T58 in the very proof the driver had just de-staled: proof 19 asserted that withdrawing P-02/P-02b makes monthend.reanchor UNBACKED, which was only true while they were its ONLY backers - it failed BECAUSE COVERAGE WAS ADDED. The worker correctly refused to edit the harness and reported it rather than discarding 20 measured kills to get green. Driver fixed it to assert the property F-1b protects and VERIFIED IT DISCRIMINATES (0 occurrences on the pristine store, present on the withdrawn one). Recorded as pattern P-7."
       ],
       "gates_raised": [
         "G-5 - DEC-1 contradicts itself on a ZERO interest rate: the prose says outside the graded domain, the enumerated list has no rate predicate, admit.go implements the list, and SELFTEST-01 (the harness's own self-test fixture) IS a zero-rate request. T10 implemented the list and flagged it rather than amending a ratified DEC-n. Driver recommends making the prose match the list. NOT RESERVED, blocks nothing."
       ],
       "process_defect": "The worker worktree cut-point defect recurred THREE times in one fire (T9's F-9, T57's N-5, and again on T56): workers handed worktrees cut BEFORE the merge of the artefact they were to work on. T9 was sent to review 11 promoted vectors and found only the four REFUSE-* files; it re-cut onto main itself. A reviewer who graded what was in front of them would have reviewed an empty corpus and reported it clean. Pattern P-5.",
-      "invariants_held": "PostgreSQL only, no prohibited engine or driver anywhere. Money is integer minor units; zero float32/float64/big.Float/ParseFloat in the port, zero float-shaped JSON number tokens store-wide. contract.go byte-identical and never gofmt'd. No cutover, no deposit-taking surface, no live endpoint, no third-party binding. Conformance never reported a PASS it had not earned."
+      "invariants_held": "PostgreSQL only, no prohibited engine or driver anywhere. Money is integer minor units; zero float32/float64/big.Float/ParseFloat in the port, zero float-shaped JSON number tokens store-wide. contract.go byte-identical and never gofmt'd. No cutover, no deposit-taking surface, no live endpoint, no third-party binding. Conformance never reported a PASS it had not earned.",
+      "final_state": "conformance.sh VERDICT: PASS (exit 0) - 29 parity vectors, 2354 graded cells, 58 ungraded, 0 inadmissible, 0 harness errors, 6/6 invariants, --prove 20/20, go build/vet/test green, gofmt -l only the frozen contract.go. THE CORPUS STARTED THIS FIRE AT ZERO PARITY VECTORS.",
+      "all_four_known_mutations_now_die": "At 13 vectors three money-moving mutations survived; at 29 all die. periodRatio -> RepaymentEvery 8 FAIL; textbook balance x rateFactor 2 FAIL; rate factor without the trailing setScale 1 FAIL; EMI smoothing loop deleted 10 FAIL (driver re-ran at 29). MOST OF THIS NEEDED NO ORACLE: T11 found 8 oracle-observed drift shapes captured two fires ago and NEVER PROMOTED, which closed one survivor BY OBSERVATION and killed two further counterfactuals (worst margin MNT 8,545,743.02). The two that did need the oracle were located by a 6,000-shape sweep and THE ORACLE CONFIRMED T11'S PREDICTION EXACTLY, including interest MNT 15,307.35 - folklore argued from source three times and observed zero times, ended by two captures.",
+      "t11_verdict": "ACCEPTED WITH REQUIRED CHANGES. THE PORT HAS NO ARITHMETIC DEFECT - 22 counterfactuals derived from source, none exposed one; T10's subtle 'first multiply against ONE is not a no-op' claim confirmed; two traps that would have broken every due date and clamp checked and the port reads the right one both times. Two non-money defects: F-1 (P1) and F-2 (P2) -> T59.",
+      "driver_correction_to_t11": "T11's F-1 says the port 'ignores cancellation'. It does not: generator.go:72 checks ctx.Err() ONCE AT ENTRY and never again [VERIFIED: one occurrence in generator.go, zero in emi.go], which is exactly consistent with T11's own measurement of 5.9s elapsed under a 50ms deadline. The fix is therefore NOT 'add a cancellation check' but 'check inside the loops where the time is spent'. Recorded that way in T59.",
+      "open_findings_carried": [
+        "T59 - T11's F-1/F-2 (port cancellation checked only at entry; ~n^2.4 cost, unbounded NumberOfRepayments, Memo cache dropped). NO ORACLE NEEDED.",
+        "T60 - T58's N-2: balance_roll_forward grades a placeholder the store README says nothing compares, so an honestly-declared unrecorded cell goes red. D-5 class. NO ORACLE NEEDED.",
+        "P-5 recurred FIVE times in one fire - workers handed worktrees cut before the merge of the artefact they were to work on. T11 got a tree with NO .go files in the port directory. The written rule is not the gap; nothing enforces it. Belongs in the dispatcher."
+      ]
     }
   ],
   "database": {
