@@ -1,0 +1,696 @@
+[
+ {
+  "case": "P-CAL",
+  "skipped": "precision 12, not the production 19",
+  "cells": 0,
+  "baselineMismatches": 0,
+  "baselineDateMismatches": 0,
+  "dateCells": 0,
+  "dateDivergent": {},
+  "divergent": {},
+  "maxMargin": {},
+  "nDivergentCells": {}
+ },
+ {
+  "case": "P-CAL-EMI6",
+  "cells": 20,
+  "baselineMismatches": 0,
+  "baselineDateMismatches": 0,
+  "dateCells": 14,
+  "dateDivergent": {},
+  "divergent": {
+   "NOFINALADJ": [
+    {
+     "case": "P-CAL-EMI6",
+     "row": 1,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 16665595,
+     "value": 16665594,
+     "delta": 1
+    },
+    {
+     "case": "P-CAL-EMI6",
+     "row": 1,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 84797605,
+     "value": 84797606,
+     "delta": 1
+    },
+    {
+     "case": "P-CAL-EMI6",
+     "row": 2,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 16762811,
+     "value": 16762810,
+     "delta": 1
+    },
+    {
+     "case": "P-CAL-EMI6",
+     "row": 2,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 68034794,
+     "value": 68034796,
+     "delta": 2
+    },
+    {
+     "case": "P-CAL-EMI6",
+     "row": 3,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 16860594,
+     "value": 16860593,
+     "delta": 1
+    },
+    {
+     "case": "P-CAL-EMI6",
+     "row": 3,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 51174200,
+     "value": 51174203,
+     "delta": 3
+    },
+    {
+     "case": "P-CAL-EMI6",
+     "row": 4,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 16958948,
+     "value": 16958947,
+     "delta": 1
+    },
+    {
+     "case": "P-CAL-EMI6",
+     "row": 4,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 34215252,
+     "value": 34215256,
+     "delta": 4
+    },
+    {
+     "case": "P-CAL-EMI6",
+     "row": 5,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 17057875,
+     "value": 17057874,
+     "delta": 1
+    },
+    {
+     "case": "P-CAL-EMI6",
+     "row": 5,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 17157377,
+     "value": 17157382,
+     "delta": 5
+    },
+    {
+     "case": "P-CAL-EMI6",
+     "row": 6,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 17157377,
+     "value": 17157378,
+     "delta": 1
+    },
+    {
+     "case": "P-CAL-EMI6",
+     "row": 6,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 0,
+     "value": 4,
+     "delta": 4
+    }
+   ],
+   "SMOOTHINGOFF": [
+    {
+     "case": "P-CAL-EMI6",
+     "row": 1,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 16665595,
+     "value": 16665594,
+     "delta": 1
+    },
+    {
+     "case": "P-CAL-EMI6",
+     "row": 1,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 84797605,
+     "value": 84797606,
+     "delta": 1
+    },
+    {
+     "case": "P-CAL-EMI6",
+     "row": 2,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 16762811,
+     "value": 16762810,
+     "delta": 1
+    },
+    {
+     "case": "P-CAL-EMI6",
+     "row": 2,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 68034794,
+     "value": 68034796,
+     "delta": 2
+    },
+    {
+     "case": "P-CAL-EMI6",
+     "row": 3,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 16860594,
+     "value": 16860593,
+     "delta": 1
+    },
+    {
+     "case": "P-CAL-EMI6",
+     "row": 3,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 51174200,
+     "value": 51174203,
+     "delta": 3
+    },
+    {
+     "case": "P-CAL-EMI6",
+     "row": 4,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 16958948,
+     "value": 16958947,
+     "delta": 1
+    },
+    {
+     "case": "P-CAL-EMI6",
+     "row": 4,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 34215252,
+     "value": 34215256,
+     "delta": 4
+    },
+    {
+     "case": "P-CAL-EMI6",
+     "row": 5,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 17057875,
+     "value": 17057874,
+     "delta": 1
+    },
+    {
+     "case": "P-CAL-EMI6",
+     "row": 5,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 17157377,
+     "value": 17157382,
+     "delta": 5
+    },
+    {
+     "case": "P-CAL-EMI6",
+     "row": 6,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 17157377,
+     "value": 17157382,
+     "delta": 5
+    }
+   ]
+  },
+  "maxMargin": {
+   "NOFINALADJ": 5,
+   "SMOOTHINGOFF": 5
+  },
+  "nDivergentCells": {
+   "NOFINALADJ": 12,
+   "SMOOTHINGOFF": 11
+  }
+ },
+ {
+  "case": "P-CAL-P00",
+  "cells": 20,
+  "baselineMismatches": 0,
+  "baselineDateMismatches": 0,
+  "dateCells": 14,
+  "dateDivergent": {},
+  "divergent": {
+   "NOFINALADJ": [
+    {
+     "case": "P-CAL-P00",
+     "row": 6,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 1690,
+     "value": 1691,
+     "delta": 1
+    }
+   ]
+  },
+  "maxMargin": {
+   "NOFINALADJ": 1
+  },
+  "nDivergentCells": {
+   "NOFINALADJ": 1
+  }
+ },
+ {
+  "case": "P-RND-21021587PT50-6x21PT6",
+  "cells": 20,
+  "baselineMismatches": 0,
+  "baselineDateMismatches": 0,
+  "dateCells": 14,
+  "dateDivergent": {},
+  "divergent": {
+   "NOFINALADJ": [
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 1,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 334921682,
+     "value": 334921683,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 1,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 1767237068,
+     "value": 1767237067,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 2,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 340950272,
+     "value": 340950273,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 2,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 1426286796,
+     "value": 1426286794,
+     "delta": 2
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 3,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 347087377,
+     "value": 347087378,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 3,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 1079199419,
+     "value": 1079199416,
+     "delta": 3
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 4,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 353334949,
+     "value": 353334951,
+     "delta": 2
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 4,
+     "kind": "REPAYMENT",
+     "field": "interest_minor",
+     "observed": 19425590,
+     "value": 19425589,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 4,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 725864470,
+     "value": 725864465,
+     "delta": 5
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 5,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 359694979,
+     "value": 359694980,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 5,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 366169491,
+     "value": 366169485,
+     "delta": 6
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 6,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 366169491,
+     "value": 366169489,
+     "delta": 2
+    }
+   ],
+   "SMOOTHINGOFF": [
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 1,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 334921682,
+     "value": 334921683,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 1,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 1767237068,
+     "value": 1767237067,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 2,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 340950272,
+     "value": 340950273,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 2,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 1426286796,
+     "value": 1426286794,
+     "delta": 2
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 3,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 347087377,
+     "value": 347087378,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 3,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 1079199419,
+     "value": 1079199416,
+     "delta": 3
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 4,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 353334949,
+     "value": 353334951,
+     "delta": 2
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 4,
+     "kind": "REPAYMENT",
+     "field": "interest_minor",
+     "observed": 19425590,
+     "value": 19425589,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 4,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 725864470,
+     "value": 725864465,
+     "delta": 5
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 5,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 359694979,
+     "value": 359694980,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 5,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 366169491,
+     "value": 366169485,
+     "delta": 6
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 6,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 366169491,
+     "value": 366169485,
+     "delta": 6
+    }
+   ],
+   "TEXTBOOK": [
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 1,
+     "kind": "REPAYMENT",
+     "field": "interest_minor",
+     "observed": 37838857,
+     "value": 37838858,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 2,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 340950272,
+     "value": 340950273,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 2,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 1426286796,
+     "value": 1426286795,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 3,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 347087377,
+     "value": 347087378,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 3,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 1079199419,
+     "value": 1079199417,
+     "delta": 2
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 4,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 353334949,
+     "value": 353334950,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 4,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 725864470,
+     "value": 725864467,
+     "delta": 3
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 5,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 359694979,
+     "value": 359694980,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 5,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 366169491,
+     "value": 366169487,
+     "delta": 4
+    },
+    {
+     "case": "P-RND-21021587PT50-6x21PT6",
+     "row": 6,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 366169491,
+     "value": 366169487,
+     "delta": 4
+    }
+   ]
+  },
+  "maxMargin": {
+   "NOFINALADJ": 6,
+   "SMOOTHINGOFF": 6,
+   "TEXTBOOK": 4
+  },
+  "nDivergentCells": {
+   "NOFINALADJ": 12,
+   "SMOOTHINGOFF": 12,
+   "TEXTBOOK": 10
+  }
+ },
+ {
+  "case": "P-RND-3139845PT86-6x7PT0",
+  "cells": 20,
+  "baselineMismatches": 0,
+  "baselineDateMismatches": 0,
+  "dateCells": 14,
+  "dateDivergent": {},
+  "divergent": {
+   "NOFINALADJ": [
+    {
+     "case": "P-RND-3139845PT86-6x7PT0",
+     "row": 6,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 53094641,
+     "value": 53094644,
+     "delta": 3
+    }
+   ],
+   "NOSETSCALE": [
+    {
+     "case": "P-RND-3139845PT86-6x7PT0",
+     "row": 2,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 51873628,
+     "value": 51873627,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-3139845PT86-6x7PT0",
+     "row": 2,
+     "kind": "REPAYMENT",
+     "field": "interest_minor",
+     "observed": 1530735,
+     "value": 1530736,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-3139845PT86-6x7PT0",
+     "row": 2,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 210538172,
+     "value": 210538173,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-3139845PT86-6x7PT0",
+     "row": 3,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 158361948,
+     "value": 158361949,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-3139845PT86-6x7PT0",
+     "row": 4,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 105881363,
+     "value": 105881364,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-3139845PT86-6x7PT0",
+     "row": 5,
+     "kind": "REPAYMENT",
+     "field": "outstanding_principal_minor",
+     "observed": 53094641,
+     "value": 53094642,
+     "delta": 1
+    },
+    {
+     "case": "P-RND-3139845PT86-6x7PT0",
+     "row": 6,
+     "kind": "REPAYMENT",
+     "field": "principal_minor",
+     "observed": 53094641,
+     "value": 53094642,
+     "delta": 1
+    }
+   ]
+  },
+  "maxMargin": {
+   "NOFINALADJ": 3,
+   "NOSETSCALE": 1
+  },
+  "nDivergentCells": {
+   "NOFINALADJ": 1,
+   "NOSETSCALE": 7
+  }
+ }
+]
