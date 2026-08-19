@@ -35,7 +35,8 @@ import os
 import sys
 from calendar import isleap
 from datetime import date
-from decimal import Decimal, ROUND_HALF_UP, localcontext
+from decimal import (Decimal, ROUND_HALF_UP, ROUND_HALF_EVEN, ROUND_DOWN, ROUND_HALF_DOWN,
+                     localcontext)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, os.pardir, "out")
@@ -43,8 +44,17 @@ OUT = os.path.join(HERE, os.pardir, "out")
 # Ratified production MathContext.  MoneyHelper.PRECISION = 19 is a compile-time constant
 # [VERIFIED: fineract-core/.../MoneyHelper.java:35, :91-93]; the mode is the tenant's, HALF_UP
 # (RoundingMode ordinal 4) [asserted by the preconditions gate, out/preconditions.txt].
-PREC = 19
-ROUND = ROUND_HALF_UP
+#
+# The three T55_NEG_* hooks exist ONLY so bin/t55-negative-tests.sh can drive this script into a
+# deliberately wrong configuration and require it to FAIL.  An assertion suite that has never
+# failed has not been tested (patterns.md).  Each hook is echoed loudly and, if it is set on a
+# normal run, the run is failed -- so a hook left set cannot masquerade as a PASS.
+PREC = int(os.environ.get("T55_NEG_PREC", "19"))
+_MODES = {"HALF_UP": ROUND_HALF_UP, "HALF_EVEN": ROUND_HALF_EVEN, "DOWN": ROUND_DOWN,
+          "HALF_DOWN": ROUND_HALF_DOWN}
+_MODE_NAME = os.environ.get("T55_NEG_ROUND", "HALF_UP")
+ROUND = _MODES[_MODE_NAME]
+DOCTOR = os.environ.get("T55_NEG_DOCTOR", "")
 MINOR = Decimal("0.01")          # MNT minor unit
 SCALE19 = Decimal("1E-19")
 
@@ -96,7 +106,14 @@ def _has_number(o):
 
 def load(cid):
     with open(os.path.join(OUT, cid + "-exact.json")) as fh:
-        return json.load(fh)
+        doc = json.load(fh)
+    if DOCTOR and DOCTOR == cid:
+        # negative-test leg: perturb ONE money cell by one minor unit, in memory only.
+        for p in doc["periods"]:
+            if "interestOriginalDue" in p:
+                p["interestOriginalDue"] = str(Decimal(p["interestOriginalDue"]) + MINOR)
+                break
+    return doc
 
 
 # ---------------------------------------------------------------- cells
@@ -375,6 +392,19 @@ PAIRS = [("p7", "p4", "UNSET (arm live) vs FEB_29_PERIOD_ONLY"),
 
 
 def main():
+    # ---- assert the SETTINGS this analysis claims to run at, mechanically, before anything else.
+    print("== settings asserted ==")
+    print("  re-derivation MathContext: precision=%d roundingMode=%s" % (PREC, _MODE_NAME))
+    if PREC != 19:
+        bad("re-derivation precision is %d, ratified production value is 19 "
+            "(T55_NEG_PREC override was LEFT SET)" % PREC)
+    if _MODE_NAME != "HALF_UP":
+        bad("re-derivation rounding mode is %s, ratified value is HALF_UP "
+            "(T55_NEG_ROUND override was LEFT SET)" % _MODE_NAME)
+    if DOCTOR:
+        bad("T55_NEG_DOCTOR override was LEFT SET to '%s' -- a doctored capture is not an "
+            "observation" % DOCTOR)
+
     sidecars()
 
     print()
@@ -408,6 +438,21 @@ def main():
         if pair == "p7 vs p3" and nd != 0:
             bad("%s: p7 vs p3 differ on %d of %d cells -- UNSET and FULL_LEAP_YEAR must coincide"
                 % (sid, nd, n))
+
+    # THE COMPARATOR MUST NOT BE INERT.  A comparator that returns 0 everywhere would report the
+    # non-leap CONTROL as 'proven non-discriminating' while proving nothing at all.  Require BOTH
+    # a non-zero and a zero among the p7-vs-p4 rows, and require the named control to be the zero.
+    p74 = {sid: nd for sid, pair, _l, _n, nd, _w, _wc, _d in table if pair == "p7 vs p4"}
+    if not any(v > 0 for v in p74.values()):
+        bad("every p7-vs-p4 pair reports 0 cells -- the comparator is inert, so no zero it "
+            "reports means anything")
+    if not any(v == 0 for v in p74.values()):
+        bad("no p7-vs-p4 pair reports 0 cells -- the non-leap control did not behave as T48-N4 "
+            "predicts, which is a finding, not a pass")
+    for ctrl in ("LB-NONLEAP", "LB-DEC15NL"):
+        if p74.get(ctrl) != 0:
+            bad("%s is the T48-N4 non-leap CONTROL and must report 0 cells; it reported %s"
+                % (ctrl, p74.get(ctrl)))
 
     print()
     print("=" * 100)
