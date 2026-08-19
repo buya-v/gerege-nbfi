@@ -158,6 +158,12 @@ assert `totalRepaymentExpected` equals the sum of the rows*. Shipped as an invar
 The suite is proved **failable**: `--negative` perturbs one leaf in memory and it exits 1 naming three
 broken invariants [`out/t46/INVARIANTS-P5-negative.md`].
 
+Worth stating because it is a new observation rather than an assumption: **C8 and C9 pass on all seven
+T46 captures**, so charges still do not move principal, the outstanding balance or the EMI even when the
+request amount disagrees with the definition and even at a tie — the seven new shapes are cell-for-cell
+identical to the zero-charge control on `principalDue`, `principalOriginalDue`, `interestDue`,
+`principalLoanBalanceOutstanding` and `totalInstallmentAmountForPeriod`.
+
 T40's own `bin/invariants.py` is left as it stands — it is T40's committed evidence, it reproduces its
 committed `out/INVARIANTS.md` byte-for-byte after the A-7 path fix [VERIFIED: `diff` silent, this task],
 and its C5 failures are the observation that produced D-1. **What must not happen is C5 travelling

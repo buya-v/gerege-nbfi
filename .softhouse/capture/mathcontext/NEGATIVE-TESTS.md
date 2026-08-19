@@ -25,6 +25,50 @@ MariaDB entries` from a real scan of the 348 classpath entries).
 
 ---
 
+---
+
+## CORRECTION BY T46 — what N4 actually proves (audit finding M-8)
+
+**The section immediately below was wrong about which branch N4 fires, and the error mattered.**
+
+`run-mathcontext.sh`'s payload-assertion block has a single `if` pair on the canary:
+
+```python
+must_throw = os.environ["EXPECT_CANARY_THROWS"] == "1"
+if must_throw and not canary.startswith("THREW java.lang.IllegalStateException"):   # :157-160
+    bad.append("the ambient-absence probe is VACUOUS: ...")
+if not must_throw and canary.startswith("THREW"):                                    # :161-162
+    bad.append("negative run: the canary DID throw when the run asserted it would not: ...")
+```
+
+N4 sets `T42_EXPECT_CANARY_THROWS=0`. So `must_throw` is **False**, and the branch that fires is
+the second one — which is exactly what N4's own transcript records
+(`out/negative/n4-canary-assertion-inverted.txt`: *"BREACH: negative run: the canary DID throw
+when the run asserted it would not…"*). **N4 proves the canary really does throw. It does NOT
+exercise the vacuity guard**, and the vacuity guard is the one that makes E1 falsifiable.
+
+**Until T46, the vacuity guard had never been exercised.** It now has:
+
+| # | breach injected | how | exit | first line of the breach |
+|---|---|---|---|---|
+| **N7** | **the vacuity guard** | `src/t46-negative-vacuity.sh` extracts the SHIPPED assertion block out of `run-mathcontext.sh` at run time (so the guard exercised is the committed one, not a copy that could drift) and runs it against a payload whose `ambientCanary` has been rewritten from `THREW java.lang.IllegalStateException: …` to `precision=19 roundingMode=HALF_UP`, with `EXPECT_CANARY_THROWS` left at its default **1** | **1** | `BREACH: the ambient-absence probe is VACUOUS: MoneyHelper.getMathContext() on an uninitialised tenant returned 'precision=19 roundingMode=HALF_UP' instead of throwing IllegalStateException. Every ABSENCE case is meaningless.` |
+| **N8** | **the Path B slot assertion** (finding M-6) | `src/t46-assert-pathb-slot.sh` rewrites the `astore` that receives `getMathContext`'s result to an unused slot in a copy of the `javap` transcript | **1** | `BREACH: A2 assembleLoanScheduleFrom: slot 99 stored from getMathContext @31 is never loaded into an invoke whose descriptor takes a MathContext` (6 breaches in all) |
+| **N9** | **the M-5 identity check** | `src/t46-negative-identity.sh` moves one money cell by one minor unit in the re-emission | **1** | `BREACH: T42-CAL /observed/periods[1]/interest: '0.58' -> '0.59'` |
+
+Each of the three is paired with a **control leg on the uncorrupted artefact that must exit 0**,
+so what is shown is that the guard *discriminates*, not merely that it can be made to complain.
+
+N7 additionally proves it corrupted nothing else: **140,978 observed cells identical** between
+the source payload and the canary-corrupted one.
+
+Transcripts: `out/negative/t46-n7-vacuity-guard.txt`,
+`analysis/t46-pathb-slot-assertion-output.txt`,
+`out/negative/t46-n9-identity-check-failable.txt`. A fourth,
+`out/negative/t46-n8-identity-check-rejects.txt`, is the transcript of the first re-emission run
+being **rejected** by the identity check.
+
+---
+
 ## N4 is the one that matters, and here is why
 
 The central experiment in T42 is an **absence** probe: a tenant is put into
@@ -44,8 +88,12 @@ an explicit canary first —
 > `BREACH: the ambient-absence probe is VACUOUS: MoneyHelper.getMathContext() on an uninitialised
 > tenant returned … instead of throwing IllegalStateException. Every ABSENCE case is meaningless.`
 
-N4 inverts that expectation and confirms the guard fires. Without N4, "the shape generated fine,
-so the ambient was never read" would be an unfalsifiable claim.
+**N4 inverts that expectation and confirms the canary really does throw** — it fires the
+*opposite* branch of the same `if`, not the vacuity guard quoted above. The vacuity guard itself
+is exercised by **N7** (see the T46 correction section above); the original wording of this
+paragraph, which said N4 fired the vacuity guard, was wrong. Between N4 and N7, "the shape
+generated fine, so the ambient was never read" is no longer an unfalsifiable claim: N4 shows the
+canary throws, N7 shows the run would be failed if it ever stopped throwing.
 
 ## N5 is the second: the wiring assertion
 
