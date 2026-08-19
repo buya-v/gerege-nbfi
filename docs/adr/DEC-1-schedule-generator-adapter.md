@@ -280,21 +280,121 @@ Because a rate factor is of order 0.005–0.02, a *scale* is strictly lossier th
 
 **The production value is 19 and it is not a choice.** `MoneyHelper.PRECISION` is the compile-time constant 19 [`MoneyHelper.java:35`] and `getMathContext()` returns `new MathContext(19, tenantRoundingMode)` [`:91-93`]. Only the mode is tenant-configurable, and Gerege's ratified mode is `HALF_UP` (Fineract ordinal 4). **The production `MathContext` is `(19, HALF_UP)`**, and any prose implying precision is tenant-configurable is wrong. A capture at 12 is a rig calibration and can never be a parity vector.
 
-**Revision 7 replaces the source inference with an ATTESTATION, because one now exists.** Both halves of `(19, HALF_UP)` have been measured against the *deployed artefact* rather than only read in the source tree:
+**Revision 7 replaced the source inference with an ATTESTATION, because one now exists. Revision 8 states precisely WHAT each half of that attestation is evidence OF** (P1-T39-1, from task T39's finding N-3, plus a re-derivation this task added to explain it). Both halves of `(19, HALF_UP)` have been measured against the *deployed artefact* rather than only read in the source tree. **But an attestation of the AMBIENT `MoneyHelper` context and an attestation of the THREADED `MathContext` are two different claims, and on the Path-A seam only the second is evidence about the money** — §4.1.2 states the rule, its mechanism and its falsification test. Each bullet below is tagged with which context it witnesses:
 
-- **Precision.** `javap -p -constants` over `BOOT-INF/lib/fineract-core-1.16.0-SNAPSHOT.jar` **inside the running container** prints `public static final int PRECISION = 19;` [VERIFIED: task T36, `.softhouse/capture/pathb/t36/out/recapture-gerege/attestation.json`]. Task T35 read the same constant at runtime on the Path-A rig.
-- **Mode.** Read three independent ways on the `gerege` tenant: the `c_configuration.rounding-mode` row (**4**, enabled), **this JVM run's own** `MoneyHelper` initialisation line, and a **behavioural canary** — `1,162,502.50 × 0.018 = 20,925.045` comes back `20925.05` on `gerege` and `20925.04` on the stock `default` tenant in the same run [VERIFIED: T36; and T37's Path-A log, 11 of 11 lines `HALF_UP`].
+- **Precision — witnesses the AMBIENT context, and the code constant behind it.** `javap -p -constants` over `BOOT-INF/lib/fineract-core-1.16.0-SNAPSHOT.jar` **inside the running container** prints `public static final int PRECISION = 19;` [VERIFIED: task T36, `.softhouse/capture/pathb/t36/out/recapture-gerege/attestation.json`; independently by task T40, `.softhouse/capture/charges/out/attested/attestation.json`]. Task T35 read the same constant at runtime on the Path-A rig. `PRECISION` is the compile-time constant `MoneyHelper.getMathContext()` builds its `MathContext` from [`MoneyHelper.java:35`, `:91-93`], so this is an attestation of **`MoneyHelper`'s** precision. On Path A the harness threads its own `MathContext` and the two coincide by construction of the rig, not by inference — the capture asserts the threaded precision separately [VERIFIED: T39, `.softhouse/capture/periodratio/ATTESTATION.md`, threaded `(19, HALF_UP)` on fifteen of sixteen, `(12, HALF_UP)` on the labelled calibration only].
+- **Mode — two of the three readings witness the AMBIENT context; the third witnesses arithmetic, on the path it ran on.** Read three independent ways on the `gerege` tenant: the `c_configuration.rounding-mode` row (**4**, enabled) and **this JVM run's own** `MoneyHelper` initialisation line are both statements about the **tenant configuration**, i.e. about what `MoneyHelper.getMathContext()` returns; the **behavioural canary** — `1,162,502.50 × 0.018 = 20,925.045` comes back `20925.05` on `gerege` and `20925.04` on the stock `default` tenant in the same run — is a statement about **arithmetic**, and it is a **Path-B** statement, taken through the running server where no caller threads a `MathContext` [VERIFIED: T36; T40 re-ran the same canary and got `20925.05`, `.softhouse/capture/charges/out/attested/`; and T37's Path-A log, 11 of 11 lines `HALF_UP`]. **None of the three is, by itself, evidence about the mode in force on a Path-A capture** — §4.1.2.
 - **Provenance of the binary.** The image's own `git.properties` reports commit `426a23544e8426a38ae43ae404670a0a7e85b9eb` with **`git.dirty=false`** — the same commit as the pinned checkout, previously assumed and now measured [VERIFIED: T35; corroborated by T36 and T37]. Image digest `sha256:e596339626bf…0459a`; `/app/fineract-provider.jar` sha256 `60fb6dbd631d…f4c9`; JVM Zulu OpenJDK `21.0.11+10-LTS` with **no JVM input flags**.
 
-So where this document says "the production `MathContext` is `(19, HALF_UP)`" it is now citing an attestation of the artefact that produced the captures, not an inference from source.
+So where this document says "the production `MathContext` is `(19, HALF_UP)`" it is citing an attestation of the artefact that produced the captures, not an inference from source. **Revision 8 adds the scope that attestation carries:** it attests the ambient `MoneyHelper` context and, separately and by its own assertions, the threaded context each capture ran at. Where a claim in this document is about **money**, the threaded reading is the citation; where it is about **provenance or tenant configuration**, the ambient reading is. §4.1.2 makes that split normative and falsifiable.
 
 **There is no size threshold.** *Observed*: the oracle's own 12-vs-19 pair diverges at a principal of **4.00** on a 36-period 16.8 % shape and is **identical** at 50,000,000 on that same shape and at 87,654,321 on a 6-period 7.0 % shape. Sensitivity is a rounding-boundary property of the `(principal, term, rate)` triple, not a magnitude property of the principal. All four MNT captures in the corpus are 12/19-identical, so nothing in the corpus shows Mongolian sizes are precision-sensitive either. **Any implementation shortcut justified by loan size is unfounded.**
 
-**One mode, not three.** The oracle takes every tie rule from one of two places — the threaded `MathContext` where one is passed, and the tenant-global one where one is not [`Money.java:52`; `:102-104`; `:150-157`; `:159-161` and `:163-170`, whose return path goes through the two-argument `Money.of` and therefore reads tenant-global state even though its own division used the threaded context]. Independently settable modes would admit combinations no deployment can produce.
+**One mode, not three.** The oracle takes every tie rule from one of two places — the threaded `MathContext` where one is passed, and the tenant-global one where one is not. **Which of the two applies is decided by one line, and revision 8 cites it rather than leaving it to `Money.java:52` to imply:** `Money` carries its own `MathContext` field [`Money.java:32`] and `getMc()` returns **that field when it is non-null**, falling back to `MoneyHelper.getMathContext()` only when it is null [`Money.java:494-496`]. So the constructor's own currency-scale `setScale(decimalPlaces, getMc().getRoundingMode())` [`Money.java:52`] reads the **threaded** mode whenever one was threaded — `this.mc` is assigned at `:42`, before `:52` runs — and the **tenant-global** mode only where no context was threaded: the two-argument `Money.of` [`:102-104`, `:114-116`], `Money.zero(currency)` [`:118-120`], the static `roundToMultiplesOf(BigDecimal, Integer)` [`:150-157`], `roundToMultiplesOf(Money, Integer)` [`:159-161`] and the three-argument form's return path [`:163-170`, which goes through the two-argument `Money.of` at `:169` even though its own division used the threaded context], and `multipliedBy(double)` [`:372-378`, the two-argument `Money.of` at `:377`]. Independently settable modes would admit combinations no deployment can produce. **Revision 7 cited `:52` as the tenant-global source; that was imprecise, and §4.1.2 records what the imprecision cost.**
 
-**Adapter obligation, widened.** The Fineract-JVM adapter must initialise the tenant rounding mode to `Rounding.Mode` before **every** call — not only when an installment multiple is set. *Every* path that constructs `Money` without an explicit `MathContext` reads the tenant-global context, and outside an initialised tenant those paths throw `IllegalStateException` [`MoneyHelper.java:74-82`]. The tenant **precision** cannot be pinned the same way; within the graded domain that is harmless, and revision 4 replaces the weak evidence revision 3 offered for that with the source argument (P2-T26-2). The weak version was: a capture threaded at precision 12 on a precision-19 tenant still reproduced the oracle's shipped conformance literal. That is not sufficient on its own — §4.1 itself establishes that the shipped 100.00 / 6 × 7 % shape is largely precision-insensitive, so reproducing it is weak evidence either way. **The argument from source is sufficient.** Inside the graded domain every `Money` is constructed through a three-argument `Money.of(…, mc)` carrying the threaded context, and the `Money` constructor reads only the **rounding mode** from `getMc()` [`Money.java:52`], never the precision. The call sites that do read the tenant-global precision [`Money.java:103`, `:115`, `:160`, `:377`] all sit on the installment-multiple and `multipliedBy(double)` paths, which the graded domain excludes (§4.7). So no reached call site consults the tenant-global precision — established from source, not inferred from a precision-insensitive capture.
+**Adapter obligation, widened.** The Fineract-JVM adapter must initialise the tenant rounding mode to `Rounding.Mode` before **every** call — not only when an installment multiple is set. *Every* path that constructs `Money` without an explicit `MathContext` reads the tenant-global context, and outside an initialised tenant those paths throw `IllegalStateException` [`MoneyHelper.java:74-82`]. The tenant **precision** cannot be pinned the same way; within the graded domain that is harmless, and revision 4 replaces the weak evidence revision 3 offered for that with the source argument (P2-T26-2). The weak version was: a capture threaded at precision 12 on a precision-19 tenant still reproduced the oracle's shipped conformance literal. That is not sufficient on its own — §4.1 itself establishes that the shipped 100.00 / 6 × 7 % shape is largely precision-insensitive, so reproducing it is weak evidence either way. **The argument from source is sufficient.** Inside the graded domain every `Money` is constructed through a three-argument `Money.of(…, mc)` carrying the threaded context, and the `Money` constructor reads only the **rounding mode** from `getMc()` [`Money.java:52`], never the precision — and, revision 8 adds, on a `Money` built through the three-argument form `getMc()` **is the threaded context** [`Money.java:494-496`], so that read is not a tenant-global read at all. The call sites that do reach the tenant-global context [`Money.java:103`, `:115`, `:160`, `:377`] all sit on the installment-multiple and `multipliedBy(double)` paths, which the graded domain excludes (§4.7). So no reached call site consults the tenant-global precision **or the tenant-global mode** — established from source, not inferred from a precision-insensitive capture, and now **confirmed by a negative test**: forcing the tenant mode to `DOWN` left all sixteen T39 capture blocks byte-identical [VERIFIED: T39 N-3, `.softhouse/capture/periodratio/out/t39-neg5.json` versus `out/t39-periodratio.json`, 0 of 16 differ]. **The obligation to initialise the tenant mode before every call therefore does NOT rest on that mode changing the answer inside the graded domain — observation says it does not. It rests on the fact that an uninitialised tenant THROWS** [`MoneyHelper.java:74-82`, `:91-93`], which turns a silently different number into a loud failure and is the stronger reason of the two.
 
-**Mode value domain.** `RoundingHalfUp` (ratified, and the only mode in the graded domain) and `RoundingHalfEven` (the oracle's stock configuration default, so a deployment inheriting it must be expressible). The mode is demonstrably live, not a dead knob: *observed*, the same request put to two tenants of one running oracle differing only in rounding mode returned period-1 interest **20,925.05** under HALF_UP and **20,925.04** under HALF_EVEN on principal MNT 1,162,502.50, the tie taken at `Money.java:52`. The remaining five Java modes are not admitted; each would be surface carrying an unproven claim.
+**Mode value domain.** `RoundingHalfUp` (ratified, and the only mode in the graded domain) and `RoundingHalfEven` (the oracle's stock configuration default, so a deployment inheriting it must be expressible). The mode is demonstrably live, not a dead knob: *observed*, the same request put to two tenants of one running oracle differing only in rounding mode returned period-1 interest **20,925.05** under HALF_UP and **20,925.04** under HALF_EVEN on principal MNT 1,162,502.50, the tie taken at `Money.java:52`. **That observation is a PATH-B one and revision 8 says so** (§4.1.2): through the running server nothing threads a `MathContext`, so `getMc()` takes the null branch [`Money.java:494-496`] and the tenant-global mode **is** the arithmetic. On **Path A** the same tenant-mode change moves nothing, because a context is threaded [VERIFIED: T39 N-3, 0 of 16 blocks differ] — the two results are consistent, not contradictory, and §4.1.2 is why. The remaining five Java modes are not admitted; each would be surface carrying an unproven claim.
+
+#### 4.1.2 WHICH `MathContext` is in force — ambient versus threaded (normative; P1-T39-1, added in revision 8)
+
+Revision 7 cited T35, T36 and T37 attestations for the production `MathContext`, and several of
+those sentences rested wholly or partly on **`MoneyHelper`**. Task T39 then ran the negative test
+nobody had run, and it separates the two contexts:
+
+| forced change | `MoneyHelper.getMathContext()` on the oracle's own testimony | observed capture blocks that moved |
+|---|---|---|
+| tenant `RoundingMode` ordinal → `1` (`DOWN`) | changed to `precision=19 roundingMode=DOWN` | **0 of 16 — byte-identical** |
+| **threaded** `MathContext` rounding mode → `DOWN` | unchanged | **15 of 16** (e.g. `T39-CTL-Q0a` total interest `76,723.70` → `76,723.65`) |
+
+[VERIFIED: task T39, `.softhouse/capture/periodratio/out/t39-neg5.json` and `out/t39-neg7.json`
+against `out/t39-periodratio.json`; `.softhouse/capture/periodratio/NEGATIVE-TESTS.md`. Both are
+**observations**, taken on the pinned reference oracle by T39, quoted here with their ids and
+taken by nobody else.]
+
+**The rule (normative, ENGINEERING, `chosen_by: agent`).**
+
+> On the **Path-A embeddable seam** the arithmetic in force is the **`MathContext` threaded into
+> `generate(mc, modelData)`**. The **ambient** `MoneyHelper` context is in force only at the call
+> sites that construct or rescale a `Money` **without** an explicit `MathContext`, and inside the
+> graded domain no such call site is reached. Therefore, on Path A inside the graded domain, an
+> attestation of the ambient context is evidence about the **tenant configuration and the
+> provenance of the run** — never about the money. On the **Path-B running-server path** the
+> converse holds: nothing threads a context, `getMc()` takes its null branch, and the ambient
+> context **is** the arithmetic.
+
+**The mechanism, re-derived by this task from the pinned checkout — the observation above is
+exactly what the source predicts.** Revision 7 wrote that the `Money` constructor "reads only the
+rounding mode from `getMc()` [`Money.java:52`]" and cited `:52` among the tenant-global sources.
+That is imprecise, and the imprecision is the whole of T39's N-3:
+
+- `Money` holds its own `MathContext` field [`Money.java:32`], assigned in the constructor at
+  [`:42`] **before** the currency-scale `setScale` at [`:52`] runs.
+- `getMc()` is an **instance** method: `return mc != null ? mc : MoneyHelper.getMathContext();`
+  [`Money.java:494-496`]. It is the ambient context **only on the null branch**.
+- Every `Money` this seam builds comes through the three-argument `Money.of(currency, amount, mc)`
+  [`Money.java:106-108`, `:110-112`] carrying the threaded context, so `getMc()` on it — including
+  at `:52` — is the **threaded** context.
+- The ambient context is reached at exactly these call sites, all of them enumerated in §4.1: the
+  two-argument `Money.of` [`:102-104`, `:114-116`], `Money.zero(currency)` [`:118-120`], the static
+  `roundToMultiplesOf(BigDecimal, Integer)` [`:150-157`], `roundToMultiplesOf(Money, Integer)`
+  [`:159-161`] and the three-argument form's return path [`:163-170`, the two-argument `Money.of`
+  at `:169`], and `multipliedBy(double)` [`:372-378`, the two-argument `Money.of` at `:377`].
+  **Every one of them sits on the installment-multiple or `multipliedBy(double)` path, which the
+  graded domain excludes** (§4.7, `InstallmentRoundingMultipleMinor == 0`).
+
+So the source says an ambient-only change must be inert on Path A inside the graded domain, and
+T39 observed it inert on 16 of 16. **This is a re-derivation that explains an observation; the
+observation outranks any re-derivation of the same question, and here the two agree.**
+
+**What the ambient reading IS still evidence of — stated so this correction does not overshoot.**
+Four things, each of which the program still needs:
+
+1. **The tenant configuration**, i.e. what `MoneyHelper.getMathContext()` returns
+   [`MoneyHelper.java:91-93`]. That is what pins the Gerege tenant to the ratified ordinal 4.
+2. **That the run would not throw.** Every ambient call site throws `IllegalStateException` on an
+   uninitialised tenant [`MoneyHelper.java:74-82`]. Attesting the ambient mode is what proves the
+   adapter obligation in §4.1 was met.
+3. **The arithmetic on Path B**, where nothing threads a context — which is why §4.1's
+   HALF_UP-versus-HALF_EVEN observation (`20,925.05` versus `20,925.04`) and T36's and T40's
+   behavioural canary are real arithmetic evidence, on that path.
+4. **`MoneyHelper.PRECISION = 19` as a property of the deployed binary** [`MoneyHelper.java:35`],
+   read by `javap` from the jar inside the container. That constant is not tenant state and the
+   negative test does not touch it.
+
+**What it is NOT evidence of:** the `MathContext` that produced any Path-A capture. That must be
+attested **separately, by the harness, as the value it threaded** — which T39's, T37's and T35's
+attestations do, and which every future capture must continue to do.
+
+**This rule is FALSIFIABLE, and task T42 owns the test.** T42 is investigating the same question
+in the same fire and this task does not have its results. The rule predicts, and T42 can confirm
+or refute, each of:
+
+- **(P1)** Forcing the ambient mode alone moves **no** cell of **any** in-graded-domain Path-A
+  capture. *Status: observed on 16 shapes for the mode* [T39 N-3]; **not** tested for the ambient
+  **precision**, and not tested outside T39's sixteen. `[UNVERIFIED beyond those 16]`
+- **(P2)** Forcing the threaded mode moves cells wherever a tie occurs. *Status: observed, 15 of
+  16* [T39 N-3]. The one that did not move is the shape with no tie at the minor unit, not a
+  counter-example.
+- **(P3)** On **Path B**, forcing the ambient mode alone **does** move money. *Status:* supported
+  only **indirectly** — by §4.1's two-tenant HALF_UP/HALF_EVEN pair and by T36's and T40's
+  half-cent canary, neither of which is a controlled single-variable negative test on a Path-B
+  **schedule**. `[UNVERIFIED as a controlled Path-B negative test]` **This is the cheapest gap
+  left in the rule and T42 should close it.**
+- **(P4)** No in-graded-domain Path-A call site reaches an ambient `Money` construction. *Status:
+  re-derived from source above; observationally consistent with (P1).* A single counter-example
+  — one in-graded-domain Path-A cell that moves under an ambient-only change — **falsifies this
+  whole subsection**, and every attestation sentence in §4.1 must then be re-scoped again.
+
+**Consequence for the capture programme (§8 item 1).** Every attestation must record the ambient
+context and the threaded context as **two labelled fields**, and any claim of the form "captured
+at `(19, HALF_UP)`" must say which. T39 already does this; earlier attestations conflate them and
+should be read with this subsection in hand. Note separately, and do not confuse the two: T39 also
+found that threaded precision **12 and 19 are indistinguishable on all sixteen of its shapes**
+[VERIFIED: T39 N-4, `out/t39-neg6.json`], so for that family `(19, HALF_UP)` is a **provenance**
+claim, not a discrimination claim. §4.1's own 12-versus-19 pair — eighteen divergent rows on an
+18 × 18.5 % shape — shows the corpus is not blind to threaded precision *in general*; it is blind
+to it on T39's sixteen.
 
 ### 4.2 Dates: civil dates, one named zone, and a month-end rule anchored to the disbursement
 
