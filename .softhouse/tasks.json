@@ -1056,10 +1056,11 @@
       "dependencies": [
         "T47"
       ],
-      "status": "pending",
-      "attempts": 0,
+      "status": "done",
+      "attempts": 1,
       "contract_independent": true,
-      "note": "Raised by local fire 20260819-140003. DISPATCHED, isolation=worktree, model=opus; orchestrator WILL await it."
+      "note": "Raised by local fire 20260819-140003. DISPATCHED, isolation=worktree, model=opus; orchestrator WILL await it. || COMPLETE, merged. VERDICT: ACCEPTED WITH REQUIRED CHANGES, NO P0 - the SECOND consecutive no-P0 round (T43, then this). Independent verification of the packed-whole-months closed form reproduced revision 10's exhaustive counts FROM FIRST PRINCIPLES: 14,976 days -> 112,147,776 ordered pairs, predicate fires 45,253, both cross-terms 0, k_oracle == k_clamped, first firing pair 2000-01-29/2001-02-28 packed 12 / clamped 13 / oracle 13. Citation audit: 155 distinct citations, 329 occurrences, 0 out of range, 0 ambiguous. The M4/M5 restatement grep found NO leak - the T2-style failure mode the driver flagged is NOT present. THREE P1s, THREE P2s, none moving money inside the graded domain. P1-T49-2 IS THE ONE THAT MATTERS AND THE DRIVER RE-VERIFIED IT BY READING: contract.go:367-370 and DEC-1 4.9 BOTH still say the ACT/ACT arm has 'no capture in the corpus' and 'no independent re-derivation has yet reproduced [it] from source'. BOTH ARE NOW FALSE - T48 captured the arm on three seams (~60 captures) and B-03/B-04 are on main; 4.10 and section 8 item 5 already say so. It leaked for five revisions and eight review rounds. IT SITS IN A contract.go DOC COMMENT, so RATIFICATION FREEZES IT and fixing it afterwards is a GATE - the same category as the known-wrong money sentence that made the driver decline at revision 8. P1-T49-1 confirms open finding T48-N1 by independent source re-derivation and shows the capture seam drops a THIRD of the 19 components, not two - so section 2.2's 'honours 17 of 19' and section 3.2's 'the two components the seam drops are EXACTLY the two the graded domain pins' are false IN THE ARGUMENT THAT LICENSES FREEZING THE CONTRACT ON A SEAM-CAPTURED CORPUS. No money moves: the only calculation-path reader (:1579) is behind daysInYearType == ACTUAL. P1-T49-3 RE-DERIVED BY THE DRIVER AND CONFIRMED: revision 10's own exact-integer worked check in 4.5.1 is wrong by exactly 10^2 - 2,160,000 x 21,875 = 47,250,000,000, not 472,500,000, which is the product of the MAJOR-unit 21,600. Conclusion and the observed 4.73/2.03 are correct. DRIVER DECISION: DO NOT RATIFY REVISION 10. One bounded erratum pass to revision 11 applying exactly these six items, then a DIFF-SCOPED check that the six landed - NOT a ninth full re-derivation, per T49's own recommendation. The rounds have converged.",
+      "branch": "softhouse/T49-dec1-v10-rereview"
     },
     {
       "id": "T50",
