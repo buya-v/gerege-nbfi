@@ -167,6 +167,20 @@ if lits:
 else:
     failures.append("analysis/shipped_literals.json missing -- no calibration possible")
 
+# --- CONTROL: reproduce the committed Path B observations B-03 and B-04 ----------------
+# reference-oracle.md records B-03 (FULL_LEAP_YEAR) 144,659.21 and B-04 (FEB_29_PERIOD_ONLY)
+# 145,011.43 total interest, 12/12 periods differing, taken through the RUNNING SERVER.
+from decimal import Decimal  # noqa: E402
+
+for case_id, want in (("T48-A2-CTL-B03", "144659.21"), ("T48-A2-CTL-B04", "145011.43"),
+                      ("T48-A2-CTL-B03NULL", "144659.21")):
+    got = sum(Decimal(rp["dueInterest"]) for rp in C[case_id]["observed"]["repaymentPeriods"])
+    good = str(got) == want
+    print("CONTROL   %-20s sum of dueInterest = %s  (committed Path B value %s): %s"
+          % (case_id, got, want, "REPRODUCED" if good else "DIVERGED"))
+    if not good:
+        failures.append("%s did not reproduce the committed Path B total interest %s" % (case_id, want))
+
 # --- FULL_LEAP_YEAR vs the field being UNSET ------------------------------------------
 for fam in ("Q", "M", "Y", "B", "A"):
     compare("F29-%s-NULL vs F29-%s-FULL" % (fam, fam), "a", "b",
