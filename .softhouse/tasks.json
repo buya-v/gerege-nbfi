@@ -822,11 +822,11 @@
         "T34",
         "T37"
       ],
-      "status": "in_flight",
+      "status": "done",
       "attempts": 1,
       "contract_independent": true,
       "branch": "softhouse/T39-periodratio-observation",
-      "note": "Raised by local fire 20260819-080001 (oracle REACHABLE). Applies the fire-20260818-230002 lesson 'an observation outranks a re-derivation of the same defect' to the ONE open P0 that is still purely re-derived. Path A throwaway containers only; the running server belongs to T40 this fire. DISPATCHED 2026-08-19T00:10Z, isolation=worktree, model=opus; orchestrator WILL await it."
+      "note": "Raised by local fire 20260819-080001 (oracle REACHABLE). Applies the fire-20260818-230002 lesson 'an observation outranks a re-derivation of the same defect' to the ONE open P0 that is still purely re-derived. Path A throwaway containers only; the running server belongs to T40 this fire. DISPATCHED 2026-08-19T00:10Z, isolation=worktree, model=opus; orchestrator WILL await it. || COMPLETE, merged. P0-T34-1 CONFIRMED BY OBSERVATION: on the 415 cells where the two readings disagree, across 8 shapes inside the drift region, the oracle agrees with periodRatio 415/415 and with RepaymentEvery 0/415. T34's re-derived worst gap MNT 398,967.73 observed digit for digit; its hand-worked period-1 figure observed 20,250.00 vs 19,575.00 under DEC-1 as written. SECOND RESULT: calculatePeriodRatio's month-end special case [:1426-1436] is live and load-bearing - 116/116 disagreeing cells; omitting those four lines doubles periodRatio on alternate periods (MNT 83,959.76 extra interest on one MNT 3.9M six-month loan). 16 captures, full-cell comparison reproduces 1,239/1,239 cells of 15 parity-setting captures, zero mismatches; controls include three reproductions of records taken by OTHER harnesses; determinism byte-identical; recipe failable on 7 axes. FINDINGS: N-1 corrects the P0's framing IN DEC-1'S FAVOUR (daysInMonth is 30 on BOTH call sites on the graded domain [:1508], so revision 7 needs a ONE-argument correction, not two). N-2 the P0 question and the month-end question are DISJOINT in shape space (special case fires on 210 of 51,729x3 pairs; on 0 of those does start != disbursement), so item 3e needs TWO vectors. N-3 WEAKENS A STANDING ATTESTATION CLAIM: the AMBIENT MoneyHelper MathContext is NOT the arithmetic in force on Path A - forcing the tenant mode to DOWN changed MoneyHelper.getMathContext() and left all 16 blocks byte-identical, while forcing the THREADED mode moved 15 of 16; only the threaded context is evidence about money. N-4 threaded precision 12 vs 19 indistinguishable on all 16 shapes; separating shape TO_BE_CAPTURED. N-5/6/7 no size threshold (MNT 100 separates); drift reproduces in March, a 30-day November and a common year; drift moves DUE DATES and loanTermInDays (185 vs 182). RAW OBSERVED only, nothing promoted; shared containers never touched."
     },
     {
       "id": "T40",
@@ -844,11 +844,59 @@
       "dependencies": [
         "T36"
       ],
-      "status": "in_flight",
+      "status": "done",
       "attempts": 1,
       "contract_independent": true,
       "branch": "softhouse/T40-charges-capture",
-      "note": "Raised by local fire 20260819-080001 (oracle REACHABLE). SOLE OWNER of the running Fineract server this fire -- T39 uses throwaway containers only. Additive-only on tenant gerege; a restart would destroy a sibling's run. DISPATCHED 2026-08-19T00:10Z, isolation=worktree, model=opus; orchestrator WILL await it."
+      "note": "Raised by local fire 20260819-080001 (oracle REACHABLE). SOLE OWNER of the running Fineract server this fire -- T39 uses throwaway containers only. Additive-only on tenant gerege; a restart would destroy a sibling's run. DISPATCHED 2026-08-19T00:10Z, isolation=worktree, model=opus; orchestrator WILL await it. || COMPLETE, merged. The charges blind spot is CLOSED. 21 accepted captures + 1 recorded refusal; preconditions 21/21 PASS before every create and capture; zero-charge control re-emitted all four committed Path B captures 4/4 BYTE-FOR-BYTE before any charge existed; additive only (12 charge defs, ids 1-12, on gerege; no restart, no deletion, m_loan still 0); determinism byte-identical across three issues. THE THREE-SCALAR COMPARISON WOULD HAVE CAUGHT NONE OF IT - level installment, final installment and total interest are identical to the control on all 21. (1) totalRepaymentExpected OMITS every charge applied in the main schedule loop; invariant C5 fails 15/21; FC-15 carries 66,900 MNT of charges in the rows and only the 15,000 disbursement fee in the total. Re-derived: ProgressiveLoanScheduleGenerator.java:367-382 never calls addTotalRepaymentExpected while AbstractCumulativeLoanScheduleGenerator.java:504 does - THE TWO GENERATORS DISAGREE, making this a DEC-1 question. (2) TWO ways to lose a charge SILENTLY, both HTTP 200 and byte-identical to the zero-charge control: FC-17 (due after the final due date; one-sided guard LoanChargeValidator.java:59-67) and FC-20 (percent-of-interest specified-due-date charge on the disbursement date; stale isFirstPeriod(), LoanScheduleParams.java:533-535 vs :143) - while FC-11, an identical FLAT charge on that same date, pays 9,000.00. (3) Charges sit ALONGSIDE the EMI, never inside it. (4) Placement is decided by chargeTimeType not by date; specified-due-date membership is [from,due] for period 1 and (from,due] thereafter. TO_BE_CAPTURED: OVERDUE_INSTALLMENT penalties, tranche charges, minCap/maxCap, the cumulative generator. RAW OBSERVED only, nothing promoted."
+    },
+    {
+      "id": "T41",
+      "title": "Apply T39's N-1/N-2/N-3 and T40's charge findings to DEC-1 v7 -> v8 (the ratification candidate)",
+      "description": "Revision 7 landed and three capture tasks in the same fire produced findings it could not have known. Apply them. T39 N-1 (corrects the P0's framing in DEC-1's FAVOUR): daysInMonth is BigDecimal.valueOf(30) on BOTH rate-factor call sites inside the graded domain [ProgressiveEMICalculator.java:1508, :1413, :1537], so revision 7's 'two arguments differ, not one' overstates it - on the graded domain exactly ONE argument moves money, the multiplier. T39 N-2: the periodRatio question and the month-end-special-case question are DISJOINT in shape space (the special case fires on 210 of 51,729 same-month pairs x 3 terms, and on ZERO of those does start != disbursement), so section 8 item 3e must name TWO vectors, not one - and BOTH are now captured by T39, so mark them CAPTURED-NOT-PROMOTED with capture ids. T39 N-3 is the one that costs the document something: the AMBIENT MoneyHelper MathContext is NOT the arithmetic in force on Path A, so every attestation sentence resting on MoneyHelper.getMathContext() - including ones revision 7 cites from T35/T36/T37 - must be re-scoped to the THREADED context, which is the only evidence about money. T40: the first charge observations in the program's history raise a genuine DEC-1 question - totalRepaymentExpected omits every charge applied in the main schedule loop [ProgressiveLoanScheduleGenerator.java:367-382 never calls addTotalRepaymentExpected] while the cumulative generator does [AbstractCumulativeLoanScheduleGenerator.java:504] - THE TWO GENERATORS DISAGREE, so the contract must say which it specifies and whether the field is carried at all; plus two silent charge-loss paths and the observed [from,due]/(from,due] specified-due-date membership rule, which is a FOURTH date-membership rule the document does not state.",
+      "agent_role": "spec_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        "docs/adr/DEC-1-schedule-generator-adapter.md",
+        "nexus/internal/apps/loanschedule/contract/contract.go",
+        ".softhouse/reviews/t41-probe/",
+        ".softhouse/handoff/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T38",
+        "T39",
+        "T40"
+      ],
+      "status": "in_flight",
+      "attempts": 1,
+      "contract_independent": true,
+      "branch": "softhouse/T41-dec1-v8",
+      "note": "Raised by local fire 20260819-080001 after T38/T39/T40 all landed. Revision 8 is the ratification candidate: once it is written, the next step is ONE independent re-review, and a clean verdict closes G-1 under policy P-2 without reaching Buyan. DISPATCHED 2026-08-19T00:30Z, isolation=worktree, model=opus; orchestrator WILL await it."
+    },
+    {
+      "id": "T42",
+      "title": "Settle T39's N-3 and N-4: which MathContext is actually in force, and does threaded precision 19 vs 12 separate at all?",
+      "description": "T39 N-3 found that the AMBIENT MoneyHelper MathContext is not the arithmetic in force on the Path A seam: forcing the tenant rounding mode to DOWN changed MoneyHelper.getMathContext() on the oracle's own testimony yet left all 16 observed blocks BYTE-IDENTICAL, while forcing the THREADED mode moved 15 of 16. Tasks T35, T36 and T37 each attested the production MathContext partly via MoneyHelper, and DEC-1 revision 7 cites those attestations - so this finding weakens a claim the whole corpus rests on, and it must be settled before ANY promotion to the parity vector store. Determine, by observation against the live pinned oracle: (a) exactly which MathContext governs each arithmetic step on Path A and on Path B - threaded, ambient, or both in different places - and therefore what an attestation must read to be evidence about money; (b) T39 N-4: whether threaded precision 19 vs 12 separates AT ALL, by searching for a shape that distinguishes them (T39 found none across 16 shapes). If a separating shape exists, capture it - it is the only thing that makes the ratified precision-19 parameter observably load-bearing. If an honest search finds none, say so plainly and state what that means for the tenant parameter's evidential status. Also state what T35/T36/T37's attestation blocks must say instead, so the orchestrator can correct reference-oracle.md.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/capture/mathcontext/",
+        ".softhouse/handoff/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T39"
+      ],
+      "status": "in_flight",
+      "attempts": 1,
+      "contract_independent": true,
+      "branch": "softhouse/T42-mathcontext-inforce",
+      "note": "Raised by local fire 20260819-080001 from T39 N-3/N-4. Path A throwaway containers preferred; the running server may be READ but not restarted or re-tenanted. DISPATCHED 2026-08-19T00:30Z, isolation=worktree, model=opus; orchestrator WILL await it."
     }
   ]
 }
