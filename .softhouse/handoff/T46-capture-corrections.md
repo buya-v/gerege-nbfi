@@ -330,8 +330,12 @@ and anything it needs escalated outside its write surface, is listed there and r
 `calculateLoanSchedule` path via `LoanScheduleAssembler` **honours**
 `installmentAmountInMultiplesOf` [VERIFIED by this task: `out/control/B-02-multiplesof100-raw.json`
 period 1 `totalInstallmentAmountForPeriod` is `112100.00`, against `112082.37` in the `B-01` baseline],
-while `LoanScheduleGeneratorServiceImpl.calculateInteresOnlyWithFirtDisbursement` (`:44` ambient `mc`,
-then `generate(mc, modelData)`) inherits Path A's drop, because
+while `LoanScheduleGeneratorServiceImpl.calculateInteresOnlyWithFirtDisbursement` inherits Path A's
+drop [VERIFIED by this task, all three lines re-opened: **`:44`** `final MathContext mc =
+MoneyHelper.getMathContext();`, **`:56`** passes
+`loanProductRelatedDetail.getInstallmentAmountInMultiplesOf()` into the
+`LoanRepaymentScheduleModelData`, **`:63`** `return scheduleGenerator.generate(mc,
+modelData).getTotalInterestAmount();`], because
 `LoanApplicationTerms.assembleFrom(LoanRepaymentScheduleModelData, MathContext)` never sets it
 [VERIFIED: `LoanApplicationTerms.java:579-606` contains **zero** occurrences of `MultiplesOf`].
 **The field is honoured or lost BY CALLER, and DEC-1 must not state its behaviour unconditionally.**
