@@ -10,10 +10,13 @@ NO FLOAT ANYWHERE. Every JSON number is parsed straight to Decimal (parse_float=
 parse_int=Decimal) from the raw response text, and every comparison is exact-Decimal in
 integer minor units (MNT minor unit 2, ISO 4217 496).
 """
+import pathlib
+import os
 import json, sys, os
 from decimal import Decimal
 
-W = "/Users/buv/gerege-nbfi/.claude/worktrees/agent-aae6901cc4f028513"
+W = os.environ.get("T40_WORKTREE",
+                   str(pathlib.Path(__file__).resolve().parents[4]))
 CH = W + "/.softhouse/capture/charges"
 CONTROL = CH + "/out/control/B-01-baseline-raw.json"
 FC = CH + "/out/fc"

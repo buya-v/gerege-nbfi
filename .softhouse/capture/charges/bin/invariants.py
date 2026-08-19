@@ -20,10 +20,13 @@ Exact Decimal in integer minor units throughout; no float is constructed at any 
   C9  the EMI (totalInstallmentAmountForPeriod) is cell-for-cell identical to the control
   C10 no negative money anywhere
 """
+import pathlib
+import os
 import json, os
 from decimal import Decimal
 
-W = "/Users/buv/gerege-nbfi/.claude/worktrees/agent-aae6901cc4f028513"
+W = os.environ.get("T40_WORKTREE",
+                   str(pathlib.Path(__file__).resolve().parents[4]))
 CH = W + "/.softhouse/capture/charges"
 FC = CH + "/out/fc"
 Z = Decimal(0)

@@ -2,7 +2,7 @@
 # T40 — determinism: the second issue of every request must be BYTE-IDENTICAL to the first.
 # Compares out/fc (first issue) with out/fc-rerun (second issue), byte-for-byte.
 set -eu
-CH=/Users/buv/gerege-nbfi/.claude/worktrees/agent-aae6901cc4f028513/.softhouse/capture/charges
+CH="${T40_WORKTREE:-$(cd "$(dirname "$0")/../../../.." && pwd)}/.softhouse/capture/charges"
 rc=0
 for f in "$CH"/out/fc/FC-*-raw.json; do
   n=$(basename "$f")

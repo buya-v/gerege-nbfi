@@ -2,7 +2,7 @@
 # T40 — self-check of T40's OWN write surface against the project non-negotiables.
 # A grep proves absence of a known-bad pattern; it never proves correctness.
 set -u
-CH=/Users/buv/gerege-nbfi/.claude/worktrees/agent-aae6901cc4f028513/.softhouse/capture/charges
+CH="${T40_WORKTREE:-$(cd "$(dirname "$0")/../../../.." && pwd)}/.softhouse/capture/charges"
 fails=0
 ok()  { printf '  PASS  %s\n' "$1"; }
 bad() { printf '  FAIL  %s\n' "$1" >&2; fails=$((fails+1)); }

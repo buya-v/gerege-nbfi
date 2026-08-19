@@ -1,7 +1,7 @@
 #!/bin/sh
 # T40 pass 2 — create charge definitions 11 and 12.  ADDITIVE ONLY.
 set -eu
-. /Users/buv/gerege-nbfi/.claude/worktrees/agent-aae6901cc4f028513/.softhouse/capture/charges/bin/lib.sh
+. "$(dirname "$0")/lib.sh"
 
 O=$CH/out/charges
 mkdir -p "$O"

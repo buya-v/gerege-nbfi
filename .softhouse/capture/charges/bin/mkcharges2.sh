@@ -8,7 +8,7 @@
 # (:367-382), DOES call addTotalRepaymentExpected (:486).  Pass 1 never touched that
 # path.  These two charges exercise it.
 set -eu
-R=/Users/buv/gerege-nbfi/.claude/worktrees/agent-aae6901cc4f028513/.softhouse/capture/charges/req
+R="${T40_WORKTREE:-$(cd "$(dirname "$0")/../../../.." && pwd)}/.softhouse/capture/charges/req"
 
 cat > "$R/charge-11-pctinterest-specifieddue.json" <<'EOF'
 {

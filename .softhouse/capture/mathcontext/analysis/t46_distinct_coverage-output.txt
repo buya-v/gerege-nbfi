@@ -1,0 +1,38 @@
+payload           : out/t42-mathcontext.json
+E1 '-A' baselines : 13
+
+id               shape                            cells      differ   verdict vs plain
+------------------------------------------------------------------------------------------------
+T42-MX-00-A      plain                            74         0        BYTE-IDENTICAL to plain
+T42-MX-01-A      drift                            74         45       distinct
+T42-MX-02-A      monthEnd                         74         14       distinct
+T42-MX-03-A      downPayment25                    82         57       distinct
+T42-MX-04-A      downPaymentAwkward               82         59       distinct
+T42-MX-05-A      downPaymentMultiples1000         82         57       distinct
+T42-MX-06-A      multiples1000                    74         0        BYTE-IDENTICAL to plain
+T42-MX-07-A      zeroDpMultiples100               74         46       distinct
+T42-MX-08-A      zeroDpMultiples100DownPayment    82         69       distinct
+T42-MX-09-A      fixedLength6                     74         0        BYTE-IDENTICAL to plain
+T42-MX-10-A      daysInYearActual                 74         30       distinct
+T42-MX-11-A      actualActual                     74         30       distinct
+T42-MX-12-A      interestRecognitionOnDisb        74         0        BYTE-IDENTICAL to plain
+
+BYTE-IDENTICAL to T42-MX-00-A (plain), including plain itself: 4
+    T42-MX-00-A      plain
+    T42-MX-06-A      multiples1000
+    T42-MX-09-A      fixedLength6
+    T42-MX-12-A      interestRecognitionOnDisb
+DISTINCT observations in the E1 matrix                       : 10
+
+M-3 headline pair  T42-MX-00-A (plain)  vs  T42-MX-06-A (multiples1000)
+  inputs that DIFFER:
+    installmentAmountInMultiplesOf           None  ->  1000
+    tenantId                                 t42_t42_mx_00_a  ->  t42_t42_mx_06_a
+  observation cells compared : 74
+  observation cells DIFFERING: 0
+  period-1 'total' on plain          : 212787.28
+  period-1 'total' on multiples1000  : 212787.28
+  is the multiples1000 period-1 total a multiple of 1000? NO
+
+CONCLUSION (M-3): installmentAmountInMultiplesOf = 1000 changed 0 observed cells.
+The three-argument Money.roundToMultiplesOf ambient path was NOT reached.
