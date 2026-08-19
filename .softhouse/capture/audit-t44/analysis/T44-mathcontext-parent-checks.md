@@ -86,3 +86,53 @@ against T39 — which suggests the two capture harnesses share the ancestor that
 **Required change:** echo `mc.getPrecision()` / `mc.getRoundingMode()` / `mc.toString()` in
 `CaptureMathContext.java` as capture 2 already does, or rename the two fields so they do not claim to
 be readings of the threaded object.
+
+---
+
+**M-P2 (P2) — N-3's `new MathContext(…)` counts are wrong, and the wrong total is already folded
+into `reference-oracle.md`. Two sites are missed entirely, one of them outside savings/deposits.**
+
+N-3 is the finding aimed squarely at the **Tier B savings port** — *"a porter who assumes
+`(19, HALF_UP)` there will be wrong on every compounding calculation"* — so its inventory is the part
+that will actually be used. I re-ran the grep independently over the pinned checkout
+(`--include='*.java'`, excluding `/src/test/`, `/misc/`, `/build/`).
+
+**What holds exactly:**
+
+| claim | mine |
+|---|---|
+| **81** `MathContext.DECIMAL64` in main source | **81** ✓ — 49 `fineract-core` + 31 `fineract-provider` + 1 `fineract-savings` |
+| **0** `DECIMAL64` in `fineract-loan` / `fineract-progressive-loan` / the seam | **0** ✓ |
+| every `DECIMAL64` is on a savings/deposit path | ✓ — 0 hits outside one |
+| the loan modules hold exactly one hard-coded `MathContext` (N-4) | ✓ — `AdvancedPaymentScheduleTransactionProcessor.java:2845` is the only one |
+| **4** × `new MathContext(15, MoneyHelper.getRoundingMode())` | **4** ✓ |
+
+**What does not hold:**
+
+- **`new MathContext(10, …)` is 5, not 9.** The nine line references N-3 lists are the **union** of
+  the 15s and the 10s, all labelled as 10s. Four of them are precision **15**:
+  `SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:526`, `:822`,
+  `DepositAccountWritePlatformServiceJpaRepositoryImpl.java:496`,
+  `SavingsAccountDomainServiceJpa.java:329`. The genuine precision-10 sites are
+  `SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:627`, `:695`, `:919`,
+  `DepositAccountWritePlatformServiceJpaRepositoryImpl.java:540`, `:837`.
+- **`reference-oracle.md` therefore carries a wrong total.** Its folded-in text reads *"81
+  `MathContext.DECIMAL64` uses and **13** `new MathContext(15|10, …)`"* — 4 + 9, double-counting the
+  four 15s. **The correct total is 9.**
+- **Two sites are missed, and a third precision with them:**
+  `new MathContext(8, MoneyHelper.getRoundingMode())` at
+  **`SavingsAccountCharge.java:562`** (`fineract-savings`) and
+  **`ShareAccountCharge.java:240`** (`fineract-provider/.../portfolio/shareaccounts/`).
+- Consequently N-3's sentence *"Every hard-coded `MathContext` in main source outside the loan
+  modules is in savings/deposits"* is **false as written** — `ShareAccountCharge.java:240` is in
+  **share accounts**, a separate Tier B context with its own precision (**8**).
+
+[VERIFIED: repo-wide grep of the pinned checkout `426a2354…`, run by this task; full site listing in
+the audit transcript.] N-3 is self-declared `[UNVERIFIED as behaviour]`, which is honest, but these
+are **transcription** errors, not behavioural ones — the class of error `patterns.md` says a
+transcription must never contain.
+
+**Required change:** correct the counts in the T42 handoff and in `reference-oracle.md` to
+**4 × precision 15, 5 × precision 10, 2 × precision 8 (nine sites total)**, add the two precision-8
+sites, and drop or qualify the "all in savings/deposits" sentence so the share-accounts context is
+not lost when Tier B is planned.

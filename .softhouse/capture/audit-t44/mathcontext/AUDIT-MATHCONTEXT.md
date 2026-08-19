@@ -216,7 +216,7 @@ That site was **never reached**. Observed, from T42's own committed payload:
   `installmentAmountInMultiplesOf` (`null` vs `1000`), and their observations differ in **0 cells**;
   period-1 total is `212787.28` on both — not a multiple of 1000.
 - Root cause, transcribed: `LoanApplicationTerms.assembleFrom(LoanRepaymentScheduleModelData, MathContext)`
-  [`fineract-loan/.../LoanApplicationTerms.java:578-607`] never calls the builder's
+  [`fineract-loan/.../LoanApplicationTerms.java:579-607`] never calls the builder's
   `installmentAmountInMultiplesOf(…)` setter, so `ProgressiveLoanScheduleGenerator.java:110`
   reads `loanApplicationTerms.getInstallmentAmountInMultiplesOf()` as `null`.
 - Therefore the three-argument `Money.roundToMultiplesOf` [`Money.java:163-170`] and its trailing
@@ -272,7 +272,7 @@ committed capture that sets the field produces output identical to one that does
 `TO_BE_CAPTURED`: an `installmentAmountInMultiplesOf` shape through an entry point that honours it.
 
 **Severity P1** (against DEC-1, not against T42's conclusions).
-[VERIFIED: observed 0-cell difference above; source transcription `LoanApplicationTerms.java:578-607`,
+[VERIFIED: observed 0-cell difference above; source transcription `LoanApplicationTerms.java:579-607`,
 `:333-334`, `ProgressiveLoanScheduleGenerator.java:81-83`, `:110`,
 `LoanScheduleGeneratorServiceImpl.java:44-63`]
 
@@ -288,6 +288,11 @@ the callee."*
   from the `Case` record; the object is constructed separately at `:369`. `mc.toString()` is never
   printed. `ATTESTATION.md` §2.1 discloses this ("echoes the **constructed values**") but the rule
   as ratified is unconditional.
+
+**Independently corroborated:** the parent auditor raised the same defect as **M-P1** in
+`.softhouse/capture/audit-t44/analysis/T44-mathcontext-parent-checks.md`, from a separate check
+with no shared context. Two workers converging on one finding is the strongest signal this
+pipeline produces.
 
 This covers all 13 E1 shapes and the whole 48-shape precision sweep — i.e. the experiments the
 Path A half of the rule rests on. The risk is low (the object is `new MathContext(c.precision(),
