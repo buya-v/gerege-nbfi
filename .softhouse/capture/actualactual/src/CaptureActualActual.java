@@ -457,6 +457,7 @@ public class CaptureActualActual {
                 for (CalcCase c : applyCalcOverrides(calcCases())) {
                     blocks.add(runExact(c));
                 }
+                blocks.add(vacuityCanary());
             }
             default -> throw new IllegalArgumentException("unknown set");
         }
@@ -748,7 +749,7 @@ public class CaptureActualActual {
                 ips.add("{\"fromDate\": \"" + ip.getFromDate() + "\", \"dueDate\": \"" + ip.getDueDate()
                         + "\", \"rateFactor\": \"" + pl(ip.getRateFactor()) + "\", \"rateFactorTillPeriodDueDate\": \""
                         + pl(ip.getRateFactorTillPeriodDueDate()) + "\", \"calculatedDueInterest\": \""
-                        + pl(ip.getCalculatedDueInterest().getAmount()) + "\", \"disbursementAmount\": \""
+                        + pl(ip.getCalculatedDueInterest()) + "\", \"disbursementAmount\": \""
                         + pl(ip.getDisbursementAmount().getAmount()) + "\"}");
             }
             r.append(String.join(", ", ips)).append("]}");
@@ -792,7 +793,9 @@ public class CaptureActualActual {
         b.append("    {\n");
         b.append("      \"id\": \"").append(c.id()).append("\",\n");
         b.append("      \"seam\": \"PATH_A2\",\n");
-        b.append("      \"family\": \"EXACTNESS-PROBE\",\n");
+        b.append("      \"family\": \"")
+                .append("CALIBRATION".equals(c.family()) ? "CALIBRATION" : "EXACTNESS-PROBE")
+                .append("\",\n");
         b.append("      \"purpose\": \"observe ProgressiveEMICalculator.java:1975 repaymentEvery.multiply("
                 + "cumulatedPeriodRatio) WITHOUT a MathContext, on the ACTUAL arguments of the sole call site "
                 + "[:1529-1530]\",\n");
@@ -876,6 +879,57 @@ public class CaptureActualActual {
                     + "partial-period arm has no probe site here\"}");
         }
         b.append(String.join(",\n", rows)).append("\n");
+        b.append("        ]\n");
+        b.append("      }\n");
+        b.append("    }");
+        return b.toString();
+    }
+
+    /**
+     * VACUITY CANARY for the exactness probe.
+     *
+     * A probe that reports "the unrounded multiply is indistinguishable from the rounded one"
+     * is worthless unless the same comparison can be shown to SEPARATE on some input.  This
+     * canary feeds the SAME comparison two operands that a MathContext(19) round WOULD move:
+     * a 25-significant-digit ratio, and the same ratio times a non-unit multiplier.  If the
+     * canary reports IDENTICAL, the probe is measuring nothing and the run is void.
+     *
+     * Every number here is a LOCAL CONSTRUCTION of this harness, not an oracle output, and is
+     * labelled so.  Its only job is to prove the instrument moves.
+     */
+    static String vacuityCanary() {
+        final MathContext mc = new MathContext(19, RoundingMode.HALF_UP);
+        // 1/7 to 25 significant digits -- more digits than mc can hold.
+        final BigDecimal wide = BigDecimal.ONE.divide(BigDecimal.valueOf(7), new MathContext(25,
+                RoundingMode.HALF_UP));
+        final BigDecimal exact1 = BigDecimal.ONE.multiply(wide);
+        final BigDecimal rounded1 = BigDecimal.ONE.multiply(wide, mc);
+        final BigDecimal three = BigDecimal.valueOf(3);
+        final BigDecimal exact3 = three.multiply(wide);
+        final BigDecimal rounded3 = three.multiply(wide, mc);
+        final StringBuilder b = new StringBuilder();
+        b.append("    {\n");
+        b.append("      \"id\": \"T48-EXACT-CANARY\",\n");
+        b.append("      \"seam\": \"NONE -- local BigDecimal construction, NOT an oracle output\",\n");
+        b.append("      \"family\": \"EXACTNESS-CANARY\",\n");
+        b.append("      \"purpose\": \"prove the exactness comparison is capable of separating at all; "
+                + "a probe that can only ever say IDENTICAL measures nothing\",\n");
+        b.append("      \"inputs\": {\n");
+        b.append(threadedEcho(mc, "NONE -- this block contacts no Fineract code"));
+        b.append("        \"note\": \"operands constructed by this harness, never observed\"\n");
+        b.append("      },\n");
+        b.append("      \"observed\": {\n");
+        b.append("        \"probes\": [\n");
+        b.append("          {\"leg\": \"multiplier=ONE, ratio wider than mc\", \"ratio\": \"").append(pl(wide))
+                .append("\", \"ratioPrecision\": ").append(wide.precision())
+                .append(", \"exactProduct\": \"").append(pl(exact1)).append("\", \"roundedProduct\": \"")
+                .append(pl(rounded1)).append("\", \"productsBitIdentical\": ")
+                .append(exact1.toPlainString().equals(rounded1.toPlainString())).append("},\n");
+        b.append("          {\"leg\": \"multiplier=THREE, ratio wider than mc\", \"ratio\": \"").append(pl(wide))
+                .append("\", \"ratioPrecision\": ").append(wide.precision())
+                .append(", \"exactProduct\": \"").append(pl(exact3)).append("\", \"roundedProduct\": \"")
+                .append(pl(rounded3)).append("\", \"productsBitIdentical\": ")
+                .append(exact3.toPlainString().equals(rounded3.toPlainString())).append("}\n");
         b.append("        ]\n");
         b.append("      }\n");
         b.append("    }");
