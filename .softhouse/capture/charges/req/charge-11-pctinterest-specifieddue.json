@@ -1,0 +1,13 @@
+{
+ "name": "T40 percent of interest on specified due date",
+ "chargeAppliesTo": 1,
+ "chargeTimeType": 2,
+ "chargeCalculationType": 4,
+ "chargePaymentMode": 0,
+ "currencyCode": "MNT",
+ "amount": 3.75,
+ "penalty": false,
+ "active": true,
+ "locale": "en",
+ "monthDayFormat": "dd MMM"
+}

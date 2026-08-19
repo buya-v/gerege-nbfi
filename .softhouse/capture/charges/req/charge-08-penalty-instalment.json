@@ -1,0 +1,13 @@
+{
+ "name": "T40 PENALTY flat per instalment",
+ "chargeAppliesTo": 1,
+ "chargeTimeType": 8,
+ "chargeCalculationType": 1,
+ "chargePaymentMode": 0,
+ "currencyCode": "MNT",
+ "amount": 1200,
+ "penalty": true,
+ "active": true,
+ "locale": "en",
+ "monthDayFormat": "dd MMM"
+}

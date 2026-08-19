@@ -1,0 +1,13 @@
+{
+ "name": "T40 flat fee per instalment",
+ "chargeAppliesTo": 1,
+ "chargeTimeType": 8,
+ "chargeCalculationType": 1,
+ "chargePaymentMode": 0,
+ "currencyCode": "MNT",
+ "amount": 2500,
+ "penalty": false,
+ "active": true,
+ "locale": "en",
+ "monthDayFormat": "dd MMM"
+}
