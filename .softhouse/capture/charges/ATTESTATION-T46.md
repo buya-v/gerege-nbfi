@@ -235,7 +235,10 @@ right. **All three committed analysis outputs still reproduce byte-for-byte thro
 1. **Raw response bytes stay canonical and are NOT rewritten.** They are what the oracle said; a JSON
    number literal on the wire is already exact text. The hazard is in the consumer.
 2. Every Path B capture gains an **exact-text sidecar** `<name>-exact.json`, in which every JSON number
-   is re-emitted as a JSON **string** carrying the wire literal byte for byte. **57 sidecars written**
+   is re-emitted as a JSON **string** carrying the wire literal byte for byte. **57 sidecars written**,
+   covering `out/fc`, `out/control`, `out/attested` and `out/t46`. The three re-issue directories
+   (`out/fc-rerun`, `out/t46-reissue`, `out/t46-rerun`) are byte-identical second copies of captures
+   already covered and are deliberately not duplicated.
    [`out/t46/EXACT-TEXT.md`, `bin/t46-exacttext.py`].
 3. **No float is constructed producing them.** Python's decoder hands the *raw matched literal* to
    `parse_float` / `parse_int`, so `json.loads(text, parse_float=str, parse_int=str)` yields the original
