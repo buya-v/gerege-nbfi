@@ -4,164 +4,155 @@ Written by the orchestrator at every checkpoint; read by the next fire of `/soft
 human) to see exactly where the factory paused. **The repo is the only memory** — never rely on an agent's
 session state.
 
-## Current state (local fire `20260819-170001`, oracle REACHABLE, clean exit)
+## Current state (local fire `20260819-200001`, oracle REACHABLE)
 
 - **Program**: `fineract-to-go-full-codebase` — **active**
 - **Active run**: `2026-08-17-run1-harness-schedule-poc` — Tier 0, not terminal
 - **Contexts**: 0 done / 17 · `tier0-harness-schedule-poc` **active**
-- **Oracle**: UP all fire. `fineract:latest` + `postgres:18.3`, both healthy, **never restarted**. Pinned
-  checkout `426a23544` clean. PostgreSQL only; no prohibited engine anywhere.
-- **Three workers dispatched, two completed and merged, one killed by a transient API 529.** No isolation
-  violation, no scope breach, nothing left uncommitted.
+- **Oracle**: UP all fire, **never restarted** (several captures' comparability rests on that).
+  `fineract:latest` + `postgres:18.3`, both healthy. Pinned checkout `426a23544` clean. PostgreSQL only.
+- **Six workers dispatched, six completed, all merged. Nothing lost, no isolation violation, no scope breach.**
 
-## THE HEADLINE: **two structural blockers fell in one fire**
+---
 
-### 1. The no-Go-toolchain gap is CLOSED — and the ratified `contract.go` COMPILES
+# THE HEADLINE: **the program has its first conformance PASS — and the driver spent the rest of the fire proving how little that PASS meant**
 
-`go1.26.6 darwin/arm64`, sha256 asserted against go.dev's published value **before** extraction, installed
-**repo-locally** at `GOROOT=.softhouse/toolchain/go`, **gitignored**, activated by
-`. /Users/buv/gerege-nbfi/.softhouse/bin/go-env.sh`, reversible with one `rm -rf`.
+```
+VERDICT: PASS (exit 0) — 13 parity vectors match the pinned reference oracle, 1350 cells compared.
+         This means "matches the reference oracle on captured vectors, within the graded domain".
+         IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a user gate.
+```
 
-The previous fire's refusal was right and was **not** overridden. Its objection was never *"is a toolchain
-allowed"* (it is not RESERVED — no money, no endpoint, no third party); it was *"may an agent modify Buyan's
-machine unattended"*. **Re-scoping the install location dissolved the objection without weakening it.**
-Nothing outside this repo was touched; there is no Homebrew on this host and no `PATH` was changed.
+`go build` / `go vet` exit 0 · `go test ./...` green · `gofmt -l` only the frozen `contract.go` (G-3) ·
+`--prove` **20/20** · 6/6 invariants hold · 0 inadmissible · 0 harness errors.
 
-**First ever compile of the ratified artefact:** `go build ./...` **exit 0**, `go vet ./...` **exit 0**.
-`[UNVERIFIED: that the package compiles]` is **retired**. Ten review rounds of shape-grading are **not**
-invalidated, and the worst-case discovery the previous fire warned about — a type error frozen into a
-ratified artefact — **did not happen.**
+**Every number above was re-run by the driver, not accepted from a worker's report.**
 
-> **A fresh clone will find no toolchain.** That is the price of not touching the host: one verified 65 MB
-> fetch. If Buyan would rather have `go` on the host PATH, say so.
+## What actually happened, in order
 
-### 2. T7 — the bottleneck behind seven tasks — is DONE and MERGED
+**1. T8 — promotion.** All 11 pass-3b production candidates promoted as parity vectors (`P-CAL` correctly
+excluded as calibration). The `UNBACKED in_graded_domain claims` line disappeared.
 
-**T9, T10, T11, T13, T14, T15 and T20 are all unblocked for the first time in the program.**
+**2. T20 — the harness learned to express a non-money kill.** Driver finding **D-4**: the harness encoded
+gradeability as strictly money-valued (`margin_minor > 0`), which made its **own** `UNBACKED …
+monthend.reanchor` complaint *unsatisfiable* — the only graders for that capability kill on **dates**.
 
-`.softhouse/conformance.sh` + `.softhouse/vectors/` + `nexus/internal/apps/loanschedule/conformance/`
-(22 files, 6,228 insertions, zero deletions, `contract.go` byte-identical: sha256 `0db73d4af996737d…`).
+**3. T10 — the first Go port. `PASS` on the first run.**
 
-**The driver re-ran everything rather than accepting the report:**
+**4. T9 — the independent review that made the PASS mean something.** Deliberately scoped to re-derive from
+**Fineract source** rather than from DEC-1's prose, because three earlier parties had all used the same
+document-based method. Verdict **ACCEPTED WITH REQUIRED CHANGES**, 9 findings, 3 × P1.
 
-| check | result |
-|---|---|
-| `go build ./...` / `go vet ./...` | **exit 0** / **exit 0** |
-| `go test ./...` | **ok** — conformance 0.582 s |
-| `gofmt -l internal` | **only** `contract/contract.go` — expected, gate **G-3** |
-| `conformance.sh` (default) | **exit 2**, *"VERDICT: UNUSABLE — THIS IS NOT A PASS"* |
-| `conformance.sh --prove` | **10 passed, 0 failed** |
-| driver's own float scans | **0** float-shaped JSON numbers in the store; **0** float types in the Go tree |
+**5. T57 + T56 — both P1s closed in the same fire.**
 
-**The harness refuses to claim all-pass over an empty corpus** — the single worst outcome its brief named.
-It names its own untrustworthiness in words: no Go port registered, no parity vector promoted.
+**6. T11 — adversarial review of the port — IN FLIGHT at checkpoint.**
 
-## NOTHING IS PROMOTED. NO CONTEXT IS AT PARITY. The harness says so out loud.
+---
 
-`.softhouse/vectors/` holds a schema, a pin, a capabilities table, one hand-authored `_selftest` fixture
-(structurally barred from the parity count) and four contract-refusal vectors. **Zero parity vectors.**
+## The result worth carrying: **a green run is a claim about the CORPUS as much as about the port**
 
-## THE ONE THING THE NEXT FIRE SHOULD DO FIRST
+T10 mutated its own port into each named wrong implementation and re-ran the real harness. **Five died.
+Four survived — three of which move money.**
 
-**T8 — promote the capture corpus into the new store**, then **T9** (independent review of harness +
-vectors). One trap its author must not discover late:
+The driver reproduced the worst survivor independently: **delete the entire EMI re-adjust smoothing loop →
+`exit 0`, 11/11 PASS.** DEC-1 calls that loop a normative conformance obligation, *"not backlog"*.
 
-> **PROMOTION ORDERING MATTERS.** Promote a covering vector **before** flipping `in_graded_domain`, or the
-> run is fatal with `UNBACKED in_graded_domain claims`. The harness already reports exactly that today for
-> `schedule.core` and `monthend.reanchor` — which is honest, not a defect.
+So T57 captured the two shapes DEC-1 itself names, and **the driver then re-ran the identical mutation**:
 
-**T10, the port, is compilable for the first time.**
+| | before T57 | after T57 |
+|---|---|---|
+| smoothing loop deleted | **11/11 PASS, exit 0** | **FAIL, exit 1** — both new vectors, named cells and margins |
 
-## The biggest transferable result: **pair-difference is the WRONG promotion filter** (T55-N2)
+**That closed loop — mutate → find the blind spot → capture the shape → prove the mutation now dies — is the
+transferable result of this fire.** It is recorded as pattern **P-3** in `.softhouse/patterns.md`.
 
-The intuitive rule — *"a vector discriminates a setting iff two captures differing only in that setting
-differ in some cell"* — is **false in both directions**:
+### Three money-moving mutations STILL survive all 13 vectors — handed to T11
 
-- `LB-DEC31` reports **0 cells** differing across the day-count setting, yet its observed value kills a
-  no-arm port by **6,015 minor units**.
-- `LB-F29CROSS` and `LB-MULTI3F` report **0 cells** on every pair, yet kill naive ports by **17,850** and
-  **71,014** minor units.
+1. **textbook `balance × rateFactor`** — three rounded operations collapsed into one
+2. **rate factor without the trailing `setScale`** — not vacuous (`…333332` vs `…3333`), but below the
+   currency layer on every corpus shape at precision 19
+3. **`periodRatio` → `RepaymentEvery`** — every promoted vector is on-lattice
 
-**A non-zero-pair rule would have discarded the three best graders in the set.** The setting decides only
-*whether* the arm fires, never its denominators. Gradeability is now the `graded_against[]` field: *which
-named wrong implementations does this vector kill, and by how much.* **An all-products-identical capture is
-not evidence of non-gradeability.**
+**Conformance cannot tell you whether the port got these right.** T11 must decide each from source.
+
+---
+
+## The false-PASS path that existed for part of this fire — found, closed, and re-verified
+
+T9's **F-1**: `unrecorded_fields` was an unguarded escape hatch. It withdrew all nine cells of the month-end
+kill from `P-02`/`P-02b`, left `1999-01-01` in place, and got **11/11 PASS, exit 0, with
+`monthend.reanchor killed by MONTHEND-CONTINUE-FROM-CLAMPED-DAY` still printed** — a capability reported as
+graded by a counterfactual whose every cell had been withdrawn.
+
+T56 closed it; **the driver reproduced the exact exploit against the fixed harness** — now `exit 2`, both
+vectors `INADMISSIBLE`, with a diagnostic naming the offending `divergent_cells` entry and the
+`unrecorded_fields` that withdraws it.
+
+T56 also reported honestly that it **could not have both** a stronger `installment_number` check and an
+admissible corpus, explained why, and chose a documented sentinel rather than quietly relaxing the rule.
+
+---
+
+## Folklore that died this fire — both were being carried by everyone, one was the driver's
+
+T9 re-derived from source and found the corpus-checking consensus was built on two false beliefs:
+
+- **The oracle does NOT use the closed-form EMI.** It folds `Π(1+rᵢ)·P / fn`, no `pow`
+  [`ProgressiveEMICalculator.java:1838-1840`, fold at `:1819` — **driver-confirmed independently**].
+- **There is NO "final principal := remaining balance."** Principal is always `EMI − interest`
+  [`RepaymentPeriod.java:339-344`]; the residual lands on the **last unpaid period's EMI** [`:1191-1206`].
+  **This was trap #4 in the brief the driver wrote for T10** — the driver was wrong and was corrected
+  mid-flight.
+
+Both reproduce the current corpus identically, **because every promoted vector runs `DAYS_30`/`DAYS_360` so
+every rᵢ is equal.** They are not guaranteed to agree at precision 19 once the rᵢ differ.
+
+**The G-4 hunt found nothing.** T9 audited DEC-1 rev 12 against source in six places and found **no**
+disagreement. Where DEC-1 and the folklore differ, **DEC-1 matches the source.**
+
+---
 
 ## Driver catches this fire — each re-derived, none accepted on report
 
-- **T55-N1 — CONFIRMED digit for digit.** `LB-DEC31` has a **zero** first segment and still grades the
-  ACT/ACT arm by **6,015 minor units**: ARM `0/366 + 31/365` → **`22014.25`** (*observed* on p3/p4/p7 and in
-  the re-runs); PLAIN `31/366` → `21954.10` (counterfactual). **The mechanism is the result:** PLAIN takes
-  its denominator from the period-**start** year (366) while ARM assigns days to the year they land in (365),
-  so **segment length is irrelevant — year lengths are what matter.** DEC-1's *"non-zero first segment"* is
-  therefore known-wrong → **G-4**. Correct condition: **spans two calendar years of differing length.**
-  Neither T55 nor the driver amended DEC-1; a ratified DEC-n is not an agent's call.
-- **G-3 — `gofmt` wants to rewrite the frozen `contract.go`** (3 hunks, doc-comment list normalisation,
-  semantically inert). **Not applied.** The risk is the failure mode, not the output: a `gofmt -w ./...` or a
-  format-on-save would silently mutate a ratified artefact whose doc comments **are** the spec, and it would
-  read as harmless formatting noise in review.
-- **D-1** — the T50-N2 citation is **`:83`, not `:81`** (`:81` is a different method). Recorded because a
-  reviewer checking `:81` would find unrelated code and might think the finding fabricated.
-- **D-2 — NEW.** That line hard-wires **two** nulls, not one: `loanCharges` **and `holidayDetailDTO`**. The
-  holiday arm is null-guarded at `DefaultScheduledDateGenerator.java:224`, so holiday/non-working-day
-  adjustment is a **guaranteed silent no-op on Path A**. **Holiday conformance, like charge conformance, can
-  only ever be graded on Path B.**
-- **D-2a** — even on **Path B**, this generator adjusts only the **FINAL** period (`:61` guards `:66`).
-  *"Adjust every date that lands on a holiday"* is the obvious and **wrong** thing for a Go port to write, and
-  it would pass the **entire existing corpus** silently. `[UNVERIFIED: no Path B capture exists — capture it.]`
+- **D-4** — the harness could not express a structural (zero-money-margin) kill, making its own UNBACKED
+  complaint unsatisfiable. Specified and routed; T8-promote corrected the spec (it is a **decode**-time
+  change — `DisallowUnknownFields` — so an `admit.go`-only fix would not have landed it).
+- **D-5, D-6** — latent harness defects that detonate on first real use: a replay loader with **three silent
+  `continue` paths**, and a frozen `ParityPass == 0` assertion. Pattern **P-4**.
+- **D-6's THIRD recurrence** — driver-found post-merge: `--prove` was 18/20, both failures **stale proofs**,
+  one of them a hard-coded `parity vectors PASS 11` that T57 moved to 13. Driver fixed both to assert the
+  **property**, and verified proof 1 still discriminates (`-impl=__none__` → 2, `-impl=loanschedule-go` → 0).
+- **Independent re-derivation of all 11 pass-3b candidates** before any worker reported — 11/11 digit for
+  digit — plus an independent third-converter transcription audit of the promoted files: **883 cells, 0
+  mismatches**. `P-01`'s headline margin `65,885,070` confirmed exactly.
 
-## What T55 established (33 Path B captures, all raw observed)
+---
 
-**6 discriminating pairs, 5 proven non-discriminating.** Determinism 33/33 byte-identical; negative tests
-9/9 breaching; invariants I1–I7 on all 33; additive-only (`m_loan` 0→0, `m_product_loan` 21→21).
+## THE NEXT FIRE STARTS HERE
 
-`LB-LEAPOUT` 27/65 (8,783 minor) · `LB-LEAPIN` 23/65 (97) · `LB-HALFYR` 23/65 (17,783) · `LB-DEC15IN` 11/43
-(2,911) · `LB-DEC15OUT` 11/43 (3,105) · `LB-MULTI3` 11/43 (**41,328**).
+1. **T11's verdict** (in flight at checkpoint — read its branch `softhouse/T11-go-port-review` and merge).
+2. **The three surviving mutations.** If T11 confirms the port is correct from source, they are a **corpus**
+   gap, not a port defect: capture the shapes that grade them. This is oracle-only work.
+3. **T13** — `/softhouse-uat` — then **T14** (user gate: accept the PoC slice; **no cutover**) and **T15**.
 
-- **Path A was disqualified on EVIDENCE, not assumption** — it drops the independent variable
-  (`LoanApplicationTerms.java:304-351` never copies `:380` into `:291`): the exact *"capture through a seam
-  that drops your variable"* trap.
-- **T48's captures were already further along than believed** — `T48B-PUREB-p7` vs `-p4` (23/65, 97 minor),
-  `T48B-YEAR` (157/285) and `T48B-QTR` (49/109) **already satisfy** T48-N4's promotion condition.
-- **Not witnessed, labelled so:** no T55 shape separates precision 19 from 12, or HALF_UP from HALF_EVEN
-  (29/36 agree at all of them; precision 8 does break it at 22/36). For those axes **`(19, HALF_UP)` is
-  provenance, not discrimination.**
+---
 
-## Design decisions in the new store that bind every later task
+## Open decisions for Buyan — **none blocking, four open**
 
-- **Money is an integer STRING** in minor units. Most JSON readers (jq included) decode numbers to doubles,
-  so an integral JSON *number* can be corrupted by the **reader**. No JSON number anywhere may contain
-  `.`, `e` or `E`.
-- **Probe-vs-parity is structural** — a parity vector records threaded **and** ambient MathContext, both
-  `(19, HALF_UP)`, cross-checked against `request.rounding`. Relabelling a precision-12 probe fails **on the
-  numbers it was produced at**, not on a label.
-- **Seam blindness is DATA** (`capabilities.json`; absent ⇒ **default-deny**). A third blind spot is **one
-  row** — every affected vector starts refusing with no vector file, schema migration or code change.
-- **`unrecorded_fields`** — pass 3 never recorded the disbursement row's balance; filling it from the
-  contract's rule would store a **derivation as an observation**.
-- **The harness contains no schedule generation or date stepping** — the last due date is *read* from the
-  vector, so **T10 cannot borrow an implementation from its own grader.**
-
-## Task state
-
-| Task | State |
-|---|---|
-| T1, T3, T3b, T4, T5, T6, **T7**, T16–T19, T21–T24, T26–T55 | **done** (45 of 57) |
-| T25 | done_partial (oracle-free slice) |
-| T2 | **parked** — unpark = gate **G-2** |
-| **T8** | in_progress — **THE NEXT BOTTLENECK**: promotion is now possible and nothing is promoted |
-| T9–T15, T20 | pending — **all unblocked by T7** |
-
-## Open decisions for Buyan
-
-- **None blocking.** Three gates are open and **not one of them parks the program**: **G-2** (one task),
-  **G-3** (nothing — the workaround is in force), **G-4** (nothing — the corrected condition is already in
-  force everywhere except DEC-1's own sentence).
-- **G-3** — leave `contract.go` unformatted (driver recommends **A**), or authorise the inert `gofmt`?
-- **G-4** — authorise a **wording-only** DEC-1 amendment: *"non-zero first segment"* → *"spans two calendar
-  years of differing length"*. Declining leaves DEC-1 known-wrong on one sentence.
-- **A repo-local Go toolchain now exists** and your machine was not touched. Say if you would rather it were
-  installed on the host PATH instead.
-- **The DEC-1 ratification remains reversible.**
+- **G-2** (one parked task, T2), **G-3** (`gofmt` vs the frozen `contract.go` — driver recommends leaving it
+  unformatted; the workaround is in force), **G-4** (DEC-1's ACT/ACT wording is known-wrong).
+- **G-5 — NEW.** DEC-1 contradicts itself on a **zero interest rate**: the prose says outside the graded
+  domain, the enumerated list has no rate predicate, `admit.go` implements the list — and `SELFTEST-01`, the
+  harness's own self-test fixture, **is a zero-rate request**. A port following the prose fails the harness.
+  T10 implemented the list and flagged it rather than amending DEC-1. Driver recommends making the prose
+  match the list.
 - **RESERVED and untouched:** cutover, regulatory / parallel-run sign-off, deposit-taking activation, licence
-  facts. None is in Run 1's path.
+  facts. **None is in Run 1's path.**
+
+## Process defect to fix — it recurred THREE times in one fire
+
+Workers were handed worktrees cut **before** the merge of the artefact they were to work on (T9's **F-9**,
+T57's **N-5**, and again on T56). T9 was sent to review 11 promoted vectors and found only the four
+`REFUSE-*` files; **it re-cut onto `main` itself.** A reviewer who graded what was in front of them would
+have reviewed an empty corpus and reported it clean. Every brief now says *"verify your base first"*, but
+that is a workaround — pattern **P-5** records the real fix.
