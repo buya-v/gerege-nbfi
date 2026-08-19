@@ -16,7 +16,7 @@
 #                                     [ChargeCalculationType.java:26-29]
 # chargePaymentMode 0 = REGULAR
 set -eu
-R=/Users/buv/gerege-nbfi/.claude/worktrees/agent-aae6901cc4f028513/.softhouse/capture/charges/req
+R="${T40_WORKTREE:-$(cd "$(dirname "$0")/../../../.." && pwd)}/.softhouse/capture/charges/req"
 
 cat > "$R/charge-01-flat-disbursement.json" <<'EOF'
 {

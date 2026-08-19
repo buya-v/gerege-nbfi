@@ -1,0 +1,22 @@
+{
+ "developerMessage": "Request was understood but caused a domain rule violation.",
+ "httpStatusCode": "403",
+ "defaultUserMessage": "Errors contain reason for domain rule violation.",
+ "userMessageGlobalisationCode": "validation.msg.domain.rule.violation",
+ "errors": [
+  {
+   "developerMessage": "This charge with specified due date cannot be added as the it is not in schedule range.",
+   "defaultUserMessage": "This charge with specified due date cannot be added as the it is not in schedule range.",
+   "userMessageGlobalisationCode": "error.msg.loanCharge.cannot.be.added.as.specified.due.date.outside.range",
+   "parameterName": "id",
+   "args": [
+    {
+     "value": "2026-01-01"
+    },
+    {
+     "value": "T40 flat fee on specified due date"
+    }
+   ]
+  }
+ ]
+}

@@ -1,16 +1,43 @@
 # T42 — which `MathContext` actually governs the money, and whether precision 19 is observable
 
+> ## CORRECTED IN PLACE BY T46 — read this first
+>
+> The T44 independent audit (`.softhouse/reviews/T44-capture-audit.md` §3) raised eleven findings
+> against this handoff and its capture set. **T46 closed them and edited this document in place.**
+> Every correction is marked `**[T46 CORRECTION …]**` at the point it applies; the full working,
+> the identity proofs and the new negative legs are in
+> `.softhouse/handoff/T46-mathcontext-corrections.md` and
+> `.softhouse/capture/mathcontext/ATTESTATION.md`.
+>
+> **No recorded observation was changed by T46**, and no T42 payload was modified. The two
+> corrections that change a *number* in this document are N-3's site inventory (M-1/M-2) and the
+> E1 matrix's distinct coverage, 10 rather than 13 (M-3). Everything else is a correction to a
+> justification, a `file:line`, or a claim's scope.
+>
+> **The three headline results are unaffected and stand:** (a) the ambient context is provably
+> never read on the Path A seam for a 2-dp currency; (b) on Path B the threaded context *is* the
+> ambient object; (c) threaded precision 19 separates from 12 on ordinary shapes.
+
 ## Verdict, in two sentences
 
 **(a) T39's N-3 is right about Path A and wrong as a general claim, and the difference matters.**
 On the **Path A** seam the threaded `MathContext` is the arithmetic and the ambient `MoneyHelper`
-context is — on 11 of 13 probe shapes — **provably never read at all**, not merely inert. On
+context is — on 11 of 13 probe shapes — **provably never read at all**, not merely inert.
+(**[T46 CORRECTION, M-3]** those thirteen shapes carry only **10 distinct observations**, and one
+of the ambient sites they were chosen to reach — the three-argument `Money.roundToMultiplesOf` via
+`installmentAmountInMultiplesOf` — was **never reached**; see §1 E1. The 11-of-13 result itself is
+unaffected and stands.) On
 **Path B** the two are *the same object*: the production caller does
-`final MathContext mc = MoneyHelper.getMathContext()` and hands that straight to
-`generate(mc, …)`, which I read off the **deployed bytecode inside the running server**. So the
+`final MathContext mc = MoneyHelper.getMathContext()` and hands **that same object** into the
+schedule generator — `generate(mc, …)` at two of the four sites, `rescheduleNextInstallments` and
+`calculatePrepaymentAmount` at the other two (**[T46 CORRECTION, M-9]**; see the §2 rule 4 table)
+— which I read off the **deployed bytecode inside the running server**. So the
 ambient reading is worthless as evidence about Path A arithmetic and is *the* evidence about
-Path B arithmetic. **No committed capture is mis-valued; T35's and T37's justifications are
-wrong and must be re-worded, T36's is substantially sound.**
+Path B arithmetic. **No committed capture is mis-valued** — `[VERIFIED for the three legs in §4,
+plus T46's fourth leg for capture 1; UNVERIFIED as a re-run of T35's or T36's suites]`, a
+qualification **[T46 CORRECTION, M-7]** requires everywhere this sentence is repeated —
+**and T35's and T37's justifications are wrong and must be re-worded, T36's is substantially
+sound.**
 
 **(b) T39's N-4 is superseded: a separating shape exists, and it is an ordinary loan.**
 Threaded precision 19 separates from 12 on **MNT 50,000,000 over 360 months at 21.6 %** — total
@@ -24,6 +51,9 @@ would actually write. Separation is **not monotone in principal**, so there is n
 **Storage:** raw observed form only; nothing promoted (`capture/mathcontext/PROVENANCE.md`).
 **Totals:** 354 observed cases across two captures, **243,308 cells compared full-cell**, 172
 control cells reproduced, 6 negative legs all failing correctly, both payloads byte-deterministic.
+**[T46]** Nine negative legs now (N7/N8/N9 added, each with a control leg); the 172 control cells
+are published individually in `analysis/t46-controls-cells-output.txt`; and a re-emission of
+capture 1 reproduces **147,630 of 147,634** previously published leaves byte-identically.
 
 ---
 
@@ -42,7 +72,9 @@ is only visible on a value that lands on a rounding boundary, so "nothing moved"
 with "it was read and happened not to matter".
 
 T42 replaces the difference test with an **absence** test. Each case carries its own tenant id
-(`MoneyHelper` caches per tenant, `MoneyHelper.java:36-37, :91-93`). The `-D` cases put a tenant
+(`MoneyHelper` caches per tenant, `MoneyHelper.java:37-38, :91-93` — **[T46 CORRECTION, M-9]**
+this document originally cited `:36-37`; `:37` is `roundingModeCache` and `:38` is
+`mathContextCache`, re-opened in the pinned checkout). The `-D` cases put a tenant
 into `ThreadLocalContextUtil` and **never call `initializeTenantRoundingMode` for it**, so any
 ambient read throws:
 
@@ -58,7 +90,12 @@ uninitialised tenant and records the throw; `run-mathcontext.sh` **fails the who
 canary ever stops throwing, and negative leg **N4** inverts that expectation and confirms the
 guard fires. Without N4 this whole section would be unfalsifiable.
 
-**Result — 13 shapes, one run** (`analysis/discriminate-output.txt`):
+**Result — 13 shapes, one run** (`analysis/discriminate-output.txt`).
+**[T46 CORRECTION, M-3]** The thirteen shapes carry only **10 distinct observations**: four of the
+`-A` baselines are byte-identical to `plain` — `plain`, `multiples1000`, `fixedLength6`,
+`interestRecognitionOnDisb` — so three of the levers chosen to widen coverage moved **nothing** on
+this seam. Marked ⚠ below.
+[VERIFIED: `.softhouse/capture/mathcontext/analysis/t46_distinct_coverage-output.txt`]
 
 | shape | ambient `DOWN` | ambient `UP` | threaded `DOWN` | **ambient ABSENT** |
 |---|---|---|---|---|
@@ -67,14 +104,14 @@ guard fires. Without N4 this whole section would be unfalsifiable.
 | monthEnd (T39-ME-B) | identical | identical | **23 cells** | generated fine |
 | downPayment 25 % | identical | identical | **20 cells** | generated fine |
 | downPayment 33.333 % on MNT 1,000,001 | identical | identical | **24 cells** | generated fine |
-| downPayment + `installmentAmountInMultiplesOf` 1000 | identical | identical | **24 cells** | generated fine |
-| `installmentAmountInMultiplesOf` 1000 | identical | identical | **23 cells** | generated fine |
+| downPayment + `installmentAmountInMultiplesOf` 1000 ⚠ | identical | identical | **24 cells** | generated fine |
+| `installmentAmountInMultiplesOf` 1000 ⚠ **inert — 0 cells vs `plain`** | identical | identical | **23 cells** | generated fine |
 | **currency 0 dp + `inMultiplesOf` 100** | **23 cells** | identical | identical | **THREW** |
 | **currency 0 dp + `inMultiplesOf` 100 + downPayment** | **27 cells** | **17 cells** | identical | **THREW** |
-| `fixedLength` 6 | identical | identical | **23 cells** | generated fine |
+| `fixedLength` 6 ⚠ **inert — 0 cells vs `plain`** | identical | identical | **23 cells** | generated fine |
 | `DaysInYear ACTUAL` | identical | identical | **18 cells** | generated fine |
 | `ACTUAL` / `ACTUAL` | identical | identical | **23 cells** | generated fine |
-| `interestRecognitionOnDisbursementDate` | identical | identical | **23 cells** | generated fine |
+| `interestRecognitionOnDisbursementDate` ⚠ **inert — 0 cells vs `plain`** | identical | identical | **23 cells** | generated fine |
 
 3,820 cells compared. Behavioural discriminator present on both axes: the threaded flip moves
 `totalInterestAmount` `76723.70 → 76723.65` on the plain shape; the ambient flip moves it
@@ -97,11 +134,73 @@ the threaded `mc` explicitly, `Money.of(…, mc)` honours it, and then the const
 **two-argument** `roundToMultiplesOf(BigDecimal, Integer)` which hard-codes
 `MoneyHelper.getRoundingMode()` [`Money.java:154`], ignoring the `mc` it was handed. It is reached
 only when `currency.getInMultiplesOf() != null && currency.getDecimalPlaces() == 0 &&
-inMultiplesOf > 0` [`Money.java:49-51`]. **MNT has 2 decimal places, so a ratified MNT
-configuration never reaches it.** [VERIFIED: `analysis/discriminate-output.txt`; source lines
-transcribed]
+inMultiplesOf > 0` [`Money.java:48-50` — **[T46 CORRECTION, M-9]** originally cited `:49-51`; the
+`if` opens at `:48` and the guarded call is at `:50`, re-opened in the pinned checkout].
+**MNT has 2 decimal places, so a ratified MNT configuration never reaches it.**
+[VERIFIED: `analysis/discriminate-output.txt`; source lines transcribed]
+
+> **[T46 CORRECTION, M-3 and M-4] — the site E1 believed it reached, and did not.**
+>
+> `CaptureMathContext.java`'s comment claimed the thirteen shapes *"between them REACH every
+> ambient-context read the static scan found on the Path A call graph"*, and justified the
+> `installmentAmountInMultiplesOf` shape as the one reaching the **three-argument**
+> `Money.roundToMultiplesOf(Money, Integer, MathContext)` and its trailing two-argument
+> `Money.of`. **That site was never reached. The claim is withdrawn** and the source comments are
+> corrected in place.
+>
+> Observed: `T42-MX-00-A` (plain) and `T42-MX-06-A` (`multiples1000`) differ in exactly one
+> substantive input and in **0 of 74 observed cells**; period-1 total is `212787.28` on both,
+> which is not a multiple of 1000; and the absence case `T42-MX-06-D` **generated a schedule**
+> rather than throwing — which it could not have done had the three-argument helper run, because
+> that helper finishes with the two-argument `Money.of` [`Money.java:169` → `:102-104`] and would
+> have hit the uninitialised tenant.
+> [VERIFIED: `analysis/t46_distinct_coverage-output.txt`]
+>
+> **Cause** [VERIFIED: re-opened by T46 in the pinned checkout]:
+> `LoanApplicationTerms.assembleFrom(LoanRepaymentScheduleModelData, MathContext)`
+> [`LoanApplicationTerms.java:579-607`] never calls the builder's
+> `installmentAmountInMultiplesOf` setter, although `LoanRepaymentScheduleModelData` carries the
+> field [`:36`]. So `ProgressiveLoanScheduleGenerator.java:110` and the guard at `:335` read
+> `null` on this seam, and the guarded three-argument call at `:336-338` never executes.
+>
+> **The line ranges in N-1's second half were also wrong.** The two-argument
+> `roundToMultiplesOf(BigDecimal, Integer)` is `Money.java:150-157` (originally `:152-158`); the
+> three-argument overload is `Money.java:163-170` (originally `:161-171`; `:159-161` is the
+> two-argument `Money` overload). The stack-trace lines above — `:154`, `:50`, `:107` — were and
+> remain correct.
+>
+> **M-4, a NEW oracle fact.** `LoanScheduleGeneratorServiceImpl.calculateInteresOnlyWithFirtDisbursement`
+> — a *production* entry point on the multi-disbursement interest-only path — inherits the same
+> blind spot: `:56` passes `loanProductRelatedDetail.getInstallmentAmountInMultiplesOf()` into the
+> `LoanRepaymentScheduleModelData`, `:63` calls `scheduleGenerator.generate(mc, modelData)`, and
+> `assembleFrom` drops it. Meanwhile the REST `calculateLoanSchedule` path via
+> `LoanScheduleAssembler` **does honour** the field — capture `B-02`, `112,082.37 → 112,100.00`,
+> which nothing here disturbs. **So the field is honoured or lost by CALLER, and DEC-1 must not
+> state its behaviour unconditionally.** `TO_BE_CAPTURED` on both callers.
+> [VERIFIED: both files re-opened by T46 in `/Users/buv/fineract` at
+> `426a23544e8426a38ae43ae404670a0a7e85b9eb`, working tree clean; **UNVERIFIED as behaviour** for
+> the `calculateInteresOnlyWithFirtDisbursement` caller — no capture exercises it]
 
 ### E2 — the two WIRINGS, side by side, in one payload
+
+> **[T46 CORRECTION, M-10] — E2's "Path A = 0 cells" is a REPLICATION of E1, not corroboration
+> of it.** The `PA` column below runs the same plain shape E1 already ran, varies the ambient
+> ordinal, holds the threaded context fixed, and observes 0 differing cells — which is exactly
+> `T42-MX-00-A`'s ambient-flip rows in the E1 table above. Same inputs, same seam, same
+> conclusion, one harness later. **Two runs of one experiment are one experiment**, and presenting
+> the `PA` column as independent corroboration overstated it. Taken alone the `PA` arm is also a
+> *difference* probe — the weaker design E1 exists to replace.
+>
+> **What E2 genuinely adds, and it is not small:** (1) the **`PB` column**, which E1 has no
+> version of — when the caller sources the threaded context *from* the ambient, moving the ambient
+> moves 22-23 cells, and 28 on T36's half-cent-tie shape; that is the entire content of ratified
+> rule 4 and it is a real result; (2) a **rule-2-compliant attestation** (`CaptureMathContext2.java:203-205`
+> echoes `mc.toString()` / `getPrecision()` / `getRoundingMode()` **and** a `wiring` field, which
+> capture 1 does not — see M-5 below); (3) **negative leg N5**, which proves the two families are
+> not merely labelled differently.
+>
+> **What E2 does NOT add:** independent evidence that the ambient context is unread on Path A.
+> That rests on **E1 alone**, plus §4's grep over the committed corpus.
 
 The Path A / Path B distinction is not about the seam; it is about **where the caller got its
 `MathContext`**. Capture 2 runs the identical shape twice, changing only that:
@@ -144,6 +243,22 @@ Running container image `sha256:e596339626bf…0459a`; jar sha256 `60fb6dbd631d�
 Four `MoneyHelper.getMathContext` call sites across the two classes that build a schedule on
 Path B. [VERIFIED: `out/t42-pathb-wiring.txt`]
 
+> **[T46 CORRECTION, M-6] — this section's only machine assertion was
+> `grep -c 'MoneyHelper.getMathContext' != 0`.** The same-local-slot claim, which is what ratified
+> rule 4 actually says, was left to the reader and had no negative leg.
+>
+> T46 added `analysis/t46_assert_pathb_slot.py`, which asserts off the `javap` transcript that
+> **(A1)** the instruction after `invokestatic MoneyHelper.getMathContext` is `astore <slot>`,
+> **(A2)** that slot is later `aload`ed into an `invoke*` whose descriptor takes a `MathContext`,
+> and **(A3)** the slot is not re-assigned in between; `src/t46-assert-pathb-slot.sh` runs it
+> against the committed transcript **and a fresh read-only `javap` re-read of the running server**
+> (both PASS), then against a slot-drifted copy (FAIL, 6 breaches).
+> [VERIFIED: `analysis/t46-pathb-slot-assertion-output.txt`]
+>
+> The re-read reconfirms `LoanScheduleAssembler.class` sha256 `d5ef3989…711ea` 20 hours later and
+> newly records `LoanScheduleGeneratorServiceImpl.class` sha256
+> `eca9b7d9010722e19c90bfd84c29cba9e3352adc0b460020b0df96608d1e31d6`.
+
 ### Controls and determinism
 
 172 control cells reproduce digit for digit against **transcribed** literals — the shipped
@@ -178,12 +293,14 @@ Six negative legs all exit 1 naming the breach. [VERIFIED: `analysis/controls-ou
 >
 > | path | wiring | is the ambient reading evidence about the money? |
 > |---|---|---|
-> | **Path B** — running server | `LoanScheduleAssembler.java:753, :777, :797`, `LoanScheduleGeneratorServiceImpl.java:44` do `mc = MoneyHelper.getMathContext()` and pass it to `generate(mc, …)`. **Same object.** | **Yes** — it *is* the threaded context. Cite the wiring; do not leave it implicit. |
+> | **Path B** — running server | `LoanScheduleAssembler.java:753, :777, :797`, `LoanScheduleGeneratorServiceImpl.java:44` do `mc = MoneyHelper.getMathContext()` and pass that **same object** into the schedule generator. **[T46 CORRECTION, M-9] — "pass it to `generate(mc, …)`" is wrong for 2 of the 4.** Per site: `:753` → `updateInterestForEqualAmortization(mc, …)` at `:758` **and** `generate(mc, …)` at `:765`; `:777` → **`rescheduleNextInstallments(mc, …)`** at `:787-788`; `:797` → **`calculatePrepaymentAmount(currency, onDate, terms, mc, …)`** at `:805-806`, where `mc` is the **4th** argument, not the 1st; `LoanScheduleGeneratorServiceImpl.java:44` → `generate(mc, modelData)` at `:63`. The substance is unaffected — on all four the threaded context is the ambient object — but cite the call site, never the helper (`patterns.md`). [VERIFIED: pinned source re-opened by T46; machine-extracted from the deployed bytecode in `analysis/t46-pathb-slot-assertion-output.txt`] | **Yes** — it *is* the threaded context. Cite the wiring; do not leave it implicit. |
 > | **Path A** — embeddable seam | the harness constructs its own `mc`. The two are **independent variables**. | **No** — it witnesses the tenant configuration only. It is still worth attesting for exactly that. Plus the one leak in rule 5. |
 >
 > **5. On Path A, the ambient context still reaches the money at exactly one site on the graded
 > call graph** — `Money.<init>` → `Money.roundToMultiplesOf(BigDecimal, Integer)` →
-> `MoneyHelper.getRoundingMode()` [`Money.java:50, :154`; `MoneyHelper.java:79`] — reached only
+> `MoneyHelper.getRoundingMode()` [`Money.java:50, :154`; `MoneyHelper.java:79` — stack-trace
+> lines, confirmed correct against the pinned source by T46; the *method* bodies are
+> `Money.java:40-53` and `:150-157`] — reached only
 > when the currency has **0 decimal places** *and* a positive `inMultiplesOf`. **MNT has 2, so a
 > ratified MNT capture never reaches it.** A capture that changes the currency's decimal places
 > must re-attest the ambient context as load-bearing.
@@ -250,6 +367,17 @@ at threaded precision {19, 12, 8}. **238,204 cells** compared full-cell.
 
 **Not covered, `TO_BE_CAPTURED`:**
 
+- **[T46 ADDITION, M-3 / M-4] `installmentAmountInMultiplesOf` and the three-argument
+  `Money.roundToMultiplesOf` ambient path.** Believed covered by this task; **it is not**. The
+  field is dropped by `LoanApplicationTerms.assembleFrom(LoanRepaymentScheduleModelData,
+  MathContext)` [`:579-607`], so `ProgressiveLoanScheduleGenerator.java:110` and `:335` read
+  `null`, `multiples1000` is byte-identical to `plain` on all 74 cells, and the ambient path
+  through `Money.java:163-170` → the two-argument `Money.of` [`:169` → `:102-104`] is **ungraded**.
+  It is **unreachable through `LoanRepaymentScheduleModelData` at all**, so no Path A capture can
+  ever grade it — grading needs Path B, where capture `B-02` already shows the field live
+  (`112,082.37 → 112,100.00`). And the field is honoured or lost **by production caller**:
+  `LoanScheduleGeneratorServiceImpl.calculateInteresOnlyWithFirtDisbursement` `:56`/`:63` loses it,
+  the REST `LoanScheduleAssembler` route keeps it.
 - `RepaymentEvery > 1`; `WEEKS`, `DAYS`, `YEARS` frequencies (`calculatePeriodRatio`'s other arms,
   `ProgressiveEMICalculator.java:1405, :1407, :1408`) — entirely uncaptured, as T39 also recorded.
 - `DaysInYearCustomStrategy` non-null; `interestCalculationPeriodMethod = SAME_AS_REPAYMENT_PERIOD`
@@ -283,6 +411,22 @@ the program that makes Buyan's ratified parameter falsifiable.
 
 ### Is any committed capture INVALIDATED? No. Here is the demonstration, not the assertion.
 
+> **[T46 CORRECTION, M-7] — the qualification is PART OF the claim and must travel with it.**
+> Wherever *"no committed capture is mis-valued"* is stated — including in this document's Verdict
+> above and in `.softhouse/reference-oracle.md` — it must read:
+>
+> > `[VERIFIED for the three legs below; UNVERIFIED as a re-run — T35's and T36's suites were not
+> > re-executed.]`
+>
+> And **leg 1 is weaker than legs 2 and 3**: it is a *self-report*, citing T35's, T37's and T39's
+> own attestations that they echoed the threaded context — the exact class of evidence this
+> document refuses elsewhere. Audit findings **F39-3** and **M-5** show that self-report is
+> inaccurate for at least T39 and for T42's own capture 1, both of which echoed **intent** under
+> object-named keys. **Legs 2 and 3 do carry the conclusion**, so it stands on those two — and
+> T46 adds a fourth, independent leg for capture 1: the re-emission proves the object echo and the
+> intent agree on **all 214 cases**, 147,630 of 147,634 leaves byte-identical
+> [VERIFIED: `.softhouse/capture/mathcontext/analysis/t46-m5-identity-proof.txt`].
+
 Three independent legs:
 
 1. **The threaded context was independently echoed and asserted in every one of them.** T35's
@@ -291,7 +435,8 @@ Three independent legs:
    candidates"; T39's `run-periodratio.sh` assertion 10 fails the run on any threaded mismatch. The
    *value* that governs was therefore attested correctly in all three.
 2. **The single ambient site on the Path A call graph is unreachable at 2 decimal places**, proved
-   by observation here (§1 E1) and by the source predicate `Money.java:49-51`. **Every committed
+   by observation here (§1 E1) and by the source predicate `Money.java:48-50` (**[T46 CORRECTION,
+   M-9]** originally `:49-51`). **Every committed
    Path A capture uses a 2-decimal-place currency** — I grepped the committed payloads:
    `"currencyDecimalPlaces": 0` appears in **no** committed capture outside my own
    (`.softhouse/capture/mathcontext/out/`), and the only committed file carrying
@@ -332,8 +477,10 @@ ambient reading *is* the threaded context. Two additions only:
 
 - **§1 table, row "effective `MathContext`"** — add the wiring citation: *"On Path B the threaded
   `MathContext` handed to the schedule generator **is** this object:
-  `LoanScheduleAssembler.java:753 → :765` (also `:777`, `:797`,
-  `LoanScheduleGeneratorServiceImpl.java:44`), verified against the deployed bytecode in
+  `LoanScheduleAssembler.java:753 → :765` (also `:777 → :787` **`rescheduleNextInstallments`**,
+  `:797 → :805` **`calculatePrepaymentAmount`**, and
+  `LoanScheduleGeneratorServiceImpl.java:44 → :63` `generate` — **[T46 CORRECTION, M-9]**: not all
+  four call `generate`), verified against the deployed bytecode in
   `.softhouse/capture/mathcontext/out/t42-pathb-wiring.txt`. That is why the ambient reading is
   evidence about the arithmetic here and is not on Path A [T42]."*
 - **Note that P14 discriminates the MODE only, not the precision.** Add: *"the precision half of
@@ -370,6 +517,21 @@ configuration*, counted twice. Replace with:
 
 ### `.softhouse/reference-oracle.md` — the corrections to fold in
 
+> **[T46 ADDITION] Two further corrections `reference-oracle.md` needs, and one of them is a wrong
+> number already folded in.** `reference-oracle.md` is outside T46's write surface; these are
+> escalated in `.softhouse/handoff/T46-mathcontext-corrections.md` for the orchestrator.
+>
+> 8. **`reference-oracle.md` records `"13 new MathContext(15|10, …)"`. The correct total is 9**
+>    — 4 at precision 15 and 5 at precision 10. The 13 was 4 + 9, double-counting the 15s, derived
+>    from N-3's own miscount. **Two precision-8 sites must be added**: `SavingsAccountCharge.java:562`
+>    and **`ShareAccountCharge.java:240`, which is in share accounts, not savings/deposits** — so
+>    the accompanying claim that every hard-coded `MathContext` outside the loan modules is in
+>    savings/deposits must be withdrawn.
+>    [VERIFIED: `.softhouse/capture/mathcontext/analysis/t46_mathcontext_inventory-output.txt`]
+> 9. **Wherever `reference-oracle.md` carries "no committed capture is mis-valued", it must carry
+>    the qualification** `[VERIFIED for the three legs stated; UNVERIFIED as a re-run]` (finding
+>    M-7), and the wiring row must not say all four sites "pass it to `generate(mc, …)`" (M-9).
+
 1. **New subsection "Which `MathContext` governs — the attestation rule."** Paste §2 of this
    handoff (the eight-point rule) verbatim. It is the durable output of T42.
 2. **The wiring table** (Path A independent / Path B ambient-sourced), with the four source
@@ -395,13 +557,30 @@ configuration*, counted twice. Replace with:
 `LoanApplicationTerms.assembleFrom` [`:580`] passes the threaded `mc`; `Money.of(…, mc)`
 [`Money.java:105-107`] honours it; and then `Money`'s constructor calls the **two-argument**
 `roundToMultiplesOf` [`Money.java:50` → `:152-158`] which hard-codes `MoneyHelper.getRoundingMode()`.
-The same pattern appears again at `Money.java:161-171`, where the *three*-argument
+The same pattern appears again at `Money.java:163-170` (**[T46 CORRECTION, M-9]** originally
+cited `:161-171`; `:159-161` is the two-argument `Money` overload), where the *three*-argument
 `roundToMultiplesOf(Money, Integer, MathContext)` uses the supplied `mc` for the division and then
-finishes with the **two**-argument `Money.of`, i.e. the ambient context for the final `setScale`.
+finishes with the **two**-argument `Money.of` [`:169` -> `:102-104`], i.e. the ambient context for
+the final `setScale`.
 A Go port that threads a context correctly everywhere will therefore be *more* consistent than
-Fineract and will diverge on 0-dp/`inMultiplesOf` currencies. **This is a port hazard, and it is
-observed, not read.** [VERIFIED: stack trace, `analysis/discriminate-output.txt`; source lines
-transcribed]
+Fineract and will diverge on 0-dp/`inMultiplesOf` currencies.
+
+**[T46 CORRECTION, M-3] — this finding was OVER-TAGGED and the tag is now split.**
+The original read *"This is a port hazard, and it is observed, not read."* and applied to both
+sites. It applies to the **first** only.
+
+- **The `Money.java:150-157` site (two-argument `roundToMultiplesOf`) IS observed.** The oracle's
+  own stack trace names `Money.java:154` [VERIFIED: stack trace in
+  `analysis/discriminate-output.txt`; `out/t42-mathcontext.json` cases `T42-MX-07-D`,
+  `T42-MX-08-D`].
+- **The `Money.java:163-170` site (three-argument overload) is a TRANSCRIPTION.** No T42 case ever
+  reached it — the `installmentAmountInMultiplesOf` shapes that were supposed to are inert on this
+  seam because `LoanApplicationTerms.assembleFrom` drops the field (see §1 E1). It reads
+  **`[UNVERIFIED as behaviour]`** and is `TO_BE_CAPTURED`.
+
+Both remain port hazards; only one is an observation.
+[VERIFIED: source lines re-opened by T46 in the pinned checkout; reachability from
+`analysis/t46_distinct_coverage-output.txt`]
 
 **N-2. On the two ambient-reading shapes the THREADED rounding mode is inert — a complete
 inversion.** `zeroDpMultiples100` moves 23 cells on the ambient flip and **0** on the threaded
@@ -417,13 +596,57 @@ in savings/deposits: **81** uses of `MathContext.DECIMAL64` (precision **16**, `
 49 in `fineract-core/.../portfolio/savings/domain/interest/` (`EndOfDayBalance`,
 `AnnualCompoundingPeriod`, `BiAnnualCompoundingPeriod`, `MonthlyCompoundingPeriod`,
 `QuarterlyCompoundingPeriod`, `DailyCompoundingPeriod`), 31 in `fineract-provider` savings
-services, 1 in `fineract-savings` — plus **4** `new MathContext(15, MoneyHelper.getRoundingMode())`
-and **9** `new MathContext(10, MoneyHelper.getRoundingMode())`
-(`SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:526, :627, :695, :822, :919`;
-`DepositAccountWritePlatformServiceJpaRepositoryImpl.java:496, :540, :837`;
-`SavingsAccountDomainServiceJpa.java:329`). **The loan modules
+services, 1 in `fineract-savings`.
+
+> **[T46 CORRECTION, M-1 and M-2] — the `new MathContext(…)` inventory that stood here was
+> miscounted AND incomplete. This is the re-derived list**, every entry a grep hit with
+> `file:line` over the pinned checkout at `426a23544e8426a38ae43ae404670a0a7e85b9eb`, working tree
+> clean, `/src/test/` and `/misc/` excluded
+> [VERIFIED: `.softhouse/capture/mathcontext/analysis/t46_mathcontext_inventory-output.txt`;
+> reproducible with `analysis/t46_mathcontext_inventory.sh`]:
+>
+> **15 `new MathContext(` sites in main source.** By the precision argument as written:
+>
+> | precision | count | sites |
+> |---|---|---|
+> | **15** | **4** | `SavingsAccountDomainServiceJpa.java:329`; `DepositAccountWritePlatformServiceJpaRepositoryImpl.java:496`; `SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:526`, `:822` |
+> | **10** | **5** | `DepositAccountWritePlatformServiceJpaRepositoryImpl.java:540`, `:837`; `SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:627`, `:695`, `:919` |
+> | **8** | **2** | `SavingsAccountCharge.java:562` (`fineract-savings`); **`ShareAccountCharge.java:240`** (`fineract-provider/.../portfolio/shareaccounts/`) |
+> | non-literal | **4** | `MoneyHelper.java:93`, `:124` (the `PRECISION = 19` constant); `MathUtil.java:473` (a *parameter*); `AdvancedPaymentScheduleTransactionProcessor.java:2845` (N-4) |
+>
+> **What was wrong.** This document published **9** `new MathContext(10, …)` sites; there are
+> **5**. The nine it listed were the **union** of the four precision-15 and five precision-10
+> sites, all labelled 10. `.softhouse/reference-oracle.md` then folded in a derived total of
+> *"13 `new MathContext(15|10, …)`"* (4 + 9), double-counting the 15s. **The correct 15-or-10
+> total is 9.** *(`reference-oracle.md` is outside T46's write surface; that correction is
+> escalated in `.softhouse/handoff/T46-mathcontext-corrections.md`.)*
+>
+> **And the universal claim two sentences above is FALSE as written.** Two precision-**8** sites
+> were omitted entirely, and one of them — `ShareAccountCharge.java:240` — is in **share
+> accounts**, a separate Tier B context with its own precision, not savings/deposits. A porter
+> reading the original N-3 would carry `(19, HALF_UP)` into share accounts and be wrong there too,
+> which is exactly the error N-3 exists to prevent. `MathUtil.java:473` and `MoneyHelper.java:93`
+> / `:124` are also outside savings/deposits, though their precision is not a literal.
+>
+> **The `DECIMAL64` arithmetic DOES hold, re-derived:** 81 = 49 (`fineract-core`) + 31
+> (`fineract-provider`) + 1 (`fineract-savings`); **0** occurrences whose path contains neither
+> "saving" nor "deposit"; **0** in any loan module. So does N-4.
+>
+> **NEW (T46) — an INDIRECT hard-code this finding misses entirely.**
+> `MathUtil.percentageOf(BigDecimal, BigDecimal, int)` [`MathUtil.java:472-473`] builds
+> `new MathContext(precision, MoneyHelper.getRoundingMode())`, so a caller passing a **literal**
+> precision hard-codes the precision *and* takes the **AMBIENT** rounding mode. **Six loan-path
+> call sites pass a literal 19**: `AbstractCumulativeLoanScheduleGenerator.java:1897`, `:2060`;
+> `LoanApplicationTerms.java:866`; `LoanDownPaymentHandlerServiceImpl.java:198`;
+> `LoanWritePlatformServiceJpaRepositoryImpl.java:448`, `:3538` — all on down-payment computation.
+> **So "the loan modules contain exactly one hard-coded `MathContext`" is true only of the literal
+> `new MathContext(` form**; through `MathUtil` there are six more, and they read the ambient mode.
+> `TO_BE_CAPTURED`. [**UNVERIFIED as behaviour** — none was executed.]
+
+**The loan modules
 (`fineract-loan`, `fineract-progressive-loan`, the embeddable seam) contain exactly one
-hard-coded `MathContext` — see N-4 — and no `DECIMAL64` at all.**
+hard-coded `MathContext` — see N-4 — and no `DECIMAL64` at all** (literal `new MathContext(` form
+only; see the T46 correction above for the six indirect sites).
 Consequence: `CLAUDE.md`'s "**the production `MathContext` is therefore `(19, HALF_UP)`**" is
 correct **for the loan path** and must not be carried into the savings port. Deposit-taking
 activation is prohibited for the NBFI licence, but the *code is in scope for porting*, and a
@@ -457,7 +680,8 @@ precision-8 probes (`D-01-p8`) were therefore always going to look decisive and 
 case. [VERIFIED: `analysis/discriminate-output.txt`]
 
 **N-7. `MoneyHelper.getMathContext()` caches the `MathContext` object per tenant**
-[`MoneyHelper.java:37, :91-93`] and only `initializeTenantRoundingMode` / `updateTenantRoundingMode`
+[`MoneyHelper.java:38, :91-93` — **[T46 CORRECTION, M-9]** originally cited `:37`, which is
+`roundingModeCache`; `mathContextCache` is `:38`] and only `initializeTenantRoundingMode` / `updateTenantRoundingMode`
 evict it. T35 already established `updateTenantRoundingMode` has no production caller. Consequence
 for Path B attestations: **the ambient reading is fixed at JVM start for a tenant**, so a
 `c_configuration.rounding-mode` row edited after boot is inert — which T36 (**P13**) already
@@ -482,6 +706,11 @@ hygienic.
   `rateFactorByRepaymentPeriod`. What is observed is that the output moves when the threaded
   context moves and does not when the ambient does. That is a discrimination, not an internal
   observation.
+- **[T46 ADDITION] The six loan-path `MathUtil.percentageOf(…, 19)` sites**, which build
+  `new MathContext(19, MoneyHelper.getRoundingMode())` — hard-coded precision, **ambient** mode —
+  on down-payment computation. `AbstractCumulativeLoanScheduleGenerator.java:1897`, `:2060`;
+  `LoanApplicationTerms.java:866`; `LoanDownPaymentHandlerServiceImpl.java:198`;
+  `LoanWritePlatformServiceJpaRepositoryImpl.java:448`, `:3538`. None executed.
 - **The Path B-only ambient sites** — `AdvancedPaymentScheduleTransactionProcessor` (~14 sites),
   `LoanCharge.java:315`, `SingleLoanChargeRepaymentScheduleProcessingWrapper.java:141, :183`,
   `LoanSchedulePeriodData.java:161`, `LoanMapper.java:49`, `AprCalculator.java:53`,
@@ -494,6 +723,32 @@ hygienic.
 ---
 
 ## 7. Unverified
+
+**[T46 ADDITIONS to this section]**
+
+- **"The thirteen E1 shapes reach every ambient read on the Path A call graph."** **FALSE, and
+  withdrawn.** One of the two sites they were chosen to reach — the three-argument
+  `Money.roundToMultiplesOf` via `installmentAmountInMultiplesOf` — was **never reached**, and the
+  matrix carries **10 distinct observations, not 13**.
+  [VERIFIED as a refutation: `analysis/t46_distinct_coverage-output.txt`]
+- **N-1's second site (`Money.java:163-170`)** is a source transcription, never executed.
+  `[UNVERIFIED as behaviour]`
+- **M-4 — that `calculateInteresOnlyWithFirtDisbursement` loses `installmentAmountInMultiplesOf`**
+  is read off the pinned source (`:56`, `:63`, and `assembleFrom`'s builder chain). No capture
+  exercises that entry point. `[VERIFIED as source; UNVERIFIED as behaviour]`
+- **The six `MathUtil.percentageOf(…, 19)` loan-path sites** are a grep with `file:line`; none was
+  executed. `[UNVERIFIED as behaviour]`
+- **The re-derived `new MathContext(` inventory** is a repo-wide grep of the pinned checkout with
+  `/src/test/` and `/misc/` excluded. Transcriptions, not observations; no savings, deposit or
+  share-account code was executed. `[UNVERIFIED as behaviour]`
+- **The T46 re-emission's identity proof carves out 4 leaves** — the harness's own
+  `CaptureMathContext.run`/`.main` stack frames — which a differently-named class cannot
+  reproduce. They are enumerated verbatim in `analysis/t46-m5-identity-proof.txt`. Every **oracle**
+  frame and every money cell is byte-identical. `[stated, not hidden]`
+- **T46 did NOT re-run T35's or T36's suites either**, so M-7's qualification stands unchanged:
+  "no committed capture is mis-valued" is `[VERIFIED for the legs stated; UNVERIFIED as a re-run]`.
+
+---
 
 - **"11 of 13 shapes never consult the ambient context."** Verified *for those thirteen shapes*.
   It licenses no claim about an unsampled shape, and in particular none about anything reachable

@@ -17,6 +17,15 @@ reproduce records taken by OTHER harnesses on OTHER tasks, so the harness is not
 
 Exact string comparison.  No float anywhere -- the shipped literal's `2.05` etc. are transcribed
 as the decimal STRINGS the oracle emits, not as Java doubles.
+
+VERBOSE MODE (added by T46 to close audit finding M-11; APPEND-ONLY, default behaviour is
+byte-for-byte unchanged).  Set `T42_CONTROLS_VERBOSE=1` in the environment, or pass `--verbose`,
+and every compared cell is printed BEFORE the existing summary as
+
+    control-id | field | expected | observed | MATCH
+
+so the control claim can be checked cell by cell from committed output rather than taken on the
+strength of a two-line summary.  Without the flag not one byte of output changes.
 """
 import json
 import sys
@@ -26,6 +35,9 @@ HERE = Path(__file__).resolve().parent
 import os
 PAYLOAD = Path(os.environ.get("T42_CONTROLS_PAYLOAD",
                              HERE.parent / "out" / "t42-mathcontext.json"))
+
+# T46 / M-11: append-only verbose switch.  Default False -> default output unchanged.
+VERBOSE = os.environ.get("T42_CONTROLS_VERBOSE", "") not in ("", "0") or "--verbose" in sys.argv[1:]
 
 # ---- C1: the shipped test literal, transcribed ---------------------------------------------
 # EmbeddableProgressiveLoanScheduleGeneratorTest.java:74-77 and :79-95.  The test asserts
@@ -93,12 +105,23 @@ def main():
     caps = {c["id"]: c for c in doc["captures"]}
     bad = []
     checked = 0
+    cell_rows = []  # T46/M-11: one entry per compared cell, printed only in verbose mode.
 
     def eq(where, expected, actual):
         nonlocal checked
         checked += 1
-        if expected != actual:
+        ok = expected == actual
+        if not ok:
             bad.append(f"{where}: expected {expected!r}, observed {actual!r}")
+        if VERBOSE:
+            # Split the existing label into (control-id, field) without changing any call site.
+            if " " in where:
+                cid, field = where.split(" ", 1)
+            elif "." in where:
+                cid, field = where.split(".", 1)
+            else:
+                cid, field = where, where
+            cell_rows.append((cid, field, expected, actual, "MATCH" if ok else "MISMATCH"))
 
     # ---- C1 -------------------------------------------------------------------------------
     cal = caps["T42-CAL"]["observed"]
@@ -144,6 +167,18 @@ def main():
         for i, (exp, got) in enumerate(zip(MEB_ROWS, rows)):
             for name, v in zip(("fromDate", "dueDate", "principal", "interest", "balance", "total"), exp):
                 eq(f"C5 T42-CTL-MEB period[{i + 1}].{name}", v, got[name])
+
+    # ---- T46 / M-11: the compared cells themselves, one line each ---------------------------
+    if VERBOSE:
+        print("control-id | field | expected | observed | MATCH")
+        print("-" * 110)
+        for cid, field, expected, actual, verdict in cell_rows:
+            print(f"{cid} | {field} | {expected} | {actual} | {verdict}")
+        print("-" * 110)
+        print(f"{len(cell_rows)} cells listed above; "
+              f"{sum(1 for r in cell_rows if r[4] == 'MATCH')} MATCH, "
+              f"{sum(1 for r in cell_rows if r[4] != 'MATCH')} MISMATCH.")
+        print()
 
     print(f"T42 controls: {checked} cells compared against TRANSCRIBED literals "
           f"(shipped test + four committed captures taken by other harnesses).")

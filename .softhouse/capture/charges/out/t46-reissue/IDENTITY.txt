@@ -1,0 +1,24 @@
+  BYTE-IDENTICAL  FC-01-flat-disbursement-raw.json  18bc7b0e30ed14d615989c25cbe394220f38a531c17408c5ed9f68a6921700be
+  BYTE-IDENTICAL  FC-02-flat-instalment-raw.json  eb121bcb048d978127c9919e3a65551364fe1d3d73fe635a4d5099ea9b7b8bbe
+  BYTE-IDENTICAL  FC-03-pctamount-disbursement-raw.json  04c3c58545ca0c457619918352798219f651d6ae64ce993d557706f1942c2100
+  BYTE-IDENTICAL  FC-04-pctinterest-instalment-raw.json  4b350ecf532bf8921901880d081b311d58a91c7d22cfe0cc91b3e5b4a9ee337f
+  BYTE-IDENTICAL  FC-05-pctamountinterest-instalment-raw.json  2f2a242fa80ca563f9599c270f0118e6bc31f6f36e23a1fb630d2df6348accc9
+  BYTE-IDENTICAL  FC-06-penalty-inside-p3-raw.json  000f9f6bc6b73382d44a01dcfa7815a2e7743d8dddd9d28205cf871cd30c745b
+  BYTE-IDENTICAL  FC-07-fee-on-p3-duedate-raw.json  dffaf0001a4f3b31d6e3ed6b418332e978daf07b384d86b9644b4779c099ed9e
+  BYTE-IDENTICAL  FC-08-penalty-instalment-raw.json  a08d24d7042263e47453e3122221c15af64fd18bb180ee6b97a184abff2b0b73
+  BYTE-IDENTICAL  FC-09-pctamount-instalment-raw.json  090fce5d47b04d796610f8edffffa26a393155b4a125a2032932a3bd6502e0dd
+  BYTE-IDENTICAL  FC-10-pctamount-inside-p6-raw.json  71c23d4d1795c0e6502fc02848174fc776c31e0d4fb39a7d0f73de72cf39f4a0
+  BYTE-IDENTICAL  FC-11-fee-on-disbursement-date-raw.json  d157b0a21c893ec03ffa6a165c7e83929c9fca9199dc5659bfa7f8322362b356
+  BYTE-IDENTICAL  FC-12-fee-on-final-duedate-raw.json  fbb8d67050a6672a7d82f06e38dd91eb118d13899daef72a721803e56b2bbc5f
+  BYTE-IDENTICAL  FC-13-fee-inside-p12-raw.json  fbb8d67050a6672a7d82f06e38dd91eb118d13899daef72a721803e56b2bbc5f
+  BYTE-IDENTICAL  FC-14-fee-inside-p1-raw.json  d157b0a21c893ec03ffa6a165c7e83929c9fca9199dc5659bfa7f8322362b356
+  BYTE-IDENTICAL  FC-15-combined-fee-and-penalty-raw.json  6dfe679c85915dbf44bf1385f4e9c132e8593265844ab456e9c349ba937a7b81
+  BYTE-IDENTICAL  FC-16-fee-on-p1-duedate-raw.json  d157b0a21c893ec03ffa6a165c7e83929c9fca9199dc5659bfa7f8322362b356
+  BYTE-IDENTICAL  FC-17-fee-after-final-duedate-raw.json  713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009
+  BYTE-IDENTICAL  FC-19-pctinterest-sdd-inside-p6-raw.json  a214f3ae361dd2f13a150f659b19c84b0bcc6d8144a68fd1f7ff2832992928aa
+  BYTE-IDENTICAL  FC-20-pctinterest-sdd-on-disb-raw.json  713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009
+  BYTE-IDENTICAL  FC-21-pctamtint-sdd-inside-p6-raw.json  52eb83b1ce9730754f2b6f18a159881975ded9d4a2afa2e544f913b976ee32c4
+  BYTE-IDENTICAL  FC-22-penalty-instalment-plus-sdd-on-p3-duedate-raw.json  f7c4d6a88d1d9f33e8c455a812450beceff03b62360c2db4f84043e2dc8ba005
+
+T46 A-7 proof: 21 of 21 committed charge responses reproduced BYTE-FOR-BYTE
+through the path-fixed scripts, on a third independent issue.

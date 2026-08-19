@@ -9,7 +9,7 @@
 # The request files are sent BYTE-VERBATIM from .softhouse/capture/pathb/req/ (read-only
 # to T40).  Nothing is regenerated, reformatted or re-serialised.
 set -eu
-. /Users/buv/gerege-nbfi/.claude/worktrees/agent-aae6901cc4f028513/.softhouse/capture/charges/bin/lib.sh
+. "$(dirname "$0")/lib.sh"
 
 O=$CH/out/control
 mkdir -p "$O"

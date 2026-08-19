@@ -1,0 +1,11 @@
+02:20:21.756 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t46_arm_ctl`: HALF_UP
+02:20:21.792 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t46_yr_a`: HALF_UP
+02:20:21.792 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t46_yr_b`: HALF_UP
+02:20:21.792 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t46_wk_a`: HALF_UP
+02:20:21.795 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t46_wk_b`: HALF_UP
+02:20:21.800 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t46_wk_c`: HALF_UP
+02:20:21.802 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t46_dy_a`: HALF_UP
+02:20:21.803 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t46_dy_b`: HALF_UP
+02:20:21.806 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t46_re_2`: HALF_UP
+02:20:21.807 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t46_re_3`: HALF_UP
+02:20:21.810 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `t46_re_2me`: HALF_UP

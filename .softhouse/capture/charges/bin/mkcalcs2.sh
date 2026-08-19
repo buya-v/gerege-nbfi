@@ -11,7 +11,7 @@
 #  FC-21  PERCENT_OF_AMOUNT_AND_INTEREST specified-due-date fee, due inside period 6
 #  FC-22  PENALTY per instalment + PENALTY specified-due-date on the SAME period boundary
 set -eu
-W=/Users/buv/gerege-nbfi/.claude/worktrees/agent-aae6901cc4f028513
+W="${T40_WORKTREE:-$(cd "$(dirname "$0")/../../../.." && pwd)}"
 CH=$W/.softhouse/capture/charges
 BASE=$W/.softhouse/capture/pathb/req/calc-B-01-baseline.json
 R=$CH/req

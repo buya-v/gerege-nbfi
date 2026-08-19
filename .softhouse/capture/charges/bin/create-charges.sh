@@ -3,7 +3,7 @@
 # Nothing existing is mutated: `select count(*) from m_charge` was 0 before this ran,
 # so every charge id on the tenant belongs to T40 and a later fire can find them all.
 set -eu
-. /Users/buv/gerege-nbfi/.claude/worktrees/agent-aae6901cc4f028513/.softhouse/capture/charges/bin/lib.sh
+. "$(dirname "$0")/lib.sh"
 
 O=$CH/out/charges
 mkdir -p "$O"

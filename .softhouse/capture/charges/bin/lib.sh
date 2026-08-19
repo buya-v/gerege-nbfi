@@ -10,7 +10,7 @@
 # ever read back as text/Decimal.
 set -u
 
-W=/Users/buv/gerege-nbfi/.claude/worktrees/agent-aae6901cc4f028513
+W="${T40_WORKTREE:-$(cd "$(dirname "$0")/../../../.." && pwd)}"
 CH=$W/.softhouse/capture/charges
 B=https://localhost:8443/fineract-provider/api/v1
 A='Authorization: Basic bWlmb3M6cGFzc3dvcmQ='

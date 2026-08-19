@@ -1,0 +1,36 @@
+== T46 re-emission of T42 capture 1, with the threaded MathContext echoed off the object ==
+  ok  pinned commit 426a23544e8426a38ae43ae404670a0a7e85b9eb
+  ok  pinned checkout clean
+  ok  image sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a
+  ok  seam class byte-identical to the pin, sha256 bf397f0b29e6d6f347c286f563875495635128f9cba80fe59881ffe0fea80714
+  ok  CaptureMathContext3.java regenerates identically from CaptureMathContext.java
+  ok  oracle identity captured into t46-mathcontext3-oracle-identity.txt
+  ok  classpath: 348 entries, digest 68e681486ae5890f7cded85b4a3e2588672d66dd5e1380dd897ef72213b5f95f
+  ok  classpath has ZERO Oracle Database / MySQL / MariaDB entries
+  ok  container exit 0
+  ok  stderr empty
+  ok  JSON payload parses
+BREACH: T42-MX-07-D /stackTrace[8]: 'at CaptureMathContext.run(CaptureMathContext.java:423)' -> 'at CaptureMathContext3.run(CaptureMathContext3.java:459)'
+BREACH: T42-MX-07-D /stackTrace[9]: 'at CaptureMathContext.main(CaptureMathContext.java:323)' -> 'at CaptureMathContext3.main(CaptureMathContext3.java:350)'
+BREACH: T42-MX-08-D /stackTrace[8]: 'at CaptureMathContext.run(CaptureMathContext.java:423)' -> 'at CaptureMathContext3.run(CaptureMathContext3.java:459)'
+BREACH: T42-MX-08-D /stackTrace[9]: 'at CaptureMathContext.main(CaptureMathContext.java:323)' -> 'at CaptureMathContext3.main(CaptureMathContext3.java:350)'
+================================================================================================
+T46 / M-5 identity proof
+  committed   : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac1c54e4da86fd3e6/.softhouse/capture/mathcontext/out/t42-mathcontext.json
+  re-emission : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac1c54e4da86fd3e6/.softhouse/capture/mathcontext/out/t46-mathcontext3.json
+================================================================================================
+  top-level harness                        DIFFERS (allowed): 'CaptureMathContext.java' -> 'CaptureMathContext3.java (T46 re-emission of CaptureMathContext.java with the threaded MathContext echoed off the object)'
+  top-level keys identical: 12 of 13
+  cases: committed 214, re-emission 214, common 214
+
+  previously published leaves compared : 147634
+  leaves that MOVED                    : 4
+  leaves ADDED by the re-emission      : 856  (threadedMathContext, threadedMathContextPrecisionFromObject, threadedMathContextRoundingModeFromObject, wiring)
+
+  M-5 substance: does the OBJECT echo agree with the INTENT the committed payload
+  published under the object-named keys?
+    cases with a disagreement: 0
+
+FAIL -- 4 breach(es).  The re-emission is INADMISSIBLE.
+BREACH: the re-emission does NOT reproduce every previously published value; payload moved to /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac1c54e4da86fd3e6/.softhouse/capture/mathcontext/out/t46-mathcontext3.json.REJECTED and NOT published
+RUN INVALID -- re-emission is not admissible and must not be published.

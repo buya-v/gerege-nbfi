@@ -2,7 +2,7 @@
 # T40 — capture the charge-bearing schedules from the live reference oracle (Fineract).
 # RAW OBSERVED FORM ONLY.  Nothing here is a parity vector; nothing is contract-shaped.
 set -eu
-. /Users/buv/gerege-nbfi/.claude/worktrees/agent-aae6901cc4f028513/.softhouse/capture/charges/bin/lib.sh
+. "$(dirname "$0")/lib.sh"
 
 O=${1:-$CH/out/fc}
 mkdir -p "$O"

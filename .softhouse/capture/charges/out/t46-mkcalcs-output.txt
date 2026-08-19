@@ -1,0 +1,36 @@
+T46 charge requests authored (new ids, new pass; no charge definition created or modified):
+
+  calc-T46-CH-01-defvsreq-pctinterest.json
+    request charges[0] : {"chargeId": 4, "amount": 1.25}
+    definition         : m_charge id 4 = 3.750000 % of interest, INSTALMENT_FEE (charge_time_enum 8, charge_calculation_enum 4)
+    discriminates      : DEFINITION governs -> period-1 fee 810.00 (3.75 % of 21,600.00); REQUEST governs -> period-1 fee 270.00 (1.25 % of 21,600.00)
+
+  calc-T46-CH-02-defvsreq-flat-disb.json
+    request charges[0] : {"chargeId": 1, "amount": 7777.77}
+    definition         : m_charge id 1 = 15000.000000 flat, DISBURSEMENT_FEE (time 1, calc 1)
+    discriminates      : DEFINITION governs -> disbursement fee 15000.00; REQUEST governs -> disbursement fee 7777.77
+
+  calc-T46-CH-03-tie-pctinterest-4725.json
+    request charges[0] : {"chargeId": 4, "amount": 0.021875}
+    definition         : m_charge id 4 = 3.750000 % of interest, INSTALMENT_FEE
+    discriminates      : REQUEST governs and 21,600.00 x 0.021875 % = 4.725 EXACTLY -- a half-cent tie. HALF_UP -> 4.73; HALF_EVEN -> 4.72
+
+  calc-T46-CH-04-tie-pctinterest-2025.json
+    request charges[0] : {"chargeId": 4, "amount": 0.009375}
+    definition         : m_charge id 4 = 3.750000 % of interest, INSTALMENT_FEE
+    discriminates      : REQUEST governs and 21,600.00 x 0.009375 % = 2.025 EXACTLY -- a half-cent tie. HALF_UP -> 2.03; HALF_EVEN -> 2.02
+
+  calc-T46-CH-05-defvsreq-pctamtint.json
+    request charges[0] : {"chargeId": 5, "amount": 2.5}
+    definition         : m_charge id 5 = 1.234500 % of amount PLUS interest, INSTALMENT_FEE (time 8, calc 3)
+    discriminates      : DEFINITION governs -> the FC-05 fee column; REQUEST governs -> roughly 2x it (2.5 / 1.2345). The observed ratio decides.
+
+  calc-T46-CH-06-defvsreq-pctamount-disb.json
+    request charges[0] : {"chargeId": 3, "amount": 0.5}
+    definition         : m_charge id 3 = 1.234500 % of amount, DISBURSEMENT_FEE (time 1, calc 2)
+    discriminates      : DEFINITION governs -> disbursement fee 14814.00 (1.2345 % of 1,200,000); REQUEST governs -> 6000.00 (0.5 % of 1,200,000)
+
+  calc-T46-CH-07-defvsreq-penalty-instalment.json
+    request charges[0] : {"chargeId": 8, "amount": 333.33}
+    definition         : m_charge id 8 = 1200.000000 flat PENALTY per instalment (time 8, calc 1, is_penalty true)
+    discriminates      : DEFINITION governs -> penalty 1200.00 per period; REQUEST governs -> penalty 333.33 per period

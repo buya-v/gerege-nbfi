@@ -8,10 +8,13 @@ Answers, from OBSERVATION only:
 
 Exact Decimal only; no float is constructed at any point.
 """
+import pathlib
+import os
 import json, os, sys
 from decimal import Decimal
 
-W = "/Users/buv/gerege-nbfi/.claude/worktrees/agent-aae6901cc4f028513"
+W = os.environ.get("T40_WORKTREE",
+                   str(pathlib.Path(__file__).resolve().parents[4]))
 CH = W + "/.softhouse/capture/charges"
 
 

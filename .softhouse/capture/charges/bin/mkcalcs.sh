@@ -26,7 +26,7 @@
 #   p1 2026-01-01 -> 2026-02-01 ... p3 2026-03-01 -> 2026-04-01 ...
 #   p6 2026-06-01 -> 2026-07-01 ... p12 2026-12-01 -> 2027-01-01
 set -eu
-W=/Users/buv/gerege-nbfi/.claude/worktrees/agent-aae6901cc4f028513
+W="${T40_WORKTREE:-$(cd "$(dirname "$0")/../../../.." && pwd)}"
 CH=$W/.softhouse/capture/charges
 BASE=$W/.softhouse/capture/pathb/req/calc-B-01-baseline.json
 R=$CH/req

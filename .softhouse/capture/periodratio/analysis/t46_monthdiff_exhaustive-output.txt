@@ -1,0 +1,16 @@
+== image      : sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a
+== source sha : 179d6225ad84619506dce3148d76a813325a9e1c4cd1e3414bfeff9afa5f8392
+first firing pair                           : seed=2000-01-29 from=2001-02-28  nPacked=12 nNaive=13 nOracle=13
+T46 exhaustive month-difference sweep
+domain                                      : ordered pairs (seed <= from), 2000-01-01 .. 2040-12-31
+java.vm.version                             : 21.0.11+10-LTS
+ordered date pairs swept                    : 112147776
+month-end special case FIRES (:1432)        : 45253
+nPacked != nNaive                           : 45253
+fires AND nPacked == nNaive                 : 0
+does NOT fire AND nPacked != nNaive         : 0
+nOracle != nNaive   [R2 vs R4]              : 0
+nOracle != nPacked  [R2 vs R3]              : 45253
+first R2-vs-R4 separator found              : (none)
+YEARS arm: yPacked != yNaive                : 165
+first YEARS separator found                 : seed=2000-02-29 from=2001-02-28 yPacked=0 yNaive=1

@@ -1,0 +1,179 @@
+control-id | field | expected | observed | MATCH
+--------------------------------------------------------------------------------------------------------------
+C1 | T42-CAL.loanTermInDays | 182 | 182 | MATCH
+C1 | T42-CAL.totalDisbursedAmount | 100.00 | 100.00 | MATCH
+C1 | T42-CAL.totalInterestAmount | 2.05 | 2.05 | MATCH
+C1 | T42-CAL.totalRepaymentAmount | 102.05 | 102.05 | MATCH
+C1 | period[0].type | DISBURSEMENT | DISBURSEMENT | MATCH
+C1 | period[0].fromDate | 2024-01-01 | 2024-01-01 | MATCH
+C1 | period[0].dueDate | 2024-01-01 | 2024-01-01 | MATCH
+C1 | period[0].principal | 100.00 | 100.00 | MATCH
+C1 | period[1].type | REPAYMENT | REPAYMENT | MATCH
+C1 | period[1].fromDate | 2024-01-01 | 2024-01-01 | MATCH
+C1 | period[1].dueDate | 2024-02-01 | 2024-02-01 | MATCH
+C1 | period[1].principal | 16.43 | 16.43 | MATCH
+C1 | period[1].interest | 0.58 | 0.58 | MATCH
+C1 | period[1].fee | 0.00 | 0.00 | MATCH
+C1 | period[1].penalty | 0.00 | 0.00 | MATCH
+C1 | period[1].total | 17.01 | 17.01 | MATCH
+C1 | period[1].balance | 83.57 | 83.57 | MATCH
+C1 | period[1].totalOutstandingBalance | 85.04 | 85.04 | MATCH
+C1 | period[2].type | REPAYMENT | REPAYMENT | MATCH
+C1 | period[2].fromDate | 2024-02-01 | 2024-02-01 | MATCH
+C1 | period[2].dueDate | 2024-03-01 | 2024-03-01 | MATCH
+C1 | period[2].principal | 16.52 | 16.52 | MATCH
+C1 | period[2].interest | 0.49 | 0.49 | MATCH
+C1 | period[2].fee | 0.00 | 0.00 | MATCH
+C1 | period[2].penalty | 0.00 | 0.00 | MATCH
+C1 | period[2].total | 17.01 | 17.01 | MATCH
+C1 | period[2].balance | 67.05 | 67.05 | MATCH
+C1 | period[2].totalOutstandingBalance | 68.03 | 68.03 | MATCH
+C1 | period[3].type | REPAYMENT | REPAYMENT | MATCH
+C1 | period[3].fromDate | 2024-03-01 | 2024-03-01 | MATCH
+C1 | period[3].dueDate | 2024-04-01 | 2024-04-01 | MATCH
+C1 | period[3].principal | 16.62 | 16.62 | MATCH
+C1 | period[3].interest | 0.39 | 0.39 | MATCH
+C1 | period[3].fee | 0.00 | 0.00 | MATCH
+C1 | period[3].penalty | 0.00 | 0.00 | MATCH
+C1 | period[3].total | 17.01 | 17.01 | MATCH
+C1 | period[3].balance | 50.43 | 50.43 | MATCH
+C1 | period[3].totalOutstandingBalance | 51.02 | 51.02 | MATCH
+C1 | period[4].type | REPAYMENT | REPAYMENT | MATCH
+C1 | period[4].fromDate | 2024-04-01 | 2024-04-01 | MATCH
+C1 | period[4].dueDate | 2024-05-01 | 2024-05-01 | MATCH
+C1 | period[4].principal | 16.72 | 16.72 | MATCH
+C1 | period[4].interest | 0.29 | 0.29 | MATCH
+C1 | period[4].fee | 0.00 | 0.00 | MATCH
+C1 | period[4].penalty | 0.00 | 0.00 | MATCH
+C1 | period[4].total | 17.01 | 17.01 | MATCH
+C1 | period[4].balance | 33.71 | 33.71 | MATCH
+C1 | period[4].totalOutstandingBalance | 34.01 | 34.01 | MATCH
+C1 | period[5].type | REPAYMENT | REPAYMENT | MATCH
+C1 | period[5].fromDate | 2024-05-01 | 2024-05-01 | MATCH
+C1 | period[5].dueDate | 2024-06-01 | 2024-06-01 | MATCH
+C1 | period[5].principal | 16.81 | 16.81 | MATCH
+C1 | period[5].interest | 0.20 | 0.20 | MATCH
+C1 | period[5].fee | 0.00 | 0.00 | MATCH
+C1 | period[5].penalty | 0.00 | 0.00 | MATCH
+C1 | period[5].total | 17.01 | 17.01 | MATCH
+C1 | period[5].balance | 16.90 | 16.90 | MATCH
+C1 | period[5].totalOutstandingBalance | 17.00 | 17.00 | MATCH
+C1 | period[6].type | REPAYMENT | REPAYMENT | MATCH
+C1 | period[6].fromDate | 2024-06-01 | 2024-06-01 | MATCH
+C1 | period[6].dueDate | 2024-07-01 | 2024-07-01 | MATCH
+C1 | period[6].principal | 16.90 | 16.90 | MATCH
+C1 | period[6].interest | 0.10 | 0.10 | MATCH
+C1 | period[6].fee | 0.00 | 0.00 | MATCH
+C1 | period[6].penalty | 0.00 | 0.00 | MATCH
+C1 | period[6].total | 17.00 | 17.00 | MATCH
+C1 | period[6].balance | 0.00 | 0.00 | MATCH
+C1 | period[6].totalOutstandingBalance | 0.00 | 0.00 | MATCH
+T42-CTL-Q0a | loanTermInDays | 182 | 182 | MATCH
+T42-CTL-Q0a | totalDisbursedAmount | 1200000.00 | 1200000.00 | MATCH
+T42-CTL-Q0a | totalInterestAmount | 76723.70 | 76723.70 | MATCH
+T42-CTL-Q0a | totalRepaymentAmount | 1276723.70 | 1276723.70 | MATCH
+T42-CTL-1 | totalDisbursedAmount | 1014632.00 | 1014632.00 | MATCH
+T42-CTL-1 | totalInterestAmount | 20815.82 | 20815.82 | MATCH
+T42-CTL-1 | totalRepaymentAmount | 1035447.82 | 1035447.82 | MATCH
+T42-CTL-P0A | loanTermInDays | 185 | 185 | MATCH
+T42-CTL-P0A | totalDisbursedAmount | 1200000.00 | 1200000.00 | MATCH
+T42-CTL-P0A | totalInterestAmount | 76984.00 | 76984.00 | MATCH
+T42-CTL-P0A | totalRepaymentAmount | 1276984.00 | 1276984.00 | MATCH
+T42-CTL-MEB | totalDisbursedAmount | 1200000.00 | 1200000.00 | MATCH
+T42-CTL-MEB | totalInterestAmount | 76723.70 | 76723.70 | MATCH
+T42-CTL-MEB | totalRepaymentAmount | 1276723.70 | 1276723.70 | MATCH
+C4 | T42-CTL-P0A period[1].fromDate | 2024-01-28 | 2024-01-28 | MATCH
+C4 | T42-CTL-P0A period[1].dueDate | 2024-02-29 | 2024-02-29 | MATCH
+C4 | T42-CTL-P0A period[1].principal | 192580.67 | 192580.67 | MATCH
+C4 | T42-CTL-P0A period[1].interest | 20250.00 | 20250.00 | MATCH
+C4 | T42-CTL-P0A period[1].fee | 0.00 | 0.00 | MATCH
+C4 | T42-CTL-P0A period[1].penalty | 0.00 | 0.00 | MATCH
+C4 | T42-CTL-P0A period[1].balance | 1007419.33 | 1007419.33 | MATCH
+C4 | T42-CTL-P0A period[1].total | 212830.67 | 212830.67 | MATCH
+C4 | T42-CTL-P0A period[1].totalOutstandingBalance | 1064153.33 | 1064153.33 | MATCH
+C4 | T42-CTL-P0A period[2].fromDate | 2024-02-29 | 2024-02-29 | MATCH
+C4 | T42-CTL-P0A period[2].dueDate | 2024-03-31 | 2024-03-31 | MATCH
+C4 | T42-CTL-P0A period[2].principal | 193527.22 | 193527.22 | MATCH
+C4 | T42-CTL-P0A period[2].interest | 19303.45 | 19303.45 | MATCH
+C4 | T42-CTL-P0A period[2].fee | 0.00 | 0.00 | MATCH
+C4 | T42-CTL-P0A period[2].penalty | 0.00 | 0.00 | MATCH
+C4 | T42-CTL-P0A period[2].balance | 813892.11 | 813892.11 | MATCH
+C4 | T42-CTL-P0A period[2].total | 212830.67 | 212830.67 | MATCH
+C4 | T42-CTL-P0A period[2].totalOutstandingBalance | 851322.66 | 851322.66 | MATCH
+C4 | T42-CTL-P0A period[3].fromDate | 2024-03-31 | 2024-03-31 | MATCH
+C4 | T42-CTL-P0A period[3].dueDate | 2024-04-30 | 2024-04-30 | MATCH
+C4 | T42-CTL-P0A period[3].principal | 198180.61 | 198180.61 | MATCH
+C4 | T42-CTL-P0A period[3].interest | 14650.06 | 14650.06 | MATCH
+C4 | T42-CTL-P0A period[3].fee | 0.00 | 0.00 | MATCH
+C4 | T42-CTL-P0A period[3].penalty | 0.00 | 0.00 | MATCH
+C4 | T42-CTL-P0A period[3].balance | 615711.50 | 615711.50 | MATCH
+C4 | T42-CTL-P0A period[3].total | 212830.67 | 212830.67 | MATCH
+C4 | T42-CTL-P0A period[3].totalOutstandingBalance | 638491.99 | 638491.99 | MATCH
+C4 | T42-CTL-P0A period[4].fromDate | 2024-04-30 | 2024-04-30 | MATCH
+C4 | T42-CTL-P0A period[4].dueDate | 2024-05-31 | 2024-05-31 | MATCH
+C4 | T42-CTL-P0A period[4].principal | 201390.35 | 201390.35 | MATCH
+C4 | T42-CTL-P0A period[4].interest | 11440.32 | 11440.32 | MATCH
+C4 | T42-CTL-P0A period[4].fee | 0.00 | 0.00 | MATCH
+C4 | T42-CTL-P0A period[4].penalty | 0.00 | 0.00 | MATCH
+C4 | T42-CTL-P0A period[4].balance | 414321.15 | 414321.15 | MATCH
+C4 | T42-CTL-P0A period[4].total | 212830.67 | 212830.67 | MATCH
+C4 | T42-CTL-P0A period[4].totalOutstandingBalance | 425661.32 | 425661.32 | MATCH
+C4 | T42-CTL-P0A period[5].fromDate | 2024-05-31 | 2024-05-31 | MATCH
+C4 | T42-CTL-P0A period[5].dueDate | 2024-06-30 | 2024-06-30 | MATCH
+C4 | T42-CTL-P0A period[5].principal | 205372.89 | 205372.89 | MATCH
+C4 | T42-CTL-P0A period[5].interest | 7457.78 | 7457.78 | MATCH
+C4 | T42-CTL-P0A period[5].fee | 0.00 | 0.00 | MATCH
+C4 | T42-CTL-P0A period[5].penalty | 0.00 | 0.00 | MATCH
+C4 | T42-CTL-P0A period[5].balance | 208948.26 | 208948.26 | MATCH
+C4 | T42-CTL-P0A period[5].total | 212830.67 | 212830.67 | MATCH
+C4 | T42-CTL-P0A period[5].totalOutstandingBalance | 212830.65 | 212830.65 | MATCH
+C4 | T42-CTL-P0A period[6].fromDate | 2024-06-30 | 2024-06-30 | MATCH
+C4 | T42-CTL-P0A period[6].dueDate | 2024-07-31 | 2024-07-31 | MATCH
+C4 | T42-CTL-P0A period[6].principal | 208948.26 | 208948.26 | MATCH
+C4 | T42-CTL-P0A period[6].interest | 3882.39 | 3882.39 | MATCH
+C4 | T42-CTL-P0A period[6].fee | 0.00 | 0.00 | MATCH
+C4 | T42-CTL-P0A period[6].penalty | 0.00 | 0.00 | MATCH
+C4 | T42-CTL-P0A period[6].balance | 0.00 | 0.00 | MATCH
+C4 | T42-CTL-P0A period[6].total | 212830.65 | 212830.65 | MATCH
+C4 | T42-CTL-P0A period[6].totalOutstandingBalance | 0.00 | 0.00 | MATCH
+C5 | T42-CTL-MEB period[1].fromDate | 2024-01-31 | 2024-01-31 | MATCH
+C5 | T42-CTL-MEB period[1].dueDate | 2024-02-29 | 2024-02-29 | MATCH
+C5 | T42-CTL-MEB period[1].principal | 191187.28 | 191187.28 | MATCH
+C5 | T42-CTL-MEB period[1].interest | 21600.00 | 21600.00 | MATCH
+C5 | T42-CTL-MEB period[1].balance | 1008812.72 | 1008812.72 | MATCH
+C5 | T42-CTL-MEB period[1].total | 212787.28 | 212787.28 | MATCH
+C5 | T42-CTL-MEB period[2].fromDate | 2024-02-29 | 2024-02-29 | MATCH
+C5 | T42-CTL-MEB period[2].dueDate | 2024-03-31 | 2024-03-31 | MATCH
+C5 | T42-CTL-MEB period[2].principal | 194628.65 | 194628.65 | MATCH
+C5 | T42-CTL-MEB period[2].interest | 18158.63 | 18158.63 | MATCH
+C5 | T42-CTL-MEB period[2].balance | 814184.07 | 814184.07 | MATCH
+C5 | T42-CTL-MEB period[2].total | 212787.28 | 212787.28 | MATCH
+C5 | T42-CTL-MEB period[3].fromDate | 2024-03-31 | 2024-03-31 | MATCH
+C5 | T42-CTL-MEB period[3].dueDate | 2024-04-30 | 2024-04-30 | MATCH
+C5 | T42-CTL-MEB period[3].principal | 198131.97 | 198131.97 | MATCH
+C5 | T42-CTL-MEB period[3].interest | 14655.31 | 14655.31 | MATCH
+C5 | T42-CTL-MEB period[3].balance | 616052.10 | 616052.10 | MATCH
+C5 | T42-CTL-MEB period[3].total | 212787.28 | 212787.28 | MATCH
+C5 | T42-CTL-MEB period[4].fromDate | 2024-04-30 | 2024-04-30 | MATCH
+C5 | T42-CTL-MEB period[4].dueDate | 2024-05-31 | 2024-05-31 | MATCH
+C5 | T42-CTL-MEB period[4].principal | 201698.34 | 201698.34 | MATCH
+C5 | T42-CTL-MEB period[4].interest | 11088.94 | 11088.94 | MATCH
+C5 | T42-CTL-MEB period[4].balance | 414353.76 | 414353.76 | MATCH
+C5 | T42-CTL-MEB period[4].total | 212787.28 | 212787.28 | MATCH
+C5 | T42-CTL-MEB period[5].fromDate | 2024-05-31 | 2024-05-31 | MATCH
+C5 | T42-CTL-MEB period[5].dueDate | 2024-06-30 | 2024-06-30 | MATCH
+C5 | T42-CTL-MEB period[5].principal | 205328.91 | 205328.91 | MATCH
+C5 | T42-CTL-MEB period[5].interest | 7458.37 | 7458.37 | MATCH
+C5 | T42-CTL-MEB period[5].balance | 209024.85 | 209024.85 | MATCH
+C5 | T42-CTL-MEB period[5].total | 212787.28 | 212787.28 | MATCH
+C5 | T42-CTL-MEB period[6].fromDate | 2024-06-30 | 2024-06-30 | MATCH
+C5 | T42-CTL-MEB period[6].dueDate | 2024-07-31 | 2024-07-31 | MATCH
+C5 | T42-CTL-MEB period[6].principal | 209024.85 | 209024.85 | MATCH
+C5 | T42-CTL-MEB period[6].interest | 3762.45 | 3762.45 | MATCH
+C5 | T42-CTL-MEB period[6].balance | 0.00 | 0.00 | MATCH
+C5 | T42-CTL-MEB period[6].total | 212787.30 | 212787.30 | MATCH
+--------------------------------------------------------------------------------------------------------------
+172 cells listed above; 172 MATCH, 0 MISMATCH.
+
+T42 controls: 172 cells compared against TRANSCRIBED literals (shipped test + four committed captures taken by other harnesses).
+PASS -- every control cell reproduces digit for digit.
