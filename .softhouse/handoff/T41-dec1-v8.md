@@ -2,7 +2,8 @@
 
 **Task:** T41, branch `softhouse/T41-dec1-v8`, worker `spec_writer`.
 **Fire:** local `20260819-080001`, Buyan's Mac.
-**Base:** `main` at `d42ccfc` (rebased onto it mid-task, so this branch is a strict superset).
+**Base:** `main` at `2df4d49` — rebased twice mid-task as `main` advanced (T42's merge landed while
+this task was running), so this branch is a strict superset of current `main`.
 **Branch check performed first, as briefed:** `git branch -a --list 'softhouse/T41*'` returned
 **nothing** — no prior T41 work existed on any branch, local or remote, so nothing was duplicated
 and nothing was rescued. The branch was created fresh.
@@ -15,9 +16,10 @@ and nothing was rescued. The branch was created fresh.
 ## Verdict
 
 **DONE.** DEC-1 is at **revision 8**, the ratification candidate. All four required findings are
-applied plus **two more that revision 8's own spec-check probe produced**. The from-text model
-reproduces **4,578 cells** across four corpora with zero mismatches and discriminates every known
-corpus-invisible wrong reading plus the three new ones.
+applied, plus **two more that revision 8's own spec-check probe produced**, plus **task T42's
+results, which landed on `main` mid-task and confirmed §4.1.2's rule while correcting one mechanism
+inside it**. The from-text model reproduces **4,578 cells** across four corpora with zero mismatches
+and discriminates every known corpus-invisible wrong reading plus the three new ones.
 
 **No gate is needed. No type, field set, enum member or graded-domain predicate moves** —
 machine-verified: §3.1's graded-domain code block is **byte-identical** to revision 7's, and
@@ -105,14 +107,38 @@ canary are real arithmetic evidence *there*); and `PRECISION = 19` as a property
 binary [`MoneyHelper.java:35`]. §4.1's adapter obligation is **re-justified**: it does not rest on
 the ambient mode changing the answer (observation says it does not), it rests on the **throw**.
 
-**The falsification test, stated for T42** (whose results I do not have): P1 an ambient-only change
-moves no in-graded-domain Path-A cell (*observed on 16 for the mode; not tested for the ambient
-precision* — `[UNVERIFIED beyond those 16]`); P2 a threaded change moves cells (*observed 15 of
-16*); **P3 on Path B an ambient-only change DOES move money — supported only indirectly, never by a
-controlled Path-B negative test on a schedule, `[UNVERIFIED]`, and this is the cheapest gap left**;
-P4 no in-graded-domain Path-A call site reaches an ambient `Money` construction (*re-derived above*).
-**One counter-example falsifies §4.1.2 and every §4.1 attestation sentence must then be re-scoped
-again.**
+**§4.1.2 was written as a falsifiable rule for T42. T42 then ran the test, its branch merged to
+`main` mid-task, and revision 8 FOLDS THE RESULTS IN rather than shipping a prediction it could have
+checked.** I rebased onto `main` at `2df4d49` and re-read
+`.softhouse/handoff/T42-mathcontext-inforce.md` and `.softhouse/capture/mathcontext/`. **The rule is
+CONFIRMED**; one prediction is strengthened, one had its mechanism **wrong in my draft**, and one
+gained an exception I had missed:
+
+| prediction | T42's result |
+|---|---|
+| **P1** ambient-only change moves no in-graded-domain Path-A cell | **CONFIRMED AND STRENGTHENED.** T42 replaced T39's *difference* test — weak, because "nothing moved" is consistent with "it was read and did not matter" — with an **absence** test: give each case an uninitialised tenant so any ambient read throws [`MoneyHelper.java:79`]. **11 of 13 shapes generated fine**, so the ambient context is *provably never read*, not merely inert. |
+| **P2** a threaded change moves cells | **CONFIRMED.** 18–24 cells per shape on 11 of 13. |
+| **P3** on Path B an ambient-only change does move money | **CONFIRMED — and my MECHANISM was WRONG.** I wrote "nothing threads a context, `getMc()` takes its null branch". It is the opposite: the caller **sources** the threaded context from the ambient one — `final MathContext mc = MoneyHelper.getMathContext()` [`LoanScheduleAssembler.java:753`] handed straight to `generate(mc, …)` [`:765`], read off the **deployed bytecode of the running server**. The two are **one reference** on Path B. Measured side by side in one payload: ambient-only change moves **0** cells on the Path-A wiring, **22–28** on the Path-B wiring. **Corrected in §4.1.2 and in `contract.go`.** |
+| **P4** no in-graded-domain Path-A site reaches an ambient `Money` construction | **CONFIRMED, but my ENUMERATION was incomplete.** There is one such site: `Money`'s constructor calls the **two-argument** `roundToMultiplesOf` [`Money.java:50`] which hard-codes `MoneyHelper.getRoundingMode()` [`:154`] and **ignores the `mc` it was handed at `:42`** — gated on `decimalPlaces == 0 && inMultiplesOf > 0` [`:48-51`]. §3.1's `Currency.MinorUnitDigits == 2` excludes it, **so P4 stands — but for a materially weaker reason than "no such site exists"**, and revision 8 now says so. |
+| **P5** (T42's own) | **The rule INVERTS on a 0-dp / `inMultiplesOf` shape**: the ambient mode moves 23 cells and the threaded mode **none**. So neither context is universally the answer and §4.1.2 is a **per-site rule, not a slogan**. |
+
+**T39's N-4 is SUPERSEDED, not qualified.** T42 swept 110 shapes to 360 periods: threaded precision
+19 separates from 12 on **MNT 50,000,000 / 360 × 21.6 %** (total interest `274,527,298.56` against
+`274,527,296.51`, **MNT 2.05**, **861 cells**) and **MNT 25,000,000 / 360 × 7.7 %** (610 cells) —
+**ordinary Mongolian NBFI loans** — and separation is **not monotone in the principal**. Buyan's
+ratified precision-19 parameter is therefore an **observable** parameter rather than a transcription
+claim. **§8 gains item 6c**, the vector pair that would make it falsifiable; §4.1's "no size
+threshold" paragraph and §5's `SignificantDigits` row are upgraded; §4.4's `currency.inMultiplesOf`
+row gains a **third** reason (that guard is the only gate on the one Path-A ambient site).
+
+**No committed capture is invalidated** — every one echoed and asserted its threaded context
+separately. **T35's and T37's *justifications* are wrong and T36's is sound**; §8 item 1 records the
+re-wording and the new machine-readable requirements (two labelled contexts *plus the wiring*, and a
+behavioural canary for whichever context the record claims governs).
+
+**I verified 8 of T42's citations myself** against the pinned checkout before relying on them —
+`LoanScheduleAssembler` `:753`, `:765`; `Money` `:48`, `:50`, `:154`; `MoneyHelper:79`;
+`LoanApplicationTerms:580`; `ProgressiveEMICalculator:1962` — **0 mismatches.**
 
 ### T40 — charges (new §4.5.1, §4.3.2 M4, §4.5, §6.1, §8 items 1 and 9, §9, `contract.go`)
 
@@ -370,14 +396,16 @@ pinned checkout by opening the exact line and matching an expected token — `Pr
   `[UNVERIFIED in this checkout]`. Which rule is in force is settled by observation (F-1).
 - **The 51,729-pair disjointness sweep** is T39's re-derivation with uncommitted raw output —
   `[UNVERIFIED as a committed artefact]`; the conclusion is corroborated by 15 captured shapes.
-- **P3 of §4.1.2's falsification test** — that an ambient-only change *does* move money on Path B —
-  is supported only indirectly and has never been run as a controlled Path-B negative test.
-  `[UNVERIFIED]` **This is the cheapest gap left in §4.1.2 and T42 should close it.**
+- **P3 is now closed by T42** (see above) and is no longer a gap. What remains open in §4.1.2: the
+  **ambient PRECISION** has still never been negative-tested on either path — T39 tested the ambient
+  *mode* and the *threaded* precision, T42 tested the ambient *mode* by absence. `[UNVERIFIED]`
 - **C-1's premise on the cumulative generator** is re-derived from source only
   [`AbstractCumulativeLoanScheduleGenerator.java:504`]; no cumulative capture exists.
   `[UNVERIFIED by observation]`
-- **The ambient PRECISION** was never negative-tested; T39 tested the ambient *mode* and the
-  *threaded* precision. `[UNVERIFIED]`
+- **T42's own uncovered ground**, inherited by §4.1.2: `RepaymentEvery > 1`, non-monthly
+  frequencies, `DaysInYearCustomStrategy` non-null, multi-disbursement, charges (unreachable through
+  `LoanRepaymentScheduleModelData`), and everything downstream of schedule generation.
+  `[UNVERIFIED]`
 - **Generalisation.** 4,578 cells grade 60 shapes. They license no claim about an un-sampled tuple.
 - **Whether revision 8 is complete.** Revision 7's model was 21-of-21 clean before T39 attacked it;
   my own probe found two things in my own draft. **Assume the next review finds something.**
@@ -386,9 +414,12 @@ pinned checkout by opening the exact line and matching an expected token — `Pr
 
 ## 9. For the reviewer
 
-1. **Attack §4.1.2 first.** It is the newest reasoning, it re-scopes claims three earlier tasks made,
-   and its P3 is unverified. If T42 finds an in-graded-domain Path-A cell that moves under an
-   ambient-only change, §4.1.2 is falsified and §4.1 must be re-scoped again.
+1. **Attack §4.1.2 first.** It is the newest reasoning and it re-scopes claims three earlier tasks
+   made. T42 already confirmed it and caught two defects in my draft (the Path-B mechanism and the
+   missing `Money.java:50` site) — **assume there is a third**. The specific soft spot: P4 now holds
+   only because `Currency.MinorUnitDigits == 2` is a graded-domain predicate, so **any future
+   widening of that predicate re-opens the whole subsection** rather than inheriting it. Check that
+   §4.4 and §3.1 say so loudly enough.
 2. **Attack F-1's resolution.** I chose the packed rule on the strength of an *indirect* argument
    (the special case is load-bearing only under it, and it is observed load-bearing). A reviewer with
    a JVM could settle it directly in one line.
