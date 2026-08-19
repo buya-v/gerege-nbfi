@@ -1,0 +1,541 @@
+=== S1-CHARGE-2ARG / V1-tie-scale2-even
+    source     : ProgressiveLoanScheduleGenerator.java:445-446 (calculateInstallmentCharge)
+    expression : Money.of(currency, amount.multiply(pct).divide(BigDecimal.valueOf(100), mc))
+    inputs     : a=100.50 percentage=1  (a*pct/100 = 1.005 exactly; scale-2 tie, last kept digit 0 (even))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        1.01                   1.01                   1.01                   1.01                   1.01                   1.01                   1.01                   
+    DOWN      1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    CEILING   1.01                   1.01                   1.01                   1.01                   1.01                   1.01                   1.01                   
+    FLOOR     1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    HALF_UP   1.01                   1.01                   1.01                   1.01                   1.01                   1.01                   1.01                   
+    HALF_DOWN 1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    HALF_EVEN 1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+
+=== S1-CHARGE-2ARG / V2-tie-scale2-odd
+    source     : ProgressiveLoanScheduleGenerator.java:445-446 (calculateInstallmentCharge)
+    expression : Money.of(currency, amount.multiply(pct).divide(BigDecimal.valueOf(100), mc))
+    inputs     : a=100.50 percentage=3  (a*pct/100 = 3.015 exactly; scale-2 tie, last kept digit 1 (odd))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   
+    DOWN      3.01                   3.01                   3.01                   3.01                   3.01                   3.01                   3.01                   
+    CEILING   3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   
+    FLOOR     3.01                   3.01                   3.01                   3.01                   3.01                   3.01                   3.01                   
+    HALF_UP   3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   
+    HALF_DOWN 3.01                   3.01                   3.01                   3.01                   3.01                   3.01                   3.01                   
+    HALF_EVEN 3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   
+
+=== S1-CHARGE-2ARG / V3-noTie-scale2
+    source     : ProgressiveLoanScheduleGenerator.java:445-446 (calculateInstallmentCharge)
+    expression : Money.of(currency, amount.multiply(pct).divide(BigDecimal.valueOf(100), mc))
+    inputs     : a=100.00 percentage=1  (a*pct/100 = 1.0000 exactly; NULL CONTROL -- no rounding decision exists at scale 2)
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    DOWN      1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    CEILING   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    FLOOR     1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    HALF_UP   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    HALF_DOWN 1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    HALF_EVEN 1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+
+=== S1-CHARGE-2ARG / V4-tie-scale2-mnt
+    source     : ProgressiveLoanScheduleGenerator.java:445-446 (calculateInstallmentCharge)
+    expression : Money.of(currency, amount.multiply(pct).divide(BigDecimal.valueOf(100), mc))
+    inputs     : a=4020100.50 percentage=25  (a*pct/100 = 1005025.125 exactly; MNT-sized scale-2 tie, last kept digit 2 (even))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             
+    DOWN      1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             
+    CEILING   1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             
+    FLOOR     1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             
+    HALF_UP   1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             
+    HALF_DOWN 1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             
+    HALF_EVEN 1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             
+
+=== S1-CHARGE-2ARG / V5-tie-prec19-even
+    source     : ProgressiveLoanScheduleGenerator.java:445-446 (calculateInstallmentCharge)
+    expression : Money.of(currency, amount.multiply(pct).divide(BigDecimal.valueOf(100), mc))
+    inputs     : a=12345678901234567.885 percentage=10  (a*pct/100 = 1234567890123456.7885, 20 significant digits; tie at 19, last kept 8 (even))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    DOWN      1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    
+    CEILING   1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    FLOOR     1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    
+    HALF_UP   1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    HALF_DOWN 1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    HALF_EVEN 1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+
+=== S1-CHARGE-2ARG / V6-tie-prec19-odd
+    source     : ProgressiveLoanScheduleGenerator.java:445-446 (calculateInstallmentCharge)
+    expression : Money.of(currency, amount.multiply(pct).divide(BigDecimal.valueOf(100), mc))
+    inputs     : a=12345678901234567.875 percentage=10  (a*pct/100 = 1234567890123456.7875, 20 significant digits; tie at 19, last kept 7 (odd))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    DOWN      1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    
+    CEILING   1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    FLOOR     1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    
+    HALF_UP   1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    HALF_DOWN 1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    HALF_EVEN 1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+
+=== S2-CHARGE-3ARG / V1-tie-scale2-even
+    source     : COUNTERFACTUAL -- what :445-446 would do if the threaded mc were passed to Money.of
+    expression : Money.of(currency, amount.multiply(pct).divide(BigDecimal.valueOf(100), mc), mc)
+    inputs     : a=100.50 percentage=1  (a*pct/100 = 1.005 exactly; scale-2 tie, last kept digit 0 (even))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    1.01                   1.00                   1.01                   1.00                   1.01                   1.00                   1.00                   
+    UP        1.01                   1.00                   1.01                   1.00                   1.01                   1.00                   1.00                   
+    DOWN      1.01                   1.00                   1.01                   1.00                   1.01                   1.00                   1.00                   
+    CEILING   1.01                   1.00                   1.01                   1.00                   1.01                   1.00                   1.00                   
+    FLOOR     1.01                   1.00                   1.01                   1.00                   1.01                   1.00                   1.00                   
+    HALF_UP   1.01                   1.00                   1.01                   1.00                   1.01                   1.00                   1.00                   
+    HALF_DOWN 1.01                   1.00                   1.01                   1.00                   1.01                   1.00                   1.00                   
+    HALF_EVEN 1.01                   1.00                   1.01                   1.00                   1.01                   1.00                   1.00                   
+
+=== S2-CHARGE-3ARG / V2-tie-scale2-odd
+    source     : COUNTERFACTUAL -- what :445-446 would do if the threaded mc were passed to Money.of
+    expression : Money.of(currency, amount.multiply(pct).divide(BigDecimal.valueOf(100), mc), mc)
+    inputs     : a=100.50 percentage=3  (a*pct/100 = 3.015 exactly; scale-2 tie, last kept digit 1 (odd))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    3.02                   3.01                   3.02                   3.01                   3.02                   3.01                   3.02                   
+    UP        3.02                   3.01                   3.02                   3.01                   3.02                   3.01                   3.02                   
+    DOWN      3.02                   3.01                   3.02                   3.01                   3.02                   3.01                   3.02                   
+    CEILING   3.02                   3.01                   3.02                   3.01                   3.02                   3.01                   3.02                   
+    FLOOR     3.02                   3.01                   3.02                   3.01                   3.02                   3.01                   3.02                   
+    HALF_UP   3.02                   3.01                   3.02                   3.01                   3.02                   3.01                   3.02                   
+    HALF_DOWN 3.02                   3.01                   3.02                   3.01                   3.02                   3.01                   3.02                   
+    HALF_EVEN 3.02                   3.01                   3.02                   3.01                   3.02                   3.01                   3.02                   
+
+=== S2-CHARGE-3ARG / V3-noTie-scale2
+    source     : COUNTERFACTUAL -- what :445-446 would do if the threaded mc were passed to Money.of
+    expression : Money.of(currency, amount.multiply(pct).divide(BigDecimal.valueOf(100), mc), mc)
+    inputs     : a=100.00 percentage=1  (a*pct/100 = 1.0000 exactly; NULL CONTROL -- no rounding decision exists at scale 2)
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    UP        1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    DOWN      1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    CEILING   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    FLOOR     1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    HALF_UP   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    HALF_DOWN 1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    HALF_EVEN 1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+
+=== S2-CHARGE-3ARG / V4-tie-scale2-mnt
+    source     : COUNTERFACTUAL -- what :445-446 would do if the threaded mc were passed to Money.of
+    expression : Money.of(currency, amount.multiply(pct).divide(BigDecimal.valueOf(100), mc), mc)
+    inputs     : a=4020100.50 percentage=25  (a*pct/100 = 1005025.125 exactly; MNT-sized scale-2 tie, last kept digit 2 (even))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    1005025.13             1005025.12             1005025.13             1005025.12             1005025.13             1005025.12             1005025.12             
+    UP        1005025.13             1005025.12             1005025.13             1005025.12             1005025.13             1005025.12             1005025.12             
+    DOWN      1005025.13             1005025.12             1005025.13             1005025.12             1005025.13             1005025.12             1005025.12             
+    CEILING   1005025.13             1005025.12             1005025.13             1005025.12             1005025.13             1005025.12             1005025.12             
+    FLOOR     1005025.13             1005025.12             1005025.13             1005025.12             1005025.13             1005025.12             1005025.12             
+    HALF_UP   1005025.13             1005025.12             1005025.13             1005025.12             1005025.13             1005025.12             1005025.12             
+    HALF_DOWN 1005025.13             1005025.12             1005025.13             1005025.12             1005025.13             1005025.12             1005025.12             
+    HALF_EVEN 1005025.13             1005025.12             1005025.13             1005025.12             1005025.13             1005025.12             1005025.12             
+
+=== S2-CHARGE-3ARG / V5-tie-prec19-even
+    source     : COUNTERFACTUAL -- what :445-446 would do if the threaded mc were passed to Money.of
+    expression : Money.of(currency, amount.multiply(pct).divide(BigDecimal.valueOf(100), mc), mc)
+    inputs     : a=12345678901234567.885 percentage=10  (a*pct/100 = 1234567890123456.7885, 20 significant digits; tie at 19, last kept 8 (even))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    UP        1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    DOWN      1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    CEILING   1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    FLOOR     1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    HALF_UP   1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    HALF_DOWN 1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    HALF_EVEN 1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+
+=== S2-CHARGE-3ARG / V6-tie-prec19-odd
+    source     : COUNTERFACTUAL -- what :445-446 would do if the threaded mc were passed to Money.of
+    expression : Money.of(currency, amount.multiply(pct).divide(BigDecimal.valueOf(100), mc), mc)
+    inputs     : a=12345678901234567.875 percentage=10  (a*pct/100 = 1234567890123456.7875, 20 significant digits; tie at 19, last kept 7 (odd))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    UP        1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    DOWN      1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    CEILING   1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    FLOOR     1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    HALF_UP   1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    HALF_DOWN 1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    HALF_EVEN 1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.78    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+
+=== S3-PCTOF-INT19 / V1-tie-scale2-even
+    source     : MathUtil.java:472-473 via a literal precision of 19
+    expression : MathUtil.percentageOf(a, pct, 19)
+    inputs     : a=100.50 percentage=1  (a*pct/100 = 1.005 exactly; scale-2 tie, last kept digit 0 (even))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 
+    DOWN      1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 
+    CEILING   1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 
+    FLOOR     1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 
+    HALF_UP   1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 
+    HALF_DOWN 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 
+    HALF_EVEN 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 
+
+=== S3-PCTOF-INT19 / V2-tie-scale2-odd
+    source     : MathUtil.java:472-473 via a literal precision of 19
+    expression : MathUtil.percentageOf(a, pct, 19)
+    inputs     : a=100.50 percentage=3  (a*pct/100 = 3.015 exactly; scale-2 tie, last kept digit 1 (odd))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 
+    DOWN      3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 
+    CEILING   3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 
+    FLOOR     3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 
+    HALF_UP   3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 
+    HALF_DOWN 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 
+    HALF_EVEN 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 
+
+=== S3-PCTOF-INT19 / V3-noTie-scale2
+    source     : MathUtil.java:472-473 via a literal precision of 19
+    expression : MathUtil.percentageOf(a, pct, 19)
+    inputs     : a=100.00 percentage=1  (a*pct/100 = 1.0000 exactly; NULL CONTROL -- no rounding decision exists at scale 2)
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 
+    DOWN      1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 
+    CEILING   1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 
+    FLOOR     1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 
+    HALF_UP   1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 
+    HALF_DOWN 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 
+    HALF_EVEN 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 
+
+=== S3-PCTOF-INT19 / V4-tie-scale2-mnt
+    source     : MathUtil.java:472-473 via a literal precision of 19
+    expression : MathUtil.percentageOf(a, pct, 19)
+    inputs     : a=4020100.50 percentage=25  (a*pct/100 = 1005025.125 exactly; MNT-sized scale-2 tie, last kept digit 2 (even))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           
+    DOWN      1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           
+    CEILING   1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           
+    FLOOR     1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           
+    HALF_UP   1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           
+    HALF_DOWN 1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           
+    HALF_EVEN 1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           
+
+=== S3-PCTOF-INT19 / V5-tie-prec19-even
+    source     : MathUtil.java:472-473 via a literal precision of 19
+    expression : MathUtil.percentageOf(a, pct, 19)
+    inputs     : a=12345678901234567.885 percentage=10  (a*pct/100 = 1234567890123456.7885, 20 significant digits; tie at 19, last kept 8 (even))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        1234567890123456.789   1234567890123456.789   1234567890123456.789   1234567890123456.789   1234567890123456.789   1234567890123456.789   1234567890123456.789   
+    DOWN      1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   
+    CEILING   1234567890123456.789   1234567890123456.789   1234567890123456.789   1234567890123456.789   1234567890123456.789   1234567890123456.789   1234567890123456.789   
+    FLOOR     1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   
+    HALF_UP   1234567890123456.789   1234567890123456.789   1234567890123456.789   1234567890123456.789   1234567890123456.789   1234567890123456.789   1234567890123456.789   
+    HALF_DOWN 1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   
+    HALF_EVEN 1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   
+
+=== S3-PCTOF-INT19 / V6-tie-prec19-odd
+    source     : MathUtil.java:472-473 via a literal precision of 19
+    expression : MathUtil.percentageOf(a, pct, 19)
+    inputs     : a=12345678901234567.875 percentage=10  (a*pct/100 = 1234567890123456.7875, 20 significant digits; tie at 19, last kept 7 (odd))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   
+    DOWN      1234567890123456.787   1234567890123456.787   1234567890123456.787   1234567890123456.787   1234567890123456.787   1234567890123456.787   1234567890123456.787   
+    CEILING   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   
+    FLOOR     1234567890123456.787   1234567890123456.787   1234567890123456.787   1234567890123456.787   1234567890123456.787   1234567890123456.787   1234567890123456.787   
+    HALF_UP   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   
+    HALF_DOWN 1234567890123456.787   1234567890123456.787   1234567890123456.787   1234567890123456.787   1234567890123456.787   1234567890123456.787   1234567890123456.787   
+    HALF_EVEN 1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   1234567890123456.788   
+
+=== S4-DOWNPAYMENT-LAT866 / V1-tie-scale2-even
+    source     : LoanApplicationTerms.java:865-866 (down payment amount)
+    expression : Money.of(currency, MathUtil.percentageOf(a, pct, 19))
+    inputs     : a=100.50 percentage=1  (a*pct/100 = 1.005 exactly; scale-2 tie, last kept digit 0 (even))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        1.01                   1.01                   1.01                   1.01                   1.01                   1.01                   1.01                   
+    DOWN      1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    CEILING   1.01                   1.01                   1.01                   1.01                   1.01                   1.01                   1.01                   
+    FLOOR     1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    HALF_UP   1.01                   1.01                   1.01                   1.01                   1.01                   1.01                   1.01                   
+    HALF_DOWN 1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    HALF_EVEN 1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+
+=== S4-DOWNPAYMENT-LAT866 / V2-tie-scale2-odd
+    source     : LoanApplicationTerms.java:865-866 (down payment amount)
+    expression : Money.of(currency, MathUtil.percentageOf(a, pct, 19))
+    inputs     : a=100.50 percentage=3  (a*pct/100 = 3.015 exactly; scale-2 tie, last kept digit 1 (odd))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   
+    DOWN      3.01                   3.01                   3.01                   3.01                   3.01                   3.01                   3.01                   
+    CEILING   3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   
+    FLOOR     3.01                   3.01                   3.01                   3.01                   3.01                   3.01                   3.01                   
+    HALF_UP   3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   
+    HALF_DOWN 3.01                   3.01                   3.01                   3.01                   3.01                   3.01                   3.01                   
+    HALF_EVEN 3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   
+
+=== S4-DOWNPAYMENT-LAT866 / V3-noTie-scale2
+    source     : LoanApplicationTerms.java:865-866 (down payment amount)
+    expression : Money.of(currency, MathUtil.percentageOf(a, pct, 19))
+    inputs     : a=100.00 percentage=1  (a*pct/100 = 1.0000 exactly; NULL CONTROL -- no rounding decision exists at scale 2)
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    DOWN      1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    CEILING   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    FLOOR     1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    HALF_UP   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    HALF_DOWN 1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    HALF_EVEN 1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+
+=== S4-DOWNPAYMENT-LAT866 / V4-tie-scale2-mnt
+    source     : LoanApplicationTerms.java:865-866 (down payment amount)
+    expression : Money.of(currency, MathUtil.percentageOf(a, pct, 19))
+    inputs     : a=4020100.50 percentage=25  (a*pct/100 = 1005025.125 exactly; MNT-sized scale-2 tie, last kept digit 2 (even))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             
+    DOWN      1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             
+    CEILING   1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             
+    FLOOR     1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             
+    HALF_UP   1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             
+    HALF_DOWN 1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             
+    HALF_EVEN 1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             
+
+=== S4-DOWNPAYMENT-LAT866 / V5-tie-prec19-even
+    source     : LoanApplicationTerms.java:865-866 (down payment amount)
+    expression : Money.of(currency, MathUtil.percentageOf(a, pct, 19))
+    inputs     : a=12345678901234567.885 percentage=10  (a*pct/100 = 1234567890123456.7885, 20 significant digits; tie at 19, last kept 8 (even))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    DOWN      1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    
+    CEILING   1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    FLOOR     1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    
+    HALF_UP   1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    HALF_DOWN 1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    HALF_EVEN 1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+
+=== S4-DOWNPAYMENT-LAT866 / V6-tie-prec19-odd
+    source     : LoanApplicationTerms.java:865-866 (down payment amount)
+    expression : Money.of(currency, MathUtil.percentageOf(a, pct, 19))
+    inputs     : a=12345678901234567.875 percentage=10  (a*pct/100 = 1234567890123456.7875, 20 significant digits; tie at 19, last kept 7 (odd))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    DOWN      1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    
+    CEILING   1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    FLOOR     1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    
+    HALF_UP   1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    HALF_DOWN 1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    HALF_EVEN 1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+
+=== S5-PCTOF-MC / V1-tie-scale2-even
+    source     : COUNTERFACTUAL -- MathUtil.java:484-491, the MathContext overload, threaded
+    expression : MathUtil.percentageOf(a, pct, new MathContext(19, threadedMode))
+    inputs     : a=100.50 percentage=1  (a*pct/100 = 1.005 exactly; scale-2 tie, last kept digit 0 (even))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 
+    UP        1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 
+    DOWN      1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 
+    CEILING   1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 
+    FLOOR     1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 
+    HALF_UP   1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 
+    HALF_DOWN 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 
+    HALF_EVEN 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 1.0050                 
+
+=== S5-PCTOF-MC / V2-tie-scale2-odd
+    source     : COUNTERFACTUAL -- MathUtil.java:484-491, the MathContext overload, threaded
+    expression : MathUtil.percentageOf(a, pct, new MathContext(19, threadedMode))
+    inputs     : a=100.50 percentage=3  (a*pct/100 = 3.015 exactly; scale-2 tie, last kept digit 1 (odd))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 
+    UP        3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 
+    DOWN      3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 
+    CEILING   3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 
+    FLOOR     3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 
+    HALF_UP   3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 
+    HALF_DOWN 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 
+    HALF_EVEN 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 3.0150                 
+
+=== S5-PCTOF-MC / V3-noTie-scale2
+    source     : COUNTERFACTUAL -- MathUtil.java:484-491, the MathContext overload, threaded
+    expression : MathUtil.percentageOf(a, pct, new MathContext(19, threadedMode))
+    inputs     : a=100.00 percentage=1  (a*pct/100 = 1.0000 exactly; NULL CONTROL -- no rounding decision exists at scale 2)
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 
+    UP        1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 
+    DOWN      1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 
+    CEILING   1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 
+    FLOOR     1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 
+    HALF_UP   1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 
+    HALF_DOWN 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 
+    HALF_EVEN 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 1.0000                 
+
+=== S5-PCTOF-MC / V4-tie-scale2-mnt
+    source     : COUNTERFACTUAL -- MathUtil.java:484-491, the MathContext overload, threaded
+    expression : MathUtil.percentageOf(a, pct, new MathContext(19, threadedMode))
+    inputs     : a=4020100.50 percentage=25  (a*pct/100 = 1005025.125 exactly; MNT-sized scale-2 tie, last kept digit 2 (even))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           
+    UP        1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           
+    DOWN      1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           
+    CEILING   1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           
+    FLOOR     1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           
+    HALF_UP   1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           
+    HALF_DOWN 1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           
+    HALF_EVEN 1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           1005025.1250           
+
+=== S5-PCTOF-MC / V5-tie-prec19-even
+    source     : COUNTERFACTUAL -- MathUtil.java:484-491, the MathContext overload, threaded
+    expression : MathUtil.percentageOf(a, pct, new MathContext(19, threadedMode))
+    inputs     : a=12345678901234567.885 percentage=10  (a*pct/100 = 1234567890123456.7885, 20 significant digits; tie at 19, last kept 8 (even))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    1234567890123456.789   1234567890123456.788   1234567890123456.789   1234567890123456.788   1234567890123456.789   1234567890123456.788   1234567890123456.788   
+    UP        1234567890123456.789   1234567890123456.788   1234567890123456.789   1234567890123456.788   1234567890123456.789   1234567890123456.788   1234567890123456.788   
+    DOWN      1234567890123456.789   1234567890123456.788   1234567890123456.789   1234567890123456.788   1234567890123456.789   1234567890123456.788   1234567890123456.788   
+    CEILING   1234567890123456.789   1234567890123456.788   1234567890123456.789   1234567890123456.788   1234567890123456.789   1234567890123456.788   1234567890123456.788   
+    FLOOR     1234567890123456.789   1234567890123456.788   1234567890123456.789   1234567890123456.788   1234567890123456.789   1234567890123456.788   1234567890123456.788   
+    HALF_UP   1234567890123456.789   1234567890123456.788   1234567890123456.789   1234567890123456.788   1234567890123456.789   1234567890123456.788   1234567890123456.788   
+    HALF_DOWN 1234567890123456.789   1234567890123456.788   1234567890123456.789   1234567890123456.788   1234567890123456.789   1234567890123456.788   1234567890123456.788   
+    HALF_EVEN 1234567890123456.789   1234567890123456.788   1234567890123456.789   1234567890123456.788   1234567890123456.789   1234567890123456.788   1234567890123456.788   
+
+=== S5-PCTOF-MC / V6-tie-prec19-odd
+    source     : COUNTERFACTUAL -- MathUtil.java:484-491, the MathContext overload, threaded
+    expression : MathUtil.percentageOf(a, pct, new MathContext(19, threadedMode))
+    inputs     : a=12345678901234567.875 percentage=10  (a*pct/100 = 1234567890123456.7875, 20 significant digits; tie at 19, last kept 7 (odd))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    1234567890123456.788   1234567890123456.787   1234567890123456.788   1234567890123456.787   1234567890123456.788   1234567890123456.787   1234567890123456.788   
+    UP        1234567890123456.788   1234567890123456.787   1234567890123456.788   1234567890123456.787   1234567890123456.788   1234567890123456.787   1234567890123456.788   
+    DOWN      1234567890123456.788   1234567890123456.787   1234567890123456.788   1234567890123456.787   1234567890123456.788   1234567890123456.787   1234567890123456.788   
+    CEILING   1234567890123456.788   1234567890123456.787   1234567890123456.788   1234567890123456.787   1234567890123456.788   1234567890123456.787   1234567890123456.788   
+    FLOOR     1234567890123456.788   1234567890123456.787   1234567890123456.788   1234567890123456.787   1234567890123456.788   1234567890123456.787   1234567890123456.788   
+    HALF_UP   1234567890123456.788   1234567890123456.787   1234567890123456.788   1234567890123456.787   1234567890123456.788   1234567890123456.787   1234567890123456.788   
+    HALF_DOWN 1234567890123456.788   1234567890123456.787   1234567890123456.788   1234567890123456.787   1234567890123456.788   1234567890123456.787   1234567890123456.788   
+    HALF_EVEN 1234567890123456.788   1234567890123456.787   1234567890123456.788   1234567890123456.787   1234567890123456.788   1234567890123456.787   1234567890123456.788   
+
+=== S6-SPECIFICDUE-2ARG / V1-tie-scale2-even
+    source     : ProgressiveLoanScheduleGenerator.java:464-465 (calculateSpecificDueDateChargeWithPercentage)
+    expression : Money.of(currency, amount.multiply(pct).divide(BigDecimal.valueOf(100), mc))
+    inputs     : a=100.50 percentage=1  (a*pct/100 = 1.005 exactly; scale-2 tie, last kept digit 0 (even))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        1.01                   1.01                   1.01                   1.01                   1.01                   1.01                   1.01                   
+    DOWN      1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    CEILING   1.01                   1.01                   1.01                   1.01                   1.01                   1.01                   1.01                   
+    FLOOR     1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    HALF_UP   1.01                   1.01                   1.01                   1.01                   1.01                   1.01                   1.01                   
+    HALF_DOWN 1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    HALF_EVEN 1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+
+=== S6-SPECIFICDUE-2ARG / V2-tie-scale2-odd
+    source     : ProgressiveLoanScheduleGenerator.java:464-465 (calculateSpecificDueDateChargeWithPercentage)
+    expression : Money.of(currency, amount.multiply(pct).divide(BigDecimal.valueOf(100), mc))
+    inputs     : a=100.50 percentage=3  (a*pct/100 = 3.015 exactly; scale-2 tie, last kept digit 1 (odd))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   
+    DOWN      3.01                   3.01                   3.01                   3.01                   3.01                   3.01                   3.01                   
+    CEILING   3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   
+    FLOOR     3.01                   3.01                   3.01                   3.01                   3.01                   3.01                   3.01                   
+    HALF_UP   3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   
+    HALF_DOWN 3.01                   3.01                   3.01                   3.01                   3.01                   3.01                   3.01                   
+    HALF_EVEN 3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   3.02                   
+
+=== S6-SPECIFICDUE-2ARG / V3-noTie-scale2
+    source     : ProgressiveLoanScheduleGenerator.java:464-465 (calculateSpecificDueDateChargeWithPercentage)
+    expression : Money.of(currency, amount.multiply(pct).divide(BigDecimal.valueOf(100), mc))
+    inputs     : a=100.00 percentage=1  (a*pct/100 = 1.0000 exactly; NULL CONTROL -- no rounding decision exists at scale 2)
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    DOWN      1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    CEILING   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    FLOOR     1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    HALF_UP   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    HALF_DOWN 1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+    HALF_EVEN 1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   1.00                   
+
+=== S6-SPECIFICDUE-2ARG / V4-tie-scale2-mnt
+    source     : ProgressiveLoanScheduleGenerator.java:464-465 (calculateSpecificDueDateChargeWithPercentage)
+    expression : Money.of(currency, amount.multiply(pct).divide(BigDecimal.valueOf(100), mc))
+    inputs     : a=4020100.50 percentage=25  (a*pct/100 = 1005025.125 exactly; MNT-sized scale-2 tie, last kept digit 2 (even))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             
+    DOWN      1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             
+    CEILING   1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             
+    FLOOR     1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             
+    HALF_UP   1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             1005025.13             
+    HALF_DOWN 1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             
+    HALF_EVEN 1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             1005025.12             
+
+=== S6-SPECIFICDUE-2ARG / V5-tie-prec19-even
+    source     : ProgressiveLoanScheduleGenerator.java:464-465 (calculateSpecificDueDateChargeWithPercentage)
+    expression : Money.of(currency, amount.multiply(pct).divide(BigDecimal.valueOf(100), mc))
+    inputs     : a=12345678901234567.885 percentage=10  (a*pct/100 = 1234567890123456.7885, 20 significant digits; tie at 19, last kept 8 (even))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    DOWN      1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    
+    CEILING   1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    FLOOR     1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    
+    HALF_UP   1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    HALF_DOWN 1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    HALF_EVEN 1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+
+=== S6-SPECIFICDUE-2ARG / V6-tie-prec19-odd
+    source     : ProgressiveLoanScheduleGenerator.java:464-465 (calculateSpecificDueDateChargeWithPercentage)
+    expression : Money.of(currency, amount.multiply(pct).divide(BigDecimal.valueOf(100), mc))
+    inputs     : a=12345678901234567.875 percentage=10  (a*pct/100 = 1234567890123456.7875, 20 significant digits; tie at 19, last kept 7 (odd))
+    rows = AMBIENT MoneyHelper mode, cols = THREADED MathContext mode (precision 19)
+              UP                     DOWN                   CEILING                FLOOR                  HALF_UP                HALF_DOWN              HALF_EVEN              
+    ABSENT    THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  THREW                  
+    UP        1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    DOWN      1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    
+    CEILING   1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    FLOOR     1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    1234567890123456.78    
+    HALF_UP   1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    HALF_DOWN 1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+    HALF_EVEN 1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    1234567890123456.79    
+
+2016 cells printed over 36 (site, value) pairs

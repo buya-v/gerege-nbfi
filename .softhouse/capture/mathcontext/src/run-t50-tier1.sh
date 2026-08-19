@@ -68,6 +68,9 @@ mkdir -p /work && cd /work
 unzip -q -o /app/fineract-provider.jar -d /work/jar
 find /work/jar -name git.properties | head -1 | xargs cat 2>/dev/null || echo "NO git.properties"
 echo "== probed class digests"
+# The Fineract classes are NOT in BOOT-INF/classes (which holds only resources); each module
+# ships its own jar under BOOT-INF/lib.  Find the owning jar, extract the .class, digest it.
+mkdir -p /work/probe
 for c in \
   org/apache/fineract/organisation/monetary/domain/Money.class \
   org/apache/fineract/organisation/monetary/domain/MoneyHelper.class \
@@ -77,7 +80,17 @@ for c in \
   org/apache/fineract/portfolio/loanaccount/loanschedule/domain/PrincipalInterest.class \
   org/apache/fineract/portfolio/loanaccount/domain/LoanCharge.class \
   org/apache/fineract/portfolio/charge/domain/ChargeCalculationType.class ; do
-  if [ -f "/work/jar/BOOT-INF/classes/$c" ]; then sha256sum "/work/jar/BOOT-INF/classes/$c"; else echo "MISSING $c"; fi
+  found=""
+  for j in /work/jar/BOOT-INF/lib/*.jar; do
+    if unzip -l "$j" "$c" >/dev/null 2>&1; then found="$j"; break; fi
+  done
+  if [ -n "$found" ]; then
+    rm -rf /work/probe/x && mkdir -p /work/probe/x
+    unzip -q -o "$found" "$c" -d /work/probe/x
+    echo "$(sha256sum /work/probe/x/$c | cut -d" " -f1)  $c  <-  $(basename "$found")"
+  else
+    echo "MISSING $c"
+  fi
 done
 echo "== classpath entries"
 ls /work/jar/BOOT-INF/lib/*.jar | sed "s#.*/##" | sort

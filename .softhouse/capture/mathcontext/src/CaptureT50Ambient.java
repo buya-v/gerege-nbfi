@@ -196,7 +196,8 @@ public class CaptureT50Ambient {
     }
 
     static String esc(String s) {
-        return s == null ? "" : s.replace("\\", "\\\\").replace("\"", "'").replace("\n", " | ").replace("\r", " ");
+        return s == null ? ""
+                : s.replace("\\", "\\\\").replace("\"", "'").replace("\n", " | ").replace("\r", " ").replace("\t", " ");
     }
 
     // ---------------------------------------------------------------------------------------
