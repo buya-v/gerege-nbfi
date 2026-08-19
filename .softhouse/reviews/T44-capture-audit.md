@@ -24,11 +24,28 @@ and `t43-probe/` were **read only, never written**.
 
 ## Verdicts
 
-| set | task | verdict |
-|---|---|---|
-| `.softhouse/capture/periodratio/` | T39 | **ACCEPTED WITH REQUIRED CHANGES** |
-| `.softhouse/capture/charges/` | T40 | *(see §2)* |
-| `.softhouse/capture/mathcontext/` | T42 | *(see §3)* |
+| set | task | verdict | findings |
+|---|---|---|---|
+| `.softhouse/capture/periodratio/` | T39 | **ACCEPTED WITH REQUIRED CHANGES** | F39-1, F39-2 (P1); F39-3, F39-4 (P2) |
+| `.softhouse/capture/charges/` | T40 | **ACCEPTED WITH REQUIRED CHANGES** | A-1…A-4 (P1); A-5…A-8 (P2) |
+| `.softhouse/capture/mathcontext/` | T42 | **ACCEPTED WITH REQUIRED CHANGES** | M-1…M-4 (P1); M-5…M-11 (P2) |
+| cross-cutting | — | — | T44-X1 (P2) |
+
+**No set was rejected, and no synthesised number was found in any of the three** — the single thing
+this audit most needed to rule out. Every published figure traced to an observed oracle response or to
+a source literal at the cited `file:line`, with **one** exception, A-2, where the line is real but says
+the opposite of what it is cited for.
+
+**What the three sets share** is not a bad number; it is a **narrower proof than the handoff claims**.
+In T39 the month-end family grades a pair of behaviours rather than the one it names; in T40 the corpus
+cannot see which of two inputs supplies the charge amount; in T42 the shapes chosen to reach a leak do
+not reach it. In each case the *conclusion* survives and the *coverage claim* does not — which is the
+`patterns.md` lesson, *coverage is what a corpus can distinguish*, landing for the sixth consecutive
+round.
+
+**Two findings were reached independently by two audit legs with no shared context** — M-1/M-2 (N-3's
+miscount) and M-5 (T42 breaking its own rule 2). By this program's own standard that is the strongest
+evidence it generates.
 
 ---
 
@@ -437,13 +454,207 @@ vs "the EMI" is unseparated even on product 2; response scale ungraded (A-6);
 
 ---
 
-# 3. `mathcontext` (T42)
+# 3. `mathcontext` (T42) — **ACCEPTED WITH REQUIRED CHANGES**
 
-*(section written after the mathcontext audit leg — see below)*
+**Judged under T42's own eight-point rule, as the brief required — and the rule is the right rule.**
+Both experiments reproduce, both payloads re-execute byte-identically, and the deployed-bytecode Path B
+wiring is real. What fails is narrower and specific: **the inventory in N-3 is miscounted, the coverage
+rationale behind the decisive experiment is refuted by T42's own data, and T42 breaks its own rule 2 on
+the capture that carries that experiment.**
+
+Full working: `.softhouse/capture/audit-t44/mathcontext/AUDIT-MATHCONTEXT.md` and the parent auditor's
+independent checks in `.softhouse/capture/audit-t44/analysis/T44-mathcontext-parent-checks.md`.
+
+## 3.1 What was re-run
+
+- **Both payloads re-executed in throwaway `--rm` containers: byte-identical** (`f2a037a1…`,
+  `f7ffeb2a…`).
+- **Negative legs N4 and N5 re-run**, both exit 1 naming the breach — including N5, which proves the
+  Path A / Path B labels are checked against the object actually handed to the generator.
+- **The Path B wiring re-read off the deployed bytecode** with an independent `javap` inside
+  `fineract-fineract-1`: class sha256 `d5ef3989…711ea`, the same local slot 9 loaded into `generate`.
+  T42's linchpin claim holds.
+- **E1, E2 and §3 recomputed** with an independent exact-`Decimal` tool; the cell totals
+  `3,820 + 90,528 + 147,676 + 1,284 = 243,308` and `238,204` all reproduce.
+- **Nine property invariants clean over 352 observations**, suite proved failable; 105 control cells
+  re-transcribed from primary sources.
+- **Independently by the parent auditor:** E1 reproduces exactly — all 13 `-D` cases record the ambient
+  read throwing (so the probe is live, not vacuous), **11 generated a schedule anyway** and **2 threw**,
+  and the 2 are exactly the 0-dp + `inMultiplesOf` shapes. The headline separating pair is in the
+  payload at the published values (`274527298.56` / `274527296.51`). T42 §4 leg 2 confirmed:
+  `"currencyDecimalPlaces": 0` appears in **no** committed capture outside T42's own, and the one
+  committed file with a positive `currencyInMultiplesOf` records 2 dp on all 13 cases — so the Path A
+  ambient leak is unreachable in the committed corpus.
+
+## 3.2 Findings
+
+### **M-1 (P1) — N-3's `new MathContext(…)` inventory is miscounted, and the wrong total is already in `reference-oracle.md`.**
+*Found independently by both audit legs, with no shared context.* N-3 publishes **9**
+`new MathContext(10, …)` sites; there are **5**. The nine `file:line`s it lists are the **union** of the
+four precision-15 and five precision-10 sites, all labelled as 10s — `SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:526`,
+`:822`, `DepositAccountWritePlatformServiceJpaRepositoryImpl.java:496` and
+`SavingsAccountDomainServiceJpa.java:329` are precision **15**. `reference-oracle.md` has folded in the
+derived total as *"**13** `new MathContext(15|10, …)`"* (4 + 9, double-counting the 15s); **the correct
+total is 9**.
+
+**What does hold, checked independently:** `MathContext.DECIMAL64` = **81** (49 `fineract-core` +
+31 `fineract-provider` + 1 `fineract-savings`), **0** in any loan module, **0** outside a savings/deposit
+path; **4** × precision 15; and N-4's `AdvancedPaymentScheduleTransactionProcessor.java:2845` really is
+the loan modules' only hard-coded `MathContext`.
+
+**P1 because N-3 exists to steer the Tier B savings port** — an inventory is the one part of it a porter
+will actually use, and `patterns.md` is explicit that a transcription may never be wrong.
+
+### **M-2 (P1) — N-3's universal claim is false: precision 8 exists, and one site is not in savings/deposits.**
+*Also found by both legs.* N-3 says *"Every hard-coded `MathContext` in main source outside the loan
+modules is in savings/deposits."* Two `new MathContext(8, MoneyHelper.getRoundingMode())` sites are
+omitted from the finding entirely: **`SavingsAccountCharge.java:562`** (`fineract-savings`) and
+**`ShareAccountCharge.java:240`**, which is in `portfolio/shareaccounts/` — **share accounts, a separate
+Tier B context with its own precision**. A porter reading N-3 would carry `(19, HALF_UP)` into share
+accounts and be wrong there too, which is precisely the error N-3 was written to prevent.
+
+### **M-3 (P1) — the coverage rationale behind the decisive experiment is refuted by T42's own observations.**
+`CaptureMathContext.java:163-166` says the E1 shapes were chosen so that *"between them they REACH every
+ambient-context read the static scan found on the Path A call graph"*, and `:179-181` justifies the
+`installmentAmountInMultiplesOf` shape as the one reaching the three-argument
+`Money.roundToMultiplesOf` and its trailing two-argument `Money.of`. **That site was never reached.**
+
+Observed in T42's own payload: `T42-MX-00-A` (plain) and `T42-MX-06-A` (`multiples1000`) differ in
+exactly one input — `installmentAmountInMultiplesOf` `null` vs `1000` — and their observations differ in
+**0 cells**; period-1 total is `212787.28` on both, which is not a multiple of 1000. The cause is the
+already-known Path A blind spot: `LoanApplicationTerms.assembleFrom(LoanRepaymentScheduleModelData, MathContext)`
+never sets it, so `ProgressiveLoanScheduleGenerator.java:110` reads `null`. Had the site been reached,
+the ABSENT case would have thrown exactly as the 0-dp cases did.
+
+Two consequences: **(a) N-1's second half is over-tagged** — *"The same pattern appears again at
+`Money.java:161-171` … **This is a port hazard, and it is observed, not read.**"* The stack trace
+evidences `Money.java:154` only; the second site is a **transcription** and must read
+`[UNVERIFIED as behaviour]`. **(b) Distinct coverage is 10, not 13** — four of the thirteen `-A`
+observations are byte-identical to `plain` (`plain`, `multiples1000`, `fixedLength6`,
+`interestRecognitionOnDisb`), so three of the levers chosen to widen coverage had **zero** observable
+effect, and the `installmentAmountInMultiplesOf` ambient path appears nowhere in §3's
+`TO_BE_CAPTURED` list because T42 believed it captured.
+
+**The headline "11 of 13 shapes provably never read the ambient context" remains true** and is correctly
+qualified in T42 §7. What fails is the reason for believing those thirteen shapes were the right thirteen.
+
+### **M-4 (P1, new oracle fact for DEC-1) — a second production site silently drops `installmentAmountInMultiplesOf`.**
+Falling out of M-3 and worth raising separately because no task has recorded it. **Stated with care, so
+it does not appear to contradict an attested observation:** the REST `calculateLoanSchedule` path via
+`LoanScheduleAssembler` **does honour** the field — that is capture `B-02`, `112,082.37 → 112,100.00`,
+and nothing here disturbs it. But **`LoanScheduleGeneratorServiceImpl.calculateInteresOnlyWithFirtDisbursement`**
+is a *different* production entry point on the multi-disbursement interest-only path, and it
+**inherits Path A's blind spot** [VERIFIED by me on the pinned source]: `:56` passes
+`loanProductRelatedDetail.getInstallmentAmountInMultiplesOf()` into the
+`LoanRepaymentScheduleModelData`, `:63` calls `scheduleGenerator.generate(mc, modelData)`, and
+`assembleFrom(modelData, mc)` drops it. So the field is honoured or lost **depending on which production
+caller builds the schedule**. `TO_BE_CAPTURED`, and DEC-1 should not state the field's behaviour
+unconditionally.
+
+### **M-5 (P2) — T42 fails its own ratified rule 2 on the capture that carries the decisive experiment.**
+*Found independently by both legs (parent's M-P1).* `CaptureMathContext2.java:203-205` complies fully —
+it writes `mc.toString()`, `mc.getPrecision()`, `mc.getRoundingMode()` **and** an explicit `wiring` field,
+and is the best-attested capture in the program. `CaptureMathContext.java:394-395` does not: it writes
+`c.precision()` and `c.mode()` — the case record's **intent** — under keys named
+`threadedMathContextPrecision` / `threadedMathContextRoundingMode` that assert otherwise. **214 of the
+354 cases** are attested that way, and capture 1 is where E1 lives.
+
+Materiality is low and should be said plainly: the ambient field in capture 1 *is* read off the object,
+the two stack traces are direct observations, and E1 is an **absence** result that does not depend on the
+threaded echo. No value is affected. It is the same defect as **F39-3** against T39 — which suggests the
+two harnesses share the ancestor that has it.
+
+### **M-6 (P2) — E3's only machine assertion is `grep -c 'getMathContext' != 0`.**
+The same-local-slot claim — the actual content of the ratified Path B row — is **unasserted and has no
+negative leg**. It was hand-verified by the audit leg and it holds, but a claim that carries a ratified
+rule should be machine-checked.
+
+### **M-7 (P2) — "no committed capture is mis-valued" is unqualified where it is ratified.**
+T42's verdict and `reference-oracle.md` state it flatly while T42 §7 qualifies it correctly
+(`[VERIFIED for the three legs stated; UNVERIFIED as a re-run]`). Leg 1 is a **self-report** of exactly
+the class T42 refuses elsewhere — it cites T35's, T37's and T39's own attestations that they echoed the
+threaded context, and F39-3/M-5 show that claim is weaker than stated for at least T39. Legs 2 and 3 do
+carry the conclusion, so it stands; the qualification must travel with it.
+
+### **M-8 (P2) — `NEGATIVE-TESTS.md` mis-describes what N4 proves.** It says N4 fires the "probe is
+VACUOUS" guard; it fires the opposite branch. **The vacuity guard has never been exercised** — and it is
+the guard that makes E1 falsifiable.
+
+### **M-9 (P2) — four `file:line` drifts inside `[VERIFIED]` tags**: `Money.java:152-158`→`:150-157`,
+`:161-171`→`:163-170`, `:49-51`→`:48-50`, `MoneyHelper.java:37`→`:38`; and *"pass it to
+`generate(mc, …)`"* is wrong for 2 of the 4 ratified wiring sites.
+
+### **M-10 (P2) — E2's "Path A = 0 cells" is a replication of E1's ambient rows**, not a second
+experiment: identical inputs, 0 differing cells, presented as independent corroboration.
+
+### **M-11 (P2) — `controls-output.txt` publishes 2 summary lines, not the 172 compared cells**, so the
+control claim cannot be checked from the committed output alone.
+
+## 3.3 Checked and found CLEAN
+
+Both payloads byte-identical on re-execution in fresh containers; every E1/E2/§3 number and all four cell
+totals recomputed independently; N4 and N5 re-run and both fail correctly; the deployed-bytecode wiring
+re-read with an independent `javap` (`d5ef3989…711ea`, slot 9 → `generate`); nine property invariants
+clean over 352 observations with the suite proved failable; 105 control cells re-transcribed from primary
+sources; N-3's DECIMAL64 arithmetic exact (81 = 49 + 31 + 1, 0 in loan modules, 0 outside savings) and
+N-4's `:2844-2845` confirmed; the 2 throwers are exactly the 2 zero-dp shapes and the 11 that generated
+all ran graded arithmetic; the Path A ambient leak confirmed unreachable across the whole committed
+corpus; PostgreSQL-only and no-float discipline clean; write surface exactly
+`capture/mathcontext/**` + its handoff.
+
+**And the rule itself is sound.** Nothing in this audit disturbs the eight-point attestation rule; the
+absence-over-difference technique is genuinely stronger than what preceded it, and applying it to T39
+and T40 is what produced F39-2, A-1 and A-8.
+
+## 3.4 Admissibility — `mathcontext`
+
+**Promote, once G-1 closes: `T42B-PREC-30-p19`** (MNT 50,000,000 / 360 / 21.6 % at threaded
+`(19, HALF_UP)`), full 861 cells — the only artefact in the program that makes Buyan's ratified
+precision-19 parameter falsifiable. With it: its `-p12` sibling kept as a **labelled discrimination
+probe**, and — because separation is **non-monotone in principal** — at least two *non-separating*
+neighbours (30 M, 80 M) so the vector cannot be passed by a port that merely happens to land on a
+matching residual. A precision-12 port still matches on 30 of 62 shapes, so a single shape is not a
+sufficient vector.
+
+**Not promotable:** the matrix family, the absence cases, the wiring-PB cases, the `-p8`/`-p12`
+families and `T42-CAL` (all discrimination probes or off-ratified-settings), and the four duplicate
+controls.
+
+**Blind spots**, the largest being the one this audit found:
+`installmentAmountInMultiplesOf` was **believed covered and is inert** (M-3), so the three-argument
+`Money.roundToMultiplesOf` ambient path is ungraded; the E1 matrix carries 10 distinct observations,
+not 13; the **Path B transport was not exercised at all** by T42 (its own §7 says so) — every Path B
+claim rests on bytecode plus T36's committed canary; `RepaymentEvery > 1`, the `WEEKS`/`DAYS`/`YEARS`
+arms, `SAME_AS_REPAYMENT_PERIOD`, multi-disbursement, interest pause, term variations and **charges**
+are all out of reach of `LoanRepaymentScheduleModelData`; precisions other than {19, 12, 8} and modes
+other than {HALF_UP, DOWN, UP, HALF_EVEN} are untried; and N-4's hard-coded `RoundingMode.DOWN` in
+repayment allocation remains `TO_BE_CAPTURED`.
 
 ---
 
-# 4. Unverified
+# 4. Method
+
+Three legs ran in parallel on disjoint write surfaces, with the parent auditor also running its own
+checks on the `mathcontext` set so that the most consequential claims had two independent looks. Every
+leg was told to re-derive rather than re-read, to re-run rather than trust committed output, and to run
+each shipped recipe in a **failing** configuration. Three recipes were exercised negatively —
+T39's (seam-sha and threaded-mode legs), T40's preconditions (tenant `default`), and T42's N4/N5 — and
+**all three failed correctly, naming the breach**.
+
+Nothing was written outside `.softhouse/capture/audit-t44/**`,
+`.softhouse/reviews/T44-capture-audit.md` and `.softhouse/handoff/T44-capture-audit.md`. The running
+containers were read (`javap`, read-only `psql`, read-only REST calculation calls) and never restarted,
+re-tenanted or written to; charge definitions 1–12 on tenant `gerege` were left exactly as T40 made them
+(`m_charge` 12, `m_loan` 0, nothing created).
+
+**Write-surface discipline of the three audited sets, checked with `git diff --name-only` from each
+branch's merge base:** T39 authored exactly `capture/periodratio/**` + its handoff; T40 exactly
+`capture/charges/**` + its handoff; T42 exactly `capture/mathcontext/**` + its handoff. **All three
+clean.**
+
+---
+
+# 5. Unverified
 
 - **That my independent model is a complete specification of the graded path.** It predicts the
   *interest* column from the previous row's observed balance; it does not model the EMI solver, the
@@ -464,3 +675,19 @@ vs "the EMI" is unseparated even on product 2; response scale ungraded (A-6);
   unsampled `(startDate, disbursementDate, principal, term, rate)` tuple.
 - **Whether the packed-vs-naive blind spot is the last one in this family.** T39's R2 was
   15-of-16 clean before it was attacked with a fourth reading; assume a fifth exists.
+- **The `charges` and `mathcontext` legs were run by delegated auditors**, and their findings are
+  reported here on their evidence. I independently re-verified the ones a ratified artefact rests on —
+  **A-2** (`AbstractCumulativeLoanScheduleGenerator.java:392` + `ScheduleCurrentPeriodParams.java:144-145`
+  against the cited `:504`), **M-1/M-2** (the full `new MathContext(…)` site listing and the DECIMAL64
+  breakdown), **M-3/M-4** (`LoanScheduleGeneratorServiceImpl.java:44-63`), **M-5** (the two harnesses'
+  echo lines), and E1's 11/2 split — and each held. **A-1, A-3, A-5, A-6, A-7, A-8, M-6 … M-11 I did
+  not re-verify myself.** `[VERIFIED on the leg's evidence; UNVERIFIED by the parent auditor]`
+- **T44-X1's value-loss measurement** is over the 245 distinct literals present in the committed
+  charges captures at their current magnitudes and scales. It says nothing about a payload with larger
+  magnitudes, and the "0 of 245 change value" result must not be read as "floats are safe here".
+- **Whether A-3's request-over-definition precedence holds for every charge type.** It is observed on
+  one percentage charge and one flat charge. `[VERIFIED on those two; UNVERIFIED as a general rule]`
+- **This audit's own coverage.** I found what these three sets fail to distinguish where I thought to
+  look. Every prior capture audit in this program found something, and so did this one; that is a
+  statement about how often these corpora are narrower than claimed, not a guarantee that the list is
+  now complete.
