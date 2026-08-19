@@ -396,3 +396,45 @@ every rᵢ is equal. **They are not guaranteed to agree at precision 19 once the
 
 > **Rule.** When N parties agree, check whether they used N methods or one. Vary the *method*, not the
 > reviewer.
+
+### P-7. A proof that asserts a FACT ABOUT TODAY'S CORPUS goes stale on the next promotion — assert the property
+
+Finding **D-6** recurred **four times in one fire**, in four different places, and twice inside the same
+proof. Every instance was a proof or test encoding a true-today fact instead of the invariant it protects:
+
+| # | frozen assertion | what falsified it |
+|---|---|---|
+| 1 | `ParityPass == 0` — "the store has no promoted capture yet" | the first promotion (T8) |
+| 2 | the same, in `TestGradeabilityIsNotPairDifference` | found by T20; nobody had reported it |
+| 3 | `parity vectors PASS 11` inside a proof | T57 moved the corpus to 13 |
+| 4 | *"withdrawing `P-02`/`P-02b` makes `monthend.reanchor` UNBACKED"* | T58 promoted 16 more vectors, several backing the same capability |
+
+Instance 4 is the instructive one: **the proof failed because coverage was ADDED.** A worker forbidden to
+edit the harness reported it rather than discarding 20 measured kills to get green — which was the right
+call, and is what surfaced it.
+
+> **Rule.** In a proof, never assert a count, a total, or "X is the only Y". Assert what the guard protects:
+> *this vector is refused, by name, with this diagnostic*. Then verify the assertion **discriminates** — it
+> must be absent on the pristine store and present on the perturbed one. An assertion that cannot go red is
+> decoration.
+
+### P-8. The rig can silently disagree with its own documented contract
+
+`.softhouse/vectors/README.md` states that a cell named in `unrecorded_fields` is **not compared** and is
+counted as an ungraded cell. Under `--self-test` that is **false** for a `DISBURSEMENT` row's outstanding
+balance: the replay implementation answers `0` for the unrecorded cell and `balance_roll_forward` then
+**grades the placeholder**. A vector that declares the cell honestly goes **red** (T58's finding **N-2** —
+all 14 affected vectors red, `go test` failing, `--prove` down to 10/20).
+
+Same class as **D-5**, one layer down: the documented behaviour and the implemented behaviour diverge, and
+the divergence only appears when an artefact finally exercises the path.
+
+T58's response is the pattern worth copying: it **did not** exempt the invariant — that would have deleted a
+check that currently passes — and it did not edit a vector to fit the rig. It **re-observed** every affected
+shape on a harness that records the column, then cross-checked the two capture sets: **14 case pairs, 134
+rows, 1,698 cells, zero differences**, across two independent Path A harnesses two fires apart. The
+workaround produced a free cross-harness control; the underlying defect stays open and is recorded as a task.
+
+> **Rule.** When the rig contradicts its own README, fix one of the two — do not adjust the artefact until
+> the contradiction is invisible. And prefer re-observing to exempting: an exemption is permanent, an
+> observation is evidence.
