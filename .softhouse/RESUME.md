@@ -11,17 +11,19 @@ session state.
 - **Contexts**: 0 done / 17 · `tier0-harness-schedule-poc` **active**
 - **Oracle**: UP all fire, **never restarted** (several captures' comparability rests on that).
   `fineract:latest` + `postgres:18.3`, both healthy. Pinned checkout `426a23544` clean. PostgreSQL only.
-- **Six workers dispatched, six completed, all merged. Nothing lost, no isolation violation, no scope breach.**
+- **Eight workers dispatched, eight completed, all merged. Nothing lost, no isolation violation, no scope breach.**
 
 ---
 
 # THE HEADLINE: **the program has its first conformance PASS — and the driver spent the rest of the fire proving how little that PASS meant**
 
 ```
-VERDICT: PASS (exit 0) — 13 parity vectors match the pinned reference oracle, 1350 cells compared.
+VERDICT: PASS (exit 0) — 29 parity vectors match the pinned reference oracle, 2354 cells compared.
          This means "matches the reference oracle on captured vectors, within the graded domain".
          IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a user gate.
 ```
+
+**The corpus started this fire at ZERO parity vectors and ended at 29.**
 
 `go build` / `go vet` exit 0 · `go test ./...` green · `gofmt -l` only the frozen `contract.go` (G-3) ·
 `--prove` **20/20** · 6/6 invariants hold · 0 inadmissible · 0 harness errors.
@@ -45,7 +47,11 @@ document-based method. Verdict **ACCEPTED WITH REQUIRED CHANGES**, 9 findings, 3
 
 **5. T57 + T56 — both P1s closed in the same fire.**
 
-**6. T11 — adversarial review of the port — IN FLIGHT at checkpoint.**
+**6. T11 — the adversarial review of the port. `ACCEPTED WITH REQUIRED CHANGES`.** **No arithmetic defect:**
+22 counterfactuals derived from source, none exposed one. So the gap was in the **corpus**, not the port —
+and T11 found that the evidence to close most of it *already existed, unpromoted*.
+
+**7. T58 — all three surviving mutations killed.** Parity **13 → 29**, cells **1,350 → 2,354**.
 
 ---
 
@@ -66,14 +72,23 @@ So T57 captured the two shapes DEC-1 itself names, and **the driver then re-ran 
 **That closed loop — mutate → find the blind spot → capture the shape → prove the mutation now dies — is the
 transferable result of this fire.** It is recorded as pattern **P-3** in `.softhouse/patterns.md`.
 
-### Three money-moving mutations STILL survive all 13 vectors — handed to T11
+### The three surviving money-moving mutations are now ALL DEAD
 
-1. **textbook `balance × rateFactor`** — three rounded operations collapsed into one
-2. **rate factor without the trailing `setScale`** — not vacuous (`…333332` vs `…3333`), but below the
-   currency layer on every corpus shape at precision 19
-3. **`periodRatio` → `RepaymentEvery`** — every promoted vector is on-lattice
+| mutation | at 13 vectors | at 29 vectors |
+|---|---|---|
+| `periodRatio` → `RepaymentEvery` | PASS, exit 0 | **8 FAIL, exit 1** |
+| textbook `balance × rateFactor` (3 rounded ops → 1) | PASS, exit 0 | **2 FAIL, exit 1** |
+| rate factor without the trailing `setScale` | PASS, exit 0 | **1 FAIL, exit 1** |
+| *(EMI smoothing loop deleted — killed earlier by T57)* | PASS, exit 0 | **10 FAIL** (driver re-ran at 29) |
 
-**Conformance cannot tell you whether the port got these right.** T11 must decide each from source.
+**Most of this needed no oracle at all.** T11's decisive finding: `.softhouse/capture/periodratio/` held **8
+oracle-observed drift shapes at `(19, HALF_UP)`, captured two fires ago and never promoted.** Promoting them
+closed one survivor **by observation** and killed two further counterfactuals — worst margin **MNT
+8,545,743.02**.
+
+For the other two, T11's 6,000-shape sweep located two ordinary on-lattice MNT loans that separate them in a
+payable amount. **The oracle confirmed T11's prediction exactly**, including interest **MNT 15,307.35** —
+folklore argued from source three times and observed zero times, ended by two captures.
 
 ---
 
@@ -128,12 +143,18 @@ disagreement. Where DEC-1 and the folklore differ, **DEC-1 matches the source.**
 
 ---
 
-## THE NEXT FIRE STARTS HERE
+## THE NEXT FIRE STARTS HERE — and NONE of it needs the oracle
 
-1. **T11's verdict** (in flight at checkpoint — read its branch `softhouse/T11-go-port-review` and merge).
-2. **The three surviving mutations.** If T11 confirms the port is correct from source, they are a **corpus**
-   gap, not a port defect: capture the shapes that grade them. This is oracle-only work.
-3. **T13** — `/softhouse-uat` — then **T14** (user gate: accept the PoC slice; **no cutover**) and **T15**.
+1. **T59** — T11's F-1/F-2. **Driver correction that changes the fix:** the port does **not** "ignore
+   cancellation" — `generator.go:72` checks `ctx.Err()` **once at entry and never again** (one occurrence in
+   `generator.go`, zero in `emi.go`), which is exactly consistent with T11 measuring 5.9 s elapsed under a
+   50 ms deadline. So check *inside* the amortization and EMI-adjustment loops, where the time is spent.
+   F-2: cost ~n^2.4 (13.3 s at n=360), `NumberOfRepayments` unbounded, the oracle's `Memo` cache dropped.
+   **Neither is a money defect and neither is graded by conformance — add a test that catches a regression.**
+2. **T60** — T58's N-2: `balance_roll_forward` grades a placeholder the store README says nothing compares,
+   so an honestly-declared unrecorded cell goes red. D-5 class, one layer down.
+3. **T12** (checkpoint drill), then **T13** `/softhouse-uat`, **T14** (user gate: accept the PoC slice;
+   **no cutover**) and **T15**.
 
 ---
 
