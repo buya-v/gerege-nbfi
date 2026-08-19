@@ -496,3 +496,74 @@ per fire; the cost of the other is that correcting a frozen falsehood needs a ga
 
 **Still RESERVED and untouched:** cutover, regulatory / parallel-run sign-off, deposit-taking activation,
 licence facts. None is in Run 1's path.
+
+---
+
+## G-3 — **ENGINEERING** — may `gofmt` rewrite the ratified `contract.go`? *(OPEN — driver-decidable, deliberately not self-answered)*
+
+**Raised by** local fire `20260819-170001`, immediately after the first ever compile of the ratified artefact.
+**Context** `tier0-harness-schedule-poc`. **Blocks** nothing — every task proceeds under the standing
+instruction below. This gate exists to stop a *silent* change, not to pause work.
+
+### What was found
+
+A repo-local Go toolchain was installed this fire (`go1.26.6`, sha256-verified, gitignored — see
+`.softhouse/reference-oracle.md`), which finally allowed the ratified DEC-1 artefact to be compiled:
+
+```
+cd nexus && go build ./...   → exit 0
+             go vet  ./...   → exit 0
+             go test ./...   → exit 0  ("no test files")
+gofmt -l .                   → internal/apps/loanschedule/contract/contract.go
+```
+
+`gofmt` wants to rewrite the frozen contract. The diff was captured and **NOT applied**:
+
+- **Extent:** 3 hunks, 25 diff lines. Every hunk inserts a bare `//` line **between numbered list items
+  inside doc comments** — Go 1.19+ doc-comment list normalisation.
+- **Semantically inert:** no type, field, enum member, error value, identifier or specified predicate moves.
+- **Caveat on the mechanical check, so nobody misreads it:** "identical after stripping all whitespace"
+  reports **NO**, because gofmt inserts new `//` tokens and `/` is not whitespace. The inserted tokens are
+  *empty comment markers*; the prose is unchanged. That check is not evidence of a substantive edit.
+
+### Why this is a gate and not a nit
+
+The doc comments in `contract.go` **ARE the specification** — the file says so itself, and DEC-1 §*Amendment
+gate* makes "re-documenting any identifier in this package" an amendment requiring a gate once ratified.
+So the risk is not that gofmt's output is wrong. The risk is the **failure mode**:
+
+> An editor format-on-save, or a `coder` who runs `gofmt -w ./...` from the repo root, silently mutates a
+> frozen ratified artefact — and the diff looks like harmless formatting noise in review.
+
+That is the same category as the defects the driver declined ratification over at revisions 8 and 10: not a
+wrong number, but a wrong thing quietly entering a frozen artefact. The driver did not self-answer it under
+P-2 for one reason: **the artefact is already frozen, and the whole point of freezing is that the driver
+stops being the one who may edit it.** Answering "yes, reformat it" would be the driver reaching into a
+ratified file on aesthetic grounds hours after ratification — precisely the discipline DEC-1's amendment
+clause was written to impose. Recording it and working around it costs nothing.
+
+### Standing instruction until this gate is answered — already in force
+
+1. **No task may run `gofmt -w`, `go fmt`, or a format-all over
+   `nexus/internal/apps/loanschedule/contract/contract.go`.** Format only files you created.
+2. **`gofmt -l` reporting exactly that one path is the EXPECTED state.** A UAT must not fail on it, and a
+   harness's gofmt-cleanliness check must exempt that path *with a comment saying why* — an unexplained
+   exemption invites a later agent to "fix" it.
+3. If the file's formatting is ever found to differ from the ratified bytes, that is a **process incident** to
+   investigate, not a diff to accept.
+
+### The three options, and the driver's recommendation
+
+| Option | Effect | Cost |
+|---|---|---|
+| **A — leave it unformatted** *(in force now)* | ratified bytes stay byte-identical; the sha256 guardrails from revisions 10/11/12 keep working unchanged | one permanent, documented gofmt exemption; every fire must re-learn it (mitigated: it is recorded here, in `reference-oracle.md`, and in T7's brief) |
+| **B — apply gofmt as a recorded no-predicate erratum** | tree becomes gofmt-clean; the exemption disappears | the ratified artefact's bytes change, which **invalidates the `contract.go` byte-identity guardrail** (sha256 `2530f13ecad961f2` over the 96-line non-comment body still holds, but the whole-file hash does not) and sets the precedent that "inert" edits to a frozen file are fine — the precedent is the real cost, not the whitespace |
+| **C — amend DEC-1 to state the file is exempt from gofmt** | makes A explicit in the specification | a DEC-1 amendment is itself a gate, so this is the most expensive route to the outcome A already delivers |
+
+**Driver's recommendation: A**, and treat it as the answer unless Buyan prefers otherwise. It is free, it is
+already in force, it preserves every existing guardrail, and it keeps the freeze meaning what it says. The
+only argument for B is tooling tidiness, and a documented one-line exemption buys the same tidiness without
+touching a ratified artefact.
+
+**Nothing here is RESERVED.** No money, no live endpoint, no third party, no licence fact — this is recorded
+for Buyan's awareness and reversal, not because an agent could not reason about it.
