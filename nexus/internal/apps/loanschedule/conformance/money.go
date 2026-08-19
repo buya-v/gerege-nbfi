@@ -145,6 +145,54 @@ func allDigits(s string) error {
 	return nil
 }
 
+// ScaleOfWireText returns the number of fraction digits in a decimal wire text —
+// its SCALE, in the BigDecimal sense the reference oracle uses.
+//
+// "112082.37" is scale 2, "1200000.000000" is scale 6, "0" is scale 0. The text
+// must be a plain decimal: an optional sign, digits, optionally a point and more
+// digits. Exponent notation is an error, because the oracle emits
+// toPlainString() and anything else is a transcription that went through a
+// formatter nobody audited.
+//
+// This is the primitive behind finding T17-F5. The scale of a value routed to a
+// money column is not cosmetic: a value carrying more fraction digits than the
+// currency has minor units is an INTERMEDIATE that escaped rounding, and a rig
+// that quietly rounded it would grade the port against a number the oracle never
+// produced.
+func ScaleOfWireText(text string) (int32, error) {
+	s := strings.TrimSpace(text)
+	if s == "" {
+		return 0, fmt.Errorf("empty wire text: want a plain decimal string")
+	}
+	if strings.ContainsAny(s, "eE") {
+		return 0, fmt.Errorf("wire text %q uses exponent notation: the oracle emits toPlainString() and "+
+			"a transcription that does not is not the oracle's own characters", text)
+	}
+	body := s
+	if strings.HasPrefix(body, "-") || strings.HasPrefix(body, "+") {
+		body = body[1:]
+	}
+	intPart, fracPart := body, ""
+	if i := strings.IndexByte(body, '.'); i >= 0 {
+		intPart, fracPart = body[:i], body[i+1:]
+	}
+	if intPart == "" {
+		return 0, fmt.Errorf("wire text %q: no integer part (write 0.50, never .50)", text)
+	}
+	if err := allDigits(intPart); err != nil {
+		return 0, fmt.Errorf("wire text %q: %w", text, err)
+	}
+	if strings.IndexByte(body, '.') >= 0 {
+		if fracPart == "" {
+			return 0, fmt.Errorf("wire text %q: a decimal point with no fraction digits", text)
+		}
+		if err := allDigits(fracPart); err != nil {
+			return 0, fmt.Errorf("wire text %q: %w", text, err)
+		}
+	}
+	return int32(len(fracPart)), nil
+}
+
 // FormatMinor renders an integer minor-unit amount for a report line, in minor
 // units, with no thousands separator and no decimal point. It is a display
 // helper for the PASS/FAIL table only; nothing compares its output.

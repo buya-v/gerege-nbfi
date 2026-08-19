@@ -226,6 +226,42 @@ prove() {
   bin="$CONF_BIN"; tmp="$CONF_TMP"
   build_binary "$bin"
 
+  # expect_saying is expect plus a required substring of the output. The T20
+  # structural rules all refuse for a REASON, and a proof that only checked the
+  # exit code would pass if the vector were refused for some unrelated reason —
+  # which is how a rule quietly stops being the rule that fires.
+  expect_saying() { # expect_saying <wanted-code> <substring> <label> -- cmd...
+    local want="$1" needle="$2" label="$3"; shift 4
+    local out got ok
+    out="$("$@" 2>&1)"; got=$?
+    ok=0
+    [ "$got" = "$want" ] && printf '%s' "$out" | grep -qF -- "$needle" && ok=1
+    if [ "$ok" = 1 ]; then
+      say "PROOF OK   exit $got (wanted $want)   $label"
+      pass=$((pass+1))
+    else
+      say "PROOF FAIL exit $got (wanted $want)   $label"
+      say "           the output had to contain: $needle"
+      say "$out"
+      fail=$((fail+1))
+    fi
+    say "--- last 6 lines of that run -------------------------------------------"
+    printf '%s\n' "$out" | tail -6
+    say ""
+  }
+
+  # assert_mutated refuses to run a proof whose perturbation did not apply. A
+  # mutation proof over an unmutated file proves nothing and looks identical to
+  # one that works.
+  assert_mutated() { # assert_mutated <file> <needle>
+    if ! grep -qF -- "$2" "$1"; then
+      say "PROOF FAIL the perturbation did not apply to $1, so the proof would be vacuous"
+      fail=$((fail+1))
+      return 1
+    fi
+    return 0
+  }
+
   expect() { # expect <wanted-code> <label> -- cmd...
     local want="$1" label="$2"; shift 3
     local got out
@@ -326,6 +362,86 @@ prove() {
     "$tmp/floaty/_selftest/SELFTEST-01-two-period-zero-rate.json"
   expect 2 "float token in a vector file" -- \
     "$bin" -self-test "-store=$tmp/floaty" "-replay-store=$STORE_ROOT"
+
+  # --- The T20 structural rules (T17 follow-ups F2, F5, F6 and driver finding
+  #     D-4/D-5). Each one is demonstrated to REFUSE a doctored vector, with the
+  #     refusal's own words asserted, and the D-5 case is demonstrated in the
+  #     other direction: an unrecorded cell must NOT cost the vector.
+
+  # 10. T17-F5: a money wire text with more fraction digits than the currency has
+  #     minor units, NOT declared. Exact conversion or not, silence is refused —
+  #     a rig that rounded it would grade the port against a number the oracle
+  #     never produced.
+  mkdir -p "$tmp/overscale"
+  cp -R "$STORE_ROOT/." "$tmp/overscale/"
+  perl -0pi -e 's/"principal_major_text": "1000\.00",/"principal_major_text": "1000.000",/' \
+    "$tmp/overscale/_selftest/SELFTEST-01-two-period-zero-rate.json"
+  if assert_mutated "$tmp/overscale/_selftest/SELFTEST-01-two-period-zero-rate.json" '"1000.000"'; then
+    expect_saying 2 "harness bug, not a rounding opportunity" \
+      "T17-F5: an UNDECLARED over-scaled money wire text is inadmissible" -- \
+      "$bin" -self-test "-store=$tmp/overscale" "-replay-store=$STORE_ROOT"
+  fi
+
+  # 11. T17-F6: a rate factor claiming to be exact. Every rate factor in the
+  #     corpus is a 12-dp rounding, so a Go divergence in digits 13+ would pass
+  #     silently against it; exact parity is TO_BE_CAPTURED and no vector may
+  #     claim it.
+  mkdir -p "$tmp/ratefactor"
+  cp -R "$STORE_ROOT/." "$tmp/ratefactor/"
+  perl -0pi -e 's/"unrecorded_fields": \[\],/"unrecorded_fields": [], "observed_rate_factor": { "text": "1.005833333333", "transcribed_at_scale": 12, "precision_status": "EXACT", "citation": "fabricated by the proof" },/' \
+    "$tmp/ratefactor/_selftest/SELFTEST-01-two-period-zero-rate.json"
+  if assert_mutated "$tmp/ratefactor/_selftest/SELFTEST-01-two-period-zero-rate.json" '"precision_status": "EXACT"'; then
+    expect_saying 2 "TO_BE_CAPTURED" \
+      "T17-F6: a rate factor claiming exactness is inadmissible" -- \
+      "$bin" -self-test "-store=$tmp/ratefactor" "-replay-store=$STORE_ROOT"
+  fi
+
+  # 12. T17-F2: a corroboration claiming a column the cross-check source does not
+  #     print. The README's CI stdout block attests six of the ten period columns
+  #     on a repayment row; total_outstanding_balance is not one of them.
+  mkdir -p "$tmp/corroboration"
+  cp -R "$STORE_ROOT/." "$tmp/corroboration/"
+  perl -0pi -e 's/"kind": "hand-authored",/"kind": "hand-authored", "corroborated_by": [ { "source": "embeddable-readme-ci-stdout", "row_kind": "REPAYMENT", "columns": ["total_outstanding_balance"], "note": "fabricated by the proof" } ],/' \
+    "$tmp/corroboration/_selftest/SELFTEST-01-two-period-zero-rate.json"
+  if assert_mutated "$tmp/corroboration/_selftest/SELFTEST-01-two-period-zero-rate.json" 'corroborated_by'; then
+    expect_saying 2 "DOES NOT ATTEST" \
+      "T17-F2: a corroboration claiming an unattested column is inadmissible" -- \
+      "$bin" -self-test "-store=$tmp/corroboration" "-replay-store=$STORE_ROOT"
+  fi
+
+  # 13. D-4: a STRUCTURAL counterfactual naming a money column. The structural
+  #     form exists for kills that move no money — a wrong due date, a wrong row
+  #     order — and it must never become a way to avoid stating a real margin.
+  mkdir -p "$tmp/structural"
+  cp -R "$STORE_ROOT/." "$tmp/structural/"
+  perl -0pi -e 's/"graded_against": \[\],/"graded_against": [ { "id": "MONEY-KILL-IN-A-STRUCTURAL-COAT", "kind": "structural", "capability": "schedule.core", "description": "fabricated by the proof", "margin_minor": "0", "divergent_cells": ["period[1].principal_minor"], "evidence": "observed 500.00; the wrong port emits 400.00 instead" } ],/' \
+    "$tmp/structural/_selftest/SELFTEST-01-two-period-zero-rate.json"
+  if assert_mutated "$tmp/structural/_selftest/SELFTEST-01-two-period-zero-rate.json" 'MONEY-KILL-IN-A-STRUCTURAL-COAT'; then
+    expect_saying 2 "money kill wearing a structural label" \
+      "D-4: a structural counterfactual naming a money column is inadmissible" -- \
+      "$bin" -self-test "-store=$tmp/structural" "-replay-store=$STORE_ROOT"
+  fi
+
+  # 14. D-5, in the OTHER direction: a money cell the capture never recorded must
+  #     cost that CELL and nothing more. Before the fix the replay implementation
+  #     dropped the whole vector and the run then reported "no vector carries this
+  #     request" — absence of evidence dressed as evidence of absence. The proof
+  #     therefore demands a GREEN run, and asserts the cell was counted as
+  #     ungraded rather than quietly forgotten.
+  mkdir -p "$tmp/unrecorded"
+  cp -R "$STORE_ROOT/." "$tmp/unrecorded/"
+  perl -0pi -e 's/"interest_minor": "0",\n(\s+)"outstanding_principal_minor": "100000",\n(\s+)"principal_major_text": "1000\.00",\n(\s+)"interest_major_text": "0\.00",\n(\s+)"outstanding_principal_major_text": "1000\.00",\n(\s+)"unrecorded_fields": \[\],/"interest_minor": "",\n$1"outstanding_principal_minor": "100000",\n$2"principal_major_text": "1000.00",\n$3"interest_major_text": "",\n$4"outstanding_principal_major_text": "1000.00",\n$5"unrecorded_fields": ["interest_minor"],/' \
+    "$tmp/unrecorded/_selftest/SELFTEST-01-two-period-zero-rate.json"
+  if assert_mutated "$tmp/unrecorded/_selftest/SELFTEST-01-two-period-zero-rate.json" '"unrecorded_fields": ["interest_minor"]'; then
+    # Scoped to the self-test context on purpose: the ungraded count is then
+    # exactly the one cell this proof introduced, whatever the rest of the store
+    # happens to contain today. A proof whose expected number moves when an
+    # unrelated vector is promoted is a proof that will be deleted rather than
+    # read.
+    expect_saying 0 "1 ungraded" \
+      "D-5: an unrecorded money cell costs the CELL, not the vector" -- \
+      "$bin" -self-test "-store=$tmp/unrecorded" "-replay-store=$tmp/unrecorded" -context=_selftest
+  fi
 
   say "======================================================================="
   say "PROOFS: $pass passed, $fail failed"

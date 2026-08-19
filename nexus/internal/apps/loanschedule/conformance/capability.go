@@ -241,7 +241,15 @@ func (r *CapabilityRegistry) CounterfactualCoverage(vectors []*Vector) (map[stri
 		}
 		for _, cf := range v.GradedAgainst {
 			if graded, defined := r.IsGraded(cf.Capability); defined && graded {
-				covered[cf.Capability] = append(covered[cf.Capability], cf.ID)
+				// The kind is carried into the coverage listing, because "this
+				// capability is covered" reads very differently when every
+				// counterfactual covering it is a zero-margin structural kill —
+				// a real kill, but not one that grades an AMOUNT (finding D-4).
+				id := cf.ID
+				if cf.Kind == CounterfactualStructural {
+					id += " [structural]"
+				}
+				covered[cf.Capability] = append(covered[cf.Capability], id)
 			}
 		}
 	}

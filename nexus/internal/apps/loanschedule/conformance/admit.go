@@ -222,21 +222,14 @@ func Admit(v *Vector, pin *Pin, repoRoot string) []string {
 			bad("graded_against[%d] (%s) grades capability %q, which is not in capabilities_required: "+
 				"a vector cannot grade a capability it does not claim to exercise", i, cf.ID, cf.Capability)
 		}
-		margin, merr := cf.MarginMinor.Int64()
-		switch {
-		case merr != nil:
-			bad("graded_against[%d] (%s) margin_minor: %v", i, cf.ID, merr)
-		case margin <= 0:
-			bad("graded_against[%d] (%s) margin_minor is %d: a candidate this vector separates by zero is "+
-				"a candidate it does NOT kill, and recording one would reintroduce the false confidence "+
-				"this field exists to remove", i, cf.ID, margin)
-		}
+		problems = append(problems, admitCounterfactualKind(i, cf, len(v.Expect.Periods))...)
 	}
 
 	if v.RetiresWhenCapabilityGraded != "" && v.Class != ClassContractRefusal {
 		bad("retires_when_capability_graded is only meaningful on a contract-refusal vector")
 	}
 
+	problems = append(problems, admitCorroborations(v)...)
 	problems = append(problems, admitRequest(&v.Request)...)
 	problems = append(problems, admitPeriods(v)...)
 	for _, ex := range v.InvariantExemptions {
@@ -245,6 +238,197 @@ func Admit(v *Vector, pin *Pin, repoRoot string) []string {
 		}
 		if strings.TrimSpace(ex.Reason) == "" {
 			bad("invariant_exemptions for %q carries no reason", ex.Invariant)
+		}
+	}
+	return problems
+}
+
+// admitCounterfactualKind enforces the money/structural split (driver finding
+// D-4).
+//
+// The structural form is STRICTLY HARDER to satisfy than the money form, and
+// deliberately so. A money kill needs one number. A structural kill has no number
+// — its margin is genuinely zero — so it must instead name every cell it diverges
+// on, name only cells the harness actually compares, name no money column, and
+// state both the wrong value and the observed one. If this ever becomes the easy
+// path, it has been implemented wrongly: it exists so that P-02's due-date kill
+// and P-03's row-order kill can be recorded HONESTLY, not so that a margin can be
+// avoided.
+func admitCounterfactualKind(i int, cf Counterfactual, periodCount int) []string {
+	var problems []string
+	bad := func(format string, args ...any) { problems = append(problems, fmt.Sprintf(format, args...)) }
+
+	switch cf.Kind {
+	case "", CounterfactualMoney:
+		margin, merr := cf.MarginMinor.Int64()
+		switch {
+		case merr != nil:
+			bad("graded_against[%d] (%s) margin_minor: %v", i, cf.ID, merr)
+		case margin <= 0:
+			bad("graded_against[%d] (%s) margin_minor is %d: a candidate this vector separates by zero is "+
+				"a candidate it does NOT kill, and recording one would reintroduce the false confidence "+
+				"this field exists to remove. If the kill is real but moves no money — a wrong due date, a "+
+				"wrong row order — it is a STRUCTURAL counterfactual: set kind %q, margin_minor \"0\", and "+
+				"name the diverging cells in divergent_cells",
+				i, cf.ID, margin, CounterfactualStructural)
+		}
+		if len(cf.DivergentCells) > 0 {
+			bad("graded_against[%d] (%s) is a money counterfactual but lists divergent_cells %v: the money "+
+				"form carries its kill in margin_minor. Naming cells here would let a reader think the "+
+				"shape was graded too, when only the amount was", i, cf.ID, cf.DivergentCells)
+		}
+
+	case CounterfactualStructural:
+		if string(cf.MarginMinor) != "0" {
+			bad("graded_against[%d] (%s) is structural, so margin_minor must be exactly \"0\" and is %q: a "+
+				"structural counterfactual moves NO money on this vector, and writing any other number "+
+				"would be inventing a margin", i, cf.ID, cf.MarginMinor)
+		}
+		if len(cf.DivergentCells) == 0 {
+			bad("graded_against[%d] (%s) is structural but names no divergent_cells. A structural kill has "+
+				"no margin to carry its evidence, so it must name every cell it diverges on — "+
+				"\"period[<n>].due_date\", \"period[<n>].from_date\", \"period[<n>].kind\" or %q — or it "+
+				"claims a kill nothing can check", i, cf.ID, DivergentCellRowOrder)
+		}
+		seen := map[string]bool{}
+		for j, cell := range cf.DivergentCells {
+			if seen[cell] {
+				bad("graded_against[%d] (%s) divergent_cells[%d] repeats %q", i, cf.ID, j, cell)
+			}
+			seen[cell] = true
+			problems = append(problems, admitDivergentCell(i, cf.ID, j, cell, periodCount)...)
+		}
+		if !statesBothValues(cf.Evidence) {
+			bad("graded_against[%d] (%s) is structural, so its evidence must state BOTH the value the "+
+				"wrong implementation produces AND the value the oracle was observed to produce — a "+
+				"structural kill has no number to carry that. The check is mechanical and crude: the "+
+				"evidence must contain the word \"observed\" and one of \"instead\", \"rather than\", "+
+				"\"wrong\" or \"emits\". Got: %q", i, cf.ID, cf.Evidence)
+		}
+
+	default:
+		bad("graded_against[%d] (%s) kind %q is neither %q (the default when empty) nor %q",
+			i, cf.ID, cf.Kind, CounterfactualMoney, CounterfactualStructural)
+	}
+	return problems
+}
+
+// admitDivergentCell checks one structural cell name.
+func admitDivergentCell(i int, id string, j int, cell string, periodCount int) []string {
+	var problems []string
+	bad := func(format string, args ...any) { problems = append(problems, fmt.Sprintf(format, args...)) }
+
+	if cell == DivergentCellRowOrder {
+		return nil
+	}
+	const prefix = "period["
+	if !strings.HasPrefix(cell, prefix) {
+		bad("graded_against[%d] (%s) divergent_cells[%d] %q is not a cell name: write "+
+			"\"period[<n>].<field>\" or %q", i, id, j, cell, DivergentCellRowOrder)
+		return problems
+	}
+	rest := cell[len(prefix):]
+	end := strings.IndexByte(rest, ']')
+	if end < 0 || !strings.HasPrefix(rest[end:], "].") {
+		bad("graded_against[%d] (%s) divergent_cells[%d] %q is malformed: write \"period[<n>].<field>\"",
+			i, id, j, cell)
+		return problems
+	}
+	idxText, field := rest[:end], rest[end+2:]
+	idx, err := MinorText(idxText).Int64()
+	if err != nil || idx < 0 {
+		bad("graded_against[%d] (%s) divergent_cells[%d] %q: %q is not a canonical non-negative row index",
+			i, id, j, cell, idxText)
+		return problems
+	}
+	if periodCount > 0 && idx >= int64(periodCount) {
+		bad("graded_against[%d] (%s) divergent_cells[%d] %q names row %d, but this vector's expected "+
+			"schedule has %d rows: a counterfactual cannot diverge on a cell that does not exist",
+			i, id, j, cell, idx, periodCount)
+	}
+	if containsString(MoneyCellFields(), field) {
+		bad("graded_against[%d] (%s) divergent_cells[%d] %q names a MONEY column. That is a money kill "+
+			"wearing a structural label: record it as kind %q with the real margin_minor instead",
+			i, id, j, cell, CounterfactualMoney)
+		return problems
+	}
+	if !containsString(StructuralCellFields(), field) {
+		bad("graded_against[%d] (%s) divergent_cells[%d] %q names field %q, which is not one of the "+
+			"non-money cells this harness compares (%s). A cell the harness never compares cannot be the "+
+			"site of a kill anything could detect",
+			i, id, j, cell, field, strings.Join(StructuralCellFields(), ", "))
+	}
+	return problems
+}
+
+// statesBothValues is the crude mechanical test that a structural
+// counterfactual's evidence names the wrong value and the observed one.
+//
+// It is prose matching and it knows it. The alternative was to leave the
+// requirement as a sentence in a document, and a requirement nobody can fail is
+// not a requirement. The error message names the exact words that satisfy it, so
+// an author is never left guessing.
+func statesBothValues(evidence string) bool {
+	e := strings.ToLower(evidence)
+	if !strings.Contains(e, "observed") {
+		return false
+	}
+	for _, marker := range []string{"instead", "rather than", "wrong", "emits"} {
+		if strings.Contains(e, marker) {
+			return true
+		}
+	}
+	return false
+}
+
+// admitCorroborations enforces finding T17-F2: a cross-check that covers part of
+// a row may not be recorded as covering the row.
+func admitCorroborations(v *Vector) []string {
+	var problems []string
+	bad := func(format string, args ...any) { problems = append(problems, fmt.Sprintf(format, args...)) }
+
+	for i, c := range v.Provenance.CorroboratedBy {
+		src, ok := AttestationSourceByID(c.Source)
+		if !ok {
+			var known []string
+			for _, s := range AttestationSources() {
+				known = append(known, s.ID)
+			}
+			bad("provenance.corroborated_by[%d] cites source %q, which this harness does not know the "+
+				"column coverage of (known: %s). A corroboration from an undeclared source is a claim the "+
+				"harness cannot scope, and an unscoped corroboration is exactly what finding T17-F2 is "+
+				"about", i, c.Source, strings.Join(known, ", "))
+			continue
+		}
+		if _, err := periodKindByName(c.RowKind); err != nil {
+			bad("provenance.corroborated_by[%d].row_kind: %v", i, err)
+			continue
+		}
+		if len(src.ColumnsByRowKind[c.RowKind]) == 0 {
+			bad("provenance.corroborated_by[%d]: source %q attests nothing at all about a %s row (it "+
+				"attests: %s)", i, c.Source, c.RowKind, strings.Join(src.RowKinds(), ", "))
+			continue
+		}
+		if len(c.Columns) == 0 {
+			bad("provenance.corroborated_by[%d] claims no column: a corroboration that names no column "+
+				"corroborates nothing", i)
+		}
+		for _, col := range c.Columns {
+			if !IsPeriodColumn(col) {
+				bad("provenance.corroborated_by[%d] claims column %q, which is not one of the ten period "+
+					"columns (%s)", i, col, strings.Join(PeriodColumns(), ", "))
+				continue
+			}
+			if !src.Attests(c.RowKind, col) {
+				bad("provenance.corroborated_by[%d]: source %q DOES NOT ATTEST column %q on a %s row. It "+
+					"attests %d of the %d period columns there (%s) and is silent on %s. A comparison "+
+					"covering part of a row may not be recorded as covering the row — finding T17-F2. "+
+					"Source: %s",
+					i, c.Source, col, c.RowKind,
+					len(src.ColumnsByRowKind[c.RowKind]), len(PeriodColumns()),
+					strings.Join(src.ColumnsByRowKind[c.RowKind], ", "),
+					strings.Join(src.Unattested(c.RowKind), ", "), src.Citation)
+			}
 		}
 	}
 	return problems
@@ -272,6 +456,32 @@ func admitParityProvenance(v *Vector, pin *Pin, repoRoot string) []string {
 	// as parity cannot smuggle it in: the numbers themselves were produced at a
 	// precision the check reads off the file.
 	want := pin.ProductionRounding
+
+	// The ambient context must be RECORDED, on every seam, before it is compared
+	// to anything. Finding T17-F3, RESTATED — the original wording is refuted:
+	//
+	//   F3 as written asked C-00 to assert that MoneyHelper is NEVER statically
+	//   initialised on the embeddable path. Capture pass 1's D-04 refutes it: with
+	//   allowFullTermForTranche = true the embeddable path DID reach MoneyHelper
+	//   and died with "No tenant context available. MoneyHelper requires a valid
+	//   tenant context" (.softhouse/capture/PASS2-REPORT.md:34, MoneyHelper.java
+	//   :178-179). The surviving, narrower claim is "not observed to be reached
+	//   when the flag is FALSE" — which is a statement about the shapes captured,
+	//   not a licence to leave the ambient MathContext unrecorded on a seam
+	//   somebody believes never reads it.
+	//
+	// So an unrecorded ambient context is INADMISSIBLE for a parity vector, and
+	// the message says why rather than reporting a bare mismatch against
+	// production.
+	if v.Oracle.AmbientMathContext == (MathContext{}) {
+		bad("a parity vector must RECORD the ambient MathContext, and this one leaves it empty. Finding "+
+			"T17-F3 as originally written — \"MoneyHelper is never statically initialised on the "+
+			"embeddable path\" — is REFUTED BY OBSERVATION: capture pass 1's D-04 ran that path with "+
+			"allowFullTermForTranche = true and died with \"No tenant context available. MoneyHelper "+
+			"requires a valid tenant context\". The narrowed claim is only that the flag-FALSE branch is "+
+			"not observed to reach it, and \"not observed in the shapes we captured\" is not "+
+			"\"unreachable\": %s", claimText("T17-F3"))
+	}
 	if v.Oracle.ThreadedMathContext.Precision != want.SignificantDigits ||
 		v.Oracle.ThreadedMathContext.RoundingMode != want.Mode {
 		bad("threaded MathContext %s is not the ratified production setting (%d,%s): this is a "+
@@ -437,6 +647,20 @@ func admitPeriods(v *Vector) []string {
 			}
 			return true
 		}
+		overScaled := map[string]bool{}
+		for _, f := range p.OverScaledWireTextFields {
+			if !containsString(MoneyCellFields(), f) {
+				bad("expect.periods[%d].over_scaled_wire_text_fields names %q, which is not a money column "+
+					"(%s): only a money column can be over-scaled, because only a money column has a "+
+					"currency scale to exceed", i, f, strings.Join(MoneyCellFields(), ", "))
+				continue
+			}
+			if overScaled[f] {
+				bad("expect.periods[%d].over_scaled_wire_text_fields repeats %q", i, f)
+			}
+			overScaled[f] = true
+		}
+		problems = append(problems, admitRateFactor(i, p.ObservedRateFactor)...)
 		type cell struct {
 			field string
 			minor MinorText
@@ -466,8 +690,43 @@ func admitPeriods(v *Vector) []string {
 					i, c.field)
 			}
 			if c.text == "" {
+				if overScaled[c.field] {
+					bad("expect.periods[%d].%s is declared over-scaled but carries no wire text at all: "+
+						"a declaration about characters nobody recorded is noise", i, c.field)
+				}
 				continue
 			}
+
+			// FINDING T17-F5, as a hard structural rule: a value with scale > the
+			// currency's minor-unit digits routed into a money column is a HARNESS
+			// BUG, not a rounding opportunity. The failure mode is a rig quietly
+			// rounding an over-scaled value and thereby grading the port against a
+			// number the oracle never produced.
+			//
+			// Non-zero excess digits are rejected by MinorFromMajorText below and
+			// can never be admitted. All-zero excess digits convert EXACTLY, so
+			// the value is usable — but only if the file says out loud that the
+			// scale is wrong. Silence is what this rule removes.
+			scale, serr := ScaleOfWireText(c.text)
+			switch {
+			case serr != nil:
+				bad("expect.periods[%d].%s wire text: %v", i, c.field, serr)
+			case scale > digits && !overScaled[c.field]:
+				bad("expect.periods[%d].%s wire text %q has SCALE %d, above the currency's %d minor-unit "+
+					"digits. A value with scale > %d routed to a money column is a harness bug, not a "+
+					"rounding opportunity (finding T17-F5): a rig that rounded it would grade the port "+
+					"against a number the oracle never produced. If the capture really emitted this scale "+
+					"and the extra digits are all zero, the conversion is exact and the vector may keep it "+
+					"— but it must SAY SO by naming %q in this row's over_scaled_wire_text_fields, so the "+
+					"report can count it. If any extra digit is non-zero the value is an INTERMEDIATE that "+
+					"escaped rounding and belongs in a decimal observation, never in a money column",
+					i, c.field, c.text, scale, digits, digits, c.field)
+			case scale <= digits && overScaled[c.field]:
+				bad("expect.periods[%d].%s is declared over-scaled but its wire text %q has scale %d, "+
+					"within the currency's %d minor-unit digits: a declaration that does not match the "+
+					"text teaches a reader to ignore the declarations", i, c.field, c.text, scale, digits)
+			}
+
 			// The transcription cross-check: re-derive the integer from the
 			// oracle's own emitted characters, by exact integer arithmetic.
 			want, cerr := MinorFromMajorText(c.text, digits)
@@ -497,6 +756,59 @@ func admitPeriods(v *Vector) []string {
 	}
 	if v.Expect.LastRepaymentDueDate != nil && !v.Expect.LastRepaymentDueDate.Valid() {
 		bad("expect.last_repayment_due_date %s is not a real calendar date", v.Expect.LastRepaymentDueDate)
+	}
+	return problems
+}
+
+// admitRateFactor enforces finding T17-F6: a transcribed rate factor is a
+// ROUNDING of the engine's value, so it may be recorded but never graded, and no
+// vector may claim it is exact.
+//
+// The trap this closes: the corpus's rate factors were compared only after
+// setScale(MoneyHelper precision, MoneyHelper rounding mode) with that precision
+// mocked to 12, so a Go port diverging in digits 13 and beyond matches the
+// transcription exactly. A harness that compared the field would be certifying
+// twelve digits of a nineteen-digit quantity and printing a PASS.
+func admitRateFactor(i int, rf *RateFactorObservation) []string {
+	if rf == nil {
+		return nil
+	}
+	var problems []string
+	bad := func(format string, args ...any) { problems = append(problems, fmt.Sprintf(format, args...)) }
+
+	decl, declared := RoundedTranscriptionFor("rate_factor")
+	if !declared {
+		bad("expect.periods[%d].observed_rate_factor is recorded but this harness declares no rounded "+
+			"transcription for \"rate_factor\": the rule that makes the field safe has been removed", i)
+		return problems
+	}
+	if strings.TrimSpace(rf.Text) == "" {
+		bad("expect.periods[%d].observed_rate_factor.text is empty", i)
+	} else {
+		scale, err := ScaleOfWireText(rf.Text)
+		switch {
+		case err != nil:
+			bad("expect.periods[%d].observed_rate_factor.text: %v", i, err)
+		case scale != rf.TranscribedAtScale:
+			bad("expect.periods[%d].observed_rate_factor claims transcribed_at_scale %d but its text %q "+
+				"carries %d fraction digits: a file may not claim more precision than it wrote down",
+				i, rf.TranscribedAtScale, rf.Text, scale)
+		case scale > decl.TranscribedScale:
+			bad("expect.periods[%d].observed_rate_factor.text %q carries %d fraction digits, beyond the %d "+
+				"the corpus's rate factors are rounded to (%s). Digits past the transcription scale were "+
+				"not observed and may not be written down as though they were",
+				i, rf.Text, scale, decl.TranscribedScale, decl.Citation)
+		}
+	}
+	if rf.PrecisionStatus != PrecisionTranscribedRounded {
+		bad("expect.periods[%d].observed_rate_factor.precision_status is %q; the only status this harness "+
+			"accepts is %q. Exact rate-factor parity is %s from the oracle — %s. Recording a rate factor is "+
+			"welcome; CLAIMING it is exact is a parity claim no capture in this corpus can support",
+			i, rf.PrecisionStatus, PrecisionTranscribedRounded, decl.ParityStatus, decl.Trap)
+	}
+	if strings.TrimSpace(rf.Citation) == "" {
+		bad("expect.periods[%d].observed_rate_factor cites no file:line: a transcription with no source is "+
+			"indistinguishable from an invention", i)
 	}
 	return problems
 }

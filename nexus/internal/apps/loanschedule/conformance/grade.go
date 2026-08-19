@@ -55,6 +55,18 @@ type Result struct {
 	GradedCells   int
 	UngradedCells int
 
+	// RateFactorsRecorded counts the rate-factor observations this vector carries.
+	// They are NEVER compared against anything (finding T17-F6: every one is a
+	// 12-dp rounding of the engine's value), so they are counted apart from the
+	// graded cells and never added to them.
+	RateFactorsRecorded int
+
+	// OverScaledCells counts money cells whose wire text carries more fraction
+	// digits than the currency has minor units, and that the vector declared as
+	// such (finding T17-F5). An UNDECLARED one is inadmissible, so this number
+	// only ever counts values somebody wrote down deliberately.
+	OverScaledCells int
+
 	Invariants []InvariantResult
 }
 
@@ -88,6 +100,21 @@ type Summary struct {
 	// graded capability to the counterfactual ids covering it.
 	CounterfactualsNamed   int
 	CounterfactualCoverage map[string][]string
+
+	// MoneyKills and StructuralKills split CounterfactualsNamed by kind, and the
+	// report prints them separately (driver finding D-4). Merging them would let a
+	// store of nothing but structural kills read as though it graded amounts —
+	// which is precisely the confusion the split exists to prevent.
+	MoneyKills      int
+	StructuralKills int
+
+	// RateFactorsRecorded and OverScaledCells aggregate the per-vector counts.
+	RateFactorsRecorded int
+	OverScaledCells     int
+
+	// CorroborationsClaimed is how many cross-check claims the admissible vectors
+	// make. Every one is scoped to the columns its source actually prints.
+	CorroborationsClaimed int
 
 	// UncoveredGradedCapabilities are capabilities marked in_graded_domain for
 	// which no parity vector kills a named wrong implementation. An unbacked
@@ -179,6 +206,16 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 		s.OracleProbe = "down"
 	}
 
+	// The harness's own standing declarations are checked before anything else.
+	// A weakened declaration — a narrowed claim that lost the observation that
+	// narrowed it, a coverage gap marked closed with no capture behind it, a
+	// rate-factor parity claim with nothing to point at — makes this run UNUSABLE
+	// rather than quietly permissive.
+	for _, defect := range HarnessDeclarationDefects() {
+		s.FatalReasons = append(s.FatalReasons,
+			"HARNESS DECLARATION DEFECT (structural.go): "+defect)
+	}
+
 	pin, err := LoadPin(filepath.Join(opts.StoreRoot, "PIN.json"))
 	if err != nil {
 		s.FatalReasons = append(s.FatalReasons, err.Error())
@@ -234,6 +271,8 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 		s.Results = append(s.Results, r)
 		s.GradedCells += r.GradedCells
 		s.UngradedCells += r.UngradedCells
+		s.RateFactorsRecorded += r.RateFactorsRecorded
+		s.OverScaledCells += r.OverScaledCells
 		for _, iv := range r.Invariants {
 			if iv.Status == InvariantViolated {
 				s.InvariantViolations++
@@ -280,6 +319,14 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 	s.UncoveredGradedCapabilities = uncovered
 	for _, v := range admissible {
 		s.CounterfactualsNamed += len(v.GradedAgainst)
+		s.CorroborationsClaimed += len(v.Provenance.CorroboratedBy)
+		for _, cf := range v.GradedAgainst {
+			if cf.Kind == CounterfactualStructural {
+				s.StructuralKills++
+				continue
+			}
+			s.MoneyKills++
+		}
 	}
 	if len(uncovered) > 0 && !opts.SelfTestMode {
 		s.FatalReasons = append(s.FatalReasons, fmt.Sprintf(
@@ -316,6 +363,18 @@ func gradeVector(ctx context.Context, v *Vector, pin *Pin, registry *CapabilityR
 		r.Outcome = OutcomeInadmissible
 		r.Detail = problems
 		return r
+	}
+
+	// Recorded-but-never-graded quantities, counted before anything else can
+	// return: a rate factor is a 12-dp rounding (T17-F6) and a declared
+	// over-scaled money text is an exact value the currency's scale did not
+	// expect (T17-F5). Both are disclosures, and a disclosure nobody counts is a
+	// disclosure nobody reads.
+	for _, p := range v.Expect.Periods {
+		if p.ObservedRateFactor != nil {
+			r.RateFactorsRecorded++
+		}
+		r.OverScaledCells += len(p.OverScaledWireTextFields)
 	}
 
 	// A refusal vector goes STALE the moment its capability enters the graded

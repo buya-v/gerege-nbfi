@@ -203,6 +203,45 @@ type Provenance struct {
 	// from them — but it must be cited, exactly as an oracle-observed value
 	// must be referenced.
 	Citation string `json:"citation"`
+
+	// CorroboratedBy are SECOND, independent records of the same oracle output
+	// that this vector's values were cross-checked against — and, per record,
+	// exactly which columns the cross-check covered. Optional.
+	//
+	// It exists because of finding T17-F2. The capture plan's calibration
+	// acceptance check says the capture must "also match the README's documented
+	// CI stdout", and a reader takes that as corroboration OF THE ROW. It is not:
+	// the README block prints six of the ten period columns on a repayment row
+	// and two on the disbursement row (see readmeCIStdout in structural.go). A
+	// partial cross-check reported as a match is how a corpus acquires confidence
+	// nobody measured, so the claim is now structured, the harness checks it
+	// against what the source actually prints, and the report states what the
+	// source does NOT cover every time it is used.
+	CorroboratedBy []Corroboration `json:"corroborated_by"`
+}
+
+// Corroboration is one claim that a named cross-check source independently
+// attests some of this vector's columns.
+type Corroboration struct {
+	// Source is an AttestationSource id declared in structural.go. Unknown source
+	// => INADMISSIBLE: the harness will not take a corroboration on trust from a
+	// document it cannot name the columns of.
+	Source string `json:"source"`
+
+	// RowKind is the period row kind the claim is about: DISBURSEMENT,
+	// DOWN_PAYMENT or REPAYMENT. A source attests different columns for different
+	// row kinds — the README block prints six for a repayment row and two for the
+	// disbursement row — so a corroboration that did not say which kind it meant
+	// would be unfalsifiable.
+	RowKind string `json:"row_kind"`
+
+	// Columns are the period columns (of the ten in PeriodColumns) this source
+	// corroborates on that row kind. Every entry must be a column the source
+	// actually prints, and the report prints the ones it does not.
+	Columns []string `json:"columns"`
+
+	// Note is free prose. Never graded.
+	Note string `json:"note"`
 }
 
 // OracleStamp records the reference-oracle build and seam a capture came from.
@@ -300,12 +339,77 @@ type ExpectPeriod struct {
 	// coverage is a number rather than an impression.
 	UnrecordedFields []string `json:"unrecorded_fields"`
 
+	// OverScaledWireTextFields declares, per money column, that the capture's own
+	// wire text for that column carries MORE fraction digits than the currency
+	// has minor-unit digits — "1200000.000000" at scale 6 for a 2-decimal
+	// currency, for instance.
+	//
+	// Finding T17-F5 is why the declaration is mandatory rather than the
+	// over-scale being tolerated silently. A value with scale > 2 routed into a
+	// money column is a HARNESS BUG, not a rounding opportunity: the failure mode
+	// it prevents is a rig quietly rounding an over-scaled value and thereby
+	// grading the port against a number the oracle never produced. So the harness
+	// splits the case in two and neither half is silent —
+	//
+	//   - excess digits that are NOT all zero: INADMISSIBLE, always. The exact
+	//     conversion is impossible and this harness will not round a
+	//     transcription (MinorFromMajorText says so and returns an error).
+	//   - excess digits that ARE all zero: the conversion is exact, so the value
+	//     is usable — but ONLY if the file says out loud that the scale is wrong,
+	//     by naming the column here. Undeclared, it is INADMISSIBLE.
+	//
+	// Declared over-scale is counted and printed in the report, so "the corpus
+	// contains over-scaled money text" is a number a reader sees rather than a
+	// fact somebody once wrote in a document.
+	OverScaledWireTextFields []string `json:"over_scaled_wire_text_fields"`
+
+	// ObservedRateFactor is the oracle's rate factor for this period, as
+	// TRANSCRIBED — never as a graded value. Optional.
+	//
+	// Finding T17-F6. Every rate factor in the corpus is compared only after
+	// setScale(MoneyHelper precision, MoneyHelper rounding mode), and the tests
+	// mock that precision to 12, so a transcribed rate factor is a 12-dp ROUNDING
+	// of the engine's value. A Go port that diverges in digits 13 and beyond
+	// therefore matches the transcription exactly and passes silently.
+	//
+	// The harness's response is to record it and refuse to grade it: the value is
+	// never compared against anything, it is counted separately from the graded
+	// cells, the report prints "exact rate-factor parity is TO_BE_CAPTURED", and a
+	// vector claiming any precision status other than TRANSCRIBED-ROUNDED is
+	// INADMISSIBLE. The alternative — comparing it — would be the harness
+	// certifying twelve digits of a nineteen-digit quantity and reporting a PASS.
+	ObservedRateFactor *RateFactorObservation `json:"observed_rate_factor"`
+
 	// ObservedTotalDueMinor is the oracle's own emitted total for this row,
 	// where the capture recorded one. The frozen contract deliberately has no
 	// total field — "a derived total in the response is a second source of
 	// truth" — so the total lives here, as an oracle observation, and powers
 	// the splits-sum-to-whole invariant. Optional.
 	ObservedTotalDueMinor *MinorText `json:"observed_total_due_minor"`
+}
+
+// RateFactorObservation is a transcribed rate factor and the precision status
+// that makes it unusable as a grading standard. See ExpectPeriod.ObservedRateFactor.
+type RateFactorObservation struct {
+	// Text is the rate factor exactly as the corpus records it, as a decimal
+	// STRING — "1.005833333333". It is never a JSON number, because a JSON number
+	// would be decoded through binary and the whole point of this field is that
+	// its digits are load-bearing.
+	Text string `json:"text"`
+
+	// TranscribedAtScale is the number of fraction digits Text carries. The
+	// harness checks it against the text itself, so a file cannot claim more
+	// precision than it wrote down.
+	TranscribedAtScale int32 `json:"transcribed_at_scale"`
+
+	// PrecisionStatus must be exactly TRANSCRIBED-ROUNDED
+	// (PrecisionTranscribedRounded). Any other value — "EXACT" above all — is
+	// INADMISSIBLE: exact rate-factor parity is TO_BE_CAPTURED from the oracle,
+	// and a vector may not claim what no capture has yet observed.
+	PrecisionStatus string `json:"precision_status"`
+
+	// Citation is the file:line the value was transcribed from.
+	Citation string `json:"citation"`
 }
 
 // Expect is the vector's expected outcome: either a schedule or a refusal.
@@ -384,15 +488,103 @@ type Counterfactual struct {
 	// sentence a porter can act on.
 	Description string `json:"description"`
 
+	// Kind is how this counterfactual is killed: CounterfactualMoney (the default
+	// when empty) or CounterfactualStructural.
+	//
+	// WHY THE SECOND KIND EXISTS (driver finding D-4). Encoding gradeability as
+	// strictly money-valued is too narrow: it cannot express a kill that is real
+	// but non-monetary, and the only graders that exist for two of this store's
+	// capabilities are exactly that shape.
+	//
+	//   - monthend.reanchor is graded by P-02 (seed day 31) and P-02b (seed day
+	//     30). Both run DAYS_30/DAYS_360, so every period is exactly 30/360
+	//     REGARDLESS of the calendar dates and the money columns are identical to
+	//     P-00's. The kill is entirely in due_date: P-02 period 2 is due
+	//     2024-03-31, re-anchored on the disbursement seed, where a port that
+	//     clamps to 2024-02-29 and continues from the clamped day emits
+	//     2024-03-29. MONEY MARGIN EXACTLY ZERO. THE PORT IS STILL WRONG.
+	//   - contract_row_ordering is graded by P-03, which emits REPAYMENT 1 (all
+	//     money zero) and only THEN the DISBURSEMENT row dated 2024-02-01. The
+	//     naive "sort by date, disbursement first" port inverts those two rows.
+	//     Money margin zero; the row order is wrong.
+	//
+	// Without this kind the harness's own "UNBACKED in_graded_domain" complaint
+	// about monthend.reanchor would be UNSATISFIABLE, pushing whoever hits it
+	// into fabricating a money margin or dropping a capability the corpus
+	// genuinely grades. Both are worse than the gap.
+	//
+	// A structural claim is STRICTLY HARDER to satisfy than a money one, and that
+	// is the point: it must name the diverging cells and state both values, where
+	// a money claim needs only a number. It is not an escape hatch for a lazy
+	// margin.
+	Kind string `json:"kind,omitempty"`
+
+	// DivergentCells names the non-money cells on which the counterfactual
+	// diverges from the oracle, as "period[<n>].<field>" or "row_order".
+	// Required and non-empty when Kind is CounterfactualStructural; must be empty
+	// otherwise. A money column named here is INADMISSIBLE — that is a money kill
+	// wearing a structural label, and it would let a real margin go unstated.
+	DivergentCells []string `json:"divergent_cells,omitempty"`
+
 	// MarginMinor is the largest absolute difference, in integer minor units,
 	// between the oracle's observed value and what the counterfactual would
-	// return on this vector. It must be > 0: a candidate the vector separates by
-	// zero is a candidate the vector does not kill, and recording one would
+	// return on this vector.
+	//
+	// For a MONEY counterfactual it must be > 0: a candidate the vector separates
+	// by zero is a candidate the vector does not kill, and recording one would
 	// reintroduce exactly the false-confidence this field exists to remove.
+	//
+	// For a STRUCTURAL counterfactual it must be exactly "0", because that is the
+	// truth — the wrong implementation moves no money on this vector — and
+	// writing any other number would be inventing a margin.
 	MarginMinor MinorText `json:"margin_minor"`
 
 	// Evidence is the re-derivation or observation behind the margin, cited.
+	//
+	// For a STRUCTURAL counterfactual it must state BOTH values: what the wrong
+	// implementation produces AND what the oracle was observed to produce. A
+	// structural kill has no number to carry that information, so the sentence
+	// has to. The harness checks mechanically that both are present (see
+	// admitCounterfactual) — crudely, by requiring the words, because a crude
+	// check that fires beats a subtle one nobody wrote.
 	Evidence string `json:"evidence"`
+}
+
+// The two kinds of counterfactual. See Counterfactual.Kind.
+const (
+	// CounterfactualMoney is the default: the wrong implementation returns a
+	// different AMOUNT, and margin_minor says by how much.
+	CounterfactualMoney = "money"
+
+	// CounterfactualStructural: the wrong implementation returns the same amounts
+	// and a different SHAPE — a wrong due date, a wrong period boundary, a wrong
+	// row kind, or rows in the wrong order.
+	CounterfactualStructural = "structural"
+)
+
+// DivergentCellRowOrder is the one whole-schedule cell name a structural
+// counterfactual may use, for a port that emits the right rows in the wrong
+// order.
+const DivergentCellRowOrder = "row_order"
+
+// StructuralCellFields are the per-row fields a structural counterfactual may
+// name in "period[<n>].<field>".
+//
+// They are exactly the NON-MONEY cells diffSchedule actually compares, minus
+// installment_number. Naming a cell the harness does not compare would let a
+// vector claim a kill nothing could ever detect; naming a money column would be a
+// money kill wearing a structural label. installment_number is deliberately
+// excluded here even though diffSchedule compares it: no observed grader in the
+// corpus turns on it, and this list is a whitelist rather than a survey. Adding
+// it later is a widening, and a widening needs a reason.
+func StructuralCellFields() []string {
+	return []string{"kind", "from_date", "due_date"}
+}
+
+// MoneyCellFields are the money columns of a row. A structural counterfactual may
+// never name one.
+func MoneyCellFields() []string {
+	return []string{"principal_minor", "interest_minor", "outstanding_principal_minor"}
 }
 
 // Exemption disables one named invariant for one vector, with a reason. It

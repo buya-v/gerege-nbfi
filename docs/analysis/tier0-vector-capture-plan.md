@@ -821,7 +821,22 @@ mode available to this program.
   2. `getLoanTermInDays() == 182` and `getPeriods().size() == 7`.
   3. Principals sum to `10000`; interests sum to `205`; totals sum to `10205`.
   4. The captured output also matches the README's documented CI stdout (§2.1) — a second, independent
-     attestation of the same figures.
+     attestation, **scoped to the columns that block actually prints and to no others** (T17 follow-up F2,
+     applied by task T20). On a **repayment** row the block prints **six** of the ten period columns —
+     `periodNumber`, `dueDate`, `outstandingBalance` ("Balance"), `principal`, `interest`, `totalDue`
+     ("Total") — and is **silent on `fromDate`, `fee`, `penalty` and `totalOutstandingBalance`**. On the
+     disbursement row it prints **two**: the date and the amount.
+     `[VERIFIED: README.md:48-63 at the pinned commit; the block's own text, re-derived mechanically by
+     TestReadmeAttestationMatchesTheReadmeText from the verbatim copy in
+     nexus/internal/apps/loanschedule/conformance/testdata/embeddable-readme-ci-stdout.txt]`
+     **Six, not nine** — T17's D8 named only `totalOutstandingBalance` as missing; four columns are missing,
+     so the check is weaker than the review stated, not stronger. **Two traps that go with it:** the block is
+     STALE relative to `misc/Main.java:86`, which now prints a seventh field ("Total Outstanding Balance") the
+     committed block does not show; and the block's `Number of Periods: 6` is a FILTERED count
+     (`Main.java:73` excludes disbursement periods) while `getPeriods().size()` is **7** — the two are
+     different quantities and cross-checking one against the other is a defect, not a corroboration.
+     A match here is therefore **never** a whole-row match, and the conformance harness now refuses any vector
+     that records it as one.
 - **On failure:** stop. Do not capture anything else. Report the harness configuration, both `MathContext`s
   (the parameter one and `MoneyHelper`'s, §2.4), and the tenant `rounding-mode` value.
 
@@ -976,6 +991,18 @@ projection, and must never emit a `float`/`double` into the vector store.
   `misc/Main.java`. Nothing to chase. See §1.1.
 - `MoneyHelper.PRECISION = 19` vs the tests' mocked precision 12 is a discrepancy that will resurface in every
   live-server capture, not just this seam.
+- **TIER-A BACKLOG — no vector exists for a rate schedule configured FROM ORIGINATION** (T17 follow-up F4,
+  carried forward by task T20). Every rate-variation expectation in the corpus is reached by calling
+  `changeInterestRate` on an **already-built** model — mid-term *rescheduling*. There are exactly 12 such call
+  sites and no others `[VERIFIED: ProgressiveEMICalculatorTest.java:410, 459, 505, 549, 1725, 1726, 1770, 1771,
+  1772, 1773, 1814, 1815]`, and the Path A seam is structurally incapable of the origination form:
+  `LoanRepaymentScheduleModelData` carries a single scalar `annualNominalInterestRate` and no rate schedule at
+  all `[VERIFIED: LoanRepaymentScheduleModelData.java:32-39, the record header, 19 components]`. **A port that
+  computes origination-time rate variation wrongly would pass this entire corpus.** Whether the two paths must
+  agree is a Tier-A design question; it is `TO_BE_CAPTURED` on the server path and is **not** closable from
+  source. The conformance harness now declares this gap as data (`CoverageGaps()` in
+  `nexus/internal/apps/loanschedule/conformance/structural.go`, id `T17-F4-rate-schedule-from-origination`) and
+  **prints it on every run**, so it stays visible whether or not anybody opens this document.
 
 ---
 
