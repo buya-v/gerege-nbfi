@@ -444,9 +444,19 @@ threaded context was independently echoed in T35/T37/T39; the sole Path A ambien
 
 ### Two findings that reach beyond Tier 0
 
-- **`(19, tenant mode)` is a LOAN-PATH rule.** All 81 `MathContext.DECIMAL64` uses and 13
-  `new MathContext(15|10, …)` in main source are in **savings/deposits**. A porter who assumes
-  `(19, HALF_UP)` there will be wrong on every compounding calculation. **This matters for Tier B and is
+- **`(19, tenant mode)` is a LOAN-PATH rule.** **Inventory corrected by audit T44 (findings M-1, M-2) —
+  the figures first recorded here were wrong, and an inventory is the one part of this a porter actually
+  uses.** What holds, re-counted independently by both of T44's audit legs: **81** `MathContext.DECIMAL64`
+  uses (49 `fineract-core` + 31 `fineract-provider` + 1 `fineract-savings`), **0 in any loan module** and
+  **0 outside a savings/deposit path**. What was wrong: the total for explicit `new MathContext(…)` sites
+  is **9**, not the 13 recorded here (4 × precision **15** and 5 × precision **10**; the original figure
+  double-counted the 15s by listing the union as though all nine were 10s). And the universal claim
+  *"everything outside the loan modules is in savings/deposits"* is **false** — two
+  `new MathContext(8, MoneyHelper.getRoundingMode())` sites were omitted entirely:
+  `SavingsAccountCharge.java:562` (`fineract-savings`) and **`ShareAccountCharge.java:240`, which is in
+  `portfolio/shareaccounts/` — share accounts, a separate Tier B context with its own precision.**
+  A porter reading the original wording would carry `(19, HALF_UP)` into share accounts and be wrong
+  there too, which is exactly the error this finding exists to prevent. **This matters for Tier B and is
   not a Tier 0 problem.**
 - **One loan-path site hard-codes `RoundingMode.DOWN` over the tenant mode** —
   `AdvancedPaymentScheduleTransactionProcessor.java:2845`, in repayment allocation, **invisible to every
