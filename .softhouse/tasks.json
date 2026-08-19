@@ -1251,9 +1251,9 @@
       "dependencies": [
         "T11"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 0,
-      "note": "Raised by T11, fire 20260819-200001. PART 1 NEEDS NO ORACLE: promote the 8 T39-P0-A..H drift shapes already captured at (19, HALF_UP) and never promoted; that closes survivor 3 BY OBSERVATION and also kills T11's M-M and M-P. T39-CAL is on PIN.json's never-promotable list. PART 2 NEEDS THE ORACLE, WHICH IS UP THIS FIRE: capture MNT 21,021,587.50 6x21.6% and MNT 3,139,845.86 6x7.0%, the two shapes T11's 6,000-shape sweep found to separate the remaining two survivors in a payable amount. T11's predicted values are a HYPOTHESIS to test, not a value to transcribe - an oracle disagreement is the finding. ACCEPTANCE TEST: each of the three mutations must go from PASS(13, exit 0) to FAIL(exit 1) with a named cell and margin."
+      "note": "Raised by T11, fire 20260819-200001. PART 1 NEEDS NO ORACLE: promote the 8 T39-P0-A..H drift shapes already captured at (19, HALF_UP) and never promoted; that closes survivor 3 BY OBSERVATION and also kills T11's M-M and M-P. T39-CAL is on PIN.json's never-promotable list. PART 2 NEEDS THE ORACLE, WHICH IS UP THIS FIRE: capture MNT 21,021,587.50 6x21.6% and MNT 3,139,845.86 6x7.0%, the two shapes T11's 6,000-shape sweep found to separate the remaining two survivors in a payable amount. T11's predicted values are a HYPOTHESIS to test, not a value to transcribe - an oracle disagreement is the finding. ACCEPTANCE TEST: each of the three mutations must go from PASS(13, exit 0) to FAIL(exit 1) with a named cell and margin. || FIRE 20260819-200001: DONE AND MERGED. ALL THREE SURVIVING MUTATIONS KILLED. Parity 13 -> 29, cells 1350 -> 2354, inadmissible 0, invariant violations 0, conformance still PASS. Mutation acceptance (worker-run, DRIVER-SPOT-CHECKED): periodRatio -> RepaymentEvery 8 FAIL; textbook balance x rateFactor 2 FAIL; rate factor without setScale 1 FAIL - each PASS/exit 0 before. THE ORACLE CONFIRMED T11'S PREDICTION EXACTLY, including interest MNT 15,307.35 on installment 2 of the 3,139,845.86 shape; T11 was contradicted on nothing. All eleven pass-3c preconditions carried over unweakened plus a twelfth calibration; all three calibrations reproduced their committed observations. Margins DERIVED from the captures, not transcribed: periodRatio MNT 90,346.57, seed rule MNT 11,721,001.87, re-anchor MNT 92,083.10, S-1 4 minor, S-2 1 minor - LARGER than T11's because T11 measured on its own probe shapes; noted, not reconciled. T58-N1: T39-ME-A, already in the tree, kills survivor 1 BY ITSELF - the oracle run for S-1 was a confirmation, not a necessity. T58-N2 (OPEN, D-5 CLASS ONE LAYER DOWN): T39's harness does not record the DISBURSEMENT row's outstanding balance. Transcribed honestly the cell goes in unrecorded_fields - but the --self-test replay answers 0 for it while balance_roll_forward GRADES the placeholder, contradicting the store README's 'nothing compares that placeholder'. All 14 vectors went red, go test failed, --prove fell to 10/20. The worker did NOT exempt the invariant (that would remove a check that currently passes); instead pass 3e RE-OBSERVED all 14 shapes on the rig that records the column, then cross-checked the two: 14 case pairs, 134 rows, 1,698 cells, ZERO differences across two independent Path A harnesses two fires apart. That is the right call and a free cross-harness control, but THE HARNESS DEFECT IS STILL OPEN -> T60. T58-N3: proof 19 failed BECAUSE COVERAGE WAS ADDED (D-6's FOURTH recurrence, in the proof the driver had just de-staled). Worker correctly refused to edit the harness and reported it; DRIVER FIXED IT to assert the property F-1b protects (the withdrawn vector refused BY NAME with the WITHDRAWS diagnostic) and verified it discriminates - 0 occurrences on the pristine store. --prove back to 20/20. P-5 RECURRED A FIFTH TIME: the worktree was stale and the worker believed T11's review was unmerged; it had been on main before T58 was dispatched. Independent transcription audit 1,932 of 1,932 cells matched; float scan 36 files / 0 tokens."
     },
     {
       "id": "T59",
@@ -1274,6 +1274,27 @@
       "attempts": 0,
       "contract_independent": true,
       "note": "Raised by T11 findings F-1 (P1) and F-2 (P2), fire 20260819-200001. NEEDS NO ORACLE - runnable on any fire. DRIVER CORRECTION TO T11'S WORDING, which changes the fix: the port does NOT 'ignore cancellation'. generator.go:72 checks ctx.Err() ONCE AT ENTRY and never again [VERIFIED: exactly one ctx.Err() in generator.go, zero in emi.go]. That is consistent with T11's measurement of 5.9s elapsed under a 50ms deadline. So the fix is NOT 'add a cancellation check' - it is to check periodically INSIDE the amortization and EMI-adjustment loops, where the time is actually spent. F-2: cost is ~n^2.4 (13.3s at n=360) and NumberOfRepayments is unbounded; the port drops the oracle's Memo cache, so it is the same function at a materially different cost. Neither defect is a money defect and neither is graded by conformance - do not expect the harness to catch a regression here, and add a test that does."
+    },
+    {
+      "id": "T60",
+      "title": "Close T58-N2: balance_roll_forward grades a placeholder the README says nothing compares",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/conformance/invariants.go",
+        "nexus/internal/apps/loanschedule/conformance/registry.go",
+        ".softhouse/vectors/README.md"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T58"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "contract_independent": true,
+      "note": "Raised by T58 finding N-2, fire 20260819-200001. NEEDS NO ORACLE. The store README states that a cell named in unrecorded_fields is not compared and is counted as an ungraded cell. That is NOT TRUE for a DISBURSEMENT row's outstanding balance under --self-test: NewReplayImplementation answers 0 for the unrecorded cell and balance_roll_forward then GRADES that placeholder, so a vector honestly declaring the cell unrecorded goes RED. T58 hit this on all 14 T39 vectors (go test failed, --prove fell to 10/20) and worked around it by re-observing every shape on a rig that records the column - the right call, since exempting the invariant would have removed a check that currently passes. But the defect is still live and the NEXT honest promotion from a harness that omits a column will hit it again. Fix the replay/invariant interaction so an unrecorded cell is genuinely not compared, or correct the README to state what actually happens. Same class as D-5: the rig silently disagreeing with its own documented contract."
     }
   ]
 }
