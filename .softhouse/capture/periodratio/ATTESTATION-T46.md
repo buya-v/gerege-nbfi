@@ -118,7 +118,8 @@ been a task that can never succeed.
 ### 1.4 Required relabelling of the `T39-ME-*` family
 
 `T39-ME-A` … `T39-ME-D` **grade the PAIR** — `month-end special case ∧ packed whole-months` — and grade
-it on **12 periods** across the four captures [`analysis/t46_arms_ratio-output.txt`, independently
+it on **10 periods** across the four captures (3 + 3 + 3 + 1; the corpus-wide R3 total of 12 adds
+`T46-RE-2ME`'s 2) [`analysis/t46_arms_ratio-output.txt`, independently
 re-derived by this task from the pinned source, not from T39's `analysis/`]. They do **not** grade the
 special case alone, and no capture can. A port with **two cancelling defects** (naive whole-months *and*
 no special case) passes all four and is, on this arm, *correct* — which is the honest way to say it.

@@ -123,7 +123,8 @@ T44 wrote that a packed-vs-naive discriminator *"has to come from `calculatePeri
 ### So
 
 **Relabel the `T39-ME-*` family** to *"grades the month-end special case **jointly with** the packed
-whole-months rule"*. They grade that pair on **12 periods** (independently re-derived, §3). A port with
+whole-months rule"*. They grade that pair on **10 periods** (3 + 3 + 3 + 1; independently
+re-derived, §3 — the corpus-wide R3 total of 12 adds `T46-RE-2ME`'s 2). A port with
 two cancelling defects passes all four **and is correct on this arm** — which is the honest way to put
 it, and better than "there is a vector we have not taken yet", because there is not one and never will be.
 
