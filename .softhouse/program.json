@@ -1,12 +1,12 @@
 {
   "program_id": "fineract-to-go-full-codebase",
-  "goal": "Port the complete Fineract codebase to Go behind the frozen adapter contract, one bounded context per run, continuously, until every context below is done. Ratified 17 August 2026 — supersedes the Minimum-Portable-Core-only scope.",
+  "goal": "Port the complete Fineract codebase to Go behind the frozen adapter contract, one bounded context per run, continuously, until every context below is done. Ratified 17 August 2026 \u2014 supersedes the Minimum-Portable-Core-only scope.",
   "status": "active",
   "driver": "/softhouse-program",
   "oracle": {
     "source_checkout": "/Users/buv/fineract",
     "pinned_commit": "426a23544",
-    "note": "Commit measured 17 Aug 2026 [VERIFIED: git log -1 in that checkout]. T1 of run 1 re-pins it into .softhouse/reference-oracle.md together with the running-instance connection facts. LOC figures below are measured from THIS checkout (find+wc over src/main/**.java) — re-measure if the pin moves.",
+    "note": "Commit measured 17 Aug 2026 [VERIFIED: git log -1 in that checkout]. T1 of run 1 re-pins it into .softhouse/reference-oracle.md together with the running-instance connection facts. LOC figures below are measured from THIS checkout (find+wc over src/main/**.java) \u2014 re-measure if the pin moves.",
     "status": "UP",
     "verified_at": "2026-08-18T07:31Z",
     "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
@@ -14,7 +14,7 @@
     "jvm": "Zulu 21.0.11+10-LTS",
     "base_url": "https://localhost:8443/fineract-provider/api/v1",
     "facts_file": ".softhouse/reference-oracle.md",
-    "driver_assertion": "org.postgresql.Driver / jdbc:postgresql:// — PASSED against running container",
+    "driver_assertion": "org.postgresql.Driver / jdbc:postgresql:// \u2014 PASSED against running container",
     "prohibited_engines": "none (0 ojdbc/oracle.jdbc/mysql/mariadb jar entries, no :1521 listener)",
     "image_digest": "sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a",
     "commit_attestation": "the image jar's own BOOT-INF/classes/git.properties carries git.commit.id=426a23544e8426a38ae43ae404670a0a7e85b9eb with git.dirty=false [VERIFIED by the T18 audit] - build-attested, not self-reported",
@@ -51,7 +51,7 @@
       "reaches_reference_oracle": false,
       "role": "Catch-up when the Mac was off: source analysis, DEC/spec drafts, Tier-C gap audit, Tier-D corpus mining. Parks vector/conformance work as oracle_unreachable."
     },
-    "mutual_exclusion": ".softhouse/LOCK — repo-level lock, pushed so both fires see it. A fire finding a lock under 6h old exits without dispatching. Stale locks (>6h) are taken over."
+    "mutual_exclusion": ".softhouse/LOCK \u2014 repo-level lock, pushed so both fires see it. A fire finding a lock under 6h old exits without dispatching. Stale locks (>6h) are taken over."
   },
   "policy": {
     "one_context_per_run": true,
@@ -75,7 +75,7 @@
     "current_run_id": "2026-08-17-run1-harness-schedule-poc",
     "completed_contexts": [],
     "parked_contexts": [],
-    "note": "Local fire 20260819-170001 (oracle REACHABLE) COMPLETE, clean exit, no worker lost. TWO STRUCTURAL BLOCKERS FELL IN ONE FIRE. (1) THE NO-GO-TOOLCHAIN GAP IS CLOSED and the ratified DEC-1 artefact COMPILES: repo-local go1.26.6 darwin/arm64, sha256 asserted against go.dev BEFORE extraction, GOROOT=.softhouse/toolchain/go, gitignored, activated by `. .softhouse/bin/go-env.sh`, reversible with one rm -rf - which closes the gap WITHOUT the durable change to Buyan's host that fire 20260819-140003 correctly declined to make unattended. The objection was never 'is a toolchain allowed' but 'may an agent modify Buyan's machine unattended'; re-scoping the install LOCATION dissolved it without weakening it. contract.go compiled for the FIRST TIME: go build exit 0, go vet exit 0. [UNVERIFIED: that the package compiles] is RETIRED and ten rounds of shape-grading are NOT invalidated. (2) T7, THE PROGRAM'S BOTTLENECK BEHIND SEVEN TASKS, IS DONE AND MERGED - T9, T10, T11, T13, T14, T15, T20 are all unblocked. The harness EXITS 2 with 'VERDICT: UNUSABLE - THIS IS NOT A PASS' and refuses to claim all-pass over an empty corpus; its --prove suite is 10/10; the driver RE-RAN build/vet/test/conformance/--prove and its own float scans rather than accepting the report (0 float-shaped JSON numbers, 0 float types). T55 ALSO DONE: 33 Path B leap-boundary captures, 6 discriminating pairs, 5 proven non-discriminating, determinism 33/33. Path A was DISQUALIFIED ON EVIDENCE - it drops the independent variable. THREE DRIVER CATCHES, each re-derived not accepted: T55-N1 CONFIRMED digit for digit (LB-DEC31 has a ZERO first segment and still grades the arm by 6,015 minor units; DEC-1's 'non-zero first segment' condition is known-wrong -> G-4, unamended because a ratified DEC-n is not an agent's call); G-3 (gofmt wants to rewrite the frozen contract.go - inert, NOT applied, because the risk is a silent mutation that reads as formatting noise in review); D-1/D-2/D-2a (the cited line is :83 not :81, and it hard-wires TWO nulls - loanCharges AND holidayDetailDTO - so HOLIDAY conformance, like charge conformance, can only ever be graded on Path B; and even on Path B this generator adjusts only the FINAL period, a trap a Go port would walk into while passing the entire existing corpus). BIGGEST TRANSFERABLE RESULT: PAIR-DIFFERENCE IS THE WRONG PROMOTION FILTER (T55-N2) - two shapes report 0 cells on every pair yet kill naive ports by 17,850 and 71,014 minor units; a non-zero-pair rule would have discarded the three best graders. Gradeability is now the graded_against[] field: which NAMED wrong implementations does this vector kill, and by how much. NOTHING IS PROMOTED YET and no context is at parity - the harness says so out loud. NEXT FIRE STARTS AT: T8 (promote the corpus into the new store - PROMOTION ORDERING MATTERS: promote a covering vector BEFORE flipping in_graded_domain or the run is fatal with UNBACKED in_graded_domain claims) and T9 (independent review of harness + vectors). T10, the port, is now compilable for the first time."
+    "note": "Local fire 20260819-200001 (oracle REACHABLE) - FIRST CONFORMANCE PASS IN THE PROGRAM. 13 parity vectors, 1350 cells, --prove 20/20, 6/6 invariants, all driver-re-run. Six workers dispatched, six completed, all merged, nothing lost. T8 promotion + T20 harness rules + T10 the first Go port + T9 the source-based review + T57 and T56 closing both of T9's P1s in the same fire. THE PASS IS NOT THE POINT: three money-moving mutations still survive all 13 vectors (textbook balance x rateFactor; rate factor without the trailing setScale; periodRatio -> RepaymentEvery) and T11 - IN FLIGHT AT CHECKPOINT - must decide from SOURCE whether each is a port defect or a corpus gap, since conformance cannot. NEXT FIRE STARTS AT: read and merge softhouse/T11-go-port-review, then capture the shapes that grade whatever T11 says is ungraded (oracle-only work), then T13 UAT, T14 (user gate: accept the PoC slice, NO cutover) and T15. Four gates open (G-2, G-3, G-4, G-5), NONE blocking, none RESERVED."
   },
   "contexts": [
     {
@@ -96,7 +96,7 @@
     {
       "id": "tierA-gl-accounting",
       "tier": "A",
-      "title": "General Ledger / accounting — double-entry posting, chart of accounts, journal entries, accruals, product-account mapping",
+      "title": "General Ledger / accounting \u2014 double-entry posting, chart of accounts, journal entries, accruals, product-account mapping",
       "fineract_paths": [
         "fineract-accounting",
         "fineract-provider/src/main/java/org/apache/fineract/accounting/journalentry",
@@ -137,7 +137,7 @@
     {
       "id": "tierA-loan-lifecycle",
       "tier": "A",
-      "title": "Loan account lifecycle — disbursement, repayment, penalties, rescheduling, write-off, delinquency",
+      "title": "Loan account lifecycle \u2014 disbursement, repayment, penalties, rescheduling, write-off, delinquency",
       "fineract_paths": [
         "fineract-loan",
         "fineract-provider/src/main/java/org/apache/fineract/portfolio/loanaccount"
@@ -149,7 +149,7 @@
         "tierA-loan-product-schedule"
       ],
       "status": "pending",
-      "main_loc_note": "66,375 + 39,871 [VERIFIED: measured]. LARGEST context — must be split across several runs by sub-behavior (disbursement | repayment allocation | penalties/charges application | rescheduling | write-off/delinquency). A single plan over all of it will exhaust every worker.",
+      "main_loc_note": "66,375 + 39,871 [VERIFIED: measured]. LARGEST context \u2014 must be split across several runs by sub-behavior (disbursement | repayment allocation | penalties/charges application | rescheduling | write-off/delinquency). A single plan over all of it will exhaust every worker.",
       "run_id": null,
       "cutover_gate": true,
       "notes": "Split mandatory. 679 + ~380 files.",
@@ -158,7 +158,7 @@
     {
       "id": "tierA-charges-rates-tax",
       "tier": "A",
-      "title": "Charges, rates, tax — including VAT / e-Barimt tie-in",
+      "title": "Charges, rates, tax \u2014 including VAT / e-Barimt tie-in",
       "fineract_paths": [
         "fineract-charge",
         "fineract-rates",
@@ -175,13 +175,13 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "3,694 + 1,926 + 2,262 + 947 + 1,089 + 415 [VERIFIED: measured]. Mongolian VAT / e-Barimt is additive, not a Fineract port — spec it, do not invent parity vectors for it.",
+      "notes": "3,694 + 1,926 + 2,262 + 947 + 1,089 + 415 [VERIFIED: measured]. Mongolian VAT / e-Barimt is additive, not a Fineract port \u2014 spec it, do not invent parity vectors for it.",
       "analysis_ready": true
     },
     {
       "id": "tierA-cob-batch",
       "tier": "A",
-      "title": "Close-of-business batch — daily accrual/aging/posting, idempotency, restart-after-failure",
+      "title": "Close-of-business batch \u2014 daily accrual/aging/posting, idempotency, restart-after-failure",
       "fineract_paths": [
         "fineract-cob",
         "fineract-provider/src/main/java/org/apache/fineract/cob",
@@ -223,7 +223,7 @@
     {
       "id": "tierB-savings-deposits",
       "tier": "B",
-      "title": "Savings / deposits / recurring deposits / interest rate charts — ported DISABLED",
+      "title": "Savings / deposits / recurring deposits / interest rate charts \u2014 ported DISABLED",
       "fineract_paths": [
         "fineract-savings",
         "fineract-provider/src/main/java/org/apache/fineract/portfolio/savings",
@@ -238,7 +238,7 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "activation_gate": "user — deposit-taking activation requires FRC / Bank of Mongolia licensing sign-off. Ships behind a config flag defaulting to OFF. Never render deposits as insured/protected/guaranteed.",
+      "activation_gate": "user \u2014 deposit-taking activation requires FRC / Bank of Mongolia licensing sign-off. Ships behind a config flag defaulting to OFF. Never render deposits as insured/protected/guaranteed.",
       "notes": "25,331 + 31,890 + 3,729 + 960 [VERIFIED: measured]. Split by run: savings account lifecycle | interest posting | recurring/fixed deposits | rate charts.",
       "analysis_ready": true
     },
@@ -293,7 +293,7 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "3,748 test LOC — good vector density.",
+      "notes": "3,748 test LOC \u2014 good vector density.",
       "analysis_ready": true
     },
     {
@@ -330,7 +330,7 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "6,203 + 3,209 [VERIFIED: measured]. Member share capital feeds the compliance-spine capital figure — reconcile against the native GL.",
+      "notes": "6,203 + 3,209 [VERIFIED: measured]. Member share capital feeds the compliance-spine capital figure \u2014 reconcile against the native GL.",
       "analysis_ready": true
     },
     {
@@ -350,7 +350,7 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "Pledged-collateral hold math: holds alter available only, never posted balance. This is the exact defect that failed adversarial review twice on the sister project — force the sign when re-deriving.",
+      "notes": "Pledged-collateral hold math: holds alter available only, never posted balance. This is the exact defect that failed adversarial review twice on the sister project \u2014 force the sign when re-deriving.",
       "analysis_ready": true
     },
     {
@@ -381,13 +381,13 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "Names are ovog / patronymic / given name — a diff introducing first_name/last_name is a rejection. National ID validated structurally, 10 chars. Match on registration number, never on name. Split by run; clients and groups are separate slices.",
+      "notes": "Names are ovog / patronymic / given name \u2014 a diff introducing first_name/last_name is a rejection. National ID validated structurally, 10 chars. Match on registration number, never on name. Split by run; clients and groups are separate slices.",
       "analysis_ready": true
     },
     {
       "id": "tierC-platform-map-first",
       "tier": "C",
-      "title": "Platform layer — MAP onto Nexus, port only demonstrated gaps",
+      "title": "Platform layer \u2014 MAP onto Nexus, port only demonstrated gaps",
       "fineract_paths": [
         "fineract-core",
         "fineract-security",
@@ -439,7 +439,7 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": false,
-      "notes": "~321k test LOC. Runs OPPORTUNISTICALLY — whenever a Tier A/B context is planned, its slice of this corpus is mined in the same run's test_writer task. Kept as a distinct context so residual suites are not forgotten. Never ported one-for-one into Go tests.",
+      "notes": "~321k test LOC. Runs OPPORTUNISTICALLY \u2014 whenever a Tier A/B context is planned, its slice of this corpus is mined in the same run's test_writer task. Kept as a distinct context so residual suites are not forgotten. Never ported one-for-one into Go tests.",
       "analysis_ready": true
     }
   ],
@@ -480,6 +480,19 @@
       "asking_for": "Approval to amend DEC-1 commentary, WORDING ONLY: replace 'non-zero first segment' with 'spans two calendar years of differing length'. No type, field, enum member, error value or graded-domain predicate moves. Failure mode if declined: a future task reads DEC-1, rejects LB-DEC31 as unpromotable, and discards a vector that grades the arm by 6,015 minor units.",
       "blocks": "Nothing. The corrected condition is already in force in RESUME.md and gates.md, and T7's harness was instructed mid-flight to use it. Only DEC-1's own sentence is outstanding.",
       "raised_by": "local fire 20260819-170001 (T55, driver-re-derived)",
+      "recorded_in": ".softhouse/gates.md"
+    },
+    {
+      "id": "G-5",
+      "class": "ENGINEERING",
+      "task": "T10",
+      "context": "tier0-harness-schedule-poc",
+      "state": "OPEN",
+      "title": "DEC-1 contradicts itself on a zero interest rate, and the harness's own self-test sits on the contradiction",
+      "why": "AnnualNominalInterestRate's doc comment says a zero rate is 'outside the graded domain'; the enumerated graded-domain list contains no rate predicate at all; admit.go:846-907 implements the list and so has none either; and _selftest/SELFTEST-01-two-period-zero-rate.json IS a zero-rate request. A port following the PROSE refuses it with ErrNoDiscriminatingVector and the harness reports that refusal as FAIL, exit 1. A port following the LIST grades it and passes. The specification cannot be satisfied both ways.",
+      "asking_for": "A wording-only DEC-1 amendment picking one reading. Driver recommends deleting the 'zero rate is outside the graded domain' sentence so the prose matches the list: the list is what the harness enforces so the prose is already inert; a zero-rate schedule is an ordinary NBFI product shape (an interest-free instalment plan) and putting it outside the graded domain would mean shipping it UNGRADED rather than not shipping it; and SELFTEST-01, the fixture that proves the harness can tell pass from fail, is itself zero-rate.",
+      "blocks": "Nothing. T10 implemented the enumerated list, matching the harness, and flagged the conflict rather than resolving it.",
+      "raised_by": "local fire 20260819-200001 (T10, driver-confirmed)",
       "recorded_in": ".softhouse/gates.md"
     }
   ],
@@ -753,6 +766,45 @@
       "vectors_promoted": 0,
       "contexts_at_parity": 0,
       "headline": "No-Go-toolchain gap CLOSED without touching the host; the ratified contract.go COMPILES; T7 the bottleneck CLEARED; pair-difference proven the wrong promotion filter"
+    },
+    {
+      "fire": "20260819-200001",
+      "host": "Buyanmunkhs-Mac-mini",
+      "oracle": "REACHABLE (never restarted)",
+      "run_id": "2026-08-17-run1-harness-schedule-poc",
+      "context": "tier0-harness-schedule-poc",
+      "tasks_closed": [
+        "T8 (promotion slice)",
+        "T20",
+        "T9",
+        "T10",
+        "T57",
+        "T56"
+      ],
+      "tasks_in_flight_at_checkpoint": [
+        "T11"
+      ],
+      "headline": "FIRST CONFORMANCE PASS IN THE PROGRAM - and the fire was then spent proving how little it meant. conformance.sh VERDICT: PASS (exit 0), 13 parity vectors, 1350 cells, 6/6 invariants, 0 inadmissible, --prove 20/20, go build/vet/test green, gofmt -l only the frozen contract.go (G-3). EVERY NUMBER DRIVER-RE-RUN, none accepted on report.",
+      "what_the_pass_does_not_mean": "T10 mutated its own port into each named wrong implementation and re-ran the real harness: FIVE died, FOUR survived, THREE of which move money. The worst - deleting the ENTIRE EMI re-adjust smoothing loop, which DEC-1 calls a normative obligation 'not backlog' - was reproduced INDEPENDENTLY BY THE DRIVER at 11/11 PASS, exit 0. T57 then captured the two shapes DEC-1 itself names, and the driver re-ran the IDENTICAL mutation: it now FAILS both new vectors with named cells and margins. That closed loop (mutate -> find the blind spot -> capture the shape -> prove the mutation now dies) is the fire's transferable result, recorded as pattern P-3.",
+      "still_ungraded": [
+        "textbook balance x rateFactor (3 rounded ops collapsed to 1)",
+        "rate factor without the trailing setScale",
+        "periodRatio -> RepaymentEvery"
+      ],
+      "false_pass_path_found_and_closed": "T9's F-1: unrecorded_fields was an unguarded escape hatch - withdrawing all nine cells of the month-end kill from P-02/P-02b while leaving 1999-01-01 in place gave 11/11 PASS, exit 0, WITH the capability still printed as killed. T56 closed it; the DRIVER REPRODUCED THE EXACT EXPLOIT against the fixed harness and got exit 2, both vectors INADMISSIBLE, with a diagnostic naming the offending divergent_cells entry and the unrecorded_fields that withdraws it.",
+      "folklore_that_died": "T9 re-derived from FINERACT SOURCE rather than from DEC-1's prose (three earlier parties had all used the same document-based method) and killed two beliefs everyone was carrying: (1) the oracle does NOT use the closed-form EMI - it folds Pi(1+r_i)*P/fn, no pow [ProgressiveEMICalculator.java:1838-1840, fold at :1819, DRIVER-CONFIRMED]; (2) there is NO 'final principal := remaining balance' - principal is always EMI - interest [RepaymentPeriod.java:339-344] and the residual lands on the LAST UNPAID PERIOD'S EMI [:1191-1206]. THE SECOND WAS TRAP #4 IN THE BRIEF THE DRIVER WROTE FOR T10 - the driver was wrong and corrected it mid-flight. Both reproduce the corpus identically ONLY because every promoted vector runs DAYS_30/DAYS_360 so every r_i is equal.",
+      "g4_hunt": "T9 was sent to find a second G-4 and FOUND NONE: DEC-1 rev 12 audited against source in six places, no disagreement. Where DEC-1 and the folklore differ, DEC-1 matches the source. That is a result, not an absence of one.",
+      "driver_catches": [
+        "D-4 the harness could not express a zero-money-margin structural kill, making its OWN 'UNBACKED monthend.reanchor' complaint unsatisfiable; spec corrected by T8-promote (it is a DECODE-time change via DisallowUnknownFields, so an admit.go-only fix would not have landed it)",
+        "D-5/D-6 latent harness defects that detonate on first real use (three silent continue paths in the replay loader; a frozen ParityPass == 0 assertion)",
+        "D-6 THIRD RECURRENCE found post-merge by the driver: --prove was 18/20, both failures stale proofs, one a hard-coded 'parity vectors PASS 11' that T57 moved to 13. Driver fixed both to assert the PROPERTY and verified proof 1 still discriminates (-impl=__none__ -> 2, -impl=loanschedule-go -> 0)",
+        "independent re-derivation of all 11 pass-3b candidates BEFORE any worker reported (11/11 digit for digit) plus a third-converter transcription audit of the promoted files (883 cells, 0 mismatches) and confirmation of P-01's 65,885,070 margin"
+      ],
+      "gates_raised": [
+        "G-5 - DEC-1 contradicts itself on a ZERO interest rate: the prose says outside the graded domain, the enumerated list has no rate predicate, admit.go implements the list, and SELFTEST-01 (the harness's own self-test fixture) IS a zero-rate request. T10 implemented the list and flagged it rather than amending a ratified DEC-n. Driver recommends making the prose match the list. NOT RESERVED, blocks nothing."
+      ],
+      "process_defect": "The worker worktree cut-point defect recurred THREE times in one fire (T9's F-9, T57's N-5, and again on T56): workers handed worktrees cut BEFORE the merge of the artefact they were to work on. T9 was sent to review 11 promoted vectors and found only the four REFUSE-* files; it re-cut onto main itself. A reviewer who graded what was in front of them would have reviewed an empty corpus and reported it clean. Pattern P-5.",
+      "invariants_held": "PostgreSQL only, no prohibited engine or driver anywhere. Money is integer minor units; zero float32/float64/big.Float/ParseFloat in the port, zero float-shaped JSON number tokens store-wide. contract.go byte-identical and never gofmt'd. No cutover, no deposit-taking surface, no live endpoint, no third-party binding. Conformance never reported a PASS it had not earned."
     }
   ],
   "database": {
@@ -764,7 +816,7 @@
       "MariaDB (docker-compose-mariadb*.yml)"
     ],
     "go_driver": "github.com/jackc/pgx/v5",
-    "money_columns": "bigint minor units — never float/double precision/real/money",
+    "money_columns": "bigint minor units \u2014 never float/double precision/real/money",
     "terminology": "'The oracle' in this program means the Fineract REFERENCE IMPLEMENTATION (.softhouse/reference-oracle.md), never Oracle Database."
   }
 }
