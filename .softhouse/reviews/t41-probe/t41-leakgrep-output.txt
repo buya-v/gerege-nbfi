@@ -1,0 +1,24 @@
+==============================================================================
+docs/adr/DEC-1-schedule-generator-adapter.md
+==============================================================================
+  N-1  the two-argument framing                    0 hit(s)
+  T39  periodRatio ungraded / corpus blind to it   0 hit(s)
+  T39  the binding is six vectors                  1 hit(s)
+      line 28: - **Revision 7 (task T38)** applies the one P0, two P1s and one P2 required by independent re-review T34 (`.softhouse/reviews/T34-DEC-1-v6-rereview.md
+  T40  three membership rules                      0 hit(s)
+  N-3  the ambient MathContext as the arithmetic   1 hit(s)
+      line 20: **P1-T39-1 — the finding that COSTS this document something (new §4.1.2, §4.1, §5, §8 items 1 and 2, §9).** T39 forced the tenant `RoundingMode` to `D
+  T40  Path-A charge power stated unscoped         0 hit(s)
+  F-1  step B's k stated loosely                   0 hit(s)
+
+==============================================================================
+nexus/internal/apps/loanschedule/contract/contract.go
+==============================================================================
+  N-1  the two-argument framing                    0 hit(s)
+  T39  periodRatio ungraded / corpus blind to it   0 hit(s)
+  T39  the binding is six vectors                  0 hit(s)
+  T40  three membership rules                      0 hit(s)
+  N-3  the ambient MathContext as the arithmetic   0 hit(s)
+  T40  Path-A charge power stated unscoped         0 hit(s)
+  F-1  step B's k stated loosely                   0 hit(s)
+

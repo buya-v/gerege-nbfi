@@ -591,9 +591,19 @@ type Rounding struct {
 	//
 	// Both land in rateFactorByRepaymentPeriod's repaymentEvery parameter
 	// (:1951) and are consumed once, at :1957. Of the two argument differences
-	// only the MULTIPLIER is live inside the graded domain: daysInMonth is
-	// daysInMonthType.isDaysInMonth_30() ? 30 : calculatedDaysInRepaymentPeriod
-	// (:1508), so under DayCountFixed30Over360 both call sites pass exactly 30.
+	// only the MULTIPLIER is live — and revision 8 states the UNCONDITIONAL
+	// form of that, narrowing revision 7 (task T39's finding N-1). daysInMonth
+	// is daysInMonthType.isDaysInMonth_30() ? 30 : calculatedDaysInRepaymentPeriod
+	// (:1508) and it is consumed at exactly one place, :1537, which sits inside
+	// the `case DAYS_30 ->` arm at :1536 — precisely the branch in which :1508
+	// yields the literal 30, the same literal the interest call site passes at
+	// :1413. On the other two DaysInMonthType values NEITHER call site is
+	// reached with a days-in-month argument at all: ACTUAL takes :1534-1535 and
+	// :1400-1402, INVALID throws at :1538 and :1415-1416. So there is no
+	// configuration, inside the graded domain or outside it, in which the two
+	// call sites pass different days-in-month arguments. A PORT MUST NOT
+	// "correct" this second argument to differ between the call sites; only the
+	// multiplier differs.
 	//
 	// periodRatio (NORMATIVE, ProgressiveEMICalculator.java:1419-1459, seed at
 	// :1461-1481):
@@ -606,9 +616,20 @@ type Rounding struct {
 	//	if !(L == DueDate && L - RepaymentEvery months == FromDate) {
 	//	    seed = the repayment period's own FromDate           (:1477-1480)
 	//	}                                    // BOTH conjuncts are required
-	//	k     := whole months from seed to FromDate, EXCEPT that when FromDate is
-	//	         the last day of its month and seed's day > FromDate's day, it is
-	//	         measured to FromDate.plusDays(1)               (:1430-1433)
+	//	k     := MONTHS.between(seed, FromDate)  -- Java LocalDate.monthsUntil,
+	//	         i.e. packed = (year*12 + month-1)*32 + day; k = (p2-p1)/32
+	//	         truncated toward zero (DateUtils.java:308-317).  THIS IS NOT
+	//	         "the largest k with seed + k months <= FromDate": the two differ
+	//	         exactly when plusMonths would have CLAMPED, which is exactly the
+	//	         condition the special case below tests, so they coincide WHILE the
+	//	         special case is present and part company the moment it is dropped.
+	//	         EXCEPT that when FromDate is the last day of its month and seed's
+	//	         day > FromDate's day, k is measured to FromDate.plusDays(1)
+	//	                                                        (:1426-1436, :1432)
+	//	         Implement the packed rule WITH the special case, or the
+	//	         clamped-step rule WITHOUT it; the packed rule minus the special
+	//	         case DOUBLE-CHARGES alternate periods (an observed MNT 83,959.76
+	//	         on one six-month MNT 3,924,149 loan).
 	//	m     := k + 1;  cursor := FromDate                      (:1441-1442)
 	//	for cursor < DueDate {                                   (:1443)
 	//	    cursor = seed + m months                             (:1444)
@@ -638,11 +659,32 @@ type Rounding struct {
 	//
 	// A PORT THAT USES RepaymentEvery ON THE INTEREST CALL SITE RETURNS
 	// DIFFERENT MONEY on 100% of drifted-boundary shapes — 480 of 480 swept,
-	// worst total-interest gap MNT 398,967.73 — AND NO CAPTURE CAN DETECT IT:
-	// 0 of the 21 committed production-setting captures and 0 of the 13
-	// observations carry a non-unit periodRatio. Those counts are
-	// RE-DERIVATIONS, not observations. The missing vector is DEC-1 section 8
-	// item 3e, and the conformance/cutover binding is six vectors because of it.
+	// worst total-interest gap MNT 398,967.73 (that sweep is a RE-DERIVATION).
+	//
+	// REVISION 8: THIS IS NOW OBSERVED, NOT ONLY RE-DERIVED. Task T39 captured
+	// 8 drift shapes from the pinned reference oracle; on the 415 cells where
+	// the two readings disagree the oracle agrees with periodRatio 415 of 415
+	// and with RepaymentEvery 0 of 415, and the periodRatio reading reproduces
+	// all 1,239 cells of all 15 parity-setting captures with zero mismatches
+	// (.softhouse/capture/periodratio/, analysis/discriminate-output.txt). The
+	// worst gap is observed at exactly the re-derived MNT 398,967.73, and there
+	// is no size threshold: MNT 100 still separates on 27 cells. The 21
+	// pre-T39 captures still cannot see any of it, which is why the captures
+	// had to be taken.
+	//
+	// A PORT MUST ALSO REPRODUCE THE MONTH-END SPECIAL CASE in the k step above
+	// (:1426-1436, predicate at :1432, effect at :1433). Omitting those four
+	// lines roughly DOUBLES periodRatio on alternate periods — an observed
+	// MNT 83,959.76 overcharge on one six-month MNT 3,924,149 loan, refuted on
+	// 116 of 116 discriminating cells (captures T39-ME-A..T39-ME-D). It cannot
+	// share a vector with the multiplier question: over 51,729 same-month pairs
+	// the special case fires on 210 and on 0 of those 210 does
+	// ScheduleStartDate differ from Disbursement.Date, so the two questions are
+	// DISJOINT in shape space.
+	//
+	// Both captures are attested raw observations, NOT admissible vectors. The
+	// missing vectors are DEC-1 section 8 items 3e and 3f, and the
+	// conformance/cutover binding is SEVEN vectors because of them.
 	//
 	// When a repayment period carries ONE interest period both numerators equal
 	// the denominator and both ratios are 1. No Path-A capture could grade the
@@ -650,7 +692,9 @@ type Rounding struct {
 	// (.softhouse/capture/dec1-binding/), which observes the prorated answer and
 	// refutes the ratio-is-1 reading on 25 of 25 discriminating cells; that
 	// capture is an attested raw observation and not yet an admissible vector
-	// (DEC-1 section 8 items 1 and 3d). The MULTIPLIER rule remains ungraded.
+	// (DEC-1 section 8 items 1 and 3d). The MULTIPLIER rule is now OBSERVED
+	// too (T39, above) and likewise NOT PROMOTED, so it remains UNGRADED: a
+	// conformance PASS is not evidence that a port implements it.
 	//
 	// Because a rate factor is a small number (of order 0.005 to 0.02), a scale
 	// is strictly lossier than the same count of significant digits on this
@@ -682,19 +726,74 @@ type Rounding struct {
 	//
 	// The reference oracle takes every tie rule from one of two places — the
 	// threaded MathContext where one is passed, and the tenant-global
-	// MathContext where one is not (Money.java:52; Money.java:102-104;
-	// Money.java:150-157; Money.java:159-161 and :163-170, whose return path
-	// goes through the two-argument Money.of and therefore reads the
-	// tenant-global context even though its own division used the threaded
-	// one). Independently settable modes would admit combinations no deployment
-	// can produce and would double the vector matrix.
+	// (AMBIENT) MathContext where one is not. WHICH OF THE TWO APPLIES IS
+	// DECIDED BY ONE LINE, and revision 8 cites it rather than leaving
+	// Money.java:52 to imply it: Money holds its own MathContext field
+	// (Money.java:32), assigned in the constructor at :42 BEFORE the
+	// currency-scale setScale at :52 runs, and getMc() is an INSTANCE method —
+	// `return mc != null ? mc : MoneyHelper.getMathContext()`
+	// (Money.java:494-496). So :52 reads the THREADED mode whenever one was
+	// threaded, and the ambient mode ONLY where none was: the two-argument
+	// Money.of (:102-104, :114-116), Money.zero(currency) (:118-120), the
+	// static roundToMultiplesOf(BigDecimal, Integer) (:150-157),
+	// roundToMultiplesOf(Money, Integer) (:159-161) and the three-argument
+	// form's return path (:163-170, the two-argument Money.of at :169), and
+	// multipliedBy(double) (:372-378, the two-argument Money.of at :377).
+	// Every one of those sits on the installment-multiple or
+	// multipliedBy(double) path, which the graded domain excludes -- AND ONE
+	// MORE SITE THAT IS HANDED A CONTEXT AND IGNORES IT (revision 8, task
+	// T42): Money's constructor calls the TWO-argument roundToMultiplesOf at
+	// Money.java:50, which hard-codes MoneyHelper.getRoundingMode()
+	// (Money.java:154) and never looks at the mc assigned at :42. It is gated
+	// on currency.getInMultiplesOf() != null && getDecimalPlaces() == 0 &&
+	// inMultiplesOf > 0 (Money.java:48-51). Currency.MinorUnitDigits == 2 is a
+	// graded-domain predicate and MNT has two decimal places, so a ratified
+	// request NEVER reaches it -- but a Go port that threads its context
+	// correctly everywhere will be MORE consistent than the reference oracle
+	// and WILL DIVERGE on a 0-decimal-place currency with an inMultiplesOf.
+	// Observed, not read: T42 reached it by giving the tenant no rounding mode
+	// and catching the IllegalStateException from MoneyHelper.java:79.
+	// Independently settable modes would admit combinations no deployment can
+	// produce and would double the vector matrix.
+	//
+	// CONSEQUENCE, AND IT IS OBSERVED (revision 8; DEC-1 section 4.1.2, from
+	// task T39's finding N-3). On the Path-A embeddable seam the arithmetic in
+	// force is the THREADED MathContext; the AMBIENT MoneyHelper context is
+	// inert inside the graded domain. Forcing the tenant rounding mode to DOWN
+	// changed MoneyHelper.getMathContext() on the oracle's own testimony and
+	// left ALL SIXTEEN observed capture blocks byte-identical; forcing the
+	// THREADED mode to DOWN moved FIFTEEN OF SIXTEEN
+	// (.softhouse/capture/periodratio/out/t39-neg5.json and out/t39-neg7.json
+	// against out/t39-periodratio.json). On the Path-B running-server path the
+	// converse holds, and the reason is NOT that nothing is threaded: the
+	// caller SOURCES the threaded context from the ambient one.
+	// LoanScheduleAssembler does
+	//     final MathContext mc = MoneyHelper.getMathContext();   (:753)
+	// and hands THAT SAME OBJECT to generate(mc, ...) (:765), so on Path B the
+	// two contexts are one reference — which is why the same request on two
+	// tenants differing only in mode returns 20,925.05 under HALF_UP and
+	// 20,925.04 under HALF_EVEN. Task T42 read that wiring off the DEPLOYED
+	// bytecode of the running server and measured it: an ambient-only change
+	// moves 0 cells on the Path A wiring and 22-28 on the Path B wiring, in
+	// one payload. A CAPTURE ATTESTATION MUST RECORD THE TWO CONTEXTS AS TWO
+	// LABELLED FIELDS AND THE WIRING; "captured at (19, HALF_UP)" does not
+	// say which, and on Path A only the threaded one is evidence about the
+	// money. THE RULE IS PER SITE, NOT A SLOGAN: on a 0-dp / inMultiplesOf
+	// shape it INVERTS -- the ambient mode moves 23 cells and the threaded
+	// mode moves none.
 	//
 	// ADAPTER OBLIGATION, and it is wider than a single call site: the
 	// Fineract-JVM adapter MUST initialise the tenant rounding mode to Mode
 	// before EVERY call, because every path that constructs Money without an
 	// explicit MathContext reads the tenant-global one, and outside an
 	// initialised tenant those paths throw IllegalStateException
-	// (MoneyHelper.java:74-82).
+	// (MoneyHelper.java:74-82, :91-93).
+	//
+	// REVISION 8 CORRECTS WHY. The obligation does NOT rest on the ambient mode
+	// changing the answer inside the graded domain — observation says it does
+	// not (T39: 0 of 16 blocks moved under an ambient-only change). It rests on
+	// the THROW: an uninitialised tenant fails loudly instead of returning a
+	// silently different number, and that is the stronger of the two reasons.
 	//
 	// The tenant PRECISION cannot be pinned the same way — it is the
 	// compile-time constant 19 (MoneyHelper.java:35). Within the graded domain
@@ -703,13 +802,15 @@ type Rounding struct {
 	// revision 4 and this comment had not followed). Inside the graded domain
 	// every Money is constructed through the three-argument Money.of(..., mc)
 	// carrying the threaded context, and the Money constructor reads only the
-	// ROUNDING MODE from getMc() (Money.java:52), never the precision. The call
-	// sites that DO read the tenant-global precision (Money.java:103, :115,
-	// :160, :169, :377) all sit on the installment-multiple and
-	// multipliedBy(double) paths, and applyInstallmentAmountInMultiplesOf is
-	// the identity inside the graded domain
-	// (ProgressiveEMICalculator.java:1761-1766), so no reached call site
-	// consults it.
+	// ROUNDING MODE from getMc() (Money.java:52), never the precision — and on
+	// such a Money getMc() IS the threaded context (Money.java:494-496), so
+	// that read is not a tenant-global read at all. The call sites that DO
+	// reach the tenant-global context (Money.java:103, :115, :160, :169, :377)
+	// all sit on the installment-multiple and multipliedBy(double) paths, and
+	// applyInstallmentAmountInMultiplesOf is the identity inside the graded
+	// domain (ProgressiveEMICalculator.java:1761-1766), so no reached call site
+	// consults the tenant-global precision OR the tenant-global mode. That is
+	// established from source and CONFIRMED BY A NEGATIVE TEST (T39, above).
 	//
 	// The earlier justification — a calibration capture threaded at precision
 	// 12 on a precision-19 tenant reproducing the oracle's shipped conformance
@@ -1226,6 +1327,41 @@ const (
 // comparison it must emit exactly zero there, and no scale-discipline invariant
 // may be applied to that key without deciding the "0" case explicitly.
 //
+// THE ORACLE'S PLAN ALSO CARRIES totalRepaymentExpected. THIS CONTRACT DOES NOT
+// CARRY IT EITHER, AND THE ADAPTER MUST DISCARD IT (revision 8, from task T40;
+// DEC-1 section 4.5.1 decision C-1). On the progressive path it is seeded with
+// the disbursement charges alone (LoanScheduleParams.java:211, :246), thereafter
+// accumulates only principal + interest per period
+// (ProgressiveLoanScheduleGenerator.java:137), and is NEVER raised by
+// applyChargesForCurrentPeriod (:367-382 — the body is addLoanCharges,
+// addTotalFeeChargesCharged, addTotalPenaltyChargesCharged and nothing else).
+// The only later charge contribution is from updatePeriodsWithCharges (:486),
+// which serves the two SEPARATED calculation types alone. The CUMULATIVE
+// generator does add them (AbstractCumulativeLoanScheduleGenerator.java:504), so
+// THE TWO GENERATORS DISAGREE and the field has no single meaning to specify.
+//
+// OBSERVED: totalRepaymentExpected == sum of totalDueForPeriod FAILS on 15 of
+// task T40's 21 charge-bearing captures; on one of them MNT 51,900 of fees and
+// penalties is visible in the rows and absent from the total
+// (.softhouse/capture/charges/out/INVARIANTS.md, C5).
+//
+// It is not carried for four reasons: inside the graded domain there is no
+// charge input, so it reduces to the sum of PrincipalMinor + InterestMinor and
+// is DERIVABLE; it has no single meaning across the two generators; it is
+// exactly the silent meaning-change a total-due column was rejected to avoid,
+// since it equals the row sum today and stops equalling it the moment charges
+// exist, with nothing breaking a compile; and the totalOutstandingAmount
+// precedent applies with more force, that field being merely uninformative while
+// this one is informative-looking and wrong.
+//
+// If a later amendment ever carries it, it carries the PROGRESSIVE generator's
+// semantics, says so on the field, and is captured against that generator.
+// NEITHER AN ADAPTER, NOR A HARNESS, NOR A CONFORMANCE CHECK MAY ASSERT THAT
+// THIS FIELD EQUALS THE SUM OF THE ROWS: the assertion passes today only because
+// the graded domain has no charges, and the day it fails it will be wrong about
+// the ORACLE, not about the port. A caller wanting a total repayable sums the
+// rows.
+//
 // # EMI re-adjust smoothing loop (normative, and an obligation on the Go module)
 //
 // The per-period PrincipalMinor/InterestMinor split depends on the level
@@ -1575,8 +1711,11 @@ const (
 // ONLY multiplier change: the interest period's own rateFactor (:639-640 ->
 // :1500-1503 -> :1536), which the growth factor sums, does keep RepaymentEvery.
 // The 30 is the days-in-month multiplier — a hard-coded literal on this call
-// site (:1413), the local daysInMonth on the recurrence call site (:1508, :1537),
-// and exactly 30 on both under DayCountFixed30Over360.
+// site (:1413), the local daysInMonth on the recurrence call site (:1508, passed
+// at :1537), and EXACTLY 30 ON BOTH ON EVERY PATH EITHER IS REACHABLE ON, not
+// merely under DayCountFixed30Over360 (revision 8): :1537 is consumed only from
+// the `case DAYS_30 ->` arm at :1536, which is precisely where :1508's ternary
+// yields BigDecimal.valueOf(30). See Rounding.RateFactorScale.
 //
 // The ratio is 1 ONLY when the interest period opens on the enclosing repayment
 // period's FromDate — rows 1 and 2 of the segmentation table above. On ROW 3,
@@ -1614,11 +1753,12 @@ const (
 // attested raw observation, not yet an admissible parity vector (DEC-1 section 8
 // items 1 and 3d).
 //
-// ## The THREE date-membership rules (normative; revision 7, P0-T37-1)
+// ## The FOUR date-membership rules (normative; revision 7, P0-T37-1; M4 added
+// in revision 8 from task T40's charge observations)
 //
-// The reference oracle uses THREE different membership conventions on the
-// disbursement date, and they do not agree. A port that assumes one convention
-// throughout is wrong somewhere.
+// The reference oracle uses FOUR different membership conventions when it
+// decides which repayment period a dated thing belongs to, and they do not all
+// agree. A port that assumes one convention throughout is wrong somewhere.
 //
 //	M1  [FromDate, DueDate] inclusive at BOTH ends for the FIRST repayment
 //	    period; (FromDate, DueDate] — from-EXCLUSIVE, due-inclusive — for every
@@ -1637,6 +1777,40 @@ const (
 //	    in which period's iteration the disbursement is REGISTERED into the
 //	    interest model (:351) and the disbursement row EMITTED (:318). It is
 //	    also the ordering window key (see the Kind / ordering doc).
+//	M4  [FromDate, DueDate] for the FIRST repayment period and
+//	    (FromDate, DueDate] for every later one — THE SAME PREDICATE FUNCTION
+//	    AS M1 (LoanRepaymentScheduleProcessingWrapper.java:251-254), reached
+//	    through LoanCharge.isDueInPeriod (LoanCharge.java:371-373,
+//	    ProgressiveLoanScheduleGenerator.java:400-403).
+//	    Decides: which repayment row a CHARGE lands on — the fee and penalty
+//	    columns and totalDueForPeriod.
+//	    NOT CARRIED BY THIS CONTRACT: GenerateRequest has no charge field and
+//	    Period has no fee or penalty. M4 is stated so that a port which later
+//	    admits charges does not reuse M1, M2 or M3 for them.
+//
+// M4 IS A DIFFERENT RULE FROM M1 EVEN THOUGH IT SHARES M1'S INTERVAL SHAPE,
+// because the input that SELECTS the shape is different — and on one path it is
+// STALE. M1 passes the repayment period's own structural property,
+// period.isFirstRepaymentPeriod() (ProgressiveLoanInterestScheduleModel.java:243),
+// which is `previous == null` (RepaymentPeriod.java:449-451) — true of the first
+// period and nothing else, always. M4 passes LoanScheduleParams.isFirstPeriod(),
+// which is `1 == instalmentNumber` (LoanScheduleParams.java:533-535) — a MUTABLE
+// RUNNING COUNTER. Inside the main schedule loop it is correct, because
+// applyChargesForCurrentPeriod runs at ProgressiveLoanScheduleGenerator.java:140
+// and incrementInstalmentNumber() only at :143. On the SEPARATED charge path it
+// is not: updatePeriodsWithCharges runs at :154, after the loop at :116-145 has
+// incremented the counter once per period, so isFirstPeriod() is FALSE FOR EVERY
+// PERIOD INCLUDING PERIOD 1 (:479, :483) and M4 degenerates to
+// (FromDate, DueDate] everywhere. That staleness silently loses a charge dated
+// on the first period's FromDate — OBSERVED, DEC-1 section 4.5.1 decision C-2b,
+// capture FC-20 byte-identical to the zero-charge control while capture FC-11 (a
+// FLAT charge, same date) pays 9,000.00.
+//
+// WHICH RULE GOVERNS WHICH FIELD: M1 the interest-period segmentation and the
+// effective due date; M2 the related-period list and hence the level
+// installment; M3 the disbursement row's emission, the interest model's
+// registration and the ordering window key; M4 the fee and penalty columns.
+// They are not interchangeable.
 //
 // M1 AND M3 DISAGREE ON EXACTLY ONE DATE: a disbursement dated on a repayment
 // period's DueDate. M1 puts it in period j, M3 in period j+1. Inside the graded
@@ -1753,8 +1927,9 @@ const (
 // a money path is a non-negotiable rejection, and here it would additionally
 // destroy the very non-cancellation this section exists to specify.
 //
-// WHAT IS WITNESSED AND WHAT IS NOT (restated in revision 7, because the
-// evidence base moved):
+// WHAT IS WITNESSED AND WHAT IS NOT (restated in revision 7 and again in
+// revision 8, because the evidence base moved twice; revision 8 closed the last
+// NOT-OBSERVED row):
 //
 //   - the DAY-COUNT PRORATION above — OBSERVED. Captures T37-3d and T37-3d-2
 //     place the disbursement strictly inside a repayment period; the ratio-1
@@ -1769,18 +1944,30 @@ const (
 //     2,309.38 and 654.38. DEC-1 section 8 item 3b.
 //   - step 4b, the PRE-DISBURSEMENT ROW'S BALANCE — OBSERVED as 0.00 by P-03,
 //     T37-3c, T37-3c-2 and Q0b.
-//   - the periodRatio MULTIPLIER (see Rounding.RateFactorScale) — NOT OBSERVED,
-//     AND THE CORPUS CANNOT SEE IT. 0 of 21 committed production-setting captures
-//     and 0 of 13 observations carry a non-unit periodRatio. DEC-1 section 8
-//     item 3e.
+//   - the periodRatio MULTIPLIER (see Rounding.RateFactorScale) — OBSERVED in
+//     revision 8. 0 of the 21 pre-T39 captures carry a non-unit periodRatio, so
+//     that corpus was blind; task T39 then captured 8 drift shapes and the
+//     oracle agrees with periodRatio on 415 of 415 discriminating cells and
+//     with RepaymentEvery on 0 of 415. DEC-1 section 8 item 3e.
+//   - the MONTH-END SPECIAL CASE inside periodRatio's k step
+//     (ProgressiveEMICalculator.java:1426-1436) — OBSERVED in revision 8.
+//     Captures T39-ME-A..T39-ME-D: omitting it roughly doubles periodRatio on
+//     alternate periods and is refuted on 116 of 116 discriminating cells.
+//     DEC-1 section 8 item 3f — a SEPARATE vector, because the two questions
+//     are disjoint in shape space and no one shape grades both.
+//   - CHARGES — not a field of this contract, and OBSERVED in revision 8 to sit
+//     ALONGSIDE the schedule rather than inside it. Across task T40's 21
+//     charge-bearing captures the principal split, the interest, the outstanding
+//     principal balance and the level installment are cell-for-cell identical to
+//     the zero-charge control, so admitting charges later changes no field
+//     specified here. DEC-1 section 4.5.1.
 //
 // Two qualifications, both load-bearing. Every "OBSERVED" above is an ATTESTED
 // RAW OBSERVATION, not an admissible parity vector: DEC-1's binding is a
 // conformance precondition discharged by promoted vectors, and the promotion
-// step (section 8 item 1) is outstanding. And item 3e has no capture at all, so
-// THE MULTIPLIER RULE REMAINS SPECIFIED-FROM-SOURCE AND UNGRADED, on the same
-// terms as the loop above: no conformance PASS for loanschedule may be read as
-// evidence that a port implements this section.
+// step (section 8 item 1) is outstanding. So every rule this section states
+// normatively is now WITNESSED and still UNGRADED — no conformance PASS for
+// loanschedule may be read as evidence that a port implements any of it.
 type Period struct {
 	// Kind discriminates this row. See PeriodKind.
 	Kind PeriodKind
@@ -1859,7 +2046,7 @@ type Period struct {
 	//
 	//	PeriodKindRepayment     ZERO if the row is emitted BEFORE the disbursement
 	//	                        is registered (i.e. before M3's owner period —
-	//	                        see "The THREE date-membership rules" above);
+	//	                        see "The FOUR date-membership rules" above);
 	//	                        otherwise max(0, balance carried in + amounts
 	//	                        disbursed in this period under M1 - PrincipalMinor)
 	//	                        (RepaymentPeriod.java:389-403, clamp at :399;
