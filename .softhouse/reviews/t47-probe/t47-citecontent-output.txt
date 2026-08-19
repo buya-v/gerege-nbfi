@@ -1,0 +1,201 @@
+T45 CITATION CONTENT CHECK - does each load-bearing cited line SAY what it is cited for?
+pinned checkout: /Users/buv/fineract @ 426a23544e8426a38ae43ae404670a0a7e85b9eb
+
+[OK  ] AbstractCumulativeLoanScheduleGenerator.java:504        contains 'addTotalRepaymentExpected(feeChargesForInstallment.plus(penaltyChargesForInstallment))'
+          claim: rev 8 cited this as the cumulative DIFFERENCE; rev 9 says it is the SHARED separated-path line
+[OK  ] ProgressiveLoanScheduleGenerator.java:486        contains 'addTotalRepaymentExpected(feeChargesForInstallment.plus(penaltyChargesForInstallment))'
+          claim: the progressive twin of ACLSG:504
+[OK  ] AbstractCumulativeLoanScheduleGenerator.java:488-508    contains 'private void updatePeriodsWithCharges'
+          claim: the cumulative generator's own updatePeriodsWithCharges
+[OK  ] ProgressiveLoanScheduleGenerator.java:470-490    contains 'private void updatePeriodsWithCharges'
+          claim: the progressive generator's updatePeriodsWithCharges
+[OK  ] AbstractCumulativeLoanScheduleGenerator.java:349        contains 'applyChargesForCurrentPeriod(loanCharges'
+          claim: cumulative: charges land on currentPeriodParams BEFORE the period total is taken
+[OK  ] AbstractCumulativeLoanScheduleGenerator.java:352        contains 'currentPeriodParams.fetchTotalAmountForPeriod()'
+          claim: cumulative: the period total that carries the charges
+[OK  ] AbstractCumulativeLoanScheduleGenerator.java:392        contains 'addTotalRepaymentExpected(totalInstallmentDue)'
+          claim: cumulative: THE real difference from the progressive generator
+[OK  ] ScheduleCurrentPeriodParams.java:144-146    contains 'feeChargesForInstallment'
+          claim: fetchTotalAmountForPeriod = principal + interest + fee + penalty
+[OK  ] ScheduleCurrentPeriodParams.java:144-146    contains 'penaltyChargesForInstallment'
+          claim: same
+[OK  ] ProgressiveLoanScheduleGenerator.java:137        contains 'addTotalRepaymentExpected(principalDue.plus(interestDue, mc))'
+          claim: progressive: principal + interest, NO charge term
+[OK  ] ProgressiveLoanScheduleGenerator.java:367-382    contains 'addTotalFeeChargesCharged'
+          claim: applyChargesForCurrentPeriod's whole body
+[OK  ] ProgressiveLoanScheduleGenerator.java:492-504    contains 'separateTotalCompoundingPercentageCharges'
+          claim: the separated set :486 serves
+[OK  ] LoanScheduleParams.java:211        contains 'chargesDueAtTimeOfDisbursement'
+          claim: totalRepaymentExpected's seed
+[OK  ] LoanScheduleParams.java:246        contains 'chargesDueAtTimeOfDisbursement'
+          claim: the identical seed
+[OK  ] ProgressiveLoanScheduleGenerator.java:345        contains 'addTotalRepaymentExpected(downPaymentAmount)'
+          claim: the fourth contributor rev 8's C-1 omitted
+[OK  ] ProgressiveLoanScheduleGenerator.java:332        contains 'isDownPaymentEnabled()'
+          claim: the branch that gates :345
+[OK  ] ProgressiveLoanScheduleGenerator.java:400-415    contains 'getCumulativeAmountOfCharge'
+          claim: the one routine all charge attribution funnels through
+[OK  ] ProgressiveLoanScheduleGenerator.java:403        contains 'isDueInPeriod(periodStart, periodEnd, isFirstPeriod)'
+          claim: M4 itself
+[OK  ] ProgressiveLoanScheduleGenerator.java:404        contains 'isInstalmentFee() && isInstallmentChargeApplicable'
+          claim: M5: the arm that does NOT read isDue
+[OK  ] ProgressiveLoanScheduleGenerator.java:405        contains 'calculateInstallmentCharge'
+          claim: M5's effect
+[OK  ] ProgressiveLoanScheduleGenerator.java:406        contains 'isOverdueInstallmentCharge() && isDue'
+          claim: an isDue arm -> M4
+[OK  ] ProgressiveLoanScheduleGenerator.java:408        contains 'isDue && loanCharge.getChargeCalculation().isPercentageBased()'
+          claim: an isDue arm -> M4
+[OK  ] ProgressiveLoanScheduleGenerator.java:411        contains '} else if (isDue) {'
+          claim: an isDue arm -> M4
+[OK  ] ProgressiveLoanScheduleGenerator.java:373        contains 'true'
+          claim: isInstallmentChargeApplicable is the literal true on the main loop
+[OK  ] ProgressiveLoanScheduleGenerator.java:376        contains 'true'
+          claim: same, penalty side
+[OK  ] ProgressiveLoanScheduleGenerator.java:479        contains 'isRecalculatedInterestComponent()'
+          claim: isInstallmentChargeApplicable on the separated path
+[OK  ] ProgressiveLoanScheduleGenerator.java:483        contains 'isRecalculatedInterestComponent()'
+          claim: same, penalty side
+[OK  ] LoanScheduleParams.java:533-535    contains 'instalmentNumber'
+          claim: isFirstPeriod() is the mutable counter
+[OK  ] LoanCharge.java:371-373    contains 'isInPeriod'
+          claim: LoanCharge.isDueInPeriod delegates to M1's predicate
+[OK  ] LoanRepaymentScheduleProcessingWrapper.java:251-254    contains 'isInPeriod'
+          claim: the shared predicate function
+[OK  ] ProgressiveLoanScheduleGenerator.java:140        contains 'applyChargesForCurrentPeriod'
+          claim: runs BEFORE incrementInstalmentNumber
+[OK  ] ProgressiveLoanScheduleGenerator.java:143        contains 'incrementInstalmentNumber()'
+          claim: the increment
+[OK  ] ProgressiveLoanScheduleGenerator.java:154        contains 'updatePeriodsWithCharges'
+          claim: the separated path, AFTER the loop
+[OK  ] Money.java:103        contains 'MoneyHelper.getMathContext()'
+          claim: two-arg Money.of(CurrencyData,..)
+[OK  ] Money.java:115        contains 'MoneyHelper.getMathContext()'
+          claim: two-arg Money.of(MonetaryCurrency,..)
+[OK  ] Money.java:119        contains 'MoneyHelper.getMathContext()'
+          claim: Money.zero(MonetaryCurrency)
+[OK  ] Money.java:130-132    contains 'MoneyHelper.getMathContext()'
+          claim: Money.zero(CurrencyData) -- OMITTED BY REVISION 8
+[OK  ] Money.java:154        contains 'MoneyHelper.getRoundingMode()'
+          claim: static roundToMultiplesOf(BigDecimal,..)
+[OK  ] Money.java:160        contains 'MoneyHelper.getMathContext()'
+          claim: static roundToMultiplesOf(Money,..)
+[OK  ] Money.java:169        contains 'Money.of(existingVal.getCurrencyData(), amountScaled)'
+          claim: three-arg return path routes through the two-arg Money.of
+[OK  ] Money.java:224-234    contains 'Money.of(getCurrencyData(), total)'
+          claim: plus(Iterable) -- OMITTED BY REVISION 8
+[OK  ] Money.java:261-267    contains 'Money.of(getCurrencyData(), newAmount)'
+          claim: plus(double) -- OMITTED BY REVISION 8
+[OK  ] Money.java:377        contains 'Money.of(getCurrencyData(), newAmount)'
+          claim: multipliedBy(double)
+[OK  ] Money.java:494-496    contains 'mc != null ? mc : MoneyHelper.getMathContext()'
+          claim: getMc()
+[OK  ] Money.java:50         contains 'roundToMultiplesOf(amountScaled, currency.getInMultiplesOf())'
+          claim: the site handed a context that ignores it (T42)
+[OK  ] Money.java:48-51      contains 'getDecimalPlaces() == 0'
+          claim: its guard
+[OK  ] Money.java:52         contains 'setScale'
+          claim: the currency-scale rounding
+[OK  ] Money.java:32         contains 'MathContext'
+          claim: Money's own mc field
+[OK  ] MoneyHelper.java:35         contains 'PRECISION = 19'
+          claim: the compile-time precision
+[OK  ] MoneyHelper.java:91-93      contains 'new MathContext(PRECISION'
+          claim: getMathContext()
+[OK  ] MoneyHelper.java:74-82      contains 'IllegalStateException'
+          claim: the uninitialised-tenant throw
+[OK  ] ProgressiveEMICalculator.java:182        contains 'Money.zero(loanProductRelatedDetail.getCurrencyData())'
+          claim: the ONE-ARG overload -> Money.java:130-132, reached on the Path-A call graph
+[OK  ] ProgressiveEMICalculator.java:142-144    contains 'isAllowFullTermForTranche()'
+          claim: the PIN that excludes it, not a 3.1 predicate
+[OK  ] ProgressiveEMICalculator.java:155-174    contains 'addFullTermTrancheDisbursement'
+          claim: the only caller of buildLoanApplicationTerms
+[OK  ] ProgressiveEMICalculator.java:1404-1413  contains 'calculatePeriodRatio'
+          claim: the interest call site's multiplier
+[OK  ] ProgressiveEMICalculator.java:1413       contains 'BigDecimal.valueOf(30)'
+          claim: the hard-coded days-in-month there
+[OK  ] ProgressiveEMICalculator.java:1508       contains 'isDaysInMonth_30()'
+          claim: daysInMonth's ternary
+[OK  ] ProgressiveEMICalculator.java:1536-1537  contains 'repaymentEvery'
+          claim: the recurrence call site's multiplier
+[OK  ] ProgressiveEMICalculator.java:1426-1436  contains 'getDayOfMonth'
+          claim: the month-end special case
+[OK  ] ProgressiveEMICalculator.java:1432       contains 'targetDateDay'
+          claim: its predicate
+[OK  ] ProgressiveEMICalculator.java:1433       contains 'plusDays(1)'
+          claim: its effect
+[OK  ] ProgressiveEMICalculator.java:1435       contains 'getExactDifference'
+          claim: the whole-months call
+[OK  ] ProgressiveEMICalculator.java:1453       contains 'divide'
+          claim: the only MathContext-rounded step of the walk
+[OK  ] ProgressiveEMICalculator.java:1454       contains 'add'
+          claim: the exact addition
+[OK  ] ProgressiveEMICalculator.java:1462       contains 'getStartDate()'
+          claim: calculateSeedDate reads the SCHEDULE START
+[OK  ] ProgressiveLoanScheduleGenerator.java:307-308    contains 'isBefore(periodDueDate)'
+          claim: M3, due-EXCLUSIVE
+[OK  ] ProgressiveLoanScheduleGenerator.java:132        contains 'setOutstandingLoanBalance'
+          claim: the row's balance, written in its own iteration
+[OK  ] ProgressiveLoanScheduleGenerator.java:351        contains 'addDisbursement'
+          claim: the registration, in M3's owner period
+[OK  ] ProgressiveLoanScheduleGenerator.java:157        contains 'totalOutstanding = BigDecimal.ZERO'
+          claim: the literal zero
+[OK  ] ProgressiveEMICalculator.java:1432       contains 'targetDateLastDay == targetDateDay && seedDateDay > targetDateDay'
+          claim: rev10 §4.1.1 step B: the closed form's right-hand side is VERBATIM this predicate
+[OK  ] ProgressiveEMICalculator.java:1433       contains 'repaymentPeriod.getFromDate().plusDays(1)'
+          claim: rev10: when it fires the oracle measures to FromDate.plusDays(1)
+[OK  ] ProgressiveEMICalculator.java:1435       contains 'DateUtils.getExactDifference(seedDate, repaymentPeriod.getFromDate()'
+          claim: rev10 PINS this as the normative whole-months reading (packed)
+[OK  ] DateUtils.java:308-317    contains 'unit.between'
+          claim: getExactDifference is ChronoUnit.<unit>.between
+[OK  ] ProgressiveEMICalculator.java:1405       contains 'ChronoUnit.YEARS'
+          claim: rev10 §4.1.1 step B (iii): the YEARS ratio is computed here
+[OK  ] ProgressiveEMICalculator.java:1598-1610  contains 'calculateRateFactorPerPeriodBasedOnRepaymentFrequency'
+          claim: rev10: the switch the YEARS ratio is handed to
+[OK  ] ProgressiveEMICalculator.java:1609       contains 'throw new UnsupportedOperationException("Invalid repayment frequency")'
+          claim: rev10: the YEARS arm is UNREACHABLE -- this is why T46-YR-A/B throw
+[OK  ] ProgressiveEMICalculator.java:1602-1608  contains 'case MONTHS ->'
+          claim: rev10: the switch carries DAYS, WEEKS and MONTHS arms and no YEARS arm
+[OK  ] ProgressiveEMICalculator.java:1477-1480  contains 'repaymentPeriod.getFromDate()'
+          claim: rev10: calculateSeedDate falls back to the period's own FromDate
+[OK  ] LoanApplicationTerms.java:579-606    contains 'assembleFrom(LoanRepaymentScheduleModelData modelData, MathContext mc)'
+          claim: rev10 §2.2: the assembler the seam and LoanScheduleGeneratorServiceImpl share
+[OK  ] LoanScheduleGeneratorServiceImpl.java:44         contains 'MathContext mc = MoneyHelper.getMathContext()'
+          claim: rev10 §2.2 per-caller table: this caller reads the AMBIENT context
+[OK  ] LoanScheduleGeneratorServiceImpl.java:56         contains 'getInstallmentAmountInMultiplesOf()'
+          claim: rev10 §2.2: the value IS put into the model data ...
+[OK  ] LoanScheduleGeneratorServiceImpl.java:63         contains 'scheduleGenerator.generate(mc, modelData)'
+          claim: ... and IS carried to generate(), and is then dropped by the assembler
+[OK  ] LoanApplicationTerms.java:217        contains 'installmentAmountInMultiplesOf'
+          claim: the field exists on LoanApplicationTerms
+[OK  ] ProgressiveLoanScheduleGenerator.java:445-446    contains 'Money.of(cumulative.getCurrency(),'
+          claim: rev10 §4.5.1: the TWO-argument Money.of on the instalment-charge path
+[OK  ] ProgressiveLoanScheduleGenerator.java:445-446    contains 'divide(BigDecimal.valueOf(100), mc)'
+          claim: rev10 §4.5.1: the percentage division DOES carry the threaded mc
+[OK  ] ProgressiveLoanScheduleGenerator.java:464-465    contains 'Money.of(cumulative.getCurrency(),'
+          claim: rev10 §4.5.1: the same two-argument construction on the specified-due-date arm
+[OK  ] Money.java:114-116    contains 'MoneyHelper.getMathContext()'
+          claim: rev10: the two-argument Money.of(MonetaryCurrency, BigDecimal) is AMBIENT
+[OK  ] Money.java:52         contains 'setScale(currency.getDecimalPlaces(), getMc().getRoundingMode())'
+          claim: rev10's per-construction rule: the scale-2 rounding point
+[OK  ] Money.java:494-496    contains 'return mc != null ? mc : MoneyHelper.getMathContext()'
+          claim: rev10's per-construction rule: getMc()'s null branch
+[OK  ] Money.java:40-42      contains 'this.mc = mc'
+          claim: rev10's per-construction rule: the instance mc is what the constructing call passed
+[OK  ] Money.java:48-51      contains 'getDecimalPlaces() == 0'
+          claim: rev10 §4.5.1: the gate the inMultiplesOf leak has and the charge leak does NOT
+[OK  ] MathUtil.java:472-473    contains 'new MathContext(precision, MoneyHelper.getRoundingMode())'
+          claim: rev10 §4.1.2, T46-N1: percentageOf(…, int) takes the AMBIENT mode
+[OK  ] AbstractCumulativeLoanScheduleGenerator.java:1897       contains 'MathUtil.percentageOf('
+          claim: T46-N1 site 1 of 6, literal 19
+[OK  ] AbstractCumulativeLoanScheduleGenerator.java:2060       contains 'MathUtil.percentageOf('
+          claim: T46-N1 site 2 of 6, literal 19
+[OK  ] LoanApplicationTerms.java:866        contains 'MathUtil.percentageOf('
+          claim: T46-N1 site 3 of 6, literal 19
+[OK  ] LoanDownPaymentHandlerServiceImpl.java:198        contains 'MathUtil.percentageOf('
+          claim: T46-N1 site 4 of 6, literal 19
+[OK  ] LoanWritePlatformServiceJpaRepositoryImpl.java:448        contains 'MathUtil.percentageOf('
+          claim: T46-N1 site 5 of 6, literal 19
+[OK  ] LoanWritePlatformServiceJpaRepositoryImpl.java:3538       contains 'MathUtil.percentageOf('
+          claim: T46-N1 site 6 of 6, literal 19
+
+assertions: 98   passed: 98   FAILED: 0
