@@ -13,6 +13,9 @@ cmp out/t46-periodratio-arms.json out/t46-periodratio-arms-determinism.json   ->
 sha256 eab5dc0cd8e9b74e428c9d8cd0d87a8ea72129c01fe1375ec679b624fb893fc4  (both)
 ```
 
+The **exhaustive month-difference sweep** was likewise re-executed from a fresh throwaway container and
+its output is byte-identical [`analysis/run-t46-monthdiff.sh`; `diff` silent against the first run].
+
 The `reemit` pass has a stronger check than determinism: **2072 of 2072 values identical to T39's
 committed payload**, taken on a different day through a different harness
 [`analysis/t46_reemit_identity-output.txt`].
