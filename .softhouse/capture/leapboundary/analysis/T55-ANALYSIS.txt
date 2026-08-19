@@ -1,0 +1,325 @@
+== exact-text sidecars ==
+  33 sidecars written, all with ZERO bare JSON numbers
+
+====================================================================================================
+DISCRIMINATION TABLE -- full-cell comparison.  Zeroes are results, not gaps.
+====================================================================================================
+shape        pair                                     cells  differ    max minor u  largest-diff cell
+LB-LEAPIN    p7 vs p4  (UNSET)                           65      23             97  plan.totalInterestCharged
+LB-LEAPIN    p3 vs p4  (FULL_LEAP_YEAR vs FEB_29_PERIOD_ONLY)      65      23             97  plan.totalInterestCharged
+LB-LEAPIN    p7 vs p3  (UNSET vs FULL_LEAP_YEAR)         65       0              -  -
+LB-LEAPOUT   p7 vs p4  (UNSET)                           65      27           8783  plan.totalInterestCharged
+LB-LEAPOUT   p3 vs p4  (FULL_LEAP_YEAR vs FEB_29_PERIOD_ONLY)      65      27           8783  plan.totalInterestCharged
+LB-LEAPOUT   p7 vs p3  (UNSET vs FULL_LEAP_YEAR)         65       0              -  -
+LB-NONLEAP   p7 vs p4  (UNSET)                           65       0              -  -
+LB-NONLEAP   p3 vs p4  (FULL_LEAP_YEAR vs FEB_29_PERIOD_ONLY)      65       0              -  -
+LB-NONLEAP   p7 vs p3  (UNSET vs FULL_LEAP_YEAR)         65       0              -  -
+LB-DEC15IN   p7 vs p4  (UNSET)                           43      11           2911  plan.totalInterestCharged
+LB-DEC15IN   p3 vs p4  (FULL_LEAP_YEAR vs FEB_29_PERIOD_ONLY)      43      11           2911  plan.totalInterestCharged
+LB-DEC15IN   p7 vs p3  (UNSET vs FULL_LEAP_YEAR)         43       0              -  -
+LB-DEC15OUT  p7 vs p4  (UNSET)                           43      11           3105  plan.totalInterestCharged
+LB-DEC15OUT  p3 vs p4  (FULL_LEAP_YEAR vs FEB_29_PERIOD_ONLY)      43      11           3105  plan.totalInterestCharged
+LB-DEC15OUT  p7 vs p3  (UNSET vs FULL_LEAP_YEAR)         43       0              -  -
+LB-DEC15NL   p7 vs p4  (UNSET)                           43       0              -  -
+LB-DEC15NL   p3 vs p4  (FULL_LEAP_YEAR vs FEB_29_PERIOD_ONLY)      43       0              -  -
+LB-DEC15NL   p7 vs p3  (UNSET vs FULL_LEAP_YEAR)         43       0              -  -
+LB-DEC31     p7 vs p4  (UNSET)                           43       0              -  -
+LB-DEC31     p3 vs p4  (FULL_LEAP_YEAR vs FEB_29_PERIOD_ONLY)      43       0              -  -
+LB-DEC31     p7 vs p3  (UNSET vs FULL_LEAP_YEAR)         43       0              -  -
+LB-F29CROSS  p7 vs p4  (UNSET)                           43       0              -  -
+LB-F29CROSS  p3 vs p4  (FULL_LEAP_YEAR vs FEB_29_PERIOD_ONLY)      43       0              -  -
+LB-F29CROSS  p7 vs p3  (UNSET vs FULL_LEAP_YEAR)         43       0              -  -
+LB-MULTI3    p7 vs p4  (UNSET)                           43      11          41328  plan.totalInterestCharged
+LB-MULTI3    p3 vs p4  (FULL_LEAP_YEAR vs FEB_29_PERIOD_ONLY)      43      11          41328  plan.totalInterestCharged
+LB-MULTI3    p7 vs p3  (UNSET vs FULL_LEAP_YEAR)         43       0              -  -
+LB-MULTI3F   p7 vs p4  (UNSET)                           43       0              -  -
+LB-MULTI3F   p3 vs p4  (FULL_LEAP_YEAR vs FEB_29_PERIOD_ONLY)      43       0              -  -
+LB-MULTI3F   p7 vs p3  (UNSET vs FULL_LEAP_YEAR)         43       0              -  -
+LB-HALFYR    p7 vs p4  (UNSET)                           65      23          17783  plan.totalInterestCharged
+LB-HALFYR    p3 vs p4  (FULL_LEAP_YEAR vs FEB_29_PERIOD_ONLY)      65      23          17783  plan.totalInterestCharged
+LB-HALFYR    p7 vs p3  (UNSET vs FULL_LEAP_YEAR)         65       0              -  -
+
+-- LB-LEAPIN  p7 vs p4 : 23 of 65 cells differ, max 97 minor units at plan.totalInterestCharged
+     plan.totalInterestCharged                  32403.86         | 32404.83        
+     plan.totalRepaymentExpected                1232403.86       | 1232404.83      
+     row1.principalDue                          594897.82        | 594898.30       
+     row1.principalLoanBalanceOutstanding       605102.18        | 605101.70       
+     row1.principalOriginalDue                  594897.82        | 594898.30       
+     row1.principalOutstanding                  594897.82        | 594898.30       
+     row1.totalDueForPeriod                     616201.93        | 616202.41       
+     row1.totalInstallmentAmountForPeriod       616201.93        | 616202.41       
+     ... 15 more
+-- LB-LEAPOUT  p7 vs p4 : 27 of 65 cells differ, max 8783 minor units at plan.totalInterestCharged
+     plan.totalInterestCharged                  32317.00         | 32404.83        
+     plan.totalRepaymentExpected                1232317.00       | 1232404.83      
+     row1.interestDue                           21245.90         | 21304.11        
+     row1.interestOriginalDue                   21245.90         | 21304.11        
+     row1.interestOutstanding                   21245.90         | 21304.11        
+     row1.principalDue                          594912.60        | 594898.30       
+     row1.principalLoanBalanceOutstanding       605087.40        | 605101.70       
+     row1.principalOriginalDue                  594912.60        | 594898.30       
+     ... 19 more
+-- LB-NONLEAP  p7 vs p4 : 0 of 65 cells differ
+-- LB-DEC15IN  p7 vs p4 : 11 of 43 cells differ, max 2911 minor units at plan.totalInterestCharged
+     plan.totalInterestCharged                  21985.14         | 22014.25        
+     plan.totalRepaymentExpected                1221985.14       | 1222014.25      
+     row1.interestDue                           21985.14         | 22014.25        
+     row1.interestOriginalDue                   21985.14         | 22014.25        
+     row1.interestOutstanding                   21985.14         | 22014.25        
+     row1.totalActualCostOfLoanForPeriod        21985.14         | 22014.25        
+     row1.totalDueForPeriod                     1221985.14       | 1222014.25      
+     row1.totalInstallmentAmountForPeriod       1221985.14       | 1222014.25      
+     ... 3 more
+-- LB-DEC15OUT  p7 vs p4 : 11 of 43 cells differ, max 3105 minor units at plan.totalInterestCharged
+     plan.totalInterestCharged                  21983.20         | 22014.25        
+     plan.totalRepaymentExpected                1221983.20       | 1222014.25      
+     row1.interestDue                           21983.20         | 22014.25        
+     row1.interestOriginalDue                   21983.20         | 22014.25        
+     row1.interestOutstanding                   21983.20         | 22014.25        
+     row1.totalActualCostOfLoanForPeriod        21983.20         | 22014.25        
+     row1.totalDueForPeriod                     1221983.20       | 1222014.25      
+     row1.totalInstallmentAmountForPeriod       1221983.20       | 1222014.25      
+     ... 3 more
+-- LB-DEC15NL  p7 vs p4 : 0 of 43 cells differ
+-- LB-DEC31  p7 vs p4 : 0 of 43 cells differ
+-- LB-F29CROSS  p7 vs p4 : 0 of 43 cells differ
+-- LB-MULTI3  p7 vs p4 : 11 of 43 cells differ, max 41328 minor units at plan.totalInterestCharged
+     plan.totalInterestCharged                  517986.72        | 518400.00       
+     plan.totalRepaymentExpected                1717986.72       | 1718400.00      
+     row1.interestDue                           517986.72        | 518400.00       
+     row1.interestOriginalDue                   517986.72        | 518400.00       
+     row1.interestOutstanding                   517986.72        | 518400.00       
+     row1.totalActualCostOfLoanForPeriod        517986.72        | 518400.00       
+     row1.totalDueForPeriod                     1717986.72       | 1718400.00      
+     row1.totalInstallmentAmountForPeriod       1717986.72       | 1718400.00      
+     ... 3 more
+-- LB-MULTI3F  p7 vs p4 : 0 of 43 cells differ
+-- LB-HALFYR  p7 vs p4 : 23 of 65 cells differ, max 17783 minor units at plan.totalInterestCharged
+     plan.totalInterestCharged                  197450.74        | 197628.57       
+     plan.totalRepaymentExpected                1397450.74       | 1397628.57      
+     row1.principalDue                          569717.15        | 569806.06       
+     row1.principalLoanBalanceOutstanding       630282.85        | 630193.94       
+     row1.principalOriginalDue                  569717.15        | 569806.06       
+     row1.principalOutstanding                  569717.15        | 569806.06       
+     row1.totalDueForPeriod                     698725.37        | 698814.28       
+     row1.totalInstallmentAmountForPeriod       698725.37        | 698814.28       
+     ... 15 more
+
+====================================================================================================
+BRANCH RE-DERIVATION -- balances/dates/interest are OBSERVED; the two candidate
+columns are RE-DERIVED at MathContext(19, HALF_UP) from the cited source.
+====================================================================================================
+
+### LB-LEAPIN -- 365 -> 366 crossing in period 2 (ANCHOR: same shape as T48's T48B-PUREB)
+  LB-LEAPIN-p7  [strategy UNSET]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2023-11-01 -> 2023-12-01    30     1200000.00       21304.11       21304.11       21304.11  COINCIDE     -
+    2   2023-12-01 -> 2024-01-01    31      605102.18       11099.75       11099.75       11100.72  ARM          30/365 + 1/366
+  LB-LEAPIN-p3  [strategy FULL_LEAP_YEAR]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2023-11-01 -> 2023-12-01    30     1200000.00       21304.11       21304.11       21304.11  COINCIDE     -
+    2   2023-12-01 -> 2024-01-01    31      605102.18       11099.75       11099.75       11100.72  ARM          30/365 + 1/366
+  LB-LEAPIN-p4  [strategy FEB_29_PERIOD_ONLY]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2023-11-01 -> 2023-12-01    30     1200000.00       21304.11       21304.11       21304.11  COINCIDE     -
+    2   2023-12-01 -> 2024-01-01    31      605101.70       11100.72       11099.74       11100.72  PLAIN        30/365 + 1/366
+
+### LB-LEAPOUT -- 366 -> 365 crossing in period 2 (NEW: no captured PAIR held this direction)
+  LB-LEAPOUT-p7  [strategy UNSET]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2024-11-01 -> 2024-12-01    30     1200000.00       21245.90       21245.90       21245.90  COINCIDE     -
+    2   2024-12-01 -> 2025-01-01    31      605087.40       11071.10       11071.10       11070.12  ARM          30/366 + 1/365
+  LB-LEAPOUT-p3  [strategy FULL_LEAP_YEAR]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2024-11-01 -> 2024-12-01    30     1200000.00       21245.90       21245.90       21245.90  COINCIDE     -
+    2   2024-12-01 -> 2025-01-01    31      605087.40       11071.10       11071.10       11070.12  ARM          30/366 + 1/365
+  LB-LEAPOUT-p4  [strategy FEB_29_PERIOD_ONLY]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2024-11-01 -> 2024-12-01    30     1200000.00       21304.11       21245.90       21304.11  PLAIN        -
+    2   2024-12-01 -> 2025-01-01    31      605101.70       11100.72       11071.36       11100.72  PLAIN        30/366 + 1/365
+
+### LB-NONLEAP -- 365 -> 365 crossing in period 2 (CONTROL for T48-N4: must be 0 cells)
+  LB-NONLEAP-p7  [strategy UNSET]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2025-11-01 -> 2025-12-01    30     1200000.00       21304.11       21304.11       21304.11  COINCIDE     -
+    2   2025-12-01 -> 2026-01-01    31      605101.70       11100.72       11100.72       11100.72  COINCIDE     30/365 + 1/365
+  LB-NONLEAP-p3  [strategy FULL_LEAP_YEAR]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2025-11-01 -> 2025-12-01    30     1200000.00       21304.11       21304.11       21304.11  COINCIDE     -
+    2   2025-12-01 -> 2026-01-01    31      605101.70       11100.72       11100.72       11100.72  COINCIDE     30/365 + 1/365
+  LB-NONLEAP-p4  [strategy FEB_29_PERIOD_ONLY]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2025-11-01 -> 2025-12-01    30     1200000.00       21304.11       21304.11       21304.11  COINCIDE     -
+    2   2025-12-01 -> 2026-01-01    31      605101.70       11100.72       11100.72       11100.72  COINCIDE     30/365 + 1/365
+
+### LB-DEC15IN -- 365 -> 366, 16-day first segment
+  LB-DEC15IN-p7  [strategy UNSET]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2023-12-15 -> 2024-01-15    31     1200000.00       21985.14       21985.14       22014.25  ARM          16/365 + 15/366
+  LB-DEC15IN-p3  [strategy FULL_LEAP_YEAR]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2023-12-15 -> 2024-01-15    31     1200000.00       21985.14       21985.14       22014.25  ARM          16/365 + 15/366
+  LB-DEC15IN-p4  [strategy FEB_29_PERIOD_ONLY]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2023-12-15 -> 2024-01-15    31     1200000.00       22014.25       21985.14       22014.25  PLAIN        16/365 + 15/366
+
+### LB-DEC15OUT -- 366 -> 365, 16-day first segment
+  LB-DEC15OUT-p7  [strategy UNSET]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2024-12-15 -> 2025-01-15    31     1200000.00       21983.20       21983.20       21954.10  ARM          16/366 + 15/365
+  LB-DEC15OUT-p3  [strategy FULL_LEAP_YEAR]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2024-12-15 -> 2025-01-15    31     1200000.00       21983.20       21983.20       21954.10  ARM          16/366 + 15/365
+  LB-DEC15OUT-p4  [strategy FEB_29_PERIOD_ONLY]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2024-12-15 -> 2025-01-15    31     1200000.00       22014.25       21983.20       22014.25  PLAIN        16/366 + 15/365
+
+### LB-DEC15NL -- 365 -> 365, 16-day first segment (CONTROL)
+  LB-DEC15NL-p7  [strategy UNSET]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2025-12-15 -> 2026-01-15    31     1200000.00       22014.25       22014.25       22014.25  COINCIDE     16/365 + 15/365
+  LB-DEC15NL-p3  [strategy FULL_LEAP_YEAR]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2025-12-15 -> 2026-01-15    31     1200000.00       22014.25       22014.25       22014.25  COINCIDE     16/365 + 15/365
+  LB-DEC15NL-p4  [strategy FEB_29_PERIOD_ONLY]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2025-12-15 -> 2026-01-15    31     1200000.00       22014.25       22014.25       22014.25  COINCIDE     16/365 + 15/365
+
+### LB-DEC31 -- first segment is ZERO days; from-date year is leap
+  LB-DEC31-p7  [strategy UNSET]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2024-12-31 -> 2025-01-31    31     1200000.00       22014.25       22014.25       21954.10  ARM          0/366 + 31/365
+  LB-DEC31-p3  [strategy FULL_LEAP_YEAR]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2024-12-31 -> 2025-01-31    31     1200000.00       22014.25       22014.25       21954.10  ARM          0/366 + 31/365
+  LB-DEC31-p4  [strategy FEB_29_PERIOD_ONLY]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2024-12-31 -> 2025-01-31    31     1200000.00       22014.25       22014.25       22014.25  COINCIDE     0/366 + 31/365
+
+### LB-F29CROSS -- crossing period CONTAINS 29 Feb 2024 -> FEB_29_PERIOD_ONLY takes the arm too
+  LB-F29CROSS-p7  [strategy UNSET]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2023-12-01 -> 2024-04-01   122     1200000.00       86458.21       86458.21       86636.71  ARM          30/365 + 92/366
+  LB-F29CROSS-p3  [strategy FULL_LEAP_YEAR]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2023-12-01 -> 2024-04-01   122     1200000.00       86458.21       86458.21       86636.71  ARM          30/365 + 92/366
+  LB-F29CROSS-p4  [strategy FEB_29_PERIOD_ONLY]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2023-12-01 -> 2024-04-01   122     1200000.00       86458.21       86458.21       86636.71  ARM          30/365 + 92/366
+
+### LB-MULTI3 -- ONE period spanning TWO 31-Dec boundaries, NO 29 Feb in the period
+  LB-MULTI3-p7  [strategy UNSET]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2024-06-01 -> 2026-06-01   730     1200000.00      517986.72      517986.72      516983.61  ARM          213/366 + 365/365 + 152/365
+  LB-MULTI3-p3  [strategy FULL_LEAP_YEAR]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2024-06-01 -> 2026-06-01   730     1200000.00      517986.72      517986.72      516983.61  ARM          213/366 + 365/365 + 152/365
+  LB-MULTI3-p4  [strategy FEB_29_PERIOD_ONLY]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2024-06-01 -> 2026-06-01   730     1200000.00      518400.00      517986.72      518400.00  PLAIN        213/366 + 365/365 + 152/365
+
+### LB-MULTI3F -- ONE period spanning TWO 31-Dec boundaries, CONTAINS 29 Feb 2024
+  LB-MULTI3F-p7  [strategy UNSET]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2023-06-01 -> 2025-06-01   731     1200000.00      518400.00      518400.00      519110.14  ARM          213/365 + 366/366 + 152/365
+  LB-MULTI3F-p3  [strategy FULL_LEAP_YEAR]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2023-06-01 -> 2025-06-01   731     1200000.00      518400.00      518400.00      519110.14  ARM          213/365 + 366/366 + 152/365
+  LB-MULTI3F-p4  [strategy FEB_29_PERIOD_ONLY]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2023-06-01 -> 2025-06-01   731     1200000.00      518400.00      518400.00      519110.14  ARM          213/365 + 366/366 + 152/365
+
+### LB-HALFYR -- semi-annual: period 1 crosses and contains 29 Feb; period 2 starts in the leap year
+  LB-HALFYR-p7  [strategy UNSET]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2023-11-01 -> 2024-05-01   182     1200000.00      129008.22      129008.22      129244.93  ARM          60/365 + 122/366
+    2   2024-05-01 -> 2024-11-01   184      630282.85       68442.52       68442.52       68442.52  COINCIDE     -
+  LB-HALFYR-p3  [strategy FULL_LEAP_YEAR]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2023-11-01 -> 2024-05-01   182     1200000.00      129008.22      129008.22      129244.93  ARM          60/365 + 122/366
+    2   2024-05-01 -> 2024-11-01   184      630282.85       68442.52       68442.52       68442.52  COINCIDE     -
+  LB-HALFYR-p4  [strategy FEB_29_PERIOD_ONLY]
+    per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
+    1   2023-11-01 -> 2024-05-01   182     1200000.00      129008.22      129008.22      129244.93  ARM          60/365 + 122/366
+    2   2024-05-01 -> 2024-11-01   184      630193.94       68620.35       68432.86       68620.35  PLAIN        -
+
+====================================================================================================
+GRADEABILITY -- would a WRONG port fail this capture?  Per capture, per naive port.
+  N365 = ignores the arm, always divides by 365.
+  NACT = ignores the arm, divides by the from-date year's ACTUAL length (365 or 366).
+  A capture GRADES a naive port when at least one period's interest differs from it.
+====================================================================================================
+  capture          vs N365   vs NACT   largest gap, minor units (period)
+  LB-LEAPIN-p7     GRADES    GRADES    N365 97 (p2)   NACT 97 (p2)
+  LB-LEAPIN-p3     GRADES    GRADES    N365 97 (p2)   NACT 97 (p2)
+  LB-LEAPIN-p4     blind     blind     N365 0   NACT 0
+  LB-LEAPOUT-p7    GRADES    GRADES    N365 5821 (p1)   NACT 98 (p2)
+  LB-LEAPOUT-p3    GRADES    GRADES    N365 5821 (p1)   NACT 98 (p2)
+  LB-LEAPOUT-p4    blind     GRADES    N365 0   NACT 5821 (p1)
+  LB-NONLEAP-p7    blind     blind     N365 0   NACT 0
+  LB-NONLEAP-p3    blind     blind     N365 0   NACT 0
+  LB-NONLEAP-p4    blind     blind     N365 0   NACT 0
+  LB-DEC15IN-p7    GRADES    GRADES    N365 2911 (p1)   NACT 2911 (p1)
+  LB-DEC15IN-p3    GRADES    GRADES    N365 2911 (p1)   NACT 2911 (p1)
+  LB-DEC15IN-p4    blind     blind     N365 0   NACT 0
+  LB-DEC15OUT-p7   GRADES    GRADES    N365 3105 (p1)   NACT 2910 (p1)
+  LB-DEC15OUT-p3   GRADES    GRADES    N365 3105 (p1)   NACT 2910 (p1)
+  LB-DEC15OUT-p4   blind     GRADES    N365 0   NACT 6015 (p1)
+  LB-DEC15NL-p7    blind     blind     N365 0   NACT 0
+  LB-DEC15NL-p3    blind     blind     N365 0   NACT 0
+  LB-DEC15NL-p4    blind     blind     N365 0   NACT 0
+  LB-DEC31-p7      blind     GRADES    N365 0   NACT 6015 (p1)
+  LB-DEC31-p3      blind     GRADES    N365 0   NACT 6015 (p1)
+  LB-DEC31-p4      blind     GRADES    N365 0   NACT 6015 (p1)
+  LB-F29CROSS-p7   GRADES    GRADES    N365 17850 (p1)   NACT 17850 (p1)
+  LB-F29CROSS-p3   GRADES    GRADES    N365 17850 (p1)   NACT 17850 (p1)
+  LB-F29CROSS-p4   GRADES    GRADES    N365 17850 (p1)   NACT 17850 (p1)
+  LB-MULTI3-p7     GRADES    GRADES    N365 41328 (p1)   NACT 100311 (p1)
+  LB-MULTI3-p3     GRADES    GRADES    N365 41328 (p1)   NACT 100311 (p1)
+  LB-MULTI3-p4     blind     GRADES    N365 0   NACT 141639 (p1)
+  LB-MULTI3F-p7    GRADES    GRADES    N365 71014 (p1)   NACT 71014 (p1)
+  LB-MULTI3F-p3    GRADES    GRADES    N365 71014 (p1)   NACT 71014 (p1)
+  LB-MULTI3F-p4    GRADES    GRADES    N365 71014 (p1)   NACT 71014 (p1)
+  LB-HALFYR-p7     GRADES    GRADES    N365 23671 (p1)   NACT 23671 (p1)
+  LB-HALFYR-p3     GRADES    GRADES    N365 23671 (p1)   NACT 23671 (p1)
+  LB-HALFYR-p4     GRADES    GRADES    N365 23671 (p1)   NACT 23671 (p1)
+
+====================================================================================================
+INVARIANTS -- per capture
+====================================================================================================
+  LB-LEAPIN-p7     PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-LEAPIN-p3     PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-LEAPIN-p4     PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-LEAPOUT-p7    PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-LEAPOUT-p3    PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-LEAPOUT-p4    PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-NONLEAP-p7    PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-NONLEAP-p3    PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-NONLEAP-p4    PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-DEC15IN-p7    PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-DEC15IN-p3    PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-DEC15IN-p4    PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-DEC15OUT-p7   PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-DEC15OUT-p3   PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-DEC15OUT-p4   PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-DEC15NL-p7    PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-DEC15NL-p3    PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-DEC15NL-p4    PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-DEC31-p7      PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-DEC31-p3      PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-DEC31-p4      PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-F29CROSS-p7   PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-F29CROSS-p3   PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-F29CROSS-p4   PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-MULTI3-p7     PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-MULTI3-p3     PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-MULTI3-p4     PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-MULTI3F-p7    PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-MULTI3F-p3    PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-MULTI3F-p4    PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-HALFYR-p7     PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-HALFYR-p3     PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  LB-HALFYR-p4     PASS   I1=ok, I2=ok, I3=ok, I4=ok, I5=ok, I6=ok, I7=ok
+  all 33 captures: I1 I2 I3 I4 I5 I6 I7 all PASS
+
+== T55 analysis PASS ==

@@ -158,7 +158,10 @@ def d_(x):
 
 
 def as_date(a):
-    y, m, dd = (int(x) for x in a.split("-"))
+    """Fineract returns dates as a [yyyy, mm, dd] array of numbers; the exact-text sidecar keeps
+    them as a list of strings.  Accept either that or the flattened yyyy-mm-dd form."""
+    parts = a.split("-") if isinstance(a, str) else a
+    y, m, dd = (int(x) for x in parts)
     return date(y, m, dd)
 
 
@@ -255,11 +258,19 @@ def rederive(cid):
         entered = arm_entered(strat, frm, due, frm, due)
         af, segs = arm_factor(RATE, frm, due)
         pf = plain_factor(RATE, frm, due, days_in_year_for(strat, frm, frm, due))
+        # Two NAIVE ports, re-derived so 'does this shape grade the arm' can be answered against
+        # both of them rather than against one:
+        #   N365 -- a port that ignores the arm AND always divides by 365;
+        #   NACT -- a port that ignores the arm but uses the from-date year's ACTUAL length.
+        n365 = plain_factor(RATE, frm, due, 365)
+        nact = plain_factor(RATE, frm, due, year_len(frm.year))
         with localcontext() as ctx:
             ctx.prec = PREC
             ctx.rounding = ROUND
             ai = (bal * af).quantize(MINOR, rounding=ROUND)
             pi = (bal * pf).quantize(MINOR, rounding=ROUND)
+            i365 = (bal * n365).quantize(MINOR, rounding=ROUND)
+            iact = (bal * nact).quantize(MINOR, rounding=ROUND)
         verdict = ("ARM" if obs == ai else "") + ("PLAIN" if obs == pi else "")
         if obs == ai == pi:
             verdict = "COINCIDE"
@@ -267,6 +278,7 @@ def rederive(cid):
             verdict = "UNATTRIBUTED"
         rows.append(dict(period=p["period"], frm=frm, due=due, days=(due - frm).days,
                          bal=bal, obs=obs, arm_i=ai, plain_i=pi, arm_f=af, plain_f=pf,
+                         n365_i=i365, nact_i=iact,
                          segs=segs, entered=entered, verdict=verdict,
                          f29=contains_feb29(frm, due)))
         bal = Decimal(p["principalLoanBalanceOutstanding"])
@@ -426,8 +438,36 @@ def main():
                         % (cid, r["period"], want, r["verdict"]))
 
     print()
-    print("=" * 100
-          )
+    print("=" * 100)
+    print("GRADEABILITY -- would a WRONG port fail this capture?  Per capture, per naive port.")
+    print("  N365 = ignores the arm, always divides by 365.")
+    print("  NACT = ignores the arm, divides by the from-date year's ACTUAL length (365 or 366).")
+    print("  A capture GRADES a naive port when at least one period's interest differs from it.")
+    print("=" * 100)
+    print("  %-16s %-9s %-9s %s" % ("capture", "vs N365", "vs NACT", "largest gap, minor units (period)"))
+    for sid, _why in SHAPES:
+        for suf in ("p7", "p3", "p4"):
+            cid = "%s-%s" % (sid, suf)
+            g365 = gact = 0
+            w365 = wact = (0, None)
+            for r in rederive(cid):
+                d1 = abs((r["obs"] - r["n365_i"]) / MINOR)
+                d2 = abs((r["obs"] - r["nact_i"]) / MINOR)
+                if d1:
+                    g365 += 1
+                    if d1 > w365[0]:
+                        w365 = (d1, r["period"])
+                if d2:
+                    gact += 1
+                    if d2 > wact[0]:
+                        wact = (d2, r["period"])
+            print("  %-16s %-9s %-9s N365 %s%s   NACT %s%s" % (
+                cid, "GRADES" if g365 else "blind", "GRADES" if gact else "blind",
+                w365[0], "" if w365[1] is None else " (p%s)" % w365[1],
+                wact[0], "" if wact[1] is None else " (p%s)" % wact[1]))
+
+    print()
+    print("=" * 100)
     print("INVARIANTS -- per capture")
     print("=" * 100)
     allok = True
