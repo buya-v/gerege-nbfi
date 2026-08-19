@@ -4,133 +4,164 @@ Written by the orchestrator at every checkpoint; read by the next fire of `/soft
 human) to see exactly where the factory paused. **The repo is the only memory** — never rely on an agent's
 session state.
 
-## Current state (local fire `20260819-140003`, oracle REACHABLE, clean exit)
+## Current state (local fire `20260819-170001`, oracle REACHABLE, clean exit)
 
 - **Program**: `fineract-to-go-full-codebase` — **active**
 - **Active run**: `2026-08-17-run1-harness-schedule-poc` — Tier 0, not terminal
-- **Contexts**: 0 done / 17 · **`tier0-harness-schedule-poc` is `active` again (was `blocked_on_gate`)**
+- **Contexts**: 0 done / 17 · `tier0-harness-schedule-poc` **active**
 - **Oracle**: UP all fire. `fineract:latest` + `postgres:18.3`, both healthy, **never restarted**. Pinned
-  checkout `426a23544` clean throughout. PostgreSQL only; no prohibited engine anywhere.
-- **Seven workers dispatched, SEVEN completed**, merged and verified. No worker lost, no isolation
-  violation, no scope breach.
+  checkout `426a23544` clean. PostgreSQL only; no prohibited engine anywhere.
+- **Three workers dispatched, two completed and merged, one killed by a transient API 529.** No isolation
+  violation, no scope breach, nothing left uncommitted.
 
-## THE HEADLINE: **DEC-1 REVISION 12 IS RATIFIED. G-1 IS CLOSED. It never reached Buyan.**
+## THE HEADLINE: **two structural blockers fell in one fire**
 
-Ten independent rounds ran. The driver declined at revisions 8 and 10 on one consistent discriminator —
-*a sentence known to be false was about to be frozen* — and both times the next revision proved the
-sentence really was wrong. It ratified at revision 12 because **no known false sentence remains**.
+### 1. The no-Go-toolchain gap is CLOSED — and the ratified `contract.go` COMPILES
 
-**No round returned a bare CLEAN and the record does not claim one did.** T53 returned **no P0 and no P1**
-with six P2 documentation-accuracy errata and *"apply the six, then ratify"*; T54 applied them; the driver
-verified each mechanically. Full record in `docs/adr/DEC-1-schedule-generator-adapter.md` § *Ratification
-record* and `.softhouse/gates.md` § *G-1 CLOSED*.
+`go1.26.6 darwin/arm64`, sha256 asserted against go.dev's published value **before** extraction, installed
+**repo-locally** at `GOROOT=.softhouse/toolchain/go`, **gitignored**, activated by
+`. /Users/buv/gerege-nbfi/.softhouse/bin/go-env.sh`, reversible with one `rm -rf`.
 
-**Guardrails, each reproduced by the driver rather than taken on report:**
-- **§3.1 and §4.1 byte-identical across revisions 10, 11 and 12** — sha256 `42b978e2abb9` / `b88faca50f22`.
-  Those sections *are* the graded domain and the rounding decision, so this proves **no predicate moved**.
-- **`contract.go` non-comment body byte-identical** — sha256 `2530f13ecad961f2` over 96 lines.
-- **0 out-of-range citations**, sustained across T49 (155 distinct), T52 (171), T53 (47 added), T54 (24).
+The previous fire's refusal was right and was **not** overridden. Its objection was never *"is a toolchain
+allowed"* (it is not RESERVED — no money, no endpoint, no third party); it was *"may an agent modify Buyan's
+machine unattended"*. **Re-scoping the install location dissolved the objection without weakening it.**
+Nothing outside this repo was touched; there is no Homebrew on this host and no `PATH` was changed.
 
-### What ratification does NOT mean
-Not that `contract.go` **compiles** (see the toolchain gap below), not parity, not promotion of any vector,
-not a cutover. `DayCountActualActual` is still refused with `ErrNoDiscriminatingVector`. **Buyan retains
-veto and may reverse the ratification.**
+**First ever compile of the ratified artefact:** `go build ./...` **exit 0**, `go vet ./...` **exit 0**.
+`[UNVERIFIED: that the package compiles]` is **retired**. Ten review rounds of shape-grading are **not**
+invalidated, and the worst-case discovery the previous fire warned about — a type error frozen into a
+ratified artefact — **did not happen.**
+
+> **A fresh clone will find no toolchain.** That is the price of not touching the host: one verified 65 MB
+> fetch. If Buyan would rather have `go` on the host PATH, say so.
+
+### 2. T7 — the bottleneck behind seven tasks — is DONE and MERGED
+
+**T9, T10, T11, T13, T14, T15 and T20 are all unblocked for the first time in the program.**
+
+`.softhouse/conformance.sh` + `.softhouse/vectors/` + `nexus/internal/apps/loanschedule/conformance/`
+(22 files, 6,228 insertions, zero deletions, `contract.go` byte-identical: sha256 `0db73d4af996737d…`).
+
+**The driver re-ran everything rather than accepting the report:**
+
+| check | result |
+|---|---|
+| `go build ./...` / `go vet ./...` | **exit 0** / **exit 0** |
+| `go test ./...` | **ok** — conformance 0.582 s |
+| `gofmt -l internal` | **only** `contract/contract.go` — expected, gate **G-3** |
+| `conformance.sh` (default) | **exit 2**, *"VERDICT: UNUSABLE — THIS IS NOT A PASS"* |
+| `conformance.sh --prove` | **10 passed, 0 failed** |
+| driver's own float scans | **0** float-shaped JSON numbers in the store; **0** float types in the Go tree |
+
+**The harness refuses to claim all-pass over an empty corpus** — the single worst outcome its brief named.
+It names its own untrustworthiness in words: no Go port registered, no parity vector promoted.
+
+## NOTHING IS PROMOTED. NO CONTEXT IS AT PARITY. The harness says so out loud.
+
+`.softhouse/vectors/` holds a schema, a pin, a capabilities table, one hand-authored `_selftest` fixture
+(structurally barred from the parity count) and four contract-refusal vectors. **Zero parity vectors.**
 
 ## THE ONE THING THE NEXT FIRE SHOULD DO FIRST
 
-**T7 — the golden-vector conformance harness + vector store.** It is unblocked for the first time in the
-program and **T9–T15 all sit behind it**. Two constraints its author must not discover late:
+**T8 — promote the capture corpus into the new store**, then **T9** (independent review of harness +
+vectors). One trap its author must not discover late:
 
-1. **Charge conformance can only ever be graded on Path B.** `ProgressiveLoanScheduleGenerator.java:81`
-   calls `generate(mc, loanApplicationTerms, null, null)` — `loanCharges` is **hard-wired `null`**, so the
-   Path A embeddable seam is structurally blind to every charge (T50-N2, driver-verified by reading the line).
-2. **NO GO TOOLCHAIN EXISTS ON THIS HOST** (below). The harness can be *designed*, and the corpus can now be
-   *promoted*, but nothing can be *executed against Go* until a toolchain is installed.
+> **PROMOTION ORDERING MATTERS.** Promote a covering vector **before** flipping `in_graded_domain`, or the
+> run is fatal with `UNBACKED in_graded_domain claims`. The harness already reports exactly that today for
+> `schedule.core` and `monthend.reanchor` — which is honest, not a defect.
 
-**Promotion is now unblocked and is the highest-value oracle-free work available.** Until this fire the
-corpus had to stay in raw observed form because *the shape was what was being ratified*. The shape is now
-ratified, so raw captures can become promoted golden vectors — subject to T48-N4's trap (see below).
+**T10, the port, is compilable for the first time.**
 
-## BLOCKING ENVIRONMENT GAP — no Go toolchain
+## The biggest transferable result: **pair-difference is the WRONG promotion filter** (T55-N2)
 
-`go` is not on `PATH` and no Go installation exists on this host [VERIFIED by the driver this fire].
-`nexus/internal/apps/loanschedule/contract/contract.go` holds **96 non-comment lines** of real Go and **has
-never been compiled**; ten review rounds graded its comments and its shape, never whether it builds. A static
-check found all three imports used and no duplicate top-level declarations — a heuristic, not a compile.
+The intuitive rule — *"a vector discriminates a setting iff two captures differing only in that setting
+differ in some cell"* — is **false in both directions**:
 
-This blocks **T10** (the port), **T11**, **T13** (`/softhouse-uat`: `go build ./...`, `go test ./...`) and the
-executable half of **T7**. A UAT that cannot run must **never** be recorded as a pass.
+- `LB-DEC31` reports **0 cells** differing across the day-count setting, yet its observed value kills a
+  no-arm port by **6,015 minor units**.
+- `LB-F29CROSS` and `LB-MULTI3F` report **0 cells** on every pair, yet kill naive ports by **17,850** and
+  **71,014** minor units.
 
-**It is not a RESERVED item** — no money, no endpoint, no third party. It was deliberately not done
-unattended because installing software is a durable change to Buyan's machine rather than to this repo.
-**Details and the fix in `.softhouse/reference-oracle.md`. A fire told "you may install a Go toolchain"
-should just do it and record the version there.**
+**A non-zero-pair rule would have discarded the three best graders in the set.** The setting decides only
+*whether* the arm fires, never its denominators. Gradeability is now the `graded_against[]` field: *which
+named wrong implementations does this vector kill, and by how much.* **An all-products-identical capture is
+not evidence of non-gradeability.**
 
-## What this fire established (all raw observed; PROMOTION now possible but NOTHING promoted yet)
+## Driver catches this fire — each re-derived, none accepted on report
 
-| result | evidence |
-|---|---|
-| **N46-1 CONFIRMED BY OBSERVATION** — the **ambient** mode governs charge rounding, after two fires stuck at `TO_BE_CAPTURED` | 7/7 threaded columns move with the ambient mode, **0/7** ambient rows with the threaded one; confirmed twice independently (2,016 transcription cells + 1,400 reflection cells); **reachable at MNT scale — `1005025.12` vs `1005025.13`** |
-| **The recorded blocker was REFUTED** | T46 and T48 both wrote "needs a tenant write"; `LoanScheduleAssembler:753` reads `getMathContext()` and `:765` threads **that same cached reference**, so a tenant write moves both axes together. **The experiment two fires waited for could never have worked** |
-| **N46-3 CONFIRMED** | `percentageOf(x, p, 19)` takes the ambient mode 7/7; the `MathContext` overload the threaded one 7/7 |
-| **The alias CROSSES CONFIGURATION SCOPES** | the value is a **tenant-global configuration** [`LoanScheduleAssembler.java:370-371`], not a product setting — **a port cannot fix it by wiring "the other product field"** |
-| **Slot LIVE, setting INERT — two results that must not be collapsed** | both readers move money (79/153 and 52/164 cells); the product setting moves **0** cells across 8 shapes on products matched on 20 SQL columns; oracle matches **31 December** 6 of 6 |
-| **The tenant-global flag is `false` on `gerege`** | T53, read-only `SELECT`; `ConfigurationDomainServiceJpa:296-300`. **So the alias has never been witnessed delivering a wrong value, and cannot be on this tenant** |
-| **`chargeCalculationType` 5 separated — T48's premise was wrong twice** | a real tranche product is byte-identical to type 2 (**0 of 302 cells**); `LoanChargeAssembler:190-204` builds one charge per tranche so `Σ p·tᵢ = p·Σtᵢ`. **Linearity hid it, not the absence of tranches.** Breaks on tranches summing below principal (`12,345.00` vs `14,814.00`) and on `minCap`/`maxCap` |
-| **`fixedLength` blocker found** | HTTP 403 *"only allowed for zero interest products"* [`LoanProductDataValidator.java:2784-2787`], `thereIsInterest` from the **request** — no product needed; moves exactly 3 cells at zero interest |
+- **T55-N1 — CONFIRMED digit for digit.** `LB-DEC31` has a **zero** first segment and still grades the
+  ACT/ACT arm by **6,015 minor units**: ARM `0/366 + 31/365` → **`22014.25`** (*observed* on p3/p4/p7 and in
+  the re-runs); PLAIN `31/366` → `21954.10` (counterfactual). **The mechanism is the result:** PLAIN takes
+  its denominator from the period-**start** year (366) while ARM assigns days to the year they land in (365),
+  so **segment length is irrelevant — year lengths are what matter.** DEC-1's *"non-zero first segment"* is
+  therefore known-wrong → **G-4**. Correct condition: **spans two calendar years of differing length.**
+  Neither T55 nor the driver amended DEC-1; a ratified DEC-n is not an agent's call.
+- **G-3 — `gofmt` wants to rewrite the frozen `contract.go`** (3 hunks, doc-comment list normalisation,
+  semantically inert). **Not applied.** The risk is the failure mode, not the output: a `gofmt -w ./...` or a
+  format-on-save would silently mutate a ratified artefact whose doc comments **are** the spec, and it would
+  read as harmless formatting noise in review.
+- **D-1** — the T50-N2 citation is **`:83`, not `:81`** (`:81` is a different method). Recorded because a
+  reviewer checking `:81` would find unrelated code and might think the finding fabricated.
+- **D-2 — NEW.** That line hard-wires **two** nulls, not one: `loanCharges` **and `holidayDetailDTO`**. The
+  holiday arm is null-guarded at `DefaultScheduledDateGenerator.java:224`, so holiday/non-working-day
+  adjustment is a **guaranteed silent no-op on Path A**. **Holiday conformance, like charge conformance, can
+  only ever be graded on Path B.**
+- **D-2a** — even on **Path B**, this generator adjusts only the **FINAL** period (`:61` guards `:66`).
+  *"Adjust every date that lands on a holiday"* is the obvious and **wrong** thing for a Go port to write, and
+  it would pass the **entire existing corpus** silently. `[UNVERIFIED: no Path B capture exists — capture it.]`
 
-## Open findings the next reader must not lose
+## What T55 established (33 Path B captures, all raw observed)
 
-- **T50-N2 (P1)** — the Path A seam **can never exercise a charge**. Governs T7's design. Driver-verified.
-- **T50-N1 (P1)** — `LoanApplicationTerms` computes the **down payment two different ways**: the Builder
-  constructor threads `builder.mc` [`:329-338`]; the other constructor is **fully ambient** [`:862-869`].
-  `LoanScheduleAssembler:548` takes the **ambient** one, Path A the **threaded** one. Driver re-derived.
-- **A latent oracle defect is an ACTIVE port defect.** On the shipped server ambient and threaded are the
-  *same object*, so Fineract is never wrong here. **It goes live the moment a port threads a context — the
-  natural Go idiom.**
-- **T48-N4's promotion trap** — the ACT/ACT arm **coincides exactly** with the plain branch when both years
-  are 365, so a cross-year vector inside a run of non-leap years grades the arm **not at all**. Any promoted
-  vector for it **must cross a leap boundary with a non-zero first segment.**
-- **Tier B trap** — `(19, tenant mode)` is a **loan-path** rule. Savings/deposits use `DECIMAL64` and
-  `MathContext(15|10, …)`; one precision-8 site is in **share accounts**.
-- **N46-3's other five literal-19 `percentageOf` sites** — `[VERIFIED as grep]`, `[UNVERIFIED as behaviour]`.
-- **`contract.go:1229`'s citation anchor** was fixed by the driver **before** the freeze. Any further
-  `contract.go` change now needs a **gate**.
+**6 discriminating pairs, 5 proven non-discriminating.** Determinism 33/33 byte-identical; negative tests
+9/9 breaching; invariants I1–I7 on all 33; additive-only (`m_loan` 0→0, `m_product_loan` 21→21).
+
+`LB-LEAPOUT` 27/65 (8,783 minor) · `LB-LEAPIN` 23/65 (97) · `LB-HALFYR` 23/65 (17,783) · `LB-DEC15IN` 11/43
+(2,911) · `LB-DEC15OUT` 11/43 (3,105) · `LB-MULTI3` 11/43 (**41,328**).
+
+- **Path A was disqualified on EVIDENCE, not assumption** — it drops the independent variable
+  (`LoanApplicationTerms.java:304-351` never copies `:380` into `:291`): the exact *"capture through a seam
+  that drops your variable"* trap.
+- **T48's captures were already further along than believed** — `T48B-PUREB-p7` vs `-p4` (23/65, 97 minor),
+  `T48B-YEAR` (157/285) and `T48B-QTR` (49/109) **already satisfy** T48-N4's promotion condition.
+- **Not witnessed, labelled so:** no T55 shape separates precision 19 from 12, or HALF_UP from HALF_EVEN
+  (29/36 agree at all of them; precision 8 does break it at 22/36). For those axes **`(19, HALF_UP)` is
+  provenance, not discrimination.**
+
+## Design decisions in the new store that bind every later task
+
+- **Money is an integer STRING** in minor units. Most JSON readers (jq included) decode numbers to doubles,
+  so an integral JSON *number* can be corrupted by the **reader**. No JSON number anywhere may contain
+  `.`, `e` or `E`.
+- **Probe-vs-parity is structural** — a parity vector records threaded **and** ambient MathContext, both
+  `(19, HALF_UP)`, cross-checked against `request.rounding`. Relabelling a precision-12 probe fails **on the
+  numbers it was produced at**, not on a label.
+- **Seam blindness is DATA** (`capabilities.json`; absent ⇒ **default-deny**). A third blind spot is **one
+  row** — every affected vector starts refusing with no vector file, schema migration or code change.
+- **`unrecorded_fields`** — pass 3 never recorded the disbursement row's balance; filling it from the
+  contract's rule would store a **derivation as an observation**.
+- **The harness contains no schedule generation or date stepping** — the last due date is *read* from the
+  vector, so **T10 cannot borrow an implementation from its own grader.**
 
 ## Task state
 
 | Task | State |
 |---|---|
-| T1, T3, T3b, T4, T5, **T6**, T16–T19, T21–T24, T26–T54 | **done** (43 of 54) |
+| T1, T3, T3b, T4, T5, T6, **T7**, T16–T19, T21–T24, T26–T55 | **done** (45 of 57) |
 | T25 | done_partial (oracle-free slice) |
-| T2 | **parked** — unpark = gate **G-2** (Buyan: *yes, once, reshaped*) |
-| **T7** | pending — **THE BOTTLENECK**, now unblocked; T9–T15 behind it |
-| T9–T15, T20 | pending |
-| T8 | in_progress — captures taken, **no vector promoted** (promotion is now permitted) |
+| T2 | **parked** — unpark = gate **G-2** |
+| **T8** | in_progress — **THE NEXT BOTTLENECK**: promotion is now possible and nothing is promoted |
+| T9–T15, T20 | pending — **all unblocked by T7** |
 
 ## Open decisions for Buyan
 
-- **None blocking.** G-1 is closed; only **G-2** remains pending and it parks one task, not the program.
-- **May I install a Go toolchain on this Mac?** Not reserved, but it is a durable change to your machine, so
-  no fire has made one unattended. **Nothing compiles until it exists.**
-- **The ratification is reversible.** The driver ratified DEC-1 revision 12 under P-2. If you would rather it
-  had waited for a literal CLEAN round, say so and it can be un-ratified.
+- **None blocking.** Three gates are open and **not one of them parks the program**: **G-2** (one task),
+  **G-3** (nothing — the workaround is in force), **G-4** (nothing — the corrected condition is already in
+  force everywhere except DEC-1's own sentence).
+- **G-3** — leave `contract.go` unformatted (driver recommends **A**), or authorise the inert `gofmt`?
+- **G-4** — authorise a **wording-only** DEC-1 amendment: *"non-zero first segment"* → *"spans two calendar
+  years of differing length"*. Declining leaves DEC-1 known-wrong on one sentence.
+- **A repo-local Go toolchain now exists** and your machine was not touched. Say if you would rather it were
+  installed on the host PATH instead.
+- **The DEC-1 ratification remains reversible.**
 - **RESERVED and untouched:** cutover, regulatory / parallel-run sign-off, deposit-taking activation, licence
   facts. None is in Run 1's path.
-
-## Stranded-branch triage — CLOSED this fire
-
-`softhouse/rescued-agent-a2027f85cea4effc9-*` — `.softhouse/reviews/t24-probe/**` **salvaged** (T24 was the
-only round T23–T47 with no probe artefact on `main`; its output is observed oracle data at `(19, HALF_UP)`).
-Its 37-line DEC-1 edit was **deliberately not taken** — v2-era, and it would have regressed the document.
-`softhouse/rescued-agent-a353b03c0dea4dd41-*` — **not merged, by decision**: raw observations already on
-`main`, attestations stale by T42's eight-point rule, `Capture3.java` a modification of a file T35/T36
-rewrote. Kept on `origin` as the only copy. See `.softhouse/reviews/t24-probe/README-PROVENANCE.md`.
-
-## If a fire dies mid-flight
-
-Check each `softhouse/T*` branch for commits — every worker is told to commit early and often. A branch with
-commits holds rescuable WIP: mark that task `needs_retry` with `note: worker killed mid-flight; rescued WIP
-on <branch>, completeness unverified`. **Never leave it `in_flight`.** And **always check for an existing
-`softhouse/<taskid>-*` branch before dispatching** — a previous fire left a *complete* T38 unmerged with
-`tasks.json` still saying `pending`, and nearly redid fifteen commits of it.
