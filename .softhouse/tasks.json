@@ -204,9 +204,9 @@
       "dependencies": [
         "T8"
       ],
-      "status": "pending",
+      "status": "done",
       "attempts": 0,
-      "note": "A harness nobody proved can fail is not a harness."
+      "note": "A harness nobody proved can fail is not a harness. || FIRE 20260819-200001: DONE AND MERGED (branch softhouse/T9-harness-vectors-review). VERDICT: ACCEPTED WITH REQUIRED CHANGES. The 11 parity vectors are ACCEPTED: all reproduce CELL FOR CELL (1,046 graded cells, 0 disagreements) from a SOURCE-SHAPED re-implementation sharing no formula with DEC-1's prose - the fourth check of the corpus but the FIRST by a different method. Both re-derived margins correct (P-01 65,885,070; P-03 334). THE G-4 HUNT FOUND NOTHING: DEC-1 rev 12 was audited against source in six places (month-end re-anchor incl. the >28/>=28 asymmetry, the two distinct seeds, membership rules M1/M2/M3, n, RateFactorScale, the smoothing loop) and DISAGREED IN NONE. Where DEC-1 and the folklore differ, DEC-1 matches the source. TWO FOLKLORE CORRECTIONS, both relayed to T10 mid-flight: (1) the oracle does NOT use the closed-form EMI - it folds Pi(1+r_i)*P/fn with no pow and no closed form [ProgressiveEMICalculator.java:1838-1840, fold at :1819, DRIVER-CONFIRMED against the pinned checkout]; (2) there is NO 'final principal := remaining balance' - principal is ALWAYS EMI - interest and the LAST UNPAID PERIOD'S EMI absorbs the residual. The closed form reproduces all 11 vectors only because every one runs DAYS_30/DAYS_360 so every r_i is identical; the forms are not guaranteed to agree digit-for-digit at precision 19 once the r_i differ. NINE FINDINGS, three P1: F-1 (unrecorded_fields is an unguarded escape hatch - DEMONSTRATED false PASS, exit 0 -> task T56), F-2 (the EMI smoothing loop is ungraded by all 11 - a port omitting it passes 11/11 -> task T57, oracle-only), F-5/F-3/F-4/F-6/F-7/F-8/F-9 (P2). F-9 is a PROCESS defect worth carrying: the reviewer's worktree was cut from 2ec5976, PREDATING the T8 merge, so the artefact under review was ABSENT; the reviewer re-cut onto main itself. A review brief must name the branch or the worktree must be cut from the commit containing the artefact. NOTHING here is a user gate and NO DEC-1 amendment is proposed."
     },
     {
       "id": "T10",
@@ -1196,6 +1196,45 @@
       "status": "done",
       "attempts": 1,
       "note": "Raised by local fire 20260819-170001. ORACLE-ONLY work no cloud fire can do. Precondition for ever promoting the ACT/ACT arm to a parity vector; until it lands, that arm stays refused with ErrNoDiscriminatingVector, which is the CORRECT behaviour and not a defect to route around. || COMPLETE, fire 20260819-170001. Branch softhouse/T55-leap-boundary-capture, 13 commits, 152 files, 6,351 insertions, ZERO deletions, merged clean. Scope check PASSED (three-dot vs merge-base): everything under .softhouse/capture/leapboundary/ + its handoff; program.json, tasks.json, reference-oracle.md, gates.md, contract.go and DEC-1 all UNTOUCHED. RESULT: 6 discriminating pairs, 5 proven non-discriminating, 33 Path B captures all HTTP 200, additive-only (m_loan 0->0, m_product_loan 21->21), determinism 33/33 byte-identical, negative tests 9/9 breach, invariants I1-I7 pass on all 33. Discrimination: LB-LEAPOUT 27/65 (8,783 minor) - LB-LEAPIN 23/65 (97) - LB-HALFYR 23/65 (17,783) - LB-DEC15IN 11/43 (2,911) - LB-DEC15OUT 11/43 (3,105) - LB-MULTI3 11/43 (41,328). PATH A DISQUALIFIED ON EVIDENCE, not by assumption: it drops the independent variable (LoanApplicationTerms.java:304-351 never copies :380 into :291) - the exact 'capture through a seam that drops your variable' trap the brief warned about. TWO FINDINGS: T55-N1 (DRIVER-RE-DERIVED AND CONFIRMED, digit for digit) - T48-N4's 'non-zero first segment' condition is TOO STRONG; LB-DEC31 has a ZERO first segment and still grades the arm by 6,015 minor units (ARM 0/366+31/365 -> 22014.25 OBSERVED on p3/p4/p7 and in re-runs; PLAIN 31/366 -> 21954.10 counterfactual). Mechanism: PLAIN takes its denominator from the period-START year (366) while ARM assigns days to the year they fall in (365), so segment length is irrelevant - YEAR LENGTHS are what matter. Correct condition: spans two calendar years of differing length. DEC-1 carries the wrong wording -> GATE G-4 (T55 correctly declined to amend a ratified artefact; so did the driver). T55-N2 - PAIR-DIFFERENCE IS THE WRONG PROMOTION FILTER: LB-F29CROSS and LB-MULTI3F report 0 cells on EVERY pair yet grade naive ports by 17,850 and 71,014 minor units, because the setting decides only WHETHER the arm fires, never its denominators; a non-zero-pair promotion rule would have discarded the three best graders in the set. Sent to T7 mid-flight as a schema requirement (model gradeability as 'which counterfactual implementations does this vector kill, by how much' - a graded-against field - NOT as pair-difference). ALSO: T48's existing captures were already further along than the brief assumed - T48B-PUREB-p7 vs -p4 (23/65, 97 minor), T48B-YEAR (157/285) and T48B-QTR (49/109) ALREADY satisfy T48-N4's promotion condition, so LB-LEAPIN was recorded as an ANCHOR (0/65 reproduction) rather than new evidence. NOT WITNESSED, labelled so: no T55 shape separates precision 19 from 12 or HALF_UP from HALF_EVEN (29/36 agree at all; precision 8 does break it at 22/36) - so for those axes (19, HALF_UP) is PROVENANCE, not discrimination. D-2 date confound mechanically excluded: 0 date-cell differences across all 33 pairs, asserted in code."
+    },
+    {
+      "id": "T56",
+      "title": "Close F-1: the unrecorded_fields escape hatch that allows a false PASS",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/conformance/admit.go",
+        "nexus/internal/apps/loanschedule/conformance/report.go",
+        "nexus/internal/apps/loanschedule/conformance/structural.go"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T9"
+      ],
+      "status": "in_progress",
+      "attempts": 0,
+      "note": "Raised by T9 finding F-1 (P1), fire 20260819-200001. THE DEFECT CLASS THIS PIPELINE EXISTS TO PREVENT: the harness reporting that it graded something it did not. F-1a admit.go enforces 'unrecorded => empty' on the THREE MONEY COLUMNS ONLY, so kind/installment_number/from_date/due_date may be populated AND ungraded. F-1b nothing cross-checks graded_against[].divergent_cells against unrecorded_fields. T9 DEMONSTRATED the exploit end to end: withdrew all nine cells of MONTHEND-CONTINUE-FROM-CLAMPED-DAY in P-02 and P-02b, left 1999-01-01 in place -> 11/11 PASS, 'monthend.reanchor killed by ...' still printed, EXIT 0. Also folds in F-5 (P2): all 15 --prove cases perturb only the hand-authored self-test fixture; none perturbs a parity vector and none perturbs a date cell. installment_number is the awkward one - it is an int, so absent and zero are indistinguishable, and it is ALREADY declared unrecorded on every DISBURSEMENT row in the committed store (T9 F-1c). Acceptance test is T9's exploit reproduced and shown to fail."
+    },
+    {
+      "id": "T57",
+      "title": "Capture and promote the two EMI-smoothing-loop shapes DEC-1 already names",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/capture/",
+        "+.softhouse/vectors/loanschedule/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T9"
+      ],
+      "status": "in_progress",
+      "attempts": 0,
+      "note": "Raised by T9 finding F-2 (P1), fire 20260819-200001. ORACLE-ONLY WORK - only a fire that reaches the live reference oracle can do it, which is why it was dispatched this fire. DEC-1 calls the EMI re-adjust smoothing loop a normative conformance obligation, 'not backlog' (contract.go:1660-1661), but NONE of the 11 promoted vectors trips its guard |lastEMI - penultimateEMI| > floor(n/2) minor units (EmiAdjustment.java:31-44); the closest, P-MNT-4M999, misses by ONE minor unit (8 vs 9). So a Go port omitting checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods entirely PASSES 11 OF 11 - T9's own no-loop re-derivation reproduces every cell, which is the proof. DEC-1 names two shapes that DO trip it at contract.go:1655-1658: MNT 1,014,632 / 6 x 7.0% (oracle 172,574.64 vs no-loop 172,574.63, every period shifts) and MNT 127,704 / 36 x 16.8% (total interest 35,746.56 vs 35,746.69). Neither was ever captured. Reuses the self-failing pass-3b rig with a calibration case; margins must be DERIVED from the new capture, not transcribed from DEC-1."
     }
   ]
 }
