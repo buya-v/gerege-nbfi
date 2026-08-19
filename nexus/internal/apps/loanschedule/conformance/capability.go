@@ -240,6 +240,12 @@ func (r *CapabilityRegistry) CounterfactualCoverage(vectors []*Vector) (map[stri
 			continue
 		}
 		for _, cf := range v.GradedAgainst {
+			// FINDING T9-F1b: a structural kill whose every divergent cell has
+			// been withdrawn from grading covers NOTHING and must not print as
+			// killing anything. See Vector.StructuralKillIsCompared.
+			if !v.StructuralKillIsCompared(cf) {
+				continue
+			}
 			if graded, defined := r.IsGraded(cf.Capability); defined && graded {
 				// The kind is carried into the coverage listing, because "this
 				// capability is covered" reads very differently when every

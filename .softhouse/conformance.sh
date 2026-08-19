@@ -443,6 +443,110 @@ prove() {
       "$bin" -self-test "-store=$tmp/unrecorded" "-replay-store=$tmp/unrecorded" -context=_selftest
   fi
 
+
+  # --- The T56 additions. Finding T9-F5: before these, ALL FIFTEEN proofs above
+  #     perturbed one file — the hand-authored self-test fixture — so no proof
+  #     touched a PARITY vector and no proof touched a DATE cell. The date-grading
+  #     capability was real but only reading diffSchedule established it, and
+  #     --prove is what a later agent runs INSTEAD of reasoning.
+
+  # 15. T9-F5(a): a PARITY vector, money cell, perturbed CONSISTENTLY so the
+  #     transcription cross-check cannot be what catches it. This is the review's
+  #     mutation M2: P-03's last period, interest 12 -> 13 with the oracle's own
+  #     wire text moved with it.
+  mkdir -p "$tmp/parity-money"
+  cp -R "$STORE_ROOT/." "$tmp/parity-money/"
+  perl -0pi -e 's/"interest_minor": "12",/"interest_minor": "13",/; s/"interest_major_text": "0\.12",/"interest_major_text": "0.13",/' \
+    "$tmp/parity-money/loanschedule/P-03-disbursement-on-repayment-due-date.json"
+  if assert_mutated "$tmp/parity-money/loanschedule/P-03-disbursement-on-repayment-due-date.json" '"interest_minor": "13",'; then
+    expect_saying 1 "row 6 interest_minor: expected 13 minor units, got 12" \
+      "T9-F5: a one-minor-unit perturbation of a PARITY vector goes red" -- \
+      "$bin" -self-test "-store=$tmp/parity-money" "-replay-store=$STORE_ROOT"
+  fi
+
+  # 16. T9-F5(b): a PARITY vector, DATE cell. The review's mutation M4, and the
+  #     one the brief was rightly worried about: monthend.reanchor's counterfactual
+  #     carries a margin_minor of exactly 0, so its whole kill lives in the date
+  #     columns. If the harness could not go red here, that capability would be
+  #     backed by nothing at all. P-02 period 2's due date is 2024-03-31 because
+  #     the oracle RE-ANCHORS on the day-31 seed; the clamp-and-continue port the
+  #     counterfactual names would emit 2024-03-29.
+  mkdir -p "$tmp/parity-date"
+  cp -R "$STORE_ROOT/." "$tmp/parity-date/"
+  perl -0pi -e 's/"due_date": \{\n(\s+)"year": 2024,\n(\s+)"month": 3,\n(\s+)"day": 31/"due_date": {\n$1"year": 2024,\n$2"month": 3,\n$3"day": 29/' \
+    "$tmp/parity-date/loanschedule/P-02-monthend-seed-day-31.json"
+  if assert_mutated "$tmp/parity-date/loanschedule/P-02-monthend-seed-day-31.json" '"day": 29'; then
+    expect_saying 1 "row 2 due_date: expected 2024-03-29, got 2024-03-31" \
+      "T9-F5: a DATE cell of a PARITY vector goes red, naming the row and both dates" -- \
+      "$bin" -self-test "-store=$tmp/parity-date" "-replay-store=$STORE_ROOT"
+  fi
+
+  # 17. T9-F1a: "marked unrecorded but carries a value" used to be enforced on the
+  #     three money columns and nowhere else, so a DATE could be simultaneously
+  #     populated and ungraded. Withdraw the disbursement row's due_date while
+  #     leaving the observed 2024-01-31 sitting in the file. Nothing in the store
+  #     names that cell as a divergent cell, so this isolates F-1a from F-1b.
+  #     Before the fix this run exited 0.
+  mkdir -p "$tmp/populated-unrecorded"
+  cp -R "$STORE_ROOT/." "$tmp/populated-unrecorded/"
+  perl -0pi -e 's/"installment_number",\n(\s+)"interest_minor"\n/"due_date",\n$1"installment_number",\n$1"interest_minor"\n/' \
+    "$tmp/populated-unrecorded/loanschedule/P-02-monthend-seed-day-31.json"
+  if assert_mutated "$tmp/populated-unrecorded/loanschedule/P-02-monthend-seed-day-31.json" '"due_date",'; then
+    expect_saying 2 "is marked unrecorded but carries the date 2024-01-31" \
+      "T9-F1a: a POPULATED non-money cell withdrawn from grading is inadmissible" -- \
+      "$bin" -self-test "-store=$tmp/populated-unrecorded" "-replay-store=$STORE_ROOT"
+  fi
+
+  # 18. T9-F1b, the direction that must REFUSE. This is the review's exploit in
+  #     miniature: take the cell MONTHEND-CONTINUE-FROM-CLAMPED-DAY names first,
+  #     in both vectors that carry that kill, write garbage into it and withdraw
+  #     it from grading. The full version — all nine cells, both files — produced
+  #     "11/11 PASS, monthend.reanchor killed by MONTHEND-CONTINUE-FROM-CLAMPED-DAY,
+  #     exit 0": a capability reported as killed by a counterfactual whose every
+  #     named cell had been withdrawn.
+  mkdir -p "$tmp/withdrawn-kill"
+  cp -R "$STORE_ROOT/." "$tmp/withdrawn-kill/"
+  perl -0pi -e 's/"due_date": \{\n(\s+)"year": 2024,\n(\s+)"month": 3,\n(\s+)"day": 31/"due_date": {\n$1"year": 1999,\n$2"month": 1,\n$3"day": 1/;
+                s/"outstanding_principal_major_text": "67\.05",\n(\s+)"unrecorded_fields": \[\]/"outstanding_principal_major_text": "67.05",\n$1"unrecorded_fields": ["due_date"]/' \
+    "$tmp/withdrawn-kill/loanschedule/P-02-monthend-seed-day-31.json"
+  perl -0pi -e 's/"due_date": \{\n(\s+)"year": 2024,\n(\s+)"month": 3,\n(\s+)"day": 30/"due_date": {\n$1"year": 1999,\n$2"month": 1,\n$3"day": 1/;
+                s/"outstanding_principal_major_text": "67\.05",\n(\s+)"unrecorded_fields": \[\]/"outstanding_principal_major_text": "67.05",\n$1"unrecorded_fields": ["due_date"]/' \
+    "$tmp/withdrawn-kill/loanschedule/P-02b-monthend-seed-day-30.json"
+  if assert_mutated "$tmp/withdrawn-kill/loanschedule/P-02-monthend-seed-day-31.json" '"unrecorded_fields": ["due_date"]' \
+     && assert_mutated "$tmp/withdrawn-kill/loanschedule/P-02b-monthend-seed-day-30.json" '"unrecorded_fields": ["due_date"]'; then
+    expect_saying 2 "WITHDRAWS from grading" \
+      "T9-F1b: a structural kill naming a cell the vector withdrew is inadmissible" -- \
+      "$bin" -self-test "-store=$tmp/withdrawn-kill" "-replay-store=$STORE_ROOT"
+  fi
+
+  # 19. T9-F1b, BOTH DIRECTIONS, asserted on the report text rather than the exit
+  #     code — because the defect this closes was never visible in the exit code.
+  #     Over the store from proof 18 the capability must be reported UNBACKED and
+  #     the "killed by" line must be GONE; over the pristine store, where the same
+  #     nine cells are recorded and graded, the same kill must still be credited.
+  #     A rule that refused both would be a rule that had simply broken grading.
+  local out19a rc19a out19b rc19b ok19
+  out19a="$("$bin" -self-test "-store=$tmp/withdrawn-kill" "-replay-store=$STORE_ROOT" 2>&1)"; rc19a=$?
+  out19b="$("$bin" -self-test 2>&1)"; rc19b=$?
+  ok19=1
+  [ "$rc19a" = 2 ] || ok19=0
+  [ "$rc19b" = 0 ] || ok19=0
+  printf '%s' "$out19a" | grep -q 'UNBACKED in_graded_domain claims: monthend.reanchor' || ok19=0
+  printf '%s' "$out19a" | grep -q 'killed by MONTHEND-CONTINUE-FROM-CLAMPED-DAY' && ok19=0
+  printf '%s' "$out19b" | grep -q 'killed by MONTHEND-CONTINUE-FROM-CLAMPED-DAY' || ok19=0
+  printf '%s' "$out19b" | grep -q 'parity vectors          PASS 11' || ok19=0
+  if [ "$ok19" = 1 ]; then
+    say "PROOF OK   exit $rc19a/$rc19b       T9-F1b: withdrawn cells STOP backing the kill; recorded ones still back it"
+    pass=$((pass+1))
+  else
+    say "PROOF FAIL exit $rc19a/$rc19b       T9-F1b coverage is not as claimed (want 2 then 0)"
+    say "$out19a"
+    say "$out19b"
+    fail=$((fail+1))
+  fi
+  printf '%s\n' "$out19a" | grep -E 'UNBACKED|monthend.reanchor|VERDICT'
+  printf '%s\n' "$out19b" | grep -E 'monthend.reanchor|parity vectors|VERDICT'
+  say ""
   say "======================================================================="
   say "PROOFS: $pass passed, $fail failed"
   say "======================================================================="
