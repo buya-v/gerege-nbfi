@@ -1,0 +1,6 @@
+AUDIT P-EMI-6-1M014632-emi-smoothing-loop.json
+   155 cells compared, 0 mismatches
+AUDIT P-EMI-36-127704-emi-smoothing-loop.json
+   695 cells compared, 0 mismatches
+TOTAL 850 cells compared, 0 mismatches
+Fraction cross-check: 176 money cells, 0 mismatches

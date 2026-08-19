@@ -1,0 +1,264 @@
+{
+  "schema": "gerege.loanschedule.vector/v1",
+  "case_id": "P-EMI-6-1M014632",
+  "context": "loanschedule",
+  "class": "parity",
+  "title": "EMI RE-ADJUST SMOOTHING LOOP, 6 periods. MNT 1,014,632.00 over 6 monthly repayments at 7.0% p.a. The loop checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods (ProgressiveEMICalculator.java:1258-1309) FIRES on this shape: its guard (EmiAdjustment.java:31-36) sees |lastEMI - penultimateEMI| = 4 minor units against a threshold of floor(6/2) = 3, adjusts the level installment from the recurrence's raw 172,574.63 up to the observed 172,574.64, and EVERY period shifts. DEC-1 names this shape at contract.go:1656-1657 and calls reproducing the loop 'a conformance obligation, not backlog' (contract.go:1660-1661); before this vector no promoted vector graded it.",
+  "dec1_revision": 12,
+  "_note": "TRANSCRIPTION NOTES. (1) request.currency.code is upper-cased from the capture's own spelling 'MNT'; admit.go requires upper case and the contract forbids the oracle's lower-case fixture spelling leaking back out. (2) request.time_zone is DECLARED, not observed: the Path A embeddable seam takes java.time.LocalDate only and has no time-zone input at all, so Asia/Ulaanbaatar is this vector's declared interpretation zone for civil dates and grades nothing. (3) request.rounding.rate_factor_scale is 19 from PIN.json's production_rounding; the capture records one MathContext precision (19) which is both. (4) On the DISBURSEMENT row, installment_number and interest_minor are marked unrecorded_fields: the oracle's own record type LoanSchedulePlanDisbursementPeriod carries exactly four fields (periodFromDate, periodDueDate, principalAmount, outstandingLoanBalance) and its periodNumber() returns null, with no interest accessor at all [VERIFIED: fineract-progressive-loan/.../LoanSchedulePlanDisbursementPeriod.java:25-35], and Capture3c.java emits every field the record does carry. So those two cells were NOT OBSERVED. DEC-1 normalises the null installment number to 0 and that normalisation is part of the CONTRACT, not an oracle observation -- filling it here would be storing a derivation as an observation, the exact defect unrecorded_fields exists to prevent. (5) The capture's per-row totalOutstandingBalance column is deliberately NOT promoted: it is principal plus interest still to accrue, not an outstanding-principal figure, and the frozen contract has no field for it. (6) PROVENANCE OF THE SHAPE: this vector's inputs are the ones DEC-1 itself names at contract.go:1655-1658. They are NOT new to the program -- task T37 captured the same two shapes through a different Path A harness (.softhouse/capture/dec1-binding/out/t37-binding.json, cases T37-3-A and T37-3-B) and pass 3c reproduces those observations cell for cell. What pass 3c adds is the pass-3b rig's guarantees, which T37's harness did not carry: the in-container attestation, the plan-level totalPrincipalAmount / totalFeeAmount / totalPenaltyAmount / totalOutstandingAmount columns, and a runner that refuses to leave a capture behind on any of eleven precondition breaches. Promotion needs those; T37's captures were never promoted. (7) THE GUARD MUST BE EVALUATED ON THE PRE-ADJUSTMENT MODEL, not on the observed output. The loop is called at ProgressiveEMICalculator.java:749, after calculateLastUnpaidRepaymentPeriodEMI at :747; once it has run, the residual it exists to shrink is smaller. On this vector the guard trips on the no-loop model and the loop then changes the schedule -- which is what makes the vector grade the loop -- so screening a candidate by re-computing the guard on the ORACLE'S OWN OUTPUT understates which shapes grade it. See .softhouse/handoff/T57-emi-smoothing-loop-vectors.md, finding N-1.",
+  "capabilities_required": [
+    "schedule.core"
+  ],
+  "graded_against": [
+    {
+      "id": "EMI-SMOOTHING-LOOP-OMITTED",
+      "capability": "schedule.core",
+      "description": "Implements the level installment from the recurrence and the final-period balancing adjustment, but OMITS the smoothing loop checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods (ProgressiveEMICalculator.java:1258-1309, called at :749 on every ordinary generation, at most three iterations). The loop re-levels the installment across the related repayment periods whenever the final-period residual exceeds its guard, so a port without it emits the RAW installment 172574.63 where the oracle emits 172574.64, and the divergence propagates through every subsequent period's principal and outstanding balance. DEC-1 calls reproducing this loop 'a conformance obligation, not backlog' (contract.go:1660-1661).",
+      "margin_minor": "5",
+      "evidence": "Derived at the ratified production MathContext (19, HALF_UP); every OBSERVED value below is transcribed from this capture and only the counterfactual is derived.\nGUARD, evaluated where the oracle evaluates it. The loop runs AFTER calculateLastUnpaidRepaymentPeriodEMI (ProgressiveEMICalculator.java:747 then :749), so the state its guard sees is exactly the no-loop schedule. r = 7.0 / 100 x 30/360 = 0.0058333333333333333 (setScale 19, HALF_UP). rateFactorPlus1N = 1.035514403982984519 and fnResult = 6.088183539940203430, both folded under mc(19) per :1816-1828, give a raw installment of 1.035514403982984519 x 1014632 / 6.088183539940203430 = 172574.63 at Money 2dp HALF_UP. Last-period balancing (:1176-1210) then raises the final EMI to 172574.67, so |lastEMI - penultimateEMI| = |172574.67 - 172574.63| = 0.04 = 4 MINOR UNITS. EmiAdjustment.shouldBeAdjusted (EmiAdjustment.java:31-36) compares |diff| x 100 against originalEmi.copy(floor(n/2)); Money.copy(double) REPLACES the amount (Money.java:220-222) so the threshold is floor(6/2) = 3 currency units flat, i.e. 3 minor units. 4 > 3, SO THE GUARD TRIPS and the loop fires.\nMARGIN. The oracle OBSERVES level installment 172574.64; the counterfactual emits 172574.63. Over the graded money columns the two schedules differ on 6 of 6 paying rows. The widest single-cell disagreement is at paying period 5, column outstanding_principal_minor: oracle OBSERVED 17157377 minor units against the counterfactual's 17157382, so the margin is |17157377 - 17157382| = 5 MINOR UNITS. Observed total interest is 20815.82 (2081582 minor units) against the counterfactual's 20815.82 (2081582 minor units), a difference of 0 minor units.\nCOUNTERFACTUAL PROVENANCE. The no-loop model is .softhouse/capture/emiloop/noloop_model.py, transcribed step for step from the pinned source. Its faithfulness is not assumed: as a CONTROL it reproduces every principal, interest and outstanding-balance cell of ten of the eleven already-promoted parity vectors exactly (P-03 excluded, its disbursement falling on a repayment due date), which is also the direct proof that the loop changes NOTHING on those ten and that this corpus could not grade it before. See .softhouse/capture/emiloop/analyse-output.txt."
+    },
+    {
+      "id": "LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT",
+      "capability": "schedule.core",
+      "description": "Emits the level installment in the final period like every other period, so the final principal is (installment - interest) instead of the WHOLE REMAINING BALANCE. The schedule then does not amortize to exactly zero.",
+      "margin_minor": "2",
+      "evidence": "Derived at (19, HALF_UP) from cells observed in this capture. Observed level installment (row total on every non-final paying period) = 172574.64; observed FINAL row total = 172574.62, so the oracle does NOT carry the level installment into the final period. Counterfactual final principal = level installment 172574.64 - observed final interest 1000.85 = 171573.79. Observed final principal = 171573.77. Margin = |17157377 - 17157379| = 2 minor units, and the counterfactual's closing balance is non-zero, so the principal_amortizes_to_zero invariant also catches it."
+    },
+    {
+      "id": "STRAIGHT-LINE-PRINCIPAL-DIVISION",
+      "capability": "schedule.core",
+      "description": "Splits the principal evenly across the repayments (principal / n each period) and adds declining-balance interest on top, instead of taking principal as the BALANCING REMAINDER of a level installment after interest. Produces a rising total due rather than a level one.",
+      "margin_minor": "246844",
+      "evidence": "Derived at (19, HALF_UP). Counterfactual per-period principal = disbursed 1014632 / 6 = 169105.33 (HALF_UP to 2dp). Widest disagreement is at paying period 6, where the oracle OBSERVED principal 171573.77 (17157377 minor units) against the counterfactual's 169105.33 (16910533 minor units): margin = 246844 minor units. The disbursed amount and every observed principal are transcribed from this capture; only the division is derived."
+    }
+  ],
+  "retires_when_capability_graded": "",
+  "provenance": {
+    "kind": "oracle-capture",
+    "note": "TRANSCRIBED, never computed, from Path A capture pass 3c (.softhouse/capture/src/run-pass3c.sh, Capture3c.java). Every expect cell is a value literally present in the referenced capture for capture case P-EMI-6-1M014632; the only transformation is exact textual major->minor scaling (\"172574.64\" -> \"17257464\"), and the oracle's own emitted characters are carried alongside in the *_major_text cross-check fields so the scaling is mechanically re-checkable. The pass-3c run reproduced two already-committed pass-3b observations as rig calibrations before emitting anything: P-CAL at (12, HALF_UP) and P-CAL-P00 at the production (19, HALF_UP), inputs and observed blocks both identical. Promotion script: .softhouse/handoff/T57-promote-emi-vectors.py (task T57).",
+    "capture_ref": ".softhouse/capture/out/capture-prod3c-raw.json",
+    "capture_sha256": "cae566d3ba99c69704fdb5dca21e247b3ec7d20c2e5ccc4e50b97721e8c92dec",
+    "capture_case_id": "P-EMI-6-1M014632",
+    "citation": ""
+  },
+  "oracle": {
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "seam": "path_a_embeddable",
+    "captured_at": "2026-08-19T13:11:58.415371634Z",
+    "threaded_mathcontext": {
+      "precision": 19,
+      "rounding_mode": "HALF_UP"
+    },
+    "ambient_mathcontext": {
+      "precision": 19,
+      "rounding_mode": "HALF_UP"
+    }
+  },
+  "request": {
+    "time_zone": "Asia/Ulaanbaatar",
+    "currency": {
+      "code": "MNT",
+      "minor_unit_digits": 2
+    },
+    "rounding": {
+      "significant_digits": 19,
+      "rate_factor_scale": 19,
+      "mode": "HALF_UP"
+    },
+    "schedule_start_date": {
+      "year": 2024,
+      "month": 1,
+      "day": 1
+    },
+    "disbursements": [
+      {
+        "date": {
+          "year": 2024,
+          "month": 1,
+          "day": 1
+        },
+        "amount_minor": "101463200"
+      }
+    ],
+    "number_of_repayments": 6,
+    "repayment_every": 1,
+    "repayment_frequency_unit": "MONTHS",
+    "annual_nominal_interest_rate": {
+      "numerator": 7,
+      "denominator": 100
+    },
+    "interest_method": "DECLINING_BALANCE",
+    "day_count": "FIXED_30_360",
+    "down_payment_percentage": {
+      "numerator": 0,
+      "denominator": 1
+    },
+    "installment_rounding_multiple_minor": "0"
+  },
+  "expect": {
+    "kind": "schedule",
+    "sentinel": "",
+    "last_repayment_due_date": null,
+    "observed_total_interest_minor": "2081582",
+    "periods": [
+      {
+        "kind": "DISBURSEMENT",
+        "installment_number": 0,
+        "from_date": {
+          "year": 2024,
+          "month": 1,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 1,
+          "day": 1
+        },
+        "principal_minor": "101463200",
+        "interest_minor": "",
+        "outstanding_principal_minor": "101463200",
+        "principal_major_text": "1014632.00",
+        "interest_major_text": "",
+        "outstanding_principal_major_text": "1014632.00",
+        "unrecorded_fields": [
+          "installment_number",
+          "interest_minor"
+        ],
+        "observed_total_due_minor": null
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 1,
+        "from_date": {
+          "year": 2024,
+          "month": 1,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 2,
+          "day": 1
+        },
+        "principal_minor": "16665595",
+        "interest_minor": "591869",
+        "outstanding_principal_minor": "84797605",
+        "principal_major_text": "166655.95",
+        "interest_major_text": "5918.69",
+        "outstanding_principal_major_text": "847976.05",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "17257464"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 2,
+        "from_date": {
+          "year": 2024,
+          "month": 2,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 3,
+          "day": 1
+        },
+        "principal_minor": "16762811",
+        "interest_minor": "494653",
+        "outstanding_principal_minor": "68034794",
+        "principal_major_text": "167628.11",
+        "interest_major_text": "4946.53",
+        "outstanding_principal_major_text": "680347.94",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "17257464"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 3,
+        "from_date": {
+          "year": 2024,
+          "month": 3,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 4,
+          "day": 1
+        },
+        "principal_minor": "16860594",
+        "interest_minor": "396870",
+        "outstanding_principal_minor": "51174200",
+        "principal_major_text": "168605.94",
+        "interest_major_text": "3968.70",
+        "outstanding_principal_major_text": "511742.00",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "17257464"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 4,
+        "from_date": {
+          "year": 2024,
+          "month": 4,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 5,
+          "day": 1
+        },
+        "principal_minor": "16958948",
+        "interest_minor": "298516",
+        "outstanding_principal_minor": "34215252",
+        "principal_major_text": "169589.48",
+        "interest_major_text": "2985.16",
+        "outstanding_principal_major_text": "342152.52",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "17257464"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 5,
+        "from_date": {
+          "year": 2024,
+          "month": 5,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 6,
+          "day": 1
+        },
+        "principal_minor": "17057875",
+        "interest_minor": "199589",
+        "outstanding_principal_minor": "17157377",
+        "principal_major_text": "170578.75",
+        "interest_major_text": "1995.89",
+        "outstanding_principal_major_text": "171573.77",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "17257464"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 6,
+        "from_date": {
+          "year": 2024,
+          "month": 6,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 7,
+          "day": 1
+        },
+        "principal_minor": "17157377",
+        "interest_minor": "100085",
+        "outstanding_principal_minor": "0",
+        "principal_major_text": "171573.77",
+        "interest_major_text": "1000.85",
+        "outstanding_principal_major_text": "0.00",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "17257462"
+      }
+    ]
+  },
+  "invariant_exemptions": []
+}

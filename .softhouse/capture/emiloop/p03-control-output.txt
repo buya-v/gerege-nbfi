@@ -1,0 +1,9 @@
+P-03 row 1 is all-zero as expected: '0.00'
+no-loop model over n = 5: r = 0.0058333333333333333, raw EMI = 20.35
+  period 2  principal 19.77/19.77  interest 0.58/0.58  balance 80.23/80.23  OK
+  period 3  principal 19.88/19.88  interest 0.47/0.47  balance 60.35/60.35  OK
+  period 4  principal 20.00/20.00  interest 0.35/0.35  balance 40.35/40.35  OK
+  period 5  principal 20.11/20.11  interest 0.24/0.24  balance 20.24/20.24  OK
+  period 6  principal 20.24/20.24  interest 0.12/0.12  balance 0.00/0.00  OK
+guard on the no-loop model: |diff| = 1 minor units vs threshold floor(5/2) = 2 -> does not trip
+P-03 control: REPRODUCED -- the loop changes nothing here
