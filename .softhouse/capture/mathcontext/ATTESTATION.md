@@ -117,6 +117,43 @@ Four `MoneyHelper.getMathContext` call sites in the two classes that build a sch
 [VERIFIED: `out/t42-pathb-wiring.txt`; source counterpart `LoanScheduleAssembler.java:753`, `:765`,
 `:777`, `:797`, `LoanScheduleGeneratorServiceImpl.java:44`]
 
+> **CORRECTION — M-6. This section's only shipped machine assertion was
+> `grep -c 'MoneyHelper.getMathContext' != 0`** (`src/read-pathb-wiring.sh`, the `N_GMC` check).
+> The same-local-slot claim — the content of ratified rule 4 — was left to the reader ("Read the
+> dataflow yourself in the transcript"), unasserted and with no negative leg.
+>
+> **T46 closed it.** `analysis/t46_assert_pathb_slot.py` asserts, off the `javap` transcript:
+> **A1** the instruction after `invokestatic MoneyHelper.getMathContext` is `astore <slot>`;
+> **A2** that slot is later `aload`ed into an `invoke*` whose descriptor takes a `MathContext`;
+> **A3** the slot is not re-assigned in between. `src/t46-assert-pathb-slot.sh` runs it against
+> the committed transcript **and against a fresh read-only `javap` re-read of the running
+> server**, then runs it again against a **slot-drifted** copy, which it must reject.
+> Result: **PASS on both real transcripts, FAIL (6 breaches) on the drifted one**
+> [VERIFIED: `analysis/t46-pathb-slot-assertion-output.txt`].
+>
+> The re-read confirms the deployed digests independently, 20 hours after T42 took them:
+> jar `60fb6dbd631d…f4c9`, `LoanScheduleAssembler.class`
+> `d5ef39897399157de96503dd242f0f999acde87bf59a191c812ab2f3547711ea` — the same digest T42 and
+> the T44 audit each recorded — and, newly recorded,
+> `LoanScheduleGeneratorServiceImpl.class` sha256
+> `eca9b7d9010722e19c90bfd84c29cba9e3352adc0b460020b0df96608d1e31d6`
+> [VERIFIED: `out/t46-pathb-wiring-reread.txt`].
+>
+> **CORRECTION — M-9. "…and pass it to `generate(mc, …)`" is wrong for 2 of the 4 sites.**
+> Machine-extracted from the deployed bytecode, and re-read in the pinned source:
+>
+> | site | what it actually does with the `MathContext` |
+> |---|---|
+> | `LoanScheduleAssembler.java:753` (slot 9) | `updateInterestForEqualAmortization(mc, …)` at `:758`, **and** `loanScheduleGenerator.generate(mc, …)` at `:765` — the claim holds |
+> | `LoanScheduleAssembler.java:777` (slot 6) | `loanScheduleGenerator.rescheduleNextInstallments(mc, …)` at `:787-788` — **not `generate`** |
+> | `LoanScheduleAssembler.java:797` (slot 8) | `loanScheduleGenerator.calculatePrepaymentAmount(currency, onDate, terms, mc, …)` at `:805-806` — **not `generate`, and `mc` is the 4th argument, not the 1st** |
+> | `LoanScheduleGeneratorServiceImpl.java:44` (slot 2) | `scheduleGenerator.generate(mc, modelData)` at `:63` — the claim holds |
+>
+> [VERIFIED: `analysis/t46-pathb-slot-assertion-output.txt` for the bytecode; the pinned source
+> lines re-opened by T46 in `/Users/buv/fineract`]. The *substance* of rule 4 is unaffected —
+> on every one of the four the threaded context is the ambient object — but the wiring row must
+> name what each caller invokes, not assume they all invoke `generate`.
+
 ### 2.4 The one place on Path A where the ambient IS read
 
 Observed, with the exact line named by the oracle's own stack trace:

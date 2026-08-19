@@ -17,6 +17,9 @@ Pinned checkout `/Users/buv/fineract` at `426a23544e8426a38ae43ae404670a0a7e85b9
 **Additive only.** No charge definition was created, modified or deleted — T40's `m_charge` ids **1–12**
 are used exactly as they stand. Nothing was restarted, re-tenanted, dropped or written to schema. The
 only endpoint touched is `POST /loans?command=calculateLoanSchedule`, which persists nothing.
+**The tenant was left exactly as found** [VERIFIED by this task, read-only SQL after every capture:
+`psql -d fineract_gerege -tAc "select (select count(*) from m_charge), (select count(*) from m_loan),
+(select count(*) from m_product_loan)"` → **`12|0|16`**]. PostgreSQL 18.3 is the only engine reached.
 
 ---
 
