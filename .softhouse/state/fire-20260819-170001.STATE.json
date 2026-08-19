@@ -1,0 +1,27 @@
+{
+  "fire": "20260819-170001",
+  "host": "local (Buyan's Mac)",
+  "run_id": "2026-08-17-run1-harness-schedule-poc",
+  "context": "tier0-harness-schedule-poc",
+  "exit": "clean - all dispatched workers awaited, nothing left running",
+  "oracle": "REACHABLE throughout; fineract:latest + postgres:18.3 healthy, never restarted",
+  "current_item": "T8 - promote the capture corpus into the vector store T7 just defined",
+  "step": "not started; T7's schema landed this fire and .softhouse/vectors/ still holds ZERO parity vectors",
+  "branch": null,
+  "next_action": "Plan and dispatch T8 (promotion) and T9 (independent review of harness + vectors). T8 is oracle-optional - the captures already exist - but an oracle-reaching fire should prefer it so any re-capture the promotion audit demands can be taken in the same fire.",
+  "blocked_on": null,
+  "open_questions": [
+    "G-3: leave contract.go unformatted (driver recommends A) or authorise the inert gofmt?",
+    "G-4: authorise a wording-only DEC-1 amendment - 'non-zero first segment' -> 'spans two calendar years of differing length'?",
+    "G-2: permit a third, differently-shaped attempt at T2?"
+  ],
+  "gate_pending": ["G-2", "G-3", "G-4"],
+  "hard_constraints_for_the_next_worker": [
+    "PROMOTION ORDERING: promote a covering vector BEFORE flipping in_graded_domain, or the run is fatal with 'UNBACKED in_graded_domain claims'. The harness already reports that for schedule.core and monthend.reanchor - honest, not a defect.",
+    "Passes 1-2 ran at precision 12/8 and may NEVER be promoted as parity vectors. Pass 3's P-CAL is calibration only.",
+    "Gradeability is graded_against[] - which NAMED wrong implementations a vector kills and by how much - NOT pair-difference. An all-products-identical capture is not evidence of non-gradeability (T55-N2).",
+    "Money is an integer STRING in minor units; no JSON number anywhere may contain '.', 'e' or 'E'.",
+    "contract.go is FROZEN and byte-identical (sha256 0db73d4af996737d...). Never gofmt -w it (G-3). gofmt -l reporting exactly that one file is the EXPECTED state.",
+    "The Go toolchain is repo-local and NOT on PATH: source .softhouse/bin/go-env.sh in every shell. A fresh clone must re-fetch it."
+  ]
+}
