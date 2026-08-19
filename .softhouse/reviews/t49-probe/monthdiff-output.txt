@@ -1,0 +1,13 @@
+days in window                 : 14976
+ordered pairs a <= b           : 112147776 (DEC-1 says 112,147,776)
+[:1432] predicate FIRES        : 45253 (DEC-1 says 45,253)
+
+--- exhaustive sub-sweep 2000-01-01..2005-12-31 (first principles) ---
+pairs                          : 2403528
+predicate fires                : 928
+packed != clamped              : 928
+fires AND packed == clamped    : 0 (DEC-1 says 0 over the full window)
+not-fires AND packed != clamped: 0 (DEC-1 says 0)
+k_oracle != k_clamped          : 0 (DEC-1 says 0)
+k_oracle != k_packed           : 928 (== the firing count)
+first firing pair              : 2000-01-29 2001-02-28 packed 12 clamped 13 oracle 13
