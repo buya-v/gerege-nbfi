@@ -246,9 +246,9 @@
       "dependencies": [
         "T10"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 0,
-      "note": "Paired independent reviewer for T10 \u2014 mandatory, re-derives. || FIRE 20260819-200001: DISPATCHED (softhouse/T11-go-port-review). Scoped to attack what the CORPUS cannot see: the three money-moving mutations that survive all 13 vectors (textbook balance x rateFactor collapsing 3 rounded ops into 1; rate factor without the trailing setScale; periodRatio -> RepaymentEvery). For each it must determine CORRECTNESS FROM SOURCE, since conformance cannot, and name a capturable shape that would grade it. Also told to verify its own base first - the worktree cut-point defect recurred three times this fire."
+      "note": "Paired independent reviewer for T10 \u2014 mandatory, re-derives. || FIRE 20260819-200001: DISPATCHED (softhouse/T11-go-port-review). Scoped to attack what the CORPUS cannot see: the three money-moving mutations that survive all 13 vectors (textbook balance x rateFactor collapsing 3 rounded ops into 1; rate factor without the trailing setScale; periodRatio -> RepaymentEvery). For each it must determine CORRECTNESS FROM SOURCE, since conformance cannot, and name a capturable shape that would grade it. Also told to verify its own base first - the worktree cut-point defect recurred three times this fire. || FIRE 20260819-200001: DONE AND MERGED (softhouse/T11-go-port-review). VERDICT: ACCEPTED WITH REQUIRED CHANGES. THE PORT HAS NO ARITHMETIC DEFECT: 22 counterfactuals derived from source, none exposed one. T11 re-derived every money path from the pinned Fineract source (fold-accumulator EMI with no pow, the three separately mc-rounded interest operations, the trailing setScale, both rate-factor call sites, the two distinct date seeds, the residual on the last unpaid period's EMI, the smoothing loop) and CONFIRMED T10's subtle claim that the first multiply against ONE is not a no-op. It also checked two traps that would have broken every due date and every clamp (calculatedRepaymentsStartingFromDate vs repaymentsStartingFromDate; getTotalCreditedAmount vs getCreditedAmounts) - the port reads the right one both times. SO THE GAP IS IN THE CORPUS, NOT THE PORT. THE DECISIVE FINDING: the evidence to close survivor 3 ALREADY EXISTS AND WAS NEVER PROMOTED - .softhouse/capture/periodratio/out/t39-periodratio.json holds 8 oracle-observed drift shapes at (19, HALF_UP) captured two fires ago [DRIVER-VERIFIED: file present, ids T39-P0-A..H plus T39-CAL and three controls]. T11 replayed all 15 in-domain captures against the port: 393 cells, zero mismatches. Promoting them also kills two counterfactuals T11 derived - M-M (seed rule, worst margin MNT 8,545,743.02) and M-P (re-anchor guard, MNT 44,960.29). NO ORACLE RUN REQUIRED. For survivors 1 and 2 a 6,000-shape sweep located two ordinary on-lattice MNT loans that separate them IN A PAYABLE AMOUNT: MNT 21,021,587.50 6x monthly 21.6% (textbook balance x rateFactor) and MNT 3,139,845.86 6x monthly 7.0% (rate factor without the trailing setScale; predicted interest 15,307.35 vs .36). That folklore has been argued from source three times and observed zero times. ALL OF THIS HANDED TO T58. Four mutations recorded as PROVABLY VACUOUS inside the graded domain (unreachable without payments or multi-tranche) so a future round does not spend captures on them. P-5 RECURRED A FOURTH TIME: T11's worktree was five commits stale and the port directory contained NO .go FILES AT ALL; it re-cut onto main itself."
     },
     {
       "id": "T12",
@@ -1235,6 +1235,45 @@
       "status": "done",
       "attempts": 0,
       "note": "Raised by T9 finding F-2 (P1), fire 20260819-200001. ORACLE-ONLY WORK - only a fire that reaches the live reference oracle can do it, which is why it was dispatched this fire. DEC-1 calls the EMI re-adjust smoothing loop a normative conformance obligation, 'not backlog' (contract.go:1660-1661), but NONE of the 11 promoted vectors trips its guard |lastEMI - penultimateEMI| > floor(n/2) minor units (EmiAdjustment.java:31-44); the closest, P-MNT-4M999, misses by ONE minor unit (8 vs 9). So a Go port omitting checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods entirely PASSES 11 OF 11 - T9's own no-loop re-derivation reproduces every cell, which is the proof. DEC-1 names two shapes that DO trip it at contract.go:1655-1658: MNT 1,014,632 / 6 x 7.0% (oracle 172,574.64 vs no-loop 172,574.63, every period shifts) and MNT 127,704 / 36 x 16.8% (total interest 35,746.56 vs 35,746.69). Neither was ever captured. Reuses the self-failing pass-3b rig with a calibration case; margins must be DERIVED from the new capture, not transcribed from DEC-1. || FIRE 20260819-200001: DONE AND MERGED. F-2 CLOSED. Pass 3c (.softhouse/capture/src/run-pass3c.sh + Capture3c.java) reuses pass 3b's self-failing rig with all nine preconditions carried over verbatim and TWO ADDED (the run refuses if either calibration fails to reproduce a committed pass-3b observation, or if the calibration reference file is not the exact digest the existing vectors were transcribed from). Two calibrations, both matched: P-CAL reproduced pass 3b's P-CAL at (12, HALF_UP), P-CAL-P00 reproduced P-00 at production (19, HALF_UP). THE GUARD TRIPS ON BOTH SHAPES: MNT 1,014,632/6x7.0% |dEMI| 4 vs threshold 3; MNT 127,704/36x16.8% |dEMI| 25 vs 18. Margins DERIVED not transcribed: 5 minor units (all 6 rows differ) and 47 (all 36 differ, compounding down the balance). DEC-1's own figures reproduce EXACTLY - DEC-1 corroborated on every point, no contradiction. Parity 11 -> 13. Transcription audited with THREE independently written converters, 850 + 176 cells, zero mismatches. DRIVER VERIFICATION THAT MATTERS MOST: the driver re-ran its own EMI-loop-removal mutation after merging - it now FAILS both new vectors with named cells and margins, where before it passed 11/11. THE CLOSED LOOP (mutate -> find blind spot -> capture the shape -> prove the mutation now dies) IS THE RESULT. N-1 (P2, IMPORTANT METHOD CORRECTION): T9's screen evaluated the guard on the ORACLE'S OWN OUTPUT, but the loop exists to SHRINK the residual the guard measures, so a post-loop screen REJECTS shapes the loop actually fired on - it would have rejected MNT 1,014,632/6x7.0%, one of the two DEC-1 names. T9's conclusion survived (re-established by direct reproduction) but the METHOD must not be reused for capture selection. N-3 (P3): the brief's premise that these shapes were never captured was WRONG - T37 captured both, at production settings, through a different Path A harness; they were never PROMOTED, which is the real gap. Turned into a free cross-harness control: 478 cells, 0 mismatches. N-5 (P2): this worktree lacked T9's review despite the brief saying it would - same class as T9's F-9."
+    },
+    {
+      "id": "T58",
+      "title": "Close the three surviving mutations: promote the T39 periodratio evidence + capture the two shapes T11 located",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        "+.softhouse/vectors/loanschedule/",
+        ".softhouse/capture/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T11"
+      ],
+      "status": "in_progress",
+      "attempts": 0,
+      "note": "Raised by T11, fire 20260819-200001. PART 1 NEEDS NO ORACLE: promote the 8 T39-P0-A..H drift shapes already captured at (19, HALF_UP) and never promoted; that closes survivor 3 BY OBSERVATION and also kills T11's M-M and M-P. T39-CAL is on PIN.json's never-promotable list. PART 2 NEEDS THE ORACLE, WHICH IS UP THIS FIRE: capture MNT 21,021,587.50 6x21.6% and MNT 3,139,845.86 6x7.0%, the two shapes T11's 6,000-shape sweep found to separate the remaining two survivors in a payable amount. T11's predicted values are a HYPOTHESIS to test, not a value to transcribe - an oracle disagreement is the finding. ACCEPTANCE TEST: each of the three mutations must go from PASS(13, exit 0) to FAIL(exit 1) with a named cell and margin."
+    },
+    {
+      "id": "T59",
+      "title": "Fix T11's F-1/F-2: honour context cancellation inside the loop, and bound the cost",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/generator.go",
+        "nexus/internal/apps/loanschedule/emi.go"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T11"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "contract_independent": true,
+      "note": "Raised by T11 findings F-1 (P1) and F-2 (P2), fire 20260819-200001. NEEDS NO ORACLE - runnable on any fire. DRIVER CORRECTION TO T11'S WORDING, which changes the fix: the port does NOT 'ignore cancellation'. generator.go:72 checks ctx.Err() ONCE AT ENTRY and never again [VERIFIED: exactly one ctx.Err() in generator.go, zero in emi.go]. That is consistent with T11's measurement of 5.9s elapsed under a 50ms deadline. So the fix is NOT 'add a cancellation check' - it is to check periodically INSIDE the amortization and EMI-adjustment loops, where the time is actually spent. F-2: cost is ~n^2.4 (13.3s at n=360) and NumberOfRepayments is unbounded; the port drops the oracle's Memo cache, so it is the same function at a materially different cost. Neither defect is a money defect and neither is graded by conformance - do not expect the harness to catch a regression here, and add a test that does."
     }
   ]
 }
