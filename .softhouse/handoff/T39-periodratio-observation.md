@@ -375,3 +375,83 @@ on `T39-P0-A`, and due dates move on every drift shape. `analysis/discriminate.p
 **G-4. Promotion is still blocked and should stay blocked.** These are attested observations, not
 vector-store entries. Promote after G-1 closes, using `REPRODUCE.md` as the committed run recipe.
 Cutover remains a hard `user` gate regardless.
+
+---
+
+# CORRECTIONS — T46 (branch `softhouse/T46-capture-corrections`), against T44 findings F39-1 … F39-4
+
+**Appended by T46. Nothing above this line was altered** — `patterns.md` forbids mutating a committed
+record; corrections to *claims* are appended, corrections to *observations* would need a re-run that
+proves identity, and one was done (§2 below). Full working:
+`.softhouse/capture/periodratio/ATTESTATION-T46.md`.
+
+## C-1 (F39-1) — the verdict and §2 table overstate what the `T39-ME-*` family grades
+
+**This handoff says:** *"the oracle agrees 116 of 116 with the routine that includes those four lines
+and 0 of 116 with the same routine minus them"*, and concludes the month-end special case is *"live and
+load-bearing"*.
+
+**The comparison is sound; the null hypothesis is the wrong one.** The four `T39-ME-*` captures grade
+the **PAIR** — `month-end special case ∧ packed whole-months` — never the special case alone. A port
+with two cancelling defects (naive whole-months **and** no special case) reproduces the oracle exactly.
+
+**T46 settled the question T44 left open, and the answer is that the special case has NO separating
+shape at all:**
+
+- **Closed form.** `packed(a,b) = k − [a.day > b.day]`, `naive(a,b) = k − [min(a.day, len(b)) > b.day]`.
+  They differ iff `b` is the last day of its month **and** `a.day > b.day` — which is verbatim the
+  predicate at `ProgressiveEMICalculator.java:1432`. And when it fires, `packed(a, b+1day) = k` = naive.
+  So `nOracle ≡ nNaive`, identically.
+- **Exhaustive measurement**, run inside the pinned oracle image over **every ordered date pair** in
+  2000-01-01 … 2040-12-31: **112,147,776 pairs, 0 R2-vs-R4 separators**; special-case firings
+  **45,253** = packed/naive disagreements **45,253**, both cross-terms **0**
+  [`.softhouse/capture/periodratio/analysis/t46_monthdiff_exhaustive-output.txt`].
+- **T44's proposed remedy does not work either.** `WEEKS` and `DAYS` cannot separate packed from naive
+  (`plusWeeks`/`plusDays` make the overshoot branch unreachable), and the `YEARS` arm — which *can*
+  separate — is **unreachable**: `calculateRateFactorPerPeriodBasedOnRepaymentFrequency` has no YEARS
+  case and throws at `:1609`. **OBSERVED**: `T46-YR-A` and `T46-YR-B` both come back
+  `java.lang.UnsupportedOperationException: Invalid repayment frequency`.
+
+**So the blind spot is PERMANENT for this generator, not `TO_BE_CAPTURED`.** Relabel the family:
+*"grades the month-end special case jointly with the packed whole-months rule"*. DEC-1 must pin the
+packed rule normatively alongside the special case — neither clause is safe stated alone.
+
+## C-2 (F39-2) — `ATTESTATION.md` §4's "two independent witnesses" are ONE
+
+The oracle's SLF4J `Initialized rounding mode…` line and `MoneyHelper.getMathContext()` are **one cache
+write, logged and then read back** [VERIFIED: `MoneyHelper.java:59-64`, `:74-82`, `:91-94`]. Both are
+**ambient**, and on Path A the ambient context is provably never read for a 2-dp currency. Read §4's
+heading as *"the AMBIENT MoneyHelper context"*, and `run-periodratio.sh:196`'s word "effective" as
+"ambient". **T42's correction list (T35, T36, T37, `reference-oracle.md`) omitted T39; it should have
+included it.** No captured value is affected — §4's own closing paragraph draws the distinction
+correctly, and the N7 leg is a genuine **threaded** canary.
+
+## C-3 (F39-3) — the threaded `MathContext` was echoed as INTENT; re-emitted off the OBJECT
+
+`CapturePeriodRatio.java:286-287` wrote the case record's `c.precision()` / `c.mode()`; nothing read
+`mc`, so assertion 10 was tautological. **T46 re-emitted all sixteen cases** through
+`src/CapturePeriodRatio2.java`, which echoes `mc.toString()`, `mc.getPrecision()`,
+`mc.getRoundingMode()` and an explicit `wiring` field off the reference handed to `generate()`, and
+`src/run-t46-periodratio.sh` asserts those.
+
+**Identity proof: 2072 of 2072 published values IDENTICAL**, 16 of 16 captures, four new leaves per
+capture and no new case in the pass [`analysis/t46_reemit_identity-output.txt`].
+
+## C-4 (F39-4) — line citations
+
+- the month-end special case is **`:1432`** (predicate) and **`:1433`** (nudged call), **not**
+  `:1429-1434` and **not** `:1426-1436` (that is the whole `case MONTHS ->` arm; `:1429` is a
+  declaration continuation and `:1434` is `} else {`).
+- `daysInMonth` is computed at **`:1508`** — the prose's `:1509` is wrong, the tag was right.
+
+## C-5 — blind spots this handoff should now record
+
+- **`RepaymentEvery > 1` is no longer a blind spot at 2 and 3.** New captures `T46-RE-3` (MONTHS,
+  every 3, drift anchoring) separates `periodRatio` from `RepaymentEvery` on **3 periods**, and
+  `T46-RE-2ME` (MONTHS, every 2, 31 Jan seed) separates the special case on **2 periods**
+  [`analysis/t46_arms_ratio-output.txt`].
+- `installmentAmountInMultiplesOf` is honoured or lost **BY CALLER** (T44 M-4):
+  `LoanScheduleAssembler` honours it; `LoanScheduleGeneratorServiceImpl` (`:44`, `generate(mc,
+  modelData)`) inherits Path A's drop, because
+  `LoanApplicationTerms.assembleFrom(LoanRepaymentScheduleModelData, MathContext)` never sets it
+  [VERIFIED: `LoanApplicationTerms.java:579-606` contains zero occurrences of `MultiplesOf`].
