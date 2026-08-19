@@ -372,18 +372,27 @@ public class CaptureT50Tier2 {
                     final LoanApplicationTerms terms = LoanApplicationTerms.assembleFrom(md, mc);
                     final LoanScheduleModel model = g.generate(mc, terms, charges, null);
                     final StringBuilder fees = new StringBuilder();
+                    final StringBuilder diag = new StringBuilder();
                     int n = 0;
                     for (LoanScheduleModelPeriod p : model.getPeriods()) {
                         if (p.isRepaymentPeriod()) {
                             if (n > 0) {
                                 fees.append(";");
+                                diag.append(";");
                             }
                             fees.append(p.feeChargesDue() == null ? "null" : p.feeChargesDue().toPlainString());
+                            // DIAGNOSTIC: if the fee is zero, is that because the charge was lost,
+                            // or because the base it is a percentage OF is zero?  Publish the base.
+                            diag.append("P=").append(p.principalDue() == null ? "null" : p.principalDue().toPlainString());
+                            diag.append("/I=").append(p.interestDue() == null ? "null" : p.interestDue().toPlainString());
                             n++;
                         }
                     }
                     observed = fees.toString();
-                    extra = "repaymentPeriods=" + n;
+                    extra = "repaymentPeriods=" + n + "; chargeIsPercentageBased="
+                            + lc.getChargeCalculation().isPercentageBased() + "; chargeIsInstalmentFee=" + lc.isInstalmentFee()
+                            + "; chargeIsFeeCharge=" + lc.isFeeCharge() + "; chargeIsDueAtDisbursement="
+                            + lc.isDueAtDisbursement() + "; percentage=" + lc.getPercentage() + "; perPeriodBase=" + diag;
                 }
                 case "L5-downPaymentAmount-ambient-ctor" -> {
                     final Object[] r = assembleFromLongOverload(currency, new BigDecimal(v.principal()), new BigDecimal(v.percentage()),
@@ -445,15 +454,18 @@ public class CaptureT50Tier2 {
         final int I_TOLERANCE = 24;
         final int I_ENABLE_DP = 53;
         final int I_DP_PCT = 54;
+        final int I_INSTALMENT_MULTIPLES = 39;
         final StringBuilder chk = new StringBuilder("params=" + n);
         chk.append(" t[0]=").append(pt[I_CURRENCY].getSimpleName());
         chk.append(" t[15]=").append(pt[I_PRINCIPAL].getSimpleName());
         chk.append(" t[24]=").append(pt[I_TOLERANCE].getSimpleName());
         chk.append(" t[53]=").append(pt[I_ENABLE_DP].getSimpleName());
         chk.append(" t[54]=").append(pt[I_DP_PCT].getSimpleName());
+        chk.append(" t[39]=").append(pt[I_INSTALMENT_MULTIPLES].getSimpleName());
         if (!pt[I_CURRENCY].getSimpleName().equals("CurrencyData") || !pt[I_PRINCIPAL].getSimpleName().equals("Money")
                 || !pt[I_TOLERANCE].getSimpleName().equals("Money") || !pt[I_ENABLE_DP].getSimpleName().equals("Boolean")
-                || !pt[I_DP_PCT].getSimpleName().equals("BigDecimal")) {
+                || !pt[I_DP_PCT].getSimpleName().equals("BigDecimal")
+                || !pt[I_INSTALMENT_MULTIPLES].getSimpleName().equals("Integer")) {
             throw new IllegalStateException("positional argument fill REFUSED -- parameter types at the assumed indices "
                     + "do not match: " + chk);
         }
@@ -465,6 +477,25 @@ public class CaptureT50Tier2 {
                 args[i] = 0;
             } else if (pt[i] == long.class) {
                 args[i] = 0L;
+            } else if (pt[i] == Boolean.class) {
+                // The :747 constructor unboxes several Boolean/Integer parameters unconditionally,
+                // so a null there throws before the down-payment block is reached.  These are type
+                // defaults; the ones the site actually reads are overridden explicitly below and
+                // the result is read back to prove the indices were right.
+                args[i] = Boolean.FALSE;
+            } else if (pt[i] == Integer.class) {
+                // installmentAmountInMultiplesOf MUST stay null: a non-null value would send the
+                // down payment through Money.roundToMultiplesOf as well [LoanApplicationTerms:867-869]
+                // and confound the site under test.
+                args[i] = (i == I_INSTALMENT_MULTIPLES) ? null : Integer.valueOf(1);
+            } else if (pt[i].isEnum()) {
+                // The constructor calls methods on several enum parameters, so null throws before
+                // the down-payment block.  values()[0] is a type default, NOT a semantic choice:
+                // none of these participate in the down-payment arithmetic, and the read-back below
+                // proves the two that do were delivered intact.
+                args[i] = pt[i].getEnumConstants()[0];
+            } else if (java.util.List.class.isAssignableFrom(pt[i])) {
+                args[i] = new ArrayList<>();
             } else {
                 args[i] = null;
             }
