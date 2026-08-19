@@ -351,3 +351,103 @@ raised: `fire-program.sh` now exports `CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0` b
 
 **This has nothing to do with the reference oracle**, and it is recorded here only because it repeatedly
 destroyed oracle work that no other fire can redo.
+
+---
+
+## Which `MathContext` governs — the T42 attestation rule (fire `20260819-080001`)
+
+Task T42 settled, **by observation against the live pinned oracle**, a question the program's earlier
+attestations answered partly wrong. The values in every committed capture are **unaffected**; some of
+the *justifications* were not evidence about money. Full derivation, negative runs and digests:
+`.softhouse/handoff/T42-mathcontext-inforce.md`.
+
+**1. Name the two contexts separately.** Never write "the `MathContext` in force" without saying which.
+- **THREADED** = the `MathContext` object actually passed to the arithmetic (`generate(mc, …)`,
+  `scheduleModel.mc()`, `Money.of(…, mc)`).
+- **AMBIENT** = `MoneyHelper.getMathContext()` for the current tenant.
+
+**2. On the THREADED context, echo the object, not the intent** — `mc.getPrecision()`,
+`mc.getRoundingMode()`, `mc.toString()`, read off the reference handed to the callee. This is the
+reading that is evidence about arithmetic.
+
+**3. On the AMBIENT context, state what it witnesses and what it does not.** It witnesses that the
+tenant was configured as ratified. It is evidence about the arithmetic **only where the caller sourced
+the threaded context from it** — and then the wiring must be cited.
+
+**4. State the WIRING explicitly, per capture path:**
+
+| path | wiring | is the ambient reading evidence about the money? |
+|---|---|---|
+| **Path B** — running server | `LoanScheduleAssembler.java:753, :777, :797` and `LoanScheduleGeneratorServiceImpl.java:44` do `mc = MoneyHelper.getMathContext()` and pass it to `generate(mc, …)` — **the same object**. Read off the **deployed bytecode** in `fineract-fineract-1`, digest `d5ef39897399157de96503dd242f0f999acde87bf59a191c812ab2f3547711ea`. | **Yes** — it *is* the threaded context. Cite the wiring; never leave it implicit. |
+| **Path A** — embeddable seam | the harness constructs its own `mc`. The two are **independent variables**. | **No** — it witnesses the tenant configuration only, which is still worth attesting for exactly that. Plus the one leak in rule 5. |
+
+Measured side by side in one payload: moving the tenant ordinal 4 → 1 moves **0 cells** under the Path A
+wiring and **23 cells** under the Path B wiring.
+
+**5. The one Path A ambient leak.** The ambient context still reaches money at exactly one site on the
+graded call graph — `Money.<init>` [`Money.java:50`] → `roundToMultiplesOf(BigDecimal, Integer)`
+[`Money.java:154`] → `MoneyHelper.getRoundingMode()` [`MoneyHelper.java:79`] — **ignoring the `mc` it was
+handed**. Reached only when the currency has **0 decimal places** *and* a positive `inMultiplesOf`.
+**MNT has 2, so no ratified MNT capture reaches it.** A capture that changes the currency's decimal
+places must re-attest the ambient context as load-bearing, and **a Go port must reproduce this site if
+it ever supports a 0-dp currency with an `inMultiplesOf`.**
+
+**6. A configuration echo is not a discriminator — carry a behavioural canary**, a value that differs by
+rounding mode, for whichever context the attestation claims governs. On Path B, T36's half-cent tie
+(`1,162,502.50 × 0.018 = 20,925.045` → `20925.05` under `HALF_UP`, `20925.04` under `HALF_EVEN`) is the
+right one and already exists. On Path A the canary must move the **threaded** mode; the cheapest is
+`76723.70 → 76723.65` on the plain 6 × 21.6 % MNT 1,200,000 shape.
+
+**7. The PRECISION half of `(19, HALF_UP)` can never disagree with the source** — `MoneyHelper.PRECISION
+= 19` is a compile-time constant [`MoneyHelper.java:35`] and only the mode is tenant-configurable.
+Echoing it is a **provenance** claim, not a discrimination — but it is now discriminable behaviourally
+(next section).
+
+**8. `(19, tenant mode)` is the LOAN-PATH rule, not a Fineract-wide one.** See N-3 below.
+
+### The decisive experiment: ABSENCE beats DIFFERENCE
+
+T39 tested the ambient context by *changing* it and watching for movement. T42 replaced that with an
+**absence** test: register a tenant in `ThreadLocalContextUtil` but never pass it to
+`initializeTenantRoundingMode`, so **any ambient read throws**. Schedules still generated — on **11 of
+13** probe shapes the ambient context is **provably never read at all**, which is a stronger statement
+than "changing it moved nothing". A canary proves the probe is not vacuous, and a negative leg inverts
+the guard and confirms it fires. **Prefer an absence probe to a difference probe when you can build one.**
+
+### Precision 19 is now OBSERVABLE, not merely transcribed
+
+T39's N-4 ("threaded precision 19 vs 12 is indistinguishable") is **superseded**. A separating shape
+exists and it is an ordinary loan:
+
+| shape | total interest at threaded precision 19 | at precision 12 | gap | cells differing |
+|---|---|---|---|---|
+| MNT 50,000,000 / 360 months / 21.6 % | **274,527,298.56** | 274,527,296.51 | MNT 2.05 | 861 |
+| MNT 25,000,000 / 360 months / 7.7 % | — | — | — | 610 |
+
+Buyan's ratified precision-19 parameter is therefore **observably load-bearing**. Three caveats, stated
+because they change how the result may be used: separation is **not monotone in principal** (25M
+separates, 30–70M do not, 80M does), so **there is no safe threshold**; 19-vs-8 separates almost
+everywhere and was never the hard case; and T39's N-4 was not wrong — its 16 shapes simply never reached
+the 360-period regime.
+
+### Amendments to earlier attestations — values unaffected, justification corrected
+
+No committed capture is invalidated; T42 demonstrated this in three legs rather than asserting it (the
+threaded context was independently echoed in T35/T37/T39; the sole Path A ambient site is unreachable at
+2 dp; and no committed payload uses a 0-dp currency).
+
+- **T37 §5 is the wrong one** — its "two independent witnesses" to the effective `MathContext` are
+  **both ambient**, i.e. one witness counted twice.
+- **T35** — "effective" should read "**ambient**".
+- **T36 is substantially sound**: its half-cent canary is real behavioural evidence, and on Path B the
+  ambient **is** the arithmetic. It needs only the wiring citation added.
+
+### Two findings that reach beyond Tier 0
+
+- **`(19, tenant mode)` is a LOAN-PATH rule.** All 81 `MathContext.DECIMAL64` uses and 13
+  `new MathContext(15|10, …)` in main source are in **savings/deposits**. A porter who assumes
+  `(19, HALF_UP)` there will be wrong on every compounding calculation. **This matters for Tier B and is
+  not a Tier 0 problem.**
+- **One loan-path site hard-codes `RoundingMode.DOWN` over the tenant mode** —
+  `AdvancedPaymentScheduleTransactionProcessor.java:2845`, in repayment allocation, **invisible to every
+  capture the program currently holds**. `TO_BE_CAPTURED`.
