@@ -629,6 +629,61 @@
       "uat": "not run - no Go implementation exists yet; T7 (harness) is still blocked behind G-1",
       "gates": "G-1 open by driver decision, NOT by a reserved item. G-2 unchanged.",
       "notes": "The driver declined to ratify against the reviewer's explicit recommendation, and recorded the decision as reversible by Buyan in gates.md."
+    },
+    {
+      "fire": "local-20260819-140003",
+      "date": "2026-08-19",
+      "context": "tier0-harness-schedule-poc",
+      "run_id": "2026-08-17-run1-harness-schedule-poc",
+      "oracle": "REACHABLE",
+      "tasks_dispatched": 7,
+      "tasks_completed": 7,
+      "tasks_lost": 0,
+      "task_ids": [
+        "T49",
+        "T50",
+        "T51",
+        "T52",
+        "T53",
+        "T54",
+        "T6 (closed by driver)"
+      ],
+      "dec1_revisions": "v10 -> v12, RATIFIED",
+      "headline": "DEC-1 REVISION 12 RATIFIED and G-1 CLOSED without reaching Buyan, after ten independent review rounds. T6 done; T7 (conformance harness) unblocked with T9-T15 behind it.",
+      "reviewer_catches": [
+        "T49 (round 9, revision 10): no P0 - the SECOND consecutive no-P0 round - but P1-T49-2 found that contract.go:367-370 and section 4.9 BOTH still said the ACT/ACT arm had 'no capture in the corpus' and was un-re-derived. FALSE SINCE REVISION 5, leaked across five revisions and eight rounds, and sitting in a contract.go DOC COMMENT where ratification would have frozen it. The driver declined revision 10 on this alone.",
+        "T49 also caught an arithmetic error in revision 10's OWN worked check, wrong by exactly 10^2 (2,160,000 x 21,875 = 47,250,000,000, not 472,500,000 - the product of the MAJOR-unit 21,600). Re-derived and confirmed by the driver.",
+        "T49 reproduced the packed-whole-months closed form FROM FIRST PRINCIPLES (112,147,776 ordered pairs, predicate fires 45,253, both cross-terms 0) and audited 155 distinct citations across 329 occurrences with 0 out of range - a POSITIVE result as valuable as its findings.",
+        "T52's own restatement grep found a THIRD leak site for P1-T49-2 that T49 had not named (contract.go's FrequencyYears comment).",
+        "T53 (round 10, revision 11): no P0 AND NO P1 - the first round in ten with neither. It tested the load-bearing call three independent ways and confirmed B-2 an ERRATUM not an AMENDMENT, so ratification needed no gate.",
+        "T53 closed the last open [UNVERIFIED] by read-only SELECT: the tenant-global flag is 'false' on gerege - which is WHY T51 saw 0 differing cells, and which means the alias has never been witnessed delivering a wrong value.",
+        "T54 flagged a divergence between T53's own remedy and the driver's brief on one item and followed the brief; the driver adjudicated and the brief was correct (a TO_BE_CAPTURED label on something T50 HAS captured is a false label even when marked superseded).",
+        "T54 caught a markdown-parity bug of its own before commit and CLEARED a near-miss citation rather than leaving it a suspicion."
+      ],
+      "driver_catches": [
+        "CORRECTED THE STANDING BRIEF BEFORE DISPATCH: T46 and T48 had both recorded N46-1 as 'needs a tenant write on the shared server', which is why it sat TO_BE_CAPTURED for two fires. The driver re-derived the BLOCKER and showed a tenant write CANNOT separate the two axes (LoanScheduleAssembler:753 reads getMathContext() and :765 threads that same cached reference). T50 confirmed the correction and refuted the old blocker. THE EXPERIMENT TWO FIRES WAITED FOR COULD NEVER HAVE WORKED.",
+        "Re-derived every load-bearing claim rather than taking it on report: P1-T49-3's arithmetic (exactly 100x), P1-T49-2 by reading both sites, T50-N1's two down-payment constructors line by line, T50-N2's hard-wired null, T51's global-config scope at LoanScheduleAssembler:370-371, and T51's linearity ratio (12,345/14,814 = 0.833333 = 1,000,000/1,200,000).",
+        "SETTLED A DISPUTE BETWEEN TWO AGENTS AT SOURCE rather than by vote: T53 said getLoanProductRelatedDetail() does not exist; it DOES exist (354 codebase hits) but NOT on LoanApplicationTerms, where the method containing :1740 is toLoanProductRelatedDetail() at :1727 - which is exactly what makes the wrong name dangerous.",
+        "Reproduced every mechanical guardrail independently: sections 3.1/4.1 byte-identical across revisions 10-12, contract.go non-comment sha256 2530f13ecad961f2 over 96 lines, 0 non-comment diff lines.",
+        "FIXED T54's ONE DEFERRED FINDING BEFORE THE FREEZE instead of leaving it to a post-ratification gate: contract.go:1229's mis-resolving citation anchor, verified at source and re-proved comment-only afterwards.",
+        "FOUND THE NO-GO-TOOLCHAIN GAP: go is not installed on this host, so contract.go's 96 non-comment lines HAVE NEVER BEEN COMPILED and T10/T11/T13 are blocked. Recorded rather than installed unattended."
+      ],
+      "vectors_added": "NONE PROMOTED - but promotion is UNBLOCKED for the first time in the program, because the shape being ratified was the reason captures had to stay raw. T48-N4's leap-boundary trap governs any ACT/ACT promotion.",
+      "new_findings": [
+        "T50-N1 (P1) two down-payment rounding specifications in one class",
+        "T50-N2 (P1) the Path A seam can never exercise a charge - governs T7's design",
+        "T50-N3 a latent oracle defect is an ACTIVE port defect",
+        "T51: the alias crosses CONFIGURATION SCOPES; slot LIVE, setting INERT",
+        "T51: chargeCalculationType 5 - LINEARITY hid it, not the absence of tranches",
+        "fixedLength blocker: HTTP 403, thereIsInterest derived from the REQUEST"
+      ],
+      "backlog_closed": [
+        "stranded-branch triage from fire 20260818-200001: t24-probe salvaged, the sibling branch decided not-merged with the reasoning recorded"
+      ],
+      "verifier": "NOT RUN - no Go toolchain on this host, so go build / go test / the conformance run could not execute. NOT recorded as a pass. All seven tasks were docs/analysis/capture targets requiring no Go.",
+      "patterns_added": 7,
+      "gates": "G-1 CLOSED (ratified). G-2 still pending and parks T2 only.",
+      "notes": "Seven workers dispatched, seven completed and merged, none lost, no isolation violation, no scope breach. The driver DECLINED ratification twice (revisions 8 and 10) on one consistent discriminator - a known-false sentence about to be frozen - and ratified revision 12 because no known false sentence remained. No round returned a bare CLEAN and the record does not claim one did."
     }
   ],
   "database": {
