@@ -47,18 +47,52 @@
 // wrong answer into a loud missing feature.
 //
 // This is not hypothetical. The capture seam the Run-1 corpus is taken through
-// accepts a 19-component input record and honours 17 of them: it never reads
-// installmentAmountInMultiplesOf (the field exists at
-// LoanApplicationTerms.java:217, but its Builder has no setter for it and
-// assembleFrom builds exclusively through the Builder,
-// LoanApplicationTerms.java:579-607), and it never copies daysInYearCustomStrategy
-// out of its Builder (set at LoanApplicationTerms.java:604, stored by the
-// Builder at :380/:567-568, and absent from the private Builder copy
-// constructor at :304-351, whose only sibling assignment is in a positional
-// constructor at :881). For both fields that seam has ZERO discriminating
-// power: an implementation honouring them and one ignoring them score
-// identically. Both facts were re-confirmed differentially and reflectively at
-// the production MathContext (19, HALF_UP).
+// accepts a 19-component input record and honours 16 of them (REVISION 11
+// corrects "17 of them" and the two-component enumeration below; re-review
+// T49's P1-T49-1, as corrected and settled by observation in task T51):
+//
+//   - it never reads installmentAmountInMultiplesOf (the field exists at
+//     LoanApplicationTerms.java:217, but its Builder has no setter for it and
+//     assembleFrom builds exclusively through the Builder,
+//     LoanApplicationTerms.java:579-607);
+//   - it never copies daysInYearCustomStrategy out of its Builder (set at
+//     LoanApplicationTerms.java:604, stored by the Builder at :380/:567-568,
+//     and absent from the private Builder copy constructor at :304-351, whose
+//     only sibling assignment is in a positional constructor at :881);
+//   - and a THIRD component, interestRecognitionOnDisbursementDate, is
+//     REPLACED rather than dropped, which is why it looks wired at every
+//     earlier step. assembleFrom sets it (:603) and the Builder copy
+//     constructor DOES copy it out (:327-328), but
+//     toLoanConfigurationDetails() (:1746-1756) never reads the field: its
+//     16th positional argument is isInterestChargedFromDateSameAsDisbursalDateEnabled
+//     (:1753), delivered into the parameter LoanConfigurationDetails names
+//     interestRecognitionOnDisbursementDate (LoanConfigurationDetails.java:72,
+//     assigned :92, returned :201-203). Those are NOT two product settings:
+//     the alias is a TENANT-GLOBAL configuration value
+//     (LoanScheduleAssembler.java:370-371) while the field it displaces is a
+//     per-product, per-request setting (:537-541) — the alias crosses
+//     configuration scopes, and a port cannot repair it by wiring the other
+//     product field. See interestRecognitionOnDisbursementDate under
+//     GenerateRequest's pinned oracle inputs for the porting rule.
+//
+// For all three that seam has ZERO discriminating power: an implementation
+// honouring them and one ignoring them score identically. The first two facts
+// were re-confirmed differentially and reflectively at the production
+// MathContext (19, HALF_UP); the third is observed — captures T48-AA-1 and
+// T48-AA-2 differ only in that flag and are 0 of 87 cells apart on Path A.
+// THE CONCLUSION THIS SUPPORTS IS STRENGTHENED RATHER THAN WEAKENED: inside
+// the graded domain the seam's blind spot is still EMPTY, now on three pins
+// instead of two.
+//
+// One further structural fact about that seam, because a conformance harness
+// author needs it before building one (task T50's T50-N2): its entry point
+// generate(mc, LoanRepaymentScheduleModelData)
+// (ProgressiveLoanScheduleGenerator.java:81-84) delegates with
+// generate(mc, loanApplicationTerms, null, null) at :83 — loanCharges is
+// HARD-WIRED null — so the charge sites at :445-446 and :464-465 are
+// unreachable from it and NO PATH-A CAPTURE CAN EVER EXERCISE A CHARGE,
+// whatever the request record grows to carry. Charge conformance can only ever
+// be graded on the server path.
 //
 // REVISION 10: installmentAmountInMultiplesOf IS HONOURED OR LOST BY CALLER,
 // NEVER BY THE FIELD, and this package must not state it unconditionally
@@ -277,8 +311,15 @@ const (
 	// DefaultScheduledDateGenerator.getRepaymentPeriodDate (:311-333) handles
 	// case YEARS with plusYears, so the schedule generates. The conclusion is
 	// unaffected — only the arm cited was wrong — but note that the observation
-	// below therefore came out of the cross-year partial-period arm, which DEC-1
-	// section 8 item 5 names as the largest un-re-derived hole in the evidence.
+	// below therefore came out of the cross-year partial-period arm. REVISION 11
+	// CORRECTS WHAT THIS SENTENCE USED TO SAY ABOUT THAT ARM (re-review T49's
+	// P1-T49-2; this was the THIRD site the retired claim had leaked to, found
+	// by revision 11's own restatement grep). It said DEC-1 section 8 item 5
+	// "names as the largest un-re-derived hole in the evidence"; item 5 has NOT
+	// said that since revision 5, when P2-T29-1 retired the caveat because task
+	// T30 re-derived the arm and reproduced B-03/B-04 digit for digit. Item 5
+	// asks for VECTORS, and its status today is CAPTURED, NOT YET PROMOTED —
+	// see DayCountActualActual below.
 	// Observed on the pinned oracle, MNT 1,200,000, 3 annual installments, 21.6%:
 	// DayCountFixed30Over360 throws "Invalid repayment frequency"; DayCountActualActual
 	// returns a complete schedule (loan term 1096 days, total interest 551,982.62).
@@ -363,12 +404,36 @@ const (
 	// day-count fraction entirely and accumulates a per-calendar-year fraction
 	// instead (ProgressiveEMICalculator.java:1505-1507 selecting :1526-1531).
 	//
-	// Outside the graded domain — refuse with ErrNoDiscriminatingVector. No
-	// capture in the corpus exercises it, and the arm it selects is the one
-	// arm of the algorithm that no independent re-derivation has yet
-	// reproduced from source. A code path returning plausible numbers nobody
-	// has compared against the oracle is exactly the unverifiable promise this
-	// contract exists to prevent.
+	// Outside the graded domain — refuse with ErrNoDiscriminatingVector. The
+	// criterion is an ADMISSIBLE VECTOR, which is what DEC-1 section 8 item 1
+	// requires of every other rule in this contract, and no vector for this arm
+	// has been promoted: gate G-1 is open and nothing from the ACT/ACT corpus
+	// is admitted to the graded domain. A code path graded by nothing is
+	// exactly the unverifiable promise this contract exists to prevent.
+	//
+	// WHAT IS NOT THE REASON, STATED BECAUSE REVISIONS 5-10 CARRIED THE STALE
+	// VERSION OF IT HERE (revision 11, re-review T49's P1-T49-2). Earlier
+	// revisions of this comment said no capture in the corpus exercises this
+	// arm and that no independent re-derivation had reproduced it from source.
+	// BOTH ARE FALSE. The arm was re-derived by task T30 — calculatePeriodFractions
+	// (ProgressiveEMICalculator.java:1550-1568) and rateFactorByRepaymentPartialPeriod
+	// (:1969-1980) — reproducing captures B-03 and B-04 digit for digit, which
+	// re-review T29 confirmed independently, and DEC-1 sections 4.10 and 8 item 5
+	// have said so since REVISION 5 (P2-T29-1). And the arm is captured: B-03
+	// and B-04 on the server path since before revision 3, plus task T48's 58
+	// captures across three seams (18 Path A, 27 Path A2, 13 Path B) at
+	// production settings, controls passing and determinism proved byte-identical
+	// from fresh containers (.softhouse/capture/actualactual/). The arm is
+	// therefore neither un-re-derived nor uncaptured; it is UNCAPTURED AS A
+	// PROMOTED VECTOR, which is the whole of the refusal's first ground.
+	//
+	// AND WHEN A VECTOR IS PROMOTED FOR IT, ONE ADMISSIBILITY CONDITION APPLIES
+	// AND IT IS A TRAP (task T48's finding N4). Where both calendar years the
+	// period touches have the same length, the sum of per-year fractions equals
+	// the plain fraction exactly, so this arm and the plain ACT/ACT branch
+	// COINCIDE — a cross-year shape inside a run of non-leap years grades a port
+	// identically whether it implements the arm or not. ANY VECTOR PROMOTED FOR
+	// THIS ARM MUST CROSS A LEAP-YEAR BOUNDARY WITH A NON-ZERO FIRST SEGMENT.
 	//
 	// Admitting it later is behaviour, not shape. It carries one consequence
 	// that IS shape, and that consequence is the reason it is named here: under
@@ -838,18 +903,54 @@ type Rounding struct {
 	// IS GATED ON decimalPlaces == 0, THIS ONE IS REACHABLE AT MNT'S TWO
 	// DECIMAL PLACES. Nothing about Path A changes: the embeddable seam's
 	// request record carries no charge, and T42's absence test would have
-	// thrown had that construction been reached. No capture this program holds
-	// can say WHICH context supplied the mode, because on Path B the two are
-	// one reference (LoanScheduleAssembler.java:753, :765) -- TO_BE_CAPTURED,
-	// DEC-1 section 8 item 9(h). Related and recorded, not admitted:
+	// thrown had that construction been reached.
+	//
+	// REVISION 11: WHICH CONTEXT SUPPLIES THAT MODE IS NOW CONFIRMED BY
+	// OBSERVATION, AND IT IS THE AMBIENT ONE (task T50). Revision 10 recorded
+	// this TO_BE_CAPTURED and said separating the two contexts needed a tenant
+	// write on a running server. THE BLOCKER WAS WRONG: LoanScheduleAssembler
+	// reads the cached ambient context at :753 and threads THAT SAME REFERENCE
+	// at :765 (MoneyHelper.java:91-93 serves one instance per tenant), so a
+	// tenant write moves BOTH axes together and separates nothing. T50
+	// separated them IN PROCESS instead —
+	// MoneyHelper.initializeTenantRoundingMode is public static over a plain
+	// map (MoneyHelper.java:54-64), needing no server and no database — and
+	// measured, over 3,416 published cells with a live vacuity canary and 9 of
+	// 9 corruptions rejected: at both charge loci the AMBIENT mode governs the
+	// money in 7 of 7 threaded columns and the threaded mode moves it in 0 of 7
+	// ambient rows, on all three charge-calculation branches, with 42/42 and
+	// 35/35 uninitialised-ambient cases throwing while the 3-argument
+	// counterfactual completes 42/42. Reachable at MNT scale: 1005025.12
+	// against 1005025.13 on a fee.
+	//
+	// PORTER'S RULE, AND IT IS A DEFECT CLASS A GO PORT INTRODUCES RATHER THAN
+	// INHERITS. On the shipped server the two contexts are the same object, so
+	// the two modes are always equal and NOTHING FINERACT PRODUCES IS WRONG.
+	// The leak goes LIVE the moment a port threads a context, which is exactly
+	// the natural Go idiom. Compute the exact rational under the threaded
+	// context, then quantise to minor units under the TENANT (ambient) mode.
+	// This binds no Run-1 code — GenerateRequest carries no charge — and is
+	// stated so it is designed against rather than discovered.
+	//
+	// Related, also CONFIRMED BY OBSERVATION in revision 11, and not admitted:
 	// MathUtil.percentageOf(BigDecimal, BigDecimal, int) builds
 	// new MathContext(precision, MoneyHelper.getRoundingMode())
 	// (MathUtil.java:472-473), so the six loan-path sites passing a literal 19
 	// (AbstractCumulativeLoanScheduleGenerator.java:1897, :2060,
 	// LoanApplicationTerms.java:866, LoanDownPaymentHandlerServiceImpl.java:198,
 	// LoanWritePlatformServiceJpaRepositoryImpl.java:448, :3538) take the
-	// ambient mode too. All six are down-payment computations, and
-	// DownPaymentPercentage is pinned to Rate{0, 1} in the graded domain.
+	// ambient mode too — measured 7 of 7 for the int overload against 7 of 7
+	// the other way for the MathContext overload, so THE TWO OVERLOADS OF ONE
+	// HELPER ARE TWO SPECIFICATIONS AND A PORT MUST NOT COLLAPSE THEM. Only
+	// LoanApplicationTerms.java:866 was executed; the other five are
+	// [VERIFIED as text, UNVERIFIED as behaviour]. All six are down-payment
+	// computations, and DownPaymentPercentage is pinned to Rate{0, 1} in the
+	// graded domain. Note also that the down payment has TWO implementations:
+	// LoanApplicationTerms's Builder constructor threads builder.mc through all
+	// three operations (:329-338) while its positional constructor is fully
+	// ambient (:863-869), and LoanScheduleAssembler.java:548 puts the SERVER on
+	// the ambient one. Outside the graded domain; recorded in DEC-1 section 8
+	// item 4a, and the domain is not widened to reach it.
 	//
 	// AND ONE
 	// MORE SITE THAT IS HANDED A CONTEXT AND IGNORES IT (revision 8, task
@@ -1107,8 +1208,38 @@ type Disbursement struct {
 //     initialiser and is never set by the seam's assembler, so it is null and
 //     the branch short-circuits.
 //   - interestRecognitionOnDisbursementDate = false shifts the year-end
-//     fraction boundary and is reachable only on the actual/actual arm, which is
-//     outside the graded domain.
+//     fraction boundary — 1 January of the next year when true
+//     (ProgressiveEMICalculator.java:1580), 31 December when false (:1582) —
+//     and its two calculation-path readers are both gated shut here: :1579 sits
+//     behind partialPeriodCalculationNeeded, whose first conjunct is
+//     daysInYearType == ACTUAL (:1505-1507), and :194 sits behind
+//     isAllowFullTermForTranche() (:142-143), which is itself a pin.
+//     REVISION 11 ADDS THE PART A PORTER MUST HAVE, AND IT IS NOT A DETAIL.
+//     The capture seam cannot express this input at all, and what reaches the
+//     slot is a DIFFERENT SETTING IN A DIFFERENT CONFIGURATION SCOPE.
+//     LoanApplicationTerms.toLoanConfigurationDetails() (:1746-1756) never
+//     reads this field; its 16th positional argument is
+//     isInterestChargedFromDateSameAsDisbursalDateEnabled (:1753), delivered
+//     into the parameter LoanConfigurationDetails names
+//     interestRecognitionOnDisbursementDate (LoanConfigurationDetails.java:72,
+//     assigned :92, returned :201-203). That alias is a TENANT-GLOBAL
+//     configuration value — configurationDomainService
+//     .isInterestChargedFromDateSameAsDisbursementDate()
+//     (LoanScheduleAssembler.java:370-371, key at
+//     GlobalConfigurationConstants.java:45, passed at :559) — whereas
+//     interestRecognitionOnDisbursementDate is a PRODUCT setting overridable
+//     per request (LoanScheduleAssembler.java:537-541). SO A GO PORT CANNOT FIX
+//     THIS BY WIRING THE OTHER PRODUCT FIELD: should this input ever be exposed
+//     (an amendment, and a gate), it must be wired FROM THE GLOBAL
+//     CONFIGURATION and must reproduce the resulting boundary bug-for-bug.
+//     Observed by task T51: the oracle matched the 31-December boundary on 6 of
+//     6 discriminating crossing periods and 1 January on 0 of 6, while the
+//     product/request setting moved 0 cells on 8 shapes across both readers —
+//     THE SLOT IS LIVE (79 of 153 and 52 of 164 cells against its own controls)
+//     AND THE PRODUCT SETTING IS INERT. On the Path-A seam the alias is
+//     assigned only at LoanApplicationTerms.java:847, unreachable through this
+//     assembler, so it is false unconditionally whatever the request carries,
+//     and the pin is enforced by the seam as well as by this contract.
 //   - fixedLength = null is a real pin: a non-null value overrides the final
 //     due date (DefaultScheduledDateGenerator.java:61-66, :108-111, :184-189).
 //   - daysInYearCustomStrategy = null is PROVABLY inert within the graded
