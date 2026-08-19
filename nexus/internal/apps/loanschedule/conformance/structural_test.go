@@ -953,3 +953,220 @@ func keysOf(m map[string]bool) []string {
 	}
 	return out
 }
+
+// ---------------------------------------------------------------------------
+// T9-F1 — unrecorded_fields is not an escape hatch
+// ---------------------------------------------------------------------------
+
+// TestT9F1UnrecordedFieldsIsNotAnEscapeHatch proves finding T9-F1, both halves.
+//
+// The T9 review demonstrated a store in which every one of the nine date cells
+// backing MONTHEND-CONTINUE-FROM-CLAMPED-DAY had been withdrawn from grading in
+// P-02 and P-02b, filled with 1999-01-01, and the run still printed
+// "monthend.reanchor killed by MONTHEND-CONTINUE-FROM-CLAMPED-DAY" and exited 0.
+// Two independent defects made that possible and each gets its own subtest here.
+func TestT9F1UnrecordedFieldsIsNotAnEscapeHatch(t *testing.T) {
+	root := repoRoot(t)
+	pin := mustPin(t)
+
+	// A disbursement row plus two repayment rows, shaped like the committed
+	// corpus: the disbursement row is the one that legitimately withdraws
+	// installment_number and interest_minor.
+	shell := func() *Vector {
+		v := parityShell(pin)
+		v.CapabilitiesRequired = []string{"schedule.core", "monthend.reanchor"}
+		v.GradedAgainst = []Counterfactual{moneyKill()}
+		v.Expect.Periods = []ExpectPeriod{
+			{
+				Kind: "DISBURSEMENT", InstallmentNumber: 0,
+				FromDate: Date{2024, 1, 31}, DueDate: Date{2024, 1, 31},
+				PrincipalMinor: "10000", InterestMinor: "", OutstandingPrincipalMinor: "10000",
+				UnrecordedFields: []string{"installment_number", "interest_minor"},
+			},
+			{
+				Kind: "REPAYMENT", InstallmentNumber: 1,
+				FromDate: Date{2024, 1, 31}, DueDate: Date{2024, 2, 29},
+				PrincipalMinor: "5000", InterestMinor: "29", OutstandingPrincipalMinor: "5000",
+			},
+			{
+				Kind: "REPAYMENT", InstallmentNumber: 2,
+				FromDate: Date{2024, 2, 29}, DueDate: Date{2024, 3, 31},
+				PrincipalMinor: "5000", InterestMinor: "29", OutstandingPrincipalMinor: "0",
+			},
+		}
+		return v
+	}
+
+	t.Run("the committed corpus's row shape stays admissible", func(t *testing.T) {
+		if problems := Admit(shell(), pin, root); len(problems) > 0 {
+			t.Fatalf("the corpus's disbursement-row shape must stay admissible, got %v", problems)
+		}
+	})
+
+	// --- F-1a: "unrecorded means EMPTY" now covers the non-money cells too. ---
+
+	t.Run("F-1a: a populated but withdrawn due_date is inadmissible", func(t *testing.T) {
+		v := shell()
+		v.Expect.Periods[2].DueDate = Date{1999, 1, 1}
+		v.Expect.Periods[2].UnrecordedFields = []string{"due_date"}
+		problems := Admit(v, pin, root)
+		if !containsSubstring(problems, "is marked unrecorded but carries the date 1999-01-01") {
+			t.Fatalf("got %v", problems)
+		}
+	})
+
+	t.Run("F-1a: a populated but withdrawn from_date is inadmissible", func(t *testing.T) {
+		v := shell()
+		v.Expect.Periods[2].UnrecordedFields = []string{"from_date"}
+		problems := Admit(v, pin, root)
+		if !containsSubstring(problems, "expect.periods[2].from_date is marked unrecorded but carries the date") {
+			t.Fatalf("got %v", problems)
+		}
+	})
+
+	t.Run("F-1a: a withdrawn date left EMPTY is still admissible", func(t *testing.T) {
+		v := shell()
+		v.Expect.Periods[2].FromDate = Date{}
+		v.Expect.Periods[2].UnrecordedFields = []string{"from_date"}
+		if problems := Admit(v, pin, root); len(problems) > 0 {
+			t.Fatalf("withdrawing a cell the capture really did not record must stay possible, got %v", problems)
+		}
+	})
+
+	t.Run("F-1a: kind may not be withdrawn at all", func(t *testing.T) {
+		v := shell()
+		v.Expect.Periods[2].UnrecordedFields = []string{"kind"}
+		problems := Admit(v, pin, root)
+		if !containsSubstring(problems, "which is not a cell a capture may withdraw from grading") {
+			t.Fatalf("got %v", problems)
+		}
+	})
+
+	// --- F-1c: installment_number, the cell whose Go type cannot tell absent
+	//     from zero. The documented sentinel is 0, and only a non-payable row
+	//     may use it. ---
+
+	t.Run("F-1c: a withdrawn installment_number carrying a value is inadmissible", func(t *testing.T) {
+		v := shell()
+		v.Expect.Periods[0].InstallmentNumber = 7
+		problems := Admit(v, pin, root)
+		if !containsSubstring(problems, "is marked unrecorded but carries 7") {
+			t.Fatalf("got %v", problems)
+		}
+	})
+
+	t.Run("F-1c: a REPAYMENT row may not withdraw installment_number", func(t *testing.T) {
+		v := shell()
+		v.Expect.Periods[2].UnrecordedFields = []string{"installment_number"}
+		problems := Admit(v, pin, root)
+		if !containsSubstring(problems, "is a REPAYMENT row and marks installment_number unrecorded") {
+			t.Fatalf("got %v", problems)
+		}
+	})
+
+	// --- F-1b: a divergent cell must be a cell THIS vector actually compares. ---
+
+	monthEndKill := func(cells ...string) Counterfactual {
+		return Counterfactual{
+			ID:             "MONTHEND-CONTINUE-FROM-CLAMPED-DAY",
+			Kind:           CounterfactualStructural,
+			Capability:     "monthend.reanchor",
+			Description:    "continues from the clamped day instead of re-anchoring on the seed",
+			MarginMinor:    "0",
+			DivergentCells: cells,
+			Evidence: "period 2 due date observed 2024-03-31; the clamp-and-continue port emits " +
+				"2024-03-29 instead",
+		}
+	}
+
+	t.Run("F-1b: a divergent cell the vector withdraws is inadmissible", func(t *testing.T) {
+		v := shell()
+		v.Expect.Periods[2].DueDate = Date{}
+		v.Expect.Periods[2].UnrecordedFields = []string{"due_date"}
+		v.GradedAgainst = append(v.GradedAgainst, monthEndKill("period[2].due_date"))
+		problems := Admit(v, pin, root)
+		if !containsSubstring(problems, "WITHDRAWS from grading") {
+			t.Fatalf("got %v", problems)
+		}
+	})
+
+	t.Run("F-1b: the same kill over a GRADED cell stays admissible", func(t *testing.T) {
+		v := shell()
+		v.GradedAgainst = append(v.GradedAgainst, monthEndKill("period[2].due_date"))
+		if problems := Admit(v, pin, root); len(problems) > 0 {
+			t.Fatalf("a properly graded structural kill must remain admissible, got %v", problems)
+		}
+	})
+
+	// --- F-1b, the coverage half: a kill with nothing compared covers nothing
+	//     and must not print as killing anything. ---
+
+	reg := mustCapabilityRegistry(t)
+
+	t.Run("F-1b: an all-withdrawn structural kill covers nothing", func(t *testing.T) {
+		v := shell()
+		v.Expect.Periods[2].DueDate = Date{}
+		v.Expect.Periods[2].UnrecordedFields = []string{"due_date"}
+		cf := monthEndKill("period[2].due_date")
+		if v.StructuralKillIsCompared(cf) {
+			t.Fatal("a kill whose only cell is withdrawn must not count as compared")
+		}
+		v.GradedAgainst = []Counterfactual{cf}
+		covered, uncovered := reg.CounterfactualCoverage([]*Vector{v})
+		if len(covered["monthend.reanchor"]) != 0 {
+			t.Errorf("monthend.reanchor must not be reported as killed, got %v", covered["monthend.reanchor"])
+		}
+		if !containsString(uncovered, "monthend.reanchor") {
+			t.Errorf("monthend.reanchor must be reported unbacked, got %v", uncovered)
+		}
+	})
+
+	t.Run("F-1b: a graded structural kill does cover", func(t *testing.T) {
+		v := shell()
+		cf := monthEndKill("period[2].due_date")
+		if !v.StructuralKillIsCompared(cf) {
+			t.Fatal("a kill over a graded cell must count as compared")
+		}
+		v.GradedAgainst = []Counterfactual{cf}
+		covered, _ := reg.CounterfactualCoverage([]*Vector{v})
+		if len(covered["monthend.reanchor"]) != 1 {
+			t.Errorf("want monthend.reanchor killed once, got %v", covered["monthend.reanchor"])
+		}
+	})
+
+	// row_order names no field, so the per-cell admission rule cannot see it.
+	// This is the path the coverage rule uniquely covers.
+	t.Run("F-1b: row_order covers nothing when no graded cell tells two rows apart", func(t *testing.T) {
+		rowOrder := Counterfactual{
+			ID: "SORT-BY-DATE-DISBURSEMENT-FIRST", Kind: CounterfactualStructural,
+			Capability: "schedule.core", MarginMinor: "0",
+			DivergentCells: []string{DivergentCellRowOrder},
+			Description:    "sorts by date with disbursements first",
+			Evidence:       "observed REPAYMENT then DISBURSEMENT; the wrong port emits them reversed instead",
+		}
+		if !shell().StructuralKillIsCompared(rowOrder) {
+			t.Fatal("rows differing in kind and date are distinguishable; this must count as compared")
+		}
+		// Now make every row identical in every GRADED structural cell. A
+		// permutation of these rows is invisible, so the row-order kill catches
+		// nothing and must not be credited.
+		flat := shell()
+		for i := range flat.Expect.Periods {
+			flat.Expect.Periods[i].Kind = "REPAYMENT"
+			flat.Expect.Periods[i].FromDate = Date{2024, 1, 31}
+			flat.Expect.Periods[i].DueDate = Date{2024, 2, 29}
+		}
+		if flat.StructuralKillIsCompared(rowOrder) {
+			t.Fatal("no graded structural cell tells two rows apart, so row_order catches nothing")
+		}
+	})
+}
+
+func mustCapabilityRegistry(t *testing.T) *CapabilityRegistry {
+	t.Helper()
+	reg, err := LoadCapabilityRegistry(filepath.Join(storeRoot(t), "capabilities.json"))
+	if err != nil {
+		t.Fatalf("LoadCapabilityRegistry: %v", err)
+	}
+	return reg
+}

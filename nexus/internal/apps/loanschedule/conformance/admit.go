@@ -222,7 +222,7 @@ func Admit(v *Vector, pin *Pin, repoRoot string) []string {
 			bad("graded_against[%d] (%s) grades capability %q, which is not in capabilities_required: "+
 				"a vector cannot grade a capability it does not claim to exercise", i, cf.ID, cf.Capability)
 		}
-		problems = append(problems, admitCounterfactualKind(i, cf, len(v.Expect.Periods))...)
+		problems = append(problems, admitCounterfactualKind(i, cf, v.Expect.Periods)...)
 	}
 
 	if v.RetiresWhenCapabilityGraded != "" && v.Class != ClassContractRefusal {
@@ -254,7 +254,12 @@ func Admit(v *Vector, pin *Pin, repoRoot string) []string {
 // path, it has been implemented wrongly: it exists so that P-02's due-date kill
 // and P-03's row-order kill can be recorded HONESTLY, not so that a margin can be
 // avoided.
-func admitCounterfactualKind(i int, cf Counterfactual, periodCount int) []string {
+//
+// It takes the vector's own expected rows, not just their count, because finding
+// T9-F1b showed that "names only cells the harness actually compares" was checked
+// against the FIELD LIST and never against THIS VECTOR: a kill could name cells
+// the same file had withdrawn from grading in unrecorded_fields.
+func admitCounterfactualKind(i int, cf Counterfactual, periods []ExpectPeriod) []string {
 	var problems []string
 	bad := func(format string, args ...any) { problems = append(problems, fmt.Sprintf(format, args...)) }
 
@@ -296,7 +301,7 @@ func admitCounterfactualKind(i int, cf Counterfactual, periodCount int) []string
 				bad("graded_against[%d] (%s) divergent_cells[%d] repeats %q", i, cf.ID, j, cell)
 			}
 			seen[cell] = true
-			problems = append(problems, admitDivergentCell(i, cf.ID, j, cell, periodCount)...)
+			problems = append(problems, admitDivergentCell(i, cf.ID, j, cell, periods)...)
 		}
 		if !statesBothValues(cf.Evidence) {
 			bad("graded_against[%d] (%s) is structural, so its evidence must state BOTH the value the "+
@@ -314,34 +319,30 @@ func admitCounterfactualKind(i int, cf Counterfactual, periodCount int) []string
 }
 
 // admitDivergentCell checks one structural cell name.
-func admitDivergentCell(i int, id string, j int, cell string, periodCount int) []string {
+func admitDivergentCell(i int, id string, j int, cell string, periods []ExpectPeriod) []string {
 	var problems []string
 	bad := func(format string, args ...any) { problems = append(problems, fmt.Sprintf(format, args...)) }
+	periodCount := len(periods)
 
 	if cell == DivergentCellRowOrder {
 		return nil
 	}
-	const prefix = "period["
-	if !strings.HasPrefix(cell, prefix) {
+	idx, field, form := ParseDivergentCell(cell)
+	switch form {
+	case DivergentCellNotACell:
 		bad("graded_against[%d] (%s) divergent_cells[%d] %q is not a cell name: write "+
 			"\"period[<n>].<field>\" or %q", i, id, j, cell, DivergentCellRowOrder)
 		return problems
-	}
-	rest := cell[len(prefix):]
-	end := strings.IndexByte(rest, ']')
-	if end < 0 || !strings.HasPrefix(rest[end:], "].") {
+	case DivergentCellMalformed:
 		bad("graded_against[%d] (%s) divergent_cells[%d] %q is malformed: write \"period[<n>].<field>\"",
 			i, id, j, cell)
 		return problems
-	}
-	idxText, field := rest[:end], rest[end+2:]
-	idx, err := MinorText(idxText).Int64()
-	if err != nil || idx < 0 {
-		bad("graded_against[%d] (%s) divergent_cells[%d] %q: %q is not a canonical non-negative row index",
-			i, id, j, cell, idxText)
+	case DivergentCellBadIndex:
+		bad("graded_against[%d] (%s) divergent_cells[%d] %q: the row index is not a canonical "+
+			"non-negative integer", i, id, j, cell)
 		return problems
 	}
-	if periodCount > 0 && idx >= int64(periodCount) {
+	if periodCount > 0 && idx >= periodCount {
 		bad("graded_against[%d] (%s) divergent_cells[%d] %q names row %d, but this vector's expected "+
 			"schedule has %d rows: a counterfactual cannot diverge on a cell that does not exist",
 			i, id, j, cell, idx, periodCount)
@@ -357,8 +358,76 @@ func admitDivergentCell(i int, id string, j int, cell string, periodCount int) [
 			"non-money cells this harness compares (%s). A cell the harness never compares cannot be the "+
 			"site of a kill anything could detect",
 			i, id, j, cell, field, strings.Join(StructuralCellFields(), ", "))
+		return problems
+	}
+
+	// FINDING T9-F1b. The check above asks whether the harness compares this
+	// field IN GENERAL. This one asks whether the vector compares it HERE.
+	//
+	// Both questions have to be asked, and only the first one was. A vector could
+	// name period[2].due_date as the site of a structural kill while its own
+	// expect.periods[2].unrecorded_fields withdrew due_date from grading — and
+	// then report the capability as killed while grading none of the cells the
+	// kill rests on. T9 did exactly that to all nine cells of
+	// MONTHEND-CONTINUE-FROM-CLAMPED-DAY in P-02 and P-02b and still got 11/11
+	// PASS at exit 0.
+	//
+	// A kill is a claim that a wrong implementation would be CAUGHT. A cell this
+	// vector does not compare catches nothing, so naming it is not evidence, and
+	// the store may not record it as though it were.
+	if periodCount > 0 && idx < periodCount && containsString(periods[idx].UnrecordedFields, field) {
+		bad("graded_against[%d] (%s) divergent_cells[%d] %q names a cell this vector's OWN "+
+			"expect.periods[%d].unrecorded_fields WITHDRAWS from grading. A structural kill has no "+
+			"margin to carry its evidence, so its whole claim is that these cells are compared — and "+
+			"this one is not. Nothing would catch a port that got it wrong, yet the report would print "+
+			"the capability as killed (finding T9-F1b). Either record the cell and grade it, or stop "+
+			"claiming a kill that rests on it",
+			i, id, j, cell, idx)
 	}
 	return problems
+}
+
+// DivergentCellForm is how ParseDivergentCell reports a cell name it could not
+// resolve. There is one parser for divergent cell names in this harness and this
+// is its vocabulary: two parsers that disagreed about what "period[2].due_date"
+// means would be a defect of exactly the shape finding T9-F1b describes — one
+// half of the harness policing a cell name the other half resolves differently.
+type DivergentCellForm int
+
+const (
+	// DivergentCellWellFormed means idx and field are usable.
+	DivergentCellWellFormed DivergentCellForm = iota
+	// DivergentCellNotACell means the name has no "period[" prefix.
+	DivergentCellNotACell
+	// DivergentCellMalformed means the brackets or the "." are wrong.
+	DivergentCellMalformed
+	// DivergentCellBadIndex means the row index is not a canonical non-negative
+	// integer.
+	DivergentCellBadIndex
+)
+
+// ParseDivergentCell splits "period[<n>].<field>" into its row index and field.
+//
+// It does NOT range-check the index against any schedule and does not judge the
+// field: those are policy, and policy belongs with the caller that has the vector
+// in hand. DivergentCellRowOrder is not a per-row cell and is reported as
+// DivergentCellNotACell; callers handle it before calling.
+func ParseDivergentCell(cell string) (idx int, field string, form DivergentCellForm) {
+	const prefix = "period["
+	if !strings.HasPrefix(cell, prefix) {
+		return 0, "", DivergentCellNotACell
+	}
+	rest := cell[len(prefix):]
+	end := strings.IndexByte(rest, ']')
+	if end < 0 || !strings.HasPrefix(rest[end:], "].") {
+		return 0, "", DivergentCellMalformed
+	}
+	idxText, field := rest[:end], rest[end+2:]
+	n, err := MinorText(idxText).Int64()
+	if err != nil || n < 0 {
+		return 0, "", DivergentCellBadIndex
+	}
+	return int(n), field, DivergentCellWellFormed
 }
 
 // statesBothValues is the crude mechanical test that a structural
@@ -625,18 +694,14 @@ func admitPeriods(v *Vector) []string {
 	digits := v.Request.Currency.MinorUnitDigits
 
 	for i, p := range v.Expect.Periods {
-		if _, err := periodKindByName(p.Kind); err != nil {
-			bad("expect.periods[%d].kind: %v", i, err)
-		}
-		if !p.FromDate.Valid() {
-			bad("expect.periods[%d].from_date %s is not a real calendar date", i, p.FromDate)
-		}
-		if !p.DueDate.Valid() {
-			bad("expect.periods[%d].due_date %s is not a real calendar date", i, p.DueDate)
-		}
+		// unrecorded_fields is validated FIRST, because every check below has to
+		// ask whether the cell it is about to inspect was withdrawn from grading.
 		for _, f := range p.UnrecordedFields {
-			if !gradedPeriodField(f) {
-				bad("expect.periods[%d].unrecorded_fields names %q which is not a graded period field", i, f)
+			if !unrecordablePeriodField(f) {
+				bad("expect.periods[%d].unrecorded_fields names %q, which is not a cell a capture may "+
+					"withdraw from grading. The withdrawable cells are exactly %s; %q is compared by "+
+					"this harness and may never be withdrawn (finding T9-F1a)",
+					i, f, strings.Join(UnrecordablePeriodFields(), ", "), f)
 			}
 		}
 		recorded := func(field string) bool {
@@ -646,6 +711,78 @@ func admitPeriods(v *Vector) []string {
 				}
 			}
 			return true
+		}
+
+		// kind is not withdrawable, so it is validated unconditionally.
+		kind, kindErr := periodKindByName(p.Kind)
+		if kindErr != nil {
+			bad("expect.periods[%d].kind: %v", i, kindErr)
+		}
+
+		// FINDING T9-F1a, as a hard structural rule: "marked unrecorded means
+		// EMPTY" now covers the NON-money cells too.
+		//
+		// Before this rule the check below existed only for the three money
+		// columns, so from_date, due_date and installment_number could each be
+		// simultaneously POPULATED and UNGRADED — a value in the file that
+		// nothing compares. T9 demonstrated the consequence end to end: it wrote
+		// 1999-01-01 into all nine cells that MONTHEND-CONTINUE-FROM-CLAMPED-DAY
+		// names in P-02 and P-02b, withdrew every one of them, and the run still
+		// reported "monthend.reanchor killed by MONTHEND-CONTINUE-FROM-CLAMPED-DAY"
+		// and exited 0. A stored value nobody compares is indistinguishable from
+		// an observation, which is the exact defect unrecorded_fields exists to
+		// prevent — applied to the half of the row where the month-end capability
+		// lives.
+		//
+		// For a date, EMPTY is the zero Date: absent from the JSON, or written as
+		// {year:0, month:0, day:0}. Nothing else is a real calendar date anyway.
+		for _, d := range []struct {
+			field string
+			date  Date
+		}{
+			{"from_date", p.FromDate},
+			{"due_date", p.DueDate},
+		} {
+			if !recorded(d.field) {
+				if d.date != (Date{}) {
+					bad("expect.periods[%d].%s is marked unrecorded but carries the date %s. A cell "+
+						"withdrawn from grading must be EMPTY: nothing compares it, so a value written "+
+						"there is a claim no run can check and a later reader cannot tell it from an "+
+						"observation (finding T9-F1a). Either record the date and grade it, or leave the "+
+						"cell at the zero date", i, d.field, d.date)
+				}
+				continue
+			}
+			if !d.date.Valid() {
+				bad("expect.periods[%d].%s %s is not a real calendar date", i, d.field, d.date)
+			}
+		}
+
+		// installment_number, the one withdrawable cell whose Go type cannot tell
+		// ABSENT from ZERO (finding T9-F1c). The documented sentinel for absent is
+		// therefore 0 — the frozen contract's own value for a row that is not
+		// payable (contract.go, Period.InstallmentNumber: "InstallmentNumber is 0
+		// because it is not payable") — and the withdrawal is confined to exactly
+		// the rows for which that sentence holds.
+		//
+		// So: a withdrawn installment_number must be 0, and only a DISBURSEMENT or
+		// DOWN_PAYMENT row may withdraw it. A REPAYMENT row's installment number is
+		// the dense 1..n sequence the contract mandates; it is never unobservable,
+		// and letting one be withdrawn would reopen the hole this rule closes.
+		if !recorded("installment_number") {
+			if p.InstallmentNumber != 0 {
+				bad("expect.periods[%d].installment_number is marked unrecorded but carries %d. The "+
+					"sentinel for an unrecorded installment number is 0, because int32 cannot tell "+
+					"absent from zero; any other value is a populated cell nothing compares "+
+					"(finding T9-F1a/F1c)", i, p.InstallmentNumber)
+			}
+			if kindErr == nil && kind == contract.PeriodKindRepayment {
+				bad("expect.periods[%d] is a REPAYMENT row and marks installment_number unrecorded. Only "+
+					"a non-payable row (DISBURSEMENT, DOWN_PAYMENT) may withdraw it, because 0 is the "+
+					"frozen contract's own value for exactly those rows and so stores no observation. A "+
+					"repayment's installment number is the contract's dense 1..n sequence: it is always "+
+					"determinable and withdrawing it would hide a real divergence (finding T9-F1a)", i)
+			}
 		}
 		overScaled := map[string]bool{}
 		for _, f := range p.OverScaledWireTextFields {
@@ -822,13 +959,29 @@ func containsString(haystack []string, needle string) bool {
 	return false
 }
 
-func gradedPeriodField(f string) bool {
-	switch f {
-	case "kind", "installment_number", "from_date", "due_date",
-		"principal_minor", "interest_minor", "outstanding_principal_minor":
-		return true
+// UnrecordablePeriodFields are the per-row cells a capture may declare in
+// unrecorded_fields — the cells for which "the capture did not record this" is a
+// statement a capture can honestly make.
+//
+// `kind` is DELIBERATELY ABSENT, and its absence is a strengthening (finding
+// T9-F1a). It used to be withdrawable and never should have been: the replay
+// grader cannot even CONSTRUCT a row without a kind (registry.go resolves it with
+// periodKindByName and hard-errors), every property invariant keys on it, row
+// ordering is defined in terms of it, and no capture seam in this corpus omits
+// it. A cell that cannot be absent must not be declarable absent — otherwise the
+// declaration is a way to stop grading a cell that was in fact observed.
+//
+// Everything on this list carries a further "unrecorded means EMPTY" rule in
+// admitPeriods. Being withdrawable is not permission to leave a value behind.
+func UnrecordablePeriodFields() []string {
+	return []string{
+		"installment_number", "from_date", "due_date",
+		"principal_minor", "interest_minor", "outstanding_principal_minor",
 	}
-	return false
+}
+
+func unrecordablePeriodField(f string) bool {
+	return containsString(UnrecordablePeriodFields(), f)
 }
 
 // GradedDomain evaluates the GRADED DOMAIN predicate list from

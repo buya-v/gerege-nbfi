@@ -587,6 +587,96 @@ func MoneyCellFields() []string {
 	return []string{"principal_minor", "interest_minor", "outstanding_principal_minor"}
 }
 
+// structuralCell renders one non-money cell of a row as the string diffSchedule
+// would compare. It knows only the fields in StructuralCellFields.
+func (p ExpectPeriod) structuralCell(field string) string {
+	switch field {
+	case "kind":
+		return p.Kind
+	case "from_date":
+		return p.FromDate.String()
+	case "due_date":
+		return p.DueDate.String()
+	}
+	return ""
+}
+
+// StructuralKillIsCompared reports whether at least one cell of a structural
+// counterfactual is actually compared when this vector is graded.
+//
+// FINDING T9-F1b, the coverage half. Admission already refuses a divergent cell
+// that this vector's unrecorded_fields withdraws, so on an admissible vector this
+// predicate is normally true. It exists anyway, for two reasons.
+//
+// First, the row_order cell names no field and so slips past the per-cell rule: a
+// vector could withdraw every structural cell on every row and still claim a
+// row-order kill, and row order is detectable ONLY through those cells — rows are
+// compared pairwise by index, so a schedule emitted in the wrong order shows up as
+// a wrong kind or a wrong date and nowhere else. Withdraw them all and nothing
+// remains that could notice.
+//
+// Second, coverage is the number a reader trusts. "monthend.reanchor killed by
+// MONTHEND-CONTINUE-FROM-CLAMPED-DAY" is a statement that a wrong implementation
+// would be CAUGHT. A kill with nothing compared catches nothing, so it must not
+// back a capability and must not print as killing anything — that printed line,
+// over a store whose month-end dates were all garbage, is precisely what T9
+// demonstrated at exit 0.
+//
+// A money kill always returns true: its evidence is the margin, not a cell list.
+func (v *Vector) StructuralKillIsCompared(cf Counterfactual) bool {
+	if cf.Kind != CounterfactualStructural {
+		return true
+	}
+	// row_order is detectable only if two rows can be TOLD APART by a cell that is
+	// actually graded. Rows are compared pairwise by index, so a schedule emitted
+	// in the wrong order surfaces as a wrong kind or a wrong date on some row and
+	// nowhere else. If every graded structural cell holds the same value on every
+	// row, a permutation of those rows is invisible and the kill catches nothing —
+	// which is the same "claims a kill nothing can check" defect as an all-withdrawn
+	// cell list, reached by a different route.
+	rowOrderCompared := func() bool {
+		if len(v.Expect.Periods) < 2 {
+			return false
+		}
+		for _, f := range StructuralCellFields() {
+			var first string
+			seen := false
+			for _, p := range v.Expect.Periods {
+				if containsString(p.UnrecordedFields, f) {
+					continue
+				}
+				got := p.structuralCell(f)
+				if !seen {
+					first, seen = got, true
+					continue
+				}
+				if got != first {
+					return true
+				}
+			}
+		}
+		return false
+	}
+	for _, cell := range cf.DivergentCells {
+		if cell == DivergentCellRowOrder {
+			if rowOrderCompared() {
+				return true
+			}
+			continue
+		}
+		idx, field, form := ParseDivergentCell(cell)
+		if form != DivergentCellWellFormed || idx >= len(v.Expect.Periods) {
+			// Malformed or out of range. Admission reports it as inadmissible;
+			// this predicate refuses to credit it either way.
+			continue
+		}
+		if !containsString(v.Expect.Periods[idx].UnrecordedFields, field) {
+			return true
+		}
+	}
+	return false
+}
+
 // Exemption disables one named invariant for one vector, with a reason. It
 // exists because an invariant that cannot be switched off gets deleted the
 // first time a legitimate shape violates it, and a deleted invariant protects
