@@ -299,3 +299,46 @@ prior round examined, so the driver has never been licensed to ratify. Revision 
 **Nothing here is escalated to Buyan.** Per CLAUDE.md, DEC-n ratification is agent-decidable on a clean
 independent review; Buyan retains veto. **Still RESERVED and untouched:** cutover, regulatory /
 parallel-run sign-off, deposit-taking activation, and licence facts — none of which is in Run 1's path.
+
+---
+
+### G-1 · RATIFICATION DECISION, fire `20260819-080001` — **NOT RATIFIED**, and the reviewer disagreed
+
+DEC-1 reached **revision 8**, the ratification candidate, and independent re-review **T43** returned
+**ACCEPTED WITH REQUIRED CHANGES — no P0**. That is the first round in eight to find no P0, and T43
+stated plainly that it *"found no reason not to ratify"*, recommending the driver ratify under P-2 and
+carry the corrections as a revision-9 erratum.
+
+**The driver declined. DEC-1 is NOT ratified and G-1 stays open.** The reasoning, recorded so it can be
+overturned:
+
+1. **The bar is written and it says clean.** CLAUDE.md: *"once the contract passes an independent review
+   **clean**, the driver ratifies it."* T43's own verdict vocabulary distinguishes **CLEAN** from
+   **ACCEPTED WITH REQUIRED CHANGES**, and it chose the latter. A reviewer may recommend policy; it does
+   not set it.
+2. **The standing invariant forbids the shortcut.** *"Continuity is achieved by finding other work, never
+   by lowering a bar."* Eight rounds of cost is not a reason to redefine "clean".
+3. **The decisive one — ratification FREEZES.** A ratified DEC-n cannot be amended by an agent without a
+   gate. **P1-T43-3 is a known-wrong statement about money**: §4.3.2's M4 is stated as deciding which row
+   a **charge** lands on, but `getCumulativeAmountOfCharge` computes `isDue` at `:403` and the
+   `isInstalmentFee()` arm at `:404-405` **never reads it** — an instalment fee lands on **every** row,
+   with no membership test at all. Observed on `FC-02` (12 charge cells) and `FC-07` (1). A porter
+   following the frozen text would mis-price by **MNT 27,500** on FC-02's shape. Freezing a statement we
+   already know to be wrong is precisely what ratification must never do — and revision 8 *introduced*
+   that charges section, so the error is new, not inherited.
+4. **The cost of one more round is small and the evidence says convergence, not thrash.** Revision 9 is an
+   erratum — three P1s and three P2s — not a rewrite. The findings changed *shape* this round: the
+   previous seven were **wrong about the money**; T43's are all *"the sentence is right, the evidence
+   pinned under it is not"*. That is what converging looks like.
+
+**What now closes G-1:** revision 9 applies T43's errata (and T44's capture-audit findings), then **one**
+independent re-review. If that returns CLEAN, the driver ratifies under P-2 without reaching Buyan.
+
+**Buyan may overturn this.** Ratifying revision 8 today would be defensible — no P0, and the three P1s are
+citation and scope-of-claim defects, one of which bites only a charge port that Run 1 does not build. It
+would unblock **T7** (the conformance harness) and everything behind it roughly one round earlier. The
+driver judged that unblocking a harness one round early is worth less than not freezing a known-wrong
+money sentence. **This is a judgment call, not a statute, and it is the only thing in G-1 that is.**
+
+**Still RESERVED and untouched:** cutover, regulatory / parallel-run sign-off, deposit-taking activation,
+licence facts. None is in Run 1's path.
