@@ -1,0 +1,13 @@
+T44 AUDIT - R2 vs R4 over the swept monthly-progressive date space
+  schedule start dates : 1095 (2023-01-01 .. 2025-12-30)
+  terms                : (6, 12, 36), RepaymentEvery=1, MONTHS
+  (start, period) pairs: 59130
+
+  periods on which the MONTH-END SPECIAL CASE FIRES        : 701
+  periods where packed and naive whole-months DISAGREE     : 701
+  periods where periodRatio(R2) != periodRatio(R4)         : 0
+
+  => R2 and R4 are the SAME FUNCTION on this entire domain.
+     The month-end special case is exactly a compensation for the packed rule's
+     month-end undercount, so a port that omits the special case AND computes
+     whole-months the obvious way is INDISTINGUISHABLE from the oracle here.

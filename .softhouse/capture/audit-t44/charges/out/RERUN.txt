@@ -1,0 +1,33 @@
+== T44 audit re-run against the live oracle ==
+2026-08-19T01:25:59Z
+
+-- CTRL-B-01 (committed Path B control request, byte-verbatim) --
+HTTP 200  calc-B-01-baseline.json  ->  713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009
+
+-- sampled T40 charge requests, byte-verbatim --
+HTTP 200  calc-FC-01-flat-disbursement.json  ->  18bc7b0e30ed14d615989c25cbe394220f38a531c17408c5ed9f68a6921700be
+HTTP 200  calc-FC-04-pctinterest-instalment.json  ->  4b350ecf532bf8921901880d081b311d58a91c7d22cfe0cc91b3e5b4a9ee337f
+HTTP 200  calc-FC-05-pctamountinterest-instalment.json  ->  2f2a242fa80ca563f9599c270f0118e6bc31f6f36e23a1fb630d2df6348accc9
+HTTP 200  calc-FC-11-fee-on-disbursement-date.json  ->  d157b0a21c893ec03ffa6a165c7e83929c9fca9199dc5659bfa7f8322362b356
+HTTP 200  calc-FC-15-combined-fee-and-penalty.json  ->  6dfe679c85915dbf44bf1385f4e9c132e8593265844ab456e9c349ba937a7b81
+HTTP 200  calc-FC-17-fee-after-final-duedate.json  ->  713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009
+HTTP 200  calc-FC-19-pctinterest-sdd-inside-p6.json  ->  a214f3ae361dd2f13a150f659b19c84b0bcc6d8144a68fd1f7ff2832992928aa
+HTTP 200  calc-FC-20-pctinterest-sdd-on-disb.json  ->  713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009
+HTTP 200  calc-FC-21-pctamtint-sdd-inside-p6.json  ->  52eb83b1ce9730754f2b6f18a159881975ded9d4a2afa2e544f913b976ee32c4
+HTTP 200  calc-FC-22-penalty-instalment-plus-sdd-on-p3-duedate.json  ->  f7c4d6a88d1d9f33e8c455a812450beceff03b62360c2db4f84043e2dc8ba005
+
+-- XR-01 refusal (expected NON-200) --
+HTTP 403  calc-XR-01-fee-before-disbursement.json  ->  1af1083d1ba86fafcf4871c1b5b7a242684b1b85cf809a44bea50d2d1c9d1805
+
+== committed digests, for comparison ==
+713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0de129ee93ba6bd9/.softhouse/capture/charges/out/control/B-01-baseline-raw.json
+18bc7b0e30ed14d615989c25cbe394220f38a531c17408c5ed9f68a6921700be  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0de129ee93ba6bd9/.softhouse/capture/charges/out/fc/FC-01-flat-disbursement-raw.json
+4b350ecf532bf8921901880d081b311d58a91c7d22cfe0cc91b3e5b4a9ee337f  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0de129ee93ba6bd9/.softhouse/capture/charges/out/fc/FC-04-pctinterest-instalment-raw.json
+2f2a242fa80ca563f9599c270f0118e6bc31f6f36e23a1fb630d2df6348accc9  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0de129ee93ba6bd9/.softhouse/capture/charges/out/fc/FC-05-pctamountinterest-instalment-raw.json
+d157b0a21c893ec03ffa6a165c7e83929c9fca9199dc5659bfa7f8322362b356  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0de129ee93ba6bd9/.softhouse/capture/charges/out/fc/FC-11-fee-on-disbursement-date-raw.json
+6dfe679c85915dbf44bf1385f4e9c132e8593265844ab456e9c349ba937a7b81  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0de129ee93ba6bd9/.softhouse/capture/charges/out/fc/FC-15-combined-fee-and-penalty-raw.json
+713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0de129ee93ba6bd9/.softhouse/capture/charges/out/fc/FC-17-fee-after-final-duedate-raw.json
+a214f3ae361dd2f13a150f659b19c84b0bcc6d8144a68fd1f7ff2832992928aa  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0de129ee93ba6bd9/.softhouse/capture/charges/out/fc/FC-19-pctinterest-sdd-inside-p6-raw.json
+713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0de129ee93ba6bd9/.softhouse/capture/charges/out/fc/FC-20-pctinterest-sdd-on-disb-raw.json
+52eb83b1ce9730754f2b6f18a159881975ded9d4a2afa2e544f913b976ee32c4  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0de129ee93ba6bd9/.softhouse/capture/charges/out/fc/FC-21-pctamtint-sdd-inside-p6-raw.json
+f7c4d6a88d1d9f33e8c455a812450beceff03b62360c2db4f84043e2dc8ba005  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0de129ee93ba6bd9/.softhouse/capture/charges/out/fc/FC-22-penalty-instalment-plus-sdd-on-p3-duedate-raw.json

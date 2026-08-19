@@ -1,0 +1,4 @@
+T44 provenance spot-check of the T39 handoff against the observed payload
+
+
+  checked 110 published values: 110 traced to the observation, 0 MISMATCHED
