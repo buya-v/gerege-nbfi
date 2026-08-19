@@ -11,8 +11,8 @@ The worst total-interest gap T34 re-derived — **MNT 398,967.73** on a MNT 50,0
 [VERIFIED: capture `T39-P0-D`, `.softhouse/capture/periodratio/analysis/discriminate-output.txt`].
 
 **A second question was settled at the same time.** `calculatePeriodRatio`'s month-end special
-case (`ProgressiveEMICalculator.java:1426-1436`) is **live and load-bearing**: on 4 shapes and
-**116 disagreeing cells**, the oracle agrees **116 of 116** with the routine that includes those
+case (`ProgressiveEMICalculator.java:1426-1436`) is **live and load-bearing**: on 4 shapes and  **[SUPERSEDED by T46 C-1/C-4: the special case is `:1432`-`:1433`, and it is graded only JOINTLY with the packed whole-months rule -- see the CORRECTIONS section at the end.]**
+**116 disagreeing cells**, the oracle agrees **116 of 116** with the routine that includes those  **[SUPERSEDED by T46 C-1: the null hypothesis is the wrong one -- a port with naive whole-months AND no special case also matches 116 of 116. See CORRECTIONS.]**
 four lines and **0 of 116** with the same routine minus them. Omitting them roughly doubles
 `periodRatio` on alternate periods — **MNT 83,959.76** of extra interest on one MNT 3.9 M / 6-month
 loan [VERIFIED: capture `T39-ME-A`].
@@ -49,7 +49,7 @@ Every case pins MNT (USD for the calibration), `MinorUnitDigits` 2, one disburse
 |---|---|---|
 | **R1** | multiplier = `RepaymentEvery` | DEC-1 §4.3.2 lines 486-490; `contract.go:1455-1459` |
 | **R2** | multiplier = `periodRatio` | `ProgressiveEMICalculator.java:1404-1413` → `calculatePeriodRatio` `:1419-1458` → `calculateSeedDate` `:1461-1479` |
-| **R3** | `periodRatio` with the month-end special case omitted | R2 minus `:1429-1434`; the most plausible mis-port of the routine |
+| **R3** | `periodRatio` with the month-end special case omitted | R2 minus `:1429-1434`; the most plausible mis-port of the routine |  **[SUPERSEDED by T46 C-4: the special case is `:1432` (predicate) and `:1433` (call); `:1429-1434` does not compile if deleted. And R3 is not the most plausible mis-port -- R4 is, and R4 is INDISTINGUISHABLE. See CORRECTIONS.]**
 
 R1 and R2 are T34's transcriptions, copied **byte-identically** into
 `.softhouse/capture/periodratio/analysis/` (`t34_model.py`, `t34_periodratio.py`); R3 is the same
@@ -100,7 +100,7 @@ let defect F-1 hide through five reviews.
 | question | separating shapes | discriminating cells | observation agrees with the **DEC-1** reading | observation agrees with the **pinned-source** reading |
 |---|---|---|---|---|
 | **P0-T34-1** — is the multiplier `RepaymentEvery` or `periodRatio`? | 8 | **415** | **0 / 415** | **415 / 415** |
-| **month-end special case** — is `:1429-1434` in force? | 4 | **116** | (omitted: **0 / 116**) | (present: **116 / 116**) |
+| **month-end special case** — is `:1429-1434` in force? | 4 | **116** | (omitted: **0 / 116**) | (present: **116 / 116**) |  **[SUPERSEDED by T46 C-1/C-4: this row grades the PAIR (special case AND packed whole-months), not `:1429-1434`. See CORRECTIONS.]**
 
 And end to end, not only on the disagreeing cells: **R2 reproduces every cell of every one of the
 15 parity-setting captures — 1,239 cells — with zero mismatches**: all 8 drift shapes, all 4
@@ -175,7 +175,7 @@ special-case-present reading on all 29 [VERIFIED: capture `T39-ME-B`].
 only ONE of them differs on the graded domain.** The task brief and T34 §1.2 both say "two
 arguments differ, not one". The pinned source passes `(…, periodRatio, BigDecimal.valueOf(30), …)`
 at `:1412-1413` and `(…, repaymentEvery, daysInMonth, …)` at `:1536-1537`. But `daysInMonth` is
-computed at `:1509` as `daysInMonthType.isDaysInMonth_30() ? BigDecimal.valueOf(30) :
+computed at `:1509` as `daysInMonthType.isDaysInMonth_30() ? BigDecimal.valueOf(30) :  **[SUPERSEDED by T46 C-4: `daysInMonth` is computed at `:1508`.]**
 calculatedDaysInRepaymentPeriod`, and DEC-1 §3.1's graded domain fixes `DaysInMonth = DAYS_30`.
 So on the graded domain the 4th argument is `30` on **both** call sites and the *effective*
 difference is exactly the multiplier. The correction DEC-1 revision 7 needs is therefore a
@@ -353,7 +353,7 @@ Full attestation: `.softhouse/capture/periodratio/ATTESTATION.md`.
 for is now **observationally required**, not merely re-derived. Three additions this capture
 supports beyond T34's list:
 
-1. State `periodRatio`'s **month-end special case** (`:1426-1436`) normatively. It is not an edge
+1. State `periodRatio`'s **month-end special case** (`:1426-1436`) normatively. It is not an edge  **[SUPERSEDED by T46 C-1: DEC-1 must pin the PACKED whole-months rule normatively alongside the special case -- neither clause is safe stated alone. The lines are `:1432`-`:1433`. See CORRECTIONS.]**
    case: it is worth MNT 83,959.76 on one captured six-month loan, and a port that drops those four
    lines double-charges alternate periods. T34 §1.6 item 2 mentions the adjustment; it should be
    normative and cited, with the "`targetDateLastDay == targetDateDay && seedDateDay >

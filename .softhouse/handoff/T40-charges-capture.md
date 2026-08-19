@@ -28,7 +28,7 @@ defects in the reference oracle itself.**
    charge, every penalty — raises `feeChargesDue`/`penaltyChargesDue` and `totalDueForPeriod` on its period
    and raises `totalFeeChargesCharged`/`totalPenaltyChargesCharged`, but **is not added to
    `totalRepaymentExpected`**. Only disbursement-time charges, and the two *separated* calculation types,
-   are. **Observed on 15 of 21 captures** (invariant C5), and re-derived from source.
+   are. **Observed on 15 of 21 captures** (invariant C5), and re-derived from source.  **[SUPERSEDED by T46 C-3: C5 is a discrimination PROBE, not an invariant -- DEC-1 rev 8's ratified C-1 forbids asserting it. See CORRECTIONS.]**
 2. **A specified-due-date charge dated after the last due date is accepted (HTTP 200) and then silently
    vanishes.** `FC-17` is **byte-identical to the zero-charge control**. The API's only date guard rejects
    dates *before* disbursement; there is no upper bound.
@@ -363,7 +363,7 @@ FC-22 corroborates on penalties alone.
 
 ### D-1 — `totalRepaymentExpected` omits every charge applied in the main loop
 
-Invariant **C5** (`totalRepaymentExpected == Σ totalDueForPeriod`) **FAILS on 15 of 21 captures**
+Invariant **C5** (`totalRepaymentExpected == Σ totalDueForPeriod`) **FAILS on 15 of 21 captures**  **[SUPERSEDED by T46 C-3: relabelled probe P5, reported as a signed delta. See CORRECTIONS.]**
 [VERIFIED: `out/INVARIANTS.md`]. Observed, four different ways:
 
 | capture | charge | `totalFeeChargesCharged` | `totalRepaymentExpected` | included? |
@@ -394,7 +394,7 @@ running total is seeded with the disbursement charges only
 [VERIFIED: `ProgressiveLoanScheduleGenerator.java:137`]. The **only** charge contribution after the seed
 comes from `updatePeriodsWithCharges`, which serves just the separated calculation types
 [VERIFIED: `:486`]. The cumulative (non-progressive) generator does add them
-[VERIFIED: `fineract-loan/.../AbstractCumulativeLoanScheduleGenerator.java:504`], so **the two generators
+[VERIFIED: `fineract-loan/.../AbstractCumulativeLoanScheduleGenerator.java:504`], so **the two generators  **[SUPERSEDED by T46 C-4: `:504` is the site of AGREEMENT. The disagreement is the cumulative MAIN LOOP at `:392` with `ScheduleCurrentPeriodParams.java:144-145`. See CORRECTIONS.]**
 disagree** — which is itself a reason not to "fix" this in the Go port without a decision.
 
 **Consequence for the port and for DEC-1:** `totalRepaymentExpected` is **not** the sum of the period
@@ -442,7 +442,7 @@ by any capture in the corpus before today.
 | C2 Σ `penaltyChargesDue` == `totalPenaltyChargesCharged` | **PASS 21/21** |
 | C3 `totalDueForPeriod` == principal + interest + fee + penalty, per period | **PASS 21/21** |
 | C4 `feeChargesOutstanding` == `feeChargesDue`, same for penalties | **PASS 21/21** |
-| C5 `totalRepaymentExpected` == Σ `totalDueForPeriod` | **FAIL on 15 of 21** — see D-1 |
+| C5 `totalRepaymentExpected` == Σ `totalDueForPeriod` | **FAIL on 15 of 21** — see D-1 |  **[SUPERSEDED by T46 C-3: probe, not invariant.]**
 | C6 Σ `principalDue` == `totalPrincipalExpected` (amortises to zero) | **PASS 21/21** |
 | C7 Σ `interestDue` == `totalInterestCharged` | **PASS 21/21** |
 | C8 principal / interest / outstanding identical to the control | **PASS 21/21** |
@@ -550,7 +550,7 @@ filed as a capture.
   and a plausible defect home. **`TO_BE_CAPTURED`.**
 * **Waiver, payment, and the `getDueAmounts` path** — none of it is reachable without a persisted loan.
 * **A charge whose percentage lands on an exact half-cent tie.** I looked for one against period 1's
-  interest (21,600.00) and proved arithmetically that none exists at that base: a tie needs `216 × p` to end
+  interest (21,600.00) and proved arithmetically that none exists at that base: a tie needs `216 × p` to end  **[SUPERSEDED by T46 C-2: the proof is FALSE and two ties have been OBSERVED -- `0.021875 %` of 21,600.00 = 4.725 -> 4.73, and `0.009375 %` = 2.025 -> 2.03. See CORRECTIONS.]**
   in `…5` at the third decimal, and `216p` is even for every terminating decimal `p`. I did **not** search
   the other eleven periods or other principals. The tenant-level canary already pins the mode, so this is a
   refinement, not a gap in the mode evidence. **`TO_BE_CAPTURED`** if someone wants the rounding mode pinned

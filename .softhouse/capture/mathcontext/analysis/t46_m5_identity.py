@@ -16,6 +16,7 @@ the exact text the oracle emitted.
 Usage: python3 analysis/t46_m5_identity.py <committed.json> <re-emission.json>
 """
 import json
+import re
 import sys
 from decimal import Decimal
 
@@ -27,6 +28,19 @@ ADDED_KEYS = {
 }
 # Top-level keys allowed to differ, and why.
 TOP_ALLOWED = {"harness"}
+
+# THE ONE CARVE-OUT, stated explicitly rather than applied silently.
+#
+# Two absence cases record a stack trace.  Its ORACLE frames -- MoneyHelper.getRoundingMode,
+# Money.roundToMultiplesOf, Money.<init>, Money.of, LoanApplicationTerms.assembleFrom,
+# ProgressiveLoanScheduleGenerator.generate -- are the evidence, and they must be identical.
+# The last two frames are the HARNESS's own (`CaptureMathContext.run` / `.main`) and name the
+# harness class and the harness's own line numbers.  A re-emission by a differently-named class
+# cannot reproduce those two frames, and they carry no information about the oracle.
+#
+# So: a moved leaf is permitted ONLY if BOTH the old and the new value are a harness self-frame.
+# Every exemption taken is printed verbatim.  Anything else is fatal.
+HARNESS_FRAME = re.compile(r"^at CaptureMathContext3?\.(run|main)\(CaptureMathContext3?\.java:\d+\)$")
 
 
 def leaves(node, prefix=""):
@@ -85,6 +99,7 @@ def main():
 
     # ---- 3. every previously published leaf ----------------------------------------------
     total, moved, added = 0, 0, 0
+    exemptions = []
     disagreements = []
     for cid in sorted(set(ca) & set(cb)):
         la = leaves(ca[cid])
@@ -93,6 +108,9 @@ def main():
             total += 1
             vb = lb.get(path, "<<ABSENT>>")
             if va != vb:
+                if HARNESS_FRAME.match(va) and HARNESS_FRAME.match(vb):
+                    exemptions.append("%s %s: %s  ->  %s" % (cid, path, va, vb))
+                    continue
                 moved += 1
                 if len(bad) < 40:
                     bad.append("%s %s: %r -> %r" % (cid, path, va, vb))
@@ -118,7 +136,11 @@ def main():
 
     print()
     print("  previously published leaves compared : %d" % total)
-    print("  leaves that MOVED                    : %d" % moved)
+    print("  leaves that MOVED (fatal)            : %d" % moved)
+    print("  leaves EXEMPT (harness self-frames)  : %d" % len(exemptions))
+    for e in exemptions:
+        print("      " + e)
+    print("  leaves byte-identical                : %d" % (total - moved - len(exemptions)))
     print("  leaves ADDED by the re-emission      : %d  (%s)"
           % (added, ", ".join(sorted(ADDED_KEYS))))
     print()
