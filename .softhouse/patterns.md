@@ -183,4 +183,50 @@ Every worker prompt carries it; review enforces it. State only what you verified
   separation is **not monotone in principal**, so there is no threshold to reason from. "We could not find a
   separating shape" is a statement about the search, not about the parameter.
 
+- **Re-derive the BLOCKER, not just the finding.** Two consecutive fires recorded N46-1 as "needs a tenant
+  write on the shared server", and it sat `TO_BE_CAPTURED` for both. The blocker was **wrong**: on Path B
+  the ambient context *is* the threaded object [`LoanScheduleAssembler:753` reads `getMathContext()`,
+  `:765` threads that same cached reference], so a tenant write moves both axes together and separates
+  nothing. The experiment everyone was waiting for could never have worked, while the one that did needed
+  **no server, no tenant write and no database** — just an in-process run setting ambient and threaded
+  differently. When a task reports something uncapturable, **the reason is a claim, and it is exactly as
+  falsifiable as the finding.** Re-derive it before you plan a fire around it.
+- **Two overloads of one helper are two specifications.** `MathUtil.percentageOf(x, p, 19)` takes the
+  **ambient** rounding mode; `percentageOf(x, p, mc)` takes the **threaded** one — 7/7 and 7/7. Likewise
+  `Money.of(currency, amount)` injects the ambient context while the 3-arg form does not. A porter reading
+  one overload and generalising has silently picked a rounding rule. **Grep every overload of any helper on
+  a money path, not just the one the call site you are reading happens to use.**
+- **A latent defect in the oracle is an active defect in the port.** On the shipped server the ambient and
+  threaded contexts are the *same object*, so Fineract never exhibits the charge-rounding leak. It goes live
+  the moment a port threads a context — which is precisely the idiomatic Go translation. **"The oracle is
+  never wrong here" does not mean "a faithful port cannot be wrong here."** Look for defect classes the
+  *translation* introduces, not only those the source exhibits.
+- **Check what the seam hard-wires before you design a harness on it.** `ProgressiveLoanScheduleGenerator:81`
+  — the Path A embeddable seam — calls `generate(mc, loanApplicationTerms, null, null)`. `loanCharges` is
+  **hard-wired null**, so that seam can *never* exercise a charge, and charge conformance can only ever be
+  graded on Path B. This was discovered in the same fire that captured 21 charge shapes *through Path B*
+  without anyone noticing the other seam was structurally blind to them. **Read the seam's own call, not
+  its signature.**
+- **Linearity hides a difference.** T48 concluded `chargeCalculationType` 5 needed a multi-disbursement
+  product. It did not: `LoanChargeAssembler:190-204` builds one charge per tranche, so `Σ p·tᵢ = p·Σtᵢ` and
+  a tranche product is byte-identical to the single-disbursement one — **0 of 302 cells**. What separates it
+  is breaking the linearity: tranches summing to less than the principal (`12,345.00` vs `14,814.00`, the
+  ratio exactly `1,000,000/1,200,000`), or a `minCap`/`maxCap` that clips per-component. **A shape whose
+  components sum to the whole cannot distinguish per-component arithmetic from whole-computation
+  arithmetic** — and the premise "we need a richer product" was wrong twice before it was tested.
+- **A live slot fed by an inert setting.** Proving the *reader* moves money is not proving the *setting*
+  does. T51 traced both readers of the aliased slot and showed each moves money against its own control
+  (79/153 and 52/164 cells) — and then showed the product setting that feeds it changes **0 cells** across
+  8 shapes on two products matched on 20 SQL columns. The slot is LIVE; the setting is INERT; the value
+  arrives from a **tenant-global configuration** in a different scope entirely
+  [`LoanScheduleAssembler:370-371`]. **Vary the writer and trace the reader — a finding that does only one
+  of the two is half a finding**, and the half it omits is the one that tells a porter what to wire.
+- **A false sentence is cheapest to fix before it is frozen.** The driver has now declined ratification
+  twice on **no-P0** reviews, both times because a known-false sentence was about to be frozen into
+  `contract.go` or the ADR — and both times the next revision proved the sentence really was wrong. One
+  of them (§4.9's "no capture exercises it") had already been retired **five revisions and eight review
+  rounds** earlier in a *different section*, and leaked the whole time. **Ratification freezes; grep for
+  restatements of every claim you correct, in every section that restates it, not only the one the review
+  named.**
+
 <!-- LEARNED PATTERNS END -->
