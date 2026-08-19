@@ -1107,6 +1107,30 @@
       "contract_independent": true,
       "note": "Raised by local fire 20260819-140003 (oracle REACHABLE). DISPATCHED, isolation=worktree, model=opus; orchestrator WILL await it. || COMPLETE, merged. ITEM 1 SETTLED BY OBSERVATION, WITH A SCOPE CORRECTION THE DRIVER RE-VERIFIED AT SOURCE. T48-N1's citation is exact (LoanApplicationTerms.java:1753 passes the value as the 16th positional argument into the parameter LoanConfigurationDetails.java:72 names interestRecognitionOnDisbursementDate, assigned :92, returned :201-203), and T49 confirmed it independently. BUT THESE ARE NOT TWO PRODUCT SETTINGS: isInterestChargedFromDateSameAsDisbursalDateEnabled is a TENANT-GLOBAL CONFIGURATION, read from configurationDomainService.isInterestChargedFromDateSameAsDisbursementDate() [LoanScheduleAssembler.java:370-371] - VERIFIED BY THE DRIVER BY OPENING THE LINES. The alias therefore CROSSES CONFIGURATION SCOPES, which is worse: a port CANNOT fix it by wiring 'the other product field'. A GO PORT MUST WIRE THAT INPUT FROM THE GLOBAL CONFIG, NOT FROM THE PRODUCT'S SAME-NAMED GETTER, and reproduce the 31-December boundary bug-for-bug. Both downstream readers traced and PROVEN TO MOVE MONEY against their own controls - ProgressiveEMICalculator.java:1579 (cross-year partial arm) 79 of 153 cells, :194 (full-term-tranche arm) 52 of 164 cells. Then the observation: products 17 (flag true) and 18 (false) asserted matched on 20 SQL columns, 8 shapes x both readers, 0 CELLS DIFFER, including the request-level override in both directions. The oracle's interest matches the 31-DECEMBER boundary on 6 of 6 discriminating periods and 1-January on 0 of 6, with the product flag true on half of them. Four further crossing periods correctly reported as discriminating nothing (equal-length years, T48-N4's rule). So the PRODUCT setting is INERT while the SLOT is LIVE. ITEM 2: T48's PREMISE WAS WRONG TWICE. A real tranche product with three genuine tranches is BYTE-IDENTICAL to type 2 (0 of 302 cells), and so is the same request on ordinary single-disbursement product 1 - the multi-disbursement PRODUCT was never what mattered, disbursementData alone drives it. Cause: LoanChargeAssembler.java:190-204 builds ONE CHARGE PER TRANCHE, so sum(p*t_i) = p*sum(t_i). LINEARITY HID IT, NOT THE ABSENCE OF TRANCHES. Two shapes break linearity: tranches summing to 1,000,000 against a principal of 1,200,000 -> 12,345.00 vs 14,814.00 (ratio 0.833333 = 1,000,000/1,200,000, ARITHMETIC RE-CHECKED BY THE DRIVER), and caps - maxCap 5000 -> 13,641.50 vs 5,000.00, minCap 8000 -> 24,000.00 vs 8,000.00. Type 5 remains rejected at every other charge time type, HTTP 400 'must not be any of [ 5 ]' [ChargeDefinitionCommandFromApiJsonDeserializer.java:493-495]. ITEM 3 BOTH HALVES LANDED: minCap/maxCap captured above; fixedLength's blocker found - HTTP 403 'only allowed for zero interest products' [LoanProductDataValidator.java:2784-2787] with thereIsInterest derived from the REQUEST, so no product was needed; at zero interest it moves exactly 3 cells (final due date, final day count, term in days). Discipline: preconditions before all 6 passes and after 3, PASS asserted each time; determinism 47/47 byte-identical; failability 8/8 including the preconditions gate exiting 1 with 5 named breaches on tenant default. Server ADDITIVE ONLY - m_charge 13->18, m_product_loan 16->21, m_loan 0->0, ids 1-13 digest unchanged, no c_configuration write, containers never touched, /Users/buv/fineract clean at 426a23544. Nothing promoted, no DEC-1 amendment proposed, capture/mathcontext/ left to T50. TOP REMAINING TO_BE_CAPTURED: setting the GLOBAL interest-charged-from-date-same-as-disbursal-date to true - the only way to witness the alias DELIVERING a different value. Needs a tenant write, so it needs an EXCLUSIVE fire or a throwaway container.",
       "branch": "softhouse/T51-alias-and-tranche-captures"
+    },
+    {
+      "id": "T52",
+      "title": "DEC-1 v10 -> v11: a BOUNDED erratum pass applying T49's six items plus this fire's three confirmed observations",
+      "description": "T49 returned ACCEPTED WITH REQUIRED CHANGES with NO P0 - the second consecutive no-P0 round - and recommended ratifying after one bounded erratum pass. This is that pass. It carries T49's three P1s and three P2s, plus the three findings T50 and T51 CONFIRMED BY OBSERVATION in the same fire, two of which change what a correct sentence says. THE BOUND IS THE POINT: no type, field, enum member or graded-domain predicate may move. If any item turns out to require moving one, STOP and report - that is an amendment and a gate, not an erratum.",
+      "agent_role": "analyst",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        "docs/adr/DEC-1-schedule-generator-adapter.md",
+        "nexus/internal/apps/loanschedule/contract/contract.go",
+        ".softhouse/handoff/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T49",
+        "T50",
+        "T51"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "contract_independent": true,
+      "note": "Raised by local fire 20260819-140003. DISPATCHED, isolation=worktree, model=opus; orchestrator WILL await it."
     }
   ]
 }
