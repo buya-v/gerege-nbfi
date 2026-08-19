@@ -279,9 +279,15 @@ prove() {
     say ""
   }
 
-  # 1. No implementation registered, oracle claimed reachable: exit 2.
-  expect 2 "no implementation to grade" -- \
-    "$bin" -oracle-probe=up
+  # 1. Nothing to grade, oracle claimed reachable: exit 2.
+  #    Was "no implementation REGISTERED", which T10 negated by registering the
+  #    port. The PROPERTY is unchanged and is what matters -- the harness refuses
+  #    to grade when it has nothing to grade -- so it is now asserted by naming an
+  #    implementation that does not exist, which does not depend on the store
+  #    happening to be empty. Same defect class as D-6: a proof must assert a
+  #    property, never a frozen fact about today's tree.
+  expect 2 "no implementation named" -- \
+    "$bin" -oracle-probe=up -impl=__none__
 
   # 2. Oracle unreachable: exit 2. Demonstrated by pointing the PROBE at a closed
   #    port and running this script for real, so the shell probe itself is what is
@@ -534,7 +540,10 @@ prove() {
   printf '%s' "$out19a" | grep -q 'UNBACKED in_graded_domain claims: monthend.reanchor' || ok19=0
   printf '%s' "$out19a" | grep -q 'killed by MONTHEND-CONTINUE-FROM-CLAMPED-DAY' && ok19=0
   printf '%s' "$out19b" | grep -q 'killed by MONTHEND-CONTINUE-FROM-CLAMPED-DAY' || ok19=0
-  printf '%s' "$out19b" | grep -q 'parity vectors          PASS 11' || ok19=0
+  # NOT a frozen count: T57 moved the corpus 11 -> 13 and a literal here would go
+  # stale on every promotion (finding D-6, third recurrence). Assert the PROPERTY --
+  # the pristine store still grades clean with no failures.
+  printf '%s' "$out19b" | grep -qE 'parity vectors +PASS [0-9]+ +FAIL 0' || ok19=0
   if [ "$ok19" = 1 ]; then
     say "PROOF OK   exit $rc19a/$rc19b       T9-F1b: withdrawn cells STOP backing the kill; recorded ones still back it"
     pass=$((pass+1))
