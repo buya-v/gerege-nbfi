@@ -46,7 +46,7 @@ close by capture the two gaps the oracle could settle:
 | **F39-3** threaded context echoed as intent | **CLOSED by re-emission** | 16 cases re-emitted with the object echo; **2072 / 2072 values identical** |
 | **F39-4** imprecise line citations | **CLOSED** | four citations corrected, each re-opened by this task |
 | **A-1** Path B wiring citation absent | **CLOSED** | five sites cited and verified |
-| **A-2** D-1 cites the site of agreement | **CORRECTED (on T44's evidence)** | pointer moved to `:392` + `ScheduleCurrentPeriodParams.java:144-145` |
+| **A-2** D-1 cites the site of agreement | **CLOSED** | pointer moved to `:392` + `ScheduleCurrentPeriodParams.java:144-145`, all five lines re-opened by this task |
 | **A-3** corpus cannot see which input supplies the money | **CLOSED by capture** | 7 new captures; **request governs, 7 for 7** |
 | **A-4** C5 shipped as an invariant | **CLOSED** | relabelled probe **P5**, signed delta, new failable suite |
 | **A-5** false negative claim about half-cent ties | **CLOSED by capture** | **two exact ties observed**, both `HALF_UP`; rounding locus re-derived |
@@ -375,8 +375,10 @@ found where a float/number comparison would have hidden a real behaviour.
   is forbidden to restart or re-tenant it, and a sibling was running. `TO_BE_CAPTURED`.
 - **Whether `m_charge.amount` governs when the request OMITS `amount`.** Every capture in the corpus
   supplies it. `TO_BE_CAPTURED`.
-- **A-2's replacement citation** was **not** re-opened by T46; it rests on T44's evidence and T44's
-  parent auditor's re-verification. `[VERIFIED on T44's evidence; UNVERIFIED by this task]`
+- *(A-2's replacement citation was on this list in an earlier draft. It has since been re-opened line by
+  line by this task — `AbstractCumulativeLoanScheduleGenerator.java:352`, `:392`, `:504`,
+  `ScheduleCurrentPeriodParams.java:144-145`, `ProgressiveLoanScheduleGenerator.java:137` and `:486` —
+  and is now `[VERIFIED by this task]`.)*
 - **`chargeTimeType = OVERDUE_INSTALLMENT`**, tranche/multi-disbursement charges, `minCap`/`maxCap`,
   the cumulative generator, `Asia/Hovd`, and anything needing a persisted loan — unchanged from T40.
 - **`RepaymentEvery > 3`**, `DaysInMonth = ACTUAL`, `DaysInYear = ACTUAL`, multi-disbursement, down

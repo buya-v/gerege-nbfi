@@ -182,9 +182,15 @@ generator has too (`ProgressiveLoanScheduleGenerator.java:486`). The correct cit
   `principalForThisPeriod.plus(interestForThisPeriod).plus(feeChargesForInstallment).plus(penaltyChargesForInstallment)`;
 - progressive **main loop**: adds only `principalDue.plus(interestDue, mc)`.
 
-**The conclusion is unchanged and true; only the pointer moves.** [VERIFIED by T44 on the pinned source
-and re-checked by T44's parent auditor; **not independently re-opened by T46** — `[UNVERIFIED by this
-task]`.]
+**The conclusion is unchanged and true; only the pointer moves.** [VERIFIED by this task — all five
+lines re-opened in the pinned checkout: `AbstractCumulativeLoanScheduleGenerator.java:352`
+`final Money totalInstallmentDue = currentPeriodParams.fetchTotalAmountForPeriod();`, **`:392`**
+`scheduleParams.addTotalRepaymentExpected(totalInstallmentDue);`, `:504` the separated path;
+`ScheduleCurrentPeriodParams.java:144-145` returning
+`principalForThisPeriod.plus(interestForThisPeriod).plus(feeChargesForInstallment).plus(penaltyChargesForInstallment)`;
+and the progressive main loop at `ProgressiveLoanScheduleGenerator.java:137`
+`scheduleParams.addTotalRepaymentExpected(principalDue.plus(interestDue, mc));` with its separated
+counterpart at `:486`.]
 
 ## 7. A-6 — response scale is caller-controlled, and worse than recorded
 
@@ -276,9 +282,8 @@ Unchanged from T44 except where marked:
 
 ## 11. Unverified
 
-- **A-2's replacement citation** is T44's and T44's parent auditor's; **T46 did not re-open
-  `AbstractCumulativeLoanScheduleGenerator.java:392` or `ScheduleCurrentPeriodParams.java:144-145`.**
-  `[VERIFIED on T44's evidence; UNVERIFIED by this task]`
+- *(A-2 was on this list in an earlier draft; it has since been re-opened line by line by this task and
+  is now `[VERIFIED by this task]` — see §6.)*
 - **That "the request governs" holds for charge types not tried.** Observed on `charge_calculation_enum`
   1, 2, 3, 4 and `charge_time_enum` 1, 8. Enum values 5 (percent of disbursement amount) and 9 (overdue
   instalment), and `charge_time_enum` 2 (specified due date), were **not** re-tested with a disagreeing

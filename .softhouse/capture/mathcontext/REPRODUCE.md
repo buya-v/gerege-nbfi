@@ -93,3 +93,88 @@ diff out/t42-mathcontext2.json out/t42-determinism2.json   # must print nothing
 On the recorded runs both produced **no output** — the payloads are byte-identical from fresh
 containers (sha256 `f2a037a1…6553` and `f7ffeb2a…6b84`). Only the log's wall-clock timestamps
 differ between runs.
+
+---
+
+## T46 — reproducing the audit corrections
+
+Everything in this section was added by T46 to close the T44 audit's findings M-1…M-11
+(`.softhouse/reviews/T44-capture-audit.md` §3). No T42 payload was modified.
+
+### M-3 — distinct coverage of the E1 matrix (contacts no oracle)
+
+```sh
+cd .softhouse/capture/mathcontext
+python3 analysis/t46_distinct_coverage.py            # reads out/t42-mathcontext.json only
+```
+
+Recorded result (`analysis/t46_distinct_coverage-output.txt`): 13 `-A` baselines, **4** of them
+byte-identical to `plain`, so **10 distinct**; `plain` vs `multiples1000` differ in **0 of 74**
+cells; period-1 total `212787.28` on both, not a multiple of 1000.
+
+### M-1 / M-2 — the hard-coded `MathContext` inventory (contacts no oracle)
+
+```sh
+bash analysis/t46_mathcontext_inventory.sh /Users/buv/fineract
+```
+
+Every line is a grep hit with `file:line`; nothing is derived. Recorded result:
+`analysis/t46_mathcontext_inventory-output.txt`.
+
+### M-11 — the 172 control cells, published
+
+```sh
+python3 analysis/controls.py                          # default: the original 2-line summary
+                                                      # sha256 4b847fc9…72548d, unchanged
+T42_CONTROLS_VERBOSE=1 python3 analysis/controls.py    # every compared cell, one per line
+# or: python3 analysis/controls.py --verbose
+```
+
+Recorded verbose result: `analysis/t46-controls-cells-output.txt` — 172 cells, 172 MATCH.
+
+### M-6 — the Path B slot assertion, positive and negative
+
+```sh
+bash src/t46-assert-pathb-slot.sh
+```
+
+Re-reads the deployed bytecode off the running `fineract-fineract-1` with `javap` (**read-only**:
+it unzips two `.class` files into a fresh `/tmp/t46j` inside the container; nothing is restarted,
+re-tenanted, reconfigured or written), asserts A1/A2/A3 on both the committed transcript and the
+re-read, then asserts them against a slot-drifted copy which it must reject. Recorded result:
+`analysis/t46-pathb-slot-assertion-output.txt` — PASS, PASS, FAIL(6).
+
+### M-8 — the vacuity guard, exercised
+
+```sh
+bash src/t46-negative-vacuity.sh      # no container; extracts the shipped guard and corrupts
+                                      # only the ambientCanary field
+```
+
+Recorded result: `out/negative/t46-n7-vacuity-guard.txt` — guard fires (exit 1) on the corrupted
+payload, silent (exit 0) on the clean one, 140,978 observed cells identical between the two.
+
+### M-5 — the re-emission with the object echo, and its identity proof
+
+```sh
+python3 analysis/t46_make_capture3.py   # regenerate src/CaptureMathContext3.java
+bash src/run-mathcontext3.sh            # throwaway `docker run --rm`; refuses to publish
+                                        # unless the identity proof passes
+bash src/t46-negative-identity.sh       # prove the identity check is failable
+```
+
+Recorded results: `analysis/t46-m5-identity-proof.txt` (147,630 of 147,634 leaves byte-identical,
+4 enumerated harness self-frames exempt, 856 keys added, 0 object/intent disagreements over 214
+cases) and `out/negative/t46-n9-identity-check-failable.txt`.
+
+`run-mathcontext3.sh` moves its payload to `*.json.REJECTED` and exits non-zero if the identity
+proof fails; `out/negative/t46-n8-identity-check-rejects.txt` is the transcript of that happening.
+
+### Digests
+
+```sh
+cd .softhouse/capture/mathcontext && find . -type f | sort | xargs shasum -a 256
+```
+
+Compare against `ATTESTATION.md` §9 (T42 artefacts) and §9.1 (T46 artefacts, including the two
+T42 files whose digests moved and why).

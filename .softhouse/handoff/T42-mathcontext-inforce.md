@@ -1,5 +1,23 @@
 # T42 — which `MathContext` actually governs the money, and whether precision 19 is observable
 
+> ## CORRECTED IN PLACE BY T46 — read this first
+>
+> The T44 independent audit (`.softhouse/reviews/T44-capture-audit.md` §3) raised eleven findings
+> against this handoff and its capture set. **T46 closed them and edited this document in place.**
+> Every correction is marked `**[T46 CORRECTION …]**` at the point it applies; the full working,
+> the identity proofs and the new negative legs are in
+> `.softhouse/handoff/T46-mathcontext-corrections.md` and
+> `.softhouse/capture/mathcontext/ATTESTATION.md`.
+>
+> **No recorded observation was changed by T46**, and no T42 payload was modified. The two
+> corrections that change a *number* in this document are N-3's site inventory (M-1/M-2) and the
+> E1 matrix's distinct coverage, 10 rather than 13 (M-3). Everything else is a correction to a
+> justification, a `file:line`, or a claim's scope.
+>
+> **The three headline results are unaffected and stand:** (a) the ambient context is provably
+> never read on the Path A seam for a 2-dp currency; (b) on Path B the threaded context *is* the
+> ambient object; (c) threaded precision 19 separates from 12 on ordinary shapes.
+
 ## Verdict, in two sentences
 
 **(a) T39's N-3 is right about Path A and wrong as a general claim, and the difference matters.**
@@ -42,7 +60,9 @@ is only visible on a value that lands on a rounding boundary, so "nothing moved"
 with "it was read and happened not to matter".
 
 T42 replaces the difference test with an **absence** test. Each case carries its own tenant id
-(`MoneyHelper` caches per tenant, `MoneyHelper.java:36-37, :91-93`). The `-D` cases put a tenant
+(`MoneyHelper` caches per tenant, `MoneyHelper.java:37-38, :91-93` — **[T46 CORRECTION, M-9]**
+this document originally cited `:36-37`; `:37` is `roundingModeCache` and `:38` is
+`mathContextCache`, re-opened in the pinned checkout). The `-D` cases put a tenant
 into `ThreadLocalContextUtil` and **never call `initializeTenantRoundingMode` for it**, so any
 ambient read throws:
 
