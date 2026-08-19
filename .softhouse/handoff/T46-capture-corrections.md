@@ -237,7 +237,8 @@ responses `out/t46/`; analysis `out/t46/DEFVSREQ.txt`.
 | `T46-CH-07` | 8 (8, 1) flat PENALTY / instalment | `1200.000000` | `333.33` | `1200.00` | **`333.33`** |
 
 **Seven for seven, across four `charge_calculation_enum` values, two `charge_time_enum` values, fee and
-penalty.** Mechanism: `ProgressiveLoanScheduleGenerator.java:445-446` / `:464-465` use
+penalty.** All seven re-issued **byte-identically** on a second issue [`out/t46/DETERMINISM.txt`].
+Mechanism: `ProgressiveLoanScheduleGenerator.java:445-446` / `:464-465` use
 `loanCharge.getPercentage()` — the `LoanCharge`'s own field, populated from the request — and flat
 charges take `loanCharge.amount()` / `amountOrPercentage()` at `:412` / `:449`.
 

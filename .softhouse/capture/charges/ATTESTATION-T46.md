@@ -68,7 +68,9 @@ no capture could distinguish "the definition governs" from "the request governs"
 the definition passed all 21 and was wrong.
 
 Seven new captures make the two disagree. Full working: `out/t46/DEFVSREQ.txt`; requests
-`req/calc-T46-CH-0*.json`; responses `out/t46/T46-CH-0*-raw.json`.
+`req/calc-T46-CH-0*.json`; responses `out/t46/T46-CH-0*-raw.json`. **Determinism: all seven re-issued
+BYTE-IDENTICALLY on a second issue** [`out/t46/DETERMINISM.txt`, `bin/t46-determinism.sh`,
+second copy under `out/t46-rerun/`].
 
 | capture | charge id (time, calc) | definition | request | if DEFINITION governs | if REQUEST governs | **OBSERVED** |
 |---|---|---|---|---|---|---|
