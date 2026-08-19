@@ -230,3 +230,75 @@ Every worker prompt carries it; review enforces it. State only what you verified
   named.**
 
 <!-- LEARNED PATTERNS END -->
+
+### Run 2026-08-17-run1-harness-schedule-poc — fire `20260819-170001` (local, oracle REACHABLE) — 2026-08-19
+
+- **What worked**: Two structural blockers fell in one fire. (1) The **no-Go-toolchain gap**, open for three
+  fires, was closed **without** the durable host change earlier fires correctly declined to make unattended —
+  a repo-local `GOROOT` under `.softhouse/toolchain/`, sha256-asserted before extraction, gitignored,
+  reversible with one `rm -rf`. The objection was never "is a toolchain allowed"; it was "may an agent modify
+  Buyan's machine unattended". Re-scoping the *install location* dissolved the objection without weakening it.
+  **Generalise: when a blocker is about blast radius rather than permission, shrink the blast radius.**
+  (2) **T7, the bottleneck behind seven tasks, is done and merged.**
+- **What the independent reviewer caught** (measure it): no reviewer ran this fire; the **driver** did the
+  adjudication and re-derived rather than accepting reports — three catches worth recording:
+  - **T55-N1 re-derived from scratch and CONFIRMED digit for digit.** `LB-DEC31` has a **zero** first segment
+    and still grades the ACT/ACT arm by **6,015 minor units** (ARM `0/366 + 31/365` → `22014.25`, *observed*
+    on all three products; PLAIN `31/366` → `21954.10`, counterfactual). The mechanism is the real result:
+    PLAIN takes its denominator from the period-**start** year (366) while ARM assigns days to the year they
+    land in (365), so **segment length is irrelevant — year lengths are what matter.** DEC-1's stricter
+    wording is therefore known-wrong → gate **G-4**, unamended because a ratified DEC-n is not an agent's call.
+  - **`gofmt` wants to rewrite the ratified `contract.go`** (doc-comment list normalisation, inert). Not
+    applied → gate **G-3**. The risk was never the output; it was that a `gofmt -w ./...` or a format-on-save
+    would mutate a frozen artefact and **read as formatting noise in review**.
+  - **D-2, found by re-reading a cited line instead of trusting the citation.** `ProgressiveLoanScheduleGenerator.java:83`
+    hard-wires **two** nulls, not one: `loanCharges` (recorded as T50-N2) **and `holidayDetailDTO`** (never
+    recorded). Holiday/non-working-day adjustment is a guaranteed **silent no-op** on Path A, null-guarded at
+    `DefaultScheduledDateGenerator.java:224`. Also **D-1**: the cite is `:83`, not `:81` — `:81` is a
+    different method. **A citation nobody re-opens is a claim, not a fact.**
+- **Vectors added / contexts at parity**: 33 Path B leap-boundary captures (T55): **6 discriminating pairs, 5
+  proven non-discriminating**, determinism 33/33 byte-identical, negative tests 9/9 breaching, invariants
+  I1–I7 on all 33. **Contexts at parity: still zero, and the harness says so out loud** — `conformance.sh`
+  exits **2** with *"VERDICT: UNUSABLE — THIS IS NOT A PASS"* and refuses to claim all-pass over an empty
+  corpus. **Nothing is promoted yet.**
+- **Claims marked UNVERIFIED** (carried forward): D-2a — that Path B reproduces holiday adjustment on the
+  **final period only** — is derived from source (`:61` guards `:66`) and **not yet observed**. No T55 shape
+  separates precision 19 from 12 or HALF_UP from HALF_EVEN, so `(19, HALF_UP)` is **provenance, not
+  discrimination**, on those axes. The Path A seam's blind spots have been found **one at a time** and nobody
+  has exhaustively audited every input it drops — expect a third.
+- **New knowledge**:
+  - **Pair-difference is the WRONG test for whether a vector grades a behaviour (T55-N2).** `LB-F29CROSS` and
+    `LB-MULTI3F` report **0 cells** on every pair yet kill naive ports by **17,850** and **71,014** minor
+    units, because the setting decides only *whether* the arm fires, never its denominators. A
+    non-zero-pair promotion rule would have discarded the **three best graders** in the set. Gradeability is
+    *"which named wrong implementations does this vector kill, and by how much"* — now the `graded_against[]`
+    schema field. **An all-products-identical capture is not evidence of non-gradeability.**
+  - **Seam blindness belongs in DATA, not code** (`capabilities.json`, absent ⇒ **default-deny**). Blind spots
+    arrive one at a time; as a table, each new one is a row that immediately refuses every affected vector
+    with no schema migration and no code change.
+  - **Money must be an integer STRING in JSON.** Most readers (jq included) decode numbers to doubles, so an
+    integral JSON *number* can be corrupted by the **reader** even when the writer was exact.
+  - **Storing a derivation as an observation is a distinct defect class** — pass 3 never recorded the
+    disbursement row's balance; filling it from the contract's own rule would grade the port against the
+    harness's assumption. Hence `unrecorded_fields`.
+  - **A grader must not contain the thing it grades** — no schedule generation or date stepping in the
+    harness, so T10 cannot borrow an implementation from its own conformance runner.
+  - **Worker branch names are not guaranteed.** Monitoring `softhouse/<taskid>-*` gave a **false negative**
+    for 50 minutes while T55 committed 6 commits to its auto-created `worktree-agent-*` branch. Check the
+    worktree's actual HEAD, not the expected branch name. The nudge sent on that false signal was harmless,
+    but the panic it nearly caused was not free.
+  - **`git diff main..branch` (two-dot) on a stale fork reports the ORCHESTRATOR's newer commits as
+    DELETIONS.** T55 appeared to delete 67 lines of `reference-oracle.md`; three-dot showed **zero**
+    deletions. Always three-dot for a scope check, exactly as the skill says.
+  - **A transient API 529 is not a task failure.** T7 attempt 1 died before its first commit and everything
+    was lost; attempt 2, told to commit a WIP within its first few tool calls, survived and produced 19
+    commits. **Record infrastructure deaths separately from quality rejections** so they never consume
+    `max_retries_per_task`.
+- **Verifier**: `go build ./...` **exit 0** · `go vet ./...` **exit 0** · `go test ./...` **ok**
+  (conformance 0.582 s) · `gofmt -l internal` → only `contract/contract.go` (**expected**, G-3) ·
+  `conformance.sh` → **exit 2, UNUSABLE, not a pass** (correct: no port, nothing promoted) ·
+  `conformance.sh --prove` → **10 passed, 0 failed** · driver's own scans: **0** float-shaped JSON numbers in
+  the vector store, **0** float types in the loanschedule Go tree. **No cutover, no parity claim.**
+- **Backlog carried forward**: promote the corpus into the new store (T8) — **promotion ordering matters:
+  promote a covering vector BEFORE flipping `in_graded_domain`, or the run is fatal**; T9 review of harness +
+  vectors; T20 (T17 F2–F6); T10 the port, now compilable; **capture D-2a on Path B**; gates **G-2, G-3, G-4**.
