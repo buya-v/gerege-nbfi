@@ -178,3 +178,68 @@ cd .softhouse/capture/mathcontext && find . -type f | sort | xargs shasum -a 256
 
 Compare against `ATTESTATION.md` §9 (T42 artefacts) and §9.1 (T46 artefacts, including the two
 T42 files whose digests moved and why).
+
+---
+
+## T50 — separating the AMBIENT rounding mode from the THREADED one (in process)
+
+Added by T50. **No T42 or T46 payload was modified.** Everything below runs in throwaway
+`docker run --rm` containers; the running `fineract-fineract-1` / `fineract-db-1` are not started,
+stopped, restarted, re-tenanted, reconfigured, `exec`'d into, read or written, `https://localhost:8443`
+is never contacted, and no PostgreSQL connection is opened.
+
+**Why an in-process run and not a tenant write.** On Path B the ambient context *is* the threaded
+object: `LoanScheduleAssembler.java:753` reads `MoneyHelper.getMathContext()` and `:765` hands that
+same reference to `generate(mc, …)`. A tenant write moves both axes together and observes nothing.
+`MoneyHelper.initializeTenantRoundingMode` is `public static` over a plain `ConcurrentHashMap`
+[`MoneyHelper.java:54-64`], so setting the ambient mode independently of the threaded one needs no
+server, no tenant write and no database at all.
+
+### The three commands
+
+```sh
+bash .softhouse/capture/mathcontext/src/run-t50-tier1.sh      # 2016 cells: the site expressions
+bash .softhouse/capture/mathcontext/src/run-t50-tier2.sh      # 1400 cells: the oracle's own methods
+bash .softhouse/capture/mathcontext/src/t50-negative-tests.sh # no container: is the checker failable?
+```
+
+Each runner is a **precondition script, not a wrapper**: `BREACH: …` + exit 1 on the pin, the
+cleanliness of the pinned checkout, the image id, the presence of all eight probed classes in the
+oracle jar, the container exit code, stderr, JSON parseability, the classpath's freedom from
+prohibited Oracle Database / MySQL / MariaDB entries, and every admissibility assertion. On an
+assertion failure the payload is moved to `*.json.REJECTED` and nothing is published. A run that does
+not print `== PASS -- capture admissible` produced nothing admissible.
+
+### What the assertions cover
+
+- **The vacuity canary (coverage detector).** Reading `MoneyHelper.getMathContext()` on an
+  uninitialised tenant must throw `IllegalStateException`. If it does not, every ambient-ABSENT case
+  is meaningless and the payload is refused.
+- **The ordinal map, read back out of `MoneyHelper` itself** — not assumed from the JDK.
+- **Per-case object-vs-intent attestation**: the ambient `MathContext` and the threaded one are echoed
+  off the objects and must match what the case id declares.
+- **The null control** (an input whose arithmetic is exact, so no rounding decision exists) must be
+  flat on every site; if it moves, the grid is discriminating on something other than rounding mode.
+- **Every cell is printed**, not just the verdict.
+
+### Analysis (contacts no oracle)
+
+```sh
+cd .softhouse/capture/mathcontext
+python3 analysis/t50_assert_tier1.py out/t50-tier1.json   # assertions + 2016-cell dump
+python3 analysis/t50_assert_tier2.py out/t50-tier2.json   # assertions + 1400-cell dump
+python3 analysis/t50_pivot_tier1.py                       # the grid as 7x7 pivot tables
+```
+
+Recorded results: `out/t50-tier1-assert.txt`, `out/t50-tier2-assert.txt`,
+`analysis/t50-pivot-tier1-output.txt`, `out/negative/t50-negative-tests-output.txt`.
+
+### Digests
+
+```sh
+cd .softhouse/capture/mathcontext && cat out/t50-digests.txt
+# regenerate:
+find . -type f -name 't50*' | sort | xargs shasum -a 256
+shasum -a 256 src/CaptureT50Ambient.java src/CaptureT50Tier2.java \
+              src/run-t50-tier1.sh src/run-t50-tier2.sh src/t50-negative-tests.sh
+```
