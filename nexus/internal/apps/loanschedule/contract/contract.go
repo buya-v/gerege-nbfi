@@ -1226,7 +1226,8 @@ type Disbursement struct {
 //     configuration value — configurationDomainService
 //     .isInterestChargedFromDateSameAsDisbursementDate()
 //     (LoanScheduleAssembler.java:370-371, key at
-//     GlobalConfigurationConstants.java:45, passed at :559) — whereas
+//     GlobalConfigurationConstants.java:45, passed at
+//     LoanScheduleAssembler.java:559) — whereas
 //     interestRecognitionOnDisbursementDate is a PRODUCT setting overridable
 //     per request (LoanScheduleAssembler.java:537-541). SO A GO PORT CANNOT FIX
 //     THIS BY WIRING THE OTHER PRODUCT FIELD: should this input ever be exposed

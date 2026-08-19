@@ -1,6 +1,6 @@
 # DEC-1 — Schedule-generator adapter contract
 
-**Status: DRAFT (revision 12) — the RATIFICATION CANDIDATE. Revision 12 is a DOCUMENTATION-ACCURACY PASS on revision 11: it applies **exactly the six P2 errata** of the independent diff-scoped check T53 (`.softhouse/reviews/T53-DEC-1-v11-diffcheck.md`), which returned **NO P0 AND NO P1** — the first round in nine with neither — confirmed that all nine of revision 11's items landed correctly, and recommended ratification once the six were applied. **Revision 12 changes no number a Go port must produce, and moves no type, no field, no enum member, no graded-domain predicate, no pin and no refusal; §3.1 and §4.1 are byte-identical to revision 11's, and `contract.go` is not touched at all.** What follows in this paragraph describes **revision 11**, which revision 12 carries forward unchanged apart from those six documentation corrections. Revision 11 is an ERRATUM PASS, exactly as revisions 9 and 10 were. It applies the three P1s and three P2s of independent re-review T49 — which returned ACCEPTED WITH REQUIRED CHANGES with NO P0, the second round in nine without one — plus the findings of capture tasks T50 and T51 that land on this document. It reopens no decision and moves no type, no field, no enum member and no graded-domain predicate. It changes exactly one number **in the arithmetic**, and that number is an arithmetic error rather than a rule: revision 10's own worked check in §4.5.1 asserted `2,160,000 × 21,875 = 472,500,000`, which is wrong by a factor of 100, and revision 11 corrects it to `47,250,000,000`. **Three counts of the evidence also change, each because a review required it**: the seam honours **16** of 19 components rather than 17 and fails to deliver **three** rather than two (T49's P1-T49-1), and **eight** capture sets exist rather than five (T49's P2-T49-1). **No number a Go port must produce changes**; the conclusion that check supports — `HALF_UP`, `4.73` and `2.03` — is re-derived here and unchanged. Revision 11 was written by task T52 and revision 12 by task T54; **neither may ratify this draft.** The diff-scoped check T49 advised in place of a ninth full re-derivation has now run — that is T53, which returned no P0 and no P1 — and its six P2 errata are applied here. Ratification is the driver's decision, and this document is a DRAFT until that decision is recorded.**
+**Status: RATIFIED (revision 12), 19 August 2026, by the `/softhouse-program` driver under policy P-2, on the tenth round's conditional acceptance having been met and verified. Buyan retains veto and may reverse this. Revision 12 is a DOCUMENTATION-ACCURACY PASS on revision 11: it applies **exactly the six P2 errata** of the independent diff-scoped check T53 (`.softhouse/reviews/T53-DEC-1-v11-diffcheck.md`), which returned **NO P0 AND NO P1** — the first round in nine with neither — confirmed that all nine of revision 11's items landed correctly, and recommended ratification once the six were applied. **Revision 12 changes no number a Go port must produce, and moves no type, no field, no enum member, no graded-domain predicate, no pin and no refusal; §3.1 and §4.1 are byte-identical to revision 11's, and `contract.go` is not touched at all.** What follows in this paragraph describes **revision 11**, which revision 12 carries forward unchanged apart from those six documentation corrections. Revision 11 is an ERRATUM PASS, exactly as revisions 9 and 10 were. It applies the three P1s and three P2s of independent re-review T49 — which returned ACCEPTED WITH REQUIRED CHANGES with NO P0, the second round in nine without one — plus the findings of capture tasks T50 and T51 that land on this document. It reopens no decision and moves no type, no field, no enum member and no graded-domain predicate. It changes exactly one number **in the arithmetic**, and that number is an arithmetic error rather than a rule: revision 10's own worked check in §4.5.1 asserted `2,160,000 × 21,875 = 472,500,000`, which is wrong by a factor of 100, and revision 11 corrects it to `47,250,000,000`. **Three counts of the evidence also change, each because a review required it**: the seam honours **16** of 19 components rather than 17 and fails to deliver **three** rather than two (T49's P1-T49-1), and **eight** capture sets exist rather than five (T49's P2-T49-1). **No number a Go port must produce changes**; the conclusion that check supports — `HALF_UP`, `4.73` and `2.03` — is re-derived here and unchanged. Revision 11 was written by task T52 and revision 12 by task T54; **neither may ratify this draft.** The diff-scoped check T49 advised in place of a ninth full re-derivation has now run — that is T53, which returned no P0 and no P1 — and its six P2 errata are applied here. Ratification is the driver's decision, and this document is a DRAFT until that decision is recorded.**
 
 **Why revision 8 was not ratified on T43's review, stated so the delay is not read as a doubt about the money.** T43 found no reason not to ratify. The driver declined anyway, for one reason: **ratification FREEZES**, and a ratified DEC-n cannot be amended by an agent without a gate. P1-T43-3 was a known-wrong sentence about money — it named M4 as deciding where a *charge* lands, which would have put an instalment fee on one row instead of twelve. **Known-wrong sentences about money are not frozen.** Revision 9 exists to be the thing that can be.
 
@@ -14,6 +14,76 @@
 | Artefact specified | `nexus/internal/apps/loanschedule/contract/contract.go` |
 | Reference oracle | Fineract, pinned checkout `426a23544e8426a38ae43ae404670a0a7e85b9eb` |
 | Supersedes | DEC-1 revision 1 (rejected by review T5); DEC-1 revision 2 (accepted-with-required-changes by re-review T23); DEC-1 revision 3 (accepted-with-required-changes by re-review T26); DEC-1 revision 4 (accepted-with-required-changes by re-review T29); DEC-1 revision 5 (accepted-with-required-changes by re-review T32); DEC-1 revision 6 (accepted-with-required-changes by re-review T34); DEC-1 revision 7 (superseded by revision 8 on the evidence of capture tasks T39 and T40, not by a review finding); DEC-1 revision 8 (accepted-with-required-changes, **no P0**, by re-review T43); DEC-1 revision 9 (superseded by revision 10 on the evidence of capture task T46, not by a review finding); DEC-1 revision 10 (accepted-with-required-changes, **no P0**, by re-review T49); DEC-1 revision 11 (accepted-with-required-changes, **no P0 and no P1**, by diff-scoped check T53) |
+
+**RATIFICATION RECORD — read this before relying on anything below.**
+
+**What was ratified:** DEC-1 **revision 12**, and the doc comments of
+`nexus/internal/apps/loanschedule/contract/contract.go`. **Ratification freezes both**: per §1, a ratified
+DEC-n cannot be amended by an agent without raising a `user` gate.
+
+**Who ratified it, and under what authority.** The `/softhouse-program` driver, local fire
+`20260819-140003`, under `CLAUDE.md` § *Answering gates*: *"DEC-n ratification is now agent-decidable — once
+the contract passes an independent review clean, the driver ratifies it, records the rationale, and
+proceeds — Buyan may reverse it."* **Cutover, regulatory / parallel-run sign-off, deposit-taking activation
+and licence facts remain hard `user` gates and NONE of them is ratified here.** Ratifying the contract is
+not authorising a cutover.
+
+**Stated honestly: no round returned a bare CLEAN, and this record does not claim one did.** Ten
+independent rounds ran (T5, T23, T26, T29, T32, T34, T37-observed, T43, T49, T53). The trend is the
+argument:
+
+| round | revision | verdict |
+|---|---|---|
+| T5 … T37 | 1 – 6 | a **new P0 every round**, each on a surface no prior round had examined |
+| **T43** | 8 | **no P0** — driver DECLINED (P1-T43-3 was a known-wrong sentence about money) |
+| **T49** | 10 | **no P0**, three P1s — driver DECLINED (P1-T49-2 was a false corpus claim inside `contract.go`) |
+| **T53** | 11 | **no P0, no P1**, six P2 documentation-accuracy errata + *"apply the six, then ratify"* |
+
+**Why this revision and not the two before it.** The driver declined twice, both times on the same
+discriminator: **a sentence known to be false was about to be frozen.** Both times the next revision proved
+the sentence really was wrong. That discriminator is what has now changed — **no known false sentence
+remains.** T53's six were applied by T54 and each was verified to have landed by the driver independently;
+T54's own two further findings were disposed of (one fixed by the driver at ratification — see below — and
+one verified already absent). T53's verdict was *conditional* acceptance, its condition has been met, and
+the reviewer itself authorised ratification once it was.
+
+**The mechanical proofs that make this an erratum chain rather than an amendment chain**, each reproduced by
+the driver and not merely reported:
+- **§3.1 and §4.1 are byte-identical across revisions 10, 11 and 12** — sha256 `42b978e2abb9` (3,592 chars)
+  and `b88faca50f22` (1,169 chars). These two sections are the graded domain and the rounding decision, so
+  their byte-identity is the proof that **no graded-domain predicate moved**. This is why ratification needs
+  no gate on N46-1/N46-3's account.
+- **`contract.go`'s non-comment body is byte-identical** — sha256 `2530f13ecad961f2` over its 96
+  non-comment, non-blank lines. Every revision in this chain changed doc comments only, verified three
+  independent ways (T52's count, T53's string-aware Go lexer, the driver's own diff parse).
+- **Citations:** 0 out of range, sustained across T49 (155 distinct / 329 occurrences), T52 (171), T53 (all
+  47 the diff added) and T54 (24 on added lines).
+
+**One erratum applied by the driver at ratification**, recorded because it is the only edit in this document's
+history not made by a task: `contract.go:1229` cited *"`GlobalConfigurationConstants.java:45`, passed at
+`:559`"*, which under this document's own last-named-file convention resolves to the wrong file. T54 found it
+and correctly left it alone (its brief forbade touching `contract.go`), flagging that after ratification the
+fix would need a gate. The driver anchored it to `LoanScheduleAssembler.java:559` — **verified by opening
+that line, which passes `isInterestChargedFromDateSameAsDisbursalDateEnabled`** — and re-proved the file
+comment-only afterwards (0 non-comment lines changed; non-comment sha256 unchanged). It was a mis-resolving
+anchor, never a wrong fact.
+
+**What is NOT verified, and is not made true by ratification:**
+- **That `contract.go` COMPILES.** No Go toolchain exists on this host, so `go build ./...` has never run
+  against it — see `.softhouse/reference-oracle.md`. Ten rounds graded this file's *comments* and its shape
+  against source and vectors; **nothing has ever graded whether it builds.** A static check found all three
+  imports used and no duplicate top-level declarations — a heuristic, not a compile.
+  **`[UNVERIFIED: that the package compiles]`.** The first fire with a toolchain must run `go build ./...`
+  before any Go is written against this contract.
+- **That the aliased input has ever been WITNESSED delivering a wrong value.** It has not, and it cannot be
+  on this tenant: the tenant-global flag is `false` [T53, read-only `SELECT`], so the alias delivers the same
+  value a correctly-wired port would. The alias EXISTS (source, four tasks) and the slot is LIVE (both readers
+  move money) — but **the harm is re-derived, not observed.** `TO_BE_CAPTURED`, and it needs a tenant write.
+- **N46-3's other five literal-19 `percentageOf` sites** — `[VERIFIED as grep]`, `[UNVERIFIED as behaviour]`.
+- **No vector is promoted.** `DayCountActualActual` is still refused with `ErrNoDiscriminatingVector`. The
+  ~60 captures of that arm are **CAPTURED, NOT PROMOTED**, and T48-N4's leap-boundary trap governs any future
+  promotion. Ratification freezes the contract's *shape and semantics*; **it asserts no parity with Fineract
+  and licenses no cutover.**
 
 **Revision history.**
 

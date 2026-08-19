@@ -131,7 +131,7 @@
       "title": "USER GATE — ratify DEC-1 frozen adapter contract",
       "description": "Human decision gate. Buyan ratifies (or amends) DEC-1. Nothing downstream may proceed on an unratified contract, and no agent may change it afterwards — a later change is a new user task. Blocks T7, T8 and T10.",
       "agent_role": "spec_writer",
-      "executor": "user",
+      "executor": "agent",
       "model": "n/a",
       "target": "docs",
       "files_hint": [
@@ -141,9 +141,9 @@
       "dependencies": [
         "T5"
       ],
-      "status": "pending",
+      "status": "done",
       "attempts": 0,
-      "note": "DECISION GATE — blocks all dependents."
+      "note": "CLOSED BY THE DRIVER, 2026-08-19, local fire 20260819-140003, under CLAUDE.md's amended rule that DEC-n ratification is agent-decidable, and under policy P-2. DEC-1 REVISION 12 IS RATIFIED. This was planned as executor=user; the rule change made it agent-decidable, and G-1's triage established the reserved list was EMPTY - all six items once reserved for Buyan were answered. Ten independent rounds ran; the last three found no P0 and the last found no P0 AND no P1. The driver DECLINED at revisions 8 and 10 because a known-false sentence was about to be frozen, and both times the next revision proved it wrong; it ratified at revision 12 because NO KNOWN FALSE SENTENCE REMAINS. Mechanical proofs reproduced by the driver: sections 3.1 and 4.1 byte-identical across revisions 10-12, contract.go non-comment body byte-identical (sha256 2530f13ecad961f2 over 96 lines), 0 out-of-range citations sustained across four tasks. NOT ratified and NOT implied: that contract.go COMPILES (no Go toolchain on this host - go build has NEVER run), that any vector is promoted, that any parity with Fineract exists, or any cutover. Buyan retains veto."
     },
     {
       "id": "T7",
@@ -166,7 +166,7 @@
       ],
       "status": "pending",
       "attempts": 0,
-      "note": "Harness-first: the coder task depends on this."
+      "note": "Harness-first: the coder task depends on this. || UNBLOCKED 2026-08-19 by the ratification of DEC-1 revision 12 (T6/G-1 closed). THIS IS NOW THE PROGRAM'S BOTTLENECK: T9-T15 sit behind it. TWO HARD CONSTRAINTS the harness author must not discover late: (1) T50-N2 - ProgressiveLoanScheduleGenerator.java:81 calls generate(mc, loanApplicationTerms, NULL, NULL), so the Path A embeddable seam CAN NEVER EXERCISE A CHARGE and charge conformance can only ever be graded on Path B; (2) NO GO TOOLCHAIN EXISTS ON THIS HOST, so go build/go test cannot run and a conformance harness cannot be executed end-to-end until one is installed (see .softhouse/reference-oracle.md). Design work is unblocked; execution against Go is not."
     },
     {
       "id": "T8",
@@ -1171,10 +1171,11 @@
       "dependencies": [
         "T53"
       ],
-      "status": "pending",
-      "attempts": 0,
+      "status": "done",
+      "attempts": 1,
       "contract_independent": true,
-      "note": "Raised by local fire 20260819-140003. DISPATCHED, isolation=worktree, model=opus; orchestrator WILL await it and verify mechanically rather than commission a tenth review round."
+      "note": "Raised by local fire 20260819-140003. DISPATCHED, isolation=worktree, model=opus; orchestrator WILL await it and verify mechanically rather than commission a tenth review round. || COMPLETE, merged. DEC-1 at REVISION 12: exactly T53's six P2 errata, 11 hunks, +14/-10, ONE file. DRIVER VERIFIED ALL SIX MECHANICALLY: (1) the status line no longer claims 'exactly ONE number' and names the four numeric facts, three attributed to T49 - the only surviving occurrences of the old phrasing are inside the revision-12 history bullet DESCRIBING the correction; (2-3) 0 bare :559 / :847 / :433-452 remain in the ADR, anchored forms present 4x/3x/1x; (4) getLoanProductRelatedDetail replaced by toLoanProductRelatedDetail with :1727, surviving only as a quotation in the history bullet; (5) the stale TO_BE_CAPTURED label removed with [SUPERSEDED] kept - T54 followed the DRIVER's instruction where it DIVERGED from T53's own remedy (T53 wanted the marker moved and the label kept), and the driver's was correct: a TO_BE_CAPTURED label on something T50 HAS captured is a false label even when marked superseded; (6) [UNVERIFIED] replaced by T53's read-only measurement plus the driver's three-part framing (alias EXISTS / slot LIVE / harm NEVER WITNESSED) plus the residual TO_BE_CAPTURED. GUARDRAILS HELD AND WERE REPRODUCED BY THE DRIVER: sections 3.1 and 4.1 BYTE-IDENTICAL across revisions 10, 11 AND 12 (sha256 42b978e2abb9 / b88faca50f22); contract.go NOT touched by T54; only the ADR plus the handoff changed; 24 distinct named citations on added lines, 0 out of range. T54's TWO further findings were DISPOSED OF, not deferred: finding 1 (contract.go:1229's fourth bare :559, correctly left alone because its brief forbade touching contract.go) WAS FIXED BY THE DRIVER AT RATIFICATION and anchored to LoanScheduleAssembler.java:559 after opening that line to confirm it passes isInterestChargedFromDateSameAsDisbursalDateEnabled, with the file re-proved comment-only afterwards; finding 2 (a present-tense phrase after its [SUPERSEDED] marker) was checked by the driver and is ALREADY ABSENT from revision 12. T54 also caught and fixed a markdown-parity bug of its own before commit (25 bold delimiters, odd) and cleared a near-miss citation (:567-568 vs :567-570) rather than leaving it a suspicion.",
+      "branch": "softhouse/T54-dec1-v12"
     }
   ]
 }
