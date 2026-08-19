@@ -1,0 +1,268 @@
+{
+  "schema": "gerege.loanschedule.vector/v1",
+  "case_id": "P-03",
+  "context": "loanschedule",
+  "class": "parity",
+  "title": "DISBURSEMENT DATED EXACTLY ON A REPAYMENT DUE DATE. Schedule start 2024-01-01, disbursement 2024-02-01. The oracle emits an all-zero REPAYMENT row 1 (2024-01-01 -> 2024-02-01) FIRST, then the DISBURSEMENT row dated 2024-02-01, then repayments 2..6 -- refuting the naive 'sort by date, disbursement first' rule at a reachable boundary. The level installment is 20.35, the EMI over the FIVE periods remaining after the disbursement date, not 17.01 over numberOfRepayments = 6.",
+  "dec1_revision": 12,
+  "_note": "TRANSCRIPTION NOTES. (1) request.currency.code is upper-cased from the capture's own spelling 'usd'; admit.go requires upper case and the contract forbids the oracle's lower-case fixture spelling leaking back out. (2) request.time_zone is DECLARED, not observed: the Path A embeddable seam takes java.time.LocalDate only and has no time-zone input at all (the capture JVM ran with defaultTimeZone GMT), so Asia/Ulaanbaatar is this vector's declared interpretation zone for civil dates and grades nothing. (3) request.rounding.rate_factor_scale is 19 from PIN.json's production_rounding; the capture records one MathContext precision (19) which is both. (4) On the DISBURSEMENT row, installment_number and interest_minor are marked unrecorded_fields: the oracle's own record type LoanSchedulePlanDisbursementPeriod carries exactly four fields (periodFromDate, periodDueDate, principalAmount, outstandingLoanBalance) and its periodNumber() returns null, with no interest accessor at all [VERIFIED: fineract-progressive-loan/.../LoanSchedulePlanDisbursementPeriod.java:25-35], and Capture3b.java:459-462 emits every field the record does carry. So those two cells were NOT OBSERVED. DEC-1 normalises the null installment number to 0 and that normalisation is part of the CONTRACT, not an oracle observation -- filling it here would be storing a derivation as an observation, the exact defect unrecorded_fields exists to prevent. (5) The capture's per-row totalOutstandingBalance column is deliberately NOT promoted: it is principal plus interest still to accrue, not an outstanding-principal figure, and the frozen contract has no field for it. Row 0 is an all-zero REPAYMENT emitted BEFORE the disbursement. Its capture column totalOutstandingBalance is 101.76 -- principal 100.00 plus the full 1.76 of interest still to accrue, recorded before any payment. That is NOT an outstanding-principal figure and is deliberately not routed into any principal column; the promoted outstanding_principal_minor for that row is the capture's `balance` cell, 0.00.",
+  "capabilities_required": [
+    "schedule.core"
+  ],
+  "graded_against": [
+    {
+      "id": "LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT",
+      "capability": "schedule.core",
+      "description": "Emits the level installment in the final period like every other period, so the final principal is (installment - interest) instead of the WHOLE REMAINING BALANCE. The schedule then does not amortize to exactly zero.",
+      "margin_minor": "1",
+      "evidence": "Derived at (19, HALF_UP) from cells observed in this capture. Observed level installment (row total on every non-final paying period) = 20.35; observed FINAL row total = 20.36, so the oracle does NOT carry the level installment into the final period. Counterfactual final principal = level installment 20.35 - observed final interest 0.12 = 20.23. Observed final principal = 20.24. Margin = |2024 - 2023| = 1 minor units, and the counterfactual's closing balance is non-zero, so the principal_amortizes_to_zero invariant also catches it."
+    },
+    {
+      "id": "EMI-DENOMINATOR-USES-NUMBER-OF-REPAYMENTS-NOT-PERIODS-AFTER-DISBURSEMENT",
+      "capability": "schedule.core",
+      "description": "Computes the level installment over numberOfRepayments (6) instead of over the periods that actually remain after the disbursement date (5), because the disbursement falls on repayment 1's due date and repayment 1 is therefore all-zero. Emits 17.01 where the oracle emits 20.35, and the schedule never amortizes to zero.",
+      "margin_minor": "334",
+      "evidence": "Derived at (19, HALF_UP). OBSERVED in this capture: level installment 20.35 (row total on paying periods 2..5), period-2 principal 19.77, period-2 interest 0.58, period-1 all-zero. r = 7.0/100 x 30/360 = 0.005833333333333333333; the counterfactual's EMI over n=6 is 100.00 x r / (1 - (1+r)^-6) = 17.01 -- which is exactly the level installment the oracle OBSERVES on P-00, the same shape with six paying periods. Counterfactual period-2 principal = 17.01 - 0.58 = 16.43 (1643 minor units, again the value observed on P-00 period 1). Observed 19.77 = 1977 minor units. Margin = 1977 - 1643 = 334 minor units on the first paying period alone. Driver-derived and independently re-derived by this task."
+    },
+    {
+      "id": "ROW-ORDER-SORT-BY-DATE-DISBURSEMENT-FIRST",
+      "capability": "schedule.core",
+      "kind": "structural",
+      "description": "Orders the response by (date, disbursement-first) instead of by the contract's window key. Because the half-open window [FromDate, DueDate) puts a disbursement dated exactly on period k's due date into period k+1, the naive rule emits the DISBURSEMENT row BEFORE the all-zero repayment 1 that shares its date; the oracle emits it AFTER.",
+      "margin_minor": "0",
+      "divergent_cells": [
+        "row_order"
+      ],
+      "evidence": "OBSERVED row order in this capture: index 0 = REPAYMENT periodNumber 1 (2024-01-01 -> 2024-02-01, every money cell 0.00), index 1 = DISBURSEMENT (2024-02-01, principal 100.00), index 2.. = REPAYMENT 2..6. The counterfactual emits DISBURSEMENT at index 0 and the all-zero REPAYMENT 1 at index 1 -- the two rows are transposed, so `kind` and `installment_number` disagree on both rows while every money column of the pair is unchanged. Margin is exactly 0 minor units: the kill is structural, in the row order, and the contract_row_ordering invariant is its worked example. No capability named contract_row_ordering exists in capabilities.json, so this entry is attributed to schedule.core, whose description already covers 'repayment period windows'."
+    }
+  ],
+  "retires_when_capability_graded": "",
+  "provenance": {
+    "kind": "oracle-capture",
+    "note": "TRANSCRIBED, never computed, from Path A capture pass 3b. Every expect cell is a value literally present in the referenced capture for capture case P-03; the only transformation is exact textual major->minor scaling (\"16.43\" -> \"1643\"), and the oracle's own emitted characters are carried alongside in the *_major_text cross-check fields so the scaling is mechanically re-checkable. Promotion script: .softhouse/handoff/T8-promote-vectors.py (task T8-promote).",
+    "capture_ref": ".softhouse/capture/out/capture-prod3b-raw.json",
+    "capture_sha256": "8d23c48fa13c04677b51bacdf07d101d6a061c79815d76b4983eccdbac945c79",
+    "capture_case_id": "P-03",
+    "citation": ""
+  },
+  "oracle": {
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "seam": "path_a_embeddable",
+    "captured_at": "2026-08-18T15:20:53.441500460Z",
+    "threaded_mathcontext": {
+      "precision": 19,
+      "rounding_mode": "HALF_UP"
+    },
+    "ambient_mathcontext": {
+      "precision": 19,
+      "rounding_mode": "HALF_UP"
+    }
+  },
+  "request": {
+    "time_zone": "Asia/Ulaanbaatar",
+    "currency": {
+      "code": "USD",
+      "minor_unit_digits": 2
+    },
+    "rounding": {
+      "significant_digits": 19,
+      "rate_factor_scale": 19,
+      "mode": "HALF_UP"
+    },
+    "schedule_start_date": {
+      "year": 2024,
+      "month": 1,
+      "day": 1
+    },
+    "disbursements": [
+      {
+        "date": {
+          "year": 2024,
+          "month": 2,
+          "day": 1
+        },
+        "amount_minor": "10000"
+      }
+    ],
+    "number_of_repayments": 6,
+    "repayment_every": 1,
+    "repayment_frequency_unit": "MONTHS",
+    "annual_nominal_interest_rate": {
+      "numerator": 7,
+      "denominator": 100
+    },
+    "interest_method": "DECLINING_BALANCE",
+    "day_count": "FIXED_30_360",
+    "down_payment_percentage": {
+      "numerator": 0,
+      "denominator": 1
+    },
+    "installment_rounding_multiple_minor": "0"
+  },
+  "expect": {
+    "kind": "schedule",
+    "sentinel": "",
+    "last_repayment_due_date": null,
+    "observed_total_interest_minor": "176",
+    "periods": [
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 1,
+        "from_date": {
+          "year": 2024,
+          "month": 1,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 2,
+          "day": 1
+        },
+        "principal_minor": "0",
+        "interest_minor": "0",
+        "outstanding_principal_minor": "0",
+        "principal_major_text": "0.00",
+        "interest_major_text": "0.00",
+        "outstanding_principal_major_text": "0.00",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "0"
+      },
+      {
+        "kind": "DISBURSEMENT",
+        "installment_number": 0,
+        "from_date": {
+          "year": 2024,
+          "month": 2,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 2,
+          "day": 1
+        },
+        "principal_minor": "10000",
+        "interest_minor": "",
+        "outstanding_principal_minor": "10000",
+        "principal_major_text": "100.00",
+        "interest_major_text": "",
+        "outstanding_principal_major_text": "100.00",
+        "unrecorded_fields": [
+          "installment_number",
+          "interest_minor"
+        ],
+        "observed_total_due_minor": null
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 2,
+        "from_date": {
+          "year": 2024,
+          "month": 2,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 3,
+          "day": 1
+        },
+        "principal_minor": "1977",
+        "interest_minor": "58",
+        "outstanding_principal_minor": "8023",
+        "principal_major_text": "19.77",
+        "interest_major_text": "0.58",
+        "outstanding_principal_major_text": "80.23",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "2035"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 3,
+        "from_date": {
+          "year": 2024,
+          "month": 3,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 4,
+          "day": 1
+        },
+        "principal_minor": "1988",
+        "interest_minor": "47",
+        "outstanding_principal_minor": "6035",
+        "principal_major_text": "19.88",
+        "interest_major_text": "0.47",
+        "outstanding_principal_major_text": "60.35",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "2035"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 4,
+        "from_date": {
+          "year": 2024,
+          "month": 4,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 5,
+          "day": 1
+        },
+        "principal_minor": "2000",
+        "interest_minor": "35",
+        "outstanding_principal_minor": "4035",
+        "principal_major_text": "20.00",
+        "interest_major_text": "0.35",
+        "outstanding_principal_major_text": "40.35",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "2035"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 5,
+        "from_date": {
+          "year": 2024,
+          "month": 5,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 6,
+          "day": 1
+        },
+        "principal_minor": "2011",
+        "interest_minor": "24",
+        "outstanding_principal_minor": "2024",
+        "principal_major_text": "20.11",
+        "interest_major_text": "0.24",
+        "outstanding_principal_major_text": "20.24",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "2035"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 6,
+        "from_date": {
+          "year": 2024,
+          "month": 6,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 7,
+          "day": 1
+        },
+        "principal_minor": "2024",
+        "interest_minor": "12",
+        "outstanding_principal_minor": "0",
+        "principal_major_text": "20.24",
+        "interest_major_text": "0.12",
+        "outstanding_principal_major_text": "0.00",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "2036"
+      }
+    ]
+  },
+  "invariant_exemptions": []
+}
