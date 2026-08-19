@@ -1,0 +1,71 @@
+{
+ "currency": {
+  "code": "MNT",
+  "decimalPlaces": "2",
+  "displayLabel": "Mongolian Tugrik [MNT]",
+  "inMultiplesOf": "0",
+  "name": "Mongolian Tugrik",
+  "nameCode": "currency.MNT"
+ },
+ "loanTermInDays": "31",
+ "periods": [
+  {
+   "downPaymentPeriod": false,
+   "dueDate": [
+    "2023",
+    "12",
+    "15"
+   ],
+   "feeChargesDue": "0",
+   "feeChargesOutstanding": "0",
+   "principalDisbursed": "1200000.00",
+   "principalLoanBalanceOutstanding": "1200000.00",
+   "totalActualCostOfLoanForPeriod": "0",
+   "totalDueForPeriod": "0",
+   "totalOriginalDueForPeriod": "0",
+   "totalOutstandingForPeriod": "0",
+   "totalOverdue": "0"
+  },
+  {
+   "daysInPeriod": "31",
+   "downPaymentPeriod": false,
+   "dueDate": [
+    "2024",
+    "1",
+    "15"
+   ],
+   "feeChargesDue": "0.00",
+   "feeChargesOutstanding": "0.00",
+   "fromDate": [
+    "2023",
+    "12",
+    "15"
+   ],
+   "interestDue": "22014.25",
+   "interestOriginalDue": "22014.25",
+   "interestOutstanding": "22014.25",
+   "penaltyChargesDue": "0.00",
+   "penaltyChargesOutstanding": "0.00",
+   "period": "1",
+   "principalDue": "1200000.00",
+   "principalLoanBalanceOutstanding": "0.00",
+   "principalOriginalDue": "1200000.00",
+   "principalOutstanding": "1200000.00",
+   "totalActualCostOfLoanForPeriod": "22014.25",
+   "totalDueForPeriod": "1222014.25",
+   "totalInstallmentAmountForPeriod": "1222014.25",
+   "totalOriginalDueForPeriod": "1222014.25",
+   "totalOutstandingForPeriod": "1222014.25",
+   "totalOverdue": "1222014.25"
+  }
+ ],
+ "totalCredits": "0",
+ "totalFeeChargesCharged": "0.00",
+ "totalInterestCharged": "22014.25",
+ "totalOutstanding": "0",
+ "totalPenaltyChargesCharged": "0.00",
+ "totalPrincipalDisbursed": "1200000.00",
+ "totalPrincipalExpected": "1200000.00",
+ "totalPrincipalPaid": "0",
+ "totalRepaymentExpected": "1222014.25"
+}
