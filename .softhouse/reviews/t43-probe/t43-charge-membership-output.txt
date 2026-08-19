@@ -1,0 +1,41 @@
+=== every addTotalRepaymentExpected call, both generators ===
+/Users/buv/fineract/fineract-progressive-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/ProgressiveLoanScheduleGenerator.java:137:                        scheduleParams.addTotalRepaymentExpected(principalDue.plus(interestDue, mc));
+/Users/buv/fineract/fineract-progressive-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/ProgressiveLoanScheduleGenerator.java:345:                scheduleParams.addTotalRepaymentExpected(downPaymentAmount);
+/Users/buv/fineract/fineract-progressive-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/ProgressiveLoanScheduleGenerator.java:486:                scheduleParams.addTotalRepaymentExpected(feeChargesForInstallment.plus(penaltyChargesForInstallment));
+/Users/buv/fineract/fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/AbstractCumulativeLoanScheduleGenerator.java:392:            scheduleParams.addTotalRepaymentExpected(totalInstallmentDue);
+/Users/buv/fineract/fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/AbstractCumulativeLoanScheduleGenerator.java:410:            scheduleParams.addTotalRepaymentExpected(scheduleParams.getTotalOutstandingInterestPaymentDueToGrace());
+/Users/buv/fineract/fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/AbstractCumulativeLoanScheduleGenerator.java:504:                scheduleParams.addTotalRepaymentExpected(feeChargesForInstallment.plus(penaltyChargesForInstallment));
+/Users/buv/fineract/fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/AbstractCumulativeLoanScheduleGenerator.java:822:                            scheduleParams.addTotalRepaymentExpected(totalInstallmentDue);
+/Users/buv/fineract/fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/AbstractCumulativeLoanScheduleGenerator.java:980:        scheduleParams.addTotalRepaymentExpected(unprocessed.plus(addToPrincipal));
+/Users/buv/fineract/fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/AbstractCumulativeLoanScheduleGenerator.java:2070:        scheduleParams.addTotalRepaymentExpected(downPaymentAmount);
+
+=== what the cumulative main loop adds (:352 -> ScheduleCurrentPeriodParams:144-146) ===
+
+            // sum up real totalInstallmentDue from components
+            final Money totalInstallmentDue = currentPeriodParams.fetchTotalAmountForPeriod();
+
+    public Money fetchTotalAmountForPeriod() {
+        return this.principalForThisPeriod.plus(interestForThisPeriod).plus(feeChargesForInstallment).plus(penaltyChargesForInstallment);
+    }
+
+=== progressive :486 vs cumulative :504 -- the SAME separated-path line ===
+                scheduleParams.addTotalRepaymentExpected(feeChargesForInstallment.plus(penaltyChargesForInstallment));
+                scheduleParams.addTotalRepaymentExpected(feeChargesForInstallment.plus(penaltyChargesForInstallment));
+
+=== getCumulativeAmountOfCharge: isDue is NOT consulted for an instalment fee ===
+    private Money getCumulativeAmountOfCharge(LocalDate periodStart, LocalDate periodEnd, PrincipalInterest principalInterestForThisPeriod,
+            Money principalDisbursed, Money totalInterestChargedForFullLoanTerm, boolean isInstallmentChargeApplicable,
+            boolean isFirstPeriod, LoanCharge loanCharge, Money cumulative, MathContext mc) {
+        boolean isDue = loanCharge.isDueInPeriod(periodStart, periodEnd, isFirstPeriod);
+        if (loanCharge.isInstalmentFee() && isInstallmentChargeApplicable) {
+            cumulative = calculateInstallmentCharge(principalInterestForThisPeriod, cumulative, loanCharge, mc);
+        } else if (loanCharge.isOverdueInstallmentCharge() && isDue && loanCharge.getChargeCalculation().isPercentageBased()) {
+            cumulative = cumulative.plus(loanCharge.chargeAmount());
+        } else if (isDue && loanCharge.getChargeCalculation().isPercentageBased()) {
+            cumulative = calculateSpecificDueDateChargeWithPercentage(principalDisbursed, totalInterestChargedForFullLoanTerm, cumulative,
+                    loanCharge, mc);
+        } else if (isDue) {
+            cumulative = cumulative.plus(loanCharge.amount());
+        }
+        return cumulative;
+    }
