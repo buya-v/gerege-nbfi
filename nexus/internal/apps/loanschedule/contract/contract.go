@@ -571,23 +571,86 @@ type Rounding struct {
 	// by which a mid-period disbursement is charged less than a full period's
 	// interest.
 	//
-	// The two call sites pass two different spans
-	// (ProgressiveEMICalculator.java:638-643), so an interest period's two rate
-	// factors share a denominator and differ in numerator:
+	// # The two call sites differ in SPAN and in MULTIPLIER (revision 7, P0-T34-1)
 	//
-	//	rateFactor              span = the interest period's own [FromDate, DueDate]   (:639-640)
-	//	                        ratio = days(interest period) / days(repayment period)
+	// Revision 6 said the call sites differ only in the span. They differ in two
+	// arguments (ProgressiveEMICalculator.java:638-643), and the second one is
+	// the one that moves money:
+	//
+	//	rateFactor              span       = the interest period's own [FromDate, DueDate]   (:639-640)
+	//	                        multiplier = RepaymentEvery                                   (:1536)
+	//	                        daysInMonth= daysInMonth (:1508, passed :1537) — 30 under 30/360
+	//	                        ratio      = days(interest period) / days(repayment period)
 	//	                        used by the fn recurrence (see the Rounding doc above)
 	//	rateFactorTillPeriodDueDate
-	//	                        span = [interest period FromDate, repayment period DueDate] (:641-642)
-	//	                        ratio = days(that span) / days(repayment period)
+	//	                        span       = [interest period FromDate, repayment period DueDate] (:641-642)
+	//	                        multiplier = periodRatio, NOT RepaymentEvery                  (:1404-1413)
+	//	                        daysInMonth= BigDecimal.valueOf(30), hard-coded                (:1413)
+	//	                        ratio      = days(that span) / days(repayment period)
 	//	                        used by the per-period interest (see Period)
 	//
-	// When a repayment period carries ONE interest period — every committed
-	// observation — both numerators equal the denominator and both ratios are 1.
-	// That is why NO CAPTURE IN THE CORPUS CAN GRADE THIS RULE, and why it is
-	// specified from source with a named missing vector (DEC-1 section 8 item
-	// 3d) rather than left to a phrase.
+	// Both land in rateFactorByRepaymentPeriod's repaymentEvery parameter
+	// (:1951) and are consumed once, at :1957. Of the two argument differences
+	// only the MULTIPLIER is live inside the graded domain: daysInMonth is
+	// daysInMonthType.isDaysInMonth_30() ? 30 : calculatedDaysInRepaymentPeriod
+	// (:1508), so under DayCountFixed30Over360 both call sites pass exactly 30.
+	//
+	// periodRatio (NORMATIVE, ProgressiveEMICalculator.java:1419-1459, seed at
+	// :1461-1481):
+	//
+	//	seed  := ScheduleStartDate                              (:1462; the schedule
+	//	         model's start date IS the first repayment period's FromDate —
+	//	         ProgressiveLoanInterestScheduleModel.java:209-211)
+	//	L     := ScheduleStartDate + k months, smallest k >= 1 that is not before
+	//	         the repayment period's DueDate                 (:1473-1476)
+	//	if !(L == DueDate && L - RepaymentEvery months == FromDate) {
+	//	    seed = the repayment period's own FromDate           (:1477-1480)
+	//	}                                    // BOTH conjuncts are required
+	//	k     := whole months from seed to FromDate, EXCEPT that when FromDate is
+	//	         the last day of its month and seed's day > FromDate's day, it is
+	//	         measured to FromDate.plusDays(1)               (:1430-1433)
+	//	m     := k + 1;  cursor := FromDate                      (:1441-1442)
+	//	for cursor < DueDate {                                   (:1443)
+	//	    cursor = seed + m months                             (:1444)
+	//	    if cursor <= DueDate { m++ } else {                  (:1445-1447)
+	//	        full := cursor;  m = m - k - 1                   (:1448-1449)
+	//	        base := seed + m months                          (:1450)
+	//	        return round_mc(days(base, DueDate) / days(base, full)) + m  (:1451-1454)
+	//	    }
+	//	}
+	//	return m - k - 1                                         (:1457-1458)
+	//
+	// The division at :1453 is the ONLY MathContext-rounded step; the addition
+	// at :1454 is EXACT. periodRatio is computed per REPAYMENT period (:1404-1410
+	// takes repaymentPeriod, never the interest period), so every interest
+	// period inside one repayment period shares it. All of it exact integer and
+	// civil-date arithmetic; no float32/float64/big.Float anywhere.
+	//
+	// periodRatio == RepaymentEvery IF AND ONLY IF the repayment period's window
+	// lies on the lattice ScheduleStartDate + j*RepaymentEvery months. It leaves
+	// that lattice whenever the month-end re-anchor on Disbursement.Date has
+	// moved a boundary, because the re-anchor is seeded on the DISBURSEMENT DATE
+	// (LoanApplicationTerms.java:583-589) while calculateSeedDate reads the
+	// SCHEDULE START (:1462). That asymmetry between two seeds is the whole
+	// mechanism, and it is in the graded domain: ScheduleStartDate 2024-01-28
+	// with a disbursement on 2024-01-31 gives repayment period 1 a periodRatio
+	// of 1.03448275862068965517.
+	//
+	// A PORT THAT USES RepaymentEvery ON THE INTEREST CALL SITE RETURNS
+	// DIFFERENT MONEY on 100% of drifted-boundary shapes — 480 of 480 swept,
+	// worst total-interest gap MNT 398,967.73 — AND NO CAPTURE CAN DETECT IT:
+	// 0 of the 21 committed production-setting captures and 0 of the 13
+	// observations carry a non-unit periodRatio. Those counts are
+	// RE-DERIVATIONS, not observations. The missing vector is DEC-1 section 8
+	// item 3e, and the conformance/cutover binding is six vectors because of it.
+	//
+	// When a repayment period carries ONE interest period both numerators equal
+	// the denominator and both ratios are 1. No Path-A capture could grade the
+	// DAY-COUNT rule until capture T37-3d landed
+	// (.softhouse/capture/dec1-binding/), which observes the prorated answer and
+	// refutes the ratio-is-1 reading on 25 of 25 discriminating cells; that
+	// capture is an attested raw observation and not yet an admissible vector
+	// (DEC-1 section 8 items 1 and 3d). The MULTIPLIER rule remains ungraded.
 	//
 	// Because a rate factor is a small number (of order 0.005 to 0.02), a scale
 	// is strictly lossier than the same count of significant digits on this
@@ -938,9 +1001,14 @@ type GenerateRequest struct {
 	// repayment is RepaymentEvery 1 with FrequencyMonths.
 	//
 	// Graded domain: 1. It is kept separate from the unit so that "every 2
-	// weeks" needs no new enum member, and it enters the interest fraction
-	// directly (ProgressiveEMICalculator.java:1956-1958), so a value other than
-	// 1 changes every period's interest and needs its own vector.
+	// weeks" needs no new enum member, and it is the multiplier of the
+	// RECURRENCE's rateFactor (ProgressiveEMICalculator.java:1536 ->
+	// :1956-1958), so a value other than 1 changes every period's interest and
+	// needs its own vector. It is NOT the multiplier of the per-period interest:
+	// that call site takes periodRatio (:1404-1413), which equals RepaymentEvery
+	// only on the lattice — see Rounding.RateFactorScale. RepaymentEvery > 1 is
+	// also the only way to reach periodRatio's whole-period return branch
+	// (:1457-1458), which no capture exercises.
 	RepaymentEvery int32
 
 	// RepaymentFrequencyUnit is the calendar unit stepped by RepaymentEvery. It
@@ -1095,9 +1163,17 @@ const (
 	// passes disbursementPeriod.getPrincipalDisbursed().getAmount() as BOTH the
 	// plan row's principalAmount and its outstandingLoanBalance
 	// (LoanSchedulePlan.java:52-56; the record's field order is
-	// LoanSchedulePlanDisbursementPeriod.java:28-31). Every committed capture
-	// contains a disbursement row, so this is GRADED. Revision 5 fixed the other
+	// LoanSchedulePlanDisbursementPeriod.java:28-31). Revision 5 fixed the other
 	// five fields of this row and left this one unstated.
+	//
+	// COVERAGE (revision 7, P1-T34-2): revision 6 wrote "Every committed capture
+	// contains a disbursement row, so this is GRADED". Containing a disbursement
+	// ROW is not the same as recording that row's BALANCE, and the claim was
+	// false when written. It is RECORDED by Path A pass 3b (12 of 12, balance ==
+	// principal on all twelve) and by the four Path B captures; it is NOT
+	// recorded by Path A pass 3 (0 of 12) or by the T37 binding harness (0 of
+	// 11); and NEITHER recording harness is promoted to the vector store. See
+	// Period.OutstandingPrincipalMinor for the full per-harness table.
 	PeriodKindDisbursement
 
 	// PeriodKindDownPayment is the down payment taken on the disbursement date.
@@ -1133,6 +1209,22 @@ const (
 // an implementation be simultaneously right about the split and wrong about the
 // sum, and because a derived total's meaning changes silently the moment
 // charges are introduced.
+//
+// The reference oracle's plan additionally carries totalOutstandingAmount. THIS
+// CONTRACT DOES NOT CARRY IT AND THE ADAPTER MUST DISCARD IT (revision 7, from
+// task T35's finding). On the progressive path it is the literal
+// BigDecimal.ZERO — final BigDecimal totalOutstanding = BigDecimal.ZERO
+// (ProgressiveLoanScheduleGenerator.java:157), passed straight through
+// LoanScheduleModel.from (:159-164) to LoanSchedulePlan.totalOutstandingAmount
+// (LoanSchedulePlan.java:43) — and is OBSERVED as the string "0", at SCALE 0,
+// on all twelve pass-3b captures, while every other money string in the same
+// artefact is scale 2. It is not a rounding artefact and it is not "the
+// schedule's outstanding total": it carries no information at all on this path.
+// A field whose only possible value is a constant would be surface with an
+// unproven meaning, and a consumer reading it as a balance would be wrong. If a
+// Go implementation is ever asked to render the oracle's PLAN shape for an audit
+// comparison it must emit exactly zero there, and no scale-discipline invariant
+// may be applied to that key without deciding the "0" case explicitly.
 //
 // # EMI re-adjust smoothing loop (normative, and an obligation on the Go module)
 //
@@ -1372,11 +1464,31 @@ const (
 //     store; the shape class itself, however, IS observed in the corpus, so this
 //     is not a hypothetical region of the graded domain.
 //
-// SPECIFIED BUT UNGRADED. No Run-1 capture trips the guard, none separates the
-// adoption test, and none exercises the loop in the later-disbursement window,
-// so conformance cannot yet detect a wrong body. No conformance PASS for this
-// context may be read as evidence that a port implements this rule; see the
-// capture obligation in DEC-1 section 8 items 3, 3a, 3b and 3c.
+// NOW WITNESSED BY OBSERVATION, BUT STILL NOT GRADED BY A VECTOR (revision 7).
+// No Run-1 Path-A capture trips the guard. Two later capture sets do:
+//
+//   - Path B, task T36: nine whole-MNT principals put to the running reference
+//     oracle. The Money.copy(double) trap makes the n = 12 threshold Money(6.00),
+//     so the loop needs |residual| > 0.06 and the four Path B corpus captures,
+//     sitting at +-0.05, cannot fire. SIX of the nine refute a no-loop model by
+//     one minor unit on every one of periods 1-11 — MNT 1,200,001 returns an
+//     observed level installment of 112,082.46 where the no-loop model says
+//     112,082.47 — and TWO (1,200,033, 1,200,045) enter the loop and back out at
+//     the strict adoption test, pinning that guard too.
+//   - Path A, task T37: captures T37-3-A and T37-3-B separate loop-present from
+//     loop-absent across 17 and 122 discriminating cells; T37-3a separates the
+//     ADOPTION TEST specifically, and on that shape the loop-absent reading is
+//     identical to the correct one — so item 3a's vector grades 3a and nothing
+//     about item 3, measured rather than assumed.
+//
+// All of those are ATTESTED RAW OBSERVATIONS, not vector-store entries. The
+// binding in DEC-1 section 8 requires an ADMISSIBLE VECTOR for each of six
+// shapes (3, 3a, 3b, 3c, 3d, 3e), and the promotion step is outstanding on all
+// of them. NO CONFORMANCE PASS FOR THIS CONTEXT MAY BE READ AS EVIDENCE THAT A
+// PORT IMPLEMENTS THIS RULE. Two sub-behaviours also remain wholly unvectored:
+// a shape that ADOPTS TWICE (every firing case observed converged after one
+// adopted adjustment, so the three-iteration bound at :1307-1308 is unwitnessed)
+// and the loop firing WITH a non-zero InstallmentRoundingMultipleMinor.
 //
 // EXACT-INTEGER ARITHMETIC, NEVER A FLOAT. Math.floor(n/2.0) and the
 // BigDecimal.valueOf(double) inside Money.copy(double) operate on values that
@@ -1446,23 +1558,31 @@ const (
 //     the span [interest period FromDate, repayment period DueDate]
 //     (ProgressiveEMICalculator.java:641-642 -> :1355-1356).
 //
-// THE RATE FACTOR IS PRORATED, AND THE DENOMINATOR IS THE REPAYMENT PERIOD, NOT
-// THE SPAN (normative; revision 6, P0-T32-1 — the full definitions are on
-// Rounding.RateFactorScale under "The two day counts in the ratio"). Written out
-// for this call site:
+// THE RATE FACTOR IS PRORATED, THE DENOMINATOR IS THE REPAYMENT PERIOD (NOT THE
+// SPAN), AND THE MULTIPLIER IS periodRatio (NOT RepaymentEvery) — normative;
+// revision 6, P0-T32-1 and revision 7, P0-T34-1. The full definitions, including
+// periodRatio's seed and walk, are on Rounding.RateFactorScale. Written out for
+// this call site:
 //
+//	periodRatio            = calculatePeriodRatio(repayment period)                      // :1404-1413, :1419-1459
 //	actualDaysInPeriod     = days(interest period FromDate -> repayment period DueDate)   // :1367-1368
 //	calculatedDaysInPeriod = days(repayment period FromDate -> repayment period DueDate)  // :1369-1370
 //	rateFactorTillPeriodDueDate =
-//	    setScale( (rate * 30 * RepaymentEvery / 360)
-//	              * actualDaysInPeriod / calculatedDaysInPeriod, RateFactorScale )        // :1961-1962
+//	    setScale( (rate * 30 * periodRatio / 360)
+//	              * actualDaysInPeriod / calculatedDaysInPeriod, RateFactorScale )        // :1956-1962
 //
-// so the ratio is 1 ONLY when the interest period opens on the enclosing
-// repayment period's FromDate — rows 1 and 2 of the segmentation table above,
-// and every shape the corpus samples. On ROW 3, the strictly-inside case, IT IS
-// STRICTLY LESS THAN 1 on the segment carrying the balance. The same denominator
-// applies to the interest period's own rateFactor (:639-640 -> :1500-1503),
-// which the growth factor sums (see Rounding).
+// Revisions 1-6 wrote RepaymentEvery where this writes periodRatio. That is the
+// ONLY multiplier change: the interest period's own rateFactor (:639-640 ->
+// :1500-1503 -> :1536), which the growth factor sums, does keep RepaymentEvery.
+// The 30 is the days-in-month multiplier — a hard-coded literal on this call
+// site (:1413), the local daysInMonth on the recurrence call site (:1508, :1537),
+// and exactly 30 on both under DayCountFixed30Over360.
+//
+// The ratio is 1 ONLY when the interest period opens on the enclosing repayment
+// period's FromDate — rows 1 and 2 of the segmentation table above. On ROW 3,
+// the strictly-inside case, IT IS STRICTLY LESS THAN 1 on the segment carrying
+// the balance. The same denominator applies to the interest period's own
+// rateFactor.
 //
 // Re-derived, NOT OBSERVED — MNT 1,200,000 / 6 x 21.6%, schedule start
 // 2024-01-01, single disbursement 2024-01-15. Repayment period 1 is
@@ -1479,9 +1599,63 @@ const (
 // — a full month's interest charged on a 17-day exposure. Re-review T32
 // re-derived that the two readings diverge on 2,913 of 2,913 (100%)
 // strictly-inside-a-period in-graded-domain shapes, worst total-interest gap MNT
-// 1,816,050.11. EVERY FIGURE HERE IS A RE-DERIVATION FROM THE PINNED CHECKOUT,
-// recorded as a candidate shape to capture (DEC-1 section 8 item 3d), and NONE
-// may be promoted to the vector store.
+// 1,816,050.11. EVERY FIGURE IN THE BLOCK ABOVE IS A RE-DERIVATION FROM THE
+// PINNED CHECKOUT and NONE may be promoted to the vector store.
+//
+// AN OBSERVATION OF THAT EXACT SHAPE NOW EXISTS, and the re-derived figures
+// above are deliberately NOT overwritten with it (revision 7). Capture T37-3d
+// (.softhouse/capture/dec1-binding/) put this shape to the pinned reference
+// oracle; the observation agrees with this rule on all 25 discriminating cells
+// and with the ratio-1 reading on none, and sibling T37-3d-2 separates them
+// across 145. P0-T32-1 is settled empirically. The numbers are not copied here
+// because promoting observed figures into the contract's own doc comments while
+// gate G-1 is open would make this file a second, unattested vector store: THE
+// CAPTURE ID IS THE CITATION, THE CAPTURE FILE IS THE NUMBER. The capture is an
+// attested raw observation, not yet an admissible parity vector (DEC-1 section 8
+// items 1 and 3d).
+//
+// ## The THREE date-membership rules (normative; revision 7, P0-T37-1)
+//
+// The reference oracle uses THREE different membership conventions on the
+// disbursement date, and they do not agree. A port that assumes one convention
+// throughout is wrong somewhere.
+//
+//	M1  [FromDate, DueDate] inclusive at BOTH ends for the FIRST repayment
+//	    period; (FromDate, DueDate] — from-EXCLUSIVE, due-inclusive — for every
+//	    later one.
+//	    (LoanRepaymentScheduleProcessingWrapper.java:251-254, reached from
+//	    ProgressiveLoanInterestScheduleModel.java:238-245)
+//	    Decides: interest-period segmentation (the table above), the effective
+//	    due date, and hence the related-period list.
+//	M2  !(p.DueDate < effectiveDueDate).
+//	    (ProgressiveLoanInterestScheduleModel.java:195-197)
+//	    Decides: which repayment periods are RELATED, hence which carry the
+//	    level installment.
+//	M3  [FromDate, DueDate) — from-inclusive, DUE-EXCLUSIVE.
+//	    (ProgressiveLoanScheduleGenerator.java:307-308, guard at :309)
+//	    Decides: during which period's iteration processDisbursements runs, so
+//	    in which period's iteration the disbursement is REGISTERED into the
+//	    interest model (:351) and the disbursement row EMITTED (:318). It is
+//	    also the ordering window key (see the Kind / ordering doc).
+//
+// M1 AND M3 DISAGREE ON EXACTLY ONE DATE: a disbursement dated on a repayment
+// period's DueDate. M1 puts it in period j, M3 in period j+1. Inside the graded
+// domain M3's owner period IS the first RELATED repayment period, in all three
+// cases of the related-periods table, so "rows before the first related period"
+// and "rows emitted before the disbursement is registered" are the same rows.
+//
+// WHICH COLLAPSE COSTS MONEY, MEASURED (task T38 pass 2; a re-derivation, no
+// oracle contacted). Using M1 where M3 belongs — emitting the carried-forward
+// balance on a row the disbursement has not reached — is the whole-principal
+// defect of step 4b below, refuted by four committed observations and failing 3
+// of the 21 committed production-setting captures. Using M3 where M1 belongs —
+// reusing the ordering window key for the segmentation above — is INERT inside
+// today's graded domain: identical money on 21 of 21 captures and on 108 of 108
+// re-derived due-date-disbursement shapes
+// (.softhouse/reviews/t38-probe/t38-pass2-membership-output.txt). Both rules are
+// still normative: the second is inert only for a single disbursement at
+// RepaymentEvery 1, and nothing tests it under multi-tranche, an interest pause
+// or a rate change. [UNVERIFIED outside the graded domain]
 //
 // Then, with InterestMethodDecliningBalance (InterestPeriod.java:145-158):
 //
@@ -1520,10 +1694,41 @@ const (
 //     period's installment) (RepaymentPeriod.java:272-286, the min at :280).
 //  3. PRINCIPAL IS THE BALANCING NON-NEGATIVE REMAINDER.
 //     PrincipalMinor = max(0, installment - InterestMinor) (:345-350).
-//  4. ROLL THE BALANCE FORWARD, CLAMPED AT ZERO. OutstandingPrincipalMinor =
-//     max(0, balance carried in + amounts disbursed in this period -
-//     PrincipalMinor) (:389-403, the clamp at :399). That clamp is why
-//     OutstandingPrincipalMinor is carried rather than derived.
+//  4. ROLL THE BALANCE FORWARD, CLAMPED AT ZERO — AND DISTINGUISH THE
+//     CARRIED-FORWARD BALANCE FROM THE EMITTED ONE (revision 7, P0-T37-1).
+//     Revision 6 wrote one rule for both and it contradicted the segmentation
+//     table above on the row whose DueDate IS the disbursement date. There are
+//     two quantities:
+//
+//     4a. carriedForward(j) = max(0, carriedForward(j-1)
+//     + amounts disbursed in period j UNDER M1
+//     - PrincipalMinor(j))
+//     (RepaymentPeriod.java:389-403, clamp at :399; the
+//     inter-period step at InterestPeriod.java:169-179)
+//     This is what the NEXT repayment period computes interest on.
+//
+//     4b. OutstandingPrincipalMinor(j) = 0                  if j is BEFORE M3's owner
+//     = carriedForward(j)   otherwise
+//
+//     A REPAYMENT ROW EMITTED BEFORE THE DISBURSEMENT IS REGISTERED REPORTS
+//     ZERO, NOT THE AMOUNT AWAITING DISBURSEMENT. The mechanism is sequencing,
+//     not arithmetic: the generator writes the row's balance at
+//     ProgressiveLoanScheduleGenerator.java:132, inside that period's own loop
+//     iteration, while emiCalculator.addDisbursement runs at :351 inside
+//     processDisbursements, called at the TOP of each iteration (:121-122) and
+//     firing only for M3's owner (:307-308). For a due-date disbursement that
+//     is period j+1, so period j's row is read from a model in which no
+//     disbursement exists — every balance in it is zero. The oracle's own
+//     post-registration getOutstandingLoanBalance() for period j WOULD be the
+//     whole principal (:396); the plan never reads it again.
+//
+//     Read literally, revision 6's single rule put the WHOLE PRINCIPAL on that
+//     row. It is refuted by four committed observations recording 0.00: captures
+//     P-03, T37-3c, T37-3c-2 and observation Q0b. This is the first DEC-1 defect
+//     in this program found by OBSERVATION rather than by re-derivation.
+//
+//     The clamp in 4a is still why OutstandingPrincipalMinor is carried rather
+//     than derived.
 //  5. THE FINAL PERIOD'S INSTALLMENT IS THEN ADJUSTED BY THE RESIDUAL and its
 //     SPLIT RECOMPUTED FROM STEPS 2-4. The order is: split every row, then
 //     absorb the residual — never the reverse. (Revision 6, P2-T32-1: revision 5
@@ -1548,21 +1753,34 @@ const (
 // a money path is a non-negotiable rejection, and here it would additionally
 // destroy the very non-cancellation this section exists to specify.
 //
-// SPECIFIED BUT UNGRADED, in three places:
+// WHAT IS WITNESSED AND WHAT IS NOT (restated in revision 7, because the
+// evidence base moved):
 //
-//   - the DAY-COUNT PRORATION above. No committed observation places a
-//     disbursement anywhere but on a repayment-period boundary, so on all
-//     thirteen the ratio is 1 either way and the corpus cannot separate this
-//     rule from the reading revision 6 deletes. DEC-1 section 8 item 3d.
+//   - the DAY-COUNT PRORATION above — OBSERVED. Captures T37-3d and T37-3d-2
+//     place the disbursement strictly inside a repayment period; the ratio-1
+//     reading is refuted on 25 and 145 discriminating cells respectively.
+//     DEC-1 section 8 item 3d.
 //   - the STRICTLY-INSIDE-A-PERIOD SEGMENTATION (row 3), the only
 //     in-graded-domain shape that gives one repayment period two interest
-//     periods. The same capture settles it. DEC-1 section 8 item 3d.
-//   - the THREE-OPERATION ROUND-TRIP against the textbook balance * rateFactor.
-//     DEC-1 section 8 item 3b.
+//     periods — OBSERVED by the same two captures.
+//   - the THREE-OPERATION ROUND-TRIP against the textbook balance * rateFactor —
+//     OBSERVED. Captures T37-3b and T37-3b-2: the textbook reading gives a final
+//     installment of 2,309.39 and total interest 654.39; the oracle returned
+//     2,309.38 and 654.38. DEC-1 section 8 item 3b.
+//   - step 4b, the PRE-DISBURSEMENT ROW'S BALANCE — OBSERVED as 0.00 by P-03,
+//     T37-3c, T37-3c-2 and Q0b.
+//   - the periodRatio MULTIPLIER (see Rounding.RateFactorScale) — NOT OBSERVED,
+//     AND THE CORPUS CANNOT SEE IT. 0 of 21 committed production-setting captures
+//     and 0 of 13 observations carry a non-unit periodRatio. DEC-1 section 8
+//     item 3e.
 //
-// All three are specified from source and ungraded, on the same terms as the
-// loop above: until 3b and 3d land, no conformance PASS for loanschedule may be
-// read as evidence that a port implements this section.
+// Two qualifications, both load-bearing. Every "OBSERVED" above is an ATTESTED
+// RAW OBSERVATION, not an admissible parity vector: DEC-1's binding is a
+// conformance precondition discharged by promoted vectors, and the promotion
+// step (section 8 item 1) is outstanding. And item 3e has no capture at all, so
+// THE MULTIPLIER RULE REMAINS SPECIFIED-FROM-SOURCE AND UNGRADED, on the same
+// terms as the loop above: no conformance PASS for loanschedule may be read as
+// evidence that a port implements this section.
 type Period struct {
 	// Kind discriminates this row. See PeriodKind.
 	Kind PeriodKind
@@ -1639,15 +1857,44 @@ type Period struct {
 	// repayment rows (revision 6, P1-T32-2 — revision 5 left the other two
 	// unstated):
 	//
-	//	PeriodKindRepayment     max(0, balance carried in + amounts disbursed in
-	//	                        this period - PrincipalMinor)
-	//	                        (RepaymentPeriod.java:389-403, clamp at :399)
+	//	PeriodKindRepayment     ZERO if the row is emitted BEFORE the disbursement
+	//	                        is registered (i.e. before M3's owner period —
+	//	                        see "The THREE date-membership rules" above);
+	//	                        otherwise max(0, balance carried in + amounts
+	//	                        disbursed in this period under M1 - PrincipalMinor)
+	//	                        (RepaymentPeriod.java:389-403, clamp at :399;
+	//	                        the zero case from :132 vs :307-308 / :351)
+	//	                                                    [GRADED by P-03,
+	//	                                                     T37-3c, T37-3c-2, Q0b]
 	//	PeriodKindDisbursement  the amount advanced, == this row's PrincipalMinor
-	//	                        (LoanSchedulePlan.java:52-56)          [GRADED]
+	//	                        (LoanSchedulePlan.java:52-56)
+	//	                                            [see the coverage note below]
 	//	PeriodKindDownPayment   balance before the disbursement + amount disbursed
 	//	                        - down payment taken
 	//	                        (ProgressiveLoanScheduleGenerator.java:340-343)
 	//	                                                             [UNGRADED]
+	//
+	// COVERAGE OF THE DISBURSEMENT ROW, STATED PER HARNESS (revision 7,
+	// P1-T34-2). Revision 6 marked this row [GRADED] on the grounds that "every
+	// committed capture contains a disbursement row". The SOURCE claim is exact;
+	// the COVERAGE claim was FALSE when written, because containing a
+	// disbursement row is not the same as recording that row's balance. Measured
+	// against the committed artefacts:
+	//
+	//	Path A pass 3   (Capture.java / Capture2.java / Capture3.java)
+	//	                12 captures, 0 record `balance` on a DISBURSEMENT row
+	//	                (keys emitted: type, dueDate, principal)      -> UNGRADED
+	//	Path A pass 3b  (Capture3b.java, landed by task T35)
+	//	                12 captures, 12 record it, and balance == principal on
+	//	                all twelve                                    -> RECORDED
+	//	Path A T37 binding harness
+	//	                11 captures, 0 record it                      -> UNGRADED
+	//	Path B          B-01..B-04, 4 of 4 record it as
+	//	                principalLoanBalanceOutstanding               -> RECORDED
+	//
+	// So: RECORDED by two harnesses, PROMOTED by neither. Neither pass 3b nor
+	// Path B is a vector-store entry yet (DEC-1 section 8 items 1 and 2, blocked
+	// on gate G-1). Do not write "graded" here unqualified.
 	//
 	// See the PeriodKind constants for the full citation of each.
 	OutstandingPrincipalMinor int64

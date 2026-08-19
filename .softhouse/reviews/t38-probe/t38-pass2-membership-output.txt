@@ -1,0 +1,23 @@
+==============================================================================
+T38 pass 2 -- does collapsing M1 into M3 move money?
+  normative : M1 for the interest model's balance-change attribution
+  wrong     : M3 (from-inclusive, DUE-EXCLUSIVE) used there too
+  NO ORACLE CONTACTED.  Every shape is either a committed capture's
+  input or a synthetic in-graded-domain request; no expectation is new.
+==============================================================================
+
+-- (1) the committed captures at (19, HALF_UP) --------------------
+
+  identical on 21 captures, diverges on 0, skipped 2
+
+-- (2) sweep: disbursement dated ON a repayment period's DueDate ---
+     (the ONE date on which M1 and M3 disagree)
+  0 of 108 due-date-disbursement shapes return different money
+
+==============================================================================
+RESULT: the M1->M3 collapse is INERT on every shape tested. Revision 7's
+        M1/M3 distinction is correct AND, on the SEGMENTATION question,
+        unobservable here; the money consequence of confusing the two
+        lives in the EMITTED balance (step 4b), which the pass-1 probe
+        already discriminates on 3 of 21 captures.
+==============================================================================

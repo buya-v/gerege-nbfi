@@ -1,0 +1,47 @@
+==============================================================================
+D  From-text DISCRIMINATION over the committed corpus
+   21 captures at (19, HALF_UP), 30/360, compared CELL BY CELL
+   (due date, principal, interest, outstanding balance, total interest)
+==============================================================================
+
+revision 7 (as written): 21 of 21 captures reproduce
+
+wrong reading                               captures failed  first witness           
+------------------------------------------------------------------------------
+ratio-is-always-1            (P0-T32-1)         12 of 21      Path A pass 3/P-01      
+                                                             cell R1.principal: reading gives 4262182.87, oracle observed 4262429.33
+textbook balance x rateFactor(P0-T29-2)          2 of 21      T37 binding/T37-3b      
+                                                             cell R6.interest: reading gives 31.89, oracle observed 31.88
+n = NumberOfRepayments       (P0-T29-1)          2 of 21      T37 binding/T37-3c      
+                                                             cell R2.principal: reading gives 2051365.77, oracle observed 2051365.78
+RepaymentEvery not periodRatio(P0-T34-1)         0 of 21      -- NONE: CORPUS IS BLIND --
+whole-principal pre-disb row (P0-T37-1)          3 of 21      Path A pass 3/P-03      
+                                                             cell R1.balance: reading gives 100.00, oracle observed 0.00
+EMI re-adjust loop ABSENT    (item 3)            6 of 21      T37 binding/T37-3-A     
+                                                             cell R1.principal: reading gives 166655.94, oracle observed 166655.95
+loop without the ADOPTION test(item 3a)          1 of 21      T37 binding/T37-3a      
+                                                             cell R1.principal: reading gives 7712.92, oracle observed 7712.91
+
+==============================================================================
+D2  Readings the committed corpus CANNOT separate -- shown to move
+    money on the DEC-1 8 item 3e candidate shape.
+    EVERY FIGURE BELOW IS A RE-DERIVATION, NOT AN OBSERVATION.
+==============================================================================
+
+  reading: RepaymentEvery not periodRatio(P0-T34-1)
+  shape:   3e candidate: MNT 1,200,000 / 6 x 21.6 %, start 2024-01-28, disbursement 2024-01-31
+  cells differing: 18 of 25
+  total interest: revision 7 76984.00   wrong reading 74607.33
+  period-1 interest: revision 7 20250.00   wrong reading 19575.00
+  periodRatio of repayment period 1: 1.03448275862068965517
+
+  reading: RepaymentEvery not periodRatio(P0-T34-1)
+  shape:   3e sibling:   MNT 50,000,000 / 36 x 21.6 %, start 2024-01-28, disbursement 2024-01-31
+  cells differing: 108 of 145
+  total interest: revision 7 18659151.45   wrong reading 18260183.72
+  period-1 interest: revision 7 843750.00   wrong reading 815625.00
+  periodRatio of repayment period 1: 1.03448275862068965517
+
+==============================================================================
+VERDICT: revision 7 reproduces the whole corpus
+==============================================================================

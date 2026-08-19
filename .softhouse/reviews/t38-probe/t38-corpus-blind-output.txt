@@ -1,0 +1,43 @@
+==============================================================================
+H  Does ANY committed capture carry a repayment period whose
+   periodRatio differs from RepaymentEvery?
+==============================================================================
+Path A pass 3/P-CAL          start 2024-01-01 disb 2024-01-01 prec 12  periods 6   non-unit periodRatio: 0  
+Path A pass 3/P-00           start 2024-01-01 disb 2024-01-01 prec 19  periods 6   non-unit periodRatio: 0  
+Path A pass 3/P-01           start 2024-01-01 disb 2024-01-01 prec 19  periods 18  non-unit periodRatio: 0  
+Path A pass 3/P-02           start 2024-01-31 disb 2024-01-31 prec 19  periods 6   non-unit periodRatio: 0  
+Path A pass 3/P-02b          start 2024-01-30 disb 2024-01-30 prec 19  periods 6   non-unit periodRatio: 0  
+Path A pass 3/P-03           start 2024-01-01 disb 2024-02-01 prec 19  periods 6   non-unit periodRatio: 0  
+Path A pass 3/P-04f          start 2024-01-01 disb 2024-01-01 prec 19  periods 6   non-unit periodRatio: 0  
+Path A pass 3/P-04t          start 2024-01-01 disb 2024-01-01 prec 19  periods 6   non-unit periodRatio: 0  
+Path A pass 3/P-MNT-5M       start 2024-01-01 disb 2024-01-01 prec 19  periods 18  non-unit periodRatio: 0  
+Path A pass 3/P-MNT-1M2      start 2024-01-01 disb 2024-01-01 prec 19  periods 12  non-unit periodRatio: 0  
+Path A pass 3/P-MNT-50M      start 2024-01-01 disb 2024-01-01 prec 19  periods 36  non-unit periodRatio: 0  
+Path A pass 3/P-MNT-4M999    start 2024-01-01 disb 2024-01-01 prec 19  periods 18  non-unit periodRatio: 0  
+Path A pass 3b/P-CAL          start 2024-01-01 disb 2024-01-01 prec 12  periods 6   non-unit periodRatio: 0  
+Path A pass 3b/P-00           start 2024-01-01 disb 2024-01-01 prec 19  periods 6   non-unit periodRatio: 0  
+Path A pass 3b/P-01           start 2024-01-01 disb 2024-01-01 prec 19  periods 18  non-unit periodRatio: 0  
+Path A pass 3b/P-02           start 2024-01-31 disb 2024-01-31 prec 19  periods 6   non-unit periodRatio: 0  
+Path A pass 3b/P-02b          start 2024-01-30 disb 2024-01-30 prec 19  periods 6   non-unit periodRatio: 0  
+Path A pass 3b/P-03           start 2024-01-01 disb 2024-02-01 prec 19  periods 6   non-unit periodRatio: 0  
+Path A pass 3b/P-04f          start 2024-01-01 disb 2024-01-01 prec 19  periods 6   non-unit periodRatio: 0  
+Path A pass 3b/P-04t          start 2024-01-01 disb 2024-01-01 prec 19  periods 6   non-unit periodRatio: 0  
+Path A pass 3b/P-MNT-5M       start 2024-01-01 disb 2024-01-01 prec 19  periods 18  non-unit periodRatio: 0  
+Path A pass 3b/P-MNT-1M2      start 2024-01-01 disb 2024-01-01 prec 19  periods 12  non-unit periodRatio: 0  
+Path A pass 3b/P-MNT-50M      start 2024-01-01 disb 2024-01-01 prec 19  periods 36  non-unit periodRatio: 0  
+Path A pass 3b/P-MNT-4M999    start 2024-01-01 disb 2024-01-01 prec 19  periods 18  non-unit periodRatio: 0  
+T37 binding/T37-CAL        start 2024-01-01 disb 2024-01-01 prec 12  periods 6   non-unit periodRatio: 0  
+T37 binding/T37-CTL-Q0a    start 2024-01-01 disb 2024-01-01 prec 19  periods 6   non-unit periodRatio: 0  
+T37 binding/T37-3-A        start 2024-01-01 disb 2024-01-01 prec 19  periods 6   non-unit periodRatio: 0  
+T37 binding/T37-3-B        start 2024-01-01 disb 2024-01-01 prec 19  periods 36  non-unit periodRatio: 0  
+T37 binding/T37-3a         start 2024-01-01 disb 2024-01-01 prec 19  periods 12  non-unit periodRatio: 0  
+T37 binding/T37-3b         start 2024-01-01 disb 2024-01-01 prec 19  periods 6   non-unit periodRatio: 0  
+T37 binding/T37-3b-2       start 2024-01-31 disb 2024-01-31 prec 19  periods 6   non-unit periodRatio: 0  
+T37 binding/T37-3c         start 2024-01-01 disb 2024-02-01 prec 19  periods 6   non-unit periodRatio: 0  
+T37 binding/T37-3c-2       start 2024-01-01 disb 2024-02-01 prec 19  periods 6   non-unit periodRatio: 0  
+T37 binding/T37-3d         start 2024-01-01 disb 2024-01-15 prec 19  periods 6   non-unit periodRatio: 0  
+T37 binding/T37-3d-2       start 2024-01-01 disb 2024-01-20 prec 19  periods 36  non-unit periodRatio: 0  
+
+captures checked: 35   with any non-unit periodRatio: 0
+
+VERDICT: THE COMMITTED CORPUS IS BLIND TO periodRatio

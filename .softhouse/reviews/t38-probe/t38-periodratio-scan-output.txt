@@ -1,0 +1,23 @@
+==============================================================================
+E  (ScheduleStartDate, Disbursement.Date) pairs in the SAME month, all
+   twelve months, 6 monthly periods, RepaymentEvery 1.
+   'drift' = at least one repayment period whose periodRatio != RepaymentEvery
+==============================================================================
+
+2024: admissible same-month pairs 5767, drifted 55 (0.95 %)
+      by ScheduleStartDate day-of-month: day 28: 30, day 29: 18, day 30: 7
+      e.g. start 2024-01-28, disbursement 2024-01-29, non-unit periodRatio(s) ['1.03448275862068965517']
+      e.g. start 2024-01-28, disbursement 2024-01-30, non-unit periodRatio(s) ['1.03448275862068965517', '1.03225806451612903226']
+      e.g. start 2024-01-28, disbursement 2024-01-31, non-unit periodRatio(s) ['1.03448275862068965517', '1.06451612903225806452']
+      e.g. start 2024-01-29, disbursement 2024-01-30, non-unit periodRatio(s) ['1.03225806451612903226']
+      e.g. start 2024-01-29, disbursement 2024-01-31, non-unit periodRatio(s) ['1.06451612903225806452', '1.03225806451612903226']
+      e.g. start 2024-01-30, disbursement 2024-01-31, non-unit periodRatio(s) ['1.06451612903225806452', '1.03225806451612903226']
+
+2025: admissible same-month pairs 5738, drifted 54 (0.94 %)
+      by ScheduleStartDate day-of-month: day 28: 29, day 29: 18, day 30: 7
+      e.g. start 2025-01-28, disbursement 2025-01-29, non-unit periodRatio(s) ['1.03225806451612903226']
+      e.g. start 2025-01-28, disbursement 2025-01-30, non-unit periodRatio(s) ['1.06451612903225806452']
+      e.g. start 2025-01-28, disbursement 2025-01-31, non-unit periodRatio(s) ['1.09677419354838709677', '1.03225806451612903226']
+      e.g. start 2025-01-29, disbursement 2025-01-30, non-unit periodRatio(s) ['1.06451612903225806452']
+      e.g. start 2025-01-29, disbursement 2025-01-31, non-unit periodRatio(s) ['1.09677419354838709677', '1.03225806451612903226']
+      e.g. start 2025-01-30, disbursement 2025-01-31, non-unit periodRatio(s) ['1.09677419354838709677', '1.03225806451612903226']

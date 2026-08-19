@@ -1,0 +1,42 @@
+==============================================================================
+G  Money divergence: periodRatio (revision 7) vs RepaymentEvery
+   (the reading revision 6 wrote), over the drifted January-2024 date
+   shapes x 4 terms x 4 rates x 5 principals.
+   RE-DERIVATION ONLY -- no oracle contacted.
+==============================================================================
+
+drifted January-2024 (start, disbursement) pairs: 6
+    2024-01-28 / 2024-01-29
+    2024-01-28 / 2024-01-30
+    2024-01-28 / 2024-01-31
+    2024-01-29 / 2024-01-30
+    2024-01-29 / 2024-01-31
+    2024-01-30 / 2024-01-31
+
+swept 480 in-graded-domain shapes
+different money on 480 of 480 (100.00 %)
+
+worst total-interest gap: MNT 398967.73
+    schedule start 2024-01-28, disbursement 2024-01-31, MNT 50,000,000, 36 x 21.6 %
+    revision 7 (periodRatio)      total interest 18659151.45
+    revision 6 (RepaymentEvery)   total interest 18260183.72
+
+------------------------------------------------------------------------------
+The DEC-1 8 item 3e capture candidate, worked out (RE-DERIVED):
+    MNT 1,200,000 / 6 x 21.6 %, start 2024-01-28, disbursement 2024-01-31
+    #   window                            rev7 P      rev7 I        rev6 P      rev6 I
+    1   2024-01-28 -> 2024-02-29       192580.67    20250.00     192859.52    19575.00
+    2   2024-02-29 -> 2024-03-31       193527.22    19303.45     194305.99    18128.53
+    3   2024-03-31 -> 2024-04-30       198180.61    14650.06     197803.50    14631.02
+    4   2024-04-30 -> 2024-05-31       201390.35    11440.32     201363.96    11070.56
+    5   2024-05-31 -> 2024-06-30       205372.89     7457.78     204988.51     7446.01
+    6   2024-06-30 -> 2024-07-31       208948.26     3882.39     208678.52     3756.21
+    total interest: revision 7 76984.00   revision 6 74607.33   gap 2376.67
+
+    periodRatio per repayment period (revision 7):
+      period 1 [2024-01-28 -> 2024-02-29]  periodRatio = 1.03448275862068965517
+      period 2 [2024-02-29 -> 2024-03-31]  periodRatio = 1.06451612903225806452
+      period 3 [2024-03-31 -> 2024-04-30]  periodRatio = 1
+      period 4 [2024-04-30 -> 2024-05-31]  periodRatio = 1.03225806451612903226
+      period 5 [2024-05-31 -> 2024-06-30]  periodRatio = 1
+      period 6 [2024-06-30 -> 2024-07-31]  periodRatio = 1.03225806451612903226
