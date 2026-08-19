@@ -541,3 +541,84 @@ it. **It was deliberately NOT done unattended**, because installing software on 
 durable change to the host rather than to this repo, and no fire had been asked to make one. It is
 surfaced here and in `RESUME.md` instead. **A fire that is told "you may install a Go toolchain" should
 just do it and record the version here.**
+
+---
+
+## Environment gap CLOSED by local fire `20260819-170001` — **repo-local Go toolchain, host untouched**
+
+The gap above is **closed**, and closed in a way that does not make the durable change to Buyan's machine
+that the previous fire (correctly) declined to make unattended.
+
+### What was installed, and where
+
+| Fact | Value |
+|---|---|
+| Version | **`go1.26.6 darwin/arm64`** (`go version` output, verbatim) |
+| Source | `https://go.dev/dl/go1.26.6.darwin-arm64.tar.gz` — the official archive, from `https://go.dev/dl/?mode=json` |
+| Size | 64,772,321 bytes |
+| **SHA-256 asserted before extraction** | `2dc95ce4675829f2df0e86b28bcef3283635902062a5f0580ca659bf570f3204` — **published value and computed value MATCHED**; the driver would not have extracted an archive that did not match |
+| `GOROOT` | `/Users/buv/gerege-nbfi/.softhouse/toolchain/go` |
+| `GOPATH` / `GOCACHE` / `GOMODCACHE` | `…/.softhouse/toolchain/{gopath,gocache,gomodcache}` |
+| Committed to git? | **No** — `.softhouse/toolchain/` is in `.gitignore` |
+| Activation | `. /Users/buv/gerege-nbfi/.softhouse/bin/go-env.sh` (committed) |
+
+### Why repo-local rather than `brew install go` or `/usr/local/go`
+
+The previous fire's reasoning was right and is preserved, not overridden: this is **not** a RESERVED item
+(no money, no live endpoint, no third-party binding), so under `CLAUDE.md` § *Answering gates* the driver's
+default is *choose and act*. What made it awkward was only that a host install is a **durable change to
+Buyan's machine**.
+
+A repo-local `GOROOT` removes exactly that objection:
+
+- **Nothing outside this repo is modified.** No `/usr/local`, no Homebrew (there is no Homebrew on this
+  host — `command -v brew` → not found), no shell profile, no `PATH` change for any interactive shell.
+- **One command fully reverses it:** `rm -rf .softhouse/toolchain`.
+- **It is not committed**, so it cannot bloat the repo or reach the cloud fire, which does not need it.
+- **Worktrees share it.** `go-env.sh` pins `GOROOT` to an ABSOLUTE path in the main checkout, so every
+  isolated worker worktree uses one toolchain and one module cache instead of downloading its own.
+
+**A future fire on a fresh clone will find no toolchain and must re-run the download.** That is the price of
+not touching the host, and it is cheap: one verified 65 MB fetch. If Buyan would rather have `go` on the
+host PATH, that is a one-line change and this section explains what it would replace.
+
+### `contract.go` COMPILES — the ten-round shape grading is not invalidated
+
+The ratified artefact was compiled for the first time in the program, immediately, before any Go was
+written against it:
+
+```
+$ . .softhouse/bin/go-env.sh && cd nexus
+$ go build ./...    → exit 0     (no output)
+$ go vet  ./...     → exit 0     (no output)
+$ go test ./...     → exit 0     ("no test files" — there are none yet)
+```
+
+So `[UNVERIFIED: that the package compiles]` is **retired and replaced by `[VERIFIED: exit 0]`**. The
+heuristic the previous fire recorded (three imports used, no duplicate top-level declarations) was right,
+and the worst-case discovery it warned about — a type error frozen into a ratified artefact — **did not
+happen.** `go vet` clean additionally means no printf-verb, shadow or struct-tag defects in the contract.
+
+### ONE new finding: `gofmt` wants to rewrite the FROZEN contract — do not let it happen silently
+
+`gofmt -l` flags `internal/apps/loanschedule/contract/contract.go`. The diff was captured and **deliberately
+NOT applied.**
+
+- **Extent:** 3 hunks, 25 diff lines. Every one inserts a bare `//` line **between numbered list items inside
+  doc comments** — Go 1.19+ doc-comment list normalisation.
+- **Semantically inert:** no type, field, enum member, error value, identifier or specified predicate moves.
+  The change is confined to comment whitespace structure. (Note the mechanical check "identical after
+  stripping all whitespace" reports **NO** — because gofmt inserts new `//` tokens, which are non-whitespace
+  bytes. The tokens it inserts are empty comment markers, so the *prose* is unchanged; do not misread that
+  check as evidence of a substantive edit.)
+- **Why it is a finding rather than a nit:** the doc comments in this file **are the specification**
+  (`contract.go` package comment, §*Amendment gate*), and post-ratification "re-documenting any identifier in
+  this package" needs a gate. So an editor-on-save `gofmt -w`, or a `coder` who runs `gofmt ./...` from the
+  repo root, would **silently mutate a frozen, ratified artefact** — and the diff would look like harmless
+  formatting noise in review.
+
+**Standing instruction until the gate is answered:** no task may run `gofmt -w`, `go fmt`, or an
+IDE format-on-save over `internal/apps/loanschedule/contract/contract.go`. Format only the files you
+created. `gofmt -l` reporting this one path is the EXPECTED state, not a defect to fix, and a UAT must not
+fail on it. Raised as gate **G-3** in `.softhouse/gates.md` (ENGINEERING, driver-decidable, deliberately not
+self-answered because the artefact is frozen).
