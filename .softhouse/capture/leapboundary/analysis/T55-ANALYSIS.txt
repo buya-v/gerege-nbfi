@@ -106,6 +106,7 @@ LB-HALFYR    p7 vs p3  (UNSET vs FULL_LEAP_YEAR)         65       0             
      row1.totalDueForPeriod                     698725.37        | 698814.28       
      row1.totalInstallmentAmountForPeriod       698725.37        | 698814.28       
      ... 15 more
+  date-cell differences across all 33 pairs: 0 (must be 0)
 
 ====================================================================================================
 BRANCH RE-DERIVATION -- balances/dates/interest are OBSERVED; the two candidate

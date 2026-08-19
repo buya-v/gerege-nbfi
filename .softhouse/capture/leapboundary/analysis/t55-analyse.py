@@ -439,6 +439,19 @@ def main():
             bad("%s: p7 vs p3 differ on %d of %d cells -- UNSET and FULL_LEAP_YEAR must coincide"
                 % (sid, nd, n))
 
+    # NO DATE MAY MOVE BETWEEN THE LEGS OF A PAIR.  The driver's D-2 note warns that on Path B the
+    # generator adjusts the FINAL period's date for non-working days, which would contaminate a
+    # comparison and look like a day-count effect.  Same-path one-setting pairs are immune in
+    # principle; this asserts it in fact, on every pair, rather than reasoning about it.
+    datecells = 0
+    for sid, pair, _l, _n, _nd, _w, _wc, d in table:
+        for k, av, bv in d:
+            if k.split(".", 1)[1] in ("fromDate", "dueDate", "obligationsMetOnDate"):
+                datecells += 1
+                bad("%s %s: DATE cell %s moved (%s vs %s) -- a date difference would masquerade as "
+                    "a day-count effect (driver note D-2)" % (sid, pair, k, av, bv))
+    print("  date-cell differences across all %d pairs: %d (must be 0)" % (len(table), datecells))
+
     # THE COMPARATOR MUST NOT BE INERT.  A comparator that returns 0 everywhere would report the
     # non-leap CONTROL as 'proven non-discriminating' while proving nothing at all.  Require BOTH
     # a non-zero and a zero among the p7-vs-p4 rows, and require the named control to be the zero.
