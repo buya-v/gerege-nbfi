@@ -326,6 +326,25 @@ Run as a delegated leg on a disjoint write surface. Its findings, working and id
 `.softhouse/capture/mathcontext/**`. Read that handoff alongside this one; anything it could not close,
 and anything it needs escalated outside its write surface, is listed there and repeated in §8.
 
+**M-1 / M-2 independently corroborated by T46's parent**, as a second look with no shared context
+[VERIFIED by this task: `grep -rn "new MathContext(" <every fineract-* module>/src/main`]. The complete
+main-source inventory of `new MathContext(<literal>, …)` is **exactly 11 sites**, and only 9 of them
+carry precision 15 or 10:
+
+| precision | sites |
+|---|---|
+| **15** (4) | `SavingsAccountDomainServiceJpa.java:329`, `DepositAccountWritePlatformServiceJpaRepositoryImpl.java:496`, `SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:526`, `:822` |
+| **10** (5) | `DepositAccountWritePlatformServiceJpaRepositoryImpl.java:540`, `:837`, `SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:627`, `:695`, `:919` |
+| **8** (2) | `SavingsAccountCharge.java:562` (`fineract-savings`), **`ShareAccountCharge.java:240`** (`portfolio/shareaccounts/` — a *different* Tier B context) |
+
+Plus `MoneyHelper.java:93` and `:124` (both `PRECISION` = 19), `MathUtil.java:473` (precision is a
+parameter) and `AdvancedPaymentScheduleTransactionProcessor.java:2845` (`RoundingMode.DOWN`). **Zero**
+`new MathContext(` in any other `fineract-*` module's main source.
+
+**So T44's M-1 is right — the total is 9, not 13 — and M-2 is right: precision 8 exists and one of its
+two sites is not in savings/deposits.** `reference-oracle.md` carries the wrong total and is outside
+T46's write surface; see §8.
+
 **M-4 is recorded in both of the other two sets' blind-spot lists**, as T44 required: the REST
 `calculateLoanSchedule` path via `LoanScheduleAssembler` **honours**
 `installmentAmountInMultiplesOf` [VERIFIED by this task: `out/control/B-02-multiplesof100-raw.json`
