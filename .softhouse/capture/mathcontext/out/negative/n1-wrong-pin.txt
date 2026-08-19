@@ -1,0 +1,6 @@
+### n1-wrong-pin
+$ run1 T42_EXPECT_COMMIT=0000000000000000000000000000000000000000 T42_OUT_PREFIX=t42-neg1
+== T42 MathContext-in-force capture ==
+BREACH: pinned checkout is at 426a23544e8426a38ae43ae404670a0a7e85b9eb, expected 0000000000000000000000000000000000000000
+RUN INVALID -- capture is not admissible.
+exit=1

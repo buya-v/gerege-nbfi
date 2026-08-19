@@ -1,0 +1,149 @@
+====================================================================================================
+T42 capture 2 -- PRECISION THRESHOLD, and the two WIRINGS side by side
+====================================================================================================
+
+====================================================================================================
+(1) THE THREADED-PRECISION THRESHOLD.  Bisecting where 19 stops agreeing with 12.
+====================================================================================================
+
+    principal (minor units, MNT)     n    rate       19 vs 12       total interest p19
+--------------------------------------------------------------------------------------
+                         1200000   360     7.7      identical               1879990.16
+                         2000000   360     7.7      identical               3133316.93
+                         3000000   360     7.7      identical               4699964.56
+                         5000000   360     7.7      identical               7833281.95
+                         8000000   360     7.7      identical              12533257.16
+                        10000000   360     7.7      identical              15666563.48
+                        15000000   360     7.7      identical              23499845.26
+                        20000000   360     7.7      identical              31333137.35
+                        25000000   360     7.7      610 cells              39166419.22
+                        30000000   360     7.7      identical              46999701.44
+                        40000000   360     7.7      identical              62666264.75
+                        50000000   360     7.7      identical              78332828.28
+                        60000000   360     7.7      identical              93999401.96
+                        70000000   360     7.7      identical             109665965.62
+                        80000000   360     7.7      714 cells             125332528.96
+                       100000000   360     7.7      456 cells             156665666.95
+                       150000000   360     7.7      716 cells             234998494.98
+                       200000000   360     7.7      723 cells             313331322.65
+                       300000000   360     7.7      536 cells             469996989.57
+                       400000000   360     7.7      666 cells             626662645.39
+                       500000000   360     7.7      592 cells             783328312.02
+                       700000000   360     7.7      770 cells            1096659634.71
+                       900000000   360     7.7      769 cells            1409990968.23
+                      1000000000   360     7.7      853 cells            1566656623.93
+                         1200000   360    21.6      identical               6588758.27
+                         3000000   360    21.6      identical              16471714.94
+                         5000000   360    21.6      identical              27452728.68
+                        10000000   360    21.6      identical              54905463.40
+                        20000000   360    21.6      identical             109810918.27
+                        30000000   360    21.6      identical             164716367.69
+                        50000000   360    21.6      861 cells             274527298.56
+                        80000000   360    21.6      identical             439243669.73
+                       100000000   360    21.6      identical             549054564.61
+                         1200000   120      13      identical                950074.47
+                         5000000   120      13      identical               3958644.42
+                        10000000   120      13      identical               7917288.69
+                        20000000   120      13      identical              15834577.64
+                        50000000   120      13      identical              39586443.95
+                       100000000   120      13      identical              79172887.78
+                       200000000   120      13      identical             158345775.93
+                       500000000   120      13      228 cells             395864439.78
+                      1000000000   120      13      241 cells             791728879.39
+                      1000000000    36      13      identical             212982272.15
+                      2000000000    36      13       72 cells             425964544.20
+                      3000000000    36      13       73 cells             638946816.37
+                      4000000000    36      13       60 cells             851929088.48
+                      5000000000    36      13      143 cells            1064911360.56
+                      6000000000    36      13       87 cells            1277893632.71
+                      7000000000    36      13       60 cells            1490875904.88
+                      8000000000    36      13       82 cells            1703858176.92
+                      9000000000    36      13       77 cells            1916840449.06
+                     10000000000    36      13       84 cells            2129822721.23
+                    100000000000     6    21.6      identical            6393641193.39
+                    200000000000     6    21.6       15 cells           12787282386.75
+                    300000000000     6    21.6       17 cells           19180923580.14
+                    400000000000     6    21.6       19 cells           25574564773.51
+                    500000000000     6    21.6        6 cells           31968205966.90
+                    600000000000     6    21.6       24 cells           38361847160.26
+                    700000000000     6    21.6       23 cells           44755488353.65
+                    800000000000     6    21.6       22 cells           51149129547.03
+                    900000000000     6    21.6       26 cells           57542770740.40
+                   1000000000000     6    21.6       19 cells           63936411933.77
+
+SMALLEST OBSERVED SEPARATING PRINCIPAL, per family:
+  n=6    rate 21.6   -> principal 200000000000  (15 cells differ)
+        total interest  p19 12787282386.75   p12 12787282386.76
+        totalInterestAmount: 12787282386.75 -> 12787282386.76
+        totalRepaymentAmount: 212787282386.75 -> 212787282386.76
+        period[1].totalOutstandingBalance: 177322735322.29 -> 177322735322.30
+        period[2].balance: 135697344023.92 -> 135697344023.93
+        period[2].interest: 3026438152.84 -> 3026438152.85
+        period[2].principal: 32438108911.62 -> 32438108911.61
+  n=36   rate 13     -> principal 2000000000  (72 cells differ)
+        total interest  p19 425964544.20   p12 425964544.19
+        totalInterestAmount: 425964544.20 -> 425964544.19
+        totalRepaymentAmount: 2425964544.20 -> 2425964544.19
+        period[1].totalOutstandingBalance: 2358576640.19 -> 2358576640.18
+        period[2].totalOutstandingBalance: 2291188736.18 -> 2291188736.17
+        period[3].totalOutstandingBalance: 2223800832.17 -> 2223800832.16
+        period[4].totalOutstandingBalance: 2156412928.16 -> 2156412928.15
+  n=120  rate 13     -> principal 500000000  (228 cells differ)
+        total interest  p19 395864439.78   p12 395864439.71
+        totalInterestAmount: 395864439.78 -> 395864439.71
+        totalRepaymentAmount: 895864439.78 -> 895864439.71
+        period[1].totalOutstandingBalance: 888398902.78 -> 888398902.71
+        period[2].totalOutstandingBalance: 880933365.78 -> 880933365.71
+        period[3].totalOutstandingBalance: 873467828.78 -> 873467828.71
+        period[4].totalOutstandingBalance: 866002291.78 -> 866002291.71
+  n=360  rate 21.6   -> principal 50000000  (861 cells differ)
+        total interest  p19 274527298.56   p12 274527296.51
+        totalInterestAmount: 274527298.56 -> 274527296.51
+        totalRepaymentAmount: 324527298.56 -> 324527296.51
+        period[1].totalOutstandingBalance: 323625833.86 -> 323625831.81
+        period[2].totalOutstandingBalance: 322724369.16 -> 322724367.11
+        period[3].totalOutstandingBalance: 321822904.46 -> 321822902.41
+        period[4].totalOutstandingBalance: 320921439.76 -> 320921437.71
+  n=360  rate 7.7    -> principal 25000000  (610 cells differ)
+        total interest  p19 39166419.22   p12 39166419.28
+        totalInterestAmount: 39166419.22 -> 39166419.28
+        totalRepaymentAmount: 64166419.22 -> 64166419.28
+        period[1].totalOutstandingBalance: 63988179.18 -> 63988179.24
+        period[2].totalOutstandingBalance: 63809939.14 -> 63809939.20
+        period[3].totalOutstandingBalance: 63631699.10 -> 63631699.16
+        period[4].totalOutstandingBalance: 63453459.06 -> 63453459.12
+
+====================================================================================================
+(2) THE TWO WIRINGS.  Only the tenant rounding ordinal is varied.  Baseline = ordinal 4.
+====================================================================================================
+
+  shape: 6 x 21.6 % on MNT 1,200,000
+     ordinal                            ambient              effective threaded mc    PATH A total interest    PATH B total interest
+           4  precision=19 roundingMode=HALF_UP  precision=19 roundingMode=HALF_UP                 76723.70                 76723.70
+           1     precision=19 roundingMode=DOWN     precision=19 roundingMode=DOWN                 76723.70                 76723.65
+           0       precision=19 roundingMode=UP       precision=19 roundingMode=UP                 76723.70                 76723.72
+           6 precision=19 roundingMode=HALF_EVEN precision=19 roundingMode=HALF_EVEN                 76723.70                 76723.70
+
+    ordinal 4 -> 1: PATH A wiring    0 cells move   |   PATH B wiring   23 cells move
+    ordinal 4 -> 0: PATH A wiring    0 cells move   |   PATH B wiring   22 cells move
+    ordinal 4 -> 6: PATH A wiring    0 cells move   |   PATH B wiring    0 cells move
+
+  shape: T36's half-cent tie shape, MNT 1,162,502.50, 12 x 21.6 %
+     ordinal                            ambient              effective threaded mc    PATH A total interest    PATH B total interest
+           4  precision=19 roundingMode=HALF_UP  precision=19 roundingMode=HALF_UP                140457.89                140457.89
+           1     precision=19 roundingMode=DOWN     precision=19 roundingMode=DOWN                140457.89                140457.81
+           0       precision=19 roundingMode=UP       precision=19 roundingMode=UP                140457.89                140457.93
+           6 precision=19 roundingMode=HALF_EVEN precision=19 roundingMode=HALF_EVEN                140457.89                140457.88
+
+    ordinal 4 -> 1: PATH A wiring    0 cells move   |   PATH B wiring   42 cells move
+    ordinal 4 -> 0: PATH A wiring    0 cells move   |   PATH B wiring   48 cells move
+    ordinal 4 -> 6: PATH A wiring    0 cells move   |   PATH B wiring   28 cells move
+
+----------------------------------------------------------------------------------------------------
+READ THIS OFF THE TABLE, do not infer it:
+  Under the PATH A wiring the tenant ordinal is inert -- the caller's own MathContext
+  governs.  Under the PATH B wiring the SAME ordinal change moves the money, because
+  the caller sourced its MathContext from MoneyHelper.  Same shape, same seam, same
+  run; the ONLY difference is where the MathContext came from.
+----------------------------------------------------------------------------------------------------
+

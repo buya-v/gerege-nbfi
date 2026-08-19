@@ -1,0 +1,18 @@
+### n5-broken-wiring
+$ run2 T42_JAVA_PROPS=-Dt42.breakWiring=true T42_OUT_PREFIX=t42-neg5
+== T42 capture 2: precision threshold + wiring ==
+  ok  pinned commit 426a23544e8426a38ae43ae404670a0a7e85b9eb, clean
+  ok  image sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a
+  ok  seam class byte-identical to the pin, sha256 bf397f0b29e6d6f347c286f563875495635128f9cba80fe59881ffe0fea80714
+  ok  container exit 0, stderr empty
+  ok  classpath: 348 entries, digest 68e681486ae5890f7cded85b4a3e2588672d66dd5e1380dd897ef72213b5f95f, ZERO prohibited drivers
+  ok  JSON payload parses; 140 oracle log lines split off
+BREACH: T42B-PB-ord1: PATH B wiring must hand the generator the AMBIENT context; ambient 'precision=19 roundingMode=DOWN' but effective 'precision=19 roundingMode=HALF_UP'
+BREACH: T42B-PB-ord0: PATH B wiring must hand the generator the AMBIENT context; ambient 'precision=19 roundingMode=UP' but effective 'precision=19 roundingMode=HALF_UP'
+BREACH: T42B-PB-ord6: PATH B wiring must hand the generator the AMBIENT context; ambient 'precision=19 roundingMode=HALF_EVEN' but effective 'precision=19 roundingMode=HALF_UP'
+BREACH: T42B-PB-tie-ord1: PATH B wiring must hand the generator the AMBIENT context; ambient 'precision=19 roundingMode=DOWN' but effective 'precision=19 roundingMode=HALF_UP'
+BREACH: T42B-PB-tie-ord0: PATH B wiring must hand the generator the AMBIENT context; ambient 'precision=19 roundingMode=UP' but effective 'precision=19 roundingMode=HALF_UP'
+BREACH: T42B-PB-tie-ord6: PATH B wiring must hand the generator the AMBIENT context; ambient 'precision=19 roundingMode=HALF_EVEN' but effective 'precision=19 roundingMode=HALF_UP'
+BREACH: payload assertions failed
+RUN INVALID -- capture is not admissible.
+exit=1

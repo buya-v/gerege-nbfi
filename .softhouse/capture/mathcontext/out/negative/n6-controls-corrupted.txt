@@ -1,0 +1,8 @@
+### n6-controls-corrupted
+$ env T42_CONTROLS_PAYLOAD=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a3afd18baf89b21fe/.softhouse/capture/mathcontext/out/negative/t42-corrupted-payload.json python3 /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3afd18baf89b21fe/.softhouse/capture/mathcontext/analysis/controls.py
+T42 controls: 172 cells compared against TRANSCRIBED literals (shipped test + four committed captures taken by other harnesses).
+
+  MISMATCH  C1 T42-CAL.totalInterestAmount: expected '2.05', observed '2.06'
+
+FAIL -- 1 of 172 cells do not reproduce.  This run is not comparable to the committed corpus.
+exit=1
