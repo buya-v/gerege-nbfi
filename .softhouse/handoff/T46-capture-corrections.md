@@ -208,6 +208,12 @@ periods where R4 (naive whole-units, no special case) != R2  : 0
 - **`T46-WK-*`, `T46-DY-*`, `T46-RE-2`, `T46-ARM-CTL` separate NOTHING** among R1/R3/R4. Stated because
   it is true: they add arm coverage, not discriminating power. *Coverage is what a corpus can
   distinguish.*
+
+**Failable and deterministic** [`capture/periodratio/NEGATIVE-TESTS-T46.md`]: the `arms` pass re-executed
+from a fresh throwaway container is **byte-identical**
+(`sha256 eab5dc0cd8e9b74e428c9d8cd0d87a8ea72129c01fe1375ec679b624fb893fc4`); forcing the **threaded**
+rounding mode to `DOWN` exits 1 with 13 breaches read off the `MathContext` **object**; a wrong seam
+sha exits 1 before any capture runs.
 - **R4 = R2 on all 186 periods** — §1's proof arriving a third way, on real observed schedules.
 
 ---

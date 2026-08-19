@@ -364,6 +364,35 @@ the absence probe's own guard inverted, the wiring broken, and a corrupted contr
 `totalOutstandingBalance`, plus `loanTermInDays`. Never the three headline scalars; that shape is
 what let defect F-1 hide through five reviews (`.softhouse/patterns.md`).
 
+> **CORRECTION — M-10. E2's "Path A = 0 cells" is a REPLICATION of E1's ambient rows, not an
+> independent second experiment**, and must not be presented as corroboration of E1.
+>
+> E2 (capture 2, `T42B-PA-*` vs `T42B-PB-*`) runs the same plain shape — MNT 1,200,000 × 6 ×
+> 21.6 %, 2 dp — varies the **ambient** tenant ordinal, holds the **threaded** context fixed on
+> the `PA` arm, and observes **0** differing cells. E1 already observed exactly that, on exactly
+> that shape, in `T42-MX-00-A`'s ambient-flip rows. Same inputs, same seam, same conclusion, one
+> harness later. Two runs of one experiment are one experiment.
+>
+> Worse, taken alone the `PA` arm is a **difference** probe — the weaker design that E1 exists to
+> replace: *"I changed it and nothing moved"* is consistent with *"it was read and did not
+> matter"*. Only E1's absence probe rules that out.
+>
+> **What E2 genuinely DOES add, and it is not small:**
+> 1. **The `PB` arm — the contrast E1 has no version of.** When the caller sources the threaded
+>    context *from* the ambient one, moving the ambient moves **23** cells (`4→1`) and **22**
+>    (`4→0`), and **28** on T36's half-cent-tie shape (`140457.89 → 140457.88`). That is what
+>    makes "wiring" a real variable rather than a label, and it is the whole content of ratified
+>    rule 4.
+> 2. **Rule-2-compliant attestation.** `CaptureMathContext2.java:203-205` echoes `mc.toString()`,
+>    `mc.getPrecision()`, `mc.getRoundingMode()` **and** an explicit `wiring` field — the thing
+>    capture 1 did not do (§2.1, M-5).
+> 3. **Negative leg N5**, which proves the two families are not merely *labelled* differently:
+>    `-Dt42.breakWiring=true` makes the `PB` cases construct their own context and the runner's
+>    wiring assertion catches it.
+>
+> **What E2 does NOT add:** independent evidence that the ambient context is not read on Path A.
+> That claim rests on **E1 alone**, plus §4's grep over the committed corpus.
+
 ## 7. No float, integer minor units
 
 `BigDecimal.toPlainString()` in both harnesses; exact **string** comparison in every analysis

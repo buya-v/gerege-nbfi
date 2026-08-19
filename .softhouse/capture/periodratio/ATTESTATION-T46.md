@@ -16,6 +16,12 @@ MariaDB entries — all asserted by `src/run-t46-periodratio.sh` on both new pas
 > **RAW OBSERVED FORM ONLY. NOTHING PROMOTED, NOTHING CONTRACT-SHAPED.** Gate G-1 is open; DEC-1 is
 > unratified.
 
+**Both new passes are proved failable and the `arms` pass is proved deterministic** — see
+`NEGATIVE-TESTS-T46.md`: the threaded-rounding-mode leg exits 1 with 13 breaches read **off the
+`MathContext` object**, the seam-sha leg exits 1 before any capture runs, and a second `arms` execution
+from a fresh container is **byte-identical**
+(`sha256 eab5dc0cd8e9b74e428c9d8cd0d87a8ea72129c01fe1375ec679b624fb893fc4`).
+
 ---
 
 ## 1. F39-1 — the month-end special case **cannot be separated by itself, anywhere.** Proved.
