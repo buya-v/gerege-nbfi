@@ -378,7 +378,7 @@ the threaded context from it** — and then the wiring must be cited.
 
 | path | wiring | is the ambient reading evidence about the money? |
 |---|---|---|
-| **Path B** — running server | `LoanScheduleAssembler.java:753, :777, :797` and `LoanScheduleGeneratorServiceImpl.java:44` do `mc = MoneyHelper.getMathContext()` and pass it to `generate(mc, …)` — **the same object**. Read off the **deployed bytecode** in `fineract-fineract-1`, digest `d5ef39897399157de96503dd242f0f999acde87bf59a191c812ab2f3547711ea`. | **Yes** — it *is* the threaded context. Cite the wiring; never leave it implicit. |
+| **Path B** — running server | `LoanScheduleAssembler.java:753` and `LoanScheduleGeneratorServiceImpl.java:44` do `mc = MoneyHelper.getMathContext()` and pass it to `generate(mc, …)` — **the same object**. **(Corrected by T46: `:777` and `:797` were listed here originally and do NOT call `generate`; five wiring sites are now cited and verified in the charges set.)** Read off the **deployed bytecode** in `fineract-fineract-1`, digest `d5ef39897399157de96503dd242f0f999acde87bf59a191c812ab2f3547711ea`. | **Yes** — it *is* the threaded context. Cite the wiring; never leave it implicit. |
 | **Path A** — embeddable seam | the harness constructs its own `mc`. The two are **independent variables**. | **No** — it witnesses the tenant configuration only, which is still worth attesting for exactly that. Plus the one leak in rule 5. |
 
 Measured side by side in one payload: moving the tenant ordinal 4 → 1 moves **0 cells** under the Path A
@@ -432,13 +432,21 @@ the 360-period regime.
 
 ### Amendments to earlier attestations — values unaffected, justification corrected
 
-No committed capture is invalidated; T42 demonstrated this in three legs rather than asserting it (the
+No committed capture is **mis-valued** — T42 demonstrated this in three legs rather than asserting it, and
+T44 re-checked it. **Qualified by T46:** "not mis-valued" is not the same as "correctly justified", and it is
+scoped to the arithmetic these captures actually exercise — it says nothing about the **ambient** rounding
+locus found on the charge path (next section). The three legs were (the
 threaded context was independently echoed in T35/T37/T39; the sole Path A ambient site is unreachable at
 2 dp; and no committed payload uses a 0-dp currency).
 
 - **T37 §5 is the wrong one** — its "two independent witnesses" to the effective `MathContext` are
   **both ambient**, i.e. one witness counted twice.
 - **T35** — "effective" should read "**ambient**".
+- **T39 — added by audit T44 (F39-2), which T42's original list missed.** T39's attestation offers "two
+  independent witnesses" that are **both ambient**, and are in fact **one cache write logged and then read
+  back** [`MoneyHelper.java:59-64`, `:91-94`] — T37's defect exactly. **Corrected by T46**, which re-emitted
+  the threaded `MathContext` read **off the object** with **2072 / 2072 published values identical** and no
+  new case in that pass.
 - **T36 is substantially sound**: its half-cent canary is real behavioural evidence, and on Path B the
   ambient **is** the arithmetic. It needs only the wiring citation added.
 
@@ -461,3 +469,24 @@ threaded context was independently echoed in T35/T37/T39; the sole Path A ambien
 - **One loan-path site hard-codes `RoundingMode.DOWN` over the tenant mode** —
   `AdvancedPaymentScheduleTransactionProcessor.java:2845`, in repayment allocation, **invisible to every
   capture the program currently holds**. `TO_BE_CAPTURED`.
+
+### Later corrections — the ambient context reaches further than the loan schedule (T46)
+
+- **N46-1 (P1, open).** The **charge** rounding mode is **AMBIENT, not threaded**. Re-derived to its locus:
+  `ProgressiveLoanScheduleGenerator.java:445-446` → the two-arg `Money.of` → `Money.java:114-116` →
+  `Money.java:52` `setScale(2, getMc().getRoundingMode())`. This is a **second** ambient leak on the graded
+  call graph, distinct from the 0-dp `inMultiplesOf` one, and unlike that one **it is reachable at MNT's 2
+  decimal places**. Two exact half-cent ties were *observed* on it (`4.725 → 4.73`, `2.025 → 2.03`, both
+  `HALF_UP`), which also **refutes** the charges set's original claim that no half-cent tie was possible.
+  **No capture the program holds can detect the mode here** — separating it needs a tenant write, so it is
+  `TO_BE_CAPTURED`.
+- **T46-N1.** Six loan-path `MathUtil.percentageOf(…, 19)` sites also take the **ambient** mode.
+- **M-4 (T44).** `LoanScheduleGeneratorServiceImpl:56, :63` **also drops** `installmentAmountInMultiplesOf`,
+  so that field is honoured or lost **by caller** — a capture seam's blind spot is a property of the caller,
+  not of the field.
+
+**What this means for rule 4 of the attestation rule above:** the Path A row said the ambient reading is *not*
+evidence about money "plus the one leak in rule 5". That is now **two** leaks, and the second one bites at
+MNT's scale. State both, or state the rule as *"attest the threaded context, and enumerate the ambient leaks
+you have actually searched for"* — the enumeration has now been wrong twice (T43 P1-T43-2, and this), which is
+itself the argument for not resting a conclusion on an exhaustiveness claim.
