@@ -54,7 +54,7 @@ close by capture the two gaps the oracle could settle:
 | **A-7** recipe hard-codes a dead worktree | **CLOSED** | 11 files self-locating; **21 / 21 responses byte-identical** on re-issue |
 | **A-8** one ambient witness counted twice | **CLOSED** | corrected with the `MoneyHelper.java:59-64` mechanism |
 | **T44-X1** Path B float-shaped on the wire | **CLOSED** | 57 exact-text sidecars, identity-proved, no float constructed |
-| **M-3, M-4, M-5, M-10, M-11** and M-1/M-2/M-6…M-9 | see §6 | delegated leg; `T46-mathcontext-corrections.md` |
+| **M-1 … M-11** (all eleven) | **ALL CLOSED** | delegated leg — nine by claim correction, three of those also by a new experiment (vacuity guard exercised, Path B slot machine-asserted, M-5 proved by re-emission at 147,630 / 147,634 leaves). §6 |
 
 **Two new findings** this pass raises are in §7.
 
@@ -324,27 +324,33 @@ never through a JSON number.** In Go: never `encoding/json` into `interface{}` (
 
 Run as a delegated leg on a disjoint write surface. Its findings, working and identity proofs are in
 **`.softhouse/handoff/T46-mathcontext-corrections.md`**, and the corrections themselves in
-`.softhouse/capture/mathcontext/**`. Read that handoff alongside this one; anything it could not close,
-and anything it needs escalated outside its write surface, is listed there and repeated in §8.
+`.softhouse/capture/mathcontext/**`. Read that handoff alongside this one.
+
+**All eleven findings M-1 … M-11 are closed**, nine by correcting a claim and **three of those also by
+an experiment that did not exist before**: the vacuity guard `NEGATIVE-TESTS.md` mis-described is now
+**exercised** (M-8), the Path B same-local-slot claim is now **machine-asserted with a negative leg**
+(M-6), and the M-5 object echo is **proved by re-emission** — `147,630 of 147,634 leaves byte-identical,
+0 oracle-observed leaves moved`, with the four carve-outs (the harness's own stack frames) enumerated
+verbatim rather than glossed. **No recorded observation was changed**: no `out/t42-*.json` payload was
+touched and every T42 digest still holds; the two source files that changed are `CaptureMathContext.java`
+(comment-only) and `controls.py` (append-only, default output proved byte-identical twice).
+M-11's 172 control cells are now published as cells rather than as a two-line `PASS`.
 
 **M-1 / M-2 independently corroborated by T46's parent**, as a second look with no shared context
 [VERIFIED by this task: `grep -rn "new MathContext(" <every fineract-* module>/src/main`]. The complete
-main-source inventory of `new MathContext(<literal>, …)` is **exactly 11 sites**, and only 9 of them
-carry precision 15 or 10:
+main-source inventory is **15 sites**, of which only **9** carry a literal precision of 15 or 10:
 
 | precision | sites |
 |---|---|
 | **15** (4) | `SavingsAccountDomainServiceJpa.java:329`, `DepositAccountWritePlatformServiceJpaRepositoryImpl.java:496`, `SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:526`, `:822` |
 | **10** (5) | `DepositAccountWritePlatformServiceJpaRepositoryImpl.java:540`, `:837`, `SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:627`, `:695`, `:919` |
 | **8** (2) | `SavingsAccountCharge.java:562` (`fineract-savings`), **`ShareAccountCharge.java:240`** (`portfolio/shareaccounts/` — a *different* Tier B context) |
+| non-literal (4) | `MoneyHelper.java:93`, `:124` (`PRECISION` = 19), `MathUtil.java:473` (precision is a parameter), `AdvancedPaymentScheduleTransactionProcessor.java:2845` (`RoundingMode.DOWN`) |
 
-Plus `MoneyHelper.java:93` and `:124` (both `PRECISION` = 19), `MathUtil.java:473` (precision is a
-parameter) and `AdvancedPaymentScheduleTransactionProcessor.java:2845` (`RoundingMode.DOWN`). **Zero**
-`new MathContext(` in any other `fineract-*` module's main source.
-
-**So T44's M-1 is right — the total is 9, not 13 — and M-2 is right: precision 8 exists and one of its
-two sites is not in savings/deposits.** `reference-oracle.md` carries the wrong total and is outside
-T46's write surface; see §8.
+**Zero** `new MathContext(` in any other `fineract-*` module's main source. **So T44's M-1 is right —
+the total is 9, not 13 — and M-2 is right: precision 8 exists and one of its two sites is not in
+savings/deposits.** Two independent greps, run by two agents with no shared context, agree site for
+site. `reference-oracle.md` carries the wrong total and is outside T46's write surface; see §8.
 
 **M-4 is recorded in both of the other two sets' blind-spot lists**, as T44 required: the REST
 `calculateLoanSchedule` path via `LoanScheduleAssembler` **honours**
@@ -382,6 +388,33 @@ currency's decimal places are never applied. **Any comparison that parses these 
 as text is blind to it** — which is exactly why T44-X1's exact-text rule matters, and is the first case
 found where a float/number comparison would have hidden a real behaviour.
 
+### From the `mathcontext` leg
+
+- **N46-3 / its `T46-N1` (P2, new oracle fact).** `MathUtil.percentageOf(BigDecimal, BigDecimal, int)`
+  [`MathUtil.java:472-473`] builds `new MathContext(precision, MoneyHelper.getRoundingMode())`, so a
+  caller passing a literal precision hard-codes the precision **and takes the AMBIENT rounding mode**.
+  **Six loan-path sites pass a literal `19`**, all on down-payment computation
+  (`AbstractCumulativeLoanScheduleGenerator.java:1897`, `:2060`; `LoanApplicationTerms.java:866`;
+  `LoanDownPaymentHandlerServiceImpl.java:198`; `LoanWritePlatformServiceJpaRepositoryImpl.java:448`,
+  `:3538`). T42's N-3 claim that the loan modules contain *exactly one* hard-coded `MathContext` is true
+  only of the literal `new MathContext(` form. **This is the same class of leak as N46-1** — a rounding
+  mode taken from the ambient context on a path a porter would thread. `TO_BE_CAPTURED`;
+  `[VERIFIED as grep with file:line; UNVERIFIED as behaviour]`.
+- **`T46-N2` (P2, method) — an absence probe is also a coverage detector.** `T42-MX-06-D`
+  (`multiples1000` with the ambient context absent) *generated a schedule*; had the three-argument
+  `Money.roundToMultiplesOf` been reached it must have thrown, as the two 0-dp shapes did. So M-3 was
+  detectable from T42's own payload with no new capture. **If the shape you added to reach a site does
+  not throw when its dependency is removed, you did not reach the site.** Free, general, and nobody used
+  it. `patterns.md` candidate.
+- **`T46-N3` (P2, method) — a shape that changes nothing is not coverage.** Three of thirteen E1 levers
+  moved zero cells and the set believed itself fully covering for a whole fire. **Diff every new shape
+  against the control before claiming it exercises anything.** `patterns.md` candidate. *(T46's own
+  `arms` pass applied exactly this test to itself and reported four non-discriminating captures as
+  non-discriminating — §3.)*
+- **`T46-N4` (P2, method) — publish the cells, not the verdict.** A two-line `PASS` and a 172-line cell
+  dump cost the same to produce and differ completely in what a reviewer can check. `patterns.md`
+  candidate.
+
 ---
 
 ## 8. What I could NOT close, and escalations
@@ -411,13 +444,26 @@ found where a float/number comparison would have hidden a real behaviour.
 1. **`.softhouse/reference-oracle.md`** — T42's amended-attestations list (T35, T36, T37) must gain
    **T39** (F39-2). *Owner: the orchestrator.*
 2. **`.softhouse/reference-oracle.md`** — the folded-in N-3 total *"13 `new MathContext(15|10, …)`"* is
-   a double count; see the delegated leg's handoff for the re-derived inventory. *Owner: the
-   orchestrator.*
-3. **DEC-1 (`docs/adr/**`, T45's surface this fire)** — the month-end obligation must pin the **packed**
+   a **double count; the correct total is 9** (4 at precision 15, 5 at precision 10), and **two
+   precision-8 sites must be added**, one of them `ShareAccountCharge.java:240` in **share accounts**,
+   not savings/deposits. Any accompanying claim that every hard-coded `MathContext` outside the loan
+   modules is in savings/deposits must be withdrawn. Corroborated by two independent greps (§6).
+   *Owner: the orchestrator.*
+3. **`.softhouse/reference-oracle.md`** — two claims need qualifying: *"no committed capture is
+   mis-valued"* must carry `[VERIFIED for the three legs stated; UNVERIFIED as a re-run]` (M-7), and the
+   Path B wiring row must not say all four sites *"pass it to `generate(mc, …)`"* — `LoanScheduleAssembler.java:777`
+   calls `rescheduleNextInstallments` and `:797` calls `calculatePrepaymentAmount` with `mc` as the
+   fourth argument (M-9). *Owner: the orchestrator.*
+4. **`.softhouse/reference-oracle.md`** — two facts worth folding in as **additions**, not corrections:
+   the `installmentAmountInMultiplesOf` caller-dependence (M-4) and the six indirect
+   `MathUtil.percentageOf(…, 19)` ambient-mode sites (T46-N1). *Owner: the orchestrator.*
+5. **DEC-1 (`docs/adr/**`, T45's surface this fire)** — the month-end obligation must pin the **packed**
    whole-months rule normatively alongside the special case (§1); and the
    `installmentAmountInMultiplesOf` obligation must be stated **per caller**, not unconditionally (§6).
-4. **`.softhouse/patterns.md`** — candidate lesson: *a blind spot can be closed by proving it
-   unclosable, and that is a better outcome than a `TO_BE_CAPTURED` that can never succeed.*
+6. **`.softhouse/patterns.md`** — candidate lessons: *a blind spot can be closed by proving it
+   unclosable, and that is a better outcome than a `TO_BE_CAPTURED` that can never succeed*; plus the
+   leg's `T46-N2` (an absence probe is a coverage detector), `T46-N3` (diff every new shape against the
+   control before claiming it exercises anything) and `T46-N4` (publish the cells, not the verdict).
    *Owner: the orchestrator's postmortem.*
 
 ---
@@ -447,9 +493,14 @@ found where a float/number comparison would have hidden a real behaviour.
 - **That `analysis/t46_arms_ratio.py` is a complete model.** It reproduces T39's own R1 and R3
   separations independently, which is the check that matters, but it models the **ratio** only and
   predicts no money. `[VERIFIED against T39's separations; UNVERIFIED as a money model]`
-- **The delegated `mathcontext` leg's findings** are reported on its evidence in its own handoff; T46's
-  parent re-verified **M-4** (the `LoanApplicationTerms` drop and the `B-02` counter-observation) and
-  nothing else from that leg. `[VERIFIED on the leg's evidence; UNVERIFIED by this task]`
+- **The delegated `mathcontext` leg's findings** are reported on its evidence in its own handoff, which
+  carries its own Unverified section (read it — it is explicit that the M-5 re-emission carves out four
+  harness-stack-frame leaves, that M-4 and T46-N1 are source transcriptions never executed, that the
+  Path B slot assertion is a bytecode-dataflow assertion and not a served request, and that the whole
+  `new MathContext` inventory is a grep). T46's parent independently re-verified **M-4** (the
+  `LoanApplicationTerms` drop and the `B-02` counter-observation) and **M-1 / M-2** (the full inventory);
+  both held. **Nothing else from that leg was re-verified by the parent.**
+  `[VERIFIED on the leg's evidence; UNVERIFIED by this task except M-1, M-2, M-4]`
 - **Note so it is not mistaken for a violation:** the strings `ojdbc`, `oracle.jdbc`, `:1521`,
   `com.mysql.cj`, `mariadb`, `go-sql-driver` appear in this work only inside `grep` patterns asserting
   those engines are **ABSENT**, and every such assertion observed **0** hits. "Oracle" throughout means

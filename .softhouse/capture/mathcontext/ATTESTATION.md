@@ -71,9 +71,11 @@ is and is not evidence of.**
   > `src/CaptureMathContext2.java:203-205` (capture 2) complies fully — it writes `mc.toString()`,
   > `mc.getPrecision()`, `mc.getRoundingMode()` and an explicit `wiring` field. The same fix is
   > demonstrated in a sibling set by
-  > `.softhouse/capture/periodratio/src/CapturePeriodRatio2.java:342-345`, which echoes
-  > `mc.toString()` / `mc.getPrecision()` / `mc.getRoundingMode()` and a `wiring` field
-  > [read by T46, not edited — that set belongs to another task].
+  > `.softhouse/capture/periodratio/src/CapturePeriodRatio2.java` — `:342-344` echo
+  > `mc.toString()` / `mc.getPrecision()` / `mc.getRoundingMode()` off the object, and `:345-347`
+  > add an explicit `wiring` field. **[UNVERIFIED as a stable citation]** — that set is owned by a
+  > concurrent sibling task which was still writing to the file; T46 read it and edited nothing
+  > there, so the line numbers are correct as read but may drift.
 - Capture 2: every case **echoes `mc.toString()`, `mc.getPrecision()` and `mc.getRoundingMode()`
   read off the object actually passed to the generator**, not off the intent that built it.
 - **This is the reading that is evidence about the arithmetic on Path A.** Observed: moving it
