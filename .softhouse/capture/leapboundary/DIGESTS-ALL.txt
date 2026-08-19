@@ -1,5 +1,4 @@
 3e6cf942b13ea6a6b425dc9f20ed13651ecbe1b5d767f113f477728665ed7e04  ./ATTESTATION.md
-664f6b5296c70d18f3ab18e046a9371944f0a4b97700abc90c276ee20adf4348  ./DIGESTS-ALL.txt
 b611d36d4cc01bc919298d39a45d877e08bc321680cde06901765664bd10a4d4  ./NEGATIVE-TESTS-OUTPUT.txt
 d30cf87caee8685aee173ef44a2b7b62b6b91298c3e08ea44e65b0755d1c5422  ./NEGATIVE-TESTS.md
 0db421fb0b1ea6c163fb4bb9ae6c5ed540a9579692cfe90355f2fb0aedaf9570  ./PROVENANCE.md
@@ -149,3 +148,7 @@ f1cd0608a031bd6f0a50125b0973ba360071acc0d0c2486ba062ac8a2032cb13  ./req/calc-LB-
 dc26bd535af4d89dcc898f02a4213d65bce64211addf78ba73babd12512d9be0  ./req/calc-LB-NONLEAP-p3.json
 c8ab091be675afb7552cbaa51c7b5b587c3165f938c7b62a11b46a6304715d7e  ./req/calc-LB-NONLEAP-p4.json
 c70cebcd7be86d60337b27190509c8176b01ee5b1a1ff186df0d0fd92aa3cbde  ./req/calc-LB-NONLEAP-p7.json
+
+# Generated with:
+#   cd .softhouse/capture/leapboundary && find . -type f | sort | xargs shasum -a 256 > /tmp/d && mv /tmp/d DIGESTS-ALL.txt
+# (written via /tmp so this file never digests itself; 150 files, this file excluded)
