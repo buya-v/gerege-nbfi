@@ -870,11 +870,11 @@
         "T39",
         "T40"
       ],
-      "status": "in_flight",
+      "status": "done",
       "attempts": 1,
       "contract_independent": true,
       "branch": "softhouse/T41-dec1-v8",
-      "note": "Raised by local fire 20260819-080001 after T38/T39/T40 all landed. Revision 8 is the ratification candidate: once it is written, the next step is ONE independent re-review, and a clean verdict closes G-1 under policy P-2 without reaching Buyan. DISPATCHED 2026-08-19T00:30Z, isolation=worktree, model=opus; orchestrator WILL await it."
+      "note": "Raised by local fire 20260819-080001 after T38/T39/T40 all landed. Revision 8 is the ratification candidate: once it is written, the next step is ONE independent re-review, and a clean verdict closes G-1 under policy P-2 without reaching Buyan. DISPATCHED 2026-08-19T00:30Z, isolation=worktree, model=opus; orchestrator WILL await it. || COMPLETE, merged (f2f30d7). DEC-1 is at REVISION 8, the ratification candidate. DECISIONS (chosen_by agent, none needs a gate): C-1 totalRepaymentExpected is NOT carried - the two generators disagree and 'total == sum of rows' fails on 15 of 21 OBSERVED captures; the adapter discards it and NO INVARIANT MAY ASSERT it equals the row sum, because that assertion would be wrong about the ORACLE not the port. C-2 a silently-dropped charge is REFUSED not reproduced - the oracle's answer is byte-identical to the zero-charge control so there is nothing to shadow-compare. M4 added as a FOURTH date-membership rule, and T41's re-derivation SHARPENS T40: M4 shares M1's predicate but M1 takes 'is first' from the period's structural previous==null while M4 takes it from a MUTABLE COUNTER stale on the separated path - that staleness IS the observed defect. SCOPE HELD: no type, field set, enum member or graded-domain predicate moved; contract.go 0 non-comment added lines, re-verified independently by the orchestrator at merge. FINDINGS: T39's N-1 narrowed FURTHER in DEC-1's favour (days-in-month is 30 at both call sites UNCONDITIONALLY; :1537 is reachable only from case DAYS_30, so the brief's premise was wrong). Item 3e SPLIT into 3e + 3f, binding widened to SEVEN vectors, ALL SEVEN now captured and ALL SEVEN separate - the binding is ONE PROMOTION DECISION away from dischargeable and that decision is gated on ratification. F-1, found by T41's own probe on its own draft: step B's k was under-specified - 'whole months truncated toward zero' names TWO functions coinciding only while the month-end special case is present; the first transcription used the WRONG one, REPRODUCED ALL 4,578 CELLS and reported the special case as inert. T42 landed mid-task and was folded in: 4.1.2's rule CONFIRMED but T41's own Path B mechanism was WRONG and its ambient-site enumeration MISSED Money.java:50->:154; both corrected. VERIFICATION: spec-check PASS 4,578 cells zero mismatches (incl. 1,827 T40 charge cells - a model computing NO charges reproduces 21 charge-bearing schedules exactly, C-1/C-2's premise made executable); 60 citations machine-checked 0 mismatches; 54 [VERIFIED] tags 0 hedged; leak grep 2 hits both correct history. CAVEAT: go build/go test could not run - no Go toolchain in this environment."
     },
     {
       "id": "T42",
@@ -892,11 +892,58 @@
       "dependencies": [
         "T39"
       ],
-      "status": "in_flight",
+      "status": "done",
       "attempts": 1,
       "contract_independent": true,
       "branch": "softhouse/T42-mathcontext-inforce",
-      "note": "Raised by local fire 20260819-080001 from T39 N-3/N-4. Path A throwaway containers preferred; the running server may be READ but not restarted or re-tenanted. DISPATCHED 2026-08-19T00:30Z, isolation=worktree, model=opus; orchestrator WILL await it."
+      "note": "Raised by local fire 20260819-080001 from T39 N-3/N-4. Path A throwaway containers preferred; the running server may be READ but not restarted or re-tenanted. DISPATCHED 2026-08-19T00:30Z, isolation=worktree, model=opus; orchestrator WILL await it. || COMPLETE, merged. (a) T39's N-3 is RIGHT about Path A, WRONG as a general claim. Path A: the THREADED context is the arithmetic and the ambient one is provably NEVER READ on 11 of 13 probe shapes - proven by an ABSENCE test (tenant registered but never passed to initializeTenantRoundingMode, so any ambient read throws; schedules still generated), which is stronger than T39's difference test. Path B: the two are THE SAME OBJECT, read off the DEPLOYED BYTECODE. Moving the tenant ordinal 4->1 moves 0 cells under Path A wiring and 23 under Path B. The ambient DOES reach money on Path A at exactly one site (Money.java:50 -> :154 -> MoneyHelper.getRoundingMode(), ignoring the mc it was handed), reachable only at decimalPlaces==0 && inMultiplesOf>0 - MNT has 2 dp so no ratified capture reaches it. NO COMMITTED CAPTURE INVALIDATED - values unaffected, justification wrong, demonstrated in three legs. T37 section 5 is the wrong one ('two independent witnesses' are BOTH ambient - one witness counted twice); T35 needs 'effective'->'ambient'; T36 substantially sound. (b) T39's N-4 SUPERSEDED: threaded precision 19 vs 12 DOES separate - MNT 50,000,000/360/21.6% gives 274,527,298.56 vs 274,527,296.51, MNT 2.05 across 861 cells - so the ratified precision-19 parameter is OBSERVABLY LOAD-BEARING. Separation is NOT monotone in principal, so there is no safe threshold. NEW: (19, tenant mode) is a LOAN-PATH rule, NOT Fineract-wide - all 81 MathContext.DECIMAL64 uses and 13 new MathContext(15|10,...) in main source are in SAVINGS/DEPOSITS, a Tier B trap. One loan-path site hard-codes RoundingMode.DOWN over the tenant mode (AdvancedPaymentScheduleTransactionProcessor.java:2845, repayment allocation), invisible to every capture the program holds, TO_BE_CAPTURED. 354 cases, 243,308 cells full-cell, 6 negative legs all failing correctly. The 8-point attestation rule is folded into reference-oracle.md."
+    },
+    {
+      "id": "T43",
+      "title": "Independent re-review of DEC-1 revision 8 (the ratification candidate; a clean verdict closes G-1)",
+      "description": "RE-DERIVE, do not read back. Revision 8 is the ratification candidate: if this review comes back CLEAN, the driver ratifies under standing policy P-2, gate G-1 closes without reaching Buyan, and task T7 (the conformance harness) unblocks along with everything behind it. If it finds a defect, say so - seven consecutive rounds have, and each on ground no prior round had examined.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/reviews/",
+        ".softhouse/handoff/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T41"
+      ],
+      "status": "in_flight",
+      "attempts": 1,
+      "contract_independent": true,
+      "branch": "softhouse/T43-dec1-v8-rereview",
+      "note": "Raised by local fire 20260819-080001. THE task that closes G-1. DISPATCHED 2026-08-19T01:20Z, isolation=worktree, model=opus; orchestrator WILL await it."
+    },
+    {
+      "id": "T44",
+      "title": "Independent audit of this fire's three capture sets (T39 periodRatio, T40 charges, T42 mathcontext)",
+      "description": "Three large capture sets landed in one fire and NONE has been independently audited, while every earlier capture pass was (T18 pass 1, T19 pass 2, T21 pass 3, T22 Path B, T27 the corrections). Audit them the same way: provenance, attestation soundness under T42's own new 8-point rule, whether each capture actually discriminates what its handoff claims, whether the property invariants hold when re-checked rather than merely claimed, and whether any published number is unsupported by an observation or a transcribed source literal. Re-run what you can against the live oracle rather than trusting the committed outputs. Report admissibility per set: what may be promoted to the parity vector store once G-1 closes, and what may not.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/reviews/",
+        ".softhouse/capture/audit-t44/",
+        ".softhouse/handoff/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T39",
+        "T40",
+        "T42"
+      ],
+      "status": "in_flight",
+      "attempts": 1,
+      "contract_independent": true,
+      "branch": "softhouse/T44-capture-audit",
+      "note": "Raised by local fire 20260819-080001 (oracle REACHABLE). DISPATCHED 2026-08-19T01:20Z, isolation=worktree, model=opus; orchestrator WILL await it."
     }
   ]
 }
