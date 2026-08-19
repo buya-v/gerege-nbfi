@@ -637,3 +637,46 @@ the condition would then live only in the operational files, with DEC-1 known-wr
 which is precisely the situation the driver twice declined to ratify into.
 
 **Not RESERVED.** No money, no live endpoint, no third party, no licence fact.
+
+---
+
+## G-5 — **ENGINEERING** — DEC-1 contradicts itself on a ZERO interest rate, and the harness's own self-test depends on which way it is read *(OPEN — needs a DEC-1 amendment, which no agent may make)*
+
+**Raised by** local fire `20260819-200001`, from task **T10** (the first Go port), **driver-confirmed**.
+**Context** `tier0-harness-schedule-poc`. **Blocks** nothing today — the port follows the enumerated list,
+which is what the harness enforces — but the two readings disagree about a reachable request.
+
+### The contradiction
+
+- `AnnualNominalInterestRate`'s doc comment says a **zero rate is "outside the graded domain"**.
+- The **enumerated graded-domain list** does not contain any rate predicate at all.
+- `admit.go:846-907` implements the list and therefore **has no rate predicate**.
+- `_selftest/SELFTEST-01-two-period-zero-rate.json` **is a zero-rate request**.
+
+So a port that follows DEC-1's **prose** refuses `SELFTEST-01` with `ErrNoDiscriminatingVector`, and the
+harness reports that refusal as **FAIL, exit 1**. A port that follows DEC-1's **list** grades it and passes.
+The specification cannot be satisfied both ways, and the harness's own self-test fixture is the shape that
+exposes it.
+
+### What T10 did, and why it is the right interim call
+
+Implemented **the enumerated list**, matching the harness, and flagged the conflict rather than resolving it.
+That keeps the port and the grader consistent with each other and leaves the decision where it belongs.
+**T10 did not amend DEC-1**, correctly — a ratified DEC-n is not an agent's call.
+
+### Asking for
+
+A **wording-only** DEC-1 amendment picking one reading. The driver recommends **making the prose match the
+list** — i.e. deleting the "zero rate is outside the graded domain" sentence — for three reasons:
+
+1. The list is what the harness enforces, so the prose is the part that is already inert.
+2. A zero-rate schedule is a perfectly ordinary NBFI product shape (an interest-free instalment plan), and
+   putting it outside the graded domain would mean shipping it **ungraded** rather than not shipping it.
+3. `SELFTEST-01` — the fixture that proves the harness can distinguish pass from fail — is zero-rate. Making
+   zero rate ungradeable would require re-authoring the harness's own self-test.
+
+The alternative (keep the prose, add a rate predicate to the list, re-author `SELFTEST-01`) is defensible but
+strictly more work for a worse outcome.
+
+**Not RESERVED.** No money, no live endpoint, no third party, no licence fact. Recorded for Buyan's awareness
+and reversal, not because an agent could not reason about it.
