@@ -60,7 +60,7 @@ def linecount(path, cache={}):
 def main():
     head = subprocess.run(["git", "-C", FIN, "rev-parse", "HEAD"],
                           capture_output=True, text=True).stdout.strip()
-    print("T45 CITATION CHECK - every file:line in DEC-1 revision 9 and contract.go")
+    print("T47 CITATION CHECK - every file:line in DEC-1 revision 10 and contract.go")
     print(f"pinned checkout: {FIN} @ {head}")
     print()
     idx = index_main_sources()

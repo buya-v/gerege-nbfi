@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""T45 - CONTENT check on the load-bearing citations of DEC-1 revision 9.
+"""T47 - CONTENT check on the load-bearing citations of DEC-1 revision 10.
 
 The range check (t45_citecheck.py) proves a cited line EXISTS. It does not prove the line
 says what the sentence above it claims -- and P1-T43-1 was a citation that existed, was
 correctly formatted, and said the opposite of what it was cited for. So this probe asserts,
-for every citation revision 9 touches plus the highest-value ones it inherits, that the
+for every citation revision 9 or revision 10 touches, plus the highest-value ones they inherit, that the
 cited line or range CONTAINS an expected token.
 
 Every assertion below was written by reading the pinned source, not by copying the document.
@@ -25,6 +25,12 @@ F = {
     "LSP": "fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/data/LoanScheduleParams.java",
     "LC": "fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/domain/LoanCharge.java",
     "LRSPW": "fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/domain/LoanRepaymentScheduleProcessingWrapper.java",
+    "MATHUTIL": "fineract-core/src/main/java/org/apache/fineract/infrastructure/core/service/MathUtil.java",
+    "LSGSI": "fineract-provider/src/main/java/org/apache/fineract/portfolio/loanaccount/service/LoanScheduleGeneratorServiceImpl.java",
+    "LAT": "fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/LoanApplicationTerms.java",
+    "LDPH": "fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/service/LoanDownPaymentHandlerServiceImpl.java",
+    "LWPS": "fineract-provider/src/main/java/org/apache/fineract/portfolio/loanaccount/service/LoanWritePlatformServiceJpaRepositoryImpl.java",
+    "DU": "fineract-core/src/main/java/org/apache/fineract/infrastructure/core/service/DateUtils.java",
 }
 
 # (key, lo, hi, must-contain, what the document claims it is)
@@ -126,6 +132,64 @@ ASSERTIONS = [
     ("PLSG", 132, 132, "setOutstandingLoanBalance", "the row's balance, written in its own iteration"),
     ("PLSG", 351, 351, "addDisbursement", "the registration, in M3's owner period"),
     ("PLSG", 157, 157, "totalOutstanding = BigDecimal.ZERO", "the literal zero"),
+    # ================= REVISION 10 =================
+    # --- finding 1: the month-end pair, and the YEARS arm that closes the escape route
+    ("EMI", 1432, 1432, "targetDateLastDay == targetDateDay && seedDateDay > targetDateDay",
+     "rev10 §4.1.1 step B: the closed form's right-hand side is VERBATIM this predicate"),
+    ("EMI", 1433, 1433, "repaymentPeriod.getFromDate().plusDays(1)",
+     "rev10: when it fires the oracle measures to FromDate.plusDays(1)"),
+    ("EMI", 1435, 1435, "DateUtils.getExactDifference(seedDate, repaymentPeriod.getFromDate()",
+     "rev10 PINS this as the normative whole-months reading (packed)"),
+    ("DU", 308, 317, "unit.between",
+     "getExactDifference is ChronoUnit.<unit>.between"),
+    ("EMI", 1405, 1405, "ChronoUnit.YEARS",
+     "rev10 §4.1.1 step B (iii): the YEARS ratio is computed here"),
+    ("EMI", 1598, 1610, "calculateRateFactorPerPeriodBasedOnRepaymentFrequency",
+     "rev10: the switch the YEARS ratio is handed to"),
+    ("EMI", 1609, 1609, 'throw new UnsupportedOperationException("Invalid repayment frequency")',
+     "rev10: the YEARS arm is UNREACHABLE -- this is why T46-YR-A/B throw"),
+    ("EMI", 1602, 1608, "case MONTHS ->",
+     "rev10: the switch carries DAYS, WEEKS and MONTHS arms and no YEARS arm"),
+    ("EMI", 1477, 1480, "repaymentPeriod.getFromDate()",
+     "rev10: calculateSeedDate falls back to the period's own FromDate"),
+
+    # --- finding 2: installmentAmountInMultiplesOf is lost BY CALLER
+    ("LAT", 579, 606, "assembleFrom(LoanRepaymentScheduleModelData modelData, MathContext mc)",
+     "rev10 §2.2: the assembler the seam and LoanScheduleGeneratorServiceImpl share"),
+    ("LSGSI", 44, 44, "MathContext mc = MoneyHelper.getMathContext()",
+     "rev10 §2.2 per-caller table: this caller reads the AMBIENT context"),
+    ("LSGSI", 56, 56, "getInstallmentAmountInMultiplesOf()",
+     "rev10 §2.2: the value IS put into the model data ..."),
+    ("LSGSI", 63, 63, "scheduleGenerator.generate(mc, modelData)",
+     "... and IS carried to generate(), and is then dropped by the assembler"),
+    ("LAT", 217, 217, "installmentAmountInMultiplesOf",
+     "the field exists on LoanApplicationTerms"),
+
+    # --- finding 3: N46-1, the ambient charge rounding mode
+    ("PLSG", 445, 446, "Money.of(cumulative.getCurrency(),",
+     "rev10 §4.5.1: the TWO-argument Money.of on the instalment-charge path"),
+    ("PLSG", 445, 446, "divide(BigDecimal.valueOf(100), mc)",
+     "rev10 §4.5.1: the percentage division DOES carry the threaded mc"),
+    ("PLSG", 464, 465, "Money.of(cumulative.getCurrency(),",
+     "rev10 §4.5.1: the same two-argument construction on the specified-due-date arm"),
+    ("MONEY", 114, 116, "MoneyHelper.getMathContext()",
+     "rev10: the two-argument Money.of(MonetaryCurrency, BigDecimal) is AMBIENT"),
+    ("MONEY", 52, 52, "setScale(currency.getDecimalPlaces(), getMc().getRoundingMode())",
+     "rev10's per-construction rule: the scale-2 rounding point"),
+    ("MONEY", 494, 496, "return mc != null ? mc : MoneyHelper.getMathContext()",
+     "rev10's per-construction rule: getMc()'s null branch"),
+    ("MONEY", 40, 42, "this.mc = mc",
+     "rev10's per-construction rule: the instance mc is what the constructing call passed"),
+    ("MONEY", 48, 51, "getDecimalPlaces() == 0",
+     "rev10 §4.5.1: the gate the inMultiplesOf leak has and the charge leak does NOT"),
+    ("MATHUTIL", 472, 473, "new MathContext(precision, MoneyHelper.getRoundingMode())",
+     "rev10 §4.1.2, T46-N1: percentageOf(…, int) takes the AMBIENT mode"),
+    ("ACLSG", 1897, 1897, "MathUtil.percentageOf(", "T46-N1 site 1 of 6, literal 19"),
+    ("ACLSG", 2060, 2060, "MathUtil.percentageOf(", "T46-N1 site 2 of 6, literal 19"),
+    ("LAT", 866, 866, "MathUtil.percentageOf(", "T46-N1 site 3 of 6, literal 19"),
+    ("LDPH", 198, 198, "MathUtil.percentageOf(", "T46-N1 site 4 of 6, literal 19"),
+    ("LWPS", 448, 448, "MathUtil.percentageOf(", "T46-N1 site 5 of 6, literal 19"),
+    ("LWPS", 3538, 3538, "MathUtil.percentageOf(", "T46-N1 site 6 of 6, literal 19"),
 ]
 
 

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""T45 - correction-leak grep.
+"""T47 - correction-leak grep.
 
 Correction leak is this project's signature failure: a correction is applied where the
 reviewer pointed and left standing in the four other places the document restates it.
 It bit revisions 7 and 8 in their own second passes, and P1-T43-1 IS a leak -- one wrong
 citation repeated four times.
 
-So: for every correction revision 9 makes, grep the WHOLE document (and contract.go) for
+So: for every correction revision 9 or revision 10 makes, grep the WHOLE document (and contract.go) for
 the pattern the correction retires, and require every remaining hit to be an explicit
-"revision 8 said X, revision 9 corrects it" acknowledgement rather than a live restatement.
+"revision N said X, revision N+1 corrects it" acknowledgement rather than a live restatement.
 """
 import re
 import sys
@@ -53,11 +53,48 @@ CHECKS = [
     ("P2-T43-1  C-1's three-term progressive semantics, missing the down payment",
      r"disbursement charges \+ Σ\(principal \+ interest\) \+ separated",
      r"(?!)"),
+
+    # ================= REVISION 10 =================
+    ("T46 F39-1  the special case as TO_BE_CAPTURED / a discriminator still wanted",
+     r"the special case ALONE is `TO_BE_CAPTURED`|"
+     r"[Aa] discriminator for the special case alone must come from|"
+     r"[Ww]hat would separate the special case alone",
+     r"(REVISION 10|revision 10|withdrawn|NOT SEPARABLE)"),
+    ("T46 F39-1  the YEARS/WEEKS/DAYS arms described as UNCAPTURED",
+     r"[Tt]hose arms are entirely uncaptured|"
+     r"remain \*\*entirely uncaptured\*\*|"
+     r"no capture exercises that branch at all",
+     r"(revision 10|REVISION 10|T46-|were \*\*entirely uncaptured through)"),
+    ("T46 F39-1  'implement the packed rule WITH ... or the clamped-step rule WITHOUT it'"
+     " offered as a free CHOICE rather than a pin",
+     r"Implement the packed rule WITH the special case, or the\s*$|"
+     r"\*\*A port must implement the packed rule WITH the special case, or the "
+     r"clamped-step rule WITHOUT it",
+     r"(?!)"),
+    ("T46 M-4  installmentAmountInMultiplesOf as unconditionally unreachable",
+     r"Structurally unreachable, not merely unset",
+     r"(?!)"),
+    ("T46 A-5 / T40  any surviving 'no half-cent tie is possible' claim",
+     r"no charge percentage lands on an exact half-cent tie|"
+     r"none exists against period 1|"
+     r"[Nn]o (exact )?half-cent tie (is possible|exists)",
+     r"(FALSE|refut|revision 9 records|revision 10|OBSERVED)"),
+    ("T46 N46-1  the charge rounding mode described as THREADED",
+     r"charge (arithmetic )?round(s|ing)? under the threaded|"
+     r"the threaded context rounds the charge",
+     r"(?!)"),
+    ("T46 N46-1  §4.1.2 still claiming the ambient list is complete/exhaustive",
+     r"the ambient-reading paths.{0,40}are \*\*exactly\*\*|"
+     r"there is no other path to the ambient context in the program",
+     r"(?!)"),
+    ("T46  'measured 0 in the same sweep' for the WEEKS/DAYS arms (T46's own overreach)",
+     r"WEEKS.{0,60}measured \*\*0\*\* separations in the same",
+     r"(?!)"),
 ]
 
 
 def main():
-    print("T45 CORRECTION-LEAK GREP over the whole document and contract.go")
+    print("T47 CORRECTION-LEAK GREP over the whole document and contract.go")
     print()
     bad = 0
     for label, pat, ackpat in CHECKS:
