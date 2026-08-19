@@ -1,0 +1,19 @@
+T39-ME-B periodRatio, special case PRESENT : ['1', '1', '1', '1', '1', '1']
+T39-ME-B periodRatio, special case OMITTED : ['1', '2', '1', '2', '1', '2']
+T39 committed observation (analysis/discriminate-output.txt):
+  R2 (present)  ['1','1','1','1','1','1']   R3 (omitted) ['1','2','1','2','1','2']
+MATCH: True
+
+F-1 check -- packed WITH the case vs clamped-step WITHOUT it, per period:
+  p1 from=2024-01-31 seed=2024-01-31 packed+case=0 clamped-no-case=0
+  p2 from=2024-02-29 seed=2024-01-31 packed+case=1 clamped-no-case=1
+  p3 from=2024-03-31 seed=2024-03-31 packed+case=0 clamped-no-case=0
+  p4 from=2024-04-30 seed=2024-01-31 packed+case=3 clamped-no-case=3
+  p5 from=2024-05-31 seed=2024-05-31 packed+case=0 clamped-no-case=0
+  p6 from=2024-06-30 seed=2024-01-31 packed+case=5 clamped-no-case=5
+  p5 from=2024-05-31 seed=2024-05-31 packed+case=0 clamped-no-case=0
+  p6 from=2024-06-30 seed=2024-01-31 packed+case=5 clamped-no-case=5
+
+T39-P0-A boundaries: ['2024-01-28', '2024-02-29', '2024-03-31', '2024-04-30', '2024-05-31', '2024-06-30', '2024-07-31']
+T39-P0-A periodRatio: ['1+1/29', '1+2/31', '1', '1+1/31', '1', '1+1/31']
+T39 observed         : 1+1/29, 1+2/31, 1, 1+1/31, 1, 1+1/31
