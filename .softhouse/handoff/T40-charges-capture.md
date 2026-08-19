@@ -660,3 +660,115 @@ out/INVARIANTS.md             C1–C10 per capture
 out/DETERMINISM.txt           byte-identity results
 out/SELFCHECK.txt             non-negotiables self-check
 ```
+
+---
+
+# CORRECTIONS — T46 (branch `softhouse/T46-capture-corrections`), against T44 findings A-1 … A-8 and T44-X1
+
+**Appended by T46. Nothing above this line was altered.** Full working:
+`.softhouse/capture/charges/ATTESTATION-T46.md`.
+
+## C-1 (A-3) — §§4-9's framing of the per-request `amount` is wrong, and the corpus was blind
+
+This handoff calls the mandatory per-request `amount` a redundant echo of the definition
+(*"Every request therefore repeats the definition's amount as exact decimal text"*). **It is not
+redundant: the request value is AUTHORITATIVE and `m_charge.amount` is ignored.** Because T40 always
+made the two equal, **no capture in the original 21 could tell the two readings apart** — a Go port that
+read the definition passed all 21 and was wrong.
+
+**Seven new captures make them disagree, and the request wins seven for seven**
+[`out/t46/DEFVSREQ.txt`]:
+
+| capture | charge (time, calc) | definition | request | DEFINITION would give | **OBSERVED** |
+|---|---|---|---|---|---|
+| `T46-CH-01` | 4 (8, 4) | `3.750000` | `1.25` | `810.00` | **`270.00`** |
+| `T46-CH-02` | 1 (1, 1) | `15000.000000` | `7777.77` | `15000.00` | **`7777.77`** |
+| `T46-CH-03` | 4 (8, 4) | `3.750000` | `0.021875` | `810.00` | **`4.73`** |
+| `T46-CH-04` | 4 (8, 4) | `3.750000` | `0.009375` | `810.00` | **`2.03`** |
+| `T46-CH-05` | 5 (8, 3) | `1.234500` | `2.5` | `1383.65685765` | **`2802.06`** |
+| `T46-CH-06` | 3 (1, 2) | `1.234500` | `0.5` | `14814.00` | **`6000.000`** |
+| `T46-CH-07` | 8 (8, 1) penalty | `1200.000000` | `333.33` | `1200.00` | **`333.33`** |
+
+Four `charge_calculation_enum` values, two `charge_time_enum` values, fee and penalty.
+**The vector's fixture is the REQUEST BYTES, not the `m_charge` row.**
+`out/attested/attestation.json`'s `charges_as_persisted` block stays load-bearing for
+`charge_time_enum` / `charge_calculation_enum` / `is_penalty` and is load-bearing for **no money value**.
+Corroborated independently by T44's audit probes AP-5/AP-6 with different values.
+
+## C-2 (A-5) — §11's arithmetic proof is FALSE, and a half-cent tie has now been observed
+
+§11 says *"a tie needs `216 × p` to end in `…5` at the third decimal, and `216p` is even for every
+terminating decimal `p`"*. `p` is a decimal, not an integer. **Two exact ties, both `HALF_UP`:**
+`0.021875 %` of `21600.00` = `4.725` → **`4.73`**; `0.009375 %` = `2.025` → **`2.03`**
+(`HALF_EVEN` would give `4.72` / `2.02`). Delete §11's claim; the in-charge-arithmetic rounding-mode
+canary exists and is captured.
+
+**The rounding locus, re-derived** — and it is not where §11 assumed:
+`ProgressiveLoanScheduleGenerator.java:445-446` multiplies and divides under the **threaded** `mc`
+(exact at precision 19), then wraps the result in the **two-argument** `Money.of(MonetaryCurrency, …)`
+[`Money.java:114-116`], which supplies **`MoneyHelper.getMathContext()` — the AMBIENT context** — and
+`Money.java:52` does `setScale(currency.getDecimalPlaces(), getMc().getRoundingMode())`.
+**The charge tie is decided by the AMBIENT tenant rounding mode, not the threaded one.**
+
+## C-3 (A-4) — C5 is a discrimination probe, not an invariant
+
+DEC-1 revision 8's ratified decision **C-1** forbids any harness asserting `totalRepaymentExpected ==
+Σ rows`. Shipped as an invariant, C5 makes a **correct** Go port fail 15 of 21. `bin/t46-invariants.py`
+keeps `C1 C2 C3 C4 C6 C7 C8 C9 C10` as invariants (**0 failures over 28 captures**) and reports C5 as
+**probe P5** — the signed delta `TRE − Σ rows` in integer minor units, **non-zero on 20 of 28**, from
+`−1,361` to `−5,190,000`. The suite is proved failable. `bin/invariants.py` is left as T40's evidence;
+what must not happen is C5 travelling forward as a conformance check.
+
+## C-4 (A-2) — D-1's single source citation points at the site of AGREEMENT
+
+`AbstractCumulativeLoanScheduleGenerator.java:504` is inside `updatePeriodsWithCharges` — the
+**separated** path, which the progressive generator has too (`ProgressiveLoanScheduleGenerator.java:486`).
+Replace it with the cumulative **main loop**: `:392`
+`scheduleParams.addTotalRepaymentExpected(totalInstallmentDue)`, `:352`
+`totalInstallmentDue = currentPeriodParams.fetchTotalAmountForPeriod()`, and
+`ScheduleCurrentPeriodParams.java:144-145` defining that as principal + interest + fee + penalty.
+The conclusion is unchanged and true; only the pointer moves.
+`[VERIFIED on T44's evidence; UNVERIFIED by T46]`
+
+## C-5 (A-1, A-8) — the attestation
+
+- **A-1:** the Path B wiring citation was entirely absent (**zero** grep hits). It is now recorded and
+  re-verified: `LoanScheduleAssembler.java:753`, `:777`, `:797` read `MoneyHelper.getMathContext()` and
+  `:765` hands that reference to `generate(mc, …)`; `LoanScheduleGeneratorServiceImpl.java:44` likewise.
+  **On Path B the ambient context IS the threaded object**, which is why T40's ambient reading was right
+  — but rule 4 requires that be said and cited.
+- **A-8:** the `c_configuration` row and the `MoneyHelper` init log line are **one** ambient witness, not
+  two [`MoneyHelper.java:59-64` logs the same local it caches]. Rule 6 still holds, via T36's behavioural
+  canary and now via C-2's two in-charge ties.
+
+## C-6 (A-6) — response scale is CALLER-CONTROLLED, and ungraded
+
+`T46-CH-06` returns the disbursement fee as **`6000.000`** (scale 3) because `0.5 %` of `1200000.00` is
+scale 3 and **nothing on the disbursement path wraps it in `Money`**, so the currency's 2 decimal places
+are never applied. The instalment path *is* wrapped, which is why `T46-CH-03` comes back at scale 2.
+Comparing these as numbers rather than as text would silently pass a port emitting `6000.00`.
+
+## C-7 (A-7) — the run recipe is runnable again
+
+11 `bin/` files hard-coded T40's ephemeral worktree path. `bin/t46-fix-paths.py` makes them
+self-locating. **Proved to change nothing: 21 of 21 responses re-issued BYTE-IDENTICAL** through the
+fixed scripts against the live oracle — a third independent issue of the corpus
+[`out/t46-reissue/IDENTITY.txt`] — and `bin/invariants.py` still reproduces `out/INVARIANTS.md`
+byte-for-byte.
+
+## C-8 (T44-X1) — Path B captures are float-shaped on the wire
+
+Raw bytes stay canonical and are **not** rewritten. **57 exact-text sidecars** `<name>-exact.json` are
+added, in which every JSON number becomes a JSON **string** carrying the wire literal byte for byte,
+produced without constructing a single float and **proved identical leaf-for-leaf** to the raw capture
+[`out/t46/EXACT-TEXT.md`, `bin/t46-exacttext.py`, failable via `--negative`]. Measured by T46:
+**17,693 bare JSON number occurrences, 552 distinct literals**, of which **65** would have their text
+changed by a float round-trip; Path A control **0**.
+**Admissibility rule: a Path B vector is compared as EXACT DECIMAL TEXT, never through a JSON number.**
+
+## C-9 — new `TO_BE_CAPTURED` items this pass raises
+
+- whether `m_charge.amount` governs when the request **omits** `amount` (every capture supplies it);
+- a shape separating the **ambient** from the **threaded** rounding mode inside charge arithmetic
+  (needs the two to differ, i.e. a tenant write this task may not make);
+- `charge_calculation_enum` 5 and 9 and `charge_time_enum` 2 re-tested with a *disagreeing* amount.
