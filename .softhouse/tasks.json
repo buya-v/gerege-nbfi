@@ -1039,6 +1039,71 @@
       "contract_independent": true,
       "branch": "softhouse/T48-actualactual-captures",
       "note": "Raised by local fire 20260819-080001 (oracle REACHABLE). Closes a section-8 item outstanding since revision 5. DISPATCHED 2026-08-19T02:45Z, isolation=worktree, model=opus; orchestrator WILL await it. || COMPLETE, merged (573441e). DEC-1 section 8's DayCountActualActual item CAN NOW BE MARKED CAPTURED - open since revision 5. The arm no observation had ever exercised is observed on THREE seams at (19, HALF_UP): Path A 18 captures, Path A2 (ProgressiveEMICalculator, the seam Fineract's own unit tests use and the only in-process seam on which daysInYearCustomStrategy binds) 27, exactness probe 28 blocks with a vacuity canary, Path B 13 with exact-text sidecars, charges 19. Both controls pass, determinism byte-identical from fresh containers, recipe failable on 8 axes. THE TASK REFUTED ITS OWN PREMISE: the brief called the 'deliberate exactness' at :1969-1980 the most interesting thing to confirm, and it is NOT CONFIRMABLE BY OBSERVATION - 21 probe sites, ZERO where ONE.multiply(f) differs from ONE.multiply(f, mc), because the sole call site passes the literal BigDecimal.ONE [:1529-1530] and f can never exceed mc's significant digits (built by add(x, mc) at :1565). A PORT THAT ROUNDED THERE WOULD NOT DIVERGE. FEB_29_PERIOD_ONLY's SECOND effect is REAL and isolated purely: two periods from 2023-11-01, both starting in non-leap 2023 so effect (a) is a provable no-op - rate factor 0.0183435885919604761 (arm fires) vs 0.0183452054794520548 (suppressed), 23 of 65 cells on Path B, 145,118.81 vs 145,413.87 on the one-year shape. FULL_LEAP_YEAR == the field unset CONFIRMED (0 of 285 cells production wiring, 0 of 91 rate-factor cells Path A2). CHARGE GAPS: m_charge.amount NEVER governs (omitting amount is HTTP 400, 5 of 5); time type 2 with a disagreeing amount, request wins 8/8; calc type 5 is accepted by validValuesForLoan() then rejected by the validator for every time type but 12 - A CONTRADICTION INSIDE FINERACT; calc type 9 does not exist; RepaymentEvery 4/6/12 captured. FIVE FINDINGS: T48-N1 (P1) toLoanConfigurationDetails() passes isInterestChargedFromDateSameAsDisbursalDateEnabled into the interestRecognitionOnDisbursementDate slot [LoanApplicationTerms.java:1753 / LoanConfigurationDetails.java:66-77] - A GO PORT WIRING THAT GETTER WILL DIVERGE. T48-N2 the calc-type-5 contradiction. T48-N3 the :1975 exactness is unreachable, do not spend a fire on it. T48-N4 the arm coincides EXACTLY with the plain branch when both years are 365, so any admitted vector MUST cross a leap boundary with a non-zero first segment. T48-N5 a tranche charge on a single-disbursement product is byte-identical to PERCENT_OF_AMOUNT and its dueDate is ignored. Capture only, nothing admitted, nothing promoted; server left as found bar one recorded addition (m_charge 12->13); charges dir additions only, 0 modifications."
+    },
+    {
+      "id": "T49",
+      "title": "Independent re-review of DEC-1 revision 10 (the ratification candidate; a clean verdict closes G-1)",
+      "description": "THE BOTTLENECK. Eight rounds of independent re-review (T5, T23, T26, T29, T32, T34, T37-observed, T43) each found a new P0 on a surface no prior round had examined - except round eight (T43), which found NONE and recommended ratification. The driver declined because P1-T43-3 was a known-wrong sentence about money (M4 was stated as deciding which row a charge lands on; an INSTALMENT_FEE consults no membership test and lands on every row - MNT 27,500 on FC-02's shape). Revisions 9 (T45) and 10 (T47) are ERRATA, not rewrites: they reopen no decision, move no type/field/enum member/graded-domain predicate, and change no number a Go port must produce. This task re-reviews revision 10 on its own terms. NEEDS NO ORACLE. If it returns CLEAN, the driver ratifies under policy P-2, G-1 closes without reaching Buyan, and T7 - and T9-T15 behind it - unblock.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/reviews/",
+        ".softhouse/handoff/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T47"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "contract_independent": true,
+      "note": "Raised by local fire 20260819-140003. DISPATCHED, isolation=worktree, model=opus; orchestrator WILL await it."
+    },
+    {
+      "id": "T50",
+      "title": "Close N46-1 and N46-3/T46-N1: separate the AMBIENT from the THREADED rounding mode inside charge and percentageOf arithmetic (in-process, no server contact)",
+      "description": "N46-1 (P1) and N46-3/T46-N1 (P2) are the same class of open leak: a rounding mode a porter would thread is actually taken from the AMBIENT MoneyHelper context. N46-1's locus is ProgressiveLoanScheduleGenerator.java:445-446 and :464-465, which divide under the THREADED mc and then hand the result to the TWO-ARGUMENT Money.of [Money.java:114-116], which injects MoneyHelper.getMathContext(); the scale-2 rounding then happens at Money.java:52 under THAT context's mode. N46-3's locus is MathUtil.percentageOf(BigDecimal, BigDecimal, int) [MathUtil.java:472-473], which builds new MathContext(precision, MoneyHelper.getRoundingMode()) - six loan-path sites pass a literal 19 and so take the ambient mode. CORRECTION TO THE STANDING BRIEF, which T46 and T48 both recorded as 'needs a tenant write': A TENANT WRITE CANNOT SEPARATE THEM. T46's own finding A-1 established that on Path B the ambient context IS the threaded object - LoanScheduleAssembler.java:753 reads MoneyHelper.getMathContext() and hands that very reference to generate(mc, ...) - so moving the tenant's mode moves BOTH together and the experiment is vacuous. Separation requires an IN-PROCESS run in which the harness sets the ambient MoneyHelper cache to mode X and threads a MathContext(19, Y) with Y != X. MoneyHelper.initializeTenantRoundingMode(String, int) is public static [MoneyHelper.java:54-64] and the cache is a plain ConcurrentHashMap, so this needs NO server, NO tenant write and NO database. Reuse T42's harness exactly: throwaway docker run --rm on the pinned fineract:latest with the same preconditions, image-id assertion, negative tests and BREACH discipline as .softhouse/capture/mathcontext/src/run-mathcontext*.sh. DO NOT start, stop, restart, re-tenant or write to fineract-fineract-1 / fineract-db-1; a sibling worker is capturing against them this fire. TIER 1 (decisive, cheap, do this first): probe the two-argument Money.of locus directly - construct a half-unit tie at MNT's 2 dp, set ambient HALF_EVEN (RoundingMode ordinal 6) while threading (19, HALF_UP) (ordinal 4), and observe which way the scale-2 rounding falls; run the mirror control (ambient HALF_UP, threaded HALF_EVEN); include a vacuity canary in T46-N2's style - if removing the ambient initialisation does NOT throw IllegalStateException, the probe never reached the site and proves nothing. TIER 2 (only if Tier 1 lands and budget allows): reach the same conclusion at the generator level through the generate(mc, LoanApplicationTerms, loanCharges, detailDTO) overload with a percentage-based installment charge shaped to a tie, and at one MathUtil.percentageOf down-payment site. RAW OBSERVED ONLY - promote nothing, G-1 is open. If a tier turns out not to be reachable, say so with the argument, in T48's 'not capturable' style, rather than supplying a plausible value.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/capture/mathcontext/",
+        ".softhouse/capture/charges/",
+        ".softhouse/handoff/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T48"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "contract_independent": true,
+      "note": "Raised by local fire 20260819-140003 (oracle REACHABLE, but this task contacts NO server). DISPATCHED, isolation=worktree, model=opus; orchestrator WILL await it."
+    },
+    {
+      "id": "T51",
+      "title": "Capture the two TO_BE_CAPTURED items that need one ADDITIVE product each: T48-N1's aliased config flag, and chargeCalculationType 5 via a tranche product",
+      "description": "T48 closed the charge gaps reachable with the products already on the gerege tenant and left exactly two that need a NEW product - both additive, both within the precedent T40/T48 already set (m_charge 12 -> 13 was an additive addition; no existing row was ever mutated). ITEM 1, the more important: T48-N1 (P1) found that LoanApplicationTerms.toLoanConfigurationDetails() passes isInterestChargedFromDateSameAsDisbursalDateEnabled into the interestRecognitionOnDisbursementDate slot [LoanApplicationTerms.java:1753 / LoanConfigurationDetails.java:66-77]. The consequence - that a schedule would MOVE if the two aliased settings differed - was re-derived from source but is [UNVERIFIED] as behaviour, because every product on gerege has the former false. Create a product with isInterestRecognitionOnDisbursementDate = true (and the interest-charged-from-date setting false), capture calculateLoanSchedule against it and against a matched comparator, and settle by OBSERVATION whether the aliasing is behaviourally reachable. Then state precisely what a Go port must reproduce: if the alias is reachable, a port wiring the correctly-named getter DIVERGES, and that is bug-for-bug parity the contract has to pin. ITEM 2: chargeCalculationType 5, which T48 found is accepted by validValuesForLoan() and then rejected by the validator for every time type but 12 - a contradiction inside Fineract. A separating shape needs a multi-disbursement (tranche) product; create one and capture whether type 5 becomes reachable, and what it computes if so. ITEM 3, only if the first two land and budget allows: minCap / maxCap on a percentage charge, and fixedLength. HARD CONSTRAINTS: additive only - create new products and charges with NEW ids, never modify or delete an existing m_product_loan, m_charge or c_configuration row; never start, stop, restart or re-tenant the shared containers (a sibling worker is running this fire); PostgreSQL is the only engine touched; POST /loans?command=calculateLoanSchedule persists no loan. Record the before/after counts of m_charge, m_product_loan and m_loan by read-only SQL in your attestation, as T46 and T48 did. RAW OBSERVED ONLY - promote nothing, admit nothing to the graded domain, G-1 is open. Apply T42's eight-point attestation rule and T44-X1's exact-text sidecar rule (Path B responses are float-shaped on the wire; a numeric comparison is blind to the scale differences N46-2 found).",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/capture/charges/",
+        ".softhouse/capture/pathb/",
+        ".softhouse/handoff/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T48"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "contract_independent": true,
+      "note": "Raised by local fire 20260819-140003 (oracle REACHABLE). DISPATCHED, isolation=worktree, model=opus; orchestrator WILL await it."
     }
   ]
 }
