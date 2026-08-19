@@ -1073,8 +1073,16 @@ captures**, so a three-scalar check would have seen none of this.
    `T46-CH-01`, definition `3.750000 %` against request `1.25`, definition would give `810.00` and
    the oracle returned **`270.00`**]. `[VERIFIED on nine captures across two tasks; UNVERIFIED as a
    general rule across the charge types not tried — `charge_calculation_enum` 5 and 9 and
-   `charge_time_enum` 2 were not re-tested with a disagreeing amount, and whether `m_charge.amount`
-   governs when the request OMITS `amount` is untried by every capture in the program]`.
+   `charge_time_enum` 2 were not re-tested with a disagreeing amount]`.
+   **What happens when the request OMITS `amount` entirely is SETTLED BY OBSERVATION, and revision 11
+   deletes the "untried by every capture" clause revision 10 carried here** (T49's P2-T49-2; task
+   T48). The request is rejected with a hard **HTTP 400 on 5 of 5 legs**, across `chargeTimeType`
+   1, 2, 8 and 12 and both `FLAT` and `PERCENT_OF_AMOUNT`, with
+   `validation.msg.loan.charges.amount.cannot.be.blank` — **so `m_charge.amount` never governs at
+   all**, because the request never reaches any charge arithmetic [VERIFIED:
+   `.softhouse/handoff/T48-actualactual-captures.md` §5 "Gap 1", and headline 5]. A blind-spot list that keeps
+   asserting a closed blind spot is the same defect revision 9 recorded against T40's half-cent
+   claim.
    **Consequence for
    any vector promoted from this set: the fixture is the REQUEST bytes, and the persisted-definition
    digests in the attestation are provenance for `charge_time_enum`, `charge_calculation_enum` and
@@ -1095,11 +1103,24 @@ Fact 4 says the rounding locus is observable. **It does not say which `MathConte
 2. The result is wrapped by the **two-argument** `Money.of(MonetaryCurrency, BigDecimal)` [`Money.java:114-116`], which supplies **`MoneyHelper.getMathContext()` — the ambient context** [`:115`]. The threaded `mc` is in scope at [`:445`] and is **not** passed.
 3. The scale-2 rounding then happens in the constructor at [`Money.java:52`], under **that** context's rounding mode, by §4.1.2's per-construction rule.
 
-**Two exact half-cent ties were OBSERVED on this locus, and that is what makes it more than a reading of the source.** A percent-of-interest instalment fee of `0.021875 %` on a period-1 interest of `21,600.00` is exactly **`4.725`** and the oracle returned **`4.73`**; `0.009375 %` on the same interest is exactly **`2.025`** and the oracle returned **`2.03`**. Both are `HALF_UP`; `HALF_EVEN` would have given `4.72` and `2.02` [VERIFIED: captures `T46-CH-03` and `T46-CH-04`, `.softhouse/capture/charges/req/calc-T46-CH-03-tie-pctinterest-4725.json` and `out/t46/T46-CH-03-tie-pctinterest-4725-raw.json`, and the `-2025` pair; read as exact wire text — `"feeChargesDue": 4.73` and `2.03` on period 1 — re-read by this task]. The arithmetic in exact integers: `2,160,000` minor units × `21,875` ÷ `10^6` ÷ `100` = `472,500,000` ÷ `10^8` = `4.725` exactly, and `× 9,375` gives `202,500,000` ÷ `10^8` = `2.025` exactly. No floating point anywhere, in the oracle's arithmetic or in this check.
+**Two exact half-cent ties were OBSERVED on this locus, and that is what makes it more than a reading of the source.** A percent-of-interest instalment fee of `0.021875 %` on a period-1 interest of `21,600.00` is exactly **`4.725`** and the oracle returned **`4.73`**; `0.009375 %` on the same interest is exactly **`2.025`** and the oracle returned **`2.03`**. Both are `HALF_UP`; `HALF_EVEN` would have given `4.72` and `2.02` [VERIFIED: captures `T46-CH-03` and `T46-CH-04`, `.softhouse/capture/charges/req/calc-T46-CH-03-tie-pctinterest-4725.json` and `out/t46/T46-CH-03-tie-pctinterest-4725-raw.json`, and the `-2025` pair; read as exact wire text — `"feeChargesDue": 4.73` and `2.03` on period 1 — re-read by this task]. **The arithmetic in exact integers, in MINOR units throughout — revision 11 corrects revision 10's chain, which was wrong by a factor of 100** (T49's P1-T49-3, re-derived independently by the driver and again by this task). Period-1 interest is `2,160,000` minor units; the percentage `0.021875 %` is the integer `21,875` scaled by `10^6`. So the charge is `2,160,000 × 21,875 ÷ 10^6 ÷ 100 = 47,250,000,000 ÷ 10^8 = 472.5` minor units — **exactly half a minor unit above `472`** — which the constructor at [`Money.java:52`] must resolve at scale 2, and `HALF_UP` resolves to `473` minor units, **`4.73`**. For `0.009375 %`: `2,160,000 × 9,375 ÷ 10^8 = 202.5` minor units → `203`, **`2.03`**. The same in **major** units, which is the form the oracle's `BigDecimal`s actually take: `21,600 × 21,875 ÷ 10^8 = 4.725` and `21,600 × 9,375 ÷ 10^8 = 2.025`. `HALF_EVEN` would have given `472`/`4.72` and `202`/`2.02`. **What revision 10 wrote was `2,160,000 × 21,875 = 472,500,000`, which is the product of the MAJOR-unit amount `21,600` — the chain mislabelled its own multiplicand and mixed unit scales in the one paragraph that closes "No floating point anywhere".** The conclusion it supports was and is correct; only the check failed to reproduce. No floating point anywhere, in the oracle's arithmetic or in this check.
 
 **Why this leak is worse than the `inMultiplesOf` one §4.4 records, and revision 10 says so plainly.** The other Path-A ambient site — the constructor's two-argument `roundToMultiplesOf` [`Money.java:50`, `:154`] — is gated on `currency.getDecimalPlaces() == 0` [`Money.java:48-51`], which §3.1's `Currency.MinorUnitDigits == 2` excludes, so **MNT can never reach it**. **This one has no such gate: it is reached at exactly two decimal places, which is MNT's, and the two ties above are it firing.** A Go port that threads one `MathContext` everywhere gets the interest right and the charge ties wrong.
 
-**What no capture in this program can tell you about it, stated so the observation is not read as more than it is.** On Path B the caller **sources** the threaded context from the ambient one — `final MathContext mc = MoneyHelper.getMathContext()` [`LoanScheduleAssembler.java:753`] handed to `generate(mc, …)` [`:765`] — so the two contexts are **one reference** (§4.1.2) and every charge capture in the corpus has them equal. **Not one capture the program holds can detect which of the two the scale-2 rounding read**, because none has them disagreeing; the two ties are consistent with `HALF_UP` and inconsistent with `HALF_EVEN` and isolate no mechanism. Separating them needs the tenant rounding mode written to differ from the threaded one on a running server, which is a tenant write. **`TO_BE_CAPTURED`** (§8 item 9(h)). `[VERIFIED as source and as two observed ties; UNVERIFIED as a controlled experiment isolating the context.]`
+**Which of the two contexts actually supplies the mode — CONFIRMED BY OBSERVATION in revision 11, and no longer `TO_BE_CAPTURED`** (task **T50**; supersedes revision 10's `TO_BE_CAPTURED` and its stated blocker). Revision 10 recorded that no capture the program holds can separate the two contexts, and that separating them "needs a tenant write on a running server". **The first half was true and the second half was wrong**, and it was wrong in a way that would have wasted a fire: on Path B `LoanScheduleAssembler` reads `final MathContext mc = MoneyHelper.getMathContext()` [`:753`] and threads **that same cached reference** to `generate(mc, …)` [`:765`], and `MoneyHelper.getMathContext()` serves one instance per tenant out of `mathContextCache.computeIfAbsent(...)` [`MoneyHelper.java:91-93`] — so a tenant write moves **both** axes at once and can never separate them. What does separate them is an **in-process** run: `MoneyHelper.initializeTenantRoundingMode(String, int)` is `public static` and writes a plain `ConcurrentHashMap` [`MoneyHelper.java:54-64`], so setting the ambient mode independently of the threaded one needs no server, no tenant write and no database. Task T50 did exactly that, in throwaway containers with no network and no PostgreSQL.
+
+**What T50 observed at this locus.** Across **3,416 published cells** — 2,016 transcribing the site expressions against the oracle's own `Money`/`MoneyHelper` classes and 1,400 entering `calculateInstallmentCharge` [`:433-452`] and `calculateSpecificDueDateChargeWithPercentage` [`:454-468`] themselves by reflection — with a live **vacuity canary** (an uninitialised tenant throws `IllegalStateException` at [`MoneyHelper.java:79`]) and **9 of 9** deliberate corruptions rejected by the checker:
+
+- at **both** N46-1 loci the **AMBIENT** mode governs the money value in **7 of 7** threaded columns, and the threaded mode moves it in **0 of 7** ambient rows, on every discriminating shape and on all three charge-calculation branches (percent-of-amount, percent-of-amount-and-interest, percent-of-interest);
+- confirmed **by absence** as well as by difference: 42 of 42 and 35 of 35 uninitialised-ambient cases **threw**, while the three-argument `Money.of(currency, amount, mc)` counterfactual **completed** 42 of 42;
+- **reachable at MNT's scale**: the observed pair on an ordinary MNT-sized amount is **`1005025.12` against `1005025.13`** — one minor unit, on a fee;
+- and there is **no shape at two decimal places on which the threaded mode can be seen at all** on this expression: even where the threaded mode moves the quotient's 19th significant digit, the subsequent `setScale(2)` discards the moved digit.
+
+[VERIFIED: `.softhouse/handoff/T50-ambient-vs-threaded-rounding.md`, Tier 1 sites S1/S6 and Tier 2 legs L1/L2; artefacts `.softhouse/capture/mathcontext/out/t50-tier1.json`, `t50-tier2.json`, assertions `out/t50-tier1-assert.txt`, `t50-tier2-assert.txt`, negative tests `out/negative/`. **This task took no oracle observation; these are T50's, quoted with their ids.**]
+
+**What this does and does not change here.** It does **not** change a number this contract requires, and it does **not** move a graded-domain predicate: on the **shipped server** the two contexts are the same object, so the two modes are always equal and **nothing Fineract produces is wrong**. §4.1's "two integers, one mode" decision remains observationally correct for the oracle. What it changes is that the porter-facing rule below is now **measured rather than read off the source**, and that §8 item 9(h)'s capture request is **discharged as an observation** (promotion is a separate step, and none has been taken). `[VERIFIED as source, as two observed ties on the running oracle, AND as a controlled in-process experiment isolating the context; UNVERIFIED as an end-to-end capture on the running server with the two modes disagreeing, which remains impossible on Path B by the wiring above.]`
+
+**The rule a Go port must follow, stated as the porter will meet it.** Compute the charge as the exact rational `amount × percentage ÷ 100` under the threaded context, then quantise to the currency's minor units under the **TENANT (ambient)** mode — `setScale(decimalPlaces, ambientMode)` at [`Money.java:52`] is where the money lands. **A port that threads one `MathContext` through the charge path and uses it for the final quantisation diverges from the oracle on every tie whenever the two modes differ.** **The leak is LATENT on the shipped server and goes LIVE the moment a port threads a context — which is precisely the natural Go idiom.** This is a defect class a Go port *introduces*, not one Fineract currently exhibits; it is recorded here so it is designed against rather than discovered.
 
 **Nothing here moves the contract**, on the same argument as the rest of §4.5.1: `GenerateRequest` carries no charge, so this binds a future port and nothing today.
 
@@ -1356,9 +1377,15 @@ Recorded here, in the same place §4.5 and §8 item 1 record the corpus's other 
   `.softhouse/capture/charges/out/t46/DEFVSREQ.txt`, captures `T46-CH-01`…`T46-CH-07`, each re-issued
   byte-identically]. **A vector promoted from this set must name the request bytes as its fixture**,
   and that requirement is unchanged — what changed is that it now rests on nine captures rather than
-  two probes. `[UNVERIFIED for the charge types not tried: `charge_calculation_enum` 5 and 9,
-  `charge_time_enum` 2, and — untried by EVERY capture in the program — whether `m_charge.amount`
-  governs when the request omits `amount` entirely]` — a systematic sweep is `TO_BE_CAPTURED`.
+  two probes. **Revision 11 CLOSES the half of this bullet that asked what happens when the request
+  omits `amount`** (T49's P2-T49-2; task T48): the oracle answers **HTTP 400 on 5 of 5 legs**
+  (`chargeTimeType` 1, 2, 8 and 12; `FLAT` and `PERCENT_OF_AMOUNT`;
+  `validation.msg.loan.charges.amount.cannot.be.blank`), **so `m_charge.amount` is never consulted
+  for a loan charge on this endpoint at all** and there is no path on which the definition's amount
+  reaches a schedule [VERIFIED: `.softhouse/handoff/T48-actualactual-captures.md` §5 "Gap 1"].
+  `[UNVERIFIED, and this is all that remains of this bullet: the charge types not tried —
+  `charge_calculation_enum` 5 and 9, and `charge_time_enum` 2, with a DISAGREEING amount]` — a
+  systematic sweep over those is `TO_BE_CAPTURED`.
 - **A charge whose percentage lands on an exact half-cent tie**, which would pin the rounding mode
   *inside the charge arithmetic specifically*. **Revision 8 recorded T40's claim that none exists
   against period 1's interest; revision 9 records that the claim is FALSE and that such a tie has
@@ -1388,15 +1415,28 @@ Recorded here, in the same place §4.5 and §8 item 1 record the corpus's other 
   [`Money.java:114-116`, ambient read at `:115`], so the scale-2 rounding at [`Money.java:52`] takes
   the **AMBIENT** mode, by §4.1.2's per-construction rule. On Path B the caller sources the threaded
   context **from** the ambient one [`LoanScheduleAssembler.java:753`, `:765`], so the two are one
-  reference and **no capture this program holds separates them** — the three ties above included.
+  reference and **no CAPTURE this program holds separates them** — the three ties above included.
   Unlike the 0-decimal-place `inMultiplesOf` leak (§4.4, `Money.java:48-51`), **this one is reachable
-  at MNT's two decimal places**, which is why it is worth a vector: a port that threads one context
-  everywhere gets the interest right and the charge ties wrong. Separating it needs the tenant
-  rounding mode written to differ from the threaded one, i.e. a tenant write. `TO_BE_CAPTURED`
-  (§8 item 9(h)); the full derivation is in *Which `MathContext` rounds a CHARGE* above.
-- **Path A cannot grade charges at all.** The embeddable seam's request record carries no charges,
-  so every charge observation in this program is a **Path-B** observation. §4.5's statement that
-  *the Path-A corpus* has zero discriminating power over charges is **unchanged and still true**.
+  at MNT's two decimal places**: a port that threads one context everywhere gets the interest right
+  and the charge ties wrong. **REVISION 11 MOVES THIS OUT OF THE BLIND-SPOT LIST: it is
+  CONFIRMED BY OBSERVATION and no longer `TO_BE_CAPTURED`** (task T50). The **ambient** mode governs,
+  7 of 7 against 0 of 7 on every discriminating shape, measured in process rather than through a
+  capture; and revision 10's stated blocker — "needs a tenant write on a running server" — is
+  **refuted**, because a tenant write moves both axes together and separates nothing. The full
+  derivation and the cell counts are in *Which `MathContext` rounds a CHARGE* above; §8 item 9(h)
+  records the same. What remains genuinely open is narrower and is stated there: **an end-to-end
+  server capture with the two modes disagreeing is impossible on Path B by the wiring**, so no
+  *promoted vector* for this rule can come from that path.
+- **Path A cannot grade charges at all, and revision 11 states that STRUCTURALLY rather than as a
+  property of the current request record** (task T50's T50-N2). The embeddable seam's entry point
+  delegates with `loanCharges = null` [`ProgressiveLoanScheduleGenerator.java:81-84`, the literal at
+  `:83`], and the two charge loci at [`:445-446`] and [`:464-465`] are reachable only from the `:87`
+  overload — **so no Path-A capture can ever exercise a charge, whatever the request record grows
+  to carry**. Every charge observation in this program is therefore a **Path-B** observation, or an
+  in-process one at `:87` (T50's Tier 2). §4.5's statement that *the Path-A corpus* has zero
+  discriminating power over charges is **unchanged and still true**, and is now true for a stronger
+  reason. **Consequence for whoever builds the conformance harness (§8 item 1): charge conformance
+  can only ever be graded on Path B, and that must be known before the harness is built, not after.**
 
 ##### Nothing in this subsection moves the contract's shape
 
