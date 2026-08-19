@@ -254,8 +254,8 @@ conformance cannot.
 
 | # | mutation | port verdict, from source | separated by an off-lattice shape? |
 |---|---|---|---|
-| **S-1** | textbook `balance × rateFactor` (3 rounded ops → 1) | **CORRECT** — `InterestPeriod.java:154-157` is three separate mc ops in that order; `emi.go:353-357` reproduces them | no (§4) |
-| **S-2** | rate factor without the trailing `setScale` | **CORRECT** — `PEC:1962` has it; `emi.go:518` `roundScale(v, m.scale)`, and scale ≡ precision is enforced at `generator.go:287-293` | no (§4) |
+| **S-1** | textbook `balance × rateFactor` (3 rounded ops → 1) | **CORRECT** — `InterestPeriod.java:154-157` is three separate mc ops in that order; `emi.go:353-357` reproduces them | not off-lattice, but **YES by sweep — a payable cell, §4.4** |
+| **S-2** | rate factor without the trailing `setScale` | **CORRECT** — `PEC:1962` has it; `emi.go:518` `roundScale(v, m.scale)`, and scale ≡ precision is enforced at `generator.go:287-293` | not off-lattice, but **YES by sweep — a payable cell, §4.4** |
 | **S-3** | `periodRatio` → `RepaymentEvery` at the interest call site | **CORRECT** — `PEC:1412-1413` passes `periodRatio` into the `repaymentEvery` slot; `PEC:1536-1537` passes `repaymentEvery`. Two call sites, two specifications. `emi.go:469-489` | **YES — MNT 62,595.93** |
 | **M-A** | growth factor rounded at 19 sig digits | **CORRECT** — `RepaymentPeriod.java:217` `reduce(ONE, BigDecimal::add)` has **no** MathContext | no |
 | **M-B** | `fnValue`'s outer `add` unrounded | **CORRECT** — `PEC:1992` `ONE.add(…, mc)` rounds | no |
@@ -301,21 +301,70 @@ At MNT minor unit 2, M-M's worst is **MNT 8,545,743.02** on a MNT 50,000,000 loa
 
 ### 4.2 The rounding-placement class — S-1, S-2, M-A, M-B, M-D
 
-These five all perturb the arithmetic at the ~10⁻¹⁹ relative level and are invisible **on every shape I tried**,
-including all four off-lattice probes. They sit below the currency layer. A separating shape must land the exact
-EMI within ~10⁻¹⁹ relative of a half-minor-unit boundary; it exists but it must be **searched for**, not
-designed. I ran a bounded sweep (rates 7.0/18.5/16.8/21.6/99.9 %, terms 6 and 12, 1,500 principals each) —
-see §7 for the outcome. **This is the honest state: not "not captured" but "not yet located", and the search is
-the work.** Note `patterns.md` already records that precision 19 vs 12 was indistinguishable across 16 shapes
-and then separated at 360 periods, and that the separation is **not monotone in principal** — so a sweep over
-*term* is at least as promising as one over principal.
+These five all perturb the arithmetic at the ~10⁻¹⁹ relative level and are invisible on all 13 vectors **and on
+all four off-lattice probes**. They sit below the currency layer, so a separating shape must land the exact EMI
+within ~10⁻¹⁹ relative of a half-minor-unit boundary: such a shape must be **searched for**, not designed. I ran
+that search — **and found one for S-1 and one for S-2.** See §4.4.
 
 ### 4.3 The strict-inequality boundaries — M-F and M-K
 
 M-F needs `|lastEMI − penultimateEMI|` to equal `floor(n/2)` **whole currency units exactly**, evaluated on the
 **pre-smoothing** model — screening on the oracle's emitted schedule is the error `patterns.md` P-2 names, and I
 avoided it by exposing a pre-smoothing entry point in the scratch copy. M-K needs a trial whose new difference
-*equals* the old one. Both are enumerable by sweep over principal at fixed `n`; see §7.
+*equals* the old one. Both are enumerable by sweep over principal at fixed `n`; see §4.4.
+
+### 4.4 The sweep — S-1 and S-2 ARE separable, and here are the two shapes
+
+I swept 6,000 in-graded-domain shapes (5 rates × 6 monthly installments × 1,200 principals spread over five
+orders of magnitude), running each of the five rounding-placement counterfactuals in-process against the port:
+
+```
+SWEEP shapes tried = 6000
+SWEEP SURV-1 textbook        separating shapes = 6   max margin(minor) = 4   MNT 2102158750 minor, 6x, rate 27/125
+SWEEP SURV-2 no-setScale     separating shapes = 2   max margin(minor) = 1   MNT  313984586 minor, 6x, rate 7/100
+SWEEP M-D emi-one-round      separating shapes = 0
+SWEEP M-A growth-rounded     separating shapes = 0
+SWEEP M-B fn-no-round        separating shapes = 0
+```
+
+**So the two headline survivors are not merely "capturable in principle" — they are capturable now, at a
+density of roughly 1 in 1,000 on the simplest possible shape.** Both separating requests are ordinary
+on-lattice loans: `ScheduleStartDate == Disbursements[0].Date == 2024-01-01`, monthly, 30/360, HALF_UP, MNT.
+
+**Named shape for S-1 — `MNT 21,021,587.50`, 6 × monthly, 21.6 %:**
+
+| row | due | port (correct) P / I / OS | counterfactual P / I / OS |
+|---|---|---|---|
+| 1 | 2024-02-01 | 334921682 / **37838857** / 1767237068 | 334921682 / **37838858** / 1767237068 |
+| 2 | 2024-03-01 | **340950272** / 31810267 / **1426286796** | **340950273** / 31810267 / **1426286795** |
+| 6 | 2024-07-01 | **366169491** / 6591051 / 0 | **366169487** / 6591051 / 0 |
+
+(rows 3–5 diverge likewise; the outstanding balance drifts to a **4 minor-unit** gap by the final row)
+
+**Named shape for S-2 — `MNT 3,139,845.86`, 6 × monthly, 7.0 %:**
+
+| row | due | port (correct) P / I / OS | counterfactual P / I / OS |
+|---|---|---|---|
+| 2 | 2024-03-01 | 51873628 / **1530735** / 210538172 | 51873627 / **1530736** / 210538173 |
+| 3 | 2024-04-01 | 52176224 / 1228139 / **158361948** | 52176224 / 1228139 / **158361949** |
+
+[VERIFIED: `/tmp/t11mut/.../t11sweep_test.go`, `t11named_test.go`; the counterfactual is selected by a
+package-level flag in the scratch copy so both readings run in one process on identical input.]
+
+Note **what** moves: an **interest** cell on row 1/2 and a **principal** cell thereafter. These are payable
+amounts, which is exactly the claim `contract.go` makes about the trailing `setScale` — *"the loss reaches a
+payable amount"* — now demonstrated on a concrete request rather than argued.
+
+**M-D, M-A and M-B were not separated in 6,000 shapes.** That is a statement about the search, not about the
+mutations: all three are non-vacuous (each drops or adds a rounding the source specifies), and the S-1/S-2
+result shows this class *does* surface at low density. A wider sweep over **term** is the obvious next step —
+`patterns.md` already records that precision 19 vs 12 was invisible across 16 shapes and then separated at 360
+periods, and that the separation is **not monotone in principal**.
+
+**The M-F / M-K strict-inequality boundary was NOT located.** I swept 3,000 principals at n ∈ {6, 12} for
+`|lastEMI − penultimateEMI| == floor(n/2)` whole currency units, evaluated on the **pre-smoothing** model
+(exposing a pre-smoothing entry point rather than screening on the emitted schedule — `patterns.md` P-2), and
+found none. Recorded as an unfinished search, not as a closed question.
 
 ---
 
@@ -484,14 +533,23 @@ Severity is what a defect would let through, not how hard it is to fix.
   oracle run is required.** This is the single highest-value, lowest-cost item in this review, and the fact that
   a live-oracle capture has sat unpromoted for two fires while the same blind spot was re-derived three times is
   itself the finding.
-- **C-2 (P2)** — the **rounding-placement class** (S-1, S-2, M-A, M-B, M-D) is ungraded by the 13 vectors **and**
-  by every off-lattice shape. Record it as an open search, not as a backlog item that reads as work remaining
-  forever: the honest statement is *"a separating shape exists and has not been located"*. Sweep over **term**
-  as well as principal — `patterns.md` already records that precision 19 vs 12 separated at 360 periods and not
-  below, and that the separation is not monotone in principal.
-- **C-3 (P2)** — the strict-inequality boundaries **M-F** and **M-K** are ungraded. Both are enumerable: sweep
-  principal at fixed `n` for `|lastEMI − penultimateEMI| == floor(n/2)` whole currency units, evaluated on the
-  **pre-smoothing** model (never on the oracle's emitted schedule — `patterns.md` P-2).
+- **C-2 (P1)** — **capture these two named shapes**, which separate S-1 and S-2 in a *payable amount* (§4.4).
+  Both are ordinary on-lattice MNT loans, `start == disbursement == 2024-01-01`, monthly, 30/360, HALF_UP —
+  two oracle runs, no special rig:
+  - **MNT 21,021,587.50, 6 × monthly, 21.6 %** — kills S-1 (textbook `balance × rateFactor`); diverges on all
+    six rows, interest by MNT 0.01 on row 1 and outstanding by MNT 0.04 by row 6.
+  - **MNT 3,139,845.86, 6 × monthly, 7.0 %** — kills S-2 (rate factor without the trailing `setScale`);
+    interest on row 2 is MNT 15,307.35 vs MNT 15,307.36.
+
+  This is the folklore that has cost this program the most: a rounding step twice dismissed as "redundant" and
+  twice found to be a money defect (`patterns.md`, Run 1). It has been argued from source three times and
+  observed **zero** times. Two captures end the argument.
+- **C-3 (P2)** — **M-A, M-B, M-D** (the rest of the rounding-placement class) and the strict-inequality
+  boundaries **M-F** and **M-K** were **not** separated in my sweep — 6,000 shapes for the former, 3,000 for
+  the latter. Record these as *unfinished searches*, not as backlog items: S-1/S-2 prove the class surfaces, so
+  widen the sweep over **term** (not principal — `patterns.md` records the separation is not monotone in
+  principal). For M-F/M-K the target is `|lastEMI − penultimateEMI| == floor(n/2)` whole currency units
+  evaluated on the **pre-smoothing** model — never on the oracle's emitted schedule (`patterns.md` P-2).
 - **C-4 (P2)** — **take a zero-rate capture** (F-3). It costs one oracle run, converts `SELFTEST-01` from
   hand-authored to observed, and settles G-5 on evidence either way.
 - **C-5 (P2, informational)** — record M-C2/M-H and M-I/M-J as **vacuous inside the graded domain** with the
@@ -519,13 +577,16 @@ vector resembles, with **zero** mismatches.
 The two defects I did find are real but neither is money: an ignored `context.Context` and a superlinear cost
 with an unbounded input. The larger finding is about the **corpus**: nine money-moving wrong implementations
 survive all 13 vectors, three of them by margins up to MNT 8.5 million — and the evidence to kill those three
-is already sitting in the tree, uncaptured into the vector store.
+is already sitting in the tree, uncaptured into the vector store. Two more are killed by two named ordinary
+loans that cost one oracle run each. **Five of the nine survivors can be closed this fire, and three of them
+need no oracle at all.**
 
 > ## ACCEPTED WITH REQUIRED CHANGES
 >
-> **P1:** F-1 (context cancellation ignored), C-1 (promote the T39 drift captures).
+> **P1:** F-1 (context cancellation ignored); C-1 (promote the T39 drift captures — no oracle run needed);
+> C-2 (capture the two named shapes that separate the rounding-placement survivors in a payable amount).
 > **P2:** F-2 (superlinear cost, unbounded `NumberOfRepayments`), F-3/C-4 (zero-rate answer unbacked by any
-> observation), C-2, C-3, C-5, and the P-5 worktree recurrence.
+> observation), C-3, C-5, and the P-5 worktree recurrence.
 >
 > None of this is a cutover recommendation. A green conformance run means "matches the reference oracle on
 > captured vectors, within the graded domain" — and this review's main result is a measurement of how much that
