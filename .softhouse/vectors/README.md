@@ -117,8 +117,15 @@ Observed scale is **not uniform** in the corpus and must not be normalised: Path
 emits `"totalOutstandingAmount": "0"` (scale 0) beside scale-2 siblings, Path B
 emits `"feeChargesDue": "15000"` on a disbursement row and `"0.00"` on repayment
 rows, and persisted product rows are scale 6 (`"1200000.000000"`). The converter
-pads short fractions and accepts trailing zeros beyond the currency scale, and
-**rejects a significant digit beyond it** rather than rounding a transcription.
+pads short fractions and **rejects a significant digit beyond the currency scale**
+rather than rounding a transcription.
+
+**Amended by T17-F5 (task T20):** trailing zeros beyond the currency scale still
+convert exactly, but they are no longer accepted *silently*. A money column whose
+wire text is over-scaled must be **declared** in that row's
+`over_scaled_wire_text_fields`, or the vector is INADMISSIBLE — see the field
+reference below. Scale in a money column is a finding to **record**, and recording
+it is now mechanical rather than optional.
 
 ---
 
@@ -165,9 +172,57 @@ observed value *kills*, and the minor-unit margin for each:
 
 Enforced: **required and non-empty on a parity vector** (a parity vector that kills
 no named candidate defect is a capture, not a grader); the `capability` must be in
-the registry **and** in the vector's `capabilities_required`; `margin_minor` must
-be an integer string **> 0**, because a candidate separated by zero is a candidate
-the vector does **not** kill.
+the registry **and** in the vector's `capabilities_required`; and for a **money**
+counterfactual `margin_minor` must be an integer string **> 0**, because a
+candidate separated by zero is a candidate the vector does **not** kill.
+
+#### A kill that moves no money — `kind: "structural"`
+
+Encoding gradeability as strictly money-valued was **too narrow**, and it made the
+harness's own "UNBACKED `in_graded_domain`" complaint about `monthend.reanchor`
+**unsatisfiable** (driver finding **D-4**). Two of this store's capabilities are
+graded only by kills that carry no amount at all:
+
+* **`monthend.reanchor`** — `P-02` (seed day 31) and `P-02b` (seed day 30) both run
+  `DAYS_30`/`DAYS_360`, so every period is exactly 30/360 **regardless of the
+  calendar dates** and every money column equals `P-00`'s. `P-02` period 2 is due
+  **2024-03-31**, re-anchored on the disbursement seed; a port that clamps to
+  2024-02-29 and continues from the clamped day emits **2024-03-29**. **Money
+  margin exactly zero. The port is still wrong.**
+* **`contract_row_ordering`** — `P-03` emits `REPAYMENT` 1 (all money zero) and only
+  **then** the `DISBURSEMENT` row dated 2024-02-01. The naive *sort by date,
+  disbursement first* port inverts them.
+
+So a counterfactual carries a `kind`:
+
+```jsonc
+{
+  "id": "MONTHEND-CONTINUE-FROM-CLAMPED-DAY",
+  "kind": "structural",
+  "capability": "monthend.reanchor",
+  "description": "clamps to the short month's last day and then continues from the CLAMPED day, instead of re-anchoring on the disbursement-date seed",
+  "margin_minor": "0",
+  "divergent_cells": ["period[1].due_date"],
+  "evidence": "P-02 period 2 due date observed 2024-03-31; the clamp-and-continue port emits 2024-03-29 instead, with every money column unchanged"
+}
+```
+
+The structural form is **strictly harder to satisfy than the money form**, and that
+is the point — it is not an escape hatch for a lazy margin:
+
+| | `kind` absent or `"money"` | `kind: "structural"` |
+|---|---|---|
+| `margin_minor` | integer string **> 0** | exactly **`"0"`** |
+| `divergent_cells` | must be **empty** | **non-empty**, and every entry checked |
+| cell vocabulary | — | `period[<n>].due_date`, `period[<n>].from_date`, `period[<n>].kind`, `row_order` |
+| a **money** column in `divergent_cells` | — | **INADMISSIBLE** — that is a money kill wearing a structural label |
+| a row index past the schedule | — | **INADMISSIBLE** — a cell that does not exist cannot diverge |
+| `evidence` | cites the margin | must state **both** values: the wrong one **and** the observed one |
+
+The report **never merges the two counts**. `counterfactuals named by admissible
+vectors: N (X money kills, Y structural kills)`, and a covering id is printed as
+`ID [structural]` — because a store of nothing but structural kills grades no
+**amount**, and a reader has to be able to see that at a glance.
 
 `ErrNoDiscriminatingVector` therefore keys off **counterfactual coverage**, not off
 pair difference. The harness computes, for every capability marked
@@ -321,7 +376,12 @@ artefact is rewriting the specification.
 
   "graded_against": [                // REQUIRED and non-empty on a parity vector
     { "id": "...", "capability": "schedule.core", "description": "...",
-      "margin_minor": "6015", "evidence": "..." }
+      "margin_minor": "6015", "evidence": "..." },
+    { "id": "...", "kind": "structural",          // money (default) | structural
+      "capability": "monthend.reanchor", "description": "...",
+      "margin_minor": "0",                        // exactly "0" when structural
+      "divergent_cells": ["period[1].due_date"],  // required when structural
+      "evidence": "... observed ... emits ... instead ..." }
   ],
   "retires_when_capability_graded": "",   // contract-refusal vectors only
 
@@ -331,7 +391,11 @@ artefact is rewriting the specification.
     "capture_ref": ".softhouse/capture/out/capture-prod3b-raw.json",
     "capture_sha256": "",            // optional; verified when present
     "capture_case_id": "P-01",       // the id INSIDE the capture bundle
-    "citation": ""                   // required for contract-refusal
+    "citation": "",                  // required for contract-refusal
+    "corroborated_by": [             // optional; scoped to what the source PRINTS
+      { "source": "embeddable-readme-ci-stdout", "row_kind": "REPAYMENT",
+        "columns": ["principal", "interest", "total_due"], "note": "" }
+    ]
   },
 
   "oracle": {
@@ -376,6 +440,8 @@ artefact is rewriting the specification.
         "interest_major_text": "21600.00",
         "outstanding_principal_major_text": "1109517.63",
         "unrecorded_fields": [],                     // see below
+        "over_scaled_wire_text_fields": [],          // see below (T17-F5)
+        "observed_rate_factor": null,                // see below (T17-F6)
         "observed_total_due_minor": "11208237"       // optional
       }
     ]
@@ -404,6 +470,75 @@ an **observation**, which is the exact defect the honesty rule exists to prevent
 the port would then be graded against the harness's own assumption. A cell nobody
 observed grades nothing, and the report says how many such cells were skipped, so
 coverage is a number rather than an impression.
+
+A cell named here is **skipped as a cell** and never costs the vector. The replay
+implementation answers `0` for it and nothing compares that placeholder — a loader
+that dropped the whole vector instead would defeat the field, and reported the
+misleading *"no vector carries this request"* (driver finding **D-5**, fixed). A
+money cell that is neither recorded nor listed here is a **loud error naming the
+vector, the period and the field** — never a silent drop.
+
+### `over_scaled_wire_text_fields` — scale > 2 is a harness bug, not a rounding opportunity
+
+Finding **T17-F5**. A `*_major_text` carrying more fraction digits than the currency
+has minor units is an **intermediate that escaped rounding**. The failure mode is a
+rig quietly rounding it and thereby grading the port against a number the oracle
+never produced, so neither half of the case is allowed to be silent:
+
+* an excess digit that is **non-zero** → **INADMISSIBLE**, always. The exact
+  conversion is impossible and the harness will not round a transcription.
+* excess digits that are **all zero** → the conversion is exact, so the value is
+  usable, **but the row must say so** by naming the money column here. Undeclared,
+  it is **INADMISSIBLE**; declared, it is admitted, **counted, and printed** in the
+  report's "recorded, never graded" line.
+
+Naming a non-money column here, or declaring a column whose text is *not*
+over-scaled, is inadmissible too — a declaration that does not match the text
+teaches a reader to ignore the declarations.
+
+### `observed_rate_factor` — recorded, and never graded
+
+Finding **T17-F6**. The corpus's rate factors are compared only **after**
+`setScale(MoneyHelper precision, MoneyHelper rounding mode)` with that precision
+mocked to **12** [`ProgressiveEMICalculatorTest.java:5241`, `applyMathContext`
+`:5256-5258`], so a transcribed rate factor is a **12-decimal-place rounding of the
+engine's value**. A Go port diverging in **digits 13 and beyond** would match the
+transcription exactly and pass silently.
+
+So the harness records it and refuses to grade it:
+
+```jsonc
+"observed_rate_factor": {
+  "text": "1.005833333333",
+  "transcribed_at_scale": 12,
+  "precision_status": "TRANSCRIBED-ROUNDED",   // the ONLY accepted status
+  "citation": "ProgressiveEMICalculatorTest.java:5241"
+}
+```
+
+`precision_status` must be exactly `TRANSCRIBED-ROUNDED`. **`"EXACT"` is
+inadmissible**: exact rate-factor parity is `TO_BE_CAPTURED` from the oracle, and no
+vector may claim what no capture has observed. The declared scale must equal the
+text's own scale, digits beyond 12 are inadmissible, and the citation is required.
+The value is **never compared against an implementation** — it is counted and
+printed separately from the graded cells.
+
+### `provenance.corroborated_by` — a partial cross-check is not a whole-row match
+
+Finding **T17-F2**. A second attestation corroborates only the columns it actually
+prints. The embeddable module's committed CI stdout block
+(`README.md:48-63`) prints **six of the ten period columns** on a repayment row —
+`period_number`, `due_date`, `outstanding_balance`, `principal`, `interest`,
+`total_due` — and is **silent on `from_date`, `fee`, `penalty` and
+`total_outstanding_balance`**. It prints two on the disbursement row.
+
+A claim naming a column the source does not print is **INADMISSIBLE**, and the
+report prints, every run, what each source does **not** cover. Two traps recorded
+with it: the block is **stale** relative to `misc/Main.java:86`, which now prints a
+seventh field the block does not show; and the block's `Number of Periods: 6` is a
+**filtered** count (`Main.java:73` excludes disbursement periods) while
+`getPeriods().size()` is **7** — cross-checking one against the other is a defect,
+not a corroboration.
 
 ### `last_repayment_due_date`
 

@@ -105,33 +105,59 @@ func NewReplayImplementation(storeRoot, contextFilter string) (contract.Schedule
 	}
 	g := &replayGenerator{byRequestKey: map[string]replayAnswer{}}
 	for _, v := range vectors {
+		// NOTHING HERE MAY DROP A VECTOR SILENTLY (driver finding D-5).
+		//
+		// This loop used to `continue` on any parse failure. The consequence was
+		// the harness's own cardinal sin: a vector that could not be loaded
+		// vanished, and the run then reported "no vector in the replay store
+		// carries this request" — absence of evidence dressed as evidence of
+		// absence. The first vectors to hit it were the promoted captures with
+		// unrecorded_fields on a DISBURSEMENT row, where MinorText("").Int64()
+		// errors by design.
+		//
+		// So an UNRECORDED money cell is skipped AS A CELL — that is what
+		// unrecorded_fields means, and diffSchedule never compares those cells —
+		// and anything genuinely unparseable is a hard error naming the vector,
+		// the period and the field.
 		req, cerr := v.Request.ContractRequest()
 		if cerr != nil {
-			continue
+			return nil, 0, fmt.Errorf(
+				"replay store: vector %s (%s) request does not map onto the frozen contract: %w",
+				v.CaseID, v.Path, cerr)
 		}
 		key := requestKey(req)
 		if v.Expect.Kind == "refusal" {
 			sent, serr := sentinelByName(v.Expect.Sentinel)
 			if serr != nil {
-				continue
+				return nil, 0, fmt.Errorf("replay store: vector %s (%s) expect.sentinel: %w",
+					v.CaseID, v.Path, serr)
 			}
 			g.byRequestKey[key] = replayAnswer{refusal: sent}
 			continue
 		}
 		var sched contract.Schedule
-		bad := false
-		for _, ep := range v.Expect.Periods {
+		for i, ep := range v.Expect.Periods {
 			kind, kerr := periodKindByName(ep.Kind)
 			if kerr != nil {
-				bad = true
-				break
+				return nil, 0, fmt.Errorf("replay store: vector %s (%s) period %d kind: %w",
+					v.CaseID, v.Path, i, kerr)
 			}
-			principal, e1 := ep.PrincipalMinor.Int64()
-			interest, e2 := ep.InterestMinor.Int64()
-			outstanding, e3 := ep.OutstandingPrincipalMinor.Int64()
-			if e1 != nil || e2 != nil || e3 != nil {
-				bad = true
-				break
+			unrecorded := map[string]bool{}
+			for _, f := range ep.UnrecordedFields {
+				unrecorded[f] = true
+			}
+			// The replay answers 0 for a cell the capture never recorded. The
+			// value is never compared — diffSchedule counts an unrecorded cell as
+			// UNGRADED and skips it — so this is a placeholder for a cell nobody
+			// observed, not an expectation.
+			principal, e1 := replayMinorCell(v, i, "principal_minor", ep.PrincipalMinor, unrecorded)
+			interest, e2 := replayMinorCell(v, i, "interest_minor", ep.InterestMinor, unrecorded)
+			outstanding, e3 := replayMinorCell(v, i, "outstanding_principal_minor",
+				ep.OutstandingPrincipalMinor, unrecorded)
+			for _, err := range []error{e1, e2, e3} {
+				if err != nil {
+					return nil, 0, err
+				}
 			}
 			sched.Periods = append(sched.Periods, contract.Period{
 				Kind:                      kind,
@@ -143,12 +169,29 @@ func NewReplayImplementation(storeRoot, contextFilter string) (contract.Schedule
 				OutstandingPrincipalMinor: outstanding,
 			})
 		}
-		if bad {
-			continue
-		}
 		g.byRequestKey[key] = replayAnswer{schedule: sched}
 	}
 	return g, len(g.byRequestKey), nil
+}
+
+// replayMinorCell reads one money cell for the replay implementation: 0 for a
+// cell the capture never recorded, the parsed integer otherwise, and a LOUD error
+// naming the vector, the period and the field for anything else.
+func replayMinorCell(v *Vector, period int, field string, text MinorText,
+	unrecorded map[string]bool) (int64, error) {
+
+	if unrecorded[field] {
+		return 0, nil
+	}
+	val, err := text.Int64()
+	if err != nil {
+		return 0, fmt.Errorf(
+			"replay store: vector %s (%s) period %d %s = %q: %w. If the capture never recorded this cell, "+
+				"name it in that period's unrecorded_fields — a cell nobody observed is carried as "+
+				"UNGRADED, never dropped and never invented",
+			v.CaseID, v.Path, period, field, text, err)
+	}
+	return val, nil
 }
 
 // requestKey is a total, collision-free-enough key for a request. It is used only

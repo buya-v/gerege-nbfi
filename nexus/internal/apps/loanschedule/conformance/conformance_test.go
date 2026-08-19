@@ -3,6 +3,7 @@ package conformance
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"go/scanner"
 	"go/token"
 	"os"
@@ -116,8 +117,72 @@ func TestHarnessGoesGreenAndRed(t *testing.T) {
 		if s.SelfTestPass == 0 {
 			t.Error("the self-test fixture did not pass")
 		}
-		if s.ParityPass != 0 {
-			t.Errorf("the store has no promoted capture yet, so ParityPass must be 0, got %d", s.ParityPass)
+		// A PARITY PASS MUST BE EARNED.
+		//
+		// This assertion used to read "ParityPass must be 0, the store has no
+		// promoted capture yet". That was a fact about the store on one day, not a
+		// property of the harness, and it made `go test ./...` unmeetable the
+		// moment a promotion succeeded (driver finding D-6). What it was actually
+		// protecting is that the harness never reports a parity PASS it has not
+		// earned, so that is what is asserted now — and it keeps holding as the
+		// store fills up.
+		vectors, _, lerr := LoadStore(pristine, "")
+		if lerr != nil {
+			t.Fatalf("LoadStore: %v", lerr)
+		}
+		byCase := map[string]*Vector{}
+		for _, v := range vectors {
+			byCase[v.CaseID] = v
+		}
+		if bad := parityPassViolations(s, byCase); len(bad) > 0 {
+			t.Errorf("this run reports parity passes it did not earn:\n  %s", strings.Join(bad, "\n  "))
+		}
+		t.Logf("parity passes this run: %d (all earned)", s.ParityPass)
+
+		// The other half of the property: with NO implementation registered there
+		// is nothing to grade, so no parity pass is possible and the run is exit 2.
+		none := mustRun(t, Options{RepoRoot: root, StoreRoot: pristine, SelfTestMode: true})
+		if none.ParityPass != 0 {
+			t.Errorf("with no implementation registered ParityPass must be 0, got %d", none.ParityPass)
+		}
+		if got := none.ExitCode(); got != 2 {
+			t.Errorf("with no implementation registered the run must be exit 2, got %d", got)
+		}
+
+		// And a self-test run never claims conformance, however many vectors pass.
+		out := render(s)
+		for _, want := range []string{"SELF-TEST", "NOT a conformance PASS"} {
+			if !strings.Contains(out, want) {
+				t.Errorf("a self-test report must carry %q", want)
+			}
+		}
+	})
+
+	t.Run("the earned-parity check itself goes red", func(t *testing.T) {
+		// RED PROOF for the replacement assertion: a summary claiming a parity
+		// PASS for a case that is a hand-authored self-test fixture, and one
+		// claiming a parity PASS with no implementation registered, must both be
+		// reported as unearned. Without this, "all earned" could mean "the check
+		// examines nothing".
+		fixture := &Vector{
+			CaseID: "PRETEND", Class: ClassSelfTest,
+			Provenance: Provenance{Kind: ProvenanceHandAuthored},
+		}
+		s := &Summary{
+			ImplementationName: "replay",
+			ParityPass:         1,
+			Results: []Result{{
+				CaseID: "PRETEND", Class: ClassParity, Outcome: OutcomePass,
+				Seam: "path_a_embeddable",
+			}},
+		}
+		bad := parityPassViolations(s, map[string]*Vector{"PRETEND": fixture})
+		if len(bad) == 0 {
+			t.Fatal("a parity PASS for a hand-authored fixture must be reported as unearned")
+		}
+		s.ImplementationName = "(none)"
+		if bad := parityPassViolations(s, map[string]*Vector{"PRETEND": fixture}); len(bad) == 0 {
+			t.Fatal("a parity PASS with no implementation registered must be reported as unearned")
 		}
 	})
 
@@ -417,18 +482,42 @@ func TestGradeabilityIsNotPairDifference(t *testing.T) {
 		t.Errorf("schedule.core should be covered by one counterfactual, got %v", covered["schedule.core"])
 	}
 
-	// Today's real store has no parity vector at all, so every graded capability
-	// is an UNBACKED claim — and the harness must say so rather than imply the
-	// capability is proven.
+	// THE PROPERTY, NOT THE STORE'S STATE ON ONE DAY.
+	//
+	// This used to assert "the real store has no parity vector, so every graded
+	// capability must be reported unbacked" — true when written, false the moment
+	// a promotion lands, and the same defect class as D-6. What it protects is
+	// that a capability is reported UNBACKED exactly when no admissible parity
+	// vector names a counterfactual for it, so that is what is asserted, and it
+	// keeps holding as the store fills up.
 	vectors, _, err := LoadStore(store, "")
 	if err != nil {
 		t.Fatalf("LoadStore: %v", err)
 	}
-	_, uncovered := registry.CounterfactualCoverage(vectors)
-	if len(uncovered) == 0 {
-		t.Error("with no parity vector promoted, every in_graded_domain capability must be reported unbacked")
+	covered, uncovered := registry.CounterfactualCoverage(vectors)
+	unbacked := map[string]bool{}
+	for _, name := range uncovered {
+		unbacked[name] = true
 	}
-	t.Logf("in_graded_domain but unbacked by any promoted vector: %v", uncovered)
+	for _, name := range registry.GradedCapabilities() {
+		switch {
+		case len(covered[name]) == 0 && !unbacked[name]:
+			t.Errorf("capability %q is in_graded_domain, no parity vector names a counterfactual for it, "+
+				"and yet it is not reported unbacked — that is a graded claim with nothing behind it", name)
+		case len(covered[name]) > 0 && unbacked[name]:
+			t.Errorf("capability %q is killed by %v and is still reported unbacked", name, covered[name])
+		}
+	}
+	t.Logf("graded capabilities backed by %d counterfactual claims; unbacked: %v", len(covered), uncovered)
+
+	// And the unbacked path must actually be able to fire: over an empty vector
+	// set, every graded capability is unbacked. Without this, "nothing unbacked"
+	// could mean "the check examines nothing".
+	_, allUnbacked := registry.CounterfactualCoverage(nil)
+	if len(allUnbacked) != len(registry.GradedCapabilities()) {
+		t.Errorf("over an empty vector set every graded capability must be unbacked: got %v, want all of %v",
+			allUnbacked, registry.GradedCapabilities())
+	}
 }
 
 // TestStaleRefusalVectorIsDetected proves that admitting a capability retires the
@@ -726,6 +815,51 @@ func TestNoFloatInTheLoanScheduleTree(t *testing.T) {
 		t.Fatalf("scanned no Go files under %s: a guard that inspects nothing passes everything", root)
 	}
 	t.Logf("scanned %d Go files under %s for floating-point identifiers", scanned, root)
+}
+
+// parityPassViolations returns one line per parity PASS the run has not earned.
+//
+// "Earned" is the whole content of a conformance claim, and it is four things at
+// once: something was registered to grade; the case that passed is a vector of
+// class PARITY; that vector's expectation was OBSERVED FROM THE ORACLE rather
+// than hand-authored or derived from the contract; and it names the capture it
+// came from. Anything else counted into ParityPass would be the harness awarding
+// itself credit.
+func parityPassViolations(s *Summary, byCase map[string]*Vector) []string {
+	var out []string
+	counted := 0
+	for _, r := range s.Results {
+		if r.Outcome != OutcomePass || r.Class != ClassParity {
+			continue
+		}
+		counted++
+		if s.ImplementationName == "" || s.ImplementationName == "(none)" {
+			out = append(out, r.CaseID+": counted as a parity PASS with no implementation registered")
+		}
+		v, ok := byCase[r.CaseID]
+		if !ok {
+			out = append(out, r.CaseID+": counted as a parity PASS but no such vector is in the store")
+			continue
+		}
+		if v.Class != ClassParity {
+			out = append(out, r.CaseID+": counted as a parity PASS but the vector's class is "+string(v.Class))
+		}
+		if v.Provenance.Kind != ProvenanceOracleCapture {
+			out = append(out, r.CaseID+": counted as a parity PASS but its provenance is "+
+				string(v.Provenance.Kind)+", not an oracle capture")
+		}
+		if v.Provenance.CaptureRef == "" || v.Provenance.CaptureCaseID == "" {
+			out = append(out, r.CaseID+": counted as a parity PASS but it names no capture artefact or case")
+		}
+		if v.Oracle.Seam == "" || v.Oracle.Seam == "none" {
+			out = append(out, r.CaseID+": counted as a parity PASS but it names no capture seam")
+		}
+	}
+	if counted != s.ParityPass {
+		out = append(out, "ParityPass says "+fmt.Sprint(s.ParityPass)+
+			" but the results carry "+fmt.Sprint(counted)+" passing parity vectors")
+	}
+	return out
 }
 
 func mustRun(t *testing.T, opts Options) *Summary {
