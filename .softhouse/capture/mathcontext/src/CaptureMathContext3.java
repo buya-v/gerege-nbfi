@@ -47,7 +47,8 @@
  *   T39 varied the two contexts with GLOBAL -D overrides, one whole run per axis.  Here every
  *   case carries its OWN (ambient, threaded) pair and its OWN tenant identifier, so the two
  *   axes are varied INDEPENDENTLY inside a single payload and every comparison is within-run.
- *   MoneyHelper caches per tenant id [MoneyHelper.java:36-37, :91-93], so a unique tenant id
+ *   MoneyHelper caches per tenant id [MoneyHelper.java:37-38, :91-93 -- corrected by T46, audit
+ *   finding M-9: :37 is roundingModeCache, :38 is mathContextCache], so a unique tenant id
  *   per case makes the cases independent.
  *
  *   THE DECISIVE PROBE IS ABSENCE, NOT DIFFERENCE.  A rounding-mode flip can only be seen on a
@@ -70,9 +71,14 @@
  *                NEVER a parity vector.
  *   T42-CTL-*    reproduction controls against committed T39/T37/Q0a observations.
  *   T42-AMB-*    the ambient-absence probe and the ambient rounding-mode flip, over shapes
- *                chosen to REACH the sites that read the ambient context (down payment,
- *                installmentAmountInMultiplesOf, currency inMultiplesOf with 0 decimal
+ *                chosen in an ATTEMPT to reach the sites that read the ambient context (down
+ *                payment, installmentAmountInMultiplesOf, currency inMultiplesOf with 0 decimal
  *                places, fixedLength, ACTUAL days-in-year, drift, month-end).
+ *                CORRECTED BY T46 (audit finding M-3): the installmentAmountInMultiplesOf lever
+ *                is INERT on this seam and its target site was never reached -- see the comment
+ *                on ambientProbeShapes() below.  Of the thirteen shapes, only ONE ambient site
+ *                was actually reached (the 0-dp + inMultiplesOf branch), and the matrix carries
+ *                10 distinct observations, not 13.
  *   T42-THR-*    the threaded rounding-mode flip on the same shapes -- the behavioural
  *                discriminator.
  *   T42-PREC-*   T39 N-4: does threaded precision 19 separate from 12 on ANY shape?  Swept
@@ -188,8 +194,31 @@ public class CaptureMathContext3 {
     // ---- the shapes under test ------------------------------------------------------------
 
     /**
-     * Shapes chosen so that between them they REACH every ambient-context read the static scan
-     * of the pinned source found on the Path A call graph, and the T39 shapes as controls.
+     * Shapes chosen so that between them they ATTEMPT to reach every ambient-context read the
+     * static scan of the pinned source found on the Path A call graph, and the T39 shapes as
+     * controls.
+     *
+     * CORRECTED BY T46 (audit finding M-3).  This comment previously claimed the shapes
+     * "REACH every ambient-context read ... on the Path A call graph".  They do not.  The
+     * `installmentAmountInMultiplesOf` lever below is INERT on this seam, so the three-argument
+     * Money.roundToMultiplesOf ambient path is NOT reached and remains UNGRADED / TO_BE_CAPTURED.
+     * Observed, not argued: T42-MX-00-A (plain) and T42-MX-06-A (multiples1000) differ in exactly
+     * one substantive input -- installmentAmountInMultiplesOf null vs 1000 -- and in ZERO of 74
+     * observed cells; period-1 total is 212787.28 on both, which is not a multiple of 1000; and
+     * the ABSENCE case T42-MX-06-D generated a schedule instead of throwing, which it could not
+     * have done had the three-argument helper's trailing two-argument Money.of been executed.
+     * [VERIFIED: analysis/t46_distinct_coverage-output.txt, from out/t42-mathcontext.json]
+     *
+     * Cause, re-read on the pinned checkout by T46:
+     * LoanApplicationTerms.assembleFrom(LoanRepaymentScheduleModelData, MathContext)
+     * [fineract-loan/.../LoanApplicationTerms.java:579-607] never calls the builder's
+     * installmentAmountInMultiplesOf setter, although LoanRepaymentScheduleModelData carries the
+     * field, so ProgressiveLoanScheduleGenerator.java:110 and :335-337 read null on this seam.
+     *
+     * DISTINCT COVERAGE OF THIS MATRIX IS 10, NOT 13.  Four of the thirteen -A observations are
+     * byte-identical to `plain`: plain itself, multiples1000, fixedLength6 and
+     * interestRecognitionOnDisb.  Three of the levers chosen to widen coverage had zero
+     * observable effect on this seam.
      */
     static List<Shape> ambientProbeShapes() {
         final List<Shape> out = new ArrayList<>();
@@ -203,12 +232,26 @@ public class CaptureMathContext3 {
         // a down-payment percentage whose product is NOT exact at 2 dp -- rounding-boundary bait
         out.add(rename(withDownPayment(mnt("x", LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 1), "1000001", 6, "21.6"), "33.333"),
                 "downPaymentAwkward"));
-        // installmentAmountInMultiplesOf: Money.roundToMultiplesOf(Money,Integer,MathContext)
-        // ends in the TWO-argument Money.of, i.e. the ambient context [Money.java:161-171]
+        // installmentAmountInMultiplesOf was INTENDED to reach
+        // Money.roundToMultiplesOf(Money,Integer,MathContext) [Money.java:163-170], which uses the
+        // supplied mc for the division and then finishes with the TWO-argument Money.of
+        // [Money.java:169 -> :102-104], i.e. the AMBIENT context for the final setScale.
+        //
+        // CORRECTED BY T46 (audit finding M-3): THIS SITE IS NEVER REACHED ON THIS SEAM.  The
+        // field is dropped by LoanApplicationTerms.assembleFrom(LoanRepaymentScheduleModelData,
+        // MathContext) [LoanApplicationTerms.java:579-607], so
+        // ProgressiveLoanScheduleGenerator.java:335 sees null and the guarded call at :336-338
+        // never executes.  Both shapes below are therefore INERT with respect to that path:
+        // multiples1000 is byte-identical to `plain` on all 74 observed cells.  The ambient path
+        // through the three-argument roundToMultiplesOf is UNGRADED -- see the TO_BE_CAPTURED /
+        // blind-spot list in PROVENANCE.md.  (The line range :161-171 in the original comment was
+        // also off by two: the three-argument overload is :163-170; :159-161 is the two-argument
+        // Money overload.)
         out.add(rename(withInstallmentMultiplesOf(withDownPayment(base, "33.333"), 1000), "downPaymentMultiples1000"));
         out.add(rename(withInstallmentMultiplesOf(base, 1000), "multiples1000"));
         // currency with 0 decimal places AND inMultiplesOf -> Money's constructor takes the
-        // ambient roundToMultiplesOf(BigDecimal,Integer) branch [Money.java:49-52, :152-158]
+        // ambient roundToMultiplesOf(BigDecimal,Integer) branch [Money.java:48-50, :150-157 --
+        // corrected by T46, audit finding M-9; the original cited :49-52 and :152-158]
         out.add(rename(withCurrency(withInstallmentMultiplesOf(base, 100), "MNT", 0, 100), "zeroDpMultiples100"));
         out.add(rename(withCurrency(withDownPayment(withInstallmentMultiplesOf(base, 100), "33.333"), "MNT", 0, 100),
                 "zeroDpMultiples100DownPayment"));

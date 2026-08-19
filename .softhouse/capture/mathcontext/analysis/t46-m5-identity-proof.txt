@@ -8,11 +8,17 @@ T46 / M-5 identity proof
   cases: committed 214, re-emission 214, common 214
 
   previously published leaves compared : 147634
-  leaves that MOVED                    : 4
+  leaves that MOVED (fatal)            : 0
+  leaves EXEMPT (harness self-frames)  : 4
+      T42-MX-07-D /stackTrace[8]: at CaptureMathContext.run(CaptureMathContext.java:423)  ->  at CaptureMathContext3.run(CaptureMathContext3.java:502)
+      T42-MX-07-D /stackTrace[9]: at CaptureMathContext.main(CaptureMathContext.java:323)  ->  at CaptureMathContext3.main(CaptureMathContext3.java:393)
+      T42-MX-08-D /stackTrace[8]: at CaptureMathContext.run(CaptureMathContext.java:423)  ->  at CaptureMathContext3.run(CaptureMathContext3.java:502)
+      T42-MX-08-D /stackTrace[9]: at CaptureMathContext.main(CaptureMathContext.java:323)  ->  at CaptureMathContext3.main(CaptureMathContext3.java:393)
+  leaves byte-identical                : 147630
   leaves ADDED by the re-emission      : 856  (threadedMathContext, threadedMathContextPrecisionFromObject, threadedMathContextRoundingModeFromObject, wiring)
 
   M-5 substance: does the OBJECT echo agree with the INTENT the committed payload
   published under the object-named keys?
     cases with a disagreement: 0
 
-FAIL -- 4 breach(es).  The re-emission is INADMISSIBLE.
+PASS -- 147630 of 147634 previously published leaves are byte-identical (4 exempt harness self-frames, enumerated above; 0 oracle-observed leaves moved), 856 keys added, and the object echo agrees with the intent on all 214 cases.

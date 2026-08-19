@@ -160,9 +160,10 @@ def main():
         print("FAIL -- the object echo DISAGREES with the intent on %d case(s).  Capture 1 would"
               " then be mis-attested in VALUE, not merely in wording." % len(disagreements))
         return 1
-    print("PASS -- every one of the %d previously published leaves is byte-identical, %d keys "
-          "added, and the object echo agrees with the intent on all %d cases."
-          % (total, added, len(set(ca) & set(cb))))
+    print("PASS -- %d of %d previously published leaves are byte-identical (%d exempt harness "
+          "self-frames, enumerated above; 0 oracle-observed leaves moved), %d keys added, and "
+          "the object echo agrees with the intent on all %d cases."
+          % (total - len(exemptions), total, len(exemptions), added, len(set(ca) & set(cb))))
     return 0
 
 

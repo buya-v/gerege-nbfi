@@ -3,6 +3,26 @@
 Everything below is **measured**, not assumed. Where a value came from a source literal it is
 given with `file:line`. Nothing here is promoted to the parity vector store — see `PROVENANCE.md`.
 
+> ## CORRECTIONS APPLIED BY T46 — read this before any section below
+>
+> The T44 independent audit (`.softhouse/reviews/T44-capture-audit.md` §3) raised eleven findings
+> against this set. T46 closed them. **No recorded observation was changed**; every correction
+> below is a correction to a *claim*, and each is also applied in place at the section it
+> affects. Full working: `.softhouse/handoff/T46-mathcontext-corrections.md`.
+>
+> | finding | the corrected claim |
+> |---|---|
+> | **M-1 / M-2** | N-3's hard-coded-`MathContext` inventory was miscounted. The re-derived inventory is in `analysis/t46_mathcontext_inventory-output.txt`: **15** `new MathContext(` sites in main source — **4** at literal precision 15, **5** at literal 10 (**9** combined, not 13), **2** at literal 8 (`SavingsAccountCharge.java:562`, `ShareAccountCharge.java:240` — the latter in **share accounts**, a different Tier B context), and **4** with a non-literal precision. |
+> | **M-3** | The E1 shapes do **not** reach every ambient read on the Path A call graph. `installmentAmountInMultiplesOf` is **inert on this seam** and its target site was never reached; **distinct coverage of the E1 matrix is 10, not 13**. See §2.5 below. |
+> | **M-4** | A second production caller, `LoanScheduleGeneratorServiceImpl.calculateInteresOnlyWithFirtDisbursement`, also drops `installmentAmountInMultiplesOf`, while the REST `calculateLoanSchedule` path honours it. See §2.5. |
+> | **M-5** | In capture 1 the keys named `threadedMathContextPrecision` / `threadedMathContextRoundingMode` carry the case record's **INTENT**, not a reading off the object. See §2.1. **T46 re-emitted the capture with the object echo added and proved the two agree on all 214 cases** — see §2.6. |
+> | **M-6** | E3's shipped assertion is only `grep -c 'getMathContext' != 0`. T46 added a real machine assertion of the same-local-slot dataflow, with a negative leg. See §2.3. |
+> | **M-7** | "No committed capture is mis-valued" must always travel with T42 §7's qualification. See §2.7. |
+> | **M-8** | `NEGATIVE-TESTS.md`'s description of leg N4 was wrong; the vacuity guard had never been exercised. T46 exercised it (leg **N7**). |
+> | **M-9** | Four `file:line` drifts inside `[VERIFIED]` tags, and "pass it to `generate(mc, …)`" is wrong for 2 of the 4 wiring sites. Corrected in §2.3 and §2.4. |
+> | **M-10** | E2's "Path A = 0 cells" is a **replication** of E1's ambient rows, not an independent second experiment. See §6. |
+> | **M-11** | `analysis/controls-output.txt` published 2 summary lines. A verbose mode now publishes all 172 compared cells: `analysis/t46-controls-cells-output.txt`. See §3. |
+
 ## 1. The environment, on the oracle's own testimony
 
 | attested value | observed | source |
@@ -29,6 +49,31 @@ is and is not evidence of.**
   asserts each case ran at the precision and mode its id declares. Calibration `T42-CAL` at
   `(12, HALF_UP)`, the four controls and the whole matrix at `(19, HALF_UP)`, the precision sweep
   at `(19|12|8, HALF_UP)`.
+  > **CORRECTION — M-5. In capture 1 these two keys are INTENT, not the OBJECT.**
+  > `out/t42-mathcontext.json`'s `threadedMathContextPrecision` and
+  > `threadedMathContextRoundingMode` are written from `c.precision()` and `c.mode()` — the case
+  > record that was used to *construct* the `MathContext` — not from `mc.getPrecision()` /
+  > `mc.getRoundingMode()` read off the reference handed to `generate(mc, …)`
+  > [`src/CaptureMathContext.java`, the `b.append("        \"threadedMathContextPrecision\"…` pair].
+  > That is a breach of T42's own ratified attestation rule 2, on the capture that carries E1, and
+  > it covers **214 of the 354** cases in this set. The key names assert an object reading; read
+  > them as intent.
+  >
+  > **What is NOT affected, and why — stated so the correction is not read as wider than it is.**
+  > The two objects are constructed one line apart from the same record
+  > (`final MathContext mc = new MathContext(c.precision(), c.mode());`), so no value depends on
+  > the distinction; the **ambient** field in capture 1 *is* read off the object
+  > (`MoneyHelper.getMathContext()`); the two stack traces are direct observations; and **E1 is an
+  > absence result** — it turns on whether a schedule generated at all, which no echo can affect.
+  > **T46 did not leave this as an argument: it re-emitted the capture with the object echo added
+  > and proved the object and the intent agree on all 214 cases (§2.6).**
+  >
+  > `src/CaptureMathContext2.java:203-205` (capture 2) complies fully — it writes `mc.toString()`,
+  > `mc.getPrecision()`, `mc.getRoundingMode()` and an explicit `wiring` field. The same fix is
+  > demonstrated in a sibling set by
+  > `.softhouse/capture/periodratio/src/CapturePeriodRatio2.java:342-345`, which echoes
+  > `mc.toString()` / `mc.getPrecision()` / `mc.getRoundingMode()` and a `wiring` field
+  > [read by T46, not edited — that set belongs to another task].
 - Capture 2: every case **echoes `mc.toString()`, `mc.getPrecision()` and `mc.getRoundingMode()`
   read off the object actually passed to the generator**, not off the intent that built it.
 - **This is the reading that is evidence about the arithmetic on Path A.** Observed: moving it

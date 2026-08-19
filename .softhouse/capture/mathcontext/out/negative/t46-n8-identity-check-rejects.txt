@@ -10,6 +10,10 @@
   ok  container exit 0
   ok  stderr empty
   ok  JSON payload parses
+BREACH: T42-MX-07-D /stackTrace[8]: 'at CaptureMathContext.run(CaptureMathContext.java:423)' -> 'at CaptureMathContext3.run(CaptureMathContext3.java:459)'
+BREACH: T42-MX-07-D /stackTrace[9]: 'at CaptureMathContext.main(CaptureMathContext.java:323)' -> 'at CaptureMathContext3.main(CaptureMathContext3.java:350)'
+BREACH: T42-MX-08-D /stackTrace[8]: 'at CaptureMathContext.run(CaptureMathContext.java:423)' -> 'at CaptureMathContext3.run(CaptureMathContext3.java:459)'
+BREACH: T42-MX-08-D /stackTrace[9]: 'at CaptureMathContext.main(CaptureMathContext.java:323)' -> 'at CaptureMathContext3.main(CaptureMathContext3.java:350)'
 ================================================================================================
 T46 / M-5 identity proof
   committed   : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac1c54e4da86fd3e6/.softhouse/capture/mathcontext/out/t42-mathcontext.json
@@ -20,19 +24,13 @@ T46 / M-5 identity proof
   cases: committed 214, re-emission 214, common 214
 
   previously published leaves compared : 147634
-  leaves that MOVED (fatal)            : 0
-  leaves EXEMPT (harness self-frames)  : 4
-      T42-MX-07-D /stackTrace[8]: at CaptureMathContext.run(CaptureMathContext.java:423)  ->  at CaptureMathContext3.run(CaptureMathContext3.java:502)
-      T42-MX-07-D /stackTrace[9]: at CaptureMathContext.main(CaptureMathContext.java:323)  ->  at CaptureMathContext3.main(CaptureMathContext3.java:393)
-      T42-MX-08-D /stackTrace[8]: at CaptureMathContext.run(CaptureMathContext.java:423)  ->  at CaptureMathContext3.run(CaptureMathContext3.java:502)
-      T42-MX-08-D /stackTrace[9]: at CaptureMathContext.main(CaptureMathContext.java:323)  ->  at CaptureMathContext3.main(CaptureMathContext3.java:393)
-  leaves byte-identical                : 147630
+  leaves that MOVED                    : 4
   leaves ADDED by the re-emission      : 856  (threadedMathContext, threadedMathContextPrecisionFromObject, threadedMathContextRoundingModeFromObject, wiring)
 
   M-5 substance: does the OBJECT echo agree with the INTENT the committed payload
   published under the object-named keys?
     cases with a disagreement: 0
 
-PASS -- 147630 of 147634 previously published leaves are byte-identical (4 exempt harness self-frames, enumerated above; 0 oracle-observed leaves moved), 856 keys added, and the object echo agrees with the intent on all 214 cases.
-  ok  identity proof written to /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac1c54e4da86fd3e6/.softhouse/capture/mathcontext/analysis/t46-m5-identity-proof.txt
-== PASS -- re-emission admissible.  payload: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac1c54e4da86fd3e6/.softhouse/capture/mathcontext/out/t46-mathcontext3.json
+FAIL -- 4 breach(es).  The re-emission is INADMISSIBLE.
+BREACH: the re-emission does NOT reproduce every previously published value; payload moved to /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac1c54e4da86fd3e6/.softhouse/capture/mathcontext/out/t46-mathcontext3.json.REJECTED and NOT published
+RUN INVALID -- re-emission is not admissible and must not be published.

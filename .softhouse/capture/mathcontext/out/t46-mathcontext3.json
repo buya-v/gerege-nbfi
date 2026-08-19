@@ -2399,8 +2399,8 @@
         "at org.apache.fineract.portfolio.loanaccount.loanschedule.domain.LoanApplicationTerms.assembleFrom(LoanApplicationTerms.java:580)",
         "at org.apache.fineract.portfolio.loanaccount.loanschedule.domain.ProgressiveLoanScheduleGenerator.generate(ProgressiveLoanScheduleGenerator.java:82)",
         "at org.apache.fineract.portfolio.loanaccount.loanschedule.domain.EmbeddableProgressiveLoanScheduleGenerator.generate(EmbeddableProgressiveLoanScheduleGenerator.java:46)",
-        "at CaptureMathContext3.run(CaptureMathContext3.java:459)",
-        "at CaptureMathContext3.main(CaptureMathContext3.java:350)"
+        "at CaptureMathContext3.run(CaptureMathContext3.java:502)",
+        "at CaptureMathContext3.main(CaptureMathContext3.java:393)"
       ]
     },
     {
@@ -2671,8 +2671,8 @@
         "at org.apache.fineract.portfolio.loanaccount.loanschedule.domain.LoanApplicationTerms.assembleFrom(LoanApplicationTerms.java:580)",
         "at org.apache.fineract.portfolio.loanaccount.loanschedule.domain.ProgressiveLoanScheduleGenerator.generate(ProgressiveLoanScheduleGenerator.java:82)",
         "at org.apache.fineract.portfolio.loanaccount.loanschedule.domain.EmbeddableProgressiveLoanScheduleGenerator.generate(EmbeddableProgressiveLoanScheduleGenerator.java:46)",
-        "at CaptureMathContext3.run(CaptureMathContext3.java:459)",
-        "at CaptureMathContext3.main(CaptureMathContext3.java:350)"
+        "at CaptureMathContext3.run(CaptureMathContext3.java:502)",
+        "at CaptureMathContext3.main(CaptureMathContext3.java:393)"
       ]
     },
     {
