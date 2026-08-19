@@ -1,9 +1,0 @@
-{
-  "holder": "local-launchd",
-  "host": "Buyanmunkhs-Mac-mini",
-  "pid": 73893,
-  "started_at": "2026-08-19T00:00:07Z",
-  "log": "/Users/buv/Library/Logs/gerege-nbfi/fire-20260819-080001.log",
-  "oracle": "REACHABLE at https://localhost:8443/fineract-provider/actuator/health",
-  "postgres": "reachable at localhost:5432"
-}
