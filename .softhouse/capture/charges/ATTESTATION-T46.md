@@ -222,7 +222,9 @@ self-locating one (`${T40_WORKTREE:-$(cd "$(dirname "$0")/../../../.." && pwd)}`
 oracle and **21 of 21 responses came back BYTE-IDENTICAL** to T40's committed `out/fc/`
 [`out/t46-reissue/IDENTITY.txt`, `bin/t46-reissue-identity.sh`]. That is also a **third** independent
 issue of the corpus, on a different day by a different task, so it is determinism evidence in its own
-right. `bin/invariants.py` likewise still reproduces `out/INVARIANTS.md` byte-for-byte.
+right. **All three committed analysis outputs still reproduce byte-for-byte through the fixed scripts**
+[VERIFIED by this task, `diff` silent on each]: `bin/invariants.py` → `out/INVARIANTS.md`,
+`bin/fullcell.py` → `out/FULLCELL.md`, `bin/feecols.py` → `out/FEECOLS.md`.
 
 ## 9. T44-X1 — exact-text serialisation for Path B
 

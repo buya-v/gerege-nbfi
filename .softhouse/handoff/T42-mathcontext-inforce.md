@@ -78,7 +78,12 @@ uninitialised tenant and records the throw; `run-mathcontext.sh` **fails the who
 canary ever stops throwing, and negative leg **N4** inverts that expectation and confirms the
 guard fires. Without N4 this whole section would be unfalsifiable.
 
-**Result — 13 shapes, one run** (`analysis/discriminate-output.txt`):
+**Result — 13 shapes, one run** (`analysis/discriminate-output.txt`).
+**[T46 CORRECTION, M-3]** The thirteen shapes carry only **10 distinct observations**: four of the
+`-A` baselines are byte-identical to `plain` — `plain`, `multiples1000`, `fixedLength6`,
+`interestRecognitionOnDisb` — so three of the levers chosen to widen coverage moved **nothing** on
+this seam. Marked ⚠ below.
+[VERIFIED: `.softhouse/capture/mathcontext/analysis/t46_distinct_coverage-output.txt`]
 
 | shape | ambient `DOWN` | ambient `UP` | threaded `DOWN` | **ambient ABSENT** |
 |---|---|---|---|---|
@@ -87,14 +92,14 @@ guard fires. Without N4 this whole section would be unfalsifiable.
 | monthEnd (T39-ME-B) | identical | identical | **23 cells** | generated fine |
 | downPayment 25 % | identical | identical | **20 cells** | generated fine |
 | downPayment 33.333 % on MNT 1,000,001 | identical | identical | **24 cells** | generated fine |
-| downPayment + `installmentAmountInMultiplesOf` 1000 | identical | identical | **24 cells** | generated fine |
-| `installmentAmountInMultiplesOf` 1000 | identical | identical | **23 cells** | generated fine |
+| downPayment + `installmentAmountInMultiplesOf` 1000 ⚠ | identical | identical | **24 cells** | generated fine |
+| `installmentAmountInMultiplesOf` 1000 ⚠ **inert — 0 cells vs `plain`** | identical | identical | **23 cells** | generated fine |
 | **currency 0 dp + `inMultiplesOf` 100** | **23 cells** | identical | identical | **THREW** |
 | **currency 0 dp + `inMultiplesOf` 100 + downPayment** | **27 cells** | **17 cells** | identical | **THREW** |
-| `fixedLength` 6 | identical | identical | **23 cells** | generated fine |
+| `fixedLength` 6 ⚠ **inert — 0 cells vs `plain`** | identical | identical | **23 cells** | generated fine |
 | `DaysInYear ACTUAL` | identical | identical | **18 cells** | generated fine |
 | `ACTUAL` / `ACTUAL` | identical | identical | **23 cells** | generated fine |
-| `interestRecognitionOnDisbursementDate` | identical | identical | **23 cells** | generated fine |
+| `interestRecognitionOnDisbursementDate` ⚠ **inert — 0 cells vs `plain`** | identical | identical | **23 cells** | generated fine |
 
 3,820 cells compared. Behavioural discriminator present on both axes: the threaded flip moves
 `totalInterestAmount` `76723.70 → 76723.65` on the plain shape; the ambient flip moves it
@@ -117,11 +122,73 @@ the threaded `mc` explicitly, `Money.of(…, mc)` honours it, and then the const
 **two-argument** `roundToMultiplesOf(BigDecimal, Integer)` which hard-codes
 `MoneyHelper.getRoundingMode()` [`Money.java:154`], ignoring the `mc` it was handed. It is reached
 only when `currency.getInMultiplesOf() != null && currency.getDecimalPlaces() == 0 &&
-inMultiplesOf > 0` [`Money.java:49-51`]. **MNT has 2 decimal places, so a ratified MNT
-configuration never reaches it.** [VERIFIED: `analysis/discriminate-output.txt`; source lines
-transcribed]
+inMultiplesOf > 0` [`Money.java:48-50` — **[T46 CORRECTION, M-9]** originally cited `:49-51`; the
+`if` opens at `:48` and the guarded call is at `:50`, re-opened in the pinned checkout].
+**MNT has 2 decimal places, so a ratified MNT configuration never reaches it.**
+[VERIFIED: `analysis/discriminate-output.txt`; source lines transcribed]
+
+> **[T46 CORRECTION, M-3 and M-4] — the site E1 believed it reached, and did not.**
+>
+> `CaptureMathContext.java`'s comment claimed the thirteen shapes *"between them REACH every
+> ambient-context read the static scan found on the Path A call graph"*, and justified the
+> `installmentAmountInMultiplesOf` shape as the one reaching the **three-argument**
+> `Money.roundToMultiplesOf(Money, Integer, MathContext)` and its trailing two-argument
+> `Money.of`. **That site was never reached. The claim is withdrawn** and the source comments are
+> corrected in place.
+>
+> Observed: `T42-MX-00-A` (plain) and `T42-MX-06-A` (`multiples1000`) differ in exactly one
+> substantive input and in **0 of 74 observed cells**; period-1 total is `212787.28` on both,
+> which is not a multiple of 1000; and the absence case `T42-MX-06-D` **generated a schedule**
+> rather than throwing — which it could not have done had the three-argument helper run, because
+> that helper finishes with the two-argument `Money.of` [`Money.java:169` → `:102-104`] and would
+> have hit the uninitialised tenant.
+> [VERIFIED: `analysis/t46_distinct_coverage-output.txt`]
+>
+> **Cause** [VERIFIED: re-opened by T46 in the pinned checkout]:
+> `LoanApplicationTerms.assembleFrom(LoanRepaymentScheduleModelData, MathContext)`
+> [`LoanApplicationTerms.java:579-607`] never calls the builder's
+> `installmentAmountInMultiplesOf` setter, although `LoanRepaymentScheduleModelData` carries the
+> field [`:36`]. So `ProgressiveLoanScheduleGenerator.java:110` and the guard at `:335` read
+> `null` on this seam, and the guarded three-argument call at `:336-338` never executes.
+>
+> **The line ranges in N-1's second half were also wrong.** The two-argument
+> `roundToMultiplesOf(BigDecimal, Integer)` is `Money.java:150-157` (originally `:152-158`); the
+> three-argument overload is `Money.java:163-170` (originally `:161-171`; `:159-161` is the
+> two-argument `Money` overload). The stack-trace lines above — `:154`, `:50`, `:107` — were and
+> remain correct.
+>
+> **M-4, a NEW oracle fact.** `LoanScheduleGeneratorServiceImpl.calculateInteresOnlyWithFirtDisbursement`
+> — a *production* entry point on the multi-disbursement interest-only path — inherits the same
+> blind spot: `:56` passes `loanProductRelatedDetail.getInstallmentAmountInMultiplesOf()` into the
+> `LoanRepaymentScheduleModelData`, `:63` calls `scheduleGenerator.generate(mc, modelData)`, and
+> `assembleFrom` drops it. Meanwhile the REST `calculateLoanSchedule` path via
+> `LoanScheduleAssembler` **does honour** the field — capture `B-02`, `112,082.37 → 112,100.00`,
+> which nothing here disturbs. **So the field is honoured or lost by CALLER, and DEC-1 must not
+> state its behaviour unconditionally.** `TO_BE_CAPTURED` on both callers.
+> [VERIFIED: both files re-opened by T46 in `/Users/buv/fineract` at
+> `426a23544e8426a38ae43ae404670a0a7e85b9eb`, working tree clean; **UNVERIFIED as behaviour** for
+> the `calculateInteresOnlyWithFirtDisbursement` caller — no capture exercises it]
 
 ### E2 — the two WIRINGS, side by side, in one payload
+
+> **[T46 CORRECTION, M-10] — E2's "Path A = 0 cells" is a REPLICATION of E1, not corroboration
+> of it.** The `PA` column below runs the same plain shape E1 already ran, varies the ambient
+> ordinal, holds the threaded context fixed, and observes 0 differing cells — which is exactly
+> `T42-MX-00-A`'s ambient-flip rows in the E1 table above. Same inputs, same seam, same
+> conclusion, one harness later. **Two runs of one experiment are one experiment**, and presenting
+> the `PA` column as independent corroboration overstated it. Taken alone the `PA` arm is also a
+> *difference* probe — the weaker design E1 exists to replace.
+>
+> **What E2 genuinely adds, and it is not small:** (1) the **`PB` column**, which E1 has no
+> version of — when the caller sources the threaded context *from* the ambient, moving the ambient
+> moves 22-23 cells, and 28 on T36's half-cent-tie shape; that is the entire content of ratified
+> rule 4 and it is a real result; (2) a **rule-2-compliant attestation** (`CaptureMathContext2.java:203-205`
+> echoes `mc.toString()` / `getPrecision()` / `getRoundingMode()` **and** a `wiring` field, which
+> capture 1 does not — see M-5 below); (3) **negative leg N5**, which proves the two families are
+> not merely labelled differently.
+>
+> **What E2 does NOT add:** independent evidence that the ambient context is unread on Path A.
+> That rests on **E1 alone**, plus §4's grep over the committed corpus.
 
 The Path A / Path B distinction is not about the seam; it is about **where the caller got its
 `MathContext`**. Capture 2 runs the identical shape twice, changing only that:
@@ -163,6 +230,22 @@ Running container image `sha256:e596339626bf…0459a`; jar sha256 `60fb6dbd631d�
 `LoanScheduleAssembler.class` sha256 `d5ef39897399157de96503dd242f0f999acde87bf59a191c812ab2f3547711ea`.
 Four `MoneyHelper.getMathContext` call sites across the two classes that build a schedule on
 Path B. [VERIFIED: `out/t42-pathb-wiring.txt`]
+
+> **[T46 CORRECTION, M-6] — this section's only machine assertion was
+> `grep -c 'MoneyHelper.getMathContext' != 0`.** The same-local-slot claim, which is what ratified
+> rule 4 actually says, was left to the reader and had no negative leg.
+>
+> T46 added `analysis/t46_assert_pathb_slot.py`, which asserts off the `javap` transcript that
+> **(A1)** the instruction after `invokestatic MoneyHelper.getMathContext` is `astore <slot>`,
+> **(A2)** that slot is later `aload`ed into an `invoke*` whose descriptor takes a `MathContext`,
+> and **(A3)** the slot is not re-assigned in between; `src/t46-assert-pathb-slot.sh` runs it
+> against the committed transcript **and a fresh read-only `javap` re-read of the running server**
+> (both PASS), then against a slot-drifted copy (FAIL, 6 breaches).
+> [VERIFIED: `analysis/t46-pathb-slot-assertion-output.txt`]
+>
+> The re-read reconfirms `LoanScheduleAssembler.class` sha256 `d5ef3989…711ea` 20 hours later and
+> newly records `LoanScheduleGeneratorServiceImpl.class` sha256
+> `eca9b7d9010722e19c90bfd84c29cba9e3352adc0b460020b0df96608d1e31d6`.
 
 ### Controls and determinism
 
