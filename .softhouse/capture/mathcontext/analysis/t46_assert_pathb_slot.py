@@ -169,7 +169,8 @@ def check(path):
           % (len(other), ", ".join("%s -> %s" % (s["method"], s["consumer"]) for s in other) or "-"))
 
     if not sites:
-        breaches.append("no MoneyHelper.getMathContext site found at all in this transcript")
+        breaches.append("no getMathContext store is consumed by any MathContext-typed invoke "
+                        "anywhere in this transcript")
     if not gen:
         breaches.append("no getMathContext site feeds a `generate(...)` call -- T42 rule 4's "
                         "linchpin claim does not hold for this artefact")

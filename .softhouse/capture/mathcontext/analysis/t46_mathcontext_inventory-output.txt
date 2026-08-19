@@ -1,0 +1,91 @@
+==============================================================================
+T46 -- hard-coded MathContext inventory, re-derived
+repo    : /Users/buv/fineract
+commit  : 426a23544e8426a38ae43ae404670a0a7e85b9eb
+dirty   : no
+excluded: paths matching /src/test/|/misc/
+==============================================================================
+
+---- 1. EVERY `new MathContext(` site in main source, with file:line ----
+fineract-core/src/main/java/org/apache/fineract/infrastructure/core/service/MathUtil.java:473:        return percentageOf(value, percentage, new MathContext(precision, MoneyHelper.getRoundingMode()));
+fineract-core/src/main/java/org/apache/fineract/organisation/monetary/domain/MoneyHelper.java:124:        return new MathContext(PRECISION, roundingMode);
+fineract-core/src/main/java/org/apache/fineract/organisation/monetary/domain/MoneyHelper.java:93:        return mathContextCache.computeIfAbsent(tenantId, k -> new MathContext(PRECISION, getRoundingMode()));
+fineract-progressive-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/domain/transactionprocessor/impl/AdvancedPaymentScheduleTransactionProcessor.java:2845:                                                new MathContext(MoneyHelper.getMathContext().getPrecision(), RoundingMode.DOWN));
+fineract-provider/src/main/java/org/apache/fineract/portfolio/savings/domain/SavingsAccountDomainServiceJpa.java:329:        final MathContext mc = new MathContext(15, MoneyHelper.getRoundingMode());
+fineract-provider/src/main/java/org/apache/fineract/portfolio/savings/service/DepositAccountWritePlatformServiceJpaRepositoryImpl.java:496:        final MathContext mc = new MathContext(15, MoneyHelper.getRoundingMode());
+fineract-provider/src/main/java/org/apache/fineract/portfolio/savings/service/DepositAccountWritePlatformServiceJpaRepositoryImpl.java:540:        final MathContext mc = new MathContext(10, MoneyHelper.getRoundingMode());
+fineract-provider/src/main/java/org/apache/fineract/portfolio/savings/service/DepositAccountWritePlatformServiceJpaRepositoryImpl.java:837:        final MathContext mc = new MathContext(10, MoneyHelper.getRoundingMode());
+fineract-provider/src/main/java/org/apache/fineract/portfolio/savings/service/SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:526:        final MathContext mc = new MathContext(15, MoneyHelper.getRoundingMode());
+fineract-provider/src/main/java/org/apache/fineract/portfolio/savings/service/SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:627:            final MathContext mc = new MathContext(10, MoneyHelper.getRoundingMode());
+fineract-provider/src/main/java/org/apache/fineract/portfolio/savings/service/SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:695:            final MathContext mc = new MathContext(10, MoneyHelper.getRoundingMode());
+fineract-provider/src/main/java/org/apache/fineract/portfolio/savings/service/SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:822:        final MathContext mc = new MathContext(15, MoneyHelper.getRoundingMode());
+fineract-provider/src/main/java/org/apache/fineract/portfolio/savings/service/SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:919:        final MathContext mc = new MathContext(10, MoneyHelper.getRoundingMode());
+fineract-provider/src/main/java/org/apache/fineract/portfolio/shareaccounts/domain/ShareAccountCharge.java:240:            final MathContext mc = new MathContext(8, MoneyHelper.getRoundingMode());
+fineract-savings/src/main/java/org/apache/fineract/portfolio/savings/domain/SavingsAccountCharge.java:562:            final MathContext mc = new MathContext(8, MoneyHelper.getRoundingMode());
+
+total `new MathContext(` sites in main source: 15
+
+---- 2. broken down by the PRECISION ARGUMENT as written ----
+
+precision 8  (literal first argument):
+    fineract-provider/src/main/java/org/apache/fineract/portfolio/shareaccounts/domain/ShareAccountCharge.java:240:            final MathContext mc = new MathContext(8, MoneyHelper.getRoundingMode());
+    fineract-savings/src/main/java/org/apache/fineract/portfolio/savings/domain/SavingsAccountCharge.java:562:            final MathContext mc = new MathContext(8, MoneyHelper.getRoundingMode());
+    count: 2
+
+precision 10  (literal first argument):
+    fineract-provider/src/main/java/org/apache/fineract/portfolio/savings/service/DepositAccountWritePlatformServiceJpaRepositoryImpl.java:540:        final MathContext mc = new MathContext(10, MoneyHelper.getRoundingMode());
+    fineract-provider/src/main/java/org/apache/fineract/portfolio/savings/service/DepositAccountWritePlatformServiceJpaRepositoryImpl.java:837:        final MathContext mc = new MathContext(10, MoneyHelper.getRoundingMode());
+    fineract-provider/src/main/java/org/apache/fineract/portfolio/savings/service/SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:627:            final MathContext mc = new MathContext(10, MoneyHelper.getRoundingMode());
+    fineract-provider/src/main/java/org/apache/fineract/portfolio/savings/service/SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:695:            final MathContext mc = new MathContext(10, MoneyHelper.getRoundingMode());
+    fineract-provider/src/main/java/org/apache/fineract/portfolio/savings/service/SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:919:        final MathContext mc = new MathContext(10, MoneyHelper.getRoundingMode());
+    count: 5
+
+precision 15  (literal first argument):
+    fineract-provider/src/main/java/org/apache/fineract/portfolio/savings/domain/SavingsAccountDomainServiceJpa.java:329:        final MathContext mc = new MathContext(15, MoneyHelper.getRoundingMode());
+    fineract-provider/src/main/java/org/apache/fineract/portfolio/savings/service/DepositAccountWritePlatformServiceJpaRepositoryImpl.java:496:        final MathContext mc = new MathContext(15, MoneyHelper.getRoundingMode());
+    fineract-provider/src/main/java/org/apache/fineract/portfolio/savings/service/SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:526:        final MathContext mc = new MathContext(15, MoneyHelper.getRoundingMode());
+    fineract-provider/src/main/java/org/apache/fineract/portfolio/savings/service/SavingsAccountWritePlatformServiceJpaRepositoryImpl.java:822:        final MathContext mc = new MathContext(15, MoneyHelper.getRoundingMode());
+    count: 4
+
+non-literal precision argument (PRECISION constant, a parameter, or read off another mc):
+    fineract-core/src/main/java/org/apache/fineract/infrastructure/core/service/MathUtil.java:473:        return percentageOf(value, percentage, new MathContext(precision, MoneyHelper.getRoundingMode()));
+    fineract-core/src/main/java/org/apache/fineract/organisation/monetary/domain/MoneyHelper.java:124:        return new MathContext(PRECISION, roundingMode);
+    fineract-core/src/main/java/org/apache/fineract/organisation/monetary/domain/MoneyHelper.java:93:        return mathContextCache.computeIfAbsent(tenantId, k -> new MathContext(PRECISION, getRoundingMode()));
+    fineract-progressive-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/domain/transactionprocessor/impl/AdvancedPaymentScheduleTransactionProcessor.java:2845:                                                new MathContext(MoneyHelper.getMathContext().getPrecision(), RoundingMode.DOWN));
+    count: 4
+
+---- 3. the loan modules: how many hard-coded MathContexts? ----
+  fineract-loan: 0
+  fineract-progressive-loan: 1
+      fineract-progressive-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/domain/transactionprocessor/impl/AdvancedPaymentScheduleTransactionProcessor.java:2845:                                                new MathContext(MoneyHelper.getMathContext().getPrecision(), RoundingMode.DOWN));
+  fineract-progressive-loan-embeddable-schedule-generator: 0
+
+---- 4. MathContext.DECIMAL64 (precision 16, HALF_EVEN) ----
+  total occurrences in main source: 81
+  by module:
+      49 fineract-core
+      31 fineract-provider
+       1 fineract-savings
+  occurrences whose path contains neither 'saving' nor 'deposit': 0
+  occurrences in any loan module: 0
+
+---- 5. NEW (T46): the INDIRECT hard-code that N-3 misses ----
+MathUtil.percentageOf(BigDecimal, BigDecimal, int) builds
+  new MathContext(precision, MoneyHelper.getRoundingMode())
+so a caller passing a LITERAL precision hard-codes the precision AND takes the AMBIENT
+rounding mode.  Loan-module callers passing a literal:
+    fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/AbstractCumulativeLoanScheduleGenerator.java:1897:                        MathUtil.percentageOf(value.getAmount(), loanApplicationTerms.getDisbursedAmountPercentageForDownPayment(), 19));
+    fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/AbstractCumulativeLoanScheduleGenerator.java:2060:                MathUtil.percentageOf(periodBaseAmount, loanApplicationTerms.getDisbursedAmountPercentageForDownPayment(), 19));
+    fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/LoanApplicationTerms.java:866:                    MathUtil.percentageOf(getPrincipal().getAmount(), getDisbursedAmountPercentageForDownPayment(), 19));
+    fineract-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/service/LoanDownPaymentHandlerServiceImpl.java:198:                MathUtil.percentageOf(disbursementTransaction.getAmount(), disbursedAmountPercentageForDownPayment, 19));
+    fineract-provider/src/main/java/org/apache/fineract/portfolio/loanaccount/service/LoanWritePlatformServiceJpaRepositoryImpl.java:3538:                    MathUtil.percentageOf(lastDisbursalTransaction.getAmount(), disbursedAmountPercentageForDownPayment, 19));
+    fineract-provider/src/main/java/org/apache/fineract/portfolio/loanaccount/service/LoanWritePlatformServiceJpaRepositoryImpl.java:448:                            MathUtil.percentageOf(amountToDisburse.getAmount(), disbursedAmountPercentageForDownPayment, 19));
+    count: 6
+
+the helper itself:
+    fineract-core/src/main/java/org/apache/fineract/infrastructure/core/service/MathUtil.java:472:    public static BigDecimal percentageOf(final BigDecimal value, final BigDecimal percentage, final int precision) {
+    fineract-core/src/main/java/org/apache/fineract/infrastructure/core/service/MathUtil.java-473-        return percentageOf(value, percentage, new MathContext(precision, MoneyHelper.getRoundingMode()));
+
+==============================================================================
+done -- every line above is a grep hit with file:line; nothing is derived.
+==============================================================================
