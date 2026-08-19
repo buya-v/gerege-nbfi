@@ -567,3 +567,73 @@ touching a ratified artefact.
 
 **Nothing here is RESERVED.** No money, no live endpoint, no third party, no licence fact — this is recorded
 for Buyan's awareness and reversal, not because an agent could not reason about it.
+
+---
+
+## G-4 — **ENGINEERING** — DEC-1 carries a promotion condition that is provably TOO STRONG *(OPEN — needs a DEC-1 amendment, which no agent may make)*
+
+**Raised by** local fire `20260819-170001`, from task **T55**, and **independently re-derived by the driver**
+before being recorded. **Context** `tier0-harness-schedule-poc`. **Blocks** nothing today: the corrected
+condition is already in force operationally and is what T7's harness was told to use.
+
+### The defect
+
+T48-N4's promotion condition for the `DayCountActualActual` arm — restated in `RESUME.md`, `gates.md`
+**and in DEC-1 commentary** — requires a promoted vector to cross a leap boundary **"with a non-zero first
+segment"**.
+
+**The "non-zero first segment" requirement is false.** Capture `LB-DEC31` has a **zero** first segment and
+still grades the arm by **6,015 minor units**.
+
+### Driver re-derivation — this was recomputed from scratch, not accepted on T55's report
+
+Shape: principal `1,200,000` MNT, one repayment, `21.6 %` nominal annual, disbursed **31 December 2024**,
+due **31 January 2025**. 2024 is a leap year (366); 2025 is not (365). The **31-December** segmentation
+boundary — which the oracle matched 6 of 6 in T51 — puts the 2024 segment at **zero days**.
+
+| Branch | Rate factor | Interest | Status |
+|---|---|---|---|
+| **ARM** (ACT/ACT, per-calendar-year denominators) | `0/366 + 31/365` = `0.08493150684931506849` | **`22014.25`** | **OBSERVED** in `LB-DEC31-p3`, `-p4`, `-p7` — all three products, and in the determinism re-runs |
+| **PLAIN** (one denominator, from the period-start year) | `31/366` = `0.08469945355191256831` | `21954.10` | counterfactual — what a no-arm port yields |
+
+`1,200,000 × 0.216 × 0.08493150684931506849 = 22014.246…` → **`22014.25`** at HALF_UP, precision 19.
+Difference **`60.15` major = `6,015` minor units.** `[VERIFIED: driver re-derivation at (19, HALF_UP);
+observed value present in 9 capture files including re-runs]`.
+
+**Why a zero first segment still discriminates** — the mechanism, which is the part worth recording:
+the PLAIN branch takes its single denominator from the **period-start year** (2024 → 366), while the ARM
+assigns the days to the year they **actually fall in** (2025 → 365). The zero-length 2024 segment
+contributes nothing to the ARM, but the PLAIN branch *still uses 2024's length*. So the two branches diverge
+whenever the start year's length differs from the length of the year the days land in — **segment length is
+irrelevant; the year lengths are what matter.**
+
+### The correction being asked for
+
+> **Wrong:** crosses a leap boundary **with a non-zero first segment**.
+> **Correct:** the period **spans two calendar years of differing length**.
+
+### What was and was not changed
+
+- **DEC-1 was NOT touched.** T55 found the defect, correctly declined to amend a ratified artefact, and
+  reported it; the driver verified it and also declined. A ratified DEC-n cannot be amended by an agent
+  (`CLAUDE.md` § Blocking questions).
+- **`RESUME.md` and `gates.md` use the corrected condition from this fire on.** They are operational files,
+  not ratified artefacts.
+- **T7's harness was instructed mid-flight to use the corrected condition** and to cite it as T55-N1 with
+  DEC-1's wording noted as under gate.
+
+So the only thing outstanding is the **wording inside DEC-1**. Until it is amended, DEC-1 states a condition
+stricter than the evidence supports — the failure mode is a *false negative*: a future task reads DEC-1,
+rejects `LB-DEC31` as unpromotable for want of a non-zero first segment, and discards a vector that grades
+the arm by 6,015 minor units.
+
+### Asking for
+
+Approval to amend DEC-1's commentary on the ACT/ACT promotion condition, **wording only**, replacing
+"non-zero first segment" with "spans two calendar years of differing length". **No type, field, enum member,
+error value or graded-domain predicate moves**; the arm's specified arithmetic is unchanged and this is a
+correction *toward* what the source and the captures already do. Rejecting the amendment is also workable —
+the condition would then live only in the operational files, with DEC-1 known-wrong on this one sentence,
+which is precisely the situation the driver twice declined to ratify into.
+
+**Not RESERVED.** No money, no live endpoint, no third party, no licence fact.

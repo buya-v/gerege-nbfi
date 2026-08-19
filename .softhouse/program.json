@@ -468,6 +468,19 @@
       "blocks": "Nothing. The standing instruction is already in force: no task may gofmt -w that path; `gofmt -l` reporting exactly that one file is the EXPECTED state and must not fail a UAT.",
       "raised_by": "local fire 20260819-170001",
       "recorded_in": ".softhouse/gates.md"
+    },
+    {
+      "id": "G-4",
+      "class": "ENGINEERING",
+      "task": "T55",
+      "context": "tier0-harness-schedule-poc",
+      "state": "OPEN",
+      "title": "DEC-1's ACT/ACT promotion condition is provably too strong - amend the wording",
+      "why": "T48-N4's condition, restated in DEC-1 commentary, requires a promoted DayCountActualActual vector to cross a leap boundary WITH A NON-ZERO FIRST SEGMENT. That is false. Capture LB-DEC31 has a ZERO first segment and still grades the arm by 6,015 minor units. Driver-re-derived from scratch at (19, HALF_UP): ARM 0/366+31/365 -> 22014.25, which is the value OBSERVED on all three products p3/p4/p7 and in the determinism re-runs; PLAIN 31/366 -> 21954.10 counterfactual. The mechanism: the PLAIN branch takes its single denominator from the period-START year (2024, leap, 366) while the ARM assigns days to the year they actually fall in (2025, 365), so the zero-length segment is irrelevant - the YEAR LENGTHS are what matter.",
+      "asking_for": "Approval to amend DEC-1 commentary, WORDING ONLY: replace 'non-zero first segment' with 'spans two calendar years of differing length'. No type, field, enum member, error value or graded-domain predicate moves. Failure mode if declined: a future task reads DEC-1, rejects LB-DEC31 as unpromotable, and discards a vector that grades the arm by 6,015 minor units.",
+      "blocks": "Nothing. The corrected condition is already in force in RESUME.md and gates.md, and T7's harness was instructed mid-flight to use it. Only DEC-1's own sentence is outstanding.",
+      "raised_by": "local fire 20260819-170001 (T55, driver-re-derived)",
+      "recorded_in": ".softhouse/gates.md"
     }
   ],
   "history": [
