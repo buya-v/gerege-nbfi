@@ -482,6 +482,27 @@ def main():
                     bad("%s period %s: source predicts %s, observation says %s"
                         % (cid, r["period"], want, r["verdict"]))
 
+    # ---- ANCHOR.  LB-LEAPIN re-takes T48's T48B-PUREB geometry on the same three products.  It is
+    # not new evidence; it is the control that ties this pass to a committed observation.  Any
+    # difference would mean the oracle, the tenant or the products moved since T48 -- which would
+    # invalidate the comparability the whole set rests on.
+    print()
+    print("=" * 100)
+    print("ANCHOR -- LB-LEAPIN vs T48's committed T48B-PUREB (identical shape, same products)")
+    print("=" * 100)
+    aa = os.path.join(HERE, os.pardir, os.pardir, "actualactual", "pathb", "out")
+    for suf in ("p7", "p3", "p4"):
+        mine = cells(load("LB-LEAPIN-%s" % suf))
+        with open(os.path.join(aa, "T48B-PUREB-%s-exact.json" % suf)) as fh:
+            theirs = cells(json.load(fh))
+        keys = sorted(set(mine) | set(theirs))
+        d = [k for k in keys if mine.get(k) != theirs.get(k)]
+        print("  LB-LEAPIN-%s vs T48B-PUREB-%s : %d of %d cells differ  %s"
+              % (suf, suf, len(d), len(keys), "REPRODUCED" if not d else "DRIFT: " + ", ".join(d[:6])))
+        if d:
+            bad("LB-LEAPIN-%s does not reproduce T48's committed T48B-PUREB-%s (%d cells) -- the "
+                "oracle/tenant/products moved since T48 and comparability is broken" % (suf, suf, len(d)))
+
     print()
     print("=" * 100)
     print("GRADEABILITY -- would a WRONG port fail this capture?  Per capture, per naive port.")

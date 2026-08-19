@@ -1,0 +1,78 @@
+====================================================================================================
+PRIOR-CAPTURE ASSESSMENT -- T48's committed Path B captures, scored by T55's own code
+====================================================================================================
+
+Q1. Does an existing T48 capture cross a leap boundary with a NON-ZERO first segment?
+Q2. Does an existing T48 PAIR discriminate (>0 cells on a one-setting change)?
+Q3. Does an existing T48 capture GRADE a port that omits the arm?
+
+### T48B-PUREB   (captured on: p7, p3, p4)
+  Q1  crossing periods with MIXED year lengths and a non-zero first segment: 1
+        p2  2023-12-01 -> 2024-01-01   segments 30/365 + 1/366   OBS 11099.75   verdict ARM
+  Q3  T48B-PUREB-p7 grades a no-arm/actual-year port on 1 periods, a no-arm/always-365 port on 1
+        largest gap vs no-arm/actual-year: p2  OBS 11099.75 vs 11100.72 = 97 minor units
+  Q2  T48B-PUREB-p7 vs T48B-PUREB-p4 : 23 of 65 cells differ, max 97 minor units at plan.totalInterestCharged
+
+### T48B-YEAR   (captured on: p7, p3, p4)
+  Q1  crossing periods with MIXED year lengths and a non-zero first segment: 1
+        p1  2023-12-01 -> 2024-01-01   segments 30/365 + 1/366   OBS 22012.31   verdict ARM
+  Q3  T48B-YEAR-p7 grades a no-arm/actual-year port on 1 periods, a no-arm/always-365 port on 12
+        largest gap vs no-arm/actual-year: p1  OBS 22012.31 vs 22014.25 = 194 minor units
+  Q2  T48B-YEAR-p7 vs T48B-YEAR-p4 : 157 of 285 cells differ, max 29506 minor units at plan.totalInterestCharged
+
+### T48B-QTR   (captured on: p7, p3, p4)
+  Q1  crossing periods with MIXED year lengths and a non-zero first segment: 1
+        p2  2023-12-01 -> 2024-03-01   segments 30/365 + 61/366   OBS 227229.96   verdict ARM
+  Q3  T48B-QTR-p7 grades a no-arm/actual-year port on 1 periods, a no-arm/always-365 port on 3
+        largest gap vs no-arm/actual-year: p2  OBS 227229.96 vs 227646.89 = 41693 minor units
+  Q2  T48B-QTR-p7 vs T48B-QTR-p4 : 49 of 109 cells differ, max 62508 minor units at plan.totalInterestCharged
+
+### T48B-B03SHAPE   (captured on: p7, p3)
+  Q1  crossing periods with MIXED year lengths and a non-zero first segment: 1
+        p12 2024-12-01 -> 2025-01-01   segments 30/366 + 1/365   OBS 2013.40   verdict ARM
+  Q3  T48B-B03SHAPE-p7 grades a no-arm/actual-year port on 1 periods, a no-arm/always-365 port on 12
+        largest gap vs no-arm/actual-year: p12  OBS 2013.40 vs 2013.22 = 18 minor units
+  Q2  NO PAIR EXISTS -- T48B-B03SHAPE was captured on p7, p3 only, so nothing grades it
+
+### the CROSS-ID pair for the 12-month 2024 shape
+  T48B-B03SHAPE-p7 vs T48B-B04SHAPE-p4 : 157 of 285 cells differ, max 35222 minor units at plan.totalInterestCharged
+  BUT: of its 12 periods only p12 crosses a year boundary.  The other 11 are wholly inside
+  leap 2024, where the strategy acts through effect (a) -- getNumberOfDays' 366 -> 365
+  substitution [:1349] -- and NOT through the arm.  The arm's own contribution at p12 is
+  OBS 2013.40 vs the no-arm/actual-year reading 2013.22 = 18 minor units, i.e. 0.006% of the pair's
+  35222-minor-unit headline.  A port that omitted the arm entirely would still miss this pair
+  by 18 minor units at p12 -- so it DOES grade the arm, but only barely and only if the
+  comparison is made period by period rather than on the headline totals.
+
+====================================================================================================
+VERDICT
+====================================================================================================
+
+YES -- existing T48 captures already discriminate, and T55 does not re-take them as new evidence.
+
+  * `T48B-PUREB-p7`/`-p3` vs `T48B-PUREB-p4` -- 23 of 65 cells, max 97 minor units.  Period 2
+    (2023-12-01 -> 2024-01-01) crosses into leap 2024 with a 30-day first segment and attributes
+    to the ARM.  This ALREADY satisfies T48-N4's promotion condition.
+  * `T48B-YEAR-p7`/`-p3` vs `T48B-YEAR-p4` -- 157 of 285 cells.  Period 1 has the same geometry and
+    the same ARM attribution, isolated from effect (a) because the from-date year 2023 is non-leap.
+  * `T48B-QTR` -- 49 of 109 cells; period 2 crosses AND contains 29 Feb, segments 30/365 + 61/366.
+  * `T48B-B03SHAPE-p7` vs `T48B-B04SHAPE-p4` -- a CROSS-ID pair that does discriminate, and whose
+    period 12 carries the 366 -> 365 direction.  It is not a clean grader of the arm: 11 of its 12
+    periods separate through effect (a) instead.
+
+T55's LB-LEAPIN is therefore an ANCHOR, not new evidence: it re-takes the PUREB geometry and must
+reproduce T48's committed numbers cell for cell.
+
+What T48's Path B set does NOT hold, and T55 adds:
+
+  * a CLEAN pair in the 366 -> 365 direction.  T48B-AA1 has that geometry but was captured on
+    product 7 ONLY (no p3/p4 twin), and the B03/B04 cross-id pair buries the arm under effect (a).
+    T55's LB-LEAPOUT (2 periods) and LB-DEC15OUT (1 period) isolate it.
+  * any period spanning TWO 31-December boundaries, i.e. THREE iterations of
+    calculatePeriodFractions.  T55's LB-MULTI3 and LB-MULTI3F are the first.
+  * any NON-LEAP cross-year CONTROL.  Every T48 Path B shape has a 366-day year in play, so
+    T48-N4 was DERIVED and never OBSERVED.  T55's LB-NONLEAP and LB-DEC15NL observe it at 0 cells
+    while the same comparator reports 11-27 cells on the leap shapes.
+  * any ZERO-first-segment shape.  T55's LB-DEC31 is the first, and it CORRECTS the necessary
+    condition T48-N4 states -- see the T55 handoff, finding T55-N1.
+

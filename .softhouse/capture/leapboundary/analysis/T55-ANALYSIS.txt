@@ -1,3 +1,5 @@
+== settings asserted ==
+  re-derivation MathContext: precision=19 roundingMode=HALF_UP
 == exact-text sidecars ==
   33 sidecars written, all with ZERO bare JSON numbers
 
@@ -242,6 +244,13 @@ columns are RE-DERIVED at MathContext(19, HALF_UP) from the cited source.
     per from -> due               days    opening bal   OBS interest   ARM re-deriv PLAIN re-deriv  verdict      segments d/len
     1   2023-11-01 -> 2024-05-01   182     1200000.00      129008.22      129008.22      129244.93  ARM          60/365 + 122/366
     2   2024-05-01 -> 2024-11-01   184      630193.94       68620.35       68432.86       68620.35  PLAIN        -
+
+====================================================================================================
+ANCHOR -- LB-LEAPIN vs T48's committed T48B-PUREB (identical shape, same products)
+====================================================================================================
+  LB-LEAPIN-p7 vs T48B-PUREB-p7 : 0 of 65 cells differ  REPRODUCED
+  LB-LEAPIN-p3 vs T48B-PUREB-p3 : 0 of 65 cells differ  REPRODUCED
+  LB-LEAPIN-p4 vs T48B-PUREB-p4 : 0 of 65 cells differ  REPRODUCED
 
 ====================================================================================================
 GRADEABILITY -- would a WRONG port fail this capture?  Per capture, per naive port.
