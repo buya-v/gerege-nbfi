@@ -964,11 +964,11 @@
         "T43",
         "T44"
       ],
-      "status": "in_flight",
+      "status": "done",
       "attempts": 1,
       "contract_independent": true,
       "branch": "softhouse/T45-dec1-v9",
-      "note": "Raised by local fire 20260819-080001 after the driver DECLINED to ratify revision 8. G-1 closes on revision 9 + ONE clean re-review. DISPATCHED 2026-08-19T01:55Z, isolation=worktree, model=opus; orchestrator WILL await it."
+      "note": "Raised by local fire 20260819-080001 after the driver DECLINED to ratify revision 8. G-1 closes on revision 9 + ONE clean re-review. DISPATCHED 2026-08-19T01:55Z, isolation=worktree, model=opus; orchestrator WILL await it. || COMPLETE, merged (3d277cc). DEC-1 at REVISION 9. All three T43 P1s independently re-derived before applying. P1-T43-1: :504 is byte-identical to ProgressiveLoanScheduleGenerator.java:486 (md5 364d5bfb on both) - the line the generators SHARE; the real difference is the cumulative main loop :349->:352->:392 via fetchTotalAmountForPeriod [:144-146]. C-1 STANDS; four citation sites re-pinned. P1-T43-2: the ambient list was short by three; T45 changed the FORM of the claim - it is now a closed set over one file and the conclusion rests on T42's ABSENCE TEST, so the list is no longer load-bearing (it had been wrong twice). P1-T43-3: M4 narrowed to the three isDue-gated arms and M5 ADDED for INSTALMENT_FEE, which consults no membership test - five conventions now. P2-T43-3 NOT CONFIRMED and correctly so: the 'stale' cell is not stale, T38 and T41 name different differing cells of the same capture because T41 uses sorted(diff)[0]; 'fixing' it would have churned four more cells wrongly. VERIFICATION: 440/440 citations in range AND 69/69 CONTENT assertions; leak grep 11 retired patterns 0 live leaks (the others had leaked exactly as P1-T43-1 did - M4's wording 6 sites, the month-end claim 7, the ambient list 4); normative blocks 0 removed 0 altered 4 added, 3.1 byte-identical; replay 4,578 cells zero mismatches plus three legs revision 8 never ran; contract.go 0 non-comment lines. NEW: (1) the M4 row understated the flag's path-dependence - a from-text model of the row alone mis-predicts FC-20. (2) A TRAP for the F39-1 sweep - boundaries must come from 4.2's re-anchor; on plain plusMonths the special case fires ZERO times and the sweep silently proves nothing. RATIFIABILITY: T45 judges revision 9 ratifiable - revision 8's M4 reading reproduces the charge row set on 13 of 21 captures, revision 9's M4+M5 on 21 of 21, so the known-wrong money sentence is now REFUTED BY THE CORPUS, not merely corrected."
     },
     {
       "id": "T46",
@@ -986,11 +986,59 @@
       "dependencies": [
         "T44"
       ],
-      "status": "in_flight",
+      "status": "done",
       "attempts": 1,
       "contract_independent": true,
       "branch": "softhouse/T46-capture-corrections",
-      "note": "Raised by local fire 20260819-080001 (oracle REACHABLE). Nothing promoted - G-1 still open. DISPATCHED 2026-08-19T01:55Z, isolation=worktree, model=opus; orchestrator WILL await it."
+      "note": "Raised by local fire 20260819-080001 (oracle REACHABLE). Nothing promoted - G-1 still open. DISPATCHED 2026-08-19T01:55Z, isolation=worktree, model=opus; orchestrator WILL await it. || COMPLETE, merged. HEADLINE: the month-end special case CANNOT BE SEPARATED BY ITSELF - not 'not yet captured' but NOT CAPTURABLE in the progressive generator, proved three ways. (1) CLOSED FORM: packed and naive differ IFF b is the last day of its month AND a.day > b.day - verbatim the predicate at :1432 - and when it fires, packed(a, b+1day) = k = naive, so nOracle == nNaive identically: THE SPECIAL CASE IS THE COMPENSATION. (2) EXHAUSTIVE run inside the pinned oracle image over EVERY ordered date pair 2000-2040 = 112,147,776: firings 45,253 = packed/naive disagreements 45,253, both cross-terms 0, R2-vs-R4 separators 0. Non-vacuous, so T45's independently-found plusMonths trap did not bite. (3) T44's escape route CLOSED BY OBSERVATION: WEEKS/DAYS cannot separate at all; YEARS can (165 pairs) but is UNREACHABLE - both YEARS captures return UnsupportedOperationException at :1609. The family is relabelled as grading the PAIR and the blind spot is recorded as UNCLOSABLE. A-3 CLOSED BY CAPTURE: the REQUEST supplies the money, m_charge.amount is IGNORED, 7 for 7. A-5: T40's 'no half-cent tie possible' REFUTED - two exact ties observed - and the rounding locus re-derived as AMBIENT. New Path A pass: T46-RE-3 separates periodRatio from RepaymentEvery at every=3, the first ever at every != 1; four captures separate NOTHING and are labelled so. F39-2/3/4, A-1/2/4/6/7, T44-X1 and M-1..M-11 all closed. NEW OPEN: N46-1 (P1) the CHARGE rounding mode is AMBIENT not threaded and is reachable at MNT's 2 dp - undetectable by every capture today, needs a tenant write, TO_BE_CAPTURED; T46-N1 six loan-path MathUtil.percentageOf(...,19) sites take the ambient mode. Four escalations to reference-oracle.md APPLIED by the orchestrator this fire. Tenant left as found; NO recorded observation file modified - every capture change is an addition."
+    },
+    {
+      "id": "T47",
+      "title": "DEC-1 v9 -> v10: pin the packed whole-months rule, state installmentAmountInMultiplesOf per caller, and record the SECOND ambient leak",
+      "description": "A small erratum closing what T46 established after revision 9 was written. (1) T46 PROVED the month-end special case is NOT SEPARABLE from the packed whole-months function - closed form, an exhaustive 112,147,776-pair run inside the pinned oracle image, and observation closing the YEARS escape route - so DEC-1 must PIN THE PACKED RULE ALONGSIDE the special case (a port implementing packed whole-months WITHOUT the special case is observationally identical, and a port implementing naive whole-months WITH it is not), and section 8 item 3f's discharge language must say the family grades the PAIR and that separating the special case alone is IMPOSSIBLE, not outstanding. (2) M-4 plus T46: installmentAmountInMultiplesOf is dropped by LoanScheduleGeneratorServiceImpl:56,63 as well as by the Path A seam, so the field is honoured or lost BY CALLER - state it per caller, since a seam's blind spot is a property of the caller and not of the field. (3) N46-1 is a SECOND ambient leak on the graded call graph and unlike the 0-dp one it is REACHABLE AT MNT's 2 DECIMAL PLACES: the CHARGE rounding mode is ambient, re-derived to ProgressiveLoanScheduleGenerator.java:445-446 -> two-arg Money.of -> Money.java:114-116 -> :52 setScale(2, getMc().getRoundingMode()), with two half-cent ties OBSERVED. Revision 9 rested 4.1.2 on a closed-set enumeration; that enumeration has now been wrong twice, so state the rule in a form that does not require exhaustiveness. (4) A-5: revision 9 already deleted the false 'no half-cent tie' claim - verify no restatement survives.",
+      "agent_role": "spec_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        "docs/adr/DEC-1-schedule-generator-adapter.md",
+        "nexus/internal/apps/loanschedule/contract/contract.go",
+        ".softhouse/reviews/t47-probe/",
+        ".softhouse/handoff/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T45",
+        "T46"
+      ],
+      "status": "in_flight",
+      "attempts": 1,
+      "contract_independent": true,
+      "branch": "softhouse/T47-dec1-v10",
+      "note": "Raised by local fire 20260819-080001. After this, ONE independent re-review closes G-1. DISPATCHED 2026-08-19T02:45Z, isolation=worktree, model=opus; orchestrator WILL await it."
+    },
+    {
+      "id": "T48",
+      "title": "Capture the DayCountActualActual arm and the remaining charge gaps from the live oracle (RAW OBSERVED only)",
+      "description": "DEC-1 section 8 has carried 'the DayCountActualActual vectors remain outstanding' since revision 5, and it is the one arm of the algorithm no capture has ever exercised - 4.9 refuses the computation with ErrNoDiscriminatingVector precisely because no vector exists. Only an oracle-reaching fire can close it. CAPTURE, do not admit: this task takes RAW OBSERVED captures of the ACTUAL/ACTUAL arm and does NOT propose admitting DayCountActualActual to the graded domain - admission would make daysInYearCustomStrategy live, which DEC-1 4.4 states is an AMENDMENT and therefore a gate. Cover the cross-year partial-period arm [ProgressiveEMICalculator.java:1505-1507, :1526-1531, calculatePeriodFractions :1550-1568, rateFactorByRepaymentPartialPeriod :1969-1980], and settle FEB_29_PERIOD_ONLY's SECOND effect, which needs one one-year ACT/ACT schedule with a 29 February period and one without. Secondly, close the cheap charge gaps T46 left open where they need no tenant write: whether m_charge.amount governs when the request OMITS amount, charge calculation enums 5 and 9, charge time type 2 with a disagreeing amount, and RepaymentEvery > 3. Do NOT attempt N46-1's ambient charge rounding mode - it needs a tenant write and the shared server must not be mutated.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/capture/actualactual/",
+        ".softhouse/capture/charges/",
+        ".softhouse/handoff/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T46"
+      ],
+      "status": "in_flight",
+      "attempts": 1,
+      "contract_independent": true,
+      "branch": "softhouse/T48-actualactual-captures",
+      "note": "Raised by local fire 20260819-080001 (oracle REACHABLE). Closes a section-8 item outstanding since revision 5. DISPATCHED 2026-08-19T02:45Z, isolation=worktree, model=opus; orchestrator WILL await it."
     }
   ]
 }
