@@ -616,9 +616,20 @@ type Rounding struct {
 	//	if !(L == DueDate && L - RepaymentEvery months == FromDate) {
 	//	    seed = the repayment period's own FromDate           (:1477-1480)
 	//	}                                    // BOTH conjuncts are required
-	//	k     := whole months from seed to FromDate, EXCEPT that when FromDate is
-	//	         the last day of its month and seed's day > FromDate's day, it is
-	//	         measured to FromDate.plusDays(1)               (:1430-1433)
+	//	k     := MONTHS.between(seed, FromDate)  -- Java LocalDate.monthsUntil,
+	//	         i.e. packed = (year*12 + month-1)*32 + day; k = (p2-p1)/32
+	//	         truncated toward zero (DateUtils.java:308-317).  THIS IS NOT
+	//	         "the largest k with seed + k months <= FromDate": the two differ
+	//	         exactly when plusMonths would have CLAMPED, which is exactly the
+	//	         condition the special case below tests, so they coincide WHILE the
+	//	         special case is present and part company the moment it is dropped.
+	//	         EXCEPT that when FromDate is the last day of its month and seed's
+	//	         day > FromDate's day, k is measured to FromDate.plusDays(1)
+	//	                                                        (:1426-1436, :1432)
+	//	         Implement the packed rule WITH the special case, or the
+	//	         clamped-step rule WITHOUT it; the packed rule minus the special
+	//	         case DOUBLE-CHARGES alternate periods (an observed MNT 83,959.76
+	//	         on one six-month MNT 3,924,149 loan).
 	//	m     := k + 1;  cursor := FromDate                      (:1441-1442)
 	//	for cursor < DueDate {                                   (:1443)
 	//	    cursor = seed + m months                             (:1444)
