@@ -19,3 +19,15 @@ T51-TR-03-c1flat-tranche-P3 200
 T51-TR-04-c5-onetranche-P3 200
 T51-TR-05-c5-nodisbdata-P3 403
 T51-TR-06-c5-on-singledisb-product-P1PROD 200
+T51-TR-07-c5-tranches-sum-1000000 200
+T51-TR-08-c2-tranches-sum-1000000 200
+T51-TR-09-c5-maxcap 200
+T51-TR-10-c2-maxcap 200
+T51-TR-11-c5-mincap 200
+T51-TR-12-c2-mincap 200
+T51-TR-13-c5-maxcap-onetranche 200
+T51-IROD-NL2L-P1 200
+T51-IROD-NL2L-P2 200
+T51-FL-6 403
+T51-FL-12 403
+T51-FL-18 403
