@@ -1,0 +1,2 @@
+ct5 vs ct2, tranches summing TO the principal : 0 cells
+ct5 vs ct2, tranches summing to 1,000,000     : 23 cells

@@ -245,7 +245,7 @@ def check_boundary(stem, label):
           ("per", "from", "due", "balance@start", "oracle interest",
            "31-Dec reading", "1-Jan reading"))
     balance = None
-    verdict = {"31-Dec": 0, "1-Jan": 0, "neither": 0}
+    verdict = {"31-Dec": 0, "1-Jan": 0, "BOTH-AGREE": 0, "neither": 0}
     for p in doc["periods"]:
         if "period" not in p:
             balance = Decimal(p["principalDisbursed"])
@@ -274,7 +274,7 @@ def check_boundary(stem, label):
     return verdict
 
 
-tally = {"31-Dec": 0, "1-Jan": 0, "neither": 0}
+tally = {"31-Dec": 0, "1-Jan": 0, "BOTH-AGREE": 0, "neither": 0}
 for stem, label in (("T51-IROD-AA1-P1", "product 17, flag TRUE"),
                     ("T51-IROD-AA1-P2", "product 18, flag FALSE"),
                     ("T51-IROD-DEC31-P1", "product 17, flag TRUE"),
@@ -291,6 +291,9 @@ print("\n  TALLY over the crossing periods where the two readings differ:")
 print("    matched the 31-DECEMBER boundary : %d" % tally["31-Dec"])
 print("    matched the 1-JANUARY  boundary : %d" % tally["1-Jan"])
 print("    matched NEITHER                 : %d" % tally["neither"])
+print("    the two readings COINCIDE (so the period discriminates nothing about the "
+      "boundary; T48-N4's rule: segments in years of EQUAL length sum identically) : %d"
+      % tally["BOTH-AGREE"])
 
 
 # =======================================================================================
@@ -311,9 +314,13 @@ print("\n-- HTTP codes for every calc leg --")
 for line in (O / "HTTP-CODES.txt").read_text().splitlines():
     print("   " + line)
 
+# This is the comparison T48 said "a separating shape needs a multi-disbursement (tranche)
+# product" for.  It has one now, with three genuine tranches -- and it STILL agrees.  The
+# expectation is therefore "observe", and the zero is the finding, not a defect in the run;
+# pass 2 (t51-analyse2.py) carries the shapes that DO separate the two.
 compare("ct=5 (id 13, TRANCHE_DISBURSEMENT) vs ct=2 (id 3, PERCENT_OF_AMOUNT) at the same "
         "1.2345 %, THREE genuine tranches, on the multi-disbursement product 19",
-        "T51-TR-01-c5-tranche-P3", "T51-TR-02-c2-comparator-P3", "separate")
+        "T51-TR-01-c5-tranche-P3", "T51-TR-02-c2-comparator-P3", "observe")
 compare("ct=5, three tranches, tranche product 19 vs the SAME request on the "
         "single-disbursement product 1",
         "T51-TR-01-c5-tranche-P3", "T51-TR-06-c5-on-singledisb-product-P1PROD", "observe")

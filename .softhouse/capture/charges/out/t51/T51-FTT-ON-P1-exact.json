@@ -1,0 +1,22 @@
+{
+ "developerMessage": "The request was invalid. This typically will happen due to validation errors which are provided.",
+ "httpStatusCode": "400",
+ "defaultUserMessage": "Validation errors exist.",
+ "userMessageGlobalisationCode": "validation.msg.validation.errors.exist",
+ "errors": [
+  {
+   "developerMessage": "Failed data validation due to: not.allowed.by.product.",
+   "defaultUserMessage": "Failed data validation due to: not.allowed.by.product.",
+   "userMessageGlobalisationCode": "validation.msg.loan.allowFullTermForTranche.not.allowed.by.product",
+   "parameterName": "allowFullTermForTranche",
+   "args": [
+    {},
+    {
+     "value": [
+      "Full term tranche cannot be enabled because the loan product does not allow it"
+     ]
+    }
+   ]
+  }
+ ]
+}

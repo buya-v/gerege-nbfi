@@ -1,0 +1,341 @@
+== exact-text sidecars ==
+  47 sidecars written, each re-checked leaf for leaf against the raw bytes
+  disbursement-row feeChargesDue, EXACT TEXT (T46-N2: the scale is caller-controlled):
+    T51-FL0-12                                     0
+    T51-FL0-18                                     0
+    T51-FL0-365                                    0
+    T51-FL0-CTRL                                   0
+    T51-FTT-OFF-P1                                 0 0
+    T51-FTT-OFF-P2                                 0 0
+    T51-FTTP-P4                                    0 0
+    T51-FTTP-P5                                    0 0
+    T51-FTTPOFF-P4                                 0 0
+    T51-FTTPOFF-P5                                 0 0
+    T51-IROD-AA1-P1                                0
+    T51-IROD-AA1-P2                                0
+    T51-IROD-AA1-REQFALSE-P1                       0
+    T51-IROD-AA1-REQTRUE-P2                        0
+    T51-IROD-D365-P1                               0
+    T51-IROD-D365-P2                               0
+    T51-IROD-DEC15-P1                              0
+    T51-IROD-DEC15-P2                              0
+    T51-IROD-DEC31-P1                              0
+    T51-IROD-DEC31-P2                              0
+    T51-IROD-NL2L-P1                               0
+    T51-IROD-NL2L-P2                               0
+    T51-IROD-NOCROSS-P1                            0
+    T51-IROD-NOCROSS-P2                            0
+    T51-IROD-R13-P1                                0
+    T51-IROD-R13-P2                                0
+    T51-TR-00-ctrl-P3                              0 0 0
+    T51-TR-01-c5-tranche-P3                        14814.000000 14814.000000 14814.000000
+    T51-TR-02-c2-comparator-P3                     14814.000000 14814.000000 14814.000000
+    T51-TR-03-c1flat-tranche-P3                    21000 21000 21000
+    T51-TR-04-c5-onetranche-P3                     14814.000000
+    T51-TR-06-c5-on-singledisb-product-P1PROD      14814.000000 14814.000000 14814.000000
+    T51-TR-07-c5-tranches-sum-1000000              12345.000000 12345.000000 12345.000000
+    T51-TR-08-c2-tranches-sum-1000000              14814.000000 14814.000000 14814.000000
+    T51-TR-09-c5-maxcap                            13641.500000 13641.500000 13641.500000
+    T51-TR-10-c2-maxcap                            5000.000000 5000.000000 5000.000000
+    T51-TR-11-c5-mincap                            24000.000000 24000.000000 24000.000000
+    T51-TR-12-c2-mincap                            8000.000000 8000.000000 8000.000000
+    T51-TR-13-c5-maxcap-onetranche                 5000.000000
+
+
+######################################################################################
+# ITEM 1 -- is T48-N1's aliasing behaviourally reachable?
+######################################################################################
+
+Products 17 (`T51 IROD true`) and 18 (`T51 IROD false`) were created from the SAME committed
+payload, differ in exactly three text lines (name, shortName, the flag), and were asserted in
+PostgreSQL to be identical on 20 compared columns and to differ on
+interest_recognition_on_disbursement_date.  Every shape below is captured on BOTH.
+
+
+== AA1  leap->non-leap, monthly, disbursed 01 Nov 2024 (T48's AA-1 shape)  --  product 17 (flag TRUE) vs product 18 (flag FALSE)
+   0 of 153 cells differ   [expected: observe]
+     -> every cell agrees.  A port that conflated the two would pass this comparison, so on its own it discriminates NOTHING.
+
+== DEC15  disbursed 15 Dec 2024: crossing period with a 16-day first segment  --  product 17 (flag TRUE) vs product 18 (flag FALSE)
+   0 of 153 cells differ   [expected: observe]
+     -> every cell agrees.  A port that conflated the two would pass this comparison, so on its own it discriminates NOTHING.
+
+== DEC31  disbursed 31 Dec 2024: first segment is 0 days at the 31-Dec boundary, 1 day at the 1-Jan boundary  --  product 17 (flag TRUE) vs product 18 (flag FALSE)
+   0 of 153 cells differ   [expected: observe]
+     -> every cell agrees.  A port that conflated the two would pass this comparison, so on its own it discriminates NOTHING.
+
+== R13  repaymentEvery 13 months from 15 Dec 2023: each period spans THREE year segments  --  product 17 (flag TRUE) vs product 18 (flag FALSE)
+   0 of 65 cells differ   [expected: observe]
+     -> every cell agrees.  A port that conflated the two would pass this comparison, so on its own it discriminates NOTHING.
+
+== NOCROSS  CONTROL, disbursed 01 Feb 2025: no period crosses a year boundary, so the arm cannot fire  --  product 17 (flag TRUE) vs product 18 (flag FALSE)
+   0 of 153 cells differ   [expected: observe]
+     -> every cell agrees.  A port that conflated the two would pass this comparison, so on its own it discriminates NOTHING.
+
+== REQUEST-LEVEL override: product 18 (flag FALSE) + request interestRecognitionOnDisbursementDate=true, vs plain product 18
+   0 of 153 cells differ   [expected: observe]
+     -> every cell agrees.  A port that conflated the two would pass this comparison, so on its own it discriminates NOTHING.
+
+== REQUEST-LEVEL override: product 17 (flag TRUE) + request interestRecognitionOnDisbursementDate=false, vs plain product 17
+   0 of 153 cells differ   [expected: observe]
+     -> every cell agrees.  A port that conflated the two would pass this comparison, so on its own it discriminates NOTHING.
+
+--- is the shape even capable of moving?  the arm-vs-no-arm control ---
+
+== AA1 at daysInYearType ACTUAL vs the SAME shape forced to 365 (arm cannot fire: the first conjunct of partialPeriodCalculationNeeded is false)
+   79 of 153 cells differ   [expected: separate]
+     row1.interestDue                     21245.90           | 21304.11
+     row1.interestOriginalDue             21245.90           | 21304.11
+     row1.interestOutstanding             21245.90           | 21304.11
+     row1.principalDue                    191447.54          | 191407.83
+     row1.principalLoanBalanceOutstanding 1008552.46         | 1008592.17
+     row1.principalOriginalDue            191447.54          | 191407.83
+     row1.principalOutstanding            191447.54          | 191407.83
+     row1.totalActualCostOfLoanForPeriod  21245.90           | 21304.11
+     row1.totalDueForPeriod               212693.44          | 212711.94
+     row1.totalInstallmentAmountForPeriod 212693.44          | 212711.94
+     ... 69 more
+
+
+--------------------------------------------------------------------------------------
+-- WHICH BOUNDARY DID THE ORACLE USE?  re-derivation at MathContext(19, HALF_UP)
+--------------------------------------------------------------------------------------
+
+The arm's f is  SUM over years  days(segment) / Year.of(year).length()  [:1554-1568].
+The segment boundary is 31 December, or 1 January of the next year when the
+LoanConfigurationDetails slot isInterestRecognitionOnDisbursementDate() is true [:1578-1584].
+Interest for a period is  round2(balance_at_period_start x rateFactor)  and rateFactor is
+0.216 x f.  Below, BOTH candidate f are re-derived from the observed dates and compared with
+the interest the ORACLE actually returned.  The dates, balances and interests are
+OBSERVATIONS; the two candidate columns are RE-DERIVATIONS.
+
+
+  product 17, flag TRUE   [T51-IROD-AA1-P1]
+    per  from         due          balance@start    oracle interest  31-Dec reading   1-Jan reading
+    1    2024-11-01   2024-12-01   1200000.00       21245.90         (no crossing)    
+    2    2024-12-01   2025-01-01   1008552.46       18453.18         18453.18         18451.55          -> 31-Dec
+         segments  31-Dec: 30/366 + 1/365                1-Jan: 31/366 + 0/365
+    3    2025-01-01   2025-02-01   814312.20        14938.72         (no crossing)    
+    4    2025-02-01   2025-03-01   616557.48        10216.27         (no crossing)    
+    5    2025-03-01   2025-04-01   414080.31        7596.39          (no crossing)    
+    6    2025-04-01   2025-05-01   208983.26        3710.17          (no crossing)    
+
+  product 18, flag FALSE   [T51-IROD-AA1-P2]
+    per  from         due          balance@start    oracle interest  31-Dec reading   1-Jan reading
+    1    2024-11-01   2024-12-01   1200000.00       21245.90         (no crossing)    
+    2    2024-12-01   2025-01-01   1008552.46       18453.18         18453.18         18451.55          -> 31-Dec
+         segments  31-Dec: 30/366 + 1/365                1-Jan: 31/366 + 0/365
+    3    2025-01-01   2025-02-01   814312.20        14938.72         (no crossing)    
+    4    2025-02-01   2025-03-01   616557.48        10216.27         (no crossing)    
+    5    2025-03-01   2025-04-01   414080.31        7596.39          (no crossing)    
+    6    2025-04-01   2025-05-01   208983.26        3710.17          (no crossing)    
+
+  product 17, flag TRUE   [T51-IROD-DEC31-P1]
+    per  from         due          balance@start    oracle interest  31-Dec reading   1-Jan reading
+    1    2024-12-31   2025-01-31   1200000.00       22014.25         22014.25         22012.31          -> 31-Dec
+         segments  31-Dec: 0/366 + 31/365                1-Jan: 1/366 + 30/365
+    2    2025-01-31   2025-02-28   1009364.71       16725.03         (no crossing)    
+    3    2025-02-28   2025-03-31   813440.20        14922.73         (no crossing)    
+    4    2025-03-31   2025-04-30   615713.39        10931.02         (no crossing)    
+    5    2025-04-30   2025-05-31   413994.87        7594.82          (no crossing)    
+    6    2025-05-31   2025-06-30   208940.15        3709.40          (no crossing)    
+
+  product 18, flag FALSE   [T51-IROD-DEC31-P2]
+    per  from         due          balance@start    oracle interest  31-Dec reading   1-Jan reading
+    1    2024-12-31   2025-01-31   1200000.00       22014.25         22014.25         22012.31          -> 31-Dec
+         segments  31-Dec: 0/366 + 31/365                1-Jan: 1/366 + 30/365
+    2    2025-01-31   2025-02-28   1009364.71       16725.03         (no crossing)    
+    3    2025-02-28   2025-03-31   813440.20        14922.73         (no crossing)    
+    4    2025-03-31   2025-04-30   615713.39        10931.02         (no crossing)    
+    5    2025-04-30   2025-05-31   413994.87        7594.82          (no crossing)    
+    6    2025-05-31   2025-06-30   208940.15        3709.40          (no crossing)    
+
+  product 17, flag TRUE   [T51-IROD-DEC15-P1]
+    per  from         due          balance@start    oracle interest  31-Dec reading   1-Jan reading
+    1    2024-12-15   2025-01-15   1200000.00       21983.20         21983.20         21981.26          -> 31-Dec
+         segments  31-Dec: 16/366 + 15/365               1-Jan: 17/366 + 14/365
+    2    2025-01-15   2025-02-15   1009235.45       18514.63         (no crossing)    
+    3    2025-02-15   2025-03-15   815002.33        13504.48         (no crossing)    
+    4    2025-03-15   2025-04-15   615759.06        11296.23         (no crossing)    
+    5    2025-04-15   2025-05-15   414307.54        7355.38          (no crossing)    
+    6    2025-05-15   2025-06-15   208915.17        3832.59          (no crossing)    
+
+  product 18, flag FALSE   [T51-IROD-DEC15-P2]
+    per  from         due          balance@start    oracle interest  31-Dec reading   1-Jan reading
+    1    2024-12-15   2025-01-15   1200000.00       21983.20         21983.20         21981.26          -> 31-Dec
+         segments  31-Dec: 16/366 + 15/365               1-Jan: 17/366 + 14/365
+    2    2025-01-15   2025-02-15   1009235.45       18514.63         (no crossing)    
+    3    2025-02-15   2025-03-15   815002.33        13504.48         (no crossing)    
+    4    2025-03-15   2025-04-15   615759.06        11296.23         (no crossing)    
+    5    2025-04-15   2025-05-15   414307.54        7355.38          (no crossing)    
+    6    2025-05-15   2025-06-15   208915.17        3832.59          (no crossing)    
+
+  product 17, flag TRUE   [T51-IROD-R13-P1]
+    per  from         due          balance@start    oracle interest  31-Dec reading   1-Jan reading
+    1    2023-12-15   2025-01-15   1200000.00       281214.25        281214.25        281214.25         -> BOTH-AGREE
+         segments  31-Dec: 16/365 + 366/366 + 15/365     1-Jan: 17/365 + 366/366 + 14/365
+    2    2025-01-15   2026-02-15   662929.90        155354.44        155354.44        155354.44         -> BOTH-AGREE
+         segments  31-Dec: 350/365 + 46/365              1-Jan: 351/365 + 45/365
+
+  product 18, flag FALSE   [T51-IROD-R13-P2]
+    per  from         due          balance@start    oracle interest  31-Dec reading   1-Jan reading
+    1    2023-12-15   2025-01-15   1200000.00       281214.25        281214.25        281214.25         -> BOTH-AGREE
+         segments  31-Dec: 16/365 + 366/366 + 15/365     1-Jan: 17/365 + 366/366 + 14/365
+    2    2025-01-15   2026-02-15   662929.90        155354.44        155354.44        155354.44         -> BOTH-AGREE
+         segments  31-Dec: 350/365 + 46/365              1-Jan: 351/365 + 45/365
+
+  TALLY over the crossing periods where the two readings differ:
+    matched the 31-DECEMBER boundary : 6
+    matched the 1-JANUARY  boundary : 0
+    matched NEITHER                 : 0
+    the two readings COINCIDE (so the period discriminates nothing about the boundary; T48-N4's rule: segments in years of EQUAL length sum identically) : 4
+
+
+######################################################################################
+# ITEM 2 -- chargeCalculationType 5 (PERCENT_OF_DISBURSEMENT_AMOUNT) on a tranche product
+######################################################################################
+
+-- charge-definition attempts (a rejected POST creates no row) --
+  create-c1-tt12             HTTP 200  created charge id 14
+  create-c2-maxcap           HTTP 200  created charge id 16
+  create-c2-mincap           HTTP 200  created charge id 18
+  create-c5-maxcap           HTTP 200  created charge id 15
+  create-c5-mincap           HTTP 200  created charge id 17
+  create-c5-tt1-reject       HTTP 400  The parameter `chargeCalculationType` must not be any of [ 5 ] .
+  create-c5-tt2-reject       HTTP 400  The parameter `chargeCalculationType` must not be any of [ 5 ] .
+  create-c5-tt8-reject       HTTP 400  The parameter `chargeCalculationType` must not be any of [ 5 ] .
+
+-- HTTP codes for every calc leg --
+   T51-IROD-AA1-P1 200
+   T51-IROD-AA1-P2 200
+   T51-IROD-AA1-REQFALSE-P1 200
+   T51-IROD-AA1-REQTRUE-P2 200
+   T51-IROD-D365-P1 200
+   T51-IROD-D365-P2 200
+   T51-IROD-DEC15-P1 200
+   T51-IROD-DEC15-P2 200
+   T51-IROD-DEC31-P1 200
+   T51-IROD-DEC31-P2 200
+   T51-IROD-NOCROSS-P1 200
+   T51-IROD-NOCROSS-P2 200
+   T51-IROD-R13-P1 200
+   T51-IROD-R13-P2 200
+   T51-TR-00-ctrl-P3 200
+   T51-TR-01-c5-tranche-P3 200
+   T51-TR-02-c2-comparator-P3 200
+   T51-TR-03-c1flat-tranche-P3 200
+   T51-TR-04-c5-onetranche-P3 200
+   T51-TR-05-c5-nodisbdata-P3 403
+   T51-TR-06-c5-on-singledisb-product-P1PROD 200
+   T51-TR-07-c5-tranches-sum-1000000 200
+   T51-TR-08-c2-tranches-sum-1000000 200
+   T51-TR-09-c5-maxcap 200
+   T51-TR-10-c2-maxcap 200
+   T51-TR-11-c5-mincap 200
+   T51-TR-12-c2-mincap 200
+   T51-TR-13-c5-maxcap-onetranche 200
+   T51-IROD-NL2L-P1 200
+   T51-IROD-NL2L-P2 200
+   T51-FL-6 403
+   T51-FL-12 403
+   T51-FL-18 403
+   T51-FL0-CTRL 200
+   T51-FL0-11 403
+   T51-FL0-12 200
+   T51-FL0-18 200
+   T51-FL0-365 200
+   T51-FL-INTEREST-REJECT 403
+   T51-FTT-ON-P1 400
+   T51-FTT-ON-P2 400
+   T51-FTT-OFF-P1 200
+   T51-FTT-OFF-P2 200
+   T51-FTTP-P4 200
+   T51-FTTP-P5 200
+   T51-FTTPOFF-P4 200
+   T51-FTTPOFF-P5 200
+
+== ct=5 (id 13, TRANCHE_DISBURSEMENT) vs ct=2 (id 3, PERCENT_OF_AMOUNT) at the same 1.2345 %, THREE genuine tranches, on the multi-disbursement product 19
+   0 of 302 cells differ   [expected: observe]
+     -> every cell agrees.  A port that conflated the two would pass this comparison, so on its own it discriminates NOTHING.
+
+== ct=5, three tranches, tranche product 19 vs the SAME request on the single-disbursement product 1
+   0 of 302 cells differ   [expected: observe]
+     -> every cell agrees.  A port that conflated the two would pass this comparison, so on its own it discriminates NOTHING.
+
+== did the ct=5 charge land at all?  vs the zero-charge control on the same product
+   23 of 302 cells differ   [expected: separate]
+     row0.feeChargesDue                   14814.000000       | 0
+     row0.feeChargesOutstanding           14814.000000       | 0
+     row0.totalActualCostOfLoanForPeriod  14814.000000       | 0
+     row0.totalDueForPeriod               14814.000000       | 0
+     row0.totalOriginalDueForPeriod       14814.000000       | 0
+     row0.totalOutstandingForPeriod       14814.000000       | 0
+     row0.totalOverdue                    14814.000000       | 0
+     row3.feeChargesDue                   14814.000000       | 0
+     row3.feeChargesOutstanding           14814.000000       | 0
+     row3.totalActualCostOfLoanForPeriod  14814.000000       | 0
+     ... 13 more
+
+== ct=1 FLAT at TRANCHE_DISBURSEMENT (id 14, 7000) vs ct=5 (id 13, 1.2345 %)
+   23 of 302 cells differ   [expected: separate]
+     row0.feeChargesDue                   21000              | 14814.000000
+     row0.feeChargesOutstanding           21000              | 14814.000000
+     row0.totalActualCostOfLoanForPeriod  21000              | 14814.000000
+     row0.totalDueForPeriod               21000              | 14814.000000
+     row0.totalOriginalDueForPeriod       21000              | 14814.000000
+     row0.totalOutstandingForPeriod       21000              | 14814.000000
+     row0.totalOverdue                    21000              | 14814.000000
+     row3.feeChargesDue                   21000              | 14814.000000
+     row3.feeChargesOutstanding           21000              | 14814.000000
+     row3.totalActualCostOfLoanForPeriod  21000              | 14814.000000
+     ... 13 more
+
+== ct=5 with THREE tranches vs ct=5 with ONE tranche of the whole principal
+   246 of 326 cells differ   [expected: separate]
+     row0.principalDisbursed              500000.00          | 1200000.00
+     row0.principalLoanBalanceOutstanding 500000.00          | 1200000.00
+     row1.interestDue                     9000.00            | 21600.00
+     row1.interestOriginalDue             9000.00            | 21600.00
+     row1.interestOutstanding             9000.00            | 21600.00
+     row1.principalDue                    37700.99           | 90482.37
+     row1.principalLoanBalanceOutstanding 462299.01          | 1109517.63
+     row1.principalOriginalDue            37700.99           | 90482.37
+     row1.principalOutstanding            37700.99           | 90482.37
+     row1.totalActualCostOfLoanForPeriod  9000.00            | 21600.00
+     ... 236 more
+
+-- the disbursement rows, exact text --
+  T51-TR-00-ctrl-P3                            totalFee=0.00           totalInterest=120219.85    totalRepay=1320219.85
+      disb 2026-1-1     principalDisbursed 500000.00      feeChargesDue 0                totalDueForPeriod 0
+      disb 2026-3-1     principalDisbursed 300000.00      feeChargesDue 0                totalDueForPeriod 0
+      disb 2026-6-1     principalDisbursed 400000.00      feeChargesDue 0                totalDueForPeriod 0
+      sum(totalDueForPeriod)=1320219.85   totalRepaymentExpected=1320219.85   AGREE
+  T51-TR-01-c5-tranche-P3                      totalFee=14814.00       totalInterest=120219.85    totalRepay=1335033.85
+      disb 2026-1-1     principalDisbursed 500000.00      feeChargesDue 14814.000000     totalDueForPeriod 14814.000000
+      disb 2026-3-1     principalDisbursed 300000.00      feeChargesDue 14814.000000     totalDueForPeriod 14814.000000
+      disb 2026-6-1     principalDisbursed 400000.00      feeChargesDue 14814.000000     totalDueForPeriod 14814.000000
+      sum(totalDueForPeriod)=1364661.850000   totalRepaymentExpected=1335033.85   **DISAGREE**
+  T51-TR-02-c2-comparator-P3                   totalFee=14814.00       totalInterest=120219.85    totalRepay=1335033.85
+      disb 2026-1-1     principalDisbursed 500000.00      feeChargesDue 14814.000000     totalDueForPeriod 14814.000000
+      disb 2026-3-1     principalDisbursed 300000.00      feeChargesDue 14814.000000     totalDueForPeriod 14814.000000
+      disb 2026-6-1     principalDisbursed 400000.00      feeChargesDue 14814.000000     totalDueForPeriod 14814.000000
+      sum(totalDueForPeriod)=1364661.850000   totalRepaymentExpected=1335033.85   **DISAGREE**
+  T51-TR-03-c1flat-tranche-P3                  totalFee=21000.00       totalInterest=120219.85    totalRepay=1341219.85
+      disb 2026-1-1     principalDisbursed 500000.00      feeChargesDue 21000            totalDueForPeriod 21000
+      disb 2026-3-1     principalDisbursed 300000.00      feeChargesDue 21000            totalDueForPeriod 21000
+      disb 2026-6-1     principalDisbursed 400000.00      feeChargesDue 21000            totalDueForPeriod 21000
+      sum(totalDueForPeriod)=1383219.85   totalRepaymentExpected=1341219.85   **DISAGREE**
+  T51-TR-04-c5-onetranche-P3                   totalFee=14814.00       totalInterest=144988.47    totalRepay=1359802.47
+      disb 2026-1-1     principalDisbursed 1200000.00     feeChargesDue 14814.000000     totalDueForPeriod 14814.000000
+      sum(totalDueForPeriod)=1359802.470000   totalRepaymentExpected=1359802.47   AGREE
+  T51-TR-06-c5-on-singledisb-product-P1PROD    totalFee=14814.00       totalInterest=120219.85    totalRepay=1335033.85
+      disb 2026-1-1     principalDisbursed 500000.00      feeChargesDue 14814.000000     totalDueForPeriod 14814.000000
+      disb 2026-3-1     principalDisbursed 300000.00      feeChargesDue 14814.000000     totalDueForPeriod 14814.000000
+      disb 2026-6-1     principalDisbursed 400000.00      feeChargesDue 14814.000000     totalDueForPeriod 14814.000000
+      sum(totalDueForPeriod)=1364661.850000   totalRepaymentExpected=1335033.85   **DISAGREE**
+
+-- the leg that was REJECTED --
+  T51-TR-05  tranche product, ct=5 charge, NO disbursementData -> HTTP 403 : For this loan product, disbursement details must be provided
+
+
+RESULT: every sidecar reproduces its raw capture leaf for leaf as text; every comparison above reports its own differing-cell count.

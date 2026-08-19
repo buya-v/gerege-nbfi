@@ -1,0 +1,78 @@
+######################################################################################
+# ITEM 1, passes 4-6 -- the SECOND reader of the aliased slot
+######################################################################################
+
+ProgressiveEMICalculator reads the slot in exactly two places on main sources:
+  * :1579  getFractionPeriodDueDateForEndOfYear      -- covered by passes 1 and 2;
+  * :194   buildLoanApplicationTerms, reached only from addFullTermTrancheDisbursement [:155],
+           guarded by isAllowFullTermForTranche() && numberOfRepayments > 0 &&
+           action == DISBURSEMENT [:140-143].
+Pass 4 tried the request-level override on a product that does not allow it; pass 5 created a
+matched product pair that does; pass 6 turned the guard off on the SAME products.
+
+-- pass 4: the request-level override alone --
+   T51-FTT-ON-P1      HTTP 400 : Failed data validation due to: not.allowed.by.product.
+        args: ['Full term tranche cannot be enabled because the loan product does not allow it']
+   T51-FTT-ON-P2      HTTP 400 : Failed data validation due to: not.allowed.by.product.
+        args: ['Full term tranche cannot be enabled because the loan product does not allow it']
+
+-- passes 5 and 6: products 20 and 21, allow_full_term_for_tranche = t, differing only in interest_recognition_on_disbursement_date --
+
+== DID THE FULL-TERM-TRANCHE ARM FIRE?  product 20 with the guard ON vs the SAME product with allowFullTermForTranche=false in the request
+   52 of 164 cells differ   [expected: separate]
+     loanTermInDays                       242                | 181
+     row4.principalDue                    194788.28          | 236781.30
+     row4.principalLoanBalanceOutstanding 780227.18          | 738234.16
+     row4.principalOriginalDue            194788.28          | 236781.30
+     row4.principalOutstanding            194788.28          | 236781.30
+     row4.totalDueForPeriod               212675.14          | 254668.16
+     row4.totalInstallmentAmountForPeriod 212675.14          | 254668.16
+     row4.totalOriginalDueForPeriod       212675.14          | 254668.16
+     ... 44 more
+
+== the same control on product 21
+   52 of 164 cells differ   [expected: separate]
+     loanTermInDays                       242                | 181
+     row4.principalDue                    194788.28          | 236781.30
+     row4.principalLoanBalanceOutstanding 780227.18          | 738234.16
+     row4.principalOriginalDue            194788.28          | 236781.30
+     row4.principalOutstanding            194788.28          | 236781.30
+     row4.totalDueForPeriod               212675.14          | 254668.16
+     row4.totalInstallmentAmountForPeriod 212675.14          | 254668.16
+     row4.totalOriginalDueForPeriod       212675.14          | 254668.16
+     ... 44 more
+
+== WITH THE ARM FIRING: product 20 (flag TRUE) vs product 21 (flag FALSE)
+   0 of 164 cells differ   [expected: observe]
+     -> every cell agrees; on its own this comparison discriminates NOTHING.
+
+== with the arm OFF: product 20 (flag TRUE) vs product 21 (flag FALSE)
+   0 of 164 cells differ   [expected: observe]
+     -> every cell agrees; on its own this comparison discriminates NOTHING.
+
+== cross-check: the arm-off result on the tranche products vs the same request on products 17/18 (not multi-disburse)
+   0 of 164 cells differ   [expected: observe]
+     -> every cell agrees; on its own this comparison discriminates NOTHING.
+
+-- what the full-term-tranche arm actually did, cell by cell --
+   T51-FTTPOFF-P4     loanTermInDays=181    totalInterestCharged=66814.98     totalRepaymentExpected=1266814.98
+        disb 2024-11-1    principalDisbursed 700000.00
+        p1   2024-11-1    -> 2024-12-1    days 30   principal 111677.73      interest 12393.44
+        p2   2024-12-1    -> 2025-1-1     days 31   principal 113306.81      interest 10764.36
+        disb 2025-1-1     principalDisbursed 500000.00
+        p3   2025-1-1     -> 2025-2-1     days 31   principal 236781.30      interest 17886.86
+        p4   2025-2-1     -> 2025-3-1     days 28   principal 242435.72      interest 12232.44
+        p5   2025-3-1     -> 2025-4-1     days 31   principal 245572.64      interest 9095.52
+        p6   2025-4-1     -> 2025-5-1     days 30   principal 250225.80      interest 4442.36
+   T51-FTTP-P4        loanTermInDays=242    totalInterestCharged=71340.81     totalRepaymentExpected=1098842.93
+        disb 2024-11-1    principalDisbursed 700000.00
+        p1   2024-11-1    -> 2024-12-1    days 30   principal 111677.73      interest 12393.44
+        p2   2024-12-1    -> 2025-1-1     days 31   principal 113306.81      interest 10764.36
+        disb 2025-1-1     principalDisbursed 500000.00
+        p3   2025-1-1     -> 2025-2-1     days 31   principal 194788.28      interest 17886.86
+        p4   2025-2-1     -> 2025-3-1     days 28   principal 199746.88      interest 12928.26
+        p5   2025-3-1     -> 2025-4-1     days 31   principal 202026.11      interest 10649.03
+        p6   2025-4-1     -> 2025-5-1     days 30   principal 205956.31      interest 6718.86
+
+
+RESULT: every comparison above published its own differing-cell count.
