@@ -490,3 +490,54 @@ evidence about money "plus the one leak in rule 5". That is now **two** leaks, a
 MNT's scale. State both, or state the rule as *"attest the threaded context, and enumerate the ambient leaks
 you have actually searched for"* — the enumeration has now been wrong twice (T43 P1-T43-2, and this), which is
 itself the argument for not resting a conclusion on an exhaustiveness claim.
+
+---
+
+## Environment gap found by local fire `20260819-140003` — **no Go toolchain on this host**
+
+**`go` is not on `PATH` and no Go installation exists on the machine** [VERIFIED by the driver this fire:
+`which go` → not found; no `/usr/local/go`, no Homebrew `go` cellar, no `go` binary under any `*/bin/go`].
+Task T52 reported the same from inside its worktree, independently.
+
+### What this does and does not block
+
+**Does not block anything this fire did.** Every task run so far is analysis, capture, review or ADR text.
+The Fineract reference oracle, PostgreSQL, Docker and the pinned checkout are all healthy and untouched by
+this gap.
+
+**Becomes the critical path the moment G-1 closes.** `CLAUDE.md` § Verification defines a PASS as
+`go build ./...`, `go test ./...`, the conformance run and property invariants. Without a toolchain:
+
+- **T7** (build the conformance harness) can be designed but not executed against Go.
+- **T10** (port the schedule generator) cannot be compiled, so no `coder` task can honestly report green.
+- **T11**, **T13** (`/softhouse-uat`) cannot run at all — and a UAT that cannot run must **never** be
+  recorded as a pass.
+
+### The consequence for `contract.go`, stated precisely
+
+`nexus/internal/apps/loanschedule/contract/contract.go` holds **96 non-comment lines** of real Go — package
+clause, three imports, types, enum constants and error values — and **it has never been compiled**, on this
+host or (as far as the repo records) any other. Nine review rounds have graded its *comments*; nothing has
+ever graded whether it *builds*.
+
+A static sanity check by the driver this fire found all three imports (`context`, `errors`, `fmt`) used at
+least once — Go rejects unused imports — and no duplicate top-level `type`/`func` declarations. **That is a
+heuristic, not a compile, and it is recorded as one.** `[UNVERIFIED: that the package compiles]`.
+
+This matters for ratification only in one narrow way, and it should not be overstated: DEC-1 freezes the
+contract's *shape and semantics*, which nine rounds have graded from source and vectors. It does not freeze
+a build result. But **the first fire with a toolchain must run `go build ./...` before any Go is written
+against this file**, because a syntax or type error in a ratified artefact is discovered at the worst
+possible moment.
+
+### What is needed, and whose call it is
+
+One toolchain install (`brew install go`, or the official tarball into `/usr/local/go`). `nexus/go.mod`
+already declares `module github.com/gerege/nexus`, `go 1.23`.
+
+This is **not** a RESERVED item under `CLAUDE.md` § Answering gates — it spends no money, exposes no
+endpoint and binds Gerege to nobody. It is ordinary developer setup and the driver would normally just do
+it. **It was deliberately NOT done unattended**, because installing software on Buyan's machine is a
+durable change to the host rather than to this repo, and no fire had been asked to make one. It is
+surfaced here and in `RESUME.md` instead. **A fire that is told "you may install a Go toolchain" should
+just do it and record the version here.**
