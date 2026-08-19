@@ -622,3 +622,70 @@ IDE format-on-save over `internal/apps/loanschedule/contract/contract.go`. Forma
 created. `gofmt -l` reporting this one path is the EXPECTED state, not a defect to fix, and a UAT must not
 fail on it. Raised as gate **G-3** in `.softhouse/gates.md` (ENGINEERING, driver-decidable, deliberately not
 self-answered because the artefact is frozen).
+
+---
+
+## Driver findings, local fire `20260819-170001` — re-derived from the pinned source, not taken on report
+
+Both items below were established by the driver reading `/Users/buv/fineract` at commit `426a23544`
+directly, while Wave 1 workers ran. Line numbers are from that commit.
+
+### D-1 (correction) — T50-N2's citation is `:83`, not `:81`
+
+The hard-wired call is at **`ProgressiveLoanScheduleGenerator.java:83`**:
+
+```java
+83:        return LoanSchedulePlan.from(generate(mc, loanApplicationTerms, null, null));
+```
+
+`[VERIFIED: grep -n on the pinned file]`. T50-N2, `RESUME.md`, `gates.md` and T7's task note all cite `:81`,
+which is **off by two** — `:81` is inside the preceding `setLoanTransactionProcessingService` method. The
+**substance of T50-N2 is confirmed exactly as recorded**; only the line cite is wrong. Recorded because
+citation accuracy has been a recurring review finding in this program (T49/T52/T53 audited 155/171/47
+citations precisely to catch this class), and a reviewer who checks `:81` will find an unrelated method and
+may wrongly conclude the finding was fabricated.
+
+### D-2 (NEW — extends T50-N2, does not duplicate it) — the Path A seam is ALSO structurally blind to HOLIDAYS and NON-WORKING DAYS
+
+T50-N2 recorded the first `null` (`loanCharges`). **There are two nulls.** The second is `holidayDetailDTO`,
+and it has the same structural consequence, which nothing in the record so far states:
+
+| Step | Evidence |
+|---|---|
+| Path A passes `holidayDetailDTO = null` | `ProgressiveLoanScheduleGenerator.java:83` (above) |
+| it flows into date generation | `:106-107` — `scheduledDateGenerator.generateRepaymentPeriods(mc, periodStartDate, loanApplicationTerms, holidayDetailDTO)` |
+| which calls the adjuster | `DefaultScheduledDateGenerator.java:66` — `adjustRepaymentDate(nextRepaymentDate, loanApplicationTerms, holidayDetailDTO).getChangedScheduleDate()` |
+| whose whole body is null-guarded | `:221-249` — `recursivelyCheckNonWorkingDaysAndHolidaysAndWorkingDaysExemptionToGenerateNextRepaymentPeriodDate` opens with `if (holidayDetailDTO != null) {` at **`:224`** and returns `adjustedDateDetailsDTO` **unchanged** otherwise |
+
+So on Path A, holiday and non-working-day adjustment is a **guaranteed silent no-op** — not an error. That
+null-guard is precisely why Path A captures run at all instead of throwing NPE, so the seam's usability and
+its blindness have the same cause.
+
+**Consequence, and it is the same shape as T50-N2:** **working-day / holiday conformance can ONLY ever be
+graded on Path B**, exactly like charge conformance. A vector store that records path provenance only in
+order to reason about *charges* is under-specified; the blind spot is at least two-dimensional. A harness
+that grades a holiday-bearing case against a Path A capture is broken by construction and must refuse.
+
+### D-2a (the sharper half — a port-defect risk of the same class as T50-N1)
+
+Even on **Path B**, this generator adjusts for holidays **only on the FINAL period.** The
+`adjustRepaymentDate` call at `DefaultScheduledDateGenerator.java:66` sits inside
+
+```java
+61:            if (repaymentPeriodNumber == numberOfRepayments) { // last period
+```
+
+so intermediate due dates are **never** holiday-adjusted on the progressive path. `[VERIFIED: :58-73, the
+loop body]`.
+
+This is dangerous in the specific way T50-N1 is dangerous. "Adjust every repayment date that falls on a
+holiday" is the obvious, reasonable, and **wrong** thing for a Go port to do; it is what a developer would
+write from the method name alone. And a port that did it would **pass the entire existing corpus silently**,
+because every capture taken so far went through Path A where the whole mechanism is inert. The defect would
+first appear in production, on a real loan whose intermediate instalment lands on a Mongolian public holiday.
+
+Filed for the loan-schedule context as a mandatory Path-B discrimination target: two captures differing only
+in whether an **intermediate** period falls on a holiday must differ in **zero** cells, while a final period
+on a holiday must move the date. Both halves need observing — the zero is as much the finding as the
+difference, per the `chargeCalculationType` 5 precedent where linearity, not absence, hid the effect.
+`[UNVERIFIED: that a Path B capture reproduces this — nobody has observed it yet.]`
