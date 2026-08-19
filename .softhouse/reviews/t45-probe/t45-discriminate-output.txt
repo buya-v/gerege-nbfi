@@ -1,0 +1,113 @@
+==============================================================================
+B1  DOES REVISION 8 DISCRIMINATE?  Each wrong reading is run against
+    every committed production-setting capture and compared CELL BY
+    CELL to revision 8's own reading.  A reading that fails 0 of a
+    corpus is INVISIBLE to that corpus -- which is a fact about the
+    corpus, never about the rule.
+    CELLS PER ROW: fromDate, dueDate, principal, interest, balance,
+    total; plus totalInterest and loanTermInDays per capture.
+==============================================================================
+    corpora: pre-T39 = 21 captures, T39 = 15 captures
+
+wrong reading                                          pre-T39     T39  first witness
+------------------------------------------------------------------------------
+ratio-is-always-1 (P0-T32-1)                           12/21    15/15   P-01 cell R1.balance
+textbook balance x rateFactor (P0-T29-2)                2/21     1/15   T37-3b cell R6.interest
+n = NumberOfRepayments (P0-T29-1)                       2/21     0/15   T37-3c cell R2.balance
+whole-principal pre-disbursement row (P0-T37-1)         3/21     0/15   P-03 cell R1.balance
+EMI re-adjust loop ABSENT (item 3)                      6/21     8/15   T37-3-A cell R1.balance
+loop WITHOUT the adoption test (item 3a)                1/21     0/15   T37-3a cell R1.balance
+RepaymentEvery instead of periodRatio (P0-T34-1)        0/21     8/15   T39-P0-A cell R1.balance
+periodRatio with the MONTH-END CASE OMITTED (T39 N-2)    3/21     4/15   P-02 cell R1.balance
+M3 reused where M1 belongs (the inert collapse)         0/21     0/15   NONE -- corpus blind
+
+    Every capture each reading FAILS, named in full:
+      ratio-is-always-1 (P0-T32-1)
+        P-01, P-MNT-5M, P-MNT-1M2, P-MNT-50M, P-MNT-4M999, T37-CTL-Q0a, T37-3-A, T37-3-B, T37-3a, T37-3b-2, T37-3d, T37-3d-2, T39-CTL-Q0a, T39-CTL-1, T39-CTL-2, T39-P0-A, T39-P0-B, T39-P0-C, T39-P0-D, T39-P0-E, T39-P0-F, T39-P0-G, T39-P0-H, T39-ME-A, T39-ME-B, T39-ME-C, T39-ME-D
+      textbook balance x rateFactor (P0-T29-2)
+        T37-3b, T37-3b-2, T39-ME-A
+      n = NumberOfRepayments (P0-T29-1)
+        T37-3c, T37-3c-2
+      whole-principal pre-disbursement row (P0-T37-1)
+        P-03, T37-3c, T37-3c-2
+      EMI re-adjust loop ABSENT (item 3)
+        T37-3-A, T37-3-B, T37-3c, T37-3c-2, T37-3d, T37-3d-2, T39-CTL-1, T39-P0-A, T39-P0-B, T39-P0-C, T39-P0-D, T39-P0-E, T39-P0-G, T39-P0-H
+      loop WITHOUT the adoption test (item 3a)
+        T37-3a
+      RepaymentEvery instead of periodRatio (P0-T34-1)
+        T39-P0-A, T39-P0-B, T39-P0-C, T39-P0-D, T39-P0-E, T39-P0-F, T39-P0-G, T39-P0-H
+      periodRatio with the MONTH-END CASE OMITTED (T39 N-2)
+        P-02, P-02b, T37-3b-2, T39-ME-A, T39-ME-B, T39-ME-C, T39-ME-D
+      M3 reused where M1 belongs (the inert collapse)
+        (none -- invisible to both corpora)
+
+==============================================================================
+B2  N1: is the AMBIENT MoneyHelper context the arithmetic in force on
+    Path A?  Revision 8 section 4.1.2 says NO -- the THREADED context
+    is.  Measured here by re-comparing T39's committed negative runs,
+    capture by capture, on every published cell of every row.
+==============================================================================
+  AMBIENT tenant mode forced to DOWN
+    overrides recorded in the payload: {'negativeTestTenantRoundingModeOrdinalOverride': '1', 'negativeTestMathContextRoundingModeOverride': None}
+    capture blocks that MOVED: 0 of 16   (cells moved: 0)
+  THREADED mode forced to DOWN
+    overrides recorded in the payload: {'negativeTestTenantRoundingModeOrdinalOverride': None, 'negativeTestMathContextRoundingModeOverride': 'DOWN'}
+    capture blocks that MOVED: 15 of 16   (cells moved: 494)
+
+  VERDICT: an ambient-only change moves NOTHING inside the graded
+  domain on Path A; a threaded change moves almost everything. The
+  reading 'the ambient MoneyHelper context is the arithmetic in
+  force' is REFUTED, and 4.1.2's rule is what the data supports.
+
+==============================================================================
+B3  N2: are charges folded INTO the EMI, or do they sit BESIDE it?
+    N3: is totalRepaymentExpected the sum of the period totals?
+    Both are claims about the ORACLE, tested against T40's committed
+    captures.  CELLS COMPARED for N2: principalDue, interestDue,
+    principalLoanBalanceOutstanding, totalInstallmentAmountForPeriod
+    on every repayment row, against the zero-charge control's values;
+    plus feeChargesDue and penaltyChargesDue, to show the charge DID
+    land somewhere.  For N3: totalRepaymentExpected against the sum
+    of totalDueForPeriod, exact Decimal, zero tolerance.
+==============================================================================
+capture                                           core cells moved  charge cells    C5
+----------------------------------------------------------------------------------------
+FC-01-flat-disbursement                                          0             1  PASS
+FC-02-flat-instalment                                            0            12  FAIL
+FC-03-pctamount-disbursement                                     0             1  PASS
+FC-04-pctinterest-instalment                                     0            12  FAIL
+FC-05-pctamountinterest-instalment                               0            12  FAIL
+FC-06-penalty-inside-p3                                          0             1  FAIL
+FC-07-fee-on-p3-duedate                                          0             1  FAIL
+FC-08-penalty-instalment                                         0            12  FAIL
+FC-09-pctamount-instalment                                       0            12  FAIL
+FC-10-pctamount-inside-p6                                        0             1  FAIL
+FC-11-fee-on-disbursement-date                                   0             1  FAIL
+FC-12-fee-on-final-duedate                                       0             1  FAIL
+FC-13-fee-inside-p12                                             0             1  FAIL
+FC-14-fee-inside-p1                                              0             1  FAIL
+FC-15-combined-fee-and-penalty                                   0            25  FAIL
+FC-16-fee-on-p1-duedate                                          0             1  FAIL
+FC-17-fee-after-final-duedate                                    0             0  PASS
+FC-19-pctinterest-sdd-inside-p6                                  0             1  PASS
+FC-20-pctinterest-sdd-on-disb                                    0             0  PASS
+FC-21-pctamtint-sdd-inside-p6                                    0             1  PASS
+FC-22-penalty-instalment-plus-sdd-on-p3-duedate                  0            12  FAIL
+
+  N2: of 21 charge captures, 19 carry a charge that
+      LANDED somewhere, and 0 moved ANY of the four core
+      schedule cells.  0 == 0 means: A CHARGE SITS ALONGSIDE
+      THE EMI, NEVER INSIDE IT.  The reading 'charges are folded into
+      the EMI' is REFUTED on every capture that carries one.
+
+  N3: totalRepaymentExpected == sum(totalDueForPeriod) FAILS on
+      15 of 21 captures.  The reading 'the oracle's
+      totalRepaymentExpected is the sum of the rows' is REFUTED, which
+      is decision C-1's premise: the contract does not carry it and no
+      invariant may assert it.
+
+==============================================================================
+B1: 9 readings tested; 1 of them are invisible to
+    BOTH corpora.  Every one that is invisible is named above with
+    'NONE -- corpus blind' and must be read as a corpus fact.
+==============================================================================

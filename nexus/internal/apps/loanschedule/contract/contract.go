@@ -733,14 +733,32 @@ type Rounding struct {
 	// currency-scale setScale at :52 runs, and getMc() is an INSTANCE method —
 	// `return mc != null ? mc : MoneyHelper.getMathContext()`
 	// (Money.java:494-496). So :52 reads the THREADED mode whenever one was
-	// threaded, and the ambient mode ONLY where none was: the two-argument
-	// Money.of (:102-104, :114-116), Money.zero(currency) (:118-120), the
-	// static roundToMultiplesOf(BigDecimal, Integer) (:150-157),
-	// roundToMultiplesOf(Money, Integer) (:159-161) and the three-argument
-	// form's return path (:163-170, the two-argument Money.of at :169), and
-	// multipliedBy(double) (:372-378, the two-argument Money.of at :377).
-	// Every one of those sits on the installment-multiple or
-	// multipliedBy(double) path, which the graded domain excludes -- AND ONE
+	// threaded, and the ambient mode ONLY where none was. REVISION 9 WIDENS THIS
+	// LIST BY THREE AND STOPS CALLING IT EXHAUSTIVE (P1-T43-2, re-review T43;
+	// revision 8's list was short, and this is the SECOND time it has had to
+	// widen). The ambient-reading paths INSIDE Money.java are: the two-argument
+	// Money.of (:102-104, :114-116), BOTH one-argument Money.zero overloads
+	// (:118-120 and :130-132 — the second was MISSING), the static
+	// roundToMultiplesOf(BigDecimal, Integer) (:150-157),
+	// roundToMultiplesOf(Money, Integer) (:159-161), the three-argument form's
+	// return path (:163-170, the two-argument Money.of at :169),
+	// multipliedBy(double) (:372-378, :377), plus(Iterable) (:224-234, :233 —
+	// MISSING) and plus(double) (:261-267, :266 — MISSING).
+	//
+	// NOT ALL OF THEM ARE EXCLUDED BY THE GRADED DOMAIN, and revision 8 said
+	// they were. Money.java:130-132 is reached from
+	// ProgressiveEMICalculator.java:182 on the addFullTermTrancheDisbursement
+	// arm, which is gated on isAllowFullTermForTranche() (:142-144) — a PIN
+	// (DEC-1 section 4.4), NOT a section 3.1 graded-domain predicate. The
+	// reachability of :224-234 and :261-267 from generate(mc, modelData) is
+	// [UNVERIFIED]. THE CLAIM THAT NO IN-GRADED-DOMAIN PATH-A EXECUTION READS
+	// THE AMBIENT CONTEXT DOES NOT REST ON THIS LIST BEING COMPLETE; it rests
+	// on task T42's ABSENCE test, which gave each shape an uninitialised tenant
+	// so that ANY ambient read anywhere throws (MoneyHelper.java:79), and 11 of
+	// 13 shapes generated fine. The list above is a PORTER'S HAZARD LIST over
+	// one file, not a proof.
+	//
+	// AND ONE
 	// MORE SITE THAT IS HANDED A CONTEXT AND IGNORES IT (revision 8, task
 	// T42): Money's constructor calls the TWO-argument roundToMultiplesOf at
 	// Money.java:50, which hard-codes MoneyHelper.getRoundingMode()
@@ -805,12 +823,19 @@ type Rounding struct {
 	// ROUNDING MODE from getMc() (Money.java:52), never the precision — and on
 	// such a Money getMc() IS the threaded context (Money.java:494-496), so
 	// that read is not a tenant-global read at all. The call sites that DO
-	// reach the tenant-global context (Money.java:103, :115, :160, :169, :377)
-	// all sit on the installment-multiple and multipliedBy(double) paths, and
-	// applyInstallmentAmountInMultiplesOf is the identity inside the graded
-	// domain (ProgressiveEMICalculator.java:1761-1766), so no reached call site
-	// consults the tenant-global precision OR the tenant-global mode. That is
-	// established from source and CONFIRMED BY A NEGATIVE TEST (T39, above).
+	// reach the tenant-global context are the eleven listed above
+	// (Money.java:103, :115, :119, :131, :154, :160, :169, :233, :266, :377,
+	// and getMc()'s own null branch at :495); each is excluded from the Run-1
+	// Path-A graded domain by a section 3.1 predicate, by a section 4.4 PIN
+	// (:131, via ProgressiveEMICalculator.java:182), or — for :233 and :266 —
+	// by an unproven absence of a call site. REVISION 9 THEREFORE DOES NOT REST
+	// THIS PARAGRAPH ON THAT LIST (P1-T43-2). That no reached call site
+	// consults the tenant-global precision OR the tenant-global mode is
+	// established by OBSERVATION: T39's negative test (0 of 16 blocks moved
+	// under a forced tenant mode of DOWN) and T42's stronger ABSENCE test (an
+	// uninitialised tenant, so any ambient read throws; 11 of 13 shapes
+	// generated fine). The source argument explains it; the observation carries
+	// it.
 	//
 	// The earlier justification — a calibration capture threaded at precision
 	// 12 on a precision-19 tenant reproducing the oracle's shipped conformance
@@ -1337,8 +1362,20 @@ const (
 // addTotalFeeChargesCharged, addTotalPenaltyChargesCharged and nothing else).
 // The only later charge contribution is from updatePeriodsWithCharges (:486),
 // which serves the two SEPARATED calculation types alone. The CUMULATIVE
-// generator does add them (AbstractCumulativeLoanScheduleGenerator.java:504), so
-// THE TWO GENERATORS DISAGREE and the field has no single meaning to specify.
+// generator DOES carry them, by a different mechanism: it folds the period's
+// charges into the period total first — applyChargesForCurrentPeriod at
+// AbstractCumulativeLoanScheduleGenerator.java:349, then
+// fetchTotalAmountForPeriod() at :352 (which is principal + interest + fee +
+// penalty, ScheduleCurrentPeriodParams.java:144-146), then
+// addTotalRepaymentExpected(totalInstallmentDue) at :392. SO THE TWO GENERATORS
+// DISAGREE and the field has no single meaning to specify.
+//
+// REVISION 9 CORRECTS THE CITATION HERE (P1-T43-3's sibling P1-T43-1, raised by
+// re-review T43 and independently confirmed by capture audit T44's A-2).
+// Revision 8 cited AbstractCumulativeLoanScheduleGenerator.java:504. That line
+// is BYTE-IDENTICAL to the progressive generator's :486 — it is the one line the
+// two generators SHARE, not a difference between them. The conclusion is
+// unchanged; only its evidence moved.
 //
 // OBSERVED: totalRepaymentExpected == sum of totalDueForPeriod FAILS on 15 of
 // task T40's 21 charge-bearing captures; on one of them MNT 51,900 of fees and
@@ -1753,12 +1790,15 @@ const (
 // attested raw observation, not yet an admissible parity vector (DEC-1 section 8
 // items 1 and 3d).
 //
-// ## The FOUR date-membership rules (normative; revision 7, P0-T37-1; M4 added
-// in revision 8 from task T40's charge observations)
+// ## The FIVE membership conventions (normative; revision 7, P0-T37-1; M4 added
+// in revision 8 from task T40's charge observations; M4 NARROWED and M5 added in
+// revision 9, P1-T43-3)
 //
-// The reference oracle uses FOUR different membership conventions when it
-// decides which repayment period a dated thing belongs to, and they do not all
-// agree. A port that assumes one convention throughout is wrong somewhere.
+// The reference oracle uses FIVE different conventions when it decides which
+// repayment period a dated thing belongs to, and they do not all agree. Four are
+// date-membership tests; THE FIFTH IS THE ABSENCE OF ONE, which is exactly why
+// it belongs here. A port that assumes one convention throughout is wrong
+// somewhere — and revision 8 made that mistake in this very list.
 //
 //	M1  [FromDate, DueDate] inclusive at BOTH ends for the FIRST repayment
 //	    period; (FromDate, DueDate] — from-EXCLUSIVE, due-inclusive — for every
@@ -1782,11 +1822,30 @@ const (
 //	    AS M1 (LoanRepaymentScheduleProcessingWrapper.java:251-254), reached
 //	    through LoanCharge.isDueInPeriod (LoanCharge.java:371-373,
 //	    ProgressiveLoanScheduleGenerator.java:400-403).
-//	    Decides: which repayment row a CHARGE lands on — the fee and penalty
-//	    columns and totalDueForPeriod.
-//	    NOT CARRIED BY THIS CONTRACT: GenerateRequest has no charge field and
-//	    Period has no fee or penalty. M4 is stated so that a port which later
-//	    admits charges does not reuse M1, M2 or M3 for them.
+//	    Decides: which repayment row a SPECIFIED_DUE_DATE or
+//	    OVERDUE_INSTALLMENT charge lands on — and NOTHING ELSE. Its result is
+//	    `isDue` at :403, read only by the three arms at :406, :408 and :411.
+//	    IT DOES NOT DECIDE WHERE AN INSTALMENT_FEE LANDS. See M5.
+//	M5  NO MEMBERSHIP TEST AT ALL. An INSTALMENT_FEE charge is applied to
+//	    EVERY repayment row unconditionally.
+//	    (ProgressiveLoanScheduleGenerator.java:404-405 —
+//	    `if (loanCharge.isInstalmentFee() && isInstallmentChargeApplicable)`,
+//	    which never reads the isDue computed at :403.
+//	    isInstallmentChargeApplicable is the hard-coded literal true on the
+//	    main-loop path (:373, :376) and !isRecalculatedInterestComponent() on
+//	    the separated path (:479, :483).)
+//	    Decides: which repayment rows an INSTALMENT_FEE lands on — all of them.
+//	    OBSERVED: capture FC-02 (flat MNT 2,500 INSTALMENT_FEE) moves 12 charge
+//	    cells and reports totalFeeChargesCharged 30,000.00 = 2,500 x 12, while
+//	    capture FC-07 (flat MNT 9,000 SPECIFIED_DUE_DATE on period 3's due
+//	    date) moves 1 (.softhouse/capture/charges/out/FULLCELL.md).
+//	    A PORT THAT APPLIES M4 TO AN INSTALMENT FEE PUTS IT ON ONE ROW INSTEAD
+//	    OF NumberOfRepayments ROWS — MNT 27,500 lost on FC-02's shape.
+//
+//	NEITHER M4 NOR M5 IS CARRIED BY THIS CONTRACT: GenerateRequest has no
+//	charge field and Period has no fee or penalty. Both are stated so that a
+//	port which later admits charges does not reuse M1, M2 or M3 for them, and
+//	does not reuse M4 for an instalment fee.
 //
 // M4 IS A DIFFERENT RULE FROM M1 EVEN THOUGH IT SHARES M1'S INTERVAL SHAPE,
 // because the input that SELECTS the shape is different — and on one path it is
@@ -1809,7 +1868,9 @@ const (
 // WHICH RULE GOVERNS WHICH FIELD: M1 the interest-period segmentation and the
 // effective due date; M2 the related-period list and hence the level
 // installment; M3 the disbursement row's emission, the interest model's
-// registration and the ordering window key; M4 the fee and penalty columns.
+// registration and the ordering window key; M4 the fee and penalty columns for
+// SPECIFIED_DUE_DATE and OVERDUE_INSTALLMENT charges only; M5 the fee and
+// penalty columns for INSTALMENT_FEE charges, on every row.
 // They are not interchangeable.
 //
 // M1 AND M3 DISAGREE ON EXACTLY ONE DATE: a disbursement dated on a repayment
@@ -2046,7 +2107,7 @@ type Period struct {
 	//
 	//	PeriodKindRepayment     ZERO if the row is emitted BEFORE the disbursement
 	//	                        is registered (i.e. before M3's owner period —
-	//	                        see "The FOUR date-membership rules" above);
+	//	                        see "The FIVE membership conventions" above);
 	//	                        otherwise max(0, balance carried in + amounts
 	//	                        disbursed in this period under M1 - PrincipalMinor)
 	//	                        (RepaymentPeriod.java:389-403, clamp at :399;

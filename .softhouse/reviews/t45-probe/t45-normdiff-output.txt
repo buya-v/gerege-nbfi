@@ -1,0 +1,57 @@
+T45 NORMATIVE-BLOCK DIFF - revision 8 (main) against revision 9 (working tree)
+
+fenced normative blocks: revision 8 = 19, revision 9 = 23
+  blocks present in 8 and REMOVED in 9 : 0
+  blocks ADDED in 9                    : 4
+  blocks unchanged                     : 19
+
++++ ADDED (absent in revision 8, present in revision 9) +++
+boolean isDue = loanCharge.isDueInPeriod(periodStart, periodEnd, isFirstPeriod);        // :403   <- M4
+if (loanCharge.isInstalmentFee() && isInstallmentChargeApplicable) {                     // :404   <- M5, no isDue
+    cumulative = calculateInstallmentCharge(principalInterestForThisPeriod, ...);        // :405
+} else if (loanCharge.isOverdueInstallmentCharge() && isDue && ...isPercentageBased()) { // :406   <- M4
+} else if (isDue && loanCharge.getChargeCalculation().isPercentageBased()) {             // :408   <- M4
+} else if (isDue) {                                                                      // :411   <- M4
+}
+
++++ ADDED (absent in revision 8, present in revision 9) +++
+ProgressiveLoanScheduleGenerator.java:486
+    scheduleParams.addTotalRepaymentExpected(feeChargesForInstallment.plus(penaltyChargesForInstallment));
+AbstractCumulativeLoanScheduleGenerator.java:504
+    scheduleParams.addTotalRepaymentExpected(feeChargesForInstallment.plus(penaltyChargesForInstallment));
+
++++ ADDED (absent in revision 8, present in revision 9) +++
+AbstractCumulativeLoanScheduleGenerator.java:349
+    applyChargesForCurrentPeriod(loanCharges, monetaryCurrency, scheduleParams, scheduledDueDate,
+                                 currentPeriodParams, mc);          # charges land on currentPeriodParams
+AbstractCumulativeLoanScheduleGenerator.java:352
+    final Money totalInstallmentDue = currentPeriodParams.fetchTotalAmountForPeriod();
+AbstractCumulativeLoanScheduleGenerator.java:392
+    scheduleParams.addTotalRepaymentExpected(totalInstallmentDue);
+ScheduleCurrentPeriodParams.java:144-146
+    public Money fetchTotalAmountForPeriod() {
+        return this.principalForThisPeriod.plus(interestForThisPeriod)
+               .plus(feeChargesForInstallment).plus(penaltyChargesForInstallment);
+    }
+
++++ ADDED (absent in revision 8, present in revision 9) +++
+totalRepaymentExpected (progressive)
+    = chargesDueAtTimeOfDisbursement                      # seed  [LoanScheduleParams.java:211, :246]
+    + Σ over repayment periods (principalDue + interestDue)      # [ProgressiveLoanScheduleGenerator.java:137]
+    + downPaymentAmount, once per disbursement, if down payment is enabled
+                                                          # [ProgressiveLoanScheduleGenerator.java:345,
+                                                          #  inside the isDownPaymentEnabled() branch at :332-347]
+    + separated specified-due-date PERCENT_OF_INTEREST and
+      PERCENT_OF_AMOUNT_AND_INTEREST charges              # [:486]
+
+==============================================================================
+Section 3.1 (the graded-domain predicate), byte comparison:
+  IDENTICAL -- no graded-domain predicate moves in revision 9.
+
+==============================================================================
+VERDICT
+  No normative block that existed in revision 8 was removed or altered, and
+  section 3.1 is byte-identical. Every block added in revision 9 is NEW
+  specification (listed above), not a change to an existing rule.
+  => A model transcribed from revision 8's arithmetic text is a correct
+     transcription of revision 9's arithmetic text.

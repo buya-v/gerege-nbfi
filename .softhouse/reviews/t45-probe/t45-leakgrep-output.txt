@@ -1,0 +1,36 @@
+T45 CORRECTION-LEAK GREP over the whole document and contract.go
+
+[CLEAN   ] P1-T43-1  :504 cited as a cumulative DIFFERENCE
+            hits: 6   acknowledged: 6   live: 0
+
+[CLEAN   ] P1-T43-1  the cumulative generator 'adds them / does the opposite'
+            hits: 0   acknowledged: 0   live: 0
+
+[CLEAN   ] P1-T43-3  M4 stated as deciding where a CHARGE lands, unqualified
+            hits: 2   acknowledged: 2   live: 0
+
+[CLEAN   ] P1-T43-3  'the FOUR date-membership rules'
+            hits: 0   acknowledged: 0   live: 0
+
+[CLEAN   ] P1-T43-2  'reached at exactly these call sites'
+            hits: 0   acknowledged: 0   live: 0
+
+[CLEAN   ] P1-T43-2  'every remaining site ... which the graded domain excludes'
+            hits: 1   acknowledged: 1   live: 0
+
+[CLEAN   ] P1-T43-2  the four-site tenant-global list Money.java:103, :115, :160, :377
+            hits: 0   acknowledged: 0   live: 0
+
+[CLEAN   ] T44 F39-1  'separates / grades the month-end special case' unqualified
+            hits: 0   acknowledged: 0   live: 0
+
+[CLEAN   ] T44 A-5  'no half-cent tie exists'
+            hits: 0   acknowledged: 0   live: 0
+
+[CLEAN   ] P2-T43-2  a bare cell count with no leaf set
+            hits: 0   acknowledged: 0   live: 0
+
+[CLEAN   ] P2-T43-1  C-1's three-term progressive semantics, missing the down payment
+            hits: 0   acknowledged: 0   live: 0
+
+TOTAL LIVE LEAKS: 0
