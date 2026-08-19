@@ -9,7 +9,7 @@ QUALIFIED citations checked : 440
   unresolvable basename     : 0
   ambiguous basenames       : 0
 
-BARE `:n` / `:n-m` citations present (context-resolved, NOT machine-checked): 724
+BARE `:n` / `:n-m` citations present (context-resolved, NOT machine-checked): 730
 
 
 Citations per file, most-cited first:
