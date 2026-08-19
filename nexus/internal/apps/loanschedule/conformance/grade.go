@@ -76,12 +76,12 @@ type Summary struct {
 	// contract digest mismatch, an empty store.
 	FatalReasons []string
 
-	ParityPass, ParityFail          int
-	ContractPass, ContractFail      int
-	SelfTestPass, SelfTestFail      int
-	Refused, Inadmissible, Errored  int
-	GradedCells, UngradedCells      int
-	InvariantViolations             int
+	ParityPass, ParityFail         int
+	ContractPass, ContractFail     int
+	SelfTestPass, SelfTestFail     int
+	Refused, Inadmissible, Errored int
+	GradedCells, UngradedCells     int
+	InvariantViolations            int
 }
 
 // ExitCode is the harness's verdict as a process exit status.

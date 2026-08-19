@@ -237,19 +237,19 @@ type Disbursement struct {
 // the frozen request shape appears, spelled in snake_case; nothing else is
 // admitted (the decoder rejects unknown fields).
 type Request struct {
-	TimeZone                        string         `json:"time_zone"`
-	Currency                        Currency       `json:"currency"`
-	Rounding                        Rounding       `json:"rounding"`
-	ScheduleStartDate               Date           `json:"schedule_start_date"`
-	Disbursements                   []Disbursement `json:"disbursements"`
-	NumberOfRepayments              int32          `json:"number_of_repayments"`
-	RepaymentEvery                  int32          `json:"repayment_every"`
-	RepaymentFrequencyUnit          string         `json:"repayment_frequency_unit"`
-	AnnualNominalInterestRate       Rate           `json:"annual_nominal_interest_rate"`
-	InterestMethod                  string         `json:"interest_method"`
-	DayCount                        string         `json:"day_count"`
-	DownPaymentPercentage           Rate           `json:"down_payment_percentage"`
-	InstallmentRoundingMultipleMinor MinorText     `json:"installment_rounding_multiple_minor"`
+	TimeZone                         string         `json:"time_zone"`
+	Currency                         Currency       `json:"currency"`
+	Rounding                         Rounding       `json:"rounding"`
+	ScheduleStartDate                Date           `json:"schedule_start_date"`
+	Disbursements                    []Disbursement `json:"disbursements"`
+	NumberOfRepayments               int32          `json:"number_of_repayments"`
+	RepaymentEvery                   int32          `json:"repayment_every"`
+	RepaymentFrequencyUnit           string         `json:"repayment_frequency_unit"`
+	AnnualNominalInterestRate        Rate           `json:"annual_nominal_interest_rate"`
+	InterestMethod                   string         `json:"interest_method"`
+	DayCount                         string         `json:"day_count"`
+	DownPaymentPercentage            Rate           `json:"down_payment_percentage"`
+	InstallmentRoundingMultipleMinor MinorText      `json:"installment_rounding_multiple_minor"`
 }
 
 // ExpectPeriod is one expected row of the schedule. The graded fields are
