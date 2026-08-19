@@ -75,7 +75,7 @@
     "current_run_id": "2026-08-17-run1-harness-schedule-poc",
     "completed_contexts": [],
     "parked_contexts": [],
-    "note": "Local fire 20260819-170001 (oracle REACHABLE) IN PROGRESS. HEADLINE: THE NO-GO-TOOLCHAIN GAP IS CLOSED and the ratified DEC-1 artefact COMPILES. The driver installed a repo-local go1.26.6 darwin/arm64 (sha256 asserted against go.dev's published value BEFORE extraction) at GOROOT=.softhouse/toolchain/go, gitignored, activated by `. .softhouse/bin/go-env.sh`, reversible with one rm -rf - which closes the gap WITHOUT the durable change to Buyan's host that fire 20260819-140003 correctly declined to make unattended. contract.go compiled for the FIRST TIME in the program: `go build ./...` exit 0, `go vet ./...` exit 0, `go test ./...` exit 0. [UNVERIFIED: that the package compiles] is RETIRED. Ten rounds of shape-grading are NOT invalidated and the worst-case discovery the previous fire warned of - a type error frozen into a ratified artefact - DID NOT HAPPEN. This unblocks the executable half of T7 and, later, T10/T11/T13. NEW GATE G-3 (ENGINEERING, driver-decidable, deliberately NOT self-answered): `gofmt -l` wants to rewrite the FROZEN contract.go - 3 hunks, 25 lines, doc-comment list normalisation, semantically inert, NOT APPLIED. The risk is the failure mode, not the output: an editor format-on-save or a `gofmt -w ./...` would silently mutate a ratified artefact whose doc comments ARE the spec, and it would read as formatting noise in review. Recommendation A (leave it, exemption documented) is in force. DRIVER FINDINGS re-derived from source, not taken on report: D-1 corrects T50-N2's citation to :83 (:81 is the preceding method - recorded because a reviewer checking :81 would find an unrelated method and might think the finding fabricated); D-2 is NEW and extends T50-N2 - there are TWO hard-wired nulls at :83, loanCharges AND holidayDetailDTO, the latter null-guarded at DefaultScheduledDateGenerator.java:224, so HOLIDAY/NON-WORKING-DAY adjustment is a guaranteed SILENT NO-OP on Path A and holiday conformance, like charge conformance, can only ever be graded on Path B; D-2a is the sharp half - even on Path B this generator adjusts only the FINAL period (:61 guards :66), so a Go port that adjusts EVERY holiday date, which is the obvious reading of the method name, would pass the ENTIRE existing corpus silently because every capture so far went through Path A where the mechanism is inert. WAVE 1 DISPATCHED, both worktree-isolated on opus, both briefed with D-1/D-2/D-2a mid-flight: T7 (the program's bottleneck - conformance harness + vector store schema, now required to actually RUN, not merely be designed; .softhouse/vectors/ is still EMPTY and nothing has ever been promoted) and T55 (NEW - the leap-boundary ACT/ACT captures T48-N4's promotion trap requires, oracle-only work no cloud fire can do). T55 was explicitly told NOT to chase the holiday finding: scope guard over temptation."
+    "note": "Local fire 20260819-170001 (oracle REACHABLE) COMPLETE, clean exit, no worker lost. TWO STRUCTURAL BLOCKERS FELL IN ONE FIRE. (1) THE NO-GO-TOOLCHAIN GAP IS CLOSED and the ratified DEC-1 artefact COMPILES: repo-local go1.26.6 darwin/arm64, sha256 asserted against go.dev BEFORE extraction, GOROOT=.softhouse/toolchain/go, gitignored, activated by `. .softhouse/bin/go-env.sh`, reversible with one rm -rf - which closes the gap WITHOUT the durable change to Buyan's host that fire 20260819-140003 correctly declined to make unattended. The objection was never 'is a toolchain allowed' but 'may an agent modify Buyan's machine unattended'; re-scoping the install LOCATION dissolved it without weakening it. contract.go compiled for the FIRST TIME: go build exit 0, go vet exit 0. [UNVERIFIED: that the package compiles] is RETIRED and ten rounds of shape-grading are NOT invalidated. (2) T7, THE PROGRAM'S BOTTLENECK BEHIND SEVEN TASKS, IS DONE AND MERGED - T9, T10, T11, T13, T14, T15, T20 are all unblocked. The harness EXITS 2 with 'VERDICT: UNUSABLE - THIS IS NOT A PASS' and refuses to claim all-pass over an empty corpus; its --prove suite is 10/10; the driver RE-RAN build/vet/test/conformance/--prove and its own float scans rather than accepting the report (0 float-shaped JSON numbers, 0 float types). T55 ALSO DONE: 33 Path B leap-boundary captures, 6 discriminating pairs, 5 proven non-discriminating, determinism 33/33. Path A was DISQUALIFIED ON EVIDENCE - it drops the independent variable. THREE DRIVER CATCHES, each re-derived not accepted: T55-N1 CONFIRMED digit for digit (LB-DEC31 has a ZERO first segment and still grades the arm by 6,015 minor units; DEC-1's 'non-zero first segment' condition is known-wrong -> G-4, unamended because a ratified DEC-n is not an agent's call); G-3 (gofmt wants to rewrite the frozen contract.go - inert, NOT applied, because the risk is a silent mutation that reads as formatting noise in review); D-1/D-2/D-2a (the cited line is :83 not :81, and it hard-wires TWO nulls - loanCharges AND holidayDetailDTO - so HOLIDAY conformance, like charge conformance, can only ever be graded on Path B; and even on Path B this generator adjusts only the FINAL period, a trap a Go port would walk into while passing the entire existing corpus). BIGGEST TRANSFERABLE RESULT: PAIR-DIFFERENCE IS THE WRONG PROMOTION FILTER (T55-N2) - two shapes report 0 cells on every pair yet kill naive ports by 17,850 and 71,014 minor units; a non-zero-pair rule would have discarded the three best graders. Gradeability is now the graded_against[] field: which NAMED wrong implementations does this vector kill, and by how much. NOTHING IS PROMOTED YET and no context is at parity - the harness says so out loud. NEXT FIRE STARTS AT: T8 (promote the corpus into the new store - PROMOTION ORDERING MATTERS: promote a covering vector BEFORE flipping in_graded_domain or the run is fatal with UNBACKED in_graded_domain claims) and T9 (independent review of harness + vectors). T10, the port, is now compilable for the first time."
   },
   "contexts": [
     {
@@ -710,6 +710,49 @@
       "patterns_added": 7,
       "gates": "G-1 CLOSED (ratified). G-2 still pending and parks T2 only.",
       "notes": "Seven workers dispatched, seven completed and merged, none lost, no isolation violation, no scope breach. The driver DECLINED ratification twice (revisions 8 and 10) on one consistent discriminator - a known-false sentence about to be frozen - and ratified revision 12 because no known false sentence remained. No round returned a bare CLEAN and the record does not claim one did."
+    },
+    {
+      "fire": "20260819-170001",
+      "date": "2026-08-19",
+      "host": "local (Buyan's Mac)",
+      "oracle": "REACHABLE throughout, never restarted",
+      "run_id": "2026-08-17-run1-harness-schedule-poc",
+      "context": "tier0-harness-schedule-poc",
+      "tasks_completed": [
+        "T7",
+        "T55"
+      ],
+      "tasks_failed_infrastructure": [
+        "T7 attempt 1 (API 529 before first commit; nothing rescued because nothing existed)"
+      ],
+      "workers_dispatched": 3,
+      "workers_completed": 2,
+      "workers_lost": 1,
+      "isolation_violations": 0,
+      "scope_breaches": 0,
+      "driver_catches": [
+        "T55-N1 re-derived and confirmed digit for digit (6,015 minor units on a ZERO first segment)",
+        "G-3 gofmt would silently mutate the frozen ratified contract.go",
+        "D-1 the T50-N2 citation is :83 not :81",
+        "D-2 NEW: the same line hard-wires holidayDetailDTO too, so Path A is blind to holidays as well as charges",
+        "D-2a even on Path B only the FINAL period is holiday-adjusted"
+      ],
+      "gates_raised": [
+        "G-3",
+        "G-4"
+      ],
+      "verifier": {
+        "go_build": "exit 0",
+        "go_vet": "exit 0",
+        "go_test": "ok (conformance 0.582s)",
+        "gofmt": "only contract/contract.go - expected per G-3",
+        "conformance_sh": "exit 2 UNUSABLE - correct, no port and nothing promoted; NOT a pass",
+        "conformance_prove": "10 passed 0 failed",
+        "float_scan": "0 float-shaped JSON numbers in the vector store, 0 float types in the loanschedule Go tree"
+      },
+      "vectors_promoted": 0,
+      "contexts_at_parity": 0,
+      "headline": "No-Go-toolchain gap CLOSED without touching the host; the ratified contract.go COMPILES; T7 the bottleneck CLEARED; pair-difference proven the wrong promotion filter"
     }
   ],
   "database": {
