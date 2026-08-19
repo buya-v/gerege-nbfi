@@ -1,0 +1,5 @@
+14|T51 flat TRANCHE disbursement|12|1|7000.000000||
+15|T51 pct of disbursement TRANCHE maxCap5000|12|5|1.234500||5000.000000
+16|T51 pct of amount DISB maxCap5000|1|2|1.234500||5000.000000
+17|T51 pct of disbursement TRANCHE minCap8000|12|5|0.100000|8000.000000|
+18|T51 pct of amount DISB minCap8000|1|2|0.100000|8000.000000|

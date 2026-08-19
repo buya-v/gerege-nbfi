@@ -1,0 +1,94 @@
+{
+ "name": "T51 IROD false",
+ "shortName": "T5B",
+ "description": "Path B parity fixture - progressive MNT",
+ "currencyCode": "MNT",
+ "digitsAfterDecimal": 2,
+ "inMultiplesOf": 0,
+ "principal": 1200000,
+ "numberOfRepayments": 12,
+ "repaymentEvery": 1,
+ "repaymentFrequencyType": 2,
+ "interestRatePerPeriod": 21.6,
+ "interestRateFrequencyType": 3,
+ "amortizationType": 1,
+ "interestType": 0,
+ "interestCalculationPeriodType": 0,
+ "transactionProcessingStrategyCode": "advanced-payment-allocation-strategy",
+ "loanScheduleType": "PROGRESSIVE",
+ "loanScheduleProcessingType": "HORIZONTAL",
+ "daysInYearType": 1,
+ "daysInMonthType": 1,
+ "accountingRule": 1,
+ "locale": "en",
+ "dateFormat": "dd MMMM yyyy",
+ "paymentAllocation": [
+  {
+   "transactionType": "DEFAULT",
+   "futureInstallmentAllocationRule": "NEXT_INSTALLMENT",
+   "paymentAllocationOrder": [
+    {
+     "paymentAllocationRule": "PAST_DUE_PENALTY",
+     "order": 1
+    },
+    {
+     "paymentAllocationRule": "PAST_DUE_FEE",
+     "order": 2
+    },
+    {
+     "paymentAllocationRule": "PAST_DUE_PRINCIPAL",
+     "order": 3
+    },
+    {
+     "paymentAllocationRule": "PAST_DUE_INTEREST",
+     "order": 4
+    },
+    {
+     "paymentAllocationRule": "DUE_PENALTY",
+     "order": 5
+    },
+    {
+     "paymentAllocationRule": "DUE_FEE",
+     "order": 6
+    },
+    {
+     "paymentAllocationRule": "DUE_PRINCIPAL",
+     "order": 7
+    },
+    {
+     "paymentAllocationRule": "DUE_INTEREST",
+     "order": 8
+    },
+    {
+     "paymentAllocationRule": "IN_ADVANCE_PENALTY",
+     "order": 9
+    },
+    {
+     "paymentAllocationRule": "IN_ADVANCE_FEE",
+     "order": 10
+    },
+    {
+     "paymentAllocationRule": "IN_ADVANCE_PRINCIPAL",
+     "order": 11
+    },
+    {
+     "paymentAllocationRule": "IN_ADVANCE_INTEREST",
+     "order": 12
+    }
+   ]
+  }
+ ],
+ "isInterestRecalculationEnabled": false,
+ "isEqualAmortization": false,
+ "multiDisburseLoan": false,
+ "canDefineInstallmentAmount": false,
+ "holdGuaranteeFunds": false,
+ "accountMovesOutOfNPAOnlyOnArrearsCompletion": false,
+ "enableDownPayment": false,
+ "dueDaysForRepaymentEvent": 0,
+ "overDueDaysForRepaymentEvent": 0,
+ "enableInstallmentLevelDelinquency": false,
+ "fundId": null,
+ "charges": [],
+ "interestRecognitionOnDisbursementDate": false
+}

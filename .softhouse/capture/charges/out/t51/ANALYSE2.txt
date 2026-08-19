@@ -1,0 +1,137 @@
+######################################################################################
+# ITEM 2, pass 2 -- the shapes that BREAK the linearity that hid chargeCalculationType 5
+######################################################################################
+
+Pass 1 found ct=5 byte-identical to ct=2 on three genuine tranches.  Reason, re-derived from
+source and then tested: LoanChargeAssembler.java:190-204 builds ONE LoanCharge per tranche for
+chargeTimeType 12, each with loanPrincipal = that tranche's principal, so the tranche reading
+totals  SUM(p x t_i) = p x SUM(t_i)  -- and when the tranches sum to the loan principal that
+is exactly the ct=2 reading  p x principal.  Two shapes break it.
+
+-- (a) tranches that DO NOT sum to the loan principal --
+   request principal 1,200,000 ; disbursementData 400,000 + 300,000 + 300,000 = 1,000,000
+   ct=5 PERCENT_OF_DISBURSEMENT_AMOUNT (id 13)  totalFeeChargesCharged=12345.00       disbursement rows=[('400000.00', '12345.000000'), ('300000.00', '12345.000000'), ('300000.00', '12345.000000')]
+   ct=2 PERCENT_OF_AMOUNT (id 3)                totalFeeChargesCharged=14814.00       disbursement rows=[('400000.00', '14814.000000'), ('300000.00', '14814.000000'), ('300000.00', '14814.000000')]
+
+== ct=5 vs ct=2, tranches summing to 1,000,000 against a principal of 1,200,000
+   23 of 302 cells differ   [expected: separate]
+     row0.feeChargesDue                   12345.000000       | 14814.000000
+     row0.feeChargesOutstanding           12345.000000       | 14814.000000
+     row0.totalActualCostOfLoanForPeriod  12345.000000       | 14814.000000
+     row0.totalDueForPeriod               12345.000000       | 14814.000000
+     row0.totalOriginalDueForPeriod       12345.000000       | 14814.000000
+     row0.totalOutstandingForPeriod       12345.000000       | 14814.000000
+     row0.totalOverdue                    12345.000000       | 14814.000000
+     row3.feeChargesDue                   12345.000000       | 14814.000000
+     ... 15 more
+
+-- (b) minCap / maxCap: a clamp is not linear (LoanCharge.minimumAndMaximumCap [LoanCharge.java:326-350], caps copied onto EVERY LoanCharge at LoanChargeService.java:527-528) --
+   tranches 500,000 + 300,000 + 400,000 ; 1.2345 % of each is 6172.5 / 3703.5 / 4938
+   ct=5, maxCap 5000 (charge 15)                      totalFeeChargesCharged=13641.50     rows=[('500000.00', '13641.500000'), ('300000.00', '13641.500000'), ('400000.00', '13641.500000')]
+   ct=2, maxCap 5000 (charge 16)                      totalFeeChargesCharged=5000.00      rows=[('500000.00', '5000.000000'), ('300000.00', '5000.000000'), ('400000.00', '5000.000000')]
+   ct=5, maxCap 5000, ONE tranche of 1,200,000        totalFeeChargesCharged=5000.00      rows=[('1200000.00', '5000.000000')]
+   ct=5, minCap 8000, 0.1 % (charge 17)               totalFeeChargesCharged=24000.00     rows=[('500000.00', '24000.000000'), ('300000.00', '24000.000000'), ('400000.00', '24000.000000')]
+   ct=2, minCap 8000, 0.1 % (charge 18)               totalFeeChargesCharged=8000.00      rows=[('500000.00', '8000.000000'), ('300000.00', '8000.000000'), ('400000.00', '8000.000000')]
+
+== maxCap 5000: ct=5 (per tranche) vs ct=2 (once)
+   23 of 302 cells differ   [expected: separate]
+     row0.feeChargesDue                   13641.500000       | 5000.000000
+     row0.feeChargesOutstanding           13641.500000       | 5000.000000
+     row0.totalActualCostOfLoanForPeriod  13641.500000       | 5000.000000
+     row0.totalDueForPeriod               13641.500000       | 5000.000000
+     row0.totalOriginalDueForPeriod       13641.500000       | 5000.000000
+     row0.totalOutstandingForPeriod       13641.500000       | 5000.000000
+     row0.totalOverdue                    13641.500000       | 5000.000000
+     row3.feeChargesDue                   13641.500000       | 5000.000000
+     ... 15 more
+
+== minCap 8000: ct=5 (per tranche) vs ct=2 (once)
+   23 of 302 cells differ   [expected: separate]
+     row0.feeChargesDue                   24000.000000       | 8000.000000
+     row0.feeChargesOutstanding           24000.000000       | 8000.000000
+     row0.totalActualCostOfLoanForPeriod  24000.000000       | 8000.000000
+     row0.totalDueForPeriod               24000.000000       | 8000.000000
+     row0.totalOriginalDueForPeriod       24000.000000       | 8000.000000
+     row0.totalOutstandingForPeriod       24000.000000       | 8000.000000
+     row0.totalOverdue                    24000.000000       | 8000.000000
+     row3.feeChargesDue                   24000.000000       | 8000.000000
+     ... 15 more
+
+== maxCap 5000 on ct=5 with THREE tranches vs the same charge on ONE tranche
+   254 of 326 cells differ   [expected: separate]
+     row0.feeChargesDue                   13641.500000       | 5000.000000
+     row0.feeChargesOutstanding           13641.500000       | 5000.000000
+     row0.principalDisbursed              500000.00          | 1200000.00
+     row0.principalLoanBalanceOutstanding 500000.00          | 1200000.00
+     row0.totalActualCostOfLoanForPeriod  13641.500000       | 5000.000000
+     row0.totalDueForPeriod               13641.500000       | 5000.000000
+     row0.totalOriginalDueForPeriod       13641.500000       | 5000.000000
+     row0.totalOutstandingForPeriod       13641.500000       | 5000.000000
+     ... 246 more
+
+== maxCap 5000 vs no cap, both ct=5, three tranches (does the cap bind at all?)
+   23 of 302 cells differ   [expected: separate]
+     row0.feeChargesDue                   13641.500000       | 14814.000000
+     row0.feeChargesOutstanding           13641.500000       | 14814.000000
+     row0.totalActualCostOfLoanForPeriod  13641.500000       | 14814.000000
+     row0.totalDueForPeriod               13641.500000       | 14814.000000
+     row0.totalOriginalDueForPeriod       13641.500000       | 14814.000000
+     row0.totalOutstandingForPeriod       13641.500000       | 14814.000000
+     row0.totalOverdue                    13641.500000       | 14814.000000
+     row3.feeChargesDue                   13641.500000       | 14814.000000
+     ... 15 more
+
+   RE-DERIVATION vs OBSERVATION (the totals above are the ORACLE's; the arithmetic is mine):
+     per-tranche maxCap : min(6172.5,5000) + min(3703.5,5000) + min(4938,5000) = 13641.50
+     whole-loan  maxCap : min(14814,5000)                                      =  5000.00
+     per-tranche minCap : max(500,8000) + max(300,8000) + max(400,8000)        = 24000.00
+     whole-loan  minCap : max(1200,8000)                                       =  8000.00
+
+
+######################################################################################
+# ITEM 1, pass 2 -- the other crossing direction (non-leap -> leap)
+######################################################################################
+
+== NL2L, disbursed 15 Dec 2023 (365-day year crossing INTO a 366-day year): product 17 (flag TRUE) vs product 18 (flag FALSE)
+   0 of 153 cells differ   [expected: observe]
+     -> every cell agrees; on its own this comparison discriminates NOTHING.
+   observed period 1: 2023-12-15 -> 2024-1-15   interestDue 21985.14   totalInterestCharged 76824.49
+
+######################################################################################
+# ITEM 3 -- fixedLength
+######################################################################################
+
+`fixedLength` is a supported calculateLoanSchedule parameter [LoanScheduleValidator.java:77]
+and has two guards, both reached from LoanApplicationValidator.fixedLengthValidations
+[:819-834] into LoanProductDataValidator.fixedLengthValidations [:2764-2797]:
+  * `thereIsInterest` -- derived from the REQUEST's interestRatePerPeriod [:829-830] -- must
+    be false, else HTTP 403 "Fixed Length configuration is only allowed for zero interest
+    products" [:2784-2787];
+  * fixedLength >= ((numberOfRepayments - 1) * repayEvery) + 1, else HTTP 403 [:2790-2796].
+
+   T51-FL-INTEREST-REJECT     HTTP 403 : Fixed Length configuration is only allowed for zero interest products
+   T51-FL0-11                 HTTP 403 : Wrong configuration between Number Of Repayments: 12 * 1 and Fixed Length: 11 values
+
+   T51-FL0-CTRL     loanTermInDays=365      last period 2026-12-1 -> 2027-1-1   totalInterestCharged=0.00
+   T51-FL0-12       loanTermInDays=365      last period 2026-12-1 -> 2027-1-1   totalInterestCharged=0.00
+   T51-FL0-18       loanTermInDays=546      last period 2026-12-1 -> 2027-7-1   totalInterestCharged=0.00
+   T51-FL0-365      loanTermInDays=11109    last period 2026-12-1 -> 2056-6-1   totalInterestCharged=0.00
+
+== fixedLength 12 (== the natural term) vs no fixedLength
+   0 of 280 cells differ   [expected: observe]
+     -> every cell agrees; on its own this comparison discriminates NOTHING.
+
+== fixedLength 18 vs no fixedLength
+   3 of 280 cells differ   [expected: separate]
+     loanTermInDays                       546                | 365
+     row12.daysInPeriod                   212                | 31
+     row12.dueDate                        ['2027', '7', '1'] | ['2027', '1', '1']
+
+== fixedLength 365 vs fixedLength 18
+   3 of 280 cells differ   [expected: separate]
+     loanTermInDays                       11109              | 546
+     row12.daysInPeriod                   10775              | 212
+     row12.dueDate                        ['2056', '6', '1'] | ['2027', '7', '1']
+
+
+RESULT: every comparison above published its own differing-cell count.

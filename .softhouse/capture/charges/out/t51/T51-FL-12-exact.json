@@ -1,0 +1,15 @@
+{
+ "developerMessage": "Request was understood but caused a domain rule violation.",
+ "httpStatusCode": "403",
+ "defaultUserMessage": "Errors contain reason for domain rule violation.",
+ "userMessageGlobalisationCode": "validation.msg.domain.rule.violation",
+ "errors": [
+  {
+   "developerMessage": "Fixed Length configuration is only allowed for zero interest products",
+   "defaultUserMessage": "Fixed Length configuration is only allowed for zero interest products",
+   "userMessageGlobalisationCode": "error.msg.fixed.length.only.supported.for.zero.interest",
+   "parameterName": "id",
+   "args": []
+  }
+ ]
+}

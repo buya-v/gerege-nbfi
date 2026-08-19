@@ -1,0 +1,13 @@
+product prod-T51-P1-irod-true id=17
+product prod-T51-P2-irod-false id=18
+product prod-T51-P3-tranche id=19
+create-c1-tt12 HTTP=200 {"resourceId":14}
+create-c5-tt1-reject HTTP=400 {"developerMessage":"The request was invalid. This typically will happen due to validation errors which are provided.","httpStatusCode":"400","defaultUserMessage":"Validation errors exist.","userMessageGlobalisationCode":"validation.msg.validation.errors.exist","errors":[{"developerMessage":"The parameter `chargeCalculationType` must not be any of [ 5 ] .","defaultUserMessage":"The parameter `chargeCalculationType` must not be any of [ 5 ] .","userMessageGlobalisationCode":"validation.msg.charge.chargeCalculationType.is.one.of.unwanted.enumerations","parameterName":"chargeCalculationType","args":[{"value":5},{"value":[5]}]}]}
+create-c5-tt2-reject HTTP=400 {"developerMessage":"The request was invalid. This typically will happen due to validation errors which are provided.","httpStatusCode":"400","defaultUserMessage":"Validation errors exist.","userMessageGlobalisationCode":"validation.msg.validation.errors.exist","errors":[{"developerMessage":"The parameter `chargeCalculationType` must not be any of [ 5 ] .","defaultUserMessage":"The parameter `chargeCalculationType` must not be any of [ 5 ] .","userMessageGlobalisationCode":"validation.msg.charge.chargeCalculationType.is.one.of.unwanted.enumerations","parameterName":"chargeCalculationType","args":[{"value":5},{"value":[5]}]}]}
+create-c5-tt8-reject HTTP=400 {"developerMessage":"The request was invalid. This typically will happen due to validation errors which are provided.","httpStatusCode":"400","defaultUserMessage":"Validation errors exist.","userMessageGlobalisationCode":"validation.msg.validation.errors.exist","errors":[{"developerMessage":"The parameter `chargeCalculationType` must not be any of [ 5 ] .","defaultUserMessage":"The parameter `chargeCalculationType` must not be any of [ 5 ] .","userMessageGlobalisationCode":"validation.msg.charge.chargeCalculationType.is.one.of.unwanted.enumerations","parameterName":"chargeCalculationType","args":[{"value":5},{"value":[5]}]}]}
+create-c5-maxcap HTTP=200 {"resourceId":15}
+create-c2-maxcap HTTP=200 {"resourceId":16}
+create-c5-mincap HTTP=200 {"resourceId":17}
+create-c2-mincap HTTP=200 {"resourceId":18}
+product prod-T51-P4-ftt-irod-true id=20
+product prod-T51-P5-ftt-irod-false id=21
