@@ -1,0 +1,24 @@
+T47 NORMATIVE-BLOCK DIFF - revision 9 (main) against revision 10 (working tree)
+
+fenced normative blocks: revision 9 = 23, revision 10 = 24
+  blocks present in 9 and REMOVED in 10 : 0
+  blocks ADDED in 10                   : 1
+  blocks unchanged                     : 23
+
++++ ADDED (absent in revision 9, present in revision 10) +++
+packed(a, b) = k − [a.day > b.day]                       # ChronoUnit.MONTHS.between, :1435
+clamped(a, b) = k − [min(a.day, len(b)) > b.day]         # largest j with a.plusMonths(j) <= b
+
+packed(a, b) != clamped(a, b)  <=>  b.day == len(b)  AND  a.day > b.day
+
+==============================================================================
+Section 3.1 (the graded-domain predicate), byte comparison:
+  IDENTICAL -- no graded-domain predicate moves in revision 10.
+
+==============================================================================
+VERDICT
+  No normative block that existed in revision 9 was removed or altered, and
+  section 3.1 is byte-identical. Every block added in revision 10 is NEW
+  specification (listed above), not a change to an existing rule.
+  => A model transcribed from revision 9's arithmetic text is a correct
+     transcription of revision 10's arithmetic text.

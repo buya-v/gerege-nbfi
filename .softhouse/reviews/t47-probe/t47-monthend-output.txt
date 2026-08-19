@@ -1,0 +1,68 @@
+T47 MONTH-END RULE CHECK -- DEC-1 revision 10
+no money is computed here and no float is constructed
+
+==============================================================================
+STEP 0  The rule AS WRITTEN in DEC-1 revision 10
+==============================================================================
+  found revision 10's closed-form block, verbatim:
+    | packed(a, b) = k − [a.day > b.day]                       # ChronoUnit.MONTHS.between, :1435
+    | clamped(a, b) = k − [min(a.day, len(b)) > b.day]         # largest j with a.plusMonths(j) <= b
+    | 
+    | packed(a, b) != clamped(a, b)  <=>  b.day == len(b)  AND  a.day > b.day
+
+  the functions below are that block, transcribed:
+    packed(a, b)  = pm(b) - pm(a) - [a.day > b.day]            (k >= 1)
+    clamped(a, b) = pm(b) - pm(a) - [min(a.day, len(b)) > b.day]
+    fires(a, b)   = len(b's month) == b.day and a.day > b.day  (:1432)
+    oracle(a, b)  = packed(a, b + 1 day) if fires else packed(a, b)  (:1433/:1435)
+
+  the worked pair the document prints, seed=2000-01-29 from=2001-02-28:
+    packed=12 clamped=13 oracle=13   -> MATCHES the document (12 / 13 / 13)
+
+==============================================================================
+LEG A  EXHAUSTIVE over the rule's whole input space (not a date range)
+==============================================================================
+  (a.day, b.day, len(b's month), k) classes exercised : 53840
+  classes where packed != clamped (k >= 1)            : 66
+  A1 violations  packed != clamped  <=>  :1432 fires  : 0
+  A2 violations  fires => oracle == clamped           : 0
+  A3 violations  not fires => packed == clamped == oracle : 0
+  => PASS -- the document's equivalence holds on EVERY input class
+
+==============================================================================
+LEG B  the 112,147,776-pair counts, 2000-01-01 .. 2040-12-31
+==============================================================================
+  cross-check on the complete sub-window 2000-01-01 .. 2004-12-31 (1827 dates):
+    total                          brute=1669878      prefix=1669878      ok
+    firing                         brute=622          prefix=622          ok
+    diverging                      brute=622          prefix=622          ok
+    cross_fires_but_equal          brute=0            prefix=0            ok
+    cross_not_fires_but_differs    brute=0            prefix=0            ok
+    oracle_ne_clamped              brute=0            prefix=0            ok
+    oracle_ne_packed               brute=622          prefix=622          ok
+    => the prefix method reproduces direct enumeration exactly
+
+  full range, against the figures DEC-1 revision 10 prints:
+    ordered date pairs swept               computed=112147776    document=112147776    MATCH
+    the :1432 predicate FIRES              computed=45253        document=45253        MATCH
+    packed != clamped                      computed=45253        document=45253        MATCH
+    fires AND packed == clamped            computed=0            document=0            MATCH
+    does NOT fire AND packed != clamped    computed=0            document=0            MATCH
+    k_oracle != k_clamped                  computed=0            document=0            MATCH
+    k_oracle != k_packed                   computed=45253        document=45253        MATCH
+  => PASS -- revision 10's table is reproduced digit for digit
+
+==============================================================================
+LEG C  the 59,130-pair sweep, re-run with the CLOSED-FORM functions
+       (boundaries + seed from the inherited section-4.2 model, as T44/T45)
+==============================================================================
+  (ScheduleStartDate, repayment period) pairs swept : 59130
+  periods on which the :1432 predicate FIRES        : 701
+  periods where k_oracle != k_packed                : 701
+  periods where k_oracle != k_clamped               : 0
+  document / T44 / T45 figures                      : (59130, 701, 701, 0)
+  => PASS -- the closed-form block and the step-B pseudocode agree, and both reproduce T44's sweep
+
+==============================================================================
+OVERALL: PASS
+==============================================================================
