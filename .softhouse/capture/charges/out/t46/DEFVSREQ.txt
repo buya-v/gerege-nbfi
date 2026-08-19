@@ -1,0 +1,76 @@
+T46 -- A-3: which input supplies the charge money?  (request vs m_charge definition)
+
+== T46-CH-01-defvsreq-pctinterest
+   charge id 4  (time_enum 8, calc_enum 4, penalty False)
+   definition m_charge.amount : 3.750000
+   request    charges[0].amount: 1.25
+   base (period-1 interest) : 21600.00
+   if DEFINITION governs -> 810.00000000
+   if REQUEST    governs -> 270.0000
+   OBSERVED period-1 feeChargesDue : 270.00
+   VERDICT: REQUEST governs
+
+== T46-CH-02-defvsreq-flat-disb
+   charge id 1  (time_enum 1, calc_enum 1, penalty False)
+   definition m_charge.amount : 15000.000000
+   request    charges[0].amount: 7777.77
+   base (flat) : 1
+   if DEFINITION governs -> 15000.000000
+   if REQUEST    governs -> 7777.77
+   OBSERVED disbursement row feeChargesDue : 7777.77
+   VERDICT: REQUEST governs
+
+== T46-CH-03-tie-pctinterest-4725
+   charge id 4  (time_enum 8, calc_enum 4, penalty False)
+   definition m_charge.amount : 3.750000
+   request    charges[0].amount: 0.021875
+   base (period-1 interest) : 21600.00
+   if DEFINITION governs -> 810.00000000
+   if REQUEST    governs -> 4.72500000
+   OBSERVED period-1 feeChargesDue : 4.73
+   VERDICT: REQUEST governs
+   HALF-CENT TIE: exact value 4.72500000 | HALF_UP -> 4.73 | HALF_EVEN -> 4.72 | OBSERVED 4.73 => HALF_UP
+
+== T46-CH-04-tie-pctinterest-2025
+   charge id 4  (time_enum 8, calc_enum 4, penalty False)
+   definition m_charge.amount : 3.750000
+   request    charges[0].amount: 0.009375
+   base (period-1 interest) : 21600.00
+   if DEFINITION governs -> 810.00000000
+   if REQUEST    governs -> 2.02500000
+   OBSERVED period-1 feeChargesDue : 2.03
+   VERDICT: REQUEST governs
+   HALF-CENT TIE: exact value 2.02500000 | HALF_UP -> 2.03 | HALF_EVEN -> 2.02 | OBSERVED 2.03 => HALF_UP
+
+== T46-CH-05-defvsreq-pctamtint
+   charge id 5  (time_enum 8, calc_enum 3, penalty False)
+   definition m_charge.amount : 1.234500
+   request    charges[0].amount: 2.5
+   base (period-1 principal + interest) : 112082.37
+   if DEFINITION governs -> 1383.65685765
+   if REQUEST    governs -> 2802.05925
+   OBSERVED period-1 feeChargesDue : 2802.06
+   VERDICT: REQUEST governs
+
+== T46-CH-06-defvsreq-pctamount-disb
+   charge id 3  (time_enum 1, calc_enum 2, penalty False)
+   definition m_charge.amount : 1.234500
+   request    charges[0].amount: 0.5
+   base (principal disbursed) : 1200000.00
+   if DEFINITION governs -> 14814.00000000
+   if REQUEST    governs -> 6000.000
+   OBSERVED disbursement row feeChargesDue : 6000.000
+   VERDICT: REQUEST governs
+
+== T46-CH-07-defvsreq-penalty-instalment
+   charge id 8  (time_enum 8, calc_enum 1, penalty True)
+   definition m_charge.amount : 1200.000000
+   request    charges[0].amount: 333.33
+   base (flat) : 1
+   if DEFINITION governs -> 1200.000000
+   if REQUEST    governs -> 333.33
+   OBSERVED period-1 penaltyChargesDue : 333.33
+   VERDICT: REQUEST governs
+
+Every number above is either a raw response leaf, a transcribed m_charge row, or an
+exact Decimal computation over those two.  No float was constructed.
