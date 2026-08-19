@@ -1,0 +1,286 @@
+{
+  "schema": "gerege.loanschedule.vector/v1",
+  "case_id": "P-DRIFT-E",
+  "context": "loanschedule",
+  "class": "parity",
+  "title": "PERIODRATIO DRIFT in a COMMON year. MNT 1,200,000.00 over 6 monthly repayments at 21.6% p.a., schedule start 2025-01-28 and disbursement 2025-01-31. Identical to P-DRIFT-A but for the year: February is 28 days rather than 29, so the re-anchor's clamp lands on a different day and the drift pattern differs. A port that got the leap case right by accident is caught here.",
+  "dec1_revision": 12,
+  "_note": "TRANSCRIPTION NOTES. (1) request.currency.code is upper-cased from the capture's own spelling; admit.go requires upper case and the contract forbids the oracle's lower-case fixture spelling leaking back out. (2) request.time_zone is DECLARED, not observed: the Path A embeddable seam takes java.time.LocalDate only and has no time-zone input at all, so Asia/Ulaanbaatar is this vector's declared interpretation zone for civil dates and grades nothing. (3) request.rounding.rate_factor_scale is 19 from PIN.json's production_rounding; the capture records one MathContext precision (19) which is both. (4) On the DISBURSEMENT row, installment_number and interest_minor are marked unrecorded_fields: the oracle's own record type LoanSchedulePlanDisbursementPeriod carries four fields and its periodNumber() returns null, with no interest accessor at all. Its outstanding balance IS recorded by this rig and is therefore promoted. (5) The capture's per-row totalOutstandingBalance column is deliberately NOT promoted: it is principal plus interest still to accrue, not an outstanding-principal figure, and the frozen contract has no field for it. (6) PROVENANCE OF THE SHAPE, AND WHY IT WAS RE-OBSERVED. Task T39 asked this exact request of the same pinned oracle two fires ago through a DIFFERENT Path A harness (CapturePeriodRatio.java, .softhouse/capture/periodratio/out/t39-periodratio.json) and the observation was never promoted. That harness records only {type, fromDate, dueDate, principal} on a DISBURSEMENT row and NOT that row's outstanding balance, so a vector transcribed from it must withdraw the cell as unrecorded -- whereupon the harness's own --self-test replay answers 0 for it and the balance_roll_forward invariant reads the placeholder as a violation (finding T58-N2, a D-5-class harness defect one layer down: D-5 taught the CELL comparison to skip an unrecorded cell; the INVARIANT layer still grades the placeholder). Rather than exempt an invariant to get a promotion out, pass 3e RE-OBSERVED all fourteen shapes on the pass-3b/3c/3d rig, which records that column. (7) CROSS-HARNESS REPRODUCTION. Because the requests are field for field T39's, the two observations are comparable, and they were compared: 14 case pairs, 134 schedule rows, 1,698 cells, ZERO differences [.softhouse/capture/t58-counterfactuals/src/cross-harness-t39-vs-pass3e.py]. Two independent Path A harnesses, two fires apart, agree on every cell either of them recorded.",
+  "capabilities_required": [
+    "schedule.core",
+    "monthend.reanchor"
+  ],
+  "graded_against": [
+    {
+      "id": "INTEREST-RATE-FACTOR-MULTIPLIER-REPAYMENTEVERY-NOT-PERIODRATIO",
+      "capability": "schedule.core",
+      "description": "Passes RepaymentEvery into the rate-factor multiplier slot that the INTEREST call site fills with periodRatio. The reference oracle has TWO call sites with TWO specifications: calculateRateFactorPerPeriodForInterest passes periodRatio [ProgressiveEMICalculator.java:1412-1413] and calculateRateFactorPerPeriod passes repaymentEvery [:1536-1537]. They coincide exactly when every repayment window sits on the schedule-start lattice, which is why an on-lattice corpus cannot tell them apart at all; move the month-end re-anchor's seed off that lattice and they diverge.",
+      "margin_minor": "174681",
+      "evidence": "Derived at the ratified production MathContext (19, HALF_UP). Every OBSERVED value below is transcribed from capture case P-DRIFT-E of .softhouse/capture/out/capture-prod3e-raw.json; only the counterfactual is derived.\nMARGIN. Over this vector's graded money cells the counterfactual diverges on 16 of 20. The widest single-cell disagreement is at period[2], column interest_minor: the oracle OBSERVED 1987437 minor units against the counterfactual's 1812756, so the margin is |1987437 - 1812756| = 174681 MINOR UNITS.\nCOUNTERFACTUAL PROVENANCE. The counterfactual value is MEASURED, not asserted: a scratch copy of the port at /tmp/t58mut with exactly one named change applied, run on this vector's own request. The patches are .softhouse/capture/t58-counterfactuals/src/apply-mutations-*.py and the runner is src/t58cf.go.txt; the raw per-cell output is out/t58-counterfactuals-*.json. The model's faithfulness is not assumed -- with the change switched OFF it reproduces all 508 graded money cells of the 20 in-domain capture cases it was run against, with ZERO mismatches, so the only thing a reported margin can be measuring is the named change."
+    },
+    {
+      "id": "PERIODRATIO-SEED-ALWAYS-SCHEDULE-START",
+      "capability": "schedule.core",
+      "description": "Makes calculateSeedDate return the schedule start unconditionally, instead of returning it only when BOTH conjuncts hold and the period's own from-date otherwise [ProgressiveEMICalculator.java:1477-1480]. The two seeds of this generator are different dates -- the month-end re-anchor is seeded on the DISBURSEMENT and calculateSeedDate on the SCHEDULE START -- and that asymmetry is the entire mechanism by which periodRatio leaves the lattice.",
+      "margin_minor": "991680",
+      "evidence": "Derived at the ratified production MathContext (19, HALF_UP). Every OBSERVED value below is transcribed from capture case P-DRIFT-E of .softhouse/capture/out/capture-prod3e-raw.json; only the counterfactual is derived.\nMARGIN. Over this vector's graded money cells the counterfactual diverges on 16 of 20. The widest single-cell disagreement is at period[3], column interest_minor: the oracle OBSERVED 1464806 minor units against the counterfactual's 2456486, so the margin is |1464806 - 2456486| = 991680 MINOR UNITS.\nCOUNTERFACTUAL PROVENANCE. The counterfactual value is MEASURED, not asserted: a scratch copy of the port at /tmp/t58mut with exactly one named change applied, run on this vector's own request. The patches are .softhouse/capture/t58-counterfactuals/src/apply-mutations-*.py and the runner is src/t58cf.go.txt; the raw per-cell output is out/t58-counterfactuals-*.json. The model's faithfulness is not assumed -- with the change switched OFF it reproduces all 508 graded money cells of the 20 in-domain capture cases it was run against, with ZERO mismatches, so the only thing a reported margin can be measuring is the named change."
+    },
+    {
+      "id": "MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28",
+      "capability": "monthend.reanchor",
+      "description": "Weakens the month-end re-anchor guard from dateDay >= 28 to dateDay > 28. The reference oracle's adjustDate fires on seedDay > 28 AND dateDay >= 28 [DefaultScheduledDateGenerator.java:168-176] -- an asymmetric pair of comparisons that reads like a typo and is not one. Weakening it silently drops the re-anchor on every period whose stepped date lands on the 28th, which is exactly what a leap February produces.",
+      "margin_minor": "174681",
+      "evidence": "Derived at the ratified production MathContext (19, HALF_UP). Every OBSERVED value below is transcribed from capture case P-DRIFT-E of .softhouse/capture/out/capture-prod3e-raw.json; only the counterfactual is derived.\nMARGIN. Over this vector's graded money cells the counterfactual diverges on 16 of 20. The widest single-cell disagreement is at period[2], column interest_minor: the oracle OBSERVED 1987437 minor units against the counterfactual's 1812756, so the margin is |1987437 - 1812756| = 174681 MINOR UNITS.\nCOUNTERFACTUAL PROVENANCE. The counterfactual value is MEASURED, not asserted: a scratch copy of the port at /tmp/t58mut with exactly one named change applied, run on this vector's own request. The patches are .softhouse/capture/t58-counterfactuals/src/apply-mutations-*.py and the runner is src/t58cf.go.txt; the raw per-cell output is out/t58-counterfactuals-*.json. The model's faithfulness is not assumed -- with the change switched OFF it reproduces all 508 graded money cells of the 20 in-domain capture cases it was run against, with ZERO mismatches, so the only thing a reported margin can be measuring is the named change."
+    },
+    {
+      "id": "MONTHEND-CONTINUE-FROM-CLAMPED-DAY",
+      "capability": "monthend.reanchor",
+      "description": "Clamps the stepped date into the short month's length and then CONTINUES FROM THE CLAMPED DAY, instead of re-anchoring on the disbursement-date seed [DefaultScheduledDateGenerator.java:168-176]. A schedule seeded on 31 January must return to the 31st the moment a month is long enough: 2024-02-29, then 2024-03-31 -- not 2024-03-29. Clamp-and-forget is the obvious implementation and it is wrong.",
+      "margin_minor": "174681",
+      "evidence": "Derived at the ratified production MathContext (19, HALF_UP). Every OBSERVED value below is transcribed from capture case P-DRIFT-E of .softhouse/capture/out/capture-prod3e-raw.json; only the counterfactual is derived.\nMARGIN. Over this vector's graded money cells the counterfactual diverges on 16 of 20. The widest single-cell disagreement is at period[2], column interest_minor: the oracle OBSERVED 1987437 minor units against the counterfactual's 1812756, so the margin is |1987437 - 1812756| = 174681 MINOR UNITS.\nCOUNTERFACTUAL PROVENANCE. The counterfactual value is MEASURED, not asserted: a scratch copy of the port at /tmp/t58mut with exactly one named change applied, run on this vector's own request. The patches are .softhouse/capture/t58-counterfactuals/src/apply-mutations-*.py and the runner is src/t58cf.go.txt; the raw per-cell output is out/t58-counterfactuals-*.json. The model's faithfulness is not assumed -- with the change switched OFF it reproduces all 508 graded money cells of the 20 in-domain capture cases it was run against, with ZERO mismatches, so the only thing a reported margin can be measuring is the named change."
+    },
+    {
+      "id": "EMI-SMOOTHING-LOOP-OMITTED",
+      "capability": "schedule.core",
+      "description": "Omits checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods [ProgressiveEMICalculator.java:1258-1309], which the oracle calls on every ordinary generation at :749 and which re-levels the installment across the related repayment periods whenever the final-period residual exceeds its guard. DEC-1 calls reproducing this loop 'a conformance obligation, not backlog' (contract.go:1660-1661).",
+      "margin_minor": "7418",
+      "evidence": "Derived at the ratified production MathContext (19, HALF_UP). Every OBSERVED value below is transcribed from capture case P-DRIFT-E of .softhouse/capture/out/capture-prod3e-raw.json; only the counterfactual is derived.\nMARGIN. Over this vector's graded money cells the counterfactual diverges on 16 of 20. The widest single-cell disagreement is at period[5], column outstanding_principal_minor: the oracle OBSERVED 20891972 minor units against the counterfactual's 20899390, so the margin is |20891972 - 20899390| = 7418 MINOR UNITS.\nCOUNTERFACTUAL PROVENANCE. The counterfactual value is MEASURED, not asserted: a scratch copy of the port at /tmp/t58mut with exactly one named change applied, run on this vector's own request. The patches are .softhouse/capture/t58-counterfactuals/src/apply-mutations-*.py and the runner is src/t58cf.go.txt; the raw per-cell output is out/t58-counterfactuals-*.json. The model's faithfulness is not assumed -- with the change switched OFF it reproduces all 508 graded money cells of the 20 in-domain capture cases it was run against, with ZERO mismatches, so the only thing a reported margin can be measuring is the named change."
+    },
+    {
+      "id": "LEVEL-INSTALLMENT-WITHOUT-FINAL-PERIOD-BALANCING-ADJUSTMENT",
+      "capability": "schedule.core",
+      "description": "Emits the level installment in the final period like every other period, so the final principal is (installment - interest) rather than the WHOLE REMAINING BALANCE [ProgressiveEMICalculator.java:1160-1219]. The schedule then does not amortize to exactly zero.",
+      "margin_minor": "8986",
+      "evidence": "Derived at the ratified production MathContext (19, HALF_UP). Every OBSERVED value below is transcribed from capture case P-DRIFT-E of .softhouse/capture/out/capture-prod3e-raw.json; only the counterfactual is derived.\nMARGIN. Over this vector's graded money cells the counterfactual diverges on 17 of 20. The widest single-cell disagreement is at period[6], column outstanding_principal_minor: the oracle OBSERVED 0 minor units against the counterfactual's 8986, so the margin is |0 - 8986| = 8986 MINOR UNITS.\nCOUNTERFACTUAL PROVENANCE. The counterfactual value is MEASURED, not asserted: a scratch copy of the port at /tmp/t58mut with exactly one named change applied, run on this vector's own request. The patches are .softhouse/capture/t58-counterfactuals/src/apply-mutations-*.py and the runner is src/t58cf.go.txt; the raw per-cell output is out/t58-counterfactuals-*.json. The model's faithfulness is not assumed -- with the change switched OFF it reproduces all 508 graded money cells of the 20 in-domain capture cases it was run against, with ZERO mismatches, so the only thing a reported margin can be measuring is the named change."
+    }
+  ],
+  "retires_when_capability_graded": "",
+  "provenance": {
+    "kind": "oracle-capture",
+    "note": "TRANSCRIBED, never computed, from Path A capture pass 3e (.softhouse/capture/src/run-pass3e.sh, Capture3e.java). Every expect cell is a value literally present in the referenced capture for capture case P-DRIFT-E; the only transformation is exact textual major->minor scaling, and the oracle's own emitted characters are carried alongside in the *_major_text cross-check fields so the scaling is mechanically re-checkable. Pass 3e is pass 3d's rig with a new case list and NOT ONE check weakened; it reproduced three already-committed observations as rig calibrations before emitting anything -- P-CAL at (12, HALF_UP) and P-CAL-P00 at the production (19, HALF_UP) against pass 3b, and P-CAL-EMI6 against pass 3c's P-EMI-6-1M014632, an MNT case at production precision whose observation is already a promoted parity vector -- with inputs and observed blocks identical in all three. Promotion script: .softhouse/handoff/T58-promote-vectors.py (task T58).",
+    "capture_ref": ".softhouse/capture/out/capture-prod3e-raw.json",
+    "capture_sha256": "8822699cc4505236c12ddd1f8156b273e0a88eaffb1ef73f73f409fc05104fc0",
+    "capture_case_id": "P-DRIFT-E",
+    "citation": ""
+  },
+  "oracle": {
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "seam": "path_a_embeddable",
+    "captured_at": "2026-08-19T14:54:02.568804760Z",
+    "threaded_mathcontext": {
+      "precision": 19,
+      "rounding_mode": "HALF_UP"
+    },
+    "ambient_mathcontext": {
+      "precision": 19,
+      "rounding_mode": "HALF_UP"
+    }
+  },
+  "request": {
+    "time_zone": "Asia/Ulaanbaatar",
+    "currency": {
+      "code": "MNT",
+      "minor_unit_digits": 2
+    },
+    "rounding": {
+      "significant_digits": 19,
+      "rate_factor_scale": 19,
+      "mode": "HALF_UP"
+    },
+    "schedule_start_date": {
+      "year": 2025,
+      "month": 1,
+      "day": 28
+    },
+    "disbursements": [
+      {
+        "date": {
+          "year": 2025,
+          "month": 1,
+          "day": 31
+        },
+        "amount_minor": "120000000"
+      }
+    ],
+    "number_of_repayments": 6,
+    "repayment_every": 1,
+    "repayment_frequency_unit": "MONTHS",
+    "annual_nominal_interest_rate": {
+      "numerator": 27,
+      "denominator": 125
+    },
+    "interest_method": "DECLINING_BALANCE",
+    "day_count": "FIXED_30_360",
+    "down_payment_percentage": {
+      "numerator": 0,
+      "denominator": 1
+    },
+    "installment_rounding_multiple_minor": "0"
+  },
+  "expect": {
+    "kind": "schedule",
+    "sentinel": "",
+    "last_repayment_due_date": null,
+    "observed_total_interest_minor": "7680948",
+    "periods": [
+      {
+        "kind": "DISBURSEMENT",
+        "installment_number": 0,
+        "from_date": {
+          "year": 2025,
+          "month": 1,
+          "day": 31
+        },
+        "due_date": {
+          "year": 2025,
+          "month": 1,
+          "day": 31
+        },
+        "principal_minor": "120000000",
+        "principal_major_text": "1200000.00",
+        "interest_minor": "",
+        "interest_major_text": "",
+        "outstanding_principal_minor": "120000000",
+        "outstanding_principal_major_text": "1200000.00",
+        "unrecorded_fields": [
+          "installment_number",
+          "interest_minor"
+        ],
+        "observed_total_due_minor": null
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 1,
+        "from_date": {
+          "year": 2025,
+          "month": 1,
+          "day": 28
+        },
+        "due_date": {
+          "year": 2025,
+          "month": 2,
+          "day": 28
+        },
+        "principal_minor": "19329190",
+        "principal_major_text": "193291.90",
+        "interest_minor": "1950968",
+        "interest_major_text": "19509.68",
+        "outstanding_principal_minor": "100670810",
+        "outstanding_principal_major_text": "1006708.10",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "21280158"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 2,
+        "from_date": {
+          "year": 2025,
+          "month": 2,
+          "day": 28
+        },
+        "due_date": {
+          "year": 2025,
+          "month": 3,
+          "day": 31
+        },
+        "principal_minor": "19292721",
+        "principal_major_text": "192927.21",
+        "interest_minor": "1987437",
+        "interest_major_text": "19874.37",
+        "outstanding_principal_minor": "81378089",
+        "outstanding_principal_major_text": "813780.89",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "21280158"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 3,
+        "from_date": {
+          "year": 2025,
+          "month": 3,
+          "day": 31
+        },
+        "due_date": {
+          "year": 2025,
+          "month": 4,
+          "day": 30
+        },
+        "principal_minor": "19815352",
+        "principal_major_text": "198153.52",
+        "interest_minor": "1464806",
+        "interest_major_text": "14648.06",
+        "outstanding_principal_minor": "61562737",
+        "outstanding_principal_major_text": "615627.37",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "21280158"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 4,
+        "from_date": {
+          "year": 2025,
+          "month": 4,
+          "day": 30
+        },
+        "due_date": {
+          "year": 2025,
+          "month": 5,
+          "day": 31
+        },
+        "principal_minor": "20136283",
+        "principal_major_text": "201362.83",
+        "interest_minor": "1143875",
+        "interest_major_text": "11438.75",
+        "outstanding_principal_minor": "41426454",
+        "outstanding_principal_major_text": "414264.54",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "21280158"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 5,
+        "from_date": {
+          "year": 2025,
+          "month": 5,
+          "day": 31
+        },
+        "due_date": {
+          "year": 2025,
+          "month": 6,
+          "day": 30
+        },
+        "principal_minor": "20534482",
+        "principal_major_text": "205344.82",
+        "interest_minor": "745676",
+        "interest_major_text": "7456.76",
+        "outstanding_principal_minor": "20891972",
+        "outstanding_principal_major_text": "208919.72",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "21280158"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 6,
+        "from_date": {
+          "year": 2025,
+          "month": 6,
+          "day": 30
+        },
+        "due_date": {
+          "year": 2025,
+          "month": 7,
+          "day": 31
+        },
+        "principal_minor": "20891972",
+        "principal_major_text": "208919.72",
+        "interest_minor": "388186",
+        "interest_major_text": "3881.86",
+        "outstanding_principal_minor": "0",
+        "outstanding_principal_major_text": "0.00",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "21280158"
+      }
+    ]
+  },
+  "invariant_exemptions": []
+}

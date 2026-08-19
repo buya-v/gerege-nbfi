@@ -1,0 +1,347 @@
+// Command t58cf is the T58 counterfactual runner. SCRATCH ONLY — it lives in a
+// copy of the port at /tmp/t58mut and is never committed.
+//
+// It reads a Path A capture bundle, rebuilds each case's request in the frozen
+// contract's shape, and runs the port under the faithful reading and under each
+// named counterfactual. For every case it reports, per graded money cell, the
+// OBSERVED value (transcribed from the capture by exact integer string
+// arithmetic — no float anywhere) against what each reading computes.
+//
+// It computes no expectation of its own: the observed column always comes from
+// the capture file.
+package main
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"math/big"
+	"os"
+	"sort"
+	"strings"
+
+	ls "github.com/gerege/nexus/internal/apps/loanschedule"
+	"github.com/gerege/nexus/internal/apps/loanschedule/contract"
+)
+
+type capFile struct {
+	Captures []capCase `json:"captures"`
+}
+
+type capCase struct {
+	ID      string `json:"id"`
+	Family  string `json:"family"`
+	Purpose string `json:"purpose"`
+	Inputs  struct {
+		ScheduleGenerationStartDate string `json:"scheduleGenerationStartDate"`
+		DisbursementDate            string `json:"disbursementDate"`
+		DisbursementAmount          string `json:"disbursementAmount"`
+		NumberOfRepayments          int    `json:"numberOfRepayments"`
+		RepaymentEvery              int    `json:"repaymentEvery"`
+		RepaymentFrequency          int    `json:"repaymentFrequency"`
+		RepaymentFrequencyType      string `json:"repaymentFrequencyType"`
+		AnnualNominalInterestRate   string `json:"annualNominalInterestRate"`
+		MathContextPrecision        int    `json:"mathContextPrecision"`
+		MathContextRoundingMode     string `json:"mathContextRoundingMode"`
+		CurrencyCode                string `json:"currencyCode"`
+		CurrencyDecimalPlaces       int    `json:"currencyDecimalPlaces"`
+		DaysInMonth                 string `json:"daysInMonth"`
+		DaysInYear                  string `json:"daysInYear"`
+		InterestMethod              string `json:"interestMethod"`
+	} `json:"inputs"`
+	Observed struct {
+		LoanTermInDays      int    `json:"loanTermInDays"`
+		TotalInterestAmount string `json:"totalInterestAmount"`
+		Periods             []struct {
+			Type                    string  `json:"type"`
+			PeriodNumber            *int    `json:"periodNumber"`
+			FromDate                string  `json:"fromDate"`
+			PeriodFromDate          string  `json:"periodFromDate"`
+			DueDate                 string  `json:"dueDate"`
+			Balance                 *string `json:"balance"`
+			Principal               *string `json:"principal"`
+			Interest                *string `json:"interest"`
+			Fee                     *string `json:"fee"`
+			Penalty                 *string `json:"penalty"`
+			Total                   *string `json:"total"`
+			TotalOutstandingBalance *string `json:"totalOutstandingBalance"`
+		} `json:"periods"`
+	} `json:"observed"`
+}
+
+// minorFromText converts a decimal major-unit string to minor units by exact
+// integer string manipulation. No float, ever. Rejects a significant digit
+// beyond the currency scale.
+func minorFromText(t string, digits int) (int64, error) {
+	neg := false
+	if strings.HasPrefix(t, "-") {
+		neg, t = true, t[1:]
+	}
+	ip, fp := t, ""
+	if i := strings.IndexByte(t, '.'); i >= 0 {
+		ip, fp = t[:i], t[i+1:]
+	}
+	if ip == "" {
+		ip = "0"
+	}
+	for len(fp) < digits {
+		fp += "0"
+	}
+	if len(fp) > digits {
+		for _, c := range fp[digits:] {
+			if c != '0' {
+				return 0, fmt.Errorf("%q carries a significant digit beyond scale %d", t, digits)
+			}
+		}
+		fp = fp[:digits]
+	}
+	var v big.Int
+	if _, ok := v.SetString(ip+fp, 10); !ok {
+		return 0, fmt.Errorf("%q is not a decimal", t)
+	}
+	if !v.IsInt64() {
+		return 0, fmt.Errorf("%q does not fit int64", t)
+	}
+	n := v.Int64()
+	if neg {
+		n = -n
+	}
+	return n, nil
+}
+
+func parseDate(s string) contract.CivilDate {
+	var y, m, d int32
+	fmt.Sscanf(s, "%d-%d-%d", &y, &m, &d)
+	return contract.CivilDate{Year: y, Month: m, Day: d}
+}
+
+// rateFromText turns "21.6" into the exact lowest-terms rational 27/125.
+func rateFromText(s string) contract.Rate {
+	ip, fp := s, ""
+	if i := strings.IndexByte(s, '.'); i >= 0 {
+		ip, fp = s[:i], s[i+1:]
+	}
+	num := new(big.Int)
+	num.SetString(ip+fp, 10)
+	den := new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(len(fp))), nil)
+	// percent
+	den.Mul(den, big.NewInt(100))
+	g := new(big.Int).GCD(nil, nil, new(big.Int).Abs(num), den)
+	if g.Sign() != 0 {
+		num.Div(num, g)
+		den.Div(den, g)
+	}
+	return contract.Rate{Numerator: num.Int64(), Denominator: den.Int64()}
+}
+
+func request(c capCase) contract.GenerateRequest {
+	in := c.Inputs
+	if in.RepaymentEvery == 0 {
+		in.RepaymentEvery = in.RepaymentFrequency
+	}
+	amt, err := minorFromText(in.DisbursementAmount, in.CurrencyDecimalPlaces)
+	if err != nil {
+		panic(err)
+	}
+	mode := contract.RoundingHalfUp
+	if in.MathContextRoundingMode == "HALF_EVEN" {
+		mode = contract.RoundingHalfEven
+	}
+	return contract.GenerateRequest{
+		TimeZone: "Asia/Ulaanbaatar",
+		Currency: contract.Currency{
+			Code:            strings.ToUpper(in.CurrencyCode),
+			MinorUnitDigits: int32(in.CurrencyDecimalPlaces),
+		},
+		Rounding: contract.Rounding{
+			SignificantDigits: int32(in.MathContextPrecision),
+			RateFactorScale:   int32(in.MathContextPrecision),
+			Mode:              mode,
+		},
+		ScheduleStartDate: parseDate(in.ScheduleGenerationStartDate),
+		Disbursements: []contract.Disbursement{
+			{Date: parseDate(in.DisbursementDate), AmountMinor: amt},
+		},
+		NumberOfRepayments:               int32(in.NumberOfRepayments),
+		RepaymentEvery:                   int32(in.RepaymentEvery),
+		RepaymentFrequencyUnit:           contract.FrequencyMonths,
+		AnnualNominalInterestRate:        rateFromText(in.AnnualNominalInterestRate),
+		InterestMethod:                   contract.InterestMethodDecliningBalance,
+		DayCount:                         contract.DayCountFixed30Over360,
+		DownPaymentPercentage:            contract.Rate{Numerator: 0, Denominator: 1},
+		InstallmentRoundingMultipleMinor: 0,
+	}
+}
+
+type cell struct {
+	Case     string `json:"case"`
+	Row      int    `json:"row"`
+	Kind     string `json:"kind"`
+	Field    string `json:"field"`
+	Observed int64  `json:"observed"`
+	Value    int64  `json:"value"`
+	Delta    int64  `json:"delta"`
+}
+
+type caseResult struct {
+	Case          string              `json:"case"`
+	Skipped       string              `json:"skipped,omitempty"`
+	Cells         int                 `json:"cells"`
+	Baseline      int                 `json:"baselineMismatches"`
+	BaselineDate  int                 `json:"baselineDateMismatches"`
+	DateCells     int                 `json:"dateCells"`
+	DateDivergent map[string][]string `json:"dateDivergent"`
+	Divergent     map[string][]cell   `json:"divergent"`
+	MaxMargin     map[string]int64    `json:"maxMargin"`
+	NCells        map[string]int      `json:"nDivergentCells"`
+}
+
+var mutations = []string{"PERIODRATIO", "TEXTBOOK", "NOSETSCALE", "SEEDSTART", "REANCHORGT", "SMOOTHINGOFF", "NOFINALADJ", "MONTHENDCLAMP"}
+
+func run(req contract.GenerateRequest, mut string) (contract.Schedule, error) {
+	ls.MutT58 = mut
+	defer func() { ls.MutT58 = "" }()
+	return ls.New().Generate(context.Background(), req)
+}
+
+func main() {
+	if len(os.Args) < 2 {
+		fmt.Fprintln(os.Stderr, "usage: t58cf <capture.json> [only-ids...]")
+		os.Exit(2)
+	}
+	raw, err := os.ReadFile(os.Args[1])
+	if err != nil {
+		panic(err)
+	}
+	var f capFile
+	if err := json.Unmarshal(raw, &f); err != nil {
+		panic(err)
+	}
+	only := map[string]bool{}
+	for _, a := range os.Args[2:] {
+		only[a] = true
+	}
+
+	var out []caseResult
+	for _, c := range f.Captures {
+		if len(only) > 0 && !only[c.ID] {
+			continue
+		}
+		res := caseResult{
+			Case:          c.ID,
+			Divergent:     map[string][]cell{},
+			MaxMargin:     map[string]int64{},
+			NCells:        map[string]int{},
+			DateDivergent: map[string][]string{},
+		}
+		if c.Inputs.MathContextPrecision != 19 {
+			res.Skipped = fmt.Sprintf("precision %d, not the production 19", c.Inputs.MathContextPrecision)
+			out = append(out, res)
+			continue
+		}
+		req := request(c)
+		digits := c.Inputs.CurrencyDecimalPlaces
+
+		// observed cells, transcribed
+		type obs struct {
+			row   int
+			kind  string
+			field string
+			v     int64
+		}
+		type dobs struct {
+			row   int
+			kind  string
+			field string
+			v     string
+		}
+		var dates []dobs
+		var observed []obs
+		for i, p := range c.Observed.Periods {
+			add := func(field string, txt *string) {
+				if txt == nil {
+					return
+				}
+				v, err := minorFromText(*txt, digits)
+				if err != nil {
+					panic(fmt.Sprintf("%s row %d %s: %v", c.ID, i, field, err))
+				}
+				observed = append(observed, obs{i, p.Type, field, v})
+			}
+			add("principal_minor", p.Principal)
+			add("interest_minor", p.Interest)
+			add("outstanding_principal_minor", p.Balance)
+			from := p.FromDate
+			if from == "" {
+				from = p.PeriodFromDate
+			}
+			dates = append(dates, dobs{i, p.Type, "from_date", from}, dobs{i, p.Type, "due_date", p.DueDate})
+		}
+		res.Cells = len(observed)
+		res.DateCells = len(dates)
+
+		readings := append([]string{""}, mutations...)
+		for _, mut := range readings {
+			sch, err := run(req, mut)
+			if err != nil {
+				panic(fmt.Sprintf("%s [%s]: %v", c.ID, mut, err))
+			}
+			if len(sch.Periods) != len(c.Observed.Periods) {
+				panic(fmt.Sprintf("%s [%s]: %d rows, capture has %d",
+					c.ID, mut, len(sch.Periods), len(c.Observed.Periods)))
+			}
+			name := mut
+			if name == "" {
+				name = "BASELINE"
+			}
+			for _, o := range observed {
+				p := sch.Periods[o.row]
+				var got int64
+				switch o.field {
+				case "principal_minor":
+					got = p.PrincipalMinor
+				case "interest_minor":
+					got = p.InterestMinor
+				case "outstanding_principal_minor":
+					got = p.OutstandingPrincipalMinor
+				}
+				if got == o.v {
+					continue
+				}
+				d := got - o.v
+				if d < 0 {
+					d = -d
+				}
+				if mut == "" {
+					res.Baseline++
+				}
+				res.Divergent[name] = append(res.Divergent[name],
+					cell{c.ID, o.row, o.kind, o.field, o.v, got, d})
+				if d > res.MaxMargin[name] {
+					res.MaxMargin[name] = d
+				}
+				res.NCells[name]++
+			}
+			for _, o := range dates {
+				p := sch.Periods[o.row]
+				d := p.FromDate
+				if o.field == "due_date" {
+					d = p.DueDate
+				}
+				got := fmt.Sprintf("%04d-%02d-%02d", d.Year, d.Month, d.Day)
+				if got == o.v {
+					continue
+				}
+				if mut == "" {
+					res.BaselineDate++
+				}
+				res.DateDivergent[name] = append(res.DateDivergent[name],
+					fmt.Sprintf("period[%d].%s observed %s, counterfactual %s", o.row, o.field, o.v, got))
+			}
+		}
+		out = append(out, res)
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].Case < out[j].Case })
+	b, _ := json.MarshalIndent(out, "", " ")
+	fmt.Println(string(b))
+}

@@ -1,0 +1,213 @@
+{
+  "artifact": "Path A capture pass 3e",
+  "capturePath": "Path A — embeddable progressive-loan schedule-generator seam, in-process. No Fineract server is started and no database connection is opened.",
+  "producedBy": ".softhouse/capture/src/run-pass3e.sh",
+  "runId": "pass3e-20260819T145401Z",
+  "capturedAtUtc": "2026-08-19T14:54:02.568804760Z",
+  "files": {
+    ".softhouse/capture/out/capture-prod3e-raw.json": "8822699cc4505236c12ddd1f8156b273e0a88eaffb1ef73f73f409fc05104fc0",
+    ".softhouse/capture/out/capture-prod3e-log.txt": "0db4b8bb103fb215b03c6317608d8310e57f7d05418e209b368ee8769518ea91",
+    ".softhouse/capture/out/capture-prod3e-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".softhouse/capture/out/capture-prod3e-classpath-sha256.txt": "8738dbaec1c242f10f28be685706b40bd46c16ff3afff696335f7e0653efa011",
+    ".softhouse/capture/out/capture-prod3e-raw.txt": "42177c2c639438b41b0f17788a1718d76922101f2c52dc582c9549097ad6614c"
+  },
+  "filesNote": "sha256 of every output of this run except this sidecar itself. The capture JSON's digest moves between runs because the attestation carries a UTC timestamp; use capturesCanonicalSha256 to check a re-run.",
+  "capturesCanonicalSha256": "5bd3105abf319566cd89063294f97f81bdc3480193063682d2580a9d1d7d94c8",
+  "capturesCanonicalSha256Definition": "sha256 of json.dumps(doc['captures'], sort_keys=True, separators=(',',':')).encode('utf-8') — stable across runs; the whole-file sha256 is NOT, because the attestation carries a UTC timestamp",
+  "measuredByRunnerOnHost": {
+    "dockerImageRef": "fineract:latest",
+    "dockerImageId": "sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a",
+    "pinnedFineractPath": "/Users/buv/fineract",
+    "pinnedFineractCommit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "pinnedFineractTreeClean": true,
+    "seamClassSha256": "bf397f0b29e6d6f347c286f563875495635128f9cba80fe59881ffe0fea80714",
+    "seamClassByteIdenticalToPinnedOriginal": true,
+    "harnessSha256": "bec2cf53b9e9aad75d673e519696b719a580b269ffece3bdf31514fb7df556c7"
+  },
+  "measuredInsideContainer": {
+    "capturePath": "Path A — embeddable progressive-loan schedule-generator seam, in-process. No Fineract server is started and no database connection is opened.",
+    "capturedAtUtc": "2026-08-19T14:54:02.568804760Z",
+    "fineract": {
+      "gitPropertiesSource": "BOOT-INF/classes/git.properties inside /app/fineract-provider.jar",
+      "gitCommitId": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+      "gitCommitIdDescribe": "1.15.0-273-g426a235",
+      "gitCommitTime": "2026-08-12T12:59+0000",
+      "gitBranch": "develop",
+      "gitDirty": "false",
+      "gitBuildVersion": "1.16.0-SNAPSHOT",
+      "providerJarPath": "/app/fineract-provider.jar",
+      "providerJarSizeBytes": 230485171,
+      "providerJarSha256": "60fb6dbd631dad8ea133d03fdd24761626f407c6d7dc4b1b41a4402eaf66f4c9"
+    },
+    "jvm": {
+      "javaVersion": "21.0.11",
+      "javaRuntimeVersion": "21.0.11+10-LTS",
+      "javaVmName": "OpenJDK 64-Bit Server VM",
+      "javaVmVersion": "21.0.11+10-LTS",
+      "javaVendor": "Azul Systems, Inc.",
+      "javaHome": "/usr/lib/jvm/zulu21-ca",
+      "osName": "Linux",
+      "osVersion": "6.12.76-linuxkit",
+      "osArch": "aarch64",
+      "fileEncoding": "UTF-8",
+      "defaultLocale": "en_US",
+      "defaultTimeZone": "GMT",
+      "userTimezoneProperty": "GMT",
+      "inputArguments": [],
+      "inputArgumentCount": 0
+    },
+    "moneyHelper": {
+      "precisionCompileTimeConstant": 19,
+      "probeTenantId": "attest_probe",
+      "probeTenantRoundingModeValueRequested": 4,
+      "effectiveMathContextPrecision": 19,
+      "effectiveMathContextRoundingMode": "HALF_UP",
+      "effectiveMathContextRoundingModeOrdinal": 4,
+      "effectiveRoundingMode": "HALF_UP",
+      "effectiveRoundingModeOrdinal": 4,
+      "effectiveMathContextToString": "precision=19 roundingMode=HALF_UP",
+      "ratifiedProductionSetting": "(19, HALF_UP) — RoundingMode.HALF_UP ordinal 4",
+      "matchesRatifiedProductionSetting": true
+    },
+    "sources": [
+      {
+        "file": "/cap/src/Capture3e.java",
+        "sha256": "bec2cf53b9e9aad75d673e519696b719a580b269ffece3bdf31514fb7df556c7"
+      },
+      {
+        "file": "/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java",
+        "sha256": "bf397f0b29e6d6f347c286f563875495635128f9cba80fe59881ffe0fea80714"
+      }
+    ],
+    "classpath": {
+      "entryCount": 350,
+      "aggregateSha256": "e823aa69d641d1006e34fd97c9e884b50fd3a33771d65dceafced4be60ef73b0",
+      "aggregateSha256Definition": "sha256 over the newline-joined, lexicographically sorted list of '<sha256>  <classpath entry>' lines",
+      "perEntryDigestFile": "/cap/out/capture-prod3e-classpath-sha256.txt"
+    },
+    "runnerSupplied": {
+      "NOTE": "ECHOED from the runner's environment. NOT measured inside the container — the container cannot read the docker image id or the host checkout. The runner script asserts these independently and fails the run on mismatch.",
+      "dockerImageRef": "fineract:latest",
+      "dockerImageId": "sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a",
+      "pinnedFineractCommit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+      "pinnedFineractPath": "/Users/buv/fineract",
+      "runId": "pass3e-20260819T145401Z"
+    }
+  },
+  "oracleOwnMoneyHelperLogLines": [
+    "14:54:02.780 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `attest_probe`: HALF_UP",
+    "14:54:02.913 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_cal`: HALF_UP",
+    "14:54:02.953 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_00`: HALF_UP",
+    "14:54:02.958 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_emi_6`: HALF_UP",
+    "14:54:02.963 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_drift_a`: HALF_UP",
+    "14:54:02.967 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_drift_b`: HALF_UP",
+    "14:54:02.970 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_drift_c`: HALF_UP",
+    "14:54:02.975 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_drift_d`: HALF_UP",
+    "14:54:02.991 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_drift_e`: HALF_UP",
+    "14:54:02.993 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_drift_f`: HALF_UP",
+    "14:54:02.994 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_drift_g`: HALF_UP",
+    "14:54:02.996 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_drift_h`: HALF_UP",
+    "14:54:02.998 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_me_a`: HALF_UP",
+    "14:54:02.998 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_me_b`: HALF_UP",
+    "14:54:02.999 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_me_c`: HALF_UP",
+    "14:54:03.000 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_me_d`: HALF_UP",
+    "14:54:03.001 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_lat_q0a`: HALF_UP",
+    "14:54:03.001 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_lat_mid`: HALF_UP"
+  ],
+  "captureCount": 17,
+  "captureIds": [
+    "P-CAL",
+    "P-CAL-P00",
+    "P-CAL-EMI6",
+    "P-DRIFT-A",
+    "P-DRIFT-B",
+    "P-DRIFT-C",
+    "P-DRIFT-D",
+    "P-DRIFT-E",
+    "P-DRIFT-F",
+    "P-DRIFT-G",
+    "P-DRIFT-H",
+    "P-ME-A",
+    "P-ME-B",
+    "P-ME-C",
+    "P-ME-D",
+    "P-LAT-Q0a",
+    "P-LAT-MID"
+  ],
+  "productionSettingsCaptureIds": [
+    "P-CAL-P00",
+    "P-CAL-EMI6",
+    "P-DRIFT-A",
+    "P-DRIFT-B",
+    "P-DRIFT-C",
+    "P-DRIFT-D",
+    "P-DRIFT-E",
+    "P-DRIFT-F",
+    "P-DRIFT-G",
+    "P-DRIFT-H",
+    "P-ME-A",
+    "P-ME-B",
+    "P-ME-C",
+    "P-ME-D",
+    "P-LAT-Q0a",
+    "P-LAT-MID"
+  ],
+  "calibrationCaptureIds": [
+    "P-CAL"
+  ],
+  "calibrationCaptureIdsNote": "SAME DEFINITION AS PASS 3b AND 3c: keyed on MathContext precision != 19, so it lists the precision-12 calibration ONLY. Pass 3e also carries TWO calibrations AT the production precision (P-CAL-P00 and P-CAL-EMI6), which therefore appear under productionSettingsCaptureIds; calibrationRoleCaptureIds below lists calibrations BY ROLE, and parityCandidateCaptureIds lists what this pass actually offers for promotion.",
+  "calibrationRoleCaptureIds": [
+    "P-CAL",
+    "P-CAL-EMI6",
+    "P-CAL-P00"
+  ],
+  "parityCandidateCaptureIds": [
+    "P-DRIFT-A",
+    "P-DRIFT-B",
+    "P-DRIFT-C",
+    "P-DRIFT-D",
+    "P-DRIFT-E",
+    "P-DRIFT-F",
+    "P-DRIFT-G",
+    "P-DRIFT-H",
+    "P-ME-A",
+    "P-ME-B",
+    "P-ME-C",
+    "P-ME-D",
+    "P-LAT-Q0a",
+    "P-LAT-MID"
+  ],
+  "calibrationReport": [
+    {
+      "calibrationCaptureId": "P-CAL",
+      "reproducedCommittedCaptureId": "P-CAL",
+      "reproducedFrom": ".softhouse/capture/out/capture-prod3b-raw.json",
+      "reproducedFromSha256": "8d23c48fa13c04677b51bacdf07d101d6a061c79815d76b4983eccdbac945c79",
+      "mathContextPrecision": 12,
+      "inputsIdentical": true,
+      "observedIdentical": true,
+      "observedCanonicalSha256": "6c052bdabbb2857605d796c6219ffcafb8b61258dc3445f0c72ad29817618d59"
+    },
+    {
+      "calibrationCaptureId": "P-CAL-EMI6",
+      "reproducedCommittedCaptureId": "P-EMI-6-1M014632",
+      "reproducedFrom": ".softhouse/capture/out/capture-prod3c-raw.json",
+      "reproducedFromSha256": "cae566d3ba99c69704fdb5dca21e247b3ec7d20c2e5ccc4e50b97721e8c92dec",
+      "mathContextPrecision": 19,
+      "inputsIdentical": true,
+      "observedIdentical": true,
+      "observedCanonicalSha256": "1d6b12c5d8b150e99fb5cb3dc7abaa0704e394e2a9a7e15e72fb93d0d4dc6fd1"
+    },
+    {
+      "calibrationCaptureId": "P-CAL-P00",
+      "reproducedCommittedCaptureId": "P-00",
+      "reproducedFrom": ".softhouse/capture/out/capture-prod3b-raw.json",
+      "reproducedFromSha256": "8d23c48fa13c04677b51bacdf07d101d6a061c79815d76b4983eccdbac945c79",
+      "mathContextPrecision": 19,
+      "inputsIdentical": true,
+      "observedIdentical": true,
+      "observedCanonicalSha256": "6c052bdabbb2857605d796c6219ffcafb8b61258dc3445f0c72ad29817618d59"
+    }
+  ],
+  "admissibilityNote": "RAW OBSERVED. Attestation is present, but presence of an attestation does not promote anything. Promotion to the parity vector store is a separate, gated decision (DEC-1 is UNRATIFIED, gate G-1)."
+}
