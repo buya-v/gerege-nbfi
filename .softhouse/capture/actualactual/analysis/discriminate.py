@@ -100,12 +100,12 @@ if bad:
 # --- CONTROL against committed observations -------------------------------------------
 # reference-oracle.md records Path B capture B-01 at total interest 144,988.47 /
 # total repayment 1,344,988.47, itself reproducing pass-3 P-MNT-1M2.
-b01 = S["T48-CTL-B01"]["observed"]
-ok = b01["totalInterestAmount"] == "144988.47" and b01["totalRepaymentAmount"] == "1344988.47"
-print("CONTROL   T48-CTL-B01 vs committed Path B observation B-01: %s (%s / %s)"
-      % ("REPRODUCED" if ok else "DIVERGED", b01["totalInterestAmount"], b01["totalRepaymentAmount"]))
+b03 = S["T48-CTL-B03"]["observed"]
+ok = b03["totalInterestAmount"] == "144659.21" and b03["totalRepaymentAmount"] == "1344659.21"
+print("CONTROL   T48-CTL-B03 vs committed Path B observation B-03: %s (%s / %s)"
+      % ("REPRODUCED" if ok else "DIVERGED", b03["totalInterestAmount"], b03["totalRepaymentAmount"]))
 if not ok:
-    failures.append("T48-CTL-B01 failed to reproduce committed observation B-01")
+    failures.append("T48-CTL-B03 failed to reproduce committed observation B-03")
 
 # --- the Path A daysInYearCustomStrategy DROP, observed -------------------------------
 compare("AA-1 vs AA-N3 (FEB_29 fed in, Path A)", "T48-AA-1", "T48-AA-N3",
@@ -113,9 +113,15 @@ compare("AA-1 vs AA-N3 (FEB_29 fed in, Path A)", "T48-AA-1", "T48-AA-N3",
 compare("AA-1 vs AA-N4 (FULL_LEAP fed in, Path A)", "T48-AA-1", "T48-AA-N4",
         SC["T48-AA-1"], SC["T48-AA-N4"], "identical")
 
-# --- the boundary choice: 31 Dec vs 1 Jan ---------------------------------------------
+# --- the boundary choice: 31 Dec vs 1 Jan.  ON PATH A THIS DOES NOT BIND -- see T48-N1.
+# LoanApplicationTerms.toLoanConfigurationDetails() [:1746-1756] passes
+# isInterestChargedFromDateSameAsDisbursalDateEnabled into the
+# interestRecognitionOnDisbursementDate parameter slot of LoanConfigurationDetails
+# [LoanConfigurationDetails.java:66-77, parameter 16] and never reads the field of that name.
+# The expectation below is therefore IDENTICAL, and the Path A2 twin A2-AA1 vs A2-AA2 -- which
+# sets the flag directly on LoanConfigurationDetails -- is where the separation shows up.
 compare("AA-1 vs AA-2 (interestRecognitionOnDisb)", "T48-AA-1", "T48-AA-2",
-        SC["T48-AA-1"], SC["T48-AA-2"], "separate")
+        SC["T48-AA-1"], SC["T48-AA-2"], "identical")
 
 # --- the arm's suppressing conjuncts ---------------------------------------------------
 compare("AA-1 vs AA-N1 (DAYS_365, arm suppressed)", "T48-AA-1", "T48-AA-N1",
@@ -162,21 +168,67 @@ else:
     failures.append("analysis/shipped_literals.json missing -- no calibration possible")
 
 # --- FULL_LEAP_YEAR vs the field being UNSET ------------------------------------------
-for fam in ("Q", "M", "Y"):
+for fam in ("Q", "M", "Y", "B", "A"):
     compare("F29-%s-NULL vs F29-%s-FULL" % (fam, fam), "a", "b",
             CC["T48-F29-%s-NULL" % fam], CC["T48-F29-%s-FULL" % fam], "identical")
 
 # --- FEB_29_PERIOD_ONLY, effect (a) and effect (b) -------------------------------------
 compare("F29-Q-NULL vs F29-Q-F29 (has Feb 29 period)", "a", "b",
         CC["T48-F29-Q-NULL"], CC["T48-F29-Q-F29"], "separate")
-compare("F29-M-NULL vs F29-M-F29 (EFFECT B isolated)", "a", "b",
+compare("F29-M-NULL vs F29-M-F29 (both effects present)", "a", "b",
         CC["T48-F29-M-NULL"], CC["T48-F29-M-F29"], "separate")
 compare("F29-Y-NULL vs F29-Y-F29 (one-year schedule)", "a", "b",
         CC["T48-F29-Y-NULL"], CC["T48-F29-Y-F29"], "separate")
+compare("F29-B-NULL vs F29-B-F29 (EFFECT B PURE)", "a", "b",
+        CC["T48-F29-B-NULL"], CC["T48-F29-B-F29"], "separate")
+compare("F29-A-NULL vs F29-A-F29 (EFFECT A PURE)", "a", "b",
+        CC["T48-F29-A-NULL"], CC["T48-F29-A-F29"], "separate")
+compare("F29-C-NULL vs F29-C-F29 (Feb 29 IN a period)", "a", "b",
+        CC["T48-F29-C-NULL"], CC["T48-F29-C-F29"], "separate")
 
 # --- the boundary choice again, at rate-factor resolution ------------------------------
 compare("A2-AA1 vs A2-AA2 (31 Dec vs 1 Jan boundary)", "a", "b",
         CC["T48-A2-AA1"], CC["T48-A2-AA2"], "separate")
+
+# --- RATE FACTORS ONLY.  ------------------------------------------------------------
+# A money cell can move for a reason the arm did not cause: the EMI is levelled across the
+# whole schedule, so a change in ANY period's rate factor moves the principal split of EVERY
+# period.  The rate factor is the ONLY cell the arm under observation actually owns, so it is
+# compared on its own here.  A comparison that moves money but not rate factors did not
+# discriminate the arm; it discriminated the levelling.
+print("")
+
+
+def rate_factors(cells):
+    return dict((k, v) for k, v in cells.items() if "rateFactor" in k)
+
+
+def rf_compare(label, a, b):
+    A, B = rate_factors(CC[a]), rate_factors(CC[b])
+    keys = sorted(set(A) | set(B))
+    diffs = [(k, A.get(k), B.get(k)) for k in keys if A.get(k) != B.get(k)]
+    print("RF  %-44s %3d of %3d rate-factor cells differ" % (label, len(diffs), len(keys)))
+    for k, x, y in diffs:
+        print("      %-34s %-24s | %s" % (k, x, y))
+    return diffs
+
+
+rf_compare("F29-Q-NULL vs F29-Q-F29", "T48-F29-Q-NULL", "T48-F29-Q-F29")
+rf_compare("F29-B-NULL vs F29-B-F29 (EFFECT B PURE)", "T48-F29-B-NULL", "T48-F29-B-F29")
+rf_compare("F29-A-NULL vs F29-A-F29 (EFFECT A PURE)", "T48-F29-A-NULL", "T48-F29-A-F29")
+rf_compare("F29-C-NULL vs F29-C-F29 (Feb 29 in a period)", "T48-F29-C-NULL", "T48-F29-C-F29")
+rf_compare("F29-Y-NULL vs F29-Y-F29", "T48-F29-Y-NULL", "T48-F29-Y-F29")
+rf_compare("A2-AA1 vs A2-AA2 (boundary choice)", "T48-A2-AA1", "T48-A2-AA2")
+rf_compare("A2-CTL-B03 vs A2-CTL-B04", "T48-A2-CTL-B03", "T48-A2-CTL-B04")
+d = rf_compare("A2-CTL-B03 vs A2-CTL-B03NULL (FULL == unset)",
+               "T48-A2-CTL-B03", "T48-A2-CTL-B03NULL")
+if d:
+    failures.append("FULL_LEAP_YEAR moved a rate factor vs unset on the B-03 shape")
+for fam in ("Q", "M", "Y", "B", "A"):
+    d = rf_compare("F29-%s-NULL vs F29-%s-FULL" % (fam, fam),
+                   "T48-F29-%s-NULL" % fam, "T48-F29-%s-FULL" % fam)
+    if d:
+        failures.append("FULL_LEAP_YEAR moved a rate factor vs the field being unset (family %s)" % fam)
 
 # ======================================================================= EXACTNESS PROBE
 print("\n######## EXACTNESS PROBE -- ProgressiveEMICalculator.java:1975 ########\n")
@@ -187,7 +239,7 @@ rf_match = 0
 rf_mismatch = []
 for c in ex["captures"]:
     o = c.get("observed")
-    if not o:
+    if not o or c.get("family") == "EXACTNESS-CANARY":
         continue
     for p in o["probes"]:
         if "note" in p or "error" in p:
@@ -209,14 +261,25 @@ for m in rf_mismatch:
 if sites == 0:
     failures.append("the exactness probe found NO probe site -- it observed nothing")
 
-canary = ex.get("vacuityCanary")
-if canary is None:
-    for c in ex["captures"]:
-        if c.get("family") == "EXACTNESS-CANARY":
-            canary = c
+canary = None
+for c in ex["captures"]:
+    if c.get("family") == "EXACTNESS-CANARY":
+        canary = c
 if canary is None:
     failures.append("no vacuity canary in the exactness payload -- a probe that always says "
                     "IDENTICAL is worthless without one")
+else:
+    legs = canary["observed"]["probes"]
+    separated = [l for l in legs if not l["productsBitIdentical"]]
+    print("\nVACUITY CANARY (local construction, NOT an oracle output): %d of %d legs SEPARATE"
+          % (len(separated), len(legs)))
+    for l in legs:
+        print("     %-38s bitIdentical=%s   exact=%s  rounded=%s"
+              % (l["leg"], l["productsBitIdentical"], l["exactProduct"], l["roundedProduct"]))
+    if not separated:
+        failures.append("the vacuity canary did NOT separate on any leg -- the exactness "
+                        "comparison is incapable of detecting a difference and its "
+                        "'IDENTICAL' verdict is worthless")
 
 print("")
 for n in notes:

@@ -181,13 +181,19 @@ public class CaptureActualActual {
                 new BigDecimal("21.6"), 19, RoundingMode.HALF_UP, "MNT", 2, DaysInMonthType.DAYS_30,
                 DaysInYearType.DAYS_360, null, BigDecimal.ZERO, null, null, false, true, false, "t48_ctl_q0a", 4,
                 "Asia/Ulaanbaatar", "MONTHS", 1));
-        // B-01 (Path B, committed) is MNT 1,200,000 / 12 monthly / 21.6% ACT/ACT from
-        // 2024-01-01; reference-oracle.md records total interest 144,988.47 and total
-        // repayment 1,344,988.47, and that it reproduces pass-3 P-MNT-1M2.  Entirely inside
-        // 2024, so the partial-period arm never fires -- which is exactly why it is a
-        // CONTROL for this task and not a capture of the arm.
-        c.add(new SeamCase("T48-CTL-B01", "CONTROL",
-                "REPRODUCTION CONTROL vs committed Path B observation B-01: ACT/ACT, NO year crossing",
+        // B-03 (Path B, committed) is MNT 1,200,000 / 12 monthly / 21.6% ACT/ACT from
+        // 2024-01-01 with daysInMonth ACTUAL and interestCalculationPeriodType DAILY
+        // [pathb/req/product-3-diycs-fullleapyear.json, calc-B-03-diycs-fullleapyear.json];
+        // reference-oracle.md records total interest 144,659.21.  Its product carries
+        // daysInYearCustomStrategy FULL_LEAP_YEAR, which Path A drops -- and FULL_LEAP_YEAR is
+        // a behavioural no-op anyway, so the two must agree.  Entirely inside 2024, so the
+        // partial-period arm never fires: this is a CONTROL, not a capture of the arm.
+        // (B-01 is NOT the right anchor for this configuration: its product sets
+        // interestCalculationPeriodType 1 = SAME_AS_REPAYMENT_PERIOD
+        // [pathb/req/product-1-baseline.json], which takes the early return at
+        // ProgressiveEMICalculator.java:1512-1524 and never reaches the ACT/ACT branch.)
+        c.add(new SeamCase("T48-CTL-B03", "CONTROL",
+                "REPRODUCTION CONTROL vs committed Path B observation B-03: ACT/ACT, NO year crossing",
                 LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 1), new BigDecimal("1200000"), 12,
                 new BigDecimal("21.6"), 19, RoundingMode.HALF_UP, "MNT", 2, DaysInMonthType.ACTUAL,
                 DaysInYearType.ACTUAL, null, BigDecimal.ZERO, null, null, false, true, false, "t48_ctl_b01", 4,
@@ -380,6 +386,74 @@ public class CaptureActualActual {
                 DaysInYearCustomStrategyType.FULL_LEAP_YEAR, 1, "t48_f29_y_full"));
         c.add(prod("T48-F29-Y-F29", "FEB29", "12 monthly 2023-12-01.., FEB_29_PERIOD_ONLY", y, "1200000",
                 "21.6", DaysInYearCustomStrategyType.FEB_29_PERIOD_ONLY, 1, "t48_f29_y_f29"));
+
+        // EFFECT (b) IN PURE ISOLATION.  Two monthly periods, 2023-11-01..2024-01-01.
+        // Effect (a) -- the 366 -> 365 substitution -- can only fire where
+        // DaysInYearType.ACTUAL.getNumberOfDays(interestPeriodFromDate) is 366
+        // [DaysInYearType.java:81-86 -> referenceDate.lengthOfYear()], i.e. where the
+        // FROM-DATE's year is a leap year.  Both periods here start in 2023, which is NOT a
+        // leap year, so effect (a) is a provable no-op on every period.  Period 2 (index 1)
+        // spans 2023-12-01..2024-01-01: it crosses the boundary and contains no 29 February,
+        // so the ONLY thing FEB_29_PERIOD_ONLY can change here is the third conjunct of
+        // partialPeriodCalculationNeeded [:1507] -- effect (b).  Every differing cell between
+        // -NULL and -F29 is therefore attributable to effect (b) and to nothing else.
+        final List<LocalDate[]> pureB = List.of(p(2023, 11, 1, 2023, 12, 1), p(2023, 12, 1, 2024, 1, 1));
+        c.add(prod("T48-F29-B-NULL", "FEB29-EFFECT-B-PURE",
+                "effect (b) ISOLATED: both periods start in non-leap 2023, strategy UNSET", pureB,
+                "1200000", "21.6", null, 1, "t48_f29_b_null"));
+        c.add(prod("T48-F29-B-FULL", "FEB29-EFFECT-B-PURE",
+                "effect (b) ISOLATED, FULL_LEAP_YEAR", pureB, "1200000", "21.6",
+                DaysInYearCustomStrategyType.FULL_LEAP_YEAR, 1, "t48_f29_b_full"));
+        c.add(prod("T48-F29-B-F29", "FEB29-EFFECT-B-PURE",
+                "effect (b) ISOLATED, FEB_29_PERIOD_ONLY", pureB, "1200000", "21.6",
+                DaysInYearCustomStrategyType.FEB_29_PERIOD_ONLY, 1, "t48_f29_b_f29"));
+
+        // EFFECT (a) IN PURE ISOLATION.  Three monthly periods inside leap year 2024, none
+        // containing 29 February and none crossing a year boundary, so effect (b) cannot
+        // fire at all and the partial-period arm is never reached.
+        final List<LocalDate[]> pureA = List.of(p(2024, 3, 1, 2024, 4, 1), p(2024, 4, 1, 2024, 5, 1),
+                p(2024, 5, 1, 2024, 6, 1));
+        c.add(prod("T48-F29-A-NULL", "FEB29-EFFECT-A-PURE",
+                "effect (a) ISOLATED: inside leap 2024, no Feb 29, no crossing, strategy UNSET", pureA,
+                "1200000", "21.6", null, 1, "t48_f29_a_null"));
+        c.add(prod("T48-F29-A-FULL", "FEB29-EFFECT-A-PURE", "effect (a) ISOLATED, FULL_LEAP_YEAR", pureA,
+                "1200000", "21.6", DaysInYearCustomStrategyType.FULL_LEAP_YEAR, 1, "t48_f29_a_full"));
+        c.add(prod("T48-F29-A-F29", "FEB29-EFFECT-A-PURE", "effect (a) ISOLATED, FEB_29_PERIOD_ONLY", pureA,
+                "1200000", "21.6", DaysInYearCustomStrategyType.FEB_29_PERIOD_ONLY, 1, "t48_f29_a_f29"));
+
+        // The control for effect (a): the SAME leap-year window, but the middle period
+        // CONTAINS 29 February, so FEB_29_PERIOD_ONLY must leave that period at 366 and
+        // agree with FULL_LEAP_YEAR on its rate factor.
+        final List<LocalDate[]> hasFeb = List.of(p(2024, 1, 15, 2024, 2, 15), p(2024, 2, 15, 2024, 3, 15),
+                p(2024, 3, 15, 2024, 4, 15));
+        c.add(prod("T48-F29-C-NULL", "FEB29-EFFECT-A-PURE",
+                "middle period CONTAINS 29 Feb 2024; strategy UNSET", hasFeb, "1200000", "21.6", null, 1,
+                "t48_f29_c_null"));
+        c.add(prod("T48-F29-C-F29", "FEB29-EFFECT-A-PURE",
+                "middle period CONTAINS 29 Feb 2024; FEB_29_PERIOD_ONLY keeps 366 there", hasFeb, "1200000",
+                "21.6", DaysInYearCustomStrategyType.FEB_29_PERIOD_ONLY, 1, "t48_f29_c_f29"));
+
+        // ---- CONTROL: reproduce the committed Path B observations B-03 and B-04 ----------
+        // Same shape as .softhouse/capture/pathb/req/calc-B-03/B-04: MNT 1,200,000, 12 monthly
+        // periods from 2024-01-01, 21.6%, ACT/ACT, daysInMonth ACTUAL, interest calculation
+        // period DAILY.  reference-oracle.md records B-03 (FULL_LEAP_YEAR) total interest
+        // 144,659.21 and B-04 (FEB_29_PERIOD_ONLY) 145,011.43, 12/12 periods differing.
+        // Reproducing both through a DIFFERENT seam anchors this pass to observations the
+        // program already holds.
+        final List<LocalDate[]> b03 = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            LocalDate f = LocalDate.of(2024, 1, 1).plusMonths(i);
+            b03.add(new LocalDate[] { f, f.plusMonths(1) });
+        }
+        c.add(prod("T48-A2-CTL-B03", "CONTROL",
+                "REPRODUCTION CONTROL vs committed Path B observation B-03 (FULL_LEAP_YEAR)", b03, "1200000",
+                "21.6", DaysInYearCustomStrategyType.FULL_LEAP_YEAR, 1, "t48_a2_ctl_b03"));
+        c.add(prod("T48-A2-CTL-B04", "CONTROL",
+                "REPRODUCTION CONTROL vs committed Path B observation B-04 (FEB_29_PERIOD_ONLY)", b03,
+                "1200000", "21.6", DaysInYearCustomStrategyType.FEB_29_PERIOD_ONLY, 1, "t48_a2_ctl_b04"));
+        c.add(prod("T48-A2-CTL-B03NULL", "CONTROL",
+                "the same shape with the strategy UNSET -- must equal B-03 if FULL_LEAP_YEAR is a no-op",
+                b03, "1200000", "21.6", null, 1, "t48_a2_ctl_b03null"));
 
         // ---- AA-PARTIAL through Path A2, so the RATE FACTOR itself is observable ----------
         final List<LocalDate[]> aa1 = List.of(p(2024, 11, 1, 2024, 12, 1), p(2024, 12, 1, 2025, 1, 1),
