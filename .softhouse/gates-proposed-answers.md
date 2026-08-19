@@ -148,3 +148,21 @@ Under the greenfield policy, ratifying the first version of the contract is a de
 ### P-3 · Reporting cadence → **exceptions only**
 
 Routine fire activity is no longer narrated. Surfaced to Buyan: rejections, gates that reach RESERVED, failures that park a context, milestones (a context reaching parity), and anything that contradicts something previously reported as settled.
+
+---
+
+## P-4 · Stop revising the contract — ratify v8 with obligations
+
+**Decision (19 Aug 2026, standing until reversed).** DEC-1 has been through eight revisions and five independent re-reviews. Each round finds fewer and narrower defects, and revision 8 passes a 4,578-cell spec check. The marginal defect caught by revision *n+1* is now worth less than the cost of the entire program waiting on it — all 17 contexts are behind this gate, and **zero lines of the port exist**.
+
+Therefore, on T43's verdict:
+
+- **Clean / ACCEPTED** → ratify immediately, as already provided for.
+- **ACCEPTED WITH REQUIRED CHANGES** → **ratify anyway.** Record every residual finding as a numbered **conformance obligation** in DEC-1 §9, each one naming the vector or capture that would settle it. Then start T7 and T10 in the same fire.
+- **REJECTED with a defect that changes money** → this is the only case that blocks. Fix that specific defect, ratify, and record the rest as obligations. Do not open a general revision round.
+
+**No revision 9 for anything short of a money-changing defect.** A residual finding recorded as an obligation is not ignored — it is graded by vectors later, which is the real acceptance test. A finding that only exists in prose has never been graded by anything.
+
+**Rationale.** Contract-first was correct and these reviews caught real defects (precision-vs-scale, two silently-dropped inputs, `n`'s definition, the per-period interest specification). But the contract cannot be proven correct by more reading; it can only be proven by a port running against the oracle. Freezing an imperfect boundary with its imperfections *written down and scheduled* beats an unfrozen perfect one that never ships.
+
+**This decision was stated on 18 Aug and not recorded in the repo, so no fire could act on it — which cost revisions 6, 7 and 8.** A decision that lives only in conversation does not exist.
