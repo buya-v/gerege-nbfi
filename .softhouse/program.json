@@ -75,7 +75,7 @@
     "current_run_id": "2026-08-17-run1-harness-schedule-poc",
     "completed_contexts": [],
     "parked_contexts": [],
-    "note": "Cloud catch-up fire cloud-20260818-2000: tier 0 remains blocked_on_gate (G-1), but the gate is now a single specified engineering step from closing. DEC-1 advanced v2->v6 under FOUR independent re-reviews (T26, T29, T32 landed; T34 pending), none of which came back clean, so the driver did not ratify - P-2 licenses ratification only on a clean review. Every P0 found was INVISIBLE TO THE CORPUS: by T32 the committed corpus passed three distinct wrong readings at 13/13 each. Nine workers dispatched, eight merged, one killed by a transient API 521 and re-run. The fire also found that the PRIOR LOCAL FIRE dispatched two opus workers and exited 104 seconds later without awaiting them, losing both - the second consecutive recurrence of that bug. Next: verify T33 landed, then T34; if clean, ratify and close G-1 without reaching Buyan."
+    "note": "Local fire 20260819-080001 (oracle REACHABLE, ~3h15m): EIGHT workers dispatched, ALL EIGHT completed, merged and verified - no worker lost, no isolation violation, no scope breach. DEC-1 advanced v6 -> v10. The gate record was corrected first: all six items G-1 listed as 'decisions only Buyan can make' are ANSWERED, so G-1 carries ZERO RESERVED items and is NOT a user gate - what gates it is one CLEAN independent re-review. T43 then returned the first NO-P0 verdict in eight rounds and RECOMMENDED RATIFYING; the driver DECLINED, because ratification FREEZES and P1-T43-3 was a known-wrong money sentence (an instalment fee lands on every row, no membership test; MNT 27,500 on FC-02). Revisions 9 and 10 then fixed it and the corpus REFUTED the old reading 13-of-21 -> 21-of-21. Oracle work only this fire could do: P0-T34-1 CONFIRMED BY OBSERVATION (415/415 disagreeing cells to periodRatio, 0/415 to RepaymentEvery); the charges blind spot opened (totalRepaymentExpected omits main-loop charges, invariant fails 15/21, the two generators disagree; two ways to lose a charge silently at HTTP 200); the threaded-vs-ambient MathContext settled by an ABSENCE probe and precision 19 shown OBSERVABLE; all three new capture sets independently audited (T44) and corrected (T46); the month-end special case PROVED NOT SEPARABLE over all 112,147,776 ordered date pairs; and DayCountActualActual CAPTURED, a section-8 item open since revision 5. NEXT FIRE'S FIRST TASK: one independent re-review of DEC-1 revision 10. If CLEAN, the driver ratifies under P-2 and G-1 closes without reaching Buyan, unblocking T7 and everything behind it."
   },
   "contexts": [
     {
@@ -611,6 +611,41 @@
       "gates_crossed": "none. G-1 remains OPEN and unratified - the driver declined to ratify three times (after T26, T29, and pending T32), because standing policy P-2 licenses ratification only on a CLEAN review and none came back clean.",
       "vectors_promoted": "none. Nothing was promoted to the parity store; T27's promotability audit says nothing is promotable today, with 6 P0 admissibility items outstanding, every one needing a live oracle.",
       "invariants_held": "PostgreSQL only; no vector synthesised; no contract-shaped capture storage while G-1 is open; no cutover; no user gate crossed"
+    },
+    {
+      "fire": "local-20260819-080001",
+      "date": "2026-08-19",
+      "context": "tier0-harness-schedule-poc",
+      "run_id": "2026-08-17-run1-harness-schedule-poc",
+      "oracle": "REACHABLE",
+      "tasks_dispatched": 8,
+      "tasks_completed": 8,
+      "tasks_lost": 0,
+      "task_ids": [
+        "T38",
+        "T39",
+        "T40",
+        "T41",
+        "T42",
+        "T43",
+        "T44",
+        "T45",
+        "T46",
+        "T47",
+        "T48"
+      ],
+      "dec1_revisions": "v6 -> v10",
+      "reviewer_catches": [
+        "T43: no P0 for the first time in eight rounds, but three P1s - one a known-wrong money sentence about charge row membership",
+        "T44: all three new capture sets ACCEPTED WITH REQUIRED CHANGES; no synthesised number, but three coverage claims did not hold",
+        "T43 and T44 independently found the same wrong citation with no shared context",
+        "T45 declined one of T43's P2s on evidence - the cell was not stale",
+        "T47 caught a TRANSPOSED consequence in the ORCHESTRATOR'S OWN BRIEF and refused to follow it",
+        "T44 and T46 corrected reference-oracle.md twice - both errors the orchestrator introduced folding in a handoff"
+      ],
+      "uat": "not run - no Go implementation exists yet; T7 (harness) is still blocked behind G-1",
+      "gates": "G-1 open by driver decision, NOT by a reserved item. G-2 unchanged.",
+      "notes": "The driver declined to ratify against the reviewer's explicit recommendation, and recorded the decision as reversible by Buyan in gates.md."
     }
   ],
   "database": {
