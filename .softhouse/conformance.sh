@@ -297,6 +297,27 @@ prove() {
   expect 2 "self-test fixture excluded from the parity count" -- \
     "$bin" -oracle-probe=up -context=_selftest
 
+  # 8b. The same fixture PASSING, and the parity count STILL zero. Exit codes alone
+  #     cannot show this one, so the report text is asserted directly: the fixture
+  #     is graded, it passes, and it buys no parity whatsoever.
+  local out8 rc8
+  out8="$("$bin" -self-test -context=_selftest 2>&1)"; rc8=$?
+  if [ "$rc8" = 0 ] \
+     && printf '%s' "$out8" | grep -q 'self-test fixtures      PASS 1' \
+     && printf '%s' "$out8" | grep -q 'parity vectors          PASS 0' \
+     && printf '%s' "$out8" | grep -q 'SELF-TEST FIXTURE' \
+     && printf '%s' "$out8" | grep -q 'EXCLUDED from the parity count' \
+     && printf '%s' "$out8" | grep -q 'NOT a conformance PASS'; then
+    say "PROOF OK   exit $rc8               the fixture PASSES and parity stays 0, stamped NOT a conformance PASS"
+    pass=$((pass+1))
+  else
+    say "PROOF FAIL exit $rc8               the fixture's pass/parity accounting is not as claimed"
+    say "$out8"
+    fail=$((fail+1))
+  fi
+  printf '%s\n' "$out8" | grep -E 'self-test fixtures|parity vectors|VERDICT'
+  say ""
+
   # 9. A float token in a vector file: the HARD guard refuses. Run the guard
   #    against a doctored copy rather than the real store.
   mkdir -p "$tmp/floaty"
