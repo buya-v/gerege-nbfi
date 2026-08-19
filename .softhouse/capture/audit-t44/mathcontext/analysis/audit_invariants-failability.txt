@@ -1,0 +1,8 @@
+before: p1.principal = 191187.28  totalInterestAmount = 76723.70
+  I1-principal-amortizes fired: disbursed 1200000.00 != due 2008812.71
+  I2-interest-sums fired: 58564.07 != 1.234
+  I3-row-splits fired at period 1
+  I4-negative fired
+  I5-float fired
+  I5-scale fired
+FAILABILITY: PASS -- 6 invariants fired on the corrupted payload

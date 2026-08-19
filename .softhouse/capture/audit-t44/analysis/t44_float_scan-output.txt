@@ -1,0 +1,89 @@
+T44 - bare non-integer JSON number scan over committed capture payloads
+
+  .softhouse/capture/periodratio/out/t39-determinism-raw.json: UNPARSEABLE (Extra data: line 1 column 2 (char 1))
+     0 bare non-integer numbers   .softhouse/capture/periodratio/out/t39-determinism.json
+  .softhouse/capture/periodratio/out/t39-neg5-raw.json: UNPARSEABLE (Extra data: line 1 column 2 (char 1))
+     0 bare non-integer numbers   .softhouse/capture/periodratio/out/t39-neg5.json
+  .softhouse/capture/periodratio/out/t39-neg6-raw.json: UNPARSEABLE (Extra data: line 1 column 2 (char 1))
+     0 bare non-integer numbers   .softhouse/capture/periodratio/out/t39-neg6.json
+  .softhouse/capture/periodratio/out/t39-neg7-raw.json: UNPARSEABLE (Extra data: line 1 column 2 (char 1))
+     0 bare non-integer numbers   .softhouse/capture/periodratio/out/t39-neg7.json
+  .softhouse/capture/periodratio/out/t39-periodratio-raw.json: UNPARSEABLE (Extra data: line 1 column 2 (char 1))
+     0 bare non-integer numbers   .softhouse/capture/periodratio/out/t39-periodratio.json
+  .softhouse/capture/mathcontext/out/t42-determinism-raw.json: UNPARSEABLE (Extra data: line 1 column 2 (char 1))
+     0 bare non-integer numbers   .softhouse/capture/mathcontext/out/t42-determinism.json
+  .softhouse/capture/mathcontext/out/t42-determinism2-raw.json: UNPARSEABLE (Extra data: line 1 column 2 (char 1))
+     0 bare non-integer numbers   .softhouse/capture/mathcontext/out/t42-determinism2.json
+  .softhouse/capture/mathcontext/out/t42-mathcontext-raw.json: UNPARSEABLE (Extra data: line 1 column 2 (char 1))
+     0 bare non-integer numbers   .softhouse/capture/mathcontext/out/t42-mathcontext.json
+  .softhouse/capture/mathcontext/out/t42-mathcontext2-raw.json: UNPARSEABLE (Extra data: line 1 column 2 (char 1))
+     0 bare non-integer numbers   .softhouse/capture/mathcontext/out/t42-mathcontext2.json
+  .softhouse/capture/mathcontext/out/t42-neg4-raw.json: UNPARSEABLE (Extra data: line 1 column 2 (char 1))
+     0 bare non-integer numbers   .softhouse/capture/mathcontext/out/t42-neg4.json
+  .softhouse/capture/mathcontext/out/t42-neg5-raw.json: UNPARSEABLE (Extra data: line 1 column 2 (char 1))
+     0 bare non-integer numbers   .softhouse/capture/mathcontext/out/t42-neg5.json
+   207 bare non-integer numbers   .softhouse/capture/charges/out/fc/FC-01-flat-disbursement-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/fc/FC-02-flat-instalment-raw.json  <-- BARE FLOAT PRESENT
+   214 bare non-integer numbers   .softhouse/capture/charges/out/fc/FC-03-pctamount-disbursement-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/fc/FC-04-pctinterest-instalment-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/fc/FC-05-pctamountinterest-instalment-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/fc/FC-06-penalty-inside-p3-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/fc/FC-07-fee-on-p3-duedate-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/fc/FC-08-penalty-instalment-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/fc/FC-09-pctamount-instalment-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/fc/FC-10-pctamount-inside-p6-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/fc/FC-11-fee-on-disbursement-date-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/fc/FC-12-fee-on-final-duedate-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/fc/FC-13-fee-inside-p12-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/fc/FC-14-fee-inside-p1-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/fc/FC-15-combined-fee-and-penalty-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/fc/FC-16-fee-on-p1-duedate-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/fc/FC-17-fee-after-final-duedate-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/fc/FC-19-pctinterest-sdd-inside-p6-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/fc/FC-20-pctinterest-sdd-on-disb-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/fc/FC-21-pctamtint-sdd-inside-p6-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/fc/FC-22-penalty-instalment-plus-sdd-on-p3-duedate-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/CTRL-B-01-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/FC-01-flat-disbursement-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/FC-02-flat-instalment-raw.json  <-- BARE FLOAT PRESENT
+   214 bare non-integer numbers   .softhouse/capture/charges/out/attested/FC-03-pctamount-disbursement-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/FC-04-pctinterest-instalment-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/FC-05-pctamountinterest-instalment-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/FC-06-penalty-inside-p3-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/FC-07-fee-on-p3-duedate-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/FC-08-penalty-instalment-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/FC-09-pctamount-instalment-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/FC-10-pctamount-inside-p6-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/FC-11-fee-on-disbursement-date-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/FC-12-fee-on-final-duedate-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/FC-13-fee-inside-p12-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/FC-14-fee-inside-p1-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/FC-15-combined-fee-and-penalty-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/FC-16-fee-on-p1-duedate-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/FC-17-fee-after-final-duedate-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/FC-19-pctinterest-sdd-inside-p6-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/FC-20-pctinterest-sdd-on-disb-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/FC-21-pctamtint-sdd-inside-p6-raw.json  <-- BARE FLOAT PRESENT
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/FC-22-penalty-instalment-plus-sdd-on-p3-duedate-raw.json  <-- BARE FLOAT PRESENT
+     0 bare non-integer numbers   .softhouse/capture/charges/out/attested/XR-01-fee-before-disbursement-HTTP403.json
+     0 bare non-integer numbers   .softhouse/capture/charges/out/attested/attestation.json
+   207 bare non-integer numbers   .softhouse/capture/charges/out/attested/canary-halfcent-raw.json  <-- BARE FLOAT PRESENT
+
+  TOTAL 9122 bare non-integer numbers found. Sample:
+    .softhouse/capture/charges/out/fc/FC-01-flat-disbursement-raw.json: '1200000.00'
+    .softhouse/capture/charges/out/fc/FC-01-flat-disbursement-raw.json: '1200000.00'
+    .softhouse/capture/charges/out/fc/FC-01-flat-disbursement-raw.json: '144988.47'
+    .softhouse/capture/charges/out/fc/FC-01-flat-disbursement-raw.json: '15000.00'
+    .softhouse/capture/charges/out/fc/FC-01-flat-disbursement-raw.json: '0.00'
+    .softhouse/capture/charges/out/fc/FC-01-flat-disbursement-raw.json: '1359988.47'
+    .softhouse/capture/charges/out/fc/FC-01-flat-disbursement-raw.json: '1200000.00'
+    .softhouse/capture/charges/out/fc/FC-01-flat-disbursement-raw.json: '1200000.00'
+    .softhouse/capture/charges/out/fc/FC-01-flat-disbursement-raw.json: '90482.37'
+    .softhouse/capture/charges/out/fc/FC-01-flat-disbursement-raw.json: '90482.37'
+    .softhouse/capture/charges/out/fc/FC-01-flat-disbursement-raw.json: '90482.37'
+    .softhouse/capture/charges/out/fc/FC-01-flat-disbursement-raw.json: '1109517.63'
+    .softhouse/capture/charges/out/fc/FC-01-flat-disbursement-raw.json: '21600.00'
+    .softhouse/capture/charges/out/fc/FC-01-flat-disbursement-raw.json: '21600.00'
+    .softhouse/capture/charges/out/fc/FC-01-flat-disbursement-raw.json: '21600.00'
+
+  => json.load() WITHOUT parse_float on these files CONSTRUCTS BINARY FLOATS.

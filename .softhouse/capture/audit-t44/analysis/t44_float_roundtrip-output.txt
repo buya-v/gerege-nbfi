@@ -1,0 +1,27 @@
+T44 - float round-trip hazard on the Path B (charges) raw captures
+  distinct bare non-integer literals: 245
+  total occurrences               : 9122
+
+  max decimal scale seen                    : 6
+  literals whose float repr() != the text   : 41
+  literals whose float VALUE != the decimal : 0
+
+  text-lossy examples:
+          '1200000.00'  ->  1200000.0
+            '15000.00'  ->  15000.0
+                '0.00'  ->  0.0
+            '21600.00'  ->  21600.0
+            '13158.10'  ->  13158.1
+           '102517.60'  ->  102517.6
+           '112082.40'  ->  112082.4
+            '30000.00'  ->  30000.0
+             '2500.00'  ->  2500.0
+            '24100.00'  ->  24100.0
+            '15658.10'  ->  15658.1
+           '114582.40'  ->  114582.4
+
+  => no literal changes VALUE on a float round-trip at these magnitudes and scales,
+     so no committed charges number is corrupted TODAY. The hazard is structural:
+     the wire format is float-shaped, so a consumer that does not force exact
+     decimal parsing violates the money rule by construction, and would corrupt
+     a value as soon as a magnitude or a scale grows.

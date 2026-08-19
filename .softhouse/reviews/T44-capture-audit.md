@@ -279,9 +279,161 @@ says `:1508`; **`:1508` is correct** [VERIFIED: this task].
 
 ---
 
-# 2. `charges` (T40)
+# 2. `charges` (T40) — **ACCEPTED WITH REQUIRED CHANGES**
 
-*(section written after the charges audit leg — see below)*
+**Every observation in the set reproduced.** All five headline behaviours are real, the two silent-loss
+paths are real, and no synthesised number was found. What the audit found instead is that **the corpus
+does not pin the input it thinks it pins**, that D-1's single source citation points at the one line
+that refutes it, and that C5 is a probe wearing an invariant's badge.
+
+Full working, scripts and raw outputs: `.softhouse/capture/audit-t44/charges/AUDIT-CHARGES.md`.
+
+## 2.1 What was re-run against the live oracle
+
+- **11 of the 21 requests re-issued byte-verbatim** from `capture/charges/req/` (plus the CTRL-B-01
+  control from `capture/pathb/req/`) against the running server: **all byte-identical**, including
+  `XR-01`'s HTTP 403 body. T40's determinism claim holds.
+- **The precondition script proved failable**: run against tenant `default` instead of `gerege` it
+  **exits 1 naming five breaches**, the behavioural half-cent canary among them. And it is
+  byte-verbatim T36's script — three-way sha256 match.
+- **C1–C10 re-implemented independently** from the stated definitions and re-run: matches
+  `out/INVARIANTS.md` cell for cell, including C5's 15 failures.
+- **A 336-leaf diff** (against T40's 286) reproduced every moved-leaf count; the difference is exactly
+  `25 dates × 2`, which confirms "286 leaves" really is every money leaf.
+- **All seven Q5 percentage bases and both rounding-locus gaps recomputed exactly** —
+  `5,437.06` vs `5,437.07` and `16,603.92` vs `16,603.88`.
+- **D-2a / D-2b byte-identity re-verified four ways.** `> 60 published numbers` in §§4-9 traced to raw
+  JSON leaves, **zero synthesised values**. The 12 `m_charge` rows match the attestation exactly, and
+  the tenant was left as found (`m_charge` 12, `m_loan` 0 — nothing created, nothing modified).
+
+## 2.2 Findings
+
+### **A-1 (P1) — T42 rule 4's wiring citation is entirely absent.**
+`grep -E 'LoanScheduleAssembler|LoanScheduleGeneratorServiceImpl|wiring|threaded|ambient'` over the whole
+of `capture/charges/` **and** the handoff returns **zero hits**. T40 is a **Path B** set, so its ambient
+`MoneyHelper` reading genuinely *is* the threaded object — but rule 4 requires that be *said and cited*
+(`LoanScheduleAssembler.java:753, :777, :797`; `LoanScheduleGeneratorServiceImpl.java:44`), not left
+implicit. As written, the attestation presents the ambient reading as "the effective `MathContext`" with
+nothing connecting it to the arithmetic. **The conclusion is right and the justification is missing.**
+
+### **A-2 (P1) — D-1's single source citation points at the one line where the two generators AGREE.**
+The handoff says *"The cumulative (non-progressive) generator does add them
+[VERIFIED: `AbstractCumulativeLoanScheduleGenerator.java:504`], so the two generators disagree."*
+I opened it myself. `:504` is
+`scheduleParams.addTotalRepaymentExpected(feeChargesForInstallment.plus(penaltyChargesForInstallment));`
+sitting inside `updatePeriodsWithCharges`, immediately after `addTotalFeeChargesCharged` /
+`addTotalPenaltyChargesCharged` at `:502-503` — i.e. the **separated-path** site that the progressive
+generator has too, at `ProgressiveLoanScheduleGenerator.java:486`. Cited as proof of disagreement, it is
+the one site of agreement.
+
+**The conclusion is nonetheless true, at a different line** [VERIFIED by me on the pinned source]: the
+cumulative **main loop** does `scheduleParams.addTotalRepaymentExpected(totalInstallmentDue)` at `:392`,
+where `:352` sets `totalInstallmentDue = currentPeriodParams.fetchTotalAmountForPeriod()` and
+`ScheduleCurrentPeriodParams.java:144-145` defines that as
+`principalForThisPeriod.plus(interestForThisPeriod).plus(feeChargesForInstallment).plus(penaltyChargesForInstallment)`.
+The progressive main loop adds only `principalDue.plus(interestDue, mc)` [`:137`].
+
+**P1 because D-1 is the finding that drove T41's ratified DEC-1 decision C-1.** A reader checking the one
+citation offered for its most consequential half would conclude the opposite. **Required change:** replace
+`:504` with `:392` + `ScheduleCurrentPeriodParams.java:144-145`, in the handoff and everywhere D-1 is
+restated.
+
+### **A-3 (P1) — the observed money came from the REQUEST amount, not from the attested charge definitions.**
+The handoff frames the mandatory per-request `amount` as a redundant echo of the definition
+(*"Every request therefore repeats the definition's amount as exact decimal text"*). It is not redundant —
+**the request value is authoritative and `m_charge.amount` is ignored**, for percentage and flat charges
+alike, observed on the live oracle:
+
+| probe | request | definition in `m_charge` | observed |
+|---|---|---|---|
+| AP-5 | `{"chargeId": 4, "amount": 0.001875}` | charge 4 = **3.750000 %** | period-1 fee **0.41**, not 810.00 |
+| AP-6 | `{"chargeId": 1, "amount": 12345.67}` | charge 1 = **15000.000000** | disbursement fee **12345.67**, not 15,000 |
+
+Consequence: `attestation.json`'s `charges_as_persisted` block — 12 rows each carrying a
+`persisted_row_sha256` — is load-bearing provenance for `charge_time_enum`, `charge_calculation_enum` and
+`is_penalty`, and is **not load-bearing for a single money value in the set**. And because T40 always made
+the two equal, **no capture in the corpus can distinguish "the definition governs" from "the request
+governs"**; a Go port that read the definition's amount passes all 21 and is wrong. **Required change:**
+the vector's fixture is the **request bytes**, not the definition row, and the admissibility record must
+say so.
+
+### **A-4 (P1) — C5 is a discrimination probe, not an invariant; carried forward it becomes an assertion DEC-1 §9 forbids.**
+Judged as the brief asked. **In T40's favour on the facts:** C5 *failing* is exactly what produced D-1,
+T40 ran before T41 decided, and `invariants.py` is demonstrably failable *because* C5 fails. As a probe it
+is the most valuable instrument in the set. **But as an invariant it is wrong about the oracle** — T41's
+ratified C-1 obliges that *"no adapter, harness or conformance check may assert it equals the sum of the
+rows"* — and its PASSes carry no information: the 6 captures where it passes pass for three unrelated
+reasons (nothing landed at all: FC-17, FC-20; disbursement-only: FC-01, FC-03; separated-path only:
+FC-19, FC-21). A green C5 says nothing about a port. **A correct Go port, discarding
+`totalRepaymentExpected` per C-1, would fail C5 on 15 of 21.** **Required change:** relabel C5 a
+discrimination probe recording the signed delta `TRE − Σ rows` per capture (0 on 6, `−543,706` to
+`−5,190,000` minor units on the other 15), and do not ship `invariants.py` with C5 in it as the
+conformance harness for a promoted charges corpus.
+
+### **A-5 (P2) — §11's arithmetic proof that no half-cent tie exists at that base is false, and one was found.**
+The handoff proves *"a tie needs `216 × p` to end in `…5` at the third decimal, and `216p` is even for
+every terminating decimal `p`"*. It is not: `p = 0.001875 %` gives exactly `0.405` on period-1 interest
+`21,600.00`, and the live oracle returned **0.41** — `HALF_UP`; `HALF_EVEN` would give `0.40`. So the
+in-charge-arithmetic rounding-mode canary T40 declared impossible **exists and has now been observed**.
+
+### **A-6 (P2) — the disbursement row serialises charge fields at the underlying `BigDecimal` scale.**
+`0`, `15000`, `14814.000000` on the wire, against the handoff's 2-dp rendering; every T40 tool normalises
+scale away, so only the SHA-256s can see it. Same family as the known `totalOutstandingAmount` scale-0
+fact — **response scale is ungraded**.
+
+### **A-7 (P2) — 15 of 19 `bin/` scripts hard-code T40's ephemeral worktree path**, so the shipped run
+recipe breaks the moment softhouse prunes that worktree. A recipe that cannot be re-run is not a recipe.
+
+### **A-8 (P2) — the `c_configuration` row and the `MoneyHelper` init line are listed as two assertions
+but are one ambient witness** — the T37 shape again (see F39-2; the mechanism is `MoneyHelper.java:59-64`
+writing the cache and logging from the same local). Rule 6 is nonetheless satisfied here, because T36's
+half-cent canary is real behavioural evidence and on Path B the ambient **is** the arithmetic.
+
+### **T44-X1 (P2, cross-cutting) — the Path B captures are float-shaped on the wire.**
+Measured, not asserted [`audit-t44/analysis/t44_float_scan-output.txt`,
+`t44_float_roundtrip-output.txt`]: every charges response carries **207–214 bare (unquoted) non-integer
+JSON numbers** — 9,122 occurrences, 245 distinct literals, max scale 6 — because Fineract's REST layer
+serialises `BigDecimal` as a JSON *number*. The Path A payloads (`periodratio`, `mathcontext`) carry
+**0**: every money leaf there is a JSON *string*.
+
+Consequence: any consumer that parses a Path B capture without forcing exact decimal parsing constructs
+binary floats, which the project rule forbids outright. Today **0 of 245 literals change VALUE** on a
+float round-trip, but **41 of 245 change TEXT** (`"1200000.00" → 1200000.0`), and the rule is *integer
+minor units, exact text*. T40's own tools do force `parse_float=Decimal`/`str` and are clean; the hazard
+is inherited by whatever consumes the promoted vectors — including the Go conformance harness, where
+`encoding/json` into `interface{}` yields `float64` by default. **Required change:** the admissibility
+record must state that Path B vectors are compared as exact decimal text, never through a JSON number.
+
+## 2.3 Checked and found CLEAN
+
+11/11 live re-issues byte-identical (incl. the 403 body) plus the control; preconditions byte-verbatim
+T36 and **proven failable**; independent C1–C10 matching cell for cell; the 336-leaf diff reproducing
+every moved-leaf count; all seven Q5 bases and both rounding-locus gaps recomputed exactly; D-2a/D-2b
+byte-identity re-verified four ways; determinism 21/21 across three committed issues; **> 60 published
+numbers traced to raw JSON leaves with zero synthesised values**; every cited source line verified
+**except A-2**; the 12 charge rows matching `m_charge`; SELFCHECK's ten assertions confirmed; the write
+surface exactly `capture/charges/**` + its handoff [VERIFIED: `git diff --name-only` from the merge base].
+Three audit probes (AP-1/2/3) additionally **close one of T40's own `[UNVERIFIED]` items in its favour** —
+the separated path uses `(from, due]` for every period and loses only period 1's `fromDate`.
+
+## 2.4 Admissibility — `charges`
+
+**Admissible as raw observations now.** As parity vectors after G-1 **only if** three things hold:
+(i) the vector is `(request bytes → response bytes)` — the request carries the charge amount (A-3);
+(ii) `totalRepaymentExpected` is **discarded** per DEC-1 C-1 and **C5 is removed from the harness** (A-4);
+(iii) comparison is exact decimal text, never a JSON number (T44-X1). 17 of the 21 responses are distinct.
+
+**FC-17 and FC-20 must be labelled NEGATIVE vectors only.** Both are byte-identical to the zero-charge
+control, so **an adapter that ignored the `charges` array entirely passes both**. They record a behaviour;
+they cannot grade one.
+
+**Blind spots:** one loan shape underneath all 21 (principal `120000000`, interest `14498847`,
+`loanTermInDays` 365, 12 periods) — term, rate, frequency and anchoring are all ungraded here; **0 of 39
+percentage roundings is a rounding tie**, so nothing in the committed set discriminates `HALF_UP` from
+`HALF_EVEN` *inside charge arithmetic* (A-5 supplies the shape that would); "period principal+interest"
+vs "the EMI" is unseparated even on product 2; response scale ungraded (A-6);
+`OVERDUE_INSTALLMENT` (the operationally important penalty), tranche/multi-disbursement charges,
+`minCap`/`maxCap`, the cumulative generator and `Asia/Hovd` all remain **`TO_BE_CAPTURED`**.
 
 ---
 
