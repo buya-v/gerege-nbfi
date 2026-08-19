@@ -342,3 +342,87 @@ money sentence. **This is a judgment call, not a statute, and it is the only thi
 
 **Still RESERVED and untouched:** cutover, regulatory / parallel-run sign-off, deposit-taking activation,
 licence facts. None is in Run 1's path.
+
+---
+
+### G-1 · UPDATE from local fire `20260819-140003` (oracle REACHABLE) — **NOT RATIFIED at revision 10**, and this time the reviewer and the driver agree
+
+**Still ENGINEERING_ONLY. `decisions_reserved_for_user` is still EMPTY. G-1 is not a `user` gate and this fire did not make it one.**
+
+#### The second consecutive no-P0 round
+
+T49 re-reviewed **revision 10** and returned **ACCEPTED WITH REQUIRED CHANGES — no P0**. That is two in a
+row (T43 on revision 8, T49 on revision 10) after seven straight rounds that each found a new P0. What T49
+verified positively matters as much as what it found:
+
+- It reproduced revision 10's packed-whole-months closed form **from first principles**: 14,976 days →
+  **112,147,776** ordered pairs, predicate fires **45,253**, both cross-terms **0**, `k_oracle ≡ k_clamped`,
+  first firing pair `2000-01-29`/`2001-02-28` packed 12 / clamped 13 / oracle 13 — matching the document exactly.
+- Citation audit: **155 distinct citations, 329 occurrences, 0 out of range, 0 ambiguous.**
+- The **M4/M5 restatement grep found no leak** — the T2-style failure mode the driver specifically warned it
+  about is not present.
+
+#### Why the driver declined anyway — one item, re-verified by the driver at source
+
+**P1-T49-2.** `contract.go:367-370` and DEC-1 §4.9 both still say the `DayCountActualActual` arm has
+*"no capture in the corpus"* and that *"no independent re-derivation has yet reproduced [it] from source"*.
+**Both are now false.** P2-T29-1 retired the re-derivation claim in **revision 5** — §4.10 and §8 item 5
+already say so — and T48 captured the arm on three seams last fire (~60 captures), with `B-03`/`B-04` on
+Path B. It leaked across **five revisions and eight review rounds**.
+
+It sits in a **`contract.go` doc comment**. **Ratification freezes it, and correcting it afterwards is a
+gate.** This is the same category as the known-wrong money sentence that made the driver decline at
+revision 8 — a false statement being frozen into the artefact — and the reviewer's own recommendation was
+likewise "ratify *after* a bounded erratum pass", not "ratify now". **Reviewer and driver agree this time.**
+
+Two supporting P1s, both re-derived by the driver rather than taken on report:
+- **P1-T49-3** — revision 10's own worked check in §4.5.1 is wrong by exactly 10²:
+  `2,160,000 × 21,875 = 47,250,000,000`, not `472,500,000`, which is the product of the **major**-unit
+  `21,600`. The conclusion it supports, and the observed `4.73`/`2.03`, are correct.
+- **P1-T49-1** — the capture seam drops a **third** of the 19 components, so §2.2's "honours 17 of 19" and
+  §3.2's "**exactly** the two the graded domain pins" are false *inside the argument that licenses freezing
+  the contract on a seam-captured corpus*. The conclusion survives and is **strengthened** — the blind spot
+  is still empty, now on three pins.
+
+#### What this fire added that revision 11 must carry
+
+Three findings **confirmed by observation** in the same fire, two of which change what a correct sentence says:
+
+- **N46-1 and N46-3 — CONFIRMED, no longer `TO_BE_CAPTURED`.** The **ambient** `MoneyHelper` mode governs the
+  charge value at `ProgressiveLoanScheduleGenerator.java:445-446`/`:464-465` in **7/7** threaded columns
+  (threaded moves it in **0/7**), reachable at MNT scale — `1005025.12` vs `1005025.13` on a fee.
+  **The recorded blocker was refuted:** T46 and T48 both wrote that separating the two axes "needs a tenant
+  write", but `LoanScheduleAssembler:753` reads `getMathContext()` and `:765` threads *that same cached
+  reference*, so a tenant write moves both together and the experiment cannot work. On the shipped server
+  the leak is **latent**; it goes live the moment a port threads a context — the natural Go idiom.
+  **This is a defect class a Go port introduces, not one Fineract exhibits.**
+- **The alias crosses configuration scopes** (T51, driver-verified at `LoanScheduleAssembler.java:370-371`).
+  `isInterestChargedFromDateSameAsDisbursalDateEnabled` is a **tenant-global configuration**, not a product
+  setting, so **a port cannot fix the alias by wiring "the other product field."** Both downstream readers
+  were proven to move money (79/153 and 52/164 cells), so **the slot is LIVE** — yet products 17/18 matched
+  on 20 SQL columns differ in **0 cells** across 8 shapes, so **the product setting is INERT**. The oracle
+  matches the **31-December** boundary on 6 of 6 discriminating periods. A port must wire from the global
+  config and reproduce 31-December bug-for-bug.
+- **T50-N2 — the Path A embeddable seam can NEVER exercise a charge.** `ProgressiveLoanScheduleGenerator.java:81`
+  calls `generate(mc, loanApplicationTerms, null, null)` — `loanCharges` hard-wired `null` (driver-verified
+  by reading the line). **Charge conformance can only ever be graded on Path B**, which constrains T7's
+  harness design and bears on §2.2/§3.2/§5's seam-coverage reasoning.
+
+#### What unblocks G-1 now
+
+1. **T52** — revision 11, a **bounded** erratum pass: T49's six items plus the three findings above. No type,
+   field, enum member or graded-domain predicate moves; if one must, that is an amendment and a gate.
+2. **A diff-scoped check** that the items landed and that every money statement the diff introduces
+   re-derives — **not a ninth full re-derivation**. T49's own recommendation, and the rounds have converged.
+3. **The driver ratifies under policy P-2 and records the rationale. Buyan retains veto.**
+
+#### The reversible judgement, restated for Buyan
+
+The driver has now declined ratification twice on no-P0 reviews (revision 8, revision 10). Both times the
+reason was a **known-false sentence about to be frozen**, not doubt about the money — and both times the
+next revision proved the sentence really was wrong. **If you would rather trade that rigour for speed, say
+so and DEC-1 can be ratified at its current revision.** The cost of the current path is roughly one round
+per fire; the cost of the other is that correcting a frozen falsehood needs a gate.
+
+**Still RESERVED and untouched:** cutover, regulatory / parallel-run sign-off, deposit-taking activation,
+licence facts. None is in Run 1's path.
