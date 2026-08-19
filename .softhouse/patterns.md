@@ -302,3 +302,97 @@ Every worker prompt carries it; review enforces it. State only what you verified
 - **Backlog carried forward**: promote the corpus into the new store (T8) — **promotion ordering matters:
   promote a covering vector BEFORE flipping `in_graded_domain`, or the run is fatal**; T9 review of harness +
   vectors; T20 (T17 F2–F6); T10 the port, now compilable; **capture D-2a on Path B**; gates **G-2, G-3, G-4**.
+
+---
+
+## Patterns learned — local fire `20260819-200001` (first conformance PASS in the program)
+
+### P-1. A ZERO money margin is not evidence of non-gradeability
+
+T55-N2 established that *pair difference* is the wrong promotion filter. This fire found the same lesson
+in a second key: a counterfactual can be **real and unkillable in the money columns**.
+
+`P-02`/`P-02b` grade the month-end re-anchor entirely in `due_date`, because they run `DAYS_30`/`DAYS_360`
+and the amounts are therefore **date-independent** — the money columns are byte-identical to `P-00`'s. A port
+that clamps `31 Jan → 29 Feb` and then continues from the clamped day emits `2024-03-29` where the oracle
+emits `2024-03-31`. **You cannot detect that bug by watching the numbers.** `P-03` grades row ordering the
+same way.
+
+The harness had encoded gradeability as strictly money-valued (`margin_minor > 0`), which made its own
+`UNBACKED in_graded_domain claims: monthend.reanchor` complaint **unsatisfiable** — pushing whoever hit it
+toward fabricating a margin or dropping a capability the corpus genuinely grades. The fix (driver finding
+**D-4**) was a `kind: "structural"` counterfactual requiring **named `divergent_cells` and both values in
+evidence** — deliberately *harder* to state than a money margin, so it cannot be an escape hatch.
+
+> **Rule.** Before concluding a shape grades nothing, ask which columns it *could* discriminate in. Money is
+> one of several.
+
+### P-2. Screen a counterfactual on the PRE-adjustment model, never on the oracle's own output
+
+T57's **N-1**, and the most subtle finding of the fire. T9 screened all 11 vectors for the EMI smoothing loop
+by evaluating the guard `|lastEMI − penultimateEMI| > floor(n/2)` on **the oracle's emitted schedule**. That
+is the wrong screen: **the loop exists to shrink the very residual the guard measures.** Screening post-loop
+therefore rejects shapes the loop actually fired on — it would have rejected `MNT 1,014,632 / 6 × 7.0 %`,
+one of the two shapes DEC-1 itself names (post-loop |Δ| 2 against a threshold of 3).
+
+T9's *conclusion* survived (T57 re-established it by direct reproduction), but **the method must not be
+reused for capture selection.** Evaluate a guard on the model as it stands *when the guarded code is called*.
+
+### P-3. A green conformance run says nothing about behaviours no vector exercises — so mutate the port
+
+T10 mutated its own port into each named wrong implementation and re-ran the real harness. **Five were
+killed; four survived, three of which move money** — including removing the **entire** EMI re-adjust loop,
+which passed 11 of 11. The driver reproduced that mutation independently and confirmed exit 0.
+
+After T57 promoted the two shapes that trip the guard, the driver re-ran the **same** mutation: it now FAILS
+both new vectors with named cells and margins. That closed loop — *find the blind spot by mutation, capture
+the shape that lights it, prove the mutation now dies* — is the cheapest way to learn what a corpus is
+actually worth.
+
+> **Rule.** "Conformance is green" is a claim about the corpus as much as about the port. Mutation-test the
+> port against every counterfactual the vectors name, and record which mutations survive.
+
+### P-4. Latent harness defects detonate on first real use — the first promotion is a test of the rig
+
+`main` was green (10/10 proofs, `go test` ok) with **three** defects waiting in it, invisible because nothing
+had ever exercised the paths:
+
+- **D-4** — `LoadVector` uses `DisallowUnknownFields`, so a new counterfactual field fails at **decode**, not
+  admissibility. An `admit.go`-only fix would not have landed it.
+- **D-5** — `registry.go`'s replay loader had **three** silent `continue` paths and dropped any vector using
+  `unrecorded_fields` on a money cell **with no diagnostic**, then reported "no vector carries this request".
+- **D-6** — `conformance_test.go` hard-asserted `ParityPass == 0` ("the store has no promoted capture yet"),
+  so `go test` could never be green after **any** successful promotion. A second instance existed in
+  `TestGradeabilityIsNotPairDifference` that nobody had reported.
+
+> **Rule.** Do not read a green rig as a verified rig when no artefact has yet travelled its main path.
+> Budget for the first real use to break it, and never diagnose that breakage as the new artefact's fault
+> without measuring the baseline separately.
+
+### P-5. Cut the worker's worktree from the commit containing the artefact
+
+**Twice this fire** a worker was handed a worktree predating the merge of the thing it was to work on
+(T9's **F-9**, T57's **N-5**). T9 was dispatched to review 11 promoted vectors and found only the four
+`REFUSE-*` files; it re-cut onto `main` itself. **A reviewer who graded what was in front of them would have
+reviewed an empty corpus and reported it clean.**
+
+> **Rule.** A brief must name the branch or commit containing the artefact, and the worker must verify its
+> base before starting. "Confirm you can see X before you begin" belongs in every review brief.
+
+### P-6. Re-deriving from the same document three times is one check, not three
+
+Three parties confirmed the pass-3b corpus by re-deriving from **DEC-1's documented rules**. Agreement among
+three applications of one method is weak evidence. T9 was therefore scoped to re-derive from **Fineract's
+source** instead — re-implementing the algorithm *in the shape the Java writes it* — and that is what
+surfaced the two pieces of folklore everyone had been carrying:
+
+- the oracle does **not** use the closed-form EMI; it folds `Π(1+rᵢ)·P / fn`, no `pow`
+  [`ProgressiveEMICalculator.java:1838-1840`, fold at `:1819`];
+- there is **no** "final principal := remaining balance" — principal is always `EMI − interest`
+  [`RepaymentPeriod.java:339-344`], and the residual lands on the **last unpaid period's EMI** [`:1191-1206`].
+
+Both reproduce the current corpus identically, because every promoted vector runs `DAYS_30`/`DAYS_360` so
+every rᵢ is equal. **They are not guaranteed to agree at precision 19 once the rᵢ differ.**
+
+> **Rule.** When N parties agree, check whether they used N methods or one. Vary the *method*, not the
+> reviewer.
