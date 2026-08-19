@@ -169,8 +169,118 @@ java.lang.IllegalStateException: Rounding mode is not initialized for tenant: t4
 ```
 
 Reached only when `currency.getInMultiplesOf() != null && currency.getDecimalPlaces() == 0 &&
-inMultiplesOf > 0` [`Money.java:49-51`]. MNT has **2** decimal places, so the ratified MNT
-configuration never reaches it.
+inMultiplesOf > 0` [`Money.java:48-50` — **corrected by T46, audit finding M-9; the original cited
+`:49-51`**. Re-opened in the pinned checkout: the `if` opens at `:48`, its second line is `:49`,
+and the guarded `roundToMultiplesOf(amountScaled, currency.getInMultiplesOf())` call is `:50`].
+MNT has **2** decimal places, so the ratified MNT configuration never reaches it.
+
+The two-argument `roundToMultiplesOf(BigDecimal, Integer)` that the trace names is
+`Money.java:150-157` (**corrected by T46 from `:152-158`**); the three-argument
+`roundToMultiplesOf(Money, Integer, MathContext)` is `Money.java:163-170` (**corrected from
+`:161-171`**; `:159-161` is the two-argument `Money` overload). The stack-trace line numbers
+themselves — `Money.java:154`, `:50`, `:107` — were and remain correct.
+
+### 2.5 What the E1 matrix did NOT reach — corrected by T46 (findings M-3 and M-4)
+
+`src/CaptureMathContext.java`'s comment on `ambientProbeShapes()` claimed the thirteen shapes
+*"between them REACH every ambient-context read the static scan found on the Path A call graph"*,
+and justified the `installmentAmountInMultiplesOf` shape as the one reaching the three-argument
+`Money.roundToMultiplesOf` and its trailing two-argument `Money.of`. **That site was never
+reached, and the claim is withdrawn.** The source comments are corrected in place.
+
+**Observed, from the committed payload alone**
+[VERIFIED: `analysis/t46_distinct_coverage-output.txt`, produced by
+`analysis/t46_distinct_coverage.py` with `json.load(..., parse_float=Decimal)` and exact-text
+cell comparison]:
+
+- `T42-MX-00-A` (plain) and `T42-MX-06-A` (`multiples1000`) differ in exactly one substantive
+  input — `installmentAmountInMultiplesOf` `null` → `1000` — plus the per-case `tenantId` the
+  harness assigns to every case. Their observations differ in **0 of 74 cells**.
+- Period-1 `total` is `212787.28` on both, **not** a multiple of 1000.
+- The absence case `T42-MX-06-D` **generated a schedule** rather than throwing. It could not have,
+  had the three-argument helper run: that helper finishes with the two-argument
+  `Money.of(currencyData, amountScaled)` [`Money.java:169` → `:102-104`], which calls
+  `MoneyHelper.getMathContext()` and would have thrown on the uninitialised tenant.
+- **Four** of the thirteen `-A` observations are byte-identical to `plain` — `plain`,
+  `multiples1000`, `fixedLength6`, `interestRecognitionOnDisb` — so **distinct coverage of the
+  E1 matrix is 10, not 13**, and three of the levers chosen to widen coverage moved nothing.
+
+**Cause, re-read on the pinned checkout by T46:**
+`LoanApplicationTerms.assembleFrom(LoanRepaymentScheduleModelData, MathContext)`
+[`fineract-loan/.../LoanApplicationTerms.java:579-607`] never calls the builder's
+`installmentAmountInMultiplesOf` setter, although `LoanRepaymentScheduleModelData` carries the
+field [`LoanRepaymentScheduleModelData.java:36`]. So on the Path A seam
+`ProgressiveLoanScheduleGenerator.java:110` and the guard at `:335` both see `null`.
+
+**M-4 — a second PRODUCTION caller drops it too.** This is not only a harness blind spot.
+[VERIFIED by T46 by re-opening both files in `/Users/buv/fineract`, commit
+`426a23544e8426a38ae43ae404670a0a7e85b9eb`, working tree clean]:
+
+- `LoanScheduleGeneratorServiceImpl.calculateInteresOnlyWithFirtDisbursement` — the
+  multi-disbursement interest-only entry point — passes
+  `loanProductRelatedDetail.getInstallmentAmountInMultiplesOf()` into the
+  `LoanRepaymentScheduleModelData` at **`:56`** and calls `scheduleGenerator.generate(mc, modelData)`
+  at **`:63`**; `assembleFrom` then drops the field. **So this production path silently loses it.**
+- The REST `calculateLoanSchedule` path via `LoanScheduleAssembler` **does honour it** — capture
+  `B-02`, `112,082.37 → 112,100.00`. Nothing here disturbs that observation.
+
+**So the field is honoured or lost BY CALLER**, and DEC-1 must not state its behaviour
+unconditionally.
+
+**Added to the blind-spot list** (`PROVENANCE.md`): the `installmentAmountInMultiplesOf` ambient
+path — three-argument `Money.roundToMultiplesOf` [`Money.java:163-170`] plus its trailing
+two-argument `Money.of` [`Money.java:169` → `:102-104`] — is **`TO_BE_CAPTURED`**, and cannot be
+reached through `LoanRepaymentScheduleModelData` at all.
+
+### 2.6 T46's re-emission — the M-5 fix, proved rather than argued
+
+`src/CaptureMathContext3.java` (generated from `src/CaptureMathContext.java` by
+`analysis/t46_make_capture3.py`; four mechanical edits, no arithmetic touched) re-runs capture 1
+in a throwaway `docker run --rm` container on the same pinned image and adds four keys per case,
+**read off the `mc` reference actually handed to `generate(mc, config)`**:
+`threadedMathContext` (`mc.toString()`), `threadedMathContextPrecisionFromObject`,
+`threadedMathContextRoundingModeFromObject`, and an explicit `wiring` field. The two original
+keys are left in place, so nothing published is replaced.
+
+`analysis/t46_m5_identity.py` then compares the two payloads leaf by leaf, exact text, no float
+[VERIFIED: `analysis/t46-m5-identity-proof.txt`]:
+
+| | |
+|---|---|
+| cases | 214 committed, 214 re-emitted, 214 common |
+| previously published leaves compared | **147,634** |
+| leaves that MOVED | **0** |
+| leaves EXEMPT and enumerated verbatim in the proof | **4** — the harness's *own* `CaptureMathContext.run`/`.main` frames inside the two absence stack traces. Every **oracle** frame (`MoneyHelper.getRoundingMode`, `Money.roundToMultiplesOf`, `Money.<init>`, `Money.of`, `LoanApplicationTerms.assembleFrom`, `ProgressiveLoanScheduleGenerator.generate`) is byte-identical. A re-emission by a differently-named class cannot reproduce its own frames, and they carry no information about the oracle. |
+| leaves byte-identical | **147,630** |
+| keys added | **856** |
+| **cases where the OBJECT echo disagrees with the INTENT** | **0 of 214** |
+
+That last row is the substance: M-5's materiality is now **observed**, not argued — no value in
+capture 1 was ever mis-attested, only mis-named. The identity check is proved failable: negative
+leg **N9** perturbs one money cell by one minor unit (`T42-CAL` period-1 `interest`
+`0.58 → 0.59`) and the check exits 1 naming that cell
+[`out/negative/t46-n9-identity-check-failable.txt`].
+
+**`out/t46-mathcontext3.json` does not replace `out/t42-mathcontext.json`.** Both are kept; the
+committed T42 payload remains the record of what T42 observed.
+
+### 2.7 The qualification that must travel with "no committed capture is mis-valued"
+
+**CORRECTION — M-7.** T42's verdict states *"No committed capture is mis-valued"* flatly, and
+`.softhouse/reference-oracle.md` has folded it in that way, while T42 §7 qualifies it correctly.
+**The qualification is part of the claim and must be carried wherever it is stated:**
+
+> `[VERIFIED for the three legs stated in T42 §4; UNVERIFIED as a re-run — T35's and T36's
+> suites were not re-executed.]`
+
+And leg 1 specifically is weaker than the other two: it is a **self-report**, citing T35's,
+T37's and T39's own attestations that they echoed the threaded context — the exact class of
+evidence T42 refuses elsewhere. Audit findings **F39-3** and **M-5** show that self-report is
+inaccurate for at least T39 and for T42's own capture 1, both of which echoed **intent** under
+object-named keys. **Legs 2 and 3 do carry the conclusion** — the Path A ambient site is
+unreachable at 2 dp, proved by observation and by the source predicate, and every committed
+Path A capture uses a 2-dp currency — so the conclusion stands on those two. T46 adds a fourth,
+independent leg for capture 1 itself: the object/intent agreement proved in §2.6.
 
 ## 3. Controls — 172 cells, all reproduce
 
@@ -187,6 +297,22 @@ configuration never reaches it.
 Four of the five reproduce records taken by **different harnesses on different tasks**, so the
 harness is not the variable. The control suite is proved failable (`NEGATIVE-TESTS.md` N6).
 
+> **CORRECTION — M-11. `analysis/controls-output.txt` publishes two summary lines, not the 172
+> compared cells**, so the control claim could not be checked from committed output alone.
+>
+> **T46 closed it, without changing the default output by one byte.** In order:
+> 1. `analysis/controls.py` was **re-run unmodified**: output sha256
+>    `4b847fc97fc5545bd0913f40ae50408a948101891f6b921b83e0c372d4988e1c`, **identical** to the
+>    committed `analysis/controls-output.txt`.
+> 2. An **append-only** verbose mode was added — `T42_CONTROLS_VERBOSE=1` or `--verbose` — which
+>    prints every compared cell as `control-id | field | expected | observed | MATCH`.
+> 3. The default mode was re-run: output sha256 **`4b847fc9…72548d` again**, byte-identical to
+>    both the committed file and the pre-change re-run.
+> 4. The verbose run is published as **`analysis/t46-controls-cells-output.txt`**: 179 lines,
+>    **172 cells listed, 172 MATCH, 0 MISMATCH**, then the unchanged two-line summary.
+>
+> The control claim is now checkable cell by cell from committed output.
+
 ## 4. Determinism
 
 Both captures were re-run from fresh containers and both payloads are **byte-identical**
@@ -200,6 +326,26 @@ Both captures were re-run from fresh containers and both payloads are **byte-ide
 Six negative legs, all exit 1 naming the breach — wrong pin, wrong image id, seam-class drift,
 the absence probe's own guard inverted, the wiring broken, and a corrupted control payload.
 `NEGATIVE-TESTS.md`.
+
+> **CORRECTION — M-8, and three legs added by T46.** `NEGATIVE-TESTS.md` said leg **N4** fires
+> the *"the ambient-absence probe is VACUOUS"* guard. **It fires the opposite branch of the same
+> `if`.** N4 sets `T42_EXPECT_CANARY_THROWS=0`, so `must_throw` is `False` and the branch that
+> runs is *"negative run: the canary DID throw when the run asserted it would not"*
+> [`src/run-mathcontext.sh:161-162`]. **The vacuity guard itself — `:157-160`, the guard that
+> makes E1 falsifiable — had never been exercised.**
+>
+> Three legs now exist that did not before:
+>
+> | leg | what it exercises | result |
+> |---|---|---|
+> | **N7** `src/t46-negative-vacuity.sh` | the **vacuity guard**, by extracting the SHIPPED assertion block out of `run-mathcontext.sh` at run time and running it against a payload whose `ambientCanary` has been rewritten from a `THREW …` string to `precision=19 roundingMode=HALF_UP`, with `must_throw` left at 1 | **exit 1**, `BREACH: the ambient-absence probe is VACUOUS: … returned 'precision=19 roundingMode=HALF_UP' …`; the same block on the **uncorrupted** payload exits 0, so the guard discriminates. 140,978 observed cells proved identical between the two payloads — the corruption touched only the canary field. `out/negative/t46-n7-vacuity-guard.txt` |
+> | **N8** `src/t46-assert-pathb-slot.sh` | the **Path B slot assertion** (M-6), against a slot-drifted `javap` transcript | **exit 1**, 6 breaches; PASS on both the committed transcript and a fresh re-read. `analysis/t46-pathb-slot-assertion-output.txt` |
+> | **N9** `src/t46-negative-identity.sh` | the **M-5 identity check**, against a re-emission with one money cell moved by one minor unit | **exit 1** naming `T42-CAL /observed/periods[1]/interest: '0.58' -> '0.59'`; exit 0 on the real pair. `out/negative/t46-n9-identity-check-failable.txt` |
+>
+> A tenth artefact, `out/negative/t46-n8-identity-check-rejects.txt`, is kept deliberately: it is
+> the transcript of the **first** re-emission run, which the identity check **rejected** before
+> the harness-self-frame carve-out was written and justified. It is evidence that the check was
+> refusing to publish, not rubber-stamping.
 
 ## 6. Scale of the comparison
 
