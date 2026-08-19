@@ -169,6 +169,7 @@ previously captured vectors are stale and must be re-captured — never re-inter
 | local `20260818-173900`, `20260818-200001` | yes | **workers killed by the harness's 600 s background-task ceiling**, not by the oracle — see the root-cause note below |
 | cloud `20260818-2000` | **no** | expected; spent entirely on oracle-free contract work |
 | local `20260818-230002` | **yes** | **the fire that closed every open admissibility P0**: Path A attested + re-emitted (T35), Path B attested, re-pointed and re-captured (T36), and DEC-1 §8's five binding shapes captured (T37). Ceiling fix landed in `fire-program.sh`. |
+| local `20260819-080001` | **yes** | `actuator/health` → `{"status":"UP"}`; `fineract-fineract-1` (fineract:latest) and `fineract-db-1` (postgres:18.3) both healthy; pinned checkout `426a23544e8426a38ae43ae404670a0a7e85b9eb` verified clean (`status --porcelain` empty); no prohibited-engine port open. Spent on T39 (observe the `periodRatio` drift region, Path A throwaway containers) and T40 (first charge-bearing captures, Path B, sole server owner), alongside oracle-free T38 (DEC-1 v7). |
 
 ## Two distinct capture paths — do not conflate them
 
