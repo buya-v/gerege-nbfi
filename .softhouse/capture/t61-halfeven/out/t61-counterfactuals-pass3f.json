@@ -1,0 +1,299 @@
+[
+  {
+    "case": "T61-HE-A",
+    "captureRef": ".softhouse/capture/out/capture-prod3f-raw.json",
+    "cells": 20,
+    "baselineMismatches": 0,
+    "baselineMismatchDetail": [],
+    "mutation": "M7",
+    "mutationName": "MONEY-QUANTIZATION-HALF-EVEN",
+    "nDivergentCells": {
+      "M7": 12
+    },
+    "maxMargin": {
+      "M7": 6
+    },
+    "divergent": {
+      "M7": [
+        {
+          "row": 1,
+          "field": "outstanding_principal_minor",
+          "observed": 84113249,
+          "value": 84113250,
+          "delta": 1
+        },
+        {
+          "row": 1,
+          "field": "principal_minor",
+          "observed": 15940901,
+          "value": 15940900,
+          "delta": 1
+        },
+        {
+          "row": 2,
+          "field": "outstanding_principal_minor",
+          "observed": 67885411,
+          "value": 67885413,
+          "delta": 2
+        },
+        {
+          "row": 2,
+          "field": "principal_minor",
+          "observed": 16227838,
+          "value": 16227837,
+          "delta": 1
+        },
+        {
+          "row": 3,
+          "field": "outstanding_principal_minor",
+          "observed": 51365472,
+          "value": 51365475,
+          "delta": 3
+        },
+        {
+          "row": 3,
+          "field": "principal_minor",
+          "observed": 16519939,
+          "value": 16519938,
+          "delta": 1
+        },
+        {
+          "row": 4,
+          "field": "interest_minor",
+          "observed": 924578,
+          "value": 924579,
+          "delta": 1
+        },
+        {
+          "row": 4,
+          "field": "outstanding_principal_minor",
+          "observed": 34548174,
+          "value": 34548179,
+          "delta": 5
+        },
+        {
+          "row": 4,
+          "field": "principal_minor",
+          "observed": 16817298,
+          "value": 16817296,
+          "delta": 2
+        },
+        {
+          "row": 5,
+          "field": "outstanding_principal_minor",
+          "observed": 17428165,
+          "value": 17428171,
+          "delta": 6
+        },
+        {
+          "row": 5,
+          "field": "principal_minor",
+          "observed": 17120009,
+          "value": 17120008,
+          "delta": 1
+        },
+        {
+          "row": 6,
+          "field": "principal_minor",
+          "observed": 17428165,
+          "value": 17428171,
+          "delta": 6
+        }
+      ]
+    },
+    "dateDivergent": {
+      "M7": []
+    }
+  },
+  {
+    "case": "T61-HE-B",
+    "captureRef": ".softhouse/capture/out/capture-prod3f-raw.json",
+    "cells": 20,
+    "baselineMismatches": 0,
+    "baselineMismatchDetail": [],
+    "mutation": "M7",
+    "mutationName": "MONEY-QUANTIZATION-HALF-EVEN",
+    "nDivergentCells": {
+      "M7": 10
+    },
+    "maxMargin": {
+      "M7": 4
+    },
+    "divergent": {
+      "M7": [
+        {
+          "row": 1,
+          "field": "interest_minor",
+          "observed": 1800095,
+          "value": 1800094,
+          "delta": 1
+        },
+        {
+          "row": 2,
+          "field": "outstanding_principal_minor",
+          "observed": 67852234,
+          "value": 67852235,
+          "delta": 1
+        },
+        {
+          "row": 2,
+          "field": "principal_minor",
+          "observed": 16219906,
+          "value": 16219905,
+          "delta": 1
+        },
+        {
+          "row": 3,
+          "field": "outstanding_principal_minor",
+          "observed": 51340369,
+          "value": 51340371,
+          "delta": 2
+        },
+        {
+          "row": 3,
+          "field": "principal_minor",
+          "observed": 16511865,
+          "value": 16511864,
+          "delta": 1
+        },
+        {
+          "row": 4,
+          "field": "outstanding_principal_minor",
+          "observed": 34531291,
+          "value": 34531294,
+          "delta": 3
+        },
+        {
+          "row": 4,
+          "field": "principal_minor",
+          "observed": 16809078,
+          "value": 16809077,
+          "delta": 1
+        },
+        {
+          "row": 5,
+          "field": "outstanding_principal_minor",
+          "observed": 17419649,
+          "value": 17419653,
+          "delta": 4
+        },
+        {
+          "row": 5,
+          "field": "principal_minor",
+          "observed": 17111642,
+          "value": 17111641,
+          "delta": 1
+        },
+        {
+          "row": 6,
+          "field": "principal_minor",
+          "observed": 17419649,
+          "value": 17419653,
+          "delta": 4
+        }
+      ]
+    },
+    "dateDivergent": {
+      "M7": []
+    }
+  },
+  {
+    "case": "T61-HE-C",
+    "captureRef": ".softhouse/capture/out/capture-prod3f-raw.json",
+    "cells": 20,
+    "baselineMismatches": 0,
+    "baselineMismatchDetail": [],
+    "mutation": "M7",
+    "mutationName": "MONEY-QUANTIZATION-HALF-EVEN",
+    "nDivergentCells": {
+      "M7": 11
+    },
+    "maxMargin": {
+      "M7": 5
+    },
+    "divergent": {
+      "M7": [
+        {
+          "row": 1,
+          "field": "outstanding_principal_minor",
+          "observed": 84075250,
+          "value": 84075251,
+          "delta": 1
+        },
+        {
+          "row": 1,
+          "field": "principal_minor",
+          "observed": 15933700,
+          "value": 15933699,
+          "delta": 1
+        },
+        {
+          "row": 2,
+          "field": "outstanding_principal_minor",
+          "observed": 67854744,
+          "value": 67854746,
+          "delta": 2
+        },
+        {
+          "row": 2,
+          "field": "principal_minor",
+          "observed": 16220506,
+          "value": 16220505,
+          "delta": 1
+        },
+        {
+          "row": 3,
+          "field": "outstanding_principal_minor",
+          "observed": 51342268,
+          "value": 51342271,
+          "delta": 3
+        },
+        {
+          "row": 3,
+          "field": "principal_minor",
+          "observed": 16512476,
+          "value": 16512475,
+          "delta": 1
+        },
+        {
+          "row": 4,
+          "field": "outstanding_principal_minor",
+          "observed": 34532568,
+          "value": 34532572,
+          "delta": 4
+        },
+        {
+          "row": 4,
+          "field": "principal_minor",
+          "observed": 16809700,
+          "value": 16809699,
+          "delta": 1
+        },
+        {
+          "row": 5,
+          "field": "outstanding_principal_minor",
+          "observed": 17420293,
+          "value": 17420298,
+          "delta": 5
+        },
+        {
+          "row": 5,
+          "field": "principal_minor",
+          "observed": 17112275,
+          "value": 17112274,
+          "delta": 1
+        },
+        {
+          "row": 6,
+          "field": "principal_minor",
+          "observed": 17420293,
+          "value": 17420298,
+          "delta": 5
+        }
+      ]
+    },
+    "dateDivergent": {
+      "M7": []
+    }
+  }
+]

@@ -1,0 +1,95 @@
+// t61cf emits, as JSON, the schedule the Go port produces for each pass-3f
+// parity candidate. It is run TWICE from the same source: once on a pristine
+// scratch copy of the port (the CONTROL) and once on a scratch copy with exactly
+// one named change applied (the COUNTERFACTUAL).
+//
+// It contains NO observed value and NO expectation. The comparison against what
+// the reference oracle emitted is done afterwards, in Python, against the
+// committed capture artefact.
+//
+// Money is int64 minor units. No floating point.
+package main
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"os"
+
+	"github.com/gerege/nexus/internal/apps/loanschedule"
+	"github.com/gerege/nexus/internal/apps/loanschedule/contract"
+)
+
+type row struct {
+	Kind        string `json:"kind"`
+	Number      int32  `json:"installment_number"`
+	FromDate    string `json:"from_date"`
+	DueDate     string `json:"due_date"`
+	Principal   int64  `json:"principal_minor"`
+	Interest    int64  `json:"interest_minor"`
+	Outstanding int64  `json:"outstanding_principal_minor"`
+}
+
+type out struct {
+	Case string `json:"case"`
+	Rows []row  `json:"rows"`
+}
+
+func main() {
+	cases := []struct {
+		id        string
+		principal int64
+	}{
+		{"T61-HE-A", 100054150},
+		{"T61-HE-B", 100005250},
+		{"T61-HE-C", 100008950},
+	}
+	start := contract.CivilDate{Year: 2024, Month: 1, Day: 1}
+	gen := loanschedule.New()
+	var all []out
+	for _, c := range cases {
+		req := contract.GenerateRequest{
+			TimeZone:                  "Asia/Ulaanbaatar",
+			Currency:                  contract.Currency{Code: "MNT", MinorUnitDigits: 2},
+			Rounding:                  contract.Rounding{SignificantDigits: 19, RateFactorScale: 19, Mode: contract.RoundingHalfUp},
+			ScheduleStartDate:         start,
+			Disbursements:             []contract.Disbursement{{Date: start, AmountMinor: c.principal}},
+			NumberOfRepayments:        6,
+			RepaymentEvery:            1,
+			RepaymentFrequencyUnit:    contract.FrequencyMonths,
+			AnnualNominalInterestRate: contract.Rate{Numerator: 27, Denominator: 125},
+			InterestMethod:            contract.InterestMethodDecliningBalance,
+			DayCount:                  contract.DayCountFixed30Over360,
+			DownPaymentPercentage:     contract.Rate{Numerator: 0, Denominator: 1},
+		}
+		s, err := gen.Generate(context.Background(), req)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, c.id, err)
+			os.Exit(1)
+		}
+		o := out{Case: c.id}
+		for _, p := range s.Periods {
+			k := "REPAYMENT"
+			if p.Kind == contract.PeriodKindDisbursement {
+				k = "DISBURSEMENT"
+			} else if p.Kind == contract.PeriodKindDownPayment {
+				k = "DOWN_PAYMENT"
+			}
+			o.Rows = append(o.Rows, row{
+				Kind:        k,
+				Number:      p.InstallmentNumber,
+				FromDate:    fmt.Sprintf("%04d-%02d-%02d", p.FromDate.Year, p.FromDate.Month, p.FromDate.Day),
+				DueDate:     fmt.Sprintf("%04d-%02d-%02d", p.DueDate.Year, p.DueDate.Month, p.DueDate.Day),
+				Principal:   p.PrincipalMinor,
+				Interest:    p.InterestMinor,
+				Outstanding: p.OutstandingPrincipalMinor,
+			})
+		}
+		all = append(all, o)
+	}
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", "  ")
+	if err := enc.Encode(all); err != nil {
+		panic(err)
+	}
+}

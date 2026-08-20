@@ -79,6 +79,23 @@ def emi_closed(g, n, principal_major):
     return rsig(rsig(rfn * principal_major) / fn), rfn, fn
 
 
+def sci(x, digits=3):
+    """Render an exact rational in scientific notation WITHOUT touching a float.
+
+    These magnitudes are in minor currency units, so binary floating point is
+    forbidden here as everywhere else in this program -- and it would be
+    self-defeating besides, since the whole point is to measure a quantity around
+    1e-11 that a double would round away.
+    """
+    if x == 0:
+        return "0"
+    e = dec_exp(x) - 1
+    mant = x / (F(10) ** e)
+    scaled = round_half_up_int(mant * (F(10) ** digits))
+    s = str(scaled).rjust(digits + 1, "0")
+    return "%s.%se%s%02d" % (s[:-digits], s[-digits:], "+" if e >= 0 else "-", abs(e))
+
+
 def main():
     print("MathContext (19, HALF_UP); FIXED_30_360; monthly; RepaymentEvery 1; on-lattice.")
     print("Every number below is exact rational arithmetic. Money is minor units.\n")
@@ -101,7 +118,7 @@ def main():
             dist = abs(frac - F(1, 2))
             moves = "YES" if gap_minor >= dist and gap_minor > 0 else "no"
             print("%-26s %-4d %-22s %-22s %s"
-                  % (label, n, "%.3e" % float(gap_minor), "%.3e" % float(dist), moves))
+                  % (label, n, sci(gap_minor), sci(dist), moves))
     print("\nThe gap is the SIZE OF THE PERTURBATION; the boundary distance is how far the")
     print("true value sits from the only place a perturbation of that size could change a")
     print("payable amount. A cent moves only when gap >= dist.")

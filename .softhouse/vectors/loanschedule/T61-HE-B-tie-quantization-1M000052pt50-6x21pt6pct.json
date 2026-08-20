@@ -1,0 +1,250 @@
+{
+  "schema": "gerege.loanschedule.vector/v1",
+  "case_id": "T61-HE-B",
+  "context": "loanschedule",
+  "class": "parity",
+  "title": "TIE AT THE CURRENCY QUANTIZATION, the clean case. MNT 1,000,052.50 over 6 monthly repayments at 21.6% p.a., schedule start == disbursement == 2024-01-01. Chosen from source algebra rather than found by search: on this lattice the period-1 rate factor is exactly 0.018, so period-1 interest in minor units is 18*B/1000, an EXACT TIE when B == 250 (mod 500). B = 100005250 gives 1800094.5 with 1800094 even, so HALF_UP and HALF_EVEN disagree at that single cell before anything compounds. The oracle was OBSERVED to emit 18000.95.",
+  "dec1_revision": 12,
+  "_note": "TRANSCRIPTION NOTES. (1) request.currency.code is upper-cased from the capture's own spelling; admit.go requires upper case and the contract forbids the oracle's fixture spelling leaking back out. (2) request.time_zone is DECLARED, not observed: the Path A embeddable seam takes java.time.LocalDate only and has no time-zone input at all, so Asia/Ulaanbaatar is this vector's declared interpretation zone for civil dates and grades nothing. (3) request.rounding.rate_factor_scale is 19 from PIN.json's production_rounding; the capture records one MathContext precision (19) which is both. (4) On the DISBURSEMENT row, installment_number and interest_minor are marked unrecorded_fields: the oracle's own record type LoanSchedulePlanDisbursementPeriod carries four fields, its periodNumber() returns null, and it has no interest accessor at all. Its outstanding balance IS recorded by this rig and is therefore promoted. (5) The capture's per-row totalOutstandingBalance column is deliberately NOT promoted: it is principal plus interest still to accrue, not an outstanding-principal figure, and the frozen contract has no field for it. (6) PROVENANCE OF THE SHAPE. This is capture pass 3f, which is pass 3e's rig with a new case list and NOT ONE check weakened -- the same relationship pass 3c has to pass 3b. It reproduced FOUR already-committed observations as rig calibrations before emitting anything: P-CAL at (12, HALF_UP) and P-CAL-P00 at the production (19, HALF_UP) against pass 3b, P-CAL-EMI6 against pass 3c's P-EMI-6-1M014632, and P-CAL-LATQ0a against pass 3e's P-LAT-Q0a -- the last being the SAME QUESTION as this vector in every field but the principal, so the rig is calibrated on exactly the lattice, term, rate, currency and MathContext this promotion rests on. All four matched with inputs and observed blocks identical, tenant id included. (7) PREDICTION REGISTERED BEFORE THE CAPTURE. .softhouse/capture/t61-halfeven/PREDICTION.md was committed to this branch ONE COMMIT BEFORE run-pass3f.sh was run, and it names the whole schedule of all three shapes plus one sharp claim: that the oracle emits 18000.95 on period 1 of T61-HE-B, not 18000.94. The oracle confirmed all 54 predicted cells with zero mismatches [.softhouse/capture/t61-halfeven/check-prediction.py]. The git history is what makes that a checkable claim rather than a story told afterwards.",
+  "capabilities_required": [
+    "schedule.core"
+  ],
+  "graded_against": [
+    {
+      "id": "MONEY-QUANTIZATION-HALF-EVEN",
+      "capability": "schedule.core",
+      "description": "Applies HALF_EVEN where the reference oracle applies the TENANT's rounding mode at the currency quantization [Money.java:52, Money(currency, amount, mc) -> setScale(currency.getDecimalPlaces(), mc.getRoundingMode())]. Buyan ratified HALF_UP (Fineract RoundingMode ordinal 4) for MNT on 2026-08-18 and CLAUDE.md requires it to be pinned explicitly and never inherited -- because HALF_EVEN is the reference oracle's own STOCK CONFIGURATION DEFAULT. A port that reads the default instead of the tenant pin, or that reaches for a language's banker's-rounding primitive because it is the one the standard library offers, lands exactly here. The two rules differ ONLY on an exact tie and only when the truncated value is even, which is why 29 promoted parity vectors could not tell them apart: not one of them lands the quantization on a tie.",
+      "margin_minor": "4",
+      "evidence": "Derived at the ratified production MathContext (19, HALF_UP). Every OBSERVED value below is transcribed from capture case T61-HE-B of .softhouse/capture/out/capture-prod3f-raw.json; only the counterfactual is derived.\nMARGIN. Over this vector's graded money cells the counterfactual diverges on 10 of 20. The widest single-cell disagreement is at period[5], column outstanding_principal_minor: the oracle OBSERVED 17419649 minor units against the counterfactual's 17419653, so the margin is |17419649 - 17419653| = 4 MINOR UNITS.\nWHY A TIE IS REACHABLE AT ALL. On this lattice the period-1 rate factor is exactly 0.018, so period-1 interest in minor units is 18*B/1000 for a principal of B minor units -- an exact half-minor-unit tie whenever B == 250 (mod 500), and the two rules then differ whenever the truncated value is even. .softhouse/vectors/capabilities.json already records the same arithmetic from the other direction (period-1 interest 20,925.05 under HALF_UP against 20,925.04 under HALF_EVEN on principal MNT 1,162,502.50).\nCOUNTERFACTUAL PROVENANCE. The counterfactual value is MEASURED, not asserted: a scratch copy of the port under /tmp with exactly one named change applied, run on this vector's own request. The patch is mutation M7 of .softhouse/handoff/T61-mutations.py; the runner is .softhouse/capture/t61-halfeven/src/run-counterfactuals.py and the raw per-cell output is out/t61-counterfactuals-pass3f.json. The model's faithfulness is not assumed -- with the change switched OFF it reproduces all 60 graded money cells of the three capture cases, with ZERO mismatches, so the only thing a reported margin can be measuring is the named change.\nPREDICTION REGISTERED BEFORE THE CAPTURE. .softhouse/capture/t61-halfeven/PREDICTION.md was committed to this branch ONE COMMIT BEFORE run-pass3f.sh was run, and it names the whole schedule of all three shapes plus one sharp claim: that the oracle emits 18000.95 on period 1 of T61-HE-B, not 18000.94. The oracle confirmed all 54 predicted cells with zero mismatches [.softhouse/capture/t61-halfeven/check-prediction.py]. The git history is what makes that a checkable claim rather than a story told afterwards."
+    }
+  ],
+  "retires_when_capability_graded": "",
+  "provenance": {
+    "kind": "oracle-capture",
+    "note": "TRANSCRIBED, never computed, from Path A capture pass 3f (.softhouse/capture/src/run-pass3f.sh, Capture3f.java). Every expect cell is a value literally present in the referenced capture for capture case T61-HE-B; the only transformation is exact textual major->minor scaling, and the oracle's own emitted characters are carried alongside in the *_major_text cross-check fields so the scaling is mechanically re-checkable. Promotion script: .softhouse/handoff/T61-promote-vectors.py (task T61).",
+    "capture_ref": ".softhouse/capture/out/capture-prod3f-raw.json",
+    "capture_sha256": "48b5377acc2d35e716c9972d73e363cc15c69b9d3bd606a4b9f1b70507479034",
+    "capture_case_id": "T61-HE-B",
+    "citation": ""
+  },
+  "oracle": {
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "seam": "path_a_embeddable",
+    "captured_at": "2026-08-20T00:45:17.643015291Z",
+    "threaded_mathcontext": {
+      "precision": 19,
+      "rounding_mode": "HALF_UP"
+    },
+    "ambient_mathcontext": {
+      "precision": 19,
+      "rounding_mode": "HALF_UP"
+    }
+  },
+  "request": {
+    "time_zone": "Asia/Ulaanbaatar",
+    "currency": {
+      "code": "MNT",
+      "minor_unit_digits": 2
+    },
+    "rounding": {
+      "significant_digits": 19,
+      "rate_factor_scale": 19,
+      "mode": "HALF_UP"
+    },
+    "schedule_start_date": {
+      "year": 2024,
+      "month": 1,
+      "day": 1
+    },
+    "disbursements": [
+      {
+        "date": {
+          "year": 2024,
+          "month": 1,
+          "day": 1
+        },
+        "amount_minor": "100005250"
+      }
+    ],
+    "number_of_repayments": 6,
+    "repayment_every": 1,
+    "repayment_frequency_unit": "MONTHS",
+    "annual_nominal_interest_rate": {
+      "numerator": 27,
+      "denominator": 125
+    },
+    "interest_method": "DECLINING_BALANCE",
+    "day_count": "FIXED_30_360",
+    "down_payment_percentage": {
+      "numerator": 0,
+      "denominator": 1
+    },
+    "installment_rounding_multiple_minor": "0"
+  },
+  "expect": {
+    "kind": "schedule",
+    "sentinel": "",
+    "last_repayment_due_date": null,
+    "observed_total_interest_minor": "6393978",
+    "periods": [
+      {
+        "kind": "DISBURSEMENT",
+        "installment_number": 0,
+        "from_date": {
+          "year": 2024,
+          "month": 1,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 1,
+          "day": 1
+        },
+        "principal_minor": "100005250",
+        "principal_major_text": "1000052.50",
+        "interest_minor": "",
+        "interest_major_text": "",
+        "outstanding_principal_minor": "100005250",
+        "outstanding_principal_major_text": "1000052.50",
+        "unrecorded_fields": [
+          "installment_number",
+          "interest_minor"
+        ],
+        "observed_total_due_minor": null
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 1,
+        "from_date": {
+          "year": 2024,
+          "month": 1,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 2,
+          "day": 1
+        },
+        "principal_minor": "15933110",
+        "principal_major_text": "159331.10",
+        "interest_minor": "1800095",
+        "interest_major_text": "18000.95",
+        "outstanding_principal_minor": "84072140",
+        "outstanding_principal_major_text": "840721.40",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "17733205"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 2,
+        "from_date": {
+          "year": 2024,
+          "month": 2,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 3,
+          "day": 1
+        },
+        "principal_minor": "16219906",
+        "principal_major_text": "162199.06",
+        "interest_minor": "1513299",
+        "interest_major_text": "15132.99",
+        "outstanding_principal_minor": "67852234",
+        "outstanding_principal_major_text": "678522.34",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "17733205"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 3,
+        "from_date": {
+          "year": 2024,
+          "month": 3,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 4,
+          "day": 1
+        },
+        "principal_minor": "16511865",
+        "principal_major_text": "165118.65",
+        "interest_minor": "1221340",
+        "interest_major_text": "12213.40",
+        "outstanding_principal_minor": "51340369",
+        "outstanding_principal_major_text": "513403.69",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "17733205"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 4,
+        "from_date": {
+          "year": 2024,
+          "month": 4,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 5,
+          "day": 1
+        },
+        "principal_minor": "16809078",
+        "principal_major_text": "168090.78",
+        "interest_minor": "924127",
+        "interest_major_text": "9241.27",
+        "outstanding_principal_minor": "34531291",
+        "outstanding_principal_major_text": "345312.91",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "17733205"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 5,
+        "from_date": {
+          "year": 2024,
+          "month": 5,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 6,
+          "day": 1
+        },
+        "principal_minor": "17111642",
+        "principal_major_text": "171116.42",
+        "interest_minor": "621563",
+        "interest_major_text": "6215.63",
+        "outstanding_principal_minor": "17419649",
+        "outstanding_principal_major_text": "174196.49",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "17733205"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 6,
+        "from_date": {
+          "year": 2024,
+          "month": 6,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 7,
+          "day": 1
+        },
+        "principal_minor": "17419649",
+        "principal_major_text": "174196.49",
+        "interest_minor": "313554",
+        "interest_major_text": "3135.54",
+        "outstanding_principal_minor": "0",
+        "outstanding_principal_major_text": "0.00",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "17733203"
+      }
+    ]
+  },
+  "invariant_exemptions": []
+}
