@@ -1,19 +1,31 @@
 #!/usr/bin/env python3
-"""T82 — make T74-promote-vectors.py's D-1/D-2 guards go red, and prove the honest cases stay green.
+"""T82 — drive T74-promote-vectors.py's D-1/D-2 guards red, and say honestly what each case proves.
 
-    python3 prove-promote-guards.py <repo-root> <mode>
+    python3 prove-promote-guards.py <repo-root> <mode> [promoter.py]
 
-Exit 1 means the promotion script REFUSED the mutated capture, which for a guard proof is the
-PASSING outcome; the driver `prove-guards-go-red.sh` states the expected exit for each mode.
+Exit 1 means the promotion script REFUSED the mutated capture, which for a GUARD proof is the
+passing outcome; the driver `prove-guards-go-red.sh` states the expected exit for each mode.
+
+The optional third argument is the promotion script to load. It defaults to the branch's
+`.softhouse/handoff/T74-promote-vectors.py`; the driver passes `main`'s REAL EXTRACTED BYTES
+(`git show main:…`) to produce each COUNTERPROOF. A counterproof run against a reconstruction of the
+old code proves less than one run against the old code, so nothing here reconstructs anything.
 
 HOW IT AVOIDS TOUCHING THE STORE. The promotion script is loaded as a MODULE (so it is the real code
 under test, not a copy of it), and only then are its two path globals repointed — `P3I_REF` at a
 mutated capture under `scratch/`, `VECTORS` at a scratch output directory. The committed script gains
-no environment-variable configurability from this: a proof harness reaching in is not the same as the
-script offering a way to promote from an arbitrary capture.
+no environment-variable configurability from this.
 
 Money is never mutated here. The modes edit day-count labels, a down-payment percentage, the
 repayment-interval keys and a periodNumber. No principal, interest, balance or total is touched.
+
+THE THREE KINDS OF CASE, kept apart on purpose — conflating them is what T87 rejected:
+
+  GUARD        the new code REFUSES and `main` ACCEPTS. This is the only kind that demonstrates a
+               guard curing a defect, and each one is paired with a counterproof against `main`.
+  REGRESSION   both codebases behave identically and must go on doing so. It proves the rewrite
+               BROKE NOTHING. It proves NOTHING about the defect and must never claim to.
+  ASSERTION    a property of the emitted vector, checked in code rather than asserted in prose.
 """
 import importlib.util
 import json
@@ -23,22 +35,26 @@ import sys
 import tempfile
 
 MODES = ("day-count", "down-payment", "down-payment-enabled", "repayment-every-absent",
-         "repayment-every-conflict", "period-number-zero", "period-number-bad")
+         "repayment-every-conflict", "period-number-zero", "period-number-bad",
+         "period-number-absent-payable", "period-number-on-nonpayable")
+
+GROUP_E = ("T74-E-P4", "T74-E-P59", "T74-E-P72", "T74-E-P340", "T74-E-P426", "T74-E-P6940")
+
+MAIN_PROMOTER = (".softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-MAIN.py")
 
 
-def load_promoter(root):
-    path = os.path.join(root, ".softhouse/handoff/T74-promote-vectors.py")
-    spec = importlib.util.spec_from_file_location("t74_promote", path)
+def load_promoter(root, path=None):
+    path = path or os.path.join(root, ".softhouse/handoff/T74-promote-vectors.py")
+    spec = importlib.util.spec_from_file_location("t74_promote_%d" % abs(hash(path)), path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)      # __name__ != "__main__", so main() does not run
     return mod
 
 
 def mutate(doc, mode):
-    """Return (doc, note). Applied to every group-E case the promoter walks."""
-    ids = {"T74-E-P4", "T74-E-P59", "T74-E-P72", "T74-E-P340", "T74-E-P426", "T74-E-P6940"}
+    """Applied to every group-E case the promoter walks."""
     for c in doc["captures"]:
-        if c["id"] not in ids:
+        if c["id"] not in GROUP_E:
             continue
         i = c["inputs"]
         if mode == "day-count":
@@ -60,10 +76,31 @@ def mutate(doc, mode):
             for p in c["observed"]["periods"]:
                 if p.get("type") == "REPAYMENT" and p.get("periodNumber") == 1:
                     p["periodNumber"] = "1"
+        elif mode == "period-number-absent-payable":
+            # THE case the `or 0` defect actually produced: a payable row with no periodNumber.
+            for p in c["observed"]["periods"]:
+                if p.get("type") == "REPAYMENT" and p.get("periodNumber") == 1:
+                    del p["periodNumber"]
+        elif mode == "period-number-on-nonpayable":
+            for p in c["observed"]["periods"]:
+                if p.get("type") == "DISBURSEMENT":
+                    p["periodNumber"] = 0
         else:
             raise SystemExit("unknown mode %r" % mode)
     return doc
 
+
+KIND = {
+    "day-count": "GUARD",
+    "down-payment": "GUARD",
+    "down-payment-enabled": "GUARD",
+    "repayment-every-absent": "GUARD",
+    "repayment-every-conflict": "GUARD",
+    "period-number-bad": "GUARD",
+    "period-number-absent-payable": "GUARD",
+    "period-number-on-nonpayable": "GUARD",
+    "period-number-zero": "REGRESSION",
+}
 
 NOTES = {
     "day-count": "daysInMonth/daysInYear -> (ACTUAL, DAYS_365), a pair the contract does not name. "
@@ -73,68 +110,109 @@ NOTES = {
     "down-payment-enabled": "downPaymentEnabled -> true, percentage still \"0\".",
     "repayment-every-absent": "both `repaymentEvery` and `repaymentFrequency` removed. The OLD "
                               "`i.get(\"repaymentEvery\", i.get(\"repaymentFrequency\"))` returned "
-                              "None and wrote a null interval into the vector.",
+                              "None and wrote a null interval into the vector. (Note: "
+                              "`repaymentEvery` is absent from ALL 36 committed cases, so that "
+                              "fallback was load-bearing on every single one.)",
     "repayment-every-conflict": "`repaymentEvery` = 3 against the recorded `repaymentFrequency` = 1. "
                                 "The OLD code silently preferred `repaymentEvery`.",
-    "period-number-zero": "period 1's periodNumber -> 0, a LEGITIMATE zero. It must survive as 0 and "
-                          "must NOT be reported as unrecorded. The OLD `or 0` could not tell it "
-                          "from an absent value.",
     "period-number-bad": "period 1's periodNumber -> the string \"1\". Must be refused, not coerced.",
+    "period-number-absent-payable":
+        "period 1's `periodNumber` KEY DELETED on a PAYABLE row. THIS IS THE DEFECT `or 0` "
+        "ACTUALLY CAUSED: the old code evaluated `None or 0`, wrote installment_number 0, filed it "
+        "under unrecorded_fields and promoted the vector without a word. An absent installment "
+        "number on a payable row is a broken capture, not a value.",
+    "period-number-on-nonpayable":
+        "every DISBURSEMENT row given `periodNumber: 0`. The withdrawal of that cell is justified by "
+        "the oracle emitting no periodNumber for a non-payable row; if one appears, the rig has "
+        "changed and withdrawing the cell would be wrong.",
+    "period-number-zero":
+        "period 1's periodNumber -> 0, a LEGITIMATE zero. REGRESSION CONTROL, NOT A GUARD PROOF: "
+        "`main` decided the VALUE with `or 0` (:254) but the WITHDRAWAL with a SEPARATE `is None` "
+        "test (:259), so a recorded 0 already survived un-withdrawn there. This case must stay "
+        "green on BOTH codebases and is proved identical between them below. It demonstrates that "
+        "the rewrite BROKE NOTHING; it demonstrates NOTHING about the `or 0` defect, and the guard "
+        "that does is `period-number-absent-payable`.",
 }
 
 
-def main(root, mode):
+def build_vectors(root, promoter, doc, tmp, tag):
+    """Run a promotion script over a mutated capture into a scratch dir."""
+    cap = os.path.join(tmp, "capture-%s.json" % tag)
+    json.dump(doc, open(cap, "w", encoding="utf-8"), indent=1)
+    out = os.path.join(tmp, "vectors-%s" % tag)
+    os.makedirs(out)
+    mod = load_promoter(root, promoter)
+    mod.P3I_REF = cap
+    mod.VECTORS = out
+    mod.main()
+    return out, mod
+
+
+def main(root, mode, promoter=None):
     if mode not in MODES:
         raise SystemExit("mode must be one of %r" % (MODES,))
     os.chdir(root)
-    mod = load_promoter(root)
-
-    doc = json.load(open(mod.P3I_REF, encoding="utf-8"))
-    doc = mutate(doc, mode)
 
     tmp = tempfile.mkdtemp(prefix="t82promote")
     try:
-        cap = os.path.join(tmp, "mutated-capture.json")
-        json.dump(doc, open(cap, "w", encoding="utf-8"), indent=1)
-        out = os.path.join(tmp, "vectors")
-        os.makedirs(out)
-
+        print("KIND:     %s" % KIND[mode])
         print("MUTATION: %s" % NOTES[mode])
-        print("          mutated capture -> %s" % cap)
+        print("PROMOTER: %s" % (promoter or ".softhouse/handoff/T74-promote-vectors.py (this branch)"))
         print("          vectors written to a SCRATCH dir, never to the store")
 
-        mod.P3I_REF = cap
-        mod.VECTORS = out
+        ref = load_promoter(root, promoter).P3I_REF
+        doc = mutate(json.load(open(ref, encoding="utf-8")), mode)
 
-        mod.main()      # SystemExit(str) here == the guard fired
+        out, mod = build_vectors(root, promoter, doc, tmp, "under-test")
+        # SystemExit(str) inside build_vectors == the guard fired; we only reach here on acceptance.
 
-        # Only the honest modes get this far. For period-number-zero, assert the point of the fix:
-        # the legitimate 0 survived AND was not filed as unrecorded.
         if mode == "period-number-zero":
+            # ASSERTION 1 — the emitted vector tells a legitimate 0 from an absent value.
             f = os.path.join(out, mod.FILENAMES["T74-E-P4"])
-            v = json.load(open(f, encoding="utf-8"))
-            rows = v["expect"]["periods"]
-            payable = [r for r in rows if r["kind"] == "REPAYMENT"]
-            first = payable[0]
+            rows = json.load(open(f, encoding="utf-8"))["expect"]["periods"]
+            first = [r for r in rows if r["kind"] == "REPAYMENT"][0]
             disb = [r for r in rows if r["kind"] == "DISBURSEMENT"][0]
             print("\nASSERTIONS on the regenerated %s:" % os.path.basename(f))
-            print("  payable row 1 installment_number = %r  (a LEGITIMATE 0, transcribed)"
-                  % first["installment_number"])
-            print("  payable row 1 unrecorded_fields  = %r  (installment_number NOT withdrawn)"
-                  % first.get("unrecorded_fields"))
-            print("  DISBURSEMENT  installment_number = %r  unrecorded_fields = %r  (absence IS "
-                  "withdrawn)" % (disb["installment_number"], disb.get("unrecorded_fields")))
+            print("  payable row 1 installment_number = %r  unrecorded_fields = %r"
+                  % (first["installment_number"], first.get("unrecorded_fields")))
+            print("  DISBURSEMENT  installment_number = %r  unrecorded_fields = %r"
+                  % (disb["installment_number"], disb.get("unrecorded_fields")))
             ok = (first["installment_number"] == 0
                   and "installment_number" not in (first.get("unrecorded_fields") or [])
                   and disb["installment_number"] == 0
                   and "installment_number" in (disb.get("unrecorded_fields") or []))
             if not ok:
                 raise SystemExit("ASSERTION FAILED: a legitimate 0 is not distinguished from absence")
-            print("  -> a legitimate 0 and an absent value are DISTINGUISHED. "
-                  "`p.get(\"periodNumber\") or 0` could not do this.")
+
+            # ASSERTION 2 — and `main` does EXACTLY THE SAME THING. This is what T87's F-1 required:
+            # the case is a regression control, and the honest way to say so is to PROVE the two
+            # codebases agree, not to print a claim that they differ.
+            mainp = os.path.join(root, MAIN_PROMOTER)
+            if not os.path.isfile(mainp):
+                raise SystemExit("scratch/promote-MAIN.py missing; the driver extracts it with "
+                                 "`git show main:.softhouse/handoff/T74-promote-vectors.py`")
+            out_main, mod_main = build_vectors(
+                root, mainp, mutate(json.load(open(ref, encoding="utf-8")), mode), tmp, "main")
+            same = diff = 0
+            for cid in GROUP_E:
+                a = json.load(open(os.path.join(out, mod.FILENAMES[cid]), encoding="utf-8"))
+                b = json.load(open(os.path.join(out_main, mod_main.FILENAMES[cid]), encoding="utf-8"))
+                if a["expect"]["periods"] == b["expect"]["periods"]:
+                    same += 1
+                else:
+                    diff += 1
+            print("  expect.periods identical between this branch and main: %d, differing: %d"
+                  % (same, diff))
+            if diff or same != len(GROUP_E):
+                raise SystemExit("ASSERTION FAILED: the regression control is not a regression "
+                                 "control — the two codebases disagree")
+            print("  -> CONFIRMED A REGRESSION CONTROL, NOT A GUARD PROOF. Both codebases emit the")
+            print("     same cells, because main decided the VALUE with `or 0` and the WITHDRAWAL")
+            print("     with a separate `is None` test. This case has NO discriminating power over")
+            print("     the `or 0` defect and no longer claims any. See period-number-absent-payable.")
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2])
+    main(sys.argv[1], sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else None)

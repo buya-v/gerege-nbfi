@@ -1,0 +1,1347 @@
+=== T82 shape-independent census sweep ===
+prose files (TIER 1, bare-numeral net): 164
+other files (TIER 2, structural nets):  1780
+lines over 4000 chars skipped by TIER 2 only: 297
+
+TIER 1 — every prose line containing 36 or 42, no phrasing assumed: 1107
+TIER 2 — PASS B (artefact name near an integer, any delimiter):     49
+TIER 2 — PASS C (corpus word within 40 chars of 30-49, either order): 628
+
+--- TIER 1 hits, grouped by file (classify every one) ---
+
+.softhouse/RESUME.md  (6)
+     17  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+     24  **Re-run by the driver on merged main, not inherited from a worker.** The corpus grew **36 → 42 parity
+     48  **They had been closed on 18 August** — P0-5 by T30 `1b65b1c`, P0-3/P0-4/P0-6 by T36
+     52  list — neither updated when T30 and T36 ran. The driver copied it into a dispatch prompt without opening it.
+     68  | **T74** Path A pass-3i | **APPROVED** by T75 | **MERGED. Six vectors promoted, 36 → 42.** |
+     88  a stdout-only `tee`. `TENANT=default sh t36/recapture.sh` ran with **five breached preconditions including a
+
+.softhouse/capture/PASS3-REPORT-shared.md  (4)
+     28  > file in `.softhouse/vectors/loanschedule/` and resolved each one's `provenance.capture_ref`: **42**
+     35  > **CENSUS CORRECTED BY T82 (T75 follow-up A-1).** As first written this banner said "36 parity
+    130  - On the `36 × 16.8 %` shape — the shape of `P-MNT-50M` — the two precisions **diverge at principal 4.00**
+    160  | `P-MNT-50M` | MNT 50,000,000 / 36 × 16.8 % | 1096 | `13,995,886.40` | `63,995,886.40` |
+
+.softhouse/capture/PASS3-REPORT.md  (4)
+     28  > file in `.softhouse/vectors/loanschedule/` and resolved each one's `provenance.capture_ref`: **42**
+     35  > **CENSUS CORRECTED BY T82 (T75 follow-up A-1).** As first written this banner said "36 parity
+    130  - On the `36 × 16.8 %` shape — the shape of `P-MNT-50M` — the two precisions **diverge at principal 4.00**
+    160  | `P-MNT-50M` | MNT 50,000,000 / 36 × 16.8 % | 1096 | `13,995,886.40` | `63,995,886.40` |
+
+.softhouse/capture/PASS3B-REPORT.md  (4)
+     55  | harness sha256 | `982e4da341d1cdb5dcd43eb1b2488d843dd6360ca5764a7d42e2b671722f29ff` |
+     79  `sha256 11c5c74a27aa1d9e91b9eacf20e36e469bc5e34e3943e00b1543ad3671a732e2` — **identical** to the committed
+    123  [`LoanSchedulePlan.java:36-43`].
+    217  - **T21 P1-11 remains open** — the `36 × 16.8 %` small-principal shape, which the oracle diverges on at
+
+.softhouse/capture/PASS3I-REPORT.md  (6)
+     45  ## The case list — 36
+     63  promoted parity vector**. `P-CAL-MNT50M` is the same `36 × 16.8 %` shape as group E at a principal of
+     69  a three-case zero-guard separator (**group D**); and the `36 × 16.8 %` small-principal shape T21
+    161  ### 7. Group E — the `36 × 16.8 %` shape, and the first vectors that grade the precision seam
+    184  canonical sha256**, cell for cell across all 36 cases. The whole-file digests differ, as they must,
+    191  - `pathIdentity.identical` true on **36 of 36**
+
+.softhouse/capture/README-pass3c.md  (1)
+     33  | `P-EMI-36-127704` | parity candidate | (19, HALF_UP) | MNT 127,704 / 36 × 16.8 % |
+
+.softhouse/capture/README-pass3f.md  (1)
+     96  bcdd5e0e4bd22a36f1531f3b75052d3570e4348a810bcaf95bbbd65bdf3c07b6
+
+.softhouse/capture/README-pass3i.md  (1)
+    132  four independent reasons set out in `PASS3I-REPORT.md`. What was promoted is the `36 × 16.8 %`
+
+.softhouse/capture/actualactual/ATTESTATION.md  (3)
+      3  That rule was **corrected twice this fire** (T42's original list, then T46's additions). This
+     74  * **Path B** — the T36 half-cent tie (`1,162,502.50 × 0.018 = 20,925.045` → `20925.05` under `HALF_UP`,
+    117  91daa0f15e4fe03ea8f36ddda29d152f9b93822be1a0d33a6d6191da1f19188d  ./out/t48-calc.json
+
+.softhouse/capture/actualactual/NEGATIVE-TESTS.md  (1)
+     30  additionally carry T36's half-cent tie, run before every post.)
+
+.softhouse/capture/actualactual/REPRODUCE.md  (1)
+     43  Runs T36's 21-assertion preconditions gate first (including the behavioural half-cent canary), asserts
+
+.softhouse/capture/audit-t44/analysis/T44-mathcontext-parent-checks.md  (17)
+      1  # T44 — the auditor's OWN independent checks on `capture/mathcontext/` (T42)
+     10  Recomputed from `out/t42-mathcontext.json` by separating two different throws that a crude scan
+     16  - **11 of 13 generated a schedule anyway** (`T42-MX-00-D` … `-06-D`, `-09-D` … `-12-D`), i.e. on
+     18  - **2 threw** — `T42-MX-07-D` and `T42-MX-08-D`, which are exactly T42's two 0-decimal-place +
+     21  T42's "11 of 13" is correct as published. [VERIFIED: this task, from the committed payload.]
+     27  | `T42B-PREC-30-p19` | 50,000,000 | 360 | 21.6 | **274527298.56** |
+     28  | `T42B-PREC-30-p12` | 50,000,000 | 360 | 21.6 | **274527296.51** |
+     30  [VERIFIED: `out/t42-mathcontext2.json`.]
+     32  **3. T42 §4 leg 2 — "no committed capture reaches the Path A ambient leak" — independently
+     37  `capture/mathcontext/out/`**, i.e. T42's own. No other committed capture is 0 dp.
+     38  - The only committed non-T42 file carrying a positive `currencyInMultiplesOf` is
+     42  So the leak is unreachable in the committed corpus, as T42 says. [VERIFIED: this task.]
+     45  softhouse/T42-mathcontext-inforce)..softhouse/T42-mathcontext-inforce` authored exactly
+     46  `.softhouse/capture/mathcontext/**` plus `.softhouse/handoff/T42-mathcontext-inforce.md` — nothing
+     61  **M-P1 (P2) — T42 complies with its own rule 2 in capture 2 and not in capture 1, and capture 1 is
+     64  T42's attestation rule 2 requires: *"On the THREADED context, echo the object, not the intent. Print
+    135  **Required change:** correct the counts in the T42 handoff and in `reference-oracle.md` to
+
+.softhouse/capture/audit-t44/charges/AUDIT-CHARGES.md  (11)
+     29  ### A-1 (P1) — the T42 rule-4 WIRING citation is entirely absent
+     31  T42's 8-point attestation rule (`.softhouse/reference-oracle.md`, "Which `MathContext` governs") says of
+     42  T42 recorded that T36 "needs only the wiring citation added". T40 inherited T36's attestation generator and
+     44  `mathcontext_wiring` block naming the four sites and the two contexts by T42's names, and the handoff §10
+    168  it read from that very row. This is the pattern T42 flagged in T37 §5 ("two independent witnesses… both
+    190  `.softhouse/capture/pathb/t36/preconditions.sh` — all three `sha256 9256b881153d3deab2013cb9d95fae95258b68b398cdf22e5da9a8a416a46b54`,
+    191  so §1's "T36's script copied byte-verbatim" is **true**) and run against tenant **`default`**:
+    288  5. **T42 rule 6 (behavioural canary) is satisfied.** `out/attested/canary-halfcent-raw.json` really contains
+    294  7. **`bin/preconditions.sh` is byte-verbatim T36's** — three-way SHA-256 match, as §1 claims.
+    339  exist to probe, or the 360-period regime where T42 showed threaded precision 19 vs 12 separates. A port
+    405  bin/preconditions-COPY.sh           T36/T40's script, copied verbatim, run against tenant `default`
+
+.softhouse/capture/audit-t44/mathcontext/AUDIT-MATHCONTEXT.md  (56)
+      1  # T44 — independent audit of `.softhouse/capture/mathcontext/` (task T42)
+      5  Every headline result of T42 reproduces under independent re-execution and independent
+      8  observed or transcribable to a `file:line` that says what T42 says it says. The defects are:
+     12  cluster of attestation-discipline points where T42 does not meet the rule T42 itself authored.
+     14  **No committed capture value is invalidated by anything in this audit.** T42's substantive
+     38  | capture 1 | `T42_OUT_PREFIX=audit-rerun1 bash ./src/run-mathcontext.sh` | `== PASS`, exit 0; payload sha256 **`f2a037a10b8d6a74e6b3dd5eedbaa18a
+     39  | capture 2 | `T42_OUT_PREFIX=audit-rerun2 bash ./src/run-mathcontext2.sh` | `== PASS`, exit 0; payload sha256 **`f7ffeb2a519e076d2483195ea359bc5
+     46  `THREW java.lang.IllegalStateException: Rounding mode is not initialized for tenant: t42_canary_never_initialised`.
+     57  | **N4** (the absence probe's guard) | `T42_EXPECT_CANARY_THROWS=0 … run-mathcontext.sh` | **exit 1**, `BREACH: negative run: the canary DID thro
+     58  | **N5** (the wiring assertion) | `T42_JAVA_PROPS=-Dt42.breakWiring=true … run-mathcontext2.sh` | **exit 1**, six breaches, first `BREACH: T42B-P
+     69  **`d5ef39897399157de96503dd242f0f999acde87bf59a191c812ab2f3547711ea`** ✔ (T42's digest, reproduced)
+     72  — **the same local slot 9**. ✔ T42's claim reproduced exactly.
+     73  - Also confirmed, which T42 did not spell out: `assembleForInterestRecalculation`
+     78  `LoanScheduleGeneratorServiceImpl` = the "four call sites" T42 claims. ✔
+     87  **Everything reproduces.** Every cell in T42's E1 13-shape table (23/22/23/20/24/24/23/[23 ambient
+     88  DOWN]/[27 DOWN, 17 UP]/23/18/23/23, and THREW vs generated), E2's 0-vs-23 / 0-vs-22 / 0-vs-42 /
+     96  The wiring figure 1,284 is T42's *comparison* count (12 comparisons × cells-per-case); the total
+    151  T42 §5 N-3 states "plus **4** `new MathContext(15, MoneyHelper.getRoundingMode())` and **9**
+    164  The nine citations T42 lists are the **union of both groups**, not the precision-10 group. The
+    205  ### P1-T44MC-3 — the E1 probe-shape coverage rationale is refuted by T42's own observations, and N-1's second half is tagged `[VERIFIED … observe
+    213  That site was **never reached**. Observed, from T42's own committed payload:
+    215  - `T42-MX-00-A` (plain) and `T42-MX-06-A` (`multiples1000`) differ in exactly one input,
+    241  listed nowhere as uncaptured, because T42 believed it captured.
+    274  **Severity P1** (against DEC-1, not against T42's conclusions).
+    279  ### P2-T44MC-5 — T42 fails its own rule 2 on capture 1 (214 of 354 cases)
+    299  c.mode())` fifteen lines later) but it is precisely the class of defect T42 faults T35/T37 for.
+    311  `read-pathb-wiring.sh` or E3**. By T42's own standard — *an assertion suite that has never failed
+    318  ### P2-T44MC-7 — "No committed capture is mis-valued" is stated unqualified in the verdict and in the ratified doc; leg 1 is a self-report of the
+    321  flatly "**No committed capture is mis-valued**". `reference-oracle.md` repeats it: "T42
+    326  same class of self-report T42 correctly declines to accept for the ambient context. T42 did not
+    335  [VERIFIED: T42 handoff §4 and §7; `reference-oracle.md` "Amendments to earlier attestations"]
+    346  It does not. `T42_EXPECT_CANARY_THROWS=0` fires the **other** branch
+    348  throw when the run asserted it would not"* — which is what both T42's own transcript
+    386  `T42-MX-00-{A,B,E}` and `T42B-PA-ord{4,1,0}` have **identical inputs** on every field and
+    389  the *Path B* one, which is new, and T42 never claims the two are independent witnesses. But
+    406  an independent run. sha256s match T42's `ATTESTATION.md` §4 exactly.
+    415  in `T42-MX-07-D` / `T42-MX-08-D`.
+    435  - **Directory discipline** — T42 wrote only `.softhouse/capture/mathcontext/**` and its handoff, as
+    450  **T42B-PREC-30-p19** — MNT 50,000,000 / 360 months / 21.6 %, MNT 2 dp, `DAYS_30`/`DAYS_360`,
+    455  Conditions, all of which T42's F-4 leaves implicit:
+    460  2. **The `(12, HALF_UP)` sibling `T42B-PREC-30-p12` is a labelled discrimination probe and never a
+    477  - **Every `T42-MX-*` matrix case.** They run deliberately non-ratified ambient (`DOWN`, `UP`) and
+    479  - **Every `T42-MX-*-D` absence case.** Two produce no schedule at all; the rest run with
+    481  - **`T42-CAL`.** USD, precision 12, a rig calibration against a shipped test literal. Never a vector.
+    482  - **Every `T42B-PB-*` wiring case.** These reproduce Path B's *wiring* on Path A's *transport*. They
+    485  - **The four `T42-CTL-*` controls.** Production-representative but already committed from T37 and
+    487  - **T42's F-4 second suggestion — "one 0-dp/`inMultiplesOf` shape, as the vector that pins N-1's
+    548  claim — the same category of defect T42 itself found in T35 and T37.
+    561  shapes T42 captured and by source transcription of `assembleFrom`. I did **not** run a capture
+    565  matching T42's stated method. They are **transcriptions**; no savings or share-account code was
+    571  **not** disassemble `LoanScheduleGeneratorServiceImpl` myself (T42's transcript covers it and the
+    574  - **"No committed capture is mis-valued."** I did **not** re-run T35's, T36's, T37's or T39's
+    575  suites. I re-derived T42's argument and found legs 2 and 3 sound and leg 1 a self-report.
+    579  `[VERIFIED for 105; the balance rests on T42's script]`
+    584  - **This audit's own completeness.** T42 found what five prior tasks of difference-probing did not;
+    596  src/                                      byte-identical copy of T42's src/, diff-proved
+
+.softhouse/capture/audit-t44/rerun-periodratio/ATTESTATION.md  (2)
+    111  | **C2 reproduction** `T39-CTL-Q0a` | committed observation **Q0a**, `.softhouse/reviews/t23-probe/t23-probe-output.txt:5-16` — a different harne
+    165  6872f7336855f054521d812a5354542dda43121a2ebaa42f54ef0df1812e58db  out/t39-neg7-log.txt
+
+.softhouse/capture/charges/ATTESTATION-T46.md  (4)
+      1  # `charges` — attestation corrections (T46), under T42's eight-point rule
+     28  T42's rule 4 requires that a Path B set **say and cite** why its ambient `MoneyHelper` reading is the
+     45  of the Path A situation (T42 E1: on Path A the ambient context is provably never read for a 2-dp
+     59  **Rule 6 is nonetheless satisfied for this set, and now doubly so.** T36's half-cent canary
+
+.softhouse/capture/charges/REPRODUCE-T46.md  (1)
+      8  `bin/run-preconditions.sh` gates every capture and **aborts** on any of its 15 breaches, including T36's
+
+.softhouse/capture/charges/out/t46/EXACT-TEXT-negative.md  (2)
+     74  | mathcontext/t42-mathcontext.json | 0 |
+     75  | mathcontext/t42-mathcontext2.json | 0 |
+
+.softhouse/capture/charges/out/t46/EXACT-TEXT.md  (2)
+     73  | mathcontext/t42-mathcontext.json | 0 |
+     74  | mathcontext/t42-mathcontext2.json | 0 |
+
+.softhouse/capture/dec1-binding/ATTESTATION.md  (1)
+     92  21b8a05dafc42e689c40cbcffecd16181c29d36a3313bedd263b9c54c4295a37  analysis/select_shapes-output.txt
+
+.softhouse/capture/dec1-binding/PROVENANCE.md  (2)
+     42  | 3 | MNT 1,014,632 / 6 × 7.0 %; MNT 127,704 / 36 × 16.8 % | DEC-1 §8 item 3, from `.softhouse/reviews/T23-DEC-1-v2-rereview.md` §6.1 |
+     46  | 3d | MNT 1,200,000 / 6 × 21.6 %, disb 2024-01-15; MNT 127,704 / 36 × 16.8 %, disb 2024-01-20 | DEC-1 §8 item 3d / `.softhouse/reviews/T32-DEC-1
+
+.softhouse/capture/leapboundary/ATTESTATION.md  (5)
+     23  `bin/t55-capture.sh` refuses to POST anything until T36's 21-assertion gate passes. Recorded
+     58  * **The rounding mode, behaviourally.** T36's half-cent tie
+     64  ARM agreement falls **29 → 22 of 36 periods**. So the agreement at (19, HALF_UP) is a real
+     72  re-derivation reproducing the oracle on the **same 29 of 36 periods** at precision 12 as at
+     79  behaviourally witnessed for the tenant, by T36's half-cent canary in the gate (§3) — but that is
+
+.softhouse/capture/leapboundary/NEGATIVE-TESTS.md  (7)
+     21  | **N9** | the re-derivation driven off `(19, HALF_UP)` | `CANARY OK: precision 8 breaks the re-derivation (29 -> 22 of 36)` |
+     45  arithmetic. Observed table, at `(precision, mode)` against 36 re-derived periods:
+     49  | `(19, HALF_UP)` | **29 of 36** | baseline, the ratified setting |
+     50  | `(12, HALF_UP)` | **29 of 36** | **IDENTICAL — no T55 shape separates 19 from 12** |
+     51  | `(8, HALF_UP)` | **22 of 36** | breaks, so the re-derivation *is* precision-sensitive |
+     52  | `(19, HALF_EVEN)` | **29 of 36** | **IDENTICAL — no T55 shape has a tie at the rounding boundary** |
+     57  here and not witnessed by these values. (HALF_UP *is* witnessed for the tenant, by T36's
+
+.softhouse/capture/leapboundary/PROVENANCE.md  (1)
+    102  products T22/T36 left on `gerege`, asserted out of PostgreSQL before use and re-asserted after:
+
+.softhouse/capture/leapboundary/REPRODUCE.md  (1)
+     30  commit and its cleanliness, runs T36's 21-assertion gate (including the behavioural half-cent
+
+.softhouse/capture/mathcontext/ATTESTATION.md  (64)
+      1  # T42 — attestation
+     20  > | **M-7** | "No committed capture is mis-valued" must always travel with T42 §7's qualification. See §2.7. |
+     33  | the jar's own `git.properties` | `git.commit.id=426a23544e8426a38ae43ae404670a0a7e85b9eb`, `git.build.version=1.16.0-SNAPSHOT`, **`git.dirty=fa
+     34  | JVM | `21.0.11+10-LTS`, Zulu, Azul Systems | `out/t42-mathcontext-oracle-identity.txt` |
+     41  ## 2. The MathContext attestation — stated the way T42 says it must be
+     43  This is the section T42 exists to get right. **Two contexts, named separately, each with what it
+     49  asserts each case ran at the precision and mode its id declares. Calibration `T42-CAL` at
+     53  > `out/t42-mathcontext.json`'s `threadedMathContextPrecision` and
+     58  > That is a breach of T42's own ratified attestation rule 2, on the capture that carries E1, and
+     91  (`out/t42-mathcontext-log.txt`, 201 lines; `out/t42-mathcontext2-log.txt`, 140 lines).
+    101  `out/t42-pathb-wiring.txt`, `javap -p -c` inside `fineract-fineract-1`, class file sha256
+    119  [VERIFIED: `out/t42-pathb-wiring.txt`; source counterpart `LoanScheduleAssembler.java:753`, `:765`,
+    136  > The re-read confirms the deployed digests independently, 20 hours after T42 took them:
+    138  > `d5ef39897399157de96503dd242f0f999acde87bf59a191c812ab2f3547711ea` — the same digest T42 and
+    164  java.lang.IllegalStateException: Rounding mode is not initialized for tenant: t42_t42_mx_07_d
+    198  - `T42-MX-00-A` (plain) and `T42-MX-06-A` (`multiples1000`) differ in exactly one substantive
+    202  - The absence case `T42-MX-06-D` **generated a schedule** rather than throwing. It could not have,
+    214  field [`LoanRepaymentScheduleModelData.java:36`]. So on the Path A seam
+    262  leg **N9** perturbs one money cell by one minor unit (`T42-CAL` period-1 `interest`
+    266  **`out/t46-mathcontext3.json` does not replace `out/t42-mathcontext.json`.** Both are kept; the
+    267  committed T42 payload remains the record of what T42 observed.
+    271  **CORRECTION — M-7.** T42's verdict states *"No committed capture is mis-valued"* flatly, and
+    272  `.softhouse/reference-oracle.md` has folded it in that way, while T42 §7 qualifies it correctly.
+    275  > `[VERIFIED for the three legs stated in T42 §4; UNVERIFIED as a re-run — T35's and T36's
+    280  evidence T42 refuses elsewhere. Audit findings **F39-3** and **M-5** show that self-report is
+    281  inaccurate for at least T39 and for T42's own capture 1, both of which echoed **intent** under
+    293  | **C1** `T42-CAL`, USD 100 / 6 × 7.0 % at threaded `(12, HALF_UP)` | the shipped Fineract test literal `EmbeddableProgressiveLoanScheduleGenerat
+    294  | **C2** `T42-CTL-Q0a` | committed observation **Q0a**; also T37-CTL-Q0a and T39-CTL-Q0a | **reproduced** |
+    295  | **C3** `T42-CTL-1` | committed capture **T37-3-A** / **T39-CTL-1** | **reproduced** |
+    296  | **C4** `T42-CTL-P0A` — full 6×9 period table | committed capture **T39-P0-A**, `.softhouse/handoff/T39-periodratio-observation.md` §2 | **repro
+    297  | **C5** `T42-CTL-MEB` — full period table | committed capture **T39-ME-B**, same handoff §2 | **reproduced digit for digit** |
+    309  > 2. An **append-only** verbose mode was added — `T42_CONTROLS_VERBOSE=1` or `--verbose` — which
+    323  - `t42-mathcontext.json` sha256 `f2a037a10b8d6a74e6b3dd5eedbaa18ad5fe34cab0f36f6a69cba47373206553`
+    324  - `t42-mathcontext2.json` sha256 `f7ffeb2a519e076d2483195ea359bc5ac5fa433d8da0f610cc3abded309c6b84`
+    334  > `if`.** N4 sets `T42_EXPECT_CANARY_THROWS=0`, so `must_throw` is `False` and the branch that
+    345  > | **N9** `src/t46-negative-identity.sh` | the **M-5 identity check**, against a re-emission with one money cell moved by one minor unit | **exi
+    372  > E2 (capture 2, `T42B-PA-*` vs `T42B-PB-*`) runs the same plain shape — MNT 1,200,000 × 6 ×
+    375  > that shape, in `T42-MX-00-A`'s ambient-flip rows. Same inputs, same seam, same conclusion, one
+    385  >    (`4→0`), and **28** on T36's half-cent-tie shape (`140457.89 → 140457.88`). That is what
+    422  68e681486ae5890f7cded85b4a3e2588672d66dd5e1380dd897ef72213b5f95f  out/t42-determinism-classpath.txt
+    423  f9439f09b3ce94c35494601816b24c6d3dcd3ad27ce2cdd729d70359e66ffe06  out/t42-determinism-oracle-identity.txt
+    424  e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  out/t42-determinism-stderr.txt
+    425  f2a037a10b8d6a74e6b3dd5eedbaa18ad5fe34cab0f36f6a69cba47373206553  out/t42-determinism.json
+    426  68e681486ae5890f7cded85b4a3e2588672d66dd5e1380dd897ef72213b5f95f  out/t42-determinism2-classpath.txt
+    427  e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  out/t42-determinism2-stderr.txt
+    428  f7ffeb2a519e076d2483195ea359bc5ac5fa433d8da0f610cc3abded309c6b84  out/t42-determinism2.json
+    429  68e681486ae5890f7cded85b4a3e2588672d66dd5e1380dd897ef72213b5f95f  out/t42-mathcontext-classpath.txt
+    430  8fd1cae1a90ba6ad2c8be8dbf62293091f9b024432b63c8f4dbf9747194a4fb0  out/t42-mathcontext-log.txt
+    431  f9439f09b3ce94c35494601816b24c6d3dcd3ad27ce2cdd729d70359e66ffe06  out/t42-mathcontext-oracle-identity.txt
+    432  273f3d0fc1b5cc897f385cd03364adae93ec017411049c66c611361635d4d2ef  out/t42-mathcontext-raw.json
+    433  e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  out/t42-mathcontext-stderr.txt
+    434  f2a037a10b8d6a74e6b3dd5eedbaa18ad5fe34cab0f36f6a69cba47373206553  out/t42-mathcontext.json
+    435  68e681486ae5890f7cded85b4a3e2588672d66dd5e1380dd897ef72213b5f95f  out/t42-mathcontext2-classpath.txt
+    436  cfd2e59234b8cf187a41513e5f84f21815f0003cffb3096bc9855a34115038a7  out/t42-mathcontext2-log.txt
+    437  27bc6a4485a1086642effe87acb4ec8c18548256619ff19d361da5ee33e83651  out/t42-mathcontext2-raw.json
+    438  e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  out/t42-mathcontext2-stderr.txt
+    439  f7ffeb2a519e076d2483195ea359bc5ac5fa433d8da0f610cc3abded309c6b84  out/t42-mathcontext2.json
+    440  6faaedc657bfcbe09444d0c7527aa51f6e204d032ee6ab3a517824b2c10415b3  out/t42-pathb-wiring.txt
+    450  `out/t42-neg4.json` has the **same** digest as `t42-mathcontext.json` — expected: N4 only inverted
+    458  **Two T42 files changed and their digests moved. Both are stated here, with what changed and
+    476  **No `out/t42-*.json` payload was touched.** Every T42 digest in section 9 above still holds.
+    510  `out/t46-mathcontext3-classpath.txt` carries the **same** digest as T42's
+    511  (`68e681486ae5…b5f95f`) and `out/t46-mathcontext3-oracle-identity.txt` the same as T42's
+    512  (`f9439f09b3ce…6ffe06`) — the container the re-emission ran in is the container T42 ran in.
+
+.softhouse/capture/mathcontext/NEGATIVE-TESTS.md  (10)
+      1  # T42 — proving the recipes and the control suite are failable
+     15  | N1 | wrong pin | `T42_EXPECT_COMMIT=000…0` | **1** | `BREACH: pinned checkout is at 426a2354…, expected 000…0` |
+     16  | N2 | wrong image id | `T42_EXPECT_IMAGE=sha256:111…1` | **1** | `BREACH: image id is sha256:e5963396…, expected sha256:111…1` |
+     18  | N4 | **the absence probe's canary expectation, inverted** — *not* the vacuity guard; see the T46 correction below | `T42_EXPECT_CANARY_THROWS=0
+     19  | N5 | **the wiring, broken** | `-Dt42.breakWiring=true` silently turns the `PATH_B_AMBIENT_SOURCED_MC` cases into Path A cases | **1** | `BREACH
+     20  | N6 | **the control suite** | `controls.py` pointed at a payload with `T42-CAL.totalInterestAmount` changed `2.05 → 2.06` | **1** | `MISMATCH  C
+     48  N4 sets `T42_EXPECT_CANARY_THROWS=0`. So `must_throw` is **False**, and the branch that fires is
+     60  | **N9** | **the M-5 identity check** | `src/t46-negative-identity.sh` moves one money cell by one minor unit in the re-emission | **1** | `BREAC
+     78  The central experiment in T42 is an **absence** probe: a tenant is put into
+     87  "ambientCanary": "THREW java.lang.IllegalStateException: Rounding mode is not initialized for tenant: t42_canary_never_initialised"
+
+.softhouse/capture/mathcontext/PROVENANCE.md  (18)
+      1  # T42 — provenance and storage form
+     18  - The **matrix** cases (`T42-MX-*`) deliberately run at non-ratified ambient rounding modes
+     22  - The **absence** cases (`T42-MX-*-D`) run with `MoneyHelper` deliberately uninitialised. Two of
+     24  - The **precision** cases (`T42-PREC-*`, `T42B-PREC-*`) run at threaded precision 12 and 8, which
+     28  - The **wiring** cases (`T42B-PA-*` / `T42B-PB-*`) differ only in where the `MathContext` came
+     34  `T42-CTL-Q0a`, `T42-CTL-1`, `T42-CTL-P0A`, `T42-CTL-MEB` — the four reproduction controls, at the
+     39  `T42-CAL` is the rig calibration at `(12, HALF_UP)` against a shipped USD test literal. It is
+     56  T42's §3 coverage statement is still the authoritative list of *unswept shapes*. This section adds
+     57  the blind spots the T44 audit found that T42 believed it had covered, plus the two production
+     65  `setScale`. **This site was never reached by any T42 case.** T42's harness comment claimed the
+     68  - **Observed:** `T42-MX-00-A` (plain) vs `T42-MX-06-A` (`multiples1000`) — one substantive input
+     69  differs, **0 of 74 observed cells** differ; the absence case `T42-MX-06-D` generated a schedule
+     92  ### B-3. Carried forward from T42 §3, unchanged
+     99  **transport** (every T42 observation is Path A); precisions other than {19, 12, 8} and modes other
+    117  `.softhouse/handoff/T42-mathcontext-inforce.md`. It **read** `.softhouse/capture/periodratio/`
+    125  replace `out/t42-mathcontext.json`; both are kept.**
+    127  T42 wrote **only** `.softhouse/capture/mathcontext/**` and
+    128  `.softhouse/handoff/T42-mathcontext-inforce.md`. It read `.softhouse/capture/periodratio/`,
+
+.softhouse/capture/mathcontext/REPRODUCE.md  (16)
+      1  # Reproducing the T42 MathContext-in-force captures
+     61  | `t42-mathcontext.json` | capture 1's payload — 214 cases: the calibration, 4 reproduction controls, the 13×5 ambient/threaded matrix, the 48×3 
+     62  | `t42-mathcontext2.json` | capture 2's payload — 140 cases: the 62-shape precision bisection and the 16 wiring cases |
+     63  | `t42-*-raw.json` / `-log.txt` / `-stderr.txt` | verbatim stdout; the oracle's own SLF4J lines split off the front; stderr (must be empty) |
+     64  | `t42-*-oracle-identity.txt` / `-classpath.txt` | jar sha256, `java -version`, the jar's own `git.properties`, the 348 classpath entries |
+     65  | `t42-pathb-wiring.txt` | `javap -p -c` of the **deployed** `LoanScheduleAssembler` and `LoanScheduleGeneratorServiceImpl`, read inside the runn
+     87  T42_OUT_PREFIX=t42-determinism  bash .softhouse/capture/mathcontext/src/run-mathcontext.sh
+     88  T42_OUT_PREFIX=t42-determinism2 bash .softhouse/capture/mathcontext/src/run-mathcontext2.sh
+     89  diff out/t42-mathcontext.json  out/t42-determinism.json    # must print nothing
+     90  diff out/t42-mathcontext2.json out/t42-determinism2.json   # must print nothing
+    102  (`.softhouse/reviews/T44-capture-audit.md` §3). No T42 payload was modified.
+    108  python3 analysis/t46_distinct_coverage.py            # reads out/t42-mathcontext.json only
+    129  T42_CONTROLS_VERBOSE=1 python3 analysis/controls.py    # every compared cell, one per line
+    179  Compare against `ATTESTATION.md` §9 (T42 artefacts) and §9.1 (T46 artefacts, including the two
+    180  T42 files whose digests moved and why).
+    186  Added by T50. **No T42 or T46 payload was modified.** Everything below runs in throwaway
+
+.softhouse/capture/pathb/PATHB-REPORT.md  (11)
+      8  defect, no oracle required), and **P0-3, P0-4 and P0-6 by T36 on fire `20260818-230002` against the live
+     11  - **P0-3 — attestation sidecar:** `t36/out/recapture-gerege/attestation.json`, every field read from the
+     13  - **P0-4 — fail-the-run preconditions:** `t36/preconditions.sh`, 15 assertions, wired into `REPRODUCE.md`;
+     17  products T36 re-created from the same payloads. **Every response byte-identical to the committed corpus,
+     18  all eight times**; no number moved (`t36/out/diff-vs-committed.txt`).
+    304  here, **second clause closed by T36** on fire `20260818-230002`; see the block immediately below).
+    318  > **T22 P1-11, SECOND CLAUSE — CLOSED by T36 (2026-08-18, live oracle). The corpus now contains those
+    343  > Raw captures `t36/out/emiloop/`, attestation `t36/out/emiloop/attestation.json`, verdict transcript
+    344  > `t36/out/emiloop/verdict.txt`, ten property invariants **ALL PASS on all nine**
+    345  > (`t36/out/emiloop/invariants.txt`). Candidate principals were *selected* by
+    346  > `t36/t36_emiloop_search.py`; **every number in the table above is observed from the oracle**, none
+
+.softhouse/capture/pathb/REPRODUCE.md  (21)
+      9  > **CLOSED per T22 audit P0-4 (applied by T36, 2026-08-18, against the running server).** These were
+     18  sh t36/preconditions.sh gerege  ||  exit 1     # <- a breach ABORTS; do not capture
+     46  and canary `20925.04`. Transcript: `t36/out/preconditions-default-NEGATIVE.txt`. Those five are exactly the
+     62  # CHANGED by T36 (T22 P0-6): captures are taken on the production-settings tenant, never `default`.
+    127  #   9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8  out/B-02-multiplesof100-raw.json
+    133  **CLOSED, 2026-08-18 by T36 against the running server** — what stood here was T22 P0-4: the Preconditions
+    137  `t36/preconditions.sh`, which the Preconditions section above runs and which **exits non-zero and names the
+    141  tenant (`t36/out/preconditions-default-NEGATIVE.txt`).
+    147  (T22 P0-3): `t36/out/recapture-gerege/attestation.json`. Number-by-number diff:
+    148  `t36/out/diff-vs-committed.txt`.
+    168  T36 reused the already-provisioned `gerege` rather than creating another while a second worker depended on
+    171  ## The whole recipe, executable (T36)
+    174  sh   t36/preconditions.sh gerege     # 15 fail-the-run assertions        (T22 P0-4)
+    175  python3 t36/attest.py gerege pathb   # preconditions + capture + attestation.json (T22 P0-3, P0-6)
+    176  sh   t36/rundiff.sh                  # number-by-number diff vs the committed corpus
+    177  sh   t36/run-invariants.sh           # T22's ten property invariants
+    178  python3 t36/t36_rederive_check.py    # re-checks T30's from-source re-derivation of B-03/B-04
+    179  sh   t36/mutation-test.sh            # proves the comparator can fail
+    180  sh   t36/recreate-products.sh        # re-creates the four products and re-issues the four applications
+    181  sh   t36/emiloop-probe.sh            # EMI re-adjust-loop probes           (T22 P1-11, 2nd clause)
+    182  python3 t36/t36_emiloop_verdict.py   # loop-fired verdict vs the no-loop model
+
+.softhouse/capture/periodratio/ATTESTATION-T46.md  (5)
+    138  T42's rule 1 exists to ban. **Read it as: "the AMBIENT `MoneyHelper` context, as the oracle reports
+    139  it".** On Path A the ambient context is **not** the arithmetic — T42's experiment E1 shows it is
+    146  This is verbatim the defect T42 raised against T37 §5. **T42's correction list named T35, T36, T37 and
+    201  | `T46-WK-A` | WEEKS | 1 | term 42 d, total interest `17701.61`, p1 `5040.00` |
+    202  | `T46-WK-B` | WEEKS | 1 | disbursement after start; term 42 d, total interest `15518.91` |
+
+.softhouse/capture/periodratio/ATTESTATION.md  (2)
+    111  | **C2 reproduction** `T39-CTL-Q0a` | committed observation **Q0a**, `.softhouse/reviews/t23-probe/t23-probe-output.txt:5-16` — a different harne
+    165  6872f7336855f054521d812a5354542dda43121a2ebaa42f54ef0df1812e58db  out/t39-neg7-log.txt
+
+.softhouse/capture/t64-zeroprincipal/MECHANISM-CORRECTION.md  (2)
+     62  [VERIFIED: `EmiAdjustment.java:31-36`]
+    131  `T64-ZP-A`, `T64-ZP-C` and `T64-ZP-D` kill by 28, 17 and 36 minor units respectively.
+
+.softhouse/capture/t64-zeroprincipal/PREDICTION.md  (4)
+     23  longest term is **n = 36** and the smallest principal is **MNT 100.00** (`P-DRIFT-F`,
+    167  | 16.8 % (21/125) | 36 | **36** | 72 | **72** |
+    171  | 36 % (9/25) | 17 | **17** | 34 | **34** |
+    197  3. **`T64-ZP-C` (MNT 0.17, n = 34, 36 %)** reproduces claim 1 at an independent rate: 33
+
+.softhouse/capture/t74-multiplesof/PREDICTION.md  (2)
+    177  ### Group E totals — the `36 × 16.8 %` shape (T21 P1-11)
+    202  - **S4** — `pathIdentity.identical` true on all 36 cases; ambient MoneyHelper `(19, ordinal 4)` on
+
+.softhouse/gates.md  (8)
+    268  - **§3.1 and §4.1 byte-identical across revisions 10, 11 and 12** — sha256 `42b978e2abb9` (3,592 chars) and
+    322  fields against the 36 copied, and all 19 record components: **there is no third dropped component.**
+    331  36×16.8% shape and is **absent** at 50,000,000 and 87,654,321. There is no threshold, and no shortcut
+    342  MNT 127,704 / 36 × 16.8% → total interest `35,746.56` vs `35,746.69`.
+    838  conformance          exit 0 — 36/36 parity vectors PASS, 4034 cells graded, 72 ungraded
+    873  2. **36 vectors is not "the loan module is correct."** The graded domain is DEC-1's: one
+    877  3. **`ZP-PRINCIPAL-NOT-CLAMPED` survives all 36 vectors.** The negative clamp remains ungraded and is
+    917  Both cannot hold here. Today `conformance.sh` reports PASS with 42 parity vectors and 0 invariant
+
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T13.md  (10)
+     17  - `.softhouse/conformance.sh` exits 0: **36/36 parity vectors PASS, 0 FAIL**, oracle probe UP, 4034 cells graded.
+     19  - `.softhouse/conformance.sh --self-test` exits 0: harness grades correctly (replay implementation), 36/36 parity fixtures still PASS via replay.
+    130  P-EMI-36-127704              parity           path_a_e... PASS            257        2
+    159  parity vectors          PASS 36   FAIL 0
+    171  VERDICT: PASS (exit 0) — 36 parity vectors match the pinned reference oracle, 4034 cells compared.
+    355  ### PIN admissibility — 36 parity + 4 refusal = 40 vector files
+    358  36 parity PASS + 4 contract-refusal PASS in the conformance SUMMARY exactly.
+    365  `FIXED_30_360`, no charges, no payments, no multi-tranche, no re-aging.** 36
+    377  states no shape in this corpus separates them (29/36 periods agree at all of
+    411  36 parity vectors graded, rather than independently querying the database.
+
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T55.md  (9)
+     10  including the zeroes; **every one of 36 re-derived periods attributed to a specific branch**; and
+    133  **36 of 36 periods attributed; 0 UNATTRIBUTED; 0 contradictions of the source prediction.** The
+    358  | **Rounding mode** | **`HALF_UP`** (`c_configuration.rounding-mode` = **4**) | PostgreSQL row **plus** the running JVM's own init line since `St
+    368  from 12** (negative leg N9: ARM agreement is 29 of 36 at both), and **none separates `HALF_UP` from
+    369  `HALF_EVEN`** (also 29 of 36). For those two axes `(19, HALF_UP)` is **provenance** here — the
+    370  compile-time constant plus the tenant assertions plus T36's half-cent canary — not a discrimination
+    371  by these values. Precision **8** does break the re-derivation (29 → 22 of 36), which is what makes
+    405  merely numerically equal to it on these 36 periods. It reproduces the oracle on every period it
+    407  operation order; VERIFIED as reproduction on 36 of 36 periods]`
+
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T64.md  (19)
+     11  Corpus **32 → 36** parity vectors, `conformance.sh` **exit 0**, `--prove` **20 passed 0 failed**.
+     73  [VERIFIED: `EmiAdjustment.java:31-36`]
+    200  `P-MNT-50M` is the **longest term** in the promoted corpus (n=36) and `P-DRIFT-F` the **smallest
+    226  | `T64-ZP-C-zero-principal-mnt0pt17-34x36pct.json` | MNT 0.17 / 34 × 36 % | 35 | the same at an independent rate, 33 zero-principal rows |
+    227  | `T64-ZP-D-zero-principal-mnt0pt36-72x16pt8pct.json` | MNT 0.36 / 72 × 16.8 % | 73 | a third rate, and the longest schedule in the store (previo
+    276  ZP-GUARD-NONSTRICT                  162 divergent, max margin 36 minor
+    277  ZP-GUARD-SCALES-THE-INSTALLMENT     162 divergent, max margin 36 minor
+    293  CONTROL   @36 vectors (as committed)  exit 0  |  parity vectors          PASS 36   FAIL 0
+    299  AFTER   @36 vectors (as committed)  exit 1  |  parity vectors          PASS 22   FAIL 14
+    306  AFTER   @36 vectors (as committed)  exit 1  |  parity vectors          PASS 33   FAIL 3
+    313  AFTER   @36 vectors (as committed)  exit 1  |  parity vectors          PASS 35   FAIL 1
+    320  AFTER   @36 vectors (as committed)  exit 0  |  parity vectors          PASS 36   FAIL 0
+    327  AFTER   @36 vectors (as committed)  exit 1  |  parity vectors          PASS 35   FAIL 1
+    334  AFTER   @36 vectors (as committed)  exit 1  |  parity vectors          PASS 29   FAIL 7
+    346  * **`ZP-GUARD-NONSTRICT` was invisible to 32 vectors** and now kills three by 28, 17 and 36 minor
+    377  parity vectors          PASS 36   FAIL 0
+    389  VERDICT: PASS (exit 0) — 36 parity vectors match the pinned reference oracle, 4034 cells compared.
+    407  **36 / 4034**.
+    447  1. **F-1 — `ZP-PRINCIPAL-NOT-CLAMPED` is still ungraded at 36 vectors.** `MathUtil.negativeToZero`
+
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T66.md  (2)
+    425  `185/1000`, `36/100`) are **not in lowest terms** and `validateWellFormed` refuses them
+    513  **and** term > 36 — contains a firing shape is **not** established by search; it is
+
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T68.md  (34)
+     34  parity vectors          PASS 36   FAIL 0
+     46  VERDICT: PASS (exit 0) — 36 parity vectors match the pinned reference oracle, 4034 cells compared.
+     87  contract — *"It must be > 0"* [VERIFIED: `contract.go:1085-1086`] — and 17, 28, 28 and 36 minor units
+     97  > a principal of 4.00 on a 36-period 16.8% shape… a rounding-boundary property of the (principal, term,
+    114  sit at *exactly* `n = 2·B` (56/28, 34/17, 72/36). That is one phenomenon sampled at three rates, not
+    161  === T64-ZP-D  vector rows 73  capture rows 73   rate 16.800%  principal 36 minor  n=72
+    176  | mutation | @32 vectors | @36 vectors | T64 claimed |
+    180  | `ZP-PRINCIPAL-NOT-CLAMPED` | (not run) | **exit 0**, `PASS 36 FAIL 0`, 4034 cells | same — survives |
+    186  ZP-RESIDUAL-NO-RECURSION @36
+    200  ZP-GUARD-NONSTRICT @36
+    205  ZP-PRINCIPAL-NOT-CLAMPED @36
+    206  parity vectors          PASS 36   FAIL 0
+    208  VERDICT: PASS (exit 0) — 36 parity vectors match the pinned reference oracle, 4034 cells compared.
+    210  ZP-GUARD-SCALES-THE-INSTALLMENT @36
+    232  | `T64-ZP-D` | `ZP-GUARD-NONSTRICT` | **162** | **36** minor |
+    255  * `EmiAdjustment.shouldBeAdjusted()` [VERIFIED: `EmiAdjustment.java:31-36`, read in full] is
+    292  and `ZP-D` (72/36), **three of the four promoted vectors**.
+    335  * **`ZP-PRINCIPAL-NOT-CLAMPED` genuinely survives all 36.** Reproduced: exit 0, `PASS 36 FAIL 0`,
+    342  FAIL 11`) and at 36 (`PASS 22 FAIL 14`). T64's self-refutation is correct — see T68-2 for where the
+    347  | | 32 vectors | 36 vectors |
+    358  taking the vector's word.** Every vector in the store — all 36, including the 32 that predate T64 —
+    360  (`64/32 = 2`, `72/36 = 2`). The oracle's own record type is
+    373  * **README counts.** *"36 promoted parity vectors … 4 contract-refusal … 1 self-test fixture — 41
+    375  *"Before them the corpus's longest term was 36 periods and its smallest principal MNT 100.00 …
+    377  max `n` **36**, min principal **10 000 minor = MNT 100.00** [VERIFIED: `/tmp/t68_corpus.py` census of
+    378  all 36 parity vectors].
+    438  `grade.go:237` and `conformance_test.go:42`; `admit.go` merely *defines* it
+    462  **That is why it survived 32 → 36 untouched:** the only quantified assertions are open-ended `>= 1`
+    478  why 32 → 36 did not break it — but it goes red the moment a **second** self-test fixture is added,
+    498  > *"T55 witnessed no shape separating precision 19 from 12, or **HALF_UP from HALF_EVEN** (29 of 36
+    499  > periods agree at all of them; precision 8 does separate, 22 of 36). Recording the setting stays
+    507  prints on every run and it is the exact defect class of P-7 in prose form. `(29 of 36 periods)` also now
+    508  reads as a corpus count at a glance, since the corpus is 36 vectors; it is 36 *periods* of a T55 probe.
+    538  them and `>` versus `>=` on that one line becomes invisible again — a defect that moves 28, 17 and 36
+
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T7.md  (4)
+    194  (29 of 36 periods agree at all of them; precision **8** does separate, 22 of 36). So the
+    215  HALF_EVEN (29 of 36 periods agree at all of them; precision 8 does separate, 22 of 36). Recording
+    506  `LB-F29CROSS`'s 17,850, `LB-MULTI3F`'s 71,014, the 29-of-36 / 22-of-36 precision witness
+    586  `graded_against`: T55 computed the counterfactual margins for all 36 re-derived periods (0
+
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T74.md  (21)
+     28  What *was* promoted is the other half of the task — T21 P1-11's `36 × 16.8 %` small-principal shape,
+     38  | `.softhouse/capture/src/Capture3i.java` | **new.** Pass 3h's rig with ONE structural fix: `Case` gains a `currencyMultiplesOf` component; `Curr
+    113  Recipe `sh .softhouse/capture/src/run-pass3i.sh`, exit **0**, 36 cases.
+    132  and on every one of the 36 cases (`ambientMoneyHelperPrecision` 19, `ambientMoneyHelperRoundingModeOrdinal` 4).
+    139  `pathIdentity.identical` true on **36 of 36**.
+    148  - group E (dp 2, 36 × 16.8 %): `T74-E-P4`, `T74-E-P59`, `T74-E-P72`, `T74-E-P340`, `T74-E-P426`, `T74-E-P6940`, each with a `-p12` companion
+    181  `T74-E-P4`, `-P59`, `-P72`, `-P340`, `-P426`, `-P6940` — MNT 4.00 to 6,940.00, 36 × 16.8 %, at
+    200  | the previous 36 vectors | **34 PASS, 2 FAIL** — `P-01` (MNT 87,654,321 / 18 × 18.5 %, row 5 `principal_minor`) and `P-RND-S1` (MNT 21,021,587.5
+    208  the corpus caught this defect on **2 of 36** shapes before, and on **8 of 42** now.
+    213  property of the `(principal, n, rate)` triple, not of magnitude. The same `36 × 16.8 %` shape at
+    217  **Store: 36 → 42 parity vectors, 4,034 → 5,576 graded cells, 96 → 102 named money kills.**
+    239  **42 parity + 4 refusal = 46 files.** A whole-file grep for `capture-prod-raw` across every vector
+    244  > "36 parity + 4 refusal" — **contradicting line 217 of this same document**, which already said
+    245  > "Store: 36 → 42 parity vectors". The six were promoted **two commits earlier on this very branch**,
+    253  > written against the *banner's* phrasing — one required `36 … (parity|promoted|golden) … vector`
+    254  > (this file says `36 parity + 4 refusal.`, with no following "vector"), the other searched for the
+    341  All six hold integer-exact on all 42 promoted vectors, checked by the harness, not by me:
+    343  `splits_sum_to_whole`, `monotonic_due_dates`, `contract_row_ordering` — 42 hold, 0 violated, 0 exempt,
+    395  parity vectors          PASS 42   FAIL 0
+    404  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+    413  was PASS exit 0 at 36 parity vectors and 4,034 cells, measured separately (P-4).
+
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T82.md  (32)
+     23  | `.softhouse/capture/src/run-pass3i.sh` | **E-1** precondition 17's `CASE_PRECISION` written out by hand (36 entries, no default), the unregiste
+     26  | `.softhouse/capture/PASS3-REPORT.md`, `PASS3-REPORT-shared.md` | **A-1** census `36 → 42`, `capture-prod3i-raw.json (6)` added, `46 files` stat
+     29  | `.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T74.md` | **C-4** `18 → 21` with the arithmetic shown; a correction block under the P-
+     44  below. T87 is right. It does not bite today (the key is present with an explicit `null` in 36/36
+     83  new one. Cost: 36 lines.
+    213  run's `PASS 42` / `contract-refusal PASS 4`]:
+    225  | **total files** | **46** = **42 parity** + 4 refusal |
+    235  `T74.md:225-238`, rendering the same census as a markdown table and reading "36 parity + 4 refusal",
+    237  document**, which said "Store: 36 → 42 parity vectors". All four are now corrected and each carries a
+    269  The row-type rule is grounded in the capture, not assumed: **36 `DISBURSEMENT` rows omit the key
+    343  * sweep 1 required `36 … (parity|promoted|golden) … vector`. `T74.md` says
+    344  `36 parity + 4 refusal.` — no following word "vector". **No match.**
+    363  `36` or `42`, **no context word required, no phrasing assumed**. This is the tier that would have
+    374  TIER 1 — prose lines containing 36 or 42, no phrasing assumed : 1093
+    382  (`36 × 16.8 %`), principals, period counts, task ids (`T36`, `T42`, `T46`), source line references
+    383  (`Money.java:42`) and dates. Classifying all 136:
+    387  | **correct, present tense** | `vectors/README.md:71,74` (42), `gates.md:917`, `RESUME.md:17,24,68`, `patterns.md:358`, `program.json:1061-1062`,
+    388  | **correct as HISTORY** — a dated transcript of an earlier fire, where 36 *was* the corpus | `T13.md` (9), `T64.md` (14), `T68.md` (14), `T71`/`
+    389  | **not a census** | `36 × 16.8 %` (a loan shape), `T42-CAL`, `:42` line refs, `P-EMI-36-127704` | not a hit in substance |
+    390  | **STALE, present tense** | **`.softhouse/vectors/README.md:580`** — "all **36** promoted parity vectors withdraw exactly those two cells" | **t
+    393  **42 of 42** schedule vectors withdraw exactly `{installment_number, interest_minor}` on every
+    415  6. **A number that is correct-but-stale-in-meaning** — "42" describing something else that happens to
+    416  be 42 today. Only classification catches that, never a regex.
+    469  wrote …/T74-E-P72-…json   (margin 1 minor at period[36].interest_minor,   2/146 graded cells move)
+    488  parity vectors          PASS 42   FAIL 0
+    496  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+    500  **42 parity vectors, 5576 graded cells, exit 0 — unchanged**, as required. [VERIFIED: my run]
+    569  for every row in `capture-prod3i-raw.json` (36 `DISBURSEMENT`, 861 `REPAYMENT`). A `DOWN_PAYMENT`
+    589  * **F-1 — `.softhouse/vectors/README.md:580` says "all 36 promoted parity vectors"** (registered as
+    590  **T93**). Stale; the true number is **42**, and the substantive claim is **true of all 42**
+    591  [VERIFIED independently by me and by T87: 42/42 withdraw exactly
+    621  with an explicit `null` in **36/36** cases [VERIFIED]. Deliberately **not** fixed in T98, because the
+
+.softhouse/handoff/T10-go-schedule-port.md  (3)
+    183  | guard: all three conjuncts, threshold `floor(n/2)` WHOLE CURRENCY UNITS flat | `EmiAdjustment.java:31-36`; `Money.copy(double)` REPLACES the am
+    453  - MNT 127,704 / 36 × 16.8% → oracle total interest **35,746.56** (a no-loop model gives 35,746.69)
+    615  *exponential* — my first version hung on the 36-period vector — so
+
+.softhouse/handoff/T21-capture-pass3-audit.md  (2)
+     42  **diverges at principal 4.00** on the 36 × 16.8 % shape and is **identical at 50,000,000** on that same
+     74  against the oracle. Recommend adding the 36 × 16.8 % small-principal family to the capture plan.
+
+.softhouse/handoff/T23-DEC-1-v2-rereview.md  (5)
+     36  (`:353-577`) and all 36 `builder.X` reads in the private copy constructor (`:304-351`) and diffed
+     61  (`EmiAdjustment.java:31-36`) compares `|lastEMI − penultimateEMI| × 100` against a `Money` of
+     65  → oracle EMI 172,574.64, specification-as-written 172,574.63; MNT 127,704 / 36 × 16.8 % → total
+     89  not by exhaustion. The `36 × 16.8 %` shape shows precision divergence at principal 4 and none at
+    103  MNT 40,595 / 36 × 16.8 % and MNT 127,704 / 36 × 16.8 %, whose post-loop gaps still exceed the
+
+.softhouse/handoff/T24-dec1-v3.md  (3)
+     45  (`EmiAdjustment.java:31-36`) compares `|lastEMI − penultimateEMI| × 100` against a `Money` of
+     70  - `MNT 127,704 / 36 × 16.8% → total interest 35,746.56 vs 35,746.69`
+     71  — oracle 35,746.56 from `t23-probe2-output.txt` line 12 (CASE P=127704 n=36 rate=16.8,
+
+.softhouse/handoff/T25-corpus-corrections.md  (2)
+     24  CORRECTED banner and the oracle-observed statement: divergence at principal **4.00** on `36 × 16.8 %`
+    121  states; item 11 (add the `36 × 16.8 %` small-principal shape to the capture plan and capture it) needs a
+
+.softhouse/handoff/T28-dec1-v4.md  (5)
+     45  | Step 2 — guard, all three conjuncts | `:1267-1269` → `EmiAdjustment.java:31-36`; `floor` at `:32`; `lowerHalf > 0` and `!isZero()` at `:33`; ma
+     48  | Step 4 — candidate installment | `EmiAdjustment.java:42-44` (`originalEmi.plus(adjustment())`); multiple pass `:1270` → `:1761-1766` (with `saf
+     75  MNT  127704 / 36 x 16.8%: level 4540.30,  final 4540.06,   total interest 35746.56  -> MATCH
+     80  Both discriminating branches are exercised: the 6 × 7.0 % case adopts one iteration and then stops on the guard; the 36 × 16.8 % case adopts one 
+    102  1. **A vector that trips the EMI re-adjust guard inside the graded domain.** Carried, ADR §8 item 3. Candidates from T23's committed cases: MNT 1
+
+.softhouse/handoff/T30-corpus-remainder.md  (1)
+    208  | **T21 P1-10, P1-11** | P1-10 remains deferred-and-recorded (T25); P1-11 needs the `36 × 16.8 %` small-principal capture |
+
+.softhouse/handoff/T31-dec1-v5.md  (1)
+    161  | 3 | trips the EMI re-adjust guard inside the graded domain | MNT 1,014,632 / 6 × 7.0 % or MNT 127,704 / 36 × 16.8 % — already **observed**, rea
+
+.softhouse/handoff/T35-patha-admissibility.md  (5)
+     56  [`LoanSchedulePlan.java:36-43`]. Every `BigDecimal` now leaves through `toPlainString()`, and the error
+    142  | **T21 P1-11** — capture the `36 × 16.8 %` small-principal shape | **OPEN** | Same reason: adding cases to `Capture3b` would have broken the inp
+    181  recipe: `sha256 11c5c74a27aa1d9e91b9eacf20e36e469bc5e34e3943e00b1543ad3671a732e2`, **identical** to the
+    265  4. **T21 P1-11 is open** — the `36 × 16.8 %` small-principal shape, on which the oracle diverges at principal
+    307  2. **T21 P1-11.** Capture the `36 × 16.8 %` shape at principals 4, 59, 72, 340, 426, 6,940 as a new id
+
+.softhouse/handoff/T36-pathb-admissibility.md  (26)
+      1  # T36 — Path B admissibility: the parked P0s, closed against the live reference oracle
+      3  **Task:** T36, branch `softhouse/T36-pathb-admissibility`.
+      9  [VERIFIED: `t36/out/recapture-gerege/attestation.json` → `oracle`].
+     21  `t36/attest.py` → **`t36/out/recapture-gerege/attestation.json`** (and a second one for the probe set at
+     22  `t36/out/emiloop/attestation.json`). It **drives the capture itself**, so the request/response digests and
+     27  What it actually recorded [all VERIFIED: `t36/out/recapture-gerege/attestation.json`]:
+     59  `t36/preconditions.sh` — 15 assertions, written against the running server, `exit 1` on any breach with the
+     74  [VERIFIED: `t36/out/preconditions-default-NEGATIVE.txt`]. Those five are precisely the defects that made the
+     89  1. **`t36/recapture.sh`** — the committed calc requests sent **byte-verbatim** (`productId` 1–4 land as-is on
+     91  2. **`t36/recreate-products.sh`** — because arm 1 leans on another task's fixture, I **re-created all four
+    110  identical to `B-01`. Observed [VERIFIED: `t36/out/emiloop/verdict.txt`, raw at `t36/out/emiloop/`]:
+    127  invariants **ALL PASS on all nine** captures [VERIFIED: `t36/out/emiloop/invariants.txt`].
+    137  - **`t36/t36_diff.py`** — exact-Decimal, integer-minor-unit, zero-tolerance comparison of **every** JSON leaf,
+    139  - **`t36/mutation-test.sh`** — proves that comparator can fail: one minor unit flipped in a copy of a
+    140  re-capture makes it exit non-zero and name the leaf [VERIFIED: `t36/out/mutation-test.txt`]. T22 found a
+    142  - **`t36/run-invariants.sh`** — T22's ten invariants (I1–I6, S1–S4) re-run on the re-captures: **ALL PASS**.
+    143  - **`t36/t36_rederive_check.py`** — re-points T30's from-source re-derivation at the new captures without
+    172  Canonical machine-readable form: **`.softhouse/capture/pathb/t36/out/recapture-gerege/attestation.json`**
+    173  (and `.../t36/out/emiloop/attestation.json`). Summary of the run that produced the re-capture:
+    198  | B-02 | `17775e019188e113` | `9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8` | **yes** |
+    210  `MathContext(19, HALF_UP)`, and cite `t36/out/recapture-gerege/attestation.json`.
+    211  3. T22 P0-3, P0-4 and P0-6 are **CLOSED (T36, fire `20260818-230002`)**; with P0-5 (T30) that is **all four**.
+    213  4. **New artefacts created on the oracle by T36** (additive only; the next fire should be able to tell mine
+    230  [VERIFIED: `t36/out/diff-vs-committed.txt`, produced by `t36/rundiff.sh`]
+    260  **Yes — CONSISTENT, all four combinations, digit-for-digit** [VERIFIED: `t36/out/rederive-check.txt`]:
+    327  `:1521`, `com.mysql.cj`, `mariadb`, `go-sql-driver` appear in `t36/preconditions.sh` and `t36/attest.py`
+
+.softhouse/handoff/T37-dec1-binding-captures.md  (3)
+     57  **`T37-3-B`** — MNT 127,704 / 36 × 16.8 %, start = disbursement 2024-01-01. Observed: term 1096,
+     58  totalInterest **35,746.56**, level **4,540.30**, final **4,540.06**. Full 36 rows in the capture file.
+    122  **`T37-3d-2`** — MNT 127,704 / 36 × 16.8 %, disbursement **2024-01-20**. Observed: term 1096,
+
+.softhouse/handoff/T38-dec1-v7.md  (8)
+    182  ## Evidence folded in from T35/T36/T37
+    195  3. **The EMI re-adjust loop is now normative AND witnessed (T36, T37).** §4.3.1 gains an observation block:
+    200  through Path A, and is measured to be a **pure** 3a discriminator. **The two sub-behaviours T36 names as
+    215  6. **Provenance is attested, not inferred (T35, T36).** §4.1's `(19, HALF_UP)` paragraph now cites
+    330  6. **Nothing in T34, T35, T36 or T37 was found to be substantively wrong.** Every source claim I re-opened —
+    347  - **"The guard fired" is not directly observed anywhere**, on any path — T36 and T37 both say so. What is
+    456  reachable in the same fire and tasks T35, T36 and T37 captured from it
+    458  branch tips `softhouse/T37-…` 23:19, `softhouse/T36-…` 23:23, `softhouse/T35-…` 23:27 on 2026-08-18, the same
+
+.softhouse/handoff/T39-periodratio-observation.md  (5)
+      9  The worst total-interest gap T34 re-derived — **MNT 398,967.73** on a MNT 50,000,000 / 36 ×
+     72  | `T39-P0-D` | 2024-01-28 | 2024-01-31 | 36 | 21.6 | 50,000,000 | **18,659,151.45** | 18,260,183.72 | **+398,967.73** | 18,659,151.45 | 0.00 | **
+    187  pairs across 2023-2025 × terms {6, 12, 36}: the month-end special case fires on **210** of them,
+    247  | **C2 reproduction** `T39-CTL-Q0a` | committed observation **Q0a**, `.softhouse/reviews/t23-probe/t23-probe-output.txt:5-16` | **42 cells** | **
+    425  "ambient". **T42's correction list (T35, T36, T37, `reference-oracle.md`) omitted T39; it should have
+
+.softhouse/handoff/T4-dec1-contract.md  (1)
+     48  count of **major** units (`LoanRepaymentScheduleModelData.java:36`, `Money.java:150-157`, `:163-170`).
+
+.softhouse/handoff/T40-charges-capture.md  (10)
+     52  `bin/preconditions.sh` is **T36's script copied byte-verbatim** from `.softhouse/capture/pathb/t36/`
+     91  | B-02 multiplesOf 100 | `9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8` | **yes** |
+     95  These are the same four digests T36 attested. **The harness is not a variable**, so every difference
+    129  and T36's, unchanged), **`m_loan` 0**, **`m_loan_charge` 0** (`calculateLoanSchedule` is a pure calculation
+    477  `gerege-nbfi/pathb-attestation/v1`, generated by `bin/attest-t40.py` (derived from T36's `attest.py`;
+    478  T36's own tree was read, never written). It **drives** its own capture run, so digests and timestamps
+    509  | FC-05-pctamountinterest-instalment | 200 | `2f2a242fa80ca563f9599c270f0118e6bc31f6f36e23a1fb630d2df6348accc9` | yes |
+    558  * **`Asia/Hovd` (+07) is still unexercised**, as T36 noted. Every date in these requests is an explicit
+    632  bin/preconditions.sh          T36's script, copied byte-verbatim (its tree is read-only to T40)
+    741  two [`MoneyHelper.java:59-64` logs the same local it caches]. Rule 6 still holds, via T36's behavioural
+
+.softhouse/handoff/T41-dec1-v8.md  (22)
+      5  **Base:** `main` at `2df4d49` — rebased twice mid-task as `main` advanced (T42's merge landed while
+     19  applied, plus **two more that revision 8's own spec-check probe produced**, plus **task T42's
+     86  states the rule, what the ambient reading *is* still evidence of, and a falsification test T42 can
+     91  - `Money` holds its own `MathContext` field [`Money.java:32`], assigned in the constructor at `:42`
+    105  Path B**, where nothing threads a context (which is why §4.1's HALF_UP/HALF_EVEN pair and T36/T40's
+    110  **§4.1.2 was written as a falsifiable rule for T42. T42 then ran the test, its branch merged to
+    113  `.softhouse/handoff/T42-mathcontext-inforce.md` and `.softhouse/capture/mathcontext/`. **The rule is
+    117  | prediction | T42's result |
+    119  | **P1** ambient-only change moves no in-graded-domain Path-A cell | **CONFIRMED AND STRENGTHENED.** T42 replaced T39's *difference* test — weak,
+    122  | **P4** no in-graded-domain Path-A site reaches an ambient `Money` construction | **CONFIRMED, but my ENUMERATION was incomplete.** There is one
+    123  | **P5** (T42's own) | **The rule INVERTS on a 0-dp / `inMultiplesOf` shape**: the ambient mode moves 23 cells and the threaded mode **none**. So
+    125  **T39's N-4 is SUPERSEDED, not qualified.** T42 swept 110 shapes to 360 periods: threaded precision
+    135  separately. **T35's and T37's *justifications* are wrong and T36's is sound**; §8 item 1 records the
+    139  **I verified 8 of T42's citations myself** against the pinned checkout before relying on them —
+    269  all 36** captures (21 + 15), extending T38's measurement.
+    316  | M3 reused where M1 belongs | 0 | 0 | **none — still inert on all 36** |
+    379  `:42`, `:52`, `:114`, `:118`, `:169`, `:377`, `:494`, `:495`), `MoneyHelper` (`:35`, `:91`),
+    399  - **P3 is now closed by T42** (see above) and is no longer a gap. What remains open in §4.1.2: the
+    401  *mode* and the *threaded* precision, T42 tested the ambient *mode* by absence. `[UNVERIFIED]`
+    405  - **T42's own uncovered ground**, inherited by §4.1.2: `RepaymentEvery > 1`, non-monthly
+    418  made. T42 already confirmed it and caught two defects in my draft (the Path-B mechanism and the
+    433  5. **The M3-where-M1 collapse is inert on 36 captures and still normative.** Nothing tests it under
+
+.softhouse/handoff/T42-mathcontext-inforce.md  (52)
+      1  # T42 — which `MathContext` actually governs the money, and whether precision 19 is observable
+     12  > **No recorded observation was changed by T46**, and no T42 payload was modified. The two
+     37  plus T46's fourth leg for capture 1; UNVERIFIED as a re-run of T35's or T36's suites]`, a
+     39  **and T35's and T37's justifications are wrong and must be re-worded, T36's is substantially
+     49  **Branch:** `softhouse/T42-mathcontext-inforce`.
+     65  `analysis/controls-output.txt` and `out/t42-pathb-wiring.txt`.
+     74  T42 replaces the difference test with an **absence** test. Each case carries its own tenant id
+     76  this document originally cited `:36-37`; `:37` is `roundingModeCache` and `:38` is
+    123  IllegalStateException: Rounding mode is not initialized for tenant: t42_t42_mx_07_d
+    151  > Observed: `T42-MX-00-A` (plain) and `T42-MX-06-A` (`multiples1000`) differ in exactly one
+    153  > which is not a multiple of 1000; and the absence case `T42-MX-06-D` **generated a schedule**
+    163  > field [`:36`]. So `ProgressiveLoanScheduleGenerator.java:110` and the guard at `:335` read
+    189  > `T42-MX-00-A`'s ambient-flip rows in the E1 table above. Same inputs, same seam, same
+    196  > moves 22-23 cells, and 28 on T36's half-cent-tie shape; that is the entire content of ratified
+    216  Path B **22**. On T36's half-cent-tie shape (MNT 1,162,502.50 × 12 × 21.6 %): `4→1` Path A **0**,
+    217  Path B **42**; `4→6` (`HALF_UP`→`HALF_EVEN`) Path A **0**, Path B **28**, `140457.89 → 140457.88`
+    218  — which independently reproduces the mechanism behind T36's `20925.05` / `20925.04` canary.
+    227  A source line is a claim about the repository. `out/t42-pathb-wiring.txt` reads the artefact that
+    244  Path B. [VERIFIED: `out/t42-pathb-wiring.txt`]
+    275  ### THE T42 ATTESTATION RULE
+    310  > T36's half-cent tie (`1,162,502.50 × 0.018 = 20,925.045` → `20925.05` under `HALF_UP`,
+    340  | 36 | 13 % | 2,000,000,000 | 72 | `425964544.20` | `425964544.19` |
+    355  MNT 1,200,000 over 36 months. Only the 19-vs-12 question was ever hard.
+    356  3. **T39's N-4 was not wrong, it was narrow.** Its 16 shapes were 6, 12 and 36 periods at
+    364  decades plus a 24-point ladder inside the two lowest), terms {6, 36, 120, 360}, rates {7.7, 13,
+    395  Before T42: `MoneyHelper.PRECISION = 19` was a **transcription** claim — true of the source, with
+    399  After T42: it is an **observable** parameter. A Go port that computes the rate factor at any
+    408  ## 4. The exact corrections T35, T36, T37 and `reference-oracle.md` need
+    418  > > `[VERIFIED for the three legs below; UNVERIFIED as a re-run — T35's and T36's suites were not
+    424  > inaccurate for at least T39 and for T42's own capture 1, both of which echoed **intent** under
+    448  already showing the ambient inert on Path A at 2 dp. T42 explains why.
+    461  attested on the row below [T42]."*
+    465  19 vs 12 is nonetheless behaviourally discriminable; see T42 §3."*
+    471  ### T36 — `.softhouse/handoff/T36-pathb-admissibility.md`
+    473  **T36 is substantially sound and should not be rewritten.** It is the only one of the three whose
+    484  `.softhouse/capture/mathcontext/out/t42-pathb-wiring.txt`. That is why the ambient reading is
+    485  evidence about the arithmetic here and is not on Path A [T42]."*
+    487  `(19, HALF_UP)` is a transcription claim here; T42 §3 supplies the first shape that
+    500  which T42 shows is never consulted on these shapes. They are one witness to the *tenant
+    503  > **`MathContext`, two contexts, attested separately [T42]:**
+    574  `analysis/discriminate-output.txt`; `out/t42-mathcontext.json` cases `T42-MX-07-D`,
+    575  `T42-MX-08-D`].
+    576  - **The `Money.java:163-170` site (three-argument overload) is a TRANSCRIPTION.** No T42 case ever
+    677  regime.** 47 of 48 capture-1 shapes separate 19 from 8, including MNT 1,200,000 over 36 months;
+    687  `c_configuration.rounding-mode` row edited after boot is inert — which T36 (**P13**) already
+    688  asserts. T42 adds only that this is now the *arithmetic's* cache on Path B, not just a
+    699  absent from this image — T36 established both). **Container discipline forbids it and another
+    701  bytecode showing the wiring, T36's already-committed two-tenant canary
+    702  (`20925.05` / `20925.04` on `gerege` / `default`, same server, same run), and T42's Path-B-wired
+    748  - **T46 did NOT re-run T35's or T36's suites either**, so M-7's qualification stands unchanged:
+    760  committed captures — I did not re-execute T35's or T36's suites. `[VERIFIED for the three legs
+    771  the Path B claims rest on the deployed bytecode and on T36's committed canary. `[stated]`
+
+.softhouse/handoff/T43-dec1-v8-rereview.md  (3)
+     57  to add once from T42, missed a second time on the same enumeration.
+     58  **P4 still stands, by observation:** T42's absence probe shows no in-graded-domain
+    122  - **T40's control reproduces all four of T36's Path-B digests byte for byte**, verified
+
+.softhouse/handoff/T44-capture-audit.md  (16)
+     25  | `.softhouse/capture/mathcontext/` | T42 | **ACCEPTED WITH REQUIRED CHANGES** | M-1…M-4 (P1); M-5…M-11 (P2) |
+     35  corpus cannot see which of two inputs supplies the charge amount; in T42 the shapes chosen to reach a
+     55  [`MoneyHelper.java:59-64`, `:74-82`, `:91-94`] — verbatim the defect T42 raised against T37, and
+     56  T42's correction list names T35/T36/T37 and **not T39**.
+     66  - **A-1 (P1)** — T42 rule 4's **wiring citation is entirely absent** (zero grep hits across the set
+     88  **`mathcontext` (T42)** — judged under its own eight-point rule, as the brief required. **The rule is
+    100  - **M-3 (P1)** — the coverage rationale behind E1 is refuted by T42's own data:
+    109  - **M-5 (P2)** — T42 fails its **own ratified rule 2** on capture 1 (214 of 354 cases echo the intent,
+    141  | T42's negative legs N4 and N5 re-run | both **exit 1** naming the breach |
+    144  | provenance sweeps | **110/110** (T39), **> 60** (T40), all E1/E2/§3 numbers and the four cell totals (T42) traced, **0 synthesised** |
+    154  its "no committed capture is mis-valued" needs T42 §7's qualification travelling with it (M-7).
+    164  4. **Add T39 to T42's amended-attestations list** in `reference-oracle.md` — F39-2 is the same defect
+    165  T42 corrected in three other handoffs and missed in the fourth. Fix the threaded echo in both
+    177  in T39 and T42's M-3 are the same error — a null hypothesis chosen for symmetry rather than for
+    191  {6, 12, 36}, `RepaymentEvery = 1`, MONTHS. `[VERIFIED on the swept domain; UNVERIFIED outside it]`
+    192  - **T39's 415/116 and T42's cell totals** are reproduced from committed analysis output; my
+
+.softhouse/handoff/T45-dec1-v9.md  (4)
+      8  | Inputs | `.softhouse/reviews/T43-DEC-1-v8-rereview.md` (primary), `.softhouse/reviews/T44-capture-audit.md`, `.softhouse/handoff/T44-capture-au
+     58  on **T42's absence test**, an experiment over the whole call graph. Rationale, stated in the
+     59  document: this enumeration has now been wrong twice (T42 forced the first widening, T43 the
+    223  repayment period)` pairs (1,095 start dates 2023-01-01…2025-12-30 × terms {6, 12, 36},
+
+.softhouse/handoff/T46-capture-corrections.md  (13)
+      5  `.softhouse/capture/charges/` (T40), `.softhouse/capture/mathcontext/` (T42).
+     24  corrections to the T39/T40/T42 handoffs. `docs/adr/**`, `nexus/**`, `.softhouse/reviews/**`,
+    144  and on Path A the ambient context is provably never read for a 2-dp currency (T42 E1). The heading and
+    146  `capture/periodratio/ATTESTATION-T46.md`. **T42's amended-attestations list named T35/T36/T37 and
+    181  | `T46-WK-A` | WEEKS | 1 | term 42 d, total interest `17701.61` |
+    182  | `T46-WK-B` | WEEKS | 1 | disbursement after start; term 42 d, total interest `15518.91` |
+    334  verbatim rather than glossed. **No recorded observation was changed**: no `out/t42-*.json` payload was
+    335  touched and every T42 digest still holds; the two source files that changed are `CaptureMathContext.java`
+    399  `:3538`). T42's N-3 claim that the loan modules contain *exactly one* hard-coded `MathContext` is true
+    403  - **`T46-N2` (P2, method) — an absence probe is also a coverage detector.** `T42-MX-06-D`
+    406  detectable from T42's own payload with no new capture. **If the shape you added to reach a site does
+    444  1. **`.softhouse/reference-oracle.md`** — T42's amended-attestations list (T35, T36, T37) must gain
+    508  - **This pass's own coverage.** T44 found what T39/T40/T42 could not distinguish; T46 found that T44's
+
+.softhouse/handoff/T46-mathcontext-corrections.md  (64)
+      5  `.softhouse/handoff/T42-mathcontext-inforce.md`. Nothing else.
+      7  `.softhouse/handoff/T42-mathcontext-inforce.md`.
+     22  **No recorded observation was changed.** No `out/t42-*.json` payload was touched; every T42
+     23  digest in `ATTESTATION.md` §9 still holds. Two T42 *source* files changed and both digests are
+     31  ## 1. M-3 (P1) — the E1 coverage rationale is refuted by T42's own data. **CLOSED.**
+     36  `out/t42-mathcontext.json` with `json.load(..., parse_float=Decimal)`, raises `SystemExit` on any
+     42  | byte-identical to `T42-MX-00-A` (`plain`), including `plain` itself | **4** — `plain`, `multiples1000`, `fixedLength6`, `interestRecognitionOnD
+     49  differ in `tenantId` (`t42_t42_mx_00_a` vs `t42_t42_mx_06_a`), because the harness assigns a unique
+     55  `T42-MX-06-D` — `multiples1000` with the ambient context **absent** — **generated a schedule**
+     60  `T42-MX-07-D` and `T42-MX-08-D` did. **The absence probe would have caught the site had it been
+     69  [`LoanRepaymentScheduleModelData.java:36`]. So on this seam
+     84  - the **class header's `T42-AMB-*` case-family line**, which restated the same claim — a leak
+     87  **`REPRODUCE.md`**, and **T42's handoff** at the Verdict, at §1 E1's table caption, at four table
+     93  T42's N-1 read: *"The same pattern appears again at `Money.java:161-171` … **This is a port hazard,
+     94  and it is observed, not read.**"* The tag is now **split**, in T42's handoff §5:
+    131  Recorded in `PROVENANCE.md` blind spot **B-2**, `ATTESTATION.md` §2.5, and T42's handoff §1 and §3.
+    151  | non-literal | **4** | `MoneyHelper.java:93`, `:124` (the `PRECISION = 19` constant); `MathUtil.java:473` (a *parameter*); `AdvancedPaymentSched
+    153  **T44's M-1 is confirmed: the 15-or-10 total is 9, not 13.** T42's N-3 published 9
+    168  ### NEW FINDING (T46-N1) — an indirect hard-code neither T42 nor T44 has
+    186  **Consequence.** T42's N-3 sentence *"the loan modules contain exactly one hard-coded
+    189  T42's N-1 documents inside `Money`. A Go port that threads a context through down-payment
+    191  `PROVENANCE.md` **B-4** and T42's handoff §3.
+    194  Corrections applied to N-3 in T42's handoff §5 (full replacement table, with the original text
+    207  2. **Verbose mode added, append-only.** `T42_CONTROLS_VERBOSE=1` (env) or `--verbose` (argv).
+    230  `ATTESTATION.md` §2.1 now states plainly that in `out/t42-mathcontext.json` the keys
+    233  in the set — a breach of T42's own ratified rule 2 on the capture that carries E1. It states what
+    275  `at CaptureMathContext.main(CaptureMathContext.java:323)` on `T42-MX-07-D` and `T42-MX-08-D`. A
+    291  **`out/t46-mathcontext3.json` does not replace `out/t42-mathcontext.json`.** Both are kept; the T42
+    292  payload remains the record of what T42 observed.
+    296  `src/t46-negative-identity.sh` moves one money cell by one minor unit (`T42-CAL` period-1
+    305  Corrected in **`ATTESTATION.md` §6** and in **T42's handoff §1 E2**, in both cases at the point the
+    310  context fixed, and observes **0** differing cells — which is exactly `T42-MX-00-A`'s ambient-flip
+    319  and **28** on T36's half-cent-tie shape (`140457.89 → 140457.88`). That is the whole content of
+    325  claim rests on **E1 alone**, plus T42 §4's grep over the committed corpus.
+    368  slot-drifted copy. T42's linchpin claim holds, and is now machine-checked.
+    370  **Independently reconfirmed digests, 20 hours after T42 read them:** jar
+    372  `d5ef39897399157de96503dd242f0f999acde87bf59a191c812ab2f3547711ea` — the same digest T42 and the
+    382  1. T42 handoff **Verdict** — the sentence itself now carries
+    384  of T35's or T36's suites]`.
+    385  2. T42 handoff **§4**, as a boxed instruction stating that the qualification is part of the claim
+    386  wherever it is repeated, and that **leg 1 is a self-report** of exactly the class T42 refuses
+    387  elsewhere — weaker than legs 2 and 3, and shown inaccurate for T39 (F39-3) and for T42's own
+    394  **T46 did NOT re-run T35's or T36's suites either**, so the "UNVERIFIED as a re-run" half stands
+    411  N4 sets `T42_EXPECT_CANARY_THROWS=0`, so `must_throw` is **False** and the branch that fires is the
+    439  | T42 said | correct | what is actually there |
+    442  | `Money.java:161-171` | **`:163-170`** | the three-argument `roundToMultiplesOf(Money, Integer, MathContext)` opens at `:163` and closes at `:17
+    444  | `MoneyHelper.java:37` | **`:38`** | `:37` is `roundingModeCache`; `:38` is `mathContextCache`. T42's `:36-37` in §1 E1 should read `:37-38`. |
+    446  **The stack-trace line numbers T42 published are correct and unchanged** — `Money.java:154`,
+    464  per-site. Corrected in `ATTESTATION.md` §2.3, in T42 handoff §2 rule 4, in the T42 handoff Verdict
+    465  (which restated it), and in the T36 correction in T42 handoff §4 (which restated it again).
+    475  - **The `Money.java:49-51` citation appears TWICE** in T42's handoff — §1 E1 *and* §4 leg 2. Both
+    477  - **The "generate(mc, …)" claim appears THREE times** — §2 rule 4, the Verdict, and the T36
+    483  - **`MoneyHelper.java:37` appears in N-7** as well as `:36-37` in §1 E1. Both corrected.
+    486  `:49-52`, `MoneyHelper.java:36-37`, or a bare `MoneyHelper.java:37` citation for the
+    487  `MathContext` cache anywhere under `.softhouse/capture/mathcontext/` or in T42's handoff.
+    498  precision 10. The 13 was 4 + 9, double-counting the 15s, inherited from T42's N-3 miscount.
+    538  - **T46 did not re-run T35's or T36's suites**, so M-7's "UNVERIFIED as a re-run" is unchanged.
+    540  witnessed *against the committed T42 payload* (147,630 identical leaves from a different
+    545  T42's §7 statement that **the Path B transport was not exercised at all** remains true of T46
+    567  Refutes T42 N-3's "exactly one hard-coded `MathContext` in the loan modules" as a general claim,
+    569  - **T46-N2 (P2, method).** The absence probe would have caught M-3 on its own: `T42-MX-06-D`
+    583  - **F-2 (DEC-1).** Add to T42's F-2 list: DEC-1 must **not** state `installmentAmountInMultiplesOf`
+    612  `analysis/controls.py` (**append-only**) · `.softhouse/handoff/T42-mathcontext-inforce.md`
+    615  **All digests, including the two T42 files whose digests moved and why:** `ATTESTATION.md` §9.1.
+
+.softhouse/handoff/T47-dec1-v10.md  (4)
+    126  (T42, T43, and now T46 — and the third omission was not even in `Money.java`). Revision 10 states the
+    134  > call passed [`:40`, assigned at `:42`].
+    137  charge, and T42's **absence** test would have thrown had that construction been reached — which is
+    327  enumeration to T42's absence test; revision 10 moves it again, to a per-construction rule that needs
+
+.softhouse/handoff/T48-actualactual-captures.md  (1)
+    347  * **Behavioural canaries, not configuration echoes**: T36's half-cent tie ran before every Path B post
+
+.softhouse/handoff/T49-dec1-v10-rereview.md  (10)
+     68  | **§4.7** `InstallmentRoundingMultipleMinor` | re-opened `:1761-1766`, `:1770-1776`, `Money.java:159-161`/`:163-170`; verified `LoanRepaymentSch
+    182  trial's **full** period list, `:1293-1306` copy-back. `EmiAdjustment.java:31-36/:38-40/:42-44/:46-48/:54-56`
+    203  Line numbers spot-verified: `:32` is the `MathContext` field, `:40`/`:42` the constructor and its `mc`
+    497  `out/` (Path-A pass 3 / 3b), `pathb/` (B-01…B-04 + T36's EMI-loop probes), `dec1-binding/` (T37),
+    499  `mathcontext/` (**T42**), `audit-t44/` (**T44**'s probes) and `actualactual/` (**T48**). Revision 8
+    500  already cited T42's set in §4.1.2 and §8 item 6c without adding it here; revision 10 cites T46's two sets
+    505  **Replacement text.** Re-state the list as **eight**, adding: "(f) the **T42 `MathContext` set**
+    577  | `EmiAdjustment.java:31-36`, `:38-40`, `:42-44`, `:46-48`, `:54-56` | guard, adjustment, adjusted EMI, strict test, `n` | ✓ exact |
+    578  | `Money.java:32`, `:40`, `:42`, `:48-51`, `:50`, `:52` | the `mc` field, the constructor, the guard, the scale | ✓ exact |
+    602  | `LoanRepaymentScheduleModelData.java:32-39`, `:36` | the 19-component record; `installmentAmountInMultiplesOf` as an `Integer` | ✓ exact — I co
+
+.softhouse/handoff/T50-ambient-vs-threaded-rounding.md  (12)
+    148  **Cells observed — the absence probe (42 ABSENT cases per site):**
+    152  | S1-CHARGE-2ARG | 42 | **42** | 0 | YES, by absence |
+    153  | S6-SPECIFICDUE-2ARG | 42 | **42** | 0 | YES |
+    154  | S3-PCTOF-INT19 | 42 | **42** | 0 | YES |
+    155  | S4-DOWNPAYMENT-LAT866 | 42 | **42** | 0 | YES |
+    156  | S2-CHARGE-3ARG | 42 | 0 | **42** | NO |
+    157  | S5-PCTOF-MC | 42 | 0 | **42** | NO |
+    294  - Confirmed by **absence** as well as by difference: 42/42 (Tier 1) and 35/35 (Tier 2) uninitialised-
+    295  ambient cases threw `IllegalStateException`, while the 3-arg counterfactual completed 42/42.
+    307  threaded 0/7, on the two shapes where a 19-significant-digit rounding decision exists; 42/42
+    369  been vacuous, the checker would have refused the payload rather than reporting 42/42 as evidence.
+    415  T50 cell threads precision 19, matching the ambient. Threaded-precision separation was T42's
+
+.softhouse/handoff/T51-alias-and-tranche-captures.md  (2)
+     45  `bin/run-preconditions.sh` (T36's 15 assertions, 21 printed checks, including the **behavioural
+    121  by text substitution on named lines only (T36's method), so every numeric literal is byte-identical
+
+.softhouse/handoff/T52-dec1-v11.md  (1)
+    235  - The 7/7-versus-0/7 result, the absence-probe counts (42/42 and 35/35 throwing against 42/42
+
+.softhouse/handoff/T53-dec1-v11-diffcheck.md  (5)
+    236  `MoneyHelper.getMathContext()` at `:115`; the constructor stores it (`:42`) and the scale-2
+    240  [`Money.java:52`, `:494-496`, `:40`, `:42`] is exactly the right four lines for that mechanism.
+    250  42/42 and 35/35 absence cases throwing; the three-argument `Money.of` counterfactual (S2)
+    251  completing **42/42**; **9** corruption rejections (N1…N9). [VERIFIED:
+    464  | `Money.java:40`, `:42`, `:48-51`, `:52`, `:114-116`, `:115`, `:154`, `:494-496` | ctor, the stored `mc`, the 0-dp gate, the quantisation, the 2
+
+.softhouse/handoff/T54-dec1-v12.md  (2)
+    298  | §3.1 | 180-210 | **3592** | **`42b978e2abb9`** | 184-214 | **3592** | **`42b978e2abb9`** |
+    399  `09c76368045294dfefbefb2d1bc0ce36de4c6efc01c613303ca37b2b3c269179`, unchanged from the branch
+
+.softhouse/handoff/T56-close-unrecorded-escape-hatch.md  (5)
+     20  before** `d36fc53 merge T9`. The eleven `P-*.json` vectors were present; **the T9 review itself was
+     23  [VERIFIED: `git merge-base --is-ancestor d36fc53 HEAD` → NO at start; `ls
+     26  I fast-forwarded to `d36fc53` before reading anything. The only content in those two commits is the
+     42  At `d36fc53`, toolchain `. .softhouse/bin/go-env.sh`, module root `nexus/`:
+    470  - [VERIFIED] The worktree was cut before the T9 merge; fast-forwarded to `d36fc53` before reading.
+
+.softhouse/handoff/T57-emi-smoothing-loop-vectors.md  (16)
+     51  P-02b         6  REPRODUCED     P-MNT-50M    36  REPRODUCED
+    155  P-EMI-6-1M014632 vs T37-3-A   ·   P-EMI-36-127704 vs T37-3-B
+    166  `EmiAdjustment.shouldBeAdjusted` (`EmiAdjustment.java:31-36`):
+    196  ### `P-EMI-36-127704` — MNT 127,704 / 36 × 16.8 %
+    205  threshold = floor(36/2) = 18 currency units → 18 minor units
+    227  | `P-EMI-36-127704` | 36 | \|Δ\| **25** > 18 → **TRIPS** | \|Δ\| 24 vs 18 → still trips |
+    233  threshold, which is why the 36-period shape still trips after the fact.)
+    269  ### `P-EMI-36-127704` — margin **47** minor units
+    271  Oracle level installment 4,540.30; counterfactual 4,540.29. **All 36 of 36 paying rows differ.**
+    280  36       4,477.38        4,477.85  −47 |        0.00          0.00     0
+    305  | `MNT 127,704 / 36 × 16.8%`: oracle total interest **35,746.56** | observed `totalInterestAmount` **35,746.56** | **MATCHES** |
+    307  | guard is `\|lastEMI − penultEMI\| × 100` vs `floor(n/2)` currency units, "3.00 for a 6-period loan, 18.00 for 36" | derived independently from 
+    315  kill by an order of magnitude on the 36-period shape. **No DEC-1 text is wrong; only a reading of it
+    329  | `P-EMI-36-127704-emi-smoothing-loop.json` | `P-EMI-36-127704` | 37 | `schedule.core` | loop-omitted **47**, final-balancing 24, straight-line 9
+    354  AUDIT P-EMI-36-127704-emi-smoothing-loop.json     695 cells compared, 0 mismatches
+    448  P-EMI-36-127704-emi-smoothing-loop.json
+
+.softhouse/handoff/T58-close-surviving-mutations.md  (3)
+    244  `S1`/`S2`/`S4`, e.g. 36 × **16.8 %** on MNT 50M); I measured on the shapes the oracle was actually
+    245  asked about, which include `P-DRIFT-D` at 36 × **21.6 %** on MNT 50M. Different shape, different
+    331  | float scan over `.softhouse/vectors/` | **36 JSON files, 0 bare number tokens containing `.`, `e` or `E`** (string literals stripped first, so 
+
+.softhouse/handoff/T59-cancellation-and-cost.md  (4)
+     28  n=36   80.94ms     n=240   4.832s
+     64  | 36 | 70.5 ms | 3.74 ms | 18.9x |
+     85  **Why 256 and not 1:** `context.Context.Err` takes a mutex on a `cancelCtx`. On the innermost fold step that charges every schedule for a propert
+    174  3. **The corpus samples terms 6/12/18/36 only.** Nothing in the vector store grades any shape where a repayment row amortizes zero principal, whi
+
+.softhouse/handoff/T61-mutation-hunt-round-2.md  (2)
+     37  `git diff --stat main -- nexus/` showing changes I had not made. Rebased onto `e42c3c5` and
+    208  capturesCanonicalSha256: bcdd5e0e4bd22a36f1531f3b75052d3570e4348a810bcaf95bbbd65bdf3c07b6
+
+.softhouse/handoff/T8-promote-parity-vectors.md  (3)
+     50  | `P-MNT-50M` | `P-MNT-50M-36x16pt8pct.json` | 37 | schedule.core |
+    105  | P-MNT-50M | LEVEL-INSTALLMENT-… / STRAIGHT-LINE-… | money | 4 / 36,423,098 |
+    325  - **`P-MNT-50M-36x16pt8pct.json` — 603 cells compared, 0 mismatches.**
+
+.softhouse/patterns.md  (7)
+    109  - **A precondition script is only worth what its negative run proves.** T36's 15 assertions were validated by running them against the stock tena
+    178  it and look for movement — **remove it and see whether anything throws**. T42 registered a tenant but never
+    182  indistinguishable across 16 shapes (T39), then separated on an ordinary loan at 360 periods (T42). Note the
+    236  violation, no scope breach. Corpus **32 → 36 parity vectors, 2,495 → 4,034 graded cells**;
+    268  survives all 36 and is still ungraded.
+    270  conformance **exit 0, 36 parity vectors, 4,034 cells, 0 inadmissible, 0 harness errors** ·
+    358  never amortizes to zero while the port returns zero. Conformance was PASS, 42 vectors, 5,576 cells,
+
+.softhouse/program.json  (9)
+     78  "note": "Local fire 20260820-170001. SEVEN workers dispatched, SEVEN completed, ZERO live at exit, nothing lost, no isolation violation, no scope
+    579  "decision": "ACCEPTED. Evidence all driver-re-run and separately reproduced by the independent verifier T13: conformance exit 0 with 36/36 parity
+    748  "T42",
+    972  "parity_vectors": "32 -> 36",
+    976  "verifier": "build 0, test ok, conformance exit 0 / 36 vectors / 4034 cells / 0 inadmissible, invariants 6/6 hold 37, --prove 21/21"
+    996  "conformance": "exit 0 - 36 parity vectors, 4034 graded cells, --prove 21/21, --self-test 0",
+   1061  "parity_vectors_before": 36,
+   1062  "parity_vectors_after": 42,
+   1071  "Dispatched T76 from a STALE park list (T22 P0-3/4/5/6 closed by T30/T36 on 18 Aug); the false sentence was in RESUME.md and T25's own note, and 
+
+.softhouse/reviews/T11-go-port-adversarial-review.md  (5)
+    148  [VERIFIED: `EmiAdjustment.java:31-36`]. **`Money.copy(double)` REPLACES the amount, it does not scale it**
+    228  M-E and M-G are killed **only** by `P-EMI-6-1M014632` / `P-EMI-36-127704`, the two shapes T57 captured this
+    293  | mutation | S1 (12×18.5%, MNT 5M) | S2 (36×16.8%, MNT 50M) | S4 (24×18.5%, start 30 / disb 31) | S3 on-lattice control |
+    391  REPLAY T39-P0-D     start=2024-01-28 disb=2024-01-31 n=36 rate=21.6  cells=109 bad=0  MATCH
+    439  PERF n= 36  elapsed=90ms      PERF n=240  elapsed=5.995s
+
+.softhouse/reviews/T17-vector-capture-plan-review.md  (1)
+    455  **Confirmed: no declining-balance schedule longer than 6 periods carries full literal per-period expectations.** A 36- or 60-month declining-bala
+
+.softhouse/reviews/T18-capture-audit.md  (1)
+    513  | §3.7 long declining-balance terms | **PARTLY CLOSED** — the corpus capped declining balance at 6 periods; D-01 is 18. Plan runs C-05 (36) and C
+
+.softhouse/reviews/T21-capture-pass3-audit.md  (18)
+     29  `36 × 16.8 %` shape — the very shape of `P-MNT-50M` — while it is **identical at principal 50,000,000**
+    189  The brief asked for at least one MNT-scale schedule; all four are matched, including the 36-period
+    221  `EmiAdjustment.shouldBeAdjusted()` [`EmiAdjustment.java:31-36`]:
+    333  | 36 × 16.8 % | **4** | `1.13` | `1.14` | **DIFFERENT** |
+    334  | 36 × 16.8 % | 59 | `16.52` | `16.51` | **DIFFERENT** |
+    335  | 36 × 16.8 % | 72 | `20.13` | `20.14` | **DIFFERENT** |
+    336  | 36 × 16.8 % | 340 | `95.16` | `95.15` | **DIFFERENT** |
+    337  | 36 × 16.8 % | 426 | `119.20` | `119.18` | **DIFFERENT** |
+    338  | 36 × 16.8 % | 6,940 | `1942.66` | `1942.65` | **DIFFERENT** |
+    339  | 36 × 16.8 % | **50,000,000** (`P-MNT-50M`) | `13995886.40` | `13995886.40` | **IDENTICAL** |
+    354  the intermediate products"* — **false**. At `36 × 16.8 %` the smallest divergent principal is **4.00**
+    359  4.00-unit loan shows it (at 36 periods); an 87,654,321-unit loan does **not** show it at `6 × 7.0 %`. The
+    373  and the `36 × 16.8 %` shape at small principals is now a known-good discriminator worth capturing.
+    386  | MNT 50,000,000 / 36 × 16.8 %, `installmentAmountInMultiplesOf` **null vs 100** | **IDENTICAL** |
+    387  | MNT 50,000,000 / 36 × 16.8 %, `installmentAmountInMultiplesOf` **null vs 100000** | **IDENTICAL** |
+    487  rows for the 36 × 16.8 % shape are, by luck, in the right direction: the oracle *does* diverge at 4, 59,
+    508  36 × 16.8 % and is identical at **50,000,000** on that same shape and at **87,654,321** on 6 × 7.0 %; and
+    550  11. **Add the `36 × 16.8 %` small-principal shape to the capture plan.** It is now a demonstrated
+
+.softhouse/reviews/T23-DEC-1-v2-rereview.md  (15)
+     56  - Mechanically diffed `LoanApplicationTerms.Builder`'s 37 fields against the 36 the private copy
+    109  `T21Probe.java`). Observed there: `36 × 16.8 %` at principal **4** is `*** DIFFERENT ***` between 12
+    204  `LoanRepaymentScheduleModelData.java:36` declares `Integer installmentAmountInMultiplesOf`;
+    230  **is** copied out (`:348` — it is one of the 36 fields the copy constructor reads). The consuming
+    326  `private` fields of `LoanApplicationTerms.Builder` (`:353-577`) and the 36 `builder.X` reads in the
+    498  | No size threshold: divergence at principal 4.00 on 36 × 16.8 %, absent at 50,000,000 | **CORRECT, and oracle-observed** — `t21-probe-oracle.txt
+    518  `EmiAdjustment.shouldBeAdjusted()` (`EmiAdjustment.java:31-36`), is
+    550  | 16,838 | 36 | 16.8 % | 598.65 | 598.65 | 598.46 | 598.46 | identical |
+    551  | 40,595 | 36 | 16.8 % | **1,443.28** | 1,443.29 | 1,443.47 | 1,443.04 | **diverges** |
+    552  | 127,704 | 36 | 16.8 % | **4,540.30** | 4,540.29 | 4,540.06 | 4,540.54 | **diverges** |
+    555  interest**, and the totals: on MNT 127,704 / 36 × 16.8 % the oracle's total interest is
+    593  (`EmbeddableProgressiveLoanScheduleGenerator.java:39-42`); `LoanApplicationTerms` and
+    714  (`EmiAdjustment.java:31-36`) compares `|lastEMI − penultimateEMI| × 100` against a `Money` of amount
+    721  vs 172,574.63 without the loop; MNT 127,704 / 36 × 16.8 % → total interest 35,746.56 vs 35,746.69.
+    788  The `36 × 16.8 %` shape shows precision sensitivity at principal 4 and none at 50,000,000, so the
+
+.softhouse/reviews/T26-DEC-1-v3-rereview.md  (8)
+     56  `35,746.56` on MNT 127,704 / 36 × 16.8 % — **but only when the loop body is modelled**. Without
+     90  "3.00 for a 6-period loan, 18.00 for 36" is therefore right.
+     94  `EmiAdjustment.java:31-36`:
+    150  | guard | `EmiAdjustment.java:31-36` | ✔ fully |
+    154  | **`adjustedEmi = penultimateEMI + adjustment`** | `EmiAdjustment.java:42-44` | ✘ absent |
+    170  (n ∈ {6,12,18,24,36,60}, principals 100,000–103,999 MNT, rates 7.0/16.8/18.5/21.6 %), the guard
+    440  and **MNT 127,704 / 36 × 16.8 %**.
+    499  `adjustedEmi = penultimateEMI + adjustment` (`EmiAdjustment.java:42-44`); the break when the
+
+.softhouse/reviews/T27-corpus-corrections-review.md  (4)
+     91  | diverge at principal **4.00** on 36 × 16.8 %, `1.13` vs `1.14` | row 1 | ✅ |
+     93  | **identical at 50,000,000** on 36 × 16.8 %, `13,995,886.40` both | row 7 | ✅ |
+    107  `.softhouse/capture/out/t21-probe-oracle.txt` §C independently shows `36 × 16.8 %` principal **4** DIFFERENT
+    449  6. T21 P1-11 — capture the `36 × 16.8 %` small-principal shape; it diverges at principal **4.00** and is the
+
+.softhouse/reviews/T29-DEC-1-v4-rereview.md  (6)
+     59  | 127,704 / 36 × 16.8 % | **4,540.30** / **4,540.06** / **35,746.56** | `t23-probe2-output.txt` |
+     66  | 16,838 / 36 × 16.8 % | 598.65 / 598.46 / 4,713.21 | `t23-probe2-output.txt` |
+     67  | 40,595 / 36 × 16.8 % | 1,443.28 / 1,443.47 / 11,363.27 | `t23-probe2-output.txt` |
+    248  | guard, three conjuncts | `EmiAdjustment.java:31-36` | ✅ `lowerHalf > 0.0 && !emiDifference.isZero() && |d|.multipliedBy(100).isGreaterThan(orig
+    252  | `adjustedEmi` | `EmiAdjustment.java:42-44` | ✅ `originalEmi.plus(adjustment())` |
+    342  | 1 | a vector that **trips the EMI re-adjust guard** inside the graded domain (§8 item 3) | MNT 1,014,632 / 6 × 7.0 %, or MNT 127,704 / 36 × 16.
+
+.softhouse/reviews/T3-progressive-schedule-behavior-review.md  (5)
+    192  - `DaysInYearType.java:36-40` (enum values incl. `DAYS_360(360, …)`) and `:81-86` (`getNumberOfDays` returns
+    194  - `DaysInMonthType.java:34-36` / `:75-80` ✅ (note: `DAYS_30`'s message key is literally
+    352  `Test:44`, `:58-59`, `:60`, `:81-83`, `:120-122`; `Main.java:42`, `:56-57`; `MoneyHelper.java:35`, `:54-65`,
+    356  `:345-350`; `InterestPeriod.java:145-158`, `:160-166`, `:168-179`; `DaysInYearType.java:36-40,81-86`;
+    357  `DaysInMonthType.java:34-36,75-80`; `CurrencyData.java:39`; `DateUtils.java:319-321`;
+
+.softhouse/reviews/T32-DEC-1-v5-rereview.md  (1)
+    126  MNT 82,836,233 / 36 x 21.6%, schedule start 2024-01-01, disbursement 2024-05-30
+
+.softhouse/reviews/T34-DEC-1-v6-rereview.md  (1)
+    192  36 × 21.6 %: `18,260,183.72` as DEC-1 is written, `18,659,151.45` from the
+
+.softhouse/reviews/T3b-progressive-schedule-behavior-rereview.md  (3)
+    213  `DaysInYearType.java:36-40,81-86,85`; `DaysInMonthType.java:34-36,75-80`; `CurrencyData.java:39`;
+    217  `Main.java:42`, `:56-57`; `Test:44`, `:48-49`, `:58-59`, `:60`, `:81-83`, `:120-122`;
+    355  (`DaysInMonthType.java:36`) — a harmless upstream typo, but a reader grepping for it will be confused.
+
+.softhouse/reviews/T43-DEC-1-v8-rereview.md  (10)
+    133  [`:372-378`, `:377`], and — added in revision 8 from T42 — the constructor's call to
+    186  once, from T42; it is missing a second time on the same enumeration.
+    189  enumeration.** T42's absence probe gave each shape an uninitialised tenant so any
+    374  `originalEmi.isLessThan(totalPaidAmount)`. `EmiAdjustment.java:31-36`
+    376  `:35`), `:38-40`, `:42-44`, `:46-48`, `:54-56`. Call site `:749` gated on
+    409  - **`Money` / `MoneyHelper`:** `Money.java:32`, `:42`, `:48-51`, `:50`, `:52`,
+    453  - **T40's control reproduces T36's four Path-B digests byte for byte.** All four
+    457  `.softhouse/capture/pathb/t36/out/recapture-gerege/`. **The harness is not a
+    463  - **T42's absence probe.** 11 of 13 generated fine; the 2 that threw are the two 0-dp
+    581  establish whether either is reached from the progressive calculator; T42's absence
+
+.softhouse/reviews/T44-capture-audit.md  (36)
+      5  `.softhouse/capture/mathcontext/` (T42) — the three capture sets from fire `20260819-080001`,
+     31  | `.softhouse/capture/mathcontext/` | T42 | **ACCEPTED WITH REQUIRED CHANGES** | M-1…M-4 (P1); M-5…M-11 (P2) |
+     41  cannot see which of two inputs supplies the charge amount; in T42 the shapes chosen to reach a leak do
+     47  miscount) and M-5 (T42 breaking its own rule 2). By this program's own standard that is the strongest
+    138  {6, 12, 36}, `RepaymentEvery = 1`, MONTHS:
+    173  ### **F39-2 (P1) — T39's attestation repeats the exact defect T42 found in T37, and T42's correction list omits T39.**
+    176  it"* — the phrasing T42's rule 1 exists to ban — and then offers *"Two independent witnesses to the
+    187  T42 raised against T37 §5 ("one witness counted twice"), and on Path A the ambient context is
+    190  T42 §4 issues corrections for **T35, T36, T37 and `reference-oracle.md`** and **never names T39** —
+    205  T42 rule 2: *"On the THREADED context, echo the object, not the intent — `mc.getPrecision()`,
+    220  reading *"effective MoneyHelper MathContext"* — the exact word T42 told T35 to drop.
+    259  (MNT 50,000,000 / 36) should both go, since they pin the bottom and top of the observed range.
+    315  byte-verbatim T36's script — three-way sha256 match.
+    328  ### **A-1 (P1) — T42 rule 4's wiring citation is entirely absent.**
+    406  writing the cache and logging from the same local). Rule 6 is nonetheless satisfied here, because T36's
+    427  T36 and **proven failable**; independent C1–C10 matching cell for cell; the 336-leaf diff reproducing
+    457  # 3. `mathcontext` (T42) — **ACCEPTED WITH REQUIRED CHANGES**
+    459  **Judged under T42's own eight-point rule, as the brief required — and the rule is the right rule.**
+    462  rationale behind the decisive experiment is refuted by T42's own data, and T42 breaks its own rule 2 on
+    476  T42's linchpin claim holds.
+    484  payload at the published values (`274527298.56` / `274527296.51`). T42 §4 leg 2 confirmed:
+    485  `"currencyDecimalPlaces": 0` appears in **no** committed capture outside T42's own, and the one
+    516  ### **M-3 (P1) — the coverage rationale behind the decisive experiment is refuted by T42's own observations.**
+    522  Observed in T42's own payload: `T42-MX-00-A` (plain) and `T42-MX-06-A` (`multiples1000`) differ in
+    536  `TO_BE_CAPTURED` list because T42 believed it captured.
+    539  qualified in T42 §7. What fails is the reason for believing those thirteen shapes were the right thirteen.
+    554  ### **M-5 (P2) — T42 fails its own ratified rule 2 on the capture that carries the decisive experiment.**
+    573  T42's verdict and `reference-oracle.md` state it flatly while T42 §7 qualifies it correctly
+    575  the class T42 refuses elsewhere — it cites T35's, T37's and T39's own attestations that they echoed the
+    611  **Promote, once G-1 closes: `T42B-PREC-30-p19`** (MNT 50,000,000 / 360 / 21.6 % at threaded
+    620  families and `T42-CAL` (all discrimination probes or off-ratified-settings), and the four duplicate
+    626  not 13; the **Path B transport was not exercised at all** by T42 (its own §7 says so) — every Path B
+    627  claim rests on bytecode plus T36's committed canary; `RepaymentEvery > 1`, the `WEEKS`/`DAYS`/`YEARS`
+    641  T39's (seam-sha and threaded-mode legs), T40's preconditions (tenant `default`), and T42's N4/N5 — and
+    652  `capture/charges/**` + its handoff; T42 exactly `capture/mathcontext/**` + its handoff. **All three
+    665  `(start, period)` pairs, 2023-2025, terms {6, 12, 36}, `RepaymentEvery = 1`, MONTHS. The
+
+.softhouse/reviews/T49-DEC-1-v10-rereview.md  (10)
+     68  | **§4.7** `InstallmentRoundingMultipleMinor` | re-opened `:1761-1766`, `:1770-1776`, `Money.java:159-161`/`:163-170`; verified `LoanRepaymentSch
+    182  trial's **full** period list, `:1293-1306` copy-back. `EmiAdjustment.java:31-36/:38-40/:42-44/:46-48/:54-56`
+    203  Line numbers spot-verified: `:32` is the `MathContext` field, `:40`/`:42` the constructor and its `mc`
+    497  `out/` (Path-A pass 3 / 3b), `pathb/` (B-01…B-04 + T36's EMI-loop probes), `dec1-binding/` (T37),
+    499  `mathcontext/` (**T42**), `audit-t44/` (**T44**'s probes) and `actualactual/` (**T48**). Revision 8
+    500  already cited T42's set in §4.1.2 and §8 item 6c without adding it here; revision 10 cites T46's two sets
+    505  **Replacement text.** Re-state the list as **eight**, adding: "(f) the **T42 `MathContext` set**
+    577  | `EmiAdjustment.java:31-36`, `:38-40`, `:42-44`, `:46-48`, `:54-56` | guard, adjustment, adjusted EMI, strict test, `n` | ✓ exact |
+    578  | `Money.java:32`, `:40`, `:42`, `:48-51`, `:50`, `:52` | the `mc` field, the constructor, the guard, the scale | ✓ exact |
+    602  | `LoanRepaymentScheduleModelData.java:32-39`, `:36` | the 19-component record; `installmentAmountInMultiplesOf` as an `Integer` | ✓ exact — I co
+
+.softhouse/reviews/T5-DEC-1-contract-review.md  (4)
+     66  I computed the complete schedule under both readings across a grid of 560 configurations per precision (precisions 12 and 19; terms 3/6/12/18/24/
+    212  `contract.go:359-375` types the field `int64` in **minor** units. The oracle's counterpart is `Integer installmentAmountInMultiplesOf` (`LoanRepa
+    281  Target: `EmbeddableProgressiveLoanScheduleGeneratorTest#testGenerate` (`…GeneratorTest.java:42-93`).
+    402  4. **Constrain `InstallmentRoundingMultipleMinor` (F-3).** Add to `contract.go:359-375`: the value must be 0, or a positive exact multiple of 10^
+
+.softhouse/reviews/T53-DEC-1-v11-diffcheck.md  (5)
+    236  `MoneyHelper.getMathContext()` at `:115`; the constructor stores it (`:42`) and the scale-2
+    240  [`Money.java:52`, `:494-496`, `:40`, `:42`] is exactly the right four lines for that mechanism.
+    250  42/42 and 35/35 absence cases throwing; the three-argument `Money.of` counterfactual (S2)
+    251  completing **42/42**; **9** corruption rejections (N1…N9). [VERIFIED:
+    464  | `Money.java:40`, `:42`, `:48-51`, `:52`, `:114-116`, `:115`, `:154`, `:494-496` | ctor, the stored `mc`, the 0-dp gate, the quantisation, the 2
+
+.softhouse/reviews/T63-memo-and-cancellation-review.md  (1)
+    523  Terms {1,2,3,4,5,8,17,35,36,37,60,120,254,255,256,257,258,300} × 2 rates × 2
+
+.softhouse/reviews/T71-fui-marker-review.md  (1)
+    354  | `.softhouse/conformance.sh` | **0** | **36 parity PASS / 0 FAIL**, 4 contract-refusal PASS, 1 self-test PASS, **4034 graded cells** (72 ungrade
+
+.softhouse/reviews/T73-fui-marker-rereview.md  (4)
+    156  for it]. Nothing in the 36-vector corpus is red and nothing needs re-capturing for this. The
+    237  - The author measured on `d0fbb42`, which they state explicitly ("All runs on the final branch
+    238  head `d0fbb42`"), and at that commit `T70.md` alone yields exactly **231**
+    436  | F-T73-4 | Handoff's "231" is correct at `d0fbb42` but is 613 at branch head `4507109` (the T72 handoff commit adds the rest). Honest and attrib
+
+.softhouse/reviews/T75-pathA-multiplesof-review.md  (11)
+      5  20,365 insertions. **Six vectors promoted**, corpus 36 -> 42.
+     80  BASELINE (branch, unmutated)   parity PASS 42  FAIL 0   5576 graded  102 money kills   exit 0
+     87  36** and is caught by **8 of 42** now. The two pre-existing catchers are MNT 87,654,321 and
+     90  not of magnitude — `P-MNT-50M` is the *same* `36 x 16.8 %` shape at MNT 50,000,000 and stays green
+    119  reports row 17 `principal 10 -> 11`, row 17 `interest 4 -> 3`, rows 17-35 `outstanding -1`, row 36
+    120  `principal 24 -> 23`, plus `splits_sum_to_whole VIOLATED` on the 23rd cell (row 36
+    347  **This is not a defect in T74's diff.** T74 promoted nothing from any of it, the 42 promoted vectors
+    372  42 parity + 4 refusal. Zero name pass 3.
+    480  main baseline    parity PASS 36  FAIL 0  4034 graded  96 money kills   exit 0
+    481  branch           parity PASS 42  FAIL 0  5576 graded  102 money kills  exit 0
+    629  - Store totals: main 36 / 4,034 / 96; branch 42 / 5,576 / 102. Exactly as claimed.
+
+.softhouse/reviews/T77-pathb-recapture-review.md  (26)
+     29  actually lives is the *caller*, `t36/recapture.sh`, and its abort is **unreachable**. I ran a
+     54  | T22 P0-3 (attestation sidecar) | open | closed by T36 `78c5bda` | **CLOSED** | commit exists, 2026-08-18T23:13:42+08:00. `t36/attest.py` (19,24
+     55  | T22 P0-4 (fail-the-run preconditions) | open | closed by T36 `c3bbf26` | **CLOSED as to `preconditions.sh`** — but see P0-T77-2, the *caller* n
+     56  | T22 P0-6 (re-point at `gerege`) | open | closed by T36 `fab040a` + `60c08ad` | **CLOSED** | both commits exist (23:10:15, 23:14:33 +08:00); `t3
+     57  | T22 P1-14 (B-03/B-04 never re-derived) | "largest remaining hole" | closed by T30, re-checked by T36 | **CLOSED** | `.softhouse/reviews/t30-pro
+     95  to any existing re-derivation script** in this repo (`t30_rederive_b03_b04.py`, `t36_rederive_check.py`,
+    172  amount **6.00** — not `EMI × 6` [VERIFIED: `EmiAdjustment.java:31-36`, `Money.java:220-222`]. It
+    182  (`out/` = the original HALF_EVEN run, `t36/out/recapture-gerege/`, `t76/out/recapture-gerege/`), all
+    201  * The two-set count check corroborates: T36's transcript has **21** PASS lines, T76's has **22** —
+    226  `CANARY_EXPECT=20925.05` [VERIFIED: `preconditions.sh:42`, and the `-`/`+` in the diff]. I ran the
+    230  $ CANARY_EXPECT=20925.04 CANARY_REQ=…/calc-pmode2-gerege.json sh t36/preconditions.sh default
+    266  $ CANARY_REQ=/tmp/tautology-req.json sh t36/preconditions.sh gerege
+    288  constant `2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154` and `bad` on mismatch.
+    293  ### ❌❌ P0-T77-2 — the fail-the-run gate in `t36/recapture.sh` is **unreachable**. Demonstrated live.
+    317  $ … sh t36/preconditions.sh default >stdout 2>stderr ; echo $?
+    322  $ TENANT=default sh t36/recapture.sh ; echo $?
+    338  this myself mid-review: a `cat` of what I thought was T36's transcript returned my own run's
+    355  negative run — `TENANT=default sh t36/recapture.sh` must exit non-zero and capture nothing.
+    357  ### ✅ Attacks A and D — real, and correctly attributed to T36
+    409  | B-01's product is ACT/ACT, so a truthful transcription lands outside the graded domain | **YES** | `daysInYearType: 1`, `daysInMonthType: 1` [V
+    449  headline finding says T36 closed two fires ago.
+    478  enabled — unchanged from what T22/T36/T76 all recorded [VERIFIED: `psql`].
+    495  parity 36 PASS / 0 FAIL · refusal 4 PASS · self-test 1 PASS
+    524  `2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154` and `bad` on mismatch. Then
+    527  2. **P0-T77-2. Make `t36/recapture.sh` actually fail the run.** Its ABORT at `:30-33` is unreachable
+    531  negative run — `TENANT=default sh t36/recapture.sh` must exit non-zero and capture nothing.
+
+.softhouse/reviews/T9-harness-and-vectors-review.md  (10)
+    221  `P-01` **ACCEPTED**. `P-MNT-50M` (36 periods, 50 M, 16.8 %) likewise reproduces all 36 periods.
+    294  P-MNT-50M    36   177766355 177766351   4     18        no
+    305  `MNT 127,704 / 36 × 16.8 %` (total interest 35,746.56 vs 35,746.69). **Neither was captured and
+    473  // LoanSchedulePlanDisbursementPeriod.java:25-36
+    480  @Override public Integer periodNumber() { return null; }  // :34-36
+    496  override span `:25-36`.
+    532  | **F-2** | **P1** | The EMI re-adjust smoothing loop (`ProgressiveEMICalculator.java:1258-1309`, guard `EmiAdjustment.java:31-44`) — which DEC-1
+    538  | **F-8** | **P2** | Documentation precision in `P-03`'s transcription note: `LoanSchedulePlanDisbursementPeriod` is a Lombok `@Data final class`
+    576  (`MNT 1,014,632 / 6 × 7.0 %` and `MNT 127,704 / 36 × 16.8 %`), so the EMI smoothing loop is graded
+    593  → `:25-36`) and the `LEVEL-INSTALLMENT-…` description (the oracle adjusts the last unpaid period's
+
+.softhouse/reviews/driver-rederivation-20260820-140000.md  (1)
+     97  | `.softhouse/conformance.sh` | **exit 0** — 36 parity PASS / 0 FAIL, 4 contract-refusal PASS, 1 self-test PASS, **4034 graded cells**, 72 ungrad
+
+.softhouse/reviews/driver-rederivation-20260820-170001.md  (4)
+     20  | T22 **P0-4** (preconditions must FAIL the run) | T36 `c3bbf26` | **CONFIRMED** — commit subject *"Path B fail-the-run preconditions (T22 P0-4),
+     21  | T22 **P0-6** (re-point at a production-settings tenant) | T36 `fab040a`, `60c08ad` | **CONFIRMED** — *"re-capture B-01..B-04 on production-sett
+     22  | T22 **P0-3** (machine-readable attestation sidecar) | T36 `78c5bda` | **CONFIRMED** — *"attestation sidecar (T22 P0-3) read live from server+Po
+     38  T36 ran, and nothing updated it when they did. Both are corrected this fire.
+
+.softhouse/reviews/t24-probe/README-PROVENANCE.md  (5)
+     44  `main` (`.softhouse/capture/pathb/out/B-0*-raw.json`). Its attestations are **stale by standard** — T42's
+     45  eight-point rule has since changed what an attestation must say, and T35/T36 produced their own
+     46  (`.softhouse/capture/pathb/t36/attest.py`, `preconditions.sh`, `mutation-test.sh`,
+     47  `.softhouse/capture/src/run-pass3b.sh`). Merging a stale attestation over T36's would be a **regression**,
+     48  and its `Capture3.java` is a *modification* of a file T35/T36 later rewrote. The branch is **kept on
+
+.softhouse/tasks.json  (47)
+    314  "note": "Run gate \u2014 must PASS before the run completes. || cloud fire 20260817-2000: dependencies extended to T3b and T17 - the re-review an
+    333  "note": "DECISION GATE \u2014 not a cutover; cutover is a later, separate gate. || fire 20260820-140000: CLOSED - ACCEPTED by the driver as gate 
+    499  "note": "Raised fire 20260818-152328. Contract-independent: audits RAW observed capture. Next fire should run this first - pass 3 is the corpus a
+    539  "note": "Raised fire 20260818-173900. A re-review after a REJECT is itself a reviewed step - DEC-1 must not be ratified on the drafter's own say-
+    579  "note": "Oracle-INDEPENDENT slice delivered by cloud catch-up fire cloud-20260818-2000 on branch softhouse/T25-corpus-corrections-oracle-indep (f
+    772  "id": "T36",
+    784  "note": "Raised by local fire 20260818-230002 (oracle REACHABLE). Path B / running-server side only, and the ONLY task this fire that mutates ref
+    785  "branch": "softhouse/T36-pathb-admissibility"
+    800  "note": "Raised by local fire 20260818-230002 (oracle REACHABLE). DEC-1 is at v6 and UNRATIFIED (gate G-1), so captures are stored in RAW OBSERVE
+    813  "T36",
+    823  "note": "Raised by local fire 20260818-230002 after T34 came back ACCEPTED WITH REQUIRED CHANGES (fifth consecutive re-review to find a new P0) a
+    853  "description": "T35 established that every fee and penalty in the entire committed corpus is 0.00, so the corpus has ZERO discriminating power ov
+    864  "T36"
+    875  "description": "Revision 7 landed and three capture tasks in the same fire produced findings it could not have known. Apply them. T39 N-1 (correc
+    896  "note": "Raised by local fire 20260819-080001 after T38/T39/T40 all landed. Revision 8 is the ratification candidate: once it is written, the nex
+    899  "id": "T42",
+    901  "description": "T39 N-3 found that the AMBIENT MoneyHelper MathContext is not the arithmetic in force on the Path A seam: forcing the tenant roun
+    917  "branch": "softhouse/T42-mathcontext-inforce",
+    918  "note": "Raised by local fire 20260819-080001 from T39 N-3/N-4. Path A throwaway containers preferred; the running server may be READ but not res
+    944  "title": "Independent audit of this fire's three capture sets (T39 periodRatio, T40 charges, T42 mathcontext)",
+    945  "description": "Three large capture sets landed in one fire and NONE has been independently audited, while every earlier capture pass was (T18 pa
+    959  "T42"
+    965  "note": "Raised by local fire 20260819-080001 (oracle REACHABLE). DISPATCHED 2026-08-19T01:20Z, isolation=worktree, model=opus; orchestrator WILL
+    990  "note": "Raised by local fire 20260819-080001 after the driver DECLINED to ratify revision 8. G-1 closes on revision 9 + ONE clean re-review. DIS
+    995  "description": "T44 found no synthesised number and no wrong conclusion, but three coverage claims that do not hold. Fix them AT THE SOURCE - the
+   1087  "description": "N46-1 (P1) and N46-3/T46-N1 (P2) are the same class of open leak: a rounding mode a porter would thread is actually taken from th
+   1110  "description": "T48 closed the charge gaps reachable with the products already on the gerege tenant and left exactly two that need a NEW product 
+   1174  "note": "Raised by local fire 20260819-140003. v10 state = ab861fa689d0c484077fe73b26084a1351c6dc2a. DISPATCHED, isolation=worktree, model=opus; 
+   1196  "note": "Raised by local fire 20260819-140003. DISPATCHED, isolation=worktree, model=opus; orchestrator WILL await it and verify mechanically rat
+   1217  "note": "Raised by local fire 20260819-170001. ORACLE-ONLY work no cloud fire can do. Precondition for ever promoting the ACT/ACT arm to a parity
+   1256  "note": "Raised by T9 finding F-2 (P1), fire 20260819-200001. ORACLE-ONLY WORK - only a fire that reaches the live reference oracle can do it, wh
+   1275  "note": "Raised by T11, fire 20260819-200001. PART 1 NEEDS NO ORACLE: promote the 8 T39-P0-A..H drift shapes already captured at (19, HALF_UP) an
+   1295  "note": "Raised by T11 findings F-1 (P1) and F-2 (P2), fire 20260819-200001. NEEDS NO ORACLE - runnable on any fire. DRIVER CORRECTION TO T11'S W
+   1368  "description": "Paired independent reviewer for T59, required by plan-gate rule 1 (every coder task has a reviewer depending on it). Central ques
+   1406  "note": "REQUIRES THE ORACLE - local fire only. Raised by T59 backlog items 2 and 3, fire 20260820-080002. Not dispatched this fire because T61 a
+   1449  "note": "REQUIRES THE ORACLE for item 1 - local fire only. Raised by T63, fire 20260820-080002. T63's third unsettled item, TestT63B (stride-boun
+   1488  "note": "Added by fire 20260820-110001. Every prior fire that promoted vectors without an independent capture audit (T21/T22/T27/T44 precedent) f
+   1529  "note": "Raised by the driver, fire 20260820-140000, on confirming T66 settled the exact step the marker names. NEEDS NO ORACLE. HIGH RISK OF THE
+   1568  "note": "Raised by the driver, fire 20260820-140000, after T71 REJECTED T70. NEEDS NO ORACLE. This is the FOURTH draft of a rule on this comment 
+   1594  "description": "ORACLE-ONLY. Two deliverables. (A) THE MONEY-MOVING GAP. T21 P1-8 records that the Path A harness gives CurrencyData.inMultiplesO
+   1607  "note": "Raised by the driver, fire 20260820-170001. Supersedes the parked Path A slice of T25. ORACLE REQUIRED and reachable this fire. Shares t
+   1628  "note": "Paired reviewer for T74, required by the plan gate. Raised by the driver, fire 20260820-170001. || fire 20260820-170001: DONE. VERDICT A
+   1646  "note": "Raised by the driver, fire 20260820-170001. Supersedes the parked Path B slice of T25. ORACLE REQUIRED and reachable this fire. Shares t
+   1668  "note": "Paired reviewer for T76, required by the plan gate. Raised by the driver, fire 20260820-170001. || fire 20260820-170001: DONE. VERDICT R
+   1712  "description": "Branch off softhouse/T76-pathb-gerege-recapture to preserve everything T77 confirmed (the third re-capture, the money, the promot
+   1748  "description": "T75 APPROVED T74 and merged it; these are follow-ups, none touching a number in a vector. E-1 (MATERIAL): run-pass3i.sh precondit
+   1808  "description": "Spawned fresh without planning context. Read the upstream handoff from the BRANCH and `git diff main...<T80 branch>` with three d
+
+.softhouse/vectors/PIN.json  (1)
+     43  "T42-CAL",
+
+.softhouse/vectors/README.md  (9)
+     71  The store holds **42 promoted parity vectors** (all in `loanschedule/`, all
+     74  42 parity PASS, 0 FAIL, 0 refused, 0 inadmissible, 5,576 cells graded, 84 ungraded,
+     78  The last six promotions are task **T74**'s `T74-E-*` — the `36 x 16.8 %` shape at
+     83  digits instead of the ratified 19 was **caught by two of the previous 36** — `P-01`
+     85  loans — and is caught by **eight of 42** now, six of them at principals under seven
+     88  triple, **not** a magnitude property — the same `36 x 16.8 %` shape at MNT 50,000,000
+    308  separating precision 19 from 12, or HALF_UP from HALF_EVEN (29 of 36 periods agree
+    309  at all of them; precision **8** does separate, 22 of 36). The harness prints this
+    580  not a convenience: all 36 promoted parity vectors withdraw exactly those two cells,
+
+docs/adr/DEC-1-schedule-generator-adapter.md  (70)
+     52  - **§3.1 and §4.1 are byte-identical across revisions 10, 11 and 12** — sha256 `42b978e2abb9` (3,592 chars)
+     90  - **Revision 12 (task T54) is a DOCUMENTATION-ACCURACY PASS ON REVISION 11, and it is the narrowest pass in this document's history.** It applies
+    105  **N46-1 — a SECOND ambient-`MathContext` leak, and the first one REACHABLE at MNT's scale (§4.1.2, §4.5.1, §8 item 9(h), §9, `contract.go`).** Th
+    117  **P1-T43-2 (§4.1.2, §4.1, `contract.go`) — an exhaustiveness claim that was not exhaustive, for the second time.** §4.1.2 said the ambient `Money
+    127  **P0-T34-1 is settled by OBSERVATION (§4.1.1, §4.3.1, §4.3.2, §8 item 3e, §9).** Revision 7 corrected the multiplier from source and recorded, ho
+    130  **P1-T39-1 — the finding that COSTS this document something (new §4.1.2, §4.1, §5, §8 items 1 and 2, §9).** T39 forced the tenant `RoundingMode` 
+    133  **Task T42's results landed on `main` while revision 8 was being written, and revision 8 FOLDS THEM IN rather than shipping a prediction it could
+    138  - **Revision 7 (task T38)** applies the one P0, two P1s and one P2 required by independent re-review T34 (`.softhouse/reviews/T34-DEC-1-v6-rerevi
+    222  *Observed*, reflectively, at the production `MathContext` (19, HALF_UP): feeding the record `installmentAmountInMultiplesOf = 999` and `daysInYea
+    359  **Revision 7 stopped there and said the difference "can only become live under `DaysInMonthType.ACTUAL`". Re-derived here in full, it cannot beco
+    433  T44's earlier sweep is a **subset of this one by construction**: over **59,130** `(ScheduleStartDate, repayment period)` pairs across 1,095 start
+    471  **How wide, and how much money — every figure a re-derivation.** Over every same-month `(ScheduleStartDate, Disbursement.Date)` pair §3.1 admits,
+    477  **What task T39 then observed on the pinned reference oracle.** Sixteen captures, one run, Path A, at attested threaded `(19, HALF_UP)` except on
+    479  **The month-end special case of step B is OBSERVED to be live and load-bearing, and it is a SEPARATE question from the multiplier** (revision 8, 
+    514  - **Precision — witnesses the AMBIENT context, and the code constant behind it.** `javap -p -constants` over `BOOT-INF/lib/fineract-core-1.16.0-S
+    515  - **Mode — two of the three readings witness the AMBIENT context; the third witnesses arithmetic, on the path it ran on.** Read three independent
+    516  - **Provenance of the binary.** The image's own `git.properties` reports commit `426a23544e8426a38ae43ae404670a0a7e85b9eb` with **`git.dirty=fals
+    520  **There is no size threshold.** *Observed*: the oracle's own 12-vs-19 pair diverges at a principal of **4.00** on a 36-period 16.8 % shape and is
+    522  **One mode, not three.** The oracle takes every tie rule from one of two places — the threaded `MathContext` where one is passed, and the tenant-
+    524  **Adapter obligation, widened.** The Fineract-JVM adapter must initialise the tenant rounding mode to `Rounding.Mode` before **every** call — not
+    530  Revision 7 cited T35, T36 and T37 attestations for the production `MathContext`, and several of
+    569  [`:42`] **before** the currency-scale `setScale` at [`:52`] runs.
+    575  - **The ambient-reading paths WITHIN `Money.java` — a closed set over one file, and revision 9 states it as such rather than as an "exactly these
+    592  - **And ONE site that is handed a `MathContext` and ignores it — revision 8 adds this from task T42, and revision 8's own §4.1.2 draft missed it.
+    595  > The list above is a **porter's hazard list over `Money.java`**: these are the constructions in that file whose rounding a Go port must not assu
+    597  **This is the stronger form of the argument and revision 9 adopts it deliberately**, because the enumeration has now had to widen twice — once fr
+    601  > **WHICH `MathContext` scales a value to the currency's decimal places is decided by the CONSTRUCTION, never by the arithmetic that produced the
+    603  **That form is deliberate and revision 10 states why.** It is a rule a porter applies at a call site, not a claim about a program; it cannot be f
+    605  - **A second family of ambient-mode reads outside `Money.java`, recorded so the next reader does not re-derive it** (task T46's `T46-N1`; **CONFI
+    610  T39 observed it inert on 16 of 16, and T42's absence test then showed it is not read at all.
+    623  HALF_UP-versus-HALF_EVEN observation (`20,925.05` versus `20,925.04`) and T36's and T40's
+    633  **This rule was written FALSIFIABLE, and task T42 then ran the test. T42's results landed on `main` while revision 8 was being written, and revis
+    635  - **(P1) An ambient-only change moves no cell of any in-graded-domain Path-A capture.** **CONFIRMED AND STRENGTHENED.** T39 observed it inert on 
+    636  - **(P2) A threaded change moves cells wherever a tie occurs.** **CONFIRMED.** 15 of 16 [T39]; T42 measured 18–24 cells per shape on 11 of its 13
+    637  - **(P3) On Path B an ambient-only change DOES move money.** **CONFIRMED, and the mechanism is better than predicted.** T42 ran the two wirings s
+    638  - **(P4) No in-graded-domain Path-A site reaches an ambient `Money` construction.** **CONFIRMED INSIDE THE GRADED DOMAIN — by T42's absence test,
+    639  - **(P5, T42's own, and it inverts the rule) On a 0-dp / `inMultiplesOf` shape the THREADED mode is inert and the AMBIENT mode moves 23 cells** —
+    644  should be read with this subsection in hand. Note separately, and do not confuse the two: T39 also found that threaded precision **12 and 19 are 
+    696  **A second smoothing pass exists, fires inside the graded domain, and is a Go-module obligation (P0-1, corrected in revision 3).** `checkAndAdjus
+    701  - **MNT 127,704 / 36 × 16.8 %** — oracle total interest **35,746.56**, the no-loop model **35,746.69** — a 0.13 divergence in a document that gra
+    761  # 2. Guard — all three conjuncts.                     :1267-1269, EmiAdjustment.java:31-36
+    779  # 4. Candidate level installment.                              EmiAdjustment.java:42-44
+    831  **The loop is now pinned by OBSERVATION, not only re-derived** (revision 7, from task T36's Path-B work against the live reference oracle, `.soft
+    834  - **Six of the nine refute a no-loop model by one minor unit on every one of periods 1–11.** MNT **1,200,001** returns an observed level installm
+    837  **Two sub-behaviours of the loop remain unvectored, and revision 7 names them rather than letting them pass as covered** (T36's own `[UNVERIFIED]
+    876  **No new oracle observation was taken or implied**, and **no figure in this subsection is an observation**: the 2,855 / 2,156 / 699 counts from T
+   1040  **Provenance.** Re-derived by task T31 from the pinned checkout; the day-count proration added in revision 6 re-derived by task T33; the `periodR
+   1053  | `currency.inMultiplesOf` | `null` | Inert because the oracle applies it only when the currency has **zero** decimal places [`Money.java:48-51`]
+   1085  So: **ungraded by pass 3 and by the T37 binding set; graded by pass 3b and by Path B.** Since the pass-3b twelve are input-for-input identical to
+   1098  the `gerege` tenant at attested `MathContext(19, HALF_UP)`**, behind T36's preconditions script
+   1101  with the four digests T36 attested, byte for byte [VERIFIED: `.softhouse/capture/charges/`,
+   1191  - confirmed **by absence** as well as by difference: 42 of 42 and 35 of 35 uninitialised-ambient cases **threw**, while the three-argument `Money
+   1566  - **Representable domain**: the oracle's counterpart is an `Integer` count of **MAJOR** units [`LoanRepaymentScheduleModelData.java:36`, consumed
+   1671  **Two admissibility facts a ratifier should know — both moved this fire, and revision 7 restates them as they now stand.** First, the eleven prod
+   1673  **EIGHT capture sets now exist, and a ratifier should not confuse them.** **Revision 11 corrects "FIVE", which was stale in the paragraph written
+   1675  (a) The twelve Path-A pass-3 captures and their pass-3b re-emission — the corpus §5 tabulates. (b) The four Path-B server-path captures, plus T36
+   1717  1. **Promote the `(19, HALF_UP)` captures to the vector store.** **Re-scoped in revision 7: the prerequisites this item listed are DONE; only the
+   1718  2. **Server-path vectors for `InstallmentRoundingMultipleMinor`** on a tenant provisioned at `(19, HALF_UP)` with a Mongolian time zone, plus a m
+   1719  3. **Vectors that trip the EMI re-adjust guard INSIDE the graded domain** [`ProgressiveEMICalculator.java:1258-1308`, guard `EmiAdjustment.java:3
+   1720  **3a. A vector that separates the loop's ADOPTION TEST from its absence** — added in revision 4 on re-review T26's finding. **STATUS, revision 7:
+   1723  **3d. A vector whose single disbursement falls STRICTLY INSIDE a repayment period** — **broken out of 3c in revision 6** on re-review T32's recom
+   1724  **3e. A vector whose SCHEDULE START and DISBURSEMENT DATE sit on different month-end anchors** — **added in revision 7** on re-review T34's P0-T3
+   1726  **What revision 9 NARROWS, and it narrows in the document's disfavour** (capture audit T44, finding F39-1, corroborating revision 8's own probe f
+   1728  **Why this is a SEPARATE item and not a second reading of 3e** — the reason is measured, not stylistic. The two questions are **disjoint in shape
+   1737  **6c. A vector that discriminates threaded PRECISION 19 from 12** — added in revision 8 from task T42, superseding T39's N-4. Until T42 no captur
+   1738  **6a. The two UNVECTORED sub-behaviours of the EMI re-adjust loop** — added in revision 7 from task T36's `[UNVERIFIED]` list, which named them r
+   1742  9. **Charge captures — the corpus's oldest blind spot, now partly closed** (added in revision 8 from task T40). Twenty-one non-zero-charge schedu
+   1769  - **The two-rounding-context obligation, and it is a defect class a Go port INTRODUCES rather than inherits** (added in revision 11; §4.1.2, §4.5
+   1777  - The loop obligation is enumerated here so it cannot be met partially. **`n` throughout is `relatedRepaymentPeriods.size()` as §4.3.1 defines it
+   1780  - The **capture programme** must close §8 items 1 and 2 before any claim of production parity, and must never route an amount through a floating-
+
+docs/analysis/progressive-schedule-behavior.md  (3)
+     62  `[VERIFIED: /Users/buv/fineract/fineract-progressive-loan-embeddable-schedule-generator/misc/Main.java:42]`,
+    435  `[VERIFIED: /Users/buv/fineract/fineract-core/src/main/java/org/apache/fineract/portfolio/common/domain/DaysInYearType.java:36-40, 81-86]`
+    446  `[VERIFIED: /Users/buv/fineract/fineract-core/src/main/java/org/apache/fineract/portfolio/common/domain/DaysInMonthType.java:34-36, 75-80]`
+
+docs/analysis/tier0-vector-capture-plan.md  (3)
+    283  | 4 | 2024-03-01 | 2024-04-01 | `12.45`→`1245` | `0.42`→`42` | `12.87`→`1287` | `37.95`→`3795` | 127–129 |
+    761  A 36-month or 60-month declining-balance schedule — the ordinary Mongolian consumer-loan shape — is unpinned.
+    878  | **C-05** | §3.9 + §3.7 | precision 12 / `HALF_UP` | `2024-01-01`; **36** monthly; principal `MNT 20,000,000` → `2000000000`; rate `18.0`; `DAYS

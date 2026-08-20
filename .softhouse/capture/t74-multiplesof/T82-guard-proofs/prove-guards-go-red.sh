@@ -6,10 +6,22 @@
 # rewrote is exercised here against an input built to break it, and the transcript is committed
 # alongside (`TRANSCRIPT.txt`).
 #
+# EVERY CASE IS LABELLED WITH WHAT IT PROVES, because T87 rejected the first version of this rig for
+# a case that could not discriminate while printing that it had:
+#
+#   GUARD        the corrected code REFUSES an input that `main` ACCEPTS. Each is paired with a
+#                COUNTERPROOF run against main's REAL EXTRACTED BYTES — never a reconstruction —
+#                because "the new code refuses X" only demonstrates a cure alongside "the old code
+#                did not".
+#   CONTROL      the honest input must stay GREEN. A guard that fires on everything is as useless as
+#                one that fires on nothing.
+#   REGRESSION   both codebases agree and must go on agreeing. Proves the rewrite broke nothing;
+#                proves NOTHING about the defect, and says so.
+#
 # The mutations are applied to COPIES under `scratch/`. Nothing here writes to
 # `.softhouse/capture/src/run-pass3i.sh`, to `.softhouse/capture/out/`, or to any vector.
 #
-# NO ORACLE, NO DOCKER, NO DATABASE, NO CONTAINER. Committed artefacts only.
+# NO ORACLE, NO DOCKER, NO DATABASE, NO CONTAINER. Committed artefacts and `git show` only.
 #
 #   usage: bash prove-guards-go-red.sh
 # ---------------------------------------------------------------------------------------------
@@ -22,9 +34,18 @@ CAP="$ROOT/.softhouse/capture/out/capture-prod3i-raw.json"
 CF="$ROOT/.softhouse/capture/t74-multiplesof/build-counterfactuals.py"
 S="$HERE/scratch"
 DRIVER="$HERE/run-precondition-block.sh"
+PROMOTE="$HERE/prove-promote-guards.py"
 
 rm -rf "$S"
 mkdir -p "$S"
+
+# --- main's REAL bytes, for every counterproof -----------------------------------------------
+# T87's method, adopted: a counterproof against a RECONSTRUCTION of the old code proves less than
+# one against the old code. These are extracted from git, not rebuilt from a string literal.
+git -C "$ROOT" show main:.softhouse/capture/src/run-pass3i.sh        > "$S/run-pass3i-MAIN.sh"
+git -C "$ROOT" show main:.softhouse/handoff/T74-promote-vectors.py   > "$S/promote-MAIN.py"
+git -C "$ROOT" show main:.softhouse/capture/t74-multiplesof/build-counterfactuals.py \
+                                                                    > "$S/build-counterfactuals-MAIN.py"
 
 pass=0
 fail=0
@@ -53,12 +74,13 @@ expect() {
 echo "T82 guard proofs"
 echo "run-pass3i.sh          sha256 $(shasum -a 256 "$SRC" | cut -d' ' -f1)"
 echo "build-counterfactuals  sha256 $(shasum -a 256 "$CF" | cut -d' ' -f1)"
+echo "promote-vectors        sha256 $(shasum -a 256 "$ROOT/.softhouse/handoff/T74-promote-vectors.py" | cut -d' ' -f1)"
 echo "capture under test     sha256 $(shasum -a 256 "$CAP" | cut -d' ' -f1)"
+echo "main run-pass3i.sh     sha256 $(shasum -a 256 "$S/run-pass3i-MAIN.sh" | cut -d' ' -f1)   (git show main:)"
+echo "main promote-vectors   sha256 $(shasum -a 256 "$S/promote-MAIN.py" | cut -d' ' -f1)   (git show main:)"
 
 # ==============================================================================================
 # CONTROL — the committed artefact, unmutated, must still be GREEN.
-# A proof that only shows red is half a proof: a guard that fires on everything is as useless as
-# one that fires on nothing.
 # ==============================================================================================
 expect 0 "CONTROL — committed pass-3i capture through the corrected precondition block" -- \
   bash "$DRIVER" "$CAP" "$S/att-control.json"
@@ -66,12 +88,10 @@ expect 0 "CONTROL — committed pass-3i capture through the corrected preconditi
 # ==============================================================================================
 # E-1 / GUARD 17a — an id in EXPECTED_IDS that CASE_PRECISION does not register.
 #
-# This is the edit the guard exists to catch and the one the old form could not: someone adds a case
-# to the harness and to EXPECTED_IDS and forgets the precision table. Under the OLD form the table
-# was built by looping over EXPECTED_IDS, so the new id was silently registered from its own suffix
-# (19, because it does not end in `-p12`) and the run proceeded. Both halves are mutated here, script
-# AND capture, because that is what the real edit looks like: the harness emits the case, so the id
-# list matches and check 8 passes.
+# The edit the guard exists to catch and the one the old form could not: somebody adds a case to the
+# harness and to EXPECTED_IDS and forgets the precision table. Both halves are mutated, script AND
+# capture, because that is what the real edit looks like — the harness emits the case, so the id list
+# matches and check 8 passes.
 # ==============================================================================================
 python3 "$HERE/mutate.py" add-unregistered-case "$SRC" "$CAP" \
   "$S/17a-run.sh" "$S/17a-capture.json" > "$S/17a-mutation.txt" 2>&1
@@ -79,18 +99,17 @@ sed -e 's/^/  MUTATION: /' "$S/17a-mutation.txt"
 expect 1 "E-1 GUARD 17a — unregistered id must FAIL THE RUN (the claim that was unreachable)" -- \
   env T82_SCRIPT="$S/17a-run.sh" bash "$DRIVER" "$S/17a-capture.json" "$S/att-17a.json"
 
-# --- and the SAME mutation against the OLD, pre-T82 form of the guard, to show the fix is real ---
-python3 "$HERE/mutate.py" restore-old-table "$S/17a-run.sh" "$CAP" \
-  "$S/17a-old-run.sh" "$S/17a-old-capture.json" > "$S/17a-old-mutation.txt" 2>&1
-sed -e 's/^/  MUTATION: /' "$S/17a-old-mutation.txt"
-expect 0 "E-1 COUNTERPROOF — the SAME unregistered id through the OLD self-constructed table" -- \
-  env T82_SCRIPT="$S/17a-old-run.sh" bash "$DRIVER" "$S/17a-capture.json" "$S/att-17a-old.json"
+# --- COUNTERPROOF, against MAIN'S REAL BYTES ------------------------------------------------
+# The same mutation applied to `git show main:…run-pass3i.sh`. Not a reconstruction of the old
+# table — the old table itself.
+python3 "$HERE/mutate.py" add-unregistered-case "$S/run-pass3i-MAIN.sh" "$CAP" \
+  "$S/17a-main-run.sh" "$S/17a-main-capture.json" > "$S/17a-main-mutation.txt" 2>&1
+sed -e 's/^/  MUTATION: /' "$S/17a-main-mutation.txt"
+expect 0 "E-1 COUNTERPROOF — the SAME unregistered id through MAIN'S REAL pre-T82 bytes" -- \
+  env T82_SCRIPT="$S/17a-main-run.sh" bash "$DRIVER" "$S/17a-main-capture.json" "$S/att-17a-main.json"
 
 # ==============================================================================================
 # E-1 / GUARD 17b — a CASE_PRECISION entry this run does not capture.
-#
-# The other direction, and the reason the table is checked both ways: a stale entry is how a table
-# stops describing the run it is validating. Script-only mutation.
 # ==============================================================================================
 python3 "$HERE/mutate.py" add-stale-entry "$SRC" "$CAP" \
   "$S/17b-run.sh" "$S/17b-capture.json" > "$S/17b-mutation.txt" 2>&1
@@ -100,9 +119,6 @@ expect 1 "E-1 GUARD 17b — stale CASE_PRECISION entry must FAIL THE RUN" -- \
 
 # ==============================================================================================
 # E-1 / GUARD 17c — a case that runs at a precision the table does not name for it.
-#
-# The per-case half, inside the `bad` loop. Capture-only mutation: T74-E-P4 is registered at 19 and
-# is made to report 12.
 # ==============================================================================================
 python3 "$HERE/mutate.py" wrong-precision "$SRC" "$CAP" \
   "$S/17c-run.sh" "$S/17c-capture.json" > "$S/17c-mutation.txt" 2>&1
@@ -111,34 +127,38 @@ expect 1 "E-1 GUARD 17c — a case at a precision its table entry forbids must F
   bash "$DRIVER" "$S/17c-capture.json" "$S/att-17c.json"
 
 # ==============================================================================================
-# E-2 / GUARD 18 — the LIVE half of the misfiling check.
+# E-2 / GUARD 18 — the LIVE half of the misfiling check, BOTH directions.
 #
 # The two dead halves intersected `probe_ids` with its own complement and are gone. The half kept
 # compares two INDEPENDENTLY derived sets: ids that promise precision 12 by NAME, and ids OBSERVED
-# running below 19. To make them disagree, register a non-`-p12` case at 12 (script) and make it run
-# at 12 (capture) — so guard 17 is satisfied and guard 18 is the one that has to catch it. That is
-# exactly the "somebody adds an unnamed probe" edit the sidecar classification exists to prevent.
+# running below 19.
+#
+# (a) register a non-`-p12` case at 12 and run it at 12 — an unnamed probe;
+# (b) register a `-p12` case at 19 and run it at 19 — a name that promises a precision it does not
+#     run. Direction (b) was added after T87 exercised it and T82's rig had not.
+# In both, guard 17 is SATISFIED, so guard 18 is the one that has to catch it.
 # ==============================================================================================
 python3 "$HERE/mutate.py" unnamed-probe "$SRC" "$CAP" \
-  "$S/18-run.sh" "$S/18-capture.json" > "$S/18-mutation.txt" 2>&1
-sed -e 's/^/  MUTATION: /' "$S/18-mutation.txt"
-expect 1 "E-2 GUARD 18 — a probe that is not named \`-p12\` must FAIL THE RUN" -- \
-  env T82_SCRIPT="$S/18-run.sh" bash "$DRIVER" "$S/18-capture.json" "$S/att-18.json"
+  "$S/18a-run.sh" "$S/18a-capture.json" > "$S/18a-mutation.txt" 2>&1
+sed -e 's/^/  MUTATION: /' "$S/18a-mutation.txt"
+expect 1 "E-2 GUARD 18(a) — a probe that is not named \`-p12\` must FAIL THE RUN" -- \
+  env T82_SCRIPT="$S/18a-run.sh" bash "$DRIVER" "$S/18a-capture.json" "$S/att-18a.json"
+
+python3 "$HERE/mutate.py" named-probe-at-19 "$SRC" "$CAP" \
+  "$S/18b-run.sh" "$S/18b-capture.json" > "$S/18b-mutation.txt" 2>&1
+sed -e 's/^/  MUTATION: /' "$S/18b-mutation.txt"
+expect 1 "E-2 GUARD 18(b) — a \`-p12\` id that does NOT run below 19 must FAIL THE RUN" -- \
+  env T82_SCRIPT="$S/18b-run.sh" bash "$DRIVER" "$S/18b-capture.json" "$S/att-18b.json"
 
 # ==============================================================================================
 # E-3 — build-counterfactuals.py's rounding-mode predicate.
 #
-# The old predicate was the Python chained comparison
-#     ia[mode] != ib[mode] != 'HALF_UP'
-# which Python evaluates as (ia != ib) and (ib != 'HALF_UP'). When BOTH arms ran at the same
-# non-ratified mode the first conjunct is FALSE, so the whole thing is false and the guard PASSES —
-# and "both arms at the same non-ratified mode" is precisely the case the varying-inputs check above
-# it cannot catch, because a shared value does not vary.
-#
-# Three runs: the legitimate capture (must still pass), both arms at HALF_DOWN (must now fail), and
-# one arm at HALF_DOWN (the case the OLD predicate did catch, which must keep failing).
+# The old predicate was the Python chained comparison `ia[mode] != ib[mode] != 'HALF_UP'`, which
+# Python evaluates as `(ia != ib) and (ib != 'HALF_UP')`. When BOTH arms ran at the same non-ratified
+# mode the first conjunct is FALSE, so the guard PASSED — and that is precisely the case the
+# varying-inputs check above it cannot catch, because a value common to both arms does not vary.
 # ==============================================================================================
-expect 0 "E-3 LEGITIMATE — the committed capture, both arms HALF_UP, must still PASS" -- \
+expect 0 "E-3 CONTROL — the committed capture, both arms HALF_UP, must still PASS" -- \
   python3 "$CF" "$CAP" "$S/cf-legit.json"
 
 python3 "$HERE/mutate.py" both-arms-half-down "$SRC" "$CAP" \
@@ -147,6 +167,9 @@ sed -e 's/^/  MUTATION: /' "$S/e3-mutation.txt"
 expect 1 "E-3 GUARD — BOTH arms at the non-ratified HALF_DOWN must now FAIL" -- \
   python3 "$CF" "$S/e3-both-half-down.json" "$S/cf-both.json"
 
+expect 0 "E-3 COUNTERPROOF — the SAME both-arms capture through MAIN'S chained comparison" -- \
+  python3 "$S/build-counterfactuals-MAIN.py" "$S/e3-both-half-down.json" "$S/cf-both-main.json"
+
 python3 "$HERE/mutate.py" one-arm-half-down "$SRC" "$CAP" \
   "$S/e3b-run.sh" "$S/e3-one-half-down.json" > "$S/e3b-mutation.txt" 2>&1
 sed -e 's/^/  MUTATION: /' "$S/e3b-mutation.txt"
@@ -154,28 +177,58 @@ expect 1 "E-3 GUARD — ONE arm at HALF_DOWN must keep FAILING (no regression)" 
   python3 "$CF" "$S/e3-one-half-down.json" "$S/cf-one.json"
 
 # ==============================================================================================
-# D-1 / D-2 — the promotion script's derived fields and its absent-key handling.
+# D-1 — the promotion script's derived request fields.
 # ==============================================================================================
 expect 1 "D-1 GUARD — a capture whose daysInMonth/daysInYear are not 30/360 must be REFUSED" -- \
-  python3 "$HERE/prove-promote-guards.py" "$ROOT" day-count
+  python3 "$PROMOTE" "$ROOT" day-count
+
+expect 0 "D-1 COUNTERPROOF — MAIN accepts it and writes the hard-coded FIXED_30_360" -- \
+  python3 "$PROMOTE" "$ROOT" day-count "$S/promote-MAIN.py"
 
 expect 1 "D-1 GUARD — a capture with a NON-ZERO downPaymentPercentage must be REFUSED" -- \
-  python3 "$HERE/prove-promote-guards.py" "$ROOT" down-payment
+  python3 "$PROMOTE" "$ROOT" down-payment
+
+expect 0 "D-1 COUNTERPROOF — MAIN accepts it and writes the hard-coded {0, 1}" -- \
+  python3 "$PROMOTE" "$ROOT" down-payment "$S/promote-MAIN.py"
 
 expect 1 "D-1 GUARD — a capture with downPaymentEnabled true must be REFUSED" -- \
-  python3 "$HERE/prove-promote-guards.py" "$ROOT" down-payment-enabled
+  python3 "$PROMOTE" "$ROOT" down-payment-enabled
 
+# ==============================================================================================
+# D-2 — absence distinguished from a legitimate zero.
+# ==============================================================================================
 expect 1 "D-2 GUARD — a capture with NO repayment-every key at all must be REFUSED" -- \
-  python3 "$HERE/prove-promote-guards.py" "$ROOT" repayment-every-absent
+  python3 "$PROMOTE" "$ROOT" repayment-every-absent
+
+expect 0 "D-2 COUNTERPROOF — MAIN accepts it and writes a NULL repayment interval" -- \
+  python3 "$PROMOTE" "$ROOT" repayment-every-absent "$S/promote-MAIN.py"
 
 expect 1 "D-2 GUARD — a capture whose two repayment-every keys DISAGREE must be REFUSED" -- \
-  python3 "$HERE/prove-promote-guards.py" "$ROOT" repayment-every-conflict
+  python3 "$PROMOTE" "$ROOT" repayment-every-conflict
 
-expect 0 "D-2 CONTROL — a legitimate periodNumber of 0 must SURVIVE, not collapse into the fallback" -- \
-  python3 "$HERE/prove-promote-guards.py" "$ROOT" period-number-zero
+# --- THE headline D-2 guard: the case the `or 0` defect actually produced -----------------------
+# Added after T87's F-2: the rig shipped without ever exercising the one guard that cures `or 0`.
+expect 1 "D-2 GUARD — a PAYABLE row with an ABSENT periodNumber must be REFUSED (the \`or 0\` defect)" -- \
+  python3 "$PROMOTE" "$ROOT" period-number-absent-payable
+
+expect 0 "D-2 COUNTERPROOF — MAIN accepts it, writes installment_number 0 and promotes six vectors" -- \
+  python3 "$PROMOTE" "$ROOT" period-number-absent-payable "$S/promote-MAIN.py"
+
+expect 1 "D-2 GUARD — a NON-PAYABLE row that CARRIES a periodNumber must be REFUSED" -- \
+  python3 "$PROMOTE" "$ROOT" period-number-on-nonpayable
+
+expect 0 "D-2 COUNTERPROOF — MAIN accepts that too" -- \
+  python3 "$PROMOTE" "$ROOT" period-number-on-nonpayable "$S/promote-MAIN.py"
 
 expect 1 "D-2 GUARD — a non-integer periodNumber must be REFUSED, not coerced" -- \
-  python3 "$HERE/prove-promote-guards.py" "$ROOT" period-number-bad
+  python3 "$PROMOTE" "$ROOT" period-number-bad
+
+# --- REGRESSION control, honestly labelled -----------------------------------------------------
+# NOT a guard proof. `main` decided the VALUE with `or 0` and the WITHDRAWAL with a separate
+# `is None` test, so a recorded 0 already survived un-withdrawn there. This case is green on BOTH
+# codebases; the mode asserts that they emit the SAME cells rather than claiming they differ.
+expect 0 "D-2 REGRESSION — a legitimate periodNumber 0 stays green, and MAIN emits the SAME cells" -- \
+  python3 "$PROMOTE" "$ROOT" period-number-zero
 
 echo
 echo "=============================================================================="
