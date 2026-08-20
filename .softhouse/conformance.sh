@@ -28,7 +28,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 STORE_ROOT="$REPO_ROOT/.softhouse/vectors"
 NEXUS_DIR="$REPO_ROOT/nexus"
-CONTRACT_REL="nexus/internal/apps/loanschedule/contract/contract.go"
+# NO CONTRACT PATH CONSTANT LIVES HERE, DELIBERATELY. The frozen DEC-1 artefact is
+# named by .softhouse/vectors/PIN.json ("contract_file") and its bytes are checked
+# against PIN.json ("contract_sha256") by Go — admit.go VerifyContractDigest. A
+# second copy of that path in this script would be a second source of truth that
+# nothing keeps in step, and it read like a guard while enforcing nothing: the
+# CONTRACT_REL variable that used to sit on this line was assigned and never used.
+# Removed rather than wired up, because wiring it up would ADD an enforcement the
+# harness does not currently have and duplicate one it already has (T62).
 HARNESS_PKG="$NEXUS_DIR/internal/apps/loanschedule/conformance"
 CMD_PKG="./internal/apps/loanschedule/conformance/cmd/conformance"
 
@@ -568,6 +575,102 @@ prove() {
   printf '%s\n' "$out19a" | grep -E 'UNBACKED|monthend.reanchor|VERDICT'
   printf '%s\n' "$out19b" | grep -E 'monthend.reanchor|parity vectors|VERDICT'
   say ""
+
+  # 20. T60, closing finding T58-N2 — an unrecorded cell that a PROPERTY INVARIANT
+  #     reads. Proof 14 covers the CELL DIFF's half of unrecorded_fields and that
+  #     is the half that was never broken. The invariants' half is where the defect
+  #     actually lived: diffSchedule honoured the withdrawal, all six invariants
+  #     ignored it, and both read the SAME struct the replay had filled with
+  #     stand-ins. The dangerous form is silent — withdraw the FINAL row's
+  #     outstanding balance, the replay stands in 0, and 0 is precisely the value
+  #     principal_amortizes_to_zero looks for, so the rig printed
+  #     "principal_amortizes_to_zero  HOLD  final outstanding == 0" and exit 0 over
+  #     a number NOBODY OBSERVED. A check quietly agreeing with a placeholder it was
+  #     handed is worse than a red.
+  #
+  #     This class has now escaped twice (T58-N2 as a false red, T60 as the false
+  #     green above). T60 added a Go package test; --prove is what the driver
+  #     re-runs INSTEAD of reasoning, so the property is asserted here too.
+  #
+  #     The withdrawal is made through the store's OWN mechanism and not a side
+  #     channel: value emptied, major text emptied, the field named in
+  #     unrecorded_fields — exactly the three things admit.go demands of an honest
+  #     withdrawal (admit.go:722-818). outstanding_principal_minor on a REPAYMENT
+  #     row is deliberately NOT contract-fixed at 0 (registry.go
+  #     contractFixesCellAtZero), so the replay's 0 is a placeholder, not an answer.
+  #
+  #     THE TWO WRONG ANSWERS FAIL THIS PROOF FOR DIFFERENT, NAMED REASONS:
+  #       * FALSE HOLD — the pre-T60 rig. Mutation: registry.go stops declaring
+  #         placeholders (drop the placeholders.Add call, or return a nil
+  #         PlaceholderCells). The invariant then grades the stand-in, agrees with
+  #         it, and reports HOLD. Caught by the "[N/A]", "NOT ASSERTED" and
+  #         "NOT RUN" checks below, NOT by the exit code — the exit code stays 0,
+  #         which is the whole reason this proof exists.
+  #       * FALSE VIOLATION — the T58-N2 symptom. Mutation: invariants.go returns
+  #         InvariantViolated instead of InvariantNoData on the placeholder branch
+  #         of invPrincipalAmortizes. Caught by the exit-code check and by the
+  #         "reported VIOLATED" check.
+  #
+  #     NO LITERAL VECTOR COUNT IS ASSERTED (pattern P-7; a frozen count is what
+  #     went stale in proofs 8b and 19, finding D-6). The mutated run is scoped to
+  #     _selftest so it speaks only about the one cell this proof withdrew, and
+  #     every positive assertion is either per-vector or a ">= 1" regex. The
+  #     control run at the end is the anti-no-op guard: over the PRISTINE store
+  #     the same invariant must still be asserted and still hold, or "not asserted"
+  #     has simply become a way to switch a check off. It asserts hold >= 1 and
+  #     violated 0 — a property, which grows with the corpus instead of going stale.
+  local out20 rc20 out20c rc20c ok20 why20
+  mkdir -p "$tmp/unrecorded-invariant"
+  cp -R "$STORE_ROOT/." "$tmp/unrecorded-invariant/"
+  perl -0pi -e 's/"outstanding_principal_minor": "0",\n(\s+)"principal_major_text": "500\.00",\n(\s+)"interest_major_text": "0\.00",\n(\s+)"outstanding_principal_major_text": "0\.00",\n(\s+)"unrecorded_fields": \[\],/"outstanding_principal_minor": "",\n$1"principal_major_text": "500.00",\n$2"interest_major_text": "0.00",\n$3"outstanding_principal_major_text": "",\n$4"unrecorded_fields": ["outstanding_principal_minor"],/' \
+    "$tmp/unrecorded-invariant/_selftest/SELFTEST-01-two-period-zero-rate.json"
+  if assert_mutated "$tmp/unrecorded-invariant/_selftest/SELFTEST-01-two-period-zero-rate.json" \
+       '"unrecorded_fields": ["outstanding_principal_minor"]'; then
+    out20="$("$bin" -self-test "-store=$tmp/unrecorded-invariant" \
+             "-replay-store=$tmp/unrecorded-invariant" -context=_selftest 2>&1)"; rc20=$?
+    out20c="$("$bin" -self-test 2>&1)"; rc20c=$?
+    ok20=1; why20=""
+    note20() { ok20=0; why20="${why20}
+           * $1"; }
+
+    # --- the FALSE VIOLATION direction ---
+    [ "$rc20" = 0 ] || note20 \
+      "FALSE VIOLATION: the run exited $rc20, wanted 0. An invariant went RED on a cell nobody observed."
+    if printf '%s' "$out20" | grep -qF -- 'INVARIANT principal_amortizes_to_zero VIOLATED'; then
+      note20 "FALSE VIOLATION: principal_amortizes_to_zero was reported VIOLATED against a stand-in."
+    fi
+
+    # --- the FALSE HOLD direction. Per-vector, so no corpus count is involved:
+    #     an invariant has exactly ONE status per vector, and asserting it is N/A
+    #     on this vector excludes HOLD on this vector. ---
+    printf '%s' "$out20" \
+      | grep -qE 'SELFTEST-01-two-period-zero-rate .* principal_amortizes_to_zero \[N/A\]' || note20 \
+      "FALSE HOLD: principal_amortizes_to_zero did not report N/A for the vector whose final outstanding was withdrawn."
+    printf '%s' "$out20" | grep -qF -- \
+      'NOT ASSERTED: row 2: final outstanding == 0 cannot be asserted (outstanding_principal_minor never recorded by the capture' \
+      || note20 "no NOT ASSERTED line names the withdrawn cell, so a reader cannot tell the check stopped checking."
+    printf '%s' "$out20" | grep -qE 'invariant assertions +[1-9][0-9]* NOT RUN' || note20 \
+      "the summary counted ZERO skipped assertions while a cell the invariants read was a placeholder."
+
+    # --- the anti-no-op control, over the PRISTINE store ---
+    [ "$rc20c" = 0 ] || note20 "control: the pristine store no longer self-tests clean (exit $rc20c, wanted 0)."
+    printf '%s' "$out20c" | grep -qE 'principal_amortizes_to_zero +hold [1-9][0-9]* +violated 0' || note20 \
+      "control: principal_amortizes_to_zero is no longer ASSERTED over the pristine store — the fix has become a no-op."
+
+    if [ "$ok20" = 1 ]; then
+      say "PROOF OK   exit $rc20/$rc20c       T58-N2/T60: a withdrawn cell an invariant reads is NOT RUN, not a HOLD and not a VIOLATION"
+      pass=$((pass+1))
+    else
+      say "PROOF FAIL exit $rc20/$rc20c       T58-N2/T60: the unrecorded-cell path is not graded as claimed:$why20"
+      say "$out20"
+      say "$out20c"
+      fail=$((fail+1))
+    fi
+    printf '%s\n' "$out20" | grep -E 'principal_amortizes_to_zero|NOT ASSERTED|invariant assertions|VERDICT'
+    printf '%s\n' "$out20c" | grep -E 'principal_amortizes_to_zero|invariant assertions|VERDICT'
+    say ""
+  fi
+
   say "======================================================================="
   say "PROOFS: $pass passed, $fail failed"
   say "======================================================================="
