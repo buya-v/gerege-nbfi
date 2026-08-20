@@ -1,32 +1,41 @@
 {
   "squad": "loan-schedule",
   "run_id": "2026-08-17-run1-harness-schedule-poc",
-  "updated_at": "2026-08-18T08:15Z",
-  "updated_by": "local fire 20260818-152328",
-  "current_item": "T21 — independent audit of capture pass 3",
-  "step": "queued; not yet dispatched",
-  "branch": null,
-  "next_action": "Dispatch T21 (opus, worktree) as the FIRST task of the next fire. Pass 3 is the only production-settings corpus and is unaudited; it was generated from Capture2.java and inherits the defects T19 found. Then run T4's retry — every decision feeding DEC-1 is now answered.",
+  "context": "tier0-harness-schedule-poc",
+  "written_by": "local fire 20260820-140000 (/softhouse-program driver)",
+  "written_at_utc": "2026-08-20T08:15:00Z",
+  "exit_reason": "clean stop after a rejection - the retry is a substantive rewrite and the driver declined to start a worker it could not see through to review. NOT a token-limit checkpoint, NOT a failure.",
+  "workers_live_at_exit": 0,
+  "workers_dispatched_this_fire": 4,
+  "workers_completed_this_fire": 4,
+  "current_item": "T72 - retry of T70 after T71's REJECTED verdict",
+  "step": "planned, not dispatched",
+  "branch": "softhouse/T72-fui-marker-v2 (to be created, branching off softhouse/T70-fui-marker)",
+  "next_action": "Dispatch T72 (opus, isolated worktree) branching off softhouse/T70-fui-marker so T70's approved content is preserved - T69's precedent after T67 rejected T65. Then T73 (opus reviewer). Then T15. Then Tier A.",
   "blocked_on": null,
+  "gate_pending": null,
   "open_questions": [
-    "Does the orchestrator's claim that precision is load-bearing only above a size threshold survive an independent check? (T21)",
-    "Do the two dropped inputs behave the same at production settings (19, HALF_UP) as at 12? (T21)",
-    "Path B (server + PostgreSQL) capture is now a prerequisite for the parity corpus — who plans it, and does it belong inside Tier 0 at all? The orchestrator recommends NOT inside Tier 0."
+    "UNSETTLED, and nobody has settled it by reading: can emi_L go negative on an admissible shape? The :1214 recursion guard reduces EXACTLY to emi_L < 0 on the graded domain (totalCreditedAmount zero by T70's conditions (3) and (4) per RepaymentPeriod.java:357-359; totalPaidAmount zero; getEmi() at :1211 is the post-:1210 value), and the port encodes it verbatim at emi.go:1207. T70 raised it as F-2, T71 confirmed the reduction, and BOTH declined to close it. Settle by capture, not by argument.",
+    "F-1 follow-up: citation drift persists in T66.md and PASS3H-REPORT.md:141,143 (deepCopy :1226 -> :1224; the FUI write :1250 -> :1246; T66.md's residual assignment :1207 -> :1210). The driver corrected its OWN document this fire; T66's artefacts are untouched and are T72's follow-up to file, not to edit.",
+    "PASS3H-REPORT.md:141-143 is the upstream source of T71's R-4 ('entered on the real model once, at :747', which contradicts the :1214 recursion). Fix the sentence in emi.go; file the upstream document separately."
   ],
-  "gate_pending": "G-1 — ratification signature on the corrected DEC-1. Every decision feeding it is answered; T4 retry + re-review are the remaining agent work.",
-  "artefacts": {
-    "captures": [
-      ".softhouse/capture/out/capture-raw.json (pass 1, 9 captures, probes, audited T18)",
-      ".softhouse/capture/out/capture-tenant-raw.json (pass 2, 13 captures, probes, audited T19)",
-      ".softhouse/capture/out/capture-prod-raw.json (pass 3, 12 captures, PARITY CANDIDATES at (19, HALF_UP), UNAUDITED)"
-    ],
-    "reports": [".softhouse/capture/PASS2-REPORT.md", ".softhouse/capture/PASS3-REPORT.md"],
-    "reviews": [".softhouse/reviews/T18-capture-audit.md", ".softhouse/reviews/T19-capture-pass2-audit.md"],
-    "run_recipe": ".softhouse/capture/README-pass2.md (covers passes 2 and 3; pass 1 has NO committed recipe — T18 P0)"
-  },
-  "hard_rules_still_in_force": [
-    "No vector has been promoted to the store. Contract-shaped storage stays forbidden while G-1 is open.",
-    "Passes 1 and 2 are PROBES, not parity vectors — they ran at precision 12/8, which production never runs.",
-    "The capture seam honours 17 of the contract's 19 inputs. Never let a conformance PASS imply coverage of the other two."
-  ]
+  "tasks_nonterminal": [
+    {"id": "T2",  "status": "parked",       "why": "G-2 CLOSED-DECLINED; permanently parked. Specification of record is DEC-1 rev 12 + the parity corpus + T3b's re-review."},
+    {"id": "T12", "status": "done_partial", "why": "Rehydration half is a committed re-runnable assertion (.softhouse/bin/rehydrate-check.sh; this fire: 74 terminal tasks, none re-selected). THE MID-FLIGHT CHECKPOINT HALF IS STILL UNEXERCISED for a FOURTH fire running - all four workers dispatched this fire ran to completion. Do not mark done until that half runs."},
+    {"id": "T25", "status": "done_partial", "why": "Oracle-independent slice delivered; the parked P0s (T21 P0-2/3/4, P1-8/9/11; T22 P0-3/4/5/6) still need a live oracle and still block promotion. NOT attempted this fire: they touch .softhouse/capture/, which T66 held all fire, and two capture workers collide there."},
+    {"id": "T70", "status": "rejected",     "why": "T71 REJECTED, driver-confirmed. NOT MERGED; the diff is preserved on softhouse/T70-fui-marker for T72 to branch from."},
+    {"id": "T72", "status": "pending",      "why": "The retry. Fourth draft of a rule on this comment; third attempted after a rejection."},
+    {"id": "T73", "status": "pending",      "why": "Paired independent reviewer for T72. Not optional - this comment has been wrong three times."},
+    {"id": "T15", "status": "pending",      "why": "Archive. Blocked on T73: archiving now would freeze a marker that is BOTH stale (understates what T66 proved) AND, per T71, states a false reason in its replacement."}
+  ],
+  "conformance_at_exit": {
+    "exit_code": 0,
+    "parity_vectors": 36,
+    "graded_cells": 4034,
+    "prove": "21/21",
+    "self_test": 0,
+    "build_vet_test": "0/0/0",
+    "contract_digest": "matches PIN.json",
+    "note": "Unchanged all fire. T66 promoted no vector (correctly - pass-3h mechanism columns are not fields the frozen contract returns). T70's rejected diff is comment-only and would not have moved a cell either."
+  }
 }
