@@ -438,3 +438,62 @@ workaround produced a free cross-harness control; the underlying defect stays op
 > **Rule.** When the rig contradicts its own README, fix one of the two — do not adjust the artefact until
 > the contradiction is invisible. And prefer re-observing to exempting: an exemption is permanent, an
 > observation is evidence.
+
+---
+
+### P-9. A green corpus can be blind to the TENANT'S OWN ratified configuration
+
+**Fire `20260820-080002`, T61.** The parity corpus stood at 29 vectors and 2,354 cells, all PASS. The driver
+then applied one mutation to `roundHalfUpToInt` — the `HALF_EVEN` tie rule, which is **Fineract's stock
+default** — and re-ran the real harness:
+
+| `MONEY-QUANTIZATION-HALF-EVEN` | verdict |
+|---|---|
+| at 29 vectors | **PASS, exit 0**, 2,354 cells |
+| at 32 vectors | **FAIL, exit 1** — three vectors, margin 1 minor unit |
+
+So a Go port that **inherited the upstream default instead of reading Buyan's ratified `HALF_UP` tenant pin**
+matched the reference oracle on every graded cell. The corpus could not see it because a tie is a measure-zero
+event on an arbitrary lattice: you do not hit one by sampling ordinary loans, you hit one by *solving* for it.
+T61 got there by source algebra — at 21.6 % on this lattice, period-1 interest is `18·B/1000` minor units, an
+exact tie exactly when `B ≡ 250 (mod 500)` — and registered the prediction **one commit before the capture
+ran**, in falsifiable terms: *"if the oracle emits `18000.94` the prediction is WRONG and the ratified tenant
+rounding mode is not what we think."* The oracle returned `1800095`.
+
+> **Rule.** Every parameter the tenant configures is a place the port can silently inherit upstream's default
+> and still pass. For each one, the corpus needs a vector on which **the configured value and the default
+> disagree observably** — and for a rounding mode that means solving for an exact tie, not sampling. The
+> general question to ask of any green run: *which of our ratified settings would this corpus fail to notice
+> we had ignored?*
+
+### P-10. A performance test that grades a PROXY is green on the very defect it is named after
+
+**Fire `20260820-080002`, T59 → T63.** T59 wrote a wall-clock cost test, honestly measured it **flaky** under
+load (12.06x / 15.13x / 14.32x against a 16x quadratic figure, no safe threshold), and replaced it with a
+load-independent **allocation-count** ratio. Good engineering — and it moved the assertion onto a quantity the
+defect need not touch. T63 then found `TestGenerationCostIsNotQuadraticInTheTerm` is **green on a port that is
+quadratic, twice over**: `installmentNumberOf` rescans every emitted row inside the emission loop
+(`generator.go:459`, `:478-486`) — a Θ(n²) that **allocates nothing** — and the port has a timing cliff at
+n=2,000 that the test's two sample points (n=90, n=360) both sit below. *(Driver re-read the source and
+confirmed the rescan mechanism; the n=2,000 cliff stands as T63 measured it.)*
+
+> **Rule.** When flakiness forces a test onto a proxy metric, prove the proxy still discriminates — mutate in
+> the defect the test is named for and watch it go red. A test that cannot fail on its own subject is worse
+> than the flaky one it replaced, because it reports confidence instead of noise. And two sample points
+> cannot characterise a curve with a cliff.
+
+### P-11. The code can be RIGHT and its stated reason WRONG — and the reason is what the next contributor checks
+
+**Fire `20260820-080002`, T63 P1-2.** T59's memo is sound, over ~74,000 adversarially generated shapes with no
+divergence and no seventh unguarded write site. But its stated soundness rule — *"step i is a function of
+periods 0..i and of nothing later"* — is **false of the reference oracle**, which writes later→earlier in four
+places (`ProgressiveEMICalculator.java:1725-1739`, `:1258-1309`, `:1202-1203`, `:1243-1251`). The memo is
+sound for a different reason: it caches a pure function of *currently stored fields*, so the real condition is
+**every write to a fold input on period j is preceded by `invalidateFrom(j)`**.
+
+A correct implementation resting on a false rule is a latent defect with a delay fuse: the next contributor
+adds a write site and checks it against the rule that is written down.
+
+> **Rule.** Review the *justification* as a separate artefact from the code, and re-derive it from source.
+> "It works and the tests pass" does not establish that the reason given for why it works is true — and the
+> reason is the part that gets reused.

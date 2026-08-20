@@ -1362,11 +1362,11 @@
    "dependencies": [
     "T59"
    ],
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
    "branch": "softhouse/T63-review-memo-and-cancellation",
    "contract_independent": true,
-   "note": "Raised by the driver, fire 20260820-080002, on noticing T59 was a money-path coder task with no paired reviewer. NEEDS NO ORACLE."
+   "note": "Raised by the driver, fire 20260820-080002, on noticing T59 was a money-path coder task with no paired reviewer. NEEDS NO ORACLE. || fire 20260820-080002: DONE, merged. VERDICT ACCEPTED WITH REQUIRED CHANGES - P0: 0, P1: 2, P2: 2. Docs only: 2 files, ZERO lines of production code, as a review should be. THE MEMO IS SOUND AND CANCELLATION IS CORRECT - attacked over ~74,000 generated shapes with no divergence, no seventh unguarded write site; enumeration done mechanically from the WRITES (18 field assignments, 9 invalidateFrom sites) rather than from T59's count of six. Confirmed T59's NumberOfRepayments refusal was correct. It also WITHDREW ONE OF ITS OWN FINDINGS: it predicted the ctxCheckStride tail latency was O(n), measured 30 (term, deadline) combinations to n=50,000, found the worst tail 65.1ms, and recorded its own prediction as refuted and T59's claim as surviving. Two P1s remain open -> T65."
   },
   {
    "id": "T64",
@@ -1388,6 +1388,49 @@
    "attempts": 0,
    "contract_independent": false,
    "note": "REQUIRES THE ORACLE - local fire only. Raised by T59 backlog items 2 and 3, fire 20260820-080002. Not dispatched this fire because T61 already holds the capture rig and two capture workers would collide in .softhouse/capture/."
+  },
+  {
+   "id": "T65",
+   "title": "Apply T63's two P1s: the false memo justification, and the cost test that is green on a quadratic port",
+   "description": "P1-2 (do this one first, it is the delay fuse): T59's memo is SOUND but its stated soundness rule is FALSE of the reference oracle. 'Step i is a function of periods 0..i and of nothing later' is true of the fold but not of the computation - Fineract writes later->earlier at ProgressiveEMICalculator.java:1725-1739, :1258-1309, :1202-1203, :1243-1251. The real condition is: every write to a fold input on period j is preceded by invalidateFrom(j). Correct the comment to state the true rule, because the stated rule is what the next contributor will check a new write site against. P1-1: TestGenerationCostIsNotQuadraticInTheTerm is green on a port that IS quadratic, twice over - installmentNumberOf rescans every emitted row inside the emission loop (generator.go:459, :478-486), a theta(n^2) that ALLOCATES NOTHING while the test grades allocation counts; and the port has a timing cliff at n=2000 (63ms at n=500, 131ms at n=1000, 7.239s at n=2000) that the test's two sample points n=90 and n=360 both sit below. Fix the O(n^2) rescan (carry the counter instead of recomputing it) AND make the test discriminate - per P-10, mutate in the defect the test is named for and watch it go red before believing it.",
+   "agent_role": "coder",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "files_hint": [
+    "nexus/internal/apps/loanschedule/generator.go",
+    "nexus/internal/apps/loanschedule/emi.go",
+    "nexus/internal/apps/loanschedule/liveness_test.go"
+   ],
+   "context": "loan-schedule",
+   "dependencies": [
+    "T63"
+   ],
+   "status": "pending",
+   "attempts": 0,
+   "contract_independent": true,
+   "note": "Raised by T63, fire 20260820-080002. NEEDS NO ORACLE. Both are P1, neither is a money defect - conformance is exit 0 at 32 parity vectors and will NOT catch a regression in either, which is the whole point. Needs a paired reviewer per plan-gate rule 1 since it touches money-path files."
+  },
+  {
+   "id": "T66",
+   "title": "Settle T63's two unproven items: futureUnrecognizedInterest is not ported, and the per-iteration trial copy",
+   "description": "T63 could not settle these from source alone and labelled them UNPROVEN rather than reporting them as defects - both are pre-existing T10 issues, not T59 regressions. (1) futureUnrecognizedInterest (ProgressiveEMICalculator.java:1217, :1243-1251) is a genuine later->earlier flow and is NOT PORTED. Argued inert on the ordinary case, but 101 admitted shapes carry the necessary half of its precondition. Needs an ORACLE CAPTURE to settle. (2) The EMI smoothing loop's trial copy is allocated ONCE OUTSIDE the loop in Java (:1274-1276) and PER ITERATION in the port (emi.go:986); argued inert on single-disbursement schedules but stops being so under multi-tranche, which the corpus does not exercise.",
+   "agent_role": "test_writer",
+   "executor": "agent",
+   "model": "opus",
+   "target": "test",
+   "files_hint": [
+    ".softhouse/capture/",
+    ".softhouse/vectors/loanschedule/"
+   ],
+   "context": "loan-schedule",
+   "dependencies": [
+    "T63"
+   ],
+   "status": "pending",
+   "attempts": 0,
+   "contract_independent": false,
+   "note": "REQUIRES THE ORACLE for item 1 - local fire only. Raised by T63, fire 20260820-080002. T63's third unsettled item, TestT63B (stride-boundary differential), did not finish in budget and was reported as INCOMPLETE rather than as passing - re-run it if cheap."
   }
  ]
 }
