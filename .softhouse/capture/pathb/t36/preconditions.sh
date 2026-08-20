@@ -15,6 +15,14 @@
 # prohibited; assertions P5/P6/P7 below fail the run if any trace of them appears.
 set -u
 
+PCD=$(cd "$(dirname "$0")" && pwd)
+# The sha256 instrument, hardened by T99.  P14b's digest pin used the bare word `shasum`, resolved
+# through $PATH; a `shasum` earlier on $PATH that prints the pinned constant made the comparison a
+# tautology again AND LEFT NO DIFF TRACE.  sha256.sh resolves the tools by absolute path in
+# root-owned system directories, known-answer-tests each one, and requires two independent
+# implementations to agree.  See sha256.sh's header and t99/prove-f2.sh.
+. "$PCD/sha256.sh"
+
 TENANT=${1:-gerege}
 PIN_IMAGE=sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a
 PIN_COMMIT=426a23544e8426a38ae43ae404670a0a7e85b9eb
@@ -186,16 +194,31 @@ fi
 # substring.  Substring matching is what T77 defeated: grep -qF '"principal": 1162502.5'
 # also matches 1162502.55, which is not a tie, so the canary answered 20925.05 under both
 # HALF_UP and HALF_EVEN and the assertion became a tautology.  A digest has no prefix.
+#
+# THIRD ITERATION (T99).  A digest has no prefix, but `shasum` had no ADDRESS: T80 computed it with
+# a bare word resolved through $PATH, so a `shasum` earlier on $PATH that prints the pinned constant
+# restored the tautology — worse than before, because the rig now LOOKS hardened and the attack
+# LEAVES NO DIFF TRACE.  Reproduced against main's bytes in t99/out/f2-prefix-*.  The digest is now
+# computed by sha256.sh: absolute-path tools in root-owned system directories, each one
+# known-answer-tested every run, and two independent implementations required to agree.  The
+# instrument is an operand too, and a failure of the instrument is a BREACH, never a silent pass.
 canary_pinned=0
 if [ -z "$CANARY_REQ" ]; then
   bad "rounding-mode canary NOT run: CANARY_REQ is unset. Set it to the committed half-cent request (t22-audit/req/calc-pmode2-gerege.json, sha256 $PIN_CANARY_SHA256). A DB row is not proof of the mode in force."
 elif [ ! -f "$CANARY_REQ" ]; then
   bad "rounding-mode canary NOT run: CANARY_REQ='$CANARY_REQ' is not a readable file. A DB row is not proof of the mode in force."
+elif ! sha256_init; then
+  # T99: the INSTRUMENT is now an operand too.  If fewer than two independent, known-answer-tested
+  # sha256 implementations are available, this script does not know what a digest is and must not
+  # pretend the pin held.
+  bad "rounding-mode canary NOT run: the sha256 instrument is not trustworthy — $SHA256_ERROR. THE CANARY WAS NOT SENT and the effective rounding mode is UNPROVEN."
+elif ! sha256_file "$CANARY_REQ"; then
+  bad "rounding-mode canary NOT run: refusing to trust a digest of '$CANARY_REQ' — $SHA256_ERROR. THE CANARY WAS NOT SENT and the effective rounding mode is UNPROVEN."
 else
-  creqsha=$(shasum -a 256 "$CANARY_REQ" | cut -d' ' -f1)
+  creqsha=$SHA256_RESULT
   if [ "$creqsha" = "$PIN_CANARY_SHA256" ]; then
     canary_pinned=1
-    ok "canary request pinned by DIGEST COMPARISON: computed sha256 $creqsha == pinned sha256 $PIN_CANARY_SHA256 ($CANARY_REQ) — the exact half-cent tie, 1,162,502.50 x 0.018 = 20,925.045"
+    ok "canary request pinned by DIGEST COMPARISON: computed sha256 $creqsha == pinned sha256 $PIN_CANARY_SHA256 ($CANARY_REQ) — the exact half-cent tie, 1,162,502.50 x 0.018 = 20,925.045 [instrument: $SHA256_USED, absolute-path tools, known-answer tested, cross-checked]"
   else
     bad "canary request DIGEST MISMATCH — computed sha256 '$creqsha' for '$CANARY_REQ', pinned sha256 is '$PIN_CANARY_SHA256'. That file is NOT the pinned half-cent tie (principal 1,162,502.50 x 0.018 = 20,925.045 exactly). A request that is not an exact half-minor-unit tie answers the same under HALF_UP and HALF_EVEN, so grading it would certify nothing. THE CANARY WAS NOT SENT and the effective rounding mode is UNPROVEN."
   fi

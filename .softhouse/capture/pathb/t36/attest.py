@@ -47,14 +47,50 @@ OUT = os.environ.get('ATTEST_OUT') or os.path.join(
 # ATTEST_OUT cannot file a `default` capture under a `gerege` name.  (The emiloop set keeps
 # its historical directory name `out/emiloop`; it is stamped but not name-checked, and that
 # exception is recorded rather than papered over.)
+# T99: the name check used to run on os.path.basename(OUT) — the LEAF only — which is the same
+# defect recapture.sh carried: ATTEST_OUT=<...>/t36/out/recapture-default/sub-gerege has leaf
+# `sub-gerege`, matches `*-gerege`, and files a gerege attestation inside the default tenant's
+# capture directory.  The path is now RESOLVED (symlinks and `..` collapsed) and checked for
+# containment and SHAPE as well as leaf name, exactly as recapture.sh does.  The emiloop set keeps
+# its historical exemption from the LEAF rule only — containment, shape and the no-nesting rule
+# apply to every capture set, because none of them is about the directory's name.
+_PATHB_ROOT = os.path.realpath(PATHB)
+_out_r = os.path.realpath(OUT)
+
+
+def _abort(msg):
+    sys.stderr.write('ABORT: ' + msg + '\n')
+    sys.exit(1)
+
+
+if _out_r == _PATHB_ROOT or not _out_r.startswith(_PATHB_ROOT + os.sep):
+    _abort("output directory %r resolves to %r, which is not a capture directory inside the Path B "
+           "evidence tree %r." % (OUT, _out_r, _PATHB_ROOT))
+_parts = os.path.relpath(_out_r, _PATHB_ROOT).split(os.sep)
+if len(_parts) != 3 or _parts[1] != 'out' or not (
+        _parts[0].startswith('t') and _parts[0][1:2].isdigit()):
+    _abort("output directory %r resolves to %r, i.e. %r below the evidence tree. A capture "
+           "directory is exactly <task>/out/<name> — three components, <task> matching t<NN>. "
+           "Nesting a capture inside another tenant's capture directory is the mis-filing hazard "
+           "the leaf check was written to stop, and a fixed depth is what makes it impossible."
+           % (OUT, _out_r, os.path.join(*_parts)))
 if CAPTURE_SET == 'pathb':
-    _base = os.path.basename(os.path.normpath(OUT))
+    _base = _parts[2]
     if not (_base == TENANT or _base.endswith('-' + TENANT)):
-        sys.stderr.write(
-            "ABORT: output directory %r is not named for tenant %r. A capture must be filed "
-            "under the tenant it was taken from; refusing to write %r bytes into a directory "
-            "called %r.\n" % (OUT, TENANT, TENANT, _base))
-        sys.exit(1)
+        _abort("output directory %r is not named for tenant %r. A capture must be filed "
+               "under the tenant it was taken from; refusing to write %r bytes into a directory "
+               "called %r." % (OUT, TENANT, TENANT, _base))
+_anc = os.path.dirname(_out_r)
+while _anc != _PATHB_ROOT and _anc != os.sep:
+    _anc_stamp = os.path.join(_anc, 'CAPTURED-FROM-TENANT')
+    if os.path.isfile(_anc_stamp):
+        with open(_anc_stamp) as _fh:
+            _anc_tenant = _fh.readline().strip()
+        _abort("output directory %r is nested inside %r, which is itself a capture set taken from "
+               "tenant %r (see %s). A capture set is never written inside another capture set."
+               % (_out_r, _anc, _anc_tenant, _anc_stamp))
+    _anc = os.path.dirname(_anc)
+OUT = _out_r
 _stamp = os.path.join(OUT, 'CAPTURED-FROM-TENANT')
 if os.path.exists(_stamp):
     with open(_stamp) as _fh:
