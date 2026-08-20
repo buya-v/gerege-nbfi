@@ -307,10 +307,10 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     reading alone, and do not weaken the lapse list at the end.
 //
 //     PROVED -- from the pinned checkout 426a23544. Every line number below was
-//     re-opened at T70 and resolved to the method it lands in; four numbers that
-//     T66 and the driver's re-derivation carried (deepCopy :1226, the FUI write
-//     :1250, the residual assignment :1207, the guard loop :1163) are corrected
-//     here to :1224, :1246, :1205/:1210 and :1165.
+//     re-opened at T70 and resolved to the method it lands in; three numbers that
+//     T66's handoff, PASS3H-REPORT.md and the driver's re-derivation all carried
+//     (deepCopy :1226, the futureUnrecognizedInterest write :1250, the residual
+//     assignment :1207) are corrected here to :1224, :1246 and :1205 with :1210.
 //
 //     (a) THE DECISION RUNS ON A TILL-DATE-TRUNCATED DEEP COPY.
 //     calculateUnrecognizedInterestTillDateOnScheduleModelCopyAndDefer
@@ -378,10 +378,11 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     (P + I) - emi_f, so u_L = max(0, u_f - (P + I) + emi_f), which is 0 as soon
 //     as cdi_f <= P. CITE T66.md:100-108 FOR THIS STEP -- that is the general-f
 //     form -- and T66.md:110-115 for the bound. Do NOT cite PREDICTION.md's step
-//     (e): it states the sufficient condition as cdi_f <= P + emi_f WITHOUT the
-//     "emi_j = 0 for j < f" premise, so it is exact only at f = 0, and it now
-//     carries a dated CORRECTION block saying so [PREDICTION.md:107-110].
-//     Citing that form would import a known-incomplete statement.
+//     (e) at PREDICTION.md:100-105: it states the sufficient condition as
+//     cdi_f <= P + emi_f WITHOUT the "emi_j = 0 for j < f" premise, so it is exact
+//     only at f = 0, and it now carries a dated CORRECTION block saying so
+//     [PREDICTION.md:107-130]. Citing that form would import a statement known to
+//     be incomplete.
 //
 //     (f) SO THE CASCADE IS DEAD FROM L ON: u_L = 0 => cdi_(L+1) = 0 => u_(L+1) =
 //     0 => ... and getPeriodWithUnrecognizedInterest needs u > 0 STRICTLY AFTER L
@@ -463,16 +464,22 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     [:1708-1720 with :1830-1832]. Each adds a non-zero term to cdi_k that (c)
 //     assumes away.
 //
-//     (5) THE SEAM STAYS A PURE ORIGINATION CALL. :1160 has sixteen other call
-//     sites and every one belongs to a post-origination operation with a
-//     different tillDate: :247 tranche merge, :368 addBalanceCorrection, :380
-//     addOverdueBalanceCorrection, :404 payInterest, :442 payPrincipal, :505
-//     addCredit, :626 getOutstandingAmountsTillDate, :698
-//     recalculateScheduleModelTillDate, :868 changeDueDate, :879 and :937
-//     re-amortization, :1091 re-age attach, :2024 interest pause, :2129
-//     reAgeEqualAmortization, plus :1214 the self-recursion of (ii) and :1288 the
-//     smoothing loop's trial copy. This block is about :747 and about no other
-//     one of them.
+//     (5) THE SEAM STAYS A PURE ORIGINATION CALL. Besides :747, :1160 has sixteen
+//     call sites. FOURTEEN belong to post-origination operations, each with its
+//     own tillDate and none of them reasoned about above: :247 tranche merge,
+//     :368 addBalanceCorrection, :380 addOverdueBalanceCorrection, :404
+//     payInterest, :442 payPrincipal, :505 addCredit, :626
+//     getOutstandingAmountsTillDate, :698 recalculateScheduleModelTillDate, :868
+//     changeDueDate, :879 and :937 re-amortization, :1091 re-age attach, :2024
+//     interest pause, :2129 reAgeEqualAmortization [VERIFIED at T70: grep for the
+//     call and resolve each hit to its enclosing method]. The remaining TWO are
+//     internal to this same generate pass and are NOT covered by the observation:
+//     :1214, the self-recursion of (ii), and :1288, the smoothing loop's trial
+//     copy, which is reached from :749 and whose tillDate is
+//     relatedPeriodsFirstDueDate (:1278). T66 argues that (a)-(g) carry over to
+//     the trial because that date equals calculateFromRepaymentPeriodDueDate on
+//     the generate path; that is proof and NOT observation [T66.md ## Unverified].
+//     This block is about the :747 entry.
 //
 // So the memo does NOT cache the derivation of period i's state; it caches a pure
 // function of the model's CURRENT STORED FIELDS for periods 0..i. Every one of
