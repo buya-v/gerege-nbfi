@@ -1,0 +1,54 @@
+=================================================================== G-1
+GUARD: the call-through refuses when the hardened rig is absent, and says so BEFORE it
+       could have asserted anything.  The message 'PRECONDITIONS NOT RUN' must be TRUE AT
+       THE MOMENT IT PRINTS.
+
+-- GREEN first (rig present): expect exit 0 and 'ALL PRECONDITIONS HOLD'
+ALL PRECONDITIONS HOLD — tenant 'gerege' at MathContext(19, HALF_UP), PostgreSQL only.
+   exit=0
+
+-- RED (rig deleted): expect exit 2, no assertion made
+  FAIL  the hardened Path B precondition rig is missing: '/tmp/t91-guards.50255/export/.softhouse/capture/pathb/t36/preconditions.sh'
+PRECONDITIONS NOT RUN. DO NOT CAPTURE — nothing was asserted about the oracle.
+   exit=2
+
+-- RED through the T40 wrapper too (bin/run-preconditions.sh must propagate it)
+PRECONDITIONS_EXIT=2
+
+=================================================================== G-2
+GUARD: verdict.sh treats an EMPTY transcript set as an ERROR, not a pass.
+       'a check that passes vacuously on zero files' is the defect class this run keeps
+       finding, so it must not be reintroduced by the thing that checks for it.
+
+   exit=3   (expect 3)
+ERROR: zero transcripts in /tmp/t91-guards.50255/empty — a scan over an empty file set proves NOTHING.
+       (this is the vacuous-pass defect class; it is an error here, not a pass)
+
+=================================================================== G-3
+GUARD: shell-invariance.sh treats ZERO compared pairs as an ERROR.
+
+   exit=3   (expect 3)
+ERROR: compared ZERO transcript pairs — proves nothing.
+
+=================================================================== G-4
+GUARD: verdict.sh's greps are 'LC_ALL=C grep -a'.
+       A transcript with one stray non-UTF-8 byte must not be able to make the scanner say
+       the HALF_UP certification is ABSENT when it is present.
+
+   poisoned the certification line itself with an invalid multibyte sequence
+
+-- what /usr/bin/grep (BSD) does with and without -a:
+   BSD  -qF  rc=0
+   BSD -aqF  rc=0
+   MEASURED: on this machine BSD grep matched EITHER WAY.  T80 reported that BSD grep in a
+   UTF-8 locale matches nothing here; that did NOT reproduce for me and I do not repeat it
+   as fact.  What DID reproduce is below.
+
+   ugrep is not on PATH here; the ugrep limb was measured interactively and is reported
+   in the handoff.  Without -a it returned 1 ('absent') on this exact poisoned file.
+
+-- verdict.sh (with -a) on the poisoned set: must still name A2a as an admission
+A2a-mutated-canary-gerege.txt                  0      YES       no         ADMITS (printed the HALF_UP certification)
+A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+
+=================================================================== done
