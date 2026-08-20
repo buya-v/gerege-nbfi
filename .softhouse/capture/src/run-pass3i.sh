@@ -80,13 +80,21 @@
 #      the exact defect this pass exists to fix — those two cases collapse onto one another and this
 #      check goes red. A guard that cannot go red is decoration (pattern P-15), so this one is
 #      written to be falsified by the very regression it guards.
-#  17. ADDED BY PASS 3i, REPLACING A WEAKER CHECK — MathContext precision is validated against an
-#      EXHAUSTIVE per-id table, and an id absent from that table FAILS THE RUN. Pass 3h used
-#      `CAL_PRECISION.get(id, 19)`, which silently accepted 19 for any id nobody had registered.
-#      Pass 3i carries deliberate precision-12 companions, so a defaulted lookup would have let a
-#      probe be mistaken for a parity candidate.
-#  18. ADDED BY PASS 3i — every case whose id ends in `-p12` must be recorded in the sidecar as a
-#      DISCRIMINATION PROBE and must not appear under parityCandidateCaptureIds.
+#  17. ADDED BY PASS 3i, REPLACING A WEAKER CHECK — MathContext precision is validated against a
+#      HAND-WRITTEN per-id table, and an id absent from that table FAILS THE RUN, as does a table
+#      entry this run does not capture. Pass 3h used `CAL_PRECISION.get(id, 19)`, which silently
+#      accepted 19 for any id nobody had registered. Pass 3i carries deliberate precision-12
+#      companions, so a defaulted lookup would have let a probe be mistaken for a parity candidate.
+#      CORRECTED BY T82: pass 3i's first form BUILT the table from EXPECTED_IDS by id suffix, which
+#      is the same default one layer down and left the "unregistered id" exit unreachable. The table
+#      is now literal, so the exit is reachable and has been DEMONSTRATED red — see
+#      `.softhouse/capture/t74-multiplesof/T82-guard-proofs/`.
+#  18. ADDED BY PASS 3i — every case whose id ends in `-p12` must actually run below precision 19,
+#      and every case actually running below precision 19 must be named `-p12`; the sidecar records
+#      those as DISCRIMINATION PROBES, separately from parityCandidateCaptureIds. CORRECTED BY T82
+#      (T75 defect N4/E-2): two further checks here intersected `probe_ids` with `parity_ids`, which
+#      is DEFINED as the complement of `probe_ids` — empty by construction, dead by structure. They
+#      are removed; the falsifiable half is kept and demonstrated red.
 #
 # DEFECT CLASS DELIBERATELY AVOIDED (T22 P0-5, found on the Path B side): a shell glob in an output
 # path cannot expand against a file that does not exist yet, so `-o out/X-*.json` makes the tool
@@ -315,14 +323,73 @@ CALIBRATIONS = {
 # Pass 3h wrote `CAL_PRECISION.get(id, 19)`: an id nobody had registered silently defaulted to the
 # production precision and passed. Pass 3i deliberately carries precision-12 companions, so a
 # defaulted lookup would let a discrimination probe be validated as though it were a parity
-# candidate. This table is EXHAUSTIVE over EXPECTED_IDS and an unregistered id FAILS THE RUN.
-CASE_PRECISION = {'P-CAL': 12}
-for _id in EXPECTED_IDS:
-    if _id not in CASE_PRECISION:
-        CASE_PRECISION[_id] = 12 if _id.endswith('-p12') else 19
+# candidate.
+#
+# CORRECTED BY T82 (T75 defect N4). The first pass-3i form of this check BUILT the table by looping
+# over EXPECTED_IDS and filling every missing entry from the id's own suffix
+# (`endswith('-p12') -> 12, else 19`). That is the SAME DEFAULT pass 3h had, merely keyed on a string
+# suffix instead of on `.get`'s second argument — and it made `_unregistered` empty by construction,
+# so the `sys.exit` below was UNREACHABLE while the header advertised it as the fix. A guard that
+# cannot go red is decoration (pattern P-15), and a decoration that advertises itself as the cure for
+# defaulting is worse than the defaulting.
+#
+# The table is therefore WRITTEN OUT, one line per case, as `FIELD_SEPARATION` below already is.
+# There is no default and no derivation: an id present in EXPECTED_IDS but missing here FAILS THE
+# RUN, and an id registered here that EXPECTED_IDS does not carry FAILS THE RUN TOO — a stale entry
+# is how a table stops describing the run it is validating.
+CASE_PRECISION = {
+    # the nine rig calibrations. P-CAL reproduces the SHIPPED TEST's (12, HALF_UP); the other eight
+    # reproduce committed parity observations and therefore run at the production 19.
+    'P-CAL':                     12,
+    'P-CAL-P00':                 19,
+    'P-CAL-EMI6':                19,
+    'P-CAL-LATQ0a':              19,
+    'P-CAL-MNT50M':              19,
+    'P-CAL-DRIFTF':              19,
+    'P-CAL-ZPA':                 19,
+    'P-CAL-ZPB':                 19,
+    'P-CAL-MNT5M':               19,
+    # groups A-D, the multiples-of factorials and probes: all at the production precision.
+    'T74-A0-DP0-NONE':           19,
+    'T74-A1-DP0-CUR100':         19,
+    'T74-A2-DP0-INST100':        19,
+    'T74-A3-DP0-BOTH100':        19,
+    'T74-B1-DP2-CUR100':         19,
+    'T74-B2-DP2-INST100':        19,
+    'T74-B3-DP2-BOTH100':        19,
+    'T74-C1-DP0-CUR1':           19,
+    'T74-C2-DP0-CUR0':           19,
+    'T74-C3-DP0-CURNEG':         19,
+    'T74-C4-DP0-CUR7':           19,
+    'T74-C5-DP0-CUR1000':        19,
+    'T74-D0-DP0-SMALL-NONE':     19,
+    'T74-D1-DP0-SMALL-CUR1000':  19,
+    'T74-D2-DP0-SMALL-INST1000': 19,
+    # group E: each parity candidate at the ratified 19, each with a DELIBERATE precision-12
+    # companion. The pair is the counterfactual, so the 12 here is load-bearing, not incidental.
+    'T74-E-P4':                  19,
+    'T74-E-P4-p12':              12,
+    'T74-E-P59':                 19,
+    'T74-E-P59-p12':             12,
+    'T74-E-P72':                 19,
+    'T74-E-P72-p12':             12,
+    'T74-E-P340':                19,
+    'T74-E-P340-p12':            12,
+    'T74-E-P426':                19,
+    'T74-E-P426-p12':            12,
+    'T74-E-P6940':               19,
+    'T74-E-P6940-p12':           12,
+}
 _unregistered = [i for i in EXPECTED_IDS if i not in CASE_PRECISION]
 if _unregistered:
-    sys.exit("RUN FAILED: no expected MathContext precision registered for %r" % _unregistered)
+    sys.exit("RUN FAILED: no expected MathContext precision registered for %r. Add the case to "
+             "CASE_PRECISION by hand — there is deliberately no default, because a defaulted "
+             "precision is how a discrimination probe gets validated as a parity candidate."
+             % _unregistered)
+_stale = [i for i in CASE_PRECISION if i not in EXPECTED_IDS]
+if _stale:
+    sys.exit("RUN FAILED: CASE_PRECISION registers %r, which this run does not capture. A table that "
+             "outlives the cases it describes stops being a check." % sorted(_stale))
 
 # --- 16. ADDED BY PASS 3i: FIELD SEPARATION -------------------------------------------------------
 # The defect this pass exists to fix is that ONE harness field fed BOTH `CurrencyData.inMultiplesOf`
@@ -534,17 +601,30 @@ captures_digest = hashlib.sha256(canon).hexdigest()
 probe_ids = [c['id'] for c in caps if c['inputs']['mathContextPrecision'] != 19
              and c['id'] not in CALIBRATIONS]
 parity_ids = [c['id'] for c in caps if c['id'] not in CALIBRATIONS and c['id'] not in probe_ids]
-_misfiled = sorted(set(probe_ids) & set(parity_ids))
-if _misfiled:
-    sys.exit("RUN FAILED: %r are recorded as both discrimination probes and parity candidates" % _misfiled)
+
+# CORRECTED BY T82 (T75 defect N4 / E-2). Two checks stood here and BOTH were structurally dead:
+#
+#     _misfiled = sorted(set(probe_ids) & set(parity_ids))            # -> always []
+#     for _pid in probe_ids:
+#         if _pid in parity_ids: ...                                  # -> never true
+#
+# `parity_ids` is DEFINED one line above as "not a calibration AND NOT IN probe_ids". Intersecting a
+# set with its own complement is empty whatever the capture contains: no edit to the harness, to
+# CASE_PRECISION, to EXPECTED_IDS or to the capture JSON can make either fire. They asserted a
+# property of the two list comprehensions, not a property of the run — and a guard that cannot go red
+# converts "not checked" into "checked and fine" (pattern P-15). Removed rather than repaired,
+# because the property they were reaching for is already enforced, falsifiably, by the check below.
+#
+# THE LIVE HALF, KEPT. This one compares two INDEPENDENTLY DERIVED sets — the ids that PROMISE
+# precision 12 by their name, and the ids that were OBSERVED running below 19 in this capture's own
+# `inputs`. Nothing defines either in terms of the other, so they can disagree, and they do disagree
+# the moment CASE_PRECISION registers a non-`-p12` case below 19 or a `-p12` case at 19.
+# DEMONSTRATED RED by T82 — see `.softhouse/capture/t74-multiplesof/T82-guard-proofs/`.
 _p12_named = [c['id'] for c in caps if c['id'].endswith('-p12')]
 if sorted(_p12_named) != sorted(probe_ids):
     sys.exit("RUN FAILED: the cases named `-p12` are %r but the cases actually running below "
              "precision 19 are %r. An id that promises a precision it does not run is worse than "
              "no id at all." % (sorted(_p12_named), sorted(probe_ids)))
-for _pid in probe_ids:
-    if _pid in parity_ids:
-        sys.exit("RUN FAILED: discrimination probe %s is listed as a parity candidate" % _pid)
 
 logtext = open(logp, encoding='utf-8').read()
 moneylines = [l for l in logtext.splitlines() if 'MoneyHelper' in l]

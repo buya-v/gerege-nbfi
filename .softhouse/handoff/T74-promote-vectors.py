@@ -209,6 +209,135 @@ def rate(text):
     return {"numerator": num // g, "denominator": den // g}
 
 
+# --- CORRECTED BY T82 (T75 follow-up D-1 / D-2) ---------------------------------------------------
+# Four request fields were written from a constant or from a silent fallback although the capture
+# RECORDS the input. Each was correct for pass 3i's cases and would have been silently wrong the
+# first time a case differed — the defect only shows up as a vector that grades the wrong question,
+# which is the most expensive kind to find later. Each is now DERIVED from the capture, and the
+# derivation REFUSES anything it cannot account for rather than falling back.
+
+
+# `day_count` was the literal "FIXED_30_360" while the capture records daysInMonth / daysInYear.
+# The contract's own mapping, verbatim from contract.go:359-360:
+#     DayCountFixed30Over360 -> (DaysInMonthType.DAYS_30, DaysInYearType.DAYS_360)
+#     DayCountActualActual   -> (DaysInMonthType.ACTUAL,  DaysInYearType.ACTUAL)
+# Anything else is a convention this store has no name for, and a vector must not guess one.
+DAY_COUNT_BY_OBSERVED_PAIR = {
+    ("DAYS_30", "DAYS_360"): "FIXED_30_360",
+    ("ACTUAL", "ACTUAL"): "ACTUAL_ACTUAL",
+}
+
+
+def day_count(i, cid):
+    dim, diy = i.get("daysInMonth"), i.get("daysInYear")
+    if dim is None or diy is None:
+        sys.exit("%s: the capture does not record daysInMonth / daysInYear (%r / %r), so the "
+                 "day-count convention cannot be derived. This script will not assume one."
+                 % (cid, dim, diy))
+    custom = i.get("daysInYearCustomStrategy")
+    if custom is not None:
+        sys.exit("%s: daysInYearCustomStrategy is %r. A custom days-in-year strategy means the "
+                 "(daysInMonth, daysInYear) pair no longer describes the convention in force, and "
+                 "the frozen contract carries no field for it." % (cid, custom))
+    key = (dim, diy)
+    if key not in DAY_COUNT_BY_OBSERVED_PAIR:
+        sys.exit("%s: observed (daysInMonth, daysInYear) = %r, which is not a day-count convention "
+                 "the frozen contract names (contract.go:359-360 maps only %r). Refusing to write a "
+                 "day_count this capture does not support."
+                 % (cid, key, sorted(DAY_COUNT_BY_OBSERVED_PAIR)))
+    return DAY_COUNT_BY_OBSERVED_PAIR[key]
+
+
+def down_payment_percentage(i, cid):
+    """`down_payment_percentage` was the literal {0, 1} while the capture records the input.
+
+    A non-zero down payment is a DIFFERENT SHAPE, not a detail: it changes the first period's
+    principal. Promoting one under a hard-coded zero would produce a vector that grades a schedule
+    the request does not describe. So a non-zero observation is refused outright rather than
+    transcribed — pass 3i captured none, and the case for one belongs in its own pass.
+    """
+    if "downPaymentEnabled" not in i or "downPaymentPercentage" not in i:
+        sys.exit("%s: the capture does not record downPaymentEnabled / downPaymentPercentage; the "
+                 "request field cannot be derived and this script will not assume a zero." % cid)
+    enabled = i["downPaymentEnabled"]
+    pct = i["downPaymentPercentage"]
+    # Zero is decided by exact string inspection, never by float(). "0", "0.00", "-0.0" and "+0"
+    # are all zero; anything with a non-zero digit is not.
+    digits = str(pct).lstrip("+-").replace(".", "")
+    is_zero = digits != "" and digits.strip("0") == "" and digits.isdigit()
+    if enabled is not False or not is_zero:
+        sys.exit("%s: downPaymentEnabled=%r downPaymentPercentage=%r. This script promotes only "
+                 "the no-down-payment shape; a down payment moves the first period's principal and "
+                 "must be captured and promoted as a shape of its own." % (cid, enabled, pct))
+    return {"numerator": 0, "denominator": 1}
+
+
+def repayment_every(i, cid):
+    """`repayment_every` was `i.get("repaymentEvery", i.get("repaymentFrequency"))`.
+
+    Two silent fallbacks in one expression: if `repaymentEvery` is absent the second key is tried,
+    and if BOTH are absent the result is `None` — written into the vector as a null the store would
+    then have to interpret. Absence of the repayment interval is not a value; it is a broken capture.
+    """
+    present = {k: i[k] for k in ("repaymentEvery", "repaymentFrequency") if k in i}
+    if not present:
+        sys.exit("%s: the capture records neither `repaymentEvery` nor `repaymentFrequency`. The "
+                 "repayment interval is not defaultable — a vector with the wrong interval grades a "
+                 "different loan and passes." % cid)
+    vals = set(present.values())
+    if len(vals) != 1:
+        sys.exit("%s: `repaymentEvery` and `repaymentFrequency` disagree (%r). The capture cannot "
+                 "say which interval the oracle actually ran." % (cid, present))
+    v = vals.pop()
+    if not isinstance(v, int) or isinstance(v, bool) or v <= 0:
+        sys.exit("%s: repayment interval is %r; expected a positive integer." % (cid, v))
+    return v
+
+
+# Row kinds the frozen contract fixes at InstallmentNumber 0 because they are not payable.
+NON_PAYABLE_ROW_TYPES = {"DISBURSEMENT"}
+
+
+def installment_number(p, cid, idx):
+    """`installment_number` was `p.get("periodNumber") or 0`.
+
+    `or` collapses a LEGITIMATE 0 into the fallback, so an absent periodNumber and a periodNumber of
+    0 became indistinguishable — the P-15 shape. They are now distinguished: absence yields the
+    contract's normative 0 for a non-payable row AND is recorded in `unrecorded_fields`; a recorded
+    0 is transcribed as the observation it is, and is NOT recorded as unrecorded.
+
+    Absence is legitimate on exactly one kind of row and nowhere else, so the two are told apart by
+    the ROW TYPE and not by the value. `LoanSchedulePlanDisbursementPeriod` carries four fields and
+    its `periodNumber()` returns null, so the rig emits no key at all for a DISBURSEMENT row; every
+    payable row in this capture carries an int. [VERIFIED: 36 DISBURSEMENT rows with the key absent,
+    861 REPAYMENT rows with an int, in capture-prod3i-raw.json]
+
+    Returns (value, was_absent).
+    """
+    kind = p.get("type")
+    absent = "periodNumber" not in p or p["periodNumber"] is None
+    if kind in NON_PAYABLE_ROW_TYPES:
+        if not absent:
+            sys.exit("%s: period[%d] is a %s row but carries periodNumber %r. A non-payable row's "
+                     "installment number is fixed at 0 by the contract (contract.go:1509-1510); an "
+                     "observed one means the rig changed and the withdrawal below would be wrong."
+                     % (cid, idx, kind, p["periodNumber"]))
+        # The contract fixes a non-payable row's InstallmentNumber at 0 (contract.go:1509-1510).
+        # That is the contract's value, not this script's guess, and the cell is withdrawn below.
+        return 0, True
+    if absent:
+        sys.exit("%s: period[%d] is a payable %s row with NO periodNumber. The old form wrote 0 "
+                 "here via `p.get(\"periodNumber\") or 0` and moved on, which is a missing input "
+                 "wearing a legitimate value's clothes." % (cid, idx, kind))
+    pn = p["periodNumber"]
+    if not isinstance(pn, int) or isinstance(pn, bool) or pn < 0:
+        sys.exit("%s: period[%d] periodNumber is %r; expected a non-negative integer. This script "
+                 "will not coerce it." % (cid, idx, pn))
+    # A recorded 0 is transcribed as the observation it is and is NOT reported as unrecorded — that
+    # is the whole point of the correction.
+    return pn, False
+
+
 def main():
     if not os.path.isdir(VECTORS):
         sys.exit("run me from the repository root")
@@ -249,15 +378,16 @@ def main():
             sys.exit("%s: pathIdentity is not identical" % cid)
 
         periods = []
-        for p in obs["periods"]:
+        for idx, p in enumerate(obs["periods"]):
+            inst_no, inst_absent = installment_number(p, cid, idx)
             row = {
                 "kind": p["type"],
-                "installment_number": p.get("periodNumber") or 0,
+                "installment_number": inst_no,
                 "from_date": date(p.get("periodFromDate") or p["fromDate"]),
                 "due_date": date(p["dueDate"]),
             }
             unrecorded, over = [], []
-            if p.get("periodNumber") is None:
+            if inst_absent:
                 unrecorded.append("installment_number")
 
             pm, o = minor(p["principal"], digits)
@@ -376,12 +506,12 @@ def main():
                 "schedule_start_date": date(i["scheduleGenerationStartDate"]),
                 "disbursements": [{"date": date(i["disbursementDate"]), "amount_minor": amt}],
                 "number_of_repayments": i["numberOfRepayments"],
-                "repayment_every": i.get("repaymentEvery", i.get("repaymentFrequency")),
+                "repayment_every": repayment_every(i, cid),
                 "repayment_frequency_unit": i["repaymentFrequencyType"],
                 "annual_nominal_interest_rate": rate(i["annualNominalInterestRate"]),
                 "interest_method": i["interestMethod"],
-                "day_count": "FIXED_30_360",
-                "down_payment_percentage": {"numerator": 0, "denominator": 1},
+                "day_count": day_count(i, cid),
+                "down_payment_percentage": down_payment_percentage(i, cid),
                 "installment_rounding_multiple_minor": "0",
             },
             "expect": {
