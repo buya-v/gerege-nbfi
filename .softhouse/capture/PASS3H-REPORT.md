@@ -69,11 +69,20 @@ not merely near it.
 
 ## Attestation
 
-- run id `pass3h-20260820T062756Z`
+- run id `pass3h-20260820T063946Z` (the committed run)
 - captures canonical sha256 **`fdd751a209c9518b157ca6fd70aef06a91acff94953e1f8cc6c4d45162b90b73`**
   (stable across runs; the whole-file digest is not, because the attestation carries a
   timestamp)
-- `capture-prod3h-raw.json` sha256 `2bc9d00584fc2c394b330b8b9ce052ea79ccb49d1790c5dd1ca31241327c798c`
+- `capture-prod3h-raw.json` sha256 `4181400baf3bf5cc8b99cb85e5c02a0a79b42708a1dc4a7635d105149bb7610c`
+- harness `Capture3h.java` sha256 `08e002ea6da3e1c95ed2e3ae9d6d96af70031d3466cc534619e2b8884a605c6f`
+- **DETERMINISM CONTROL, free.** The pass was run **twice**: once at run id
+  `pass3h-20260820T062756Z` with harness sha256 `d620a8c1de31d6e68edd84256bd08b967b694f90762a63b6b398e10707cad39e`,
+  and again after that harness's file header was rewritten (a **comment-only** change — the
+  first draft had inherited pass 3f / task T64's rationale verbatim, a P-12 corrections
+  leak). Both runs produced the **identical captures canonical sha256**
+  `fdd751a209c9518b157ca6fd70aef06a91acff94953e1f8cc6c4d45162b90b73`, cell for cell across
+  all 18 cases and all 416 mechanism rows. The whole-file digests differ, as they must,
+  because the attestation carries a timestamp and the harness digest.
 - effective `MathContext` **(19, HALF_UP), RoundingMode ordinal 4** — the ratified
   production setting, asserted by the runner
 - stderr **empty** (`e3b0c442…b7852b855`, the sha256 of zero bytes)
