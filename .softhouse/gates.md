@@ -973,6 +973,19 @@ is not a stale column. **The Go port reproduces all 22 cell for cell, so there i
 
 ### Three corrections to what was previously recorded
 
+1. > **[CORRECTION — local fire `20260820-230001`, driver. THIS ITEM AS WRITTEN NAMES THE WRONG FAMILY.]**
+   > The sentence below says **Family A**. It should say **Family B**, and the error is the driver's, not
+   > T84's. The 761-cell / **0 cell diffs** grading is the **Family B** measurement: Family B is precisely
+   > the family where the Go port reproduces the oracle cell for cell, which is *why* the cell diffs are
+   > zero and *why* an invariant exemption alone can turn FAIL into PASS. **Family A cannot produce 0 cell
+   > diffs** — every Family A case diverges by exactly one cell, the final row's `outstanding_principal_minor`.
+   > Independently established twice: by **T100** (2,525 Family A cells, one diff each) and re-derived by
+   > **T101** (all 29 Family B cells → 25,751 graded cells, 0 cell diffs; all 312 Family A cells → exactly
+   > one diff each, on `main`'s current port). This is the gate's most decision-relevant sentence and it was
+   > recorded backwards; it is corrected here rather than left standing until the full rewrite lands.
+   > **Read the item below as applying to Family B.** The count `18` in item 3 is also wrong — see the
+   > second correction block after item 3.
+
 1. **Option (a) is reachable today on Family A, with no port change and no amendment.** Graded with the real
    `conformance.Run` and the real port: **without** the exemption, 761 cells, **0 cell diffs**, FAIL with two
    invariants violated; **with** the exemption, **PASS**. The earlier claim that exemptions are inert holds
@@ -981,6 +994,16 @@ is not a stale column. **The Go port reproduces all 22 cell for cell, so there i
    ordinary 30-year term** — and MNT 2.91 at 0.12 % / n=600, 11.6× the previously stated bound.
 3. **The closed form is a hypothesis and is falsified outside the sampled grid** (18 cells at the precision-19
    floor). T83 labelled it a hypothesis rather than a fact; that call was right.
+
+   > **[CORRECTION — local fire `20260820-230001`, driver.]** The refutation count is **22**, not 18, and
+   > the cause is a **float**. T101 adjudicated the dispute between T84 (18) and T100 (22) by recomputing
+   > from the raw captures in exact rational arithmetic, and ruled for **22**. The four missing cells are
+   > T84's own `T84-TIE-R600p0-*-B1` cells: T84's `prediction.json` stores `BtimesA` for them as the
+   > IEEE-754 float `0.5`, so a strictly positive residual of order 1e-20 read as an exact tie and the
+   > cells were scored as holding. **CLAUDE.md's no-float rule bound the port, the vectors and the
+   > fixtures; it did not visibly bind the ANALYSIS and PREDICTION scripts, and this is what that gap
+   > costs** — a float in a script that grades nothing still put a wrong number into the gate the product
+   > owner reads. Carried to `patterns.md` as a candidate pattern.
 
 ### What is being asked, and what no agent may do
 
