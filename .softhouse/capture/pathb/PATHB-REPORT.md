@@ -376,11 +376,30 @@ both closed and both demonstrated:
   would have printed *PASS effective rounding mode canary* while the JVM ran HALF_EVEN. The expectation is
   now a constant and an override attempt is itself a breach.
 - the canary REQUEST was pinned only by path. Any request that returns `20925.05` under **either** mode —
-  a principal that is not a half-minor-unit tie — degraded the strongest assertion into a tautology. The
-  request is now pinned **by content** (the four literals that make the tie) and its sha256 is printed.
+  a principal that is not a half-minor-unit tie — degraded the strongest assertion into a tautology. T76
+  pinned it "by content" (four literals) and printed a sha256.
 
-Four attack transcripts, all refused (`t76/out/`): `attack-A-default.txt` (wrong tenant, 5 breaches),
-`attack-B-expect-override.txt` (6), `attack-C-swapped-canary.txt` (non-tie canary), `attack-D-nocanary.txt`.
+**CORRECTION, T77 → T80.** The second bullet's closure was **false**, and the first bullet's transcript did
+not run the attack it named:
+
+- The "content pin" used `grep -qF` **prefix** matches and **printed** the sha256 without ever **comparing**
+  it. T77 changed one character (`1162502.5` → `1162502.55`, not a tie) and reached *ALL PRECONDITIONS HOLD,
+  exit 0* on `gerege` — and on the HALF_EVEN `default` tenant made the script print *PASS effective rounding
+  mode canary (= HALF_UP)*. **The strongest assertion in the rig certified HALF_UP on a HALF_EVEN JVM.**
+  T80 replaced it with a **digest comparison** against a literal in the script; on mismatch the canary is not
+  sent at all. Proved by `t80/out/attack-2a-…`, `attack-2b-…`, `attack-3a-…`.
+- T76's attack-B transcript ran a **decoy** variable (`CANARY_EXPECT_OVERRIDE`) and claimed 6 breaches;
+  T77 measured 5 running the command as captioned. T80's tripwire watches `CANARY_EXPECT` itself, and the
+  captioned command now really does produce **6** on `default` (`t80/out/attack-4a-…`).
+- Separately, the **caller** never enforced any of it: `recapture.sh` tee'd only stdout while every FAIL goes
+  to stderr, so its ABORT was unreachable — T77 took a full capture on the wrong tenant, past five breaches,
+  to exit 0, into a hard-coded `recapture-gerege` directory. T80 gates on the exit status, captures both
+  streams, and derives the output directory from the tenant actually used
+  (`t80/out/attack-1a-…`, `attack-1b-…`, `attack-1c-…`).
+
+Superseded T76 transcripts (`t76/out/`): `attack-A-default.txt` (wrong tenant, 5 breaches — still valid),
+`attack-B-expect-override.txt` (**decoy command, count not reproducible**), `attack-C-swapped-canary.txt`
+(**closure was false**), `attack-D-nocanary.txt` (still valid). Live transcripts: `t80/out/`.
 
 **3. A new invariant, I7, because the existing ten had a blind spot.** T22's checker is genuinely failable —
 one minor unit on `principalDue` trips I1/I5/S2, one on `totalDueForPeriod` trips I4/I5 — but a one-minor-unit

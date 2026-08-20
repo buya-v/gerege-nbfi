@@ -197,8 +197,8 @@ closures are demonstrated by an attack transcript rather than asserted:
 | attack | what it tried | result | transcript |
 |---|---|---|---|
 | A | capture on the stock `default` tenant | **exit 1, 5 breaches** (Kolkata, `rounding-mode=6`, HALF_EVEN in force, MySQL-era `schema_connection_parameters`, canary `20925.04`) | `t76/out/attack-A-default.txt` |
-| B | `CANARY_EXPECT=20925.04` — tell the script HALF_EVEN is what it should expect | **exit 1, 6 breaches**; the expectation is now a **constant**, and `CANARY_EXPECT_OVERRIDE` is a tripwire that fails on sight | `t76/out/attack-B-expect-override.txt` |
-| C | swap the canary for a request that is **not** a half-minor-unit tie (principal `1162502.78`), so `20925.05` comes back under either mode | **exit 1** — the canary request is now pinned **by content** (`"principal": 1162502.5`, `"interestRatePerPeriod": 21.6`, `"numberOfRepayments": 12`, `"interestCalculationPeriodType": 1`) and its sha256 is printed | `t76/out/attack-C-swapped-canary.txt` |
+| B | `CANARY_EXPECT=20925.04` — tell the script HALF_EVEN is what it should expect | **CORRECTED BY T80.** T76's transcript did not run the command in this caption: it ran a *decoy* variable, `CANARY_EXPECT_OVERRIDE`, which T76 itself had introduced and which no attacker would set, and its documented count of 6 breaches did not reproduce (T77 measured **5**). The tripwire now watches `CANARY_EXPECT` itself, and the caption's own command now measures **exit 1, 6 breaches** on `default` and **exit 1, 1 breach** on `gerege` | `t80/out/attack-4a-expect-override-default-sh.txt`, `t80/out/attack-4b-expect-override-gerege-sh.txt`; the now-inert decoy: `t80/out/attack-4c-decoy-variable-sh.txt` |
+| C | swap the canary for a request that is **not** a half-minor-unit tie (principal `1162502.78`), so `20925.05` comes back under either mode | **THIS CLOSURE WAS FALSE; SUPERSEDED BY T80.** The "content pin" was four `grep -qF` **prefix** matches and a sha256 that was **printed but never compared**. T77 defeated it with one character (`1162502.5` → `1162502.55`) and reached *ALL PRECONDITIONS HOLD, exit 0* — and, on the HALF_EVEN `default` tenant, *PASS effective rounding mode canary (= HALF_UP)*. The request is now pinned by **digest comparison** against a literal in the script, and a mismatch means the canary is **not sent at all** | superseded transcript `t76/out/attack-C-swapped-canary.txt`; live closure `t80/out/attack-2a-mutated-canary-gerege-sh.txt`, `t80/out/attack-2b-mutated-canary-default-sh.txt`, `t80/out/attack-3a-swapped-canary-gerege-sh.txt` |
 | D | omit the canary entirely | **exit 1** — "A DB row is not proof of the mode in force" | `t76/out/attack-D-nocanary.txt` |
 
 The honest run on `gerege` still exits **0** with **22 PASS** and no FAIL (`t76/out/preconditions-gerege.txt`).
@@ -212,6 +212,59 @@ produced it. Default behaviour is byte-for-byte unchanged.
 process substitution. Invoked as `sh .softhouse/conformance.sh` it dies with a syntax error at line 104 and
 **exits 2** — which is the harness's own "nothing was graded" code and reads exactly like a real fatal
 verdict. Run it as `bash .softhouse/conformance.sh` or `./.softhouse/conformance.sh`.
+
+---
+
+## HARDENED by T80 (2026-08-20) — the canary did not bite, and the abort was unreachable
+
+T77 rejected T76's §3 by **attacking it**, which is the only test that means anything here. Two P0s, both
+now closed and both closed by a run rather than by a sentence. Every transcript below is the verbatim
+output of `t80/run-attacks.sh` / `t80/happy-path.sh`, exit code included.
+
+**P0-A — the canary is pinned by DIGEST COMPARISON, not by substring.** `grep -qF '"principal": 1162502.5'`
+also matches `1162502.55`, and `1162502.55 × 0.018 = 20925.0459` is **not** a half-minor-unit tie, so it
+answers `20925.05` under HALF_UP *and* HALF_EVEN. The assertion was a tautology. `preconditions.sh` now
+computes the sha256 of the file it is about to POST and compares it to the literal
+`2a6621be…52154` recorded in the script. Two operands, only one of which a caller can reach.
+On mismatch the canary is **not sent**, so the sentence *"PASS effective rounding mode canary … (= HALF_UP)"*
+is unreachable except on the exact pinned tie.
+
+**P0-B — `recapture.sh` can now actually abort, and files its output under the tenant it used.** `bad()`
+writes FAIL to **stderr**; the old gate `tee`'d only **stdout** and grepped that, so its `grep -c '^  FAIL'`
+was always `0` and the ABORT was dead code. T77 ran `TENANT=default sh recapture.sh` and got five breached
+preconditions — including a canary that **404'd**, i.e. the mode in force was never established — no abort,
+all four captures taken, exit 0, written into a **hard-coded** `recapture-gerege` directory. The gate now
+tests the **exit status** of `preconditions.sh` and, independently, greps a transcript that captures **both**
+streams; and `O` derives from `$TENANT`, an explicit `RECAPTURE_OUT` must still be *named* for the tenant,
+and a `CAPTURED-FROM-TENANT` stamp refuses a cross-tenant overwrite.
+
+| # | attack | result | transcript (`t80/out/`) |
+|---|---|---|---|
+| 1a | `TENANT=default sh t36/recapture.sh` | **exit 1**, 5 breaches, `ABORT`, **zero** captures, filed under `recapture-default` | `attack-1a-wrong-tenant-sh.txt` |
+| 1b | `TENANT=default RECAPTURE_OUT=…/recapture-gerege …` | **exit 1** at the name guard, *before* the preconditions run | `attack-1b-wrong-tenant-into-gerege-dir-sh.txt` |
+| 1c | directory already stamped `gerege`, re-used for a `default` capture | **exit 1** at the stamp | `attack-1c-stamp-mismatch-sh.txt` |
+| 2a | canary principal `1162502.5` → `1162502.55`, tenant `gerege` | **exit 1**, 1 breach: `DIGEST MISMATCH`, both digests named | `attack-2a-mutated-canary-gerege-sh.txt` |
+| 2b | the same mutation on the HALF_EVEN `default` tenant | **exit 1**, 5 breaches; the HALF_UP PASS line is **absent** | `attack-2b-mutated-canary-default-sh.txt` |
+| 3a | canary swapped for another committed, valid, non-tie request | **exit 1**, digest mismatch, canary not sent | `attack-3a-swapped-canary-gerege-sh.txt` |
+| 3b/3c | canary path missing / unset | **exit 1** each | `attack-3b-…`, `attack-3c-…` |
+| 4a/4b | `CANARY_EXPECT=20925.04` on `default` / `gerege` | **exit 1**, 6 and 1 breaches | `attack-4a-…`, `attack-4b-…` |
+| 4c | T76's decoy `CANARY_EXPECT_OVERRIDE` | **exit 0** — it is now inert, as it should be | `attack-4c-decoy-variable-sh.txt` |
+| 4 | every attack re-run with the recipe under `bash` instead of `sh` | **11/11 transcripts byte-identical** after normalising the interpreter name | `attack-4-shell-invariance.txt` |
+| 5 | happy path on `gerege` | **exit 0**, **22 PASS / 0 FAIL**, four captures **byte-identical across six independently produced sets** | `attack-5-happy-path.txt` |
+
+Reproduce the whole thing:
+
+```sh
+sh   .softhouse/capture/pathb/t80/run-attacks.sh      # SH=sh   by default
+SH=bash bash .softhouse/capture/pathb/t80/run-attacks.sh
+sh   .softhouse/capture/pathb/t80/shell-invariance.sh
+sh   .softhouse/capture/pathb/t80/happy-path.sh
+```
+
+**The `sh` / exit-2 note above still stands and is NOT fixed here:** invoke the conformance harness only as
+`bash .softhouse/conformance.sh`. Under `sh` it exits **2**, the harness's "oracle unusable" fatal code,
+which a program driver would read as a legitimate oracle-down park. That is a different script (T77
+P2-T77-5) and outside T80's scope.
 
 ### The T76 additions to the recipe
 
