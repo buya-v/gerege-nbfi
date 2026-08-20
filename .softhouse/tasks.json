@@ -346,11 +346,12 @@
       ],
       "context": "harness",
       "dependencies": [
-        "T14"
+        "T14",
+        "T71"
       ],
       "status": "pending",
       "attempts": 0,
-      "note": "Only the orchestrator pushes."
+      "note": "Only the orchestrator pushes. || fire 20260820-140000: dependency extended to T71 - the stale [UNVERIFIED] marker T66 settled must be corrected and independently reviewed before the run is archived, since archiving it would freeze a comment that understates what is now proven."
     },
     {
       "id": "T16",
@@ -1499,6 +1500,44 @@
       "status": "done",
       "attempts": 1,
       "note": "fire 20260820-110001: retry of T65 after T67's REJECTED verdict; branches off softhouse/T65-t63-p1s so the approved executable change is preserved. Comment-only by charter - an executable change here would be a scope breach. || fire 20260820-110001: DONE, merged (T65+T69 together). Comment-and-citation only - driver verified the delta 401472a..T69 over nexus/ is comment lines plus ONE t.Fatalf citation string, which T69 disclosed itself. Rule now in three clauses: (a) adds m.minorDigits and m.precision and says why they are special (model-wide, so NO invalidateFrom index can cover them); (b) SUFFICIENT not iff, with the construction sites explained and 'DO NOT FIX THOSE SITES BY ADDING A GUARD'; (c) NEW - p.idx is the memo's KEY, so m.periods[i].idx == i and no reordering. FOUND A DEFECT IN T67'S OWN REPLACEMENT TEXT: ProgressiveEMICalculator.java:247 is in mergeNewScheduleModelWithExistingOne, reachable only on the allowFullTermForTranche branch; the ordinary path is :747. Marked futureUnrecognizedInterest [UNVERIFIED] and named T66 as the settling task rather than assert a third wrong reason. Recount: 12 direct fold-input writes on a live model, not T65's 13 - and the source now carries NO count at all."
+    },
+    {
+      "id": "T70",
+      "title": "Update the [UNVERIFIED] futureUnrecognizedInterest marker in emi.go — T66 settled it",
+      "description": "emi.go:315-325 carries an [UNVERIFIED] block stating that 'the argument still needs the tillDate period's OWN unrecognized interest to be zero on every graded shape ... that step is not established here', and naming T66 as the task chartered to settle it BY ORACLE CAPTURE. T66 has now done so: the capture exists (pass 3h, 18 cases, 416 mechanism rows, futureUnrecognizedInterest 0.00 and interestMovedUpward false on every one, 8/8 rig calibrations, 18/18 path identity, canonical sha256 fdd751a2..., reproduced independently by the driver), and the named step is closed by the aggregate identity Sum(emi) = P + I at ProgressiveEMICalculator.java:1189-1207 together with emi_j = 0 for j < f. COMMENT-ONLY, ZERO executable change - an executable change here is a scope breach. The comment's own instruction is binding: the upgrade from hypothesis to result is permitted ONLY because a capture now exists, never from reading alone; say exactly what the capture establishes (the OUTCOME on the real model) and what it does not (the till-date copy's internal state was never observed by anyone), and carry the premise list that lapses under multi-tranche, payments, credits, capitalized income, re-aging and interest pauses. Cite T66.md:100-108 for the general-f form, not PREDICTION.md's f=0 form.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/emi.go"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T66"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver, fire 20260820-140000, on confirming T66 settled the exact step the marker names. NEEDS NO ORACLE. HIGH RISK OF THE T65 FAILURE MODE: T65 rewrote this same rule, T67 REJECTED the rewrite because the replacement text was ALSO false, and T69's fix in turn found a defect in T67's own replacement text (:247 is the allowFullTermForTranche branch; the ordinary path is :747). Three drafts, two of them wrong. Pair with an independent reviewer (T71) and expect the comment, not the code, to be the defect."
+    },
+    {
+      "id": "T71",
+      "title": "INDEPENDENT review of T70's comment rewrite — re-derive the claim, do not read the author's conclusion",
+      "description": "Spawned fresh without planning context. Read the upstream handoff from the BRANCH (git show softhouse/T70-*:.softhouse/handoff/.../T70.md), read the diff with git diff main...<branch>, and RE-DERIVE the claim the comment makes from the pinned Fineract source and the pass-3h capture rather than accepting T70's account of it. Check specifically: (1) every line citation resolves to the method the text says it does at pinned commit 426a23544 - this is where T67 itself erred; (2) the comment does not assert anything the capture did not observe, in particular nothing about the till-date COPY's internal state; (3) the stated rule is SUFFICIENT, not merely true - the T65 rejection was that a true-but-insufficient rule lets a later edit break the port while satisfying every clause; (4) the premise list that lapses under multi-tranche/payments/credits/capitalized-income/re-aging/interest-pauses is present and correct; (5) ZERO executable change - a single non-comment line is a rejection; (6) contract.go untouched and never gofmt'd. Verdict: APPROVED / MICRO-FIX (<=10 lines, mechanical, never a number and never money logic) / REJECTED with specifics. If you find nothing, state what you checked so silence is distinguishable from not looking.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/emi.go"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T70"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Paired reviewer for T70, required by the plan gate (every coder task gets a reviewer). Raised by the driver, fire 20260820-140000."
     }
   ]
 }
