@@ -1,0 +1,30 @@
+absent    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-1a-wrong-tenant-bash.txt
+absent    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-1a-wrong-tenant-sh.txt
+absent    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-1b-wrong-tenant-into-gerege-dir-bash.txt
+absent    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-1b-wrong-tenant-into-gerege-dir-sh.txt
+absent    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-1c-stamp-mismatch-bash.txt
+absent    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-1c-stamp-mismatch-sh.txt
+absent    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-2a-mutated-canary-gerege-bash.txt
+absent    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-2a-mutated-canary-gerege-sh.txt
+absent    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-2b-mutated-canary-default-bash.txt
+absent    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-2b-mutated-canary-default-sh.txt
+absent    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-3a-swapped-canary-gerege-bash.txt
+absent    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-3a-swapped-canary-gerege-sh.txt
+absent    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-3b-missing-canary-bash.txt
+absent    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-3b-missing-canary-sh.txt
+absent    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-3c-no-canary-bash.txt
+absent    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-3c-no-canary-sh.txt
+absent    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-4-shell-invariance.txt
+absent    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-4a-expect-override-default-bash.txt
+absent    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-4a-expect-override-default-sh.txt
+OK        /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-4b-expect-override-gerege-bash.txt — canary PASS is accompanied by a passing digest pin, tenant gerege
+OK        /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-4b-expect-override-gerege-sh.txt — canary PASS is accompanied by a passing digest pin, tenant gerege
+OK        /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-4c-decoy-variable-bash.txt — canary PASS is accompanied by a passing digest pin, tenant gerege
+OK        /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-4c-decoy-variable-sh.txt — canary PASS is accompanied by a passing digest pin, tenant gerege
+OK        /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attack-5-happy-path.txt — canary PASS is accompanied by a passing digest pin, tenant gerege
+OK        /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attest-gerege/preconditions.txt — canary PASS is accompanied by a passing digest pin, tenant gerege
+OK        /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/bash-recapture-gerege/preconditions.txt — canary PASS is accompanied by a passing digest pin, tenant gerege
+OK        /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/recapture-gerege/preconditions.txt — canary PASS is accompanied by a passing digest pin, tenant gerege
+
+violations: 0
+RESULT: the HALF_UP claim is never made except on tenant gerege with the pinned canary.
