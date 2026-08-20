@@ -1723,9 +1723,9 @@
       "dependencies": [
         "T77"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "Raised by the driver, fire 20260820-170001, after T77 REJECTED T76. NEEDS THE ORACLE - schedule on a local fire. Pair with an independent reviewer whose explicit job is to ATTACK the recipe, since that is how both defects were found. || local fire 20260820-200002: DISPATCHED (wave 1), isolated worktree, model opus."
+      "note": "Raised by the driver, fire 20260820-170001, after T77 REJECTED T76. NEEDS THE ORACLE - schedule on a local fire. Pair with an independent reviewer whose explicit job is to ATTACK the recipe, since that is how both defects were found. || local fire 20260820-200002: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260820-200002: DONE on softhouse/T80-pathb-recipe-hardening (352f623, 813acb1, e45f2bf), forked from T76 head 9dbccf4. BOTH P0s CLOSED AND CLOSED BY RUNNING THE ATTACKS. P0-A: canary pinned by DIGEST COMPARISON (computes shasum of the file it is about to POST vs literal PIN_CANARY_SHA256), and on mismatch the canary is NOT SENT AT ALL, so the 'PASS ... (= HALF_UP)' sentence is structurally unreachable off the pinned tie; the four grep -qF prefix matches are gone; ran T77's own exploit and reproduced T77's mutated digest 13ce2f4f... exactly. P0-B: gate now tests preconditions.sh EXIT STATUS and greps a transcript redirected 2>&1 so stderr FAIL lines are in the grepped file (attest.py's shape, adopted not reinvented); output dir derives from $TENANT; CAPTURED-FROM-TENANT stamp refuses cross-tenant re-use; TENANT=default sh t36/recapture.sh now gives 5 breaches, ABORT, ZERO capture files, filed under recapture-default, exit 1; forcing it into recapture-gerege dies at the name guard BEFORE preconditions run. 22 attack transcripts (11 attacks x 2 interpreters), 11/11 sh-vs-bash byte-identical. P2s discharged, decoy removed, breach count MEASURED at 6 not adjusted, sidecar revision now read from PIN.json and ratification from gates.md. Promoted nothing. FORK-FRESHNESS: main is 28 commits ahead of its fork point, so its conformance evidence reports 36 parity vectors, not main's 42 - the diff is confined to .softhouse/capture/pathb/ so the merge should be clean, but the DRIVER must re-run conformance on merged main. Follow-up raised: T77 F-1, audit-t44/charges/bin/preconditions-COPY.sh still carries the pre-hardening hole (registered T91)."
     },
     {
       "id": "T81",
@@ -1879,9 +1879,9 @@
       "dependencies": [
         "T79"
       ],
-      "status": "pending",
+      "status": "done",
       "attempts": 0,
-      "note": "Raised by the driver, local fire 20260820-200002, after T79 REJECTED T78. SIXTH attempt on this comment but the FIRST that is a bounded 3-edit patch rather than a re-derivation - T79 ruled the argument sound and the shape correct. NEEDS NO ORACLE."
+      "note": "Raised by the driver, local fire 20260820-200002, after T79 REJECTED T78. SIXTH attempt on this comment but the FIRST that is a bounded 3-edit patch rather than a re-derivation - T79 ruled the argument sound and the shape correct. NEEDS NO ORACLE. || local fire 20260820-200002: DONE on softhouse/T88-fui-marker-d6 (406ad3c patch, 722f018 handoff). Diff vs T78 is 1 file / 32+/15- / 5 hunks, each mapped one-to-one to a T79 finding; 0 non-comment changed lines vs T78 AND vs main; comment-stripped emi.go 609 lines sha256 e660867196b5bea6...1133a4d, cmp byte-identical to main; gofmt -l names exactly contract.go and NOT emi.go. Edit 1 restored the clause VERBATIM from 4507109 (occurrence count 1 -> 0 at T78 head -> 1 at T88) and deliberately kept the parent's wording without the article that T79 had suggested, flagging the divergence. Edit 2 removed all four 'bijection' occurrences and RE-VERIFIED the three source facts itself rather than accepting the driver's; it went further than asked and confirmed the cross-edge BOTH ways - private addCapitalizedIncome (:274-284) has NO action guard at all, so :1752 sends a DISBURSEMENT op to :280. addDisbursement( call sites: :126, :134, :137, :1107, :1751. Edit 3 ran the grep itself: 9 lines (149,280,317,356,703,718,722,723,730). JUDGEMENT CALL FOR T89 TO RULE ON: it corrected the count in BOTH places it is stated (part 4 prose and part 9 GRAPH 3), arguing that leaving one is exactly the P-12 corrections-leak this chain has been burned by. Raised F-T88-3: a retry brief that names ONE location of a defect invites the P-12 leak and should say 'and every restatement of it' - a defect in the DRIVER'S brief, accepted."
     },
     {
       "id": "T89",
@@ -1921,6 +1921,25 @@
       "status": "pending",
       "attempts": 0,
       "note": "Raised by the driver, local fire 20260820-200002, from T81's F-1. Needs the oracle only to run the harness. files_hint is approximate - locate report.go before editing. Pair with an independent reviewer."
+    },
+    {
+      "id": "T91",
+      "title": "A pre-hardening copy of preconditions.sh survives at audit-t44/charges/bin/preconditions-COPY.sh",
+      "description": "Raised by T77 (F-1) and re-raised by T80, which correctly refused to fix it as out of scope. `.softhouse/capture/audit-t44/charges/bin/preconditions-COPY.sh` is a COPY of the Path B precondition script taken before hardening, so it still carries the tautology-canary hole that T80 has now closed in the original: prefix `grep -qF` matches and a sha256 that is printed but never compared. A capture rig that has been hardened in one copy and not the other is worse than one that was never hardened, because the hardened version is what everyone cites. T80's recommendation, which the driver endorses: make it CALL the original rather than patch it a third time - a third divergent copy is the actual defect. Verify by running the same attack suite T80 built against whatever path this copy is reachable by, and show it now refuses. Do not promote anything; do not touch t80/ or t36/ artefacts.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/capture/audit-t44/"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T80"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260820-200002, from T77 F-1 as re-raised by T80. NEEDS THE ORACLE to run the attack suite. Pair with an independent reviewer."
     }
   ]
 }
