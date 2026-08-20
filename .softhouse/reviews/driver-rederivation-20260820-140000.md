@@ -95,6 +95,7 @@ numbers from a worker's report.
 | check | result |
 |---|---|
 | `.softhouse/conformance.sh` | **exit 0** — 36 parity PASS / 0 FAIL, 4 contract-refusal PASS, 1 self-test PASS, **4034 graded cells**, 72 ungraded (never recorded by the capture), 0 refused, 0 inadmissible, 0 harness errors, 0 invariant violations, 0 invariant assertions NOT RUN |
+| `go build ./...` / `go vet ./...` / `go test ./...` (repo-local toolchain go1.26.6 darwin/arm64, loaded via `.softhouse/bin/go-env.sh` — a bare `go` saying "command not found" is the EXPECTED state of a fresh shell here, not a broken environment) | **0 / 0 / 0** — all packages ok |
 | `.softhouse/conformance.sh --prove` | **exit 0** — **21 proofs passed, 0 failed** |
 | `contract.go` sha256 | `0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139` — **identical** to `contract_sha256` in `.softhouse/vectors/PIN.json`. The ratified artefact is byte-intact and the G-3 digest guard has nothing to fire on. |
 | float in the non-test port | **none.** Every `float32`/`float64` occurrence under `nexus/internal/apps/loanschedule/` outside `_test.go` is inside a `contract.go` doc comment **prohibiting** it (`:121`, `:738`, `:1898`, `:2212`). |
