@@ -1,6 +1,9 @@
 package loanschedule
 
-import "math/big"
+import (
+	"context"
+	"math/big"
+)
 
 // The progressive-loan interest schedule model, and the EMI arithmetic over it.
 //
@@ -15,8 +18,17 @@ import "math/big"
 //     Memo fields). Memo invalidates on the hash of its declared dependencies
 //     [VERIFIED: Memo.java:56-72 recomputes whenever a dependency hash moves, and
 //     InterestPeriod carries a generated equals/hashCode over its amounts,
-//     InterestPeriod.java:40-43], so it is a pure cache. This port recomputes on
-//     every read, which is the same function without the cache.
+//     InterestPeriod.java:40-43], so it is a pure cache. This port carries an
+//     equivalent cache over the one derived quantity whose recomputation is not
+//     O(1) -- the forward interest chain (see chainStep) -- and invalidates it by
+//     PERIOD INDEX rather than by dependency hash. Revision 1 of this file
+//     dropped the cache entirely and recomputed on every read; that is the same
+//     FUNCTION at a materially different COST -- quadratic in NumberOfRepayments,
+//     measured at 10.77 s for a 360-period schedule -- which is a defect in its
+//     own right (T11 F-2). The cache is observationally inert, and
+//     TestInterestChainMemoIsObservationallyInert grades that claim by generating
+//     every swept shape twice, once with the memo on and once with it off, and
+//     comparing cell for cell.
 //  2. Every quantity the oracle carries as a Money is an int64 count of minor
 //     units here. Money is a BigDecimal at the currency's scale plus a
 //     MathContext [VERIFIED: Money.java:40-53], and at a fixed scale its add,
@@ -67,6 +79,27 @@ type repaymentPeriod struct {
 type scheduleModel struct {
 	periods []*repaymentPeriod
 
+	// ctx is the request's context, carried on the model so that a linear pass
+	// over the periods can be abandoned when the caller has gone away.
+	//
+	// It is held here rather than threaded through the derived-quantity
+	// accessors because those accessors ARE the money arithmetic: giving
+	// duePrincipalMinor an error return would rewrite every expression in this
+	// file, and rewriting money code to fix a liveness defect is a trade this
+	// program does not make. Nothing here reads a clock, and cancellation never
+	// changes a computed value -- it decides only whether a value is returned.
+	ctx context.Context
+
+	// cancelled is sticky: once the context has reported an error every later
+	// check short-circuits, every loop unwinds, and generate discards the
+	// half-built schedule and returns ctx.Err().
+	cancelled bool
+
+	// chain and chainValid are the memo over the forward interest chain. Entries
+	// 0..chainValid-1 are valid; see chainStep and interestChainUpTo.
+	chain      []chainStep
+	chainValid int
+
 	minorDigits int32
 	precision   int32 // Rounding.SignificantDigits
 	scale       int32 // Rounding.RateFactorScale
@@ -88,6 +121,81 @@ type scheduleModel struct {
 	daysInYear  *big.Rat
 }
 
+// ---------------------------------------------------------------------------
+// Cancellation. NEVER an answer device: with a live context every check below
+// is a predictable false and the arithmetic runs exactly as it did before.
+// ---------------------------------------------------------------------------
+
+// ctxCheckStride bounds how much work runs between two reads of the context: a
+// linear pass over the periods asks at most once every ctxCheckStride periods.
+//
+// It is a power of two so the test is a mask, and it is not 1 because
+// context.Context.Err takes a mutex on a cancelCtx: putting that on the
+// innermost step of the fold would charge every schedule for a liveness
+// property only a cancelled schedule uses. At this port's measured per-period
+// cost the 256-period stride bounds the tail latency of a cancelled call to a
+// few milliseconds, far below any deadline a caller of a schedule service sets,
+// and the whole of the corpus is 36 periods or fewer -- so on every graded shape
+// the context is read exactly once per pass, at index 0.
+const ctxCheckStride = 256
+
+// checkCancel reports whether generation should be abandoned, reading the
+// context at most once every ctxCheckStride periods and remembering the answer.
+//
+// When it returns true the caller unwinds, generate discards the half-built
+// model and Generate returns ctx.Err() -- the bare context error, which is the
+// convention the entry check at the top of Generate already established, and
+// which is neither of the contract's three refusal sentinels because a cancelled
+// request was not refused. The contract permits exactly this: "a purely
+// computational implementation may honour cancellation and otherwise ignore it"
+// (contract.ScheduleGenerator.Generate).
+func (m *scheduleModel) checkCancel(i int) bool {
+	if m.cancelled {
+		return true
+	}
+	if m.ctx == nil || i&(ctxCheckStride-1) != 0 {
+		return false
+	}
+	if m.ctx.Err() != nil {
+		m.cancelled = true
+		return true
+	}
+	return false
+}
+
+// ---------------------------------------------------------------------------
+// The interest-chain memo
+// ---------------------------------------------------------------------------
+
+// chainStep is one memoised step of the forward interest chain: a period's
+// calculated and due interest, and the unrecognized interest it carries into the
+// period after it.
+//
+// This is the port's counterpart of the oracle's Memo over
+// RepaymentPeriod.getCalculatedDueInterest / getDueInterest
+// [VERIFIED: RepaymentPeriod.java:60-70 declares the Memo fields; Memo.java:56-72
+// recomputes only when a declared dependency's hash moves]. The oracle
+// invalidates by HASHING the dependencies; this port invalidates by PERIOD
+// INDEX, which is sound for exactly one reason: step i is a function of periods
+// 0..i only -- no quantity of a later period appears anywhere in the fold -- so a
+// write to period j leaves every step before j intact and makes steps j..n-1
+// stale and nothing else. Every site in this file that writes a quantity the
+// fold reads (a segment's outstanding balance, its rate factor till due, its
+// window, or a period's installment) therefore calls invalidateFrom.
+type chainStep struct{ calculated, due, carried int64 }
+
+// memoiseInterestChain switches the memo off. It is written only by this
+// package's own differential test; it is not configuration, and no caller,
+// request field or deployment can reach it.
+var memoiseInterestChain = true
+
+// invalidateFrom discards the memoised chain from period index i onward.
+func (m *scheduleModel) invalidateFrom(i int) {
+	if i < m.chainValid {
+		m.chainValid = i
+	}
+}
+
 // newInterestPeriod builds a segment with the oracle's initial amounts: rate
 // factors BigDecimal.ZERO and every Money zero
 // [VERIFIED: InterestPeriod.java:96-105, withEmptyAmounts].
@@ -107,6 +215,12 @@ func (m *scheduleModel) deepCopy() *scheduleModel {
 		rate: m.rate, repaymentEvery: m.repaymentEvery,
 		daysInMonth: m.daysInMonth, daysInYear: m.daysInYear,
 		periods: make([]*repaymentPeriod, 0, len(m.periods)),
+		ctx:     m.ctx, cancelled: m.cancelled,
+		// The copy starts on an EMPTY memo rather than a copy of this one. The two
+		// models are equal at this instant so copying would also be correct, but
+		// the trial is about to be rewritten period by period and an empty memo
+		// cannot be stale.
+		chain: make([]chainStep, len(m.periods)),
 	}
 	for _, p := range m.periods {
 		q := &repaymentPeriod{from: p.from, due: p.due, emiMinor: p.emiMinor, idx: p.idx,
@@ -229,6 +343,9 @@ func (m *scheduleModel) effectiveRepaymentDueDate(owner *repaymentPeriod, d civi
 // the date falls strictly inside
 // [VERIFIED: ProgressiveLoanInterestScheduleModel.java:245-296].
 func (m *scheduleModel) registerBalanceChange(owner *repaymentPeriod, d civilDate, amountMinor int64) {
+	// Every arm below writes this period's segments -- an amount, a moved due
+	// date, or a whole new segment -- so the chain is stale from here on.
+	m.invalidateFrom(owner.idx)
 	isLast := owner.idx == len(m.periods)-1
 	onMaturity := isLast && compareDates(d, owner.due) == 0
 
@@ -300,7 +417,12 @@ func (m *scheduleModel) insertSegment(owner *repaymentPeriod, d civilDate, amoun
 // grace configuration the seam cannot express.
 func (m *scheduleModel) recalculate(effectiveDue civilDate) {
 	related := m.relatedPeriods(effectiveDue)
-	for _, p := range related {
+	// Each step below returns immediately on a cancelled model, so the sequence
+	// unwinds without a check between every pair.
+	for i, p := range related {
+		if m.checkCancel(i) {
+			return
+		}
 		m.calculateRateFactors(p)
 	}
 	m.updateOutstandingBalances()
@@ -321,6 +443,9 @@ func (m *scheduleModel) recalculate(effectiveDue civilDate) {
 // principal awaiting advance.
 func (m *scheduleModel) updateOutstandingBalances() {
 	for i, p := range m.periods {
+		if m.checkCancel(i) {
+			return
+		}
 		for j, s := range p.segments {
 			if j == 0 {
 				if i == 0 {
@@ -328,10 +453,17 @@ func (m *scheduleModel) updateOutstandingBalances() {
 				}
 				prevPeriod := m.periods[i-1]
 				prevSeg := prevPeriod.segments[len(prevPeriod.segments)-1]
+				// The chain up to i-1 is read BEFORE period i is invalidated. The
+				// hoist into a local is what makes that order explicit, and it is
+				// what keeps this walk linear: nothing later than i-1 can influence
+				// step i-1, so the prefix this read just paid for survives the write.
+				due := m.duePrincipalMinor(prevPeriod)
+				m.invalidateFrom(i)
 				s.outstandingMinor = maxInt64(0,
-					prevSeg.outstandingMinor+prevSeg.disbursedMinor-m.duePrincipalMinor(prevPeriod))
+					prevSeg.outstandingMinor+prevSeg.disbursedMinor-due)
 				continue
 			}
+			m.invalidateFrom(i)
 			prevSeg := p.segments[j-1]
 			s.outstandingMinor = maxInt64(0, prevSeg.outstandingMinor+prevSeg.disbursedMinor)
 		}
@@ -370,9 +502,34 @@ func (m *scheduleModel) segmentCalculatedInterest(p *repaymentPeriod, s *interes
 // memoisation the same recursion is exponential, so this port walks the chain
 // forward instead. It is the same function, and only periods 0..last are needed
 // because nothing later can influence an earlier period.
+//
+// THAT SAME PROPERTY -- step i depends on periods 0..i and on nothing later --
+// is what lets the walk be memoised as a PREFIX and resumed rather than
+// restarted (see chainStep). Without the memo this function is O(n) on every
+// read and the readers are themselves O(n) loops, which is the whole of the
+// port's quadratic cost; with it, a forward pass over the periods pays for each
+// step once. The memo changes no value: with memoiseInterestChain false the
+// fold restarts at index 0 on every call, exactly as revision 1 did.
 func (m *scheduleModel) interestChainUpTo(last int) (calculated, due int64) {
+	start := 0
 	var carriedUnrecognized int64
-	for i := 0; i <= last; i++ {
+	if memoiseInterestChain {
+		if last < m.chainValid {
+			e := m.chain[last]
+			return e.calculated, e.due
+		}
+		if m.chainValid > 0 {
+			start = m.chainValid
+			carriedUnrecognized = m.chain[start-1].carried
+		}
+	}
+	for i := start; i <= last; i++ {
+		if m.checkCancel(i) {
+			// The memo keeps only the steps that COMPLETED, so it stays truthful;
+			// the pair returned here is meaningless and every caller above is
+			// unwinding to discard it.
+			return calculated, due
+		}
 		p := m.periods[i]
 		// SUM THE SEGMENTS, THEN MAKE IT MONEY -- exactly once, and in that order:
 		// rounding each segment to the minor unit and then adding is a different
@@ -388,6 +545,10 @@ func (m *scheduleModel) interestChainUpTo(last int) (calculated, due int64) {
 		// arms of that expression collapse to the min.
 		due = maxInt64(0, minInt64(calculated, p.emiMinor))
 		carriedUnrecognized = maxInt64(0, calculated-due)
+		if memoiseInterestChain {
+			m.chain[i] = chainStep{calculated: calculated, due: due, carried: carriedUnrecognized}
+			m.chainValid = i + 1
+		}
 	}
 	return calculated, due
 }
@@ -457,6 +618,9 @@ func (m *scheduleModel) growthFactor(p *repaymentPeriod) *big.Rat {
 // calculateRateFactors fills both rate factors of every segment of p
 // [VERIFIED: ProgressiveEMICalculator.java:636-644].
 func (m *scheduleModel) calculateRateFactors(p *repaymentPeriod) {
+	// Both rate factors are dependencies of the interest chain's step for this
+	// period [VERIFIED: RepaymentPeriod.java:255-257 -> InterestPeriod.java:143-158].
+	m.invalidateFrom(p.idx)
 	for _, s := range p.segments {
 		s.rateFactor = m.rateFactorForRecurrence(p, s)
 		s.rateFactorTillDue = m.rateFactorForInterest(p, s)
@@ -616,17 +780,23 @@ func (m *scheduleModel) periodRatioSeed(p *repaymentPeriod) civilDate {
 // The installment is written onto the RELATED periods only. Rows before the
 // first related period keep a ZERO installment and produce an all-zero row.
 func (m *scheduleModel) calculateLevelInstallment(related []*repaymentPeriod) {
-	if len(related) == 0 {
+	if m.cancelled || len(related) == 0 {
 		return
 	}
 	rateFactorN := big.NewRat(1, 1)
-	for _, p := range related {
+	for i, p := range related {
+		if m.checkCancel(i) {
+			return
+		}
 		rateFactorN = roundSignificant(new(big.Rat).Mul(rateFactorN, m.growthFactor(p)), m.precision)
 	}
 	fn := big.NewRat(1, 1)
 	for i, p := range related {
 		if i == 0 {
 			continue
+		}
+		if m.checkCancel(i) {
+			return
 		}
 		product := roundSignificant(new(big.Rat).Mul(fn, m.growthFactor(p)), m.precision)
 		fn = roundSignificant(product.Add(product, big.NewRat(1, 1)), m.precision)
@@ -635,6 +805,9 @@ func (m *scheduleModel) calculateLevelInstallment(related []*repaymentPeriod) {
 	numerator := roundSignificant(new(big.Rat).Mul(rateFactorN, balance), m.precision)
 	installment := roundSignificant(new(big.Rat).Quo(numerator, fn), m.precision)
 	emi := minorFromMajor(installment, m.minorDigits)
+	// The balance was read from the chain above; the installments are written
+	// after it, so the invalidation belongs here and not before the read.
+	m.invalidateFrom(related[0].idx)
 	for _, p := range related {
 		if emi >= 0 {
 			p.emiMinor = emi
@@ -649,7 +822,7 @@ func (m *scheduleModel) calculateLevelInstallment(related []*repaymentPeriod) {
 // residual, so its principal is the WHOLE REMAINING BALANCE rather than
 // installment minus interest, and the schedule amortizes to exactly zero.
 func (m *scheduleModel) applyFinalPeriodResidual(depth int) {
-	if depth > len(m.periods)+2 {
+	if m.cancelled || depth > len(m.periods)+2 {
 		return
 	}
 
@@ -661,14 +834,21 @@ func (m *scheduleModel) applyFinalPeriodResidual(depth int) {
 	// looks inert is how the two money defects of this program's first run
 	// survived review.
 	var totalDuePaidDiff int64
-	for _, p := range m.periods {
+	for i, p := range m.periods {
+		if m.checkCancel(i) {
+			return
+		}
 		for _, s := range p.segments {
 			totalDuePaidDiff += s.disbursedMinor
 		}
 	}
-	for _, p := range m.periods {
+	for i, p := range m.periods {
+		if m.checkCancel(i) {
+			return
+		}
 		outstanding := m.duePrincipalMinor(p)
 		if outstanding > totalDuePaidDiff {
+			m.invalidateFrom(i)
 			p.emiMinor -= outstanding - totalDuePaidDiff
 			if p.emiMinor < 0 {
 				p.emiMinor = 0
@@ -682,13 +862,17 @@ func (m *scheduleModel) applyFinalPeriodResidual(depth int) {
 	}
 
 	var totalDueInterest, totalEMI, totalDisbursed int64
-	for _, p := range m.periods {
+	for i, p := range m.periods {
+		if m.checkCancel(i) {
+			return
+		}
 		totalDueInterest += m.dueInterestMinor(p)
 		totalEMI += p.emiMinor
 		for _, s := range p.segments {
 			totalDisbursed += s.disbursedMinor
 		}
 	}
+	m.invalidateFrom(idx)
 	m.periods[idx].emiMinor += totalDisbursed + totalDueInterest - totalEMI
 	if m.periods[idx].emiMinor < 0 {
 		m.periods[idx].emiMinor = 0
@@ -772,11 +956,17 @@ func shouldBeAdjusted(n int, original, difference int64, minorDigits int32) bool
 //   - break MEANS STOP. All four exits terminate the loop.
 //   - THE COUNTER ADVANCES ONLY ON ADOPTION, and bounds the loop at three.
 func (m *scheduleModel) adjustEMIIfNeeded(related []*repaymentPeriod) {
-	if len(related) == 0 {
+	if m.cancelled || len(related) == 0 {
 		return
 	}
 	adjustCounter := 1
 	for {
+		// Once per OUTER iteration, which is the cadence the loop's own structure
+		// offers: each iteration is a full rebuild on a copy, and the steps inside
+		// it carry their own per-period checks.
+		if m.checkCancel(0) {
+			return
+		}
 		original, difference := emiAdjustment(related)
 		if !shouldBeAdjusted(len(related), original, difference, m.minorDigits) {
 			return
@@ -796,11 +986,16 @@ func (m *scheduleModel) adjustEMIIfNeeded(related []*repaymentPeriod) {
 		firstFrom, firstDue := related[0].from, related[0].due
 		for _, p := range trial.periods {
 			if compareDates(p.from, firstFrom) >= 0 && compareDates(p.due, firstDue) >= 0 && adjusted >= 0 {
+				trial.invalidateFrom(p.idx)
 				p.emiMinor = adjusted
 			}
 		}
 		trial.updateOutstandingBalances()
 		trial.applyFinalPeriodResidual(0)
+		if trial.cancelled {
+			m.cancelled = true
+			return
+		}
 
 		// The adoption test re-measures over the trial's FULL period list, not the
 		// related sublist [:1289]; only the magnitude of the difference is read, so
@@ -820,6 +1015,7 @@ func (m *scheduleModel) adjustEMIIfNeeded(related []*repaymentPeriod) {
 			if i >= len(trialRelated) {
 				break
 			}
+			m.invalidateFrom(p.idx)
 			p.emiMinor = trialRelated[i].emiMinor
 		}
 		m.updateOutstandingBalances()

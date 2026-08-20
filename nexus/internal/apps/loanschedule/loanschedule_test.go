@@ -151,7 +151,11 @@ func TestEpochDayRoundTrips(t *testing.T) {
 // date-independent, so a port that clamps and forgets the seed produces
 // identical money and the wrong dates.
 func TestMonthEndReAnchorRemembersTheSeedDay(t *testing.T) {
-	got := repaymentDueDates(date(2024, 1, 31), 6, 1, contract.FrequencyMonths, date(2024, 1, 31))
+	got, err := repaymentDueDates(context.Background(), date(2024, 1, 31), 6, 1,
+		contract.FrequencyMonths, date(2024, 1, 31))
+	if err != nil {
+		t.Fatal(err)
+	}
 	want := []civilDate{
 		date(2024, 2, 29), date(2024, 3, 31), date(2024, 4, 30),
 		date(2024, 5, 31), date(2024, 6, 30), date(2024, 7, 31),
@@ -162,7 +166,11 @@ func TestMonthEndReAnchorRemembersTheSeedDay(t *testing.T) {
 				"becomes the new seed)", i+1, formatDate(got[i]), formatDate(want[i]))
 		}
 	}
-	got30 := repaymentDueDates(date(2024, 1, 30), 6, 1, contract.FrequencyMonths, date(2024, 1, 30))
+	got30, err := repaymentDueDates(context.Background(), date(2024, 1, 30), 6, 1,
+		contract.FrequencyMonths, date(2024, 1, 30))
+	if err != nil {
+		t.Fatal(err)
+	}
 	want30 := []civilDate{
 		date(2024, 2, 29), date(2024, 3, 30), date(2024, 4, 30),
 		date(2024, 5, 30), date(2024, 6, 30), date(2024, 7, 30),
