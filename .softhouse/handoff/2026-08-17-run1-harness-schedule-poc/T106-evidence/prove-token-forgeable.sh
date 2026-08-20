@@ -29,7 +29,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../../../.." && pwd)"
 HARNESS="$REPO_ROOT/.softhouse/conformance.sh"
 TOKEN="conformance-psub-live"
-PSUB='< <(builtin printf "%s\\n" "$CONFORMANCE_PSUB_TOKEN")'
+PSUB='< <(builtin printf "%s\n" "$CONFORMANCE_PSUB_TOKEN")'
 READLINE='      IFS= builtin read -r _conformance_psub_line'
 
 pass=0; fail=0
@@ -54,7 +54,10 @@ trap 'rm -f "$ORIG" "$FIXED"' EXIT
 # Both mutants get a redirection source that fails open() at run time. The eval
 # string still PARSES, so `builtin read` is reached and fails, and the NEXT
 # statement — printf of the variable — still runs. That is the whole defect.
-sed "s|$PSUB|< /nonexistent-T106/nope|" "$HARNESS" > "$ORIG"
+awk -v lit="$PSUB" '
+  index($0, lit) > 0 && !done { print "           < /nonexistent-T106/nope"; done = 1; next }
+  { print }
+' "$HARNESS" > "$ORIG"
 if cmp -s "$HARNESS" "$ORIG"; then
   bad "mutation" "the sed changed nothing — this script proves nothing today"
 else
