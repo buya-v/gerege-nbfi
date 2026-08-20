@@ -83,14 +83,23 @@ func (Generator) Generate(ctx context.Context, req contract.GenerateRequest) (co
 	// predicate is SEMANTIC: it needs the last repayment due date, which is a
 	// function of the schedule start, the term, the frequency and the month-end
 	// rule. Producing them costs nothing and refuses nothing.
-	dueDates := repaymentDueDates(req.ScheduleStartDate, req.NumberOfRepayments,
+	//
+	// "Costs nothing" is true of every shape the corpus samples and is NOT true
+	// of the domain: NumberOfRepayments is bounded below at 1 and not bounded
+	// above at all (contract.GenerateRequest.NumberOfRepayments), so this pass
+	// and everything after it is linear in a caller-controlled number. From here
+	// down every linear pass is cancellable.
+	dueDates, err := repaymentDueDates(ctx, req.ScheduleStartDate, req.NumberOfRepayments,
 		int64(req.RepaymentEvery), req.RepaymentFrequencyUnit, req.Disbursements[0].Date)
+	if err != nil {
+		return contract.Schedule{}, err
+	}
 
 	if err := validateGradedDomain(req, dueDates[len(dueDates)-1]); err != nil {
 		return contract.Schedule{}, err
 	}
 
-	return generate(req, dueDates), nil
+	return generate(ctx, req, dueDates)
 }
 
 // ---------------------------------------------------------------------------
@@ -406,14 +415,27 @@ func validateGradedDomain(req contract.GenerateRequest, lastDue civilDate) error
 // inside its own iteration (:126-133) while the registration happens in the
 // iteration of the period that owns the date (:121 -> :350). The mechanism is
 // sequencing, not arithmetic.
-func generate(req contract.GenerateRequest, dueDates []civilDate) contract.Schedule {
-	model := newScheduleModel(req, dueDates)
+//
+// # Cancellation
+//
+// The error return is a LIVENESS return and never a refusal: it is ctx.Err() or
+// nothing. A schedule is returned only when the loop below ran to completion on
+// a model that was never abandoned, so a half-built row list can never be
+// mistaken for an answer -- the model's sticky cancelled flag is the single
+// authority and it is consulted after the loop, not inside it.
+func generate(ctx context.Context, req contract.GenerateRequest,
+	dueDates []civilDate) (contract.Schedule, error) {
+
+	model := newScheduleModel(ctx, req, dueDates)
 
 	disbursement := req.Disbursements[0]
 	pending := true
 	periods := make([]contract.Period, 0, len(model.periods)+1)
 
-	for _, p := range model.periods {
+	for i, p := range model.periods {
+		if model.checkCancel(i) {
+			break
+		}
 		if pending && inPeriodM3(disbursement.Date, p.from, p.due) {
 			periods = append(periods, contract.Period{
 				Kind:              contract.PeriodKindDisbursement,
@@ -442,7 +464,12 @@ func generate(req contract.GenerateRequest, dueDates []civilDate) contract.Sched
 			OutstandingPrincipalMinor: model.outstandingLoanBalanceMinor(p),
 		})
 	}
-	return contract.Schedule{Periods: periods}
+	if model.cancelled {
+		// ctx.Err() is non-nil here: the flag is set only after the context has
+		// already reported an error, and a context's error never returns to nil.
+		return contract.Schedule{}, ctx.Err()
+	}
+	return contract.Schedule{Periods: periods}, nil
 }
 
 // installmentNumberOf returns the next payable-installment number given the rows
@@ -462,8 +489,11 @@ func installmentNumberOf(emitted []contract.Period) int32 {
 // due date, each carrying exactly one interest period spanning its whole window
 // [VERIFIED: ProgressiveEMICalculator.java:100-111 ->
 // RepaymentPeriod.java:143-151].
-func newScheduleModel(req contract.GenerateRequest, dueDates []civilDate) *scheduleModel {
+func newScheduleModel(ctx context.Context, req contract.GenerateRequest,
+	dueDates []civilDate) *scheduleModel {
+
 	m := &scheduleModel{
+		ctx:            ctx,
 		minorDigits:    req.Currency.MinorUnitDigits,
 		precision:      req.Rounding.SignificantDigits,
 		scale:          req.Rounding.RateFactorScale,
@@ -482,12 +512,17 @@ func newScheduleModel(req contract.GenerateRequest, dueDates []civilDate) *sched
 		daysInYear:  ratInt64(360),
 	}
 	from := req.ScheduleStartDate
+	m.periods = make([]*repaymentPeriod, 0, len(dueDates))
 	for i, due := range dueDates {
+		if m.checkCancel(i) {
+			return m
+		}
 		p := newRepaymentPeriod(from, due)
 		p.idx = i
 		m.periods = append(m.periods, p)
 		from = due
 	}
+	m.chain = make([]chainStep, len(m.periods))
 	return m
 }
 
@@ -509,18 +544,29 @@ func newScheduleModel(req contract.GenerateRequest, dueDates []civilDate) *sched
 // the contract, and adjustRepaymentDate short-circuits when holidayDetailDTO is
 // null [VERIFIED: DefaultScheduledDateGenerator.java:224], which the seam
 // hard-wires it to be [VERIFIED: ProgressiveLoanScheduleGenerator.java:83].
-func repaymentDueDates(start civilDate, count int32, every int64,
-	unit contract.RepaymentFrequencyUnit, seed civilDate) []civilDate {
+// The capacity hint is CAPPED rather than taken from count. count is
+// caller-controlled and unbounded above, and a hint of two billion is a
+// multi-gigabyte allocation demanded before the first date is computed or the
+// first cancellation is noticed; append then grows the slice at the same
+// amortized cost and returns the identical dates. The cap is an allocation
+// decision and changes no value.
+func repaymentDueDates(ctx context.Context, start civilDate, count int32, every int64,
+	unit contract.RepaymentFrequencyUnit, seed civilDate) ([]civilDate, error) {
 
-	out := make([]civilDate, 0, count)
+	out := make([]civilDate, 0, min(int(count), 4096))
 	last := start
 	for i := int32(0); i < count; i++ {
+		if i&(ctxCheckStride-1) == 0 {
+			if err := ctx.Err(); err != nil {
+				return nil, err
+			}
+		}
 		next := stepDate(last, every, unit)
 		next = reAnchorToSeed(next, seed, unit)
 		out = append(out, next)
 		last = next
 	}
-	return out
+	return out, nil
 }
 
 // stepDate advances one boundary by the repayment frequency
