@@ -1,0 +1,328 @@
+{
+ "note": "PREDICTION ONLY. Not an observation. Never promotable.",
+ "mechanism": "level EMI quantizes to 0.00 at scale 2 under HALF_UP",
+ "rule": "fails iff B_minor * a(r,n) < 0.5",
+ "rows": [
+  {
+   "annualRatePct": "21.6",
+   "numberOfRepayments": 2,
+   "annuityFactor": "0.5135401388",
+   "halfOverFactor": "0.973634",
+   "predictedLargestFailingMinor": 0,
+   "predictedSmallestCleanMinor": 1,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 5
+  },
+  {
+   "annualRatePct": "21.6",
+   "numberOfRepayments": 3,
+   "annuityFactor": "0.3454046892",
+   "halfOverFactor": "1.447577",
+   "predictedLargestFailingMinor": 1,
+   "predictedSmallestCleanMinor": 2,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 5
+  },
+  {
+   "annualRatePct": "21.6",
+   "numberOfRepayments": 4,
+   "annuityFactor": "0.2613503405",
+   "halfOverFactor": "1.913141",
+   "predictedLargestFailingMinor": 1,
+   "predictedSmallestCleanMinor": 2,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 5
+  },
+  {
+   "annualRatePct": "21.6",
+   "numberOfRepayments": 6,
+   "annuityFactor": "0.1773227353",
+   "halfOverFactor": "2.819717",
+   "predictedLargestFailingMinor": 2,
+   "predictedSmallestCleanMinor": 3,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 6
+  },
+  {
+   "annualRatePct": "21.6",
+   "numberOfRepayments": 12,
+   "annuityFactor": "0.0934019769",
+   "halfOverFactor": "5.353206",
+   "predictedLargestFailingMinor": 5,
+   "predictedSmallestCleanMinor": 6,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 9
+  },
+  {
+   "annualRatePct": "21.6",
+   "numberOfRepayments": 24,
+   "annuityFactor": "0.0516808350",
+   "halfOverFactor": "9.674766",
+   "predictedLargestFailingMinor": 9,
+   "predictedSmallestCleanMinor": 10,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 13
+  },
+  {
+   "annualRatePct": "21.6",
+   "numberOfRepayments": 36,
+   "annuityFactor": "0.0379838318",
+   "halfOverFactor": "13.163496",
+   "predictedLargestFailingMinor": 13,
+   "predictedSmallestCleanMinor": 14,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 17
+  },
+  {
+   "annualRatePct": "21.6",
+   "numberOfRepayments": 56,
+   "annuityFactor": "0.0284915826",
+   "halfOverFactor": "17.549043",
+   "predictedLargestFailingMinor": 17,
+   "predictedSmallestCleanMinor": 18,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 21
+  },
+  {
+   "annualRatePct": "7.0",
+   "numberOfRepayments": 2,
+   "annuityFactor": "0.5043792411",
+   "halfOverFactor": "0.991318",
+   "predictedLargestFailingMinor": 0,
+   "predictedSmallestCleanMinor": 1,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 5
+  },
+  {
+   "annualRatePct": "7.0",
+   "numberOfRepayments": 3,
+   "annuityFactor": "0.3372297619",
+   "halfOverFactor": "1.482669",
+   "predictedLargestFailingMinor": 1,
+   "predictedSmallestCleanMinor": 2,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 5
+  },
+  {
+   "annualRatePct": "7.0",
+   "numberOfRepayments": 4,
+   "annuityFactor": "0.2536564360",
+   "halfOverFactor": "1.971170",
+   "predictedLargestFailingMinor": 1,
+   "predictedSmallestCleanMinor": 2,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 5
+  },
+  {
+   "annualRatePct": "7.0",
+   "numberOfRepayments": 6,
+   "annuityFactor": "0.1700859373",
+   "halfOverFactor": "2.939690",
+   "predictedLargestFailingMinor": 2,
+   "predictedSmallestCleanMinor": 3,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 6
+  },
+  {
+   "annualRatePct": "7.0",
+   "numberOfRepayments": 12,
+   "annuityFactor": "0.0865267461",
+   "halfOverFactor": "5.778560",
+   "predictedLargestFailingMinor": 5,
+   "predictedSmallestCleanMinor": 6,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 9
+  },
+  {
+   "annualRatePct": "7.0",
+   "numberOfRepayments": 24,
+   "annuityFactor": "0.0447725791",
+   "halfOverFactor": "11.167550",
+   "predictedLargestFailingMinor": 11,
+   "predictedSmallestCleanMinor": 12,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 15
+  },
+  {
+   "annualRatePct": "7.0",
+   "numberOfRepayments": 36,
+   "annuityFactor": "0.0308770969",
+   "halfOverFactor": "16.193232",
+   "predictedLargestFailingMinor": 16,
+   "predictedSmallestCleanMinor": 17,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 20
+  },
+  {
+   "annualRatePct": "7.0",
+   "numberOfRepayments": 56,
+   "annuityFactor": "0.0209838980",
+   "halfOverFactor": "23.827794",
+   "predictedLargestFailingMinor": 23,
+   "predictedSmallestCleanMinor": 24,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 27
+  },
+  {
+   "annualRatePct": "16.8",
+   "numberOfRepayments": 2,
+   "annuityFactor": "0.5105243297",
+   "halfOverFactor": "0.979385",
+   "predictedLargestFailingMinor": 0,
+   "predictedSmallestCleanMinor": 1,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 5
+  },
+  {
+   "annualRatePct": "16.8",
+   "numberOfRepayments": 3,
+   "annuityFactor": "0.3427099188",
+   "halfOverFactor": "1.458960",
+   "predictedLargestFailingMinor": 1,
+   "predictedSmallestCleanMinor": 2,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 5
+  },
+  {
+   "annualRatePct": "16.8",
+   "numberOfRepayments": 4,
+   "annuityFactor": "0.2588108219",
+   "halfOverFactor": "1.931913",
+   "predictedLargestFailingMinor": 1,
+   "predictedSmallestCleanMinor": 2,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 5
+  },
+  {
+   "annualRatePct": "16.8",
+   "numberOfRepayments": 6,
+   "annuityFactor": "0.1749279391",
+   "halfOverFactor": "2.858320",
+   "predictedLargestFailingMinor": 2,
+   "predictedSmallestCleanMinor": 3,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 6
+  },
+  {
+   "annualRatePct": "16.8",
+   "numberOfRepayments": 12,
+   "annuityFactor": "0.0911098654",
+   "halfOverFactor": "5.487880",
+   "predictedLargestFailingMinor": 5,
+   "predictedSmallestCleanMinor": 6,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 9
+  },
+  {
+   "annualRatePct": "16.8",
+   "numberOfRepayments": 24,
+   "annuityFactor": "0.0493462184",
+   "halfOverFactor": "10.132489",
+   "predictedLargestFailingMinor": 10,
+   "predictedSmallestCleanMinor": 11,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 14
+  },
+  {
+   "annualRatePct": "16.8",
+   "numberOfRepayments": 36,
+   "annuityFactor": "0.0355532702",
+   "halfOverFactor": "14.063404",
+   "predictedLargestFailingMinor": 14,
+   "predictedSmallestCleanMinor": 15,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 18
+  },
+  {
+   "annualRatePct": "16.8",
+   "numberOfRepayments": 56,
+   "annuityFactor": "0.0258811303",
+   "halfOverFactor": "19.319094",
+   "predictedLargestFailingMinor": 19,
+   "predictedSmallestCleanMinor": 20,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 23
+  },
+  {
+   "annualRatePct": "36.0",
+   "numberOfRepayments": 2,
+   "annuityFactor": "0.5226108374",
+   "halfOverFactor": "0.956735",
+   "predictedLargestFailingMinor": 0,
+   "predictedSmallestCleanMinor": 1,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 5
+  },
+  {
+   "annualRatePct": "36.0",
+   "numberOfRepayments": 3,
+   "annuityFactor": "0.3535303633",
+   "halfOverFactor": "1.414306",
+   "predictedLargestFailingMinor": 1,
+   "predictedSmallestCleanMinor": 2,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 5
+  },
+  {
+   "annualRatePct": "36.0",
+   "numberOfRepayments": 4,
+   "annuityFactor": "0.2690270452",
+   "halfOverFactor": "1.858549",
+   "predictedLargestFailingMinor": 1,
+   "predictedSmallestCleanMinor": 2,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 5
+  },
+  {
+   "annualRatePct": "36.0",
+   "numberOfRepayments": 6,
+   "annuityFactor": "0.1845975005",
+   "halfOverFactor": "2.708596",
+   "predictedLargestFailingMinor": 2,
+   "predictedSmallestCleanMinor": 3,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 6
+  },
+  {
+   "annualRatePct": "36.0",
+   "numberOfRepayments": 12,
+   "annuityFactor": "0.1004620855",
+   "halfOverFactor": "4.977002",
+   "predictedLargestFailingMinor": 4,
+   "predictedSmallestCleanMinor": 5,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 8
+  },
+  {
+   "annualRatePct": "36.0",
+   "numberOfRepayments": 24,
+   "annuityFactor": "0.0590474159",
+   "halfOverFactor": "8.467771",
+   "predictedLargestFailingMinor": 8,
+   "predictedSmallestCleanMinor": 9,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 12
+  },
+  {
+   "annualRatePct": "36.0",
+   "numberOfRepayments": 36,
+   "annuityFactor": "0.0458037942",
+   "halfOverFactor": "10.916126",
+   "predictedLargestFailingMinor": 10,
+   "predictedSmallestCleanMinor": 11,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 14
+  },
+  {
+   "annualRatePct": "36.0",
+   "numberOfRepayments": 56,
+   "annuityFactor": "0.0370844726",
+   "halfOverFactor": "13.482732",
+   "predictedLargestFailingMinor": 13,
+   "predictedSmallestCleanMinor": 14,
+   "sweepFromMinor": 1,
+   "sweepToMinor": 17
+  }
+ ],
+ "totalSweepCases": 330
+}
