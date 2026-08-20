@@ -85,11 +85,22 @@ first header carried pass-3f/T64 rationale verbatim (a P-12 corrections leak), r
 2. **T71** — paired INDEPENDENT reviewer for T70. Not optional: this same comment has been rewritten twice
    and been wrong twice (T65 rejected by T67; T69's fix found a defect in T67's own replacement text).
 3. **T15** — archive the run, record the strangler backlog, append postmortem patterns. Depends on T71.
-4. Then **Tier A**: `tierA-gl-accounting` and `tierA-loan-product-schedule` both become READY (their only
-   dependency is `tier0-harness-schedule-poc`). Lowest tier first; tie-break on smaller `main_loc` →
-   `tierA-loan-product-schedule` (20,461) before `tierA-gl-accounting` (24,000), unless the unblocking count
-   says otherwise (`gl-accounting` unblocks more, so weigh that first — the rule is *most dependents first*,
-   `main_loc` only as tie-break, and `gl-accounting` unblocks 5 contexts to `loan-product-schedule`'s 1).
+4. Then **Tier A**. Once `tier0-harness-schedule-poc` is `done`, three contexts become READY —
+   **computed from `program.json`, not estimated**:
+
+   | context | tier | `main_loc` | direct dependents |
+   |---|---|---|---|
+   | `tierA-gl-accounting` | A | 24,000 | **6** |
+   | `tierA-loan-product-schedule` | A | 20,461 | 1 |
+   | `tierD-test-corpus-to-vectors` | D | 321,000 | 0 |
+
+   The selection rule is **lowest tier first; within a tier, the one unblocking the most dependents;
+   `main_loc` only as tie-break.** So it is **`tierA-gl-accounting`** — it unblocks six contexts
+   (`loan-lifecycle`, `charges-rates-tax`, `savings-deposits`, `branch`, `shares`, `clients-groups`) to
+   `loan-product-schedule`'s one, and the dependents rule outranks the 3,539-LOC size difference. At 24,000
+   LOC it is **under** the 25,000 splitting threshold, so it may be planned whole — but check
+   `files_hint` breadth before deciding, since the plan gate also rejects a `files_hint` spanning a whole
+   large module.
 
 **T12 remains `done_partial`, deliberately not `done`.** The rehydration half is a committed re-runnable
 assertion (`.softhouse/bin/rehydrate-check.sh`; this fire: 70 terminal tasks, none re-selected). **The
