@@ -277,6 +277,46 @@ Every worker prompt carries it; review enforces it. State only what you verified
 - **Closed as already-satisfied**: T62's follow-up F-1 (wire up a contract-digest guard) —
   `VerifyContractDigest` already fires at `grade.go:237` before `LoadStore`, driver-confirmed.
 
+
+### P-15 — a rejection is terminal for its task ID, and must name its successor in a FIELD
+
+*Fire 20260820-140000. `rehydrate-check.sh` flagged rejected `T70` as re-runnable, exactly as it flagged
+`T65` in fire 20260820-110001.* The two rejections differ and the difference is the point: `T65`'s commits
+**were** merged (via `T69`), so `superseded` fit; `T70`'s were **deliberately not merged** and are preserved
+on its branch for `T72` to branch from. Both are terminal **for that task id** — this pipeline never re-runs
+a rejected id, because the retry carries a new one (`T65`→`T69`, `T70`→`T72`).
+
+That makes a new failure mode possible: a rejection that is terminal, unmerged, and has **nobody assigned to
+finish it**. So `rejected` is terminal *only* alongside a guard requiring an explicit `superseded_by`.
+
+**The guard's first draft was a silent false green, and only testing it found that.** It scanned note text
+for the rejected id — and `T15`'s note mentions `T70` in passing ("archiving now would freeze the marker"),
+which the scan counted as a successor. It **passed with the real successor deleted**. Rewritten to read an
+explicit `superseded_by` field and then falsified two ways (successor deleted; field removed), both exiting
+1, with the honest state exiting 0.
+
+**An assertion that cannot fail is worse than no assertion** — it converts "not checked" into "checked and
+fine". This is `P-14` ("a mutation no vector can distinguish is a blind spot, not an absence") applied to the
+scheduler's own state, and `T62`'s silent-false-green defect class recurring in a third place. *Test the
+guard, not just the thing it guards.*
+
+### P-16 — the driver's own claims are worker-checkable, and this fire two of them were wrong
+
+*Fire 20260820-140000.* The driver committed a source-derived hypothesis to `.softhouse/reviews/` **before**
+dispatching `T66`, precisely so the ruling could not turn on whose report read better. **`T66` refuted it**,
+and the driver's error was structural: it reasoned about the live model when the lookup runs on a
+**till-date-truncated deep copy**. The driver then **overstated a finding against `T66`** and withdrew it on
+checking, and separately **propagated an unchecked line number** (`:1226`, actually `:1224`) out of `T66`'s
+own prediction, into its re-derivation, and onward into `T70`'s dispatch prompt — `P-12` recurring in the
+document whose job was checking.
+
+Two consequences worth keeping:
+1. **Register the driver's reasoning before the worker reports.** It cost nothing and made a refutation
+   legible instead of arguable.
+2. **A number copied from the artefact under review is not evidence, it is the artefact's claim.** Resolve
+   every citation against the pinned source before repeating it — especially in a document whose purpose is
+   to check that artefact.
+
 <!-- LEARNED PATTERNS END -->
 
 ### Run 2026-08-17-run1-harness-schedule-poc — fire `20260819-170001` (local, oracle REACHABLE) — 2026-08-19
