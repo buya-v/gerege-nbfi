@@ -355,3 +355,190 @@ guard predicate and none touches a vector.
 * **That `NON_PAYABLE_ROW_TYPES = {"DISBURSEMENT"}` is complete for row kinds no capture in this store
   carries.** Same limit T82 records; the failure direction is a loud refusal, which is the right one.
   `[UNVERIFIED]`
+
+---
+---
+
+# CONFIRMATION PASS — T98 at `849d618`
+
+**Scope.** Not a fresh review: a check that my four findings landed, that nothing else rode along, and
+a ruling on the two questions the driver put to me. Re-verified against `softhouse/T82-pass3i-defects`
+head **`849d618`** in a scratch clone (`/tmp/t98repo`) and a scratch tree (`/tmp/t98tree`).
+
+## VERDICT: **MICRO-FIX** — all four findings landed and are verified; two mechanical number errors remain in committed evidence
+
+F-1, F-2, F-3 and F-4 are **closed**, each verified by me rather than accepted. The work went beyond
+the brief in three ways I asked for and did not require. Two residuals are ≤6 mechanical lines, touch
+no guard predicate and no vector, and should be fixed before merge rather than carried:
+
+* **M-1 — the `main` line citations are off by one, in six places, inside the retraction of a false
+  claim.** The block is tagged `[VERIFIED: git show main:…]` and cites `:254` / `:259` / `:260`. The
+  actual lines in `git show main:.softhouse/handoff/T74-promote-vectors.py` are **`:255`** (`or 0`),
+  **`:260`** (`is None`) and **`:261`** (`unrecorded.append`) — I re-extracted and printed them with
+  true line numbers, and confirmed main's copy is unchanged (sha `27bb20b4…`, identical to the copy I
+  used in the first pass). A reader opening `:254` finds `"kind": p["type"],`. Occurrences:
+  `prove-promote-guards.py:130-131`, `T82.md:293,294,295,298`, and — regenerated, so it follows from
+  the first — `TRANSCRIPT.txt:361`. [VERIFIED]
+* **M-2 — the handoff's sweep totals do not match its own committed evidence.** `T82.md:374-376`
+  prints `1093 / 47 / 622`; the committed `SWEEP.txt` prints `1107 / 49 / 628`; my reproduction of the
+  committed run prints `1107 / 51 / 725`. Stale numbers from an earlier run, in the section that fixes
+  a miscount finding. [VERIFIED] The **conclusion is unaffected and I reproduced it** — see below.
+
+Everything else I found is a note, not a fix.
+
+## F-1 — closed, and closed better than asked
+
+* **Deleted at source.** `grep -c 'could not do this\|could not tell it'` = **0** in both
+  `prove-promote-guards.py` and `TRANSCRIPT.txt`. The only surviving occurrences are in `T82.md` at
+  `:286`, `:305` and `:550`, where the sentence is **quoted in order to retract it** — which is correct
+  practice; a correction must name what it corrects. [VERIFIED]
+* **The relabelled case proves what its new name claims.** `KIND: REGRESSION`, and
+  `prove-promote-guards.py:191-212` now loads `main`'s real extracted bytes as a second promoter, runs
+  the same mutation through both, compares `expect.periods` for all six group-E vectors and
+  `raise SystemExit("ASSERTION FAILED: the regression control is not a regression control …")` if they
+  disagree. In my own run it printed `expect.periods identical between this branch and main: 6,
+  differing: 0`. It is a falsifiable assertion, not a label. [VERIFIED: my run, `/tmp/t98-proofrun.txt`]
+* It re-derived my finding rather than accepting it, and reached the same substance. The *substance*
+  is right; only the line numbers are wrong (**M-1**).
+
+## F-2 — closed; I drove both new guards red again, independently
+
+The three shipping scripts are **byte-identical** between the head I first reviewed and `849d618`
+(`run-pass3i.sh` `3ca0d3f6…`, `build-counterfactuals.py` `b1e9f608…`, `T74-promote-vectors.py`
+`efcfcfa5…`), so my nine earlier red-drives still stand verbatim. On top of that, using **my own**
+mutation script against the new tree:
+
+| my input | new code | `main`'s bytes |
+|---|---|---|
+| payable `REPAYMENT` row 1 with `periodNumber` deleted, all six group-E cases | **exit 1** — `period[1] is a payable REPAYMENT row with NO periodNumber` | **exit 0** — accepts, writes `installment_number 0`, promotes six vectors |
+| every `DISBURSEMENT` row given `periodNumber: 0` | **exit 1** — `period[0] is a DISBURSEMENT row but carries periodNumber 0` | accepts |
+
+Both are now `MODES` entries (`period-number-absent-payable`, `period-number-on-nonpayable`), each
+paired with a counterproof against `main`'s extracted bytes. [VERIFIED]
+
+## F-3 — closed, and the new sweep is tested against the defect it exists to catch
+
+`T74.md:225-238` now carries the `capture-prod3i-raw.json | 6` row, reads **"42 parity + 4 refusal =
+46 files"**, and is annotated with an honest account of *why* the first sweep missed it (both regexes
+tuned to the banner's phrasing). No `36 parity` claim survives in that file except inside the
+correction text quoting the old wording. [VERIFIED]
+
+**I did not take the new sweep's word for it — I ran it against the PRE-FIX tree.** Its TIER-1 listing
+contains, at position 495:
+
+```
+    238  36 parity + 4 refusal. A whole-file grep for `capture-prod-raw` across every vector returns nothing.
+```
+
+So "this is the tier that would have caught F-3" is **demonstrated**, not asserted. [VERIFIED:
+`sweep-census.py /tmp/t82tree`]
+
+**And I re-ran my own differently-shaped sweep on the fixed tree.** After `T74.md`, the only stale
+present-tense restatement left is `.softhouse/vectors/README.md:580` (T93). Two sweeps of different
+shapes converging on the same single survivor. [VERIFIED]
+
+## F-4 — closed; I recounted from the script
+
+`grep -c '^expect 0 '` = **10**, `grep -c '^expect 1 '` = **15**, total **25**, and my run reports
+`25 as expected, 0 not as expected`. Classifying every `expect` line by its label:
+
+* **CONTROL** (`expect 0`): lines 85, 161 → **2**
+* **COUNTERPROOF** (`expect 0`): lines 108, 170, 185, 191, 203, 214, 220 → **7**
+* **REGRESSION** (`expect 0`): line 230 → **1**
+* **GUARD** (`expect 1`): lines 99, 117, 126, 144, 150, 167, 176, 182, 188, 194, 200, 206, 211, 217, 223 → **15**
+
+15 + 7 + 2 + 1 = **25**, and 7 + 2 + 1 = **10** green. The committed composition table is exactly
+right. [VERIFIED]
+
+## Adopted beyond the brief — all three verified
+
+* Every counterproof drives `git show main:` **real bytes**; `restore-old-table` is **gone**
+  (`grep -rn restore-old-table` over the proof dir: 0 hits outside `SWEEP.txt`). [VERIFIED]
+* Guard 18 **direction (b)** added — the direction I exercised and the rig had not. [VERIFIED]
+* `TRANSCRIPT.txt` now reproduces my run with **zero diff lines** after normalising hashes and paths
+  (last pass it differed only in tempdir names; now it is exact). [VERIFIED]
+
+## Question 1 — is the blind-spot list honest and complete enough to rely on?
+
+**Honest: yes, and unusually so.** It names two spots that are **not closable by grep at all** (a
+census with no number; a census with spelled-out numbers) instead of implying completeness, and it
+names the right one as the residual risk. The design reasoning is also sound: it splits the search
+space rather than weakening the pattern, which is the correct response to "a bare `\b36\b` returns
+~19,000 hits". The tier that matters is empirically validated against the actual escape (above).
+
+**Complete: not quite — one omission and one presentation gap, both notes, neither a reason to hold
+the merge:**
+
+* **N-2 — self-inclusion is not on the list.** The sweep scans a tree that now contains its own
+  output. Re-running it today gives PASS B **51** and PASS C **725** against the committed **49** and
+  **628**, and the difference is *exactly* `SWEEP.txt`'s own contribution (**+2** and **+97**, measured
+  per-file). TIER 1 is unaffected (`SWEEP.txt` is `.txt`, so not prose-tier) and reproduces
+  **byte-identically** — my TIER-1 section diffs to **0 lines** against the committed one, all 1107
+  hits. So the classification base is fully reproducible; only the two structural counters drift.
+  [VERIFIED: `/tmp/t98-passc.py`]
+* **N-3 — PASS C's hits are never printed.** Only TIER 1 is listed, and PASS B only under `--full`
+  (which the committed `SWEEP.txt` was not run with). One of the three nets therefore produces a
+  count — 628, the largest of the three — that no human can classify. "Narrow enough that a human can
+  classify every hit" is the script's own stated design goal, and PASS C does not meet it.
+  [VERIFIED: read the code; there is no PASS C print path]
+* Minor doc imprecision, in the safe direction: the docstring describes PASS B/C as the "TIER 2"
+  nets, but the code applies them to **every** file including prose. The behaviour is broader than
+  documented, not narrower.
+
+**My ruling: rely on it.** The conclusion it reaches — one stale survivor, `README.md:580` — I
+verified twice by independent routes, and the escape it was built for is empirically caught.
+
+## Question 2 — must N-1 land before merge?
+
+**No. I agree with the decision, and I would have made the same one.** Three reasons:
+
+1. My own review filed N-1 as **"P2, note only"** and explicitly did not ask for it.
+2. Tightening `i.get("daysInYearCustomStrategy")` into a key-presence check **is a guard predicate
+   change**. Landing a new refusal path without driving it red is *exactly* the F-1 defect I rejected
+   this branch for. Declining it on those grounds is the control working, not a dodge.
+3. It cannot bite: the key is present with an explicit `null` in **36/36** cases [VERIFIED, my first
+   pass], so today the `.get` and a presence check are indistinguishable in behaviour.
+
+F-7 records it with the reasoning and notes the rig now has a `MODES` slot ready. **Do not hold the
+merge for it.**
+
+## Invariants re-verified at `849d618` against CURRENT main
+
+`main` moved twice during this pass (`b7d3590` → `dfc09fd` → `c3ba0c9`); all checks below are against
+the current tip.
+
+| check | result |
+|---|---|
+| `git diff --stat main...branch -- .softhouse/vectors/` / `nexus/` / `pathb/` / `t83-nonamortizing/` | all **empty** [VERIFIED] |
+| files changed by the branch vs main | the same 17 as before, plus `SWEEP.txt` and `sweep-census.py`. **Nothing rode along.** [VERIFIED] |
+| three shipping scripts vs the head I first reviewed | **byte-identical** — T98 changed only evidence and prose [VERIFIED] |
+| re-run `T74-promote-vectors.py` | all **46** vectors byte-identical; `git status --porcelain .softhouse/vectors/` empty [VERIFIED] |
+| `bash .softhouse/conformance.sh` | **exit 0** — parity **42** PASS / 0 FAIL, refusal 4 PASS, **5576 graded**, 84 ungraded, 0 inadmissible, 0 refused, 0 harness errors, 0 invariant violations, **0 assertions NOT RUN** [VERIFIED: my run] |
+| `gofmt -l` | exactly `nexus/internal/apps/loanschedule/contract/contract.go` [VERIFIED] |
+| `prove-guards-go-red.sh` | **25 as expected, 0 not as expected**, exit 0 [VERIFIED: my run] |
+| `TRANSCRIPT.txt` vs my run | **0 diff lines** after hash/path normalisation [VERIFIED] |
+| `py_compile` on the three Python proof files, `bash -n` on the driver | clean [VERIFIED] |
+
+**One note on the interpreter guard, not a defect.** `sh .softhouse/conformance.sh` exits **2** in this
+branch's tree, not 3, because the branch never touched `.softhouse/conformance.sh` and its base
+predates T81. `git show main:.softhouse/conformance.sh` **does** carry `EXIT_WRONG_INTERPRETER=3`
+(`:68`), and the branch does not modify the file, so merged main's guarded copy wins with no conflict.
+I invoked with `bash` throughout. [VERIFIED]
+
+## Observation for whoever maintains the rig — `main:` is a moving baseline
+
+Every counterproof now resolves `git show main:…` at run time. That is stronger than the
+reconstruction it replaced, and it is what I asked for — but the baseline is a **moving ref**. `main`
+moved twice while I was checking, and the moment this branch merges, `main` will hold the *corrected*
+scripts, at which point all **seven** COUNTERPROOF rows flip from exit 0 to exit 1 and the rig reports
+seven failures against itself. The transcript is reproducible only until merge. One-line remedy for a
+future pass: resolve the baseline as `git show $(git merge-base main HEAD):…`, which is stable both
+across `main` moving and across the merge. Recording it because I created the exposure by asking for
+main's real bytes. **Not a finding, and not a reason to hold anything.**
+
+## What would have made me reject again
+
+A guard added for F-2 that I could not drive red myself, or a "control" that still could not
+discriminate — and neither is present: I drove both new guards red with my own inputs and confirmed
+`main` accepts the same captures, and the relabelled regression case now *proves* its own kind and
+fails loudly if the two codebases ever diverge.
