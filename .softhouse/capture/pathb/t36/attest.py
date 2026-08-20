@@ -29,8 +29,11 @@ TENANT = sys.argv[1] if len(sys.argv) > 1 else 'gerege'
 # Which capture set to attest.  'pathb' = the four committed B-0x sets (T22 P0-6 re-capture);
 # 'emiloop' = the T36 EMI re-adjust-loop probes (T22 P1-11, second clause).
 CAPTURE_SET = sys.argv[2] if len(sys.argv) > 2 else 'pathb'
-OUT = os.path.join(HERE, 'out',
-                   'recapture-%s' % TENANT if CAPTURE_SET == 'pathb' else CAPTURE_SET)
+# ATTEST_OUT (added by T76) lets an INDEPENDENT re-run write its own evidence directory
+# instead of overwriting T36's committed capture set.  Re-running a generator over the
+# artefacts it produced last fire destroys the very record a reviewer diffs against.
+OUT = os.environ.get('ATTEST_OUT') or os.path.join(
+    HERE, 'out', 'recapture-%s' % TENANT if CAPTURE_SET == 'pathb' else CAPTURE_SET)
 FIN, DB = 'fineract-fineract-1', 'fineract-db-1'
 BASE = 'https://localhost:8443/fineract-provider'
 
@@ -263,7 +266,11 @@ att = {
                 'T22 P0-6 (production-settings tenant re-capture)'],
     'capture_set': 'pathb-B01..B04' if CAPTURE_SET == 'pathb' else 'pathb-emiloop-probes',
     'capture_path': 'Path B — running Fineract server (REST + PostgreSQL)',
-    'produced_by': {'task': 'T36', 'branch': 'softhouse/T36-pathb-admissibility',
+    # ATTEST_TASK / ATTEST_BRANCH (added by T76): a sidecar produced by a LATER task must
+    # not claim T36 produced it.  Provenance that names the wrong author is a false record,
+    # even when every number in it is right.
+    'produced_by': {'task': os.environ.get('ATTEST_TASK', 'T36'),
+                    'branch': os.environ.get('ATTEST_BRANCH', 'softhouse/T36-pathb-admissibility'),
                     'generated_at_utc': now(),
                     'generator': 't36/attest.py',
                     'preconditions_script': 't36/preconditions.sh',

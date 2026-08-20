@@ -1,0 +1,29 @@
+========================================================================================
+mutant principalDue  (B-01-mut-principalDue.json)
+  currency=MNT scale=2 inMultiplesOf=0 loanTermInDays=365
+  per fromDate    dueDate     days  principal    interest   total        balance
+    1 2026-1-1    2026-2-1      31     9048237     2160000    11208237    110951763
+    2 2026-2-1    2026-3-1      28     9211105     1997132    11208237    101740658
+    3 2026-3-1    2026-4-1      31     9376905     1831332    11208237     92363753
+    4 2026-4-1    2026-5-1      30     9545689     1662548    11208237     82818064
+    5 2026-5-1    2026-6-1      31     9717512     1490725    11208237     73100552
+    6 2026-6-1    2026-7-1      30     9892427     1315810    11208237     63208125
+    7 2026-7-1    2026-8-1      31    10070491     1137746    11208237     53137634
+    8 2026-8-1    2026-9-1      31    10251760      956477    11208237     42885874
+    9 2026-9-1    2026-10-1     30    10436291      771946    11208237     32449583
+   10 2026-10-1   2026-11-1     31    10624145      584092    11208237     21825438
+   11 2026-11-1   2026-12-1     30    10815379      392858    11208237     11010059
+   12 2026-12-1   2027-1-1      31    11010060      198181    11208240            0
+  I1   sum(principal)=120000001 disbursed=120000000                     **FAIL**
+  I2   final outstanding=0                                              PASS
+  I3   sum(interest)=14498847 totalInterestCharged=14498847             PASS
+  I4   sum(totalDue)=134498847 totalRepaymentExpected=134498847         PASS
+  I5   splits sum to whole (1 break(s)) [(12, 11208241, 11208240)]      **FAIL**
+  I6   P+I+F+Pen=134498847 totalRepayment=134498847                     PASS
+  S1   all money literals integral in minor units (0 bad)               PASS
+  S2   running balance ties (1 break(s)) [(12, -1, 0)]                  **FAIL**
+  S3   disbursement pseudo-period principal == totalPrincipalDisbursed  PASS
+  S4   loanTermInDays=365 span=365 sum(daysInPeriod)=365                PASS
+  RESULT: FAILURE
+========================================================================================
+OVERALL: FAIL

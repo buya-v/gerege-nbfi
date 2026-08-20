@@ -172,6 +172,8 @@ storing would corrupt the vector.
 
 ```sh
 sh   t36/preconditions.sh gerege     # 15 fail-the-run assertions        (T22 P0-4)
+                                     # HARDENED BY T76 - see below; the canary is now
+                                     # pinned by CONTENT and its expectation is a CONSTANT
 python3 t36/attest.py gerege pathb   # preconditions + capture + attestation.json (T22 P0-3, P0-6)
 sh   t36/rundiff.sh                  # number-by-number diff vs the committed corpus
 sh   t36/run-invariants.sh           # T22's ten property invariants
@@ -183,3 +185,45 @@ python3 t36/t36_emiloop_verdict.py   # loop-fired verdict vs the no-loop model
 ```
 
 Findings and their evidence: `PATHB-REPORT.md`.
+
+---
+
+## HARDENED by T76 (2026-08-20) — the preconditions could be talked out of failing
+
+T22 P0-4 asked that the recipe **fail the run** rather than sit in prose, and T36 delivered that. Two
+ways remained to make it pass while the arithmetic in force was the wrong one. Both are closed, and both
+closures are demonstrated by an attack transcript rather than asserted:
+
+| attack | what it tried | result | transcript |
+|---|---|---|---|
+| A | capture on the stock `default` tenant | **exit 1, 5 breaches** (Kolkata, `rounding-mode=6`, HALF_EVEN in force, MySQL-era `schema_connection_parameters`, canary `20925.04`) | `t76/out/attack-A-default.txt` |
+| B | `CANARY_EXPECT=20925.04` — tell the script HALF_EVEN is what it should expect | **exit 1, 6 breaches**; the expectation is now a **constant**, and `CANARY_EXPECT_OVERRIDE` is a tripwire that fails on sight | `t76/out/attack-B-expect-override.txt` |
+| C | swap the canary for a request that is **not** a half-minor-unit tie (principal `1162502.78`), so `20925.05` comes back under either mode | **exit 1** — the canary request is now pinned **by content** (`"principal": 1162502.5`, `"interestRatePerPeriod": 21.6`, `"numberOfRepayments": 12`, `"interestCalculationPeriodType": 1`) and its sha256 is printed | `t76/out/attack-C-swapped-canary.txt` |
+| D | omit the canary entirely | **exit 1** — "A DB row is not proof of the mode in force" | `t76/out/attack-D-nocanary.txt` |
+
+The honest run on `gerege` still exits **0** with **22 PASS** and no FAIL (`t76/out/preconditions-gerege.txt`).
+
+**Two small generalisations to `t36/attest.py`, for provenance rather than function:** `ATTEST_OUT` lets a
+later task write its own evidence directory instead of overwriting the capture set a reviewer diffs
+against, and `ATTEST_TASK` / `ATTEST_BRANCH` stop a sidecar produced by a later task from claiming T36
+produced it. Default behaviour is byte-for-byte unchanged.
+
+**One operational note that cost a round trip:** `conformance.sh` has a `#!/bin/bash` shebang and uses
+process substitution. Invoked as `sh .softhouse/conformance.sh` it dies with a syntax error at line 104 and
+**exits 2** — which is the harness's own "nothing was graded" code and reads exactly like a real fatal
+verdict. Run it as `bash .softhouse/conformance.sh` or `./.softhouse/conformance.sh`.
+
+### The T76 additions to the recipe
+
+```sh
+# independent re-capture into a T76-owned directory, with its own attestation sidecar
+ATTEST_TASK=T76 ATTEST_BRANCH=softhouse/T76-pathb-gerege-recapture \
+  ATTEST_OUT="$PWD/t76/out/recapture-gerege" python3 t36/attest.py gerege pathb
+
+# the ten T22 invariants, then T76's I7 mirror-column invariant the ten do not cover
+python3 t22-audit/t22_invariants.py t76/out/recapture-gerege/B-0*-raw.json
+python3 t76/t76_mirror_invariant.py t76/out/recapture-gerege/B-0*-raw.json
+
+# B-01 vs the PROMOTED Path A vector P-MNT-1M2, and both differentials, in exact minor units
+python3 t76/t76_crosscheck.py
+```

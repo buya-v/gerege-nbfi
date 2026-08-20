@@ -33,7 +33,14 @@ AUTH='Authorization: Basic bWlmb3M6cGFzc3dvcmQ='
 # answer 20925.05 under HALF_UP and 20925.04 under HALF_EVEN.
 # T22 observed both, one per tenant (t22-audit/out-modeprobe2/).
 CANARY_REQ=${CANARY_REQ:-}
-CANARY_EXPECT=${CANARY_EXPECT:-20925.05}
+# HARDENED by T76.  CANARY_EXPECT used to be env-overridable, which meant the single
+# strongest assertion in this script could be TALKED OUT OF FAILING:
+#   CANARY_EXPECT=20925.04 sh preconditions.sh default
+# would have printed "PASS effective rounding mode canary" while the process ran
+# HALF_EVEN.  The expectation is now a constant, and an attempt to override it from
+# the environment is itself a breach.
+CANARY_EXPECT=20925.05
+CANARY_EXPECT_ENV_ATTEMPT=${CANARY_EXPECT_OVERRIDE:-}
 
 fails=0
 ok()   { printf '  PASS  %s\n' "$1"; }
@@ -146,6 +153,29 @@ esac
 
 # ------------------- P14 EFFECTIVE-mode canary: ask the running server
 # Strongest of the lot: it is the arithmetic itself answering, not configuration.
+if [ -n "$CANARY_EXPECT_ENV_ATTEMPT" ]; then
+  bad "CANARY_EXPECT_OVERRIDE is set ('$CANARY_EXPECT_ENV_ATTEMPT') — the canary expectation is a CONSTANT (20925.05). Refusing to grade the arithmetic against a value supplied by the runner."
+fi
+
+# P14b (T76): the canary REQUEST is pinned by content, not merely by path.  Without this
+# a runner could point CANARY_REQ at any request that happens to return 20925.05 under
+# EITHER mode -- e.g. a principal that is not a half-minor-unit tie -- and the strongest
+# assertion in the script would degrade into a tautology.  The tie is a property of these
+# four literals: 1,162,502.50 x 0.018 = 20,925.045 exactly.
+if [ -n "$CANARY_REQ" ] && [ -f "$CANARY_REQ" ]; then
+  creqsha=$(shasum -a 256 "$CANARY_REQ" | cut -d' ' -f1)
+  cmiss=''
+  for lit in '"principal": 1162502.5' '"interestRatePerPeriod": 21.6' \
+             '"numberOfRepayments": 12' '"interestCalculationPeriodType": 1'; do
+    grep -qF "$lit" "$CANARY_REQ" || cmiss="$cmiss [$lit]"
+  done
+  if [ -n "$cmiss" ]; then
+    bad "canary request $CANARY_REQ (sha256 $creqsha) is not the pinned half-cent tie; missing:$cmiss"
+  else
+    ok "canary request pinned by content (half-cent tie 1162502.50 x 0.018 = 20925.045), sha256 $creqsha"
+  fi
+fi
+
 if [ -n "$CANARY_REQ" ] && [ -f "$CANARY_REQ" ]; then
   cbody=$(curl -sk -X POST "$BASE/api/v1/loans?command=calculateLoanSchedule" \
     -H "$AUTH" -H "Fineract-Platform-TenantId: $TENANT" -H 'Content-Type: application/json' \
