@@ -1740,9 +1740,9 @@
       ],
       "context": "harness",
       "dependencies": [],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "Raised by the driver, fire 20260820-170001, from a finding BOTH T76 and T77 reached independently. The driver did NOT fix it inline despite it being a few lines, because conformance.sh is the grading harness and an unreviewed edit to the thing that decides PASS is exactly what this pipeline forbids. STANDING INSTRUCTION until it lands: invoke the harness as `bash .softhouse/conformance.sh`, NEVER `sh`. || local fire 20260820-200002: DISPATCHED (wave 1), isolated worktree, model opus."
+      "note": "Raised by the driver, fire 20260820-170001, from a finding BOTH T76 and T77 reached independently. The driver did NOT fix it inline despite it being a few lines, because conformance.sh is the grading harness and an unreviewed edit to the thing that decides PASS is exactly what this pipeline forbids. STANDING INSTRUCTION until it lands: invoke the harness as `bash .softhouse/conformance.sh`, NEVER `sh`. || local fire 20260820-200002: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260820-200002: DONE on softhouse/T81-conformance-shell-guard (2 commits). Guard is the FIRST executable statement, exits 3 'wrong interpreter, harness never started'. IT REFUTED THE DRIVER'S CONSTRAINT 4 RATHER THAN COMPLYING: on this machine /bin/sh IS bash 3.2.57, and bash 3.2 disables process substitution in POSIX mode, which it enters both as `sh` and under --posix - so the brief's claim that bash-via-sh and bash --posix are legitimate runs that must not trip the guard is FALSE HERE; both die at old line 104 on main with exit 2. So the guard FEATURE-TESTS the capability (BASH_VERSION set AND `< <(...)` actually works), not the shell's name. SECOND UNANTICIPATED FINDING (F-1, pre-existing, in nexus/, outside its scope guard): report.go:102 ranges an UNSORTED map[string][]string so two report lines swap order - measured 23/30 vs 7/30 over 30 runs of ONE binary. The harness report is therefore NOT byte-reproducible, which matters because byte-reproducibility of harness output is used as evidence in reviews. Registered as T90. Proofs committed as 29 transcripts. SCOPE: also edited .claude/skills/softhouse-uat/SKILL.md (which documented the harness WITHOUT bash - the trap's origin) and added an exit-3 row to softhouse-program's never-halt table. DRIVER ACCEPTS this as within the brief's 'update the exit-code table wherever it lives'; recorded as an intentional scope extension, not a breach."
     },
     {
       "id": "T82",
@@ -1902,6 +1902,25 @@
       "status": "pending",
       "attempts": 0,
       "note": "Paired reviewer for T88. Raised by the driver, local fire 20260820-200002. NEEDS NO ORACLE."
+    },
+    {
+      "id": "T90",
+      "title": "The harness report is not byte-reproducible \u2014 report.go:102 ranges an unsorted map",
+      "description": "Found by T81 while establishing a byte-identical baseline for its own change, and it is OUTSIDE T81's scope guard so T81 correctly did not fix it. `report.go:102` ranges an unsorted `map[string][]string`, so two `... killed by ...` lines swap order between runs of the SAME binary on the SAME input \u2014 T81 measured 23/30 vs 7/30 over 30 runs. WHY THIS MATTERS BEYOND TIDINESS: this pipeline repeatedly uses byte-identity of harness output as EVIDENCE (T81 itself had to normalise via a sorted diff to prove its change was inert, and reviewers are routinely asked to diff a run against main). A harness whose output is nondeterministic silently weakens every such proof, and worse, it trains reviewers to explain away diffs. Sort the iteration order deterministically. Do NOT change any verdict, any cell count, any grading behaviour, or the meaning of any exit code. Prove it: run the same binary N>=30 times on the same store and show byte-identical output every time, and show the VERDICT line and cell counts unchanged from main.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/harness/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T81"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260820-200002, from T81's F-1. Needs the oracle only to run the harness. files_hint is approximate - locate report.go before editing. Pair with an independent reviewer."
     }
   ]
 }
