@@ -96,10 +96,14 @@ type scheduleModel struct {
 	cancelled bool
 
 	// chain and chainValid are the memo over the forward interest chain. Entries
-	// 0..chainValid-1 are valid; see chainStep and interestChainUpTo.
+	// 0..chainValid-1 are valid, and chain[i] is keyed by POSITION in periods;
+	// see chainStep and interestChainUpTo.
 	chain      []chainStep
 	chainValid int
 
+	// minorDigits and precision are READ BY THE INTEREST FOLD (chainStep (a)) and
+	// are model-wide, so no invalidateFrom index can cover a write to them. They
+	// are set once in newScheduleModel and must never be written afterwards.
 	minorDigits int32
 	precision   int32 // Rounding.SignificantDigits
 	scale       int32 // Rounding.RateFactorScale
@@ -173,25 +177,73 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //
 // This is the port's counterpart of the oracle's Memo over
 // RepaymentPeriod.getCalculatedDueInterest / getDueInterest
-// [VERIFIED: RepaymentPeriod.java:60-70 declares the Memo fields; Memo.java:43-53
+// [VERIFIED: RepaymentPeriod.java:71-77 declares the four Memo fields -- :71, :73,
+// :75, :77; :60-70 is originalEmi/paidPrincipal/paidInterest/
+// futureUnrecognizedInterest/mc and was the wrong cite until T69. Memo.java:43-53
 // re-reads the declared dependencies on every get and Memo.java:56-72 recomputes
 // only when one of their hashes has moved]. The oracle invalidates by HASHING the
 // dependencies; this port invalidates by PERIOD INDEX.
 //
 // THE RULE THAT MAKES INDEX INVALIDATION SOUND -- read this before adding a write.
 //
-//	(a) The fold reads, for period i, ONLY these STORED fields, of periods 0..i:
-//	    the model's periods slice; that period's due and emiMinor; its segments
-//	    slice; and per segment from, due, outstandingMinor and rateFactorTillDue.
-//	    (Derived by reading interestChainUpTo and segmentCalculatedInterest, not
-//	    from this comment. NOT read: segment rateFactor, segment disbursedMinor --
-//	    which reaches the fold only after updateOutstandingBalances turns it into
-//	    outstandingMinor -- period from, and period idx.)
+// There are TWO obligations, not one. The memo is a map from a period INDEX to a
+// money pair, so it can go wrong by holding a stale VALUE (a) and (b), or by being
+// asked with the wrong KEY (c). A write-ordering rule alone does not cover (c).
 //
-//	(b) Therefore the memo is sound IF AND ONLY IF every write to one of those
-//	    fields on period j is PRECEDED by invalidateFrom(j') for some j' <= j,
-//	    with no read of the chain in between. That -- a write-ordering rule -- is
-//	    the whole of the soundness argument.
+//	(a) DEPENDENCY SET. The fold reads, for period i, exactly these STORED fields
+//	    of periods 0..i: the model's periods slice; that period's due and emiMinor;
+//	    its segments slice; and per segment from, due, outstandingMinor and
+//	    rateFactorTillDue. It ALSO reads two MODEL-WIDE fields that no index can
+//	    cover -- minorDigits (emi.go:542 majorFromMinor, emi.go:603 minorFromMajor)
+//	    and precision (emi.go:543-545, three roundSignificant calls). Those two are
+//	    set once in newScheduleModel's struct literal and MUST NEVER be written
+//	    after it: a write to either invalidates the WHOLE chain, and there is no
+//	    invalidateFrom(j) that expresses that. Per-tranche or per-period rounding
+//	    would break this and needs a different mechanism, not a guard.
+//	    (Derived by reading interestChainUpTo and segmentCalculatedInterest, not
+//	    from this comment. NOT read by the fold body: segment rateFactor, segment
+//	    disbursedMinor -- which reaches the fold only after updateOutstandingBalances
+//	    turns it into outstandingMinor -- and period from. Period idx is not read by
+//	    the fold body either, but it is NOT free: see (c).)
+//
+//	(b) WRITE ORDERING -- A SUFFICIENT RULE, NOT AN "IF AND ONLY IF". The cached
+//	    values stay fresh if every write to one of (a)'s PER-PERIOD fields on period
+//	    j is PRECEDED by invalidateFrom(j') for some j' <= j, with no read of the
+//	    chain in between. That is the discipline every live-model write site in this
+//	    file follows, and it is what a new write site should follow.
+//
+//	    It is SUFFICIENT and NOT NECESSARY, and writing it as "if and only if" is
+//	    false. What soundness actually needs is the weaker condition that
+//	    m.chainValid <= j holds at the next chain read after the write. An
+//	    invalidateFrom(j') with j' <= j ESTABLISHES that condition; CONSTRUCTION
+//	    ALREADY SATISFIES IT. m.chainValid is zero-valued; interestChainUpTo trusts
+//	    m.chain[last] only when last < m.chainValid (emi.go:578) and resumes only
+//	    from m.chainValid (emi.go:582-584); and invalidateFrom only ever LOWERS it
+//	    (emi.go:246-247), so while chainValid == 0 nothing is trusted and an
+//	    invalidateFrom call would be a no-op by its own guard.
+//
+//	    That is why the writes that BUILD a model carry no guard and are not
+//	    defects: generator.go:515-522 fills m.periods and sets p.idx before m.chain
+//	    is even allocated (generator.go:525), and deepCopy gives the copy a fresh
+//	    empty chain (emi.go:275) before writing its periods and segments
+//	    (emi.go:282, :284). DO NOT "FIX" THOSE SITES BY ADDING A GUARD. Guard any
+//	    write that can run after a chain read -- which is every write on a model
+//	    that has been handed to a caller.
+//
+//	(c) KEY INVARIANT -- what (b) does not cover and cannot. m.chain[i] is keyed by
+//	    POSITION IN m.periods (the store is m.chain[i] while the walk reads
+//	    m.periods[i], emi.go:594, :610), and p.idx is the key every lookup uses:
+//	    calculatedDueInterestMinor and dueInterestMinor call interestChainUpTo(p.idx)
+//	    (emi.go:618, :623), and the guards themselves are indexed by it
+//	    (invalidateFrom(p.idx), emi.go:684, :871, :1050, :1079). Soundness therefore
+//	    ALSO requires m.periods[i].idx == i for every i, and m.periods never
+//	    reordered, spliced or shortened after construction. Write p.idx, or permute
+//	    m.periods, and interestChainUpTo answers with ANOTHER PERIOD'S MONEY while
+//	    rule (b) is satisfied at every step -- (b) never mentions idx, and permuting
+//	    a slice whose contents are unchanged can be done with a guard and still be
+//	    wrong. This is why p.idx is assigned exactly once, in index order, at
+//	    generator.go:521, before m.chain exists, and why nothing in this package
+//	    sorts, reverses, copies over or deletes from m.periods.
 //
 // DO NOT restate (b) as "no quantity of a later period appears anywhere in the
 // fold, so step i is a function of periods 0..i and of nothing later". That
@@ -201,10 +253,13 @@ func (m *scheduleModel) checkCancel(i int) bool {
 // least four places, and this port reproduces three of them:
 //
 //   - the annuity fold. rateFactorN is a product over EVERY related period's rate
-//     factor and fnResult a fold over the same list, and the single resulting
-//     installment is written onto all of them, first included
-//     [VERIFIED: ProgressiveEMICalculator.java:1725-1739, the reduce at :1818-1822
-//     and :1824-1828; port: calculateLevelInstallment].
+//     factor and fnResult a fold over the same list MINUS THE FIRST, and the single
+//     resulting installment is written onto all of them, first included
+//     [VERIFIED: ProgressiveEMICalculator.java:1722-1742 --- rateFactorN at :1725,
+//     fnResult at :1726, the forEach/setEmi at :1736-1741; the reduces themselves
+//     are at :1818-1819 (calculateRateFactorPlus1NForEmi, :1816-1820) and :1827
+//     (calculateFnResultForEmi, :1822-1828), whose .skip(1) is at :1825; port:
+//     calculateLevelInstallment].
 //   - the EMI re-adjust smoothing loop. getEmiAdjustment scans FROM THE END and
 //     returns lastPeriod.getEmi().minus(penultimatePeriod.getEmi()), and the
 //     uniform installment derived from that tail residual is stamped onto every
@@ -217,23 +272,63 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //   - futureUnrecognizedInterest on period i is assigned the unrecognizedInterest
 //     of a period at index > i -- getPeriodWithUnrecognizedInterest filters on
 //     dueDate().isAfter(...) -- and that field is then added into
-//     calculateCalculatedDueInterest [VERIFIED: :1243-1251 calling :1805-1814;
-//     RepaymentPeriod.java:260]. NOT PORTED: it is unreachable on the graded
-//     domain, where nothing is ever paid.
+//     calculateCalculatedDueInterest [VERIFIED: :1243-1251 calling :1805-1814, the
+//     isAfter filter at :1809; RepaymentPeriod.java:260]. NOT PORTED.
+//
+//     THE REASON IS NOT "NOTHING IS EVER PAID". That sentence stood here until
+//     T69 and it is true but inert. unrecognizedInterest is calculatedDueInterest
+//     minus dueInterest, clamped at zero [VERIFIED: RepaymentPeriod.java:381-383],
+//     and dueInterest caps at emi + credited + futureUnrecognized [VERIFIED:
+//     RepaymentPeriod.java:276-286, :293-295]. So on a ZERO-EMI period with
+//     nothing paid it is strictly POSITIVE -- and zero-EMI periods are exactly
+//     what applyFinalPeriodResidual's counterpart creates. Nothing being paid does
+//     not close this.
+//
+//     What APPEARS to close it, read from source at T69: the lookup runs on a
+//     deepCopy in which calculateRateFactorForScheduleTillDateInclusive has
+//     already zeroed rateFactor and rateFactorTillPeriodDueDate on every interest
+//     period dated strictly after tillDate [VERIFIED: :1237 calling :1791-1803,
+//     filter targetDate.isBefore(ip.getDueDate()) at :1799, zeroing at :1800-1801],
+//     and tillDate is anchored at the DISBURSEMENT, not at maturity. On the
+//     ordinary single-disbursement path calculateLastUnpaidRepaymentPeriodEMI is
+//     entered at :747 with calculateFromRepaymentPeriodDueDate =
+//     getEffectiveRepaymentDueDate(model, changedPeriod, operation
+//     .getSubmittedOnDate()) [VERIFIED: :146-151 and :250-263], i.e. the due date
+//     of the period the disbursement falls in. Only on the allowFullTermForTranche
+//     branch is tillDate the disbursement date itself, at :247 [VERIFIED: the
+//     branch at :142-144 -> addFullTermTrancheDisbursement :155-174 ->
+//     mergeNewScheduleModelWithExistingOne :206-248]. Note also that :1183-1184
+//     RESETS the last unpaid period's futureUnrecognizedInterest to zero on entry,
+//     and that period is the only one this path can ever set.
+//
+//     [UNVERIFIED] -- READ FROM SOURCE, NOT OBSERVED, and it is not a finished
+//     proof. The argument still needs the tillDate period's OWN unrecognized
+//     interest to be zero on every graded shape, so that the periods after it
+//     inherit nothing through RepaymentPeriod.java:262; that step is not
+//     established here. T63 recorded the whole claim unproven with 101 admitted
+//     shapes carrying the zero-EMI half of the precondition, and T66 is chartered
+//     to settle it by ORACLE CAPTURE. Until a capture exists, treat "unreachable
+//     on the graded domain" as a HYPOTHESIS this port depends on, not a result --
+//     and do not upgrade it to an assertion from reading alone. That upgrade was
+//     made once, at T65, and rejected.
 //
 // So the memo does NOT cache the derivation of period i's state; it caches a pure
 // function of the model's CURRENT STORED FIELDS for periods 0..i. Every one of
-// those later->earlier influences, in the Java and in the port alike, is realised
-// as a WRITE to a stored field of an earlier period -- setEmi there, p.emiMinor
-// here -- so (b) covers all of them and no separate backward-dependency argument
-// is needed or true.
+// those later->earlier influences that this port reproduces is realised as a WRITE
+// to a stored field of an EARLIER period -- setEmi there, p.emiMinor here -- so
+// following (b) at each of those write sites is enough for them, and no separate
+// backward-dependency argument is needed or true. (b) is enough for THOSE SITES;
+// it is not the whole soundness argument, which is (a), (b) and (c) together.
 //
 // This is the push form of what the oracle's Memo does by pulling: it re-hashes
 // its declared dependencies on every get and never pushes an invalidation to a
 // neighbour [VERIFIED: Memo.java:43-53].
 //
-// Every write site in emi.go and generator.go was enumerated FROM THE WRITES at
-// T65 and each one checked against (b); the enumeration is in T65's handoff.
+// Every assignment in emi.go and generator.go was enumerated FROM THE WRITES and
+// classified against (a), (b) and (c) -- independently at T65, at T67 and at T69,
+// with the three enumerations agreeing on the SET of sites. The tables are in
+// those handoffs. Deliberately stated without a count: any number here goes stale
+// on the next line moved, and the enumeration, not the total, is the evidence.
 type chainStep struct{ calculated, due, carried int64 }
 
 // memoiseInterestChain switches the memo off. It is written only by this
@@ -563,7 +658,11 @@ func (m *scheduleModel) segmentCalculatedInterest(p *repaymentPeriod, s *interes
 // and NOT a claim that no later period can influence an earlier one. Later
 // periods influence earlier ones all over this file and all over the reference
 // oracle; they do it by WRITING the fields listed there, which is why every such
-// write is preceded by invalidateFrom. See chainStep before adding one.
+// write ON A LIVE MODEL is preceded by invalidateFrom -- the writes that BUILD a
+// model need no guard, and chainStep (b) says why. Note too that last is a KEY,
+// not just a bound: it indexes m.chain and m.periods alike, so chainStep (c) --
+// m.periods[i].idx == i, and no reordering -- is as load-bearing here as the
+// dependency set. See chainStep before adding a write.
 //
 // That dependency set is what lets the walk be memoised as a PREFIX and resumed
 // rather than restarted. Without the memo this function is O(n) on every read

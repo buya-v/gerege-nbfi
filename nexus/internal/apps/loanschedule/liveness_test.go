@@ -14,7 +14,9 @@ import (
 // Liveness, not arithmetic.
 //
 // .softhouse/conformance.sh grades neither of the two defects this file exists
-// for. The corpus replays its captured shapes (32 parity vectors at T65) through a
+// for. The corpus replays its captured shapes -- however many are promoted on the
+// day, deliberately not restated here, because this line already went stale once
+// and needed a hand edit -- through a
 // live context and compares money cells, so a port that ignores cancellation
 // entirely and a port that takes ten seconds to answer both PASS it — the run is
 // silent about how long an answer took and about whether a caller who left is
@@ -336,7 +338,8 @@ func TestInstallmentNumbersAreDenseOverPayableRowsOnly(t *testing.T) {
 				if p.InstallmentNumber != want {
 					t.Fatalf("disbursed %s, row %d (kind %d): InstallmentNumber %d, want %d — "+
 						"the payable-row counter is not dense and 1-based "+
-						"[VERIFIED: ProgressiveLoanScheduleGenerator.java:126, :143]",
+						"[VERIFIED: ProgressiveLoanScheduleGenerator.java:123, :143; "+
+						"down payment :341, :346; disbursement row :316-318 takes no number]",
 						formatDate(on), i, p.Kind, p.InstallmentNumber, want)
 				}
 				want++

@@ -434,7 +434,12 @@ func generate(ctx context.Context, req contract.GenerateRequest,
 	// nextInstallment is the dense, 1-based counter over PAYABLE rows -- down
 	// payment and repayment -- which a disbursement row does not advance. One
 	// shared counter runs across them and is read before it is incremented
-	// [VERIFIED: ProgressiveLoanScheduleGenerator.java:126, :143].
+	// [VERIFIED: ProgressiveLoanScheduleGenerator.java:123 reads
+	// scheduleParams.getInstalmentNumber() onto the repayment row and :143
+	// increments it; :341 reads the SAME counter onto the down-payment row and
+	// :346 increments it, inside processDisbursements; and the disbursement row
+	// at :316-318 neither reads nor increments it. :126 was cited here until T69
+	// and is wrong -- it is the .ifPresent lambda opener].
 	//
 	// CARRIED, NOT RECOMPUTED. Until T65 this was a helper, installmentNumberOf,
 	// that rescanned every row already emitted on every row emitted: a
