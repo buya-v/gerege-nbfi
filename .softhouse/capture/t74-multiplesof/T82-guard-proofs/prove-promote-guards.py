@@ -7,9 +7,11 @@ Exit 1 means the promotion script REFUSED the mutated capture, which for a GUARD
 passing outcome; the driver `prove-guards-go-red.sh` states the expected exit for each mode.
 
 The optional third argument is the promotion script to load. It defaults to the branch's
-`.softhouse/handoff/T74-promote-vectors.py`; the driver passes `main`'s REAL EXTRACTED BYTES
-(`git show main:…`) to produce each COUNTERPROOF. A counterproof run against a reconstruction of the
-old code proves less than one run against the old code, so nothing here reconstructs anything.
+`.softhouse/handoff/T74-promote-vectors.py`; the driver passes the FORK POINT'S REAL EXTRACTED BYTES
+(`git show $(git merge-base main HEAD):…`) to produce each COUNTERPROOF. A counterproof run against a
+reconstruction of the old code proves less than one against the old code, so nothing here
+reconstructs anything — and the baseline is the IMMUTABLE fork point rather than the moving ref
+`main`, so these rows keep meaning the same thing after this branch merges.
 
 HOW IT AVOIDS TOUCHING THE STORE. The promotion script is loaded as a MODULE (so it is the real code
 under test, not a copy of it), and only then are its two path globals repointed — `P3I_REF` at a
@@ -21,8 +23,8 @@ repayment-interval keys and a periodNumber. No principal, interest, balance or t
 
 THE THREE KINDS OF CASE, kept apart on purpose — conflating them is what T87 rejected:
 
-  GUARD        the new code REFUSES and `main` ACCEPTS. This is the only kind that demonstrates a
-               guard curing a defect, and each one is paired with a counterproof against `main`.
+  GUARD        the new code REFUSES and the PRE-FIX code ACCEPTS. This is the only kind that
+               demonstrates a guard curing a defect; each is paired with a fork-point counterproof.
   REGRESSION   both codebases behave identically and must go on doing so. It proves the rewrite
                BROKE NOTHING. It proves NOTHING about the defect and must never claim to.
   ASSERTION    a property of the emitted vector, checked in code rather than asserted in prose.
@@ -32,7 +34,6 @@ import json
 import os
 import shutil
 import sys
-import tempfile
 
 MODES = ("day-count", "down-payment", "down-payment-enabled", "repayment-every-absent",
          "repayment-every-conflict", "period-number-zero", "period-number-bad",
@@ -40,7 +41,8 @@ MODES = ("day-count", "down-payment", "down-payment-enabled", "repayment-every-a
 
 GROUP_E = ("T74-E-P4", "T74-E-P59", "T74-E-P72", "T74-E-P340", "T74-E-P426", "T74-E-P6940")
 
-MAIN_PROMOTER = (".softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/promote-MAIN.py")
+SCRATCH = ".softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch"
+BASE_PROMOTER = SCRATCH + "/promote-BASE.py"
 
 
 def load_promoter(root, path=None):
@@ -127,8 +129,8 @@ NOTES = {
         "changed and withdrawing the cell would be wrong.",
     "period-number-zero":
         "period 1's periodNumber -> 0, a LEGITIMATE zero. REGRESSION CONTROL, NOT A GUARD PROOF: "
-        "`main` decided the VALUE with `or 0` (:254) but the WITHDRAWAL with a SEPARATE `is None` "
-        "test (:259), so a recorded 0 already survived un-withdrawn there. This case must stay "
+        "the PRE-FIX code decided the VALUE with `or 0` (:255) but the WITHDRAWAL with a SEPARATE "
+        "`is None` test (:260-261), so a recorded 0 already survived un-withdrawn there. This must stay "
         "green on BOTH codebases and is proved identical between them below. It demonstrates that "
         "the rewrite BROKE NOTHING; it demonstrates NOTHING about the `or 0` defect, and the guard "
         "that does is `period-number-absent-payable`.",
@@ -153,7 +155,12 @@ def main(root, mode, promoter=None):
         raise SystemExit("mode must be one of %r" % (MODES,))
     os.chdir(root)
 
-    tmp = tempfile.mkdtemp(prefix="t82promote")
+    # A DETERMINISTIC scratch dir, not tempfile.mkdtemp(): the random suffix leaked into every
+    # printed path and made TRANSCRIPT.txt unreproducible, so a reader could not tell a real change
+    # from a fresh temp name. One mode, one fixed directory, wiped before use.
+    tmp = os.path.join(root, SCRATCH, "promote-%s" % mode)
+    shutil.rmtree(tmp, ignore_errors=True)
+    os.makedirs(tmp)
     try:
         print("KIND:     %s" % KIND[mode])
         print("MUTATION: %s" % NOTES[mode])
@@ -184,32 +191,33 @@ def main(root, mode, promoter=None):
             if not ok:
                 raise SystemExit("ASSERTION FAILED: a legitimate 0 is not distinguished from absence")
 
-            # ASSERTION 2 — and `main` does EXACTLY THE SAME THING. This is what T87's F-1 required:
+            # ASSERTION 2 — and the PRE-FIX code does EXACTLY THE SAME THING. T87's F-1 required this:
             # the case is a regression control, and the honest way to say so is to PROVE the two
             # codebases agree, not to print a claim that they differ.
-            mainp = os.path.join(root, MAIN_PROMOTER)
-            if not os.path.isfile(mainp):
-                raise SystemExit("scratch/promote-MAIN.py missing; the driver extracts it with "
-                                 "`git show main:.softhouse/handoff/T74-promote-vectors.py`")
-            out_main, mod_main = build_vectors(
-                root, mainp, mutate(json.load(open(ref, encoding="utf-8")), mode), tmp, "main")
+            basep = os.path.join(root, BASE_PROMOTER)
+            if not os.path.isfile(basep):
+                raise SystemExit("scratch/promote-BASE.py missing; the driver extracts it with "
+                                 "`git show $(git merge-base main HEAD):"
+                                 ".softhouse/handoff/T74-promote-vectors.py`")
+            out_base, mod_base = build_vectors(
+                root, basep, mutate(json.load(open(ref, encoding="utf-8")), mode), tmp, "base")
             same = diff = 0
             for cid in GROUP_E:
                 a = json.load(open(os.path.join(out, mod.FILENAMES[cid]), encoding="utf-8"))
-                b = json.load(open(os.path.join(out_main, mod_main.FILENAMES[cid]), encoding="utf-8"))
+                b = json.load(open(os.path.join(out_base, mod_base.FILENAMES[cid]), encoding="utf-8"))
                 if a["expect"]["periods"] == b["expect"]["periods"]:
                     same += 1
                 else:
                     diff += 1
-            print("  expect.periods identical between this branch and main: %d, differing: %d"
+            print("  expect.periods identical between this branch and the FORK POINT: %d, differing: %d"
                   % (same, diff))
             if diff or same != len(GROUP_E):
                 raise SystemExit("ASSERTION FAILED: the regression control is not a regression "
                                  "control — the two codebases disagree")
             print("  -> CONFIRMED A REGRESSION CONTROL, NOT A GUARD PROOF. Both codebases emit the")
-            print("     same cells, because main decided the VALUE with `or 0` and the WITHDRAWAL")
-            print("     with a separate `is None` test. This case has NO discriminating power over")
-            print("     the `or 0` defect and no longer claims any. See period-number-absent-payable.")
+            print("     same cells, because the pre-fix code decided the VALUE with `or 0` (:255) and")
+            print("     the WITHDRAWAL with a separate `is None` test (:260-261). NO discriminating power")
+            print("     over the `or 0` defect, and it no longer claims any. See period-number-absent-payable.")
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 

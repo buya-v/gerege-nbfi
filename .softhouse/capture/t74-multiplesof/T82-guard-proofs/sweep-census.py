@@ -57,6 +57,13 @@ TREES = [".softhouse/capture", ".softhouse/handoff", ".softhouse/reviews", ".sof
 
 SKIP_DIRS = {".git", "scratch", "__pycache__", "node_modules"}
 
+# N-2 (T87). This sweep lives inside one of the trees it scans, so a re-run was scanning its OWN
+# previous output — SWEEP.txt and the guard-proof TRANSCRIPT.txt — and reporting the hits it had
+# just written as if they were findings. TIER 1 was unaffected (neither file is prose by the
+# is_prose() rule) but the TIER 2 counts drifted upward on every run, which is exactly the kind of
+# number that quietly stops meaning anything. Excluded by name, and the exclusion is REPORTED.
+SELF_OUTPUTS = {"SWEEP.txt", "TRANSCRIPT.txt"}
+
 # TIER 1 = files where a human-written CLAIM can live.
 PROSE_SUFFIX = (".md",)
 PROSE_EXTRA = ("program.json", "tasks.json", "PIN.json", "capabilities.json", "RESUME.md")
@@ -80,6 +87,8 @@ def files(root):
         for dirpath, dirnames, filenames in os.walk(p):
             dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
             for f in filenames:
+                if f in SELF_OUTPUTS and "T82-guard-proofs" in dirpath:
+                    continue
                 yield os.path.join(dirpath, f)
 
 
@@ -131,9 +140,24 @@ def main(root, full=False):
         print("\n%s  (%d)" % (rel, len(per[rel])))
         for n, s in sorted(per[rel]):
             print("  %5d  %s" % (n, s[:145]))
+    # N-3 (T87). PASS C is the widest net here and its hits were COUNTED but never printed, even
+    # under --full — a number with no classifiable population behind it, which is close to the
+    # defect class this whole task removed. Both TIER 2 passes now print in full under --full, and
+    # PASS C's per-file distribution prints ALWAYS so the count is never bare.
+    print()
+    print("--- TIER 2 PASS C, per file (the count is never printed without its population) ---")
+    perc = {}
+    for rel, n, s in c:
+        perc.setdefault(rel, []).append(n)
+    for rel in sorted(perc, key=lambda r: (-len(perc[r]), r)):
+        print("  %-70s %d" % (rel, len(perc[rel])))
+
     if full:
-        print("\n--- TIER 2 PASS B hits ---")
+        print("\n--- TIER 2 PASS B hits (%d) ---" % len(b))
         for rel, n, s in sorted(b):
+            print("  %s:%d  %s" % (rel, n, s[:145]))
+        print("\n--- TIER 2 PASS C hits (%d) ---" % len(c))
+        for rel, n, s in sorted(c):
             print("  %s:%d  %s" % (rel, n, s[:145]))
 
 

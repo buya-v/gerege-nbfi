@@ -1,11 +1,11 @@
 === T82 shape-independent census sweep ===
 prose files (TIER 1, bare-numeral net): 164
-other files (TIER 2, structural nets):  1780
+other files (TIER 2, structural nets):  1778
 lines over 4000 chars skipped by TIER 2 only: 297
 
-TIER 1 — every prose line containing 36 or 42, no phrasing assumed: 1107
+TIER 1 — every prose line containing 36 or 42, no phrasing assumed: 1106
 TIER 2 — PASS B (artefact name near an integer, any delimiter):     49
-TIER 2 — PASS C (corpus word within 40 chars of 30-49, either order): 628
+TIER 2 — PASS C (corpus word within 40 chars of 30-49, either order): 627
 
 --- TIER 1 hits, grouped by file (classify every one) ---
 
@@ -503,39 +503,38 @@ TIER 2 — PASS C (corpus word within 40 chars of 30-49, either order): 628
     404  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
     413  was PASS exit 0 at 36 parity vectors and 4,034 cells, measured separately (P-4).
 
-.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T82.md  (32)
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T82.md  (31)
      23  | `.softhouse/capture/src/run-pass3i.sh` | **E-1** precondition 17's `CASE_PRECISION` written out by hand (36 entries, no default), the unregiste
      26  | `.softhouse/capture/PASS3-REPORT.md`, `PASS3-REPORT-shared.md` | **A-1** census `36 → 42`, `capture-prod3i-raw.json (6)` added, `46 files` stat
      29  | `.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T74.md` | **C-4** `18 → 21` with the arithmetic shown; a correction block under the P-
-     44  below. T87 is right. It does not bite today (the key is present with an explicit `null` in 36/36
-     83  new one. Cost: 36 lines.
-    213  run's `PASS 42` / `contract-refusal PASS 4`]:
-    225  | **total files** | **46** = **42 parity** + 4 refusal |
-    235  `T74.md:225-238`, rendering the same census as a markdown table and reading "36 parity + 4 refusal",
-    237  document**, which said "Store: 36 → 42 parity vectors". All four are now corrected and each carries a
-    269  The row-type rule is grounded in the capture, not assumed: **36 `DISBURSEMENT` rows omit the key
-    343  * sweep 1 required `36 … (parity|promoted|golden) … vector`. `T74.md` says
-    344  `36 parity + 4 refusal.` — no following word "vector". **No match.**
-    363  `36` or `42`, **no context word required, no phrasing assumed**. This is the tier that would have
-    374  TIER 1 — prose lines containing 36 or 42, no phrasing assumed : 1093
-    382  (`36 × 16.8 %`), principals, period counts, task ids (`T36`, `T42`, `T46`), source line references
-    383  (`Money.java:42`) and dates. Classifying all 136:
-    387  | **correct, present tense** | `vectors/README.md:71,74` (42), `gates.md:917`, `RESUME.md:17,24,68`, `patterns.md:358`, `program.json:1061-1062`,
-    388  | **correct as HISTORY** — a dated transcript of an earlier fire, where 36 *was* the corpus | `T13.md` (9), `T64.md` (14), `T68.md` (14), `T71`/`
-    389  | **not a census** | `36 × 16.8 %` (a loan shape), `T42-CAL`, `:42` line refs, `P-EMI-36-127704` | not a hit in substance |
-    390  | **STALE, present tense** | **`.softhouse/vectors/README.md:580`** — "all **36** promoted parity vectors withdraw exactly those two cells" | **t
-    393  **42 of 42** schedule vectors withdraw exactly `{installment_number, interest_minor}` on every
-    415  6. **A number that is correct-but-stale-in-meaning** — "42" describing something else that happens to
-    416  be 42 today. Only classification catches that, never a regex.
-    469  wrote …/T74-E-P72-…json   (margin 1 minor at period[36].interest_minor,   2/146 graded cells move)
-    488  parity vectors          PASS 42   FAIL 0
-    496  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
-    500  **42 parity vectors, 5576 graded cells, exit 0 — unchanged**, as required. [VERIFIED: my run]
-    569  for every row in `capture-prod3i-raw.json` (36 `DISBURSEMENT`, 861 `REPAYMENT`). A `DOWN_PAYMENT`
-    589  * **F-1 — `.softhouse/vectors/README.md:580` says "all 36 promoted parity vectors"** (registered as
-    590  **T93**). Stale; the true number is **42**, and the substantive claim is **true of all 42**
-    591  [VERIFIED independently by me and by T87: 42/42 withdraw exactly
-    621  with an explicit `null` in **36/36** cases [VERIFIED]. Deliberately **not** fixed in T98, because the
+     55  below. T87 is right. It does not bite today (the key is present with an explicit `null` in 36/36
+     94  new one. Cost: 36 lines.
+    224  run's `PASS 42` / `contract-refusal PASS 4`]:
+    236  | **total files** | **46** = **42 parity** + 4 refusal |
+    246  `T74.md:225-238`, rendering the same census as a markdown table and reading "36 parity + 4 refusal",
+    248  document**, which said "Store: 36 → 42 parity vectors". All four are now corrected and each carries a
+    280  The row-type rule is grounded in the capture, not assumed: **36 `DISBURSEMENT` rows omit the key
+    363  * sweep 1 required `36 … (parity|promoted|golden) … vector`. `T74.md` says
+    364  `36 parity + 4 refusal.` — no following word "vector". **No match.**
+    383  `36` or `42`, **no context word required, no phrasing assumed**. This is the tier that would have
+    419  (`36 × 16.8 %`), principals, period counts, task ids (`T36`, `T42`, `T46`), source line references
+    420  (`Money.java:42`) and dates. Classifying all 136:
+    424  | **correct, present tense** | `vectors/README.md:71,74` (42), `gates.md:917`, `RESUME.md:17,24,68`, `patterns.md:358`, `program.json:1061-1062`,
+    425  | **correct as HISTORY** — a dated transcript of an earlier fire, where 36 *was* the corpus | `T13.md` (9), `T64.md` (14), `T68.md` (14), `T71`/`
+    426  | **not a census** | `36 × 16.8 %` (a loan shape), `T42-CAL`, `:42` line refs, `P-EMI-36-127704` | not a hit in substance |
+    427  | **STALE, present tense** | **`.softhouse/vectors/README.md:580`** — "all **36** promoted parity vectors withdraw exactly those two cells" | **t
+    430  **42 of 42** schedule vectors withdraw exactly `{installment_number, interest_minor}` on every
+    452  6. **A number that is correct-but-stale-in-meaning** — "42" describing something else that happens to
+    453  be 42 today. Only classification catches that, never a regex.
+    506  wrote …/T74-E-P72-…json   (margin 1 minor at period[36].interest_minor,   2/146 graded cells move)
+    525  parity vectors          PASS 42   FAIL 0
+    533  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+    537  **42 parity vectors, 5576 graded cells, exit 0 — unchanged**, as required. [VERIFIED: my run]
+    606  for every row in `capture-prod3i-raw.json` (36 `DISBURSEMENT`, 861 `REPAYMENT`). A `DOWN_PAYMENT`
+    626  * **F-1 — `.softhouse/vectors/README.md:580` says "all 36 promoted parity vectors"** (registered as
+    627  **T93**). Stale; the true number is **42**, and the substantive claim is **true of all 42**
+    628  [VERIFIED independently by me and by T87: 42/42 withdraw exactly
+    658  with an explicit `null` in **36/36** cases [VERIFIED]. Deliberately **not** fixed in T98, because the
 
 .softhouse/handoff/T10-go-schedule-port.md  (3)
     183  | guard: all three conjuncts, threshold `floor(n/2)` WHOLE CURRENCY UNITS flat | `EmiAdjustment.java:31-36`; `Money.copy(double)` REPLACES the am
@@ -1345,3 +1344,100 @@ docs/analysis/tier0-vector-capture-plan.md  (3)
     283  | 4 | 2024-03-01 | 2024-04-01 | `12.45`→`1245` | `0.42`→`42` | `12.87`→`1287` | `37.95`→`3795` | 127–129 |
     761  A 36-month or 60-month declining-balance schedule — the ordinary Mongolian consumer-loan shape — is unpinned.
     878  | **C-05** | §3.9 + §3.7 | precision 12 / `HALF_UP` | `2024-01-01`; **36** monthly; principal `MNT 20,000,000` → `2000000000`; rate `18.0`; `DAYS
+
+--- TIER 2 PASS C, per file (the count is never printed without its population) ---
+  .softhouse/capture/mathcontext/out/negative/t46-pathb-wiring-slot-drifted.txt 68
+  .softhouse/capture/mathcontext/out/t42-pathb-wiring.txt                68
+  .softhouse/capture/mathcontext/out/t46-pathb-wiring-reread.txt         68
+  .softhouse/capture/audit-t44/mathcontext/out/AUDIT-javap-assembler.txt 66
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T13.md         31
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T68.md         27
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T64.md         24
+  .softhouse/tasks.json                                                  17
+  docs/adr/DEC-1-schedule-generator-adapter.md                           16
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T82.md         15
+  .softhouse/capture/t64-zeroprincipal/out/harness-mutation-runs.txt     14
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T74.md         14
+  .softhouse/handoff/T10-go-schedule-port.md                             13
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T62.md         10
+  .softhouse/program.json                                                9
+  .softhouse/reviews/T75-pathA-multiplesof-review.md                     9
+  .softhouse/patterns.md                                                 8
+  .softhouse/capture/t64-zeroprincipal/src/run-harness-mutations.sh      7
+  .softhouse/capture/t74-multiplesof/T82-guard-proofs/sweep-census.py    6
+  .softhouse/handoff/T61-mutation-hunt-round-2.md                        6
+  .softhouse/capture/t64-zeroprincipal/src/T64-promote-vectors.py        5
+  .softhouse/gates.md                                                    5
+  .softhouse/reviews/T17-vector-capture-plan-review.md                   5
+  .softhouse/capture/src/Capture3g.java                                  4
+  .softhouse/capture/t64-zeroprincipal/MECHANISM-CORRECTION.md           4
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T69.md         4
+  .softhouse/vectors/README.md                                           4
+  .softhouse/RESUME.md                                                   3
+  .softhouse/capture/PASS3-REPORT-shared.md                              3
+  .softhouse/capture/PASS3-REPORT.md                                     3
+  .softhouse/capture/t74-multiplesof/pass3-supersession-banner.txt       3
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T65.md         3
+  .softhouse/handoff/T56-close-unrecorded-escape-hatch.md                3
+  .softhouse/reviews/T9-harness-and-vectors-review.md                    3
+  .softhouse/vectors/loanschedule/T64-ZP-A-zero-principal-mnt0pt28-56x21pt6pct.json 3
+  .softhouse/vectors/loanschedule/T64-ZP-C-zero-principal-mnt0pt17-34x36pct.json 3
+  .softhouse/vectors/loanschedule/T64-ZP-D-zero-principal-mnt0pt36-72x16pt8pct.json 3
+  .softhouse/capture/mathcontext/PROVENANCE.md                           2
+  .softhouse/capture/mathcontext/analysis/t46-pathb-slot-assertion-output.txt 2
+  .softhouse/handoff/T38-dec1-v7.md                                      2
+  .softhouse/handoff/T41-dec1-v8.md                                      2
+  .softhouse/handoff/T57-emi-smoothing-loop-vectors.md                   2
+  .softhouse/handoff/T59-cancellation-and-cost.md                        2
+  .softhouse/reviews/t41-probe/edit8.py                                  2
+  .softhouse/reviews/t41-probe/t41_discriminate.py                       2
+  .softhouse/reviews/t45-probe/t45_discriminate.py                       2
+  .softhouse/reviews/t47-probe/t47_discriminate.py                       2
+  .softhouse/reviews/t47-probe/t47_edit_2.py                             2
+  .softhouse/vectors/loanschedule/T64-ZP-B-early-payoff-dead-rows-mnt0pt28-55x21pt6pct.json 2
+  .softhouse/capture/PASS2-REPORT.md                                     1
+  .softhouse/capture/README-pass3i.md                                    1
+  .softhouse/capture/audit-t44/analysis/T44-mathcontext-parent-checks.md 1
+  .softhouse/capture/audit-t44/charges/AUDIT-CHARGES.md                  1
+  .softhouse/capture/audit-t44/mathcontext/AUDIT-MATHCONTEXT.md          1
+  .softhouse/capture/charges/bin/t46-reissue-identity.sh                 1
+  .softhouse/capture/emiloop/t37-crosscheck.py                           1
+  .softhouse/capture/mathcontext/ATTESTATION.md                          1
+  .softhouse/capture/mathcontext/NEGATIVE-TESTS.md                       1
+  .softhouse/capture/src/Capture3h.java                                  1
+  .softhouse/capture/src/Capture3i.java                                  1
+  .softhouse/capture/t64-zeroprincipal/PREDICTION.md                     1
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T7.md          1
+  .softhouse/handoff/T24-dec1-v3.md                                      1
+  .softhouse/handoff/T30-corpus-remainder.md                             1
+  .softhouse/handoff/T37-dec1-binding-captures.md                        1
+  .softhouse/handoff/T42-mathcontext-inforce.md                          1
+  .softhouse/handoff/T47-dec1-v10.md                                     1
+  .softhouse/handoff/T49-dec1-v10-rereview.md                            1
+  .softhouse/handoff/T53-dec1-v11-diffcheck.md                           1
+  .softhouse/handoff/T58-close-surviving-mutations.md                    1
+  .softhouse/handoff/T74-promote-vectors.py                              1
+  .softhouse/handoff/T8-transcription-audit.py                           1
+  .softhouse/reviews/T29-DEC-1-v4-rereview.md                            1
+  .softhouse/reviews/T34-DEC-1-v6-rereview.md                            1
+  .softhouse/reviews/T43-DEC-1-v8-rereview.md                            1
+  .softhouse/reviews/T49-DEC-1-v10-rereview.md                           1
+  .softhouse/reviews/T53-DEC-1-v11-diffcheck.md                          1
+  .softhouse/reviews/T71-fui-marker-review.md                            1
+  .softhouse/reviews/T73-fui-marker-rereview.md                          1
+  .softhouse/reviews/T77-pathb-recapture-review.md                       1
+  .softhouse/reviews/driver-rederivation-20260820-140000.md              1
+  .softhouse/reviews/t41-probe/edit13.py                                 1
+  .softhouse/reviews/t41-probe/edit14.py                                 1
+  .softhouse/reviews/t41-probe/edit18.py                                 1
+  .softhouse/reviews/t41-probe/edit19.py                                 1
+  .softhouse/reviews/t41-probe/edit5.py                                  1
+  .softhouse/reviews/t41-probe/edit_go3.py                               1
+  .softhouse/reviews/t41-probe/t41_validate.py                           1
+  .softhouse/reviews/t45-probe/t45_validate.py                           1
+  .softhouse/reviews/t47-probe/t47_validate.py                           1
+  .softhouse/vectors/capabilities.json                                   1
+  .softhouse/vectors/loanschedule/P-DRIFT-D-drift-36x21pt6pct-50M.json   1
+  .softhouse/vectors/loanschedule/P-DRIFT-G-drift-seeded-in-march.json   1
+  .softhouse/vectors/loanschedule/REFUSE-01-actual-actual-ungraded.json  1
+  .softhouse/vectors/loanschedule/REFUSE-03-annual-fixed30360-precedence.json 1
