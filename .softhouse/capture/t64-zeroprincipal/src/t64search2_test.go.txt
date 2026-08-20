@@ -1,0 +1,66 @@
+package loanschedule
+
+import (
+	"context"
+	"fmt"
+	"os"
+	"testing"
+
+	"github.com/gerege/nexus/internal/apps/loanschedule/contract"
+)
+
+// T64 SEARCH v2 — small principals, moderate terms, several rates. Reports the
+// SMALLEST n at which a shape has a zero-principal repayment row, and flags
+// MIXED shapes (some zero-principal rows AND some non-zero ones), which are the
+// more discriminating kind.
+func TestT64Search2(t *testing.T) {
+	if os.Getenv("T64_SEARCH2") == "" {
+		t.Skip("set T64_SEARCH2=1")
+	}
+	rates := []contract.Rate{
+		{Numerator: 27, Denominator: 125}, // 21.6 %
+		{Numerator: 21, Denominator: 125}, // 16.8 %
+		{Numerator: 37, Denominator: 200}, // 18.5 %
+		{Numerator: 7, Denominator: 100},  // 7 %
+		{Numerator: 24, Denominator: 100}, // 24 %
+		{Numerator: 36, Denominator: 100}, // 36 %
+		{Numerator: 48, Denominator: 100}, // 48 %
+		{Numerator: 60, Denominator: 100}, // 60 %
+	}
+	type best struct {
+		n, zeros, rows int
+		mixed          bool
+	}
+	for _, rate := range rates {
+		for p := int64(1); p <= 400; p++ {
+			var b *best
+			for n := 2; n <= 250; n++ {
+				got, err := Generator{}.Generate(context.Background(), baseRequest(p, int32(n), rate))
+				if err != nil {
+					continue
+				}
+				zeros, nonzero := 0, 0
+				for i := range got.Periods {
+					pd := got.Periods[i]
+					if pd.Kind != contract.PeriodKindRepayment {
+						continue
+					}
+					if pd.PrincipalMinor == 0 && pd.InterestMinor > 0 {
+						zeros++
+					} else if pd.PrincipalMinor > 0 {
+						nonzero++
+					}
+				}
+				if zeros > 0 {
+					b = &best{n: n, zeros: zeros, rows: len(got.Periods), mixed: nonzero > 1}
+					break
+				}
+			}
+			if b != nil {
+				fmt.Printf("MIN rate=%d/%d principal=%d n=%d zeros=%d rows=%d mixed=%v\n",
+					rate.Numerator, rate.Denominator, p, b.n, b.zeros, b.rows, b.mixed)
+			}
+		}
+	}
+	fmt.Println("DONE")
+}

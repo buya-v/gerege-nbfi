@@ -1,0 +1,5541 @@
+[
+  {
+    "case": "T64-ZP-A",
+    "captureRef": ".softhouse/capture/out/capture-prod3g-raw.json",
+    "cells": 170,
+    "baselineMismatches": 0,
+    "baselineMismatchDetail": [],
+    "mutationNames": {
+      "ZP-GUARD-SCALES-THE-INSTALLMENT": "EMI smoothing guard multiplies the installment by floor(n/2) instead of comparing against floor(n/2) whole currency units",
+      "ZP-GUARD-NONSTRICT": "EMI smoothing guard fires on equality (>=) where the oracle requires strict inequality (>)",
+      "ZP-RESIDUAL-NO-RECURSION": "the final-period residual clamps a negative installment to zero but does not re-apply itself, so the residual it could not place is silently dropped",
+      "ZP-PRINCIPAL-NOT-CLAMPED": "a repayment row's principal is installment minus interest without the negative clamp",
+      "ZP-ADOPTION-TEST-NONSTRICT": "the smoothing loop adopts a trial whose EMI difference merely TIES the previous one",
+      "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": "the smoothing loop spreads the gap over floor(n/2) periods instead of n"
+    },
+    "nDivergentCells": {
+      "ZP-GUARD-SCALES-THE-INSTALLMENT": 126,
+      "ZP-GUARD-NONSTRICT": 126,
+      "ZP-RESIDUAL-NO-RECURSION": 0,
+      "ZP-PRINCIPAL-NOT-CLAMPED": 0,
+      "ZP-ADOPTION-TEST-NONSTRICT": 0,
+      "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": 0
+    },
+    "maxMargin": {
+      "ZP-GUARD-SCALES-THE-INSTALLMENT": 28,
+      "ZP-GUARD-NONSTRICT": 28,
+      "ZP-RESIDUAL-NO-RECURSION": 0,
+      "ZP-PRINCIPAL-NOT-CLAMPED": 0,
+      "ZP-ADOPTION-TEST-NONSTRICT": 0,
+      "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": 0
+    },
+    "divergent": {
+      "ZP-GUARD-SCALES-THE-INSTALLMENT": [
+        {
+          "row": 1,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 27,
+          "delta": 1
+        },
+        {
+          "row": 1,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 1,
+          "delta": 1
+        },
+        {
+          "row": 2,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 2,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 25,
+          "delta": 3
+        },
+        {
+          "row": 2,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 3,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 3,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 23,
+          "delta": 5
+        },
+        {
+          "row": 3,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 4,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 4,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 21,
+          "delta": 7
+        },
+        {
+          "row": 4,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 5,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 5,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 19,
+          "delta": 9
+        },
+        {
+          "row": 5,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 6,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 6,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 17,
+          "delta": 11
+        },
+        {
+          "row": 6,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 7,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 7,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 15,
+          "delta": 13
+        },
+        {
+          "row": 7,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 8,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 8,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 13,
+          "delta": 15
+        },
+        {
+          "row": 8,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 9,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 9,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 11,
+          "delta": 17
+        },
+        {
+          "row": 9,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 10,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 10,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 9,
+          "delta": 19
+        },
+        {
+          "row": 10,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 11,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 11,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 7,
+          "delta": 21
+        },
+        {
+          "row": 11,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 12,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 12,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 5,
+          "delta": 23
+        },
+        {
+          "row": 12,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 13,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 13,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 3,
+          "delta": 25
+        },
+        {
+          "row": 13,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 14,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 14,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 1,
+          "delta": 27
+        },
+        {
+          "row": 14,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 15,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 15,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 15,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 1,
+          "delta": 1
+        },
+        {
+          "row": 16,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 16,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 17,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 17,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 18,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 18,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 19,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 19,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 20,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 20,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 21,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 21,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 22,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 22,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 23,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 23,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 24,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 24,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 25,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 25,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 26,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 26,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 27,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 27,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 28,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 28,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 29,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 29,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 30,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 30,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 31,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 31,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 32,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 32,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 33,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 33,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 34,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 34,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 35,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 35,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 36,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 36,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 37,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 37,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 38,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 38,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 39,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 39,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 40,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 40,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 41,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 41,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 42,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 42,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 43,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 43,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 44,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 44,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 45,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 45,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 46,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 46,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 47,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 47,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 48,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 48,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 49,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 49,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 50,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 50,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 51,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 51,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 52,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 52,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 53,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 53,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 54,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 54,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 55,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 55,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 56,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 56,
+          "field": "principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        }
+      ],
+      "ZP-GUARD-NONSTRICT": [
+        {
+          "row": 1,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 27,
+          "delta": 1
+        },
+        {
+          "row": 1,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 1,
+          "delta": 1
+        },
+        {
+          "row": 2,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 2,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 25,
+          "delta": 3
+        },
+        {
+          "row": 2,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 3,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 3,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 23,
+          "delta": 5
+        },
+        {
+          "row": 3,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 4,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 4,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 21,
+          "delta": 7
+        },
+        {
+          "row": 4,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 5,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 5,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 19,
+          "delta": 9
+        },
+        {
+          "row": 5,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 6,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 6,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 17,
+          "delta": 11
+        },
+        {
+          "row": 6,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 7,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 7,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 15,
+          "delta": 13
+        },
+        {
+          "row": 7,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 8,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 8,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 13,
+          "delta": 15
+        },
+        {
+          "row": 8,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 9,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 9,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 11,
+          "delta": 17
+        },
+        {
+          "row": 9,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 10,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 10,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 9,
+          "delta": 19
+        },
+        {
+          "row": 10,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 11,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 11,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 7,
+          "delta": 21
+        },
+        {
+          "row": 11,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 12,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 12,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 5,
+          "delta": 23
+        },
+        {
+          "row": 12,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 13,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 13,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 3,
+          "delta": 25
+        },
+        {
+          "row": 13,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 14,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 14,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 1,
+          "delta": 27
+        },
+        {
+          "row": 14,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 15,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 15,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 15,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 1,
+          "delta": 1
+        },
+        {
+          "row": 16,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 16,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 17,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 17,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 18,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 18,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 19,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 19,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 20,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 20,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 21,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 21,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 22,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 22,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 23,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 23,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 24,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 24,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 25,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 25,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 26,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 26,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 27,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 27,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 28,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 28,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 29,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 29,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 30,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 30,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 31,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 31,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 32,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 32,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 33,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 33,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 34,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 34,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 35,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 35,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 36,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 36,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 37,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 37,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 38,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 38,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 39,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 39,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 40,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 40,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 41,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 41,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 42,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 42,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 43,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 43,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 44,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 44,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 45,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 45,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 46,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 46,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 47,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 47,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 48,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 48,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 49,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 49,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 50,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 50,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 51,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 51,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 52,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 52,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 53,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 53,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 54,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 54,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 55,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 55,
+          "field": "outstanding_principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        },
+        {
+          "row": 56,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 56,
+          "field": "principal_minor",
+          "observed": 28,
+          "value": 0,
+          "delta": 28
+        }
+      ],
+      "ZP-RESIDUAL-NO-RECURSION": [],
+      "ZP-PRINCIPAL-NOT-CLAMPED": [],
+      "ZP-ADOPTION-TEST-NONSTRICT": [],
+      "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": []
+    }
+  },
+  {
+    "case": "T64-ZP-B",
+    "captureRef": ".softhouse/capture/out/capture-prod3g-raw.json",
+    "cells": 167,
+    "baselineMismatches": 0,
+    "baselineMismatchDetail": [],
+    "mutationNames": {
+      "ZP-GUARD-SCALES-THE-INSTALLMENT": "EMI smoothing guard multiplies the installment by floor(n/2) instead of comparing against floor(n/2) whole currency units",
+      "ZP-GUARD-NONSTRICT": "EMI smoothing guard fires on equality (>=) where the oracle requires strict inequality (>)",
+      "ZP-RESIDUAL-NO-RECURSION": "the final-period residual clamps a negative installment to zero but does not re-apply itself, so the residual it could not place is silently dropped",
+      "ZP-PRINCIPAL-NOT-CLAMPED": "a repayment row's principal is installment minus interest without the negative clamp",
+      "ZP-ADOPTION-TEST-NONSTRICT": "the smoothing loop adopts a trial whose EMI difference merely TIES the previous one",
+      "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": "the smoothing loop spreads the gap over floor(n/2) periods instead of n"
+    },
+    "nDivergentCells": {
+      "ZP-GUARD-SCALES-THE-INSTALLMENT": 0,
+      "ZP-GUARD-NONSTRICT": 0,
+      "ZP-RESIDUAL-NO-RECURSION": 40,
+      "ZP-PRINCIPAL-NOT-CLAMPED": 0,
+      "ZP-ADOPTION-TEST-NONSTRICT": 0,
+      "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": 0
+    },
+    "maxMargin": {
+      "ZP-GUARD-SCALES-THE-INSTALLMENT": 0,
+      "ZP-GUARD-NONSTRICT": 0,
+      "ZP-RESIDUAL-NO-RECURSION": 2,
+      "ZP-PRINCIPAL-NOT-CLAMPED": 0,
+      "ZP-ADOPTION-TEST-NONSTRICT": 0,
+      "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": 0
+    },
+    "divergent": {
+      "ZP-GUARD-SCALES-THE-INSTALLMENT": [],
+      "ZP-GUARD-NONSTRICT": [],
+      "ZP-RESIDUAL-NO-RECURSION": [
+        {
+          "row": 15,
+          "field": "principal_minor",
+          "observed": 1,
+          "value": 2,
+          "delta": 1
+        },
+        {
+          "row": 16,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 17,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 18,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 19,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 20,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 21,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 22,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 23,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 24,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 25,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 26,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 27,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 28,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 29,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 30,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 31,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 32,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 33,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 34,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 35,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 36,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 37,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 38,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 39,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 40,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 41,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 42,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 43,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 44,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 45,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 46,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 47,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 48,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 49,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 50,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 51,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 52,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 53,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 54,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        }
+      ],
+      "ZP-PRINCIPAL-NOT-CLAMPED": [],
+      "ZP-ADOPTION-TEST-NONSTRICT": [],
+      "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": []
+    }
+  },
+  {
+    "case": "T64-ZP-C",
+    "captureRef": ".softhouse/capture/out/capture-prod3g-raw.json",
+    "cells": 104,
+    "baselineMismatches": 0,
+    "baselineMismatchDetail": [],
+    "mutationNames": {
+      "ZP-GUARD-SCALES-THE-INSTALLMENT": "EMI smoothing guard multiplies the installment by floor(n/2) instead of comparing against floor(n/2) whole currency units",
+      "ZP-GUARD-NONSTRICT": "EMI smoothing guard fires on equality (>=) where the oracle requires strict inequality (>)",
+      "ZP-RESIDUAL-NO-RECURSION": "the final-period residual clamps a negative installment to zero but does not re-apply itself, so the residual it could not place is silently dropped",
+      "ZP-PRINCIPAL-NOT-CLAMPED": "a repayment row's principal is installment minus interest without the negative clamp",
+      "ZP-ADOPTION-TEST-NONSTRICT": "the smoothing loop adopts a trial whose EMI difference merely TIES the previous one",
+      "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": "the smoothing loop spreads the gap over floor(n/2) periods instead of n"
+    },
+    "nDivergentCells": {
+      "ZP-GUARD-SCALES-THE-INSTALLMENT": 76,
+      "ZP-GUARD-NONSTRICT": 76,
+      "ZP-RESIDUAL-NO-RECURSION": 0,
+      "ZP-PRINCIPAL-NOT-CLAMPED": 0,
+      "ZP-ADOPTION-TEST-NONSTRICT": 0,
+      "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": 0
+    },
+    "maxMargin": {
+      "ZP-GUARD-SCALES-THE-INSTALLMENT": 17,
+      "ZP-GUARD-NONSTRICT": 17,
+      "ZP-RESIDUAL-NO-RECURSION": 0,
+      "ZP-PRINCIPAL-NOT-CLAMPED": 0,
+      "ZP-ADOPTION-TEST-NONSTRICT": 0,
+      "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": 0
+    },
+    "divergent": {
+      "ZP-GUARD-SCALES-THE-INSTALLMENT": [
+        {
+          "row": 1,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 16,
+          "delta": 1
+        },
+        {
+          "row": 1,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 1,
+          "delta": 1
+        },
+        {
+          "row": 2,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 2,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 14,
+          "delta": 3
+        },
+        {
+          "row": 2,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 3,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 3,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 12,
+          "delta": 5
+        },
+        {
+          "row": 3,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 4,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 4,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 10,
+          "delta": 7
+        },
+        {
+          "row": 4,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 5,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 5,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 8,
+          "delta": 9
+        },
+        {
+          "row": 5,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 6,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 6,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 6,
+          "delta": 11
+        },
+        {
+          "row": 6,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 7,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 7,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 4,
+          "delta": 13
+        },
+        {
+          "row": 7,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 8,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 8,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 2,
+          "delta": 15
+        },
+        {
+          "row": 8,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 9,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 9,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 9,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 10,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 10,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 11,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 11,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 12,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 12,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 13,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 13,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 14,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 14,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 15,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 15,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 16,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 16,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 17,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 17,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 18,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 18,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 19,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 19,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 20,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 20,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 21,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 21,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 22,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 22,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 23,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 23,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 24,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 24,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 25,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 25,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 26,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 26,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 27,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 27,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 28,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 28,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 29,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 29,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 30,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 30,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 31,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 31,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 32,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 32,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 33,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 33,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 34,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 34,
+          "field": "principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        }
+      ],
+      "ZP-GUARD-NONSTRICT": [
+        {
+          "row": 1,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 16,
+          "delta": 1
+        },
+        {
+          "row": 1,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 1,
+          "delta": 1
+        },
+        {
+          "row": 2,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 2,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 14,
+          "delta": 3
+        },
+        {
+          "row": 2,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 3,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 3,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 12,
+          "delta": 5
+        },
+        {
+          "row": 3,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 4,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 4,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 10,
+          "delta": 7
+        },
+        {
+          "row": 4,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 5,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 5,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 8,
+          "delta": 9
+        },
+        {
+          "row": 5,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 6,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 6,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 6,
+          "delta": 11
+        },
+        {
+          "row": 6,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 7,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 7,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 4,
+          "delta": 13
+        },
+        {
+          "row": 7,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 8,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 8,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 2,
+          "delta": 15
+        },
+        {
+          "row": 8,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 9,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 9,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 9,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 10,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 10,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 11,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 11,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 12,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 12,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 13,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 13,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 14,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 14,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 15,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 15,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 16,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 16,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 17,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 17,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 18,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 18,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 19,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 19,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 20,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 20,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 21,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 21,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 22,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 22,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 23,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 23,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 24,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 24,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 25,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 25,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 26,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 26,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 27,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 27,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 28,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 28,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 29,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 29,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 30,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 30,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 31,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 31,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 32,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 32,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 33,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 33,
+          "field": "outstanding_principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        },
+        {
+          "row": 34,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 34,
+          "field": "principal_minor",
+          "observed": 17,
+          "value": 0,
+          "delta": 17
+        }
+      ],
+      "ZP-RESIDUAL-NO-RECURSION": [],
+      "ZP-PRINCIPAL-NOT-CLAMPED": [],
+      "ZP-ADOPTION-TEST-NONSTRICT": [],
+      "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": []
+    }
+  },
+  {
+    "case": "T64-ZP-D",
+    "captureRef": ".softhouse/capture/out/capture-prod3g-raw.json",
+    "cells": 218,
+    "baselineMismatches": 0,
+    "baselineMismatchDetail": [],
+    "mutationNames": {
+      "ZP-GUARD-SCALES-THE-INSTALLMENT": "EMI smoothing guard multiplies the installment by floor(n/2) instead of comparing against floor(n/2) whole currency units",
+      "ZP-GUARD-NONSTRICT": "EMI smoothing guard fires on equality (>=) where the oracle requires strict inequality (>)",
+      "ZP-RESIDUAL-NO-RECURSION": "the final-period residual clamps a negative installment to zero but does not re-apply itself, so the residual it could not place is silently dropped",
+      "ZP-PRINCIPAL-NOT-CLAMPED": "a repayment row's principal is installment minus interest without the negative clamp",
+      "ZP-ADOPTION-TEST-NONSTRICT": "the smoothing loop adopts a trial whose EMI difference merely TIES the previous one",
+      "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": "the smoothing loop spreads the gap over floor(n/2) periods instead of n"
+    },
+    "nDivergentCells": {
+      "ZP-GUARD-SCALES-THE-INSTALLMENT": 162,
+      "ZP-GUARD-NONSTRICT": 162,
+      "ZP-RESIDUAL-NO-RECURSION": 0,
+      "ZP-PRINCIPAL-NOT-CLAMPED": 0,
+      "ZP-ADOPTION-TEST-NONSTRICT": 0,
+      "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": 0
+    },
+    "maxMargin": {
+      "ZP-GUARD-SCALES-THE-INSTALLMENT": 36,
+      "ZP-GUARD-NONSTRICT": 36,
+      "ZP-RESIDUAL-NO-RECURSION": 0,
+      "ZP-PRINCIPAL-NOT-CLAMPED": 0,
+      "ZP-ADOPTION-TEST-NONSTRICT": 0,
+      "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": 0
+    },
+    "divergent": {
+      "ZP-GUARD-SCALES-THE-INSTALLMENT": [
+        {
+          "row": 1,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 35,
+          "delta": 1
+        },
+        {
+          "row": 1,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 1,
+          "delta": 1
+        },
+        {
+          "row": 2,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 2,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 33,
+          "delta": 3
+        },
+        {
+          "row": 2,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 3,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 3,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 31,
+          "delta": 5
+        },
+        {
+          "row": 3,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 4,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 4,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 29,
+          "delta": 7
+        },
+        {
+          "row": 4,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 5,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 5,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 27,
+          "delta": 9
+        },
+        {
+          "row": 5,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 6,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 6,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 25,
+          "delta": 11
+        },
+        {
+          "row": 6,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 7,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 7,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 23,
+          "delta": 13
+        },
+        {
+          "row": 7,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 8,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 8,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 21,
+          "delta": 15
+        },
+        {
+          "row": 8,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 9,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 9,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 19,
+          "delta": 17
+        },
+        {
+          "row": 9,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 10,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 10,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 17,
+          "delta": 19
+        },
+        {
+          "row": 10,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 11,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 11,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 15,
+          "delta": 21
+        },
+        {
+          "row": 11,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 12,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 12,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 13,
+          "delta": 23
+        },
+        {
+          "row": 12,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 13,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 13,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 11,
+          "delta": 25
+        },
+        {
+          "row": 13,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 14,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 14,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 9,
+          "delta": 27
+        },
+        {
+          "row": 14,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 15,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 15,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 7,
+          "delta": 29
+        },
+        {
+          "row": 15,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 16,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 16,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 5,
+          "delta": 31
+        },
+        {
+          "row": 16,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 17,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 17,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 3,
+          "delta": 33
+        },
+        {
+          "row": 17,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 18,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 18,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 1,
+          "delta": 35
+        },
+        {
+          "row": 18,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 19,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 19,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 19,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 1,
+          "delta": 1
+        },
+        {
+          "row": 20,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 20,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 21,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 21,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 22,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 22,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 23,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 23,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 24,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 24,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 25,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 25,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 26,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 26,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 27,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 27,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 28,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 28,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 29,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 29,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 30,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 30,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 31,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 31,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 32,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 32,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 33,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 33,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 34,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 34,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 35,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 35,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 36,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 36,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 37,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 37,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 38,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 38,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 39,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 39,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 40,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 40,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 41,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 41,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 42,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 42,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 43,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 43,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 44,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 44,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 45,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 45,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 46,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 46,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 47,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 47,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 48,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 48,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 49,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 49,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 50,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 50,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 51,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 51,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 52,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 52,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 53,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 53,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 54,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 54,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 55,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 55,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 56,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 56,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 57,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 57,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 58,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 58,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 59,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 59,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 60,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 60,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 61,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 61,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 62,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 62,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 63,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 63,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 64,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 64,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 65,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 65,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 66,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 66,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 67,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 67,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 68,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 68,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 69,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 69,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 70,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 70,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 71,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 71,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 72,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 72,
+          "field": "principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        }
+      ],
+      "ZP-GUARD-NONSTRICT": [
+        {
+          "row": 1,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 35,
+          "delta": 1
+        },
+        {
+          "row": 1,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 1,
+          "delta": 1
+        },
+        {
+          "row": 2,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 2,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 33,
+          "delta": 3
+        },
+        {
+          "row": 2,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 3,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 3,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 31,
+          "delta": 5
+        },
+        {
+          "row": 3,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 4,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 4,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 29,
+          "delta": 7
+        },
+        {
+          "row": 4,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 5,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 5,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 27,
+          "delta": 9
+        },
+        {
+          "row": 5,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 6,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 6,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 25,
+          "delta": 11
+        },
+        {
+          "row": 6,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 7,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 7,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 23,
+          "delta": 13
+        },
+        {
+          "row": 7,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 8,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 8,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 21,
+          "delta": 15
+        },
+        {
+          "row": 8,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 9,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 9,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 19,
+          "delta": 17
+        },
+        {
+          "row": 9,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 10,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 10,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 17,
+          "delta": 19
+        },
+        {
+          "row": 10,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 11,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 11,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 15,
+          "delta": 21
+        },
+        {
+          "row": 11,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 12,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 12,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 13,
+          "delta": 23
+        },
+        {
+          "row": 12,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 13,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 13,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 11,
+          "delta": 25
+        },
+        {
+          "row": 13,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 14,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 14,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 9,
+          "delta": 27
+        },
+        {
+          "row": 14,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 15,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 15,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 7,
+          "delta": 29
+        },
+        {
+          "row": 15,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 16,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 16,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 5,
+          "delta": 31
+        },
+        {
+          "row": 16,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 17,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 17,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 3,
+          "delta": 33
+        },
+        {
+          "row": 17,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 18,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 18,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 1,
+          "delta": 35
+        },
+        {
+          "row": 18,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 2,
+          "delta": 2
+        },
+        {
+          "row": 19,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 19,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 19,
+          "field": "principal_minor",
+          "observed": 0,
+          "value": 1,
+          "delta": 1
+        },
+        {
+          "row": 20,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 20,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 21,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 21,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 22,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 22,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 23,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 23,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 24,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 24,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 25,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 25,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 26,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 26,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 27,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 27,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 28,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 28,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 29,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 29,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 30,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 30,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 31,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 31,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 32,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 32,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 33,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 33,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 34,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 34,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 35,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 35,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 36,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 36,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 37,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 37,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 38,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 38,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 39,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 39,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 40,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 40,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 41,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 41,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 42,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 42,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 43,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 43,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 44,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 44,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 45,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 45,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 46,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 46,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 47,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 47,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 48,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 48,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 49,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 49,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 50,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 50,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 51,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 51,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 52,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 52,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 53,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 53,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 54,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 54,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 55,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 55,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 56,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 56,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 57,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 57,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 58,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 58,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 59,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 59,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 60,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 60,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 61,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 61,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 62,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 62,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 63,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 63,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 64,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 64,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 65,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 65,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 66,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 66,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 67,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 67,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 68,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 68,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 69,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 69,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 70,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 70,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 71,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 71,
+          "field": "outstanding_principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        },
+        {
+          "row": 72,
+          "field": "interest_minor",
+          "observed": 1,
+          "value": 0,
+          "delta": 1
+        },
+        {
+          "row": 72,
+          "field": "principal_minor",
+          "observed": 36,
+          "value": 0,
+          "delta": 36
+        }
+      ],
+      "ZP-RESIDUAL-NO-RECURSION": [],
+      "ZP-PRINCIPAL-NOT-CLAMPED": [],
+      "ZP-ADOPTION-TEST-NONSTRICT": [],
+      "ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF": []
+    }
+  }
+]
