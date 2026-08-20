@@ -306,7 +306,8 @@
         "T65",
         "T66",
         "T67",
-        "T68"
+        "T68",
+        "T69"
       ],
       "status": "pending",
       "attempts": 0,
@@ -1390,10 +1391,10 @@
       "dependencies": [
         "T59"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
       "contract_independent": false,
-      "note": "REQUIRES THE ORACLE - local fire only. Raised by T59 backlog items 2 and 3, fire 20260820-080002. Not dispatched this fire because T61 already holds the capture rig and two capture workers would collide in .softhouse/capture/. || fire 20260820-110001: dispatched, isolated worktree, opus."
+      "note": "REQUIRES THE ORACLE - local fire only. Raised by T59 backlog items 2 and 3, fire 20260820-080002. Not dispatched this fire because T61 already holds the capture rig and two capture workers would collide in .softhouse/capture/. || fire 20260820-110001: dispatched, isolated worktree, opus. || fire 20260820-110001: DONE, merged to main. Corpus 32 -> 36 parity vectors, 2495 -> 4034 graded cells, driver-re-run exit 0, --prove 21/21 after composing with T62. Prediction commit 37886ac PRECEDES capture d77f3f5 (P-9); oracle confirmed 1539/1539 predicted cells, zero mismatches. Discharges T59's blocker: ZP-RESIDUAL-NO-RECURSION was green on all 32 and is red at 36. Reports its prediction was RIGHT on a WRONG stated mechanism (P-11) and promoted the misreading as a counterfactual. Two honest negatives kept, incl. ZP-PRINCIPAL-NOT-CLAMPED surviving all 36 (negative clamp still ungraded, follow-up F-1). Under audit by T68."
     },
     {
       "id": "T65",
@@ -1412,10 +1413,10 @@
       "dependencies": [
         "T63"
       ],
-      "status": "done",
+      "status": "rejected",
       "attempts": 1,
       "contract_independent": true,
-      "note": "Raised by T63, fire 20260820-080002. NEEDS NO ORACLE. Both are P1, neither is a money defect - conformance is exit 0 at 32 parity vectors and will NOT catch a regression in either, which is the whole point. Needs a paired reviewer per plan-gate rule 1 since it touches money-path files. || fire 20260820-110001: dispatched, isolated worktree, opus. || fire 20260820-110001: DONE on branch softhouse/T65-t63-p1s (d156849 + 401472a), rebased onto merged main. Awaiting T67 (paired reviewer) before merge - money-path files, rule 1. Reported: 24-site write enumeration (13 fold-input writes, 9 invalidateFrom, no unguarded write), all four T63 Java citations confirmed with one refined (RepaymentPeriod.java:226 not :260); carried counter proved value-identical over 3600 shapes/51888 rows by sha256; cost test rewritten with NO timing assertion (machine-independent allocations-per-period); FOUR mutations run incl. an HONEST NEGATIVE - restoring the rescan leaves the new test GREEN, which T65 documented rather than hid. Did NOT fix applyFinalPeriodResidual's O(n^2) recursion, claiming faithfulness to ProgressiveEMICalculator:1211-1215 - T67 must verify that claim."
+      "note": "Raised by T63, fire 20260820-080002. NEEDS NO ORACLE. Both are P1, neither is a money defect - conformance is exit 0 at 32 parity vectors and will NOT catch a regression in either, which is the whole point. Needs a paired reviewer per plan-gate rule 1 since it touches money-path files. || fire 20260820-110001: dispatched, isolated worktree, opus. || fire 20260820-110001: DONE on branch softhouse/T65-t63-p1s (d156849 + 401472a), rebased onto merged main. Awaiting T67 (paired reviewer) before merge - money-path files, rule 1. Reported: 24-site write enumeration (13 fold-input writes, 9 invalidateFrom, no unguarded write), all four T63 Java citations confirmed with one refined (RepaymentPeriod.java:226 not :260); carried counter proved value-identical over 3600 shapes/51888 rows by sha256; cost test rewritten with NO timing assertion (machine-independent allocations-per-period); FOUR mutations run incl. an HONEST NEGATIVE - restoring the rescan leaves the new test GREEN, which T65 documented rather than hid. Did NOT fix applyFinalPeriodResidual's O(n^2) recursion, claiming faithfulness to ProgressiveEMICalculator:1211-1215 - T67 must verify that claim. || fire 20260820-110001: REJECTED by T67 (P0:0 P1:3 P2:6). Executable change (carried counter, rewritten cost test) VERIFIED SOUND by T67 and NOT re-litigated - the rejection is on the written rule, which is still false. DRIVER INDEPENDENTLY CONFIRMED TWO OF THE THREE from committed source: (i) the fold reads m.minorDigits at emi.go:604 via minorFromMajor(sum, m.minorDigits), which clause (a)'s 'ONLY these stored fields' omits; (ii) clause (a) files 'period idx' under NOT READ, but calculatedDueInterestMinor/dueInterestMinor call interestChainUpTo(p.idx) while interestChainUpTo fills m.chain[i] over m.periods[i] - p.idx IS the memo's lookup key, so rule (b) is not sufficient. Corrective retry dispatched as T69 off T65's branch; T65's commits are preserved, not reverted."
     },
     {
       "id": "T66",
@@ -1453,9 +1454,9 @@
       "dependencies": [
         "T65"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "Added by fire 20260820-110001: plan-gate rule 1 - T65 is a money-path change and must not land unreviewed. T59 landing without a paired reviewer is exactly the omission T63 was created to repair. || fire 20260820-110001: dispatched, isolated worktree, opus."
+      "note": "Added by fire 20260820-110001: plan-gate rule 1 - T65 is a money-path change and must not land unreviewed. T59 landing without a paired reviewer is exactly the omission T63 was created to repair. || fire 20260820-110001: dispatched, isolated worktree, opus. || fire 20260820-110001: DONE, branch softhouse/T67-review-t65 (2186b4e). VERDICT REJECTED. Enumerated the write sites FROM THE WRITES via 3 independent greps (27 assignment sites = T65's 24 rows; 9 invalidateFrom at 400/518/523/684/871/912/936/1050/1079), re-derived counter equivalence by INDUCTION plus its own 3840-shape/70080-row probe, reproduced all four T65 mutations incl. the honest negative M3, and CONFIRMED the applyFinalPeriodResidual faithfulness claim (so refusing to optimise it was right). Also established the corpus is weaker than 'single-disbursement': 31 of 32 vectors put the disbursement at index 0, exactly one (P-03) at index 1."
     },
     {
       "id": "T68",
@@ -1473,9 +1474,31 @@
         "T62",
         "T64"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "Added by fire 20260820-110001. Every prior fire that promoted vectors without an independent capture audit (T21/T22/T27/T44 precedent) found real P0s in the promotion, never zero."
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Added by fire 20260820-110001. Every prior fire that promoted vectors without an independent capture audit (T21/T22/T27/T44 precedent) found real P0s in the promotion, never zero. || fire 20260820-110001: dispatched, isolated worktree, opus."
+    },
+    {
+      "id": "T69",
+      "title": "Corrective retry of T65: make the memo soundness rule actually true (T67's three P1s)",
+      "description": "T65's executable change is approved and preserved; only the WRITTEN RULE is wrong. Fix clause (a)'s incomplete read set (m.minorDigits, m.precision), the 'NOT read: period idx' claim (p.idx is the memo's lookup key via interestChainUpTo(p.idx)), the false IF AND ONLY IF (sufficiency + the key invariant + why writes before the chain is built are sound), and the futureUnrecognizedInterest bullet's wrong reason ('where nothing is ever paid' does not close it). Comment and citation edits only.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/emi.go",
+        "nexus/internal/apps/loanschedule/generator.go",
+        "nexus/internal/apps/loanschedule/liveness_test.go"
+      ],
+      "context": "tier0-harness-schedule-poc",
+      "dependencies": [
+        "T65",
+        "T67"
+      ],
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "fire 20260820-110001: retry of T65 after T67's REJECTED verdict; branches off softhouse/T65-t63-p1s so the approved executable change is preserved. Comment-only by charter - an executable change here would be a scope breach."
     }
   ]
 }
