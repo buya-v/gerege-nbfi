@@ -355,7 +355,9 @@
         "T84",
         "T85",
         "T86",
-        "T87"
+        "T87",
+        "T88",
+        "T89"
       ],
       "status": "pending",
       "attempts": 0,
@@ -1682,10 +1684,10 @@
       "dependencies": [
         "T73"
       ],
-      "status": "done",
+      "status": "rejected",
       "attempts": 0,
       "branch": "softhouse/T78-fui-marker-d5",
-      "note": "Raised and DISPATCHED by the driver, fire 20260820-170001, after T73 REJECTED T72. FIFTH draft of a rule on one comment (T65 rejected by T67; T69 fixed it and found a defect in T67's own text; T70 rejected by T71; T72 rejected by T73). THE DRIVER IS CHANGING THE SHAPE OF THE INSTRUCTION rather than asking for a fifth enumeration, because four rounds of 'fix the findings' have produced four true-but-insufficient rules and each reviewer found the next hole one call frame further out. AWAITS an independent reviewer (T79) which is NOT dispatched this fire - T78 will sit unmerged on its branch exactly as T70 and T72 did. || fire 20260820-170001: worker COMPLETE on softhouse/T78-fui-marker-d5, NOT MERGED - awaiting independent review T79, which is the FIRST TASK OF THE NEXT FIRE. The driver dispatched only what it had budget to review. T78 abandoned enumeration for a CLOSED FORM: three censuses each exhaustive by grep, plus one test. (1) Where the field can be WRITTEN - exactly 3 statements in Fineract main: :1184 (always zero), :1246, and AdvancedPaymentScheduleTransactionProcessor.java:1995, A THIRD WRITER NO PREVIOUS DRAFT NAMED, inside calculateUnrecognizedInterestForClosedPeriodByInterestRecalculationStrategy (:1981-1999) called from handleRepayment (:1971). (2) Entries to the :1246 write - exactly 2 callers of :1221, :1217 and :392 inside payInterest, with what :392 MEANS now stated (none of :1160 runs, so (d),(e),(f) are inapplicable there rather than weakened). (3) Entries to :718 - exactly 4 call sites IN BIJECTION WITH EmiChangeOperation.Action, a 4-constant enum fixed by the compiler (EmiChangeOperation.java:32-37), SO A FIFTH ROUTE CANNOT APPEAR WITHOUT A COMPILE-VISIBLE EDIT TO THE PINNED ORACLE - that is why the rule can stop enumerating. :733-735 stated as the four-term disjunction it is; the fence rescoped from GradedDomain to the PORT's accepted input surface; the tripwire recounted over five graphs. Preserved verbatim: all citations, the whole allowFullTermForTranche/P-04t material, (e)'s non-tightness, condition (7)'s admission, and emi_L < 0 still [UNVERIFIED] and explicitly needing a capture. TWO FINDINGS: F-T78-1 (P2) T73's OWN F-T73-2 is wrong on a verified claim - it said no deepCopy/copyWithoutPaidAmounts caller routes back into addDisbursement, but :1749's copy IS disbursed into two lines later at :1751; also deepCopy passes COPY=false (:132) while copyWithoutPaidAmounts passes true (:141), so the :1224 copy the whole decision runs on is NOT isCopy(). T73's conclusion survives on stronger ground. F-T78-2 (P3) a GOFMT TRAP hit and fixed: the block sits inside a Go doc-comment LIST ITEM, and the first draft made gofmt -l name emi.go as well as contract.go, which would have broken gate G-3. Zero executable change proved both ways at named commits: 0 non-comment changed lines under nexus/ at 741686a and at head b2ebe52; comment-stripped emi.go byte-identical to main, both 609 lines, both sha256 e660867196b5bea6...33a4d."
+      "note": "Raised and DISPATCHED by the driver, fire 20260820-170001, after T73 REJECTED T72. FIFTH draft of a rule on one comment (T65 rejected by T67; T69 fixed it and found a defect in T67's own text; T70 rejected by T71; T72 rejected by T73). THE DRIVER IS CHANGING THE SHAPE OF THE INSTRUCTION rather than asking for a fifth enumeration, because four rounds of 'fix the findings' have produced four true-but-insufficient rules and each reviewer found the next hole one call frame further out. AWAITS an independent reviewer (T79) which is NOT dispatched this fire - T78 will sit unmerged on its branch exactly as T70 and T72 did. || fire 20260820-170001: worker COMPLETE on softhouse/T78-fui-marker-d5, NOT MERGED - awaiting independent review T79, which is the FIRST TASK OF THE NEXT FIRE. The driver dispatched only what it had budget to review. T78 abandoned enumeration for a CLOSED FORM: three censuses each exhaustive by grep, plus one test. (1) Where the field can be WRITTEN - exactly 3 statements in Fineract main: :1184 (always zero), :1246, and AdvancedPaymentScheduleTransactionProcessor.java:1995, A THIRD WRITER NO PREVIOUS DRAFT NAMED, inside calculateUnrecognizedInterestForClosedPeriodByInterestRecalculationStrategy (:1981-1999) called from handleRepayment (:1971). (2) Entries to the :1246 write - exactly 2 callers of :1221, :1217 and :392 inside payInterest, with what :392 MEANS now stated (none of :1160 runs, so (d),(e),(f) are inapplicable there rather than weakened). (3) Entries to :718 - exactly 4 call sites IN BIJECTION WITH EmiChangeOperation.Action, a 4-constant enum fixed by the compiler (EmiChangeOperation.java:32-37), SO A FIFTH ROUTE CANNOT APPEAR WITHOUT A COMPILE-VISIBLE EDIT TO THE PINNED ORACLE - that is why the rule can stop enumerating. :733-735 stated as the four-term disjunction it is; the fence rescoped from GradedDomain to the PORT's accepted input surface; the tripwire recounted over five graphs. Preserved verbatim: all citations, the whole allowFullTermForTranche/P-04t material, (e)'s non-tightness, condition (7)'s admission, and emi_L < 0 still [UNVERIFIED] and explicitly needing a capture. TWO FINDINGS: F-T78-1 (P2) T73's OWN F-T73-2 is wrong on a verified claim - it said no deepCopy/copyWithoutPaidAmounts caller routes back into addDisbursement, but :1749's copy IS disbursed into two lines later at :1751; also deepCopy passes COPY=false (:132) while copyWithoutPaidAmounts passes true (:141), so the :1224 copy the whole decision runs on is NOT isCopy(). T73's conclusion survives on stronger ground. F-T78-2 (P3) a GOFMT TRAP hit and fixed: the block sits inside a Go doc-comment LIST ITEM, and the first draft made gofmt -l name emi.go as well as contract.go, which would have broken gate G-3. Zero executable change proved both ways at named commits: 0 non-comment changed lines under nexus/ at 741686a and at head b2ebe52; comment-stripped emi.go byte-identical to main, both 609 lines, both sha256 e660867196b5bea6...33a4d. || local fire 20260820-200002: REJECTED by T79. NOT MERGED. The rejection is NOT the old failure mode - T79 confirms the closed form closes and says the shape must not change again. Three textual defects, remedy ~8 lines. T88 is the surgical retry."
     },
     {
       "id": "T79",
@@ -1702,9 +1704,9 @@
       "dependencies": [
         "T78"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "Paired reviewer for T78. Raised by the driver, fire 20260820-170001, NOT dispatched this fire \u2014 the driver dispatched only what it had budget to see through. This is the FIRST task of the next fire. || local fire 20260820-200002: DISPATCHED (wave 1), isolated worktree, model opus."
+      "note": "Paired reviewer for T78. Raised by the driver, fire 20260820-170001, NOT dispatched this fire \u2014 the driver dispatched only what it had budget to see through. This is the FIRST task of the next fire. || local fire 20260820-200002: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260820-200002: DONE on softhouse/T79-review-t78 (a14875a). VERDICT REJECTED, three findings, but it states the TASK SHAPE WAS RIGHT and the closed form CLOSES \u2014 the four-prior-rejections failure mode (enumerated fence, next caller one frame out) is gone. F-T79-1 (P1, INTRODUCED BY T78): the step-(e) replacement consumed the clause 'Hence sum of emi_j over' from the FOLLOWING sentence and never restored it, so (e) now asserts an index interval equals a money quantity and the bridge from (d)'s identity to u_L=0 is gone; recoverable VERBATIM from parent 4507109. Rejected rather than MICRO-FIX because that budget bars money logic - correct call. F-T79-2 (P2): 'THAT BIJECTION IS THE CLOSURE' is false on the site->Action side. F-T79-3 (P3): tripwire graph 3 claims its grep returns 7 lines, it returns 9. ADJUDICATED F-T78-1 IN T78'S FAVOUR: T73's [VERIFIED] sentence is false. Re-ran all three censuses WIDER than T78 (repo-wide, case-insensitive), same answers; APSTP:1995 exact in all six particulars; both zero-change proofs RECOMPUTED not accepted; G-3 holds."
     },
     {
       "id": "T80",
@@ -1861,6 +1863,45 @@
       "status": "pending",
       "attempts": 0,
       "note": "Paired reviewer for T82. Raised by the driver, local fire 20260820-200002. Contract-independent; needs no oracle except to confirm the conformance verdict is unmoved."
+    },
+    {
+      "id": "T88",
+      "title": "SURGICAL retry of T78 \u2014 restore one verbatim clause, restate one sentence, fix one grep count. Nothing else.",
+      "description": "Branch off softhouse/T78-fui-marker-d5 and apply EXACTLY T79's three findings. This is NOT a sixth rewrite - T79 explicitly ruled the closed form CLOSES and the task shape must not change again. (1) F-T79-1 (P1): T78's step-(e) replacement consumed the clause 'Hence sum of emi_j over' from the FOLLOWING sentence and never restored it, so step (e) now asserts an index interval equals a money quantity and the bridge from (d)'s identity sum_j emi_j = P + I to (e)'s conclusion u_L = 0 - the entire reason the field may be omitted - is missing. RESTORE IT VERBATIM from parent commit 4507109; do not paraphrase it and do not improve it. (2) F-T79-2 (P2): the sentence 'THAT BIJECTION IS THE CLOSURE' is FALSE on the site->Action side and the block's own part 5 refutes it - :1751/:1752 pass operation.withZeroAmount(), which PRESERVES the action, into the private addDisbursement/addCapitalizedIncome, so :149 can carry CAPITALIZED_INCOME, and :1107 is a further addDisbursement call site. Restate so the closure rests on what actually carries it: the grep-reproducible four-call-site COUNT plus the rule's own answer (one DISBURSEMENT into an empty model makes :743 unreachable). Injectivity is NOT required and must not be claimed. (3) F-T79-3 (P3): tripwire graph 3 claims its grep returns 7 lines; it returns 9 - :703 and :730 are dispatch-target declarations sharing the name prefix. Correct the count. CONSTRAINTS: zero executable change, proved two ways; contract.go untouched and never gofmt'd; gofmt -l must name exactly contract.go and NOT emi.go (T78 hit that trap once - the block sits inside a Go doc-comment LIST ITEM); no citation added, moved or removed beyond these three edits.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/emi.go"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T79"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260820-200002, after T79 REJECTED T78. SIXTH attempt on this comment but the FIRST that is a bounded 3-edit patch rather than a re-derivation - T79 ruled the argument sound and the shape correct. NEEDS NO ORACLE."
+    },
+    {
+      "id": "T89",
+      "title": "INDEPENDENT review of T88 \u2014 check the three edits landed and NOTHING else moved",
+      "description": "Spawned fresh without planning context. Read the upstream handoff from the BRANCH and `git diff main...softhouse/T88-fui-marker-d6` with three dots, and also `git diff softhouse/T78-fui-marker-d5..softhouse/T88-fui-marker-d6` to see the patch in isolation. T88 was a BOUNDED 3-edit patch on a doc comment that T79 had already ruled sound; the risk is therefore SCOPE, not insufficiency. Check: (1) the restored clause is BYTE-IDENTICAL to the one in parent 4507109, not paraphrased; (2) the restated closure sentence no longer claims injectivity and instead rests on the four-call-site count plus the rule's own answer - and re-derive from source that withZeroAmount() at EmiChangeOperation.java:64-69 preserves the action and that :1107 and :1751/:1752 are call sites, so the correction is itself correct; (3) the grep count is 9 and you reproduced it; (4) NOTHING ELSE CHANGED - diff T78..T88 should contain only these three edits; any fourth edit is a rejection regardless of merit; (5) zero executable change, recomputed not accepted; (6) gofmt -l names exactly contract.go and NOT emi.go. Verdict: APPROVED / MICRO-FIX (<=10 lines, mechanical, never money logic) / REJECTED with specifics.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/emi.go",
+        ".softhouse/reviews/"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T88"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Paired reviewer for T88. Raised by the driver, local fire 20260820-200002. NEEDS NO ORACLE."
     }
   ]
 }
