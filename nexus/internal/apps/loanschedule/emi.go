@@ -194,12 +194,16 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //	    of periods 0..i: the model's periods slice; that period's due and emiMinor;
 //	    its segments slice; and per segment from, due, outstandingMinor and
 //	    rateFactorTillDue. It ALSO reads two MODEL-WIDE fields that no index can
-//	    cover -- minorDigits (emi.go:542 majorFromMinor, emi.go:603 minorFromMajor)
-//	    and precision (emi.go:543-545, three roundSignificant calls). Those two are
+//	    cover -- minorDigits, through segmentCalculatedInterest's majorFromMinor
+//	    and interestChainUpTo's minorFromMajor, and precision, through
+//	    segmentCalculatedInterest's three roundSignificant calls. Those two are
 //	    set once in newScheduleModel's struct literal and MUST NEVER be written
 //	    after it: a write to either invalidates the WHOLE chain, and there is no
 //	    invalidateFrom(j) that expresses that. Per-tranche or per-period rounding
 //	    would break this and needs a different mechanism, not a guard.
+//	    (In-file references here are by FUNCTION NAME, not by line: this comment
+//	    block is long enough that editing it moves every line number in the file,
+//	    which is how the last set of self-cites went stale.)
 //	    (Derived by reading interestChainUpTo and segmentCalculatedInterest, not
 //	    from this comment. NOT read by the fold body: segment rateFactor, segment
 //	    disbursedMinor -- which reaches the fold only after updateOutstandingBalances
@@ -217,33 +221,37 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //	    m.chainValid <= j holds at the next chain read after the write. An
 //	    invalidateFrom(j') with j' <= j ESTABLISHES that condition; CONSTRUCTION
 //	    ALREADY SATISFIES IT. m.chainValid is zero-valued; interestChainUpTo trusts
-//	    m.chain[last] only when last < m.chainValid (emi.go:578) and resumes only
-//	    from m.chainValid (emi.go:582-584); and invalidateFrom only ever LOWERS it
-//	    (emi.go:246-247), so while chainValid == 0 nothing is trusted and an
-//	    invalidateFrom call would be a no-op by its own guard.
+//	    m.chain[last] only under `last < m.chainValid` and resumes only from
+//	    `start = m.chainValid`; and invalidateFrom only ever LOWERS chainValid
+//	    (`if i < m.chainValid`). So while chainValid == 0 nothing is trusted, the
+//	    fold restarts at index 0, and an invalidateFrom call would be a no-op by
+//	    its own guard.
 //
 //	    That is why the writes that BUILD a model carry no guard and are not
-//	    defects: generator.go:515-522 fills m.periods and sets p.idx before m.chain
-//	    is even allocated (generator.go:525), and deepCopy gives the copy a fresh
-//	    empty chain (emi.go:275) before writing its periods and segments
-//	    (emi.go:282, :284). DO NOT "FIX" THOSE SITES BY ADDING A GUARD. Guard any
-//	    write that can run after a chain read -- which is every write on a model
-//	    that has been handed to a caller.
+//	    defects: newScheduleModel (generator.go) fills m.periods and sets p.idx in
+//	    a loop and allocates m.chain only AFTER that loop, and deepCopy hands the
+//	    copy a fresh empty chain before writing the copy's periods and segments.
+//	    DO NOT "FIX" THOSE SITES BY ADDING A GUARD. Guard any write that can run
+//	    after a chain read -- which is every write on a model that has been handed
+//	    to a caller.
 //
 //	(c) KEY INVARIANT -- what (b) does not cover and cannot. m.chain[i] is keyed by
-//	    POSITION IN m.periods (the store is m.chain[i] while the walk reads
-//	    m.periods[i], emi.go:594, :610), and p.idx is the key every lookup uses:
-//	    calculatedDueInterestMinor and dueInterestMinor call interestChainUpTo(p.idx)
-//	    (emi.go:618, :623), and the guards themselves are indexed by it
-//	    (invalidateFrom(p.idx), emi.go:684, :871, :1050, :1079). Soundness therefore
-//	    ALSO requires m.periods[i].idx == i for every i, and m.periods never
-//	    reordered, spliced or shortened after construction. Write p.idx, or permute
-//	    m.periods, and interestChainUpTo answers with ANOTHER PERIOD'S MONEY while
-//	    rule (b) is satisfied at every step -- (b) never mentions idx, and permuting
-//	    a slice whose contents are unchanged can be done with a guard and still be
-//	    wrong. This is why p.idx is assigned exactly once, in index order, at
-//	    generator.go:521, before m.chain exists, and why nothing in this package
-//	    sorts, reverses, copies over or deletes from m.periods.
+//	    POSITION IN m.periods: interestChainUpTo's loop reads m.periods[i] and
+//	    stores its answer at m.chain[i]. And p.idx is the key every lookup uses --
+//	    calculatedDueInterestMinor and dueInterestMinor both call
+//	    interestChainUpTo(p.idx) -- as do several of the guards themselves
+//	    (invalidateFrom(p.idx) in calculateRateFactors and twice in
+//	    adjustEMIIfNeeded; invalidateFrom(related[0].idx) in
+//	    calculateLevelInstallment). Soundness therefore ALSO requires
+//	    m.periods[i].idx == i
+//	    for every i, and m.periods never reordered, spliced or shortened after
+//	    construction. Write p.idx, or permute m.periods, and interestChainUpTo
+//	    answers with ANOTHER PERIOD'S MONEY while rule (b) is satisfied at every
+//	    step -- (b) never mentions idx, and permuting a slice whose per-period
+//	    contents are unchanged can be done with a guard and still be wrong. This is
+//	    why p.idx is assigned exactly once, in index order, in newScheduleModel,
+//	    before m.chain exists, and why nothing in this package sorts, reverses,
+//	    copies over or deletes from m.periods.
 //
 // DO NOT restate (b) as "no quantity of a later period appears anywhere in the
 // fold, so step i is a function of periods 0..i and of nothing later". That
@@ -260,15 +268,18 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     are at :1818-1819 (calculateRateFactorPlus1NForEmi, :1816-1820) and :1827
 //     (calculateFnResultForEmi, :1822-1828), whose .skip(1) is at :1825; port:
 //     calculateLevelInstallment].
+//
 //   - the EMI re-adjust smoothing loop. getEmiAdjustment scans FROM THE END and
 //     returns lastPeriod.getEmi().minus(penultimatePeriod.getEmi()), and the
 //     uniform installment derived from that tail residual is stamped onto every
 //     related period starting at the earliest
 //     [VERIFIED: :1258-1309, the scan at :1778-1789, the writes at :1279-1286 and
 //     :1298-1304; port: adjustEMIIfNeeded].
+//
 //   - the final-period residual. diff is a WHOLE-SCHEDULE aggregate and :1165-1174
 //     writes emi on ANY period whose outstanding principal exceeds a whole-schedule
 //     total [VERIFIED: :1160-1219, diff at :1202-1203; port: applyFinalPeriodResidual].
+//
 //   - futureUnrecognizedInterest on period i is assigned the unrecognizedInterest
 //     of a period at index > i -- getPeriodWithUnrecognizedInterest filters on
 //     dueDate().isAfter(...) -- and that field is then added into
