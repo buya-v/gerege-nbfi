@@ -20,11 +20,16 @@ All four are `bash prove-guards-go-red.sh`, unedited stdout+stderr.
 |---|---|---|---|
 | `prefix-branch.txt` | v2 (computed) | branch `softhouse/T102-literal-fork-sha` @ `55409cf` | **25 as expected, 0 not** |
 | `prefix-merged.txt` | v2 (computed) | throwaway clone, branch merged into its own `main` (`ff73824`) | **18 as expected, 7 not** |
-| `postfix-branch.txt` | v3 (literal) | branch, after the fix | **25 as expected, 0 not** |
-| `postfix-merged.txt` | v3 (literal) | throwaway clone, fixed branch merged into its own `main` (`997ebe0`) | **25 as expected, 0 not** |
+| `postfix-branch.txt` | v3 (literal) | branch, at final HEAD | **25 as expected, 0 not** |
+| `postfix-merged.txt` | v3 (literal) | throwaway clone, final branch merged into its own `main` (`a3808f0`, from main `d0ef08d`) | **25 as expected, 0 not** |
 
 Row 2 is the reproduction of the defect and row 4 is the acceptance test. Without row 2 the pair
 could not tell a fix from a no-op.
+
+**Rows 3 and 4 are BYTE-IDENTICAL** once the repo root path is normalised
+(`diff` exit 0 after a single `s|<root>|ROOT|g` on each). Not merely the same score — the same
+transcript, including every extracted sha256 and every guard's stdout. That is the property a
+literal pin is supposed to have and the property the computed forms did not have.
 
 ## What moved, in one number
 
