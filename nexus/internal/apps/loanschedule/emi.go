@@ -307,10 +307,13 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     reading alone, and do not weaken the lapse list at the end.
 //
 //     PROVED -- from the pinned checkout 426a23544. Every line number below was
-//     re-opened at T70 and resolved to the method it lands in; three numbers that
-//     T66's handoff, PASS3H-REPORT.md and the driver's re-derivation all carried
+//     re-opened AGAIN at T72 and resolved to the method it lands in; nothing here
+//     is transcribed on trust from an earlier handoff. Three numbers that T66's
+//     handoff, PASS3H-REPORT.md and the driver's re-derivation all carried
 //     (deepCopy :1226, the futureUnrecognizedInterest write :1250, the residual
-//     assignment :1207) are corrected here to :1224, :1246 and :1205 with :1210.
+//     assignment :1207) were corrected at T70 to :1224, :1246 and :1205 with
+//     :1210, and T72 re-confirmed each against the pinned file. T72 also widens
+//     InterestPeriod.java:168-186 to :168-188, the method's real span.
 //
 //     (a) THE DECISION RUNS ON A TILL-DATE-TRUNCATED DEEP COPY.
 //     calculateUnrecognizedInterestTillDateOnScheduleModelCopyAndDefer
@@ -326,24 +329,34 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     tests is written only by addOverdueBalanceCorrection [VERIFIED: :372-382,
 //     recording at ProgressiveLoanInterestScheduleModel.java:106-108], which no
 //     origination path calls, and even when it fires the :1240 rebuild writes
-//     outstandingLoanBalance only [VERIFIED: InterestPeriod.java:168-186] and
+//     outstandingLoanBalance only [VERIFIED: InterestPeriod.java:168-188] and
 //     cannot restore a zeroed rate factor.
 //
-//     (b) tillDate IS ANCHORED AT THE DISBURSEMENT, NOT AT MATURITY. On the
-//     ordinary single-disbursement path addDisbursement's else branch (:145-151)
-//     passes getEffectiveRepaymentDueDate(...) -- the due date of the period the
-//     disbursement lands in, or the NEXT period's due date when it lands exactly
-//     on one [VERIFIED: :250-263] -- into calculateEMIValueAndRateFactors
-//     (:718-728), which for DECLINING_BALANCE dispatches at :723 to
+//     (b) tillDate IS ANCHORED AT THE DISBURSEMENT, NOT AT MATURITY -- AND WHICH
+//     ANCHOR IS USED IS DECIDED BY A PRODUCT FLAG, NOT BY THE NUMBER OF
+//     DISBURSEMENTS. addDisbursement (:137-153) branches at :142-144 on
+//     isAllowFullTermForTranche() && numberOfRepayments > 0 &&
+//     action == DISBURSEMENT [VERIFIED: :142-144]. THAT GUARD NEVER CONSULTS HOW
+//     MANY DISBURSEMENTS THERE ARE. With the flag FALSE the else branch
+//     (:145-151) passes getEffectiveRepaymentDueDate(...) -- the due date of the
+//     period the disbursement lands in, or the NEXT period's due date when it
+//     lands exactly on one [VERIFIED: :250-263] -- into
+//     calculateEMIValueAndRateFactors (:718-728), which for DECLINING_BALANCE
+//     dispatches at :723 to
 //     calculateEMIValueAndRateFactorsForDecliningBalanceInterestMethod (:730-751)
-//     and enters calculateLastUnpaidRepaymentPeriodEMI AT :747. Call that
-//     period's index f. The other disbursement entry, :247, passes the
-//     disbursement DATE itself and sits inside mergeNewScheduleModelWithExistingOne
-//     (:206-248), reachable only from addFullTermTrancheDisbursement (:155-174)
-//     under the isAllowFullTermForTranche branch at :142-144 -- NOT the ordinary
-//     path. (T67's replacement text cited :247 as the ordinary path and was
-//     rejected for it. Resolve every citation you add here to its enclosing
-//     method before you write it down.) With (a): on the copy, a period k > f
+//     and enters calculateLastUnpaidRepaymentPeriodEMI AT :747 with that due
+//     date. Call that period's index f. With the flag TRUE -- on ANY number of
+//     disbursements, INCLUDING EXACTLY ONE -- addFullTermTrancheDisbursement
+//     (:155-174) runs instead and reaches :1160 at :247, inside
+//     mergeNewScheduleModelWithExistingOne (:206-248), with tillDate =
+//     operation.getSubmittedOnDate(), the disbursement DATE [VERIFIED: :247].
+//     There is no f on that path and (b) is simply FALSE there. SO STEP (b) IS
+//     PROTECTED BY THE FLAG PIN, CONDITION (1) BELOW -- NOT by the
+//     single-disbursement predicate. (T67's replacement text cited :247 as the
+//     ordinary path and was rejected for it; T70's rule then blamed :247 on
+//     multi-tranche and was rejected for that. Resolve every citation you add
+//     here to its enclosing method, AND every guard to its actual condition,
+//     before you write it down.) With (a): on the copy, a period k > f
 //     contributes S_k = 0.
 //
 //     (c) BEYOND f THE CHAIN IS A PURE NON-INCREASING CASCADE. With nothing paid,
@@ -359,9 +372,20 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     diff = totalDisbursed + capitalizedIncome + creditedPrincipal +
 //     totalDueInterest - totalEMI, and :1205 with :1210 assigns
 //     emi_L := emi_L + diff on the selected last-not-fully-paid period L --
-//     immediately before the :1217 lookup. So at lookup time sum_j emi_j = P + I,
-//     with P the disbursed principal and I the total due interest as measured on
-//     the real model. Note also that :1183-1184 RESETS that period's
+//     immediately before the :1217 lookup. So sum_j emi_j = P + I, with P the
+//     disbursed principal and I the total due interest as measured on the real
+//     model JUST BEFORE THE ASSIGNMENT [T66.md:96-97].
+//
+//     KEEP THAT QUALIFIER; IT IS LOAD-BEARING AND T70 DROPPED IT. getDueInterest
+//     is memoised on a dependency key that INCLUDES emi [VERIFIED:
+//     RepaymentPeriod.java:272-286, the Memo.of dependency array at :282-283], so
+//     the :1210 write invalidates period L's memo and the total due interest a
+//     lookup would return AFTER the assignment can differ from the I that went
+//     into diff. The identity is a statement about the PRE-assignment I. It is
+//     NOT true "at lookup time", and T70's wording said it was. The conclusion
+//     survives -- (e) uses I only as a non-negative quantity dropped from a bound
+//     [T66.md:110-115] -- but the sentence does not survive without the
+//     qualifier. Note also that :1183-1184 RESETS that period's
 //     futureUnrecognizedInterest to zero on entry, and it is the only period this
 //     path can ever set.
 //
@@ -374,15 +398,17 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     :196] and the level installment is written only onto the list passed in
 //     [VERIFIED: :1674 dispatching at :1680 to
 //     calculateEMIOnActualModelWithDecliningBalanceInterestMethod (:1722-1742),
-//     the forEach/setEmi at :1736-1741]. Hence sum of emi_j over f < j <= L is
-//     (P + I) - emi_f, so u_L = max(0, u_f - (P + I) + emi_f), which is 0 as soon
-//     as cdi_f <= P. CITE T66.md:100-108 FOR THIS STEP -- that is the general-f
-//     form -- and T66.md:110-115 for the bound. Do NOT cite PREDICTION.md's step
-//     (e) at PREDICTION.md:100-105: it states the sufficient condition as
-//     cdi_f <= P + emi_f WITHOUT the "emi_j = 0 for j < f" premise, so it is exact
-//     only at f = 0, and it now carries a dated CORRECTION block saying so
-//     [PREDICTION.md:107-130]. Citing that form would import a statement known to
-//     be incomplete.
+//     the forEach/setEmi at :1736-1741]. THAT WRITE PATH IS REACHED ONLY VIA
+//     :741, under onlyOnActualModelShouldApply (:733-735) -- which is what
+//     condition (2) is really protecting; see there. Hence sum of emi_j over
+//     f < j <= L is (P + I) - emi_f, so u_L = max(0, u_f - (P + I) + emi_f),
+//     which is 0 as soon as cdi_f <= P. CITE T66.md:100-108 FOR THIS STEP -- that
+//     is the general-f form -- and T66.md:110-115 for the bound. Do NOT cite
+//     PREDICTION.md's step (e) at PREDICTION.md:100-105: it states the sufficient
+//     condition as cdi_f <= P + emi_f WITHOUT the "emi_j = 0 for j < f" premise,
+//     so it is exact only at f = 0, and it now carries a dated CORRECTION block
+//     saying so [PREDICTION.md:107-130]. Citing that form would import a
+//     statement known to be incomplete.
 //
 //     (f) SO THE CASCADE IS DEAD FROM L ON: u_L = 0 => cdi_(L+1) = 0 => u_(L+1) =
 //     0 => ... and getPeriodWithUnrecognizedInterest needs u > 0 STRICTLY AFTER L
@@ -408,79 +434,211 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     AFTER L: P-CAL-ZPB 40 such rows, T66-M-R12000 10, T66-M-DRIFT-R12000 10,
 //     T66-M-DRIFT-R2400 3, T66-M-FLOOR-HR 3 -- and the two R12000 cases run at a
 //     per-period rate factor of 10.00, ten times past (e)'s sufficient condition.
-//     capturesCanonicalSha256
-//     fdd751a209c9518b157ca6fd70aef06a91acff94953e1f8cc6c4d45162b90b73,
-//     reproduced by the driver's independent re-run and recomputed from the
-//     committed capture at T70.
+//     AND ALL 18 RAN allowFullTermForTranche = false, so this corpus observes the
+//     :747 entry AND NOTHING ELSE. capturesCanonicalSha256
+//     fdd751a209c9518b157ca6fd70aef06a91acff94953e1f8cc6c4d45162b90b73.
+//     [VERIFIED at T72: every figure in this paragraph -- 18, 416, zero
+//     exceptions on the three fields, 18 of 18 path identity, the five tails
+//     40/10/10/3/3, and 18 of 18 inputs.allowFullTermForTranche == false -- was
+//     re-derived from .softhouse/capture/out/capture-prod3h-raw.json at T72, and
+//     the digest matches capture-prod3h-attestation.json:15.]
 //
 //     SEARCHED -- T66's port-side census over 21,060 admitted shapes: 9,437 carry
 //     a zero-EMI period, 156 of those carry positive calculatedDueInterest, and 0
 //     place such a period strictly after L. [VERIFIED: T66.md, re-run
 //     independently by the driver in
 //     .softhouse/reviews/driver-rederivation-20260820-140000.md. NOT re-run at
-//     T70: the throwaway harness is preserved only as
+//     T70 or T72: the throwaway harness is preserved only as
 //     .softhouse/capture/t66-unrecognized-interest/t66_search_test.go.txt.]
 //
 //     NOT CLAIMED, and do not let a later edit quietly claim it:
 //
 //     (i) THE COPY'S INTERNAL STATE WAS NEVER OBSERVED, by anyone. Pass 3h reads
-//     the REAL model, so it establishes the OUTCOME of the one decision -- on the
-//     generate path :1160 is entered on the real model once, at :747, the field
-//     is written as the last act of that call at :1246, and :1288's calls run on
-//     the smoothing loop's TRIAL copy -- and NOT the copy's intermediate u_k
-//     cascade [PASS3H-REPORT.md:138-149]. Steps (a)-(g) are proof; the 416 rows
-//     are observation of the outcome. Keep the two apart.
+//     the REAL model, so it establishes the OUTCOME of the one decision -- the
+//     field write at :1246 is the LAST ACT on the real model of the outer :747
+//     frame, because that frame's :1217 runs after any inner frame has returned,
+//     and :1288's calls run on the smoothing loop's TRIAL copy -- and NOT the
+//     copy's intermediate u_k cascade [PASS3H-REPORT.md:138-149]. DO NOT WRITE
+//     "entered on the real model once, at :747". PASS3H-REPORT.md:141-143 says
+//     exactly that, T70 inherited it verbatim, and it is FALSE: :1214 re-enters
+//     :1160 on scheduleModel, the REAL model [VERIFIED: :1211-1215, the argument
+//     at :1214]. Once-ness is not what the observation needs; LAST-ness is. That
+//     upstream document is an attestation and is not edited from here, so it
+//     still carries the false sentence. Steps (a)-(g) are proof; the 416 rows are
+//     observation of the outcome. Keep the two apart.
 //
-//     (ii) THE RECURSIVE FRAME IS NOT COVERED DEDUCTIVELY. :1211-1215 re-enters
-//     :1160 when the residual drives emi_L below totalPaid - totalCredited (zero
-//     when nothing is paid); the port reproduces it as applyFinalPeriodResidual's
-//     own depth+1 re-entry (no line number on purpose -- it moves). The OUTER
-//     frame's :1217 lookup therefore runs after an inner frame has re-established
-//     (d) on a possibly DIFFERENT L. T66 states (d) for a single entry into
-//     :1160, and neither T66 nor the driver analysed the recursive frame
-//     separately. It is covered empirically -- the census runs the port's own
-//     residual with the recursion in place -- and it is [UNVERIFIED] that the
-//     recursive frame preserves (d) for the outer target. Settle it by capture,
-//     not by reading, if a shape ever needs it.
+//     (ii) THE RECURSIVE FRAME IS NOT COVERED DEDUCTIVELY, AND WHAT WOULD FIRE IT
+//     IS NOW EXACTLY KNOWN. :1211-1215 re-enters :1160 -- on the real model, with
+//     the same tillDate -- when getEmi() falls below
+//     totalPaidAmount - totalCreditedAmount. ON THE GRADED DOMAIN THAT RIGHT-HAND
+//     SIDE IS EXACTLY ZERO, TERM BY TERM, so the guard reduces to emi_L < 0:
+//     totalPaidAmount is paidPrincipal + paidInterest [VERIFIED:
+//     RepaymentPeriod.java:367-369], zero because nothing is paid; and
+//     totalCreditedAmount is creditedPrincipal + creditedInterest -
+//     creditedInterestMovedDueReAge - creditedPrincipalMovedDueReAge [VERIFIED:
+//     RepaymentPeriod.java:357-359], whose first two terms are zero by the NO
+//     CREDITED AMOUNTS condition and whose last two are zero by the NO RE-AGING
+//     clause -- so it is zero termwise, not merely "zero when nothing is paid".
+//     getEmi() at :1211 reads what :1210 has just written [VERIFIED: :1205-1213].
+//     The port encodes that same test verbatim: the emiMinor < 0 clamp and the
+//     depth+1 re-entry inside applyFinalPeriodResidual (cited by NAME, not by
+//     line -- the number moves every time this comment does).
+//
+//     WHETHER emi_L CAN GO STRICTLY NEGATIVE ON AN ADMITTED SHAPE IS [UNVERIFIED]
+//     AND IS NOT SETTLED HERE. Nothing on :1205 floors getEmi().add(diff, mc);
+//     the only floor on that statement is the getFixedInterest() override at
+//     :1206-1208, excluded by the NO FIXED INTEREST clause, and the earlier
+//     :1165-1174 loop's floor is minimumEMI = paidInterest + paidPrincipal = 0
+//     [VERIFIED: :1169-1172], which clamps THAT loop's subtraction and says
+//     nothing about diff. The OUTER frame's :1217 lookup therefore runs after an
+//     inner frame has re-established (d) on a possibly DIFFERENT L, and it is
+//     [UNVERIFIED] that the recursive frame preserves (d) for the outer target.
+//     T66 states (d) for a SINGLE entry into :1160; neither T66 nor the driver
+//     analysed the recursive frame. Coverage is EMPIRICAL -- the census runs the
+//     port's own residual with the recursion in place over 21,060 shapes with 0
+//     firings. SETTLE IT BY CAPTURE, NOT BY READING. T70, T71 and the driver each
+//     declined to settle it by reading and each was right to; the detector is one
+//     integer, so hunt for an admitted shape whose residual drives the final
+//     period's EMI strictly negative rather than arguing about it.
 //
 //     (iii) NOTHING HERE GENERALISES PAST THE GRADED DOMAIN.
 //
 //     THE RULE THIS PORT DEPENDS ON. Omitting futureUnrecognizedInterest and
 //     interestMovedUpward is safe ONLY while EVERY one of the following holds.
 //     Make any of them false and the argument above is VOID -- the field must be
-//     ported BEFORE the wider shape is admitted, not after a vector goes red:
+//     ported BEFORE the wider shape is admitted, not after a vector goes red.
+//     T70 numbered these (1)-(5) and its (1) named the WRONG GUARD, which is why
+//     T71 rejected it; the flag pin is NEW here and takes (1), so T70's (1)-(5)
+//     are (2)-(6) below, and (7)-(8) are new as well. Cross-references inside
+//     this block name the conditions rather than numbering them, on purpose: a
+//     number drifts, a name does not.
 //
-//     (1) EXACTLY ONE DISBURSEMENT [conformance/admit.go:1018-1020, inside
-//     GradedDomain :999-1060]. Multi-tranche breaks (b) outright, because the
-//     tranche branch enters :1160 at :247 with tillDate = the disbursement DATE,
-//     and contract.go:1330-1342 says multi-tranche is coming.
+//     (1) allowFullTermForTranche IS FALSE -- THE FLAG PIN. This, and NOT the
+//     disbursement count, is what protects step (b). The guard at :142-144 is
+//     isAllowFullTermForTranche() && numberOfRepayments > 0 &&
+//     action == DISBURSEMENT and NEVER CONSULTS THE DISBURSEMENT COUNT [VERIFIED:
+//     :142-144]. Setting it true on an ORDINARY SINGLE DISBURSEMENT routes into a
+//     full re-amortization through a synthetic terms object and a temporary
+//     schedule model (:155-174) and reaches :1160 at :247 with tillDate = the
+//     disbursement DATE -- which voids (b) outright, and voids (e)'s
+//     "emi_j = 0 for j < f" premise as well, because the merge writes EMI onto
+//     EXISTING periods:
+//     existingRepaymentPeriod.get().setEmi(getEmi().add(newPrincipal.add(
+//     newInterest))) [VERIFIED: :228], not onto a window list. The frozen
+//     contract already states this pin and its reason [contract.go:1179 and
+//     :1191-1202]: it is "a REAL BEHAVIOURAL PIN, not a dead field", "the guard
+//     that consumes it never consults multi-disbursement at all", and the two
+//     captures differing only in this flag that came out identical are "a
+//     measurement, not a licence to ignore the flag".
 //
-//     (2) NOTHING IS EVER PAID. A payment breaks "isFullyPaid() iff emi == 0" in
+//     HOW TO CHECK CONDITION (1), BECAUSE THE HARNESS CANNOT. The frozen contract
+//     has NO FIELD for this flag, so GradedDomain neither tests it nor can
+//     [VERIFIED: conformance/admit.go:999-1060 contains no such predicate; the
+//     contract files the flag as a PIN, "NOT a section 3.1 graded-domain
+//     predicate", contract.go:866-869]. The check is on the ORACLE RUN behind a
+//     capture -- inputs.allowFullTermForTranche in the capture JSON -- and never
+//     on the vector request, which cannot express it. A vector can therefore be
+//     admitted, graded and GREEN while its oracle run took the :247 entry.
+//
+//     AND THE CORPUS ALREADY CONTAINS EXACTLY THAT.
+//     .softhouse/vectors/loanschedule/P-04t-fulltermfortranche-true.json is class
+//     "parity", has EXACTLY ONE disbursement, and its capture ran the flag TRUE,
+//     so its oracle run went down :247 -- while all 18 pass-3h cases ran it FALSE
+//     [VERIFIED at T72: the vector file's class and its single-element
+//     request.disbursements; 18 of 18 inputs.allowFullTermForTranche == false in
+//     capture-prod3h-raw.json]. Nothing is red, because P-04t's expected cells
+//     are byte-identical to P-04f's and P-00's and the contract has no field to
+//     tell the three apart. That is OUTPUT IDENTITY ON ONE SHAPE -- a
+//     measurement, and NOT coverage. futureUnrecognizedInterest has never been
+//     read on the :247 entry by anyone. DO NOT CITE P-04t AS EVIDENCE FOR
+//     (a)-(g); it is evidence of the opposite, that the flag-true path is inside
+//     the graded corpus and outside the observation. The harness records the same
+//     live-and-schedule-neutral finding as T17-F3, marked NARROWED-BY-OBSERVATION
+//     [conformance/structural.go:257-276].
+//
+//     (2) EXACTLY ONE DISBURSEMENT [conformance/admit.go:1018-1020, inside
+//     GradedDomain :999-1060]. A SEPARATE condition from (1), protecting a
+//     DIFFERENT step. With the flag false a SECOND disbursement still takes the
+//     else branch (:145-151), but by then the model is no longer empty --
+//     isEmpty() is "no period has a non-zero EMI" [VERIFIED:
+//     ProgressiveLoanInterestScheduleModel.java:394-399] -- so unless every EMI
+//     is still zero, onlyOnActualModelShouldApply is FALSE [VERIFIED: :733-735]
+//     and the write path (e) depends on, :741's calculateEMIOnActualModel, is NOT
+//     taken; :743's calculateEMIOnNewModelAndMerge runs instead. Periods before
+//     the second disbursement's f also already carry EMI from the first, and each
+//     disbursement brings its OWN tillDate into :747, so there is no single f.
+//     contract.go:1330-1342 says multi-tranche is coming.
+//
+//     (3) NOTHING IS EVER PAID. A payment breaks "isFullyPaid() iff emi == 0" in
 //     (e) and the reduction in (c).
 //
-//     (3) NO CREDITED PRINCIPAL OR INTEREST AND NO CAPITALIZED INCOME. Each is a
-//     term of diff and breaks the identity in (d) [:1189-1203].
+//     (4) NO CREDITED PRINCIPAL OR INTEREST AND NO CAPITALIZED INCOME -- the NO
+//     CREDITED AMOUNTS condition. Each is a term of diff and breaks the identity
+//     in (d) [:1189-1203], and the first two are terms of totalCreditedAmount in
+//     (ii) [RepaymentPeriod.java:357-359].
 //
-//     (4) NO FIXED INTEREST [:259, :1206-1208], NO RE-AGING, NO INTEREST PAUSE
+//     (5) NO FIXED INTEREST [RepaymentPeriod.java:259 -- the
+//     add(getFixedInterest()) into calculatedDueInterest -- with
+//     ProgressiveEMICalculator.java:1206-1208], NO RE-AGING, NO INTEREST PAUSE
 //     [:1708-1720 with :1830-1832]. Each adds a non-zero term to cdi_k that (c)
-//     assumes away.
+//     assumes away; re-aging additionally makes the last two terms of
+//     totalCreditedAmount non-zero in (ii). Note the FILE QUALIFIER on :259:
+//     unqualified :N in this block means ProgressiveEMICalculator.java, where
+//     :259 is the comment "// Currently N+1 scenario is not supported." inside
+//     getEffectiveRepaymentDueDate -- not what is meant. T70 wrote it unqualified
+//     and T71 rejected the citation.
 //
-//     (5) THE SEAM STAYS A PURE ORIGINATION CALL. Besides :747, :1160 has sixteen
-//     call sites. FOURTEEN belong to post-origination operations, each with its
-//     own tillDate and none of them reasoned about above: :247 tranche merge,
-//     :368 addBalanceCorrection, :380 addOverdueBalanceCorrection, :404
-//     payInterest, :442 payPrincipal, :505 addCredit, :626
-//     getOutstandingAmountsTillDate, :698 recalculateScheduleModelTillDate, :868
-//     changeDueDate, :879 and :937 re-amortization, :1091 re-age attach, :2024
-//     interest pause, :2129 reAgeEqualAmortization [VERIFIED at T70: grep for the
-//     call and resolve each hit to its enclosing method]. The remaining TWO are
-//     internal to this same generate pass and are NOT covered by the observation:
-//     :1214, the self-recursion of (ii), and :1288, the smoothing loop's trial
-//     copy, which is reached from :749 and whose tillDate is
-//     relatedPeriodsFirstDueDate (:1278). T66 argues that (a)-(g) carry over to
-//     the trial because that date equals calculateFromRepaymentPeriodDueDate on
-//     the generate path; that is proof and NOT observation [T66.md ## Unverified].
-//     This block is about the :747 entry.
+//     (6) THE SEAM STAYS THE ORDINARY :747 ENTRY. Besides :747, :1160 has SIXTEEN
+//     call sites [VERIFIED at T72: grep the name in the pinned file -- 17 call
+//     lines plus the declaration at :1160].
+//     THIRTEEN are post-origination operations, each with its own tillDate and
+//     none of them reasoned about above: :368 addBalanceCorrection, :380
+//     addOverdueBalanceCorrection, :404 payInterest, :442 payPrincipal, :505
+//     addCredit, :626 getOutstandingAmountsTillDate, :698
+//     recalculateScheduleModelTillDate, :868 changeDueDate, :879 and :937
+//     re-amortization, :1091 re-age attach, :2024 interest pause, :2129
+//     reAgeEqualAmortization.
+//     ONE IS AN ORIGINATION CALL AND MUST NOT BE FILED WITH THEM. :247 is reached
+//     from addDisbursement (:137-153) via :144 and :155-174: same loan, same
+//     disbursement, same call, different branch. It is ORIGINATION, and the only
+//     thing holding it off is condition (1). T70 listed :247 under
+//     "post-origination operations" and phrased this condition as "the seam stays
+//     a PURE ORIGINATION CALL"; that pair is what let a reader satisfy every
+//     clause while standing on :247, and it is why T71 rejected the draft. Do not
+//     restore either phrasing -- "this is origination" is NOT a reason to believe
+//     :247 is unreachable.
+//     THE REMAINING TWO are internal to this same generate pass and are NOT
+//     covered by the observation: :1214, the self-recursion of (ii), and :1288,
+//     the smoothing loop's trial copy, reached from :749 inside
+//     checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods (:1258-1309) with
+//     tillDate = relatedPeriodsFirstDueDate (:1278). T66 argues that (a)-(g)
+//     carry over to the trial because that date equals
+//     calculateFromRepaymentPeriodDueDate on the generate path; that is proof and
+//     NOT observation [T66.md ## Unverified]. 13 + 1 + 2 = 16. If that arithmetic
+//     stops reconciling, the call graph moved and this whole block is stale.
+//
+//     (7) THE OTHER FIVE PINNED ORACLE INPUTS STILL HOLD [contract.go:1173-1186]:
+//     allowPartialPeriodInterestCalculation = true,
+//     interestRecognitionOnDisbursementDate = false, fixedLength = null,
+//     daysInYearCustomStrategy = null, currency.inMultiplesOf = null. NONE of
+//     them was analysed against (a)-(g) by T66, T70 or T72; they are listed here
+//     so that relaxing one is a DECISION and not an oversight. Relaxing any of
+//     them puts this argument back in [UNVERIFIED] until it is re-argued or
+//     captured. Condition (1) is the sixth pin, broken out above because it is
+//     the one already violated inside the corpus.
+//
+//     (8) THE GRADED DOMAIN IS NOT WIDENED IN ANY OTHER RESPECT
+//     [conformance/admit.go:999-1060]. (1)-(7) name the premises this argument
+//     actually USES; they are not a complete characterisation of the graded
+//     domain, and no one has checked (a)-(g) against a predicate that is not on
+//     this list. Widening GradedDomain in any way at all -- down payments, a
+//     different repayment frequency or unit, a different rounding mode, anything
+//     -- is outside everything above. Re-argue it or capture it first. "The rule
+//     does not mention it, so it must be fine" is exactly the reasoning this
+//     condition exists to forbid.
+//
+//     This block establishes the :747 entry, on the domain fenced by (1)-(8), and
+//     nothing else.
 //
 // So the memo does NOT cache the derivation of period i's state; it caches a pure
 // function of the model's CURRENT STORED FIELDS for periods 0..i. Every one of
