@@ -54,7 +54,12 @@ trap 'rm -f "$ORIG" "$FIXED"' EXIT
 # Both mutants get a redirection source that fails open() at run time. The eval
 # string still PARSES, so `builtin read` is reached and fails, and the NEXT
 # statement — printf of the variable — still runs. That is the whole defect.
-awk -v lit="$PSUB" '
+# NOTE: the literal is passed through the ENVIRONMENT, not through `awk -v`. `-v`
+# processes escape sequences, so the `\n` inside the probe's printf format would
+# arrive as a real newline and never match. That silent near-miss is exactly what
+# the cmp check below exists to catch.
+T106_LIT="$PSUB" awk '
+  BEGIN { lit = ENVIRON["T106_LIT"] }
   index($0, lit) > 0 && !done { print "           < /nonexistent-T106/nope"; done = 1; next }
   { print }
 ' "$HARNESS" > "$ORIG"
