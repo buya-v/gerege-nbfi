@@ -1,0 +1,727 @@
+{
+ "schema": "gerege.capture.prediction/v1",
+ "pass": "3i",
+ "task": "T74",
+ "registered_before_capture": true,
+ "note": "REGISTERED BEFORE THE CAPTURE RAN — pattern P-9. This file and PREDICTION.md were committed to branch softhouse/T74-pathA-multiplesof one commit BEFORE run-pass3i.sh was executed. check-prediction.py grades the capture against it and reports every mismatch. A refuted prediction is a RESULT, not a failure, and the handoff reports it as one.",
+ "identities": [
+  {
+   "case": "T74-A2-DP0-INST100",
+   "equals": "T74-A0-DP0-NONE",
+   "basis": "SOURCE",
+   "why": "LoanApplicationTerms.assembleFrom(LoanRepaymentScheduleModelData, MathContext) at LoanApplicationTerms.java:579-607 builds exclusively through Builder and contains ZERO occurrences of 'MultiplesOf'; the Builder has no setter for installmentAmountInMultiplesOf and the field's only assignment is at :828, in a positional constructor this path never reaches. So the model's installmentAmountInMultiplesOf is null whatever the caller passes, applyInstallmentAmountInMultiplesOf (ProgressiveEMICalculator.java:1763) returns its argument unchanged, and channel 2 is INERT on the Path A seam."
+  },
+  {
+   "case": "T74-A3-DP0-BOTH100",
+   "equals": "T74-A1-DP0-CUR100",
+   "basis": "SOURCE",
+   "why": "same reason: adding the installment field on top of the currency field adds nothing, because the installment field never arrives."
+  },
+  {
+   "case": "T74-B1-DP2-CUR100",
+   "equals": "P-CAL-MNT5M",
+   "basis": "SOURCE",
+   "why": "Money.java:48 requires currency.getDecimalPlaces() == 0. MNT is minor unit 2, so channel 1 is shut and CurrencyData.inMultiplesOf is inert at production."
+  },
+  {
+   "case": "T74-B2-DP2-INST100",
+   "equals": "P-CAL-MNT5M",
+   "basis": "SOURCE",
+   "why": "channel 2 inert (the seam drops the field) AND channel 1 shut (dp = 2). This is the arm that says the PRODUCTION corpus grades neither input."
+  },
+  {
+   "case": "T74-B3-DP2-BOTH100",
+   "equals": "P-CAL-MNT5M",
+   "basis": "SOURCE",
+   "why": "both channels off, for the two reasons above."
+  },
+  {
+   "case": "T74-C1-DP0-CUR1",
+   "equals": "T74-A0-DP0-NONE",
+   "basis": "SOURCE",
+   "why": "the gate opens (1 > 0) and roundToMultiplesOf(x, 1) is x.divide(1, 0, HALF_UP).multiply(1) = round(x) at scale 0 — and the constructor's next statement is setScale(0, ...) anyway, so rounding to multiples of one is arithmetically inert at zero decimal places."
+  },
+  {
+   "case": "T74-C2-DP0-CUR0",
+   "equals": "T74-A0-DP0-NONE",
+   "basis": "SOURCE",
+   "why": "third conjunct of Money.java:48, currency.getInMultiplesOf() > 0, is false."
+  },
+  {
+   "case": "T74-C3-DP0-CURNEG",
+   "equals": "T74-A0-DP0-NONE",
+   "basis": "SOURCE",
+   "why": "same conjunct on the negative side; Money.java:153 is a second guard behind it."
+  },
+  {
+   "case": "T74-D2-DP0-SMALL-INST1000",
+   "equals": "T74-D0-DP0-SMALL-NONE",
+   "basis": "SOURCE",
+   "why": "channel 2 inert on this seam, so safeRoundingForEMI's zero-guard (ProgressiveEMICalculator.java:1770-1776) is never reached at all."
+  }
+ ],
+ "differences": [
+  {
+   "case": "T74-A1-DP0-CUR100",
+   "differsFrom": "T74-A0-DP0-NONE",
+   "basis": "T21v2-B",
+   "why": "channel 1 fires: dp = 0, inMultiplesOf = 100 > 0."
+  },
+  {
+   "case": "T74-C4-DP0-CUR7",
+   "differsFrom": "T74-A0-DP0-NONE",
+   "basis": "SOURCE"
+  },
+  {
+   "case": "T74-C5-DP0-CUR1000",
+   "differsFrom": "T74-A0-DP0-NONE",
+   "basis": "SOURCE"
+  },
+  {
+   "case": "T74-D1-DP0-SMALL-CUR1000",
+   "differsFrom": "T74-D0-DP0-SMALL-NONE",
+   "basis": "SOURCE"
+  },
+  {
+   "case": "T74-A0-DP0-NONE",
+   "differsFrom": "P-CAL-MNT5M",
+   "basis": "SOURCE",
+   "why": "same request but currencyDecimalPlaces 0 against 2 — different quantization scale, so this pair is expected to differ for a reason that has nothing to do with either multiples-of input."
+  }
+ ],
+ "full_schedules": {
+  "T74-A0-DP0-NONE": {
+   "basis": "T21v2-B arm A",
+   "observed": {
+    "loanTermInDays": 547,
+    "totalDisbursedAmount": "5000000",
+    "totalInterestAmount": "763994",
+    "totalRepaymentAmount": "5763994",
+    "periods": [
+     {
+      "type": "DISBURSEMENT",
+      "dueDate": "2024-01-01",
+      "principal": "5000000"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 1,
+      "periodFromDate": "2024-01-01",
+      "dueDate": "2024-02-01",
+      "principal": "243139",
+      "interest": "77083",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320222",
+      "balance": "4756861",
+      "totalOutstandingBalance": "5443772"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 2,
+      "periodFromDate": "2024-02-01",
+      "dueDate": "2024-03-01",
+      "principal": "246887",
+      "interest": "73335",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320222",
+      "balance": "4509974",
+      "totalOutstandingBalance": "5123550"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 3,
+      "periodFromDate": "2024-03-01",
+      "dueDate": "2024-04-01",
+      "principal": "250693",
+      "interest": "69529",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320222",
+      "balance": "4259281",
+      "totalOutstandingBalance": "4803328"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 4,
+      "periodFromDate": "2024-04-01",
+      "dueDate": "2024-05-01",
+      "principal": "254558",
+      "interest": "65664",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320222",
+      "balance": "4004723",
+      "totalOutstandingBalance": "4483106"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 5,
+      "periodFromDate": "2024-05-01",
+      "dueDate": "2024-06-01",
+      "principal": "258483",
+      "interest": "61739",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320222",
+      "balance": "3746240",
+      "totalOutstandingBalance": "4162884"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 6,
+      "periodFromDate": "2024-06-01",
+      "dueDate": "2024-07-01",
+      "principal": "262467",
+      "interest": "57755",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320222",
+      "balance": "3483773",
+      "totalOutstandingBalance": "3842662"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 7,
+      "periodFromDate": "2024-07-01",
+      "dueDate": "2024-08-01",
+      "principal": "266514",
+      "interest": "53708",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320222",
+      "balance": "3217259",
+      "totalOutstandingBalance": "3522440"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 8,
+      "periodFromDate": "2024-08-01",
+      "dueDate": "2024-09-01",
+      "principal": "270623",
+      "interest": "49599",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320222",
+      "balance": "2946636",
+      "totalOutstandingBalance": "3202218"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 9,
+      "periodFromDate": "2024-09-01",
+      "dueDate": "2024-10-01",
+      "principal": "274795",
+      "interest": "45427",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320222",
+      "balance": "2671841",
+      "totalOutstandingBalance": "2881996"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 10,
+      "periodFromDate": "2024-10-01",
+      "dueDate": "2024-11-01",
+      "principal": "279031",
+      "interest": "41191",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320222",
+      "balance": "2392810",
+      "totalOutstandingBalance": "2561774"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 11,
+      "periodFromDate": "2024-11-01",
+      "dueDate": "2024-12-01",
+      "principal": "283333",
+      "interest": "36889",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320222",
+      "balance": "2109477",
+      "totalOutstandingBalance": "2241552"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 12,
+      "periodFromDate": "2024-12-01",
+      "dueDate": "2025-01-01",
+      "principal": "287701",
+      "interest": "32521",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320222",
+      "balance": "1821776",
+      "totalOutstandingBalance": "1921330"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 13,
+      "periodFromDate": "2025-01-01",
+      "dueDate": "2025-02-01",
+      "principal": "292136",
+      "interest": "28086",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320222",
+      "balance": "1529640",
+      "totalOutstandingBalance": "1601108"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 14,
+      "periodFromDate": "2025-02-01",
+      "dueDate": "2025-03-01",
+      "principal": "296640",
+      "interest": "23582",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320222",
+      "balance": "1233000",
+      "totalOutstandingBalance": "1280886"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 15,
+      "periodFromDate": "2025-03-01",
+      "dueDate": "2025-04-01",
+      "principal": "301213",
+      "interest": "19009",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320222",
+      "balance": "931787",
+      "totalOutstandingBalance": "960664"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 16,
+      "periodFromDate": "2025-04-01",
+      "dueDate": "2025-05-01",
+      "principal": "305857",
+      "interest": "14365",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320222",
+      "balance": "625930",
+      "totalOutstandingBalance": "640442"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 17,
+      "periodFromDate": "2025-05-01",
+      "dueDate": "2025-06-01",
+      "principal": "310572",
+      "interest": "9650",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320222",
+      "balance": "315358",
+      "totalOutstandingBalance": "320220"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 18,
+      "periodFromDate": "2025-06-01",
+      "dueDate": "2025-07-01",
+      "principal": "315358",
+      "interest": "4862",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320220",
+      "balance": "0",
+      "totalOutstandingBalance": "0"
+     }
+    ]
+   }
+  },
+  "T74-A1-DP0-CUR100": {
+   "basis": "T21v2-B arm B",
+   "observed": {
+    "loanTermInDays": 547,
+    "totalDisbursedAmount": "5000000",
+    "totalInterestAmount": "764100",
+    "totalRepaymentAmount": "5764100",
+    "periods": [
+     {
+      "type": "DISBURSEMENT",
+      "dueDate": "2024-01-01",
+      "principal": "5000000"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 1,
+      "periodFromDate": "2024-01-01",
+      "dueDate": "2024-02-01",
+      "principal": "243100",
+      "interest": "77100",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320200",
+      "balance": "4756900",
+      "totalOutstandingBalance": "5443900"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 2,
+      "periodFromDate": "2024-02-01",
+      "dueDate": "2024-03-01",
+      "principal": "246900",
+      "interest": "73300",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320200",
+      "balance": "4510000",
+      "totalOutstandingBalance": "5123700"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 3,
+      "periodFromDate": "2024-03-01",
+      "dueDate": "2024-04-01",
+      "principal": "250700",
+      "interest": "69500",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320200",
+      "balance": "4259300",
+      "totalOutstandingBalance": "4803500"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 4,
+      "periodFromDate": "2024-04-01",
+      "dueDate": "2024-05-01",
+      "principal": "254500",
+      "interest": "65700",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320200",
+      "balance": "4004800",
+      "totalOutstandingBalance": "4483300"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 5,
+      "periodFromDate": "2024-05-01",
+      "dueDate": "2024-06-01",
+      "principal": "258500",
+      "interest": "61700",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320200",
+      "balance": "3746300",
+      "totalOutstandingBalance": "4163100"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 6,
+      "periodFromDate": "2024-06-01",
+      "dueDate": "2024-07-01",
+      "principal": "262400",
+      "interest": "57800",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320200",
+      "balance": "3483900",
+      "totalOutstandingBalance": "3842900"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 7,
+      "periodFromDate": "2024-07-01",
+      "dueDate": "2024-08-01",
+      "principal": "266500",
+      "interest": "53700",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320200",
+      "balance": "3217400",
+      "totalOutstandingBalance": "3522700"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 8,
+      "periodFromDate": "2024-08-01",
+      "dueDate": "2024-09-01",
+      "principal": "270600",
+      "interest": "49600",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320200",
+      "balance": "2946800",
+      "totalOutstandingBalance": "3202500"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 9,
+      "periodFromDate": "2024-09-01",
+      "dueDate": "2024-10-01",
+      "principal": "274800",
+      "interest": "45400",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320200",
+      "balance": "2672000",
+      "totalOutstandingBalance": "2882300"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 10,
+      "periodFromDate": "2024-10-01",
+      "dueDate": "2024-11-01",
+      "principal": "279000",
+      "interest": "41200",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320200",
+      "balance": "2393000",
+      "totalOutstandingBalance": "2562100"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 11,
+      "periodFromDate": "2024-11-01",
+      "dueDate": "2024-12-01",
+      "principal": "283300",
+      "interest": "36900",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320200",
+      "balance": "2109700",
+      "totalOutstandingBalance": "2241900"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 12,
+      "periodFromDate": "2024-12-01",
+      "dueDate": "2025-01-01",
+      "principal": "287700",
+      "interest": "32500",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320200",
+      "balance": "1822000",
+      "totalOutstandingBalance": "1921700"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 13,
+      "periodFromDate": "2025-01-01",
+      "dueDate": "2025-02-01",
+      "principal": "292100",
+      "interest": "28100",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320200",
+      "balance": "1529900",
+      "totalOutstandingBalance": "1601500"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 14,
+      "periodFromDate": "2025-02-01",
+      "dueDate": "2025-03-01",
+      "principal": "296600",
+      "interest": "23600",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320200",
+      "balance": "1233300",
+      "totalOutstandingBalance": "1281300"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 15,
+      "periodFromDate": "2025-03-01",
+      "dueDate": "2025-04-01",
+      "principal": "301200",
+      "interest": "19000",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320200",
+      "balance": "932100",
+      "totalOutstandingBalance": "961100"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 16,
+      "periodFromDate": "2025-04-01",
+      "dueDate": "2025-05-01",
+      "principal": "305800",
+      "interest": "14400",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320200",
+      "balance": "626300",
+      "totalOutstandingBalance": "640900"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 17,
+      "periodFromDate": "2025-05-01",
+      "dueDate": "2025-06-01",
+      "principal": "310500",
+      "interest": "9700",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320200",
+      "balance": "315800",
+      "totalOutstandingBalance": "320700"
+     },
+     {
+      "type": "REPAYMENT",
+      "periodNumber": 18,
+      "periodFromDate": "2025-06-01",
+      "dueDate": "2025-07-01",
+      "principal": "315800",
+      "interest": "4900",
+      "feeAmount": "0",
+      "penaltyAmount": "0",
+      "total": "320700",
+      "balance": "0",
+      "totalOutstandingBalance": "0"
+     }
+    ]
+   }
+  }
+ },
+ "money_cells_are_multiples_of": [
+  {
+   "case": "T74-A1-DP0-CUR100",
+   "modulus": 100,
+   "basis": "SOURCE"
+  },
+  {
+   "case": "T74-A3-DP0-BOTH100",
+   "modulus": 100,
+   "basis": "SOURCE"
+  },
+  {
+   "case": "T74-C4-DP0-CUR7",
+   "modulus": 7,
+   "basis": "SOURCE"
+  },
+  {
+   "case": "T74-C5-DP0-CUR1000",
+   "modulus": 1000,
+   "basis": "SOURCE"
+  },
+  {
+   "case": "T74-D1-DP0-SMALL-CUR1000",
+   "modulus": 1000,
+   "basis": "SOURCE"
+  }
+ ],
+ "totals": {
+  "T74-E-P4": {
+   "basis": "T21v2-2",
+   "totalInterestAmount": "1.14",
+   "totalRepaymentAmount": "5.14"
+  },
+  "T74-E-P4-p12": {
+   "basis": "T21v2-2",
+   "totalInterestAmount": "1.13",
+   "totalRepaymentAmount": "5.13"
+  },
+  "T74-E-P59": {
+   "basis": "T21v2-2",
+   "totalInterestAmount": "16.51",
+   "totalRepaymentAmount": "75.51"
+  },
+  "T74-E-P59-p12": {
+   "basis": "T21v2-2",
+   "totalInterestAmount": "16.52",
+   "totalRepaymentAmount": "75.52"
+  },
+  "T74-E-P72": {
+   "basis": "T21v2-2",
+   "totalInterestAmount": "20.14",
+   "totalRepaymentAmount": "92.14"
+  },
+  "T74-E-P72-p12": {
+   "basis": "T21v2-2",
+   "totalInterestAmount": "20.13",
+   "totalRepaymentAmount": "92.13"
+  },
+  "T74-E-P340": {
+   "basis": "T21v2-2",
+   "totalInterestAmount": "95.15",
+   "totalRepaymentAmount": "435.15"
+  },
+  "T74-E-P340-p12": {
+   "basis": "T21v2-2",
+   "totalInterestAmount": "95.16",
+   "totalRepaymentAmount": "435.16"
+  },
+  "T74-E-P426": {
+   "basis": "T21v2-2",
+   "totalInterestAmount": "119.18",
+   "totalRepaymentAmount": "545.18"
+  },
+  "T74-E-P426-p12": {
+   "basis": "T21v2-2",
+   "totalInterestAmount": "119.20",
+   "totalRepaymentAmount": "545.20"
+  },
+  "T74-E-P6940": {
+   "basis": "T21v2-2",
+   "totalInterestAmount": "1942.65",
+   "totalRepaymentAmount": "8882.65"
+  },
+  "T74-E-P6940-p12": {
+   "basis": "T21v2-2",
+   "totalInterestAmount": "1942.66",
+   "totalRepaymentAmount": "8882.66"
+  }
+ },
+ "sharp_claims": [
+  {
+   "id": "S1",
+   "case": "T74-D1-DP0-SMALL-CUR1000",
+   "claim": "totalInterestAmount == '0' and every REPAYMENT row's interest == '0'",
+   "basis": "SOURCE",
+   "derivation": "Period-1 interest on MNT 1,000 at a 30/360 monthly factor of 0.216/12 = 0.018 is 18 currency units. Money's constructor quantizes it: 18/1000 = 0.018, divide(1000, 0, HALF_UP) = 0, times 1000 = 0 [Money.java:150-157]. Every later period's interest is smaller still."
+  },
+  {
+   "id": "S2",
+   "case": "T74-D1-DP0-SMALL-CUR1000",
+   "claim": "exactly ONE repayment row carries non-zero principal, and it is period 6 with principal '1000', interest '0', total '1000' and balance '0'; periods 1..5 each carry principal '0', interest '0', total '0' and balance '1000'",
+   "basis": "SOURCE",
+   "derivation": "The level installment is ~177.5, which quantizes to 0 under channel 1 and has NO safeRoundingForEMI fallback, so every EMI starts at 0 and duePrincipal = EMI - dueInterest = 0 [RepaymentPeriod.java:345-350]. All six periods are then vacuously isFullyPaid, so calculateLastUnpaidRepaymentPeriodEMI takes the :1178-1181 fallback branch (no unpaid period AND totalPaidPrincipal zero) and picks the LAST period, whose outstanding balance is 1,000 > 0. diff = 1000 + 0 + 0 + 0 - 0 = 1000, so its EMI becomes 1000 [:1202-1210]. The smoothing loop then does not fire: getEmiAdjustment scans for a pair in which NEITHER period is fully paid [:1779-1787], the only not-fully-paid period is the last one, so the scan falls through to the :1788 fallback whose emiDifference is zero and shouldBeAdjusted() is false [EmiAdjustment.java:32-35]."
+  },
+  {
+   "id": "S3",
+   "case": "T74-D1-DP0-SMALL-CUR1000",
+   "claim": "at least five of the six mechanism rows report emi == '0.00' or '0' — the safeRoundingForEMI zero-guard does NOT protect them",
+   "basis": "SOURCE",
+   "derivation": "That guard is channel 2's (ProgressiveEMICalculator.java:1770-1776) and the Path A seam never delivers the field that reaches it. Channel 1, in the Money constructor, has no equivalent. THIS IS THE OBSERVATION THAT TELLS THE TWO MECHANISMS APART: if the operative rounding were channel 2's, a positive EMI could not round to zero."
+  },
+  {
+   "id": "S4",
+   "case": "ALL",
+   "claim": "pathIdentity.identical is true on all 36 cases, and every case's ambientMoneyHelperPrecision is 19 with rounding-mode ordinal 4",
+   "basis": "SOURCE",
+   "derivation": "MoneyHelper.PRECISION = 19 is a compile-time constant and getMathContext() returns new MathContext(19, tenantRoundingMode) [MoneyHelper.java:35,91-93]; every case initialises its tenant at ordinal 4."
+  },
+  {
+   "id": "S5",
+   "case": "T74-A1-DP0-CUR100",
+   "claim": "period 1 interest is '77100', not '77083' — the value channel 1 produces by rounding 77,083.33 to the NEAREST multiple of 100 under HALF_UP, not by flooring it",
+   "basis": "T21v2-B + SOURCE",
+   "derivation": "5,000,000 x 0.185/12 = 77,083.33; 77083.33/100 = 770.8333, HALF_UP at scale 0 is 771, times 100 is 77,100. A port that FLOORED would emit 77,000 and a port that used HALF_EVEN would still emit 77,100 here — so this cell separates nearest-vs-floor but NOT HALF_UP-vs-HALF_EVEN, and the prediction claims only the first."
+  },
+  {
+   "id": "S6",
+   "case": "T74-E-*",
+   "claim": "all six group-E production-precision cases differ from their precision-12 companion in at least one money cell",
+   "basis": "T21v2-2",
+   "derivation": "T21's sweep recorded DIFFERENT on all six, at principals from MNT 4.00 upward. If any pair comes back IDENTICAL, T21 section 6.2's refutation of the size-threshold claim is weakened and the handoff must say so."
+  }
+ ]
+}
