@@ -175,12 +175,13 @@ func WriteReport(w io.Writer, s *Summary) {
 		p("    nothing graded")
 	} else {
 		for _, name := range AllInvariants() {
-			hold, viol, exempt, na := 0, 0, 0, 0
+			hold, viol, exempt, na, skipped := 0, 0, 0, 0, 0
 			for _, r := range s.Results {
 				for _, iv := range r.Invariants {
 					if iv.Name != name {
 						continue
 					}
+					skipped += len(iv.NotAsserted)
 					switch iv.Status {
 					case InvariantHold:
 						hold++
@@ -193,7 +194,35 @@ func WriteReport(w io.Writer, s *Summary) {
 					}
 				}
 			}
-			p("    %-38s hold %-4d violated %-4d exempt %-4d n/a %d", name, hold, viol, exempt, na)
+			p("    %-38s hold %-4d violated %-4d exempt %-4d n/a %-4d not-asserted %d",
+				name, hold, viol, exempt, na, skipped)
+		}
+	}
+	p("")
+
+	// FINDING T58-N2. An assertion that did not run is reported here in full,
+	// never inferred from a HOLD. A HOLD carrying skipped rows is a PARTIAL hold
+	// and this section is the only place a reader can see which rows it covered.
+	p("--- INVARIANT ASSERTIONS THAT COULD NOT RUN (a cell the capture never recorded) ---")
+	p("    An invariant reads the schedule the implementation RETURNED. Where the implementation could not")
+	p("    compute a cell — only the self-test replay ever can't, and only for a cell the vector's own")
+	p("    unrecorded_fields withdrew — the assertions that read it are DECLARED not-applicable here rather")
+	p("    than run against the stand-in. Both directions of that defect were live before this section")
+	p("    existed: balance_roll_forward went RED on a placeholder, and principal_amortizes_to_zero went")
+	p("    quietly GREEN on one, which is the worse half. A check that stops checking says so, in writing.")
+	if s.InvariantAssertionsNotRun == 0 {
+		p("    NONE — every invariant assertion ran, on cells somebody actually observed.")
+	} else {
+		for _, r := range s.Results {
+			for _, iv := range r.Invariants {
+				if len(iv.NotAsserted) == 0 {
+					continue
+				}
+				p("    %s — %s [%s]", r.CaseID, iv.Name, iv.Status)
+				for _, na := range iv.NotAsserted {
+					p("        NOT ASSERTED: %s", na)
+				}
+			}
 		}
 	}
 	p("")
@@ -215,6 +244,8 @@ func WriteReport(w io.Writer, s *Summary) {
 	p("    recorded, never graded  %d rate factors (%s), %d declared over-scaled money cells",
 		s.RateFactorsRecorded, PrecisionTranscribedRounded, s.OverScaledCells)
 	p("    invariant violations    %d", s.InvariantViolations)
+	p("    invariant assertions    %d NOT RUN (a cell nobody observed; listed above, never inferred)",
+		s.InvariantAssertionsNotRun)
 
 	if len(s.FatalReasons) > 0 {
 		p("")

@@ -1,11 +1,14 @@
 package conformance
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/gerege/nexus/internal/apps/loanschedule/contract"
 )
 
 // The proofs for the structural rules added by task T20: T17 follow-ups F2 to F6,
@@ -1169,4 +1172,267 @@ func mustCapabilityRegistry(t *testing.T) *CapabilityRegistry {
 		t.Fatalf("LoadCapabilityRegistry: %v", err)
 	}
 	return reg
+}
+
+// ---------------------------------------------------------------------------
+// T60 — an unrecorded cell is never graded, by a cell diff OR by an invariant
+// ---------------------------------------------------------------------------
+
+// withdrawSelfTestCell rewrites the self-test fixture so that one row honestly
+// declares one cell unrecorded: the value goes empty (or, for a date, to the zero
+// date), any major text goes empty, and the field is named in that row's
+// unrecorded_fields. That is exactly what admit.go requires of an honest
+// withdrawal, which is the point — the whole defect is that HONESTY was penalised.
+func withdrawSelfTestCell(t *testing.T, from, to string) string {
+	t.Helper()
+	store := copyStore(t, storeRoot(t))
+	perturb(t, filepath.Join(store, SelfTestDir, "SELFTEST-01-two-period-zero-rate.json"), from, to)
+	return store
+}
+
+func selfTestReplayRun(t *testing.T, store string) *Summary {
+	t.Helper()
+	impl, n, err := NewReplayImplementation(store, SelfTestDir)
+	if err != nil {
+		t.Fatalf("NewReplayImplementation: %v", err)
+	}
+	if n == 0 {
+		t.Fatal("the replay implementation learned no answers: the vector was DROPPED")
+	}
+	return mustRun(t, Options{
+		RepoRoot: repoRoot(t), StoreRoot: store, ContextFilter: SelfTestDir,
+		Implementation: impl, ImplementationName: "replay", SelfTestMode: true,
+	})
+}
+
+func invariantOf(t *testing.T, s *Summary, name string) InvariantResult {
+	t.Helper()
+	for _, r := range s.Results {
+		for _, iv := range r.Invariants {
+			if iv.Name == name {
+				return iv
+			}
+		}
+	}
+	t.Fatalf("invariant %s was not evaluated at all\n%s", name, render(s))
+	return InvariantResult{}
+}
+
+// TestT60UnrecordedCellIsNeverGradedByAnInvariant is the permanent regression
+// test for T58 finding N-2.
+//
+// THE DEFECT. `.softhouse/vectors/README.md` promises that a cell named in
+// unrecorded_fields is not compared and is counted UNGRADED. diffSchedule honoured
+// that. The property invariants did not: the self-test replay answers 0 for a cell
+// nobody observed, and the invariants graded that stand-in. Reproduced on the
+// unfixed rig in three forms before this test existed —
+//
+//	A  withdraw the DISBURSEMENT row's outstanding balance
+//	   -> exit 1, "balance_roll_forward VIOLATED: row 0 DISBURSEMENT: outstanding
+//	      0 != principal advanced 100000". A vector went RED for being honest.
+//	      This is the form T58 hit on all 14 T39 vectors.
+//	B  withdraw the FINAL row's outstanding balance
+//	   -> exit 0, "principal_amortizes_to_zero HOLD, final outstanding == 0", and
+//	      balance_roll_forward HOLD as well. A check passing on a number nobody
+//	      observed, because the placeholder IS the value it looks for. This half
+//	      was not in T58's report and is the dangerous one.
+//	C  withdraw a REPAYMENT row's due date
+//	   -> exit 1, monotonic_due_dates AND contract_row_ordering both violated on
+//	      the fabricated window [2026-02-01, 0000-00-00). So it was never confined
+//	      to one invariant or to money.
+//
+// This defect has now appeared in two named findings (T9-F1, T58-N2). It does not
+// come back a third time.
+func TestT60UnrecordedCellIsNeverGradedByAnInvariant(t *testing.T) {
+	t.Run("A_withdrawn_disbursement_outstanding_is_not_a_red", func(t *testing.T) {
+		store := withdrawSelfTestCell(t,
+			`"outstanding_principal_minor": "100000",
+        "principal_major_text": "1000.00",
+        "interest_major_text": "0.00",
+        "outstanding_principal_major_text": "1000.00",
+        "unrecorded_fields": [],`,
+			`"outstanding_principal_minor": "",
+        "principal_major_text": "1000.00",
+        "interest_major_text": "0.00",
+        "outstanding_principal_major_text": "",
+        "unrecorded_fields": ["outstanding_principal_minor"],`)
+		s := selfTestReplayRun(t, store)
+		if got := s.ExitCode(); got != 0 {
+			t.Errorf("a vector that HONESTLY declares a cell unrecorded must not go red; exit %d\n%s",
+				got, render(s))
+		}
+		iv := invariantOf(t, s, InvBalanceRollForward)
+		if iv.Status == InvariantViolated {
+			t.Errorf("balance_roll_forward graded a placeholder nobody observed: %s", iv.Detail)
+		}
+		if len(iv.NotAsserted) != 1 {
+			t.Errorf("the skipped assertion must be REPORTED, not silent; got %+v", iv.NotAsserted)
+		}
+		// AND IT MUST NOT HAVE BECOME A NO-OP. Withdrawing the disbursement row's
+		// balance costs exactly ONE row, because the running balance follows the
+		// PRINCIPAL column, which the capture did record. Both repayment rows are
+		// still asserted, on observed numbers.
+		if iv.Status != InvariantHold {
+			t.Errorf("the rows that CAN be asserted must still be asserted; got %s (%s)",
+				iv.Status, iv.Detail)
+		}
+		if !strings.Contains(iv.Detail, "2 row(s)") {
+			t.Errorf("the two repayment rows must still be checked; detail was %q", iv.Detail)
+		}
+		if out := render(s); !strings.Contains(out, "INVARIANT ASSERTIONS THAT COULD NOT RUN") ||
+			!strings.Contains(out, "NOT ASSERTED: row 0") {
+			t.Error("the report must name the row whose assertion did not run")
+		}
+	})
+
+	t.Run("B_withdrawn_final_outstanding_is_not_a_silent_hold", func(t *testing.T) {
+		store := withdrawSelfTestCell(t,
+			`"outstanding_principal_minor": "0",
+        "principal_major_text": "500.00",
+        "interest_major_text": "0.00",
+        "outstanding_principal_major_text": "0.00",
+        "unrecorded_fields": [],`,
+			`"outstanding_principal_minor": "",
+        "principal_major_text": "500.00",
+        "interest_major_text": "0.00",
+        "outstanding_principal_major_text": "",
+        "unrecorded_fields": ["outstanding_principal_minor"],`)
+		s := selfTestReplayRun(t, store)
+		iv := invariantOf(t, s, InvPrincipalAmortizes)
+		if iv.Status == InvariantHold {
+			t.Errorf("principal_amortizes_to_zero claimed to HOLD on a cell NOBODY OBSERVED: %s. "+
+				"A check that quietly stops checking is strictly worse than a red one.", iv.Detail)
+		}
+		if iv.Status != InvariantNoData {
+			t.Errorf("want N/A, got %s (%s)", iv.Status, iv.Detail)
+		}
+		if len(iv.NotAsserted) == 0 {
+			t.Error("N/A must carry the reason, so a reader knows the check did not run")
+		}
+	})
+
+	t.Run("C_withdrawn_due_date_does_not_fabricate_a_calendar_date", func(t *testing.T) {
+		store := withdrawSelfTestCell(t,
+			`"due_date": { "year": 2026, "month": 3, "day": 1 },
+        "principal_minor": "50000",
+        "interest_minor": "0",
+        "outstanding_principal_minor": "0",
+        "principal_major_text": "500.00",
+        "interest_major_text": "0.00",
+        "outstanding_principal_major_text": "0.00",
+        "unrecorded_fields": [],`,
+			`"due_date": { "year": 0, "month": 0, "day": 0 },
+        "principal_minor": "50000",
+        "interest_minor": "0",
+        "outstanding_principal_minor": "0",
+        "principal_major_text": "500.00",
+        "interest_major_text": "0.00",
+        "outstanding_principal_major_text": "0.00",
+        "unrecorded_fields": ["due_date"],`)
+		s := selfTestReplayRun(t, store)
+		if got := s.ExitCode(); got != 0 {
+			t.Errorf("exit %d: no invariant may be violated by the ZERO DATE it was handed\n%s",
+				got, render(s))
+		}
+		// The window check degrades per row: the first repayment window is still
+		// asserted, the second is declared not-applicable.
+		mono := invariantOf(t, s, InvMonotonicDueDates)
+		if mono.Status != InvariantHold || len(mono.NotAsserted) != 1 {
+			t.Errorf("monotonic_due_dates: want a PARTIAL hold naming one skipped row, got %s %v",
+				mono.Status, mono.NotAsserted)
+		}
+		// Ordering has no partial form — a row that cannot be keyed makes the
+		// whole ordering unkeyable — so it must be N/A, never a HOLD.
+		ord := invariantOf(t, s, InvOrdering)
+		if ord.Status != InvariantNoData {
+			t.Errorf("contract_row_ordering is a whole-schedule property: with an unobserved date it must "+
+				"be N/A, not %s (%s)", ord.Status, ord.Detail)
+		}
+		if len(ord.NotAsserted) == 0 {
+			t.Error("the N/A must name the row that could not be keyed")
+		}
+	})
+
+	// THE GUARD AGAINST WEAKENING, and the reason option (a) was affordable at
+	// all. Every one of the 29 promoted parity vectors withdraws interest_minor
+	// and installment_number on its DISBURSEMENT row. The frozen contract FIXES
+	// both at 0 for that row kind — contract.go:1509-1510, "its InterestMinor is
+	// 0, and its InstallmentNumber is 0 because it is not payable" — so the
+	// replay's 0 is the contract's own value, not a stand-in, and those cells
+	// stay graded. Treating every withdrawn cell as a placeholder would have
+	// turned splits_sum_to_whole's interest-column total into a no-op on the
+	// entire corpus, which is precisely the trade this task refused to make.
+	t.Run("D_a_cell_the_contract_fixes_at_zero_is_still_asserted", func(t *testing.T) {
+		store := withdrawSelfTestCell(t,
+			`"interest_minor": "0",
+        "outstanding_principal_minor": "100000",
+        "principal_major_text": "1000.00",
+        "interest_major_text": "0.00",
+        "outstanding_principal_major_text": "1000.00",
+        "unrecorded_fields": [],`,
+			`"interest_minor": "",
+        "outstanding_principal_minor": "100000",
+        "principal_major_text": "1000.00",
+        "interest_major_text": "",
+        "outstanding_principal_major_text": "1000.00",
+        "unrecorded_fields": ["interest_minor"],`)
+		s := selfTestReplayRun(t, store)
+		if got := s.ExitCode(); got != 0 {
+			t.Fatalf("exit %d\n%s", got, render(s))
+		}
+		if s.InvariantAssertionsNotRun != 0 {
+			t.Errorf("a DISBURSEMENT row's interest is 0 BY THE FROZEN CONTRACT, so withdrawing it "+
+				"withdraws no observation and must cost NO assertion; got %d skipped\n%s",
+				s.InvariantAssertionsNotRun, render(s))
+		}
+		for _, name := range []string{InvSplitsSumToWhole, InvBalanceRollForward, InvPrincipalAmortizes} {
+			if iv := invariantOf(t, s, name); iv.Status != InvariantHold {
+				t.Errorf("%s must still HOLD, got %s (%s)", name, iv.Status, iv.Detail)
+			}
+		}
+	})
+
+	// The committed corpus must be unaffected by all of the above: no promoted
+	// vector withdraws a cell the contract does not fix, so not one invariant
+	// assertion is skipped anywhere in the store.
+	t.Run("E_the_committed_corpus_skips_no_assertion", func(t *testing.T) {
+		store := storeRoot(t)
+		impl, _, err := NewReplayImplementation(store, "")
+		if err != nil {
+			t.Fatalf("NewReplayImplementation: %v", err)
+		}
+		s := mustRun(t, Options{
+			RepoRoot: repoRoot(t), StoreRoot: store,
+			Implementation: impl, ImplementationName: "replay", SelfTestMode: true,
+		})
+		if s.InvariantAssertionsNotRun != 0 {
+			t.Errorf("the committed store must skip NO invariant assertion, got %d\n%s",
+				s.InvariantAssertionsNotRun, render(s))
+		}
+		if s.InvariantViolations != 0 {
+			t.Errorf("the committed store must violate no invariant, got %d", s.InvariantViolations)
+		}
+	})
+
+	// An implementation that does NOT declare placeholders is treated as having
+	// computed everything — the strict default, and the one a real Go port gets.
+	// If this ever stops being true, every invariant silently weakens at once.
+	t.Run("F_a_real_implementation_declares_no_placeholder", func(t *testing.T) {
+		var g contract.ScheduleGenerator = generatorFunc(
+			func(context.Context, contract.GenerateRequest) (contract.Schedule, error) {
+				return contract.Schedule{}, nil
+			})
+		if _, ok := g.(PlaceholderReporter); ok {
+			t.Fatal("a plain ScheduleGenerator must NOT satisfy PlaceholderReporter: the default has to " +
+				"be 'computed everything', so that a port can never accidentally excuse an invariant")
+		}
+	})
+}
+
+// generatorFunc adapts a func to contract.ScheduleGenerator without implementing
+// PlaceholderReporter, standing in for a real port.
+type generatorFunc func(context.Context, contract.GenerateRequest) (contract.Schedule, error)
+
+func (f generatorFunc) Generate(ctx context.Context, req contract.GenerateRequest) (contract.Schedule, error) {
+	return f(ctx, req)
 }

@@ -66,10 +66,26 @@ mechanically, so a file cannot become something it is not by being renamed:
   `_selftest/` may carry no other class. It must also carry
   `provenance.note` exactly `"hand-authored, NOT observed from the oracle"`.
 
-**Everything in this store is unpromoted today.** The store holds one self-test
-fixture and four contract-refusal vectors. `conformance.sh` therefore exits **2**
-with `NO PARITY VECTOR WAS GRADED`, which is the correct and intended state until
-the promotion task runs.
+### What the store actually holds today
+
+The store holds **29 promoted parity vectors** (all in `loanschedule/`, all
+captured at the production MathContext `(19, HALF_UP)`), **4 contract-refusal
+vectors** and **1 self-test fixture** — 34 files. `conformance.sh` exits **0**:
+29 parity PASS, 0 FAIL, 0 refused, 0 inadmissible, 2,354 cells graded, 58 ungraded,
+0 invariant violations, 0 invariant assertions not run.
+
+This paragraph is a statement of **fact about the current contents**, and it goes
+stale every time a vector is promoted. It said *"Everything in this store is
+unpromoted today… `conformance.sh` therefore exits 2 with `NO PARITY VECTOR WAS
+GRADED`"* long after 29 promotions had made that false. Nothing above or below it
+is a rule that changed — the promotion rules are unchanged — but a reader who
+trusts a stale fact stops trusting the rules next to it. **If you promote or
+retire a vector, update this paragraph in the same commit.**
+
+The `NO PARITY VECTOR WAS GRADED` fatal reason and its exit **2** are still live in
+the harness and still correct: they fire on any run that grades no parity vector —
+a context filter that matches only refusals, a `--self-test`-shaped store, an empty
+corpus. What changed is that the default run is no longer one of those.
 
 ---
 
@@ -477,6 +493,62 @@ that dropped the whole vector instead would defeat the field, and reported the
 misleading *"no vector carries this request"* (driver finding **D-5**, fixed). A
 money cell that is neither recorded nor listed here is a **loud error naming the
 vector, the period and the field** — never a silent drop.
+
+#### The property invariants honour it too, and say what they could not check
+
+For a while they did not, and this paragraph is the correction (finding
+**T58-N2**, closed by **T60**). The cell diff always skipped an unrecorded cell,
+but the six property invariants read the schedule the *implementation returned* —
+placeholder and all — and graded it. That broke in both directions:
+
+* a vector honestly withdrawing a DISBURSEMENT row's balance went **RED**:
+  `balance_roll_forward VIOLATED: row 0 DISBURSEMENT: outstanding 0 != principal
+  advanced 100000`. **Declaring a cell unrecorded was penalised**, which inverts
+  the incentive this whole field exists to create;
+* worse, a vector withdrawing the **final** row's balance went quietly **GREEN**:
+  `principal_amortizes_to_zero HOLD, final outstanding == 0` — the placeholder is
+  `0`, and `0` is exactly what that invariant looks for, so the check agreed with
+  the stand-in it was handed;
+* and it was never only about money: withdrawing a due date fabricated
+  `0000-00-00` and took `monotonic_due_dates` and `contract_row_ordering` red on a
+  window the rig invented.
+
+Now an implementation declares which cells of its own answer are stand-ins, and
+**an assertion that reads one is not made**. The rules:
+
+* **An unmade assertion is never silent.** It is named — row, cells, reason — in
+  the report's `INVARIANT ASSERTIONS THAT COULD NOT RUN` section and counted on
+  the `invariant assertions ... NOT RUN` summary line.
+* **A partial hold says it is partial.** `balance_roll_forward` degrades **per
+  row**, because its running balance follows the *principal* column, which pass 3
+  does record — so withdrawing the disbursement row's balance costs exactly **one**
+  assertion and every repayment row is still checked, on observed numbers.
+* **An invariant that could assert nothing reports `N/A`, never `HOLD`.**
+  `contract_row_ordering` has no partial form at all — one unkeyable row makes the
+  whole ordering unkeyable — so it is all or nothing. A check that quietly stops
+  checking is strictly worse than a red one.
+* **Only an implementation that genuinely cannot compute a cell declares one**,
+  which today means the self-test replay and nothing else. A real Go port computes
+  every cell of every row, declares nothing, and every invariant runs against it in
+  full. Grading a port is unaffected by any of this.
+
+**Withdrawing a cell the frozen contract already fixes at `0` withdraws nothing,
+and is still graded.** A `DISBURSEMENT` row's `interest_minor` and
+`installment_number` are `0` normatively — *"its InterestMinor is 0, and its
+InstallmentNumber is 0 because it is not payable"*, `contract.go:1509-1510` — so
+the replay's `0` there is the **contract's own value**, not an invention. This is
+not a convenience: all 29 promoted parity vectors withdraw exactly those two cells,
+and treating them as placeholders would have turned `splits_sum_to_whole`'s
+interest-column total into a no-op across the entire corpus. The same argument was
+already ratified for `installment_number` by finding **T9-F1c**.
+
+`outstanding_principal_minor` on a disbursement row is **deliberately excluded**
+from that exemption although the contract fixes it too, because it is fixed *as a
+function of another cell of the same schedule* — "the amount advanced, equal to
+this row's `PrincipalMinor`" — which is **verbatim what `balance_roll_forward`
+asserts**. Supplying it would make the invariant check the rig's own derivation and
+hold every time. That is the same circularity this section already forbids a
+promotion task from committing to the store, one layer down.
 
 ### `over_scaled_wire_text_fields` — scale > 2 is a harness bug, not a rounding opportunity
 
