@@ -1347,10 +1347,10 @@
       "dependencies": [
         "T60"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
       "contract_independent": true,
-      "note": "Raised by T60, fire 20260820-080002. NEEDS NO ORACLE. T60 also flagged a structural stale-fact problem: it corrected the vector-store README's counts and added an 'update in the same commit' instruction, but nothing enforces it - a test asserting the README's figures against the harness's own counts would, and that is a NEW RULE needing its own review, deliberately left out of T60's scope. || fire 20260820-110001: dispatched, isolated worktree, opus."
+      "note": "Raised by T60, fire 20260820-080002. NEEDS NO ORACLE. T60 also flagged a structural stale-fact problem: it corrected the vector-store README's counts and added an 'update in the same commit' instruction, but nothing enforces it - a test asserting the README's figures against the harness's own counts would, and that is a NEW RULE needing its own review, deliberately left out of T60's scope. || fire 20260820-110001: dispatched, isolated worktree, opus. || fire 20260820-110001: DONE, merged to main (c6b91af). --prove 20 -> 21 proofs. DRIVER-REPRODUCED the central claim independently in a scratch worktree: with registry.go's placeholder declaration removed (the pre-T60 rig), plain conformance still returns exit 0 / 32 parity vectors / principal_amortizes_to_zero hold 33 not-asserted 0 - a SILENT FALSE GREEN - while the new proof FAILS exit 0/0 naming 'FALSE HOLD: principal_amortizes_to_zero did not report N/A'. The exit code cannot see the defect; the proof can. CONTRACT_REL deleted (PIN.json + admit.go VerifyContractDigest are the single source of truth); wiring it up would ADD an enforcement, so raised as follow-up instead. Scope clean: conformance.sh + handoff only."
     },
     {
       "id": "T63",
@@ -1412,10 +1412,10 @@
       "dependencies": [
         "T63"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
       "contract_independent": true,
-      "note": "Raised by T63, fire 20260820-080002. NEEDS NO ORACLE. Both are P1, neither is a money defect - conformance is exit 0 at 32 parity vectors and will NOT catch a regression in either, which is the whole point. Needs a paired reviewer per plan-gate rule 1 since it touches money-path files. || fire 20260820-110001: dispatched, isolated worktree, opus."
+      "note": "Raised by T63, fire 20260820-080002. NEEDS NO ORACLE. Both are P1, neither is a money defect - conformance is exit 0 at 32 parity vectors and will NOT catch a regression in either, which is the whole point. Needs a paired reviewer per plan-gate rule 1 since it touches money-path files. || fire 20260820-110001: dispatched, isolated worktree, opus. || fire 20260820-110001: DONE on branch softhouse/T65-t63-p1s (d156849 + 401472a), rebased onto merged main. Awaiting T67 (paired reviewer) before merge - money-path files, rule 1. Reported: 24-site write enumeration (13 fold-input writes, 9 invalidateFrom, no unguarded write), all four T63 Java citations confirmed with one refined (RepaymentPeriod.java:226 not :260); carried counter proved value-identical over 3600 shapes/51888 rows by sha256; cost test rewritten with NO timing assertion (machine-independent allocations-per-period); FOUR mutations run incl. an HONEST NEGATIVE - restoring the rescan leaves the new test GREEN, which T65 documented rather than hid. Did NOT fix applyFinalPeriodResidual's O(n^2) recursion, claiming faithfulness to ProgressiveEMICalculator:1211-1215 - T67 must verify that claim."
     },
     {
       "id": "T66",
@@ -1453,9 +1453,9 @@
       "dependencies": [
         "T65"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "Added by fire 20260820-110001: plan-gate rule 1 - T65 is a money-path change and must not land unreviewed. T59 landing without a paired reviewer is exactly the omission T63 was created to repair."
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Added by fire 20260820-110001: plan-gate rule 1 - T65 is a money-path change and must not land unreviewed. T59 landing without a paired reviewer is exactly the omission T63 was created to repair. || fire 20260820-110001: dispatched, isolated worktree, opus."
     },
     {
       "id": "T68",
