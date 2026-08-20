@@ -297,11 +297,14 @@
     "T24",
     "T25",
     "T26",
-    "T27"
+    "T27",
+    "T59",
+    "T60",
+    "T61"
    ],
    "status": "pending",
    "attempts": 0,
-   "note": "Run gate \u2014 must PASS before the run completes. || cloud fire 20260817-2000: dependencies extended to T3b and T17 - the re-review and the capture-plan review are run gates too. || fire 20260818-152328: dependencies extended to T18 and T19 - the two capture audits are run gates too. || fire 20260818-173900: dependencies extended to T21, T22, T23 - all three audits are run gates. || fire 20260818-200001: dependencies extended to T24, T25, T26, T27."
+   "note": "Run gate \u2014 must PASS before the run completes. || cloud fire 20260817-2000: dependencies extended to T3b and T17 - the re-review and the capture-plan review are run gates too. || fire 20260818-152328: dependencies extended to T18 and T19 - the two capture audits are run gates too. || fire 20260818-173900: dependencies extended to T21, T22, T23 - all three audits are run gates. || fire 20260818-200001: dependencies extended to T24, T25, T26, T27. || fire 20260820-080002: dependencies extended to T59, T60, T61 - the port fixes, the rig fix and the mutation-hunt promotions must all be in before UAT grades the slice."
   },
   {
    "id": "T14",
