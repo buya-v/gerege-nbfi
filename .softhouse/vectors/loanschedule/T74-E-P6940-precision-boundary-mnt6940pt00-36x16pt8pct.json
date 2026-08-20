@@ -1,0 +1,910 @@
+{
+  "schema": "gerege.loanschedule.vector/v1",
+  "case_id": "T74-E-P6940",
+  "context": "loanschedule",
+  "class": "parity",
+  "title": "PRECISION BOUNDARY, MNT 6,940.00 over 36 monthly repayments at 16.8% p.a. The largest of the six, included because the SAME shape at MNT 50,000,000 -- the promoted P-MNT-50M -- is precision-INSENSITIVE. Divergence is a property of the (principal, n, rate) triple, not of magnitude, and this pair of vectors is what stops that being re-learned.",
+  "dec1_revision": 12,
+  "_note": "TRANSCRIPTION NOTES. (1) request.currency.code is upper-cased from the capture's own spelling; admit.go requires upper case and the contract forbids the oracle's fixture spelling leaking back out. (2) request.time_zone is DECLARED, not observed: the Path A embeddable seam takes java.time.LocalDate only and has no time-zone input at all, so Asia/Ulaanbaatar is this vector's declared interpretation zone for civil dates and grades nothing. (3) request.rounding.rate_factor_scale is 19 from PIN.json's production_rounding; the capture records one MathContext precision (19) which is both. (4) On the DISBURSEMENT row, installment_number and interest_minor are marked unrecorded_fields: the oracle's own record type LoanSchedulePlanDisbursementPeriod carries four fields, its periodNumber() returns null, and it has no interest accessor at all. Its outstanding balance IS recorded by this rig and is therefore promoted. (5) The capture's per-row totalOutstandingBalance column is deliberately NOT promoted: it is principal plus interest still to accrue, not an outstanding-principal figure, and the frozen contract has no field for it. (6) PROVENANCE OF THE SHAPE. Capture pass 3i is pass 3h's rig with ONE STRUCTURAL FIX -- CurrencyData.inMultiplesOf and installmentAmountInMultiplesOf finally have separate slots, T21 required change P1-8 -- and a new case list, with NOT ONE precondition weakened, three added and one replaced by a stronger form. It reproduced NINE already-committed observations as rig calibrations before emitting anything: P-CAL at (12, HALF_UP) and P-CAL-P00, P-CAL-MNT50M and P-CAL-MNT5M at the production (19, HALF_UP) against pass 3b; P-CAL-EMI6 against pass 3c; P-CAL-LATQ0a and P-CAL-DRIFTF against pass 3e; P-CAL-ZPA and P-CAL-ZPB against pass 3g. All nine matched with inputs and observed blocks identical, tenant id included. P-CAL-MNT50M is the SAME 36 x 16.8% SHAPE as this vector at a principal of 50,000,000, so the rig is calibrated on this vector's own term and rate, at a size where the oracle is precision-INSENSITIVE. (7) WHY THIS SHAPE IS IN THE STORE AT ALL. T21 required change P1-11: the pass-3 report claimed precision is load-bearing only above a size threshold; T21's auditor refuted it against the oracle at principals as small as MNT 4.00 on exactly this shape and asked for it to be captured. This is that capture, promoted. (8) PREDICTION REGISTERED BEFORE THE CAPTURE. .softhouse/capture/t74-multiplesof/PREDICTION.md and predicted.json were committed to this branch TWO COMMITS BEFORE run-pass3i.sh was run, and among 1,083 registered predictions they name the total interest of all six of these shapes at BOTH precisions, transcribed from T21's own probe transcript. All twelve totals were confirmed by the oracle [.softhouse/capture/t74-multiplesof/check-prediction.py]. That is also a P-16 check on the document under this task's review: twelve numbers taken out of the T21 audit and put back to the oracle, and the audit was right about all of them.",
+  "capabilities_required": [
+    "schedule.core"
+  ],
+  "graded_against": [
+    {
+      "id": "MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19",
+      "capability": "schedule.core",
+      "description": "Runs the intermediate arithmetic at 12 significant digits instead of the ratified 19. `Rounding.SignificantDigits == 19` is a graded-domain predicate of the frozen contract and a ratified tenant parameter: MoneyHelper.PRECISION = 19 is a COMPILE-TIME CONSTANT and getMathContext() returns new MathContext(19, tenantRoundingMode) [MoneyHelper.java:35,91-93], so only the MODE is configurable. A port that hard-codes some other working precision, that reaches for whatever its decimal library offers by default, or that reads precision 12 out of one of Fineract's own MOCKED TESTS -- where 12 is the value that appears -- lands exactly here. Before this vector family the corpus could not see it: the store's README records that T55 witnessed no shape separating precision 19 from 12, and every promoted vector was precision-insensitive, so the MathContext was recorded as provenance and graded nothing.",
+      "margin_minor": "1",
+      "evidence": "OBSERVED at the ratified production MathContext (19, HALF_UP). Every expect cell is transcribed from capture case T74-E-P6940 of .softhouse/capture/out/capture-prod3i-raw.json.\nMARGIN. Over this vector's graded money cells the counterfactual diverges on 18 of 146. The widest single-cell disagreement is at period[22], column principal_minor: the oracle OBSERVED 20030 minor units against the counterfactual's 20029, so the margin is |20030 - 20029| = 1 MINOR UNITS. Total interest moves from 1942.65 at the ratified precision to 1942.66 at 12.\nTHE COUNTERFACTUAL IS ALSO AN OBSERVATION. It is capture case T74-E-P6940-p12 of the SAME artefact -- the same request put to the same oracle through the same seam in the same run, at MathContext precision 12 instead of 19 and identical in every other input.\nCOUNTERFACTUAL PROVENANCE, AND WHY IT IS STRONGER THAN THIS STORE'S OTHERS. The other counterfactuals in this corpus (T58, T61, T64) are measured by mutating the GO PORT and re-running it, and each needs a control proving the unmutated model reproduces the oracle before its margin means anything. THIS ONE CONTAINS NO MODEL. Both arms are observations of the reference oracle, taken in the SAME RUN of .softhouse/capture/src/run-pass3i.sh, through the same seam, behind the same nine rig calibrations, differing in exactly one input -- the threaded MathContext precision -- which build-counterfactuals.py ASSERTS by comparing the two inputs blocks field by field and refusing any pair that differs in anything else. The counterfactual case id is recorded below and its capture case is in the same artefact. WHAT THIS DOES NOT ESTABLISH: it says nothing about where a port with some OTHER precision defect lands, and nothing about the rounding MODE, which is HALF_UP on both arms.\nPREDICTION REGISTERED BEFORE THE CAPTURE. .softhouse/capture/t74-multiplesof/PREDICTION.md and predicted.json were committed to this branch TWO COMMITS BEFORE run-pass3i.sh was run, and among 1,083 registered predictions they name the total interest of all six of these shapes at BOTH precisions, transcribed from T21's own probe transcript. All twelve totals were confirmed by the oracle [.softhouse/capture/t74-multiplesof/check-prediction.py]. That is also a P-16 check on the document under this task's review: twelve numbers taken out of the T21 audit and put back to the oracle, and the audit was right about all of them."
+    }
+  ],
+  "retires_when_capability_graded": "",
+  "provenance": {
+    "kind": "oracle-capture",
+    "note": "TRANSCRIBED, never computed, from Path A capture pass 3i (.softhouse/capture/src/run-pass3i.sh, Capture3i.java). Every expect cell is a value literally present in the referenced capture for capture case T74-E-P6940; the only transformation is exact textual major->minor scaling, and the oracle's own emitted characters are carried alongside in the *_major_text cross-check fields so the scaling is mechanically re-checkable. Promotion script: .softhouse/handoff/T74-promote-vectors.py (task T74).",
+    "capture_ref": ".softhouse/capture/out/capture-prod3i-raw.json",
+    "capture_sha256": "e0ea0bcfa1e37914fd5eec68040d90319d2d343dc50d2ad30d90f4cd9acde430",
+    "capture_case_id": "T74-E-P6940",
+    "citation": ""
+  },
+  "oracle": {
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "seam": "path_a_embeddable",
+    "captured_at": "2026-08-20T09:38:27.945779543Z",
+    "threaded_mathcontext": {
+      "precision": 19,
+      "rounding_mode": "HALF_UP"
+    },
+    "ambient_mathcontext": {
+      "precision": 19,
+      "rounding_mode": "HALF_UP"
+    }
+  },
+  "request": {
+    "time_zone": "Asia/Ulaanbaatar",
+    "currency": {
+      "code": "MNT",
+      "minor_unit_digits": 2
+    },
+    "rounding": {
+      "significant_digits": 19,
+      "rate_factor_scale": 19,
+      "mode": "HALF_UP"
+    },
+    "schedule_start_date": {
+      "year": 2024,
+      "month": 1,
+      "day": 1
+    },
+    "disbursements": [
+      {
+        "date": {
+          "year": 2024,
+          "month": 1,
+          "day": 1
+        },
+        "amount_minor": "694000"
+      }
+    ],
+    "number_of_repayments": 36,
+    "repayment_every": 1,
+    "repayment_frequency_unit": "MONTHS",
+    "annual_nominal_interest_rate": {
+      "numerator": 21,
+      "denominator": 125
+    },
+    "interest_method": "DECLINING_BALANCE",
+    "day_count": "FIXED_30_360",
+    "down_payment_percentage": {
+      "numerator": 0,
+      "denominator": 1
+    },
+    "installment_rounding_multiple_minor": "0"
+  },
+  "expect": {
+    "kind": "schedule",
+    "sentinel": "",
+    "last_repayment_due_date": null,
+    "observed_total_interest_minor": "194265",
+    "periods": [
+      {
+        "kind": "DISBURSEMENT",
+        "installment_number": 0,
+        "from_date": {
+          "year": 2024,
+          "month": 1,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 1,
+          "day": 1
+        },
+        "principal_minor": "694000",
+        "principal_major_text": "6940.00",
+        "interest_minor": "",
+        "interest_major_text": "",
+        "outstanding_principal_minor": "694000",
+        "outstanding_principal_major_text": "6940.00",
+        "unrecorded_fields": [
+          "installment_number",
+          "interest_minor"
+        ],
+        "observed_total_due_minor": null
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 1,
+        "from_date": {
+          "year": 2024,
+          "month": 1,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 2,
+          "day": 1
+        },
+        "principal_minor": "14958",
+        "principal_major_text": "149.58",
+        "interest_minor": "9716",
+        "interest_major_text": "97.16",
+        "outstanding_principal_minor": "679042",
+        "outstanding_principal_major_text": "6790.42",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 2,
+        "from_date": {
+          "year": 2024,
+          "month": 2,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 3,
+          "day": 1
+        },
+        "principal_minor": "15167",
+        "principal_major_text": "151.67",
+        "interest_minor": "9507",
+        "interest_major_text": "95.07",
+        "outstanding_principal_minor": "663875",
+        "outstanding_principal_major_text": "6638.75",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 3,
+        "from_date": {
+          "year": 2024,
+          "month": 3,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 4,
+          "day": 1
+        },
+        "principal_minor": "15380",
+        "principal_major_text": "153.80",
+        "interest_minor": "9294",
+        "interest_major_text": "92.94",
+        "outstanding_principal_minor": "648495",
+        "outstanding_principal_major_text": "6484.95",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 4,
+        "from_date": {
+          "year": 2024,
+          "month": 4,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 5,
+          "day": 1
+        },
+        "principal_minor": "15595",
+        "principal_major_text": "155.95",
+        "interest_minor": "9079",
+        "interest_major_text": "90.79",
+        "outstanding_principal_minor": "632900",
+        "outstanding_principal_major_text": "6329.00",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 5,
+        "from_date": {
+          "year": 2024,
+          "month": 5,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 6,
+          "day": 1
+        },
+        "principal_minor": "15813",
+        "principal_major_text": "158.13",
+        "interest_minor": "8861",
+        "interest_major_text": "88.61",
+        "outstanding_principal_minor": "617087",
+        "outstanding_principal_major_text": "6170.87",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 6,
+        "from_date": {
+          "year": 2024,
+          "month": 6,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 7,
+          "day": 1
+        },
+        "principal_minor": "16035",
+        "principal_major_text": "160.35",
+        "interest_minor": "8639",
+        "interest_major_text": "86.39",
+        "outstanding_principal_minor": "601052",
+        "outstanding_principal_major_text": "6010.52",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 7,
+        "from_date": {
+          "year": 2024,
+          "month": 7,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 8,
+          "day": 1
+        },
+        "principal_minor": "16259",
+        "principal_major_text": "162.59",
+        "interest_minor": "8415",
+        "interest_major_text": "84.15",
+        "outstanding_principal_minor": "584793",
+        "outstanding_principal_major_text": "5847.93",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 8,
+        "from_date": {
+          "year": 2024,
+          "month": 8,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 9,
+          "day": 1
+        },
+        "principal_minor": "16487",
+        "principal_major_text": "164.87",
+        "interest_minor": "8187",
+        "interest_major_text": "81.87",
+        "outstanding_principal_minor": "568306",
+        "outstanding_principal_major_text": "5683.06",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 9,
+        "from_date": {
+          "year": 2024,
+          "month": 9,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 10,
+          "day": 1
+        },
+        "principal_minor": "16718",
+        "principal_major_text": "167.18",
+        "interest_minor": "7956",
+        "interest_major_text": "79.56",
+        "outstanding_principal_minor": "551588",
+        "outstanding_principal_major_text": "5515.88",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 10,
+        "from_date": {
+          "year": 2024,
+          "month": 10,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 11,
+          "day": 1
+        },
+        "principal_minor": "16952",
+        "principal_major_text": "169.52",
+        "interest_minor": "7722",
+        "interest_major_text": "77.22",
+        "outstanding_principal_minor": "534636",
+        "outstanding_principal_major_text": "5346.36",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 11,
+        "from_date": {
+          "year": 2024,
+          "month": 11,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2024,
+          "month": 12,
+          "day": 1
+        },
+        "principal_minor": "17189",
+        "principal_major_text": "171.89",
+        "interest_minor": "7485",
+        "interest_major_text": "74.85",
+        "outstanding_principal_minor": "517447",
+        "outstanding_principal_major_text": "5174.47",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 12,
+        "from_date": {
+          "year": 2024,
+          "month": 12,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2025,
+          "month": 1,
+          "day": 1
+        },
+        "principal_minor": "17430",
+        "principal_major_text": "174.30",
+        "interest_minor": "7244",
+        "interest_major_text": "72.44",
+        "outstanding_principal_minor": "500017",
+        "outstanding_principal_major_text": "5000.17",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 13,
+        "from_date": {
+          "year": 2025,
+          "month": 1,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2025,
+          "month": 2,
+          "day": 1
+        },
+        "principal_minor": "17674",
+        "principal_major_text": "176.74",
+        "interest_minor": "7000",
+        "interest_major_text": "70.00",
+        "outstanding_principal_minor": "482343",
+        "outstanding_principal_major_text": "4823.43",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 14,
+        "from_date": {
+          "year": 2025,
+          "month": 2,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2025,
+          "month": 3,
+          "day": 1
+        },
+        "principal_minor": "17921",
+        "principal_major_text": "179.21",
+        "interest_minor": "6753",
+        "interest_major_text": "67.53",
+        "outstanding_principal_minor": "464422",
+        "outstanding_principal_major_text": "4644.22",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 15,
+        "from_date": {
+          "year": 2025,
+          "month": 3,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2025,
+          "month": 4,
+          "day": 1
+        },
+        "principal_minor": "18172",
+        "principal_major_text": "181.72",
+        "interest_minor": "6502",
+        "interest_major_text": "65.02",
+        "outstanding_principal_minor": "446250",
+        "outstanding_principal_major_text": "4462.50",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 16,
+        "from_date": {
+          "year": 2025,
+          "month": 4,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2025,
+          "month": 5,
+          "day": 1
+        },
+        "principal_minor": "18426",
+        "principal_major_text": "184.26",
+        "interest_minor": "6248",
+        "interest_major_text": "62.48",
+        "outstanding_principal_minor": "427824",
+        "outstanding_principal_major_text": "4278.24",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 17,
+        "from_date": {
+          "year": 2025,
+          "month": 5,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2025,
+          "month": 6,
+          "day": 1
+        },
+        "principal_minor": "18684",
+        "principal_major_text": "186.84",
+        "interest_minor": "5990",
+        "interest_major_text": "59.90",
+        "outstanding_principal_minor": "409140",
+        "outstanding_principal_major_text": "4091.40",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 18,
+        "from_date": {
+          "year": 2025,
+          "month": 6,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2025,
+          "month": 7,
+          "day": 1
+        },
+        "principal_minor": "18946",
+        "principal_major_text": "189.46",
+        "interest_minor": "5728",
+        "interest_major_text": "57.28",
+        "outstanding_principal_minor": "390194",
+        "outstanding_principal_major_text": "3901.94",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 19,
+        "from_date": {
+          "year": 2025,
+          "month": 7,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2025,
+          "month": 8,
+          "day": 1
+        },
+        "principal_minor": "19211",
+        "principal_major_text": "192.11",
+        "interest_minor": "5463",
+        "interest_major_text": "54.63",
+        "outstanding_principal_minor": "370983",
+        "outstanding_principal_major_text": "3709.83",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 20,
+        "from_date": {
+          "year": 2025,
+          "month": 8,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2025,
+          "month": 9,
+          "day": 1
+        },
+        "principal_minor": "19480",
+        "principal_major_text": "194.80",
+        "interest_minor": "5194",
+        "interest_major_text": "51.94",
+        "outstanding_principal_minor": "351503",
+        "outstanding_principal_major_text": "3515.03",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 21,
+        "from_date": {
+          "year": 2025,
+          "month": 9,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2025,
+          "month": 10,
+          "day": 1
+        },
+        "principal_minor": "19753",
+        "principal_major_text": "197.53",
+        "interest_minor": "4921",
+        "interest_major_text": "49.21",
+        "outstanding_principal_minor": "331750",
+        "outstanding_principal_major_text": "3317.50",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 22,
+        "from_date": {
+          "year": 2025,
+          "month": 10,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2025,
+          "month": 11,
+          "day": 1
+        },
+        "principal_minor": "20030",
+        "principal_major_text": "200.30",
+        "interest_minor": "4644",
+        "interest_major_text": "46.44",
+        "outstanding_principal_minor": "311720",
+        "outstanding_principal_major_text": "3117.20",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 23,
+        "from_date": {
+          "year": 2025,
+          "month": 11,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2025,
+          "month": 12,
+          "day": 1
+        },
+        "principal_minor": "20310",
+        "principal_major_text": "203.10",
+        "interest_minor": "4364",
+        "interest_major_text": "43.64",
+        "outstanding_principal_minor": "291410",
+        "outstanding_principal_major_text": "2914.10",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 24,
+        "from_date": {
+          "year": 2025,
+          "month": 12,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2026,
+          "month": 1,
+          "day": 1
+        },
+        "principal_minor": "20594",
+        "principal_major_text": "205.94",
+        "interest_minor": "4080",
+        "interest_major_text": "40.80",
+        "outstanding_principal_minor": "270816",
+        "outstanding_principal_major_text": "2708.16",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 25,
+        "from_date": {
+          "year": 2026,
+          "month": 1,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2026,
+          "month": 2,
+          "day": 1
+        },
+        "principal_minor": "20883",
+        "principal_major_text": "208.83",
+        "interest_minor": "3791",
+        "interest_major_text": "37.91",
+        "outstanding_principal_minor": "249933",
+        "outstanding_principal_major_text": "2499.33",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 26,
+        "from_date": {
+          "year": 2026,
+          "month": 2,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2026,
+          "month": 3,
+          "day": 1
+        },
+        "principal_minor": "21175",
+        "principal_major_text": "211.75",
+        "interest_minor": "3499",
+        "interest_major_text": "34.99",
+        "outstanding_principal_minor": "228758",
+        "outstanding_principal_major_text": "2287.58",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 27,
+        "from_date": {
+          "year": 2026,
+          "month": 3,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2026,
+          "month": 4,
+          "day": 1
+        },
+        "principal_minor": "21471",
+        "principal_major_text": "214.71",
+        "interest_minor": "3203",
+        "interest_major_text": "32.03",
+        "outstanding_principal_minor": "207287",
+        "outstanding_principal_major_text": "2072.87",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 28,
+        "from_date": {
+          "year": 2026,
+          "month": 4,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2026,
+          "month": 5,
+          "day": 1
+        },
+        "principal_minor": "21772",
+        "principal_major_text": "217.72",
+        "interest_minor": "2902",
+        "interest_major_text": "29.02",
+        "outstanding_principal_minor": "185515",
+        "outstanding_principal_major_text": "1855.15",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 29,
+        "from_date": {
+          "year": 2026,
+          "month": 5,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2026,
+          "month": 6,
+          "day": 1
+        },
+        "principal_minor": "22077",
+        "principal_major_text": "220.77",
+        "interest_minor": "2597",
+        "interest_major_text": "25.97",
+        "outstanding_principal_minor": "163438",
+        "outstanding_principal_major_text": "1634.38",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 30,
+        "from_date": {
+          "year": 2026,
+          "month": 6,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2026,
+          "month": 7,
+          "day": 1
+        },
+        "principal_minor": "22386",
+        "principal_major_text": "223.86",
+        "interest_minor": "2288",
+        "interest_major_text": "22.88",
+        "outstanding_principal_minor": "141052",
+        "outstanding_principal_major_text": "1410.52",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 31,
+        "from_date": {
+          "year": 2026,
+          "month": 7,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2026,
+          "month": 8,
+          "day": 1
+        },
+        "principal_minor": "22699",
+        "principal_major_text": "226.99",
+        "interest_minor": "1975",
+        "interest_major_text": "19.75",
+        "outstanding_principal_minor": "118353",
+        "outstanding_principal_major_text": "1183.53",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 32,
+        "from_date": {
+          "year": 2026,
+          "month": 8,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2026,
+          "month": 9,
+          "day": 1
+        },
+        "principal_minor": "23017",
+        "principal_major_text": "230.17",
+        "interest_minor": "1657",
+        "interest_major_text": "16.57",
+        "outstanding_principal_minor": "95336",
+        "outstanding_principal_major_text": "953.36",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 33,
+        "from_date": {
+          "year": 2026,
+          "month": 9,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2026,
+          "month": 10,
+          "day": 1
+        },
+        "principal_minor": "23339",
+        "principal_major_text": "233.39",
+        "interest_minor": "1335",
+        "interest_major_text": "13.35",
+        "outstanding_principal_minor": "71997",
+        "outstanding_principal_major_text": "719.97",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 34,
+        "from_date": {
+          "year": 2026,
+          "month": 10,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2026,
+          "month": 11,
+          "day": 1
+        },
+        "principal_minor": "23666",
+        "principal_major_text": "236.66",
+        "interest_minor": "1008",
+        "interest_major_text": "10.08",
+        "outstanding_principal_minor": "48331",
+        "outstanding_principal_major_text": "483.31",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 35,
+        "from_date": {
+          "year": 2026,
+          "month": 11,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2026,
+          "month": 12,
+          "day": 1
+        },
+        "principal_minor": "23997",
+        "principal_major_text": "239.97",
+        "interest_minor": "677",
+        "interest_major_text": "6.77",
+        "outstanding_principal_minor": "24334",
+        "outstanding_principal_major_text": "243.34",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24674"
+      },
+      {
+        "kind": "REPAYMENT",
+        "installment_number": 36,
+        "from_date": {
+          "year": 2026,
+          "month": 12,
+          "day": 1
+        },
+        "due_date": {
+          "year": 2027,
+          "month": 1,
+          "day": 1
+        },
+        "principal_minor": "24334",
+        "principal_major_text": "243.34",
+        "interest_minor": "341",
+        "interest_major_text": "3.41",
+        "outstanding_principal_minor": "0",
+        "outstanding_principal_major_text": "0.00",
+        "unrecorded_fields": [],
+        "observed_total_due_minor": "24675"
+      }
+    ]
+  },
+  "invariant_exemptions": []
+}

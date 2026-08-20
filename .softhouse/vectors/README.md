@@ -68,20 +68,50 @@ mechanically, so a file cannot become something it is not by being renamed:
 
 ### What the store actually holds today
 
-The store holds **36 promoted parity vectors** (all in `loanschedule/`, all
+The store holds **42 promoted parity vectors** (all in `loanschedule/`, all
 captured at the production MathContext `(19, HALF_UP)`), **4 contract-refusal
-vectors** and **1 self-test fixture** — 41 files. `conformance.sh` exits **0**:
-36 parity PASS, 0 FAIL, 0 refused, 0 inadmissible, 4,034 cells graded, 72 ungraded,
+vectors** and **1 self-test fixture** — 47 files. `conformance.sh` exits **0**:
+42 parity PASS, 0 FAIL, 0 refused, 0 inadmissible, 5,576 cells graded, 84 ungraded,
 0 invariant violations, 0 invariant assertions not run. `conformance.sh --prove`
-reports **20 passed, 0 failed**.
+reports **21 passed, 0 failed**.
 
-The last four promotions are task **T64**'s `T64-ZP-*` — the first vectors in this
+The last six promotions are task **T74**'s `T74-E-*` — the `36 x 16.8 %` shape at
+principals from **MNT 4.00** to MNT 6,940.00, asked for by T21 required change P1-11.
+They are the first vectors in this store whose counterfactual is
+`MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19`, and they change what the corpus
+can see: mutating the port to run its intermediate arithmetic at 12 significant
+digits instead of the ratified 19 was **caught by two of the previous 36** — `P-01`
+at MNT 87,654,321 and `P-RND-S1` at MNT 21,021,587.50, both multi-million-tugrik
+loans — and is caught by **eight of 42** now, six of them at principals under seven
+thousand tugriks, the smallest being **MNT 4.00**. That is T21 §6.2's finding made mechanical:
+precision sensitivity is a rounding-boundary property of the `(principal, n, rate)`
+triple, **not** a magnitude property — the same `36 x 16.8 %` shape at MNT 50,000,000
+(`P-MNT-50M`, promoted) is precision-**insensitive**.
+
+Their counterfactual is also unlike every other one in this store: **it contains no
+model.** Both arms are observations of the reference oracle, taken in the same run of
+`run-pass3i.sh` through the same seam, differing in exactly one input. The other
+counterfactuals here (T58, T61, T64) are measured by mutating the Go port and need a
+control proving the unmutated model reproduces the oracle before their margins mean
+anything.
+
+The four before them are task **T64**'s `T64-ZP-*` — the first vectors in this
 store containing a REPAYMENT row that amortizes **exactly zero principal** while
 interest is non-zero, and the first containing rows that are entirely dead after an
-early payoff. Before them the corpus's longest term was 36 periods and its smallest
-principal MNT 100.00, and it had **no** discriminating power over either shape. They
-also make this store's terms much longer: `T64-ZP-D` is 73 rows against a previous
-maximum of 37.
+early payoff. They also make this store's terms much longer: `T64-ZP-D` is 73 rows.
+
+**`.softhouse/capture/out/capture-prod-raw.json` (capture pass 3, `Capture3.java`) is
+NON-PROMOTABLE — superseded, not doubted.** Pass 3b re-observed the same twelve cases
+on a rig carrying the attestation block and the `periodFromDate` / `feeAmount` /
+`penaltyAmount` columns T21 required, declares `supersedes` in the artefact itself, and
+is what the eleven pass-3-lineage vectors were transcribed from. Task T74 verified that
+**no vector here names `capture-prod-raw.json`**, so T21 P0-2/P0-3/P0-4 were never
+promotion blockers in practice — they are record hygiene. Pass 3 must not be re-run to
+retrofit fields into a superseded artefact. The mark lives in
+`.softhouse/capture/PASS3-REPORT.md`, `PASS3-REPORT-shared.md` and `PIN.json`'s `note`,
+and deliberately **not** in `never_promotable_capture_case_ids`: that list is typed as
+capture *case* ids (`admit.go:603`), pass 3 shares its case ids with pass 3b, and
+denylisting them would wrongly refuse eleven promoted vectors.
 
 This paragraph is a statement of **fact about the current contents**, and it goes
 stale every time a vector is promoted. It said *"Everything in this store is

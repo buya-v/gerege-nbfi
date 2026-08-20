@@ -1,6 +1,6 @@
 {
   "schema": "gerege.loanschedule.pin/v1",
-  "note": "Store-level comparability pin. Every constant that decides whether a capture is comparable at all lives HERE and not in each vector, so that re-stamping the corpus after a ratified amendment is one edit rather than N. Per-vector fields (dec1_revision, oracle.fineract_commit, oracle.threaded_mathcontext, oracle.ambient_mathcontext) are checked AGAINST this file, so a vector cannot quietly disagree with it.",
+  "note": "Store-level comparability pin. Every constant that decides whether a capture is comparable at all lives HERE and not in each vector, so that re-stamping the corpus after a ratified amendment is one edit rather than N. Per-vector fields (dec1_revision, oracle.fineract_commit, oracle.threaded_mathcontext, oracle.ambient_mathcontext) are checked AGAINST this file, so a vector cannot quietly disagree with it. THE DENYLIST BELOW CARRIES TWO DIFFERENT REASONS AND THEY ARE NOT INTERCHANGEABLE. (1) PRECISION PROBE OR RIG CALIBRATION -- taken at a MathContext precision production never runs, so the NUMBERS are not production-representative: the pass-1 and pass-2 ids, P-CAL, T37-CAL through T48-CAL-S5, and pass 3i's six T74-E-*-p12 companions. (2) OUT OF THE GRADED DOMAIN BY CURRENCY SCALE -- pass 3i's T74-A*, T74-C* and T74-D* run at currencyDecimalPlaces 0, where a second rounding channel switches on inside the oracle (Money.java:48-51) that DEC-1's graded domain excludes (MinorUnitDigits == 2 only) and the frozen contract has no field for. Those numbers are CORRECT observations; they are simply not observations of anything this contract can express, and task T74 measured that channel deliberately and promoted nothing from it. A THIRD KIND OF MARK DELIBERATELY DOES NOT LIVE HERE. `.softhouse/capture/out/capture-prod-raw.json` (capture pass 3, Capture3.java) is NON-PROMOTABLE because it is SUPERSEDED by pass 3b, which re-observed the same twelve cases on a rig carrying the attestation block and the periodFromDate / feeAmount / penaltyAmount columns T21 required. That is a fact about a FILE, not about a capture case id, and this file's schema is closed by DisallowUnknownFields in admit.go while NeverPromotable is typed as case ids. The mark therefore lives in .softhouse/capture/PASS3-REPORT.md, PASS3-REPORT-shared.md and .softhouse/vectors/README.md. Task T74 verified independently that no vector in this store names capture-prod-raw.json in its provenance, so T21 P0-2/P0-3/P0-4 were never promotion blockers in practice.",
 
   "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
 
@@ -45,6 +45,27 @@
     "T48-CAL-S2",
     "T48-CAL-S3",
     "T48-CAL-S4",
-    "T48-CAL-S5"
+    "T48-CAL-S5",
+    "T74-E-P4-p12",
+    "T74-E-P59-p12",
+    "T74-E-P72-p12",
+    "T74-E-P340-p12",
+    "T74-E-P426-p12",
+    "T74-E-P6940-p12",
+    "T74-A0-DP0-NONE",
+    "T74-A1-DP0-CUR100",
+    "T74-A2-DP0-INST100",
+    "T74-A3-DP0-BOTH100",
+    "T74-B1-DP2-CUR100",
+    "T74-B2-DP2-INST100",
+    "T74-B3-DP2-BOTH100",
+    "T74-C1-DP0-CUR1",
+    "T74-C2-DP0-CUR0",
+    "T74-C3-DP0-CURNEG",
+    "T74-C4-DP0-CUR7",
+    "T74-C5-DP0-CUR1000",
+    "T74-D0-DP0-SMALL-NONE",
+    "T74-D1-DP0-SMALL-CUR1000",
+    "T74-D2-DP0-SMALL-INST1000"
   ]
 }

@@ -20,6 +20,49 @@ against the committed oracle transcript.
 > `out/capture-prod3b-attestation.json`. **Still nothing is promoted** — see `PASS3B-REPORT.md` §6 for
 > what continues to block the eleven `(19, HALF_UP)` records.
 
+> ## `out/capture-prod-raw.json` IS **NON-PROMOTABLE** — SUPERSEDED, NOT DOUBTED
+>
+> **Recorded by task T74, 2026-08-20, after checking the claim rather than repeating it.**
+>
+> **No vector in `.softhouse/vectors/` derives from this capture, and none ever did.** T74 read every
+> file in `.softhouse/vectors/loanschedule/` and resolved each one's `provenance.capture_ref`: 36
+> parity vectors, naming `capture-prod3b-raw.json` (11), `capture-prod3c-raw.json` (2),
+> `capture-prod3d-raw.json` (2), `capture-prod3e-raw.json` (14), `capture-prod3f-raw.json` (3) and
+> `capture-prod3g-raw.json` (4); plus 4 `contract-refusal` vectors, which carry no capture at all.
+> **`capture-prod-raw.json` appears nowhere**, in a `capture_ref` or anywhere else in any vector file.
+>
+> **The consequence, and it is the point of this banner.** T21 §10 **P0-2** (no attestation block),
+> **P0-3** (no `periodFromDate` / `feeAmount` / `penaltyAmount`) and **P0-4** (no executable run recipe)
+> were filed as items that *block promotion of a pass-3 capture*. Since nothing was ever promoted from
+> one, they are **record hygiene, not promotion blockers**. Pass 3b already carries the attestation
+> block and all three columns, and says so in the artefact itself
+> (`"supersedes": "Capture3.java / capture-prod-raw.json — same twelve cases; adds attestation,
+> periodFromDate, feeAmount, penaltyAmount, plan totals, toPlainString"`). **Pass 3 must NOT be re-run to
+> retrofit fields into a superseded capture**; that would spend an oracle run to improve an artefact
+> nothing reads.
+>
+> **P0-4 is closed for real, and not here.** The executable Path A recipe with the seam byte-identity
+> check as a *precondition step that exits non-zero* — not a prose instruction — and with the log/JSON
+> split built in is `.softhouse/capture/src/run-pass3i.sh`, whose lineage runs back through
+> `run-pass3h.sh` … `run-pass3b.sh`. T74 falsified its guards rather than asserting them: a mutated seam
+> in the repo fails precondition 4; a mutated seam in **both** copies with `git update-index
+> --assume-unchanged` silencing the checkout — which defeats preconditions 3 and 4 together — fails the
+> literal-digest precondition 4b added by pass 3i. Both transcripts are in the T74 handoff.
+>
+> **Every NUMBER in this document stands.** T21 reproduced the capture byte for byte, re-derived all
+> twelve cases from the pinned Fineract source to the minor unit, and confirmed all six property
+> invariants integer-exact. Pass 3b then re-observed the same twelve cases and matched **1560 of 1560**
+> published values. This banner marks the FILE as an artefact nothing may be promoted from. It does not
+> retract a single value in it, and the file stays on disk as the audited historical record.
+>
+> The mark also lives in `.softhouse/vectors/PIN.json`'s `note` and in `.softhouse/vectors/README.md`.
+> It is deliberately **not** an entry in `PIN.json`'s `never_promotable_capture_case_ids`: that list is
+> typed as *capture case ids* and consumed as such (`admit.go:603`, matched against
+> `provenance.capture_case_id`), and the pin file's schema is closed by `DisallowUnknownFields`
+> (`admit.go:60-66`), so a whole-file mark has no admissible home there. Pass 3's twelve case ids are
+> shared with pass 3b, so denylisting them by id would wrongly refuse eleven already-promoted vectors.
+
+
 ## Why pass 3 exists
 
 Buyan ratified the tenant parameters on 2026-08-18 (`.softhouse/gates-proposed-answers.md`): **rounding
