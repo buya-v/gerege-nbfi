@@ -895,7 +895,7 @@ regulatory sign-off and licence facts are equally untouched and are not in Run 1
 
 - **id**: G-8
 - **class**: ENGINEERING to measure; the *remedy* is a DEC-n amendment, which is a hard `user` gate
-- **task**: T75 (found), T83 (to measure)
+- **task**: T75 (found), T83 (MEASURED — boundary table below), T84 (independent re-run)
 - **context**: tier0-harness-schedule-poc / loan-schedule
 - **state**: OPEN — blocks nothing today
 - **raised_by**: local fire 20260820-170001, from T75's approval of T74
@@ -918,18 +918,180 @@ Both cannot hold here. Today `conformance.sh` reports PASS with 42 parity vector
 violations — **only because no vector covers this region.** That is precisely the blind spot the
 conformance gate exists to eliminate, so a green bar is not evidence against this finding.
 
-**What is being asked.** Nothing yet — T83 must first re-capture independently (not trust T75's numbers) and
-measure the exact boundary: the largest principal that fails, per repayment count. Then one of:
+**What was asked, and what T83 did.** T83 re-captured the region INDEPENDENTLY (it took no number
+from T75) and measured the exact boundary: the largest principal that fails and the smallest that is
+clean, per repayment count, at four annual rates. The measurement is below. One of three remedies then
+follows, and T83 decides none of them:
 
-- **(a)** promote a parity vector for the region with an explicit invariant exemption, recording in writing
-  that the oracle does not amortize to zero there. **May not need an amendment at all** if the vector
-  schema's existing `invariant_exemptions` mechanism covers it — check before assuming.
+- **(a)** promote a parity vector for the region with an explicit invariant exemption.
 - **(b)** refuse the region from the graded domain as a documented contract-refusal vector.
 - **(c)** treat it as an oracle defect and diverge deliberately.
 
-**(b) and (c) both amend the graded domain, which is a change to a ratified DEC-n — a hard `user` gate no
-agent may cross.** The driver's recommendation, recorded but not acted on: prefer **(a)**, because it keeps
-the oracle authoritative and makes the divergence *measured and visible* rather than defined away, and
-because it is the only option that may be reachable without spending an amendment. Buyan decides (b)/(c).
+## MEASURED BY T83 (fire `20260820-200002`, branch `softhouse/T83-nonamortizing-boundary`)
 
-**What unblocks it**: T83's measurement. **What it blocks**: nothing today.
+T83 registered a numeric prediction and committed it **before** building or running anything
+(`.softhouse/capture/t83-nonamortizing/PREDICTION.md`, its own commit and a parent of the evidence
+commit), then built an INDEPENDENT probe — `CaptureT83.java`, derived mechanically from
+`Capture3g.java`, driving the in-JVM Path A seam. No Fineract server started, no database
+connection, nothing written to any running container or tenant.
+
+**Rig calibration [VERIFIED: `out/capture-t83-attestation.json`].** `P-CAL-ZPA` and `P-CAL-ZPB`
+reproduce pass 3g's committed `T64-ZP-A` and `T64-ZP-B` — both already-promoted parity vectors —
+**cell for cell, with ZERO input differences, tenant id included**.
+
+**The sweep.** 330 contiguous cells: 4 annual rates x 8 repayment counts, principal swept in minor
+units from 1 upward past the boundary, **every** cell emitted whether clean or not. All strictly
+inside the graded domain (MNT dp 2, single disbursement on the schedule start date 2024-01-01,
+MONTHS/1, DECLINING_BALANCE, DAYS_30/DAYS_360, no down payment, both multiples-of inputs null,
+`(19, HALF_UP)`). **198 fail to amortize, 132 are clean, 0 anomalies.**
+
+### The boundary table — MEASURED, not derived
+
+"Failing" = the emitted schedule's LAST row carries a non-zero outstanding balance, which is exactly
+the cell `principal_amortizes_to_zero` reads.
+
+| rate % | n | principals swept (minor) | cases | LARGEST FAILING | SMALLEST CLEAN | contiguous |
+|---|---|---|---|---|---|---|
+| 21.6 | 2 | 1..5 | 5 | none | **1** (MNT 0.01) | yes |
+| 21.6 | 3 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |
+| 21.6 | 4 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |
+| 21.6 | 6 | 1..6 | 6 | **2** (MNT 0.02) | **3** (MNT 0.03) | yes |
+| 21.6 | 12 | 1..9 | 9 | **5** (MNT 0.05) | **6** (MNT 0.06) | yes |
+| 21.6 | 24 | 1..13 | 13 | **9** (MNT 0.09) | **10** (MNT 0.10) | yes |
+| 21.6 | 36 | 1..17 | 17 | **13** (MNT 0.13) | **14** (MNT 0.14) | yes |
+| 21.6 | 56 | 1..21 | 21 | **17** (MNT 0.17) | **18** (MNT 0.18) | yes |
+| 7.0 | 2 | 1..5 | 5 | none | **1** (MNT 0.01) | yes |
+| 7.0 | 3 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |
+| 7.0 | 4 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |
+| 7.0 | 6 | 1..6 | 6 | **2** (MNT 0.02) | **3** (MNT 0.03) | yes |
+| 7.0 | 12 | 1..9 | 9 | **5** (MNT 0.05) | **6** (MNT 0.06) | yes |
+| 7.0 | 24 | 1..15 | 15 | **11** (MNT 0.11) | **12** (MNT 0.12) | yes |
+| 7.0 | 36 | 1..20 | 20 | **16** (MNT 0.16) | **17** (MNT 0.17) | yes |
+| 7.0 | 56 | 1..27 | 27 | **23** (MNT 0.23) | **24** (MNT 0.24) | yes |
+| 16.8 | 2 | 1..5 | 5 | none | **1** (MNT 0.01) | yes |
+| 16.8 | 3 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |
+| 16.8 | 4 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |
+| 16.8 | 6 | 1..6 | 6 | **2** (MNT 0.02) | **3** (MNT 0.03) | yes |
+| 16.8 | 12 | 1..9 | 9 | **5** (MNT 0.05) | **6** (MNT 0.06) | yes |
+| 16.8 | 24 | 1..14 | 14 | **10** (MNT 0.10) | **11** (MNT 0.11) | yes |
+| 16.8 | 36 | 1..18 | 18 | **14** (MNT 0.14) | **15** (MNT 0.15) | yes |
+| 16.8 | 56 | 1..23 | 23 | **19** (MNT 0.19) | **20** (MNT 0.20) | yes |
+| 36.0 | 2 | 1..5 | 5 | none | **1** (MNT 0.01) | yes |
+| 36.0 | 3 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |
+| 36.0 | 4 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |
+| 36.0 | 6 | 1..6 | 6 | **2** (MNT 0.02) | **3** (MNT 0.03) | yes |
+| 36.0 | 12 | 1..8 | 8 | **4** (MNT 0.04) | **5** (MNT 0.05) | yes |
+| 36.0 | 24 | 1..12 | 12 | **8** (MNT 0.08) | **9** (MNT 0.09) | yes |
+| 36.0 | 36 | 1..14 | 14 | **10** (MNT 0.10) | **11** (MNT 0.11) | yes |
+| 36.0 | 56 | 1..17 | 17 | **13** (MNT 0.13) | **14** (MNT 0.14) | yes |
+
+**T75's report is CONFIRMED and is a strict subset of this.** MNT 0.01/6, 0.02/6, 0.01/12 and
+0.01/56 at 21.6 % all fail; 0.03/6 and above are clean.
+
+**21.6 % is NOT load-bearing** — the region exists at 7.0 %, 16.8 % and 36.0 % too. The rate moves
+*where* the boundary sits and moves it DOWN as the rate rises. The region is **empty at n = 2** at
+every rate tested, and grows with the term.
+
+**Every principal in the region is far below one MNT (the largest anywhere in the sweep is MNT
+0.23).** No commercially realistic Mongolian loan amount is in it; the shapes are reachable only at
+the rounding floor.
+
+**Closed form — a HYPOTHESIS CONSISTENT WITH the measurement, never a measured fact.** "Fails iff
+`B_minor × a(r,n) < 0.5`", where `a(r,n) = r/(1−(1+r)^−n)` is the ordinary annuity factor and
+`r = annual/100/12` — i.e. the level EMI quantizes to 0.00. It was registered in advance and it
+matched the measurement on **all 32 shapes, 106 of 106 registered predictions held, 0 refuted**
+[`check-prediction.py`, exit 0]. It was NOT tested outside the 4 rates x 8 terms sampled, and no
+claim is made for any un-sampled rate, term or day-count.
+
+### What it actually is — NARROWER than "the oracle does not amortize principal to zero"
+
+Three facts hold on **all 198** failing cases [VERIFIED: `out/measured-boundary.json`]:
+
+- the **principal column still sums exactly to the disbursed amount**;
+- the oracle's **own `totalOutstandingAmount` reads `0`** while its balance column does not;
+- the **balance column is CONSTANT on every row**, equal to the principal advanced.
+
+And the divergence against the Go port is **one cell per case — the FINAL row's outstanding
+principal, nothing else** [VERIFIED: `out/port-vs-oracle.json`; 198 divergent cells over 198 failing
+cases; port control on `T64-ZP-A`/`T64-ZP-B` = **0** mismatch cells; the port refused nothing].
+
+**It is a STALE MEMO, and that is an OBSERVATION, not a reading of the source**
+[`out/orderdep.json`]. `ProbeOrderDep.java` forces the oracle's own balance `Memo` to recompute by
+moving a DECLARED dependency (`paidPrincipal`) and moving it back to the same value:
+
+- **5 of 5 failing shapes**: balance as emitted non-zero, balance after forced recompute **0.00** —
+  the emitted number is **order-dependent**;
+- **4 of 4 clean controls** (including `T64-ZP-A` and an ordinary MNT 1,200,000 loan): unchanged
+  under the identical procedure, so the probe is not measuring its own perturbation;
+- path identity true on all 9; `paidPrincipal` restored on all 9.
+
+Source, for the causal chain [VERIFIED at the pinned commit]: the balance memo's dependency array
+omits `emi` (`RepaymentPeriod.java:400`) while the memoized body subtracts `getDuePrincipal()`
+(`:398`), which is a direct function of `emi`; the sibling `getDueInterest()` memo **does** declare
+`emi` (`:272-286`), so the omission is asymmetric inside one class. The pre-adjustment read is the
+filter at `ProgressiveEMICalculator.java:1180`, in the **same method** as the raise at `:1210`.
+**The driver's candidate site is REFUTED**: `RepaymentPeriod.getInitialBalanceForEmiRecalculation()`
+(`:414-426`) reads `getPrevious()`'s balance and therefore can never populate the LAST period's memo;
+the other two readers in the calculator (`:617`, `:1629`) are off the generate path or read a
+different period.
+
+So G-8 is precisely: **the reference oracle's outstanding-balance column is stale with respect to its
+own final EMI adjustment, on a bounded region at the rounding floor, while its principal column and
+its own totals are right.**
+
+### The exemption mechanism — it EXISTS, it is HONOURED, and it is INERT here
+
+**Measured, not assumed** [`out/exemption-demo.json`; `run-exemption-demo.py`]. A parity vector for
+MNT 0.01/6 x 21.6 %, transcribed from the T83 capture, was built in two variants and graded with the
+**real** `conformance.Run` and the **real** Go port over a scratch store under `/tmp`. Nothing was
+written to `.softhouse/vectors`; the corpus count did not change.
+
+- `invariant_exemptions` **exists** in the schema (`vector.go:684`, `747`), is **validated** on
+  admission (unknown invariant name or empty reason is inadmissible, `admit.go:235-241`), is
+  **honoured** by `CheckInvariants` (`invariants.go:193-210`) and is **printed on every run**.
+- The proposed vector is **ADMISSIBLE** in both variants (inadmissible 0).
+- With the exemption, `principal_amortizes_to_zero` and `balance_roll_forward` do report **EXEMPT**.
+- **Both variants FAIL, identically**, on one cell:
+  `row 6 outstanding_principal_minor: expected 1 minor units, got 0 (delta -1)`.
+- **Without any exemption, all six invariants already HOLD** — because invariants are checked against
+  what the *implementation* returned, and the port's schedule does amortize. The exemption therefore
+  turns HOLD into EXEMPT **and changes nothing**.
+
+**Conclusion, and it corrects the assumption in the driver's recorded recommendation:** the G-8
+divergence is a **cell diff**, not an invariant violation, and `invariant_exemptions` has no power
+over cell diffs — `diffSchedule` decides FAIL before the invariant statuses are consulted
+(`grade.go:487-497`). **Option (a) is NOT reachable with the existing mechanism alone.** Its full
+shape is: change the port to emit the oracle's stale balance, *and then* carry both exemptions,
+because at that point the port's own output would violate both invariants. That is a **port change**,
+which T83 did not make and does not propose to make unilaterally.
+
+T83 therefore **prepared and did not promote**. The proposed vector files are committed at
+`.softhouse/capture/t83-nonamortizing/proposed-vector-{no-exemption,with-exemption}.json`. The
+conformance corpus is unchanged: `bash .softhouse/conformance.sh` re-run after this work is
+**PASS, exit 0, 42 parity vectors, 5576 cells, 0 invariant violations**.
+
+### The three options, still undecided — (b) and (c) remain a hard `user` gate
+
+- **(a)** promote a parity vector for the region with an explicit invariant exemption. **Now known to
+  require a port change as well**, per the measurement above. Reachable, but not free, and not
+  agent-decidable in the form recorded.
+- **(b)** refuse the region from the graded domain as a documented contract-refusal vector. Cheap in
+  code — the region is fully characterised and bounded — but it is a **graded-domain amendment**.
+- **(c)** treat it as an oracle defect and diverge deliberately, keeping the port's `0`. This is what
+  the port does *today*, ungraded; making it a decision means recording that the program knowingly
+  differs from its own oracle.
+
+**(b) and (c) both amend the graded domain, which is a change to a ratified DEC-n — a hard `user`
+gate no agent may cross.** Buyan decides. T83 did not decide, and attaches only the measurement.
+
+**What unblocks it**: a `user` decision among (a)/(b)/(c). **What it blocks**: nothing today — no
+vector covers the region and the conformance run is exit 0 without it.
+
+**Evidence, all committed on `softhouse/T83-nonamortizing-boundary`** (probe sources, exact
+invocations and raw oracle output, so T84 can re-run it):
+`.softhouse/capture/t83-nonamortizing/` — `PREDICTION.md`, `predicted-boundary.json`,
+`src/CaptureT83.java`, `src/run-t83.sh`, `src/classify-boundary.py`, `src/check-prediction.py`,
+`src/ProbeOrderDep.java`, `src/run-orderdep.sh`, `src/t83port.go.txt`, `src/run-port.py`,
+`src/t83grade.go.txt`, `src/run-exemption-demo.py`, and under `out/`: `capture-t83-raw.json`,
+`capture-t83-attestation.json`, `capture-t83-oracle-log.txt`, `measured-boundary.json`,
+`port-vs-oracle.json`, `orderdep.json`, `exemption-demo.json`.
