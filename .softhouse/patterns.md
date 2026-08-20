@@ -229,6 +229,54 @@ Every worker prompt carries it; review enforces it. State only what you verified
   restatements of every claim you correct, in every section that restates it, not only the one the review
   named.**
 
+
+### Run 1 — local fire `20260820-110001` (oracle REACHABLE; six workers, all six completed)
+
+- **What worked**: six workers dispatched, six completed, all merged, nothing lost, no isolation
+  violation, no scope breach. Corpus **32 → 36 parity vectors, 2,495 → 4,034 graded cells**;
+  `--prove` **20 → 21 proofs**. Every headline number re-run by the driver, not taken from a report.
+- **What the independent reviewer caught** (measured):
+  - **T67 REJECTED T65** — a money-path change whose *executable* part was sound and unbreakable, on
+    the ground that its **written rule was still false**. The driver confirmed two of the three from
+    committed source before ruling: the fold reads `m.minorDigits` (via `minorFromMajor`), which the
+    comment's "ONLY these stored fields" list omitted; and the comment filed `period idx` under
+    "NOT read" while `calculatedDueInterestMinor` calls `interestChainUpTo(p.idx)` — **`p.idx` is the
+    memo's lookup key**, so the stated rule was not even sufficient.
+  - **T69 then found a defect in T67's own replacement text** (`ProgressiveEMICalculator.java:247` is
+    on the `allowFullTermForTranche` branch; the ordinary path is `:747`), and **refused to assert a
+    third reason** for `futureUnrecognizedInterest`, marking it `[UNVERIFIED]` and naming T66.
+  - **T68 found the correction document was itself wrong about its own reason, twice** — P-11
+    recursing one level up.
+- **New patterns**:
+  - **P-12 — a right conclusion on a wrong reason recurs in the artefact written to record it.**
+    T64 corrected its vector text when the harness refuted its first draft and did not carry the
+    correction into `MECHANISM-CORRECTION.md`. When a claim is corrected, **sweep for every
+    restatement of it**, including in the document whose subject is the correction. Third recurrence
+    of the corrections-leak failure; it is now the single most reliable defect in this pipeline.
+  - **P-13 — for a specification-bearing comment, the comment IS the deliverable.** A reviewer that
+    verifies the code and waves through the prose has reviewed the cheaper half. T65's diff was
+    correct and was still rightly rejected: the rule is what the next contributor checks a new write
+    site against, so a rule that is subtly false is a P1, not a nit.
+  - **P-14 — a mutation that no vector can distinguish is a blind spot, not an absence.**
+    `ZP-RESIDUAL-NO-RECURSION` was green on all 32 vectors and is red at 36. The ungraded path T59
+    declined to "optimise" is now graded, and the refusal was vindicated: T67 independently confirmed
+    the port's recursion is faithful to `ProgressiveEMICalculator.java:1211-1214`.
+- **Vectors added / contexts at parity**: `T64-ZP-A/B/C/D` (zero-principal rows at the rounding
+  floor). Tier 0 remains the only context with any parity at all; **nothing is cut over**.
+- **Claims marked UNVERIFIED, carried forward**: `futureUnrecognizedInterest`'s closing mechanism
+  (T66 settles it by oracle capture); the negative-clamp counterfactual `ZP-PRINCIPAL-NOT-CLAMPED`
+  survives all 36 and is still ungraded.
+- **Verifier**: `go build` 0 · `go test` ok (loanschedule 7.6 s, conformance 6.5 s) ·
+  conformance **exit 0, 36 parity vectors, 4,034 cells, 0 inadmissible, 0 harness errors** ·
+  six invariants **hold 37 / violated 0 / not-asserted 0** · `--prove` **21 passed, 0 failed** ·
+  `gofmt -l` names exactly the frozen `contract.go` (gate G-3, expected).
+- **Backlog carried forward**: B-1 (ACT/ACT arm blocks the fold-vs-closed-form question);
+  `ZP-PRINCIPAL-NOT-CLAMPED` ungraded; `report.go:113` still prints that no vector separates HALF_UP
+  from HALF_EVEN, which **T61 falsified** — a stale fact inside the reporter itself; proof 8b carries
+  a literal `self-test fixtures PASS 1`; single-vector-kill fragility for `ZP-RESIDUAL-NO-RECURSION`.
+- **Closed as already-satisfied**: T62's follow-up F-1 (wire up a contract-digest guard) —
+  `VerifyContractDigest` already fires at `grade.go:237` before `LoadStore`, driver-confirmed.
+
 <!-- LEARNED PATTERNS END -->
 
 ### Run 2026-08-17-run1-harness-schedule-poc — fire `20260819-170001` (local, oracle REACHABLE) — 2026-08-19
