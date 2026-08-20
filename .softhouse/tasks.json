@@ -1821,9 +1821,9 @@
       "dependencies": [
         "T80"
       ],
-      "status": "pending",
+      "status": "done",
       "attempts": 0,
-      "note": "Paired reviewer for T80. Raised by the driver, local fire 20260820-200002. NEEDS THE ORACLE. Both of T80's P0s were found by ATTACKING the recipe, so attacking it is the review."
+      "note": "Paired reviewer for T80. Raised by the driver, local fire 20260820-200002. NEEDS THE ORACLE. Both of T80's P0s were found by ATTACKING the recipe, so attacking it is the review. || local fire 20260820-200002: DONE on softhouse/T85-review-t80 (f7d768c). VERDICT MICRO-FIX. ALL DESTRUCTIVE TESTING RAN AGAINST A git archive EXPORT IN /tmp/t85, worktree clean - good hygiene. COULD NOT BREAK EITHER P0: six required attack classes each under BOTH sh and bash, all exit 1, zero capture bytes, nothing in a gerege-named directory, forbidden sentence absent; plus EIGHT MORE INVENTED ATTACKS. Best positive result: symlinking preconditions.txt to /dev/null kills the grep operand and the run STILL aborted on the exit-status operand alone - the two-operand design is load-bearing and now demonstrated, not asserted. forbidden-sentence.sh reproduces 27 files / 0 violations AND FIRES on two planted violations, so it is not itself tautological. Byte identity reproduced AND EXTENDED: 1 distinct digest per capture id across NINE sets (T80 claimed six). merge-tree against main CLEAN; conformance from its own main-forked worktree PASS exit 0 42 parity / 5576 cells, confirming T80's 36 is fork age only. Oracle untouched: State.StartedAt byte-identical, m_loan 0 on both tenants, c_configuration.rounding-mode still 4/true and 6/true. HONEST CAVEAT RECORDED: the pinned canary returns HTTP 404 on `default` (its productId 11 does not exist there), so P14's HALF_EVEN limb rests on T22's earlier observation, NOT on anything measured this fire."
     },
     {
       "id": "T86",
@@ -2058,6 +2058,26 @@
       "status": "pending",
       "attempts": 0,
       "note": "Raised by the driver, local fire 20260820-200002. Needs no oracle except to confirm the conformance verdict. T87 scoped the remedy as 'minutes of work, no guard predicate and no vector touched'."
+    },
+    {
+      "id": "T99",
+      "title": "T85's lower-ranked Path B findings \u2014 a basename-only path guard, a PATH-poisonable digest, and two vacuous guards",
+      "description": "Raised by T85 while issuing MICRO-FIX on T80; none blocks the merge, all are real. (1) P2: the output-path guard compares BASENAMES only, so real `gerege` captures can land under `recapture-default/sub-gerege` at exit 0 - the mis-filing hazard T80 closed at the top level survives one directory down. (2) P3: a PATH-poisoned `shasum` defeats the digest pin AND LEAVES NO DIFF TRACE, which is worse than the tautology it replaced because the rig now looks hardened; consider resolving the tool by absolute path or cross-checking with a second implementation. (3) P3: `forbidden-sentence.sh` PASSES VACUOUSLY ON ZERO FILES - a standing check that reports success when it inspected nothing is the exact defect class this run keeps finding; make an empty file set an error. (4) P3: `t36/out/recapture-gerege/` carries no CAPTURED-FROM-TENANT stamp, so the committed evidence predating the stamp cannot be distinguished from evidence whose stamp was removed. Fix all four and demonstrate each red.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/capture/pathb/"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T80",
+        "T85"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260820-200002, from T85's lower-ranked findings. NEEDS THE ORACLE. Sequence after T80 merges."
     }
   ]
 }
