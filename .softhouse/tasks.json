@@ -346,6 +346,8 @@
       ],
       "context": "harness",
       "dependencies": [
+        "T100",
+        "T101",
         "T14",
         "T71",
         "T73",
@@ -2055,9 +2057,9 @@
       "dependencies": [
         "T87"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "attempts": 0,
-      "note": "Raised by the driver, local fire 20260820-200002. Needs no oracle except to confirm the conformance verdict. T87 scoped the remedy as 'minutes of work, no guard predicate and no vector touched'."
+      "note": "Raised by the driver, local fire 20260820-200002. Needs no oracle except to confirm the conformance verdict. T87 scoped the remedy as 'minutes of work, no guard predicate and no vector touched'. || local fire 20260820-200002: applied at 849d618 and CONFIRMED by T87 (MICRO-FIX). Three items sent back before merge: the MOVING-BASELINE TIME BOMB (counterproofs use the moving ref `main:`, so on merge all seven COUNTERPROOF rows flip to failing against the rig itself - pin to `git merge-base main HEAD`), M-1 (six off-by-one main: citations inside a [VERIFIED] block; truth is :255/:260/:261), M-2 (T82.md prints 1093/47/622 where its own SWEEP.txt prints 1107/49/628)."
     },
     {
       "id": "T99",
@@ -2098,6 +2100,26 @@
       "status": "pending",
       "attempts": 0,
       "note": "Raised by the driver, local fire 20260820-200002. Needs the oracle only if it re-measures; T84's cells are committed on its branch. Pair with an independent reviewer (T101) - the review must check that EVERY conclusion in the reworked gates.md names the family it holds for."
+    },
+    {
+      "id": "T101",
+      "title": "INDEPENDENT review of T100 \u2014 every conclusion must name the family it holds for",
+      "description": "Spawned fresh without planning context. T100 reworks G-8's write-up after T84 REJECTED T83 for conclusions that were false even though the numbers were right. THE FAILURE MODE IS UNSCOPED GENERALISATION, so review for scope, not for arithmetic. For EVERY sentence in the reworked gates.md section: does it name the family (A = stale derived column; B = genuine non-amortization) and the domain it was measured over? Any claim that silently generalises from one family to both, or from the swept grid to the graded domain, is a rejection. Specifically re-check: (1) family B's discriminator - principal column sums to 0.00, totalPrincipalAmount 0.00, forced memo recompute does NOT move the balance, and the Go port reproduces all 22 cells so there is NO divergence there; (2) that option (a) is stated as reachable ONLY where the port does not diverge, with the 761-cell/0-cell-diff grading result cited; (3) that the MNT 1.09 at 3.6%/n=360 case is present and not rounded away into 'sub-MNT dust'; (4) that the closed form is labelled a falsified hypothesis with the 18 precision-19-floor cells named; (5) that the mechanism is attributed to T75; (6) that G-8 is still OPEN and (b)/(c) are neither decided nor recommended-as-settled - they amend a ratified DEC-n and are hard user gates. Also verify nothing was promoted and conformance is unchanged.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/gates.md",
+        ".softhouse/reviews/"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T100"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Paired reviewer for T100. Raised by the driver, local fire 20260820-200002."
     }
   ]
 }
