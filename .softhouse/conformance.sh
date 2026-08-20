@@ -15,13 +15,20 @@
 #      implementation to grade, an unreachable oracle, zero parity vectors, an
 #      inadmissible vector, a refused vector, a failed HARD guard.
 #   3  WRONG INTERPRETER — the harness never started. This file was handed to a
-#      shell that cannot execute it: a POSIX sh, dash, zsh, or a bash with process
-#      substitution switched off, which is what BOTH `sh conformance.sh` and
-#      `bash --posix conformance.sh` produce on bash 3.2 (macOS). Nothing was
-#      graded, no vector was read, and the reference oracle was never contacted —
-#      so 3 says NOTHING about the corpus and NOTHING about the oracle. The fix is
-#      always the same: re-run it under bash, `bash .softhouse/conformance.sh` or
+#      shell that could not be OBSERVED to run the one construct the harness is
+#      built on, `< <(...)`. That covers a shell that is not bash at all (dash,
+#      zsh, ksh, busybox ash), a bash with process substitution switched off
+#      (bash 3.2 in POSIX mode — which is what BOTH `sh conformance.sh` and
+#      `bash --posix conformance.sh` give you on macOS), and a bash that stops
+#      the probe from running at all (`bash -r`). Nothing was graded, no vector
+#      was read, and the reference oracle was never contacted — so 3 says
+#      NOTHING about the corpus and NOTHING about the oracle. The fix is always
+#      the same: re-run it under bash, `bash .softhouse/conformance.sh` or
 #      `./.softhouse/conformance.sh`.
+#      The test is a CAPABILITY test, never a test of the shell's name: where
+#      /bin/sh IS a bash 5.x (Fedora, RHEL, and any distro that links sh to
+#      bash), `sh conformance.sh` is ADMITTED and works [VERIFIED: T97 — bash
+#      5.2.37 and 5.3.9, argv[0]=sh, admitted; matrix in the T97 handoff].
 #
 # 0, 1 and 2 are the verdict codes and there are still only three of them; 3 is not
 # a verdict, it is a refusal to start, and it is deliberately NOT 2 so that a
@@ -32,6 +39,7 @@
 # "The oracle" here means the FINERACT REFERENCE IMPLEMENTATION we grade Go output
 # against. Oracle Database is a prohibited product in this program and appears
 # nowhere in this stack. PostgreSQL is the only permitted database.
+#=END-OF-HELP=
 
 # ---------------------------------------------------------------------------
 # INTERPRETER GUARD. This is the FIRST EXECUTABLE STATEMENT IN THE FILE and it
@@ -58,14 +66,66 @@
 #       enters POSIX mode when invoked as `sh` and under `--posix`. Those runs ARE
 #       bash by every name test and still cannot parse this file. So the guard
 #       feature-tests the construct itself: if `< <(…)` does not work HERE, this
-#       shell cannot run this file, whatever it calls itself. Equally, a future
-#       bash where POSIX mode keeps process substitution (5.1+) passes the test and
-#       is correctly left alone — the guard keys on the capability, not on the mode.
-#   The eval runs in a SUBSHELL so that a shell which aborts on a syntax error in a
-#   special built-in kills only the subshell. It is reached only once BASH_VERSION
-#   is known to be set, so that eval is always bash's own eval.
+#       shell cannot run this file, whatever it calls itself. Equally, a bash
+#       where POSIX mode keeps process substitution (5.1+) passes the test and is
+#       correctly left alone — the guard keys on the CAPABILITY, never on the
+#       shell's name. On Fedora/RHEL, where /bin/sh IS bash 5.x, `sh` is admitted
+#       and works [VERIFIED: T97 matrix — 5.2.37 and 5.3.9, plain, `--posix`,
+#       argv[0]=sh, and argv[0]=sh + `--posix`: eight of eight ADMITTED].
+#
+# POSITIVE EVIDENCE, and why the first version of this guard was not enough (T86
+# raised this while APPROVING T81; closed by T97).
+#   The original probe asked "did a process-substitution command FAIL?" and
+#   admitted the shell when the answer was no. That cannot distinguish
+#   "process substitution works" from "the probe never executed", and a shell in
+#   the second state is exactly as unable to run this file as one in the first.
+#   `bash -r` (restricted) is such a shell: it refuses the `>/dev/null 2>&1` the
+#   old probe redirected itself with, so the subshell never ran, the `if`
+#   condition read false, and the harness was ADMITTED — then died at
+#   `SCRIPT_DIR="$(cd …)"` (restricted shells refuse `cd` too), reported
+#   `no Go toolchain. Expected /.softhouse/bin/go-env.sh` — a path that exists
+#   nowhere — and exited **2**. A shell-selection mistake wearing the oracle's
+#   outage code: precisely the defect exit 3 was created to abolish, one layer in.
+#   [VERIFIED: T97 reproduced it against `git show main:.softhouse/conformance.sh`
+#   — exit 2, that exact fabricated line.]
+#
+#   So the probe no longer looks for the ABSENCE of a failure. It demands a
+#   VALUE. `$CONFORMANCE_PSUB_TOKEN` is written on the far side of a process
+#   substitution and read back through `< <(…)`; the guard proceeds only when it
+#   compares equal to what was expected. The token can reach the comparison by
+#   exactly one route — the construct working — so every way of not running the
+#   probe (syntax error, refused redirection, killed subshell, a shell that never
+#   reached the line) yields an empty observation and FAILS CLOSED.
+#
+#   Detail that matters, and the exact rock T86's own first draft split on:
+#   `printf '%s\n'`, WITH the newline. A `while read -r x; do …; done < <(printf
+#   %s value)` reads a final line that has no terminator, `read` returns non-zero,
+#   the loop body never runs, and plain, healthy bash is REFUSED. This probe uses
+#   a single `read` and grades the VARIABLE, not `read`'s status, so it is immune
+#   to that either way — but the newline is there so nothing downstream inherits
+#   the trap. `IFS=` stops a hostile inherited IFS from splitting the token away
+#   [VERIFIED: T97 — `IFS=oc` and `IFS=' '` in the environment, both ADMITTED],
+#   and `builtin` pins `read`/`printf` to bash's own so an exported shell function
+#   of either name cannot forge the token.
+#
+#   The whole probe runs inside a COMMAND SUBSTITUTION, i.e. a subshell, so a
+#   shell that aborts on a syntax error inside the special builtin `eval` (which
+#   is what POSIX mode does) kills only that subshell; the outer script survives
+#   to print the refusal. It is reached only once BASH_VERSION is known to be set,
+#   so that `eval` is always bash's own.
 # ---------------------------------------------------------------------------
 EXIT_WRONG_INTERPRETER=3
+CONFORMANCE_PSUB_TOKEN="conformance-psub-live"
+conformance_psub_seen=""
+if [ -n "${BASH_VERSION:-}" ]; then
+  conformance_psub_seen="$(
+    eval '
+      IFS= builtin read -r _conformance_psub_line \
+           < <(builtin printf "%s\n" "$CONFORMANCE_PSUB_TOKEN")
+      builtin printf "%s" "$_conformance_psub_line"
+    ' 2>/dev/null
+  )"
+fi
 conformance_shell_why=""
 if [ -z "${BASH_VERSION:-}" ]; then
   # Reported exactly as observed. zsh, for instance, HAS process substitution but
@@ -74,8 +134,12 @@ if [ -z "${BASH_VERSION:-}" ]; then
   # this shell actually has. A guard that says the wrong true-sounding thing is
   # how the next reader is sent to the wrong place.
   conformance_shell_why="BASH_VERSION is unset, so this shell is not bash at all."
-elif ! ( eval 'while read -r _conformance_probe; do :; done < <(printf %s "")' ) >/dev/null 2>&1; then
-  conformance_shell_why="this IS bash ${BASH_VERSION}, but process substitution '< <(...)' does not work in it."
+elif [ "$conformance_psub_seen" != "$CONFORMANCE_PSUB_TOKEN" ]; then
+  # Deliberately phrased as an OBSERVATION, not as a diagnosis. The guard knows
+  # the token did not arrive; it does NOT know which of "the construct is
+  # unavailable" and "the probe was never allowed to run" is true, and inventing
+  # one would be the same class of fiction as the old `no Go toolchain` line.
+  conformance_shell_why="this IS bash ${BASH_VERSION}, but the process-substitution probe did not deliver its token: expected [${CONFORMANCE_PSUB_TOKEN}], observed [${conformance_psub_seen}]. Either '< <(...)' does not work in this shell, or this shell stopped the probe from running at all (a restricted 'bash -r' refuses the redirection the probe needs)."
 fi
 if [ -n "$conformance_shell_why" ]; then
   printf '%s\n' \
@@ -92,14 +156,17 @@ if [ -n "$conformance_shell_why" ]; then
     "conformance: FIX — re-run it under bash:" \
     "conformance:     bash .softhouse/conformance.sh" \
     "conformance:     ./.softhouse/conformance.sh        (the shebang selects bash)" \
-    "conformance: 'sh conformance.sh' and 'bash --posix conformance.sh' are BOTH wrong on" \
-    "conformance: bash 3.2: invoked either way, bash switches process substitution off." \
+    "conformance: On bash 3.2 (macOS) 'sh conformance.sh' and 'bash --posix conformance.sh'" \
+    "conformance: are BOTH wrong: invoked either way, bash switches process substitution" \
+    "conformance: off. Where /bin/sh IS a bash 5.x (Fedora, RHEL), 'sh' is fine — this" \
+    "conformance: guard tests the CAPABILITY, not the name of the shell. 'bash -r' is" \
+    "conformance: refused everywhere: a restricted shell cannot run this harness." \
     "conformance:" \
     "conformance: EXIT 3 — wrong interpreter. See the EXIT CODES table at the top of this" \
     "conformance: file and the 'Running it' section of .softhouse/vectors/README.md." >&2
   exit "$EXIT_WRONG_INTERPRETER"
 fi
-unset conformance_shell_why
+unset conformance_shell_why conformance_psub_seen CONFORMANCE_PSUB_TOKEN
 
 set -u -o pipefail
 
@@ -141,12 +208,27 @@ say()  { printf '%s\n' "$*"; }
 warn() { printf '%s\n' "$*" >&2; }
 
 usage() {
-  # 2,34 is EXACTLY the header comment block, which now runs to "PostgreSQL is the
-  # only permitted database." on line 34. It was '2,30p' when the block ended at 24,
-  # so --help trailed six lines of raw shell (`set -u -o pipefail`, SCRIPT_DIR=…).
-  # Re-anchored on the block rather than widened, so the new exit code 3 is in
-  # --help and the stray code is not. Nothing else about usage changed.
-  sed -n '2,34p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+  # SELF-LOCATING. --help prints the header comment block, from line 2 down to the
+  # line before the sentinel. It used to name a hard-coded range, and that range
+  # had ALREADY drifted once: '2,30p' when the block ended at line 24 trailed five
+  # lines of raw shell (`set -u -o pipefail`, `SCRIPT_DIR=…`) into --help, was
+  # corrected to '2,34p', and would have drifted again the moment anyone edited the
+  # header — which T97 did. A literal line number in a file that gets edited is not
+  # a bound, it is a countdown. The sentinel moves with the block.
+  #
+  # The sentinel is matched anchored at column 0 (`^#=END-OF-HELP=$`), so the
+  # mention of it in this comment cannot match. If it is ever deleted, this is an
+  # ERROR and not a silent short/long --help: a help function that cannot find its
+  # own text must say so, not print whatever it happens to find.
+  local src="${BASH_SOURCE[0]}" end
+  end="$(grep -n '^#=END-OF-HELP=$' "$src" | head -1 | cut -d: -f1)"
+  if [ -z "$end" ] || [ "$end" -lt 3 ]; then
+    warn "conformance: --help is broken: the '#=END-OF-HELP=' sentinel that bounds the"
+    warn "conformance: header comment block is missing from $src (or is at line $end)."
+    warn "conformance: Restore it on the line directly after the header block."
+    return 1
+  fi
+  sed -n "2,$((end - 1))p" "$src" | sed 's/^# \{0,1\}//'
 }
 
 # ---------------------------------------------------------------------------
@@ -764,7 +846,10 @@ prove() {
 
 # ---------------------------------------------------------------------------
 case "${1:-}" in
-  --help|-h)   usage; exit 0 ;;
+  # `exit $?`, not `exit 0`: if usage() cannot find the sentinel that bounds its own
+  # text it returns 1, and --help must not report success over output it could not
+  # produce. (P-22 — a check that cannot fail is worse than no check.)
+  --help|-h)   usage; exit $? ;;
   --prove)     prove; exit $? ;;
   --self-test) main_grade "${2:-}" 1; exit $? ;;
   --*)         warn "conformance: unknown option $1"; usage; exit "$EXIT_UNUSABLE" ;;
