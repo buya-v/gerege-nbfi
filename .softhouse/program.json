@@ -75,7 +75,7 @@
     "current_run_id": "2026-08-17-run1-harness-schedule-poc",
     "completed_contexts": [],
     "parked_contexts": [],
-    "note": "Local fire 20260820-140000. THREE workers dispatched (T66, T13, T70); T66 and T13 completed and merged. THE RESULT OF THIS FIRE: the driver formed a source-derived hypothesis that the unported futureUnrecognizedInterest moves money on the graded domain, committed the chain to .softhouse/reviews/ BEFORE the worker reported so the ruling could not turn on whose report read better - AND THE WORKER REFUTED IT. The driver's step 4 reasoned about the live model; the lookup actually runs on a deep copy re-rated only to tillDate, with every later rate factor ZEROED and tillDate anchored at the DISBURSEMENT. The driver re-ran all three of T66's legs (re-capturing pass 3h to the identical canonical digest, and re-running the 21,060-shape census) rather than accept the report, then overstated a finding against T66 and WITHDREW it on checking. T13 (independent verifier, read-only) returned the run-gate UAT PASS, reproducing every driver number: 36/36 parity, 4034 cells, --prove 21/21, --self-test 0, build/vet/test 0/0/0, contract digest intact. T14 CLOSED-ACCEPTED as G-6 by the driver (PRODUCT-class, RESERVED list checked rather than deferring to the executor label), with four residuals recorded rather than glossed - chiefly that T12's mid-flight checkpoint drill is STILL unexercised for a fourth fire. T70/T71 PLANNED AND T70 DISPATCHED: emi.go:315-325 still calls the futureUnrecognizedInterest claim a HYPOTHESIS and names T66 as the task chartered to settle it by oracle capture - that capture now exists, so the marker is stale. Comment-only, paired with an independent reviewer because this same comment has been rewritten twice and been wrong twice. T15 now depends on T71. NEXT: T70 -> T71 -> T15, then Tier A. Computed from program.json, the next context is tierA-gl-accounting: SIX direct dependents to loan-product-schedule's one, and the dependents rule outranks the 3,539-LOC size difference."
+    "note": "Local fire 20260820-140000. FOUR workers dispatched, FOUR completed, ZERO live at exit, nothing lost, no isolation violation, no scope breach. Corpus UNCHANGED at 36 parity vectors / 4034 cells - correctly, since neither T66 nor T70 could move a graded cell. TWO REJECTIONS AND TWO DRIVER SELF-CORRECTIONS. T66 REFUTED THE DRIVER'S OWN HYPOTHESIS about futureUnrecognizedInterest - the driver had committed its chain to .softhouse/reviews/ BEFORE the worker reported precisely so the ruling could not turn on whose report read better, and was wrong: the lookup runs on a till-date-truncated DEEP COPY whose later rate factors are ZEROED, with tillDate anchored at the DISBURSEMENT. The driver re-ran all three of T66's legs (re-capturing pass 3h to the identical canonical digest fdd751a2..., re-running the 21,060-shape census to 156/0) rather than accept the report. It then overstated a finding against T66 and withdrew it. T13 returned the run-gate UAT PASS reproducing every driver number. T14 CLOSED-ACCEPTED as G-6 (PRODUCT-class; the driver checked the RESERVED list rather than deferring to the executor label), with four residuals recorded - chiefly T12's mid-flight drill, still unexercised for a FOURTH fire. T71 then REJECTED T70's marker correction, and the driver confirmed it from source: the rule was INSUFFICIENT because allowFullTermForTranche is a product flag rather than a tranche count, and the condition that actually protects the argument was ALREADY WRITTEN IN THE FROZEN CONTRACT at contract.go:1191-1202. T70's diff is preserved unmerged for T72. TWO FINDINGS CARRIED FORWARD: F-1, citation drift in three artefacts including the driver's own (deepCopy :1224 not :1226; the FUI write :1246 not :1250; the residual assignment :1210 not :1207); and F-2, a gap in T66's proof neither T66 nor the driver noticed - the :1214 recursion means the :1217 lookup can run in an outer frame after an inner frame re-established step (d). NEXT FIRE: T72 (retry, branch off softhouse/T70-fui-marker) -> T73 (reviewer) -> T15 (archive, now blocked on T73) -> Tier A, where the next context is tierA-gl-accounting on SIX direct dependents to loan-product-schedule's one. Gates: G-4 and G-5 OPEN, wording-only, blocking nothing, none RESERVED."
   },
   "contexts": [
     {
@@ -905,26 +905,32 @@
       "oracle": "REACHABLE (fineract:latest + postgres:18.3, up ~44h, never restarted)",
       "run_id": "2026-08-17-run1-harness-schedule-poc",
       "context": "tier0-harness-schedule-poc",
-      "workers_dispatched": 3,
-      "workers_completed": 2,
-      "workers_in_flight_at_write": 1,
+      "workers_dispatched": 4,
+      "workers_completed": 4,
+      "workers_in_flight_at_write": 0,
       "tasks_closed": [
         "T66",
         "T13",
-        "T14"
+        "T14",
+        "T71"
       ],
       "tasks_planned": [
-        "T70",
-        "T71"
+        "T72",
+        "T73"
       ],
       "conformance": "exit 0 - 36 parity vectors, 4034 graded cells, --prove 21/21, --self-test 0",
       "build_vet_test": "0 / 0 / 0 (-count=1, not cached)",
-      "reviewer_catches": "T66 REFUTED THE DRIVER'S OWN HYPOTHESIS at step 4 - the futureUnrecognizedInterest lookup runs on a till-date-truncated DEEP COPY (:1226, :1237, :1791-1803) whose later rate factors are ZEROED, with tillDate anchored at the DISBURSEMENT (:137-151 -> :747), so a tail period's own interest is zero by construction; the inheritance route through RepaymentPeriod.java:261-263 is closed by the aggregate identity Sum(emi)=P+I at :1189-1207. This settles the exact step T69 marked [UNVERIFIED] at emi.go:315-325. The driver then OVERSTATED a finding against T66 (step (e)'s sufficient condition under-derived for general f) and WITHDREW it on verifying the handoff supplies the premise - avoiding P-11/P-12 while citing them.",
+      "reviewer_catches": "T66 REFUTED THE DRIVER'S OWN HYPOTHESIS at step 4 - the futureUnrecognizedInterest lookup runs on a till-date-truncated DEEP COPY (:1226, :1237, :1791-1803) whose later rate factors are ZEROED, with tillDate anchored at the DISBURSEMENT (:137-151 -> :747), so a tail period's own interest is zero by construction; the inheritance route through RepaymentPeriod.java:261-263 is closed by the aggregate identity Sum(emi)=P+I at :1189-1207. This settles the exact step T69 marked [UNVERIFIED] at emi.go:315-325. The driver then OVERSTATED a finding against T66 (step (e)'s sufficient condition under-derived for general f) and WITHDREW it on verifying the handoff supplies the premise - avoiding P-11/P-12 while citing them. || SECOND REJECTION THIS FIRE: T71 REJECTED T70. The rule was INSUFFICIENT - allowFullTermForTranche is a PRODUCT FLAG, not a tranche count, and the gate at :142-144 never consults the disbursement count, so ONE disbursement with the flag true satisfies all five of T70's conditions and still enters :1160 at :247 (in mergeNewScheduleModelWithExistingOne, :206) with tillDate = the disbursement DATE, voiding step (b) and (e)'s emi_j=0 premise. THE CORRECT CONDITION WAS ALREADY IN THE FROZEN CONTRACT (contract.go:1191-1202: 'a REAL BEHAVIOURAL PIN', the guard 'never consults multi-disbursement at all', 'a measurement, not a licence to ignore the flag') AND THE RULE NEVER NAMED IT. Driver confirmed all three load-bearing claims from source before ruling. Same failure mode as T67's p.idx catch; P-13 for the third time on this comment. T70 NOT MERGED - preserved on its branch for T72 to branch from, as T69 branched off T65.",
       "driver_verification": "All three of T66's legs re-run independently: source cruxes confirmed at pinned 426a23544; pass-3h RE-CAPTURED from a scratch worktree to the IDENTICAL canonical sha256 fdd751a209c9518b157ca6fd70aef06a91acff94953e1f8cc6c4d45162b90b73 with 8/8 rig calibrations reproduced cell-for-cell (incl. promoted T64-ZP-A/ZP-B), 18/18 path identity, 416 mechanism rows, 0 firings, 68 zero-EMI rows present; census re-run to admitted=21060 / zero-EMI shapes=9437 / positive-cdi=156 / strictly-after-L=0, matching T66 exactly. Three runs of pass 3h now agree on the digest.",
       "vectors_promoted": 0,
       "vectors_promoted_note": "CORRECTLY none - pass 3h's mechanism columns are not fields the frozen contract returns, so a vector transcribed from them would grade nothing. The parity corpus is unchanged at 36.",
       "gates": "G-6 CLOSED-ACCEPTED (T14, PRODUCT, chosen_by agent, explicitly not a cutover). G-4 and G-5 remain OPEN, wording-only amendments to a ratified DEC-1, blocking nothing. None RESERVED.",
-      "uat": "PASS (T13, independent verifier, read-only branch)"
+      "uat": "PASS (T13, independent verifier, read-only branch)",
+      "tasks_rejected": [
+        "T70"
+      ],
+      "driver_self_corrections": "TWO this fire. (1) The driver OVERSTATED a finding against T66 (step (e)'s sufficient condition under-derived for general f) and WITHDREW it on verifying the handoff supplies the premise - avoiding P-11/P-12 while citing them. (2) The driver PROPAGATED AN UNCHECKED CITATION: it took deepCopy ':1226' from T66's PREDICTION.md, repeated it in its own re-derivation, AND passed it into T70's dispatch prompt. The correct line is :1224; :1226 is a comment. Found by T70, verified by the driver, corrected in the driver's own document. P-12 recurring in the document whose job was checking.",
+      "open_unsettled": "F-2: whether emi_L can go negative on an admissible shape is UNESTABLISHED. The :1214 recursion guard reduces EXACTLY to emi_L < 0 on the graded domain (totalCreditedAmount zero by RepaymentPeriod.java:357-359, totalPaidAmount zero, getEmi() at :1211 being the post-:1210 value), encoded verbatim at emi.go:1207. T70 raised it, T71 confirmed the reduction, the driver offered it - ALL THREE DECLINED TO CLOSE IT BY READING. Settle by capture."
     }
   ],
   "database": {
