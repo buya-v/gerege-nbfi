@@ -20,13 +20,19 @@ EMI = os.path.join(ROOT, "nexus/internal/apps/loanschedule/emi.go")
 RND = os.path.join(ROOT, "nexus/internal/apps/loanschedule/rounding.go")
 
 TRUE_FOLD = """	rateFactorN := big.NewRat(1, 1)
-	for _, p := range related {
+	for i, p := range related {
+		if m.checkCancel(i) {
+			return
+		}
 		rateFactorN = roundSignificant(new(big.Rat).Mul(rateFactorN, m.growthFactor(p)), m.precision)
 	}
 	fn := big.NewRat(1, 1)
 	for i, p := range related {
 		if i == 0 {
 			continue
+		}
+		if m.checkCancel(i) {
+			return
 		}
 		product := roundSignificant(new(big.Rat).Mul(fn, m.growthFactor(p)), m.precision)
 		fn = roundSignificant(product.Add(product, big.NewRat(1, 1)), m.precision)
@@ -37,6 +43,9 @@ CLOSED_FORM = """	n := len(related)
 	g := m.growthFactor(related[0])
 	exact := big.NewRat(1, 1)
 	for i := 0; i < n; i++ {
+		if m.checkCancel(i) {
+			return
+		}
 		exact.Mul(exact, g)
 	}
 	rateFactorN := roundSignificant(exact, m.precision)
@@ -63,13 +72,19 @@ MUTATIONS = [
 
  ("M3", "RATEFACTORN-FIRST-MULTIPLY-UNROUNDED",
   [(EMI, """	rateFactorN := big.NewRat(1, 1)
-	for _, p := range related {
+	for i, p := range related {
+		if m.checkCancel(i) {
+			return
+		}
 		rateFactorN = roundSignificant(new(big.Rat).Mul(rateFactorN, m.growthFactor(p)), m.precision)
 	}""",
         """	rateFactorN := m.growthFactor(related[0])
 	for i, p := range related {
 		if i == 0 {
 			continue
+		}
+		if m.checkCancel(i) {
+			return
 		}
 		rateFactorN = roundSignificant(new(big.Rat).Mul(rateFactorN, m.growthFactor(p)), m.precision)
 	}""")],
@@ -145,9 +160,13 @@ MUTATIONS = [
   "interest (:381-383) into this period's calculated interest."),
 
  ("M9", "FINAL-RESIDUAL-OVERSHOOT-GUARD-DROPPED",
-  [(EMI, """	for _, p := range m.periods {
+  [(EMI, """	for i, p := range m.periods {
+		if m.checkCancel(i) {
+			return
+		}
 		outstanding := m.duePrincipalMinor(p)
 		if outstanding > totalDuePaidDiff {
+			m.invalidateFrom(i)
 			p.emiMinor -= outstanding - totalDuePaidDiff
 			if p.emiMinor < 0 {
 				p.emiMinor = 0
