@@ -29,10 +29,15 @@
 # status is the rig's own.  No caller had to change.
 #
 # PROVENANCE WARNING — read before comparing transcripts.  Every `preconditions*.txt` under
-# .softhouse/capture/charges/out/ was produced by the OLD bytes, not by these.  Those transcripts
-# remain valid records of what was observed; they will NOT reproduce byte-for-byte through this
-# call-through, because the hardened rig emits two extra canary-pin lines (P14a/P14b).  The old
-# bytes are not lost: `git show e6c1795a172168105d788321a71ee4ca62b73e36`.
+# .softhouse/capture/charges/out/ was produced by the OLD bytes, not by these.  They will not
+# reproduce BYTE-for-byte through this call-through, but the difference is additive and I measured
+# it rather than assuming it.  Through bin/run-preconditions.sh on tenant gerege:
+#     before T91:  21 PASS, 0 FAIL, exit 0
+#     after  T91:  22 PASS, 0 FAIL, exit 0   — the one added line is
+#                  "PASS  canary request pinned by DIGEST COMPARISON: computed sha256 … == pinned …"
+# and on the `default` negative control the breach COUNT is unchanged at 5 with only one FAIL line
+# reworded.  No assertion was lost.  The old bytes are not lost either:
+# `git show e6c1795a172168105d788321a71ee4ca62b73e36`.
 #
 # Usage and exit status are unchanged:
 #   sh preconditions.sh [tenant-identifier]      (default: gerege)

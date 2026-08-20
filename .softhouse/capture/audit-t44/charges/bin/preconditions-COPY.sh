@@ -29,11 +29,16 @@
 # PROVENANCE WARNING — read this before checking a digest.  `AUDIT-CHARGES.md` (T44) records that
 # this file, `charges/bin/preconditions.sh` and `pathb/t36/preconditions.sh` were "all three sha256
 # 9256b881…a46b54".  That was true when T44 wrote it and is now true of NONE of them: T76/T80
-# changed the third, T91 changed the other two.  `../out/PRECOND-default.txt` is still the genuine
-# transcript of the 9256b881 bytes on tenant `default`; it will NOT reproduce through this
-# call-through, because the hardened rig emits two extra canary-pin lines (P14a/P14b) and reports a
-# different breach count.  The audited bytes are not lost:
+# changed the third, T91 changed the other two.  The audited bytes are not lost:
 # `git show e6c1795a172168105d788321a71ee4ca62b73e36`.
+#
+# `../out/PRECOND-default.txt` DOES still reproduce through this call-through, and I measured it
+# rather than assuming:
+#     CANARY_REQ=<pathb/t22-audit/req/calc-pmode2-gerege.json> sh preconditions-COPY.sh default
+# gives the SAME 5 breaches and the same exit 1.  The transcript differs in exactly two places —
+# one ADDED line, `PASS  canary request pinned by DIGEST COMPARISON …`, and a longer wording on
+# `FAIL  rounding-mode canary returned HTTP 404, not 200[ — the mode in force was never
+# established]`.  So T44's finding is unaffected; only the text is richer.
 #
 # Nothing in the repository invokes this file (grep for its basename finds only prose).  It is kept
 # rather than deleted because AUDIT-CHARGES.md names it as the provenance of a committed transcript
