@@ -1516,9 +1516,9 @@
       "dependencies": [
         "T66"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "Raised by the driver, fire 20260820-140000, on confirming T66 settled the exact step the marker names. NEEDS NO ORACLE. HIGH RISK OF THE T65 FAILURE MODE: T65 rewrote this same rule, T67 REJECTED the rewrite because the replacement text was ALSO false, and T69's fix in turn found a defect in T67's own replacement text (:247 is the allowFullTermForTranche branch; the ordinary path is :747). Three drafts, two of them wrong. Pair with an independent reviewer (T71) and expect the comment, not the code, to be the defect."
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Raised by the driver, fire 20260820-140000, on confirming T66 settled the exact step the marker names. NEEDS NO ORACLE. HIGH RISK OF THE T65 FAILURE MODE: T65 rewrote this same rule, T67 REJECTED the rewrite because the replacement text was ALSO false, and T69's fix in turn found a defect in T67's own replacement text (:247 is the allowFullTermForTranche branch; the ordinary path is :747). Three drafts, two of them wrong. Pair with an independent reviewer (T71) and expect the comment, not the code, to be the defect. || fire 20260820-140000: DISPATCHED as isolated worktree worker on softhouse/T70-fui-marker, model opus, in parallel with T13."
     },
     {
       "id": "T71",
