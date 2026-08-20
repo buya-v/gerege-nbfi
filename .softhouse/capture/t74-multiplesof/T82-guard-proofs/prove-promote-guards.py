@@ -8,10 +8,15 @@ passing outcome; the driver `prove-guards-go-red.sh` states the expected exit fo
 
 The optional third argument is the promotion script to load. It defaults to the branch's
 `.softhouse/handoff/T74-promote-vectors.py`; the driver passes the FORK POINT'S REAL EXTRACTED BYTES
-(`git show $(git merge-base main HEAD):…`) to produce each COUNTERPROOF. A counterproof run against a
-reconstruction of the old code proves less than one against the old code, so nothing here
-reconstructs anything — and the baseline is the IMMUTABLE fork point rather than the moving ref
-`main`, so these rows keep meaning the same thing after this branch merges.
+(`git show $(cat T82-guard-proofs/FORK-POINT-SHA):…`, a LITERAL 40-hex sha) to produce each
+COUNTERPROOF. A counterproof run against a reconstruction of the old code proves less than one
+against the old code, so nothing here reconstructs anything.
+
+THE BASELINE IS A LITERAL SHA, NOT A COMPUTED REF, AND THAT DISTINCTION IS THE WHOLE POINT. `main:`
+moves; so does `git merge-base main HEAD`, which is the fork point only while this branch is
+UNMERGED — after the merge HEAD == main and the merge base is the merge commit itself, so every
+COUNTERPROOF would compare the fixed code against ITSELF. Measured in T102: 25/25 on the branch,
+18/7 on a scratch merge. The literal sha keeps these rows meaning the same thing in both states.
 
 HOW IT AVOIDS TOUCHING THE STORE. The promotion script is loaded as a MODULE (so it is the real code
 under test, not a copy of it), and only then are its two path globals repointed — `P3I_REF` at a
@@ -197,8 +202,10 @@ def main(root, mode, promoter=None):
             basep = os.path.join(root, BASE_PROMOTER)
             if not os.path.isfile(basep):
                 raise SystemExit("scratch/promote-BASE.py missing; the driver extracts it with "
-                                 "`git show $(git merge-base main HEAD):"
-                                 ".softhouse/handoff/T74-promote-vectors.py`")
+                                 "`git show $(cat T82-guard-proofs/FORK-POINT-SHA):"
+                                 ".softhouse/handoff/T74-promote-vectors.py` — a LITERAL sha, "
+                                 "NEVER `merge-base main HEAD` or any other computed ref, which "
+                                 "resolve to the FIXED code once this branch merges (T102)")
             out_base, mod_base = build_vectors(
                 root, basep, mutate(json.load(open(ref, encoding="utf-8")), mode), tmp, "base")
             same = diff = 0

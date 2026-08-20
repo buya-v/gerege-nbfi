@@ -11,8 +11,10 @@
 #
 #   GUARD        the corrected code REFUSES an input that the PRE-FIX code ACCEPTS. Each is paired
 #                with a COUNTERPROOF run against the FORK POINT'S REAL EXTRACTED BYTES — never a
-#                reconstruction, and never the moving ref `main` — because "the new code refuses X"
-#                only demonstrates a cure alongside "the old code did not".
+#                reconstruction, and never a MOVING REF (`main:`, `merge-base main HEAD`, or any
+#                other ref that resolves differently once this branch merges; see FORK-POINT-SHA)
+#                — because "the new code refuses X" only demonstrates a cure alongside "the old
+#                code did not".
 #   CONTROL      the honest input must stay GREEN. A guard that fires on everything is as useless as
 #                one that fires on nothing.
 #   REGRESSION   both codebases agree and must go on agreeing. Proves the rewrite broke nothing;
@@ -43,13 +45,49 @@ mkdir -p "$S"
 # T87's method, adopted: a counterproof against a RECONSTRUCTION of the old code proves less than one
 # against the old code. These are extracted from git, not rebuilt from a string literal.
 #
-# THE BASELINE IS PINNED TO THE FORK POINT, NOT TO `main`. An earlier version of this rig used the
-# moving ref `main:`, which is a TIME BOMB: the moment this branch merges, `main` contains the FIX,
-# every COUNTERPROOF row starts asserting that the fixed code accepts a mutation it is designed to
-# refuse, and all seven flip to failing — against the rig itself. A proof harness that goes red on
-# merge is exactly the evidence-integrity defect this task was rejected for once already. The fork
-# point is immutable and keeps meaning "the code as it stood before this branch" forever.
-BASE="$(git -C "$ROOT" merge-base main HEAD)"
+# THE BASELINE IS A LITERAL SHA READ FROM `FORK-POINT-SHA`. NOT `main:`. NOT `merge-base main HEAD`.
+# NOT ANY COMPUTED REF. This has now failed twice, and the second failure is the instructive one:
+#
+#   v1 used `main:`. On merge `main` contains the FIX, so every COUNTERPROOF compares the fixed
+#   code against itself.
+#   v2 (T98) used `git merge-base main HEAD` and reported it as "the immutable fork point". That is
+#   true ON THE BRANCH and FALSE ON MERGED MAIN — after the merge HEAD == main, so the merge base of
+#   the two is THE MERGE COMMIT ITSELF, which again contains the fix. Same time bomb, one indirection
+#   deeper. MEASURED (T102): the pre-fix rig scores 25/25 on the branch and
+#   "18 as expected, 7 not as expected" on a throwaway clone whose `main` is the merge — the seven
+#   being exactly the seven COUNTERPROOF rows, with the extracted BASE run-pass3i.sh moving from
+#   sha256 d84ec7bf… (real pre-T82 bytes) to 3ca0d3f6… (the fixed bytes).
+#
+# A literal sha cannot be recomputed into the wrong answer by a later merge. There is deliberately
+# NO FALLBACK: if FORK-POINT-SHA is missing or unparseable this script ABORTS with exit 2, because a
+# counterproof silently taken against the wrong baseline prints a green row for a comparison that
+# never happened, and that is worse than no counterproof at all.
+FORK_SHA_FILE="$HERE/FORK-POINT-SHA"
+if [ ! -f "$FORK_SHA_FILE" ]; then
+  echo "FATAL: $FORK_SHA_FILE is missing." >&2
+  echo "       The counterproof baseline is a LITERAL sha and this rig has NO computed fallback:" >&2
+  echo "       \`main:\`, \`merge-base main HEAD\` and every other moving ref resolve to code that" >&2
+  echo "       CONTAINS THE FIX once this branch is merged. Restore the file; do not substitute a" >&2
+  echo "       computed ref. See T102." >&2
+  exit 2
+fi
+BASE="$(grep -vE '^[[:space:]]*(#|$)' "$FORK_SHA_FILE" | tail -n 1 | tr -d '[:space:]')"
+case "$BASE" in
+  *[!0-9a-f]* | "")
+    echo "FATAL: $FORK_SHA_FILE does not contain a 40-hex commit sha (read: '$BASE')." >&2
+    echo "       Refusing to guess a baseline. See T102." >&2
+    exit 2 ;;
+esac
+if [ "${#BASE}" -ne 40 ]; then
+  echo "FATAL: $FORK_SHA_FILE must hold a FULL 40-hex sha; got ${#BASE} chars ('$BASE')." >&2
+  echo "       An abbreviated sha can become ambiguous as the repo grows. See T102." >&2
+  exit 2
+fi
+if ! git -C "$ROOT" cat-file -e "$BASE^{commit}" 2>/dev/null; then
+  echo "FATAL: $BASE is not a commit in this repository." >&2
+  echo "       The pinned fork point must be reachable to extract the pre-fix bytes. See T102." >&2
+  exit 2
+fi
 git -C "$ROOT" show "$BASE:.softhouse/capture/src/run-pass3i.sh"      > "$S/run-pass3i-BASE.sh"
 git -C "$ROOT" show "$BASE:.softhouse/handoff/T74-promote-vectors.py" > "$S/promote-BASE.py"
 git -C "$ROOT" show "$BASE:.softhouse/capture/t74-multiplesof/build-counterfactuals.py" \
@@ -84,7 +122,7 @@ echo "run-pass3i.sh          sha256 $(shasum -a 256 "$SRC" | cut -d' ' -f1)"
 echo "build-counterfactuals  sha256 $(shasum -a 256 "$CF" | cut -d' ' -f1)"
 echo "promote-vectors        sha256 $(shasum -a 256 "$ROOT/.softhouse/handoff/T74-promote-vectors.py" | cut -d' ' -f1)"
 echo "capture under test     sha256 $(shasum -a 256 "$CAP" | cut -d' ' -f1)"
-echo "fork-point (BASE)      $BASE"
+echo "fork-point (BASE)      $BASE  [LITERAL, from FORK-POINT-SHA — never a computed ref]"
 echo "BASE run-pass3i.sh     sha256 $(shasum -a 256 "$S/run-pass3i-BASE.sh" | cut -d' ' -f1)"
 echo "BASE promote-vectors   sha256 $(shasum -a 256 "$S/promote-BASE.py" | cut -d' ' -f1)"
 

@@ -3,7 +3,7 @@ run-pass3i.sh          sha256 3ca0d3f6380a74d32c8bca000f8587724927b4b55eb0c51b8e
 build-counterfactuals  sha256 b1e9f6087f93c2b0b1606d4631d5d97e96dd72fbbebf96baaea1dd89190ed9f1
 promote-vectors        sha256 efcfcfa59305d5da67a2149cace4a9fffb991daff5ad92fe7fe5c8e0595a94e4
 capture under test     sha256 e0ea0bcfa1e37914fd5eec68040d90319d2d343dc50d2ad30d90f4cd9acde430
-fork-point (BASE)      8da4b831b96a146c2b46ad34d85ed098395de160  [LITERAL, from FORK-POINT-SHA — never a computed ref]
+fork-point (BASE)      8da4b831b96a146c2b46ad34d85ed098395de160
 BASE run-pass3i.sh     sha256 d84ec7bf9888baa1b1fa3f75be679af982ae7435c4aa2e1edbb06f999084e0d3
 BASE promote-vectors   sha256 27bb20b4161bb5359ff3eaae5cea963e8a26585a8f2ede4b8ab12507cf87c3d1
 

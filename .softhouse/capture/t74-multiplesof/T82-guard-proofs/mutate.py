@@ -10,8 +10,11 @@ what it catches in the edit somebody will actually make:
 
   add-unregistered-case   somebody adds a case to the harness and to EXPECTED_IDS and forgets the
                           precision table. Applied to the SHIPPING script it must go red; applied to
-                          `git show main:…run-pass3i.sh` it must sail past — that pair is the
-                          counterproof, and it uses main's REAL BYTES rather than a reconstruction.
+                          the FORK POINT'S bytes — `git show $(cat FORK-POINT-SHA):…run-pass3i.sh`,
+                          a LITERAL sha, never `main:` or `merge-base main HEAD`, both of which
+                          resolve to the FIXED code once this branch merges (T102) — it must sail
+                          past. That pair is the counterproof, and it uses the pre-fix REAL BYTES
+                          rather than a reconstruction.
   add-stale-entry         somebody removes a case but leaves its table entry behind
   wrong-precision         a case runs at a precision its table entry forbids
   unnamed-probe           somebody registers a NON-`-p12` case at precision 12 — a discrimination
