@@ -346,6 +346,8 @@
       ],
       "context": "harness",
       "dependencies": [
+        "T100",
+        "T101",
         "T14",
         "T71",
         "T73",
@@ -355,7 +357,10 @@
         "T84",
         "T85",
         "T86",
-        "T87"
+        "T87",
+        "T88",
+        "T89",
+        "T98"
       ],
       "status": "pending",
       "attempts": 0,
@@ -1682,10 +1687,10 @@
       "dependencies": [
         "T73"
       ],
-      "status": "done",
+      "status": "rejected",
       "attempts": 0,
       "branch": "softhouse/T78-fui-marker-d5",
-      "note": "Raised and DISPATCHED by the driver, fire 20260820-170001, after T73 REJECTED T72. FIFTH draft of a rule on one comment (T65 rejected by T67; T69 fixed it and found a defect in T67's own text; T70 rejected by T71; T72 rejected by T73). THE DRIVER IS CHANGING THE SHAPE OF THE INSTRUCTION rather than asking for a fifth enumeration, because four rounds of 'fix the findings' have produced four true-but-insufficient rules and each reviewer found the next hole one call frame further out. AWAITS an independent reviewer (T79) which is NOT dispatched this fire - T78 will sit unmerged on its branch exactly as T70 and T72 did. || fire 20260820-170001: worker COMPLETE on softhouse/T78-fui-marker-d5, NOT MERGED - awaiting independent review T79, which is the FIRST TASK OF THE NEXT FIRE. The driver dispatched only what it had budget to review. T78 abandoned enumeration for a CLOSED FORM: three censuses each exhaustive by grep, plus one test. (1) Where the field can be WRITTEN - exactly 3 statements in Fineract main: :1184 (always zero), :1246, and AdvancedPaymentScheduleTransactionProcessor.java:1995, A THIRD WRITER NO PREVIOUS DRAFT NAMED, inside calculateUnrecognizedInterestForClosedPeriodByInterestRecalculationStrategy (:1981-1999) called from handleRepayment (:1971). (2) Entries to the :1246 write - exactly 2 callers of :1221, :1217 and :392 inside payInterest, with what :392 MEANS now stated (none of :1160 runs, so (d),(e),(f) are inapplicable there rather than weakened). (3) Entries to :718 - exactly 4 call sites IN BIJECTION WITH EmiChangeOperation.Action, a 4-constant enum fixed by the compiler (EmiChangeOperation.java:32-37), SO A FIFTH ROUTE CANNOT APPEAR WITHOUT A COMPILE-VISIBLE EDIT TO THE PINNED ORACLE - that is why the rule can stop enumerating. :733-735 stated as the four-term disjunction it is; the fence rescoped from GradedDomain to the PORT's accepted input surface; the tripwire recounted over five graphs. Preserved verbatim: all citations, the whole allowFullTermForTranche/P-04t material, (e)'s non-tightness, condition (7)'s admission, and emi_L < 0 still [UNVERIFIED] and explicitly needing a capture. TWO FINDINGS: F-T78-1 (P2) T73's OWN F-T73-2 is wrong on a verified claim - it said no deepCopy/copyWithoutPaidAmounts caller routes back into addDisbursement, but :1749's copy IS disbursed into two lines later at :1751; also deepCopy passes COPY=false (:132) while copyWithoutPaidAmounts passes true (:141), so the :1224 copy the whole decision runs on is NOT isCopy(). T73's conclusion survives on stronger ground. F-T78-2 (P3) a GOFMT TRAP hit and fixed: the block sits inside a Go doc-comment LIST ITEM, and the first draft made gofmt -l name emi.go as well as contract.go, which would have broken gate G-3. Zero executable change proved both ways at named commits: 0 non-comment changed lines under nexus/ at 741686a and at head b2ebe52; comment-stripped emi.go byte-identical to main, both 609 lines, both sha256 e660867196b5bea6...33a4d."
+      "note": "Raised and DISPATCHED by the driver, fire 20260820-170001, after T73 REJECTED T72. FIFTH draft of a rule on one comment (T65 rejected by T67; T69 fixed it and found a defect in T67's own text; T70 rejected by T71; T72 rejected by T73). THE DRIVER IS CHANGING THE SHAPE OF THE INSTRUCTION rather than asking for a fifth enumeration, because four rounds of 'fix the findings' have produced four true-but-insufficient rules and each reviewer found the next hole one call frame further out. AWAITS an independent reviewer (T79) which is NOT dispatched this fire - T78 will sit unmerged on its branch exactly as T70 and T72 did. || fire 20260820-170001: worker COMPLETE on softhouse/T78-fui-marker-d5, NOT MERGED - awaiting independent review T79, which is the FIRST TASK OF THE NEXT FIRE. The driver dispatched only what it had budget to review. T78 abandoned enumeration for a CLOSED FORM: three censuses each exhaustive by grep, plus one test. (1) Where the field can be WRITTEN - exactly 3 statements in Fineract main: :1184 (always zero), :1246, and AdvancedPaymentScheduleTransactionProcessor.java:1995, A THIRD WRITER NO PREVIOUS DRAFT NAMED, inside calculateUnrecognizedInterestForClosedPeriodByInterestRecalculationStrategy (:1981-1999) called from handleRepayment (:1971). (2) Entries to the :1246 write - exactly 2 callers of :1221, :1217 and :392 inside payInterest, with what :392 MEANS now stated (none of :1160 runs, so (d),(e),(f) are inapplicable there rather than weakened). (3) Entries to :718 - exactly 4 call sites IN BIJECTION WITH EmiChangeOperation.Action, a 4-constant enum fixed by the compiler (EmiChangeOperation.java:32-37), SO A FIFTH ROUTE CANNOT APPEAR WITHOUT A COMPILE-VISIBLE EDIT TO THE PINNED ORACLE - that is why the rule can stop enumerating. :733-735 stated as the four-term disjunction it is; the fence rescoped from GradedDomain to the PORT's accepted input surface; the tripwire recounted over five graphs. Preserved verbatim: all citations, the whole allowFullTermForTranche/P-04t material, (e)'s non-tightness, condition (7)'s admission, and emi_L < 0 still [UNVERIFIED] and explicitly needing a capture. TWO FINDINGS: F-T78-1 (P2) T73's OWN F-T73-2 is wrong on a verified claim - it said no deepCopy/copyWithoutPaidAmounts caller routes back into addDisbursement, but :1749's copy IS disbursed into two lines later at :1751; also deepCopy passes COPY=false (:132) while copyWithoutPaidAmounts passes true (:141), so the :1224 copy the whole decision runs on is NOT isCopy(). T73's conclusion survives on stronger ground. F-T78-2 (P3) a GOFMT TRAP hit and fixed: the block sits inside a Go doc-comment LIST ITEM, and the first draft made gofmt -l name emi.go as well as contract.go, which would have broken gate G-3. Zero executable change proved both ways at named commits: 0 non-comment changed lines under nexus/ at 741686a and at head b2ebe52; comment-stripped emi.go byte-identical to main, both 609 lines, both sha256 e660867196b5bea6...33a4d. || local fire 20260820-200002: REJECTED by T79. NOT MERGED. The rejection is NOT the old failure mode - T79 confirms the closed form closes and says the shape must not change again. Three textual defects, remedy ~8 lines. T88 is the surgical retry."
     },
     {
       "id": "T79",
@@ -1702,9 +1707,9 @@
       "dependencies": [
         "T78"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "Paired reviewer for T78. Raised by the driver, fire 20260820-170001, NOT dispatched this fire \u2014 the driver dispatched only what it had budget to see through. This is the FIRST task of the next fire. || local fire 20260820-200002: DISPATCHED (wave 1), isolated worktree, model opus."
+      "note": "Paired reviewer for T78. Raised by the driver, fire 20260820-170001, NOT dispatched this fire \u2014 the driver dispatched only what it had budget to see through. This is the FIRST task of the next fire. || local fire 20260820-200002: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260820-200002: DONE on softhouse/T79-review-t78 (a14875a). VERDICT REJECTED, three findings, but it states the TASK SHAPE WAS RIGHT and the closed form CLOSES \u2014 the four-prior-rejections failure mode (enumerated fence, next caller one frame out) is gone. F-T79-1 (P1, INTRODUCED BY T78): the step-(e) replacement consumed the clause 'Hence sum of emi_j over' from the FOLLOWING sentence and never restored it, so (e) now asserts an index interval equals a money quantity and the bridge from (d)'s identity to u_L=0 is gone; recoverable VERBATIM from parent 4507109. Rejected rather than MICRO-FIX because that budget bars money logic - correct call. F-T79-2 (P2): 'THAT BIJECTION IS THE CLOSURE' is false on the site->Action side. F-T79-3 (P3): tripwire graph 3 claims its grep returns 7 lines, it returns 9. ADJUDICATED F-T78-1 IN T78'S FAVOUR: T73's [VERIFIED] sentence is false. Re-ran all three censuses WIDER than T78 (repo-wide, case-insensitive), same answers; APSTP:1995 exact in all six particulars; both zero-change proofs RECOMPUTED not accepted; G-3 holds."
     },
     {
       "id": "T80",
@@ -1721,9 +1726,9 @@
       "dependencies": [
         "T77"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "Raised by the driver, fire 20260820-170001, after T77 REJECTED T76. NEEDS THE ORACLE - schedule on a local fire. Pair with an independent reviewer whose explicit job is to ATTACK the recipe, since that is how both defects were found. || local fire 20260820-200002: DISPATCHED (wave 1), isolated worktree, model opus."
+      "note": "Raised by the driver, fire 20260820-170001, after T77 REJECTED T76. NEEDS THE ORACLE - schedule on a local fire. Pair with an independent reviewer whose explicit job is to ATTACK the recipe, since that is how both defects were found. || local fire 20260820-200002: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260820-200002: DONE on softhouse/T80-pathb-recipe-hardening (352f623, 813acb1, e45f2bf), forked from T76 head 9dbccf4. BOTH P0s CLOSED AND CLOSED BY RUNNING THE ATTACKS. P0-A: canary pinned by DIGEST COMPARISON (computes shasum of the file it is about to POST vs literal PIN_CANARY_SHA256), and on mismatch the canary is NOT SENT AT ALL, so the 'PASS ... (= HALF_UP)' sentence is structurally unreachable off the pinned tie; the four grep -qF prefix matches are gone; ran T77's own exploit and reproduced T77's mutated digest 13ce2f4f... exactly. P0-B: gate now tests preconditions.sh EXIT STATUS and greps a transcript redirected 2>&1 so stderr FAIL lines are in the grepped file (attest.py's shape, adopted not reinvented); output dir derives from $TENANT; CAPTURED-FROM-TENANT stamp refuses cross-tenant re-use; TENANT=default sh t36/recapture.sh now gives 5 breaches, ABORT, ZERO capture files, filed under recapture-default, exit 1; forcing it into recapture-gerege dies at the name guard BEFORE preconditions run. 22 attack transcripts (11 attacks x 2 interpreters), 11/11 sh-vs-bash byte-identical. P2s discharged, decoy removed, breach count MEASURED at 6 not adjusted, sidecar revision now read from PIN.json and ratification from gates.md. Promoted nothing. FORK-FRESHNESS: main is 28 commits ahead of its fork point, so its conformance evidence reports 36 parity vectors, not main's 42 - the diff is confined to .softhouse/capture/pathb/ so the merge should be clean, but the DRIVER must re-run conformance on merged main. Follow-up raised: T77 F-1, audit-t44/charges/bin/preconditions-COPY.sh still carries the pre-hardening hole (registered T91). || local fire 20260820-200002: T85's TWO P1s APPLIED at 8d6be94, then MERGED. F-1 was ITS OWN P0-B ONE LAYER IN and it said so: makedirs / the CAPTURED-FROM-TENANT stamp / the preconditions.txt write all sat ABOVE the pre.returncode test, so the abort message 'no capture attempted, no attestation written' was FALSE AT THE MOMENT IT PRINTED. Gate now runs first. Proof script restores the PRE-FIX attest.py from its own 813acb1 and runs both, 'because a proof that only shows the after cannot tell a fix from a no-op' - pre-fix mutated the 14-file committed set, fixed leaves all 14 digests identical. It reported that its corrupted digest f8125c11 DIFFERS from T85's e0cf542d and explained why (its preconditions.sh now carries the digest-pin line and the F-2 fix) rather than papering over it. F-2: ${PIN_PG_MAJOR_MINOR} braced; with P7 forced to fail, pre-fix gave 10 PASS / 0 FAIL with P8/P9/P10/P13 never reached and the canary NOT REACHED, fixed gives 21/1 with the canary running. It again declined to adopt T85's 7-vs-16 counts as if it had measured them. THIRD FINDING DISCLOSED UNPROMPTED: `grep -a` is NOT sufficient - BSD grep in a UTF-8 locale matches NOTHING in a file containing an invalid multibyte sequence and returns 0, so its own first proof draft reported 'P8-P15 not reached: 0' for every counter, RIGHT NUMBERS WRONG REASON. That is a silent-zero path in recapture.sh's own second gate operand; added LC_ALL=C there and in forbidden-sentence.sh. All 22 attack transcripts byte-identical after the fixes except timestamps. HONESTY: P14's HALF_EVEN limb marked [UNVERIFIED this fire] because the pinned canary's productId 11 does not exist on `default` and returns HTTP 404 - a provisioning reason, not an arithmetic one."
     },
     {
       "id": "T81",
@@ -1738,9 +1743,9 @@
       ],
       "context": "harness",
       "dependencies": [],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "Raised by the driver, fire 20260820-170001, from a finding BOTH T76 and T77 reached independently. The driver did NOT fix it inline despite it being a few lines, because conformance.sh is the grading harness and an unreviewed edit to the thing that decides PASS is exactly what this pipeline forbids. STANDING INSTRUCTION until it lands: invoke the harness as `bash .softhouse/conformance.sh`, NEVER `sh`. || local fire 20260820-200002: DISPATCHED (wave 1), isolated worktree, model opus."
+      "note": "Raised by the driver, fire 20260820-170001, from a finding BOTH T76 and T77 reached independently. The driver did NOT fix it inline despite it being a few lines, because conformance.sh is the grading harness and an unreviewed edit to the thing that decides PASS is exactly what this pipeline forbids. STANDING INSTRUCTION until it lands: invoke the harness as `bash .softhouse/conformance.sh`, NEVER `sh`. || local fire 20260820-200002: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260820-200002: DONE on softhouse/T81-conformance-shell-guard (2 commits). Guard is the FIRST executable statement, exits 3 'wrong interpreter, harness never started'. IT REFUTED THE DRIVER'S CONSTRAINT 4 RATHER THAN COMPLYING: on this machine /bin/sh IS bash 3.2.57, and bash 3.2 disables process substitution in POSIX mode, which it enters both as `sh` and under --posix - so the brief's claim that bash-via-sh and bash --posix are legitimate runs that must not trip the guard is FALSE HERE; both die at old line 104 on main with exit 2. So the guard FEATURE-TESTS the capability (BASH_VERSION set AND `< <(...)` actually works), not the shell's name. SECOND UNANTICIPATED FINDING (F-1, pre-existing, in nexus/, outside its scope guard): report.go:102 ranges an UNSORTED map[string][]string so two report lines swap order - measured 23/30 vs 7/30 over 30 runs of ONE binary. The harness report is therefore NOT byte-reproducible, which matters because byte-reproducibility of harness output is used as evidence in reviews. Registered as T90. Proofs committed as 29 transcripts. SCOPE: also edited .claude/skills/softhouse-uat/SKILL.md (which documented the harness WITHOUT bash - the trap's origin) and added an exit-3 row to softhouse-program's never-halt table. DRIVER ACCEPTS this as within the brief's 'update the exit-code table wherever it lives'; recorded as an intentional scope extension, not a breach."
     },
     {
       "id": "T82",
@@ -1757,9 +1762,9 @@
       "dependencies": [
         "T75"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "Raised by the driver, fire 20260820-170001, from T75's approval findings. Contract-independent, needs no oracle - runnable on a cloud catch-up fire."
+      "status": "done",
+      "attempts": 1,
+      "note": "Raised by the driver, fire 20260820-170001, from T75's approval findings. Contract-independent, needs no oracle - runnable on a cloud catch-up fire. || local fire 20260820-200002: DISPATCHED (wave 1), isolated worktree, opus. Files disjoint from T80 (pathb/) and T83 (t83-nonamortizing/), so it runs concurrently. || local fire 20260820-200002: DONE on softhouse/T82-pass3i-defects (402a1da, 0101fbb). EVERY REWRITTEN GUARD DEMONSTRATED RED, which is what this task shape has failed to do four times. E-1 took option 1 (hand-written 36-entry CASE_PRECISION literal, no default) and its load-bearing evidence is a COUNTERPROOF: the identical mutation exits 1 on the new code and exits 0 ('validation OK - 37 captures', all calibrations green) on the old. It also showed the old loop's post-condition WAS literally the predicate the next line tested, so _unregistered was [] for EVERY POSSIBLE EXPECTED_IDS - an empty-domain guard. E-3 was dead in BOTH directions, stronger than the brief stated, and T82 verified that before editing: both arms sharing a non-ratified mode -> first conjunct false -> passes; arms differing -> never reached, because differing modes die at the `varying` check two lines earlier. Guards demonstrated by a harness that SLICES THE HEREDOC OUT OF run-pass3i.sh BYTE-FOR-BYTE and runs that exact text, so it cannot drift from what ships: 16 outcomes, 16 as expected, five deliberate green controls. A-1's mechanical sweep earned its keep - it found a THIRD census copy the brief did not name, pass3-supersession-banner.txt, the pasteable SOURCE the two reports were built from; fixing only the reports would have left the wrong census on disk for the next paste. C-4 confirmed 21 three independent ways. Invariants: vectors diff EMPTY, promotion script regenerates all six vectors byte-identical, conformance 42 parity / 5576 cells / exit 0 unchanged, gofmt -l names exactly contract.go, nexus/ untouched, pathb/ and t83-nonamortizing/ never opened. || local fire 20260820-200002: REJECTED by T87 on EVIDENCE INTEGRITY (code confirmed correct, nine guards driven red by the reviewer). NOT MERGED pending T98, which applies T87's four findings. T87 stated exactly what would make it an approval: delete the false sentence, add a payable-absent mode, correct or annotate T74.md:238, fix the 5-vs-4 count. || local fire 20260820-200002: NOT MERGED. All of T87's findings are applied and confirmed, but the merge was backed out after the driver's post-merge run of the proof harness failed 7/25 - see T98. One literal-sha change away from merging. || local fire 20260820-230001: MERGED to main after T103's independent review ruled T82+T87+T102 safe. DRIVER RE-VERIFIED ON MERGED MAIN, NOT ON A BRANCH (P-24): prove-guards-go-red.sh prints '25 as expected, 0 not as expected' exit 0, with fork-point (BASE) 8da4b831b96a... [LITERAL, from FORK-POINT-SHA - never a computed ref], BASE run-pass3i.sh sha256 d84ec7bf9888baa1..., BASE promote-vectors sha256 27bb20b4161bb535... - exactly the values T103 said must appear or the pin was bypassed. bash conformance.sh on merged main: VERDICT PASS exit 0, 42 parity vectors PASS / 0 FAIL, 4 contract-refusal, 1 self-test, 5576 graded cells + 84 ungraded, 102 money kills / 7 structural, 0 invariant violations, 0 assertions NOT RUN."
     },
     {
       "id": "T83",
@@ -1777,9 +1782,9 @@
       "dependencies": [
         "T75"
       ],
-      "status": "in_progress",
+      "status": "rejected",
       "attempts": 1,
-      "note": "Raised by the driver, fire 20260820-170001. NEEDS THE ORACLE - schedule on a local fire. This is the most consequential UNVECTORED finding of the fire: a green conformance run does not cover it, so it is invisible to the gate that is supposed to catch exactly this. || local fire 20260820-200002: DISPATCHED (wave 1), isolated worktree, model opus."
+      "note": "Raised by the driver, fire 20260820-170001. NEEDS THE ORACLE - schedule on a local fire. This is the most consequential UNVECTORED finding of the fire: a green conformance run does not cover it, so it is invisible to the gate that is supposed to catch exactly this. || local fire 20260820-200002: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260820-200002: DONE on softhouse/T83-nonamortizing-boundary (7 commits, PREDICTION COMMITTED FIRST). Took no number from T75; built CaptureT83.java from Capture3g.java, in-JVM Path A seam, no server/DB/tenant write. CALIBRATION ZERO DIFFS: P-CAL-ZPA/ZPB reproduce pass 3g's T64-ZP-A/ZP-B cell-for-cell, 0 input differences INCLUDING TENANT ID. BOUNDARY MEASURED: 330 contiguous sweep cells (4 rates x 8 terms, every cell emitted clean or not), 198 fail / 132 clean / 0 anomalies, failing set is the CONTIGUOUS PREFIX on all 32 shapes. Largest failing principal ranges from NONE at n=2 to MNT 0.23 (7.0%, n=56); everything in the region is below MNT 0.25. 21.6% is NOT load-bearing - the region exists at 7.0/16.8/36.0% and moves DOWN as the rate rises. Closed form B_minor x a(r,n) < 0.5 matched all 32 shapes (106/106 registered predictions held) and is reported as a HYPOTHESIS CONSISTENT WITH the measurement, not a fact. PORT SIDE: 198 divergent cells; control 0 mismatches on two promoted parity vectors; port refused nothing; the divergence is ONE CELL PER CASE - the final row's outstanding principal, nothing else. THREE RESULTS THAT CHANGE G-8: (1) the driver's mid-flight reframing is CORRECT AND COULD NOT BE REFUTED - on all 198 failing cases the principal column still sums to the disbursed amount, the oracle's own totalOutstandingAmount reads 0, and the balance column is constant. (2) STALE MEMO OBSERVED, NOT INFERRED: ProbeOrderDep.java forces the oracle's own Memo to recompute and 5/5 failing shapes go non-zero -> 0.00, 4/4 clean controls unchanged, path identity true on all 9 - BUT THE DRIVER'S CANDIDATE SITE IS REFUTED; getInitialBalanceForEmiRecalculation (:414-426) reads getPrevious()'s balance and can never populate the LAST period's memo. Real pre-adjustment read is ProgressiveEMICalculator.java:1180, the same method as the raise at :1210. DRIVER RE-VERIFIED THIS FROM SOURCE AND CONFIRMS IT. (3) invariant_exemptions EXISTS AND IS HONOURED BUT IS INERT HERE - measured by grading a prepared vector with the real conformance.Run and the real port on a scratch store: both variants FAIL IDENTICALLY on 'row 6 outstanding_principal_minor: expected 1, got 0', and WITHOUT any exemption all six invariants already HOLD because they read the PORT's output, which amortizes. The divergence is a CELL DIFF and exemptions have no power over cell diffs. SO OPTION (a) AS RECORDED ALSO NEEDS A PORT CHANGE. Prepared both vector variants, PROMOTED NOTHING. Corpus unchanged: PASS exit 0, 42 parity vectors, 0 invariant violations. Containers Up(healthy) before and after. || local fire 20260820-200002: REJECTED by T84. NOT MERGED - which is the right outcome, because main's gates.md still carries the PRE-T83 G-8 text and is therefore not carrying anything false. The MEASUREMENT is sound and fully reproduced; only the three unscoped conclusions written into gates.md are wrong. T100 reworks it."
     },
     {
       "id": "T84",
@@ -1798,9 +1803,9 @@
       "dependencies": [
         "T83"
       ],
-      "status": "pending",
+      "status": "done",
       "attempts": 0,
-      "note": "Paired reviewer for T83. Raised by the driver, local fire 20260820-200002. Needs the oracle to reproduce the probe (in-JVM Path A seam, no server, no DB)."
+      "note": "Paired reviewer for T83. Raised by the driver, local fire 20260820-200002. Needs the oracle to reproduce the probe (in-JVM Path A seam, no server, no DB). || local fire 20260820-200002: DONE on softhouse/T84-review-t83 (prediction e6d6a47 is a STRICT ANCESTOR of evidence 0d07e93). VERDICT REJECTED - NOT for the measurement, which it REPRODUCED IN FULL AND MOSTLY BYTE-IDENTICALLY (T83's capture re-run from its own sources: 332 cases, canonical sha256 01b41d9c...3101b IDENTICAL; its OWN classifier: 330 cells, 198/132/0, 32 shapes, 0 holes, contiguous prefix on all 32, boundary table identical row for row, PLUS an id-vs-inputs consistency check T83 never made, 0 mismatches; 12 boundary cells re-asked with DIFFERENT TENANT IDS AND REVERSED ORDERING, 12/12 identical). Rejected for THREE UNSCOPED CONCLUSIONS T83 wrote into gates.md - THE ARTEFACT BUYAN READS TO DECIDE - all three false inside the graded domain. P0-1: G-8 HAS A SECOND FAMILY. 600.0% p.a. / MNT 0.01 / n >= 104, 22 MEASURED CELLS, where the principal column sums to 0.00 against a 0.01 disbursement and totalPrincipalAmount reads 0.00, and FORCED MEMO RECOMPUTE DOES NOT MOVE THE BALANCE - so by the DRIVER'S OWN STATED DISCRIMINATOR it is a GENUINE NON-AMORTIZATION, not a stale memo. The Go port reproduces all 22 cell for cell. THE DRIVER'S REFRAMING IS THEREFORE REFUTED AS A GENERAL CLAIM, on the exact test the driver itself wrote down ('if it ever fails to sum, the reframing is WRONG'). P0-2: 'invariant_exemptions is inert, so option (a) needs a port change' is REFUTED AS A GENERAL CLAIM - graded with the real conformance.Run and the real port, WITHOUT exemption 761 cells / 0 CELL DIFFS / FAIL with two invariants VIOLATED, and WITH the exemption PASS, ZERO PORT CHANGE. T83's claim holds only on the sub-family where the port diverges. P1-3: 'every principal in the region is far below one MNT' is FALSE - MNT 1.09 at 3.6%/n=360, AN ORDINARY 30-YEAR TERM, and MNT 2.91 at 0.12%/n=600, 11.6x the stated bound. P1-4: the closed form is FALSIFIED outside the sampled grid (18 cells at the precision-19 floor) - T83 was right to label it a hypothesis and that call is VINDICATED. P2: the mechanism was first stated by T75, not the driver. G-8 stays OPEN; it analysed (b)/(c) and decided neither; nothing promoted; conformance PASS exit 0 42 vectors."
     },
     {
       "id": "T85",
@@ -1818,9 +1823,9 @@
       "dependencies": [
         "T80"
       ],
-      "status": "pending",
+      "status": "done",
       "attempts": 0,
-      "note": "Paired reviewer for T80. Raised by the driver, local fire 20260820-200002. NEEDS THE ORACLE. Both of T80's P0s were found by ATTACKING the recipe, so attacking it is the review."
+      "note": "Paired reviewer for T80. Raised by the driver, local fire 20260820-200002. NEEDS THE ORACLE. Both of T80's P0s were found by ATTACKING the recipe, so attacking it is the review. || local fire 20260820-200002: DONE on softhouse/T85-review-t80 (f7d768c). VERDICT MICRO-FIX. ALL DESTRUCTIVE TESTING RAN AGAINST A git archive EXPORT IN /tmp/t85, worktree clean - good hygiene. COULD NOT BREAK EITHER P0: six required attack classes each under BOTH sh and bash, all exit 1, zero capture bytes, nothing in a gerege-named directory, forbidden sentence absent; plus EIGHT MORE INVENTED ATTACKS. Best positive result: symlinking preconditions.txt to /dev/null kills the grep operand and the run STILL aborted on the exit-status operand alone - the two-operand design is load-bearing and now demonstrated, not asserted. forbidden-sentence.sh reproduces 27 files / 0 violations AND FIRES on two planted violations, so it is not itself tautological. Byte identity reproduced AND EXTENDED: 1 distinct digest per capture id across NINE sets (T80 claimed six). merge-tree against main CLEAN; conformance from its own main-forked worktree PASS exit 0 42 parity / 5576 cells, confirming T80's 36 is fork age only. Oracle untouched: State.StartedAt byte-identical, m_loan 0 on both tenants, c_configuration.rounding-mode still 4/true and 6/true. HONEST CAVEAT RECORDED: the pinned canary returns HTTP 404 on `default` (its productId 11 does not exist there), so P14's HALF_EVEN limb rests on T22's earlier observation, NOT on anything measured this fire."
     },
     {
       "id": "T86",
@@ -1838,9 +1843,9 @@
       "dependencies": [
         "T81"
       ],
-      "status": "pending",
+      "status": "done",
       "attempts": 0,
-      "note": "Paired reviewer for T81. Raised by the driver, local fire 20260820-200002. NEEDS THE ORACLE to run the harness both ways."
+      "note": "Paired reviewer for T81. Raised by the driver, local fire 20260820-200002. NEEDS THE ORACLE to run the harness both ways. || local fire 20260820-200002: DONE on softhouse/T86-review-t81 (64a95f5), docs only. VERDICT APPROVED. RAN 11 full harness runs, 6 refusal runs, 30 direct binary runs, 9 interpreter probes, 5 container runs - not read, RUN. BYTE IDENTITY UNNORMALISED (stronger than T81's own evidence): bash+main and bash+T81 from the same worktree path give identical sha256 3b7c96fd..., 19790 bytes, empty diff, exit 0, PASS 42 parity / 5576 cells. CENTRAL PROPERTY re-proved with ITS OWN perturbation (P-03 interest_minor 12->13, wire text moved consistently): guarded script exit 1 VERDICT FAIL with 0 guard traces, and `sh` over the SAME RED STORE gives exit 3 with ZERO occurrences of VERDICT|PASS|FAIL. Exit 3 genuinely free: shell exits only 0/$?/2, grade.go:154-172 returns only 1,2,2,0. Guard is the file's FIRST executable line (68), before set -u (104) and both process-substitution sites (188/206). ADJUDICATION 1: T81 WAS RIGHT TO REFUTE THE DRIVER'S BRIEF - /bin/sh here is a separate 101,232-byte binary reporting GNU bash 3.2.57 and process substitution dies under BOTH sh and bash --posix while plain bash works; there was nothing to let through. ADJUDICATION 2: the report nondeterminism is real, reproduced at 27/3 over 30 runs, and it BIT T86 LIVE; T81's sorted normalisation is honest but merely corroborative. BONUS: closed T81's own [UNVERIFIED] - bash 5.2.37 and 5.3.9 in throwaway containers ARE admitted under --posix and argv[0]=sh, so NO FALSE REFUSAL EXISTS. Six findings, none blocking."
     },
     {
       "id": "T87",
@@ -1858,9 +1863,507 @@
       "dependencies": [
         "T82"
       ],
+      "status": "done",
+      "attempts": 0,
+      "note": "Paired reviewer for T82. Raised by the driver, local fire 20260820-200002. Contract-independent; needs no oracle except to confirm the conformance verdict is unmoved. || local fire 20260820-200002: DONE on softhouse/T87-review-t82 (8f8ebbd). VERDICT REJECTED, 4 findings - but T82's CODE IS RIGHT and T87 says so: every guard T82 rewrote is LIVE, and T87 DROVE NINE OF THEM RED with its own inputs on cases T82 did not use, including two directions T82 never tried (P18 direction (b), a -p12 id running at 19; and both D-2 payable/non-payable row shapes). The rejection is on EVIDENCE INTEGRITY, not behaviour. It also re-ran E-1's counterproof against MAIN'S REAL BYTES rather than T82's restore-old-table reconstruction and got the same exit 0 / 'validation OK - 37 captures'. F-1 (P1): the D-2 'legitimate periodNumber 0' GREEN CONTROL HAS ZERO DISCRIMINATING POWER - main's script produces IDENTICAL expect.periods, because main decided the value with `or 0` at :255 but the withdrawal with a SEPARATE `is None` test at :260, so a recorded 0 already survived un-withdrawn; and the committed harness PRINTS a sentence claiming otherwise, which T82.md repeats as established. It is false. F-2 (P1): the one D-2 guard that actually cures the `or 0` defect (payable row, absent key) is NEVER EXERCISED by the rig. F-3 (P1): A FOURTH CENSUS COPY at handoff T74.md:225-238, present tense, contradicting line 217 of the SAME FILE - and T82 edited that file twice; both its sweep regexes were tuned to the BANNER's phrasing and cannot see the same census rendered as a markdown table. P-12 INSIDE THE TASK ASSIGNED TO CLOSE P-12. F-4 (P2): 'five deliberate green controls' is four. MICRO-FIX was unavailable because F-3 and F-4 both turn on a number. CONFIRMED INDEPENDENTLY: E-3 dead in both directions against main's bytes; E-2's removed halves dead by structural proof plus 360,435 synthetic capture lists with 0 firings; the hand-written 36-entry table exhaustive, duplicate-free, stale-free and matching every observed precision; C-4 = 21 by a FOURTH route; slicing faithful by its own independent sed with a matching sha256; no float( outside prose; all 46 vectors regenerate byte-identical from BOTH old and new promotion scripts; conformance 42 parity / 5576 graded / exit 0. It also CONFIRMED T92 by experiment: applying the wording fix to Capture3i.java gives exit 1 harness sha mismatch, so T82 was right not to edit capture bytes - PROVED, not accepted. || local fire 20260820-200002 CONFIRMATION PASS (007b992): VERDICT MICRO-FIX. All four findings landed and were VERIFIED, NOT ACCEPTED. F-1: sentence gone at source, grep -c = 0 in both script and transcript, survivors only in T82.md quoting it TO RETRACT it; the relabelled REGRESSION case now loads main's real bytes as a second promoter and asserts identical periods. F-2: T87 drove BOTH new guards red with ITS OWN script, and main accepts both, writing installment_number 0 and promoting six vectors. F-3: IT TESTED THE NEW SWEEP AGAINST THE PRE-FIX TREE - TIER 1 lists the missed line, so 'this is the tier that would have caught F-3' is DEMONSTRATED, not asserted. F-4: recounted line by line, 25 = 15 GUARD + 7 COUNTERPROOF + 2 CONTROL + 1 REGRESSION. RULED ON BOTH DRIVER QUESTIONS: blind-spot list HONEST and relyable (it names two spots not closable by grep AT ALL rather than implying completeness); and N-1 MUST NOT HOLD THE MERGE because tightening it IS a predicate change and landing a refusal path without driving it red would be exactly the F-1 defect it rejected for - 'declining it was the control working'. THREE ITEMS TO FIX BEFORE MERGE: M-1 the main citations in the F-1 retraction are OFF BY ONE IN SIX PLACES inside a [VERIFIED: git show main:] block (truth is :255/:260/:261); M-2 T82.md prints 1093/47/622 where its own SWEEP.txt prints 1107/49/628; and THE MOVING-BASELINE TIME BOMB - the counterproof baseline is the moving ref `main:`, so ON MERGE all seven COUNTERPROOF rows flip to failing against the rig itself. T87 recorded that last one rather than charging it, because its own request for main's real bytes created the exposure. Also N-2 (sweep self-inclusion) and N-3 (PASS C's 628 hits never printed even under --full, so its largest net yields a count nobody can classify). || local fire 20260820-200002: T87's 'moving-baseline' observation was RIGHT AND UNDER-RATED. It recorded it rather than charging it, on the grounds that its own request for main's real bytes created the exposure; the driver charged it, T98's fix was insufficient, and the driver's post-merge run proved it. Lesson recorded as P-24: an assertion about what happens ON MERGE can only be tested BY MERGING. || local fire 20260820-230001: MERGED to main after T103's independent review ruled T82+T87+T102 safe. DRIVER RE-VERIFIED ON MERGED MAIN, NOT ON A BRANCH (P-24): prove-guards-go-red.sh prints '25 as expected, 0 not as expected' exit 0, with fork-point (BASE) 8da4b831b96a... [LITERAL, from FORK-POINT-SHA - never a computed ref], BASE run-pass3i.sh sha256 d84ec7bf9888baa1..., BASE promote-vectors sha256 27bb20b4161bb535... - exactly the values T103 said must appear or the pin was bypassed. bash conformance.sh on merged main: VERDICT PASS exit 0, 42 parity vectors PASS / 0 FAIL, 4 contract-refusal, 1 self-test, 5576 graded cells + 84 ungraded, 102 money kills / 7 structural, 0 invariant violations, 0 assertions NOT RUN."
+    },
+    {
+      "id": "T88",
+      "title": "SURGICAL retry of T78 \u2014 restore one verbatim clause, restate one sentence, fix one grep count. Nothing else.",
+      "description": "Branch off softhouse/T78-fui-marker-d5 and apply EXACTLY T79's three findings. This is NOT a sixth rewrite - T79 explicitly ruled the closed form CLOSES and the task shape must not change again. (1) F-T79-1 (P1): T78's step-(e) replacement consumed the clause 'Hence sum of emi_j over' from the FOLLOWING sentence and never restored it, so step (e) now asserts an index interval equals a money quantity and the bridge from (d)'s identity sum_j emi_j = P + I to (e)'s conclusion u_L = 0 - the entire reason the field may be omitted - is missing. RESTORE IT VERBATIM from parent commit 4507109; do not paraphrase it and do not improve it. (2) F-T79-2 (P2): the sentence 'THAT BIJECTION IS THE CLOSURE' is FALSE on the site->Action side and the block's own part 5 refutes it - :1751/:1752 pass operation.withZeroAmount(), which PRESERVES the action, into the private addDisbursement/addCapitalizedIncome, so :149 can carry CAPITALIZED_INCOME, and :1107 is a further addDisbursement call site. Restate so the closure rests on what actually carries it: the grep-reproducible four-call-site COUNT plus the rule's own answer (one DISBURSEMENT into an empty model makes :743 unreachable). Injectivity is NOT required and must not be claimed. (3) F-T79-3 (P3): tripwire graph 3 claims its grep returns 7 lines; it returns 9 - :703 and :730 are dispatch-target declarations sharing the name prefix. Correct the count. CONSTRAINTS: zero executable change, proved two ways; contract.go untouched and never gofmt'd; gofmt -l must name exactly contract.go and NOT emi.go (T78 hit that trap once - the block sits inside a Go doc-comment LIST ITEM); no citation added, moved or removed beyond these three edits.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/emi.go"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T79"
+      ],
+      "status": "done",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260820-200002, after T79 REJECTED T78. SIXTH attempt on this comment but the FIRST that is a bounded 3-edit patch rather than a re-derivation - T79 ruled the argument sound and the shape correct. NEEDS NO ORACLE. || local fire 20260820-200002: DONE on softhouse/T88-fui-marker-d6 (406ad3c patch, 722f018 handoff). Diff vs T78 is 1 file / 32+/15- / 5 hunks, each mapped one-to-one to a T79 finding; 0 non-comment changed lines vs T78 AND vs main; comment-stripped emi.go 609 lines sha256 e660867196b5bea6...1133a4d, cmp byte-identical to main; gofmt -l names exactly contract.go and NOT emi.go. Edit 1 restored the clause VERBATIM from 4507109 (occurrence count 1 -> 0 at T78 head -> 1 at T88) and deliberately kept the parent's wording without the article that T79 had suggested, flagging the divergence. Edit 2 removed all four 'bijection' occurrences and RE-VERIFIED the three source facts itself rather than accepting the driver's; it went further than asked and confirmed the cross-edge BOTH ways - private addCapitalizedIncome (:274-284) has NO action guard at all, so :1752 sends a DISBURSEMENT op to :280. addDisbursement( call sites: :126, :134, :137, :1107, :1751. Edit 3 ran the grep itself: 9 lines (149,280,317,356,703,718,722,723,730). JUDGEMENT CALL FOR T89 TO RULE ON: it corrected the count in BOTH places it is stated (part 4 prose and part 9 GRAPH 3), arguing that leaving one is exactly the P-12 corrections-leak this chain has been burned by. Raised F-T88-3: a retry brief that names ONE location of a defect invites the P-12 leak and should say 'and every restatement of it' - a defect in the DRIVER'S brief, accepted. || local fire 20260820-200002: MICRO-FIX F-T89-1 APPLIED BY THE AUTHOR at head cfcd229, then MERGED. One line became two, splitting the attribution so each half is true of the party it names; the rest of the bracket stays attributed to T73. Proofs re-run at the new head: 6 hunks vs T78, 0 non-comment changed lines vs T78 AND vs main, stripped emi.go 609 lines sha256 e660867196b5bea6...1133a4d cmp-identical to main, gofmt -l names exactly contract.go and NOT emi.go, contract.go sha unchanged, go build 0. IT WALKED INTO ITS OWN F-T88-3: its three greps were for the NUMERAL, and the surviving restatement vouched for the value BY COUNT ('all five'), which no grep for the number can find."
+    },
+    {
+      "id": "T89",
+      "title": "INDEPENDENT review of T88 \u2014 check the three edits landed and NOTHING else moved",
+      "description": "Spawned fresh without planning context. Read the upstream handoff from the BRANCH and `git diff main...softhouse/T88-fui-marker-d6` with three dots, and also `git diff softhouse/T78-fui-marker-d5..softhouse/T88-fui-marker-d6` to see the patch in isolation. T88 was a BOUNDED 3-edit patch on a doc comment that T79 had already ruled sound; the risk is therefore SCOPE, not insufficiency. Check: (1) the restored clause is BYTE-IDENTICAL to the one in parent 4507109, not paraphrased; (2) the restated closure sentence no longer claims injectivity and instead rests on the four-call-site count plus the rule's own answer - and re-derive from source that withZeroAmount() at EmiChangeOperation.java:64-69 preserves the action and that :1107 and :1751/:1752 are call sites, so the correction is itself correct; (3) the grep count is 9 and you reproduced it; (4) NOTHING ELSE CHANGED - diff T78..T88 should contain only these three edits; any fourth edit is a rejection regardless of merit; (5) zero executable change, recomputed not accepted; (6) gofmt -l names exactly contract.go and NOT emi.go. Verdict: APPROVED / MICRO-FIX (<=10 lines, mechanical, never money logic) / REJECTED with specifics.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/emi.go",
+        ".softhouse/reviews/"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T88"
+      ],
+      "status": "done",
+      "attempts": 0,
+      "note": "Paired reviewer for T88. Raised by the driver, local fire 20260820-200002. NEEDS NO ORACLE. || local fire 20260820-200002: DONE on softhouse/T89-review-t88 (9a08549). VERDICT MICRO-FIX. Re-derived every source fact at the pin and RECOMPUTED every proof rather than copying digests. Edit 1 byte-identical to 4507109 by cmp plus sha256 434377795d63186b..., and it RE-DERIVED THE MONEY BRIDGE in T78's rewritten surroundings: step (e) still delivers both zero-premises, so (d)'s identity splits into the tail sum equalling (P+I) minus emi_f, giving u_L = max(0, cdi_f - (P+I)), which is zero as soon as cdi_f <= P because I >= 0 is dropped - and that is also exactly why the bound is not tight. RULED FOR T88 ON THE ARTICLE: T79 is internally inconsistent, saying 'recoverable VERBATIM from 4507109' while quoting the parent WITHOUT the article three paragraphs above its own suggested edit. Edit 2's three facts confirmed exact and T88's extra both-ways finding HOLDS. Edit 3's grep re-run: 9 lines. AGREED WITH THE DRIVER'S RULING that correcting both restatements is within one finding. FOUND THE THIRD RESTATEMENT, F-T89-1 (P3): emi.go:928's '[VERIFIED at T78: all five counts re-derived by grep]' certified in T78's name a number T78 never produced - P-12 landing ONE LEVEL UP, invisible to a grep for the numeral because it restates the finding's VERIFICATION, not its VALUE. BONUS (P-19): re-ran ALL FIVE tripwire censuses, graphs 1/2/4/5 exact, so graph 3 was the only defect; and CLOSED T88's F-T88-1 in two commands - the private-callee census for the other three entry sites is clean, :1107 was the only one. Raised F-T89-4 (T96). Explicitly ruled the defect is in THIS PATCH, not the task shape, so P-18 does not apply."
+    },
+    {
+      "id": "T90",
+      "title": "The harness report is not byte-reproducible \u2014 report.go:102 ranges an unsorted map",
+      "description": "Found by T81 while establishing a byte-identical baseline for its own change, and it is OUTSIDE T81's scope guard so T81 correctly did not fix it. `report.go:102` ranges an unsorted `map[string][]string`, so two `... killed by ...` lines swap order between runs of the SAME binary on the SAME input \u2014 T81 measured 23/30 vs 7/30 over 30 runs. WHY THIS MATTERS BEYOND TIDINESS: this pipeline repeatedly uses byte-identity of harness output as EVIDENCE (T81 itself had to normalise via a sorted diff to prove its change was inert, and reviewers are routinely asked to diff a run against main). A harness whose output is nondeterministic silently weakens every such proof, and worse, it trains reviewers to explain away diffs. Sort the iteration order deterministically. Do NOT change any verdict, any cell count, any grading behaviour, or the meaning of any exit code. Prove it: run the same binary N>=30 times on the same store and show byte-identical output every time, and show the VERDICT line and cell counts unchanged from main.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/harness/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T81"
+      ],
+      "status": "done",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-200002, from T81's F-1. Needs the oracle only to run the harness. files_hint is approximate - locate report.go before editing. Pair with an independent reviewer. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260820-230001: DONE on softhouse/T90-report-determinism (3 commits). IT CORRECTED THE DRIVER'S files_hint: there is no .../loanschedule/harness/ directory; the harness package is nexus/internal/apps/loanschedule/conformance/. The line number was right - report.go:102 ranged s.CounterfactualCoverage (map[string][]string). FOUR SITES FIXED, THREE OF THEM NOT IN THE BRIEF: report.go:102 (the named 'killed by' lines, now sortedKeys); structural.go:475 declarationDefects ranged ColumnsByRowKind and every string it appends prints as a HARNESS DECLARATION DEFECT FATAL REASON; capability.go:140 LoadCapabilityRegistry ranged a seam's Status and RETURNS ON THE FIRST BAD ENTRY, so a registry with two defects named one AT RANDOM; vector.go:854 row comparator keyed on (context, case_id) only with nothing rejecting a duplicate case_id - added path as a third key so there are no ties (inert today, same sha256 either way). SITES 2 AND 3 EMIT NOTHING ON THE SHIPPED DATA - invisible to any measurement, findable only by reading. Five further map iterations checked and LEFT ALONE with a documented per-site reason. EVIDENCE: pre-fix on main's bytes, 30 runs of ONE binary on ONE store gave 2 distinct sha256, split 26/4 - it reported what it measured rather than the 23/7 or 27/3 the brief predicted; the diff is exactly two lines, schedule.core and monthend.reanchor swapping. Post-fix 30 runs gave ONE sha256 8c22938ffb027f4c..., measured twice (after the sort fixes and again after the tie-break). NOTHING BUT LINE ORDER MOVED, PROVED BY cmp RATHER THAN ARGUMENT: the post-fix bytes ARE one of the pre-fix runs (the 4/30 variant); sorted normalisation matches both variants; 146 lines each; per-vector outcome table identical across 49 rows; all headline counters identical. THREE REGRESSION GUARDS EACH DRIVEN RED against the reverted loops, green after (P-22). go build 0 / go vet 0 / go test -count=1 ok / gofmt -l names exactly contract.go / bash conformance.sh exit 0 VERDICT PASS 42 parity 5576 cells 0 invariant violations 0 NOT RUN / --prove 21/0 / full script output byte-identical over 3 runs. DRIVER-VERIFIED SCOPE: vectors diff EMPTY, contract/ diff EMPTY, nothing outside the conformance package. RAISED F-T90-2 (registered T105): the report embeds the ABSOLUTE store path, so runs from two different worktrees can NEVER be byte-identical - which defeats exactly the reviewer workflow this task exists to protect. RAISED F-T90-4: RESUME.md:94 goes stale on merge; orchestrator-owned, driver will fix at exit. || local fire 20260820-230001: APPROVED by T104 and MERGED to main. DRIVER RE-VERIFIED ON MERGED MAIN with the pinned toolchain (.softhouse/bin/go-env.sh): go build OK, go vet OK, go test ./... -count=1 ok on loanschedule and conformance, gofmt -l names EXACTLY internal/apps/loanschedule/contract/contract.go (G-3 expected state), bash conformance.sh VERDICT PASS exit 0 with 42 parity vectors / 5576 graded cells / 84 ungraded / 0 invariant violations / 0 assertions NOT RUN.",
+      "branch": "softhouse/T90-report-determinism"
+    },
+    {
+      "id": "T91",
+      "title": "A pre-hardening copy of preconditions.sh survives at audit-t44/charges/bin/preconditions-COPY.sh",
+      "description": "Raised by T77 (F-1) and re-raised by T80, which correctly refused to fix it as out of scope. `.softhouse/capture/audit-t44/charges/bin/preconditions-COPY.sh` is a COPY of the Path B precondition script taken before hardening, so it still carries the tautology-canary hole that T80 has now closed in the original: prefix `grep -qF` matches and a sha256 that is printed but never compared. A capture rig that has been hardened in one copy and not the other is worse than one that was never hardened, because the hardened version is what everyone cites. T80's recommendation, which the driver endorses: make it CALL the original rather than patch it a third time - a third divergent copy is the actual defect. Verify by running the same attack suite T80 built against whatever path this copy is reachable by, and show it now refuses. Do not promote anything; do not touch t80/ or t36/ artefacts.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/capture/audit-t44/"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T80"
+      ],
+      "status": "done",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-200002, from T77 F-1 as re-raised by T80. NEEDS THE ORACLE to run the attack suite. Pair with an independent reviewer. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260820-230001: DONE on softhouse/T91-preconditions-copy (5 commits). THE DRIVER'S BRIEF WAS WRONG TWICE AND THE SECOND ERROR IS THE FINDING OF THE FIRE. (1) WRONG ON THE HOLES: the brief asserted the copy carries grep -qF PREFIX matches and a sha256 computed-and-printed-but-never-compared. NEITHER IS IN IT. The copy PREDATES T76 entirely; its only sha256 is PIN_IMAGE, which IS compared at P1. Both named holes were INTRODUCED BY T76 (3d70a86, lines 166/170) and lived only in pathb/t36/preconditions.sh. The copy's actual holes are a DIFFERENT SUPERSET: the canary request is not pinned at all (any readable file accepted), CANARY_EXPECT is env-overridable with no tripwire, and PIN_PG_MAJOR_MINOR is unbraced. (2) WRONG ON WHICH FILE MATTERS: preconditions-COPY.sh is invoked by NOTHING (10 grep hits, all prose) - but it is BYTE-IDENTICAL to .softhouse/capture/charges/bin/preconditions.sh, which capture scripts and attest.py DO invoke, including t55-capture.sh and pathb-capture.sh. DRIVER INDEPENDENTLY CONFIRMED THE BLOB IDENTITY: git rev-parse main:.softhouse/capture/audit-t44/charges/bin/preconditions-COPY.sh and main:.softhouse/capture/charges/bin/preconditions.sh BOTH give e6c1795a172168105d788321a71ee4ca62b73e36. So everything under charges/, leapboundary/ and actualactual/ was gated by the UNHARDENED script while readers see 'the rig is hardened'. The task was framed as a dead copy; it was a LIVE TWIN. P-12, precisely. REMEDY: both twins are now CALL-THROUGHS that dot-source pathb/t36/preconditions.sh - dot-source, not exec, to preserve sh/bash invariance. Three copies -> one rig. No third patched copy, no caller changed, old bytes retained at git show e6c1795a. PROOF BY ATTACK, 13 classes x sh/bash x 4 labels, all against git archive exports in /tmp: PRE-FIX 6 OF 13 ADMIT. The sharpest is its own A2c - on the HALF_UP tenant the rig printed 'PASS effective rounding mode canary: period-1 interest 20925.04 (= HALF_UP)', certifying HALF_UP over the value its own comment calls HALF_EVEN, with BOTH operands attacker-supplied. POST-FIX 0 admit, all 13 meet declared expectations across all four labels, 13/13 sh-vs-bash identical. Happy path additive only: 21 -> 22 PASS, 0 FAIL, exit 0; T44's `default` control reproduces with the same 5 breaches. GUARDS DRIVEN RED (P-22): missing-rig -> exit 2 with a message TRUE AT THE MOMENT IT PRINTS; zero-file scans -> error not pass, in both scorers. G-4 FOUND A DEFECT IN ITS OWN WORK: ugrep -qF returns 'absent' on a poisoned transcript that DOES contain the certification sentence - driven RED, fixed with LC_ALL=C grep -a. CONTRADICTS T80/T85 AND SAYS SO RATHER THAN REPEATING THE CLAIM: T80's asserted BSD-grep-in-UTF-8 behaviour DID NOT REPRODUCE here; it reports the non-reproduction. It also disclosed that its own scorer's first rule was wrong (it flagged a fired guard as an admission) and that the corrected expectation table was written AFTER the first post-fix run. TWO REGISTERED PREDICTIONS (PR-9 count, PR-10 breach count) WERE WRONG AND ARE SCORED AS WRONG in the handoff. DRIVER-VERIFIED SCOPE: vectors + nexus/ + pathb/ diffs ALL EMPTY. Worker reports bash conformance.sh PASS exit 0 42 parity 5576 cells 0 invariant violations; oracle read-only throughout. UNVERIFIED AND FLAGGED: the HALF_EVEN limb still cannot be shown (productId 11 absent on `default` -> HTTP 404; proving it needs an oracle WRITE); no Go toolchain in its environment so no go build / gofmt; the 17 capture scripts were not run end-to-end because they POST loans. FOLLOW-UP RAISED: pathb/t80/forbidden-sentence.sh passes vacuously on an empty glob - CONVERGES with T99 item (3), which owns it this fire.",
+      "branch": "softhouse/T91-preconditions-copy"
+    },
+    {
+      "id": "T92",
+      "title": "A committed capture artefact carries a false claim about its own preconditions (Capture3i.java:442)",
+      "description": "Raised by T82, which could not fix it: `Capture3i.java:442`'s `extends` string is BAKED INTO THE COMMITTED CAPTURE and claims precondition 17 was 'an EXHAUSTIVE per-id table'. That was FALSE at capture time - T82 proved the table was constructed by looping over EXPECTED_IDS, so the guard had an empty domain and the claim describes a check that could not fire. Correcting the string requires a RE-CAPTURE and therefore the oracle. This matters more than a stale comment: the string is inside the capture, so it travels with the evidence and a future reader takes it as an attestation of how the capture was validated. Decide and record whether to (i) re-capture with the corrected string, or (ii) leave the bytes and add an external, committed erratum that any reader of that capture will encounter - and if (ii), prove the erratum is discoverable from the capture itself, not just filed near it. Do NOT silently edit the capture bytes: a capture whose text no longer matches what the oracle emitted is no longer a capture.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/capture/"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T82"
+      ],
       "status": "pending",
       "attempts": 0,
-      "note": "Paired reviewer for T82. Raised by the driver, local fire 20260820-200002. Contract-independent; needs no oracle except to confirm the conformance verdict is unmoved."
+      "note": "Raised by the driver, local fire 20260820-200002, from T82's closing flag. NEEDS THE ORACLE if option (i). Pair with an independent reviewer."
+    },
+    {
+      "id": "T93",
+      "title": "vectors/README.md:580 still says 'all 36 promoted parity vectors' \u2014 the corpus is 42",
+      "description": "Flagged by T82, which correctly refused to fix it because doing so would have broken the empty-vectors-diff invariant its own brief imposed. The line is stale documentation, not a graded artefact: conformance reports 42 parity vectors / 5576 graded cells on merged main, and T82 verified the sentence's claim is true of all 42. NOTE the precedent already set this fire: the driver accepted T81's prose edits to this same README as within scope, so the empty-vectors-diff rule is understood to protect vector JSON, PIN.json and capabilities.json - not README prose. Fix the census here AND sweep mechanically for every other restatement of it (P-12: this run has been burned repeatedly by corrections landing in the named section and not in the sections restating the same claim). Must not touch any vector JSON, PIN.json or capabilities.json.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "sonnet",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/vectors/README.md"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T81",
+        "T82"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260820-200002. Sequenced AFTER T81 and T82 merge, because T81 also edits this file. Needs no oracle. || local fire 20260820-230001: SCOPE EXTENDED by F-T97-1. T97 declined to fix the .softhouse/vectors/README.md doc site T86 named, because its brief demanded an empty vectors diff, and it was right to obey rather than reinterpret. T93 now owns BOTH the 36-vs-42 census AND T97's drop-in replacement text for the 'sh is refused' over-generalisation (the exact text is in T97's handoff as F-T97-1). The empty-vectors-diff rule protects vector JSON, PIN.json and capabilities.json - NOT README prose; precedent set this run when T81's prose edits to the same file were accepted."
+    },
+    {
+      "id": "T94",
+      "title": "T75's review claims its probe is reproducible, but no probe artefact was ever committed",
+      "description": "Found by T83 while deliberately NOT trusting T75's numbers. T75's review says its probe is 'reproducible from this review', but `CaptureF2.java` is not in the repo and not in git history, and no T75 capture artefact was committed. Nothing was lost - T83 re-measured independently and confirmed the finding - but the reproducibility claim is currently FALSE, and it sits in a review that was used as evidence to approve a merge and to raise a gate. This is a process defect of the same family the pipeline already grades for: a claim that cannot be checked is not evidence, and 'reproducible' is exactly the word that stops the next reader from checking. Either commit the probe source and its raw output so the claim becomes true, or amend the sentence in T75's review to say what was actually retained. Do NOT alter T75's findings or its verdict - only the reproducibility claim and, if you commit them, the artefacts it refers to. Then sweep the other review artefacts under .softhouse/reviews/ for the same claim shape and report how many make a reproducibility claim without a committed artefact.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/reviews/"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T83"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260820-200002, from T83's closing flag. Needs no oracle unless it chooses to regenerate the probe. The sweep at the end is the valuable half - this may not be the only review carrying an uncheckable reproducibility claim."
+    },
+    {
+      "id": "T96",
+      "title": "State and count the fact that makes the unreachability argument airtight \u2014 :743 is the SOLE caller of calculateEMIOnNewModelAndMerge",
+      "description": "Raised by T89 as F-T89-4 while reviewing T88, and deliberately kept OUT of that bounded patch because it STRENGTHENS the argument rather than correcting it. The futureUnrecognizedInterest block's closure argument turns on `:743` being the only route into `calculateEMIOnNewModelAndMerge` and hence into `:1744-1759`. That fact is currently UNSTATED and, more importantly, UNCOUNTED: none of the block's five tripwire censuses would move if a second caller appeared, so the tripwire that exists to detect drift in exactly this argument is blind to the one edit that would break it. Add the fact, add it to the census that guards it, and re-derive all five counts at pinned 426a23544. Then demonstrate the tripwire actually fires: introduce a second caller in a scratch copy of the pinned source and show the census count move. A tripwire nobody has seen go red is not a tripwire. Zero executable change; contract.go untouched; gofmt -l must name exactly contract.go and NOT emi.go.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/emi.go"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T89"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260820-200002, from T89's F-T89-4. NEEDS NO ORACLE. Pair with an independent reviewer. Sequence AFTER T88 merges."
+    },
+    {
+      "id": "T97",
+      "title": "The interpreter guard's probe is a NEGATIVE test \u2014 it cannot tell 'psub works' from 'the probe never ran'",
+      "description": "Raised by T86 (P2) while APPROVING T81, and deliberately NOT prescribed as a micro-fix because T86's own first draft of the replacement line falsely refused plain bash (a missing trailing newline) - which is precisely the argument for giving it its own task and its own review. The guard added by T81 feature-tests process substitution by checking that a probe did NOT fail, so an interpreter where the probe never executes at all is ADMITTED. Demonstrated: `bash -r` passes the guard and then dies with a fabricated 'no Go toolchain' message and EXIT 2 - the exact defect class T81 was sent to close, reappearing one layer in. Not a regression, not reachable in this repo today, and it cannot turn a red run green - so this is a hardening task, not a fix to a live break. Replace the negative test with POSITIVE EVIDENCE: the probe must produce a value that only a working process substitution could have produced. T86 measured a working replacement across nine interpreters; reproduce that independently rather than copying it, and test at minimum: bash 3.2 (this machine), bash 5.x under --posix and argv[0]=sh, dash, zsh, ksh93, and `bash -r`. Do not change the meaning of exit 0/1/2/3 and do not touch grading. ALSO from T86, same file: two doc sites over-generalise 'sh is refused' (false on Fedora/RHEL where /bin/sh is bash 5.x), and usage()'s hard-coded `2,34p` line range will drift again - fix both.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        ".softhouse/conformance.sh"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T81",
+        "T86"
+      ],
+      "status": "needs_retry",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-200002, from T86's P2. NEEDS THE ORACLE to re-run the harness. Pair with an independent reviewer whose job is to find an interpreter the new probe wrongly refuses - that is the failure mode T86 hit in its own draft. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260820-230001: DONE on softhouse/T97-guard-positive-probe (5 commits). THE PROBE IS NOW POSITIVE EVIDENCE: the old guard asked 'did a process-substitution command FAIL?' and admitted on 'no', which is ALSO the answer when the command never ran. The new probe demands a VALUE - conformance-psub-live is written on the far side of <(...), read back through < <(...), and the guard proceeds only on STRING EQUALITY, so every way of not running the probe yields an empty observation and FAILS CLOSED. It grades the VARIABLE, never read's status. printf '%s\\n' WITH the newline is deliberate: the missing newline is exactly what made T86's own draft falsely refuse plain bash. EVIDENCE, all six brief items: (1) bash -r REFUSED at exit 3 with zero VERDICT|PASS|FAIL tokens on 3.2.57, 5.2.37 and 5.3.9; (2) every capable interpreter admitted, full green run through /bin/bash; (3) PRE-FIX REPRODUCED against a PINNED IMMUTABLE COMMIT ab2de89 with the sha256 asserted rather than the moving ref main: - it adopted P-24/T102's lesson unprompted - bash -r admitted then exit 2 with 'no Go toolchain. Expected /.softhouse/bin/go-env.sh', a path that exists nowhere; whole-matrix side by side, EXACTLY TWO ROWS CHANGE, 2 -> 3, everything else identical; (4) bash conformance.sh VERDICT PASS exit 0, 42 parity, 5576 cells, 0 invariant violations, 0 NOT RUN, --prove 21/21; (5) sh conformance.sh exit 3 with 0 verdict tokens; (6) go build/vet/test -count=1 all 0, gofmt -l names exactly contract.go. Committed T97-evidence/prove-interpreter-guard.sh: 13 ASSERTIONS, RED AND GREEN, exits non-zero if any row disagrees, and VERIFIED ON A SCRATCH MERGE INTO CURRENT MAIN (main had moved) - 13/13 and conformance PASS there too. TWO FINDINGS FROM ACTIVELY HUNTING A WRONGLY-REFUSED INTERPRETER, which is the failure mode T86 hit in its own draft: FOUND AND FIXED - with a bare eval, an exported eval() function made bash 5.2.37 refuse, a REAL false refusal, closed with builtin eval. FOUND AND REPORTED, NOT FIXABLE - an exported builtin() function still causes a refusal; no fixed point exists for that game; the trade is one hijackable name instead of three, it is fail-CLOSED, and no fail-closed refusal can turn a red run green. Written into the harness comment rather than hidden. TWO REFUSALS CHECKED AND FOUND NOT FALSE: POSIXLY_CORRECT=1 on bash 3.2 (psub genuinely dies) and bash 5.2 with /dev/fd removed (same binary, admitted with it, refused without - the guard tracks CAPABILITY, not identity). VERIFIED HONESTLY AGAINST ITS OWN INTEREST: bash -r DOES have working process substitution; it is refused because the probe cannot run, and refusing it is still correct because cd is restricted so SCRIPT_DIR comes out empty. The refusal message says exactly that and names $- = hrB. DOCS: softhouse-uat/SKILL.md and both statements in conformance.sh now describe the CAPABILITY, stating that where /bin/sh is bash 5.x, sh conformance.sh is ADMITTED. usage() is self-locating on a #=END-OF-HELP= sentinel and ERRORS at exit 1 if the sentinel is deleted rather than printing the wrong span - and the drift was NOT hypothetical, its own header edit would have made the retired 2,34p cut --help mid-sentence. UNVERIFIED AND MARKED AS SUCH RATHER THAN FILLED IN: bash 4.x (docker daemon cannot reach the registry, pull stalls, host curl returns 401, no local image carries a bash 4) and no complete graded run under bash 5.x (containers have no Go toolchain or oracle route). RAISED F-T97-1: it did NOT edit .softhouse/vectors/README.md - the second doc site T86 named - because the driver's brief required the vectors diff to be EMPTY, and it obeyed the constraint literally and put the drop-in replacement text in its handoff instead. THE DRIVER'S CONSTRAINT WAS AMBIGUOUS AND THE WORKER WAS RIGHT TO OBEY IT: the intent is to protect vector JSON, PIN.json and capabilities.json, NOT README prose - a precedent already set this run when T81's prose edits to that same README were accepted. Folded into T93. DRIVER-VERIFIED: vectors+nexus diff EMPTY. Oracle untouched, read-only curl health probes only, both containers Up (healthy) before and after. || local fire 20260820-230001: NOT MERGED. T106 gave MICRO-FIX but broke T97's CENTRAL CLAIM - the token is forgeable via the uninitialised _conformance_psub_line when the redirection fails at RUN TIME, measured exit 0 ADMITTED on a genuinely psub-dead bash 5.3.9. T113 applies the one-line fix plus T106's F2/F3/F4/F5 and must pass T106's own prove-token-forgeable.sh. The driver did NOT apply this inline: a change to the refusal predicate of the thing that decides PASS is exactly what T87 ruled must not land as a micro-fix without being driven red on its own branch.",
+      "branch": "softhouse/T97-guard-positive-probe"
+    },
+    {
+      "id": "T98",
+      "title": "Apply T87's four findings to T82 \u2014 delete a false claim, exercise the guard that cures the defect, close the FOURTH census copy",
+      "description": "T87 REJECTED T82 on evidence integrity while confirming its code is correct and driving nine of its guards red independently. Apply exactly these four, on top of softhouse/T82-pass3i-defects. F-1 (P1): the D-2 'legitimate periodNumber 0' green control has ZERO discriminating power - main's script produces identical expect.periods, because main decided the VALUE with `or 0` at :255 but the WITHDRAWAL with a separate `is None` test at :260, so a recorded 0 already survived un-withdrawn. The committed harness PRINTS a sentence asserting the opposite (prove-promote-guards.py:134, TRANSCRIPT.txt:205) and the handoff repeats it as established. DELETE THE FALSE SENTENCE - do not soften it. F-2 (P1): the one D-2 guard that actually cures the `or 0` defect (payable row, ABSENT key) is never exercised by the rig; add that mode and produce the counterproof against main. F-3 (P1): there is a FOURTH census copy at .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T74.md:225-238 - present tense, capture-prod3i-raw.json (6) omitted, '36 parity + 4 refusal' - CONTRADICTING LINE 217 OF THE SAME FILE. Correct or annotate it. F-4 (P2): 'five of the sixteen are deliberate green controls' is FOUR (4 x expect 0, 12 x expect 1); the handoff's own parenthetical lists four. THE LESSON THAT MATTERS MORE THAN THE FIX: both of T82's sweep regexes were tuned to the BANNER's phrasing and could not see the same census rendered as a markdown table. Your sweep must be shape-independent - search for the NUMBERS and for the concept, not for a sentence template - and report what you searched and what it could not have found. Touch no guard predicate and no vector: vectors diff must stay empty and conformance must stay 42 parity / 5576 graded / exit 0.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/capture/",
+        ".softhouse/handoff/"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T87"
+      ],
+      "status": "superseded",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260820-200002. Needs no oracle except to confirm the conformance verdict. T87 scoped the remedy as 'minutes of work, no guard predicate and no vector touched'. || local fire 20260820-200002: applied at 849d618 and CONFIRMED by T87 (MICRO-FIX). Three items sent back before merge: the MOVING-BASELINE TIME BOMB (counterproofs use the moving ref `main:`, so on merge all seven COUNTERPROOF rows flip to failing against the rig itself - pin to `git merge-base main HEAD`), M-1 (six off-by-one main: citations inside a [VERIFIED] block; truth is :255/:260/:261), M-2 (T82.md prints 1093/47/622 where its own SWEEP.txt prints 1107/49/628). || local fire 20260820-200002 DRIVER POST-MERGE VERIFICATION CAUGHT THE FIX FAILING, AND THE MERGE WAS BACKED OUT. T98 pinned the counterproof baseline to `git merge-base main HEAD` at 55409cf and reported it as 'the immutable fork point 8da4b83'. That is true ON THE BRANCH and FALSE ON MERGED MAIN: once merged, HEAD == main, so `git merge-base main HEAD` resolves to the merge commit itself and every counterproof compares the fixed code against ITSELF. The driver merged T82+T87, RAN prove-guards-go-red.sh on merged main, and got '18 as expected, 7 NOT as expected' - exactly the seven COUNTERPROOF rows, i.e. the time bomb T87 predicted, relocated rather than removed. Merges reset (they were unpushed); main is unchanged at 2c9007d and green; branches softhouse/T82-pass3i-defects (55409cf) and softhouse/T87-review-t82 (007b992) retain all the work. THE REMEDY IS A LITERAL IMMUTABLE SHA, not a computed ref: hard-code the fork point 8da4b83 (or record it in a file the rig reads), so the baseline cannot follow main. Three call sites: prove-guards-go-red.sh:52, and the two documentation strings at prove-promote-guards.py:11 and :200. THEN RE-VERIFY THE WAY THE DRIVER DID - not on the branch, but on a scratch merge of the branch INTO main, because that is the state the assertion has to survive. || local fire 20260820-230001: SUPERSEDED BY T102, which replaced T98's computed `git merge-base main HEAD` with a literal immutable sha and verified it the only way the assertion can be tested - on a merge. T103 independently confirmed that T87's M-1 and M-2, the other two items T98 owed, ARE fixed on the merged branch and were not lost in the supersession. Nothing from T98 is outstanding."
+    },
+    {
+      "id": "T99",
+      "title": "T85's lower-ranked Path B findings \u2014 a basename-only path guard, a PATH-poisonable digest, and two vacuous guards",
+      "description": "Raised by T85 while issuing MICRO-FIX on T80; none blocks the merge, all are real. (1) P2: the output-path guard compares BASENAMES only, so real `gerege` captures can land under `recapture-default/sub-gerege` at exit 0 - the mis-filing hazard T80 closed at the top level survives one directory down. (2) P3: a PATH-poisoned `shasum` defeats the digest pin AND LEAVES NO DIFF TRACE, which is worse than the tautology it replaced because the rig now looks hardened; consider resolving the tool by absolute path or cross-checking with a second implementation. (3) P3: `forbidden-sentence.sh` PASSES VACUOUSLY ON ZERO FILES - a standing check that reports success when it inspected nothing is the exact defect class this run keeps finding; make an empty file set an error. (4) P3: `t36/out/recapture-gerege/` carries no CAPTURED-FROM-TENANT stamp, so the committed evidence predating the stamp cannot be distinguished from evidence whose stamp was removed. Fix all four and demonstrate each red.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/capture/pathb/"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T80",
+        "T85"
+      ],
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-200002, from T85's lower-ranked findings. NEEDS THE ORACLE. Sequence after T80 merges. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus."
+    },
+    {
+      "id": "T100",
+      "title": "Rework G-8's write-up \u2014 TWO phenomena, not one; scope every conclusion to the family it holds for",
+      "description": "T84 REJECTED T83 while reproducing every one of its numbers, most byte-identically. The measurement stands; the CONCLUSIONS written into .softhouse/gates.md do not, and gates.md is the artefact Buyan reads to decide. Rework it on top of softhouse/T83-nonamortizing-boundary using T84's measurements (branch softhouse/T84-review-t83) as well as your own. FOUR THINGS MUST CHANGE. (1) G-8 IS TWO PHENOMENA. Family A (the one you measured): a STALE DERIVED COLUMN - principal column sums to the disbursement, totalOutstandingAmount reads 0, forced memo recompute drives the balance to 0.00. Family B (T84's, 22 measured cells at 600.0% p.a. / MNT 0.01 / n >= 104): a GENUINE NON-AMORTIZATION - the principal column sums to 0.00 against a 0.01 disbursement, totalPrincipalAmount reads 0.00, forced recompute does NOT move the balance, and the Go port REPRODUCES all 22 cell for cell so there is no divergence there at all. Present them separately with their discriminators, and state which measurement establishes which. (2) 'invariant_exemptions is inert, so option (a) needs a port change' must be RESCOPED: T84 graded it with the real conformance.Run and the real port - without exemption 761 cells / 0 cell diffs / FAIL with two invariants violated, WITH exemption PASS, zero port change. Option (a) IS reachable today with no port change and no amendment on the family where the port does not diverge; it needs a port change only where it does. (3) 'everything below MNT 0.25' is FALSE - MNT 1.09 at 3.6%/n=360, an ORDINARY 30-YEAR TERM, and MNT 2.91 at 0.12%/n=600. Restate the bound over the domain you actually swept and say what you did not sweep. (4) The closed form is falsified outside the sampled grid (18 cells at the precision-19 floor) - record the falsification; your decision to label it a hypothesis was right and T84 vindicated it. ALSO: attribute the stale-memo mechanism to T75, which stated it first, not to the driver. DO NOT CROSS THE GATE: (b) and (c) amend the graded domain and remain hard user gates. Do not promote a vector. Leave G-8 OPEN.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/gates.md",
+        ".softhouse/capture/"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T84"
+      ],
+      "status": "rejected",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-200002. Needs the oracle only if it re-measures; T84's cells are committed on its branch. Pair with an independent reviewer (T101) - the review must check that EVERY conclusion in the reworked gates.md names the family it holds for. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260820-230001: DONE on softhouse/T100-g8-two-families (based on softhouse/T83-nonamortizing-boundary). gates.md G-8 section rewritten from line 893 to EOF as TWO PHENOMENA under one gate id, each with its own discriminator, cell count and EXPLICITLY NAMED SWEPT DOMAIN; structure is a side-by-side discriminator table -> FAMILY A -> FAMILY B -> option (a) rescoped -> the bound restated -> the closed form falsified -> the three options (undecided) -> evidence per branch. Copied T84's evidence in UNMODIFIED so the family-B citations resolve (T84 itself still not merged). IT DID NOT ACCEPT THE DRIVER'S DISCRIMINATOR: totalOutstandingAmount reads 0 on BOTH families, so it is NOT a discriminator - T83's write-up leaned on it and so did the driver's brief. Family A discriminator restated as: principal sums to the disbursement, EXACTLY ONE non-zero principal row (the last), memo recompute drives the balance to 0.00, port diverges on one cell per case. Family B: principal column sums to 0.00 against a 0.01 disbursement, totalPrincipalAmount 0.00, NO non-zero principal row, memo recompute does NOT move it, PORT REPRODUCES IT CELL FOR CELL. Mechanism attributed to T75 (:400/:1180/:1210 plus the isFullyPaid() 0==0 step); the driver's candidate site getInitialBalanceForEmiRecalculation():413-426 recorded as REFUTED. OPTION (a) RESCOPED IN BOTH HALVES: reachable TODAY on family B with ZERO port change (761 cells, 0 cell diffs, FAIL->PASS); still needs a port change on family A (2525 cells, one cell diff, exemptions inert). BOUND RESTATED OVER THE DOMAIN ACTUALLY SWEPT: MNT 0.23 on T83's grid, MNT 2.91 over the union of 687 swept cells, MNT 1.09 at 3.6%/n=360 an ORDINARY 30-YEAR TERM explicitly called out as not dust; what was NOT swept is listed, including 'no term above n=600 ever asked', so no upper bound over the graded domain is claimed. Closed form recorded as TESTED AND FALSIFIED outside the sampled grid, T83's hypothesis-not-fact call recorded as vindicated. MEASURED ITSELF rather than only re-reading: its own 17-case Path A capture (CaptureT100.java, different tenant ids, scrambled order, calibrations reproducing T64-ZP-A/B cell-for-cell, canonical sha256 314c4d55...2bfba) with the PREDICTION COMMITTED FIRST at 34e973f before the probe was built, all 15 predictions held, EXTENDING FAMILY B to n=122 and n=250 above T84's swept top; re-ran T84's order-dependence probe (family B 3/3 unmoved, family A 1.09 -> 0.00, controls unmoved); a two-family exemption demo with the real conformance.Run and real port; an independent classifier plus an EXACT-RATIONAL closed-form test over T83's and T84's raw captures (T83 -> 198 A / 132 clean / 0 B; T84 -> 111 A / 22 B / 209 clean). COUNT CORRECTION AGAINST T84: closed form gives 22 refutations on T84's grid, not the 18 T84 reported - the 4 extra are T84's own T84-TIE-R600p0-*-B1 cells. Re-verified every Fineract citation at pinned 426a23544 plus contract.go:1163-1170 and grade.go:488-493. HONEST CAVEAT DISCLOSED: the exemption-demo runs exit non-zero for scratch-store coverage fatals unrelated to G-8, so the CASE OUTCOME is the measurement, not the exit code. GATE DISCIPLINE HELD: G-8 stays OPEN, (b) and (c) neither decided nor recommended nor pre-implemented, nothing promoted. DRIVER-VERIFIED: vectors+nexus diff EMPTY vs main. Worker reports PIN.json/capabilities.json untouched, gofmt -l names only contract.go, conformance VERDICT PASS exit 0 42 parity 5576 cells 0 invariant violations, containers untouched and Up (healthy). || local fire 20260820-230001: REJECTED by T101 on three sentences, NOT on its measurement - which T101 reproduced over a WIDER cell set than T100 swept. NOT MERGED. T112 is the retry.",
+      "branch": "softhouse/T100-g8-two-families"
+    },
+    {
+      "id": "T101",
+      "title": "INDEPENDENT review of T100 \u2014 every conclusion must name the family it holds for",
+      "description": "Spawned fresh without planning context. T100 reworks G-8's write-up after T84 REJECTED T83 for conclusions that were false even though the numbers were right. THE FAILURE MODE IS UNSCOPED GENERALISATION, so review for scope, not for arithmetic. For EVERY sentence in the reworked gates.md section: does it name the family (A = stale derived column; B = genuine non-amortization) and the domain it was measured over? Any claim that silently generalises from one family to both, or from the swept grid to the graded domain, is a rejection. Specifically re-check: (1) family B's discriminator - principal column sums to 0.00, totalPrincipalAmount 0.00, forced memo recompute does NOT move the balance, and the Go port reproduces all 22 cells so there is NO divergence there; (2) that option (a) is stated as reachable ONLY where the port does not diverge, with the 761-cell/0-cell-diff grading result cited; (3) that the MNT 1.09 at 3.6%/n=360 case is present and not rounded away into 'sub-MNT dust'; (4) that the closed form is labelled a falsified hypothesis with the 18 precision-19-floor cells named; (5) that the mechanism is attributed to T75; (6) that G-8 is still OPEN and (b)/(c) are neither decided nor recommended-as-settled - they amend a ratified DEC-n and are hard user gates. Also verify nothing was promoted and conformance is unchanged.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/gates.md",
+        ".softhouse/reviews/"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T100"
+      ],
+      "status": "done",
+      "attempts": 1,
+      "note": "Paired reviewer for T100. Raised by the driver, local fire 20260820-200002. || local fire 20260820-230001: DISPATCHED, isolated worktree, opus. Reviews softhouse/T100-g8-two-families. || local fire 20260820-230001: DONE on softhouse/T101-review-t100 (c7eaa45). VERDICT REJECTED - narrowly, on THREE SENTENCES, none of them a measurement. It re-derived every load-bearing number independently and over a WIDER set of cells than T100 measured. F-1 (gates.md:1040): 'family A exists at all 12 rates swept' is FALSE - it exists at 11 of 12 and NOT at 600.0%, the rate that DEFINES family B, and it contradicts the section's own discriminator table nine lines earlier at :925. P-23 recurring by the exact corrections-leak route patterns.md records: the table was scoped, the prose restatement of the same claim was not. F-2 (:1204): '11.6x the old bound' has NO ANTECEDENT because the rewrite deleted every 'MNT 0.25'; against the only bound the section states (MNT 0.23) the ratio is 12.65x. F-3 (:1181-1185): the exit-code caveat is false for THREE OF FOUR variants - ExitCode() returns 1 on ParityFail/InvariantViolations BEFORE reading FatalReasons (grade.go:154-160), so those exits ARE the G-8 finding; it hides nothing (all four runs reproduced) but teaches the reader to discount an honest signal. All three corrections are NUMBERS so none is micro-fix eligible. WHAT CHECKED OUT: a 56-ROW SENTENCE-BY-SENTENCE SCOPE TABLE, every conclusion naming a family or a domain, most both; 687 swept cells / 312 family A / 29 family B reproduced by its own classifier; all 10 discriminator rows hold on 341/341 cells; totalOutstandingAmount reads '0' on BOTH families so T100's correction is right and the text does not lean on it; re-grading ALL 29 family-B cells through the real port gives 25,751 graded cells and 0 CELL DIFFS, and ALL 312 family-A cells give exactly ONE diff each, always the final row's outstanding_principal_minor - both on main's CURRENT port, which has advanced +678 lines since the fork; the exemption demo reproduced end to end; MNT 1.09 at 3.6%/n=360 present, prominent and protected from being called dust; every Fineract citation re-verified at 426a23544 including the driver's candidate site REFUTED; prediction 34e973f is a STRICT, NEVER-AMENDED ancestor and 15/15 predictions held; nothing promoted; contract.go byte-identical and un-gofmt'd; conformance PASS exit 0 42 vectors 5576 cells 0 violations. IT RULED THE 18-vs-22 DISPUTE FOR T100 AND FOUND THE CAUSE NEITHER PARTY RECORDED: T84's prediction.json stores BtimesA for those four cells as the FLOAT 0.5, so a strictly positive ~1e-20 residual read as an EXACT TIE. A float-precision artefact in an ANALYSIS script - pattern candidate: the no-float rule must cover analysis and prediction scripts, not just the port and the vectors. RAISED M-1, A MERGE HAZARD ON MAIN INVISIBLE TO A THREE-DOT DIFF: main gained a 66-line G-8 UPDATE block at main:.softhouse/gates.md:936-998 AFTER T100's merge base, and it attributes the FAMILY B measurement to FAMILY A - the gate's most decision-relevant sentence backwards. THE MERGE MUST DELETE main:936-998 IN THE SAME COMMIT. DRIVER ACTION TAKEN IMMEDIATELY: the driver wrote that block last fire, verified M-1 itself against main, and neutralised BOTH errors on main at once with inline CORRECTION blocks (family attribution, and the 18-vs-22 count with its float cause) rather than leaving main carrying something false until the rewrite lands.",
+      "branch": "softhouse/T101-review-t100"
+    },
+    {
+      "id": "T102",
+      "title": "Pin the counterproof baseline to a LITERAL sha and re-verify on a scratch merge, not on the branch",
+      "description": "THE FIRST TASK OF THE NEXT FIRE if T82 is to merge. T98 pinned the counterproof baseline to `git merge-base main HEAD`, which is the fork point ON THE BRANCH and the merge commit itself ON MERGED MAIN - so after merge every counterproof compares the fixed code against itself and 7 of 25 proofs go red. The driver reproduced this by merging and running prove-guards-go-red.sh: '18 as expected, 7 not as expected'. The merges were backed out; main is untouched and green; the work is intact on softhouse/T82-pass3i-defects (55409cf) and softhouse/T87-review-t82 (007b992). FIX: replace the computed ref with the LITERAL immutable fork-point sha 8da4b83 - or record it in a file the rig reads - at prove-guards-go-red.sh:52, and correct the two documentation strings at prove-promote-guards.py:11 and :200 which also describe the computed form. THE ACCEPTANCE TEST IS THE PART THAT WAS MISSING BOTH TIMES: do not verify on the branch. Create a scratch merge of the branch into current main, run the proof harness THERE, and require 25/25. An assertion about what happens on merge can only be tested by merging.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/capture/t74-multiplesof/T82-guard-proofs/"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T87"
+      ],
+      "status": "done",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-200002, from its own post-merge verification. Needs no oracle except to confirm conformance. Small and fully specified. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260820-230001: DONE on softhouse/T102-literal-fork-sha (dd69927, a48da58, 61e7102) on top of T82 head 55409cf. FORK POINT MEASURED FIRST, not accepted from the brief: git merge-base main softhouse/T82-pass3i-defects = 8da4b831b96a146c2b46ad34d85ed098395de160, driver re-ran and confirms the same value. Pinned in a committed FORK-POINT-SHA file read by prove-guards-go-red.sh, with FOUR loud refusals (missing / non-hex / abbreviated / not-a-commit), all exercised, all exit 2 BEFORE any proof row runs, and NO computed fallback anywhere. IT REFUTED A STEP IN THE DRIVER'S OWN BRIEF: a scratch WORKTREE cannot reproduce the defect, because the ref `main` in a worktree still points at the PRE-merge commit, so merge-base resolves to the real fork point and the PRE-FIX rig passes 25/25 FOR THE WRONG REASON. The bug requires `main` ITSELF to be the merge commit, so it used a throwaway CLONE with its own main. A worker who verified on a scratch worktree and stopped would have reported a false green - the THIRD consecutive failure of this same task. FOUR-CELL MATRIX: pre-fix/branch 25/25; pre-fix/clone-merged 18-as-expected-7-not (exactly the seven COUNTERPROOF rows E-1, E-3, D-1x2, D-2x3; no GUARD, CONTROL or REGRESSION row moved); post-fix/branch 25/25; post-fix/clone-merged 25/25. Rows 3 and 4 BYTE-IDENTICAL after normalising the repo root (diff exit 0), which is stronger than matching scores. Mechanism in one number: the extracted baseline run-pass3i.sh moved from d84ec7bf (real pre-T82 bytes) to 3ca0d3f6, which is the sha the SAME transcript prints for the branch's own shipping file - it was diffing the fixed code against itself. SWEEP FOUND THREE SITES THE BRIEF DID NOT NAME: mutate.py:13 still carried the v1 `git show main:` form T98's fix never touched, and T82.md restated the wrong claim in three places including a [VERIFIED:] provenance command that, re-run post-merge, would show the FIXED source and appear to refute its own finding (P-12). Deliberately left T82.md:521 (a claim ABOUT main, not a baseline pin - different defect class) and listed five things the sweep could not have found. DRIVER-VERIFIED INVARIANTS: vectors diff EMPTY, nexus/ diff EMPTY, contract.go untouched. Worker reports gofmt -l names exactly contract.go and bash conformance.sh VERDICT PASS exit 0 / 42 parity / 5576 cells / 0 invariant violations; oracle never contacted (git show + python3 only). || local fire 20260820-230001: MERGED to main after T103's independent review ruled T82+T87+T102 safe. DRIVER RE-VERIFIED ON MERGED MAIN, NOT ON A BRANCH (P-24): prove-guards-go-red.sh prints '25 as expected, 0 not as expected' exit 0, with fork-point (BASE) 8da4b831b96a... [LITERAL, from FORK-POINT-SHA - never a computed ref], BASE run-pass3i.sh sha256 d84ec7bf9888baa1..., BASE promote-vectors sha256 27bb20b4161bb535... - exactly the values T103 said must appear or the pin was bypassed. bash conformance.sh on merged main: VERDICT PASS exit 0, 42 parity vectors PASS / 0 FAIL, 4 contract-refusal, 1 self-test, 5576 graded cells + 84 ungraded, 102 money kills / 7 structural, 0 invariant violations, 0 assertions NOT RUN.",
+      "branch": "softhouse/T102-literal-fork-sha"
+    },
+    {
+      "id": "T103",
+      "title": "INDEPENDENT review of T102 \u2014 reproduce the merge-state acceptance yourself, in a clone",
+      "description": "Paired reviewer for T102. The whole point of T102 is an assertion about what happens ON MERGE, which has now been got wrong twice; the review must re-run it, not read it.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/reviews/",
+        ".softhouse/capture/t74-multiplesof/T82-guard-proofs/"
+      ],
+      "context": "tier0-harness-schedule-poc",
+      "dependencies": [
+        "T102"
+      ],
+      "status": "done",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-230001. Its verdict gates merging T82+T87+T102 together. NEEDS NO ORACLE except to confirm the conformance verdict. || local fire 20260820-230001: DONE on softhouse/T103-review-t102 (664e080, 1e11314). VERDICT MICRO-FIX; ruled T82+T87+T102 SAFE TO MERGE. IT RE-RAN EVERYTHING RATHER THAN READING T102's TRANSCRIPTS. Measured the fork point itself = 8da4b831b96a..., equal to T102's literal, and RE-MEASURED AFTER MAIN MOVED TWICE UNDER IT MID-REVIEW (2efed5d -> 2755999b -> 724c079) - unchanged. Checked ALL THREE extracted baseline files differ from shipping bytes so every counterproof discriminates; T102 had only printed two. THREE SELF-BUILT MERGE CONSTRUCTIONS, all in throwaway /tmp clones with real main never touched: a two-parent clone merge, main forced to the branch tip (ff-shaped), and a second two-parent merge at the newer main with T87 on top. Pre-fix/merged 18/7 exit 1 in both pre-fix constructions; post-fix 25/25 exit 0 everywhere; the seven are exactly the seven COUNTERPROOF rows with no GUARD/CONTROL/REGRESSION row moving. CLAIM (c) CONFIRMED BY ITS OWN WORKTREE MERGE - the single most load-bearing claim in T102 and it came from the worker, not the brief: in a scratch worktree main stays at the pre-merge tip which still holds pre-T82 bytes, so the PRE-FIX rig passes 25/25 FOR THE WRONG REASON, and a reviewer using the obvious in-repo method would have reported a false green for the THIRD time. All four refusals driven red itself in the merged state: exit 2, ZERO stdout bytes, 0 proof rows. EVIDENCE INTEGRITY: 3 of T102's 4 committed transcripts BYTE-IDENTICAL to its own runs after root normalisation; the 4th differs in exactly one line, the merge sha, which MUST differ. Nothing fabricated. T87's M-1 AND M-2 ARE BOTH FIXED, NOT LOST - it re-read the fork-point bytes itself (:255/:260/:261 right, :254 is the kind line), and T102 went FURTHER than M-1 asked: the [VERIFIED:] provenance command now uses the literal sha so it is re-runnable post-merge instead of appearing to refute its own finding. M-2 fixed the stronger way (transcription deleted, not reset). RULED ON (h): leaving T82.md:521 as `git show main:` is CORRECT - a monotone self-verifying claim ABOUT main, not a baseline pin. FOUR NEW FINDINGS, none blocking: F-3 (P2) T102.md says a wrong-but-valid pin cannot be detected, 'nothing can' - FALSE, pinning main's tip is silently accepted and scores a green 25/25, and THE RIG ALREADY COMPUTES AND PRINTS THE BASE sha256s AND NEVER COMPARES THEM - the P-22 canary shape inside T102's own artefact, and the THIRD occurrence of print-a-digest-without-comparing this run (registered T109). F-2 (P3, three sites) the documented recovery command `git show $(cat FORK-POINT-SHA):...` DOES NOT WORK because cat emits the 25-line header and git dies - mutate.py:14, prove-promote-guards.py:11-12, and the operator-facing SystemExit at :206-207. F-1 (P3) SWEEP.txt no longer matches its own commit (committed 1106/49/627, re-running on the same tree gives 1107/49/628) while T82.md tells the reader to trust it - caused by T102's own new prose files, and the invariant is unmaintainable as stated, so stamp the file with its generating commit instead. F-4 (P3) `set -u` without `set -e`: a valid commit lacking the baseline paths writes three empty files and scores 18/7, indistinguishable from the defect it diagnoses. Refused correctly: empty file, comments-only, tree sha, uppercase hex. Harmless: annotated-tag sha.",
+      "branch": "softhouse/T103-review-t102"
+    },
+    {
+      "id": "T104",
+      "title": "INDEPENDENT review of T90 \u2014 re-measure the nondeterminism and the byte identity yourself",
+      "description": "Paired reviewer for T90. T90 changes the harness that decides PASS; the review must re-run its measurements, not read them.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        ".softhouse/reviews/",
+        "nexus/internal/apps/loanschedule/conformance/"
+      ],
+      "context": "tier0-harness-schedule-poc",
+      "dependencies": [
+        "T90"
+      ],
+      "status": "done",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-230001. NEEDS THE ORACLE to run the harness. || local fire 20260820-230001: DONE on softhouse/T104-review-t90 (c36062a, 0fec692). VERDICT APPROVED - every executable claim T90 makes reproduced on bytes it measured itself. PRE-FIX: 130 runs of a binary built from main's bytes, 2 distinct sha256, split 28/2 over 30 and 80/20 over 100; diff exactly the two lines T90 named. POST-FIX: 130 runs, exactly ONE sha256 4c791721... IT EXPLAINED THE SHA MISMATCH WITH T90 RATHER THAN ASSUMING IT: the report embeds the absolute store path at line 3 and nowhere else, and substituting T90's worktree path from `git worktree list` into ITS OWN post-fix report hashes to 8c22938ffb027f4c... all 64 digits - so no residual nondeterminism. CLAIM (g) CONFIRMED BY cmp: post-fix bytes ARE one of the pre-fix runs; per-vector table identical across 47 rows; whole-report diff is 2 lines so every counter is untouched BY CONSTRUCTION. MECHANISM IT ADDS: the shipped coverage map has exactly TWO keys, so there are exactly 2 reachable byte images and the split is ONE BIASED COIN FLIP PER RUN - which is why 23/7, 27/3, 26/4, 28/2 and 80/20 are all the same finding, not five conflicting measurements. SITES 2 AND 3, the ones T90's own evidence CANNOT cover: it CONSTRUCTED INPUTS and measured both trees - main produces 4 DISTINCT OUTCOMES OVER 500 ITERATIONS at each site (naming one defect at random), T90 produces 1, the lexicographically first; and it traced that neither can move a verdict because ExitCode() keys on len(FatalReasons) > 0, a COUNT. ENUMERATION VERIFIED BY TYPE-CHECK, NOT GREP: a go/types census with 0 unresolved subjects finds exactly 7 map ranges in main's conformance package; T90 fixed the 3 that reach output; the other 4 reasons each independently re-derived and correct; loanschedule, contract and cmd have ZERO. GUARDS DRIVEN RED TWICE, TWO DIFFERENT WAYS: all three fail on main's real bytes for the right reasons, then a mutation T90 did NOT try - stable-but-DESCENDING - fails all three order assertions. Not vacuous. FIVE FINDINGS, none a defect in shipped code: F-T104-3 (P1) A DUPLICATE case_id IS SILENTLY GRADED - its dup store reports 43 parity vectors / 5623 cells / VERDICT PASS / exit 0 with NO WARNING, and those are the numbers this program quotes as coverage evidence (registered T110). F-T104-1 (P2) T90's '_test.go files, for map ranges - none' is FALSE; structural_test.go:116/:121/:954 are map ranges, consequence nil but it is a sweep-completeness claim inside the sweep section (P-21). F-T104-2 (P2) the vector.go tie-break DID NOT GO RED - with only that key reverted a duplicate store gave 40/40 identical runs because ReadDir is sorted and pdqsort deterministic; it is hardening, correctly labelled by T90, not a fourth fixed nondeterminism. F-T104-4 (advisory) the 30-run protocol is the weak instrument, ~1-in-8 odds of a false 'deterministic' reading at the low end; use N>=100 or the unit guard. F-T104-5 (nit) report.go freezes 'split 26/4' into a comment and the split is not reproducible.",
+      "branch": "softhouse/T104-review-t90"
+    },
+    {
+      "id": "T105",
+      "title": "The harness report embeds the ABSOLUTE store path, so two worktrees can never produce byte-identical output",
+      "description": "Raised by T90 as F-T90-2 and correctly kept out of its bounded patch because it CHANGES REPORT CONTENT. The conformance report embeds the absolute path of the vector store. This pipeline routinely asks a reviewer to diff a worker's harness run against a main run - and those two runs are BY CONSTRUCTION in different worktrees, so they can never be byte-identical, no matter how deterministic the iteration order is. T90 just closed the ordering half of byte-reproducibility; this is the other half, and without it the workflow T90 exists to protect still does not work. Make the emitted path relative to the repo root (or otherwise stable across worktrees) WITHOUT losing the provenance a reader needs - a reader must still be able to tell WHICH store was graded. Do not change any verdict, any cell count, any grading behaviour, or the meaning of any exit code. PROVE IT by running the harness from TWO DIFFERENT WORKTREES on the same store and showing byte-identical output, and show the pre-fix runs differ in exactly the path lines. Pair with an independent reviewer.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/conformance/"
+      ],
+      "context": "tier0-harness-schedule-poc",
+      "dependencies": [
+        "T90"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260820-230001, from T90's F-T90-2. NEEDS THE ORACLE. Sequence AFTER T90 merges - same package."
+    },
+    {
+      "id": "T106",
+      "title": "INDEPENDENT review of T97 \u2014 find an interpreter the new probe wrongly refuses",
+      "description": "Paired reviewer for T97. The guard decides whether the harness runs at all; its predecessor's own author-draft falsely refused plain bash, so a false refusal is the failure mode.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        ".softhouse/reviews/",
+        ".softhouse/conformance.sh"
+      ],
+      "context": "tier0-harness-schedule-poc",
+      "dependencies": [
+        "T97"
+      ],
+      "status": "done",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-230001. NEEDS THE ORACLE to run the harness. || local fire 20260820-230001: DONE on softhouse/T106-review-t97 (5 commits, 3 files, +846 lines, nothing outside its own review artefacts). VERDICT MICRO-FIX. F1 (P1) - THE TOKEN IS FORGEABLE ON A REAL INTERPRETER, AND T97's CENTRAL CLAIM IS FALSE. T97 shipped 'every way of not running the probe yields an empty observation and fails CLOSED' verbatim at conformance.sh:96-99. It OMITS THE FAMILY 'the redirection is attempted and FAILS AT RUN TIME'. _conformance_psub_line is the one probe variable NEVER INITIALISED, so when < <(...) cannot be opened, builtin read never runs and the next statement prints the INHERITED value. MEASURED ON REAL BASH 5.3.9 WITH /dev/fd REMOVED (genuinely psub-dead), unmodified harness: clean env -> exit 3 REFUSED; _conformance_psub_line=conformance-psub-live exported -> EXIT 0 ADMITTED. Reproduced on the host with the redirection rewritten to a path that fails open(). CONSEQUENCE IS NOT COSMETIC: a wrongly-admitted run on a psub-dead shell reaches the HARD guards, whose `while read ... done < <(find ...)` loops then RETURN 0 HAVING INSPECTED ZERO FILES - the P-22 vacuous-pass mode the harness's own line 53 cites. Fix is ONE LINE (_conformance_psub_line= inside the eval, a plain assignment, unshadowable), proven to close the forge and to introduce no false refusal. F2 (P2) T97's residual-hijack ruling is WRONG TWICE: `[` is a SECOND hijackable name it never enumerated ([() { return 1; } -> ADMITTED), and hijacks are NOT fail-closed - builtin() { echo conformance-psub-live; } -> ADMITTED on a psub-dead bash. T106's ruling: no fixed point does exist (function lookup precedes builtin lookup for every command word, and builtin/command are themselves command words), the builtin eval change should STAND, but the written defence must be replaced with 'this guard defends against a wrong INVOCATION, never a hostile ENVIRONMENT'. F3/F4/F5 (P3): --help can exit 1, the graded FAIL code, where the file's own convention is EXIT_UNUSABLE; 'admitted AND WORKS' overclaims since no graded run under bash 5.x exists; and T97's rig STRUCTURALLY CANNOT SEE F1. CONFIRMED OF T97: pre-fix reproduced from MAIN's ACTUAL BYTES (sha256 identical to T97's pinned ab2de89) - admitted, then exit 2 with the fabricated /.softhouse/bin/go-env.sh; post-fix bash -r exit 3 with ZERO verdict tokens on 3.2.57 and 5.3.9; NO wrongly-refused interpreter found beyond T97's own, across 26 hostile environments on bash 3.2 and 25 on 5.3.9, with dash/zsh/ksh93/busybox all correctly refused and the POSIXLY_CORRECT=1 and no-/dev/fd refusals verified TRUE; the rig is NOT vacuous - 8 mutations each drove the intended row red for the right reason, including its own anti-inertness checks; exit semantics intact (grade.go returns 1/2/2/0, 3 free); usage() genuinely self-locating; SKILL.md's claim verified BY RELINKING /bin/sh -> bash 5.3.9. F-T97-1: driver's position UPHELD, and it confirmed the follow-up is really parked in tasks.json T93. Invariants checked ON A SCRATCH MERGE INTO CURRENT MAIN (main moved twice mid-review, the second move touching the Go conformance package): vectors/nexus diff empty, contract.go byte-identical, gofmt -l names exactly contract.go, build/vet/test green, conformance PASS exit 0 42 vectors 5576 cells 0 violations 0 NOT RUN, sh -> exit 3 with 0 tokens. [UNVERIFIED] bash 4.x and a complete graded run under bash 5.x - the same gaps T97 declared; T106 did not close them. Committed its own acceptance rig: T106-evidence/prove-token-forgeable.sh, 8 assertions red and green, no container or oracle needed.",
+      "branch": "softhouse/T106-review-t97"
+    },
+    {
+      "id": "T107",
+      "title": "INDEPENDENT review of T91 \u2014 the live twin, and whether any PROMOTED vector's provenance rests on the unhardened gate",
+      "description": "Paired reviewer for T91. T91 reframed a dead-copy cleanup into a live-rig finding; the review must establish the blast radius, not just the fix.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/reviews/",
+        ".softhouse/capture/"
+      ],
+      "context": "tier0-harness-schedule-poc",
+      "dependencies": [
+        "T91"
+      ],
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-230001. NEEDS THE ORACLE."
+    },
+    {
+      "id": "T108",
+      "title": "Adjudicate a direct contradiction in committed evidence \u2014 BSD grep -a in a UTF-8 locale",
+      "description": "T80 reported, and T85 accepted, that `grep -a` is NOT sufficient: BSD grep in a UTF-8 locale matches NOTHING in a file containing an invalid multibyte sequence AND RETURNS 0 - a silent-zero path. That claim is committed on main, it caused LC_ALL=C to be added in two places, and the driver has since repeated it in three worker briefs. T91 tried to reproduce it on the same host and COULD NOT, and reported the non-reproduction rather than repeating the claim. One of these is wrong and both are now in committed evidence, so a future reader will cite whichever they find first. SETTLE IT BY EXPERIMENT: construct the exact file shape (invalid multibyte sequence + the target string), run it under the host's BSD grep, GNU grep, ugrep and whatever else the rigs actually invoke, in a UTF-8 locale and under LC_ALL=C, and record the exit status and match behaviour for each. Then determine what T80 actually observed - a different tool, a different locale, a different file shape, or an error. Correct whichever committed claim is false, wherever it is RESTATED (P-12), and leave a citable record. Do NOT weaken any existing LC_ALL=C hardening even if the original justification turns out to be wrong: fail-closed is still right, but its stated REASON must be true.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/capture/",
+        ".softhouse/patterns.md"
+      ],
+      "context": "tier0-harness-schedule-poc",
+      "dependencies": [
+        "T91"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260820-230001, from T91's non-reproduction of a T80 claim. NEEDS NO ORACLE - pure local tooling. Good cloud-fire work."
+    },
+    {
+      "id": "T109",
+      "title": "The fork-point rig PRINTS the BASE sha256s and never COMPARES them \u2014 the third print-a-digest-without-comparing this run",
+      "description": "Raised by T103 as F-3 (P2) while approving T102, and deliberately NOT taken as a micro-fix because adding a comparison is a PREDICATE CHANGE, and landing a refusal path without driving it red would be the exact defect this run keeps rejecting for. T102 pinned the counterproof baseline to a literal sha in FORK-POINT-SHA, with four loud refusals for a missing / non-hex / abbreviated / not-a-commit value. But a WRONG-BUT-VALID pin is silently accepted: T103 pinned main's tip and the rig scored a green 25/25. T102's own write-up says this cannot be detected and 'nothing can' - which is FALSE, and the disproof is in the rig itself: prove-guards-go-red.sh ALREADY COMPUTES AND PRINTS `BASE run-pass3i.sh sha256 d84ec7bf...` and `BASE promote-vectors sha256 27bb20b4...`. It just never compares them to anything. That is precisely the canary shape T80's P0-A closed (a sha256 printed but never compared, certifying HALF_UP on a HALF_EVEN JVM) and it is now the THIRD occurrence of this exact defect class in this run. FIX: compare the computed BASE digests against committed literals and REFUSE on mismatch, before any proof row runs. DRIVE IT RED (P-22): pin main's tip and show the rig now refuses where T103 got a green 25/25; pin the correct sha and show 25/25 survives. VERIFY ON A SCRATCH MERGE INTO MAIN IN A THROWAWAY CLONE, NOT A WORKTREE - a worktree cannot reproduce this class of defect because its `main` ref stays at the pre-merge tip (T102's finding, T103-confirmed). ALSO fold in T103's other three: F-2, the documented recovery command `git show $(cat .../FORK-POINT-SHA):...` does not work because cat emits the 25-line header - fix at mutate.py:14, prove-promote-guards.py:11-12 and the operator-facing SystemExit at :206-207; F-1, stamp SWEEP.txt with its generating commit instead of asserting a census that its own new prose files invalidate; F-4, `set -u` without `set -e` lets a valid commit lacking the baseline paths write three empty files and score 18/7, indistinguishable from the defect it diagnoses. Correct the 'nothing can' sentence in T102.md - do not soften it.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/capture/t74-multiplesof/T82-guard-proofs/"
+      ],
+      "context": "tier0-harness-schedule-poc",
+      "dependencies": [
+        "T103"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260820-230001, from T103's F-1..F-4. Needs no oracle except to confirm the conformance verdict. Pair with an independent reviewer. T82+T87+T102+T103 are ALREADY MERGED - this hardens what is on main."
+    },
+    {
+      "id": "T110",
+      "title": "A duplicate case_id is SILENTLY GRADED \u2014 the harness inflates its own coverage numbers",
+      "description": "Raised by T104 as F-T104-3 (P1) while APPROVING T90, and correctly kept out of that bounded patch. T104 built a store containing a duplicate case_id and the harness reported '43 parity vectors / 5623 cells / VERDICT PASS / exit 0' WITH NO WARNING. THOSE ARE THE NUMBERS THIS PROGRAM QUOTES AS COVERAGE EVIDENCE - every RESUME.md, every gate write-up and every postmortem cites the parity-vector and graded-cell counts as the measure of what has been proven against the reference oracle. A store that silently double-counts inflates exactly that number, and nothing in the pipeline would notice. Note T90 added `path` as a third comparator key so duplicates ORDER deterministically; T104 measured that this tie-break did NOT go red (ReadDir is sorted, pdqsort deterministic) and classified it as hardening, not a fix. THE REAL DEFECT IS THAT DUPLICATES ARE NOT REJECTED. Make a duplicate case_id a HARNESS ERROR that refuses the run - not a warning, not a dedup, because silently dropping one is the same class of lie as silently counting two. DRIVE IT RED (P-22): reproduce T104's 43/5623 green on main's bytes first, then show the fixed harness refuses that same store, and show the legitimate 42-vector store still gives PASS exit 0 / 42 / 5576 unchanged. Do not change any verdict, cell count or exit-code meaning on a well-formed store. Pair with an independent reviewer.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/conformance/"
+      ],
+      "context": "tier0-harness-schedule-poc",
+      "dependencies": [
+        "T104"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260820-230001, from T104's F-T104-3. NEEDS THE ORACLE to run the harness. Sequence with T105 - same package."
+    },
+    {
+      "id": "T111",
+      "title": "Amend T90's false sweep-completeness claim at source, and the frozen 26/4 comment",
+      "description": "T104's F-T104-1 (P2) and F-T104-5 (nit), both now MERGED ON MAIN and therefore live. (1) T90's handoff states '_test.go files, for map ranges - none'. That is FALSE: structural_test.go:116, :121 and :954 are map ranges. The consequence is nil (test-only, failure-path-only) but the claim sits INSIDE THE SWEEP-COMPLETENESS SECTION, which is exactly where a false claim does damage - P-21, a correction that leaves the attestation wrong is not a correction. Amend it at source AND wherever it is restated (P-12). (2) report.go freezes 'split 26/4' into a code comment; T104 measured 28/2 and 80/20 on the same defect, and established WHY all these numbers agree - the shipped coverage map has exactly two keys, so the split is one biased coin flip per run and the ratio is not a reproducible property. Replace the frozen ratio with the mechanism. (3) While there: record T104's F-T104-4 advisory where a future worker will see it - a 30-run determinism protocol carries roughly a 1-in-8 chance of a false 'deterministic' reading at the low end; N>=100 or the unit guard is the instrument to use. Zero executable change; contract.go untouched; gofmt -l must name exactly contract.go.",
+      "agent_role": "spec_writer",
+      "executor": "agent",
+      "model": "sonnet",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/",
+        "nexus/internal/apps/loanschedule/conformance/report.go"
+      ],
+      "context": "tier0-harness-schedule-poc",
+      "dependencies": [
+        "T104"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260820-230001, from T104's F-T104-1/F-T104-4/F-T104-5. NEEDS NO ORACLE - good cloud-fire work."
+    },
+    {
+      "id": "T112",
+      "title": "Retry of T100 \u2014 apply T101's three findings, and delete main's backwards G-8 UPDATE block in the same commit",
+      "description": "RETRY at opus. T101 REJECTED T100 narrowly, on three sentences, none of them a measurement; T101 reproduced T100's numbers over a WIDER cell set (687 swept / 312 family A / 29 family B, all 10 discriminator rows holding on 341/341 cells) and confirmed the rework is right in substance. Apply exactly these, on top of softhouse/T100-g8-two-families, reading T101's review from its branch (git show softhouse/T101-review-t100:.softhouse/reviews/T101-review-of-T100.md). F-1 (gates.md:1040): 'family A exists at all 12 rates swept' is FALSE - it exists at 11 of 12 and NOT at 600.0%, the rate that DEFINES family B, and it contradicts the section's own discriminator table nine lines earlier at :925. Fix it AND sweep for every other restatement of the same claim - this is P-23 recurring by the corrections-leak route, where the table was scoped and the prose restatement was not, so a fix that lands only at :1040 has reproduced the defect. F-2 (:1204): '11.6x the old bound' has no antecedent because the rewrite deleted every 'MNT 0.25'; against the only bound the section states (MNT 0.23) the true ratio is 12.65x - state the antecedent explicitly or drop the multiple. F-3 (:1181-1185): the exit-code caveat is false for three of four variants - ExitCode() returns 1 on ParityFail/InvariantViolations BEFORE reading FatalReasons (grade.go:154-160), so those exits ARE the G-8 finding; rewrite it so it does not teach the reader to discount an honest signal. THE MERGE HAZARD, WHICH IS THE PART A THREE-DOT DIFF CANNOT SHOW YOU: main gained a 66-line G-8 UPDATE block at main:.softhouse/gates.md:936-998 AFTER your merge base. The driver has since annotated it with two inline CORRECTION blocks, but it must be DELETED as part of this rewrite, in the SAME commit, so the section is not left with a superseded block and its corrections sitting under the authoritative one. Rebase or merge main into your branch FIRST so you can see it. Also fold in T101's five P3 nits and adopt its ruling on the 18-vs-22 dispute: the count is 22, and the cause is a FLOAT - T84's prediction.json stores BtimesA for four cells as the IEEE-754 float 0.5, so a strictly positive ~1e-20 residual read as an exact tie. Record that cause in the gate text. GATE DISCIPLINE UNCHANGED: G-8 stays OPEN; (b) and (c) amend the graded domain of a ratified DEC-n and are hard user gates - do not decide, recommend-as-settled, or pre-implement either. Promote nothing: vectors and nexus diffs must be EMPTY, PIN.json and capabilities.json untouched, contract.go never gofmt'd (G-3, gofmt -l naming exactly contract.go is EXPECTED). Confirm bash conformance.sh (never sh - sh exits 3, which is NOT an oracle outage) gives VERDICT PASS exit 0, 42 parity vectors, 5576 graded cells, 0 invariant violations.",
+      "agent_role": "spec_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/gates.md",
+        ".softhouse/capture/"
+      ],
+      "context": "tier0-harness-schedule-poc",
+      "dependencies": [
+        "T101"
+      ],
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-230001, as the retry of T100 after T101's REJECTED verdict. Needs the oracle only if it re-measures. Pair with an independent reviewer before merge."
+    },
+    {
+      "id": "T113",
+      "title": "Close the forgeable token \u2014 apply T106's F1..F5 to T97 and pass T106's own forge rig",
+      "description": "T106 gave T97 MICRO-FIX but REFUTED ITS CENTRAL CLAIM. Apply exactly T106's findings on top of softhouse/T97-guard-positive-probe. F1 (P1): the guard's shipped sentence at conformance.sh:96-99 - 'every way of not running the probe yields an empty observation and fails CLOSED' - is FALSE. It omits the family 'the redirection is attempted and FAILS AT RUN TIME'. _conformance_psub_line is never initialised, so when < <(...) cannot be opened, builtin read never runs and the next statement prints the INHERITED value; T106 measured exit 0 ADMITTED on a genuinely psub-dead bash 5.3.9 (/dev/fd removed) with _conformance_psub_line=conformance-psub-live exported, against exit 3 REFUSED with a clean env. The fix is ONE LINE - a plain, unshadowable `_conformance_psub_line=` assignment INSIDE the eval - but it is a change to the REFUSAL PREDICATE of the thing that decides PASS, so it gets its own branch and its own red-and-green proof; that is T87's standing ruling and it is why this was not applied inline. THE ACCEPTANCE TEST IS T106's OWN RIG, which you must NOT modify to suit you: git show softhouse/T106-review-t97:.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T106-evidence/prove-token-forgeable.sh - 8 assertions, red and green, no container or oracle needed. Run it pre-fix (it must show the forge succeeding) and post-fix (it must show the forge closed), and report both. Then re-run T97's own 13-assertion prove-interpreter-guard.sh and show no false refusal was introduced - T106 swept 26 hostile environments on bash 3.2 and 25 on 5.3.9 and found none, so a regression here is on you. ALSO FIX, all from T106: F2 (P2) the residual-hijack defence is wrong twice - `[` is a SECOND hijackable name T97 never enumerated ([() { return 1; } admits), and hijacks are NOT fail-closed (builtin() { echo conformance-psub-live; } ADMITS on a psub-dead bash). Keep the `builtin eval` change, which T106 endorses, but REPLACE the written defence with the accurate one: this guard defends against a wrong INVOCATION, never a hostile ENVIRONMENT. Do not overstate the new fix either - state precisely what the one-line assignment does and does not defend. F3 (P3): --help can exit 1, which is the graded FAIL code, where the file's own convention is EXIT_UNUSABLE. F4 (P3): 'admitted AND WORKS' overclaims - no complete graded run under bash 5.x exists; mark it [UNVERIFIED] rather than softening it. F5 (P3): T97's own rig structurally cannot see F1 - say so in the rig, so the next reader does not mistake its green for coverage. Do NOT change the meaning of exit 0/1/2/3, any grading behaviour, any vector, PIN.json or capabilities.json; vectors and nexus diffs must be EMPTY; contract.go never gofmt'd (G-3). Confirm bash conformance.sh gives VERDICT PASS exit 0 / 42 parity / 5576 cells / 0 invariant violations, and sh conformance.sh exits 3 with zero verdict tokens. VERIFY ON A SCRATCH MERGE INTO CURRENT MAIN, not only on the branch (P-24) - main has moved repeatedly this fire, including inside the Go conformance package.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        ".softhouse/conformance.sh"
+      ],
+      "context": "tier0-harness-schedule-poc",
+      "dependencies": [
+        "T106"
+      ],
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-230001, from T106's F1 (P1). NEEDS THE ORACLE to run the harness. Acceptance is T106's own rig, unmodified."
     }
   ]
 }

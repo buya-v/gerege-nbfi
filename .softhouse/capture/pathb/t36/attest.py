@@ -11,8 +11,16 @@ describe one single run rather than being attached to files after the fact.  The
 fail-the-run preconditions (T22 P0-4) execute first; a breach aborts before any capture.
 
 RAW OBSERVED.  This sidecar makes a capture set ADMISSIBLE for review; it does not
-promote anything to the parity vector store — DEC-1 is unratified (gate G-1) and
-promotion is a separate, non-agent decision.
+promote anything to the parity vector store.  Promotion is a separate decision taken
+against the frozen contract's graded domain, and it is refused for these four captures
+for reasons recorded in t76/PROMOTION-DECISION.md (gate G-7).
+
+Program state that used to be HARD-CODED here is now READ, because it went stale and was
+quoted downstream while stale (T77 P1-T77-4): the sidecar said "DEC-1 is at revision 6 and
+UNRATIFIED (gate G-1)" for two fires after DEC-1 reached revision 12 and G-1 closed.  The
+revision comes from .softhouse/vectors/PIN.json and the ratification state from the G-1
+heading in .softhouse/gates.md; if either cannot be read it is recorded as unread, never
+guessed.
 
 Usage: python3 attest.py [tenant]     (default: gerege)
 """
@@ -29,8 +37,33 @@ TENANT = sys.argv[1] if len(sys.argv) > 1 else 'gerege'
 # Which capture set to attest.  'pathb' = the four committed B-0x sets (T22 P0-6 re-capture);
 # 'emiloop' = the T36 EMI re-adjust-loop probes (T22 P1-11, second clause).
 CAPTURE_SET = sys.argv[2] if len(sys.argv) > 2 else 'pathb'
-OUT = os.path.join(HERE, 'out',
-                   'recapture-%s' % TENANT if CAPTURE_SET == 'pathb' else CAPTURE_SET)
+# ATTEST_OUT (added by T76) lets an INDEPENDENT re-run write its own evidence directory
+# instead of overwriting T36's committed capture set.  Re-running a generator over the
+# artefacts it produced last fire destroys the very record a reviewer diffs against.
+OUT = os.environ.get('ATTEST_OUT') or os.path.join(
+    HERE, 'out', 'recapture-%s' % TENANT if CAPTURE_SET == 'pathb' else CAPTURE_SET)
+# T80, converging with recapture.sh: a capture set is filed under the TENANT IT WAS TAKEN
+# FROM, structurally.  For the pathb set the directory name must end in the tenant id, so
+# ATTEST_OUT cannot file a `default` capture under a `gerege` name.  (The emiloop set keeps
+# its historical directory name `out/emiloop`; it is stamped but not name-checked, and that
+# exception is recorded rather than papered over.)
+if CAPTURE_SET == 'pathb':
+    _base = os.path.basename(os.path.normpath(OUT))
+    if not (_base == TENANT or _base.endswith('-' + TENANT)):
+        sys.stderr.write(
+            "ABORT: output directory %r is not named for tenant %r. A capture must be filed "
+            "under the tenant it was taken from; refusing to write %r bytes into a directory "
+            "called %r.\n" % (OUT, TENANT, TENANT, _base))
+        sys.exit(1)
+_stamp = os.path.join(OUT, 'CAPTURED-FROM-TENANT')
+if os.path.exists(_stamp):
+    with open(_stamp) as _fh:
+        _prev = _fh.readline().strip()
+    if _prev != TENANT:
+        sys.stderr.write(
+            "ABORT: %r already holds a capture set taken from tenant %r (see %s); refusing to "
+            "overwrite it with a %r capture.\n" % (OUT, _prev, _stamp, TENANT))
+        sys.exit(1)
 FIN, DB = 'fineract-fineract-1', 'fineract-db-1'
 BASE = 'https://localhost:8443/fineract-provider'
 
@@ -57,6 +90,45 @@ EMILOOP_CAPTURES = [('EL-%d' % p, 'EMI re-adjust-loop probe, principal %d MNT' %
 CAPTURES = PATHB_CAPTURES if CAPTURE_SET == 'pathb' else EMILOOP_CAPTURES
 
 notes = []
+SOFTHOUSE = os.path.normpath(os.path.join(HERE, '..', '..', '..'))   # .softhouse/
+
+
+def _read_dec1_state():
+    """Read DEC-1's revision and ratification state from the files that carry them.
+
+    Two independent sources, neither of them this script's own memory:
+      revision  <- .softhouse/vectors/PIN.json  ("dec1_revision")
+      ratified  <- .softhouse/gates.md          (the G-1 CLOSED/RATIFIED heading)
+    An unreadable source yields None and a note, never a guess.
+    """
+    rev = None
+    pin = os.path.join(SOFTHOUSE, 'vectors', 'PIN.json')
+    try:
+        with open(pin) as fh:
+            rev = json.load(fh).get('dec1_revision')
+    except Exception as exc:                                         # noqa: BLE001
+        notes.append('UNREAD dec1_revision — %s (%s)' % (exc, pin))
+    ratified = None
+    gates = os.path.join(SOFTHOUSE, 'gates.md')
+    try:
+        with open(gates) as fh:
+            txt = fh.read()
+        if 'G-1 · **CLOSED — RATIFIED**' in txt:
+            ratified = True
+        elif 'G-1 ·' in txt:
+            ratified = False
+    except Exception as exc:                                         # noqa: BLE001
+        notes.append('UNREAD dec1 ratification state — %s (%s)' % (exc, gates))
+    if ratified is None:
+        notes.append('UNREAD dec1 ratification state — no G-1 heading matched in %s' % gates)
+    return rev, ratified
+
+
+DEC1_REVISION, DEC1_RATIFIED = _read_dec1_state()
+DEC1_PHRASE = 'DEC-1 is at revision %s and %s (gate G-1 %s)' % (
+    DEC1_REVISION if DEC1_REVISION is not None else 'UNREAD',
+    {True: 'RATIFIED', False: 'UNRATIFIED', None: 'of UNREAD ratification state'}[DEC1_RATIFIED],
+    {True: 'CLOSED', False: 'open', None: 'state unread'}[DEC1_RATIFIED])
 
 
 def sh(cmd):
@@ -89,13 +161,26 @@ def now():
 canary = os.path.join(PATHB, 't22-audit', 'req', 'calc-pmode2-gerege.json')
 pre = subprocess.run('CANARY_REQ=%s sh %s %s' % (canary, os.path.join(HERE, 'preconditions.sh'), TENANT),
                      shell=True, capture_output=True, text=True)
-os.makedirs(OUT, exist_ok=True)
-with open(os.path.join(OUT, 'preconditions.txt'), 'w') as fh:
-    fh.write(pre.stdout + pre.stderr)
+# THE GATE COMES FIRST, AND NOTHING IS WRITTEN BEFORE IT (T85 F-1).  T80 put the makedirs/stamp/
+# transcript writes ABOVE this test, so a breached run printed "no capture attempted, no attestation
+# written" while having ALREADY stamped a committed capture set with the wrong tenant and replaced
+# its precondition transcript.  `python3 attest.py default emiloop` did exactly that to eleven
+# `gerege` captures: the message was true about captures and false about writes.  A breached run must
+# leave the filesystem exactly as it found it, because the directory it would touch may be evidence.
 if pre.returncode != 0:
     sys.stderr.write(pre.stdout + pre.stderr)
-    sys.stderr.write('\nABORT: preconditions breached — no capture attempted, no attestation written.\n')
+    sys.stderr.write('\nABORT: preconditions breached — no capture attempted, no attestation written, '
+                     'and nothing at all written into %r.\n' % OUT)
     sys.exit(1)
+
+os.makedirs(OUT, exist_ok=True)
+# Provenance stamp: the directory records the tenant it was captured from, so a later run for a
+# different tenant is refused above rather than silently overwriting (the four response bodies
+# are byte-identical across rounding modes, so no digest downstream could tell them apart).
+with open(_stamp, 'w') as fh:
+    fh.write(TENANT + '\n')
+with open(os.path.join(OUT, 'preconditions.txt'), 'w') as fh:
+    fh.write(pre.stdout + pre.stderr)
 
 # ------------------------------------------------------------------ the oracle
 image_id = sh("docker image inspect fineract:latest --format '{{.Id}}'")
@@ -258,12 +343,27 @@ for cid, label, reqdir, reqname, respname in CAPTURES:
 att = {
     '_schema': 'gerege-nbfi/pathb-attestation/v1',
     '_status': 'RAW OBSERVED — admissibility attestation only. NOTHING PROMOTED to the parity '
-               'vector store; DEC-1 is at revision 6 and UNRATIFIED (gate G-1).',
-    '_closes': ['T22 P0-3 (attestation sidecar)', 'T22 P0-4 (fail-the-run preconditions)',
-                'T22 P0-6 (production-settings tenant re-capture)'],
+               'vector store. ' + DEC1_PHRASE + '.',
+    '_dec1': {'revision': DEC1_REVISION,
+              'revision_source': '.softhouse/vectors/PIN.json:dec1_revision',
+              'ratified': DEC1_RATIFIED,
+              'ratified_source': '.softhouse/gates.md — the G-1 heading'},
+    # Not "_closes": a RE-RUN of this generator closes nothing.  The items below were closed
+    # by T36 on fire 20260818-230002 and independently re-verified by T76/T77; recording them
+    # as closed-by-whom is true whoever runs this script, which "_closes" was not.
+    '_closed_by': {'T22 P0-3 (attestation sidecar)': 'T36, commit 78c5bda',
+                   'T22 P0-4 (fail-the-run preconditions)':
+                       'T36, commit c3bbf26 — the SCRIPT; its CALLER recapture.sh was still '
+                       'unable to abort until T80 (T77 P0-T77-2)',
+                   'T22 P0-6 (production-settings tenant re-capture)':
+                       'T36, commits fab040a and 60c08ad'},
     'capture_set': 'pathb-B01..B04' if CAPTURE_SET == 'pathb' else 'pathb-emiloop-probes',
     'capture_path': 'Path B — running Fineract server (REST + PostgreSQL)',
-    'produced_by': {'task': 'T36', 'branch': 'softhouse/T36-pathb-admissibility',
+    # ATTEST_TASK / ATTEST_BRANCH (added by T76): a sidecar produced by a LATER task must
+    # not claim T36 produced it.  Provenance that names the wrong author is a false record,
+    # even when every number in it is right.
+    'produced_by': {'task': os.environ.get('ATTEST_TASK', 'T36'),
+                    'branch': os.environ.get('ATTEST_BRANCH', 'softhouse/T36-pathb-admissibility'),
                     'generated_at_utc': now(),
                     'generator': 't36/attest.py',
                     'preconditions_script': 't36/preconditions.sh',
@@ -340,7 +440,9 @@ att = {
     'products_as_persisted': products,
     'captures': captures,
     'does_not_license': [
-        'promotion to the parity vector store (DEC-1 unratified, gate G-1)',
+        'promotion to the parity vector store — an admissibility attestation is not a promotion '
+        'decision. Promotion of these four is refused on graded-domain grounds recorded in '
+        't76/PROMOTION-DECISION.md (gate G-7), not on DEC-1 ratification: ' + DEC1_PHRASE,
         'any claim about cutover, which is a hard user gate',
         'any claim about behaviour not exercised here: multi-disbursement, charges, down payments, '
         'repayments, delinquency, COB or anything clock-sensitive',

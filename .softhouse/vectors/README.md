@@ -724,11 +724,44 @@ tasks.
 .softhouse/conformance.sh --prove         # the harness's own red/green mutation proofs
 ```
 
+**Run it with `bash`, never `sh`.** `bash .softhouse/conformance.sh` or
+`./.softhouse/conformance.sh` (the shebang selects bash). `sh conformance.sh`,
+`bash --posix conformance.sh`, `dash` and `zsh` are all refused up front with
+**exit 3** — see below for why that code exists.
+
 Exit **0** requires: every graded vector passed, **at least one parity vector was
 graded**, and the reference oracle was confirmed reachable. Exit **1** is a
 mismatch or a violated invariant. Exit **2** is "unusable, so no verdict is
 available" — no implementation, unreachable oracle, zero parity vectors, an
 inadmissible or refused vector.
+
+Exit **3** is **WRONG INTERPRETER: the harness never started.** It is not a
+verdict. Nothing was graded, no vector was read, and the reference oracle was
+never contacted, so exit 3 says nothing about the corpus and nothing about the
+oracle — in particular **the oracle is not down; the invocation is wrong.** It
+exists because `sh .softhouse/conformance.sh` used to die at the first process
+substitution and **exit 2**, and 2 is both this harness's "oracle unusable" code
+and `/softhouse-program`'s oracle-is-down stop condition, so a shell-selection
+typo was indistinguishable from a real outage and could park every vector task
+under a reason that was not true (found independently by T76 and T77; closed by
+T81). Under `zsh` it was worse: `BASH_SOURCE` is unset, `SCRIPT_DIR` resolved
+elsewhere, and the harness printed its own `EXIT 2 — the harness is unusable` line
+over a fabricated diagnosis.
+
+The guard keys on the **capability**, not on the shell's name: it requires
+`BASH_VERSION` to be set *and* process substitution to actually work, because
+bash 3.2 — which is both `/bin/sh` and `/bin/bash` on macOS — switches process
+substitution off in POSIX mode, and it enters POSIX mode both as `sh` and under
+`--posix`. Those runs are bash and still cannot execute the file. 3 was chosen
+because 0/1/2 are the verdict codes, 126/127 are the shell's "cannot
+execute"/"not found", and 128+n is death by signal.
+
+| exit | meaning | is it a verdict? |
+| ---- | ------- | ---------------- |
+| 0 | every graded vector passed, ≥1 parity vector graded, oracle reachable | yes — PASS, never "safe to cut over" |
+| 1 | a mismatch or a violated property invariant | yes — FAIL |
+| 2 | harness / corpus / oracle unusable, incl. **oracle unreachable** | no — "no trustworthy verdict is available" |
+| 3 | **wrong interpreter**; the harness never started, oracle never contacted | no — and **not** an oracle outage |
 
 A PASS means **"matches the reference oracle on captured vectors, within the graded
 domain"**. It never means safe to cut over. Cutover is a `user` gate.

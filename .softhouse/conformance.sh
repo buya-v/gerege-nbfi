@@ -14,14 +14,93 @@
 #   2  the harness, the corpus or the oracle is unusable: no Go toolchain, no
 #      implementation to grade, an unreachable oracle, zero parity vectors, an
 #      inadmissible vector, a refused vector, a failed HARD guard.
+#   3  WRONG INTERPRETER — the harness never started. This file was handed to a
+#      shell that cannot execute it: a POSIX sh, dash, zsh, or a bash with process
+#      substitution switched off, which is what BOTH `sh conformance.sh` and
+#      `bash --posix conformance.sh` produce on bash 3.2 (macOS). Nothing was
+#      graded, no vector was read, and the reference oracle was never contacted —
+#      so 3 says NOTHING about the corpus and NOTHING about the oracle. The fix is
+#      always the same: re-run it under bash, `bash .softhouse/conformance.sh` or
+#      `./.softhouse/conformance.sh`.
 #
-# There is no fourth code and no silent success. In particular an empty vector set
-# is 2, not 0: a harness that reported PASS over zero vectors would be worse than
-# no harness at all.
+# 0, 1 and 2 are the verdict codes and there are still only three of them; 3 is not
+# a verdict, it is a refusal to start, and it is deliberately NOT 2 so that a
+# shell-selection mistake can never be mistaken for an oracle outage. There is no
+# silent success: an empty vector set is 2, not 0, because a harness that reported
+# PASS over zero vectors would be worse than no harness at all.
 #
 # "The oracle" here means the FINERACT REFERENCE IMPLEMENTATION we grade Go output
 # against. Oracle Database is a prohibited product in this program and appears
 # nowhere in this stack. PostgreSQL is the only permitted database.
+
+# ---------------------------------------------------------------------------
+# INTERPRETER GUARD. This is the FIRST EXECUTABLE STATEMENT IN THE FILE and it
+# must stay first. It runs before any shell option is set, before a vector file is
+# opened, before the Go toolchain is looked for and before the oracle is probed,
+# so it cannot swallow, delay, or reassign a verdict: on the path where it fires,
+# no verdict has been computed and none is printed.
+#
+# WHY IT EXISTS (T76 and T77 found this independently in the same fire).
+# `sh .softhouse/conformance.sh` used to die at the first process substitution
+# (the `done < <(find …)` in guard_no_float_in_vectors) with a bash syntax error
+# and **exit 2** — and 2 is this harness's "unusable / oracle unreachable" code AND
+# the /softhouse-program driver's oracle-is-down stop condition. So a one-word
+# shell-selection typo was indistinguishable from a genuine oracle outage and could
+# park every vector task in the program under a reason that was not true. Under
+# `zsh` it was worse: BASH_SOURCE is unset, SCRIPT_DIR resolved to the wrong
+# directory, the toolchain was therefore "not found", and the harness printed its
+# OWN "EXIT 2 — the harness is unusable" line over a diagnosis that was fiction.
+#
+# WHAT IT TESTS, and why "is this bash?" is not enough:
+#   (a) BASH_VERSION unset  →  not bash at all (dash, zsh, ksh, busybox ash).
+#   (b) BASH_VERSION set is NOT sufficient. bash 3.2 — which is BOTH /bin/sh and
+#       /bin/bash on macOS — disables process substitution in POSIX mode, and it
+#       enters POSIX mode when invoked as `sh` and under `--posix`. Those runs ARE
+#       bash by every name test and still cannot parse this file. So the guard
+#       feature-tests the construct itself: if `< <(…)` does not work HERE, this
+#       shell cannot run this file, whatever it calls itself. Equally, a future
+#       bash where POSIX mode keeps process substitution (5.1+) passes the test and
+#       is correctly left alone — the guard keys on the capability, not on the mode.
+#   The eval runs in a SUBSHELL so that a shell which aborts on a syntax error in a
+#   special built-in kills only the subshell. It is reached only once BASH_VERSION
+#   is known to be set, so that eval is always bash's own eval.
+# ---------------------------------------------------------------------------
+EXIT_WRONG_INTERPRETER=3
+conformance_shell_why=""
+if [ -z "${BASH_VERSION:-}" ]; then
+  # Reported exactly as observed. zsh, for instance, HAS process substitution but
+  # is still fatal here (BASH_SOURCE unset -> SCRIPT_DIR wrong -> a fabricated
+  # "no Go toolchain" exit 2), so the diagnosis must not claim a missing feature
+  # this shell actually has. A guard that says the wrong true-sounding thing is
+  # how the next reader is sent to the wrong place.
+  conformance_shell_why="BASH_VERSION is unset, so this shell is not bash at all."
+elif ! ( eval 'while read -r _conformance_probe; do :; done < <(printf %s "")' ) >/dev/null 2>&1; then
+  conformance_shell_why="this IS bash ${BASH_VERSION}, but process substitution '< <(...)' does not work in it."
+fi
+if [ -n "$conformance_shell_why" ]; then
+  printf '%s\n' \
+    "conformance: WRONG INTERPRETER — this harness requires bash, and the shell that" \
+    "conformance: was handed this file cannot execute it." \
+    "conformance:   $conformance_shell_why" \
+    "conformance:" \
+    "conformance: THE HARNESS NEVER STARTED. Nothing was graded, no vector was read, and" \
+    "conformance: the reference oracle (Fineract) was NEVER CONTACTED. This is not a" \
+    "conformance: verdict and it is not evidence about the oracle. THE ORACLE IS NOT DOWN;" \
+    "conformance: the invocation is wrong. Do NOT read this as exit 2 (harness/corpus/" \
+    "conformance: oracle unusable) and do NOT park a task on an oracle-outage reason." \
+    "conformance:" \
+    "conformance: FIX — re-run it under bash:" \
+    "conformance:     bash .softhouse/conformance.sh" \
+    "conformance:     ./.softhouse/conformance.sh        (the shebang selects bash)" \
+    "conformance: 'sh conformance.sh' and 'bash --posix conformance.sh' are BOTH wrong on" \
+    "conformance: bash 3.2: invoked either way, bash switches process substitution off." \
+    "conformance:" \
+    "conformance: EXIT 3 — wrong interpreter. See the EXIT CODES table at the top of this" \
+    "conformance: file and the 'Running it' section of .softhouse/vectors/README.md." >&2
+  exit "$EXIT_WRONG_INTERPRETER"
+fi
+unset conformance_shell_why
+
 set -u -o pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -62,7 +141,12 @@ say()  { printf '%s\n' "$*"; }
 warn() { printf '%s\n' "$*" >&2; }
 
 usage() {
-  sed -n '2,30p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+  # 2,34 is EXACTLY the header comment block, which now runs to "PostgreSQL is the
+  # only permitted database." on line 34. It was '2,30p' when the block ended at 24,
+  # so --help trailed six lines of raw shell (`set -u -o pipefail`, SCRIPT_DIR=…).
+  # Re-anchored on the block rather than widened, so the new exit code 3 is in
+  # --help and the stray code is not. Nothing else about usage changed.
+  sed -n '2,34p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
 }
 
 # ---------------------------------------------------------------------------

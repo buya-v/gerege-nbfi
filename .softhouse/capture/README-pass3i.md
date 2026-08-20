@@ -40,8 +40,8 @@ eight references to nine. Three checks are added and one is replaced by a strong
 | 10–13 | all nine rig calibrations reproduce their committed observation cell for cell, `inputs` and tenant id included; each reference artefact present at its recorded sha256 | earlier passes + `P-CAL-MNT5M` |
 | 14–15 | PATH IDENTITY on every case; mechanism columns present and non-empty | pass 3h |
 | **16** | **FIELD SEPARATION** — an expected per-id `(decimalPlaces, currencyInMultiplesOf, installmentAmountInMultiplesOf)` table, **plus** a check that the capture contains a currency-only case *and* an installment-only case | **pass 3i** |
-| **17** | **MathContext precision from an EXHAUSTIVE per-id table; an unregistered id fails the run** | **pass 3i** |
-| **18** | **every `-p12` case is classified as a discrimination probe in the sidecar and may not appear under `parityCandidateCaptureIds`** | **pass 3i** |
+| **17** | **MathContext precision from a HAND-WRITTEN per-id table; an id it does not register fails the run, and so does an entry this run does not capture** | **pass 3i**, table corrected by **T82** |
+| **18** | **every `-p12` case actually runs below precision 19 and every case below 19 is named `-p12`; the sidecar classifies them as discrimination probes, separately from `parityCandidateCaptureIds`** | **pass 3i**, corrected by **T82** |
 
 ### Why 4b exists
 
@@ -59,6 +59,17 @@ production precision and passed. Pass 3i deliberately carries precision-12 compa
 lookup would let a **discrimination probe validate as though it were a parity candidate** — the exact
 confusion `CLAUDE.md` warns about for the pass-1 and pass-2 corpus.
 
+**CORRECTED BY T82 (T75 defect N4).** As pass 3i first shipped, this section's claim was NOT TRUE of
+the code. The table was **built by looping over `EXPECTED_IDS`** and filling each missing entry from
+the id's own suffix (`endswith('-p12') -> 12, else 19`), so `_unregistered` was **empty by
+construction** and the "unregistered id fails the run" exit was **unreachable**. That is the same
+default pass 3h had, moved one layer down and keyed on a string suffix — a **P-15 violation inside the
+check advertised as curing P-15**. T82 wrote the table out by hand, added the stale-entry direction,
+and **demonstrated all three halves red**; transcript in
+`.softhouse/capture/t74-multiplesof/T82-guard-proofs/TRANSCRIPT.txt`. The same transcript runs the
+identical mutation through the OLD self-constructing table and shows it **exit 0**, which is what
+makes the correction a fix rather than a restatement.
+
 ### Why 16 is written to be falsifiable
 
 The defect this pass exists to fix is one field feeding two JSON keys. If a later edit re-aliases
@@ -75,6 +86,17 @@ Each of these was actually run by task T74; transcripts in the T74 handoff.
 | append the same comment to **both** copies, with `git update-index --assume-unchanged` silencing the checkout so preconditions 3 **and** 4 both pass | **exit 1**, precondition **4b** (`sha256 00d08ef6… expected bf397f0b…`) |
 | re-alias `CurrencyData.inMultiplesOf` back onto `installmentMultiplesOf`, exactly as passes 3–3h had it | **exit 1**, precondition **16**, naming all eleven affected cases |
 | leave a `-p12` case named `-p12` but make it run at precision 19 | **exit 1**, precondition **17** (`must run at precision 12, got 19`) |
+
+**T82 added five more, because T75 found that two of pass 3i's guards could not go red at all**
+(`T82-guard-proofs/TRANSCRIPT.txt`, 16 outcomes, all as expected):
+
+| attack | result |
+|---|---|
+| add a case to `EXPECTED_IDS` **and to the capture** and forget `CASE_PRECISION` | **exit 1**, precondition **17** (`no expected MathContext precision registered for [...]`) |
+| the **same** mutation against the pre-T82 self-constructing table | **exit 0** — the counterproof that the old guard was dead |
+| leave a stale `CASE_PRECISION` entry for a case this run does not capture | **exit 1**, precondition **17** (`registers [...] which this run does not capture`) |
+| register a **non-`-p12`** case at precision 12 and run it there, so 17 is satisfied | **exit 1**, precondition **18** (`the cases named -p12 are [...] but the cases actually running below precision 19 are [...]`) |
+| run both counterfactual arms at a **non-ratified** rounding mode | **exit 1**, `build-counterfactuals.py` — which the pre-T82 chained comparison **passed** |
 
 The falsification was performed on a **scratch clone** of the pinned checkout at `/tmp`, never on
 `/Users/buv/fineract`, which was verified clean and at `426a23544e…` afterwards.

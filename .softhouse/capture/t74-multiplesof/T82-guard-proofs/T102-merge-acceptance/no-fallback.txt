@@ -1,0 +1,25 @@
+T102 — FORK-POINT-SHA has NO computed fallback. All four bad states abort with exit 2
+before any proof row runs. Run in the throwaway clone /tmp/t102-clone.
+
+--- 1. file MISSING ---------------------------------------------------------
+exit=2
+FATAL: /tmp/t102-clone/.softhouse/capture/t74-multiplesof/T82-guard-proofs/FORK-POINT-SHA is missing.
+       The counterproof baseline is a LITERAL sha and this rig has NO computed fallback:
+       `main:`, `merge-base main HEAD` and every other moving ref resolve to code that
+       CONTAINS THE FIX once this branch is merged. Restore the file; do not substitute a
+       computed ref. See T102.
+
+--- 2. file UNPARSEABLE (not hex) -------------------------------------------
+exit=2
+FATAL: /tmp/t102-clone/.softhouse/capture/t74-multiplesof/T82-guard-proofs/FORK-POINT-SHA does not contain a 40-hex commit sha (read: 'not-a-sha').
+       Refusing to guess a baseline. See T102.
+
+--- 3. ABBREVIATED sha (7 chars) -------------------------------------------
+exit=2
+FATAL: /tmp/t102-clone/.softhouse/capture/t74-multiplesof/T82-guard-proofs/FORK-POINT-SHA must hold a FULL 40-hex sha; got 7 chars ('8da4b83').
+       An abbreviated sha can become ambiguous as the repo grows. See T102.
+
+--- 4. well-formed sha that is NOT A COMMIT here ----------------------------
+exit=2
+FATAL: deadbeefdeadbeefdeadbeefdeadbeefdeadbeef is not a commit in this repository.
+       The pinned fork point must be reachable to extract the pre-fix bytes. See T102.

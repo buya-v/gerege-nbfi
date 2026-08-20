@@ -172,6 +172,8 @@ storing would corrupt the vector.
 
 ```sh
 sh   t36/preconditions.sh gerege     # 15 fail-the-run assertions        (T22 P0-4)
+                                     # HARDENED BY T76 - see below; the canary is now
+                                     # pinned by CONTENT and its expectation is a CONSTANT
 python3 t36/attest.py gerege pathb   # preconditions + capture + attestation.json (T22 P0-3, P0-6)
 sh   t36/rundiff.sh                  # number-by-number diff vs the committed corpus
 sh   t36/run-invariants.sh           # T22's ten property invariants
@@ -183,3 +185,118 @@ python3 t36/t36_emiloop_verdict.py   # loop-fired verdict vs the no-loop model
 ```
 
 Findings and their evidence: `PATHB-REPORT.md`.
+
+---
+
+## HARDENED by T76 (2026-08-20) — the preconditions could be talked out of failing
+
+T22 P0-4 asked that the recipe **fail the run** rather than sit in prose, and T36 delivered that. Two
+ways remained to make it pass while the arithmetic in force was the wrong one. Both are closed, and both
+closures are demonstrated by an attack transcript rather than asserted:
+
+| attack | what it tried | result | transcript |
+|---|---|---|---|
+| A | capture on the stock `default` tenant | **exit 1, 5 breaches** (Kolkata, `rounding-mode=6`, HALF_EVEN in force, MySQL-era `schema_connection_parameters`, canary `20925.04`) | `t76/out/attack-A-default.txt` |
+| B | `CANARY_EXPECT=20925.04` — tell the script HALF_EVEN is what it should expect | **CORRECTED BY T80.** T76's transcript did not run the command in this caption: it ran a *decoy* variable, `CANARY_EXPECT_OVERRIDE`, which T76 itself had introduced and which no attacker would set, and its documented count of 6 breaches did not reproduce (T77 measured **5**). The tripwire now watches `CANARY_EXPECT` itself, and the caption's own command now measures **exit 1, 6 breaches** on `default` and **exit 1, 1 breach** on `gerege` | `t80/out/attack-4a-expect-override-default-sh.txt`, `t80/out/attack-4b-expect-override-gerege-sh.txt`; the now-inert decoy: `t80/out/attack-4c-decoy-variable-sh.txt` |
+| C | swap the canary for a request that is **not** a half-minor-unit tie (principal `1162502.78`), so `20925.05` comes back under either mode | **THIS CLOSURE WAS FALSE; SUPERSEDED BY T80.** The "content pin" was four `grep -qF` **prefix** matches and a sha256 that was **printed but never compared**. T77 defeated it with one character (`1162502.5` → `1162502.55`) and reached *ALL PRECONDITIONS HOLD, exit 0* — and, on the HALF_EVEN `default` tenant, *PASS effective rounding mode canary (= HALF_UP)*. The request is now pinned by **digest comparison** against a literal in the script, and a mismatch means the canary is **not sent at all** | superseded transcript `t76/out/attack-C-swapped-canary.txt`; live closure `t80/out/attack-2a-mutated-canary-gerege-sh.txt`, `t80/out/attack-2b-mutated-canary-default-sh.txt`, `t80/out/attack-3a-swapped-canary-gerege-sh.txt` |
+| D | omit the canary entirely | **exit 1** — "A DB row is not proof of the mode in force" | `t76/out/attack-D-nocanary.txt` |
+
+The honest run on `gerege` still exits **0** with **22 PASS** and no FAIL (`t76/out/preconditions-gerege.txt`).
+
+**Two small generalisations to `t36/attest.py`, for provenance rather than function:** `ATTEST_OUT` lets a
+later task write its own evidence directory instead of overwriting the capture set a reviewer diffs
+against, and `ATTEST_TASK` / `ATTEST_BRANCH` stop a sidecar produced by a later task from claiming T36
+produced it. Default behaviour is byte-for-byte unchanged.
+
+**One operational note that cost a round trip:** `conformance.sh` has a `#!/bin/bash` shebang and uses
+process substitution. Invoked as `sh .softhouse/conformance.sh` it dies with a syntax error at line 104 and
+**exits 2** — which is the harness's own "nothing was graded" code and reads exactly like a real fatal
+verdict. Run it as `bash .softhouse/conformance.sh` or `./.softhouse/conformance.sh`.
+
+---
+
+## HARDENED by T80 (2026-08-20) — the canary did not bite, and the abort was unreachable
+
+T77 rejected T76's §3 by **attacking it**, which is the only test that means anything here. Two P0s, both
+now closed and both closed by a run rather than by a sentence. Every transcript below is the verbatim
+output of `t80/run-attacks.sh` / `t80/happy-path.sh`, exit code included.
+
+**P0-A — the canary is pinned by DIGEST COMPARISON, not by substring.** `grep -qF '"principal": 1162502.5'`
+also matches `1162502.55`, and `1162502.55 × 0.018 = 20925.0459` is **not** a half-minor-unit tie, so it
+answers `20925.05` under HALF_UP *and* HALF_EVEN. The assertion was a tautology. `preconditions.sh` now
+computes the sha256 of the file it is about to POST and compares it to the literal
+`2a6621be…52154` recorded in the script. Two operands, only one of which a caller can reach.
+On mismatch the canary is **not sent**, so the sentence *"PASS effective rounding mode canary … (= HALF_UP)"*
+is unreachable except on the exact pinned tie.
+
+**P0-B — `recapture.sh` can now actually abort, and files its output under the tenant it used.** `bad()`
+writes FAIL to **stderr**; the old gate `tee`'d only **stdout** and grepped that, so its `grep -c '^  FAIL'`
+was always `0` and the ABORT was dead code. T77 ran `TENANT=default sh recapture.sh` and got five breached
+preconditions — including a canary that **404'd**, i.e. the mode in force was never established — no abort,
+all four captures taken, exit 0, written into a **hard-coded** `recapture-gerege` directory. The gate now
+tests the **exit status** of `preconditions.sh` and, independently, greps a transcript that captures **both**
+streams; and `O` derives from `$TENANT`, an explicit `RECAPTURE_OUT` must still be *named* for the tenant,
+and a `CAPTURED-FROM-TENANT` stamp refuses a cross-tenant overwrite.
+
+| # | attack | result | transcript (`t80/out/`) |
+|---|---|---|---|
+| 1a | `TENANT=default sh t36/recapture.sh` | **exit 1**, 5 breaches, `ABORT`, **zero** captures, filed under `recapture-default` | `attack-1a-wrong-tenant-sh.txt` |
+| 1b | `TENANT=default RECAPTURE_OUT=…/recapture-gerege …` | **exit 1** at the name guard, *before* the preconditions run | `attack-1b-wrong-tenant-into-gerege-dir-sh.txt` |
+| 1c | directory already stamped `gerege`, re-used for a `default` capture | **exit 1** at the stamp | `attack-1c-stamp-mismatch-sh.txt` |
+| 2a | canary principal `1162502.5` → `1162502.55`, tenant `gerege` | **exit 1**, 1 breach: `DIGEST MISMATCH`, both digests named | `attack-2a-mutated-canary-gerege-sh.txt` |
+| 2b | the same mutation on the HALF_EVEN `default` tenant | **exit 1**, 5 breaches; the HALF_UP PASS line is **absent** | `attack-2b-mutated-canary-default-sh.txt` |
+| 3a | canary swapped for another committed, valid, non-tie request | **exit 1**, digest mismatch, canary not sent | `attack-3a-swapped-canary-gerege-sh.txt` |
+| 3b/3c | canary path missing / unset | **exit 1** each | `attack-3b-…`, `attack-3c-…` |
+| 4a/4b | `CANARY_EXPECT=20925.04` on `default` / `gerege` | **exit 1**, 6 and 1 breaches | `attack-4a-…`, `attack-4b-…` |
+| 4c | T76's decoy `CANARY_EXPECT_OVERRIDE` | **exit 0** — it is now inert, as it should be | `attack-4c-decoy-variable-sh.txt` |
+| 4 | every attack re-run with the recipe under `bash` instead of `sh` | **11/11 transcripts byte-identical** after normalising the interpreter name | `attack-4-shell-invariance.txt` |
+| 5 | happy path on `gerege` | **exit 0**, **22 PASS / 0 FAIL**, four captures **byte-identical across six independently produced sets** | `attack-5-happy-path.txt` |
+
+Reproduce the whole thing:
+
+```sh
+sh   .softhouse/capture/pathb/t80/run-attacks.sh      # SH=sh   by default
+SH=bash bash .softhouse/capture/pathb/t80/run-attacks.sh
+sh   .softhouse/capture/pathb/t80/shell-invariance.sh
+sh   .softhouse/capture/pathb/t80/happy-path.sh
+```
+
+### Amended after T85's review (MICRO-FIX)
+
+Two P1s, both proved by a before/after run rather than asserted:
+
+* **`attest.py` wrote provenance before its gate.** The `makedirs` / `CAPTURED-FROM-TENANT` /
+  `preconditions.txt` writes sat *above* the `pre.returncode` test, so `python3 attest.py default
+  emiloop` printed *"no capture attempted, no attestation written"* while stamping eleven `gerege`
+  captures as `default` and replacing their HALF_UP transcript. The `emiloop` set is reachable
+  because it is exempt from the directory-**name** check. The gate now runs first and a breached run
+  writes nothing. Proof: `sh t80/prove-f1.sh` → `t80/out/F1-attest-gate-order.txt`.
+* **`preconditions.sh` died instead of firing when P7 failed.** `'$PIN_PG_MAJOR_MINOR…'` ran the
+  identifier into U+2026, so under `set -u` the script aborted at that line: P8-P15 never ran,
+  **including the entire rounding-mode canary**, and no breach summary printed. Now
+  `${PIN_PG_MAJOR_MINOR}`. Proof: `sh t80/prove-f2.sh` → `t80/out/F2-p7-death-sh.txt` (10 PASS / 0
+  FAIL / no canary, versus 21 PASS / 1 FAIL / canary run).
+
+Also, one token in two places: `LC_ALL=C grep -ac`. BSD grep in a UTF-8 locale silently matches
+**nothing** in a file containing an invalid multibyte sequence, which would make `recapture.sh`'s
+FAIL-count operand return 0 on a breached run.
+
+**The `sh` / exit-2 note above still stands and is NOT fixed here:** invoke the conformance harness only as
+`bash .softhouse/conformance.sh`. Under a non-bash interpreter it exits **3** since the guard merged to main (**2** before that) —
+which a program driver would read as a legitimate oracle-down park. That is a different script (T77
+P2-T77-5) and outside T80's scope.
+
+### The T76 additions to the recipe
+
+```sh
+# independent re-capture into a T76-owned directory, with its own attestation sidecar
+ATTEST_TASK=T76 ATTEST_BRANCH=softhouse/T76-pathb-gerege-recapture \
+  ATTEST_OUT="$PWD/t76/out/recapture-gerege" python3 t36/attest.py gerege pathb
+
+# the ten T22 invariants, then T76's I7 mirror-column invariant the ten do not cover
+python3 t22-audit/t22_invariants.py t76/out/recapture-gerege/B-0*-raw.json
+python3 t76/t76_mirror_invariant.py t76/out/recapture-gerege/B-0*-raw.json
+
+# B-01 vs the PROMOTED Path A vector P-MNT-1M2, and both differentials, in exact minor units
+python3 t76/t76_crosscheck.py
+```

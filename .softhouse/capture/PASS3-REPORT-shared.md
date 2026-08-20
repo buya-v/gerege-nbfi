@@ -25,11 +25,19 @@ against the committed oracle transcript.
 > **Recorded by task T74, 2026-08-20, after checking the claim rather than repeating it.**
 >
 > **No vector in `.softhouse/vectors/` derives from this capture, and none ever did.** T74 read every
-> file in `.softhouse/vectors/loanschedule/` and resolved each one's `provenance.capture_ref`: 36
+> file in `.softhouse/vectors/loanschedule/` and resolved each one's `provenance.capture_ref`: **42**
 > parity vectors, naming `capture-prod3b-raw.json` (11), `capture-prod3c-raw.json` (2),
-> `capture-prod3d-raw.json` (2), `capture-prod3e-raw.json` (14), `capture-prod3f-raw.json` (3) and
-> `capture-prod3g-raw.json` (4); plus 4 `contract-refusal` vectors, which carry no capture at all.
+> `capture-prod3d-raw.json` (2), `capture-prod3e-raw.json` (14), `capture-prod3f-raw.json` (3),
+> `capture-prod3g-raw.json` (4) and `capture-prod3i-raw.json` (**6**); plus 4 `contract-refusal`
+> vectors, which carry no capture at all — **46 files in the directory**.
 > **`capture-prod-raw.json` appears nowhere**, in a `capture_ref` or anywhere else in any vector file.
+>
+> **CENSUS CORRECTED BY T82 (T75 follow-up A-1).** As first written this banner said "36 parity
+> vectors" and omitted `capture-prod3i-raw.json` entirely — the six `T74-E-*` vectors that the SAME
+> BRANCH had promoted **two commits earlier**, and that `.softhouse/vectors/README.md` in that very
+> commit already counted as 42. The banner's actual claim — that no vector anywhere names
+> `capture-prod-raw.json` — was and remains **true**, and is unaffected: the six omitted vectors name
+> pass 3i. Only the census was stale. Recounted mechanically over all 46 files by T82.
 >
 > **The consequence, and it is the point of this banner.** T21 §10 **P0-2** (no attestation block),
 > **P0-3** (no `periodFromDate` / `feeAmount` / `penaltyAmount`) and **P0-4** (no executable run recipe)

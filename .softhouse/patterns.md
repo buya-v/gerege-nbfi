@@ -363,6 +363,112 @@ never amortizes to zero while the port returns zero. Conformance was PASS, 42 ve
 > be chartered to probe the region **around** the work, not only to re-check the work — that is where the
 > unvectored divergences are, by construction.
 
+
+### P-20. A driver's dispatch brief is an unreviewed artefact, and it can be WRONG in ways the worker must be free to refuse
+
+**Fire `20260820-200002`.** Two briefs written by the driver carried false premises, and both were caught by
+the worker rather than by the driver:
+
+- **T79** was told *"if the bijection fails, the closed form does not close."* It checked, found the site→Action
+  mapping is **not** injective (`EmiChangeOperation.java:64-69`'s `withZeroAmount()` preserves the action, so
+  `ProgressiveEMICalculator.java:1751`'s `addDisbursement` can carry `CAPITALIZED_INCOME`; `:1107` is a further
+  call site) — and **refused the framing**, showing closure rests on the grep-reproducible call-site *count*,
+  not on injectivity.
+- **T81** was told *"`bash` via an `sh` symlink and `bash --posix` are legitimate runs that must not trip the
+  guard."* On this machine `/bin/sh` **is** bash 3.2.57, and bash 3.2 disables process substitution in POSIX
+  mode — so both genuinely fail. It feature-tested the **capability** instead of the shell name and flagged the
+  contradiction. T86 verified the binaries and confirmed it.
+
+Both workers were right, and a compliant worker would have shipped the driver's error into a specification or a
+grading harness.
+
+> **Rule.** Write briefs so a premise can be refused: state the driver's reasoning as reasoning, mark which
+> claims are unverified, and say explicitly that refuting the brief is a valid outcome. When a worker refutes
+> one, record it as the control working — and correct it **at source** before the next task inherits it.
+
+### P-21. Correcting a defect where it was *named* leaves it where it is *restated* — including one level up, in the attestation
+
+**Fire `20260820-200002`, four independent instances.** A grep for the corrected *value* cannot find a
+restatement that vouches for it by *count* or renders it in a different *shape*:
+
+- **T88** fixed a grep count in the two places it appeared, then T89 found `emi.go:928`'s
+  `[VERIFIED at T78: all five counts re-derived by grep…]` — an attestation certifying, in T78's name, a
+  number T78 never produced. T88 had raised this exact hazard itself (F-T88-3) and still walked into it.
+- **T82** swept for a stale census with two regexes tuned to a banner's phrasing; T87 found a **fourth** copy
+  rendered as a markdown table, inside a file T82 had edited twice, contradicting line 217 of that same file.
+  P-12 landing inside the task assigned to close P-12.
+
+The remedy that worked (T98) was to **split the search space rather than weaken the pattern**: a bare-numeral
+net over prose assuming no phrasing, plus shape-free structural nets — and to **write the blind spots down**,
+including the two that grep cannot close at all (a census with no number; a census spelled out in words).
+
+> **Rule.** A correction task must sweep for the finding's *restatements and its attestations*, not its
+> numerals, and must publish what its sweep structurally could not have found. A brief that names one location
+> invites the leak; say "and every restatement of it."
+
+### P-22. A guard, a canary, or a control that cannot fail is worse than none — because it is believed
+
+**Fire `20260820-200002`, the fire's dominant theme, found five separate times.**
+
+- A **canary** that printed a sha256 without ever comparing it certified `HALF_UP` **on a HALF_EVEN JVM** (T77→T80).
+- An **abort** that wrote FAIL to stderr while the gate grepped a stdout-only `tee` let a capture be taken on the
+  wrong tenant and filed under the right tenant's name (T77→T80).
+- A **precondition** whose table was built by looping over the very ids it then checked had an empty domain, and
+  it was advertised as the fix for defaulting (T75→T82).
+- A **green control** with zero discriminating power printed that it had some — `main` produced identical output
+  (T87→T98). The author called it an honesty-rule breach.
+- An `attest.py` that stamped provenance **before** testing its gate printed *"no capture attempted, no
+  attestation written"* while having already mislabelled 11 captures (T85→T80).
+
+Every one was found by someone **attacking** the rig, never by reading it. Two were found inside the task sent
+to fix the previous one.
+
+> **Rule.** Ship no guard you have not personally driven **red**. State the input that makes it fail, and commit
+> the transcript. For a fix, run the counterproof against the **real pre-fix bytes** (`git show main:`), because
+> a proof that only shows the "after" cannot distinguish a fix from a no-op. And a guard that inspects zero
+> files must be an error, not a pass.
+
+### P-23. A measurement can be perfectly reproduced and its CONCLUSIONS still be false — scope every claim to the family it holds for
+
+**Fire `20260820-200002`, T84 on T83.** T84 reproduced T83's capture byte-identically (canonical sha256
+`01b41d9c…`), re-derived the boundary table row for row with its own classifier, and re-asked 12 boundary cells
+with different tenant ids and reversed ordering — 12/12 identical. It then **REJECTED**, because three
+conclusions T83 had written into `gates.md` — *the artefact the decision-maker reads* — were false as stated:
+
+- G-8 is **two phenomena**, not one. A second family (600 % p.a., MNT 0.01, n ≥ 104, 22 cells) fails to sum at
+  all and survives a forced memo recompute, so it is a genuine non-amortization — refuting the driver's
+  reframing on the driver's own stated discriminator.
+- "`invariant_exemptions` is inert, so option (a) needs a port change" holds only on the sub-family where the
+  port diverges; elsewhere the exemption yields PASS with **zero port change**.
+- "Everything is far below one MNT" was false at **MNT 1.09 / 3.6 % / n=360** — an ordinary 30-year term.
+
+> **Rule.** Grade the write-up as a separate artefact from the measurement, and grade it hardest where it feeds
+> a `user` gate. Every sentence must name the domain it was measured over and say what was not swept. A
+> reviewer that only re-runs the numbers has reviewed half the deliverable.
+
+
+### P-24. An assertion about what happens ON MERGE can only be tested BY MERGING
+
+**Fire `20260820-200002`, T87 → T98 → the driver.** T87 observed that T82's counterproofs used the moving ref
+`main:` as their baseline, so *on merge* all seven would flip to failing against the rig itself. T98 fixed it
+by pinning to `git merge-base main HEAD` and reported it as "the immutable fork point `8da4b83`" — verifying
+**on the branch**, where that is exactly what it resolves to.
+
+On merged `main`, `HEAD == main`, so `git merge-base main HEAD` is the **merge commit itself** and every
+counterproof compares the fixed code against itself. The driver merged, ran `prove-guards-go-red.sh`, and got
+**"18 as expected, 7 not as expected"** — the same seven rows, the time bomb relocated rather than removed.
+The merges were unpushed and were backed out; `main` never carried it.
+
+Three competent parties looked at this — the reviewer who predicted it, the author who fixed it, and the
+driver who charged it — and all three would have missed it, because every one of them tested in the state
+where the bug is invisible.
+
+> **Rule.** When a property is asserted about the *post-merge* state, verify it on a **scratch merge into
+> current main**, never on the branch. And prefer a literal immutable sha to any ref that is computed from
+> `main`: a baseline that can follow `main` will follow it exactly when you stop watching. The driver's
+> post-merge re-run of the artefact — not of conformance, of the *artefact* — is what caught this; make it
+> a standing step.
+
 <!-- LEARNED PATTERNS END -->
 
 ### Run 2026-08-17-run1-harness-schedule-poc — fire `20260819-170001` (local, oracle REACHABLE) — 2026-08-19

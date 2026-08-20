@@ -1,0 +1,8 @@
+=== ATTACK 1b — capture on 'default' but FILED UNDER recapture-gerege (T77's provenance hazard)
+runner shell: sh   recipe interpreter: sh   cwd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb
+
+$ TENANT=default RECAPTURE_OUT=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t36/out/recapture-gerege "$SH" t36/recapture.sh
+
+ABORT: output directory '/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t36/out/recapture-gerege' is not named for tenant 'default'. A capture must be filed under the tenant it was taken from; refusing to write 'default' bytes into a directory called 'recapture-gerege'.
+
+EXIT=1

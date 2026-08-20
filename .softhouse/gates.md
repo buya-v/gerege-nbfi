@@ -897,11 +897,21 @@ regulatory sign-off and licence facts are equally untouched and are not in Run 1
 - **class**: ENGINEERING to measure; the *remedy* is a DEC-n amendment, which is a hard `user` gate
 - **task**: T75 (found the shape, and stated the family-A mechanism first), T83 (measured family A),
   T84 (reproduced T83, measured family B, and rejected T83's write-up), T100 (rewrote this section
-  and re-measured both discriminators)
+  and re-measured both discriminators), T101 (independent review — reproduced the measurement over a
+  **wider** cell set than T100 swept, and rejected the write-up on three sentences), T112 (applied
+  T101's corrections and deleted the superseded UPDATE block named below)
 - **context**: tier0-harness-schedule-poc / loan-schedule
-- **state**: **OPEN** — blocks nothing today
+- **state**: **OPEN** — blocks nothing today. T112 fixed the write-up; it did not decide the gate.
 - **raised_by**: local fire 20260820-170001, from T75's approval of T74
 - **recorded_in**: `.softhouse/gates.md`
+- **supersedes**: the block `## G-8 — UPDATE from local fire 20260820-200002` that stood on `main`
+  until T112, together with the two inline `[CORRECTION — local fire 20260820-230001, driver]`
+  annotations added to it as a stopgap. That block attributed the **family-B** exemption
+  measurement — 761 graded cells, **0 cell diffs**, FAIL turning to PASS under an invariant
+  exemption — to **family A**, which is the gate's most decision-relevant sentence stated
+  backwards, and it carried the superseded **18**-refutation count. **T112 deleted it in the same
+  commit that landed this section**, so this is now the only G-8 write-up in this file. Nothing it
+  said correctly is lost; everything is restated below, scoped to the family it belongs to.
 
 ### Read this first: G-8 is TWO phenomena, and a remedy for one is not a remedy for the other
 
@@ -935,8 +945,13 @@ calibrated probe against the pinned oracle image (its calibrations reproduced `T
 cell-for-cell with zero input diffs). Result: **MNT 0.01 / 6 × 21.6 % at `MinorUnitDigits = 2` —
 inside the graded domain, no multiples-of input involved — makes the reference oracle emit a
 schedule whose balance column never reaches zero, `0.01` on every row including the last, while the
-Go port returns `0`.** That shape is **family A** [VERIFIED by T100: `T100-FAMA-R21p6-N6-B2`, its
-principal column sums to 2 minor units against a 2-minor-unit disbursement].
+Go port returns `0`.** That shape is **family A** [VERIFIED by T112's own re-classification of the
+committed raw captures, in integer minor units: `T83-SW-R21p6-N6-B1` — **the shape in the sentence,
+MNT 0.01** — has a REPAYMENT principal column summing to 1 minor unit against a 1-minor-unit
+disbursement, and a last row still carrying 1 minor unit outstanding. T100 tagged this sentence with
+the *neighbouring* cell `T100-FAMA-R21p6-N6-B2` (MNT 0.02), which is also family A but is not the
+shape described; corrected here per T101 F-5. The claim was always true — only its citation was to
+the wrong cell].
 
 **Why it matters.** On family A this is a live port-vs-oracle divergence on an **admitted** shape,
 and it sets two of this project's own rules against each other:
@@ -1035,11 +1050,24 @@ the largest failing principal by more than an order of magnitude.
 | 36.0 | 56 | 1..17 | 17 | **13** (MNT 0.13) | **14** (MNT 0.14) | yes |
 
 **T75's report is CONFIRMED and is a strict subset of this.** MNT 0.01/6, 0.02/6, 0.01/12 and
-0.01/56 at 21.6 % all fail; 0.03/6 and above are clean **at 21.6 % / n = 6**.
+0.01/56 at 21.6 % all fail; **MNT 0.03 through MNT 0.06 — 3..6 minor units, which is the entire
+range swept above the boundary at that shape — are clean at 21.6 % / n = 6** [VERIFIED by T112 from
+T83's raw capture: exactly principals 1..6 minor were asked at that shape, 1 and 2 fail, 3..6 are
+clean, and nothing larger was asked. The earlier phrasing "0.03 **and above**" claimed a half-line
+the sweep does not cover — T101 F-7].
 
-**21.6 % is not load-bearing for family A** — family A exists at all 12 rates swept, from 0.12 % to
-300.0 %. Across T83's grid the rate moves *where* the boundary sits and moves it DOWN as the rate
-rises; the region is **empty at n = 2** at all four rates T83 tested, and grows with the term.
+**21.6 % is not load-bearing for family A** — family A exists at **11 of the 12** annual rates
+swept: every rate from 0.12 % to 300.0 %, and **NOT at 600.0 %**, where every failing cell is
+family B and no family-A cell has ever been observed. That is the same count the discriminator
+table above carries, and it is spelled out here on purpose: an earlier revision of this paragraph
+read "family A exists at **all 12** rates swept", which asserted family A at precisely the rate
+that *defines* family B and contradicted that table nine lines earlier. The table had been scoped
+and this prose restatement of the same claim had not — pattern P-23 leaking by the exact route
+`patterns.md` records [T101 F-1; **independently re-measured by T112** over all 687 swept cells of
+the four committed raw captures: the family-A rate set is {0.12, 1.2, 3.6, 7.0, 12.0, 16.8, 21.6,
+36.0, 48.0, 96.0, 300.0} — **eleven** — and family A at 600.0 % is the **empty set**]. Across T83's
+grid the rate moves *where* the boundary sits and moves it DOWN as the rate rises; the region is
+**empty at n = 2** at all four rates T83 tested, and grows with the term.
 
 ### The port divergence, family A only — ONE CELL PER CASE
 
@@ -1119,8 +1147,12 @@ finding after all."* It failed.
 - principal **MNT 0.01 (1 minor unit)** — no other principal has produced a family-B cell.
 - repayment counts **n ∈ {104…122} ∪ {150, 200, 250}**: T84 measured 104…121 contiguously plus 150
   and 200 (22 cells, of which n = 108 and n = 120 were measured twice, once in each of its two
-  probes, agreeing); **T100 added n = 122 and n = 250, which are above the top of n T84 swept, and
-  both are family B.** At **n = 103** the same shape is **clean** [T84; re-measured by T100].
+  probes, agreeing); **T100 added n = 122 — one above T84's contiguous top of 121, but NOT above
+  T84's largest n, which is 200 — and n = 250, which IS above every n T84 asked. Both are family
+  B.** At **n = 103** the same shape is **clean** [T84; re-measured by T100. The n-set and the
+  contiguity re-derived by T112 from the raw captures, which also show T84's n at
+  600.0 % / MNT 0.01 running 88…121 contiguously plus 60, 150 and 200. An earlier revision said
+  both new cells were above the top of n T84 swept; only n = 250 is — T101 F-4].
 
 **The Go port reproduces family B cell for cell — 0 divergent cells** [T84 over all 22; T100 through
 the real grader on `T100-FAMB-R600p0-N108-B1`: **761 graded cells, 0 cell diffs**]. On family B there
@@ -1178,11 +1210,28 @@ So:
 T83's sentence *"Option (a) is NOT reachable with the existing mechanism alone"* is therefore **true
 of family A and false of family B**, and it was recorded here unscoped.
 
-**A caveat on reading those runs:** each variant's process exit code is non-zero for a reason that
-has nothing to do with G-8 — a one-vector scratch store trips the corpus-level coverage fatals
-(`monthend.reanchor` has no killing vector there; "no parity vector was graded" when the only vector
-fails). The **case outcome** and the invariant statuses in the table are the measurement; the exit
-code of a scratch store is not.
+**How to read the exit codes of those four runs — three of the four ARE this finding, and must not
+be discounted.** `Summary.ExitCode()` returns **1** as soon as
+`ParityFail + ContractFail + SelfTestFail > 0 || InvariantViolations > 0`, **before it ever inspects
+`FatalReasons`** [VERIFIED by T112 at `nexus/internal/apps/loanschedule/conformance/grade.go:154-160`
+on current `main`]. So:
+
+- **FAMILY-B-NO-EXEMPTION (exit 1), FAMILY-A-NO-EXEMPTION (exit 1) and FAMILY-A-WITH-EXEMPTION
+  (exit 1)** exit non-zero **because of the G-8 failure itself** — the parity FAIL, plus on family
+  B the two invariant violations. Those three exit codes are the finding, not scratch-store noise.
+- **Only FAMILY-B-WITH-EXEMPTION's exit 2 is unrelated to G-8.** That run has no fail and no
+  violation, so control reaches the second branch and the corpus-level coverage fatal decides: a
+  one-vector scratch store cannot kill `monthend.reanchor`, which the full committed corpus does.
+  That is an artefact of grading one vector in isolation and says nothing about either family.
+
+[VERIFIED by T112 from T100's own committed run record `out/exemption-demo-t100.json`: exit codes
+**1 / 2 / 1 / 1** with `parityFail` 1 / 0 / 1 / 1 and `invariantViolations` 2 / 0 / 0 / 0, in that
+file's own order — `FAMILY-B-NO-EXEMPTION`, `FAMILY-B-WITH-EXEMPTION`, `FAMILY-A-NO-EXEMPTION`,
+`FAMILY-A-WITH-EXEMPTION`; T101 reproduced all four runs independently on `main`'s current port and
+got the same codes.] An earlier revision said *each* variant's exit code had "nothing to do with G-8". That
+was false for three of the four and taught the reader to discount an honest signal — T101 F-3. The
+**case outcome** and the invariant statuses in the table above remain the measurement; what changes
+is that three of the four exit codes now agree with them instead of being waved away.
 
 Prepared and **NOT promoted**, for both families:
 `.softhouse/capture/t83-nonamortizing/proposed-vector-{no-exemption,with-exemption}.json` (T83,
@@ -1197,12 +1246,20 @@ This file previously said *"Every principal in the region is far below one MNT (
 in the sweep is MNT 0.23)"*. That was true of **T83's grid** and false as a statement about the
 graded domain. Restated, with the domain named each time:
 
-- **Over T83's grid** (rates {7.0, 16.8, 21.6, 36.0} × n ∈ {2…56}, principals 1..27 minor): the
-  largest failing principal is **MNT 0.23**, at 7.0 % / n = 56.
+- **Over T83's grid** (rates {7.0, 16.8, 21.6, 36.0} × the **eight discrete terms**
+  n ∈ {2, 3, 4, 6, 12, 24, 36, 56} — a set, not a contiguous range — principals 1..27 minor): the
+  largest failing principal is **MNT 0.23**, at 7.0 % / n = 56 [re-derived by T112 from T83's raw
+  capture; the discrete-term wording per T101 F-8].
 - **Over the union of every cell T83, T84 and T100 have swept** (687 cells; 12 rates from 0.12 % to
   600.0 %; n from 1 to 600): the largest failing principal is **MNT 2.91**, at 0.12 % / n = 600
-  — **11.6× the old bound** [T84 measured it; **T100 re-measured that exact shape independently and
-  reproduced it**, and measured MNT 2.92 clean at the same shape].
+  [T84 measured it; **T100 re-measured that exact shape independently and reproduced it**, and
+  measured MNT 2.92 clean at the same shape; both re-derived again by T112 from the raw captures].
+  **The two absolute figures are the statement — MNT 0.23 over T83's grid, MNT 2.91 over the union,
+  a ratio of 291 ÷ 23 = 12.65×.** An earlier revision wrote "**11.6×** the old bound". That
+  multiple was taken against a *different* denominator — the "below MNT 0.25" bound this file
+  asserted before T83's grid was measured (2.91 ÷ 0.25 = 11.64) — and the rewrite deleted every
+  mention of MNT 0.25, leaving a ratio whose denominator the reader could no longer find. It is
+  given in absolutes here so it cannot drift again [T101 F-2].
 - **MNT 1.09 fails at 3.6 % p.a. over n = 360 — an ordinary 30-year monthly term at an ordinary
   rate** [T84; **re-measured by T100**, `T100-FAMA-R3p6-N360-B109`, with MNT 1.10 clean beside it].
   This is not sub-MNT dust and must not be described as such. It is still an absurdly small *loan*,
@@ -1242,11 +1299,28 @@ family-B cell** — 600.0 % / B = 1 / n ≥ 104 — where the closed form predic
 the EMI quantizing to zero in the oracle's own `(19, HALF_UP)` arithmetic — offered as an
 explanation, not as a verified mechanism `[UNVERIFIED]`.
 
-**A count correction:** T84's write-up records **18** refutations; T100's exact-rational evaluation
-over the same 342 cells finds **22**. The four extra are T84's own probe-1 tie cells
-`T84-TIE-R600p0-N{108,120,150,200}-B1`, which `T84-evidence/prediction.json` registers as
-`predictedFails: false` and which measured FAIL. Either count supports the same conclusion; 22 is
-the number T100 can show.
+**A count correction — and its cause is a FLOAT.** T84's write-up records **18** refutations;
+T100's exact-rational evaluation over the same 342 cells finds **22**. **T101 adjudicated the
+dispute by recomputing from the raw captures in exact rational arithmetic and RULED FOR 22** — over
+T83's 330 cells 330 held and 0 were refuted; over T84's 342 cells **320 held, 22 refuted, and there
+were 0 exact ties at all**.
+
+The four disputed cells are T84's own probe-1 "tie" cells
+`T84-TIE-R600p0-N{108,120,150,200}-B1`. **T84's `.softhouse/reviews/T84-evidence/prediction.json`
+stores `BtimesA` for them as the IEEE-754 double `0.5`** — e.g.
+`{"B": 1, "BtimesA": 0.5, "n": 108, "predictedFails": false}`. In exact rational arithmetic
+`B·a − ½` at those shapes is strictly **positive** and of order 1e-20 (`+4.799e-20` at n = 108), so
+the closed form predicts CLEAN there and the measured FAIL refutes it. Double precision cannot
+resolve a residual that small, so four strict inequalities were read as exact ties and dropped from
+the count [T101's ruling and its diagnosis; the stored literal `0.5` re-read by T112 from the
+committed `prediction.json`].
+
+**Record the cause, not just the correction.** The difference between "two agents counted
+differently" and "a float in an analysis script put a wrong number into the document the product
+owner reads" is the whole point of this project's no-floating-point rule. That rule visibly bound
+the port, the schema, the vectors and the fixtures; it did not visibly bind the **analysis and
+prediction scripts**, and this is exactly what that gap costs — the script graded nothing, and its
+float still reached this gate. **22 is the count.**
 
 **So: the closed form is a good description of family A on the grid where it was fitted, and it is
 not a law. It does not predict family B at all.** No claim is made for any un-sampled rate, term or
@@ -1267,15 +1341,25 @@ day-count.
   describe family B at all.**
 
 **(b) and (c) both amend the graded domain, which is a change to a ratified DEC-n — a hard `user`
-gate no agent may cross.** Buyan decides. T83, T84 and T100 each analysed them and **decided none
-and recommend none**; T100 attaches only the measurement and the scoping.
+gate no agent may cross.** Buyan decides. T83, T84, T100, T101 and T112 have each handled them and
+**decided none, recommended none, and pre-implemented none**; they attach only the measurement and
+the scoping. T112's whole mandate was the write-up: it corrected sentences and deleted a superseded
+block, and it moved nothing about the gate's substance.
 
 **What unblocks it**: a `user` decision, now on **two** phenomena rather than one. **What it
 blocks**: nothing today — no vector covers either family and the conformance run is exit 0 without
-them. **What it leaves uncovered**: on T84's accounting, **331 measured divergent-or-invalid cells**
-sit outside the corpus — 309 family-A port-vs-oracle divergences (198 T83 + 111 T84) plus **22
-family-B cells where the PORT ITSELF emits a schedule that does not repay the loan and no vector
-says so**. The last 22 are the worse half.
+them. **What it leaves uncovered**: over the union of everything T83, T84 and T100 swept, **341
+measured divergent-or-invalid cells** sit outside the corpus — **312 family-A port-vs-oracle
+divergences** plus **29 family-B cells where the PORT ITSELF emits a schedule that does not repay
+the loan and no vector says so**. The last 29 are the worse half. (T84's narrower accounting gave
+**331** — 198 T83 + 111 T84 family-A plus 22 family-B — because it predates T100's own cells;
+331 is right on T84's set and 341 is right on this section's union, which is the set every other
+figure here is stated over — T101 F-6. T101 then re-graded the whole union through the real
+`conformance.Run` and the real port on current `main`: all **312** family-A cells give **exactly
+one** diff each, always the final row's `outstanding_principal_minor`, and all **29** family-B
+cells give **0 cell diffs across 25,751 graded cells**. Family counts re-derived independently
+again by T112 from the four committed raw captures: 687 swept / 312 family A / 29 family B / 346
+clean.)
 
 **Conformance is unmoved by this rewrite**: `bash .softhouse/conformance.sh` → **VERDICT PASS, exit
 0, 42 parity vectors, 5576 graded cells, 0 invariant violations**. Nothing was promoted; `PIN.json`
@@ -1309,3 +1393,18 @@ and `capabilities.json` are untouched.
 `t83-reclassified.json`, `t84-reclassified.json`, `t100-classified.json`,
 `column-shape-{t83,t84,t100}.json`, `closed-form-check.json`, `largest-failing.json`,
 `orderdep-t84probe-rerun-by-t100.json`, `exemption-demo-t100.json`.
+
+**The independent review that rejected T100's write-up and reproduced its measurement over a wider
+cell set, committed on `softhouse/T101-review-t100`** — `.softhouse/reviews/T101-review-of-T100.md`
+(56-row sentence-by-sentence scope table; all 29 family-B cells re-graded through the real
+`conformance.Run` on `main`'s current port for 25,751 graded cells and 0 cell diffs; all 312
+family-A cells re-graded for exactly one diff each; the 18-vs-22 ruling) and
+`.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T101.md`.
+
+**The corrections, committed on `softhouse/T112-g8-rework-retry`** — this section as it now stands,
+plus `.softhouse/capture/t100-g8-rescope/CORRECTIONS-T112.md`, which records the one superseded
+phrasing (T101 F-4) still carried by that directory's **registered prediction and executed probe
+sources**, and why those four files were deliberately left byte-identical rather than edited.
+T112 measured nothing new against the reference oracle: every number it added or changed was
+re-derived in integer minor units from the four already-committed raw captures, or read from
+`grade.go` and `out/exemption-demo-t100.json` in this repository.

@@ -76,8 +76,29 @@ def main(capture_path, out_path):
                              % (base, probe, sorted(varying - allowed)))
         if ia["mathContextPrecision"] != 19 or ib["mathContextPrecision"] != 12:
             raise SystemExit("%s/%s are not a 19-vs-12 pair" % (base, probe))
-        if ia["mathContextRoundingMode"] != ib["mathContextRoundingMode"] != "HALF_UP":
-            raise SystemExit("%s/%s do not share the ratified HALF_UP mode" % (base, probe))
+        # CORRECTED BY T82 (T75 follow-up E-3). This stood as the Python CHAINED COMPARISON
+        #
+        #     if ia[...] != ib[...] != "HALF_UP":
+        #
+        # which Python expands to `(ia != ib) and (ib != "HALF_UP")`. Both conjuncts had to hold for
+        # the guard to fire, so it PASSED whenever the two arms SHARED a mode — including when both
+        # shared a NON-ratified one, which is exactly the case the `varying` check above cannot see,
+        # because a value common to both arms does not vary. Worse, the only case the chained form
+        # could in principle have caught (the two arms differing) is unreachable here: differing
+        # modes put `mathContextRoundingMode` into `varying`, which is not in `allowed`, so the run
+        # already died two checks earlier. The guard was therefore dead in BOTH directions.
+        #
+        # Stated positively instead, with no chaining: EACH arm must be at the ratified HALF_UP.
+        # The ratified production setting is MathContext(19, HALF_UP) — CLAUDE.md, and
+        # MoneyHelper.PRECISION = 19 is a compile-time constant.
+        off_mode = {arm: m for arm, m in ((base, ia["mathContextRoundingMode"]),
+                                          (probe, ib["mathContextRoundingMode"]))
+                    if m != "HALF_UP"}
+        if off_mode:
+            raise SystemExit("%s/%s: %r is not the ratified HALF_UP rounding mode. A counterfactual "
+                             "measured at a mode production never runs describes a port defect "
+                             "nobody has, and this pair's whole claim is that the ONLY difference "
+                             "between its arms is precision 19 against 12." % (base, probe, off_mode))
         digits = ia["currencyDecimalPlaces"]
 
         pa, pb = a['observed']['periods'], b['observed']['periods']

@@ -1,0 +1,8 @@
+713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009  t36/out/recapture-gerege/B-01-baseline-raw.json
+9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8  t36/out/recapture-gerege/B-02-multiplesof100-raw.json
+892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf  t36/out/recapture-gerege/B-03-diycs-fullleapyear-raw.json
+c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80  t36/out/recapture-gerege/B-04-diycs-feb29only-raw.json
+b4587e5d64ddfdddec29c4b1e137ef41073a3a598ee1a805dfc41d56459cf24f  t36/out/recapture-gerege/attestation.json
+39f56dc2c94a6da59235af7d0ecb7d51548bcf3f4d52730a94c864d7f65a3d25  t36/out/recapture-gerege/canary-halfcent-raw.json
+4c3ff7f8c07e89d5a7e16b0d8e386b74a4b2c21e089052b546d336b9c51d1768  t36/out/recapture-gerege/preconditions.txt
+e27c26046144c48b19c29d721b892e01422dd28f0a4a5d4ab30aee4272a775bb  t36/out/recapture-gerege/products-asrow.jsonl

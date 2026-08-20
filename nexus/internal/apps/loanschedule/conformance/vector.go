@@ -851,11 +851,24 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 			vectors = append(vectors, v)
 		}
 	}
+	// (context, case_id, PATH) — three keys, and the third is what makes the order
+	// TOTAL (T90's sweep). Nothing rejects two files carrying the same case_id in
+	// one context, and on that input the two-key comparator declares neither less
+	// than the other: sort.Slice is not stable, so which row printed first would be
+	// decided by an unspecified rule rather than by the data. Path is the file's
+	// store-relative name, unique by construction, so no tie can survive it and the
+	// row order of the whole report is a function of the store's CONTENTS. Inert on
+	// today's store — all 47 case_ids are distinct, and the report is byte-identical
+	// with and without this key — which is the point: it costs nothing now and it
+	// removes a way for the table to reorder itself later.
 	sort.Slice(vectors, func(i, j int) bool {
 		if vectors[i].Context != vectors[j].Context {
 			return vectors[i].Context < vectors[j].Context
 		}
-		return vectors[i].CaseID < vectors[j].CaseID
+		if vectors[i].CaseID != vectors[j].CaseID {
+			return vectors[i].CaseID < vectors[j].CaseID
+		}
+		return vectors[i].Path < vectors[j].Path
 	})
 	return vectors, loadErrs, nil
 }
