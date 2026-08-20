@@ -1941,9 +1941,10 @@
       "dependencies": [
         "T80"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "Raised by the driver, local fire 20260820-200002, from T77 F-1 as re-raised by T80. NEEDS THE ORACLE to run the attack suite. Pair with an independent reviewer. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus."
+      "note": "Raised by the driver, local fire 20260820-200002, from T77 F-1 as re-raised by T80. NEEDS THE ORACLE to run the attack suite. Pair with an independent reviewer. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260820-230001: DONE on softhouse/T91-preconditions-copy (5 commits). THE DRIVER'S BRIEF WAS WRONG TWICE AND THE SECOND ERROR IS THE FINDING OF THE FIRE. (1) WRONG ON THE HOLES: the brief asserted the copy carries grep -qF PREFIX matches and a sha256 computed-and-printed-but-never-compared. NEITHER IS IN IT. The copy PREDATES T76 entirely; its only sha256 is PIN_IMAGE, which IS compared at P1. Both named holes were INTRODUCED BY T76 (3d70a86, lines 166/170) and lived only in pathb/t36/preconditions.sh. The copy's actual holes are a DIFFERENT SUPERSET: the canary request is not pinned at all (any readable file accepted), CANARY_EXPECT is env-overridable with no tripwire, and PIN_PG_MAJOR_MINOR is unbraced. (2) WRONG ON WHICH FILE MATTERS: preconditions-COPY.sh is invoked by NOTHING (10 grep hits, all prose) - but it is BYTE-IDENTICAL to .softhouse/capture/charges/bin/preconditions.sh, which capture scripts and attest.py DO invoke, including t55-capture.sh and pathb-capture.sh. DRIVER INDEPENDENTLY CONFIRMED THE BLOB IDENTITY: git rev-parse main:.softhouse/capture/audit-t44/charges/bin/preconditions-COPY.sh and main:.softhouse/capture/charges/bin/preconditions.sh BOTH give e6c1795a172168105d788321a71ee4ca62b73e36. So everything under charges/, leapboundary/ and actualactual/ was gated by the UNHARDENED script while readers see 'the rig is hardened'. The task was framed as a dead copy; it was a LIVE TWIN. P-12, precisely. REMEDY: both twins are now CALL-THROUGHS that dot-source pathb/t36/preconditions.sh - dot-source, not exec, to preserve sh/bash invariance. Three copies -> one rig. No third patched copy, no caller changed, old bytes retained at git show e6c1795a. PROOF BY ATTACK, 13 classes x sh/bash x 4 labels, all against git archive exports in /tmp: PRE-FIX 6 OF 13 ADMIT. The sharpest is its own A2c - on the HALF_UP tenant the rig printed 'PASS effective rounding mode canary: period-1 interest 20925.04 (= HALF_UP)', certifying HALF_UP over the value its own comment calls HALF_EVEN, with BOTH operands attacker-supplied. POST-FIX 0 admit, all 13 meet declared expectations across all four labels, 13/13 sh-vs-bash identical. Happy path additive only: 21 -> 22 PASS, 0 FAIL, exit 0; T44's `default` control reproduces with the same 5 breaches. GUARDS DRIVEN RED (P-22): missing-rig -> exit 2 with a message TRUE AT THE MOMENT IT PRINTS; zero-file scans -> error not pass, in both scorers. G-4 FOUND A DEFECT IN ITS OWN WORK: ugrep -qF returns 'absent' on a poisoned transcript that DOES contain the certification sentence - driven RED, fixed with LC_ALL=C grep -a. CONTRADICTS T80/T85 AND SAYS SO RATHER THAN REPEATING THE CLAIM: T80's asserted BSD-grep-in-UTF-8 behaviour DID NOT REPRODUCE here; it reports the non-reproduction. It also disclosed that its own scorer's first rule was wrong (it flagged a fired guard as an admission) and that the corrected expectation table was written AFTER the first post-fix run. TWO REGISTERED PREDICTIONS (PR-9 count, PR-10 breach count) WERE WRONG AND ARE SCORED AS WRONG in the handoff. DRIVER-VERIFIED SCOPE: vectors + nexus/ + pathb/ diffs ALL EMPTY. Worker reports bash conformance.sh PASS exit 0 42 parity 5576 cells 0 invariant violations; oracle read-only throughout. UNVERIFIED AND FLAGGED: the HALF_EVEN limb still cannot be shown (productId 11 absent on `default` -> HTTP 404; proving it needs an oracle WRITE); no Go toolchain in its environment so no go build / gofmt; the 17 capture scripts were not run end-to-end because they POST loans. FOLLOW-UP RAISED: pathb/t80/forbidden-sentence.sh passes vacuously on an empty glob - CONVERGES with T99 item (3), which owns it this fire.",
+      "branch": "softhouse/T91-preconditions-copy"
     },
     {
       "id": "T92",
@@ -2222,6 +2223,46 @@
       "status": "in_progress",
       "attempts": 1,
       "note": "Raised by the driver, local fire 20260820-230001. NEEDS THE ORACLE to run the harness."
+    },
+    {
+      "id": "T107",
+      "title": "INDEPENDENT review of T91 \u2014 the live twin, and whether any PROMOTED vector's provenance rests on the unhardened gate",
+      "description": "Paired reviewer for T91. T91 reframed a dead-copy cleanup into a live-rig finding; the review must establish the blast radius, not just the fix.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/reviews/",
+        ".softhouse/capture/"
+      ],
+      "context": "tier0-harness-schedule-poc",
+      "dependencies": [
+        "T91"
+      ],
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-230001. NEEDS THE ORACLE."
+    },
+    {
+      "id": "T108",
+      "title": "Adjudicate a direct contradiction in committed evidence \u2014 BSD grep -a in a UTF-8 locale",
+      "description": "T80 reported, and T85 accepted, that `grep -a` is NOT sufficient: BSD grep in a UTF-8 locale matches NOTHING in a file containing an invalid multibyte sequence AND RETURNS 0 - a silent-zero path. That claim is committed on main, it caused LC_ALL=C to be added in two places, and the driver has since repeated it in three worker briefs. T91 tried to reproduce it on the same host and COULD NOT, and reported the non-reproduction rather than repeating the claim. One of these is wrong and both are now in committed evidence, so a future reader will cite whichever they find first. SETTLE IT BY EXPERIMENT: construct the exact file shape (invalid multibyte sequence + the target string), run it under the host's BSD grep, GNU grep, ugrep and whatever else the rigs actually invoke, in a UTF-8 locale and under LC_ALL=C, and record the exit status and match behaviour for each. Then determine what T80 actually observed - a different tool, a different locale, a different file shape, or an error. Correct whichever committed claim is false, wherever it is RESTATED (P-12), and leave a citable record. Do NOT weaken any existing LC_ALL=C hardening even if the original justification turns out to be wrong: fail-closed is still right, but its stated REASON must be true.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/capture/",
+        ".softhouse/patterns.md"
+      ],
+      "context": "tier0-harness-schedule-poc",
+      "dependencies": [
+        "T91"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260820-230001, from T91's non-reproduction of a T80 claim. NEEDS NO ORACLE - pure local tooling. Good cloud-fire work."
     }
   ]
 }
