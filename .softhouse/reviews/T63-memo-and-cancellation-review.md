@@ -7,7 +7,9 @@ Target: `nexus/internal/apps/loanschedule/{emi.go, generator.go, liveness_test.g
 
 ## VERDICT: ACCEPTED WITH REQUIRED CHANGES
 
-**P0: 0. P1: 2. P2: 4.**
+**P0: 0. P1: 2. P2: 2, plus 3 observations I could NOT prove and label as such
+(F-3 withdrawn outright — I predicted a defect, went looking, and the code was
+right).**
 
 **The memo is sound and the cancellation is correct. I attacked both hard and
 could not break either**, and I say so plainly below alongside everything I
@@ -52,6 +54,15 @@ git checkout -B softhouse/T63-review-memo-and-cancellation main
 Base now contains the merged T59 work (`emi.go` with the memo, `liveness_test.go`)
 and the merged T60 work (`conformance/invariants.go` with placeholder reporting,
 `4895e07`). **Stated as required: my base was stale and I rebased.**
+
+**Second rebase, after the review was written.** `main` advanced again while this
+ran — T61 merged (`8bd5b25`), taking the parity corpus from **29 to 32**
+vectors. I rebased onto it before committing. Every conformance figure below was
+observed at `bb3c898` and therefore reads **29 parity / 2354 cells**; that is the
+state of the tree I reviewed, and I have not restated it as 32. The review's
+conclusions are unaffected: `git diff bb3c898 8bd5b25 -- nexus/internal/apps/loanschedule/`
+is **empty**, so T61 changed the vector store and not one line of the port under
+review. The final branch adds exactly two files and no code.
 
 ## Verification I ran, and the exit codes I observed
 
@@ -151,16 +162,21 @@ sound **iff** every write to one of those fields on period *j* is preceded by
 (`ProgressiveEMICalculator.java:1258-1309`, `:1725-1739`, `:1202-1203`) — they
 just do it by writing, which (b) covers.
 
-## F-2 (P1-1) — `installmentNumberOf` is a non-allocating Θ(n²), and T59's cost regression test is structurally incapable of seeing it.
+## F-2 (P1-1) — `TestGenerationCostIsNotQuadraticInTheTerm` is GREEN on a port whose measured growth is 55x over a 2x term, on the test's own request shape.
 
-**Where.** `generator.go:459` calls `installmentNumberOf(periods)` once per
-emitted row; `generator.go:478-486` scans **every row already emitted**. Total
-Θ(n²) comparisons, **zero allocations**.
+This is the finding I would not let through unchanged. It has two independent
+halves, and the test is blind to **both**.
 
-**Provenance.** Pre-existing — `git log -S installmentNumberOf` gives `91fcee2`
-(T10). T59 did not introduce it and did not claim to have removed it.
+### Half one — the metric cannot see a quadratic that allocates nothing
 
-**Reproduction — measured, T63F:**
+`generate` calls `installmentNumberOf(periods)` once per emitted row
+(`generator.go:459`); `installmentNumberOf` (`generator.go:478-486`) scans
+**every row already emitted**. Total Θ(n²) comparisons, **zero allocations**.
+
+Pre-existing — `git log -S installmentNumberOf` gives `91fcee2` (T10). T59 did
+not introduce it and did not claim to have removed it.
+
+**Reproduction — measured, T63F**, the function isolated from everything else:
 
 | rows | time in `installmentNumberOf` alone | growth over a 2x term |
 |---|---|---|
@@ -169,93 +185,129 @@ emitted row; `generator.go:478-486` scans **every row already emitted**. Total
 | 4,000 | 38.817 ms | **4.15x** |
 | 8,000 | 157.088 ms | **4.05x** |
 
-Textbook quadratic (linear would be 2x). Extrapolated to the term T59's own
-liveness test uses — n = 50,000 — that is **≈ 6.1 s of pure scanning**, in a
-function T59's commit message describes as reduced to "growth over a 4x term
-22.81x -> 4.19x".
+Textbook quadratic; linear would be 2x. `TestGenerationCostIsNotQuadraticInTheTerm`
+(`liveness_test.go:184-232`) asserts a ratio of `runtime.MemStats.Mallocs`, so
+this function's contribution to the graded quantity is **exactly zero at every
+n**, forever, by construction.
 
-**Why the regression test cannot see it.**
-`TestGenerationCostIsNotQuadraticInTheTerm` (`liveness_test.go:184-232`) asserts
-a ratio of `runtime.MemStats.Mallocs`. `installmentNumberOf` allocates nothing,
-so its contribution to that ratio is **exactly zero at every n**. The secondary
-5 s wall-clock cap is taken at n=360, where this costs ~0.3 ms. The test is
-therefore green on an implementation that is quadratic, which is precisely the
-implementation class it exists to reject.
+### Half two — the two sample points sit entirely below the cliff
 
-**Honest qualification on when it bites.** At the corpus's terms this costs
-nothing, and at the terms T59 benchmarked (n ≤ 720) it is still a rounding
-error: the linear part of generation is ~50 µs/period (T63I, 21.6%), so the
-quadratic term only becomes the *majority* of the cost somewhere around
-n ≈ 25,000. That is not a reason to shrug — it is the term **T59's own
-cancellation test uses**. `TestCancellationIsHonouredDuringGeneration`
-(`liveness_test.go:74`) picks `term = 50000` on the stated reasoning that "at the
-cost measured after the T59 fix a 50,000-period schedule takes seconds", and at
-that term most of those seconds are this scan, not the arithmetic the memo
-bounds.
+Worse, and I did not expect this: on **`livenessRequest` itself** — the same
+request shape the cost test uses, rate 21.6%, principal MNT 50,000,000 —
+generation is not linear at all past n≈1000. Measured, min of 3 (T63E):
+
+| n | wall clock | growth over a 2x term |
+|---|---|---|
+| 500 | 62.98 ms | — |
+| 1,000 | 130.96 ms | **2.07x** (linear) |
+| 2,000 | **7.239 s** | **55.27x** |
+| 4,000 | *did not complete inside this review's budget* | — |
+
+**55x over a 2x term.** The mechanism is the one T59 itself declared as backlog
+item 2 — `applyFinalPeriodResidual`'s self-recursion (`emi.go:879`), depth O(n),
+each level O(n). What T59 did **not** connect is that its regression test samples
+**n=90 and n=360**, and both sit below the cliff, so the test would report
+"4.67x, PASS" on a port that takes 7.2 s at n=2,000 and does not finish at
+n=4,000.
+
+### Why this is P1 and not a shrug
+
+The test's *name* and its doc comment ("It asserts a RATIO between two terms …
+work grew X over a 4x term … Linear is 4x and quadratic is 16x") state a
+property of **generation cost in the term**. What it actually grades is a much
+narrower and genuinely useful property: **the interest chain is not recomputed
+inside O(n) loops**. Those are different claims, and this program has twice
+declared the gap between them a defect in its own right — T60's "a check that
+stops checking says so, in writing", and pattern P-7 "assert the property, not
+today's corpus".
 
 To be fair to T59: the substitution of allocation counts for wall clock was
 argued carefully and the flakiness measurement behind it is real and correct.
-The defect is not the substitution, it is that the doc comment claims the proxy
-is "a faithful one: nearly every allocation in a generation is a `big.Rat`
+The defect is **not** the substitution. It is that the doc comment argues the
+proxy is faithful — "nearly every allocation in a generation is a `big.Rat`
 produced by a step of the interest chain, which is precisely the quantity the
-memo bounds" — true, and precisely why it is blind to any cost that is *not*
-the interest chain.
+memo bounds" — which is true, and is exactly why the proxy is blind to every
+cost that is *not* the interest chain. Both quadratics here are.
 
-**Minimal fix** (not applied — review scope): carry the counter as a local in
-`generate`, incremented when a payable row is appended, instead of rescanning.
-`installmentNumberOf`'s return is a pure function of the number of payable rows
-already emitted, so the values are identical:
+### Required change — one of these two, not both
+
+**(a) Narrow the claim to what is graded.** Rename to
+`TestInterestChainIsNotRecomputedQuadratically`, and state in the doc that it
+grades the memo and **not** generation cost, naming the two known super-linear
+terms it does not cover (`installmentNumberOf`, and
+`applyFinalPeriodResidual`'s recursion) with a pointer to the backlog. Cheapest,
+honest, and loses nothing.
+
+**(b) Or make the test grade what its name says.** Add a wall-clock assertion
+across n ∈ {500, 1000, 2000} on `livenessRequest` — the cliff is a 55x step, so
+no threshold-flakiness argument applies at that separation, which is precisely
+the objection that ruled wall clock out at n=90/360. It fails today; that is the
+point, and it should be marked as a known-failing guard against the declared
+backlog item rather than deleted.
+
+**And, independently, fix the scan** (not applied — review scope; ≈3 lines,
+values provably identical because `installmentNumberOf`'s return is a pure
+function of the count of payable rows already emitted):
 
 ```go
 // in generate(), before the loop
 var payable int32
 // replace  InstallmentNumber: installmentNumberOf(periods),
 //   with   InstallmentNumber: payable + 1,
-// and increment payable immediately after each disbursement/down-payment/repayment
-// row is appended, matching installmentNumberOf's own Kind predicate.
+// and increment payable immediately after each down-payment / repayment row is
+// appended, matching installmentNumberOf's own Kind predicate.
 ```
 
-Recommend pairing it with a wall-clock cost assertion at a term where a
-non-allocating quadratic is visible (n ≥ 4,000), or the same blind spot returns.
+## F-3 — WITHDRAWN AS UNPROVEN. I predicted a defect in the `ctxCheckStride` claim, went looking for it, and did not find it.
 
-## F-3 (P2-1) — the `ctxCheckStride` doc overstates what the stride bounds.
+Recorded in full because a failed prediction is a result, and because the
+source-level observation behind it is still worth having on file.
 
-**Where.** `emi.go:131-139`:
+**The claim under test.** `emi.go:129-139` (the `ctxCheckStride` doc):
 
 > At this port's measured per-period cost the 256-period stride bounds the tail
 > latency of a cancelled call to a few milliseconds
 
-**Re-derivation.** The stride bounds the number of **periods** between two
-context reads. It does not bound the **work**, because two stretches do
+**What I derived from source, and predicted.** The stride bounds the number of
+**periods** between two context reads, not the **work**, and two stretches do
 per-period work that itself grows with n:
 
-1. `generate`'s emitting loop (`generator.go:435-466`) does 256 rows between two
-   `checkCancel` calls, and each row costs O(k) in `installmentNumberOf` (F-2) —
-   so one stride costs O(256·n), not O(256).
-2. `adjustEMIIfNeeded` (`emi.go:958-1027`) contains three **fully uncancellable**
-   O(n) stretches: `deepCopy` (`emi.go:212-241`, which also allocates two
-   objects per period), the trial write loop (`emi.go:986-991`), and the
-   `trialRelated` build plus adopt loop (`emi.go:1005-1021`). `emiAdjustment`
-   (`emi.go:910`) and `relatedPeriods` (`emi.go:294`) are two more.
+1. `generate`'s emitting loop (`generator.go:435-466`) checks once per 256 rows,
+   and each row costs O(k) inside `installmentNumberOf` (F-2) — so one stride
+   costs O(256·n).
+2. `adjustEMIIfNeeded` (`emi.go:958-1027`) contains **fully uncancellable** O(n)
+   stretches: `deepCopy` (`emi.go:212-241`, two allocations per period), the
+   trial write loop (`emi.go:986-991`), the `trialRelated` build plus adopt loop
+   (`emi.go:1005-1021`), plus `emiAdjustment` (`emi.go:910`) and `relatedPeriods`
+   (`emi.go:294`).
 
-So the tail after cancellation is **O(n)**, not O(stride).
+So I predicted an O(n) tail and expected to measure it growing.
 
-**This is a documentation defect, not a liveness bug**, and the reason matters:
-`checkCancel` (`emi.go:152-163`) tests the sticky `m.cancelled` flag **first**,
-before the stride mask, so once the flag is set every subsequent check
-short-circuits regardless of index and the unwinding is immediate. The
-uncancellable stretches are each entered at most once after the flag is set,
-because `adjustEMIIfNeeded` re-checks at the head of every outer iteration
-(`emi.go:965`) and after the trial (`emi.go:995`). The bound is O(n), which is
-still bounded, still monotone in a caller-controlled input, and still not "a few
-milliseconds".
+**What I measured — `TestT63G`, 30 (term, deadline) combinations.** Terms
+{1500, 3000, 5000, 20000, 50000} × deadlines {0, 5 ms, 50 ms, 200 ms, 900 ms,
+2.5 s}. The late deadlines were chosen deliberately: at these terms generation
+runs for seconds inside `recalculate`, so a deadline in the hundreds of
+milliseconds lands **inside** `adjustEMIIfNeeded`, which is where the
+uncancellable stretches are.
 
-**Minimal correction:** say what is true — the stride bounds *periods* between
-reads; the tail latency is O(n) because of the uncancellable stretches named
-above; on the graded corpus (≤ 36 periods) both are one pass and the cadence is
-invisible.
+Worst tail observed across all 30: **65.1 ms** (n=20,000, deadline 2.5 s).
+Median tail ~11 ms. Every single run returned `rows=0` with the context's error.
 
-## F-4 (P2-2) — the `applyFinalPeriodResidual` cost cliff is reachable at much shorter terms than the handoff records, by raising the RATE rather than the term.
+**Verdict on my own prediction: not supported.** The comment's "a few
+milliseconds, far below any deadline a caller of a schedule service sets" is,
+as far as I can measure, **true**. The stretches I identified are real but
+cheap: `deepCopy` at n=50,000 is ~100k allocations, and the O(256·n) scan in the
+emitting loop is unreachable before any sane deadline because `recalculate`
+consumes the time first.
+
+**The one residual, weakly supported.** There is a visible upward drift at the
+late deadlines — 2.6 ms at n=1500 rising to 65.1 ms at n=20,000 — consistent
+with an O(n) stretch but two orders of magnitude short of mattering. If the
+comment is touched at all, "tens of milliseconds, drifting up slowly with the
+term" is the phrasing the data supports. **Not a required change**, and I record
+it as an observation, not a finding.
+
+## F-4 (P2-1) — the `applyFinalPeriodResidual` cost cliff is reachable at much shorter terms than the handoff records, by raising the RATE rather than the term.
 
 T59's handoff records this honestly as backlog item 2, at n ≈ 1100 on
 near-interest-only shapes, and **refused to touch it unvectored — which was the
@@ -282,11 +334,18 @@ Money is unaffected at these shapes — T63B2 confirms principal sums to exactly
 the disbursed amount and the final balance is 0 at n ∈ {60,120,254,256,258} at
 both 200% and 500%.
 
+**And it is not only a high-rate phenomenon.** F-2 half two measured the same
+cliff at the ordinary 21.6% rate — n=1,000 at 131 ms, n=2,000 at **7.239 s**,
+n=4,000 not finishing inside this review's budget. So there are two independent
+routes onto it: raise the rate (cliff at n≈256) or raise the term (cliff between
+n=1,000 and n=2,000). T59's handoff placed it at n≈1100, which is consistent.
+
 **Backlog amendment recommended:** T59's backlog item 3 asks for a *long-term*
 capture. It should ask for a **long-term OR high-rate** capture — the shape is
-"many rows amortize zero principal", and rate reaches it at a quarter of the term.
+"many rows amortize zero principal", and rate reaches it at a quarter of the
+term, which makes the capture cheaper to take from the reference oracle.
 
-## F-5 (P2-3) — `memoiseInterestChain` is a mutable package-level global in production code.
+## F-5 (P2-2) — `memoiseInterestChain` is a mutable package-level global in production code.
 
 **Where.** `emi.go:187-190`. Its comment ("written only by this package's own
 differential test; it is not configuration, and no caller, request field or
@@ -401,20 +460,31 @@ The memo stays truthful (only completed steps are stored, `emi.go:548-551`), the
 model is discarded, and `generate` returns the zero `Schedule`. The comment at
 `emi.go:532-534` states this. Verified, no leak.
 
-**The stride, on a 50,000-period request.** See F-3: bounded, but O(n), not
-O(stride).
+**The stride, on a 50,000-period request.** Measured, not assumed — see F-3.
+Worst tail across 30 (term, deadline) combinations up to n=50,000 was **65.1
+ms**, median ~11 ms. I expected to find this unbounded and did not.
 
-**Empirical:** `TestT63H_NoPartialScheduleEverEscapes` fires a deadline at 292
-offsets across the window in which an n=3,000 generation is running and asserts
-`err != nil ⟺ Periods == nil`, and that every completed run is cell-for-cell
-equal to the uncancelled schedule.
+**Empirical — `TestT63H_NoPartialScheduleEverEscapes`.** A deadline is fired at
+292 offsets (137 us apart, 0-40 ms) across the window in which an n=200
+generation runs, asserting `err != nil` if and only if `Periods == nil`, and
+that every completed run is cell-for-cell equal to the uncancelled schedule:
+
+```
+T63H: 170 cancelled, 122 completed; no partial schedule and no divergent complete one
+```
+
+The term matters and I got it wrong the first time: at n=3,000 **all 292 runs
+cancelled** and the "completed" arm of the biconditional was never exercised at
+all -- a test that looks like it grades both directions and grades one. At n=200
+both arms are sampled (170 / 122), which is the run reported above. Recording
+the mistake because it is the same failure shape as F-2.
 
 ---
 
 # WHAT I ATTACKED AND COULD NOT BREAK
 
-Stated plainly, because a failed attack is a result: **five independent attacks,
-none exposed a defect in the memo.**
+Stated plainly, because a failed attack is a result: **five independent attacks
+over ~74,000 generated shapes, none exposed a defect in the memo.**
 
 ### 1. Differential over the disbursement-date axis T59 never sampled — 34,512 shapes, 0 divergences
 
@@ -448,11 +518,24 @@ T63A: 34512 shapes (33396 answered, 1116 refused) compared memo-on vs memo-off
 
 **Zero divergences.** Refusals agreed on both sides.
 
-### 2. Terms across the 256 stride boundary — `TestT63B`
+### 2. Terms across the 256 stride boundary — `TestT63B`, **NOT COMPLETED**
 
 Terms {1,2,3,4,5,8,17,35,36,37,60,120,254,255,256,257,258,300} × 2 rates × 2
-principals × 2 starts × 2 disbursement offsets. The memo-off reference is
-quadratic *by construction*, which is what caps the term here.
+principals × 2 starts × 2 disbursement offsets, memo-on vs memo-off.
+
+**This run did not finish inside the review's wall-clock budget and I am
+reporting it as incomplete rather than implying it passed.** It ran 413 s
+without reaching its `t.Logf`. The reason is structural and not a defect: the
+memo-OFF reference is quadratic *by construction* — that is the whole point of
+the memo — so a single memo-off generation at n=300 costs seconds, and the sweep
+needs two per shape.
+
+What this does and does not cost the review: the stride boundary at 256 is a
+**cancellation** cadence, not a memo cadence — `interestChainUpTo`'s resume path
+(`emi.go:516-524`) behaves identically at n=17 and n=300, and the mask only
+decides how often `ctx.Err()` is read. So the memo evidence rests on T63A / T63D
+/ T63J, which did complete, and on the write-site enumeration; T63B would have
+been confirmatory. Re-run it with a longer budget if the driver wants it.
 
 ### 3. Reachability instrumentation — is the attacked machinery even reachable?
 
@@ -473,11 +556,25 @@ and no promoted vector trips its guard** (`loanschedule_test.go:203-214` states
 this; conformance is silent about it). That is a corpus gap, not a T59 defect,
 and it is already on the program's radar via T57.
 
-### 4. Differential restricted to exactly those shapes — `TestT63J`
+### 4. Differential restricted to exactly those shapes — `TestT63J`, 4,533 shapes, 0 divergences
 
 Rather than trust that the broad sweeps happened to contain carry/smoothing
-shapes, `TestT63J` selects the shapes where `carried != 0` **or** the smoothing
-guard is true and runs the memo-on/memo-off differential on those only.
+shapes, `TestT63J` **selects** the shapes where `carried != 0` **or** the
+smoothing guard is true, and runs the memo-on/memo-off differential on those
+only:
+
+```
+T63J: 4533 shapes compared memo-on vs memo-off - 30 with a non-zero inter-period
+      carry, 4526 tripping the EMI smoothing guard, 23 both
+--- PASS (151.35s)
+```
+
+**Zero divergences.** The 30 carry shapes are the ones that matter most: they are
+the only shapes on which `interestChainUpTo`'s RESUME path reads a non-zero
+`chain[chainValid-1].carried`, so on every other shape a bug in that read would
+be invisible no matter how many shapes were compared. Terms are capped at 18
+here because the memo-off reference is quadratic; the selection predicate is what
+makes the run interesting, not the term.
 
 ### 5. Final-state memo audit — 215,289 entries, 0 stale
 
@@ -583,10 +680,14 @@ The handoff calls disbursement-on-`due[0]` "the only shape that registers a
 balance change into a period other than the first" — that is true of the sweep,
 but it is not the interesting property, and the shape the contract itself
 singles out as the discriminating one is absent. My 34,512-shape run closes it,
-and found nothing, which is the best possible outcome for T59.
+and found nothing, which is the best possible outcome for T59. Disagreement on
+the *sampling*, not on the *result*.
 
-**Disagreement 4 — "the 256-period stride bounds the tail latency … to a few
-milliseconds."** F-3: O(n), not O(stride).
+**NOT a disagreement, after measuring — "the 256-period stride bounds the tail
+latency … to a few milliseconds."** I derived from source that this should be
+O(n) and not O(stride), predicted a growing tail, and then measured 30
+(term, deadline) combinations up to n=50,000: worst tail **65.1 ms**, median
+~11 ms. **T59's claim survives and mine does not.** See F-3, withdrawn.
 
 **Disagreement 5 — the cost claim's scope.** The handoff's table and the
 regression test both sample **one rate**. F-4 shows the cliff at n=256 rather
@@ -603,8 +704,7 @@ asks for a *long-term* capture. It should read *long-term **or high-rate***.
 1. **F-2 fix** — replace `installmentNumberOf`'s rescan with a running counter in
    `generate`, and add a wall-clock cost assertion at n ≥ 4,000 so a
    non-allocating quadratic cannot hide behind the allocation ratio again.
-2. **F-1 / F-3 doc corrections** in `emi.go` — state the write-ordering rule and
-   the true latency bound.
+2. **F-1 doc correction** in `emi.go:176-184` — state the write-ordering rule.
 3. **F-4** — amend T59 backlog item 3 to *long-term **or high-rate***; a 500%
    capture at n=256 reaches the same shape at a quarter of the term and would be
    cheaper to capture.
@@ -627,13 +727,50 @@ asks for a *long-term* capture. It should read *long-term **or high-rate***.
    oracle capture at that shape.
 6. **Corpus gap, already known:** the EMI smoothing guard is true on 30% of
    admitted shapes and no promoted vector trips it.
+7. **UNPROVEN, port fidelity, pre-existing (T10) — the smoothing loop's trial copy
+   is re-allocated per iteration here and allocated ONCE in the oracle.**
+   `ProgressiveEMICalculator.java:1274-1276` guards the copy with
+   `if (newScheduleModel == null) { newScheduleModel = scheduleModel.deepCopy(mc); }`,
+   **outside** any per-iteration reset, so on the loop's second and third passes
+   the Java trial still carries whatever the previous pass wrote to it. The port
+   does `trial := m.deepCopy()` **inside** the loop (`emi.go:986`), starting each
+   pass from the live model. The two differ exactly when *(a)* the loop adopts
+   and iterates again, and *(b)* the previous pass's
+   `calculateLastUnpaidRepaymentPeriodEMI` on the trial wrote an installment to a
+   period **outside** the related window — because those are the periods the
+   uniform-EMI stamp at `:1280-1285` does not overwrite.
+   **I could not construct an input exhibiting it and am reporting it as
+   unproven.** My re-derivation says it is inert on a single-disbursement graded
+   schedule: the only writer outside the related window is the guard loop at
+   `:1165-1174` / `emi.go:851-855`, whose predicate is
+   `duePrincipal(p) > totalDuePaidDiff`, and a pre-related period has
+   `emiMinor == 0` hence `duePrincipal == 0`, which is never greater than the
+   total disbursed. That argument stops holding the moment multi-tranche
+   disbursement arrives (`contract.go:1330-1342` says it will), so it should be
+   recorded now rather than rediscovered then. The port's own comment
+   ("THE TRIAL IS A REBUILD on a copy, not a patch", `emi.go:951-952`) describes
+   the rebuild correctly and is silent on the allocation site, which is the part
+   that differs.
 
 ---
 
-# THE REVIEW HARNESS
+# THE REVIEW HARNESS — every run, and its outcome
 
-The eight tests above were run from a temporary file
-`nexus/internal/apps/loanschedule/t63_review_test.go`, **removed before commit**
-so this review changes nothing in the port. The source is preserved verbatim at
-`.softhouse/reviews/T63-memo-differential_test.go.txt`; drop it back into the
-package and every number here re-runs.
+Run from a temporary file `nexus/internal/apps/loanschedule/t63_review_test.go`,
+**removed before commit** so this review changes nothing in the port. Source
+preserved verbatim at `.softhouse/reviews/T63-memo-differential_test.go.txt`;
+drop it back into the package and every number here re-runs.
+
+| test | what it grades | outcome |
+|---|---|---|
+| `TestT63A_DisbursementOnEveryDayOfTheTerm` | memo-on vs memo-off, disbursement on every day of the term | **PASS** — 34,512 shapes (33,396 answered, 1,116 refused), 0 divergences, 237.04 s |
+| `TestT63B_TermsAcrossTheStrideBoundary` | memo differential at terms 1..300 | **NOT COMPLETED** — 413 s, memo-off reference is quadratic by construction |
+| `TestT63B2_HighRateLongTermMemoOnOnly` | invariants + cost at 200% / 500%, n up to 258 | **PASS** — principal sums to the disbursed amount and final balance 0 on all 10 |
+| `TestT63C_ReachabilityOfTheAttackedMechanisms` | is the attacked machinery reachable at all | **PASS** — 30,690 admitted shapes; carry 386, smoothing 9,206, multi-segment 28,560, zero-EMI-with-interest 101 |
+| `TestT63D_MemoAgreesWithScratchOnTheFinalState` | every still-valid memo entry vs a from-scratch recomputation | **PASS** — 7,344 generations, 215,289 entries, **0 stale** |
+| `TestT63E_WallClockGrowthAcrossFourTerms` | generation cost in the term, on `livenessRequest` | **truncated** — n=500 63 ms, n=1,000 131 ms (2.07x), n=2,000 **7.239 s (55.27x)**, n=4,000 did not finish |
+| `TestT63F_InstallmentNumberOfIsQuadratic` | `installmentNumberOf` isolated | **PASS** — 4.22x / 4.15x / 4.05x per 2x term; textbook quadratic |
+| `TestT63G_CancellationTailLatency` | tail between cancellation and return | **PASS** — 30 (term, deadline) combos to n=50,000; worst tail 65.1 ms; **my O(n) prediction not supported** |
+| `TestT63H_NoPartialScheduleEverEscapes` | `err != nil` iff `Periods == nil`, and completed runs identical | **PASS** — 170 cancelled / 122 completed, both arms sampled |
+| `TestT63I_FinalPeriodResidualRecursionCost` | cost vs rate at fixed terms | **PASS** — linear at 21.6%, 8.08x / 5.69x per 2x term at 200% / 500% |
+| `TestT63J_DifferentialOnCarryAndSmoothingShapesOnly` | memo differential on carry / smoothing shapes only | **PASS** — 4,533 selected shapes (30 carry, 4,526 smoothing, 23 both), 0 divergences, 151.35 s |

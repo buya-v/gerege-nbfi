@@ -266,8 +266,11 @@ func TestT63J_DifferentialOnCarryAndSmoothingShapesOnly(t *testing.T) {
 	for _, start := range []civilDate{date(2024, 1, 1), date(2024, 1, 31), date(2023, 2, 28)} {
 		for _, rate := range []contract.Rate{{Numerator: 0, Denominator: 1}, {Numerator: 7, Denominator: 100},
 			{Numerator: 27, Denominator: 125}, {Numerator: 5, Denominator: 1}, {Numerator: 20, Denominator: 1}} {
+			// Terms are capped at 18 because the memo-OFF reference this compares
+			// against is quadratic by construction; the selection predicate below
+			// is what makes the run interesting, not the term.
 			for _, principal := range []int64{1, 3, 100, 999999, 5000000000, 900000000000} {
-				for _, term := range []int32{1, 2, 3, 6, 12, 18, 36} {
+				for _, term := range []int32{1, 2, 3, 6, 12, 18} {
 					for off := int64(0); off < int64(term)*31+2; off += 7 {
 						v := t63Request(start, plusDays(start, off), principal, term, rate)
 						dueDates, err := repaymentDueDates(ctx, v.ScheduleStartDate, v.NumberOfRepayments,
@@ -407,8 +410,16 @@ func TestT63F_InstallmentNumberOfIsQuadratic(t *testing.T) {
 // The claim under test is emi.go:135-139: "the 256-period stride bounds the tail
 // latency of a cancelled call to a few milliseconds".
 func TestT63G_CancellationTailLatency(t *testing.T) {
-	for _, n := range []int32{5000, 20000, 50000} {
-		for _, fire := range []time.Duration{0, 5 * time.Millisecond, 50 * time.Millisecond} {
+	// The first row of deadlines fires during repaymentDueDates / model
+	// construction. The LATE ones are the interesting ones: at n=1500-5000 the
+	// generation runs for seconds inside recalculate, so a deadline in the
+	// hundreds of ms to seconds lands inside adjustEMIIfNeeded -- which is where
+	// the UNCANCELLABLE O(n) stretches are (deepCopy, the trial write loop, the
+	// trialRelated build and adopt loops). If the tail is O(n) rather than
+	// O(stride), this is where it shows.
+	for _, n := range []int32{1500, 3000, 5000, 20000, 50000} {
+		for _, fire := range []time.Duration{0, 5 * time.Millisecond, 50 * time.Millisecond,
+			200 * time.Millisecond, 900 * time.Millisecond, 2500 * time.Millisecond} {
 			ctx, cancel := context.WithTimeout(context.Background(), fire)
 			start := time.Now()
 			s, err := Generator{}.Generate(ctx, livenessRequest(n))
@@ -427,7 +438,12 @@ func TestT63G_CancellationTailLatency(t *testing.T) {
 // row list? Fire the cancel at every microsecond offset across the window in
 // which generation is running, and assert the pairing (err==nil) <=> (rows complete).
 func TestT63H_NoPartialScheduleEverEscapes(t *testing.T) {
-	const n = 3000
+	// The term is chosen so that BOTH directions of the biconditional are
+	// sampled: a full generation here takes a few ms, so deadlines swept from 0
+	// past that figure produce cancellations early and completions late. At
+	// n=3000 (tried first) every one of 292 runs cancelled and the "completed"
+	// arm was never exercised, which is a weaker test than it looks.
+	const n = 200
 	full, err := Generator{}.Generate(context.Background(), livenessRequest(n))
 	if err != nil {
 		t.Fatal(err)
