@@ -122,7 +122,7 @@ oracle capture, and `T64-ZP-B` carries 40 of them after the last not-fully-paid 
 **Step 4 was wrong, and wrong for a reason more general than the driver's own guess at how it might
 fail.** The driver's note above speculated that ZP-B is inert because its tail rows have a zero
 outstanding balance — a property of that one shape. The real reason is structural and applies to
-every shape: the lookup does not run on the live model at all. It runs on a **deep copy** (`:1226`)
+every shape: the lookup does not run on the live model at all. It runs on a **deep copy** (`:1224`)
 that `calculateRateFactorForScheduleTillDateInclusive` (`:1237`, `:1791-1803`) has re-rated only up
 to `tillDate`, **zeroing `rateFactor` and `rateFactorTillPeriodDueDate` on every interest period
 whose due date is after it** [VERIFIED by the driver at `ProgressiveEMICalculator.java:1791-1803`].
@@ -207,3 +207,47 @@ capture. The driver re-ran both and they are inert.
   conflict, but the driver did not reconcile them and does not assert they agree.
 - The proof's premises lapse under multi-tranche, payments, credits, capitalized income, re-aging
   and interest pauses. T66 records that list; none of it is graded today.
+
+
+---
+
+# CORRECTION — the driver propagated an unchecked line number into the document whose job was checking
+
+Added at the end of local fire `20260820-140000`, after **T70** found it.
+
+**`:1226` above was wrong; `deepCopy` is at `:1224`.** `:1226` is a *comment line*. The driver took the
+number from T66's `PREDICTION.md`, repeated it in this re-derivation, **and passed it into T70's dispatch
+prompt** — so an unchecked citation propagated from the artefact under review into the review, and then into
+the next task's instructions. That is **P-12** (a correction document wrong about its own reason) recurring
+one level up, and it is the second time this fire the driver has had to withdraw something it wrote.
+
+T70 found the same drift in **three** committed artefacts. Verified by the driver by reading
+`ProgressiveEMICalculator.java` at pinned `426a23544`:
+
+| claim, as written in `T66.md` / `PASS3H-REPORT.md:141,143` / this document | actual line at `426a23544` |
+|---|---|
+| `deepCopy` at `:1226` | **`:1224`** — `:1226` is a comment |
+| the `futureUnrecognizedInterest` write at `:1250` | **`:1246`** — `:1250` is a closing brace |
+| the residual assignment at `:1207` (`T66.md`) | **`:1210`** (`setEmi(adjustedEmi)`); `:1205` is `Money adjustedEmi = …` and `:1207` sits inside the `getFixedInterest()` guard condition |
+
+**None of this moves the verdict.** Every cited *method* is the right method and every step of the argument
+stands; the drift is in the line numbers, which is exactly the class of error T69 caught in T67's own
+replacement text (`:247` is on the `allowFullTermForTranche` branch; the ordinary path is `:747`). It is
+recorded because a wrong citation in a money-path document is how the next reader is sent to the wrong code.
+`T66.md` and `PASS3H-REPORT.md` are **not** corrected here — they are T66's artefacts and are filed as
+follow-up **F-1**.
+
+## F-2 — a gap in the T66 proof that neither T66 nor the driver noticed
+
+**T70 raised it and, correctly, did not close it by reading.** `:1214` recursively re-enters
+`calculateLastUnpaidRepaymentPeriodEMI` (declared `:1160`), and the `:1217` defer then runs in the **outer**
+frame — so the lookup can execute after an inner frame has re-established step (d) on a possibly different
+`L`. **T66 states (d) for a single entry only.** Neither T66's proof nor the driver's re-derivation above
+analysed the recursive frame; the census covers it **empirically, not deductively**. [VERIFIED by the driver
+at `:1211-1215` and `:1160`.]
+
+The driver's own refinement, **offered to T71 to verify or refute and NOT adopted here**: the guard at
+`:1211-1212` is `getEmi().isLessThan(totalPaidAmount.minus(totalCreditedAmount))`, and on the graded domain
+nothing is paid and nothing credited, so it *appears* to reduce to `emi_L < 0`. **Whether `emi_L` can be
+negative on an admissible shape is not established**, and the driver does not claim it cannot — asserting
+that from reading alone would be precisely the move this comment's own history forbids.
