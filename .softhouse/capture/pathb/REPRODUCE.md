@@ -261,8 +261,28 @@ sh   .softhouse/capture/pathb/t80/shell-invariance.sh
 sh   .softhouse/capture/pathb/t80/happy-path.sh
 ```
 
+### Amended after T85's review (MICRO-FIX)
+
+Two P1s, both proved by a before/after run rather than asserted:
+
+* **`attest.py` wrote provenance before its gate.** The `makedirs` / `CAPTURED-FROM-TENANT` /
+  `preconditions.txt` writes sat *above* the `pre.returncode` test, so `python3 attest.py default
+  emiloop` printed *"no capture attempted, no attestation written"* while stamping eleven `gerege`
+  captures as `default` and replacing their HALF_UP transcript. The `emiloop` set is reachable
+  because it is exempt from the directory-**name** check. The gate now runs first and a breached run
+  writes nothing. Proof: `sh t80/prove-f1.sh` → `t80/out/F1-attest-gate-order.txt`.
+* **`preconditions.sh` died instead of firing when P7 failed.** `'$PIN_PG_MAJOR_MINOR…'` ran the
+  identifier into U+2026, so under `set -u` the script aborted at that line: P8-P15 never ran,
+  **including the entire rounding-mode canary**, and no breach summary printed. Now
+  `${PIN_PG_MAJOR_MINOR}`. Proof: `sh t80/prove-f2.sh` → `t80/out/F2-p7-death-sh.txt` (10 PASS / 0
+  FAIL / no canary, versus 21 PASS / 1 FAIL / canary run).
+
+Also, one token in two places: `LC_ALL=C grep -ac`. BSD grep in a UTF-8 locale silently matches
+**nothing** in a file containing an invalid multibyte sequence, which would make `recapture.sh`'s
+FAIL-count operand return 0 on a breached run.
+
 **The `sh` / exit-2 note above still stands and is NOT fixed here:** invoke the conformance harness only as
-`bash .softhouse/conformance.sh`. Under `sh` it exits **2**, the harness's "oracle unusable" fatal code,
+`bash .softhouse/conformance.sh`. Under a non-bash interpreter it exits **3** since the guard merged to main (**2** before that) —
 which a program driver would read as a legitimate oracle-down park. That is a different script (T77
 P2-T77-5) and outside T80's scope.
 

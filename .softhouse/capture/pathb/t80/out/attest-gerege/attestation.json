@@ -17,7 +17,7 @@
  "produced_by": {
   "task": "T80",
   "branch": "softhouse/T80-pathb-recipe-hardening",
-  "generated_at_utc": "2026-08-20T12:18:36Z",
+  "generated_at_utc": "2026-08-20T12:57:44Z",
   "generator": "t36/attest.py",
   "preconditions_script": "t36/preconditions.sh",
   "preconditions_result": "ALL PASS (transcript: t80/out/attest-gerege/preconditions.txt)"
@@ -171,7 +171,7 @@
    "response_file": "t80/out/attest-gerege/B-01-baseline-raw.json",
    "response_sha256": "713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009",
    "response_bytes": 8342,
-   "captured_at_utc": "2026-08-20T12:18:36Z",
+   "captured_at_utc": "2026-08-20T12:57:43Z",
    "committed_corpus_sha256": "713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009",
    "matches_committed_corpus_bytes": true
   },
@@ -186,7 +186,7 @@
    "response_file": "t80/out/attest-gerege/B-02-multiplesof100-raw.json",
    "response_sha256": "9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8",
    "response_bytes": 8342,
-   "captured_at_utc": "2026-08-20T12:18:36Z",
+   "captured_at_utc": "2026-08-20T12:57:43Z",
    "committed_corpus_sha256": "9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8",
    "matches_committed_corpus_bytes": true
   },
@@ -201,7 +201,7 @@
    "response_file": "t80/out/attest-gerege/B-03-diycs-fullleapyear-raw.json",
    "response_sha256": "892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf",
    "response_bytes": 8467,
-   "captured_at_utc": "2026-08-20T12:18:36Z",
+   "captured_at_utc": "2026-08-20T12:57:43Z",
    "committed_corpus_sha256": "892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf",
    "matches_committed_corpus_bytes": true
   },
@@ -216,7 +216,7 @@
    "response_file": "t80/out/attest-gerege/B-04-diycs-feb29only-raw.json",
    "response_sha256": "c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80",
    "response_bytes": 8467,
-   "captured_at_utc": "2026-08-20T12:18:36Z",
+   "captured_at_utc": "2026-08-20T12:57:44Z",
    "committed_corpus_sha256": "c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80",
    "matches_committed_corpus_bytes": true
   }

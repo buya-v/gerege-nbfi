@@ -1,5 +1,5 @@
 === HAPPY PATH — tenant gerege, MathContext(19, HALF_UP)
-run at 2026-08-20T12:18:15Z
+run at 2026-08-20T12:57:24Z
 
 --- 5a: sh t36/recapture.sh  ->  t80/out/recapture-gerege
 ### tenant 'gerege'  ->  output directory /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/recapture-gerege

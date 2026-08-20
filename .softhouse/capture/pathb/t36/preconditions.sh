@@ -111,7 +111,14 @@ pgdrv=$(docker exec "$FIN" sh -c 'unzip -l /app/fineract-provider.jar' 2>/dev/nu
 # ------------------------------------------------- P7 PostgreSQL server version
 pgv=$(docker exec "$DB" psql -U root -t -c 'select version();' 2>/dev/null | tr -d '\r' | sed -n '1s/^ *//p')
 case "$pgv" in "$PIN_PG_MAJOR_MINOR"*) ok "PostgreSQL version: $pgv" ;;
-               *) bad "PostgreSQL version is '$pgv', pin is '$PIN_PG_MAJOR_MINOR…'" ;; esac
+               *) bad "PostgreSQL version is '$pgv', pin is '${PIN_PG_MAJOR_MINOR}…'" ;; esac
+# ^ THE BRACES ARE LOAD-BEARING (T85 F-2).  Without them the variable reference runs straight into
+# the ellipsis U+2026 (bytes e2 80 a6); bash reads 0xe2 as part of the identifier, and under `set -u`
+# the whole script DIES here.  Measured effect of the unbraced form when P7 fails: 7 FAIL lines
+# instead of 16, P8-P15 never executed -- INCLUDING THE ENTIRE ROUNDING-MODE CANARY -- no
+# "PRECONDITIONS BREACHED: n" summary, and attest.py crashing with a UnicodeDecodeError on the
+# truncated multibyte name.  It failed CLOSED (exit 1), so it was never a false pass; but a guard
+# that dies instead of reporting takes the strongest assertion in the script down with it.
 
 # --------------------------------------------------------- P8 tenant row exists
 tzid=$(docker exec "$DB" psql -U root -d fineract_tenants -At \

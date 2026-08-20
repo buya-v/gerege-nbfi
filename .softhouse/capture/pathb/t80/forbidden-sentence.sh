@@ -16,8 +16,9 @@ D='PASS  canary request pinned by DIGEST COMPARISON'
 bad=0
 for f in "$O"/attack-*.txt "$O"/*/preconditions.txt; do
   [ -f "$f" ] || continue
-  if grep -qF "$S" "$f"; then
-    if grep -qF "$D" "$f" && grep -q "tenant 'gerege'" "$f" && ! grep -q "tenant 'default'" "$f"; then
+  if LC_ALL=C grep -qaF "$S" "$f"; then
+    if LC_ALL=C grep -qaF "$D" "$f" && LC_ALL=C grep -qa "tenant 'gerege'" "$f" \
+       && ! LC_ALL=C grep -qa "tenant 'default'" "$f"; then
       echo "OK        $f — canary PASS is accompanied by a passing digest pin, tenant gerege"
     else
       echo "VIOLATION $f — the canary PASS appears WITHOUT a passing digest pin, or not on gerege"

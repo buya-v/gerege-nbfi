@@ -161,6 +161,18 @@ def now():
 canary = os.path.join(PATHB, 't22-audit', 'req', 'calc-pmode2-gerege.json')
 pre = subprocess.run('CANARY_REQ=%s sh %s %s' % (canary, os.path.join(HERE, 'preconditions.sh'), TENANT),
                      shell=True, capture_output=True, text=True)
+# THE GATE COMES FIRST, AND NOTHING IS WRITTEN BEFORE IT (T85 F-1).  T80 put the makedirs/stamp/
+# transcript writes ABOVE this test, so a breached run printed "no capture attempted, no attestation
+# written" while having ALREADY stamped a committed capture set with the wrong tenant and replaced
+# its precondition transcript.  `python3 attest.py default emiloop` did exactly that to eleven
+# `gerege` captures: the message was true about captures and false about writes.  A breached run must
+# leave the filesystem exactly as it found it, because the directory it would touch may be evidence.
+if pre.returncode != 0:
+    sys.stderr.write(pre.stdout + pre.stderr)
+    sys.stderr.write('\nABORT: preconditions breached — no capture attempted, no attestation written, '
+                     'and nothing at all written into %r.\n' % OUT)
+    sys.exit(1)
+
 os.makedirs(OUT, exist_ok=True)
 # Provenance stamp: the directory records the tenant it was captured from, so a later run for a
 # different tenant is refused above rather than silently overwriting (the four response bodies
@@ -169,10 +181,6 @@ with open(_stamp, 'w') as fh:
     fh.write(TENANT + '\n')
 with open(os.path.join(OUT, 'preconditions.txt'), 'w') as fh:
     fh.write(pre.stdout + pre.stderr)
-if pre.returncode != 0:
-    sys.stderr.write(pre.stdout + pre.stderr)
-    sys.stderr.write('\nABORT: preconditions breached — no capture attempted, no attestation written.\n')
-    sys.exit(1)
 
 # ------------------------------------------------------------------ the oracle
 image_id = sh("docker image inspect fineract:latest --format '{{.Id}}'")

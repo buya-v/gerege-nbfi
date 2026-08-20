@@ -83,7 +83,11 @@ cat "$O/preconditions.txt"
 # Operand 1: the exit status preconditions.sh actually emits.
 # Operand 2: FAIL lines in a transcript that now captures BOTH streams (the bug T77 found was that
 # it captured only stdout, where a FAIL line never appears).  Either one aborts.
-prefails=$(grep -c '^  FAIL' "$O/preconditions.txt" || true)
+# LC_ALL=C: BSD grep in a UTF-8 locale silently fails to match ANY line in a file containing an
+# invalid multibyte sequence, so a transcript with one stray byte would make this operand return 0
+# on a breached run.  That is precisely the silent-zero this gate exists to stop; operand 1 (the
+# exit status) would still abort, but an operand that can go blind is not a second operand.
+prefails=$(LC_ALL=C grep -ac '^  FAIL' "$O/preconditions.txt" || true)
 if [ "$prestatus" -ne 0 ] || [ "$prefails" != "0" ]; then
   echo >&2
   die "preconditions breached — exit status $prestatus, $prefails FAIL line(s) in $O/preconditions.txt. NOTHING WAS CAPTURED. Any file already in '$O' is from an earlier run and is NOT an observation of this environment."
