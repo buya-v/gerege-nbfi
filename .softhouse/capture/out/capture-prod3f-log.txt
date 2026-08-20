@@ -1,0 +1,8 @@
+00:45:17.865 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `attest_probe`: HALF_UP
+00:45:18.000 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_cal`: HALF_UP
+00:45:18.034 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_00`: HALF_UP
+00:45:18.040 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_p_emi_6`: HALF_UP
+00:45:18.045 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_lat_q0a`: HALF_UP
+00:45:18.047 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_t61_he_a`: HALF_UP
+00:45:18.049 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_t61_he_b`: HALF_UP
+00:45:18.051 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `cap_t61_he_c`: HALF_UP
