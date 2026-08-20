@@ -1,0 +1,1054 @@
+[
+ {
+  "case": "T74-E-P4",
+  "counterfactualCase": "T74-E-P4-p12",
+  "counterfactualId": "MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19",
+  "bothArmsAreOracleObservations": true,
+  "cells": 146,
+  "divergentCellCount": 23,
+  "divergent": [
+   {
+    "row": 17,
+    "field": "principal_minor",
+    "observed": 10,
+    "counterfactual": 11,
+    "delta": 1
+   },
+   {
+    "row": 17,
+    "field": "interest_minor",
+    "observed": 4,
+    "counterfactual": 3,
+    "delta": 1
+   },
+   {
+    "row": 17,
+    "field": "outstanding_principal_minor",
+    "observed": 240,
+    "counterfactual": 239,
+    "delta": 1
+   },
+   {
+    "row": 18,
+    "field": "outstanding_principal_minor",
+    "observed": 229,
+    "counterfactual": 228,
+    "delta": 1
+   },
+   {
+    "row": 19,
+    "field": "outstanding_principal_minor",
+    "observed": 218,
+    "counterfactual": 217,
+    "delta": 1
+   },
+   {
+    "row": 20,
+    "field": "outstanding_principal_minor",
+    "observed": 207,
+    "counterfactual": 206,
+    "delta": 1
+   },
+   {
+    "row": 21,
+    "field": "outstanding_principal_minor",
+    "observed": 196,
+    "counterfactual": 195,
+    "delta": 1
+   },
+   {
+    "row": 22,
+    "field": "outstanding_principal_minor",
+    "observed": 185,
+    "counterfactual": 184,
+    "delta": 1
+   },
+   {
+    "row": 23,
+    "field": "outstanding_principal_minor",
+    "observed": 174,
+    "counterfactual": 173,
+    "delta": 1
+   },
+   {
+    "row": 24,
+    "field": "outstanding_principal_minor",
+    "observed": 162,
+    "counterfactual": 161,
+    "delta": 1
+   },
+   {
+    "row": 25,
+    "field": "outstanding_principal_minor",
+    "observed": 150,
+    "counterfactual": 149,
+    "delta": 1
+   },
+   {
+    "row": 26,
+    "field": "outstanding_principal_minor",
+    "observed": 138,
+    "counterfactual": 137,
+    "delta": 1
+   },
+   {
+    "row": 27,
+    "field": "outstanding_principal_minor",
+    "observed": 126,
+    "counterfactual": 125,
+    "delta": 1
+   },
+   {
+    "row": 28,
+    "field": "outstanding_principal_minor",
+    "observed": 114,
+    "counterfactual": 113,
+    "delta": 1
+   },
+   {
+    "row": 29,
+    "field": "outstanding_principal_minor",
+    "observed": 102,
+    "counterfactual": 101,
+    "delta": 1
+   },
+   {
+    "row": 30,
+    "field": "outstanding_principal_minor",
+    "observed": 89,
+    "counterfactual": 88,
+    "delta": 1
+   },
+   {
+    "row": 31,
+    "field": "outstanding_principal_minor",
+    "observed": 76,
+    "counterfactual": 75,
+    "delta": 1
+   },
+   {
+    "row": 32,
+    "field": "outstanding_principal_minor",
+    "observed": 63,
+    "counterfactual": 62,
+    "delta": 1
+   },
+   {
+    "row": 33,
+    "field": "outstanding_principal_minor",
+    "observed": 50,
+    "counterfactual": 49,
+    "delta": 1
+   },
+   {
+    "row": 34,
+    "field": "outstanding_principal_minor",
+    "observed": 37,
+    "counterfactual": 36,
+    "delta": 1
+   },
+   {
+    "row": 35,
+    "field": "outstanding_principal_minor",
+    "observed": 24,
+    "counterfactual": 23,
+    "delta": 1
+   },
+   {
+    "row": 36,
+    "field": "principal_minor",
+    "observed": 24,
+    "counterfactual": 23,
+    "delta": 1
+   },
+   {
+    "row": 36,
+    "field": "observed_total_due_minor",
+    "observed": 24,
+    "counterfactual": 23,
+    "delta": 1
+   }
+  ],
+  "widest": {
+   "row": 17,
+   "field": "principal_minor",
+   "observed": 10,
+   "counterfactual": 11,
+   "delta": 1
+  },
+  "observedTotalInterest": "1.14",
+  "counterfactualTotalInterest": "1.13"
+ },
+ {
+  "case": "T74-E-P59",
+  "counterfactualCase": "T74-E-P59-p12",
+  "counterfactualId": "MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19",
+  "bothArmsAreOracleObservations": true,
+  "cells": 146,
+  "divergentCellCount": 27,
+  "divergent": [
+   {
+    "row": 13,
+    "field": "principal_minor",
+    "observed": 151,
+    "counterfactual": 150,
+    "delta": 1
+   },
+   {
+    "row": 13,
+    "field": "interest_minor",
+    "observed": 59,
+    "counterfactual": 60,
+    "delta": 1
+   },
+   {
+    "row": 13,
+    "field": "outstanding_principal_minor",
+    "observed": 4099,
+    "counterfactual": 4100,
+    "delta": 1
+   },
+   {
+    "row": 14,
+    "field": "outstanding_principal_minor",
+    "observed": 3946,
+    "counterfactual": 3947,
+    "delta": 1
+   },
+   {
+    "row": 15,
+    "field": "outstanding_principal_minor",
+    "observed": 3791,
+    "counterfactual": 3792,
+    "delta": 1
+   },
+   {
+    "row": 16,
+    "field": "outstanding_principal_minor",
+    "observed": 3634,
+    "counterfactual": 3635,
+    "delta": 1
+   },
+   {
+    "row": 17,
+    "field": "outstanding_principal_minor",
+    "observed": 3475,
+    "counterfactual": 3476,
+    "delta": 1
+   },
+   {
+    "row": 18,
+    "field": "outstanding_principal_minor",
+    "observed": 3314,
+    "counterfactual": 3315,
+    "delta": 1
+   },
+   {
+    "row": 19,
+    "field": "outstanding_principal_minor",
+    "observed": 3150,
+    "counterfactual": 3151,
+    "delta": 1
+   },
+   {
+    "row": 20,
+    "field": "outstanding_principal_minor",
+    "observed": 2984,
+    "counterfactual": 2985,
+    "delta": 1
+   },
+   {
+    "row": 21,
+    "field": "outstanding_principal_minor",
+    "observed": 2816,
+    "counterfactual": 2817,
+    "delta": 1
+   },
+   {
+    "row": 22,
+    "field": "outstanding_principal_minor",
+    "observed": 2645,
+    "counterfactual": 2646,
+    "delta": 1
+   },
+   {
+    "row": 23,
+    "field": "outstanding_principal_minor",
+    "observed": 2472,
+    "counterfactual": 2473,
+    "delta": 1
+   },
+   {
+    "row": 24,
+    "field": "outstanding_principal_minor",
+    "observed": 2297,
+    "counterfactual": 2298,
+    "delta": 1
+   },
+   {
+    "row": 25,
+    "field": "outstanding_principal_minor",
+    "observed": 2119,
+    "counterfactual": 2120,
+    "delta": 1
+   },
+   {
+    "row": 26,
+    "field": "outstanding_principal_minor",
+    "observed": 1939,
+    "counterfactual": 1940,
+    "delta": 1
+   },
+   {
+    "row": 27,
+    "field": "outstanding_principal_minor",
+    "observed": 1756,
+    "counterfactual": 1757,
+    "delta": 1
+   },
+   {
+    "row": 28,
+    "field": "outstanding_principal_minor",
+    "observed": 1571,
+    "counterfactual": 1572,
+    "delta": 1
+   },
+   {
+    "row": 29,
+    "field": "outstanding_principal_minor",
+    "observed": 1383,
+    "counterfactual": 1384,
+    "delta": 1
+   },
+   {
+    "row": 30,
+    "field": "outstanding_principal_minor",
+    "observed": 1192,
+    "counterfactual": 1193,
+    "delta": 1
+   },
+   {
+    "row": 31,
+    "field": "outstanding_principal_minor",
+    "observed": 999,
+    "counterfactual": 1000,
+    "delta": 1
+   },
+   {
+    "row": 32,
+    "field": "outstanding_principal_minor",
+    "observed": 803,
+    "counterfactual": 804,
+    "delta": 1
+   },
+   {
+    "row": 33,
+    "field": "outstanding_principal_minor",
+    "observed": 604,
+    "counterfactual": 605,
+    "delta": 1
+   },
+   {
+    "row": 34,
+    "field": "outstanding_principal_minor",
+    "observed": 402,
+    "counterfactual": 403,
+    "delta": 1
+   },
+   {
+    "row": 35,
+    "field": "outstanding_principal_minor",
+    "observed": 198,
+    "counterfactual": 199,
+    "delta": 1
+   },
+   {
+    "row": 36,
+    "field": "principal_minor",
+    "observed": 198,
+    "counterfactual": 199,
+    "delta": 1
+   },
+   {
+    "row": 36,
+    "field": "observed_total_due_minor",
+    "observed": 201,
+    "counterfactual": 202,
+    "delta": 1
+   }
+  ],
+  "widest": {
+   "row": 13,
+   "field": "principal_minor",
+   "observed": 151,
+   "counterfactual": 150,
+   "delta": 1
+  },
+  "observedTotalInterest": "16.51",
+  "counterfactualTotalInterest": "16.52"
+ },
+ {
+  "case": "T74-E-P72",
+  "counterfactualCase": "T74-E-P72-p12",
+  "counterfactualId": "MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19",
+  "bothArmsAreOracleObservations": true,
+  "cells": 146,
+  "divergentCellCount": 2,
+  "divergent": [
+   {
+    "row": 36,
+    "field": "interest_minor",
+    "observed": 4,
+    "counterfactual": 3,
+    "delta": 1
+   },
+   {
+    "row": 36,
+    "field": "observed_total_due_minor",
+    "observed": 254,
+    "counterfactual": 253,
+    "delta": 1
+   }
+  ],
+  "widest": {
+   "row": 36,
+   "field": "interest_minor",
+   "observed": 4,
+   "counterfactual": 3,
+   "delta": 1
+  },
+  "observedTotalInterest": "20.14",
+  "counterfactualTotalInterest": "20.13"
+ },
+ {
+  "case": "T74-E-P340",
+  "counterfactualCase": "T74-E-P340-p12",
+  "counterfactualId": "MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19",
+  "bothArmsAreOracleObservations": true,
+  "cells": 146,
+  "divergentCellCount": 25,
+  "divergent": [
+   {
+    "row": 15,
+    "field": "principal_minor",
+    "observed": 891,
+    "counterfactual": 890,
+    "delta": 1
+   },
+   {
+    "row": 15,
+    "field": "interest_minor",
+    "observed": 318,
+    "counterfactual": 319,
+    "delta": 1
+   },
+   {
+    "row": 15,
+    "field": "outstanding_principal_minor",
+    "observed": 21859,
+    "counterfactual": 21860,
+    "delta": 1
+   },
+   {
+    "row": 16,
+    "field": "outstanding_principal_minor",
+    "observed": 20956,
+    "counterfactual": 20957,
+    "delta": 1
+   },
+   {
+    "row": 17,
+    "field": "outstanding_principal_minor",
+    "observed": 20040,
+    "counterfactual": 20041,
+    "delta": 1
+   },
+   {
+    "row": 18,
+    "field": "outstanding_principal_minor",
+    "observed": 19112,
+    "counterfactual": 19113,
+    "delta": 1
+   },
+   {
+    "row": 19,
+    "field": "outstanding_principal_minor",
+    "observed": 18171,
+    "counterfactual": 18172,
+    "delta": 1
+   },
+   {
+    "row": 20,
+    "field": "outstanding_principal_minor",
+    "observed": 17216,
+    "counterfactual": 17217,
+    "delta": 1
+   },
+   {
+    "row": 21,
+    "field": "outstanding_principal_minor",
+    "observed": 16248,
+    "counterfactual": 16249,
+    "delta": 1
+   },
+   {
+    "row": 22,
+    "field": "outstanding_principal_minor",
+    "observed": 15266,
+    "counterfactual": 15267,
+    "delta": 1
+   },
+   {
+    "row": 23,
+    "field": "outstanding_principal_minor",
+    "observed": 14271,
+    "counterfactual": 14272,
+    "delta": 1
+   },
+   {
+    "row": 24,
+    "field": "outstanding_principal_minor",
+    "observed": 13262,
+    "counterfactual": 13263,
+    "delta": 1
+   },
+   {
+    "row": 25,
+    "field": "outstanding_principal_minor",
+    "observed": 12239,
+    "counterfactual": 12240,
+    "delta": 1
+   },
+   {
+    "row": 26,
+    "field": "outstanding_principal_minor",
+    "observed": 11201,
+    "counterfactual": 11202,
+    "delta": 1
+   },
+   {
+    "row": 27,
+    "field": "outstanding_principal_minor",
+    "observed": 10149,
+    "counterfactual": 10150,
+    "delta": 1
+   },
+   {
+    "row": 28,
+    "field": "outstanding_principal_minor",
+    "observed": 9082,
+    "counterfactual": 9083,
+    "delta": 1
+   },
+   {
+    "row": 29,
+    "field": "outstanding_principal_minor",
+    "observed": 8000,
+    "counterfactual": 8001,
+    "delta": 1
+   },
+   {
+    "row": 30,
+    "field": "outstanding_principal_minor",
+    "observed": 6903,
+    "counterfactual": 6904,
+    "delta": 1
+   },
+   {
+    "row": 31,
+    "field": "outstanding_principal_minor",
+    "observed": 5791,
+    "counterfactual": 5792,
+    "delta": 1
+   },
+   {
+    "row": 32,
+    "field": "outstanding_principal_minor",
+    "observed": 4663,
+    "counterfactual": 4664,
+    "delta": 1
+   },
+   {
+    "row": 33,
+    "field": "outstanding_principal_minor",
+    "observed": 3519,
+    "counterfactual": 3520,
+    "delta": 1
+   },
+   {
+    "row": 34,
+    "field": "outstanding_principal_minor",
+    "observed": 2359,
+    "counterfactual": 2360,
+    "delta": 1
+   },
+   {
+    "row": 35,
+    "field": "outstanding_principal_minor",
+    "observed": 1183,
+    "counterfactual": 1184,
+    "delta": 1
+   },
+   {
+    "row": 36,
+    "field": "principal_minor",
+    "observed": 1183,
+    "counterfactual": 1184,
+    "delta": 1
+   },
+   {
+    "row": 36,
+    "field": "observed_total_due_minor",
+    "observed": 1200,
+    "counterfactual": 1201,
+    "delta": 1
+   }
+  ],
+  "widest": {
+   "row": 15,
+   "field": "principal_minor",
+   "observed": 891,
+   "counterfactual": 890,
+   "delta": 1
+  },
+  "observedTotalInterest": "95.15",
+  "counterfactualTotalInterest": "95.16"
+ },
+ {
+  "case": "T74-E-P426",
+  "counterfactualCase": "T74-E-P426-p12",
+  "counterfactualId": "MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19",
+  "bothArmsAreOracleObservations": true,
+  "cells": 146,
+  "divergentCellCount": 39,
+  "divergent": [
+   {
+    "row": 3,
+    "field": "principal_minor",
+    "observed": 945,
+    "counterfactual": 944,
+    "delta": 1
+   },
+   {
+    "row": 3,
+    "field": "interest_minor",
+    "observed": 570,
+    "counterfactual": 571,
+    "delta": 1
+   },
+   {
+    "row": 3,
+    "field": "outstanding_principal_minor",
+    "observed": 39805,
+    "counterfactual": 39806,
+    "delta": 1
+   },
+   {
+    "row": 4,
+    "field": "outstanding_principal_minor",
+    "observed": 38847,
+    "counterfactual": 38848,
+    "delta": 1
+   },
+   {
+    "row": 5,
+    "field": "outstanding_principal_minor",
+    "observed": 37876,
+    "counterfactual": 37877,
+    "delta": 1
+   },
+   {
+    "row": 6,
+    "field": "outstanding_principal_minor",
+    "observed": 36891,
+    "counterfactual": 36892,
+    "delta": 1
+   },
+   {
+    "row": 7,
+    "field": "outstanding_principal_minor",
+    "observed": 35892,
+    "counterfactual": 35893,
+    "delta": 1
+   },
+   {
+    "row": 8,
+    "field": "principal_minor",
+    "observed": 1013,
+    "counterfactual": 1012,
+    "delta": 1
+   },
+   {
+    "row": 8,
+    "field": "interest_minor",
+    "observed": 502,
+    "counterfactual": 503,
+    "delta": 1
+   },
+   {
+    "row": 8,
+    "field": "outstanding_principal_minor",
+    "observed": 34879,
+    "counterfactual": 34881,
+    "delta": 2
+   },
+   {
+    "row": 9,
+    "field": "outstanding_principal_minor",
+    "observed": 33852,
+    "counterfactual": 33854,
+    "delta": 2
+   },
+   {
+    "row": 10,
+    "field": "outstanding_principal_minor",
+    "observed": 32811,
+    "counterfactual": 32813,
+    "delta": 2
+   },
+   {
+    "row": 11,
+    "field": "outstanding_principal_minor",
+    "observed": 31755,
+    "counterfactual": 31757,
+    "delta": 2
+   },
+   {
+    "row": 12,
+    "field": "outstanding_principal_minor",
+    "observed": 30685,
+    "counterfactual": 30687,
+    "delta": 2
+   },
+   {
+    "row": 13,
+    "field": "outstanding_principal_minor",
+    "observed": 29600,
+    "counterfactual": 29602,
+    "delta": 2
+   },
+   {
+    "row": 14,
+    "field": "outstanding_principal_minor",
+    "observed": 28499,
+    "counterfactual": 28501,
+    "delta": 2
+   },
+   {
+    "row": 15,
+    "field": "outstanding_principal_minor",
+    "observed": 27383,
+    "counterfactual": 27385,
+    "delta": 2
+   },
+   {
+    "row": 16,
+    "field": "outstanding_principal_minor",
+    "observed": 26251,
+    "counterfactual": 26253,
+    "delta": 2
+   },
+   {
+    "row": 17,
+    "field": "outstanding_principal_minor",
+    "observed": 25104,
+    "counterfactual": 25106,
+    "delta": 2
+   },
+   {
+    "row": 18,
+    "field": "outstanding_principal_minor",
+    "observed": 23940,
+    "counterfactual": 23942,
+    "delta": 2
+   },
+   {
+    "row": 19,
+    "field": "outstanding_principal_minor",
+    "observed": 22760,
+    "counterfactual": 22762,
+    "delta": 2
+   },
+   {
+    "row": 20,
+    "field": "outstanding_principal_minor",
+    "observed": 21564,
+    "counterfactual": 21566,
+    "delta": 2
+   },
+   {
+    "row": 21,
+    "field": "outstanding_principal_minor",
+    "observed": 20351,
+    "counterfactual": 20353,
+    "delta": 2
+   },
+   {
+    "row": 22,
+    "field": "outstanding_principal_minor",
+    "observed": 19121,
+    "counterfactual": 19123,
+    "delta": 2
+   },
+   {
+    "row": 23,
+    "field": "outstanding_principal_minor",
+    "observed": 17874,
+    "counterfactual": 17876,
+    "delta": 2
+   },
+   {
+    "row": 24,
+    "field": "outstanding_principal_minor",
+    "observed": 16609,
+    "counterfactual": 16611,
+    "delta": 2
+   },
+   {
+    "row": 25,
+    "field": "outstanding_principal_minor",
+    "observed": 15327,
+    "counterfactual": 15329,
+    "delta": 2
+   },
+   {
+    "row": 26,
+    "field": "outstanding_principal_minor",
+    "observed": 14027,
+    "counterfactual": 14029,
+    "delta": 2
+   },
+   {
+    "row": 27,
+    "field": "outstanding_principal_minor",
+    "observed": 12708,
+    "counterfactual": 12710,
+    "delta": 2
+   },
+   {
+    "row": 28,
+    "field": "outstanding_principal_minor",
+    "observed": 11371,
+    "counterfactual": 11373,
+    "delta": 2
+   },
+   {
+    "row": 29,
+    "field": "outstanding_principal_minor",
+    "observed": 10015,
+    "counterfactual": 10017,
+    "delta": 2
+   },
+   {
+    "row": 30,
+    "field": "outstanding_principal_minor",
+    "observed": 8640,
+    "counterfactual": 8642,
+    "delta": 2
+   },
+   {
+    "row": 31,
+    "field": "outstanding_principal_minor",
+    "observed": 7246,
+    "counterfactual": 7248,
+    "delta": 2
+   },
+   {
+    "row": 32,
+    "field": "outstanding_principal_minor",
+    "observed": 5832,
+    "counterfactual": 5834,
+    "delta": 2
+   },
+   {
+    "row": 33,
+    "field": "outstanding_principal_minor",
+    "observed": 4399,
+    "counterfactual": 4401,
+    "delta": 2
+   },
+   {
+    "row": 34,
+    "field": "outstanding_principal_minor",
+    "observed": 2946,
+    "counterfactual": 2948,
+    "delta": 2
+   },
+   {
+    "row": 35,
+    "field": "outstanding_principal_minor",
+    "observed": 1472,
+    "counterfactual": 1474,
+    "delta": 2
+   },
+   {
+    "row": 36,
+    "field": "principal_minor",
+    "observed": 1472,
+    "counterfactual": 1474,
+    "delta": 2
+   },
+   {
+    "row": 36,
+    "field": "observed_total_due_minor",
+    "observed": 1493,
+    "counterfactual": 1495,
+    "delta": 2
+   }
+  ],
+  "widest": {
+   "row": 8,
+   "field": "outstanding_principal_minor",
+   "observed": 34879,
+   "counterfactual": 34881,
+   "delta": 2
+  },
+  "observedTotalInterest": "119.18",
+  "counterfactualTotalInterest": "119.20"
+ },
+ {
+  "case": "T74-E-P6940",
+  "counterfactualCase": "T74-E-P6940-p12",
+  "counterfactualId": "MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19",
+  "bothArmsAreOracleObservations": true,
+  "cells": 146,
+  "divergentCellCount": 18,
+  "divergent": [
+   {
+    "row": 22,
+    "field": "principal_minor",
+    "observed": 20030,
+    "counterfactual": 20029,
+    "delta": 1
+   },
+   {
+    "row": 22,
+    "field": "interest_minor",
+    "observed": 4644,
+    "counterfactual": 4645,
+    "delta": 1
+   },
+   {
+    "row": 22,
+    "field": "outstanding_principal_minor",
+    "observed": 311720,
+    "counterfactual": 311721,
+    "delta": 1
+   },
+   {
+    "row": 23,
+    "field": "outstanding_principal_minor",
+    "observed": 291410,
+    "counterfactual": 291411,
+    "delta": 1
+   },
+   {
+    "row": 24,
+    "field": "outstanding_principal_minor",
+    "observed": 270816,
+    "counterfactual": 270817,
+    "delta": 1
+   },
+   {
+    "row": 25,
+    "field": "outstanding_principal_minor",
+    "observed": 249933,
+    "counterfactual": 249934,
+    "delta": 1
+   },
+   {
+    "row": 26,
+    "field": "outstanding_principal_minor",
+    "observed": 228758,
+    "counterfactual": 228759,
+    "delta": 1
+   },
+   {
+    "row": 27,
+    "field": "outstanding_principal_minor",
+    "observed": 207287,
+    "counterfactual": 207288,
+    "delta": 1
+   },
+   {
+    "row": 28,
+    "field": "outstanding_principal_minor",
+    "observed": 185515,
+    "counterfactual": 185516,
+    "delta": 1
+   },
+   {
+    "row": 29,
+    "field": "outstanding_principal_minor",
+    "observed": 163438,
+    "counterfactual": 163439,
+    "delta": 1
+   },
+   {
+    "row": 30,
+    "field": "outstanding_principal_minor",
+    "observed": 141052,
+    "counterfactual": 141053,
+    "delta": 1
+   },
+   {
+    "row": 31,
+    "field": "outstanding_principal_minor",
+    "observed": 118353,
+    "counterfactual": 118354,
+    "delta": 1
+   },
+   {
+    "row": 32,
+    "field": "outstanding_principal_minor",
+    "observed": 95336,
+    "counterfactual": 95337,
+    "delta": 1
+   },
+   {
+    "row": 33,
+    "field": "outstanding_principal_minor",
+    "observed": 71997,
+    "counterfactual": 71998,
+    "delta": 1
+   },
+   {
+    "row": 34,
+    "field": "outstanding_principal_minor",
+    "observed": 48331,
+    "counterfactual": 48332,
+    "delta": 1
+   },
+   {
+    "row": 35,
+    "field": "outstanding_principal_minor",
+    "observed": 24334,
+    "counterfactual": 24335,
+    "delta": 1
+   },
+   {
+    "row": 36,
+    "field": "principal_minor",
+    "observed": 24334,
+    "counterfactual": 24335,
+    "delta": 1
+   },
+   {
+    "row": 36,
+    "field": "observed_total_due_minor",
+    "observed": 24675,
+    "counterfactual": 24676,
+    "delta": 1
+   }
+  ],
+  "widest": {
+   "row": 22,
+   "field": "principal_minor",
+   "observed": 20030,
+   "counterfactual": 20029,
+   "delta": 1
+  },
+  "observedTotalInterest": "1942.65",
+  "counterfactualTotalInterest": "1942.66"
+ }
+]

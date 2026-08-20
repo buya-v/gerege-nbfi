@@ -435,7 +435,6 @@ public class Capture3i {
         cases.add(mult("T74-E-P6940-p12", "DISCRIMINATION PROBE, NOT A PARITY CANDIDATE: T74-E-P6940's request at MathContext precision 12",
                 LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 1), new BigDecimal("6940"), 36, new BigDecimal("16.8"),
                 2, null, null, 12, "cap_t74_e_p6940_p12"));
-                LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 1), new BigDecimal("0.28"), 120, new BigDecimal("21.6"), "cap_t66_floor_long"));
 
         StringBuilder sb = new StringBuilder();
         sb.append("{\n  \"pass\": \"3i\",\n");
