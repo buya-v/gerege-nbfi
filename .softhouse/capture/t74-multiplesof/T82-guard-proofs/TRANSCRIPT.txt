@@ -1,0 +1,222 @@
+T82 guard proofs
+run-pass3i.sh          sha256 3ca0d3f6380a74d32c8bca000f8587724927b4b55eb0c51b8e64be7cefe2a519
+build-counterfactuals  sha256 b1e9f6087f93c2b0b1606d4631d5d97e96dd72fbbebf96baaea1dd89190ed9f1
+capture under test     sha256 e0ea0bcfa1e37914fd5eec68040d90319d2d343dc50d2ad30d90f4cd9acde430
+
+==============================================================================
+CONTROL — committed pass-3i capture through the corrected precondition block
+  expecting exit 0
+------------------------------------------------------------------------------
+  | # precondition block: lines 267..707 of run-pass3i.sh, 441 lines, sha256 ada3a43988d544dc620c18b9e1b8aa4e2b04e2170f2f8dad3fd32d4255d57269
+  | # capture under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/out/capture-prod3i-raw.json
+  | validation OK — 36 captures, attestation present, effective MathContext (19, HALF_UP ordinal 4)
+  | calibration OK — P-CAL reproduced committed P-CAL (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/out/capture-prod3b-raw.json) at precision 12, inputs and observed both identical
+  | calibration OK — P-CAL-DRIFTF reproduced committed P-DRIFT-F (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/out/capture-prod3e-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-EMI6 reproduced committed P-EMI-6-1M014632 (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/out/capture-prod3c-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-LATQ0a reproduced committed P-LAT-Q0a (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/out/capture-prod3e-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-MNT50M reproduced committed P-MNT-50M (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/out/capture-prod3b-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-MNT5M reproduced committed P-MNT-5M (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/out/capture-prod3b-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-P00 reproduced committed P-00 (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/out/capture-prod3b-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-ZPA reproduced committed T64-ZP-A (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/out/capture-prod3g-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-ZPB reproduced committed T64-ZP-B (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/out/capture-prod3g-raw.json) at precision 19, inputs and observed both identical
+  | captures canonical sha256: 41bcf7306f691b730d17ed7fa08131b16052d737773c80d12f5abacf6b7d581f
+------------------------------------------------------------------------------
+  RESULT: exit 0 — AS EXPECTED
+  MUTATION: script:  EXPECTED_IDS += 'T82-PROOF-UNREGISTERED-CASE'  (CASE_PRECISION deliberately NOT updated)
+  MUTATION: capture: appended a clone of T74-E-P4 under id 'T82-PROOF-UNREGISTERED-CASE', money untouched
+
+==============================================================================
+E-1 GUARD 17a — unregistered id must FAIL THE RUN (the claim that was unreachable)
+  expecting exit 1
+------------------------------------------------------------------------------
+  | # precondition block: lines 267..708 of run-pass3i.sh, 442 lines, sha256 eba8acc1b68c230eabfe2a61109ea0d1ecaca8f0c491c5fda149f3d101c779cd
+  | # capture under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/17a-capture.json
+  | RUN FAILED: no expected MathContext precision registered for ['T82-PROOF-UNREGISTERED-CASE']. Add the case to CASE_PRECISION by hand — there is deliberately no default, because a defaulted precision is how a discrimination probe gets validated as a parity candidate.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+  MUTATION: script:  CASE_PRECISION reverted to the pre-T82 self-constructing form
+  MUTATION:          (the id-suffix default: endswith('-p12') -> 12, else 19)
+
+==============================================================================
+E-1 COUNTERPROOF — the SAME unregistered id through the OLD self-constructed table
+  expecting exit 0
+------------------------------------------------------------------------------
+  | # precondition block: lines 267..662 of run-pass3i.sh, 396 lines, sha256 0da3cd7d11058f3e7364cc6db7a33084fd5c8af6fec9aa07803575fdf29c1e51
+  | # capture under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/17a-capture.json
+  | validation OK — 37 captures, attestation present, effective MathContext (19, HALF_UP ordinal 4)
+  | calibration OK — P-CAL reproduced committed P-CAL (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/out/capture-prod3b-raw.json) at precision 12, inputs and observed both identical
+  | calibration OK — P-CAL-DRIFTF reproduced committed P-DRIFT-F (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/out/capture-prod3e-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-EMI6 reproduced committed P-EMI-6-1M014632 (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/out/capture-prod3c-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-LATQ0a reproduced committed P-LAT-Q0a (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/out/capture-prod3e-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-MNT50M reproduced committed P-MNT-50M (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/out/capture-prod3b-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-MNT5M reproduced committed P-MNT-5M (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/out/capture-prod3b-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-P00 reproduced committed P-00 (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/out/capture-prod3b-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-ZPA reproduced committed T64-ZP-A (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/out/capture-prod3g-raw.json) at precision 19, inputs and observed both identical
+  | calibration OK — P-CAL-ZPB reproduced committed T64-ZP-B (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/out/capture-prod3g-raw.json) at precision 19, inputs and observed both identical
+  | captures canonical sha256: 3d6fb273b2bc95b68e9e601c58477c5f40196243a084fd4349b26075265a761c
+------------------------------------------------------------------------------
+  RESULT: exit 0 — AS EXPECTED
+  MUTATION: script:  CASE_PRECISION += 'T82-PROOF-STALE-ENTRY', an id this run does not capture
+
+==============================================================================
+E-1 GUARD 17b — stale CASE_PRECISION entry must FAIL THE RUN
+  expecting exit 1
+------------------------------------------------------------------------------
+  | # precondition block: lines 267..708 of run-pass3i.sh, 442 lines, sha256 da80199d21f20e447609443704d842070500a55f9c62090c08899da1bc94eea7
+  | # capture under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/out/capture-prod3i-raw.json
+  | RUN FAILED: CASE_PRECISION registers ['T82-PROOF-STALE-ENTRY'], which this run does not capture. A table that outlives the cases it describes stops being a check.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+  MUTATION: capture: T74-E-P4 mathContextPrecision 19 -> 12 (CASE_PRECISION registers it at 19); money untouched
+
+==============================================================================
+E-1 GUARD 17c — a case at a precision its table entry forbids must FAIL THE RUN
+  expecting exit 1
+------------------------------------------------------------------------------
+  | # precondition block: lines 267..707 of run-pass3i.sh, 441 lines, sha256 ada3a43988d544dc620c18b9e1b8aa4e2b04e2170f2f8dad3fd32d4255d57269
+  | # capture under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/17c-capture.json
+  | RUN FAILED: capture validation:
+  |   T74-E-P4: must run at precision 19, got 12
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+  MUTATION: script:  CASE_PRECISION['T74-A0-DP0-NONE'] 19 -> 12
+  MUTATION: capture: T74-A0-DP0-NONE mathContextPrecision 19 -> 12, money untouched
+  MUTATION:          so guard 17 is SATISFIED and guard 18 is the one that must catch it
+
+==============================================================================
+E-2 GUARD 18 — a probe that is not named `-p12` must FAIL THE RUN
+  expecting exit 1
+------------------------------------------------------------------------------
+  | # precondition block: lines 267..707 of run-pass3i.sh, 441 lines, sha256 b640746421d90062f98e289531208af6102cf9b3e66214d3860d2331e17a4768
+  | # capture under test: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/18-capture.json
+  | RUN FAILED: the cases named `-p12` are ['T74-E-P340-p12', 'T74-E-P4-p12', 'T74-E-P426-p12', 'T74-E-P59-p12', 'T74-E-P6940-p12', 'T74-E-P72-p12'] but the cases actually running below precision 19 are ['T74-A0-DP0-NONE', 'T74-E-P340-p12', 'T74-E-P4-p12', 'T74-E-P426-p12', 'T74-E-P59-p12', 'T74-E-P6940-p12', 'T74-E-P72-p12']. An id that promises a precision it does not run is worse than no id at all.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+
+==============================================================================
+E-3 LEGITIMATE — the committed capture, both arms HALF_UP, must still PASS
+  expecting exit 0
+------------------------------------------------------------------------------
+  | T74-E-P4     23/146 graded cells diverge; widest 1 minor at period[17].principal_minor (observed 10 vs 11); total interest 1.14 vs 1.13
+  | T74-E-P59    27/146 graded cells diverge; widest 1 minor at period[13].principal_minor (observed 151 vs 150); total interest 16.51 vs 16.52
+  | T74-E-P72     2/146 graded cells diverge; widest 1 minor at period[36].interest_minor (observed 4 vs 3); total interest 20.14 vs 20.13
+  | T74-E-P340   25/146 graded cells diverge; widest 1 minor at period[15].principal_minor (observed 891 vs 890); total interest 95.15 vs 95.16
+  | T74-E-P426   39/146 graded cells diverge; widest 2 minor at period[8].outstanding_principal_minor (observed 34879 vs 34881); total interest 119.18 vs 119.20
+  | T74-E-P6940  18/146 graded cells diverge; widest 1 minor at period[22].principal_minor (observed 20030 vs 20029); total interest 1942.65 vs 1942.66
+  | 
+  | wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02134703c9ae8a80/.softhouse/capture/t74-multiplesof/T82-guard-proofs/scratch/cf-legit.json
+------------------------------------------------------------------------------
+  RESULT: exit 0 — AS EXPECTED
+  MUTATION: capture: rounding mode HALF_UP -> HALF_DOWN on ['T74-E-P4', 'T74-E-P4-p12']; money untouched
+
+==============================================================================
+E-3 GUARD — BOTH arms at the non-ratified HALF_DOWN must now FAIL
+  expecting exit 1
+------------------------------------------------------------------------------
+  | T74-E-P4/T74-E-P4-p12: {'T74-E-P4': 'HALF_DOWN', 'T74-E-P4-p12': 'HALF_DOWN'} is not the ratified HALF_UP rounding mode. A counterfactual measured at a mode production never runs describes a port defect nobody has, and this pair's whole claim is that the ONLY difference between its arms is precision 19 against 12.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+  MUTATION: capture: rounding mode HALF_UP -> HALF_DOWN on ['T74-E-P4-p12']; money untouched
+
+==============================================================================
+E-3 GUARD — ONE arm at HALF_DOWN must keep FAILING (no regression)
+  expecting exit 1
+------------------------------------------------------------------------------
+  | T74-E-P4 vs T74-E-P4-p12 differ in more than the precision: ['mathContextRoundingMode', 'mathContextRoundingModeOrdinal']
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+
+==============================================================================
+D-1 GUARD — a capture whose daysInMonth/daysInYear are not 30/360 must be REFUSED
+  expecting exit 1
+------------------------------------------------------------------------------
+  | MUTATION: daysInMonth/daysInYear -> (ACTUAL, DAYS_365), a pair the contract does not name. The OLD code wrote the constant "FIXED_30_360" regardless.
+  |           mutated capture -> /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t82promotewx2i8ogq/mutated-capture.json
+  |           vectors written to a SCRATCH dir, never to the store
+  | T74-E-P4: observed (daysInMonth, daysInYear) = ('ACTUAL', 'DAYS_365'), which is not a day-count convention the frozen contract names (contract.go:359-360 maps only [('ACTUAL', 'ACTUAL'), ('DAYS_30', 'DAYS_360')]). Refusing to write a day_count this capture does not support.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+
+==============================================================================
+D-1 GUARD — a capture with a NON-ZERO downPaymentPercentage must be REFUSED
+  expecting exit 1
+------------------------------------------------------------------------------
+  | MUTATION: downPaymentPercentage -> "25". The OLD code wrote {0, 1} regardless, so the vector would have graded a schedule the request did not describe.
+  |           mutated capture -> /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t82promotew3pn2f34/mutated-capture.json
+  |           vectors written to a SCRATCH dir, never to the store
+  | T74-E-P4: downPaymentEnabled=False downPaymentPercentage='25'. This script promotes only the no-down-payment shape; a down payment moves the first period's principal and must be captured and promoted as a shape of its own.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+
+==============================================================================
+D-1 GUARD — a capture with downPaymentEnabled true must be REFUSED
+  expecting exit 1
+------------------------------------------------------------------------------
+  | MUTATION: downPaymentEnabled -> true, percentage still "0".
+  |           mutated capture -> /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t82promote9v8hthbn/mutated-capture.json
+  |           vectors written to a SCRATCH dir, never to the store
+  | T74-E-P4: downPaymentEnabled=True downPaymentPercentage='0'. This script promotes only the no-down-payment shape; a down payment moves the first period's principal and must be captured and promoted as a shape of its own.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+
+==============================================================================
+D-2 GUARD — a capture with NO repayment-every key at all must be REFUSED
+  expecting exit 1
+------------------------------------------------------------------------------
+  | MUTATION: both `repaymentEvery` and `repaymentFrequency` removed. The OLD `i.get("repaymentEvery", i.get("repaymentFrequency"))` returned None and wrote a null interval into the vector.
+  |           mutated capture -> /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t82promote291wtkrh/mutated-capture.json
+  |           vectors written to a SCRATCH dir, never to the store
+  | T74-E-P4: the capture records neither `repaymentEvery` nor `repaymentFrequency`. The repayment interval is not defaultable — a vector with the wrong interval grades a different loan and passes.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+
+==============================================================================
+D-2 GUARD — a capture whose two repayment-every keys DISAGREE must be REFUSED
+  expecting exit 1
+------------------------------------------------------------------------------
+  | MUTATION: `repaymentEvery` = 3 against the recorded `repaymentFrequency` = 1. The OLD code silently preferred `repaymentEvery`.
+  |           mutated capture -> /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t82promotetvosivrq/mutated-capture.json
+  |           vectors written to a SCRATCH dir, never to the store
+  | T74-E-P4: `repaymentEvery` and `repaymentFrequency` disagree ({'repaymentEvery': 3, 'repaymentFrequency': 1}). The capture cannot say which interval the oracle actually ran.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+
+==============================================================================
+D-2 CONTROL — a legitimate periodNumber of 0 must SURVIVE, not collapse into the fallback
+  expecting exit 0
+------------------------------------------------------------------------------
+  | MUTATION: period 1's periodNumber -> 0, a LEGITIMATE zero. It must survive as 0 and must NOT be reported as unrecorded. The OLD `or 0` could not tell it from an absent value.
+  |           mutated capture -> /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t82promoteotx_tyq1/mutated-capture.json
+  |           vectors written to a SCRATCH dir, never to the store
+  | wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t82promoteotx_tyq1/vectors/T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json  (margin 1 minor at period[17].principal_minor, 23/146 graded cells move)
+  | wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t82promoteotx_tyq1/vectors/T74-E-P59-precision-boundary-mnt59pt00-36x16pt8pct.json  (margin 1 minor at period[13].principal_minor, 27/146 graded cells move)
+  | wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t82promoteotx_tyq1/vectors/T74-E-P72-precision-boundary-mnt72pt00-36x16pt8pct.json  (margin 1 minor at period[36].interest_minor, 2/146 graded cells move)
+  | wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t82promoteotx_tyq1/vectors/T74-E-P340-precision-boundary-mnt340pt00-36x16pt8pct.json  (margin 1 minor at period[15].principal_minor, 25/146 graded cells move)
+  | wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t82promoteotx_tyq1/vectors/T74-E-P426-precision-boundary-mnt426pt00-36x16pt8pct.json  (margin 2 minor at period[8].outstanding_principal_minor, 39/146 graded cells move)
+  | wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t82promoteotx_tyq1/vectors/T74-E-P6940-precision-boundary-mnt6940pt00-36x16pt8pct.json  (margin 1 minor at period[22].principal_minor, 18/146 graded cells move)
+  | 
+  | 6 vectors promoted from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t82promoteotx_tyq1/mutated-capture.json (sha256 7efe8970731782b795682f6fa05dee1d72ab56151cd6fda1a1a088eeb668077a)
+  | NOTHING was promoted from capture groups A, B, C or D — see this script's docstring.
+  | 
+  | ASSERTIONS on the regenerated T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json:
+  |   payable row 1 installment_number = 0  (a LEGITIMATE 0, transcribed)
+  |   payable row 1 unrecorded_fields  = []  (installment_number NOT withdrawn)
+  |   DISBURSEMENT  installment_number = 0  unrecorded_fields = ['installment_number', 'interest_minor']  (absence IS withdrawn)
+  |   -> a legitimate 0 and an absent value are DISTINGUISHED. `p.get("periodNumber") or 0` could not do this.
+------------------------------------------------------------------------------
+  RESULT: exit 0 — AS EXPECTED
+
+==============================================================================
+D-2 GUARD — a non-integer periodNumber must be REFUSED, not coerced
+  expecting exit 1
+------------------------------------------------------------------------------
+  | MUTATION: period 1's periodNumber -> the string "1". Must be refused, not coerced.
+  |           mutated capture -> /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t82promotei9rpvcw4/mutated-capture.json
+  |           vectors written to a SCRATCH dir, never to the store
+  | T74-E-P4: period[1] periodNumber is '1'; expected a non-negative integer. This script will not coerce it.
+------------------------------------------------------------------------------
+  RESULT: exit 1 — AS EXPECTED
+
+==============================================================================
+T82 guard proofs: 16 as expected, 0 not as expected
+==============================================================================
