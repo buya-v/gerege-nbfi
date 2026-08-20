@@ -38,6 +38,12 @@ which is not a PASS and never becomes one. A vector that was not observed from t
 is not a vector. No fire may synthesise, derive or extrapolate an expected value to fill the
 gap — it parks the task and moves to work that needs no live instance.
 
+**Read the code before you park, though: only exit 2 means this.** `conformance.sh`
+also has **exit 3 — wrong interpreter**, which means the harness never started and
+the oracle was **never contacted** (someone ran `sh conformance.sh` instead of
+`bash conformance.sh`). Exit 3 is not evidence about this instance and must never
+be parked as an outage; fix the invocation and grade again. Codes: `.softhouse/vectors/README.md`.
+
 ## Pinned build
 
 | Fact | Value |
