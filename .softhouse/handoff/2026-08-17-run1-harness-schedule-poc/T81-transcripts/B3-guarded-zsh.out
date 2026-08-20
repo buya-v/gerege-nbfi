@@ -1,0 +1,18 @@
+conformance: WRONG INTERPRETER — this harness requires bash, and the shell that
+conformance: was handed this file cannot execute it.
+conformance:   BASH_VERSION is unset, so this shell is not bash at all.
+conformance:
+conformance: THE HARNESS NEVER STARTED. Nothing was graded, no vector was read, and
+conformance: the reference oracle (Fineract) was NEVER CONTACTED. This is not a
+conformance: verdict and it is not evidence about the oracle. THE ORACLE IS NOT DOWN;
+conformance: the invocation is wrong. Do NOT read this as exit 2 (harness/corpus/
+conformance: oracle unusable) and do NOT park a task on an oracle-outage reason.
+conformance:
+conformance: FIX — re-run it under bash:
+conformance:     bash .softhouse/conformance.sh
+conformance:     ./.softhouse/conformance.sh        (the shebang selects bash)
+conformance: 'sh conformance.sh' and 'bash --posix conformance.sh' are BOTH wrong on
+conformance: bash 3.2: invoked either way, bash switches process substitution off.
+conformance:
+conformance: EXIT 3 — wrong interpreter. See the EXIT CODES table at the top of this
+conformance: file and the 'Running it' section of .softhouse/vectors/README.md.

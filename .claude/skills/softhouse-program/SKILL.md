@@ -106,6 +106,7 @@ A worker spawned without a worktree, or given an absolute path into the main che
 | UAT red after retry | Park the context. Never `done`. Continue to the next READY context. |
 | Merge conflict | Abort that merge, mark `conflict`, continue independent merges; the conflicted task is re-planned next fire. |
 | **Oracle unreachable** | Conformance is exit 2, never PASS. Park all vector/conformance tasks. Then **keep working what does not need the oracle**: analyst behavior extraction, spec/ADR drafts, the Tier-C gap audit, Tier-D corpus mining from source. Retry the oracle next fire. |
+| **Conformance exited 3** | **NOT an oracle outage — do not park anything.** 3 is `conformance.sh`'s wrong-interpreter refusal: the harness never started, no vector was read, the oracle was never contacted. Something invoked it as `sh conformance.sh` (or `dash`/`zsh`/`bash --posix`) instead of `bash conformance.sh`. Fix the invocation and re-run. Only exit **2** is the oracle-is-down stop condition. |
 | Token soft limit reached | `/softhouse` checkpoint protocol: workers commit WIP, write `.softhouse/state/<squad>.STATE.json`, write `.softhouse/RESUME.md`, commit, push, exit cleanly. The scheduled fire resumes. |
 | Quota/rate-limit error mid-flight | Same checkpoint path, immediately. Never leave a worktree uncommitted. |
 | `user` gate reached | Record in `.softhouse/gates.md` + `program.gates_pending`, mark that context `blocked_on_gate`, **and move to the next READY context**. Do not cross it. Do not idle if other work exists. |

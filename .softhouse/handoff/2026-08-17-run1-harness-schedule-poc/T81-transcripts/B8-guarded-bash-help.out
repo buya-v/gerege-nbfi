@@ -1,0 +1,33 @@
+Golden-vector conformance harness — Fineract reference oracle vs the Go module.
+
+  .softhouse/conformance.sh [CONTEXT]      grade the store (optionally one context)
+  .softhouse/conformance.sh --prove        run the harness's own mutation proofs
+  .softhouse/conformance.sh --self-test    grade the HARNESS via the replay implementation
+  .softhouse/conformance.sh --help
+
+EXIT CODES
+  0  every graded vector passed AND at least one PARITY vector was graded AND the
+     reference oracle was confirmed reachable. Means "matches the reference oracle
+     on captured vectors, within the graded domain". NEVER means safe to cut over.
+  1  a mismatch or a violated property invariant. A definite, reproducible defect.
+  2  the harness, the corpus or the oracle is unusable: no Go toolchain, no
+     implementation to grade, an unreachable oracle, zero parity vectors, an
+     inadmissible vector, a refused vector, a failed HARD guard.
+  3  WRONG INTERPRETER — the harness never started. This file was handed to a
+     shell that cannot execute it: a POSIX sh, dash, zsh, or a bash with process
+     substitution switched off, which is what BOTH `sh conformance.sh` and
+     `bash --posix conformance.sh` produce on bash 3.2 (macOS). Nothing was
+     graded, no vector was read, and the reference oracle was never contacted —
+     so 3 says NOTHING about the corpus and NOTHING about the oracle. The fix is
+     always the same: re-run it under bash, `bash .softhouse/conformance.sh` or
+     `./.softhouse/conformance.sh`.
+
+0, 1 and 2 are the verdict codes and there are still only three of them; 3 is not
+a verdict, it is a refusal to start, and it is deliberately NOT 2 so that a
+shell-selection mistake can never be mistaken for an oracle outage. There is no
+silent success: an empty vector set is 2, not 0, because a harness that reported
+PASS over zero vectors would be worse than no harness at all.
+
+"The oracle" here means the FINERACT REFERENCE IMPLEMENTATION we grade Go output
+against. Oracle Database is a prohibited product in this program and appears
+nowhere in this stack. PostgreSQL is the only permitted database.

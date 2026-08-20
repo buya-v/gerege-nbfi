@@ -20,10 +20,15 @@ The generic skill smoke-tests a running web system. Here, UAT means: **does the 
 ```bash
 go build ./...
 go test ./...
-.softhouse/conformance.sh    # replays golden vectors through the Go module and diffs vs Fineract-captured expected outputs
+bash .softhouse/conformance.sh   # replays golden vectors through the Go module and diffs vs Fineract-captured expected outputs
 ```
 
-Exit 0 = PASS, 1 = FAIL, 2 = could not run (e.g. oracle unreachable).
+Exit 0 = PASS, 1 = FAIL, 2 = could not run (e.g. oracle unreachable),
+**3 = wrong interpreter — the harness never started.** Run it with `bash` (or
+`./.softhouse/conformance.sh`); `sh`, `dash`, `zsh` and `bash --posix` are refused
+up front with exit 3. Exit 3 is **not** a verdict and **not** an oracle outage:
+nothing was graded and the oracle was never contacted. Re-invoke under bash and
+grade again — never park a task on it. Full table: `.softhouse/vectors/README.md`.
 
 ### HARD checks — must be zero
 

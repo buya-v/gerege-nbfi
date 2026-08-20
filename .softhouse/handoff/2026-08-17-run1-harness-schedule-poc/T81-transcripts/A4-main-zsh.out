@@ -1,0 +1,3 @@
+.softhouse/conformance.sh:27: BASH_SOURCE[0]: parameter not set
+conformance: no Go toolchain. Expected /Users/buv/gerege-nbfi/.claude/worktrees/.softhouse/bin/go-env.sh to put one on PATH.
+conformance: EXIT 2 — the harness is unusable. This is NOT a pass.
