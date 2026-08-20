@@ -1840,9 +1840,9 @@
       "dependencies": [
         "T81"
       ],
-      "status": "pending",
+      "status": "done",
       "attempts": 0,
-      "note": "Paired reviewer for T81. Raised by the driver, local fire 20260820-200002. NEEDS THE ORACLE to run the harness both ways."
+      "note": "Paired reviewer for T81. Raised by the driver, local fire 20260820-200002. NEEDS THE ORACLE to run the harness both ways. || local fire 20260820-200002: DONE on softhouse/T86-review-t81 (64a95f5), docs only. VERDICT APPROVED. RAN 11 full harness runs, 6 refusal runs, 30 direct binary runs, 9 interpreter probes, 5 container runs - not read, RUN. BYTE IDENTITY UNNORMALISED (stronger than T81's own evidence): bash+main and bash+T81 from the same worktree path give identical sha256 3b7c96fd..., 19790 bytes, empty diff, exit 0, PASS 42 parity / 5576 cells. CENTRAL PROPERTY re-proved with ITS OWN perturbation (P-03 interest_minor 12->13, wire text moved consistently): guarded script exit 1 VERDICT FAIL with 0 guard traces, and `sh` over the SAME RED STORE gives exit 3 with ZERO occurrences of VERDICT|PASS|FAIL. Exit 3 genuinely free: shell exits only 0/$?/2, grade.go:154-172 returns only 1,2,2,0. Guard is the file's FIRST executable line (68), before set -u (104) and both process-substitution sites (188/206). ADJUDICATION 1: T81 WAS RIGHT TO REFUTE THE DRIVER'S BRIEF - /bin/sh here is a separate 101,232-byte binary reporting GNU bash 3.2.57 and process substitution dies under BOTH sh and bash --posix while plain bash works; there was nothing to let through. ADJUDICATION 2: the report nondeterminism is real, reproduced at 27/3 over 30 runs, and it BIT T86 LIVE; T81's sorted normalisation is honest but merely corroborative. BONUS: closed T81's own [UNVERIFIED] - bash 5.2.37 and 5.3.9 in throwaway containers ARE admitted under --posix and argv[0]=sh, so NO FALSE REFUSAL EXISTS. Six findings, none blocking."
     },
     {
       "id": "T87",
@@ -1998,6 +1998,45 @@
       "status": "pending",
       "attempts": 0,
       "note": "Raised by the driver, local fire 20260820-200002, from T83's closing flag. Needs no oracle unless it chooses to regenerate the probe. The sweep at the end is the valuable half - this may not be the only review carrying an uncheckable reproducibility claim."
+    },
+    {
+      "id": "T96",
+      "title": "State and count the fact that makes the unreachability argument airtight \u2014 :743 is the SOLE caller of calculateEMIOnNewModelAndMerge",
+      "description": "Raised by T89 as F-T89-4 while reviewing T88, and deliberately kept OUT of that bounded patch because it STRENGTHENS the argument rather than correcting it. The futureUnrecognizedInterest block's closure argument turns on `:743` being the only route into `calculateEMIOnNewModelAndMerge` and hence into `:1744-1759`. That fact is currently UNSTATED and, more importantly, UNCOUNTED: none of the block's five tripwire censuses would move if a second caller appeared, so the tripwire that exists to detect drift in exactly this argument is blind to the one edit that would break it. Add the fact, add it to the census that guards it, and re-derive all five counts at pinned 426a23544. Then demonstrate the tripwire actually fires: introduce a second caller in a scratch copy of the pinned source and show the census count move. A tripwire nobody has seen go red is not a tripwire. Zero executable change; contract.go untouched; gofmt -l must name exactly contract.go and NOT emi.go.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/emi.go"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T89"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260820-200002, from T89's F-T89-4. NEEDS NO ORACLE. Pair with an independent reviewer. Sequence AFTER T88 merges."
+    },
+    {
+      "id": "T97",
+      "title": "The interpreter guard's probe is a NEGATIVE test \u2014 it cannot tell 'psub works' from 'the probe never ran'",
+      "description": "Raised by T86 (P2) while APPROVING T81, and deliberately NOT prescribed as a micro-fix because T86's own first draft of the replacement line falsely refused plain bash (a missing trailing newline) - which is precisely the argument for giving it its own task and its own review. The guard added by T81 feature-tests process substitution by checking that a probe did NOT fail, so an interpreter where the probe never executes at all is ADMITTED. Demonstrated: `bash -r` passes the guard and then dies with a fabricated 'no Go toolchain' message and EXIT 2 - the exact defect class T81 was sent to close, reappearing one layer in. Not a regression, not reachable in this repo today, and it cannot turn a red run green - so this is a hardening task, not a fix to a live break. Replace the negative test with POSITIVE EVIDENCE: the probe must produce a value that only a working process substitution could have produced. T86 measured a working replacement across nine interpreters; reproduce that independently rather than copying it, and test at minimum: bash 3.2 (this machine), bash 5.x under --posix and argv[0]=sh, dash, zsh, ksh93, and `bash -r`. Do not change the meaning of exit 0/1/2/3 and do not touch grading. ALSO from T86, same file: two doc sites over-generalise 'sh is refused' (false on Fedora/RHEL where /bin/sh is bash 5.x), and usage()'s hard-coded `2,34p` line range will drift again - fix both.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        ".softhouse/conformance.sh"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T81",
+        "T86"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260820-200002, from T86's P2. NEEDS THE ORACLE to re-run the harness. Pair with an independent reviewer whose job is to find an interpreter the new probe wrongly refuses - that is the failure mode T86 hit in its own draft."
     }
   ]
 }
