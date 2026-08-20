@@ -104,6 +104,31 @@ with monthly repayment the per-period rate factor is `annualRate/12`, so the suf
 condition is `annualRate ≤ 1200%` on the regular lattice (and `≤ 600%` if the month-end
 re-anchor doubles a `periodRatio`).
 
+> **CORRECTION — added by the `/softhouse-program` driver, local fire 20260820-140000. The
+> registered claim above is deliberately NOT rewritten**; this document's evidentiary value is that
+> it was committed *before* the capture ran, so it is annotated rather than edited (T64's
+> `MECHANISM-CORRECTION.md` precedent).
+>
+> As written, step (e)'s implication "`u_L = 0` as soon as `cdi_f ≤ P + emi_f`" needs
+> `Sum_{j≤f} emi_j ≤ I + emi_f`. That is **exact at `f = 0`** — the ordinary shape, named in step (b) —
+> but it is **not derived here for general `f`**, and `I ≥ Sum_j dueInterest_j` with
+> `dueInterest_j ≤ emi_j` runs the wrong way round to supply it.
+>
+> **The handoff closes the gap and reaches a tighter condition.**
+> `.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T66.md:100-108` establishes
+> `emi_j = 0` for every `j < f` as well, giving `Sum_{j≤f} emi_j = emi_f` for **any** `f` and the
+> stronger `cdi_f ≤ P`. Verified independently by the driver: `getRelatedRepaymentPeriods(d)` keeps
+> only periods with `dueDate ≥ d` [`ProgressiveLoanInterestScheduleModel.java:191-198`] and
+> `calculateEMIOnActualModel` writes `setEmi` only on the window list it is passed
+> [`ProgressiveEMICalculator.java:1674`], so a period before the window is never assigned an EMI —
+> and both `f = 1` cases in this very capture, `T66-M-DISB-ON-DUE` and `T66-M-DISB-ON-DUE-HR`,
+> report period 0 `emi == "0.00"`.
+>
+> **The verdict is unaffected.** Read step (e) as proved for `f = 0` here and for general `f` in the
+> handoff. Above a per-period rate factor of 1.00 the closed-form bound is not tight in either
+> document, and the conclusion is carried there by the capture (`T66-M-R12000`,
+> `T66-M-DRIFT-R12000`, rate factor 10.00) and the 21,060-shape census — both re-run by the driver.
+
 **(f) And the cascade is dead from `L` onwards.** `u_L = 0` gives `cdi_{L+1} = 0`, hence
 `u_{L+1} = 0`, and so on. `getPeriodWithUnrecognizedInterest` requires a period with
 `u > 0` **strictly after** `L` (`:1806-1808`). There is none.
