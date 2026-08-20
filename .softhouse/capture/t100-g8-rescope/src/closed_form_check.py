@@ -9,6 +9,11 @@ This script evaluates it in EXACT RATIONAL arithmetic (fractions.Fraction — no
 Decimal rounding) over every non-calibration case in whichever raw captures are passed, and
 compares the prediction against the measured last-row balance. It is written for T100 and
 shares no code with T83's check-prediction.py or T84's eval-probe*.py.
+
+NOTE ON `float`: every DECISION here is made in exact rational arithmetic (`gap < 0`). The single
+`float(gap)` below is a DISPLAY conversion of a dimensionless residual `B*a - 1/2`, used only to
+print an order of magnitude; no money value is ever converted to float, and no comparison reads the
+float. Money itself is parsed as integer minor units by `minor()`.
 """
 import json, gzip, sys, collections
 from fractions import Fraction

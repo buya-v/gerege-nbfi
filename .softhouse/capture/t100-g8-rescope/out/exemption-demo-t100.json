@@ -1,0 +1,224 @@
+{
+ "FAMILY-B-NO-EXEMPTION": {
+  "exitCode": 1,
+  "fatalReasons": [
+   "THESE CAPABILITIES ARE MARKED in_graded_domain BUT NO PARITY VECTOR KILLS A NAMED WRONG IMPLEMENTATION FOR THEM: monthend.reanchor. \"In the graded domain\" means a vector exists that can tell a correct implementation from an incorrect one, and pair difference is NOT that test \u2014 LB-DEC31 reports zero cells differing across the day-count setting and still kills a no-arm port by 6,015 minor units (T55-N1). Either promote a vector with a graded_against entry, or set in_graded_domain false in capabilities.json.",
+   "NO PARITY VECTOR WAS GRADED. Self-test fixtures and contract-refusal vectors do not make a parity claim: the first is hand-authored, the second is derived from the ratified contract rather than observed from the oracle. Until a capture is promoted, this harness cannot say the port matches Fineract, and it will not pretend to."
+  ],
+  "inadmissible": 0,
+  "invariantViolations": 2,
+  "loadErrors": null,
+  "parityFail": 1,
+  "parityPass": 0,
+  "refused": 0,
+  "results": [
+   {
+    "case_id": "T100-G8-FAMB-NOEXEMPT",
+    "outcome": "FAIL",
+    "detail": [
+     "invariant principal_portions_sum_to_disbursed VIOLATED: principal advanced 1 minor units, principal repaid 0 minor units, difference -1",
+     "invariant principal_amortizes_to_zero VIOLATED: final row (REPAYMENT, due 2033-01-01) leaves 1 minor units outstanding, not 0"
+    ],
+    "graded_cells": 761,
+    "ungraded_cells": 2,
+    "invariants": [
+     {
+      "name": "principal_portions_sum_to_disbursed",
+      "status": "VIOLATED",
+      "detail": "principal advanced 1 minor units, principal repaid 0 minor units, difference -1"
+     },
+     {
+      "name": "principal_amortizes_to_zero",
+      "status": "VIOLATED",
+      "detail": "final row (REPAYMENT, due 2033-01-01) leaves 1 minor units outstanding, not 0"
+     },
+     {
+      "name": "balance_roll_forward",
+      "status": "HOLD",
+      "detail": "109 row(s): every outstanding balance asserted follows from the previous row and its principal"
+     },
+     {
+      "name": "splits_sum_to_whole",
+      "status": "HOLD",
+      "detail": "109 observed total(s) reproduced by the split"
+     },
+     {
+      "name": "monotonic_due_dates",
+      "status": "HOLD",
+      "detail": "108 repayment windows, strictly increasing and contiguous"
+     },
+     {
+      "name": "contract_row_ordering",
+      "status": "HOLD",
+      "detail": "109 rows in the contract's window-key order"
+     }
+    ]
+   }
+  ]
+ },
+ "FAMILY-B-WITH-EXEMPTION": {
+  "exitCode": 2,
+  "fatalReasons": [
+   "THESE CAPABILITIES ARE MARKED in_graded_domain BUT NO PARITY VECTOR KILLS A NAMED WRONG IMPLEMENTATION FOR THEM: monthend.reanchor. \"In the graded domain\" means a vector exists that can tell a correct implementation from an incorrect one, and pair difference is NOT that test \u2014 LB-DEC31 reports zero cells differing across the day-count setting and still kills a no-arm port by 6,015 minor units (T55-N1). Either promote a vector with a graded_against entry, or set in_graded_domain false in capabilities.json."
+  ],
+  "inadmissible": 0,
+  "invariantViolations": 0,
+  "loadErrors": null,
+  "parityFail": 0,
+  "parityPass": 1,
+  "refused": 0,
+  "results": [
+   {
+    "case_id": "T100-G8-FAMB",
+    "outcome": "PASS",
+    "detail": null,
+    "graded_cells": 761,
+    "ungraded_cells": 2,
+    "invariants": [
+     {
+      "name": "principal_portions_sum_to_disbursed",
+      "status": "EXEMPT",
+      "detail": "GATE G-8, family B. The oracle's own principal column sums to 0.00 against a 0.01 disbursement, and the port agrees."
+     },
+     {
+      "name": "principal_amortizes_to_zero",
+      "status": "EXEMPT",
+      "detail": "GATE G-8, family B. The reference oracle emits a schedule for this graded-domain shape whose principal column never repays the disbursement; the Go port reproduces it cell for cell, so the divergence is not port-vs-oracle."
+     },
+     {
+      "name": "balance_roll_forward",
+      "status": "EXEMPT",
+      "detail": "GATE G-8, family B. The balance column is constant at the disbursed amount on every row."
+     },
+     {
+      "name": "splits_sum_to_whole",
+      "status": "HOLD",
+      "detail": "109 observed total(s) reproduced by the split"
+     },
+     {
+      "name": "monotonic_due_dates",
+      "status": "HOLD",
+      "detail": "108 repayment windows, strictly increasing and contiguous"
+     },
+     {
+      "name": "contract_row_ordering",
+      "status": "HOLD",
+      "detail": "109 rows in the contract's window-key order"
+     }
+    ]
+   }
+  ]
+ },
+ "FAMILY-A-NO-EXEMPTION": {
+  "exitCode": 1,
+  "fatalReasons": [
+   "THESE CAPABILITIES ARE MARKED in_graded_domain BUT NO PARITY VECTOR KILLS A NAMED WRONG IMPLEMENTATION FOR THEM: monthend.reanchor. \"In the graded domain\" means a vector exists that can tell a correct implementation from an incorrect one, and pair difference is NOT that test \u2014 LB-DEC31 reports zero cells differing across the day-count setting and still kills a no-arm port by 6,015 minor units (T55-N1). Either promote a vector with a graded_against entry, or set in_graded_domain false in capabilities.json.",
+   "NO PARITY VECTOR WAS GRADED. Self-test fixtures and contract-refusal vectors do not make a parity claim: the first is hand-authored, the second is derived from the ratified contract rather than observed from the oracle. Until a capture is promoted, this harness cannot say the port matches Fineract, and it will not pretend to."
+  ],
+  "inadmissible": 0,
+  "invariantViolations": 0,
+  "loadErrors": null,
+  "parityFail": 1,
+  "parityPass": 0,
+  "refused": 0,
+  "results": [
+   {
+    "case_id": "T100-G8-FAMA-NOEXEMPT",
+    "outcome": "FAIL",
+    "detail": [
+     "row 360 outstanding_principal_minor: expected 109 minor units, got 0 (delta -109)"
+    ],
+    "graded_cells": 2525,
+    "ungraded_cells": 2,
+    "invariants": [
+     {
+      "name": "principal_portions_sum_to_disbursed",
+      "status": "HOLD",
+      "detail": "advanced == repaid == 109 minor units"
+     },
+     {
+      "name": "principal_amortizes_to_zero",
+      "status": "HOLD",
+      "detail": "final outstanding == 0"
+     },
+     {
+      "name": "balance_roll_forward",
+      "status": "HOLD",
+      "detail": "361 row(s): every outstanding balance asserted follows from the previous row and its principal"
+     },
+     {
+      "name": "splits_sum_to_whole",
+      "status": "HOLD",
+      "detail": "361 observed total(s) reproduced by the split"
+     },
+     {
+      "name": "monotonic_due_dates",
+      "status": "HOLD",
+      "detail": "360 repayment windows, strictly increasing and contiguous"
+     },
+     {
+      "name": "contract_row_ordering",
+      "status": "HOLD",
+      "detail": "361 rows in the contract's window-key order"
+     }
+    ]
+   }
+  ]
+ },
+ "FAMILY-A-WITH-EXEMPTION": {
+  "exitCode": 1,
+  "fatalReasons": [
+   "THESE CAPABILITIES ARE MARKED in_graded_domain BUT NO PARITY VECTOR KILLS A NAMED WRONG IMPLEMENTATION FOR THEM: monthend.reanchor. \"In the graded domain\" means a vector exists that can tell a correct implementation from an incorrect one, and pair difference is NOT that test \u2014 LB-DEC31 reports zero cells differing across the day-count setting and still kills a no-arm port by 6,015 minor units (T55-N1). Either promote a vector with a graded_against entry, or set in_graded_domain false in capabilities.json.",
+   "NO PARITY VECTOR WAS GRADED. Self-test fixtures and contract-refusal vectors do not make a parity claim: the first is hand-authored, the second is derived from the ratified contract rather than observed from the oracle. Until a capture is promoted, this harness cannot say the port matches Fineract, and it will not pretend to."
+  ],
+  "inadmissible": 0,
+  "invariantViolations": 0,
+  "loadErrors": null,
+  "parityFail": 1,
+  "parityPass": 0,
+  "refused": 0,
+  "results": [
+   {
+    "case_id": "T100-G8-FAMA",
+    "outcome": "FAIL",
+    "detail": [
+     "row 360 outstanding_principal_minor: expected 109 minor units, got 0 (delta -109)"
+    ],
+    "graded_cells": 2525,
+    "ungraded_cells": 2,
+    "invariants": [
+     {
+      "name": "principal_portions_sum_to_disbursed",
+      "status": "HOLD",
+      "detail": "advanced == repaid == 109 minor units"
+     },
+     {
+      "name": "principal_amortizes_to_zero",
+      "status": "EXEMPT",
+      "detail": "GATE G-8, family A. The reference oracle's final-row balance column is stale with respect to its own final EMI adjustment on this shape."
+     },
+     {
+      "name": "balance_roll_forward",
+      "status": "EXEMPT",
+      "detail": "GATE G-8, family A. The balance column is constant at the disbursed amount on every row."
+     },
+     {
+      "name": "splits_sum_to_whole",
+      "status": "HOLD",
+      "detail": "361 observed total(s) reproduced by the split"
+     },
+     {
+      "name": "monotonic_due_dates",
+      "status": "HOLD",
+      "detail": "360 repayment windows, strictly increasing and contiguous"
+     },
+     {
+      "name": "contract_row_ordering",
+      "status": "HOLD",
+      "detail": "361 rows in the contract's window-key order"
+     }
+    ]
+   }
+  ]
+ }
+}
