@@ -1982,7 +1982,7 @@
       ],
       "status": "pending",
       "attempts": 0,
-      "note": "Raised by the driver, local fire 20260820-200002. Sequenced AFTER T81 and T82 merge, because T81 also edits this file. Needs no oracle."
+      "note": "Raised by the driver, local fire 20260820-200002. Sequenced AFTER T81 and T82 merge, because T81 also edits this file. Needs no oracle. || local fire 20260820-230001: SCOPE EXTENDED by F-T97-1. T97 declined to fix the .softhouse/vectors/README.md doc site T86 named, because its brief demanded an empty vectors diff, and it was right to obey rather than reinterpret. T93 now owns BOTH the 36-vs-42 census AND T97's drop-in replacement text for the 'sh is refused' over-generalisation (the exact text is in T97's handoff as F-T97-1). The empty-vectors-diff rule protects vector JSON, PIN.json and capabilities.json - NOT README prose; precedent set this run when T81's prose edits to the same file were accepted."
     },
     {
       "id": "T94",
@@ -2038,9 +2038,10 @@
         "T81",
         "T86"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "Raised by the driver, local fire 20260820-200002, from T86's P2. NEEDS THE ORACLE to re-run the harness. Pair with an independent reviewer whose job is to find an interpreter the new probe wrongly refuses - that is the failure mode T86 hit in its own draft. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus."
+      "note": "Raised by the driver, local fire 20260820-200002, from T86's P2. NEEDS THE ORACLE to re-run the harness. Pair with an independent reviewer whose job is to find an interpreter the new probe wrongly refuses - that is the failure mode T86 hit in its own draft. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260820-230001: DONE on softhouse/T97-guard-positive-probe (5 commits). THE PROBE IS NOW POSITIVE EVIDENCE: the old guard asked 'did a process-substitution command FAIL?' and admitted on 'no', which is ALSO the answer when the command never ran. The new probe demands a VALUE - conformance-psub-live is written on the far side of <(...), read back through < <(...), and the guard proceeds only on STRING EQUALITY, so every way of not running the probe yields an empty observation and FAILS CLOSED. It grades the VARIABLE, never read's status. printf '%s\\n' WITH the newline is deliberate: the missing newline is exactly what made T86's own draft falsely refuse plain bash. EVIDENCE, all six brief items: (1) bash -r REFUSED at exit 3 with zero VERDICT|PASS|FAIL tokens on 3.2.57, 5.2.37 and 5.3.9; (2) every capable interpreter admitted, full green run through /bin/bash; (3) PRE-FIX REPRODUCED against a PINNED IMMUTABLE COMMIT ab2de89 with the sha256 asserted rather than the moving ref main: - it adopted P-24/T102's lesson unprompted - bash -r admitted then exit 2 with 'no Go toolchain. Expected /.softhouse/bin/go-env.sh', a path that exists nowhere; whole-matrix side by side, EXACTLY TWO ROWS CHANGE, 2 -> 3, everything else identical; (4) bash conformance.sh VERDICT PASS exit 0, 42 parity, 5576 cells, 0 invariant violations, 0 NOT RUN, --prove 21/21; (5) sh conformance.sh exit 3 with 0 verdict tokens; (6) go build/vet/test -count=1 all 0, gofmt -l names exactly contract.go. Committed T97-evidence/prove-interpreter-guard.sh: 13 ASSERTIONS, RED AND GREEN, exits non-zero if any row disagrees, and VERIFIED ON A SCRATCH MERGE INTO CURRENT MAIN (main had moved) - 13/13 and conformance PASS there too. TWO FINDINGS FROM ACTIVELY HUNTING A WRONGLY-REFUSED INTERPRETER, which is the failure mode T86 hit in its own draft: FOUND AND FIXED - with a bare eval, an exported eval() function made bash 5.2.37 refuse, a REAL false refusal, closed with builtin eval. FOUND AND REPORTED, NOT FIXABLE - an exported builtin() function still causes a refusal; no fixed point exists for that game; the trade is one hijackable name instead of three, it is fail-CLOSED, and no fail-closed refusal can turn a red run green. Written into the harness comment rather than hidden. TWO REFUSALS CHECKED AND FOUND NOT FALSE: POSIXLY_CORRECT=1 on bash 3.2 (psub genuinely dies) and bash 5.2 with /dev/fd removed (same binary, admitted with it, refused without - the guard tracks CAPABILITY, not identity). VERIFIED HONESTLY AGAINST ITS OWN INTEREST: bash -r DOES have working process substitution; it is refused because the probe cannot run, and refusing it is still correct because cd is restricted so SCRIPT_DIR comes out empty. The refusal message says exactly that and names $- = hrB. DOCS: softhouse-uat/SKILL.md and both statements in conformance.sh now describe the CAPABILITY, stating that where /bin/sh is bash 5.x, sh conformance.sh is ADMITTED. usage() is self-locating on a #=END-OF-HELP= sentinel and ERRORS at exit 1 if the sentinel is deleted rather than printing the wrong span - and the drift was NOT hypothetical, its own header edit would have made the retired 2,34p cut --help mid-sentence. UNVERIFIED AND MARKED AS SUCH RATHER THAN FILLED IN: bash 4.x (docker daemon cannot reach the registry, pull stalls, host curl returns 401, no local image carries a bash 4) and no complete graded run under bash 5.x (containers have no Go toolchain or oracle route). RAISED F-T97-1: it did NOT edit .softhouse/vectors/README.md - the second doc site T86 named - because the driver's brief required the vectors diff to be EMPTY, and it obeyed the constraint literally and put the drop-in replacement text in its handoff instead. THE DRIVER'S CONSTRAINT WAS AMBIGUOUS AND THE WORKER WAS RIGHT TO OBEY IT: the intent is to protect vector JSON, PIN.json and capabilities.json, NOT README prose - a precedent already set this run when T81's prose edits to that same README were accepted. Folded into T93. DRIVER-VERIFIED: vectors+nexus diff EMPTY. Oracle untouched, read-only curl health probes only, both containers Up (healthy) before and after.",
+      "branch": "softhouse/T97-guard-positive-probe"
     },
     {
       "id": "T98",
@@ -2201,6 +2202,26 @@
       "status": "pending",
       "attempts": 0,
       "note": "Raised by the driver, local fire 20260820-230001, from T90's F-T90-2. NEEDS THE ORACLE. Sequence AFTER T90 merges - same package."
+    },
+    {
+      "id": "T106",
+      "title": "INDEPENDENT review of T97 \u2014 find an interpreter the new probe wrongly refuses",
+      "description": "Paired reviewer for T97. The guard decides whether the harness runs at all; its predecessor's own author-draft falsely refused plain bash, so a false refusal is the failure mode.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        ".softhouse/reviews/",
+        ".softhouse/conformance.sh"
+      ],
+      "context": "tier0-harness-schedule-poc",
+      "dependencies": [
+        "T97"
+      ],
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-230001. NEEDS THE ORACLE to run the harness."
     }
   ]
 }
