@@ -1,0 +1,64 @@
+=== T99 F-1 — a capture must not be filed one directory down inside another tenant's
+prefix ref:  <PREFIX-COMMIT>
+fixed ref:   HEAD = <HEAD-COMMIT>
+export:      <EXPORT>   (git archive, so nothing uncommitted can leak into a proof)
+pre-fix recapture.sh sha256 efccb0a4323628b45952a7e2dff12590e7dce3a2705ae66aa73aa53cd3b0d7d7 — matches the pin, this IS main's byte sequence
+pre-fix attest.py sha256 0edced54a750fa17981af5a287b413c1a8298680ce2b7d4952087a14e61ce780 — matches the pin, this IS main's byte sequence
+
+THE ATTACK:  TENANT=gerege RECAPTURE_OUT=<tree>/t36/out/recapture-default/sub-gerege  sh t36/recapture.sh
+             the leaf 'sub-gerege' matches *-gerege; the directory it sits IN is
+             'recapture-default', which is another tenant's capture directory.
+
+--- 1a.prefix — hermetic run (docker/curl stubbed, the shared oracle is untouched)
+EXIT=1
+  guard verdict: ADMITTED — the run proceeded past the output-path check into:
+    ### tenant 'gerege'  ->  output directory <EXPORT>/prefix/.softhouse/capture/pathb/t36/out/recapture-default/sub-gerege
+  what now exists at t36/out/recapture-default/sub-gerege:
+    t36/out/recapture-default/sub-gerege/CAPTURED-FROM-TENANT
+    t36/out/recapture-default/sub-gerege/preconditions.txt
+    ^ a 'gerege' provenance stamp, written INSIDE recapture-default/
+
+--- 1a.fixed — hermetic run (docker/curl stubbed, the shared oracle is untouched)
+EXIT=1
+  guard verdict: REFUSED before anything ran —
+    ABORT: output directory '<EXPORT>/fixed/.softhouse/capture/pathb/t36/out/recapture-default/sub-gerege' resolves to '<EXPORT>/fixed/.softhouse/capture/pathb/t36/out/recapture-default/sub-gerege'; relative to the evidence tree tha
+  what now exists at t36/out/recapture-default/sub-gerege:
+    (the directory was never created)
+
+--- 1b.prefix — the SAME attack against the LIVE reference oracle, pre-fix bytes
+EXIT=0
+  preconditions: 22 PASS, 0 FAIL
+  B-01  HTTP 200  -> t36/out/recapture-default/sub-gerege/B-01-baseline-raw.json
+  B-02  HTTP 200  -> t36/out/recapture-default/sub-gerege/B-02-multiplesof100-raw.json
+  B-03  HTTP 200  -> t36/out/recapture-default/sub-gerege/B-03-diycs-fullleapyear-raw.json
+  B-04  HTTP 200  -> t36/out/recapture-default/sub-gerege/B-04-diycs-feb29only-raw.json
+  now inside the default tenant's capture directory:
+    t36/out/recapture-default/CAPTURED-FROM-TENANT
+    t36/out/recapture-default/preconditions.txt
+    t36/out/recapture-default/sub-gerege/B-01-baseline-raw.json
+    t36/out/recapture-default/sub-gerege/B-02-multiplesof100-raw.json
+    t36/out/recapture-default/sub-gerege/B-03-diycs-fullleapyear-raw.json
+    t36/out/recapture-default/sub-gerege/B-04-diycs-feb29only-raw.json
+    t36/out/recapture-default/sub-gerege/CAPTURED-FROM-TENANT
+    t36/out/recapture-default/sub-gerege/preconditions.txt
+    t36/out/recapture-default/sub-gerege/products-asrow.jsonl
+  VERDICT: EXIT 0, four real oracle captures and a 'gerege' stamp, filed one directory
+           down inside 'recapture-default'.  Nothing downstream can tell.
+
+--- 1b.fixed — the same live invocation against this branch's bytes
+EXIT=1
+  ABORT: output directory '<EXPORT>/fixed/.softhouse/capture/pathb/t36/out/recapture-default/sub-gerege' resolves to '<EXPORT>/fixed/.softhouse/capture/pathb/t36/out/recapture-default/sub-gerege'; relative to the evidence tree tha
+  captures written: 0
+
+--- 1c — the same basename-only shape at attest.py:51, found by sweeping for the SHAPE
+  prefix:   ADMITTED — first line: wrote <EXPORT>/prefix/.softhouse/capture/pathb/t36/out/recapture-default/sub-gerege/attestation.json
+  fixed:   REFUSED — ABORT: output directory '<EXPORT>/fixed/.softhouse/capture/pathb/t36/out/recapture-default/sub-gerege' resolves to '<EXPORT>/fixed/.softhouse/capture/pathb/t36/out/reca…
+
+--- 1d — hardening that breaks the happy path is not hardening (fixed bytes, guard only)
+  accepted              t36/out/recapture-gerege — the default derivation
+  accepted              t80/out/attest-gerege — an explicit t80-style directory
+  accepted              t22-probe/out/x-gerege — another task directory
+
+defect reproduces on the PRE-FIX bytes: YES
+defect refused by the FIXED bytes:      YES
+RESULT: F-1 (basename-only output-path guard) CLOSED — red before, green after.

@@ -1,0 +1,159 @@
+
+=== 0. locale sanity — are there files here that would make a UTF-8 grep go silently blind?
+  files where a UTF-8 grep would go blind: 0
+  (every grep below is LC_ALL=C, so this number does not change what the sweep can see)
+
+NOTE: greps 1-3 exclude t99/ itself.  This task's own proof scripts quote the defective
+idioms verbatim in their headers, and a hit list dominated by the report about the defect
+is not a hit list.  t99/ is syntax-checked and reviewed separately.
+
+=== 1. basename-only comparisons — the F-1 shape
+--- shell: basename used in a comparison rather than for display
+t80/summarise.sh:9:  b=$(basename "$f")
+t80/shell-invariance.sh:19:    echo "MISSING bash counterpart for $(basename "$f")"
+t80/shell-invariance.sh:28:    echo "IDENTICAL  $(basename "$f")  vs  $(basename "$b")"
+t80/shell-invariance.sh:30:    echo "DIFFERS    $(basename "$f")  vs  $(basename "$b")"
+t36/recapture.sh:57:#     Obase=$(basename "$O"); case "$Obase" in "$TENANT" | *-"$TENANT" ) : ;; * ) die ...
+t36/recapture.sh:85:    rb=$(basename "$rp"); rp=$(dirname "$rp")
+--- python: os.path.basename feeding a name test
+t76/t76_crosscheck.py:22:PATHB = os.path.normpath(os.path.join(HERE, os.pardir))
+t76/t76_crosscheck.py:23:SOFTHOUSE = os.path.normpath(os.path.join(PATHB, os.pardir, os.pardir))
+provenance.py:155:    leaf = os.path.basename(reldir)
+provenance.py:231:    leaf = os.path.basename(reldir)
+t36/t36_rederive_check.py:19:T30 = os.path.normpath(os.path.join(HERE, '..', '..', '..', 'reviews', 't30-probe',
+t36/attest.py:35:PATHB = os.path.normpath(os.path.join(HERE, '..'))
+t36/attest.py:50:# T99: the name check used to run on os.path.basename(OUT) — the LEAF only — which is the same
+t36/attest.py:57:_PATHB_ROOT = os.path.realpath(PATHB)
+t36/attest.py:58:_out_r = os.path.realpath(OUT)
+t36/attest.py:79:    if not (_base == TENANT or _base.endswith('-' + TENANT)):
+t36/attest.py:129:SOFTHOUSE = os.path.normpath(os.path.join(HERE, '..', '..', '..'))   # .softhouse/
+--- any other place a tenant id is compared against a path fragment
+t80/prove-f1.sh:52:echo "  stamp now present: $( [ -f "$E/CAPTURED-FROM-TENANT" ] && echo "YES, contents: $(cat "$E/CAPTURED-FROM-TENANT")" || echo no )"
+t80/prove-f1.sh:82:echo "  stamp present: $( [ -f "$E/CAPTURED-FROM-TENANT" ] && echo "YES — FIX FAILED, contents: $(cat "$E/CAPTURED-FROM-TENANT")" || echo "no" )"
+t36/recapture.sh:57:#     Obase=$(basename "$O"); case "$Obase" in "$TENANT" | *-"$TENANT" ) : ;; * ) die ...
+t36/recapture.sh:120:  "$TENANT" | *-"$TENANT" ) : ;;
+t36/attest.py:79:    if not (_base == TENANT or _base.endswith('-' + TENANT)):
+t36/attest.py:101:            "overwrite it with a %r capture.\n" % (OUT, _prev, _stamp, TENANT))
+t36/attest.py:198:pre = subprocess.run('CANARY_REQ=%s sh %s %s' % (canary, os.path.join(HERE, 'preconditions.sh'), TENANT),
+t36/attest.py:275:           "where t.identifier='%s';" % TENANT)
+t36/attest.py:276:tz = q('fineract_tenants', "select timezone_id from tenants where identifier='%s';" % TENANT)
+t36/attest.py:277:tname = q('fineract_tenants', "select name from tenants where identifier='%s';" % TENANT)
+t36/attest.py:280:        "join tenant_server_connections c on c.id=t.oltp_id where t.identifier='%s';" % TENANT)
+t36/attest.py:283:          "where t.identifier='%s';" % TENANT)
+t36/attest.py:291:             "`%s`' | tail -1" % (container_started, FIN, TENANT))
+
+=== 2. tools resolved through $PATH — the F-2 shape
+--- digest tools
+t80/prove-f1.sh:22:# `shasum` on $PATH could make BEFORE and AFTER agree by fiat.  Hardened instrument instead.
+t80/happy-path.sh:42:# point of this leg, and a bare `shasum` on $PATH could make all six agree by fiat.  The hardened
+t36/recapture.sh:201:# not by a bare `shasum` that $PATH decides the meaning of.  A refusal prints REFUSED and fails the
+t36/emiloop-probe.sh:41:# implementations required to agree — rather than by a bare `shasum` whose meaning $PATH decides.
+t36/recreate-products.sh:99:# T99 (sweep for the F-2 shape): hardened digest instrument, not a $PATH-resolved `shasum`.
+t36/preconditions.sh:19:# The sha256 instrument, hardened by T99.  P14b's digest pin used the bare word `shasum`, resolved
+t36/preconditions.sh:20:# through $PATH; a `shasum` earlier on $PATH that prints the pinned constant made the comparison a
+t36/preconditions.sh:198:# THIRD ITERATION (T99).  A digest has no prefix, but `shasum` had no ADDRESS: T80 computed it with
+t36/preconditions.sh:199:# a bare word resolved through $PATH, so a `shasum` earlier on $PATH that prints the pinned constant
+t36/sha256.sh:2:# T99 — a sha256 that a PATH-poisoned `shasum` cannot answer for.
+t36/sha256.sh:6:# shape — but computed the digest with the bare word `shasum`, resolved through $PATH:
+t36/sha256.sh:8:#     creqsha=$(shasum -a 256 "$CANARY_REQ" | cut -d' ' -f1)     # preconditions.sh:195, pre-T99
+t36/sha256.sh:10:# A `shasum` earlier on $PATH that prints the pinned constant for any input collapses the two
+t36/sha256.sh:26:#  3. TWO INDEPENDENT IMPLEMENTATIONS MUST AGREE.  Perl (`shasum`), C (`sha256sum`), LibreSSL
+t36/sha256.sh:27:#     (`openssl dgst`) and CPython (`hashlib`) are four separate implementations; at least two must
+t36/sha256.sh:33:# (the perl `shasum` is a perl script — `head -1 /usr/bin/shasum` is `#!/usr/bin/perl`), PYTHONPATH
+t36/sha256.sh:72:    shasum)    _cands='/usr/bin/shasum /bin/shasum' ;;
+t36/sha256.sh:73:    sha256sum) _cands='/sbin/sha256sum /usr/bin/sha256sum /bin/sha256sum' ;;
+t36/sha256.sh:91:    shasum)    $SHA256_ENV -i $SHA256_MINENV "$_p" -a 256 "$_f" 2>/dev/null \
+t36/sha256.sh:93:    sha256sum) $SHA256_ENV -i $SHA256_MINENV "$_p" "$_f" 2>/dev/null \
+t36/sha256.sh:121:  for _t in shasum sha256sum openssl python3; do
+t36/sha256.sh:146:  for _t in shasum sha256sum openssl python3; do
+
+--- OTHER unpinned externals in the two scripts that decide whether a capture is admissible
+    (reported, not fixed: see the handoff.  A poisoned `docker` defeats P1-P3 and P5-P13;
+     a poisoned `curl` defeats P4 and the canary.  Both are far larger jobs than the digest
+     pin, and neither is what T85 raised.)
+    docker   22 occurrence(s) in preconditions.sh + recapture.sh
+    curl     3 occurrence(s) in preconditions.sh + recapture.sh
+    psql     12 occurrence(s) in preconditions.sh + recapture.sh
+    grep     9 occurrence(s) in preconditions.sh + recapture.sh
+    sed      6 occurrence(s) in preconditions.sh + recapture.sh
+    tr       15 occurrence(s) in preconditions.sh + recapture.sh
+    head     2 occurrence(s) in preconditions.sh + recapture.sh
+    unzip    4 occurrence(s) in preconditions.sh + recapture.sh
+    javap    1 occurrence(s) in preconditions.sh + recapture.sh
+    attest.py computes its digests with hashlib IN PROCESS, so it is not PATH-reachable at all.
+
+=== 3. checks that can pass on an empty input set — the F-3 shape
+--- loops over a glob with a [ -f ] || continue and no counter
+t80/summarise.sh:8:for f in "$O"/attack-*.txt; do
+t80/forbidden-sentence.sh:42:for f in "$O"/attack-*.txt "$O"/*/preconditions.txt; do
+t80/prove-f1.sh:26:  for f in "$E"/*; do
+t80/shell-invariance.sh:15:for f in "$O"/attack-*-sh.txt; do
+t36/recapture.sh:209:for f in "$O"/B-0*-raw.json; do
+t36/emiloop-probe.sh:45:for f in "$O"/emiloop-*-raw.json; do
+t36/recreate-products.sh:103:for f in "$O"/B-0*-raw.json; do
+
+--- grep -c / wc -l results compared to 0 (a zero can mean 'clean' or 'read nothing')
+t80/summarise.sh:11:  p=$(grep -c '^  PASS' "$f" || true)
+t80/summarise.sh:12:  q=$(grep -c '^  FAIL' "$f" || true)
+t80/prove-f2.sh:33:# `grep -c` reported NOTHING for the very line that proves the defect.  And `-a` alone is NOT
+t80/prove-f2.sh:35:# sequence at all, so it returns 0 rather than 1 [measured: `grep -ac` -> 0, `LC_ALL=C grep -ac`
+t80/prove-f2.sh:41:  echo "  PASS lines ................. $(LC_ALL=C grep -ac '^  PASS' "$t" || true)"
+t80/prove-f2.sh:42:  echo "  FAIL lines ................. $(LC_ALL=C grep -ac '^  FAIL' "$t" || true)"
+t80/prove-f2.sh:43:  echo "  P7 breach reported ......... $(LC_ALL=C grep -ac 'PostgreSQL version is' "$t" || true)"
+t80/prove-f2.sh:45:  echo "    tenant row (P8) .......... $(LC_ALL=C grep -ac "tenant 'gerege' exists" "$t" || true)"
+t80/prove-f2.sh:46:  echo "    timezone (P9) ............ $(LC_ALL=C grep -ac 'timezone_id' "$t" || true)"
+t80/prove-f2.sh:47:  echo "    rounding-mode row (P10) .. $(LC_ALL=C grep -ac 'rounding-mode' "$t" || true)"
+t80/prove-f2.sh:48:  echo "    JVM mode in force (P13) .. $(LC_ALL=C grep -ac 'running JVM initialized' "$t" || true)"
+t80/prove-f2.sh:49:  echo "    CANARY digest pin (P14b) . $(LC_ALL=C grep -ac 'canary request pinned by DIGEST' "$t" || true)"
+t80/prove-f2.sh:50:  echo "    CANARY arithmetic (P14c) . $(LC_ALL=C grep -ac 'effective rounding mode canary' "$t" || true)"
+t80/prove-f2.sh:51:  echo "    MNT currency (P15) ....... $(LC_ALL=C grep -ac 'MNT seeded' "$t" || true)"
+t80/prove-f2.sh:52:  echo "  breach summary printed ..... $(LC_ALL=C grep -ac 'PRECONDITIONS BREACHED' "$t" || true)"
+t80/prove-f2.sh:53:  echo "  unbound-variable death ..... $(LC_ALL=C grep -ac 'unbound variable' "$t" || true)"
+t80/prove-f2.sh:78:echo "  UnicodeDecodeError ......... $(LC_ALL=C grep -ac 'UnicodeDecodeError' "$O/.f2-attest.txt" || true)"
+t80/prove-f2.sh:79:echo "  Traceback .................. $(LC_ALL=C grep -ac 'Traceback' "$O/.f2-attest.txt" || true)"
+t80/prove-f2.sh:80:echo "  clean ABORT message ........ $(LC_ALL=C grep -ac 'ABORT: preconditions breached' "$O/.f2-attest.txt" || true)"
+t80/prove-f2.sh:85:canary_prefix=$(LC_ALL=C grep -ac 'effective rounding mode canary' "$O/.f2-prefix.txt" || true)
+t80/prove-f2.sh:86:canary_fixed=$(LC_ALL=C grep -ac 'effective rounding mode canary' "$O/.f2-fixed.txt" || true)
+t80/prove-f2.sh:87:summary_fixed=$(LC_ALL=C grep -ac 'PRECONDITIONS BREACHED' "$O/.f2-fixed.txt" || true)
+t80/prove-f1.sh:39:echo "--- BEFORE: $(wc -l < "$O/.f1-before" | tr -d ' ') files"
+t80/prove-f1.sh:85:  echo "  RESULT: committed set UNCHANGED — all $(wc -l < "$O/.f1-before" | tr -d ' ') digests identical, including preconditions.txt"
+t80/happy-path.sh:37:echo "PASS lines: $(grep -c '^  PASS' "$O/recapture-gerege/preconditions.txt")"
+t80/happy-path.sh:38:echo "FAIL lines: $(grep -c '^  FAIL' "$O/recapture-gerege/preconditions.txt" || true)"
+t80/happy-path.sh:73:  c=$(digests "$n" | awk '{print $1}' | sort -u | wc -l | tr -d ' ')
+t36/recapture.sh:164:prefails=$(LC_ALL=C grep -ac '^  FAIL' "$O/preconditions.txt" || true)
+t36/recreate-products.sh:32:grep -c '^  FAIL' "$O/preconditions.txt" > /dev/null 2>&1 || true
+t36/recreate-products.sh:55:  n=$(diff "$W/req/$f.json" "$REQ/$f.json" | grep -c '^[<>]' || true)
+t36/preconditions.sh:115:        | grep -c 'BOOT-INF/lib/postgresql-')
+
+=== 4. capture directories with no in-band provenance — the F-4 shape
+  directory                                  stamp     tier-A   tenant
+  out                                        -         NO       NOT ESTABLISHED
+  t22-audit/out-fresh-tenant                 -         NO       NOT ESTABLISHED
+  t22-audit/out-modeprobe                    -         NO       NOT ESTABLISHED
+  t22-audit/out-modeprobe2                   -         NO       NOT ESTABLISHED
+  t22-audit/out-probe                        -         NO       NOT ESTABLISHED
+  t22-audit/out-rerun-default                -         NO       NOT ESTABLISHED
+  t22-audit/out-rounddown                    -         NO       NOT ESTABLISHED
+  t22-probe/out                              -         NO       NOT ESTABLISHED
+  t36/out/emiloop                            -         yes      gerege
+  t36/out/recapture-default                  default   yes      default
+  t36/out/recapture-gerege                   -         yes      gerege
+  t36/out/recreate-gerege                    -         yes      gerege
+  t76/out/recapture-gerege                   -         yes      gerege
+  t80/out/attest-gerege                      gerege    yes      gerege
+  t80/out/bash-recapture-gerege              gerege    yes      gerege
+  t80/out/recapture-gerege                   gerege    yes      gerege
+  t80/out/stamp-probe-default                gerege    yes      gerege
+  totals: 17 directories, 5 stamped, 9 with tier-A evidence, 8 with no tenant established
+
+=== WHAT THIS SWEEP CANNOT FIND
+  * Anything outside .softhouse/capture/pathb/.  The sweep is scoped to this tree; sibling capture
+    trees (.softhouse/capture/audit-t44/ is owned by another worker this fire) were not searched.
+  * A basename comparison written some other way — `${x##*/}`, `awk -F/ '{print $NF}'`, a Python
+    `split('/')[-1]`.  Greps 1 finds the idioms actually used here; it does not bound the space.
+  * A tool invoked through a variable (`$DOCKER`, `$PY`) or through a shell function, since the
+    literal name never appears at the call site.
+  * A vacuous check whose emptiness comes from something other than a glob — an empty SQL result,
+    an empty JSON array, a `for` over an unset variable.
+  * Whether a capture's recorded tenant is TRUE.  The index records what the evidence says and what
+    tier it is; it cannot promote tier-B prose into an observation, and it does not try.

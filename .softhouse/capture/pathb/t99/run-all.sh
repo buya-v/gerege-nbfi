@@ -20,7 +20,14 @@ rc=0
 
 for f in f1 f2 f3 f4; do
   for shell in sh bash; do
-    root=/tmp/t99-run/$shell/$f
+    # The two export roots are padded to the SAME LENGTH.  Several transcript lines are truncated
+    # with `cut -c1-N` for readability, and a shorter path would move the truncation point — which
+    # showed up on the first run as an sh-vs-bash "difference" that was nothing but the width of
+    # the word `sh`.  A normalisation artefact reported as a behavioural difference is exactly the
+    # "right numbers, wrong reason" failure this run keeps finding, so it is removed at the source
+    # rather than explained away in the report.
+    case $shell in sh) pad=sh__ ;; *) pad=$shell ;; esac
+    root=/tmp/t99-run/$pad/$f
     printf '%-3s %-4s ... ' "$f" "$shell"
     T99_EXPORT_ROOT=$root T99_SH=$shell T99_LIVE=$LIVE \
       "$shell" "$T99/prove-$f.sh" > "$O/.raw-$f-$shell" 2>&1

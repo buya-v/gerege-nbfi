@@ -1,0 +1,281 @@
+=== T99 F-4 — 'no stamp because it predates the mechanism' vs 'no stamp because it was removed'
+prefix ref:  <PREFIX-COMMIT>
+fixed ref:   HEAD = <HEAD-COMMIT>
+export:      <EXPORT>   (git archive, so nothing uncommitted can leak into a proof)
+
+--- 4a.prefix — delete the stamp from a directory that HAS one, then compare the two
+  t80/out/recapture-gerege: stamp present? no   files: 6
+  t36/out/recapture-gerege: stamp present? no   files: 8
+  a reader handed this tree can consult:
+    PROVENANCE-INDEX.json : ABSENT
+    provenance.py         : ABSENT
+  VERDICT: both directories now present the same state — no stamp — and the tree carries
+           nothing that distinguishes the one that never had a stamp from the one whose
+           stamp was just deleted.  That is the finding.
+
+--- 4a.fixed — the same deletion against this branch's tree
+  EXIT=1
+    directories checked: 17
+    files digested:      110
+    problems:            2
+      MISSING FILE t80/out/recapture-gerege/CAPTURED-FROM-TENANT
+      STAMP REMOVED t80/out/recapture-gerege — the index records a stamp saying 'gerege'; it is gone.
+  VERDICT: the REMOVAL is named, and the directory that merely PREDATES the mechanism is
+           not accused.  The two cases are now different states, not the same state.
+
+--- 4b — a stamp APPEARING on a directory recorded as predating the mechanism.  (This is not
+         hypothetical: T99's author caused it by accident, running the recipe against the
+         worktree instead of a /tmp export.  It was restored from git; here it is caught.)
+  EXIT=1
+    problems:            2
+      UNACCOUNTED FILE t36/out/recapture-gerege/CAPTURED-FROM-TENANT — this directory gained a file after the index was emitted (AND IT IS A STAMP: a stamp that did not come from the capture run is not pr
+      STAMP APPEARED t36/out/recapture-gerege — the index records this directory as predating the stamp mechanism; a stamp has since been added.
+
+--- 4c — one edited byte in a committed capture
+    flipped the first "1" to "2" at offset 202
+  EXIT=1
+    problems:            1
+      BYTES MOVED t36/out/recapture-gerege/B-01-baseline-raw.json: index 713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009, on disk 98abf589d3eaf726cfba88d210583ed4f825c277dd27af2bf7a25a1a2
+
+--- 4d — a new capture directory the index does not account for
+  EXIT=1
+    problems:            1
+      UNACCOUNTED DIRECTORY t99/out/smuggled-gerege — it holds captures or a stamp and the index does not cover it. Re-run `provenance.py emit` and review the diff.
+
+--- 4e — discoverable FROM THE CAPTURE, not merely filed near it
+  (i) in place — the index is found the way .git is, by ascending from the file itself:
+      file:    <EXPORT>/fixed/.softhouse/capture/pathb/t36/out/recapture-gerege/B-01-baseline-raw.json
+      sha256:  713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009
+      index:   <EXPORT>/fixed/.softhouse/capture/pathb/PROVENANCE-INDEX.json  (found by ascent from the file itself)
+      records sharing these bytes: 12
+      NOTE: several committed captures are BYTE-IDENTICAL, so content addressing returns all of them. That is a fact about the corpus, not a weakness of the lookup: the four Path B response bodies are
+      
+      FOUND as out/B-01-baseline-raw.json
+        tenant:       NOT ESTABLISHED IN-BAND
+        basis:        NOT ESTABLISHED IN-BAND — no stamp, no precondition transcript and no attestation inside this directory. The tier-B/C entries below say what the recipe targeted and what the dire
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 4b64950 2026-08-18
+        first commit: 4b64950 2026-08-18
+        note:         The ORIGINAL Path B corpus (B-01..B-04 plus two product read-backs). No tier-A record exists inside it. Two committed files say what tenant it was taken on, and both are tier-B p
+      
+      FOUND as t22-audit/out-fresh-tenant/B-01-raw.json
+        tenant:       NOT ESTABLISHED IN-BAND
+        basis:        NOT ESTABLISHED IN-BAND — no stamp, no precondition transcript and no attestation inside this directory. The tier-B/C entries below say what the recipe targeted and what the dire
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 4ebb5ec 2026-08-18
+        first commit: 4ebb5ec 2026-08-18
+        evidence [B] t22-audit/fresh-tenant.sh                            ['gerege']
+        evidence [C] t22-audit/out-fresh-tenant                           tenant
+      
+      FOUND as t22-audit/out-probe/p09-raw.json
+        tenant:       NOT ESTABLISHED IN-BAND
+        basis:        NOT ESTABLISHED IN-BAND — no stamp, no precondition transcript and no attestation inside this directory. The tier-B/C entries below say what the recipe targeted and what the dire
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 4ebb5ec 2026-08-18
+        first commit: 4ebb5ec 2026-08-18
+        evidence [B] t22-audit/probe.sh                                   ['gerege']
+        evidence [C] t22-audit/out-probe                                  probe
+      
+      FOUND as t22-audit/out-rerun-default/B-01-raw.json
+        tenant:       NOT ESTABLISHED IN-BAND
+        basis:        NOT ESTABLISHED IN-BAND — no stamp, no precondition transcript and no attestation inside this directory. The tier-B/C entries below say what the recipe targeted and what the dire
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 2fe6c10 2026-08-18
+        first commit: 2fe6c10 2026-08-18
+        evidence [B] t22-audit/rerun-default.sh                           ['default']
+        evidence [C] t22-audit/out-rerun-default                          default
+      
+      FOUND as t22-probe/out/calc-B-01-baseline-halfeven-raw.json
+        tenant:       NOT ESTABLISHED IN-BAND
+        basis:        NOT ESTABLISHED IN-BAND — no stamp, no precondition transcript and no attestation inside this directory. The tier-B/C entries below say what the recipe targeted and what the dire
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 9133213 2026-08-18
+        first commit: 9133213 2026-08-18
+        note:         Rescued WIP from the T22 probe. Read it together with t22-probe/PROVENANCE-NOTE.md, which records that the `halfeven` in these filenames is a DISCOVERY LABEL for what the `defaul
+      
+      FOUND as t36/out/emiloop/emiloop-1200000-raw.json
+        tenant:       gerege
+        basis:        tier-A in-band evidence written by the capture run
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in b92f74c 2026-08-18
+        first commit: b92f74c 2026-08-18
+        note:         Keeps its historical directory name (`out/emiloop`), so attest.py exempts it from the LEAF-name rule while still applying containment, shape and the no-nesting rule (T99). Tenant
+        evidence [A] preconditions.txt                                    gerege
+        evidence [A] attestation.json                                     gerege
+        evidence [B] t36/emiloop-probe.sh                                 ['gerege']
+      
+      FOUND as t36/out/recapture-gerege/B-01-baseline-raw.json
+        tenant:       gerege
+        basis:        tier-A in-band evidence written by the capture run
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in fab040a 2026-08-18
+        first commit: fab040a 2026-08-18
+        note:         THE DIRECTORY THIS INDEX WAS WRITTEN FOR (T85's fourth finding, closed by T99). It has no CAPTURED-FROM-TENANT stamp because it PREDATES the mechanism: these files were first com
+        evidence [A] preconditions.txt                                    gerege
+        evidence [A] attestation.json                                     gerege
+        evidence [C] t36/out/recapture-gerege                             gerege
+      
+      FOUND as t36/out/recreate-gerege/B-01-baseline-raw.json
+        tenant:       gerege
+        basis:        tier-A in-band evidence written by the capture run
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 60c08ad 2026-08-18
+        first commit: 60c08ad 2026-08-18
+        evidence [A] preconditions.txt                                    gerege
+        evidence [B] t36/recreate-products.sh                             ['gerege']
+        evidence [C] t36/out/recreate-gerege                              gerege
+      
+      FOUND as t76/out/recapture-gerege/B-01-baseline-raw.json
+        tenant:       gerege
+        basis:        tier-A in-band evidence written by the capture run
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 3d70a86 2026-08-20
+        first commit: 3d70a86 2026-08-20
+        evidence [A] preconditions.txt                                    gerege
+        evidence [A] attestation.json                                     gerege
+        evidence [C] t76/out/recapture-gerege                             gerege
+      
+      FOUND as t80/out/attest-gerege/B-01-baseline-raw.json
+        tenant:       gerege
+        basis:        tier-A in-band evidence written by the capture run
+        in-band stamp: gerege
+        first commit: 813acb1 2026-08-20
+        evidence [A] CAPTURED-FROM-TENANT                                 gerege
+        evidence [A] preconditions.txt                                    gerege
+        evidence [A] attestation.json                                     gerege
+        evidence [C] t80/out/attest-gerege                                gerege
+      
+      FOUND as t80/out/bash-recapture-gerege/B-01-baseline-raw.json
+        tenant:       gerege
+        basis:        tier-A in-band evidence written by the capture run
+        in-band stamp: gerege
+        first commit: 813acb1 2026-08-20
+        evidence [A] CAPTURED-FROM-TENANT                                 gerege
+        evidence [A] preconditions.txt                                    gerege
+        evidence [C] t80/out/bash-recapture-gerege                        gerege
+      
+      FOUND as t80/out/recapture-gerege/B-01-baseline-raw.json
+        tenant:       gerege
+        basis:        tier-A in-band evidence written by the capture run
+        in-band stamp: gerege
+        first commit: 813acb1 2026-08-20
+        evidence [A] CAPTURED-FROM-TENANT                                 gerege
+        evidence [A] preconditions.txt                                    gerege
+        evidence [C] t80/out/recapture-gerege                             gerege
+
+  (ii) renamed, and moved to a directory of its own with no neighbours and no transcript:
+      sha256:  713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009
+      index:   <EXPORT>/fixed/.softhouse/capture/pathb/PROVENANCE-INDEX.json  (found by ascent from the file itself)
+      FOUND as out/B-01-baseline-raw.json
+        tenant:       NOT ESTABLISHED IN-BAND
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 4b64950 2026-08-18
+        first commit: 4b64950 2026-08-18
+      FOUND as t22-audit/out-fresh-tenant/B-01-raw.json
+        tenant:       NOT ESTABLISHED IN-BAND
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 4ebb5ec 2026-08-18
+        first commit: 4ebb5ec 2026-08-18
+      FOUND as t22-audit/out-probe/p09-raw.json
+        tenant:       NOT ESTABLISHED IN-BAND
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 4ebb5ec 2026-08-18
+        first commit: 4ebb5ec 2026-08-18
+      FOUND as t22-audit/out-rerun-default/B-01-raw.json
+        tenant:       NOT ESTABLISHED IN-BAND
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 2fe6c10 2026-08-18
+        first commit: 2fe6c10 2026-08-18
+      FOUND as t22-probe/out/calc-B-01-baseline-halfeven-raw.json
+        tenant:       NOT ESTABLISHED IN-BAND
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 9133213 2026-08-18
+        first commit: 9133213 2026-08-18
+      FOUND as t36/out/emiloop/emiloop-1200000-raw.json
+        tenant:       gerege
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in b92f74c 2026-08-18
+        first commit: b92f74c 2026-08-18
+      FOUND as t36/out/recapture-gerege/B-01-baseline-raw.json
+        tenant:       gerege
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in fab040a 2026-08-18
+        first commit: fab040a 2026-08-18
+        note:         THE DIRECTORY THIS INDEX WAS WRITTEN FOR (T85's fourth finding, closed by T99). It has no CAPTURED-FROM-TENANT stamp because it PREDATES the mechanism: these files were first com
+      FOUND as t36/out/recreate-gerege/B-01-baseline-raw.json
+        tenant:       gerege
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 60c08ad 2026-08-18
+        first commit: 60c08ad 2026-08-18
+      FOUND as t76/out/recapture-gerege/B-01-baseline-raw.json
+        tenant:       gerege
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 3d70a86 2026-08-20
+        first commit: 3d70a86 2026-08-20
+      FOUND as t80/out/attest-gerege/B-01-baseline-raw.json
+        tenant:       gerege
+        first commit: 813acb1 2026-08-20
+      FOUND as t80/out/bash-recapture-gerege/B-01-baseline-raw.json
+        tenant:       gerege
+        first commit: 813acb1 2026-08-20
+      FOUND as t80/out/recapture-gerege/B-01-baseline-raw.json
+        tenant:       gerege
+        first commit: 813acb1 2026-08-20
+
+  (iii) moved OUT of the tree entirely — the ascent honestly fails, and the digest still
+        finds the record when the index is named, which is what proves the link is the
+        CONTENT and not the path:
+      ERROR: no PROVENANCE-INDEX.json found by ascending from <EXPORT>/9c44ab10.bin, and none supplied with --index.
+      FOUND as out/B-01-baseline-raw.json
+        tenant:       NOT ESTABLISHED IN-BAND
+        basis:        NOT ESTABLISHED IN-BAND — no stamp, no precondition transcript and no attestation inside this directory. The tier-B/C entries below say what the recipe targeted and what the dire
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 4b64950 2026-08-18
+      FOUND as t22-audit/out-fresh-tenant/B-01-raw.json
+        tenant:       NOT ESTABLISHED IN-BAND
+        basis:        NOT ESTABLISHED IN-BAND — no stamp, no precondition transcript and no attestation inside this directory. The tier-B/C entries below say what the recipe targeted and what the dire
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 4ebb5ec 2026-08-18
+      FOUND as t22-audit/out-probe/p09-raw.json
+        tenant:       NOT ESTABLISHED IN-BAND
+        basis:        NOT ESTABLISHED IN-BAND — no stamp, no precondition transcript and no attestation inside this directory. The tier-B/C entries below say what the recipe targeted and what the dire
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 4ebb5ec 2026-08-18
+      FOUND as t22-audit/out-rerun-default/B-01-raw.json
+        tenant:       NOT ESTABLISHED IN-BAND
+        basis:        NOT ESTABLISHED IN-BAND — no stamp, no precondition transcript and no attestation inside this directory. The tier-B/C entries below say what the recipe targeted and what the dire
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 2fe6c10 2026-08-18
+      FOUND as t22-probe/out/calc-B-01-baseline-halfeven-raw.json
+        tenant:       NOT ESTABLISHED IN-BAND
+        basis:        NOT ESTABLISHED IN-BAND — no stamp, no precondition transcript and no attestation inside this directory. The tier-B/C entries below say what the recipe targeted and what the dire
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 9133213 2026-08-18
+      FOUND as t36/out/emiloop/emiloop-1200000-raw.json
+        tenant:       gerege
+        basis:        tier-A in-band evidence written by the capture run
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in b92f74c 2026-08-18
+      FOUND as t36/out/recapture-gerege/B-01-baseline-raw.json
+        tenant:       gerege
+        basis:        tier-A in-band evidence written by the capture run
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in fab040a 2026-08-18
+      FOUND as t36/out/recreate-gerege/B-01-baseline-raw.json
+        tenant:       gerege
+        basis:        tier-A in-band evidence written by the capture run
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 60c08ad 2026-08-18
+      FOUND as t76/out/recapture-gerege/B-01-baseline-raw.json
+        tenant:       gerege
+        basis:        tier-A in-band evidence written by the capture run
+        in-band stamp: none — predates the stamp mechanism, which was introduced in commit 813acb1; this directory was first committed in 3d70a86 2026-08-20
+      FOUND as t80/out/attest-gerege/B-01-baseline-raw.json
+        tenant:       gerege
+        basis:        tier-A in-band evidence written by the capture run
+        in-band stamp: gerege
+      FOUND as t80/out/bash-recapture-gerege/B-01-baseline-raw.json
+        tenant:       gerege
+        basis:        tier-A in-band evidence written by the capture run
+        in-band stamp: gerege
+      FOUND as t80/out/recapture-gerege/B-01-baseline-raw.json
+        tenant:       gerege
+        basis:        tier-A in-band evidence written by the capture run
+        in-band stamp: gerege
+
+  (iv) one byte changed — NOT FOUND, which is correct: those bytes are no longer that capture
+      sha256:  10a91e1f191ea94a9db6d12c03400b946bb74ffed14535bad32a8a3fce9b0e50
+      RESULT: NOT FOUND. These bytes are not any capture this index accounts for.
+
+--- 4f — the verifier is held to the same rule as F-3: it must not pass on an empty tree
+  EXIT=2  (2 = vacuous, refused)
+    wrote PROVENANCE-INDEX.json: 0 directories, 0 files
+    ERROR: this verification INSPECTED NOTHING (0 directories, 0 files). A standing check that reports success on an empty input set is worse than no check, because it is believed. This is NOT a pass.
+    directories checked: 0
+    files digested:      0
+    problems:            0
+
+--- 4g — the untampered committed tree verifies clean
+  EXIT=0
+    directories checked: 17
+    files digested:      111
+    problems:            0
+    RESULT: every indexed capture is byte-identical to its record, every stamp state matches the record, and no capture-bearing directory is unaccounted for.
+
+defect reproduces on the PRE-FIX bytes: YES
+defect refused by the FIXED bytes:      YES
+RESULT: F-4 (stamp-absence ambiguity) CLOSED — red before, green after.

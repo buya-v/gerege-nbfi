@@ -1,0 +1,57 @@
+=== T99 F-3 — a check that reports success on an empty file set is not a check
+prefix ref:  <PREFIX-COMMIT>
+fixed ref:   HEAD = <HEAD-COMMIT>
+export:      <EXPORT>   (git archive, so nothing uncommitted can leak into a proof)
+pre-fix forbidden-sentence.sh sha256 71142e40b4af9ec873f0eca6a3ecb60d18033f2f0d37f75a2b29ffc4b9bf798f — matches the pin, this IS main's byte sequence
+
+--- 3a — ZERO FILES.  The script is copied to a directory whose out/ is empty, which is what
+         a moved script, a pruned worktree or an edited glob all look like.
+  prefix: files visible to the globs: 0
+  EXIT=0
+    
+    violations: 0
+    RESULT: the HALF_UP claim is never made except on tenant gerege with the pinned canary.
+  VERDICT: exit 0 and the strongest sentence in the file, on an empty input set.
+
+  fixed: files visible to the globs: 0
+  EXIT=2
+    
+    files inspected: 0
+    files carrying the guarded sentence (rule actually applied): 0
+    violations: 0
+    ERROR: this check INSPECTED NOTHING — no file matched <EXPORT>/empty-fixed/t80/out/attack-*.txt or <EXPORT>/empty-fixed/t80/out/*/preconditions.txt.
+    A standing check that reports success on an empty file set is worse than no check, because it
+    is believed.  This is NOT a pass: find the evidence, or fix the globs.
+  VERDICT: exit 2, named as an ERROR, and the RESULT sentence is not printed.
+
+--- 3b — the second way to be vacuous: files ARE read, but not one contains the guarded
+         sentence, so the co-occurrence rule adjudicates nothing.
+  prefix: EXIT=0
+    
+    violations: 0
+    RESULT: the HALF_UP claim is never made except on tenant gerege with the pinned canary.
+  fixed: EXIT=2
+    ERROR: 2 file(s) were read and NOT ONE of them contains the guarded sentence
+    'PASS  effective rounding mode canary', so the co-occurrence rule adjudicated nothing.  The check is vacuous.  This is NOT a pass:
+    the transcripts that make the HALF_UP claim are missing from <EXPORT>/quiet-fixed/t80/out.
+
+--- 3c — what T85 proved must still hold: the committed evidence reproduces, and a planted
+         violation still fires.  (A fix that made the check quieter would show up here.)
+  prefix, committed evidence untouched:
+    EXIT=0  OK=8  absent=19  violations=0
+  fixed, committed evidence untouched:
+    EXIT=0  OK=8  absent=19  violations=0
+  planting two violations (the guarded sentence with no digest pin, one on tenant default):
+  prefix: EXIT=1  violations=2
+    VIOLATION t80/out/attack-9w-planted-default.txt — the canary PASS appears WITHOUT a passing digest pin, or not on gerege
+    VIOLATION t80/out/attack-9x-planted-nopin.txt — the canary PASS appears WITHOUT a passing digest pin, or not on gerege
+  fixed: EXIT=1  violations=2
+    VIOLATION t80/out/attack-9w-planted-default.txt — the canary PASS appears WITHOUT a passing digest pin, or not on gerege
+    VIOLATION t80/out/attack-9x-planted-nopin.txt — the canary PASS appears WITHOUT a passing digest pin, or not on gerege
+
+  (a planted violation is written into the /tmp export only; the committed transcripts in
+   the repository are never touched by this proof)
+
+defect reproduces on the PRE-FIX bytes: YES
+defect refused by the FIXED bytes:      YES
+RESULT: F-3 (vacuous pass on zero files) CLOSED — red before, green after.

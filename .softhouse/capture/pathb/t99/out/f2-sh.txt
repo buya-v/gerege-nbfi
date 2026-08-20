@@ -1,0 +1,58 @@
+=== T99 F-2 — the digest pin must not be answerable by $PATH
+recipe interpreter under test: sh
+prefix ref:  <PREFIX-COMMIT>
+fixed ref:   HEAD = <HEAD-COMMIT>
+export:      <EXPORT>   (git archive, so nothing uncommitted can leak into a proof)
+pre-fix preconditions.sh sha256 7c68f2dcc539a27648f2fb0623927c1231c9b3729bdfb77eb01bd90e67ae876b — matches the pin, this IS main's byte sequence
+
+the mutated canary: one character, 1162502.5 -> 1162502.55 (T77's exploit request)
+  true sha256   13ce2f4f21a1ad568b080b859682b9e995aac97712e00fcf44c6fc177d6b9ca5
+  pinned sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154
+  what the poisoned shasum says for it: 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154
+
+--- 2a.prefix — PATH=<poison>:$PATH  CANARY_REQ=<mutated>  sh t36/preconditions.sh gerege
+EXIT=0
+  PASS lines: 22   FAIL lines: 0
+      PASS  canary request pinned by DIGEST COMPARISON: computed sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 == pinned sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 (<EXPORT>/mutated-canary.
+      PASS  effective rounding mode canary: period-1 interest 20925.05 (= HALF_UP)
+    ALL PRECONDITIONS HOLD — tenant 'gerege' at MathContext(19, HALF_UP), PostgreSQL only.
+  VERDICT: the pin passed on a file whose true sha256 is 13ce2f4f21a1ad568b080b859682b9e995aac97712e00fcf44c6fc177d6b9ca5, the canary was SENT,
+           and the run reported ALL PRECONDITIONS HOLD.  The strongest assertion in
+           the recipe was graded against a request the pin exists to refuse.
+
+--- 2a.fixed — PATH=<poison>:$PATH  CANARY_REQ=<mutated>  sh t36/preconditions.sh gerege
+EXIT=1
+  PASS lines: 20   FAIL lines: 1
+      FAIL  canary request DIGEST MISMATCH — computed sha256 '13ce2f4f21a1ad568b080b859682b9e995aac97712e00fcf44c6fc177d6b9ca5' for '<EXPORT>/mutated-canary.json', pinned sha256 is '2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab933521
+    PRECONDITIONS BREACHED: 1. DO NOT CAPTURE. Any file produced now is NOT an observation
+  VERDICT: digest mismatch, canary NOT sent, run breached.  The poisoned $PATH was
+           never consulted: the instrument resolves its tools absolutely.
+
+--- 2b.fixed — same poisoned $PATH, the REAL pinned canary: hardening must not just refuse
+EXIT=0
+      PASS  canary request pinned by DIGEST COMPARISON: computed sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 == pinned sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 (<EXPORT>/fixed/.softhous
+      PASS  effective rounding mode canary: period-1 interest 20925.05 (= HALF_UP)
+    ALL PRECONDITIONS HOLD — tenant 'gerege' at MathContext(19, HALF_UP), PostgreSQL only.
+
+--- 2c — a tool that constant-returns the pin never gets to answer (known-answer test)
+  tools that survived the KAT: sha256sum(/sbin/sha256sum) openssl(/usr/bin/openssl) python3(/usr/bin/python3)
+  RESULT: the liar was excluded before it could answer anything
+  digest of the mutated canary from the survivors: 13ce2f4f21a1ad568b080b859682b9e995aac97712e00fcf44c6fc177d6b9ca5 (used: sha256sum+openssl+python3)
+  and it is the TRUE digest, not the pin.
+
+--- 2d — a liar that PASSES the known-answer test is caught by cross-implementation
+         disagreement (this is why one hardened tool would not have been enough)
+  tools that survived the KAT: shasum(<EXPORT>/poison/liar-clever) sha256sum(/sbin/sha256sum) openssl(/usr/bin/openssl) python3(/usr/bin/python3)
+  the clever liar PASSED the known-answer test, as designed
+  RESULT: REFUSED, no digest returned —
+    sha256 IMPLEMENTATIONS DISAGREE on '<EXPORT>/mutated-canary.json': shasum says '2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154', sha256sum says '13ce2f4f21a1ad568b080b859682b9e995aac97712e00fcf44c6fc177d6b9ca5'. At lea
+
+--- 2e — the attack leaves NO DIFF TRACE, which is what makes it worse than the tautology
+  files changed in the repository by everything above:
+    ?? .softhouse/capture/pathb/t99/out/
+  count: 1
+  (the poisoned tool lives on $PATH; nothing a reviewer diffs would ever show it)
+
+defect reproduces on the PRE-FIX bytes: YES
+defect refused by the FIXED bytes:      YES
+RESULT: F-2 (PATH-poisoned digest instrument) CLOSED — red before, green after.
