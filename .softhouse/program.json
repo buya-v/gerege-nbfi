@@ -1,832 +1,835 @@
 {
-  "program_id": "fineract-to-go-full-codebase",
-  "goal": "Port the complete Fineract codebase to Go behind the frozen adapter contract, one bounded context per run, continuously, until every context below is done. Ratified 17 August 2026 \u2014 supersedes the Minimum-Portable-Core-only scope.",
-  "status": "active",
-  "driver": "/softhouse-program",
-  "oracle": {
-    "source_checkout": "/Users/buv/fineract",
-    "pinned_commit": "426a23544",
-    "note": "Commit measured 17 Aug 2026 [VERIFIED: git log -1 in that checkout]. T1 of run 1 re-pins it into .softhouse/reference-oracle.md together with the running-instance connection facts. LOC figures below are measured from THIS checkout (find+wc over src/main/**.java) \u2014 re-measure if the pin moves.",
-    "status": "UP",
-    "verified_at": "2026-08-18T07:31Z",
-    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
-    "postgres_version": "18.3",
-    "jvm": "Zulu 21.0.11+10-LTS",
-    "base_url": "https://localhost:8443/fineract-provider/api/v1",
-    "facts_file": ".softhouse/reference-oracle.md",
-    "driver_assertion": "org.postgresql.Driver / jdbc:postgresql:// \u2014 PASSED against running container",
-    "prohibited_engines": "none (0 ojdbc/oracle.jdbc/mysql/mariadb jar entries, no :1521 listener)",
-    "image_digest": "sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a",
-    "commit_attestation": "the image jar's own BOOT-INF/classes/git.properties carries git.commit.id=426a23544e8426a38ae43ae404670a0a7e85b9eb with git.dirty=false [VERIFIED by the T18 audit] - build-attested, not self-reported",
-    "capture_paths": "Path A = embeddable seam, in-process, NO database. Path B = running server + PostgreSQL - BUILT and now AUDITED (T22): it does grade both inputs Path A silently drops. installmentAmountInMultiplesOf moves 12/12 periods (capture B-02); daysInYearCustomStrategy moves the schedule only via FEB_29_PERIOD_ONLY (capture B-04), since FULL_LEAP_YEAR was proved byte-identical to the field being unset. Both verified persisted in PostgreSQL. Path B captures ran at HALF_EVEN (rounding-mode=6), not the ratified HALF_UP, though the four are mode-insensitive by re-observation. Tenant 'gerege' (fineract_gerege, Asia/Ulaanbaatar, rounding-mode 4) was provisioned by the T22 auditor. See .softhouse/reference-oracle.md.",
-    "production_math_context": "(19, HALF_UP) - MoneyHelper.PRECISION=19 is a compile-time constant; only the mode is per-tenant, and Buyan ratified HALF_UP on 2026-08-18."
+ "program_id": "fineract-to-go-full-codebase",
+ "goal": "Port the complete Fineract codebase to Go behind the frozen adapter contract, one bounded context per run, continuously, until every context below is done. Ratified 17 August 2026 \u2014 supersedes the Minimum-Portable-Core-only scope.",
+ "status": "active",
+ "driver": "/softhouse-program",
+ "oracle": {
+  "source_checkout": "/Users/buv/fineract",
+  "pinned_commit": "426a23544",
+  "note": "Commit measured 17 Aug 2026 [VERIFIED: git log -1 in that checkout]. T1 of run 1 re-pins it into .softhouse/reference-oracle.md together with the running-instance connection facts. LOC figures below are measured from THIS checkout (find+wc over src/main/**.java) \u2014 re-measure if the pin moves.",
+  "status": "UP",
+  "verified_at": "2026-08-18T07:31Z",
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+  "postgres_version": "18.3",
+  "jvm": "Zulu 21.0.11+10-LTS",
+  "base_url": "https://localhost:8443/fineract-provider/api/v1",
+  "facts_file": ".softhouse/reference-oracle.md",
+  "driver_assertion": "org.postgresql.Driver / jdbc:postgresql:// \u2014 PASSED against running container",
+  "prohibited_engines": "none (0 ojdbc/oracle.jdbc/mysql/mariadb jar entries, no :1521 listener)",
+  "image_digest": "sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a",
+  "commit_attestation": "the image jar's own BOOT-INF/classes/git.properties carries git.commit.id=426a23544e8426a38ae43ae404670a0a7e85b9eb with git.dirty=false [VERIFIED by the T18 audit] - build-attested, not self-reported",
+  "capture_paths": "Path A = embeddable seam, in-process, NO database. Path B = running server + PostgreSQL - BUILT and now AUDITED (T22): it does grade both inputs Path A silently drops. installmentAmountInMultiplesOf moves 12/12 periods (capture B-02); daysInYearCustomStrategy moves the schedule only via FEB_29_PERIOD_ONLY (capture B-04), since FULL_LEAP_YEAR was proved byte-identical to the field being unset. Both verified persisted in PostgreSQL. Path B captures ran at HALF_EVEN (rounding-mode=6), not the ratified HALF_UP, though the four are mode-insensitive by re-observation. Tenant 'gerege' (fineract_gerege, Asia/Ulaanbaatar, rounding-mode 4) was provisioned by the T22 auditor. See .softhouse/reference-oracle.md.",
+  "production_math_context": "(19, HALF_UP) - MoneyHelper.PRECISION=19 is a compile-time constant; only the mode is per-tenant, and Buyan ratified HALF_UP on 2026-08-18."
+ },
+ "scheduler": {
+  "primary": {
+   "substrate": "local launchd agent on Buyan's Mac",
+   "label": "mn.gerege.nbfi.softhouse-program",
+   "plist": "~/Library/LaunchAgents/mn.gerege.nbfi.softhouse-program.plist (copy of record: .softhouse/launchd/)",
+   "wrapper": ".softhouse/bin/fire-program.sh",
+   "times_local": [
+    "08:00 Asia/Ulaanbaatar",
+    "14:00 Asia/Ulaanbaatar"
+   ],
+   "reaches_reference_oracle": true,
+   "why": "Vector capture and conformance need the Fineract reference oracle + PostgreSQL on localhost. Only this fire can advance them.",
+   "logs": "~/Library/Logs/gerege-nbfi/fire-*.log",
+   "probe": ".softhouse/bin/fire-program.sh --probe",
+   "manage": "launchctl bootout|bootstrap gui/501 ~/Library/LaunchAgents/mn.gerege.nbfi.softhouse-program.plist"
   },
-  "scheduler": {
-    "primary": {
-      "substrate": "local launchd agent on Buyan's Mac",
-      "label": "mn.gerege.nbfi.softhouse-program",
-      "plist": "~/Library/LaunchAgents/mn.gerege.nbfi.softhouse-program.plist (copy of record: .softhouse/launchd/)",
-      "wrapper": ".softhouse/bin/fire-program.sh",
-      "times_local": [
-        "08:00 Asia/Ulaanbaatar",
-        "14:00 Asia/Ulaanbaatar"
-      ],
-      "reaches_reference_oracle": true,
-      "why": "Vector capture and conformance need the Fineract reference oracle + PostgreSQL on localhost. Only this fire can advance them.",
-      "logs": "~/Library/Logs/gerege-nbfi/fire-*.log",
-      "probe": ".softhouse/bin/fire-program.sh --probe",
-      "manage": "launchctl bootout|bootstrap gui/501 ~/Library/LaunchAgents/mn.gerege.nbfi.softhouse-program.plist"
-    },
-    "catchup": {
-      "substrate": "claude.ai scheduled cloud routine",
-      "routine_id": "trig_01J7a66YFD7mzSLiKiFsj5XV",
-      "url": "https://claude.ai/code/routines/trig_01J7a66YFD7mzSLiKiFsj5XV",
-      "cron_utc": "0 12 * * *",
-      "local_time": "20:00 Asia/Ulaanbaatar, daily",
-      "model": "claude-opus-5",
-      "sources": [
-        "https://github.com/buya-v/gerege-nbfi",
-        "https://github.com/apache/fineract"
-      ],
-      "reaches_reference_oracle": false,
-      "role": "Catch-up when the Mac was off: source analysis, DEC/spec drafts, Tier-C gap audit, Tier-D corpus mining. Parks vector/conformance work as oracle_unreachable."
-    },
-    "mutual_exclusion": ".softhouse/LOCK \u2014 repo-level lock, pushed so both fires see it. A fire finding a lock under 6h old exits without dispatching. Stale locks (>6h) are taken over."
+  "catchup": {
+   "substrate": "claude.ai scheduled cloud routine",
+   "routine_id": "trig_01J7a66YFD7mzSLiKiFsj5XV",
+   "url": "https://claude.ai/code/routines/trig_01J7a66YFD7mzSLiKiFsj5XV",
+   "cron_utc": "0 12 * * *",
+   "local_time": "20:00 Asia/Ulaanbaatar, daily",
+   "model": "claude-opus-5",
+   "sources": [
+    "https://github.com/buya-v/gerege-nbfi",
+    "https://github.com/apache/fineract"
+   ],
+   "reaches_reference_oracle": false,
+   "role": "Catch-up when the Mac was off: source analysis, DEC/spec drafts, Tier-C gap audit, Tier-D corpus mining. Parks vector/conformance work as oracle_unreachable."
   },
-  "policy": {
-    "one_context_per_run": true,
-    "auto_plan_next": true,
-    "auto_approve_plan_if_gate_checklist_passes": true,
-    "never_cross_user_gate": true,
-    "park_and_continue_on_block": true,
-    "stop_conditions": [
-      "every context status == done",
-      "the only remaining work is a pending user gate",
-      "the oracle is unreachable AND no analysis/spec work remains that does not need it"
-    ],
-    "daily_soft_limit_pct": 90,
-    "max_retries_per_task": 1,
-    "retry_model": "opus",
-    "park_after_retries": true,
-    "gate_scope": "A gate on a CONTRACT blocks work that CONSUMES the contract (any coder task, anything under the go_target), not work that produces knowledge the decision needs anyway. While tier0 is blocked_on_gate, every other context is READY-FOR-ANALYSIS: analyst behaviour extraction from pinned source, test-corpus mining into capture plans, RAW observed vector capture on an oracle-reaching fire, and the Tier-C gap audit may all proceed. Contract-shaped storage, Go code, and amending the gated DEC-n may not. An open gate must never mean an idle factory."
-  },
-  "cursor": {
-    "current_context": "tier0-harness-schedule-poc",
-    "current_run_id": "2026-08-17-run1-harness-schedule-poc",
-    "completed_contexts": [],
-    "parked_contexts": [],
-    "note": "Local fire 20260819-200001 (oracle REACHABLE) COMPLETE, clean exit, eight workers dispatched and eight merged, nothing lost. THE PROGRAM WENT FROM ZERO PARITY VECTORS TO 29, AND FROM NO GO CODE TO A PORT THAT MATCHES THE ORACLE ON 2354 CELLS. conformance.sh VERDICT: PASS (exit 0), --prove 20/20, 6/6 invariants, 0 inadmissible - all driver-re-run, none accepted on report. THE PASS IS NOT THE POINT: at 13 vectors three money-moving mutations of the port still survived, and the fire was spent closing them. All four known mutations now die (8/2/1/10 vectors respectively). Two P1 review findings raised and BOTH closed in the same fire (F-1 the demonstrated false-PASS path; F-2 the ungraded EMI smoothing loop). NEXT FIRE NEEDS NO ORACLE: T59 (port cancellation checked only at entry, and cost ~n^2.4 - neither is graded by conformance, so add a test), T60 (balance_roll_forward grades a placeholder the README says nothing compares), then T12 drill, T13 UAT, T14 (user gate: accept the PoC slice, NO cutover) and T15. Five gates open (G-2, G-3, G-4, G-5), NONE blocking and NONE reserved. Cutover, regulatory sign-off, deposit-taking activation and licence facts remain untouched and are not in Run 1's path."
-  },
-  "contexts": [
-    {
-      "id": "tier0-harness-schedule-poc",
-      "tier": 0,
-      "title": "Conformance harness, DEC-1 frozen contract, progressive-loan schedule-generator PoC",
-      "fineract_paths": [
-        "fineract-progressive-loan-embeddable-schedule-generator"
-      ],
-      "main_loc": 182,
-      "go_target": "nexus/internal/apps/loanschedule",
-      "dependencies": [],
-      "status": "active",
-      "run_id": "2026-08-17-run1-harness-schedule-poc",
-      "cutover_gate": false,
-      "notes": "Planned. Everything else depends on the harness existing. || cloud fire 20260817-2000: BLOCKED at gate G-1 (ratify DEC-1), which is NOT YET ANSWERABLE - the draft was independently REJECTED (T5) and the defect it turns on is one the current corpus provably cannot detect. Every other context in this program declares tier 0 as a transitive dependency, so the whole program is behind this gate. Measured this fire against the pin: the module is src/main 92 LOC + misc/Main.java 90 = 182, which settles the '~182 LOC' figure on record. || fire 20260818-173900: four workers landed and merged. The two capture audits are done; DEC-1 v2 was drafted and independently re-reviewed. G-1 did NOT close - T23 found three P0 defects, the sharpest being that the EMI re-adjust loop is LIVE inside the graded domain (7 of 10 graded-domain requests diverge from the contract as specified, and no vector in the corpus trips it). The contract-domain / graded-domain split itself SURVIVED review, and the reviewer proved mechanically that there is no third silently-dropped component beyond the known two. || G-1 CLOSED 2026-08-19: DEC-1 revision 12 RATIFIED by the driver under P-2 after ten independent rounds. T6 done; T7 (conformance harness) is now the bottleneck with T9-T15 behind it. TWO CONSTRAINTS FOR T7: charge conformance can only be graded on Path B (the Path A embeddable seam hard-wires loanCharges to null, T50-N2), and NO GO TOOLCHAIN EXISTS ON THIS HOST so go build/go test cannot run - the harness can be designed but not executed against Go until one is installed."
-    },
-    {
-      "id": "tierA-gl-accounting",
-      "tier": "A",
-      "title": "General Ledger / accounting \u2014 double-entry posting, chart of accounts, journal entries, accruals, product-account mapping",
-      "fineract_paths": [
-        "fineract-accounting",
-        "fineract-provider/src/main/java/org/apache/fineract/accounting/journalentry",
-        "fineract-provider/src/main/java/org/apache/fineract/accounting/accrual",
-        "fineract-provider/src/main/java/org/apache/fineract/accounting/productaccountmapping",
-        "fineract-provider/src/main/java/org/apache/fineract/accounting/common"
-      ],
-      "main_loc": 24000,
-      "go_target": "nexus/internal/apps/ledger",
-      "dependencies": [
-        "tier0-harness-schedule-poc"
-      ],
-      "status": "pending",
-      "run_id": null,
-      "cutover_gate": true,
-      "notes": "12,752 LOC in fineract-accounting + 11,224 in provider/accounting [VERIFIED: measured]. Split by run if a single plan exceeds worker context: journal posting | accruals | COA + product mapping.",
-      "analysis_ready": true
-    },
-    {
-      "id": "tierA-loan-product-schedule",
-      "tier": "A",
-      "title": "Loan products, interest methods, schedule generation (full progressive-loan module)",
-      "fineract_paths": [
-        "fineract-progressive-loan",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/loanproduct"
-      ],
-      "main_loc": 20461,
-      "go_target": "nexus/internal/apps/loanproduct",
-      "dependencies": [
-        "tier0-harness-schedule-poc"
-      ],
-      "status": "pending",
-      "run_id": null,
-      "cutover_gate": true,
-      "notes": "14,308 + 6,153 LOC. 7,863 test LOC in fineract-progressive-loan is the richest vector seam in the codebase.",
-      "analysis_ready": true
-    },
-    {
-      "id": "tierA-loan-lifecycle",
-      "tier": "A",
-      "title": "Loan account lifecycle \u2014 disbursement, repayment, penalties, rescheduling, write-off, delinquency",
-      "fineract_paths": [
-        "fineract-loan",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/loanaccount"
-      ],
-      "main_loc": 106246,
-      "go_target": "nexus/internal/apps/loan",
-      "dependencies": [
-        "tierA-gl-accounting",
-        "tierA-loan-product-schedule"
-      ],
-      "status": "pending",
-      "main_loc_note": "66,375 + 39,871 [VERIFIED: measured]. LARGEST context \u2014 must be split across several runs by sub-behavior (disbursement | repayment allocation | penalties/charges application | rescheduling | write-off/delinquency). A single plan over all of it will exhaust every worker.",
-      "run_id": null,
-      "cutover_gate": true,
-      "notes": "Split mandatory. 679 + ~380 files.",
-      "analysis_ready": true
-    },
-    {
-      "id": "tierA-charges-rates-tax",
-      "tier": "A",
-      "title": "Charges, rates, tax \u2014 including VAT / e-Barimt tie-in",
-      "fineract_paths": [
-        "fineract-charge",
-        "fineract-rates",
-        "fineract-tax",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/charge",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/rate",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/tax"
-      ],
-      "main_loc": 10333,
-      "go_target": "nexus/internal/apps/charges",
-      "dependencies": [
-        "tierA-gl-accounting"
-      ],
-      "status": "pending",
-      "run_id": null,
-      "cutover_gate": true,
-      "notes": "3,694 + 1,926 + 2,262 + 947 + 1,089 + 415 [VERIFIED: measured]. Mongolian VAT / e-Barimt is additive, not a Fineract port \u2014 spec it, do not invent parity vectors for it.",
-      "analysis_ready": true
-    },
-    {
-      "id": "tierA-cob-batch",
-      "tier": "A",
-      "title": "Close-of-business batch \u2014 daily accrual/aging/posting, idempotency, restart-after-failure",
-      "fineract_paths": [
-        "fineract-cob",
-        "fineract-provider/src/main/java/org/apache/fineract/cob",
-        "fineract-provider/src/main/java/org/apache/fineract/batch"
-      ],
-      "main_loc": 13471,
-      "go_target": "nexus/internal/apps/cob",
-      "dependencies": [
-        "tierA-loan-lifecycle",
-        "tierA-charges-rates-tax"
-      ],
-      "status": "pending",
-      "run_id": null,
-      "cutover_gate": true,
-      "notes": "3,190 + 4,881 + 5,400 [VERIFIED: measured]. Reuse Nexus's scheduler; do not port Fineract's job framework.",
-      "analysis_ready": true
-    },
-    {
-      "id": "tierA-provisioning-reporting",
-      "tier": "A",
-      "title": "Provisioning + FRC reporting feeds (Tier-A completion)",
-      "fineract_paths": [
-        "fineract-provider/src/main/java/org/apache/fineract/accounting/provisioning",
-        "fineract-report",
-        "fineract-provider/src/main/java/org/apache/fineract/spm",
-        "fineract-provider/src/main/java/org/apache/fineract/infrastructure/dataqueries"
-      ],
-      "main_loc": 11400,
-      "go_target": "nexus/internal/apps/provisioning",
-      "dependencies": [
-        "tierA-cob-batch"
-      ],
-      "status": "pending",
-      "run_id": null,
-      "cutover_gate": true,
-      "notes": "Tier-A cutover + regulatory acceptance are user gates; parallel run required. Compliance-spine capital and 30%/70% limits must reconcile to the native GL.",
-      "analysis_ready": true
-    },
-    {
-      "id": "tierB-savings-deposits",
-      "tier": "B",
-      "title": "Savings / deposits / recurring deposits / interest rate charts \u2014 ported DISABLED",
-      "fineract_paths": [
-        "fineract-savings",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/savings",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/interestratechart",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/accountdetails"
-      ],
-      "main_loc": 61910,
-      "go_target": "nexus/internal/apps/savings",
-      "dependencies": [
-        "tierA-gl-accounting"
-      ],
-      "status": "pending",
-      "run_id": null,
-      "cutover_gate": true,
-      "activation_gate": "user \u2014 deposit-taking activation requires FRC / Bank of Mongolia licensing sign-off. Ships behind a config flag defaulting to OFF. Never render deposits as insured/protected/guaranteed.",
-      "notes": "25,331 + 31,890 + 3,729 + 960 [VERIFIED: measured]. Split by run: savings account lifecycle | interest posting | recurring/fixed deposits | rate charts.",
-      "analysis_ready": true
-    },
-    {
-      "id": "tierB-working-capital-loan",
-      "tier": "B",
-      "title": "Working-capital loan module",
-      "fineract_paths": [
-        "fineract-working-capital-loan"
-      ],
-      "main_loc": 34244,
-      "go_target": "nexus/internal/apps/workingcapital",
-      "dependencies": [
-        "tierA-loan-lifecycle"
-      ],
-      "status": "pending",
-      "run_id": null,
-      "cutover_gate": true,
-      "notes": "355 files, 6,138 test LOC [VERIFIED: measured]. Split by sub-behavior.",
-      "analysis_ready": true
-    },
-    {
-      "id": "tierB-loan-origination",
-      "tier": "B",
-      "title": "Loan origination workflow",
-      "fineract_paths": [
-        "fineract-loan-origination"
-      ],
-      "main_loc": 3966,
-      "go_target": "nexus/internal/apps/origination",
-      "dependencies": [
-        "tierA-loan-lifecycle"
-      ],
-      "status": "pending",
-      "run_id": null,
-      "cutover_gate": true,
-      "notes": "1,657 test LOC available as vectors.",
-      "analysis_ready": true
-    },
-    {
-      "id": "tierB-investor",
-      "tier": "B",
-      "title": "Investor / external asset owner module",
-      "fineract_paths": [
-        "fineract-investor"
-      ],
-      "main_loc": 6250,
-      "go_target": "nexus/internal/apps/investor",
-      "dependencies": [
-        "tierA-loan-lifecycle"
-      ],
-      "status": "pending",
-      "run_id": null,
-      "cutover_gate": true,
-      "notes": "3,748 test LOC \u2014 good vector density.",
-      "analysis_ready": true
-    },
-    {
-      "id": "tierB-branch",
-      "tier": "B",
-      "title": "Branch / teller / cash management",
-      "fineract_paths": [
-        "fineract-branch"
-      ],
-      "main_loc": 3937,
-      "go_target": "nexus/internal/apps/branch",
-      "dependencies": [
-        "tierA-gl-accounting"
-      ],
-      "status": "pending",
-      "run_id": null,
-      "cutover_gate": true,
-      "notes": "",
-      "analysis_ready": true
-    },
-    {
-      "id": "tierB-shares",
-      "tier": "B",
-      "title": "Share accounts + share products (SCC member shares)",
-      "fineract_paths": [
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/shareaccounts",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/shareproducts"
-      ],
-      "main_loc": 9412,
-      "go_target": "nexus/internal/apps/shares",
-      "dependencies": [
-        "tierA-gl-accounting"
-      ],
-      "status": "pending",
-      "run_id": null,
-      "cutover_gate": true,
-      "notes": "6,203 + 3,209 [VERIFIED: measured]. Member share capital feeds the compliance-spine capital figure \u2014 reconcile against the native GL.",
-      "analysis_ready": true
-    },
-    {
-      "id": "tierB-collateral",
-      "tier": "B",
-      "title": "Collateral + collateral management + post-dated cheques",
-      "fineract_paths": [
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/collateral",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/collateralmanagement",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/repaymentwithpostdatedchecks"
-      ],
-      "main_loc": 5511,
-      "go_target": "nexus/internal/apps/collateral",
-      "dependencies": [
-        "tierA-loan-lifecycle"
-      ],
-      "status": "pending",
-      "run_id": null,
-      "cutover_gate": true,
-      "notes": "Pledged-collateral hold math: holds alter available only, never posted balance. This is the exact defect that failed adversarial review twice on the sister project \u2014 force the sign when re-deriving.",
-      "analysis_ready": true
-    },
-    {
-      "id": "tierB-clients-groups",
-      "tier": "B",
-      "title": "Clients, groups, centres, meetings, calendar, collection sheet, addresses, notes, transfers, funds",
-      "fineract_paths": [
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/client",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/group",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/collectionsheet",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/meeting",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/calendar",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/address",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/note",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/transfer",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/fund",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/account",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/accounts",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/products",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/search",
-        "fineract-provider/src/main/java/org/apache/fineract/portfolio/common"
-      ],
-      "main_loc": 42000,
-      "go_target": "nexus/internal/apps/parties",
-      "dependencies": [
-        "tierA-gl-accounting"
-      ],
-      "status": "pending",
-      "run_id": null,
-      "cutover_gate": true,
-      "notes": "Names are ovog / patronymic / given name \u2014 a diff introducing first_name/last_name is a rejection. National ID validated structurally, 10 chars. Match on registration number, never on name. Split by run; clients and groups are separate slices.",
-      "analysis_ready": true
-    },
-    {
-      "id": "tierC-platform-map-first",
-      "tier": "C",
-      "title": "Platform layer \u2014 MAP onto Nexus, port only demonstrated gaps",
-      "fineract_paths": [
-        "fineract-core",
-        "fineract-security",
-        "fineract-validation",
-        "fineract-command",
-        "fineract-command-jdbc",
-        "fineract-command-async",
-        "fineract-command-audit",
-        "fineract-command-disruptor",
-        "fineract-provider/src/main/java/org/apache/fineract/infrastructure",
-        "fineract-provider/src/main/java/org/apache/fineract/organisation",
-        "fineract-provider/src/main/java/org/apache/fineract/useradministration",
-        "fineract-provider/src/main/java/org/apache/fineract/notification",
-        "fineract-provider/src/main/java/org/apache/fineract/template",
-        "fineract-provider/src/main/java/org/apache/fineract/adhocquery",
-        "fineract-provider/src/main/java/org/apache/fineract/interoperation",
-        "fineract-provider/src/main/java/org/apache/fineract/commands",
-        "fineract-document",
-        "fineract-db",
-        "fineract-client",
-        "fineract-avro-schemas"
-      ],
-      "main_loc": 180000,
-      "go_target": "nexus/internal/platform",
-      "dependencies": [
-        "tierA-provisioning-reporting"
-      ],
-      "status": "pending",
-      "run_id": null,
-      "cutover_gate": true,
-      "notes": "First run in this context is an ANALYST GAP AUDIT, not a port: for each subsystem (auth, tenancy, command bus, jobs, hooks, events, bulk import, campaigns, data queries, credit bureau, SMS/GCM, surveys, reporting mail) state what Nexus already provides and what is a real gap. Only audited gaps get coder tasks. ~72k core + ~81k provider/infrastructure + ~10k organisation [VERIFIED: measured]. Unjustified plumbing ports are rejections.",
-      "analysis_ready": true
-    },
-    {
-      "id": "tierD-test-corpus-to-vectors",
-      "tier": "D",
-      "title": "Mine Fineract's test corpus + e2e suites into golden vectors",
-      "fineract_paths": [
-        "integration-tests",
-        "fineract-e2e-tests-core",
-        "fineract-e2e-tests-runner",
-        "**/src/test"
-      ],
-      "main_loc": 321000,
-      "go_target": ".softhouse/vectors",
-      "dependencies": [
-        "tier0-harness-schedule-poc"
-      ],
-      "status": "pending",
-      "run_id": null,
-      "cutover_gate": false,
-      "notes": "~321k test LOC. Runs OPPORTUNISTICALLY \u2014 whenever a Tier A/B context is planned, its slice of this corpus is mined in the same run's test_writer task. Kept as a distinct context so residual suites are not forgotten. Never ported one-for-one into Go tests.",
-      "analysis_ready": true
-    }
+  "mutual_exclusion": ".softhouse/LOCK \u2014 repo-level lock, pushed so both fires see it. A fire finding a lock under 6h old exits without dispatching. Stale locks (>6h) are taken over."
+ },
+ "policy": {
+  "one_context_per_run": true,
+  "auto_plan_next": true,
+  "auto_approve_plan_if_gate_checklist_passes": true,
+  "never_cross_user_gate": true,
+  "park_and_continue_on_block": true,
+  "stop_conditions": [
+   "every context status == done",
+   "the only remaining work is a pending user gate",
+   "the oracle is unreachable AND no analysis/spec work remains that does not need it"
   ],
-  "gates_pending": [
-    {
-      "id": "G-2",
-      "class": "POLICY",
-      "task": "T2",
-      "context": "tier0-harness-schedule-poc",
-      "title": "Permit a third, differently-shaped attempt at the schedule behaviour extraction?",
-      "state": "OPEN",
-      "why": "T2 exhausted policy.max_retries_per_task=1 (attempt 1 and its retry both REJECTED) and is parked by policy, not judgement. The failure is systematic: corrections land in the section the review named but not in the sections that restate the same claim.",
-      "asking_for": "One more attempt with a different task shape - apply T3b's 10 enumerated edits surgically, then a mechanical grep sweep for restatements of each corrected claim elsewhere in the document. If declined, the alternative is to treat T3b's review as the specification of record and grade the port on vectors alone.",
-      "raised_by": "cloud fire 20260817-2000",
-      "recorded_in": ".softhouse/gates.md"
-    },
-    {
-      "id": "G-3",
-      "class": "ENGINEERING",
-      "task": "T7",
-      "context": "tier0-harness-schedule-poc",
-      "state": "OPEN",
-      "title": "May gofmt rewrite the ratified contract.go?",
-      "why": "The first compile of the ratified DEC-1 artefact (this fire, after the toolchain gap closed) showed `gofmt -l` flags nexus/internal/apps/loanschedule/contract/contract.go: 3 hunks, 25 diff lines, all doc-comment list normalisation (Go 1.19+), semantically inert - no type, field, enum member, error value, identifier or specified predicate moves. NOT APPLIED. The gate is about the failure mode: contract.go's doc comments ARE the specification and DEC-1's amendment clause makes re-documenting an identifier a gate, so an editor format-on-save or a `gofmt -w ./...` from the repo root would silently mutate a frozen ratified artefact and the diff would read as harmless formatting noise in review.",
-      "asking_for": "Confirm option A - leave contract.go unformatted, keep a documented gofmt exemption. Option B (apply it as a no-predicate erratum) would change the ratified bytes and invalidate the whole-file byte-identity guardrail, and its real cost is the precedent that 'inert' edits to a frozen file are fine. Option C (amend DEC-1 to record the exemption) is a gate to buy what A already delivers.",
-      "blocks": "Nothing. The standing instruction is already in force: no task may gofmt -w that path; `gofmt -l` reporting exactly that one file is the EXPECTED state and must not fail a UAT.",
-      "raised_by": "local fire 20260819-170001",
-      "recorded_in": ".softhouse/gates.md"
-    },
-    {
-      "id": "G-4",
-      "class": "ENGINEERING",
-      "task": "T55",
-      "context": "tier0-harness-schedule-poc",
-      "state": "OPEN",
-      "title": "DEC-1's ACT/ACT promotion condition is provably too strong - amend the wording",
-      "why": "T48-N4's condition, restated in DEC-1 commentary, requires a promoted DayCountActualActual vector to cross a leap boundary WITH A NON-ZERO FIRST SEGMENT. That is false. Capture LB-DEC31 has a ZERO first segment and still grades the arm by 6,015 minor units. Driver-re-derived from scratch at (19, HALF_UP): ARM 0/366+31/365 -> 22014.25, which is the value OBSERVED on all three products p3/p4/p7 and in the determinism re-runs; PLAIN 31/366 -> 21954.10 counterfactual. The mechanism: the PLAIN branch takes its single denominator from the period-START year (2024, leap, 366) while the ARM assigns days to the year they actually fall in (2025, 365), so the zero-length segment is irrelevant - the YEAR LENGTHS are what matter.",
-      "asking_for": "Approval to amend DEC-1 commentary, WORDING ONLY: replace 'non-zero first segment' with 'spans two calendar years of differing length'. No type, field, enum member, error value or graded-domain predicate moves. Failure mode if declined: a future task reads DEC-1, rejects LB-DEC31 as unpromotable, and discards a vector that grades the arm by 6,015 minor units.",
-      "blocks": "Nothing. The corrected condition is already in force in RESUME.md and gates.md, and T7's harness was instructed mid-flight to use it. Only DEC-1's own sentence is outstanding.",
-      "raised_by": "local fire 20260819-170001 (T55, driver-re-derived)",
-      "recorded_in": ".softhouse/gates.md"
-    },
-    {
-      "id": "G-5",
-      "class": "ENGINEERING",
-      "task": "T10",
-      "context": "tier0-harness-schedule-poc",
-      "state": "OPEN",
-      "title": "DEC-1 contradicts itself on a zero interest rate, and the harness's own self-test sits on the contradiction",
-      "why": "AnnualNominalInterestRate's doc comment says a zero rate is 'outside the graded domain'; the enumerated graded-domain list contains no rate predicate at all; admit.go:846-907 implements the list and so has none either; and _selftest/SELFTEST-01-two-period-zero-rate.json IS a zero-rate request. A port following the PROSE refuses it with ErrNoDiscriminatingVector and the harness reports that refusal as FAIL, exit 1. A port following the LIST grades it and passes. The specification cannot be satisfied both ways.",
-      "asking_for": "A wording-only DEC-1 amendment picking one reading. Driver recommends deleting the 'zero rate is outside the graded domain' sentence so the prose matches the list: the list is what the harness enforces so the prose is already inert; a zero-rate schedule is an ordinary NBFI product shape (an interest-free instalment plan) and putting it outside the graded domain would mean shipping it UNGRADED rather than not shipping it; and SELFTEST-01, the fixture that proves the harness can tell pass from fail, is itself zero-rate.",
-      "blocks": "Nothing. T10 implemented the enumerated list, matching the harness, and flagged the conflict rather than resolving it.",
-      "raised_by": "local fire 20260819-200001 (T10, driver-confirmed)",
-      "recorded_in": ".softhouse/gates.md"
-    }
-  ],
-  "history": [
-    {
-      "fire": "cloud-routine 20260817-2000 (catch-up, no live oracle)",
-      "run_id": "2026-08-17-run1-harness-schedule-poc",
-      "context": "tier0-harness-schedule-poc",
-      "oracle_reachable": false,
-      "oracle_probe": "no docker daemon, PostgreSQL not listening on :5432, actuator/health silent - T8 parked with reason oracle_unreachable; no vector synthesised",
-      "tasks_dispatched": [
-        "T3b",
-        "T5",
-        "T16",
-        "T17"
-      ],
-      "worker_isolation": "all 4 workers in real worktrees on softhouse/* branches - the previous fire's isolation violation was NOT repeated",
-      "verdicts": {
-        "T3b": "REJECTED",
-        "T5": "REJECTED",
-        "T16": "delivered",
-        "T17": "ACCEPTED w/ 6 execution-blocking corrections"
-      },
-      "reviewer_catches": [
-        "T5: the precision-vs-scale ambiguity CHANGES MONEY - 189/560 grid configs diverge; a one-minor-unit error appears in period 5 and never heals. The shipped conformance vector cannot discriminate.",
-        "T5 + T3b INDEPENDENTLY, from different artefacts: allowFullTermForTranche is caller-settable and the guard at ProgressiveEMICalculator.java:142-144 never consults isMultiDisburseLoan() - refuting a 'dead field' claim used to drop an input from a frozen contract.",
-        "T3b: attempt 2's corrections leaked - fixed in the named sections, left wrong in the sections restating the same claims.",
-        "T3b: a 4th MoneyHelper fallback at ProgressiveEMICalculator.java:182 that the analysis's own list denies.",
-        "T17: 418/418 transcribed values verified literally present - zero synthesised vectors reached the plan.",
-        "T17: two [VERIFIED]-tagged supporting claims false, incl. FULL_LEAP_YEAR which has no absolute literal anywhere and was missing from the coverage map."
-      ],
-      "uat": "NOT RUN - conformance needs the reference oracle, which this fire could not reach. go build + go vet verified clean independently.",
-      "outcome": "Program blocked at gate G-1. Two artefacts rejected before they could be ratified; one accepted. No bar was lowered and no vector invented."
-    },
-    {
-      "fire": "local 20260818-152328 (oracle REACHABLE)",
-      "run_id": "2026-08-17-run1-harness-schedule-poc",
-      "context": "tier0-harness-schedule-poc",
-      "oracle_reachable": true,
-      "oracle_probe": "Fineract UP, PostgreSQL on :5432, Docker 29.6.2, image digest sha256:e596339626bf..., Zulu 21.0.11. No prohibited engine; only postgresql-42.7.11.jar on the capture classpath [VERIFIED by T19].",
-      "tasks_dispatched": [
-        "T16b",
-        "T18",
-        "T19"
-      ],
-      "orchestrator_work": [
-        "rescued and processed the abandoned pass-1 capture from fire 20260818-080003",
-        "capture pass 2 (tenant context)",
-        "capture pass 3 (production settings)"
-      ],
-      "worker_isolation": "all 3 workers in real worktrees on their own branches; no isolation violation",
-      "verdicts": {
-        "T16b": "done and merged",
-        "T18": "ACCEPTED WITH REQUIRED CHANGES",
-        "T19": "ACCEPTED WITH REQUIRED CHANGES"
-      },
-      "reviewer_catches": [
-        "T18: DEC-1 as drafted is EMPIRICALLY WRONG by one minor unit at precision 12 - the oracle emits period-5 principal 4,531,420.25 where the significant-digits-only reading DEC-1 describes emits ...26. G-1 unblock step 1 satisfied.",
-        "T18: caught an ORCHESTRATOR OVER-CLAIM - a precision sweep cannot separate the two MathContext senses (one integer drives both), and the sense-1 schedule at p12 equals the oracle's at p19, so reading the D-01/D-01-p19 delta as the sense difference is wrong. gates.md corrected.",
-        "T18: provenance is build-attested, not self-reported - git.properties inside the image jar carries the commit id and git.dirty=false.",
-        "T18: independently re-derived D-01 at p8/p12/p19 and reproduced the oracle exactly, including the EmiAdjustment convergence loop that only fires at p8.",
-        "T19: re-ran Capture2.java unmodified and got BYTE-IDENTICAL output, excluding hand-editing and synthesis.",
-        "T19: found THREE reasoning errors in the orchestrator's own pass-2 write-up - the '17.01 cannot be a no-op' argument (safeRoundingForEMI returns the unrounded EMI when rounding would zero it), the 'both channels' claim (CurrencyData.inMultiplesOf is gated on decimalPlaces==0), and misattributed server-path citations (cumulative, not progressive generator).",
-        "T19: found a SECOND silently dropped contract input the orchestrator missed - daysInYearCustomStrategy is read by assembleFrom but never copied by the Builder copy-constructor - reframing the defect from one field to a class. The seam accepts a 19-component contract and honours 17.",
-        "T16b: the orchestrator's 'roughly 5 of 6 corrections applied' estimate was wrong - only 1.5 had landed. The worker verified instead of trusting it. Its mandatory consistency sweeps caught three restatements T17's change list never named, all in the coverage map."
-      ],
-      "uat": "NOT RUN - T13 is gated on T9/T11/T12/T18/T19/T21 and the harness (T7) does not exist yet. No conformance run was claimed.",
-      "outcome": "Major advance without crossing a gate. The evidence G-1 was waiting on now exists and is audited; Buyan answered every G-1 decision except the ratification signature and ratified HALF_UP + NBFI. Three capture passes, 12 production-settings parity candidates, and a structural defect found in the conformance rig itself: the capture seam silently drops 2 of the contract's 19 inputs, so the corpus has zero discriminating power on them. No vector promoted, no bar lowered, no gate crossed."
-    },
-    {
-      "fire": "20260818-173900",
-      "host": "local (Buyan's Mac)",
-      "oracle": "REACHABLE",
-      "context": "tier0-harness-schedule-poc",
-      "run_id": "2026-08-17-run1-harness-schedule-poc",
-      "workers_dispatched": 4,
-      "workers_completed": 4,
-      "workers_killed": 0,
-      "tasks_closed": [
-        "T21",
-        "T22",
-        "T4",
-        "T23"
-      ],
-      "tasks_raised": [
-        "T24",
-        "T25"
-      ],
-      "merges": 4,
-      "reviewer_catches": [
-        "T21 refuted the orchestrator's size-threshold claim (divergence at principal 4.00, absent at 50,000,000) and showed the killed worker's own X2 invariant failure was a false alarm from an invalid check",
-        "T22 retracted a FALSE rounding rule before it reached DEC-1 (nearest multiple under the tenant mode, not up; observed rounding DOWN 111,148.35 -> 111,100.00) and found the Path B captures ran at HALF_EVEN, not the ratified HALF_UP",
-        "T23 found the EMI re-adjust loop live inside the graded domain with 7 of 10 requests diverging, a silently discarded out-of-window disbursement, and that FrequencyYears does not always throw - blocking a ratification the driver would otherwise have taken under P-2"
-      ],
-      "uat": "not run - the run is still blocked at G-1",
-      "gate_status": "G-1 still open; now scoped to T23's three P0 corrections plus a re-review",
-      "vectors_promoted": 0,
-      "note": "Also rescued and PUSHED the previous fire's three stranded branches, which existed only locally, and salvaged their probe artifacts onto main."
-    },
-    {
-      "fire": "cloud-20260818-2000",
-      "host": "cloud sandbox (Claude Code Remote)",
-      "oracle": "UNREACHABLE - expected; all vector-capture and conformance work parked oracle_unreachable, and this fire spent itself entirely on work needing no live oracle",
-      "context": "tier0-harness-schedule-poc",
-      "run_id": "2026-08-17-run1-harness-schedule-poc",
-      "workers_dispatched": 8,
-      "workers_completed": 7,
-      "workers_killed": 1,
-      "tasks_closed": [
-        "T24",
-        "T25 (partial)",
-        "T26",
-        "T27",
-        "T28",
-        "T29",
-        "T30",
-        "T31"
-      ],
-      "tasks_raised": [
-        "T28",
-        "T29",
-        "T30",
-        "T31",
-        "T32"
-      ],
-      "merges": 7,
-      "opened_by_finding": "The PRIOR local fire 20260818-200001 dispatched T24 and T25 at 20:01:23 and checkpointed 104 seconds later with both still marked in_flight. No softhouse/T24-* or softhouse/T25-* branch was ever created. Two opus workers cannot complete in 104 seconds: both died and their work was lost. This is the SECOND consecutive recurrence of the dispatch-and-exit failure mode that SKILL.md STEP 5.5 exists to prevent (first: 17:22, which stranded 4,482 insertions). This cloud fire re-did both tasks properly, awaiting every worker.",
-      "premise_corrected": "RESUME.md asserted T24 'needs the oracle' because T23's P0-1 mentions capturing vectors. That was an over-read: P0-1 requires RE-SCOPING backlog item 8.3, not capturing the vectors now. Every figure T24 needed was already observed and committed by T23. All eight tasks this fire ran turned out to need no live oracle.",
-      "reviewer_catches": [
-        "T26 re-reviewed DEC-1 v3 and found a NEW P0 the drafter and T23 both missed: the EMI re-adjust loop was specified by its TRIGGER but never by its EFFECT. Over 24,000 in-graded-domain shapes the guard fires on 2,855; an implementation omitting the adoption test differs on 2,156 of them. No Run-1 vector trips the guard, so the corpus could not catch it.",
-        "T27 caught T25 SILENTLY DROPPING an item (T22 P1-12) while claiming nothing was dropped, MIS-PARKING five oracle-free items as oracle_unreachable, and leaving five documents asserting 'NOT YET INDEPENDENTLY AUDITED' beside the audits' own corrections - one of which (PATHB-REPORT.md:150-151) had become factually false. It verified the two 'fake PASS' invariant defects were genuinely fixed by MUTATION TESTING, corrupting committed captures by one minor unit to confirm the checks now fail.",
-        "T29 re-reviewed DEC-1 v4 and found TWO more P0s, the second serious: the PER-PERIOD INTEREST COMPUTATION - the core money calculation of the entire contract - was specified NOWHERE. The oracle performs three separately mc-rounded operations that cancel algebraically but not numerically; the textbook single-multiply reading the prose actually described diverges on 699 of 43,992 in-graded-domain shapes. ALL 13 COMMITTED OBSERVATIONS PASS EITHER WAY.",
-        "T30 closed what T27 called the largest remaining hole in the Path B evidence WITHOUT an oracle, re-deriving B-03/B-04 from source through the cross-year partial-period arm - digit-for-digit, 12/12 periods, both totals, at two rounding modes - and surfaced two normative facts nobody had recorded, including that FEB_29_PERIOD_ONLY does TWO things, so a port implementing only the days-in-year cap fails B-04, the corpus's only vector for that field. It also fixed an honesty defect: a report presented a model-DERIVED figure as an OBSERVED one.",
-        "T31 caught that its own worktree was a commit behind main and REBASED rather than silently reverting the driver's gate record - then proved its fix DISCRIMINATES, showing both wrong readings now fail while the corpus still passes them 13/13."
-      ],
-      "pattern_recorded": "THREE consecutive independent re-reviews (T23, T26, T29) each found NEW P0s in areas the previous review had not examined, and in EVERY case the committed corpus passed both the right and the wrong reading. 'The golden vectors pass' has so far been no evidence of correctness in this contract. The document is nonetheless converging: T29 verified the whole of T28's loop specification and ~20 of its citations exactly, and each new P0 has been fresh ground rather than re-opened ground.",
-      "uat": "not run - Run 1's UAT (T13) is gated on the harness and on conformance, which need the live oracle",
-      "gates_crossed": "none. G-1 remains OPEN and unratified - the driver declined to ratify three times (after T26, T29, and pending T32), because standing policy P-2 licenses ratification only on a CLEAN review and none came back clean.",
-      "vectors_promoted": "none. Nothing was promoted to the parity store; T27's promotability audit says nothing is promotable today, with 6 P0 admissibility items outstanding, every one needing a live oracle.",
-      "invariants_held": "PostgreSQL only; no vector synthesised; no contract-shaped capture storage while G-1 is open; no cutover; no user gate crossed"
-    },
-    {
-      "fire": "local-20260819-080001",
-      "date": "2026-08-19",
-      "context": "tier0-harness-schedule-poc",
-      "run_id": "2026-08-17-run1-harness-schedule-poc",
-      "oracle": "REACHABLE",
-      "tasks_dispatched": 8,
-      "tasks_completed": 8,
-      "tasks_lost": 0,
-      "task_ids": [
-        "T38",
-        "T39",
-        "T40",
-        "T41",
-        "T42",
-        "T43",
-        "T44",
-        "T45",
-        "T46",
-        "T47",
-        "T48"
-      ],
-      "dec1_revisions": "v6 -> v10",
-      "reviewer_catches": [
-        "T43: no P0 for the first time in eight rounds, but three P1s - one a known-wrong money sentence about charge row membership",
-        "T44: all three new capture sets ACCEPTED WITH REQUIRED CHANGES; no synthesised number, but three coverage claims did not hold",
-        "T43 and T44 independently found the same wrong citation with no shared context",
-        "T45 declined one of T43's P2s on evidence - the cell was not stale",
-        "T47 caught a TRANSPOSED consequence in the ORCHESTRATOR'S OWN BRIEF and refused to follow it",
-        "T44 and T46 corrected reference-oracle.md twice - both errors the orchestrator introduced folding in a handoff"
-      ],
-      "uat": "not run - no Go implementation exists yet; T7 (harness) is still blocked behind G-1",
-      "gates": "G-1 open by driver decision, NOT by a reserved item. G-2 unchanged.",
-      "notes": "The driver declined to ratify against the reviewer's explicit recommendation, and recorded the decision as reversible by Buyan in gates.md."
-    },
-    {
-      "fire": "local-20260819-140003",
-      "date": "2026-08-19",
-      "context": "tier0-harness-schedule-poc",
-      "run_id": "2026-08-17-run1-harness-schedule-poc",
-      "oracle": "REACHABLE",
-      "tasks_dispatched": 7,
-      "tasks_completed": 7,
-      "tasks_lost": 0,
-      "task_ids": [
-        "T49",
-        "T50",
-        "T51",
-        "T52",
-        "T53",
-        "T54",
-        "T6 (closed by driver)"
-      ],
-      "dec1_revisions": "v10 -> v12, RATIFIED",
-      "headline": "DEC-1 REVISION 12 RATIFIED and G-1 CLOSED without reaching Buyan, after ten independent review rounds. T6 done; T7 (conformance harness) unblocked with T9-T15 behind it.",
-      "reviewer_catches": [
-        "T49 (round 9, revision 10): no P0 - the SECOND consecutive no-P0 round - but P1-T49-2 found that contract.go:367-370 and section 4.9 BOTH still said the ACT/ACT arm had 'no capture in the corpus' and was un-re-derived. FALSE SINCE REVISION 5, leaked across five revisions and eight rounds, and sitting in a contract.go DOC COMMENT where ratification would have frozen it. The driver declined revision 10 on this alone.",
-        "T49 also caught an arithmetic error in revision 10's OWN worked check, wrong by exactly 10^2 (2,160,000 x 21,875 = 47,250,000,000, not 472,500,000 - the product of the MAJOR-unit 21,600). Re-derived and confirmed by the driver.",
-        "T49 reproduced the packed-whole-months closed form FROM FIRST PRINCIPLES (112,147,776 ordered pairs, predicate fires 45,253, both cross-terms 0) and audited 155 distinct citations across 329 occurrences with 0 out of range - a POSITIVE result as valuable as its findings.",
-        "T52's own restatement grep found a THIRD leak site for P1-T49-2 that T49 had not named (contract.go's FrequencyYears comment).",
-        "T53 (round 10, revision 11): no P0 AND NO P1 - the first round in ten with neither. It tested the load-bearing call three independent ways and confirmed B-2 an ERRATUM not an AMENDMENT, so ratification needed no gate.",
-        "T53 closed the last open [UNVERIFIED] by read-only SELECT: the tenant-global flag is 'false' on gerege - which is WHY T51 saw 0 differing cells, and which means the alias has never been witnessed delivering a wrong value.",
-        "T54 flagged a divergence between T53's own remedy and the driver's brief on one item and followed the brief; the driver adjudicated and the brief was correct (a TO_BE_CAPTURED label on something T50 HAS captured is a false label even when marked superseded).",
-        "T54 caught a markdown-parity bug of its own before commit and CLEARED a near-miss citation rather than leaving it a suspicion."
-      ],
-      "driver_catches": [
-        "CORRECTED THE STANDING BRIEF BEFORE DISPATCH: T46 and T48 had both recorded N46-1 as 'needs a tenant write on the shared server', which is why it sat TO_BE_CAPTURED for two fires. The driver re-derived the BLOCKER and showed a tenant write CANNOT separate the two axes (LoanScheduleAssembler:753 reads getMathContext() and :765 threads that same cached reference). T50 confirmed the correction and refuted the old blocker. THE EXPERIMENT TWO FIRES WAITED FOR COULD NEVER HAVE WORKED.",
-        "Re-derived every load-bearing claim rather than taking it on report: P1-T49-3's arithmetic (exactly 100x), P1-T49-2 by reading both sites, T50-N1's two down-payment constructors line by line, T50-N2's hard-wired null, T51's global-config scope at LoanScheduleAssembler:370-371, and T51's linearity ratio (12,345/14,814 = 0.833333 = 1,000,000/1,200,000).",
-        "SETTLED A DISPUTE BETWEEN TWO AGENTS AT SOURCE rather than by vote: T53 said getLoanProductRelatedDetail() does not exist; it DOES exist (354 codebase hits) but NOT on LoanApplicationTerms, where the method containing :1740 is toLoanProductRelatedDetail() at :1727 - which is exactly what makes the wrong name dangerous.",
-        "Reproduced every mechanical guardrail independently: sections 3.1/4.1 byte-identical across revisions 10-12, contract.go non-comment sha256 2530f13ecad961f2 over 96 lines, 0 non-comment diff lines.",
-        "FIXED T54's ONE DEFERRED FINDING BEFORE THE FREEZE instead of leaving it to a post-ratification gate: contract.go:1229's mis-resolving citation anchor, verified at source and re-proved comment-only afterwards.",
-        "FOUND THE NO-GO-TOOLCHAIN GAP: go is not installed on this host, so contract.go's 96 non-comment lines HAVE NEVER BEEN COMPILED and T10/T11/T13 are blocked. Recorded rather than installed unattended."
-      ],
-      "vectors_added": "NONE PROMOTED - but promotion is UNBLOCKED for the first time in the program, because the shape being ratified was the reason captures had to stay raw. T48-N4's leap-boundary trap governs any ACT/ACT promotion.",
-      "new_findings": [
-        "T50-N1 (P1) two down-payment rounding specifications in one class",
-        "T50-N2 (P1) the Path A seam can never exercise a charge - governs T7's design",
-        "T50-N3 a latent oracle defect is an ACTIVE port defect",
-        "T51: the alias crosses CONFIGURATION SCOPES; slot LIVE, setting INERT",
-        "T51: chargeCalculationType 5 - LINEARITY hid it, not the absence of tranches",
-        "fixedLength blocker: HTTP 403, thereIsInterest derived from the REQUEST"
-      ],
-      "backlog_closed": [
-        "stranded-branch triage from fire 20260818-200001: t24-probe salvaged, the sibling branch decided not-merged with the reasoning recorded"
-      ],
-      "verifier": "NOT RUN - no Go toolchain on this host, so go build / go test / the conformance run could not execute. NOT recorded as a pass. All seven tasks were docs/analysis/capture targets requiring no Go.",
-      "patterns_added": 7,
-      "gates": "G-1 CLOSED (ratified). G-2 still pending and parks T2 only.",
-      "notes": "Seven workers dispatched, seven completed and merged, none lost, no isolation violation, no scope breach. The driver DECLINED ratification twice (revisions 8 and 10) on one consistent discriminator - a known-false sentence about to be frozen - and ratified revision 12 because no known false sentence remained. No round returned a bare CLEAN and the record does not claim one did."
-    },
-    {
-      "fire": "20260819-170001",
-      "date": "2026-08-19",
-      "host": "local (Buyan's Mac)",
-      "oracle": "REACHABLE throughout, never restarted",
-      "run_id": "2026-08-17-run1-harness-schedule-poc",
-      "context": "tier0-harness-schedule-poc",
-      "tasks_completed": [
-        "T7",
-        "T55"
-      ],
-      "tasks_failed_infrastructure": [
-        "T7 attempt 1 (API 529 before first commit; nothing rescued because nothing existed)"
-      ],
-      "workers_dispatched": 3,
-      "workers_completed": 2,
-      "workers_lost": 1,
-      "isolation_violations": 0,
-      "scope_breaches": 0,
-      "driver_catches": [
-        "T55-N1 re-derived and confirmed digit for digit (6,015 minor units on a ZERO first segment)",
-        "G-3 gofmt would silently mutate the frozen ratified contract.go",
-        "D-1 the T50-N2 citation is :83 not :81",
-        "D-2 NEW: the same line hard-wires holidayDetailDTO too, so Path A is blind to holidays as well as charges",
-        "D-2a even on Path B only the FINAL period is holiday-adjusted"
-      ],
-      "gates_raised": [
-        "G-3",
-        "G-4"
-      ],
-      "verifier": {
-        "go_build": "exit 0",
-        "go_vet": "exit 0",
-        "go_test": "ok (conformance 0.582s)",
-        "gofmt": "only contract/contract.go - expected per G-3",
-        "conformance_sh": "exit 2 UNUSABLE - correct, no port and nothing promoted; NOT a pass",
-        "conformance_prove": "10 passed 0 failed",
-        "float_scan": "0 float-shaped JSON numbers in the vector store, 0 float types in the loanschedule Go tree"
-      },
-      "vectors_promoted": 0,
-      "contexts_at_parity": 0,
-      "headline": "No-Go-toolchain gap CLOSED without touching the host; the ratified contract.go COMPILES; T7 the bottleneck CLEARED; pair-difference proven the wrong promotion filter"
-    },
-    {
-      "fire": "20260819-200001",
-      "host": "Buyanmunkhs-Mac-mini",
-      "oracle": "REACHABLE (never restarted)",
-      "run_id": "2026-08-17-run1-harness-schedule-poc",
-      "context": "tier0-harness-schedule-poc",
-      "tasks_closed": [
-        "T8 (promotion slice)",
-        "T20",
-        "T9",
-        "T10",
-        "T57",
-        "T56",
-        "T11",
-        "T58"
-      ],
-      "tasks_in_flight_at_checkpoint": [],
-      "headline": "FIRST CONFORMANCE PASS IN THE PROGRAM - and the fire was then spent proving how little it meant. conformance.sh VERDICT: PASS (exit 0), 13 parity vectors, 1350 cells, 6/6 invariants, 0 inadmissible, --prove 20/20, go build/vet/test green, gofmt -l only the frozen contract.go (G-3). EVERY NUMBER DRIVER-RE-RUN, none accepted on report.",
-      "what_the_pass_does_not_mean": "T10 mutated its own port into each named wrong implementation and re-ran the real harness: FIVE died, FOUR survived, THREE of which move money. The worst - deleting the ENTIRE EMI re-adjust smoothing loop, which DEC-1 calls a normative obligation 'not backlog' - was reproduced INDEPENDENTLY BY THE DRIVER at 11/11 PASS, exit 0. T57 then captured the two shapes DEC-1 itself names, and the driver re-ran the IDENTICAL mutation: it now FAILS both new vectors with named cells and margins. That closed loop (mutate -> find the blind spot -> capture the shape -> prove the mutation now dies) is the fire's transferable result, recorded as pattern P-3.",
-      "still_ungraded": [
-        "textbook balance x rateFactor (3 rounded ops collapsed to 1)",
-        "rate factor without the trailing setScale",
-        "periodRatio -> RepaymentEvery"
-      ],
-      "false_pass_path_found_and_closed": "T9's F-1: unrecorded_fields was an unguarded escape hatch - withdrawing all nine cells of the month-end kill from P-02/P-02b while leaving 1999-01-01 in place gave 11/11 PASS, exit 0, WITH the capability still printed as killed. T56 closed it; the DRIVER REPRODUCED THE EXACT EXPLOIT against the fixed harness and got exit 2, both vectors INADMISSIBLE, with a diagnostic naming the offending divergent_cells entry and the unrecorded_fields that withdraws it.",
-      "folklore_that_died": "T9 re-derived from FINERACT SOURCE rather than from DEC-1's prose (three earlier parties had all used the same document-based method) and killed two beliefs everyone was carrying: (1) the oracle does NOT use the closed-form EMI - it folds Pi(1+r_i)*P/fn, no pow [ProgressiveEMICalculator.java:1838-1840, fold at :1819, DRIVER-CONFIRMED]; (2) there is NO 'final principal := remaining balance' - principal is always EMI - interest [RepaymentPeriod.java:339-344] and the residual lands on the LAST UNPAID PERIOD'S EMI [:1191-1206]. THE SECOND WAS TRAP #4 IN THE BRIEF THE DRIVER WROTE FOR T10 - the driver was wrong and corrected it mid-flight. Both reproduce the corpus identically ONLY because every promoted vector runs DAYS_30/DAYS_360 so every r_i is equal.",
-      "g4_hunt": "T9 was sent to find a second G-4 and FOUND NONE: DEC-1 rev 12 audited against source in six places, no disagreement. Where DEC-1 and the folklore differ, DEC-1 matches the source. That is a result, not an absence of one.",
-      "driver_catches": [
-        "D-4 the harness could not express a zero-money-margin structural kill, making its OWN 'UNBACKED monthend.reanchor' complaint unsatisfiable; spec corrected by T8-promote (it is a DECODE-time change via DisallowUnknownFields, so an admit.go-only fix would not have landed it)",
-        "D-5/D-6 latent harness defects that detonate on first real use (three silent continue paths in the replay loader; a frozen ParityPass == 0 assertion)",
-        "D-6 THIRD RECURRENCE found post-merge by the driver: --prove was 18/20, both failures stale proofs, one a hard-coded 'parity vectors PASS 11' that T57 moved to 13. Driver fixed both to assert the PROPERTY and verified proof 1 still discriminates (-impl=__none__ -> 2, -impl=loanschedule-go -> 0)",
-        "independent re-derivation of all 11 pass-3b candidates BEFORE any worker reported (11/11 digit for digit) plus a third-converter transcription audit of the promoted files (883 cells, 0 mismatches) and confirmation of P-01's 65,885,070 margin",
-        "D-6 recurred a FOURTH time, found by T58 in the very proof the driver had just de-staled: proof 19 asserted that withdrawing P-02/P-02b makes monthend.reanchor UNBACKED, which was only true while they were its ONLY backers - it failed BECAUSE COVERAGE WAS ADDED. The worker correctly refused to edit the harness and reported it rather than discarding 20 measured kills to get green. Driver fixed it to assert the property F-1b protects and VERIFIED IT DISCRIMINATES (0 occurrences on the pristine store, present on the withdrawn one). Recorded as pattern P-7."
-      ],
-      "gates_raised": [
-        "G-5 - DEC-1 contradicts itself on a ZERO interest rate: the prose says outside the graded domain, the enumerated list has no rate predicate, admit.go implements the list, and SELFTEST-01 (the harness's own self-test fixture) IS a zero-rate request. T10 implemented the list and flagged it rather than amending a ratified DEC-n. Driver recommends making the prose match the list. NOT RESERVED, blocks nothing."
-      ],
-      "process_defect": "The worker worktree cut-point defect recurred THREE times in one fire (T9's F-9, T57's N-5, and again on T56): workers handed worktrees cut BEFORE the merge of the artefact they were to work on. T9 was sent to review 11 promoted vectors and found only the four REFUSE-* files; it re-cut onto main itself. A reviewer who graded what was in front of them would have reviewed an empty corpus and reported it clean. Pattern P-5.",
-      "invariants_held": "PostgreSQL only, no prohibited engine or driver anywhere. Money is integer minor units; zero float32/float64/big.Float/ParseFloat in the port, zero float-shaped JSON number tokens store-wide. contract.go byte-identical and never gofmt'd. No cutover, no deposit-taking surface, no live endpoint, no third-party binding. Conformance never reported a PASS it had not earned.",
-      "final_state": "conformance.sh VERDICT: PASS (exit 0) - 29 parity vectors, 2354 graded cells, 58 ungraded, 0 inadmissible, 0 harness errors, 6/6 invariants, --prove 20/20, go build/vet/test green, gofmt -l only the frozen contract.go. THE CORPUS STARTED THIS FIRE AT ZERO PARITY VECTORS.",
-      "all_four_known_mutations_now_die": "At 13 vectors three money-moving mutations survived; at 29 all die. periodRatio -> RepaymentEvery 8 FAIL; textbook balance x rateFactor 2 FAIL; rate factor without the trailing setScale 1 FAIL; EMI smoothing loop deleted 10 FAIL (driver re-ran at 29). MOST OF THIS NEEDED NO ORACLE: T11 found 8 oracle-observed drift shapes captured two fires ago and NEVER PROMOTED, which closed one survivor BY OBSERVATION and killed two further counterfactuals (worst margin MNT 8,545,743.02). The two that did need the oracle were located by a 6,000-shape sweep and THE ORACLE CONFIRMED T11'S PREDICTION EXACTLY, including interest MNT 15,307.35 - folklore argued from source three times and observed zero times, ended by two captures.",
-      "t11_verdict": "ACCEPTED WITH REQUIRED CHANGES. THE PORT HAS NO ARITHMETIC DEFECT - 22 counterfactuals derived from source, none exposed one; T10's subtle 'first multiply against ONE is not a no-op' claim confirmed; two traps that would have broken every due date and clamp checked and the port reads the right one both times. Two non-money defects: F-1 (P1) and F-2 (P2) -> T59.",
-      "driver_correction_to_t11": "T11's F-1 says the port 'ignores cancellation'. It does not: generator.go:72 checks ctx.Err() ONCE AT ENTRY and never again [VERIFIED: one occurrence in generator.go, zero in emi.go], which is exactly consistent with T11's own measurement of 5.9s elapsed under a 50ms deadline. The fix is therefore NOT 'add a cancellation check' but 'check inside the loops where the time is spent'. Recorded that way in T59.",
-      "open_findings_carried": [
-        "T59 - T11's F-1/F-2 (port cancellation checked only at entry; ~n^2.4 cost, unbounded NumberOfRepayments, Memo cache dropped). NO ORACLE NEEDED.",
-        "T60 - T58's N-2: balance_roll_forward grades a placeholder the store README says nothing compares, so an honestly-declared unrecorded cell goes red. D-5 class. NO ORACLE NEEDED.",
-        "P-5 recurred FIVE times in one fire - workers handed worktrees cut before the merge of the artefact they were to work on. T11 got a tree with NO .go files in the port directory. The written rule is not the gap; nothing enforces it. Belongs in the dispatcher."
-      ]
-    }
-  ],
-  "database": {
-    "engine": "PostgreSQL",
-    "rule": "PostgreSQL is the ONLY database for every environment: the Fineract reference oracle, the Go module, vector capture, shadow/differential runs and CI. Fineract's shipped default is already Postgres [VERIFIED: fineract-provider/src/main/resources/application.properties -> org.postgresql.Driver, jdbc:postgresql://localhost:5432/fineract_tenants]. Bring the oracle up with the postgresql compose profile only.",
-    "prohibited": [
-      "Oracle Database (ojdbc, oracle.jdbc, OracleDialect, :1521, tnsnames)",
-      "MySQL (com.mysql.cj, docker-compose-mysql*.yml)",
-      "MariaDB (docker-compose-mariadb*.yml)"
-    ],
-    "go_driver": "github.com/jackc/pgx/v5",
-    "money_columns": "bigint minor units \u2014 never float/double precision/real/money",
-    "terminology": "'The oracle' in this program means the Fineract REFERENCE IMPLEMENTATION (.softhouse/reference-oracle.md), never Oracle Database."
+  "daily_soft_limit_pct": 90,
+  "max_retries_per_task": 1,
+  "retry_model": "opus",
+  "park_after_retries": true,
+  "gate_scope": "A gate on a CONTRACT blocks work that CONSUMES the contract (any coder task, anything under the go_target), not work that produces knowledge the decision needs anyway. While tier0 is blocked_on_gate, every other context is READY-FOR-ANALYSIS: analyst behaviour extraction from pinned source, test-corpus mining into capture plans, RAW observed vector capture on an oracle-reaching fire, and the Tier-C gap audit may all proceed. Contract-shaped storage, Go code, and amending the gated DEC-n may not. An open gate must never mean an idle factory."
+ },
+ "cursor": {
+  "current_context": "tier0-harness-schedule-poc",
+  "current_run_id": "2026-08-17-run1-harness-schedule-poc",
+  "completed_contexts": [],
+  "parked_contexts": [],
+  "note": "Local fire 20260819-200001 (oracle REACHABLE) COMPLETE, clean exit, eight workers dispatched and eight merged, nothing lost. THE PROGRAM WENT FROM ZERO PARITY VECTORS TO 29, AND FROM NO GO CODE TO A PORT THAT MATCHES THE ORACLE ON 2354 CELLS. conformance.sh VERDICT: PASS (exit 0), --prove 20/20, 6/6 invariants, 0 inadmissible - all driver-re-run, none accepted on report. THE PASS IS NOT THE POINT: at 13 vectors three money-moving mutations of the port still survived, and the fire was spent closing them. All four known mutations now die (8/2/1/10 vectors respectively). Two P1 review findings raised and BOTH closed in the same fire (F-1 the demonstrated false-PASS path; F-2 the ungraded EMI smoothing loop). NEXT FIRE NEEDS NO ORACLE: T59 (port cancellation checked only at entry, and cost ~n^2.4 - neither is graded by conformance, so add a test), T60 (balance_roll_forward grades a placeholder the README says nothing compares), then T12 drill, T13 UAT, T14 (user gate: accept the PoC slice, NO cutover) and T15. Five gates open (G-2, G-3, G-4, G-5), NONE blocking and NONE reserved. Cutover, regulatory sign-off, deposit-taking activation and licence facts remain untouched and are not in Run 1's path."
+ },
+ "contexts": [
+  {
+   "id": "tier0-harness-schedule-poc",
+   "tier": 0,
+   "title": "Conformance harness, DEC-1 frozen contract, progressive-loan schedule-generator PoC",
+   "fineract_paths": [
+    "fineract-progressive-loan-embeddable-schedule-generator"
+   ],
+   "main_loc": 182,
+   "go_target": "nexus/internal/apps/loanschedule",
+   "dependencies": [],
+   "status": "active",
+   "run_id": "2026-08-17-run1-harness-schedule-poc",
+   "cutover_gate": false,
+   "notes": "Planned. Everything else depends on the harness existing. || cloud fire 20260817-2000: BLOCKED at gate G-1 (ratify DEC-1), which is NOT YET ANSWERABLE - the draft was independently REJECTED (T5) and the defect it turns on is one the current corpus provably cannot detect. Every other context in this program declares tier 0 as a transitive dependency, so the whole program is behind this gate. Measured this fire against the pin: the module is src/main 92 LOC + misc/Main.java 90 = 182, which settles the '~182 LOC' figure on record. || fire 20260818-173900: four workers landed and merged. The two capture audits are done; DEC-1 v2 was drafted and independently re-reviewed. G-1 did NOT close - T23 found three P0 defects, the sharpest being that the EMI re-adjust loop is LIVE inside the graded domain (7 of 10 graded-domain requests diverge from the contract as specified, and no vector in the corpus trips it). The contract-domain / graded-domain split itself SURVIVED review, and the reviewer proved mechanically that there is no third silently-dropped component beyond the known two. || G-1 CLOSED 2026-08-19: DEC-1 revision 12 RATIFIED by the driver under P-2 after ten independent rounds. T6 done; T7 (conformance harness) is now the bottleneck with T9-T15 behind it. TWO CONSTRAINTS FOR T7: charge conformance can only be graded on Path B (the Path A embeddable seam hard-wires loanCharges to null, T50-N2), and NO GO TOOLCHAIN EXISTS ON THIS HOST so go build/go test cannot run - the harness can be designed but not executed against Go until one is installed."
+  },
+  {
+   "id": "tierA-gl-accounting",
+   "tier": "A",
+   "title": "General Ledger / accounting \u2014 double-entry posting, chart of accounts, journal entries, accruals, product-account mapping",
+   "fineract_paths": [
+    "fineract-accounting",
+    "fineract-provider/src/main/java/org/apache/fineract/accounting/journalentry",
+    "fineract-provider/src/main/java/org/apache/fineract/accounting/accrual",
+    "fineract-provider/src/main/java/org/apache/fineract/accounting/productaccountmapping",
+    "fineract-provider/src/main/java/org/apache/fineract/accounting/common"
+   ],
+   "main_loc": 24000,
+   "go_target": "nexus/internal/apps/ledger",
+   "dependencies": [
+    "tier0-harness-schedule-poc"
+   ],
+   "status": "pending",
+   "run_id": null,
+   "cutover_gate": true,
+   "notes": "12,752 LOC in fineract-accounting + 11,224 in provider/accounting [VERIFIED: measured]. Split by run if a single plan exceeds worker context: journal posting | accruals | COA + product mapping.",
+   "analysis_ready": true
+  },
+  {
+   "id": "tierA-loan-product-schedule",
+   "tier": "A",
+   "title": "Loan products, interest methods, schedule generation (full progressive-loan module)",
+   "fineract_paths": [
+    "fineract-progressive-loan",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/loanproduct"
+   ],
+   "main_loc": 20461,
+   "go_target": "nexus/internal/apps/loanproduct",
+   "dependencies": [
+    "tier0-harness-schedule-poc"
+   ],
+   "status": "pending",
+   "run_id": null,
+   "cutover_gate": true,
+   "notes": "14,308 + 6,153 LOC. 7,863 test LOC in fineract-progressive-loan is the richest vector seam in the codebase.",
+   "analysis_ready": true
+  },
+  {
+   "id": "tierA-loan-lifecycle",
+   "tier": "A",
+   "title": "Loan account lifecycle \u2014 disbursement, repayment, penalties, rescheduling, write-off, delinquency",
+   "fineract_paths": [
+    "fineract-loan",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/loanaccount"
+   ],
+   "main_loc": 106246,
+   "go_target": "nexus/internal/apps/loan",
+   "dependencies": [
+    "tierA-gl-accounting",
+    "tierA-loan-product-schedule"
+   ],
+   "status": "pending",
+   "main_loc_note": "66,375 + 39,871 [VERIFIED: measured]. LARGEST context \u2014 must be split across several runs by sub-behavior (disbursement | repayment allocation | penalties/charges application | rescheduling | write-off/delinquency). A single plan over all of it will exhaust every worker.",
+   "run_id": null,
+   "cutover_gate": true,
+   "notes": "Split mandatory. 679 + ~380 files.",
+   "analysis_ready": true
+  },
+  {
+   "id": "tierA-charges-rates-tax",
+   "tier": "A",
+   "title": "Charges, rates, tax \u2014 including VAT / e-Barimt tie-in",
+   "fineract_paths": [
+    "fineract-charge",
+    "fineract-rates",
+    "fineract-tax",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/charge",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/rate",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/tax"
+   ],
+   "main_loc": 10333,
+   "go_target": "nexus/internal/apps/charges",
+   "dependencies": [
+    "tierA-gl-accounting"
+   ],
+   "status": "pending",
+   "run_id": null,
+   "cutover_gate": true,
+   "notes": "3,694 + 1,926 + 2,262 + 947 + 1,089 + 415 [VERIFIED: measured]. Mongolian VAT / e-Barimt is additive, not a Fineract port \u2014 spec it, do not invent parity vectors for it.",
+   "analysis_ready": true
+  },
+  {
+   "id": "tierA-cob-batch",
+   "tier": "A",
+   "title": "Close-of-business batch \u2014 daily accrual/aging/posting, idempotency, restart-after-failure",
+   "fineract_paths": [
+    "fineract-cob",
+    "fineract-provider/src/main/java/org/apache/fineract/cob",
+    "fineract-provider/src/main/java/org/apache/fineract/batch"
+   ],
+   "main_loc": 13471,
+   "go_target": "nexus/internal/apps/cob",
+   "dependencies": [
+    "tierA-loan-lifecycle",
+    "tierA-charges-rates-tax"
+   ],
+   "status": "pending",
+   "run_id": null,
+   "cutover_gate": true,
+   "notes": "3,190 + 4,881 + 5,400 [VERIFIED: measured]. Reuse Nexus's scheduler; do not port Fineract's job framework.",
+   "analysis_ready": true
+  },
+  {
+   "id": "tierA-provisioning-reporting",
+   "tier": "A",
+   "title": "Provisioning + FRC reporting feeds (Tier-A completion)",
+   "fineract_paths": [
+    "fineract-provider/src/main/java/org/apache/fineract/accounting/provisioning",
+    "fineract-report",
+    "fineract-provider/src/main/java/org/apache/fineract/spm",
+    "fineract-provider/src/main/java/org/apache/fineract/infrastructure/dataqueries"
+   ],
+   "main_loc": 11400,
+   "go_target": "nexus/internal/apps/provisioning",
+   "dependencies": [
+    "tierA-cob-batch"
+   ],
+   "status": "pending",
+   "run_id": null,
+   "cutover_gate": true,
+   "notes": "Tier-A cutover + regulatory acceptance are user gates; parallel run required. Compliance-spine capital and 30%/70% limits must reconcile to the native GL.",
+   "analysis_ready": true
+  },
+  {
+   "id": "tierB-savings-deposits",
+   "tier": "B",
+   "title": "Savings / deposits / recurring deposits / interest rate charts \u2014 ported DISABLED",
+   "fineract_paths": [
+    "fineract-savings",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/savings",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/interestratechart",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/accountdetails"
+   ],
+   "main_loc": 61910,
+   "go_target": "nexus/internal/apps/savings",
+   "dependencies": [
+    "tierA-gl-accounting"
+   ],
+   "status": "pending",
+   "run_id": null,
+   "cutover_gate": true,
+   "activation_gate": "user \u2014 deposit-taking activation requires FRC / Bank of Mongolia licensing sign-off. Ships behind a config flag defaulting to OFF. Never render deposits as insured/protected/guaranteed.",
+   "notes": "25,331 + 31,890 + 3,729 + 960 [VERIFIED: measured]. Split by run: savings account lifecycle | interest posting | recurring/fixed deposits | rate charts.",
+   "analysis_ready": true
+  },
+  {
+   "id": "tierB-working-capital-loan",
+   "tier": "B",
+   "title": "Working-capital loan module",
+   "fineract_paths": [
+    "fineract-working-capital-loan"
+   ],
+   "main_loc": 34244,
+   "go_target": "nexus/internal/apps/workingcapital",
+   "dependencies": [
+    "tierA-loan-lifecycle"
+   ],
+   "status": "pending",
+   "run_id": null,
+   "cutover_gate": true,
+   "notes": "355 files, 6,138 test LOC [VERIFIED: measured]. Split by sub-behavior.",
+   "analysis_ready": true
+  },
+  {
+   "id": "tierB-loan-origination",
+   "tier": "B",
+   "title": "Loan origination workflow",
+   "fineract_paths": [
+    "fineract-loan-origination"
+   ],
+   "main_loc": 3966,
+   "go_target": "nexus/internal/apps/origination",
+   "dependencies": [
+    "tierA-loan-lifecycle"
+   ],
+   "status": "pending",
+   "run_id": null,
+   "cutover_gate": true,
+   "notes": "1,657 test LOC available as vectors.",
+   "analysis_ready": true
+  },
+  {
+   "id": "tierB-investor",
+   "tier": "B",
+   "title": "Investor / external asset owner module",
+   "fineract_paths": [
+    "fineract-investor"
+   ],
+   "main_loc": 6250,
+   "go_target": "nexus/internal/apps/investor",
+   "dependencies": [
+    "tierA-loan-lifecycle"
+   ],
+   "status": "pending",
+   "run_id": null,
+   "cutover_gate": true,
+   "notes": "3,748 test LOC \u2014 good vector density.",
+   "analysis_ready": true
+  },
+  {
+   "id": "tierB-branch",
+   "tier": "B",
+   "title": "Branch / teller / cash management",
+   "fineract_paths": [
+    "fineract-branch"
+   ],
+   "main_loc": 3937,
+   "go_target": "nexus/internal/apps/branch",
+   "dependencies": [
+    "tierA-gl-accounting"
+   ],
+   "status": "pending",
+   "run_id": null,
+   "cutover_gate": true,
+   "notes": "",
+   "analysis_ready": true
+  },
+  {
+   "id": "tierB-shares",
+   "tier": "B",
+   "title": "Share accounts + share products (SCC member shares)",
+   "fineract_paths": [
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/shareaccounts",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/shareproducts"
+   ],
+   "main_loc": 9412,
+   "go_target": "nexus/internal/apps/shares",
+   "dependencies": [
+    "tierA-gl-accounting"
+   ],
+   "status": "pending",
+   "run_id": null,
+   "cutover_gate": true,
+   "notes": "6,203 + 3,209 [VERIFIED: measured]. Member share capital feeds the compliance-spine capital figure \u2014 reconcile against the native GL.",
+   "analysis_ready": true
+  },
+  {
+   "id": "tierB-collateral",
+   "tier": "B",
+   "title": "Collateral + collateral management + post-dated cheques",
+   "fineract_paths": [
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/collateral",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/collateralmanagement",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/repaymentwithpostdatedchecks"
+   ],
+   "main_loc": 5511,
+   "go_target": "nexus/internal/apps/collateral",
+   "dependencies": [
+    "tierA-loan-lifecycle"
+   ],
+   "status": "pending",
+   "run_id": null,
+   "cutover_gate": true,
+   "notes": "Pledged-collateral hold math: holds alter available only, never posted balance. This is the exact defect that failed adversarial review twice on the sister project \u2014 force the sign when re-deriving.",
+   "analysis_ready": true
+  },
+  {
+   "id": "tierB-clients-groups",
+   "tier": "B",
+   "title": "Clients, groups, centres, meetings, calendar, collection sheet, addresses, notes, transfers, funds",
+   "fineract_paths": [
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/client",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/group",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/collectionsheet",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/meeting",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/calendar",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/address",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/note",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/transfer",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/fund",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/account",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/accounts",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/products",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/search",
+    "fineract-provider/src/main/java/org/apache/fineract/portfolio/common"
+   ],
+   "main_loc": 42000,
+   "go_target": "nexus/internal/apps/parties",
+   "dependencies": [
+    "tierA-gl-accounting"
+   ],
+   "status": "pending",
+   "run_id": null,
+   "cutover_gate": true,
+   "notes": "Names are ovog / patronymic / given name \u2014 a diff introducing first_name/last_name is a rejection. National ID validated structurally, 10 chars. Match on registration number, never on name. Split by run; clients and groups are separate slices.",
+   "analysis_ready": true
+  },
+  {
+   "id": "tierC-platform-map-first",
+   "tier": "C",
+   "title": "Platform layer \u2014 MAP onto Nexus, port only demonstrated gaps",
+   "fineract_paths": [
+    "fineract-core",
+    "fineract-security",
+    "fineract-validation",
+    "fineract-command",
+    "fineract-command-jdbc",
+    "fineract-command-async",
+    "fineract-command-audit",
+    "fineract-command-disruptor",
+    "fineract-provider/src/main/java/org/apache/fineract/infrastructure",
+    "fineract-provider/src/main/java/org/apache/fineract/organisation",
+    "fineract-provider/src/main/java/org/apache/fineract/useradministration",
+    "fineract-provider/src/main/java/org/apache/fineract/notification",
+    "fineract-provider/src/main/java/org/apache/fineract/template",
+    "fineract-provider/src/main/java/org/apache/fineract/adhocquery",
+    "fineract-provider/src/main/java/org/apache/fineract/interoperation",
+    "fineract-provider/src/main/java/org/apache/fineract/commands",
+    "fineract-document",
+    "fineract-db",
+    "fineract-client",
+    "fineract-avro-schemas"
+   ],
+   "main_loc": 180000,
+   "go_target": "nexus/internal/platform",
+   "dependencies": [
+    "tierA-provisioning-reporting"
+   ],
+   "status": "pending",
+   "run_id": null,
+   "cutover_gate": true,
+   "notes": "First run in this context is an ANALYST GAP AUDIT, not a port: for each subsystem (auth, tenancy, command bus, jobs, hooks, events, bulk import, campaigns, data queries, credit bureau, SMS/GCM, surveys, reporting mail) state what Nexus already provides and what is a real gap. Only audited gaps get coder tasks. ~72k core + ~81k provider/infrastructure + ~10k organisation [VERIFIED: measured]. Unjustified plumbing ports are rejections.",
+   "analysis_ready": true
+  },
+  {
+   "id": "tierD-test-corpus-to-vectors",
+   "tier": "D",
+   "title": "Mine Fineract's test corpus + e2e suites into golden vectors",
+   "fineract_paths": [
+    "integration-tests",
+    "fineract-e2e-tests-core",
+    "fineract-e2e-tests-runner",
+    "**/src/test"
+   ],
+   "main_loc": 321000,
+   "go_target": ".softhouse/vectors",
+   "dependencies": [
+    "tier0-harness-schedule-poc"
+   ],
+   "status": "pending",
+   "run_id": null,
+   "cutover_gate": false,
+   "notes": "~321k test LOC. Runs OPPORTUNISTICALLY \u2014 whenever a Tier A/B context is planned, its slice of this corpus is mined in the same run's test_writer task. Kept as a distinct context so residual suites are not forgotten. Never ported one-for-one into Go tests.",
+   "analysis_ready": true
   }
+ ],
+ "gates_pending": [
+  {
+   "id": "G-2",
+   "class": "POLICY",
+   "task": "T2",
+   "context": "tier0-harness-schedule-poc",
+   "title": "Permit a third, differently-shaped attempt at the schedule behaviour extraction?",
+   "state": "CLOSED - DECLINED",
+   "why": "T2 exhausted policy.max_retries_per_task=1 (attempt 1 and its retry both REJECTED) and is parked by policy, not judgement. The failure is systematic: corrections land in the section the review named but not in the sections that restate the same claim.",
+   "asking_for": "One more attempt with a different task shape - apply T3b's 10 enumerated edits surgically, then a mechanical grep sweep for restatements of each corrected claim elsewhere in the document. If declined, the alternative is to treat T3b's review as the specification of record and grade the port on vectors alone.",
+   "raised_by": "cloud fire 20260817-2000",
+   "recorded_in": ".softhouse/gates.md",
+   "closed_by": "local fire 20260820-080002 (/softhouse-program driver)",
+   "chosen_by": "agent",
+   "decision": "No third attempt; T2 stays parked permanently. Specification of record is DEC-1 rev 12 (ratified, frozen in contract.go), the 29-vector parity corpus, and T3b's re-review. Closed under CLAUDE.md 'Answering gates' as a PRODUCT/process item with no RESERVED content. Driver found the real hazard was the EXISTING document, not the missing one: its section 7.4 prescribed clamp-and-continue month-end stepping as what a Go port 'must replicate bit-for-bit', which is the killed counterfactual MONTHEND-CONTINUE-FROM-CLAMPED-DAY - parity vector P-02 has period 2 due 2024-03-31. Neutralised at zero model cost with a SUPERSEDED banner plus inline CORRECTION blocks at the three sites T3b enumerated and the ls-008 row. Buyan may reverse."
+  },
+  {
+   "id": "G-3",
+   "class": "ENGINEERING",
+   "task": "T7",
+   "context": "tier0-harness-schedule-poc",
+   "state": "OPEN",
+   "title": "May gofmt rewrite the ratified contract.go?",
+   "why": "The first compile of the ratified DEC-1 artefact (this fire, after the toolchain gap closed) showed `gofmt -l` flags nexus/internal/apps/loanschedule/contract/contract.go: 3 hunks, 25 diff lines, all doc-comment list normalisation (Go 1.19+), semantically inert - no type, field, enum member, error value, identifier or specified predicate moves. NOT APPLIED. The gate is about the failure mode: contract.go's doc comments ARE the specification and DEC-1's amendment clause makes re-documenting an identifier a gate, so an editor format-on-save or a `gofmt -w ./...` from the repo root would silently mutate a frozen ratified artefact and the diff would read as harmless formatting noise in review.",
+   "asking_for": "Confirm option A - leave contract.go unformatted, keep a documented gofmt exemption. Option B (apply it as a no-predicate erratum) would change the ratified bytes and invalidate the whole-file byte-identity guardrail, and its real cost is the precedent that 'inert' edits to a frozen file are fine. Option C (amend DEC-1 to record the exemption) is a gate to buy what A already delivers.",
+   "blocks": "Nothing. The standing instruction is already in force: no task may gofmt -w that path; `gofmt -l` reporting exactly that one file is the EXPECTED state and must not fail a UAT.",
+   "raised_by": "local fire 20260819-170001",
+   "recorded_in": ".softhouse/gates.md"
+  },
+  {
+   "id": "G-4",
+   "class": "ENGINEERING",
+   "task": "T55",
+   "context": "tier0-harness-schedule-poc",
+   "state": "OPEN",
+   "title": "DEC-1's ACT/ACT promotion condition is provably too strong - amend the wording",
+   "why": "T48-N4's condition, restated in DEC-1 commentary, requires a promoted DayCountActualActual vector to cross a leap boundary WITH A NON-ZERO FIRST SEGMENT. That is false. Capture LB-DEC31 has a ZERO first segment and still grades the arm by 6,015 minor units. Driver-re-derived from scratch at (19, HALF_UP): ARM 0/366+31/365 -> 22014.25, which is the value OBSERVED on all three products p3/p4/p7 and in the determinism re-runs; PLAIN 31/366 -> 21954.10 counterfactual. The mechanism: the PLAIN branch takes its single denominator from the period-START year (2024, leap, 366) while the ARM assigns days to the year they actually fall in (2025, 365), so the zero-length segment is irrelevant - the YEAR LENGTHS are what matter.",
+   "asking_for": "Approval to amend DEC-1 commentary, WORDING ONLY: replace 'non-zero first segment' with 'spans two calendar years of differing length'. No type, field, enum member, error value or graded-domain predicate moves. Failure mode if declined: a future task reads DEC-1, rejects LB-DEC31 as unpromotable, and discards a vector that grades the arm by 6,015 minor units.",
+   "blocks": "Nothing. The corrected condition is already in force in RESUME.md and gates.md, and T7's harness was instructed mid-flight to use it. Only DEC-1's own sentence is outstanding.",
+   "raised_by": "local fire 20260819-170001 (T55, driver-re-derived)",
+   "recorded_in": ".softhouse/gates.md"
+  },
+  {
+   "id": "G-5",
+   "class": "ENGINEERING",
+   "task": "T10",
+   "context": "tier0-harness-schedule-poc",
+   "state": "OPEN",
+   "title": "DEC-1 contradicts itself on a zero interest rate, and the harness's own self-test sits on the contradiction",
+   "why": "AnnualNominalInterestRate's doc comment says a zero rate is 'outside the graded domain'; the enumerated graded-domain list contains no rate predicate at all; admit.go:846-907 implements the list and so has none either; and _selftest/SELFTEST-01-two-period-zero-rate.json IS a zero-rate request. A port following the PROSE refuses it with ErrNoDiscriminatingVector and the harness reports that refusal as FAIL, exit 1. A port following the LIST grades it and passes. The specification cannot be satisfied both ways.",
+   "asking_for": "A wording-only DEC-1 amendment picking one reading. Driver recommends deleting the 'zero rate is outside the graded domain' sentence so the prose matches the list: the list is what the harness enforces so the prose is already inert; a zero-rate schedule is an ordinary NBFI product shape (an interest-free instalment plan) and putting it outside the graded domain would mean shipping it UNGRADED rather than not shipping it; and SELFTEST-01, the fixture that proves the harness can tell pass from fail, is itself zero-rate.",
+   "blocks": "Nothing. T10 implemented the enumerated list, matching the harness, and flagged the conflict rather than resolving it.",
+   "raised_by": "local fire 20260819-200001 (T10, driver-confirmed)",
+   "recorded_in": ".softhouse/gates.md"
+  }
+ ],
+ "history": [
+  {
+   "fire": "cloud-routine 20260817-2000 (catch-up, no live oracle)",
+   "run_id": "2026-08-17-run1-harness-schedule-poc",
+   "context": "tier0-harness-schedule-poc",
+   "oracle_reachable": false,
+   "oracle_probe": "no docker daemon, PostgreSQL not listening on :5432, actuator/health silent - T8 parked with reason oracle_unreachable; no vector synthesised",
+   "tasks_dispatched": [
+    "T3b",
+    "T5",
+    "T16",
+    "T17"
+   ],
+   "worker_isolation": "all 4 workers in real worktrees on softhouse/* branches - the previous fire's isolation violation was NOT repeated",
+   "verdicts": {
+    "T3b": "REJECTED",
+    "T5": "REJECTED",
+    "T16": "delivered",
+    "T17": "ACCEPTED w/ 6 execution-blocking corrections"
+   },
+   "reviewer_catches": [
+    "T5: the precision-vs-scale ambiguity CHANGES MONEY - 189/560 grid configs diverge; a one-minor-unit error appears in period 5 and never heals. The shipped conformance vector cannot discriminate.",
+    "T5 + T3b INDEPENDENTLY, from different artefacts: allowFullTermForTranche is caller-settable and the guard at ProgressiveEMICalculator.java:142-144 never consults isMultiDisburseLoan() - refuting a 'dead field' claim used to drop an input from a frozen contract.",
+    "T3b: attempt 2's corrections leaked - fixed in the named sections, left wrong in the sections restating the same claims.",
+    "T3b: a 4th MoneyHelper fallback at ProgressiveEMICalculator.java:182 that the analysis's own list denies.",
+    "T17: 418/418 transcribed values verified literally present - zero synthesised vectors reached the plan.",
+    "T17: two [VERIFIED]-tagged supporting claims false, incl. FULL_LEAP_YEAR which has no absolute literal anywhere and was missing from the coverage map."
+   ],
+   "uat": "NOT RUN - conformance needs the reference oracle, which this fire could not reach. go build + go vet verified clean independently.",
+   "outcome": "Program blocked at gate G-1. Two artefacts rejected before they could be ratified; one accepted. No bar was lowered and no vector invented."
+  },
+  {
+   "fire": "local 20260818-152328 (oracle REACHABLE)",
+   "run_id": "2026-08-17-run1-harness-schedule-poc",
+   "context": "tier0-harness-schedule-poc",
+   "oracle_reachable": true,
+   "oracle_probe": "Fineract UP, PostgreSQL on :5432, Docker 29.6.2, image digest sha256:e596339626bf..., Zulu 21.0.11. No prohibited engine; only postgresql-42.7.11.jar on the capture classpath [VERIFIED by T19].",
+   "tasks_dispatched": [
+    "T16b",
+    "T18",
+    "T19"
+   ],
+   "orchestrator_work": [
+    "rescued and processed the abandoned pass-1 capture from fire 20260818-080003",
+    "capture pass 2 (tenant context)",
+    "capture pass 3 (production settings)"
+   ],
+   "worker_isolation": "all 3 workers in real worktrees on their own branches; no isolation violation",
+   "verdicts": {
+    "T16b": "done and merged",
+    "T18": "ACCEPTED WITH REQUIRED CHANGES",
+    "T19": "ACCEPTED WITH REQUIRED CHANGES"
+   },
+   "reviewer_catches": [
+    "T18: DEC-1 as drafted is EMPIRICALLY WRONG by one minor unit at precision 12 - the oracle emits period-5 principal 4,531,420.25 where the significant-digits-only reading DEC-1 describes emits ...26. G-1 unblock step 1 satisfied.",
+    "T18: caught an ORCHESTRATOR OVER-CLAIM - a precision sweep cannot separate the two MathContext senses (one integer drives both), and the sense-1 schedule at p12 equals the oracle's at p19, so reading the D-01/D-01-p19 delta as the sense difference is wrong. gates.md corrected.",
+    "T18: provenance is build-attested, not self-reported - git.properties inside the image jar carries the commit id and git.dirty=false.",
+    "T18: independently re-derived D-01 at p8/p12/p19 and reproduced the oracle exactly, including the EmiAdjustment convergence loop that only fires at p8.",
+    "T19: re-ran Capture2.java unmodified and got BYTE-IDENTICAL output, excluding hand-editing and synthesis.",
+    "T19: found THREE reasoning errors in the orchestrator's own pass-2 write-up - the '17.01 cannot be a no-op' argument (safeRoundingForEMI returns the unrounded EMI when rounding would zero it), the 'both channels' claim (CurrencyData.inMultiplesOf is gated on decimalPlaces==0), and misattributed server-path citations (cumulative, not progressive generator).",
+    "T19: found a SECOND silently dropped contract input the orchestrator missed - daysInYearCustomStrategy is read by assembleFrom but never copied by the Builder copy-constructor - reframing the defect from one field to a class. The seam accepts a 19-component contract and honours 17.",
+    "T16b: the orchestrator's 'roughly 5 of 6 corrections applied' estimate was wrong - only 1.5 had landed. The worker verified instead of trusting it. Its mandatory consistency sweeps caught three restatements T17's change list never named, all in the coverage map."
+   ],
+   "uat": "NOT RUN - T13 is gated on T9/T11/T12/T18/T19/T21 and the harness (T7) does not exist yet. No conformance run was claimed.",
+   "outcome": "Major advance without crossing a gate. The evidence G-1 was waiting on now exists and is audited; Buyan answered every G-1 decision except the ratification signature and ratified HALF_UP + NBFI. Three capture passes, 12 production-settings parity candidates, and a structural defect found in the conformance rig itself: the capture seam silently drops 2 of the contract's 19 inputs, so the corpus has zero discriminating power on them. No vector promoted, no bar lowered, no gate crossed."
+  },
+  {
+   "fire": "20260818-173900",
+   "host": "local (Buyan's Mac)",
+   "oracle": "REACHABLE",
+   "context": "tier0-harness-schedule-poc",
+   "run_id": "2026-08-17-run1-harness-schedule-poc",
+   "workers_dispatched": 4,
+   "workers_completed": 4,
+   "workers_killed": 0,
+   "tasks_closed": [
+    "T21",
+    "T22",
+    "T4",
+    "T23"
+   ],
+   "tasks_raised": [
+    "T24",
+    "T25"
+   ],
+   "merges": 4,
+   "reviewer_catches": [
+    "T21 refuted the orchestrator's size-threshold claim (divergence at principal 4.00, absent at 50,000,000) and showed the killed worker's own X2 invariant failure was a false alarm from an invalid check",
+    "T22 retracted a FALSE rounding rule before it reached DEC-1 (nearest multiple under the tenant mode, not up; observed rounding DOWN 111,148.35 -> 111,100.00) and found the Path B captures ran at HALF_EVEN, not the ratified HALF_UP",
+    "T23 found the EMI re-adjust loop live inside the graded domain with 7 of 10 requests diverging, a silently discarded out-of-window disbursement, and that FrequencyYears does not always throw - blocking a ratification the driver would otherwise have taken under P-2"
+   ],
+   "uat": "not run - the run is still blocked at G-1",
+   "gate_status": "G-1 still open; now scoped to T23's three P0 corrections plus a re-review",
+   "vectors_promoted": 0,
+   "note": "Also rescued and PUSHED the previous fire's three stranded branches, which existed only locally, and salvaged their probe artifacts onto main."
+  },
+  {
+   "fire": "cloud-20260818-2000",
+   "host": "cloud sandbox (Claude Code Remote)",
+   "oracle": "UNREACHABLE - expected; all vector-capture and conformance work parked oracle_unreachable, and this fire spent itself entirely on work needing no live oracle",
+   "context": "tier0-harness-schedule-poc",
+   "run_id": "2026-08-17-run1-harness-schedule-poc",
+   "workers_dispatched": 8,
+   "workers_completed": 7,
+   "workers_killed": 1,
+   "tasks_closed": [
+    "T24",
+    "T25 (partial)",
+    "T26",
+    "T27",
+    "T28",
+    "T29",
+    "T30",
+    "T31"
+   ],
+   "tasks_raised": [
+    "T28",
+    "T29",
+    "T30",
+    "T31",
+    "T32"
+   ],
+   "merges": 7,
+   "opened_by_finding": "The PRIOR local fire 20260818-200001 dispatched T24 and T25 at 20:01:23 and checkpointed 104 seconds later with both still marked in_flight. No softhouse/T24-* or softhouse/T25-* branch was ever created. Two opus workers cannot complete in 104 seconds: both died and their work was lost. This is the SECOND consecutive recurrence of the dispatch-and-exit failure mode that SKILL.md STEP 5.5 exists to prevent (first: 17:22, which stranded 4,482 insertions). This cloud fire re-did both tasks properly, awaiting every worker.",
+   "premise_corrected": "RESUME.md asserted T24 'needs the oracle' because T23's P0-1 mentions capturing vectors. That was an over-read: P0-1 requires RE-SCOPING backlog item 8.3, not capturing the vectors now. Every figure T24 needed was already observed and committed by T23. All eight tasks this fire ran turned out to need no live oracle.",
+   "reviewer_catches": [
+    "T26 re-reviewed DEC-1 v3 and found a NEW P0 the drafter and T23 both missed: the EMI re-adjust loop was specified by its TRIGGER but never by its EFFECT. Over 24,000 in-graded-domain shapes the guard fires on 2,855; an implementation omitting the adoption test differs on 2,156 of them. No Run-1 vector trips the guard, so the corpus could not catch it.",
+    "T27 caught T25 SILENTLY DROPPING an item (T22 P1-12) while claiming nothing was dropped, MIS-PARKING five oracle-free items as oracle_unreachable, and leaving five documents asserting 'NOT YET INDEPENDENTLY AUDITED' beside the audits' own corrections - one of which (PATHB-REPORT.md:150-151) had become factually false. It verified the two 'fake PASS' invariant defects were genuinely fixed by MUTATION TESTING, corrupting committed captures by one minor unit to confirm the checks now fail.",
+    "T29 re-reviewed DEC-1 v4 and found TWO more P0s, the second serious: the PER-PERIOD INTEREST COMPUTATION - the core money calculation of the entire contract - was specified NOWHERE. The oracle performs three separately mc-rounded operations that cancel algebraically but not numerically; the textbook single-multiply reading the prose actually described diverges on 699 of 43,992 in-graded-domain shapes. ALL 13 COMMITTED OBSERVATIONS PASS EITHER WAY.",
+    "T30 closed what T27 called the largest remaining hole in the Path B evidence WITHOUT an oracle, re-deriving B-03/B-04 from source through the cross-year partial-period arm - digit-for-digit, 12/12 periods, both totals, at two rounding modes - and surfaced two normative facts nobody had recorded, including that FEB_29_PERIOD_ONLY does TWO things, so a port implementing only the days-in-year cap fails B-04, the corpus's only vector for that field. It also fixed an honesty defect: a report presented a model-DERIVED figure as an OBSERVED one.",
+    "T31 caught that its own worktree was a commit behind main and REBASED rather than silently reverting the driver's gate record - then proved its fix DISCRIMINATES, showing both wrong readings now fail while the corpus still passes them 13/13."
+   ],
+   "pattern_recorded": "THREE consecutive independent re-reviews (T23, T26, T29) each found NEW P0s in areas the previous review had not examined, and in EVERY case the committed corpus passed both the right and the wrong reading. 'The golden vectors pass' has so far been no evidence of correctness in this contract. The document is nonetheless converging: T29 verified the whole of T28's loop specification and ~20 of its citations exactly, and each new P0 has been fresh ground rather than re-opened ground.",
+   "uat": "not run - Run 1's UAT (T13) is gated on the harness and on conformance, which need the live oracle",
+   "gates_crossed": "none. G-1 remains OPEN and unratified - the driver declined to ratify three times (after T26, T29, and pending T32), because standing policy P-2 licenses ratification only on a CLEAN review and none came back clean.",
+   "vectors_promoted": "none. Nothing was promoted to the parity store; T27's promotability audit says nothing is promotable today, with 6 P0 admissibility items outstanding, every one needing a live oracle.",
+   "invariants_held": "PostgreSQL only; no vector synthesised; no contract-shaped capture storage while G-1 is open; no cutover; no user gate crossed"
+  },
+  {
+   "fire": "local-20260819-080001",
+   "date": "2026-08-19",
+   "context": "tier0-harness-schedule-poc",
+   "run_id": "2026-08-17-run1-harness-schedule-poc",
+   "oracle": "REACHABLE",
+   "tasks_dispatched": 8,
+   "tasks_completed": 8,
+   "tasks_lost": 0,
+   "task_ids": [
+    "T38",
+    "T39",
+    "T40",
+    "T41",
+    "T42",
+    "T43",
+    "T44",
+    "T45",
+    "T46",
+    "T47",
+    "T48"
+   ],
+   "dec1_revisions": "v6 -> v10",
+   "reviewer_catches": [
+    "T43: no P0 for the first time in eight rounds, but three P1s - one a known-wrong money sentence about charge row membership",
+    "T44: all three new capture sets ACCEPTED WITH REQUIRED CHANGES; no synthesised number, but three coverage claims did not hold",
+    "T43 and T44 independently found the same wrong citation with no shared context",
+    "T45 declined one of T43's P2s on evidence - the cell was not stale",
+    "T47 caught a TRANSPOSED consequence in the ORCHESTRATOR'S OWN BRIEF and refused to follow it",
+    "T44 and T46 corrected reference-oracle.md twice - both errors the orchestrator introduced folding in a handoff"
+   ],
+   "uat": "not run - no Go implementation exists yet; T7 (harness) is still blocked behind G-1",
+   "gates": "G-1 open by driver decision, NOT by a reserved item. G-2 unchanged.",
+   "notes": "The driver declined to ratify against the reviewer's explicit recommendation, and recorded the decision as reversible by Buyan in gates.md."
+  },
+  {
+   "fire": "local-20260819-140003",
+   "date": "2026-08-19",
+   "context": "tier0-harness-schedule-poc",
+   "run_id": "2026-08-17-run1-harness-schedule-poc",
+   "oracle": "REACHABLE",
+   "tasks_dispatched": 7,
+   "tasks_completed": 7,
+   "tasks_lost": 0,
+   "task_ids": [
+    "T49",
+    "T50",
+    "T51",
+    "T52",
+    "T53",
+    "T54",
+    "T6 (closed by driver)"
+   ],
+   "dec1_revisions": "v10 -> v12, RATIFIED",
+   "headline": "DEC-1 REVISION 12 RATIFIED and G-1 CLOSED without reaching Buyan, after ten independent review rounds. T6 done; T7 (conformance harness) unblocked with T9-T15 behind it.",
+   "reviewer_catches": [
+    "T49 (round 9, revision 10): no P0 - the SECOND consecutive no-P0 round - but P1-T49-2 found that contract.go:367-370 and section 4.9 BOTH still said the ACT/ACT arm had 'no capture in the corpus' and was un-re-derived. FALSE SINCE REVISION 5, leaked across five revisions and eight rounds, and sitting in a contract.go DOC COMMENT where ratification would have frozen it. The driver declined revision 10 on this alone.",
+    "T49 also caught an arithmetic error in revision 10's OWN worked check, wrong by exactly 10^2 (2,160,000 x 21,875 = 47,250,000,000, not 472,500,000 - the product of the MAJOR-unit 21,600). Re-derived and confirmed by the driver.",
+    "T49 reproduced the packed-whole-months closed form FROM FIRST PRINCIPLES (112,147,776 ordered pairs, predicate fires 45,253, both cross-terms 0) and audited 155 distinct citations across 329 occurrences with 0 out of range - a POSITIVE result as valuable as its findings.",
+    "T52's own restatement grep found a THIRD leak site for P1-T49-2 that T49 had not named (contract.go's FrequencyYears comment).",
+    "T53 (round 10, revision 11): no P0 AND NO P1 - the first round in ten with neither. It tested the load-bearing call three independent ways and confirmed B-2 an ERRATUM not an AMENDMENT, so ratification needed no gate.",
+    "T53 closed the last open [UNVERIFIED] by read-only SELECT: the tenant-global flag is 'false' on gerege - which is WHY T51 saw 0 differing cells, and which means the alias has never been witnessed delivering a wrong value.",
+    "T54 flagged a divergence between T53's own remedy and the driver's brief on one item and followed the brief; the driver adjudicated and the brief was correct (a TO_BE_CAPTURED label on something T50 HAS captured is a false label even when marked superseded).",
+    "T54 caught a markdown-parity bug of its own before commit and CLEARED a near-miss citation rather than leaving it a suspicion."
+   ],
+   "driver_catches": [
+    "CORRECTED THE STANDING BRIEF BEFORE DISPATCH: T46 and T48 had both recorded N46-1 as 'needs a tenant write on the shared server', which is why it sat TO_BE_CAPTURED for two fires. The driver re-derived the BLOCKER and showed a tenant write CANNOT separate the two axes (LoanScheduleAssembler:753 reads getMathContext() and :765 threads that same cached reference). T50 confirmed the correction and refuted the old blocker. THE EXPERIMENT TWO FIRES WAITED FOR COULD NEVER HAVE WORKED.",
+    "Re-derived every load-bearing claim rather than taking it on report: P1-T49-3's arithmetic (exactly 100x), P1-T49-2 by reading both sites, T50-N1's two down-payment constructors line by line, T50-N2's hard-wired null, T51's global-config scope at LoanScheduleAssembler:370-371, and T51's linearity ratio (12,345/14,814 = 0.833333 = 1,000,000/1,200,000).",
+    "SETTLED A DISPUTE BETWEEN TWO AGENTS AT SOURCE rather than by vote: T53 said getLoanProductRelatedDetail() does not exist; it DOES exist (354 codebase hits) but NOT on LoanApplicationTerms, where the method containing :1740 is toLoanProductRelatedDetail() at :1727 - which is exactly what makes the wrong name dangerous.",
+    "Reproduced every mechanical guardrail independently: sections 3.1/4.1 byte-identical across revisions 10-12, contract.go non-comment sha256 2530f13ecad961f2 over 96 lines, 0 non-comment diff lines.",
+    "FIXED T54's ONE DEFERRED FINDING BEFORE THE FREEZE instead of leaving it to a post-ratification gate: contract.go:1229's mis-resolving citation anchor, verified at source and re-proved comment-only afterwards.",
+    "FOUND THE NO-GO-TOOLCHAIN GAP: go is not installed on this host, so contract.go's 96 non-comment lines HAVE NEVER BEEN COMPILED and T10/T11/T13 are blocked. Recorded rather than installed unattended."
+   ],
+   "vectors_added": "NONE PROMOTED - but promotion is UNBLOCKED for the first time in the program, because the shape being ratified was the reason captures had to stay raw. T48-N4's leap-boundary trap governs any ACT/ACT promotion.",
+   "new_findings": [
+    "T50-N1 (P1) two down-payment rounding specifications in one class",
+    "T50-N2 (P1) the Path A seam can never exercise a charge - governs T7's design",
+    "T50-N3 a latent oracle defect is an ACTIVE port defect",
+    "T51: the alias crosses CONFIGURATION SCOPES; slot LIVE, setting INERT",
+    "T51: chargeCalculationType 5 - LINEARITY hid it, not the absence of tranches",
+    "fixedLength blocker: HTTP 403, thereIsInterest derived from the REQUEST"
+   ],
+   "backlog_closed": [
+    "stranded-branch triage from fire 20260818-200001: t24-probe salvaged, the sibling branch decided not-merged with the reasoning recorded"
+   ],
+   "verifier": "NOT RUN - no Go toolchain on this host, so go build / go test / the conformance run could not execute. NOT recorded as a pass. All seven tasks were docs/analysis/capture targets requiring no Go.",
+   "patterns_added": 7,
+   "gates": "G-1 CLOSED (ratified). G-2 still pending and parks T2 only.",
+   "notes": "Seven workers dispatched, seven completed and merged, none lost, no isolation violation, no scope breach. The driver DECLINED ratification twice (revisions 8 and 10) on one consistent discriminator - a known-false sentence about to be frozen - and ratified revision 12 because no known false sentence remained. No round returned a bare CLEAN and the record does not claim one did."
+  },
+  {
+   "fire": "20260819-170001",
+   "date": "2026-08-19",
+   "host": "local (Buyan's Mac)",
+   "oracle": "REACHABLE throughout, never restarted",
+   "run_id": "2026-08-17-run1-harness-schedule-poc",
+   "context": "tier0-harness-schedule-poc",
+   "tasks_completed": [
+    "T7",
+    "T55"
+   ],
+   "tasks_failed_infrastructure": [
+    "T7 attempt 1 (API 529 before first commit; nothing rescued because nothing existed)"
+   ],
+   "workers_dispatched": 3,
+   "workers_completed": 2,
+   "workers_lost": 1,
+   "isolation_violations": 0,
+   "scope_breaches": 0,
+   "driver_catches": [
+    "T55-N1 re-derived and confirmed digit for digit (6,015 minor units on a ZERO first segment)",
+    "G-3 gofmt would silently mutate the frozen ratified contract.go",
+    "D-1 the T50-N2 citation is :83 not :81",
+    "D-2 NEW: the same line hard-wires holidayDetailDTO too, so Path A is blind to holidays as well as charges",
+    "D-2a even on Path B only the FINAL period is holiday-adjusted"
+   ],
+   "gates_raised": [
+    "G-3",
+    "G-4"
+   ],
+   "verifier": {
+    "go_build": "exit 0",
+    "go_vet": "exit 0",
+    "go_test": "ok (conformance 0.582s)",
+    "gofmt": "only contract/contract.go - expected per G-3",
+    "conformance_sh": "exit 2 UNUSABLE - correct, no port and nothing promoted; NOT a pass",
+    "conformance_prove": "10 passed 0 failed",
+    "float_scan": "0 float-shaped JSON numbers in the vector store, 0 float types in the loanschedule Go tree"
+   },
+   "vectors_promoted": 0,
+   "contexts_at_parity": 0,
+   "headline": "No-Go-toolchain gap CLOSED without touching the host; the ratified contract.go COMPILES; T7 the bottleneck CLEARED; pair-difference proven the wrong promotion filter"
+  },
+  {
+   "fire": "20260819-200001",
+   "host": "Buyanmunkhs-Mac-mini",
+   "oracle": "REACHABLE (never restarted)",
+   "run_id": "2026-08-17-run1-harness-schedule-poc",
+   "context": "tier0-harness-schedule-poc",
+   "tasks_closed": [
+    "T8 (promotion slice)",
+    "T20",
+    "T9",
+    "T10",
+    "T57",
+    "T56",
+    "T11",
+    "T58"
+   ],
+   "tasks_in_flight_at_checkpoint": [],
+   "headline": "FIRST CONFORMANCE PASS IN THE PROGRAM - and the fire was then spent proving how little it meant. conformance.sh VERDICT: PASS (exit 0), 13 parity vectors, 1350 cells, 6/6 invariants, 0 inadmissible, --prove 20/20, go build/vet/test green, gofmt -l only the frozen contract.go (G-3). EVERY NUMBER DRIVER-RE-RUN, none accepted on report.",
+   "what_the_pass_does_not_mean": "T10 mutated its own port into each named wrong implementation and re-ran the real harness: FIVE died, FOUR survived, THREE of which move money. The worst - deleting the ENTIRE EMI re-adjust smoothing loop, which DEC-1 calls a normative obligation 'not backlog' - was reproduced INDEPENDENTLY BY THE DRIVER at 11/11 PASS, exit 0. T57 then captured the two shapes DEC-1 itself names, and the driver re-ran the IDENTICAL mutation: it now FAILS both new vectors with named cells and margins. That closed loop (mutate -> find the blind spot -> capture the shape -> prove the mutation now dies) is the fire's transferable result, recorded as pattern P-3.",
+   "still_ungraded": [
+    "textbook balance x rateFactor (3 rounded ops collapsed to 1)",
+    "rate factor without the trailing setScale",
+    "periodRatio -> RepaymentEvery"
+   ],
+   "false_pass_path_found_and_closed": "T9's F-1: unrecorded_fields was an unguarded escape hatch - withdrawing all nine cells of the month-end kill from P-02/P-02b while leaving 1999-01-01 in place gave 11/11 PASS, exit 0, WITH the capability still printed as killed. T56 closed it; the DRIVER REPRODUCED THE EXACT EXPLOIT against the fixed harness and got exit 2, both vectors INADMISSIBLE, with a diagnostic naming the offending divergent_cells entry and the unrecorded_fields that withdraws it.",
+   "folklore_that_died": "T9 re-derived from FINERACT SOURCE rather than from DEC-1's prose (three earlier parties had all used the same document-based method) and killed two beliefs everyone was carrying: (1) the oracle does NOT use the closed-form EMI - it folds Pi(1+r_i)*P/fn, no pow [ProgressiveEMICalculator.java:1838-1840, fold at :1819, DRIVER-CONFIRMED]; (2) there is NO 'final principal := remaining balance' - principal is always EMI - interest [RepaymentPeriod.java:339-344] and the residual lands on the LAST UNPAID PERIOD'S EMI [:1191-1206]. THE SECOND WAS TRAP #4 IN THE BRIEF THE DRIVER WROTE FOR T10 - the driver was wrong and corrected it mid-flight. Both reproduce the corpus identically ONLY because every promoted vector runs DAYS_30/DAYS_360 so every r_i is equal.",
+   "g4_hunt": "T9 was sent to find a second G-4 and FOUND NONE: DEC-1 rev 12 audited against source in six places, no disagreement. Where DEC-1 and the folklore differ, DEC-1 matches the source. That is a result, not an absence of one.",
+   "driver_catches": [
+    "D-4 the harness could not express a zero-money-margin structural kill, making its OWN 'UNBACKED monthend.reanchor' complaint unsatisfiable; spec corrected by T8-promote (it is a DECODE-time change via DisallowUnknownFields, so an admit.go-only fix would not have landed it)",
+    "D-5/D-6 latent harness defects that detonate on first real use (three silent continue paths in the replay loader; a frozen ParityPass == 0 assertion)",
+    "D-6 THIRD RECURRENCE found post-merge by the driver: --prove was 18/20, both failures stale proofs, one a hard-coded 'parity vectors PASS 11' that T57 moved to 13. Driver fixed both to assert the PROPERTY and verified proof 1 still discriminates (-impl=__none__ -> 2, -impl=loanschedule-go -> 0)",
+    "independent re-derivation of all 11 pass-3b candidates BEFORE any worker reported (11/11 digit for digit) plus a third-converter transcription audit of the promoted files (883 cells, 0 mismatches) and confirmation of P-01's 65,885,070 margin",
+    "D-6 recurred a FOURTH time, found by T58 in the very proof the driver had just de-staled: proof 19 asserted that withdrawing P-02/P-02b makes monthend.reanchor UNBACKED, which was only true while they were its ONLY backers - it failed BECAUSE COVERAGE WAS ADDED. The worker correctly refused to edit the harness and reported it rather than discarding 20 measured kills to get green. Driver fixed it to assert the property F-1b protects and VERIFIED IT DISCRIMINATES (0 occurrences on the pristine store, present on the withdrawn one). Recorded as pattern P-7."
+   ],
+   "gates_raised": [
+    "G-5 - DEC-1 contradicts itself on a ZERO interest rate: the prose says outside the graded domain, the enumerated list has no rate predicate, admit.go implements the list, and SELFTEST-01 (the harness's own self-test fixture) IS a zero-rate request. T10 implemented the list and flagged it rather than amending a ratified DEC-n. Driver recommends making the prose match the list. NOT RESERVED, blocks nothing."
+   ],
+   "process_defect": "The worker worktree cut-point defect recurred THREE times in one fire (T9's F-9, T57's N-5, and again on T56): workers handed worktrees cut BEFORE the merge of the artefact they were to work on. T9 was sent to review 11 promoted vectors and found only the four REFUSE-* files; it re-cut onto main itself. A reviewer who graded what was in front of them would have reviewed an empty corpus and reported it clean. Pattern P-5.",
+   "invariants_held": "PostgreSQL only, no prohibited engine or driver anywhere. Money is integer minor units; zero float32/float64/big.Float/ParseFloat in the port, zero float-shaped JSON number tokens store-wide. contract.go byte-identical and never gofmt'd. No cutover, no deposit-taking surface, no live endpoint, no third-party binding. Conformance never reported a PASS it had not earned.",
+   "final_state": "conformance.sh VERDICT: PASS (exit 0) - 29 parity vectors, 2354 graded cells, 58 ungraded, 0 inadmissible, 0 harness errors, 6/6 invariants, --prove 20/20, go build/vet/test green, gofmt -l only the frozen contract.go. THE CORPUS STARTED THIS FIRE AT ZERO PARITY VECTORS.",
+   "all_four_known_mutations_now_die": "At 13 vectors three money-moving mutations survived; at 29 all die. periodRatio -> RepaymentEvery 8 FAIL; textbook balance x rateFactor 2 FAIL; rate factor without the trailing setScale 1 FAIL; EMI smoothing loop deleted 10 FAIL (driver re-ran at 29). MOST OF THIS NEEDED NO ORACLE: T11 found 8 oracle-observed drift shapes captured two fires ago and NEVER PROMOTED, which closed one survivor BY OBSERVATION and killed two further counterfactuals (worst margin MNT 8,545,743.02). The two that did need the oracle were located by a 6,000-shape sweep and THE ORACLE CONFIRMED T11'S PREDICTION EXACTLY, including interest MNT 15,307.35 - folklore argued from source three times and observed zero times, ended by two captures.",
+   "t11_verdict": "ACCEPTED WITH REQUIRED CHANGES. THE PORT HAS NO ARITHMETIC DEFECT - 22 counterfactuals derived from source, none exposed one; T10's subtle 'first multiply against ONE is not a no-op' claim confirmed; two traps that would have broken every due date and clamp checked and the port reads the right one both times. Two non-money defects: F-1 (P1) and F-2 (P2) -> T59.",
+   "driver_correction_to_t11": "T11's F-1 says the port 'ignores cancellation'. It does not: generator.go:72 checks ctx.Err() ONCE AT ENTRY and never again [VERIFIED: one occurrence in generator.go, zero in emi.go], which is exactly consistent with T11's own measurement of 5.9s elapsed under a 50ms deadline. The fix is therefore NOT 'add a cancellation check' but 'check inside the loops where the time is spent'. Recorded that way in T59.",
+   "open_findings_carried": [
+    "T59 - T11's F-1/F-2 (port cancellation checked only at entry; ~n^2.4 cost, unbounded NumberOfRepayments, Memo cache dropped). NO ORACLE NEEDED.",
+    "T60 - T58's N-2: balance_roll_forward grades a placeholder the store README says nothing compares, so an honestly-declared unrecorded cell goes red. D-5 class. NO ORACLE NEEDED.",
+    "P-5 recurred FIVE times in one fire - workers handed worktrees cut before the merge of the artefact they were to work on. T11 got a tree with NO .go files in the port directory. The written rule is not the gap; nothing enforces it. Belongs in the dispatcher."
+   ]
+  }
+ ],
+ "database": {
+  "engine": "PostgreSQL",
+  "rule": "PostgreSQL is the ONLY database for every environment: the Fineract reference oracle, the Go module, vector capture, shadow/differential runs and CI. Fineract's shipped default is already Postgres [VERIFIED: fineract-provider/src/main/resources/application.properties -> org.postgresql.Driver, jdbc:postgresql://localhost:5432/fineract_tenants]. Bring the oracle up with the postgresql compose profile only.",
+  "prohibited": [
+   "Oracle Database (ojdbc, oracle.jdbc, OracleDialect, :1521, tnsnames)",
+   "MySQL (com.mysql.cj, docker-compose-mysql*.yml)",
+   "MariaDB (docker-compose-mariadb*.yml)"
+  ],
+  "go_driver": "github.com/jackc/pgx/v5",
+  "money_columns": "bigint minor units \u2014 never float/double precision/real/money",
+  "terminology": "'The oracle' in this program means the Fineract REFERENCE IMPLEMENTATION (.softhouse/reference-oracle.md), never Oracle Database."
+ }
 }

@@ -163,13 +163,67 @@ test is unconformance-testable by construction, and that fact belongs in the fro
 Steps 2–4 have not moved. What changed this fire is that the *evidence* the gate was waiting on now exists,
 and one new decision was added that nobody knew to ask.
 
-### G-2 · POLICY · third attempt for the T2 behaviour extraction?
+### G-2 · POLICY · third attempt for the T2 behaviour extraction? — **CLOSED: DECLINED**
 
 `policy.max_retries_per_task = 1` and `park_after_retries = true`. T2 has now used attempt 1 (rejected) and its one retry (rejected again), so it is **parked by policy** rather than by judgement. Not a money question — a budget one.
 
 The failure is systematic and diagnosable: **the analyst corrected each section the review named, but not the other sections that restate the same claim.** Month-end stepping was fixed in §4.4 and left wrong in §7.4 and the vector matrix; "cancels to 1" fixed in §4.2, left wrong in §7.4. A Go implementer reading the document still meets the original wrong instruction. A third identical attempt would likely repeat this.
 
 **Asking for:** permission for one more attempt with a *different task shape* — apply T3b's ten enumerated edits surgically, then run a mechanical consistency sweep that greps every corrected claim for restatements elsewhere in the document, rather than another free-form rewrite. If the answer is no, the alternative is to treat T3b's review as the specification of record and have the port graded against vectors alone.
+
+
+#### DECISION — **DECLINED**, local fire `20260820-080002`, 20 August 2026 (`chosen_by: agent`, Buyan may reverse)
+
+Closed by the `/softhouse-program` driver under `CLAUDE.md` § *Answering gates* — this is a **PRODUCT/process**
+item with **no RESERVED content**: it is not a cutover, not a DEC-n amendment, not a licence fact, not a
+regulatory sign-off. The standing instruction is *choose and recommend, do not ask*.
+
+**No third attempt. T2 stays parked permanently.** The specification of record for the progressive-loan
+schedule is, in order: **DEC-1 revision 12** (ratified, frozen in `contract.go`), **the 29-vector parity
+corpus**, and **T3b's re-review** (whose re-derivations are sound even though the document it reviewed was not).
+
+**Why, in one line: the artefact is not on any task's dependency path, and the failure mode it exhibits is one
+that prose has and vectors do not.**
+
+1. **It has been superseded twice over.** DEC-1 survived ten review rounds to ratification, and T9's
+   dedicated hunt for DEC-1/source disagreement audited six places and found **none** — *"where DEC-1 and the
+   folklore differ, DEC-1 matches the source."* A third prose attempt would be re-deriving, less rigorously,
+   what a ratified and independently re-reviewed artefact already states.
+2. **The gate's own diagnosis argues against spending the attempt.** The systematic failure is *"corrections
+   land in the section the review named but not in the sections that restate the same claim."* That is a
+   defect class **a document has and an executable corpus does not** — a vector cannot restate a claim
+   inconsistently in a second section. The program's answer to *"is the spec right?"* is now mechanical:
+   mutate the port, see whether the corpus kills it. That loop closed four money-moving mutations last fire.
+   Prose cannot be mutation-tested.
+3. **Opportunity cost, on the one fire that can reach the oracle.** An opus attempt spent on a superseded
+   document is an attempt not spent on corpus expansion — the thing measurably catching defects.
+
+**The real risk in declining was NOT the missing document — it was the existing one, and it was worse than
+the gate knew.** The driver read `docs/analysis/progressive-schedule-behavior.md` before deciding and found
+the rejected restatements still live, including one that is **refuted by an oracle observation the corpus
+already holds**:
+
+> §7.4 told a Go implementer that `2026-01-31 → 02-28 → 03-28` is *"exactly what a Go port's date-stepping
+> must replicate bit-for-bit."* **The oracle re-anchors on the disbursement seed.** Parity vector `P-02`
+> has period 2 due **`2024-03-31`**. The behaviour §7.4 prescribes is recorded in the corpus as the killed
+> counterfactual `MONTHEND-CONTINUE-FROM-CLAMPED-DAY`, and a port built from that paragraph **fails
+> conformance** — on the due date, at a money margin of exactly zero, which is why it is graded structurally.
+
+So the document was not merely stale; **it was an instruction to build a known-wrong port, sitting in the
+repo's only prose behaviour narrative.** Rather than buy a third rewrite, the driver neutralised the hazard
+directly and at no model cost:
+
+- a **⛔ SUPERSEDED — DO NOT IMPLEMENT FROM THIS DOCUMENT** banner at the top, naming the three sources of
+  record and stating that unmarked sections carry no warranty;
+- inline **⛔ CORRECTION** blocks at the three sites T3b enumerated and the driver re-verified as still
+  wrong: §7.4's month-end rule (refuted by `P-02`), §7.4's *"cancel to `1` regardless"* (refuted by the
+  §5.1 `setScale` step and by `LB-DEC31`, which separates the ACT/ACT arm by **6,015 minor units**), and
+  §8's unpinned MathContext (settled: `(19, HALF_UP)`, and probes at precision 12/8 are never promotable);
+- a correction to the `ls-008` row, which restated the refuted rule a fourth time.
+
+**Reversal condition.** If a Tier-A task finds it genuinely needs a prose schedule narrative that DEC-1 and
+the corpus do not supply, re-raise this gate with the specific gap named. *"It would be nice to have"* is not
+that; a named unanswerable question is.
 
 
 ---

@@ -1,5 +1,28 @@
 # Progressive Loan Schedule Generator — Behavior Analysis
 
+> # ⛔ SUPERSEDED — DO NOT IMPLEMENT FROM THIS DOCUMENT
+>
+> **Status: PARKED / REJECTED. Not the specification of record.** Decided by the `/softhouse-program`
+> driver on 2026-08-20 closing gate **G-2** (`chosen_by: agent`; Buyan may reverse).
+>
+> This document is attempt 2 of T2. It was **REJECTED** by independent re-review
+> (`.softhouse/reviews/T3b-progressive-schedule-behavior-rereview.md`) because corrections landed in the
+> section the first review named but **not** in the other sections restating the same claim. Those
+> restatements are still here. **At least one of them tells a Go implementer to build a behaviour the
+> reference oracle has since been observed to refute** (see §7.4).
+>
+> **The specification of record for the progressive-loan schedule is, in this order:**
+> 1. **DEC-1 revision 12** — ratified, `nexus/internal/apps/loanschedule/contract/contract.go` (frozen).
+> 2. **The parity corpus** — `.softhouse/vectors/loanschedule/`, 29 vectors observed from the pinned
+>    reference oracle (Fineract) at MathContext `(19, HALF_UP)`, graded by `.softhouse/conformance.sh`.
+> 3. **`.softhouse/reviews/T3b-progressive-schedule-behavior-rereview.md`** — the review, whose
+>    re-derivations are sound even though the document it reviewed was rejected.
+>
+> This file is retained only as a **provenance record of how the analysis was reached**, and for its
+> §9 emulator work. Every claim in it is superseded by the three sources above wherever they differ.
+> Corrections are marked inline as **`⛔ CORRECTION`** at the sites the re-review named; sections
+> without such a marker have **not** been re-audited and carry no warranty.
+
 **Scope of this document.** The arithmetic of `EmbeddableProgressiveLoanScheduleGenerator` and its immediate
 dependency chain (`ProgressiveLoanScheduleGenerator` → `ProgressiveEMICalculator` → `RepaymentPeriod` /
 `InterestPeriod` → `Money` / `MoneyHelper`), as implemented at the pinned Fineract checkout
@@ -935,6 +958,19 @@ Two independent mechanisms are involved and must both be captured:
   Feb correctly," is exactly what a Go port's date-stepping must replicate bit-for-bit — a naive
   `time.AddDate(0,1,0)` in Go has different month-end clamping semantics than Java's `LocalDate.plusMonths`, so
   this is a first-class golden-vector target (`ls-008`, `ls-009`, `ls-010`).
+
+  > **⛔ CORRECTION — THE BULLET ABOVE IS REFUTED BY THE ORACLE. DO NOT IMPLEMENT IT.**
+  > It describes *clamp and then continue from the clamped day* (`2026-01-31 → 02-28 → 03-28`) and calls
+  > that what a Go port "must replicate bit-for-bit". **The reference oracle does the opposite: it
+  > re-anchors each step on the disbursement-date seed.** OBSERVED: parity vector `P-02` (seed day 31)
+  > has period 2 due **`2024-03-31`**, not `2024-03-29`. The behaviour this bullet prescribes is
+  > recorded in the corpus as the *killed counterfactual*
+  > `MONTHEND-CONTINUE-FROM-CLAMPED-DAY` (capability `monthend.reanchor`,
+  > `.softhouse/vectors/loanschedule/`), and a port implementing it FAILS conformance. Note its money
+  > margin is exactly **zero** — under `DAYS_30`/`DAYS_360` every money column is unchanged — which is
+  > precisely why the corpus grades it *structurally*, on `period[1].due_date`. This was the first
+  > review's finding, corrected in §4.4 and left standing here. See `.softhouse/vectors/README.md`
+  > and DEC-1 rev 12.
 - **Interest day-count**: under the default `DAYS_30`/`DAYS_360` convention (§4.2), the day-count math is
   insensitive to the actual month length or leap-year status when the interest sub-period exactly spans one
   repayment period — `actualDaysInPeriod`/`calculatedDaysInPeriod` cancel to `1` regardless of whether the period
@@ -942,6 +978,13 @@ Two independent mechanisms are involved and must both be captured:
   date-generation mechanism (bullet above), not the interest-fraction formula** — the golden-vector value of these
   rows is mostly to pin down date-stepping parity, plus (secondarily) to confirm the Go port's `DAYS_30`/`DAYS_360`
   path doesn't accidentally leak real calendar-day sensitivity where Fineract has none.
+
+  > **⛔ CORRECTION — "cancel to `1` regardless" is the claim the re-review rejected.** It was corrected
+  > in §4.2 and left uncorrected here. The day-count fraction is **not** an identity that cancels away:
+  > there is a real, value-changing `setScale` step (§5.1, re-derived by the re-review), and under
+  > `DayCountActualActual` the segments are assigned to the calendar year they actually fall in, so the
+  > year lengths do **not** cancel — OBSERVED on capture `LB-DEC31`, where the arm is separated by
+  > **6,015 minor units**. Take §4.2 and DEC-1 rev 12, not this paragraph.
 
 ### 7.5 Single-period loans
 
@@ -965,7 +1008,15 @@ row assumes `interestMethod = DECLINING_BALANCE`, `downPaymentEnabled = false`, 
 `interestRecognitionOnDisbursementDate = false`, `installmentAmountInMultiplesOf = null`, `fixedLength = null`,
 `daysInYearCustomStrategy = null`, `allowFullTermForTranche = false` unless a column overrides it. `mc` for
 capture should be pinned explicitly (e.g. `MathContext(19, HALF_UP)` to match `MoneyHelper.PRECISION`, or the
-project's chosen capture precision — record whichever is used alongside the vectors). Timezone only affects how
+project's chosen capture precision — record whichever is used alongside the vectors).
+
+> **⛔ CORRECTION — this is SETTLED and is no longer a choice.** The re-review rejected leaving it open.
+> The production MathContext is **`(19, HALF_UP)`**, ratified in `CLAUDE.md`: `MoneyHelper.PRECISION = 19`
+> is a compile-time constant [`fineract-core/.../MoneyHelper.java:35,91-93`] and only the rounding **mode**
+> is tenant-configurable; the tenant is pinned to `HALF_UP` (`RoundingMode` ordinal 4). A capture taken at
+> precision 12 or 8 is a **discrimination probe and may never be promoted as a parity vector** — the
+> promotion contract enforces this in code by reading the MathContext off the file itself
+> (`.softhouse/vectors/README.md`). Timezone only affects how
 the civil disbursement date is derived/displayed upstream of this generator (it consumes a bare `LocalDate`); it
 is included here to pin the tz-to-civil-date derivation at the boundary, per the project's no-hardcoded-offset
 rule.
@@ -979,7 +1030,7 @@ rule.
 | ls-005-uneven-principal | 100000099 | 18.50 | 9 | MONTHS | 2026-01-15 | Asia/Ulaanbaatar | DAYS_30 | DAYS_360 | Odd (non-round) principal, non-zero rate — §6 residual absorption, general case |
 | ls-006-uneven-principal-long | 733333337 (7,333,333.37₮) | 21.75 | 24 | MONTHS | 2026-02-10 | Asia/Hovd | DAYS_30 | DAYS_360 | Long term (24mo), fractional-basis-point rate, uneven principal — compounding drift over many periods |
 | ls-007-single-period | 50000000 (500,000₮) | 15.00 | 1 | MONTHS | 2026-06-01 | Asia/Ulaanbaatar | DAYS_30 | DAYS_360 | Single-installment / bullet loan, §7.5 |
-| ls-008-monthend-jan31 | 150000000 (1,500,000₮) | 19.99 | 6 | MONTHS | 2026-01-31 | Asia/Ulaanbaatar | DAYS_30 | DAYS_360 | Disbursement on Jan 31 — exercises month-end date-stepping clamp (Feb 28, then Mar 28 not 31), §7.4 |
+| ls-008-monthend-jan31 | 150000000 (1,500,000₮) | 19.99 | 6 | MONTHS | 2026-01-31 | Asia/Ulaanbaatar | DAYS_30 | DAYS_360 | Disbursement on Jan 31 — exercises month-end date-stepping, §7.4 — ⛔ the parenthetical "(Feb 28, then Mar 28 not 31)" is REFUTED: the oracle re-anchors on the seed and emits Mar 31 (see §7.4 correction) |
 | ls-009-leapyear-feb29 | 200000000 (2,000,000₮) | 12.00 | 12 | MONTHS | 2028-02-29 | Asia/Hovd | DAYS_30 | DAYS_360 | Disbursement ON Feb 29 (2028 is a leap year) — exercises leap-day date-stepping, §7.4 |
 | ls-010-leapyear-crossing | 180000000 (1,800,000₮) | 16.40 | 6 | MONTHS | 2027-11-30 | Asia/Ulaanbaatar | DAYS_30 | DAYS_360 | Term (Nov 2027 → May 2028) crosses into leap-year February; also month-end (Nov 30) start |
 | ls-011-weekly | 60000000 (600,000₮) | 30.00 | 12 | WEEKS | 2026-05-04 | Asia/Ulaanbaatar | DAYS_30 | DAYS_360 | WEEKS frequency — exercises `rateFactorByRepaymentEveryWeek` (7-day multiplier) path distinct from monthly |
