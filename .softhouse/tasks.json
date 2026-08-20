@@ -1324,6 +1324,27 @@
    "branch": "softhouse/T61-mutation-hunt-round-2",
    "contract_independent": false,
    "note": "REQUIRES THE ORACLE - only a local fire can run it. Raised by the driver, fire 20260820-080002, from the standing caveat in RESUME.md that the fold and the closed-form EMI are not guaranteed to agree at precision 19 once the r_i differ. Mutants must be fully reverted before commit; DEC-1 may not be amended (raise a gate instead); .softhouse/vectors/README.md is owned by T60 this fire."
+  },
+  {
+   "id": "T62",
+   "title": "Give --prove a proof covering the unrecorded-cell path (T60 backlog)",
+   "description": "T60 closed the defect where unrecorded_fields was honoured by diffSchedule and ignored by all six property invariants, and added a 6-sub-test Go regression test proven to discriminate against two mutations. But --prove - the mutation-proof suite the DRIVER re-runs independently - has no proof covering this path. This defect class has now escaped twice (T58-N2 found it as a red-on-honesty symptom; T60 found the silent-false-green form the driver then reproduced). Add a --prove proof that withdraws a cell an invariant depends on and asserts the run reports NOT RUN rather than either a false HOLD or a false VIOLATION. Follow P-7: assert the property, not today's corpus counts - a hard-coded vector count is what made proofs go stale twice before.",
+   "agent_role": "test_writer",
+   "executor": "agent",
+   "model": "opus",
+   "target": "test",
+   "files_hint": [
+    ".softhouse/conformance.sh",
+    "nexus/internal/apps/loanschedule/conformance/"
+   ],
+   "context": "harness",
+   "dependencies": [
+    "T60"
+   ],
+   "status": "pending",
+   "attempts": 0,
+   "contract_independent": true,
+   "note": "Raised by T60, fire 20260820-080002. NEEDS NO ORACLE. T60 also flagged a structural stale-fact problem: it corrected the vector-store README's counts and added an 'update in the same commit' instruction, but nothing enforces it - a test asserting the README's figures against the harness's own counts would, and that is a NEW RULE needing its own review, deliberately left out of T60's scope."
   }
  ]
 }
