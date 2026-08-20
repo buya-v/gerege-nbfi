@@ -104,3 +104,89 @@ numbers from a worker's report.
 Oracle for this fire: `fineract-fineract-1` (`fineract:latest`) up ~44 h healthy, `fineract-db-1`
 (`postgres:18.3`) up ~2 days healthy, `/fineract-provider/actuator/health` → `{"status":"UP"}`.
 Pinned checkout `/Users/buv/fineract` at `426a23544`, clean.
+
+---
+
+# T66's verdict, and the driver's own re-derivation of it
+
+**T66 returned verdict (B): provably inert on the graded domain — and it REFUTED the driver's
+hypothesis at step 4.** The driver did not accept that from the report. All three of T66's legs were
+re-run or re-derived by the driver independently, below. **The hypothesis was wrong and T66 was
+right**, which is the outcome the honesty rule exists to make reportable.
+
+## Where the driver's chain was wrong
+
+Steps 1-3 hold and are now *observed*, not merely argued: 68 zero-EMI mechanism rows appear in the
+oracle capture, and `T64-ZP-B` carries 40 of them after the last not-fully-paid period `L`.
+
+**Step 4 was wrong, and wrong for a reason more general than the driver's own guess at how it might
+fail.** The driver's note above speculated that ZP-B is inert because its tail rows have a zero
+outstanding balance — a property of that one shape. The real reason is structural and applies to
+every shape: the lookup does not run on the live model at all. It runs on a **deep copy** (`:1226`)
+that `calculateRateFactorForScheduleTillDateInclusive` (`:1237`, `:1791-1803`) has re-rated only up
+to `tillDate`, **zeroing `rateFactor` and `rateFactorTillPeriodDueDate` on every interest period
+whose due date is after it** [VERIFIED by the driver at `ProgressiveEMICalculator.java:1791-1803`].
+And `tillDate` is anchored at the **disbursement**, not maturity: `addDisbursement` passes
+`getEffectiveRepaymentDueDate(..., operation.getSubmittedOnDate())` into
+`calculateEMIValueAndRateFactors` [VERIFIED at `:137-151`], which reaches
+`calculateLastUnpaidRepaymentPeriodEMI(scheduleModel, calculateFromRepaymentPeriodDueDate)` at
+`:747`. So on the copy a tail period's **own** interest is zero by construction and cannot supply
+the `u > 0` the precondition needs. The driver's step 4 reasoned about the live model and never
+noticed the copy is truncated — which is the whole point of a method named
+`...TillDateOnScheduleModelCopyAndDefer`.
+
+The only surviving route is **inheritance** down the `u` chain from period `f`, via
+`calculatedDueInterest += previous.getUnrecognizedInterest()` [VERIFIED at
+`RepaymentPeriod.java:261-263`]. T66 closes that with the aggregate identity `Σ emi = P + I` that
+`:1189-1207` has just enforced — which is precisely the step T69 marked `[UNVERIFIED]` at
+`emi.go:315-325` and named T66 to settle.
+
+## What the driver re-ran, rather than read
+
+| leg | driver's independent result |
+|---|---|
+| **Source proof, crux (a)** | CONFIRMED at `:1791-1803` — post-`tillDate` rate factors set to `BigDecimal.ZERO`. |
+| **Source proof, crux (b)** | CONFIRMED at `:137-151` → `:747` — `tillDate` anchored at the disbursement. |
+| **Inheritance term** | CONFIRMED at `RepaymentPeriod.java:261-263`. This is why the proof needs the `u_k` cascade and cannot stop at "zeroed rate factors ⇒ zero". |
+| **Oracle capture, pass 3h** | **RE-RUN BY THE DRIVER** from a scratch worktree with `CAP_OUT_DIR=/tmp`. `capturesCanonicalSha256` = `fdd751a209c9518b157ca6fd70aef06a91acff94953e1f8cc6c4d45162b90b73` — **identical** to the committed artefact. **8/8 rig calibrations reproduced cell-for-cell**, including `P-CAL-ZPA`/`P-CAL-ZPB` against the already-promoted `T64-ZP-A`/`T64-ZP-B`. Empty stderr. Effective MathContext `(19, HALF_UP ordinal 4)`. Every tenant logged `HALF_UP`. |
+| **Mechanism rows** | **RE-COUNTED BY THE DRIVER** from its own run: 18 cases, **416 mechanism rows, 0 with `futureUnrecognizedInterest != "0.00"`, 0 with `interestMovedUpward != false`**, `pathIdentity.identical == true` on **18/18**. 68 zero-EMI rows present, so the shape under study is genuinely exercised. |
+| **Port census** | **RE-RUN BY THE DRIVER** (`TestT66ZeroEMICensus`, 193 s): `admitted=21060, shapes with a zero-EMI period=9437, of which the zero-EMI period carries POSITIVE calculatedDueInterest=156, of which such a period lies STRICTLY AFTER L = 0`. The 156 and the 0 match T66's report exactly. Every logged example sits `at or before L`, at the rounding floor. |
+| **Scope** | `git diff main...softhouse/T66-unrecognized-interest` touches **nothing** under `nexus/` or `.softhouse/vectors/`. The seam class `EmbeddableProgressiveLoanScheduleGenerator.java` is **byte-identical** (`bf397f0b…`) — the mechanism columns are read through a delegating `Proxy`, with path identity against the pristine seam as the guard. |
+| **P-9 (prediction first)** | Commit order verified: `1c95499` PREDICTION at 14:27:41, capture output `b995572` at 14:37:22. The later re-run (`7a09130`) changed only `capturedAtUtc` and `Capture3h.java`'s own sha — **observations byte-identical, canonical digest unchanged**, which is a free determinism control. |
+
+Three independent runs of pass 3h now agree on the canonical digest.
+
+## FINDING P2-1 — the written sufficient condition in step (e) is stated more generally than its derivation supports
+
+Recording this under **P-13** (*a deliverable that is a rule can be false even when everything
+executable is right*), and because T66 promoted no vector, changed no money and its conclusion is
+otherwise confirmed, it is **P2 — correct the wording, do not withdraw anything.**
+
+`PREDICTION.md` §2 step (e) writes:
+
+> `u_L = max(0, u_f - P - I + Σ_{j≤f} emi_j) ≤ max(0, cdi_f - P - I + Σ_{j≤f} emi_j)` … `u_L = 0`
+> as soon as `cdi_f ≤ P + emi_f`
+
+The final implication needs `Σ_{j≤f} emi_j ≤ I + emi_f`. That is **exact when `f = 0`** (the
+ordinary shape, where the sum is just `emi_0 = emi_f`), and the document does say `f = 0` is the
+ordinary shape in step (b) — but the sufficient condition is written without carrying that premise,
+and `I ≥ Σ_j dueInterest_j` with `dueInterest_j ≤ emi_j` gives the inequality the **wrong way round**
+for general `f`. The fix is wording only: state the condition as holding **for `f = 0`, or wherever
+`emi_j = 0` for all `j < f`**.
+
+This does not weaken the verdict. The `f ≥ 1` case is covered empirically and deliberately — T66
+captured `T66-M-DISB-ON-DUE` and `T66-M-DISB-ON-DUE-HR` for exactly that shape, both observed inert
+— and the 21,060-shape census covers it again. **Proof for `f = 0`, observation for `f ≥ 1`** is the
+honest description of what is established, and that is what the document should say.
+
+## What the driver did NOT verify, so silence is distinguishable from not looking
+
+- The `u_k` cascade's **intermediate** state on the till-date copy is not observable through the
+  Proxy and was not observed by anyone. T66 says this itself in `PASS3H-REPORT.md:140-146` — "It is
+  **not** an observation of the copy's internal state" — before the driver could raise it. The
+  oracle confirms the **outcome**; the proof and the port census cover the mechanism.
+- T66's report says "6,377 with a zero-EMI tail"; the driver's re-run of the census reports "9,437
+  shapes with a zero-EMI period". These are different predicates (tail vs anywhere) and are not in
+  conflict, but the driver did not reconcile them and does not assert they agree.
+- The proof's premises lapse under multi-tranche, payments, credits, capitalized income, re-aging
+  and interest pauses. T66 records that list; none of it is graded today.
