@@ -596,6 +596,42 @@ stops being the one who may edit it.** Answering "yes, reformat it" would be the
 ratified file on aesthetic grounds hours after ratification — precisely the discipline DEC-1's amendment
 clause was written to impose. Recording it and working around it costs nothing.
 
+### Driver check, local fire `20260820-080002` — **the feared failure mode is already prevented MECHANICALLY, and loudly**
+
+G-3's stated risk is a *silent* mutation: *"an editor format-on-save, or a `coder` who runs `gofmt -w ./...`
+from the repo root, silently mutates a frozen ratified artefact — and the diff looks like harmless formatting
+noise in review."* The driver tested whether that is actually true, rather than reasoning about it.
+
+**It is not. The mutation is not silent — it halts the harness on the very next run.**
+
+`.softhouse/vectors/PIN.json` carries `contract_sha256`, and `conformance/admit.go:87-93` compares it against
+the file's real digest on every run. The driver **demonstrated** this rather than reading it: appending a
+single trailing newline to `contract.go` — a semantically inert, whitespace-only change of exactly the class
+gofmt would make — produced
+
+```
+--- WHY THIS RUN CANNOT BE TRUSTED ---
+    * frozen contract nexus/internal/apps/loanschedule/contract/contract.go digest c5bf0918… does not match
+      the store pin 0db73d4a…: the corpus is expressed in the ratified DEC-1 shape and a change to that shape
+      invalidates it. This is not a harness bug to work around — either the edit needs a gate, or the corpus
+      needs re-validating and the pin re-stamping
+
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+```
+
+`contract.go` was restored byte-for-byte immediately (`0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139`,
+matching PIN.json) and `git status --porcelain` came back empty.
+
+**What this changes for the decision.** G-3 remains Buyan's — it concerns a frozen ratified artefact, and the
+driver still declines to reach into one on aesthetic grounds. But its *urgency* is now measured rather than
+assumed: a stray `gofmt -w` cannot slip through review as formatting noise, because the next conformance run
+refuses to produce a verdict at all and names the file. **Option A costs nothing and is protected by a guard
+that provably fires.** The gate is safe to leave open indefinitely.
+
+**Backlog (not part of the gate).** `.softhouse/conformance.sh:31` defines `CONTRACT_REL` and never uses it —
+the real check lives in `admit.go`. A vestigial shell variable that looks like a guard is mildly misleading to
+the next reader; delete it or wire it up.
+
 ### Standing instruction until this gate is answered — already in force
 
 1. **No task may run `gofmt -w`, `go fmt`, or a format-all over
