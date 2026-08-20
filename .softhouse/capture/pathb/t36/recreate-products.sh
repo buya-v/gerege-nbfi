@@ -96,4 +96,11 @@ for pair in "01:calc-B-01-baseline:B-01-baseline" \
 done
 
 echo
-shasum -a 256 "$O"/B-0*-raw.json
+# T99 (sweep for the F-2 shape): hardened digest instrument, not a $PATH-resolved `shasum`.
+. "$D/sha256.sh"
+sha256_init || { echo "REFUSED: $SHA256_ERROR" >&2; exit 1; }
+echo "# sha256 by $SHA256_TOOLS"
+for f in "$O"/B-0*-raw.json; do
+  sha256_file "$f" || { echo "REFUSED: $SHA256_ERROR" >&2; exit 1; }
+  printf '%s  %s\n' "$SHA256_RESULT" "$f"
+done

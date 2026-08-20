@@ -18,7 +18,17 @@ E=$W/t36/out/emiloop
 PREFIX_COMMIT=813acb1                     # T80's own pre-F-1 attest.py
 cd "$W"
 
-snap() { shasum -a 256 "$E"/* | sed "s|$W/||"; }
+# T99 (sweep for the F-2 shape): this snapshot IS the evidence this proof turns on — a bare
+# `shasum` on $PATH could make BEFORE and AFTER agree by fiat.  Hardened instrument instead.
+. "$W/t36/sha256.sh"
+sha256_init || { echo "REFUSED: $SHA256_ERROR" >&2; exit 1; }
+snap() {
+  for f in "$E"/*; do
+    [ -f "$f" ] || continue
+    sha256_file "$f" || { echo "REFUSED: $SHA256_ERROR" >&2; exit 1; }
+    printf '%s  %s\n' "$SHA256_RESULT" "$f"
+  done | sed "s|$W/||"
+}
 
 echo "=== T85 F-1 — a breached attest.py run must write NOTHING"
 echo "run at $(date -u +%Y-%m-%dT%H:%M:%SZ)"

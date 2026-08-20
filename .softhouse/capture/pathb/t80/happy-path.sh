@@ -38,29 +38,39 @@ echo "PASS lines: $(grep -c '^  PASS' "$O/recapture-gerege/preconditions.txt")"
 echo "FAIL lines: $(grep -c '^  FAIL' "$O/recapture-gerege/preconditions.txt" || true)"
 echo
 
+# T99 (sweep for the F-2 shape): the "1 distinct digest across 6 sets" claim below is the whole
+# point of this leg, and a bare `shasum` on $PATH could make all six agree by fiat.  The hardened
+# instrument computes them: absolute-path tools, known-answer tested every run, two independent
+# implementations required to agree.
+. "$W/t36/sha256.sh"
+sha256_init || { echo "REFUSED: $SHA256_ERROR" >&2; exit 1; }
+echo "# sha256 by $SHA256_TOOLS"
+sets() {
+  echo "$W/out/$1-raw.json" \
+       "$W/t36/out/recapture-gerege/$1-raw.json" \
+       "$W/t76/out/recapture-gerege/$1-raw.json" \
+       "$O/recapture-gerege/$1-raw.json" \
+       "$O/bash-recapture-gerege/$1-raw.json" \
+       "$O/attest-gerege/$1-raw.json"
+}
+digests() {
+  for f in $(sets "$1"); do
+    [ -f "$f" ] || continue
+    sha256_file "$f" || { echo "REFUSED: $SHA256_ERROR" >&2; exit 1; }
+    printf '%s  %s\n' "$SHA256_RESULT" "$f"
+  done
+}
+
 echo "--- byte-identity vs the corpus T77 confirmed (four distinct digests, five sets)"
 for n in B-01-baseline B-02-multiplesof100 B-03-diycs-fullleapyear B-04-diycs-feb29only; do
-  shasum -a 256 \
-    "$W/out/$n-raw.json" \
-    "$W/t36/out/recapture-gerege/$n-raw.json" \
-    "$W/t76/out/recapture-gerege/$n-raw.json" \
-    "$O/recapture-gerege/$n-raw.json" \
-    "$O/bash-recapture-gerege/$n-raw.json" \
-    "$O/attest-gerege/$n-raw.json" 2>/dev/null
+  digests "$n"
   echo
 done
 
 echo "--- distinct digests per capture id (expect exactly 1 each)"
 rc=0
 for n in B-01-baseline B-02-multiplesof100 B-03-diycs-fullleapyear B-04-diycs-feb29only; do
-  c=$(shasum -a 256 \
-        "$W/out/$n-raw.json" \
-        "$W/t36/out/recapture-gerege/$n-raw.json" \
-        "$W/t76/out/recapture-gerege/$n-raw.json" \
-        "$O/recapture-gerege/$n-raw.json" \
-        "$O/bash-recapture-gerege/$n-raw.json" \
-        "$O/attest-gerege/$n-raw.json" \
-      | awk '{print $1}' | sort -u | wc -l | tr -d ' ')
+  c=$(digests "$n" | awk '{print $1}' | sort -u | wc -l | tr -d ' ')
   echo "$n: $c distinct digest(s) across 6 independently produced sets"
   [ "$c" = "1" ] || rc=1
 done

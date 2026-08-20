@@ -403,6 +403,14 @@ def whence(path, index_path=None):
     if not hits:
         print('RESULT: NOT FOUND. These bytes are not any capture this index accounts for.')
         return 1
+    tenants = sorted({(r['tenant'] or 'NOT ESTABLISHED IN-BAND') for r, _ in hits})
+    print('records sharing these bytes: %d' % len(hits))
+    if len(hits) > 1:
+        print('NOTE: several committed captures are BYTE-IDENTICAL, so content addressing returns '
+              'all of them. That is a fact about the corpus, not a weakness of the lookup: the '
+              'four Path B response bodies are identical across tenants and rounding modes, which '
+              'is exactly why a directory needs a provenance record at all. Tenants recorded for '
+              'these bytes: %s.' % ', '.join(tenants))
     for rec, fn in hits:
         print('')
         print('FOUND as %s/%s' % (rec['path'], fn))
