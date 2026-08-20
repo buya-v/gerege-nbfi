@@ -2136,9 +2136,30 @@
       "dependencies": [
         "T87"
       ],
+      "status": "done",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-200002, from its own post-merge verification. Needs no oracle except to confirm conformance. Small and fully specified. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260820-230001: DONE on softhouse/T102-literal-fork-sha (dd69927, a48da58, 61e7102) on top of T82 head 55409cf. FORK POINT MEASURED FIRST, not accepted from the brief: git merge-base main softhouse/T82-pass3i-defects = 8da4b831b96a146c2b46ad34d85ed098395de160, driver re-ran and confirms the same value. Pinned in a committed FORK-POINT-SHA file read by prove-guards-go-red.sh, with FOUR loud refusals (missing / non-hex / abbreviated / not-a-commit), all exercised, all exit 2 BEFORE any proof row runs, and NO computed fallback anywhere. IT REFUTED A STEP IN THE DRIVER'S OWN BRIEF: a scratch WORKTREE cannot reproduce the defect, because the ref `main` in a worktree still points at the PRE-merge commit, so merge-base resolves to the real fork point and the PRE-FIX rig passes 25/25 FOR THE WRONG REASON. The bug requires `main` ITSELF to be the merge commit, so it used a throwaway CLONE with its own main. A worker who verified on a scratch worktree and stopped would have reported a false green - the THIRD consecutive failure of this same task. FOUR-CELL MATRIX: pre-fix/branch 25/25; pre-fix/clone-merged 18-as-expected-7-not (exactly the seven COUNTERPROOF rows E-1, E-3, D-1x2, D-2x3; no GUARD, CONTROL or REGRESSION row moved); post-fix/branch 25/25; post-fix/clone-merged 25/25. Rows 3 and 4 BYTE-IDENTICAL after normalising the repo root (diff exit 0), which is stronger than matching scores. Mechanism in one number: the extracted baseline run-pass3i.sh moved from d84ec7bf (real pre-T82 bytes) to 3ca0d3f6, which is the sha the SAME transcript prints for the branch's own shipping file - it was diffing the fixed code against itself. SWEEP FOUND THREE SITES THE BRIEF DID NOT NAME: mutate.py:13 still carried the v1 `git show main:` form T98's fix never touched, and T82.md restated the wrong claim in three places including a [VERIFIED:] provenance command that, re-run post-merge, would show the FIXED source and appear to refute its own finding (P-12). Deliberately left T82.md:521 (a claim ABOUT main, not a baseline pin - different defect class) and listed five things the sweep could not have found. DRIVER-VERIFIED INVARIANTS: vectors diff EMPTY, nexus/ diff EMPTY, contract.go untouched. Worker reports gofmt -l names exactly contract.go and bash conformance.sh VERDICT PASS exit 0 / 42 parity / 5576 cells / 0 invariant violations; oracle never contacted (git show + python3 only).",
+      "branch": "softhouse/T102-literal-fork-sha"
+    },
+    {
+      "id": "T103",
+      "title": "INDEPENDENT review of T102 \u2014 reproduce the merge-state acceptance yourself, in a clone",
+      "description": "Paired reviewer for T102. The whole point of T102 is an assertion about what happens ON MERGE, which has now been got wrong twice; the review must re-run it, not read it.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/reviews/",
+        ".softhouse/capture/t74-multiplesof/T82-guard-proofs/"
+      ],
+      "context": "tier0-harness-schedule-poc",
+      "dependencies": [
+        "T102"
+      ],
       "status": "in_progress",
       "attempts": 1,
-      "note": "Raised by the driver, local fire 20260820-200002, from its own post-merge verification. Needs no oracle except to confirm conformance. Small and fully specified. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus."
+      "note": "Raised by the driver, local fire 20260820-230001. Its verdict gates merging T82+T87+T102 together. NEEDS NO ORACLE except to confirm the conformance verdict."
     }
   ]
 }
