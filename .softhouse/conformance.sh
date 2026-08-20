@@ -139,10 +139,21 @@ if [ -z "${BASH_VERSION:-}" ]; then
   conformance_shell_why="BASH_VERSION is unset, so this shell is not bash at all."
 elif [ "$conformance_psub_seen" != "$CONFORMANCE_PSUB_TOKEN" ]; then
   # Deliberately phrased as an OBSERVATION, not as a diagnosis. The guard knows
-  # the token did not arrive; it does NOT know which of "the construct is
-  # unavailable" and "the probe was never allowed to run" is true, and inventing
-  # one would be the same class of fiction as the old `no Go toolchain` line.
-  conformance_shell_why="this IS bash ${BASH_VERSION}, but the process-substitution probe did not deliver its token: expected [${CONFORMANCE_PSUB_TOKEN}], observed [${conformance_psub_seen}]. Either '< <(...)' does not work in this shell, or this shell stopped the probe from running at all (a restricted 'bash -r' refuses the redirection the probe needs)."
+  # the token did not arrive; in general it does NOT know which of "the construct
+  # is unavailable" and "the probe was never allowed to run" is true, and
+  # inventing one would be the same class of fiction as the old `no Go toolchain`
+  # line. The ONE case it can name for certain is a restricted shell, which
+  # advertises itself in `$-` [VERIFIED: T97 — `$-` is `hrBc` under `bash -r` on
+  # 3.2.57, 5.2.37 and 5.3.9]. Worth naming, because `bash -r` is the one refusal
+  # here where process substitution itself is fine: `bash -r -c 'IFS= read -r v <
+  # <(printf "%s\n" X)'` returns X. What `bash -r` cannot do is the rest of the
+  # harness — `cd` is refused, so SCRIPT_DIR and REPO_ROOT come out EMPTY, and
+  # every `>` redirection is refused too. Refusing it is correct; the old guard
+  # admitted it and the run then died at exit 2 blaming a missing Go toolchain.
+  conformance_shell_why="this IS bash ${BASH_VERSION}, but the process-substitution probe did not deliver its token: expected [${CONFORMANCE_PSUB_TOKEN}], observed [${conformance_psub_seen}]. Either '< <(...)' does not work in this shell, or this shell stopped the probe from running at all."
+  case "$-" in
+    *r*) conformance_shell_why="$conformance_shell_why It is the latter: this is a RESTRICTED shell (\$- = $-, i.e. 'bash -r'). A restricted shell refuses the redirection the probe needs AND the 'cd' this harness needs, so it could never have run the harness either." ;;
+  esac
 fi
 if [ -n "$conformance_shell_why" ]; then
   printf '%s\n' \
