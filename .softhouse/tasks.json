@@ -1759,9 +1759,9 @@
       "dependencies": [
         "T75"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "Raised by the driver, fire 20260820-170001, from T75's approval findings. Contract-independent, needs no oracle - runnable on a cloud catch-up fire. || local fire 20260820-200002: DISPATCHED (wave 1), isolated worktree, opus. Files disjoint from T80 (pathb/) and T83 (t83-nonamortizing/), so it runs concurrently."
+      "note": "Raised by the driver, fire 20260820-170001, from T75's approval findings. Contract-independent, needs no oracle - runnable on a cloud catch-up fire. || local fire 20260820-200002: DISPATCHED (wave 1), isolated worktree, opus. Files disjoint from T80 (pathb/) and T83 (t83-nonamortizing/), so it runs concurrently. || local fire 20260820-200002: DONE on softhouse/T82-pass3i-defects (402a1da, 0101fbb). EVERY REWRITTEN GUARD DEMONSTRATED RED, which is what this task shape has failed to do four times. E-1 took option 1 (hand-written 36-entry CASE_PRECISION literal, no default) and its load-bearing evidence is a COUNTERPROOF: the identical mutation exits 1 on the new code and exits 0 ('validation OK - 37 captures', all calibrations green) on the old. It also showed the old loop's post-condition WAS literally the predicate the next line tested, so _unregistered was [] for EVERY POSSIBLE EXPECTED_IDS - an empty-domain guard. E-3 was dead in BOTH directions, stronger than the brief stated, and T82 verified that before editing: both arms sharing a non-ratified mode -> first conjunct false -> passes; arms differing -> never reached, because differing modes die at the `varying` check two lines earlier. Guards demonstrated by a harness that SLICES THE HEREDOC OUT OF run-pass3i.sh BYTE-FOR-BYTE and runs that exact text, so it cannot drift from what ships: 16 outcomes, 16 as expected, five deliberate green controls. A-1's mechanical sweep earned its keep - it found a THIRD census copy the brief did not name, pass3-supersession-banner.txt, the pasteable SOURCE the two reports were built from; fixing only the reports would have left the wrong census on disk for the next paste. C-4 confirmed 21 three independent ways. Invariants: vectors diff EMPTY, promotion script regenerates all six vectors byte-identical, conformance 42 parity / 5576 cells / exit 0 unchanged, gofmt -l names exactly contract.go, nexus/ untouched, pathb/ and t83-nonamortizing/ never opened."
     },
     {
       "id": "T83",
@@ -1940,6 +1940,45 @@
       "status": "pending",
       "attempts": 0,
       "note": "Raised by the driver, local fire 20260820-200002, from T77 F-1 as re-raised by T80. NEEDS THE ORACLE to run the attack suite. Pair with an independent reviewer."
+    },
+    {
+      "id": "T92",
+      "title": "A committed capture artefact carries a false claim about its own preconditions (Capture3i.java:442)",
+      "description": "Raised by T82, which could not fix it: `Capture3i.java:442`'s `extends` string is BAKED INTO THE COMMITTED CAPTURE and claims precondition 17 was 'an EXHAUSTIVE per-id table'. That was FALSE at capture time - T82 proved the table was constructed by looping over EXPECTED_IDS, so the guard had an empty domain and the claim describes a check that could not fire. Correcting the string requires a RE-CAPTURE and therefore the oracle. This matters more than a stale comment: the string is inside the capture, so it travels with the evidence and a future reader takes it as an attestation of how the capture was validated. Decide and record whether to (i) re-capture with the corrected string, or (ii) leave the bytes and add an external, committed erratum that any reader of that capture will encounter - and if (ii), prove the erratum is discoverable from the capture itself, not just filed near it. Do NOT silently edit the capture bytes: a capture whose text no longer matches what the oracle emitted is no longer a capture.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/capture/"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T82"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260820-200002, from T82's closing flag. NEEDS THE ORACLE if option (i). Pair with an independent reviewer."
+    },
+    {
+      "id": "T93",
+      "title": "vectors/README.md:580 still says 'all 36 promoted parity vectors' \u2014 the corpus is 42",
+      "description": "Flagged by T82, which correctly refused to fix it because doing so would have broken the empty-vectors-diff invariant its own brief imposed. The line is stale documentation, not a graded artefact: conformance reports 42 parity vectors / 5576 graded cells on merged main, and T82 verified the sentence's claim is true of all 42. NOTE the precedent already set this fire: the driver accepted T81's prose edits to this same README as within scope, so the empty-vectors-diff rule is understood to protect vector JSON, PIN.json and capabilities.json - not README prose. Fix the census here AND sweep mechanically for every other restatement of it (P-12: this run has been burned repeatedly by corrections landing in the named section and not in the sections restating the same claim). Must not touch any vector JSON, PIN.json or capabilities.json.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "sonnet",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/vectors/README.md"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T81",
+        "T82"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260820-200002. Sequenced AFTER T81 and T82 merge, because T81 also edits this file. Needs no oracle."
     }
   ]
 }
