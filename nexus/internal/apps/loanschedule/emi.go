@@ -295,33 +295,184 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     what applyFinalPeriodResidual's counterpart creates. Nothing being paid does
 //     not close this.
 //
-//     What APPEARS to close it, read from source at T69: the lookup runs on a
-//     deepCopy in which calculateRateFactorForScheduleTillDateInclusive has
-//     already zeroed rateFactor and rateFactorTillPeriodDueDate on every interest
-//     period dated strictly after tillDate [VERIFIED: :1237 calling :1791-1803,
-//     filter targetDate.isBefore(ip.getDueDate()) at :1799, zeroing at :1800-1801],
-//     and tillDate is anchored at the DISBURSEMENT, not at maturity. On the
-//     ordinary single-disbursement path calculateLastUnpaidRepaymentPeriodEMI is
-//     entered at :747 with calculateFromRepaymentPeriodDueDate =
-//     getEffectiveRepaymentDueDate(model, changedPeriod, operation
-//     .getSubmittedOnDate()) [VERIFIED: :146-151 and :250-263], i.e. the due date
-//     of the period the disbursement falls in. Only on the allowFullTermForTranche
-//     branch is tillDate the disbursement date itself, at :247 [VERIFIED: the
-//     branch at :142-144 -> addFullTermTrancheDisbursement :155-174 ->
-//     mergeNewScheduleModelWithExistingOne :206-248]. Note also that :1183-1184
-//     RESETS the last unpaid period's futureUnrecognizedInterest to zero on entry,
-//     and that period is the only one this path can ever set.
+//     WHAT CLOSES IT, AND WHY THE UPGRADE IS ALLOWED NOW. T69 left the argument
+//     below marked [UNVERIFIED]: it still needed the tillDate period's OWN
+//     unrecognized interest not to reach the periods after it through
+//     RepaymentPeriod.java:261-263, and it named T66 to settle that by ORACLE
+//     CAPTURE. T66 delivered both halves -- the step that closes the inheritance
+//     route, and capture pass 3h, THE FIRST OBSERVATION OF THIS FIELD IN THE
+//     PROGRAM. The upgrade from hypothesis to result is licensed BY THE CAPTURE,
+//     never by the reading: the same reading without a capture was asserted once,
+//     at T65, and rejected. Do not promote anything else in this block from
+//     reading alone, and do not weaken the lapse list at the end.
 //
-//     [UNVERIFIED] -- READ FROM SOURCE, NOT OBSERVED, and it is not a finished
-//     proof. The argument still needs the tillDate period's OWN unrecognized
-//     interest to be zero on every graded shape, so that the periods after it
-//     inherit nothing through RepaymentPeriod.java:262; that step is not
-//     established here. T63 recorded the whole claim unproven with 101 admitted
-//     shapes carrying the zero-EMI half of the precondition, and T66 is chartered
-//     to settle it by ORACLE CAPTURE. Until a capture exists, treat "unreachable
-//     on the graded domain" as a HYPOTHESIS this port depends on, not a result --
-//     and do not upgrade it to an assertion from reading alone. That upgrade was
-//     made once, at T65, and rejected.
+//     PROVED -- from the pinned checkout 426a23544. Every line number below was
+//     re-opened at T70 and resolved to the method it lands in; four numbers that
+//     T66 and the driver's re-derivation carried (deepCopy :1226, the FUI write
+//     :1250, the residual assignment :1207, the guard loop :1163) are corrected
+//     here to :1224, :1246, :1205/:1210 and :1165.
+//
+//     (a) THE DECISION RUNS ON A TILL-DATE-TRUNCATED DEEP COPY.
+//     calculateUnrecognizedInterestTillDateOnScheduleModelCopyAndDefer
+//     (:1221-1252) copies at :1224, then :1237 calls
+//     calculateRateFactorForScheduleTillDateInclusive (:1791-1803), which sets
+//     BOTH rateFactor and rateFactorTillPeriodDueDate to BigDecimal.ZERO on every
+//     interest period with targetDate.isBefore(ip.getDueDate()) [VERIFIED: filter
+//     :1799, zeroing :1800-1801], and InterestPeriod.getCalculatedDueInterest
+//     multiplies by rateFactorTillPeriodDueDate [VERIFIED: InterestPeriod.java
+//     :145-157, the multiply at :155]. So on the copy a period dated after
+//     tillDate contributes exactly ZERO INTEREST OF ITS OWN. The
+//     overdue-correction branch (:1229-1241) does not disturb that: the list it
+//     tests is written only by addOverdueBalanceCorrection [VERIFIED: :372-382,
+//     recording at ProgressiveLoanInterestScheduleModel.java:106-108], which no
+//     origination path calls, and even when it fires the :1240 rebuild writes
+//     outstandingLoanBalance only [VERIFIED: InterestPeriod.java:168-186] and
+//     cannot restore a zeroed rate factor.
+//
+//     (b) tillDate IS ANCHORED AT THE DISBURSEMENT, NOT AT MATURITY. On the
+//     ordinary single-disbursement path addDisbursement's else branch (:145-151)
+//     passes getEffectiveRepaymentDueDate(...) -- the due date of the period the
+//     disbursement lands in, or the NEXT period's due date when it lands exactly
+//     on one [VERIFIED: :250-263] -- into calculateEMIValueAndRateFactors
+//     (:718-728), which for DECLINING_BALANCE dispatches at :723 to
+//     calculateEMIValueAndRateFactorsForDecliningBalanceInterestMethod (:730-751)
+//     and enters calculateLastUnpaidRepaymentPeriodEMI AT :747. Call that
+//     period's index f. The other disbursement entry, :247, passes the
+//     disbursement DATE itself and sits inside mergeNewScheduleModelWithExistingOne
+//     (:206-248), reachable only from addFullTermTrancheDisbursement (:155-174)
+//     under the isAllowFullTermForTranche branch at :142-144 -- NOT the ordinary
+//     path. (T67's replacement text cited :247 as the ordinary path and was
+//     rejected for it. Resolve every citation you add here to its enclosing
+//     method before you write it down.) With (a): on the copy, a period k > f
+//     contributes S_k = 0.
+//
+//     (c) BEYOND f THE CHAIN IS A PURE NON-INCREASING CASCADE. With nothing paid,
+//     no credit, no capitalized income, no fixed interest and futureUnrecognized
+//     still zero, calculatedDueInterest reduces to cdi_k = S_k + u_(k-1)
+//     [VERIFIED: RepaymentPeriod.java:252-265, the previous-period term at
+//     :261-263], dueInterest to min(cdi_k, emi_k) [VERIFIED: :272-286, the min at
+//     :280, with :293-295], and u_k = max(0, cdi_k - dueInterest_k) [VERIFIED:
+//     :381-383]. So for k > f, u_k = max(0, u_(k-1) - emi_k), telescoping to
+//     u_k = max(0, u_f - (sum of emi_j over f < j <= k)).
+//
+//     (d) AN AGGREGATE IDENTITY HAS JUST BEEN ENFORCED. :1189-1203 computes
+//     diff = totalDisbursed + capitalizedIncome + creditedPrincipal +
+//     totalDueInterest - totalEMI, and :1205 with :1210 assigns
+//     emi_L := emi_L + diff on the selected last-not-fully-paid period L --
+//     immediately before the :1217 lookup. So at lookup time sum_j emi_j = P + I,
+//     with P the disbursed principal and I the total due interest as measured on
+//     the real model. Note also that :1183-1184 RESETS that period's
+//     futureUnrecognizedInterest to zero on entry, and it is the only period this
+//     path can ever set.
+//
+//     (e) THEREFORE u_L = 0. emi_j = 0 for every j > L, because isFullyPaid() is
+//     emiPlusCreditedAmountsPlusFutureUnrecognizedInterest == totalPaidAmount
+//     [VERIFIED: RepaymentPeriod.java:371-373] and with nothing paid that is
+//     emi_j == 0. AND emi_j = 0 for every j < f, which is the premise the whole
+//     step turns on: getRelatedRepaymentPeriods keeps only dueDate >= tillDate
+//     [VERIFIED: ProgressiveLoanInterestScheduleModel.java:191-198, filter at
+//     :196] and the level installment is written only onto the list passed in
+//     [VERIFIED: :1674 dispatching at :1680 to
+//     calculateEMIOnActualModelWithDecliningBalanceInterestMethod (:1722-1742),
+//     the forEach/setEmi at :1736-1741]. Hence sum of emi_j over f < j <= L is
+//     (P + I) - emi_f, so u_L = max(0, u_f - (P + I) + emi_f), which is 0 as soon
+//     as cdi_f <= P. CITE T66.md:100-108 FOR THIS STEP -- that is the general-f
+//     form -- and T66.md:110-115 for the bound. Do NOT cite PREDICTION.md's step
+//     (e): it states the sufficient condition as cdi_f <= P + emi_f WITHOUT the
+//     "emi_j = 0 for j < f" premise, so it is exact only at f = 0, and it now
+//     carries a dated CORRECTION block saying so [PREDICTION.md:107-110].
+//     Citing that form would import a known-incomplete statement.
+//
+//     (f) SO THE CASCADE IS DEAD FROM L ON: u_L = 0 => cdi_(L+1) = 0 => u_(L+1) =
+//     0 => ... and getPeriodWithUnrecognizedInterest needs u > 0 STRICTLY AFTER L
+//     [VERIFIED: :1805-1814, the u > 0 test at :1808, the isAfter at :1809].
+//     There is no such period.
+//
+//     (g) THE FALLBACK SELECTOR CANNOT RESCUE IT. :1178-1181 fires only when the
+//     :1176-1177 filter comes back EMPTY, and it then selects the LAST period,
+//     after which nothing is strictly later.
+//
+//     THE BOUND IN (e) IS NOT TIGHT above a per-period rate factor of 1.00. Above
+//     that the conclusion is carried by the capture and the census below, not by
+//     the inequality. Do not restate it as a tight bound.
+//
+//     OBSERVED -- capture pass 3h, .softhouse/capture/PASS3H-REPORT.md and
+//     .softhouse/capture/out/capture-prod3h-*. 18 cases, 416 mechanism rows read
+//     off the oracle's OWN model through a delegating Proxy, with path identity
+//     against the pristine seam on 18 of 18 and 8 of 8 rig calibrations
+//     reproduced cell for cell (including the promoted T64-ZP-A and T64-ZP-B):
+//     futureUnrecognizedInterest == "0.00", interestMovedUpward == false and
+//     unrecognizedInterest == "0.00" on ALL 416. Five cases carry the full
+//     structural precondition -- a vacuously fully-paid zero-EMI period STRICTLY
+//     AFTER L: P-CAL-ZPB 40 such rows, T66-M-R12000 10, T66-M-DRIFT-R12000 10,
+//     T66-M-DRIFT-R2400 3, T66-M-FLOOR-HR 3 -- and the two R12000 cases run at a
+//     per-period rate factor of 10.00, ten times past (e)'s sufficient condition.
+//     capturesCanonicalSha256
+//     fdd751a209c9518b157ca6fd70aef06a91acff94953e1f8cc6c4d45162b90b73,
+//     reproduced by the driver's independent re-run and recomputed from the
+//     committed capture at T70.
+//
+//     SEARCHED -- T66's port-side census over 21,060 admitted shapes: 9,437 carry
+//     a zero-EMI period, 156 of those carry positive calculatedDueInterest, and 0
+//     place such a period strictly after L. [VERIFIED: T66.md, re-run
+//     independently by the driver in
+//     .softhouse/reviews/driver-rederivation-20260820-140000.md. NOT re-run at
+//     T70: the throwaway harness is preserved only as
+//     .softhouse/capture/t66-unrecognized-interest/t66_search_test.go.txt.]
+//
+//     NOT CLAIMED, and do not let a later edit quietly claim it:
+//
+//     (i) THE COPY'S INTERNAL STATE WAS NEVER OBSERVED, by anyone. Pass 3h reads
+//     the REAL model, so it establishes the OUTCOME of the one decision -- on the
+//     generate path :1160 is entered on the real model once, at :747, the field
+//     is written as the last act of that call at :1246, and :1288's calls run on
+//     the smoothing loop's TRIAL copy -- and NOT the copy's intermediate u_k
+//     cascade [PASS3H-REPORT.md:138-149]. Steps (a)-(g) are proof; the 416 rows
+//     are observation of the outcome. Keep the two apart.
+//
+//     (ii) THE RECURSIVE FRAME IS NOT COVERED DEDUCTIVELY. :1211-1215 re-enters
+//     :1160 when the residual drives emi_L below totalPaid - totalCredited (zero
+//     when nothing is paid); the port reproduces it at emi.go:1048-1051. The
+//     OUTER frame's :1217 lookup therefore runs after an inner frame has
+//     re-established (d) on a possibly DIFFERENT L. T66 states (d) for a single
+//     entry, and neither T66 nor the driver analysed the recursive frame
+//     separately. It is covered empirically -- the census runs the port's own
+//     residual with the recursion in place -- and it is [UNVERIFIED] that the
+//     recursive frame preserves (d) for the outer target. Settle it by capture,
+//     not by reading, if a shape ever needs it.
+//
+//     (iii) NOTHING HERE GENERALISES PAST THE GRADED DOMAIN.
+//
+//     THE RULE THIS PORT DEPENDS ON. Omitting futureUnrecognizedInterest and
+//     interestMovedUpward is safe ONLY while EVERY one of the following holds.
+//     Make any of them false and the argument above is VOID -- the field must be
+//     ported BEFORE the wider shape is admitted, not after a vector goes red:
+//
+//     (1) EXACTLY ONE DISBURSEMENT [conformance/admit.go:1018-1020, inside
+//     GradedDomain :999-1060]. Multi-tranche breaks (b) outright, because the
+//     tranche branch enters :1160 at :247 with tillDate = the disbursement DATE,
+//     and contract.go:1330-1342 says multi-tranche is coming.
+//
+//     (2) NOTHING IS EVER PAID. A payment breaks "isFullyPaid() iff emi == 0" in
+//     (e) and the reduction in (c).
+//
+//     (3) NO CREDITED PRINCIPAL OR INTEREST AND NO CAPITALIZED INCOME. Each is a
+//     term of diff and breaks the identity in (d) [:1189-1203].
+//
+//     (4) NO FIXED INTEREST [:259, :1206-1208], NO RE-AGING, NO INTEREST PAUSE
+//     [:1708-1720 with :1830-1832]. Each adds a non-zero term to cdi_k that (c)
+//     assumes away.
+//
+//     (5) THE SEAM STAYS A PURE ORIGINATION CALL. :1160 has sixteen other call
+//     sites and every one belongs to a post-origination operation with a
+//     different tillDate: :247 tranche merge, :368 addBalanceCorrection, :380
+//     addOverdueBalanceCorrection, :404 payInterest, :442 payPrincipal, :505
+//     addCredit, :626 getOutstandingAmountsTillDate, :698
+//     recalculateScheduleModelTillDate, :868 changeDueDate, :879 and :937
+//     re-amortization, :1091 re-age attach, :2024 interest pause, :2129
+//     reAgeEqualAmortization, plus :1214 the self-recursion of (ii) and :1288 the
+//     smoothing loop's trial copy. This block is about :747 and about no other
+//     one of them.
 //
 // So the memo does NOT cache the derivation of period i's state; it caches a pure
 // function of the model's CURRENT STORED FIELDS for periods 0..i. Every one of
