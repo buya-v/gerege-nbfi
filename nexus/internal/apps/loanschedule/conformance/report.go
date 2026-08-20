@@ -3,6 +3,7 @@ package conformance
 import (
 	"fmt"
 	"io"
+	"sort"
 	"strings"
 )
 
@@ -99,7 +100,39 @@ func WriteReport(w io.Writer, s *Summary) {
 	if len(s.CounterfactualCoverage) == 0 {
 		p("    no graded capability is backed by a parity vector yet")
 	} else {
-		for capName, ids := range s.CounterfactualCoverage {
+		// FINDING T90 — THIS LINE USED TO MOVE ON ITS OWN. Ranging the map
+		// directly printed these lines in a different order between two runs of
+		// the SAME binary on the SAME store, because Go randomises map iteration
+		// order. Measured on main's bytes: 30 runs, 2 distinct sha256, split
+		// 26/4, differing ONLY in whether schedule.core or monthend.reanchor
+		// printed first (T81 measured 23/7, T86 27/3, and it bit T86 live).
+		//
+		// It is not cosmetic. This pipeline uses BYTE-IDENTITY of the harness's
+		// own output as evidence: T81 had to normalise a run through a sorted
+		// diff to show its change was inert, and reviewers are routinely asked to
+		// diff a run against main. Output that reorders itself weakens every such
+		// proof and — worse — trains a reader to explain away a diff instead of
+		// investigating it.
+		//
+		// THE ORDER, AND WHY IT IS TOTAL. Keys are capability names, and they are
+		// keys of a Go map, so they are pairwise DISTINCT; sort.Strings orders
+		// them by Go's byte-wise `<` over the UTF-8 encoding, which is a strict
+		// total order on distinct strings. No tie can arise, so the printed
+		// sequence is a function of the map's CONTENTS ALONE — never of insertion
+		// order, hash seed, map size or toolchain version.
+		//
+		// The ids WITHIN a line are ordered the same way, on a copy, so that this
+		// line's determinism is checkable without leaving this file
+		// (CapabilityRegistry.CounterfactualCoverage sorts them too — sorting an
+		// already-sorted slice is a no-op, and the report must not inherit its
+		// determinism from a function three files away). Ids REPEAT here, one per
+		// vector naming that counterfactual, so the sequence is a multiset; a
+		// sorted multiset of strings is unique, hence total on this input as
+		// well. Equal ids are interchangeable by definition, so sort.Strings
+		// being unstable cannot show.
+		for _, capName := range sortedKeys(s.CounterfactualCoverage) {
+			ids := append([]string(nil), s.CounterfactualCoverage[capName]...)
+			sort.Strings(ids)
 			p("    %-42s killed by %s", capName, strings.Join(ids, ", "))
 		}
 	}
@@ -272,6 +305,28 @@ func WriteReport(w io.Writer, s *Summary) {
 		p("VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.")
 	}
 	p("")
+}
+
+// sortedKeys returns m's keys in ascending byte-wise order.
+//
+// IT IS THE PACKAGE'S ONE WAY TO WALK A MAP THAT REACHES OUTPUT (finding T90).
+// Ranging a map directly is the defect it exists to prevent: Go randomises
+// iteration order, so a report line, a diagnostic list or a fatal reason built
+// that way changes position between two runs of one binary on one input, and this
+// pipeline treats byte-identity of harness output as evidence.
+//
+// The order is TOTAL, not merely "whatever sort.Strings does": map keys are
+// pairwise distinct, and byte-wise `<` on distinct strings is a strict total
+// order, so there are no ties to break and the result depends only on the SET of
+// keys. A caller that also needs the VALUES ordered must say so itself — a slice
+// value carries its own order and this function knows nothing about it.
+func sortedKeys[V any](m map[string]V) []string {
+	out := make([]string, 0, len(m))
+	for k := range m {
+		out = append(out, k)
+	}
+	sort.Strings(out)
+	return out
 }
 
 func anyViolation(ivs []InvariantResult) bool {

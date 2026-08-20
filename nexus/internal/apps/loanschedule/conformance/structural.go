@@ -472,7 +472,18 @@ func declarationDefects(sources []AttestationSource, claims []Claim, gaps []Cove
 		if len(s.ColumnsByRowKind) == 0 {
 			bad("attestation source %q attests no column on any row kind", s.ID)
 		}
-		for rowKind, cols := range s.ColumnsByRowKind {
+		// SORTED, for the same reason as report.go's coverage listing (T90):
+		// every line this loop appends is printed as a "HARNESS DECLARATION
+		// DEFECT" fatal reason, so ranging the map directly would reorder a
+		// FATAL-REASONS BLOCK between two runs of one binary — in the one report
+		// section a reader is most likely to be diffing. RowKinds() is that
+		// order: the map's keys, byte-wise ascending, total because map keys are
+		// distinct. With the shipped declaration this loop reports nothing at
+		// all, so today the change is invisible; it stops being invisible the
+		// first time a declaration is weakened on two row kinds at once, which is
+		// exactly when a stable diff is worth having.
+		for _, rowKind := range s.RowKinds() {
+			cols := s.ColumnsByRowKind[rowKind]
 			if _, err := periodKindByName(rowKind); err != nil {
 				bad("attestation source %q names row kind %q: %v", s.ID, rowKind, err)
 			}
