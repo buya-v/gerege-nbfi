@@ -446,6 +446,29 @@ conclusions T83 had written into `gates.md` — *the artefact the decision-maker
 > a `user` gate. Every sentence must name the domain it was measured over and say what was not swept. A
 > reviewer that only re-runs the numbers has reviewed half the deliverable.
 
+
+### P-24. An assertion about what happens ON MERGE can only be tested BY MERGING
+
+**Fire `20260820-200002`, T87 → T98 → the driver.** T87 observed that T82's counterproofs used the moving ref
+`main:` as their baseline, so *on merge* all seven would flip to failing against the rig itself. T98 fixed it
+by pinning to `git merge-base main HEAD` and reported it as "the immutable fork point `8da4b83`" — verifying
+**on the branch**, where that is exactly what it resolves to.
+
+On merged `main`, `HEAD == main`, so `git merge-base main HEAD` is the **merge commit itself** and every
+counterproof compares the fixed code against itself. The driver merged, ran `prove-guards-go-red.sh`, and got
+**"18 as expected, 7 not as expected"** — the same seven rows, the time bomb relocated rather than removed.
+The merges were unpushed and were backed out; `main` never carried it.
+
+Three competent parties looked at this — the reviewer who predicted it, the author who fixed it, and the
+driver who charged it — and all three would have missed it, because every one of them tested in the state
+where the bug is invisible.
+
+> **Rule.** When a property is asserted about the *post-merge* state, verify it on a **scratch merge into
+> current main**, never on the branch. And prefer a literal immutable sha to any ref that is computed from
+> `main`: a baseline that can follow `main` will follow it exactly when you stop watching. The driver's
+> post-merge re-run of the artefact — not of conformance, of the *artefact* — is what caught this; make it
+> a standing step.
+
 <!-- LEARNED PATTERNS END -->
 
 ### Run 2026-08-17-run1-harness-schedule-poc — fire `20260819-170001` (local, oracle REACHABLE) — 2026-08-19
