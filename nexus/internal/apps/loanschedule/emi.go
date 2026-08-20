@@ -925,7 +925,8 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     re-amortization, :1091 re-age attach, :2024 interest pause, :2129
 //     reAgeEqualAmortization. 13 + 4 = 17.
 //
-//     [VERIFIED at T78: all five counts re-derived by grep at 426a23544. T73
+//     [VERIFIED at T78: graphs 1, 2, 4 and 5 re-derived by grep at 426a23544.
+//     GRAPH 3'S COUNT IS VERIFIED AT T88, NOT T78 -- T78 recorded 7, it is 9. T73
 //     independently walked all sixteen non-:747 sites of graph 5 to their
 //     enclosing signatures and found ZERO citation defects across this block, so
 //     the list in graph 5 is inherited rather than rewritten.] :1288 is reached
