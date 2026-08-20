@@ -12,6 +12,22 @@
 # never writes outside its own mktemp directory. The rows that need the oracle are
 # the FULL GREEN RUN rows, and those are deliberately NOT here: run
 # `bash .softhouse/conformance.sh` for those.
+#
+# WHAT THIS RIG STRUCTURALLY CANNOT SEE (T106 F5, added by T113 — read this before
+# treating its green as coverage).
+#   Every row here runs the guard in a CLEAN environment, and the one row that
+#   breaks the probe ([5]) breaks it by rewriting the redirection's SOURCE to
+#   /dev/null — a redirection that still OPENS and still leaves `read` with a
+#   valid, empty input. So this rig can only ever observe the pre-initialised
+#   value of `_conformance_psub_line` being empty, and it cannot detect the case
+#   T106 found: a redirection that fails at RUN TIME (open() fails) while an
+#   INHERITED `_conformance_psub_line` supplies the token the probe never read.
+#   Green here says nothing about that. It was green on the forgeable version of
+#   the guard, and it is green on the fixed one.
+#   The rig that DOES see it is
+#   .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/prove-token-forgeable.sh
+#   (T106's, kept unmodified), and the hostile-environment rows are in
+#   .../T113-evidence/interpreter-matrix.sh section [3]. Run all three.
 set -u -o pipefail
 
 # The pre-fix bytes are pinned to an IMMUTABLE COMMIT SHA, not to `main:`.
@@ -161,11 +177,17 @@ sed '/^#=END-OF-HELP=$/d' "$HARNESS" > "$NOSENT"
 if cmp -s "$HARNESS" "$NOSENT"; then
   bad "sentinel" "no '#=END-OF-HELP=' line in the harness — usage() has no bound"
 else
+  # EXPECTATION CHANGED BY T113, deliberately, and this is the only row T113
+  # touched. It used to require exit 1. Exit 1 is this harness's GRADED FAIL code
+  # — "a definite, reproducible defect" in a vector — and a broken help text is
+  # not that; it is the harness being unusable, which the file's own EXIT CODES
+  # table calls 2 (EXIT_UNUSABLE). T106 F3. The row still drives the same defect
+  # red; only the code it demands has moved, and it must now REFUSE 1.
   out="$(/bin/bash "$NOSENT" --help 2>&1)"; code=$?
-  if [ "$code" = 1 ] && printf '%s\n' "$out" | grep -q -- '--help is broken'; then
-    ok "sentinel deleted -> --help ERRORS (exit 1), it does not print the wrong thing"
+  if [ "$code" = 2 ] && printf '%s\n' "$out" | grep -q -- '--help is broken'; then
+    ok "sentinel deleted -> --help ERRORS (exit 2 = EXIT_UNUSABLE), not the wrong text, and NOT the graded-fail 1"
   else
-    bad "sentinel deleted" "expected exit 1 + '--help is broken'; got exit $code"
+    bad "sentinel deleted" "expected exit 2 (EXIT_UNUSABLE) + '--help is broken'; got exit $code"
   fi
 fi
 # And the drift the sentinel abolishes is not hypothetical: the literal range that
