@@ -14,8 +14,15 @@
 # is back-fitted can re-score them by hand.
 #
 # Two traps this run has already hit, both guarded here:
-#   * `grep -a` is NOT sufficient.  BSD grep in a UTF-8 locale matches NOTHING in a file containing
-#     an invalid multibyte sequence AND RETURNS 0.  Every grep below is LC_ALL=C.
+#   * A grep that silently reports NO MATCH on a transcript containing a stray non-UTF-8 byte turns
+#     "the forbidden sentence is absent" into a lie.  Every grep below is `LC_ALL=C grep -a`, both
+#     halves deliberate.  MEASURED on this machine: with /usr/bin/grep (BSD) I could NOT reproduce
+#     a silent miss either with an invalid multibyte sequence or with an embedded NUL, in either
+#     locale — so T80's stated BSD behaviour did not reproduce for me and I am not repeating it as
+#     fact.  What DID reproduce: `ugrep 7.5.0 -I` (which is what a `grep` on an interactive PATH
+#     can be) returns 1 — "absent" — on exactly the poisoned transcript that does contain the
+#     sentence, and `-a` fixes it.  The guard was driven RED against that grep before `-a` was
+#     added.
 #   * A check that passes VACUOUSLY ON ZERO FILES is the defect class this run keeps finding.  An
 #     empty transcript set, or an attack named in the table with no transcript, is an ERROR here.
 #
@@ -60,9 +67,9 @@ echo "$TABLE" | while IFS='|' read -r name want sent why; do
     continue
   fi
   st=$(LC_ALL=C tail -1 "$f" | sed 's/EXIT=//')
-  if LC_ALL=C grep -qF "$S" "$f"; then c=YES; else c=no; fi
-  if LC_ALL=C grep -qF "$DG" "$f"; then d=YES; else d=no; fi
-  if LC_ALL=C grep -q "tenant 'gerege'" "$f" && ! LC_ALL=C grep -q "tenant 'default'" "$f"; then g=YES; else g=no; fi
+  if LC_ALL=C grep -aqF "$S" "$f"; then c=YES; else c=no; fi
+  if LC_ALL=C grep -aqF "$DG" "$f"; then d=YES; else d=no; fi
+  if LC_ALL=C grep -aq "tenant 'gerege'" "$f" && ! LC_ALL=C grep -aq "tenant 'default'" "$f"; then g=YES; else g=no; fi
 
   v=OK
   case "$want" in

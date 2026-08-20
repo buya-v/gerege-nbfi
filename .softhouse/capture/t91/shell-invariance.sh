@@ -17,8 +17,17 @@ A=$O/$L-sh
 B=$O/$L-bash
 [ -d "$A" ] && [ -d "$B" ] || { echo "missing $A or $B" >&2; exit 2; }
 
-norm() {   # strip the interpreter line and fold the label out of embedded paths
-  LC_ALL=C sed -e '/^interpreter: /d' -e "s/$L-bash/LABEL/g" -e "s/$L-sh/LABEL/g" "$1"
+# Normalise ONLY the three things that must differ between the two runs:
+#   1. the recorded `interpreter:` header line;
+#   2. the interpreter token inside the echoed command, which appears only on the `$ ` line and
+#      only in quotes, so the substitution is anchored to that line and cannot silently fold a
+#      difference in the recipe's own output;
+#   3. the label embedded in the temp-file paths the runner generates.
+# Everything else — every PASS/FAIL line, every digest, the exit status — is compared verbatim.
+norm() {
+  LC_ALL=C sed -e '/^interpreter: /d' \
+               -e '/^\$ /s/"bash"/"INTERP"/g' -e '/^\$ /s/"sh"/"INTERP"/g' \
+               -e "s/$L-bash/LABEL/g" -e "s/$L-sh/LABEL/g" "$1"
 }
 
 n=0; bad=0
