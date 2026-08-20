@@ -1757,9 +1757,9 @@
       "dependencies": [
         "T75"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "Raised by the driver, fire 20260820-170001, from T75's approval findings. Contract-independent, needs no oracle - runnable on a cloud catch-up fire."
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Raised by the driver, fire 20260820-170001, from T75's approval findings. Contract-independent, needs no oracle - runnable on a cloud catch-up fire. || local fire 20260820-200002: DISPATCHED (wave 1), isolated worktree, opus. Files disjoint from T80 (pathb/) and T83 (t83-nonamortizing/), so it runs concurrently."
     },
     {
       "id": "T83",
