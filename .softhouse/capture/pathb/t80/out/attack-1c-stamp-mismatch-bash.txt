@@ -1,0 +1,8 @@
+=== ATTACK 1c — a directory already stamped 'gerege', re-used for a 'default' capture
+runner shell: bash   recipe interpreter: bash   cwd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb
+
+$ TENANT=default RECAPTURE_OUT=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/stamp-probe-default "$SH" t36/recapture.sh
+
+ABORT: '/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/stamp-probe-default' already holds a capture set taken from tenant 'gerege' (see /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/stamp-probe-default/CAPTURED-FROM-TENANT); refusing to overwrite it with a 'default' capture.
+
+EXIT=1

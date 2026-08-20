@@ -33,7 +33,25 @@ AUTH='Authorization: Basic bWlmb3M6cGFzc3dvcmQ='
 # answer 20925.05 under HALF_UP and 20925.04 under HALF_EVEN.
 # T22 observed both, one per tenant (t22-audit/out-modeprobe2/).
 CANARY_REQ=${CANARY_REQ:-}
-CANARY_EXPECT=${CANARY_EXPECT:-20925.05}
+# The canary request is pinned by DIGEST, not by path and not by substring.  T77 broke
+# T76's substring pin with a one-character edit (principal 1162502.5 -> 1162502.55, which
+# is NOT a half-minor-unit tie and therefore answers 20925.05 under EITHER mode) and drove
+# this script to "PASS effective rounding mode canary (= HALF_UP)" on the HALF_EVEN
+# `default` tenant.  A check has two operands; if the caller controls both, it is not a
+# check.  The two operands here are (a) the sha256 of the file this script is about to
+# POST, computed at run time, and (b) this literal, which the caller cannot reach without
+# editing the recipe itself.  Mismatch is a BREACH and the canary is NOT SENT.
+PIN_CANARY_SHA256=2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154
+# HARDENED by T76, corrected by T80.  CANARY_EXPECT used to be env-overridable, which meant
+# the single strongest assertion in this script could be TALKED OUT OF FAILING:
+#   CANARY_EXPECT=20925.04 sh preconditions.sh default
+# would have printed "PASS effective rounding mode canary" while the process ran HALF_EVEN.
+# T76 made the expectation a constant but pointed the tripwire at CANARY_EXPECT_OVERRIDE --
+# a name no attacker uses, so the documented attack did not reproduce (T77 P1-T77-3).  The
+# tripwire now watches CANARY_EXPECT ITSELF: the inherited value is captured HERE, one line
+# BEFORE the constant assignment that overwrites it.
+CANARY_EXPECT_ENV_ATTEMPT=${CANARY_EXPECT:-}
+CANARY_EXPECT=20925.05
 
 fails=0
 ok()   { printf '  PASS  %s\n' "$1"; }
@@ -93,7 +111,14 @@ pgdrv=$(docker exec "$FIN" sh -c 'unzip -l /app/fineract-provider.jar' 2>/dev/nu
 # ------------------------------------------------- P7 PostgreSQL server version
 pgv=$(docker exec "$DB" psql -U root -t -c 'select version();' 2>/dev/null | tr -d '\r' | sed -n '1s/^ *//p')
 case "$pgv" in "$PIN_PG_MAJOR_MINOR"*) ok "PostgreSQL version: $pgv" ;;
-               *) bad "PostgreSQL version is '$pgv', pin is '$PIN_PG_MAJOR_MINOR…'" ;; esac
+               *) bad "PostgreSQL version is '$pgv', pin is '${PIN_PG_MAJOR_MINOR}…'" ;; esac
+# ^ THE BRACES ARE LOAD-BEARING (T85 F-2).  Without them the variable reference runs straight into
+# the ellipsis U+2026 (bytes e2 80 a6); bash reads 0xe2 as part of the identifier, and under `set -u`
+# the whole script DIES here.  Measured effect of the unbraced form when P7 fails: 7 FAIL lines
+# instead of 16, P8-P15 never executed -- INCLUDING THE ENTIRE ROUNDING-MODE CANARY -- no
+# "PRECONDITIONS BREACHED: n" summary, and attest.py crashing with a UnicodeDecodeError on the
+# truncated multibyte name.  It failed CLOSED (exit 1), so it was never a false pass; but a guard
+# that dies instead of reporting takes the strongest assertion in the script down with it.
 
 # --------------------------------------------------------- P8 tenant row exists
 tzid=$(docker exec "$DB" psql -U root -d fineract_tenants -At \
@@ -146,21 +171,50 @@ esac
 
 # ------------------- P14 EFFECTIVE-mode canary: ask the running server
 # Strongest of the lot: it is the arithmetic itself answering, not configuration.
-if [ -n "$CANARY_REQ" ] && [ -f "$CANARY_REQ" ]; then
+# Precisely because it is the strongest, it is the one worth neutering, so it is pinned
+# twice over: the EXPECTATION is a constant (P14a) and the REQUEST is pinned by digest
+# comparison (P14b).  If either pin is breached the canary is NOT SENT at all -- the
+# sentence "PASS effective rounding mode canary" must be unreachable except on the exact
+# pinned half-cent tie, because a reader believes that sentence.
+
+# ---- P14a: the expectation is a constant, and an override attempt is itself a breach
+if [ -n "$CANARY_EXPECT_ENV_ATTEMPT" ]; then
+  bad "CANARY_EXPECT was set in the environment ('$CANARY_EXPECT_ENV_ATTEMPT') — the canary expectation is a CONSTANT ($CANARY_EXPECT). Refusing to grade the arithmetic against a value supplied by the runner."
+fi
+
+# ---- P14b: the canary REQUEST is pinned by DIGEST COMPARISON, not by path, not by
+# substring.  Substring matching is what T77 defeated: grep -qF '"principal": 1162502.5'
+# also matches 1162502.55, which is not a tie, so the canary answered 20925.05 under both
+# HALF_UP and HALF_EVEN and the assertion became a tautology.  A digest has no prefix.
+canary_pinned=0
+if [ -z "$CANARY_REQ" ]; then
+  bad "rounding-mode canary NOT run: CANARY_REQ is unset. Set it to the committed half-cent request (t22-audit/req/calc-pmode2-gerege.json, sha256 $PIN_CANARY_SHA256). A DB row is not proof of the mode in force."
+elif [ ! -f "$CANARY_REQ" ]; then
+  bad "rounding-mode canary NOT run: CANARY_REQ='$CANARY_REQ' is not a readable file. A DB row is not proof of the mode in force."
+else
+  creqsha=$(shasum -a 256 "$CANARY_REQ" | cut -d' ' -f1)
+  if [ "$creqsha" = "$PIN_CANARY_SHA256" ]; then
+    canary_pinned=1
+    ok "canary request pinned by DIGEST COMPARISON: computed sha256 $creqsha == pinned sha256 $PIN_CANARY_SHA256 ($CANARY_REQ) — the exact half-cent tie, 1,162,502.50 x 0.018 = 20,925.045"
+  else
+    bad "canary request DIGEST MISMATCH — computed sha256 '$creqsha' for '$CANARY_REQ', pinned sha256 is '$PIN_CANARY_SHA256'. That file is NOT the pinned half-cent tie (principal 1,162,502.50 x 0.018 = 20,925.045 exactly). A request that is not an exact half-minor-unit tie answers the same under HALF_UP and HALF_EVEN, so grading it would certify nothing. THE CANARY WAS NOT SENT and the effective rounding mode is UNPROVEN."
+  fi
+fi
+
+# ---- P14c: send it, only if BOTH pins held.
+if [ "$canary_pinned" = "1" ]; then
   cbody=$(curl -sk -X POST "$BASE/api/v1/loans?command=calculateLoanSchedule" \
     -H "$AUTH" -H "Fineract-Platform-TenantId: $TENANT" -H 'Content-Type: application/json' \
     -d @"$CANARY_REQ" -w '\n%{http_code}' 2>/dev/null)
   ccode=$(printf '%s' "$cbody" | tail -1)
   cjson=$(printf '%s' "$cbody" | sed '$d')
   if [ "$ccode" != "200" ]; then
-    bad "rounding-mode canary returned HTTP $ccode, not 200"
+    bad "rounding-mode canary returned HTTP $ccode, not 200 — the mode in force was never established"
   else
     p1=$(printf '%s' "$cjson" | tr ',' '\n' | grep -m1 '"interestOriginalDue"' | sed 's/.*://')
     [ "$p1" = "$CANARY_EXPECT" ] && ok "effective rounding mode canary: period-1 interest $p1 (= HALF_UP)" \
       || bad "effective rounding-mode canary returned period-1 interest '$p1', expected '$CANARY_EXPECT'; 20925.04 would mean the process is running HALF_EVEN"
   fi
-else
-  bad "rounding-mode canary NOT run (set CANARY_REQ to the committed half-cent request). A DB row is not proof of the mode in force."
 fi
 
 # ---------------------------------------------------------------- P15 MNT currency

@@ -351,3 +351,73 @@ re-observation cited under Caveats instead of resting on it alone.
 ## Reproduction
 
 Full recipe, byte-exact requests and raw responses: `REPRODUCE.md`, `req/`, `out/` in this directory.
+
+---
+
+## T76 (2026-08-20) — third independent re-capture, hardened preconditions, and the promotion verdict
+
+**A prediction was registered and committed BEFORE any oracle contact** (P-9): `t76/PREDICTION.md`,
+commit `dd06aee`, 2026-08-20T09:09:44Z. Every observation below either confirms it or is reported as a
+refutation of it.
+
+**1. Byte-identity, now observed a THIRD time and by a third worker.** The four captures were re-taken on
+tenant `gerege` at `MathContext(19, HALF_UP)` (21 preconditions PASS, transcript
+`t76/out/preconditions-gerege.txt`) and are **byte-identical to the committed corpus and to T36's
+re-capture** — one sha256 per case across all three sets, `713a3560…`, `9de8757d…`, `892dd6f5…`,
+`c80f62b0…`. The committed corpus was taken on `default` at HALF_EVEN (commit `4b64950`, 17:10 +0800,
+before tenant `gerege` existed at 17:5x). **So the HALF_EVEN → HALF_UP move is worth 0 minor units in
+every cell of all four, and nothing is retracted.** Attestation: `t76/out/recapture-gerege/attestation.json`
+— every field identical to T36's except timestamps and paths.
+
+**2. The preconditions script has been HARDENED, because it could be talked out of failing.** Two holes,
+both closed and both demonstrated:
+
+- `CANARY_EXPECT` was environment-overridable, so `CANARY_EXPECT=20925.04 sh preconditions.sh default`
+  would have printed *PASS effective rounding mode canary* while the JVM ran HALF_EVEN. The expectation is
+  now a constant and an override attempt is itself a breach.
+- the canary REQUEST was pinned only by path. Any request that returns `20925.05` under **either** mode —
+  a principal that is not a half-minor-unit tie — degraded the strongest assertion into a tautology. T76
+  pinned it "by content" (four literals) and printed a sha256.
+
+**CORRECTION, T77 → T80.** The second bullet's closure was **false**, and the first bullet's transcript did
+not run the attack it named:
+
+- The "content pin" used `grep -qF` **prefix** matches and **printed** the sha256 without ever **comparing**
+  it. T77 changed one character (`1162502.5` → `1162502.55`, not a tie) and reached *ALL PRECONDITIONS HOLD,
+  exit 0* on `gerege` — and on the HALF_EVEN `default` tenant made the script print *PASS effective rounding
+  mode canary (= HALF_UP)*. **The strongest assertion in the rig certified HALF_UP on a HALF_EVEN JVM.**
+  T80 replaced it with a **digest comparison** against a literal in the script; on mismatch the canary is not
+  sent at all. Proved by `t80/out/attack-2a-…`, `attack-2b-…`, `attack-3a-…`.
+- T76's attack-B transcript ran a **decoy** variable (`CANARY_EXPECT_OVERRIDE`) and claimed 6 breaches;
+  T77 measured 5 running the command as captioned. T80's tripwire watches `CANARY_EXPECT` itself, and the
+  captioned command now really does produce **6** on `default` (`t80/out/attack-4a-…`).
+- Separately, the **caller** never enforced any of it: `recapture.sh` tee'd only stdout while every FAIL goes
+  to stderr, so its ABORT was unreachable — T77 took a full capture on the wrong tenant, past five breaches,
+  to exit 0, into a hard-coded `recapture-gerege` directory. T80 gates on the exit status, captures both
+  streams, and derives the output directory from the tenant actually used
+  (`t80/out/attack-1a-…`, `attack-1b-…`, `attack-1c-…`).
+
+Superseded T76 transcripts (`t76/out/`): `attack-A-default.txt` (wrong tenant, 5 breaches — still valid),
+`attack-B-expect-override.txt` (**decoy command, count not reproducible**), `attack-C-swapped-canary.txt`
+(**closure was false**), `attack-D-nocanary.txt` (still valid). Live transcripts: `t80/out/`.
+
+**3. A new invariant, I7, because the existing ten had a blind spot.** T22's checker is genuinely failable —
+one minor unit on `principalDue` trips I1/I5/S2, one on `totalDueForPeriod` trips I4/I5 — but a one-minor-unit
+change to **`totalOriginalDueForPeriod` trips nothing**: the `*Original*` and `*Outstanding*` mirror columns
+are never read. `t76/t76_mirror_invariant.py` asserts the mirrors equal the DUE columns on an unpaid
+schedule, in exact integer minor units; it PASSES on all four captures plus the canary and FAILS on the
+mutant. Transcripts: `t76/out/mutation/`. This matters for B-02 specifically: a port that rounds the
+installment but forgets to carry the rounded value into the ORIGINAL column was previously ungraded.
+
+**4. B-03/B-04 re-derivation (T22 P1-14) is CLOSED, and I checked it by running it.** T30 rebuilt both
+schedules from the pinned progressive source (DAILY / ACT-ACT cross-year partial-period arm) with zero
+hard-coded expected values and exact `Decimal` throughout; `t36/t36_rederive_check.py` re-points that model
+at the production-settings re-captures. Executed this fire: **CONSISTENT for B-03 and B-04 at both HALF_UP
+and HALF_EVEN model modes** (`t76/out/rederive-check-t36paths.txt`).
+
+**5. PROMOTION: nothing is promoted, and the reason is in the contract, not in the captures.** Full
+reasoning, with the four admission tests applied case by case and the differentials measured in minor
+units: **`t76/PROMOTION-DECISION.md`**. In one line each — B-01 kills nothing new (its money is identical
+to the already-promoted `P-MNT-1M2`, re-checked cell by cell today); B-02 is refused by a **ratified**
+DEC-1 §4.7; B-03/B-04 need a component the frozen contract does not have and pins to null
+(`contract.go:1183`). Proposed gate **G-7**, three ordered questions.

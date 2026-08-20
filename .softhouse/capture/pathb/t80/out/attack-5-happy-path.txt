@@ -1,0 +1,160 @@
+=== HAPPY PATH — tenant gerege, MathContext(19, HALF_UP)
+run at 2026-08-20T12:57:24Z
+
+--- 5a: sh t36/recapture.sh  ->  t80/out/recapture-gerege
+### tenant 'gerege'  ->  output directory /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/recapture-gerege
+
+### preconditions (T22 P0-4) — a breach ABORTS before any capture
+== T36 Path B preconditions, tenant 'gerege' ==
+  PASS  image digest sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a
+  PASS  jar git.commit.id 426a23544e8426a38ae43ae404670a0a7e85b9eb
+  PASS  jar git.dirty=false
+  PASS  MoneyHelper.PRECISION = 19 (deployed bytecode)
+  PASS  actuator/health UP
+  PASS  driverClassName org.postgresql.Driver
+  PASS  JDBC URL is jdbc:postgresql://…
+  PASS  0 prohibited-engine hits in container env
+  PASS  0 prohibited driver jars in fineract-provider.jar
+  PASS  PostgreSQL JDBC driver present in the jar
+  PASS  PostgreSQL version: PostgreSQL 18.3 (Debian 18.3-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+  PASS  tenant 'gerege' exists
+  PASS  tenant timezone_id = Asia/Ulaanbaatar
+  PASS  c_configuration.rounding-mode = 4 (HALF_UP)
+  PASS  rounding-mode row enabled
+  PASS  schema_connection_parameters is empty
+  PASS  tenant schema_server_port = 5432
+  PASS  running JVM initialized tenant 'gerege' at HALF_UP
+  PASS  canary request pinned by DIGEST COMPARISON: computed sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 == pinned sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t22-audit/req/calc-pmode2-gerege.json) — the exact half-cent tie, 1,162,502.50 x 0.018 = 20,925.045
+  PASS  effective rounding mode canary: period-1 interest 20925.05 (= HALF_UP)
+  PASS  MNT seeded with decimal_places=2 (ISO 4217 496, minor unit 2)
+  PASS  MNT enabled for the tenant
+
+ALL PRECONDITIONS HOLD — tenant 'gerege' at MathContext(19, HALF_UP), PostgreSQL only.
+
+### product persistence read-back, from PostgreSQL rows not from the create response
+1|NULL|NULL
+2|100.000000|NULL
+3|NULL|FULL_LEAP_YEAR
+4|NULL|FEB_29_PERIOD_ONLY
+
+### captures — explicit filenames, HTTP status checked, non-200 fails the run
+B-01  HTTP 200  -> /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/recapture-gerege/B-01-baseline-raw.json
+B-02  HTTP 200  -> /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/recapture-gerege/B-02-multiplesof100-raw.json
+B-03  HTTP 200  -> /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/recapture-gerege/B-03-diycs-fullleapyear-raw.json
+B-04  HTTP 200  -> /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/recapture-gerege/B-04-diycs-feb29only-raw.json
+
+713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/recapture-gerege/B-01-baseline-raw.json
+9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/recapture-gerege/B-02-multiplesof100-raw.json
+892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/recapture-gerege/B-03-diycs-fullleapyear-raw.json
+c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/recapture-gerege/B-04-diycs-feb29only-raw.json
+
+captured from tenant 'gerege' (stamped in /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/recapture-gerege/CAPTURED-FROM-TENANT)
+EXIT=0
+
+--- 5b: bash t36/recapture.sh  ->  t80/out/bash-recapture-gerege
+### tenant 'gerege'  ->  output directory /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/bash-recapture-gerege
+
+### preconditions (T22 P0-4) — a breach ABORTS before any capture
+== T36 Path B preconditions, tenant 'gerege' ==
+  PASS  image digest sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a
+  PASS  jar git.commit.id 426a23544e8426a38ae43ae404670a0a7e85b9eb
+  PASS  jar git.dirty=false
+  PASS  MoneyHelper.PRECISION = 19 (deployed bytecode)
+  PASS  actuator/health UP
+  PASS  driverClassName org.postgresql.Driver
+  PASS  JDBC URL is jdbc:postgresql://…
+  PASS  0 prohibited-engine hits in container env
+  PASS  0 prohibited driver jars in fineract-provider.jar
+  PASS  PostgreSQL JDBC driver present in the jar
+  PASS  PostgreSQL version: PostgreSQL 18.3 (Debian 18.3-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+  PASS  tenant 'gerege' exists
+  PASS  tenant timezone_id = Asia/Ulaanbaatar
+  PASS  c_configuration.rounding-mode = 4 (HALF_UP)
+  PASS  rounding-mode row enabled
+  PASS  schema_connection_parameters is empty
+  PASS  tenant schema_server_port = 5432
+  PASS  running JVM initialized tenant 'gerege' at HALF_UP
+  PASS  canary request pinned by DIGEST COMPARISON: computed sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 == pinned sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t22-audit/req/calc-pmode2-gerege.json) — the exact half-cent tie, 1,162,502.50 x 0.018 = 20,925.045
+  PASS  effective rounding mode canary: period-1 interest 20925.05 (= HALF_UP)
+  PASS  MNT seeded with decimal_places=2 (ISO 4217 496, minor unit 2)
+  PASS  MNT enabled for the tenant
+
+ALL PRECONDITIONS HOLD — tenant 'gerege' at MathContext(19, HALF_UP), PostgreSQL only.
+
+### product persistence read-back, from PostgreSQL rows not from the create response
+1|NULL|NULL
+2|100.000000|NULL
+3|NULL|FULL_LEAP_YEAR
+4|NULL|FEB_29_PERIOD_ONLY
+
+### captures — explicit filenames, HTTP status checked, non-200 fails the run
+B-01  HTTP 200  -> /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/bash-recapture-gerege/B-01-baseline-raw.json
+B-02  HTTP 200  -> /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/bash-recapture-gerege/B-02-multiplesof100-raw.json
+B-03  HTTP 200  -> /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/bash-recapture-gerege/B-03-diycs-fullleapyear-raw.json
+B-04  HTTP 200  -> /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/bash-recapture-gerege/B-04-diycs-feb29only-raw.json
+
+713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/bash-recapture-gerege/B-01-baseline-raw.json
+9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/bash-recapture-gerege/B-02-multiplesof100-raw.json
+892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/bash-recapture-gerege/B-03-diycs-fullleapyear-raw.json
+c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/bash-recapture-gerege/B-04-diycs-feb29only-raw.json
+
+captured from tenant 'gerege' (stamped in /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/bash-recapture-gerege/CAPTURED-FROM-TENANT)
+EXIT=0
+
+--- 5c: python3 t36/attest.py gerege  ->  t80/out/attest-gerege
+wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attest-gerege/attestation.json
+effective MathContext: MathContext(19, HALF_UP)   matches ratified: True
+  B-01  HTTP 200  sha256 713a35601b8909f4  matches committed corpus: True
+  B-02  HTTP 200  sha256 9de8757deeb02476  matches committed corpus: True
+  B-03  HTTP 200  sha256 892dd6f537ef34f5  matches committed corpus: True
+  B-04  HTTP 200  sha256 c80f62b01721ab15  matches committed corpus: True
+EXIT=0
+
+--- precondition PASS/FAIL counts of the sh happy-path run
+PASS lines: 22
+FAIL lines: 0
+
+--- byte-identity vs the corpus T77 confirmed (four distinct digests, five sets)
+713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/out/B-01-baseline-raw.json
+713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t36/out/recapture-gerege/B-01-baseline-raw.json
+713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t76/out/recapture-gerege/B-01-baseline-raw.json
+713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/recapture-gerege/B-01-baseline-raw.json
+713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/bash-recapture-gerege/B-01-baseline-raw.json
+713a35601b8909f47640770ba93431a053882b161769c6af35728bacac062009  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attest-gerege/B-01-baseline-raw.json
+
+9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/out/B-02-multiplesof100-raw.json
+9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t36/out/recapture-gerege/B-02-multiplesof100-raw.json
+9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t76/out/recapture-gerege/B-02-multiplesof100-raw.json
+9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/recapture-gerege/B-02-multiplesof100-raw.json
+9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/bash-recapture-gerege/B-02-multiplesof100-raw.json
+9de8757deeb02476d48e4c84a42b297cc99fab9a286adb505c005ab8d99d02f8  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attest-gerege/B-02-multiplesof100-raw.json
+
+892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/out/B-03-diycs-fullleapyear-raw.json
+892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t36/out/recapture-gerege/B-03-diycs-fullleapyear-raw.json
+892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t76/out/recapture-gerege/B-03-diycs-fullleapyear-raw.json
+892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/recapture-gerege/B-03-diycs-fullleapyear-raw.json
+892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/bash-recapture-gerege/B-03-diycs-fullleapyear-raw.json
+892dd6f537ef34f50f6c46258d054e620565951e671b414184f0ffb9f7da58bf  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attest-gerege/B-03-diycs-fullleapyear-raw.json
+
+c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/out/B-04-diycs-feb29only-raw.json
+c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t36/out/recapture-gerege/B-04-diycs-feb29only-raw.json
+c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t76/out/recapture-gerege/B-04-diycs-feb29only-raw.json
+c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/recapture-gerege/B-04-diycs-feb29only-raw.json
+c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/bash-recapture-gerege/B-04-diycs-feb29only-raw.json
+c80f62b01721ab15e994dcf7fca5d5f3f60ada39aa210ca45bbb67b65c724a80  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t80/out/attest-gerege/B-04-diycs-feb29only-raw.json
+
+--- distinct digests per capture id (expect exactly 1 each)
+B-01-baseline: 1 distinct digest(s) across 6 independently produced sets
+B-02-multiplesof100: 1 distinct digest(s) across 6 independently produced sets
+B-03-diycs-fullleapyear: 1 distinct digest(s) across 6 independently produced sets
+B-04-diycs-feb29only: 1 distinct digest(s) across 6 independently produced sets
+
+--- the tenant this capture set was taken from, as stamped by the recipe
+gerege
+
+--- what the sidecar now says about DEC-1 (was: 'revision 6 and UNRATIFIED')
+RAW OBSERVED — admissibility attestation only. NOTHING PROMOTED to the parity vector store. DEC-1 is at revision 12 and RATIFIED (gate G-1 CLOSED).
+{"revision": 12, "revision_source": ".softhouse/vectors/PIN.json:dec1_revision", "ratified": true, "ratified_source": ".softhouse/gates.md \u2014 the G-1 heading"}
+promotion to the parity vector store — an admissibility attestation is not a promotion decision. Promotion of these four is refused on graded-domain grounds recorded in t76/PROMOTION-DECISION.md (gate G-7), not on DEC-1 ratification: DEC-1 is at revision 12 and RATIFIED (gate G-1 CLOSED)
+
+RESULT: HAPPY PATH INTACT — every capture byte-identical across all six sets.

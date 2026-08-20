@@ -1,0 +1,33 @@
+=== T85 F-1 — a breached attest.py run must write NOTHING
+run at 2026-08-20T12:58:00Z
+victim set: t36/out/emiloop  (11 EL-* captures taken on tenant gerege, plus attestation and transcripts)
+
+--- BEFORE: 14 files
+4c3ff7f8c07e89d5a7e16b0d8e386b74a4b2c21e089052b546d336b9c51d1768  t36/out/emiloop/preconditions.txt
+  stamp present: no
+
+--- 1. PRE-FIX attest.py (813acb1), invocation: python3 t36/attest.py default emiloop
+EXIT=1
+  
+  ABORT: preconditions breached — no capture attempted, no attestation written.
+  stamp now present: YES, contents: default
+  RESULT: COMMITTED SET MUTATED BY A RUN THAT SAID IT WROTE NOTHING:
+    0a1
+    > 01666ec060466c14b9fa06c613fbac449163f2a2017558fe16526209ab78c6b0  t36/out/emiloop/CAPTURED-FROM-TENANT
+    13c14
+    < 4c3ff7f8c07e89d5a7e16b0d8e386b74a4b2c21e089052b546d336b9c51d1768  t36/out/emiloop/preconditions.txt
+    ---
+    > f8125c11b84f7fea060a7282266bda2b89e30da7267fc1e4ab198b15180d0a91  t36/out/emiloop/preconditions.txt
+    transcript first line is now: == T36 Path B preconditions, tenant 'default' ==
+
+--- evidence restored from git: all digests back to BEFORE
+
+--- 2. FIXED attest.py, same invocation: python3 t36/attest.py default emiloop
+EXIT=1
+  
+  ABORT: preconditions breached — no capture attempted, no attestation written, and nothing at all written into '/Users/buv/gerege-nbfi/.claude/worktrees/agent-a02d87b3761013f6c/.softhouse/capture/pathb/t36/out/emiloop'.
+  stamp present: no
+  RESULT: committed set UNCHANGED — all 14 digests identical, including preconditions.txt
+
+prefix-defect-reproduced=1   fixed-run-clean=yes
+RESULT: F-1 CLOSED — the defect reproduces on the pre-fix file and is absent after the fix.
