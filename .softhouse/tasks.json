@@ -1921,9 +1921,10 @@
       "dependencies": [
         "T81"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "Raised by the driver, local fire 20260820-200002, from T81's F-1. Needs the oracle only to run the harness. files_hint is approximate - locate report.go before editing. Pair with an independent reviewer. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus."
+      "note": "Raised by the driver, local fire 20260820-200002, from T81's F-1. Needs the oracle only to run the harness. files_hint is approximate - locate report.go before editing. Pair with an independent reviewer. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260820-230001: DONE on softhouse/T90-report-determinism (3 commits). IT CORRECTED THE DRIVER'S files_hint: there is no .../loanschedule/harness/ directory; the harness package is nexus/internal/apps/loanschedule/conformance/. The line number was right - report.go:102 ranged s.CounterfactualCoverage (map[string][]string). FOUR SITES FIXED, THREE OF THEM NOT IN THE BRIEF: report.go:102 (the named 'killed by' lines, now sortedKeys); structural.go:475 declarationDefects ranged ColumnsByRowKind and every string it appends prints as a HARNESS DECLARATION DEFECT FATAL REASON; capability.go:140 LoadCapabilityRegistry ranged a seam's Status and RETURNS ON THE FIRST BAD ENTRY, so a registry with two defects named one AT RANDOM; vector.go:854 row comparator keyed on (context, case_id) only with nothing rejecting a duplicate case_id - added path as a third key so there are no ties (inert today, same sha256 either way). SITES 2 AND 3 EMIT NOTHING ON THE SHIPPED DATA - invisible to any measurement, findable only by reading. Five further map iterations checked and LEFT ALONE with a documented per-site reason. EVIDENCE: pre-fix on main's bytes, 30 runs of ONE binary on ONE store gave 2 distinct sha256, split 26/4 - it reported what it measured rather than the 23/7 or 27/3 the brief predicted; the diff is exactly two lines, schedule.core and monthend.reanchor swapping. Post-fix 30 runs gave ONE sha256 8c22938ffb027f4c..., measured twice (after the sort fixes and again after the tie-break). NOTHING BUT LINE ORDER MOVED, PROVED BY cmp RATHER THAN ARGUMENT: the post-fix bytes ARE one of the pre-fix runs (the 4/30 variant); sorted normalisation matches both variants; 146 lines each; per-vector outcome table identical across 49 rows; all headline counters identical. THREE REGRESSION GUARDS EACH DRIVEN RED against the reverted loops, green after (P-22). go build 0 / go vet 0 / go test -count=1 ok / gofmt -l names exactly contract.go / bash conformance.sh exit 0 VERDICT PASS 42 parity 5576 cells 0 invariant violations 0 NOT RUN / --prove 21/0 / full script output byte-identical over 3 runs. DRIVER-VERIFIED SCOPE: vectors diff EMPTY, contract/ diff EMPTY, nothing outside the conformance package. RAISED F-T90-2 (registered T105): the report embeds the ABSOLUTE store path, so runs from two different worktrees can NEVER be byte-identical - which defeats exactly the reviewer workflow this task exists to protect. RAISED F-T90-4: RESUME.md:94 goes stale on merge; orchestrator-owned, driver will fix at exit.",
+      "branch": "softhouse/T90-report-determinism"
     },
     {
       "id": "T91",
@@ -2160,6 +2161,45 @@
       "status": "in_progress",
       "attempts": 1,
       "note": "Raised by the driver, local fire 20260820-230001. Its verdict gates merging T82+T87+T102 together. NEEDS NO ORACLE except to confirm the conformance verdict."
+    },
+    {
+      "id": "T104",
+      "title": "INDEPENDENT review of T90 \u2014 re-measure the nondeterminism and the byte identity yourself",
+      "description": "Paired reviewer for T90. T90 changes the harness that decides PASS; the review must re-run its measurements, not read them.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        ".softhouse/reviews/",
+        "nexus/internal/apps/loanschedule/conformance/"
+      ],
+      "context": "tier0-harness-schedule-poc",
+      "dependencies": [
+        "T90"
+      ],
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-230001. NEEDS THE ORACLE to run the harness."
+    },
+    {
+      "id": "T105",
+      "title": "The harness report embeds the ABSOLUTE store path, so two worktrees can never produce byte-identical output",
+      "description": "Raised by T90 as F-T90-2 and correctly kept out of its bounded patch because it CHANGES REPORT CONTENT. The conformance report embeds the absolute path of the vector store. This pipeline routinely asks a reviewer to diff a worker's harness run against a main run - and those two runs are BY CONSTRUCTION in different worktrees, so they can never be byte-identical, no matter how deterministic the iteration order is. T90 just closed the ordering half of byte-reproducibility; this is the other half, and without it the workflow T90 exists to protect still does not work. Make the emitted path relative to the repo root (or otherwise stable across worktrees) WITHOUT losing the provenance a reader needs - a reader must still be able to tell WHICH store was graded. Do not change any verdict, any cell count, any grading behaviour, or the meaning of any exit code. PROVE IT by running the harness from TWO DIFFERENT WORKTREES on the same store and showing byte-identical output, and show the pre-fix runs differ in exactly the path lines. Pair with an independent reviewer.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/conformance/"
+      ],
+      "context": "tier0-harness-schedule-poc",
+      "dependencies": [
+        "T90"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260820-230001, from T90's F-T90-2. NEEDS THE ORACLE. Sequence AFTER T90 merges - same package."
     }
   ]
 }
