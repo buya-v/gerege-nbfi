@@ -1273,10 +1273,10 @@
    "dependencies": [
     "T11"
    ],
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
    "contract_independent": true,
-   "note": "Raised by T11 findings F-1 (P1) and F-2 (P2), fire 20260819-200001. NEEDS NO ORACLE - runnable on any fire. DRIVER CORRECTION TO T11'S WORDING, which changes the fix: the port does NOT 'ignore cancellation'. generator.go:72 checks ctx.Err() ONCE AT ENTRY and never again [VERIFIED: exactly one ctx.Err() in generator.go, zero in emi.go]. That is consistent with T11's measurement of 5.9s elapsed under a 50ms deadline. So the fix is NOT 'add a cancellation check' - it is to check periodically INSIDE the amortization and EMI-adjustment loops, where the time is actually spent. F-2: cost is ~n^2.4 (13.3s at n=360) and NumberOfRepayments is unbounded; the port drops the oracle's Memo cache, so it is the same function at a materially different cost. Neither defect is a money defect and neither is graded by conformance - do not expect the harness to catch a regression here, and add a test that does. || fire 20260820-080002: DISPATCHED as isolated worktree worker on softhouse/T59-cancellation-and-cost, model opus.",
+   "note": "Raised by T11 findings F-1 (P1) and F-2 (P2), fire 20260819-200001. NEEDS NO ORACLE - runnable on any fire. DRIVER CORRECTION TO T11'S WORDING, which changes the fix: the port does NOT 'ignore cancellation'. generator.go:72 checks ctx.Err() ONCE AT ENTRY and never again [VERIFIED: exactly one ctx.Err() in generator.go, zero in emi.go]. That is consistent with T11's measurement of 5.9s elapsed under a 50ms deadline. So the fix is NOT 'add a cancellation check' - it is to check periodically INSIDE the amortization and EMI-adjustment loops, where the time is actually spent. F-2: cost is ~n^2.4 (13.3s at n=360) and NumberOfRepayments is unbounded; the port drops the oracle's Memo cache, so it is the same function at a materially different cost. Neither defect is a money defect and neither is graded by conformance - do not expect the harness to catch a regression here, and add a test that does. || fire 20260820-080002: DISPATCHED as isolated worktree worker on softhouse/T59-cancellation-and-cost, model opus. || fire 20260820-080002: DONE, merged (d12ef0a). Driver re-ran: build/vet/test green, conformance exit 0 29 parity PASS 2354 cells, --prove 20/20, no float32/float64 in the non-test package, contract.go untouched. F-1 fixed by putting ctx on scheduleModel and reading it at the head of every linear pass at most once per 256 periods with a sticky flag consulted AFTER the emitting loop; baseline was 50ms deadline n=360 returning at 10.82s with err=nil. F-2 fixed by restoring the oracle's memo as a prefix cache (chainStep/chainValid, invalidated by period index at six write sites): n=360 10.767s -> 39.3ms (274x), allocations 92,667,466 -> 357,932. T59 CORRECTLY REFUSED to bound NumberOfRepayments: DEC-1 contract.go:1344-1348 has no upper bound and revision 4 explicitly removed it from the graded-domain predicates, so bounding it is a user gate. It also reported honestly that its first cost test was FLAKY under load (12.06x/15.13x/14.32x against a 16x quadratic figure, no safe threshold) and replaced it with a load-independent allocation-count ratio. PAIRED REVIEWER T63 DISPATCHED - a caching change to money arithmetic cannot be signed off by conformance alone, because every promoted vector runs <=36 periods and the speedup is at n=360.",
    "branch": "softhouse/T59-cancellation-and-cost"
   },
   {
@@ -1345,6 +1345,49 @@
    "attempts": 0,
    "contract_independent": true,
    "note": "Raised by T60, fire 20260820-080002. NEEDS NO ORACLE. T60 also flagged a structural stale-fact problem: it corrected the vector-store README's counts and added an 'update in the same commit' instruction, but nothing enforces it - a test asserting the README's figures against the harness's own counts would, and that is a NEW RULE needing its own review, deliberately left out of T60's scope."
+  },
+  {
+   "id": "T63",
+   "title": "Independent adversarial review of T59's memoisation and cancellation (re-derives from source)",
+   "description": "Paired independent reviewer for T59, required by plan-gate rule 1 (every coder task has a reviewer depending on it). Central question is NOT 'does conformance pass' - it does, but every promoted parity vector runs <=36 periods while the memo's claimed speedup is at n=360, so the corpus cannot establish inertness on shapes it does not grade. Re-derive from Fineract source whether invalidation-by-period-index is sound (the EMI re-adjust smoothing loop and the residual landing on the last unpaid period both reach ACROSS periods), enumerate the write sites independently rather than trusting the count of six, and check whether a cancelled generation can return a partial non-empty schedule.",
+   "agent_role": "reviewer",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "files_hint": [
+    ".softhouse/reviews/",
+    "nexus/internal/apps/loanschedule/"
+   ],
+   "context": "loan-schedule",
+   "dependencies": [
+    "T59"
+   ],
+   "status": "in_progress",
+   "attempts": 1,
+   "branch": "softhouse/T63-review-memo-and-cancellation",
+   "contract_independent": true,
+   "note": "Raised by the driver, fire 20260820-080002, on noticing T59 was a money-path coder task with no paired reviewer. NEEDS NO ORACLE."
+  },
+  {
+   "id": "T64",
+   "title": "Capture a shape where a repayment row amortizes ZERO principal (T59 backlog)",
+   "description": "T59 found applyFinalPeriodResidual is O(n^2) on near-interest-only shapes (n=1100 -> 2.31s, 929 zero-principal rows, 34.9% cumulative in the profile) and correctly did NOT fix it: it is a faithful port of ProgressiveEMICalculator.java:1160-1219, it is innermost money code, and NO VECTOR GRADES THAT SHAPE. That last clause is the real finding - the corpus has zero discriminating power over a repayment row that amortizes zero principal, so a port could get that path wrong and pass everything. Capture such a shape from the live reference oracle at (19, HALF_UP) and promote it, which both closes the blind spot and unblocks any future work on the residual path.",
+   "agent_role": "test_writer",
+   "executor": "agent",
+   "model": "opus",
+   "target": "test",
+   "files_hint": [
+    ".softhouse/capture/",
+    ".softhouse/vectors/loanschedule/"
+   ],
+   "context": "loan-schedule",
+   "dependencies": [
+    "T59"
+   ],
+   "status": "pending",
+   "attempts": 0,
+   "contract_independent": false,
+   "note": "REQUIRES THE ORACLE - local fire only. Raised by T59 backlog items 2 and 3, fire 20260820-080002. Not dispatched this fire because T61 already holds the capture rig and two capture workers would collide in .softhouse/capture/."
   }
  ]
 }
