@@ -1,0 +1,653 @@
+{
+ "T84B-NSW-R300p0-N170-B2": {
+  "B": 2,
+  "gap": 1.6759759912428246e-17,
+  "n": 170,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N171-B2": {
+  "B": 2,
+  "gap": 1.3407807929942597e-17,
+  "n": 171,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N172-B2": {
+  "B": 2,
+  "gap": 1.0726246343954078e-17,
+  "n": 172,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N173-B2": {
+  "B": 2,
+  "gap": 8.580997075163262e-18,
+  "n": 173,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N174-B2": {
+  "B": 2,
+  "gap": 6.86479766013061e-18,
+  "n": 174,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N175-B2": {
+  "B": 2,
+  "gap": 5.491838128104488e-18,
+  "n": 175,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N176-B2": {
+  "B": 2,
+  "gap": 4.39347050248359e-18,
+  "n": 176,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N177-B2": {
+  "B": 2,
+  "gap": 3.514776401986872e-18,
+  "n": 177,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N178-B2": {
+  "B": 2,
+  "gap": 2.8118211215894976e-18,
+  "n": 178,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N179-B2": {
+  "B": 2,
+  "gap": 2.2494568972715982e-18,
+  "n": 179,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N180-B2": {
+  "B": 2,
+  "gap": 1.7995655178172786e-18,
+  "n": 180,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N181-B2": {
+  "B": 2,
+  "gap": 1.439652414253823e-18,
+  "n": 181,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N182-B2": {
+  "B": 2,
+  "gap": 1.1517219314030583e-18,
+  "n": 182,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N183-B2": {
+  "B": 2,
+  "gap": 9.213775451224466e-19,
+  "n": 183,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N184-B2": {
+  "B": 2,
+  "gap": 7.371020360979573e-19,
+  "n": 184,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N185-B2": {
+  "B": 2,
+  "gap": 5.896816288783658e-19,
+  "n": 185,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N186-B2": {
+  "B": 2,
+  "gap": 4.717453031026926e-19,
+  "n": 186,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N187-B2": {
+  "B": 2,
+  "gap": 3.7739624248215414e-19,
+  "n": 187,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N188-B2": {
+  "B": 2,
+  "gap": 3.019169939857233e-19,
+  "n": 188,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N189-B2": {
+  "B": 2,
+  "gap": 2.4153359518857866e-19,
+  "n": 189,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N190-B2": {
+  "B": 2,
+  "gap": 1.9322687615086292e-19,
+  "n": 190,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N191-B2": {
+  "B": 2,
+  "gap": 1.5458150092069034e-19,
+  "n": 191,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N192-B2": {
+  "B": 2,
+  "gap": 1.2366520073655228e-19,
+  "n": 192,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N193-B2": {
+  "B": 2,
+  "gap": 9.893216058924182e-20,
+  "n": 193,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N194-B2": {
+  "B": 2,
+  "gap": 7.914572847139345e-20,
+  "n": 194,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N195-B2": {
+  "B": 2,
+  "gap": 6.331658277711477e-20,
+  "n": 195,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N196-B2": {
+  "B": 2,
+  "gap": 5.065326622169181e-20,
+  "n": 196,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N197-B2": {
+  "B": 2,
+  "gap": 4.0522612977353446e-20,
+  "n": 197,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N198-B2": {
+  "B": 2,
+  "gap": 3.2418090381882755e-20,
+  "n": 198,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N199-B2": {
+  "B": 2,
+  "gap": 2.5934472305506206e-20,
+  "n": 199,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N200-B2": {
+  "B": 2,
+  "gap": 2.0747577844404964e-20,
+  "n": 200,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N201-B2": {
+  "B": 2,
+  "gap": 1.659806227552397e-20,
+  "n": 201,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N202-B2": {
+  "B": 2,
+  "gap": 1.3278449820419178e-20,
+  "n": 202,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N203-B2": {
+  "B": 2,
+  "gap": 1.0622759856335342e-20,
+  "n": 203,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R300p0-N204-B2": {
+  "B": 2,
+  "gap": 8.498207885068274e-21,
+  "n": 204,
+  "predictedFails": false,
+  "rate": "300.0"
+ },
+ "T84B-NSW-R600p0-N100-B1": {
+  "B": 1,
+  "gap": 1.2298272132899146e-18,
+  "n": 100,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N101-B1": {
+  "B": 1,
+  "gap": 8.198848088599431e-19,
+  "n": 101,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N102-B1": {
+  "B": 1,
+  "gap": 5.465898725732954e-19,
+  "n": 102,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N103-B1": {
+  "B": 1,
+  "gap": 3.6439324838219692e-19,
+  "n": 103,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N104-B1": {
+  "B": 1,
+  "gap": 2.4292883225479795e-19,
+  "n": 104,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N105-B1": {
+  "B": 1,
+  "gap": 1.6195255483653197e-19,
+  "n": 105,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N106-B1": {
+  "B": 1,
+  "gap": 1.0796836989102132e-19,
+  "n": 106,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N107-B1": {
+  "B": 1,
+  "gap": 7.197891326068087e-20,
+  "n": 107,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N108-B1": {
+  "B": 1,
+  "gap": 4.798594217378725e-20,
+  "n": 108,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N109-B1": {
+  "B": 1,
+  "gap": 3.1990628115858165e-20,
+  "n": 109,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N110-B1": {
+  "B": 1,
+  "gap": 2.1327085410572112e-20,
+  "n": 110,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N111-B1": {
+  "B": 1,
+  "gap": 1.4218056940381408e-20,
+  "n": 111,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N112-B1": {
+  "B": 1,
+  "gap": 9.478704626920939e-21,
+  "n": 112,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N113-B1": {
+  "B": 1,
+  "gap": 6.3191364179472924e-21,
+  "n": 113,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N114-B1": {
+  "B": 1,
+  "gap": 4.212757611964861e-21,
+  "n": 114,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N115-B1": {
+  "B": 1,
+  "gap": 2.8085050746432408e-21,
+  "n": 115,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N116-B1": {
+  "B": 1,
+  "gap": 1.8723367164288273e-21,
+  "n": 116,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N117-B1": {
+  "B": 1,
+  "gap": 1.2482244776192182e-21,
+  "n": 117,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N118-B1": {
+  "B": 1,
+  "gap": 8.321496517461454e-22,
+  "n": 118,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N119-B1": {
+  "B": 1,
+  "gap": 5.547664344974303e-22,
+  "n": 119,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N120-B1": {
+  "B": 1,
+  "gap": 3.6984428966495353e-22,
+  "n": 120,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N121-B1": {
+  "B": 1,
+  "gap": 2.4656285977663567e-22,
+  "n": 121,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N88-B1": {
+  "B": 1,
+  "gap": 1.5956557716259904e-16,
+  "n": 88,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N89-B1": {
+  "B": 1,
+  "gap": 1.063770514417327e-16,
+  "n": 89,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N90-B1": {
+  "B": 1,
+  "gap": 7.091803429448846e-17,
+  "n": 90,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N91-B1": {
+  "B": 1,
+  "gap": 4.727868952965897e-17,
+  "n": 91,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N92-B1": {
+  "B": 1,
+  "gap": 3.151912635310598e-17,
+  "n": 92,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N93-B1": {
+  "B": 1,
+  "gap": 2.101275090207065e-17,
+  "n": 93,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N94-B1": {
+  "B": 1,
+  "gap": 1.4008500601380436e-17,
+  "n": 94,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N95-B1": {
+  "B": 1,
+  "gap": 9.339000400920289e-18,
+  "n": 95,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N96-B1": {
+  "B": 1,
+  "gap": 6.226000267280193e-18,
+  "n": 96,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N97-B1": {
+  "B": 1,
+  "gap": 4.150666844853462e-18,
+  "n": 97,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N98-B1": {
+  "B": 1,
+  "gap": 2.7671112299023078e-18,
+  "n": 98,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-NSW-R600p0-N99-B1": {
+  "B": 1,
+  "gap": 1.844740819934872e-18,
+  "n": 99,
+  "predictedFails": false,
+  "rate": "600.0"
+ },
+ "T84B-XL-R0p12-N480-B233": {
+  "B": 233,
+  "gap": -0.0028158711423299848,
+  "n": 480,
+  "predictedFails": true,
+  "rate": "0.12"
+ },
+ "T84B-XL-R0p12-N480-B234": {
+  "B": 234,
+  "gap": -0.00068203367942153,
+  "n": 480,
+  "predictedFails": true,
+  "rate": "0.12"
+ },
+ "T84B-XL-R0p12-N480-B235": {
+  "B": 235,
+  "gap": 0.001451803783486925,
+  "n": 480,
+  "predictedFails": false,
+  "rate": "0.12"
+ },
+ "T84B-XL-R0p12-N480-B236": {
+  "B": 236,
+  "gap": 0.00358564124639538,
+  "n": 480,
+  "predictedFails": false,
+  "rate": "0.12"
+ },
+ "T84B-XL-R0p12-N600-B290": {
+  "B": 290,
+  "gap": -0.0019975163502240346,
+  "n": 600,
+  "predictedFails": true,
+  "rate": "0.12"
+ },
+ "T84B-XL-R0p12-N600-B291": {
+  "B": 291,
+  "gap": -0.0002802664066041174,
+  "n": 600,
+  "predictedFails": true,
+  "rate": "0.12"
+ },
+ "T84B-XL-R0p12-N600-B292": {
+  "B": 292,
+  "gap": 0.0014369835370157996,
+  "n": 600,
+  "predictedFails": false,
+  "rate": "0.12"
+ },
+ "T84B-XL-R0p12-N600-B293": {
+  "B": 293,
+  "gap": 0.0031542334806357168,
+  "n": 600,
+  "predictedFails": false,
+  "rate": "0.12"
+ },
+ "T84B-XL-R1p2-N480-B189": {
+  "B": 189,
+  "gap": -0.004025764236938463,
+  "n": 480,
+  "predictedFails": true,
+  "rate": "1.2"
+ },
+ "T84B-XL-R1p2-N480-B190": {
+  "B": 190,
+  "gap": -0.0014015619313137986,
+  "n": 480,
+  "predictedFails": true,
+  "rate": "1.2"
+ },
+ "T84B-XL-R1p2-N480-B191": {
+  "B": 191,
+  "gap": 0.0012226403743108656,
+  "n": 480,
+  "predictedFails": false,
+  "rate": "1.2"
+ },
+ "T84B-XL-R1p2-N480-B192": {
+  "B": 192,
+  "gap": 0.00384684267993553,
+  "n": 480,
+  "predictedFails": false,
+  "rate": "1.2"
+ },
+ "T84B-XL-R1p2-N600-B224": {
+  "B": 224,
+  "gap": -0.003352157239510013,
+  "n": 600,
+  "predictedFails": true,
+  "rate": "1.2"
+ },
+ "T84B-XL-R1p2-N600-B225": {
+  "B": 225,
+  "gap": -0.0011349793700435398,
+  "n": 600,
+  "predictedFails": true,
+  "rate": "1.2"
+ },
+ "T84B-XL-R1p2-N600-B226": {
+  "B": 226,
+  "gap": 0.0010821984994229335,
+  "n": 600,
+  "predictedFails": false,
+  "rate": "1.2"
+ },
+ "T84B-XL-R1p2-N600-B227": {
+  "B": 227,
+  "gap": 0.0032993763688894066,
+  "n": 600,
+  "predictedFails": false,
+  "rate": "1.2"
+ },
+ "T84B-XL-R3p6-N480-B126": {
+  "B": 126,
+  "gap": -0.004301916923670195,
+  "n": 480,
+  "predictedFails": true,
+  "rate": "3.6"
+ },
+ "T84B-XL-R3p6-N480-B127": {
+  "B": 127,
+  "gap": -0.0003678051532231333,
+  "n": 480,
+  "predictedFails": true,
+  "rate": "3.6"
+ },
+ "T84B-XL-R3p6-N480-B128": {
+  "B": 128,
+  "gap": 0.0035663066172239286,
+  "n": 480,
+  "predictedFails": false,
+  "rate": "3.6"
+ },
+ "T84B-XL-R3p6-N480-B129": {
+  "B": 129,
+  "gap": 0.007500418387670991,
+  "n": 480,
+  "predictedFails": false,
+  "rate": "3.6"
+ },
+ "T84B-XL-R3p6-N600-B138": {
+  "B": 138,
+  "gap": -0.003748910122634327,
+  "n": 600,
+  "predictedFails": true,
+  "rate": "3.6"
+ },
+ "T84B-XL-R3p6-N600-B139": {
+  "B": 139,
+  "gap": -0.00015288773221863394,
+  "n": 600,
+  "predictedFails": true,
+  "rate": "3.6"
+ },
+ "T84B-XL-R3p6-N600-B140": {
+  "B": 140,
+  "gap": 0.0034431346581970594,
+  "n": 600,
+  "predictedFails": false,
+  "rate": "3.6"
+ },
+ "T84B-XL-R3p6-N600-B141": {
+  "B": 141,
+  "gap": 0.007039157048612753,
+  "n": 600,
+  "predictedFails": false,
+  "rate": "3.6"
+ }
+}

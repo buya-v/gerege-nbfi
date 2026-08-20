@@ -1,0 +1,2843 @@
+[
+ [
+  "P-CAL-ZPA",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "P-CAL-ZPB",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RP-R36p0-N3-B1",
+  "OK",
+  [
+   {
+    "row": 3,
+    "field": "outstanding_principal_minor",
+    "oracle": 1,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RP-R21p6-N56-B18",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RP-R21p6-N56-B17",
+  "OK",
+  [
+   {
+    "row": 56,
+    "field": "outstanding_principal_minor",
+    "oracle": 17,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RP-R21p6-N2-B1",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RP-R16p8-N24-B11",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RP-R16p8-N24-B10",
+  "OK",
+  [
+   {
+    "row": 24,
+    "field": "outstanding_principal_minor",
+    "oracle": 10,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RP-R36p0-N12-B5",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RP-R36p0-N12-B4",
+  "OK",
+  [
+   {
+    "row": 12,
+    "field": "outstanding_principal_minor",
+    "oracle": 4,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RP-R7p0-N56-B24",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RP-R7p0-N56-B23",
+  "OK",
+  [
+   {
+    "row": 56,
+    "field": "outstanding_principal_minor",
+    "oracle": 23,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RP-R21p6-N6-B3",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RP-R21p6-N6-B2",
+  "OK",
+  [
+   {
+    "row": 6,
+    "field": "outstanding_principal_minor",
+    "oracle": 2,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-FAR-R21p6-N6-B30",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R21p6-N6-B50",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R21p6-N6-B100",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R21p6-N6-B1000",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R21p6-N6-B10000",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R21p6-N6-B100000",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R7p0-N56-B30",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R7p0-N56-B50",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R7p0-N56-B100",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R7p0-N56-B1000",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R7p0-N56-B10000",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R7p0-N56-B100000",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R36p0-N12-B30",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R36p0-N12-B50",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R36p0-N12-B100",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R36p0-N12-B1000",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R36p0-N12-B10000",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R36p0-N12-B100000",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R16p8-N36-B30",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R16p8-N36-B50",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R16p8-N36-B100",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R16p8-N36-B1000",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R16p8-N36-B10000",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-FAR-R16p8-N36-B100000",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R1p2-N6-B1",
+  "OK",
+  [
+   {
+    "row": 6,
+    "field": "outstanding_principal_minor",
+    "oracle": 1,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R1p2-N6-B2",
+  "OK",
+  [
+   {
+    "row": 6,
+    "field": "outstanding_principal_minor",
+    "oracle": 2,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R1p2-N6-B3",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R1p2-N6-B4",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R1p2-N6-B5",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R1p2-N12-B3",
+  "OK",
+  [
+   {
+    "row": 12,
+    "field": "outstanding_principal_minor",
+    "oracle": 3,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R1p2-N12-B4",
+  "OK",
+  [
+   {
+    "row": 12,
+    "field": "outstanding_principal_minor",
+    "oracle": 4,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R1p2-N12-B5",
+  "OK",
+  [
+   {
+    "row": 12,
+    "field": "outstanding_principal_minor",
+    "oracle": 5,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R1p2-N12-B6",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R1p2-N12-B7",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R1p2-N12-B8",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R1p2-N56-B25",
+  "OK",
+  [
+   {
+    "row": 56,
+    "field": "outstanding_principal_minor",
+    "oracle": 25,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R1p2-N56-B26",
+  "OK",
+  [
+   {
+    "row": 56,
+    "field": "outstanding_principal_minor",
+    "oracle": 26,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R1p2-N56-B27",
+  "OK",
+  [
+   {
+    "row": 56,
+    "field": "outstanding_principal_minor",
+    "oracle": 27,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R1p2-N56-B28",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R1p2-N56-B29",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R1p2-N56-B30",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R3p6-N6-B1",
+  "OK",
+  [
+   {
+    "row": 6,
+    "field": "outstanding_principal_minor",
+    "oracle": 1,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R3p6-N6-B2",
+  "OK",
+  [
+   {
+    "row": 6,
+    "field": "outstanding_principal_minor",
+    "oracle": 2,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R3p6-N6-B3",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R3p6-N6-B4",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R3p6-N6-B5",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R3p6-N12-B3",
+  "OK",
+  [
+   {
+    "row": 12,
+    "field": "outstanding_principal_minor",
+    "oracle": 3,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R3p6-N12-B4",
+  "OK",
+  [
+   {
+    "row": 12,
+    "field": "outstanding_principal_minor",
+    "oracle": 4,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R3p6-N12-B5",
+  "OK",
+  [
+   {
+    "row": 12,
+    "field": "outstanding_principal_minor",
+    "oracle": 5,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R3p6-N12-B6",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R3p6-N12-B7",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R3p6-N12-B8",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R3p6-N56-B23",
+  "OK",
+  [
+   {
+    "row": 56,
+    "field": "outstanding_principal_minor",
+    "oracle": 23,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R3p6-N56-B24",
+  "OK",
+  [
+   {
+    "row": 56,
+    "field": "outstanding_principal_minor",
+    "oracle": 24,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R3p6-N56-B25",
+  "OK",
+  [
+   {
+    "row": 56,
+    "field": "outstanding_principal_minor",
+    "oracle": 25,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R3p6-N56-B26",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R3p6-N56-B27",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R3p6-N56-B28",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R12p0-N6-B1",
+  "OK",
+  [
+   {
+    "row": 6,
+    "field": "outstanding_principal_minor",
+    "oracle": 1,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R12p0-N6-B2",
+  "OK",
+  [
+   {
+    "row": 6,
+    "field": "outstanding_principal_minor",
+    "oracle": 2,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R12p0-N6-B3",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R12p0-N6-B4",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R12p0-N6-B5",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R12p0-N12-B3",
+  "OK",
+  [
+   {
+    "row": 12,
+    "field": "outstanding_principal_minor",
+    "oracle": 3,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R12p0-N12-B4",
+  "OK",
+  [
+   {
+    "row": 12,
+    "field": "outstanding_principal_minor",
+    "oracle": 4,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R12p0-N12-B5",
+  "OK",
+  [
+   {
+    "row": 12,
+    "field": "outstanding_principal_minor",
+    "oracle": 5,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R12p0-N12-B6",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R12p0-N12-B7",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R12p0-N12-B8",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R12p0-N56-B19",
+  "OK",
+  [
+   {
+    "row": 56,
+    "field": "outstanding_principal_minor",
+    "oracle": 19,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R12p0-N56-B20",
+  "OK",
+  [
+   {
+    "row": 56,
+    "field": "outstanding_principal_minor",
+    "oracle": 20,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R12p0-N56-B21",
+  "OK",
+  [
+   {
+    "row": 56,
+    "field": "outstanding_principal_minor",
+    "oracle": 21,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R12p0-N56-B22",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R12p0-N56-B23",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R12p0-N56-B24",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R48p0-N6-B1",
+  "OK",
+  [
+   {
+    "row": 6,
+    "field": "outstanding_principal_minor",
+    "oracle": 1,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R48p0-N6-B2",
+  "OK",
+  [
+   {
+    "row": 6,
+    "field": "outstanding_principal_minor",
+    "oracle": 2,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R48p0-N6-B3",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R48p0-N6-B4",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R48p0-N6-B5",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R48p0-N12-B2",
+  "OK",
+  [
+   {
+    "row": 12,
+    "field": "outstanding_principal_minor",
+    "oracle": 2,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R48p0-N12-B3",
+  "OK",
+  [
+   {
+    "row": 12,
+    "field": "outstanding_principal_minor",
+    "oracle": 3,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R48p0-N12-B4",
+  "OK",
+  [
+   {
+    "row": 12,
+    "field": "outstanding_principal_minor",
+    "oracle": 4,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R48p0-N12-B5",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R48p0-N12-B6",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R48p0-N12-B7",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R48p0-N56-B9",
+  "OK",
+  [
+   {
+    "row": 56,
+    "field": "outstanding_principal_minor",
+    "oracle": 9,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R48p0-N56-B10",
+  "OK",
+  [
+   {
+    "row": 56,
+    "field": "outstanding_principal_minor",
+    "oracle": 10,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R48p0-N56-B11",
+  "OK",
+  [
+   {
+    "row": 56,
+    "field": "outstanding_principal_minor",
+    "oracle": 11,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R48p0-N56-B12",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R48p0-N56-B13",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R48p0-N56-B14",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R96p0-N6-B1",
+  "OK",
+  [
+   {
+    "row": 6,
+    "field": "outstanding_principal_minor",
+    "oracle": 1,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R96p0-N6-B2",
+  "OK",
+  [
+   {
+    "row": 6,
+    "field": "outstanding_principal_minor",
+    "oracle": 2,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R96p0-N6-B3",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R96p0-N6-B4",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R96p0-N6-B5",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R96p0-N12-B1",
+  "OK",
+  [
+   {
+    "row": 12,
+    "field": "outstanding_principal_minor",
+    "oracle": 1,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R96p0-N12-B2",
+  "OK",
+  [
+   {
+    "row": 12,
+    "field": "outstanding_principal_minor",
+    "oracle": 2,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R96p0-N12-B3",
+  "OK",
+  [
+   {
+    "row": 12,
+    "field": "outstanding_principal_minor",
+    "oracle": 3,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R96p0-N12-B4",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R96p0-N12-B5",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R96p0-N12-B6",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R96p0-N56-B4",
+  "OK",
+  [
+   {
+    "row": 56,
+    "field": "outstanding_principal_minor",
+    "oracle": 4,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R96p0-N56-B5",
+  "OK",
+  [
+   {
+    "row": 56,
+    "field": "outstanding_principal_minor",
+    "oracle": 5,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R96p0-N56-B6",
+  "OK",
+  [
+   {
+    "row": 56,
+    "field": "outstanding_principal_minor",
+    "oracle": 6,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-RATE-R96p0-N56-B7",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R96p0-N56-B8",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-RATE-R96p0-N56-B9",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N1-B1",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N1-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N1-B3",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N5-B1",
+  "OK",
+  [
+   {
+    "row": 5,
+    "field": "outstanding_principal_minor",
+    "oracle": 1,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N5-B2",
+  "OK",
+  [
+   {
+    "row": 5,
+    "field": "outstanding_principal_minor",
+    "oracle": 2,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N5-B3",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N5-B4",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N5-B5",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N7-B1",
+  "OK",
+  [
+   {
+    "row": 7,
+    "field": "outstanding_principal_minor",
+    "oracle": 1,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N7-B2",
+  "OK",
+  [
+   {
+    "row": 7,
+    "field": "outstanding_principal_minor",
+    "oracle": 2,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N7-B3",
+  "OK",
+  [
+   {
+    "row": 7,
+    "field": "outstanding_principal_minor",
+    "oracle": 3,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N7-B4",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N7-B5",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N7-B6",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N30-B9",
+  "OK",
+  [
+   {
+    "row": 30,
+    "field": "outstanding_principal_minor",
+    "oracle": 9,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N30-B10",
+  "OK",
+  [
+   {
+    "row": 30,
+    "field": "outstanding_principal_minor",
+    "oracle": 10,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N30-B11",
+  "OK",
+  [
+   {
+    "row": 30,
+    "field": "outstanding_principal_minor",
+    "oracle": 11,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N30-B12",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N30-B13",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N30-B14",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N60-B16",
+  "OK",
+  [
+   {
+    "row": 60,
+    "field": "outstanding_principal_minor",
+    "oracle": 16,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N60-B17",
+  "OK",
+  [
+   {
+    "row": 60,
+    "field": "outstanding_principal_minor",
+    "oracle": 17,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N60-B18",
+  "OK",
+  [
+   {
+    "row": 60,
+    "field": "outstanding_principal_minor",
+    "oracle": 18,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N60-B19",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N60-B20",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N60-B21",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N120-B22",
+  "OK",
+  [
+   {
+    "row": 120,
+    "field": "outstanding_principal_minor",
+    "oracle": 22,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N120-B23",
+  "OK",
+  [
+   {
+    "row": 120,
+    "field": "outstanding_principal_minor",
+    "oracle": 23,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N120-B24",
+  "OK",
+  [
+   {
+    "row": 120,
+    "field": "outstanding_principal_minor",
+    "oracle": 24,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N120-B25",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N120-B26",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N120-B27",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N240-B25",
+  "OK",
+  [
+   {
+    "row": 240,
+    "field": "outstanding_principal_minor",
+    "oracle": 25,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N240-B26",
+  "OK",
+  [
+   {
+    "row": 240,
+    "field": "outstanding_principal_minor",
+    "oracle": 26,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N240-B27",
+  "OK",
+  [
+   {
+    "row": 240,
+    "field": "outstanding_principal_minor",
+    "oracle": 27,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N240-B28",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N240-B29",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N240-B30",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N360-B25",
+  "OK",
+  [
+   {
+    "row": 360,
+    "field": "outstanding_principal_minor",
+    "oracle": 25,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N360-B26",
+  "OK",
+  [
+   {
+    "row": 360,
+    "field": "outstanding_principal_minor",
+    "oracle": 26,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N360-B27",
+  "OK",
+  [
+   {
+    "row": 360,
+    "field": "outstanding_principal_minor",
+    "oracle": 27,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N360-B28",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N360-B29",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TERM-R21p6-N360-B30",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R0p12-N120-B57",
+  "OK",
+  [
+   {
+    "row": 120,
+    "field": "outstanding_principal_minor",
+    "oracle": 57,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R0p12-N120-B58",
+  "OK",
+  [
+   {
+    "row": 120,
+    "field": "outstanding_principal_minor",
+    "oracle": 58,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R0p12-N120-B59",
+  "OK",
+  [
+   {
+    "row": 120,
+    "field": "outstanding_principal_minor",
+    "oracle": 59,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R0p12-N120-B60",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R0p12-N120-B61",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R0p12-N120-B62",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R0p12-N240-B116",
+  "OK",
+  [
+   {
+    "row": 240,
+    "field": "outstanding_principal_minor",
+    "oracle": 116,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R0p12-N240-B117",
+  "OK",
+  [
+   {
+    "row": 240,
+    "field": "outstanding_principal_minor",
+    "oracle": 117,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R0p12-N240-B118",
+  "OK",
+  [
+   {
+    "row": 240,
+    "field": "outstanding_principal_minor",
+    "oracle": 118,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R0p12-N240-B119",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R0p12-N240-B120",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R0p12-N240-B121",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R0p12-N360-B174",
+  "OK",
+  [
+   {
+    "row": 360,
+    "field": "outstanding_principal_minor",
+    "oracle": 174,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R0p12-N360-B175",
+  "OK",
+  [
+   {
+    "row": 360,
+    "field": "outstanding_principal_minor",
+    "oracle": 175,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R0p12-N360-B176",
+  "OK",
+  [
+   {
+    "row": 360,
+    "field": "outstanding_principal_minor",
+    "oracle": 176,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R0p12-N360-B177",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R0p12-N360-B178",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R0p12-N360-B179",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R1p2-N120-B54",
+  "OK",
+  [
+   {
+    "row": 120,
+    "field": "outstanding_principal_minor",
+    "oracle": 54,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R1p2-N120-B55",
+  "OK",
+  [
+   {
+    "row": 120,
+    "field": "outstanding_principal_minor",
+    "oracle": 55,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R1p2-N120-B56",
+  "OK",
+  [
+   {
+    "row": 120,
+    "field": "outstanding_principal_minor",
+    "oracle": 56,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R1p2-N120-B57",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R1p2-N120-B58",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R1p2-N120-B59",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R1p2-N240-B104",
+  "OK",
+  [
+   {
+    "row": 240,
+    "field": "outstanding_principal_minor",
+    "oracle": 104,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R1p2-N240-B105",
+  "OK",
+  [
+   {
+    "row": 240,
+    "field": "outstanding_principal_minor",
+    "oracle": 105,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R1p2-N240-B106",
+  "OK",
+  [
+   {
+    "row": 240,
+    "field": "outstanding_principal_minor",
+    "oracle": 106,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R1p2-N240-B107",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R1p2-N240-B108",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R1p2-N240-B109",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R1p2-N360-B149",
+  "OK",
+  [
+   {
+    "row": 360,
+    "field": "outstanding_principal_minor",
+    "oracle": 149,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R1p2-N360-B150",
+  "OK",
+  [
+   {
+    "row": 360,
+    "field": "outstanding_principal_minor",
+    "oracle": 150,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R1p2-N360-B151",
+  "OK",
+  [
+   {
+    "row": 360,
+    "field": "outstanding_principal_minor",
+    "oracle": 151,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R1p2-N360-B152",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R1p2-N360-B153",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R1p2-N360-B154",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R3p6-N120-B48",
+  "OK",
+  [
+   {
+    "row": 120,
+    "field": "outstanding_principal_minor",
+    "oracle": 48,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R3p6-N120-B49",
+  "OK",
+  [
+   {
+    "row": 120,
+    "field": "outstanding_principal_minor",
+    "oracle": 49,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R3p6-N120-B50",
+  "OK",
+  [
+   {
+    "row": 120,
+    "field": "outstanding_principal_minor",
+    "oracle": 50,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R3p6-N120-B51",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R3p6-N120-B52",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R3p6-N120-B53",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R3p6-N240-B83",
+  "OK",
+  [
+   {
+    "row": 240,
+    "field": "outstanding_principal_minor",
+    "oracle": 83,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R3p6-N240-B84",
+  "OK",
+  [
+   {
+    "row": 240,
+    "field": "outstanding_principal_minor",
+    "oracle": 84,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R3p6-N240-B85",
+  "OK",
+  [
+   {
+    "row": 240,
+    "field": "outstanding_principal_minor",
+    "oracle": 85,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R3p6-N240-B86",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R3p6-N240-B87",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R3p6-N240-B88",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R3p6-N360-B107",
+  "OK",
+  [
+   {
+    "row": 360,
+    "field": "outstanding_principal_minor",
+    "oracle": 107,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R3p6-N360-B108",
+  "OK",
+  [
+   {
+    "row": 360,
+    "field": "outstanding_principal_minor",
+    "oracle": 108,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R3p6-N360-B109",
+  "OK",
+  [
+   {
+    "row": 360,
+    "field": "outstanding_principal_minor",
+    "oracle": 109,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-LONG-R3p6-N360-B110",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R3p6-N360-B111",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-LONG-R3p6-N360-B112",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TIE-R600p0-N60-B1",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TIE-R600p0-N60-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TIE-R600p0-N90-B1",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TIE-R600p0-N90-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TIE-R600p0-N108-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84-TIE-R600p0-N108-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TIE-R600p0-N120-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84-TIE-R600p0-N120-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TIE-R600p0-N150-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84-TIE-R600p0-N150-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TIE-R600p0-N200-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84-TIE-R600p0-N200-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TIE-R300p0-N100-B1",
+  "OK",
+  [
+   {
+    "row": 100,
+    "field": "outstanding_principal_minor",
+    "oracle": 1,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TIE-R300p0-N100-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TIE-R300p0-N100-B3",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TIE-R300p0-N150-B1",
+  "OK",
+  [
+   {
+    "row": 150,
+    "field": "outstanding_principal_minor",
+    "oracle": 1,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TIE-R300p0-N150-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TIE-R300p0-N150-B3",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TIE-R300p0-N175-B1",
+  "OK",
+  [
+   {
+    "row": 175,
+    "field": "outstanding_principal_minor",
+    "oracle": 1,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TIE-R300p0-N175-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TIE-R300p0-N175-B3",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TIE-R300p0-N196-B1",
+  "OK",
+  [
+   {
+    "row": 196,
+    "field": "outstanding_principal_minor",
+    "oracle": 1,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TIE-R300p0-N196-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TIE-R300p0-N196-B3",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TIE-R300p0-N220-B1",
+  "OK",
+  [
+   {
+    "row": 220,
+    "field": "outstanding_principal_minor",
+    "oracle": 1,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TIE-R300p0-N220-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TIE-R300p0-N220-B3",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TIE-R300p0-N260-B1",
+  "OK",
+  [
+   {
+    "row": 260,
+    "field": "outstanding_principal_minor",
+    "oracle": 1,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84-TIE-R300p0-N260-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84-TIE-R300p0-N260-B3",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R600p0-N88-B1",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R600p0-N89-B1",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R600p0-N90-B1",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R600p0-N91-B1",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R600p0-N92-B1",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R600p0-N93-B1",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R600p0-N94-B1",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R600p0-N95-B1",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R600p0-N96-B1",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R600p0-N97-B1",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R600p0-N98-B1",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R600p0-N99-B1",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R600p0-N100-B1",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R600p0-N101-B1",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R600p0-N102-B1",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R600p0-N103-B1",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R600p0-N104-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84B-NSW-R600p0-N105-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84B-NSW-R600p0-N106-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84B-NSW-R600p0-N107-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84B-NSW-R600p0-N108-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84B-NSW-R600p0-N109-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84B-NSW-R600p0-N110-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84B-NSW-R600p0-N111-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84B-NSW-R600p0-N112-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84B-NSW-R600p0-N113-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84B-NSW-R600p0-N114-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84B-NSW-R600p0-N115-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84B-NSW-R600p0-N116-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84B-NSW-R600p0-N117-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84B-NSW-R600p0-N118-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84B-NSW-R600p0-N119-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84B-NSW-R600p0-N120-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84B-NSW-R600p0-N121-B1",
+  "OK",
+  [],
+  1
+ ],
+ [
+  "T84B-NSW-R300p0-N170-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N171-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N172-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N173-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N174-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N175-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N176-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N177-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N178-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N179-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N180-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N181-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N182-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N183-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N184-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N185-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N186-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N187-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N188-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N189-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N190-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N191-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N192-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N193-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N194-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N195-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N196-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N197-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N198-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N199-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N200-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N201-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N202-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N203-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-NSW-R300p0-N204-B2",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-XL-R0p12-N480-B233",
+  "OK",
+  [
+   {
+    "row": 480,
+    "field": "outstanding_principal_minor",
+    "oracle": 233,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84B-XL-R0p12-N480-B234",
+  "OK",
+  [
+   {
+    "row": 480,
+    "field": "outstanding_principal_minor",
+    "oracle": 234,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84B-XL-R0p12-N480-B235",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-XL-R0p12-N480-B236",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-XL-R0p12-N600-B290",
+  "OK",
+  [
+   {
+    "row": 600,
+    "field": "outstanding_principal_minor",
+    "oracle": 290,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84B-XL-R0p12-N600-B291",
+  "OK",
+  [
+   {
+    "row": 600,
+    "field": "outstanding_principal_minor",
+    "oracle": 291,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84B-XL-R0p12-N600-B292",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-XL-R0p12-N600-B293",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-XL-R1p2-N480-B189",
+  "OK",
+  [
+   {
+    "row": 480,
+    "field": "outstanding_principal_minor",
+    "oracle": 189,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84B-XL-R1p2-N480-B190",
+  "OK",
+  [
+   {
+    "row": 480,
+    "field": "outstanding_principal_minor",
+    "oracle": 190,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84B-XL-R1p2-N480-B191",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-XL-R1p2-N480-B192",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-XL-R1p2-N600-B224",
+  "OK",
+  [
+   {
+    "row": 600,
+    "field": "outstanding_principal_minor",
+    "oracle": 224,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84B-XL-R1p2-N600-B225",
+  "OK",
+  [
+   {
+    "row": 600,
+    "field": "outstanding_principal_minor",
+    "oracle": 225,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84B-XL-R1p2-N600-B226",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-XL-R1p2-N600-B227",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-XL-R3p6-N480-B126",
+  "OK",
+  [
+   {
+    "row": 480,
+    "field": "outstanding_principal_minor",
+    "oracle": 126,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84B-XL-R3p6-N480-B127",
+  "OK",
+  [
+   {
+    "row": 480,
+    "field": "outstanding_principal_minor",
+    "oracle": 127,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84B-XL-R3p6-N480-B128",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-XL-R3p6-N480-B129",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-XL-R3p6-N600-B138",
+  "OK",
+  [
+   {
+    "row": 600,
+    "field": "outstanding_principal_minor",
+    "oracle": 138,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84B-XL-R3p6-N600-B139",
+  "OK",
+  [
+   {
+    "row": 600,
+    "field": "outstanding_principal_minor",
+    "oracle": 139,
+    "port": 0
+   }
+  ],
+  0
+ ],
+ [
+  "T84B-XL-R3p6-N600-B140",
+  "OK",
+  [],
+  0
+ ],
+ [
+  "T84B-XL-R3p6-N600-B141",
+  "OK",
+  [],
+  0
+ ]
+]
