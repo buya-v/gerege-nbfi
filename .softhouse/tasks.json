@@ -348,11 +348,14 @@
    "dependencies": [
     "T14",
     "T71",
-    "T73"
+    "T73",
+    "T75",
+    "T77",
+    "T79"
    ],
    "status": "pending",
    "attempts": 0,
-   "note": "Only the orchestrator pushes. || fire 20260820-140000: dependency extended to T71 - the stale [UNVERIFIED] marker T66 settled must be corrected and independently reviewed before the run is archived, since archiving it would freeze a comment that understates what is now proven. || fire 20260820-140000: dependency extended to T73. T71 REJECTED T70, so the stale [UNVERIFIED] marker is STILL stale and archiving now would freeze a comment that both understates what T66 proved AND, per T71, states a false reason in its replacement. T15 does not run until the marker is corrected and independently approved."
+   "note": "Only the orchestrator pushes. || fire 20260820-140000: dependency extended to T71 - the stale [UNVERIFIED] marker T66 settled must be corrected and independently reviewed before the run is archived, since archiving it would freeze a comment that understates what is now proven. || fire 20260820-140000: dependency extended to T73. T71 REJECTED T70, so the stale [UNVERIFIED] marker is STILL stale and archiving now would freeze a comment that both understates what T66 proved AND, per T71, states a false reason in its replacement. T15 does not run until the marker is corrected and independently approved. || fire 20260820-170001: dependencies extended to T75, T77 and T79. T73 REJECTED T72, so the marker is STILL wrong and archiving now would freeze a rule the reviewer has demonstrated is insufficient; and T74/T76 are unmerged pending review."
   },
   {
    "id": "T16",
@@ -1556,10 +1559,11 @@
    "dependencies": [
     "T71"
    ],
-   "status": "in_progress",
+   "status": "rejected",
    "attempts": 0,
-   "note": "Raised by the driver, fire 20260820-140000, after T71 REJECTED T70. NEEDS NO ORACLE. This is the FOURTH draft of a rule on this comment and the THIRD to be attempted after a rejection (T65 rejected by T67; T69 fixed it and found a defect in T67's own text; T70 rejected by T71). Expect the comment, not the code, to be the defect, and expect the defect to be INSUFFICIENCY rather than falsehood. Pair with an independent reviewer (T73). || fire 20260820-170001: DISPATCHED as isolated worktree worker on softhouse/T72-fui-marker-retry, model opus, branched off softhouse/T70-fui-marker to preserve T70 approved content. In parallel with T74 and T76 (disjoint files, and T72 needs no oracle).",
-   "branch": "softhouse/T72-fui-marker-retry"
+   "note": "Raised by the driver, fire 20260820-140000, after T71 REJECTED T70. NEEDS NO ORACLE. This is the FOURTH draft of a rule on this comment and the THIRD to be attempted after a rejection (T65 rejected by T67; T69 fixed it and found a defect in T67's own text; T70 rejected by T71). Expect the comment, not the code, to be the defect, and expect the defect to be INSUFFICIENCY rather than falsehood. Pair with an independent reviewer (T73). || fire 20260820-170001: DISPATCHED as isolated worktree worker on softhouse/T72-fui-marker-retry, model opus, branched off softhouse/T70-fui-marker to preserve T70 approved content. In parallel with T74 and T76 (disjoint files, and T72 needs no oracle). || fire 20260820-170001: worker COMPLETE on softhouse/T72-fui-marker-retry (branched off softhouse/T70-fui-marker), ZERO executable change verified two ways by the author and re-verified by T73 (0 non-comment lines under nexus/; comment-stripped emi.go sha256 e660867196b5bea6... identical to main, 609 lines each). REJECTED by independent reviewer T73, and THE DRIVER CONFIRMED THE REJECTION FROM SOURCE BEFORE RULING. NOT MERGED - the diff stays on softhouse/T72-fui-marker-retry for T78 to branch from, exactly as T72 branched off T70. THE REJECTION (F-T73-1, P1): the rule is TRUE but still INSUFFICIENT, and fails one call frame further out than T70 did. T73 CONSTRUCTED the counterexample - a MID-TERM INTEREST RATE VARIATION - which satisfies conditions (1)-(8) verbatim and still routes the futureUnrecognizedInterest decision outside steps (a)-(g): generate :87 -> applyInterestRateChangesOnPeriod :120 -> changeInterestRate :273 -> :350 -> :356 -> :718 -> :723 -> :730 -> :747 -> :1160. DRIVER-VERIFIED AT PINNED 426a23544 BY READING THE SOURCE: changeInterestRate at :350 anchors interestRateChangeEffectiveDate = operation.getSubmittedOnDate().minusDays(1), NOT the disbursement date, voiding step (b)'s anchor; it calls calculateEMIValueAndRateFactors (declared :718) at :356; and :733-735 is a FOUR-term disjunction whose second term is operation.getAction() == INTEREST_RATE_CHANGE, so onlyOnActualModelShouldApply is true via the RATE-CHANGE disjunct and :741 is taken on a model that ALREADY carries EMI on every period - which is the exact mechanism step (e) cites as its protection. The structural error: T72's condition (6) fences the callers of :1160; it needed to fence the callers of :718, which has FOUR (:149 addDisbursement, :280 addCapitalizedIncome, :317 addRepaymentPeriods, :356 changeInterestRate). Because the :1160 entry on the rate-change route IS :747, condition (6) is satisfied AFFIRMATIVELY and the 13+1+2=16 tripwire still reconciles. DAMNING AND DRIVER-VERIFIED: the FROZEN contract names 'a mid-term rate change' TWICE (contract.go:563-564 and :2117-2118) as one of exactly three domain-widening events, alongside an interest pause and a multi-tranche disbursement. T72's rule fences the other two and is silent on the third - and its condition (5) names applyInterestPause, which sits three lines below the rate-change call in the same generator method. NOT a live parity failure: no vector is red, nothing needs re-capturing. SECONDARY: F-T73-2 (P2) condition (2) reduces the four-term :733-735 disjunction to isEmpty() while marking it [VERIFIED] against the line carrying the other three (not exploitable today - isCopy() unreachable from addDisbursement, T73 checked every deepCopy caller). F-T73-3 (P2) the 13+1+2=16 tripwire counts the wrong call graph: :1221 - the method that writes :1246 - has a SECOND caller at :392 inside payInterest, reaching the write without passing through :1160 at all. F-T73-4 (P3) the handoff's '231' is true at d0fbb42 but 613 at branch head 4507109. CREDITED AND KEPT: every citation resolved (T73 dumped ~100 cited lines and walked all sixteen :1160 call sites - ZERO citation defects, the first draft in this chain with none); nothing asserted about the deep copy's unobserved internal state; (e)'s non-tightness preserved; condition (7)'s admission that the other five pinned oracle inputs were never analysed against (a)-(g) judged HONEST SCOPING. AND T72's BEST CONTRIBUTION WAS INDEPENDENTLY CONFIRMED TRUE: the allowFullTermForTranche pin is UNENFORCEABLE BY THE HARNESS BY CONSTRUCTION - captures[7].inputs.allowFullTermForTranche == true in capture-prod3b-raw.json, class parity, one disbursement, and GradedDomain has no predicate that could ever distinguish it, so parity vector P-04t is admitted, graded and GREEN while its oracle run took :247. T73 judged its mitigation sufficient for a port-only reader and called it the best part of the draft. Condition (8) is the weak clause: scoped to GradedDomain, while T73's counterexample widens the PORT, not the graded domain.",
+   "branch": "softhouse/T72-fui-marker-retry",
+   "superseded_by": "T78"
   },
   {
    "id": "T73",
@@ -1576,9 +1580,9 @@
    "dependencies": [
     "T72"
    ],
-   "status": "pending",
+   "status": "done",
    "attempts": 0,
-   "note": "Paired reviewer for T72. Raised by the driver, fire 20260820-140000."
+   "note": "Paired reviewer for T72. Raised by the driver, fire 20260820-140000. || fire 20260820-170001: DONE. VERDICT REJECTED. Review committed on softhouse/T73-review-t72 (3b39d04) at .softhouse/reviews/T73-fui-marker-rereview.md. The driver independently re-derived the load-bearing claims at pinned 426a23544 by reading ProgressiveEMICalculator.java:344-360 and :728-750 and contract.go:560-568 and :2113-2122 BEFORE ruling, rather than settling it on whose report read better - all confirmed. This is the reviewer catching a TRUE-BUT-INSUFFICIENT rule for the third consecutive round on this one comment (T67 caught T65, T71 caught T70, T73 caught T72), and the first round in which the reviewer CONSTRUCTED the counterexample route rather than only naming a false clause."
   },
   {
    "id": "T74",
@@ -1594,9 +1598,9 @@
    ],
    "context": "harness",
    "dependencies": [],
-   "status": "in_progress",
+   "status": "done",
    "attempts": 0,
-   "note": "Raised by the driver, fire 20260820-170001. Supersedes the parked Path A slice of T25. ORACLE REQUIRED and reachable this fire. Shares the live oracle with T76 (Path B): MUST NOT mutate shared oracle state — no c_configuration writes, no container restart, no liquibase re-run, no tenant creation or edit. Path A is the in-JVM embeddable seam; if a deliverable seems to need a global mutation, STOP and report instead. || fire 20260820-170001: DISPATCHED as isolated worktree worker on softhouse/T74-pathA-multiplesof, model opus. ORACLE REACHABLE. In parallel with T76 (Path B REST) under an explicit no-shared-state-mutation constraint: Path A is the in-JVM seam, Path B is REST+Postgres on the gerege tenant, so neither should touch the other. Carries a DRIVER CLAIM to check: no promoted vector derives from pass 3.",
+   "note": "Raised by the driver, fire 20260820-170001. Supersedes the parked Path A slice of T25. ORACLE REQUIRED and reachable this fire. Shares the live oracle with T76 (Path B): MUST NOT mutate shared oracle state — no c_configuration writes, no container restart, no liquibase re-run, no tenant creation or edit. Path A is the in-JVM embeddable seam; if a deliverable seems to need a global mutation, STOP and report instead. || fire 20260820-170001: DISPATCHED as isolated worktree worker on softhouse/T74-pathA-multiplesof, model opus. ORACLE REACHABLE. In parallel with T76 (Path B REST) under an explicit no-shared-state-mutation constraint: Path A is the in-JVM seam, Path B is REST+Postgres on the gerege tenant, so neither should touch the other. Carries a DRIVER CLAIM to check: no promoted vector derives from pass 3. || fire 20260820-170001: worker COMPLETE on softhouse/T74-pathA-multiplesof, five commits, NOT YET MERGED - awaiting independent review T75. Delivered: (A) Capture3i.java forked from pass 3h giving CurrencyData.inMultiplesOf and installmentAmountInMultiplesOf SEPARATE slots in Case, model construction and emitted JSON; 36 cases, nine rig calibrations reproduced cell for cell, determinism control passed on identical capturesCanonicalSha256 across two runs. THE RULE AS PINNED BY OBSERVATION: all money movement belongs to CurrencyData.inMultiplesOf alone - every installment-only arm byte-identical to its baseline, which is the FIRST OBSERVED proof of a blindness that until now rested on a source reading. The gate is FOUR conjuncts, not the three the driver's brief quoted (the fourth is MathUtil.isGreaterThanZero(amountScaled) at Money.java:49). The channel ROUNDS THE DISBURSED PRINCIPAL ITSELF (requested MNT 5,000,000 returned as 5,000,002 at inMultiplesOf=7) and has NO zero-guard, so MNT 1,000 / 6 x 21.6% quantizes every installment to zero - which is what distinguishes it from safeRoundingForEMI. AT THE PRODUCTION MinorUnitDigits=2 NEITHER INPUT MOVES A SINGLE CELL. (B) T21 P1-11 captured at six principals MNT 4.00-6,940.00 each with a precision-12 companion. (C) THE DRIVER'S PASS-3 CLAIM HOLDS, verified by resolving every vector's capture_ref: 36 parity vectors across 3b/3c/3d/3e/3f/3g, 4 refusals with no capture, ZERO naming capture-prod-raw.json. Marked NON-PROMOTABLE (superseded, not doubted) in both PASS3 reports, the store README and PIN.json's note - deliberately NOT in never_promotable_capture_case_ids, because that list is typed as case ids, pass 3 shares its ids with pass 3b, and the pin schema is closed by DisallowUnknownFields (the worker tried it and it exits 2). PROMOTION: NOTHING from the multiples-of groups - the frozen contract has no field for CurrencyData.inMultiplesOf, the graded domain pins MinorUnitDigits to 2, and installment.rounding.multiple is 'blind'; recorded in capabilities.json instead. SIX vectors promoted from group E, counterfactual MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19, unusual in containing no model since both arms are oracle observations. Mutation-proved: the mutation kills 2 of the previous 36 and 8 of 42 now. Conformance PASS exit 0, 42 parity vectors, 5576 cells, 0 invariant violations; --prove 21/0; go build/test exit 0; nexus/ untouched; gofmt -l reports exactly contract.go. TWO THINGS CARRIED FORWARD: (1) ONE PREDICTION WAS REFUTED AND REPORTED AS SUCH - S2 said T74-D1's final row would carry balance 0 and the oracle emitted 1000; source-traced to getOutstandingLoanBalance()'s memo omitting emi from its dependency array, with the :1180 guard that FINDS the target period being what stales its balance. The worker names a fully specified candidate (MNT 0.01 / 6 x 21.6%, dp 2) for whether this is reachable INSIDE the graded domain - IF IT IS, THE ORACLE EMITS A GRADED SCHEDULE THAT DOES NOT AMORTIZE TO ZERO, which would violate a stated property invariant. (2) The worker corrected its own claim mid-task (the mutation kills two pre-existing vectors, not one) and softened an unobserved claim about T76.",
    "branch": "softhouse/T74-pathA-multiplesof"
   },
   {
@@ -1633,9 +1637,9 @@
    ],
    "context": "harness",
    "dependencies": [],
-   "status": "in_progress",
+   "status": "done",
    "attempts": 0,
-   "note": "Raised by the driver, fire 20260820-170001. Supersedes the parked Path B slice of T25. ORACLE REQUIRED and reachable this fire. Shares the live oracle with T74 (Path A, in-JVM seam): MUST NOT mutate shared oracle state — no c_configuration writes, no container restart, no liquibase re-run, no tenant creation or edit. Path B is REST + PostgreSQL against the EXISTING gerege tenant. If a deliverable seems to need a global mutation, STOP and report instead. || fire 20260820-170001: DISPATCHED as isolated worktree worker on softhouse/T76-pathb-gerege-recapture, model opus. ORACLE REACHABLE. In parallel with T74 under the same no-shared-state-mutation constraint. Closes the T22 P0 list that T25 parked as oracle_unreachable.",
+   "note": "Raised by the driver, fire 20260820-170001. Supersedes the parked Path B slice of T25. ORACLE REQUIRED and reachable this fire. Shares the live oracle with T74 (Path A, in-JVM seam): MUST NOT mutate shared oracle state — no c_configuration writes, no container restart, no liquibase re-run, no tenant creation or edit. Path B is REST + PostgreSQL against the EXISTING gerege tenant. If a deliverable seems to need a global mutation, STOP and report instead. || fire 20260820-170001: DISPATCHED as isolated worktree worker on softhouse/T76-pathb-gerege-recapture, model opus. ORACLE REACHABLE. In parallel with T74 under the same no-shared-state-mutation constraint. Closes the T22 P0 list that T25 parked as oracle_unreachable. || fire 20260820-170001: worker COMPLETE on softhouse/T76-pathb-gerege-recapture, three commits, NOT YET MERGED - awaiting independent review T77. THE WORKER REFUTED THE DRIVER'S BRIEF BEFORE TOUCHING THE ORACLE and registered the refutation in t76/PREDICTION.md committed 09:09:44Z, before its first capture at 09:12:11Z, so it cannot be back-fitted. THE DRIVER HAS RE-CHECKED THE REFUTATION FROM THE COMMITS AND IT HOLDS - see .softhouse/reviews/driver-rederivation-20260820-170001.md: T22 P0-3 closed by T36 78c5bda, P0-4 by T36 c3bbf26, P0-6 by T36 fab040a + 60c08ad, P1-14 by T30 1b65b1c; P0-5 attributed to T30 1b65b1c but NOT directly verified by the driver, left to T77. contract.go is at REVISION 11, not the REVISION 10 the driver's brief named. The stale premise came from RESUME.md and from T25's own park list, and the driver propagated it into a dispatch prompt without opening it - the same failure mode as last fire's F-1. DELIVERED ANYWAY, once the brief dissolved: a THIRD independent re-capture on tenant gerege at (19,HALF_UP), all four byte-identical to the HALF_EVEN originals AND to T36's set, 0 minor units moved, nothing retracted; rounding mode read from the server three ways (c_configuration row = 4, the JVM's own MoneyHelper init line, and a half-cent canary answering 20925.05). TWO REAL HOLES FOUND AND CLOSED IN THE FAIL-THE-RUN PRECONDITIONS: CANARY_EXPECT was env-overridable, so CANARY_EXPECT=20925.04 sh preconditions.sh default would have printed PASS while the JVM ran HALF_EVEN; and the canary REQUEST was pinned only by path, so a non-tie request returning 20925.05 under either mode turned the strongest assertion into a tautology. Four attack transcripts committed, all exit 1. A DEFECT IN THE PROPERTY INVARIANTS: T22's ten are failable on principalDue/totalDueForPeriod but a one-minor-unit change to totalOriginalDueForPeriod trips NOTHING - the *Original*/*Outstanding* mirror columns are never read; new failable invariant I7 closes it. PROMOTION: NOTHING, and the driver agrees, having verified each refusal against the frozen contract - B-02 because contract.go:114-116 refuses InstallmentRoundingMultipleMinor for Run 1 per ratified DEC-1 section 4.7 while AGREEING it moves money (1,763 minor units of margin in period 1), :1130 pinning it to 0; B-03/B-04 because contract.go:1183 pins daysInYearCustomStrategy null and the frozen GenerateRequest has no component to carry it (a contract shape change is a hard user gate); B-01 as money-identical to the already-promoted P-MNT-1M2 - THAT LAST ONE THE DRIVER DID NOT CHECK CELL BY CELL, left to T77, because if the identity is wrong a promotable vector was discarded. Raised proposed gate G-7. LATENT TRAP REPORTED: bash .softhouse/conformance.sh exits 0 VERDICT PASS (36 parity, 4034 cells, 0 invariant violations), but invoked as `sh` it dies at line 104 on bash process substitution and EXITS 2 - indistinguishable from the harness's real fatal code, which is the code that must never be read as a pass. Shared-oracle discipline held: no config writes, no restart (container start time unchanged), no tenant work, no products created, m_loan still 0.",
    "branch": "softhouse/T76-pathb-gerege-recapture"
   },
   {
@@ -1657,6 +1661,45 @@
    "status": "pending",
    "attempts": 0,
    "note": "Paired reviewer for T76, required by the plan gate. Raised by the driver, fire 20260820-170001."
+  },
+  {
+   "id": "T78",
+   "title": "FIFTH draft of the futureUnrecognizedInterest rule — fence the callers of :718, not the callers of :1160",
+   "description": "placeholder — see dispatch prompt",
+   "agent_role": "coder",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "files_hint": [
+    "nexus/internal/apps/loanschedule/emi.go"
+   ],
+   "context": "loan-schedule",
+   "dependencies": [
+    "T73"
+   ],
+   "status": "in_progress",
+   "attempts": 0,
+   "branch": "softhouse/T78-fui-marker-d5",
+   "note": "Raised and DISPATCHED by the driver, fire 20260820-170001, after T73 REJECTED T72. FIFTH draft of a rule on one comment (T65 rejected by T67; T69 fixed it and found a defect in T67's own text; T70 rejected by T71; T72 rejected by T73). THE DRIVER IS CHANGING THE SHAPE OF THE INSTRUCTION rather than asking for a fifth enumeration, because four rounds of 'fix the findings' have produced four true-but-insufficient rules and each reviewer found the next hole one call frame further out. AWAITS an independent reviewer (T79) which is NOT dispatched this fire - T78 will sit unmerged on its branch exactly as T70 and T72 did."
+  },
+  {
+   "id": "T79",
+   "title": "INDEPENDENT review of T78 — attack the closed form, not the enumeration",
+   "description": "Spawned fresh without planning context. Read the upstream handoff from the BRANCH and git diff main...softhouse/T78-fui-marker-d5 with three dots. T78 was told to abandon caller enumeration and state the rule in CLOSED form, anchored to the frozen contract's own three domain-widening events (multi-tranche disbursement, interest pause, mid-term rate change — contract.go:563-564, :2117-2118). THE DECISIVE TEST IS STILL SUFFICIENCY, but the attack surface has moved: do not hunt a fifth uncovered caller, hunt whether the CLOSED form actually closes. Specifically: (1) is the fence stated over the PORT's accepted input surface rather than over GradedDomain — T73's counterexample defeated T72's condition (8) precisely because (8) was scoped to GradedDomain while the counterexample widened the port; (2) does it cover the SECOND writer of futureUnrecognizedInterest, :1221's caller at :392 inside payInterest, which reaches the :1246 write without passing through :1160 at all (T73 F-T73-3); (3) is the four-term disjunction at :733-735 stated in full rather than reduced to isEmpty() (T73 F-T73-2); (4) ZERO executable change, verified two ways; (5) every citation re-opened at pinned 426a23544; (6) contract.go untouched and never gofmt'd. Verdict: APPROVED / MICRO-FIX (<=10 lines, mechanical, never a number and never money logic) / REJECTED with specifics.",
+   "agent_role": "reviewer",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "files_hint": [
+    "nexus/internal/apps/loanschedule/emi.go"
+   ],
+   "context": "loan-schedule",
+   "dependencies": [
+    "T78"
+   ],
+   "status": "pending",
+   "attempts": 0,
+   "note": "Paired reviewer for T78. Raised by the driver, fire 20260820-170001, NOT dispatched this fire — the driver dispatched only what it had budget to see through. This is the FIRST task of the next fire."
   }
  ]
 }
