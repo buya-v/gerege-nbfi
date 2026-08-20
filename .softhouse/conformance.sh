@@ -110,6 +110,11 @@
 #   suppress it. `builtin eval` is not decoration: with a bare `eval`, an exported
 #   `eval()` function made bash 5.2.37 refuse the harness, and that WOULD have
 #   been a false refusal [VERIFIED: T97 hostile-environment matrix, both readings].
+#   `builtin` itself has no such shield and there is no fixed point for the game:
+#   an exported `builtin()` function DOES make this guard refuse [VERIFIED: T97,
+#   bash 5.2.37]. That is one name instead of three, the refusal is fail-CLOSED,
+#   and no fail-closed refusal can turn a red run green — which is why the trade
+#   is taken in this direction and written down rather than hidden.
 #
 #   The whole probe runs inside a COMMAND SUBSTITUTION, i.e. a subshell, so a
 #   shell that aborts on a syntax error inside `eval` (which is what POSIX mode
@@ -143,9 +148,11 @@ elif [ "$conformance_psub_seen" != "$CONFORMANCE_PSUB_TOKEN" ]; then
   # is unavailable" and "the probe was never allowed to run" is true, and
   # inventing one would be the same class of fiction as the old `no Go toolchain`
   # line. The ONE case it can name for certain is a restricted shell, which
-  # advertises itself in `$-` [VERIFIED: T97 — `$-` is `hrBc` under `bash -r` on
-  # 3.2.57, 5.2.37 and 5.3.9]. Worth naming, because `bash -r` is the one refusal
-  # here where process substitution itself is fine: `bash -r -c 'IFS= read -r v <
+  # advertises itself in `$-` [VERIFIED: T97 — `$-` contains `r` under `bash -r`
+  # on 3.2.57, 5.2.37 and 5.3.9: `hrB` running a script, `hrBc` under `-c`; the
+  # test is for the `r`, not for the whole string]. Worth naming, because
+  # `bash -r` is the ONE refusal here where process substitution itself is fine:
+  # `bash -r -c 'IFS= read -r v <
   # <(printf "%s\n" X)'` returns X. What `bash -r` cannot do is the rest of the
   # harness — `cd` is refused, so SCRIPT_DIR and REPO_ROOT come out EMPTY, and
   # every `>` redirection is refused too. Refusing it is correct; the old guard
