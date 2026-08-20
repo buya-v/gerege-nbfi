@@ -1,5 +1,34 @@
 # T64 — the prediction was RIGHT and one of its reasons was WRONG
 
+> ## ⛔ CORRECTED BY T68 (independent audit) — driver-applied, fire 20260820-110001
+>
+> This document was written to record "right prediction, wrong mechanism" (pattern **P-11**).
+> The independent audit T68 found that **the correction document is itself right about the code and
+> wrong about the reason, twice** — P-11 recursing one level up. Two statements below are FALSE and
+> are marked inline where they occur:
+>
+> 1. **"Both readings happen to produce `n ≥ 2·B` … which is why the wrong one survived a ten-rate
+>    check"** is false. §2.4 and `Capture3g.java`'s header state the threshold **strictly**
+>    (`n > 2·B`). The two readings differ at **exactly `n = 2·B`** — which is the case of `T64-ZP-A`,
+>    `T64-ZP-C` and `T64-ZP-D`. This document's own table shows it: `T64-ZP-A` has n=56, B=28, and
+>    `28 > 28` → false. So the ten-rate check **did** discriminate; §2.6's derived column had already
+>    used the non-strict threshold. The probe that follow-up F-5 asks for already existed and already
+>    fired.
+> 2. **"which all 32 previously-promoted parity vectors pass"** and **"nothing in the corpus could
+>    have told the two readings apart"** are false of `ZP-GUARD-SCALES-THE-INSTALLMENT`. It was
+>    **already graded before this capture** — `PASS 21 FAIL 11` at 32 vectors, reproduced by T68 and
+>    stated independently in T64's own handoff ("already graded, 11 of 32 fail"). T64 corrected the
+>    *vector text* when the harness refuted its first draft and did not carry the correction into
+>    *this* document. That is the corrections-leak pattern, and it is why the sweep for restatements
+>    is part of the rule and not a nicety.
+>
+> **Nothing in the promoted vectors changes.** T68's verdict on T64 is APPROVED WITH REQUIRED
+> CORRECTIONS, P0: 0, and no vector is withdrawn. The prediction was confirmed by the oracle
+> 1539/1539 and the corrected `Money.copy(double)` mechanism was re-derived and upheld
+> [`Money.java:216-222` → constructor `:40-53`].
+
+
+
 **Written AFTER the capture. `PREDICTION.md` is deliberately left exactly as it was committed** —
 rewriting it would destroy the only thing that makes it evidence, which is that git can show it
 predates `run-pass3g.sh`. This file is the correction, and pattern **P-11** is why it exists:
@@ -54,8 +83,11 @@ the final period's installment has absorbed the whole residual. So:
 | `T64-ZP-B` (n=55) | 28 | 27 | `28 > 27` → **true** | loop runs; pays off at period 15 |
 
 **The gate is `shouldBeAdjusted()` returning false at `:1267-1269`, not the adjustment quantizing
-away at `:1270-1273`.** Both readings happen to produce `n ≥ 2·B`, which is exactly why the wrong
-one survived a ten-rate check: **agreement on the answer is not agreement on the mechanism.**
+away at `:1270-1273`.** ~~Both readings happen to produce `n ≥ 2·B`, which is exactly why the wrong
+one survived a ten-rate check~~ — **FALSE, see the T68 correction at the top of this file: the
+threshold is strict (`n > 2·B`) and the readings differ at exactly `n = 2·B`, which is `T64-ZP-A`,
+`T64-ZP-C` and `T64-ZP-D`, so the ten-rate check did discriminate.** The surviving point stands on
+its own: **agreement on the answer is not agreement on the mechanism.**
 
 ## The two rates where the predicted `n_min` was too high
 
@@ -94,10 +126,12 @@ The misreading is not exotic. `originalEmi.copy(floor(n/2))` is a method called 
 installment** taking **a count**, and reading it as "the installment times the count" is the natural
 thing to do. It is what the author of this capture did, from these lines, before opening
 `Money.java`. It is now a **named, measured counterfactual** in the store —
-`ZP-GUARD-SCALES-THE-INSTALLMENT` — which all 32 previously-promoted parity vectors pass and
+`ZP-GUARD-SCALES-THE-INSTALLMENT` — which ~~all 32 previously-promoted parity vectors pass~~
+**(FALSE: it was already red at 32, `PASS 21 FAIL 11` — see the T68 correction at the top)** and
 `T64-ZP-A`, `T64-ZP-C` and `T64-ZP-D` kill by 28, 17 and 36 minor units respectively.
 
 The Go port already had the correct reading, with the correct citation, before this task started
 [`nexus/internal/apps/loanschedule/emi.go:924-942`]. That is an independent confirmation of the
 correction and a point in T10's favour — and it does not reduce the risk, because until this capture
-**nothing in the corpus could have told the two readings apart.**
+~~nothing in the corpus could have told the two readings apart.~~ **FALSE — 11 of the 32 vectors
+already told them apart. See the T68 correction at the top of this file.**
