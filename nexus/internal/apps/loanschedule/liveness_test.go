@@ -14,12 +14,15 @@ import (
 // Liveness, not arithmetic.
 //
 // .softhouse/conformance.sh grades neither of the two defects this file exists
-// for. The corpus replays 29 captured shapes through a live context and compares
-// money cells, so a port that ignores cancellation entirely and a port that
-// takes ten seconds to answer both PASS it — the run is silent about how long an
-// answer took and about whether a caller who left is still being computed for.
-// Both are properties of the SHAPE of the computation rather than of its values,
-// and a property nothing grades is a property that rots.
+// for. The corpus replays its captured shapes -- however many are promoted on the
+// day, deliberately not restated here, because this line already went stale once
+// and needed a hand edit -- through a
+// live context and compares money cells, so a port that ignores cancellation
+// entirely and a port that takes ten seconds to answer both PASS it — the run is
+// silent about how long an answer took and about whether a caller who left is
+// still being computed for. Both are properties of the SHAPE of the computation
+// rather than of its values, and a property nothing grades is a property that
+// rots.
 //
 // The two facts pinned here:
 //
@@ -35,11 +38,17 @@ import (
 //     O(n) loops. Cost was measured at ~n^2.1: 10.77 s at n=360.
 //
 // Neither test measures cost with a stopwatch where it can avoid one. The cost
-// test asserts a ratio of ALLOCATION COUNTS, which is a deterministic property of
-// the computation and not of the box (the wall-clock version of it was measured
-// flaky under load -- see its doc comment). The cancellation test does need a
-// clock, because promptness is what it is about; its budget is set ~40x above
-// the measured figure and the reasoning is recorded where it is used.
+// test asserts ALLOCATIONS PER PERIOD across five terms and carries no timing
+// bound at all, which makes it a deterministic property of the computation and
+// not of the box (the wall-clock version of it was measured flaky under load --
+// see its doc comment). The cancellation test does need a clock, because
+// promptness is what it is about; its budget is set ~40x above the measured
+// figure and the reasoning is recorded where it is used.
+//
+// Each test states, in its own doc, the defect class it CANNOT see. That is not
+// throat-clearing: the cost test was green for two revisions on a port that was
+// quadratic twice over (T63 F-2), and both blind spots were in the gap between
+// what its name claimed and what its metric could reach.
 
 // livenessRequest is a graded-domain request of an arbitrary term. Everything
 // but NumberOfRepayments is the corpus's own baseline shape.
@@ -143,91 +152,215 @@ func TestCancellationIsHonouredDuringGeneration(t *testing.T) {
 	}
 }
 
-// TestGenerationCostIsNotQuadraticInTheTerm is T11 F-2's regression test.
+// costSampleTerms are the terms TestGenerationCostIsLinearInTheTerm measures, and
+// gradedCostCeiling is the largest term over which this port's cost is claimed to
+// be linear. Both are stated here rather than inside the test because the
+// ceiling is a MEASURED FACT ABOUT THE PORT and the test's whole job is to keep
+// it true.
 //
-// It asserts a RATIO between two terms, because an absolute duration says more
-// about the box than about the code. What it takes the ratio OF is not wall
-// clock: it is the number of heap allocations the generation performs.
+// WHY THE CEILING IS 1,000 AND NOT INFINITY. Beyond it this port is quadratic in
+// the term and SO IS THE REFERENCE ORACLE, by the same mechanism: on a shape
+// where many rows amortize no principal, applyFinalPeriodResidual re-enters
+// itself (emi.go, the `m.applyFinalPeriodResidual(depth + 1)` arm), the faithful
+// port of calculateLastUnpaidRepaymentPeriodEMI's self-call
+// [VERIFIED: ProgressiveEMICalculator.java:1211-1215 -- the guard at :1211-1213 and
+// the self-call at :1214; the Java has no depth cap, this port bounds it at
+// len(periods)+2]. Each level is O(n) and the
+// depth grows with n, so total cost is O(n^2). Measured at T65 on the
+// livenessRequest shape, with the recursion depth instrumented:
 //
-// THAT SUBSTITUTION IS THE WHOLE POINT OF THIS TEST, and it was made after
-// measuring the alternative rather than instead of measuring it. A wall-clock
-// version of this test, min-of-five, was run on a box carrying twice as many
-// spinning processes as it has cores: the ratio came out at 12.06x, 15.13x and
-// 14.32x on three consecutive runs, against a quadratic figure of 16x. There is
-// no threshold that separates "linear on a loaded box" from "quadratic on an
-// idle one", because a longer run absorbs proportionally more preemption and
-// more GC than a shorter one, and taking the minimum does not fix a bias that
-// applies to every repetition. A timing test with no safe threshold is the flaky
-// test that gets deleted, taking the regression cover with it.
+//	    n     max recursion depth     allocations per period
+//	  360                       0                        994
+//	1,000                      11                        993
+//	1,050                      19                        995
+//	1,100                     929                     19,024   <- the cliff
+//	1,500                   1,313                     27,403
+//	2,000                   1,797                     38,097
 //
-// Allocation count has none of that. It is a property of the computation, not of
-// the machine: the port is deterministic, so the same request performs the same
-// allocations on every run, on every box, under any load. Measured drift across
-// repeated runs is under 0.1% (45,005 then 44,992 at n=45), which is the test
-// harness's own allocations landing inside the window, and the threshold carries
-// a 2x margin over that in both directions. And the proxy is a faithful one:
-// nearly every allocation in a generation is a big.Rat produced by a step of the
-// interest chain, which is precisely the quantity the memo bounds.
+// Wall clock at the same points, min of 3 below the cliff: 63 ms at n=500, 80 ms
+// at n=1,000, 4.54 s at n=1,500, 8.83 s at n=2,000, 21.86 s at n=3,000. (T63 F-2
+// measured 63.0 ms / 131.0 ms / 7.239 s at n=500/1,000/2,000; T65 reproduces the
+// cliff and locates its onset between n=1,050 and n=1,100, which T63's three
+// sample points could only bracket as "between 1,000 and 2,000".)
 //
-//	                       n=90        n=360      ratio
-//	memo on (this port)     76,581     357,932     4.67x     ~1,000 per period
-//	memo off (pre-T59)   4,114,328  92,667,466    22.52x     quadratic
-//
-// Linear over a 4x term is 4x and quadratic is 16x. The threshold sits at 9 --
-// twice the observed figure and well below both the 16x textbook quadratic and
-// the 22.52x the un-memoised port actually produces.
-//
-// The wall-clock bound that follows is deliberately crude and secondary. It is
-// there only to catch a catastrophic constant factor that the ratio would divide
-// out, and at 5 s it is ~110x the 39 ms measured locally while still sitting
-// below the 10.77 s the un-memoised port took at this exact term.
-func TestGenerationCostIsNotQuadraticInTheTerm(t *testing.T) {
-	const (
-		small              = 90
-		large              = 360
-		maxRatioHundredths = 900 // 9.00x
-		absoluteCap        = 5 * time.Second
-	)
+// THE TERM IS NOT THE ONLY ROUTE ONTO IT. T63 F-4 measured the same cliff at
+// n=256 by raising the annual rate to 200%, at a principal and disbursement shape
+// inside the graded domain. The driving quantity is "many rows amortize zero
+// principal", which rate reaches far sooner than term does. So the linearity
+// claimed here is claimed at ONE RATE -- the corpus baseline 21.6% -- and nowhere
+// else, and the ceiling below would be much lower at a higher one. Both are
+// recorded as follow-ups; neither is fixed here, because the recursion is
+// faithful to the reference oracle and changing it unvectored would be a
+// divergence, not an optimisation.
+const (
+	gradedCostCeiling = 1000
+	costSmallTerm     = 90
+)
 
-	work := func(term int32) uint64 {
-		req := livenessRequest(term)
+var costSampleTerms = []int32{costSmallTerm, 180, 360, 720, gradedCostCeiling}
+
+// TestGenerationCostIsLinearInTheTerm is T11 F-2's regression test.
+//
+// It asserts that the COST PER PERIOD does not grow with the term, over every
+// term up to gradedCostCeiling. That is a property, not a threshold on today's
+// numbers: a linear port holds it at any constant, a quadratic one violates it at
+// every constant once the sample range is wide enough.
+//
+// WHAT IT MEASURES, AND WHY NOT WALL CLOCK. Heap allocations, not time. The
+// substitution was made at T59 after measuring the alternative rather than
+// instead of measuring it: a wall-clock version, min-of-five, run on a box
+// carrying twice as many spinning processes as it has cores, returned 12.06x,
+// 15.13x and 14.32x on three consecutive runs against a quadratic figure of 16x.
+// There is no threshold separating "linear on a loaded box" from "quadratic on an
+// idle one", because a longer run absorbs proportionally more preemption and GC
+// than a shorter one and taking the minimum does not fix a bias that applies to
+// every repetition. Allocation count has none of that: the port is deterministic,
+// so the same request allocates the same amount on every run, on every box, under
+// any load. Measured drift across repeated runs is under 0.1% (45,005 then 44,992
+// at n=45), which is the harness's own allocations landing inside the window.
+// EVERY assertion below is therefore machine-independent, and this test has no
+// timing bound at all.
+//
+// WHAT THIS TEST CANNOT SEE, STATED SO IT DOES NOT ROT.
+//
+//  1. Work that allocates nothing. The exact instance: until T65, generate called
+//     a helper installmentNumberOf once per emitted row and that helper rescanned
+//     every row already emitted -- a Theta(n^2) with ZERO allocations, so this
+//     metric read it as free at every term (T63 F-2 half one). It was fixed by
+//     inspection and proved by identity (3,600 shapes byte-identical, 32/32
+//     conformance), NOT by this test, and re-running this test against the
+//     restored scan at T65 confirmed it stays green. No cost metric available
+//     here would have caught it either: at n=1,000 the scan cost 2.12 ms out of a
+//     230 ms generation, under 1%, so wall clock could not have separated it from
+//     noise anywhere inside the graded ceiling.
+//  2. Anything above gradedCostCeiling, or at a rate above the corpus baseline.
+//     See the comment on that constant. The top sample point is deliberately AT
+//     the ceiling rather than comfortably below it, so that the cliff migrating
+//     DOWN into the supported range fails this test -- which is the direction that
+//     matters. T59's version sampled n=90 and n=360 only, 3.1x below the cliff's
+//     measured onset, and would have reported "4.67x, PASS" on a port that takes
+//     8.8 s at n=2,000.
+//
+// The margin. Measured at T65: 850 allocations per period at n=90, then 994, 994,
+// 993, 993 at n=180, 360, 720 and 1,000 — a 1.16x spread, and the one outlier is
+// the SHORTEST term, where the model's fixed setup cost is spread over fewer
+// periods. maxPerPeriodGrowth is 2.00x. That is ~5x looser than the observed
+// spread and still far tighter than either defect needs: the un-memoised port was
+// measured at T65 going 45,715 -> 129,228 -> 257,410 -> 513,117 -> 2,282,302 per
+// period across the same five terms, tripping at the FIRST step (2.82x at n=180),
+// and the residual cliff trips at 22.38x if gradedCostCeiling is raised to 1,100.
+// Both mutations were run and both went red; see T65's handoff.
+func TestGenerationCostIsLinearInTheTerm(t *testing.T) {
+	// Hundredths of a multiple, so 200 reads as 2.00x. Integer throughout: no
+	// float appears in this package, money or not.
+	const maxPerPeriodGrowth = 200
+
+	perPeriod := func(term int32) uint64 {
 		var before, after runtime.MemStats
 		runtime.ReadMemStats(&before)
-		if _, err := (Generator{}).Generate(context.Background(), req); err != nil {
+		if _, err := (Generator{}).Generate(context.Background(), livenessRequest(term)); err != nil {
 			t.Fatalf("term %d: %v", term, err)
 		}
 		runtime.ReadMemStats(&after)
-		return after.Mallocs - before.Mallocs
+		return (after.Mallocs - before.Mallocs) / uint64(term)
 	}
 
-	smallWork, largeWork := work(small), work(large)
-	if smallWork == 0 {
-		t.Fatalf("n=%d allocated nothing; the measurement is broken, not the port", small)
+	base := perPeriod(costSampleTerms[0])
+	if base == 0 {
+		t.Fatalf("n=%d allocated nothing per period; the measurement is broken, not the port",
+			costSampleTerms[0])
 	}
-	// Hundredths of a multiple, so 467 reads as 4.67x. Integer throughout: no
-	// float appears in this package, money or not.
-	ratio := int64(largeWork) * 100 / int64(smallWork)
-	t.Logf("n=%d %d allocations, n=%d %d allocations, ratio %d.%02dx over a %dx term "+
-		"(linear %dx, quadratic %dx)",
-		small, smallWork, large, largeWork, ratio/100, ratio%100,
-		large/small, large/small, (large/small)*(large/small))
+	t.Logf("n=%-5d %d allocations per period (baseline)", costSampleTerms[0], base)
 
-	if ratio > maxRatioHundredths {
-		t.Errorf("work grew %d.%02dx over a %dx term (n=%d allocated %d, n=%d allocated %d). "+
-			"Linear is %dx and quadratic is %dx: this is the interest chain being recomputed "+
-			"inside O(n) loops again (T11 F-2). The reference oracle memoises it "+
-			"(RepaymentPeriod's Memo fields); see chainStep.",
-			ratio/100, ratio%100, large/small, small, smallWork, large, largeWork,
-			large/small, (large/small)*(large/small))
+	for _, term := range costSampleTerms[1:] {
+		got := perPeriod(term)
+		growth := int64(got) * 100 / int64(base)
+		t.Logf("n=%-5d %d allocations per period, %d.%02dx the n=%d baseline",
+			term, got, growth/100, growth%100, costSampleTerms[0])
+		if growth > maxPerPeriodGrowth {
+			t.Errorf("cost per period grew %d.%02dx from n=%d (%d allocations per period) to "+
+				"n=%d (%d per period). A linear generation holds this flat at any term. "+
+				"Two known causes, in the order to check them: the interest chain is being "+
+				"recomputed inside O(n) loops again -- the reference oracle memoises it via "+
+				"RepaymentPeriod's Memo fields, see chainStep (T11 F-2) -- or the "+
+				"applyFinalPeriodResidual recursion cliff has moved DOWN below n=%d, in "+
+				"which case re-measure it and move gradedCostCeiling rather than raising "+
+				"this threshold.",
+				growth/100, growth%100, costSampleTerms[0], base, term, got, gradedCostCeiling)
+		}
 	}
+}
 
-	start := time.Now()
-	if _, err := (Generator{}).Generate(context.Background(), livenessRequest(large)); err != nil {
+// TestInstallmentNumbersAreDenseOverPayableRowsOnly is the guard for the counter
+// P1-1(a) carried forward in generate.
+//
+// It is a CORRECTNESS test living in a liveness file, and deliberately: the
+// change that made it necessary was a cost fix, the quantity it protects reaches
+// the emitted schedule, and no cost metric in this package can see the defect it
+// replaces (see TestGenerationCostIsLinearInTheTerm, "what this test cannot
+// see"). Recomputing the number by scanning was self-evidently consistent;
+// carrying it forward is not, so the invariant that made the scan correct is
+// asserted directly.
+//
+// The shape that matters is a disbursement landing on a LATER repayment period's
+// due date, because then the disbursement row is emitted in the middle of the row
+// list and must not advance the counter. A naive index-based counter passes on
+// every schedule-start disbursement and fails only here.
+func TestInstallmentNumbersAreDenseOverPayableRowsOnly(t *testing.T) {
+	const (
+		principal = 5000000000
+		term      = 36
+	)
+	start := date(2024, 1, 1)
+	due, err := repaymentDueDates(context.Background(), start, term, 1, contract.FrequencyMonths, start)
+	if err != nil {
 		t.Fatal(err)
 	}
-	if elapsed := time.Since(start); elapsed > absoluteCap {
-		t.Errorf("a %d-period schedule took %v, over the %v cap; the un-memoised port took "+
-			"10.77 s at this term", large, elapsed, absoluteCap)
+
+	// Disbursement on the schedule start, on the first due date, and deep inside
+	// the term -- the last of which puts the disbursement row at index 31.
+	for _, on := range []civilDate{start, due[0], due[len(due)-6]} {
+		req := baseRequest(principal, term, contract.Rate{Numerator: 27, Denominator: 125})
+		req.ScheduleStartDate = start
+		req.Disbursements = []contract.Disbursement{{Date: on, AmountMinor: principal}}
+
+		s, err := Generator{}.Generate(context.Background(), req)
+		if err != nil {
+			t.Fatalf("disbursed %s: %v", formatDate(on), err)
+		}
+
+		var want int32 = 1
+		payable, nonPayable := 0, 0
+		for i, p := range s.Periods {
+			switch p.Kind {
+			case contract.PeriodKindDownPayment, contract.PeriodKindRepayment:
+				payable++
+				if p.InstallmentNumber != want {
+					t.Fatalf("disbursed %s, row %d (kind %d): InstallmentNumber %d, want %d — "+
+						"the payable-row counter is not dense and 1-based "+
+						"[VERIFIED: ProgressiveLoanScheduleGenerator.java:123, :143; "+
+						"down payment :341, :346; disbursement row :316-318 takes no number]",
+						formatDate(on), i, p.Kind, p.InstallmentNumber, want)
+				}
+				want++
+			default:
+				nonPayable++
+				if p.InstallmentNumber != 0 {
+					t.Fatalf("disbursed %s, row %d (kind %d): InstallmentNumber %d, want 0 — "+
+						"a non-payable row carries no installment number and must not "+
+						"advance the counter", formatDate(on), i, p.Kind, p.InstallmentNumber)
+				}
+			}
+		}
+		if payable != term {
+			t.Errorf("disbursed %s: %d payable rows, want %d", formatDate(on), payable, term)
+		}
+		if nonPayable != 1 {
+			t.Errorf("disbursed %s: %d non-payable rows, want exactly 1 (the disbursement)",
+				formatDate(on), nonPayable)
+		}
+		t.Logf("disbursed %s: %d payable rows numbered 1..%d, %d non-payable at 0",
+			formatDate(on), payable, want-1, nonPayable)
 	}
 }
 

@@ -431,6 +431,25 @@ func generate(ctx context.Context, req contract.GenerateRequest,
 	disbursement := req.Disbursements[0]
 	pending := true
 	periods := make([]contract.Period, 0, len(model.periods)+1)
+	// nextInstallment is the dense, 1-based counter over PAYABLE rows -- down
+	// payment and repayment -- which a disbursement row does not advance. One
+	// shared counter runs across them and is read before it is incremented
+	// [VERIFIED: ProgressiveLoanScheduleGenerator.java:123 reads
+	// scheduleParams.getInstalmentNumber() onto the repayment row and :143
+	// increments it; :341 reads the SAME counter onto the down-payment row and
+	// :346 increments it, inside processDisbursements; and the disbursement row
+	// at :316-318 neither reads nor increments it. :126 was cited here until T69
+	// and is wrong -- it is the .ifPresent lambda opener].
+	//
+	// CARRIED, NOT RECOMPUTED. Until T65 this was a helper, installmentNumberOf,
+	// that rescanned every row already emitted on every row emitted: a
+	// Theta(n^2) inside an O(n) loop, and one that ALLOCATES NOTHING, so the
+	// allocation-count metric TestGenerationCostIsLinearInTheTerm grades was
+	// blind to it at every term, forever, by construction (T63 F-2 half one;
+	// re-measured at T65 -- 2.12 ms at n=1,000 rising 4.48x/4.10x/3.66x per
+	// doubling to 142.8 ms at n=8,000). The counter below is the same function of
+	// the same rows; increment it at EVERY payable row appended and nowhere else.
+	nextInstallment := int32(1)
 
 	for i, p := range model.periods {
 		if model.checkCancel(i) {
@@ -453,16 +472,15 @@ func generate(ctx context.Context, req contract.GenerateRequest,
 			pending = false
 		}
 		periods = append(periods, contract.Period{
-			Kind: contract.PeriodKindRepayment,
-			// One shared counter runs across payable rows and is read before it is
-			// incremented [VERIFIED: ProgressiveLoanScheduleGenerator.java:126, :143].
-			InstallmentNumber:         installmentNumberOf(periods),
+			Kind:                      contract.PeriodKindRepayment,
+			InstallmentNumber:         nextInstallment,
 			FromDate:                  p.from,
 			DueDate:                   p.due,
 			PrincipalMinor:            model.duePrincipalMinor(p),
 			InterestMinor:             model.dueInterestMinor(p),
 			OutstandingPrincipalMinor: model.outstandingLoanBalanceMinor(p),
 		})
+		nextInstallment++
 	}
 	if model.cancelled {
 		// ctx.Err() is non-nil here: the flag is set only after the context has
@@ -470,19 +488,6 @@ func generate(ctx context.Context, req contract.GenerateRequest,
 		return contract.Schedule{}, ctx.Err()
 	}
 	return contract.Schedule{Periods: periods}, nil
-}
-
-// installmentNumberOf returns the next payable-installment number given the rows
-// already emitted: a dense, 1-based counter over down-payment and repayment rows,
-// which a disbursement row does not advance.
-func installmentNumberOf(emitted []contract.Period) int32 {
-	var n int32
-	for _, p := range emitted {
-		if p.Kind == contract.PeriodKindDownPayment || p.Kind == contract.PeriodKindRepayment {
-			n++
-		}
-	}
-	return n + 1
 }
 
 // newScheduleModel builds the interest schedule model: one repayment period per
