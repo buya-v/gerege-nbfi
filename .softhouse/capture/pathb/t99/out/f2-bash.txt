@@ -49,8 +49,10 @@ EXIT=0
 
 --- 2e — the attack leaves NO DIFF TRACE, which is what makes it worse than the tautology
   files changed in the repository by everything above:
-    ?? .softhouse/capture/pathb/t99/out/
-  count: 1
+     M .softhouse/capture/pathb/t99/out/f1-sh.txt
+     M .softhouse/capture/pathb/t99/out/f2-sh.txt
+    ?? .softhouse/capture/pathb/t99/out/.raw-f2-bash
+  count: 3
   (the poisoned tool lives on $PATH; nothing a reviewer diffs would ever show it)
 
 defect reproduces on the PRE-FIX bytes: YES

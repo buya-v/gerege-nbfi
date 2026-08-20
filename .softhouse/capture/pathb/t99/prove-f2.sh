@@ -28,6 +28,11 @@ PIN=2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154
 
 echo "=== T99 F-2 — the digest pin must not be answerable by \$PATH"
 echo "recipe interpreter under test: $SH"
+# Snapshot the repository state BEFORE anything below runs.  Leg 2e measures the DELTA, not the
+# absolute list: when this proof is driven by run-all.sh the runner's own in-flight transcript
+# files are present in `git status`, and reporting those as "changes the attack made" would be a
+# false positive of exactly the kind this task exists to remove.
+git -C "$REPO" status --porcelain > "${TMPDIR:-/tmp}/t99-f2-status-before.$$"
 t99_export
 t99_pin "$P/t36/preconditions.sh" "$PIN_PREFIX_PRECOND" preconditions.sh
 echo
@@ -182,10 +187,14 @@ echo
 
 # ------------------------------------------------------------------- 2e. the no-diff-trace part
 echo "--- 2e — the attack leaves NO DIFF TRACE, which is what makes it worse than the tautology"
-echo "  files changed in the repository by everything above:"
-n=$(git -C "$REPO" status --porcelain | wc -l | tr -d ' ')
-git -C "$REPO" status --porcelain | sed 's/^/    /'
-echo "  count: $n"
+git -C "$REPO" status --porcelain > "${TMPDIR:-/tmp}/t99-f2-status-after.$$"
+echo "  repository paths that CHANGED STATE while the attack above ran:"
+diff "${TMPDIR:-/tmp}/t99-f2-status-before.$$" "${TMPDIR:-/tmp}/t99-f2-status-after.$$" \
+  | LC_ALL=C grep -a '^[<>]' | LC_ALL=C grep -av 't99/out/' | sed 's/^/    /'
+n=$(diff "${TMPDIR:-/tmp}/t99-f2-status-before.$$" "${TMPDIR:-/tmp}/t99-f2-status-after.$$" \
+      | LC_ALL=C grep -a '^[<>]' | LC_ALL=C grep -avc 't99/out/')
+rm -f "${TMPDIR:-/tmp}/t99-f2-status-before.$$" "${TMPDIR:-/tmp}/t99-f2-status-after.$$"
+echo "  count: $n   (t99/out/ excluded: those are this proof's OWN transcripts being written)"
 echo "  (the poisoned tool lives on \$PATH; nothing a reviewer diffs would ever show it)"
 
 t99_verdict "$prefix_admitted" "$fixed_refused" "F-2 (PATH-poisoned digest instrument)"

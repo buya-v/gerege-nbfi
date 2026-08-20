@@ -21,7 +21,7 @@ EXIT=1
 --- 1a.fixed — hermetic run (docker/curl stubbed, the shared oracle is untouched)
 EXIT=1
   guard verdict: REFUSED before anything ran —
-    ABORT: output directory '<EXPORT>/fixed/.softhouse/capture/pathb/t36/out/recapture-default/sub-gerege' resolves to '<EXPORT>/fixed/.softhouse/capture/pathb/t36/out/recapture-default/sub-gerege'; relative to the evidence tree that is
+    ABORT: output directory '<EXPORT>/fixed/.softhouse/capture/pathb/t36/out/recapture-default/sub-gerege' resolves to '<EXPORT>/fixed/.softhouse/capture/pathb/t36/out/recapture-default/sub-gerege'; relative to the evidence tree tha
   what now exists at t36/out/recapture-default/sub-gerege:
     (the directory was never created)
 
@@ -47,12 +47,12 @@ EXIT=0
 
 --- 1b.fixed — the same live invocation against this branch's bytes
 EXIT=1
-  ABORT: output directory '<EXPORT>/fixed/.softhouse/capture/pathb/t36/out/recapture-default/sub-gerege' resolves to '<EXPORT>/fixed/.softhouse/capture/pathb/t36/out/recapture-default/sub-gerege'; relative to the evidence tree that is
+  ABORT: output directory '<EXPORT>/fixed/.softhouse/capture/pathb/t36/out/recapture-default/sub-gerege' resolves to '<EXPORT>/fixed/.softhouse/capture/pathb/t36/out/recapture-default/sub-gerege'; relative to the evidence tree tha
   captures written: 0
 
 --- 1c — the same basename-only shape at attest.py:51, found by sweeping for the SHAPE
   prefix:   ADMITTED — first line: wrote <EXPORT>/prefix/.softhouse/capture/pathb/t36/out/recapture-default/sub-gerege/attestation.json
-  fixed:   REFUSED — ABORT: output directory '<EXPORT>/fixed/.softhouse/capture/pathb/t36/out/recapture-default/sub-gerege' resolves to '<EXPORT>/fixed/.softhouse/capture/pathb/t36/out/recaptur…
+  fixed:   REFUSED — ABORT: output directory '<EXPORT>/fixed/.softhouse/capture/pathb/t36/out/recapture-default/sub-gerege' resolves to '<EXPORT>/fixed/.softhouse/capture/pathb/t36/out/reca…
 
 --- 1d — hardening that breaks the happy path is not hardening (fixed bytes, guard only)
   accepted              t36/out/recapture-gerege — the default derivation
