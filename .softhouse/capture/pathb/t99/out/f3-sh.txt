@@ -51,6 +51,30 @@ pre-fix forbidden-sentence.sh sha256 71142e40b4af9ec873f0eca6a3ecb60d18033f2f0d3
 
   (a planted violation is written into the /tmp export only; the committed transcripts in
    the repository are never touched by this proof)
+--- 3e — the same 'guard that cannot fail' shape, found by sweeping, in two OTHER scripts.
+         t36/recreate-products.sh and t36/emiloop-probe.sh carried the EXACT defect T77 found
+         and T80 fixed in recapture.sh: preconditions.sh's bad() writes FAIL to STDERR
+         (preconditions.sh:58) and both scripts redirected STDOUT ONLY, so the '^  FAIL' grep
+         they abort on could never match, and neither looked at the exit status.
+
+  the mechanical fact, measured on the pre-fix bytes — where do FAIL lines go?
+    preconditions.sh exit status: (breached environment, docker/curl stubbed)
+    '^  FAIL' lines on STDOUT: 0
+    '^  FAIL' lines on STDERR: 18
+    => a gate that greps a stdout-only transcript for '^  FAIL' matches nothing, ever.
+
+  prefix/recreate-products.sh, run in a breached environment (docker and curl stubbed):
+    EXIT=1   aborted before capturing: NO — it went on to capture
+  prefix/emiloop-probe.sh, run in a breached environment (docker and curl stubbed):
+    EXIT=1   aborted before capturing: NO — it went on to capture
+  fixed/recreate-products.sh, run in a breached environment (docker and curl stubbed):
+    EXIT=1   aborted before capturing: YES
+      ABORT: preconditions breached — exit status 1, 18 FAIL line(s). NOTHING WAS CAPTURED.
+  fixed/emiloop-probe.sh, run in a breached environment (docker and curl stubbed):
+    EXIT=1   aborted before capturing: YES
+      ABORT: preconditions breached — exit status 1, 18 FAIL line(s). NOTHING WAS CAPTURED.
+
+  (both are additionally reported in the handoff: they were NOT in T85's four findings.)
 
 defect reproduces on the PRE-FIX bytes: YES
 defect refused by the FIXED bytes:      YES

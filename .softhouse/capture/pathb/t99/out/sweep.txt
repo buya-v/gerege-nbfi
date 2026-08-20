@@ -47,8 +47,8 @@ t36/attest.py:291:             "`%s`' | tail -1" % (container_started, FIN, TENA
 t80/prove-f1.sh:22:# `shasum` on $PATH could make BEFORE and AFTER agree by fiat.  Hardened instrument instead.
 t80/happy-path.sh:42:# point of this leg, and a bare `shasum` on $PATH could make all six agree by fiat.  The hardened
 t36/recapture.sh:201:# not by a bare `shasum` that $PATH decides the meaning of.  A refusal prints REFUSED and fails the
-t36/emiloop-probe.sh:41:# implementations required to agree — rather than by a bare `shasum` whose meaning $PATH decides.
-t36/recreate-products.sh:99:# T99 (sweep for the F-2 shape): hardened digest instrument, not a $PATH-resolved `shasum`.
+t36/emiloop-probe.sh:54:# implementations required to agree — rather than by a bare `shasum` whose meaning $PATH decides.
+t36/recreate-products.sh:111:# T99 (sweep for the F-2 shape): hardened digest instrument, not a $PATH-resolved `shasum`.
 t36/preconditions.sh:19:# The sha256 instrument, hardened by T99.  P14b's digest pin used the bare word `shasum`, resolved
 t36/preconditions.sh:20:# through $PATH; a `shasum` earlier on $PATH that prints the pinned constant made the comparison a
 t36/preconditions.sh:198:# THIRD ITERATION (T99).  A digest has no prefix, but `shasum` had no ADDRESS: T80 computed it with
@@ -89,8 +89,8 @@ t80/forbidden-sentence.sh:42:for f in "$O"/attack-*.txt "$O"/*/preconditions.txt
 t80/prove-f1.sh:26:  for f in "$E"/*; do
 t80/shell-invariance.sh:15:for f in "$O"/attack-*-sh.txt; do
 t36/recapture.sh:209:for f in "$O"/B-0*-raw.json; do
-t36/emiloop-probe.sh:45:for f in "$O"/emiloop-*-raw.json; do
-t36/recreate-products.sh:103:for f in "$O"/B-0*-raw.json; do
+t36/emiloop-probe.sh:58:for f in "$O"/emiloop-*-raw.json; do
+t36/recreate-products.sh:115:for f in "$O"/B-0*-raw.json; do
 
 --- grep -c / wc -l results compared to 0 (a zero can mean 'clean' or 'read nothing')
 t80/summarise.sh:11:  p=$(grep -c '^  PASS' "$f" || true)
@@ -121,8 +121,10 @@ t80/happy-path.sh:37:echo "PASS lines: $(grep -c '^  PASS' "$O/recapture-gerege/
 t80/happy-path.sh:38:echo "FAIL lines: $(grep -c '^  FAIL' "$O/recapture-gerege/preconditions.txt" || true)"
 t80/happy-path.sh:73:  c=$(digests "$n" | awk '{print $1}' | sort -u | wc -l | tr -d ' ')
 t36/recapture.sh:164:prefails=$(LC_ALL=C grep -ac '^  FAIL' "$O/preconditions.txt" || true)
-t36/recreate-products.sh:32:grep -c '^  FAIL' "$O/preconditions.txt" > /dev/null 2>&1 || true
-t36/recreate-products.sh:55:  n=$(diff "$W/req/$f.json" "$REQ/$f.json" | grep -c '^[<>]' || true)
+t36/emiloop-probe.sh:33:prefails=$(LC_ALL=C grep -ac '^  FAIL' "$O/preconditions.txt" || true)
+t36/recreate-products.sh:34:# being grepped and the ABORT was unreachable; the `grep -c … > /dev/null 2>&1 || true` line above
+t36/recreate-products.sh:42:prefails=$(LC_ALL=C grep -ac '^  FAIL' "$O/preconditions.txt" || true)
+t36/recreate-products.sh:67:  n=$(diff "$W/req/$f.json" "$REQ/$f.json" | grep -c '^[<>]' || true)
 t36/preconditions.sh:115:        | grep -c 'BOOT-INF/lib/postgresql-')
 
 === 4. capture directories with no in-band provenance — the F-4 shape
