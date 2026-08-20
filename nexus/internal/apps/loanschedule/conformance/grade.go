@@ -55,6 +55,12 @@ type Result struct {
 	GradedCells   int
 	UngradedCells int
 
+	// PlaceholderCells counts the cells of the returned schedule the
+	// implementation declared it could not compute (finding T58-N2). It is 0 for
+	// every real implementation; only the self-test replay ever reports one, and
+	// only for a cell the vector's own unrecorded_fields withdrew.
+	PlaceholderCells int
+
 	// RateFactorsRecorded counts the rate-factor observations this vector carries.
 	// They are NEVER compared against anything (finding T17-F6: every one is a
 	// 12-dp rounding of the engine's value), so they are counted apart from the
@@ -94,6 +100,13 @@ type Summary struct {
 	Refused, Inadmissible, Errored int
 	GradedCells, UngradedCells     int
 	InvariantViolations            int
+
+	// InvariantAssertionsNotRun counts the individual invariant assertions that
+	// could NOT be made because a cell they read was never observed (finding
+	// T58-N2). It is reported next to the violation count and printed in full in
+	// its own section, because a check that quietly stops checking is strictly
+	// worse than a red one. 0 on the committed corpus.
+	InvariantAssertionsNotRun int
 
 	// CounterfactualsNamed is how many wrong implementations the admissible
 	// vectors between them claim to kill, and CounterfactualCoverage maps each
@@ -277,6 +290,7 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 			if iv.Status == InvariantViolated {
 				s.InvariantViolations++
 			}
+			s.InvariantAssertionsNotRun += len(iv.NotAsserted)
 		}
 		switch r.Outcome {
 		case OutcomePass:
@@ -460,7 +474,18 @@ func gradeVector(ctx context.Context, v *Vector, pin *Pin, registry *CapabilityR
 
 	diffs, graded, ungraded := diffSchedule(v, got)
 	r.GradedCells, r.UngradedCells = graded, ungraded
-	r.Invariants = CheckInvariants(v, got)
+
+	// FINDING T58-N2. The invariants read the schedule the implementation
+	// RETURNED, so if the implementation could not compute a cell it must say
+	// which, or the invariants grade a stand-in. A real port implements nothing
+	// here and every invariant runs in full; only the self-test replay ever
+	// declares a placeholder, and only for a cell the vector honestly withdrew.
+	var placeholders PlaceholderCells
+	if pr, ok := opts.Implementation.(PlaceholderReporter); ok {
+		placeholders = pr.PlaceholderCells(req)
+	}
+	r.PlaceholderCells = placeholders.Count()
+	r.Invariants = CheckInvariants(v, got, placeholders)
 	if len(diffs) > 0 {
 		r.Outcome = OutcomeFail
 		r.Detail = diffs

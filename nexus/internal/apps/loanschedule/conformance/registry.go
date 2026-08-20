@@ -79,6 +79,57 @@ type replayGenerator struct {
 type replayAnswer struct {
 	schedule contract.Schedule
 	refusal  error
+
+	// placeholders names the cells of schedule that came from nowhere: the
+	// capture never recorded them, so the replay filled a stand-in. See
+	// PlaceholderCells and contractFixesCellAtZero.
+	placeholders PlaceholderCells
+}
+
+// PlaceholderCells reports which cells of the replay's answer are stand-ins
+// rather than transcribed observations, so that the property invariants can
+// decline to assert anything that reads one (finding T58-N2).
+//
+// This is the ONLY implementation of PlaceholderReporter and it must stay that
+// way: a real port computes every cell, so it reports none and every invariant
+// runs in full against it.
+func (g *replayGenerator) PlaceholderCells(req contract.GenerateRequest) PlaceholderCells {
+	return g.byRequestKey[requestKey(req)].placeholders
+}
+
+// contractFixesCellAtZero reports whether the FROZEN CONTRACT itself fixes this
+// cell at 0 for this row kind, independently of every other cell in the schedule.
+//
+// This is the line between an answer and a placeholder, and it is the reason
+// closing T58-N2 cost no check that currently passes. All 29 promoted parity
+// vectors withdraw installment_number and interest_minor on their DISBURSEMENT
+// row, because Path A's capture harness does not print either. For a DISBURSEMENT
+// row the contract says, normatively:
+//
+//	"its InterestMinor is 0, and its InstallmentNumber is 0 because it is not
+//	 payable" — contract.go:1509-1510 (and :1532 for DOWN_PAYMENT)
+//
+// So the replay's 0 there is not invented: it is the contract's own value, a
+// CONSTANT, and grading it grades something real. admit.go already ratified
+// exactly this argument for installment_number (finding T9-F1c, admit.go:772-778,
+// "0 is the frozen contract's own value for a row that is not payable"); this
+// function only states it once and applies it to interest as well.
+//
+// outstanding_principal_minor on a DISBURSEMENT row is DELIBERATELY NOT on this
+// list, even though contract.go:1512-1513 fixes it too. It is fixed as a FUNCTION
+// OF ANOTHER CELL OF THE SAME SCHEDULE — "IS THE AMOUNT ADVANCED, equal to this
+// row's PrincipalMinor" — which is verbatim the thing balance_roll_forward
+// asserts. Supplying it would make the invariant check the rig's own derivation
+// and report HOLD every time, which is the circularity vector.go:329-336 already
+// forbids a promotion task from committing in the store. A rule the harness
+// derives is not an observation the harness may grade.
+func contractFixesCellAtZero(kind contract.PeriodKind, field string) bool {
+	switch kind {
+	case contract.PeriodKindDisbursement, contract.PeriodKindDownPayment:
+	default:
+		return false
+	}
+	return field == FieldInstallmentNumber || field == FieldInterestMinor
 }
 
 func (g *replayGenerator) Generate(_ context.Context, req contract.GenerateRequest) (contract.Schedule, error) {
@@ -136,6 +187,7 @@ func NewReplayImplementation(storeRoot, contextFilter string) (contract.Schedule
 			continue
 		}
 		var sched contract.Schedule
+		placeholders := PlaceholderCells{}
 		for i, ep := range v.Expect.Periods {
 			kind, kerr := periodKindByName(ep.Kind)
 			if kerr != nil {
@@ -145,11 +197,22 @@ func NewReplayImplementation(storeRoot, contextFilter string) (contract.Schedule
 			unrecorded := map[string]bool{}
 			for _, f := range ep.UnrecordedFields {
 				unrecorded[f] = true
+				// FINDING T58-N2. diffSchedule always honoured unrecorded_fields.
+				// The property invariants did not, and they read this same
+				// schedule — so a cell the replay stands in for has to be
+				// DECLARED, not merely skipped by the cell diff. Every withdrawn
+				// cell is a placeholder except the ones the frozen contract fixes
+				// at 0 for this row kind, where 0 is the contract's own value and
+				// therefore a real answer.
+				if !contractFixesCellAtZero(kind, f) {
+					placeholders.Add(i, f)
+				}
 			}
-			// The replay answers 0 for a cell the capture never recorded. The
-			// value is never compared — diffSchedule counts an unrecorded cell as
-			// UNGRADED and skips it — so this is a placeholder for a cell nobody
-			// observed, not an expectation.
+			// The replay answers 0 (or the zero date) for a cell the capture never
+			// recorded. The value is never compared — diffSchedule counts an
+			// unrecorded cell as UNGRADED and skips it, and CheckInvariants now
+			// declines to assert anything that reads one — so this is a
+			// placeholder for a cell nobody observed, not an expectation.
 			principal, e1 := replayMinorCell(v, i, "principal_minor", ep.PrincipalMinor, unrecorded)
 			interest, e2 := replayMinorCell(v, i, "interest_minor", ep.InterestMinor, unrecorded)
 			outstanding, e3 := replayMinorCell(v, i, "outstanding_principal_minor",
@@ -169,7 +232,7 @@ func NewReplayImplementation(storeRoot, contextFilter string) (contract.Schedule
 				OutstandingPrincipalMinor: outstanding,
 			})
 		}
-		g.byRequestKey[key] = replayAnswer{schedule: sched}
+		g.byRequestKey[key] = replayAnswer{schedule: sched, placeholders: placeholders}
 	}
 	return g, len(g.byRequestKey), nil
 }
