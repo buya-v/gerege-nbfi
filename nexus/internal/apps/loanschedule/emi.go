@@ -410,7 +410,7 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     really protecting", reducing four terms to one and marking it [VERIFIED]
 //     against the line that carries the other three; T73 then rejected the draft
 //     by riding the second term. What protects (e) is the CLOSURE TEST below,
-//     part 6; all four disjuncts are resolved in part 5.
+//     part 6; all four disjuncts are resolved in part 5. Hence sum of emi_j over
 //     f < j <= L is (P + I) - emi_f, so u_L = max(0, u_f - (P + I) + emi_f),
 //     which is 0 as soon as cdi_f <= P. CITE T66.md:100-108 FOR THIS STEP -- that
 //     is the general-f form -- and T66.md:110-115 for the bound. Do NOT cite
@@ -615,9 +615,12 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //
 //     PART 4 -- THE ENTRIES TO :718 ARE CLOSED BY AN ENUM, NOT BY A LIST ANYONE
 //     WROTE. :718 has EXACTLY FOUR call sites [VERIFIED at 426a23544: grep
-//     "calculateEMIValueAndRateFactors" in the pinned file returns call lines
-//     :149, :280, :317 and :356, the declaration :718, and the two dispatch lines
-//     :722 and :723], and those four stand in BIJECTION with
+//     "calculateEMIValueAndRateFactors" in the pinned file returns NINE lines --
+//     call lines :149, :280, :317 and :356, the declaration :718, the two
+//     dispatch lines :722 and :723, and the two dispatch-target declarations
+//     :703 (Flat) and :730 (DecliningBalance), which merely share the name
+//     prefix -- so only the first four are calls into :718]. Every operation
+//     that reaches any of those four sites carries one of the constants of
 //     EmiChangeOperation.Action, a FOUR-CONSTANT enum fixed by the compiler
 //     [VERIFIED: EmiChangeOperation.java:32-37 -- DISBURSEMENT,
 //     INTEREST_RATE_CHANGE, CAPITALIZED_INCOME, ADD_REPAYMENT_PERIODS -- with the
@@ -636,14 +639,26 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     span and every anchor above opened and resolved to its enclosing signature;
 //     the operation constructed by each public wrapper -- :134 disburse, :271
 //     capitalizedIncome, :289 changeInterestRate, :295-297 addRepaymentPeriods --
-//     confirms the bijection.]
+//     confirms which Action each PUBLIC WRAPPER constructs. THE SITE-TO-ACTION
+//     MAP IS NOT INJECTIVE, AND THE CLOSURE DOES NOT NEED IT TO BE: the private
+//     addDisbursement and addCapitalizedIncome carry further callers at :1107,
+//     :1751 and :1752, and withZeroAmount() PRESERVES the action for both
+//     DISBURSEMENT and CAPITALIZED_INCOME [VERIFIED: EmiChangeOperation.java
+//     :64-69], so a CAPITALIZED_INCOME operation can enter :718 at :149 and a
+//     DISBURSEMENT one at :280 -- see part 5.]
 //
-//     THAT BIJECTION IS THE CLOSURE. A fifth route into :718 cannot appear
-//     without either a fifth Action constant or a fifth call site, and both are
-//     compile-visible edits to the pinned oracle that part 9's greps detect. That
-//     is why this rule can stop enumerating: the set of things able to choose a
-//     tillDate and a model state for :747 is FINITE and is fixed by a Java enum,
-//     not by anyone's judgement about which shapes are exotic.
+//     THAT FOUR-SITE COUNT IS THE CLOSURE, WITH THE FOUR-CONSTANT ENUM. A fifth
+//     route into :718 cannot appear without either a fifth Action constant or a
+//     fifth call site, and both are compile-visible edits to the pinned oracle
+//     that part 9's greps detect. INJECTIVITY OF SITE -> ACTION IS NOT PART OF
+//     THIS ARGUMENT AND IS NOT CLAIMED ANYWHERE IN THIS BLOCK; the cross-edges
+//     that :1751 and :1752 open are unreachable under the closure test's OWN
+//     ANSWER, since exactly one DISBURSEMENT into an EMPTY model fires term 1 of
+//     :733-735, so :741 runs, :743 is never entered, and :1744-1759 -- where
+//     :1751 and :1752 live -- is never called. That is why this rule can stop
+//     enumerating: the set of things able to choose a tillDate and a model state
+//     for :747 is FINITE, fixed by a grep-reproducible call-site count and by a
+//     Java enum, not by anyone's judgement about which shapes are exotic.
 //
 //     AND IT IS WHY THE CONTRACT ALREADY KNEW THE ANSWER. The frozen contract
 //     names the same three non-disbursement widenings, twice: "It stops being
@@ -891,8 +906,10 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     GRAPH 2, calculateUnrecognizedInterestTillDateOnScheduleModelCopyAndDefer:
 //     2 callers (:392, :1217) and 1 declaration (:1221).
 //
-//     GRAPH 3, calculateEMIValueAndRateFactors: 4 callers (:149, :280, :317,
-//     :356), 1 declaration (:718), 2 dispatch lines (:722, :723).
+//     GRAPH 3, calculateEMIValueAndRateFactors: the grep returns 9 lines -- 4
+//     callers (:149, :280, :317, :356), 1 declaration (:718), 2 dispatch lines
+//     (:722, :723), and 2 dispatch-target declarations (:703, :730) that share
+//     the name prefix.
 //
 //     GRAPH 4, EmiChangeOperation.Action: 4 constants
 //     [EmiChangeOperation.java:32-37].
@@ -926,7 +943,7 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     THIS BLOCK ESTABLISHES THE DISBURSEMENT ENTRY AT :149 WITH THE FLAG FALSE,
 //     AND NOTHING ELSE. What makes that closed is not the length of a list. It is
 //     that three censuses -- 3 write sites; 2 callers of :1221; 4 callers of :718
-//     in bijection with a 4-constant enum -- are each exhaustive by grep, and
+//     carrying a 4-constant enum -- are each exhaustive by grep, and
 //     that widening any of them is a compile-visible edit to the pinned oracle.
 //
 // So the memo does NOT cache the derivation of period i's state; it caches a pure
