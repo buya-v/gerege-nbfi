@@ -19,7 +19,10 @@ set -u
 
 T99=$(cd "$(dirname "$0")" && pwd)
 REPO=$(git -C "$T99" rev-parse --show-toplevel)
-PREFIX_REF=${T99_PREFIX_REF:-main}
+# The fork point, not the moving branch: `main` advances under a running fire, and a proof whose
+# "before" changes underneath it proves nothing reproducible.  The digest pins below are the second
+# operand — if the pre-fix bytes are ever not the bytes the defect was found in, the proof aborts.
+PREFIX_REF=${T99_PREFIX_REF:-$(git -C "$T99" merge-base main HEAD)}
 EXPORT=${T99_EXPORT_ROOT:-/tmp/t99-proof}
 PB=.softhouse/capture/pathb
 
