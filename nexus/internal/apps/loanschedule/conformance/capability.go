@@ -137,7 +137,15 @@ func LoadCapabilityRegistry(path string) (*CapabilityRegistry, error) {
 		if _, dup := r.bySeam[s.Name]; dup {
 			return nil, fmt.Errorf("capability registry: duplicate seam %q", s.Name)
 		}
-		for capName, st := range s.Status {
+		// SORTED (T90). This loop returns on the FIRST bad entry, so ranging the
+		// map directly meant that a seam with two defective capability entries
+		// reported one of them at random: two runs of one binary on one
+		// capabilities.json, two different fatal reasons, and a reader diffing
+		// them would see a registry error appear to change. Which registries are
+		// rejected does not depend on the order — every path here returns an
+		// error — so this fixes WHICH defect is named first, and nothing else.
+		for _, capName := range sortedKeys(s.Status) {
+			st := s.Status[capName]
 			if _, ok := r.byName[capName]; !ok {
 				return nil, fmt.Errorf("capability registry: seam %q references unknown capability %q", s.Name, capName)
 			}
