@@ -888,3 +888,48 @@ regulatory / parallel-run sign-off, and no automation may cross it. Deposit-taki
 regulatory sign-off and licence facts are equally untouched and are not in Run 1's path.
 
 **Buyan may reverse this.**
+
+---
+
+## G-8 — a graded-domain shape where the reference oracle does not amortize principal to zero
+
+- **id**: G-8
+- **class**: ENGINEERING to measure; the *remedy* is a DEC-n amendment, which is a hard `user` gate
+- **task**: T75 (found), T83 (to measure)
+- **context**: tier0-harness-schedule-poc / loan-schedule
+- **state**: OPEN — blocks nothing today
+- **raised_by**: local fire 20260820-170001, from T75's approval of T74
+- **recorded_in**: `.softhouse/gates.md`
+
+**What was found.** T75 registered a prediction, committed it, and only then ran a calibrated probe against
+the pinned oracle image (its calibrations reproduced `T64-ZP-A`/`T64-ZP-B` cell-for-cell with zero input
+diffs). Result: **MNT 0.01 / 6 × 21.6% at `MinorUnitDigits = 2` — entirely inside the graded domain, with no
+multiples-of input involved — makes the reference oracle emit a schedule whose balance column never reaches
+zero: `0.01` on every row, including the last.** The Go port returns `0`. The same holds at 0.02/6,
+0.01/12 and 0.01/56, and the region is clean at 0.03 and above.
+
+**Why it matters.** This is a live divergence between the port and the oracle on an **admitted** shape, and
+it sets two of this project's own rules against each other:
+
+- *"Fineract is the oracle and fallback. No ported Go context is correct until its golden vectors match."*
+- *"property invariants … principal amortizes to zero."*
+
+Both cannot hold here. Today `conformance.sh` reports PASS with 42 parity vectors and 0 invariant
+violations — **only because no vector covers this region.** That is precisely the blind spot the
+conformance gate exists to eliminate, so a green bar is not evidence against this finding.
+
+**What is being asked.** Nothing yet — T83 must first re-capture independently (not trust T75's numbers) and
+measure the exact boundary: the largest principal that fails, per repayment count. Then one of:
+
+- **(a)** promote a parity vector for the region with an explicit invariant exemption, recording in writing
+  that the oracle does not amortize to zero there. **May not need an amendment at all** if the vector
+  schema's existing `invariant_exemptions` mechanism covers it — check before assuming.
+- **(b)** refuse the region from the graded domain as a documented contract-refusal vector.
+- **(c)** treat it as an oracle defect and diverge deliberately.
+
+**(b) and (c) both amend the graded domain, which is a change to a ratified DEC-n — a hard `user` gate no
+agent may cross.** The driver's recommendation, recorded but not acted on: prefer **(a)**, because it keeps
+the oracle authoritative and makes the divergence *measured and visible* rather than defined away, and
+because it is the only option that may be reachable without spending an amendment. Buyan decides (b)/(c).
+
+**What unblocks it**: T83's measurement. **What it blocks**: nothing today.

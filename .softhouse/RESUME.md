@@ -4,187 +4,142 @@ Written by the orchestrator at every checkpoint; read by the next fire of `/soft
 human) to see exactly where the factory paused. **The repo is the only memory** — never rely on an agent's
 session state.
 
-## Current state (local fire `20260820-140000`, oracle REACHABLE)
+## Current state (local fire `20260820-170001`, oracle REACHABLE)
 
 - **Program**: `fineract-to-go-full-codebase` — **active**
 - **Active run**: `2026-08-17-run1-harness-schedule-poc` — Tier 0
-- **Contexts**: 0 done / 17 · `tier0-harness-schedule-poc` **active, at its last two tasks**
-- **Oracle**: UP all fire, never restarted (~44 h). `fineract:latest` + `postgres:18.3`, both healthy.
-  Pinned checkout `426a23544` clean. PostgreSQL only.
-- **This fire: three workers dispatched (T66, T13, T70). T66 and T13 completed and merged.**
+- **Contexts**: 0 done / 17 · `tier0-harness-schedule-poc` **active**
+- **Oracle**: UP all fire, never restarted (~47 h). `fineract:latest` + `postgres:18.3`, both healthy.
+  Pinned checkout `426a23544` clean at entry and at exit. PostgreSQL only.
+- **Seven workers dispatched, seven completed, ZERO live at exit.** No isolation violation, no scope breach.
 
 ```
-VERDICT: PASS (exit 0) — 36 parity vectors match the pinned reference oracle, 4034 cells compared.
-         --prove 21/21 · --self-test 0 · 6/6 invariants · 0 inadmissible · 0 harness errors
-         build / vet / test (-count=1) 0 / 0 / 0 · contract.go digest == PIN.json
+VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+         4 contract-refusal · 1 self-test · 0 refused · 0 inadmissible · 0 harness errors
+         0 invariant violations · 0 invariant assertions NOT RUN
+         build / vet / test (-count=1) 0 / 0 / 0 · gofmt -l names exactly contract.go (G-3 expected)
          IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a user gate.
 ```
 
-**Every number above was re-run by the driver, and separately reproduced by the independent verifier T13.**
+**Re-run by the driver on merged main, not inherited from a worker.** The corpus grew **36 → 42 parity
+vectors** and 4034 → 5576 graded cells — the first corpus growth in three fires.
 
 ---
 
-# THE HEADLINE: **the driver formed a hypothesis, a worker refuted it, and the driver was wrong**
+# THE HEADLINE: the fire's most important finding is UNVECTORED, and a REVIEWER found it
 
-The driver read the pinned source and found what looked like the step nobody had taken: `isFullyPaid()`
-is `emi + credited + FUI == totalPaidAmount`, so on the pure-generation seam — where nothing is ever paid
-— **a zero-EMI period is vacuously "fully paid"**, and the selector at `ProgressiveEMICalculator.java:1176-1177`
-returns the last *non-zero-EMI* period. That supplies the "strictly after `L`" half of
-`getPeriodWithUnrecognizedInterest`'s precondition that T63 had explicitly not tested. `T64-ZP-B` has
-**40 such rows**. The driver committed that chain to `.softhouse/reviews/driver-rederivation-20260820-140000.md`
-*before* T66 reported, so the ruling could not be settled on whose report read better.
+**`MNT 0.01 / 6 × 21.6%` at `MinorUnitDigits = 2` — entirely inside the graded domain, no multiples-of input
+— makes the reference oracle emit a schedule whose balance column NEVER REACHES ZERO: `0.01` on every row,
+including the last. The Go port returns `0`.** Same at 0.02/6, 0.01/12, 0.01/56; clean at 0.03 and above.
 
-**T66 refuted it at step 4, and was right.** The lookup does not run on the live model at all. It runs on a
-**deep copy** (`:1226`) that `calculateRateFactorForScheduleTillDateInclusive` (`:1237`, `:1791-1803`)
-re-rates only up to `tillDate`, **zeroing** the rate factors of every later interest period — and `tillDate`
-is anchored at the **disbursement**, not maturity (`addDisbursement` `:137-151` → `:747`). A tail period's
-own interest is therefore zero *by construction*. The only surviving route is inheritance through
-`RepaymentPeriod.java:261-263`, and T66 closes that with the aggregate identity `Σ emi = P + I` enforced at
-`:1189-1207`. **That is exactly the step T69 marked `[UNVERIFIED]` at `emi.go:315-325` and named T66 to settle.**
+T75 found it while *approving* T74. It registered a prediction, committed it, and only then probed the
+pinned image — its calibrations reproduced `T64-ZP-A`/`ZP-B` cell-for-cell with zero input diffs.
 
-The driver re-ran all three of T66's legs rather than accept the report:
-
-| leg | driver's independent result |
-|---|---|
-| source cruxes (a) and (b) | confirmed at the pinned commit |
-| **pass-3h capture** | **re-captured from a scratch worktree — identical canonical digest `fdd751a2…`**, 8/8 rig calibrations reproduced cell-for-cell (incl. the promoted `T64-ZP-A`/`ZP-B`), 18/18 path identity, 416 mechanism rows, **0 firings**, 68 zero-EMI rows present, empty stderr, `(19, HALF_UP)` |
-| **census** | **re-run** — `admitted=21060`, zero-EMI shapes `9437`, with positive `calculatedDueInterest` **156**, strictly after `L` **0** — matching T66 exactly |
-
-Scope was clean: nothing under `nexus/` or `.softhouse/vectors/`; the seam class byte-identical
-(`bf397f0b…`), mechanism columns read through a delegating `Proxy` guarded by path identity. P-9 honoured:
-PREDICTION committed 14:27:41, capture 14:37:22; the later re-run changed only `capturedAtUtc` and the
-harness sha — **observations byte-identical**, a free determinism control. Three runs now agree on the digest.
-
-**No vector promoted, correctly** — the mechanism columns are not fields the frozen contract returns, so a
-vector transcribed from them would grade nothing.
-
-## The driver also overstated a finding against T66, and withdrew it
-
-The driver flagged step (e)'s sufficient condition as under-derived for general `f`. **True of
-`PREDICTION.md`, false of the handoff**, which supplies the missing premise (`emi_j = 0` for `j < f`) with a
-citation the driver then verified — `getRelatedRepaymentPeriods` keeps only `dueDate ≥ d`
-[`ProgressiveLoanInterestScheduleModel.java:191-198`], `calculateEMIOnActualModel` writes `setEmi` only on the
-window it is passed [`:1674`] — and both `f = 1` cases in the capture report period 0 `emi == "0.00"`.
-Publishing the first form would have reproduced **P-11/P-12** while citing them. Withdrawn, demoted to P3
-doc hygiene, and the registered prediction **annotated rather than rewritten**, since its value is that it was
-committed before the capture.
-
-**T66 reported two defects in its own work rather than burying them:** its first sweep silently dropped the
-21.6/16.8/18.5/36% rate literals (not in lowest terms, refused by `validateWellFormed`, counted as "not
-admitted"), caught only because it printed the refusal instead of accepting a zero; and `Capture3h.java`'s
-first header carried pass-3f/T64 rationale verbatim (a P-12 corrections leak), rewritten and re-run.
+This sets two project rules against each other: *Fineract is the oracle* versus *principal amortizes to
+zero*. **Conformance is green only because no vector covers the region** — which is exactly the blind spot
+the gate exists to eliminate, so the green bar is not evidence against the finding. Raised as **G-8**;
+**T83** must re-capture independently and measure the boundary before anyone proposes a remedy.
 
 ---
 
-## What happened after T66 — and the fire's second rejection
+## THE DRIVER WAS WRONG, IT COST A WHOLE WORKER, AND THE WORKER CAUGHT IT FIRST
 
-**T13 (independent verifier) returned the run-gate UAT PASS**, reproducing every driver number in its own
-worktree: build/vet/test `0/0/0` at `-count=1`, conformance exit 0 with 36/36 parity and 4034 cells,
-`--prove` 21/21, `--self-test` 0, `contract.go` digest matching `PIN.json`, `gofmt -l` naming exactly
-`contract.go` (the expected G-3 state). Its branch touched only its own handoff. Merged.
+The driver dispatched **T76** to close T22's `P0-3/4/5/6` "still open, still blocking vector promotion."
+**They had been closed on 18 August** — P0-5 by T30 `1b65b1c`, P0-3/P0-4/P0-6 by T36
+`78c5bda`/`c3bbf26`/`fab040a`+`60c08ad`, and P1-14 (B-03/B-04 never re-derived) by T30 as well.
 
-**T14 closed as G-6 — ACCEPTED by the driver**, `chosen_by: agent`. The driver checked the
-`executor: "user"` label against CLAUDE.md's **exhaustive** RESERVED list rather than letting the label
-settle it: T14 is not a licence fact, not a cutover, not regulatory sign-off, and spends nothing. Accepted
-with four residuals recorded rather than glossed. **It authorises no cutover.** Buyan may reverse.
+**The false sentence was in this very file**, in the paragraph the last fire wrote, and in `T25`'s own park
+list — neither updated when T30 and T36 ran. The driver copied it into a dispatch prompt without opening it.
+Same failure mode as last fire's F-1, one level up: last time a line number, this time an entire task premise.
 
-**T70 — the correction of the stale marker — was REJECTED by its independent reviewer T71, and the driver
-confirmed the rejection from source before ruling.** This is the third time a rule on this comment has been
-wrong, and the second time the defect was **insufficiency** rather than falsehood.
+T76 checked before touching the oracle and registered the refutation in `t76/PREDICTION.md` — a commit that
+is a **parent** of its evidence commit, so it cannot be back-fitted. T77 confirmed it in every particular.
+The driver re-verified it from the commits itself (`.softhouse/reviews/driver-rederivation-20260820-170001.md`).
 
-> `allowFullTermForTranche` is a **PRODUCT FLAG, not a tranche count.** The gate is
-> `isAllowFullTermForTranche() && numberOfRepayments > 0 && action == DISBURSEMENT` and **never consults the
-> disbursement count** [DRIVER-VERIFIED: `ProgressiveEMICalculator.java:142-144`]. So a shape with
-> **exactly one disbursement** and the flag true satisfies **every one of T70's five conditions** and still
-> enters `:1160` at **`:247`** — inside `mergeNewScheduleModelWithExistingOne` (`:206`) [DRIVER-VERIFIED] —
-> with `tillDate` = the disbursement **date**, voiding step (b) outright and (e)'s `emi_j = 0 for j < f`
-> premise with it.
+**Standing correction, now in force:** a `parked` list inside a task note is *evidence of what was true when
+it was written, not a work queue.* Check whether a later commit already closed the items before dispatching.
 
-**The correct condition was already written down, and the rule never named it.** `contract.go:1191-1202` —
-the *frozen, ratified* artefact — already says `allowFullTermForTranche = false` is "a REAL BEHAVIOURAL PIN",
-that the guard "never consults multi-disbursement at all", and that the two identical captures are "a
-measurement, not a licence to ignore the flag" [DRIVER-VERIFIED by reading `contract.go`]. T70 instead wrote
-that multi-tranche is what breaks (b), and filed `:247` under "post-origination operations" when it is
-reachable **at origination**. Same failure mode as T67's `p.idx` catch: executable change right, conclusion
-right, **rule insufficient**.
+---
 
-T71 credited what was right, and the driver kept that: all other citations resolve, T70's three claimed
-drift corrections are real, every capture figure independently re-derived, `(e)`'s non-tightness preserved,
-nothing asserted about the copy's internal state, and **marking the recursion `[UNVERIFIED]` explicitly
-credited as correct behaviour.** Zero executable change re-verified two ways.
+## What each worker did
 
-**T70's diff is NOT merged.** It stays on `softhouse/T70-fui-marker` for the retry to branch from — exactly
-as T69 branched off T65.
+| task | verdict | outcome |
+|---|---|---|
+| **T74** Path A pass-3i | **APPROVED** by T75 | **MERGED. Six vectors promoted, 36 → 42.** |
+| **T75** review of T74 | done | The only approval this fire — and it found G-8 |
+| **T72** 4th draft of the fui rule | **REJECTED** by T73 | not merged; T78 branches off it |
+| **T73** review of T72 | done | Constructed the counterexample rather than just naming a false clause |
+| **T76** Path B re-capture | **REJECTED** by T77 | not merged; T80 branches off it |
+| **T77** review of T76 | done | Found a worse defect than the one it rejected |
+| **T78** 5th draft, closed form | done | **NOT MERGED — awaiting T79, the first task of the next fire** |
 
-### Two findings the fire is carrying forward
+**T73's rejection of T72, driver-verified from source before ruling.** A **mid-term interest rate variation**
+satisfies every one of T72's eight conditions and still routes the decision outside steps (a)-(g):
+`:120 → :273 → :350 → :356 → :718 → :747 → :1160`. `changeInterestRate` anchors on
+`submittedOnDate.minusDays(1)`, not the disbursement, voiding step (b); and `:733-735` is a **four-term**
+disjunction whose second term is `INTEREST_RATE_CHANGE`, so `:741` is taken on a model that already carries
+EMI on every period — the exact mechanism step (e) cited as protection. T72 fenced the callers of `:1160`;
+it needed to fence the callers of **`:718`**. **The frozen contract already named the gap twice**
+(`contract.go:563-564`, `:2117-2118` — interest pause, mid-term rate change, multi-tranche). T72 fenced two
+of the three.
 
-- **F-1 — citation drift in three artefacts, one of them the driver's own.** `deepCopy` is **`:1224`**, not
-  `:1226` (a comment line); the `futureUnrecognizedInterest` write is **`:1246`**, not `:1250` (a closing
-  brace); `T66.md`'s residual assignment is **`:1210`**, not `:1207` (inside the `getFixedInterest()` guard).
-  All driver-verified. **The driver took `:1226` from T66's `PREDICTION.md`, repeated it in its own
-  re-derivation, and passed it into T70's dispatch prompt** — P-12 recurring, in the document whose job was
-  checking. The driver's document is corrected; T66's artefacts are a follow-up, not something the driver
-  edits.
-- **F-2 — a gap in T66's proof neither T66 nor the driver noticed.** `:1214` recursively re-enters
-  `calculateLastUnpaidRepaymentPeriodEMI` (`:1160`), and the `:1217` defer then runs in the **outer** frame,
-  so the lookup can execute after an inner frame re-established step (d) on a possibly different `L`. T66
-  states (d) for a single entry only; the census covers the recursion **empirically, not deductively**.
-  T71 confirmed the driver's reduction: the guard is **exactly `emi_L < 0`** on the graded domain, encoded
-  verbatim at `emi.go:1207`. **Whether `emi_L` can go negative is UNESTABLISHED** — T70, T71 and the driver
-  all declined to settle it by reading. Settle it by capture.
+**T77's rejection of T76 found something worse than the item it rejected.** T22 P0-4's fail-the-run property
+lives in the *caller*, and its ABORT is **unreachable** — `bad()` writes FAIL to stderr while the gate greps
+a stdout-only `tee`. `TENANT=default sh t36/recapture.sh` ran with **five breached preconditions including a
+404'd canary, no abort, all four captures taken, exit 0** — written into a hard-coded `recapture-gerege`
+directory. **A capture taken on the wrong tenant is filed under the right tenant's name.** T80 fixes it.
+
+**T78 changed strategy on the driver's instruction.** Four rounds of "enumerate the safe conditions" produced
+four true-but-insufficient rules. T78 wrote a **closed form**: three censuses each exhaustive by grep, and
+the load-bearing one is that the four entries to `:718` are **in bijection with a 4-constant enum fixed by
+the compiler** — so a fifth route cannot appear without a compile-visible edit to the pinned oracle. That is
+what lets the rule stop enumerating. It also named a **third writer of the field no previous draft found**
+(`AdvancedPaymentScheduleTransactionProcessor.java:1995`).
 
 ---
 
 ## THE NEXT FIRE STARTS HERE
 
-**No oracle required for any of the first three.**
+1. **T79** — independent review of T78. **First task, no oracle needed.** Attack whether the closed form
+   *closes*, not whether a fifth caller exists.
+2. **T83** — **ORACLE ONLY.** Re-capture and measure the G-8 non-amortizing boundary. Highest-value oracle
+   work outstanding; the divergence is live and unvectored.
+3. **T80** — **ORACLE ONLY.** Retry of T76: make the Path B abort reachable and the canary non-tautological.
+4. **T81** — the `sh` vs `bash` trap in `conformance.sh`. Both T76 and T77 hit it independently: under `sh`
+   it dies at line 104 and **exits 2**, the harness's real "oracle unusable" code and this driver's third
+   stop condition. **A shell-selection typo currently masquerades as a legitimate oracle-down park.**
+   **STANDING INSTRUCTION until it lands: invoke as `bash .softhouse/conformance.sh`, NEVER `sh`.**
+5. **T82** — T75's seven defects on the pass-3i artefacts. Two are guards that cannot go red (a P-15
+   violation inside the check advertised as fixing P-15; a Python chained comparison that passes when both
+   arms ran at a non-ratified mode). No oracle needed — good cloud-fire work.
+6. **T15** — archive. Now depends on T14, T71, **T73, T75, T77, T79**.
+7. **Then Tier A.** `tierA-gl-accounting` is already decomposed in `program.json` into three **measured**
+   slices, with the rationale and the rejected alternative recorded: **A2** chart of accounts + product
+   mapping (6,636 LOC) → **A1** journal posting, the double-entry engine (11,535) → **A3** period-end
+   (4,953). Total re-measured at pinned `426a23544`: **23,161 LOC**. Plan gate rule 5 forces the split
+   independently of the 25,000 threshold, because `fineract-accounting` is a whole 12,752-LOC module.
 
-1. **T72** — retry of T70. Branch off `softhouse/T70-fui-marker` to preserve its approved content. Fix
-   T71's R-1 (P1, name the **pin**, in `contract.go:1191-1202`'s own terms; stop filing `:247` as
-   post-origination), R-2 (P2, qualify `:259` as `RepaymentPeriod.java:259`), R-3 and R-4 (P3). **The test is
-   SUFFICIENCY**, not truth: a reader obeying every clause must be unable to break the port.
-2. **T73** — paired independent reviewer for T72. Not optional.
-3. **T15** — archive the run, strangler backlog, postmortem patterns. **Now depends on T73**: archiving
-   today would freeze a marker that is both stale *and*, per T71, false in its replacement.
-4. Then **Tier A**. Once `tier0-harness-schedule-poc` is `done`, three contexts become READY —
-   **computed from `program.json`, not estimated**:
+**T12 remains `done_partial`** — the mid-flight checkpoint drill is **still unexercised for a FIFTH fire**.
+All seven workers this fire ran to completion again. It needs a fire that genuinely hits the soft limit
+with a worker in flight.
 
-   | context | tier | `main_loc` | direct dependents |
-   |---|---|---|---|
-   | `tierA-gl-accounting` | A | 24,000 | **6** |
-   | `tierA-loan-product-schedule` | A | 20,461 | 1 |
-   | `tierD-test-corpus-to-vectors` | D | 321,000 | 0 |
-
-   The rule is **lowest tier first; within a tier, the one unblocking the most dependents; `main_loc` only as
-   tie-break.** So **`tierA-gl-accounting`** — six dependents to one, and that outranks the 3,539-LOC
-   difference. At 24,000 LOC it is under the 25,000 splitting threshold and may be planned whole, but check
-   `files_hint` breadth first: the plan gate also rejects a `files_hint` spanning a whole large module.
-
-**Also still waiting, and ORACLE-ONLY:** T25's parked P0s (T21 P0-2/3/4, P1-8/9/11; T22 P0-3/4/5/6). They
-were not attempted this fire because they touch `.softhouse/capture/`, which T66 held all fire, and two
-capture workers collide there. They still block vector promotion.
-
-**T12 remains `done_partial`.** The rehydration half is a committed re-runnable assertion
-(`.softhouse/bin/rehydrate-check.sh`; this fire: 74 terminal tasks, none re-selected). **The mid-flight
-checkpoint half is unexercised for a FOURTH fire running** — all four workers dispatched this fire ran to
-completion. The next fire that approaches the soft limit with a worker in flight should treat it as the drill.
+**Worktree debt:** ~60 stale `softhouse/*` worktrees are still registered. STEP 9 hygiene has never run.
+Harmless today, but it is unbounded growth on a real disk.
 
 ---
 
-## Open decisions for Buyan — **none blocking, two open, none RESERVED**
+## Open decisions for Buyan — **none blocking, three open, none RESERVED**
 
 - **G-4** — DEC-1's ACT/ACT promotion condition is provably too strong (wording only).
 - **G-5** — DEC-1 contradicts itself on a zero interest rate (wording only).
+- **G-8** — **new this fire.** The non-amortizing MNT 0.01 shape. Blocks nothing; **T83 measures it before
+  anyone proposes a remedy.** Driver's recommendation, recorded but not acted on: prefer promoting a parity
+  vector with an explicit invariant exemption, because it keeps the oracle authoritative and makes the
+  divergence measured rather than defined away — and it may need no DEC-n amendment at all. Refusing the
+  region or diverging deliberately both amend the graded domain and are hard `user` gates.
 
-Both are wording amendments to a **ratified DEC-n**, which no automation may cross. Both block nothing; the
-corrected readings are already in force.
-
-- **G-6 — accept the Tier-0 PoC slice (T14) — CLOSED, ACCEPTED by the driver this fire.** PRODUCT-class.
-  The driver checked the `executor: "user"` label against CLAUDE.md's **exhaustive** RESERVED list rather
-  than letting the label settle it; T14 is not a licence fact, not a cutover, not regulatory sign-off, and
-  spends nothing. Accepted with four residuals recorded rather than glossed — chiefly that T12's mid-flight
-  drill is still unexercised, which T14's own description names as review material. **Buyan may reverse.**
-- **G-3** (gofmt vs frozen `contract.go`) and **G-2** (third attempt at T2) — closed in earlier fires.
+**G-2, G-3, G-6** — closed in earlier fires. **G-7** was proposed inside T76's handoff and is *not* yet
+promoted to a gate, because T76 was rejected; T80 should re-raise it if it survives.
 
 **RESERVED and untouched:** cutover, regulatory / parallel-run sign-off, deposit-taking activation, licence
-facts. **None is in Run 1's path, and G-6 explicitly authorises no cutover.**
+facts. None is in Run 1's path.
