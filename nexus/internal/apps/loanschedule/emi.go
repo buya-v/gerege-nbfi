@@ -433,10 +433,11 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //
 //     (ii) THE RECURSIVE FRAME IS NOT COVERED DEDUCTIVELY. :1211-1215 re-enters
 //     :1160 when the residual drives emi_L below totalPaid - totalCredited (zero
-//     when nothing is paid); the port reproduces it at emi.go:1048-1051. The
-//     OUTER frame's :1217 lookup therefore runs after an inner frame has
-//     re-established (d) on a possibly DIFFERENT L. T66 states (d) for a single
-//     entry, and neither T66 nor the driver analysed the recursive frame
+//     when nothing is paid); the port reproduces it as applyFinalPeriodResidual's
+//     own depth+1 re-entry (no line number on purpose -- it moves). The OUTER
+//     frame's :1217 lookup therefore runs after an inner frame has re-established
+//     (d) on a possibly DIFFERENT L. T66 states (d) for a single entry into
+//     :1160, and neither T66 nor the driver analysed the recursive frame
 //     separately. It is covered empirically -- the census runs the port's own
 //     residual with the recursion in place -- and it is [UNVERIFIED] that the
 //     recursive frame preserves (d) for the outer target. Settle it by capture,
