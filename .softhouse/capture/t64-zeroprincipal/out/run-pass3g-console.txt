@@ -1,0 +1,25 @@
+preconditions OK
+  image      sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a
+  fineract   426a23544e8426a38ae43ae404670a0a7e85b9eb (clean)
+  seam sha   bf397f0b29e6d6f347c286f563875495635128f9cba80fe59881ffe0fea80714
+  harness    de75bfb8367a91abe10eda4f63577a093af3a90b4530c69963fce2dc50416b32
+  cal ref    .softhouse/capture/out/capture-prod3b-raw.json (8d23c48fa13c04677b51bacdf07d101d6a061c79815d76b4983eccdbac945c79)
+  run id     pass3g-20260820T034646Z
+validation OK — 10 captures, attestation present, effective MathContext (19, HALF_UP ordinal 4)
+calibration OK — P-CAL reproduced committed P-CAL (.softhouse/capture/out/capture-prod3b-raw.json) at precision 12, inputs and observed both identical
+calibration OK — P-CAL-DRIFTF reproduced committed P-DRIFT-F (.softhouse/capture/out/capture-prod3e-raw.json) at precision 19, inputs and observed both identical
+calibration OK — P-CAL-EMI6 reproduced committed P-EMI-6-1M014632 (.softhouse/capture/out/capture-prod3c-raw.json) at precision 19, inputs and observed both identical
+calibration OK — P-CAL-LATQ0a reproduced committed P-LAT-Q0a (.softhouse/capture/out/capture-prod3e-raw.json) at precision 19, inputs and observed both identical
+calibration OK — P-CAL-MNT50M reproduced committed P-MNT-50M (.softhouse/capture/out/capture-prod3b-raw.json) at precision 19, inputs and observed both identical
+calibration OK — P-CAL-P00 reproduced committed P-00 (.softhouse/capture/out/capture-prod3b-raw.json) at precision 19, inputs and observed both identical
+captures canonical sha256: ad09ccaaa79771cbda2c4e37a5bf7ce28f7e27b1ab5a6ca610a34efe1e7bb9cb
+
+sha256 of every output (also written to .softhouse/capture/out/capture-prod3g-sha256.txt):
+6e0c37019095cf8664b18b643bafb8e59014b47f2d4a8a82ce43463e41827d91  .softhouse/capture/out/capture-prod3g-raw.json
+1496dc940dcc16a5efc8031612139486e7d01a66e4e65e600c1939618dad50c0  .softhouse/capture/out/capture-prod3g-log.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  .softhouse/capture/out/capture-prod3g-stderr.txt
+142ec626d3b98a66e09c6128939c5fba0634a31e0780733261085407d7405fe3  .softhouse/capture/out/capture-prod3g-attestation.json
+8738dbaec1c242f10f28be685706b40bd46c16ff3afff696335f7e0653efa011  .softhouse/capture/out/capture-prod3g-classpath-sha256.txt
+8d2b1abfe53a96afb69d7e55aeb20c1c40276e8c07ddd03d04aca61688ac20ec  .softhouse/capture/out/capture-prod3g-raw.txt
+
+DONE. Nothing here is promoted to the parity vector store; that is a separate gated decision.
