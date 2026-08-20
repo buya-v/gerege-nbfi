@@ -1,0 +1,26 @@
+{
+  "squad": "fire-20260820-170001",
+  "driver": "/softhouse-program",
+  "host": "Buyanmunkhs-Mac-mini",
+  "started_at": "2026-08-20T09:00:12Z",
+  "run_id": "2026-08-17-run1-harness-schedule-poc",
+  "context": "tier0-harness-schedule-poc",
+  "oracle": "REACHABLE — fineract:latest + postgres:18.3 both healthy, up 47h/2d; pinned checkout 426a23544 clean",
+  "step": "wave 1 dispatched, awaiting three workers",
+  "live_workers": [
+    {"task": "T72", "branch": "softhouse/T72-fui-marker-retry", "model": "opus", "needs_oracle": false,
+     "what": "4th draft of the futureUnrecognizedInterest rule at emi.go:315-325; fixes T71's R-1..R-4; comment-only"},
+    {"task": "T74", "branch": "softhouse/T74-pathA-multiplesof", "model": "opus", "needs_oracle": true,
+     "what": "pass-3i: separate CurrencyData.inMultiplesOf from installmentAmountInMultiplesOf and capture the decimalPlaces==0 money-moving seam (T21 P1-8); add the 36x16.8% small-principal discriminator (P1-11); settle pass 3's promotion status"},
+    {"task": "T76", "branch": "softhouse/T76-pathb-gerege-recapture", "model": "opus", "needs_oracle": true,
+     "what": "close T22 P0-3/4/5/6: attestation sidecar, failing preconditions, fixed capture loop, re-capture B-01..B-04 on tenant gerege at (19,HALF_UP)"}
+  ],
+  "next_action": "await all three; adjudicate; then dispatch paired reviewers T73 (for T72), T75 (for T74), T77 (for T76); then T15 archive; then plan tierA-gl-accounting",
+  "blocked_on": null,
+  "open_questions": [
+    "F-2 carried forward: whether emi_L can go negative is UNESTABLISHED; T72 must record it, not settle it. Needs a capture — candidate task for a later oracle fire.",
+    "DRIVER CLAIM under worker check (T74): no promoted vector derives from pass 3, so T21 P0-2/3/4 are record hygiene rather than promotion blockers."
+  ],
+  "gate_pending": ["G-4 (wording)", "G-5 (wording)"],
+  "checkpoint_rule": "NEVER exit with a live worker — a background worker dies with the session. Await or force-checkpoint each branch first."
+}

@@ -1556,9 +1556,10 @@
    "dependencies": [
     "T71"
    ],
-   "status": "pending",
+   "status": "in_progress",
    "attempts": 0,
-   "note": "Raised by the driver, fire 20260820-140000, after T71 REJECTED T70. NEEDS NO ORACLE. This is the FOURTH draft of a rule on this comment and the THIRD to be attempted after a rejection (T65 rejected by T67; T69 fixed it and found a defect in T67's own text; T70 rejected by T71). Expect the comment, not the code, to be the defect, and expect the defect to be INSUFFICIENCY rather than falsehood. Pair with an independent reviewer (T73)."
+   "note": "Raised by the driver, fire 20260820-140000, after T71 REJECTED T70. NEEDS NO ORACLE. This is the FOURTH draft of a rule on this comment and the THIRD to be attempted after a rejection (T65 rejected by T67; T69 fixed it and found a defect in T67's own text; T70 rejected by T71). Expect the comment, not the code, to be the defect, and expect the defect to be INSUFFICIENCY rather than falsehood. Pair with an independent reviewer (T73). || fire 20260820-170001: DISPATCHED as isolated worktree worker on softhouse/T72-fui-marker-retry, model opus, branched off softhouse/T70-fui-marker to preserve T70 approved content. In parallel with T74 and T76 (disjoint files, and T72 needs no oracle).",
+   "branch": "softhouse/T72-fui-marker-retry"
   },
   {
    "id": "T73",
@@ -1593,9 +1594,10 @@
    ],
    "context": "harness",
    "dependencies": [],
-   "status": "pending",
+   "status": "in_progress",
    "attempts": 0,
-   "note": "Raised by the driver, fire 20260820-170001. Supersedes the parked Path A slice of T25. ORACLE REQUIRED and reachable this fire. Shares the live oracle with T76 (Path B): MUST NOT mutate shared oracle state — no c_configuration writes, no container restart, no liquibase re-run, no tenant creation or edit. Path A is the in-JVM embeddable seam; if a deliverable seems to need a global mutation, STOP and report instead."
+   "note": "Raised by the driver, fire 20260820-170001. Supersedes the parked Path A slice of T25. ORACLE REQUIRED and reachable this fire. Shares the live oracle with T76 (Path B): MUST NOT mutate shared oracle state — no c_configuration writes, no container restart, no liquibase re-run, no tenant creation or edit. Path A is the in-JVM embeddable seam; if a deliverable seems to need a global mutation, STOP and report instead. || fire 20260820-170001: DISPATCHED as isolated worktree worker on softhouse/T74-pathA-multiplesof, model opus. ORACLE REACHABLE. In parallel with T76 (Path B REST) under an explicit no-shared-state-mutation constraint: Path A is the in-JVM seam, Path B is REST+Postgres on the gerege tenant, so neither should touch the other. Carries a DRIVER CLAIM to check: no promoted vector derives from pass 3.",
+   "branch": "softhouse/T74-pathA-multiplesof"
   },
   {
    "id": "T75",
@@ -1631,9 +1633,10 @@
    ],
    "context": "harness",
    "dependencies": [],
-   "status": "pending",
+   "status": "in_progress",
    "attempts": 0,
-   "note": "Raised by the driver, fire 20260820-170001. Supersedes the parked Path B slice of T25. ORACLE REQUIRED and reachable this fire. Shares the live oracle with T74 (Path A, in-JVM seam): MUST NOT mutate shared oracle state — no c_configuration writes, no container restart, no liquibase re-run, no tenant creation or edit. Path B is REST + PostgreSQL against the EXISTING gerege tenant. If a deliverable seems to need a global mutation, STOP and report instead."
+   "note": "Raised by the driver, fire 20260820-170001. Supersedes the parked Path B slice of T25. ORACLE REQUIRED and reachable this fire. Shares the live oracle with T74 (Path A, in-JVM seam): MUST NOT mutate shared oracle state — no c_configuration writes, no container restart, no liquibase re-run, no tenant creation or edit. Path B is REST + PostgreSQL against the EXISTING gerege tenant. If a deliverable seems to need a global mutation, STOP and report instead. || fire 20260820-170001: DISPATCHED as isolated worktree worker on softhouse/T76-pathb-gerege-recapture, model opus. ORACLE REACHABLE. In parallel with T74 under the same no-shared-state-mutation constraint. Closes the T22 P0 list that T25 parked as oracle_unreachable.",
+   "branch": "softhouse/T76-pathb-gerege-recapture"
   },
   {
    "id": "T77",
