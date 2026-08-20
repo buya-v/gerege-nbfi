@@ -1,56 +1,66 @@
 /*
  * Golden-vector capture harness, PASS 3h — gerege-nbfi Fineract→Go migration, Tier 0.
  *
- * PASS 3h IS PASS 3f's RIG WITH A NEW CASE LIST. Every precondition, attestation field, column and
- * emission rule is preserved byte-for-byte; only the case list differs, and NOT ONE check was
- * weakened. All FOUR of pass 3f's rig calibrations are carried over unchanged and TWO more are
- * added, chosen to sit on exactly the two axes this pass extends.
+ * PASS 3h IS PASS 3g's RIG WITH A NEW CASE LIST AND ONE NEW COLUMN FAMILY. Every precondition,
+ * attestation field, `observed` column and emission rule of pass 3g is preserved byte-for-byte and
+ * NOT ONE check was weakened. All SIX of pass 3g's rig calibrations are carried over unchanged and
+ * TWO more are added; three runner preconditions are added.
  *
- * WHY THIS PASS EXISTS — task T64. T59 found `applyFinalPeriodResidual` (a faithful port of
- * ProgressiveEMICalculator.java:1160-1219) is O(n^2) on near-interest-only shapes and correctly
- * declined to fix it, because NO VECTOR GRADES THAT SHAPE. Measured: across all 32 promoted parity
- * vectors the longest term is n=36 and the smallest principal is MNT 100.00, and not one contains a
- * REPAYMENT row whose principal is 0.
+ * WHY THIS PASS EXISTS — task T66. T63 reported UNPROVEN that `futureUnrecognizedInterest` is not
+ * ported: ProgressiveEMICalculator.java:1217 calls
+ * calculateUnrecognizedInterestTillDateOnScheduleModelCopyAndDefer, which at :1243-1251 (via
+ * :1805-1814) copies a later period's unrecognized interest onto the last-unpaid period's
+ * futureUnrecognizedInterest and sets interestMovedUpward on every later period. The port
+ * (nexus/internal/apps/loanschedule/emi.go:995-1055) has no counterpart to either.
  *
- * DERIVED FROM SOURCE, NOT SEARCHED FOR. A repayment row's principal is max(0, EMI - dueInterest)
- * [RepaymentPeriod.java:345-350], both quantized to the currency scale [Money.java:52], and the
- * exact EMI/interest gap is B*r/((1+r)^n - 1) > 0 for every finite n. So the two can only quantize
- * to the same minor unit at the ROUNDING FLOOR:
+ * THE FIELD IS NOT OBSERVABLE THROUGH THE RETURNED SCHEDULE. It feeds getCalculatedDueInterest
+ * (RepaymentPeriod.java:252-265) and getDueInterest (:271-286), and getDueInterest is
+ * min(calculatedDueInterest, emiPlusCreditedAmountsPlusFutureUnrecognizedInterest). On a zero-EMI
+ * period that minimum is min(cdi, 0) = 0 WHATEVER cdi IS, so a dead row's observed interest of 0
+ * says nothing about the quantity the precondition actually tests. Every capture pass in this
+ * program recorded only the returned plan, so the corpus was structurally blind to the field.
  *
- *     B >= ceil(0.5/r)   so period-1 interest quantizes to at least 1 minor unit, and
- *     n >  2*B           so the EMI smoothing adjustment B/n quantizes to zero and the loop breaks
- *                        [ProgressiveEMICalculator.java:1270-1273; uncountablePeriods is 0 at
- *                        origination, :2027-2031]
+ * SO THIS PASS RECORDS IT. ProgressiveEMICalculator is `final` and cannot be subclassed, so the
+ * mechanism() method below constructs the ORACLE'S OWN ProgressiveLoanScheduleGenerator around the
+ * ORACLE'S OWN ProgressiveEMICalculator placed behind a java.lang.reflect.Proxy whose entire
+ * behaviour is: delegate the call unchanged, and remember the ProgressiveLoanInterestScheduleModel
+ * that generatePeriodInterestScheduleModel returns. That is the object the generator then mutates,
+ * so after generate() returns the harness reads the oracle's own final per-period state. It
+ * REIMPLEMENTS NOTHING and it does NOT modify the seam class, whose byte identity against the
+ * pinned original is still asserted by the runner and without which the run is void.
  *
- * with B the principal in MINOR UNITS. The full derivation, the ten-rate check of the bound and the
- * cell-for-cell prediction live in .softhouse/capture/t64-zeroprincipal/PREDICTION.md and
- * predicted-schedules.json, and were committed BEFORE this harness was written.
+ * PATH IDENTITY is the calibration that licenses reading those columns: every case is ALSO run
+ * through the pristine embeddable seam, both plans are rendered cell for cell by ONE renderer, and
+ * run-pass3h.sh FAILS THE RUN if any pair differs.
  *
- * SIX CALIBRATIONS AND FOUR PARITY CANDIDATES:
+ * EIGHT CALIBRATIONS AND TEN MECHANISM PROBES:
  *
  *   P-CAL          RIG CALIBRATION at (12, HALF_UP), inputs identical to pass 3b's P-CAL.
  *   P-CAL-P00      RIG CALIBRATION at PRODUCTION (19, HALF_UP), inputs identical to pass 3b's P-00.
  *   P-CAL-EMI6     RIG CALIBRATION in MNT, inputs identical to pass 3c's P-EMI-6-1M014632.
  *   P-CAL-LATQ0a   RIG CALIBRATION in MNT, inputs identical to pass 3e's P-LAT-Q0a.
- *   P-CAL-MNT50M   RIG CALIBRATION ADDED BY PASS 3h: inputs identical to pass 3b's P-MNT-50M, the
- *                  LONGEST TERM in the promoted corpus (n=36). This pass's candidates run at n=34
- *                  to n=72, so the rig is calibrated at the far end of the term axis it extends.
- *   P-CAL-DRIFTF   RIG CALIBRATION ADDED BY PASS 3h: inputs identical to pass 3e's P-DRIFT-F, the
- *                  SMALLEST PRINCIPAL in the promoted corpus (MNT 1.00). This pass's candidates run
- *                  at MNT 0.17 to MNT 0.36, so the rig is calibrated at the far end of the
- *                  principal axis it extends too.
- *   T64-ZP-A/B/C/D four parity candidates. All four are ordinary single-disbursement MNT loans
- *                  strictly inside DEC-1's graded domain: disbursement ON the schedule start date,
- *                  RepaymentEvery 1 MONTHS, DECLINING_BALANCE, DAYS_30/DAYS_360, no down payment,
- *                  no installment rounding, MNT 2 decimals, (19, HALF_UP). Only the principal, the
- *                  term and the rate move.
+ *   P-CAL-MNT50M   RIG CALIBRATION, inputs identical to pass 3b's P-MNT-50M (longest promoted term).
+ *   P-CAL-DRIFTF   RIG CALIBRATION, inputs identical to pass 3e's P-DRIFT-F (smallest promoted
+ *                  principal).
+ *   P-CAL-ZPA      RIG CALIBRATION ADDED BY PASS 3h: inputs identical to pass 3g's T64-ZP-A.
+ *   P-CAL-ZPB      RIG CALIBRATION ADDED BY PASS 3h: inputs identical to pass 3g's T64-ZP-B — the
+ *                  ONLY shape in the whole committed corpus whose schedule carries a ZERO-EMI TAIL,
+ *                  which is exactly the precondition half T63 could not test. The rig is therefore
+ *                  calibrated ON the shape under study, not merely near it.
+ *   T66-M-*        ten MECHANISM PROBES, all ordinary single-disbursement MNT loans strictly inside
+ *                  DEC-1's graded domain, pushing the two axes that domain leaves unbounded (the
+ *                  nominal rate, to a per-period factor of 10.00, and the term, to 120), plus the
+ *                  month-end drift region where the per-period rate factor is not uniform and the
+ *                  shape where the disbursement lands ON a repayment due date.
  *
- * None of the six calibrations is a parity vector and P-CAL is on PIN.json's never-promotable list.
+ * None of the eight calibrations is a parity vector and P-CAL is on PIN.json's never-promotable
+ * list. None of the ten probes is promoted by this pass either.
  *
  * It asserts nothing and predicts nothing — every value printed is what the oracle emitted. In
- * particular this harness does NOT know which rows it expects to be zero, does NOT count them and
- * does NOT decide whether a shape is at the rounding floor: it prints the oracle's schedule and
- * stops.
+ * particular this harness does NOT know what it expects futureUnrecognizedInterest to be, does not
+ * count anything and does not decide whether a mechanism fired: it prints the oracle's model and
+ * stops. The falsifiable prediction lives in
+ * .softhouse/capture/t66-unrecognized-interest/PREDICTION.md and was committed BEFORE this file.
  *
  * PRODUCTION SETTINGS. Buyan ratified the tenant parameters on 2026-08-18: rounding mode HALF_UP,
  * licence NBFI. Precision is not a choice — MoneyHelper.PRECISION = 19 is a compile-time constant and
