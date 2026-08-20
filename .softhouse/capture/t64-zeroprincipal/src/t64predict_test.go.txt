@@ -1,0 +1,119 @@
+package loanschedule
+
+import (
+	"context"
+	"fmt"
+	"os"
+	"testing"
+
+	"github.com/gerege/nexus/internal/apps/loanschedule/contract"
+)
+
+// T64 — check the DERIVED bound against the port across several rates, and dump
+// the full schedule of the chosen candidates so a prediction can be registered
+// before the oracle is asked.
+//
+// Derived bound (from ProgressiveEMICalculator + RepaymentPeriod, see
+// PREDICTION.md):
+//
+//	B_min = ceil(0.5 / r)      so that period-1 interest quantizes to >= 1 minor
+//	n_min = 2 * B_min          so that the EMI smoothing adjustment (residual/n)
+//	                           quantizes to 0 minor and the loop breaks
+func TestT64Predict(t *testing.T) {
+	if os.Getenv("T64_PREDICT") == "" {
+		t.Skip("set T64_PREDICT=1")
+	}
+	type row struct {
+		rate    contract.Rate
+		bMinPre int64 // derived B_min
+	}
+	rows := []row{
+		{contract.Rate{Numerator: 27, Denominator: 125}, 28},  // 21.6% -> r=0.018   -> ceil(0.5/0.018)=28
+		{contract.Rate{Numerator: 21, Denominator: 125}, 36},  // 16.8% -> r=0.014   -> 36
+		{contract.Rate{Numerator: 37, Denominator: 200}, 33},  // 18.5% -> r=0.0154166.. -> 33
+		{contract.Rate{Numerator: 7, Denominator: 100}, 86},   // 7%    -> r=0.0058333.. -> 86
+		{contract.Rate{Numerator: 6, Denominator: 25}, 25},  // 24%   -> r=0.02    -> 25
+		{contract.Rate{Numerator: 9, Denominator: 25}, 17},  // 36%   -> r=0.03    -> 17
+		{contract.Rate{Numerator: 12, Denominator: 25}, 13},  // 48%   -> r=0.04    -> 13
+		{contract.Rate{Numerator: 3, Denominator: 5}, 10},  // 60%   -> r=0.05    -> 10
+		{contract.Rate{Numerator: 6, Denominator: 5}, 5},  // 120%  -> r=0.10    -> 5
+		{contract.Rate{Numerator: 12, Denominator: 5}, 3},  // 240%  -> r=0.20    -> 3
+	}
+	for _, rw := range rows {
+		// smallest B that yields any zero-principal row at any n <= 4*B+40
+		var gotB, gotN int64 = -1, -1
+		for b := int64(1); b <= rw.bMinPre+40 && gotB < 0; b++ {
+			for n := int64(2); n <= 4*b+60; n++ {
+				got, err := Generator{}.Generate(context.Background(), baseRequest(b, int32(n), rw.rate))
+				if err != nil {
+					continue
+				}
+				for i := range got.Periods {
+					pd := got.Periods[i]
+					if pd.Kind == contract.PeriodKindRepayment && pd.PrincipalMinor == 0 && pd.InterestMinor > 0 {
+						gotB, gotN = b, n
+						break
+					}
+				}
+				if gotB >= 0 {
+					break
+				}
+			}
+		}
+		fmt.Printf("RATE %d/%d derivedBmin=%d derivedNmin=%d  observedBmin=%d observedNmin=%d  Bmatch=%v Nmatch=%v\n",
+			rw.rate.Numerator, rw.rate.Denominator, rw.bMinPre, 2*rw.bMinPre, gotB, gotN,
+			gotB == rw.bMinPre, gotN == 2*rw.bMinPre)
+	}
+}
+
+// TestT64Dump prints the full schedule of the shapes named in T64_DUMP.
+func TestT64Dump(t *testing.T) {
+	if os.Getenv("T64_DUMP") == "" {
+		t.Skip("set T64_DUMP=1")
+	}
+	type shape struct {
+		id   string
+		p    int64
+		n    int32
+		rate contract.Rate
+	}
+	shapes := []shape{
+		{"T64-ZP-A", 28, 56, contract.Rate{Numerator: 27, Denominator: 125}},
+		{"T64-ZP-B", 28, 55, contract.Rate{Numerator: 27, Denominator: 125}},
+		{"T64-ZP-C", 17, 34, contract.Rate{Numerator: 9, Denominator: 25}}, {"T64-ZP-D", 36, 72, contract.Rate{Numerator: 21, Denominator: 125}},
+	}
+	for _, s := range shapes {
+		got, err := Generator{}.Generate(context.Background(), baseRequest(s.p, s.n, s.rate))
+		if err != nil {
+			fmt.Printf("%s ERROR %v\n", s.id, err)
+			continue
+		}
+		zeros, sumP, sumI := 0, int64(0), int64(0)
+		fmt.Printf("=== %s principal_minor=%d n=%d rate=%d/%d rows=%d\n",
+			s.id, s.p, s.n, s.rate.Numerator, s.rate.Denominator, len(got.Periods))
+		for i := range got.Periods {
+			pd := got.Periods[i]
+			kind := "REPAYMENT"
+			switch pd.Kind {
+			case contract.PeriodKindDisbursement:
+				kind = "DISBURSEMENT"
+			case contract.PeriodKindDownPayment:
+				kind = "DOWNPAYMENT"
+			}
+			if pd.Kind == contract.PeriodKindRepayment {
+				sumP += pd.PrincipalMinor
+				sumI += pd.InterestMinor
+				if pd.PrincipalMinor == 0 && pd.InterestMinor > 0 {
+					zeros++
+				}
+			}
+			fmt.Printf("%s|%d|%04d-%02d-%02d|%04d-%02d-%02d|%d|%d|%d\n",
+				kind, pd.InstallmentNumber,
+				pd.FromDate.Year, pd.FromDate.Month, pd.FromDate.Day,
+				pd.DueDate.Year, pd.DueDate.Month, pd.DueDate.Day,
+				pd.PrincipalMinor, pd.InterestMinor, pd.OutstandingPrincipalMinor)
+		}
+		fmt.Printf("--- %s zeros=%d sumPrincipal=%d sumInterest=%d\n",
+			s.id, zeros, sumP, sumI)
+	}
+}
