@@ -76,15 +76,76 @@ first header carried pass-3f/T64 rationale verbatim (a P-12 corrections leak), r
 
 ---
 
+## What happened after T66 — and the fire's second rejection
+
+**T13 (independent verifier) returned the run-gate UAT PASS**, reproducing every driver number in its own
+worktree: build/vet/test `0/0/0` at `-count=1`, conformance exit 0 with 36/36 parity and 4034 cells,
+`--prove` 21/21, `--self-test` 0, `contract.go` digest matching `PIN.json`, `gofmt -l` naming exactly
+`contract.go` (the expected G-3 state). Its branch touched only its own handoff. Merged.
+
+**T14 closed as G-6 — ACCEPTED by the driver**, `chosen_by: agent`. The driver checked the
+`executor: "user"` label against CLAUDE.md's **exhaustive** RESERVED list rather than letting the label
+settle it: T14 is not a licence fact, not a cutover, not regulatory sign-off, and spends nothing. Accepted
+with four residuals recorded rather than glossed. **It authorises no cutover.** Buyan may reverse.
+
+**T70 — the correction of the stale marker — was REJECTED by its independent reviewer T71, and the driver
+confirmed the rejection from source before ruling.** This is the third time a rule on this comment has been
+wrong, and the second time the defect was **insufficiency** rather than falsehood.
+
+> `allowFullTermForTranche` is a **PRODUCT FLAG, not a tranche count.** The gate is
+> `isAllowFullTermForTranche() && numberOfRepayments > 0 && action == DISBURSEMENT` and **never consults the
+> disbursement count** [DRIVER-VERIFIED: `ProgressiveEMICalculator.java:142-144`]. So a shape with
+> **exactly one disbursement** and the flag true satisfies **every one of T70's five conditions** and still
+> enters `:1160` at **`:247`** — inside `mergeNewScheduleModelWithExistingOne` (`:206`) [DRIVER-VERIFIED] —
+> with `tillDate` = the disbursement **date**, voiding step (b) outright and (e)'s `emi_j = 0 for j < f`
+> premise with it.
+
+**The correct condition was already written down, and the rule never named it.** `contract.go:1191-1202` —
+the *frozen, ratified* artefact — already says `allowFullTermForTranche = false` is "a REAL BEHAVIOURAL PIN",
+that the guard "never consults multi-disbursement at all", and that the two identical captures are "a
+measurement, not a licence to ignore the flag" [DRIVER-VERIFIED by reading `contract.go`]. T70 instead wrote
+that multi-tranche is what breaks (b), and filed `:247` under "post-origination operations" when it is
+reachable **at origination**. Same failure mode as T67's `p.idx` catch: executable change right, conclusion
+right, **rule insufficient**.
+
+T71 credited what was right, and the driver kept that: all other citations resolve, T70's three claimed
+drift corrections are real, every capture figure independently re-derived, `(e)`'s non-tightness preserved,
+nothing asserted about the copy's internal state, and **marking the recursion `[UNVERIFIED]` explicitly
+credited as correct behaviour.** Zero executable change re-verified two ways.
+
+**T70's diff is NOT merged.** It stays on `softhouse/T70-fui-marker` for the retry to branch from — exactly
+as T69 branched off T65.
+
+### Two findings the fire is carrying forward
+
+- **F-1 — citation drift in three artefacts, one of them the driver's own.** `deepCopy` is **`:1224`**, not
+  `:1226` (a comment line); the `futureUnrecognizedInterest` write is **`:1246`**, not `:1250` (a closing
+  brace); `T66.md`'s residual assignment is **`:1210`**, not `:1207` (inside the `getFixedInterest()` guard).
+  All driver-verified. **The driver took `:1226` from T66's `PREDICTION.md`, repeated it in its own
+  re-derivation, and passed it into T70's dispatch prompt** — P-12 recurring, in the document whose job was
+  checking. The driver's document is corrected; T66's artefacts are a follow-up, not something the driver
+  edits.
+- **F-2 — a gap in T66's proof neither T66 nor the driver noticed.** `:1214` recursively re-enters
+  `calculateLastUnpaidRepaymentPeriodEMI` (`:1160`), and the `:1217` defer then runs in the **outer** frame,
+  so the lookup can execute after an inner frame re-established step (d) on a possibly different `L`. T66
+  states (d) for a single entry only; the census covers the recursion **empirically, not deductively**.
+  T71 confirmed the driver's reduction: the guard is **exactly `emi_L < 0`** on the graded domain, encoded
+  verbatim at `emi.go:1207`. **Whether `emi_L` can go negative is UNESTABLISHED** — T70, T71 and the driver
+  all declined to settle it by reading. Settle it by capture.
+
+---
+
 ## THE NEXT FIRE STARTS HERE
 
-1. **T70** — correct the now-stale `[UNVERIFIED]` marker at `emi.go:315-325`, which still calls this a
-   *"HYPOTHESIS this port depends on, not a result"* and names T66 as the task chartered to settle it by
-   oracle capture. That capture now exists. **Comment-only; needs no oracle.**
-   *Status at the end of this fire: see the task table below.*
-2. **T71** — paired INDEPENDENT reviewer for T70. Not optional: this same comment has been rewritten twice
-   and been wrong twice (T65 rejected by T67; T69's fix found a defect in T67's own replacement text).
-3. **T15** — archive the run, record the strangler backlog, append postmortem patterns. Depends on T71.
+**No oracle required for any of the first three.**
+
+1. **T72** — retry of T70. Branch off `softhouse/T70-fui-marker` to preserve its approved content. Fix
+   T71's R-1 (P1, name the **pin**, in `contract.go:1191-1202`'s own terms; stop filing `:247` as
+   post-origination), R-2 (P2, qualify `:259` as `RepaymentPeriod.java:259`), R-3 and R-4 (P3). **The test is
+   SUFFICIENCY**, not truth: a reader obeying every clause must be unable to break the port.
+2. **T73** — paired independent reviewer for T72. Not optional.
+3. **T15** — archive the run, strangler backlog, postmortem patterns. **Now depends on T73**: archiving
+   today would freeze a marker that is both stale *and*, per T71, false in its replacement.
 4. Then **Tier A**. Once `tier0-harness-schedule-poc` is `done`, three contexts become READY —
    **computed from `program.json`, not estimated**:
 
@@ -94,18 +155,19 @@ first header carried pass-3f/T64 rationale verbatim (a P-12 corrections leak), r
    | `tierA-loan-product-schedule` | A | 20,461 | 1 |
    | `tierD-test-corpus-to-vectors` | D | 321,000 | 0 |
 
-   The selection rule is **lowest tier first; within a tier, the one unblocking the most dependents;
-   `main_loc` only as tie-break.** So it is **`tierA-gl-accounting`** — it unblocks six contexts
-   (`loan-lifecycle`, `charges-rates-tax`, `savings-deposits`, `branch`, `shares`, `clients-groups`) to
-   `loan-product-schedule`'s one, and the dependents rule outranks the 3,539-LOC size difference. At 24,000
-   LOC it is **under** the 25,000 splitting threshold, so it may be planned whole — but check
-   `files_hint` breadth before deciding, since the plan gate also rejects a `files_hint` spanning a whole
-   large module.
+   The rule is **lowest tier first; within a tier, the one unblocking the most dependents; `main_loc` only as
+   tie-break.** So **`tierA-gl-accounting`** — six dependents to one, and that outranks the 3,539-LOC
+   difference. At 24,000 LOC it is under the 25,000 splitting threshold and may be planned whole, but check
+   `files_hint` breadth first: the plan gate also rejects a `files_hint` spanning a whole large module.
 
-**T12 remains `done_partial`, deliberately not `done`.** The rehydration half is a committed re-runnable
-assertion (`.softhouse/bin/rehydrate-check.sh`; this fire: 70 terminal tasks, none re-selected). **The
-mid-flight checkpoint half is still unexercised for a fourth fire running** — every worker dispatched has
-completed. The next fire that approaches the soft limit with a worker in flight should treat that as the drill.
+**Also still waiting, and ORACLE-ONLY:** T25's parked P0s (T21 P0-2/3/4, P1-8/9/11; T22 P0-3/4/5/6). They
+were not attempted this fire because they touch `.softhouse/capture/`, which T66 held all fire, and two
+capture workers collide there. They still block vector promotion.
+
+**T12 remains `done_partial`.** The rehydration half is a committed re-runnable assertion
+(`.softhouse/bin/rehydrate-check.sh`; this fire: 74 terminal tasks, none re-selected). **The mid-flight
+checkpoint half is unexercised for a FOURTH fire running** — all four workers dispatched this fire ran to
+completion. The next fire that approaches the soft limit with a worker in flight should treat it as the drill.
 
 ---
 
