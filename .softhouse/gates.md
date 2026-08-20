@@ -933,3 +933,66 @@ the oracle authoritative and makes the divergence *measured and visible* rather 
 because it is the only option that may be reachable without spending an amendment. Buyan decides (b)/(c).
 
 **What unblocks it**: T83's measurement. **What it blocks**: nothing today.
+
+---
+
+## G-8 — UPDATE from local fire `20260820-200002` (measured, reviewed, and **still OPEN**)
+
+Recorded by the `/softhouse-program` driver. **Supersedes the "T83 must first re-capture" wording above.**
+The measurement has been made **and independently reproduced**. What follows is what is now established and
+what Buyan is actually being asked.
+
+### Provenance — why this is believable
+
+- **T83** built its own probe (in-JVM Path A seam, no server, no DB), took no number from T75, committed its
+  prediction as a **parent** of its evidence, and calibrated against two already-committed captures with
+  **zero input differences including tenant id**.
+- **T84** reproduced T83's capture from T83's own sources — canonical sha256 `01b41d9c…3101b`, **identical** —
+  re-derived the boundary with its **own** classifier (330 cells, 198 fail / 132 clean / 0 holes, contiguous
+  failing prefix on all 32 shapes), and re-asked 12 boundary cells with **different tenant ids and reversed
+  ordering**: 12/12 identical. It then added **342 new cells** of its own.
+- **T84 nonetheless REJECTED T83's write-up**, because the conclusions written into this file were wrong
+  even though the numbers were right. Those conclusions are **not** on `main`; the corrected write-up is
+  task **T100**. What is below is the driver's summary of what both agree on.
+
+### There are TWO phenomena under one gate id
+
+**Family A — a stale derived column.** The principal column sums to the disbursement, the oracle's own
+`totalOutstandingAmount` reads `0`, and the balance column alone is constant. Forcing the oracle's own `Memo`
+to recompute drives it to `0.00` (5/5 failing shapes; 4/4 clean controls unchanged) — **observed, not
+inferred**. Mechanism, verified from source three times independently (T83, T84, and the driver):
+`ProgressiveEMICalculator.java:1180` reads the last period's balance inside a filter while `emi` is still
+`0.00`; `:1210` raises the EMI in the same method; and `RepaymentPeriod.java:400`'s memo **omits `emi` from
+its dependency array**, while the sibling `getDueInterest()` memo at `:272-286` declares it. The mechanism was
+first stated by **T75**.
+
+**Family B — a genuine non-amortization.** 600.0 % p.a., MNT 0.01, n ≥ 104 — **22 measured cells** where the
+principal column sums to **0.00** against a `0.01` disbursement and `totalPrincipalAmount` reads `0.00`, and a
+**forced memo recompute does not move the balance.** By the discriminator the driver itself wrote down, this
+is not a stale column. **The Go port reproduces all 22 cell for cell, so there is no divergence here at all.**
+
+### Three corrections to what was previously recorded
+
+1. **Option (a) is reachable today on Family A, with no port change and no amendment.** Graded with the real
+   `conformance.Run` and the real port: **without** the exemption, 761 cells, **0 cell diffs**, FAIL with two
+   invariants violated; **with** the exemption, **PASS**. The earlier claim that exemptions are inert holds
+   only on the sub-family where the port diverges.
+2. **The region is not confined to sub-MNT-0.25 dust.** It reaches **MNT 1.09 at 3.6 % over 360 periods — an
+   ordinary 30-year term** — and MNT 2.91 at 0.12 % / n=600, 11.6× the previously stated bound.
+3. **The closed form is a hypothesis and is falsified outside the sampled grid** (18 cells at the precision-19
+   floor). T83 labelled it a hypothesis rather than a fact; that call was right.
+
+### What is being asked, and what no agent may do
+
+- **(a)** promote parity vectors with an explicit invariant exemption, recording in writing that the oracle
+  does not amortize to zero there. **Reachable now for Family A.**
+- **(b)** refuse the region from the graded domain as a documented contract-refusal vector.
+- **(c)** treat it as an oracle defect and diverge deliberately.
+
+**(b) and (c) amend the graded domain — a change to a ratified DEC-n, and a hard `user` gate no agent may
+cross.** No agent has decided them and none may. **Family B deserves its own answer**: the port already
+matches the oracle there, so "match the oracle" and "the balance amortizes" cannot both be satisfied by any
+amount of porting.
+
+**State: OPEN. Blocks: nothing today.** Conformance on merged `main` is PASS, exit 0, 42 parity vectors,
+5576 cells, **0 invariant violations** — and it is green because **no vector covers either family.**
