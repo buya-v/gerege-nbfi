@@ -104,22 +104,25 @@
 #   a single `read` and grades the VARIABLE, not `read`'s status, so it is immune
 #   to that either way — but the newline is there so nothing downstream inherits
 #   the trap. `IFS=` stops a hostile inherited IFS from splitting the token away
-#   [VERIFIED: T97 — `IFS=oc` and `IFS=' '` in the environment, both ADMITTED],
-#   and `builtin` pins `read`/`printf` to bash's own so an exported shell function
-#   of either name cannot forge the token.
+#   [VERIFIED: T97 — `IFS=oc`, `IFS=' '` and `IFS=$'\n'` in the environment, all
+#   ADMITTED], and `builtin` pins `eval`/`read`/`printf` to bash's own so an
+#   exported shell function of any of those names can neither forge the token nor
+#   suppress it. `builtin eval` is not decoration: with a bare `eval`, an exported
+#   `eval()` function made bash 5.2.37 refuse the harness, and that WOULD have
+#   been a false refusal [VERIFIED: T97 hostile-environment matrix, both readings].
 #
 #   The whole probe runs inside a COMMAND SUBSTITUTION, i.e. a subshell, so a
-#   shell that aborts on a syntax error inside the special builtin `eval` (which
-#   is what POSIX mode does) kills only that subshell; the outer script survives
+#   shell that aborts on a syntax error inside `eval` (which is what POSIX mode
+#   does to a special builtin) kills only that subshell; the outer script survives
 #   to print the refusal. It is reached only once BASH_VERSION is known to be set,
-#   so that `eval` is always bash's own.
+#   so that `builtin` and `eval` are always bash's own.
 # ---------------------------------------------------------------------------
 EXIT_WRONG_INTERPRETER=3
 CONFORMANCE_PSUB_TOKEN="conformance-psub-live"
 conformance_psub_seen=""
 if [ -n "${BASH_VERSION:-}" ]; then
   conformance_psub_seen="$(
-    eval '
+    builtin eval '
       IFS= builtin read -r _conformance_psub_line \
            < <(builtin printf "%s\n" "$CONFORMANCE_PSUB_TOKEN")
       builtin printf "%s" "$_conformance_psub_line"
