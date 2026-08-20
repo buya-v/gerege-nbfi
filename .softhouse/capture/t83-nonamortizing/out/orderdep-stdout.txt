@@ -1,0 +1,180 @@
+12:21:33.099 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `od_f_a`: HALF_UP
+12:21:33.144 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `od_f_b`: HALF_UP
+12:21:33.149 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `od_f_c`: HALF_UP
+12:21:33.183 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `od_f_d`: HALF_UP
+12:21:33.208 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `od_f_e`: HALF_UP
+12:21:33.211 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `od_c_a`: HALF_UP
+12:21:33.213 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `od_c_b`: HALF_UP
+12:21:33.269 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `od_c_c`: HALF_UP
+12:21:33.283 [main] INFO org.apache.fineract.organisation.monetary.domain.MoneyHelper -- Initialized rounding mode for tenant `od_c_d`: HALF_UP
+{
+  "probe": "T83 order-dependence",
+  "question": "Is the reference oracle's non-zero final outstanding balance ORDER-DEPENDENT (a stale memo) or not (a genuine non-amortizing schedule)?",
+  "method": "After generate() returns, force the balance memo to recompute by moving a DECLARED dependency (paidPrincipal) and moving it back to the same value, then re-read. Memo.java recomputes on a declared dependency's hashCode change; RepaymentPeriod.java:400 declares {paidPrincipal, paidInterest, interestPeriods, totalDisbursedAmount} and NOT emi.",
+  "moneyHelperPrecision": 19,
+  "cases": [
+    {
+      "id": "OD-FAIL-R21p6-N6-B1",
+      "purpose": "T75's headline shape: MNT 0.01 / 6 x 21.6%",
+      "inputs": {"disbursementAmount": "0.01", "principalMinorUnits": 1, "numberOfRepayments": 6, "annualNominalInterestRate": "21.6", "currencyDecimalPlaces": 2, "mathContextPrecision": 19, "mathContextRoundingMode": "HALF_UP", "mathContextRoundingModeOrdinal": 4, "tenantId": "od_f_a", "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP"},
+      "pathIdentity": {"identical": true, "note": "the instrumented plan is compared cell for cell against the PRISTINE seam's plan; if this is false nothing below is about the seam's computation"},
+      "emittedFinalRowBalance": "0.01",
+      "lastRepaymentPeriod": {
+        "emiAtRead": "0.01",
+        "duePrincipalAtRead": "0.01",
+        "paidPrincipalBefore": "0.00",
+        "paidPrincipalAfter": "0.00",
+        "paidPrincipalRestored": true,
+        "A_balanceAsEmitted": "0.01",
+        "intermediate_balanceWhilePerturbed": "0.01",
+        "B_balanceAfterForcedRecompute": "0.00",
+        "orderDependent": true
+      }
+    },
+    {
+      "id": "OD-FAIL-R21p6-N6-B2",
+      "purpose": "MNT 0.02 / 6 x 21.6%, the largest failing principal at this shape",
+      "inputs": {"disbursementAmount": "0.02", "principalMinorUnits": 2, "numberOfRepayments": 6, "annualNominalInterestRate": "21.6", "currencyDecimalPlaces": 2, "mathContextPrecision": 19, "mathContextRoundingMode": "HALF_UP", "mathContextRoundingModeOrdinal": 4, "tenantId": "od_f_b", "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP"},
+      "pathIdentity": {"identical": true, "note": "the instrumented plan is compared cell for cell against the PRISTINE seam's plan; if this is false nothing below is about the seam's computation"},
+      "emittedFinalRowBalance": "0.02",
+      "lastRepaymentPeriod": {
+        "emiAtRead": "0.02",
+        "duePrincipalAtRead": "0.02",
+        "paidPrincipalBefore": "0.00",
+        "paidPrincipalAfter": "0.00",
+        "paidPrincipalRestored": true,
+        "A_balanceAsEmitted": "0.02",
+        "intermediate_balanceWhilePerturbed": "0.01",
+        "B_balanceAfterForcedRecompute": "0.00",
+        "orderDependent": true
+      }
+    },
+    {
+      "id": "OD-FAIL-R21p6-N56-B17",
+      "purpose": "MNT 0.17 / 56 x 21.6%, the largest failing principal at the longest term swept",
+      "inputs": {"disbursementAmount": "0.17", "principalMinorUnits": 17, "numberOfRepayments": 56, "annualNominalInterestRate": "21.6", "currencyDecimalPlaces": 2, "mathContextPrecision": 19, "mathContextRoundingMode": "HALF_UP", "mathContextRoundingModeOrdinal": 4, "tenantId": "od_f_c", "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP"},
+      "pathIdentity": {"identical": true, "note": "the instrumented plan is compared cell for cell against the PRISTINE seam's plan; if this is false nothing below is about the seam's computation"},
+      "emittedFinalRowBalance": "0.17",
+      "lastRepaymentPeriod": {
+        "emiAtRead": "0.17",
+        "duePrincipalAtRead": "0.17",
+        "paidPrincipalBefore": "0.00",
+        "paidPrincipalAfter": "0.00",
+        "paidPrincipalRestored": true,
+        "A_balanceAsEmitted": "0.17",
+        "intermediate_balanceWhilePerturbed": "0.01",
+        "B_balanceAfterForcedRecompute": "0.00",
+        "orderDependent": true
+      }
+    },
+    {
+      "id": "OD-FAIL-R7p0-N56-B23",
+      "purpose": "MNT 0.23 / 56 x 7.0%, the largest failing principal anywhere in the sweep",
+      "inputs": {"disbursementAmount": "0.23", "principalMinorUnits": 23, "numberOfRepayments": 56, "annualNominalInterestRate": "7.0", "currencyDecimalPlaces": 2, "mathContextPrecision": 19, "mathContextRoundingMode": "HALF_UP", "mathContextRoundingModeOrdinal": 4, "tenantId": "od_f_d", "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP"},
+      "pathIdentity": {"identical": true, "note": "the instrumented plan is compared cell for cell against the PRISTINE seam's plan; if this is false nothing below is about the seam's computation"},
+      "emittedFinalRowBalance": "0.23",
+      "lastRepaymentPeriod": {
+        "emiAtRead": "0.23",
+        "duePrincipalAtRead": "0.23",
+        "paidPrincipalBefore": "0.00",
+        "paidPrincipalAfter": "0.00",
+        "paidPrincipalRestored": true,
+        "A_balanceAsEmitted": "0.23",
+        "intermediate_balanceWhilePerturbed": "0.01",
+        "B_balanceAfterForcedRecompute": "0.00",
+        "orderDependent": true
+      }
+    },
+    {
+      "id": "OD-FAIL-R36p0-N12-B4",
+      "purpose": "MNT 0.04 / 12 x 36.0%, an independent rate",
+      "inputs": {"disbursementAmount": "0.04", "principalMinorUnits": 4, "numberOfRepayments": 12, "annualNominalInterestRate": "36.0", "currencyDecimalPlaces": 2, "mathContextPrecision": 19, "mathContextRoundingMode": "HALF_UP", "mathContextRoundingModeOrdinal": 4, "tenantId": "od_f_e", "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP"},
+      "pathIdentity": {"identical": true, "note": "the instrumented plan is compared cell for cell against the PRISTINE seam's plan; if this is false nothing below is about the seam's computation"},
+      "emittedFinalRowBalance": "0.04",
+      "lastRepaymentPeriod": {
+        "emiAtRead": "0.04",
+        "duePrincipalAtRead": "0.04",
+        "paidPrincipalBefore": "0.00",
+        "paidPrincipalAfter": "0.00",
+        "paidPrincipalRestored": true,
+        "A_balanceAsEmitted": "0.04",
+        "intermediate_balanceWhilePerturbed": "0.01",
+        "B_balanceAfterForcedRecompute": "0.00",
+        "orderDependent": true
+      }
+    },
+    {
+      "id": "OD-CLEAN-R21p6-N6-B3",
+      "purpose": "CONTROL: MNT 0.03 / 6 x 21.6%, the smallest clean principal at this shape",
+      "inputs": {"disbursementAmount": "0.03", "principalMinorUnits": 3, "numberOfRepayments": 6, "annualNominalInterestRate": "21.6", "currencyDecimalPlaces": 2, "mathContextPrecision": 19, "mathContextRoundingMode": "HALF_UP", "mathContextRoundingModeOrdinal": 4, "tenantId": "od_c_a", "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP"},
+      "pathIdentity": {"identical": true, "note": "the instrumented plan is compared cell for cell against the PRISTINE seam's plan; if this is false nothing below is about the seam's computation"},
+      "emittedFinalRowBalance": "0.00",
+      "lastRepaymentPeriod": {
+        "emiAtRead": "0.00",
+        "duePrincipalAtRead": "0.00",
+        "paidPrincipalBefore": "0.00",
+        "paidPrincipalAfter": "0.00",
+        "paidPrincipalRestored": true,
+        "A_balanceAsEmitted": "0.00",
+        "intermediate_balanceWhilePerturbed": "0.00",
+        "B_balanceAfterForcedRecompute": "0.00",
+        "orderDependent": false
+      }
+    },
+    {
+      "id": "OD-CLEAN-R21p6-N56-B18",
+      "purpose": "CONTROL: MNT 0.18 / 56 x 21.6%, the smallest clean principal at the longest term swept",
+      "inputs": {"disbursementAmount": "0.18", "principalMinorUnits": 18, "numberOfRepayments": 56, "annualNominalInterestRate": "21.6", "currencyDecimalPlaces": 2, "mathContextPrecision": 19, "mathContextRoundingMode": "HALF_UP", "mathContextRoundingModeOrdinal": 4, "tenantId": "od_c_b", "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP"},
+      "pathIdentity": {"identical": true, "note": "the instrumented plan is compared cell for cell against the PRISTINE seam's plan; if this is false nothing below is about the seam's computation"},
+      "emittedFinalRowBalance": "0.00",
+      "lastRepaymentPeriod": {
+        "emiAtRead": "0.00",
+        "duePrincipalAtRead": "0.00",
+        "paidPrincipalBefore": "0.00",
+        "paidPrincipalAfter": "0.00",
+        "paidPrincipalRestored": true,
+        "A_balanceAsEmitted": "0.00",
+        "intermediate_balanceWhilePerturbed": "0.00",
+        "B_balanceAfterForcedRecompute": "0.00",
+        "orderDependent": false
+      }
+    },
+    {
+      "id": "OD-CLEAN-R21p6-N56-B28",
+      "purpose": "CONTROL: MNT 0.28 / 56 x 21.6% — T64-ZP-A, an ALREADY-PROMOTED parity vector",
+      "inputs": {"disbursementAmount": "0.28", "principalMinorUnits": 28, "numberOfRepayments": 56, "annualNominalInterestRate": "21.6", "currencyDecimalPlaces": 2, "mathContextPrecision": 19, "mathContextRoundingMode": "HALF_UP", "mathContextRoundingModeOrdinal": 4, "tenantId": "od_c_c", "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP"},
+      "pathIdentity": {"identical": true, "note": "the instrumented plan is compared cell for cell against the PRISTINE seam's plan; if this is false nothing below is about the seam's computation"},
+      "emittedFinalRowBalance": "0.00",
+      "lastRepaymentPeriod": {
+        "emiAtRead": "0.29",
+        "duePrincipalAtRead": "0.28",
+        "paidPrincipalBefore": "0.00",
+        "paidPrincipalAfter": "0.00",
+        "paidPrincipalRestored": true,
+        "A_balanceAsEmitted": "0.00",
+        "intermediate_balanceWhilePerturbed": "0.01",
+        "B_balanceAfterForcedRecompute": "0.00",
+        "orderDependent": false
+      }
+    },
+    {
+      "id": "OD-CLEAN-R21p6-N6-B120000000",
+      "purpose": "CONTROL: MNT 1,200,000 / 6 x 21.6% — P-LAT-Q0a's principal, an ordinary loan",
+      "inputs": {"disbursementAmount": "1200000.00", "principalMinorUnits": 120000000, "numberOfRepayments": 6, "annualNominalInterestRate": "21.6", "currencyDecimalPlaces": 2, "mathContextPrecision": 19, "mathContextRoundingMode": "HALF_UP", "mathContextRoundingModeOrdinal": 4, "tenantId": "od_c_d", "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP"},
+      "pathIdentity": {"identical": true, "note": "the instrumented plan is compared cell for cell against the PRISTINE seam's plan; if this is false nothing below is about the seam's computation"},
+      "emittedFinalRowBalance": "0.00",
+      "lastRepaymentPeriod": {
+        "emiAtRead": "212787.30",
+        "duePrincipalAtRead": "209024.85",
+        "paidPrincipalBefore": "0.00",
+        "paidPrincipalAfter": "0.00",
+        "paidPrincipalRestored": true,
+        "A_balanceAsEmitted": "0.00",
+        "intermediate_balanceWhilePerturbed": "0.01",
+        "B_balanceAfterForcedRecompute": "0.00",
+        "orderDependent": false
+      }
+    }
+  ]
+}
+
