@@ -328,9 +328,9 @@
       "dependencies": [
         "T13"
       ],
-      "status": "pending",
+      "status": "done",
       "attempts": 0,
-      "note": "DECISION GATE — not a cutover; cutover is a later, separate gate."
+      "note": "DECISION GATE — not a cutover; cutover is a later, separate gate. || fire 20260820-140000: CLOSED - ACCEPTED by the driver as gate G-6, chosen_by agent. The driver checked the executor:'user' label against CLAUDE.md's EXHAUSTIVE RESERVED list rather than treating the label as settling it: RESERVED is licence facts, CUTOVER, regulatory/parallel-run sign-off, and anything spending real money / exposing a live endpoint / binding a third party. T14 is none of these and its own description says NOTHING is cut over. It is a greenfield PRODUCT/process judgement, and P-2 already made the analogous DEC-1 ratification agent-decidable. Evidence, ALL DRIVER-RE-RUN and separately reproduced by the independent verifier T13: conformance exit 0, 36/36 parity, 4034 cells, 0 invariant violations, 0 NOT RUN; --prove 21/21; --self-test 0; build/vet/test 0/0/0 at -count=1; contract.go digest == PIN.json. ACCEPTED WITH RESIDUALS RECORDED, NOT GLOSSED: (1) T12 mid-flight checkpoint half still unexercised for a fourth fire - and T14's own description names the drill as review material, so this is a real shortfall; (2) 36 vectors is NOT 'the loan module is correct' - DEC-1's graded domain only; (3) ZP-PRINCIPAL-NOT-CLAMPED survives all 36, still ungraded, kept as an honest negative; (4) T2 permanently parked, T70/T71 in flight and doc-only. NOT A CUTOVER and does not authorise one. Recorded in .softhouse/gates.md as G-6. Buyan may reverse."
     },
     {
       "id": "T15",

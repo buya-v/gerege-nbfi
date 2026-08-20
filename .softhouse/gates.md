@@ -799,3 +799,92 @@ spends a ratified-document amendment to buy exactly what Option A already delive
 is the EXPECTED state and must not fail a UAT.
 
 **Buyan may reverse this.**
+
+---
+
+# G-6 — accept the Tier-0 PoC slice (task T14) — **CLOSED, ACCEPTED by the driver**
+
+| | |
+|---|---|
+| **Class** | **PRODUCT / process.** No RESERVED content. |
+| **Task** | T14, run `2026-08-17-run1-harness-schedule-poc`, context `tier0-harness-schedule-poc` |
+| **Raised by** | the original Run-1 plan, as `executor: "user"` |
+| **Closed by** | local fire `20260820-140000` (`/softhouse-program` driver) |
+| **chosen_by** | `agent` |
+| **Blocks** | nothing further; T15 (archive) and Tier A follow |
+
+## Why the driver decided this rather than parking it
+
+The task was planned `executor: "user"`, and the driver checked that label against CLAUDE.md
+§ *Answering gates* rather than treating it as settling the question. **RESERVED is an exhaustive
+list**: which licence a deployment holds and any fact about Gerege's legal entity; **CUTOVER**
+authorization; regulatory acceptance / parallel-run sign-off; and anything that spends real money,
+exposes a live endpoint, or binds Gerege to a third party.
+
+**T14 is none of those, and says so in its own description**: *"Explicitly recorded: NOTHING is cut
+over from Fineract to Go in this run."* It asks whether the PoC is adequate proof that the pipeline
+works — a greenfield process judgement. The standing policy is directly on point: the driver chooses
+and recommends, and *"a choice recorded in writing is easier to overturn than a question is to
+answer."* **P-2** already set this precedent by making DEC-1 ratification agent-decidable on a clean
+independent review. Parking the whole program on this item would idle the factory on a question no
+statute, vector or source reading is waiting to answer.
+
+## What was proven
+
+Every number below was **re-run by the driver**, not accepted from a worker's report, and the
+independent verifier T13 reproduced them separately in its own worktree.
+
+```
+conformance          exit 0 — 36/36 parity vectors PASS, 4034 cells graded, 72 ungraded
+                     4 contract-refusal PASS, 1 self-test PASS
+                     0 refused · 0 inadmissible · 0 harness errors
+                     0 invariant violations · 0 invariant assertions NOT RUN
+--prove              exit 0 — 21/21 mutation proofs
+--self-test          exit 0
+go build / vet / test (-count=1, not cached)   0 / 0 / 0
+contract.go sha256   identical to PIN.json contract_sha256
+```
+
+**The acceptance rests on the pipeline catching real defects, not on a green bar.** In evidence:
+
+- **T67 REJECTED T65 — a diff whose code was correct, because its written rule was false.** The
+  driver confirmed two of T67's three findings from committed source *before* ruling. **T69** then
+  fixed it and **found a defect in T67's own replacement text**, and refused to assert a third reason
+  for `futureUnrecognizedInterest`, marking it `[UNVERIFIED]` instead. Three wrong reasons for one
+  bullet is what this pipeline exists to stop, and it stopped at two.
+- **T64** registered a falsifiable prediction naming all 221 rows **one commit before** the capture;
+  the oracle returned 1539/1539 cells, zero mismatches. A mutation green on all 32 vectors is red at 36.
+- **T68** found the correction document was wrong about its own reason, twice — P-11 recursing.
+- **T66** (this fire) **refuted the driver's own hypothesis**, and the driver re-ran all three of its
+  legs — re-capturing pass 3h to the identical canonical digest — rather than accept either side.
+  The driver then **overstated a finding against T66 and withdrew it** on checking the handoff.
+
+A pipeline in which the reviewer overrules the coder, the reviewer's own text gets corrected, and the
+**driver's** hypothesis is refuted by a worker and its own finding withdrawn, is the thing this PoC
+was built to demonstrate.
+
+## Accepted WITH these residuals recorded, not glossed
+
+1. **T12 is `done_partial`, and the acceptance does not pretend otherwise.** The rehydration half is a
+   committed re-runnable assertion (`.softhouse/bin/rehydrate-check.sh`). **The mid-flight checkpoint
+   half is still unexercised** — for a fourth fire running, because every dispatched worker has
+   completed. That is the better outcome and it leaves the drill undone. T14's own description names
+   the drill as something to review, so this is a real, if narrow, shortfall in the evidence.
+2. **36 vectors is not "the loan module is correct."** The graded domain is DEC-1's: one
+   disbursement, monthly `DECLINING_BALANCE`, `FIXED_30_360`, no charges, no payments, no
+   multi-tranche, no re-aging. T13 recorded the ungraded areas (rate-factor exactness
+   `TO_BE_CAPTURED`, precision 19 vs 12 unseparated, origination-time rate variation untested).
+3. **`ZP-PRINCIPAL-NOT-CLAMPED` survives all 36 vectors.** The negative clamp remains ungraded and is
+   in the backlog, kept as an honest negative.
+4. **T2 stays permanently parked** (G-2), and T70/T71 — the correction of the now-stale
+   `[UNVERIFIED]` marker T66 settled — were in flight when this was decided. Both are doc-only and
+   neither can move a graded cell.
+
+## What this acceptance is NOT
+
+**It is not a cutover, and it does not authorise one.** Nothing moves from Fineract to Go. Cutover
+remains a hard `user` gate requiring vectors passing **plus** a clean shadow-parity window **plus**
+regulatory / parallel-run sign-off, and no automation may cross it. Deposit-taking activation,
+regulatory sign-off and licence facts are equally untouched and are not in Run 1's path.
+
+**Buyan may reverse this.**
