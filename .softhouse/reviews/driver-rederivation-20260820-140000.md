@@ -156,28 +156,45 @@ The only surviving route is **inheritance** down the `u` chain from period `f`, 
 
 Three independent runs of pass 3h now agree on the canonical digest.
 
-## FINDING P2-1 — the written sufficient condition in step (e) is stated more generally than its derivation supports
+## FINDING P2-1 — the sufficient condition is incomplete in `PREDICTION.md`, and COMPLETE in the handoff
 
-Recording this under **P-13** (*a deliverable that is a rule can be false even when everything
-executable is right*), and because T66 promoted no vector, changed no money and its conclusion is
-otherwise confirmed, it is **P2 — correct the wording, do not withdraw anything.**
+**This finding was overstated in the driver's first draft and is corrected here before being acted
+on.** The first draft said "the written sufficient condition in step (e) is stated more generally
+than its derivation supports", full stop. That is true of `PREDICTION.md` and **false of the
+handoff**, which supplies exactly the missing premise. Leaving the finding in its first form would
+have reproduced **P-11 / P-12** — a correction document wrong about its own reason — while citing
+them, so it is restated accurately below and the earlier wording is withdrawn.
 
-`PREDICTION.md` §2 step (e) writes:
+**The gap, in `PREDICTION.md:100` only.** Step (e) writes `u_L = 0` as soon as `cdi_f <= P + emi_f`.
+That implication needs `Sum_{j<=f} emi_j <= I + emi_f`. Exact when `f = 0`; not derived there for
+general `f`, and `I >= Sum_j dueInterest_j` with `dueInterest_j <= emi_j` runs the **wrong way
+round** to supply it.
 
-> `u_L = max(0, u_f - P - I + Σ_{j≤f} emi_j) ≤ max(0, cdi_f - P - I + Σ_{j≤f} emi_j)` … `u_L = 0`
-> as soon as `cdi_f ≤ P + emi_f`
+**The handoff closes it, and the driver verified the closure rather than accepting it.**
+`T66.md:100-108` establishes `emi_j = 0` for every `j < f` as well, so `Sum_{j<=f} emi_j = emi_f`
+*generally*, not merely at `f = 0` — and it reaches a **tighter** condition, `cdi_f <= P`. Both legs
+check out:
 
-The final implication needs `Σ_{j≤f} emi_j ≤ I + emi_f`. That is **exact when `f = 0`** (the
-ordinary shape, where the sum is just `emi_0 = emi_f`), and the document does say `f = 0` is the
-ordinary shape in step (b) — but the sufficient condition is written without carrying that premise,
-and `I ≥ Σ_j dueInterest_j` with `dueInterest_j ≤ emi_j` gives the inequality the **wrong way round**
-for general `f`. The fix is wording only: state the condition as holding **for `f = 0`, or wherever
-`emi_j = 0` for all `j < f`**.
+- **Source.** `getRelatedRepaymentPeriods(d)` keeps only periods with `dueDate >= d`, so periods
+  before `f` are outside the window [VERIFIED by the driver: `ProgressiveLoanInterestScheduleModel.java:191-198`],
+  and `calculateEMIOnActualModel(List<RepaymentPeriod> repaymentPeriods, ...)` writes `setEmi` only
+  on the list it is passed [VERIFIED: `ProgressiveEMICalculator.java:1674`]. A period outside the
+  window is never assigned an EMI and keeps the zero it started with.
+- **Observation.** The driver read its own pass-3h run: `T66-M-DISB-ON-DUE` and
+  `T66-M-DISB-ON-DUE-HR` — the two `f = 1` shapes — both report period 0 `emi == "0.00"` and
+  `calculatedDueInterest == "0.00"`.
 
-This does not weaken the verdict. The `f ≥ 1` case is covered empirically and deliberately — T66
-captured `T66-M-DISB-ON-DUE` and `T66-M-DISB-ON-DUE-HR` for exactly that shape, both observed inert
-— and the 21,060-shape census covers it again. **Proof for `f = 0`, observation for `f ≥ 1`** is the
-honest description of what is established, and that is what the document should say.
+**So the settled proof has no gap.** What remains is a **P3 documentation-hygiene** item: the
+registered prediction states the condition without the premise the handoff later supplies. The
+prediction's evidentiary value is that it was committed **before** the capture, so it must **not** be
+rewritten; a dated forward-pointing CORRECTION block is the correct treatment, and that is what was
+applied — the registered claim is left standing and annotated, exactly as T64's
+`MECHANISM-CORRECTION.md` set the precedent.
+
+**Beyond the closed-form bound, the conclusion is carried by evidence, not by the inequality**, and
+T66 says so itself: above a per-period rate factor of 1.00 the bound is not tight, which is why
+`T66-M-R12000` and `T66-M-DRIFT-R12000` (rate factor **10.00**, ten times past it) are in the
+capture. The driver re-ran both and they are inert.
 
 ## What the driver did NOT verify, so silence is distinguishable from not looking
 
