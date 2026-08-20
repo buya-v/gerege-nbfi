@@ -4,18 +4,18 @@ Written by the orchestrator at every checkpoint; read by the next fire of `/soft
 human) to see exactly where the factory paused. **The repo is the only memory** — never rely on an agent's
 session state.
 
-## Current state (local fire `20260820-080002`, oracle REACHABLE)
+## Current state (local fire `20260820-110001`, oracle REACHABLE)
 
 - **Program**: `fineract-to-go-full-codebase` — **active**
 - **Active run**: `2026-08-17-run1-harness-schedule-poc` — Tier 0, not terminal
 - **Contexts**: 0 done / 17 · `tier0-harness-schedule-poc` **active**
-- **Oracle**: UP all fire, **never restarted** (~39 h; several captures' comparability rests on that).
-  `fineract:latest` + `postgres:18.3`, both healthy. Pinned checkout `426a23544` clean. PostgreSQL only.
-- **Four workers dispatched, four completed, all merged. Nothing lost, no isolation violation, no scope breach.**
+- **Oracle**: UP all fire, **never restarted** (~43 h). `fineract:latest` + `postgres:18.3`, both healthy.
+  Pinned checkout `426a23544` clean. PostgreSQL only.
+- **Six workers dispatched, six completed, all merged. Nothing lost, no isolation violation, no scope breach.**
 
 ```
-VERDICT: PASS (exit 0) — 32 parity vectors match the pinned reference oracle, 2495 cells compared.
-         --prove 20/20 · 6/6 invariants hold · 0 inadmissible · 0 harness errors
+VERDICT: PASS (exit 0) — 36 parity vectors match the pinned reference oracle, 4034 cells compared.
+         --prove 21/21 · 6/6 invariants hold 37 · 0 inadmissible · 0 harness errors
          IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a user gate.
 ```
 
@@ -23,153 +23,112 @@ VERDICT: PASS (exit 0) — 32 parity vectors match the pinned reference oracle, 
 
 ---
 
-# THE HEADLINE: **a port using Fineract's stock rounding default passed all 29 vectors**
+# THE HEADLINE: **a diff whose code was correct was rejected, because its written rule was false**
 
-The corpus began this fire green at 29 vectors / 2,354 cells. The driver applied **one** mutation to
-`roundHalfUpToInt` — the `HALF_EVEN` tie rule, which is **Fineract's own stock default** — and re-ran the real
-harness in a scratch worktree:
+T63 (last fire) found T59's memo **sound** but its stated justification **false**. T65 rewrote the rule.
+The independent reviewer **T67 REJECTED T65** — and was right. The driver confirmed two of T67's three
+findings from the committed source *before* ruling, rather than settling it on whose report read better:
 
-| `MONEY-QUANTIZATION-HALF-EVEN` | verdict |
+| the comment said | the source says |
 |---|---|
-| **at 29 vectors** | **PASS, exit 0**, 2,354 cells |
-| **at 32 vectors** | **FAIL, exit 1** — `T61-HE-A/B/C`, on the predicted cells |
+| the fold reads **ONLY** the eight listed stored fields | it also reads `m.minorDigits`, via `minorFromMajor(sum, m.minorDigits)` |
+| `period idx` is **NOT read** | `calculatedDueInterestMinor` calls `interestChainUpTo(p.idx)`, and the chain is filled at `m.chain[i]` over `m.periods[i]` — **`p.idx` is the memo's lookup key** |
 
-**So a Go port that inherited the upstream default instead of reading Buyan's ratified `HALF_UP` tenant pin
-matched the reference oracle on every graded cell.** That is a money defect that would have shipped, and it is
-the exact class `CLAUDE.md` ratifies as non-negotiable ("Rounding mode: `HALF_UP` for MNT… never inherit a
-default").
+So the rewritten rule was not merely incomplete, it was **not sufficient**: writing `p.idx`, or reordering
+`m.periods`, returns another period's money while satisfying the stated rule at every step.
 
-**Why the corpus could not see it:** a rounding tie is measure-zero on an arbitrary lattice. You do not reach
-one by sampling ordinary loans — you *solve* for one. T61 did the algebra from source (at 21.6 % on this
-lattice period-1 interest is `18·B/1000` minor units, an exact tie exactly when `B ≡ 250 (mod 500)`) and
-**committed the prediction one commit before the capture ran** (`d543fd0` → `0e75bef`), in falsifiable terms:
+**T65's executable change was never in doubt** — T67 verified the carried counter by induction *and* its own
+3,840-shape / 70,080-row probe, reproduced all four mutations, and confirmed the `applyFinalPeriodResidual`
+recursion is faithful to `ProgressiveEMICalculator.java:1211-1214`, vindicating T59's refusal to "optimise"
+it. The rejection was on the deliverable that *is* a rule. Recorded as pattern **P-13**.
 
-> *"`T61-HE-B`, period 1, interest: the oracle will emit `18000.95`, not `18000.94`. If the oracle emits
-> `18000.94`, the prediction is WRONG, and the ratified tenant rounding mode is not what we think."*
-
-The oracle returned **`1800095`**. Recorded as pattern **P-9**.
+**T69 fixed it in three clauses — and found a defect in T67's own replacement text**
+(`ProgressiveEMICalculator.java:247` sits on the `allowFullTermForTranche` branch; the ordinary path is
+`:747`). It also **refused to assert a third reason** for `futureUnrecognizedInterest`, marking it
+`[UNVERIFIED]` and naming **T66** as the task that settles it. Three wrong reasons for one bullet is exactly
+the failure this pipeline exists to stop, and it stopped at two.
 
 ---
 
 ## What else this fire established
 
-**T60 — the reported defect was the lesser of three forms.** `unrecorded_fields` was honoured by
-`diffSchedule` and **ignored by all six property invariants**, which read the same struct the replay had
-filled with placeholders. The driver reproduced the worst form from scratch at the pre-fix commit: withdrawing
-the **final** row's outstanding balance gave `exit 0` with `principal_amortizes_to_zero hold 30`, asserting
-*"final outstanding == 0"* against a placeholder `0` nobody observed — **a silent false green**. Post-fix the
-same perturbation reports `not-asserted 1` and names the vector under a new *INVARIANT ASSERTIONS THAT COULD
-NOT RUN* section. **No passing check was traded away**: the real corpus still shows all six invariants
-`hold 30+ / violated 0`.
+**T64 — the ungraded path is graded now.** T59 profiled `applyFinalPeriodResidual` as O(n²) on
+near-interest-only shapes and correctly did not fix it, because **no vector graded that shape**. T64 derived
+from source that a repayment row with zero principal and non-zero interest exists **only at the rounding
+floor** (`B ≥ ceil(0.5/r)`, `n ≳ 2·B`, `B` in *minor* units), registered a falsifiable prediction naming all
+**221 rows one commit before the capture** (P-9), and the oracle returned
+`compared 1539 predicted cells / PREDICTION CONFIRMED — zero mismatches`.
 
-**T59 — cancellation and cost.** The port checked `ctx.Err()` **once at entry and never again**, so a 50 ms
-deadline returned at **10.82 s with `err=nil`**. Now checked inside the loops, sticky flag consulted *after*
-the emitting loop so no partial schedule escapes. The oracle's memo was restored as a prefix cache:
-**n=360 → 10.767 s → 39.3 ms (274×)**, allocations 92.7 M → 358 k. It **correctly refused** to bound
-`NumberOfRepayments` — DEC-1 has no upper bound and revision 4 removed it from the graded-domain predicates,
-so that is a `user` gate — and it **reported its own cost test as flaky** before replacing it.
+- `ZP-RESIDUAL-NO-RECURSION` — drop the self-re-entry — was **green on all 32** vectors and is **red at 36**,
+  killed solely by `T64-ZP-B`. Pattern **P-14**: a mutation no vector can distinguish is a blind spot, not an
+  absence.
+- **Honest negative kept:** `ZP-PRINCIPAL-NOT-CLAMPED` **survives all 36**. The negative clamp is still
+  ungraded and is in the backlog, not glossed.
 
-**T63 — the reviewer the driver added.** T59 was a money-path change with **no paired reviewer**, which
-plan-gate rule 1 requires; conformance cannot settle it, because every promoted vector runs **≤36 periods**
-while the memo's speedup is at n=360. Verdict **ACCEPTED WITH REQUIRED CHANGES** (P0: 0, P1: 2). The memo is
-**sound** — ~74,000 shapes, no divergence, no seventh unguarded write site, enumeration done from the *writes*
-(18 assignments, 9 `invalidateFrom`) rather than from T59's stated count. Two P1s stand:
+**T62 — `--prove` now covers the unrecorded-cell path, and the driver reproduced why it had to.** In a
+scratch worktree at the pre-fix behaviour, plain conformance returns **exit 0, 32 parity vectors,
+`principal_amortizes_to_zero hold 33 not-asserted 0`** — a **silent false green** — while the new proof fails
+**0/0** naming `FALSE HOLD`. *The exit code cannot see that defect; the proof can.* That defect class had
+already escaped twice.
 
-- **P1-2, the delay fuse.** The memo is right; **its stated reason is false of the oracle**, which writes
-  later→earlier in four places. The true condition is *every write to a fold input on period j is preceded by
-  `invalidateFrom(j)`*. The written-down rule is what the next contributor checks a new write site against.
-  Pattern **P-11**.
-- **P1-1.** `TestGenerationCostIsNotQuadraticInTheTerm` is **green on a port that is quadratic**, twice over:
-  `installmentNumberOf` rescans every emitted row inside the emission loop (`generator.go:459`, `:478-486`) —
-  Θ(n²) that **allocates nothing**, while the test grades allocation *counts* — and a timing cliff at n=2,000
-  sits above both sample points. *(Driver re-read the source and confirmed the rescan; the cliff stands as
-  T63 measured it.)* Pattern **P-10**.
-
-T63 also **withdrew one of its own findings** after measuring 30 combinations to n=50,000 and finding T59's
-claim survived.
-
----
-
-## A hypothesis answered NO — with a measurement, not a null sweep
-
-The driver sent T61 after the biggest documented blind spot: the oracle **folds** the rate factors rather than
-using the closed-form EMI, and both agree on the corpus only *because every promoted vector has equal rᵢ*.
-
-Step 1 **confirmed the caveat is not stale** — all 29 prior vectors are `FIXED_30_360`/`MONTHS`/`every=1`.
-But `CLOSED-FORM-POW-EMI` **cannot be closed by any capture in the current graded domain**: the gap under
-equal rᵢ is **~1e-11 minor units**, thirteen orders of magnitude below a cent. The only route to unequal rᵢ is
-`ACTUAL_ACTUAL` across two calendar years of differing length, which **needs the ACT/ACT arm ported first**.
-T61 declined to spend the oracle there and said why — **91 ACT/ACT captures already sit unpromoted; the
-bottleneck is the port, not the oracle.** Backlog **B-1**, with a ready-to-run acceptance test.
-
-Three further survivors were reclassified as **provably unreachable** rather than open gaps (M6, M8, M10).
-**M11 remains genuinely open** (0 of 72,003; needs a targeted solve, not a sweep).
-
----
-
-## Gate G-2 — CLOSED, DECLINED, and the real hazard was the document that EXISTS
-
-Closed by the driver under `CLAUDE.md` § *Answering gates* (PRODUCT/process, no RESERVED content). **No third
-attempt at T2.** Specification of record: **DEC-1 rev 12** (ratified, frozen), **the parity corpus**, **T3b's
-re-review**.
-
-The decisive find was not the missing document but the parked one still on disk. Its **§7.4 told a Go
-implementer that clamp-and-continue month-end stepping (`2026-01-31 → 02-28 → 03-28`) is what a port "must
-replicate bit-for-bit."** That is the **killed counterfactual** `MONTHEND-CONTINUE-FROM-CLAMPED-DAY`: parity
-vector `P-02` has period 2 due **`2024-03-31`**, re-anchored on the disbursement seed. A port built from that
-paragraph **fails conformance**, at a money margin of exactly zero. Neutralised at zero model cost with a
-**⛔ SUPERSEDED** banner and inline corrections at the three sites T3b enumerated, plus the `ls-008` row that
-restated it a fourth time.
+**T68 — the audit found the correction document was wrong about its own reason, twice.** T64 corrected its
+vector text when the harness refuted its first draft, and did not carry the correction into
+`MECHANISM-CORRECTION.md`. **P-11 recursing one level up**, now recorded as **P-12**. Verdicts: T62
+**APPROVED**, T64 **APPROVED WITH REQUIRED CORRECTIONS**, **P0: 0, no vector withdrawn**. T68 also pinned the
+provenance *tighter than T64 claimed* — `capturedAtUtc` falls between the prediction commit and the capture
+commit — and re-transcribed all four vectors with its own exact-integer comparator: zero discrepancies.
+The driver applied T68's corrections to that document this fire.
 
 ---
 
 ## THE NEXT FIRE STARTS HERE
 
-**Needs NO oracle — run these first:**
-1. **T65** — T63's two P1s. Do **P1-2 first** (the false justification; it is the delay fuse), then P1-1.
-   Touches money-path files, so it **needs a paired reviewer** per plan-gate rule 1.
-2. **T62** — `--prove` has no proof covering the unrecorded-cell path. This defect class has now escaped
-   **twice**, and `--prove` is what the driver re-runs independently. Follow **P-7**: assert the property,
-   not today's counts.
-
-**ORACLE-ONLY — only a local fire can do these. Do NOT run both alongside another capture task; two capture
-workers collide in `.softhouse/capture/`:**
-3. **T64** — capture a shape where a repayment row amortizes **zero principal**. The corpus has zero
-   discriminating power there, which is why T59's O(n²) residual path is ungraded.
-4. **T66** — settle T63's two unproven items, chiefly that `futureUnrecognizedInterest` is **not ported**
-   (101 admitted shapes carry half its precondition). Both are pre-existing **T10** issues, not T59 regressions.
+**ORACLE-ONLY — only a local fire can do this:**
+1. **T66** — settle T63's two unproven items, chiefly that `futureUnrecognizedInterest` is **not ported**
+   (101 admitted shapes carry half its precondition). T69 has now marked the comment `[UNVERIFIED]` and
+   named T66 explicitly, so this is the task that closes a claim three tasks have declined to assert.
+   Item 2 (the per-iteration trial copy under multi-tranche) needs no oracle.
+   *Not run this fire: T64 held the capture rig, and two capture workers collide in `.softhouse/capture/`.*
 
 **Then:** T12's remaining half → T13 `/softhouse-uat` → T14 (`user` gate: accept the PoC slice, **no
 cutover**) → T15.
 
-**T12 is `done_partial`, deliberately not `done`.** The rehydration half is exercised and now committed as a
-re-runnable assertion — `.softhouse/bin/rehydrate-check.sh`, which fails loudly if any terminal task would be
-re-executed (this fire: 60 terminal, none re-selected). **The mid-flight checkpoint half is still untested**,
-because all four workers ran to completion. The next fire that approaches the soft limit with a worker in
-flight should treat that as the drill.
+**T12 is `done_partial`, deliberately not `done`.** The rehydration half is committed as a re-runnable
+assertion (`.softhouse/bin/rehydrate-check.sh`; this fire: 61 terminal tasks, none re-selected). **The
+mid-flight checkpoint half is still untested** — all six workers this fire ran to completion, which is the
+better outcome but leaves the drill unexercised for a third fire running. The next fire that approaches the
+soft limit with a worker in flight should treat that as the drill.
 
 ---
 
-## Open decisions for Buyan — **none blocking, three open, none RESERVED**
+## Open decisions for Buyan — **none blocking, two open, none RESERVED**
 
-- **G-3** (`gofmt` vs the frozen `contract.go`). **De-risked by demonstration this fire:** the driver appended
-  one inert newline and the next run returned **exit 2 UNUSABLE**, naming both digests
-  (`admit.go:87-93` enforces `PIN.json`'s `contract_sha256`). The feared *silent* mutation is impossible —
-  it halts the harness loudly. Option A costs nothing; **safe to leave open indefinitely.**
 - **G-4** (DEC-1's ACT/ACT promotion condition is provably too strong — wording only).
-- **G-5** (DEC-1 contradicts itself on a zero interest rate; the harness's own self-test sits on the
-  contradiction — wording only).
+- **G-5** (DEC-1 contradicts itself on a zero interest rate — wording only).
 
-G-4 and G-5 are wording amendments to a **ratified DEC-n**, which no automation may cross. Both are recorded
-as blocking nothing; the corrected readings are already in force.
+Both are wording amendments to a **ratified DEC-n**, which no automation may cross. Both block nothing; the
+corrected readings are already in force.
+
+- **G-3 (`gofmt` vs the frozen `contract.go`) — CLOSED this fire by the driver, Option A.** ENGINEERING, no
+  RESERVED content. The feared *silent* mutation is impossible: a byte change makes the harness exit 2 naming
+  both digests, and T68 independently demonstrated the digest guard fires at `grade.go:237` **before**
+  `LoadStore`, on both a `_selftest`-scoped run and an empty store. Standing instruction, already in force:
+  no task may `gofmt -w` that path, and `gofmt -l` reporting exactly that one file is the EXPECTED state.
+  Buyan may reverse.
 
 **RESERVED and untouched:** cutover, regulatory / parallel-run sign-off, deposit-taking activation, licence
 facts. **None is in Run 1's path.**
 
 ## Backlog carried
-- **B-1** — ACT/ACT arm must be ported before the fold-vs-closed-form question is decidable.
-- `conformance.sh:31` defines `CONTRACT_REL` and never uses it — a vestigial shell variable that reads like a
-  guard. Delete it or wire it up.
-- Nothing enforces that the vector-store README's counts track the corpus; T60 corrected them and added an
-  instruction, but an assertion would be a **new rule** needing its own review.
-- `conformance.sh` grades **no liveness property at all**; T59's three tests are package tests, not vectors.
+- **B-1** — ACT/ACT arm must be ported before the fold-vs-closed-form question is decidable (91 ACT/ACT
+  captures sit unpromoted; the bottleneck is the port, not the oracle).
+- `ZP-PRINCIPAL-NOT-CLAMPED` survives all 36 — the negative clamp is still ungraded.
+- **`report.go:113` still prints that no vector separates HALF_UP from HALF_EVEN — `T61` falsified that three
+  commits before this fire.** A stale fact inside the reporter itself.
+- Proof 8b carries a literal `self-test fixtures PASS 1`; single-vector-kill fragility for
+  `ZP-RESIDUAL-NO-RECURSION`.
+- Nothing enforces that the vector-store README's counts track the corpus (they were stale 29-vs-36 until
+  T64 fixed them in the promotion commit — third recurrence).
+- `conformance.sh` grades **no liveness property at all**; the cost/cancellation tests are package tests.
+- **CLOSED as already-satisfied:** T62's follow-up F-1 — `VerifyContractDigest` already fires at
+  `grade.go:237` before `LoadStore` (driver-confirmed by grep, T68-confirmed by demonstration).
