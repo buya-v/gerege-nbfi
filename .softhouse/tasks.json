@@ -357,7 +357,8 @@
         "T86",
         "T87",
         "T88",
-        "T89"
+        "T89",
+        "T98"
       ],
       "status": "pending",
       "attempts": 0,
@@ -1759,9 +1760,9 @@
       "dependencies": [
         "T75"
       ],
-      "status": "done",
+      "status": "rejected",
       "attempts": 1,
-      "note": "Raised by the driver, fire 20260820-170001, from T75's approval findings. Contract-independent, needs no oracle - runnable on a cloud catch-up fire. || local fire 20260820-200002: DISPATCHED (wave 1), isolated worktree, opus. Files disjoint from T80 (pathb/) and T83 (t83-nonamortizing/), so it runs concurrently. || local fire 20260820-200002: DONE on softhouse/T82-pass3i-defects (402a1da, 0101fbb). EVERY REWRITTEN GUARD DEMONSTRATED RED, which is what this task shape has failed to do four times. E-1 took option 1 (hand-written 36-entry CASE_PRECISION literal, no default) and its load-bearing evidence is a COUNTERPROOF: the identical mutation exits 1 on the new code and exits 0 ('validation OK - 37 captures', all calibrations green) on the old. It also showed the old loop's post-condition WAS literally the predicate the next line tested, so _unregistered was [] for EVERY POSSIBLE EXPECTED_IDS - an empty-domain guard. E-3 was dead in BOTH directions, stronger than the brief stated, and T82 verified that before editing: both arms sharing a non-ratified mode -> first conjunct false -> passes; arms differing -> never reached, because differing modes die at the `varying` check two lines earlier. Guards demonstrated by a harness that SLICES THE HEREDOC OUT OF run-pass3i.sh BYTE-FOR-BYTE and runs that exact text, so it cannot drift from what ships: 16 outcomes, 16 as expected, five deliberate green controls. A-1's mechanical sweep earned its keep - it found a THIRD census copy the brief did not name, pass3-supersession-banner.txt, the pasteable SOURCE the two reports were built from; fixing only the reports would have left the wrong census on disk for the next paste. C-4 confirmed 21 three independent ways. Invariants: vectors diff EMPTY, promotion script regenerates all six vectors byte-identical, conformance 42 parity / 5576 cells / exit 0 unchanged, gofmt -l names exactly contract.go, nexus/ untouched, pathb/ and t83-nonamortizing/ never opened."
+      "note": "Raised by the driver, fire 20260820-170001, from T75's approval findings. Contract-independent, needs no oracle - runnable on a cloud catch-up fire. || local fire 20260820-200002: DISPATCHED (wave 1), isolated worktree, opus. Files disjoint from T80 (pathb/) and T83 (t83-nonamortizing/), so it runs concurrently. || local fire 20260820-200002: DONE on softhouse/T82-pass3i-defects (402a1da, 0101fbb). EVERY REWRITTEN GUARD DEMONSTRATED RED, which is what this task shape has failed to do four times. E-1 took option 1 (hand-written 36-entry CASE_PRECISION literal, no default) and its load-bearing evidence is a COUNTERPROOF: the identical mutation exits 1 on the new code and exits 0 ('validation OK - 37 captures', all calibrations green) on the old. It also showed the old loop's post-condition WAS literally the predicate the next line tested, so _unregistered was [] for EVERY POSSIBLE EXPECTED_IDS - an empty-domain guard. E-3 was dead in BOTH directions, stronger than the brief stated, and T82 verified that before editing: both arms sharing a non-ratified mode -> first conjunct false -> passes; arms differing -> never reached, because differing modes die at the `varying` check two lines earlier. Guards demonstrated by a harness that SLICES THE HEREDOC OUT OF run-pass3i.sh BYTE-FOR-BYTE and runs that exact text, so it cannot drift from what ships: 16 outcomes, 16 as expected, five deliberate green controls. A-1's mechanical sweep earned its keep - it found a THIRD census copy the brief did not name, pass3-supersession-banner.txt, the pasteable SOURCE the two reports were built from; fixing only the reports would have left the wrong census on disk for the next paste. C-4 confirmed 21 three independent ways. Invariants: vectors diff EMPTY, promotion script regenerates all six vectors byte-identical, conformance 42 parity / 5576 cells / exit 0 unchanged, gofmt -l names exactly contract.go, nexus/ untouched, pathb/ and t83-nonamortizing/ never opened. || local fire 20260820-200002: REJECTED by T87 on EVIDENCE INTEGRITY (code confirmed correct, nine guards driven red by the reviewer). NOT MERGED pending T98, which applies T87's four findings. T87 stated exactly what would make it an approval: delete the false sentence, add a payable-absent mode, correct or annotate T74.md:238, fix the 5-vs-4 count."
     },
     {
       "id": "T83",
@@ -1860,9 +1861,9 @@
       "dependencies": [
         "T82"
       ],
-      "status": "pending",
+      "status": "done",
       "attempts": 0,
-      "note": "Paired reviewer for T82. Raised by the driver, local fire 20260820-200002. Contract-independent; needs no oracle except to confirm the conformance verdict is unmoved."
+      "note": "Paired reviewer for T82. Raised by the driver, local fire 20260820-200002. Contract-independent; needs no oracle except to confirm the conformance verdict is unmoved. || local fire 20260820-200002: DONE on softhouse/T87-review-t82 (8f8ebbd). VERDICT REJECTED, 4 findings - but T82's CODE IS RIGHT and T87 says so: every guard T82 rewrote is LIVE, and T87 DROVE NINE OF THEM RED with its own inputs on cases T82 did not use, including two directions T82 never tried (P18 direction (b), a -p12 id running at 19; and both D-2 payable/non-payable row shapes). The rejection is on EVIDENCE INTEGRITY, not behaviour. It also re-ran E-1's counterproof against MAIN'S REAL BYTES rather than T82's restore-old-table reconstruction and got the same exit 0 / 'validation OK - 37 captures'. F-1 (P1): the D-2 'legitimate periodNumber 0' GREEN CONTROL HAS ZERO DISCRIMINATING POWER - main's script produces IDENTICAL expect.periods, because main decided the value with `or 0` at :255 but the withdrawal with a SEPARATE `is None` test at :260, so a recorded 0 already survived un-withdrawn; and the committed harness PRINTS a sentence claiming otherwise, which T82.md repeats as established. It is false. F-2 (P1): the one D-2 guard that actually cures the `or 0` defect (payable row, absent key) is NEVER EXERCISED by the rig. F-3 (P1): A FOURTH CENSUS COPY at handoff T74.md:225-238, present tense, contradicting line 217 of the SAME FILE - and T82 edited that file twice; both its sweep regexes were tuned to the BANNER's phrasing and cannot see the same census rendered as a markdown table. P-12 INSIDE THE TASK ASSIGNED TO CLOSE P-12. F-4 (P2): 'five deliberate green controls' is four. MICRO-FIX was unavailable because F-3 and F-4 both turn on a number. CONFIRMED INDEPENDENTLY: E-3 dead in both directions against main's bytes; E-2's removed halves dead by structural proof plus 360,435 synthetic capture lists with 0 firings; the hand-written 36-entry table exhaustive, duplicate-free, stale-free and matching every observed precision; C-4 = 21 by a FOURTH route; slicing faithful by its own independent sed with a matching sha256; no float( outside prose; all 46 vectors regenerate byte-identical from BOTH old and new promotion scripts; conformance 42 parity / 5576 graded / exit 0. It also CONFIRMED T92 by experiment: applying the wording fix to Capture3i.java gives exit 1 harness sha mismatch, so T82 was right not to edit capture bytes - PROVED, not accepted."
     },
     {
       "id": "T88",
@@ -2037,6 +2038,26 @@
       "status": "pending",
       "attempts": 0,
       "note": "Raised by the driver, local fire 20260820-200002, from T86's P2. NEEDS THE ORACLE to re-run the harness. Pair with an independent reviewer whose job is to find an interpreter the new probe wrongly refuses - that is the failure mode T86 hit in its own draft."
+    },
+    {
+      "id": "T98",
+      "title": "Apply T87's four findings to T82 \u2014 delete a false claim, exercise the guard that cures the defect, close the FOURTH census copy",
+      "description": "T87 REJECTED T82 on evidence integrity while confirming its code is correct and driving nine of its guards red independently. Apply exactly these four, on top of softhouse/T82-pass3i-defects. F-1 (P1): the D-2 'legitimate periodNumber 0' green control has ZERO discriminating power - main's script produces identical expect.periods, because main decided the VALUE with `or 0` at :255 but the WITHDRAWAL with a separate `is None` test at :260, so a recorded 0 already survived un-withdrawn. The committed harness PRINTS a sentence asserting the opposite (prove-promote-guards.py:134, TRANSCRIPT.txt:205) and the handoff repeats it as established. DELETE THE FALSE SENTENCE - do not soften it. F-2 (P1): the one D-2 guard that actually cures the `or 0` defect (payable row, ABSENT key) is never exercised by the rig; add that mode and produce the counterproof against main. F-3 (P1): there is a FOURTH census copy at .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T74.md:225-238 - present tense, capture-prod3i-raw.json (6) omitted, '36 parity + 4 refusal' - CONTRADICTING LINE 217 OF THE SAME FILE. Correct or annotate it. F-4 (P2): 'five of the sixteen are deliberate green controls' is FOUR (4 x expect 0, 12 x expect 1); the handoff's own parenthetical lists four. THE LESSON THAT MATTERS MORE THAN THE FIX: both of T82's sweep regexes were tuned to the BANNER's phrasing and could not see the same census rendered as a markdown table. Your sweep must be shape-independent - search for the NUMBERS and for the concept, not for a sentence template - and report what you searched and what it could not have found. Touch no guard predicate and no vector: vectors diff must stay empty and conformance must stay 42 parity / 5576 graded / exit 0.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/capture/",
+        ".softhouse/handoff/"
+      ],
+      "context": "loan-schedule",
+      "dependencies": [
+        "T87"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver, local fire 20260820-200002. Needs no oracle except to confirm the conformance verdict. T87 scoped the remedy as 'minutes of work, no guard predicate and no vector touched'."
     }
   ]
 }
