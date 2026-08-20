@@ -6,7 +6,9 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 python3 - <<'PY'
 import json,sys
 t=json.load(open('.softhouse/tasks.json'))
-TERMINAL={'done','approved','parked','done_partial'}
+TERMINAL={'done','approved','parked','done_partial','superseded'}
+# 'superseded': the task's commits were merged as part of a successor task's branch.
+# Added fire 20260820-110001, when T65 (rejected, but merged via T69) was flagged re-runnable.
 by={k['id']:k for k in t['tasks']}
 ready,blocked,bad=[],[],[]
 for k in t['tasks']:
