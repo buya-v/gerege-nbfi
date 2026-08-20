@@ -266,9 +266,9 @@
    "dependencies": [
     "T10"
    ],
-   "status": "pending",
-   "attempts": 0,
-   "note": "Required by the run requirement; orchestrator-only."
+   "status": "done_partial",
+   "attempts": 1,
+   "note": "Required by the run requirement; orchestrator-only. || fire 20260820-080002: DONE_PARTIAL, and deliberately not marked done. THE REHYDRATION HALF WAS EXERCISED FOR REAL and is now a committed, re-runnable assertion at .softhouse/bin/rehydrate-check.sh: from committed state alone it computes what the next fire would pick up and FAILS LOUDLY if any terminal task would be re-executed. Result this fire: 60 terminal tasks, none re-selected; next fire picks up T12, T62, T64, T65, T66; T13 blocked only on T12, then T14, T15. THE MID-FLIGHT CHECKPOINT HALF WAS NOT EXERCISED, because all four workers dispatched this fire ran to completion and none needed to be signalled to checkpoint - the better outcome, but it means the 'signal a live worker to commit WIP and write its STATE.json' path is still untested. Do NOT mark this task done until that half runs. The next fire that approaches the token soft limit with a worker in flight should treat it as the drill and record it here."
   },
   {
    "id": "T13",

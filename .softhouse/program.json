@@ -75,7 +75,7 @@
   "current_run_id": "2026-08-17-run1-harness-schedule-poc",
   "completed_contexts": [],
   "parked_contexts": [],
-  "note": "Local fire 20260819-200001 (oracle REACHABLE) COMPLETE, clean exit, eight workers dispatched and eight merged, nothing lost. THE PROGRAM WENT FROM ZERO PARITY VECTORS TO 29, AND FROM NO GO CODE TO A PORT THAT MATCHES THE ORACLE ON 2354 CELLS. conformance.sh VERDICT: PASS (exit 0), --prove 20/20, 6/6 invariants, 0 inadmissible - all driver-re-run, none accepted on report. THE PASS IS NOT THE POINT: at 13 vectors three money-moving mutations of the port still survived, and the fire was spent closing them. All four known mutations now die (8/2/1/10 vectors respectively). Two P1 review findings raised and BOTH closed in the same fire (F-1 the demonstrated false-PASS path; F-2 the ungraded EMI smoothing loop). NEXT FIRE NEEDS NO ORACLE: T59 (port cancellation checked only at entry, and cost ~n^2.4 - neither is graded by conformance, so add a test), T60 (balance_roll_forward grades a placeholder the README says nothing compares), then T12 drill, T13 UAT, T14 (user gate: accept the PoC slice, NO cutover) and T15. Five gates open (G-2, G-3, G-4, G-5), NONE blocking and NONE reserved. Cutover, regulatory sign-off, deposit-taking activation and licence facts remain untouched and are not in Run 1's path."
+  "note": "Local fire 20260820-080002 (oracle REACHABLE) COMPLETE, clean exit. FOUR workers dispatched, FOUR completed and merged, nothing lost, no isolation violation, no scope breach. PARITY 29 -> 32 VECTORS (2354 -> 2495 cells), conformance exit 0, --prove 20/20, 6/6 invariants, 0 inadmissible - all driver-re-run. THE RESULT OF THIS FIRE: a port that inherited FINERACT'S STOCK DEFAULT ROUNDING MODE instead of Buyan's ratified HALF_UP tenant pin PASSED ALL 29 VECTORS. The driver reproduced both columns itself - HALF_EVEN mutant PASSES exit 0 at 29 vectors, FAILS exit 1 at 32 on the predicted cells. T61 found it by SOLVING for an exact rounding tie from source algebra and registering the falsifiable prediction ONE COMMIT BEFORE the capture; the oracle confirmed it exactly. Its primary hypothesis (fold vs closed-form EMI) was answered NO WITH A MEASUREMENT: the gap under equal r_i is ~1e-11 minor units, so it cannot be closed by any capture in the current graded domain - it needs the ACT/ACT arm ported first (backlog B-1; 91 ACT/ACT captures already sit unpromoted). T60 closed the unrecorded-cell defect and the driver independently reproduced its worst form - a SILENT FALSE GREEN where principal_amortizes_to_zero asserted 'final outstanding == 0' against a placeholder nobody observed. T59 fixed cancellation (a 50ms deadline had returned at 10.82s with err=nil) and restored the oracle's memo (274x at n=360). T63, the paired reviewer the driver added because T59 was a money-path change without one, found the memo SOUND over ~74,000 shapes but its STATED RULE FALSE, and found T59's cost test green on a port that is quadratic. Gate G-2 CLOSED-DECLINED by the driver, and the superseded T2 document banner-marked after it was found prescribing the killed month-end counterfactual as required behaviour. G-3 de-risked by demonstration. NEXT FIRE: T65 (T63's two P1s, no oracle), T62 (--prove gap, no oracle), T64 + T66 (ORACLE-ONLY captures), then T12's remaining half, T13 UAT, T14 user gate, T15. Gates open: G-3, G-4, G-5 - all ENGINEERING, all DEC-1/contract wording, NONE blocking, NONE reserved."
  },
  "contexts": [
   {
@@ -818,6 +818,45 @@
     "T60 - T58's N-2: balance_roll_forward grades a placeholder the store README says nothing compares, so an honestly-declared unrecorded cell goes red. D-5 class. NO ORACLE NEEDED.",
     "P-5 recurred FIVE times in one fire - workers handed worktrees cut before the merge of the artefact they were to work on. T11 got a tree with NO .go files in the port directory. The written rule is not the gap; nothing enforces it. Belongs in the dispatcher."
    ]
+  },
+  {
+   "run_id": "2026-08-17-run1-harness-schedule-poc",
+   "fire": "local 20260820-080002",
+   "context": "tier0-harness-schedule-poc",
+   "tasks_completed": [
+    "T59",
+    "T60",
+    "T61",
+    "T63"
+   ],
+   "tasks_partial": [
+    "T12"
+   ],
+   "tasks_queued": [
+    "T62",
+    "T64",
+    "T65",
+    "T66"
+   ],
+   "gates_closed": [
+    "G-2 (DECLINED)"
+   ],
+   "parity_vectors": "29 -> 32",
+   "cells": "2354 -> 2495",
+   "uat": "conformance exit 0, --prove 20/20, 6/6 invariants, 0 inadmissible",
+   "reviewer_catches": [
+    "T63 P1-2: the memo is sound but its stated soundness rule is false of the oracle, which writes later->earlier in four places",
+    "T63 P1-1: the cost test is green on a port that is quadratic twice over - an allocation-free theta(n^2) rescan, and a timing cliff above both sample points",
+    "T60: the reported symptom was the lesser of three forms; the worst was a silent false green, driver-reproduced at the pre-fix commit"
+   ],
+   "driver_catches": [
+    "reproduced both columns of the HALF_EVEN kill table independently",
+    "reproduced T60's silent false green from scratch at the pre-fix commit",
+    "found the parked T2 document was prescribing the killed month-end counterfactual as required behaviour",
+    "demonstrated the frozen-contract byte guard actually fires (G-3)",
+    "noticed T59 was a money-path coder task with no paired reviewer and dispatched T63"
+   ],
+   "notes": "Four workers, four merged, zero lost. T61 caught its own base going stale mid-task and rebased; T63 withdrew one of its own findings after measuring it."
   }
  ],
  "database": {
