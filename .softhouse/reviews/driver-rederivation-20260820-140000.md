@@ -84,3 +84,22 @@ reported.
 - Verdict **(C) still unproven** is acceptable and is not a failure, provided it names what was
   tried and what would settle it. T63 earned credit for withdrawing its own F-3 after going to look;
   the same standard applies here.
+
+---
+
+## Driver-re-run baseline for this fire, taken BEFORE T66 could change anything
+
+So that any corpus change T66 makes is attributable, and so that T13 does not have to take these
+numbers from a worker's report.
+
+| check | result |
+|---|---|
+| `.softhouse/conformance.sh` | **exit 0** — 36 parity PASS / 0 FAIL, 4 contract-refusal PASS, 1 self-test PASS, **4034 graded cells**, 72 ungraded (never recorded by the capture), 0 refused, 0 inadmissible, 0 harness errors, 0 invariant violations, 0 invariant assertions NOT RUN |
+| `.softhouse/conformance.sh --prove` | **exit 0** — **21 proofs passed, 0 failed** |
+| `contract.go` sha256 | `0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139` — **identical** to `contract_sha256` in `.softhouse/vectors/PIN.json`. The ratified artefact is byte-intact and the G-3 digest guard has nothing to fire on. |
+| float in the non-test port | **none.** Every `float32`/`float64` occurrence under `nexus/internal/apps/loanschedule/` outside `_test.go` is inside a `contract.go` doc comment **prohibiting** it (`:121`, `:738`, `:1898`, `:2212`). |
+| prohibited database engines | **none in use.** Every hit for `ojdbc` / `oracle.jdbc` / `:1521` / `com.mysql.cj` / `go-sql-driver/mysql` across `nexus/` and `.softhouse/` is either a **grep pattern inside a guard script** (`capture/charges/bin/selfcheck.sh:14`, `preconditions.sh:79,85`, `attest.py:142,145`), a **recorded zero-count assertion** (`reference-oracle.md:77,81`), or prose naming the prohibition (`program.json:893`, `ATTESTATION-T46.md:307-308`). PostgreSQL only. |
+
+Oracle for this fire: `fineract-fineract-1` (`fineract:latest`) up ~44 h healthy, `fineract-db-1`
+(`postgres:18.3`) up ~2 days healthy, `/fineract-provider/actuator/health` → `{"status":"UP"}`.
+Pinned checkout `/Users/buv/fineract` at `426a23544`, clean.
