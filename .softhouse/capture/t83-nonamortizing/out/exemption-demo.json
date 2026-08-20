@@ -1,0 +1,114 @@
+{
+ "NO-EXEMPTION": {
+  "exitCode": 1,
+  "fatalReasons": [
+   "THESE CAPABILITIES ARE MARKED in_graded_domain BUT NO PARITY VECTOR KILLS A NAMED WRONG IMPLEMENTATION FOR THEM: monthend.reanchor. \"In the graded domain\" means a vector exists that can tell a correct implementation from an incorrect one, and pair difference is NOT that test \u2014 LB-DEC31 reports zero cells differing across the day-count setting and still kills a no-arm port by 6,015 minor units (T55-N1). Either promote a vector with a graded_against entry, or set in_graded_domain false in capabilities.json.",
+   "NO PARITY VECTOR WAS GRADED. Self-test fixtures and contract-refusal vectors do not make a parity claim: the first is hand-authored, the second is derived from the ratified contract rather than observed from the oracle. Until a capture is promoted, this harness cannot say the port matches Fineract, and it will not pretend to."
+  ],
+  "inadmissible": 0,
+  "invariantViolations": 0,
+  "loadErrors": null,
+  "parityFail": 1,
+  "parityPass": 0,
+  "refused": 0,
+  "results": [
+   {
+    "case_id": "T83-NONAMORT-NOEXEMPT",
+    "outcome": "FAIL",
+    "detail": [
+     "row 6 outstanding_principal_minor: expected 1 minor units, got 0 (delta -1)"
+    ],
+    "graded_cells": 47,
+    "ungraded_cells": 2,
+    "invariants": [
+     {
+      "name": "principal_portions_sum_to_disbursed",
+      "status": "HOLD",
+      "detail": "advanced == repaid == 1 minor units"
+     },
+     {
+      "name": "principal_amortizes_to_zero",
+      "status": "HOLD",
+      "detail": "final outstanding == 0"
+     },
+     {
+      "name": "balance_roll_forward",
+      "status": "HOLD",
+      "detail": "7 row(s): every outstanding balance asserted follows from the previous row and its principal"
+     },
+     {
+      "name": "splits_sum_to_whole",
+      "status": "HOLD",
+      "detail": "7 observed total(s) reproduced by the split"
+     },
+     {
+      "name": "monotonic_due_dates",
+      "status": "HOLD",
+      "detail": "6 repayment windows, strictly increasing and contiguous"
+     },
+     {
+      "name": "contract_row_ordering",
+      "status": "HOLD",
+      "detail": "7 rows in the contract's window-key order"
+     }
+    ]
+   }
+  ]
+ },
+ "WITH-EXEMPTION": {
+  "exitCode": 1,
+  "fatalReasons": [
+   "THESE CAPABILITIES ARE MARKED in_graded_domain BUT NO PARITY VECTOR KILLS A NAMED WRONG IMPLEMENTATION FOR THEM: monthend.reanchor. \"In the graded domain\" means a vector exists that can tell a correct implementation from an incorrect one, and pair difference is NOT that test \u2014 LB-DEC31 reports zero cells differing across the day-count setting and still kills a no-arm port by 6,015 minor units (T55-N1). Either promote a vector with a graded_against entry, or set in_graded_domain false in capabilities.json.",
+   "NO PARITY VECTOR WAS GRADED. Self-test fixtures and contract-refusal vectors do not make a parity claim: the first is hand-authored, the second is derived from the ratified contract rather than observed from the oracle. Until a capture is promoted, this harness cannot say the port matches Fineract, and it will not pretend to."
+  ],
+  "inadmissible": 0,
+  "invariantViolations": 0,
+  "loadErrors": null,
+  "parityFail": 1,
+  "parityPass": 0,
+  "refused": 0,
+  "results": [
+   {
+    "case_id": "T83-NONAMORT-A",
+    "outcome": "FAIL",
+    "detail": [
+     "row 6 outstanding_principal_minor: expected 1 minor units, got 0 (delta -1)"
+    ],
+    "graded_cells": 47,
+    "ungraded_cells": 2,
+    "invariants": [
+     {
+      "name": "principal_portions_sum_to_disbursed",
+      "status": "HOLD",
+      "detail": "advanced == repaid == 1 minor units"
+     },
+     {
+      "name": "principal_amortizes_to_zero",
+      "status": "EXEMPT",
+      "detail": "GATE G-8. The reference oracle emits a non-zero outstanding balance on the final row of this graded-domain shape. T83 observed the cause to be a stale memo, not a genuine failure to amortize: the same schedule's principal column sums to the disbursed amount and its own totalOutstandingAmount reads 0."
+     },
+     {
+      "name": "balance_roll_forward",
+      "status": "EXEMPT",
+      "detail": "GATE G-8, same shape. The final row's outstanding is the value carried in rather than max(0, carried in - principal), because the oracle's balance memo was populated before the final-period EMI adjustment."
+     },
+     {
+      "name": "splits_sum_to_whole",
+      "status": "HOLD",
+      "detail": "7 observed total(s) reproduced by the split"
+     },
+     {
+      "name": "monotonic_due_dates",
+      "status": "HOLD",
+      "detail": "6 repayment windows, strictly increasing and contiguous"
+     },
+     {
+      "name": "contract_row_ordering",
+      "status": "HOLD",
+      "detail": "7 rows in the contract's window-key order"
+     }
+    ]
+   }
+  ]
+ }
+}
