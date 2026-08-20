@@ -317,6 +317,52 @@ Two consequences worth keeping:
    every citation against the pinned source before repeating it — especially in a document whose purpose is
    to check that artefact.
 
+
+### P-17 — a `parked` list is evidence of a past state, never a work queue
+
+Fire `20260820-170001` dispatched a full opus worker (T76) to close four `P0` items its brief said were
+"still open, still blocking vector promotion." **All four had been closed two days earlier** by T30 and T36.
+The stale sentence lived in `RESUME.md` *and* in the parked task's own `note` — neither was updated when the
+closing work landed, because nothing in the pipeline updates a park list except the task that wrote it.
+
+The worker checked before acting, registered the refutation in a commit that is a **parent** of its evidence
+commit, and converted the fire into genuine findings anyway. That recovery is not the lesson; the dispatch is.
+
+> **Rule.** Before dispatching from any park list, deferred-item list, or "still outstanding" paragraph,
+> `git log` the artefacts it names and confirm no later commit closed them. Treat such a list as a
+> **timestamped observation**, not as state. When you close someone else's parked item, amend the note that
+> parked it — a closure recorded only in your own commit message is invisible to the next fire.
+
+### P-18 — when four rounds of enumeration keep failing, the strategy is the defect, not the draft
+
+One comment block took **five drafts**: T65 rejected by T67, T69 fixing it and finding a defect in T67's own
+replacement text, T70 rejected by T71, T72 rejected by T73. Every rejection had the same shape — the rule was
+**true but insufficient**, and each reviewer found the next hole one call frame further out. Each retry brief
+said "fix the reviewer's findings," which produced the next true-but-insufficient enumeration.
+
+The fifth draft was briefed differently: *stop enumerating; state it in closed form.* It worked because a
+**closure argument** was available and nobody had looked for one — the entry points to the decisive method
+are in bijection with a four-constant enum fixed by the compiler, so a fifth route cannot appear without a
+compile-visible edit to the pinned oracle. It also surfaced a third writer of the field that four rounds of
+enumeration had missed.
+
+> **Rule.** Two consecutive rejections of the same kind are a signal about the *instruction*, not the worker.
+> Before dispatching retry number three, ask what would make the rule **closed** — an exhaustive census, a
+> compiler-enforced bound, a bijection — and brief that instead of another round of patches. A rule that
+> enumerates safe cases is only as good as the enumerator's imagination; a rule that bounds the space is not.
+
+### P-19 — a green conformance run is silent about regions no vector covers, and that silence reads as safety
+
+This fire's most consequential finding was made by a **reviewer approving someone else's work**, not by any
+capture task: inside the graded domain, at a small principal, the reference oracle emits a schedule that
+never amortizes to zero while the port returns zero. Conformance was PASS, 42 vectors, 5,576 cells,
+**0 invariant violations** — throughout. It was green because nothing pointed at that region.
+
+> **Rule.** "Conformance PASS" means *matches the oracle where we looked.* When reporting it, say what the
+> corpus does **not** reach; a bare PASS invites the reader to hear "the port is correct." Reviewers should
+> be chartered to probe the region **around** the work, not only to re-check the work — that is where the
+> unvectored divergences are, by construction.
+
 <!-- LEARNED PATTERNS END -->
 
 ### Run 2026-08-17-run1-harness-schedule-poc — fire `20260819-170001` (local, oracle REACHABLE) — 2026-08-19

@@ -1006,6 +1006,81 @@
    ],
    "driver_self_corrections": "TWO this fire. (1) The driver OVERSTATED a finding against T66 (step (e)'s sufficient condition under-derived for general f) and WITHDREW it on verifying the handoff supplies the premise - avoiding P-11/P-12 while citing them. (2) The driver PROPAGATED AN UNCHECKED CITATION: it took deepCopy ':1226' from T66's PREDICTION.md, repeated it in its own re-derivation, AND passed it into T70's dispatch prompt. The correct line is :1224; :1226 is a comment. Found by T70, verified by the driver, corrected in the driver's own document. P-12 recurring in the document whose job was checking.",
    "open_unsettled": "F-2: whether emi_L can go negative on an admissible shape is UNESTABLISHED. The :1214 recursion guard reduces EXACTLY to emi_L < 0 on the graded domain (totalCreditedAmount zero by RepaymentPeriod.java:357-359, totalPaidAmount zero, getEmi() at :1211 being the post-:1210 value), encoded verbatim at emi.go:1207. T70 raised it, T71 confirmed the reduction, the driver offered it - ALL THREE DECLINED TO CLOSE IT BY READING. Settle by capture."
+  },
+  {
+   "fire": "20260820-170001",
+   "host": "Buyanmunkhs-Mac-mini",
+   "oracle": "REACHABLE",
+   "run_id": "2026-08-17-run1-harness-schedule-poc",
+   "context": "tier0-harness-schedule-poc",
+   "workers_dispatched": 7,
+   "workers_completed": 7,
+   "live_at_exit": 0,
+   "tasks": [
+    "T72",
+    "T73",
+    "T74",
+    "T75",
+    "T76",
+    "T77",
+    "T78"
+   ],
+   "merged": [
+    "T74",
+    "T75",
+    "T73",
+    "T77"
+   ],
+   "rejections": [
+    {
+     "task": "T72",
+     "by": "T73",
+     "why": "rule true but INSUFFICIENT - a mid-term interest rate variation satisfies all eight conditions and still routes outside steps (a)-(g) via :356 -> :718 -> :747 -> :1160; driver re-verified from source before ruling"
+    },
+    {
+     "task": "T76",
+     "by": "T77",
+     "why": "precondition hardening incomplete - the tautology canary still passes on a one-character change, and the fail-the-run ABORT in the CALLER is unreachable, so TENANT=default runs to exit 0 and files captures under recapture-gerege"
+    }
+   ],
+   "approvals": [
+    {
+     "task": "T74",
+     "by": "T75",
+     "evidence": "876/876 money cells re-derived by the reviewer's own transcriber, byte-reproducible promotion, non-vacuous under the reviewer's own mutation (PASS 34 FAIL 8), seam mutation defeated twice"
+    }
+   ],
+   "reviewer_catches": [
+    "T73 CONSTRUCTED a counterexample route rather than naming a false clause - the first time in this chain",
+    "T77 found a worse defect than the one it rejected: the fail-the-run property lives in the caller and its abort is unreachable",
+    "T75 settled an open question during an approval and found G-8, the fire's most consequential result",
+    "T78 found a THIRD writer of futureUnrecognizedInterest that four prior drafts missed",
+    "T78 found T73's own F-T73-2 wrong on a verified claim, while agreeing with its conclusion"
+   ],
+   "corpus": {
+    "parity_vectors_before": 36,
+    "parity_vectors_after": 42,
+    "cells_before": 4034,
+    "cells_after": 5576
+   },
+   "uat": "PASS exit 0 on merged main, re-run by the driver: build/vet/test 0/0/0, 0 invariant violations, 0 assertions NOT RUN, gofmt -l naming exactly contract.go",
+   "gates_raised": [
+    "G-8"
+   ],
+   "driver_self_corrections": [
+    "Dispatched T76 from a STALE park list (T22 P0-3/4/5/6 closed by T30/T36 on 18 Aug); the false sentence was in RESUME.md and T25's own note, and the driver copied it into a prompt without opening it. Corrected at source.",
+    "Marked T75 and T78 in_progress in tasks.json without actually spawning them; caught when neither branch appeared, and both were then dispatched for real."
+   ],
+   "patterns_added": [
+    "P-17",
+    "P-18",
+    "P-19"
+   ],
+   "carried_forward": [
+    "F-2: whether emi_L can go negative is UNESTABLISHED (second fire)",
+    "T12 mid-flight checkpoint drill unexercised (fifth fire)",
+    "~60 stale worktrees, STEP 9 hygiene never run"
+   ]
   }
  ],
  "database": {
