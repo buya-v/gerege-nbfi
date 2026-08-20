@@ -17,6 +17,7 @@
 
 echo "=== T99 F-3 — a check that reports success on an empty file set is not a check"
 t99_export
+t99_stubs
 t99_pin "$P/t80/forbidden-sentence.sh" "$PIN_PREFIX_FORBIDDEN" forbidden-sentence.sh
 echo
 
@@ -103,5 +104,37 @@ done
 echo
 echo "  (a planted violation is written into the /tmp export only; the committed transcripts in"
 echo "   the repository are never touched by this proof)"
+
+
+# ------------------- 3e. the SWEEP hit: two more gates that could not fail, found by shape
+echo "--- 3e — the same 'guard that cannot fail' shape, found by sweeping, in two OTHER scripts."
+echo "         t36/recreate-products.sh and t36/emiloop-probe.sh carried the EXACT defect T77 found"
+echo "         and T80 fixed in recapture.sh: preconditions.sh's bad() writes FAIL to STDERR"
+echo "         (preconditions.sh:58) and both scripts redirected STDOUT ONLY, so the '^  FAIL' grep"
+echo "         they abort on could never match, and neither looked at the exit status."
+echo
+echo "  the mechanical fact, measured on the pre-fix bytes — where do FAIL lines go?"
+( PATH=$EXPORT/stub:$PATH; export PATH
+  CANARY_REQ=$P/t22-audit/req/calc-pmode2-gerege.json sh "$P/t36/preconditions.sh" gerege ) \
+    > "$EXPORT/f3e-stdout.txt" 2>"$EXPORT/f3e-stderr.txt"
+echo "    preconditions.sh exit status: (breached environment, docker/curl stubbed)"
+echo "    '^  FAIL' lines on STDOUT: $(LC_ALL=C grep -ac '^  FAIL' "$EXPORT/f3e-stdout.txt" || true)"
+echo "    '^  FAIL' lines on STDERR: $(LC_ALL=C grep -ac '^  FAIL' "$EXPORT/f3e-stderr.txt" || true)"
+echo "    => a gate that greps a stdout-only transcript for '^  FAIL' matches nothing, ever."
+echo
+for side in prefix fixed; do
+  if [ "$side" = prefix ]; then TREE=$P; else TREE=$F; fi
+  for s in recreate-products emiloop-probe; do
+    echo "  $side/$s.sh, run in a breached environment (docker and curl stubbed):"
+    ( PATH=$EXPORT/stub:$PATH; export PATH
+      sh "$TREE/t36/$s.sh" ) > "$EXPORT/f3e-$side-$s.txt" 2>&1
+    st=$?
+    echo "    EXIT=$st   aborted before capturing: $(LC_ALL=C grep -qa 'ABORT: preconditions breached' "$EXPORT/f3e-$side-$s.txt" && echo YES || echo 'NO — it went on to capture')"
+    LC_ALL=C grep -a 'ALL PASS\|preconditions: ALL PASS\|ABORT: preconditions breached' "$EXPORT/f3e-$side-$s.txt" \
+      | head -1 | cut -c1-160 | sed 's/^/      /'
+  done
+done
+echo
+echo "  (both are additionally reported in the handoff: they were NOT in T85's four findings.)"
 
 t99_verdict "$prefix_admitted" "$fixed_refused" "F-3 (vacuous pass on zero files)"

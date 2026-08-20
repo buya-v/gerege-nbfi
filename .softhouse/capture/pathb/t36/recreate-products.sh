@@ -28,10 +28,22 @@ T='Fineract-Platform-TenantId: gerege'
 CT='Content-Type: application/json'
 
 echo "### preconditions"
-CANARY_REQ="$W/t22-audit/req/calc-pmode2-gerege.json" sh "$D/preconditions.sh" gerege > "$O/preconditions.txt"
-grep -c '^  FAIL' "$O/preconditions.txt" > /dev/null 2>&1 || true
-if grep -q '^  FAIL' "$O/preconditions.txt"; then
-  echo "ABORT: preconditions breached" >&2; cat "$O/preconditions.txt" >&2; exit 1
+# T99 (sweep for the F-3 shape — a guard that cannot fail).  Same defect T77 found and T80 fixed in
+# recapture.sh, still live here: the redirect captured STDOUT ONLY while preconditions.sh's bad()
+# writes every FAIL to STDERR (preconditions.sh:58), so `^  FAIL` could never appear in the file
+# being grepped and the ABORT was unreachable; the `grep -c … > /dev/null 2>&1 || true` line above
+# it computed a count and threw it away; and the exit status the script actually emits was ignored.
+# Two operands now — the EXIT STATUS, and a FAIL grep over a transcript holding BOTH streams —
+# either of which aborts.  LC_ALL=C: a BSD grep in a UTF-8 locale returns 0 lines AND 0 on a file
+# with an invalid multibyte sequence, which is the silent zero this gate exists to stop.
+prestatus=0
+CANARY_REQ="$W/t22-audit/req/calc-pmode2-gerege.json" \
+  sh "$D/preconditions.sh" gerege > "$O/preconditions.txt" 2>&1 || prestatus=$?
+prefails=$(LC_ALL=C grep -ac '^  FAIL' "$O/preconditions.txt" || true)
+if [ "$prestatus" -ne 0 ] || [ "$prefails" != "0" ]; then
+  echo "ABORT: preconditions breached — exit status $prestatus, $prefails FAIL line(s). NOTHING WAS CAPTURED." >&2
+  cat "$O/preconditions.txt" >&2
+  exit 1
 fi
 echo "ALL PASS"
 
