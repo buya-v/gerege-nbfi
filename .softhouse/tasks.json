@@ -1921,9 +1921,9 @@
       "dependencies": [
         "T81"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "Raised by the driver, local fire 20260820-200002, from T81's F-1. Needs the oracle only to run the harness. files_hint is approximate - locate report.go before editing. Pair with an independent reviewer."
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-200002, from T81's F-1. Needs the oracle only to run the harness. files_hint is approximate - locate report.go before editing. Pair with an independent reviewer. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus."
     },
     {
       "id": "T91",
@@ -1940,9 +1940,9 @@
       "dependencies": [
         "T80"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "Raised by the driver, local fire 20260820-200002, from T77 F-1 as re-raised by T80. NEEDS THE ORACLE to run the attack suite. Pair with an independent reviewer."
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-200002, from T77 F-1 as re-raised by T80. NEEDS THE ORACLE to run the attack suite. Pair with an independent reviewer. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus."
     },
     {
       "id": "T92",
@@ -2037,9 +2037,9 @@
         "T81",
         "T86"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "Raised by the driver, local fire 20260820-200002, from T86's P2. NEEDS THE ORACLE to re-run the harness. Pair with an independent reviewer whose job is to find an interpreter the new probe wrongly refuses - that is the failure mode T86 hit in its own draft."
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-200002, from T86's P2. NEEDS THE ORACLE to re-run the harness. Pair with an independent reviewer whose job is to find an interpreter the new probe wrongly refuses - that is the failure mode T86 hit in its own draft. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus."
     },
     {
       "id": "T98",
@@ -2077,9 +2077,9 @@
         "T80",
         "T85"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "Raised by the driver, local fire 20260820-200002, from T85's lower-ranked findings. NEEDS THE ORACLE. Sequence after T80 merges."
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-200002, from T85's lower-ranked findings. NEEDS THE ORACLE. Sequence after T80 merges. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus."
     },
     {
       "id": "T100",
@@ -2097,9 +2097,9 @@
       "dependencies": [
         "T84"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "Raised by the driver, local fire 20260820-200002. Needs the oracle only if it re-measures; T84's cells are committed on its branch. Pair with an independent reviewer (T101) - the review must check that EVERY conclusion in the reworked gates.md names the family it holds for."
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-200002. Needs the oracle only if it re-measures; T84's cells are committed on its branch. Pair with an independent reviewer (T101) - the review must check that EVERY conclusion in the reworked gates.md names the family it holds for. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus."
     },
     {
       "id": "T101",
@@ -2136,9 +2136,9 @@
       "dependencies": [
         "T87"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "Raised by the driver, local fire 20260820-200002, from its own post-merge verification. Needs no oracle except to confirm conformance. Small and fully specified."
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "Raised by the driver, local fire 20260820-200002, from its own post-merge verification. Needs no oracle except to confirm conformance. Small and fully specified. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus."
     }
   ]
 }
