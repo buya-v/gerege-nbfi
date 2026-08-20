@@ -68,19 +68,29 @@ mechanically, so a file cannot become something it is not by being renamed:
 
 ### What the store actually holds today
 
-The store holds **29 promoted parity vectors** (all in `loanschedule/`, all
+The store holds **36 promoted parity vectors** (all in `loanschedule/`, all
 captured at the production MathContext `(19, HALF_UP)`), **4 contract-refusal
-vectors** and **1 self-test fixture** — 34 files. `conformance.sh` exits **0**:
-29 parity PASS, 0 FAIL, 0 refused, 0 inadmissible, 2,354 cells graded, 58 ungraded,
-0 invariant violations, 0 invariant assertions not run.
+vectors** and **1 self-test fixture** — 41 files. `conformance.sh` exits **0**:
+36 parity PASS, 0 FAIL, 0 refused, 0 inadmissible, 4,034 cells graded, 72 ungraded,
+0 invariant violations, 0 invariant assertions not run. `conformance.sh --prove`
+reports **20 passed, 0 failed**.
+
+The last four promotions are task **T64**'s `T64-ZP-*` — the first vectors in this
+store containing a REPAYMENT row that amortizes **exactly zero principal** while
+interest is non-zero, and the first containing rows that are entirely dead after an
+early payoff. Before them the corpus's longest term was 36 periods and its smallest
+principal MNT 100.00, and it had **no** discriminating power over either shape. They
+also make this store's terms much longer: `T64-ZP-D` is 73 rows against a previous
+maximum of 37.
 
 This paragraph is a statement of **fact about the current contents**, and it goes
 stale every time a vector is promoted. It said *"Everything in this store is
 unpromoted today… `conformance.sh` therefore exits 2 with `NO PARITY VECTOR WAS
-GRADED`"* long after 29 promotions had made that false. Nothing above or below it
-is a rule that changed — the promotion rules are unchanged — but a reader who
-trusts a stale fact stops trusting the rules next to it. **If you promote or
-retire a vector, update this paragraph in the same commit.**
+GRADED`"* long after 29 promotions had made that false, and it then said **29** for
+the whole of T61's three-vector promotion. Nothing above or below it is a rule that
+changed — the promotion rules are unchanged — but a reader who trusts a stale fact
+stops trusting the rules next to it. **If you promote or retire a vector, update
+this paragraph in the same commit.**
 
 The `NO PARITY VECTOR WAS GRADED` fatal reason and its exit **2** are still live in
 the harness and still correct: they fire on any run that grades no parity vector —
@@ -537,7 +547,7 @@ and is still graded.** A `DISBURSEMENT` row's `interest_minor` and
 `installment_number` are `0` normatively — *"its InterestMinor is 0, and its
 InstallmentNumber is 0 because it is not payable"*, `contract.go:1509-1510` — so
 the replay's `0` there is the **contract's own value**, not an invention. This is
-not a convenience: all 29 promoted parity vectors withdraw exactly those two cells,
+not a convenience: all 36 promoted parity vectors withdraw exactly those two cells,
 and treating them as placeholders would have turned `splits_sum_to_whole`'s
 interest-column total into a no-op across the entire corpus. The same argument was
 already ratified for `installment_number` by finding **T9-F1c**.

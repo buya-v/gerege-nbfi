@@ -1,0 +1,49 @@
+==========================================================================
+CONTROL — the UNMUTATED port. Must be GREEN in both configurations, or
+nothing below is evidence.
+==========================================================================
+  CONTROL   @32 vectors (T64 removed)  exit 0  |  parity vectors          PASS 32   FAIL 0
+  CONTROL   @36 vectors (as committed)  exit 0  |  parity vectors          PASS 36   FAIL 0
+
+==========================================================================
+MUTATION ZP-GUARD-SCALES-THE-INSTALLMENT
+==========================================================================
+  BEFORE  @32 vectors (T64 removed)   exit 1  |  parity vectors          PASS 21   FAIL 11
+  AFTER   @36 vectors (as committed)  exit 1  |  parity vectors          PASS 22   FAIL 14
+  => already graded before this capture (red at 32); T64 adds nothing here.
+
+==========================================================================
+MUTATION ZP-GUARD-NONSTRICT
+==========================================================================
+  BEFORE  @32 vectors (T64 removed)   exit 0  |  parity vectors          PASS 32   FAIL 0
+  AFTER   @36 vectors (as committed)  exit 1  |  parity vectors          PASS 33   FAIL 3
+  => CLOSED A BLIND SPOT: green at 32, RED at 36.
+
+==========================================================================
+MUTATION ZP-RESIDUAL-NO-RECURSION
+==========================================================================
+  BEFORE  @32 vectors (T64 removed)   exit 0  |  parity vectors          PASS 32   FAIL 0
+  AFTER   @36 vectors (as committed)  exit 1  |  parity vectors          PASS 35   FAIL 1
+  => CLOSED A BLIND SPOT: green at 32, RED at 36.
+
+==========================================================================
+MUTATION ZP-PRINCIPAL-NOT-CLAMPED
+==========================================================================
+  BEFORE  @32 vectors (T64 removed)   exit 0  |  parity vectors          PASS 32   FAIL 0
+  AFTER   @36 vectors (as committed)  exit 0  |  parity vectors          PASS 36   FAIL 0
+  => SURVIVES BOTH. This capture does NOT grade it. Reported as such.
+
+==========================================================================
+MUTATION ZP-ADOPTION-TEST-NONSTRICT
+==========================================================================
+  BEFORE  @32 vectors (T64 removed)   exit 1  |  parity vectors          PASS 31   FAIL 1
+  AFTER   @36 vectors (as committed)  exit 1  |  parity vectors          PASS 35   FAIL 1
+  => already graded before this capture (red at 32); T64 adds nothing here.
+
+==========================================================================
+MUTATION ZP-SMOOTHING-DIVISOR-IS-LOWER-HALF
+==========================================================================
+  BEFORE  @32 vectors (T64 removed)   exit 1  |  parity vectors          PASS 25   FAIL 7
+  AFTER   @36 vectors (as committed)  exit 1  |  parity vectors          PASS 29   FAIL 7
+  => already graded before this capture (red at 32); T64 adds nothing here.
+
