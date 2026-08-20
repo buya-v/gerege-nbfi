@@ -770,3 +770,32 @@ strictly more work for a worse outcome.
 
 **Not RESERVED.** No money, no live endpoint, no third party, no licence fact. Recorded for Buyan's awareness
 and reversal, not because an agent could not reason about it.
+
+---
+
+## G-3 — CLOSED (Option A), local fire `20260820-110001`
+
+**Class:** ENGINEERING. No RESERVED content, so the driver decides it (CLAUDE.md § *Answering gates*).
+
+**Decision: Option A.** `nexus/internal/apps/loanschedule/contract/contract.go` is **never** `gofmt`'d. The
+exemption is a standing instruction, **not** a DEC-1 amendment.
+
+**Why the feared failure mode cannot happen — demonstrated twice, not argued:**
+1. Fire `20260819-170001`: the driver appended one inert newline to the frozen file; the next harness run
+   returned **exit 2 UNUSABLE**, naming both digests (`admit.go:87-93` against `PIN.json`'s
+   `contract_sha256`).
+2. Fire `20260820-110001`, task **T68**: `VerifyContractDigest` fires at **`grade.go:237`, before
+   `LoadStore`** — confirmed by the driver by grep and by T68 by demonstration, on both a `_selftest`-scoped
+   run and an **empty store**. There is no path by which a vector loads without the digest being checked.
+
+A silent mutation of the ratified artefact is therefore impossible; a mutation halts the harness loudly.
+
+**Rejected alternatives.** Option B (apply the formatting as an "inert erratum") would change the ratified
+bytes, invalidate the whole-file byte-identity guardrail, and — the real cost — establish the precedent that
+"semantically inert" edits to a frozen file are acceptable. Option C (amend DEC-1 to record the exemption)
+spends a ratified-document amendment to buy exactly what Option A already delivers for nothing.
+
+**In force, unchanged:** no task may `gofmt -w` that path, and `gofmt -l` reporting **exactly that one file**
+is the EXPECTED state and must not fail a UAT.
+
+**Buyan may reverse this.**

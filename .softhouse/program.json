@@ -464,13 +464,16 @@
       "class": "ENGINEERING",
       "task": "T7",
       "context": "tier0-harness-schedule-poc",
-      "state": "OPEN",
+      "state": "CLOSED - OPTION A",
       "title": "May gofmt rewrite the ratified contract.go?",
       "why": "The first compile of the ratified DEC-1 artefact (this fire, after the toolchain gap closed) showed `gofmt -l` flags nexus/internal/apps/loanschedule/contract/contract.go: 3 hunks, 25 diff lines, all doc-comment list normalisation (Go 1.19+), semantically inert - no type, field, enum member, error value, identifier or specified predicate moves. NOT APPLIED. The gate is about the failure mode: contract.go's doc comments ARE the specification and DEC-1's amendment clause makes re-documenting an identifier a gate, so an editor format-on-save or a `gofmt -w ./...` from the repo root would silently mutate a frozen ratified artefact and the diff would read as harmless formatting noise in review.",
       "asking_for": "Confirm option A - leave contract.go unformatted, keep a documented gofmt exemption. Option B (apply it as a no-predicate erratum) would change the ratified bytes and invalidate the whole-file byte-identity guardrail, and its real cost is the precedent that 'inert' edits to a frozen file are fine. Option C (amend DEC-1 to record the exemption) is a gate to buy what A already delivers.",
       "blocks": "Nothing. The standing instruction is already in force: no task may gofmt -w that path; `gofmt -l` reporting exactly that one file is the EXPECTED state and must not fail a UAT.",
       "raised_by": "local fire 20260819-170001",
-      "recorded_in": ".softhouse/gates.md"
+      "recorded_in": ".softhouse/gates.md",
+      "closed_by": "local fire 20260820-110001 (/softhouse-program driver)",
+      "chosen_by": "agent",
+      "decision": "Option A: contract.go is never gofmt'd; the exemption is a standing instruction, not a DEC-1 amendment. Closed under CLAUDE.md 'Answering gates' as ENGINEERING with no RESERVED content. The feared SILENT mutation is impossible and this was shown twice: fire 20260819 appended one inert newline and the next run returned exit 2 UNUSABLE naming both digests; this fire T68 demonstrated the guard fires at grade.go:237 BEFORE LoadStore, on both a _selftest-scoped run and an empty store, so no vector can enter by a path that skips it. Option B would change ratified bytes and set the precedent that 'inert' edits to a frozen file are fine; Option C would spend a DEC-1 amendment to buy what A already delivers. In force: no task may gofmt -w that path, and `gofmt -l` reporting exactly that one file is the EXPECTED state and must not fail a UAT. Buyan may reverse."
     },
     {
       "id": "G-4",
