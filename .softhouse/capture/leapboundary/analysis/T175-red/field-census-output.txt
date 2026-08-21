@@ -1,0 +1,86 @@
+T175 field census -- t55-analyse.py:352, capture LB-LEAPIN-p7
+planted value: '1,200,000.000' -- three decimal places in MNT (minor unit 2), and not
+Decimal-parseable, so it is BOTH a real breach of the money non-negotiable AND
+an input the :352 handler discards.
+rows: disbursement row = index 0, first repayment row = index 1
+
+PLAN-LEVEL MONEYISH fields (9):
+  plan.totalCredits                   SWALLOWED SILENTLY -- I6 = ok  <-- VACUOUS PASS ON A REAL 3-dp BREACH
+  plan.totalFeeChargesCharged         SWALLOWED SILENTLY -- I6 = ok  <-- VACUOUS PASS ON A REAL 3-dp BREACH
+  plan.totalInterestCharged           CRASHES -- InvalidOperation, from an unguarded Decimal() in I1/I2/I3/I5/I7
+  plan.totalOutstanding               SWALLOWED SILENTLY -- I6 = ok  <-- VACUOUS PASS ON A REAL 3-dp BREACH
+  plan.totalPenaltyChargesCharged     SWALLOWED SILENTLY -- I6 = ok  <-- VACUOUS PASS ON A REAL 3-dp BREACH
+  plan.totalPrincipalDisbursed        SWALLOWED SILENTLY -- I6 = ok  <-- VACUOUS PASS ON A REAL 3-dp BREACH
+  plan.totalPrincipalExpected         SWALLOWED SILENTLY -- I6 = ok  <-- VACUOUS PASS ON A REAL 3-dp BREACH
+  plan.totalPrincipalPaid             SWALLOWED SILENTLY -- I6 = ok  <-- VACUOUS PASS ON A REAL 3-dp BREACH
+  plan.totalRepaymentExpected         SWALLOWED SILENTLY -- I6 = ok  <-- VACUOUS PASS ON A REAL 3-dp BREACH
+
+ROW-LEVEL MONEYISH fields (16), planted in EACH of the two row kinds:
+  field                          in the DISBURSEMENT row (row0)                 in a REPAYMENT row (row1)
+  feeChargesDue                  SWALLOWED SILENTLY                             CRASHES
+  interestDue                    absent from that row                           SWALLOWED SILENTLY
+  interestOriginalDue            absent from that row                           CRASHES
+  interestOutstanding            absent from that row                           SWALLOWED SILENTLY
+  penaltyChargesDue              absent from that row                           CRASHES
+  principalDisbursed             SWALLOWED SILENTLY                             absent from that row
+  principalDue                   absent from that row                           SWALLOWED SILENTLY
+  principalLoanBalanceOutstanding CRASHES                                        CRASHES
+  principalOriginalDue           absent from that row                           CRASHES
+  principalOutstanding           absent from that row                           SWALLOWED SILENTLY
+  totalActualCostOfLoanForPeriod SWALLOWED SILENTLY                             SWALLOWED SILENTLY
+  totalDueForPeriod              SWALLOWED SILENTLY                             SWALLOWED SILENTLY
+  totalInstallmentAmountForPeriod absent from that row                           SWALLOWED SILENTLY
+  totalOriginalDueForPeriod      SWALLOWED SILENTLY                             CRASHES
+  totalOutstandingForPeriod      SWALLOWED SILENTLY                             SWALLOWED SILENTLY
+  totalOverdue                   SWALLOWED SILENTLY                             SWALLOWED SILENTLY
+
+================================================================================================
+SUMMARY -- denominators, stated (P-40)
+================================================================================================
+  MONEYISH names declared by t55-analyse.py:120-130 : 28
+  ...of which present in LB-LEAPIN-p7 : 9 plan + 16 row
+  cell PLANTS actually run : 32
+  ...SWALLOWED SILENTLY (vacuous I6 pass on a real 3-dp breach) : 24
+      plan.totalCredits
+      plan.totalFeeChargesCharged
+      plan.totalOutstanding
+      plan.totalPenaltyChargesCharged
+      plan.totalPrincipalDisbursed
+      plan.totalPrincipalExpected
+      plan.totalPrincipalPaid
+      plan.totalRepaymentExpected
+      row0.feeChargesDue (disbursement)
+      row1.interestDue (repayment)
+      row1.interestOutstanding (repayment)
+      row0.principalDisbursed (disbursement)
+      row1.principalDue (repayment)
+      row1.principalOutstanding (repayment)
+      row0.totalActualCostOfLoanForPeriod (disbursement)
+      row1.totalActualCostOfLoanForPeriod (repayment)
+      row0.totalDueForPeriod (disbursement)
+      row1.totalDueForPeriod (repayment)
+      row1.totalInstallmentAmountForPeriod (repayment)
+      row0.totalOriginalDueForPeriod (disbursement)
+      row0.totalOutstandingForPeriod (disbursement)
+      row1.totalOutstandingForPeriod (repayment)
+      row0.totalOverdue (disbursement)
+      row1.totalOverdue (repayment)
+  ...CRASHED loudly instead (an unguarded Decimal() got there first) : 8
+      plan.totalInterestCharged
+      row1.feeChargesDue (repayment)
+      row1.interestOriginalDue (repayment)
+      row1.penaltyChargesDue (repayment)
+      row0.principalLoanBalanceOutstanding (disbursement)
+      row1.principalLoanBalanceOutstanding (repayment)
+      row1.principalOriginalDue (repayment)
+      row1.totalOriginalDueForPeriod (repayment)
+  ...REPORTED by I6 as a violation : 0
+
+  NOT SWEPT by this census, and therefore not claimed (P-40):
+    * MONEYISH names that do not appear in LB-LEAPIN-p7 at all
+      (interestPaid, principalPaid, totalPaidForPeriod)
+    * the other 32 captures -- this census plants in one capture only; the
+      guard/no-guard structure is a property of the CODE, not of the capture,
+      but a field absent from this shape could not be probed here.
+    * unparseable values of other SHAPES (empty string, null-as-text, a
+      Unicode minus). Only one planted shape was swept.

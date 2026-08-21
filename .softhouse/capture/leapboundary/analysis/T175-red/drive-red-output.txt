@@ -1,0 +1,74 @@
+T175 RED PROBE -- t55-analyse.py:352, the I6 money-decimal-places swallow
+  original  : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a982e3fa98d08b3a4/.softhouse/capture/leapboundary/analysis/T175-red/../t55-analyse.py
+  successor : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a982e3fa98d08b3a4/.softhouse/capture/leapboundary/analysis/T175-red/../t55-invariants-v2.py
+  committed corpus (never written to): /Users/buv/gerege-nbfi/.claude/worktrees/agent-a982e3fa98d08b3a4/.softhouse/capture/leapboundary/analysis/T175-red/../../out
+
+======== LEG A -- ORIGINAL vs the CLEAN corpus (baseline) ========
+    | PLANTED  nothing -- clean copy
+    | scratch corpus: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t175-red-4upk7irh/clean  (33 sidecar files copied from /Users/buv/gerege-nbfi/.claude/worktrees/agent-a982e3fa98d08b3a4/.softhouse/capture/leapboundary/out)
+  AS PREDICTED      ORIGINAL I6 on the clean corpus (ok = no breach present): True
+        detail: all cells
+
+======== LEG B -- ORIGINAL vs a PARSEABLE 3-dp plant (control) ========
+    | PLANTED  LB-LEAPIN-p7-exact.json  totalRepaymentExpected: '1232403.86' -> '1200000.000'
+    | scratch corpus: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t175-red-4upk7irh/parseable  (33 sidecar files copied from /Users/buv/gerege-nbfi/.claude/worktrees/agent-a982e3fa98d08b3a4/.softhouse/capture/leapboundary/out)
+  AS PREDICTED      ORIGINAL I6 on a PARSEABLE three-decimal money cell (must VIOLATE): False
+        detail: plan.totalRepaymentExpected=1200000.000
+        -> the original's I6 is NOT simply broken. It catches a 3-dp breach
+           whenever the text happens to parse. That is what makes leg C damning.
+
+======== LEG C -- ORIGINAL vs an UNPARSEABLE 3-dp plant (THE DEFECT) ========
+    | PLANTED  LB-LEAPIN-p7-exact.json  totalRepaymentExpected: '1232403.86' -> '1,200,000.000'
+    | scratch corpus: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t175-red-4upk7irh/unparseable  (33 sidecar files copied from /Users/buv/gerege-nbfi/.claude/worktrees/agent-a982e3fa98d08b3a4/.softhouse/capture/leapboundary/out)
+  AS PREDICTED      ORIGINAL I6 on an UNPARSEABLE three-decimal money cell (defect => ok): True
+        detail: all cells
+        -> `1,200,000.000` is THREE decimal places in a 2-minor-unit currency,
+           i.e. a real breach of the first non-negotiable in CLAUDE.md. The
+           original reports I6=ok and prints NOTHING about having skipped it.
+        -> field-census.py enumerates the whole money surface of this capture:
+           24 of 32 cell plants are swallowed exactly like this one, 8 crash on
+           an unguarded Decimal() elsewhere, and 0 are reported BY I6.
+  AS PREDICTED      ORIGINAL's whole invariant row for LB-LEAPIN-p7 (all seven still 'ok'): 7
+
+======== LEG D -- SUCCESSOR vs the SAME unparseable plant ========
+  AS PREDICTED      SUCCESSOR exit status (must REFUSE): 1
+  AS PREDICTED      SUCCESSOR NAMES the planted cell's exact text: True
+  AS PREDICTED      SUCCESSOR names the cell key: True
+  AS PREDICTED      SUCCESSOR's SKIP REGISTER item count (1 x I6 + 2 x worst-delta): 3
+  AS PREDICTED      ...of which I6 entries: 1
+  AS PREDICTED      ...of which worst-delta entries: 2
+        --- the SUCCESSOR's verdict lines:
+        | FAIL  LB-LEAPIN-p7 I6 VIOLATED -- plan.totalRepaymentExpected='1,200,000.000' UNPARSEABLE AS DECIMAL (InvalidOperation)
+        | money cells I6 INSPECTED   : 1235      <-- I6's denominator; zero would be an ERROR
+        | money cells I6 SWALLOWED   : 1      <-- t55-analyse.py:352 discarded these silently
+        | [I6] LB-LEAPIN-p7 :: plan.totalRepaymentExpected = '1,200,000.000'  --  InvalidOperation: [<class 'decimal.ConversionSyntax'>]
+        | FAIL  3 item(s) were swallowed.  A swallow is a FAILURE of this run, never a skip.
+        | T175 SUCCESSOR: FAILED -- 2 breach(es):
+        | 3 item(s) were swallowed.  A swallow is a FAILURE of this run, never a skip.
+
+======== LEG E -- the OTHER half (P-50): SUCCESSOR vs the CLEAN corpus ========
+  AS PREDICTED      SUCCESSOR exit status on the clean corpus: 0
+        | captures loaded            : 33 of 33 requested
+        | money cells I6 INSPECTED   : 1236      <-- I6's denominator; zero would be an ERROR
+        | money cells I6 SWALLOWED   : 0      <-- t55-analyse.py:352 discarded these silently
+        | MONEYISH leaves dropped by cells() before I6: 0
+        | money deltas CONSIDERED    : 212
+        | money deltas SWALLOWED     : 0      <-- t55-analyse.py:167 discarded these silently
+        | T175 SUCCESSOR: PASS -- 33 captures, 1236 money cells inspected, 212 money deltas considered, 0 swallowed.
+  AS PREDICTED      SUCCESSOR reports a NON-ZERO I6 denominator: True
+
+======== LEG F -- SUCCESSOR vs an EMPTY corpus (zero inspected is an ERROR) ========
+  AS PREDICTED      SUCCESSOR exit status on an empty corpus: 1
+  AS PREDICTED      SUCCESSOR calls zero-captures an ERROR (P-35): True
+  AS PREDICTED      SUCCESSOR calls zero-money-cells an ERROR (P-35): True
+        --- and for contrast, the ORIGINAL on the same empty corpus:
+        | ORIGINAL raises FileNotFoundError: [Errno 2] No such file or directory: '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t175-red-4upk7irh/empty/LB-LEAPIN-p7-exact.json'  (it has no empty-corpus handling at all;
+        |  the file-not-found happens to be loud, but that is the LOADER,
+        |  not the invariant -- :352 stays silent on every cell it drops.)
+
+======== VERDICT ========
+  ALL LEGS AS PREDICTED
+
+  t55-analyse.py sha256 before probe : abf4494a4ce9147419021ca83fe91c6818717ff747fdf127cee1bfef826dfe05
+  t55-analyse.py sha256 after  probe : abf4494a4ce9147419021ca83fe91c6818717ff747fdf127cee1bfef826dfe05
+  AS PREDICTED      the committed original is BYTE-IDENTICAL after the probe
