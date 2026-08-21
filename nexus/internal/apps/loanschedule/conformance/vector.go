@@ -815,24 +815,52 @@ func RejectFloatTokens(raw []byte) error {
 
 // LoadStore walks the store root and loads every .json vector under it.
 //
-// contextFilter, when non-empty, selects a single context directory. A filter
-// that matches nothing is reported: silently grading zero vectors is the exact
-// outcome this harness exists to make impossible.
+// contextFilter, when non-empty, selects a single context DIRECTORY to grade. A
+// filter that matches nothing is reported by the caller (ZERO VECTORS FOUND):
+// silently grading zero vectors is the exact outcome this harness exists to make
+// impossible.
+//
+// THE DUPLICATE-case_id CENSUS IS TAKEN OVER THE WHOLE STORE, BEFORE THE FILTER
+// IS APPLIED (T123, closing T119's F-T119-1). The filter narrows what is GRADED;
+// it does not narrow what is CHECKED.
+//
+// T110 collected only the filtered contexts and then checked those, so its doc
+// comment's word "store-wide" was false under -context. Measured on T110's own
+// bytes, on a store carrying one case_id in two different context directories:
+// unfiltered → exit 2, refused; -context=loanschedule → exit 0, 42 parity
+// vectors, no refusal, no warning. A store defect that is invisible from one
+// angle is worse than one that is always visible, because the run that hides it
+// is the run somebody quotes. The census is therefore taken over `all` below —
+// every context directory, filter or no filter — and only then is the graded
+// subset selected.
+//
+// The cost is that a filtered run reads and decodes every context, not only its
+// own. Two consequences, both deliberate and both narrower than they look:
+//
+//   - a context directory that cannot be ENUMERATED now fails the run even when
+//     the filter excludes it. Uniqueness across the store cannot be asserted over
+//     a directory that could not be listed, and asserting it anyway is the thing
+//     this function exists not to do.
+//   - a file OUTSIDE the filter that fails to LOAD is skipped and is not recorded
+//     as a LoadError — exactly as before this change. It cannot inflate any
+//     count, because a vector that does not load is never graded; and in the
+//     unfiltered run that conformance.sh performs it is a LoadError and the run
+//     is exit 2 regardless. The census's blind spot is confined to files that
+//     could not have been counted in the first place.
 func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) {
 	entries, err := os.ReadDir(storeRoot)
 	if err != nil {
 		return nil, nil, fmt.Errorf("vector store %s: %w", storeRoot, err)
 	}
-	var vectors []*Vector
+	var all []*Vector    // every context — the domain of the duplicate census
+	var graded []*Vector // the subset this run grades: all, or one context of it
 	var loadErrs []LoadError
 	for _, e := range entries {
 		if !e.IsDir() {
 			continue
 		}
 		ctx := e.Name()
-		if contextFilter != "" && ctx != contextFilter {
-			continue
-		}
+		selected := contextFilter == "" || ctx == contextFilter
 		dir := filepath.Join(storeRoot, ctx)
 		files, err := os.ReadDir(dir)
 		if err != nil {
@@ -845,31 +873,43 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 			rel := filepath.Join(ctx, f.Name())
 			v, err := LoadVector(filepath.Join(dir, f.Name()), rel)
 			if err != nil {
-				loadErrs = append(loadErrs, LoadError{Path: rel, Err: err})
+				if selected {
+					loadErrs = append(loadErrs, LoadError{Path: rel, Err: err})
+				}
 				continue
 			}
-			vectors = append(vectors, v)
+			all = append(all, v)
+			if selected {
+				graded = append(graded, v)
+			}
 		}
 	}
-	// (context, case_id, PATH) — three keys, and the third is what makes the order
-	// TOTAL (T90's sweep). Two files carrying the same case_id in one context are
-	// now REFUSED outright (DuplicateCaseIDs, below), but the comparator keeps the
-	// path key regardless: it is what makes the row order a function of the store's
-	// CONTENTS rather than of pdqsort's behaviour on a tie, and the sort runs BEFORE
-	// the duplicate check so that the refusal itself names its files in a
-	// deterministic order. Inert on today's store — all 47 case_ids are distinct,
-	// and the report is byte-identical with and without this key (T104 §7(iii),
-	// measured by reverting only this key).
-	sort.Slice(vectors, func(i, j int) bool {
-		if vectors[i].Context != vectors[j].Context {
-			return vectors[i].Context < vectors[j].Context
-		}
-		if vectors[i].CaseID != vectors[j].CaseID {
-			return vectors[i].CaseID < vectors[j].CaseID
-		}
-		return vectors[i].Path < vectors[j].Path
-	})
-	if err := DuplicateCaseIDs(vectors); err != nil {
+	// (context, case_id, PATH) — three keys.
+	//
+	// The first two are what put the report's rows in an order that is a function
+	// of the store's CONTENTS rather than of os.ReadDir's order on disk (T90's
+	// sweep). That claim is now covered: ordering_is_by_context_then_case_id in
+	// store_integrity_test.go builds a store whose filename order is the REVERSE
+	// of its case_id order, so deleting this sort turns that sub-test red.
+	//
+	// The PATH key is what makes the comparator a TOTAL order, and it is provably
+	// unreachable rather than merely inert: the only way two loaded vectors can
+	// tie on (context, case_id) is for them to be a duplicate, and a duplicate
+	// REFUSES the run below, so the sorted slice is discarded before anybody can
+	// observe the tiebreak. No store that loads can exercise it, and no test
+	// asserts that it is exercised. It stays as the guarantee that the comparator
+	// is a total order.
+	//
+	// This sort does NOT make the refusal message deterministic, although until
+	// T123 the comment here said it did. T119's mutation M5 deleted this sort
+	// entirely and the 50-iteration determinism sub-test still passed 50/50: the
+	// refusal's ordering comes from sortedKeys and sort.Strings INSIDE
+	// DuplicateCaseIDs, which is where the doc comment on that function correctly
+	// locates it. The check runs after the sort because that reads better, not
+	// because determinism needs it (P-11: the code was right and the reason given
+	// for it was not, and the reason is what the next contributor checks).
+	sortVectorsForReport(all)
+	if err := DuplicateCaseIDs(all); err != nil {
 		// Returned as the third value, NOT as a LoadError: a LoadError is a
 		// property of ONE file ("this one could not be read"), and no single file
 		// here is at fault — the defect is the relationship between two files.
@@ -879,7 +919,26 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 		// duplicated still reports both.
 		return nil, loadErrs, err
 	}
-	return vectors, loadErrs, nil
+	if contextFilter == "" {
+		return all, loadErrs, nil
+	}
+	sortVectorsForReport(graded)
+	return graded, loadErrs, nil
+}
+
+// sortVectorsForReport imposes the report's row order: context, then case_id,
+// then path. Which of the three keys is load-bearing, and which is provably
+// unreachable, is set out at the call site in LoadStore.
+func sortVectorsForReport(vectors []*Vector) {
+	sort.Slice(vectors, func(i, j int) bool {
+		if vectors[i].Context != vectors[j].Context {
+			return vectors[i].Context < vectors[j].Context
+		}
+		if vectors[i].CaseID != vectors[j].CaseID {
+			return vectors[i].CaseID < vectors[j].CaseID
+		}
+		return vectors[i].Path < vectors[j].Path
+	})
 }
 
 // DuplicateCaseIDs returns an error naming every case_id declared by more than
@@ -905,16 +964,27 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 // the only outcome that cannot be mistaken for either a larger corpus or a
 // smaller one.
 //
-// The key is the case_id ALONE, store-wide, not (context, case_id). Two files in
-// different context directories with one case_id are the same lie: the report
-// prints CASE without CONTEXT, so a reader cannot tell the two rows apart, and
-// both still add to the same headline totals. Scoping the check per-context
-// would let that pass. This also catches a symlinked or hard-linked copy of a
-// vector file, which arrives as two distinct paths carrying one case_id.
+// The key is the case_id ALONE, not (context, case_id). Two files in different
+// context directories with one case_id are the same lie: the report prints CASE
+// without CONTEXT, so a reader cannot tell the two rows apart, and both still add
+// to the same headline totals. Scoping the check per-context would let that pass.
+// This also catches a symlinked or hard-linked copy of a vector file, which
+// arrives as two distinct paths carrying one case_id.
 //
-// Ordering: the caller sorts first, and both the outer list of case_ids and the
-// inner list of paths are sorted here, so the message is a function of the
-// store's contents alone.
+// "STORE-WIDE" IS A PROPERTY OF THE CALLER, NOT OF THIS FUNCTION. This function
+// checks exactly the slice it is handed, and it has no way to know what was left
+// out of it. It is LoadStore that makes the property store-wide, by taking the
+// census over every context directory BEFORE it applies -context (T123, closing
+// T119's F-T119-1: under T110 the filter ran first, so a cross-context duplicate
+// with -context=loanschedule gave exit 0, 42 parity vectors and no refusal).
+// Anybody calling DuplicateCaseIDs directly on a filtered or otherwise narrowed
+// slice gets a claim about that slice and nothing wider.
+//
+// Ordering: both the outer list of case_ids (sortedKeys) and the inner list of
+// paths (sort.Strings) are sorted HERE, so the message is a function of the
+// store's contents alone. It does not depend on the caller having sorted first —
+// verified by T119's mutation M5, which deleted LoadStore's sort entirely and
+// left the 50-iteration determinism sub-test passing 50/50.
 func DuplicateCaseIDs(vectors []*Vector) error {
 	byCase := make(map[string][]string, len(vectors))
 	for _, v := range vectors {
