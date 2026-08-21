@@ -861,8 +861,8 @@
       "executor": "agent",
       "model": "opus",
       "target": "docs",
-      "status": "pending",
-      "attempts": 0,
+      "status": "in_progress",
+      "attempts": 1,
       "dependencies": [
         "T179"
       ],
@@ -871,7 +871,8 @@
         ".softhouse/patterns.md"
       ],
       "description": "INDEPENDENT review of T179. Re-derive; do not accept the author's conclusions. Read the upstream handoff from the BRANCH (git show <branch>:.softhouse/handoff/<run_id>/T179.md) and the diff with git diff main...<branch> (THREE DOTS, P-41). Drive the author's guard/probe yourself: a guard that was never driven RED is not shipped (P-22), a prover must be falsifiable toward the FIX as well as the defect (P-50), and a check that inspects zero items is an ERROR not a pass (P-35). Verdict APPROVED / MICRO-FIX (<=10 lines, mechanical, never a number) / REJECTED with specifics. If you find nothing, state what you checked so silence is distinguishable from not looking.",
-      "note": "Registered by the driver at dispatch of T179 (plan gate rule 1: every coder/analyst task gets a paired reviewer)."
+      "note": "Registered by the driver at dispatch of T179 (plan gate rule 1: every coder/analyst task gets a paired reviewer). | dispatched local fire 20260821-125942 batch 2; brief carries the P-59 non-empty-diff assertion",
+      "branch": "softhouse/T183-review-t179"
     },
     {
       "id": "T184",
@@ -880,8 +881,8 @@
       "executor": "agent",
       "model": "opus",
       "target": "docs",
-      "status": "pending",
-      "attempts": 0,
+      "status": "in_progress",
+      "attempts": 1,
       "dependencies": [
         "T173"
       ],
@@ -890,7 +891,8 @@
         ".softhouse/capture/"
       ],
       "description": "INDEPENDENT review of T173. Re-derive; do not accept the author's conclusions. Read the upstream handoff from the BRANCH (git show <branch>:.softhouse/handoff/<run_id>/T173.md) and the diff with git diff main...<branch> (THREE DOTS, P-41). Drive the author's guard/probe yourself: a guard that was never driven RED is not shipped (P-22), a prover must be falsifiable toward the FIX as well as the defect (P-50), and a check that inspects zero items is an ERROR not a pass (P-35). Verdict APPROVED / MICRO-FIX (<=10 lines, mechanical, never a number) / REJECTED with specifics. If you find nothing, state what you checked so silence is distinguishable from not looking.",
-      "note": "Registered by the driver at dispatch of T173 (plan gate rule 1: every coder/analyst task gets a paired reviewer)."
+      "note": "Registered by the driver at dispatch of T173 (plan gate rule 1: every coder/analyst task gets a paired reviewer). | dispatched local fire 20260821-125942 batch 2; brief carries the P-59 non-empty-diff assertion",
+      "branch": "softhouse/T184-review-t173"
     },
     {
       "id": "T185",
@@ -1007,9 +1009,9 @@
         "A2-8",
         "A2-12"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "raised by local fire 20260821-125942: .softhouse/vectors/ holds ONLY loanschedule/, so A2-8's merged GL port is graded by ZERO parity vectors. The store README's own layout is one directory per bounded context and conformance.sh already filters by context -- the harness was built for a second context that was never added. A GL context needs its own frozen contract before a vector can be admitted against it. DEC-n RATIFICATION is agent-decidable (CLAUDE.md), so drafting DEC-2 is not a user gate; amending the RATIFIED DEC-1 still is. | dispatched local fire 20260821-125942 batch 1 (6th worker)",
+      "note": "raised by local fire 20260821-125942: .softhouse/vectors/ holds ONLY loanschedule/, so A2-8's merged GL port is graded by ZERO parity vectors. The store README's own layout is one directory per bounded context and conformance.sh already filters by context -- the harness was built for a second context that was never added. A GL context needs its own frozen contract before a vector can be admitted against it. DEC-n RATIFICATION is agent-decidable (CLAUDE.md), so drafting DEC-2 is not a user gate; amending the RATIFIED DEC-1 still is. | dispatched local fire 20260821-125942 batch 1 (6th worker) | MERGED as a DRAFT, not ratified. Seam is getLinkedGLAccountForLoanProduct(Long,int,Long) -- NO amount parameter, driver-verified at 426a23544, so DEC-2 selects an ACCOUNT and cannot grade money invariants at this seam.",
       "branch": "softhouse/A2-13-dec2-gl-contract"
     },
     {
@@ -1027,9 +1029,10 @@
       "dependencies": [
         "A2-13"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "paired reviewer, required by the plan gate: no contract is ratified on its author's word."
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "paired reviewer, required by the plan gate: no contract is ratified on its author's word. | dispatched local fire 20260821-125942 batch 2; brief carries the P-59 non-empty-diff assertion",
+      "branch": "softhouse/A2-14-review-dec2"
     },
     {
       "id": "A2-15",
@@ -1087,9 +1090,10 @@
       "dependencies": [
         "T188"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "raised by T188 (F-1, F-2). Money non-negotiable exposure -- highest-priority harness task."
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "raised by T188 (F-1, F-2). Money non-negotiable exposure -- highest-priority harness task. | dispatched local fire 20260821-125942 batch 2; brief carries the P-59 non-empty-diff assertion",
+      "branch": "softhouse/T191-failopen-money-guards"
     },
     {
       "id": "T192",
