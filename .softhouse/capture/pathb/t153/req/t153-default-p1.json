@@ -1,0 +1,21 @@
+{
+ "clientId": 1,
+ "productId": 1,
+ "loanType": "individual",
+ "principal": 1162502.5,
+ "loanTermFrequency": 12,
+ "loanTermFrequencyType": 2,
+ "numberOfRepayments": 12,
+ "repaymentEvery": 1,
+ "repaymentFrequencyType": 2,
+ "interestRatePerPeriod": 21.6,
+ "interestRateFrequencyType": 3,
+ "amortizationType": 1,
+ "interestType": 0,
+ "interestCalculationPeriodType": 1,
+ "transactionProcessingStrategyCode": "advanced-payment-allocation-strategy",
+ "expectedDisbursementDate": "01 January 2026",
+ "submittedOnDate": "01 January 2026",
+ "locale": "en",
+ "dateFormat": "dd MMMM yyyy"
+}
