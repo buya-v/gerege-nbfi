@@ -1,0 +1,119 @@
+
+=== A0  BASELINE — no rig anywhere ===
+CENSUS narrow-catch — inspected 57 .java files across 20 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9dedcc8aae76a8b1 (recursive, whole repository; EXCLUDED 1 other checkout root(s): .claude/worktrees)
+narrow load-bearing catch sites: 67 total, 67 in FROZEN files (34 files), 0 NEW
+clean: no capture rig outside the frozen set narrows its seam handler.
+exit=0
+
+=== A1  RED — rig planted inside THIS COMMIT'S OWN tree (.softhouse/capture/t188-probe/src) ===
+CENSUS narrow-catch — inspected 58 .java files across 21 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9dedcc8aae76a8b1 (recursive, whole repository; EXCLUDED 1 other checkout root(s): .claude/worktrees)
+narrow load-bearing catch sites: 68 total, 67 in FROZEN files (34 files), 1 NEW
+REFUSED — a NEW capture rig narrows its seam handler. java.lang.Error is exactly what the reference oracle throws.
+  .softhouse/capture/t188-probe/src/CaptureT188Probe.java:5  } catch (RuntimeException e) {
+Fix: use ThrewOutcome (capture/lib/ThrewOutcome.java). Mechanical patch: capture/src/t169-red/build_harness_t169.py.
+exit=1
+
+=== A2  IGNORED — the SAME rig moved under .claude/worktrees/agent-t188-fake/ ===
+CENSUS narrow-catch — inspected 57 .java files across 20 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9dedcc8aae76a8b1 (recursive, whole repository; EXCLUDED 1 other checkout root(s): .claude/worktrees)
+narrow load-bearing catch sites: 67 total, 67 in FROZEN files (34 files), 0 NEW
+clean: no capture rig outside the frozen set narrows its seam handler.
+exit=0
+-- proof the file really is there and really is narrow --
+-rw-r--r--  1 buv  staff  159 Aug 21 21:12 /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9dedcc8aae76a8b1/.claude/worktrees/agent-t188-fake/.softhouse/capture/t188-probe/src/CaptureT188Probe.java
+5:    } catch (RuntimeException e) {
+
+=== A3  BOTH AT ONCE — own-tree rig REFUSED BY NAME while the worktrees rig stays invisible ===
+CENSUS narrow-catch — inspected 58 .java files across 21 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9dedcc8aae76a8b1 (recursive, whole repository; EXCLUDED 1 other checkout root(s): .claude/worktrees)
+narrow load-bearing catch sites: 68 total, 67 in FROZEN files (34 files), 1 NEW
+REFUSED — a NEW capture rig narrows its seam handler. java.lang.Error is exactly what the reference oracle throws.
+  .softhouse/capture/t188-probe/src/CaptureT188Probe.java:5  } catch (RuntimeException e) {
+Fix: use ThrewOutcome (capture/lib/ThrewOutcome.java). Mechanical patch: capture/src/t169-red/build_harness_t169.py.
+exit=1
+
+=== A4  GREEN AGAIN — both rigs removed ===
+CENSUS narrow-catch — inspected 57 .java files across 20 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9dedcc8aae76a8b1 (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+narrow load-bearing catch sites: 67 total, 67 in FROZEN files (34 files), 0 NEW
+clean: no capture rig outside the frozen set narrows its seam handler.
+exit=0
+
+=== A5  the lint's own selftest still passes (not over-broad) ===
+CENSUS narrow-catch — inspected 1 .java files across 1 directories under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp9asvhtc5 (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+narrow load-bearing catch sites: 1 total, 0 in FROZEN files (0 files), 1 NEW
+REFUSED — a NEW capture rig narrows its seam handler. java.lang.Error is exactly what the reference oracle throws.
+  .softhouse/capture/newrig/src/CaptureBrandNew.java:5  } catch (RuntimeException e) {
+Fix: use ThrewOutcome (capture/lib/ThrewOutcome.java). Mechanical patch: capture/src/t169-red/build_harness_t169.py.
+  -> exit 1
+CENSUS narrow-catch — inspected 1 .java files across 1 directories under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp9asvhtc5 (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+narrow load-bearing catch sites: 0 total, 0 in FROZEN files (0 files), 0 NEW
+clean: no capture rig outside the frozen set narrows its seam handler.
+  -> exit 0
+CENSUS narrow-catch — inspected 1 .java files across 1 directories under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp9asvhtc5 (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+narrow load-bearing catch sites: 0 total, 0 in FROZEN files (0 files), 0 NEW
+clean: no capture rig outside the frozen set narrows its seam handler.
+  -> exit 0
+CENSUS narrow-catch — inspected 0 .java files across 0 directories under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmpbbkp_nbg (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+narrow load-bearing catch sites: 0 total, 0 in FROZEN files (0 files), 0 NEW
+REFUSED — INSPECTED 0 .java FILES across 0 DIRECTORIES under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmpbbkp_nbg.
+A lint that opens no file refuses nothing and reports clean. This is an ERROR, not a pass (P-35).
+  -> exit 1
+
+check_no_narrow_catch selftest: 0 failure(s)
+exit=0
+
+=== A6  git status must be untouched by all of the above ===
+  (empty above = the rigs left no trace)
+
+=== B1  SIZING THE EPIPE REPRO MYSELF — binary search for the pipe-buffer threshold ===
+  payload=4096     rc=0    no inversion
+  payload=16384    rc=0    no inversion
+  payload=32768    rc=0    no inversion
+  payload=49152    rc=0    no inversion
+  payload=65536    rc=141  INVERTED
+  payload=131072   rc=141  INVERTED
+  payload=320935   rc=141  INVERTED
+  THRESHOLD: largest non-inverting payload ~64768 B; smallest inverting ~65024 B (a 64 KiB pipe buffer)
+  NOTE: 36 KB 'proves the bug absent' -- it fits the buffer. That is the trap.
+
+=== B2  RED/GREEN on the driver's own site: OLD grep -q vs NEW grep -c, same input ===
+  OLD (grep -q): reports NO CENSUS LINE  <-- WRONG, it is line 1
+  NEW (grep -c): census_lines=1  -> census line found (CORRECT)
+  NEW (grep -c) on output with NO census line: census_lines=0 -> ERROR (correct, not over-corrected)
+
+=== B3  THE SWEEP — every remaining pipeline of this shape in conformance.sh, by POLARITY ===
+  total sites: 18
+    449:  end="$(LC_ALL=C grep -an '^#=END-OF-HELP=$' "$src" | head -1 | cut -d: -f1)"
+    546:    if perl -0pe 's/"(\\.|[^"\\])*"//g' "$f" | LC_ALL=C grep -aEq '[-0-9][0-9]*\.[0-9]|[0-9][eE][-+]?[0-9]'; then
+    607:       | LC_ALL=C grep -aEq '\bfloat(32|64)\b|\bbig\.Float\b|\bcomplex(64|128)\b|\b(Parse|Format|Append)Float\b'; then
+    893:    [ "$got" = "$want" ] && printf '%s' "$out" | LC_ALL=C grep -aqF -- "$needle" && ok=1
+    1003:     && printf '%s' "$out8" | LC_ALL=C grep -aq 'self-test fixtures      PASS 1' \
+    1004:     && printf '%s' "$out8" | LC_ALL=C grep -aq 'parity vectors          PASS 0' \
+    1005:     && printf '%s' "$out8" | LC_ALL=C grep -aq 'SELF-TEST FIXTURE' \
+    1006:     && printf '%s' "$out8" | LC_ALL=C grep -aq 'EXCLUDED from the parity count' \
+    1007:     && printf '%s' "$out8" | LC_ALL=C grep -aq 'NOT a conformance PASS'; then
+    1201:  printf '%s' "$out19a" | LC_ALL=C grep -aq 'WITHDRAWS from grading' || ok19=0
+    1202:  printf '%s' "$out19a" | LC_ALL=C grep -aq 'P-02' || ok19=0
+    1209:  printf '%s' "$out19b" | LC_ALL=C grep -aq 'killed by MONTHEND-CONTINUE-FROM-CLAMPED-DAY' || ok19=0
+    1213:  printf '%s' "$out19b" | LC_ALL=C grep -aqE 'parity vectors +PASS [0-9]+ +FAIL 0' || ok19=0
+    1287:    if printf '%s' "$out20" | LC_ALL=C grep -aqF -- 'INVARIANT principal_amortizes_to_zero VIOLATED'; then
+    1295:      | LC_ALL=C grep -aqE 'SELFTEST-01-two-period-zero-rate .* principal_amortizes_to_zero \[N/A\]' || note20 \
+    1297:    printf '%s' "$out20" | LC_ALL=C grep -aqF -- \
+    1300:    printf '%s' "$out20" | LC_ALL=C grep -aqE 'invariant assertions +[1-9][0-9]* NOT RUN' || note20 \
+    1305:    printf '%s' "$out20c" | LC_ALL=C grep -aqE 'principal_amortizes_to_zero +hold [1-9][0-9]* +violated 0' || note20 \
+
+=== B4  FAIL-OPEN sites, driven: the guard MISSES a planted defect once its producer clears 64 KiB ===
+  post-strip=4015     -> FLOATING-POINT IDENTIFIER refused (correct)
+  post-strip=20815    -> FLOATING-POINT IDENTIFIER refused (correct)
+  post-strip=43815    -> FLOATING-POINT IDENTIFIER refused (correct)
+  post-strip=89815    -> *** guard PASSED a file containing float64: FAIL-OPEN ***
+  post-strip=181815   -> *** guard PASSED a file containing float64: FAIL-OPEN ***
+
+=== B5  MARGIN on the real tree today — how far each fail-open site is from the threshold ===
+  site 607 (guard_no_float_in_harness), largest post-comment-strip .go output:
+    44941	nexus/internal/apps/loanschedule/conformance/structural_test.go
+    37354	nexus/internal/apps/loanschedule/conformance/admit.go
+    35601	nexus/internal/apps/loanschedule/conformance/conformance_test.go
+  site 546 (guard_no_float_in_vectors), largest post-string-strip .json output:
+    21326	T64-ZP-D-zero-principal-mnt0pt36-72x16pt8pct.json
+    16834	T64-ZP-A-zero-principal-mnt0pt28-56x21pt6pct.json
+    16492	T64-ZP-B-early-payoff-dead-rows-mnt0pt28-55x21pt6pct.json
+  -> both below the ~64 KiB threshold today: the hazard is LATENT, not live.
