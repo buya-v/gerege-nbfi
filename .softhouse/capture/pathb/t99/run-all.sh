@@ -7,6 +7,13 @@
 # darwin25], so the two runs exercise POSIX mode vs not, not two implementations.  That is worth
 # saying plainly: identical transcripts here bound less than they would on dash-vs-bash.
 #
+# THIS RUNNER NEEDS THE LIVE REFERENCE ORACLE (Fineract) TO GO GREEN.  T135 §7.4 measured it: with
+# T99_LIVE=0, f1/f3/f4 exit 0 and **f2 exits 1** — "defect reproduces on the PRE-FIX bytes: NO —
+# this proof proves nothing".  Both of F-2's verdict predicates are set only inside the live legs;
+# 2c/2d/2e are hermetic but do not feed the verdict.  That is the RIGHT failure mode (a skipped leg
+# is never a pass), but it means run-all.sh cannot be green in an oracle-down fire, and a reader who
+# sees exit 1 there should check whether the oracle was up before reading it as a regression.
+#
 # NORMALISATION.  Two things legitimately differ run to run and would swamp a byte comparison: the
 # export directory (per shell, so both trees can exist at once) and the git object ids.  Both are
 # replaced by placeholders.  Nothing else is touched — in particular no PASS/FAIL line, no digest

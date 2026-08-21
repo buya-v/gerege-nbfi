@@ -28,6 +28,28 @@ echo "=== T99 F-4 — 'no stamp because it predates the mechanism' vs 'no stamp 
 t99_export
 echo
 
+# ------------------------------------------------------- T152: THIS PROOF'S OWN BASELINE ASSERTION
+# f1/f2/f3 each pin a pre-fix FILE by digest, so a wrong baseline makes them abort loudly.  f4 had
+# no such operand, and its 4a verdict is a CONJUNCTION OF ABSENCES (no stamp, no stamp, no index) —
+# which is exactly what a baseline that already contains the fix also produces.  T135 measured the
+# consequence on a scratch merge into `main`: f1/f2/f3 exit 3 on their pins and **f4 exits 1
+# saying "F-4 NOT CLOSED"**, a false negative on the very finding this branch closes.
+#
+# So assert the baseline POSITIVELY, in the one respect that defines it: the remedy under proof —
+# PROVENANCE-INDEX.json — must be ABSENT from the pre-fix tree.  If it is present, the export is
+# not a pre-fix tree and no conclusion may be drawn from it; abort (exit 3) rather than conclude.
+# This is belt-and-braces to the literal FORK-POINT-SHA, not a substitute for it: the sha stops the
+# baseline from moving, and this stops a moved baseline from being read as a result.
+if [ -f "$P/PROVENANCE-INDEX.json" ]; then
+  t99_die "baseline assertion: the pre-fix export ALREADY CONTAINS PROVENANCE-INDEX.json, so it is
+  not a pre-fix tree — the remedy under proof is already in it.  Every verdict below would be a
+  comparison of the fix against itself.  This is what a baseline computed from \`main\` produces
+  after this branch merges; see t99/FORK-POINT-SHA.  Refusing to conclude."
+fi
+echo "  baseline assertion: PROVENANCE-INDEX.json is ABSENT from the pre-fix export — this really"
+echo "                      is a tree from before the remedy, not the merged fix compared to itself"
+echo
+
 prefix_admitted=0
 fixed_refused=0
 
