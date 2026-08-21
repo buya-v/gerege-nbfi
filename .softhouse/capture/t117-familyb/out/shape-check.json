@@ -1,0 +1,809 @@
+{
+ "predictionUnderTest": "P4 \u2014 exact row shape of a family-B cell at 600.0 % / B = 1 minor / n >= 300",
+ "capturesInFile": 202,
+ "inScope": 166,
+ "outOfScopeCountedNotDropped": 36,
+ "erroredCases": [],
+ "matchedP4": 110,
+ "deviatingCount": 56,
+ "byObservedFamily": {
+  "B": {
+   "in": 110,
+   "matched": 110
+  },
+  "A": {
+   "in": 0,
+   "matched": 0
+  },
+  "clean": {
+   "in": 56,
+   "matched": 0
+  }
+ },
+ "deviations": [
+  {
+   "id": "T117-NC-R600p0-N398-B1",
+   "n": 398,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N730-B1",
+   "n": 730,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N470-B1",
+   "n": 470,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N520-B1",
+   "n": 520,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N840-B1",
+   "n": 840,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N600-B1",
+   "n": 600,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NC-R600p0-N392-B1",
+   "n": 392,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N480-B1",
+   "n": 480,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N420-B1",
+   "n": 420,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N500-B1",
+   "n": 500,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N580-B1",
+   "n": 580,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NC-R600p0-N400-B1",
+   "n": 400,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N850-B1",
+   "n": 850,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N880-B1",
+   "n": 880,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N540-B1",
+   "n": 540,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N720-B1",
+   "n": 720,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N900-B1",
+   "n": 900,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N770-B1",
+   "n": 770,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N610-B1",
+   "n": 610,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N760-B1",
+   "n": 760,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N510-B1",
+   "n": 510,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N790-B1",
+   "n": 790,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NC-R600p0-N391-B1",
+   "n": 391,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N680-B1",
+   "n": 680,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NC-R600p0-N393-B1",
+   "n": 393,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N780-B1",
+   "n": 780,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N690-B1",
+   "n": 690,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N660-B1",
+   "n": 660,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N830-B1",
+   "n": 830,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NC-R600p0-N363-B1",
+   "n": 363,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N570-B1",
+   "n": 570,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N450-B1",
+   "n": 450,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N550-B1",
+   "n": 550,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N410-B1",
+   "n": 410,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NC-R600p0-N394-B1",
+   "n": 394,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NC-R600p0-N395-B1",
+   "n": 395,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N820-B1",
+   "n": 820,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N490-B1",
+   "n": 490,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N670-B1",
+   "n": 670,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N710-B1",
+   "n": 710,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NC-R600p0-N362-B1",
+   "n": 362,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NC-R600p0-N399-B1",
+   "n": 399,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NC-R600p0-N397-B1",
+   "n": 397,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N740-B1",
+   "n": 740,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N430-B1",
+   "n": 430,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N700-B1",
+   "n": 700,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N800-B1",
+   "n": 800,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NC-R600p0-N396-B1",
+   "n": 396,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N750-B1",
+   "n": 750,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N560-B1",
+   "n": 560,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N890-B1",
+   "n": 890,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N590-B1",
+   "n": 590,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N460-B1",
+   "n": 460,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N440-B1",
+   "n": 440,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N810-B1",
+   "n": 810,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  },
+  {
+   "id": "T117-NL-R600p0-N530-B1",
+   "n": 530,
+   "observedFamily": "clean",
+   "deviations": [
+    "totalPrincipalAmount='0.01'",
+    "totalInterestAmount='0.13'",
+    "totalRepaymentAmount='0.14'",
+    "row 1 interest = 1 minor, expected 0",
+    "row 1 total = 1 minor, expected 0",
+    "row 1 totalOutstandingBalance = 13 minor, expected 1"
+   ],
+   "deviationCountTruncatedTo6": 42
+  }
+ ]
+}
