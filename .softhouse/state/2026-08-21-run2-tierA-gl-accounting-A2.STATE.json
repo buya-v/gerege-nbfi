@@ -1,28 +1,58 @@
 {
-  "squad": "2026-08-21-run2-tierA-gl-accounting-A2",
-  "written_by": "local fire 20260821-134344 (/softhouse-program driver)",
-  "written_at": "2026-08-21 (end of fire)",
-  "live_workers_at_exit": 0,
-  "current_item": "Tier A slice A2 (GL accounting) — port written, reviewed, HELD unmerged on a guard-coverage precondition",
-  "step": "seven workers dispatched, seven completed, all seven adjudicated and every branch either merged or explicitly held with a written reason",
-  "branches_merged": [
-    "A2-11",
-    "T154",
-    "T155",
-    "T156",
-    "T158",
-    "T117",
-    "T159",
-    "A2-9"
-  ],
-  "branches_held_unmerged": {
-    "softhouse/A2-8-ledger-port": "HELD on TWO grounds, neither lowered: (1) T166 is an unmet MERGE PRECONDITION and A2-9's F-E made it worse -- the no-float guards do not cover nexus/internal/apps/ledger/ AND the in-package scans use ReadDir('.') and skip subdirectories, so a planted float64 in ledger/sub/ passed both the package test and conformance.sh; (2) four non-money corrections required first: F-A (ApplicableSlotName inert), F-B (a [VERIFIED:] SQL SUBSTRING claim PostgreSQL refutes), F-C (a [VERIFIED:] count of 27 that measures 52), F-D (a correction misattributed to f50e006)."
-  },
-  "next_action": "Do T166 FIRST -- it is the only thing between 6,065 lines of new money code and main, and its red probe must be driven from a SUBDIRECTORY. Then apply A2-9's four corrections to A2-8's branch and merge it. Then A2-8's follow-on A2 slice work.",
-  "blocked_on": "nothing external. The reference oracle was UP for the whole fire.",
-  "open_questions": [
-    "Is the family-B unamortized residual bounded at all? Two workers have now raised the ceiling by asking a larger term (MNT 5.01 at n=1000, then MNT 10.01 at n=3000) and neither found a limit.",
-    "How many historical 'N asked / N observed / 0 errored' integrity claims are unsupported because the shared rig catches RuntimeException rather than Throwable? (T169)"
-  ],
-  "gate_pending": "G-8 (open, and its write-up is wrong in at least 25 places -> T170). G-10 (open, refined this fire to five products / six mapping rows). No RESERVED item is blocking any work."
+ "squad": "2026-08-21-run2-tierA-gl-accounting-A2",
+ "written_by": "local fire 20260821-054355 (/softhouse-program driver)",
+ "written_at": "2026-08-21 (end of fire)",
+ "supersedes": "the version written by fire 20260821-134344, which still recorded softhouse/A2-8-ledger-port as HELD UNMERGED. That is NO LONGER TRUE -- A2-12 carried A2-8 in and T166 (its merge precondition) landed. A stale manifest is worse than none; this rewrite exists because the next fire would have acted on it.",
+ "live_workers_at_exit": 0,
+ "current_item": "Tier A slice A2 (GL accounting) -- port merged; this fire spent itself on the harness/evidence integrity backlog that guards it",
+ "step": "eight workers dispatched, eight completed, eight merged; zero live at exit; no isolation violation, no scope breach",
+ "branches_merged_this_fire": [
+  "T173",
+  "T175",
+  "T177",
+  "T178",
+  "T179",
+  "T170",
+  "T171",
+  "T172"
+ ],
+ "branches_held_unmerged": {},
+ "driver_work_not_on_any_branch": [
+  "e93afc9 -- fixed TWO defects in T173's guards found by running the harness on real merged main (P-56 walk scope, P-57 pipefail inversion). Driven red AND green. Under independent review as T188.",
+  "nonnegotiable-guard-audit.md addendum -- restricting the scope of T171's fail-open claim after the driver's own measurement contradicted its premise. Adjudicated by T189."
+ ],
+ "verified_on_merged_main_at_exit": {
+  "conformance": "exit 0, probe line PRESENT and reading up, 43 parity vectors / 5664 cells, invariant violations 0",
+  "go": "build 0, vet 0, test 0; gofmt -l names exactly contract.go (expected, G-3)",
+  "anchors": "DEC-1 49dc8923... and contract.go 0db73d4a... unmoved"
+ },
+ "pending_tasks": [
+  "T116",
+  "T145",
+  "T160",
+  "T162",
+  "T164",
+  "T165",
+  "T168",
+  "T174",
+  "T176",
+  "T180",
+  "T181",
+  "T182",
+  "T183",
+  "T184",
+  "T185",
+  "T186",
+  "T187",
+  "T188",
+  "T189"
+ ],
+ "next_action": "T187 first -- a LIVE gate bypass. Then T188, T189, T186, T165, T174, T176, T180, T160, T164, T162, T168, T145, and the paired reviewers T181-T185. T116 stays parked behind T177's re-scoping.",
+ "blocked_on": null,
+ "gate_pending": null,
+ "open_questions": [
+  "The grep invalid-byte direction is UNSETTLED (2 positives, 2 negatives, a third uncharacterised NUL mode). Do not cite either direction as established until T189.",
+  "gates.md still carries TWO ## G-8 headings; the NOTICE block is marked SUPERSEDED but not merged into the rebuilt section.",
+  "The A2 ledger port is still graded by NO parity vector -- the 43 are loanschedule's."
+ ]
 }
