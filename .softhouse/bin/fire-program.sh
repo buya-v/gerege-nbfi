@@ -221,10 +221,32 @@ run_exit_guard() {
 # The driver is required to checkpoint on EVERY exit path (skill STEP 5.5). It has
 # been observed exiting rc=0 mid-run with deliverables uncommitted and RESUME.md
 # stale, which makes the work invisible to the next fire. Detect and rescue.
-DIRTY=$(git status --porcelain | LC_ALL=C grep -av '^?? \.softhouse/LOCK$' || true)
-if [[ -n "$DIRTY" ]]; then
+# T190: no grep and no pipeline in this guard. git's own pathspec exclusion does the
+# filtering — the idiom the rescue's own `git add` below already uses — and git's exit
+# status is CHECKED instead of swallowed by `|| true`.
+#   Why the PIPELINE had to go, not just the `|| true`: this script runs
+#   `set -uo pipefail` WITHOUT `-e` (line 17). When git fails it prints nothing, so
+#   the downstream filter selects nothing and exits 1, and zsh's pipefail reports the
+#   RIGHTMOST non-zero status — rc=1, byte-identical to a genuinely clean tree
+#   (measured: git rc=128 + filter rc=1 -> pipeline rc=1, pipestatus=(128 1)).
+#   A pipeline here therefore CANNOT distinguish "clean" from "git broke", which is
+#   the fail-open: the guard reported the reassuring answer when it had learned nothing.
+#   Why `:(top)`: a bare `-- .` pathspec is cwd-relative and would silently narrow the
+#   guard to a subdirectory; `:(top)` anchors both pathspecs at the repo root whatever
+#   cwd is, so the guard does not depend on the `cd "$REPO"` at line 49.
+#   Dropping grep also removes every byte-class, locale, binary-detection and
+#   grep-implementation question from a load-bearing guard (T189, P-58).
+DIRTY=$(git status --porcelain -- ':(top)' ':(top,exclude).softhouse/LOCK')
+GS_RC=$?
+if (( GS_RC != 0 )); then
+  log "ERROR: exit-protocol guard could not read git status (rc=$GS_RC) — REFUSING to conclude the tree is clean. No rescue attempted (git is not answering); treat this fire's deliverables as UNVERIFIED and inspect the tree by hand."
+elif [[ -n "$DIRTY" ]]; then
   log "WARN: exit-protocol violation — driver left uncommitted work:"
-  print -r -- "$DIRTY" | head -20
+  # No `| head` here either: under pipefail an early-exiting consumer poisons the
+  # pipeline status (measured rc=141 at 50k lines), which is P-57's hazard sitting
+  # inside the very guard this task is de-fanging. zsh slice, byte-identical output.
+  local -a DIRTY_LINES; DIRTY_LINES=("${(@f)DIRTY}")
+  print -rl -- "${(@)DIRTY_LINES[1,20]}"
   git add -A -- . ':!.softhouse/LOCK' >/dev/null 2>&1
   git -c user.name="Buyan" -c user.email="buya.vol@gmail.com" \
       commit -q -m "softhouse: rescue uncommitted deliverables left by fire $STAMP (exit-protocol violation)" >/dev/null 2>&1
