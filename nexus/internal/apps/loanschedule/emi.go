@@ -537,9 +537,17 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     grep -rn "setFutureUnrecognizedInterest" over
 //     fineract-progressive-loan/src/main and fineract-provider/src/main returns
 //     ProgressiveEMICalculator.java:1184 and :1246 and
-//     AdvancedPaymentScheduleTransactionProcessor.java:1995 and nothing else; the
+//     AdvancedPaymentScheduleTransactionProcessor.java:1995 and NOTHING ELSE --
+//     re-derived at T96, still 3 lines, and still 3 when the grep is widened to
+//     the whole checkout including every test and e2e tree. T78 added that "the
 //     only other mention of the name in main is a javadoc line,
-//     OverdueBalanceCorrection.java:26]:
+//     OverdueBalanceCorrection.java:26" and that clause is WRONG BOTH WAYS:
+//     :26 does not contain the SETTER name at all, so under this grep it is not
+//     a mention; and under the FIELD name, case-insensitively, the two main
+//     trees carry 28 mentions (31 checkout-wide), not one, of which exactly TWO
+//     are prose -- ProgressiveEMICalculator.java:1228 and
+//     OverdueBalanceCorrection.java:26. The THREE-SITE COUNT IS UNAFFECTED;
+//     only T78's parenthetical was false, and it is corrected here]:
 //
 //     W0 IS :1184 -- setFutureUnrecognizedInterest(scheduleModel.zero()), inside
 //     :1160's ifPresent. ALWAYS ZERO. Its sibling :1186 is the only
@@ -655,7 +663,29 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     that :1751 and :1752 open are unreachable under the closure test's OWN
 //     ANSWER, since exactly one DISBURSEMENT into an EMPTY model fires term 1 of
 //     :733-735, so :741 runs, :743 is never entered, and :1744-1759 -- where
-//     :1751 and :1752 live -- is never called. That is why this rule can stop
+//     :1751 and :1752 live -- is never called.
+//
+//     THAT LAST STEP IS AN INFERENCE, AND THE FACT IT RESTS ON WENT UNSTATED IN
+//     EVERY DRAFT THROUGH T88: :743 IS THE SOLE CALL SITE OF
+//     calculateEMIOnNewModelAndMerge IN THE ENTIRE PINNED TREE [VERIFIED at
+//     426a23544: a checkout-wide grep for the name over all 7,890 tracked files
+//     -- 6,586 of them Java, main and test and e2e alike -- returns EXACTLY TWO
+//     lines, the call :743 and the declaration :1744. The declaration is
+//     PRIVATE, so the method is not virtual, cannot be overridden, and cannot be
+//     reached through the Spring/CGLIB proxy the @Component class sits behind
+//     (:71-72), since a proxy intercepts no private method. No reflective route
+//     exists either: the name occurs in NO string literal anywhere in the tree,
+//     which the same grep would have found; fineract-progressive-loan contains
+//     no setAccessible, MethodHandles.lookup or ReflectionTestUtils; and the
+//     tree's ONE getDeclaredMethods() call filters on a "get" name prefix in an
+//     unrelated e2e step definition, WorkingCapitalLoanAccountStepDef.java:3484].
+//     Without that fact ":743 is never entered" licenses nothing whatever about
+//     :1744-1759, and a second caller could be added to the oracle with NONE of
+//     the five counts T78 wrote here moving -- which T89 raised as F-T89-4 and
+//     T96 closed. It is GRAPH 6 of part 9, and T96 drove that count RED on a
+//     throwaway copy of the pinned tree rather than assert that it could move.
+//
+//     That is why this rule can stop
 //     enumerating: the set of things able to choose a tillDate and a model state
 //     for :747 is FINITE, fixed by a grep-reproducible call-site count and by a
 //     Java enum, not by anyone's judgement about which shapes are exotic.
@@ -721,7 +751,10 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     copy that the whole W1 decision runs on is NOT isCopy(), and the only
 //     isCopy() model in the program is the one made at :1749 inside
 //     calculateEMIOnNewModelAndMerge (:1744-1759) -- which is the :743 ELSE
-//     BRANCH itself.
+//     BRANCH itself. "IN THE PROGRAM" IS EARNED BY THE SAME COUNT PART 4 SPENDS:
+//     :743 is that method's SOLE caller in the pinned tree, so there is no
+//     second route to :1749 [GRAPH 6; evidence in part 4]. Widen that count and
+//     this sentence stops being true at the same instant part 4's does.
 //
 //     A CORRECTION TO THE REVIEW THAT ORDERED THIS DRAFT; record it, do not drop
 //     it. T73's F-T73-2 states that "no deepCopy / copyWithoutPaidAmounts caller
@@ -894,27 +927,52 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     by reading, and each was right to. IT NEEDS A CAPTURE, not another
 //     paragraph.
 //
-//     PART 9 -- THE TRIPWIRE, COUNTING THE RIGHT GRAPHS. FIVE counts, each
-//     reproducible by one grep against the pinned checkout 426a23544. If ANY of
-//     them changes, the census above is no longer closed and this whole block is
-//     STALE.
+//     PART 9 -- THE TRIPWIRE, COUNTING THE RIGHT GRAPHS. SIX counts. Five share
+//     one command and the sixth has its own; both are written out here so a
+//     reader RE-RUNS them instead of trusting them. If ANY of the six changes,
+//     the census above is no longer closed and this whole block is STALE.
 //
-//     GRAPH 1, setFutureUnrecognizedInterest: 3 assignment sites in main --
-//     :1184, :1246, AdvancedPaymentScheduleTransactionProcessor.java:1995 -- plus
+//     THE COMMAND for graphs 1, 2, 3, 5 and 6, run from the ROOT of a 426a23544
+//     checkout and NOT inside one file, with the graph's identifier substituted:
+//     grep -rn "IDENTIFIER" . | wc -l
+//
+//     RUN IT AT THE ROOT; SCOPE IS PART OF THE DETECTOR. T78 and T88 stated
+//     graphs 2 and 3 as "grep the method name in the pinned file", and T96 broke
+//     both on a throwaway copy: widen :1221 or :718 from private to public and
+//     add a caller in ANOTHER file, and the file-scoped grep still reads 3 and 9
+//     and stays GREEN while the root-scoped one reads 4 and 10. Graph 1 was
+//     scoped narrower still -- to two of the checkout's twenty-eight src/main
+//     trees -- so a fourth write site in fineract-loan/src/main left it GREEN at
+//     3 while the root grep read 4. The COUNTS did not drift; the DETECTORS were
+//     narrower than the claims they guard, and the numbers below are identical
+//     at the root, so widening the scope costs nothing.
+//
+//     GRAPH 1, setFutureUnrecognizedInterest -> 3. Assignment sites :1184,
+//     :1246, AdvancedPaymentScheduleTransactionProcessor.java:1995 -- plus
 //     RepaymentPeriod.java:127 fed by :156, which only propagates.
 //
-//     GRAPH 2, calculateUnrecognizedInterestTillDateOnScheduleModelCopyAndDefer:
-//     2 callers (:392, :1217) and 1 declaration (:1221).
+//     GRAPH 2, calculateUnrecognizedInterestTillDateOnScheduleModelCopyAndDefer
+//     -> 3. 2 callers (:392, :1217) and 1 declaration (:1221).
 //
-//     GRAPH 3, calculateEMIValueAndRateFactors: the grep returns 9 lines -- 4
-//     callers (:149, :280, :317, :356), 1 declaration (:718), 2 dispatch lines
-//     (:722, :723), and 2 dispatch-target declarations (:703, :730) that share
-//     the name prefix.
+//     GRAPH 3, calculateEMIValueAndRateFactors -> 9 lines: 4 callers (:149,
+//     :280, :317, :356), 1 declaration (:718), 2 dispatch lines (:722, :723),
+//     and 2 dispatch-target declarations (:703, :730) that share the name
+//     prefix.
 //
-//     GRAPH 4, EmiChangeOperation.Action: 4 constants
-//     [EmiChangeOperation.java:32-37].
+//     GRAPH 4, EmiChangeOperation.Action -> 4 constants
+//     [EmiChangeOperation.java:32-37]. THIS ONE IS NOT A GREP, and part 9 used
+//     to claim all of them were. Its command, over that file, is:
+//     sed -n '/public enum Action {/,/^    }/p' FILE | sed 's|//.*||' |
+//     tr ',' '\n' | grep -cE '^[[:space:]]*[A-Z][A-Z0-9_]*[[:space:]]*$'
+//     TOKENISE IT; DO NOT MATCH WHOLE LINES. T96's first two attempts here were
+//     per-line regexes and BOTH went silently green on a legal Java edit: a
+//     fifth constant written WITHOUT a trailing comma (the last constant may
+//     omit it) read 4 under one, and two extra constants placed on ONE line read
+//     4 under the other. The form above strips comments, splits on commas and
+//     counts identifiers, and reads 5 and 6 on those two mutants.
 //
-//     GRAPH 5, calculateLastUnpaidRepaymentPeriodEMI: 17 call sites, of which
+//     GRAPH 5, calculateLastUnpaidRepaymentPeriodEMI -> 18 lines = 17 call sites
+//     plus the declaration :1160. Of the 17 call sites,
 //     :747 is this seam's, :247 is the (gamma) route, :1214 is the self-recursion
 //     of (ii), :1288 is the smoothing loop's trial copy, and THIRTEEN are
 //     post-origination operations, each with its own tillDate and none of them
@@ -923,13 +981,29 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     addCredit, :626 getOutstandingAmountsTillDate, :698
 //     recalculateScheduleModelTillDate, :868 changeDueDate, :879 and :937
 //     re-amortization, :1091 re-age attach, :2024 interest pause, :2129
-//     reAgeEqualAmortization. 13 + 4 = 17.
+//     reAgeEqualAmortization. 13 + 4 = 17, plus the declaration = 18.
 //
-//     [VERIFIED at T78: graphs 1, 2, 4 and 5 re-derived by grep at 426a23544.
-//     GRAPH 3'S COUNT IS VERIFIED AT T88, NOT T78 -- T78 recorded 7, it is 9. T73
-//     independently walked all sixteen non-:747 sites of graph 5 to their
-//     enclosing signatures and found ZERO citation defects across this block, so
-//     the list in graph 5 is inherited rather than rewritten.] :1288 is reached
+//     GRAPH 6, calculateEMIOnNewModelAndMerge -> 2: 1 call site (:743) and 1
+//     declaration (:1744). THIS IS THE COUNT THAT MAKES THE UNREACHABILITY
+//     ARGUMENT AIRTIGHT. Part 4 spends it to conclude that :1744-1759, and with
+//     it the :1751/:1752 cross-edges, is never called; part 5 term 4 spends it
+//     again for "the only isCopy() model in the program". T89 raised its absence
+//     as F-T89-4: a second caller of :1744 could be added to the pinned oracle
+//     and NONE of graphs 1 to 5 would move. T96 confirmed that by measurement,
+//     not by argument -- see the red demonstration below.
+//
+//     [VERIFIED at 426a23544. ALL SIX counts re-derived at T96 with the commands
+//     above -- 3, 3, 9, 4, 18, 2 -- and NONE of the five inherited ones had
+//     drifted; graph 6 is an ADDITION, not a correction. Provenance of the
+//     earlier work, kept because it records who got what wrong: graphs 1, 2, 4
+//     and 5 were first re-derived at T78; graph 3's 9 is T88's, T78 having
+//     recorded 7 until T79 refuted it; T78's parenthetical about
+//     OverdueBalanceCorrection.java:26 in part 1 is corrected at T96; and the
+//     stated SCOPES of graphs 1, 2 and 3 are widened at T96 for the reason given
+//     above. T73 independently walked all sixteen non-:747 sites of graph 5 to
+//     their enclosing signatures and found ZERO citation defects across this
+//     block, so the list in graph 5 is inherited rather than rewritten.] :1288
+//     is reached
 //     from :749 inside checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods
 //     (:1258-1309) with tillDate = relatedPeriodsFirstDueDate (:1278); T66 argues
 //     (a)-(g) carry over to that trial because the date equals
@@ -938,14 +1012,47 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //
 //     T72's tripwire was 13 + 1 + 2 = 16 and counted ONLY graph 5. It stayed
 //     green through T73's counterexample, because that counterexample's :1160
-//     entry is :747 and nothing in graph 5 moved. Counting one graph out of five
-//     is what made a stale detector look live.
+//     entry is :747 and nothing in graph 5 moved. Counting one graph -- of the
+//     six this block now names -- is what made a stale detector look live.
+//
+//     SEEN RED, NOT ASSERTED. A tripwire nobody has watched go red is not a
+//     tripwire. T96 exported the pinned tree (git archive 426a23544 into a
+//     throwaway directory), ran FOURTEEN edits against the copy and recorded
+//     which counts moved. Each count goes red on the edit it exists for: a
+//     fourth setFutureUnrecognizedInterest write, 1: 3 -> 4; a third caller of
+//     :1221, 2: 3 -> 4; a fifth call site of :718, 3: 9 -> 10; a fifth Action
+//     constant, 4: 4 -> 5; an eighteenth call of :1160, 5: 18 -> 19; and a
+//     SECOND CALLER of :1744 inserted in the flat-interest arm, 6: 2 -> 3. On
+//     that last mutant GRAPHS 1 TO 5 ALL READ GREEN -- F-T89-4 measured rather
+//     than argued. The count that catches it did not exist until T96.
+//
+//     WHAT THE SIX COUNTS STRUCTURALLY CANNOT SEE. Published, because a guard
+//     whose blind spots are unwritten gets believed past them.
+//
+//     THEY STAY GREEN ON A CANCELLING PAIR. Every one is a line count, so an
+//     addition offsets a deletion. Demonstrated twice at T96: a fifth call site
+//     into :718 together with ONE dispatch line renamed reads 9 on a file that
+//     then has FIVE call sites into :718 -- the four-site closure broken with
+//     every tripwire green; and a new :1160 call on the origination path
+//     together with deletion of the unrelated :2129 call reads 18. No scalar can
+//     close this. The defence is that the numbers here are DECOMPOSED -- graph 3
+//     is 4+1+2+2, not "9" -- so a reader who reproduces the LINES, and not only
+//     the total, sees the substitution. REPRODUCE THE LINES.
+//
+//     THEY SAY NOTHING WHILE THE PIN HOLDS. They compare a live checkout against
+//     426a23544, so they are constant by construction until someone bumps the
+//     pin. A pin bump is their only moment, and it is the moment to run them.
+//
+//     THEY DO NOT SEE THE PORT. Every one counts lines in the ORACLE. Nothing
+//     here fires on a change to this file, to the adapter or to GradedDomain --
+//     that is what part 6's closure test is for, and it is run by a person.
 //
 //     THIS BLOCK ESTABLISHES THE DISBURSEMENT ENTRY AT :149 WITH THE FLAG FALSE,
 //     AND NOTHING ELSE. What makes that closed is not the length of a list. It is
-//     that three censuses -- 3 write sites; 2 callers of :1221; 4 callers of :718
-//     carrying a 4-constant enum -- are each exhaustive by grep, and
-//     that widening any of them is a compile-visible edit to the pinned oracle.
+//     that four censuses -- 3 write sites; 2 callers of :1221; 4 callers of :718
+//     carrying a 4-constant enum; and 1 caller of :1744 -- are each exhaustive
+//     by grep, and that widening any of them is a compile-visible edit to the
+//     pinned oracle.
 //
 // So the memo does NOT cache the derivation of period i's state; it caches a pure
 // function of the model's CURRENT STORED FIELDS for periods 0..i. Every one of
