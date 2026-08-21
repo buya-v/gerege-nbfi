@@ -540,6 +540,16 @@ missing was the handoff that says "I am finished."** Discarding them would have 
 > agent id. And the next fire's first move on a rescue is to **read it before judging it**: the handoff is the
 > last thing a worker writes, so its absence says nothing whatever about how much of the work was done.
 
+**And then audit it, because a rescued document is a CLAIM, not a finding.** Re-running T107's review found its
+substance and its verdict entirely correct — and still turned up a `[VERIFIED: my own runs]` badge on a claim
+that **cannot be true on this host** (a silent-miss attributed to `ugrep`, which is not installed here, and whose
+`PATH` entry `/pkg/env/global/bin` does not exist), plus six factual errors in file counts, line ranges and
+attribution. The killed worker never got to the step where it would have checked its own tags.
+
+> **Corollary.** Rescue the file; do not rescue its badges. Every `[VERIFIED]` in rescued work is downgraded to
+> `[UNVERIFIED]` until somebody re-runs it — the tag asserts a measurement was made, and the one thing you know
+> about a killed worker is that it stopped partway through making them.
+
 <!-- LEARNED PATTERNS END -->
 
 ### Run 2026-08-17-run1-harness-schedule-poc — fire `20260819-170001` (local, oracle REACHABLE) — 2026-08-19

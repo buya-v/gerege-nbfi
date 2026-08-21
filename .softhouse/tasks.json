@@ -2244,9 +2244,9 @@
       "dependencies": [
         "T91"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "Raised by the driver, local fire 20260820-230001. NEEDS THE ORACLE. || local fire 20260821-080001: PREVIOUS FIRE'S WORKER WAS KILLED before signalling done. Its review document was rescued to softhouse/rescued-agent-a73334f89c8eb3d16-20260820-230001 and is SUBSTANTIALLY COMPLETE: 575 lines, VERDICT MICRO-FIX, all nine rulings the brief asked for answered, incl. 'zero of 42 promoted parity vectors depend on the unhardened gate'. Branch softhouse/T107-review-t91 re-pointed at the rescue. RE-DISPATCHED as T107b (opus, isolated worktree) to independently re-run the review's falsifiable claims and write the missing handoff - NOT to read it back and agree."
+      "note": "Raised by the driver, local fire 20260820-230001. NEEDS THE ORACLE. || local fire 20260821-080001: PREVIOUS FIRE'S WORKER WAS KILLED before signalling done. Its review document was rescued to softhouse/rescued-agent-a73334f89c8eb3d16-20260820-230001 and is SUBSTANTIALLY COMPLETE: 575 lines, VERDICT MICRO-FIX, all nine rulings the brief asked for answered, incl. 'zero of 42 promoted parity vectors depend on the unhardened gate'. Branch softhouse/T107-review-t91 re-pointed at the rescue. RE-DISPATCHED as T107b (opus, isolated worktree) to independently re-run the review's falsifiable claims and write the missing handoff - NOT to read it back and agree. || local fire 20260821-080001: DONE and ATTESTED on softhouse/T107-review-t91 (b70b295). VERDICT MICRO-FIX reaffirmed. THE RESCUE WAS VINDICATED AND ALSO AUDITED: 6 of 6 headline claims REPRODUCED from main's bytes - 'zero of 42' re-derived per vector (42/42 path_a_embeddable, 42/42 (19,HALF_UP), 7 capture_refs summing to 42, 7/7 declared digests equal bytes on disk), plus a STRONGER structural form T107 never ran (grep for curl|psql|8443|5432 over all seven producing recipes returns ZERO hits, so the Path B tenant gate is INAPPLICABLE to Path A, not merely absent); census 20 files / 23 call sites exact incl. T91's missed t55-negative-tests.sh:52; attack suite 6/13 -> 0/13 both interpreters, A2c verbatim; three of T107's four new attacks admit; verdict.sh vacuous pass driven red. ONE [VERIFIED] BADGE DOWNGRADED (C-7): T107's ugrep 7.5.0 -I silent-miss was tagged [VERIFIED: my own runs] but THERE IS NO ugrep ON THIS HOST and /pkg/env/global/bin (on PATH) does not exist; T91's own committed GUARDS-RED.txt records the 'ugrep is not on PATH here' fallback. Moved to [UNVERIFIED]. SIX further factual corrections (46 files not 47, eight printf lines not nine, :108-143/:165-216 not :97-207, the 25th transcript is T51's control not T44's, attest.py :95/:269 not :96/:270, only the three G-1 legs failed from a non-git export) - every conclusion survives all seven. ADDED MF-4: charges/bin/preconditions.sh:8 ships '17 capture scripts and attest.py' against a measured 20/23, a false sentence in a SHIPPED file 41 lines above the one MF-3 corrects. MF-1 and MF-2 driven RED AND GREEN in /tmp; explicitly established that MF-2 does NOT close N9 - only FU-1 does. IT ALSO CORRECTED THE DRIVER: this fire's state file proposed de-scoping T108 as overlapping its section 7; T107b refused, because section 7's BSD half is settled but the UGREP half is now OPEN, not closed."
     },
     {
       "id": "T108",
@@ -2264,9 +2264,9 @@
       "dependencies": [
         "T91"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "attempts": 0,
-      "note": "Raised by the driver, local fire 20260820-230001, from T91's non-reproduction of a T80 claim. NEEDS NO ORACLE - pure local tooling. Good cloud-fire work."
+      "note": "Raised by the driver, local fire 20260820-230001, from T91's non-reproduction of a T80 claim. NEEDS NO ORACLE - pure local tooling. Good cloud-fire work. || local fire 20260821-080001: KEPT IN SCOPE AND DISPATCHED. The driver proposed de-scoping this as overlapping T107b section 7; T107b REFUSED that and was right - the BSD half is now settled by two independent workers (T80 wrong, T91 right, BSD grep 2.6.0-FreeBSD matched 18/18) but the UGREP half is OPEN, not closed: there is no ugrep on this host at all, so T107's [VERIFIED] badge on it was downgraded to [UNVERIFIED] with ZERO committed evidence behind it. FOUR WORKERS HAVE NOW MADE FOUR DIFFERENT CLAIMS ABOUT ONE GREP. Brief widened accordingly: the answer space explicitly includes 'a tool not present on this host at all', every measurement gets a committed transcript with command + tool version + locale + hexdump, and 'T80 was simply wrong' is an acceptable finding."
     },
     {
       "id": "T109",
@@ -2368,7 +2368,7 @@
     {
       "id": "T114",
       "title": "INDEPENDENT review of T112 — the G-8 two-family rework",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -2379,12 +2379,12 @@
         ".softhouse/reviews/"
       ],
       "description": "Paired reviewer for T112. Re-derive the family A / family B split, the 22 family-B cells, the 761/0-cell-diff option-(a) result, the 12.65x ratio and the MNT 1.09 @ 3.6% @ 360-period claim from the oracle and from pinned source 426a23544 — never from T112's write-up. Verify T101's F-1/F-2/F-3 landed at EVERY restatement, not only the line T101 named (P-12/P-23, the corrections-leak route). Check the cited lines say what is claimed. Confirm the document neither decides nor implies a decision on options (b)/(c), which amend the graded domain and are hard user gates.",
-      "note": "Raised and dispatched by the driver, local fire 20260821-080001."
+      "note": "Raised and dispatched by the driver, local fire 20260821-080001. || local fire 20260821-080001: DONE on softhouse/T114-review-t112 (8f1f865). VERDICT MICRO-FIX. IT REFUSED THE DRIVER'S BRIEF ON A FALSE PREMISE (P-20) AND WAS RIGHT: the brief said option (a) is reachable for FAMILY A with zero port change (761 cells / 0 diffs). That is the FAMILY B measurement. Family A grades 2525 cells with exactly ONE cell diff per case (final row outstanding_principal_minor, e.g. expected 109 got 0) and stays FAIL UNCHANGED under the exemption - an invariant exemption cannot cure a PARITY diff. THIRD PROPAGATION of the driver's own error, twice AFTER main corrected it in 95ec06a. Driver has now fixed RESUME.md, program.json and T116 (whose SCOPE INVERTS: promote family B, not A). EVERYTHING REPRODUCED independently in integer/exact arithmetic: 687 swept / 312 A / 29 B / 346 clean; all ten discriminator rows on 341/341 cells; family A at 11 of 12 rates and EMPTY at 600.0%; MNT 0.23 / MNT 2.91 / 291÷23 = 12.65x; MNT 1.09 at 3.6% n=360 with 1.10 clean beside it; 761/0 and 2525/1; 198 divergent cells one per case; 106/106 predictions; 330/330; 320-held/22-refuted/ZERO ties; both canonical digests; and it CLOSED T112's own [UNVERIFIED] on the n=108 residual (+4.7986e-20). Every Fineract and Go citation checks out incl. 'the only three readers of getOutstandingLoanBalance() are :617, :1180, :1629'. RIG ATTACKED not read: T83's prediction checker driven RED THREE WAYS and probed for vacuity - it FAILS CLOSED on an empty measurement because P6 is an existence assertion over hard-coded rates, and its digests are compared to pinned literals, not printed. FINDINGS: F-T114-1 (P2) 'the gap is below the ulp of 1/2 at 19 significant digits' is FALSE on 4 of 29 family-B cells - exact-rational gaps of 2.43/1.62/1.08 ulp at n=104,105,106, contradicting the figure quoted one line above, so THE SUB-ULP EXPLANATION FAILS EXACTLY AT THE REGION'S LOWER BOUNDARY where family B's cause will be decided. F-T114-2 (P2) THE F-4 FIX ITSELF introduced a new unscoped claim (T84's largest n is 600 not 200) - P-23 landing inside the task assigned to close P-23. F-T114-3 (P2) eea5e80 is an EVIL MERGE: its tasks.json differs from BOTH parents and equals main@7d723b5, carrying T113 present in neither parent. F-T114-4 (P3) one true fact lost with the deleted block (T84's 12 boundary cells re-asked with different tenant ids and reversed order, 12/12 identical). F-T114-5/6 (P3) a live float() sort key at classify-boundary.py:102 contradicting its own header at :20, and closed_form_check.py:83 crashing on its all-clean path - both in EXECUTED probe sources, so record-do-not-edit. Deletion verified BY MERGING into current main (P-24): merged gates.md byte-identical to the branch, exactly one G-8 write-up, only conflict is tasks.json. T122 applies the findings."
     },
     {
       "id": "T115",
       "title": "Apply T107's MF-1..MF-3 to T91 before it merges",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "test",
@@ -2395,11 +2395,11 @@
         ".softhouse/capture/t91/"
       ],
       "description": "T107 reviewed T91 MICRO-FIX and specified three fixes in its §10 (9 lines, mechanical, no number and no money logic). All three are in the vacuous-pass class this run keeps finding (P-22) — notably verdict.sh PASSING VACUOUSLY ON CONTENT-FREE TRANSCRIPTS. Apply them on top of softhouse/T91-preconditions-copy and DRIVE MF-1 AND MF-2 RED before merge. Do not weaken any existing LC_ALL=C hardening.",
-      "note": "Raised by the driver, local fire 20260821-080001, from T107's §10. Blocked until T107b attests the review. Needs the oracle."
+      "note": "Raised by the driver, local fire 20260821-080001, from T107's §10. Blocked until T107b attests the review. Needs the oracle. || local fire 20260821-080001: DISPATCHED. Scope now FOUR micro-fixes - T107b added MF-4 (charges/bin/preconditions.sh:8 ships a false 17-vs-20/23 census in a SHIPPED file). MF-1/MF-2 already driven red+green by T107b in /tmp; T115 must drive them itself, not inherit. MUST NOT believe MF-2 closes N9 - only FU-1 does."
     },
     {
       "id": "T116",
-      "title": "G-8 option (a) — promote a family-A parity vector with an explicit invariant exemption",
+      "title": "G-8 option (a) — promote a FAMILY B parity vector with an explicit invariant exemption",
       "status": "pending",
       "executor": "agent",
       "model": "opus",
@@ -2411,8 +2411,8 @@
         ".softhouse/vectors/",
         ".softhouse/capture/"
       ],
-      "description": "THIS TASK CARRIES AN EXPLICIT PROMOTION MANDATE, which T112 correctly refused to take without one. T101 and T112 both confirm option (a) is reachable TODAY for family A with ZERO port change and NO DEC-n amendment: 761 cells, 0 cell diffs, FAIL without the exemption on two invariants, PASS with it. T83 STEP 5 found invariant_exemptions EXISTS and is honoured but is INERT on this divergence — settle that contradiction FIRST and report it, because if the mechanism really is inert then option (a) is not reachable and the gate write-up is wrong. Capture from the live oracle only; synthesise nothing. The exemption must be declared, narrow, and legible in the report — an exemption that silences an invariant without saying so is the vacuous-guard class (P-22). SCOPE: family A only. Options (b) and (c) amend the graded domain and are HARD USER GATES — do not touch them.",
-      "note": "Raised by the driver, local fire 20260821-080001, from T112 follow-up 4. NEEDS THE ORACLE. Gated on T114's verdict because promoting a vector on the strength of an unreviewed write-up is exactly the mistake this pipeline exists to prevent. Pair with an independent reviewer."
+      "description": "THIS TASK CARRIES AN EXPLICIT PROMOTION MANDATE, which T112 correctly refused to take without one. *** THE DRIVER'S FIRST VERSION OF THIS TASK NAMED THE WRONG FAMILY AND WOULD HAVE SENT YOU ON AN IMPOSSIBLE ERRAND. Corrected by T114, which refused the brief (P-20). *** The promotable family is B, NOT A. FAMILY B: option (a) is reachable TODAY with ZERO port change and NO DEC-n amendment - 761 cells, ZERO cell diffs, FAIL on two invariants without the exemption, PASS with it. That is the vector to promote. FAMILY A: NOT reachable by exemption - 2525 cells with exactly ONE cell diff per case (the final row's outstanding_principal_minor, e.g. expected 109 got 0), and it stays FAIL UNCHANGED under the exemption, because an invariant exemption cannot cure a PARITY diff. Do not attempt family A here. NOTE THE PARADOX AND STATE IT IN THE VECTOR'S OWN NOTE: family B is the family where the oracle genuinely does not amortize AND the Go port reproduces it cell for cell, so promoting it records a shape on which the port is faithful and the loan is not repaid. That is exactly why it is promotable and exactly why the exemption must be loud. T83 STEP 5 recorded invariant_exemptions as INERT on this divergence while T101/T112 graded it working - settle that contradiction FIRST and report it; the likely resolution is that T83 tested it against family A. Capture from the live oracle only; synthesise nothing. The exemption must be declared, narrow, and legible in the report - an exemption that silences an invariant without saying so is the vacuous-guard class (P-22). Options (b) and (c) amend the graded domain and are HARD USER GATES - do not touch them.",
+      "note": "Raised by the driver, local fire 20260821-080001, from T112 follow-up 4. NEEDS THE ORACLE. Gated on T114's verdict because promoting a vector on the strength of an unreviewed write-up is exactly the mistake this pipeline exists to prevent. Pair with an independent reviewer. || local fire 20260821-080001: FAMILY CORRECTED A->B after T114 refused the driver's brief. The A/B attribution has now been stated backwards by the driver THREE times, twice AFTER the correction landed on main in 95ec06a. Check gates.md:978 before restating it."
     },
     {
       "id": "T117",
@@ -2476,6 +2476,22 @@
       ],
       "description": "T110's F-T110-1..5 and their shared root, to be scoped by T119's ruling. conformance.sh's guard_no_float_in_vectors enumerates the store with `find -name '*.json' -type f` (RECURSIVE, no symlink follow) while LoadStore reads ONE LEVEL DEEP and matches the suffix bytewise. The two therefore disagree about what the store contains and no check compares their counts. Measured consequences, all silent: a symlinked context directory is skipped entirely (F-1), a nested subdirectory is skipped (F-2), UPPER.JSON is not a vector (F-3), case-only case_id variants both grade at 43/5623 (F-4), and NFC vs NFD Unicode-normalisation variants both grade AND RENDER IDENTICALLY in the report at 44/5670 (F-5). Fix: an explicit file census that REFUSES any .json under the store root the harness did not load, plus a case_id charset rule ([A-Za-z0-9._-]; all 47 committed ids are ASCII). DRIVE EVERY LEG RED (P-22) and show the legitimate 42/5576 store is untouched.",
       "note": "Raised by the driver, local fire 20260821-080001, from T110's F-T110-1..5. The census is the real fix - the individual five are symptoms of one disagreement. Sequence after T110+T119 and after T105 (same package). NEEDS THE ORACLE."
+    },
+    {
+      "id": "T122",
+      "title": "Apply T114's findings to the G-8 write-up and make T112 mergeable",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [
+        "T114"
+      ],
+      "files_hint": [
+        ".softhouse/gates.md"
+      ],
+      "description": "Applies T114's F-T114-1 (the sub-ulp claim is false on 4 of 29 family-B cells - exact-rational gaps of 2.43/1.62/1.08 ulp at n=104,105,106, so the explanation fails at the region's LOWER BOUNDARY where family B's cause will be decided; re-derive in exact rational arithmetic, never float - P-25), F-T114-2 (the F-4 fix itself introduced an unscoped claim; T84's largest n is 600 not 200), and F-T114-4 (restore the lost order-and-identity independence result: T84's 12 boundary cells re-asked with different tenant ids and reversed order, 12/12 identical). Records F-T114-5/6 without editing the executed probe sources. RESOLVES THE EVIL MERGE (F-T114-3): the branch must end with tasks.json EXACTLY as on current main. Verifies on a scratch merge into current main in a throwaway clone (P-24).",
+      "note": "Raised and dispatched by the driver, local fire 20260821-080001, from T114's MICRO-FIX verdict."
     }
   ]
 }

@@ -78,9 +78,18 @@ stated discriminator.** A compliant worker would have shipped each error into a 
   sums to **0.00** against a 0.01 disbursement and a forced recompute does **not** move the balance. **The Go
   port reproduces all 22 cell for cell — there is no divergence there at all.**
 
-**Two corrections to what was previously believed:** option **(a) is reachable today for Family A with ZERO
-port change** (761 cells, 0 cell diffs, FAIL without the exemption on two invariants, PASS with it); and the
-region reaches **MNT 1.09 at 3.6 % over 360 periods — an ordinary 30-year term**, not sub-MNT-0.25 dust.
+**Two corrections to what was previously believed:** option **(a) is reachable today for FAMILY B with ZERO
+port change** (761 cells, **0** cell diffs, FAIL without the exemption on two invariants, PASS with it) — and it
+is **NOT reachable for Family A**, which grades 2,525 cells with **one** cell diff per case (final row
+`outstanding_principal_minor`: expected 109, got 0) and stays **FAIL unchanged under the exemption**, because an
+invariant exemption cannot cure a *parity* diff. The region reaches **MNT 1.09 at 3.6 % over 360 periods — an
+ordinary 30-year term**, not sub-MNT-0.25 dust.
+
+> **The A/B attribution here was wrong three times and is the driver's own error each time.** It was written
+> backwards into a 66-line `gates.md` UPDATE block, corrected on `main` in `95ec06a`, restated backwards in
+> RESUME.md, and then restated backwards *again* in this fire's T114 brief and T116 task description — after the
+> correction was already on `main`. T114 refused the brief on it (P-20). If you are about to repeat the sentence,
+> check it against `gates.md:978` first.
 
 **(b) and (c) amend the graded domain — hard `user` gates. No agent has decided them and none may.**
 
