@@ -199,7 +199,7 @@
     },
     {
       "id": "T153",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "test",
@@ -211,11 +211,11 @@
       "dependencies": [],
       "title": "INDEPENDENT review of T149 — the promoted vector is NOT on main and must not be merged until this passes",
       "description": "T149 promoted .softhouse/vectors/loanschedule/T149-PATHB-TIE-1M162502pt50-12x21pt6pct.json on branch softhouse/T149-halfup-tie-vector and it is DELIBERATELY UNMERGED: the driver dispatched T149 without a paired reviewer, which is a plan-gate rule-1 violation the driver committed, and a promotion into the graded corpus is exactly what may not go in unreviewed. THE VECTOR IS THE FIRST IN THE STORE OBSERVED THROUGH THE RUNNING FINERACT SERVER -- all 42 others come from the in-process Path A seam -- so it is also the first time anything has graded the Go port against a live server response. That is why it is worth reviewing rather than dropping. RE-DERIVE, do not read and agree. (a) Re-observe the tie live on tenant gerege and confirm 20925.05 vs default's 20925.04 yourself. (b) T149 claims the Path B transcription is TRUE because it took the vector on product 9 (genuinely 30/360) rather than the canary's ACT/ACT product 11, and that it closed T76's [UNVERIFIED] on interestCalculationPeriodMethod by measurement -- verify BOTH, since T76's PROMOTE NOTHING ruling is what this promotion had to get past. (c) Re-run prove-redgreen.sh and confirm the three arms (42+M7 -> FAIL 3; 43+M7 -> FAIL 4 including the new vector; 43 unmutated -> PASS). (d) Confirm the vector's note says something TRUE -- T149 refused to write the false sentence its brief demanded (see P-13, patterns.md), so check what it wrote instead. (e) Confirm nexus/ is byte-identical to main and DEC-1/contract.go untouched. Then re-run conformance on a P-24 SCRATCH MERGE into current main and report the parity count.",
-      "note": "Raised by the driver, local fire 20260821-134344, to close its OWN plan-gate violation. NEEDS THE ORACLE."
+      "note": "Raised by the driver, local fire 20260821-134344, to close its OWN plan-gate violation. NEEDS THE ORACLE. || local fire 20260821-054355: DISPATCHED (wave 1), isolated worktree, model opus."
     },
     {
       "id": "A2-5",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "target": "test",
@@ -227,11 +227,11 @@
       "dependencies": [],
       "title": "A2 capture rig — the transport-failure handler cannot fire, and manifest verify is three kinds of blind",
       "description": "A2-4's D-2 and D-3, both P-22 class, both on main now and documented in .softhouse/capture/tierA-a2/DEFECTS-FOUND-BY-REVIEW.md. FIX BEFORE THE NEXT CAPTURE TASK USES THIS RIG. D-2 (the dangerous one): cap.sh's transport-failure handler is UNREACHABLE -- set -e terminates the shell at `code=$(curl ...)`, so rc=$?, the diagnostic and the `rm -f \"$OUT\"` never run. Driven against an unreachable endpoint, A STALE BODY AND STALE STATUS SURVIVE UNDER A FRESH captured-at-utc, which is exactly the artefact the rm -f exists to prevent. A capture rig that can silently present old bytes as newly observed is the worst failure mode available to this program. D-3: manifest.py verify (i) passes VACUOUSLY on empty input -- 'OK: 0 files match', exit 0; (ii) is NON-RECURSIVE, so a fabricated observation in out/<subdir>/ is laundered as verified; (iii) covers neither CAPTURE-PLAN.md (which carries all seven findings), nor the rig, nor itself -- the reviewer appended 'MNT rounds HALF_EVEN and money may be stored as float' to the analysis doc and verify stayed GREEN. DRIVE EVERY FIX RED BEFORE AND GREEN AFTER (P-22) and commit both transcripts. Make zero-files-inspected an ERROR, not a pass. Do NOT mutate any captured bytes under out/ -- they are immutable evidence and MANIFEST.sha256 covers them; extend coverage instead. Do NOT delete the attempt1-* artefacts: they are real oracle refusals whose RECIPES are false, and deleting evidence to make a rig look clean is worse than carrying it flagged.",
-      "note": "Raised by the driver from A2-4's D-2/D-3, local fire 20260821-134344."
+      "note": "Raised by the driver from A2-4's D-2/D-3, local fire 20260821-134344. || local fire 20260821-054355: DISPATCHED (wave 1), isolated worktree, model opus."
     },
     {
       "id": "A2-6",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "sonnet",
       "target": "docs",
@@ -243,7 +243,7 @@
       "dependencies": [],
       "title": "Apply A2-2's micro-fix and its three missing UNVERIFIED markers to the A2 behaviour doc",
       "description": "A2-2 returned MICRO-FIX on A2-1 with all five priorities CONFIRMED. Apply exactly its findings, no rewrite -- P-5 (gates-proposed-answers.md) forbids a third draft of a prose item. F-4 (the micro-fix): JournalEntryType.java is cited as being in fineract-accounting; it is in fineract-core. Content and line numbers are correct. THIS IS THE ONE CITATION SLICE A1 IS EXPLICITLY TOLD TO FOLLOW, and it is itself an instance of A2-1's own headline finding B-1 (the slice's core types are not in the slice). F-1: replace A2-1's MECHANISM for TrialBalance.closing_balance -- it is written AT INSERT from SUM(je.amount), the UNSIGNED total, NOT by the accumulator at Tasklet:119-127, which is gated on `closing_balance IS NULL` against a NOT NULL column and whose only NULL-producing constructor has ZERO CALLERS. Mark that accumulator as unreachable dead code. F-2: the debit/credit grep claim is false as stated (zero hits in the whole glaccount path; the only in-scope hits are GOODWILL_CREDIT identifiers) -- the CONCLUSION survives a fortiori, so correct the evidence, not the conclusion. F-5: add the three missing [UNVERIFIED] markers -- F-1's mechanism, F-3's Spring Data null-argument question (leave it CONTESTED; A2-2 traced every writer of acc_product_mapping and proved NO money impact either way), and the savings charge path's unguarded null chargeId. Do not restructure the document and do not re-argue anything A2-2 confirmed.",
-      "note": "Raised by the driver from A2-2's F-1..F-5, local fire 20260821-134344."
+      "note": "Raised by the driver from A2-2's F-1..F-5, local fire 20260821-134344. || local fire 20260821-054355: DISPATCHED (wave 1), isolated worktree, model sonnet."
     }
   ],
   "cross_corroboration": {
