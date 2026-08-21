@@ -1,0 +1,98 @@
+PRE  shim sha256 7f53f33b6c7a39cd   POST shim sha256 829fe1181fe2641b
+rig sha256 (both exports) 7c68f2dcc539a276 / 7c68f2dcc539a276
+
+==================================================================
+MF-2 PREMISE re-measured: exit statements in the hardened rig
+==================================================================
+   234:  exit 1
+   237:exit 0
+   total 'exit' statements: 2
+   function definitions in the rig:
+      57:ok()   { printf '  PASS  %s\n' "$1"; }
+      58:bad()  { printf '  FAIL  %s\n' "$1" >&2; fails=$((fails+1)); }
+
+==================================================================
+MF-2 RED — the rig EMPTIED
+==================================================================
+--- pre, DIRECT call
+    exit=0  stdout bytes=0  stderr bytes=0
+--- pre, through bin/run-preconditions.sh (the T40 wrapper)
+    exit=0  transcript bytes=0
+    PRECONDITIONS_EXIT=0
+
+--- post, DIRECT call
+    exit=2  stdout bytes=0  stderr bytes=158
+    stderr: PRECONDITIONS NOT RUN: the rig at '/tmp/T138-mf2-empty-post/.softhouse/capture/pathb/t36/preconditions.sh' returned without exiting — nothing was asserted.
+--- post, through bin/run-preconditions.sh (the T40 wrapper)
+    exit=2  transcript bytes=158
+    PRECONDITIONS_EXIT=2
+    transcript: PRECONDITIONS NOT RUN: the rig at '/tmp/T138-mf2-empty-post/.softhouse/capture/pathb/t36/preconditions.sh' returned without exiting — nothing was asserted.
+
+==================================================================
+MF-2 GREEN — five real callers, pre vs post, against the LIVE oracle
+==================================================================
+--- tree: pre
+    C1 wrapper/gerege                 22/0/0
+    C2 direct/default/no CANARY_REQ   16/5/1
+    C3 direct/t55-no-such-tenant      13/9/1
+       'has no row in fineract_tenants.tenants' occurrences: 1
+    C4 COPY shim/default              17/5/1
+    C5 wrapper from /tmp              22/0/0
+
+--- tree: post
+    C1 wrapper/gerege                 22/0/0
+    C2 direct/default/no CANARY_REQ   16/5/1
+    C3 direct/t55-no-such-tenant      13/9/1
+       'has no row in fineract_tenants.tenants' occurrences: 1
+    C4 COPY shim/default              17/5/1
+    C5 wrapper from /tmp              22/0/0
+
+--- cell-for-cell diff of the five transcripts, pre vs post (headers aside):
+    c1: differs —
+       20c20
+       <   PASS  canary request pinned by DIGEST COMPARISON: computed sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 == pinned sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 (/tmp/T138-mf2-green-pre/.softhouse/capture/pathb/t22-audit/req/calc-pmode2-gerege.json) — the exact half-cent tie, 1,162,502.50 x 0.018 = 20,925.045
+       ---
+       >   PASS  canary request pinned by DIGEST COMPARISON: computed sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 == pinned sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 (/tmp/T138-mf2-green-post/.softhouse/capture/pathb/t22-audit/req/calc-pmode2-gerege.json) — the exact half-cent tie, 1,162,502.50 x 0.018 = 20,925.045
+    c2: byte-identical
+    c3: differs —
+       20c20
+       <   PASS  canary request pinned by DIGEST COMPARISON: computed sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 == pinned sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 (/tmp/T138-mf2-green-pre/.softhouse/capture/pathb/t22-audit/req/calc-pmode2-gerege.json) — the exact half-cent tie, 1,162,502.50 x 0.018 = 20,925.045
+       ---
+       >   PASS  canary request pinned by DIGEST COMPARISON: computed sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 == pinned sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 (/tmp/T138-mf2-green-post/.softhouse/capture/pathb/t22-audit/req/calc-pmode2-gerege.json) — the exact half-cent tie, 1,162,502.50 x 0.018 = 20,925.045
+    c4: differs —
+       20c20
+       <   PASS  canary request pinned by DIGEST COMPARISON: computed sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 == pinned sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 (/tmp/T138-mf2-green-pre/.softhouse/capture/pathb/t22-audit/req/calc-pmode2-gerege.json) — the exact half-cent tie, 1,162,502.50 x 0.018 = 20,925.045
+       ---
+       >   PASS  canary request pinned by DIGEST COMPARISON: computed sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 == pinned sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 (/tmp/T138-mf2-green-post/.softhouse/capture/pathb/t22-audit/req/calc-pmode2-gerege.json) — the exact half-cent tie, 1,162,502.50 x 0.018 = 20,925.045
+    c5: differs —
+       20c20
+       <   PASS  canary request pinned by DIGEST COMPARISON: computed sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 == pinned sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 (/tmp/T138-mf2-green-pre/.softhouse/capture/pathb/t22-audit/req/calc-pmode2-gerege.json) — the exact half-cent tie, 1,162,502.50 x 0.018 = 20,925.045
+       ---
+       >   PASS  canary request pinned by DIGEST COMPARISON: computed sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 == pinned sha256 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154 (/tmp/T138-mf2-green-post/.softhouse/capture/pathb/t22-audit/req/calc-pmode2-gerege.json) — the exact half-cent tie, 1,162,502.50 x 0.018 = 20,925.045
+
+==================================================================
+N9 — the rig at its path REPLACED by the pre-hardening bytes,
+     measured THROUGH the POST-MF-2 shim
+==================================================================
+   rig now sha256 9256b881153d3deab2013cb9d95fae95258b68b398cdf22e5da9a8a416a46b54
+   (T91 records the pre-hardening blob's sha256 as 9256b881153d3dea…)
+   shim is the POST-MF-2 one: 1 MF-2 marker(s) present
+   EXIT=0
+     PASS  MNT seeded with decimal_places=2 (ISO 4217 496, minor unit 2)
+     PASS  MNT enabled for the tenant
+   
+   ALL PRECONDITIONS HOLD — tenant 'gerege' at MathContext(19, HALF_UP), PostgreSQL only.
+     PASS  effective rounding mode canary: period-1 interest 20925.05 (= HALF_UP)
+
+==================================================================
+N10 — the shim reached through a SYMLINK placed in a foreign tree,
+      measured THROUGH the POST-MF-2 shim
+==================================================================
+   symlink: /tmp/T138-n10/evil/charges/bin/preconditions.sh -> /tmp/T138-mf2-post/.softhouse/capture/charges/bin/preconditions.sh
+   the shim resolves its rig as $(dirname $0)/../../pathb/t36/preconditions.sh
+   EXIT=0
+     PASS  effective rounding mode canary: period-1 interest 20925.05 (= HALF_UP)
+   ALL PRECONDITIONS HOLD — tenant 'gerege' at MathContext(19, HALF_UP), PostgreSQL only.
+
+=== SUMMARY
+N9  exit was printed above; N10 exit was printed above.

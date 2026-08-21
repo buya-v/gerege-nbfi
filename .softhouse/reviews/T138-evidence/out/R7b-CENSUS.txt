@@ -1,0 +1,81 @@
+NET 1 — every .sh/.py line under .softhouse/capture/ mentioning 'preconditions.sh',
+        excluding the t91 harness (a red/green rig, not a pipeline caller):
+   raw mention lines: 64
+
+NET 2 — restrict to lines that are EXECUTABLE invocations of the charges shim
+        or of the T40 wrapper.  Comments (^#), grep -v exclusions and
+        provenance strings are excluded and listed separately.
+
+--- (a) DIRECT invocations of charges/bin/preconditions.sh:
+    charges/bin/attest.py:269:                    'preconditions_script': 't36/preconditions.sh',
+    charges/bin/run-preconditions.sh:9:  sh "$W/.softhouse/capture/charges/bin/preconditions.sh" gerege > "$OUT" 2>&1
+    charges/bin/t51-negative.sh:21:sh "$CH/bin/preconditions.sh" default > "$N/n1-preconditions-default.txt" 2>&1
+    leapboundary/bin/t55-negative-tests.sh:52:    sh "$W/.softhouse/capture/charges/bin/preconditions.sh" t55-no-such-tenant
+    pathb/t36/attest.py:369:                    'preconditions_script': 't36/preconditions.sh',
+
+--- python callers (they build the argv list, not a shell line):
+    charges/bin/attest.py:90:pre = subprocess.run('CANARY_REQ=%s sh %s %s' % (canary, os.path.join(HERE, 'preconditions.sh'), TENANT),
+    charges/bin/attest.py:269:                    'preconditions_script': 't36/preconditions.sh',
+    charges/bin/attest-t40.py:91:pre = subprocess.run('CANARY_REQ=%s sh %s %s' % (canary, os.path.join(HERE, 'preconditions.sh'), TENANT),
+    charges/bin/attest-t40.py:305:                    'preconditions_script': 'bin/preconditions.sh (copied verbatim from '
+    charges/bin/attest-t40.py:306:                                            'pathb/t36/preconditions.sh)',
+
+--- the 5 sites T115 names, quoted verbatim from the tree:
+    charges/bin/run-preconditions.sh:9             sh "$W/.softhouse/capture/charges/bin/preconditions.sh" gerege > "$OUT" 2>&1
+    charges/bin/attest.py:90                       pre = subprocess.run('CANARY_REQ=%s sh %s %s' % (canary, os.path.join(HERE, 'preconditions.sh'), TENANT),
+    charges/bin/attest-t40.py:91                   pre = subprocess.run('CANARY_REQ=%s sh %s %s' % (canary, os.path.join(HERE, 'preconditions.sh'), TENANT),
+    charges/bin/t51-negative.sh:21                 sh "$CH/bin/preconditions.sh" default > "$N/n1-preconditions-default.txt" 2>&1
+    leapboundary/bin/t55-negative-tests.sh:52      sh "$W/.softhouse/capture/charges/bin/preconditions.sh" t55-no-such-tenant
+
+--- the exclusions T115 names, quoted verbatim:
+    charges/bin/selfcheck.sh:15                    | grep -v 'bin/preconditions.sh' | grep -v 'bin/attest' | grep -v 'bin/selfcheck.sh')
+    charges/bin/attest-t40.py:305                  'preconditions_script': 'bin/preconditions.sh (copied verbatim from '
+
+--- (b) WRAPPER invocations (run-preconditions.sh), executable lines only:
+    actualactual/src/pathb-capture.sh:37:sh "$CH/bin/run-preconditions.sh" "$O/preconditions.txt" > /dev/null || {
+    charges/bin/capture.sh:10:sh "$CH/bin/run-preconditions.sh" "$O/preconditions.txt" > /dev/null || {
+    charges/bin/control.sh:18:sh "$CH/bin/run-preconditions.sh" "$O/preconditions.txt" > /dev/null || {
+    charges/bin/create-charges.sh:11:sh "$CH/bin/run-preconditions.sh" "$O/preconditions.txt" > /dev/null || {
+    charges/bin/create-charges2.sh:8:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-pass2.txt" > /dev/null || {
+    charges/bin/t46-capture.sh:18:sh "$CH/bin/run-preconditions.sh" "$O/preconditions.txt" > /dev/null || {
+    charges/bin/t48-capture.sh:28:sh "$CH/bin/run-preconditions.sh" "$O/preconditions.txt" > /dev/null || {
+    charges/bin/t48-determinism.sh:14:sh "$CH/bin/run-preconditions.sh" "$R/preconditions.txt" > /dev/null || {
+    charges/bin/t51-capture.sh:195:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-after.txt" > /dev/null || {
+    charges/bin/t51-capture.sh:29:sh "$CH/bin/run-preconditions.sh" "$O/preconditions.txt" > /dev/null || {
+    charges/bin/t51-capture2.sh:234:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-pass2-after.txt" > /dev/null || {
+    charges/bin/t51-capture2.sh:28:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-pass2.txt" > /dev/null || {
+    charges/bin/t51-capture3.sh:20:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-pass3.txt" > /dev/null || {
+    charges/bin/t51-capture4.sh:22:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-pass4.txt" > /dev/null || {
+    charges/bin/t51-capture5.sh:120:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-pass5-after.txt" > /dev/null || {
+    charges/bin/t51-capture5.sh:21:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-pass5.txt" > /dev/null || {
+    charges/bin/t51-capture6.sh:20:sh "$CH/bin/run-preconditions.sh" "$O/preconditions-pass6.txt" > /dev/null || {
+    leapboundary/bin/t55-capture.sh:56:sh "$W/.softhouse/capture/charges/bin/run-preconditions.sh" "$O/preconditions.txt" > /dev/null || {
+    ---- wrapper call SITES: 18
+    ---- wrapper call FILES: 15
+
+=== TOTALS (T138's own count)
+    direct sites: 5   direct files: 5
+    wrapper sites: 18   wrapper files: 15
+    union of files:
+       actualactual/src/pathb-capture.sh
+       charges/bin/attest-t40.py
+       charges/bin/attest.py
+       charges/bin/capture.sh
+       charges/bin/control.sh
+       charges/bin/create-charges.sh
+       charges/bin/create-charges2.sh
+       charges/bin/run-preconditions.sh
+       charges/bin/t46-capture.sh
+       charges/bin/t48-capture.sh
+       charges/bin/t48-determinism.sh
+       charges/bin/t51-capture.sh
+       charges/bin/t51-capture2.sh
+       charges/bin/t51-capture3.sh
+       charges/bin/t51-capture4.sh
+       charges/bin/t51-capture5.sh
+       charges/bin/t51-capture6.sh
+       charges/bin/t51-negative.sh
+       leapboundary/bin/t55-capture.sh
+       leapboundary/bin/t55-negative-tests.sh
+    ---- DISTINCT FILES: 20
+    ---- TOTAL SITES:    23
