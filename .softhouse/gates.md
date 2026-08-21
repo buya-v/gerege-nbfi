@@ -10,6 +10,30 @@ Gate classes that always stop:
 
 ---
 
+## GATE REGISTER — the authoritative state of every gate id
+
+**Read this table first.** The prose sections below are the *raising and deciding record*, appended
+chronologically and never rewritten, so several gate ids appear more than once and an early block can carry a
+state line that a later block supersedes. **When a section heading and this table disagree, this table is
+right** — it is rebuilt from `.softhouse/program.json.gates_pending` at every fire that touches a gate.
+Built by local fire `20260821-125942`.
+
+| Gate | Class | State | Decided by / blocking on | Where the LIVE block is |
+|---|---|---|---|---|
+| **G-1** | CONTRACT | **CLOSED — RATIFIED** | local fire `20260819-140003` | `## G-1 · CLOSED — RATIFIED` (the `## Open` heading immediately below is STALE for G-1) |
+| **G-2** | POLICY | **CLOSED — DECLINED** | local fire `20260820-080002`, `chosen_by: agent` | T2 stays permanently parked |
+| **G-3** | ENGINEERING | **CLOSED — Option A** | local fire `20260820-110001`, `chosen_by: agent` | `## G-3 — CLOSED (Option A)`. The earlier `## G-3 raised` block is the raising record only. |
+| **G-4** | ENGINEERING | **OPEN — HARD `user` GATE** | Buyan. Amends a **ratified** DEC-n, which no agent may do (CLAUDE.md § Answering gates). | `## G-4` |
+| **G-5** | ENGINEERING | **OPEN — HARD `user` GATE** | Buyan. Amends a **ratified** DEC-n. | `## G-5` |
+| **G-6** | PRODUCT | **CLOSED — ACCEPTED** | local fire `20260820-140000`, `chosen_by: agent`. Authorises **no cutover**. | `## G-6` |
+| **G-7** | — | **NEVER ALLOCATED** | — | The id was skipped. Nothing is missing; do not go looking for it. |
+| **G-8** | ENGINEERING | **OPEN** | Not yet asking for a decision. Options (b) and (c) would narrow the graded domain → hard `user` gate; (a) may not. | `## G-8 — TWO phenomena at the rounding floor…`. `## G-8-NOTICE` is SUPERSEDED history. |
+| **G-9** | PRODUCT | **CLOSED — DECIDED** | local fire `20260821-054355`, `chosen_by: agent`. Carries a `driver_error_correction`: the decision stands, the driver's stated *consequence* was false. | `## G-9 — CLOSED` |
+| **G-10** | ENGINEERING | **OPEN — driver recommends (c), Buyan may overrule** | Blocks nothing today. | `## G-10 — REFINED…` |
+
+**Open right now: G-4, G-5, G-8, G-10.** Of those, **G-4 and G-5 are hard `user` gates** (each amends a
+ratified DEC-n); **G-8 and G-10 block no work today** and the driver has recorded a recommendation on each.
+
 ## Open
 
 ### G-1 · CONTRACT · ratify DEC-1 — **NOT YET ANSWERABLE**
@@ -553,7 +577,7 @@ licence facts. None is in Run 1's path.
 
 ---
 
-## G-3 — **ENGINEERING** — may `gofmt` rewrite the ratified `contract.go`? *(OPEN — driver-decidable, deliberately not self-answered)*
+## G-3 raised — **ENGINEERING** — may `gofmt` rewrite the ratified `contract.go`? *(SUPERSEDED — **CLOSED, Option A**, in the `## G-3 — CLOSED` section below; this block is the raising record, not the state)*
 
 **Raised by** local fire `20260819-170001`, immediately after the first ever compile of the ratified artefact.
 **Context** `tier0-harness-schedule-poc`. **Blocks** nothing — every task proceeds under the standing
@@ -2173,7 +2197,7 @@ why trap (3) requires the Go port to carry classification **on the entry**.
 
 ---
 
-## G-8 — NOTICE, local fire `20260821-134344`: T117's measurement moves the bound. **REVIEWED — T159 APPROVED; the number then DOUBLED; T170 has since APPLIED all of this to the G-8 write-up above.**
+## G-8-NOTICE (SUPERSEDED — historical record; the LIVE G-8 section is above) — local fire `20260821-134344`: T117's measurement moves the bound. **REVIEWED — T159 APPROVED; the number then DOUBLED; T170 has since APPLIED all of this to the G-8 write-up above.**
 
 **Status of this block, as of T170: SUPERSEDED BY THE SECTION ABOVE, and kept as the record of how the
 measurement moved.** Everything in it that was still true has been folded into G-8 itself — the FULL vs
