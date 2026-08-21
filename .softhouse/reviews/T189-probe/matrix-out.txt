@@ -1,0 +1,860 @@
+live line 224 (extracted): DIRTY=$(git status --porcelain | LC_ALL=C grep -av '^?? \.softhouse/LOCK$' || true)
+extracted pattern bytes  : 0000000    ^   ?   ?       \   .   s   o   f   t   h   o   u   s   e   /
+0000020    L   O   C   K   $                                            
+################ ARM 1 â€” /usr/bin/grep (BSD), live flags -av, LC_ALL=C (== the live line) ############
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=e-clean.txt
+  exit=0  stdout_bytes=40  stdout_lines=2
+  stdout:
+    |  M real_change.go
+    | ?? new_deliverable.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=e-clean.txt
+  exit=0  stdout_bytes=40  stdout_lines=2
+  stdout:
+    |  M real_change.go
+    | ?? new_deliverable.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=e-clean.txt
+  exit=0  stdout_bytes=40  stdout_lines=2
+  stdout:
+    |  M real_change.go
+    | ?? new_deliverable.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=a-utf8-e2.txt
+  exit=0  stdout_bytes=63  stdout_lines=3
+  stdout:
+    | zzz clean line before
+    |  M poison_â_after.go
+    | ?? another_after.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=a-utf8-e2.txt
+  exit=0  stdout_bytes=63  stdout_lines=3
+  stdout:
+    | zzz clean line before
+    |  M poison_â_after.go
+    | ?? another_after.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=a-utf8-e2.txt
+  exit=0  stdout_bytes=63  stdout_lines=3
+  stdout:
+    | zzz clean line before
+    |  M poison_â_after.go
+    | ?? another_after.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=c-fffe.txt
+  exit=0  stdout_bytes=40  stdout_lines=3
+  stdout:
+sed: RE error: illegal byte sequence
+    | keep-me
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=c-fffe.txt
+  exit=0  stdout_bytes=40  stdout_lines=3
+  stdout:
+sed: RE error: illegal byte sequence
+    | keep-me
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=c-fffe.txt
+  exit=0  stdout_bytes=40  stdout_lines=3
+  stdout:
+sed: RE error: illegal byte sequence
+    | keep-me
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=f-ff.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid ÿ poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=f-ff.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid ÿ poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=f-ff.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid ÿ poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=g-80.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid € poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=g-80.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid € poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=g-80.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid € poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=h-c0.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid À poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=h-c0.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid À poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=h-c0.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid À poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=d-lockline.txt
+  exit=0  stdout_bytes=38  stdout_lines=2
+  stdout:
+    | ?? .softhouse/LOCKâ
+    |  M real_change.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=d-lockline.txt
+  exit=0  stdout_bytes=38  stdout_lines=2
+  stdout:
+    | ?? .softhouse/LOCKâ
+    |  M real_change.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=d-lockline.txt
+  exit=0  stdout_bytes=38  stdout_lines=2
+  stdout:
+    | ?? .softhouse/LOCKâ
+    |  M real_change.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=b-nul.txt
+  exit=0  stdout_bytes=26  stdout_lines=3
+  stdout:
+Assertion failed: (advance > 0), function substitute, file process.c, line 462.
+    | keep-me
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=b-nul.txt
+  exit=0  stdout_bytes=26  stdout_lines=3
+  stdout:
+Assertion failed: (advance > 0), function substitute, file process.c, line 462.
+    | keep-me
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=b-nul.txt
+  exit=0  stdout_bytes=26  stdout_lines=3
+  stdout:
+Assertion failed: (advance > 0), function substitute, file process.c, line 462.
+    | keep-me
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=i-blob.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+Assertion failed: (advance > 0), function substitute, file process.c, line 462.
+    | keep-me
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=i-blob.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+Assertion failed: (advance > 0), function substitute, file process.c, line 462.
+    | keep-me
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=i-blob.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+Assertion failed: (advance > 0), function substitute, file process.c, line 462.
+    | keep-me
+  stderr:
+################ ARM 2 â€” /usr/bin/grep (BSD), UNhardened flags -v, LC_ALL=C.UTF-8 (== pre-T157 line) ############
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=e-clean.txt
+  exit=0  stdout_bytes=40  stdout_lines=2
+  stdout:
+    |  M real_change.go
+    | ?? new_deliverable.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=e-clean.txt
+  exit=0  stdout_bytes=40  stdout_lines=2
+  stdout:
+    |  M real_change.go
+    | ?? new_deliverable.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=e-clean.txt
+  exit=0  stdout_bytes=40  stdout_lines=2
+  stdout:
+    |  M real_change.go
+    | ?? new_deliverable.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=a-utf8-e2.txt
+  exit=0  stdout_bytes=63  stdout_lines=3
+  stdout:
+    | zzz clean line before
+    |  M poison_â_after.go
+    | ?? another_after.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=a-utf8-e2.txt
+  exit=0  stdout_bytes=63  stdout_lines=3
+  stdout:
+    | zzz clean line before
+    |  M poison_â_after.go
+    | ?? another_after.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=a-utf8-e2.txt
+  exit=0  stdout_bytes=63  stdout_lines=3
+  stdout:
+    | zzz clean line before
+    |  M poison_â_after.go
+    | ?? another_after.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=c-fffe.txt
+  exit=0  stdout_bytes=40  stdout_lines=3
+  stdout:
+sed: RE error: illegal byte sequence
+    | keep-me
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=c-fffe.txt
+  exit=0  stdout_bytes=40  stdout_lines=3
+  stdout:
+sed: RE error: illegal byte sequence
+    | keep-me
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=c-fffe.txt
+  exit=0  stdout_bytes=40  stdout_lines=3
+  stdout:
+sed: RE error: illegal byte sequence
+    | keep-me
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=f-ff.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid ÿ poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=f-ff.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid ÿ poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=f-ff.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid ÿ poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=g-80.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid € poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=g-80.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid € poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=g-80.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid € poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=h-c0.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid À poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=h-c0.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid À poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=h-c0.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid À poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=d-lockline.txt
+  exit=0  stdout_bytes=38  stdout_lines=2
+  stdout:
+    | ?? .softhouse/LOCKâ
+    |  M real_change.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=d-lockline.txt
+  exit=0  stdout_bytes=38  stdout_lines=2
+  stdout:
+    | ?? .softhouse/LOCKâ
+    |  M real_change.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=d-lockline.txt
+  exit=0  stdout_bytes=38  stdout_lines=2
+  stdout:
+    | ?? .softhouse/LOCKâ
+    |  M real_change.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=b-nul.txt
+  exit=0  stdout_bytes=134  stdout_lines=1
+  stdout:
+    | Binary file /Users/buv/gerege-nbfi/.claude/worktrees/agent-a22be659ba8ce2970/.softhouse/reviews/T189-probe/fixtures/b-nul.txt matches
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=b-nul.txt
+  exit=0  stdout_bytes=37  stdout_lines=1
+  stdout:
+    | Binary file (standard input) matches
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=b-nul.txt
+  exit=0  stdout_bytes=37  stdout_lines=1
+  stdout:
+    | Binary file (standard input) matches
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=i-blob.txt
+  exit=0  stdout_bytes=135  stdout_lines=1
+  stdout:
+    | Binary file /Users/buv/gerege-nbfi/.claude/worktrees/agent-a22be659ba8ce2970/.softhouse/reviews/T189-probe/fixtures/i-blob.txt matches
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=i-blob.txt
+  exit=0  stdout_bytes=37  stdout_lines=1
+  stdout:
+    | Binary file (standard input) matches
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=i-blob.txt
+  exit=0  stdout_bytes=37  stdout_lines=1
+  stdout:
+    | Binary file (standard input) matches
+  stderr:
+################ ARM 3 â€” claude-as-ugrep wrapper (-I hard-coded), UNhardened flags -v ############
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=e-clean.txt
+  exit=0  stdout_bytes=40  stdout_lines=2
+  stdout:
+    |  M real_change.go
+    | ?? new_deliverable.go
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=e-clean.txt
+  exit=0  stdout_bytes=40  stdout_lines=2
+  stdout:
+    |  M real_change.go
+    | ?? new_deliverable.go
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=e-clean.txt
+  exit=0  stdout_bytes=40  stdout_lines=2
+  stdout:
+    |  M real_change.go
+    | ?? new_deliverable.go
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=a-utf8-e2.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=a-utf8-e2.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=a-utf8-e2.txt
+  exit=0  stdout_bytes=63  stdout_lines=3
+  stdout:
+    | zzz clean line before
+    |  M poison_â_after.go
+    | ?? another_after.go
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=c-fffe.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=c-fffe.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=c-fffe.txt
+  exit=0  stdout_bytes=40  stdout_lines=3
+  stdout:
+sed: RE error: illegal byte sequence
+    | keep-me
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=f-ff.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=f-ff.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=f-ff.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid ÿ poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=g-80.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=g-80.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=g-80.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid € poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=h-c0.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=h-c0.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=h-c0.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid À poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=d-lockline.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=d-lockline.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=d-lockline.txt
+  exit=0  stdout_bytes=38  stdout_lines=2
+  stdout:
+    | ?? .softhouse/LOCKâ
+    |  M real_change.go
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=b-nul.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=b-nul.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=b-nul.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=i-blob.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=redir FIXTURE=i-blob.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=pipe FIXTURE=i-blob.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+################ ARM 4 â€” claude-as-ugrep wrapper, LIVE flags -av, LC_ALL=C ############
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=e-clean.txt
+  exit=0  stdout_bytes=40  stdout_lines=2
+  stdout:
+    |  M real_change.go
+    | ?? new_deliverable.go
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=e-clean.txt
+  exit=0  stdout_bytes=40  stdout_lines=2
+  stdout:
+    |  M real_change.go
+    | ?? new_deliverable.go
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=e-clean.txt
+  exit=0  stdout_bytes=40  stdout_lines=2
+  stdout:
+    |  M real_change.go
+    | ?? new_deliverable.go
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=a-utf8-e2.txt
+  exit=0  stdout_bytes=63  stdout_lines=3
+  stdout:
+    | zzz clean line before
+    |  M poison_â_after.go
+    | ?? another_after.go
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=a-utf8-e2.txt
+  exit=0  stdout_bytes=63  stdout_lines=3
+  stdout:
+    | zzz clean line before
+    |  M poison_â_after.go
+    | ?? another_after.go
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=a-utf8-e2.txt
+  exit=0  stdout_bytes=63  stdout_lines=3
+  stdout:
+    | zzz clean line before
+    |  M poison_â_after.go
+    | ?? another_after.go
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=c-fffe.txt
+  exit=0  stdout_bytes=40  stdout_lines=3
+  stdout:
+sed: RE error: illegal byte sequence
+    | keep-me
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=c-fffe.txt
+  exit=0  stdout_bytes=40  stdout_lines=3
+  stdout:
+sed: RE error: illegal byte sequence
+    | keep-me
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=c-fffe.txt
+  exit=0  stdout_bytes=40  stdout_lines=3
+  stdout:
+sed: RE error: illegal byte sequence
+    | keep-me
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=f-ff.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid ÿ poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=f-ff.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid ÿ poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=f-ff.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid ÿ poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=g-80.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid € poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=g-80.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid € poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=g-80.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid € poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=h-c0.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid À poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=h-c0.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid À poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=h-c0.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+    | keep-me
+    | mid À poison
+    | also-keep
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=d-lockline.txt
+  exit=0  stdout_bytes=38  stdout_lines=2
+  stdout:
+    | ?? .softhouse/LOCKâ
+    |  M real_change.go
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=d-lockline.txt
+  exit=0  stdout_bytes=38  stdout_lines=2
+  stdout:
+    | ?? .softhouse/LOCKâ
+    |  M real_change.go
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=d-lockline.txt
+  exit=0  stdout_bytes=38  stdout_lines=2
+  stdout:
+    | ?? .softhouse/LOCKâ
+    |  M real_change.go
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=b-nul.txt
+  exit=0  stdout_bytes=26  stdout_lines=3
+  stdout:
+Assertion failed: (advance > 0), function substitute, file process.c, line 462.
+    | keep-me
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=b-nul.txt
+  exit=0  stdout_bytes=26  stdout_lines=3
+  stdout:
+Assertion failed: (advance > 0), function substitute, file process.c, line 462.
+    | keep-me
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=b-nul.txt
+  exit=0  stdout_bytes=26  stdout_lines=3
+  stdout:
+Assertion failed: (advance > 0), function substitute, file process.c, line 462.
+    | keep-me
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=file FIXTURE=i-blob.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+Assertion failed: (advance > 0), function substitute, file process.c, line 462.
+    | keep-me
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=redir FIXTURE=i-blob.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+Assertion failed: (advance > 0), function substitute, file process.c, line 462.
+    | keep-me
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-av' LC_ALL=C SHAPE=pipe FIXTURE=i-blob.txt
+  exit=0  stdout_bytes=31  stdout_lines=3
+  stdout:
+Assertion failed: (advance > 0), function substitute, file process.c, line 462.
+    | keep-me
+  stderr:
+################ ARM 5 â€” locale sweep, BSD, -v, file shape only ############
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C SHAPE=file FIXTURE=a-utf8-e2.txt
+  exit=0  stdout_bytes=63  stdout_lines=3
+  stdout:
+    | zzz clean line before
+    |  M poison_â_after.go
+    | ?? another_after.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C SHAPE=file FIXTURE=b-nul.txt
+  exit=0  stdout_bytes=134  stdout_lines=1
+  stdout:
+    | Binary file /Users/buv/gerege-nbfi/.claude/worktrees/agent-a22be659ba8ce2970/.softhouse/reviews/T189-probe/fixtures/b-nul.txt matches
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=a-utf8-e2.txt
+  exit=0  stdout_bytes=63  stdout_lines=3
+  stdout:
+    | zzz clean line before
+    |  M poison_â_after.go
+    | ?? another_after.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=b-nul.txt
+  exit=0  stdout_bytes=134  stdout_lines=1
+  stdout:
+    | Binary file /Users/buv/gerege-nbfi/.claude/worktrees/agent-a22be659ba8ce2970/.softhouse/reviews/T189-probe/fixtures/b-nul.txt matches
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=en_US.UTF-8 SHAPE=file FIXTURE=a-utf8-e2.txt
+  exit=0  stdout_bytes=63  stdout_lines=3
+  stdout:
+    | zzz clean line before
+    |  M poison_â_after.go
+    | ?? another_after.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=en_US.UTF-8 SHAPE=file FIXTURE=b-nul.txt
+  exit=0  stdout_bytes=134  stdout_lines=1
+  stdout:
+    | Binary file /Users/buv/gerege-nbfi/.claude/worktrees/agent-a22be659ba8ce2970/.softhouse/reviews/T189-probe/fixtures/b-nul.txt matches
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=POSIX SHAPE=file FIXTURE=a-utf8-e2.txt
+  exit=0  stdout_bytes=63  stdout_lines=3
+  stdout:
+    | zzz clean line before
+    |  M poison_â_after.go
+    | ?? another_after.go
+  stderr:
+----------------------------------------------------------------
+IMPL=bsd FLAGS='-v' LC_ALL=POSIX SHAPE=file FIXTURE=b-nul.txt
+  exit=0  stdout_bytes=134  stdout_lines=1
+  stdout:
+    | Binary file /Users/buv/gerege-nbfi/.claude/worktrees/agent-a22be659ba8ce2970/.softhouse/reviews/T189-probe/fixtures/b-nul.txt matches
+  stderr:
+################ ARM 6 â€” locale sweep, ugrep wrapper, -v, file shape only ############
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C SHAPE=file FIXTURE=a-utf8-e2.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C SHAPE=file FIXTURE=b-nul.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=a-utf8-e2.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=C.UTF-8 SHAPE=file FIXTURE=b-nul.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=en_US.UTF-8 SHAPE=file FIXTURE=a-utf8-e2.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=en_US.UTF-8 SHAPE=file FIXTURE=b-nul.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=POSIX SHAPE=file FIXTURE=a-utf8-e2.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+----------------------------------------------------------------
+IMPL=ugrep FLAGS='-v' LC_ALL=POSIX SHAPE=file FIXTURE=b-nul.txt
+  exit=1  stdout_bytes=0  stdout_lines=0
+  stdout:
+  stderr:
+################ DONE ############

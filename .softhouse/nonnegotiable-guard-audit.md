@@ -334,8 +334,20 @@ executable guard at all. T154 touched none of them.
 
 ---
 
-## APPENDED BY T171 — correction: T154's "fail-closed" characterization of `fire-program.sh:224`
-is wrong; the true direction is fail-open. This section corrects the RECORD; it edits no code and
+## APPENDED BY T171 — correction to T154's "fail-closed" characterization of `fire-program.sh:224`
+*(headline SUPERSEDED by T189 — see "T189 ADJUDICATION" at the end of this file)*
+
+> **SUPERSEDED HEADLINE, T189.** This section originally read *"…is wrong; the true direction is
+> fail-open."* **Neither "fail-open" nor "fail-closed" is a property of this line.** T189 settled it
+> by measurement (124 cells): the behaviour is determined by **which program the token `grep` names**.
+> T157's reproduction was real but ran the Claude Code `grep` **shell function** — i.e. **ugrep 7.5.0
+> with `-I` hard-coded** — not `/usr/bin/grep`, despite its Apparatus paragraph naming the latter.
+> T171's and the driver's negatives were also real, and ran BSD grep. **The body below is retained
+> unedited** (T114 precedent): its P-55 finding about T155's probe shape is correct and valuable, and
+> its own measured negative is what made this adjudicable. Read its *direction* claim as withdrawn.
+> Full adjudication: `.softhouse/reviews/T189-grep-adjudication.md`.
+
+This section corrects the RECORD; it edits no code and
 no committed handoff (T114 precedent — superseded, never rewritten).
 
 **The wrong claim, precisely.** T154's handoff, Blockers §1, describes the pre-fix line
@@ -470,3 +482,87 @@ positives and two negatives, and the reader must not inherit it as settled.**
 direction currently has more support than the other**, and the NUL shape suggests the question may
 have been framed around the wrong byte class from the start. The **anchoring** defect at the same
 line is a separate matter and **is** settled: T172 fixed and red/green-proved it.
+
+> **T189: the standing instruction is now DISCHARGED.** The dispute is settled below. The driver's
+> two measured observations in this addendum are both **confirmed** and both re-derived independently
+> — invalid UTF-8 suppresses nothing under `/usr/bin/grep`, and a NUL does produce
+> `Binary file … matches` at exit 0. The driver's provenance caveat ("the binary actually invoked may
+> differ between measurements") was **exactly right and is the answer**. Two corrections to the table
+> above: the "previous fire's driver / ugrep 7.5.0" row is **not a second implementation** — it is the
+> same program T157 was actually running, so the two positives are one program, not two; and the NUL
+> mode is **not** confined to seekable input — it occurs through a pipe as well.
+
+---
+
+## T189 ADJUDICATION — SETTLED. The discriminator is the resolved PROGRAM, not the byte class
+
+**Full evidence and 124-cell matrix: `.softhouse/reviews/T189-grep-adjudication.md` and
+`.softhouse/reviews/T189-probe/`.** Summary of what the record may now assert:
+
+**The discriminator is which program the token `grep` names.** On this host `grep` resolves to a
+**shell function** (from `/Users/buv/.claude/shell-snapshots/snapshot-zsh-…sh`) that re-execs the
+`claude` binary as **`ugrep 7.5.0`** with **`-I` hard-coded** — ugrep's *ignore-binary-files* flag,
+which skips the **whole file** and exits 1. `/usr/bin/grep` is BSD grep 2.6.0-FreeBSD and behaves
+completely differently. [VERIFIED: `type -a grep`, `declare -f grep`,
+`exec -a ugrep "$CLAUDE_CODE_EXECPATH" --version` → `ugrep 7.5.0 aarch64-apple-macosx`.]
+
+**All four prior attempts measured correctly; two measured one program and two measured the other.**
+T157's transcript shows bare `grep` (→ ugrep) although its Apparatus paragraph names `/usr/bin/grep`;
+the "independent ugrep 7.5.0 corroboration" is the **same** program, so it corroborated nothing new.
+T171 and the driver called `/usr/bin/grep` by absolute path and correctly saw no suppression. **The
+"two positives vs two negatives" tally was a miscount of programs, not a disagreement about
+behaviour.**
+
+| axis | is it the discriminator? | measured |
+|---|---|---|
+| **grep implementation / invocation path** | **YES — this is it** | `exit 1, zero output` in **0 of 62** BSD cells, **26 of 62** ugrep cells |
+| **`--binary-files` mode (`-a`)** | **YES — the decisive mitigation** | ugrep `-v` 18/27 blind → ugrep `-av` **0/27**; BSD `-av` **0/27** |
+| NUL vs invalid UTF-8 | secondary, real | NUL strictly stronger: it trips BSD (third mode) and trips ugrep **even through a pipe**; invalid UTF-8 trips only ugrep-on-seekable |
+| seekable vs pipe | secondary, and **not a defence** | matters only for ugrep + invalid UTF-8; a pipe stops **neither** implementation once a NUL is present |
+| locale | **NO** | 16 locale-sweep cells, `C`/`C.UTF-8`/`en_US.UTF-8`/`POSIX`: **zero** variation |
+| OS build | **NO** | T171's "same version string, different behaviour" puzzle dissolves — never the same binary |
+
+**The third mode, characterised** (BSD grep, no `-a`, NUL present; exact bytes via `od -c`): file
+shape → `Binary file /…/b-nul.txt matches`, **exit 0**; redirection and pipe →
+`Binary file (standard input) matches`, **exit 0**. `DIRTY` is **non-empty**, so the guard fires, but
+its contents are a **message, not a path**. Neither fail-open nor fail-closed.
+
+### Verdict on the live line: SAFE today — but not for the reason previously recorded
+
+`DIRTY=$(git status --porcelain | LC_ALL=C grep -av '^?? \.softhouse/LOCK$' || true)` is safe because:
+
+1. **`-a` is present** — 27/27 correct under **both** implementations, every shape, every byte class
+   including NUL. This is the load-bearing defence. T157's edit was right; its rationale was wrong.
+2. **The real fire never runs ugrep** — the plist runs `/bin/zsh -lc`, `fire-program.sh` is
+   `#!/bin/zsh` so the script is a non-login non-interactive child, `/etc/zshenv` and `~/.zshenv` are
+   both **absent**, the wrapper is **not exported** (`bash -c 'type -t grep'` → `file`), and under the
+   plist's exact `PATH`, `whence -a grep` reports only `/usr/bin/grep`.
+3. **The input is ASCII by construction** — APFS refuses invalid-UTF-8 filenames (`EILSEQ 92`), NUL
+   cannot appear in a POSIX filename, and `git status --porcelain` **C-quotes** non-ASCII
+   (`core.quotePath` default true).
+
+**It is NOT safe "because it is a pipe."** That claim — which both T157 and T171 relied on for
+reachability — is **refuted**: NUL defeats a pipe under both implementations.
+
+### The one genuinely LIVE fail-open in this guard has nothing to do with bytes
+
+`DIRTY=$(git status --porcelain | … || true)` — **if `git status` fails, `DIRTY` is empty and the
+guard silently concludes the tree is clean.** Measured: rc=**128** outside a repo, `DIRTY=[]`. The
+script runs `set -uo pipefail` **without `-e`**, and the trailing `|| true` discards the status
+anyway, so nothing observes it. A hardening diff (drop the grep entirely for git's own
+`':(exclude).softhouse/LOCK'` pathspec — the idiom the next line already uses — and check git's rc)
+is proposed in T189's handoff and review, **driven red/green** on a production-shaped scratch repo,
+and is **deliberately NOT applied**: `fire-program.sh` is the running wrapper for the fire that
+dispatched T189. **Routing that patch is the driver's call.**
+
+**T172's anchoring fix is untouched and re-confirmed** by T189's S3 scenario: the
+`.softhouse/LOCKED_STATE.md` sibling is correctly kept in `DIRTY`.
+
+**Scope of this finding — do NOT over-generalise it.** T189 adjudicated `fire-program.sh:224` only.
+Row **M-1** above (the `conformance.sh:180-190` float guard) reports a *different* mechanism at a
+*different* site — `LC_ALL=C` fixes it and `-a` alone does not — which is the **BSD-grep** signature
+recorded in P-33, the mirror image of the ugrep `-I` signature found here. The two findings are
+consistent, and M-1 stands. What **does** generalise is the provenance rule: any claim in this
+register of the form *"BSD grep does X"* whose transcript shows a **bare `grep`** was measuring
+ugrep 7.5.0, and should be re-attributed before it is relied on. [T189 checked this only for line 224;
+a register-wide sweep is a follow-up, **not** something T189 verified.]
