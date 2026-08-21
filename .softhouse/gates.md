@@ -1774,3 +1774,48 @@ independently corroborated: `out/A2-019-db-glaccount-rows.txt` is a snapshot tak
   five live product mappings. **The oracle holds that state, reports it without complaint, and will not
   re-create it — and the read-back structurally cannot reveal it**, since `GET /loanproducts/{id}` returns
   `{id, name, glCode}` per slot and **no type or usage at all**. Raised as G-10.
+
+---
+
+## G-10 — REFINED by its own independent review, local fire `20260821-134344` — still **OPEN**
+
+Raised last fire from A2-7's `A2-214` 403. Re-derived and sharpened by **A2-11**, the paired reviewer, whose
+brief explicitly asked whether G-10's framing was *accurate and not overstated*. Two answers, opposite
+directions, and both matter:
+
+**1. The wording in `gates.md` is CORRECT AS WRITTEN and needs no change — but the reasoning around it was
+overstated elsewhere.** The claim "**the read-back** structurally cannot reveal it" is true and stays: `GET
+/loanproducts/{id}` returns `{id, name, glCode}` per slot and no `type`, no `usage`. The broader restatement
+that *"nothing at the contract boundary reveals it"* is **false** — `GET /glaccounts/2` reveals INCOME
+plainly. The distinction is exact and load-bearing: **one call cannot reveal the retype; two calls can.** A
+port that resolves classification through a second `/glaccounts/{id}` read is not blind to this. A port that
+trusts the product read alone is.
+
+**2. "Five products" UNDERSTATES it — there are five products but SIX mapping rows.** Product **27**
+duplicates **gl 16 (ASSET)** and **gl 2 (INCOME)** in a **single payment-type slot**, which the repository
+resolves to **one** row. So a slot a porter would reasonably model as unique is not unique in the stored
+data, and the count depends on whether you are counting products, mapping rows, or resolved slots. Any
+disclosure of G-10 must say which.
+
+### What this does NOT change
+
+The driver's recommendation stands: **(c) — take vectors only from products the oracle would still accept.**
+A2-11 did not disturb it, and this refinement strengthens it, since the affected surface is larger than
+first recorded, not smaller. **G-10 remains OPEN** and no vector may be taken from the affected products
+without saying so.
+
+### And it is now explained, not merely observed
+
+Independently of A2-11, the driver re-derived *why the oracle is in this state at all* —
+`.softhouse/reviews/driver-rederivation-20260821-134344-A2-trap3-classification.md`. The only
+journal-entries-exist guard on the GL-account update path
+(`GLAccountWritePlatformServiceJpaRepositoryImpl.java:151-159`) is keyed on **`USAGE`**, gated on
+`isHeaderAccount()`. **`TYPE` is not mentioned**, though `deleteGLAccount` has its own entries-exist check at
+`:201-203`, so the repository query was available and simply was not applied to classification. Fineract
+refuses to *disable* an account a product points at (`validateForAttachedProduct`, `:178-189`) and permits
+*retyping* an account with posted history.
+
+**So G-10 is not an oddity of the capture tenant. It is the documented behaviour of the update path**, and
+any Fineract deployment can reach the same state. Combined with `acc_gl_journal_entry` carrying no
+classification column, a retype retroactively re-renders every entry ever posted to that account — which is
+why trap (3) requires the Go port to carry classification **on the entry**.
