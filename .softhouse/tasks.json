@@ -841,7 +841,7 @@
       "executor": "agent",
       "model": "opus",
       "target": "docs",
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
       "dependencies": [
         "T177"
@@ -851,7 +851,7 @@
         ".softhouse/reviews/"
       ],
       "description": "INDEPENDENT review of T177. Re-derive; do not accept the author's conclusions. Read the upstream handoff from the BRANCH (git show <branch>:.softhouse/handoff/<run_id>/T177.md) and the diff with git diff main...<branch> (THREE DOTS, P-41). Drive the author's guard/probe yourself: a guard that was never driven RED is not shipped (P-22), a prover must be falsifiable toward the FIX as well as the defect (P-50), and a check that inspects zero items is an ERROR not a pass (P-35). Verdict APPROVED / MICRO-FIX (<=10 lines, mechanical, never a number) / REJECTED with specifics. If you find nothing, state what you checked so silence is distinguishable from not looking.",
-      "note": "dispatched local fire 20260821-125942 batch 1",
+      "note": "dispatched local fire 20260821-125942 batch 1 | MERGED to main, local fire 20260821-125942, driver re-verified the central claim before merging",
       "branch": "softhouse/T182-review-t177"
     },
     {
@@ -956,7 +956,7 @@
       "executor": "agent",
       "model": "opus",
       "target": "code",
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
       "dependencies": [
         "T173"
@@ -966,7 +966,7 @@
         ".softhouse/conformance.sh"
       ],
       "description": "The driver merged T173, found the merged harness RED on main (exit 2, NO probe line -- a HARD-guard failure, correctly not parked as an oracle outage), and fixed two defects ITSELF in e93afc9 rather than leaving main red. That fix has had no independent reviewer, and the driver is the layer this program has repeatedly caught being wrong (P-52, and the exit-127 and bad-probe errors in the last two RESUMEs). REVIEW IT. (A) The lint now excludes .claude/worktrees from its walk and RETURNS/PRINTS the exclusion. Re-derive: is the exclusion predicate right (it compares os.path.relpath(full, root) to the literal '.claude/worktrees' -- what happens when root is ITSELF inside a worktree, which is the normal case for every worker you and it dispatch? what about a nested .claude/worktrees deeper in the tree, or a symlinked worktree?). A guard that silently stops walking in a worker's own tree would be the same silent-scope defect one level down. (B) conformance.sh's census-presence check moved from grep -q to grep -c to survive EPIPE under pipefail. Re-derive whether any OTHER pipeline in conformance.sh has the same shape -- sweep for `| ... grep -q` and `| head` under set -o pipefail and report the count, since the driver fixed only the one that bit it (P-37: a starting point is not a sweep). DRIVE BOTH YOURSELF (P-22, P-50): plant a narrow-catch rig inside the commit's own tree AND inside a .claude/worktrees subtree, and show the first is refused and the second ignored; reproduce the EPIPE inversion at a size you determine yourself rather than inheriting the driver's 320,935 bytes. Verdict APPROVED / MICRO-FIX / REJECTED.",
-      "note": "dispatched local fire 20260821-125942 batch 1",
+      "note": "dispatched local fire 20260821-125942 batch 1 | MERGED to main, local fire 20260821-125942, driver re-verified the central claim before merging",
       "branch": "softhouse/T188-review-driver-merge-fix"
     },
     {
@@ -976,7 +976,7 @@
       "executor": "agent",
       "model": "opus",
       "target": "docs",
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
       "dependencies": [
         "T171",
@@ -987,7 +987,7 @@
         ".softhouse/reviews/"
       ],
       "description": "THE RECORD NOW ASSERTS SOMETHING FOUR ATTEMPTS DISAGREE ABOUT. History: T154 called fire-program.sh:224 'fail-closed'. T157 drove it and reported the OPPOSITE -- on SEEKABLE input one invalid byte makes BSD grep print nothing and exit 1, emptying DIRTY, which is fail-OPEN. A previous fire's driver recorded an independent reproduction on ugrep 7.5.0. T171 (this fire) then drove SIX invalid-byte spellings across 18+ byte/input-shape combinations on /usr/bin/grep 2.6.0-FreeBSD, macOS 26.5.1 build 25F80, and COULD NOT REPRODUCE IT AT ALL -- reported honestly as a material negative rather than buried. THE DRIVER THEN MEASURED IT TOO, and got a second negative plus a new discriminator: (i) \\xff\\xfe invalid UTF-8 in a seekable file does NOT suppress output under /usr/bin/grep -v in LC_ALL=C, en_US.UTF-8 or POSIX -- all lines printed, exit 0, identical on piped input; (ii) a real NUL byte DOES change behaviour -- grep prints 'Binary file g.txt matches' and suppresses the lines, exit 0. So the trigger may be NUL, not invalid UTF-8, and the NUL shape does NOT empty the output either: DIRTY would be NON-empty but contain a message instead of paths, which is a THIRD failure mode nobody has characterised and is neither cleanly fail-open nor fail-closed. ALSO NOTE: on the driver's shell `which -a grep` shows grep resolving to a SHELL FUNCTION wrapper, and ugrep is not on PATH -- so the earlier ugrep corroboration could not be re-checked and the binary actually invoked may differ between measurements. SETTLE IT: determine what the ACTUAL discriminator is (NUL vs invalid UTF-8 vs --binary-files mode vs seekable-vs-pipe vs grep implementation vs OS build vs a shell function wrapper intercepting the call), with every trial's implementation, version, OS build, locale, input shape and invocation path recorded. Then RE-SCOPE what the record asserts: T171 merged a correction whose headline says the true direction is fail-OPEN, resting on ONE observation that two subsequent attempts could not reproduce, and the driver appended its own measured addendum. Do not settle this by vote and do not simply revert to T154 -- 'fail-closed' has no more support than 'fail-open' does. If the honest answer is that the behaviour is not reproducible on this machine class and the claim must be reduced to a scoped observation, SAY THAT. P-46: quote by extraction. Note T172 has already ANCHORED the pattern, which is a separate and settled defect -- do not re-open it.",
-      "note": "dispatched local fire 20260821-125942 batch 1",
+      "note": "dispatched local fire 20260821-125942 batch 1 | MERGED to main, local fire 20260821-125942, driver re-verified the central claim before merging",
       "branch": "softhouse/T189-grep-adjudication-final"
     },
     {
@@ -1051,6 +1051,65 @@
       "status": "pending",
       "attempts": 0,
       "note": "blocked until DEC-2 exists and has passed independent review -- a vector cannot be admitted against a contract that does not exist. G-10 is OPEN and its driver recommendation (c) is a PRECONDITION on which products may be promoted from."
+    },
+    {
+      "id": "T190",
+      "title": "fire-program.sh:224's ONE genuinely live fail-open is unrelated to bytes \u2014 an empty DIRTY when git itself fails reads as 'clean'",
+      "description": "T189 measured it and deliberately did not apply the fix, because fire-program.sh is the RUNNING wrapper of the fire that found it. Apply T189's already-red/green-driven hardening on a branch; it takes effect on the NEXT fire, because the running bash keeps reading the old inode. DIRTY=$(git status --porcelain | ... || true) yields an EMPTY DIRTY when git exits non-zero (rc=128 measured) and the guard silently concludes the tree is clean -- set -uo pipefail without -e, plus the || true, so nothing observes the failure. T189's proposed patch drops grep entirely in favour of git's own ':(exclude)' pathspec and checks git's rc; it was driven red and green on a production-shaped scratch repo INCLUDING T172's anchor regression. RE-DERIVE it, do not apply it on trust. CAVEAT T189 STATED ABOUT ITSELF: it drove the patch under bash, NOT zsh. Settle which shell the wrapper actually runs under and re-drive under that one.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        ".softhouse/bin/fire-program.sh"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T189"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "raised by T189, local fire 20260821-125942. Routing was explicitly left to the driver and the driver agrees with T189's restraint in not self-applying."
+    },
+    {
+      "id": "T191",
+      "title": "THREE fail-OPEN pipefail sites in conformance.sh \u2014 and TWO of them are the no-float MONEY guards",
+      "description": "T188's sweep, driver-re-derived from the source before registering. conformance.sh:546 (FLOAT-SHAPED NUMBER in a vector) and :607 (FLOATING-POINT IDENTIFIER in Go) are both 'perl ... | LC_ALL=C grep -aEq ...'. grep -q exits 0 the MOMENT IT MATCHES; perl then takes EPIPE; set -o pipefail promotes the pipeline to non-zero; the enclosing if is therefore FALSE ON A FLOAT IT DID FIND. The guard behind the FIRST non-negotiable in CLAUDE.md goes silent exactly when it has something to say. :1287 (the false-violation check) is the third. Convert all three to a DRAINING form (grep -c and test the count, per P-57) and DRIVE EACH RED AND GREEN (P-22, P-50) -- a float must be caught both below and ABOVE the 64 KiB pipe-buffer threshold. Also add the missing selftest for the .claude/worktrees exclusion predicate in check_no_narrow_catch.py, BOTH DIRECTIONS (T188's F-1): the branch that decides what the lint may ignore is the one branch its own P-22 machinery cannot currently demonstrate. LATENT NOT LIVE, and do not overstate it: T188 measured the largest post-strip .go output at 44,941 B against a 65,024 B threshold, a 1.45x margin. A SECOND NECESSARY CONDITION T188 established and the driver's own earlier note missed: the consumer must be able to STOP EARLY, so a 400 KB single-line JSON does not reproduce it at all. Size your own repro; do not inherit a number.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        ".softhouse/conformance.sh",
+        ".softhouse/capture/lib/check_no_narrow_catch.py"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T188"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "raised by T188 (F-1, F-2). Money non-negotiable exposure -- highest-priority harness task."
+    },
+    {
+      "id": "T192",
+      "title": "The FOURTEEN fail-CLOSED pipefail sites, before the corpus reaches ~135 vectors and they start firing",
+      "description": "T188's sweep: 18 sites of the early-exiting-consumer-under-pipefail shape remain in conformance.sh and 55 across the 24 pipefail scripts under .softhouse/. Fourteen are fail-CLOSED -- inversion produces a spurious exit 2 WITH NO PROBE LINE, which is the exact symptom that cost this program a fire and that the driver's own standing rule now has three paragraphs about. T188 measured the arrival date: self-test output runs ~480 B/vector over 43 vectors and crosses 64 KiB at roughly 135 vectors, with the matched needle at byte 6,193 -- INSIDE the first buffer-full, so it will INVERT rather than ride past. Also fix the now-false 'whole repository' wording in the narrow-catch lint (T188's F-4), and extend P-57 in patterns.md with POLARITY and the stop-early condition (F-5) -- P-57 as written describes the shape but not which direction a given site fails in, and the direction is what decides whether it is urgent.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        ".softhouse/conformance.sh",
+        ".softhouse/patterns.md"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T191"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "raised by T188 (F-3, F-4, F-5). Serialised behind T191 -- both edit conformance.sh."
     }
   ],
   "cross_corroboration": {
