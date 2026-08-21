@@ -1302,3 +1302,30 @@ oracle, and the port now disagrees with it *on purpose*.
 3. **A worker refusing half an instruction, with a reason, is the system working.** Record the refusal, adjudicate
    it, and correct the record — this is the fourth time this fire that a worker overturned the driver
    (A2-7 → the premise, T155 → its own rig, A2-11 → the fabrication, A2-8 → this).
+
+**P-48 — A SOURCE-TEXT GREP SCORES A FILE BY THE PROSE THE FILE CONTAINS, INCLUDING PROSE THE FILE IS
+WRITING.** Found twice in one fire, in unrelated rigs, which is what makes it a class rather than a bug:
+
+- `analyze7.py`'s float guard greps whole-file source for `parse_float` — and matches it **in its own
+  docstring**, so deleting `parse_float` from the actual code leaves the guard passing (A2-11 measured it).
+- T156's P-26 sweep classified `.softhouse/reviews/t47-probe/t47_edit_1.py` as **guarded** because the word
+  `trap` appears three times in the file — **all three inside prose strings the script writes into the
+  ratified DEC-1 ADR**. Driver-verified: `grep -nE '^\s*(try:|finally:|except)|atexit|signal\.'` over that
+  file returns **nothing at all**. The file was scored safe **by the text it was writing**, while performing
+  an unprotected in-place rewrite of a document that is a hard `user` gate to amend. T158 measured the blast
+  radius: 4 of 19 "guarded" hits carry zero guards; the true unguarded population is **115, not 111**.
+
+Both are P-22 (a guard that cannot fail) reached by a specific route worth naming on its own, because the
+guard *looks* like it is testing the property and its output *looks* like a measurement.
+
+*Rules:*
+1. **Detect code with a parser, not a regex.** "Does this file guard itself?" and "does every `json.load`
+   pass `parse_float=`?" are questions about the **AST**. Walk it. A grep over source text cannot distinguish
+   a call site from a comment, a docstring, an `echo`, or a string literal being written to another file.
+2. **A file that WRITES prose about guards will match any guard regex.** Documentation generators, ADR
+   editors, and this pipeline's own handoff writers are the worst offenders — and they are exactly the files
+   that touch ratified documents.
+3. **Report the population, then hand-read the exceptions.** T158 found this only because it re-read the
+   19-file allowlist instead of trusting the count. **An unexamined allowlist is where this class lives.**
+4. **Prefer atomicity to trapping where it is available.** `os.replace()` of a temp file in the same
+   directory is atomic on POSIX and needs no signal handling at all — strictly better than any trap.
