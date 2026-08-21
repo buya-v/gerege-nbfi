@@ -513,14 +513,14 @@
       "executor": "agent",
       "model": "opus",
       "target": "code",
-      "status": "in_progress",
+      "status": "done",
       "attempts": 0,
       "dependencies": [],
       "files_hint": [
         ".softhouse/capture/tierA-a2/"
       ],
       "description": "RAISED BY A2-11 during its review of A2-7, and DRIVEN RED by A2-11 (.softhouse/reviews/A2-11/prove-resolve7-float-red.py). This is the LIVE P-25 class and it is worse than the 74-scripts finding in T145, because T145's instances corrupt the ANALYSIS of captures whereas THIS ONE CORRUPTS THE REQUEST BODY SENT TO THE REFERENCE ORACLE. resolve7.py rewrites `1200000.00` and `1200000.000000` as `1200000.0` in the JSON body POSTed to Fineract. A2-11 states NO CAPTURE IS AFFECTED TODAY -- verify that claim yourself before relying on it, and say how you verified it. The danger is prospective and total: a capture rig that silently reshapes money literals on the wire cannot be trusted to have observed what it claims to have observed, and every vector it ever produces inherits the doubt. Fix with json.load/dumps(parse_float=Decimal) or integer minor units throughout, and make the request body a BYTE-FOR-BYTE artefact that is committed alongside the response so a reviewer can diff what was SENT, not only what came back. DRIVE IT RED (P-22) reusing A2-11's prover rather than writing a second one. Do NOT edit scripts that produced committed evidence -- record those and re-run from scratch copies (T114's standing ruling); if any committed capture IS affected, that is a REFUSAL to be reported, not a number to be adjusted.",
-      "note": "dispatched local fire 20260821-054355 (2nd fire of day), worktree-isolated",
+      "note": "MERGED. A2-11's 'no capture affected' claim VERIFIED not accepted: 0 of 493 request tokens altered, via real-parser hooks with a printed skip register naming all 190 skipped files. Found what A2-11 missed: 236 mangling-prone literals in 21 committed RESPONSE captures plus a SECOND unguarded json.load on the response side. Structural finding: curl -d @FILE strips newlines, so for 102/102 bodied captures the committed req/ file is NOT what went over the wire (whitespace only, 0 numeric tokens differ). DRIVER-REPRODUCED ON MAIN: A2-11's prover exits 0 against the DEFECTIVE script ('FAILURES: 0') because its assertions pass when the bug is present -- P-35 negative-assertion shape, a demonstration whose exit code reads as health. T163 widened it; driver confirmed the widened prover asserts resolve7 RED and resolve8 GREEN internally. T114 ruling honoured: driver confirmed resolve7.py and cap.sh byte-identical. [UNVERIFIED] carried: cap8.sh has never talked to Fineract; the new guard is not wired into anything automatic (P-45).",
       "branch": "softhouse/T163-resolve7-money-literals"
     },
     {
@@ -617,7 +617,7 @@
       "executor": "agent",
       "model": "opus",
       "target": "code",
-      "status": "in_progress",
+      "status": "done",
       "attempts": 0,
       "dependencies": [],
       "files_hint": [
@@ -625,7 +625,7 @@
         ".softhouse/capture/src/"
       ],
       "description": "RAISED BY T159, WHICH FOUND IT BY DETONATING IT rather than by reading. The shared Java capture rig -- inherited by T83, T84, T100 AND T117 alike -- catches RuntimeException, not Throwable. A java.lang.StackOverflowError is an Error, NOT a RuntimeException, so it is precisely what slips through, AND T159 OBSERVED EXACTLY THAT: two cells died with java.lang.StackOverflowError from ProgressiveEMICalculator.calculateLastUnpaidRepaymentPeriodEMI recursing into itself at ProgressiveEMICalculator.java:1214, non-monotonically -- (B=10001,n=2000) dies while (B=10001,n=3000) succeeds. WHY THIS IS A MEASUREMENT DEFECT AND NOT A ROBUSTNESS NIT: every sweep this program has run reports an integrity line of the form 'N asked / N observed / 0 errored / 0 skipped', and that line is cited as PROOF THE SWEEP IS COMPLETE. With this hole, '0 errored' is consistent with BOTH 'nothing failed' AND 'the failures were invisible to the handler' -- the P-40 class (an enumerator that cannot see what it skipped) reaching the ERROR path instead of the enumeration path. Fix: catch Throwable, record the throwable's class and message as a FIRST-CLASS OUTCOME distinct from both success and absence, and make the integrity line report it -- 'N asked / N observed / N threw / N skipped'. A cell that threw is NOT an observation and must never be graded as one, and must never be silently absent either. DRIVE IT RED (P-22) using T159's own detonation rather than inventing one, and re-run the affected historical sweeps' integrity lines to say whether any committed 'N errored 0' claim is now known to be unsupported -- REPORT that honestly rather than adjusting it. P-26: sweep every other capture rig for the same catch-narrowing.",
-      "note": "dispatched local fire 20260821-054355 (2nd fire of day), worktree-isolated",
+      "note": "MERGED. '0 errored' was UNFALSIFIABLE, not merely blind: two routes (Error escaping main() before any JSON; printStackTrace on a stderr-refusing runner) mean no completed run in this program's history could have printed any other value. Red pair driven. HISTORICAL CLAIMS REPORTED NOT ADJUSTED: T117's '287/287/0 errored' is TRUE ABOUT THE RUN; the unsupported part is the INFERENCE that the sweep covers its region. Driver-verified the check_no_narrow_catch lint refuses a planted 35th rig (exit 1, named at file:line) and its selftest passes; the driver's FIRST probe was not caught and that was the DRIVER'S error -- the catch did not wrap a seam marker, and the lint deliberately asserts it must not be over-broad.",
       "branch": "softhouse/T169-capture-rig-throwable"
     },
     {
@@ -676,6 +676,84 @@
         ".softhouse/bin/fire-program.sh"
       ],
       "description": "Raised by T157 as an unrelated defect found in the same line, correctly left out of its diff as outside files_hint intent. The pattern '^?? \\.softhouse/LOCK' has no end anchor, so the exit-protocol dirty-check would ALSO discard an untracked file named .softhouse/LOCKFILE, .softhouse/LOCK.bak or .softhouse/LOCKED -- i.e. it can hide real uncommitted work from the very guard that exists to rescue it. Same fail-open direction as T157's finding. Anchor it, and DRIVE IT RED (P-22) by creating each over-matched filename in a scratch tree and showing the pre-fix guard swallows it and the post-fix guard reports it. Verify with zsh -n (the file is #!/bin/zsh -- bash -n is the wrong interpreter check) and with --probe, and quote both."
+    },
+    {
+      "id": "T173",
+      "title": "The float-literal guard T163 shipped is not wired into anything that runs automatically (P-45)",
+      "role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "status": "pending",
+      "dependencies": [
+        "T163",
+        "T166"
+      ],
+      "files_hint": [
+        ".softhouse/conformance.sh",
+        ".softhouse/capture/tierA-a2/"
+      ],
+      "description": "Raised by T163 against its OWN fix, and it is the P-45 shape this program keeps recording: a guard nothing invokes is not a guard. T163's request-body float guard and audit exist and are falsifiable, but no automatic path runs them, so the next rig can reintroduce the wire-side float round trip and every check stays green. T166 has just made conformance.sh's guarded root DERIVED for Go source; do the equivalent for the capture rigs -- wire the guard onto a path that actually executes, report what it inspected, and make zero inspected an ERROR (P-35). Also wire T169's check_no_narrow_catch.py, which has the identical problem. DRIVE IT RED (P-22): show the pre-wiring harness passes a planted wire-side float and a planted 35th narrow-catch rig, and the post-wiring one refuses both."
+    },
+    {
+      "id": "T174",
+      "title": "mkreq*.py are one float literal away from T163's defect; and two frozen recipes still carry the shell-embedded variant",
+      "role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "status": "pending",
+      "dependencies": [
+        "T163"
+      ],
+      "files_hint": [
+        ".softhouse/capture/tierA-a2/"
+      ],
+      "description": "Raised by T163 as follow-ups it correctly did not widen its diff to cover. The mkreq*.py family builds request bodies and is one float literal away from the same binary-double round trip on the way TO the reference oracle; two frozen capture recipes still carry the shell-embedded variant of the defective resolve step. Neither is corrupt today -- verify that claim yourself rather than inheriting it, and say how -- but both are live reintroduction paths. Honour T114's ruling: anything that produced committed evidence is superseded by a scratch copy, never edited. DRIVE IT RED (P-22) reusing T163's widened prover battery rather than writing a third one."
+    },
+    {
+      "id": "T175",
+      "title": "Two Python swallow sites make a money invariant and a float scan pass VACUOUSLY — t55-analyse.py:352 and t44_float_roundtrip.py:29",
+      "role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "status": "pending",
+      "dependencies": [
+        "T169"
+      ],
+      "files_hint": [
+        ".softhouse/capture/"
+      ],
+      "description": "Raised by T169's P-26 census, which found 11 Python swallow sites of which TWO are load-bearing on non-negotiables: t55-analyse.py:352 makes a money-decimal-places invariant pass VACUOUSLY, and t44_float_roundtrip.py:29 makes a float scan SKIP what it cannot parse. Both are the signature failure of this program -- a check that stops checking and says so nowhere -- sitting directly on the first non-negotiable in CLAUDE.md. T169 correctly did not fix them (T114's ruling; they produced committed evidence). Supersede with scratch copies, make every skip NAMED and counted with zero-inspected an ERROR (P-35), and REPORT honestly whether any committed claim resting on those two is now known to be unsupported -- report it, do not adjust it. DRIVE IT RED (P-22)."
+    },
+    {
+      "id": "T176",
+      "title": "build_harness_t159.py does not reproduce the committed CaptureT159.java — the evidence chain does not reproduce",
+      "role": "coder",
+      "executor": "agent",
+      "model": "sonnet",
+      "status": "pending",
+      "dependencies": [
+        "T169"
+      ],
+      "files_hint": [
+        ".softhouse/capture/t159-review-t117/"
+      ],
+      "description": "Raised by T169. Benign in substance -- two hunks were applied by hand -- but the generator does not reproduce the artefact it is supposed to generate, so the chain from recipe to committed evidence is broken and a future reader cannot re-derive CaptureT159.java. Make the generator reproduce the committed bytes exactly, or if the hand hunks were correct and the generator is wrong, say so and fix the generator to emit them. Prove it with a byte-for-byte diff of generated vs committed. Do NOT edit the committed CaptureT159.java to match a broken generator -- that would be repairing the evidence to fit the tool."
+    },
+    {
+      "id": "T177",
+      "title": "The oracle's StackOverflowError is not a function of the cell's inputs alone — (B=10001, n=3000) threw for T169 and was observed cleanly by T159",
+      "role": "analyst",
+      "executor": "agent",
+      "model": "opus",
+      "status": "pending",
+      "dependencies": [
+        "T169"
+      ],
+      "files_hint": [
+        ".softhouse/capture/",
+        ".softhouse/reviews/"
+      ],
+      "description": "Raised by T169 and marked [UNVERIFIED] rather than guessed, which is why it is worth running. T159 observed (B=10001 minor, n=3000) CLEANLY -- it is the cell behind G-8's headline MNT 10.01 residual. T169 asked the same cell on the same pinned image and it THREW java.lang.StackOverflowError. So whether the oracle throws depends on something outside the cell's inputs -- JVM stack depth, thread, warmup, or container state are the obvious candidates and NONE is established. THIS RE-SCOPES ANY ATTEMPT TO BOUND THE THROWING REGION BEFORE ORACLE TIME IS SPENT ON IT: a probe that maps the boundary by asking each cell ONCE is measuring noise, not a boundary. Establish what the throw actually depends on, with repeated trials per cell and the trial count reported. This BLOCKS the sensible design of T116 and of G-8 option (a), because a vector promoted from a cell that throws intermittently is not reproducible."
     }
   ],
   "cross_corroboration": {
