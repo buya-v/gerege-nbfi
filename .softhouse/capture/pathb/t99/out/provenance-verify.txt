@@ -1,0 +1,4 @@
+directories checked: 17
+files digested:      111
+problems:            0
+RESULT: every indexed capture is byte-identical to its record, every stamp state matches the record, and no capture-bearing directory is unaccounted for.

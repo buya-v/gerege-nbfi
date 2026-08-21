@@ -15,6 +15,14 @@
 # prohibited; assertions P5/P6/P7 below fail the run if any trace of them appears.
 set -u
 
+PCD=$(cd "$(dirname "$0")" && pwd)
+# The sha256 instrument, hardened by T99.  P14b's digest pin used the bare word `shasum`, resolved
+# through $PATH; a `shasum` earlier on $PATH that prints the pinned constant made the comparison a
+# tautology again AND LEFT NO DIFF TRACE.  sha256.sh resolves the tools by absolute path in
+# root-owned system directories, known-answer-tests each one, and requires two independent
+# implementations to agree.  See sha256.sh's header and t99/prove-f2.sh.
+. "$PCD/sha256.sh"
+
 TENANT=${1:-gerege}
 PIN_IMAGE=sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a
 PIN_COMMIT=426a23544e8426a38ae43ae404670a0a7e85b9eb
@@ -88,23 +96,50 @@ case "$h" in *'"status":"UP"'*) ok "actuator/health UP" ;;
              *) bad "actuator/health did not report UP: '$h'" ;; esac
 
 # -------------------------------------------- P5 PostgreSQL-only: container env
-env_jdbc=$(docker inspect "$FIN" --format '{{range .Config.Env}}{{println .}}{{end}}' 2>/dev/null | grep -iE 'driver|jdbc')
+#
+# T99b CORRECTION — A PROHIBITION COUNTED OVER NO INPUT IS ZERO.  P5's `banned` and P6's `jarhits`
+# below asserted an ABSENCE (`[ "$banned" = "0" ]`), and `grep -icE` over an EMPTY stream returns
+# `0`.  So when `docker` produced nothing at all — it is not installed, the container is gone, the
+# daemon is down, or a $PATH-poisoned `docker` refuses — this script printed
+#     PASS  0 prohibited-engine hits in container env
+#     PASS  0 prohibited driver jars in fineract-provider.jar
+# HAVING SCANNED NOTHING.  These are the Oracle-Database / MySQL / MariaDB prohibition assertions,
+# a CLAUDE.md non-negotiable, and they were structurally incapable of failing for the reason they
+# exist.  Measured on main's bytes with docker stubbed to refuse: both PASS lines printed, 18 FAIL.
+# This is the F-3 defect class (P-22) in a different file; T99's own sweep did not see it because
+# its grep pattern was `grep -c\|grep -ac\|wc -l` and these two lines use `grep -icE`.
+#
+# The remedy is a LIVENESS OPERAND: the scan output is captured once, and a count of 0 is only
+# allowed to mean "clean" after the input has been shown to be non-empty.  Empty input is a FAIL
+# that says the scan did not happen, never a PASS.
+env_dump=$(docker inspect "$FIN" --format '{{range .Config.Env}}{{println .}}{{end}}' 2>/dev/null)
+env_lines=$(printf '%s\n' "$env_dump" | LC_ALL=C grep -c . || true)
+env_jdbc=$(printf '%s\n' "$env_dump" | grep -iE 'driver|jdbc')
 case "$env_jdbc" in *org.postgresql.Driver*) ok "driverClassName org.postgresql.Driver" ;;
                     *) bad "container env does not carry org.postgresql.Driver" ;; esac
 case "$env_jdbc" in *jdbc:postgresql://*) ok "JDBC URL is jdbc:postgresql://…" ;;
                     *) bad "container env does not carry a jdbc:postgresql URL" ;; esac
-banned=$(docker inspect "$FIN" --format '{{range .Config.Env}}{{println .}}{{end}}' 2>/dev/null \
-         | grep -icE 'ojdbc|oracle\.jdbc|:1521|com\.mysql\.cj|mariadb|go-sql-driver')
-[ "$banned" = "0" ] && ok "0 prohibited-engine hits in container env" \
-  || bad "$banned prohibited-engine hits in container env (Oracle Database / MySQL / MariaDB are prohibited)"
+if [ -z "$env_dump" ]; then
+  bad "prohibited-engine scan of the container env INSPECTED NOTHING: \`docker inspect $FIN\` returned no environment at all, so a count of 0 would mean 'not looked', not 'clean'. The Oracle Database / MySQL / MariaDB prohibition is UNPROVEN for this container."
+else
+  banned=$(printf '%s\n' "$env_dump" | grep -icE 'ojdbc|oracle\.jdbc|:1521|com\.mysql\.cj|mariadb|go-sql-driver')
+  [ "$banned" = "0" ] && ok "0 prohibited-engine hits in container env ($env_lines env line(s) actually scanned)" \
+    || bad "$banned prohibited-engine hits in container env (Oracle Database / MySQL / MariaDB are prohibited)"
+fi
 
 # ------------------------------------------------ P6 PostgreSQL-only: the jar
-jarhits=$(docker exec "$FIN" sh -c 'unzip -l /app/fineract-provider.jar' 2>/dev/null \
-          | grep -icE 'ojdbc|oracle-jdbc|mysql-connector|mariadb-java')
-[ "$jarhits" = "0" ] && ok "0 prohibited driver jars in fineract-provider.jar" \
-  || bad "$jarhits prohibited driver jars inside fineract-provider.jar"
-pgdrv=$(docker exec "$FIN" sh -c 'unzip -l /app/fineract-provider.jar' 2>/dev/null \
-        | grep -c 'BOOT-INF/lib/postgresql-')
+# Same liveness operand, and the listing is taken ONCE so the prohibition scan and the
+# positive-presence scan below cannot disagree about which listing they read.
+jarlist=$(docker exec "$FIN" sh -c 'unzip -l /app/fineract-provider.jar' 2>/dev/null)
+jarlines=$(printf '%s\n' "$jarlist" | LC_ALL=C grep -c . || true)
+if [ -z "$jarlist" ]; then
+  bad "prohibited-driver-jar scan INSPECTED NOTHING: \`unzip -l /app/fineract-provider.jar\` in $FIN returned no listing at all, so a count of 0 would mean 'not looked', not 'clean'. The Oracle Database / MySQL / MariaDB prohibition is UNPROVEN for this jar."
+else
+  jarhits=$(printf '%s\n' "$jarlist" | grep -icE 'ojdbc|oracle-jdbc|mysql-connector|mariadb-java')
+  [ "$jarhits" = "0" ] && ok "0 prohibited driver jars in fineract-provider.jar ($jarlines jar entry line(s) actually scanned)" \
+    || bad "$jarhits prohibited driver jars inside fineract-provider.jar"
+fi
+pgdrv=$(printf '%s\n' "$jarlist" | grep -c 'BOOT-INF/lib/postgresql-')
 [ "$pgdrv" -ge 1 ] && ok "PostgreSQL JDBC driver present in the jar" \
   || bad "no PostgreSQL JDBC driver in the jar"
 
@@ -148,10 +183,21 @@ rm_en=$(docker exec "$DB" psql -U root -d "$schema" -At \
 # The stock `default` row carries MySQL-era JDBC parameters
 # (serverTimezone=…&useLegacyDatetimeCode=…&sessionVariables=time_zone=…).
 # pgjdbc ignores them, but MySQL-shaped config must not sit on a capture tenant.
+#
+# T99b CORRECTION — the SAME "absence counted over no input" shape, third instance.  This asserted
+# `[ -z "$scp" ]`, and a psql that never ran returns the empty string too, so a dead database, a
+# missing container or a $PATH-poisoned `docker` printed "PASS  schema_connection_parameters is
+# empty" having read no row.  Measured on main's bytes with docker stubbed: the PASS was printed.
+# The query is now WRAPPED IN BRACKETS, which makes the two cases distinguishable: a live row that
+# is genuinely empty answers `[]`, a query that did not run answers nothing at all.
 scp=$(docker exec "$DB" psql -U root -d fineract_tenants -At \
-  -c "select coalesce(c.schema_connection_parameters,'') from tenants t join tenant_server_connections c on c.id=t.oltp_id where t.identifier='$TENANT';" 2>/dev/null | tr -d '\r')
-[ -z "$scp" ] && ok "schema_connection_parameters is empty" \
-  || bad "schema_connection_parameters = '$scp' — must be empty on a capture tenant"
+  -c "select '['||coalesce(c.schema_connection_parameters,'')||']' from tenants t join tenant_server_connections c on c.id=t.oltp_id where t.identifier='$TENANT';" 2>/dev/null | tr -d '\r')
+case "$scp" in
+  '')   bad "schema_connection_parameters check INSPECTED NOTHING: the query against fineract_tenants returned no row at all for tenant '$TENANT', so 'empty' would mean 'not read', not 'empty'. MySQL-era JDBC parameters on this tenant are UNPROVEN absent." ;;
+  '[]') ok "schema_connection_parameters is empty (a row was returned and its value is the empty string)" ;;
+  *)    scp_val=${scp#[}; scp_val=${scp_val%]}
+        bad "schema_connection_parameters = '$scp_val' — must be empty on a capture tenant" ;;
+esac
 
 # ------------------------------- P12 tenant connection points at PostgreSQL:5432
 port=$(docker exec "$DB" psql -U root -d fineract_tenants -At \
@@ -186,16 +232,31 @@ fi
 # substring.  Substring matching is what T77 defeated: grep -qF '"principal": 1162502.5'
 # also matches 1162502.55, which is not a tie, so the canary answered 20925.05 under both
 # HALF_UP and HALF_EVEN and the assertion became a tautology.  A digest has no prefix.
+#
+# THIRD ITERATION (T99).  A digest has no prefix, but `shasum` had no ADDRESS: T80 computed it with
+# a bare word resolved through $PATH, so a `shasum` earlier on $PATH that prints the pinned constant
+# restored the tautology — worse than before, because the rig now LOOKS hardened and the attack
+# LEAVES NO DIFF TRACE.  Reproduced against main's bytes in t99/out/f2-prefix-*.  The digest is now
+# computed by sha256.sh: absolute-path tools in root-owned system directories, each one
+# known-answer-tested every run, and two independent implementations required to agree.  The
+# instrument is an operand too, and a failure of the instrument is a BREACH, never a silent pass.
 canary_pinned=0
 if [ -z "$CANARY_REQ" ]; then
   bad "rounding-mode canary NOT run: CANARY_REQ is unset. Set it to the committed half-cent request (t22-audit/req/calc-pmode2-gerege.json, sha256 $PIN_CANARY_SHA256). A DB row is not proof of the mode in force."
 elif [ ! -f "$CANARY_REQ" ]; then
   bad "rounding-mode canary NOT run: CANARY_REQ='$CANARY_REQ' is not a readable file. A DB row is not proof of the mode in force."
+elif ! sha256_init; then
+  # T99: the INSTRUMENT is now an operand too.  If fewer than two independent, known-answer-tested
+  # sha256 implementations are available, this script does not know what a digest is and must not
+  # pretend the pin held.
+  bad "rounding-mode canary NOT run: the sha256 instrument is not trustworthy — $SHA256_ERROR. THE CANARY WAS NOT SENT and the effective rounding mode is UNPROVEN."
+elif ! sha256_file "$CANARY_REQ"; then
+  bad "rounding-mode canary NOT run: refusing to trust a digest of '$CANARY_REQ' — $SHA256_ERROR. THE CANARY WAS NOT SENT and the effective rounding mode is UNPROVEN."
 else
-  creqsha=$(shasum -a 256 "$CANARY_REQ" | cut -d' ' -f1)
+  creqsha=$SHA256_RESULT
   if [ "$creqsha" = "$PIN_CANARY_SHA256" ]; then
     canary_pinned=1
-    ok "canary request pinned by DIGEST COMPARISON: computed sha256 $creqsha == pinned sha256 $PIN_CANARY_SHA256 ($CANARY_REQ) — the exact half-cent tie, 1,162,502.50 x 0.018 = 20,925.045"
+    ok "canary request pinned by DIGEST COMPARISON: computed sha256 $creqsha == pinned sha256 $PIN_CANARY_SHA256 ($CANARY_REQ) — the exact half-cent tie, 1,162,502.50 x 0.018 = 20,925.045 [instrument: $SHA256_USED, absolute-path tools, known-answer tested, cross-checked]"
   else
     bad "canary request DIGEST MISMATCH — computed sha256 '$creqsha' for '$CANARY_REQ', pinned sha256 is '$PIN_CANARY_SHA256'. That file is NOT the pinned half-cent tie (principal 1,162,502.50 x 0.018 = 20,925.045 exactly). A request that is not an exact half-minor-unit tie answers the same under HALF_UP and HALF_EVEN, so grading it would certify nothing. THE CANARY WAS NOT SENT and the effective rounding mode is UNPROVEN."
   fi

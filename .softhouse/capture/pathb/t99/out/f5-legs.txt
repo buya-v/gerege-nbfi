@@ -1,0 +1,79 @@
+=== T152 — the four F-5 legs
+main   (pre-fix) = ab2de89356986c8ed85a9d2e26c2bc86b0fb8720   [literal, from t99/FORK-POINT-SHA]
+branch (fixed)   = <HEAD-COMMIT>
+tenant           = gerege
+real docker      = /usr/local/bin/docker
+
+=== LEG 1 — RED: docker AND curl stubbed to exit 1 (nothing to scan, anywhere)
+  main     EXIT=1  PASS=3   FAIL=18
+        PASS  0 prohibited-engine hits in container env
+        PASS  0 prohibited driver jars in fineract-provider.jar
+        PASS  schema_connection_parameters is empty
+  >> in a completely dead environment the ONLY PASS lines in the entire suite are these three,
+  >> and they are the three that carry the CLAUDE.md database-prohibition non-negotiable.
+  branch   EXIT=1  PASS=0   FAIL=21
+        FAIL  prohibited-engine scan of the container env INSPECTED NOTHING: `docker inspect fineract-fineract-1` returned n
+        FAIL  prohibited-driver-jar scan INSPECTED NOTHING: `unzip -l /app/fineract-provider.jar` in fineract-fineract-1 ret
+        FAIL  schema_connection_parameters check INSPECTED NOTHING: the query against fineract_tenants returned no row at al
+  OK   main   RED PASS = 3
+  OK   main   RED FAIL = 18
+  OK   branch RED PASS = 0
+  OK   branch RED FAIL = 21
+
+=== LEG 2 — GREEN: the live reference oracle, both sides
+  main     EXIT=0  PASS=22  FAIL=0
+  branch   EXIT=0  PASS=22  FAIL=0
+    branch witnesses:
+        PASS  0 prohibited-engine hits in container env (47 env line(s) actually scanned)
+        PASS  0 prohibited driver jars in fineract-provider.jar (5406 jar entry line(s) actually scanned)
+        PASS  schema_connection_parameters is empty (a row was returned and its value is the empty string)
+      ALL PRECONDITIONS HOLD — tenant 'gerege' at MathContext(19, HALF_UP), PostgreSQL only.
+  OK   main   GREEN PASS = 22
+  OK   main   GREEN FAIL = 0
+  OK   branch GREEN PASS = 22
+  OK   branch GREEN FAIL = 0
+  OK   env-line witness = 47
+  OK   jar-entry witness = 5406
+  >> 22 PASS on BOTH sides, so the liveness operands weakened nothing; the branch additionally
+  >> prints what each scan actually read, which is the difference between 'clean' and 'not looked'.
+
+=== LEG 3 — POSITIVE CONTROL: a poisoned docker that ANSWERS (mariadb env, mysql-connector
+    jar, MySQL-shaped tenant row).  Both sides must still FAIL all three.
+  main     EXIT=1  PASS=19  FAIL=3
+        FAIL  1 prohibited-engine hits in container env (Oracle Database / MySQL / MariaDB are prohibited)
+        FAIL  1 prohibited driver jars inside fineract-provider.jar
+        FAIL  schema_connection_parameters = '[serverTimezone=UTC&useLegacyDatetimeCode=false]' — must be empty on a capture
+  branch   EXIT=1  PASS=19  FAIL=3
+        FAIL  1 prohibited-engine hits in container env (Oracle Database / MySQL / MariaDB are prohibited)
+        FAIL  1 prohibited driver jars inside fineract-provider.jar
+        FAIL  schema_connection_parameters = 'serverTimezone=UTC&useLegacyDatetimeCode=false' — must be empty on a capture t
+  OK   main   prohibition FAILs = 3
+  OK   branch prohibition FAILs = 3
+  >> the fix is not 'refuse everything': the assertions still fire for their REAL reason.
+
+=== LEG 4 — PARTIAL OUTAGE: the fineract container is gone, the DB is alive, docker is REAL
+  main     EXIT=1  PASS=15  FAIL=7
+        PASS  0 prohibited-engine hits in container env
+        PASS  0 prohibited driver jars in fineract-provider.jar
+        PASS  schema_connection_parameters is empty
+  branch   EXIT=1  PASS=13  FAIL=9
+        PASS  schema_connection_parameters is empty (a row was returned and its value is the empty string)
+        FAIL  prohibited-engine scan of the container env INSPECTED NOTHING: `docker inspect fineract-fineract-1` returned n
+        FAIL  prohibited-driver-jar scan INSPECTED NOTHING: `unzip -l /app/fineract-provider.jar` in fineract-fineract-1 ret
+  OK   apparatus: the DATABASE still answered (P12 from the same join) = 1
+  OK   main   vacuous prohibition PASSes on the partial outage = 2
+  OK   branch INSPECTED NOTHING messages = 2
+  >> P11 is NOT vacuous here — the database really answers, so its PASS is a REAL observation.
+  >> That is the point of this leg: the three assertions have three different emptiness SOURCES,
+  >> and only a partial outage separates them.  A total outage makes all three look alike.
+    main   P11, partial outage: PASS  schema_connection_parameters is empty
+    main   P11, TOTAL   outage: PASS  schema_connection_parameters is empty
+    branch P11, partial outage: PASS  schema_connection_parameters is empty (a row was returned and its value is the empty string)
+  OK   main's two P11 PASS lines are BYTE-IDENTICAL — one read a row, one read nothing,
+       and no reader of the transcript can tell which.  That is F-5.
+
+=== VERDICT
+RESULT: all four F-5 legs reproduce.  RED 3/18 -> 0/21; GREEN 22/0 on both sides with the
+        47 and 5406 witnesses; the poisoned docker still fails 3 on both sides; and on a
+        partial outage main prints two vacuous PASSes where the branch says INSPECTED
+        NOTHING.  The three assertions are no longer capable of passing on no input.
