@@ -2480,7 +2480,7 @@
     {
       "id": "T122",
       "title": "Apply T114's findings to the G-8 write-up and make T112 mergeable",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -2491,7 +2491,7 @@
         ".softhouse/gates.md"
       ],
       "description": "Applies T114's F-T114-1 (the sub-ulp claim is false on 4 of 29 family-B cells - exact-rational gaps of 2.43/1.62/1.08 ulp at n=104,105,106, so the explanation fails at the region's LOWER BOUNDARY where family B's cause will be decided; re-derive in exact rational arithmetic, never float - P-25), F-T114-2 (the F-4 fix itself introduced an unscoped claim; T84's largest n is 600 not 200), and F-T114-4 (restore the lost order-and-identity independence result: T84's 12 boundary cells re-asked with different tenant ids and reversed order, 12/12 identical). Records F-T114-5/6 without editing the executed probe sources. RESOLVES THE EVIL MERGE (F-T114-3): the branch must end with tasks.json EXACTLY as on current main. Verifies on a scratch merge into current main in a throwaway clone (P-24).",
-      "note": "Raised and dispatched by the driver, local fire 20260821-080001, from T114's MICRO-FIX verdict."
+      "note": "Raised and dispatched by the driver, local fire 20260821-080001, from T114's MICRO-FIX verdict. || local fire 20260821-080001: DONE on softhouse/T122-g8-t114-fixes (300b52d). F-T114-1 re-derived in EXACT RATIONAL arithmetic with NO FLOAT CONSTRUCTED ANYWHERE, not even for display: 4 of 29 family-B cells are NOT below the ulp of 1/2 at 19 significant digits - 2.43, 2.43, 1.62, 1.08 ulp at n=104,104,105,106, then 0.72 at n=107 decreasing to 4.7441e-45 at n=250; EXACT ULP CROSSING: last n >= 1 ulp = 106, first n < 1 ulp = 107. THE INTERPRETATION IS THE REAL RESULT: the 'EMI quantizes to zero because the gap is beneath the arithmetic's resolution' story is REFUTED AT THE REGION'S FIRST THREE TERMS, and the region's boundary (n=104; n=102 and n=103 measured clean in both captures) DOES NOT COINCIDE with the sub-ulp boundary (n=107), so AT MOST ONE CAN BE THE CAUSE - sub-ulp is a correlate over 25 of 29 cells, not the explanation, and the next worker on family B starts at n=104, not in the sub-ulp tail. CAME ONE STEP FROM A THIRD WRONG COUNT ON THIS GATE: T84-evidence/out/ holds BOTH capture-t84-raw.json (15 captures) AND .json.gz (251), same for t84b (14 vs 95); the first run over the plain files gave a plausible, self-consistent and WRONG 16 family-B / 3 exceptions. Now P-32. F-T114-2 scoped: T84's max n ANYWHERE is 600, max n AT 600.0%/MNT 0.01 is 200 - and THE LEAK HAD REACHED THE ATTESTATION (P-21): T112.md claimed every replacement carried both scope limbs while F-4's carried NONE. F-T114-4 restored and re-verified, plus A SECOND LOST FACT recovered (T83's probe topology - in-process Path A seam, no server, no DB - at run-t83.sh:5-10, :99-107, :316). F-T114-5/6 RECORDED NOT EDITED, with harmlessness MEASURED not asserted: an exact-Fraction-key variant emits an identical measured-boundary.json and boundary table. EVIL MERGE CONFIRMED; T112's handoff denies touching tasks.json in FOUR places, all corrected. IT DEVIATED FROM ITS BRIEF AND WAS RIGHT (P-31): told to take main's tasks.json it did, tested by merging, and it CONFLICTED because main moved three times during the task and edited the file every time - so it set the blob back to merge-base 7e49bd93, the branch authoring NO change, so any merge into any future main takes main's side with zero conflict. SCRATCH MERGE: three passes against three different main heads, all exit 0, no conflict on any path, plus a real merge --no-ff; merged gates.md = the branch's blob, merged tasks.json = main's blob, EXACTLY ONE ## G-8 heading. Family attribution swept at ALL 16 SITES, none backwards. Conformance PASS exit 0, 42 parity, 5576 cells, 0 violations; gofmt -l names exactly contract.go. FLAGGED, and T129 now owns it: nobody has rebuilt T101's 56-row scope table across two rounds of corrections that both ADDED prose, and three consecutive reviews have each found a false-scope sentence."
     },
     {
       "id": "T123",
@@ -2591,6 +2591,54 @@
       ],
       "description": "Paired reviewer for T96. Re-derive the sole-caller verdict at pinned 426a23544 incl. the virtual-dispatch and reflection exclusions, check that each of the six PUBLISHED commands actually reproduces its claimed number (a published command that does not reproduce its own number is rejection-class), and reproduce the red demonstration. Then audit T96's own blind-spot analysis by constructing each defeating edit, and answer the question T96 could not ask of itself: is the class CLOSED or has it merely MOVED - does the whole-tree grep form have its own silent-green edit, and is 'reproduce the LINES, not the total' an instruction a reader will follow or a scalar tripwire with a disclaimer?",
       "note": "Raised by the driver, local fire 20260821-080001, from T109's class sweep / T96."
+    },
+    {
+      "id": "T121",
+      "title": "INDEPENDENT review of T113 — the forgeable interpreter-guard token",
+      "status": "done",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [
+        "T113"
+      ],
+      "files_hint": [
+        ".softhouse/reviews/"
+      ],
+      "description": "Paired reviewer for T113, landing at the end of a chain in which FOUR CONSECUTIVE WORKERS each found the previous one's central claim false (T86 on T81, T106 on T97, T113 on T106). Adjudicate F-T113-1 (T113 against T106 on whether the probe's IFS= prefix prevents a false refusal) from the bash manual's actual read semantics AND by experiment, and F-T113-2 (a false line-53 citation). Hunt for a FALSE REFUSAL - the failure mode T86 hit in its own draft - and try to close the bash 4.x gap T113 left open.",
+      "note": "Raised and dispatched by the driver, local fire 20260821-080001. || local fire 20260821-080001: DONE on softhouse/T121-review-t113 (bf88c46). VERDICT MICRO-FIX. The one-line fix is correct and minimal, driven red and green against REAL PRE-FIX BYTES on THREE bash major versions. F-T113-1 SPLIT RULING: disposition UPHELD (T106's IFS=e false-refusal claim is false - brute-forced 97+94+94 single-char IFS values on bash 3.2.57/4.4.0/5.3.9 plus 256 character pairs plus all 94 printable chars at once, ZERO mangled; withdrawing the claim was right and keeping the prefix was right) but the DERIVATION IS REFUTED - T113 replaced a false reason with a DIFFERENT false reason: 'read with a single variable strips only leading/trailing IFS WHITESPACE' is wrong, since IFS=z on line abcz yields abc on all three versions. The true rule also strips ONE TRAILING NON-WHITESPACE IFS DELIMITER when it occurs exactly once and is the final character. THE PROBE SURVIVES BY AN ACCIDENT OF SPELLING: conformance-psub-live escapes only because its final 'e' also appears in 'conformance'; conformance-psub-livz under IFS=z IS TRUNCATED - so the harness's list of futures the prefix insures against is missing the likeliest one, somebody renames the token. NOT rejection-class, because T113 kept the prefix: it deleted a false justification, not a true one. F-T113-2 UPHELD IN FULL (f2813c8's line 53 is inside WHY IT EXISTS and describes the psub DYING under sh - the opposite failure). BASH 4.x GAP CLOSED, retiring N-T113-5: docker pull bash:4.4 stalled for T121 too, but the block is DAEMON-SIDE not network-side (ftp.gnu.org returns 200), so it BUILT GNU bash 4.4.0 FROM THE OFFICIAL TARBALL and ran the matrix - guard behaviour identical to 3.2.57/5.3.9, zero false refusals, forge present pre-fix (clean=3 forged=0) and closed post-fix (3/3), plus the new datum that BASH 4.4 KILLS PSUB IN POSIX MODE, confirming the 5.1+ attribution and bracketing the boundary to (4.4, 5.3.9]. Six exotic shells T113's matrix skipped SILENTLY are now closed, and /dev/fd AT MODE 000 is a SECOND real-interpreter reproduction of F1. T106's rig byte-identical (cb11a2be...0005), both legs reproduce 8/0 and 7/1 exactly, healthy-bash control green in BOTH legs - which is what makes it a fix and not a blanket refusal. F-T121-2 (P3): N-T113-3 was swept for the SENTENCE, not the CONCEPT (P-26) - three more scripts print without asserting (readonly-sourced-edge.sh, and psub-dead-container.sh / bash5-matrix-container.sh, whose strong INERT guards protect the SUBJECT but never the OBSERVATION, their clean=3/forged=3 expectations living in COMMENTS). F-T121-3 (P3): the --help 1->2 move is right but conformance.sh:59 should say exit 2 is also the driver's oracle-is-down stop condition. P-24 scratch merge into current main (which moved 6d2a1e9 -> 9027f00 during the task): clean, PASS exit 0, 42 parity, 5576 cells, 0 violations, --prove 21/0, sh -> exit 3 with zero verdict tokens, gofmt -l names exactly contract.go, vectors and nexus diffs empty. T130 applies the findings."
+    },
+    {
+      "id": "T129",
+      "title": "INDEPENDENT review of T122 — and the overdue rebuild of the G-8 scope table",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [
+        "T122"
+      ],
+      "files_hint": [
+        ".softhouse/reviews/"
+      ],
+      "description": "Paired reviewer for T122, with a second mandate T122 itself flagged. PART 1: re-derive the four exact-rational ulp gaps and the exact ulp crossing (last n >= 1 ulp = 106, first < 1 ulp = 107); independently verify the .json vs .json.gz subset claim that nearly produced a THIRD wrong count on this gate (P-32); test the INTERPRETATION that the region's boundary (n=104) and the sub-ulp boundary (n=107) do not coincide, so at most one can be the cause; and rule on T122's deliberate deviation over tasks.json (the driver believes T122 was right and the brief was wrong - see P-31). PART 2, why this task exists: NOBODY HAS REBUILT T101's 56-row sentence-by-sentence scope table across two subsequent rounds of corrections that both ADDED prose, and three consecutive reviews (T101, T114, T122) have each found a false-scope sentence. That is a section growing faster than its audit. Rebuild the table from scratch over the branch's current text, paying particular attention to sentences added BY THE CORRECTIONS - F-T114-2 was a fix that introduced a new unscoped claim, and T112's own attestation then misdescribed it.",
+      "note": "Raised and dispatched by the driver, local fire 20260821-080001."
+    },
+    {
+      "id": "T130",
+      "title": "Apply T121's findings to T113 — and remove the accident of spelling",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [
+        "T121"
+      ],
+      "files_hint": [
+        ".softhouse/conformance.sh"
+      ],
+      "description": "Applies F-T121-1: T113 replaced a false reason with a DIFFERENT false reason - read also strips ONE trailing non-whitespace IFS delimiter when it occurs exactly once and is final - correct at conformance.sh:171-174, interpreter-matrix.sh:142-145 and T113.md:346-348. AND removes the underlying hazard: the probe token survives truncation only by an ACCIDENT OF SPELLING (its final 'e' recurs in 'conformance'), so the guard's correctness rests on a coincidence a rename would silently break. Make the token structurally immune or assert it round-trips, and DRIVE IT RED by renaming to a truncatable spelling. Plus F-T121-2 (three more print-without-asserting scripts - the concept T113 swept only as a sentence) and F-T121-3 (conformance.sh:59, and exit 2 now formally ambiguous since T110). Retires N-T113-5: bash 4.x measured, boundary bracketed to (4.4, 5.3.9].",
+      "note": "Raised and dispatched by the driver, local fire 20260821-080001."
     }
   ]
 }
