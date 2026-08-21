@@ -813,6 +813,29 @@ input shape; a digest claim needs **the exact canonicalisation and where it live
 > is a digest of raw file bytes and says so. When you cannot reproduce a published digest, suspect the recipe
 > before you suspect the evidence, and record which it turned out to be.
 
+### P-39. A program embedded in a doc comment is subject to the FORMATTER — write it indentation-insensitive
+
+**Fire `20260821-080001`, T146.** The `futureUnrecognizedInterest` block publishes census commands inside `emi.go`'s
+doc comments so a future reader can re-run them. T146 needed a real parser for one of them (no line-oriented
+pipeline can count Java enum constants — nested braces in constructor arguments and class bodies, `/* */` spanning
+lines, the first constant on the header line, the last comma optional), and wrote it in **Python**.
+
+`gofmt -l` immediately named `emi.go`. **`gofmt` reflows doc comments and flattens any line indented deeper than
+the block's base** — so an indentation-significant program embedded in a comment is not merely reformatted, it is
+**silently destroyed by the next `gofmt` run**, and the destruction reads as whitespace noise in review. Three
+constructs had to be re-authored flat; the census shipped as 45 lines of POSIX `awk`.
+
+The same task then found the sharper half by attacking its own fix: its first `awk` draft read a constant written
+with a `,` escaped comma as **4, silently green** — the exact defect it was sent to close, reappearing inside
+the fix. JLS 3.3 resolves `\uXXXX` *before* lexing, so the census now **refuses** any `\u` input rather than answer
+it, and publishes that refusal as a stated limit.
+
+> **Rule.** Anything executable that lives inside a comment must survive the formatter — no significant
+> indentation, no trailing-whitespace dependence, no line-continuation the reflow can join. Prove it by running
+> the formatter and by **extracting the program back out of the committed comment and running the extracted
+> bytes** (T146 did: 45 lines, `cmp` byte-identical, all eleven inputs re-run against the extract). A published
+> command nobody has round-tripped is a claim, not a check.
+
 <!-- LEARNED PATTERNS END -->
 
 ### Run 2026-08-17-run1-harness-schedule-poc — fire `20260819-170001` (local, oracle REACHABLE) — 2026-08-19
