@@ -1,0 +1,6 @@
+POST /glaccounts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/bad-047-type-0.json
+captured-at-utc: 2026-08-21T05:59:46Z

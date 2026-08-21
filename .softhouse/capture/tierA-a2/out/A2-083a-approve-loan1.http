@@ -1,0 +1,6 @@
+POST /loans/1?command=approve
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/approve-083.json
+captured-at-utc: 2026-08-21T06:03:36Z

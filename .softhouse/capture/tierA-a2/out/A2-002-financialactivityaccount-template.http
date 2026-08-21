@@ -1,0 +1,4 @@
+GET /financialactivityaccounts/template
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+captured-at-utc: 2026-08-21T05:56:58Z

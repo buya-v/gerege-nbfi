@@ -1,0 +1,6 @@
+POST /glaccounts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/gl-130-clean-for-delete.json
+captured-at-utc: 2026-08-21T06:06:01Z

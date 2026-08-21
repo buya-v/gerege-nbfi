@@ -1,0 +1,6 @@
+POST /loans
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/loan-081-on-product22-b.json
+captured-at-utc: 2026-08-21T06:03:36Z
