@@ -902,7 +902,10 @@ regulatory sign-off and licence facts are equally untouched and are not in Run 1
   T101's corrections and deleted the superseded UPDATE block named below), T114 (independent review
   of T112 — **re-derived every load-bearing number in this section from scratch and all of it
   reproduced**; MICRO-FIX on two false sentences, one of them introduced by T112's own fix), T122
-  (applied T114's findings)
+  (applied T114's findings), T129 (independent review of T122 — rebuilt the sentence-by-sentence
+  scope audit from scratch, 117 rows, 6 fail, **every failure a scope or disposition statement and
+  the measurements perfect**; MICRO-FIX), T140 (applied T129's six findings and adopted the standing
+  rule below)
 - **context**: tier0-harness-schedule-poc / loan-schedule
 - **state**: **OPEN** — blocks nothing today. T112 fixed the write-up and T122 fixed two sentences in
   T112's fix; **neither decided the gate, and neither may.**
@@ -919,9 +922,42 @@ regulatory sign-off and licence facts are equally untouched and are not in Run 1
   **That claim was audited claim-by-claim twice — by T114, which found exactly one loss (T84's
   12-cell tenant-id/reversed-order re-ask, restored above), and again by T122, which re-read the
   deleted block end to end and restored one further provenance clause (T83's probe topology: no
-  server, no database connection). Verified on a scratch merge into current `main` in a throwaway
+  server, no database connection). **A third claim-by-claim audit, by T129, found one further
+  substantive loss — `main:947`'s "T83 … took no number from T75", the independence claim that makes
+  the "T75's report is CONFIRMED" below mean anything — and T140 restored it, verified at source.**
+  Verified on a scratch merge into current `main` in a throwaway
   clone: the merged file carries exactly ONE `## G-8` heading, and the only surviving mentions of the
   deleted block are this bullet naming it.**
+
+### STANDING RULE — how to edit this section (adopted at T140, proposed by T129)
+
+This section is the artefact **Buyan reads to decide a `user` gate**, and it has now carried a wrong
+number or a wrong scope statement to that reader **four separate times**: a family A/B inversion, an
+18-instead-of-22 refutation count born of a float in an analysis script (P-25), an unscoped
+"largest n" sentence that contradicted the section ten lines away (P-26), and a `tasks.json`
+disposition that the author had already reversed and never swept (P-21 by a third route). Every one
+of them was in **prose**, not in a measurement. So:
+
+1. **Nobody edits this section without rebuilding the sentence-by-sentence scope table.** Not a
+   grep for the sentence you are changing — a rebuild, claim by claim, of what every sentence
+   asserts and the domain it was measured over. T129's rebuild ran to 117 rows and found six
+   failures, **all six of them scope or disposition statements in a section whose measurements are
+   perfect**. That ratio is the whole reason for this rule.
+2. **The editor adds itself to the non-decision roster** at *"decided none, recommended none, and
+   pre-implemented none"* below, and to the `task:` bullet above. That roster is the section's own
+   attestation; a stale one is a claim made in the name of tasks that never made it.
+3. **Sweep for the concept, never for the wording** (P-21 / P-26) — including your own change of
+   mind. A correction you later reverse leaves its own restatements behind as fossils, and they are
+   the most convincing fossils in the document because they were written by the person who now knows
+   better. Then **write down what the sweep could not have found**.
+4. **Exact arithmetic only, including for display** (P-25). Any number re-derived for this section is
+   integer minor units or `fractions.Fraction`; a float in an analysis script has already put a wrong
+   count in front of the decision-maker once.
+5. **Analyse the `.gz` captures, not the plain `.json` extracts** — see the warning in the Evidence
+   block below. The extracts give a plausible, self-consistent, wrong answer.
+6. **Verify the merge by merging** (P-24), in a throwaway clone against *current* `main`: exactly one
+   `## G-8` heading, no conflict on `.softhouse/tasks.json`, and `gates.md` resolving to your
+   branch's blob.
 
 ### Read this first: G-8 is TWO phenomena, and a remedy for one is not a remedy for the other
 
@@ -1005,15 +1041,31 @@ oracle image: it **does not start the Fineract server and opens no database conn
 writes nothing to the running reference-oracle container or its PostgreSQL database
 [VERIFIED by T122 at `src/run-t83.sh:5-10`; the seam source is pinned by `cmp` against the pinned
 checkout **and** by a sha256 literal in the script at `:99-107`, because two files mutated the same
-way compare equal under `cmp`]. Its prediction was committed as a strict ancestor of its evidence,
+way compare equal under `cmp`]. **It took no number from T75** — T83 generated its own cells by a
+contiguous sweep and re-measured the shape T75 reported from scratch, which is what makes "T75's
+report is CONFIRMED" below an independent confirmation rather than a restatement [VERIFIED by T140
+at `.softhouse/capture/t83-nonamortizing/src/CaptureT83.java:16`, *"T83 re-measures that
+INDEPENDENTLY — it takes no number from T75 — and measures the EXACT BOUNDARY by a contiguous
+sweep"*, and `:25-26`, *"THIS HARNESS ASSERTS NOTHING AND PREDICTS NOTHING … does not classify
+them"*. This clause stood in the deleted `main` UPDATE block at `main:.softhouse/gates.md:947` and
+was the one substantive claim not carried over; restored at T140 on T129's F-T129-6]. Its
+prediction was committed as a strict ancestor of its evidence,
 and it calibrates against two already-committed captures with **zero input differences including
 tenant id**;
 reproduced by T84 byte-identically, canonical sha256 `01b41d9c…3101b`, 332 cases; T84 additionally
-re-asked **12 boundary cells with different tenant ids and in reversed order — 12 of 12 identical**,
-so the boundary is neither tenant-dependent nor order-of-emission dependent [`T84-review-t83.md`
+re-asked **12 boundary cells with different tenant ids and in a different emission order, with each
+boundary pair reversed — 12 of 12 identical**, so the boundary is neither tenant-dependent nor
+order-of-emission dependent [`T84-review-t83.md`
 §1.3; re-verified by T122 from the committed capture: the twelve `T84-RP-*` cells carry their own
 `t84_rp_*` tenant ids, distinct from T83's `cap_t83_*`, and each one's whole `observed` block is
-byte-identical to the same-shape T83 cell — 12 matched, 12 identical]; re-classified a
+byte-identical to the same-shape T83 cell — 12 matched, 12 identical. **The words "in reversed
+order" stood here until T140 and were loose**: measured, the twelve cells' partners sit at T83
+emission positions 265, 79, 78, 2, 215, 214, 285, 284, 171, 170, 19, 18 — neither increasing nor
+decreasing, i.e. a *scramble* in which the five same-shape boundary **pairs** are each locally
+reversed relative to T83 (79 before 78, 215 before 214, 285 before 284, 171 before 170, 19 before
+18) and the remaining two cells are singletons. The conclusion is unaffected and fully supported —
+T140 re-derived the 12-of-12 byte-identity and the tenant-id disjointness independently — only the
+description was wrong]; re-classified a
 third time by T100 from the same raw capture: **198 fail / 132 clean / 0 family B**]. Domain swept:
 annual rates **{7.0, 16.8, 21.6, 36.0}** × repayment counts **{2, 3, 4, 6, 12, 24, 36, 56}**,
 principal swept contiguously in minor units from 1 past the boundary (1..27 minor), every cell
@@ -1164,9 +1216,14 @@ finding after all."* It failed.
 **T84 measured 22 family-B cells; T100 measured 7 more.** Union of what has been observed:
 
 - annual rate **600.0 % — and no other rate has ever produced a family-B cell.** T84 swept 300.0 %
-  with B = 2 through n = 204 and 300.0 % with B = 1 at six terms up to n = 260: the 300 % failures
-  are **family A** (their principal column sums) [VERIFIED by T100's re-classification of T84's raw
-  capture: 6 family-A cells at 300.0 %, 0 family-B].
+  with B = 2 at n = 100, 150, **170…204 contiguously**, 220 and 260 — **41 cells, all clean** — and
+  300.0 % with B = 1 at six terms up to n = 260 (n = 100, 150, 175, 196, 220, 260): the 300 %
+  failures are **family A** (their principal column sums) [VERIFIED by T100's re-classification of
+  T84's raw capture: 6 family-A cells at 300.0 %, 0 family-B. Domain re-derived by T140 from the
+  committed `.gz` captures: **the largest n asked at 300.0 % is 260 for both principals**, not 204 —
+  204 is the top of the *contiguous* run only, and an earlier revision said "B = 2 through n = 204",
+  which under-stated the domain. The 41 B = 2 cells cover 39 distinct n; n = 175 and n = 196 were
+  each asked twice and agree].
 - principal **MNT 0.01 (1 minor unit)** — no other principal has produced a family-B cell.
 - repayment counts **n ∈ {104…122} ∪ {150, 200, 250}**: T84 measured 104…121 contiguously plus 150
   and 200 (22 cells, of which n = 108 and n = 120 were measured twice, once in each of its two
@@ -1447,10 +1504,15 @@ day-count.
   describe family B at all.**
 
 **(b) and (c) both amend the graded domain, which is a change to a ratified DEC-n — a hard `user`
-gate no agent may cross.** Buyan decides. T83, T84, T100, T101 and T112 have each handled them and
+gate no agent may cross.** Buyan decides. T83, T84, T100, T101, T112, **T114, T122, T129 and T140**
+have each handled them and
 **decided none, recommended none, and pre-implemented none**; they attach only the measurement and
 the scoping. T112's whole mandate was the write-up: it corrected sentences and deleted a superseded
-block, and it moved nothing about the gate's substance.
+block, and it moved nothing about the gate's substance; T114, T122, T129 and T140 likewise touched
+only the prose. **This roster is the section's own non-decision attestation, so it must name every
+task that has reviewed or edited the section — T114 and T122 were missing until T140 added them
+(T129 F-T129-4), and the omission was invisible to a reader. If you edit this section, add
+yourself here.**
 
 **What unblocks it**: a `user` decision, now on **two** phenomena rather than one. **What it
 blocks**: nothing today — no vector covers either family and the conformance run is exit 0 without
@@ -1489,6 +1551,29 @@ and `capabilities.json` are untouched.
 `proposed-vector-family2-{no-exemption,with-exemption}.json`, and under `out/`:
 `capture-t84-raw.json{,.gz}`, `capture-t84b-raw.json{,.gz}`, `port-vs-oracle.json`,
 `orderdep2.json`, `exemption-demo.json`. Review: `.softhouse/reviews/T84-review-t83.md`.
+
+> **READ THIS BEFORE ANALYSING THOSE TWO CAPTURES — the `.gz` is the capture, the `.json` is an
+> extract.** `out/` holds **both** forms of each T84 capture and they are **not** the same evidence.
+> `capture-t84-raw.json.gz` holds **251** cases and `capture-t84b-raw.json.gz` holds **95** — these
+> are the captures, and **every count in this section is derived from them**. The plain
+> `capture-t84-raw.json` (**15** cases) and `capture-t84b-raw.json` (**14** cases) are committed
+> **extracts**, retaining only the cases cited in `T84-review-t83.md`. They are strict,
+> content-identical **subsets**: no id in an extract is absent from its `.gz`, and every id present
+> in both is byte-identical under a canonical dump [VERIFIED independently by T129 and again by
+> T140]. Each extract also records the full capture's canonical sha256 in
+> `_t84_full_captures_canonical_sha256`, and **that digest reproduces exactly over the `.gz`
+> captures array** — `3900a204…ccdcbf17` for t84 (251 cases) and `47611b04…22723313` for t84b (95
+> cases) — which is independent provenance that the `.gz` is the capture and the extract is a
+> faithful excerpt of it [VERIFIED by T140 under `run-t84.sh:109`'s own recipe,
+> `json.dumps(caps, sort_keys=True, separators=(',',':'))`; the digest is recipe-sensitive, and a
+> canonicalisation that differs in `ensure_ascii` reproduces neither]. **Analysing the plain files
+> silently yields a plausible wrong answer** — it produces **16** family-B cells and **3**
+> non-sub-ulp exceptions against the true **29** and **4**, and nothing about the run looks wrong,
+> because a subset of a capture is a perfectly well-formed capture. T122 hit this and caught it;
+> T129 reproduced the wrong numbers exactly, and **T140 reproduced them a third time** — running its
+> own classifier over the extracts gives **370** total swept cells and **16** family B (distinct
+> n = {104, 105, 108, 120, 121, 122, 150, 200, 250}, of which n = 104 twice and n = 105 give the 3
+> non-sub-ulp exceptions), against the true **687** and **29**.
 
 **The two-family split, committed on `softhouse/T100-g8-two-families`** —
 `.softhouse/capture/t100-g8-rescope/`: `PREDICTION.md` (registered in an ancestor commit),
@@ -1537,4 +1622,24 @@ the four family-B ulp gaps were re-derived in **exact rational arithmetic** from
 captures, T84's full n-set and the 12 `T84-RP-*` re-ask were re-derived the same way, and the two
 probe-source defects were re-verified by running unmodified copies from a scratch directory. It
 changed no vector, no `PIN.json`, no `capabilities.json`, no `contract.go` and no `nexus/` file, and
-it took `.softhouse/tasks.json` **wholesale from `main`** (F-T114-3, the evil merge in `eea5e80`).
+it left `.softhouse/tasks.json` at the **merge-base blob `7e49bd93`**, so the branch authors **no
+change at all** to the orchestrator's file and any merge into any future `main` takes `main`'s side
+with no conflict (F-T114-3, the evil merge in `eea5e80`; a snapshot of `main` was tried first and
+was rejected because `main` edits that file continuously — `git diff main --
+.softhouse/tasks.json` on the branch is therefore **not** empty, and that is the correct state for a
+file the branch must not touch). **Do not "fix" that diff.** The check that means anything is the
+post-merge one, and it passes: on a scratch merge into current `main` the merged tree's
+`tasks.json` blob equals `main`'s exactly and the path does not appear in the merge at all
+[VERIFIED by T122 against `main@79a67d1`, by T129 against `main@fdcdf09` and `main@e35ea7b`, and by
+T140 against `main@bcf2c55`. The line count of the three-dot diff is a function of how far `main`
+has moved since the merge base and is deliberately not quoted here — it was 1,097 lines at
+`main@e35ea7b` and 1,258 at `main@bcf2c55`].
+
+**T129's findings applied, committed on `softhouse/T140-g8-t129-fixes`** — this section as it now
+stands, plus the same five-site sweep applied to `T112.md`. T140 contacted the reference oracle
+**not at all**: the 687-cell split, the 29 family-B cells, the four ulp gaps and the crossing, the
+300.0 % domain, the twelve `T84-RP-*` partner positions and the two capture-extract digests were all
+re-derived from the committed capture bytes in **exact rational and integer arithmetic**, by a
+script sharing no code with T83's, T84's, T100's, T112's, T114's, T122's or T129's classifiers. It
+changed no vector, no `PIN.json`, no `capabilities.json`, no `contract.go` and no `nexus/` file, and
+it left `.softhouse/tasks.json` at the merge-base blob exactly as T122 did.
