@@ -351,14 +351,14 @@
       "role": "coder",
       "executor": "agent",
       "model": "opus",
-      "status": "in_progress",
+      "status": "done_pending_review",
       "dependencies": [],
       "title": "prove-redgreen.sh arm 1 has no EXIT trap — an interrupted run leaves the store SHORT and the next run reports a GREEN PASS 42",
       "files_hint": [
         ".softhouse/capture/pathb/t149/"
       ],
       "description": "RAISED BY T153 as a non-blocking finding during its APPROVAL of T149, local fire 20260821-054355. prove-redgreen.sh arm 1 moves a vector out of the store and back with two `mv`s and NO `trap ... EXIT`. A kill, a Ctrl-C or any failure BETWEEN the two mv's leaves the vector parked OUTSIDE STORE_ROOT -- and because the harness grades whatever it finds, THE NEXT CONFORMANCE RUN THEN REPORTS A GREEN 'PASS 42' over a store that is silently one vector short. That is the exact failure class this program keeps finding: A GREEN THAT MEANS LESS THAN IT APPEARS TO. It is worse than a red, because nothing prompts anyone to look. Fix with a trap that restores the store on ANY exit path, and DRIVE IT RED (P-22): interrupt the script between the mv's and show the store is restored, and show the pre-fix version leaves it short. Cross-check whether the same unguarded mv-out/mv-back shape exists in any OTHER rig -- P-26, sweep the concept, not the sentence.",
-      "note": "Raised by the driver from T153's non-blocking findings, local fire 20260821-054355. || local fire 20260821-134344: DISPATCHED (wave 1), isolated worktree softhouse/T156-redgreen-exit-trap, model opus. Told to run the destructive interruption against a SCRATCH store only, read pre-fix bytes from an immutable git blob, hard-code no vector count (main moved 42->43), and sweep the concept P-26 without reaching outside files_hint.",
+      "note": "Raised by the driver from T153's non-blocking findings, local fire 20260821-054355. || local fire 20260821-134344: DISPATCHED (wave 1), isolated worktree softhouse/T156-redgreen-exit-trap, model opus. Told to run the destructive interruption against a SCRATCH store only, read pre-fix bytes from an immutable git blob, hard-code no vector count (main moved 42->43), and sweep the concept P-26 without reaching outside files_hint. || local fire 20260821-134344: DONE on softhouse/T156-redgreen-exit-trap (3 commits). DELIBERATELY NOT MERGED pending its paired reviewer T158 -- the T149/T154 precedent. Driver verified scope itself: 10 files, ALL inside .softhouse/capture/pathb/t149/ plus handoff, clean. It MEASURED the silent green directly -- removing one parity vector from a scratch store gives 'VERDICT: PASS (exit 0) -- 42 parity vectors, 5576 cells', exit 0, no warning, against the driver's own verified 43/5664 baseline on main. Fix is trap EXIT/INT/TERM/HUP + idempotent VERIFIED restore + start-up recovery for the uncatchable SIGKILL case; it removed every hard-coded count and asserts relations instead, which mattered because main moved b4ebb81->9e42bbc under it mid-task. Drove 6 interruption classes x {pre,post} from an immutable blob in throwaway sandboxes -- 5 of 6 pre-fix interruptions stranded the store into a green PASS. P-26 sweep 502 of 3308 files with limits STATED IN NUMBERS. Raised four follow-ups OUTSIDE its files_hint and correctly did not reach out to fix them -> T160, T161, T162.",
       "attempts": 1
     },
     {
@@ -430,6 +430,60 @@
       ],
       "description": "Paired reviewer for T117 (plan gate rule 1). T117 sweeps 600.0% p.a. at n=300..1000 and B=2..5 against the live oracle to settle (i) whether family B is a half-line in n or a bounded island and (ii) WHETHER THE FAILING PRINCIPAL CAN EXCEED ONE MINOR UNIT. (ii) is a MONEY MAGNITUDE that changes G-8's disclosure, so re-derive it yourself in integer minor units from T117's RAW captures - do not accept its analysis layer. Specifically: (a) confirm T117 committed its predictions BEFORE any observation existed, by reading the commit ORDER in git, not the file contents (P-9 is only a control if the commit precedes the data); (b) grep every script T117 added for json.load without parse_float= and for any float comparison deciding a money claim (P-25 - 74 of 240 .py files under .softhouse/ have this defect today); (c) re-observe a SAMPLE of the swept points against the live oracle yourself and confirm byte-identical results - a sweep nobody re-observed is one worker's word; (d) check P-40: how many swept points returned an observation, how many did not, and does T117 SAY SO? An unreported skip in a sweep whose conclusion is a bound is a falsified bound; (e) confirm T117 decided nothing about G-8 and did not touch options (b)/(c), which are hard user gates; (f) check whether T117 restated the A/B family attribution correctly - the driver has had it BACKWARDS three times, twice after the correction landed in 95ec06a, so treat any A/B statement as suspect until you re-derive which family is which from gates.md:978. Verdict APPROVED / MICRO-FIX / REJECTED with specifics.",
       "note": "Registered by the driver, local fire 20260821-134344, running the plan gate over its OWN additions (P-44) - T117 was dispatched without a paired reviewer. Its output feeds T116 (the G-8 option-(a) promotion) and a G-8 disclosure Buyan reads, so an unreviewed measurement here propagates into a gate write-up."
+    },
+    {
+      "id": "T160",
+      "title": "The store census refuses an INFLATED store and has no equivalent for a DEFLATED one — deletion is an unguarded route to a green PASS",
+      "role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "status": "pending",
+      "attempts": 0,
+      "dependencies": [
+        "T155",
+        "T158"
+      ],
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/conformance/",
+        ".softhouse/conformance.sh"
+      ],
+      "description": "RAISED BY T156 as follow-up F-3 and RE-DERIVED BY THE DRIVER before being written as a task (P-42). CONFIRMED at nexus/internal/apps/loanschedule/conformance/vector.go: DuplicateCaseIDs refuses an INFLATED store (two files declaring one case_id) and its own comment states the ground -- coverage numbers are sums over loaded vectors, and LoadStore takes the census over every context directory BEFORE applying -context, closing T119's F-T119-1. There is NO equivalent in the DEFLATED direction. THE ASYMMETRY IS STRUCTURAL, NOT AN OVERSIGHT IN ONE FUNCTION: a vector that has been REMOVED is absent from BOTH enumerators, so `find` and LoadStore AGREE, any census that compares the two is satisfied, and the store grades green one vector short. T154's LEG 3 census refuses any .json the harness did not load -- that is inflation by construction and CANNOT catch deflation. MEASURED CONSEQUENCE (T156, reproduced on a scratch store): delete exactly one parity vector file and the harness prints 'VERDICT: PASS (exit 0) -- 42 parity vectors ... 5576 cells compared', exit 0, NO WARNING ANYWHERE, against the driver's own verified 43/5664 on main this fire. T156 fixed ONE CAUSE of deflation (an unguarded mv in one rig). ANY OTHER CAUSE GIVES THE SAME SILENT GREEN -- a failed checkout, a bad merge, a .gitignore, a stray rm, a worktree prune. THE ONLY THING THAT CAN DISTINGUISH 'this store is COMPLETE' from 'this store is SELF-CONSISTENT' is a COMMITTED MANIFEST OF EXPECTED case_ids that the harness refuses to run without. Build it: the manifest is data under version control, the harness loads it, and a case_id in the manifest with no file on disk is a REFUSAL (exit 2) naming the missing ids -- not a warning, not a lower count. Design for the two legitimate ways the store grows and shrinks: promoting a vector must be a deliberate one-line manifest edit in the same commit, and -context filtering must NOT be able to satisfy the manifest by narrowing it (that is exactly the shape of F-T119-1, which already bit this harness once). DRIVE IT RED (P-22): delete a vector, show the pre-fix green PASS and the post-fix refusal; then show the legitimate store is UNTOUCHED at exit 0 with the cell count unchanged. Hard-code no count -- read the manifest. A test-only guard is not a guard (P-45): conformance.sh never runs go test, so the refusal must fire on the path conformance.sh actually executes. Depends on T155 and T158 so it lands after the census and trap work is reviewed and merged, in one coherent order rather than three colliding diffs.",
+      "note": "Raised by the driver from T156's F-3, local fire 20260821-134344. Driver re-derived vector.go's duplicate-only reasoning from the source itself rather than inheriting T156's reading. T155 was asked mid-flight to rule independently on whether T154's LEG 3 census closes the deflated direction; its answer scopes this task."
+    },
+    {
+      "id": "T161",
+      "title": "A PROVER THAT CORRUPTS THE LIVE RIG IT IS PROVING — prove-f1.sh overwrites t36/attest.py with pre-fix bytes and has ZERO traps",
+      "role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "status": "pending",
+      "attempts": 0,
+      "dependencies": [],
+      "files_hint": [
+        ".softhouse/capture/pathb/t80/"
+      ],
+      "description": "RAISED BY T156 as follow-up F-1, which marked it [UNVERIFIED] because it had only read the file and was correctly refusing to reach outside its files_hint. THE DRIVER HAS NOW VERIFIED IT DIRECTLY AND IT IS WORSE THAN T156 COULD SEE BY READING. .softhouse/capture/pathb/t80/prove-f1.sh does, in sequence: `cp \"$W/t36/attest.py\" \"$O/.f1-fixed\"` (backup to a DOTFILE in an output dir), then `git show \"$PREFIX_COMMIT:.softhouse/capture/pathb/t36/attest.py\" > \"$W/t36/attest.py\"` -- IT OVERWRITES THE LIVE RIG FILE WITH PRE-FIX BYTES -- then RUNS it, which mutates $W/t36/out/emiloop and creates the CAPTURED-FROM-TENANT stamp, then restores with `cp` + `rm -f` + `git checkout --`. `grep -n trap` over the whole file returns NOTHING. ZERO TRAPS. Any interruption, any set -e failure, any Ctrl-C between the overwrite and the restore LEAVES THE LIVE ATTESTER AT PRE-FIX BYTES, plus a stray CAPTURED-FROM-TENANT stamp and a mutated out/emiloop. THIS IS STRICTLY MORE DANGEROUS THAN THE DEFECT T156 WAS SENT TO FIX. A stranded vector is at least detectable by counting. A SILENTLY DOWNGRADED ATTESTER KEEPS PRODUCING ATTESTATIONS THAT LOOK ENTIRELY NORMAL -- and t36/attest.py is part of the enforced precondition path (preconditions.sh:159-160 -> exit 1 -> attest.py:90/:95-98) that this program cites as the thing standing between a fabricated capture and the corpus. Fix it the way T156 fixed arm 1 and REUSE THAT SHAPE rather than inventing a second one: trap on EXIT/INT/TERM/HUP, restore VERIFIED not assumed, idempotent, plus start-up recovery for SIGKILL which no trap can catch. Restore from an IMMUTABLE GIT BLOB, not from a dotfile in an output directory that a `rm -rf out/` would take with it -- that backup is itself part of the defect. DRIVE IT RED (P-22) on a SCRATCH COPY ONLY: never interrupt this script against the real t36 rig, because doing so is the very corruption you are fixing. Show the pre-fix interruption leaves attest.py downgraded and the stamp present, and the post-fix one does not, on every interruption path separately.",
+      "note": "Raised by the driver from T156's F-1, local fire 20260821-134344. T156 marked it [UNVERIFIED] and shape-confirmed by reading only; the driver read prove-f1.sh:45-70 and ran `grep -n trap` over it and CONFIRMED both the overwrite of the live file and the total absence of traps. No paired reviewer yet -- register one when this is dispatched (plan gate rule 1)."
+    },
+    {
+      "id": "T162",
+      "title": "T61-mutations.py leaves rounding.go mutated on SIGTERM/SIGKILL — the loud half of the unguarded-mutator family",
+      "role": "coder",
+      "executor": "agent",
+      "model": "sonnet",
+      "target": "code",
+      "status": "pending",
+      "attempts": 0,
+      "dependencies": [
+        "T161"
+      ],
+      "files_hint": [
+        ".softhouse/handoff/"
+      ],
+      "description": "RAISED BY T156 as follow-up F-2. .softhouse/handoff/T61-mutations.py:265,289-291 wraps its mutation in a `finally` that covers SIGINT but NOT SIGTERM and not SIGKILL, so a killed driver leaves nexus/.../rounding.go MUTATED IN THE WORKING TREE. T156 classified this as the BENIGN half of the family because it fails LOUDLY -- a mutated rounding.go breaks the build or reds the conformance run rather than producing a quiet green. CONFIRM THAT CLASSIFICATION BEFORE ACTING ON IT, and if it is right, say so and fix it anyway: loud is not the same as harmless when the file it strands is a MONEY path (rounding is the first non-negotiable), and a developer who sees an unexplained red may `git checkout` the file and lose an unrelated local change. Extend the coverage to SIGTERM/SIGHUP, add start-up detection for the SIGKILL case, and DRIVE IT RED (P-22) on a scratch copy. Depends on T161 so the two unguarded-mutator fixes land in one coherent order and reuse ONE restore shape rather than three -- the P-26 lesson is that this family is the concept, not the sentence.",
+      "note": "Raised by the driver from T156's F-2, local fire 20260821-134344. Lowest severity of T156's four follow-ups and deliberately routed to sonnet; it is mechanical once T161 sets the shape. No paired reviewer yet -- register one when dispatched (plan gate rule 1)."
     }
   ],
   "cross_corroboration": {
