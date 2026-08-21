@@ -1,0 +1,34 @@
+file                                                 try   atomic target       anchors live  undet  write sites
+----------------------------------------------------------------------------------------------------------------------
+.softhouse/reviews/t41-probe/edit10.py               0     False  DEC-1        1       1     0      1  <<< ALL ANCHORS LIVE TODAY
+.softhouse/reviews/t41-probe/edit2.py                0     False  DEC-1        1       1     0      1  <<< ALL ANCHORS LIVE TODAY
+.softhouse/reviews/t41-probe/edit.py                 0     False  DEC-1        7       1     0      1
+.softhouse/reviews/t41-probe/edit11.py               0     False  DEC-1        5       0     0      1
+.softhouse/reviews/t41-probe/edit12.py               0     False  DEC-1        3       0     0      1
+.softhouse/reviews/t41-probe/edit13.py               0     False  DEC-1        4       2     0      1
+.softhouse/reviews/t41-probe/edit14.py               0     False  DEC-1        5       0     0      1
+.softhouse/reviews/t41-probe/edit16.py               0     False  DEC-1        4       1     0      1
+.softhouse/reviews/t41-probe/edit17.py               0     False  DEC-1        1       0     0      1
+.softhouse/reviews/t41-probe/edit18.py               0     False  DEC-1        0       0     0      1
+.softhouse/reviews/t41-probe/edit19.py               0     False  DEC-1        3       0     0      1
+.softhouse/reviews/t41-probe/edit20.py               0     False  DEC-1        0       0     0      1
+.softhouse/reviews/t41-probe/edit21.py               0     False  DEC-1        0       0     0      1
+.softhouse/reviews/t41-probe/edit22.py               0     False  contract.go  2       0     0      1
+.softhouse/reviews/t41-probe/edit3.py                0     False  DEC-1        2       0     0      1
+.softhouse/reviews/t41-probe/edit4.py                0     False  DEC-1        2       0     0      1
+.softhouse/reviews/t41-probe/edit5.py                0     False  DEC-1        1       0     0      1
+.softhouse/reviews/t41-probe/edit6.py                0     False  DEC-1        4       0     0      1
+.softhouse/reviews/t41-probe/edit7.py                0     False  DEC-1        5       0     0      1
+.softhouse/reviews/t41-probe/edit8.py                0     False  DEC-1        5       1     0      1
+.softhouse/reviews/t41-probe/edit9.py                0     False  DEC-1        3       2     0      1
+.softhouse/reviews/t41-probe/edit_go1.py             0     False  contract.go  6       0     0      1
+.softhouse/reviews/t41-probe/edit_go2.py             0     False  contract.go  3       1     0      1
+.softhouse/reviews/t41-probe/edit_go3.py             0     False  contract.go  3       1     0      1
+.softhouse/reviews/t41-probe/edit_go4.py             0     False  contract.go  1       0     0      1
+.softhouse/reviews/t47-probe/t167-redprobe.py        4     False  DEC-1        0       0     1      17
+.softhouse/reviews/t47-probe/t178-redprobe.py        0     False  DEC-1        0       0     0      11
+
+files that write AND name a protected artefact: 27
+of those, ALL anchors live today:               2
+files with at least one UNDETERMINED anchor:     1
+files that could not be parsed (counted, not dropped): 0
