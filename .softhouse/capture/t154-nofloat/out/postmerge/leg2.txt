@@ -1,0 +1,61 @@
+=== [0] APPARATUS ===
+pinned pre-fix sha : 187e9726dfad5076f4b68877f411d7d218280889
+PRE  has nofloat.go : no
+POST has nofloat.go : yes
+the injected probe  :
+    package loanschedule
+    
+    func t154InterestProbe(p int64) int64 { rate := 0.036 / 12.0; amt := rate * 1.0; return p + int64(amt) }
+    -- forbidden identifiers in it: 0
+
+=== [1] CONTROL — both trees clean, no probe ===
+  pre  build=0  no-float test=0  conformance=0
+OK    pre clean: go build 0
+OK    pre clean: no-float test 0
+OK    pre clean: conformance 0
+  post build=0  no-float test=0  conformance=0
+OK    post clean: go build 0
+OK    post clean: no-float test 0
+OK    post clean: conformance 0
+
+=== [2] WITH THE FLOAT LITERAL INJECTED ===
+  pre  build=0  no-float test=0  conformance=0   (wanted 0 / 0 / 0 — all three green on a float)
+  post build=0  no-float test=1  conformance=2   (wanted 0 / 1 / 2 — build still fine, guard RED, verdict RED)
+
+  --- what the PRE-fix guard said about the injected float ---
+      ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	0.256s
+      VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+  --- what the POST-fix guard says ---
+      --- FAIL: TestNoFloatInTheLoanScheduleTree (0.04s)
+          --- FAIL: TestNoFloatInTheLoanScheduleTree/the_committed_tree_is_clean (0.04s)
+              conformance_test.go:795: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg2.G04Cy8PWCT/post/nexus/internal/apps/loanschedule/t154probe.go:3:49: floating-point literal "0.036": money is integer minor units, and no floating-point value may appear on a money path — including for intermediate calculation (CLAUDE.md, first non-negotiable)
+              conformance_test.go:795: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg2.G04Cy8PWCT/post/nexus/internal/apps/loanschedule/t154probe.go:3:57: floating-point literal "12.0": money is integer minor units, and no floating-point value may appear on a money path — including for intermediate calculation (CLAUDE.md, first non-negotiable)
+          no-float census         25 Go files / 56301 tokens inspected under nexus/internal/apps/loanschedule
+          * FLOATING POINT ON A MONEY PATH: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg2.G04Cy8PWCT/post/nexus/internal/apps/loanschedule/t154probe.go:3:49: floating-point literal "0.036": money is integer minor units, and no floating-point value may appear on a money path — including for intermediate calculation (CLAUDE.md, first non-negotiable)
+          * FLOATING POINT ON A MONEY PATH: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg2.G04Cy8PWCT/post/nexus/internal/apps/loanschedule/t154probe.go:3:57: floating-point literal "12.0": money is integer minor units, and no floating-point value may appear on a money path — including for intermediate calculation (CLAUDE.md, first non-negotiable)
+          * FLOATING POINT ON A MONEY PATH: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg2.G04Cy8PWCT/post/nexus/internal/apps/loanschedule/t154probe.go:3:77: floating-point literal "1.0": money is integer minor units, and no floating-point value may appear on a money path — including for intermediate calculation (CLAUDE.md, first non-negotiable)
+      VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+OK    PRE  probe: go build exit 0 — a float literal compiles, of course
+OK    PRE  probe: the no-float GUARD passed on a float — the finding
+OK    PRE  probe: conformance exit 0 on a float — the finding
+OK    POST probe: go build exit 0 — the fix does not break the build
+OK    POST probe: the no-float guard FAILS (exit 1)
+OK    POST probe: conformance exit 2
+OK    POST probe: the guard names the literal 0.036 and its file:line
+OK    POST probe: conformance names it as FLOATING POINT ON A MONEY PATH
+
+=== [3] THE GUARD SPEAKS WHEN IT IS HAPPY, TOO (P-35) ===
+  A guard that reports only failures cannot be told apart from one that never ran.
+          no-float census         24 Go files / 56269 tokens inspected under nexus/internal/apps/loanschedule
+                                  0 forbidden identifiers, 0 floating-point or imaginary LITERALS, 0 unscannable files
+OK    POST clean conformance PRINTS the census (files, tokens, each violation count)
+OK    PRE clean conformance printed NO census — the guard was silent whether or not it ran
+
+=== [4] THE REAL TREE WAS NEVER POISONED ===
+OK    no t154probe.go in the real tree — both arms ran in scratch trees
+OK    git status --porcelain -- nexus names no t154probe
+
+=======================================================================
+LEG 2 ROWS: 18 as wanted, 0 not as wanted
+=======================================================================
