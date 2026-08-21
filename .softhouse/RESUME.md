@@ -72,9 +72,12 @@ journal-entry vector has nowhere to post until a chart of accounts and a mapping
 **A2-1's mapping-resolution answer is the gate on planning the A1 coder.** If it returns `[UNVERIFIED]`, the
 posting engine cannot be planned yet — say so rather than proceeding on a guess.
 
-**T149 is the highest-value money item outstanding.** `HALF_UP` is ratified, yet **0 of 46 vectors carry
-either tie answer**, so nothing in the parity corpus would notice a port that inherited Fineract's stock
-`HALF_EVEN`. Measured tie: `1,162,502.50 × 0.018 = 20,925.045` → `20925.05` (gerege) vs `20925.04` (default).
+**T149 — DONE, and it REFUTED THE DRIVER'S BRIEF.** The brief asserted that 0 of 46 vectors carry either tie
+answer **so** nothing would notice a `HALF_EVEN` port. The first clause is true of the literal characters; the
+inference is **false by three vectors** — `T61-HE-A/B/C`, measured with mutation `M7`: `parity PASS 39 FAIL 3`.
+The worker refused to write the false sentence and said so. Live tie reproduced exactly:
+`1,162,502.50 × 0.018 = 20,925.045` → `20925.05` (gerege) vs `20925.04` (default), 89 product columns differing
+only in `id`. Promoted for a better reason: **the first parity vector observed through the running server.**
 
 Then: **A2 coder** (only once vectors exist), then slices **A1** (journal posting, 11,535 LOC — check at plan
 time whether it needs splitting again) and **A3** (period-end, 4,953).

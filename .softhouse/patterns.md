@@ -1157,3 +1157,29 @@ tool against a case whose answer was already known (`git show … | grep`).
   ("a guard that cannot fail") wearing a search tool's clothes: the query could not have found a hit, and
   reported that as evidence of none.
 
+### P-13. Grepping the store for a VALUE does not answer what the store KILLS
+
+The driver briefed T149 with: *"0 of 46 vectors carry either tie answer — **so** nothing in the parity corpus
+would notice a port that inherited Fineract's stock `HALF_EVEN`."* The worker measured it instead of accepting
+it and came back with the refutation: **false by three vectors.** `T61-HE-A/B/C` are exact ties at the same
+quantization on other principals, and their named counterfactual was *already* `MONEY-QUANTIZATION-HALF-EVEN`.
+Mutation `M7` over the 42-vector store: `KILLED | parity PASS 39 FAIL 3`.
+
+**The count was never wrong; the inference was.** T136 wrote it correctly — *"0 of 46 … **but** `REFUSE-02`
+makes HALF_EVEN a contract refusal"*. T147 restated it with **"so no *parity* vector discriminates the mode"**,
+and the driver's T149 brief inherited that "so" and hardened it. **One conjunction, replaced twice, turned a
+true measurement into a false claim about coverage** — and it was heading for a vector's own note, where it
+would have become documentation of the corpus's blindness at the exact moment the corpus was proving otherwise.
+
+- A vector does not need to **contain** a value to **discriminate** on it. Grep answers *what is written*;
+  only a mutation answers *what would be caught*. They are different questions and only one of them is about
+  coverage.
+- **Coverage claims are measured with mutation, never with search.** If you are about to write "no vector
+  would notice X", run the mutation that does X and read the count.
+- When a source hedges with **"but"**, the hedge is usually the load-bearing half. Dropping it to "so" is not
+  a compression — it inverts the claim.
+
+**The worker refused to write the sentence its brief required, and said why.** That is the behaviour this
+pipeline wants: the brief is not evidence, and a task that can only be completed by asserting something false
+should come back refuted rather than complete. Fifth time a worker has caught the driver (P-20).
+
