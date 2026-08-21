@@ -1,0 +1,1 @@
+{"id":8,"name":"Interest On Loans","glCode":"40100","disabled":false,"manualEntriesAllowed":true,"type":{"id":4,"code":"accountType.income","value":"INCOME"},"usage":{"id":1,"code":"accountUsage.detail","value":"DETAIL"},"description":"","nameDecorated":"Interest On Loans","tagId":{"id":0}}

@@ -1,0 +1,4 @@
+GET /journalentries?loanId=5&limit=50
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+captured-at-utc: 2026-08-21T07:27:42Z

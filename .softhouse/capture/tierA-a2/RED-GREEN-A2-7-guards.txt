@@ -1,0 +1,38 @@
+RED-GREEN transcript for the A2-7 recipe guards.
+
+Produced by:  python3 prove-mkreq7-guard-red.py
+Exit code:    0
+Host:         darwin/arm64, python3 3.9.6
+Oracle:       NOT contacted. Every case runs in a throwaway temp directory against a
+              COPY of mkreq7.py / resolve7.py; no byte of the committed evidence is
+              touched and no HTTP request is made.
+
+Why this file exists: P-22 — ship no guard you have not personally driven red, and state
+the input that makes it fail. D-1 in this same directory (FLAGGED-NOT-REPRODUCIBLE.txt)
+is the defect these guards prevent: a generator that silently rewrote request bodies
+captures had already been taken against.
+
+----------------------------------------------------------------------------- stdout
+mkreq7.py — the request-body generator
+  ok   GREEN empty req/ writes and exits 0  rc=0 files=12
+  ok   GREEN rerun is byte-identical and exits 0  rc=0
+  ok   RED  a differing body makes it exit 1  rc=1
+  ok   RED  the refusal NAMES the offending file
+  ok   RED  the refusal cites D-1
+  ok   RED  it leaves every byte on disk alone
+  ok   RED  it aborts before writing: a deleted sibling is NOT recreated  rc=1
+  ok   GREEN restoring the byte lets it complete, and rebuilds only the missing file  rc=0
+resolve7.py — the observed-value resolver
+  ok   RED  a response with no resourceId is refused, not guessed  rc=1
+  ok   RED  the refusal says there is no observation to resolve from
+  ok   GREEN an observed resourceId is substituted verbatim  rc=0 body={'clientId': 1, 'productId': 46}
+  ok   RED  it refuses to rewrite an existing resolved body with a different id  rc=1 body={'clientId': 1, 'productId': 46}
+  ok   RED  a template with no __PLACEHOLDER__ is refused  rc=1
+analyze7.py — no binary floating point on any amount
+  ok   it parses JSON numbers as Decimal
+  ok   it never calls bare float()
+  ok   an oracle amount literal loads as Decimal, not float  Decimal 1200000.000000
+
+16 assertions, 0 failed
+
+(stderr was empty)
