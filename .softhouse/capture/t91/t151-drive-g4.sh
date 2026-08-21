@@ -76,16 +76,39 @@ PY
   (cd "$1" && git add -A && git -c user.name=T151 -c user.email=t151@local commit -q -m "T151 mutate $2")
 }
 
-cell() {  # cell <side> <sha> <healthy|nolc|scanner> <want G-4: OK|RED> <want script exit>
-  d=$S/$(printf '%s%s' "$1" "$3" | tr -cd 'A-Za-z0-9')
+# unfix — revert ONE of the two edits in a POST clone, to show that BOTH are load-bearing.
+# Same discipline as blind(): the pattern is asserted, so a revert that does not take ABORTS
+# instead of silently leaving the tree fixed and reporting a green cell.
+unfix() {  # unfix <dir> <assertion|poison>
+  python3 - "$1/.softhouse/capture/t91/prove-guards.sh" "$2" <<'PY'
+import sys
+p, which = sys.argv[1], sys.argv[2]
+s = open(p).read()
+if which == 'assertion':
+    old = '"^A2a.*ADMITS (printed the HALF_UP certification)"'
+    new = '"^A2a.*ADMITS"'
+else:
+    old = "open(p, 'wb').write(b[:i] + b'\\xff\\xfe' + b[i:])"
+    new = "j = b.find(b'\\n', i)\nopen(p, 'wb').write(b[:j] + b'\\xff\\xfe' + b[j:])"
+assert old in s, 'ABORT: cannot revert the %s edit — pattern absent' % which
+open(p, 'w').write(s.replace(old, new))
+PY
+  [ $? -eq 0 ] || { echo "ABORT: revert '$2' did not apply" >&2; exit 2; }
+  (cd "$1" && git add -A && git -c user.name=T151 -c user.email=t151@local commit -q -m "T151 revert $2 edit")
+}
+
+cell() {  # cell <side> <sha> <healthy|nolc|scanner> <want G-4: OK|RED> <want script exit> [unfix]
+  d=$S/$(printf '%s%s%s' "$1" "$3" "${6:-}" | tr -cd 'A-Za-z0-9')
   build "$d" "$2"
+  [ -z "${6:-}" ] || unfix "$d" "$6"
   [ "$3" = healthy ] || blind "$d" "$3"
   (cd "$d" && sh .softhouse/capture/t91/prove-guards.sh) > "$d.txt" 2>&1
   rc=$?
   if LC_ALL=C /usr/bin/grep -aq 'named as an admission on the poisoned set' "$d.txt"; then g4=OK
   elif LC_ALL=C /usr/bin/grep -aq 'NOT named as an admission' "$d.txt"; then g4=RED
   else g4=NEITHER; fi
-  printf '  %-5s %-8s  G-4=%-7s (want %-3s)  script exit=%s (want %s)' "$1" "$3" "$g4" "$4" "$rc" "$5"
+  printf '  %-5s %-8s %-10s G-4=%-7s (want %-3s)  script exit=%s (want %s)' \
+         "$1" "$3" "${6:+-$6}" "$g4" "$4" "$rc" "$5"
   ok=yes
   [ "$4" = '?' ] || [ "$g4" = "$4" ] || ok=no
   [ "$5" = '?' ] || [ "$rc" = "$5" ] || ok=no
@@ -102,8 +125,17 @@ cell PRE  "$PRE_SHA"  nolc    OK  0     # <-- THE FINDING: green with the harden
 cell POST "$POST_SHA" healthy OK  0
 cell POST "$POST_SHA" nolc    RED 1     # <-- must now go red
 echo "=== the third mutation: the scanner fully blinded (what a silent-miss grep actually produces)"
-cell PRE  "$PRE_SHA"  scanner ?   ?     # exploratory on the PRE side; graded only on POST
+# CORRECTION TO T138, recorded because a correction that leaves the attestation wrong is not a
+# correction (P-21).  T138's §3 table gives the SHIPPED tree with the scanner blinded as `exit 1`.
+# It is `exit 0`, G-4 `OK` — which is what T138's own PROSE in F-T138-1(a) says ("G-4 printed
+# `A2a named as an admission on the poisoned set OK [G-4]`; the whole script exited 0").  T138's
+# committed driver `r14b-g4fix.sh` never ran that combination, so no transcript backed the table
+# cell.  The expectation below is MEASURED here, and it agrees with the prose, not the table.
+cell PRE  "$PRE_SHA"  scanner OK  0
 cell POST "$POST_SHA" scanner RED 1
+echo "=== BOTH edits are load-bearing: revert either one and the guard goes blind again"
+cell POST "$POST_SHA" nolc    OK  0 assertion   # poison-position edit ONLY
+cell POST "$POST_SHA" nolc    OK  0 poison      # assertion edit ONLY
 if [ "$BAD" -eq 0 ]; then
   echo "done — every cell behaved as specified."
   echo "F-T138-1 REPRODUCED on PRE and CLOSED on POST."
