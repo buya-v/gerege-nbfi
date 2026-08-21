@@ -1,0 +1,177 @@
+=== T183 probe transcript
+repo            : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a23b9972dbbfab8e4
+classifier under review : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a23b9972dbbfab8e4/.softhouse/reviews/t179-guard-classifier/guard_classify.py
+DEC-1  sha256   : 49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab
+contract.go sha : 0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139
+
+### PROBE 1 — does the classifier follow IMPORTS?
+Two fixtures whose mutation is LOCAL and whose guard lives ENTIRELY in an
+imported module (a real restoring @contextmanager, and a real atexit restore).
+Correct answer: GUARDED.  Expected defect: UNGUARDED.
+ENFORCE: 2 unguarded mutation(s) of a trusted artefact
+=== T179 parser-based guard classifier
+root                : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t183.8QzGJ4/imp
+python parser       : ast (stdlib, authoritative for Python)
+shell parser        : NONE — every .sh file is REFUSED, and counted
+
+--- POPULATION, with denominators
+  script files enumerated (.py/.sh/.bash)   : 3
+    of which Python, parsed                 : 3
+    of which REFUSED                        : 0
+  non-script files under the same root      : 0 (never inspected)
+    largest uninspected groups              : 
+  mutation call sites found in Python       : 6
+
+--- MUTATION SITES: scope x verdict (every site appears exactly once)
+  scope      UNGUARDED                 GUARDED-PROCESS           GUARDED-FINALLY-INDIRECT  GUARDED-CONTEXTMANAGER    GUARDED-FINALLY           ATOMIC                    SANDBOX                   
+  TRUSTED    2                         0                         0                         0                         0                         0                         0                            (total 2)
+  UNKNOWN    4                         0                         0                         0                         0                         0                         0                            (total 4)
+  SCRATCH    0                         0                         0                         0                         0                         0                         0                            (total 0)
+  ALL        6                         0                         0                         0                         0                         0                         0                            (total 6)
+
+--- UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (2 sites in 2 files)
+  green_imported_atexit.py:10  io.open(mode='w')  tags=ADR
+      target: P
+  green_imported_cm.py:14  io.open(mode='w')  tags=ADR
+      target: P
+
+--- UNGUARDED MUTATIONS WHOSE TARGET COULD NOT BE RESOLVED (4 sites in 1 files)
+    These are NOT clean and NOT dirty. They are unresolved, and they are
+    printed so nothing is silently dropped (P-40).
+  mylib_guard.py:13  shutil.copyfile   target: backup
+  mylib_guard.py:24  shutil.copyfile   target: backup
+  mylib_guard.py:17  shutil.copyfile   target: path
+  mylib_guard.py:18  os.unlink   target: backup
+
+--- P-48 DETECTOR: files T156's regex would score GUARDED on prose alone
+    (guard words present ONLY inside string literals; zero try/finally nodes)
+  green_imported_atexit.py                                         guard-words-in-literals=1  sites=1
+
+--- REFUSED FILES, NAMED (a refusal is an outcome, not a skip)
+  refused total: 0
+PROBE 1 exit=1
+
+### PROBE 2 — bare `assert` under python3 -O
+A file whose ONLY protection is a bare assert.  Correct answer: UNGUARDED.
+ENFORCE: 1 unguarded mutation(s) of a trusted artefact
+=== T179 parser-based guard classifier
+root                : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t183.8QzGJ4/asrt
+python parser       : ast (stdlib, authoritative for Python)
+shell parser        : NONE — every .sh file is REFUSED, and counted
+
+--- POPULATION, with denominators
+  script files enumerated (.py/.sh/.bash)   : 1
+    of which Python, parsed                 : 1
+    of which REFUSED                        : 0
+  non-script files under the same root      : 0 (never inspected)
+    largest uninspected groups              : 
+  mutation call sites found in Python       : 1
+
+--- MUTATION SITES: scope x verdict (every site appears exactly once)
+  scope      UNGUARDED                 GUARDED-PROCESS           GUARDED-FINALLY-INDIRECT  GUARDED-CONTEXTMANAGER    GUARDED-FINALLY           ATOMIC                    SANDBOX                   
+  TRUSTED    1                         0                         0                         0                         0                         0                         0                            (total 1)
+  UNKNOWN    0                         0                         0                         0                         0                         0                         0                            (total 0)
+  SCRATCH    0                         0                         0                         0                         0                         0                         0                            (total 0)
+  ALL        1                         0                         0                         0                         0                         0                         0                            (total 1)
+
+--- UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (1 sites in 1 files)
+  assert_only.py:14  io.open(mode='w')  tags=ADR
+      target: P
+
+--- UNGUARDED MUTATIONS WHOSE TARGET COULD NOT BE RESOLVED (0 sites in 0 files)
+    These are NOT clean and NOT dirty. They are unresolved, and they are
+    printed so nothing is silently dropped (P-40).
+
+--- P-48 DETECTOR: files T156's regex would score GUARDED on prose alone
+    (guard words present ONLY inside string literals; zero try/finally nodes)
+  none in this root
+
+--- REFUSED FILES, NAMED (a refusal is an outcome, not a skip)
+  refused total: 0
+PROBE 2 exit=1
+ast.Assert nodes in each T179 script (0 everywhere => -O cannot neuter them):
+    engine_divergence.py         ast.Assert nodes: 0 []
+    guard_classify.py            ast.Assert nodes: 0 []
+    list_trusted_unguarded.py    ast.Assert nodes: 0 []
+    rederive_population.py       ast.Assert nodes: 0 []
+    selftest.py                  ast.Assert nodes: 0 []
+selftest under python3 -O:
+    exit=0  (0 = still passes; the interesting case is PROBE 4)
+
+### PROBE 3 — the FAIL-OPEN population hole
+The three t41-probe rewriters whose write target is a FUNCTION PARAMETER.
+All three truncate the ratified DEC-1 in place with no handler; two of them
+also truncate the frozen contract.go.  Correct --enforce answer: exit 1.
+=== T179 parser-based guard classifier
+root                : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t183.8QzGJ4/fo
+python parser       : ast (stdlib, authoritative for Python)
+shell parser        : NONE — every .sh file is REFUSED, and counted
+
+--- POPULATION, with denominators
+  script files enumerated (.py/.sh/.bash)   : 3
+    of which Python, parsed                 : 3
+    of which REFUSED                        : 0
+  non-script files under the same root      : 0 (never inspected)
+    largest uninspected groups              : 
+  mutation call sites found in Python       : 3
+
+--- MUTATION SITES: scope x verdict (every site appears exactly once)
+  scope      UNGUARDED                 GUARDED-PROCESS           GUARDED-FINALLY-INDIRECT  GUARDED-CONTEXTMANAGER    GUARDED-FINALLY           ATOMIC                    SANDBOX                   
+  TRUSTED    0                         0                         0                         0                         0                         0                         0                            (total 0)
+  UNKNOWN    3                         0                         0                         0                         0                         0                         0                            (total 3)
+  SCRATCH    0                         0                         0                         0                         0                         0                         0                            (total 0)
+  ALL        3                         0                         0                         0                         0                         0                         0                            (total 3)
+
+--- UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)
+
+--- UNGUARDED MUTATIONS WHOSE TARGET COULD NOT BE RESOLVED (3 sites in 3 files)
+    These are NOT clean and NOT dirty. They are unresolved, and they are
+    printed so nothing is silently dropped (P-40).
+  edit18.py:17  io.open(mode='w')   target: path
+  edit20.py:21  io.open(mode='w')   target: path
+  edit21.py:17  io.open(mode='w')   target: path
+
+--- P-48 DETECTOR: files T156's regex would score GUARDED on prose alone
+    (guard words present ONLY inside string literals; zero try/finally nodes)
+  none in this root
+
+--- REFUSED FILES, NAMED (a refusal is an outcome, not a skip)
+  refused total: 0
+PROBE 3 exit=0   <-- 0 means FAIL-OPEN
+
+### PROBE 4 — is the selftest NON-VACUOUS?  Sabotage in BOTH directions.
+    sabotage applied: always-guarded
+    selftest vs always-guarded classifier      : exit=1  (1 = the instrument CAN fail)
+    FAIL lines: 4
+    same under python3 -O             : exit=1  (1 = -O does not neuter it)
+    sabotage applied: never-guarded
+    selftest vs never-guarded classifier      : exit=1  (1 = the instrument CAN fail)
+    FAIL lines: 5
+    same under python3 -O             : exit=1  (1 = -O does not neuter it)
+
+### PROBE 5 — non-vacuity (P-35): zero files inspected must be an ERROR
+    empty root exit=3  (3 = error, not a pass)
+
+### PROBE 6 — does the classifier misclassify ITSELF?
+--- MUTATION SITES: scope x verdict (every site appears exactly once)
+  scope      UNGUARDED                 GUARDED-PROCESS           GUARDED-FINALLY-INDIRECT  GUARDED-CONTEXTMANAGER    GUARDED-FINALLY           ATOMIC                    SANDBOX                   
+  TRUSTED    0                         0                         0                         0                         0                         0                         0                            (total 0)
+  UNKNOWN    0                         0                         0                         0                         0                         1                         0                            (total 1)
+  SCRATCH    0                         0                         0                         0                         0                         0                         0                            (total 0)
+  ALL        0                         0                         0                         0                         0                         1                         0                            (total 1)
+
+--- UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)
+
+--- UNGUARDED MUTATIONS WHOSE TARGET COULD NOT BE RESOLVED (0 sites in 0 files)
+    These are NOT clean and NOT dirty. They are unresolved, and they are
+    printed so nothing is silently dropped (P-40).
+
+--- P-48 DETECTOR: files T156's regex would score GUARDED on prose alone
+    (guard words present ONLY inside string literals; zero try/finally nodes)
+  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a23b9972dbbfab8e4/.softhouse/reviews/t179-guard-classifier/guard_classify.py guard-words-in-literals=40  sites=1
+
+--- REFUSED FILES, NAMED (a refusal is an outcome, not a skip)
+  refused total: 0
+
+DEC-1  sha256 after : 49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab
+contract.go   after : 0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139
