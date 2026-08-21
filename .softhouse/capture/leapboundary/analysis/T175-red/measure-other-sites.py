@@ -59,14 +59,25 @@ def measure_t55_prior():
     m = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(m)
     aa = os.path.join(ROOT, ".softhouse", "capture", "actualactual", "pathb", "out")
-    sets = ["T48B-PUREB", "T48B-YEAR", "T48B-QTR", "T48B-B03SHAPE"]
     minor = Decimal("0.01")
     considered, swallowed = 0, []
     pairs = 0
-    for sid in sets:
+    # The B03SHAPE set has NO -p4 leg: its committed row (T55-PRIOR-CAPTURE-ASSESSMENT.txt:38)
+    # is the CROSS-SET pair `T48B-B03SHAPE-p7 vs T48B-B04SHAPE-p4`.  The first draft of this
+    # measurement assumed same-set pairs throughout and reported those two as "absent"; the
+    # assumption was wrong, not the corpus.  Enumerated explicitly now.
+    PAIRS = []
+    for sid in ("T48B-PUREB", "T48B-YEAR", "T48B-QTR"):
         for a, b in (("p7", "p4"), ("p3", "p4"), ("p7", "p3")):
-            fa = os.path.join(aa, "%s-%s-exact.json" % (sid, a))
-            fb = os.path.join(aa, "%s-%s-exact.json" % (sid, b))
+            PAIRS.append(("%s-%s" % (sid, a), "%s-%s" % (sid, b), sid))
+    PAIRS.append(("T48B-B03SHAPE-p7", "T48B-B04SHAPE-p4", "T48B-B03SHAPE x B04SHAPE"))
+    PAIRS.append(("T48B-B03SHAPE-p3", "T48B-B04SHAPE-p4", "T48B-B03SHAPE x B04SHAPE"))
+    PAIRS.append(("T48B-B03SHAPE-p7", "T48B-B03SHAPE-p3", "T48B-B03SHAPE"))
+    if True:
+        for ida, idb, sid in PAIRS:
+            fa = os.path.join(aa, "%s-exact.json" % ida)
+            fb = os.path.join(aa, "%s-exact.json" % idb)
+            a, b = ida, idb
             if not (os.path.exists(fa) and os.path.exists(fb)):
                 print("    (pair absent, not counted: %s %s vs %s)" % (sid, a, b))
                 continue

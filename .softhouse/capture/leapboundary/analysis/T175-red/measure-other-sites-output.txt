@@ -13,10 +13,8 @@ SITE  capture/charges/bin/t46-exacttext.py:108   `except json.JSONDecodeError: c
 ================================================================================================
 SITE  leapboundary/analysis/t55-prior-capture-assessment.py:103   `except Exception: pass`
 ================================================================================================
-    (pair absent, not counted: T48B-B03SHAPE p7 vs p4)
-    (pair absent, not counted: T48B-B03SHAPE p3 vs p4)
-  pairs compared                      : 10
-  money deltas CONSIDERED             : 458
+  pairs compared                      : 12
+  money deltas CONSIDERED             : 772
   money deltas SWALLOWED / excluded   : 0
   VERDICT: same shape as t55-analyse.py:167, and its committed output
            T55-PRIOR-CAPTURE-ASSESSMENT.txt publishes 'max N minor units' four
