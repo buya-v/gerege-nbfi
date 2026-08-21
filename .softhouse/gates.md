@@ -1121,23 +1121,30 @@ calls, 75 java processes]:
 
 **G-8's headline number is NOT at risk from this, and the two cells must not be confused.** The
 MNT 10.01 residual belongs to **B = 1001 minor units** at n = 3000 (`T159-R600p0-N3000-B1001`). The
-cell that throws is **B = 10001**, which **amortizes fully** and is not a family-B cell at all —
-`totalPrincipalAmount 100.01` against a `100.01` disbursement, final balance `0.00`, 19 non-zero
-principal rows [VERIFIED by T170 by extraction from T159's raw capture]. T177 asked the **headline**
+cell that throws is **B = 10001**, and **when the oracle answers it, it amortizes fully** — it is not
+a family-B cell at all: `totalPrincipalAmount 100.01` against a `100.01` disbursement, final balance
+`0.00`, 19 non-zero principal rows [VERIFIED by T170 by extraction from T159's raw capture, where
+that cell was observed]. T177 asked the **headline**
 cell from **9 cold starts: 9 observed, 0 threw**, with `totalInterestAmount 15010.01` on all 16 of
-its observations, matching T159's committed value. **The headline cell is cold-safe.**
+its observations, matching T159's committed value. **The headline cell is cold-safe.** *The two ids
+differ by one digit and the driver's own brief for T177 conflated them; T177 refused that premise
+and was right.*
 
 **One artefact to stop misreading.** Every `errorStackDepthTotal` of exactly `1024` in this program's
-captures is **HotSpot's recording cap, not a depth** [T177]. With the cap lifted
+captures is **HotSpot's recording cap, not a depth** [T177; T170 notes that T159's own capture does
+not carry the field at all — it records `error`, `errorCause` and `errorStackTop` only, so the
+warning bites on T169-era and later captures]. With the cap lifted
 (`-XX:MaxJavaStackTraceDepth=0`) the true depth reached at overflow **rises** as compilation
 proceeds — 5119, 4683, 4683, then **8400** frames on the fourth attempt in one JVM, and on the fifth
 it fits. T177 measured frame *depth*, not frame *size*, and **asserts no mechanism**.
 
 **What is NOT known about the third outcome, and must not be filled in:**
 
-- **Its extent.** Only three cells have ever been probed for it under controlled JVM state. Whether
+- **Its extent.** Only **three** cells have ever been asked as probes under controlled JVM state —
+  (B = 10001, n = 3000), (B = 10001, n = 2000) and (B = 1001, n = 3000) — plus a warm-up control at
+  (B = 10001, n = 200) and a one-pass replay of T159's 24-cell prefix. Whether
   any **other** committed capture in this program is affected is `[UNVERIFIED]` — T177 did not
-  re-run T83, T84, T100 or T117.
+  re-run T83, T84, T100 or T117, and neither did T170.
 - **The exact `-Xss` boundary.** Measured only that 4m throws and 8m observes, 2 JVMs each; the
   interval was not bisected. `[UNVERIFIED]`
 - **The mechanism inside C2**, and whether "attempt 5" is a constant or a compilation threshold this
@@ -1369,8 +1376,12 @@ was written when only one shape had been seen. **There are two shapes:**
 | n = 150, B = 11 minor | 11 | **2** | **9** | `0.02` | `0.11` → `0.09` | `0.14` |
 | n = 2000, B = 999 minor | 999 | **166** | **833** | `1.66` | `9.99` → `8.33` | `13.32` |
 
-The first three were found by T117 and re-asked by T159 under disjoint tenant ids
-(byte-identical, 3 of 3); the fourth is T159's and is far larger than the other three.
+The first three were found by T117 and re-asked by T159 under **disjoint tenant ids**; the fourth is
+T159's and is far larger than the other three. **T170 re-verified the re-ask independently: each
+pair's whole `observed` block is byte-identical under a canonical dump (`sort_keys=True`,
+`separators=(',',':')`), 3 of 3, while the tenant ids differ (`t117p2_r600p0_n108_b11` vs
+`t159_r600p0_n108_b11`, and so on).** So the partial shape is neither a tenant artefact nor a
+one-run fluke.
 
 **On all 209 family-B cells the unamortized residual equals the final row's `balance` exactly, and
 `totalOutstandingAmount` reads `0`** — 209 of 209, 0 exceptions [T170]. So `totalOutstandingAmount`
@@ -1384,7 +1395,7 @@ The discriminator is exactly the test the driver's re-derivation named in advanc
 family-A reframing when applied to all of G-8: *"If it ever fails to sum, the reframing above is
 **wrong** and G-8 is the broader finding after all."* It failed.
 
-### What was measured, and over what domain — narrower than family A in RATE and PRINCIPAL, and now much WIDER in TERM
+### What was measured, and over what domain — narrower than family A in RATE, and now WIDER in TERM and in the largest failing PRINCIPAL
 
 **This heading used to read "a MUCH narrower domain than family A", and in the dimensions a reader
 cares about that is now false.** Family B is still narrower in **rate** — one annual rate against
@@ -1409,12 +1420,16 @@ the raw `.gz` captures; `out/extract-t170.json`]. Union of what has been observe
   each asked twice and agree].
 - principal: **20 distinct values, every one ODD**, from **1 to 1001 minor units** —
   `1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 51, 101, 501, 503, 551, 601, 801, 999, 1001`
-  [re-derived by T170 from the raw captures; T117 contributed 1…501 and T159 added 503, 551, 601,
-  801, 999, 1001]. **This bullet used to read *"principal MNT 0.01 (1 minor unit) — no other
+  [re-derived by T170 from the raw captures: the four record captures contain exactly one of them
+  (**1**); T117's two captures contain **14** — `1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 51, 101,
+  501`; and T159 added **6** — `503, 551, 601, 801, 999, 1001`]. **This bullet used to read
+  *"principal MNT 0.01 (1 minor unit) — no other
   principal has produced a family-B cell"*, which was true of the four record captures and is now
   false.** Every family-B principal observed is odd; **that is an observation over 209 cells, not a
   law**, and no even principal has been shown to be safe.
-- repayment counts: **`104 ≤ n ≤ 3000`**, and family B has been observed at every scale in between.
+- repayment counts: **`104 ≤ n ≤ 3000`**. Family B has been observed at terms across that whole
+  range — **but NOT at every term in it**; there are measured clean gaps inside otherwise-contiguous
+  family-B stretches, which is the band structure below.
   - **The four record captures** (T84, T100) cover **n ∈ {104…122} ∪ {150, 200, 250}** at
     600.0 % / MNT 0.01: T84 measured 104…121 contiguously plus 150 and 200 (22 cells, of which
     n = 108 and n = 120 were measured twice, once in each of its two probes, agreeing); T100 added
@@ -1483,7 +1498,7 @@ of the 180 new cells** `[UNVERIFIED]`.
 
 ---
 
-## Option (a), RESCOPED — reachable today on family B, needs a port change on family A
+## Option (a), RESCOPED — reachable today on a FULL family-B cell, needs a port change on family A, UNMEASURED on a PARTIAL cell
 
 Option (a) is *"promote a parity vector for the region with an explicit invariant exemption."*
 Whether that works **depends entirely on which family the vector covers**, because

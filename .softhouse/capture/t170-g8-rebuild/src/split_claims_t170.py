@@ -22,13 +22,17 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..",
 GATES = os.path.join(ROOT, ".softhouse/gates.md")
 
 # The two G-8 blocks, by heading, resolved at run time so the ranges cannot go stale.
-START_MAIN = "## G-8 — TWO phenomena at the rounding floor, under one gate id"
+START_MAIN = "## G-8 — TWO phenomena at the rounding floor"
 END_MAIN = "## G-9 — CLOSED (chart of accounts)"
 START_NOTICE = "## G-8 — NOTICE, local fire `20260821-134344`"
 
 
 def main():
-    lines = open(GATES).read().split("\n")
+    # Runnable against any revision, so the BEFORE and AFTER denominators are both
+    # reproducible:  git show main:.softhouse/gates.md > /tmp/before.md
+    #                split_claims_t170.py /tmp/before.md
+    path = sys.argv[1] if len(sys.argv) > 1 else GATES
+    lines = open(path).read().split("\n")
     idx = {}
     for i, ln in enumerate(lines):
         if ln.startswith(START_MAIN):
@@ -86,15 +90,17 @@ def main():
                           else "prose",
                           "text": s})
 
-    out = {"ranges": {k: v + 1 for k, v in idx.items()},
+    out = {"source": path,
+           "ranges": {k: v + 1 for k, v in idx.items()},
            "units": units, "skipped": skipped,
            "counts": {"units": len(units), "skipped": len(skipped),
                       "by_kind": {}}}
     for u in units:
         out["counts"]["by_kind"][u["kind"]] = out["counts"]["by_kind"].get(u["kind"], 0) + 1
-    dest = os.path.join(ROOT, ".softhouse/capture/t170-g8-rebuild/out/claim-units-t170.json")
-    with open(dest, "w") as f:
-        json.dump(out, f, indent=1)
+    if path == GATES:
+        dest = os.path.join(ROOT, ".softhouse/capture/t170-g8-rebuild/out/claim-units-t170.json")
+        with open(dest, "w") as f:
+            json.dump(out, f, indent=1)
     print(json.dumps(out["counts"], indent=1))
     print(json.dumps(out["ranges"], indent=1))
 

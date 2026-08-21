@@ -12,9 +12,21 @@ Measured, not estimated, by `src/split_claims_t170.py` and `src/paragraphs_t170.
 
 | unit | on `main` (before) | on this branch (after) |
 |---|---|---|
-| line-level claim units in the two G-8 blocks | **747** | — |
-| lines skipped (blank / fence / table separator / rule), with the reason recorded | **131** | — |
+| line-level claim units in the two G-8 blocks | **747** | 1116 |
+| lines skipped (blank / fence / table separator / rule), with the reason recorded | **131** | 167 |
 | **paragraph-level claim units** — one paragraph, bullet, table row or heading | **239** (28 headings, 154 prose/bullets, 57 table rows) | **322** |
+
+Both revisions are reproducible; every script takes the path as `argv[1]`:
+
+```
+git show main:.softhouse/gates.md > /tmp/before.md
+python3 src/split_claims_t170.py /tmp/before.md     # 747 units / 131 skipped
+python3 src/paragraphs_t170.py  /tmp/before.md      # 239 units
+python3 src/diff_units_t170.py  /tmp/before.md      # the verdict arithmetic
+```
+
+`out/claim-units-t170.json` and `out/paragraph-units-t170.json` hold the **after** state (this
+branch's `gates.md`); the before figures are the ones above and are reproduced by the commands.
 
 **The 239 is the denominator every verdict below is stated against**, and all 239 were read. The
 `.softhouse/gates.md` blocks it covers are located **by heading, not by line number**, so the count
@@ -31,20 +43,20 @@ prevent:
 ```
 before_units                               239
 after_units                                322
-before_units_surviving_byte_identical      183
-before_units_changed_or_removed             56
-after_units_new                            139
+before_units_surviving_byte_identical      182
+before_units_changed_or_removed             57
+after_units_new                            140
 ```
 
-So: **239 units read, 0 skipped without judging, 56 touched, 183 left byte-identical.** Of the 56:
+So: **239 units read, 0 skipped without judging, 57 touched, 182 left byte-identical.** Of the 57:
 
 | verdict | units |
 |---|---|
 | **FALSE as written — repaired** | **17** (enumerated below) |
-| **TRUE but unscoped — re-scoped in place** | **21** (enumerated below) |
-| headings, `task:`/`state:` bullets, the non-decision roster, the STANDING RULE's own occurrence count, and status lines that restated one of the above | **18** |
+| **TRUE but unscoped — re-scoped in place** | **23** (enumerated below) |
+| headings, `task:`/`state:` bullets, the non-decision roster, the STANDING RULE's own occurrence count, and status lines that restated one of the above | **17** |
 
-`after_units_new` = **139** is dominated by the THIRD OUTCOME block and by the four-shape PARTIAL
+`after_units_new` = **140** is dominated by the THIRD OUTCOME block and by the four-shape PARTIAL
 table; it also counts the FULL/PARTIAL bullets that replaced single sentences.
 
 ## What was FALSE and is repaired
@@ -97,6 +109,8 @@ neither T117's nine nor T159's 25.**
 | ⭐ M-12 | NOTICE finding 2, *"Raised as T169"* | T169 landed; T177 then reconciled T159 against T169 |
 | ⭐ M-13 | heading *"FAMILY B — the principal column itself never repays the loan"* | *"…does not repay the loan, in FULL or in PART"* |
 | ⭐ M-14 | table row `totalOutstandingAmount` — *"`0` — so this field does not discriminate"* | true, and now measured on **all 209**: `totalOutstandingAmount` reads `0` on every family-B cell including all four partial shapes |
+| ⭐ M-15 | heading *"Option (a), RESCOPED — reachable today on family B, needs a port change on family A"* | *"…on a FULL family-B cell … UNMEASURED on a PARTIAL cell"* — the heading restated, unscoped, the very claim the table under it now qualifies |
+| ⭐ M-16 | *"repayment counts n ∈ …"* bullet, when rewritten, briefly said family B is observed "at every scale in between" | corrected before commit to "**NOT at every term in it**" — there are measured clean gaps. Recorded because it is an error T170 introduced and caught in its own re-read, and the STANDING RULE asks the editor to sweep its own change of mind |
 
 ## What is NEW
 
