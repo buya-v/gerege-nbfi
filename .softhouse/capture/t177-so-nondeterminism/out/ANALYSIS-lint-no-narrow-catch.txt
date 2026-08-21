@@ -1,0 +1,3 @@
+narrow load-bearing catch sites: 67 total, 67 in FROZEN files (34 files), 0 NEW
+clean: no capture rig outside the frozen set narrows its seam handler.
+lint exit 0
