@@ -1,53 +1,57 @@
 # DEC-2 — GL / accounting adapter contract
 
-> # ⛔ REJECTED BY INDEPENDENT REVIEW — DO NOT RATIFY THIS REVISION
+> # ⚠ NOTHING GRADES THIS CONTEXT'S MONEY. NOTHING GRADES THIS CONTEXT AT ALL.
 >
-> **`A2-14` REJECTED revision 1 on 21 August 2026** (local fire `20260821-125942`). Full review:
-> `.softhouse/reviews/A2-14-DEC2-gl-accounting-contract-review.md`. Rework is task **`A2-16`**.
-> **`A2-15` (promote GL vectors) is blocked until a revision passes review** — it cannot promote a
-> vector against a contract that has been rejected.
+> **Read this before any other sentence in this document, and before quoting any number out of it.**
+> Every claim below is a claim about what the reference oracle *does* and what a conforming port
+> *must* do. **Not one of them is currently checked by anything.** Four separate facts, each
+> measured by this task, not reasoned:
 >
-> **The rejection is on SHAPE, not on honesty or research.** A2-14 opened over thirty source and
-> capture citations and found **every `[VERIFIED]` claim traced to real source at the exact cited
-> line** — none overstated, none fabricated. G-9 was applied and not re-litigated; **G-10 was
-> recorded and explicitly left undecided, so no gate was crossed**; default-deny is genuinely
-> inherited; no float is admitted anywhere Gerege owns the number. The factual base survives into
-> the rework.
+> 1. **No `ledger` vector exists.** `.softhouse/vectors/` holds `loanschedule/` and `_selftest/` and
+>    nothing else [VERIFIED by this task: `ls .softhouse/vectors/`].
+> 2. **No `ledger` vector CAN exist.** The store's only accepted schema is
+>    `gerege.loanschedule.vector/v1` and its `Request`/`Expect` shapes are loan-schedule shapes. §5
+>    establishes this in code and by three failing positive controls. **This is not a gap somebody
+>    forgot to fill; it is machinery that has not been built.**
+> 3. **No guard enforces `I-3` (balances are derived) or `I-4` (append-only).** `run_guards` invokes
+>    exactly five guards and **all five are about floating point, `gofmt` and exception scope**
+>    [VERIFIED by this task: `.softhouse/conformance.sh:843-849`]. **Nothing anywhere in this
+>    repository looks for a balance write path, or for an `UPDATE`/`DELETE` against
+>    `acc_gl_journal_entry`.**
+> 4. **The "PASS 43" everybody quotes is `loanschedule`'s.** All 43 promoted parity vectors are in
+>    the `loanschedule/` directory. **Zero of them touch a GL account, a mapping, a financial
+>    activity or a journal entry.**
 >
-> **Three findings must be resolved before ratification:**
+> **§8 contains a sentence that is true and will be misread**, so it is contradicted here in
+> advance: `conformance.sh`'s hard guards *do* walk `nexus/internal/apps/ledger/`. They walk it
+> **for floating-point literals and `gofmt`**. That is not `I-3`. That is not `I-4`. A reader who
+> takes "the guards cover the ledger tree" to mean the double-entry invariants are enforced has
+> been misled by this document, and §8 now says so at the point of the claim.
 >
-> 1. **R-1 — no `ledger` vector is expressible against the frozen schema.** §5's *"Disposition 3
->    needs no new machinery"* is false. `Expect.Kind ∈ {schedule, refusal}`; `Expect.Sentinel` must
->    be one of the three **contract** sentinels, so §4.9's oracle-faithful 404 — this context's
->    commonest graded output — has no representation; `StructuralCellFields()` is a hard-coded
->    closed set and `admitCounterfactual` rejects all six cells §5 proposes. For a context whose own
->    text says *"most kills will be structural"*, the structural machinery refuses the entire corpus.
-> 2. **R-2 — an empty `ledger/` directory PASSES SILENTLY. Driver-measured on real `main`:** an
->    empty `.softhouse/vectors/ledger/` with the harness run unfiltered — *the way `conformance.sh`
->    actually invokes it* — gives **exit 0, `VERDICT: PASS`, 43 vectors**, and the only occurrence of
->    "ledger" in the whole output is the no-float census line. `conformance.sh:855` adds `-context`
->    only when given an argument; `vector.go:950-952` returns all contexts when the filter is empty.
->    §5's narrower sentence is true; the bolded claim resting on it is not.
-> 3. **R-3 — the prose and the enumerated list contradict each other on whether the contract carries
->    money** — the same defect class as the still-open **G-5** on DEC-1. §2.2/§3.2/§5 say *"the
->    contract carries no amount"*, while §4.2's `G-07`/`G-08` are predicates about currency and
->    amount wire text and §4.4 grades `I-1`/`I-2` in `int64` minor units. Either the prose is false
->    or those predicates are vacuous (P-35). Root cause: the no-amount property is derived from
->    `ledger_inprocess_resolver` — **the one seam `G-01` refuses** — then stated as a property of a
->    contract built on three seams that do carry money.
->
-> **And the answer to the question this contract exists to make askable: nothing currently grades
-> the ledger's money.** No vectors, no schema to express one in, and no guard for `I-3`/`I-4` —
-> `run_guards` invokes five guards, all about float, `gofmt` and exception scope. §8 says the guards
-> cover the ledger tree, which is **true for float** and **will be misread** as covering the
-> append-only and derived-balance invariants.
+> **What ratifying DEC-2 would and would not buy.** It would buy a written boundary and an
+> admissibility standard. It would buy **no grading whatsoever** until the machinery in §5.3
+> exists. Ratification is not coverage, and this document must never be cited as though it were.
 
 
-**Status: DRAFT (revision 1), 21 August 2026, written by task `A2-13`. NOT RATIFIED, and this
-task may not ratify it.** An independent review (`A2-14`) grades it; the driver decides
-ratification under standing policy **P-2**. **No PIN digest appears in this document**, and
-§1.1 explains why one *cannot* appear yet: unlike DEC-1, this ADR is not written against an
-existing frozen Go file.
+**Status: DRAFT (revision 2), 21 August 2026, drafted by task `A2-16`. NOT RATIFIED. `A2-16` may
+not ratify it and does not.** Revision 1 (`A2-13`) was **REJECTED** by independent review
+(`A2-14`, local fire `20260821-125942`) on three shape findings, all three resolved here — §5 for
+R-1 and R-2, §2.2/§3.2/§4.2/§4.4 for R-3, §9 item 10 for the review's finding F-A. **A further
+independent review must pass clean before the driver may ratify** under standing policy **P-2**;
+until then `A2-15` (promote GL vectors) stays blocked, and §5.3 names work that must land before
+`A2-15` could succeed even against a ratified contract.
+
+**What survived the rejection, so that it is not re-litigated.** A2-14 opened over thirty source
+and capture citations and found **every `[VERIFIED]` claim traced to real source at the exact
+cited line** — none overstated, none mis-cited, none fabricated. G-9 was applied as closed; G-10
+was recorded and explicitly left undecided, so no gate was crossed; default-deny is genuinely
+inherited; no float is admitted anywhere Gerege owns the number. The rejection was about
+inferences drawn on top of that base, and this revision changes those inferences and only those.
+Claims carried forward unchanged from revision 1 keep revision 1's citation tier; claims this
+task re-opened are marked as such.
+
+**No PIN digest appears in this document**, and §1.1 explains why one *cannot* appear yet: unlike
+DEC-1, this ADR is not written against an existing frozen Go file.
 
 **Terminology.** In this document "**the reference oracle**" always means the **Fineract
 reference implementation** at the pinned commit — the implementation this program grades Go
@@ -55,14 +59,31 @@ output against (test-oracle sense). It never means **Oracle Database**, which is
 product in this program. PostgreSQL is the only permitted database, for the reference oracle,
 the Go module, capture and shadow runs alike.
 
-**Citation convention.** Every `file:line` citation is to the pinned Fineract checkout
-`/Users/buv/fineract` @ `426a23544e8426a38ae43ae404670a0a7e85b9eb` [VERIFIED: `git rev-parse
-HEAD`, by this task]. Every capture citation is to a committed file under
-`.softhouse/capture/tierA-a2/`. Every material claim carries **`[VERIFIED: …]`** — meaning
-*this task* opened the source line or the capture bytes — or **`[UNVERIFIED]`**. A claim taken
-on another worker's report and not re-opened here is marked
+**Citation convention.** Every Fineract `file:line` citation is to the pinned checkout
+`/Users/buv/fineract` @ `426a23544e8426a38ae43ae404670a0a7e85b9eb` [VERIFIED by `A2-16`:
+`git rev-parse HEAD` in that checkout returns exactly that commit]. Every capture citation is to a
+committed file under `.softhouse/capture/tierA-a2/`. Every material claim carries
+**`[VERIFIED: …]`** — meaning the authoring task opened the source line or the capture bytes — or
+**`[UNVERIFIED]`**. A claim taken on another worker's report and not re-opened is marked
 **`[VERIFIED BY <task>, NOT RE-OPENED HERE]`**, which is a third and weaker thing, and the
 distinction is deliberate.
+
+**Reading "this task" across two revisions.** Unqualified *"this task"* means **`A2-13`**, the
+author of revision 1, and its verifications stand — an independent review re-opened over thirty of
+them and every one traced to real source at the exact cited line. Where **`A2-16`** re-opened a
+claim, corrected one, or measured something new, the citation says so explicitly: **`[VERIFIED by
+this task]` inside material revision 2 added**, or **`[RE-VERIFIED by A2-16]`**, or **`[MEASURED by
+this task]`** for a harness run this task actually performed rather than reasoned about. Every
+`[MEASURED]` in this document is `A2-16`'s and was produced by running the real conformance binary
+against a **temporary copy** of the vector store; **no file under `.softhouse/vectors/` or `nexus/`
+was modified by revision 2.**
+
+**Harness `file:line` citations drift, and revision 2 re-took the ones it relies on.** Several
+harness line numbers moved between revision 1 and revision 2 as unrelated tasks landed — for example
+the `-context` flag append and `run_guards`, both cited by revision 1's reviewer at line numbers that
+no longer hold. Every harness citation in §4.4.1, §5.1, §5.2 and §5.4 was re-taken by `A2-16` against
+its own tree. **A harness citation elsewhere in this document may be stale by a few lines; the facts
+behind them were not observed to have changed.**
 
 **Nothing in this document is asserted from memory.** §9 enumerates every `[UNVERIFIED]` and
 why it could not be closed. Per the project honesty rule, an honest negative outranks a
@@ -241,15 +262,52 @@ see, each demonstrated from source rather than asserted:
 | **B-2** | **The resolved account's classification, usage or `disabled` flag.** | The body ends `glAccount = accountMapping.getGlAccount();` at `:1213` and `return glAccount;` at `:1215`, with no reference to any of the three [VERIFIED by this task, the whole method read]. **This is the mechanism of G-10** (§4.6): a retype is invisible to resolution because resolution never looks. A2-9 re-derived the same for all four resolvers and concluded resolution gradings are immune to the retyped chart [VERIFIED BY A2-9, NOT RE-OPENED HERE]. |
 | **B-3** | **A charge.** | The charge resolvers are `private` and every caller is inside `AccountingProcessorHelper` itself [VERIFIED by this task: `grep -rn` over the checkout excluding `/build/` returns, for `getLinkedGLAccountForLoanCharges`, only `:402`, `:404`, `:764`, `:1430` — all in that file — plus three comment mentions in an integration test]. **So an in-process seam bound to the public method cannot grade a charge**, by construction. This is structurally the same fact as DEC-1's `loanCharges = null` at `ProgressiveLoanScheduleGenerator.java:83`, reached by a different mechanism: Java visibility rather than a hard-wired null. |
 | **B-4** | **The office.** | `acc_gl_financial_activity_account` is tenant-global — three columns plus id, no office dimension [VERIFIED BY A2-1 AND A2-2 from `0001_initial_schema.xml:99-109`, NOT RE-OPENED HERE; corroborated by this task from `A2-150`, whose dump of that table projects `id, financial_activity_type, gl_account_id` and joins the account]. |
-| **B-5** | **Any amount, and any currency.** | Neither is a parameter and neither appears in the body [VERIFIED by this task, the whole method read]. **No money flows through this seam at all.** |
+| **B-5** | **Any amount, and any currency.** | Neither is a parameter and neither appears in the body [VERIFIED by this task, the whole method read]. **No money flows through THIS METHOD at all.** Scope, and revision 2 states it in the row rather than leaving it to be inferred: this is a fact about `getLinkedGLAccountForLoanProduct`, which is the analogue of the **`ledger_inprocess_resolver`** seam — **the one seam `G-01` refuses** (§4.1, §4.2). It is **not** a fact about the contract, which is anchored on three other seams, two of which carry money. |
 
-**B-5 is the single most important structural difference between DEC-2 and DEC-1**, and §4.3 and
-§4.4 both turn on it. DEC-1's contract is a money-producing function and every vector grades an
-amount. **DEC-2's contract is an account-selecting function**: its answers are ids, names, GL
-codes, enum values and refusal strings. Money enters this context only where the *posting
-engine* — slice **A1**, not A2 — takes the resolved account and writes a leg. That makes several
-of the project's monetary invariants **structural properties of the Go implementation rather
-than things a `ledger` vector can grade**, and §4.4 says exactly which.
+**B-5's scope, corrected in revision 2 — this is finding R-3, and it is the same defect class as
+the still-OPEN `G-5` on DEC-1.**
+
+Revision 1 read B-5 off the in-process resolver and then restated it, in §2.2, §3.2 and §5, as
+*"the contract carries no amount"*. That is the G-5 shape exactly: a **prose** claim contradicted
+by the **enumerated list** it sits beside, with the enumerated list being the part anything
+mechanical would follow. `G-07` and `G-08` (§4.2) are predicates about a currency code and about
+an amount's wire text; §4.4 grades `I-1`/`I-2` in `int64` minor units. Either the prose was false
+or those two predicates were true-of-nothing (**P-35**). Shipping that unresolved would have put a
+second ratified ADR into the same contradiction that is currently a hard `user` gate on the first.
+
+**The decision: KEEP THE MONEY, NARROW THE PROSE.** The measured data settles which half was
+false, and it is the prose:
+
+- `A2-235` holds exactly eight `"amount":` occurrences, each a bare JSON number: `1200000.000000`
+  ×2, `200000.000000` ×2, `1000000.000000` ×2, `50000.000000` ×2 [VERIFIED by this task, regex over
+  the raw bytes]. In minor units that is 120,000,000 + 20,000,000 + 100,000,000 + 5,000,000 =
+  **245,000,000** per side.
+- `A2-150`'s `acc_gl_journal_entry` dump projects **both** `amount` and `currency_code`: six rows,
+  every one `1200000.000000` and `MNT` [VERIFIED by this task, lines 65-70 of
+  `A2-150-db-final-state.txt`].
+
+So money is present on `ledger_rest_posting` **and** on `ledger_db_readback`, and the alternative
+resolution — striking `G-07`/`G-08` and demoting `I-1`/`I-2` — would have thrown away the only two
+ledger invariants anything in this program could ever grade, in order to preserve a tidy sentence.
+That is the wrong trade.
+
+**The corrected statements, which are what the rest of this document now says:**
+
+- **The `ledger` contract DOES carry an amount and a currency, on the seams that observe a journal
+  entry.** `G-07` and `G-08` are live predicates, and §4.2 now scopes them to the vectors they
+  actually bind.
+- **The RESOLUTION FUNCTION does not.** `getLinkedGLAccountForLoanProduct` takes three scalars and
+  returns an account; a vector that asserts only a resolution outcome asserts no money, and
+  `G-07`/`G-08` are inert on it — inert by scope, which is a different thing from vacuous.
+- **DEC-2's contract is therefore two things, and revision 1 named only the first**: an
+  account-selecting function, *and* a money-bearing observation of what the posting engine wrote
+  through it. Money is *produced* by slice **A1**; it is *observed* here, and observing it is
+  exactly what makes `I-1` and `I-2` statable at all.
+
+**What this does NOT rescue.** Being statable is not being graded. §5 establishes that no vector
+asserting a money cell — or any other `ledger` cell — is currently expressible at all. `I-1` and
+`I-2` are gradeable **from the data in hand and from nothing else that is missing except the
+machinery**; they are not gradeable **today**. §4.4 now says that in those words.
 
 ### 2.3 What the REST read-back cannot see
 
@@ -313,8 +371,12 @@ Of the five blind spots in §2.2:
 
 - **B-3 (charges)** and **B-4 (office)** are **excluded from the contract domain** — no charge
   entry point and no office dimension is admitted (§4.2). Pinned, in DEC-1's sense.
-- **B-5 (money)** is **not a blind spot at all**; it is a correct statement that this seam is
-  money-free, and the contract carries no amount.
+- **B-5 (money)** is **not a blind spot; it is a scope statement, and revision 2 narrows it.** The
+  in-process resolver is money-free — but that resolver is `ledger_inprocess_resolver`, the seam
+  `G-01` refuses, so its money-freeness is not a property of this contract. **The contract carries
+  an amount and a currency** on `ledger_rest_posting` and on any `ledger_db_readback` vector that
+  reads `acc_gl_journal_entry`, both of which are admitted seams and both of which are observed
+  carrying MNT amounts (§2.2, R-3). `G-07` and `G-08` bind exactly there.
 - **B-1 (accounting rule)** is **live and not pinnable.** The contract *does* carry the
   accounting rule, because the caller must supply it to choose the placeholder family (§4.8) —
   but the oracle's own renderer ignores it, so a faithful port must reproduce a message the
@@ -400,7 +462,9 @@ G-05  SlotFamily               == CashLoanSlot     when AccountingRule == CASH_B
                                 == AccrualLoanSlot  when AccountingRule == ACCRUAL_PERIODIC
 G-06  PaymentTypeID            != nil    whenever SlotCode == 1 (FUND_SOURCE)
 G-07  Currency.Code            == "MNT"  and  Currency.MinorUnitDigits == 2
+                               — binds ONLY a vector that asserts a MONEY CELL (see below)
 G-08  every amount's wire text is EXACT at MinorUnitDigits  (no non-zero digit beyond)
+                               — binds ONLY a vector that asserts a MONEY CELL (see below)
 G-09  GLAccount.Classification ∈ {ASSET, LIABILITY, EQUITY, INCOME, EXPENSE}   (1..5)
 G-10  GLAccount.Usage          ∈ {DETAIL, HEADER}                              (1, 2)
 G-11  for a POSTING-TIME grading only:  SlotCode ∈ {1, 2, 6, 12}
@@ -412,7 +476,7 @@ G-11  for a POSTING-TIME grading only:  SlotCode ∈ {1, 2, 6, 12}
 |---|---|---|
 | **G-01** | These three seams produced the whole A2 corpus. | `ledger_inprocess_resolver` does not exist; **ABSENT refuses** (default-deny, §4.10). |
 | **G-02** | Products 22, 23, 24, 27, 28 are all `product_type = 1` [VERIFIED by this task from `A2-150`'s per-product mapping-count table — five rows, every `product_type` = 1]; product 46 likewise [VERIFIED BY A2-8 from `A2-072`, NOT RE-OPENED HERE]. | The tenant has **no** savings, share or working-capital-loan product [VERIFIED BY A2-8's `[UNVERIFIED]` items 3 and 4, NOT RE-OPENED HERE], so nothing in those resolvers is graded against the oracle at all. `PROVISIONING`(3) and `CLIENT`(5) likewise. |
-| **G-03** | Cash observed on products 22, 24, 27, 46; accrual-periodic observed on 28 [VERIFIED by this task for 46: `A2-211`'s `accountingRule` decodes to `{"id":2,"code":"accountingRuleType.cash","value":"CASH BASED"}`; for 28, VERIFIED BY A2-7 from `A2-213`, NOT RE-OPENED HERE]. | `NONE`(1) has no mappings at all. `ACCRUAL_UPFRONT`(4) is uncaptured, and on the **savings** side its mapping switch reaches `default: break` [VERIFIED BY A2-2, NOT RE-OPENED HERE] — so the loan side must not be assumed by symmetry. §9 item 10. |
+| **G-03** | Cash observed on products 22, 24, 27, 46; accrual-periodic observed on 28 [VERIFIED by this task for 46: `A2-211`'s `accountingRule` decodes to `{"id":2,"code":"accountingRuleType.cash","value":"CASH BASED"}`; for 28, VERIFIED BY A2-7 from `A2-213`, NOT RE-OPENED HERE]. | `NONE`(1) has no mappings at all. **`ACCRUAL_UPFRONT`(4) is refused for one reason only: it is UNCAPTURED.** Revision 2 corrects revision 1's second reason, which was wrong — see the `ACCRUAL_UPFRONT` note immediately below and §9 item 10, now CLOSED. |
 | **G-04** | Loan-product resolution is the only entry point exercised end to end. | Charge resolution: **B-3**, and no charge exists in the tenant [A2-8 item 5]. Reason/classification lookup: no such row exists [item 6]. STEP 0's *data* is graded (§4.5) but its *precedence at posting* is not [item 9]. |
 | **G-05** | Both families are exercised: cash by 22/24/27/46, accrual by 28's thirteen slots including the three receivables. | A bare integer cannot select a family (§2.1). Admitting one would re-open the collision at 22/24/25. |
 | **G-06** | The corpus's loan fund-source resolutions all carry a payment type: `A2-084` type 1 → GL 16, `A2-085` type 2 → GL 2 (falling back to the core row), `A2-086` type 1 → the duplicate refusal [VERIFIED BY A2-8, AND THE `A2-086` REQUEST BODY RE-CHECKED BY A2-9 AGAINST THE `.http` RECORD, NOT RE-OPENED HERE]. | **`PaymentTypeID == nil` on FUND_SOURCE is genuinely undecided.** The oracle issues the payment-type finder with a null argument and no null guard [VERIFIED by this task: `AccountingProcessorHelper.java:1199-1206` has no `paymentTypeId != null` conjunct, unlike the working-capital path at `:1015`]. Spring Data JPA conventionally renders a null bound to a derived-query equality as `IS NULL`, which would match the **core row**; the alternative reading matches nothing. **Neither reading is settled from the pinned checkout, and no capture separates them.** Refusing is the only defensible answer. §9 item 2. |
@@ -420,6 +484,80 @@ G-11  for a POSTING-TIME grading only:  SlotCode ∈ {1, 2, 6, 12}
 | **G-08** | See §4.3. | See §4.3 and §9 item 1. |
 | **G-09 / G-10** | All five classifications and both usages appear: `A2-150`'s `acc_gl_account` is **21 rows** spanning `classification_enum ∈ {1,2,3,4,5}` and `account_usage ∈ {1,2}` [VERIFIED by this task, dump read row by row]. | Nothing outside 1..5 / 1..2 is a legal stored value; out-of-range is `ErrInvalidRequest`, which §4.9's precedence puts **ahead** of any graded-domain refusal. |
 | **G-11** | **Only four slots were ever posted to.** `A2-150`'s six journal-entry rows touch GL 4 (`LOAN_PORTFOLIO`), GL 16 and GL 2 (`FUND_SOURCE`) and GL 1 (`LOAN_PORTFOLIO` on product 24, a **HEADER** account) [VERIFIED by this task from the dump]. `A2-235`'s eight legs add `LOSSES_WRITTEN_OFF`(6) and `INCOME_FROM_RECOVERY`(12) [VERIFIED BY A2-7's `analyze7.py` table, NOT RE-OPENED HERE]. | **4 of the 23 cash placeholders.** The other 19 are resolvable-from-stored-rows but **never posted**, and §4.7 forbids reading that absence as a statement about them. |
+
+**`ACCRUAL_UPFRONT` on the LOAN side — closed in revision 2, and it changes G-03's reasoning.**
+
+Revision 1 refused `ACCRUAL_UPFRONT`(4) partly on the ground that *"on the savings side its mapping
+switch reaches `default: break` … so the loan side must not be assumed by symmetry"*, and filed the
+loan side under §9 as unclosable. **The refusal to assume symmetry was right and the two sides do
+differ. Filing it as unclosable was wrong: it is one grep, and this task took it.**
+
+```java
+            case ACCRUAL_UPFRONT:
+                // Fall Through
+            case ACCRUAL_PERIODIC:
+```
+
+[VERIFIED by this task at the pinned checkout `426a23544e8426a38ae43ae404670a0a7e85b9eb`:
+`fineract-provider/src/main/java/org/apache/fineract/accounting/productaccountmapping/service/ProductToGLAccountMappingWritePlatformServiceImpl.java:149-151`,
+inside `createLoanProductToGLAccountMapping` (declared `:61`, its switch at `:74`). The three lines
+are quoted verbatim above.]
+
+**On the loan side `ACCRUAL_UPFRONT` falls through and writes the FULL accrual mapping set.** On the
+savings side it writes nothing. So a loan product created at `accountingRule = 4` persists rows
+**byte-identical** to one created at `accountingRule = 3`.
+
+**Two corrections of inherited wording, both verified in the pinned checkout by this task, and both
+mattering because a reader will grep for the words:**
+
+- The savings **helper** does not reach a `default:` label. It has `case ACCRUAL_UPFRONT: break;` —
+  at **two** sites, `:192-193` and `:313-314` — and the file contains **zero** occurrences of
+  `default:` [VERIFIED by this task:
+  `fineract-accounting/src/main/java/org/apache/fineract/accounting/producttoaccountmapping/service/SavingsProductToGLAccountMappingHelper.java`;
+  `grep -c 'default:'` returns 0].
+- The savings **create switch in the write service** *does* reach `default: break;`, at `:345-346`,
+  because it has no `case ACCRUAL_UPFRONT` at all [VERIFIED by this task, same file as the loan
+  fall-through: `createSavingProductToGLAccountMapping` declared `:311`, switch `:318`]. Revision 1's
+  wording was true of this switch and false of the helper, and cited neither.
+
+`AccountingRuleType` has exactly four members — `NONE(1)`, `CASH_BASED(2)`, `ACCRUAL_PERIODIC(3)`,
+`ACCRUAL_UPFRONT(4)` [VERIFIED by this task: `AccountingRuleType.java`, the enum body read in full],
+so the loan switch needs no `default:` and has none.
+
+**What this does and does not do to G-03.** It removes the *source* uncertainty and leaves the
+*evidential* one, which is the only ground the refusal now stands on: **no capture exists at
+`accountingRule = 4`.** Admitting 4 on the strength of "the source says it writes the same rows"
+would be admitting a value to the graded domain on a source reading rather than on an observation —
+the precise move this program forbids. It stays out, with an honest reason, and **one capture
+retires the refusal**: create one loan product at `accountingRule = 4`, read it back, and compare
+the persisted mapping set against product 28's. That capture is named in §9 item 10 and is cheap.
+
+**A hazard this uncovers, recorded because a port would reproduce it silently.** `fromInt` is a
+`HashMap` lookup returning `null` for an unknown value [VERIFIED by this task,
+`AccountingRuleType.java`, the `intToEnumMap` static block and `fromInt`], and both call sites
+`switch` on the result directly — so an out-of-range `accountingRule` reaches `switch(null)` and
+throws NPE rather than refusing. This is the same shape as §4.9's R-2 divergence and is governed by
+it. `[UNVERIFIED]` — whether the API validator rejects out-of-range values before this point; this
+task did not open the validator.
+
+**Which vectors `G-07` and `G-08` actually bind — scoping added in revision 2 (R-3).**
+
+`G-07` and `G-08` bind **a vector that asserts a money cell**, and only such a vector. They do not
+bind by seam, and revision 2 says so explicitly because "by seam" is the natural guess and it is
+wrong in both directions:
+
+- A `ledger_rest_posting` vector asserting a journal entry's `amount` and `currency_code` — **bound.**
+- A `ledger_db_readback` vector over `acc_gl_journal_entry` — **bound.** That dump projects `amount`
+  and `currency_code` [VERIFIED by this task, `A2-150-db-final-state.txt:65-70`], so "db read-backs
+  carry no money" would be false.
+- A `ledger_db_readback` vector over `acc_product_mapping` or `acc_gl_account`, or a
+  `ledger_rest_admin` vector asserting a resolution outcome or a refusal code — **not bound.** There
+  is no amount in the assertion for `G-08` to be exact about.
+
+**A predicate that is inert by scope is not a vacuous predicate (P-35).** The distinction is that a
+vacuous predicate is one nothing could fail; these two can be failed, by any vector carrying a money
+cell, and the admission rule must evaluate them on exactly those vectors. Whether the *evaluation*
+is expressible is a separate question, answered no in §5.
 
 **Two gradings that are NOT posting-time and must not be conflated with G-11:**
 
@@ -473,12 +611,35 @@ the oracle's major-unit decimal text to `int64` minor units happens **at the ada
 HTTP/DB decode for a live adapter, and the capture-transcription step for a vector — and **never
 deeper in**. Nothing behind that edge ever sees a decimal.
 
-**`[UNVERIFIED — T186 is settling the general rule.]`** Task **T186** is ruling in parallel on the
-program-wide major/minor conversion boundary. DEC-2 deliberately states only the boundary this
-context requires and does **not** pre-empt T186 on: the general placement rule for other
-contexts, the treatment of currencies whose minor unit is not 2, or whether a shared conversion
-utility is mandated. If T186's ruling contradicts anything in this subsection, **T186 governs**
-and this subsection is the amendment.
+**T186 HAS RULED — revision 2 removes revision 1's live forward reference.** Revision 1 carried
+`[UNVERIFIED — T186 is settling the general rule.]` here and *"is settling it in parallel"* at §9
+item 3. **T186 merged before revision 1 did**, and A2-13's branch simply forked before it landed
+[the ruling is `.softhouse/reviews/T186-wire-money-form-ruling.md`, read in full by this task]. A
+ratified contract must not ship a live forward reference to a completed task.
+
+T186's ruling is a three-way split, and **nothing in this subsection contradicts it** [checked
+clause by clause by this task]:
+
+| T186 category | ruling | DEC-2's position |
+|---|---|---|
+| **(a)** oracle-facing capture wire, `.softhouse/capture/**` | major-unit decimal is **ADMISSIBLE and in fact mandatory** — the oracle's bytes are captured as the oracle emitted them, bound as byte-fidelity | consistent: this subsection *measures* the wire (`"amount":1200000.000000`, scale 6, `numeric(19,6)`) rather than assuming it |
+| **(b)** the Go module's own adapter/API surface, `nexus/**` | **REJECTION** — binds absolutely | consistent: *"integer minor units, `int64`, everywhere … in any struct field, schema column, API field, fixture or intermediate calculation"* |
+| **(c)** the **stored vector**, `.softhouse/vectors/**` | **REJECTION** — money is `int64` minor units, and the measured state is **zero violations** across 50 files | revision 1 *implied* this by placing the conversion at "the capture-transcription step". **Revision 2 states it as a rule** — see immediately below |
+
+**Normative consequence 4, added in revision 2 and required by T186(c): a stored `ledger` vector
+carries money as a JSON STRING of integer minor units, never as a JSON number.** The loanschedule
+schema already does exactly this — `"principal_minor": "116250250"`, with the oracle's own emitted
+characters kept separately as `"principal_major_text": "1162502.50"` for transcription cross-check
+only [VERIFIED: T186 §(c), citing
+`.softhouse/vectors/loanschedule/T149-PATHB-TIE-1M162502pt50-12x21pt6pct.json`]. Any `ledger` money
+cell §5.3 introduces **must** adopt that pairing: the graded value is the minor-unit integer string;
+the major-unit decimal text is a cross-check on the transcription and is **never** a grading
+standard. A `ledger` vector storing `1200000.000000` as a bare JSON number would be rejected by the
+store's existing raw-token float scan before any typed decode, which is the correct outcome.
+
+DEC-2 still does **not** pre-empt T186 on what T186 itself left open: the treatment of currencies
+whose minor unit is not 2, and whether a shared conversion utility is mandated. Those are outside
+this contract. **If T186's ruling and this subsection are ever read as conflicting, T186 governs.**
 
 **`[UNVERIFIED]` — whether the oracle can produce sub-minor-unit residue in a MONEY column at
 all.** No captured vector establishes it. The corpus's only values beyond two decimals are the
@@ -489,23 +650,65 @@ probe set, not about Fineract.* §9 item 1.
 
 ### 4.4 The double-entry invariants: which are GRADEABLE, and which are structural only
 
-Because this seam is money-free (**B-5**), most of the project's ledger invariants cannot be
-graded by a `ledger` vector. Saying which is the honest half of this contract.
+Most of the project's ledger invariants cannot be graded by a `ledger` vector, and **none of them
+can be graded today**. Saying which, and saying why the two statements differ, is the honest half of
+this contract.
 
-| id | Invariant | Statement, checkable | Gradeable by a captured `ledger` vector? |
-|---|---|---|---|
-| **I-1** | Debits equal credits | For every transaction, `Σ debit legs == Σ credit legs`, compared as `int64` minor units | **YES, today.** `A2-235`'s eight legs: debits `120,000,000 + 20,000,000 + 100,000,000 + 5,000,000 = 245,000,000` minor units, credits the same [re-derived by this task from A2-7's leg table; the total matches A2-8's stated 245,000,000]. `A2-150`'s six rows are three balanced pairs at 120,000,000 each [VERIFIED by this task from the dump]. |
-| **I-2** | Splits sum to whole | `whole == Σ splits`, `int64` minor units | **YES.** `120,000,000 = 20,000,000 + 100,000,000` — disbursed principal against repayment plus write-off [re-derived by this task from the same legs]. |
-| **I-3** | Balances are DERIVED, never written | No write path to any balance column exists in the Go tree | **NO — STRUCTURAL ONLY.** A vector is a snapshot of oracle output; it cannot observe the *absence* of a write path. Gradeable only by a source-level guard over the Go tree. And the oracle is **not** a positive example: `m_trial_balance.closing_balance` is a written, stored, **unsigned** sum wearing a balance's name [VERIFIED BY A2-2's re-derivation of `UpdateTrialBalanceDetailsTasklet.java:81` reading `JournalEntryRepository.java:61`, NOT RE-OPENED HERE]. It is deliberately **not ported** (§7). |
-| **I-4** | The ledger is append-only | No `UPDATE`/`DELETE` against `acc_gl_journal_entry` from application code | **NO — STRUCTURAL ONLY.** "No update ever happened" is not observable from a capture. Partial exception: a reversal is observable *as a row*, because the table carries a `reversed` flag [VERIFIED by this task: `JournalEntry.java:79` `@Column(name = "reversed", nullable = false)`]. |
-| **I-5** | Corrections are reversing entries | A correction adds a leg pair; it never mutates one | **UNGRADED TODAY.** The A2 corpus contains no reversal: `A2-150`'s journal dump does not project `reversed` or `reversal_id` and its six rows are three ordinary pairs [VERIFIED by this task]; A2-8's grading table lists no reversal grading [VERIFIED BY A2-8, NOT RE-OPENED HERE]. Refused with `ErrNoDiscriminatingVector`; retired by one capture. §9 item 13. |
-| **I-6** | Holds are postings and alter `available` only, never posted `balance` | — | **OUT OF THE CONTRACT DOMAIN.** No hold concept exists in A2's three tables. Refused with `ErrUnsupportedConfiguration`. |
-| **I-7** | `Idempotency-Key` on every money-movement POST | — | **NOT APPLICABLE TO THIS CONTRACT, and that must be said rather than assumed.** DEC-2's surface exposes no HTTP endpoint and moves no money; it is a value computation. The obligation is real and lands on **A1** (the posting engine) and on the adapter's HTTP layer. A `ledger` conformance PASS says nothing whatever about it. |
+**Revision 1's fourth column answered two questions at once. Revision 2 splits it into two
+columns**, because the difference between them is the whole of finding R-1:
+
+- **IN PRINCIPLE** — do captured oracle bytes exist that would separate a correct implementation
+  from an incorrect one? This is a question about the corpus.
+- **TODAY** — can that separation be written down as an admissible vector and evaluated by the
+  grader? This is a question about the machinery, and for **every row in this table the answer is
+  NO**, because no `ledger` vector of any shape is currently expressible (§5).
+
+| id | Invariant | Statement, checkable | In principle, from the captures in hand? | Graded today? |
+|---|---|---|---|---|
+| **I-1** | Debits equal credits | For every transaction, `Σ debit legs == Σ credit legs`, compared as `int64` minor units | **YES.** `A2-235`'s eight legs: debits `120,000,000 + 20,000,000 + 100,000,000 + 5,000,000 = 245,000,000` minor units, credits the same [the eight `"amount":` tokens RE-VERIFIED by this task from the raw bytes; the total matches A2-8's stated 245,000,000]. `A2-150`'s six rows are three balanced pairs at 120,000,000 each [VERIFIED by this task from the dump, lines 65-70]. | **NO.** §5 — no admissible vector can carry a money cell, or any `ledger` cell. |
+| **I-2** | Splits sum to whole | `whole == Σ splits`, `int64` minor units | **YES.** `120,000,000 = 20,000,000 + 100,000,000` — disbursed principal against repayment plus write-off [re-derived by this task from the same legs]. | **NO.** Same reason. |
+| **I-3** | Balances are DERIVED, never written | No write path to any balance column exists in the Go tree | **NO — STRUCTURAL ONLY.** A vector is a snapshot of oracle output; it cannot observe the *absence* of a write path. Gradeable only by a source-level guard over the Go tree. And the oracle is **not** a positive example: `m_trial_balance.closing_balance` is a written, stored, **unsigned** sum wearing a balance's name [VERIFIED BY A2-2's re-derivation of `UpdateTrialBalanceDetailsTasklet.java:81` reading `JournalEntryRepository.java:61`, NOT RE-OPENED HERE]. It is deliberately **not ported** (§7). | **NO, AND NOT BY ANYTHING ELSE EITHER.** No such guard exists. `run_guards` invokes five guards and all five are about float, `gofmt` and exception scope [VERIFIED by this task: `.softhouse/conformance.sh:843-849`]. See the correction below. |
+| **I-4** | The ledger is append-only | No `UPDATE`/`DELETE` against `acc_gl_journal_entry` from application code | **NO — STRUCTURAL ONLY.** "No update ever happened" is not observable from a capture. Partial exception: a reversal is observable *as a row*, because the table carries a `reversed` flag [VERIFIED BY A2-13 from `JournalEntry.java:79`, NOT RE-OPENED HERE]. | **NO, AND NOT BY ANYTHING ELSE EITHER.** Same as I-3: no guard looks for an `UPDATE`/`DELETE` against `acc_gl_journal_entry`. |
+| **I-5** | Corrections are reversing entries | A correction adds a leg pair; it never mutates one | **UNGRADED TODAY.** The A2 corpus contains no reversal: `A2-150`'s journal dump does not project `reversed` or `reversal_id` and its six rows are three ordinary pairs [VERIFIED by this task]; A2-8's grading table lists no reversal grading [VERIFIED BY A2-8, NOT RE-OPENED HERE]. Refused with `ErrNoDiscriminatingVector`; retired by one capture. §9 item 13. | **NO.** Nothing to grade, and nothing to grade it with. |
+| **I-6** | Holds are postings and alter `available` only, never posted `balance` | — | **OUT OF THE CONTRACT DOMAIN.** No hold concept exists in A2's three tables. Refused with `ErrUnsupportedConfiguration`. | **N/A.** |
+| **I-7** | `Idempotency-Key` on every money-movement POST | — | **NOT APPLICABLE TO THIS CONTRACT, and that must be said rather than assumed.** DEC-2's surface exposes no HTTP endpoint and moves no money; it is a value computation. The obligation is real and lands on **A1** (the posting engine) and on the adapter's HTTP layer. A `ledger` conformance PASS says nothing whatever about it. | **N/A** — and note that today there is no `ledger` conformance PASS to say nothing with. |
 
 **The rule this table encodes:** DEC-2 **obliges** I-1 through I-5 on any implementation of the
-GL/accounting context, and **grades** only I-1 and I-2 today. **I-3 and I-4 must be enforced by a
+GL/accounting context, and **grades none of them today.** **I-3 and I-4 must be enforced by a
 harness-level source guard, not by a vector**, and DEC-2 states that as a normative requirement
 rather than a hope.
+
+### 4.4.1 THE GUARD I-3 AND I-4 REQUIRE DOES NOT EXIST
+
+Revision 1 stated the requirement correctly and never claimed the guard existed. It also never said
+it **doesn't**, and it placed the requirement four lines above a paragraph about guards that *do*
+run. A reader will merge them. **This subsection exists so they cannot be merged.**
+
+**`run_guards` invokes exactly five guards** [VERIFIED by this task, `.softhouse/conformance.sh:843-849`,
+opened and read]:
+
+```
+  guard_no_float_in_vectors
+  guard_no_float_in_harness
+  guard_gofmt
+  guard_no_float_in_capture_requests
+  guard_no_narrow_catch_in_capture_rigs
+```
+
+**All five concern floating point, source formatting and exception scope. Not one of them looks
+for:**
+
+- a write path to any balance column (that is **I-3**);
+- an `UPDATE` or `DELETE` statement against `acc_gl_journal_entry`, or any Go call that would emit
+  one (that is **I-4**);
+- a derived-balance function that caches instead of deriving;
+- a correction path that mutates a leg instead of adding a reversing pair (that is **I-5**).
+
+**So the normative requirement in the table above is, today, unsatisfied.** The correct reading of
+this whole subsection is: *DEC-2 obliges I-3 and I-4, names the only mechanism that could enforce
+them, and records that the mechanism has not been written.* Anyone who ratifies this document
+ratifies that gap along with it, knowingly. Writing the guard is named as a precondition in §5.3 and
+as a follow-up; it is **not** done by this ADR, which writes no code.
 
 **One inherited claim this draft CORRECTS rather than repeats.** A2-8's follow-up **F-1** records
 that `conformance.sh`'s hard guards were scoped to `loanschedule`, so a float in
@@ -747,6 +950,15 @@ retyped account, which this task re-verified from `A2-150`.]
 request outside the graded domain is refused before the oracle's own refusal is computed, because
 a refusal nobody can grade is not an answer.
 
+> **THE (b) COLUMN OF THIS TABLE CANNOT CURRENTLY BE WRITTEN DOWN.** The vector schema has exactly
+> two expectation kinds, `schedule` and `refusal`, and `refusal` means one of the three **contract**
+> sentinels above. There is no encoding for *"the oracle answered 404 with
+> `error.msg.productToAccountMapping.not.found`"* — and filing it as a contract refusal would write
+> this subsection's own named defect into the corpus. Establishing this is §5.1; a representation
+> for it is precondition **P-2** in §5.3. **Every row of the (b) table is therefore ungraded today**,
+> including the three `A2-224` / `A2-225` / `A2-092` message-for-message gradings, which exist as
+> **Go tests** against committed bytes and not as vectors (§5).
+
 **Two normative rules about the message text:**
 
 - **R-1 — the miss message is rendered by the FIXED enum for the entry point, not by the
@@ -793,7 +1005,7 @@ not the registry file itself** — authoring data files belongs to the grader ta
 | `gl.account.model` | classification, usage, parent link, hierarchy generation, decorated name | **true** | `ledger_db_readback`, `ledger_rest_admin`: `exercised` |
 | `mapping.core.row` | the all-discriminators-NULL row keyed on `(product_id, product_type, financial_account_type)` | **true** | `ledger_rest_admin`, `ledger_rest_posting`, `ledger_db_readback`: `exercised` |
 | `mapping.paymenttype.override` | STEP 2, fund-source slot only | **true** | `ledger_rest_posting`: `exercised` (`A2-084` type 1 → GL 16; `A2-085` type 2 → core row) |
-| `mapping.paymenttype.null` | resolution with a **nil** payment type on the fund-source slot | **false** | ABSENT on every seam. Declared so a vector claiming it is refused **with a named reason** rather than as an unknown capability. §9 item 2. |
+| `mapping.paymenttype.null` | resolution with a **nil** payment type on the fund-source slot | **false** | **`blind` on ALL FOUR seams** — `ledger_rest_admin`, `ledger_rest_posting`, `ledger_db_readback`, `ledger_inprocess_resolver`. Corrected in revision 2 — see the note below. §9 item 2. |
 | `mapping.duplicate.rows` | two rows in one resolved slot | **true** | `ledger_rest_posting`: `exercised` (`A2-086`) |
 | `mapping.charge.precedence` | the three per-family charge chains, and savings' `m_charge`-account override | **false** | `ledger_inprocess_resolver`: `blind` — **B-3**, the charge resolvers are `private`. Other seams: ABSENT, no charge exists in the tenant. |
 | `mapping.reason.classification` | charge-off reason, write-off reason, capitalized-income and buy-down classification lookups | **false** | ABSENT on every seam — no such row exists. |
@@ -804,6 +1016,27 @@ not the registry file itself** — authoring data files belongs to the grader ta
 | `resolution.savings` / `resolution.shares` / `resolution.wcl` | the other three product families | **false** | ABSENT on every seam. |
 | `entry.classification.carried` | whether the port records the account's classification **on the entry** | **false** | ABSENT — structural (§4.4 I-3 / I-4 class); no vector can grade it. |
 | `money.subminor.residue` | a money column carrying a non-zero digit beyond the minor unit | **false** | ABSENT — never observed; §4.3, §9 item 1. |
+
+**Correction in revision 2 — `mapping.paymenttype.null` had to be listed on a seam, not left
+ABSENT, for the property the row claims.** Revision 1 said the row was *"declared so a vector
+claiming it is refused **with a named reason** rather than as an unknown capability"* while leaving
+it ABSENT on every seam. **Those two are incompatible.** `Assess` interpolates the row's `Evidence`
+string — the named reason — only on the `blind` and `ungraded` paths; a capability that is *defined*
+but absent from a seam's status map lands in the `unknown` bucket with the generic default-deny text
+and **no evidence string at all** [VERIFIED by this task: `capability.go:308-331`, the three arms
+read; `capDef.Evidence` appears in the `blind` and `ungraded` messages and in neither `unknown`
+message]. So the row refused either way and the diagnostic — the entire point of declaring it — was
+silently lost. It is now listed as **`blind` on all four seams**.
+
+**All four, and the reason is worth stating because listing only one would have looked tidier and
+achieved nothing.** `Assess` reads the status map of **the seam the vector declares**. Listing the row
+`blind` only on `ledger_inprocess_resolver` would deliver the named reason exclusively to a vector
+declaring the one seam `G-01` already refuses — the diagnostic would arrive precisely where nobody can
+receive it. A vector on `ledger_rest_admin` or `ledger_rest_posting` claiming this capability is the
+realistic case, and it must get the named reason too. `blind` is the accurate status on each of them:
+no seam in the corpus resolves a fund-source slot with a nil payment type, and §9 item 2 records that
+the query semantics themselves are undecided, so an implementation honouring the capability and one
+ignoring it score identically everywhere — which is what `blind` means.
 
 **One vocabulary decision, recorded rather than taken silently.** Several rows above are ABSENT
 for a reason the four statuses do not name: *no fixture exists on the capture tenant* — there is
@@ -834,55 +1067,328 @@ What *does* exist, and it is substantial but it is **not** the same thing:
 - **55 Go tests in `nexus/internal/apps/ledger/`**, every one graded against committed
   reference-oracle bytes [count VERIFIED BY A2-8, NOT RE-OPENED HERE]. **These are not harness
   guards.** `conformance.sh` never runs `go test`, so a regression in them does not turn the
-  harness red [VERIFIED by this task: the script contains no `go test` invocation — its only Go
-  commands are a `go build` of the conformance `cmd` package — and it says so itself at
-  `conformance.sh:682`, *"`conformance.sh` never runs `go test`, so a Go-test-only guard is not a
-  guard"* (P-45)].
+  harness red [RE-VERIFIED by `A2-16`: the script contains **no** `go test` invocation — both
+  occurrences of the string are comments, at `conformance.sh:718` and `:721`; its only Go command is
+  a `go build` of the conformance `cmd` package — and it says so itself at `conformance.sh:721`,
+  *"`conformance.sh` never runs `go test`, so a Go-test-only guard is not a guard"* (P-45). The line
+  numbers moved between revisions; the fact did not.].
 
 **The honest consequence, stated so nobody reads a green bar as coverage:** ratifying DEC-2 would
 freeze a contract whose graded domain (§4.2) is *justified* by observations that are **not yet
-promoted vectors**. Three dispositions are possible, and this draft recommends the third:
+promoted vectors** — and, revision 2 adds, **that could not be promoted if somebody tried.**
+
+### 5.1 No `ledger` vector is expressible against the frozen vector schema — MEASURED
+
+**This is finding R-1, and revision 1's central claim about it —** *"Disposition 3 needs no new
+machinery, and that is the argument for it"* **— was false.** Revision 2 retracts it. The
+retraction is not a wording change: it inverts the argument for the disposition this section
+recommends, so §5.2 re-argues that disposition on different grounds.
+
+The store's admission machinery is a **loan-schedule** machine. Not a generic one with a
+loan-schedule tenant in it — a loan-schedule one, in its schema string, its request type, its
+expectation type, its comparator and its cell whitelist. Each of the five findings below was opened
+in source by this task, and the section closes with three positive controls that were **run**.
+
+**(1) The schema string names the context.** `VectorSchemaV1 = "gerege.loanschedule.vector/v1"` is
+the **only** value the loader accepts, and it is checked before anything else [VERIFIED by this
+task: `nexus/internal/apps/loanschedule/conformance/vector.go:16-18` declares it as *"the only
+schema string this harness accepts"*; `admit.go:109-110` refuses any other]. A `ledger` vector
+would have to declare itself a loanschedule vector in its first line.
+
+**(2) `Request` has no field a `ledger` request could go in.** The type is thirteen fields —
+`TimeZone`, `Currency`, `Rounding`, `ScheduleStartDate`, `Disbursements`, `NumberOfRepayments`,
+`RepaymentEvery`, `RepaymentFrequencyUnit`, `AnnualNominalInterestRate`, `InterestMethod`,
+`DayCount`, `DownPaymentPercentage`, `InstallmentRoundingMultipleMinor` [VERIFIED by this task:
+`vector.go:279-293`, the struct read in full]. **Not one of §4.2's eleven predicates is about
+anything in that list.** A `ledger` request is a product id, a placeholder code, a payment type id, a
+product type, an accounting rule and a seam; the schema has a home for none of them, and decoding is
+**strict** — an unknown field is a hard load failure, not an ignored key [MEASURED, positive control
+1 below].
+
+**(3) `Expect.Kind` is the closed set `{schedule, refusal}`, and `Expect.Sentinel` must be one of
+the three CONTRACT sentinels.** [VERIFIED by this task: `vector.go:418-431` documents both;
+`admit.go:180-194` is the `switch` whose `default` arm is *"expect.kind %q is neither \"schedule\"
+nor \"refusal\""*; `enums.go:92-103` `sentinelByName` resolves exactly `ErrInvalidRequest`,
+`ErrUnsupportedConfiguration`, `ErrNoDiscriminatingVector` and errors on anything else.]
+
+**So §4.9's oracle-faithful 404 — the single commonest graded output this context has — has no
+representation at all.** §4.9 is emphatic that these are **ANSWERS**, not contract refusals, and
+that *"a port that returned `ErrNoDiscriminatingVector` where the oracle returns a 404 would
+'refuse' a case that is in fact fully graded"*. The schema offers exactly two encodings and both are
+wrong: `kind: "schedule"` is not what happened, and `kind: "refusal"` with any of the three
+sentinels asserts the contract refused when in fact **the oracle answered**. Encoding it as a
+contract refusal would write the §4.9 defect *into the corpus*.
+
+**(4) There is no class the observed 404 can be filed under — and this is the hardest wall, harder
+than revision 1 or its reviewer identified.** The three classes are mutually exclusive and jointly
+closed [VERIFIED by this task, `admit.go:130-176`]:
+
+| class | the rule that excludes an observed oracle 404 | source |
+|---|---|---|
+| `parity` | **"a parity vector must expect a schedule; a refusal is not an oracle observation"** — the check is `v.Expect.Kind != "schedule"` | `admit.go:517-519` |
+| `contract-refusal` | requires `provenance.kind == "contract"` and **`oracle.seam == "none"`** — *"nothing was captured"* — and the sentinel must be one of the three | `admit.go:154-171`, `enums.go:93-103` |
+| `selftest` | must live under `_selftest/`, must be hand-authored, **never counts toward parity** | `admit.go:131-143` |
+
+Read together: **the schema's model of an oracle observation IS a schedule.** A refusal is, by
+construction, something the *contract* did, derived from contract text, captured from nothing. That
+is a coherent model of DEC-1's world and it has no room in it for a context whose oracle answers
+"404, `error.msg.productToAccountMapping.not.found`" and where reproducing that string exactly *is*
+parity.
+
+**(5) `StructuralCellFields()` is a hard-coded whitelist of three, and it rejects all six cells
+revision 1 proposed.** `func StructuralCellFields() []string { return []string{"kind", "from_date",
+"due_date"} }` [VERIFIED by this task: `vector.go:571-583`]. Admission compares against it
+literally, and refuses anything else with *"names field %q, which is not one of the non-money cells
+this harness compares"* [VERIFIED: `admit.go:355-361`]. Revision 1's proposed
+`resolved.account_id`, `resolved.gl_code`, `resolved.classification`, `refusal.code`,
+`refusal.http_status`, `refusal.message` are **all six** outside it — and so is the `period[<n>].`
+prefix the cell parser requires before it even looks at the field name [VERIFIED:
+`admit.go:330-344`, `ParseDivergentCell`'s four-way form vocabulary].
+
+**And the whitelist's own doc comment explains why widening it is not a one-line change.** The three
+fields are *"exactly the NON-MONEY cells `diffSchedule` actually compares"*, and the stated reason
+for the whitelist is that *"naming a cell the harness does not compare would let a vector claim a
+kill nothing could ever detect"* — finding **T9-F1b**, which is the defect that once printed nine
+killed capabilities at exit 0 over a store whose dates were garbage [VERIFIED by this task:
+`vector.go:571-580` and the `StructuralKillIsCompared` comment at `:592-627`]. **A cell is
+admissible if and only if some comparator compares it.** `diffSchedule` compares schedule rows.
+Adding `resolved.gl_code` to this list without a comparator that compares GL codes would reintroduce
+T9-F1b at the level of the harness itself — a whitelist that no longer means what it says.
+
+#### The three positive controls, RUN
+
+Revision 1 asserted machinery adequacy without exercising it. Revision 2 exercised it. Method: build
+the real binary from `CMD_PKG` [`conformance.sh:411`], copy `.softhouse/vectors` to a temp store, add
+a `ledger/` directory, author the vector, run `-context=ledger -oracle-probe=up`. **No file in the
+repository was modified by any of this.**
+
+| # | the vector | what the harness did |
+|---|---|---|
+| **PC-1** | a `ledger` vector written the way §4.9 and §5 actually need it: `schema: "gerege.ledger.vector/v1"`, request `{product_id, placeholder_code, payment_type_id}`, `expect: {kind: "oracle_refusal", sentinel: "HTTP404", http_status: 404}` | **not read as a vector at all.** `ledger/LEDGER-PROBE-404.json: decode: json: unknown field "product_id"`, listed under *"FILES THAT COULD NOT BE READ AS VECTORS (each one makes this run unusable)"*. Exit 2. |
+| **PC-2** | the same case with every schema-forced field filled in with loanschedule filler, keeping only the three things this context actually needs | **INADMISSIBLE**, with the four refusals quoted below. Exit 2. |
+| **PC-3** | the same case filed as `class: "contract-refusal"` — the only other class outside `_selftest/` | **INADMISSIBLE**: *"class \"contract-refusal\" requires oracle.seam \"none\": nothing was captured"* and *"expect.sentinel: \"ErrGLAccountMappingNotFound\" is not one of ErrInvalidRequest, ErrUnsupportedConfiguration, ErrNoDiscriminatingVector"*. Exit 2. |
+
+PC-2's refusals, quoted verbatim from the run [MEASURED by this task]:
+
+```
+    a parity vector must expect a schedule; a refusal is not an oracle observation
+    expect.kind "oracle_refusal_404" is neither "schedule" nor "refusal"
+    graded_against[0] (...) divergent_cells[0] "period[0].gl_account_id" names field
+      "gl_account_id", which is not one of the non-money cells this harness compares
+      (kind, from_date, due_date). A cell the harness never compares cannot be the
+      site of a kill anything could detect
+```
+
+**The harness is behaving correctly in every one of these. That is the point.** Nothing here is a
+bug to be fixed; it is a machine doing exactly what it was built to do, to a vector from a context
+it was never built for.
+
+### 5.2 The decision: EXTEND the machinery — and DEC-2 grades nothing until it exists
+
+Two dispositions were open. **(a) extend the vector schema**, which is real machinery and must stop
+being implied to be free; or **(b) restrict DEC-2 to grading only what the schema can already
+express.**
+
+**(b) is rejected, and the argument is short because the arithmetic is short: the intersection is
+empty.** §5.1 (2) shows no `ledger` *input* has a field; §5.1 (3) and (4) show no `ledger` *output*
+has an encoding or a class. So "grade only what the schema expresses" is not a narrower DEC-2 — it
+is a DEC-2 that grades **zero** predicates and admits **zero** vectors, while §0's entire stated
+purpose is to give `A2-15` something to build a grader against. A contract that can never be graded
+is not a weaker contract; it is a memo.
+
+**(a) is adopted. The machinery is named, it is not built here, and this document does not pretend
+it is anywhere else either.** Three things follow, and revision 2 states all three as normative.
+
+**First — the extension is a SECOND vector schema and a SECOND comparator, not a widening of the
+first.** This is a design decision this task takes, with the alternative recorded:
+
+- *Rejected: widen `gerege.loanschedule.vector/v1` in place* — add `ledger` fields to `Request`,
+  a third `Expect.Kind`, `ledger` cells to `StructuralCellFields()`. Three reasons.
+  **(i)** `StructuralCellFields()`'s safety property is *"exactly the non-money cells `diffSchedule`
+  actually compares"*; a union list covering two comparators is a superset of what either compares,
+  which is precisely T9-F1b (§5.1 (5)). **(ii)** `sentinelByName` returns
+  `contract.Err*` values imported from `nexus/internal/apps/loanschedule/contract` [VERIFIED by this
+  task: `enums.go:93-103`, `registry.go:11`], so **a fourth sentinel means editing the frozen
+  `contract.go` — a DEC-1 amendment and a hard `user` gate.** Revision 2 does not go near it.
+  **(iii)** the whole grading pipeline is typed on `contract.ScheduleGenerator` / `contract.Schedule`
+  and every vector's request is mapped through `Request.ContractRequest()` onto the frozen DEC-1
+  request [VERIFIED by this task: `registry.go:26-28` declares `impls map[string]contract.ScheduleGenerator`; `grade.go:508` and `registry.go:173` both route every vector through `v.Request.ContractRequest()`]. Widening the schema without
+  widening those types produces a vector nothing can be asked to answer.
+- *Adopted: a `ledger`-specific schema (`gerege.ledger.vector/v1`) with its own `Request`, its own
+  `Expect`, its own comparator and its own cell whitelist*, sharing the store root, the file census,
+  the duplicate-case-id check, the raw-token float scan and the capability registry. Shared where
+  the property is about **the store**; separate where the property is about **what a comparator
+  compares**.
+
+**Second — and this constrains the extension absolutely: the 43 must still pass.** The extension
+touches the same harness DEC-1's 43 promoted parity vectors depend on, and those 43 are the only
+parity evidence this program has. **A `ledger` extension that costs one of them is not a trade this
+contract permits.** The demonstration required of whoever builds it, stated so it cannot be
+improvised:
+
+1. **Before/after digests of all 43 vector files** under `.softhouse/vectors/loanschedule/`. A
+   second schema string means no existing vector file changes a byte; if any digest moves, the
+   extension has widened the first schema and is out of bounds.
+2. **`bash .softhouse/conformance.sh` unfiltered, before and after**, both reporting `VERDICT: PASS
+   (exit 0)` with **`parity vectors PASS 43 FAIL 0`** and the **same cell count**. The baseline this
+   task measured on its own tree is `43 parity vectors match the pinned reference oracle, **5664
+   cells compared**` [MEASURED by this task]. A cell count that moves means the comparator changed
+   under the loanschedule corpus, which is a regression whatever the verdict line says.
+3. **`bash .softhouse/conformance.sh loanschedule` before and after**, identical but for
+   timestamps.
+4. **No diff to `nexus/internal/apps/loanschedule/contract/contract.go`, and no DEC-1 amendment.**
+   If the extension turns out to require either, that is a hard `user` gate — **raise it, do not
+   make it.**
+5. **Invoke with `bash`, never `sh`** — exit 3 is a wrong-interpreter refusal, not a failure — and
+   never `gofmt -w` `contract.go`; `gofmt -l` reporting exactly that one file is the expected state
+   (standing instruction, **G-3 CLOSED-OPTION-A**).
+
+**Third — Disposition 3 survives, on a different argument.** Three dispositions were open on
+ratification-versus-vectors, carried forward from revision 1 unchanged:
 
 1. **Ratify now and promote later.** Rejected: §4.2's predicates cite captures as evidence, and a
    predicate justified by an unpromoted capture is a promise, not a grading.
 2. **Refuse to ratify until vectors exist.** Rejected: **a vector cannot be promoted against a
-   contract that does not exist** — that is §0, and it is a deadlock.
-3. **Ratify the contract, and require the FIRST promotion task (`A2-15`) to promote at least one
-   parity vector per `in_graded_domain: true` capability in §4.10 before the `ledger` context may
-   be reported as graded at all.**
+   contract that does not exist** — that is §0, and it is a deadlock. §5.1 makes it a *harder*
+   deadlock than revision 1 knew: not only is there no contract to promote against, there is no
+   schema to write the promotion in.
+3. **Ratify the contract, and require the FIRST promotion task to promote at least one parity vector
+   per `in_graded_domain: true` capability in §4.10 before the `ledger` context may be reported as
+   graded at all.** **Recommended.**
 
-**Disposition 3 needs no new machinery, and that is the argument for it.** The existing grader
-already enforces both halves, and this task re-opened the code rather than citing the README:
+**But the argument for 3 is NOT "it needs no new machinery" — that was revision 1's argument and it
+was false.** The argument is: **the machinery it needs is bounded, nameable and separable (§5.3), and
+the alternatives are a deadlock (2) or an unbacked claim (1).** Disposition 3 is the only one that
+lets the boundary be written down now and the grading arrive later without either pretending in the
+meantime — *provided* this document says plainly, everywhere a reader could be misled, that the
+grading has not arrived. That proviso is what §8.1, §4.4.1, §4.9 and the banner are for.
 
-- **An `in_graded_domain: true` capability with no covering kill is already FATAL.** [VERIFIED by
-  this task: `nexus/internal/apps/loanschedule/conformance/grade.go:406-415` appends
-  *"THESE CAPABILITIES ARE MARKED `in_graded_domain` BUT NO PARITY VECTOR KILLS A NAMED WRONG
-  IMPLEMENTATION FOR THEM …"* and instructs the reader to *"Either promote a vector with a
-  `graded_against` entry, or set `in_graded_domain` false"*.] So §4.10's registry rows are
-  self-enforcing the moment they land: marking a `ledger` capability graded without a killing
-  vector turns the run red rather than green.
-- **An empty context directory is already FATAL, and is not silent.** [VERIFIED by this task:
-  `grade.go:334-342` emits *"ZERO VECTORS FOUND under `<storeRoot>/<contextFilter>`: an empty
-  vector set is exit 2. A harness that reported PASS over zero vectors would be the single worst
-  outcome available to it."*, and it names the **context-filtered** path, so
-  `conformance.sh ledger` over an empty `ledger/` cannot pass.]
-- **And a store with vectors but none graded is FATAL too** — `grade.go:418-425`,
-  `NO PARITY VECTOR WAS GRADED`, fired when `ParityPass == 0 && len(vectors) > 0`, which is the
-  state a `ledger/` holding only contract-refusal vectors would be in [VERIFIED by this task].
+It remains a **recommendation to the ratifier**, not a decision this task may take.
 
-Disposition 3 therefore keeps the loud failure and forbids the quiet one, using rules the harness
-already has. It is a **recommendation to the ratifier**, not a decision this task may take.
+### 5.3 Preconditions on `A2-15` — none of which exist today
 
-**A second admissibility rule this section forces**, transplanted from the loanschedule store: a
-`ledger` parity vector must name the **wrong implementations it kills** (`graded_against`). The
-loanschedule store's finding applies directly — *"an all-products-identical capture is not
-evidence of non-gradeability"*, and conversely **a capture that kills nothing is a capture, not a
-grader**. For this context most kills will be **structural** rather than money-valued
-(`kind: "structural"`, `margin_minor: "0"`, non-empty `divergent_cells`), because the answers are
-account ids and strings. **The cell vocabulary must therefore be extended for this context** —
-`resolved.account_id`, `resolved.gl_code`, `resolved.classification`, `refusal.code`,
-`refusal.http_status`, `refusal.message` — and that extension is the grader task's work, named
-here so it is not improvised.
+`A2-15` cannot promote a `ledger` vector until **all** of the following exist. They are
+preconditions, not follow-ups, and §8 repeats the consequence.
+
+| # | precondition | why, in one line |
+|---|---|---|
+| **P-1** | A **`ledger` vector schema** with a request shape covering product id, product type, accounting rule, slot family, slot code, payment type id and seam | §5.1 (2) — strict decode rejects every one of them today |
+| **P-2** | An **expectation shape for an oracle-faithful refusal** — HTTP status, error code, message text — that is **not** one of the three contract sentinels and is **not** confusable with them | §5.1 (3), §4.9(b); this is the context's commonest graded output |
+| **P-3** | A **class** an observed non-schedule oracle answer can be filed under, since `parity` requires a schedule and `contract-refusal` requires `oracle.seam == "none"` | §5.1 (4) — the hardest of the five |
+| **P-4** | A **comparator** for `ledger` outputs, and a **cell whitelist derived from it** rather than authored beside it | §5.1 (5); the whitelist's meaning is "what the comparator compares" (T9-F1b) |
+| **P-5** | **Money cells** — `int64` minor-unit **strings**, paired with the oracle's own emitted characters as a transcription cross-check only | §4.3, T186 (c); required for `I-1`/`I-2` to be gradeable at all |
+| **P-6** | A **decision on `capabilities.json`** — its schema id is the hard constant `gerege.loanschedule.capabilities/v1` and `dec1_revision` is singular. Appending `ledger` rows works today, but the file is named and versioned for one context | §4.10; **not DEC-2's decision to take**, and it must not be improvised |
+| **P-7** | The same decision for **`PIN.json`** — schema `gerege.loanschedule.pin/v1`, singular `contract_file` / `contract_sha256` [VERIFIED by this task: `admit.go:65-66`] | a second context implies a second pinned contract file, and the pin has one slot |
+| **P-8** | The **`I-3`/`I-4` source guard** §4.4.1 requires | it does not exist; without it, ratifying DEC-2 obliges two invariants nothing checks |
+
+**P-1 through P-5 are the schema extension. P-6 and P-7 are decisions. P-8 is independent of all of
+them** — it is a guard over the Go tree and could be written today, against the ported package that
+already exists.
+
+### 5.4 What actually enforces Disposition 3 in the DEFAULT run — R-2, corrected and MEASURED
+
+**Revision 1 claimed *"An empty context directory is already FATAL, and is not silent."* That claim
+is FALSE, and revision 2 retracts it.** The narrower sentence beside it — that the fatal *names the
+context-filtered path*, so `conformance.sh ledger` over an empty `ledger/` cannot pass — is **true**.
+Revision 1 presented the two as one argument. They are not, and the difference is the difference
+between an enforcement and nothing.
+
+**The mechanism, re-read in source by this task:**
+
+- **The fatal is guarded on the WHOLE returned vector set, not on the requested directory.**
+  `if len(vectors) == 0 { … "ZERO VECTORS FOUND under %s" … }`, and `where` is the store root unless
+  a context filter was given [VERIFIED by this task: `grade.go:334-342`].
+- **`LoadStore` returns ALL contexts when the filter is empty:** `if contextFilter == "" { return
+  all, loadErrs, nil }` [VERIFIED by this task: `vector.go:950-952`].
+- **`conformance.sh` passes `-context` only when it was given an argument:**
+  `[ -n "$context" ] && args+=("-context=$context")` [VERIFIED by this task:
+  `.softhouse/conformance.sh:894`].
+
+So on the default invocation `len(vectors)` is 43-plus, the fatal never fires, and the third fatal —
+`NO PARITY VECTOR WAS GRADED`, `ParityPass == 0 && len(vectors) > 0` [`grade.go:418-425`] — is inert
+for the same reason, because `ParityPass` is 43.
+
+**MEASURED by this task on its own tree**, real binary, temp copy of the store, empty `ledger/`
+directory added:
+
+| run | result |
+|---|---|
+| unfiltered — **what `conformance.sh` performs** | **exit 0**, `VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared`. **The string "ledger" occurs exactly once in the entire output, and it is the no-float census line `covered: nexus/internal/apps/ledger`** — a statement about the Go source tree, not about a vector. No warning. No zero-count. Nothing. |
+| `-context=ledger` | exit 2, `VERDICT: UNUSABLE`, `ZERO VECTORS FOUND under <tmp>/ledger` |
+
+**An empty `ledger/` therefore passes silently, and it does so in the run everybody quotes.**
+
+**The leg that DOES hold, and it is a strong one — also MEASURED.** The capability fatal is
+**registry-wide**: `CounterfactualCoverage` ranges over `r.GradedCapabilities()`, the whole registry,
+with no context scoping anywhere in it [VERIFIED by this task: `capability.go:232-278`]. This task
+appended one experimental row to a **temp copy** of `capabilities.json` — `ledger.probe.a216`,
+`in_graded_domain: true`, no covering kill — and re-ran **unfiltered**:
+
+```
+    UNBACKED in_graded_domain claims: ledger.probe.a216
+    * THESE CAPABILITIES ARE MARKED in_graded_domain BUT NO PARITY VECTOR KILLS A NAMED
+      WRONG IMPLEMENTATION FOR THEM: ledger.probe.a216. …
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+```
+
+[MEASURED by this task. The row was added to a temp store only; `.softhouse/vectors/capabilities.json`
+was not modified.]
+
+**So the enforcement is real, and it fires on the REGISTRY ROWS, not on the empty directory.**
+Revision 1 presented those two as interchangeable legs of one argument and they are not
+interchangeable at all: if §4.10's rows are never authored, or are authored `in_graded_domain:
+false`, `ledger/` stays empty and **invisible indefinitely**, at exit 0, in every run.
+
+**And §5.1 sits on top of this, which produces the ordering rule below.** Once the rows land as
+`true`, the fatal fires — and until P-1…P-5 exist, **no admissible `ledger` vector can be written to
+clear it.** The run would be permanently red with no legal way out. That is not a hypothetical: it
+is exactly the state the measurement above puts the harness in.
+
+**NORMATIVE SEQUENCING RULE, and revision 2 adds it because the measurement forces it.** `ledger`
+capability rows are authored in this order and no other:
+
+1. **The §5.3 machinery lands first** (P-1…P-5), with the 43-vector demonstration of §5.2.
+2. **Rows are authored `in_graded_domain: false`**, each carrying in its `evidence` string the
+   reason — *no admissible vector can yet be written for this capability* — so the row is a recorded
+   gap rather than a claim.
+3. **A row flips to `true` in the same change that promotes the vector covering it**, never before.
+
+**A row set to `true` ahead of its vector turns every run in the repository red and cannot be
+cleared by any legal means.** Any task that does it has broken the harness for every other context,
+not just for `ledger`.
+
+**A remaining hole, recorded and NOT closed by this document, because closing it is code.** Nothing
+makes an empty or vector-less context directory visible in the **unfiltered** run. Two candidate
+fixes, both outside DEC-2's scope and both for the harness owner: make `conformance.sh` refuse a
+context directory that exists and is empty even without `-context`; or have `LoadStore` report
+per-context zero counts in the unfiltered census the way `StoreFileCensus` already reports stray
+files. **The second is more in keeping with T123/T154's precedent** — *"the filter narrows what is
+GRADED, never what is CHECKED"*, which is the census's own stated rule [VERIFIED by this task:
+`vector.go:940-944`] — and an empty context directory is precisely a store fact that is invisible
+from one angle, which is the defect class T123 was written to close. **DEC-2 records the hole; it
+does not fix it.**
+
+### 5.5 The `graded_against` requirement, restated with its true cost
+
+A `ledger` parity vector must name the **wrong implementations it kills** (`graded_against`). The
+loanschedule store's finding applies directly — *"an all-products-identical capture is not evidence
+of non-gradeability"*, and conversely **a capture that kills nothing is a capture, not a grader**.
+
+For this context **many** kills will be structural rather than money-valued (`kind: "structural"`,
+`margin_minor: "0"`, non-empty `divergent_cells`), because much of what this contract answers is
+account ids, GL codes, enum values and refusal strings. **Revision 2 corrects revision 1's "most",
+which followed from the over-broad B-5:** vectors asserting a journal entry carry real amounts
+(§2.2, R-3), and `I-1`/`I-2` are **money** kills with non-zero margins once P-5 exists. A `ledger`
+corpus of nothing but structural kills would grade no amount at all, and the harness prints exactly
+that distinction for a reason (finding D-4).
+
+The cell vocabulary revision 1 proposed — `resolved.account_id`, `resolved.gl_code`,
+`resolved.classification`, `refusal.code`, `refusal.http_status`, `refusal.message` — remains the
+right **starting list**, plus money cells per P-5. **What revision 2 changes is the claim about what
+it costs:** revision 1 called it *"the grader task's work, named here so it is not improvised"*,
+which reads like configuration. It is **P-4**: a comparator, and a whitelist derived from that
+comparator rather than authored beside it. Authoring the six names without the comparator would
+produce a store that reports kills nothing checks — finding T9-F1b, reintroduced deliberately.
 
 ---
 
@@ -916,8 +1422,16 @@ Ordered by descending risk.
   loan side must be measured, not assumed by symmetry. §9 item 10.
 - **6.5 More placeholder codes — a value-domain widening, shape holds**, *provided* §4.8's
   disjointness assertion against the financial-activity codes is executable rather than a comment.
-- **6.6 A second currency — low risk for this context**, because §2.2 **B-5** means no amount
-  crosses this seam. It is a real risk for **A1**.
+- **6.6 A second currency — low risk for the RESOLUTION half, real for the OBSERVATION half.**
+  Revision 2 corrects revision 1 here, which said *"§2.2 B-5 means no amount crosses this seam"* and
+  inherited the over-broad B-5 (R-3). **Resolution** genuinely is currency-free: three scalars in,
+  an account out, and adding MNT-plus-one changes no predicate. **Observation is not.** `G-07` pins
+  `Currency.Code == "MNT"` and `G-08` pins exactness at two minor-unit digits, and every journal
+  entry in the corpus is MNT [VERIFIED: `A2-150`'s dump, six rows]. A second currency with a
+  different minor unit widens the value domain of both predicates and interacts with a question
+  **T186 explicitly left open** (§4.3) — the treatment of currencies whose minor unit is not 2. It
+  is a **value-domain widening, not a shape change**, so it is not an amendment; but it is not the
+  non-event revision 1 described. It remains a larger risk for **A1**, which produces the amounts.
 - **6.7 The chart itself — no risk to the shape, by construction.** G-9 puts it outside the
   contract (§4.5), so an FRC-aligned chart is a data deliverable and changes no predicate here.
 - **6.8 What holds under all of the above.** The two-domain structure of §3.1, the seam registry
@@ -945,31 +1459,78 @@ Named, because a contract is defined as much by its edges as by its interior.
 - **The chart of accounts** — data, G-9 (§4.5).
 - **`Idempotency-Key`** — the adapter's HTTP layer and A1 (§4.4 I-7).
 - **Deposit-taking activation** — a `user` gate, unaffected by anything here.
-- **Amending DEC-1 or `nexus/internal/apps/loanschedule/contract/contract.go`** — **not required
-  by this draft, and not done.** The A2-13 handoff records the before-and-after digests of both.
+- **Amending DEC-1 or `nexus/internal/apps/loanschedule/contract/contract.go`** — **not required by
+  revision 1, not required by revision 2, and not done by either.** The `A2-13` and `A2-16` handoffs
+  each record the before-and-after sha256 of both files.
+
+  **One conditional that a builder of §5.3's machinery must not walk into.** The harness resolves a
+  vector's refusal sentinel through `sentinelByName`, which returns `contract.Err*` values imported
+  from the **frozen** `contract.go` [VERIFIED by this task: `enums.go:93-103`, `registry.go:11`]. **A
+  fourth sentinel added to that function is a modification of a ratified DEC-1 artefact and therefore
+  a hard `user` gate.** §5.2 chooses a design that avoids it — a separate `ledger` schema with its
+  own expectation type and its own sentinel space, sharing nothing with `contract.Err*`. If a future
+  task finds itself unable to avoid touching `contract.go`, **that is the moment to stop and raise a
+  gate**, not to make a one-line change to a file whose whole purpose is that it does not move.
+
+- **Writing the `ledger` vector schema, comparator, cell whitelist or `I-3`/`I-4` guard** — §5.3's
+  eight preconditions. **This ADR writes no code**, and §1.1 gives the reason. Naming machinery is
+  not building it, and revision 2 is careful to claim only the former.
 
 ---
 
 ## 8. Consequences
 
-**If ratified:**
+### 8.1 NOTHING GRADES THE LEDGER — say it here, not only in the banner
 
-- `.softhouse/vectors/ledger/` becomes a legal context directory and `conformance.sh ledger`
-  becomes a meaningful command.
+The banner at the head of this document says this. It is repeated here, at the end, because §8 is
+what a ratifier reads last and because revision 1's §8 said something adjacent that a reader will
+merge with it.
+
+**Four facts, each measured by this task:**
+
+1. **Zero `ledger` vectors exist.** The store's only context directories are `loanschedule/` and
+   `_selftest/`.
+2. **Zero `ledger` vectors CAN exist** — §5.1, established in code and by three positive controls
+   that were run. Preconditions P-1…P-5 (§5.3) do not exist.
+3. **Zero guards enforce `I-3` or `I-4`.** `run_guards` invokes five and all five are about float,
+   `gofmt` and exception scope [`.softhouse/conformance.sh:843-849`]. §4.4.1.
+4. **The 43 passing parity vectors are `loanschedule`'s.** None touches a GL account, a mapping, a
+   financial activity or a journal entry.
+
+**Ratifying DEC-2 changes none of the four.** It writes down a boundary; it grades nothing. The two
+must never be confused, and a citation of this document as evidence of ledger coverage is a
+misreading of it.
+
+### 8.2 If ratified
+
+- `.softhouse/vectors/ledger/` becomes a legal context directory — **and stays unusable until the
+  §5.3 machinery lands**, at which point `conformance.sh ledger` becomes a meaningful command.
 - `A2-15` has an admissibility standard: §4.2's predicates, §4.6's A-1…A-4, §4.10's registry, and
-  §5's `graded_against` requirement.
-- The GL/accounting context acquires a boundary a regulator can be shown, and "PASS 43" stops
-  being the only thing anyone can say about the ledger.
+  §5.5's `graded_against` requirement — **and eight preconditions (§5.3) it cannot start without.**
+- The GL/accounting context acquires a boundary a regulator can be shown. **"PASS 43" remains the
+  only thing anyone can say about the ledger, and what it says is "this is about a different
+  context".**
 
-**If ratified, these remain true and must not be misread:**
+### 8.3 If ratified, these remain true and must not be misread
 
-- **A `ledger` conformance PASS would mean "matches the reference oracle on captured vectors,
-  inside the graded domain".** It would not mean the ledger is correct, and it would mean nothing
-  at all about savings, shares, working-capital loans, charges, reversals, holds, or nineteen of
-  the twenty-three cash placeholder slots.
-- **`conformance.sh`'s hard guards DO cover `nexus/internal/apps/ledger/` today** — T166 widened
-  both to the module root, verified by this task (§4.4). That is what makes I-3 and I-4
-  enforceable at all, and **re-narrowing either root would silently un-grade them.**
+- **A `ledger` conformance PASS would mean "matches the reference oracle on captured vectors, inside
+  the graded domain".** It would not mean the ledger is correct, and it would mean nothing at all
+  about savings, shares, working-capital loans, charges, reversals, holds, or nineteen of the
+  twenty-three cash placeholder slots. **Today there is no such PASS to misread.**
+- **`conformance.sh`'s hard guards DO cover `nexus/internal/apps/ledger/` today — FOR FLOATING POINT
+  AND `gofmt`, AND FOR NOTHING ELSE.** T166 widened both roots to the Go module root, re-verified by
+  this task (§4.4), and this task's own unfiltered run printed `covered: nexus/internal/apps/ledger`
+  in the no-float census [MEASURED]. **That coverage is not `I-3` and it is not `I-4`.** Revision 1
+  wrote *"That is what makes I-3 and I-4 enforceable at all"* — true in the sense that a guard must
+  be able to *see* the tree before it can check anything in it, and **certain to be read as saying
+  the invariants are checked. They are not checked. No guard for either exists** (§4.4.1). What
+  remains true from revision 1 is the forward warning: **re-narrowing either root would silently
+  un-cover this tree**, and would do so while still printing a healthy-looking file count.
+- **The `graded_against` machinery is genuine enforcement, and it fires on the REGISTRY ROWS, not on
+  an empty directory** (§5.4, measured both ways). An empty `.softhouse/vectors/ledger/` passes at
+  exit 0 in the default run today; a `ledger` capability row marked `in_graded_domain: true` with no
+  covering kill turns every run in the repository red immediately. **Observe §5.4's sequencing rule**
+  — rows land `false`, and flip in the same change that promotes the vector covering them.
 - Cutover, regulatory sign-off and licence facts remain hard `user` gates, and **G-10 remains
   OPEN**.
 
@@ -977,7 +1538,11 @@ Named, because a contract is defined as much by its edges as by its interior.
 
 ## 9. Every `[UNVERIFIED]` in this document, and why it could not be closed
 
-Each is a gap, not a guess declined.
+Each is a gap, not a guess declined — **except item 10, which revision 2 CLOSES, because it was
+never a gap. It was a read not taken.** Revision 1's preamble classed all thirteen as *"a gap, not a
+guess declined"*, and for twelve of them that was accurate. Item 10 was one grep away. The
+correction is recorded rather than quietly applied, because "unclosable" and "not yet opened" are
+different claims and only one of them is honest about the cost of closing it.
 
 1. **Whether the oracle can produce sub-minor-unit residue in a money column at all, and what it
    would do with one.** No captured vector establishes it; the corpus's only values beyond two
@@ -990,8 +1555,15 @@ Each is a gap, not a guess declined.
    named: a row with `payment_type` NULL and `charge_id` set at placeholder 1 — under `IS NULL`
    the payment-type query matches two rows and yields the non-unique refusal; under the other
    reading the core row stands. §4.2 G-06.
-3. **The program-wide major/minor conversion boundary** — **T186 is settling it in parallel** and
-   this draft does not pre-empt it. §4.3.
+3. ~~**The program-wide major/minor conversion boundary** — T186 is settling it in parallel.~~
+   **CLOSED in revision 2: T186 HAS RULED**, and it merged *before* revision 1 did — A2-13's branch
+   forked before it landed, so revision 1 shipped a live forward reference to a completed task. The
+   three-way ruling — (a) major-unit decimal mandatory on the capture wire, (b) absolute rejection
+   on the Go module's own surface, (c) integer minor units in the stored vector — is reproduced in
+   §4.3 with DEC-2's position on each, and **§4.3 now states (c) as an explicit rule for `ledger`
+   vectors** rather than leaving it implied. No contradiction with this document was found. What
+   T186 itself left open — non-2 minor units, and whether a shared conversion utility is mandated —
+   is outside this contract and is **not** claimed closed here. §4.3.
 4. **Which enum actually rendered the observed miss messages.** R-1 is source-derived. `A2-224`
    and `A2-225` are at codes 16 and 13, where both loan enums render identically, so they cannot
    discriminate. A capture at code **22**, **24** or **25** on a **cash** product would settle it
@@ -1010,9 +1582,20 @@ Each is a gap, not a guess declined.
 9. **The financial-activity create/update asymmetry** (101 and 102 are creatable but not settable
    on update). Read from both halves of the validator and implemented; **not observed** — no
    capture does a `PUT` with `financialActivityId: 101`. A cheap refusal vector nobody has taken.
-10. **Whether `ACCRUAL_UPFRONT` on the LOAN side writes mappings.** The savings switch reaches
-    `default: break`; the loan side was not read by this task and must not be assumed by
-    symmetry. §4.2 G-03, §6.4.
+10. ~~**Whether `ACCRUAL_UPFRONT` on the LOAN side writes mappings.**~~ **CLOSED in revision 2. IT
+    WRITES THE FULL ACCRUAL SET.** `case ACCRUAL_UPFRONT: // Fall Through` into `case
+    ACCRUAL_PERIODIC:` [VERIFIED by this task at the pinned checkout:
+    `ProductToGLAccountMappingWritePlatformServiceImpl.java:149-151`, inside
+    `createLoanProductToGLAccountMapping`]. The savings side writes nothing — `case ACCRUAL_UPFRONT:
+    break;` at `SavingsProductToGLAccountMappingHelper.java:192-193` and `:313-314`, a file
+    containing **zero** `default:` labels; the savings create switch in the write service reaches
+    `default: break;` at `:345-346` because it has no `ACCRUAL_UPFRONT` case at all [all VERIFIED by
+    this task]. **Revision 1 was right to refuse the symmetry assumption and wrong to file the
+    question as unclosable.** Full treatment, including the two wording corrections and the
+    `switch(null)` hazard, is in §4.2 under `G-03`. **What is still open, and is now the ONLY ground
+    for `G-03`'s refusal, is evidential: no capture exists at `accountingRule = 4`** — one product
+    creation and one read-back retires it, comparing the persisted mapping set against product 28's.
+    §4.2 G-03, §6.4.
 11. **Whether `PortfolioProductType.fromInt`'s two oracle call sites are ever reached with a
     stored 3, 4 or 5.** The permutation is verified; the blast radius is not.
 12. **The five never-posted mandatory slots.** No parity claim is made about `INTEREST_ON_LOANS`,
@@ -1025,8 +1608,64 @@ Each is a gap, not a guess declined.
 
 ## 10. Revision history
 
-- **Revision 1 (this document)** — DRAFT, task `A2-13`, 21 August 2026. First draft. **Not
-  ratified, no PIN digest, and no Go authored.** Reviewed independently by `A2-14`; the driver
-  decides ratification. `docs/adr/DEC-1-schedule-generator-adapter.md` and
-  `nexus/internal/apps/loanschedule/contract/contract.go` were **not modified** — the A2-13
-  handoff records their sha256 digests before and after this session.
+- **Revision 2 (this document)** — DRAFT, task `A2-16`, 21 August 2026. **NOT RATIFIED; `A2-16` does
+  not ratify it.** A further independent review must pass clean first, and ratification is then the
+  driver's under standing policy **P-2**. Drafted in response to `A2-14`'s **REJECTION** of revision
+  1 — a rejection on **shape**, not on honesty or research, with every one of revision 1's
+  `[VERIFIED]` claims confirmed against real source at the exact cited line.
+
+  **Changes, all of them:**
+
+  1. **R-1 resolved (§5.1, §5.2, §5.3).** Revision 1's *"Disposition 3 needs no new machinery, and
+     that is the argument for it"* is **retracted as false**. §5.1 establishes in code — and by
+     **three positive controls that were run**, not reasoned — that no `ledger` vector is
+     expressible: the schema string names `loanschedule`, `Request`'s thirteen fields have no home
+     for a `ledger` input, `Expect.Kind` is `{schedule, refusal}`, `Expect.Sentinel` is the three
+     contract sentinels, **no vector class can hold an observed non-schedule oracle answer**, and
+     `StructuralCellFields()` is a whitelist of three that rejects all six proposed cells. §5.2
+     **decides to EXTEND** — as a *second* schema and comparator, never a widening of the first,
+     with the reasoning for each rejected alternative and an explicit refusal to touch the frozen
+     `contract.go`. It states the **43-vector non-regression demonstration** the extension owes.
+     §5.3 turns §5 into **eight named preconditions on `A2-15`**, none of which exists.
+  2. **R-2 corrected (§5.4).** Revision 1's *"An empty context directory is already FATAL, and is
+     not silent"* is **retracted as false** for the unfiltered run, which is the run
+     `conformance.sh` actually performs. **Measured both ways** on this task's own tree: unfiltered
+     → **exit 0, `VERDICT: PASS`**, `ledger` named nowhere but the no-float census line; filtered →
+     exit 2. The leg that *does* hold — the **registry-wide** capability fatal — was also measured,
+     by appending one experimental row to a temp copy of `capabilities.json`: **exit 2**. Revision 1
+     presented the two as interchangeable; they are not, and a **normative sequencing rule** for
+     `ledger` capability rows now follows from the difference.
+  3. **R-3 resolved (§2.2, §3.2, §4.2, §4.4).** The prose-versus-list contradiction — the same
+     defect class as the still-**OPEN** `G-5` on DEC-1 — is settled by **keeping the money and
+     narrowing the prose**. `B-5` is rescoped to `ledger_inprocess_resolver`, the one seam `G-01`
+     refuses; `G-07`/`G-08` are kept and **scoped to vectors that assert a money cell**, which is
+     not the same as scoping by seam; `I-1`/`I-2` are split into *gradeable in principle from the
+     captures in hand* (**yes**) and *graded today* (**no**).
+  4. **§9 item 10 CLOSED (§4.2, §9).** `ACCRUAL_UPFRONT` **falls through** into `ACCRUAL_PERIODIC`
+     on the loan side and writes the full accrual set; savings writes nothing. Two inherited wording
+     errors about `default:` labels corrected. `G-03`'s refusal now rests on the one ground that
+     survives: **no capture at `accountingRule = 4`**.
+  5. **§9 item 3 CLOSED (§4.3).** T186 has **ruled**; revision 1's live forward reference is
+     replaced by the ruling, and T186 **(c)** — the stored vector carries integer minor units — is
+     stated as an explicit rule for `ledger` vectors.
+  6. **"Nothing grades the ledger" made structurally unmissable** — the banner at the head of the
+     document, **§4.4.1** (the `I-3`/`I-4` guard does not exist; the five guards are enumerated),
+     **§4.9**'s block on the unrepresentable 404, and **§8.1**. Revision 1's §8 sentence about guard
+     coverage is kept, marked **true for float and `gofmt` only**, and explicitly contradicted where
+     it would otherwise be read as covering the append-only and derived-balance invariants.
+  7. **`mapping.paymenttype.null` listed `blind` on all four seams (§4.10)**, because `Assess`
+     interpolates the named reason only on the `blind`/`ungraded` paths — an ABSENT row refuses with
+     generic text and loses the diagnostic the row exists to carry.
+
+  **No gate was crossed and none is newly raised by the text.** G-9 is applied as closed; **G-10
+  remains OPEN and is not decided here**; cutover, regulatory sign-off and licence facts are
+  untouched. `docs/adr/DEC-1-schedule-generator-adapter.md` and
+  `nexus/internal/apps/loanschedule/contract/contract.go` were **not modified** — the `A2-16`
+  handoff records both sha256 digests before and after. **No Go was written and `nexus/` was not
+  touched.**
+
+- **Revision 1** — DRAFT, task `A2-13`, 21 August 2026. First draft. **Not ratified, no PIN digest,
+  and no Go authored.** Reviewed independently by `A2-14` (local fire `20260821-125942`), verdict
+  **REJECTED** on three shape findings; full review at
+  `.softhouse/reviews/A2-14-DEC2-gl-accounting-contract-review.md`. Its factual base survives into
+  revision 2 substantially unchanged.
