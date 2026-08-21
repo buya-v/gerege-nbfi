@@ -1,0 +1,17 @@
+TRANSCRIPT                                     EXIT   CANARY-OK DIGEST-PIN VERDICT
+---                                            ---    ---       ---        ---
+A2a-mutated-canary-gerege.txt                  1      no        no         OK
+A2b-mutated-canary-default.txt                 1      no        no         OK
+A2c-crafted-canary-and-expectation-gerege.txt  1      no        no         OK
+A3a-swapped-canary-gerege.txt                  1      no        no         OK
+A3b-missing-canary.txt                         1      no        no         OK
+A3c-no-canary.txt                              1      no        no         OK
+A4a-expect-override-default.txt                1      no        YES        OK
+A4b-expect-override-gerege.txt                 1      YES       YES        OK
+A4c-decoy-variable.txt                         0      YES       YES        OK
+A5-helpful-correct-override.txt                1      YES       YES        OK
+A6-canary-is-a-directory.txt                   1      no        no         OK
+A7-symlinked-canary.txt                        0      YES       YES        OK
+A8-foreign-cwd.txt                             0      YES       YES        OK
+
+ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION.

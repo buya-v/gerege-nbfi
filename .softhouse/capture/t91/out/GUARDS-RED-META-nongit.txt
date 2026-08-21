@@ -1,0 +1,2 @@
+ABORT: git archive failed — there is nothing to prove anything against.
+fatal: not a git repository (or any of the parent directories): .git

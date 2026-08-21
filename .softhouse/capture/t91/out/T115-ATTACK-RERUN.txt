@@ -1,0 +1,135 @@
+pre  shim: blob e6c1795a172168105d788321a71ee4ca62b73e36   sha256 9256b881153d3dea
+post shim: HEAD 15f73ef          sha256 829fe1181fe2641b
+
+=================================================== pre / sh
+TRANSCRIPT                                     EXIT   CANARY-OK DIGEST-PIN VERDICT
+---                                            ---    ---       ---        ---
+A2a-mutated-canary-gerege.txt                  0      YES       no         ADMITS (printed the HALF_UP certification)
+A2b-mutated-canary-default.txt                 1      no        no         OK
+A2c-crafted-canary-and-expectation-gerege.txt  0      YES       no         ADMITS (printed the HALF_UP certification)
+A3a-swapped-canary-gerege.txt                  1      no        no         OK
+A3b-missing-canary.txt                         1      no        no         OK
+A3c-no-canary.txt                              1      no        no         OK
+A4a-expect-override-default.txt                1      no        no         OK
+A4b-expect-override-gerege.txt                 1      no        no         OK
+A4c-decoy-variable.txt                         0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A5-helpful-correct-override.txt                0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A6-canary-is-a-directory.txt                   1      no        no         OK
+A7-symlinked-canary.txt                        0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A8-foreign-cwd.txt                             0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+
+EXPECTATIONS NOT MET (6):
+A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+A2c-crafted-canary-and-expectation-gerege.txt ADMITS (printed the HALF_UP certification)
+A4c-decoy-variable.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A5-helpful-correct-override.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A7-symlinked-canary.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A8-foreign-cwd.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+SCORER EXIT=1
+
+=================================================== pre / bash
+TRANSCRIPT                                     EXIT   CANARY-OK DIGEST-PIN VERDICT
+---                                            ---    ---       ---        ---
+A2a-mutated-canary-gerege.txt                  0      YES       no         ADMITS (printed the HALF_UP certification)
+A2b-mutated-canary-default.txt                 1      no        no         OK
+A2c-crafted-canary-and-expectation-gerege.txt  0      YES       no         ADMITS (printed the HALF_UP certification)
+A3a-swapped-canary-gerege.txt                  1      no        no         OK
+A3b-missing-canary.txt                         1      no        no         OK
+A3c-no-canary.txt                              1      no        no         OK
+A4a-expect-override-default.txt                1      no        no         OK
+A4b-expect-override-gerege.txt                 1      no        no         OK
+A4c-decoy-variable.txt                         0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A5-helpful-correct-override.txt                0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A6-canary-is-a-directory.txt                   1      no        no         OK
+A7-symlinked-canary.txt                        0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A8-foreign-cwd.txt                             0      YES       no         ADMITS (HALF_UP certification without a passing digest pin on gerege)
+
+EXPECTATIONS NOT MET (6):
+A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+A2c-crafted-canary-and-expectation-gerege.txt ADMITS (printed the HALF_UP certification)
+A4c-decoy-variable.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A5-helpful-correct-override.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A7-symlinked-canary.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+A8-foreign-cwd.txt ADMITS (HALF_UP certification without a passing digest pin on gerege)
+SCORER EXIT=1
+
+--------------------------------------------------- pre: sh vs bash invariance
+identical  A2a-mutated-canary-gerege.txt
+identical  A2b-mutated-canary-default.txt
+identical  A2c-crafted-canary-and-expectation-gerege.txt
+identical  A3a-swapped-canary-gerege.txt
+identical  A3b-missing-canary.txt
+identical  A3c-no-canary.txt
+identical  A4a-expect-override-default.txt
+identical  A4b-expect-override-gerege.txt
+identical  A4c-decoy-variable.txt
+identical  A5-helpful-correct-override.txt
+identical  A6-canary-is-a-directory.txt
+identical  A7-symlinked-canary.txt
+identical  A8-foreign-cwd.txt
+
+pairs compared: 13   differing: 0
+RESULT: sh and bash agree on all 13 transcripts for label 't115-pre'.
+INVARIANCE EXIT=0
+
+=================================================== post / sh
+TRANSCRIPT                                     EXIT   CANARY-OK DIGEST-PIN VERDICT
+---                                            ---    ---       ---        ---
+A2a-mutated-canary-gerege.txt                  1      no        no         OK
+A2b-mutated-canary-default.txt                 1      no        no         OK
+A2c-crafted-canary-and-expectation-gerege.txt  1      no        no         OK
+A3a-swapped-canary-gerege.txt                  1      no        no         OK
+A3b-missing-canary.txt                         1      no        no         OK
+A3c-no-canary.txt                              1      no        no         OK
+A4a-expect-override-default.txt                1      no        YES        OK
+A4b-expect-override-gerege.txt                 1      YES       YES        OK
+A4c-decoy-variable.txt                         0      YES       YES        OK
+A5-helpful-correct-override.txt                1      YES       YES        OK
+A6-canary-is-a-directory.txt                   1      no        no         OK
+A7-symlinked-canary.txt                        0      YES       YES        OK
+A8-foreign-cwd.txt                             0      YES       YES        OK
+
+ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION.
+SCORER EXIT=0
+
+=================================================== post / bash
+TRANSCRIPT                                     EXIT   CANARY-OK DIGEST-PIN VERDICT
+---                                            ---    ---       ---        ---
+A2a-mutated-canary-gerege.txt                  1      no        no         OK
+A2b-mutated-canary-default.txt                 1      no        no         OK
+A2c-crafted-canary-and-expectation-gerege.txt  1      no        no         OK
+A3a-swapped-canary-gerege.txt                  1      no        no         OK
+A3b-missing-canary.txt                         1      no        no         OK
+A3c-no-canary.txt                              1      no        no         OK
+A4a-expect-override-default.txt                1      no        YES        OK
+A4b-expect-override-gerege.txt                 1      YES       YES        OK
+A4c-decoy-variable.txt                         0      YES       YES        OK
+A5-helpful-correct-override.txt                1      YES       YES        OK
+A6-canary-is-a-directory.txt                   1      no        no         OK
+A7-symlinked-canary.txt                        0      YES       YES        OK
+A8-foreign-cwd.txt                             0      YES       YES        OK
+
+ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION.
+SCORER EXIT=0
+
+--------------------------------------------------- post: sh vs bash invariance
+identical  A2a-mutated-canary-gerege.txt
+identical  A2b-mutated-canary-default.txt
+identical  A2c-crafted-canary-and-expectation-gerege.txt
+identical  A3a-swapped-canary-gerege.txt
+identical  A3b-missing-canary.txt
+identical  A3c-no-canary.txt
+identical  A4a-expect-override-default.txt
+identical  A4b-expect-override-gerege.txt
+identical  A4c-decoy-variable.txt
+identical  A5-helpful-correct-override.txt
+identical  A6-canary-is-a-directory.txt
+identical  A7-symlinked-canary.txt
+identical  A8-foreign-cwd.txt
+
+pairs compared: 13   differing: 0
+RESULT: sh and bash agree on all 13 transcripts for label 't115-post'.
+INVARIANCE EXIT=0
+
+transcripts written under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a24fd9c7c2f938fb4/.softhouse/capture/t91/out/t115-*  (T91's own out/ dirs untouched)
+RESULT: pre-fix 6 of 13 ADMIT (exit 1), post-fix 0 of 13 (exit 0), sh/bash 13 of 13 identical.
