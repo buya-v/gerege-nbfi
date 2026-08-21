@@ -478,14 +478,14 @@
       "executor": "agent",
       "model": "opus",
       "target": "code",
-      "status": "in_progress",
+      "status": "done",
       "attempts": 0,
       "dependencies": [],
       "files_hint": [
         ".softhouse/capture/pathb/t80/"
       ],
       "description": "RAISED BY T156 as follow-up F-1, which marked it [UNVERIFIED] because it had only read the file and was correctly refusing to reach outside its files_hint. THE DRIVER HAS NOW VERIFIED IT DIRECTLY AND IT IS WORSE THAN T156 COULD SEE BY READING. .softhouse/capture/pathb/t80/prove-f1.sh does, in sequence: `cp \"$W/t36/attest.py\" \"$O/.f1-fixed\"` (backup to a DOTFILE in an output dir), then `git show \"$PREFIX_COMMIT:.softhouse/capture/pathb/t36/attest.py\" > \"$W/t36/attest.py\"` -- IT OVERWRITES THE LIVE RIG FILE WITH PRE-FIX BYTES -- then RUNS it, which mutates $W/t36/out/emiloop and creates the CAPTURED-FROM-TENANT stamp, then restores with `cp` + `rm -f` + `git checkout --`. `grep -n trap` over the whole file returns NOTHING. ZERO TRAPS. Any interruption, any set -e failure, any Ctrl-C between the overwrite and the restore LEAVES THE LIVE ATTESTER AT PRE-FIX BYTES, plus a stray CAPTURED-FROM-TENANT stamp and a mutated out/emiloop. THIS IS STRICTLY MORE DANGEROUS THAN THE DEFECT T156 WAS SENT TO FIX. A stranded vector is at least detectable by counting. A SILENTLY DOWNGRADED ATTESTER KEEPS PRODUCING ATTESTATIONS THAT LOOK ENTIRELY NORMAL -- and t36/attest.py is part of the enforced precondition path (preconditions.sh:159-160 -> exit 1 -> attest.py:90/:95-98) that this program cites as the thing standing between a fabricated capture and the corpus. Fix it the way T156 fixed arm 1 and REUSE THAT SHAPE rather than inventing a second one: trap on EXIT/INT/TERM/HUP, restore VERIFIED not assumed, idempotent, plus start-up recovery for SIGKILL which no trap can catch. Restore from an IMMUTABLE GIT BLOB, not from a dotfile in an output directory that a `rm -rf out/` would take with it -- that backup is itself part of the defect. DRIVE IT RED (P-22) on a SCRATCH COPY ONLY: never interrupt this script against the real t36 rig, because doing so is the very corruption you are fixing. Show the pre-fix interruption leaves attest.py downgraded and the stamp present, and the post-fix one does not, on every interruption path separately.",
-      "note": "dispatched local fire 20260821-054355 (2nd fire of day), worktree-isolated",
+      "note": "MERGED. Seven interruption classes driven on throwaway git clone --shared sandboxes; pre-fix every one left the attester at c56825ad (the attester that MISLABELLED ELEVEN CAPTURES), post-fix all intact, KILL repaired at start-up. Re-running the PRE-FIX script PROMOTES the corruption -- the backup step copies the already-downgraded file. Fix reuses T156's shape: traps on EXIT/INT/TERM/HUP/QUIT/PIPE, restore re-hashes rather than assuming, restore source is an IMMUTABLE GIT BLOB (the .f1-fixed dotfile backup, itself part of the defect, is gone), in-flight marker is a pointer into git's object store with start-up recovery for SIGKILL. T161 FOUND A VACUOUS ARM IN ITS OWN PROBE: the sleep-5 trigger fired before the window opens at 12.34s, so both arms said 'RIG INTACT' and proved nothing; now polls until attest.py IS the pre-fix digest. Driver-verified: scope t80/ only, t36/ untouched by the diff, live attester 567e4cf0 on main before and after, seven traps present, blob restore and marker recovery as described.",
       "branch": "softhouse/T161-provef1-trap-and-recovery"
     },
     {
@@ -785,6 +785,21 @@
         ".softhouse/patterns.md"
       ],
       "description": "The root cause behind T167, and P-48 in its purest form. T156's sweep classified an unguarded in-place rewriter of a RATIFIED DEC-n as GUARDED because its detection regex greps SOURCE TEXT for the word 'trap' -- and every match was that word inside PROSE STRINGS THE SCRIPT WRITES INTO THE ADR. The file was scored safe by the text it was writing. T158 measured 4 of 19 'guarded' hits carrying zero guards, so the true unguarded population is 115 not 111 -- re-derive that number yourself rather than inheriting it. Detect with a PARSER (ast for Python, a real shell parser or a documented refusal for sh), not a regex: a guard must be an actual try/finally/atexit/signal/trap NODE, not a byte sequence. T167 surfaced a SECOND engine bug worth closing with it: the same pattern text returns 3 matches in Python re and 0 in POSIX ERE because [^#\\n] means different things in each -- so a sweep's answer depends on which engine ran it. DRIVE IT RED (P-22) on both failure shapes: a file guarded only by the word in prose (must be REFUSED as unguarded) and a genuinely guarded file (must PASS -- not over-broad, per T169's lint precedent)."
+    },
+    {
+      "id": "T180",
+      "title": "prove-f1.sh's overwrite of the live attester can be REMOVED, not merely made recoverable — a sibling file in the same directory reproduces the defect",
+      "role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "status": "pending",
+      "dependencies": [
+        "T161"
+      ],
+      "files_hint": [
+        ".softhouse/capture/pathb/t80/"
+      ],
+      "description": "Raised by T161 and MEASURED, not suggested. T161 made the live-attester overwrite recoverable on every interruption path; this removes the need to overwrite at all. attest.py derives OUT from its OWN directory, which is why T158's 'run it from a scratch path like prove-f2.sh' breaks the guard under test -- but T161 measured that a SIBLING FILE IN THE SAME DIRECTORY reproduces the defect exactly with the live attester untouched (evidence at out/F1-sibling-scratch-alternative.txt). Adopt that shape. NOTE T161's own caveat and do not drop it: the trap machinery is STILL NEEDED either way, because the evidence set is mutated regardless -- so this REDUCES blast radius, it does not retire the recovery. DRIVE IT RED (P-22) on scratch clones only, never against the real t36 rig, and verify t36/attest.py is 567e4cf0... before AND after. Reuse T161's now-deterministic trigger (poll until the digest changes); do NOT reintroduce a sleep, which is the vacuous arm T161 caught in its own probe."
     }
   ],
   "cross_corroboration": {
