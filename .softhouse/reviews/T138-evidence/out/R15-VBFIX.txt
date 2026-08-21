@@ -1,0 +1,60 @@
+=== is the certification sentence present in every committed transcript dir?
+   pre/postfix-copy-bash        transcripts carrying the sentence: 5
+   pre/postfix-copy-sh          transcripts carrying the sentence: 5
+   pre/postfix-livetwin-bash    transcripts carrying the sentence: 5
+   pre/postfix-livetwin-sh      transcripts carrying the sentence: 5
+   pre/prefix-copy-bash         transcripts carrying the sentence: 6
+   pre/prefix-copy-sh           transcripts carrying the sentence: 6
+   pre/prefix-livetwin-bash     transcripts carrying the sentence: 6
+   pre/prefix-livetwin-sh       transcripts carrying the sentence: 6
+   post/postfix-copy-bash       transcripts carrying the sentence: 5
+   post/postfix-copy-sh         transcripts carrying the sentence: 5
+   post/postfix-livetwin-bash   transcripts carrying the sentence: 5
+   post/postfix-livetwin-sh     transcripts carrying the sentence: 5
+   post/prefix-copy-bash        transcripts carrying the sentence: 6
+   post/prefix-copy-sh          transcripts carrying the sentence: 6
+   post/prefix-livetwin-bash    transcripts carrying the sentence: 6
+   post/prefix-livetwin-sh      transcripts carrying the sentence: 6
+   post/t115-post-bash          transcripts carrying the sentence: 5
+   post/t115-post-sh            transcripts carrying the sentence: 5
+   post/t115-pre-bash           transcripts carrying the sentence: 6
+   post/t115-pre-sh             transcripts carrying the sentence: 6
+
+=== the proposed assertion, applied to a copy of the shipped verdict.sh
+   assertion inserted (anchor asserted, not assumed)
+
+=== NO-OP check: every committed transcript dir, shipped vs patched scorer
+   pre/postfix-copy-bash        shipped exit=0   patched exit=0   SAME
+   pre/postfix-copy-sh          shipped exit=0   patched exit=0   SAME
+   pre/postfix-livetwin-bash    shipped exit=0   patched exit=0   SAME
+   pre/postfix-livetwin-sh      shipped exit=0   patched exit=0   SAME
+   pre/prefix-copy-bash         shipped exit=1   patched exit=1   SAME
+   pre/prefix-copy-sh           shipped exit=1   patched exit=1   SAME
+   pre/prefix-livetwin-bash     shipped exit=1   patched exit=1   SAME
+   pre/prefix-livetwin-sh       shipped exit=1   patched exit=1   SAME
+   post/postfix-copy-bash       shipped exit=0   patched exit=0   SAME
+   post/postfix-copy-sh         shipped exit=0   patched exit=0   SAME
+   post/postfix-livetwin-bash   shipped exit=0   patched exit=0   SAME
+   post/postfix-livetwin-sh     shipped exit=0   patched exit=0   SAME
+   post/prefix-copy-bash        shipped exit=1   patched exit=1   SAME
+   post/prefix-copy-sh          shipped exit=1   patched exit=1   SAME
+   post/prefix-livetwin-bash    shipped exit=1   patched exit=1   SAME
+   post/prefix-livetwin-sh      shipped exit=1   patched exit=1   SAME
+   post/t115-post-bash          shipped exit=0   patched exit=0   SAME
+   post/t115-post-sh            shipped exit=0   patched exit=0   SAME
+   post/t115-pre-bash           shipped exit=1   patched exit=1   SAME
+   post/t115-pre-sh             shipped exit=1   patched exit=1   SAME
+
+=== RED check: the 13 dead-oracle transcripts from r13
+   shipped exit=1  (accidental: 3 CLEAN rows)
+   
+   ERROR: not one transcript contains the rounding-mode certification sentence -- the suite
+          never reached a live oracle.  Scoring it would grade an outage as a clean sweep.
+   patched exit=3  (deliberate)
+
+=== RED check 2: dead oracle AND all three CLEAN rows retyped to BREACH
+   three CLEAN rows retyped to BREACH
+   
+   ERROR: not one transcript contains the rounding-mode certification sentence -- the suite
+          never reached a live oracle.  Scoring it would grade an outage as a clean sweep.
+   patched+retyped exit=3  (was 0 before the assertion)

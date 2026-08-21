@@ -1,0 +1,74 @@
+=== CASE 0  control: writable $O, no stale scratch
+DIFFERS    A1.txt
+1,2c1,2
+< AAA
+< EXIT=0
+---
+> BBB DIFFERENT
+> EXIT=1
+
+pairs compared: 1   differing: 1
+PRE_EXIT=1
+
+=== CASE 1  $O dir mode 555, NO pre-existing scratch
+/tmp/T138/pre/.softhouse/capture/t91/shell-invariance.sh: line 39: /tmp/T138/vf1/.inv-a: Permission denied
+/tmp/T138/pre/.softhouse/capture/t91/shell-invariance.sh: line 39: /tmp/T138/vf1/.inv-b: Permission denied
+diff: /tmp/T138/vf1/.inv-a: No such file or directory
+DIFFERS    A1.txt
+diff: /tmp/T138/vf1/.inv-a: No such file or directory
+
+pairs compared: 1   differing: 1
+PRE_EXIT=1
+   -> the redirect cannot CREATE the file; diff has no input; fail-closed (false DIFFERS).
+
+=== CASE 2  $O dir mode 555, stale scratch present and WRITABLE (mode 644)
+DIFFERS    A1.txt
+1,2c1,2
+< AAA
+< EXIT=0
+---
+> BBB DIFFERENT
+> EXIT=1
+rm: /tmp/T138/vf2/.inv-a: Permission denied
+rm: /tmp/T138/vf2/.inv-b: Permission denied
+
+pairs compared: 1   differing: 1
+PRE_EXIT=1
+   -> redirect to an EXISTING writable file succeeds; the difference IS caught.
+
+=== CASE 3  $O dir mode 555 AND stale scratch mode 444 (a read-only checkout / RO mount)
+/tmp/T138/pre/.softhouse/capture/t91/shell-invariance.sh: line 39: /tmp/T138/vf3/.inv-a: Permission denied
+/tmp/T138/pre/.softhouse/capture/t91/shell-invariance.sh: line 39: /tmp/T138/vf3/.inv-b: Permission denied
+identical  A1.txt
+rm: /tmp/T138/vf3/.inv-a: Permission denied
+rm: /tmp/T138/vf3/.inv-b: Permission denied
+
+pairs compared: 1   differing: 0
+RESULT: sh and bash agree on all 1 transcripts for label 'z'.
+PRE_EXIT=0
+   <- THIS is the vacuous pass: it graded the STALE bytes and reported agreement.
+
+=== CASE 3', same directory, POST-fix script
+DIFFERS    A1.txt
+1,2c1,2
+< AAA
+< EXIT=0
+---
+> BBB DIFFERENT
+> EXIT=1
+
+pairs compared: 1   differing: 1
+POST_EXIT=1
+
+=== CASE 4  the same shape without any directory permissions at all:
+    scratch files left read-only by an earlier interrupted run, $O writable
+/tmp/T138/pre/.softhouse/capture/t91/shell-invariance.sh: line 39: /tmp/T138/vf4/.inv-a: Permission denied
+/tmp/T138/pre/.softhouse/capture/t91/shell-invariance.sh: line 39: /tmp/T138/vf4/.inv-b: Permission denied
+identical  A1.txt
+
+pairs compared: 1   differing: 0
+RESULT: sh and bash agree on all 1 transcripts for label 'z'.
+PRE_EXIT=0
+chmod: /tmp/T138/vf4/.inv-a: No such file or directory
+chmod: /tmp/T138/vf4/.inv-b: No such file or directory
+   -> a read-only $O is NOT required; read-only SCRATCH FILES are enough.

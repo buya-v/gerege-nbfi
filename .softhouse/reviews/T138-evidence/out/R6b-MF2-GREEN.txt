@@ -1,0 +1,25 @@
+--- tree: pre   (/tmp/T138-mf2-pre)
+    C1 wrapper/gerege                        22/0/0
+    C2 direct/default/no CANARY_REQ          16/5/1
+    C3 direct/t55-no-such-tenant/no CANARY   12/9/1
+       'has no row in fineract_tenants.tenants': 1
+    C4 COPY shim/default                     17/5/1
+    C5 wrapper from /tmp                     22/0/0
+--- tree: post   (/tmp/T138-mf2-post)
+    C1 wrapper/gerege                        22/0/0
+    C2 direct/default/no CANARY_REQ          16/5/1
+    C3 direct/t55-no-such-tenant/no CANARY   12/9/1
+       'has no row in fineract_tenants.tenants': 1
+    C4 COPY shim/default                     17/5/1
+    C5 wrapper from /tmp                     22/0/0
+
+--- cell-for-cell, pre vs post, with the export path normalised out:
+    g1: IDENTICAL after path normalisation
+    g2: IDENTICAL after path normalisation
+    g3: IDENTICAL after path normalisation
+    g4: IDENTICAL after path normalisation
+    g5: IDENTICAL after path normalisation
+
+--- MF-2 message byte count is PATH-DEPENDENT (T115 reports 162):
+    len for path '/tmp/x' = 94
+    len for path '/tmp/T138-mf2-empty-post/.softhouse/capture/pathb/t36/preconditions.sh' = 158

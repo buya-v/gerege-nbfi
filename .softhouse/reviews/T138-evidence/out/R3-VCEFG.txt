@@ -1,0 +1,136 @@
+###################################################################### V-C
+sed that does not match is a COPY.  Reformat the canonical request and see
+what the PRE-fix run-attacks.sh would have fired at the rig.
+
+canonical request principal line:
+    "principal": 1162502.5,
+canonical sha256: 2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154
+reformatted (1162502.5 -> 1162502.50) sha256: b79ec0a19886e527adfb5df7121a8ca9a013c3e2349abb848fc1783c79df174a
+the two committed T91 mutations applied to the REFORMATTED canon:
+   req-mutated-55.json is BYTE-IDENTICAL to the (reformatted) canon — the 'attack' is a copy
+      principal now: "principal":1162502.50,
+   req-crafted-04.json is BYTE-IDENTICAL to the (reformatted) canon — the 'attack' is a copy
+      principal now: "principal":1162502.50,
+
+-- and: is the reformatted canon still the SAME NUMBER but a DIFFERENT digest?
+   principal canon      : 1162502.5
+   principal reformatted: 1162502.50
+   numerically equal    : True
+   (decimal, not float — P-25)
+
+-- POST-fix run-attacks.sh assert_mutated on that input (G-6's red leg, run standalone):
+   see R4-GUARDS.txt, leg G-6.
+
+###################################################################### V-E
+shell-invariance.sh compared ONE SIDE's file list.
+-- PRE-fix:
+identical  A1.txt
+
+pairs compared: 1   differing: 0
+RESULT: sh and bash agree on all 1 transcripts for label 'z'.
+   PRE_EXIT=0
+-- POST-fix (same directory):
+identical  A1.txt
+MISSING  /tmp/T138/ve/z-sh/A2.txt  (present under z-bash only)
+
+pairs compared: 2   differing: 1
+   POST_EXIT=1
+
+-- reversed: sh-only transcript (the case the PRE-fix loop DID cover)
+identical  A1.txt
+MISSING  /tmp/T138/ve2/z-bash/A2.txt
+
+pairs compared: 2   differing: 1
+   PRE_EXIT=1
+
+###################################################################### V-F
+scratch .inv-a/.inv-b written INTO the audited directory $O.
+-- control: writable $O, PRE-fix — the difference IS caught
+DIFFERS    A1.txt
+1,2c1,2
+< AAA
+< EXIT=0
+---
+> BBB DIFFERENT
+> EXIT=1
+
+pairs compared: 1   differing: 1
+   PRE_EXIT=1
+
+-- now plant identical stale scratch and make $O read-only:
+DIFFERS    A1.txt
+1,2c1,2
+< AAA
+< EXIT=0
+---
+> BBB DIFFERENT
+> EXIT=1
+rm: /tmp/T138/vf/.inv-a: Permission denied
+rm: /tmp/T138/vf/.inv-b: Permission denied
+
+pairs compared: 1   differing: 1
+   PRE_EXIT=1
+-- POST-fix on the very same read-only $O:
+DIFFERS    A1.txt
+1,2c1,2
+< AAA
+< EXIT=0
+---
+> BBB DIFFERENT
+> EXIT=1
+
+pairs compared: 1   differing: 1
+   POST_EXIT=1
+
+###################################################################### V-G
+two skip-branches that returned success, in the PRE-fix prove-guards.sh
+-- the G-4 skip branch, pre-fix source:
+   65:mkdir -p "$S/poison"
+   66:cp "$ROOT/.softhouse/capture/t91/out/prefix-copy-sh"/A*.txt "$S/poison/" 2>/dev/null || \
+   67:  { echo "   (no committed pre-fix transcripts to poison; skipping G-4)"; exit 0; }
+   68:python3 - "$S/poison/A2a-mutated-canary-gerege.txt" <<'PY'
+   69-import sys
+   70-p = sys.argv[1]
+   71-b = open(p, 'rb').read()
+   --
+   75:print('   poisoned the certification line itself with an invalid multibyte sequence')
+   76-PY
+   77-echo
+   78-echo "-- what /usr/bin/grep (BSD) does with and without -a:"
+   79:LC_ALL=C /usr/bin/grep -qF 'PASS  effective rounding mode canary' "$S/poison/A2a-mutated-canary-gerege.txt"
+   80-echo "   BSD  -qF  rc=$?"
+   81:LC_ALL=C /usr/bin/grep -aqF 'PASS  effective rounding mode canary' "$S/poison/A2a-mutated-canary-gerege.txt"
+   82-echo "   BSD -aqF  rc=$?"
+   83-echo "   MEASURED: on this machine BSD grep matched EITHER WAY.  T80 reported that BSD grep in a"
+   84-echo "   UTF-8 locale matches nothing here; that did NOT reproduce for me and I do not repeat it"
+   --
+   88:  LC_ALL=C ugrep -qF 'PASS  effective rounding mode canary' "$S/poison/A2a-mutated-canary-gerege.txt"
+-- the ugrep else-branch, pre-fix source:
+   if command -v ugrep >/dev/null 2>&1; then
+     LC_ALL=C ugrep -qF 'PASS  effective rounding mode canary' "$S/poison/A2a-mutated-canary-gerege.txt"
+     echo "   ugrep  -qF  rc=$?   (1 = 'absent' — WRONG, the sentence is there)"
+     LC_ALL=C ugrep -aqF 'PASS  effective rounding mode canary' "$S/poison/A2a-mutated-canary-gerege.txt"
+     echo "   ugrep -aqF  rc=$?   (0 = present — correct)"
+   else
+     echo "   ugrep is not on PATH here; the ugrep limb was measured interactively and is reported"
+     echo "   in the handoff.  Without -a it returned 1 ('absent') on this exact poisoned file."
+   fi
+-- post-fix G-4 skip branch:
+     { echo "ABORT: no committed pre-fix transcripts to poison — G-4 cannot run, and a guard that" >&2
+       echo "       did not run must not report success." >&2; exit 2; }
+   python3 - "$S/poison/A2a-mutated-canary-gerege.txt" <<'PY'
+-- post-fix ugrep else-branch:
+     echo "   ugrep is NOT on PATH here, so the ugrep limb WAS NOT MEASURED BY THIS RUN."
+     echo "   [UNVERIFIED] T91 reported interactively that ugrep 7.5.0 -I returns 1 ('absent') on this"
+     echo "   exact poisoned file and that -a fixes it.  T107b could not reproduce it — there is no"
+     echo "   ugrep on this host at all — and downgraded the claim from [VERIFIED].  It rests on"
+     echo "   unrecorded interactive runs and ZERO committed evidence.  T108 settles which tool T80"
+     echo "   actually observed.  This branch states the absence of a measurement; it does not stand"
+     echo "   in for one."
+   fi
+-- is ugrep on PATH from INSIDE a script (P-33)?
+   no — the else-branch is the one that runs here
+-- pre-fix script's final statement:
+   sh "$HERE/verdict.sh" "$S/poison" 2>&1 | LC_ALL=C /usr/bin/grep -a '^A2a'
+   echo
+   echo "=================================================================== done"

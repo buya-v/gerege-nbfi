@@ -1,0 +1,34 @@
+==================================================================
+MUTATION — revert V-A: put verdict.sh's failure channel back in $D
+==================================================================
+   90:FAILS=$D/.score-fail  # T138 mutation: V-A reverted
+   exit=1   EXPECTED 1   OK      [G-5 GREEN discriminates]
+   exit=3   EXPECTED 1   *** NOT AS EXPECTED ***   [G-5 RED read-only transcript dir still reports the 6 admissions]
+   no false 'ALL 13' verdict   OK      [G-5]
+SCRIPT_EXIT=1
+
+==================================================================
+MUTATION — revert V-E: shell-invariance.sh iterates the sh side only
+==================================================================
+   48:NAMES=$( ls "$A"/A*.txt 2>/dev/null | while read -r p; do basename "$p"; done | sort -u )  # T138 mutation: V-E reverted
+   exit=0   EXPECTED 0   OK      [G-7 GREEN matched pair]
+   exit=0   EXPECTED 1   *** NOT AS EXPECTED ***   [G-7 RED bash-only transcript]
+SCRIPT_EXIT=1
+
+==================================================================
+MUTATION — revert V-F: scratch back into $O
+==================================================================
+   55:  norm "$f" > "$O/.inv-a"; norm "$b" > "$O/.inv-b"  # T138 mutation: V-F reverted
+   exit=0   EXPECTED 0   OK      [G-7 GREEN matched pair]
+   exit=1   EXPECTED 1   OK      [G-7 RED bash-only transcript]
+SCRIPT_EXIT=0
+   -> V-F has NO guard: no leg of prove-guards.sh exercises a read-only $O for
+      shell-invariance.sh.  Reverting V-F leaves every leg green.
+
+==================================================================
+MUTATION — revert MF-1's SHAPE test (keep T107's value test only)
+==================================================================
+   124:    *) shape=ok ;;  # T138 mutation: shape test reverted
+SCRIPT_EXIT=0 (guards do not cover the shape test)
+   -> MF-1's shape test likewise has no leg in prove-guards.sh; it is driven only
+      by t115-drive-mf1.sh.
