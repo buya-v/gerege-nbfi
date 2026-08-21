@@ -1822,7 +1822,7 @@ why trap (3) requires the Go port to carry classification **on the entry**.
 
 ---
 
-## G-8 — PROVISIONAL NOTICE, local fire `20260821-134344`: T117's measurement moves the bound. **UNREVIEWED — DO NOT CITE YET.**
+## G-8 — NOTICE, local fire `20260821-134344`: T117's measurement moves the bound. **REVIEWED — T159 APPROVED. See the UPDATE at the end of this block: the number has since DOUBLED.**
 
 **Status of this block: T117 has reported; its paired reviewer T159 has NOT.** The driver is recording the
 measurement here rather than rewriting G-8, because rewriting a gate Buyan decides on, on the strength of a
@@ -1876,3 +1876,67 @@ nothing about the gate, touched no vector, and did not go near them. **T116** (o
 promotion) is **not** invalidated — its target cell is untouched — but it is deliberately **not dispatched**
 this fire: it would move the store's vector count while two reviewers are actively measuring store counts,
 and the deflation manifest (**T160**) that would make such a move safe does not exist yet.
+
+### UPDATE — T159 reviewed T117, APPROVED it, and then DOUBLED the headline by asking the question T117 said nobody had asked
+
+**The DO-NOT-CITE hold above is lifted. What replaces it is a larger number and the same warning.**
+
+T159 re-derived every one of T117's figures from the **raw captures**, reading none of its analysis layer:
+102 mechanical claim-vs-observed checks — **100 exact, 0 fabrications, 2 scope imprecisions**; all five
+committed digests reproduce; the P-9 control genuine by `merge-base --is-ancestor`, with the prediction
+commits containing zero observation keys; **17/17 re-asked cells byte-identical under disjoint tenant ids**,
+including the MNT 5.01 cell and all three partials.
+
+**Then it asked past n = 1000, which T117 had flagged as the reason its own number was not a bound.**
+
+| | T117 | T159 |
+|---|---|---|
+| largest unamortized residual | **MNT 5.01** at n = 1000 | **MNT 10.01** at n = 3000 |
+| rows of `principal "0.00"` | 1000 | **3000** |
+| balance frozen | 83 years | **2024 → 2274** |
+| scheduled interest | MNT 2,505.01 | **MNT 15,010.01** |
+| partial-shortfall cells | 3 | **4** (new: residual 833 minor against a 999-minor disbursement) |
+| distinct family-B principals | 14 | **20**, all odd |
+
+**`T159-R600p0-N3000-B1001` reports `totalPrincipalAmount 0.00`. And n = 3000 is simply the largest term
+T159 asked.** The residual **doubled when the term tripled**, and it doubled *because someone asked a bigger
+question*, not because a boundary was found.
+
+> **Any disclosure of G-8 must state the residual WITH ITS TERM — "MNT 10.01 at n = 3000" — and must still
+> say it is the largest OBSERVED and not a bound.** Two independent workers have now raised this ceiling by
+> asking a larger term, and neither found a limit. Writing "MNT 10.01" without its term would repeat, one
+> level up, exactly the error T117 was sent to correct.
+
+### THREE THINGS NOBODY HAD RECORDED, and the first one needs a sentence G-8 does not have
+
+1. **THE REFERENCE ORACLE THROWS.** Two cells died with `java.lang.StackOverflowError` —
+   `ProgressiveEMICalculator.calculateLastUnpaidRepaymentPeriodEMI` recursing into itself at
+   `ProgressiveEMICalculator.java:1214`. **It is not monotone**: `(B=10001, n=2000)` dies while
+   `(B=10001, n=3000)` succeeds, so this is not a simple size limit and cannot be excluded by bounding the
+   inputs. **G-8's write-up has no sentence for a third outcome in which no schedule is produced at all** —
+   it contemplates "amortizes" and "does not amortize", not "the oracle throws". **Option (b) needs one**,
+   because a graded domain that cannot express "no answer" will silently classify a crash as something else.
+2. **A LATENT HOLE IN THE SHARED RIG**, inherited by T83, T84, T100 **and** T117 alike: it catches
+   `RuntimeException`, **not** `Throwable`. T159 found it **by detonating it**. T117's "0 errored" is sound
+   *for the run that completed*, but the rig **cannot distinguish "none errored" from "none asked that
+   errors"** — and a `StackOverflowError` is an `Error`, not a `RuntimeException`, so it is exactly what
+   slips through. Raised as **T169**.
+3. **`gates.md:978`** — *"balance column | constant at the disbursed amount"* is **also falsified** by the
+   partial cells, and is **not** on T117's list of nine.
+
+### The rebuild is a task, not a footnote
+
+T159's §9 lists **25 `gates.md` sites**, six of them not on T117's nine. Neither worker edited `gates.md` —
+correctly, because its STANDING RULE demands a full sentence-by-sentence scope rebuild and parallel workers
+were live. **The list is produced; the rebuild is raised as T170** and must be done before G-8 goes to Buyan.
+
+### Driver's own errors in this exchange, recorded because the record is the point
+
+- **The driver's T159 brief listed 13 principals while saying 14** — `101` was missing. T117's handoff was
+  correct; the driver's restatement of it was not. *A brief that miscounts the evidence it is quoting is the
+  P-46 shape at one remove: the reviewer was handed a subtly wrong version of what it was checking.*
+- T117 attributes `+2.4292883e-19` to T122, but T122 committed `+2.4293e-19`; the 8-digit literal is T100's
+  `gap_float` — **a float**. The value is real, the attribution is wrong. Minor, and recorded rather than
+  silently fixed.
+- The driver's A/B attribution was **right** this time — checked by T159, after being wrong three times
+  previously.
