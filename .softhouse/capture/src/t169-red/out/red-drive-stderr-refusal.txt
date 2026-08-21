@@ -1,0 +1,16 @@
+the refusal, quoted verbatim from the committed runner:
+67:[ -s "$ERR" ] && { printf 'RUN FAILED: stderr NOT empty:\n' >&2; cat "$ERR" >&2; exit 1; } || true
+
+and the handler line that guarantees it fires whenever a cell is recorded:
+643:            e.printStackTrace(System.err);
+
+DRIVE: run that refusal against a NON-EMPTY stderr, exactly as a recorded RuntimeException
+       would have left it.
+RUN FAILED: stderr NOT empty:
+java.lang.ArithmeticException: / by zero
+	at org.apache.fineract...
+EXIT 1   <- non-zero: the run is REFUSED, so no integrity line is ever printed
+
+CONTROL: the same refusal against an EMPTY stderr.
+EXIT 0   <- zero: the run proceeds, and prints its integrity line, which therefore can only
+             ever have read '0 errored'.
