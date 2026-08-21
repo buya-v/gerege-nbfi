@@ -106,19 +106,28 @@ A worker spawned without a worktree, or given an absolute path into the main che
 | UAT red after retry | Park the context. Never `done`. Continue to the next READY context. |
 | Merge conflict | Abort that merge, mark `conflict`, continue independent merges; the conflicted task is re-planned next fire. |
 | **Oracle unreachable** — `conformance.sh` prints `probe = down` AND exits 2 | Conformance is exit 2, never PASS. Park all vector/conformance tasks. Then **keep working what does not need the oracle**: analyst behavior extraction, spec/ADR drafts, the Tier-C gap audit, Tier-D corpus mining from source. Retry the oracle next fire. |
-| **Exit 2 with `probe = up`** | **NOT an oracle outage — park nothing on it.** Exit 2 also means *the corpus is unusable*: `ZERO VECTORS FOUND`, an inadmissible vector, or (since T110) a **duplicate `case_id`**. The oracle is fine and the fault is in the store, so parking vector work would idle the factory over a defect it could fix in the same fire. Treat it as a **task failure**, find the corpus defect, fix it, re-run. |
+| **Exit 2, probe line says `up`** | **NOT an oracle outage — park nothing.** Exit 2 also means *the corpus is unusable*: `ZERO VECTORS FOUND`, an inadmissible vector, or (since T110) a **duplicate `case_id`**. The oracle is fine and the fault is in the store. Treat it as a **task failure**, find the corpus defect, fix it, re-run. |
+| **Exit 2 and NO probe line at all** | **NOT an oracle outage either — and this is the dangerous one.** Four exit-2 paths run *before* the probe is ever printed: no Go toolchain, `mktemp` failure, build failure, and **a failed HARD guard** (`run_guards` is called at `conformance.sh:281`; the probe prints at `:296`). So a `guard_no_float_in_vectors` failure — a **money non-negotiable** — exits 2 in silence, and "`probe != up`" is *trivially true when nothing printed*. Read the absence of the line, not the value. **Fix the harness or the violation; park nothing.** |
 | **Conformance exited 3** | **NOT an oracle outage — do not park anything.** 3 is `conformance.sh`'s wrong-interpreter refusal: the harness never started, no vector was read, the oracle was never contacted. Something invoked it as `sh conformance.sh` (or `dash`/`zsh`/`bash --posix`) instead of `bash conformance.sh`. Fix the invocation and re-run. |
 | Token soft limit reached | `/softhouse` checkpoint protocol: workers commit WIP, write `.softhouse/state/<squad>.STATE.json`, write `.softhouse/RESUME.md`, commit, push, exit cleanly. The scheduled fire resumes. |
 | Quota/rate-limit error mid-flight | Same checkpoint path, immediately. Never leave a worktree uncommitted. |
 | `user` gate reached | Record in `.softhouse/gates.md` + `program.gates_pending`, mark that context `blocked_on_gate`, **and move to the next READY context**. Do not cross it. Do not idle if other work exists. |
 
-> **Read the probe line, never the exit code alone.** `conformance.sh` prints
-> `conformance: reference oracle (<url>) probe = up|down` **unconditionally, before the binary runs** — that
-> line, not the exit status, is what says whether the oracle was reachable. The oracle-is-down stop condition
-> is **`exit 2` AND `probe != up`**, both of them. Exit 2 alone is ambiguous, because the same code also
-> carries "the corpus is unusable", and reading it as an outage is the exit-3 mistake reappearing one level
-> up: a **refusal** mistaken for an **outage**, parking work that nothing is blocking. Raised by T119 against
-> this file while reviewing T110.
+> **Read the probe line, never the exit code alone — and check it was printed at all.** When `conformance.sh`
+> reaches its oracle check it prints `conformance: reference oracle (<url>) probe = up|down`, and *that* line,
+> not the exit status, is what says whether the oracle was reachable. **It is not always reached.** The oracle-is-down stop condition
+> is **`exit 2` AND a probe line that was actually PRINTED and reads `down`** — all three. Exit 2 alone is
+> ambiguous, because the same code also carries "the corpus is unusable" and "the harness never started", and
+> reading it as an outage is the exit-3 mistake reappearing one level up: a **refusal** mistaken for an
+> **outage**, parking work that nothing is blocking.
+>
+> **The probe line is NOT printed unconditionally**, and the first version of this rule said it was — the
+> driver's error, caught by T150 (F-T150-1) inside the very paragraph written to close this defect. Four exit-2
+> paths precede it, and one of them is **a failed HARD guard**. So the rule as first written would have parked
+> vector work as an *oracle outage* on a `guard_no_float_in_vectors` failure — a violation of the first
+> non-negotiable in `CLAUDE.md`, silently reclassified as somebody else's server being down. **Test for the
+> line's presence first, then its value.** Raised by T119 against this file while reviewing T110; corrected by
+> T150 while reviewing T130.
 
 A parked context is never abandoned: every fire re-evaluates parks and unparks any whose precondition now holds (oracle back up, dependency now `done`, conflict resolved).
 
