@@ -933,20 +933,25 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     reader RE-RUNS them instead of trusting them. If ANY of the six changes,
 //     the census above is no longer closed and this whole block is STALE.
 //
-//     THE COMMAND for graphs 1, 2, 3, 5 and 6, run from the ROOT of a 426a23544
-//     checkout and NOT inside one file, with the graph's identifier substituted:
-//     grep -rn "IDENTIFIER" . | wc -l
+//     THE COMMAND for graphs 1, 2, 3, 5 and 6, run in a Fineract checkout with
+//     the graph's identifier substituted. It names the pin, so it cannot silently
+//     read a moved HEAD, and it searches TRACKED FILES ONLY:
+//     git grep -n "IDENTIFIER" 426a23544 -- . | wc -l
+//     A plain grep works on a CLEAN EXPORT (git archive 426a23544 | tar -x) and
+//     gives the same six numbers -- T96 ran both -- but do not point grep -rn at
+//     a live checkout root: it descends into .git and into any Gradle build/
+//     tree, which is slow and can add "Binary file matches" lines to the count.
 //
-//     RUN IT AT THE ROOT; SCOPE IS PART OF THE DETECTOR. T78 and T88 stated
+//     SEARCH THE WHOLE TREE; SCOPE IS PART OF THE DETECTOR. T78 and T88 stated
 //     graphs 2 and 3 as "grep the method name in the pinned file", and T96 broke
 //     both on a throwaway copy: widen :1221 or :718 from private to public and
 //     add a caller in ANOTHER file, and the file-scoped grep still reads 3 and 9
-//     and stays GREEN while the root-scoped one reads 4 and 10. Graph 1 was
+//     and stays GREEN while the whole-tree one reads 4 and 10. Graph 1 was
 //     scoped narrower still -- to two of the checkout's twenty-eight src/main
 //     trees -- so a fourth write site in fineract-loan/src/main left it GREEN at
-//     3 while the root grep read 4. The COUNTS did not drift; the DETECTORS were
-//     narrower than the claims they guard, and the numbers below are identical
-//     at the root, so widening the scope costs nothing.
+//     3 while the whole-tree search read 4. The COUNTS did not drift; the
+//     DETECTORS were narrower than the claims they guard, and every number below
+//     is identical whole-tree, so widening the scope costs nothing.
 //
 //     GRAPH 1, setFutureUnrecognizedInterest -> 3. Assignment sites :1184,
 //     :1246, AdvancedPaymentScheduleTransactionProcessor.java:1995 -- plus
