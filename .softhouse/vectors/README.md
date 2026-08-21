@@ -421,7 +421,7 @@ artefact is rewriting the specification.
 ```jsonc
 {
   "schema": "gerege.loanschedule.vector/v1",
-  "case_id": "...",                  // stable, unique within the context
+  "case_id": "...",                  // stable, unique across the WHOLE STORE — see below
   "context": "loanschedule",         // must equal the directory name
   "class": "parity",                 // parity | contract-refusal | selftest
   "title": "...",                    // what this vector discriminates, in prose
@@ -511,6 +511,33 @@ Enums are **names, never ordinals**: an ordinal silently re-points if a member i
 inserted, and a name either resolves or errors. No Fineract type, class or enum
 name appears in a vector file — the contract forbids one crossing the boundary,
 and a vector is on the contract's side of it.
+
+### `case_id` — unique across the WHOLE store, not per context
+
+This line used to read *"stable, unique within the context"*. That was the
+`(context, case_id)` rule, and it is **wrong**: filing `loanschedule/X` alongside
+`newcontext/X` now **refuses the run with exit 2** and grades nothing.
+
+The key is the `case_id` **alone**. The report's first column prints CASE without
+CONTEXT, so two rows carrying one `case_id` are indistinguishable to a reader, and
+both still add to the same headline totals — the two numbers this program quotes
+as its coverage evidence, "N parity vectors" and "M graded cells", are sums over
+the loaded vectors. Measured on the pre-fix bytes with one file copied under a
+second name: **43 parity vectors / 5623 graded cells / VERDICT PASS / exit 0**,
+against 42 / 5576 for the same store without the copy, with no warning anywhere in
+the report.
+
+The harness does **not** de-duplicate and does **not** warn. The two files are not
+known to agree — the second may carry a different expectation, a different
+provenance or a different capture reference — so dropping one would be the same
+lie in the other direction, told by the harness instead of by the store. It
+refuses, names both paths, and nothing is graded.
+
+The census is taken over the **whole store before `-context` is applied**, so a
+filtered run is checked against every context and not merely against the slice it
+grades. See `DuplicateCaseIDs` and `LoadStore` in
+`nexus/internal/apps/loanschedule/conformance/vector.go`, and the guards in
+`store_integrity_test.go`.
 
 ### `unrecorded_fields` — the field that prevents fabrication
 
