@@ -1,0 +1,5 @@
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+    parity vectors          PASS 43   FAIL 0
+    cells compared          5664 graded, 87 ungraded (never recorded by the capture)
+    invariant violations    0
+VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.

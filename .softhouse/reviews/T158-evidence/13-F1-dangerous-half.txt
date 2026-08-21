@@ -1,0 +1,12 @@
+caught the post-attest window: True  script exit: -9
+--- git status after the interruption ---
+M .softhouse/capture/pathb/t36/attest.py
+ M .softhouse/capture/pathb/t36/out/emiloop/preconditions.txt
+?? .softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT
+?? .softhouse/capture/pathb/t80/out/.f1-after-prefix
+?? .softhouse/capture/pathb/t80/out/.f1-before
+?? .softhouse/capture/pathb/t80/out/.f1-fixed
+?? .softhouse/capture/pathb/t80/out/.f1-out1
+--- committed-evidence paths left MODIFIED under t36/out/emiloop ---
+ M .softhouse/capture/pathb/t36/out/emiloop/preconditions.txt
+?? .softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT

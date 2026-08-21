@@ -1,0 +1,19 @@
+tree under test: 31e6c56d82974659b75b4d8df3a217c4cc4596ef  (31e6c56 T156: P-24 scratch-merge rig, README amendment, handoff)
+
+enumerator 1  os.walk   (T156's own, re-run above) : see 02-t156-sweep-rerun-branch-tip.txt
+enumerator 2  find(1)   .sh/.py  : 503
+enumerator 2  find(1)   all      : 3314
+enumerator 3  git ls-files .sh/py: 503
+enumerator 3  git ls-files all   : 3314
+
+os.walk's blind spots, checked rather than assumed:
+  untracked .sh/.py present on disk but absent from the index : 0
+  symlinks under .softhouse (os.walk does not follow)         : 0
+  directories the sweep could not list (os.walk swallows these
+  silently — it has no onerror handler)                       : 0
+
+T156 reported 502 / 3308, taken at commit 574c525. Tracked counts at that commit:
+  .sh/.py : 502
+  all     : 3311
+  (the 3311-vs-3308 delta is the three t156/ transcripts not yet written when the
+   sweep ran; the .sh/.py figure matches exactly)
