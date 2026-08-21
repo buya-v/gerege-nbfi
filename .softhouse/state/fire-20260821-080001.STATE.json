@@ -1,0 +1,49 @@
+{
+  "fire": "20260821-080001",
+  "host": "Buyanmunkhs-Mac-mini",
+  "started_at": "2026-08-21T00:00:13Z",
+  "run_id": "2026-08-17-run1-harness-schedule-poc",
+  "context": "tier0-harness-schedule-poc",
+  "oracle": "REACHABLE — https://localhost:8443/fineract-provider/actuator/health UP; PostgreSQL localhost:5432; Docker 29.6.2; pinned checkout /Users/buv/fineract 426a23544; no prohibited-engine ports open",
+  "main_at_dispatch": "8faee44",
+  "baseline_verified_by_driver_on_main": "bash .softhouse/conformance.sh -> VERDICT PASS exit 0, 42 parity vectors, 4 contract-refusal, 1 self-test, 5576 graded cells / 84 ungraded, 0 invariant violations, 0 invariant assertions NOT RUN, 0 harness errors",
+  "step": "wave 1 dispatched (6 workers), awaiting all",
+  "entry_finding": "The previous fire (20260820-230001) ended with THREE workers killed mid-flight — T99, T107, T113. All three had their WIP rescued by the wrapper sweep to rescued-agent-* branches, and NONE was marked needs_retry; tasks.json still claimed in_progress. T107's rescued output turned out to be a SUBSTANTIALLY COMPLETE 575-line review carrying a MICRO-FIX verdict and all nine rulings; T99's was 7 commits and 3533 insertions. This is the P-25 shape: the rescue sweep works, but a rescued branch with no handoff is indistinguishable from an abandoned one until somebody re-reads it, and the ledger said nothing.",
+  "branches_repointed_at_rescued_wip": {
+    "softhouse/T99-pathb-lower-findings": "2789591 (was at main)",
+    "softhouse/T107-review-t91": "35655fb (was at main — branch existed but held nothing)",
+    "softhouse/T113-close-forgeable-token": "b9f9ab3 (was at T97's tip, holding none of T113's own work)"
+  },
+  "wave1": [
+    {"task": "T99b", "branch": "softhouse/T99-pathb-lower-findings", "based_on": "rescued WIP", "model": "opus", "needs_oracle": "yes", "next_action": "await; regenerate every proof rather than trust committed transcripts; then pair a reviewer"},
+    {"task": "T107b", "branch": "softhouse/T107-review-t91", "based_on": "rescued WIP", "model": "opus", "needs_oracle": "yes", "next_action": "await; then dispatch T115 to apply MF-1..MF-3 to T91, then merge T91"},
+    {"task": "T113b", "branch": "softhouse/T113-close-forgeable-token", "based_on": "rescued WIP on T97", "model": "opus", "needs_oracle": "yes", "next_action": "await; acceptance is T106's UNMODIFIED forge rig red+green; then merge T97+T106+T113 together"},
+    {"task": "T114", "branch": "softhouse/T114-review-t112", "based_on": "main", "model": "opus", "needs_oracle": "to re-derive", "next_action": "await; then merge or retry T112; unblocks T116/T117/T118"},
+    {"task": "T110", "branch": "softhouse/T110-duplicate-caseid-refusal", "based_on": "main", "model": "opus", "needs_oracle": "to run the harness", "next_action": "await; then pair an independent reviewer; sequence T105 after it (same package)"},
+    {"task": "T96", "branch": "softhouse/T96-sole-caller-census", "based_on": "main", "model": "opus", "needs_oracle": "no", "next_action": "await; then pair an independent reviewer"}
+  ],
+  "not_dispatched_this_wave": [
+    {"task": "T115", "why": "applies T107's micro-fixes; blocked until T107b attests the review"},
+    {"task": "T116", "why": "G-8 option (a) vector promotion; gated on T114's verdict — promoting a vector on an unreviewed write-up is the mistake the pipeline exists to prevent"},
+    {"task": "T117", "why": "family-B probe; gated on T114"},
+    {"task": "T118", "why": "patterns.md, driver's own file; write at postmortem"},
+    {"task": "T105", "why": "same package as T110 — sequence after it merges"},
+    {"task": "T108", "why": "OVERLAPS T107b §7, which already adjudicates the BSD-grep claim (T91 right, T80 not, on this host; the reproduced silent miss is ugrep -I). Re-scope T108 once T107b lands rather than duplicating it"},
+    {"task": "T109", "why": "hardens already-merged T82/T87/T102/T103; needs a scratch clone not a worktree; wave 2"},
+    {"task": "T92", "why": "capture-artefact erratum; wave 2"},
+    {"task": "T93", "why": "README census 36->42 + T97's F-T97-1 text; sequence after T113b so the replacement text is final"},
+    {"task": "T94", "why": "reproducibility-claim sweep of .softhouse/reviews/; wave 2 or cloud fire"},
+    {"task": "T111", "why": "no oracle needed; good cloud-fire work"},
+    {"task": "T15", "why": "archive; blocked on the wave-1 reviewers"}
+  ],
+  "blocked_on": null,
+  "open_questions": [
+    "G-8 family B: the port already matches the oracle, so 'match the oracle' and 'the balance amortizes' cannot both hold there by any amount of porting. T117 will establish whether the failing principal can exceed one minor unit — that number changes what the disclosure has to say.",
+    "Whether invariant_exemptions is genuinely INERT on the G-8 divergence (T83 STEP 5) or reachable (T101/T112). Both are on the record and they contradict. T116 must settle it before promoting anything."
+  ],
+  "gate_pending": [
+    "G-4 (OPEN, ENGINEERING, wording-only amendment to a RATIFIED DEC-1 — driver does not cross)",
+    "G-5 (OPEN, same class)",
+    "G-8 (OPEN, measured and reproduced; option (a) is agent-decidable and now has a task with a promotion mandate (T116); (b) and (c) amend the graded domain and remain hard user gates)"
+  ]
+}
