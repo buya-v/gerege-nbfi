@@ -1,0 +1,15 @@
+{
+  "squad": "tierA-A2-wave1",
+  "run_id": "2026-08-21-run2-tierA-gl-accounting-A2",
+  "fire": "20260821-134344",
+  "dispatched": [
+    {"task": "A2-1", "branch": "softhouse/A2-1-behaviour", "step": "behaviour extraction from pinned source", "next_action": "reviewer A2-2 re-derives from source", "blocked_on": null},
+    {"task": "A2-3", "branch": "softhouse/A2-3-capture", "step": "corpus mining + RAW oracle capture", "next_action": "reviewer A2-4 attacks the rig", "blocked_on": null},
+    {"task": "T149", "branch": "softhouse/T149-halfup-tie-vector", "step": "re-observe the tie live, promote a parity vector, prove red/green", "next_action": "independent reviewer", "blocked_on": null}
+  ],
+  "gate_pending": null,
+  "open_questions": [
+    "A2-1's mapping-resolution answer is what slice A1 will build on; if it comes back [UNVERIFIED] the A1 coder cannot be planned yet.",
+    "Whether T149's live re-observation reproduces T136's 20925.05 / 20925.04. A disagreement is a finding, not a reconciliation job."
+  ]
+}
