@@ -1,0 +1,5159 @@
+{
+ "ranges": {
+  "main_start": 894,
+  "main_end": 1653,
+  "notice_start": 1825,
+  "notice_end": 1944
+ },
+ "units": [
+  {
+   "line": 894,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "## G-8 \u2014 TWO phenomena at the rounding floor, under one gate id"
+  },
+  {
+   "line": 896,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **id**: G-8"
+  },
+  {
+   "line": 897,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **class**: ENGINEERING to measure; the *remedy* is a DEC-n amendment, which is a hard `user` gate"
+  },
+  {
+   "line": 898,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **task**: T75 (found the shape, and stated the family-A mechanism first), T83 (measured family A),"
+  },
+  {
+   "line": 899,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "T84 (reproduced T83, measured family B, and rejected T83's write-up), T100 (rewrote this section"
+  },
+  {
+   "line": 900,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "and re-measured both discriminators), T101 (independent review \u2014 reproduced the measurement over a"
+  },
+  {
+   "line": 901,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**wider** cell set than T100 swept, and rejected the write-up on three sentences), T112 (applied"
+  },
+  {
+   "line": 902,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "T101's corrections and deleted the superseded UPDATE block named below), T114 (independent review"
+  },
+  {
+   "line": 903,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "of T112 \u2014 **re-derived every load-bearing number in this section from scratch and all of it"
+  },
+  {
+   "line": 904,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "reproduced**; MICRO-FIX on two false sentences, one of them introduced by T112's own fix), T122"
+  },
+  {
+   "line": 905,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "(applied T114's findings), T129 (independent review of T122 \u2014 rebuilt the sentence-by-sentence"
+  },
+  {
+   "line": 906,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "scope audit from scratch, 117 rows, 6 fail, **every failure a scope or disposition statement and"
+  },
+  {
+   "line": 907,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the measurements perfect**; MICRO-FIX), T140 (applied T129's six findings and adopted the standing"
+  },
+  {
+   "line": 908,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "rule below)"
+  },
+  {
+   "line": 909,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **context**: tier0-harness-schedule-poc / loan-schedule"
+  },
+  {
+   "line": 910,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **state**: **OPEN** \u2014 blocks nothing today. T112 fixed the write-up and T122 fixed two sentences in"
+  },
+  {
+   "line": 911,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "T112's fix; **neither decided the gate, and neither may.**"
+  },
+  {
+   "line": 912,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **raised_by**: local fire 20260820-170001, from T75's approval of T74"
+  },
+  {
+   "line": 913,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **recorded_in**: `.softhouse/gates.md`"
+  },
+  {
+   "line": 914,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **supersedes**: the block `## G-8 \u2014 UPDATE from local fire 20260820-200002` that stood on `main`"
+  },
+  {
+   "line": 915,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "until T112, together with the two inline `[CORRECTION \u2014 local fire 20260820-230001, driver]`"
+  },
+  {
+   "line": 916,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "annotations added to it as a stopgap. That block attributed the **family-B** exemption"
+  },
+  {
+   "line": 917,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "measurement \u2014 761 graded cells, **0 cell diffs**, FAIL turning to PASS under an invariant"
+  },
+  {
+   "line": 918,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "exemption \u2014 to **family A**, which is the gate's most decision-relevant sentence stated"
+  },
+  {
+   "line": 919,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "backwards, and it carried the superseded **18**-refutation count. **T112 deleted it in the same"
+  },
+  {
+   "line": 920,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "commit that landed this section**, so this is now the only G-8 write-up in this file. Nothing it"
+  },
+  {
+   "line": 921,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "said correctly is lost; everything is restated below, scoped to the family it belongs to."
+  },
+  {
+   "line": 922,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**That claim was audited claim-by-claim twice \u2014 by T114, which found exactly one loss (T84's"
+  },
+  {
+   "line": 923,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "12-cell tenant-id/reversed-order re-ask, restored above), and again by T122, which re-read the"
+  },
+  {
+   "line": 924,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "deleted block end to end and restored one further provenance clause (T83's probe topology: no"
+  },
+  {
+   "line": 925,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "server, no database connection). **A third claim-by-claim audit, by T129, found one further"
+  },
+  {
+   "line": 926,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "substantive loss \u2014 `main:947`'s \"T83 \u2026 took no number from T75\", the independence claim that makes"
+  },
+  {
+   "line": 927,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the \"T75's report is CONFIRMED\" below mean anything \u2014 and T140 restored it, verified at source.**"
+  },
+  {
+   "line": 928,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "Verified on a scratch merge into current `main` in a throwaway"
+  },
+  {
+   "line": 929,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "clone: the merged file carries exactly ONE `## G-8` heading, and the only surviving mentions of the"
+  },
+  {
+   "line": 930,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "deleted block are this bullet naming it.**"
+  },
+  {
+   "line": 932,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "### STANDING RULE \u2014 how to edit this section (adopted at T140, proposed by T129)"
+  },
+  {
+   "line": 934,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "This section is the artefact **Buyan reads to decide a `user` gate**, and it has now carried a wrong"
+  },
+  {
+   "line": 935,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "number or a wrong scope statement to that reader **four separate times**: a family A/B inversion, an"
+  },
+  {
+   "line": 936,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "18-instead-of-22 refutation count born of a float in an analysis script (P-25), an unscoped"
+  },
+  {
+   "line": 937,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "\"largest n\" sentence that contradicted the section ten lines away (P-26), and a `tasks.json`"
+  },
+  {
+   "line": 938,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "disposition that the author had already reversed and never swept (P-21 by a third route). Every one"
+  },
+  {
+   "line": 939,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "of them was in **prose**, not in a measurement. So:"
+  },
+  {
+   "line": 941,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "1. **Nobody edits this section without rebuilding the sentence-by-sentence scope table.** Not a"
+  },
+  {
+   "line": 942,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "grep for the sentence you are changing \u2014 a rebuild, claim by claim, of what every sentence"
+  },
+  {
+   "line": 943,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "asserts and the domain it was measured over. T129's rebuild ran to 117 rows and found six"
+  },
+  {
+   "line": 944,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "failures, **all six of them scope or disposition statements in a section whose measurements are"
+  },
+  {
+   "line": 945,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "perfect**. That ratio is the whole reason for this rule."
+  },
+  {
+   "line": 946,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "2. **The editor adds itself to the non-decision roster** at *\"decided none, recommended none, and"
+  },
+  {
+   "line": 947,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "pre-implemented none\"* below, and to the `task:` bullet above. That roster is the section's own"
+  },
+  {
+   "line": 948,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "attestation; a stale one is a claim made in the name of tasks that never made it."
+  },
+  {
+   "line": 949,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "3. **Sweep for the concept, never for the wording** (P-21 / P-26) \u2014 including your own change of"
+  },
+  {
+   "line": 950,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "mind. A correction you later reverse leaves its own restatements behind as fossils, and they are"
+  },
+  {
+   "line": 951,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the most convincing fossils in the document because they were written by the person who now knows"
+  },
+  {
+   "line": 952,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "better. **A site list handed to you by a reviewer is a starting point, never the sweep** \u2014 T129"
+  },
+  {
+   "line": 953,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "named five sites for that `tasks.json` fossil and a concept-grep found **seven**. Then **write"
+  },
+  {
+   "line": 954,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "down what the sweep could not have found**."
+  },
+  {
+   "line": 955,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "4. **Exact arithmetic only, including for display** (P-25). Any number re-derived for this section is"
+  },
+  {
+   "line": 956,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "integer minor units or `fractions.Fraction`; a float in an analysis script has already put a wrong"
+  },
+  {
+   "line": 957,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "count in front of the decision-maker once."
+  },
+  {
+   "line": 958,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "5. **Analyse the `.gz` captures, not the plain `.json` extracts** \u2014 see the warning in the Evidence"
+  },
+  {
+   "line": 959,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "block below. The extracts give a plausible, self-consistent, wrong answer."
+  },
+  {
+   "line": 960,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "6. **Verify the merge by merging** (P-24), in a throwaway clone against *current* `main`: exactly one"
+  },
+  {
+   "line": 961,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`## G-8` heading, no conflict on `.softhouse/tasks.json`, and `gates.md` resolving to your"
+  },
+  {
+   "line": 962,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "branch's blob."
+  },
+  {
+   "line": 964,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "### Read this first: G-8 is TWO phenomena, and a remedy for one is not a remedy for the other"
+  },
+  {
+   "line": 966,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "Everything below is scoped to the family it was measured on. A sentence about family A is not a"
+  },
+  {
+   "line": 967,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "sentence about family B, and neither is a sentence about the graded domain as a whole \u2014 the domain"
+  },
+  {
+   "line": 968,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "is graded **by sampling**, and rate, principal and `NumberOfRepayments` are unbounded in it"
+  },
+  {
+   "line": 969,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "[VERIFIED by T100 at `nexus/internal/apps/loanschedule/contract/contract.go:1163-1170`: *\"are graded"
+  },
+  {
+   "line": 970,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "by sampling rather than by enumeration \u2026 No claim is made that any un-sampled value is safe\"*]."
+  },
+  {
+   "line": 972,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| | **FAMILY A \u2014 stale derived column** | **FAMILY B \u2014 genuine non-amortization** |"
+  },
+  {
+   "line": 974,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| principal column sums to the disbursed amount | **yes** | **NO \u2014 it sums to 0.00** |"
+  },
+  {
+   "line": 975,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| `totalPrincipalAmount` | = the disbursement | **0.00** |"
+  },
+  {
+   "line": 976,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| non-zero principal rows | exactly **one**, the last, carrying the whole disbursement | **none** |"
+  },
+  {
+   "line": 977,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| last row's interest | `0.00` | `0.01` |"
+  },
+  {
+   "line": 978,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| balance column | constant at the disbursed amount | constant at the disbursed amount |"
+  },
+  {
+   "line": 979,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| `totalOutstandingAmount` | `0` | `0` \u2014 **so this field does not discriminate** |"
+  },
+  {
+   "line": 980,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| forcing the oracle's own balance `Memo` to recompute | balance goes to **`0.00`** | **does not move** |"
+  },
+  {
+   "line": 981,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| the Go port | **diverges**, on exactly one cell per case | **reproduces it cell for cell \u2014 no divergence at all** |"
+  },
+  {
+   "line": 982,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| `invariant_exemptions` as a remedy | **inert** \u2014 the failure is a cell diff | **decisive** \u2014 the failure is purely invariant |"
+  },
+  {
+   "line": 983,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| measured at | **11** of the 12 annual rates swept (all but 600.0 %), `3 \u2264 n \u2264 600`, **312 cells** | **one** annual rate (600.0 %), `104 \u2264 n \u2264 250`, **29 cells** |"
+  },
+  {
+   "line": 985,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "Cells behind that table: **312 family-A** (198 T83 + 111 T84 + 3 T100) and **29 family-B** (22 T84 +"
+  },
+  {
+   "line": 986,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "7 T100), each re-derived from the committed raw captures by T100's own classifier"
+  },
+  {
+   "line": 987,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "[`.softhouse/capture/t100-g8-rescope/src/classify_two_families.py`, `out/column-shape-{t83,t84,t100}.json`]."
+  },
+  {
+   "line": 988,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "Every row of that table holds on **every** cell of its family in those captures \u2014 no exceptions, no"
+  },
+  {
+   "line": 989,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "mixed cases. The two families are disjoint and each is internally uniform on what was swept."
+  },
+  {
+   "line": 991,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**What was found originally.** T75 registered a prediction, committed it, and only then ran a"
+  },
+  {
+   "line": 992,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "calibrated probe against the pinned oracle image (its calibrations reproduced `T64-ZP-A`/`T64-ZP-B`"
+  },
+  {
+   "line": 993,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "cell-for-cell with zero input diffs). Result: **MNT 0.01 / 6 \u00d7 21.6 % at `MinorUnitDigits = 2` \u2014"
+  },
+  {
+   "line": 994,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "inside the graded domain, no multiples-of input involved \u2014 makes the reference oracle emit a"
+  },
+  {
+   "line": 995,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "schedule whose balance column never reaches zero, `0.01` on every row including the last, while the"
+  },
+  {
+   "line": 996,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "Go port returns `0`.** That shape is **family A** [VERIFIED by T112's own re-classification of the"
+  },
+  {
+   "line": 997,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "committed raw captures, in integer minor units: `T83-SW-R21p6-N6-B1` \u2014 **the shape in the sentence,"
+  },
+  {
+   "line": 998,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "MNT 0.01** \u2014 has a REPAYMENT principal column summing to 1 minor unit against a 1-minor-unit"
+  },
+  {
+   "line": 999,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "disbursement, and a last row still carrying 1 minor unit outstanding. T100 tagged this sentence with"
+  },
+  {
+   "line": 1000,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the *neighbouring* cell `T100-FAMA-R21p6-N6-B2` (MNT 0.02), which is also family A but is not the"
+  },
+  {
+   "line": 1001,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "shape described; corrected here per T101 F-5. The claim was always true \u2014 only its citation was to"
+  },
+  {
+   "line": 1002,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the wrong cell]."
+  },
+  {
+   "line": 1004,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**Why it matters.** On family A this is a live port-vs-oracle divergence on an **admitted** shape,"
+  },
+  {
+   "line": 1005,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "and it sets two of this project's own rules against each other:"
+  },
+  {
+   "line": 1007,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- *\"Fineract is the oracle and fallback. No ported Go context is correct until its golden vectors match.\"*"
+  },
+  {
+   "line": 1008,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- *\"property invariants \u2026 principal amortizes to zero.\"*"
+  },
+  {
+   "line": 1010,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**On family B it is worse and it is different: there is no port-vs-oracle divergence to arbitrate,"
+  },
+  {
+   "line": 1011,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "because the port agrees with the oracle \u2014 both emit a schedule that never repays the loan.** A"
+  },
+  {
+   "line": 1012,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "declared-divergence mechanism would have to be able to say *\"both are wrong\"*, which the harness"
+  },
+  {
+   "line": 1013,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "cannot express today."
+  },
+  {
+   "line": 1015,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "Today `conformance.sh` reports PASS with 42 parity vectors and 0 invariant violations \u2014 **only"
+  },
+  {
+   "line": 1016,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "because no vector covers either family.** That is precisely the blind spot the conformance gate"
+  },
+  {
+   "line": 1017,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "exists to eliminate, so a green bar is not evidence against this finding."
+  },
+  {
+   "line": 1021,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "## FAMILY A \u2014 the outstanding-balance column is STALE with respect to the oracle's own final EMI adjustment"
+  },
+  {
+   "line": 1023,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "### Discriminator for family A"
+  },
+  {
+   "line": 1025,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "A cell is family A when **all** of these hold, and they were checked on every cell claimed below:"
+  },
+  {
+   "line": 1027,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "1. the last emitted row carries a non-zero outstanding `balance`;"
+  },
+  {
+   "line": 1028,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "2. the REPAYMENT rows' `principal` column still **sums exactly to the disbursed amount** \u2014 in every"
+  },
+  {
+   "line": 1029,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "family-A cell measured so far by exactly one non-zero principal row, the last, carrying the whole"
+  },
+  {
+   "line": 1030,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "disbursement;"
+  },
+  {
+   "line": 1031,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "3. forcing the oracle's own balance `Memo` to recompute drives that balance to **`0.00`**."
+  },
+  {
+   "line": 1033,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "Test 3 is the decisive one: it is what separates A from B, and it is the discriminator the driver's"
+  },
+  {
+   "line": 1034,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "re-derivation named in advance (*\"a memo-staleness defect predicts [order dependence] \u2026 a genuine"
+  },
+  {
+   "line": 1035,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "non-amortization predicts no order dependence at all\"*,"
+  },
+  {
+   "line": 1036,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`.softhouse/reviews/driver-rederivation-20260820-200002-G8.md`)."
+  },
+  {
+   "line": 1038,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "### What was measured, and over what domain"
+  },
+  {
+   "line": 1040,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**T83's sweep \u2014 330 cells, all family A** [T83, branch `softhouse/T83-nonamortizing-boundary`. The"
+  },
+  {
+   "line": 1041,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "probe is the **in-process Path A embeddable seam** in a throw-away container built from the pinned"
+  },
+  {
+   "line": 1042,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "oracle image: it **does not start the Fineract server and opens no database connection**, and it"
+  },
+  {
+   "line": 1043,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "writes nothing to the running reference-oracle container or its PostgreSQL database"
+  },
+  {
+   "line": 1044,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "[VERIFIED by T122 at `src/run-t83.sh:5-10`; the seam source is pinned by `cmp` against the pinned"
+  },
+  {
+   "line": 1045,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "checkout **and** by a sha256 literal in the script at `:99-107`, because two files mutated the same"
+  },
+  {
+   "line": 1046,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "way compare equal under `cmp`]. **It took no number from T75** \u2014 T83 generated its own cells by a"
+  },
+  {
+   "line": 1047,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "contiguous sweep and re-measured the shape T75 reported from scratch, which is what makes \"T75's"
+  },
+  {
+   "line": 1048,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "report is CONFIRMED\" below an independent confirmation rather than a restatement [VERIFIED by T140"
+  },
+  {
+   "line": 1049,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "at `.softhouse/capture/t83-nonamortizing/src/CaptureT83.java:16`, *\"T83 re-measures that"
+  },
+  {
+   "line": 1050,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "INDEPENDENTLY \u2014 it takes no number from T75 \u2014 and measures the EXACT BOUNDARY by a contiguous"
+  },
+  {
+   "line": 1051,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "sweep\"*, and `:25-26`, *\"THIS HARNESS ASSERTS NOTHING AND PREDICTS NOTHING \u2026 does not classify"
+  },
+  {
+   "line": 1052,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "them\"*. This clause stood in the deleted `main` UPDATE block at `main:.softhouse/gates.md:947` and"
+  },
+  {
+   "line": 1053,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "was the one substantive claim not carried over; restored at T140 on T129's F-T129-6]. Its"
+  },
+  {
+   "line": 1054,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "prediction was committed as a strict ancestor of its evidence,"
+  },
+  {
+   "line": 1055,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "and it calibrates against two already-committed captures with **zero input differences including"
+  },
+  {
+   "line": 1056,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "tenant id**;"
+  },
+  {
+   "line": 1057,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "reproduced by T84 byte-identically, canonical sha256 `01b41d9c\u20263101b`, 332 cases; T84 additionally"
+  },
+  {
+   "line": 1058,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "re-asked **12 boundary cells with different tenant ids and in a different emission order, with each"
+  },
+  {
+   "line": 1059,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "boundary pair reversed \u2014 12 of 12 identical**, so the boundary is neither tenant-dependent nor"
+  },
+  {
+   "line": 1060,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "order-of-emission dependent [`T84-review-t83.md`"
+  },
+  {
+   "line": 1061,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "\u00a71.3; re-verified by T122 from the committed capture: the twelve `T84-RP-*` cells carry their own"
+  },
+  {
+   "line": 1062,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`t84_rp_*` tenant ids, distinct from T83's `cap_t83_*`, and each one's whole `observed` block is"
+  },
+  {
+   "line": 1063,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "byte-identical to the same-shape T83 cell \u2014 12 matched, 12 identical. **The words \"in reversed"
+  },
+  {
+   "line": 1064,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "order\" stood here until T140 and were loose**: measured, the twelve cells' partners sit at T83"
+  },
+  {
+   "line": 1065,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "emission positions 265, 79, 78, 2, 215, 214, 285, 284, 171, 170, 19, 18 \u2014 neither increasing nor"
+  },
+  {
+   "line": 1066,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "decreasing, i.e. a *scramble* in which the five same-shape boundary **pairs** are each locally"
+  },
+  {
+   "line": 1067,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "reversed relative to T83 (79 before 78, 215 before 214, 285 before 284, 171 before 170, 19 before"
+  },
+  {
+   "line": 1068,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "18) and the remaining two cells are singletons. The conclusion is unaffected and fully supported \u2014"
+  },
+  {
+   "line": 1069,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "T140 re-derived the 12-of-12 byte-identity and the tenant-id disjointness independently \u2014 only the"
+  },
+  {
+   "line": 1070,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "description was wrong]; re-classified a"
+  },
+  {
+   "line": 1071,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "third time by T100 from the same raw capture: **198 fail / 132 clean / 0 family B**]. Domain swept:"
+  },
+  {
+   "line": 1072,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "annual rates **{7.0, 16.8, 21.6, 36.0}** \u00d7 repayment counts **{2, 3, 4, 6, 12, 24, 36, 56}**,"
+  },
+  {
+   "line": 1073,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "principal swept contiguously in minor units from 1 past the boundary (1..27 minor), every cell"
+  },
+  {
+   "line": 1074,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "emitted whether clean or not. All strictly inside the graded domain (MNT dp 2, single disbursement"
+  },
+  {
+   "line": 1075,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "on the schedule start date 2024-01-01, MONTHS/1, DECLINING_BALANCE, DAYS_30/DAYS_360, no down"
+  },
+  {
+   "line": 1076,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "payment, both multiples-of inputs null, `(19, HALF_UP)`)."
+  },
+  {
+   "line": 1078,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**T84's extension \u2014 111 further family-A cells** at annual rates **{0.12, 1.2, 3.6, 7.0, 12.0, 16.8,"
+  },
+  {
+   "line": 1079,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "21.6, 36.0, 48.0, 96.0, 300.0}** and terms up to **n = 600**, principals 1..100 000 minor."
+  },
+  {
+   "line": 1081,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**T100's confirmation \u2014 3 family-A cells** re-asked with **different tenant ids**, in a **scrambled"
+  },
+  {
+   "line": 1082,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "order**, from its own capture (`out/capture-t100-raw.json`, canonical sha256 `314c4d55\u20262bfba`, rig"
+  },
+  {
+   "line": 1083,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "calibrations reproducing the committed `T64-ZP-A`/`T64-ZP-B` cell-for-cell with 0 input diffs):"
+  },
+  {
+   "line": 1084,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "21.6 % / n=6 / MNT 0.02, 3.6 % / n=360 / MNT 1.09, 0.12 % / n=600 / MNT 2.91 \u2014 all three fail, all"
+  },
+  {
+   "line": 1085,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "three sum, all three predicted in advance."
+  },
+  {
+   "line": 1087,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "### The boundary table \u2014 MEASURED BY T83, over T83's grid only"
+  },
+  {
+   "line": 1089,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "\"Failing\" = the emitted schedule's LAST row carries a non-zero outstanding balance, which is exactly"
+  },
+  {
+   "line": 1090,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the cell `principal_amortizes_to_zero` reads. **This table describes 4 rates \u00d7 8 terms and nothing"
+  },
+  {
+   "line": 1091,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "else**; T84's and T100's cells at other rates and longer terms are reported after it, and they move"
+  },
+  {
+   "line": 1092,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the largest failing principal by more than an order of magnitude."
+  },
+  {
+   "line": 1094,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| rate % | n | principals swept (minor) | cases | LARGEST FAILING | SMALLEST CLEAN | contiguous |"
+  },
+  {
+   "line": 1096,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 21.6 | 2 | 1..5 | 5 | none | **1** (MNT 0.01) | yes |"
+  },
+  {
+   "line": 1097,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 21.6 | 3 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |"
+  },
+  {
+   "line": 1098,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 21.6 | 4 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |"
+  },
+  {
+   "line": 1099,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 21.6 | 6 | 1..6 | 6 | **2** (MNT 0.02) | **3** (MNT 0.03) | yes |"
+  },
+  {
+   "line": 1100,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 21.6 | 12 | 1..9 | 9 | **5** (MNT 0.05) | **6** (MNT 0.06) | yes |"
+  },
+  {
+   "line": 1101,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 21.6 | 24 | 1..13 | 13 | **9** (MNT 0.09) | **10** (MNT 0.10) | yes |"
+  },
+  {
+   "line": 1102,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 21.6 | 36 | 1..17 | 17 | **13** (MNT 0.13) | **14** (MNT 0.14) | yes |"
+  },
+  {
+   "line": 1103,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 21.6 | 56 | 1..21 | 21 | **17** (MNT 0.17) | **18** (MNT 0.18) | yes |"
+  },
+  {
+   "line": 1104,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 7.0 | 2 | 1..5 | 5 | none | **1** (MNT 0.01) | yes |"
+  },
+  {
+   "line": 1105,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 7.0 | 3 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |"
+  },
+  {
+   "line": 1106,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 7.0 | 4 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |"
+  },
+  {
+   "line": 1107,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 7.0 | 6 | 1..6 | 6 | **2** (MNT 0.02) | **3** (MNT 0.03) | yes |"
+  },
+  {
+   "line": 1108,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 7.0 | 12 | 1..9 | 9 | **5** (MNT 0.05) | **6** (MNT 0.06) | yes |"
+  },
+  {
+   "line": 1109,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 7.0 | 24 | 1..15 | 15 | **11** (MNT 0.11) | **12** (MNT 0.12) | yes |"
+  },
+  {
+   "line": 1110,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 7.0 | 36 | 1..20 | 20 | **16** (MNT 0.16) | **17** (MNT 0.17) | yes |"
+  },
+  {
+   "line": 1111,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 7.0 | 56 | 1..27 | 27 | **23** (MNT 0.23) | **24** (MNT 0.24) | yes |"
+  },
+  {
+   "line": 1112,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 16.8 | 2 | 1..5 | 5 | none | **1** (MNT 0.01) | yes |"
+  },
+  {
+   "line": 1113,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 16.8 | 3 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |"
+  },
+  {
+   "line": 1114,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 16.8 | 4 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |"
+  },
+  {
+   "line": 1115,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 16.8 | 6 | 1..6 | 6 | **2** (MNT 0.02) | **3** (MNT 0.03) | yes |"
+  },
+  {
+   "line": 1116,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 16.8 | 12 | 1..9 | 9 | **5** (MNT 0.05) | **6** (MNT 0.06) | yes |"
+  },
+  {
+   "line": 1117,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 16.8 | 24 | 1..14 | 14 | **10** (MNT 0.10) | **11** (MNT 0.11) | yes |"
+  },
+  {
+   "line": 1118,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 16.8 | 36 | 1..18 | 18 | **14** (MNT 0.14) | **15** (MNT 0.15) | yes |"
+  },
+  {
+   "line": 1119,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 16.8 | 56 | 1..23 | 23 | **19** (MNT 0.19) | **20** (MNT 0.20) | yes |"
+  },
+  {
+   "line": 1120,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 36.0 | 2 | 1..5 | 5 | none | **1** (MNT 0.01) | yes |"
+  },
+  {
+   "line": 1121,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 36.0 | 3 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |"
+  },
+  {
+   "line": 1122,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 36.0 | 4 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |"
+  },
+  {
+   "line": 1123,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 36.0 | 6 | 1..6 | 6 | **2** (MNT 0.02) | **3** (MNT 0.03) | yes |"
+  },
+  {
+   "line": 1124,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 36.0 | 12 | 1..8 | 8 | **4** (MNT 0.04) | **5** (MNT 0.05) | yes |"
+  },
+  {
+   "line": 1125,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 36.0 | 24 | 1..12 | 12 | **8** (MNT 0.08) | **9** (MNT 0.09) | yes |"
+  },
+  {
+   "line": 1126,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 36.0 | 36 | 1..14 | 14 | **10** (MNT 0.10) | **11** (MNT 0.11) | yes |"
+  },
+  {
+   "line": 1127,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| 36.0 | 56 | 1..17 | 17 | **13** (MNT 0.13) | **14** (MNT 0.14) | yes |"
+  },
+  {
+   "line": 1129,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**T75's report is CONFIRMED and is a strict subset of this.** MNT 0.01/6, 0.02/6, 0.01/12 and"
+  },
+  {
+   "line": 1130,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "0.01/56 at 21.6 % all fail; **MNT 0.03 through MNT 0.06 \u2014 3..6 minor units, which is the entire"
+  },
+  {
+   "line": 1131,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "range swept above the boundary at that shape \u2014 are clean at 21.6 % / n = 6** [VERIFIED by T112 from"
+  },
+  {
+   "line": 1132,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "T83's raw capture: exactly principals 1..6 minor were asked at that shape, 1 and 2 fail, 3..6 are"
+  },
+  {
+   "line": 1133,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "clean, and nothing larger was asked. The earlier phrasing \"0.03 **and above**\" claimed a half-line"
+  },
+  {
+   "line": 1134,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the sweep does not cover \u2014 T101 F-7]."
+  },
+  {
+   "line": 1136,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**21.6 % is not load-bearing for family A** \u2014 family A exists at **11 of the 12** annual rates"
+  },
+  {
+   "line": 1137,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "swept: every rate from 0.12 % to 300.0 %, and **NOT at 600.0 %**, where every failing cell is"
+  },
+  {
+   "line": 1138,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "family B and no family-A cell has ever been observed. That is the same count the discriminator"
+  },
+  {
+   "line": 1139,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "table above carries, and it is spelled out here on purpose: an earlier revision of this paragraph"
+  },
+  {
+   "line": 1140,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "read \"family A exists at **all 12** rates swept\", which asserted family A at precisely the rate"
+  },
+  {
+   "line": 1141,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "that *defines* family B and contradicted that table nine lines earlier. The table had been scoped"
+  },
+  {
+   "line": 1142,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "and this prose restatement of the same claim had not \u2014 pattern P-23 leaking by the exact route"
+  },
+  {
+   "line": 1143,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`patterns.md` records [T101 F-1; **independently re-measured by T112** over all 687 swept cells of"
+  },
+  {
+   "line": 1144,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the four committed raw captures: the family-A rate set is {0.12, 1.2, 3.6, 7.0, 12.0, 16.8, 21.6,"
+  },
+  {
+   "line": 1145,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "36.0, 48.0, 96.0, 300.0} \u2014 **eleven** \u2014 and family A at 600.0 % is the **empty set**]. Across T83's"
+  },
+  {
+   "line": 1146,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "grid the rate moves *where* the boundary sits and moves it DOWN as the rate rises; the region is"
+  },
+  {
+   "line": 1147,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**empty at n = 2** at all four rates T83 tested, and grows with the term."
+  },
+  {
+   "line": 1149,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "### The port divergence, family A only \u2014 ONE CELL PER CASE"
+  },
+  {
+   "line": 1151,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "On family A the divergence against the Go port is **the FINAL row's outstanding principal and"
+  },
+  {
+   "line": 1152,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "nothing else**: **198 divergent cells over T83's 198 failing cases** [T83, `out/port-vs-oracle.json`;"
+  },
+  {
+   "line": 1153,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "T84 re-ran it and got an identical file; port control on `T64-ZP-A`/`T64-ZP-B` = 0 mismatch cells;"
+  },
+  {
+   "line": 1154,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the port refused nothing], plus **111 further divergent cases** in T84's own family-A sweep. T100"
+  },
+  {
+   "line": 1155,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "re-measured one of them through the real grader: `T100-FAMA-R3p6-N360-B109` grades **2525 cells with"
+  },
+  {
+   "line": 1156,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "exactly one diff \u2014 `row 360 outstanding_principal_minor: expected 109 minor units, got 0`**"
+  },
+  {
+   "line": 1157,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "[`out/exemption-demo-t100.json`]. The port amortizes; the oracle's balance column does not."
+  },
+  {
+   "line": 1159,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "### The mechanism \u2014 FIRST STATED BY T75, and it applies to family A"
+  },
+  {
+   "line": 1161,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**Attribution: the `:400` / `:1180` / `:1210` chain is T75's**, stated in `T75-pathA-multiplesof-review.md`"
+  },
+  {
+   "line": 1162,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "\u00a75 one fire before the driver's re-derivation restated it, and T75 additionally carries the"
+  },
+  {
+   "line": 1163,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`isFullyPaid()` step. It is not the driver's finding and this record previously failed to say so."
+  },
+  {
+   "line": 1165,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "Source, re-verified line by line by T100 at the pinned commit `426a23544`:"
+  },
+  {
+   "line": 1167,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- `RepaymentPeriod.getOutstandingLoanBalance()` is a `Memo` whose body subtracts `getDuePrincipal()`"
+  },
+  {
+   "line": 1168,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "(`RepaymentPeriod.java:398`) \u2014 a direct function of `emi` \u2014 while its dependency array at **`:400`**"
+  },
+  {
+   "line": 1169,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "is `{paidPrincipal, paidInterest, interestPeriods, totalDisbursedAmount}` and **omits `emi`**;"
+  },
+  {
+   "line": 1170,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- the sibling `getDueInterest()` memo **does** declare `emi` (`:278` opening, `:283`), so the"
+  },
+  {
+   "line": 1171,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "omission is asymmetric inside one class;"
+  },
+  {
+   "line": 1172,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- `isFullyPaid()` is `getEmiPlusCreditedAmountsPlusFutureUnrecognizedInterest().isEqualTo(getTotalPaidAmount())`,"
+  },
+  {
+   "line": 1173,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "i.e. `0 == 0` when every EMI quantizes to zero [T75];"
+  },
+  {
+   "line": 1174,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- `calculateLastUnpaidRepaymentPeriodEMI` (`ProgressiveEMICalculator.java:1160`) then takes its"
+  },
+  {
+   "line": 1175,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "fallback, whose last filter at **`:1180`** is `rp.getOutstandingLoanBalance().isGreaterThanZero()`"
+  },
+  {
+   "line": 1176,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "\u2014 which **populates the memo on the target period** \u2014 and **`:1210`** raises that period's EMI in"
+  },
+  {
+   "line": 1177,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the **same method** through a plain setter that invalidates nothing;"
+  },
+  {
+   "line": 1178,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- the only three readers of `getOutstandingLoanBalance()` in the calculator are `:617`, `:1180`"
+  },
+  {
+   "line": 1179,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "and `:1629`."
+  },
+  {
+   "line": 1181,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**The driver's candidate site is REFUTED** [T83, re-verified by T84 and again by T100]:"
+  },
+  {
+   "line": 1182,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`RepaymentPeriod.getInitialBalanceForEmiRecalculation()` (`:413-426`) reads `getPrevious()`'s"
+  },
+  {
+   "line": 1183,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "balance and therefore can never populate the LAST period's memo."
+  },
+  {
+   "line": 1185,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "### The mechanism is also OBSERVED, not only read \u2014 family A only"
+  },
+  {
+   "line": 1187,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`ProbeOrderDep.java` / `ProbeOrderDep2.java` force the oracle's own balance `Memo` to recompute by"
+  },
+  {
+   "line": 1188,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "moving a DECLARED dependency (`paidPrincipal`) and moving it back to the same value."
+  },
+  {
+   "line": 1190,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- T83, on 5 of 5 family-A shapes: balance as emitted non-zero, balance after forced recompute"
+  },
+  {
+   "line": 1191,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**`0.00`**; 4 of 4 clean controls unmoved; path identity true on all 9."
+  },
+  {
+   "line": 1192,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- T84 re-ran T83's probe and reproduced 5/5 and 4/4."
+  },
+  {
+   "line": 1193,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **T100 re-ran T84's probe itself** [`out/orderdep-t84probe-rerun-by-t100.json`]: the family-A cell"
+  },
+  {
+   "line": 1194,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`OD2-FAM1-R3p6-N360-B109` moves **`1.09` \u2192 `0.00`**; three clean controls (including an ordinary"
+  },
+  {
+   "line": 1195,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "MNT 1,200,000 loan) unmoved; path identity true on all 7; `paidPrincipal` restored on all 7."
+  },
+  {
+   "line": 1197,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "So **family A is precisely: the reference oracle's outstanding-balance column is stale with respect"
+  },
+  {
+   "line": 1198,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "to its own final EMI adjustment, while its principal column and its own totals are right.** That"
+  },
+  {
+   "line": 1199,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "sentence is true **of family A** \u2014 it was written into this file by T83 as a description of **all**"
+  },
+  {
+   "line": 1200,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "of G-8, and in that unscoped form it is **false**; see family B."
+  },
+  {
+   "line": 1204,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "## FAMILY B \u2014 the principal column itself never repays the loan"
+  },
+  {
+   "line": 1206,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "### Discriminator for family B"
+  },
+  {
+   "line": 1208,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "A cell is family B when the REPAYMENT rows' `principal` column **does not sum to the disbursed"
+  },
+  {
+   "line": 1209,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "amount**. On every family-B cell measured so far it sums to **0.00** against a **0.01** disbursement,"
+  },
+  {
+   "line": 1210,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`totalPrincipalAmount` reads `0.00`, **no** row carries a non-zero principal, the last row carries"
+  },
+  {
+   "line": 1211,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`interest 0.01`, and forcing the memo to recompute **does not move the balance**. This is exactly"
+  },
+  {
+   "line": 1212,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the test the driver's re-derivation named in advance as fatal to the family-A reframing when applied"
+  },
+  {
+   "line": 1213,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "to all of G-8: *\"If it ever fails to sum, the reframing above is **wrong** and G-8 is the broader"
+  },
+  {
+   "line": 1214,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "finding after all.\"* It failed."
+  },
+  {
+   "line": 1216,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "### What was measured, and over what domain \u2014 a MUCH narrower domain than family A"
+  },
+  {
+   "line": 1218,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**T84 measured 22 family-B cells; T100 measured 7 more.** Union of what has been observed:"
+  },
+  {
+   "line": 1220,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- annual rate **600.0 % \u2014 and no other rate has ever produced a family-B cell.** T84 swept 300.0 %"
+  },
+  {
+   "line": 1221,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "with B = 2 at n = 100, 150, **170\u2026204 contiguously**, 220 and 260 \u2014 **41 cells, all clean** \u2014 and"
+  },
+  {
+   "line": 1222,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "300.0 % with B = 1 at six terms up to n = 260 (n = 100, 150, 175, 196, 220, 260): the 300 %"
+  },
+  {
+   "line": 1223,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "failures are **family A** (their principal column sums) [VERIFIED by T100's re-classification of"
+  },
+  {
+   "line": 1224,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "T84's raw capture: 6 family-A cells at 300.0 %, 0 family-B. Domain re-derived by T140 from the"
+  },
+  {
+   "line": 1225,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "committed `.gz` captures: **the largest n asked at 300.0 % is 260 for both principals**, not 204 \u2014"
+  },
+  {
+   "line": 1226,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "204 is the top of the *contiguous* run only, and an earlier revision said \"B = 2 through n = 204\","
+  },
+  {
+   "line": 1227,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "which under-stated the domain. The 41 B = 2 cells cover 39 distinct n; n = 175 and n = 196 were"
+  },
+  {
+   "line": 1228,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "each asked twice and agree]."
+  },
+  {
+   "line": 1229,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- principal **MNT 0.01 (1 minor unit)** \u2014 no other principal has produced a family-B cell."
+  },
+  {
+   "line": 1230,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- repayment counts **n \u2208 {104\u2026122} \u222a {150, 200, 250}**: T84 measured 104\u2026121 contiguously plus 150"
+  },
+  {
+   "line": 1231,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "and 200 (22 cells, of which n = 108 and n = 120 were measured twice, once in each of its two"
+  },
+  {
+   "line": 1232,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "probes, agreeing); **T100 added n = 122 \u2014 one above T84's contiguous top of 121, but NOT above the"
+  },
+  {
+   "line": 1233,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "largest n T84 asked *at this shape*, which is 200 \u2014 and n = 250, which IS above every n T84 asked"
+  },
+  {
+   "line": 1234,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "*at 600.0 % / MNT 0.01*. Both are family B.** (T84's largest n **anywhere** is **600**, at 0.12 % \u2014"
+  },
+  {
+   "line": 1235,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`T84B-XL-R0p12-N600-B291` \u2014 so neither sentence holds unscoped; both hold at the family-B shape."
+  },
+  {
+   "line": 1236,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "Nothing above n = 250 has ever been asked at the family-B shape.) At **n = 103** the same shape is"
+  },
+  {
+   "line": 1237,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**clean** [T84; re-measured by T100. The n-set and the contiguity re-derived by T112 from the raw"
+  },
+  {
+   "line": 1238,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "captures, which also show T84's n at 600.0 % / MNT 0.01 running 88\u2026121 contiguously plus 60, 150"
+  },
+  {
+   "line": 1239,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "and 200. An earlier revision said both new cells were above the top of n T84 swept; only n = 250"
+  },
+  {
+   "line": 1240,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "is \u2014 T101 F-4. The scope qualifiers were added by T122 \u2014 T114 F-T114-2 \u2014 after re-deriving T84's"
+  },
+  {
+   "line": 1241,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "full n-set from its two committed raw captures: max n **600** overall (at rates {0.12, 1.2, 3.6}),"
+  },
+  {
+   "line": 1242,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "max n **200** at 600.0 % / MNT 0.01. The unscoped form contradicted this same section at"
+  },
+  {
+   "line": 1243,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "*\"terms up to n = 600\"* and at *\"n from 1 to 600\"* below]."
+  },
+  {
+   "line": 1245,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**The Go port reproduces family B cell for cell \u2014 0 divergent cells** [T84 over all 22; T100 through"
+  },
+  {
+   "line": 1246,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the real grader on `T100-FAMB-R600p0-N108-B1`: **761 graded cells, 0 cell diffs**]. On family B there"
+  },
+  {
+   "line": 1247,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "is **no oracle/port divergence at all**; both compute a schedule that does not repay the loan."
+  },
+  {
+   "line": 1249,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**Family B is NOT order-dependent** [T84, 3 of 3; **re-run by T100**, 3 of 3 unmoved at n = 104, 108,"
+  },
+  {
+   "line": 1250,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "120 while the family-A control in the same run moved 1.09 \u2192 0.00]. So the family-A mechanism above"
+  },
+  {
+   "line": 1251,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "does **not** explain family B, and no claim is made that it does."
+  },
+  {
+   "line": 1253,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "### What is NOT known about family B"
+  },
+  {
+   "line": 1255,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **Its cause.** T84 measured *that* it is not order-dependent and *that* the principal column sums"
+  },
+  {
+   "line": 1256,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "to zero; it did not locate the code path, and neither did T100. `[UNVERIFIED]`"
+  },
+  {
+   "line": 1257,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **Whether it exists at any other rate, at any other principal, or below n = 104.** Every family-B"
+  },
+  {
+   "line": 1258,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "cell ever measured is 600.0 % / MNT 0.01 / n \u2265 104. `[UNVERIFIED]`"
+  },
+  {
+   "line": 1259,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **Whether it terminates.** n = 250 fails; nothing above n = 250 has been asked. `[UNVERIFIED]`"
+  },
+  {
+   "line": 1260,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **`MinorUnitDigits \u2260 2`, and Path B / REST.** Not measured, by anyone. `[UNVERIFIED]`"
+  },
+  {
+   "line": 1264,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "## Option (a), RESCOPED \u2014 reachable today on family B, needs a port change on family A"
+  },
+  {
+   "line": 1266,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "Option (a) is *\"promote a parity vector for the region with an explicit invariant exemption.\"*"
+  },
+  {
+   "line": 1267,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "Whether that works **depends entirely on which family the vector covers**, because"
+  },
+  {
+   "line": 1268,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`invariant_exemptions` has power over invariant statuses and none over cell diffs"
+  },
+  {
+   "line": 1269,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "(`CheckInvariants` runs first at `grade.go:488` and the `len(diffs) > 0` early return at `:489-493`"
+  },
+  {
+   "line": 1270,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "short-circuits the **outcome**, not the computation [VERIFIED by T100 at those lines]; T83's earlier"
+  },
+  {
+   "line": 1271,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "citation of `:487-497` as if the diff check ran first was imprecise, per T84)."
+  },
+  {
+   "line": 1273,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**Both halves below were measured by T100 in a single run, with the REAL `conformance.Run` and the"
+  },
+  {
+   "line": 1274,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "REAL Go port, over a throw-away store under `/tmp`, on two cells transcribed from T100's own"
+  },
+  {
+   "line": 1275,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "capture. Nothing was written to `.softhouse/vectors`; the corpus count did not change**"
+  },
+  {
+   "line": 1276,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "[`out/exemption-demo-t100.json`; T84 measured the family-B half first, on its own capture, and T100's"
+  },
+  {
+   "line": 1277,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "run reproduces its numbers]."
+  },
+  {
+   "line": 1279,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| | **family B** (600.0 % / MNT 0.01 / n = 108) | **family A** (3.6 % / MNT 1.09 / n = 360) |"
+  },
+  {
+   "line": 1281,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| graded cells | 761 | 2525 |"
+  },
+  {
+   "line": 1282,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| cell diffs | **0** | **1** \u2014 `row 360 outstanding_principal_minor: expected 109, got 0` |"
+  },
+  {
+   "line": 1283,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| without any exemption | **FAIL**, `principal_portions_sum_to_disbursed` and `principal_amortizes_to_zero` **VIOLATED** | **FAIL** on the cell diff, all six invariants **HOLD** |"
+  },
+  {
+   "line": 1284,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| with exemptions | **PASS**, parityPass 1, 0 violations, **zero port change** | **FAIL \u2014 unchanged.** The exemptions register as EXEMPT and the cell diff still decides |"
+  },
+  {
+   "line": 1285,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| admissible | yes, both variants | yes, both variants |"
+  },
+  {
+   "line": 1287,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "So:"
+  },
+  {
+   "line": 1289,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **On family B, option (a) is reachable TODAY** \u2014 with the existing mechanism, **no port change**,"
+  },
+  {
+   "line": 1290,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "and no DEC-n amendment. The failure there is purely invariant, because the port agrees with the"
+  },
+  {
+   "line": 1291,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "oracle. This is the cheap option the gate's earlier text said did not exist; it exists, on the"
+  },
+  {
+   "line": 1292,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "family T83 never sampled."
+  },
+  {
+   "line": 1293,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **On family A, option (a) still requires a port change**, exactly as T83 concluded. Its full shape"
+  },
+  {
+   "line": 1294,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "is: change the port to emit the oracle's stale balance, *and then* carry the exemptions, because"
+  },
+  {
+   "line": 1295,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "at that point the port's own output would violate them. That is a port change no agent has made or"
+  },
+  {
+   "line": 1296,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "proposes to make unilaterally."
+  },
+  {
+   "line": 1298,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "T83's sentence *\"Option (a) is NOT reachable with the existing mechanism alone\"* is therefore **true"
+  },
+  {
+   "line": 1299,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "of family A and false of family B**, and it was recorded here unscoped."
+  },
+  {
+   "line": 1301,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**How to read the exit codes of those four runs \u2014 three of the four ARE this finding, and must not"
+  },
+  {
+   "line": 1302,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "be discounted.** `Summary.ExitCode()` returns **1** as soon as"
+  },
+  {
+   "line": 1303,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`ParityFail + ContractFail + SelfTestFail > 0 || InvariantViolations > 0`, **before it ever inspects"
+  },
+  {
+   "line": 1304,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`FatalReasons`** [VERIFIED by T112 at `nexus/internal/apps/loanschedule/conformance/grade.go:154-160`"
+  },
+  {
+   "line": 1305,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "on current `main`]. So:"
+  },
+  {
+   "line": 1307,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **FAMILY-B-NO-EXEMPTION (exit 1), FAMILY-A-NO-EXEMPTION (exit 1) and FAMILY-A-WITH-EXEMPTION"
+  },
+  {
+   "line": 1308,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "(exit 1)** exit non-zero **because of the G-8 failure itself** \u2014 the parity FAIL, plus on family"
+  },
+  {
+   "line": 1309,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "B the two invariant violations. Those three exit codes are the finding, not scratch-store noise."
+  },
+  {
+   "line": 1310,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **Only FAMILY-B-WITH-EXEMPTION's exit 2 is unrelated to G-8.** That run has no fail and no"
+  },
+  {
+   "line": 1311,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "violation, so control reaches the second branch and the corpus-level coverage fatal decides: a"
+  },
+  {
+   "line": 1312,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "one-vector scratch store cannot kill `monthend.reanchor`, which the full committed corpus does."
+  },
+  {
+   "line": 1313,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "That is an artefact of grading one vector in isolation and says nothing about either family."
+  },
+  {
+   "line": 1315,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "[VERIFIED by T112 from T100's own committed run record `out/exemption-demo-t100.json`: exit codes"
+  },
+  {
+   "line": 1316,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**1 / 2 / 1 / 1** with `parityFail` 1 / 0 / 1 / 1 and `invariantViolations` 2 / 0 / 0 / 0, in that"
+  },
+  {
+   "line": 1317,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "file's own order \u2014 `FAMILY-B-NO-EXEMPTION`, `FAMILY-B-WITH-EXEMPTION`, `FAMILY-A-NO-EXEMPTION`,"
+  },
+  {
+   "line": 1318,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`FAMILY-A-WITH-EXEMPTION`; T101 reproduced all four runs independently on `main`'s current port and"
+  },
+  {
+   "line": 1319,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "got the same codes.] An earlier revision said *each* variant's exit code had \"nothing to do with G-8\". That"
+  },
+  {
+   "line": 1320,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "was false for three of the four and taught the reader to discount an honest signal \u2014 T101 F-3. The"
+  },
+  {
+   "line": 1321,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**case outcome** and the invariant statuses in the table above remain the measurement; what changes"
+  },
+  {
+   "line": 1322,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "is that three of the four exit codes now agree with them instead of being waved away."
+  },
+  {
+   "line": 1324,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "Prepared and **NOT promoted**, for both families:"
+  },
+  {
+   "line": 1325,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`.softhouse/capture/t83-nonamortizing/proposed-vector-{no-exemption,with-exemption}.json` (T83,"
+  },
+  {
+   "line": 1326,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "family A at 21.6 % / MNT 0.01 / n = 6), `.softhouse/reviews/T84-evidence/proposed-vector-family2-{no-exemption,with-exemption}.json`"
+  },
+  {
+   "line": 1327,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "(T84, family B)."
+  },
+  {
+   "line": 1331,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "## The bound on the failing principal, RESTATED OVER THE DOMAIN ACTUALLY SWEPT"
+  },
+  {
+   "line": 1333,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "This file previously said *\"Every principal in the region is far below one MNT (the largest anywhere"
+  },
+  {
+   "line": 1334,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "in the sweep is MNT 0.23)\"*. That was true of **T83's grid** and false as a statement about the"
+  },
+  {
+   "line": 1335,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "graded domain. Restated, with the domain named each time:"
+  },
+  {
+   "line": 1337,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **Over T83's grid** (rates {7.0, 16.8, 21.6, 36.0} \u00d7 the **eight discrete terms**"
+  },
+  {
+   "line": 1338,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "n \u2208 {2, 3, 4, 6, 12, 24, 36, 56} \u2014 a set, not a contiguous range \u2014 principals 1..27 minor): the"
+  },
+  {
+   "line": 1339,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "largest failing principal is **MNT 0.23**, at 7.0 % / n = 56 [re-derived by T112 from T83's raw"
+  },
+  {
+   "line": 1340,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "capture; the discrete-term wording per T101 F-8]."
+  },
+  {
+   "line": 1341,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **Over the union of every cell T83, T84 and T100 have swept** (687 cells; 12 rates from 0.12 % to"
+  },
+  {
+   "line": 1342,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "600.0 %; n from 1 to 600): the largest failing principal is **MNT 2.91**, at 0.12 % / n = 600"
+  },
+  {
+   "line": 1343,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "[T84 measured it; **T100 re-measured that exact shape independently and reproduced it**, and"
+  },
+  {
+   "line": 1344,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "measured MNT 2.92 clean at the same shape; both re-derived again by T112 from the raw captures]."
+  },
+  {
+   "line": 1345,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**The two absolute figures are the statement \u2014 MNT 0.23 over T83's grid, MNT 2.91 over the union,"
+  },
+  {
+   "line": 1346,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "a ratio of 291 \u00f7 23 = 12.65\u00d7.** An earlier revision wrote \"**11.6\u00d7** the old bound\". That"
+  },
+  {
+   "line": 1347,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "multiple was taken against a *different* denominator \u2014 the \"below MNT 0.25\" bound this file"
+  },
+  {
+   "line": 1348,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "asserted before T83's grid was measured (2.91 \u00f7 0.25 = 11.64) \u2014 and the rewrite deleted every"
+  },
+  {
+   "line": 1349,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "mention of MNT 0.25, leaving a ratio whose denominator the reader could no longer find. It is"
+  },
+  {
+   "line": 1350,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "given in absolutes here so it cannot drift again [T101 F-2]."
+  },
+  {
+   "line": 1351,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **MNT 1.09 fails at 3.6 % p.a. over n = 360 \u2014 an ordinary 30-year monthly term at an ordinary"
+  },
+  {
+   "line": 1352,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "rate** [T84; **re-measured by T100**, `T100-FAMA-R3p6-N360-B109`, with MNT 1.10 clean beside it]."
+  },
+  {
+   "line": 1353,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "This is not sub-MNT dust and must not be described as such. It is still an absurdly small *loan*,"
+  },
+  {
+   "line": 1354,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "but the shape that produces it is not absurd."
+  },
+  {
+   "line": 1355,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- The region **grows as the term lengthens and as the rate falls**: at 0.12 % the largest failing"
+  },
+  {
+   "line": 1356,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "principal runs 59, 118, 176, 234, 291 minor units at n = 120, 240, 360, 480, 600 \u2014 i.e. \u2248 n/2"
+  },
+  {
+   "line": 1357,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "minor units, which is what the closed form below predicts in the limit r \u2192 0"
+  },
+  {
+   "line": 1358,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "[T100's re-derivation, `out/largest-failing.json`; every one of those bracketed by a measured clean"
+  },
+  {
+   "line": 1359,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "cell one minor unit above]."
+  },
+  {
+   "line": 1361,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**What was NOT swept, and therefore what this bound does not cover.** Only `MinorUnitDigits = 2`,"
+  },
+  {
+   "line": 1362,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "only MNT, only DAYS_30/DAYS_360, only MONTHS/1, only a single disbursement on the schedule start"
+  },
+  {
+   "line": 1363,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "date, no down payment, no charges, both multiples-of inputs null, only `(19, HALF_UP)`. Only twelve"
+  },
+  {
+   "line": 1364,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "annual rates were ever asked \u2014 {0.12, 1.2, 3.6, 7.0, 12.0, 16.8, 21.6, 36.0, 48.0, 96.0, 300.0,"
+  },
+  {
+   "line": 1365,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "600.0} \u2014 out of a continuum; nothing between 3.6 % and 7.0 %, nothing between 96 % and 300 %,"
+  },
+  {
+   "line": 1366,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "nothing above 600 %, nothing at or below 0 %. **No term above n = 600 has ever been asked**, and"
+  },
+  {
+   "line": 1367,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "since the largest failing principal grows with n, **the measurement establishes no upper bound on"
+  },
+  {
+   "line": 1368,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the failing principal over the graded domain as a whole** \u2014 only over the grid swept. The"
+  },
+  {
+   "line": 1369,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "practical reading \u2014 that no commercially realistic Mongolian loan *amount* has been observed to fail"
+  },
+  {
+   "line": 1370,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "\u2014 holds **over that grid**, and is not a proof about the domain."
+  },
+  {
+   "line": 1372,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "## The closed form \u2014 TESTED AND FALSIFIED outside the sampled grid"
+  },
+  {
+   "line": 1374,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "T83 registered *\"fails iff `B_minor \u00d7 a(r,n) < 0.5`\"*, where `a(r,n) = r/(1\u2212(1+r)^\u2212n)` and"
+  },
+  {
+   "line": 1375,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`r = annual/100/12`, and **labelled it a HYPOTHESIS CONSISTENT WITH the measurement rather than a"
+  },
+  {
+   "line": 1376,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "measured fact**. **That call was right, and T84's measurement vindicated it.** On T83's own grid it"
+  },
+  {
+   "line": 1377,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "held on all 32 shapes, 106 of 106 registered predictions, 0 refuted [`check-prediction.py`, exit 0,"
+  },
+  {
+   "line": 1378,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "re-run by T84 with the same result]."
+  },
+  {
+   "line": 1380,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**It is false outside that grid.** T100 re-evaluated it in **exact rational arithmetic**: over"
+  },
+  {
+   "line": 1381,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "T83's own 330 cells it holds **330 of 330**; over all 342 non-calibration cells of T84's two"
+  },
+  {
+   "line": 1382,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "captures, **320 held, 22 refuted, 0 exact ties**"
+  },
+  {
+   "line": 1383,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "[`src/closed_form_check.py`, `out/closed-form-check.json`]. **Every one of the 22 refutations is a"
+  },
+  {
+   "line": 1384,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "family-B cell** \u2014 600.0 % / B = 1 / n \u2265 104 \u2014 where the closed form predicts CLEAN (the exact gap"
+  },
+  {
+   "line": 1385,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`B\u00b7a \u2212 \u00bd` is positive: `+2.429e-19` at n = 104, falling to `+3.025e-36` at n = 200) and the oracle"
+  },
+  {
+   "line": 1386,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**fails**. The gap is below the ulp of \u00bd at 19 significant digits (**1e-19**) on **25 of the 29**"
+  },
+  {
+   "line": 1387,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "measured family-B cells \u2014 and **NOT** on the four at **n = 104, 105 and 106**, where it is **2.43,"
+  },
+  {
+   "line": 1388,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "1.62 and 1.08 ulp** respectively. So a sub-ulp argument does not reach the cells at the region's"
+  },
+  {
+   "line": 1389,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**lower boundary**, which is where the phenomenon starts and therefore where its cause will be"
+  },
+  {
+   "line": 1390,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "decided. Sub-ulp quantization of the EMI in the oracle's own `(19, HALF_UP)` arithmetic is offered"
+  },
+  {
+   "line": 1391,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "as a possible explanation **for the other 25**, not as a verified mechanism, and it is **not** an"
+  },
+  {
+   "line": 1392,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "explanation for n = 104\u2026106 `[UNVERIFIED]`."
+  },
+  {
+   "line": 1394,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "[Re-derived independently by T122 in **exact rational arithmetic** (`fractions.Fraction`, money"
+  },
+  {
+   "line": 1395,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "parsed as integer minor units, the comparison made against `Fraction(1, 10**19)` \u2014 no float on any"
+  },
+  {
+   "line": 1396,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "decision path, P-25) over all 29 family-B cells of the four committed raw captures. Exact gaps:"
+  },
+  {
+   "line": 1397,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "n=104 `+2.4293e-19` = 2.43 ulp (two cells, `T84B-NSW-R600p0-N104-B1` and `T100-FAMB-R600p0-N104-B1`,"
+  },
+  {
+   "line": 1398,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "agreeing); n=105 `+1.6195e-19` = 1.62 ulp; n=106 `+1.0797e-19` = 1.08 ulp; then n=107 `+7.1979e-20`"
+  },
+  {
+   "line": 1399,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "= 0.72 ulp and everything above it strictly smaller, down to n=250 `+4.7441e-45`. The gap is"
+  },
+  {
+   "line": 1400,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "strictly positive on all 29 and strictly decreasing across the 22 distinct n, so the ulp crossing is"
+  },
+  {
+   "line": 1401,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**between n = 106 and n = 107** and is crossed exactly once. An earlier revision stated the sub-ulp"
+  },
+  {
+   "line": 1402,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "claim over the whole family; it contradicted the `+2.429e-19` figure quoted on the line above it \u2014"
+  },
+  {
+   "line": 1403,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "T114 F-T114-1.]"
+  },
+  {
+   "line": 1405,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**What the failure at n = 104\u2026106 means for the open question of family B's cause.** Family B's"
+  },
+  {
+   "line": 1406,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "mechanism is still `[UNVERIFIED]` and this narrows what may be assumed about it:"
+  },
+  {
+   "line": 1408,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **A \"the EMI quantizes to zero because the gap is beneath the arithmetic's resolution\" story is"
+  },
+  {
+   "line": 1409,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "refuted at the region's first three terms.** At n = 104 the residual is more than **two** units in"
+  },
+  {
+   "line": 1410,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the last place of \u00bd carried at the tenant's ratified precision \u2014 a difference the oracle's own"
+  },
+  {
+   "line": 1411,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`(19, HALF_UP)` arithmetic **can** represent. Whatever makes those cells fail is therefore not"
+  },
+  {
+   "line": 1412,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "simple exhaustion of significant digits, and any candidate mechanism must explain n = 104, 105 and"
+  },
+  {
+   "line": 1413,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "106 on its own terms."
+  },
+  {
+   "line": 1414,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **The boundary of the region and the boundary of the sub-ulp condition do not coincide.** The"
+  },
+  {
+   "line": 1415,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "region starts at n = 104 (n = 102 and n = 103 are measured clean at the same shape); the sub-ulp"
+  },
+  {
+   "line": 1416,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "condition starts at n = 107. A cause that tracked the sub-ulp condition would have put the"
+  },
+  {
+   "line": 1417,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "region's edge at 107. It is at 104, so the two are different thresholds and at most one of them"
+  },
+  {
+   "line": 1418,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "can be the cause."
+  },
+  {
+   "line": 1419,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **Consequently the sub-ulp observation is a correlate over 25 of 29 cells, not the explanation of"
+  },
+  {
+   "line": 1420,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the family**, and it must not be used to argue that family B is confined to residuals too small to"
+  },
+  {
+   "line": 1421,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "matter. The next worker on family B should start at **n = 104**, not in the sub-ulp tail, and"
+  },
+  {
+   "line": 1422,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "should treat locating the code path \u2014 which neither T84, T100, T101, T112 nor T114 did \u2014 as the"
+  },
+  {
+   "line": 1423,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "open work."
+  },
+  {
+   "line": 1425,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**A count correction \u2014 and its cause is a FLOAT.** T84's write-up records **18** refutations;"
+  },
+  {
+   "line": 1426,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "T100's exact-rational evaluation over the same 342 cells finds **22**. **T101 adjudicated the"
+  },
+  {
+   "line": 1427,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "dispute by recomputing from the raw captures in exact rational arithmetic and RULED FOR 22** \u2014 over"
+  },
+  {
+   "line": 1428,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "T83's 330 cells 330 held and 0 were refuted; over T84's 342 cells **320 held, 22 refuted, and there"
+  },
+  {
+   "line": 1429,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "were 0 exact ties at all**."
+  },
+  {
+   "line": 1431,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "The four disputed cells are T84's own probe-1 \"tie\" cells"
+  },
+  {
+   "line": 1432,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`T84-TIE-R600p0-N{108,120,150,200}-B1`. **T84's `.softhouse/reviews/T84-evidence/prediction.json`"
+  },
+  {
+   "line": 1433,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "stores `BtimesA` for them as the IEEE-754 double `0.5`** \u2014 e.g."
+  },
+  {
+   "line": 1434,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`{\"B\": 1, \"BtimesA\": 0.5, \"n\": 108, \"predictedFails\": false}`. In exact rational arithmetic"
+  },
+  {
+   "line": 1435,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`B\u00b7a \u2212 \u00bd` at those shapes is strictly **positive** and of order 1e-20 (`+4.799e-20` at n = 108), so"
+  },
+  {
+   "line": 1436,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the closed form predicts CLEAN there and the measured FAIL refutes it. Double precision cannot"
+  },
+  {
+   "line": 1437,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "resolve a residual that small, so four strict inequalities were read as exact ties and dropped from"
+  },
+  {
+   "line": 1438,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the count [T101's ruling and its diagnosis; the stored literal `0.5` re-read by T112 from the"
+  },
+  {
+   "line": 1439,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "committed `prediction.json`]."
+  },
+  {
+   "line": 1441,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**Record the cause, not just the correction.** The difference between \"two agents counted"
+  },
+  {
+   "line": 1442,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "differently\" and \"a float in an analysis script put a wrong number into the document the product"
+  },
+  {
+   "line": 1443,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "owner reads\" is the whole point of this project's no-floating-point rule. That rule visibly bound"
+  },
+  {
+   "line": 1444,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the port, the schema, the vectors and the fixtures; it did not visibly bind the **analysis and"
+  },
+  {
+   "line": 1445,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "prediction scripts**, and this is exactly what that gap costs \u2014 the script graded nothing, and its"
+  },
+  {
+   "line": 1446,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "float still reached this gate. **22 is the count.** The rule is now written down as **P-25** in"
+  },
+  {
+   "line": 1447,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`.softhouse/patterns.md`: it binds anything whose output is used to reason about money, and the test"
+  },
+  {
+   "line": 1448,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "is *\"if this number is wrong, does a wrong money claim reach a human?\"*"
+  },
+  {
+   "line": 1450,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "### Two KNOWN DEFECTS in this gate's own probe sources \u2014 recorded, deliberately NOT fixed"
+  },
+  {
+   "line": 1452,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "Found by T114 while reviewing T112 and re-verified by T122. **Neither changes any published number**"
+  },
+  {
+   "line": 1453,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "\u2014 that is stated below as a measurement, not as an assurance. Both are left byte-identical on"
+  },
+  {
+   "line": 1454,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "purpose: these are **executed probe sources**, and editing one \u2014 even a comment \u2014 destroys the"
+  },
+  {
+   "line": 1455,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "byte-reproducibility of a committed capture from the sources that produced it, which is the property"
+  },
+  {
+   "line": 1456,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "that makes the evidence above worth anything. The same reasoning T112 applied in"
+  },
+  {
+   "line": 1457,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`.softhouse/capture/t100-g8-rescope/CORRECTIONS-T112.md` applies here. **A future re-run of either"
+  },
+  {
+   "line": 1458,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "script must fix these FIRST, in a new pass with new ids, and must not silently re-emit into the"
+  },
+  {
+   "line": 1459,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "existing `out/` directories.**"
+  },
+  {
+   "line": 1461,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "1. **A LIVE FLOAT in an analysis script \u2014 P-25 in a file, not in a lesson.**"
+  },
+  {
+   "line": 1462,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`.softhouse/capture/t83-nonamortizing/src/classify-boundary.py:102` sorts with"
+  },
+  {
+   "line": 1463,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`key=lambda kv: (float(kv[0][0]), kv[0][1])`, while the same file's own header at **`:20`** states"
+  },
+  {
+   "line": 1464,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "*\"Nothing here constructs a float.\"* **The header is false.** This is the *second* live instance"
+  },
+  {
+   "line": 1465,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "of exactly the gap the paragraph above is about, and it is sitting inside this gate's own evidence"
+  },
+  {
+   "line": 1466,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "set. **No published result is affected, and T122 measured that rather than asserting it:** the"
+  },
+  {
+   "line": 1467,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`float()` is a sort key over annual-rate *labels* only \u2014 no money value is converted, and no"
+  },
+  {
+   "line": 1468,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "classification, comparison or count reads it. T122 copied the script unmodified to a scratch"
+  },
+  {
+   "line": 1469,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "directory, produced a variant differing **only** in that one key (`fractions.Fraction(str(...))`"
+  },
+  {
+   "line": 1470,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "instead of `float(...)`), and ran both against the committed capture: the emitted"
+  },
+  {
+   "line": 1471,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`measured-boundary.json` files are **identical**, the stdout boundary tables are **identical row"
+  },
+  {
+   "line": 1472,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "for row**, and the unmodified run reproduces the committed"
+  },
+  {
+   "line": 1473,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`out/measured-boundary.json` **exactly**. The four labels T83 swept \u2014 7.0, 16.8, 21.6, 36.0 \u2014 order"
+  },
+  {
+   "line": 1474,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the same way under either key. The sibling scripts got this right and said so precisely"
+  },
+  {
+   "line": 1475,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "(`swept_domain.py:6`; `closed_form_check.py:13-16`)."
+  },
+  {
+   "line": 1476,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "2. **`closed_form_check.py` crashes on its own all-clean path.**"
+  },
+  {
+   "line": 1477,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`.softhouse/capture/t100-g8-rescope/src/closed_form_check.py:83` computes"
+  },
+  {
+   "line": 1478,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`min(abs(r['gap_float']) for r in refuted)` with no guard for an empty `refuted`, so an input with"
+  },
+  {
+   "line": 1479,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**zero** refutations exits **1** with `ValueError: min() arg is an empty sequence`. **No recorded"
+  },
+  {
+   "line": 1480,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "number is affected:** every count prints *before* the crash, and the committed"
+  },
+  {
+   "line": 1481,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`out/closed-form-check.json` was written by the 342-cell T84 run where `refuted` has 22 members"
+  },
+  {
+   "line": 1482,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "and the crash path is not taken. T122 re-ran the script unmodified from a scratch copy (sha256"
+  },
+  {
+   "line": 1483,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`55ecbc8f\u2026`, byte-identical to the committed source, and the committed `out/` untouched): on T83's"
+  },
+  {
+   "line": 1484,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "330 cells it prints **330 / 330 held / 0 refuted / 0 ties** and *then* exits 1; on T84's two"
+  },
+  {
+   "line": 1485,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "captures it prints **342 / 320 held / 22 refuted / 0 ties**, exits 0, and its output is"
+  },
+  {
+   "line": 1486,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**byte-identical to the committed `out/closed-form-check.json`**. The hazard is a signalling one:"
+  },
+  {
+   "line": 1487,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "a script whose job is to report refutations returns a **failure exit on the clean input**, which a"
+  },
+  {
+   "line": 1488,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "future re-runner will read as \"the check failed\" when it means \"there was nothing to report\"."
+  },
+  {
+   "line": 1490,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**So: the closed form is a good description of family A on the grid where it was fitted, and it is"
+  },
+  {
+   "line": 1491,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "not a law. It does not predict family B at all.** No claim is made for any un-sampled rate, term or"
+  },
+  {
+   "line": 1492,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "day-count."
+  },
+  {
+   "line": 1494,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "## The three options, still undecided \u2014 (b) and (c) remain a hard `user` gate"
+  },
+  {
+   "line": 1496,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **(a)** promote a parity vector for the region with an explicit invariant exemption. **Reachable"
+  },
+  {
+   "line": 1497,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "today on family B with zero port change; requires a port change on family A.** Scope any decision"
+  },
+  {
+   "line": 1498,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "to one family; a vector for one says nothing about the other."
+  },
+  {
+   "line": 1499,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **(b)** refuse the region from the graded domain as a documented contract-refusal vector. Cheap in"
+  },
+  {
+   "line": 1500,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "code for family A over the grid swept \u2014 but the region is **not** fully bounded (see the bound"
+  },
+  {
+   "line": 1501,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "above: no term beyond n = 600 has been asked, and family B has been seen at only one rate), and it"
+  },
+  {
+   "line": 1502,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "is a **graded-domain amendment**."
+  },
+  {
+   "line": 1503,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "- **(c)** treat it as an oracle defect and diverge deliberately, keeping the port's `0`. That is what"
+  },
+  {
+   "line": 1504,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the port does *today, ungraded, on family A only* \u2014 **on family B the port emits the same"
+  },
+  {
+   "line": 1505,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "non-amortizing schedule the oracle does, so there is nothing to diverge from and (c) does not"
+  },
+  {
+   "line": 1506,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "describe family B at all.**"
+  },
+  {
+   "line": 1508,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**(b) and (c) both amend the graded domain, which is a change to a ratified DEC-n \u2014 a hard `user`"
+  },
+  {
+   "line": 1509,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "gate no agent may cross.** Buyan decides. T83, T84, T100, T101, T112, **T114, T122, T129 and T140**"
+  },
+  {
+   "line": 1510,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "have each handled them and"
+  },
+  {
+   "line": 1511,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**decided none, recommended none, and pre-implemented none**; they attach only the measurement and"
+  },
+  {
+   "line": 1512,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the scoping. T112's whole mandate was the write-up: it corrected sentences and deleted a superseded"
+  },
+  {
+   "line": 1513,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "block, and it moved nothing about the gate's substance; T114, T122, T129 and T140 likewise touched"
+  },
+  {
+   "line": 1514,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "only the prose. **This roster is the section's own non-decision attestation, so it must name every"
+  },
+  {
+   "line": 1515,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "task that has reviewed or edited the section \u2014 T114 and T122 were missing until T140 added them"
+  },
+  {
+   "line": 1516,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "(T129 F-T129-4), and the omission was invisible to a reader. If you edit this section, add"
+  },
+  {
+   "line": 1517,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "yourself here.**"
+  },
+  {
+   "line": 1519,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**What unblocks it**: a `user` decision, now on **two** phenomena rather than one. **What it"
+  },
+  {
+   "line": 1520,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "blocks**: nothing today \u2014 no vector covers either family and the conformance run is exit 0 without"
+  },
+  {
+   "line": 1521,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "them. **What it leaves uncovered**: over the union of everything T83, T84 and T100 swept, **341"
+  },
+  {
+   "line": 1522,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "measured divergent-or-invalid cells** sit outside the corpus \u2014 **312 family-A port-vs-oracle"
+  },
+  {
+   "line": 1523,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "divergences** plus **29 family-B cells where the PORT ITSELF emits a schedule that does not repay"
+  },
+  {
+   "line": 1524,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the loan and no vector says so**. The last 29 are the worse half. (T84's narrower accounting gave"
+  },
+  {
+   "line": 1525,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**331** \u2014 198 T83 + 111 T84 family-A plus 22 family-B \u2014 because it predates T100's own cells;"
+  },
+  {
+   "line": 1526,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "331 is right on T84's set and 341 is right on this section's union, which is the set every other"
+  },
+  {
+   "line": 1527,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "figure here is stated over \u2014 T101 F-6. T101 then re-graded the whole union through the real"
+  },
+  {
+   "line": 1528,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`conformance.Run` and the real port on current `main`: all **312** family-A cells give **exactly"
+  },
+  {
+   "line": 1529,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "one** diff each, always the final row's `outstanding_principal_minor`, and all **29** family-B"
+  },
+  {
+   "line": 1530,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "cells give **0 cell diffs across 25,751 graded cells**. Family counts re-derived independently"
+  },
+  {
+   "line": 1531,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "again by T112 from the four committed raw captures: 687 swept / 312 family A / 29 family B / 346"
+  },
+  {
+   "line": 1532,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "clean.)"
+  },
+  {
+   "line": 1534,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**Conformance is unmoved by this rewrite**: `bash .softhouse/conformance.sh` \u2192 **VERDICT PASS, exit"
+  },
+  {
+   "line": 1535,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "0, 42 parity vectors, 5576 graded cells, 0 invariant violations**. Nothing was promoted; `PIN.json`"
+  },
+  {
+   "line": 1536,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "and `capabilities.json` are untouched."
+  },
+  {
+   "line": 1538,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "### Evidence"
+  },
+  {
+   "line": 1540,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**Family A, committed on `softhouse/T83-nonamortizing-boundary`** \u2014 `.softhouse/capture/t83-nonamortizing/`:"
+  },
+  {
+   "line": 1541,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`PREDICTION.md`, `predicted-boundary.json`, `src/CaptureT83.java`, `src/run-t83.sh`,"
+  },
+  {
+   "line": 1542,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`src/classify-boundary.py`, `src/check-prediction.py`, `src/ProbeOrderDep.java`,"
+  },
+  {
+   "line": 1543,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`src/run-orderdep.sh`, `src/t83port.go.txt`, `src/run-port.py`, `src/t83grade.go.txt`,"
+  },
+  {
+   "line": 1544,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`src/run-exemption-demo.py`, and under `out/`: `capture-t83-raw.json`,"
+  },
+  {
+   "line": 1545,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`capture-t83-attestation.json`, `capture-t83-oracle-log.txt`, `measured-boundary.json`,"
+  },
+  {
+   "line": 1546,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`port-vs-oracle.json`, `orderdep.json`, `exemption-demo.json`."
+  },
+  {
+   "line": 1548,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**Family B, committed on `softhouse/T84-review-t83`** (and copied unmodified onto"
+  },
+  {
+   "line": 1549,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`softhouse/T100-g8-two-families` so these citations resolve) \u2014 `.softhouse/reviews/T84-evidence/`:"
+  },
+  {
+   "line": 1550,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`PREDICTION.md`, `prediction.json`, `prediction2.json`, `src/CaptureT84.java`,"
+  },
+  {
+   "line": 1551,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`src/CaptureT84B.java`, `src/ProbeOrderDep2.java`, `src/run-t84.sh`, `src/run-orderdep2.sh`,"
+  },
+  {
+   "line": 1552,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`src/exemption-demo.py`, `src/classify.py`, `src/eval-probe{1,2}.py`,"
+  },
+  {
+   "line": 1553,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`proposed-vector-family2-{no-exemption,with-exemption}.json`, and under `out/`:"
+  },
+  {
+   "line": 1554,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`capture-t84-raw.json{,.gz}`, `capture-t84b-raw.json{,.gz}`, `port-vs-oracle.json`,"
+  },
+  {
+   "line": 1555,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`orderdep2.json`, `exemption-demo.json`. Review: `.softhouse/reviews/T84-review-t83.md`."
+  },
+  {
+   "line": 1557,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> **READ THIS BEFORE ANALYSING THOSE TWO CAPTURES \u2014 the `.gz` is the capture, the `.json` is an"
+  },
+  {
+   "line": 1558,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> extract.** `out/` holds **both** forms of each T84 capture and they are **not** the same evidence."
+  },
+  {
+   "line": 1559,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> `capture-t84-raw.json.gz` holds **251** cases and `capture-t84b-raw.json.gz` holds **95** \u2014 these"
+  },
+  {
+   "line": 1560,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> are the captures, and **every count in this section is derived from them**. The plain"
+  },
+  {
+   "line": 1561,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> `capture-t84-raw.json` (**15** cases) and `capture-t84b-raw.json` (**14** cases) are committed"
+  },
+  {
+   "line": 1562,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> **extracts**, retaining only the cases cited in `T84-review-t83.md`. They are strict,"
+  },
+  {
+   "line": 1563,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> content-identical **subsets**: no id in an extract is absent from its `.gz`, and every id present"
+  },
+  {
+   "line": 1564,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> in both is byte-identical under a canonical dump [VERIFIED independently by T129 and again by"
+  },
+  {
+   "line": 1565,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> T140]. Each extract also records the full capture's canonical sha256 in"
+  },
+  {
+   "line": 1566,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> `_t84_full_captures_canonical_sha256`, and **that digest reproduces exactly over the `.gz`"
+  },
+  {
+   "line": 1567,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> captures array** \u2014 `3900a204\u2026ccdcbf17` for t84 (251 cases) and `47611b04\u202622723313` for t84b (95"
+  },
+  {
+   "line": 1568,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> cases) \u2014 which is independent provenance that the `.gz` is the capture and the extract is a"
+  },
+  {
+   "line": 1569,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> faithful excerpt of it [VERIFIED by T140 under `run-t84.sh:109`'s own recipe,"
+  },
+  {
+   "line": 1570,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> `json.dumps(caps, sort_keys=True, separators=(',',':'))`; the digest is recipe-sensitive, and a"
+  },
+  {
+   "line": 1571,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> canonicalisation that differs in `ensure_ascii` reproduces neither]. **Analysing the plain files"
+  },
+  {
+   "line": 1572,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> silently yields a plausible wrong answer** \u2014 it produces **16** family-B cells and **3**"
+  },
+  {
+   "line": 1573,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> non-sub-ulp exceptions against the true **29** and **4**, and nothing about the run looks wrong,"
+  },
+  {
+   "line": 1574,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> because a subset of a capture is a perfectly well-formed capture. T122 hit this and caught it;"
+  },
+  {
+   "line": 1575,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> T129 reproduced the wrong numbers exactly, and **T140 reproduced them a third time** \u2014 running its"
+  },
+  {
+   "line": 1576,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> own classifier over the extracts gives **370** total swept cells and **16** family B (distinct"
+  },
+  {
+   "line": 1577,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> n = {104, 105, 108, 120, 121, 122, 150, 200, 250}, of which n = 104 twice and n = 105 give the 3"
+  },
+  {
+   "line": 1578,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "> non-sub-ulp exceptions), against the true **687** and **29**."
+  },
+  {
+   "line": 1580,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**The two-family split, committed on `softhouse/T100-g8-two-families`** \u2014"
+  },
+  {
+   "line": 1581,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`.softhouse/capture/t100-g8-rescope/`: `PREDICTION.md` (registered in an ancestor commit),"
+  },
+  {
+   "line": 1582,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`prediction.json`, `src/gencases.py`, `src/build_harness.py`, `src/CaptureT100.java`,"
+  },
+  {
+   "line": 1583,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`src/run-t100.sh`, `src/postcheck.py`, `src/classify_two_families.py`, `src/column_shape.py`,"
+  },
+  {
+   "line": 1584,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`src/closed_form_check.py`, `src/largest_failing.py`, `src/swept_domain.py`,"
+  },
+  {
+   "line": 1585,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`src/exemption_demo_t100.py`, and under `out/`: `capture-t100-raw.json`,"
+  },
+  {
+   "line": 1586,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`t83-reclassified.json`, `t84-reclassified.json`, `t100-classified.json`,"
+  },
+  {
+   "line": 1587,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`column-shape-{t83,t84,t100}.json`, `closed-form-check.json`, `largest-failing.json`,"
+  },
+  {
+   "line": 1588,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`orderdep-t84probe-rerun-by-t100.json`, `exemption-demo-t100.json`."
+  },
+  {
+   "line": 1590,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**The independent review that rejected T100's write-up and reproduced its measurement over a wider"
+  },
+  {
+   "line": 1591,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "cell set, committed on `softhouse/T101-review-t100`** \u2014 `.softhouse/reviews/T101-review-of-T100.md`"
+  },
+  {
+   "line": 1592,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "(56-row sentence-by-sentence scope table; all 29 family-B cells re-graded through the real"
+  },
+  {
+   "line": 1593,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`conformance.Run` on `main`'s current port for 25,751 graded cells and 0 cell diffs; all 312"
+  },
+  {
+   "line": 1594,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "family-A cells re-graded for exactly one diff each; the 18-vs-22 ruling) and"
+  },
+  {
+   "line": 1595,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T101.md`."
+  },
+  {
+   "line": 1597,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**The corrections, committed on `softhouse/T112-g8-rework-retry`** \u2014 this section as it now stands,"
+  },
+  {
+   "line": 1598,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "plus `.softhouse/capture/t100-g8-rescope/CORRECTIONS-T112.md`, which records the one superseded"
+  },
+  {
+   "line": 1599,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "phrasing (T101 F-4) still carried by that directory's **registered prediction and executed probe"
+  },
+  {
+   "line": 1600,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "sources**, and why those four files were deliberately left byte-identical rather than edited."
+  },
+  {
+   "line": 1601,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "T112 measured nothing new against the reference oracle: every number it added or changed was"
+  },
+  {
+   "line": 1602,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "re-derived in integer minor units from the four already-committed raw captures, or read from"
+  },
+  {
+   "line": 1603,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`grade.go` and `out/exemption-demo-t100.json` in this repository."
+  },
+  {
+   "line": 1605,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**The independent review of T112, committed on `softhouse/T114-review-t112`** \u2014"
+  },
+  {
+   "line": 1606,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`.softhouse/reviews/T114-review-of-T112.md` and"
+  },
+  {
+   "line": 1607,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T114.md`. **VERDICT MICRO-FIX.** T114 wrote"
+  },
+  {
+   "line": 1608,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "its own classifier from scratch, sharing no code with T83's, T84's, T100's or T112's, and"
+  },
+  {
+   "line": 1609,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**re-derived every load-bearing number in this section \u2014 all of it reproduced**: 687 / 312 / 29 /"
+  },
+  {
+   "line": 1610,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "346, all ten discriminator rows on 341 of 341 cells, the 11-of-12 rate split, MNT 0.23 / MNT 2.91 /"
+  },
+  {
+   "line": 1611,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "12.65\u00d7 / MNT 1.09, 761-with-0-diffs and 2525-with-1-diff, 198 divergent cells one per case, 106/106"
+  },
+  {
+   "line": 1612,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "predictions, 330/330 and 320-held/22-refuted/0-ties, both canonical digests, and **every** Fineract"
+  },
+  {
+   "line": 1613,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "and `grade.go` citation. It also **attacked the rig** (P-22): T83's prediction checker was driven"
+  },
+  {
+   "line": 1614,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "red three ways and probed for vacuity, and it **fails closed** on an empty measurement. It found two"
+  },
+  {
+   "line": 1615,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "false sentences \u2014 corrected by T122 below \u2014 and **refused a false premise in its own dispatch"
+  },
+  {
+   "line": 1616,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "brief** (P-20): the brief attributed the family-B exemption result to family A for the **third**"
+  },
+  {
+   "line": 1617,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "time, which is the error `main` had already corrected in `95ec06a`."
+  },
+  {
+   "line": 1619,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**T114's findings applied, committed on `softhouse/T122-g8-t114-fixes`** \u2014 this section as it now"
+  },
+  {
+   "line": 1620,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "stands, plus the KNOWN-DEFECTS record in `CORRECTIONS-T112.md` and"
+  },
+  {
+   "line": 1621,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`.softhouse/capture/t83-nonamortizing/KNOWN-DEFECTS.md`, and the corrections to T112's and T100's"
+  },
+  {
+   "line": 1622,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "handoffs. T122 contacted the reference oracle **not at all** and measured nothing new against it:"
+  },
+  {
+   "line": 1623,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "the four family-B ulp gaps were re-derived in **exact rational arithmetic** from the committed raw"
+  },
+  {
+   "line": 1624,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "captures, T84's full n-set and the 12 `T84-RP-*` re-ask were re-derived the same way, and the two"
+  },
+  {
+   "line": 1625,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "probe-source defects were re-verified by running unmodified copies from a scratch directory. It"
+  },
+  {
+   "line": 1626,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "changed no vector, no `PIN.json`, no `capabilities.json`, no `contract.go` and no `nexus/` file, and"
+  },
+  {
+   "line": 1627,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "it left `.softhouse/tasks.json` at the **merge-base blob `7e49bd93`**, so the branch authors **no"
+  },
+  {
+   "line": 1628,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "change at all** to the orchestrator's file and any merge into any future `main` takes `main`'s side"
+  },
+  {
+   "line": 1629,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "with no conflict (F-T114-3, the evil merge in `eea5e80`; a snapshot of `main` was tried first and"
+  },
+  {
+   "line": 1630,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "was rejected because `main` edits that file continuously \u2014 `git diff main --"
+  },
+  {
+   "line": 1631,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": ".softhouse/tasks.json` on the branch is therefore **not** empty, and that is the correct state for a"
+  },
+  {
+   "line": 1632,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "file the branch must not touch). **Do not \"fix\" that diff.** The check that means anything is the"
+  },
+  {
+   "line": 1633,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "post-merge one, and it passes: on a scratch merge into current `main` the merged tree's"
+  },
+  {
+   "line": 1634,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "`tasks.json` blob equals `main`'s exactly and the path does not appear in the merge at all"
+  },
+  {
+   "line": 1635,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "[VERIFIED by T122 against `main@79a67d1`, by T129 against `main@fdcdf09` and `main@e35ea7b`, and by"
+  },
+  {
+   "line": 1636,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "T140 against `main@c535841` \u2014 **four different `main` heads, none of which the disposition was"
+  },
+  {
+   "line": 1637,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "designed against**, which is the whole point of it. The line count of that diff is a function of how"
+  },
+  {
+   "line": 1638,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "far `main` has moved since the merge base, so no single value belongs in this file: it was 1,097"
+  },
+  {
+   "line": 1639,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "lines at `main@e35ea7b`, 1,258 at `main@bcf2c55`, and 1,326 at `main@c535841` \u2014 three readings"
+  },
+  {
+   "line": 1640,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "during a single task and its review]."
+  },
+  {
+   "line": 1642,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**T129's findings applied, committed on `softhouse/T140-g8-t129-fixes`** \u2014 this section as it now"
+  },
+  {
+   "line": 1643,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "stands, plus the same five-site sweep applied to `T112.md`. T140 contacted the reference oracle"
+  },
+  {
+   "line": 1644,
+   "block": "MAIN",
+   "kind": "bullet",
+   "text": "**not at all**: the 687-cell split, the 29 family-B cells, the four ulp gaps and the crossing, the"
+  },
+  {
+   "line": 1645,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "300.0 % domain, the twelve `T84-RP-*` partner positions and the two capture-extract digests were all"
+  },
+  {
+   "line": 1646,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "re-derived from the committed capture bytes in **exact rational and integer arithmetic**, by a"
+  },
+  {
+   "line": 1647,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "script sharing no code with T83's, T84's, T100's, T112's, T114's, T122's or T129's classifiers. It"
+  },
+  {
+   "line": 1648,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "changed no vector, no `PIN.json`, no `capabilities.json`, no `contract.go` and no `nexus/` file, and"
+  },
+  {
+   "line": 1649,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "it left `.softhouse/tasks.json` at the merge-base blob exactly as T122 did."
+  },
+  {
+   "line": 1825,
+   "block": "NOTICE",
+   "kind": "heading",
+   "text": "## G-8 \u2014 NOTICE, local fire `20260821-134344`: T117's measurement moves the bound. **REVIEWED \u2014 T159 APPROVED. See the UPDATE at the end of this block: the number has since DOUBLED.**"
+  },
+  {
+   "line": 1827,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "**Status of this block: T117 has reported; its paired reviewer T159 has NOT.** The driver is recording the"
+  },
+  {
+   "line": 1828,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "measurement here rather than rewriting G-8, because rewriting a gate Buyan decides on, on the strength of a"
+  },
+  {
+   "line": 1829,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "single unreviewed worker report, is precisely the mistake that produced **P-40** and **P-46** this same fire."
+  },
+  {
+   "line": 1830,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "**Nothing below may be quoted to Buyan, or into any disclosure, until T159 returns a verdict.** The"
+  },
+  {
+   "line": 1831,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "sentence-by-sentence rebuild G-8's STANDING RULE requires has deliberately **not** been done."
+  },
+  {
+   "line": 1833,
+   "block": "NOTICE",
+   "kind": "heading",
+   "text": "### The headline, if it survives review"
+  },
+  {
+   "line": 1835,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "**The failing principal EXCEEDS one minor unit, and no upper bound is established.**"
+  },
+  {
+   "line": 1837,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "- Largest unamortized residual observed: **501 minor units = MNT 5.01**, at 600.0 % / n = 1000 \u2014 1000 rows"
+  },
+  {
+   "line": 1838,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "of `principal \"0.00\"`, balance frozen at 5.01 for 83 years, MNT 2,505.01 of scheduled interest, principal"
+  },
+  {
+   "line": 1839,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "never repaid. That also exceeds the whole-corpus **family-A** record of MNT 2.91."
+  },
+  {
+   "line": 1840,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "- **\"Sub-minor-unit dust\" is dead.** The open question T117 was sent to settle asked whether the failing"
+  },
+  {
+   "line": 1841,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "principal could exceed one minor unit. Answer: yes, by a factor of 501."
+  },
+  {
+   "line": 1842,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "- **No bound.** The first failing term grows with the principal (B \u2264 51 fails at n=108; B=101 at 250; B=501"
+  },
+  {
+   "line": 1843,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "at 1000; B \u2265 1001 clean at all five terms asked). Because the largest failing principal **tracks the"
+  },
+  {
+   "line": 1844,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "largest term asked**, and nothing above n = 1000 has ever been asked, **MNT 5.01 is the largest OBSERVED,"
+  },
+  {
+   "line": 1845,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "not a bound.** T159 has been sent to ask beyond n = 1000 specifically to test whether this is a real trend"
+  },
+  {
+   "line": 1846,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "or an artefact of the probe set. *That answer, not this one, is what should reach Buyan.*"
+  },
+  {
+   "line": 1847,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "- Family B is **neither a half-line in n nor a bounded island** \u2014 an interleaved band structure, with clean"
+  },
+  {
+   "line": 1848,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "gaps inside otherwise-contiguous family-B stretches."
+  },
+  {
+   "line": 1850,
+   "block": "NOTICE",
+   "kind": "heading",
+   "text": "### One correction the driver makes to T117's own reading, in T117's favour and against it"
+  },
+  {
+   "line": 1852,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "T117 reports that `gates.md`'s claim \"on every family-B cell it sums to 0.00\" is falsified by three partial"
+  },
+  {
+   "line": 1853,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "cells (B=11, n \u2208 {108,121,150}, principal column summing to 5, 4 and 2 minor units against an 11-minor-unit"
+  },
+  {
+   "line": 1854,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "disbursement \u2014 a **partial** shortfall, a shape the record did not contain)."
+  },
+  {
+   "line": 1856,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "The sentence it refers to is at **`gates.md:1209`**, and it actually reads *\"On every family-B cell **measured"
+  },
+  {
+   "line": 1857,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "so far** it sums to **0.00** against a **0.01** disbursement\"*. So:"
+  },
+  {
+   "line": 1859,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "- **It was true when written**, and it is explicitly hedged (`measured so far`) and explicitly scoped to a"
+  },
+  {
+   "line": 1860,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "`0.01` disbursement \u2014 which *is* the B=1 case. T117 slightly overstates by calling it an unqualified"
+  },
+  {
+   "line": 1861,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "universal."
+  },
+  {
+   "line": 1862,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "- **But T117 is right where it counts:** the *measured set* has now grown, and the hedge is what carried the"
+  },
+  {
+   "line": 1863,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "sentence \u2014 not a scoping decision anyone made deliberately. Any reader who took `0.00` as the family-B"
+  },
+  {
+   "line": 1864,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "signature now has a wrong mental model, and the **partial-shortfall shape is genuinely new**."
+  },
+  {
+   "line": 1865,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "- The row at **`gates.md:974`** (`principal column sums to the disbursed amount | yes | NO \u2014 it sums to 0.00`)"
+  },
+  {
+   "line": 1866,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "carries **no hedge at all** and is the one that needs the rebuild."
+  },
+  {
+   "line": 1868,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "*Recording both halves because a reviewer's finding is not improved by overstating it, and a gate is not"
+  },
+  {
+   "line": 1869,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "protected by understating it.* T159 has been asked to complete the sweep \u2014 T117 listed **nine** affected"
+  },
+  {
+   "line": 1870,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "sentences and correctly marked that list a starting point, not the sweep (**P-37**)."
+  },
+  {
+   "line": 1872,
+   "block": "NOTICE",
+   "kind": "heading",
+   "text": "### What is NOT in question"
+  },
+  {
+   "line": 1874,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "G-8's options **(b)** and **(c)** amend the graded domain and remain **hard `user` gates**. T117 decided"
+  },
+  {
+   "line": 1875,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "nothing about the gate, touched no vector, and did not go near them. **T116** (option (a), the family-B"
+  },
+  {
+   "line": 1876,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "promotion) is **not** invalidated \u2014 its target cell is untouched \u2014 but it is deliberately **not dispatched**"
+  },
+  {
+   "line": 1877,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "this fire: it would move the store's vector count while two reviewers are actively measuring store counts,"
+  },
+  {
+   "line": 1878,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "and the deflation manifest (**T160**) that would make such a move safe does not exist yet."
+  },
+  {
+   "line": 1880,
+   "block": "NOTICE",
+   "kind": "heading",
+   "text": "### UPDATE \u2014 T159 reviewed T117, APPROVED it, and then DOUBLED the headline by asking the question T117 said nobody had asked"
+  },
+  {
+   "line": 1882,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "**The DO-NOT-CITE hold above is lifted. What replaces it is a larger number and the same warning.**"
+  },
+  {
+   "line": 1884,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "T159 re-derived every one of T117's figures from the **raw captures**, reading none of its analysis layer:"
+  },
+  {
+   "line": 1885,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "102 mechanical claim-vs-observed checks \u2014 **100 exact, 0 fabrications, 2 scope imprecisions**; all five"
+  },
+  {
+   "line": 1886,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "committed digests reproduce; the P-9 control genuine by `merge-base --is-ancestor`, with the prediction"
+  },
+  {
+   "line": 1887,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "commits containing zero observation keys; **17/17 re-asked cells byte-identical under disjoint tenant ids**,"
+  },
+  {
+   "line": 1888,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "including the MNT 5.01 cell and all three partials."
+  },
+  {
+   "line": 1890,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "**Then it asked past n = 1000, which T117 had flagged as the reason its own number was not a bound.**"
+  },
+  {
+   "line": 1892,
+   "block": "NOTICE",
+   "kind": "table_row",
+   "text": "| | T117 | T159 |"
+  },
+  {
+   "line": 1894,
+   "block": "NOTICE",
+   "kind": "table_row",
+   "text": "| largest unamortized residual | **MNT 5.01** at n = 1000 | **MNT 10.01** at n = 3000 |"
+  },
+  {
+   "line": 1895,
+   "block": "NOTICE",
+   "kind": "table_row",
+   "text": "| rows of `principal \"0.00\"` | 1000 | **3000** |"
+  },
+  {
+   "line": 1896,
+   "block": "NOTICE",
+   "kind": "table_row",
+   "text": "| balance frozen | 83 years | **2024 \u2192 2274** |"
+  },
+  {
+   "line": 1897,
+   "block": "NOTICE",
+   "kind": "table_row",
+   "text": "| scheduled interest | MNT 2,505.01 | **MNT 15,010.01** |"
+  },
+  {
+   "line": 1898,
+   "block": "NOTICE",
+   "kind": "table_row",
+   "text": "| partial-shortfall cells | 3 | **4** (new: residual 833 minor against a 999-minor disbursement) |"
+  },
+  {
+   "line": 1899,
+   "block": "NOTICE",
+   "kind": "table_row",
+   "text": "| distinct family-B principals | 14 | **20**, all odd |"
+  },
+  {
+   "line": 1901,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "**`T159-R600p0-N3000-B1001` reports `totalPrincipalAmount 0.00`. And n = 3000 is simply the largest term"
+  },
+  {
+   "line": 1902,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "T159 asked.** The residual **doubled when the term tripled**, and it doubled *because someone asked a bigger"
+  },
+  {
+   "line": 1903,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "question*, not because a boundary was found."
+  },
+  {
+   "line": 1905,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "> **Any disclosure of G-8 must state the residual WITH ITS TERM \u2014 \"MNT 10.01 at n = 3000\" \u2014 and must still"
+  },
+  {
+   "line": 1906,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "> say it is the largest OBSERVED and not a bound.** Two independent workers have now raised this ceiling by"
+  },
+  {
+   "line": 1907,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "> asking a larger term, and neither found a limit. Writing \"MNT 10.01\" without its term would repeat, one"
+  },
+  {
+   "line": 1908,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "> level up, exactly the error T117 was sent to correct."
+  },
+  {
+   "line": 1910,
+   "block": "NOTICE",
+   "kind": "heading",
+   "text": "### THREE THINGS NOBODY HAD RECORDED, and the first one needs a sentence G-8 does not have"
+  },
+  {
+   "line": 1912,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "1. **THE REFERENCE ORACLE THROWS.** Two cells died with `java.lang.StackOverflowError` \u2014"
+  },
+  {
+   "line": 1913,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "`ProgressiveEMICalculator.calculateLastUnpaidRepaymentPeriodEMI` recursing into itself at"
+  },
+  {
+   "line": 1914,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "`ProgressiveEMICalculator.java:1214`. **It is not monotone**: `(B=10001, n=2000)` dies while"
+  },
+  {
+   "line": 1915,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "`(B=10001, n=3000)` succeeds, so this is not a simple size limit and cannot be excluded by bounding the"
+  },
+  {
+   "line": 1916,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "inputs. **G-8's write-up has no sentence for a third outcome in which no schedule is produced at all** \u2014"
+  },
+  {
+   "line": 1917,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "it contemplates \"amortizes\" and \"does not amortize\", not \"the oracle throws\". **Option (b) needs one**,"
+  },
+  {
+   "line": 1918,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "because a graded domain that cannot express \"no answer\" will silently classify a crash as something else."
+  },
+  {
+   "line": 1919,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "2. **A LATENT HOLE IN THE SHARED RIG**, inherited by T83, T84, T100 **and** T117 alike: it catches"
+  },
+  {
+   "line": 1920,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "`RuntimeException`, **not** `Throwable`. T159 found it **by detonating it**. T117's \"0 errored\" is sound"
+  },
+  {
+   "line": 1921,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "*for the run that completed*, but the rig **cannot distinguish \"none errored\" from \"none asked that"
+  },
+  {
+   "line": 1922,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "errors\"** \u2014 and a `StackOverflowError` is an `Error`, not a `RuntimeException`, so it is exactly what"
+  },
+  {
+   "line": 1923,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "slips through. Raised as **T169**."
+  },
+  {
+   "line": 1924,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "3. **`gates.md:978`** \u2014 *\"balance column | constant at the disbursed amount\"* is **also falsified** by the"
+  },
+  {
+   "line": 1925,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "partial cells, and is **not** on T117's list of nine."
+  },
+  {
+   "line": 1927,
+   "block": "NOTICE",
+   "kind": "heading",
+   "text": "### The rebuild is a task, not a footnote"
+  },
+  {
+   "line": 1929,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "T159's \u00a79 lists **25 `gates.md` sites**, six of them not on T117's nine. Neither worker edited `gates.md` \u2014"
+  },
+  {
+   "line": 1930,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "correctly, because its STANDING RULE demands a full sentence-by-sentence scope rebuild and parallel workers"
+  },
+  {
+   "line": 1931,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "were live. **The list is produced; the rebuild is raised as T170** and must be done before G-8 goes to Buyan."
+  },
+  {
+   "line": 1933,
+   "block": "NOTICE",
+   "kind": "heading",
+   "text": "### Driver's own errors in this exchange, recorded because the record is the point"
+  },
+  {
+   "line": 1935,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "- **The driver's T159 brief listed 13 principals while saying 14** \u2014 `101` was missing. T117's handoff was"
+  },
+  {
+   "line": 1936,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "correct; the driver's restatement of it was not. *A brief that miscounts the evidence it is quoting is the"
+  },
+  {
+   "line": 1937,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "P-46 shape at one remove: the reviewer was handed a subtly wrong version of what it was checking.*"
+  },
+  {
+   "line": 1938,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "- T117 attributes `+2.4292883e-19` to T122, but T122 committed `+2.4293e-19`; the 8-digit literal is T100's"
+  },
+  {
+   "line": 1939,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "`gap_float` \u2014 **a float**. The value is real, the attribution is wrong. Minor, and recorded rather than"
+  },
+  {
+   "line": 1940,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "silently fixed."
+  },
+  {
+   "line": 1941,
+   "block": "NOTICE",
+   "kind": "bullet",
+   "text": "- The driver's A/B attribution was **right** this time \u2014 checked by T159, after being wrong three times"
+  },
+  {
+   "line": 1942,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "previously."
+  }
+ ],
+ "skipped": [
+  {
+   "line": 895,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 931,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 933,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 940,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 963,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 965,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 971,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 973,
+   "block": "MAIN",
+   "why": "table separator"
+  },
+  {
+   "line": 984,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 990,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1003,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1006,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1009,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1014,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1018,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1019,
+   "block": "MAIN",
+   "why": "horizontal rule"
+  },
+  {
+   "line": 1020,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1022,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1024,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1026,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1032,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1037,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1039,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1077,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1080,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1086,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1088,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1093,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1095,
+   "block": "MAIN",
+   "why": "table separator"
+  },
+  {
+   "line": 1128,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1135,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1148,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1150,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1158,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1160,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1164,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1166,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1180,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1184,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1186,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1189,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1196,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1201,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1202,
+   "block": "MAIN",
+   "why": "horizontal rule"
+  },
+  {
+   "line": 1203,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1205,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1207,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1215,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1217,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1219,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1244,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1248,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1252,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1254,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1261,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1262,
+   "block": "MAIN",
+   "why": "horizontal rule"
+  },
+  {
+   "line": 1263,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1265,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1272,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1278,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1280,
+   "block": "MAIN",
+   "why": "table separator"
+  },
+  {
+   "line": 1286,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1288,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1297,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1300,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1306,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1314,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1323,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1328,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1329,
+   "block": "MAIN",
+   "why": "horizontal rule"
+  },
+  {
+   "line": 1330,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1332,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1336,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1360,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1371,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1373,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1379,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1393,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1404,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1407,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1424,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1430,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1440,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1449,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1451,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1460,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1489,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1493,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1495,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1507,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1518,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1533,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1537,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1539,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1547,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1556,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1579,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1589,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1596,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1604,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1618,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1641,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1650,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1651,
+   "block": "MAIN",
+   "why": "horizontal rule"
+  },
+  {
+   "line": 1652,
+   "block": "MAIN",
+   "why": "blank"
+  },
+  {
+   "line": 1826,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1832,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1834,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1836,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1849,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1851,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1855,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1858,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1867,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1871,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1873,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1879,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1881,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1883,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1889,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1891,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1893,
+   "block": "NOTICE",
+   "why": "table separator"
+  },
+  {
+   "line": 1900,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1904,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1909,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1911,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1926,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1928,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1932,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1934,
+   "block": "NOTICE",
+   "why": "blank"
+  },
+  {
+   "line": 1943,
+   "block": "NOTICE",
+   "why": "blank"
+  }
+ ],
+ "counts": {
+  "units": 747,
+  "skipped": 131,
+  "by_kind": {
+   "heading": 28,
+   "bullet": 150,
+   "prose": 512,
+   "table_row": 57
+  }
+ }
+}

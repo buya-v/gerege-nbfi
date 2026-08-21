@@ -1,0 +1,1181 @@
+{
+ "before_units": 239,
+ "after_units": 322,
+ "before_units_surviving_byte_identical": 183,
+ "before_units_changed_or_removed": 56,
+ "after_units_new": 139,
+ "changed_or_removed": [
+  {
+   "line": 894,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "## G-8 \u2014 TWO phenomena at the rounding floor, under one gate id"
+  },
+  {
+   "line": 898,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **task**: T75 (found the shape, and stated the family-A mechanism first), T83 (measured family A), T84 (reproduced T83, measured family B, and rejected T83's write-up), T100 (rewrote this section an"
+  },
+  {
+   "line": 910,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **state**: **OPEN** \u2014 blocks nothing today. T112 fixed the write-up and T122 fixed two sentences in T112's fix; **neither decided the gate, and neither may.**"
+  },
+  {
+   "line": 934,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "This section is the artefact **Buyan reads to decide a `user` gate**, and it has now carried a wrong number or a wrong scope statement to that reader **four separate times**: a family A/B inversion, a"
+  },
+  {
+   "line": 964,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "### Read this first: G-8 is TWO phenomena, and a remedy for one is not a remedy for the other"
+  },
+  {
+   "line": 974,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| principal column sums to the disbursed amount | **yes** | **NO \u2014 it sums to 0.00** |"
+  },
+  {
+   "line": 975,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| `totalPrincipalAmount` | = the disbursement | **0.00** |"
+  },
+  {
+   "line": 976,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| non-zero principal rows | exactly **one**, the last, carrying the whole disbursement | **none** |"
+  },
+  {
+   "line": 977,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| last row's interest | `0.00` | `0.01` |"
+  },
+  {
+   "line": 978,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| balance column | constant at the disbursed amount | constant at the disbursed amount |"
+  },
+  {
+   "line": 979,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| `totalOutstandingAmount` | `0` | `0` \u2014 **so this field does not discriminate** |"
+  },
+  {
+   "line": 980,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| forcing the oracle's own balance `Memo` to recompute | balance goes to **`0.00`** | **does not move** |"
+  },
+  {
+   "line": 981,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| the Go port | **diverges**, on exactly one cell per case | **reproduces it cell for cell \u2014 no divergence at all** |"
+  },
+  {
+   "line": 982,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| `invariant_exemptions` as a remedy | **inert** \u2014 the failure is a cell diff | **decisive** \u2014 the failure is purely invariant |"
+  },
+  {
+   "line": 983,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| measured at | **11** of the 12 annual rates swept (all but 600.0 %), `3 \u2264 n \u2264 600`, **312 cells** | **one** annual rate (600.0 %), `104 \u2264 n \u2264 250`, **29 cells** |"
+  },
+  {
+   "line": 985,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "Cells behind that table: **312 family-A** (198 T83 + 111 T84 + 3 T100) and **29 family-B** (22 T84 + 7 T100), each re-derived from the committed raw captures by T100's own classifier [`.softhouse/capt"
+  },
+  {
+   "line": 1010,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**On family B it is worse and it is different: there is no port-vs-oracle divergence to arbitrate, because the port agrees with the oracle \u2014 both emit a schedule that never repays the loan.** A declar"
+  },
+  {
+   "line": 1015,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "Today `conformance.sh` reports PASS with 42 parity vectors and 0 invariant violations \u2014 **only because no vector covers either family.** That is precisely the blind spot the conformance gate exists to"
+  },
+  {
+   "line": 1204,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "## FAMILY B \u2014 the principal column itself never repays the loan"
+  },
+  {
+   "line": 1208,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "A cell is family B when the REPAYMENT rows' `principal` column **does not sum to the disbursed amount**. On every family-B cell measured so far it sums to **0.00** against a **0.01** disbursement, `to"
+  },
+  {
+   "line": 1216,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "### What was measured, and over what domain \u2014 a MUCH narrower domain than family A"
+  },
+  {
+   "line": 1218,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**T84 measured 22 family-B cells; T100 measured 7 more.** Union of what has been observed:"
+  },
+  {
+   "line": 1229,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- principal **MNT 0.01 (1 minor unit)** \u2014 no other principal has produced a family-B cell."
+  },
+  {
+   "line": 1230,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- repayment counts **n \u2208 {104\u2026122} \u222a {150, 200, 250}**: T84 measured 104\u2026121 contiguously plus 150 and 200 (22 cells, of which n = 108 and n = 120 were measured twice, once in each of its two probes, "
+  },
+  {
+   "line": 1245,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**The Go port reproduces family B cell for cell \u2014 0 divergent cells** [T84 over all 22; T100 through the real grader on `T100-FAMB-R600p0-N108-B1`: **761 graded cells, 0 cell diffs**]. On family B the"
+  },
+  {
+   "line": 1249,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**Family B is NOT order-dependent** [T84, 3 of 3; **re-run by T100**, 3 of 3 unmoved at n = 104, 108, 120 while the family-A control in the same run moved 1.09 \u2192 0.00]. So the family-A mechanism above"
+  },
+  {
+   "line": 1255,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Its cause.** T84 measured *that* it is not order-dependent and *that* the principal column sums to zero; it did not locate the code path, and neither did T100. `[UNVERIFIED]`"
+  },
+  {
+   "line": 1257,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Whether it exists at any other rate, at any other principal, or below n = 104.** Every family-B cell ever measured is 600.0 % / MNT 0.01 / n \u2265 104. `[UNVERIFIED]`"
+  },
+  {
+   "line": 1259,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Whether it terminates.** n = 250 fails; nothing above n = 250 has been asked. `[UNVERIFIED]`"
+  },
+  {
+   "line": 1289,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **On family B, option (a) is reachable TODAY** \u2014 with the existing mechanism, **no port change**, and no DEC-n amendment. The failure there is purely invariant, because the port agrees with the orac"
+  },
+  {
+   "line": 1341,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Over the union of every cell T83, T84 and T100 have swept** (687 cells; 12 rates from 0.12 % to 600.0 %; n from 1 to 600): the largest failing principal is **MNT 2.91**, at 0.12 % / n = 600 [T84 m"
+  },
+  {
+   "line": 1361,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**What was NOT swept, and therefore what this bound does not cover.** Only `MinorUnitDigits = 2`, only MNT, only DAYS_30/DAYS_360, only MONTHS/1, only a single disbursement on the schedule start date,"
+  },
+  {
+   "line": 1380,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**It is false outside that grid.** T100 re-evaluated it in **exact rational arithmetic**: over T83's own 330 cells it holds **330 of 330**; over all 342 non-calibration cells of T84's two captures, **"
+  },
+  {
+   "line": 1394,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "[Re-derived independently by T122 in **exact rational arithmetic** (`fractions.Fraction`, money parsed as integer minor units, the comparison made against `Fraction(1, 10**19)` \u2014 no float on any decis"
+  },
+  {
+   "line": 1419,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Consequently the sub-ulp observation is a correlate over 25 of 29 cells, not the explanation of the family**, and it must not be used to argue that family B is confined to residuals too small to m"
+  },
+  {
+   "line": 1496,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **(a)** promote a parity vector for the region with an explicit invariant exemption. **Reachable today on family B with zero port change; requires a port change on family A.** Scope any decision to "
+  },
+  {
+   "line": 1499,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **(b)** refuse the region from the graded domain as a documented contract-refusal vector. Cheap in code for family A over the grid swept \u2014 but the region is **not** fully bounded (see the bound abov"
+  },
+  {
+   "line": 1503,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **(c)** treat it as an oracle defect and diverge deliberately, keeping the port's `0`. That is what the port does *today, ungraded, on family A only* \u2014 **on family B the port emits the same non-amor"
+  },
+  {
+   "line": 1508,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**(b) and (c) both amend the graded domain, which is a change to a ratified DEC-n \u2014 a hard `user` gate no agent may cross.** Buyan decides. T83, T84, T100, T101, T112, **T114, T122, T129 and T140** ha"
+  },
+  {
+   "line": 1519,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**What unblocks it**: a `user` decision, now on **two** phenomena rather than one. **What it blocks**: nothing today \u2014 no vector covers either family and the conformance run is exit 0 without them. **"
+  },
+  {
+   "line": 1534,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**Conformance is unmoved by this rewrite**: `bash .softhouse/conformance.sh` \u2192 **VERDICT PASS, exit 0, 42 parity vectors, 5576 graded cells, 0 invariant violations**. Nothing was promoted; `PIN.json` "
+  },
+  {
+   "line": 1578,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "> non-sub-ulp exceptions), against the true **687** and **29**."
+  },
+  {
+   "line": 1825,
+   "block": "NOTICE",
+   "kind": "heading",
+   "text": "## G-8 \u2014 NOTICE, local fire `20260821-134344`: T117's measurement moves the bound. **REVIEWED \u2014 T159 APPROVED. See the UPDATE at the end of this block: the number has since DOUBLED.**"
+  },
+  {
+   "line": 1827,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "**Status of this block: T117 has reported; its paired reviewer T159 has NOT.** The driver is recording the measurement here rather than rewriting G-8, because rewriting a gate Buyan decides on, on the"
+  },
+  {
+   "line": 1833,
+   "block": "NOTICE",
+   "kind": "heading",
+   "text": "### The headline, if it survives review"
+  },
+  {
+   "line": 1837,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "- Largest unamortized residual observed: **501 minor units = MNT 5.01**, at 600.0 % / n = 1000 \u2014 1000 rows of `principal \"0.00\"`, balance frozen at 5.01 for 83 years, MNT 2,505.01 of scheduled interes"
+  },
+  {
+   "line": 1840,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "- **\"Sub-minor-unit dust\" is dead.** The open question T117 was sent to settle asked whether the failing principal could exceed one minor unit. Answer: yes, by a factor of 501."
+  },
+  {
+   "line": 1842,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "- **No bound.** The first failing term grows with the principal (B \u2264 51 fails at n=108; B=101 at 250; B=501 at 1000; B \u2265 1001 clean at all five terms asked). Because the largest failing principal **tr"
+  },
+  {
+   "line": 1856,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "The sentence it refers to is at **`gates.md:1209`**, and it actually reads *\"On every family-B cell **measured so far** it sums to **0.00** against a **0.01** disbursement\"*. So:"
+  },
+  {
+   "line": 1865,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "- The row at **`gates.md:974`** (`principal column sums to the disbursed amount | yes | NO \u2014 it sums to 0.00`) carries **no hedge at all** and is the one that needs the rebuild."
+  },
+  {
+   "line": 1868,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "*Recording both halves because a reviewer's finding is not improved by overstating it, and a gate is not protected by understating it.* T159 has been asked to complete the sweep \u2014 T117 listed **nine**"
+  },
+  {
+   "line": 1912,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "1. **THE REFERENCE ORACLE THROWS.** Two cells died with `java.lang.StackOverflowError` \u2014 `ProgressiveEMICalculator.calculateLastUnpaidRepaymentPeriodEMI` recursing into itself at `ProgressiveEMICalcul"
+  },
+  {
+   "line": 1919,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "2. **A LATENT HOLE IN THE SHARED RIG**, inherited by T83, T84, T100 **and** T117 alike: it catches `RuntimeException`, **not** `Throwable`. T159 found it **by detonating it**. T117's \"0 errored\" is so"
+  },
+  {
+   "line": 1924,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "3. **`gates.md:978`** \u2014 *\"balance column | constant at the disbursed amount\"* is **also falsified** by the partial cells, and is **not** on T117's list of nine."
+  },
+  {
+   "line": 1927,
+   "block": "NOTICE",
+   "kind": "heading",
+   "text": "### The rebuild is a task, not a footnote"
+  },
+  {
+   "line": 1929,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "T159's \u00a79 lists **25 `gates.md` sites**, six of them not on T117's nine. Neither worker edited `gates.md` \u2014 correctly, because its STANDING RULE demands a full sentence-by-sentence scope rebuild and p"
+  }
+ ],
+ "new": [
+  {
+   "line": 894,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "## G-8 \u2014 TWO phenomena at the rounding floor (one of them in TWO shapes), and a THIRD outcome in which there is no schedule at all, under one gate id"
+  },
+  {
+   "line": 898,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **task**: T75 (found the shape, and stated the family-A mechanism first), T83 (measured family A), T84 (reproduced T83, measured family B, and rejected T83's write-up), T100 (rewrote this section an"
+  },
+  {
+   "line": 919,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **state**: **OPEN** \u2014 blocks nothing today. T112 fixed the write-up, T122 fixed two sentences in T112's fix, and T170 rebuilt the family-B half after T117 and T159 moved the measurement; **none of t"
+  },
+  {
+   "line": 944,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "This section is the artefact **Buyan reads to decide a `user` gate**, and it has now carried a wrong number or a wrong scope statement to that reader **five separate times**: a family A/B inversion, a"
+  },
+  {
+   "line": 982,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "### Read this first: G-8 is TWO phenomena and THREE outcomes, and a remedy for one is not a remedy for the other"
+  },
+  {
+   "line": 990,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**And family B itself has TWO shapes, not one** \u2014 the **FULL** shape, in which the principal column sums to `0.00` and nothing is repaid, and the **PARTIAL** shape, in which it sums to a non-zero amou"
+  },
+  {
+   "line": 999,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| principal column sums to the disbursed amount | **yes** | **NO.** FULL: sums to `0.00`. PARTIAL: sums to a non-zero amount short of the disbursement |"
+  },
+  {
+   "line": 1000,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| `totalPrincipalAmount` | = the disbursement | FULL: **`0.00`** \u00b7 PARTIAL: `0.02` / `0.04` / `0.05` / `1.66` on the four shapes measured |"
+  },
+  {
+   "line": 1001,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| non-zero principal rows | exactly **one**, the last, carrying the whole disbursement | FULL: **none** \u00b7 PARTIAL: exactly **one**, the last, carrying **part** of the disbursement |"
+  },
+  {
+   "line": 1002,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| last row's interest | `0.00` | `0.01` **only where the disbursement is 1 minor unit** (150 of the 209 cells); 19 distinct values across the full shape, and `0.11` / `0.12` / `0.14` / `13.32` on the "
+  },
+  {
+   "line": 1003,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| balance column | constant at the disbursed amount | FULL: constant at the disbursed amount \u00b7 PARTIAL: **two** values \u2014 the disbursed amount, then the residual on the last row |"
+  },
+  {
+   "line": 1004,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| `totalOutstandingAmount` | `0` | `0` on all 209 \u2014 **so this field does not discriminate** |"
+  },
+  {
+   "line": 1005,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| forcing the oracle's own balance `Memo` to recompute | balance goes to **`0.00`** | **does not move** \u2014 but measured on **3** of the 29 record cells only, all at 1 minor unit; **UNMEASURED** on all "
+  },
+  {
+   "line": 1006,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| the Go port | **diverges**, on exactly one cell per case | **reproduces it cell for cell \u2014 no divergence at all** on the **29** record cells (T84's 22, T100's 1 through the real grader, and T101's r"
+  },
+  {
+   "line": 1007,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| `invariant_exemptions` as a remedy | **inert** \u2014 the failure is a cell diff | **decisive** \u2014 the failure is purely invariant \u2014 **established on ONE full cell** (600.0 % / MNT 0.01 / n = 108). On a p"
+  },
+  {
+   "line": 1008,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| measured at | **11** of the 12 annual rates swept (all but 600.0 %), `3 \u2264 n \u2264 600`, **312 cells** | **one** annual rate (600.0 %), `104 \u2264 n \u2264 3000`, principals **1 \u2026 1001 minor units**, **209 cells*"
+  },
+  {
+   "line": 1010,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "Cells behind that table: **312 family-A** (198 T83 + 111 T84 + 3 T100) and **209 family-B** \u2014 the **29** of the four record captures (22 T84 + 7 T100) plus **180** added by T117 (155) and T159 (25). T"
+  },
+  {
+   "line": 1021,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**Every row of that table holds on every cell of its family in the FOUR RECORD captures (T83, T84, T84b, T100) \u2014 no exceptions, no mixed cases.** It is **not** uniform over the 209: the partial shape "
+  },
+  {
+   "line": 1051,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**On family B it is worse and it is different: there is no port-vs-oracle divergence to arbitrate, because the port agrees with the oracle \u2014 both emit a schedule that never repays the loan.** A declar"
+  },
+  {
+   "line": 1059,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "Today `conformance.sh` reports PASS with **43 parity vectors, 5,664 graded cells** and 0 invariant violations \u2014 **only because no vector covers either family.** That is precisely the blind spot the co"
+  },
+  {
+   "line": 1069,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "## THE THIRD OUTCOME \u2014 the reference oracle can produce NO SCHEDULE AT ALL"
+  },
+  {
+   "line": 1071,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**Added at T170, because until now this section had no sentence for it.** Every other sentence in G-8 is about *what the oracle emitted*. There is a third possibility, and it has been observed:"
+  },
+  {
+   "line": 1074,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "> **The reference oracle can answer the request by throwing `java.lang.StackOverflowError`, emitting"
+  },
+  {
+   "line": 1075,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "> no schedule at all.** So the outcome of asking the oracle a cell in this region is one of **three**"
+  },
+  {
+   "line": 1076,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "> things \u2014 it amortizes, it emits a schedule that does not amortize, or **there is no schedule**."
+  },
+  {
+   "line": 1078,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "This matters to the gate and not only to the write-up. **Option (b) proposes to refuse a region from the graded domain, and a graded domain that can express only \"amortizes\" and \"does not amortize\" wi"
+  },
+  {
+   "line": 1083,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**What was observed.** Two of the 49 cases in T159's committed capture carry no `observed` block at all and an `error` of `java.lang.StackOverflowError: null` \u2014 `T159-R600p0-N2000-B10001` and `T159-R6"
+  },
+  {
+   "line": 1094,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**And the throw is a function of JVM STATE, not of the cell's inputs \u2014 T177 measured this, and it changes what may be said here** [`.softhouse/reviews/T177-stackoverflow-nondeterminism.md`, `.softhous"
+  },
+  {
+   "line": 1099,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Cold start throws every time.** The disputed cell (B = 10001 minor units, n = 3000) as the JVM's very first seam call, default `-Xss`, C2 on: **33 JVMs, 0 observed, 33 threw.** T159's detonation ("
+  },
+  {
+   "line": 1103,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Warm-up removes it, as a step function.** Inside one JVM the disputed cell flips from threw to observed at **attempt 5** and never flips back \u2014 **7 of 7** independent default-flag JVMs, and in **1"
+  },
+  {
+   "line": 1108,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **It moves with `-Xss` and with the JIT.** First call of a cold JVM, 2 JVMs per size: 512k, 1m, 2m and 4m **throw 2/2**; 8m and 16m **observe 2/2**. With C2 off (`-XX:TieredStopAtLevel=1`) the trans"
+  },
+  {
+   "line": 1111,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Therefore \"the throwing region\" is not a region of the input space at all.** Any sentence whose premise is a boundary in (B, n) is **refuted at the premise**, not merely imprecise \u2014 including the "
+  },
+  {
+   "line": 1116,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **T159 and T169 never disagreed about the oracle.** T177 replayed T159's committed case list in T159's committed order: the only two cells that threw are exactly the two that threw in T159's committ"
+  },
+  {
+   "line": 1122,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**G-8's headline number is NOT at risk from this, and the two cells must not be confused.** The MNT 10.01 residual belongs to **B = 1001 minor units** at n = 3000 (`T159-R600p0-N3000-B1001`). The cell"
+  },
+  {
+   "line": 1130,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**One artefact to stop misreading.** Every `errorStackDepthTotal` of exactly `1024` in this program's captures is **HotSpot's recording cap, not a depth** [T177]. With the cap lifted (`-XX:MaxJavaStac"
+  },
+  {
+   "line": 1136,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**What is NOT known about the third outcome, and must not be filled in:**"
+  },
+  {
+   "line": 1138,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Its extent.** Only three cells have ever been probed for it under controlled JVM state. Whether any **other** committed capture in this program is affected is `[UNVERIFIED]` \u2014 T177 did not re-run "
+  },
+  {
+   "line": 1141,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **The exact `-Xss` boundary.** Measured only that 4m throws and 8m observes, 2 JVMs each; the interval was not bisected. `[UNVERIFIED]`"
+  },
+  {
+   "line": 1143,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **The mechanism inside C2**, and whether \"attempt 5\" is a constant or a compilation threshold this cell happens to cross at 5. `[UNVERIFIED]`"
+  },
+  {
+   "line": 1145,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Whether de-optimisation can flip an observed cell back to throwing.** Never seen in 139 trials; no run was long enough to force one. `[UNVERIFIED]`"
+  },
+  {
+   "line": 1147,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Whether the Go port must reproduce it.** T177 offers, explicitly **as a reasoned inference and not as a measurement**, that the throw is an environmental limit of the JVM rather than a semantic th"
+  },
+  {
+   "line": 1151,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**A rig note, because it changes how the older \"0 errored\" lines should be read.** Before T169 the shared capture rig caught `RuntimeException`, not `Throwable`, so **no completed run in the history o"
+  },
+  {
+   "line": 1344,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "## FAMILY B \u2014 the principal column does not repay the loan, in FULL or in PART"
+  },
+  {
+   "line": 1348,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**The discriminator is unchanged and still separates the families cleanly:** a cell is family B when the REPAYMENT rows' `principal` column **does not sum to the disbursed amount** [re-derived by T170"
+  },
+  {
+   "line": 1354,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **FULL \u2014 202 of the 209 cells measured.** The principal column sums to **`0.00`**, `totalPrincipalAmount` reads `0.00`, **no** row carries a non-zero principal, and the balance column is constant at"
+  },
+  {
+   "line": 1358,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **PARTIAL \u2014 7 measurements over 4 distinct shapes, all found after this section was written.** The principal column sums to a **non-zero** amount that is still **short** of the disbursement, exactly"
+  },
+  {
+   "line": 1365,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| shape (600.0 %) | disbursed | amortized | **residual** | `totalPrincipalAmount` | balance column | last row's interest |"
+  },
+  {
+   "line": 1367,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| n = 108, B = 11 minor | 11 | **5** | **6** | `0.05` | `0.11` \u2192 `0.06` | `0.11` |"
+  },
+  {
+   "line": 1368,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| n = 121, B = 11 minor | 11 | **4** | **7** | `0.04` | `0.11` \u2192 `0.07` | `0.12` |"
+  },
+  {
+   "line": 1369,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| n = 150, B = 11 minor | 11 | **2** | **9** | `0.02` | `0.11` \u2192 `0.09` | `0.14` |"
+  },
+  {
+   "line": 1370,
+   "block": "MAIN",
+   "kind": "table_row",
+   "text": "| n = 2000, B = 999 minor | 999 | **166** | **833** | `1.66` | `9.99` \u2192 `8.33` | `13.32` |"
+  },
+  {
+   "line": 1372,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "The first three were found by T117 and re-asked by T159 under disjoint tenant ids (byte-identical, 3 of 3); the fourth is T159's and is far larger than the other three."
+  },
+  {
+   "line": 1375,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**On all 209 family-B cells the unamortized residual equals the final row's `balance` exactly, and `totalOutstandingAmount` reads `0`** \u2014 209 of 209, 0 exceptions [T170]. So `totalOutstandingAmount` s"
+  },
+  {
+   "line": 1379,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "Forcing the memo to recompute **does not move the balance** \u2014 but that was measured on **3** cells, all full shape, all at a 1-minor-unit disbursement, and it is **unmeasured on every partial cell and"
+  },
+  {
+   "line": 1383,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "The discriminator is exactly the test the driver's re-derivation named in advance as fatal to the family-A reframing when applied to all of G-8: *\"If it ever fails to sum, the reframing above is **wro"
+  },
+  {
+   "line": 1387,
+   "block": "MAIN",
+   "kind": "heading",
+   "text": "### What was measured, and over what domain \u2014 narrower than family A in RATE and PRINCIPAL, and now much WIDER in TERM"
+  },
+  {
+   "line": 1389,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**This heading used to read \"a MUCH narrower domain than family A\", and in the dimensions a reader cares about that is now false.** Family B is still narrower in **rate** \u2014 one annual rate against ele"
+  },
+  {
+   "line": 1397,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**T84 measured 22 family-B cells; T100 measured 7 more; T117 measured 155 and T159 measured 25 \u2014 209 in total, over 190 distinct (rate, n, principal) shapes** [each count re-derived by T170 from the r"
+  },
+  {
+   "line": 1410,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- principal: **20 distinct values, every one ODD**, from **1 to 1001 minor units** \u2014 `1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 51, 101, 501, 503, 551, 601, 801, 999, 1001` [re-derived by T170 from the r"
+  },
+  {
+   "line": 1417,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- repayment counts: **`104 \u2264 n \u2264 3000`**, and family B has been observed at every scale in between."
+  },
+  {
+   "line": 1418,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **The four record captures** (T84, T100) cover **n \u2208 {104\u2026122} \u222a {150, 200, 250}** at 600.0 % / MNT 0.01: T84 measured 104\u2026121 contiguously plus 150 and 200 (22 cells, of which n = 108 and n = 120 w"
+  },
+  {
+   "line": 1423,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **T117** added **155** family-B cells \u2014 122 in its pass 1 (principals 1, 3, 5) and 33 in its pass 2 (principals 5, 7, 9, 11, 13, 15, 17, 19, 21, 51, 101, 501). Its family-B terms run 104, 108, 121, "
+  },
+  {
+   "line": 1429,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **T159** added **25** more, at principals 1, 11, 501, 503, 551, 601, 801, 999, 1001 and `n \u2208 {108, 121, 150, 360, 361, 364, 365, 389, 390, 1000, 1200, 1500, 2000, 3000}`."
+  },
+  {
+   "line": 1431,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **The old sentence *\"Nothing above n = 250 has ever been asked at the family-B shape\"* is false.** It has been asked to **n = 3000**, and it is family B there. **n = 3000 is simply the largest term "
+  },
+  {
+   "line": 1434,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- Family B is **not a half-line in n and not a bounded island**: T117 found an interleaved band structure, with clean gaps inside otherwise-contiguous family-B stretches [T117, reviewed and approved b"
+  },
+  {
+   "line": 1440,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- *(Scope note kept from earlier revisions, because it is still the thing that goes wrong here: T84's largest n **anywhere** is **600**, at 0.12 % \u2014 `T84B-XL-R0p12-N600-B291` \u2014 and its largest n at 60"
+  },
+  {
+   "line": 1445,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**The Go port reproduces family B cell for cell \u2014 0 divergent cells \u2014 on the 29 cells of the four record captures, and ON NOTHING ELSE** [T84 over its 22; T100 through the real grader on `T100-FAMB-R6"
+  },
+  {
+   "line": 1455,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**Family B is NOT order-dependent \u2014 measured on 3 cells** [T84, 3 of 3; **re-run by T100**, 3 of 3 unmoved at n = 104, 108, 120, all at a 1-minor-unit disbursement, while the family-A control in the s"
+  },
+  {
+   "line": 1463,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Its cause.** T84 measured *that* it is not order-dependent and *that* the principal column sums to zero; it did not locate the code path, and neither did T100, T117 or T159. **Nobody has looked fo"
+  },
+  {
+   "line": 1468,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Whether it exists at any other RATE, or below n = 104.** Every family-B cell ever measured is at **600.0 %** and at `n \u2265 104`. `[UNVERIFIED]` **The \"at any other principal\" half of this question i"
+  },
+  {
+   "line": 1473,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Whether it terminates.** It does **not** terminate anywhere anyone has looked: n = 3000 fails, and **nothing above n = 3000 has been asked**. The largest unamortized residual rose from MNT 0.01 to"
+  },
+  {
+   "line": 1477,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Whether the Go port reproduces the 180 new cells, or any partial cell.** Never graded. `[UNVERIFIED]`"
+  },
+  {
+   "line": 1479,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Whether any of the 180 new cells is order-dependent.** Never tested. `[UNVERIFIED]`"
+  },
+  {
+   "line": 1481,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Whether an EVEN principal can be family B.** All 20 observed are odd; no even principal has been shown safe, and no claim is made either way. `[UNVERIFIED]`"
+  },
+  {
+   "line": 1511,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **On a FULL family-B cell, option (a) is reachable TODAY** \u2014 with the existing mechanism, **no port change**, and no DEC-n amendment. The failure there is purely invariant, because the port agrees w"
+  },
+  {
+   "line": 1570,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Over the union of every cell T83, T84 and T100 have swept** (687 cells; 12 rates from 0.12 % to 600.0 %; n from 1 to 600): the largest failing principal is **MNT 2.91**, at 0.12 % / n = 600 [T84 m"
+  },
+  {
+   "line": 1581,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Over the union that includes T117's and T159's captures, the largest unamortized residual is MNT 10.01 AT n = 3000** \u2014 `T159-R600p0-N3000-B1001`, 600.0 %, a disbursement of 1001 minor units, **300"
+  },
+  {
+   "line": 1588,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **State it with its term, always: \"MNT 10.01 at n = 3000\".** The figure was MNT 0.01 while only n \u2264 250 had been asked, **MNT 5.01 at n = 1000** once T117 asked (`T117P2-R600p0-N1000-B501` \u2014 501 min"
+  },
+  {
+   "line": 1594,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **MNT 10.01 is the largest OBSERVED residual, NOT A BOUND.** n = 3000 is simply the largest term anyone has asked. **Two independent workers have now raised this ceiling by asking a larger term and "
+  },
+  {
+   "line": 1608,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**What was NOT swept, and therefore what this bound does not cover.** Only `MinorUnitDigits = 2`, only MNT, only DAYS_30/DAYS_360, only MONTHS/1, only a single disbursement on the schedule start date,"
+  },
+  {
+   "line": 1616,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**On the term, the premise of this paragraph has changed and the conclusion has not.** It used to read *\"No term above n = 600 has ever been asked\"*. That is **false**: terms have been asked to **n = "
+  },
+  {
+   "line": 1624,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "The practical reading \u2014 that no commercially realistic Mongolian loan *amount* has been observed to fail \u2014 still holds over everything swept to date: the largest failing disbursement anywhere in the r"
+  },
+  {
+   "line": 1638,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**It is false outside that grid.** T100 re-evaluated it in **exact rational arithmetic**: over T83's own 330 cells it holds **330 of 330**; over all 342 non-calibration cells of T84's two captures, **"
+  },
+  {
+   "line": 1655,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "[Re-derived independently by T122 in **exact rational arithmetic** (`fractions.Fraction`, money parsed as integer minor units, the comparison made against `Fraction(1, 10**19)` \u2014 no float on any decis"
+  },
+  {
+   "line": 1681,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Consequently the sub-ulp observation is a correlate over 25 of the four record captures' 29 cells, not the explanation of the family**, and it must not be used to argue that family B is confined t"
+  },
+  {
+   "line": 1760,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **(a)** promote a parity vector for the region with an explicit invariant exemption. **Reachable today on a FULL family-B cell with zero port change; requires a port change on family A; UNKNOWN on a"
+  },
+  {
+   "line": 1765,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **(b)** refuse the region from the graded domain as a documented contract-refusal vector. Cheap in code for family A over the grid swept \u2014 but the region is **not** fully bounded, and it is a **grad"
+  },
+  {
+   "line": 1769,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **The term half of the old \"not fully bounded\" reason has changed and the reason still holds.** It used to read *\"no term beyond n = 600 has been asked\"*; terms have since been asked to **n = 3000**"
+  },
+  {
+   "line": 1773,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **THE THIRD OUTCOME.** Part of this region cannot be evaluated by the reference implementation on demand at all: it can throw `java.lang.StackOverflowError` and emit no schedule. A refusal drafted i"
+  },
+  {
+   "line": 1777,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **And the throwing is not a property of the inputs** (T177), so a refusal cannot be written as a set of (rate, principal, term) that \"the oracle cannot evaluate\" \u2014 the same inputs answer or throw de"
+  },
+  {
+   "line": 1780,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **(c)** treat it as an oracle defect and diverge deliberately, keeping the port's `0`. That is what the port does *today, ungraded, on family A only* \u2014 **on the 29 record family-B cells the port emi"
+  },
+  {
+   "line": 1787,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**(b) and (c) both amend the graded domain, which is a change to a ratified DEC-n \u2014 a hard `user` gate no agent may cross.** Buyan decides. T83, T84, T100, T101, T112, **T114, T122, T129, T140 and T17"
+  },
+  {
+   "line": 1801,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**What unblocks it**: a `user` decision, now on **two** phenomena, **two shapes of the second one**, and **a third outcome in which there is no schedule at all**. **What it blocks**: nothing today \u2014 n"
+  },
+  {
+   "line": 1806,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Over the union of everything T83, T84 and T100 swept**, **341 measured divergent-or-invalid cells** sit outside the corpus \u2014 **312 family-A port-vs-oracle divergences** plus **29 family-B cells wh"
+  },
+  {
+   "line": 1818,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **Plus 180 further family-B cells** from T117 and T159 that no vector covers **and that nobody has graded against the port at all** \u2014 so they cannot be added to the \"341\" figure, which is a count of"
+  },
+  {
+   "line": 1823,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "- **And an unknown number of inputs on which the oracle throws instead of answering**, which no vector and no invariant can express today."
+  },
+  {
+   "line": 1826,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**Conformance is unmoved by this rebuild**: `bash .softhouse/conformance.sh` \u2192 **VERDICT PASS, exit 0, 43 parity vectors, 5664 graded cells, 0 invariant violations, 0 assertions NOT RUN** [measured by"
+  },
+  {
+   "line": 1872,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "> non-sub-ulp exceptions), against the true **687** and **29** **of those four captures** \u2014 the"
+  },
+  {
+   "line": 1873,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "> family-B total across all seven committed captures is **209**, see the discriminator table above."
+  },
+  {
+   "line": 1874,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "> [T170 hit this warning too and obeyed it: every T170 figure is derived from the `.gz` where a `.gz`"
+  },
+  {
+   "line": 1875,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "> exists, and its script names each input path and prints the sha256 of the bytes it read.]"
+  },
+  {
+   "line": 1948,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**The measurement that moved family B, committed on `softhouse/T117-familyb-probe`** \u2014 `.softhouse/capture/t117-familyb/`, notably `out/capture-t117-raw.json.gz` (202 cases) and `out/capture-t117p2-ra"
+  },
+  {
+   "line": 1953,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**The independent review that approved it and then doubled its headline, committed on `softhouse/T159-review-t117`** \u2014 `.softhouse/capture/t159-review-t117/`, notably `out/capture-t159-raw.json.gz` (4"
+  },
+  {
+   "line": 1961,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**The shared rig fix, committed on `softhouse/T169-capture-rig-throwable`** \u2014 `.softhouse/capture/lib/ThrewOutcome.java`, `lib/sweep_integrity.py`, `lib/check_no_narrow_catch.py`, and the controlled p"
+  },
+  {
+   "line": 1965,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**The JVM-state measurement behind the THIRD OUTCOME block, committed on `softhouse/T177-stackoverflow-nondeterminism`** \u2014 `.softhouse/capture/t177-so-nondeterminism/`: `src/CaptureT177{,b}.java`, the"
+  },
+  {
+   "line": 1973,
+   "block": "MAIN",
+   "kind": "prose",
+   "text": "**This rebuild, committed on `softhouse/T170-g8-rebuild`** \u2014 `.softhouse/capture/t170-g8-rebuild/`: `src/extract_t170.py` (every figure T170 carries into this section, re-derived **by extraction** in "
+  },
+  {
+   "line": 2161,
+   "block": "NOTICE",
+   "kind": "heading",
+   "text": "## G-8 \u2014 NOTICE, local fire `20260821-134344`: T117's measurement moves the bound. **REVIEWED \u2014 T159 APPROVED; the number then DOUBLED; T170 has since APPLIED all of this to the G-8 write-up above.**"
+  },
+  {
+   "line": 2163,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "**Status of this block, as of T170: SUPERSEDED BY THE SECTION ABOVE, and kept as the record of how the measurement moved.** Everything in it that was still true has been folded into G-8 itself \u2014 the F"
+  },
+  {
+   "line": 2171,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "*Original status line, kept because the record is the point:* **\"T117 has reported; its paired reviewer T159 has NOT.\"** The driver was recording the measurement here rather than rewriting G-8, becaus"
+  },
+  {
+   "line": 2178,
+   "block": "NOTICE",
+   "kind": "heading",
+   "text": "### The headline as T117 reported it \u2014 SUPERSEDED BY T159 IN THE UPDATE BELOW; every figure here is T117's"
+  },
+  {
+   "line": 2182,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "- Largest unamortized residual observed: **501 minor units = MNT 5.01**, at 600.0 % / n = 1000 \u2014 1000 rows of `principal \"0.00\"`, balance frozen at 5.01 for 83 years, MNT 2,505.01 of scheduled interes"
+  },
+  {
+   "line": 2186,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "- **\"Sub-minor-unit dust\" is dead.** The open question T117 was sent to settle asked whether the failing principal could exceed one minor unit. Answer: yes, by a factor of 501 \u2014 **and by 1001 once T15"
+  },
+  {
+   "line": 2189,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "- **No bound.** The first failing term grows with the principal (B \u2264 51 fails at n=108; B=101 at 250; B=501 at 1000; **B \u2265 1001 clean at all five terms T117 asked** \u2014 *and B = 1001 is family B at n = "
+  },
+  {
+   "line": 2205,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "The sentence it refers to was the opening of G-8's **\"Discriminator for family B\"**, and it actually read *\"On every family-B cell **measured so far** it sums to **0.00** against a **0.01** disburseme"
+  },
+  {
+   "line": 2217,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "- The **discriminator-table row** *\"principal column sums to the disbursed amount | yes | NO \u2014 it sums to 0.00\"* carried **no hedge at all** and was the one that needed the rebuild. **Repaired by T170"
+  },
+  {
+   "line": 2221,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "*Recording both halves because a reviewer's finding is not improved by overstating it, and a gate is not protected by understating it.* T159 was asked to complete the sweep \u2014 T117 listed **nine** affe"
+  },
+  {
+   "line": 2226,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "**A note on the file:line citations in this NOTICE block.** They were accurate against the `gates.md` that stood when the block was written, and **T170's rebuild moved every line in G-8**. Each one ha"
+  },
+  {
+   "line": 2271,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "1. **THE REFERENCE ORACLE THROWS.** Two cells died with `java.lang.StackOverflowError` \u2014 `ProgressiveEMICalculator.calculateLastUnpaidRepaymentPeriodEMI` recursing into itself at `ProgressiveEMICalcul"
+  },
+  {
+   "line": 2279,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "> **CORRECTED BY T177 \u2014 the reasoning attached to it, not the finding.** This entry originally continued:"
+  },
+  {
+   "line": 2280,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "> *\"**It is not monotone**: `(B=10001, n=2000)` dies while `(B=10001, n=3000)` succeeds, so this is not a"
+  },
+  {
+   "line": 2281,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "> simple size limit and cannot be excluded by bounding the inputs.\"* **The premise is refuted.** T177"
+  },
+  {
+   "line": 2282,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "> measured **139 probe trials across 75 java processes** and found the throw to be a function of **JVM"
+  },
+  {
+   "line": 2283,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "> state \u2014 warm-up / JIT tier / `-Xss` \u2014 not of the cell's inputs**: from a cold JVM, `(B=10001, n=3000)`"
+  },
+  {
+   "line": 2284,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "> threw **33 of 33** times and `(B=10001, n=2000)` **9 of 9**; from attempt 5 inside a JVM neither throws."
+  },
+  {
+   "line": 2285,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "> The two cells differ in **run position**, not in behaviour \u2014 the first was T159's sweep cell #1 and the"
+  },
+  {
+   "line": 2286,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "> second its #27. **So \"the throwing region\" is not a region of the input space at all**, and any sentence"
+  },
+  {
+   "line": 2287,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "> whose premise is a boundary in (B, n) is refuted rather than merely imprecise. The **conclusion** \u2014"
+  },
+  {
+   "line": 2288,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "> that this cannot be excluded by bounding the inputs \u2014 may still hold; **T177 did not test it**, and it"
+  },
+  {
+   "line": 2289,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "> no longer rests on that pair of cells. See the THIRD OUTCOME block above."
+  },
+  {
+   "line": 2291,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "> **AND THE CELL THAT THROWS IS NOT THE CELL BEHIND THE HEADLINE RESIDUAL.** T177 corrected its own"
+  },
+  {
+   "line": 2292,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "> dispatch brief on this and it is worth stating here, because the two are one digit apart: the MNT 10.01"
+  },
+  {
+   "line": 2293,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "> residual is **B = 1001 minor units** (`T159-R600p0-N3000-B1001`); the cell that throws is"
+  },
+  {
+   "line": 2294,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "> **B = 10001**, which **amortizes fully** and is not a family-B cell at all. T177 asked the **headline**"
+  },
+  {
+   "line": 2295,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "> cell from **9 cold starts: 9 observed, 0 threw**, `totalInterestAmount 15010.01` every time."
+  },
+  {
+   "line": 2296,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "> **G-8's headline number is cold-safe and is not in doubt.**"
+  },
+  {
+   "line": 2297,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "2. **A LATENT HOLE IN THE SHARED RIG**, inherited by T83, T84, T100 **and** T117 alike: it catches `RuntimeException`, **not** `Throwable`. T159 found it **by detonating it**. T117's \"0 errored\" is so"
+  },
+  {
+   "line": 2307,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "3. **The discriminator table's `balance column` row** (`gates.md:978` when this was written) \u2014 *\"balance column | constant at the disbursed amount\"* is **also falsified** by the partial cells, and is "
+  },
+  {
+   "line": 2313,
+   "block": "NOTICE",
+   "kind": "heading",
+   "text": "### The rebuild is a task, not a footnote \u2014 **and it has been DONE, by T170**"
+  },
+  {
+   "line": 2315,
+   "block": "NOTICE",
+   "kind": "prose",
+   "text": "T159's \u00a79 lists **25 `gates.md` sites**, six of them not on T117's nine. Neither worker edited `gates.md` \u2014 correctly, because its STANDING RULE demands a full sentence-by-sentence scope rebuild and p"
+  }
+ ]
+}
