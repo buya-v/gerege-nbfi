@@ -539,12 +539,35 @@ load_toolchain() {
 # that have nothing to do with the store being clean — a renamed store root, a
 # typo in STORE_ROOT, a `find` that failed.
 guard_no_float_in_vectors() {
-  local bad=0 seen=0 f
+  local bad=0 seen=0 f hits
   while IFS= read -r f; do
     seen=$((seen + 1))
     # Strip string literals first, then look for a decimal or exponent number.
-    if perl -0pe 's/"(\\.|[^"\\])*"//g' "$f" | LC_ALL=C grep -aEq '[-0-9][0-9]*\.[0-9]|[0-9][eE][-+]?[0-9]'; then
-      warn "conformance: FLOAT-SHAPED NUMBER in $f"
+    #
+    # `grep -c`, NOT `grep -q` — AND THE REASON IS THE MONEY NON-NEGOTIABLE ITSELF.
+    # `grep -q` exits 0 the instant it MATCHES. The upstream `perl` is then writing
+    # into a closed pipe: for any post-strip output larger than one pipe buffer it is
+    # still blocked in write(2) when that happens, takes SIGPIPE, and `set -o pipefail`
+    # (line 396) promotes the PIPELINE's status to that non-zero value — so the
+    # enclosing `if` evaluated FALSE ON A FLOAT IT HAD ACTUALLY FOUND. The guard behind
+    # the first non-negotiable in CLAUDE.md went SILENT exactly when it had something to
+    # say, and only on the big inputs. That is P-57, on a money path.
+    # Two conditions are BOTH necessary and both are satisfied here: output larger than
+    # the buffer, and a consumer that can STOP EARLY. (A 400 KB single-line JSON does not
+    # reproduce it, because `grep -q` on one line cannot stop before EOF.)
+    # Measured on this host: perl producer + /usr/bin/grep consumer inverts at 64776 B of
+    # post-strip output; 64775 B still fires. `.softhouse/reviews/T191-probe/`.
+    # `grep -c` consumes ALL of its input, so the producer never meets a closed pipe.
+    #
+    # -a AND LC_ALL=C ARE BOTH LOAD-BEARING AND NEITHER MAY BE DROPPED (P-33, P-58):
+    # they defend against DIFFERENT programs, and inside this script `grep` is
+    # /usr/bin/grep (BSD grep), not any interactive shell function of that name.
+    # [T191]
+    hits="$(perl -0pe 's/"(\\.|[^"\\])*"//g' "$f" \
+            | LC_ALL=C grep -acE '[-0-9][0-9]*\.[0-9]|[0-9][eE][-+]?[0-9]')" || true
+    [ -n "$hits" ] || hits=0
+    if [ "$hits" -gt 0 ]; then
+      warn "conformance: FLOAT-SHAPED NUMBER in $f ($hits stripped line(s) matched)"
       bad=1
     fi
   done < <(find "$STORE_ROOT" -name '*.json' -type f | sort)
@@ -599,13 +622,29 @@ guard_no_float_in_vectors() {
 # walk apart from a single-directory walk, and the single-directory walk is the
 # state this guard was in while printing a healthy-looking number.
 guard_no_float_in_harness() {
-  local bad=0 seen=0 pkgs=0 f
+  local bad=0 seen=0 pkgs=0 f hits
   while IFS= read -r f; do
     seen=$((seen + 1))
     # Drop // comments and /* */ comments, then look for a float identifier.
-    if perl -0pe 's{//[^\n]*}{}g; s{/\*.*?\*/}{}gs' "$f" \
-       | LC_ALL=C grep -aEq '\bfloat(32|64)\b|\bbig\.Float\b|\bcomplex(64|128)\b|\b(Parse|Format|Append)Float\b'; then
-      warn "conformance: FLOATING-POINT IDENTIFIER in $f"
+    #
+    # `grep -c`, NOT `grep -q`, for exactly the reason spelled out in
+    # guard_no_float_in_vectors above: `grep -q` stops at the first match, `perl` dies of
+    # EPIPE mid-write, `set -o pipefail` promotes that to the pipeline's status, and the
+    # `if` reads FALSE ON A FLOAT IDENTIFIER IT FOUND. It is size-gated, so it is silent
+    # on small files and wrong on large ones — the failure mode that survives review.
+    # LATENT, NOT LIVE, IN TODAY'S TREE, and say so honestly: the largest post-strip .go
+    # output in this module is conformance/structural_test.go at 44,941 B (raw 56,153),
+    # against a 64,776 B inversion point measured on this host -- a 1.44x margin, not a
+    # safety property. The frozen contract.go, the biggest file by raw bytes, clears it
+    # only because it is almost entirely comment: 151,885 raw -> 5,690 stripped. One large
+    # generated or table-driven .go file closes that margin and the guard goes quiet with
+    # no other symptom. `grep -c` drains.
+    # -a and LC_ALL=C stay (P-33, P-58 — different programs, different attacks). [T191]
+    hits="$(perl -0pe 's{//[^\n]*}{}g; s{/\*.*?\*/}{}gs' "$f" \
+            | LC_ALL=C grep -acE '\bfloat(32|64)\b|\bbig\.Float\b|\bcomplex(64|128)\b|\b(Parse|Format|Append)Float\b')" || true
+    [ -n "$hits" ] || hits=0
+    if [ "$hits" -gt 0 ]; then
+      warn "conformance: FLOATING-POINT IDENTIFIER in $f ($hits uncommented line(s) matched)"
       bad=1
     fi
   done < <(find "$NEXUS_DIR" -name '*.go' -type f | sort)
@@ -1270,7 +1309,7 @@ prove() {
   #     the same invariant must still be asserted and still hold, or "not asserted"
   #     has simply become a way to switch a check off. It asserts hold >= 1 and
   #     violated 0 — a property, which grows with the corpus instead of going stale.
-  local out20 rc20 out20c rc20c ok20 why20
+  local out20 rc20 out20c rc20c ok20 why20 violated_hits
   mkdir -p "$tmp/unrecorded-invariant"
   cp -R "$STORE_ROOT/." "$tmp/unrecorded-invariant/"
   perl -0pi -e 's/"outstanding_principal_minor": "0",\n(\s+)"principal_major_text": "500\.00",\n(\s+)"interest_major_text": "0\.00",\n(\s+)"outstanding_principal_major_text": "0\.00",\n(\s+)"unrecorded_fields": \[\],/"outstanding_principal_minor": "",\n$1"principal_major_text": "500.00",\n$2"interest_major_text": "0.00",\n$3"outstanding_principal_major_text": "",\n$4"unrecorded_fields": ["outstanding_principal_minor"],/' \
@@ -1287,7 +1326,22 @@ prove() {
     # --- the FALSE VIOLATION direction ---
     [ "$rc20" = 0 ] || note20 \
       "FALSE VIOLATION: the run exited $rc20, wanted 0. An invariant went RED on a cell nobody observed."
-    if printf '%s' "$out20" | LC_ALL=C grep -aqF -- 'INVARIANT principal_amortizes_to_zero VIOLATED'; then
+    # `grep -c`, NOT `grep -q`. THIRD SITE OF THE SAME FAIL-OPEN SHAPE (T191), and the
+    # only one of the three whose producer is the bash BUILTIN `printf` rather than
+    # `perl` — the builtin dies of SIGPIPE just the same, measured on this host at
+    # 65,549 B of `$out20` versus 65,548 B still clean. `$out20` is a whole harness run's
+    # combined stdout+stderr, so it grows with the corpus: this is the site of the three
+    # MOST likely to cross the buffer on its own, and when it does, `grep -q` matching
+    # 'INVARIANT ... VIOLATED' on line 1 kills the printf, pipefail makes the pipeline
+    # non-zero, the `if` reads FALSE, and note20 is never called — the proof would
+    # report OK on the very FALSE VIOLATION it exists to detect. Polarity matters: the
+    # neighbouring `... || note20 ...` checks fail CLOSED under the same defect (a killed
+    # producer reads as "needle absent" -> note20 -> FAIL), which is a false alarm, not a
+    # silent pass. This one, and only this one in the block, fails OPEN.
+    violated_hits="$(printf '%s' "$out20" \
+                     | LC_ALL=C grep -acF -- 'INVARIANT principal_amortizes_to_zero VIOLATED')" || true
+    [ -n "$violated_hits" ] || violated_hits=0
+    if [ "$violated_hits" -gt 0 ]; then
       note20 "FALSE VIOLATION: principal_amortizes_to_zero was reported VIOLATED against a stand-in."
     fi
 
