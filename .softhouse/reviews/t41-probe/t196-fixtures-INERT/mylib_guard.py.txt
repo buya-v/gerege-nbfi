@@ -1,0 +1,30 @@
+"""A REAL restoring guard, living in its own module.
+
+Byte-for-byte T183's `T183-evidence/fixtures-INERT/mylib_guard.py.txt`, copied so
+T196's drive is self-contained.  Held as `.py.txt`: no `.py` sweep enumerates it and
+no shell runs it.  `t196-drive.sh` copies it to a scratch dir under a `.py` name.
+"""
+import contextlib
+import os
+import shutil
+import tempfile
+import atexit
+
+
+@contextlib.contextmanager
+def preserved(path):
+    """Genuinely restores `path` on any exit — try/finally + byte-for-byte restore."""
+    backup = tempfile.mkstemp()[1]
+    shutil.copyfile(path, backup)
+    try:
+        yield
+    finally:
+        shutil.copyfile(backup, path)
+        os.unlink(backup)
+
+
+def install_restore(path):
+    """Registers a real atexit restore for `path`."""
+    backup = tempfile.mkstemp()[1]
+    shutil.copyfile(path, backup)
+    atexit.register(shutil.copyfile, backup, path)
