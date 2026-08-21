@@ -1,5 +1,10 @@
 # Slice A2 — capture plan, mined from Fineract's own test corpus
 
+> **DEFECTS FOUND BY INDEPENDENT REVIEW — read `DEFECTS-FOUND-BY-REVIEW.md` in this directory before
+> citing anything under `out/`.** The corpus is real (24 of 27 recipes re-issue byte-identically), but the
+> **10 `attempt1-*` recipes are provably false** and must not be cited as reproducible; `cap.sh`'s
+> transport-failure handler **cannot fire**; and `manifest.py verify` does **not** cover this file.
+
 Worker **A2-3**, local fire 2026-08-21. Scope: `glaccount`, `producttoaccountmapping`,
 `financialactivityaccount` in `fineract-accounting`, plus
 `fineract-provider/.../accounting/productaccountmapping`. Source: pinned checkout
