@@ -66,6 +66,14 @@ Rules a worker agent must not violate. These get grepped against diffs during re
 - **Clean up worktrees after merging.** `/softhouse` STEP 9 requires `git worktree remove` + `prune`; it was not happening. On 21 Aug 2026 the tree held **121 worktrees / 12 GB**; 97 were clean and fully merged. A fire that merges a branch removes its worktree in the same step.
 - **A worktree with unmerged commits is a claim on attention.** 24 remain, each holding commits not on main (rescued branches, rejected drafts, and several `softhouse/T3x`–`T1xx` task branches). Each must end as merged, explicitly abandoned with a reason in `tasks.json`, or re-dispatched. Silent accumulation of unmerged branches hides lost work — the exact failure this program has already hit three times.
 
+### Ratified artefacts are write-protected (new — 21 Aug 2026)
+
+- **No committed script may write to a ratified artefact.** Found by T167: nine committed probe scripts (`.softhouse/reviews/t47-probe/t47_edit_1..8.py`) hard-wire `docs/adr/DEC-1-schedule-generator-adapter.md` and call `open(DOC, "w").write(...)`. DEC-1 is RATIFIED, and amending a ratified DEC-n is a hard `user` gate — so an unguarded in-place rewriter is a **gate bypass**, whether or not anyone runs it. "Nobody happened to execute it" is not a control.
+- **Probe scripts read and report. They never write.** A probe that needs to show a proposed edit prints a diff; it does not apply one.
+- **Grep rejections** on any committed script: `open(` … `"w"` combined with a path under `docs/adr/`, `.softhouse/vectors/`, or a ratified DEC-n; also `sed -i`, `>` redirection, or `Path.write_text` against those paths.
+- **Edits to a ratified artefact happen in exactly one way:** a task whose plan-gate check confirms the `user` gate is open, producing a new revision entry. Any other path is a rejection.
+- **This rule is retroactive** — existing tooling gets swept, not grandfathered.
+
 ### Mongolia rules (inherited)
 
 - **Never render member savings as insured/protected/guaranteed** — SCC deposits are not covered; misrepresentation carries criminal exposure. Applies to any API-returned string.
