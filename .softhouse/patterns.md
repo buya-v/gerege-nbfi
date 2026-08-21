@@ -1489,3 +1489,37 @@ guard *looks* like it is testing the property and its output *looks* like a meas
    19-file allowlist instead of trusting the count. **An unexamined allowlist is where this class lives.**
 4. **Prefer atomicity to trapping where it is available.** `os.replace()` of a temp file in the same
    directory is atomic on POSIX and needs no signal handling at all — strictly better than any trap.
+
+**P-55 — A "CONFIRMATION" PROBE THAT REUSES THE CLAIM'S OWN INVOCATION SHAPE WILL CONFIRM THE CLAIM
+EVEN WHEN IT IS WRONG, BECAUSE IT NEVER TESTS THE SHAPE THAT ACTUALLY FAILS.** T154 characterized the
+unhardened grep at `fire-program.sh:224` as **"fail-closed."** T157 drove it directly and found the
+opposite — on seekable input (file argument / `<` redirection), one invalid byte makes BSD grep print
+**nothing** and exit 1, so `DIRTY` comes back **empty** and the rescue is silently skipped: **fail-open**,
+the dangerous direction. But T155's independent review (`T155-review-of-T154.md`, and its probe script
+literally named `prove-x-removal-and-failclosed.sh`) had *already* "confirmed" T154's wrong claim,
+marked `[VERIFIED]`. T171 traced why: the probe fed the poisoned bytes through `cat file | grep -v ...`
+— **a pipe** — and a pipe is exactly the one invocation shape T157 later showed does **not** exhibit the
+blindness (BSD grep's fast invalid-byte-abort path only triggers on a seekable source). T155's probe was
+built on the same mental model as the claim it was checking — "a blind `grep -v` will just fail to
+match" — so it tested a shape where that model happens to hold trivially, and the real bug, which lives
+specifically in the file/redirection case, was never in the probe's search space.
+
+*Rules:*
+1. **An "independent" verification that inherits the original author's invocation assumptions is not
+   independent.** T155 re-derived the *conclusion* without re-deriving the *mechanism* — it should have
+   asked "what are ALL the ways this line's input reaches grep?" (pipe, file argument, `<` redirection)
+   rather than picking the one shape that matches the existing narrative.
+2. **When a probe's filename asserts the answer (`...-and-failclosed.sh`), read it as a claim, not a
+   given, and check what it actually drives.** The name told the next reader what to believe before the
+   bytes did.
+3. **Match the reproduction to the real call site, not to whichever shape is easiest to script.**
+   `fire-program.sh:224` is a pipe today, so the pipe result (safe) is the operationally relevant one —
+   but establishing *that* required first finding the file/redirection case (unsafe) and then showing the
+   real site doesn't use it. Testing only the pipe and stopping there — which is what T155 did — produces
+   a true fact (pipes are safe here) wearing a false explanation ("because grep is fail-closed").
+4. **T171 could not reproduce T157's original bug at all**, on the same reported grep version string
+   (`2.6.0-FreeBSD`) but a different macOS build (`sw_vers` → `26.5.1`/`25F80` vs T157's/the driver's
+   untested build). A version string alone is not enough provenance for a cross-machine reproduction claim
+   — a grep binary that reports the same banner can behave differently across OS patch levels. Record the
+   OS build next to the tool version whenever a reproduction depends on this kind of low-level parsing
+   quirk.

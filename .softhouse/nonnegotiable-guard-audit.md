@@ -331,3 +331,102 @@ cells compared"*; `--prove` → **exit 0**, *"PROOFS: 21 passed, 0 failed"*.
 **Still open in this register after T154:** D-1/D-2/D-3 (PostgreSQL-only preconditions vacuous on
 zero input), R-5/R-6 (the rounding canary), X-1, X-2, Z-2, and the eight non-negotiables with no
 executable guard at all. T154 touched none of them.
+
+---
+
+## APPENDED BY T171 — correction: T154's "fail-closed" characterization of `fire-program.sh:224`
+is wrong; the true direction is fail-open. This section corrects the RECORD; it edits no code and
+no committed handoff (T114 precedent — superseded, never rewritten).
+
+**The wrong claim, precisely.** T154's handoff, Blockers §1, describes the pre-fix line
+`DIRTY=$(git status --porcelain | grep -v '^?? \.softhouse/LOCK' || true)` (`fire-program.sh:224`) as
+**"fail-closed"**: *"a blind `grep -v` fails to match, so the line is kept, `DIRTY` is non-empty, and
+the rescue path runs rather than being skipped."* That is backwards.
+
+**The correct characterization** [VERIFIED:
+`.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T157.md`, "The red probe" section, and my
+own independent reproduction below]: fed a **seekable** input (a regular file, by argument or `<`
+redirection) containing **one invalid byte anywhere**, BSD grep does not "keep the poisoned line" — it
+prints **nothing at all for the whole input** and exits 1. `DIRTY` comes back **empty**, and
+`run_exit_guard` concludes there is nothing to rescue. That is **fail-open**, the dangerous direction
+for an exit-protocol guard, and the opposite of what T154 recorded.
+
+### My own reproduction (independent of T157's and the driver's)
+
+**Apparatus** [VERIFIED, this session]: `/usr/bin/grep` reports itself as `grep (BSD grep, GNU
+compatible) 2.6.0-FreeBSD` — the **same version string** T108/T154/T157 used. Host: `sw_vers` →
+`ProductName: macOS`, `ProductVersion: 26.5.1`, `BuildVersion: 25F80`, `arch: arm64`. Locale as
+inherited by this shell: `LANG=C.UTF-8`, `LC_ALL` unset — matching T157's reported production locale.
+`/usr/bin/grep` is a genuine Mach-O binary at that path (`file` confirms x86_64 + arm64e slices, not a
+shell alias); a `grep` **shell function** exists in this environment that shadows the name for
+interactive use, but I called `/usr/bin/grep` by full path throughout, and re-ran the same tests inside
+a clean `env -i LANG=C.UTF-8 /bin/bash script.sh` to rule out the function entirely — same results.
+
+**Result — this build does NOT reproduce the blindness.** I drove six invalid-byte spellings
+(`\xe2`, `\xff`, `\x80`, `\xc0`, `\xfe`, `\x81\x82`) across three input shapes (file argument, `<`
+redirection, anonymous pipe), including the poison placed directly on the LOCK-matching line itself.
+**Every single case** returned the correct filtered output (the non-`.softhouse/LOCK` lines, poison
+notwithstanding) with **rc=0** — none went silent, none returned rc=1-with-no-output. This is the
+opposite of what T157 measured on its own machine and the opposite of the ugrep 7.5.0 result the
+driver independently derived.
+
+This is a **material finding, stated plainly**: two invocations of a grep binary reporting the
+identical version string (`2.6.0-FreeBSD`) behave differently on invalid-byte input. I did not
+determine why — I only measured that they differ [UNVERIFIED beyond the observation itself]. The
+plausible explanation is that Apple ships `/usr/bin/grep` as a periodically-patched BSD-derived binary
+that keeps a static self-reported version banner across OS updates, so "same grep --version string"
+is not sufficient provenance for a cross-machine reproduction claim — the OS build (`sw_vers`) should
+be recorded alongside it. **This does not change the correction above**: T157 and the driver each drove
+the bug red on their own machines with the bytes shown in T157's handoff, and I have no reason to doubt
+either of those two independent, differently-implemented reproductions. It does mean a *third* attempt
+(mine) is a documented **negative**, not a third confirmation, and the guard's behavior should be
+treated as build-dependent rather than universal across everything that calls itself BSD grep 2.6.0.
+
+### Reachability, stated exactly (not overstated)
+
+The corrected direction (fail-open) is **not reachable through the live code as written today**:
+
+1. `fire-program.sh:224` feeds grep via an **anonymous pipe**
+   (`git status --porcelain | grep -v ...`), never a file argument or `<` redirection. T157 drove every
+   poison placement through an actual pipe and every one produced the **correct** output — pipe-fed
+   `grep -v` was not observed to go blind on either machine tested. [VERIFIED:
+   T157's handoff, "ANONYMOUS PIPE" row; matches my own pipe results, rc=0 with correct output on the
+   build I tested, which reproduced no failure mode at all.]
+2. **APFS refuses to create a filename containing an invalid UTF-8 byte outright** — `EILSEQ`
+   [VERIFIED: T157's handoff, `python3 -c "open(b'...\xe2...', 'wb')"` → `OSError(92, 'Illegal byte
+   sequence')`]. So on this filesystem the poisoned byte cannot even originate from a locally-created
+   file in the first place.
+
+So: this is a **latent mischaracterization sitting in merged evidence**, not a live hole. It would only
+matter if a future edit changed the line from a pipe to a seekable read (e.g. capturing
+`git status --porcelain` to a temp file before grepping it) — a plausible refactor, and one that would
+then fail silently in the fail-open direction rather than the fail-closed direction T154 recorded.
+Saying more than this — e.g. that the guard is currently unsafe — would be overstating the risk to make
+the correction sound urgent, which the task brief specifically warned against.
+
+### Merged artefacts left unedited under the T114 precedent (named, not rewritten)
+
+Four committed files still carry the wrong claim or a repetition of it. Per T114, committed evidence is
+named and superseded, never rewritten in place:
+
+1. `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T154.md`, Blockers §1 — the original
+   claim ("It is also **fail-closed** under BSD grep...").
+2. `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T155.md`, lines 49–52 — T155's own review
+   handoff repeats it as confirmed fact: *"I confirmed it is **fail-closed** — a blind `grep -v` keeps
+   the line, `DIRTY` is non-empty, the rescue runs."*
+3. `.softhouse/reviews/T155-review-of-T154.md`, lines 76–82 — the same repetition, this time marked
+   `[VERIFIED]`: *"I confirmed its direction is **fail-closed**... The blind grep can only cause a
+   spurious DIRTY, never a skipped rescue [VERIFIED]."*
+4. `.softhouse/reviews/T155-probe/prove-x-removal-and-failclosed.sh` and its recorded output
+   `.softhouse/reviews/T155-probe/out/probe-ix.txt` — the probe script T155 wrote to test this
+   (named, literally, `...-and-failclosed.sh`) drives the poison through `cat file | grep -v ...`
+   (line 41 of the script) — **a pipe**. Per T157's finding (and mine, on the build that reproduces
+   nothing at all) a pipe is exactly the shape that does **not** exhibit the blindness. So T155's
+   "confirmation" tested a shape that structurally cannot fail the way the claim describes; it
+   demonstrated the pipe is safe (true, and consistent with §Reachability above) while believing it had
+   confirmed something about the general `grep -v` behavior (false). This is the specific mechanism worth
+   naming in `patterns.md` — see P-55 below.
+
+**Already correct, no fix needed:** `.softhouse/RESUME.md:85` and `.softhouse/tasks.json` (lines 415,
+651, 663) already state the corrected fail-open direction accurately — these were written after T157's
+finding and do not need correction.
