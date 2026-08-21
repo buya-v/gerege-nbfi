@@ -1,0 +1,29 @@
+wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-aff8ecc0611ecc867/.softhouse/capture/pathb/t125/green-t40-gerege/attestation.json
+GATE: effective rounding mode PROVEN HALF_UP — pinned exact tie calc-pmode2-gerege.json answered 20925.05 (HALF_EVEN would answer 20925.04)
+GATE: 1 capture(s) had no first-issue counterpart to compare against (CTRL-B-01) — an absence, not a mismatch, and NOT a determinism claim.
+effective MathContext: MathContext(19, HALF_UP)   matches ratified: True
+canary: 20925.05 (HALF_UP confirmed behaviourally)
+  CTRL-B-01                                          HTTP 200  sha256 713a35601b8909f4  == prior issue: None
+  FC-01-flat-disbursement                            HTTP 200  sha256 18bc7b0e30ed14d6  == prior issue: True
+  FC-02-flat-instalment                              HTTP 200  sha256 eb121bcb048d9781  == prior issue: True
+  FC-03-pctamount-disbursement                       HTTP 200  sha256 04c3c58545ca0c45  == prior issue: True
+  FC-04-pctinterest-instalment                       HTTP 200  sha256 4b350ecf532bf892  == prior issue: True
+  FC-05-pctamountinterest-instalment                 HTTP 200  sha256 2f2a242fa80ca563  == prior issue: True
+  FC-06-penalty-inside-p3                            HTTP 200  sha256 000f9f6bc6b73382  == prior issue: True
+  FC-07-fee-on-p3-duedate                            HTTP 200  sha256 dffaf0001a4f3b31  == prior issue: True
+  FC-08-penalty-instalment                           HTTP 200  sha256 a08d24d7042263e4  == prior issue: True
+  FC-09-pctamount-instalment                         HTTP 200  sha256 090fce5d47b04d79  == prior issue: True
+  FC-10-pctamount-inside-p6                          HTTP 200  sha256 71c23d4d1795c0e6  == prior issue: True
+  FC-11-fee-on-disbursement-date                     HTTP 200  sha256 d157b0a21c893ec0  == prior issue: True
+  FC-12-fee-on-final-duedate                         HTTP 200  sha256 fbb8d67050a6672a  == prior issue: True
+  FC-13-fee-inside-p12                               HTTP 200  sha256 fbb8d67050a6672a  == prior issue: True
+  FC-14-fee-inside-p1                                HTTP 200  sha256 d157b0a21c893ec0  == prior issue: True
+  FC-15-combined-fee-and-penalty                     HTTP 200  sha256 6dfe679c85915dbf  == prior issue: True
+  FC-16-fee-on-p1-duedate                            HTTP 200  sha256 d157b0a21c893ec0  == prior issue: True
+  FC-17-fee-after-final-duedate                      HTTP 200  sha256 713a35601b8909f4  == prior issue: True
+  FC-19-pctinterest-sdd-inside-p6                    HTTP 200  sha256 a214f3ae361dd2f1  == prior issue: True
+  FC-20-pctinterest-sdd-on-disb                      HTTP 200  sha256 713a35601b8909f4  == prior issue: True
+  FC-21-pctamtint-sdd-inside-p6                      HTTP 200  sha256 52eb83b1ce973075  == prior issue: True
+  FC-22-penalty-instalment-plus-sdd-on-p3-duedate    HTTP 200  sha256 f7c4d6a88d1d9f33  == prior issue: True
+  XR-01                                              HTTP 403  (REFUSAL, not a capture)
+NOTES: none — every attested field was read from a primary source.

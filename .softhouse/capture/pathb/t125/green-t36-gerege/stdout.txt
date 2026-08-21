@@ -1,0 +1,7 @@
+wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-aff8ecc0611ecc867/.softhouse/capture/pathb/t125/green-t36-gerege/attestation.json
+GATE: effective rounding mode PROVEN HALF_UP — pinned exact tie calc-pmode2-gerege.json answered 20925.05 (HALF_EVEN would answer 20925.04)
+effective MathContext: MathContext(19, HALF_UP)   matches ratified: True
+  B-01  HTTP 200  sha256 713a35601b8909f4  matches committed corpus: True
+  B-02  HTTP 200  sha256 9de8757deeb02476  matches committed corpus: True
+  B-03  HTTP 200  sha256 892dd6f537ef34f5  matches committed corpus: True
+  B-04  HTTP 200  sha256 c80f62b01721ab15  matches committed corpus: True

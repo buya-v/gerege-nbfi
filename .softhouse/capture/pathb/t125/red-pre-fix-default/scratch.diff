@@ -1,0 +1,8 @@
+161c161
+< canary = os.path.join(PATHB, 't22-audit', 'req', 'calc-pmode2-gerege.json')
+---
+> canary = os.path.join(PATHB, 't22-audit', 'req', 'calc-pmode2-default.json')
+170c170
+< if pre.returncode != 0:
+---
+> if False:  # T125 RED DEMO: OUTER precondition gate DISABLED
