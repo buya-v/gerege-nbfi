@@ -2563,7 +2563,7 @@
     {
       "id": "T127",
       "title": "INDEPENDENT review of T109 — the fork-point digest comparison and its class sweep",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -2574,7 +2574,7 @@
         ".softhouse/reviews/"
       ],
       "description": "Paired reviewer for T109. Re-establish the pre-fix green 25/25 on main's tip, the 12 red cases and their ZERO-stdout-bytes property, the three digests (fourth independent measurement), the ten invocation forms both ways, and the P-24 scratch-clone merge into current main. Close T109's own gap: the Go toolchain IS at .softhouse/toolchain/go/bin/go, so run build/vet/test/gofmt. RE-RUN THE 356-FILE CENSUS INDEPENDENTLY and rule on the out-of-scope items, above all admit.go:594.",
-      "note": "Raised by the driver, local fire 20260821-080001, from T109's class sweep / T96."
+      "note": "Raised by the driver, local fire 20260821-080001, from T109's class sweep / T96. || local fire 20260821-080001: DONE on softhouse/T127-review-t109 (c4eff9d). VERDICT MICRO-FIX, 7 items, all prose/evidence, no predicate change. Every behavioural claim of T109 reproduced on its own drivers in its own throwaway clone: 12 refusals, 11 at exit 2 with ZERO stdout bytes and ZERO proof-row artefacts (a green run writes 4, so the metric DISCRIMINATES); ordering proved THREE ways including one T109 never stated (from source, check_base_digest :217 and the capture pin :224 both precede the header :261 and row 1 :283); three digests measured a FOURTH time, all agreeing, and 8da4b83 confirmed as fork point STRUCTURALLY. P-24 scratch merge at a tip two commits newer than any T109 saw: 25/25 exit 0, merge-commit pin refused, transcript byte-identical. THE GO GAP IS CLOSED and T109's premise was false with the disproof COMMITTED ON ITS OWN BRANCH (.softhouse/bin/go-env.sh says 'usage from any checkout OR worktree'). IT REFUTED T109's HEADLINE FINDING, the one the driver acted on: 'a HALF_EVEN JVM writes a complete attestation and exits 0' is FALSE - the canary IS gated, preconditions.sh:159-160 -> exit 1, which attest.py runs at :90 and aborts on at :95-98 with 'no attestation written'; the :337 verdict is a REDUNDANT COPY of an enforced check. Mechanics accurate, consequence wrong. T125 REACHED THE SAME CORRECTION INDEPENDENTLY DURING EXECUTION and disclosed that it had to disable the outer gate to demonstrate. THE REAL, LIVE HOLE - on which T125, T127 and T134's R-5 all converge, and DRIVER-CONFIRMED: T80's CANARY_EXPECT hardening was never back-ported from pathb/t36/preconditions.sh (which pins the literal at :54) to charges/bin/preconditions.sh:36 or audit-t44/.../preconditions-COPY.sh:36, both still ${CANARY_EXPECT:-20925.05}, so CANARY_EXPECT=20925.04 passes the gate - T80's OWN ATTACK 4a. OTHER FINDINGS: F-1 (P2) T109's 'green 25/25 against a baseline that already contains the fix' is false and T103 never claimed it, escalated by T109 into four sites incl. operator-facing FATAL text; F-3 (P2) THE zsh ROW HAS ZERO DISCRIMINATING POWER - it refuses the CORRECT pin too (set -- $fork_line, no zsh word-splitting) and the pre-fix rig runs green under zsh, so it is A REGRESSION T109 INTRODUCED, and T109 ran leg B on 3 of 10 forms while labelling it 'SAME FORMS'; F-2/F-4/F-5 (P3) the printed recovery command returns the wrong commit so the recovery loop never terminates, and the F-2 sweep missed T82.md:124 in a file T109 edited. CENSUS RE-RUN: 348 not 356, by five counting methods incl. the -name/-o-name precedence trap; capturesCanonicalSha256 8 rigs CONFIRMED; CP_DIGEST 6 files NOT 11 (substance holds, EXPECTED_CP* = 0). admit.go:594 RULING: not reachable today (42/42 parity carry a non-empty capture_sha256; the 5 empties are exactly the contract-refusal and self-test classes) BUT it is a guard that cannot fail, and structural_test.go:750-847 admits a class:'parity' vector with an empty capture_sha256 IN A PASSING TEST - deserves its own small task, T141."
     },
     {
       "id": "T128",
@@ -2611,7 +2611,7 @@
     {
       "id": "T129",
       "title": "INDEPENDENT review of T122 — and the overdue rebuild of the G-8 scope table",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -2622,7 +2622,7 @@
         ".softhouse/reviews/"
       ],
       "description": "Paired reviewer for T122, with a second mandate T122 itself flagged. PART 1: re-derive the four exact-rational ulp gaps and the exact ulp crossing (last n >= 1 ulp = 106, first < 1 ulp = 107); independently verify the .json vs .json.gz subset claim that nearly produced a THIRD wrong count on this gate (P-32); test the INTERPRETATION that the region's boundary (n=104) and the sub-ulp boundary (n=107) do not coincide, so at most one can be the cause; and rule on T122's deliberate deviation over tasks.json (the driver believes T122 was right and the brief was wrong - see P-31). PART 2, why this task exists: NOBODY HAS REBUILT T101's 56-row sentence-by-sentence scope table across two subsequent rounds of corrections that both ADDED prose, and three consecutive reviews (T101, T114, T122) have each found a false-scope sentence. That is a section growing faster than its audit. Rebuild the table from scratch over the branch's current text, paying particular attention to sentences added BY THE CORRECTIONS - F-T114-2 was a fix that introduced a new unscoped claim, and T112's own attestation then misdescribed it.",
-      "note": "Raised and dispatched by the driver, local fire 20260821-080001."
+      "note": "Raised and dispatched by the driver, local fire 20260821-080001. || local fire 20260821-080001: DONE on softhouse/T129-review-t122 (318d413). VERDICT MICRO-FIX. Reproduced T122's ulp derivation EXACTLY with its own classifier in exact Fraction end to end - 687 cells, split 346/312/29, family B at rate 600.0 and principal 1 minor only; 4 of 29 not below the ulp (2.43/2.43/1.62/1.08 at n=104,104,105,106), first sub-ulp at n=107 (0.72), strictly positive on all 29 and strictly decreasing across 22 distinct n, ULP CROSSING crossed EXACTLY ONCE (last >=1 ulp = 106, first <1 = 107). Derived WHY it is one clean threshold: at the family-B shape r = 1/2 exactly, so gap = (1/2)(2/3)^n/(1-(2/3)^n) and the four values are in exact 3:2 ratio. IT REPRODUCED THE TRAP TOO: the same analysis over the plain .json files gives 16 family-B / 3 exceptions, exactly T122's wrong first-run numbers - and it made a check T122 did not, that each plain file's recorded canonical sha256 reproduces over the .gz captures array. RULED THE tasks.json DEVIATION: T122 IS RIGHT AND THE DRIVER'S BRIEF WAS WRONG - reverting to the merge-base blob makes theirs==base so any future main wins unconditionally, a STRUCTURAL guarantee, where a snapshot satisfies 'no intentional change' only at an instant; retested against two main heads T122 never saw, both clean. The brief's literal empty-diff check is itself the P-24 moving-baseline anti-pattern. REBUILT SCOPE TABLE: 117 rows, 6 fail, and EVERY failure is a scope or disposition statement - on this reading THE MEASUREMENTS ARE PERFECT. F-T129-1 (P2, apply before merge): gates.md:1540 says T122 took tasks.json 'wholesale from main', false after its own revert, and FIVE sites carry the superseded text, one asserting an empty diff that is 1,097 lines - P-21/P-26 a third time, this time the leaking correction is the author's own change of mind. F-T129-2: ':1166 300.0% with B=2 through n=204' - measured top is 260. F-T129-3: ':1012 in reversed order' is a scramble with each boundary PAIR reversed. F-T129-4: the ':1450 non-decision roster' is stale by two tasks. F-T129-5: the Evidence block lists the .json and .gz without noting the plain files are EXTRACTS - the silence that caused the trap. F-T129-6: one clause of the deleted UPDATE block unrestored - main:947's 'T83 took no number from T75', the independence claim that makes ':1075 T75's report is CONFIRMED' mean anything. Proposed standing rule: nobody edits G-8 again without rebuilding the table, and the editor adds itself to the :1450 roster."
     },
     {
       "id": "T130",
@@ -2694,7 +2694,7 @@
     {
       "id": "T134",
       "title": "Audit EVERY CLAUDE.md non-negotiable's guard and prove which can actually fail",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -2703,7 +2703,7 @@
         ".softhouse/nonnegotiable-guard-audit.md"
       ],
       "description": "Three separate workers this fire, on three unrelated tasks, each found a guard on a DIFFERENT non-negotiable that could report success having verified nothing - money/no-float (bare grep, T108), ratified HALF_UP (verdict computed and never gated, T109), and PostgreSQL-only/no-Oracle-MySQL-MariaDB (vacuous on zero input, T99b). Three for three, and nobody has ever checked the set AS A SET. Enumerate every non-negotiable, find its guard or record ABSENT, drive every existing guard RED in a scratch copy, and classify each FIRES / VACUOUS / ABSENT / UNGATED. Deliverable is a REGISTER, not repairs - three fixes are already in flight and a fix landing under another worker's feet is worth less than a complete map. Answer the blast-radius question per vacuous guard: what was certified through it while it was blind?",
-      "note": "Raised by the driver, local fire 20260821-080001, from T99b's F-5."
+      "note": "Raised by the driver, local fire 20260821-080001, from T99b's F-5. || local fire 20260821-080001: DONE and MERGED (508824a, two new files, nothing fixed, nothing promoted). COUNTS: 19 non-negotiables - 8 guarded and firing, 3 vacuous/ungated, EIGHT WITH NO EXECUTABLE GUARD AT ALL. By site, 38 examined: FIRES 16, VACUOUS 6, UNGATED 1, ABSENT 15 - and FIVE of the sixteen FIRES sites are SIMULTANEOUSLY vacuous at an entry point, discriminating on real input and passing silently on starved input, which is the state that gets a guard believed. THE SYSTEMATIC ANSWER, now P-35: every vacuous guard in this repo is a NEGATIVE assertion (count==0, [ -z ], grep found nothing) and is vacuous on zero input BY CONSTRUCTION; every guard that survived attack is POSITIVE (present AND equal). Reviewer test: if the PASS sentence would still print on empty input, it is not a guard. NEW FINDINGS: M-3, the worst money row - a float LITERAL is invisible to BOTH no-float guards because both inspect IDENTIFIERS and a literal is token.FLOAT, so rate := 0.036 / 12.0 builds, passes the test and takes conformance to exit 0 (DRIVER-VERIFIED: the shell guard's regex does not fire on an injected literal); fix is three lines and currently FREE, 0 float literals across the tree's 21 files. X-1: conformance.sh derives STORE_ROOT from BASH_SOURCE while the grader uses FindRepoRoot(\".\") from the process CWD, so THE SHELL GUARDS AND THE GO GRADER CAN INSPECT TWO DIFFERENT VECTOR STORES - demonstrated in one invocation. X-2: --prove never calls run_guards, so its 21/21 says nothing about the three HARD guards. M-6, highest leverage: capture/charges/bin/selfcheck.sh implements correct, run-failing checks for FIVE non-negotiables and NOTHING INVOKES IT. R-5 (independently matching T125/T127): the T76/T80 CANARY_EXPECT hardening never reached two of its three copies. Z-2: the timezone guard enforces 'IANA name not offset' but not 'one of the two Mongolian zones' - America/New_York in a graded vector gives exit 0. X-3: softhouse-uat/SKILL.md publishes five HARD checks and FOUR HAVE NO EXECUTABLE EXISTENCE. BLAST RADIUS, measured not inferred: nothing was certified through a vacuous guard - 0 float-shaped vector files under the mitigations the guard lacks, 0 float identifiers and 0 float literals in nexus/, nexus/ imports NO database driver at all, and all 42 promoted parity vectors trace to run-pass3*.sh which runs the seam with no database in the loop and gates precision 19 AND ordinal 4 with sys.exit. THE LIVE EXPOSURE IS THE ANALYSIS LAYER: 74 of 240 .py files call json.load with no parse_float=, and capture/actualactual/analysis/discriminate.py:160 decides a money claim by BINARY-FLOAT EQUALITY and then prints 'ALL n PERIODS REPRODUCED DIGIT FOR DIGIT' - the P-25 class that already put 18-instead-of-22 into gates.md. HONEST LIMIT it states itself: an archived '0 prohibited-engine hits' PASS is ambiguous between 'checked and clean' and 'checked nothing', so every archived P5/P6/P11 PASS must be treated as UNPROVEN."
     },
     {
       "id": "T135",
@@ -2786,6 +2786,101 @@
       ],
       "description": "T107's FU-1, re-established by T115 with measurements THROUGH the post-MF-2 shim: N9 (rig replaced by pre-hardening bytes) exits 0 printing 'ALL PRECONDITIONS HOLD'; N10 (symlinked shim) exits 0 running the attacker's stub. MF-2 does NOT close either, and three separate artefacts now say so out loud so nobody merges believing F-2 is discharged. FU-1 is an identity/digest check on the rig actually sourced at run time - the shim must verify it is executing the bytes it thinks it is. Pin to a literal immutable sha (P-24), drive N9 and N10 red, and confirm the five real callers stay identical cell for cell.",
       "note": "Raised and dispatched by the driver, local fire 20260821-080001."
+    },
+    {
+      "id": "T140",
+      "title": "Apply T129's six scope-table findings to the G-8 write-up",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [
+        "T129"
+      ],
+      "files_hint": [
+        ".softhouse/gates.md"
+      ],
+      "description": "F-T129-1 (P2, apply before merge): gates.md:1540 and four sites in T112.md say T122 took tasks.json 'wholesale from main' - false after T122's own revert to the merge-base blob, and one of them asserts an empty diff that is 1,097 lines. P-21/P-26 a THIRD time on this section, and this time the leaking correction is the author's own change of mind. Plus F-T129-2 (':1166 through n=204' - measured top is 260), F-T129-3 (':1012 reversed order' is a scramble with each boundary PAIR reversed), F-T129-4 (the ':1450' non-decision roster is stale by two tasks - add T114 and T122), F-T129-5 (the Evidence block must say the plain .json files are EXTRACTS of the .gz - the silence that caused the near-third-wrong-count), F-T129-6 (restore main:947's 'T83 took no number from T75', the independence claim that makes ':1075 T75's report is CONFIRMED' mean anything). ADOPT T129's standing rule: nobody edits G-8 again without rebuilding the scope table, and the editor adds ITSELF to the :1450 roster. tasks.json must stay at the merge-base blob (P-31); do not re-snapshot it.",
+      "note": "Raised by the driver, local fire 20260821-080001, from T134 / T127 / T129."
+    },
+    {
+      "id": "T141",
+      "title": "admit.go:594 skips the capture-digest check on an empty string — a guard that cannot fail",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [
+        "T142"
+      ],
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/conformance/"
+      ],
+      "description": "T127's ruling. Not reachable today: 42 of 42 parity vectors carry a non-empty capture_sha256, and the 5 empties are exactly the contract-refusal and self-test classes. But the field is documented OPTIONAL, admit requires capture_ref and capture_case_id for a parity vector and NOT the digest, and structural_test.go:750-847 admits a class:'parity' vector with capture_sha256:'' IN A PASSING TEST. One `if`, a red fixture, then flip that fixture and the 'optional' comment. P-35: phrase it positively - the digest is PRESENT and EQUAL - not 'no mismatch found'.",
+      "note": "Raised by the driver, local fire 20260821-080001, from T134 / T127 / T129."
+    },
+    {
+      "id": "T142",
+      "title": "Apply T127's seven micro-fixes to T109 — including a zsh regression T109 introduced",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [
+        "T127"
+      ],
+      "files_hint": [
+        ".softhouse/capture/t74-multiplesof/T82-guard-proofs/"
+      ],
+      "description": "F-1 (P2): 'green 25/25 against a baseline that already contains the fix' is false, T103 never claimed it, and T109 escalated it into FOUR sites including operator-facing FATAL text. F-3 (P2): the zsh row has ZERO discriminating power - it refuses the CORRECT pin too, because `set -- $fork_line` does not word-split in zsh, and the pre-fix rig runs green under zsh, so this is a REGRESSION T109 INTRODUCED; 9 of 10 forms discriminate and T109 ran leg B on 3 of 10 while labelling it 'SAME FORMS'. F-2/F-4/F-5 (P3): the printed recovery command returns the wrong commit so the recovery loop never terminates; the F-2 sweep missed T82.md:124 IN A FILE T109 EDITED; census counts are 348 not 356 and CP_DIGEST is 6 files not 11. ALSO correct T109's escalated headline: the attest.py canary IS gated via preconditions.sh:159-160 -> exit 1 -> attest.py :90/:95-98, so the :337 verdict is a REDUNDANT ungated copy of an ENFORCED check - real, worth gating as defence in depth, but NOT 'a HALF_EVEN JVM attests green today'. The live hole is CANARY_EXPECT in the two un-back-ported copies (T137).",
+      "note": "Raised by the driver, local fire 20260821-080001, from T134 / T127 / T129."
+    },
+    {
+      "id": "T143",
+      "title": "M-3 — a float LITERAL is invisible to both no-float guards",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [
+        "T142"
+      ],
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/"
+      ],
+      "description": "T134's worst money row, driver-verified in its decisive limb: both guards inspect IDENTIFIERS, so a float literal (token.FLOAT) such as `rate := 0.036 / 12.0` builds, passes TestNoFloatInTheLoanScheduleTree, and takes conformance.sh to exit 0. This is a hole in the FIRST non-negotiable in CLAUDE.md. Fix is ~3 lines (walk the AST for token.FLOAT / token.IMAG in addition to the identifier check) and is currently FREE - T134 measured 0 float and 0 imaginary literals across the tree's 21 files. DRIVE IT RED with an injected literal and GREEN on the clean tree. Phrase the guard POSITIVELY (P-35) and make zero-files-inspected an error. Also fix M-5 if in scope: LoadStore reads only files inside a context dir, so for store-root JSON the defeatable shell guard is the only float check.",
+      "note": "Raised by the driver, local fire 20260821-080001, from T134 / T127 / T129."
+    },
+    {
+      "id": "T144",
+      "title": "X-1 / X-2 / M-6 — two different stores, a --prove that skips the guards, and a selfcheck nothing calls",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [
+        "T142"
+      ],
+      "files_hint": [
+        ".softhouse/conformance.sh",
+        ".softhouse/capture/charges/bin/selfcheck.sh"
+      ],
+      "description": "Three structural findings from T134. X-1: conformance.sh derives STORE_ROOT from BASH_SOURCE while the Go grader uses FindRepoRoot(\".\") from the process CWD, so THE SHELL GUARDS AND THE GRADER CAN INSPECT TWO DIFFERENT VECTOR STORES - T134 demonstrated it in one invocation. Every 'the guards passed, therefore the graded store is clean' inference in this program depends on those being the same store. X-2: --prove never calls run_guards, so its 21/21 says nothing about the three HARD guards. M-6, highest leverage in the whole register: capture/charges/bin/selfcheck.sh implements correct, RUN-FAILING checks for FIVE non-negotiables and nothing invokes it and it scans one directory - wiring it into run_guards with CH=REPO_ROOT converts five ABSENT rows at once. Drive each red (P-22), phrase positively (P-35).",
+      "note": "Raised by the driver, local fire 20260821-080001, from T134 / T127 / T129."
+    },
+    {
+      "id": "T145",
+      "title": "The analysis layer decides money claims in binary floating point — 74 of 240 scripts",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [],
+      "files_hint": [
+        ".softhouse/capture/"
+      ],
+      "description": "T134's blast-radius finding, and the only LIVE money exposure it found. 74 of 240 .py files under .softhouse/ call json.load with no parse_float=, so every money literal in a capture becomes a binary double the moment it is read. Worst instance: capture/actualactual/analysis/discriminate.py:160 decides a money claim by BINARY-FLOAT EQUALITY and then prints 'ALL n PERIODS REPRODUCED DIGIT FOR DIGIT'. This is the P-25 class that already put 18-instead-of-22 into the gate write-up Buyan reads. Fix json.load(parse_float=Decimal) or integers throughout; do NOT edit scripts that produced committed evidence (record those and re-run from scratch copies, per T114's ruling). Report which published numbers, if any, change.",
+      "note": "Raised by the driver, local fire 20260821-080001, from T134 / T127 / T129."
     }
   ]
 }

@@ -643,7 +643,8 @@ and which one you get depends on where you type it:**
 |---|---|
 | inside a script (`sh x.sh`, `bash x.sh`) | `/usr/bin/grep` — **BSD grep**. Shell functions are not exported to children. |
 | into the Claude Code **Bash tool** | a **shell function** re-execing the `claude` binary with `argv[0]=ugrep` — **ugrep with `-I` hard-coded** |
-| `command grep` / `command -v grep` | BSD grep — the function is bypassed **by design** |
+| `command grep …` | BSD grep — `command` **does** bypass the function when *running* it |
+| `command -v grep` | **reports the shell function.** It does NOT bypass it — see the correction below |
 
 And the two programs fail in **opposite** ways: BSD grep goes blind to the rest of **one line** at and right of the
 invalid byte, which **`LC_ALL=C` fixes and `-a` does not**; ugrep `-I` skips the **whole file**, which **`-a` fixes
@@ -659,6 +660,20 @@ ran from a script: **both blind to a shell function by construction.**
 > program runs*. Never run both arms of a comparison under the mitigation you are testing. And *N*-of-*N* green
 > cells refute nothing unless the failing shape is among the *N* — "I could not reproduce it" is a statement about
 > your probe until you have shown your probe can produce the effect at all.
+
+> **CORRECTION (T131, same fire).** The first version of this pattern — written by the driver — asserted that
+> `command -v grep` *bypasses* the shell function. **It does not: `command -v` reports the function.** Verified by
+> construction: define `myfn(){ :; }` and `command -v myfn` prints `myfn`. The *rule* survives untouched — `type -a`
+> is still the right instrument, because it shows the function **and** the binary and their order — but the stated
+> mechanism was wrong, and it was wrong in a pattern written to warn against exactly this. The driver then repeated
+> the false mechanism in T131's own dispatch brief, which is the propagation this pattern describes, one layer out.
+>
+> **Second silent-miss mode, and neither token fixes it (T131 F-T131-2).** The Bash-tool `grep` function carries
+> `--ignore-files`, so it honours `.gitignore` — and this repo's `.gitignore` contains `.claude/worktrees/`. A
+> `grep -rl '<string>' .` from the repo root therefore returns **exit 1 and no output** for a string that exists in
+> a sibling worktree. That is the exact command shape census and sweep tasks use, so **every repo-wide sweep run
+> through the Bash tool has been blind to every worktree and every gitignored path.** When a sweep must be
+> exhaustive, run it through `/usr/bin/grep` or `git grep`, and say in the artefact which one you used.
 
 ### P-34. Every non-negotiable that has a guard has a guard that can pass without checking — three for three
 
@@ -684,6 +699,39 @@ set** — which is why three-for-three is the finding, not three separate bugs.
 > red — and treat `ABSENT` as a first-class entry, because the non-negotiables with no guard at all are the ones
 > this table cannot even list. When a guard is found vacuous, the next question is never "is it fixed" but **"what
 > was certified through it while it was blind?"**
+
+### P-35. Every vacuous guard in this repo is a NEGATIVE assertion — and that is the whole diagnosis
+
+**Fire `20260821-080001`, T134, auditing all 19 CLAUDE.md non-negotiables and 38 guard sites at once.** Three
+workers had each stumbled onto a guard that could pass having checked nothing (P-34). Auditing the set as a set
+produced the reason they are all the same bug:
+
+> **A guard phrased as "I found nothing wrong" is vacuous on no input, by construction.**
+> `count == 0` · `[ -z "$x" ]` · `grep found no match` · `exit status was not failure`
+
+Every guard that survived attack was phrased **positively**: *this specific thing is present, AND it equals this
+specific value.* Every guard that fell was phrased negatively. It is not a coincidence and it is not three bugs.
+
+The register measured **FIRES 16 · VACUOUS 6 · UNGATED 1 · ABSENT 15** — and, most tellingly, **five of the sixteen
+FIRES sites are simultaneously vacuous at an entry point**: they discriminate correctly on real input and pass
+silently on starved input. That combination is exactly what gets a guard believed.
+
+Two consequences worth carrying:
+
+- **`ABSENT` is the biggest bucket and the quietest.** Eight of nineteen non-negotiables have no executable guard at
+  all — the append-only ledger, holds→available, `Idempotency-Key`, the never-insured/protected/guaranteed string
+  rule, three-part names, the national-ID shape, the RTGS threshold, deposit-activation-disabled. A vacuous guard
+  at least appears in a register; a missing one appears nowhere, and prose in `CLAUDE.md` reads to everyone
+  downstream as if it were enforced.
+- **A guard can be blind to the *form* of a violation rather than its presence.** Both no-float guards inspect
+  **identifiers**, so `rate := 0.036 / 12.0` — a float *literal*, `token.FLOAT` — builds, passes the test, and
+  takes conformance to exit 0. *(Driver-verified: the shell guard's regex does not fire on the injected literal.)*
+  The rule was "no floating point"; the guard implemented "no float-typed identifiers".
+
+> **Rule.** Write every guard as a positive assertion — *N items were inspected, and each equalled its expected
+> value* — and make **zero inspected** an error. The reviewer's one-line test: **if the PASS sentence would still
+> print on empty input, it is not a guard.** Then ask the second question, which the first does not cover: *does
+> this guard detect every FORM the violation can take, or only the form I happened to think of?*
 
 <!-- LEARNED PATTERNS END -->
 
