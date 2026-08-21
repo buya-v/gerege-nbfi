@@ -1,0 +1,16 @@
+Post-fix line-224 (exact bytes from the T172 branch):
+  DIRTY=$(git status --porcelain | LC_ALL=C grep -av '^?? \.softhouse/LOCK$' || true)
+
+=== git status --porcelain (real, scratch repo, same state as pre-fix run) ===
+ M some/other/baseline.go
+?? .softhouse/LOCK
+?? .softhouse/LOCKED_STATE.md
+?? some/other/newfile.go
+
+DIRTY (post-fix pattern) =
+ M some/other/baseline.go
+?? .softhouse/LOCKED_STATE.md
+?? some/other/newfile.go
+
+VERDICT 1: sibling KEPT in DIRTY -- FIXED (GREEN)
+VERDICT 2: real LOCK line correctly excluded from DIRTY -- not over-corrected

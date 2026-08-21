@@ -1,0 +1,14 @@
+Pre-fix line-224 (exact bytes from main):
+  DIRTY=$(git status --porcelain | LC_ALL=C grep -av '^?? \.softhouse/LOCK' || true)
+
+=== git status --porcelain (real, scratch repo) ===
+ M some/other/baseline.go
+?? .softhouse/LOCK
+?? .softhouse/LOCKED_STATE.md
+?? some/other/newfile.go
+
+DIRTY (pre-fix pattern) =
+ M some/other/baseline.go
+?? some/other/newfile.go
+
+VERDICT: sibling silently DROPPED from DIRTY -- BUG CONFIRMED RED, against real git status output
