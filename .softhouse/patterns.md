@@ -41,6 +41,12 @@ Rules a worker agent must not violate. These get grepped against diffs during re
 - **Schema-first still holds:** adopt/prune Fineract's PostgreSQL schema; both sides read the SAME schema — that shared Postgres database is what makes shadow/differential testing meaningful. A parity claim across two different engines is not a parity claim.
 - **Terminology:** "the oracle" in this project = the **Fineract reference implementation** (test-oracle sense), recorded in `.softhouse/reference-oracle.md`. It is never Oracle Database. Write "reference oracle (Fineract)"; reserve "Oracle Database" for the prohibited product.
 
+### Repository hygiene (new — 21 Aug 2026)
+
+- **Raw capture dumps are artefacts, not source.** A capture output over ~5,000 lines is stored as its **recipe + SHA-256 + the derived vectors**, never committed whole. Two negative-control files (`t46-perturbed-reemission.json`, `t46-corrupted-canary-payload.json`) alone are 351k lines; captures total 1.33M of the repo's 1.58M lines, and every clone and every cloud fire pays for that. The vector STORE (`.softhouse/vectors/`) is committed; multi-hundred-thousand-line probe dumps are regenerable and must be regenerable — if a dump cannot be reproduced from its recorded recipe, that is a defect in the recipe.
+- **Clean up worktrees after merging.** `/softhouse` STEP 9 requires `git worktree remove` + `prune`; it was not happening. On 21 Aug 2026 the tree held **121 worktrees / 12 GB**; 97 were clean and fully merged. A fire that merges a branch removes its worktree in the same step.
+- **A worktree with unmerged commits is a claim on attention.** 24 remain, each holding commits not on main (rescued branches, rejected drafts, and several `softhouse/T3x`–`T1xx` task branches). Each must end as merged, explicitly abandoned with a reason in `tasks.json`, or re-dispatched. Silent accumulation of unmerged branches hides lost work — the exact failure this program has already hit three times.
+
 ### Mongolia rules (inherited)
 
 - **Never render member savings as insured/protected/guaranteed** — SCC deposits are not covered; misrepresentation carries criminal exposure. Applies to any API-returned string.
