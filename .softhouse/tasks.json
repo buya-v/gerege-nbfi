@@ -2019,9 +2019,9 @@
       "dependencies": [
         "T89"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 0,
-      "note": "Raised by the driver, local fire 20260820-200002, from T89's F-T89-4. NEEDS NO ORACLE. Pair with an independent reviewer. Sequence AFTER T88 merges. || local fire 20260821-080001: DISPATCHED (wave 1), isolated worktree, model opus. No oracle needed. Brief extended: after driving the new sole-caller census red, construct the detecting edit for each of the OTHER FOUR censuses and report which can and cannot go red (P-22)."
+      "note": "Raised by the driver, local fire 20260820-200002, from T89's F-T89-4. NEEDS NO ORACLE. Pair with an independent reviewer. Sequence AFTER T88 merges. || local fire 20260821-080001: DISPATCHED (wave 1), isolated worktree, model opus. No oracle needed. Brief extended: after driving the new sole-caller census red, construct the detecting edit for each of the OTHER FOUR censuses and report which can and cannot go red (P-22). || local fire 20260821-080001: DONE on softhouse/T96-sole-caller-census (5 commits). SOLE-CALLER CONFIRMED at pinned 426a23544: git grep over all 7,890 tracked files (6,586 Java, main+test+e2e) returns EXACTLY TWO LINES - the call :743 and the declaration :1744. The method is private, so not virtual, not overridable, not interceptable by the Spring/CGLIB proxy the @Component class at :71-72 sits behind; no reflective route (name in no string literal anywhere, no setAccessible/MethodHandles.lookup/ReflectionTestUtils in fineract-progressive-loan, the tree's one getDeclaredMethods() name-filtered to get* in an unrelated e2e step def). The escape hatch did not fire. ALL SIX COUNTS RE-DERIVED, NONE DRIFTED (3/3/9/4/18/2-new), each with its exact reproducing command now written into part 9. RED DEMONSTRATION: second caller injected into a git-archive scratch tree, graph 6 goes 2 -> 3 RED while graphs 1-5 stay GREEN on the same tree - F-T89-4 measured, not argued. THE VALUABLE HALF - IT AUDITED THE FIVE CENSUSES THAT ALREADY SHIPPED AND TWO COULD NOT DETECT THEIR OWN DEFINING EDIT: graphs 2 and 3 were FILE-SCOPED, so private->public plus a caller elsewhere leaves the block's own command reading 9 on a tree with FIVE call sites into :718 - the closure-critical count, silently green; graph 1 was scoped to 2 of 28 src/main trees. Both fixed to whole-tree git grep at the pin, numbers unchanged. THIRD BLIND SPOT NOT FIXABLE BY A SCALAR: cancelling add/delete pairs defeat all six because they are LINE counts - shown twice (graph 3 holds at 9, graph 5 at 18) - published in the block as 'reproduce the LINES, not the total' rather than papered over. AND ITS OWN graph-4 COMMAND WENT SILENTLY GREEN TWICE before it worked (a comma-less final enum constant and two constants on one line are both legal Java and both read 4); shipped a tokenising form and recorded both rejected drafts. ALSO CORRECTED T78's part-1 parenthetical about OverdueBalanceCorrection.java:26 as FALSE UNDER BOTH READINGS (28 field-name mentions in main, not 1; :26 contains no setter name at all), found part 9 claiming every count was a grep when graph 4 had no command at all, and swept 'grep-reproducible' restated in three further places. GATES: zero non-comment changed lines vs fork point, comment-stripped emi.go byte-identical to main (c5a49c3f), contract.go 0db73d4a unchanged, gofmt -l names exactly contract.go and NOT emi.go, build/vet/test 0/0/ok. MERGE NOTE: measure against fork point 8faee447, not main - main moved several orchestrator commits during the task and never touched emi.go. AWAITING REVIEW T128."
     },
     {
       "id": "T97",
@@ -2283,9 +2283,9 @@
       "dependencies": [
         "T103"
       ],
-      "status": "pending",
+      "status": "done",
       "attempts": 0,
-      "note": "Raised by the driver, local fire 20260820-230001, from T103's F-1..F-4. Needs no oracle except to confirm the conformance verdict. Pair with an independent reviewer. T82+T87+T102+T103 are ALREADY MERGED - this hardens what is on main."
+      "note": "Raised by the driver, local fire 20260820-230001, from T103's F-1..F-4. Needs no oracle except to confirm the conformance verdict. Pair with an independent reviewer. T82+T87+T102+T103 are ALREADY MERGED - this hardens what is on main. || local fire 20260821-080001: DONE on softhouse/T109-fork-point-digest-compare (5 commits). T102's 'nothing can detect a wrong-but-valid pin' DISPROVED by two lines of its own header. FORK-POINT-SHA is now keyed (commit <sha> + one sha256 per extracted file, each required exactly once; bare-sha form refused) and all three digests are compared BEFORE the header prints and before row 1, exit 2 naming file/expected/observed. RED: 12 cases, every one exit 2 with ZERO stdout bytes and ZERO proof-row artefacts (the zero-bytes result is what proves the refusal precedes the header) - main's tip, T102-era bare sha, each of three digests altered individually, no/duplicate commit directive, root commit lacking the paths, plus T102's original four. GREEN: 25/25 exit 0, composition unchanged; the three digests measured independently by T102, T103 and T109, all agreeing. SELF-ATTACK: the wrong pin fed through TEN invocation forms (abs/rel, three cwds, direct exec, sh, zsh, piped bash < script) - all exit 2 / 0 bytes / 0 rows, and the correct pin runs 25/25 through the same forms, so the refusal DISCRIMINATES rather than being a rig that cannot run. P-24 SCRATCH CLONE: merged into the clone's own main so main==HEAD and merge-base main HEAD is the merge commit - THE EXACT STATE THAT KILLED T98 - 25/25 exit 0, transcript byte-identical to the branch after root normalisation, re-run against three different main tips as main moved twice. CLASS SWEEP (the valuable half): all 356 *.sh/*.py under .softhouse/ plus conformance.sh censused - 9 FAMILIES, ~90 SITES. Three load-bearing and in scope, all fixed. ALSO fixed F-2 (the cat FORK-POINT-SHA recovery command never worked, 3 sites), F-1 (sweep-census.py now stamps the commit it measured and shouts on a dirty tree, driven red and back), F-6, and corrected T102's false sentence PLUS FIVE RESTATEMENTS IT DID NOT QUOTE (P-26) with the sweep's five limits stated. Baseline unmoved: conformance PASS exit 0, 42 parity, 5576 cells, 0 violations; vectors and nexus diffs empty. HONEST GAP, AND ITS PREMISE WAS FALSE: it reported 'no Go toolchain on this host' and left go build/test/gofmt UNVERIFIED - the toolchain IS at .softhouse/toolchain/go/bin/go (go1.26.6) and conformance.sh loads it. Second occurrence this fire; now P-30. AWAITING REVIEW T127."
     },
     {
       "id": "T110",
@@ -2525,6 +2525,72 @@
       ],
       "description": "Raised by T119 against .claude/skills/softhouse-program/SKILL.md:108-109 while reviewing T110. The file said 'Only exit 2 is the oracle-is-down stop condition'. Since T110, exit 2 carries TWO meanings: the oracle is unreachable, OR the corpus is unusable (ZERO VECTORS FOUND, an inadmissible vector, a duplicate case_id). A driver following the old rule would park all vector work with reason=oracle_unreachable over a duplicate file while the oracle sat healthy - the EXACT defect class T81 closed at exit 3, reappearing one level up in the skill that grades for it: a REFUSAL read as an OUTAGE. The disambiguator already exists and prints unconditionally before the binary runs (conformance.sh:296, 'probe = up|down'). Park condition is now 'exit 2 AND probe != up', both of them.",
       "note": "Raised by T119, local fire 20260821-080001. FIXED BY THE DRIVER THE SAME FIRE: new table row for 'Exit 2 with probe = up' (task failure, park nothing), the false 'Only exit 2...' sentence deleted, and a standing blockquote after the STEP 4 table: read the probe line, never the exit code alone. Restatement sweep done across all three softhouse SKILL.md files (P-26): softhouse-uat:54 says only 'if the oracle is down, conformance reports exit 2, not a false PASS', which is TRUE and does not assert the converse - left alone. ENGINEERING, no RESERVED content, driver-decidable under CLAUDE.md 'Answering gates'. Buyan may reverse."
+    },
+    {
+      "id": "T125",
+      "title": "The HALF_UP attestation canary computes a verdict and GATES NOTHING — three live files",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [
+        "T109"
+      ],
+      "files_hint": [
+        ".softhouse/capture/charges/bin/",
+        ".softhouse/capture/pathb/t36/"
+      ],
+      "description": "Raised by T109's class sweep, driver-verified. charges/bin/attest.py:337, attest-t40.py:377 and pathb/t36/attest.py:437 compute the effective-rounding-mode canary verdict, write it into attestation.json, print it, and gate nothing - every sys.exit in those files is a precondition or an HTTP!=200 check, all positioned BEFORE the canary block. A HALF_EVEN JVM produces a complete, green-looking attestation TODAY. This is the FOURTH occurrence of the computed-printed-never-compared class this run, and it is the most consequential: HALF_UP is a RATIFIED TENANT PARAMETER (RoundingMode ordinal 4, Buyan 18 Aug 2026) whose stock Fineract default is HALF_EVEN, and P-9 records that a port inheriting the default matched the oracle on every graded cell at 29 vectors. The canary exists to catch exactly that and cannot. T80's P0-A supposedly closed this shape - establish whether these three were missed or forked before it.",
+      "note": "Raised by the driver, local fire 20260821-080001, from T109's class sweep / T96."
+    },
+    {
+      "id": "T126",
+      "title": "T109's residual class backlog — unread digests in 19 rigs, and admit.go:594",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [
+        "T127"
+      ],
+      "files_hint": [
+        ".softhouse/capture/",
+        "nexus/internal/apps/loanschedule/conformance/"
+      ],
+      "description": "From T109 section 8.2, out of its scope. capturesCanonicalSha256 in 8 rigs says IN ITS OWN DEFINITION STRING that it exists 'to check a re-run', and no code reads it. CP_DIGEST in 11 rigs has no EXPECTED_*. matches_ratified_production_setting and byte_identical_to_prior_issue are the same ungated shape as T125's canary. And admit.go:594 SKIPS THE CAPTURE-DIGEST CHECK ON AN EMPTY STRING - the only member of the list inside the graded Go pipeline, so establish first whether an empty capture digest can reach it on a promoted vector and what the skip permits. T127 rules on admit.go:594; scope this task from that ruling.",
+      "note": "Raised by the driver, local fire 20260821-080001, from T109's class sweep / T96."
+    },
+    {
+      "id": "T127",
+      "title": "INDEPENDENT review of T109 — the fork-point digest comparison and its class sweep",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [
+        "T109"
+      ],
+      "files_hint": [
+        ".softhouse/reviews/"
+      ],
+      "description": "Paired reviewer for T109. Re-establish the pre-fix green 25/25 on main's tip, the 12 red cases and their ZERO-stdout-bytes property, the three digests (fourth independent measurement), the ten invocation forms both ways, and the P-24 scratch-clone merge into current main. Close T109's own gap: the Go toolchain IS at .softhouse/toolchain/go/bin/go, so run build/vet/test/gofmt. RE-RUN THE 356-FILE CENSUS INDEPENDENTLY and rule on the out-of-scope items, above all admit.go:594.",
+      "note": "Raised by the driver, local fire 20260821-080001, from T109's class sweep / T96."
+    },
+    {
+      "id": "T128",
+      "title": "INDEPENDENT review of T96 — the sole-caller census and its blind-spot analysis",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [
+        "T96"
+      ],
+      "files_hint": [
+        ".softhouse/reviews/"
+      ],
+      "description": "Paired reviewer for T96. Re-derive the sole-caller verdict at pinned 426a23544 incl. the virtual-dispatch and reflection exclusions, check that each of the six PUBLISHED commands actually reproduces its claimed number (a published command that does not reproduce its own number is rejection-class), and reproduce the red demonstration. Then audit T96's own blind-spot analysis by constructing each defeating edit, and answer the question T96 could not ask of itself: is the class CLOSED or has it merely MOVED - does the whole-tree grep form have its own silent-green edit, and is 'reproduce the LINES, not the total' an instruction a reader will follow or a scalar tripwire with a disclaimer?",
+      "note": "Raised by the driver, local fire 20260821-080001, from T109's class sweep / T96."
     }
   ]
 }

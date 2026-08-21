@@ -550,6 +550,46 @@ attribution. The killed worker never got to the step where it would have checked
 > `[UNVERIFIED]` until somebody re-runs it — the tag asserts a measurement was made, and the one thing you know
 > about a killed worker is that it stopped partway through making them.
 
+### P-29. A COUNT is a weak tripwire: a narrow scope is green on the edit that widens it, and a line count is green on a cancelling pair
+
+**Fire `20260821-080001`, T96, closing T89's F-T89-4.** The `futureUnrecognizedInterest` block defends its closure
+argument with five grep censuses. T96 was sent to add a sixth — `:743` is the sole caller of
+`calculateEMIOnNewModelAndMerge` — and to prove the new tripwire fires. It did. Then it asked the same question
+of the five that already shipped, and **two of them could not detect their own defining edit**:
+
+- **A file-scoped grep is green on the edit that leaves the file.** Graphs 2 and 3 were scoped to one file. Change
+  `private` → `public` and add a caller elsewhere and the block's own command still reads **9 on a tree with five
+  call sites** into the very method the argument is about. The closure-critical count, silently green. Graph 1 was
+  scoped to 2 of 28 `src/main` trees.
+- **A line count is green on a cancelling add/delete pair.** All six censuses count lines, so one addition offsets
+  one deletion — demonstrated twice, graph 3 holding at 9 and graph 5 at 18. **This one is not fixable by a
+  scalar at all**, and the honest response was to publish the limit in the block ("reproduce the LINES, not the
+  total") rather than to pretend a number covers it.
+- **And the new census went silently green twice before it worked.** A comma-less final enum constant, and two
+  constants on one line, are both legal Java and both read 4. It took a tokenising form to count what was meant.
+
+> **Rule.** Before shipping a count as a guard, write the edit it exists to detect **and run it**. Then write the
+> edit that *should* trip it but won't — a wider scope, a cancelling pair, a legal syntax you didn't parse — and
+> **publish that limit next to the number**. A census defends a *claim*; scope it to the claim's blast radius, not
+> to the file you happened to be editing. And where no scalar can cover the case, say so in the artefact: a
+> tripwire with a stated blind spot is honest, a tripwire with an unstated one is the vacuous guard of P-22 with
+> extra arithmetic.
+
+### P-30. The repo-local Go toolchain exists — stop marking results `[UNVERIFIED]` for want of it
+
+**Fire `20260821-080001`, twice in one day (T109, and T91 as caught by T107b).** Two workers reported *"there is no
+Go toolchain on this host"* and downgraded `go build` / `go vet` / `go test` / `gofmt -l` to `[UNVERIFIED]` on that
+basis. **The premise is false.** A pinned toolchain lives at `.softhouse/toolchain/go/bin/go` (go1.26.6
+darwin/arm64) — installed repo-local precisely so an agent need not modify Buyan's machine — and
+`conformance.sh` **loads it itself**, which is why both workers' conformance runs were green in the same reports
+that claimed no toolchain existed.
+
+The cost is not cosmetic: an `[UNVERIFIED]` tag is how this pipeline records *"nobody has checked this"*, and
+spending it on something checkable in one command devalues every honest use of it.
+
+> **Rule.** `[UNVERIFIED]` is for what cannot be measured here, not for what the worker did not find. Before
+> tagging one, check whether the tool is in the repo — and name the toolchain path in the brief so nobody has to.
+
 <!-- LEARNED PATTERNS END -->
 
 ### Run 2026-08-17-run1-harness-schedule-poc — fire `20260819-170001` (local, oracle REACHABLE) — 2026-08-19
