@@ -119,11 +119,28 @@ drv = sh("grep", "-ncE", r"^\s*(try:|finally:|except)|atexit|signal\.",
          PREFIX_SCRIPT)
 print("driver's guard regex over the PRE-FIX file  -> rc=%d out=%r"
       % (drv.returncode, drv.stdout.strip()))
-t156 = sh("grep", "-cE", r"^[^#\n]*(\btrap\b|\bfinally\s*:|atexit\.register"
-                         r"|__exit__|contextmanager)", PREFIX_SCRIPT)
-print("T156's GUARD regex over the PRE-FIX file    -> rc=%d matches=%r"
-      % (t156.returncode, t156.stdout.strip()))
 import ast
+import re
+# T156's GUARD, verbatim from t156-sweep-unguarded-mutators.py:58.  Run it the
+# way T156 ran it - Python `re` - and ALSO shelled out to grep -E, because the
+# two disagree and the disagreement is itself a P-33 finding (see below).
+T156_GUARD = re.compile(
+    r"(?m)^[^#\n]*(\btrap\b|\bfinally\s*:|atexit\.register|__exit__"
+    r"|contextmanager)")
+py_hits = T156_GUARD.findall(src)
+print("T156's GUARD in PYTHON re (as T156 ran it)  -> %d matches -> GUARDED=%s"
+      % (len(py_hits), bool(py_hits)))
+g = sh("grep", "-cE", r"^[^#\n]*(\btrap\b|\bfinally\s*:|atexit\.register"
+                      r"|__exit__|contextmanager)", PREFIX_SCRIPT)
+print("the SAME pattern text through grep -E       -> rc=%d matches=%r"
+      % (g.returncode, g.stdout.strip()))
+print("   The two disagree, and neither is a typo: in Python `re` a bracket")
+print("   expression honours the \\n escape, so [^#\\n] means `not # and not")
+print("   newline`; in POSIX ERE it does not, so [^#\\n] means `not #, not")
+print("   backslash, not the letter n` - and every one of the three `trap`")
+print("   occurrences has a letter n earlier on its line (`One trap worth`),")
+print("   which the anchored [^#\\n]* cannot cross.  Same characters, opposite")
+print("   verdict.  P-33: a tool claim is a claim about the ENGINE too.")
 tree = ast.parse(src)
 in_str, in_code = 0, 0
 for node in ast.walk(tree):
