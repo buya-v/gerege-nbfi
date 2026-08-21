@@ -56,10 +56,25 @@
 # WHY IT EXISTS (T76 and T77 found this independently in the same fire).
 # `sh .softhouse/conformance.sh` used to die at the first process substitution
 # (the `done < <(find …)` in guard_no_float_in_vectors) with a bash syntax error
-# and **exit 2** — and 2 is this harness's "unusable / oracle unreachable" code AND
-# the /softhouse-program driver's oracle-is-down stop condition. So a one-word
-# shell-selection typo was indistinguishable from a genuine oracle outage and could
-# park every vector task in the program under a reason that was not true. Under
+# and **exit 2** — and 2 is this harness's "unusable" code, which at the time was
+# also, on its own, the /softhouse-program driver's oracle-is-down stop condition.
+# So a one-word shell-selection typo was indistinguishable from a genuine oracle
+# outage and could park every vector task in the program under a reason that was
+# not true.
+#
+#   EXIT 2 IS FORMALLY AMBIGUOUS TODAY, AND THE DRIVER NO LONGER READS IT ALONE.
+#   2 means "the ORACLE is unusable" OR "the CORPUS is unusable" — zero vectors,
+#   an inadmissible vector, a refused vector, a failed HARD guard, and since T110
+#   a duplicate `case_id`, which REFUSES the run at 2. A refusal read as an outage
+#   is the same defect one level up, so the driver's park condition is now BOTH
+#   `exit 2` AND `probe != up`, taken from the `reference oracle (…) probe = up|down`
+#   line this harness prints unconditionally before the graded binary runs (see
+#   `probe_oracle` below). Exit 2 with `probe = up` is a corpus defect to be FIXED
+#   in the same fire, never a reason to park [.claude/skills/softhouse-program/
+#   SKILL.md, the exit-code table]. Exit 3 stays outside all of this: it says
+#   nothing about either the corpus or the oracle, because neither was reached.
+#
+# Under
 # `zsh` it was worse: BASH_SOURCE is unset, SCRIPT_DIR resolved to the wrong
 # directory, the toolchain was therefore "not found", and the harness printed its
 # OWN "EXIT 2 — the harness is unusable" line over a diagnosis that was fiction.
@@ -160,27 +175,95 @@
 #   the loop body never runs, and plain, healthy bash is REFUSED. This probe uses
 #   a single `read` and grades the VARIABLE, not `read`'s status, so it is immune
 #   to that either way — but the newline is there so nothing downstream inherits
-#   the trap. `IFS=` is there so that no inherited IFS can reach the `read` at all
-#   [VERIFIED: T97 — `IFS=oc`, `IFS=' '` and `IFS=$'\n'` in the environment, all
-#   ADMITTED; T113 re-measured `IFS=oc`, `IFS=' '`, `IFS=e` and `env -i` on
-#   3.2.57 and on 5.3.9, all ADMITTED].
-#   BUT THE PREFIX IS BELT-AND-BRACES, NOT A MEASURED SAVE, and this file used to
-#   imply otherwise. T106 wrote that `IFS=e` "would have been a false refusal
-#   without the prefix, so the prefix earns its place", reasoning that the token
-#   `conformance-psub-live` contains an `e`. T113 tested that by DELETING the
-#   prefix and it is not so: `read` with a SINGLE variable assigns the whole line
-#   and strips only leading/trailing IFS *whitespace*, so a non-whitespace
-#   delimiter — even one occurring in the token, even as its first or last
-#   character — changes nothing. Prefix removed, the probe still returned the
-#   token intact under IFS = `oc`, `' '`, `e`, `c`, `-`, `l`, `v`, `i` and
-#   newline, and the whole harness was still ADMITTED
-#   [VERIFIED: T113, bash 3.2.57 and bash 5.3.9, both directions measured].
-#   The prefix stays: it costs nothing, and it is the difference between "cannot
-#   break today" and "cannot break if someone later reads two variables or puts
-#   whitespace in the token". It is documented as insurance, because a guard that
-#   is credited with a save it never made is the P-22 failure in miniature. And
-#   note this is a NORMALISATION, not a defence: `IFS` is not a command word, but
-#   nothing here stops a hostile environment either — see below.
+#   the trap. `IFS=` is there so that no IFS in force when this file starts can
+#   reach the `read` at all.
+#
+#   FIRST, BY WHAT ROUTE COULD ONE BE IN FORCE? Not the one every matrix in this
+#   chain used. **bash resets IFS to the default ` \t\n` at startup and IGNORES an
+#   inherited one**, so `env IFS=z bash conformance.sh` delivers nothing — the
+#   child's `$IFS` is the 3-character default before line 1 runs, in plain mode,
+#   under `--posix`, under `argv[0]=sh` and under `POSIXLY_CORRECT=1` alike. Every
+#   `IFS=…` row T97, T106, T113 and T121 ran through the environment is therefore a
+#   NULL CONTROL: it could not have failed, whatever the token was. Two routes DO
+#   deliver: a **`BASH_ENV` startup file that assigns IFS** (bash sources it before
+#   a non-interactive script), and this file being **SOURCED** into a shell that
+#   has already set IFS. [VERIFIED: T130 enumerated all seven routes on bash
+#   3.2.57, 4.4.0 and 5.3.9 — env / env+--posix / env+argv[0]=sh / env+POSIXLY_CORRECT
+#   deliver the default on all three; BASH_ENV and sourcing deliver `IFS=z` on all
+#   three.] So the threat is real and reachable — it is just not the one that was
+#   being measured.
+#   [SUPERSEDES: T97 "`IFS=oc`, `IFS=' '`, `IFS=$'\n'` in the environment, all
+#   ADMITTED" and T113's re-measurement of the same four. Both readings are still
+#   true as ADMISSIONS; neither is evidence about IFS.]
+#   BUT THE PREFIX IS BELT-AND-BRACES FOR TODAY'S TOKEN, NOT A MEASURED SAVE —
+#   and this file has now carried TWO different wrong reasons for that. T106 wrote
+#   that `IFS=e` "would have been a false refusal without the prefix, so the prefix
+#   earns its place", reasoning that the token `conformance-psub-live` contains an
+#   `e`. T113 deleted the prefix, measured, and correctly withdrew that — then put
+#   a SECOND false rule in its place: that `read` with a single variable "strips
+#   only leading/trailing IFS *whitespace*, so a non-whitespace delimiter — even
+#   as the token's first or last character — changes nothing". IT DOES NOT.
+#   Counterexample, identical on three bash majors: `IFS=z`, line `abcz` → `abc`.
+#
+#   THE MEASURED RULE. `read -r` with a SINGLE variable assigns the whole line,
+#   stripping leading and trailing IFS *whitespace* — AND ALSO stripping the final
+#   character when that character is a NON-whitespace IFS delimiter AND that is the
+#   ONLY position in the whole line holding ANY IFS delimiter. One further
+#   delimiter occurrence anywhere — same character or a different IFS character —
+#   and nothing is stripped: `abczz`, `zabcz` and `abzcz` all survive `IFS=z`, and
+#   `abcze` survives `IFS=ze` while `abcz` does not.
+#   [VERIFIED: T130 brute-forced that predicate against `read` itself over every
+#   string of length 1..6 on {a,b} × IFS ∈ {a,b,ab} and every string of length 1..5
+#   on {a,b,c} × IFS ∈ {a,b,c,ab,bc,abc,:,a:} — 3,282 cases, 0 disagreements, on
+#   bash 3.2.57, 4.4.0 and 5.3.9 alike.]
+#
+#   WHY TODAY'S TOKEN SURVIVES, AND WHY THAT IS NOT A LICENCE TO RELAX.
+#   `conformance-psub-live` ends in `e`, and `e` also occurs in `conformance`, so
+#   the "sole delimiter, in final position" shape is unreachable for it under ANY
+#   IFS at all — any IFS containing `e` finds two of them, and any IFS not
+#   containing `e` does not touch the last character. THAT IS AN ACCIDENT OF HOW
+#   THE TOKEN IS SPELLED, NOT A PROPERTY OF THE PROBE. Rename it
+#   `conformance-psub-livz` — or anything whose last character does not occur
+#   earlier in it — and `IFS=z` truncates the observation to `conformance-psub-liv`
+#   and the comparison below fails. With the prefix in place that is harmless;
+#   with the prefix deleted, over a route that delivers IFS, it REFUSES a perfectly
+#   healthy bash at exit 3 [VERIFIED: T130, 3.2.57 / 4.4.0 / 5.3.9 — the table
+#   below].
+#   So the list of futures the prefix insures against has THREE entries, and the
+#   third is the likeliest thing an editor actually does: someone later READS TWO
+#   VARIABLES; someone PUTS WHITESPACE IN THE TOKEN; someone RENAMES THE TOKEN.
+#
+#   THE WHOLE THING, MEASURED RATHER THAN ARGUED — 2 token spellings x prefix
+#   kept/dropped x 3 IFS routes, 12 cells, identical on bash 3.2.57, 4.4.0 and
+#   5.3.9 [VERIFIED: T130]. ELEVEN cells ADMIT. Exactly one refuses:
+#
+#       token=conformance-psub-livz  prefix=DROPPED  route=BASH_ENV  -> exit 3
+#
+#   i.e. a false refusal of a perfectly healthy bash needs ALL THREE of a renamed
+#   token, a deleted prefix, and a route that actually delivers IFS. Today's token
+#   is immune on every route with or without the prefix — no IFS string mangles
+#   `conformance-psub-live`, because its last character `e` is never a lone
+#   delimiter. So the prefix is STILL not a measured save today, and it stops being
+#   merely stylistic the moment anyone renames the token.
+#
+#   AND THE TOKEN INVARIANT IS ASSERTED, NOT NARRATED. Because that immunity is a
+#   property of the spelling, it is checked by a test instead of promised by this
+#   comment: section [6b] of .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/
+#   T113-evidence/interpreter-matrix.sh reads CONFORMANCE_PSUB_TOKEN out of THIS
+#   file and requires (i) that it contain no whitespace and (ii) that its last
+#   character occur earlier in it — which together imply it round-trips through a
+#   single-variable `read` under EVERY IFS — then re-measures that against `read`
+#   itself for each character of the token's own alphabet, and end to end through a
+#   prefix-DELETED copy of the harness over the BASH_ENV route.
+#   [VERIFIED: T130 drove all three legs red by renaming the token to
+#   `conformance-psub-livz` — the pre-T130 matrix reported 26 passed / 0 failed and
+#   exit 0 on that same renamed harness, i.e. it silently admitted it — and green
+#   again on restore.] The prefix still stays: it costs nothing, and it is what
+#   makes such a rename merely a red row rather than a broken guard. It is
+#   documented as insurance, because a guard credited with a save it never made is
+#   the P-22 failure in miniature. And note this is a NORMALISATION, not a defence:
+#   `IFS` is not a command word, but nothing here stops a hostile environment
+#   either — see below.
 #
 #   Meanwhile `builtin` pins `eval`/`read`/`printf` to bash's own, so an exported function
 #   of one of those names cannot quietly take their place. `builtin eval` is not
@@ -991,6 +1074,16 @@ case "${1:-}" in
   # header would have looked exactly like a real conformance failure to any
   # caller that reads exit codes — the same class of confusion exit 3 exists to
   # abolish, one code over. (T106 F3, applied by T113.)
+  #
+  # T130 (T121's F-T121-3): true, and worth saying in full. 2 is not a private
+  # bucket — see the WHY IT EXISTS block near the top of this file. It is
+  # deliberately AMBIGUOUS between "the oracle is unusable" and "the corpus is
+  # unusable", and this arm is the eighth member of that existing polysemy rather
+  # than a new collision. It is still right: no grading caller passes `--help`,
+  # the stderr text names the missing sentinel, and 1 must stay reserved for a
+  # graded FAIL. What disambiguates 2 for a reader is NOT this arm but the
+  # `probe = up|down` line printed unconditionally before the graded binary runs;
+  # the driver parks only on `exit 2` AND `probe != up`.
   --help|-h)   usage || exit "$EXIT_UNUSABLE"; exit 0 ;;
   --prove)     prove; exit $? ;;
   --self-test) main_grade "${2:-}" 1; exit $? ;;

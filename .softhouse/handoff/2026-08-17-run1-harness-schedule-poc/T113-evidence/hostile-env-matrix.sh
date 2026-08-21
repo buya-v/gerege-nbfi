@@ -2,6 +2,22 @@
 # T113 — hostile-ENVIRONMENT matrix against the interpreter guard.
 # usage: bash T113-hostile.sh <harness> [--kill-devfd]
 # Prints one line per attack: <label> exit=<code>
+#
+# THIS IS A PROBE, NOT A RIG. It has no expectations and no failure counter, and it
+# exits 0 whatever it observes — deliberately, because a hostile environment is
+# something the guard explicitly does NOT claim to defend against, so there is no
+# "correct" exit code for most of these rows to be graded on. T113 disclosed that as
+# N-T113-3, in its handoff; T130 moved the disclosure INTO THE FILE, because the
+# handoff is not what the next reader opens. Read its output; never cite its exit
+# code as a pass. The asserted rigs are `interpreter-matrix.sh`,
+# `readonly-sourced-edge.sh`, `psub-dead-container.sh`, `bash5-matrix-container.sh`,
+# T97's `prove-interpreter-guard.sh` and T106's `prove-token-forgeable.sh`.
+#
+# T130 also notes: the `IFS=… exported` rows below are NULL CONTROLS. bash resets
+# IFS to the default at startup and ignores an inherited one, so an exported IFS
+# never reaches the guard on any bash tested (3.2.57 / 4.4.0 / 5.3.9). The routes
+# that DO deliver are a BASH_ENV startup file and sourcing; see
+# `interpreter-matrix.sh` section [6], which asserts the route before using it.
 h="$1"
 [ "${2:-}" = "--kill-devfd" ] && rm -f /dev/fd
 echo "bash: $(bash --version | head -1)"
