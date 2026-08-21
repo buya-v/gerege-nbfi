@@ -590,6 +590,45 @@ spending it on something checkable in one command devalues every honest use of i
 > **Rule.** `[UNVERIFIED]` is for what cannot be measured here, not for what the worker did not find. Before
 > tagging one, check whether the tool is in the repo — and name the toolchain path in the brief so nobody has to.
 
+### P-31. Never snapshot a file the orchestrator is actively editing — author no change to it at all
+
+**Fire `20260821-080001`, T122, deviating from its brief and right to.** T122 was told to end its branch with
+`tasks.json` **exactly as on current `main`**, to undo an evil merge. It did — then tested by merging (P-24) and
+**it conflicted.** `main` had moved three times during the task and edited `tasks.json` in every one.
+
+A snapshot of a moving file is stale the moment it is taken, and taking it *converts a file the branch does not
+care about into a merge conflict*. The correct resolution is the opposite of the instruction: set the blob back to
+the **merge base**, so the branch authors **no change at all** and any merge into any future `main` takes `main`'s
+side with zero conflict.
+
+Read the consequence correctly, because it looks wrong: `git diff main -- tasks.json` on such a branch is **not**
+empty — it shows the branch is *behind*. That is exactly right for a file the branch must not touch. **The
+post-merge check is the one that matters**, not the three-dot diff.
+
+> **Rule.** For any file owned by the orchestrator rather than the task — `tasks.json`, `program.json`,
+> `RESUME.md`, `patterns.md` — a worker branch should author **zero** change: not the current contents, not a
+> merge, not a reconciliation. "Take main's copy" is a trap whenever `main` is live. This is P-24's lesson applied
+> to a *file* instead of a *ref*: a baseline that can follow `main` will follow it exactly when you stop watching.
+
+### P-32. A committed artefact and its compressed twin are not the same evidence — check which one is the capture
+
+**Fire `20260821-080001`, T122, one step from a third wrong count on gate G-8.** `T84-evidence/out/` holds **both**
+`capture-t84-raw.json` (15 captures) **and** `capture-t84-raw.json.gz` (251) — likewise t84b, 14 against 95. The
+plain files are strict content-identical **subsets**; the `.gz` are the captures.
+
+T122's first analysis ran over the plain files, found **16 family-B cells and 3 sub-ulp exceptions**, and every
+number was self-consistent and plausible. The true figures are **29** and **4**. Nothing in the run looked wrong,
+because a subset of a capture is a perfectly well-formed capture.
+
+This gate has already carried two wrong counts into the document Buyan reads — 18-instead-of-22 from a float in an
+analysis script (P-25), and the family A/B inversion. This would have been the third, and it would have arrived
+inside the task sent to fix the second.
+
+> **Rule.** Before analysing a capture directory, **enumerate every file that could be the evidence and count the
+> records in each.** Where a plain and a compressed form both exist, establish which is authoritative and state it
+> in the write-up. A plausible, internally consistent result over the wrong file is indistinguishable from a
+> correct one — so the check must happen before the analysis, not after it looks odd.
+
 <!-- LEARNED PATTERNS END -->
 
 ### Run 2026-08-17-run1-harness-schedule-poc — fire `20260819-170001` (local, oracle REACHABLE) — 2026-08-19
