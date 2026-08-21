@@ -221,7 +221,7 @@ run_exit_guard() {
 # The driver is required to checkpoint on EVERY exit path (skill STEP 5.5). It has
 # been observed exiting rc=0 mid-run with deliverables uncommitted and RESUME.md
 # stale, which makes the work invisible to the next fire. Detect and rescue.
-DIRTY=$(git status --porcelain | LC_ALL=C grep -av '^?? \.softhouse/LOCK' || true)
+DIRTY=$(git status --porcelain | LC_ALL=C grep -av '^?? \.softhouse/LOCK$' || true)
 if [[ -n "$DIRTY" ]]; then
   log "WARN: exit-protocol violation — driver left uncommitted work:"
   print -r -- "$DIRTY" | head -20
