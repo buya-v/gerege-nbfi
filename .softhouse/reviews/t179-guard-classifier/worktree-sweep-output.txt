@@ -1,0 +1,467 @@
+=== T179 parser-based guard classifier
+root                : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a19ac368db6db79fe/.softhouse
+python parser       : ast (stdlib, authoritative for Python)
+shell parser        : NONE — every .sh file is REFUSED, and counted
+
+--- POPULATION, with denominators
+  script files enumerated (.py/.sh/.bash)   : 599
+    of which Python, parsed                 : 349
+    of which REFUSED                        : 250
+      REFUSED-SHELL-NO-PARSER               : 250
+  non-script files under the same root      : 2994 (never inspected)
+    largest uninspected groups              : .json 1431, .txt 847, .md 283, .status 160, .http 147, .java 55
+  explicitly excluded by --exclude          : 10 (reviews/t179-guard-classifier/fixtures/green_atexit.py, reviews/t179-guard-classifier/fixtures/green_atomic.py, reviews/t179-guard-classifier/fixtures/green_contextmanager.py, reviews/t179-guard-classifier/fixtures/green_indirect.py, …)
+  mutation call sites found in Python       : 411
+
+--- MUTATION SITES: scope x verdict (every site appears exactly once)
+  scope      UNGUARDED                 GUARDED-PROCESS           GUARDED-FINALLY-INDIRECT  GUARDED-CONTEXTMANAGER    GUARDED-FINALLY           ATOMIC                    SANDBOX                   
+  TRUSTED    47                        0                         0                         0                         2                         0                         0                            (total 49)
+  UNKNOWN    83                        0                         0                         0                         4                         2                         0                            (total 89)
+  SCRATCH    0                         0                         0                         0                         0                         1                         272                          (total 273)
+  ALL        130                       0                         0                         0                         6                         3                         272                          (total 411)
+
+--- UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (47 sites in 43 files)
+  capture/audit-t44/charges/bin/analyse_probes.py:101  open(mode='w')  tags=CAPTURE
+      target: os.path.join(AUD, 'out', 'PROBES.md')
+  capture/audit-t44/charges/bin/audit_recompute.py:325  open(mode='w')  tags=CAPTURE
+      target: out
+  capture/audit-t44/charges/bin/spotcheck.py:65  open(mode='w')  tags=CAPTURE
+      target: OUT
+  capture/charges/bin/attest-t40.py:134  open(mode='w')  tags=CAPTURE
+      target: os.path.join(OUT, 'preconditions.txt')
+  capture/pathb/t22-audit/mkmode.py:23  open(mode='w')  tags=CAPTURE
+      target: os.path.join(OUT, 'pmode-mult1.json')
+  capture/pathb/t22-audit/mkmode.py:31  open(mode='w')  tags=CAPTURE
+      target: os.path.join(OUT, 'calc-pmode-%s.json' % tenant)
+  capture/pathb/t22-audit/mkmode2.py:27  open(mode='w')  tags=CAPTURE
+      target: os.path.join(OUT, 'pmode2-halfcent.json')
+  capture/pathb/t22-audit/mkmode2.py:35  open(mode='w')  tags=CAPTURE
+      target: os.path.join(OUT, 'calc-pmode2-%s.json' % tenant)
+  capture/pathb/t22-audit/mkprobe.py:27  open(mode='w')  tags=CAPTURE
+      target: os.path.join(OUT, name + '.json')
+  capture/pathb/t36/attest.py:257  open(mode='w')  tags=CAPTURE
+      target: os.path.join(OUT, 'preconditions.txt')
+  capture/t100-g8-rescope/src/closed_form_check.py:85  open(mode='w')  tags=CAPTURE
+      target: sys.argv[0].replace('/src/', '/out/').replace('closed_form_check.py', 'closed-form-check.json')
+  capture/t100-g8-rescope/src/column_shape.py:30  open(mode='w')  tags=CAPTURE
+      target: __file__.replace('/src/', '/out/').replace('column_shape.py', 'column-shape.json')
+  capture/t100-g8-rescope/src/exemption_demo_t100.py:205  open(mode='w')  tags=CAPTURE
+      target: os.path.join(ROOT, '.softhouse/capture/t100-g8-rescope/out/exemption-demo-t100.json')
+  capture/t100-g8-rescope/src/largest_failing.py:50  open(mode='w')  tags=CAPTURE
+      target: __file__.replace('/src/', '/out/').replace('largest_failing.py', 'largest-failing.json')
+  handoff/T61-sweep/build-pass3f.py:216  os.chmod  tags=CAPTURE
+      target: os.path.join(SRC, 'run-pass3f.sh')
+  handoff/T61-sweep/build-pass3f.py:147  open(mode='w')  tags=CAPTURE
+      target: os.path.join(SRC, 'Capture3f.java')
+  handoff/T61-sweep/build-pass3f.py:215  open(mode='w')  tags=CAPTURE
+      target: os.path.join(SRC, 'run-pass3f.sh')
+  reviews/t41-probe/edit.py:170  io.open(mode='w')  tags=ADR
+      target: P
+  reviews/t41-probe/edit10.py:249  io.open(mode='w')  tags=ADR
+      target: P
+  reviews/t41-probe/edit11.py:90  io.open(mode='w')  tags=ADR
+      target: P
+  reviews/t41-probe/edit12.py:105  io.open(mode='w')  tags=ADR
+      target: P
+  reviews/t41-probe/edit13.py:131  io.open(mode='w')  tags=ADR
+      target: P
+  reviews/t41-probe/edit14.py:94  io.open(mode='w')  tags=ADR
+      target: P
+  reviews/t41-probe/edit16.py:81  io.open(mode='w')  tags=ADR
+      target: P
+  reviews/t41-probe/edit17.py:49  io.open(mode='w')  tags=ADR
+      target: P
+  reviews/t41-probe/edit19.py:66  io.open(mode='w')  tags=ADR
+      target: P
+  reviews/t41-probe/edit2.py:116  io.open(mode='w')  tags=ADR
+      target: P
+  reviews/t41-probe/edit22.py:65  io.open(mode='w')  tags=PORT,RIG
+      target: G
+  reviews/t41-probe/edit3.py:82  io.open(mode='w')  tags=ADR
+      target: P
+  reviews/t41-probe/edit4.py:50  io.open(mode='w')  tags=ADR
+      target: P
+  reviews/t41-probe/edit5.py:113  io.open(mode='w')  tags=ADR
+      target: P
+  reviews/t41-probe/edit6.py:123  io.open(mode='w')  tags=ADR
+      target: P
+  reviews/t41-probe/edit7.py:81  io.open(mode='w')  tags=ADR
+      target: P
+  reviews/t41-probe/edit8.py:169  io.open(mode='w')  tags=ADR
+      target: P
+  reviews/t41-probe/edit9.py:99  io.open(mode='w')  tags=ADR
+      target: P
+  reviews/t41-probe/edit_go1.py:196  io.open(mode='w')  tags=PORT,RIG
+      target: P
+  reviews/t41-probe/edit_go2.py:92  io.open(mode='w')  tags=PORT,RIG
+      target: P
+  reviews/t41-probe/edit_go3.py:118  io.open(mode='w')  tags=PORT,RIG
+      target: P
+  reviews/t41-probe/edit_go4.py:32  io.open(mode='w')  tags=PORT,RIG
+      target: P
+  reviews/t47-probe/t47_edit_2.py:160  io.open(mode='w')  tags=ADR
+      target: DOC
+  reviews/t47-probe/t47_edit_3.py:117  io.open(mode='w')  tags=ADR
+      target: DOC
+  reviews/t47-probe/t47_edit_4.py:158  io.open(mode='w')  tags=ADR
+      target: DOC
+  reviews/t47-probe/t47_edit_4c.py:53  io.open(mode='w')  tags=ADR
+      target: DOC
+  reviews/t47-probe/t47_edit_5.py:77  io.open(mode='w')  tags=ADR
+      target: DOC
+  reviews/t47-probe/t47_edit_6.py:80  io.open(mode='w')  tags=ADR
+      target: DOC
+  reviews/t47-probe/t47_edit_7.py:184  io.open(mode='w')  tags=PORT,RIG
+      target: GO
+  reviews/t47-probe/t47_edit_8.py:88  io.open(mode='w')  tags=ADR
+      target: DOC
+
+--- UNGUARDED MUTATIONS WHOSE TARGET COULD NOT BE RESOLVED (83 sites in 65 files)
+    These are NOT clean and NOT dirty. They are unresolved, and they are
+    printed so nothing is silently dropped (P-40).
+  capture/actualactual/analysis/pathb-crosscheck.py:48  Path.write_text   target: side
+  capture/audit-t44/mathcontext/analysis/audit_invariants.py:131  open(mode='w')   target: os.path.join(HERE, 'audit_invariants-output.txt')
+  capture/audit-t44/mathcontext/analysis/audit_recompute.py:224  open(mode='w')   target: os.path.join(HERE, 'audit_recompute-output.txt')
+  capture/charges/bin/attest-t40.py:465  open(mode='w')   target: path
+  capture/charges/bin/attest.py:113  open(mode='w')   target: os.path.join(OUT, 'preconditions.txt')
+  capture/charges/bin/attest.py:389  open(mode='w')   target: path
+  capture/charges/bin/t46-exacttext.py:117  Path.write_text   target: sidecar
+  capture/charges/bin/t46-fix-paths.py:64  Path.write_text   target: p
+  capture/charges/bin/t46-mark-superseded.py:76  Path.write_text   target: p
+  capture/charges/bin/t46-mkcalcs.py:99  Path.write_text   target: path
+  capture/charges/bin/t48-analyse.py:59  Path.write_text   target: side
+  capture/charges/bin/t48-mkreq.py:73  Path.write_text   target: D / name
+  capture/charges/bin/t51-analyse.py:87  Path.write_text   target: side
+  capture/leapboundary/analysis/t55-analyse.py:81  open(mode='w')   target: os.path.join(OUT, side)
+  capture/mathcontext/analysis/t46_make_capture3.py:83  Path.write_text   target: DST
+  capture/pathb/provenance.py:295  open(mode='w')   target: os.path.join(root, INDEX_NAME)
+  capture/pathb/t149/promote-vector.py:254  open(mode='w')   target: out_path
+  capture/pathb/t149/prove-exit-trap.py:220  shutil.rmtree   target: sb0
+  capture/pathb/t149/prove-exit-trap.py:290  shutil.rmtree   target: r['sandbox']
+  capture/pathb/t149/prove-exit-trap.py:304  shutil.rmtree   target: r['sandbox']
+  capture/pathb/t149/prove-exit-trap.py:274  shutil.rmtree   target: r['sandbox']
+  capture/pathb/t22-probe/mkcalc.py:20  open(mode='w')   target: os.path.join(P, 'req', f + '-repro.json')
+  capture/pathb/t22-probe/mkreq.py:24  open(mode='w')   target: os.path.join(P, 'req', f + '-repro.json')
+  capture/pathb/t36/attest.py:255  open(mode='w')   target: _stamp
+  capture/pathb/t36/attest.py:559  open(mode='w')   target: path
+  capture/src/t169-red/build_harness_t169.py:146  os.remove   target: a
+  capture/src/t169-red/build_harness_t169.py:147  os.remove   target: b
+  capture/src/t169-red/build_harness_t169.py:131  open(mode='w')   target: os.path.join(HERE, 'CaptureT169Pre.java')
+  capture/src/t169-red/build_harness_t169.py:132  open(mode='w')   target: os.path.join(HERE, 'CaptureT169Post.java')
+  capture/src/t169-red/build_harness_t169.py:143  open(mode='w')   target: a
+  capture/src/t169-red/build_harness_t169.py:144  open(mode='w')   target: b
+  capture/src/t169-red/census_catch_narrowing.py:140  open(mode='w')   target: dest
+  capture/src/t169-red/gencases_t169.py:52  open(mode='w')   target: cases_out
+  capture/src/t169-red/gencases_t169.py:55  open(mode='w')   target: ids_out
+  capture/t100-g8-rescope/src/build_harness.py:54  open(mode='w')   target: OUT
+  capture/t100-g8-rescope/src/gencases.py:47  open(mode='w')   target: os.path.join(ROOT, 'prediction.json')
+  capture/t117-familyb/src/build_harness.py:64  open(mode='w')   target: OUT
+  capture/t117-familyb/src/build_harness_pass2.py:55  open(mode='w')   target: OUT
+  capture/t117-familyb/src/gencases.py:130  open(mode='w')   target: os.path.join(ROOT, 'prediction.json')
+  capture/t117-familyb/src/gencases_pass2.py:118  open(mode='w')   target: os.path.join(ROOT, 'prediction-pass2.json')
+  capture/t159-review-t117/src/build_harness_t159.py:60  open(mode='w')   target: OUT
+  capture/t159-review-t117/src/gencases_t159.py:165  open(mode='w')   target: os.path.join(ROOT, 'prediction-t159.json')
+  capture/t61-halfeven/src/run-counterfactuals.py:145  open(mode='w')   target: path
+  capture/t64-zeroprincipal/src/T64-promote-vectors.py:401  open(mode='w')   target: path
+  capture/t64-zeroprincipal/src/run-counterfactuals.py:143  open(mode='w')   target: path
+  capture/t74-multiplesof/T82-guard-proofs/mutate.py:40  open(mode='w')   target: p
+  capture/t74-multiplesof/T82-guard-proofs/mutate.py:116  shutil.copyfile   target: out_script
+  capture/t74-multiplesof/T82-guard-proofs/mutate.py:118  open(mode='w')   target: out_script
+  capture/t74-multiplesof/build-counterfactuals.py:140  open(mode='w')   target: out_path
+  capture/t74-multiplesof/build-prediction.py:229  open(mode='w')   target: out_path
+  capture/t74-multiplesof/extract-t21v2-AB.py:73  open(mode='w')   target: outpath
+  capture/t83-nonamortizing/src/classify-boundary.py:153  open(mode='w')   target: outpath
+  capture/t83-nonamortizing/src/run-exemption-demo.py:232  open(mode='w')   target: out
+  capture/t83-nonamortizing/src/run-port.py:155  open(mode='w')   target: outp
+  capture/tierA-a2/manifest.py:113  open(mode='w')   target: MAN
+  capture/tierA-a2/mkreq.py:19  open(mode='w')   target: p
+  capture/tierA-a2/mkreq2.py:33  open(mode='w')   target: os.path.join(REQ, name + '.json')
+  capture/tierA-a2/mkreq3.py:20  open(mode='w')   target: os.path.join(REQ, name + '.json')
+  capture/tierA-a2/mkreq4.py:12  open(mode='w')   target: os.path.join(REQ, n + '.json')
+  capture/tierA-a2/mkreq5.py:22  open(mode='w')   target: os.path.join(REQ, n + '.json')
+  capture/tierA-a2/mkreq6.py:24  open(mode='w')   target: os.path.join(REQ, n + '.json')
+  capture/tierA-a2/mkreq7.py:215  open(mode='w')   target: p
+  capture/tierA-a2/prove-cap-transport-red.py:93  Path.mkdir   target: os
+  capture/tierA-a2/prove-cap-transport-red.py:94  Path.mkdir   target: os
+  capture/tierA-a2/prove-manifest-blind-red.py:64  Path.mkdir   target: os
+  capture/tierA-a2/prove-manifest-blind-red.py:104  Path.mkdir   target: os
+  capture/tierA-a2/prove-manifest-red.py:68  os.remove   target: EXTRA
+  capture/tierA-a2/prove-manifest-red.py:48  open(mode='wb')   target: VICTIM
+  capture/tierA-a2/prove-manifest-red.py:58  open(mode='wb')   target: VICTIM
+  capture/tierA-a2/rename1.py:17  os.rename   target: os.path.join(OUT, 'attempt1-' + b)
+  capture/tierA-a2/resolve7.py:40  open(mode='w')   target: out
+  capture/tierA-a2/resolve8.py:258  os.replace   target: out
+  capture/tierA-a2/resolve8.py:256  open(mode='wb')   target: tmp
+  handoff/T57-promote-emi-vectors.py:420  open(mode='w')   target: path
+  handoff/T58-promote-vectors.py:708  open(mode='w')   target: path
+  handoff/T61-mutations.py:291  open(mode='w')   target: path
+  handoff/T61-promote-vectors.py:329  open(mode='w')   target: path
+  handoff/T74-promote-vectors.py:528  open(mode='w')   target: path
+  handoff/T8-promote-vectors.py:541  open(mode='w')   target: path
+  reviews/A2-10-probe/poison-d3-manifest.py:80  os.remove   target: os.path.join(root, n)
+  reviews/t41-probe/edit18.py:17  io.open(mode='w')   target: path
+  reviews/t41-probe/edit20.py:21  io.open(mode='w')   target: path
+  reviews/t41-probe/edit21.py:17  io.open(mode='w')   target: path
+
+--- P-48 DETECTOR: files T156's regex would score GUARDED on prose alone
+    (guard words present ONLY inside string literals; zero try/finally nodes)
+  capture/pathb/t149/prove-exit-trap.py                            guard-words-in-literals=8  sites=9
+  capture/t100-g8-rescope/src/gencases.py                          guard-words-in-literals=2  sites=3
+  handoff/T74-promote-vectors.py                                   guard-words-in-literals=1  sites=1
+  reviews/T158-drive-followups.py                                  guard-words-in-literals=10  sites=3
+  reviews/T158-drive-t156-refusals.py                              guard-words-in-literals=9  sites=22
+  reviews/t179-guard-classifier/guard_classify.py                  guard-words-in-literals=40  sites=1
+  reviews/t47-probe/t167-redprobe.py                               guard-words-in-literals=22  sites=23
+
+--- REFUSED FILES, NAMED (a refusal is an outcome, not a skip)
+  bin/build-oracle-image.sh                                        REFUSED-SHELL-NO-PARSER
+  bin/fire-program.sh                                              REFUSED-SHELL-NO-PARSER
+  bin/go-env.sh                                                    REFUSED-SHELL-NO-PARSER
+  bin/rehydrate-check.sh                                           REFUSED-SHELL-NO-PARSER
+  capture/actualactual/src/negative-tests.sh                       REFUSED-SHELL-NO-PARSER
+  capture/actualactual/src/pathb-capture.sh                        REFUSED-SHELL-NO-PARSER
+  capture/actualactual/src/run-actualactual.sh                     REFUSED-SHELL-NO-PARSER
+  capture/audit-t44/charges/bin/mkprobes.sh                        REFUSED-SHELL-NO-PARSER
+  capture/audit-t44/charges/bin/preconditions-COPY.sh              REFUSED-SHELL-NO-PARSER
+  capture/audit-t44/charges/bin/rerun.sh                           REFUSED-SHELL-NO-PARSER
+  capture/audit-t44/charges/bin/runprobes.sh                       REFUSED-SHELL-NO-PARSER
+  capture/audit-t44/mathcontext/src/read-pathb-wiring.sh           REFUSED-SHELL-NO-PARSER
+  capture/audit-t44/mathcontext/src/run-mathcontext.sh             REFUSED-SHELL-NO-PARSER
+  capture/audit-t44/mathcontext/src/run-mathcontext2.sh            REFUSED-SHELL-NO-PARSER
+  capture/audit-t44/mathcontext/src/run-negative-tests.sh          REFUSED-SHELL-NO-PARSER
+  capture/audit-t44/rerun-periodratio/src/run-periodratio.sh       REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/capture.sh                                   REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/control.sh                                   REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/create-charges.sh                            REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/create-charges2.sh                           REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/determinism.sh                               REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/lib.sh                                       REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/mkcalcs.sh                                   REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/mkcalcs2.sh                                  REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/mkcharges.sh                                 REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/mkcharges2.sh                                REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/preconditions.sh                             REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/run-preconditions.sh                         REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/selfcheck.sh                                 REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/t46-capture.sh                               REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/t46-determinism.sh                           REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/t46-reissue-identity.sh                      REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/t48-capture.sh                               REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/t48-determinism.sh                           REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/t51-capture.sh                               REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/t51-capture2.sh                              REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/t51-capture3.sh                              REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/t51-capture4.sh                              REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/t51-capture5.sh                              REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/t51-capture6.sh                              REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/t51-determinism.sh                           REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/t51-mkfixtures.sh                            REFUSED-SHELL-NO-PARSER
+  capture/charges/bin/t51-negative.sh                              REFUSED-SHELL-NO-PARSER
+  capture/leapboundary/bin/t55-capture.sh                          REFUSED-SHELL-NO-PARSER
+  capture/leapboundary/bin/t55-determinism.sh                      REFUSED-SHELL-NO-PARSER
+  capture/leapboundary/bin/t55-negative-tests.sh                   REFUSED-SHELL-NO-PARSER
+  capture/mathcontext/analysis/t46_mathcontext_inventory.sh        REFUSED-SHELL-NO-PARSER
+  capture/mathcontext/src/read-pathb-wiring.sh                     REFUSED-SHELL-NO-PARSER
+  capture/mathcontext/src/run-mathcontext.sh                       REFUSED-SHELL-NO-PARSER
+  capture/mathcontext/src/run-mathcontext2.sh                      REFUSED-SHELL-NO-PARSER
+  capture/mathcontext/src/run-mathcontext3.sh                      REFUSED-SHELL-NO-PARSER
+  capture/mathcontext/src/run-negative-tests.sh                    REFUSED-SHELL-NO-PARSER
+  capture/mathcontext/src/run-t50-tier1.sh                         REFUSED-SHELL-NO-PARSER
+  capture/mathcontext/src/run-t50-tier2.sh                         REFUSED-SHELL-NO-PARSER
+  capture/mathcontext/src/t46-assert-pathb-slot.sh                 REFUSED-SHELL-NO-PARSER
+  capture/mathcontext/src/t46-negative-identity.sh                 REFUSED-SHELL-NO-PARSER
+  capture/mathcontext/src/t46-negative-vacuity.sh                  REFUSED-SHELL-NO-PARSER
+  capture/mathcontext/src/t50-negative-tests.sh                    REFUSED-SHELL-NO-PARSER
+  capture/pathb/t125/drive-canary-green.sh                         REFUSED-SHELL-NO-PARSER
+  capture/pathb/t125/drive-canary-red.sh                           REFUSED-SHELL-NO-PARSER
+  capture/pathb/t125/drive-stale-fork.sh                           REFUSED-SHELL-NO-PARSER
+  capture/pathb/t149/capture-halfeven-arm.sh                       REFUSED-SHELL-NO-PARSER
+  capture/pathb/t149/grade-scratch-store.sh                        REFUSED-SHELL-NO-PARSER
+  capture/pathb/t149/prove-redgreen.sh                             REFUSED-SHELL-NO-PARSER
+  capture/pathb/t149/t156-p24-scratch-merge.sh                     REFUSED-SHELL-NO-PARSER
+  capture/pathb/t22-audit/fresh-tenant.sh                          REFUSED-SHELL-NO-PARSER
+  capture/pathb/t22-audit/modeprobe.sh                             REFUSED-SHELL-NO-PARSER
+  capture/pathb/t22-audit/modeprobe2.sh                            REFUSED-SHELL-NO-PARSER
+  capture/pathb/t22-audit/probe.sh                                 REFUSED-SHELL-NO-PARSER
+  capture/pathb/t22-audit/rerun-default.sh                         REFUSED-SHELL-NO-PARSER
+  capture/pathb/t22-probe/capture.sh                               REFUSED-SHELL-NO-PARSER
+  capture/pathb/t22-probe/repro.sh                                 REFUSED-SHELL-NO-PARSER
+  capture/pathb/t36/emiloop-probe.sh                               REFUSED-SHELL-NO-PARSER
+  capture/pathb/t36/mutation-test.sh                               REFUSED-SHELL-NO-PARSER
+  capture/pathb/t36/preconditions.sh                               REFUSED-SHELL-NO-PARSER
+  capture/pathb/t36/recapture.sh                                   REFUSED-SHELL-NO-PARSER
+  capture/pathb/t36/recreate-products.sh                           REFUSED-SHELL-NO-PARSER
+  capture/pathb/t36/run-invariants-emiloop.sh                      REFUSED-SHELL-NO-PARSER
+  capture/pathb/t36/run-invariants.sh                              REFUSED-SHELL-NO-PARSER
+  capture/pathb/t36/rundiff.sh                                     REFUSED-SHELL-NO-PARSER
+  capture/pathb/t36/sha256.sh                                      REFUSED-SHELL-NO-PARSER
+  capture/pathb/t80/forbidden-sentence.sh                          REFUSED-SHELL-NO-PARSER
+  capture/pathb/t80/happy-path.sh                                  REFUSED-SHELL-NO-PARSER
+  capture/pathb/t80/prove-f1.sh                                    REFUSED-SHELL-NO-PARSER
+  capture/pathb/t80/prove-f2.sh                                    REFUSED-SHELL-NO-PARSER
+  capture/pathb/t80/run-attacks.sh                                 REFUSED-SHELL-NO-PARSER
+  capture/pathb/t80/shell-invariance.sh                            REFUSED-SHELL-NO-PARSER
+  capture/pathb/t80/summarise.sh                                   REFUSED-SHELL-NO-PARSER
+  capture/pathb/t99/lib.sh                                         REFUSED-SHELL-NO-PARSER
+  capture/pathb/t99/prove-f1.sh                                    REFUSED-SHELL-NO-PARSER
+  capture/pathb/t99/prove-f2.sh                                    REFUSED-SHELL-NO-PARSER
+  capture/pathb/t99/prove-f3.sh                                    REFUSED-SHELL-NO-PARSER
+  capture/pathb/t99/prove-f4.sh                                    REFUSED-SHELL-NO-PARSER
+  capture/pathb/t99/prove-f5-legs.sh                               REFUSED-SHELL-NO-PARSER
+  capture/pathb/t99/prove-p24-postmerge.sh                         REFUSED-SHELL-NO-PARSER
+  capture/pathb/t99/prove-sweep-patterns.sh                        REFUSED-SHELL-NO-PARSER
+  capture/pathb/t99/run-all.sh                                     REFUSED-SHELL-NO-PARSER
+  capture/pathb/t99/sweep.sh                                       REFUSED-SHELL-NO-PARSER
+  capture/periodratio/analysis/run-t46-monthdiff.sh                REFUSED-SHELL-NO-PARSER
+  capture/periodratio/src/run-periodratio.sh                       REFUSED-SHELL-NO-PARSER
+  capture/periodratio/src/run-t46-periodratio.sh                   REFUSED-SHELL-NO-PARSER
+  capture/src/run-pass3b.sh                                        REFUSED-SHELL-NO-PARSER
+  capture/src/run-pass3c.sh                                        REFUSED-SHELL-NO-PARSER
+  capture/src/run-pass3d.sh                                        REFUSED-SHELL-NO-PARSER
+  capture/src/run-pass3e.sh                                        REFUSED-SHELL-NO-PARSER
+  capture/src/run-pass3f.sh                                        REFUSED-SHELL-NO-PARSER
+  capture/src/run-pass3g.sh                                        REFUSED-SHELL-NO-PARSER
+  capture/src/run-pass3h.sh                                        REFUSED-SHELL-NO-PARSER
+  capture/src/run-pass3i.sh                                        REFUSED-SHELL-NO-PARSER
+  capture/src/run-rc6-rounddown-attestation.sh                     REFUSED-SHELL-NO-PARSER
+  capture/src/t169-red/mutate-guards.sh                            REFUSED-SHELL-NO-PARSER
+  capture/src/t169-red/red-drive-stderr-refusal.sh                 REFUSED-SHELL-NO-PARSER
+  capture/src/t169-red/run-one-variant.sh                          REFUSED-SHELL-NO-PARSER
+  capture/src/t169-red/run-t169.sh                                 REFUSED-SHELL-NO-PARSER
+  capture/t100-g8-rescope/src/run-t100.sh                          REFUSED-SHELL-NO-PARSER
+  capture/t117-familyb/src/run-t117-pass2.sh                       REFUSED-SHELL-NO-PARSER
+  capture/t117-familyb/src/run-t117.sh                             REFUSED-SHELL-NO-PARSER
+  capture/t154-nofloat/drive-leg1-e2e.sh                           REFUSED-SHELL-NO-PARSER
+  capture/t154-nofloat/drive-leg1.sh                               REFUSED-SHELL-NO-PARSER
+  capture/t154-nofloat/drive-leg2.sh                               REFUSED-SHELL-NO-PARSER
+  capture/t154-nofloat/drive-leg3.sh                               REFUSED-SHELL-NO-PARSER
+  capture/t154-nofloat/regen-leg1-red.sh                           REFUSED-SHELL-NO-PARSER
+  capture/t154-nofloat/regen-leg2-red.sh                           REFUSED-SHELL-NO-PARSER
+  capture/t154-nofloat/regen-leg3-red.sh                           REFUSED-SHELL-NO-PARSER
+  capture/t159-review-t117/src/run-t159.sh                         REFUSED-SHELL-NO-PARSER
+  capture/t64-zeroprincipal/src/run-harness-mutations.sh           REFUSED-SHELL-NO-PARSER
+  capture/t66-unrecognized-interest/gotest.sh                      REFUSED-SHELL-NO-PARSER
+  capture/t74-multiplesof/T82-guard-proofs/prove-guards-go-red.sh  REFUSED-SHELL-NO-PARSER
+  capture/t74-multiplesof/T82-guard-proofs/run-precondition-block.sh REFUSED-SHELL-NO-PARSER
+  capture/t83-nonamortizing/src/run-orderdep.sh                    REFUSED-SHELL-NO-PARSER
+  capture/t83-nonamortizing/src/run-t83.sh                         REFUSED-SHELL-NO-PARSER
+  capture/t91/prove-guards.sh                                      REFUSED-SHELL-NO-PARSER
+  capture/t91/run-attacks.sh                                       REFUSED-SHELL-NO-PARSER
+  capture/t91/shell-invariance.sh                                  REFUSED-SHELL-NO-PARSER
+  capture/t91/t115-drive-mf1.sh                                    REFUSED-SHELL-NO-PARSER
+  capture/t91/t115-drive-mf2.sh                                    REFUSED-SHELL-NO-PARSER
+  capture/t91/t115-drive-mf3-mf4.sh                                REFUSED-SHELL-NO-PARSER
+  capture/t91/t115-rerun-attacks.sh                                REFUSED-SHELL-NO-PARSER
+  capture/t91/t151-drive-g4.sh                                     REFUSED-SHELL-NO-PARSER
+  capture/t91/t151-drive-g67.sh                                    REFUSED-SHELL-NO-PARSER
+  capture/t91/t151-drive-vb.sh                                     REFUSED-SHELL-NO-PARSER
+  capture/t91/t151-merge-check.sh                                  REFUSED-SHELL-NO-PARSER
+  capture/t91/verdict.sh                                           REFUSED-SHELL-NO-PARSER
+  capture/tierA-a2/cap.sh                                          REFUSED-SHELL-NO-PARSER
+  capture/tierA-a2/cap8.sh                                         REFUSED-SHELL-NO-PARSER
+  capture/tierA-a2/env.sh                                          REFUSED-SHELL-NO-PARSER
+  capture/tierA-a2/prove-census-red.sh                             REFUSED-SHELL-NO-PARSER
+  capture/tierA-a2/run-020-accounts.sh                             REFUSED-SHELL-NO-PARSER
+  capture/tierA-a2/run-040-refusals.sh                             REFUSED-SHELL-NO-PARSER
+  capture/tierA-a2/run-060-mappings.sh                             REFUSED-SHELL-NO-PARSER
+  capture/tierA-a2/run-100-finactivity.sh                          REFUSED-SHELL-NO-PARSER
+  capture/tierA-a2/run-120-delete-update.sh                        REFUSED-SHELL-NO-PARSER
+  capture/tierA-a2/run-200-a2-7-readbacks.sh                       REFUSED-SHELL-NO-PARSER
+  capture/tierA-a2/run-210-a2-7-mapping.sh                         REFUSED-SHELL-NO-PARSER
+  capture/tierA-a2/run-220-a2-7-runtime-v8.sh                      REFUSED-SHELL-NO-PARSER
+  capture/tierA-a2/run-220-a2-7-runtime.sh                         REFUSED-SHELL-NO-PARSER
+  capture/tierA-a2/run-232-a2-7-writeoff-recovery.sh               REFUSED-SHELL-NO-PARSER
+  capture/tierA-a2/run-240-a2-7-update-path.sh                     REFUSED-SHELL-NO-PARSER
+  conformance.sh                                                   REFUSED-SHELL-NO-PARSER
+  handoff/2026-08-17-run1-harness-schedule-poc/T106-evidence/prove-token-forgeable.sh REFUSED-SHELL-NO-PARSER
+  handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/bash5-matrix-container.sh REFUSED-SHELL-NO-PARSER
+  handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/hostile-env-matrix.sh REFUSED-SHELL-NO-PARSER
+  handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/interpreter-matrix.sh REFUSED-SHELL-NO-PARSER
+  handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/prove-token-forgeable.sh REFUSED-SHELL-NO-PARSER
+  handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/psub-dead-container.sh REFUSED-SHELL-NO-PARSER
+  handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/readonly-sourced-edge.sh REFUSED-SHELL-NO-PARSER
+  handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/ifs-routes.sh REFUSED-SHELL-NO-PARSER
+  handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/read-ifs-predicate.sh REFUSED-SHELL-NO-PARSER
+  handoff/2026-08-17-run1-harness-schedule-poc/T130-evidence/token-spelling-crossproduct.sh REFUSED-SHELL-NO-PARSER
+  handoff/2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh REFUSED-SHELL-NO-PARSER
+  handoff/T8-run-conformance.sh                                    REFUSED-SHELL-NO-PARSER
+  reviews/A2-10-probe/adjudicate-rmf-brief-literal.sh              REFUSED-SHELL-NO-PARSER
+  reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh             REFUSED-SHELL-NO-PARSER
+  reviews/A2-10-probe/poison-d2-shell-matrix.sh                    REFUSED-SHELL-NO-PARSER
+  reviews/A2-11/re-derive-runtime.sh                               REFUSED-SHELL-NO-PARSER
+  reviews/A2-11/re-observe.sh                                      REFUSED-SHELL-NO-PARSER
+  reviews/A2-11/run-all.sh                                         REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/blast-discriminate.sh                      REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/blast-measure.sh                           REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/charges-attack-expect-override.sh          REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/charges-attack-live.sh                     REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/f1-attack.sh                               REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/f1-attest-attack.sh                        REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/f2-canary-digests.sh                       REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/f2-clever-liar.sh                          REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/f2-prefix-pins.sh                          REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/f2-tooldir-writability.sh                  REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/f3-check.sh                                REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/f4-check.sh                                REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/f5-container-gone.sh                       REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/f5-deadtool.sh                             REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/f5-live.sh                                 REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/f5-positive-control.sh                     REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/f6-prove-f1-predicate.sh                   REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/f6-prove-f4-abort.sh                       REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/f6-runall-red.sh                           REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/p24-microfix-check.sh                      REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/p24-scratch-merge.sh                       REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/sweep-broad.sh                             REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/sweep-misscheck.sh                         REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/sweep-missprobe.sh                         REFUSED-SHELL-NO-PARSER
+  reviews/T135-evidence/sweep-pattern-check.sh                     REFUSED-SHELL-NO-PARSER
+  reviews/T138-evidence/r1-mf1.sh                                  REFUSED-SHELL-NO-PARSER
+  reviews/T138-evidence/r10-go.sh                                  REFUSED-SHELL-NO-PARSER
+  reviews/T138-evidence/r11-hygiene.sh                             REFUSED-SHELL-NO-PARSER
+  reviews/T138-evidence/r12-grep.sh                                REFUSED-SHELL-NO-PARSER
+  reviews/T138-evidence/r13-vb.sh                                  REFUSED-SHELL-NO-PARSER
+  reviews/T138-evidence/r14-g4fix.sh                               REFUSED-SHELL-NO-PARSER
+  reviews/T138-evidence/r14b-g4fix.sh                              REFUSED-SHELL-NO-PARSER
+  reviews/T138-evidence/r15-vbfix.sh                               REFUSED-SHELL-NO-PARSER
+  reviews/T138-evidence/r1b-mf1-red.sh                             REFUSED-SHELL-NO-PARSER
+  reviews/T138-evidence/r2-va.sh                                   REFUSED-SHELL-NO-PARSER
+  reviews/T138-evidence/r3-vcef.sh                                 REFUSED-SHELL-NO-PARSER
+  reviews/T138-evidence/r3b-vf.sh                                  REFUSED-SHELL-NO-PARSER
+  reviews/T138-evidence/r4-guards-red.sh                           REFUSED-SHELL-NO-PARSER
+  reviews/T138-evidence/r5-mutate-g5-g7.sh                         REFUSED-SHELL-NO-PARSER
+  reviews/T138-evidence/r6-mf2.sh                                  REFUSED-SHELL-NO-PARSER
+  reviews/T138-evidence/r6b-mf2-green.sh                           REFUSED-SHELL-NO-PARSER
+  reviews/T138-evidence/r7-mf3-mf4.sh                              REFUSED-SHELL-NO-PARSER
+  reviews/T138-evidence/r7b-census.sh                              REFUSED-SHELL-NO-PARSER
+  reviews/T138-evidence/r8-merge.sh                                REFUSED-SHELL-NO-PARSER
+  reviews/T138-evidence/r9-post-merge.sh                           REFUSED-SHELL-NO-PARSER
+  reviews/T155-probe/make-poison.sh                                REFUSED-SHELL-NO-PARSER
+  reviews/T155-probe/prove-i-invalid-byte.sh                       REFUSED-SHELL-NO-PARSER
+  reviews/T155-probe/prove-ii-literals.sh                          REFUSED-SHELL-NO-PARSER
+  reviews/T155-probe/prove-iii-census.sh                           REFUSED-SHELL-NO-PARSER
+  reviews/T155-probe/prove-iiib-binary-direct.sh                   REFUSED-SHELL-NO-PARSER
+  reviews/T155-probe/prove-iv-zero-input.sh                        REFUSED-SHELL-NO-PARSER
+  reviews/T155-probe/prove-ix-sweep-and-help.sh                    REFUSED-SHELL-NO-PARSER
+  reviews/T155-probe/prove-v-census-counts.sh                      REFUSED-SHELL-NO-PARSER
+  reviews/T155-probe/prove-vi-build-test-prove.sh                  REFUSED-SHELL-NO-PARSER
+  reviews/T155-probe/prove-vii-residual-attacks.sh                 REFUSED-SHELL-NO-PARSER
+  reviews/T155-probe/prove-viii-compiles-on-main.sh                REFUSED-SHELL-NO-PARSER
+  reviews/T155-probe/prove-x-removal-and-failclosed.sh             REFUSED-SHELL-NO-PARSER
+  reviews/T155-probe/prove-xi-microfix.sh                          REFUSED-SHELL-NO-PARSER
+  reviews/T155-probe/prove-xii-perl-microfix.sh                    REFUSED-SHELL-NO-PARSER
+  reviews/T155-probe/prove-xii-perl-true-absence.sh                REFUSED-SHELL-NO-PARSER
+  reviews/T155-probe/prove-xiii-deflation.sh                       REFUSED-SHELL-NO-PARSER
+  reviews/T155-probe/prove-xiv-sweep-coverage.sh                   REFUSED-SHELL-NO-PARSER
+  reviews/T155-probe/rerun-t154-provers-postmerge.sh               REFUSED-SHELL-NO-PARSER
+  reviews/T155-probe/run-conformance.sh                            REFUSED-SHELL-NO-PARSER
+  reviews/T155-probe/show-refusals.sh                              REFUSED-SHELL-NO-PARSER
+  reviews/T158-compare-enumerators.sh                              REFUSED-SHELL-NO-PARSER
+  reviews/T84-evidence/src/run-orderdep2.sh                        REFUSED-SHELL-NO-PARSER
+  reviews/T84-evidence/src/run-t84.sh                              REFUSED-SHELL-NO-PARSER
+  reviews/t21v2/run-probe2-attested.sh                             REFUSED-SHELL-NO-PARSER
+  reviews/t43-probe/t43_ambient_sites.sh                           REFUSED-SHELL-NO-PARSER
+  reviews/t43-probe/t43_charge_membership.sh                       REFUSED-SHELL-NO-PARSER
+  reviews/t45-probe/gen-ambient-sites.sh                           REFUSED-SHELL-NO-PARSER
+  reviews/t45-probe/gen-cumulative-vs-progressive.sh               REFUSED-SHELL-NO-PARSER
+  refused total: 250
