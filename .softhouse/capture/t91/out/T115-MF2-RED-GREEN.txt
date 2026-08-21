@@ -1,0 +1,57 @@
+pre  export: ccf3c14171dea52bd044d81d5ca67aba8054b74c (MF-2 absent, asserted)
+post export: ebc4a06e05933711c275afe3e2bb84e9d8751c40 (MF-2 present, asserted)
+
+=================================================================== MF-2 PREMISE
+top-level `exit` statements in the hardened rig: 2
+    234:  exit 1
+    237:exit 0
+function definitions in the rig: 2   (ok/bad printers; neither contains an exit)
+
+=================================================================== RED — the rig EMPTIED
+--- PRE: direct shim call
+    exit=0   stdout=0 bytes   stderr:
+--- PRE: through the T40 wrapper bin/run-preconditions.sh
+    exit=0
+      PRECONDITIONS_EXIT=0
+    transcript /tmp/t115-mf2.83552/PRE-wrap.txt is 0 bytes
+
+--- POST: direct shim call
+    exit=2   stdout=0 bytes   stderr:
+      PRECONDITIONS NOT RUN: the rig at '/tmp/t115-mf2.83552/post-red/.softhouse/capture/pathb/t36/preconditions.sh' returned without exiting — nothing was asserted.
+--- POST: through the T40 wrapper bin/run-preconditions.sh
+    exit=2
+      PRECONDITIONS NOT RUN: the rig at '/tmp/t115-mf2.83552/post-red/.softhouse/capture/pathb/t36/preconditions.sh' returned without exiting — nothing was asserted.
+      PRECONDITIONS_EXIT=2
+    transcript /tmp/t115-mf2.83552/POST-wrap.txt is 162 bytes
+
+RED verdict: pre = exit 0 over a ZERO-BYTE transcript; post = exit 2, transcript non-empty.
+
+=================================================================== GREEN — five real callers
+Each caller is run against BOTH exports.  Cells: PASS count / FAIL count / exit status.
+
+     caller                                                     pre-MF-2 (P/F/rc)  post-MF-2 (P/F/rc) identical?
+     C1 bin/run-preconditions.sh (T40 wrapper), tenant gerege   22/0/0             22/0/0             YES
+     C2 t51-negative.sh form: direct, tenant default, no CANARY_REQ 16/5/1             16/5/1             YES
+     C3 t55-negative-tests.sh N2: tenant t55-no-such-tenant     12/9/1             12/9/1             YES
+     C4 T44 control via preconditions-COPY.sh, tenant default   17/5/1             17/5/1             YES
+     C5 C1 from a foreign CWD (/tmp), absolute path             22/0/0             22/0/0             YES
+
+callers identical cell for cell: 5 of 5
+C3's asserted string survives post-MF-2: 1 occurrence(s)
+C2/C4 breach count post-MF-2 (MF-3's subject, must be 5): C2=5  C4=5
+
+=================================================================== N9 / N10 — STILL OPEN
+MF-2 does NOT close F-2.  Measured, post-MF-2, so nobody merges believing otherwise:
+
+--- N9: the rig at its path REPLACED by main's pre-hardening bytes
+    exit=0
+      PASS  effective rounding mode canary: period-1 interest 20925.05 (= HALF_UP)
+    ALL PRECONDITIONS HOLD — tenant 'gerege' at MathContext(19, HALF_UP), PostgreSQL only.
+    => N9 STILL ADMITS through the MF-2 shim.  F-2 is NOT discharged.  FU-1 closes this.
+
+--- N10: the shim reached through a SYMLINK placed in a foreign tree
+    exit=0
+    ALL PRECONDITIONS HOLD — tenant 'gerege' at MathContext(19, HALF_UP), PostgreSQL only.
+    => N10 STILL ADMITS: the attacker's stub rig ran.  F-2 is NOT discharged.  FU-1 closes this.
+
+RESULT: MF-2 driven RED and GREEN; five callers identical cell for cell; N9/N10 measured OPEN.
