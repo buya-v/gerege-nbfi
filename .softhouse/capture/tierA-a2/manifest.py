@@ -81,17 +81,17 @@ def entries():
         base = os.path.join(DIR, d)
         if not os.path.isdir(base):
             continue
-        for root, dirnames, filenames in os.walk(base):
+        for root, dirnames, filenames in os.walk(base, followlinks=True):
             dirnames.sort()
             for n in sorted(filenames):
                 p = os.path.join(root, n)
-                if os.path.isfile(p) and not os.path.islink(p):
+                if os.path.isfile(p):
                     yield os.path.relpath(p, DIR), p
     for n in sorted(os.listdir(DIR)):
         p = os.path.join(DIR, n)
         if n == MANIFEST_NAME:
             continue
-        if os.path.isfile(p) and not os.path.islink(p):
+        if os.path.isfile(p):
             yield n, p
 
 
