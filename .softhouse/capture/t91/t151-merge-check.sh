@@ -64,12 +64,34 @@ done
 echo
 
 echo "=== every artefact re-run ON THE MERGED TREE"
+# A red artefact on the merged tree means one of two very different things, and reporting them as
+# one would be dishonest in either direction: T151 broke it, or it was already broken on `main`.
+# So a failure is not scored until a CONTROL RUN of the same artefact on PLAIN CURRENT MAIN — no
+# T151 commit in the tree at all — has said which.  Absence beats difference: the control is the
+# tree without the change, not the tree with the change reasoned about.
+PREEX=0
+rm -rf "$W-main"
+git clone --quiet --no-hardlinks --shared "$ROOT" "$W-main" || { echo "ABORT: control clone failed" >&2; exit 2; }
+(cd "$W-main" && git checkout -q -B t151control "$MAIN_SHA") || { echo "ABORT: control checkout failed" >&2; exit 2; }
+trap 'rm -rf "$W" "$W-main"' EXIT
 art() {  # art <label> <command...>
   lbl=$1; shift
   (cd "$W" && "$@") > "$W/art.txt" 2>&1
   r=$?
-  if [ "$r" = 0 ]; then printf '   %-28s exit 0   OK\n' "$lbl"
-  else printf '   %-28s exit %s   *** NOT GREEN ***\n' "$lbl" "$r"; tail -15 "$W/art.txt" | sed 's/^/      /'; BAD=$((BAD+1)); fi
+  if [ "$r" = 0 ]; then printf '   %-28s exit 0   OK\n' "$lbl"; return; fi
+  (cd "$W-main" && "$@") > "$W/art-control.txt" 2>&1
+  c=$?
+  if [ "$c" = "$r" ]; then
+    printf '   %-28s exit %s   PRE-EXISTING ON MAIN (control run of the same artefact on %s, with no\n' \
+           "$lbl" "$r" "$(printf '%s' "$MAIN_SHA" | cut -c1-8)"
+    printf '   %-28s          T151 commit in the tree, exits %s too) — NOT a T151 regression\n' '' "$c"
+    tail -6 "$W/art.txt" | sed 's/^/      /'
+    PREEX=$((PREEX+1))
+  else
+    printf '   %-28s exit %s   *** T151 REGRESSION *** (plain main exits %s)\n' "$lbl" "$r" "$c"
+    tail -15 "$W/art.txt" | sed 's/^/      /'
+    BAD=$((BAD+1))
+  fi
 }
 art prove-guards.sh       sh .softhouse/capture/t91/prove-guards.sh
 art t151-drive-g4.sh      sh .softhouse/capture/t91/t151-drive-g4.sh
@@ -104,6 +126,15 @@ for f in verdict.sh run-attacks.sh shell-invariance.sh prove-guards.sh; do
 done
 echo
 
-if [ "$BAD" -eq 0 ]; then echo "done — merges clean into current main, promotes nothing, every artefact green."; exit 0; fi
+if [ "$PREEX" -gt 0 ]; then
+  echo "*** $PREEX artefact(s) are RED ON PLAIN CURRENT MAIN, independently of T151. ***"
+  echo "    They are reported, not excused: an artefact that is red on main is red for whoever"
+  echo "    merges next, and a worker who silences it has hidden it.  See the T151 handoff."
+  echo
+fi
+if [ "$BAD" -eq 0 ]; then
+  echo "done — merges clean into current main, promotes nothing, no T151 regression."
+  exit 0
+fi
 echo "done — $BAD check(s) failed."
 exit 1
