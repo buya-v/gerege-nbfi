@@ -1,0 +1,14 @@
+=== control: main's own tree compiles ===
+control exit=0
+
+=== T154's store_integrity_test.go dropped onto MAIN ===
+exit=1
+# github.com/gerege/nexus/internal/apps/loanschedule/conformance
+# [github.com/gerege/nexus/internal/apps/loanschedule/conformance]
+vet: internal/apps/loanschedule/conformance/store_integrity_test.go:476:13: undefined: StoreFileCensus
+
+=== T154's conformance_test.go dropped onto MAIN ===
+exit=1
+# github.com/gerege/nexus/internal/apps/loanschedule/conformance
+# [github.com/gerege/nexus/internal/apps/loanschedule/conformance]
+vet: internal/apps/loanschedule/conformance/conformance_test.go:780:37: undefined: LoanScheduleTreeRel

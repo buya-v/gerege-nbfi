@@ -1,0 +1,39 @@
+=== the ground T155 swept, sized ===
+  .sh files under .softhouse/                              215
+  .py files under .softhouse/                              292
+  .pl files under .softhouse/                              1
+  ALL files under .softhouse/                              3336
+
+  COVERED by T155 (read and/or driven):
+    .softhouse/conformance.sh — every grep site          1 file / 30 grep lines
+    .softhouse/bin/*.sh — every grep site                4 files
+    T154's own drivers, re-run post-merge                  7 files
+    Go: the whole censused tree                            24 files
+    Go: files in the module OUTSIDE that tree              0 files
+
+  SKIPPED by T155, deliberately, and why:
+    - historical evidence scripts under .softhouse/reviews/*-evidence/ and
+      .softhouse/handoff/*-evidence/: 200 files.
+      They are committed transcripts of past measurements; editing them falsifies
+      the evidence they record. Same reasoning T154 gave. NOT audited for blind greps.
+    - Python: 292 files. Different encoding behaviour from BSD grep;
+      T156 swept .sh/.py, T155 did not re-do that ground.
+    - any grep on an unmerged sibling branch, and any grep built at runtime
+      from a variable: a lexical sweep cannot see either.
+
+=== the Go ground, which T156's .sh/.py sweep states is INVISIBLE to it ===
+  Go files in the module:              24
+  of which inside the censused tree:   24
+  of which OUTSIDE it (uncensused):    0
+  -> the census root is the fixed path LoanScheduleTreeRel; today it happens to
+     be the whole module, so the coverage gap is 0 files TODAY and grows silently
+     the moment a second Go package is added. Reported as a residual, not a defect.
+
+  float/complex identifiers anywhere in the module (should be 0 outside the
+  guard's own split-string denylist and its comments):
+    ./internal/apps/loanschedule/contract/contract.go:121://     There is no float32, float64, big.Float, decimal string or float-backed
+    ./internal/apps/loanschedule/contract/contract.go:738:	// civil-date arithmetic; no float32/float64/big.Float anywhere.
+    ./internal/apps/loanschedule/contract/contract.go:1898:// reference implementation and MUST NOT be reproduced as float32/float64/
+    ./internal/apps/loanschedule/contract/contract.go:2212:// each of the three points) and never float32, float64 or big.Float — a float on
+    ./internal/apps/loanschedule/conformance/conformance_test.go:759:// them — "There is no float32, float64, big.Float, decimal string or float-backed
+    (end)

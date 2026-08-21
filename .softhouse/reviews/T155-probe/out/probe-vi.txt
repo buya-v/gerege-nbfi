@@ -1,0 +1,22 @@
+=== go build ./... ===
+exit=0
+=== go vet ./... ===
+exit=0
+=== go test ./... ===
+exit=0
+ok  	github.com/gerege/nexus/internal/apps/loanschedule	7.687s
+ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	25.443s
+?   	github.com/gerege/nexus/internal/apps/loanschedule/conformance/cmd/conformance	[no test files]
+?   	github.com/gerege/nexus/internal/apps/loanschedule/contract	[no test files]
+=== gofmt -l . (G-3: contract.go and NOTHING ELSE is expected; never gofmt -w) ===
+internal/apps/loanschedule/contract/contract.go
+exit=0
+=== conformance.sh --prove ===
+exit=0
+PROOF OK lines: 21
+PROOF FAIL lines: 0
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+VERDICT: SELF-TEST PASS (exit 0). The harness grades correctly. NOT a conformance PASS.
+VERDICT: SELF-TEST PASS (exit 0). The harness grades correctly. NOT a conformance PASS.
+VERDICT: SELF-TEST PASS (exit 0). The harness grades correctly. NOT a conformance PASS.
+PROOFS: 21 passed, 0 failed

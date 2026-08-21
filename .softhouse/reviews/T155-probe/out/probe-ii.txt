@@ -1,0 +1,51 @@
+======================================================================
+PROBE: float literal, zero forbidden identifiers
+======================================================================
+-- PRE (/tmp/t155/pre)
+  exit=0  probe=up
+  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+  <no census line>
+0
+  => OK (wanted exit 0)
+-- POST (/tmp/t155/post)
+  exit=2  probe=up
+  VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+  no-float census         25 Go files / 56299 tokens inspected under nexus/internal/apps/loanschedule
+  !     * FLOATING POINT ON A MONEY PATH: /tmp/t155/post/nexus/internal/apps/loanschedule/t155_probe.go:6:7: floating-point literal "0.036": money is integer minor units, and no floating-point value may appear on a money path — including for intermediate calculation (CLAUDE.md, first non-negotiable)
+2
+  => OK (wanted exit 2)
+======================================================================
+PROBE: imag literal, zero forbidden identifiers
+======================================================================
+-- PRE (/tmp/t155/pre)
+  exit=0  probe=up
+  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+  <no census line>
+0
+  => OK (wanted exit 0)
+-- POST (/tmp/t155/post)
+  exit=2  probe=up
+  VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+  no-float census         25 Go files / 56294 tokens inspected under nexus/internal/apps/loanschedule
+  !     * FLOATING POINT ON A MONEY PATH: /tmp/t155/post/nexus/internal/apps/loanschedule/t155_probe.go:6:7: floating-point literal "3i": money is integer minor units, and no floating-point value may appear on a money path — including for intermediate calculation (CLAUDE.md, first non-negotiable)
+2
+  => OK (wanted exit 2)
+======================================================================
+PROBE: hexfloat literal, zero forbidden identifiers
+======================================================================
+-- PRE (/tmp/t155/pre)
+  exit=0  probe=up
+  VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+  <no census line>
+0
+  => OK (wanted exit 0)
+-- POST (/tmp/t155/post)
+  exit=2  probe=up
+  VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+  no-float census         25 Go files / 56299 tokens inspected under nexus/internal/apps/loanschedule
+  !     * FLOATING POINT ON A MONEY PATH: /tmp/t155/post/nexus/internal/apps/loanschedule/t155_probe.go:7:7: floating-point literal "0x1p-2": money is integer minor units, and no floating-point value may appear on a money path — including for intermediate calculation (CLAUDE.md, first non-negotiable)
+2
+  => OK (wanted exit 2)
+
+PRE arms wanted exit 0 (the inherited hole); POST arms wanted exit 2.
+rows disagreeing with T155's own expectation: 0

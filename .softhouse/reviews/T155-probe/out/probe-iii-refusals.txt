@@ -1,0 +1,61 @@
+===================== POST-C1 =====================
+conformance: no-float guard — inspected 50 .json files under /tmp/t155/post/.softhouse/vectors
+conformance: no-float guard — inspected 24 .go files under /tmp/t155/post/nexus/internal/apps/loanschedule
+    store           /tmp/t155/post/.softhouse/vectors
+    * STORE FILE CENSUS — 50 .json files were found under /tmp/t155/post/.softhouse/vectors and 1 of them are unaccounted for: "evilctx" is a SYMLINK. The vector store must be plain files and plain directories: `find` (without -L) and os.ReadDir both skip a symlink, and they skip different things when one appears, so the store's contents stop being a function of the store. The shell float guard enumerates this store with `find -name '*.json' -type f` (recursive, case-sensitive, no symlink following) and LoadStore reads one level down matching the suffix bytewise; where the two disagree, a file is graded by neither, checked by neither, or counted twice. This run is REFUSED and NOTHING WAS GRADED: exit 2, which is not a PASS
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+===================== POST-C2 =====================
+conformance: no-float guard — inspected 3 .json files under /tmp/t155/post/.softhouse/vectors
+conformance: no-float guard — inspected 24 .go files under /tmp/t155/post/nexus/internal/apps/loanschedule
+    store           /tmp/t155/post/.softhouse/vectors
+    * STORE FILE CENSUS — 3 .json files were found under /tmp/t155/post/.softhouse/vectors and 1 of them are unaccounted for: "loanschedule" is a SYMLINK. The vector store must be plain files and plain directories: `find` (without -L) and os.ReadDir both skip a symlink, and they skip different things when one appears, so the store's contents stop being a function of the store. The shell float guard enumerates this store with `find -name '*.json' -type f` (recursive, case-sensitive, no symlink following) and LoadStore reads one level down matching the suffix bytewise; where the two disagree, a file is graded by neither, checked by neither, or counted twice. This run is REFUSED and NOTHING WAS GRADED: exit 2, which is not a PASS
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+===================== POST-C3 =====================
+conformance: no-float guard — inspected 51 .json files under /tmp/t155/post/.softhouse/vectors
+conformance: no-float guard — inspected 24 .go files under /tmp/t155/post/nexus/internal/apps/loanschedule
+    store           /tmp/t155/post/.softhouse/vectors
+    * STORE FILE CENSUS — 50 .json files were found under /tmp/t155/post/.softhouse/vectors and 1 of them are unaccounted for: "loanschedule/sub" is a directory INSIDE a context directory. The store is exactly two levels — <root>/<context>/<vector>.json — and LoadStore reads one level down, so nothing below here is ever loaded or graded. The shell float guard enumerates this store with `find -name '*.json' -type f` (recursive, case-sensitive, no symlink following) and LoadStore reads one level down matching the suffix bytewise; where the two disagree, a file is graded by neither, checked by neither, or counted twice. This run is REFUSED and NOTHING WAS GRADED: exit 2, which is not a PASS
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+===================== POST-C4 =====================
+conformance: no-float guard — inspected 50 .json files under /tmp/t155/post/.softhouse/vectors
+conformance: no-float guard — inspected 24 .go files under /tmp/t155/post/nexus/internal/apps/loanschedule
+    store           /tmp/t155/post/.softhouse/vectors
+    * STORE FILE CENSUS — 51 .json files were found under /tmp/t155/post/.softhouse/vectors and 1 of them are unaccounted for: "loanschedule/T155-UPPER.JSON" is a .json under the store root that the harness DID NOT LOAD. Every vector file must be loaded and graded, or the corpus counts describe a different set of files than the one on disk. The shell float guard enumerates this store with `find -name '*.json' -type f` (recursive, case-sensitive, no symlink following) and LoadStore reads one level down matching the suffix bytewise; where the two disagree, a file is graded by neither, checked by neither, or counted twice. This run is REFUSED and NOTHING WAS GRADED: exit 2, which is not a PASS
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+===================== POST-C5 =====================
+conformance: no-float guard — inspected 51 .json files under /tmp/t155/post/.softhouse/vectors
+conformance: no-float guard — inspected 24 .go files under /tmp/t155/post/nexus/internal/apps/loanschedule
+    store           /tmp/t155/post/.softhouse/vectors
+    * CASE_ID INTEGRITY — case_ids differing only in letter case: "P-00" (loanschedule/P-00-baseline-6x7pct.json) AND "p-00" (loanschedule/T155-case-clash.json). Both grade, and both add to the parity-vector and graded-cell totals. This run is REFUSED and NOTHING WAS GRADED: exit 2, which is not a PASS
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+===================== POST-C6 =====================
+conformance: no-float guard — inspected 52 .json files under /tmp/t155/post/.softhouse/vectors
+conformance: no-float guard — inspected 24 .go files under /tmp/t155/post/nexus/internal/apps/loanschedule
+    store           /tmp/t155/post/.softhouse/vectors
+    * CASE_ID INTEGRITY — loanschedule/T155-nfc.json declares case_id "T155-café", which contains "é" — a case_id must match [A-Za-z0-9._-]+ so that two ids cannot render identically in the report (a Unicode NFC/NFD pair does exactly that); loanschedule/T155-nfd.json declares case_id "T155-café", which contains "́" — a case_id must match [A-Za-z0-9._-]+ so that two ids cannot render identically in the report (a Unicode NFC/NFD pair does exactly that). This run is REFUSED and NOTHING WAS GRADED: exit 2, which is not a PASS
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+===================== POST-C7 =====================
+conformance: no-float guard — inspected 51 .json files under /tmp/t155/post/.softhouse/vectors
+conformance: no-float guard — inspected 24 .go files under /tmp/t155/post/nexus/internal/apps/loanschedule
+    store           /tmp/t155/post/.softhouse/vectors
+    * STORE FILE CENSUS — 51 .json files were found under /tmp/t155/post/.softhouse/vectors and 1 of them are unaccounted for: "T155-ROOT-CLEAN.json" sits at the STORE ROOT and is not one of PIN.json, capabilities.json. LoadStore reads only files INSIDE a context directory, so a .json here is never decoded, never graded, and never float-checked by Go. The shell float guard enumerates this store with `find -name '*.json' -type f` (recursive, case-sensitive, no symlink following) and LoadStore reads one level down matching the suffix bytewise; where the two disagree, a file is graded by neither, checked by neither, or counted twice. This run is REFUSED and NOTHING WAS GRADED: exit 2, which is not a PASS
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+===================== POST-C8 =====================
+conformance: FLOAT-SHAPED NUMBER in /tmp/t155/post/.softhouse/vectors/T155-ROOT-POISON.json
+conformance: no-float guard — inspected 51 .json files under /tmp/t155/post/.softhouse/vectors
+conformance: no-float guard — inspected 24 .go files under /tmp/t155/post/nexus/internal/apps/loanschedule
+conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+
+===================== POST-C9 =====================
+conformance: FLOAT-SHAPED NUMBER in /tmp/t155/post/.softhouse/vectors/T155-ROOT-PLAINFLOAT.json
+conformance: no-float guard — inspected 51 .json files under /tmp/t155/post/.softhouse/vectors
+conformance: no-float guard — inspected 24 .go files under /tmp/t155/post/nexus/internal/apps/loanschedule
+conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+

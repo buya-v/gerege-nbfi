@@ -1,0 +1,36 @@
+=== ARM 1: fix applied, perl present, clean store — must stay GREEN, counts unchanged ===
+  exit=0
+    conformance: no-float guard — inspected 50 .json files under /tmp/t155/perlfix/.softhouse/vectors
+    conformance: no-float guard — inspected 24 .go files under /tmp/t155/perlfix/nexus/internal/apps/loanschedule
+    parity vectors          PASS 43   FAIL 0
+    cells compared          5664 graded, 87 ungraded (never recorded by the capture)
+    VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+
+=== ARM 2: perl replaced by exit-127, WITHOUT the fix (the defect) ===
+  exit=0
+    conformance: no-float guard — inspected 50 .json files under /tmp/t155/post/.softhouse/vectors
+    conformance: no-float guard — inspected 24 .go files under /tmp/t155/post/nexus/internal/apps/loanschedule
+    VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+
+=== ARM 3: perl replaced by exit-127, WITH the fix — must refuse ===
+  exit=0
+    VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+
+the fix diff, verbatim:
+--- /tmp/t155/post/.softhouse/conformance.sh	2026-08-21 15:50:58
++++ /tmp/t155/perlfix/.softhouse/conformance.sh	2026-08-21 16:16:28
+@@ -471,6 +471,14 @@
+   if ! command -v go >/dev/null 2>&1; then
+     warn "conformance: no Go toolchain. Expected $env_script to put one on PATH."
+     warn "conformance: EXIT 2 — the harness is unusable. This is NOT a pass."
++    exit "$EXIT_UNUSABLE"
++  fi
++  # perl is a PRECONDITION, not an optional convenience: both no-float guards
++  # pipe every file through it, and with perl gone the pipeline yields nothing,
++  # the guard reports "inspected N files" and returns 0 ON A FLOAT (T155/D-2).
++  if ! command -v perl >/dev/null 2>&1; then
++    warn "conformance: no perl. Both no-float guards pipe every file through perl; without it they"
++    warn "conformance: enumerate files and inspect none. EXIT 2 — the harness is unusable. NOT a pass."
+     exit "$EXIT_UNUSABLE"
+   fi
+ }
