@@ -33,6 +33,13 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PATHB = os.path.normpath(os.path.join(HERE, '..'))
+# T125: the effective-rounding-mode GATE lives in ONE module shared by all three attestation
+# sidecars.  It is not inlined here because the defect it closes was caused by exactly that:
+# T80 hardened this file while `charges/bin/attest.py` and `charges/bin/attest-t40.py`, forked
+# from it at T36, were never swept (P-21/P-26).  A failed import is a hard failure by design.
+sys.path.insert(0, os.path.normpath(os.path.join(PATHB, '..', 'lib')))
+import attest_gate                                                   # noqa: E402
+
 TENANT = sys.argv[1] if len(sys.argv) > 1 else 'gerege'
 # Which capture set to attest.  'pathb' = the four committed B-0x sets (T22 P0-6 re-capture);
 # 'emiloop' = the T36 EMI re-adjust-loop probes (T22 P1-11, second clause).
@@ -158,7 +165,11 @@ def now():
 
 
 # --------------------------------------------------------------- preconditions
-canary = os.path.join(PATHB, 't22-audit', 'req', 'calc-pmode2-gerege.json')
+# T125: the canary request is chosen BY TENANT from a pinned table of solved exact ties and
+# carries its own pinned digest.  It used to be the `gerege` request hard-coded for every
+# tenant, which for any other tenant could only ever produce an ungraded HTTP error.
+canary, canary_pin_sha = attest_gate.canary_request_for(
+    TENANT, os.path.join(PATHB, 't22-audit', 'req'))
 pre = subprocess.run('CANARY_REQ=%s sh %s %s' % (canary, os.path.join(HERE, 'preconditions.sh'), TENANT),
                      shell=True, capture_output=True, text=True)
 # THE GATE COMES FIRST, AND NOTHING IS WRITTEN BEFORE IT (T85 F-1).  T80 put the makedirs/stamp/
@@ -270,8 +281,23 @@ canary_code = sh("curl -sk -X POST '%s/api/v1/loans?command=calculateLoanSchedul
 canary_p1 = None
 if canary_code == '200':
     with open(canary_out, 'rb') as fh:
-        cj = json.loads(fh.read().decode())
+        # T125: parse_float=str.  This value is MONEY and it is about to be compared as exact
+        # text; routing it through a binary float — even only to re-serialise it — is the
+        # no-floating-point rule broken inside the very check that guards the rounding mode.
+        cj = json.loads(fh.read().decode(), parse_float=str)
     canary_p1 = str(cj['periods'][1]['interestOriginalDue'])
+
+# ------------------------------------------------------------------------- T125: THE GATE
+# Everything above is an OBSERVATION; this is the first line in this file that REFUSES on
+# one.  Until T125 the canary's verdict was computed, written into attestation.json and
+# compared against nothing: a HALF_EVEN JVM produced a complete attestation and exit 0
+# (measured — see capture/pathb/t125/red-pre-fix-default/).  It is placed HERE, before any
+# capture is taken, so a run that cannot establish the mode spends no requests on the oracle
+# and leaves no bodies of unknown provenance behind.
+attest_gate.assert_effective_rounding_mode(
+    tenant=TENANT, canary_path=canary, canary_bytes=canary_bytes,
+    canary_pinned_sha=canary_pin_sha, canary_http_code=canary_code, canary_p1=canary_p1,
+    precision=precision, rounding_ordinal=rounding_ordinal, mode_in_force=mode_in_force)
 
 # --------------------------------------------------------- products, from the rows
 products = []
@@ -450,11 +476,25 @@ att = {
     'notes': notes,
 }
 
+# T125, last line of defence: the DOCUMENT is graded against the same constants before it is
+# written, by reading back the very fields that are about to be serialised — the canary
+# verdict, `matches_ratified_production_setting`, and the per-capture byte-identity claim.
+# All three were of one shape: computed, written, never compared.
+_no_prior = attest_gate.assert_attestation_is_verified(att, 'matches_committed_corpus_bytes')
+
 path = os.path.join(OUT, 'attestation.json')
 with open(path, 'w') as fh:
     json.dump(att, fh, indent=1, sort_keys=False)
     fh.write('\n')
 print('wrote %s' % path)
+print('GATE: effective rounding mode PROVEN %s — pinned exact tie %s answered %s '
+      '(HALF_EVEN would answer %s)'
+      % (attest_gate.WANT_ROUNDING_NAME, os.path.basename(canary), canary_p1,
+         attest_gate.EXPECTED_UNDER_HALF_EVEN))
+if _no_prior:
+    print('GATE: %d capture(s) had no committed counterpart to compare against (%s) — an '
+          'absence, not a mismatch, and NOT a reproducibility claim.'
+          % (len(_no_prior), ', '.join(str(x) for x in _no_prior)))
 print('effective MathContext: %s   matches ratified: %s'
       % (att['effective_math_context']['notation'],
          att['effective_math_context']['matches_ratified_production_setting']))

@@ -24,7 +24,22 @@ import subprocess
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-PATHB = os.path.normpath(os.path.join(HERE, '..'))
+# NOTE (T125).  THIS FILE IS A STALE FORK AND IS NOT RUNNABLE WHERE IT SITS.  It is a
+# verbatim copy of `capture/pathb/t36/attest.py` as of commit aafc8b3 (T36), committed into
+# `capture/charges/bin/` by T40's merge (5e2391a) alongside the copy T40 actually re-pointed,
+# `attest-t40.py`.  It was never re-pointed itself: `PATHB` below resolves to
+# `capture/charges`, and neither `charges/t22-audit/` nor `charges/req/calc-B-01-baseline.json`
+# exists, so no run of this file has ever produced an attestation (there is none on disk from
+# it).  It also predates every hardening T80/T85 applied to the file it was forked from.
+# T125 gates it rather than leaving one ungated copy of the class behind, and registers
+# "delete this fork or re-point it" as an open question in the T125 handoff.
+CAPTURE_ROOT = os.path.normpath(os.path.join(HERE, '..', '..'))       # .softhouse/capture
+PATHB = os.path.normpath(os.path.join(HERE, '..'))                    # STALE: = charges/
+# T125: the effective-rounding-mode GATE, shared with the other two attestation sidecars.
+# Not inlined, because an inlined fix is exactly what failed to reach this fork (P-21/P-26).
+sys.path.insert(0, os.path.join(CAPTURE_ROOT, 'lib'))
+import attest_gate                                                   # noqa: E402
+
 TENANT = sys.argv[1] if len(sys.argv) > 1 else 'gerege'
 # Which capture set to attest.  'pathb' = the four committed B-0x sets (T22 P0-6 re-capture);
 # 'emiloop' = the T36 EMI re-adjust-loop probes (T22 P1-11, second clause).
@@ -86,7 +101,12 @@ def now():
 
 
 # --------------------------------------------------------------- preconditions
-canary = os.path.join(PATHB, 't22-audit', 'req', 'calc-pmode2-gerege.json')
+# T125: the canary request is chosen BY TENANT from a pinned table of solved exact ties and
+# carries its own pinned digest.  It is resolved against the REAL `pathb/t22-audit/req`
+# rather than this fork's stale `PATHB`, so the gate below is reachable rather than dying on
+# a missing file; the rest of this fork's paths are left exactly as found (see header).
+canary, canary_pin_sha = attest_gate.canary_request_for(
+    TENANT, os.path.join(CAPTURE_ROOT, 'pathb', 't22-audit', 'req'))
 pre = subprocess.run('CANARY_REQ=%s sh %s %s' % (canary, os.path.join(HERE, 'preconditions.sh'), TENANT),
                      shell=True, capture_output=True, text=True)
 os.makedirs(OUT, exist_ok=True)
@@ -185,8 +205,20 @@ canary_code = sh("curl -sk -X POST '%s/api/v1/loans?command=calculateLoanSchedul
 canary_p1 = None
 if canary_code == '200':
     with open(canary_out, 'rb') as fh:
-        cj = json.loads(fh.read().decode())
+        # T125: parse_float=str.  This value is MONEY and it is about to be compared as exact
+        # text; routing it through a binary float — even only to re-serialise it — is the
+        # no-floating-point rule broken inside the very check that guards the rounding mode.
+        cj = json.loads(fh.read().decode(), parse_float=str)
     canary_p1 = str(cj['periods'][1]['interestOriginalDue'])
+
+# ------------------------------------------------------------------------- T125: THE GATE
+# Everything above is an OBSERVATION; this is the first line in this file that REFUSES on
+# one.  Until T125 the canary's verdict was computed, written into attestation.json, and
+# compared against nothing.
+attest_gate.assert_effective_rounding_mode(
+    tenant=TENANT, canary_path=canary, canary_bytes=canary_bytes,
+    canary_pinned_sha=canary_pin_sha, canary_http_code=canary_code, canary_p1=canary_p1,
+    precision=precision, rounding_ordinal=rounding_ordinal, mode_in_force=mode_in_force)
 
 # --------------------------------------------------------- products, from the rows
 products = []
@@ -348,11 +380,24 @@ att = {
     'notes': notes,
 }
 
+# T125, last line of defence: the DOCUMENT is graded before it is written, by reading back
+# the very fields about to be serialised — the canary verdict,
+# `matches_ratified_production_setting`, and the per-capture byte-identity claim.
+_no_prior = attest_gate.assert_attestation_is_verified(att, 'matches_committed_corpus_bytes')
+
 path = os.path.join(OUT, 'attestation.json')
 with open(path, 'w') as fh:
     json.dump(att, fh, indent=1, sort_keys=False)
     fh.write('\n')
 print('wrote %s' % path)
+print('GATE: effective rounding mode PROVEN %s — pinned exact tie %s answered %s '
+      '(HALF_EVEN would answer %s)'
+      % (attest_gate.WANT_ROUNDING_NAME, os.path.basename(canary), canary_p1,
+         attest_gate.EXPECTED_UNDER_HALF_EVEN))
+if _no_prior:
+    print('GATE: %d capture(s) had no committed counterpart to compare against (%s) — an '
+          'absence, not a mismatch, and NOT a reproducibility claim.'
+          % (len(_no_prior), ', '.join(str(x) for x in _no_prior)))
 print('effective MathContext: %s   matches ratified: %s'
       % (att['effective_math_context']['notation'],
          att['effective_math_context']['matches_ratified_production_setting']))

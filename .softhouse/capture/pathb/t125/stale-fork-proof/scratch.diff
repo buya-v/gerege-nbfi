@@ -1,0 +1,4 @@
+115c115
+< if pre.returncode != 0:
+---
+> if False:  # T125: OUTER precondition gate DISABLED

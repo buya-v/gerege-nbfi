@@ -31,8 +31,28 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 CH = os.path.normpath(os.path.join(HERE, '..'))          # .softhouse/capture/charges
 W = os.path.normpath(os.path.join(CH, '..', '..', '..'))  # worktree root
 PATHB = os.path.join(W, '.softhouse', 'capture', 'pathb')  # READ-ONLY to T40
+# T125: the effective-rounding-mode GATE, shared with the other two attestation sidecars.
+# This file was forked from pathb/t36/attest.py at T36 and never received T80's hardening —
+# so the fix is deliberately NOT inlined here, because an inlined fix is what fails to reach
+# a fork (P-21/P-26).  A failed import is a hard failure by design.
+sys.path.insert(0, os.path.normpath(os.path.join(CH, '..', 'lib')))
+import attest_gate                                                   # noqa: E402
+
 TENANT = sys.argv[1] if len(sys.argv) > 1 else 'gerege'
-OUT = os.path.join(CH, 'out', 'attested')
+# T125, adopting T76's fix to the file this one was forked from: ATTEST_OUT lets an
+# INDEPENDENT re-run write its own evidence directory instead of overwriting T40's committed
+# capture set.  Re-running a generator over the artefacts it produced last fire destroys the
+# very record a reviewer diffs against — and there was no way to drive this rig's gate
+# green without doing so.  When ATTEST_OUT is used the directory must be named for the
+# tenant it is capturing, so a `default` capture cannot be filed under a `gerege` name (T80).
+OUT = os.environ.get('ATTEST_OUT') or os.path.join(CH, 'out', 'attested')
+if os.environ.get('ATTEST_OUT'):
+    _base = os.path.basename(os.path.normpath(OUT))
+    if not (_base == TENANT or _base.endswith('-' + TENANT)):
+        sys.stderr.write(
+            "ABORT: ATTEST_OUT %r is not named for tenant %r. A capture must be filed under "
+            "the tenant it was taken from.\n" % (OUT, TENANT))
+        sys.exit(1)
 FIN, DB = 'fineract-fineract-1', 'fineract-db-1'
 BASE = 'https://localhost:8443/fineract-provider'
 
@@ -87,7 +107,10 @@ def now():
 
 
 # --------------------------------------------------------------- preconditions
-canary = os.path.join(PATHB, 't22-audit', 'req', 'calc-pmode2-gerege.json')
+# T125: the canary request is chosen BY TENANT from a pinned table of solved exact ties and
+# carries its own pinned digest, instead of the `gerege` request hard-coded for every tenant.
+canary, canary_pin_sha = attest_gate.canary_request_for(
+    TENANT, os.path.join(PATHB, 't22-audit', 'req'))
 pre = subprocess.run('CANARY_REQ=%s sh %s %s' % (canary, os.path.join(HERE, 'preconditions.sh'), TENANT),
                      shell=True, capture_output=True, text=True)
 os.makedirs(OUT, exist_ok=True)
@@ -186,6 +209,16 @@ if canary_code == '200':
     with open(canary_out, 'rb') as fh:
         cj = json.loads(fh.read().decode(), parse_float=str)
     canary_p1 = str(cj['periods'][1]['interestOriginalDue'])
+
+# ------------------------------------------------------------------------- T125: THE GATE
+# Everything above is an OBSERVATION; this is the first line in this file that REFUSES on
+# one.  Until T125 the canary's verdict was computed, printed and written into
+# attestation.json, and compared against nothing.  It is placed HERE, before any capture is
+# taken, so a run that cannot establish the mode spends no requests on the oracle.
+attest_gate.assert_effective_rounding_mode(
+    tenant=TENANT, canary_path=canary, canary_bytes=canary_bytes,
+    canary_pinned_sha=canary_pin_sha, canary_http_code=canary_code, canary_p1=canary_p1,
+    precision=precision, rounding_ordinal=rounding_ordinal, mode_in_force=mode_in_force)
 
 # --------------------------------------------------------- product, from the row
 # Every T40 request uses productId 1 and clientId 1 — one product, so one row.
@@ -299,12 +332,20 @@ att = {
                'and the contract SHAPE is what is still being ratified.',
     'capture_set': 'T40 charges — fees and penalties on the progressive loan schedule',
     'capture_path': 'Path B — running Fineract server (REST + PostgreSQL)',
-    'produced_by': {'task': 'T40', 'branch': 'softhouse/T40-charges-capture',
+    # T125, adopting T76's fix to the file this one was forked from: a sidecar produced by a
+    # LATER task must not claim T40 produced it.  Provenance that names the wrong author is a
+    # false record even when every number in it is right.
+    'produced_by': {'task': os.environ.get('ATTEST_TASK', 'T40'),
+                    'branch': os.environ.get('ATTEST_BRANCH', 'softhouse/T40-charges-capture'),
                     'generated_at_utc': now(),
                     'generator': 'bin/attest-t40.py (derived from pathb/t36/attest.py)',
                     'preconditions_script': 'bin/preconditions.sh (copied verbatim from '
                                             'pathb/t36/preconditions.sh)',
-                    'preconditions_result': 'ALL PASS (transcript: out/attested/preconditions.txt)',
+                    # T125: the transcript path is DERIVED from OUT.  It was hard-coded to
+                    # out/attested/preconditions.txt, which named the wrong file the moment
+                    # ATTEST_OUT pointed the run somewhere else.
+                    'preconditions_result': 'ALL PASS (transcript: %s)'
+                                            % os.path.relpath(os.path.join(OUT, 'preconditions.txt'), W),
                     'zero_charge_control': 'bin/control.sh — all four committed Path B captures '
                                            'reproduced byte-for-byte before any charge was created '
                                            '(out/control/)'},
@@ -396,11 +437,25 @@ att = {
     'notes': notes,
 }
 
+# T125, last line of defence: the DOCUMENT is graded before it is written, by reading back
+# the very fields about to be serialised — the canary verdict,
+# `matches_ratified_production_setting`, and `byte_identical_to_prior_issue`.  All three were
+# of one shape: computed, printed, never compared.
+_no_prior = attest_gate.assert_attestation_is_verified(att, 'byte_identical_to_prior_issue')
+
 path = os.path.join(OUT, 'attestation.json')
 with open(path, 'w') as fh:
     json.dump(att, fh, indent=1, sort_keys=False)
     fh.write('\n')
 print('wrote %s' % path)
+print('GATE: effective rounding mode PROVEN %s — pinned exact tie %s answered %s '
+      '(HALF_EVEN would answer %s)'
+      % (attest_gate.WANT_ROUNDING_NAME, os.path.basename(canary), canary_p1,
+         attest_gate.EXPECTED_UNDER_HALF_EVEN))
+if _no_prior:
+    print('GATE: %d capture(s) had no first-issue counterpart to compare against (%s) — an '
+          'absence, not a mismatch, and NOT a determinism claim.'
+          % (len(_no_prior), ', '.join(str(x) for x in _no_prior)))
 print('effective MathContext: %s   matches ratified: %s'
       % (att['effective_math_context']['notation'],
          att['effective_math_context']['matches_ratified_production_setting']))

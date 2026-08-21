@@ -1,0 +1,12 @@
+
+==============================================================================
+ATTESTATION REFUSED — the effective rounding mode is NOT the ratified MathContext(19, HALF_UP)
+==============================================================================
+  * EFFECTIVE ROUNDING MODE IS NOT HALF_UP: on the pinned exact tie the oracle answered period-1 interest '20925.04'; HALF_UP gives 20925.05 and HALF_EVEN gives 20925.04. That is exactly the HALF_EVEN answer. The process is running Fineract's STOCK DEFAULT, not the ratified tenant pin.
+  * c_configuration.rounding-mode for tenant 'default' is 6, ratified ordinal is 4 (HALF_UP). Ordinal 6 is HALF_EVEN and is not production-representative.
+  * the running JVM initialized tenant 'default' at 'HALF_EVEN', not HALF_UP. MoneyHelper caches the mode per tenant at startup, so this — not the DB row — is what the arithmetic used.
+
+No attestation.json was written. An attestation asserts the reference oracle was
+observed at the RATIFIED tenant setting MathContext(19, HALF_UP); a run that cannot
+establish that has nothing to attest, and a file claiming a verdict it did not
+verify is worse than no file at all.
