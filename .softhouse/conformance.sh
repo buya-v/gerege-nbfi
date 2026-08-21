@@ -142,6 +142,14 @@
 #   that cannot fail is worse than none, because it is believed"), and it is what
 #   makes THIS one different from the residual hijacks: a hijack refuses, and a
 #   refusal cannot turn a red run green; a forged admission can.
+#   [CORRECTED BY T154, and the correction NARROWS this paragraph rather than
+#   retiring it. "Would then return 0 having inspected ZERO files" was true when
+#   it was written and is now FALSE: both guards count what they inspected and
+#   return 1 with a named error at zero, and the Go census in nofloat.go /
+#   census.go does the same on its own two surfaces. So the psub-dead route no
+#   longer reaches a vacuous float guard. Everything else here stands — the
+#   interpreter guard is still the difference between a refusal and a forged
+#   admission, and a forged admission still reaches the rest of this file.]
 #   [CITATION CORRECTED BY T113: T106's review, and the first draft of this
 #   paragraph, both said "the vacuous pass that line 53 of this file already warns
 #   about". It does not. The block that line number pointed at is `WHY IT EXISTS`
@@ -438,7 +446,7 @@ usage() {
   # ERROR and not a silent short/long --help: a help function that cannot find its
   # own text must say so, not print whatever it happens to find.
   local src="${BASH_SOURCE[0]}" end
-  end="$(grep -n '^#=END-OF-HELP=$' "$src" | head -1 | cut -d: -f1)"
+  end="$(LC_ALL=C grep -an '^#=END-OF-HELP=$' "$src" | head -1 | cut -d: -f1)"
   if [ -z "$end" ] || [ "$end" -lt 3 ]; then
     warn "conformance: --help is broken: the '#=END-OF-HELP=' sentinel that bounds the"
     warn "conformance: header comment block is missing from $src (or is at line $end)."
@@ -471,20 +479,61 @@ load_toolchain() {
 # HARD guards. They prove the ABSENCE of known-bad patterns and nothing more.
 # ---------------------------------------------------------------------------
 
+# THE TWO TOKENS `LC_ALL=C` AND `-a` ON EVERY LOAD-BEARING grep IN THIS FILE.
+#
+# Both are required and they defend against TWO DIFFERENT PROGRAMS. On this host
+# the token `grep` names two of them and which one you get depends on where it is
+# typed [VERIFIED: T108's 360-cell matrix, .softhouse/capture/t108-grep/MATRIX.md;
+# ruling recorded as P-33 in .softhouse/patterns.md]:
+#
+#   inside a script (what these guards are)  -> /usr/bin/grep, BSD grep
+#       2.6.0-FreeBSD. Shell functions are NOT exported to a child, so a script
+#       never sees the session's `grep`. In a UTF-8 locale BSD grep goes blind to
+#       the part of ONE LINE at and to the RIGHT of an invalid byte: count 0,
+#       exit 1, NO diagnostic. `LC_ALL=C` fixes that; `-a` does NOT.
+#   typed into the Claude Code Bash tool     -> a shell function re-execing the
+#       `claude` binary with argv[0]=ugrep, i.e. ugrep with `-I` hard-coded, which
+#       skips the WHOLE FILE and prints nothing at all. `-a` fixes that;
+#       `LC_ALL=C` does NOT.
+#
+# These guards fire only when they FIND something bad, so a blind grep is a
+# SILENT PASS ON A FLOAT — the money non-negotiable at the top of CLAUDE.md,
+# passing without having checked (P-34, P-35). Measured end to end before this
+# fix: a single `.json` at the STORE ROOT carrying a float and one lone 0xE2
+# earlier on the same line produced `VERDICT: PASS (exit 0) — 42 parity vectors
+# … 5576 cells`, byte-identical to the clean run and with no warning anywhere
+# [VERIFIED: .softhouse/capture/t154-nofloat/out/leg1-e2e-RED-before-fix.txt].
+#
+# DO NOT DROP EITHER TOKEN. A test that removes them is in drive-leg1.sh, and it
+# runs both arms against the REAL pre-fix bytes at a pinned immutable sha.
+
 # guard_no_float_in_vectors: no JSON number in any vector file may carry a '.',
 # 'e' or 'E'. Every monetary value in the store is an integer STRING in minor
 # units, so nothing legitimate is inconvenienced. A float anywhere in a vector
 # file is a rejection — including in a field somebody thought was "just" a rate or
 # a day count.
+#
+# PHRASED POSITIVELY (P-35): it reports how many files it INSPECTED, and zero
+# inspected is an ERROR, not a pass. "I found nothing wrong" is vacuous on no
+# input by construction, and this guard's `find` can return nothing for reasons
+# that have nothing to do with the store being clean — a renamed store root, a
+# typo in STORE_ROOT, a `find` that failed.
 guard_no_float_in_vectors() {
-  local bad=0 f
+  local bad=0 seen=0 f
   while IFS= read -r f; do
+    seen=$((seen + 1))
     # Strip string literals first, then look for a decimal or exponent number.
-    if perl -0pe 's/"(\\.|[^"\\])*"//g' "$f" | grep -Eq '[-0-9][0-9]*\.[0-9]|[0-9][eE][-+]?[0-9]'; then
+    if perl -0pe 's/"(\\.|[^"\\])*"//g' "$f" | LC_ALL=C grep -aEq '[-0-9][0-9]*\.[0-9]|[0-9][eE][-+]?[0-9]'; then
       warn "conformance: FLOAT-SHAPED NUMBER in $f"
       bad=1
     fi
   done < <(find "$STORE_ROOT" -name '*.json' -type f | sort)
+  if [ "$seen" -eq 0 ]; then
+    warn "conformance: guard_no_float_in_vectors INSPECTED ZERO FILES under $STORE_ROOT."
+    warn "conformance: a guard that inspects nothing passes everything. This is an ERROR, not a pass."
+    return 1
+  fi
+  say "conformance: no-float guard — inspected $seen .json files under $STORE_ROOT"
   return "$bad"
 }
 
@@ -493,16 +542,31 @@ guard_no_float_in_vectors() {
 # stream, because the frozen contract's doc comments name the forbidden types in
 # order to forbid them and a byte grep therefore fires on the prohibition itself.
 # Repeated here only as a cross-check that skips comments the same way.
+#
+# IT INSPECTS IDENTIFIERS, AND A FLOAT LITERAL IS NOT AN IDENTIFIER. `rate :=
+# 0.036 / 12.0` carries no forbidden identifier at all, so neither this guard nor
+# the Go test caught it until T154 added the LITERAL check to the Go test
+# (TestNoFloatLiteralsInTheLoanScheduleTree). That check is the one that covers
+# literals; this one stays as written and covers identifiers.
+#
+# Same positive phrasing as above: zero files inspected is an ERROR.
 guard_no_float_in_harness() {
-  local bad=0 f
+  local bad=0 seen=0 f
   while IFS= read -r f; do
+    seen=$((seen + 1))
     # Drop // comments and /* */ comments, then look for a float identifier.
     if perl -0pe 's{//[^\n]*}{}g; s{/\*.*?\*/}{}gs' "$f" \
-       | grep -Eq '\bfloat(32|64)\b|\bbig\.Float\b|\bcomplex(64|128)\b|\b(Parse|Format|Append)Float\b'; then
+       | LC_ALL=C grep -aEq '\bfloat(32|64)\b|\bbig\.Float\b|\bcomplex(64|128)\b|\b(Parse|Format|Append)Float\b'; then
       warn "conformance: FLOATING-POINT IDENTIFIER in $f"
       bad=1
     fi
   done < <(find "$NEXUS_DIR/internal/apps/loanschedule" -name '*.go' -type f | sort)
+  if [ "$seen" -eq 0 ]; then
+    warn "conformance: guard_no_float_in_harness INSPECTED ZERO FILES under $NEXUS_DIR/internal/apps/loanschedule."
+    warn "conformance: a guard that inspects nothing passes everything. This is an ERROR, not a pass."
+    return 1
+  fi
+  say "conformance: no-float guard — inspected $seen .go files under $NEXUS_DIR/internal/apps/loanschedule"
   return "$bad"
 }
 
@@ -526,7 +590,7 @@ guard_no_float_in_harness() {
 guard_gofmt() {
   local unformatted
   unformatted="$(gofmt -l "$HARNESS_PKG" "$NEXUS_DIR/internal/apps/loanschedule/conformance/cmd" 2>/dev/null \
-                 | grep -v "/contract/contract.go$" || true)"
+                 | LC_ALL=C grep -av "/contract/contract.go$" || true)"
   if [ -n "$unformatted" ]; then
     warn "conformance: not gofmt-clean:"
     warn "$unformatted"
@@ -625,7 +689,7 @@ prove() {
     local out got ok
     out="$("$@" 2>&1)"; got=$?
     ok=0
-    [ "$got" = "$want" ] && printf '%s' "$out" | grep -qF -- "$needle" && ok=1
+    [ "$got" = "$want" ] && printf '%s' "$out" | LC_ALL=C grep -aqF -- "$needle" && ok=1
     if [ "$ok" = 1 ]; then
       say "PROOF OK   exit $got (wanted $want)   $label"
       pass=$((pass+1))
@@ -644,7 +708,7 @@ prove() {
   # mutation proof over an unmutated file proves nothing and looks identical to
   # one that works.
   assert_mutated() { # assert_mutated <file> <needle>
-    if ! grep -qF -- "$2" "$1"; then
+    if ! LC_ALL=C grep -aqF -- "$2" "$1"; then
       say "PROOF FAIL the perturbation did not apply to $1, so the proof would be vacuous"
       fail=$((fail+1))
       return 1
@@ -696,7 +760,7 @@ prove() {
   cp -R "$STORE_ROOT/." "$tmp/perturbed/"
   perl -0pi -e 's/"principal_minor": "50000",\n(\s+)"interest_minor": "0",\n(\s+)"outstanding_principal_minor": "50000",\n(\s+)"principal_major_text": "500\.00",/"principal_minor": "50001",\n$1"interest_minor": "0",\n$2"outstanding_principal_minor": "50000",\n$3"principal_major_text": "500.01",/' \
     "$tmp/perturbed/_selftest/SELFTEST-01-two-period-zero-rate.json"
-  if ! grep -q '"50001"' "$tmp/perturbed/_selftest/SELFTEST-01-two-period-zero-rate.json"; then
+  if ! LC_ALL=C grep -aq '"50001"' "$tmp/perturbed/_selftest/SELFTEST-01-two-period-zero-rate.json"; then
     say "PROOF FAIL the perturbation did not apply, so the proof would be vacuous"
     fail=$((fail+1))
   else
@@ -735,11 +799,11 @@ prove() {
   local out8 rc8
   out8="$("$bin" -self-test -context=_selftest 2>&1)"; rc8=$?
   if [ "$rc8" = 0 ] \
-     && printf '%s' "$out8" | grep -q 'self-test fixtures      PASS 1' \
-     && printf '%s' "$out8" | grep -q 'parity vectors          PASS 0' \
-     && printf '%s' "$out8" | grep -q 'SELF-TEST FIXTURE' \
-     && printf '%s' "$out8" | grep -q 'EXCLUDED from the parity count' \
-     && printf '%s' "$out8" | grep -q 'NOT a conformance PASS'; then
+     && printf '%s' "$out8" | LC_ALL=C grep -aq 'self-test fixtures      PASS 1' \
+     && printf '%s' "$out8" | LC_ALL=C grep -aq 'parity vectors          PASS 0' \
+     && printf '%s' "$out8" | LC_ALL=C grep -aq 'SELF-TEST FIXTURE' \
+     && printf '%s' "$out8" | LC_ALL=C grep -aq 'EXCLUDED from the parity count' \
+     && printf '%s' "$out8" | LC_ALL=C grep -aq 'NOT a conformance PASS'; then
     say "PROOF OK   exit $rc8               the fixture PASSES and parity stays 0, stamped NOT a conformance PASS"
     pass=$((pass+1))
   else
@@ -747,7 +811,7 @@ prove() {
     say "$out8"
     fail=$((fail+1))
   fi
-  printf '%s\n' "$out8" | grep -E 'self-test fixtures|parity vectors|VERDICT'
+  printf '%s\n' "$out8" | LC_ALL=C grep -aE 'self-test fixtures|parity vectors|VERDICT'
   say ""
 
   # 9. A float token in a vector file: the HARD guard refuses. Run the guard
@@ -933,19 +997,19 @@ prove() {
   # (finding T58-N3, D-6's fourth recurrence -- in this very proof). Assert the
   # PROPERTY F-1b protects instead: the vector whose cells were withdrawn is
   # refused, by name, with the diagnostic that says why.
-  printf '%s' "$out19a" | grep -q 'WITHDRAWS from grading' || ok19=0
-  printf '%s' "$out19a" | grep -q 'P-02' || ok19=0
+  printf '%s' "$out19a" | LC_ALL=C grep -aq 'WITHDRAWS from grading' || ok19=0
+  printf '%s' "$out19a" | LC_ALL=C grep -aq 'P-02' || ok19=0
   # DELIBERATELY NOT asserted: that the store-wide "killed by
   # MONTHEND-CONTINUE-FROM-CLAMPED-DAY" line disappears. T58 promoted P-ME-* vectors
   # that carry the SAME counterfactual id and legitimately back it, so that line is
   # now printed by them and its presence says nothing about P-02. The store-wide
   # aggregate is the wrong place to assert a PER-VECTOR refusal; the two greps above
   # assert it where it actually lives, by vector name and with the diagnostic.
-  printf '%s' "$out19b" | grep -q 'killed by MONTHEND-CONTINUE-FROM-CLAMPED-DAY' || ok19=0
+  printf '%s' "$out19b" | LC_ALL=C grep -aq 'killed by MONTHEND-CONTINUE-FROM-CLAMPED-DAY' || ok19=0
   # NOT a frozen count: T57 moved the corpus 11 -> 13 and a literal here would go
   # stale on every promotion (finding D-6, third recurrence). Assert the PROPERTY --
   # the pristine store still grades clean with no failures.
-  printf '%s' "$out19b" | grep -qE 'parity vectors +PASS [0-9]+ +FAIL 0' || ok19=0
+  printf '%s' "$out19b" | LC_ALL=C grep -aqE 'parity vectors +PASS [0-9]+ +FAIL 0' || ok19=0
   if [ "$ok19" = 1 ]; then
     say "PROOF OK   exit $rc19a/$rc19b       T9-F1b: withdrawn cells STOP backing the kill; recorded ones still back it"
     pass=$((pass+1))
@@ -955,8 +1019,8 @@ prove() {
     say "$out19b"
     fail=$((fail+1))
   fi
-  printf '%s\n' "$out19a" | grep -E 'UNBACKED|monthend.reanchor|VERDICT'
-  printf '%s\n' "$out19b" | grep -E 'monthend.reanchor|parity vectors|VERDICT'
+  printf '%s\n' "$out19a" | LC_ALL=C grep -aE 'UNBACKED|monthend.reanchor|VERDICT'
+  printf '%s\n' "$out19b" | LC_ALL=C grep -aE 'monthend.reanchor|parity vectors|VERDICT'
   say ""
 
   # 20. T60, closing finding T58-N2 — an unrecorded cell that a PROPERTY INVARIANT
@@ -1019,7 +1083,7 @@ prove() {
     # --- the FALSE VIOLATION direction ---
     [ "$rc20" = 0 ] || note20 \
       "FALSE VIOLATION: the run exited $rc20, wanted 0. An invariant went RED on a cell nobody observed."
-    if printf '%s' "$out20" | grep -qF -- 'INVARIANT principal_amortizes_to_zero VIOLATED'; then
+    if printf '%s' "$out20" | LC_ALL=C grep -aqF -- 'INVARIANT principal_amortizes_to_zero VIOLATED'; then
       note20 "FALSE VIOLATION: principal_amortizes_to_zero was reported VIOLATED against a stand-in."
     fi
 
@@ -1027,17 +1091,17 @@ prove() {
     #     an invariant has exactly ONE status per vector, and asserting it is N/A
     #     on this vector excludes HOLD on this vector. ---
     printf '%s' "$out20" \
-      | grep -qE 'SELFTEST-01-two-period-zero-rate .* principal_amortizes_to_zero \[N/A\]' || note20 \
+      | LC_ALL=C grep -aqE 'SELFTEST-01-two-period-zero-rate .* principal_amortizes_to_zero \[N/A\]' || note20 \
       "FALSE HOLD: principal_amortizes_to_zero did not report N/A for the vector whose final outstanding was withdrawn."
-    printf '%s' "$out20" | grep -qF -- \
+    printf '%s' "$out20" | LC_ALL=C grep -aqF -- \
       'NOT ASSERTED: row 2: final outstanding == 0 cannot be asserted (outstanding_principal_minor never recorded by the capture' \
       || note20 "no NOT ASSERTED line names the withdrawn cell, so a reader cannot tell the check stopped checking."
-    printf '%s' "$out20" | grep -qE 'invariant assertions +[1-9][0-9]* NOT RUN' || note20 \
+    printf '%s' "$out20" | LC_ALL=C grep -aqE 'invariant assertions +[1-9][0-9]* NOT RUN' || note20 \
       "the summary counted ZERO skipped assertions while a cell the invariants read was a placeholder."
 
     # --- the anti-no-op control, over the PRISTINE store ---
     [ "$rc20c" = 0 ] || note20 "control: the pristine store no longer self-tests clean (exit $rc20c, wanted 0)."
-    printf '%s' "$out20c" | grep -qE 'principal_amortizes_to_zero +hold [1-9][0-9]* +violated 0' || note20 \
+    printf '%s' "$out20c" | LC_ALL=C grep -aqE 'principal_amortizes_to_zero +hold [1-9][0-9]* +violated 0' || note20 \
       "control: principal_amortizes_to_zero is no longer ASSERTED over the pristine store — the fix has become a no-op."
 
     if [ "$ok20" = 1 ]; then
@@ -1049,8 +1113,8 @@ prove() {
       say "$out20c"
       fail=$((fail+1))
     fi
-    printf '%s\n' "$out20" | grep -E 'principal_amortizes_to_zero|NOT ASSERTED|invariant assertions|VERDICT'
-    printf '%s\n' "$out20c" | grep -E 'principal_amortizes_to_zero|invariant assertions|VERDICT'
+    printf '%s\n' "$out20" | LC_ALL=C grep -aE 'principal_amortizes_to_zero|NOT ASSERTED|invariant assertions|VERDICT'
+    printf '%s\n' "$out20c" | LC_ALL=C grep -aE 'principal_amortizes_to_zero|invariant assertions|VERDICT'
     say ""
   fi
 

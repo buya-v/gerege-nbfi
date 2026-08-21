@@ -3,6 +3,7 @@ package conformance
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -842,11 +843,16 @@ func RejectFloatTokens(raw []byte) error {
 //     a directory that could not be listed, and asserting it anyway is the thing
 //     this function exists not to do.
 //   - a file OUTSIDE the filter that fails to LOAD is skipped and is not recorded
-//     as a LoadError — exactly as before this change. It cannot inflate any
-//     count, because a vector that does not load is never graded; and in the
-//     unfiltered run that conformance.sh performs it is a LoadError and the run
-//     is exit 2 regardless. The census's blind spot is confined to files that
-//     could not have been counted in the first place.
+//     as a LoadError. It cannot inflate any count, because a vector that does not
+//     load is never graded; and in the unfiltered run that conformance.sh
+//     performs it is a LoadError and the run is exit 2 regardless.
+//     [T154 CORRECTION] This paragraph used to end "the census's blind spot is
+//     confined to files that could not have been counted in the first place",
+//     which read as though nothing were left uncovered. It was a blind spot all
+//     the same: such a file was on disk, was not loaded, was not reported, and
+//     nothing said so. StoreFileCensus below now REFUSES it — it is a `.json`
+//     under the root that is neither a loaded vector nor a reported load error,
+//     which is the same rule that closes F-1 through F-5.
 func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) {
 	entries, err := os.ReadDir(storeRoot)
 	if err != nil {
@@ -909,15 +915,37 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 	// because determinism needs it (P-11: the code was right and the reason given
 	// for it was not, and the reason is what the next contributor checks).
 	sortVectorsForReport(all)
+	// THE THREE STORE-WIDE REFUSALS, ALL TAKEN OVER `all` AND ALL REPORTED
+	// TOGETHER.
+	//
+	// Returned as the third value, NOT as LoadErrors: a LoadError is a property
+	// of ONE file ("this one could not be read"), and no single file is at fault
+	// in any of these — the defect is a relationship between files, or between
+	// the store on disk and the set the harness loaded. Run turns this into a
+	// fatal reason and returns BEFORE the grading loop, so nothing is graded and
+	// no count is printed that could be believed. loadErrs travels with it so a
+	// store that is both malformed and duplicated still reports both.
+	//
+	// JOINED RATHER THAN SHORT-CIRCUITED: a store with two different defects
+	// must report two, or fixing the first reveals the second one run later,
+	// and a reader who saw only the first believes the store was one edit from
+	// clean.
+	var refusals []error
 	if err := DuplicateCaseIDs(all); err != nil {
-		// Returned as the third value, NOT as a LoadError: a LoadError is a
-		// property of ONE file ("this one could not be read"), and no single file
-		// here is at fault — the defect is the relationship between two files.
-		// Run turns this into a fatal reason and returns BEFORE the grading loop,
-		// so nothing is graded and no count is printed that could be believed.
-		// loadErrs travels with it so a store that is both malformed and
-		// duplicated still reports both.
-		return nil, loadErrs, err
+		refusals = append(refusals, err)
+	}
+	if err := CaseIDIntegrity(all); err != nil {
+		refusals = append(refusals, err)
+	}
+	// T154: the census is what makes "the store" mean the same set of files to
+	// the shell float guard and to this loader. It is taken over `all` and over
+	// the WHOLE tree, filter or no filter — for the same reason the duplicate
+	// census is (T123): the filter narrows what is GRADED, never what is CHECKED.
+	if err := StoreFileCensus(storeRoot, all, loadErrs); err != nil {
+		refusals = append(refusals, err)
+	}
+	if len(refusals) > 0 {
+		return nil, loadErrs, errors.Join(refusals...)
 	}
 	if contextFilter == "" {
 		return all, loadErrs, nil

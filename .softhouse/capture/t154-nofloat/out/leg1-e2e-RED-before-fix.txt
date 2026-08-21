@@ -1,0 +1,49 @@
+=== [0] APPARATUS ===
+pinned pre-fix sha : 187e9726dfad5076f4b68877f411d7d218280889
+pre-fix subject    : RESUME + state: A2 analysis and capture merged, T149 held for its missing review, G-9 raised
+PRE  guard line    : if perl -0pe 's/"(\\.|[^"\\])*"//g' "$f" | grep -Eq '[-0-9][0-9]*\.[0-9]|[0-9][eE][-+]?[0-9]'; then
+POST guard line    : if perl -0pe 's/"(\\.|[^"\\])*"//g' "$f" | grep -Eq '[-0-9][0-9]*\.[0-9]|[0-9][eE][-+]?[0-9]'; then
+ANTI-NO-OP         : the two lines above must DIFFER, or this script compares a fix with itself
+  -> IDENTICAL. The fix is not in the working tree yet; every POST row below is a RED row.
+
+=== [1] CONTROL — both trees clean, no poison ===
+--- pre-clean ---
+    conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+        parity vectors          PASS 42   FAIL 0
+        cells compared          5576 graded, 84 ungraded (never recorded by the capture)
+    VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+--- post-clean ---
+    conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+        parity vectors          PASS 42   FAIL 0
+        cells compared          5576 graded, 84 ungraded (never recorded by the capture)
+    VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+OK    PRE  clean  exit 0
+OK    POST clean  exit 0
+
+=== [2] THE DEFEAT — one .json at the store root, float + one invalid byte ===
+0000000    {  \n           "   c   a   s   e   _   i   d   "   :       "
+0000020    T   1   5   4   -   P   O   I   S   O   N   "   ,  \n        
+0000040  342       "   r   a   t   e   _   p   c   t   "   :       3   .
+0000060    6  \n   }  \n                                                
+0000064
+--- pre-poisoned ---
+    conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+        parity vectors          PASS 42   FAIL 0
+        cells compared          5576 graded, 84 ungraded (never recorded by the capture)
+    VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+--- post-poisoned ---
+    conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+        parity vectors          PASS 42   FAIL 0
+        cells compared          5576 graded, 84 ungraded (never recorded by the capture)
+    VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+OK    PRE  poisoned exit 0 — SILENT PASS ON A FLOAT, which is the finding
+OK    PRE  poisoned printed NO 'FLOAT-SHAPED NUMBER' line anywhere
+FAIL  POST poisoned exit 0, wanted 2
+FAIL  POST poisoned did not name T154-POISON-store-root.json
+
+=== [3] THE COMMITTED STORE WAS NEVER TOUCHED ===
+OK    git status --porcelain -- .softhouse/vectors is EMPTY
+
+=======================================================================
+LEG 1 E2E: 5 as wanted, 2 not as wanted
+=======================================================================

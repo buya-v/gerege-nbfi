@@ -53,7 +53,7 @@ done
 [ "${BUILD_OK}" = "1" ] || { echo "FATAL: bootJar failed after 3 attempts"; exit 1; }
 
 JAR="$(ls -1 "${FINERACT_SRC}"/fineract-provider/build/libs/fineract-provider-*.jar \
-       | grep -v -- '-plain\.jar$' | head -1)"
+       | LC_ALL=C grep -av -- '-plain\.jar$' | head -1)"
 echo "bootJar    : ${JAR}"
 [ -s "${JAR}" ] || { echo "FATAL: bootJar not produced"; exit 1; }
 
