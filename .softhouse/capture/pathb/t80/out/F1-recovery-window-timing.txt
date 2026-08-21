@@ -1,0 +1,64 @@
+=== T161 — WHEN the window is actually open, measured, not assumed
+==================================================================
+`out/F1-recovery-redgreen.txt`'s last section signals the script while the attester child
+is still running.  An earlier version of that probe used `sleep 5` and then signalled.
+This transcript is why that was replaced: it is one clean run of the FIXED prove-f1.sh in
+a throwaway clone, every line stamped with seconds since the script started.
+
+  window OPENS (`guard: pinned …`, i.e. the marker is written and the traps armed)  12.34s
+  the pre-fix attester starts                                                       12.92s
+  the pre-fix attester ends (`EXIT=1`)                                              21.99s
+  window CLOSES (`--- evidence restored from git …`)                                40.96s
+  script exits 0                                                                    67.97s
+
+So a 5-second sleep signalled a script that had not yet touched a single byte of the rig:
+the arm reported RIG INTACT and proved nothing about the trap at all — a guard that cannot
+fail (P-22).  The probe now polls `t36/attest.py` until its sha256 IS the pre-fix digest
+c56825ad… — true ONLY between the overwrite and the undo — waits 2s so the attester is
+under way, and only then signals.  Deterministic, not timed.
+
+The run below is also the plain end-to-end evidence that the fixed script still reaches its
+original verdict: `prefix-defect-reproduced=1  fixed-run-clean=yes`, `F-1 CLOSED`, exit 0.
+
+Driver: /tmp scratch timing harness (not committed; it only timestamps stdout).
+------------------------------------------------------------------
+   1.47  === T85 F-1 — a breached attest.py run must write NOTHING
+   1.48  run at 2026-08-21T09:54:10Z
+   1.48  victim set: t36/out/emiloop  (11 EL-* captures taken on tenant gerege, plus attestation and transcripts)
+   1.48  
+  10.44  --- BEFORE: 14 files
+  10.45  4c3ff7f8c07e89d5a7e16b0d8e386b74a4b2c21e089052b546d336b9c51d1768  t36/out/emiloop/preconditions.txt
+  10.46    stamp present: no
+  10.46  
+  12.34  guard: pinned .softhouse/capture/pathb/t36/attest.py at sha256 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2 as immutable blob 9e38fe5e273c959a004423faa7e612f0240f51bc; marker /tmp/t161-scratch/.softhouse/capture/pathb/t80/.f1-swap-in-progress
+  12.92  --- 1. PRE-FIX attest.py (813acb1, blob 8e9f865ba6e9f8841c9be81962770e3c818fe53f, sha256 c56825ad6f915063703240ac7ea6a6a54608c4f06333f21d2ddff0327de52f92)
+  12.92      invocation: python3 t36/attest.py default emiloop
+  21.99  EXIT=1
+  22.00    
+  22.00    ABORT: preconditions breached — no capture attempted, no attestation written.
+  30.96    stamp now present: YES, contents: default
+  30.97    RESULT: COMMITTED SET MUTATED BY A RUN THAT SAID IT WROTE NOTHING:
+  30.98      0a1
+  30.98      > 01666ec060466c14b9fa06c613fbac449163f2a2017558fe16526209ab78c6b0  t36/out/emiloop/CAPTURED-FROM-TENANT
+  30.98      13c14
+  30.98      < 4c3ff7f8c07e89d5a7e16b0d8e386b74a4b2c21e089052b546d336b9c51d1768  t36/out/emiloop/preconditions.txt
+  30.98      ---
+  30.98      > 6601f670bdfe4943d1b1e982182dc11adae1e26594518622acdc8f05a8af2841  t36/out/emiloop/preconditions.txt
+  30.99      transcript first line is now: == T36 Path B preconditions, tenant 'default' ==
+  30.99  
+  32.41  guard: removed the stray CAPTURED-FROM-TENANT stamp from t36/out/emiloop
+  32.53  guard: restored the committed evidence set t36/out/emiloop from git
+  40.96  --- evidence restored from git: all digests back to BEFORE, and .softhouse/capture/pathb/t36/attest.py is back at 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2
+  40.96  
+  40.96  --- 2. FIXED attest.py, same invocation: python3 t36/attest.py default emiloop
+  49.83  EXIT=1
+  49.84    
+  49.84    ABORT: preconditions breached — no capture attempted, no attestation written, and nothing at all written into '/private/tmp/t161-scratch/.softhouse/capture/pathb/t36/out/emiloop'.
+  58.53    stamp present: no
+  58.54    RESULT: committed set UNCHANGED — all 14 digests identical, including preconditions.txt
+  58.54  
+  58.55  prefix-defect-reproduced=1   fixed-run-clean=yes
+  58.55  RESULT: F-1 CLOSED — the defect reproduces on the pre-fix file and is absent after the fix.
+  59.21  guard: .softhouse/capture/pathb/t36/attest.py is at its pre-run bytes (567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2)
+  67.95  guard: evidence set restored — 14 files, census identical to the pre-run census
+rc=0  total=67.97
