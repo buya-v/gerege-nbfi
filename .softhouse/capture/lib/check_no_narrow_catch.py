@@ -15,6 +15,8 @@ Usage:
   check_no_narrow_catch.py <repo-root>     exit 0 clean, exit 1 and name every new site otherwise
   check_no_narrow_catch.py --selftest      drive the lint RED on a synthetic new rig (P-22)
 """
+import contextlib
+import io
 import os
 import re
 import sys
@@ -227,6 +229,130 @@ def selftest():
         print('  -> exit %d' % rc)
         if rc != 1:
             fails.append('a tree containing no .java file at all reported clean — the lint is vacuous')
+
+    # -----------------------------------------------------------------------------------
+    # (e)-(h) THE EXCLUSION, DRIVEN BOTH DIRECTIONS. [T191, T188's finding F-1]
+    #
+    # `scan` decides what this lint may IGNORE, and until now that branch was the one
+    # branch its own P-22 machinery could not demonstrate: cases (a)-(d) all plant inside
+    # the tree's own content, so every one of them passes whether the exclusion is present,
+    # absent, inverted, or misspelt. An exclusion is a licence to say nothing about a
+    # subtree; a licence that nothing tests is P-22 pointed at the lint's blind spot rather
+    # than at its trigger. Both directions, because fixing one alone converts a false alarm
+    # into a silent pass (P-50, P-57 rule 3):
+    #     IGNORED — the rig under `.claude/worktrees/` must NOT be refused, and the census
+    #               must NAME the exclusion rather than merely be quieter;
+    #     REFUSED — the byte-identical rig in the tree's own content MUST be refused.
+    # Then (g) plants BOTH AT ONCE, because that is the only arm that can tell a working
+    # exclusion apart from a lint that has stopped refusing anything at all.
+    # -----------------------------------------------------------------------------------
+    NARROW_RIG = (
+        'class CaptureBrandNew {\n'
+        '  void run() {\n'
+        '    try {\n'
+        '      plan = generator.generate(mc, config);\n'
+        '    } catch (RuntimeException e) {\n'
+        '      record(e);\n'
+        '    }\n'
+        '  }\n'
+        '}\n')
+    CLEAN_RIG = (
+        'class CaptureAlreadyFixed {\n'
+        '  void run() {\n'
+        '    try {\n'
+        '      plan = generator.generate(mc, config);\n'
+        '    } catch (Throwable t) {\n'
+        '      if (ThrewOutcome.isFatal(t)) { throw t; }\n'
+        '      ThrewOutcome.appendThrew(b, t, 25);\n'
+        '    }\n'
+        '  }\n'
+        '}\n')
+
+    def _plant(root, rel, body):
+        path = os.path.join(root, *rel.split('/'))
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        open(path, 'w').write(body)
+        return path
+
+    def _run(root):
+        """check(root) with its stdout captured AND echoed, so assertions can read it."""
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = check(root)
+        out = buf.getvalue()
+        sys.stdout.write(out)
+        print('  -> exit %d' % rc)
+        return rc, out
+
+    OWN = '.softhouse/capture/newrig/src/CaptureBrandNew.java'
+    WT = '.claude/worktrees/agent-deadbeef/.softhouse/capture/newrig/src/CaptureBrandNew.java'
+
+    # (e) IGNORED direction. A clean own-tree rig keeps `seen > 0`, so a rc of 0 means
+    #     "inspected and found nothing to refuse" and not the vacuous-walk ERROR of (d).
+    with tempfile.TemporaryDirectory() as tmp:
+        _plant(tmp, '.softhouse/capture/existing/src/CaptureAlreadyFixed.java', CLEAN_RIG)
+        _plant(tmp, WT, NARROW_RIG)
+        rc, out = _run(tmp)
+        if rc != 0:
+            fails.append('(e) a narrow-catch rig under .claude/worktrees was REFUSED — the '
+                         'exclusion is not in force, and this lint would grade every historical checkout')
+        if 'CaptureBrandNew.java' in out:
+            fails.append('(e) the report NAMED a file under .claude/worktrees — it is grading a '
+                         'subtree it claims to exclude')
+        if 'EXCLUDED 1 other checkout root(s): .claude/worktrees' not in out:
+            fails.append('(e) the census did not NAME the exclusion. A walk that is merely quieter '
+                         'is indistinguishable from one that found nothing (P-35/T165): '
+                         'got %r' % out.splitlines()[0:1])
+        if 'inspected 1 .java files' not in out:
+            fails.append('(e) expected exactly the 1 own-tree .java file to be inspected; census says %r'
+                         % out.splitlines()[0:1])
+
+    # (f) REFUSED direction. THE BYTE-IDENTICAL RIG in the tree's own content. If (e) passed
+    #     and this fails, the exclusion is over-broad; if both pass, the predicate discriminates.
+    with tempfile.TemporaryDirectory() as tmp:
+        _plant(tmp, '.softhouse/capture/existing/src/CaptureAlreadyFixed.java', CLEAN_RIG)
+        _plant(tmp, OWN, NARROW_RIG)
+        rc, out = _run(tmp)
+        if rc != 1:
+            fails.append('(f) the SAME rig in the tree\'s own content was NOT refused — the '
+                         'exclusion is over-broad, or the lint has stopped refusing anything')
+        if OWN not in out:
+            fails.append('(f) the refusal did not NAME %s' % OWN)
+
+    # (g) BOTH AT ONCE — the arm that actually separates the two hypotheses. The refusal must
+    #     name the own-tree file and ONLY it: exactly one NEW site, from the tree's own content.
+    with tempfile.TemporaryDirectory() as tmp:
+        _plant(tmp, OWN, NARROW_RIG)
+        _plant(tmp, WT, NARROW_RIG)
+        rc, out = _run(tmp)
+        if rc != 1:
+            fails.append('(g) with a narrow rig in BOTH trees the lint did not refuse at all')
+        if '%d NEW' % 1 not in out and ', 1 NEW' not in out:
+            fails.append('(g) expected exactly 1 NEW site (the own-tree one); census line was %r'
+                         % [l for l in out.splitlines() if 'NEW' in l])
+        if OWN not in out:
+            fails.append('(g) the refusal did not name the own-tree file')
+        if 'worktrees' in out.replace('EXCLUDED 1 other checkout root(s): .claude/worktrees', ''):
+            fails.append('(g) the refusal named a path under .claude/worktrees as well as the '
+                         'own-tree file — the exclusion leaks')
+
+    # (h) THE EXCLUSION IS ANCHORED AT THE GRADED ROOT, and that is deliberate, not an
+    #     oversight: the predicate is `relpath(dir, root) == '.claude/worktrees'`, so it names
+    #     EXACTLY ONE directory that the census can print, rather than a glob whose reach a
+    #     reader cannot see. A `.claude/worktrees` nested deeper in real repository content is
+    #     NOT a checkout root and IS graded. Frozen here so that a later widening to a
+    #     substring/`in path` test — which would silently un-grade any path containing those
+    #     bytes — has to change a failing selftest to land. Note the direction: this arm fails
+    #     CLOSED (a spurious refusal), which is the safe side for a money-adjacent lint.
+    with tempfile.TemporaryDirectory() as tmp:
+        _plant(tmp, 'src/vendor/.claude/worktrees/CaptureBrandNew.java', NARROW_RIG)
+        rc, out = _run(tmp)
+        if rc != 1:
+            fails.append('(h) a .claude/worktrees nested below the graded root was IGNORED — the '
+                         'exclusion has been widened from one named directory to a path substring')
+        if 'EXCLUDED 0 other checkout root(s): none' not in out:
+            fails.append('(h) the census claimed a checkout-root exclusion for a directory that is '
+                         'not at the graded root')
 
     print()
     print('check_no_narrow_catch selftest: %d failure(s)' % len(fails))
