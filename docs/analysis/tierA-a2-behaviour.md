@@ -114,11 +114,17 @@ the brief), citing A1's file explicitly each time so the reviewer can see the bo
 | `gl_code` | **100** (`GLAccount.java:64`) | **45** (`0001_initial_schema.xml:58`) | **45** (`GLAccountCommand.java:45-46`) |
 | `description` | 500 | 500 | 500 — all three agree |
 
-The DDL is authoritative on a Liquibase-managed Fineract (Hibernate does not generate schema here;
-see §5.2). So the **effective** limits are name ≤ 200 and glCode ≤ 45, and the JPA `length`
-attributes are dead metadata that disagrees with the database in both directions. A port that
-copies the entity annotations would truncate names at 45 and accept 100-char GL codes the database
-rejects.
+**Which side wins?** Liquibase owns the schema — `spring.liquibase.enabled` defaults to `true` and
+the master changelog is wired at `fineract-provider/src/main/resources/application.properties:496-497`
+— and `grep -rn "ddl-auto|hbm2ddl"` over every `*.properties`, `*.yml`, `*.yaml` and `*.java` in the
+checkout (excluding `/build/`) returns **zero hits**, so nothing in this repository asks Hibernate to
+create or validate the schema. On that evidence the **effective** limits are name ≤ 200 and
+glCode ≤ 45, and the JPA `length` attributes are dead metadata that disagrees with the database in
+both directions. A port that copies the entity annotations would truncate names at 45 and accept
+100-char GL codes the database rejects.
+`[UNVERIFIED: that Spring Boot's effective `ddl-auto` is `none` here — that is a framework default,
+not a fact recorded in this repository. Confirm against a live instance if the length question ever
+becomes load-bearing.]`
 
 Also note the DDL default `account_usage = 2` (= `HEADER`, §3.2) — but every write path supplies
 `usage` explicitly from the command (`GLAccount.fromJson`, `GLAccount.java:92`), so the default is
@@ -141,17 +147,21 @@ private String hierarchyOf(final Long id) {
 }
 ```
 
-`hierarchyOf` is invoked **on the parent**, so it reads the *parent's* `hierarchy` field. Therefore:
+`generateHierarchy()` runs **on the child**, so `getId()` is the *child's* id, while `hierarchyOf` is
+invoked **on the parent**, so `this.hierarchy` inside it is the *parent's* string. The rule is
+therefore `child.hierarchy = parent.hierarchy + child.id + "."`, seeded at `"."` for a root.
 
-- root account → `"."`
-- child of root id 5 → `"." + "5" + "."` = `".5."` — wait: the *child's* hierarchy is
-  `parent.hierarchy + childId + "."`, i.e. for a child with id 7 of a root with id 5:
-  `parent.hierarchy` is `"."`, so the child's hierarchy is `".7."`.
-  **The parent's own id does not appear in the child's hierarchy string at the first level**; it
-  appears only from the grandchild down, because the grandchild inherits `".7."` and appends its
-  own id. This is worth stating precisely because it is counter-intuitive: the string is
-  *"the concatenation of the ids of my ancestors strictly below the root, plus my own id"*.
-  A grandchild id 9 gets `".7." + "9" + "."` = `".7.9."`.
+Worked example — root id 5, child id 7, grandchild id 9:
+
+| account | hierarchy | dots | depth = dots − 1 |
+|---|---|---|---|
+| root (id 5) | `"."` | 1 | 0 |
+| child (id 7) | `"." + "7" + "."` = `".7."` | 2 | 1 |
+| grandchild (id 9) | `".7." + "9" + "."` = `".7.9."` | 3 | 2 |
+
+State it precisely, because it is counter-intuitive: **an account's own id appears in its own
+hierarchy string, and the root's id never appears in any string.** The string is the dot-delimited
+list of ids from the account's highest non-root ancestor down to the account itself.
 
 **Creation sequence** — `fineract-accounting/.../glaccount/service/GLAccountWritePlatformServiceJpaRepositoryImpl.java:96-100`:
 
@@ -217,7 +227,7 @@ Where usage actually gates behaviour:
 | A **detail** account may not be a parent | `GLAccountWritePlatformServiceJpaRepositoryImpl.java:229-231` → `GLAccountInvalidParentException` |
 | A **header** account with children may not be deleted | `…:196-198` → `GLAccountInvalidDeleteException(HAS_CHILDREN)` |
 | Changing usage **to header** is refused if journal entries exist | `…:153-158` → `GLAccountInvalidUpdateException(TRANSANCTIONS_LOGGED)` |
-| Product-mapping selection lists offer only **enabled detail** accounts | `GLAccountReadPlatformServiceImpl.java:214-222` (`retrieveAllEnabledDetailGLAccounts`, `usage=DETAIL`, `disabled=false`) |
+| The accounting **dropdowns** offer only **enabled detail** accounts, per type | `GLAccountReadPlatformServiceImpl.java:214-222` (`retrieveAllEnabledDetailGLAccounts`, passes `usage=DETAIL`, `disabled=false`), called for each of the five types at `fineract-provider/src/main/java/org/apache/fineract/accounting/common/AccountingDropdownReadPlatformServiceImpl.java:96, :101, :110, :119, :128, :137, :146` |
 
 **There is no check anywhere in this slice that a journal entry may only be posted to a DETAIL
 account, nor that a product mapping may only point at a DETAIL account.** `getAccountByIdAndType`
@@ -906,9 +916,9 @@ ASSET/LIABILITY/EQUITY/INCOME/EXPENSE and **nothing in the four scope paths deri
 from it**. Grep of the scope paths for `debit`/`credit` finds hits only in the trial-balance job
 described below and in Swagger example strings.
 
-The **one** place this slice *consumes* a sign convention is the trial-balance tasklet, and it
-consumes one fixed elsewhere. `fineract-accounting/.../glaccount/domain/JournalEntryRepository`?
-— no; the query lives in
+The **one** place this slice *consumes* a sign convention is the trial-balance tasklet
+(`glaccount/jobs/updatetrialbalancedetails/UpdateTrialBalanceDetailsTasklet.java:72`), and the
+convention it consumes is fixed **outside** the slice, in the JPQL of
 `fineract-accounting/src/main/java/org/apache/fineract/accounting/journalentry/domain/JournalEntryRepository.java:52-66`:
 
 ```java
@@ -973,7 +983,7 @@ Beyond §2.6, §5.3 and §6.3:
 
 | Behaviour | Site | Why it matters |
 |---|---|---|
-| `GLAccountInvalidUsageException` is **dead code** — constructed nowhere in the tree | `exception/GLAccountInvalidUsageException.java:26-30`; grep for the class name across all non-`build/` `*.java` returns only its own file and one import-free hit in the read service's *sibling* class | Do not port it as a live refusal |
+| `GLAccountInvalidUsageException` is **dead code** — constructed nowhere in the tree | `exception/GLAccountInvalidUsageException.java:26-30`. `grep -rn --include='*.java' "GLAccountInvalidUsageException" .` over the whole checkout, excluding `/build/`, returns **exactly two lines, both inside that file** (`:26` the class declaration, `:28` the constructor). No import, no `new`, no reference. | Do not port it as a live refusal |
 | The two exceptions' **error codes are swapped relative to their class names** | `GLAccountInvalidUsageException.java:29` emits `error.msg.glaccount.classification.invalid`; `GLAccountInvalidClassificationException.java:29` emits `error.msg.glaccount.usage.invalid` | A port that "fixes" the naming changes the wire contract |
 | An invalid `usage` query param throws `GLAccountInvalidClassificationException(accountClassification)` — passing the **classification**, which may be `null` | `GLAccountReadPlatformServiceImpl.java:120-122` | The error message reports the wrong (possibly null) value |
 | `GET /glaccounts?searchParam=…` builds **syntactically invalid SQL** | `GLAccountReadPlatformServiceImpl.java:154`: `sql += " ( name like %?% or gl_code like %?% )"` — `%?%` is not valid SQL and the placeholders would not bind | Any non-blank `searchParam` should fail. `[UNVERIFIED: not executed against a live database this fire — high-value cheap capture]` |
@@ -1092,6 +1102,8 @@ Every file this document cites, so the reviewer can re-open them in one pass. Al
 - `fineract-core/src/main/java/org/apache/fineract/accounting/glaccount/api/GLAccountJsonInputParams.java`
 - `fineract-core/src/main/java/org/apache/fineract/accounting/common/AccountingConstants.java`
 - `fineract-core/src/main/java/org/apache/fineract/accounting/common/AccountingEnumerations.java` (line 84 only)
+- `fineract-provider/src/main/java/org/apache/fineract/accounting/common/AccountingDropdownReadPlatformServiceImpl.java` (lines 96–146 only)
+- `fineract-provider/src/main/resources/application.properties` (lines 496–497 only)
 - `fineract-core/src/main/java/org/apache/fineract/portfolio/PortfolioProductType.java`
 - `fineract-provider/src/main/java/org/apache/fineract/accounting/journalentry/service/AccountingProcessorHelper.java`
 - `fineract-accounting/src/main/java/org/apache/fineract/accounting/journalentry/domain/{JournalEntryRepository,JournalEntryType}.java`
