@@ -1,0 +1,22 @@
+minimal PATH holds: awk bash cat find grep mkdir rm sed sh sort wc 
+perl present in it? NO
+
+=== the POST guards over a store holding a PLAIN, PLAINLY VISIBLE float ===
+--- with perl available (control) ---
+    conformance: FLOAT-SHAPED NUMBER in /tmp/t155/zero/badstore/bad.json
+    conformance: no-float guard — inspected 1 .json files under /tmp/t155/zero/badstore
+    conformance: FLOATING-POINT IDENTIFIER in /tmp/t155/zero/badgo/internal/apps/loanschedule/bad.go
+    conformance: no-float guard — inspected 1 .go files under /tmp/t155/zero/badgo/internal/apps/loanschedule
+    RC vectors=1 harness=1
+    ^ wanted: RC vectors=1 harness=1 (the float is found)
+
+--- with perl TRULY ABSENT ---
+    /tmp/t155/guards-post.sh: line 11: perl: command not found
+    conformance: no-float guard — inspected 1 .json files under /tmp/t155/zero/badstore
+    /tmp/t155/guards-post.sh: line 29: perl: command not found
+    conformance: no-float guard — inspected 1 .go files under /tmp/t155/zero/badgo/internal/apps/loanschedule
+    RC vectors=0 harness=0
+    ^ 'RC vectors=0 harness=0' here is a VACUOUS PASS ON A FLOAT:
+      the guard reports 'inspected N files' and returns success having
+      inspected none of them. The P-35 counter counts files ENUMERATED by
+      find, not files SCANNED.

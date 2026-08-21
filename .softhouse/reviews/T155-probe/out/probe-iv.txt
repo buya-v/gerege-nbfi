@@ -1,0 +1,25 @@
+lifted guard functions:       31 lines PRE,       45 lines POST
+
+0 = guard returned success.  1 = guard refused.
+
+POSITIVE CONTROL (both bad)    PRE{RC vectors=1 harness=1}  POST{RC vectors=1 harness=1}
+NEGATIVE CONTROL (both good)   PRE{RC vectors=0 harness=0}  POST{RC vectors=0 harness=0}
+ZERO INPUT (both empty)        PRE{RC vectors=0 harness=0}  POST{RC vectors=1 harness=1}
+ZERO store only                PRE{RC vectors=0 harness=0}  POST{RC vectors=1 harness=0}
+ZERO go tree only              PRE{RC vectors=0 harness=0}  POST{RC vectors=0 harness=1}
+
+the POST wording on zero input:
+    conformance: guard_no_float_in_vectors INSPECTED ZERO FILES under /tmp/t155/zero/emptystore.
+    conformance: a guard that inspects nothing passes everything. This is an ERROR, not a pass.
+    conformance: guard_no_float_in_harness INSPECTED ZERO FILES under /tmp/t155/zero/emptygo/internal/apps/loanschedule.
+    conformance: a guard that inspects nothing passes everything. This is an ERROR, not a pass.
+    RC vectors=1 harness=1
+
+rows disagreeing with T155's own expectation: 0
+
+=== HAZARD PROBE: guard behaviour when perl cannot run ===
+-- POST guards over a store holding a PLAIN float, with perl replaced by exit-127 --
+    conformance: no-float guard — inspected 1 .json files under /tmp/t155/zero/badstore
+    conformance: no-float guard — inspected 1 .go files under /tmp/t155/zero/badgo/internal/apps/loanschedule
+    RC vectors=0 harness=0
+   (wanted: a refusal. 'RC vectors=0 harness=0' here is a VACUOUS PASS ON A FLOAT.)

@@ -1,0 +1,28 @@
+=================== ARM PRE (binary only, no shell guards) ===================
+[control] unmutated store
+  exit=0   VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference 
+  <no census/case_id line>
+[B1] store-root .json with NO float at all
+  exit=0   VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference 
+  <no census/case_id line>
+[B2] store-root .json, float behind ONE invalid byte (invisible to the pre-fix shell grep)
+  exit=0   VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference 
+  <no census/case_id line>
+[B3] store-root .json with a PLAIN float (the shell grep would have caught this one)
+  exit=0   VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference 
+  <no census/case_id line>
+
+=================== ARM POST (binary only, no shell guards) ===================
+[control] unmutated store
+  exit=0   VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference 
+  <no census/case_id line>
+[B1] store-root .json with NO float at all
+  exit=2   VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS
+  * STORE FILE CENSUS — 51 .json files were found under /tmp/t155/post/.softhouse/vectors and 1 of them are unaccounted fo
+[B2] store-root .json, float behind ONE invalid byte (invisible to the pre-fix shell grep)
+  exit=2   VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS
+  * STORE FILE CENSUS — 51 .json files were found under /tmp/t155/post/.softhouse/vectors and 1 of them are unaccounted fo
+[B3] store-root .json with a PLAIN float (the shell grep would have caught this one)
+  exit=2   VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS
+  * STORE FILE CENSUS — 51 .json files were found under /tmp/t155/post/.softhouse/vectors and 1 of them are unaccounted fo
+

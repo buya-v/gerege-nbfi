@@ -1,0 +1,21 @@
+conformance.sh grep invocation sites:  PRE=26  POST=26
+
+POST sites WITHOUT both tokens (must be empty):
+  (end)
+
+aliased spellings anywhere in .softhouse (egrep/fgrep/zgrep):
+  (end)
+
+unhardened greps left in .softhouse/bin (T154 disclosed exactly one):
+  /tmp/t155/post/.softhouse/bin/fire-program.sh:224:DIRTY=$(git status --porcelain | grep -v '^?? \.softhouse/LOCK' || true)
+  (end)
+
+=== --help still exits 0 and prints the help, not raw shell ===
+exit=0  lines=45
+first line: Golden-vector conformance harness — Fineract reference oracle vs the Go module.
+leaked raw shell? 0 lines (want 0)
+sentinel leaked?  0 lines (want 0)
+
+=== the sweeper is idempotent (re-running it must change nothing) ===
+  hardened 0 grep invocation(s) in /tmp/t155/sweep-test.sh
+  IDEMPOTENT: re-running the sweeper on the swept file changes nothing

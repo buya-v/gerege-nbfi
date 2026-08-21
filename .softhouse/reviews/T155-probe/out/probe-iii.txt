@@ -1,0 +1,40 @@
+grep this script gets: /usr/bin/grep
+
+======================================================================
+ARM PRE   tree=/tmp/t155/pre
+======================================================================
+CONTROL (unmutated): exit=0 parity=42 cells=5576   [MEASURED, never assumed]
+
+CASE                               exit:parity:cells        who refused / meaning
+----                               -------------------      ---------------------
+C1 symlinked EXTRA context         0:42:5576                REFUSE-01-actual-actual-u... contract-refusal none        PASS              1        0  
+C2 symlinked WHOLE context         2:0:21                   harness refuses any vector claiming corroboration a source cannot give, and prints the gap here
+C3 nested subdir, CLEAN vector     0:42:5576                REFUSE-01-actual-actual-u... contract-refusal none        PASS              1        0  
+C4 UPPER.JSON, CLEAN vector        0:42:5576                REFUSE-01-actual-actual-u... contract-refusal none        PASS              1        0  
+C5 case-only case_id (P-00/p-00)   0:43:5623                REFUSE-01-actual-actual-u... contract-refusal none        PASS              1        0  
+C6 NFC + NFD spellings of one id   0:44:5670                REFUSE-01-actual-actual-u... contract-refusal none        PASS              1        0  
+C7 store-root .json, NO float      0:42:5576                REFUSE-01-actual-actual-u... contract-refusal none        PASS              1        0  
+C8 store-root, float behind 0xE2   0:42:5576                REFUSE-01-actual-actual-u... contract-refusal none        PASS              1        0  
+C9 store-root, PLAIN float         2:NA:NA                  conformance: FLOAT-SHAPED NUMBER in /tmp/t155/pre/.softhouse/vectors/T155-ROOT-PLAINFLOAT.json
+
+PRE store left clean? git-independent check:
+
+======================================================================
+ARM POST   tree=/tmp/t155/post
+======================================================================
+CONTROL (unmutated): exit=0 parity=43 cells=5664   [MEASURED, never assumed]
+
+CASE                               exit:parity:cells        who refused / meaning
+----                               -------------------      ---------------------
+C1 symlinked EXTRA context         2:0:0                    harness refuses any vector claiming corroboration a source cannot give, and prints the gap here
+C2 symlinked WHOLE context         2:0:0                    harness refuses any vector claiming corroboration a source cannot give, and prints the gap here
+C3 nested subdir, CLEAN vector     2:0:0                    harness refuses any vector claiming corroboration a source cannot give, and prints the gap here
+C4 UPPER.JSON, CLEAN vector        2:0:0                    harness refuses any vector claiming corroboration a source cannot give, and prints the gap here
+C5 case-only case_id (P-00/p-00)   2:0:0                    harness refuses any vector claiming corroboration a source cannot give, and prints the gap here
+C6 NFC + NFD spellings of one id   2:0:0                    harness refuses any vector claiming corroboration a source cannot give, and prints the gap here
+C7 store-root .json, NO float      2:0:0                    harness refuses any vector claiming corroboration a source cannot give, and prints the gap here
+C8 store-root, float behind 0xE2   2:NA:NA                  conformance: FLOAT-SHAPED NUMBER in /tmp/t155/post/.softhouse/vectors/T155-ROOT-POISON.json
+C9 store-root, PLAIN float         2:NA:NA                  conformance: FLOAT-SHAPED NUMBER in /tmp/t155/post/.softhouse/vectors/T155-ROOT-PLAINFLOAT.json
+
+POST store left clean? git-independent check:
+

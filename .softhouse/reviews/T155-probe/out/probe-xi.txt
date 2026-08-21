@@ -1,0 +1,44 @@
+=== ARM 1: fix applied, tree CLEAN — must stay GREEN with UNCHANGED counts ===
+  exit=0
+    parity vectors          PASS 43   FAIL 0
+    cells compared          5664 graded, 87 ungraded (never recorded by the capture)
+    no-float census         24 Go files / 56295 tokens inspected under nexus/internal/apps/loanschedule
+    VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+
+=== ARM 2: fix applied, census call site DELETED, float literal planted — must go RED ===
+  exit=2
+    parity vectors          PASS 43   FAIL 0
+    cells compared          5664 graded, 87 ungraded (never recorded by the capture)
+    no-float census         0 Go files / 0 tokens inspected under nexus/internal/apps/loanschedule
+    * THE NO-FLOAT CENSUS INSPECTED ZERO GO FILES: a guard that inspects nothing passes everything, so this is an ERROR and not a pass
+    VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+=== ARM 3: NO fix, census call site DELETED, float literal planted — the defect as it stands ===
+  exit=0
+    parity vectors          PASS 43   FAIL 0
+    cells compared          5664 graded, 87 ungraded (never recorded by the capture)
+    no-float census         0 Go files / 0 tokens inspected under nexus/internal/apps/loanschedule
+    VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+
+the fix diff, verbatim:
+--- /tmp/t155/post/nexus/internal/apps/loanschedule/conformance/grade.go	2026-08-21 15:50:58
++++ /tmp/t155/fix-clean/nexus/internal/apps/loanschedule/conformance/grade.go	2026-08-21 16:15:31
+@@ -249,6 +249,18 @@
+ 		for _, v := range census.Violations() {
+ 			s.FatalReasons = append(s.FatalReasons, "FLOATING POINT ON A MONEY PATH: "+v)
+ 		}
++	}
++
++	// P-35 ASSERTED, NOT MERELY PRINTED (T155/D-1). The report prints
++	// "no-float census N Go files / T tokens"; nothing checked N. With the call
++	// site above deleted, NoFloatCensus stays zero-valued, the report prints
++	// "0 Go files / 0 tokens" and the run was STILL exit 0 on a tree carrying a
++	// float literal. This statement is separate from the block above so that a
++	// minimal deletion of the call site leaves it behind and turns the run red.
++	if s.NoFloatCensus.FilesScanned == 0 {
++		s.FatalReasons = append(s.FatalReasons,
++			"THE NO-FLOAT CENSUS INSPECTED ZERO GO FILES: a guard that inspects nothing passes everything, "+
++				"so this is an ERROR and not a pass")
+ 	}
+ 
+ 	pin, err := LoadPin(filepath.Join(opts.StoreRoot, "PIN.json"))

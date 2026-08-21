@@ -1,0 +1,37 @@
+worktree HEAD: a5e01bd233d1e08cc58902857e9600ab5b40e498
+worktree clean: 0 modified paths
+
+==============================================================
+RE-RUN drive-leg1.sh   (POST arm = the merged working tree)
+==============================================================
+exit=0
+  === [0] APPARATUS — binary, version, locale, invocation, input shape (P-33) ===
+  LEG 1 ROWS: 12 as wanted, 0 not as wanted
+
+==============================================================
+RE-RUN drive-leg1-e2e.sh   (POST arm = the merged working tree)
+==============================================================
+exit=0
+  === [0] APPARATUS ===
+  LEG 1 E2E: 7 as wanted, 0 not as wanted
+
+==============================================================
+RE-RUN drive-leg2.sh   (POST arm = the merged working tree)
+==============================================================
+exit=0
+  === [0] APPARATUS ===
+  LEG 2 ROWS: 18 as wanted, 0 not as wanted
+
+==============================================================
+RE-RUN drive-leg3.sh   (POST arm = the merged working tree)
+==============================================================
+exit=0
+  === [0] APPARATUS ===
+    BASELINE: 43 parity vectors, 5664 graded cells.
+  LEG 3 ROWS: 26 as wanted, 0 not as wanted
+
+=== store untouched after all four? ===
+  (no DIRTY lines above = the provers mutated nothing they should not)
+
+provers that did not exit 0: 0
+full transcripts under /tmp/t155/out/t154-provers
