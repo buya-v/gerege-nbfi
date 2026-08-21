@@ -151,7 +151,17 @@ Never synthesise a vector you did not observe from the oracle, and never let con
 
 You hold the repo lock at .softhouse/LOCK; the wrapper releases it when you exit. Checkpoint at the ~90% token soft limit per the skill, push .softhouse/ state, and stop cleanly."
 
-log "invoking driver"
+# ---------------------------------------------------------------- chaining ---
+# A fire ends when the driver's CONTEXT fills, not when the work is done. Waiting
+# for the next cron slot then wastes hours of an otherwise-idle machine. So chain:
+# re-invoke a FRESH driver immediately while there is runnable work, progress is
+# being made, and the budget holds. Each iteration is a new context reading the
+# same repo state, which is exactly what the next scheduled fire would have been.
+CHAIN_MAX="${CHAIN_MAX:-8}"
+CHAIN_N=0
+
+run_driver() {
+  log "invoking driver (chain iteration $((CHAIN_N+1))/$CHAIN_MAX)"
 
 # ROOT CAUSE OF EVERY LOST LOCAL FIRE (found 2026-08-18 by fire 20260818-230002).
 # `claude -p` waits only 600s for background tasks after the driver's final
@@ -203,9 +213,11 @@ else
   RC=$?
 fi
 
-log "driver exited rc=$RC"
+  log "driver exited rc=$RC"
+}
 
 # ------------------------------------------------------- exit-protocol guard ---
+run_exit_guard() {
 # The driver is required to checkpoint on EVERY exit path (skill STEP 5.5). It has
 # been observed exiting rc=0 mid-run with deliverables uncommitted and RESUME.md
 # stale, which makes the work invisible to the next fire. Detect and rescue.
@@ -248,5 +260,46 @@ if [[ -f .softhouse/RESUME.md ]]; then
   fi
 fi
 
-git push -q origin main 2>/dev/null || log "WARN: could not push after exit-protocol guard"
+  git push -q origin main 2>/dev/null || log "WARN: could not push after exit-protocol guard"
+}
+
+# --------------------------------------------------------------- chain loop ---
+while (( CHAIN_N < CHAIN_MAX )); do
+  HEAD_BEFORE=$(git rev-parse HEAD)
+  run_driver
+  run_exit_guard
+  CHAIN_N=$((CHAIN_N+1))
+
+  (( RC != 0 )) && { log "chain: stopping — driver exited rc=$RC"; break; }
+
+  # No commits this iteration means the driver found nothing to advance. One more
+  # attempt would repeat it; the next scheduled fire can try with fresh state.
+  if [[ "$(git rev-parse HEAD)" == "$HEAD_BEFORE" ]]; then
+    log "chain: stopping — iteration produced no commits (nothing advanced)"
+    break
+  fi
+
+  # Program finished, or every remaining task is blocked on a human.
+  if /usr/bin/python3 - <<'PY'
+import json,sys
+try:
+    prog=json.load(open('.softhouse/program.json'))
+    if prog.get('status')=='complete': sys.exit(0)
+    tasks=json.load(open('.softhouse/tasks.json'))['tasks']
+    live=[t for t in tasks if t.get('status') not in
+          ('done','parked','rejected','superseded','done_partial','approved')
+          and t.get('executor')!='user']
+    sys.exit(0 if not live else 1)
+except Exception:
+    sys.exit(1)
+PY
+  then
+    log "chain: stopping — no runnable work left (program complete or all remaining work is a user gate)"
+    break
+  fi
+
+  log "chain: work remains and the last iteration advanced — starting the next driver immediately"
+done
+
+log "chain finished after $CHAIN_N iteration(s)"
 exit $RC
