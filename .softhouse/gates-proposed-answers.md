@@ -1,5 +1,12 @@
 # Proposed answers to open gates
 
+> **CITATION HAZARD.** The `P-n` ids **in this file are ratified DECISIONS**. `.softhouse/patterns.md`
+> runs a separate `P-n` series of *learned patterns*, and **P-1 through P-5 are defined in both**.
+> Always cite the file: "P-5 (`gates-proposed-answers.md`)" = *close tier 0*; "P-5 (`patterns.md`)"
+> = *cut the worker's worktree from the commit containing the artefact*. See the table at the top of
+> `patterns.md`. Recorded by local fire `20260821-134344` as pattern P-12 (`patterns.md`).
+
+
 Prepared 2026-08-18 at Buyan's instruction to answer gate questions from technical knowledge and from the **Law of Mongolia on Non-Banking Financial Activities** (adopted 12 Dec 2002, State Great Khural) — <https://legalinfo.mn/mn/detail/103>.
 
 Each item is classified:

@@ -1,5 +1,24 @@
 # Softhouse learned patterns — Gerege NBFI (Fineract → Go migration)
 
+> **CITATION HAZARD — two `P-n` series exist in this repo, and `P-1`…`P-5` are each defined TWICE.**
+> Verified by exact heading match, local fire `20260821-134344`:
+>
+> | id | **this file** — a *learned pattern* | **`.softhouse/gates-proposed-answers.md`** — a *ratified decision* |
+> |---|---|---|
+> | P-1 | A ZERO money margin is not evidence of non-gradeability | Installment rounding to a multiple → launch WITHOUT it |
+> | P-2 | Screen a counterfactual on the PRE-adjustment model | DEC-1 ratification → agent-decidable on a clean review |
+> | P-3 | A green conformance run says nothing about unexercised behaviours | Reporting cadence → exceptions only |
+> | P-4 | Latent harness defects detonate on first real use | Stop revising the contract — ratify with obligations |
+> | P-5 | Cut the worker's worktree from the commit containing the artefact | **Close tier 0 — obligations, not fifth drafts** |
+>
+> `P-6`…`P-39` are defined only here and are unambiguous.
+>
+> **Always cite the file, never the bare number** — write "P-5 (`gates-proposed-answers.md`)" or
+> "P-5 (`patterns.md`)". A worker told to act "under P-5" with no file could apply the worktree-cutting rule
+> when the user meant *close tier 0*, or the reverse. This was latent until 21 Aug 2026: `patterns.md`'s P-5
+> existed but **nothing had ever cited it**, so no collision could occur until the decision series reached 5.
+> It is recorded rather than renamed because the decision headings are the user's own text.
+
 Softhouse reads this file during pre-flight and applies it when planning. Anything above the markers is hand-written project knowledge; everything between the markers is appended automatically by each run's postmortem.
 
 Seeded from the proven Digital Coop Bank pipeline. The money/Mongolia constraints are inherited; the migration-specific rules are new.
@@ -1110,3 +1129,31 @@ adds a write site and checks it against the rule that is written down.
 > **Rule.** Review the *justification* as a separate artefact from the code, and re-derive it from source.
 > "It works and the tests pass" does not establish that the reason given for why it works is true — and the
 > reason is the part that gets reused.
+
+### P-12. An ID SERIES that restarts in a second file is a name collision waiting for its first citation
+
+This repo runs two `P-n` series — learned patterns here, ratified decisions in
+`.softhouse/gates-proposed-answers.md`. They coexisted harmlessly while the decision series was short and
+`patterns.md`'s low numbers were never cited. On **21 Aug 2026** the decision series reached **P-5**, the user
+ratified it, and within one fire the driver wrote ~100 references to "P-5" meaning *close tier 0* — into
+`obligations.md`, `RESUME.md`, `tasks.json`, `program.json` and four commit messages — while `patterns.md`
+went on defining P-5 as *cut the worker's worktree from the commit containing the artefact*.
+
+Nothing broke, because every reference the driver wrote names its file. **That is the whole defence, and it is
+one careless sentence from failing** — the next worker to write "as required by P-5" hands the reader a
+coin flip between two unrelated rules, both of which are real, both of which are in force.
+
+**The measurement is the finding.** Grepping for the collision is how it was found, and the first grep was
+WRONG: `git grep -E '\bP-5\b' <commit>` returned **0 hits** on a file that provably contains the string,
+because git's default regex engine does not support the GNU `\b` word boundary. Reported as "the collision is
+new and entirely mine", which would have been a false all-clear on a real hazard. Caught by re-testing the
+tool against a case whose answer was already known (`git show … | grep`).
+
+- **Two IDs from different namespaces must not be typographically identical.** If they already are, the fix
+  is a citation convention plus a table at the top of both files — not a rename, when one side is the user's
+  own ratified text.
+- **Before trusting a grep's ZERO, prove the grep can find something you know is there.** A zero result from
+  an unsupported regex feature is indistinguishable from a zero result from absence. This is the P-22 class
+  ("a guard that cannot fail") wearing a search tool's clothes: the query could not have found a hit, and
+  reported that as evidence of none.
+
