@@ -1,0 +1,35 @@
+PRE-FIX bytes read from 16d5252 (29 .py files)
+
+R1  MENTIONS the DEC-1 path anywhere  -> reproduces the driver's 21 and T178's 21
+  mentions docs/adr/DEC-1                                    21
+      edit.py, edit10.py, edit11.py, edit12.py, edit13.py, edit14.py, edit16.py, edit17.py, edit18.py, edit19.py, edit2.py, edit20.py, edit21.py, edit3.py, edit4.py, edit5.py, edit6.py, edit7.py, edit8.py, edit9.py, leakgrep.py
+R1b MENTIONS contract.go anywhere     -> reproduces the driver's 8
+  mentions contract.go                                        8
+      edit18.py, edit21.py, edit22.py, edit_go1.py, edit_go2.py, edit_go3.py, edit_go4.py, leakgrep.py
+
+R2  MENTIONS the DEC-1 path AND has a truncating write-open
+  mentions + truncating write                                20
+      edit.py, edit10.py, edit11.py, edit12.py, edit13.py, edit14.py, edit16.py, edit17.py, edit18.py, edit19.py, edit2.py, edit20.py, edit21.py, edit3.py, edit4.py, edit5.py, edit6.py, edit7.py, edit8.py, edit9.py
+      DIFFERENCE R1 - R2 = leakgrep.py
+      That file is a READ-ONLY grep.  It is why 21 is a MENTION count and not
+      a writer count.
+
+R3  DIRECT truncating write, target from a literal or a module-level
+    constant only (no helper-parameter resolution) -> reproduces T179's 22 = 17 + 5
+  R3 ADR                                                     17
+      edit.py, edit10.py, edit11.py, edit12.py, edit13.py, edit14.py, edit16.py, edit17.py, edit19.py, edit2.py, edit3.py, edit4.py, edit5.py, edit6.py, edit7.py, edit8.py, edit9.py
+  R3 contract.go                                              5
+      edit22.py, edit_go1.py, edit_go2.py, edit_go3.py, edit_go4.py
+  R3 UNDETERMINED (write target is a helper parameter)        3
+      edit18.py, edit20.py, edit21.py
+
+R4  files named edit_go*.py with a module-level nexus/... constant
+    -> reproduces T178's 4
+  R4 contract.go                                              4
+      edit_go1.py, edit_go2.py, edit_go3.py, edit_go4.py
+
+R5  T187's rule (t187-census.py): a truncating write whose target
+    resolves statically, INCLUDING through a helper's `path`
+    parameter back to its call sites.  Run t187-census.py
+    --scan=<a checkout of the pre-fix bytes> for the full table:
+    25 files = 20 DEC-1 + 7 contract.go, 2 of them writing BOTH.
