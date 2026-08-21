@@ -798,7 +798,7 @@
       ],
       "description": "The root cause behind T167, and P-48 in its purest form. T156's sweep classified an unguarded in-place rewriter of a RATIFIED DEC-n as GUARDED because its detection regex greps SOURCE TEXT for the word 'trap' -- and every match was that word inside PROSE STRINGS THE SCRIPT WRITES INTO THE ADR. The file was scored safe by the text it was writing. T158 measured 4 of 19 'guarded' hits carrying zero guards, so the true unguarded population is 115 not 111 -- re-derive that number yourself rather than inheriting it. Detect with a PARSER (ast for Python, a real shell parser or a documented refusal for sh), not a regex: a guard must be an actual try/finally/atexit/signal/trap NODE, not a byte sequence. T167 surfaced a SECOND engine bug worth closing with it: the same pattern text returns 3 matches in Python re and 0 in POSIX ERE because [^#\\n] means different things in each -- so a sweep's answer depends on which engine ran it. DRIVE IT RED (P-22) on both failure shapes: a file guarded only by the word in prose (must be REFUSED as unguarded) and a genuinely guarded file (must PASS -- not over-broad, per T169's lint precedent).",
       "attempts": 1,
-      "note": "DONE and MERGED, local fire 20260821-054355. Parser-based (ast) guard classifier replacing T156's regex; shell is a documented REFUSAL (250 .sh counted, never guessed). Engine divergence demonstrated: same bytes score 3 in Python re and 0 in grep -E/awk/sed. Reported that '115 not 111' is both stale AND unquotable in principle while half the corpus is unparsed. Not wired to anything automatic -- wiring spec in handoff, conformance.sh was held by T173."
+      "note": "DONE and MERGED, local fire 20260821-054355. Parser-based (ast) guard classifier replacing T156's regex; shell is a documented REFUSAL (250 .sh counted, never guessed). Engine divergence demonstrated: same bytes score 3 in Python re and 0 in grep -E/awk/sed. Reported that '115 not 111' is both stale AND unquotable in principle while half the corpus is unparsed. Not wired to anything automatic -- wiring spec in handoff, conformance.sh was held by T173. | REJECTED by its independent review T183 AFTER MERGE. Three material findings; repair routed as T196. The classifier is not sound as merged: --enforce exits 0 on three unguarded rewriters of the ratified DEC-1."
     },
     {
       "id": "T180",
@@ -861,7 +861,7 @@
       "executor": "agent",
       "model": "opus",
       "target": "docs",
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
       "dependencies": [
         "T179"
@@ -871,7 +871,7 @@
         ".softhouse/patterns.md"
       ],
       "description": "INDEPENDENT review of T179. Re-derive; do not accept the author's conclusions. Read the upstream handoff from the BRANCH (git show <branch>:.softhouse/handoff/<run_id>/T179.md) and the diff with git diff main...<branch> (THREE DOTS, P-41). Drive the author's guard/probe yourself: a guard that was never driven RED is not shipped (P-22), a prover must be falsifiable toward the FIX as well as the defect (P-50), and a check that inspects zero items is an ERROR not a pass (P-35). Verdict APPROVED / MICRO-FIX (<=10 lines, mechanical, never a number) / REJECTED with specifics. If you find nothing, state what you checked so silence is distinguishable from not looking.",
-      "note": "Registered by the driver at dispatch of T179 (plan gate rule 1: every coder/analyst task gets a paired reviewer). | dispatched local fire 20260821-125942 batch 2; brief carries the P-59 non-empty-diff assertion",
+      "note": "MERGED. Verdict REJECTED on T179 (D-1 --enforce fails open on parameter-targeted targets; D-2 published count 3 short; D-3 import blindness punishes the shared-guard idiom). CONVERGED WITH T187 BLIND on the population: 25 files, 20+7, 2 both. Repair routed as T196.",
       "branch": "softhouse/T183-review-t179"
     },
     {
@@ -1174,6 +1174,27 @@
       "status": "pending",
       "attempts": 0,
       "note": "raised by T184 (F1, F2). Serialised behind T194 -- both edit conformance.sh."
+    },
+    {
+      "id": "T196",
+      "title": "Apply T183's backstep fix to T179's classifier \u2014 --enforce FAILS OPEN on the three parameter-targeted rewriters, and the check PUNISHES the hardening idiom the program adopted",
+      "description": "T183 REJECTED T179 with three material findings and supplied a +25-line patch it wrote, TESTED and deliberately did NOT apply, on the correct ground that a fix the reviewer merges is a fix nobody reviewed. Apply it, having RE-DERIVED it first. D-1: T179 resolves a mutation's target from module constants only, so edit18/20/21 -- which write through 'def patch(path, pairs)' called as patch(P, ...) -- resolve to UNKNOWN, and --enforce EXITS 0 on a directory containing exactly those three, each an unguarded in-place truncation of the RATIFIED DEC-1 and two also of the FROZEN contract.go. The asymmetry is the tell and the argument for the fix: T179 ALREADY takes the mirror-image FORWARD interprocedural step for guards (indirectly_guarded_funcs); only the BACKWARD one is missing. D-3: import blindness reproduces -- a file whose mutation is local and whose guard lives in an IMPORTED module scores UNGUARDED and fires --enforce, so the check punishes the exact shared-t178_guard.py idiom T178 adopted and T187 extended across 25 files. That direction is the one that fires and it is the one T179 does not disclose. FIVE of the patch's repo-wide reclassifications are UNADJUDICATED -- adjudicate each individually and say which you accepted and why; do not apply them as a block. RE-TAKE THE POPULATION AGAINST POST-T187 MAIN before quoting any file count: T183 derived its numbers at a fork point taken BEFORE T187 merged and modified t41-probe, and said so against itself. THE COUNT ITSELF IS NOW SETTLED and you should not re-litigate it -- T187 and T183 derived it independently and BLIND, by execution and by static sweep respectively, and agreed exactly: 25 files, 20 DEC-1 + 7 contract.go, 2 writing both. Drive red and green (P-22, P-50) on SCRATCH COPIES ONLY; never execute a population script from the repo root; verify both frozen digests before and after.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        ".softhouse/reviews/t41-probe/",
+        ".softhouse/capture/lib/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T183",
+        "T187"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "raised by T183 (D-1, D-2, D-3) with a tested unapplied patch at .softhouse/reviews/T183-evidence/PROPOSED-backstep.patch. T179 is already merged, so this is the repair path for a REJECTED verdict on merged work."
     }
   ],
   "cross_corroboration": {
