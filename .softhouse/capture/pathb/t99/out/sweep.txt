@@ -51,8 +51,8 @@ t36/emiloop-probe.sh:54:# implementations required to agree — rather than by a
 t36/recreate-products.sh:111:# T99 (sweep for the F-2 shape): hardened digest instrument, not a $PATH-resolved `shasum`.
 t36/preconditions.sh:19:# The sha256 instrument, hardened by T99.  P14b's digest pin used the bare word `shasum`, resolved
 t36/preconditions.sh:20:# through $PATH; a `shasum` earlier on $PATH that prints the pinned constant made the comparison a
-t36/preconditions.sh:198:# THIRD ITERATION (T99).  A digest has no prefix, but `shasum` had no ADDRESS: T80 computed it with
-t36/preconditions.sh:199:# a bare word resolved through $PATH, so a `shasum` earlier on $PATH that prints the pinned constant
+t36/preconditions.sh:236:# THIRD ITERATION (T99).  A digest has no prefix, but `shasum` had no ADDRESS: T80 computed it with
+t36/preconditions.sh:237:# a bare word resolved through $PATH, so a `shasum` earlier on $PATH that prints the pinned constant
 t36/sha256.sh:2:# T99 — a sha256 that a PATH-poisoned `shasum` cannot answer for.
 t36/sha256.sh:6:# shape — but computed the digest with the bare word `shasum`, resolved through $PATH:
 t36/sha256.sh:8:#     creqsha=$(shasum -a 256 "$CANARY_REQ" | cut -d' ' -f1)     # preconditions.sh:195, pre-T99
@@ -71,10 +71,10 @@ t36/sha256.sh:146:  for _t in shasum sha256sum openssl python3; do
     (reported, not fixed: see the handoff.  A poisoned `docker` defeats P1-P3 and P5-P13;
      a poisoned `curl` defeats P4 and the canary.  Both are far larger jobs than the digest
      pin, and neither is what T85 raised.)
-    docker   22 occurrence(s) in preconditions.sh + recapture.sh
+    docker   26 occurrence(s) in preconditions.sh + recapture.sh
     curl     3 occurrence(s) in preconditions.sh + recapture.sh
-    psql     12 occurrence(s) in preconditions.sh + recapture.sh
-    grep     9 occurrence(s) in preconditions.sh + recapture.sh
+    psql     13 occurrence(s) in preconditions.sh + recapture.sh
+    grep     13 occurrence(s) in preconditions.sh + recapture.sh
     sed      6 occurrence(s) in preconditions.sh + recapture.sh
     tr       15 occurrence(s) in preconditions.sh + recapture.sh
     head     2 occurrence(s) in preconditions.sh + recapture.sh
@@ -125,7 +125,10 @@ t36/emiloop-probe.sh:33:prefails=$(LC_ALL=C grep -ac '^  FAIL' "$O/preconditions
 t36/recreate-products.sh:34:# being grepped and the ABORT was unreachable; the `grep -c … > /dev/null 2>&1 || true` line above
 t36/recreate-products.sh:42:prefails=$(LC_ALL=C grep -ac '^  FAIL' "$O/preconditions.txt" || true)
 t36/recreate-products.sh:67:  n=$(diff "$W/req/$f.json" "$REQ/$f.json" | grep -c '^[<>]' || true)
-t36/preconditions.sh:115:        | grep -c 'BOOT-INF/lib/postgresql-')
+t36/preconditions.sh:110:# its grep pattern was `grep -c\|grep -ac\|wc -l` and these two lines use `grep -icE`.
+t36/preconditions.sh:116:env_lines=$(printf '%s\n' "$env_dump" | LC_ALL=C grep -c . || true)
+t36/preconditions.sh:134:jarlines=$(printf '%s\n' "$jarlist" | LC_ALL=C grep -c . || true)
+t36/preconditions.sh:142:pgdrv=$(printf '%s\n' "$jarlist" | grep -c 'BOOT-INF/lib/postgresql-')
 
 === 4. capture directories with no in-band provenance — the F-4 shape
   directory                                  stamp     tier-A   tenant

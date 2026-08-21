@@ -56,7 +56,18 @@ echo "--- loops over a glob with a [ -f ] || continue and no counter"
 LC_ALL=C grep -rn 'for f in .*\*\|for d in .*\*\|glob(' --include='*.sh' --include='*.py' --exclude-dir=t99 . | sed 's|^\./||'
 echo
 echo "--- grep -c / wc -l results compared to 0 (a zero can mean 'clean' or 'read nothing')"
-LC_ALL=C grep -rn 'grep -c\|grep -ac\|wc -l' --include='*.sh' --exclude-dir=t99 . | sed 's|^\./||'
+# T99b CORRECTION.  This pattern used to be the three literals `grep -c`, `grep -ac`, `wc -l`, and
+# it therefore COULD NOT SEE `grep -icE`, which is how preconditions.sh:105 and :111 — the
+# Oracle-Database / MySQL / MariaDB prohibition assertions, a CLAUDE.md non-negotiable — were
+# written.  Both counted over a stream that is empty whenever `docker` answers nothing, and both
+# printed PASS for it.  A sweep for a defect shape that cannot match the shape as actually written
+# is the same failure as the guards it is looking for: it reported 0 hits having not looked.
+# The flag letters are now a character class, so any -c/-ic/-ac/-icE spelling is caught.
+LC_ALL=C grep -rnE 'grep -[a-zA-Z]*c[a-zA-Z]*( |$)|wc -l' --include='*.sh' --exclude-dir=t99 . | sed 's|^\./||'
+echo
+echo "--- absence assertions: a count or an empty string treated as PROOF OF CLEANLINESS"
+echo "    (each of these needs a LIVENESS OPERAND — evidence that the input was non-empty)"
+LC_ALL=C grep -rnE '\[ "\$[a-z_]+" = "?0"? \]|\[ -z "\$[a-z_]+" \]' --include='*.sh' --exclude-dir=t99 . | sed 's|^\./||'
 
 hr "4. capture directories with no in-band provenance — the F-4 shape"
 python3 - <<'EOF'

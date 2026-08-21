@@ -50,7 +50,6 @@ for side in prefix fixed; do
   else
     echo "  guard verdict: ADMITTED — the run proceeded past the output-path check into:"
     head -1 "$EXPORT/f1-$side.txt" | sed 's/^/    /'
-    if [ "$side" = prefix ]; then prefix_admitted=1; fi
   fi
   echo "  what now exists at $ATTACK:"
   if [ -d "$TREE/$ATTACK" ]; then
@@ -60,6 +59,21 @@ for side in prefix fixed; do
     fi
   else
     echo "    (the directory was never created)"
+  fi
+  # T99b: `prefix_admitted` used to be set by the ABSENCE of the ABORT string, which is an
+  # observation a run that never happened produces just as readily as a run the guard let past —
+  # the very defect shape this task exists to remove.  It now requires the POSITIVE ARTEFACT: a
+  # directory that was actually created one level inside `recapture-default/` and a provenance
+  # stamp inside it reading `gerege`.  Nothing but a bypassed guard writes that.
+  if [ "$side" = prefix ]; then
+    stamp_txt=''
+    [ -f "$TREE/$ATTACK/CAPTURED-FROM-TENANT" ] && stamp_txt=$(head -1 "$TREE/$ATTACK/CAPTURED-FROM-TENANT" | tr -d '\r')
+    if ! LC_ALL=C grep -qa 'ABORT: output directory' "$EXPORT/f1-$side.txt" \
+       && [ -d "$TREE/$ATTACK" ] && [ "$stamp_txt" = gerege ]; then
+      prefix_admitted=1
+    else
+      echo "  (the pre-fix leg produced no misfiled artefact: directory present=$( [ -d "$TREE/$ATTACK" ] && echo yes || echo no ), stamp='$stamp_txt' — this proof is NOT demonstrating the defect)"
+    fi
   fi
   echo
 done

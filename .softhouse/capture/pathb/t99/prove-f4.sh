@@ -32,7 +32,17 @@ prefix_admitted=0
 fixed_refused=0
 
 # ------------------------------------------------------- 4a. the ambiguity, on the pre-fix tree
+# T99b: this leg's verdict is a conjunction of ABSENCES, and an absence is exactly what an export
+# that never happened also produces.  So the PRECONDITIONS are asserted first, positively, and the
+# leg aborts rather than concluding from a tree it has not established the contents of.
 echo "--- 4a.prefix — delete the stamp from a directory that HAS one, then compare the two"
+[ -f "$P/$STAMPED/CAPTURED-FROM-TENANT" ] \
+  || t99_die "4a precondition: the pre-fix $STAMPED carries no CAPTURED-FROM-TENANT to delete, so 'both look the same afterwards' would prove nothing"
+pre_stamped_files=$(find "$P/$STAMPED" -type f | wc -l | tr -d ' ')
+pre_unstamped_files=$(find "$P/$UNSTAMPED" -type f | wc -l | tr -d ' ')
+[ "$pre_stamped_files" -ge 2 ] && [ "$pre_unstamped_files" -ge 2 ] \
+  || t99_die "4a precondition: the pre-fix capture directories are empty ($STAMPED=$pre_stamped_files files, $UNSTAMPED=$pre_unstamped_files files); the export did not happen and no conclusion may be drawn from it"
+echo "  precondition: $STAMPED HAS a stamp and $pre_stamped_files files; $UNSTAMPED has $pre_unstamped_files files"
 rm -f "$P/$STAMPED/CAPTURED-FROM-TENANT"
 for d in "$STAMPED" "$UNSTAMPED"; do
   echo "  $d: stamp present? $( [ -f "$P/$d/CAPTURED-FROM-TENANT" ] && echo yes || echo no )   files: $(ls -A "$P/$d" | wc -l | tr -d ' ')"

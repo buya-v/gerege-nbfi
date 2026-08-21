@@ -4,6 +4,7 @@ fixed ref:   HEAD = <HEAD-COMMIT>
 export:      <EXPORT>   (git archive, so nothing uncommitted can leak into a proof)
 
 --- 4a.prefix — delete the stamp from a directory that HAS one, then compare the two
+  precondition: t80/out/recapture-gerege HAS a stamp and 7 files; t36/out/recapture-gerege has 8 files
   t80/out/recapture-gerege: stamp present? no   files: 6
   t36/out/recapture-gerege: stamp present? no   files: 8
   a reader handed this tree can consult:

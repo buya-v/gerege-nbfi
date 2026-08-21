@@ -59,13 +59,25 @@ done
 echo
 echo "=== sweep"
 sh "$T99/sweep.sh" > "$O/sweep.txt" 2>&1
-echo "  wrote out/sweep.txt (exit $?)"
+sweep_st=$?
+echo "  wrote out/sweep.txt (exit $sweep_st)"
+[ "$sweep_st" = 0 ] || rc=1
 
 echo
 echo "=== provenance index, against the working tree"
 python3 "$T99/../provenance.py" verify > "$O/provenance-verify.txt" 2>&1
-echo "  exit $? — $(tail -1 "$O/provenance-verify.txt" | cut -c1-120)"
+prov_st=$?
+echo "  exit $prov_st — $(tail -1 "$O/provenance-verify.txt" | cut -c1-120)"
+[ "$prov_st" = 0 ] || rc=1
 
+# T99b: the sweep's and the verifier's exit codes used to be PRINTED and then discarded, so this
+# runner could report "ALL FOUR PROOFS CLOSED" over a failing provenance verification.  A summary
+# that cannot be made to say the bad word is the same defect the proofs below it are about.
 echo
-[ "$rc" = 0 ] && echo "ALL FOUR PROOFS CLOSED under both shells." || echo "AT LEAST ONE PROOF DID NOT CLOSE."
+if [ "$rc" = 0 ]; then
+  echo "ALL FOUR PROOFS CLOSED under both shells; sweep exit 0; provenance verify exit 0."
+else
+  echo "NOT CLEAN — at least one of: a proof did not close, the sweep failed, the provenance"
+  echo "verification failed.  See the exit codes above."
+fi
 exit $rc

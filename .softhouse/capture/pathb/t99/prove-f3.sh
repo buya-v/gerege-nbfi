@@ -137,4 +137,29 @@ done
 echo
 echo "  (both are additionally reported in the handoff: they were NOT in T85's four findings.)"
 
+# ------- 3f. T99b: the SAME vacuous-pass shape inside preconditions.sh, on the money-adjacent
+#             assertions that carry a CLAUDE.md non-negotiable.
+echo
+echo "--- 3f — T99b.  The F-3 shape again, in preconditions.sh, on the PostgreSQL-only prohibition."
+echo "         P5's \$banned and P6's \$jarhits are \`grep -icE\` counts and P11's \$scp is a psql"
+echo "         result; all three were adjudicated by \`= 0\` / \`-z\`, and an empty stream counts 0"
+echo "         and reads empty.  So a \`docker\` that answers NOTHING produced:"
+echo "             PASS  0 prohibited-engine hits in container env"
+echo "             PASS  0 prohibited driver jars in fineract-provider.jar"
+echo "             PASS  schema_connection_parameters is empty"
+echo "         — the Oracle Database / MySQL / MariaDB prohibition, PASSED WITHOUT LOOKING."
+echo "         Below: the same stubbed run against both sides.  A liveness operand now makes an"
+echo "         empty scan a FAIL that says the scan did not happen."
+for side in prefix fixed; do
+  if [ "$side" = prefix ]; then TREE=$P; else TREE=$F; fi
+  ( PATH=$EXPORT/stub:$PATH; export PATH
+    CANARY_REQ=$TREE/t22-audit/req/calc-pmode2-gerege.json sh "$TREE/t36/preconditions.sh" gerege ) \
+      > "$EXPORT/f3f-$side.txt" 2>&1
+  echo "  $side: EXIT=$?  FAIL lines=$(LC_ALL=C grep -ac '^  FAIL' "$EXPORT/f3f-$side.txt")"
+  echo "    prohibition verdicts printed while docker answered nothing:"
+  LC_ALL=C grep -a 'prohibited-engine\|prohibited driver jars\|schema_connection_parameters' \
+    "$EXPORT/f3f-$side.txt" | cut -c1-190 | sed 's/^/      /'
+done
+echo "  (a PASS on any of those three lines on the 'fixed' side would mean the correction failed)"
+
 t99_verdict "$prefix_admitted" "$fixed_refused" "F-3 (vacuous pass on zero files)"
