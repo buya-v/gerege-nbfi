@@ -263,12 +263,19 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 				"work. Register the Go port in cmd/conformance/impl_hook.go once it exists.")
 	}
 
+	// s.LoadErrors is recorded BEFORE the error is examined, because LoadStore's
+	// store-integrity refusals (a duplicate case_id) carry the load errors out
+	// with them: a store that is both malformed and duplicated must report both,
+	// not whichever the control flow happened to reach first.
 	vectors, loadErrs, err := LoadStore(opts.StoreRoot, opts.ContextFilter)
+	s.LoadErrors = loadErrs
 	if err != nil {
+		// The grading loop is BELOW this return. A duplicate case_id therefore
+		// refuses the run before a single vector is graded, and no vector count
+		// or cell count is ever computed that a reader could quote.
 		s.FatalReasons = append(s.FatalReasons, err.Error())
 		return s, nil
 	}
-	s.LoadErrors = loadErrs
 	if len(vectors) == 0 {
 		where := opts.StoreRoot
 		if opts.ContextFilter != "" {
