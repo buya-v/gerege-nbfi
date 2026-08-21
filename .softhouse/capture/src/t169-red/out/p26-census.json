@@ -1,0 +1,742 @@
+{
+ "javaBroad": [
+  {
+   "file": ".softhouse/capture/t159-review-t117/src/CaptureT159.java",
+   "line": 474,
+   "text": "} catch (Throwable e) { // T159: Throwable, not RuntimeException - a StackOverflowError must be RECORDED, not fatal"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/src/CaptureT50Tier2.java",
+   "line": 410,
+   "text": "} catch (Throwable t) {"
+  },
+  {
+   "file": ".softhouse/capture/src/t169-red/CaptureT169Post.java",
+   "line": 433,
+   "text": "} catch (Throwable t) {"
+  },
+  {
+   "file": ".softhouse/reviews/t24-probe/T24Probe.java",
+   "line": 116,
+   "text": "} catch (Throwable t) {"
+  },
+  {
+   "file": ".softhouse/reviews/t23-probe/T23Probe.java",
+   "line": 85,
+   "text": "} catch (Throwable t) {"
+  }
+ ],
+ "javaNarrowIncidental": [
+  {
+   "file": ".softhouse/capture/mathcontext/src/CaptureT50Ambient.java",
+   "line": 185,
+   "loadBearing": false,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/actualactual/src/CaptureActualActual.java",
+   "line": 789,
+   "loadBearing": false,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/actualactual/src/CaptureActualActual.java",
+   "line": 890,
+   "loadBearing": false,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/actualactual/src/CaptureActualActual.java",
+   "line": 914,
+   "loadBearing": false,
+   "text": "} catch (RuntimeException e) {"
+  }
+ ],
+ "javaNarrowLoadBearing": [
+  {
+   "file": ".softhouse/capture/t117-familyb/src/CaptureT117.java",
+   "line": 568,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/t117-familyb/src/CaptureT117.java",
+   "line": 628,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/t117-familyb/src/CaptureT117P2.java",
+   "line": 453,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/t117-familyb/src/CaptureT117P2.java",
+   "line": 513,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/t159-review-t117/src/CaptureT159.java",
+   "line": 414,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/dec1-binding/src/CaptureBinding.java",
+   "line": 176,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/dec1-binding/src/CaptureBinding.java",
+   "line": 234,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/periodratio/src/CapturePeriodRatio.java",
+   "line": 257,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/periodratio/src/CapturePeriodRatio.java",
+   "line": 315,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/periodratio/src/CapturePeriodRatio2.java",
+   "line": 308,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/periodratio/src/CapturePeriodRatio2.java",
+   "line": 375,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/t100-g8-rescope/src/CaptureT100.java",
+   "line": 382,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/t100-g8-rescope/src/CaptureT100.java",
+   "line": 442,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/t83-nonamortizing/src/CaptureT83.java",
+   "line": 413,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/t83-nonamortizing/src/CaptureT83.java",
+   "line": 473,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/src/CaptureMathContext3.java",
+   "line": 414,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/src/CaptureMathContext3.java",
+   "line": 432,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/src/CaptureMathContext3.java",
+   "line": 503,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException | StackOverflowError e) {"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/src/CaptureMathContext2.java",
+   "line": 217,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/src/CaptureT50Tier2.java",
+   "line": 268,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/src/CaptureT50Tier2.java",
+   "line": 285,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/src/CaptureT50Ambient.java",
+   "line": 167,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/src/CaptureT50Ambient.java",
+   "line": 219,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/src/CaptureT50Ambient.java",
+   "line": 300,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException | StackOverflowError e) {"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/src/CaptureMathContext.java",
+   "line": 387,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/src/CaptureMathContext.java",
+   "line": 405,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/mathcontext/src/CaptureMathContext.java",
+   "line": 467,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException | StackOverflowError e) {"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/rerun-periodratio/src/CapturePeriodRatio.java",
+   "line": 257,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/rerun-periodratio/src/CapturePeriodRatio.java",
+   "line": 315,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/mathcontext/src/CaptureMathContext2.java",
+   "line": 217,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/mathcontext/src/CaptureMathContext.java",
+   "line": 344,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/mathcontext/src/CaptureMathContext.java",
+   "line": 362,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/audit-t44/mathcontext/src/CaptureMathContext.java",
+   "line": 424,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException | StackOverflowError e) {"
+  },
+  {
+   "file": ".softhouse/capture/actualactual/src/CaptureActualActual.java",
+   "line": 661,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/actualactual/src/CaptureActualActual.java",
+   "line": 1046,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture3.java",
+   "line": 180,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture3.java",
+   "line": 233,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture2.java",
+   "line": 160,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture2.java",
+   "line": 213,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture3f.java",
+   "line": 395,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture3f.java",
+   "line": 455,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture3g.java",
+   "line": 413,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture3g.java",
+   "line": 473,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture3h.java",
+   "line": 476,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture3h.java",
+   "line": 536,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture3h.java",
+   "line": 662,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture.java",
+   "line": 162,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture3d.java",
+   "line": 369,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture3d.java",
+   "line": 429,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture3e.java",
+   "line": 408,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture3e.java",
+   "line": 468,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/T21Probe.java",
+   "line": 70,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture3i.java",
+   "line": 650,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture3i.java",
+   "line": 713,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture3i.java",
+   "line": 839,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture3b.java",
+   "line": 366,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture3b.java",
+   "line": 426,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture3c.java",
+   "line": 348,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/Capture3c.java",
+   "line": 408,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/t169-red/CaptureT169Pre.java",
+   "line": 373,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/t169-red/CaptureT169Pre.java",
+   "line": 433,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/capture/src/t169-red/CaptureT169Post.java",
+   "line": 373,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/reviews/t21v2/T21v2Probe.java",
+   "line": 89,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/CaptureT84B.java",
+   "line": 464,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/CaptureT84B.java",
+   "line": 524,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/CaptureT84.java",
+   "line": 620,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  },
+  {
+   "file": ".softhouse/reviews/T84-evidence/src/CaptureT84.java",
+   "line": 680,
+   "loadBearing": true,
+   "text": "} catch (RuntimeException e) {"
+  }
+ ],
+ "pyRecording": [
+  {
+   "body": [
+    "notes.append('command failed (%s): %s' % (exc, cmd))",
+    "return None"
+   ],
+   "file": ".softhouse/capture/charges/bin/attest.py",
+   "line": 81,
+   "text": "except Exception as exc:                                     # noqa: BLE001"
+  },
+  {
+   "body": [
+    "notes.append('command failed (%s): %s' % (exc, cmd))",
+    "return None"
+   ],
+   "file": ".softhouse/capture/charges/bin/attest-t40.py",
+   "line": 87,
+   "text": "except Exception as exc:                                     # noqa: BLE001"
+  },
+  {
+   "body": [
+    "sys.exit(\"RUN FAILED: capture JSON does not parse: %s\" % e)"
+   ],
+   "file": ".softhouse/capture/t83-nonamortizing/src/run-t83.sh",
+   "line": 171,
+   "text": "except Exception as e:"
+  },
+  {
+   "body": [
+    "print(\"   RESP(raw):\", open(body).read()[:600])",
+    "continue"
+   ],
+   "file": ".softhouse/capture/tierA-a2/show.py",
+   "line": 32,
+   "text": "except Exception as e:"
+  },
+  {
+   "body": [
+    "notes.append('UNREAD dec1_revision \u2014 %s (%s)' % (exc, pin))"
+   ],
+   "file": ".softhouse/capture/pathb/t36/attest.py",
+   "line": 180,
+   "text": "except Exception as exc:                                         # noqa: BLE001"
+  },
+  {
+   "body": [
+    "notes.append('UNREAD dec1 ratification state \u2014 %s (%s)' % (exc, gates))"
+   ],
+   "file": ".softhouse/capture/pathb/t36/attest.py",
+   "line": 191,
+   "text": "except Exception as exc:                                         # noqa: BLE001"
+  },
+  {
+   "body": [
+    "notes.append('command failed (%s): %s' % (exc, cmd))",
+    "return None"
+   ],
+   "file": ".softhouse/capture/pathb/t36/attest.py",
+   "line": 209,
+   "text": "except Exception as exc:                                     # noqa: BLE001"
+  },
+  {
+   "body": [
+    "print(f\"  {p}: UNPARSEABLE ({e})\")",
+    "continue"
+   ],
+   "file": ".softhouse/capture/audit-t44/analysis/t44_float_scan.py",
+   "line": 39,
+   "text": "except Exception as e:"
+  },
+  {
+   "body": [
+    "sys.exit(\"RUN FAILED: capture JSON does not parse: %s\" % e)"
+   ],
+   "file": ".softhouse/capture/src/run-pass3b.sh",
+   "line": 136,
+   "text": "except Exception as e:"
+  },
+  {
+   "body": [
+    "sys.exit(\"RUN FAILED: capture JSON does not parse: %s\" % e)"
+   ],
+   "file": ".softhouse/capture/src/run-pass3f.sh",
+   "line": 203,
+   "text": "except Exception as e:"
+  },
+  {
+   "body": [
+    "sys.exit(\"RUN FAILED: capture JSON does not parse: %s\" % e)"
+   ],
+   "file": ".softhouse/capture/src/run-pass3g.sh",
+   "line": 203,
+   "text": "except Exception as e:"
+  },
+  {
+   "body": [
+    "sys.exit(\"RUN FAILED: capture JSON does not parse: %s\" % e)"
+   ],
+   "file": ".softhouse/capture/src/run-pass3c.sh",
+   "line": 162,
+   "text": "except Exception as e:"
+  },
+  {
+   "body": [
+    "sys.exit(\"RUN FAILED: capture JSON does not parse: %s\" % e)"
+   ],
+   "file": ".softhouse/capture/src/run-pass3h.sh",
+   "line": 238,
+   "text": "except Exception as e:"
+  },
+  {
+   "body": [
+    "sys.exit(\"RUN FAILED: capture JSON does not parse: %s\" % e)"
+   ],
+   "file": ".softhouse/capture/src/run-pass3i.sh",
+   "line": 276,
+   "text": "except Exception as e:"
+  },
+  {
+   "body": [
+    "sys.exit(\"RUN FAILED: capture JSON does not parse: %s\" % e)"
+   ],
+   "file": ".softhouse/capture/src/run-pass3d.sh",
+   "line": 190,
+   "text": "except Exception as e:"
+  },
+  {
+   "body": [
+    "sys.exit(\"RUN FAILED: capture JSON does not parse: %s\" % e)"
+   ],
+   "file": ".softhouse/capture/src/run-pass3e.sh",
+   "line": 194,
+   "text": "except Exception as e:"
+  },
+  {
+   "body": [
+    "sys.exit(1)"
+   ],
+   "file": ".softhouse/bin/fire-program.sh",
+   "line": 293,
+   "text": "except Exception:"
+  },
+  {
+   "body": [
+    "print(f\"C4 could not run against the committed request bodies: {e!r}\")",
+    "print(\"See the fallback in t45_m4m5.py.\")",
+    "rc |= 8"
+   ],
+   "file": ".softhouse/reviews/t45-probe/t45_extra.py",
+   "line": 416,
+   "text": "except Exception as e:                                   # noqa: BLE001"
+  },
+  {
+   "body": [
+    "print(f\"C4 could not run against the committed request bodies: {e!r}\")",
+    "print(\"See the fallback in t45_m4m5.py.\")",
+    "rc |= 8"
+   ],
+   "file": ".softhouse/reviews/t47-probe/t47_extra.py",
+   "line": 416,
+   "text": "except Exception as e:                                   # noqa: BLE001"
+  },
+  {
+   "body": [
+    "unparseable.append((rel, repr(exc)))",
+    "continue"
+   ],
+   "file": ".softhouse/reviews/A2-11/audit-float.py",
+   "line": 94,
+   "text": "except Exception as exc:                      # NOT swallowed \u2014 reported (P-40)"
+  },
+  {
+   "body": [
+    "unparsed_bodies.append((body, repr(exc)))",
+    "continue"
+   ],
+   "file": ".softhouse/reviews/A2-11/enumerate-corpus.py",
+   "line": 104,
+   "text": "except Exception as exc:                     # NAMED (P-40)"
+  },
+  {
+   "body": [
+    "check(\"could read %s\" % path.name, False, repr(exc))",
+    "continue"
+   ],
+   "file": ".softhouse/reviews/A2-11/verify-double-entry-minor-units.py",
+   "line": 73,
+   "text": "except Exception as exc:                     # NAMED, not swallowed (P-40)"
+  }
+ ],
+ "pySwallow": [
+  {
+   "body": [
+    "pass"
+   ],
+   "file": ".softhouse/capture/out/t35-byte-identity.py",
+   "line": 83,
+   "text": "except Exception:"
+  },
+  {
+   "body": [
+    "pass"
+   ],
+   "file": ".softhouse/capture/leapboundary/analysis/t55-prior-capture-assessment.py",
+   "line": 103,
+   "text": "except Exception:"
+  },
+  {
+   "body": [
+    "pass"
+   ],
+   "file": ".softhouse/capture/leapboundary/analysis/t55-analyse.py",
+   "line": 167,
+   "text": "except Exception:"
+  },
+  {
+   "body": [
+    "continue"
+   ],
+   "file": ".softhouse/capture/leapboundary/analysis/t55-analyse.py",
+   "line": 352,
+   "text": "except Exception:"
+  },
+  {
+   "body": [
+    "return None"
+   ],
+   "file": ".softhouse/capture/pathb/provenance.py",
+   "line": 116,
+   "text": "except Exception:                                                    # noqa: BLE001"
+  },
+  {
+   "body": [
+    "return None"
+   ],
+   "file": ".softhouse/capture/pathb/provenance.py",
+   "line": 144,
+   "text": "except Exception:                                                    # noqa: BLE001"
+  },
+  {
+   "body": [
+    "return {}"
+   ],
+   "file": ".softhouse/capture/pathb/provenance.py",
+   "line": 196,
+   "text": "except Exception:                                                    # noqa: BLE001"
+  },
+  {
+   "body": [
+    "pass"
+   ],
+   "file": ".softhouse/capture/audit-t44/analysis/t44_float_roundtrip.py",
+   "line": 29,
+   "text": "except Exception:"
+  },
+  {
+   "body": [
+    "failed += 1",
+    "continue"
+   ],
+   "file": ".softhouse/reviews/t45-probe/t45_discriminate.py",
+   "line": 135,
+   "text": "except Exception:"
+  },
+  {
+   "body": [
+    "failed += 1",
+    "continue"
+   ],
+   "file": ".softhouse/reviews/t47-probe/t47_discriminate.py",
+   "line": 135,
+   "text": "except Exception:"
+  },
+  {
+   "body": [
+    "failed += 1",
+    "continue"
+   ],
+   "file": ".softhouse/reviews/t41-probe/t41_discriminate.py",
+   "line": 135,
+   "text": "except Exception:"
+  }
+ ]
+}

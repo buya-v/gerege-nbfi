@@ -1,0 +1,20 @@
+=== check_no_narrow_catch.py --selftest  (P-22: the lint driven RED and back to green) ===
+narrow load-bearing catch sites: 1 total, 0 in FROZEN files (0 files), 1 NEW
+REFUSED — a NEW capture rig narrows its seam handler. java.lang.Error is exactly what the reference oracle throws.
+  .softhouse/capture/newrig/src/CaptureBrandNew.java:5  } catch (RuntimeException e) {
+Fix: use ThrewOutcome (capture/lib/ThrewOutcome.java). Mechanical patch: capture/src/t169-red/build_harness_t169.py.
+  -> exit 1
+narrow load-bearing catch sites: 0 total, 0 in FROZEN files (0 files), 0 NEW
+clean: no capture rig outside the frozen set narrows its seam handler.
+  -> exit 0
+narrow load-bearing catch sites: 0 total, 0 in FROZEN files (0 files), 0 NEW
+clean: no capture rig outside the frozen set narrows its seam handler.
+  -> exit 0
+
+check_no_narrow_catch selftest: 0 failure(s)
+selftest exit 0
+
+=== check_no_narrow_catch.py <repo>  (the standing state of the repository) ===
+narrow load-bearing catch sites: 67 total, 67 in FROZEN files (34 files), 0 NEW
+clean: no capture rig outside the frozen set narrows its seam handler.
+repo check exit 0

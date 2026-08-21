@@ -1,0 +1,20 @@
+ok    all clean -> asked 3 / observed 3 / threw 0 / skipped 0
+ok    one throw -> asked 3 / observed 2 / threw 1 / skipped 0
+ok    the throw is NAMED with its class
+ok    the throw keeps its top frame
+ok    a PRE-T169 shaped throw (no outcome key) is still counted as threw
+ok    a PRE-T169 shaped throw still yields its class
+ok    a missing cell -> asked 3 / observed 2 / threw 0 / skipped 1
+ok    the missing cell is NAMED
+ok    an unasked cell is flagged EXTRA
+ok    a transposed id list is flagged REORDERED
+ok    a threw cell carrying an observed block is a contradiction  -> IntegrityError: A: declared outcome "threw" but carries a non-null observed block — a threw cell is NOT an observation and must never be graded as one
+ok    an observed cell carrying an error is a contradiction  -> IntegrityError: A: declared outcome "observed" but observed is null and/or an error is recorded
+ok    a duplicated id is refused  -> IntegrityError: A: emitted twice
+ok    an unknown outcome token is refused  -> IntegrityError: A: unknown outcome 'maybe'
+ok    GRADING a threw cell is refused  -> IntegrityError: refusing to grade 1 cell(s):
+ok    GRADING an absent cell is refused  -> IntegrityError: refusing to grade 1 cell(s):
+ok    grading only the OBSERVED cells is allowed
+
+sweep_integrity selftest: 0 failure(s)
+exit 0

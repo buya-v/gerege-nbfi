@@ -1,0 +1,191 @@
+#!/usr/bin/env python3
+"""check_no_narrow_catch — T169. A LINT that fails when a NEW capture rig wraps the measured seam in
+`catch (RuntimeException ...)` or `catch (Exception ...)`.
+
+WHY A LINT AND NOT A REWRITE. Thirty-four Java rigs in this repository carry the narrow handler, and
+every one of them PRODUCED COMMITTED EVIDENCE. T114's standing ruling forbids editing a script that
+produced committed evidence, because the artefact then no longer corresponds to the code that made
+it. So the historical rigs are FROZEN AND NAMED below, not corrected — and this lint's job is to
+stop the defect propagating into the next rig, which is the only place it can still do harm.
+
+The fix a new rig should apply is in `ThrewOutcome.java`, and the mechanical patch that applies it
+is `capture/src/t169-red/build_harness_t169.py` (OLD_HANDLER -> NEW_HANDLER).
+
+Usage:
+  check_no_narrow_catch.py <repo-root>     exit 0 clean, exit 1 and name every new site otherwise
+  check_no_narrow_catch.py --selftest      drive the lint RED on a synthetic new rig (P-22)
+"""
+import os
+import re
+import sys
+import tempfile
+
+JAVA_CATCH = re.compile(r'\bcatch\s*\(\s*(RuntimeException|Exception)\b')
+SEAM_MARKERS = ('generator.generate(', 'ProgressiveLoanScheduleGenerator', 'calculateRepaymentSchedule',
+                'MoneyHelper.getMathContext', '.generate(mc,')
+
+# ---------------------------------------------------------------------------------------------
+# FROZEN — every file below carried the narrow handler on 2026-08-21, when T169 measured it, and
+# every one produced committed evidence. They are recorded, NOT corrected (T114's standing ruling).
+# Adding a file here is a deliberate act that a reviewer can see in the diff.
+# ---------------------------------------------------------------------------------------------
+FROZEN = {
+    '.softhouse/capture/actualactual/src/CaptureActualActual.java',
+    '.softhouse/capture/audit-t44/mathcontext/src/CaptureMathContext.java',
+    '.softhouse/capture/audit-t44/mathcontext/src/CaptureMathContext2.java',
+    '.softhouse/capture/audit-t44/rerun-periodratio/src/CapturePeriodRatio.java',
+    '.softhouse/capture/dec1-binding/src/CaptureBinding.java',
+    '.softhouse/capture/mathcontext/src/CaptureMathContext.java',
+    '.softhouse/capture/mathcontext/src/CaptureMathContext2.java',
+    '.softhouse/capture/mathcontext/src/CaptureMathContext3.java',
+    '.softhouse/capture/mathcontext/src/CaptureT50Ambient.java',
+    '.softhouse/capture/mathcontext/src/CaptureT50Tier2.java',
+    '.softhouse/capture/periodratio/src/CapturePeriodRatio.java',
+    '.softhouse/capture/periodratio/src/CapturePeriodRatio2.java',
+    '.softhouse/capture/src/Capture.java',
+    '.softhouse/capture/src/Capture2.java',
+    '.softhouse/capture/src/Capture3.java',
+    '.softhouse/capture/src/Capture3b.java',
+    '.softhouse/capture/src/Capture3c.java',
+    '.softhouse/capture/src/Capture3d.java',
+    '.softhouse/capture/src/Capture3e.java',
+    '.softhouse/capture/src/Capture3f.java',
+    '.softhouse/capture/src/Capture3g.java',
+    '.softhouse/capture/src/Capture3h.java',
+    '.softhouse/capture/src/Capture3i.java',
+    '.softhouse/capture/src/T21Probe.java',
+    '.softhouse/capture/t100-g8-rescope/src/CaptureT100.java',
+    '.softhouse/capture/t117-familyb/src/CaptureT117.java',
+    '.softhouse/capture/t117-familyb/src/CaptureT117P2.java',
+    '.softhouse/capture/t159-review-t117/src/CaptureT159.java',   # SEAM handler already Throwable;
+                                                                  # the remaining site is the ambient
+                                                                  # MathContext read, not the seam.
+    '.softhouse/capture/t83-nonamortizing/src/CaptureT83.java',
+    '.softhouse/reviews/T84-evidence/src/CaptureT84.java',
+    '.softhouse/reviews/T84-evidence/src/CaptureT84B.java',
+    '.softhouse/reviews/t21v2/T21v2Probe.java',
+    # T169's own controlled pair. `Pre` IS the historical handler, deliberately and by definition —
+    # it exists to be driven red. `Post` has the T169 seam handler; its ONE remaining narrow catch is
+    # around the ambient MoneyHelper.getMathContext() read, kept narrow so that the Pre/Post pair
+    # differs in the seam handler ALONE and stays a controlled experiment. Raised as a follow-up.
+    '.softhouse/capture/src/t169-red/CaptureT169Pre.java',
+    '.softhouse/capture/src/t169-red/CaptureT169Post.java',
+}
+
+
+def try_block_for(lines, catch_idx):
+    depth = 0
+    i = catch_idx
+    while i >= 0:
+        line = lines[i]
+        depth += line.count('}') - line.count('{')
+        if re.search(r'\btry\s*\{', line) and depth <= 0:
+            return '\n'.join(lines[i:catch_idx + 1])
+        i -= 1
+    return ''
+
+
+def scan(root):
+    """Every LOAD-BEARING narrow catch, as (relpath, line, text)."""
+    hits = []
+    for dirpath, dirnames, filenames in os.walk(root):
+        dirnames[:] = [d for d in dirnames if d not in ('.git', 'node_modules', 'build', '.gradle')]
+        for fn in filenames:
+            if not fn.endswith('.java'):
+                continue
+            path = os.path.join(dirpath, fn)
+            rel = os.path.relpath(path, root)
+            lines = open(path, errors='replace').read().split('\n')
+            for n, line in enumerate(lines):
+                s = line.strip()
+                if s.startswith('*') or s.startswith('//') or s.startswith('/*'):
+                    continue
+                if JAVA_CATCH.search(line) and any(m in try_block_for(lines, n) for m in SEAM_MARKERS):
+                    hits.append((rel, n + 1, s))
+    return hits
+
+
+def check(root):
+    hits = scan(root)
+    new = [h for h in hits if h[0] not in FROZEN]
+    frozen_hit_files = {h[0] for h in hits if h[0] in FROZEN}
+    print('narrow load-bearing catch sites: %d total, %d in FROZEN files (%d files), %d NEW'
+          % (len(hits), len(hits) - len(new), len(frozen_hit_files), len(new)))
+    if new:
+        print('REFUSED — a NEW capture rig narrows its seam handler. '
+              'java.lang.Error is exactly what the reference oracle throws.')
+        for rel, line, text in new:
+            print('  %s:%d  %s' % (rel, line, text))
+        print('Fix: use ThrewOutcome (capture/lib/ThrewOutcome.java). '
+              'Mechanical patch: capture/src/t169-red/build_harness_t169.py.')
+        return 1
+    print('clean: no capture rig outside the frozen set narrows its seam handler.')
+    return 0
+
+
+def selftest():
+    """P-22: the lint must be able to FAIL. Plant a synthetic new rig and require a refusal."""
+    fails = []
+    with tempfile.TemporaryDirectory() as tmp:
+        d = os.path.join(tmp, '.softhouse', 'capture', 'newrig', 'src')
+        os.makedirs(d)
+        # (a) a NEW rig with the narrow handler around the seam -> must be REFUSED
+        open(os.path.join(d, 'CaptureBrandNew.java'), 'w').write(
+            'class CaptureBrandNew {\n'
+            '  void run() {\n'
+            '    try {\n'
+            '      plan = generator.generate(mc, config);\n'
+            '    } catch (RuntimeException e) {\n'
+            '      record(e);\n'
+            '    }\n'
+            '  }\n'
+            '}\n')
+        rc = check(tmp)
+        print('  -> exit %d' % rc)
+        if rc != 1:
+            fails.append('a new rig with a narrow seam handler was NOT refused')
+
+        # (b) the same rig, fixed -> must PASS
+        open(os.path.join(d, 'CaptureBrandNew.java'), 'w').write(
+            'class CaptureBrandNew {\n'
+            '  void run() {\n'
+            '    try {\n'
+            '      plan = generator.generate(mc, config);\n'
+            '    } catch (Throwable t) {\n'
+            '      if (ThrewOutcome.isFatal(t)) { throw t; }\n'
+            '      ThrewOutcome.appendThrew(b, t, 25);\n'
+            '    }\n'
+            '  }\n'
+            '}\n')
+        rc = check(tmp)
+        print('  -> exit %d' % rc)
+        if rc != 0:
+            fails.append('the FIXED rig was refused anyway — the lint is over-broad')
+
+        # (c) a narrow catch that does NOT guard the seam -> must PASS (not over-broad)
+        open(os.path.join(d, 'CaptureBrandNew.java'), 'w').write(
+            'class CaptureBrandNew {\n'
+            '  void run() {\n'
+            '    try {\n'
+            '      readSomeProperties();\n'
+            '    } catch (RuntimeException e) {\n'
+            '      record(e);\n'
+            '    }\n'
+            '  }\n'
+            '}\n')
+        rc = check(tmp)
+        print('  -> exit %d' % rc)
+        if rc != 0:
+            fails.append('a narrow catch away from the seam was refused — the lint is over-broad')
+
+    print()
+    print('check_no_narrow_catch selftest: %d failure(s)' % len(fails))
+    for f in fails:
+        print('  FAIL ' + f)
+    return 1 if fails else 0
+
+
+if __name__ == '__main__':
+    if '--selftest' in sys.argv:
+        sys.exit(selftest())
+    sys.exit(check(os.path.abspath(sys.argv[1])))

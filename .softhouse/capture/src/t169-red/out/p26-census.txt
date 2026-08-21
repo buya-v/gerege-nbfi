@@ -1,0 +1,124 @@
+T169 P-26 CENSUS — catch-narrowing across every rig in the repository
+==============================================================================
+
+JAVA-NARROW  catch (RuntimeException|Exception): 71 sites in 34 files
+  LOAD-BEARING (the guarded block calls the measured seam): 67
+    .softhouse/capture/t117-familyb/src/CaptureT117.java:568  } catch (RuntimeException e) {
+    .softhouse/capture/t117-familyb/src/CaptureT117.java:628  } catch (RuntimeException e) {
+    .softhouse/capture/t117-familyb/src/CaptureT117P2.java:453  } catch (RuntimeException e) {
+    .softhouse/capture/t117-familyb/src/CaptureT117P2.java:513  } catch (RuntimeException e) {
+    .softhouse/capture/t159-review-t117/src/CaptureT159.java:414  } catch (RuntimeException e) {
+    .softhouse/capture/dec1-binding/src/CaptureBinding.java:176  } catch (RuntimeException e) {
+    .softhouse/capture/dec1-binding/src/CaptureBinding.java:234  } catch (RuntimeException e) {
+    .softhouse/capture/periodratio/src/CapturePeriodRatio.java:257  } catch (RuntimeException e) {
+    .softhouse/capture/periodratio/src/CapturePeriodRatio.java:315  } catch (RuntimeException e) {
+    .softhouse/capture/periodratio/src/CapturePeriodRatio2.java:308  } catch (RuntimeException e) {
+    .softhouse/capture/periodratio/src/CapturePeriodRatio2.java:375  } catch (RuntimeException e) {
+    .softhouse/capture/t100-g8-rescope/src/CaptureT100.java:382  } catch (RuntimeException e) {
+    .softhouse/capture/t100-g8-rescope/src/CaptureT100.java:442  } catch (RuntimeException e) {
+    .softhouse/capture/t83-nonamortizing/src/CaptureT83.java:413  } catch (RuntimeException e) {
+    .softhouse/capture/t83-nonamortizing/src/CaptureT83.java:473  } catch (RuntimeException e) {
+    .softhouse/capture/mathcontext/src/CaptureMathContext3.java:414  } catch (RuntimeException e) {
+    .softhouse/capture/mathcontext/src/CaptureMathContext3.java:432  } catch (RuntimeException e) {
+    .softhouse/capture/mathcontext/src/CaptureMathContext3.java:503  } catch (RuntimeException | StackOverflowError e) {
+    .softhouse/capture/mathcontext/src/CaptureMathContext2.java:217  } catch (RuntimeException e) {
+    .softhouse/capture/mathcontext/src/CaptureT50Tier2.java:268  } catch (RuntimeException e) {
+    .softhouse/capture/mathcontext/src/CaptureT50Tier2.java:285  } catch (RuntimeException e) {
+    .softhouse/capture/mathcontext/src/CaptureT50Ambient.java:167  } catch (RuntimeException e) {
+    .softhouse/capture/mathcontext/src/CaptureT50Ambient.java:219  } catch (RuntimeException e) {
+    .softhouse/capture/mathcontext/src/CaptureT50Ambient.java:300  } catch (RuntimeException | StackOverflowError e) {
+    .softhouse/capture/mathcontext/src/CaptureMathContext.java:387  } catch (RuntimeException e) {
+    .softhouse/capture/mathcontext/src/CaptureMathContext.java:405  } catch (RuntimeException e) {
+    .softhouse/capture/mathcontext/src/CaptureMathContext.java:467  } catch (RuntimeException | StackOverflowError e) {
+    .softhouse/capture/audit-t44/rerun-periodratio/src/CapturePeriodRatio.java:257  } catch (RuntimeException e) {
+    .softhouse/capture/audit-t44/rerun-periodratio/src/CapturePeriodRatio.java:315  } catch (RuntimeException e) {
+    .softhouse/capture/audit-t44/mathcontext/src/CaptureMathContext2.java:217  } catch (RuntimeException e) {
+    .softhouse/capture/audit-t44/mathcontext/src/CaptureMathContext.java:344  } catch (RuntimeException e) {
+    .softhouse/capture/audit-t44/mathcontext/src/CaptureMathContext.java:362  } catch (RuntimeException e) {
+    .softhouse/capture/audit-t44/mathcontext/src/CaptureMathContext.java:424  } catch (RuntimeException | StackOverflowError e) {
+    .softhouse/capture/actualactual/src/CaptureActualActual.java:661  } catch (RuntimeException e) {
+    .softhouse/capture/actualactual/src/CaptureActualActual.java:1046  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture3.java:180  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture3.java:233  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture2.java:160  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture2.java:213  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture3f.java:395  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture3f.java:455  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture3g.java:413  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture3g.java:473  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture3h.java:476  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture3h.java:536  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture3h.java:662  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture.java:162  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture3d.java:369  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture3d.java:429  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture3e.java:408  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture3e.java:468  } catch (RuntimeException e) {
+    .softhouse/capture/src/T21Probe.java:70  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture3i.java:650  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture3i.java:713  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture3i.java:839  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture3b.java:366  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture3b.java:426  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture3c.java:348  } catch (RuntimeException e) {
+    .softhouse/capture/src/Capture3c.java:408  } catch (RuntimeException e) {
+    .softhouse/capture/src/t169-red/CaptureT169Pre.java:373  } catch (RuntimeException e) {
+    .softhouse/capture/src/t169-red/CaptureT169Pre.java:433  } catch (RuntimeException e) {
+    .softhouse/capture/src/t169-red/CaptureT169Post.java:373  } catch (RuntimeException e) {
+    .softhouse/reviews/t21v2/T21v2Probe.java:89  } catch (RuntimeException e) {
+    .softhouse/reviews/T84-evidence/src/CaptureT84B.java:464  } catch (RuntimeException e) {
+    .softhouse/reviews/T84-evidence/src/CaptureT84B.java:524  } catch (RuntimeException e) {
+    .softhouse/reviews/T84-evidence/src/CaptureT84.java:620  } catch (RuntimeException e) {
+    .softhouse/reviews/T84-evidence/src/CaptureT84.java:680  } catch (RuntimeException e) {
+  INCIDENTAL (guarded block does not reach the seam): 4
+    .softhouse/capture/mathcontext/src/CaptureT50Ambient.java:185  } catch (RuntimeException e) {
+    .softhouse/capture/actualactual/src/CaptureActualActual.java:789  } catch (RuntimeException e) {
+    .softhouse/capture/actualactual/src/CaptureActualActual.java:890  } catch (RuntimeException e) {
+    .softhouse/capture/actualactual/src/CaptureActualActual.java:914  } catch (RuntimeException e) {
+
+JAVA-BROAD  catch (Throwable) / catch (... | StackOverflowError): 5 sites
+    .softhouse/capture/t159-review-t117/src/CaptureT159.java:474  } catch (Throwable e) { // T159: Throwable, not RuntimeException - a StackOverflowError must be RECORDED, not fatal
+    .softhouse/capture/mathcontext/src/CaptureT50Tier2.java:410  } catch (Throwable t) {
+    .softhouse/capture/src/t169-red/CaptureT169Post.java:433  } catch (Throwable t) {
+    .softhouse/reviews/t24-probe/T24Probe.java:116  } catch (Throwable t) {
+    .softhouse/reviews/t23-probe/T23Probe.java:85  } catch (Throwable t) {
+
+PY-SWALLOW  except Exception / bare except with NO record in the next 4 lines: 11 sites
+    .softhouse/capture/out/t35-byte-identity.py:83  except Exception:   -> pass
+    .softhouse/capture/leapboundary/analysis/t55-prior-capture-assessment.py:103  except Exception:   -> pass
+    .softhouse/capture/leapboundary/analysis/t55-analyse.py:167  except Exception:   -> pass
+    .softhouse/capture/leapboundary/analysis/t55-analyse.py:352  except Exception:   -> continue
+    .softhouse/capture/pathb/provenance.py:116  except Exception:                                                    # noqa: BLE001   -> return None
+    .softhouse/capture/pathb/provenance.py:144  except Exception:                                                    # noqa: BLE001   -> return None
+    .softhouse/capture/pathb/provenance.py:196  except Exception:                                                    # noqa: BLE001   -> return {}
+    .softhouse/capture/audit-t44/analysis/t44_float_roundtrip.py:29  except Exception:   -> pass
+    .softhouse/reviews/t45-probe/t45_discriminate.py:135  except Exception:   -> failed += 1; continue
+    .softhouse/reviews/t47-probe/t47_discriminate.py:135  except Exception:   -> failed += 1; continue
+    .softhouse/reviews/t41-probe/t41_discriminate.py:135  except Exception:   -> failed += 1; continue
+
+PY-RECORDING  except ... that records before continuing (not a defect): 22 sites
+    .softhouse/capture/charges/bin/attest.py:81  except Exception as exc:                                     # noqa: BLE001   -> notes.append('command failed (%s): %s' % (exc, cmd)); return None
+    .softhouse/capture/charges/bin/attest-t40.py:87  except Exception as exc:                                     # noqa: BLE001   -> notes.append('command failed (%s): %s' % (exc, cmd)); return None
+    .softhouse/capture/t83-nonamortizing/src/run-t83.sh:171  except Exception as e:   -> sys.exit("RUN FAILED: capture JSON does not parse: %s" % e)
+    .softhouse/capture/tierA-a2/show.py:32  except Exception as e:   -> print("   RESP(raw):", open(body).read()[:600]); continue
+    .softhouse/capture/pathb/t36/attest.py:180  except Exception as exc:                                         # noqa: BLE001   -> notes.append('UNREAD dec1_revision — %s (%s)' % (exc, pin))
+    .softhouse/capture/pathb/t36/attest.py:191  except Exception as exc:                                         # noqa: BLE001   -> notes.append('UNREAD dec1 ratification state — %s (%s)' % (exc, gates))
+    .softhouse/capture/pathb/t36/attest.py:209  except Exception as exc:                                     # noqa: BLE001   -> notes.append('command failed (%s): %s' % (exc, cmd)); return None
+    .softhouse/capture/audit-t44/analysis/t44_float_scan.py:39  except Exception as e:   -> print(f"  {p}: UNPARSEABLE ({e})"); continue
+    .softhouse/capture/src/run-pass3b.sh:136  except Exception as e:   -> sys.exit("RUN FAILED: capture JSON does not parse: %s" % e)
+    .softhouse/capture/src/run-pass3f.sh:203  except Exception as e:   -> sys.exit("RUN FAILED: capture JSON does not parse: %s" % e)
+    .softhouse/capture/src/run-pass3g.sh:203  except Exception as e:   -> sys.exit("RUN FAILED: capture JSON does not parse: %s" % e)
+    .softhouse/capture/src/run-pass3c.sh:162  except Exception as e:   -> sys.exit("RUN FAILED: capture JSON does not parse: %s" % e)
+    .softhouse/capture/src/run-pass3h.sh:238  except Exception as e:   -> sys.exit("RUN FAILED: capture JSON does not parse: %s" % e)
+    .softhouse/capture/src/run-pass3i.sh:276  except Exception as e:   -> sys.exit("RUN FAILED: capture JSON does not parse: %s" % e)
+    .softhouse/capture/src/run-pass3d.sh:190  except Exception as e:   -> sys.exit("RUN FAILED: capture JSON does not parse: %s" % e)
+    .softhouse/capture/src/run-pass3e.sh:194  except Exception as e:   -> sys.exit("RUN FAILED: capture JSON does not parse: %s" % e)
+    .softhouse/bin/fire-program.sh:293  except Exception:   -> sys.exit(1)
+    .softhouse/reviews/t45-probe/t45_extra.py:416  except Exception as e:                                   # noqa: BLE001   -> print(f"C4 could not run against the committed request bodies: {e!r}"); print("See the fallback in t45_m4m5.py."); rc |= 8
+    .softhouse/reviews/t47-probe/t47_extra.py:416  except Exception as e:                                   # noqa: BLE001   -> print(f"C4 could not run against the committed request bodies: {e!r}"); print("See the fallback in t45_m4m5.py."); rc |= 8
+    .softhouse/reviews/A2-11/audit-float.py:94  except Exception as exc:                      # NOT swallowed — reported (P-40)   -> unparseable.append((rel, repr(exc))); continue
+    .softhouse/reviews/A2-11/enumerate-corpus.py:104  except Exception as exc:                     # NAMED (P-40)   -> unparsed_bodies.append((body, repr(exc))); continue
+    .softhouse/reviews/A2-11/verify-double-entry-minor-units.py:73  except Exception as exc:                     # NAMED, not swallowed (P-40)   -> check("could read %s" % path.name, False, repr(exc)); continue
+
+MACHINE-READABLE: 5 keys, 109 total sites
+wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-af1f5b7aebc97911d/.softhouse/capture/src/t169-red/out/p26-census.json
