@@ -899,9 +899,13 @@ regulatory sign-off and licence facts are equally untouched and are not in Run 1
   T84 (reproduced T83, measured family B, and rejected T83's write-up), T100 (rewrote this section
   and re-measured both discriminators), T101 (independent review — reproduced the measurement over a
   **wider** cell set than T100 swept, and rejected the write-up on three sentences), T112 (applied
-  T101's corrections and deleted the superseded UPDATE block named below)
+  T101's corrections and deleted the superseded UPDATE block named below), T114 (independent review
+  of T112 — **re-derived every load-bearing number in this section from scratch and all of it
+  reproduced**; MICRO-FIX on two false sentences, one of them introduced by T112's own fix), T122
+  (applied T114's findings)
 - **context**: tier0-harness-schedule-poc / loan-schedule
-- **state**: **OPEN** — blocks nothing today. T112 fixed the write-up; it did not decide the gate.
+- **state**: **OPEN** — blocks nothing today. T112 fixed the write-up and T122 fixed two sentences in
+  T112's fix; **neither decided the gate, and neither may.**
 - **raised_by**: local fire 20260820-170001, from T75's approval of T74
 - **recorded_in**: `.softhouse/gates.md`
 - **supersedes**: the block `## G-8 — UPDATE from local fire 20260820-200002` that stood on `main`
@@ -990,7 +994,12 @@ non-amortization predicts no order dependence at all"*,
 ### What was measured, and over what domain
 
 **T83's sweep — 330 cells, all family A** [T83, branch `softhouse/T83-nonamortizing-boundary`;
-reproduced by T84 byte-identically, canonical sha256 `01b41d9c…3101b`, 332 cases; re-classified a
+reproduced by T84 byte-identically, canonical sha256 `01b41d9c…3101b`, 332 cases; T84 additionally
+re-asked **12 boundary cells with different tenant ids and in reversed order — 12 of 12 identical**,
+so the boundary is neither tenant-dependent nor order-of-emission dependent [`T84-review-t83.md`
+§1.3; re-verified by T122 from the committed capture: the twelve `T84-RP-*` cells carry their own
+`t84_rp_*` tenant ids, distinct from T83's `cap_t83_*`, and each one's whole `observed` block is
+byte-identical to the same-shape T83 cell — 12 matched, 12 identical]; re-classified a
 third time by T100 from the same raw capture: **198 fail / 132 clean / 0 family B**]. Domain swept:
 annual rates **{7.0, 16.8, 21.6, 36.0}** × repayment counts **{2, 3, 4, 6, 12, 24, 36, 56}**,
 principal swept contiguously in minor units from 1 past the boundary (1..27 minor), every cell
@@ -1147,12 +1156,18 @@ finding after all."* It failed.
 - principal **MNT 0.01 (1 minor unit)** — no other principal has produced a family-B cell.
 - repayment counts **n ∈ {104…122} ∪ {150, 200, 250}**: T84 measured 104…121 contiguously plus 150
   and 200 (22 cells, of which n = 108 and n = 120 were measured twice, once in each of its two
-  probes, agreeing); **T100 added n = 122 — one above T84's contiguous top of 121, but NOT above
-  T84's largest n, which is 200 — and n = 250, which IS above every n T84 asked. Both are family
-  B.** At **n = 103** the same shape is **clean** [T84; re-measured by T100. The n-set and the
-  contiguity re-derived by T112 from the raw captures, which also show T84's n at
-  600.0 % / MNT 0.01 running 88…121 contiguously plus 60, 150 and 200. An earlier revision said
-  both new cells were above the top of n T84 swept; only n = 250 is — T101 F-4].
+  probes, agreeing); **T100 added n = 122 — one above T84's contiguous top of 121, but NOT above the
+  largest n T84 asked *at this shape*, which is 200 — and n = 250, which IS above every n T84 asked
+  *at 600.0 % / MNT 0.01*. Both are family B.** (T84's largest n **anywhere** is **600**, at 0.12 % —
+  `T84B-XL-R0p12-N600-B291` — so neither sentence holds unscoped; both hold at the family-B shape.
+  Nothing above n = 250 has ever been asked at the family-B shape.) At **n = 103** the same shape is
+  **clean** [T84; re-measured by T100. The n-set and the contiguity re-derived by T112 from the raw
+  captures, which also show T84's n at 600.0 % / MNT 0.01 running 88…121 contiguously plus 60, 150
+  and 200. An earlier revision said both new cells were above the top of n T84 swept; only n = 250
+  is — T101 F-4. The scope qualifiers were added by T122 — T114 F-T114-2 — after re-deriving T84's
+  full n-set from its two committed raw captures: max n **600** overall (at rates {0.12, 1.2, 3.6}),
+  max n **200** at 600.0 % / MNT 0.01. The unscoped form contradicted this same section at
+  *"terms up to n = 600"* and at *"n from 1 to 600"* below].
 
 **The Go port reproduces family B cell for cell — 0 divergent cells** [T84 over all 22; T100 through
 the real grader on `T100-FAMB-R600p0-N108-B1`: **761 graded cells, 0 cell diffs**]. On family B there
@@ -1295,9 +1310,44 @@ captures, **320 held, 22 refuted, 0 exact ties**
 [`src/closed_form_check.py`, `out/closed-form-check.json`]. **Every one of the 22 refutations is a
 family-B cell** — 600.0 % / B = 1 / n ≥ 104 — where the closed form predicts CLEAN (the exact gap
 `B·a − ½` is positive: `+2.429e-19` at n = 104, falling to `+3.025e-36` at n = 200) and the oracle
-**fails**. The gap there is below the ulp of ½ at 19 significant digits, which is consistent with
-the EMI quantizing to zero in the oracle's own `(19, HALF_UP)` arithmetic — offered as an
-explanation, not as a verified mechanism `[UNVERIFIED]`.
+**fails**. The gap is below the ulp of ½ at 19 significant digits (**1e-19**) on **25 of the 29**
+measured family-B cells — and **NOT** on the four at **n = 104, 105 and 106**, where it is **2.43,
+1.62 and 1.08 ulp** respectively. So a sub-ulp argument does not reach the cells at the region's
+**lower boundary**, which is where the phenomenon starts and therefore where its cause will be
+decided. Sub-ulp quantization of the EMI in the oracle's own `(19, HALF_UP)` arithmetic is offered
+as a possible explanation **for the other 25**, not as a verified mechanism, and it is **not** an
+explanation for n = 104…106 `[UNVERIFIED]`.
+
+[Re-derived independently by T122 in **exact rational arithmetic** (`fractions.Fraction`, money
+parsed as integer minor units, the comparison made against `Fraction(1, 10**19)` — no float on any
+decision path, P-25) over all 29 family-B cells of the four committed raw captures. Exact gaps:
+n=104 `+2.4293e-19` = 2.43 ulp (two cells, `T84B-NSW-R600p0-N104-B1` and `T100-FAMB-R600p0-N104-B1`,
+agreeing); n=105 `+1.6195e-19` = 1.62 ulp; n=106 `+1.0797e-19` = 1.08 ulp; then n=107 `+7.1979e-20`
+= 0.72 ulp and everything above it strictly smaller, down to n=250 `+4.7441e-45`. The gap is
+strictly positive on all 29 and strictly decreasing across the 22 distinct n, so the ulp crossing is
+**between n = 106 and n = 107** and is crossed exactly once. An earlier revision stated the sub-ulp
+claim over the whole family; it contradicted the `+2.429e-19` figure quoted on the line above it —
+T114 F-T114-1.]
+
+**What the failure at n = 104…106 means for the open question of family B's cause.** Family B's
+mechanism is still `[UNVERIFIED]` and this narrows what may be assumed about it:
+
+- **A "the EMI quantizes to zero because the gap is beneath the arithmetic's resolution" story is
+  refuted at the region's first three terms.** At n = 104 the residual is more than **two** units in
+  the last place of ½ carried at the tenant's ratified precision — a difference the oracle's own
+  `(19, HALF_UP)` arithmetic **can** represent. Whatever makes those cells fail is therefore not
+  simple exhaustion of significant digits, and any candidate mechanism must explain n = 104, 105 and
+  106 on its own terms.
+- **The boundary of the region and the boundary of the sub-ulp condition do not coincide.** The
+  region starts at n = 104 (n = 102 and n = 103 are measured clean at the same shape); the sub-ulp
+  condition starts at n = 107. A cause that tracked the sub-ulp condition would have put the
+  region's edge at 107. It is at 104, so the two are different thresholds and at most one of them
+  can be the cause.
+- **Consequently the sub-ulp observation is a correlate over 25 of 29 cells, not the explanation of
+  the family**, and it must not be used to argue that family B is confined to residuals too small to
+  matter. The next worker on family B should start at **n = 104**, not in the sub-ulp tail, and
+  should treat locating the code path — which neither T84, T100, T101, T112 nor T114 did — as the
+  open work.
 
 **A count correction — and its cause is a FLOAT.** T84's write-up records **18** refutations;
 T100's exact-rational evaluation over the same 342 cells finds **22**. **T101 adjudicated the
@@ -1320,7 +1370,49 @@ differently" and "a float in an analysis script put a wrong number into the docu
 owner reads" is the whole point of this project's no-floating-point rule. That rule visibly bound
 the port, the schema, the vectors and the fixtures; it did not visibly bind the **analysis and
 prediction scripts**, and this is exactly what that gap costs — the script graded nothing, and its
-float still reached this gate. **22 is the count.**
+float still reached this gate. **22 is the count.** The rule is now written down as **P-25** in
+`.softhouse/patterns.md`: it binds anything whose output is used to reason about money, and the test
+is *"if this number is wrong, does a wrong money claim reach a human?"*
+
+### Two KNOWN DEFECTS in this gate's own probe sources — recorded, deliberately NOT fixed
+
+Found by T114 while reviewing T112 and re-verified by T122. **Neither changes any published number**
+— that is stated below as a measurement, not as an assurance. Both are left byte-identical on
+purpose: these are **executed probe sources**, and editing one — even a comment — destroys the
+byte-reproducibility of a committed capture from the sources that produced it, which is the property
+that makes the evidence above worth anything. The same reasoning T112 applied in
+`.softhouse/capture/t100-g8-rescope/CORRECTIONS-T112.md` applies here. **A future re-run of either
+script must fix these FIRST, in a new pass with new ids, and must not silently re-emit into the
+existing `out/` directories.**
+
+1. **A LIVE FLOAT in an analysis script — P-25 in a file, not in a lesson.**
+   `.softhouse/capture/t83-nonamortizing/src/classify-boundary.py:102` sorts with
+   `key=lambda kv: (float(kv[0][0]), kv[0][1])`, while the same file's own header at **`:20`** states
+   *"Nothing here constructs a float."* **The header is false.** This is the *second* live instance
+   of exactly the gap the paragraph above is about, and it is sitting inside this gate's own evidence
+   set. **No published result is affected, and T122 measured that rather than asserting it:** the
+   `float()` is a sort key over annual-rate *labels* only — no money value is converted, and no
+   classification, comparison or count reads it. T122 copied the script unmodified to a scratch
+   directory, produced a variant differing **only** in that one key (`fractions.Fraction(str(...))`
+   instead of `float(...)`), and ran both against the committed capture: the emitted
+   `measured-boundary.json` files are **identical**, the stdout boundary tables are **identical row
+   for row**, and the unmodified run reproduces the committed
+   `out/measured-boundary.json` **exactly**. The four labels T83 swept — 7.0, 16.8, 21.6, 36.0 — order
+   the same way under either key. The sibling scripts got this right and said so precisely
+   (`swept_domain.py:6`; `closed_form_check.py:13-16`).
+2. **`closed_form_check.py` crashes on its own all-clean path.**
+   `.softhouse/capture/t100-g8-rescope/src/closed_form_check.py:83` computes
+   `min(abs(r['gap_float']) for r in refuted)` with no guard for an empty `refuted`, so an input with
+   **zero** refutations exits **1** with `ValueError: min() arg is an empty sequence`. **No recorded
+   number is affected:** every count prints *before* the crash, and the committed
+   `out/closed-form-check.json` was written by the 342-cell T84 run where `refuted` has 22 members
+   and the crash path is not taken. T122 re-ran the script unmodified from a scratch copy (sha256
+   `55ecbc8f…`, byte-identical to the committed source, and the committed `out/` untouched): on T83's
+   330 cells it prints **330 / 330 held / 0 refuted / 0 ties** and *then* exits 1; on T84's two
+   captures it prints **342 / 320 held / 22 refuted / 0 ties**, exits 0, and its output is
+   **byte-identical to the committed `out/closed-form-check.json`**. The hazard is a signalling one:
+   a script whose job is to report refutations returns a **failure exit on the clean input**, which a
+   future re-runner will read as "the check failed" when it means "there was nothing to report".
 
 **So: the closed form is a good description of family A on the grid where it was fitted, and it is
 not a law. It does not predict family B at all.** No claim is made for any un-sampled rate, term or
@@ -1408,3 +1500,27 @@ sources**, and why those four files were deliberately left byte-identical rather
 T112 measured nothing new against the reference oracle: every number it added or changed was
 re-derived in integer minor units from the four already-committed raw captures, or read from
 `grade.go` and `out/exemption-demo-t100.json` in this repository.
+
+**The independent review of T112, committed on `softhouse/T114-review-t112`** —
+`.softhouse/reviews/T114-review-of-T112.md` and
+`.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T114.md`. **VERDICT MICRO-FIX.** T114 wrote
+its own classifier from scratch, sharing no code with T83's, T84's, T100's or T112's, and
+**re-derived every load-bearing number in this section — all of it reproduced**: 687 / 312 / 29 /
+346, all ten discriminator rows on 341 of 341 cells, the 11-of-12 rate split, MNT 0.23 / MNT 2.91 /
+12.65× / MNT 1.09, 761-with-0-diffs and 2525-with-1-diff, 198 divergent cells one per case, 106/106
+predictions, 330/330 and 320-held/22-refuted/0-ties, both canonical digests, and **every** Fineract
+and `grade.go` citation. It also **attacked the rig** (P-22): T83's prediction checker was driven
+red three ways and probed for vacuity, and it **fails closed** on an empty measurement. It found two
+false sentences — corrected by T122 below — and **refused a false premise in its own dispatch
+brief** (P-20): the brief attributed the family-B exemption result to family A for the **third**
+time, which is the error `main` had already corrected in `95ec06a`.
+
+**T114's findings applied, committed on `softhouse/T122-g8-t114-fixes`** — this section as it now
+stands, plus the KNOWN-DEFECTS record in `CORRECTIONS-T112.md` and
+`.softhouse/capture/t83-nonamortizing/KNOWN-DEFECTS.md`, and the corrections to T112's and T100's
+handoffs. T122 contacted the reference oracle **not at all** and measured nothing new against it:
+the four family-B ulp gaps were re-derived in **exact rational arithmetic** from the committed raw
+captures, T84's full n-set and the 12 `T84-RP-*` re-ask were re-derived the same way, and the two
+probe-source defects were re-verified by running unmodified copies from a scratch directory. It
+changed no vector, no `PIN.json`, no `capabilities.json`, no `contract.go` and no `nexus/` file, and
+it took `.softhouse/tasks.json` **wholesale from `main`** (F-T114-3, the evil merge in `eea5e80`).
