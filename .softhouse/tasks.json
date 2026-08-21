@@ -1011,7 +1011,7 @@
       ],
       "status": "done",
       "attempts": 1,
-      "note": "raised by local fire 20260821-125942: .softhouse/vectors/ holds ONLY loanschedule/, so A2-8's merged GL port is graded by ZERO parity vectors. The store README's own layout is one directory per bounded context and conformance.sh already filters by context -- the harness was built for a second context that was never added. A GL context needs its own frozen contract before a vector can be admitted against it. DEC-n RATIFICATION is agent-decidable (CLAUDE.md), so drafting DEC-2 is not a user gate; amending the RATIFIED DEC-1 still is. | dispatched local fire 20260821-125942 batch 1 (6th worker) | MERGED as a DRAFT, not ratified. Seam is getLinkedGLAccountForLoanProduct(Long,int,Long) -- NO amount parameter, driver-verified at 426a23544, so DEC-2 selects an ACCOUNT and cannot grade money invariants at this seam.",
+      "note": "raised by local fire 20260821-125942: .softhouse/vectors/ holds ONLY loanschedule/, so A2-8's merged GL port is graded by ZERO parity vectors. The store README's own layout is one directory per bounded context and conformance.sh already filters by context -- the harness was built for a second context that was never added. A GL context needs its own frozen contract before a vector can be admitted against it. DEC-n RATIFICATION is agent-decidable (CLAUDE.md), so drafting DEC-2 is not a user gate; amending the RATIFIED DEC-1 still is. | dispatched local fire 20260821-125942 batch 1 (6th worker) | MERGED as a DRAFT, not ratified. Seam is getLinkedGLAccountForLoanProduct(Long,int,Long) -- NO amount parameter, driver-verified at 426a23544, so DEC-2 selects an ACCOUNT and cannot grade money invariants at this seam. | REJECTED by A2-14 after merge. The ADR now carries a DO-NOT-RATIFY banner. Its section 5 claim that an empty ledger/ cannot pass silently is MEASURABLY FALSE.",
       "branch": "softhouse/A2-13-dec2-gl-contract"
     },
     {
@@ -1029,9 +1029,9 @@
       "dependencies": [
         "A2-13"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "paired reviewer, required by the plan gate: no contract is ratified on its author's word. | dispatched local fire 20260821-125942 batch 2; brief carries the P-59 non-empty-diff assertion",
+      "note": "MERGED. Verdict REJECTED on DEC-2 rev 1 (R-1 no ledger vector expressible; R-2 empty ledger/ passes silently -- DRIVER-MEASURED and it refutes a claim the driver had repeated as fact; R-3 prose-vs-list money contradiction, the G-5 defect class). Factual base sound: every [VERIFIED] traced to source; G-10 left undecided, no gate crossed. Rework is A2-16.",
       "branch": "softhouse/A2-14-review-dec2"
     },
     {
@@ -1048,12 +1048,11 @@
       ],
       "context": "tierA-gl-accounting",
       "dependencies": [
-        "A2-13",
-        "A2-14"
+        "A2-16"
       ],
       "status": "pending",
       "attempts": 0,
-      "note": "blocked until DEC-2 exists and has passed independent review -- a vector cannot be admitted against a contract that does not exist. G-10 is OPEN and its driver recommendation (c) is a PRECONDITION on which products may be promoted from."
+      "note": "blocked until DEC-2 exists and has passed independent review -- a vector cannot be admitted against a contract that does not exist. G-10 is OPEN and its driver recommendation (c) is a PRECONDITION on which products may be promoted from. | BLOCKED: DEC-2 rev 1 was REJECTED by A2-14. No vector may be promoted against a rejected contract. Now depends on A2-16 (rev 2) instead of A2-13/A2-14."
     },
     {
       "id": "T190",
@@ -1195,6 +1194,26 @@
       "status": "pending",
       "attempts": 0,
       "note": "raised by T183 (D-1, D-2, D-3) with a tested unapplied patch at .softhouse/reviews/T183-evidence/PROPOSED-backstep.patch. T179 is already merged, so this is the repair path for a REJECTED verdict on merged work."
+    },
+    {
+      "id": "A2-16",
+      "title": "DEC-2 revision 2 \u2014 resolve A2-14's three rejection-grade findings, chiefly that NO ledger vector is expressible against the frozen vector schema",
+      "description": "A2-14 REJECTED DEC-2 revision 1 ON SHAPE, not on honesty: it opened over thirty citations and every [VERIFIED] claim traced to real source at the exact cited line, G-9 was applied, G-10 was recorded and left UNDECIDED, default-deny is inherited, and no float is admitted anywhere Gerege owns the number. THE FACTUAL BASE SURVIVES -- do not re-do the research; resolve the shape. R-1: no ledger vector is expressible against the frozen schema. Expect.Kind is {schedule, refusal}; Expect.Sentinel must be one of the three CONTRACT sentinels, so section 4.9's oracle-faithful 404 -- this context's commonest graded output -- has no representation; StructuralCellFields() is a hard-coded closed set and admitCounterfactual rejects all six cells section 5 proposes. So EITHER the vector schema must be extended (which is real machinery, and section 5 must stop claiming otherwise) OR DEC-2 must grade something the schema can already express -- decide which, argue it, and note that extending the schema touches the harness that DEC-1's 43 vectors depend on, so any change must leave them passing. R-2: an empty ledger/ directory PASSES SILENTLY -- driver-measured on real main, exit 0 VERDICT PASS with the only occurrence of 'ledger' in the output being the no-float census line. conformance.sh:855 adds -context only when given an argument; vector.go:950-952 returns all contexts when the filter is empty. Correct the claim; the capability fatal that DOES hold fires on the REGISTRY ROWS, not the empty directory, and revision 1 presented them as interchangeable. R-3: prose and enumerated list contradict on whether the contract carries money -- the SAME DEFECT CLASS AS THE STILL-OPEN G-5 on DEC-1, so shipping it would knowingly repeat an open gate. A2-14's recommendation, which the driver endorses as a starting point but does not impose: KEEP the money and scope the no-amount property to the in-process seam it was actually derived from (ledger_inprocess_resolver, the one seam G-01 refuses). Also close section 9 item 10 with A2-14's F-A: ProductToGLAccountMappingWritePlatformServiceImpl.java:149-151 is 'case ACCRUAL_UPFRONT: // Fall Through' into ACCRUAL_PERIODIC, so the loan side writes the FULL accrual set while savings writes none; bears on G-03. AND STATE PLAINLY, where a reader cannot miss it, that NOTHING CURRENTLY GRADES THE LEDGER'S MONEY: no vectors, no schema to express one in, and no guard for I-3/I-4 -- run_guards invokes five guards, all about float, gofmt and exception scope. Section 8's claim that the guards cover the ledger tree is TRUE FOR FLOAT and WILL BE MISREAD as covering the append-only and derived-balance invariants. You are DRAFTING revision 2; you do not ratify it, and a further independent review follows.",
+      "agent_role": "spec_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        "docs/adr/",
+        ".softhouse/handoff/"
+      ],
+      "context": "tierA-gl-accounting",
+      "dependencies": [
+        "A2-14"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "raised by A2-14's REJECTED verdict, local fire 20260821-125942. A2-15 stays BLOCKED behind this: no vector may be promoted against a rejected contract."
     }
   ],
   "cross_corroboration": {

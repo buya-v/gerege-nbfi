@@ -1634,3 +1634,29 @@ diff it was handed.
 3. **The dispatcher owns this.** A brief that names a diff command must also name the state that
    command is valid in. This was the driver's defect, not the reviewers'.
 
+---
+
+**P-60 — A WORKTREE FORKS WHEN IT IS CREATED, NOT WHEN THE PROMPT IS WRITTEN, SO "FORKED FROM CURRENT
+MAIN" GOES STALE INSIDE A SINGLE ORCHESTRATOR TURN.** Local fire `20260821-125942`, reported by
+**A2-14** against the **driver's own brief**, and it is the sibling of **P-59**.
+
+The driver merged `A2-13` (which created `docs/adr/DEC-2-gl-accounting-adapter.md`) and dispatched
+`A2-14` to review it in the same breath. `A2-14`'s worktree forked from `1e40059` — **a parent of the
+A2-13 merge** — so **the document it was sent to review did not exist in its tree**, while its brief
+asserted it was "forked from current main". It had no commits of its own, so it reset onto `main`,
+re-verified both frozen digests, and proceeded. That was the right recovery and it should not have
+had to make it.
+
+The failure is quiet in the dangerous direction: a reviewer that does **not** notice reads an absent
+artefact as an empty one, and "I found nothing" is again indistinguishable from "there was nothing to
+find" (P-35, P-59).
+
+*Rules:*
+1. **Never assert the fork point in a brief.** Tell the worker to establish it: `git merge-base HEAD
+   main`, `git log --oneline -1`, and — when reviewing a specific artefact — **assert the file exists
+   before reading it**, treating absence as a STOP rather than as emptiness.
+2. **Merge, then push, then dispatch** — and if the dispatch depends on the merge, say in the brief
+   *"if `<path>` is absent, reset onto `main` first"*, which is exactly what A2-14 worked out alone.
+3. **P-59 and P-60 are one family:** the reviewer's view of its subject is a function of *when* its
+   tree was cut, and both defects present as a clean, empty, reassuring result.
+

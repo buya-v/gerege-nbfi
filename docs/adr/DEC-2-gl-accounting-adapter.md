@@ -1,5 +1,48 @@
 # DEC-2 — GL / accounting adapter contract
 
+> # ⛔ REJECTED BY INDEPENDENT REVIEW — DO NOT RATIFY THIS REVISION
+>
+> **`A2-14` REJECTED revision 1 on 21 August 2026** (local fire `20260821-125942`). Full review:
+> `.softhouse/reviews/A2-14-DEC2-gl-accounting-contract-review.md`. Rework is task **`A2-16`**.
+> **`A2-15` (promote GL vectors) is blocked until a revision passes review** — it cannot promote a
+> vector against a contract that has been rejected.
+>
+> **The rejection is on SHAPE, not on honesty or research.** A2-14 opened over thirty source and
+> capture citations and found **every `[VERIFIED]` claim traced to real source at the exact cited
+> line** — none overstated, none fabricated. G-9 was applied and not re-litigated; **G-10 was
+> recorded and explicitly left undecided, so no gate was crossed**; default-deny is genuinely
+> inherited; no float is admitted anywhere Gerege owns the number. The factual base survives into
+> the rework.
+>
+> **Three findings must be resolved before ratification:**
+>
+> 1. **R-1 — no `ledger` vector is expressible against the frozen schema.** §5's *"Disposition 3
+>    needs no new machinery"* is false. `Expect.Kind ∈ {schedule, refusal}`; `Expect.Sentinel` must
+>    be one of the three **contract** sentinels, so §4.9's oracle-faithful 404 — this context's
+>    commonest graded output — has no representation; `StructuralCellFields()` is a hard-coded
+>    closed set and `admitCounterfactual` rejects all six cells §5 proposes. For a context whose own
+>    text says *"most kills will be structural"*, the structural machinery refuses the entire corpus.
+> 2. **R-2 — an empty `ledger/` directory PASSES SILENTLY. Driver-measured on real `main`:** an
+>    empty `.softhouse/vectors/ledger/` with the harness run unfiltered — *the way `conformance.sh`
+>    actually invokes it* — gives **exit 0, `VERDICT: PASS`, 43 vectors**, and the only occurrence of
+>    "ledger" in the whole output is the no-float census line. `conformance.sh:855` adds `-context`
+>    only when given an argument; `vector.go:950-952` returns all contexts when the filter is empty.
+>    §5's narrower sentence is true; the bolded claim resting on it is not.
+> 3. **R-3 — the prose and the enumerated list contradict each other on whether the contract carries
+>    money** — the same defect class as the still-open **G-5** on DEC-1. §2.2/§3.2/§5 say *"the
+>    contract carries no amount"*, while §4.2's `G-07`/`G-08` are predicates about currency and
+>    amount wire text and §4.4 grades `I-1`/`I-2` in `int64` minor units. Either the prose is false
+>    or those predicates are vacuous (P-35). Root cause: the no-amount property is derived from
+>    `ledger_inprocess_resolver` — **the one seam `G-01` refuses** — then stated as a property of a
+>    contract built on three seams that do carry money.
+>
+> **And the answer to the question this contract exists to make askable: nothing currently grades
+> the ledger's money.** No vectors, no schema to express one in, and no guard for `I-3`/`I-4` —
+> `run_guards` invokes five guards, all about float, `gofmt` and exception scope. §8 says the guards
+> cover the ledger tree, which is **true for float** and **will be misread** as covering the
+> append-only and derived-balance invariants.
+
+
 **Status: DRAFT (revision 1), 21 August 2026, written by task `A2-13`. NOT RATIFIED, and this
 task may not ratify it.** An independent review (`A2-14`) grades it; the driver decides
 ratification under standing policy **P-2**. **No PIN digest appears in this document**, and
