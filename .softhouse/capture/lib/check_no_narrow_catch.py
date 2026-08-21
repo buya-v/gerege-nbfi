@@ -86,8 +86,18 @@ def try_block_for(lines, catch_idx):
 
 
 def scan(root):
-    """Every LOAD-BEARING narrow catch, as (relpath, line, text)."""
+    """Every LOAD-BEARING narrow catch, as (relpath, line, text), plus what was INSPECTED.
+
+    Returns (hits, files_opened, dirs_holding_java). T173 added the second and third: this
+    lint fires only when it FINDS something, so a walk that opened ZERO .java files printed
+    `0 total, 0 NEW`, said `clean`, and exited 0 — a refusal certifying a tree it never read.
+    The counts are what let `check` turn that into an ERROR (P-35), and the DIRECTORY count
+    is there for the same reason T166 added a package count on the Go side: a file count
+    alone cannot tell a whole-tree walk apart from a single-directory one.
+    """
     hits = []
+    seen = 0
+    dirs = set()
     for dirpath, dirnames, filenames in os.walk(root):
         dirnames[:] = [d for d in dirnames if d not in ('.git', 'node_modules', 'build', '.gradle')]
         for fn in filenames:
@@ -95,6 +105,8 @@ def scan(root):
                 continue
             path = os.path.join(dirpath, fn)
             rel = os.path.relpath(path, root)
+            seen += 1
+            dirs.add(dirpath)
             lines = open(path, errors='replace').read().split('\n')
             for n, line in enumerate(lines):
                 s = line.strip()
@@ -102,15 +114,23 @@ def scan(root):
                     continue
                 if JAVA_CATCH.search(line) and any(m in try_block_for(lines, n) for m in SEAM_MARKERS):
                     hits.append((rel, n + 1, s))
-    return hits
+    return hits, seen, dirs
 
 
 def check(root):
-    hits = scan(root)
+    hits, seen, dirs = scan(root)
     new = [h for h in hits if h[0] not in FROZEN]
     frozen_hit_files = {h[0] for h in hits if h[0] in FROZEN}
+    print('CENSUS narrow-catch — inspected %d .java files across %d directories under %s '
+          '(recursive, whole repository)' % (seen, len(dirs), os.path.abspath(root)))
     print('narrow load-bearing catch sites: %d total, %d in FROZEN files (%d files), %d NEW'
           % (len(hits), len(hits) - len(new), len(frozen_hit_files), len(new)))
+    if seen == 0 or not dirs:
+        print('REFUSED — INSPECTED %d .java FILES across %d DIRECTORIES under %s.'
+              % (seen, len(dirs), os.path.abspath(root)))
+        print('A lint that opens no file refuses nothing and reports clean. '
+              'This is an ERROR, not a pass (P-35).')
+        return 1
     if new:
         print('REFUSED — a NEW capture rig narrows its seam handler. '
               'java.lang.Error is exactly what the reference oracle throws.')
@@ -177,6 +197,16 @@ def selftest():
         print('  -> exit %d' % rc)
         if rc != 0:
             fails.append('a narrow catch away from the seam was refused — the lint is over-broad')
+
+    # (d) T173, P-35: a tree with NO .java file at all -> ERROR, never `clean`. Before this
+    #     the lint returned 0 here, because it fires only on what it FINDS and it found
+    #     nothing. Deliberately a SEPARATE temporary directory from (a)-(c): reusing theirs
+    #     after deleting the file would test deletion, not an unreachable root.
+    with tempfile.TemporaryDirectory() as tmp:
+        rc = check(tmp)
+        print('  -> exit %d' % rc)
+        if rc != 1:
+            fails.append('a tree containing no .java file at all reported clean — the lint is vacuous')
 
     print()
     print('check_no_narrow_catch selftest: %d failure(s)' % len(fails))
