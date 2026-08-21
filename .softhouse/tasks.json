@@ -2579,7 +2579,7 @@
     {
       "id": "T128",
       "title": "INDEPENDENT review of T96 — the sole-caller census and its blind-spot analysis",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -2590,7 +2590,7 @@
         ".softhouse/reviews/"
       ],
       "description": "Paired reviewer for T96. Re-derive the sole-caller verdict at pinned 426a23544 incl. the virtual-dispatch and reflection exclusions, check that each of the six PUBLISHED commands actually reproduces its claimed number (a published command that does not reproduce its own number is rejection-class), and reproduce the red demonstration. Then audit T96's own blind-spot analysis by constructing each defeating edit, and answer the question T96 could not ask of itself: is the class CLOSED or has it merely MOVED - does the whole-tree grep form have its own silent-green edit, and is 'reproduce the LINES, not the total' an instruction a reader will follow or a scalar tripwire with a disclaimer?",
-      "note": "Raised by the driver, local fire 20260821-080001, from T109's class sweep / T96."
+      "note": "Raised by the driver, local fire 20260821-080001, from T109's class sweep / T96. || local fire 20260821-080001: DONE on softhouse/T128-review-t96. VERDICT MICRO-FIX. SOLE-CALLER CONFIRMED AND STRONGER THAN T96 ARGUED: exactly two lines over 7,890 tracked files (6,586 .java), matching T96 exactly; no Kotlin/Scala in the tree at all and its 9 .groovy files are buildSrc plumbing. THREE FACTS T96 NEVER USED make it airtight - the class is FINAL (:71-73) so CGLIB cannot proxy it at all; the seam we port constructs it with `new` (EmbeddableProgressiveLoanScheduleGenerator.java:40); and the tree's ONE bytecode-manipulating build step, EclipseLink static weaving, selects only @Entity/@MappedSuperclass/@Converter/AttributeConverter, so it provably never touches this @Component - no @EnableLoadTimeWeaving, no aop.xml. That CLOSES the build-time half of T96's own [UNVERIFIED] item. All 6 published commands reproduce their numbers (3,3,9,4,18,2) under two independent shapes; M-6 reproduced independently (graph 6 2->3 RED, graphs 1-5 GREEN). BUT THE BLIND-SPOT CLASS IS NOT CLOSED - IT MOVED. F-T128-1 (live P-22): the 'hardened' tokenising graph-4 command is SILENTLY GREEN on four legal five-constant enum edits (constructor argument, /* */ block comment, constant on the enum header line, constant class body), each reading 4; its stated reason 'strips comments' is FALSE - it strips // only - and the one-per-line layout it relies on is held up SOLELY by trailing // hints, which Fineract's own formatter (join_wrapped_lines=true) removes. Graph 4 is closure-critical. F-T128-2 (P-21/P-26, FOURTH recurrence this fire): the scope fix landed in part 9 and NOT at the two sites that make the claims - emi.go:625 still says 'grep the method name IN THE PINNED FILE', which on mutant M-3b reads 9 GREEN on a tree with five call sites into :718 while part 9's command reads 10 RED; same at :587, third survivor at :531. F-T128-3: a PURE ADDITION with no deletion beats all six (two calls on line 743 -> graph 6 reads 2 GREEN) and 'reproduce the LINES' misses it BECAUSE THE LINE NUMBERS DO NOT MOVE. ZERO EXECUTABLE CHANGE proven by go/scanner TOKEN-STREAM EQUALITY (4,224 non-comment tokens each way) - a much stronger instrument than reading the diff. Conformance PASS exit 0 42/5576. NOTED FOR THE DRIVER: 79a67d1 is a LEDGER ENTRY, NOT A MERGE - T96 is still unmerged; and the Go toolchain lives in the MAIN REPO not the agent worktree, which is why three workers reported it absent. T146 applies the findings."
     },
     {
       "id": "T121",
@@ -2724,7 +2724,7 @@
     {
       "id": "T136",
       "title": "INDEPENDENT review of T125 — the attestation canary gate",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -2735,7 +2735,7 @@
         ".softhouse/reviews/"
       ],
       "description": "Paired reviewer. See the branch handoff and the driver's dispatch brief.",
-      "note": "Raised and dispatched by the driver, local fire 20260821-080001."
+      "note": "Raised and dispatched by the driver, local fire 20260821-080001. || local fire 20260821-080001: DONE on softhouse/T136-review-t125 (df4aa8e). VERDICT MICRO-FIX - every load-bearing claim of T125 reproduced independently and NONE IS FALSE. Own measurement of both tenants on the tie (one process, StartedAt 2026-08-18T09:51:53Z): gerege + calc-pmode2-gerege.json (2a6621be) -> HTTP 200 20925.05; default + calc-pmode2-default.json -> HTTP 200 20925.04; re-derived with decimal at precision 19, 1162502.50 x 0.018 = 20925.04500 -> HALF_UP 20925.05, HALF_EVEN 20925.04. IT CLOSED A CONFOUND T125 ASSERTED BUT NEVER MEASURED: m_product_loan id 10@fineract_default vs 11@fineract_gerege differ in 89 columns BY ONLY `id`, so the divergence is the mode and nothing else. MODE-SENSITIVITY RULING, 13x stronger than T125's: it posted ALL 197 committed calc-*.json to BOTH tenants, discarded the 8 product-confounded results, and got 52 SOUND COMPARISONS, ZERO DIFFERING (22 leapboundary, 9 emiloop, 9 charge-free charges, 8 actualactual, 4 pathb/req) - NO DIGEST ANYWHERE IN PATH B IS MODE-SENSITIVE. Three refinements: the B-0x shapes are blind because 1,200,000 x 1.8% = 21,600.00 EXACTLY (no tie to round); the 44 charge shapes are STRUCTURALLY UNTESTABLE because m_charge has 0 rows on default, so attest-t40.py has NO LIVE RED PROOF; and the GRADED CORPUS IS NOT BLIND - REFUSE-02-half-even-ungraded.json makes HALF_EVEN a contract refusal and 0 of 46 vectors carry either tie answer. Blast radius reproduced (5 graded, 0 not clean) and the grader MUTATION-TESTED: 7 tamperings, 7 detected. Ordering proved BY DIFFERENTIAL not reading: neuter only the pre-capture gate -> 4 capture bodies appear; unmutated -> 0. MICRO-FIX FINDINGS, all the class T125 was closing: compare-bytes.py exits 0 having compared ZERO files; drive-canary-red.sh:42 prints 'changed lines: 2 (expect 4)' and COMPARES NOTHING; the doc grader is `is not True` on one field and `is False` on the other so the STRING 'False' passes and zero captures passes; and ATTEST-T40.PY:115-121 STILL CARRIES T85's F-1, DEMONSTRATED LIVE overwriting the committed charges/out/attested/preconditions.txt (4c3ff7f8 -> b74409be) WHILE PRINTING 'no capture attempted, no attestation written' (restored). CP_DIGEST backlog is 11 rigs but the TOKEN REACHES ONLY 6 - the other 5 compute it inline. CANARY_EXPECT:36 hole CONFIRMED BY DEMONSTRATION (CANARY_EXPECT=20925.04 prints 'PASS ... (= HALF_UP)' on the HALF_EVEN JVM) but it does NOT alone green the run today and since T125 no longer buys a green attestation. STALE FORK RECOMMENDATION: DELETE. T147 applies the findings."
     },
     {
       "id": "T137",
@@ -2881,6 +2881,58 @@
       ],
       "description": "T134's blast-radius finding, and the only LIVE money exposure it found. 74 of 240 .py files under .softhouse/ call json.load with no parse_float=, so every money literal in a capture becomes a binary double the moment it is read. Worst instance: capture/actualactual/analysis/discriminate.py:160 decides a money claim by BINARY-FLOAT EQUALITY and then prints 'ALL n PERIODS REPRODUCED DIGIT FOR DIGIT'. This is the P-25 class that already put 18-instead-of-22 into the gate write-up Buyan reads. Fix json.load(parse_float=Decimal) or integers throughout; do NOT edit scripts that produced committed evidence (record those and re-run from scratch copies, per T114's ruling). Report which published numbers, if any, change.",
       "note": "Raised by the driver, local fire 20260821-080001, from T134 / T127 / T129."
+    },
+    {
+      "id": "T147",
+      "title": "Apply T136's five micro-fixes to T125",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [
+        "T136"
+      ],
+      "files_hint": [
+        ".softhouse/capture/pathb/",
+        ".softhouse/capture/lib/"
+      ],
+      "description": "Applies T136's findings: T85's F-1 still LIVE in attest-t40.py:115-121 (overwrites committed evidence while printing 'no attestation written'), compare-bytes.py exiting 0 on zero files, drive-canary-red.sh:42 printing an expectation it never compares, the doc grader's is-not-True/is-False asymmetry (the string 'False' passes, zero captures passes), and the CP_DIGEST count (11 rigs but the token reaches only 6).",
+      "note": "Raised by the driver, local fire 20260821-080001, from T136 / T128."
+    },
+    {
+      "id": "T148",
+      "title": "DELETE the stale unrunnable fork charges/bin/attest.py",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [
+        "T115",
+        "T133",
+        "T137"
+      ],
+      "files_hint": [
+        ".softhouse/capture/charges/bin/"
+      ],
+      "description": "T136's recommendation with reasoning: it is byte-identical to t36/attest.py@aafc8b3, UNRUNNABLE (proven by running it), produced nothing, and is referenced by nothing. Re-pointing it instead would mean maintaining a THIRD copy of a sidecar attest-t40.py already covers - recreating the P-21 fork hazard on purpose, on the one copy that cannot be driven end to end. T136 supplies drive-stale-fork.sh. Prove unreferenced with git grep AND /usr/bin/grep (P-33: the Bash-tool grep honours .gitignore, which contains .claude/worktrees/). SEQUENCE AFTER T115, T133 and T137, which all hold charges/bin/.",
+      "note": "Raised by the driver, local fire 20260821-080001, from T136 / T128."
+    },
+    {
+      "id": "T149",
+      "title": "Promote the HALF_UP/HALF_EVEN tie as a PARITY vector — the corpus has no vector carrying either answer",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "dependencies": [
+        "T147"
+      ],
+      "files_hint": [
+        ".softhouse/vectors/",
+        ".softhouse/capture/"
+      ],
+      "description": "THIS TASK CARRIES AN EXPLICIT PROMOTION MANDATE. T136's backlog item, and it is the cheapest real coverage this program can buy. Today REFUSE-02-half-even-ungraded.json makes HALF_EVEN a CONTRACT REFUSAL, so the graded corpus is not blind - but 0 of 46 vectors carry either tie answer, so nothing in the parity corpus would notice a port that inherited Fineract's stock HALF_EVEN default. That is precisely P-9, whose original instance took SOLVING for an exact tie to expose. The tie is already solved and measured live on both tenants: 1,162,502.50 x 0.018 = 20,925.045 -> HALF_UP 20925.05 (gerege), HALF_EVEN 20925.04 (default), request sha256 2a6621be..., and T136 established the two product rows differ in 89 columns by only `id`, so the mode is the sole cause. Capture from the live oracle only; synthesise nothing. Pair with an independent reviewer.",
+      "note": "Raised by the driver, local fire 20260821-080001, from T136 / T128."
     }
   ]
 }
