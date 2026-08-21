@@ -1,0 +1,53 @@
+T175 -- re-derived Python swallow-site census
+root: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a982e3fa98d08b3a4
+
+#    file                                                           line   clause                     body
+1    .softhouse/capture/audit-t44/analysis/t44_float_roundtrip.py   29     except Exception:          pass
+2    .softhouse/capture/charges/bin/t46-exacttext.py                108    except json.JSONDecodeError: continue
+3    .softhouse/capture/leapboundary/analysis/t55-analyse.py        352    except Exception:          continue
+4    .softhouse/capture/leapboundary/analysis/t55-analyse.py        167    except Exception:          pass
+5    .softhouse/capture/leapboundary/analysis/t55-prior-capture-assessment.py 103    except Exception:          pass
+6    .softhouse/capture/out/t35-byte-identity.py                    83     except Exception:          pass
+7    .softhouse/capture/pathb/provenance.py                         116    except Exception:          return None
+8    .softhouse/capture/pathb/provenance.py                         134    except OSError:            return None
+9    .softhouse/capture/pathb/provenance.py                         144    except Exception:          return None
+10   .softhouse/capture/pathb/provenance.py                         196    except Exception:          return {}
+11   .softhouse/capture/pathb/provenance.py                         171    except OSError:            continue
+12   .softhouse/capture/pathb/t149/prove-exit-trap.py               180    except (ProcessLookupError, PermissionError): pass
+13   .softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py 154    except (OSError, UnicodeDecodeError): continue          # already counted and named above; not a new silent 
+14   .softhouse/capture/pathb/t80/prove-f1-recovery.py              230    except ProcessLookupError: pass
+15   .softhouse/capture/t74-multiplesof/T82-guard-proofs/sweep-census.py 108    except (OSError, IsADirectoryError): continue
+16   .softhouse/capture/tierA-a2/census-json-float-siblings.py      108    except SyntaxError:        continue
+17   .softhouse/capture/tierA-a2/prove-cap-transport-red.py         113    except FileNotFoundError:  return None
+18   .softhouse/reviews/A2-10-probe/poison-d2-transport-modes.py    76     except OSError:            return
+19   .softhouse/reviews/A2-10-probe/poison-d2-transport-modes.py    83     except OSError:            pass
+20   .softhouse/reviews/A2-10-probe/poison-d3-symlink.py            76     except OSError:            pass
+21   .softhouse/reviews/T158-drive-followups.py                     79     except (OSError, FileNotFoundError): pass
+22   .softhouse/reviews/t34-probe/t34_sweep.py                      34     except ValueError:         continue
+23   .softhouse/reviews/t47-probe/t167-reaudit-guards.py            60     except Exception:          return "<unparse unavailable>"
+24   .softhouse/reviews/t47-probe/t167-redprobe.py                  247    except OSError:            pass
+25   .softhouse/reviews/t47-probe/t167-redprobe.py                  353    except OSError:            pass
+26   .softhouse/reviews/t47-probe/t167-redprobe.py                  217    except OSError:            pass
+27   .softhouse/reviews/t47-probe/t167-redprobe.py                  279    except OSError:            pass
+28   .softhouse/reviews/t47-probe/t167-sibling-census.py            72     except Exception:          return None
+29   .softhouse/reviews/t47-probe/t167-sibling-census.py            62     except Exception:          continue
+
+====================================================================================================
+DENOMINATORS (P-40)
+====================================================================================================
+  .py files walked                      : 351
+  .py files UNREADABLE (named below)    : 0
+  .py files UNPARSEABLE (named below)   : 0
+  except-handlers seen in total         : 85
+  ...of which SWALLOW SITES by the definition above : 29
+
+  WHAT THIS SWEEP STRUCTURALLY CANNOT FIND:
+    * a swallow written in a language other than Python (Java/bash/Go/SQL);
+    * a `try/finally` with no `except` that returns a default;
+    * a handler that RECORDS to a variable nobody ever prints -- it counts as
+      recording here, and is a weaker defect but still one;
+    * a swallow implemented WITHOUT an except clause at all: `dict.get(k, 0)`,
+      `re.match(...) or default`, `glob` matching nothing, a `continue` guarded by
+      an `if` -- the same vacuity with no exception in sight. This is the largest
+      blind spot and no AST net over `except` can close it;
+    * files skipped by directory name: .git, .gradle, .venv, __pycache__, build, node_modules, toolchain, venv
