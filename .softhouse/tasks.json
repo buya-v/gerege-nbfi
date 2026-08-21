@@ -683,7 +683,7 @@
    "role": "coder",
    "executor": "agent",
    "model": "opus",
-   "status": "in_progress",
+   "status": "done",
    "dependencies": [
     "T163",
     "T166"
@@ -694,7 +694,7 @@
    ],
    "description": "Raised by T163 against its OWN fix, and it is the P-45 shape this program keeps recording: a guard nothing invokes is not a guard. T163's request-body float guard and audit exist and are falsifiable, but no automatic path runs them, so the next rig can reintroduce the wire-side float round trip and every check stays green. T166 has just made conformance.sh's guarded root DERIVED for Go source; do the equivalent for the capture rigs -- wire the guard onto a path that actually executes, report what it inspected, and make zero inspected an ERROR (P-35). Also wire T169's check_no_narrow_catch.py, which has the identical problem. DRIVE IT RED (P-22): show the pre-wiring harness passes a planted wire-side float and a planted 35th narrow-catch rig, and the post-wiring one refuses both.",
    "attempts": 1,
-   "note": "dispatched local fire 20260821-054355, worktree-isolated"
+   "note": "DONE and MERGED, local fire 20260821-054355 -- BUT THE DRIVER FOUND TWO DEFECTS IN IT ON THE MERGE (P-49), fixed in e93afc9 and NOT in the branch: (A) the narrow-catch lint walked .claude/worktrees/, grading 43 other checkouts -- 2292 refusals, all of them outside this commit's content; (B) its census-presence check inverted itself on large output via grep -q + pipefail, reporting NO CENSUS LINE when the line was line 1. Both driven red and green by the driver. The wiring itself is sound and measured: pre-wiring harness PASSED a planted wire float and a planted narrow-catch rig; post-wiring refuses both."
   },
   {
    "id": "T174",
@@ -717,7 +717,7 @@
    "role": "coder",
    "executor": "agent",
    "model": "opus",
-   "status": "in_progress",
+   "status": "done",
    "dependencies": [
     "T169"
    ],
@@ -726,7 +726,7 @@
    ],
    "description": "Raised by T169's P-26 census, which found 11 Python swallow sites of which TWO are load-bearing on non-negotiables: t55-analyse.py:352 makes a money-decimal-places invariant pass VACUOUSLY, and t44_float_roundtrip.py:29 makes a float scan SKIP what it cannot parse. Both are the signature failure of this program -- a check that stops checking and says so nowhere -- sitting directly on the first non-negotiable in CLAUDE.md. T169 correctly did not fix them (T114's ruling; they produced committed evidence). Supersede with scratch copies, make every skip NAMED and counted with zero-inspected an ERROR (P-35), and REPORT honestly whether any committed claim resting on those two is now known to be unsupported -- report it, do not adjust it. DRIVE IT RED (P-22).",
    "attempts": 1,
-   "note": "dispatched local fire 20260821-054355, worktree-isolated"
+   "note": "DONE and MERGED, local fire 20260821-054355. Successors shipped as pure additions (20 files, 0 modifications); originals byte-identical. Found the t44 defect swallowed 18 REAL committed files, not just a planted one, and that t55's I6 misses 24 of 32 planted money breaches. Names T55.md:333-337 as a merged claim now unsupported -- reported, not adjusted. DISAGREES WITH T169 on its own census: 29 sites / 5 load-bearing, not 11 / 2."
   },
   {
    "id": "T176",
@@ -749,7 +749,7 @@
    "role": "analyst",
    "executor": "agent",
    "model": "opus",
-   "status": "in_progress",
+   "status": "done",
    "dependencies": [
     "T169"
    ],
@@ -759,7 +759,7 @@
    ],
    "description": "Raised by T169 and marked [UNVERIFIED] rather than guessed, which is why it is worth running. T159 observed (B=10001 minor, n=3000) CLEANLY -- it is the cell behind G-8's headline MNT 10.01 residual. T169 asked the same cell on the same pinned image and it THREW java.lang.StackOverflowError. So whether the oracle throws depends on something outside the cell's inputs -- JVM stack depth, thread, warmup, or container state are the obvious candidates and NONE is established. THIS RE-SCOPES ANY ATTEMPT TO BOUND THE THROWING REGION BEFORE ORACLE TIME IS SPENT ON IT: a probe that maps the boundary by asking each cell ONCE is measuring noise, not a boundary. Establish what the throw actually depends on, with repeated trials per cell and the trial count reported. This BLOCKS the sensible design of T116 and of G-8 option (a), because a vector promoted from a cell that throws intermittently is not reproducible.",
    "attempts": 1,
-   "note": "dispatched local fire 20260821-054355, worktree-isolated"
+   "note": "DONE and MERGED, local fire 20260821-054355. Answered: the StackOverflowError is a function of JVM STATE (warm-up/JIT/-Xss), not of the cell. 107 trials of the disputed cell across 75 fresh JVMs; cold start throws 33/33, attempt 5+ within a JVM never throws (step function, 7/7 JVMs, never reversing). ALSO CORRECTED THE DRIVER'S OWN BRIEF: the disputed cell is NOT the cell behind G-8's MNT 10.01 headline (that is B=1001, observed 15010.01 on 9/9 cold starts). Every errorStackDepthTotal:1024 in this program is HotSpot's recording cap, not a depth."
   },
   {
    "id": "T178",
@@ -767,7 +767,7 @@
    "role": "coder",
    "executor": "agent",
    "model": "opus",
-   "status": "in_progress",
+   "status": "done",
    "dependencies": [
     "T167"
    ],
@@ -776,7 +776,7 @@
    ],
    "description": "Raised by T167 as its P0 and REPRODUCED BY THE DRIVER. t47_edit_1.py, which T167 hardened, was one of NINE. DO t47_edit_4.py FIRST AND TREAT IT AS AN INCIDENT, NOT A CHORE: both its anchors still match the ratified DEC-1 today, so running it in the repo right now rewrites a ratified DEC-n in place, unauthorised, with no trap and no atomicity. The driver proved it on a scratch copy of the CURRENT ADR: exit 0, 'edit4: ok', sha256 49dc8923... -> cabc2aeb.... Amending a ratified DEC-n is a HARD USER GATE, so a script that can do it silently is a gate bypass wearing a probe's clothes. t47_edit_7.py targets the FROZEN contract.go and G-3 forbids even gofmt touching it. REUSE T167's shape rather than inventing a second one -- atomic mkstemp+fsync+os.replace with st_dev asserted, sha gates on target AND candidate, default-deny argv authorisation with no override that reaches a ratified artefact, and no bare `assert` (python3 -O strips them). DRIVE EACH RED (P-22) ON SCRATCH COPIES ONLY -- never against the real docs/adr/ or nexus/. Verify the real DEC-1 ADR is byte-identical to main at sha256 49dc8923... before AND after your work, and STOP AND REPORT if it ever is not.",
    "attempts": 1,
-   "note": "dispatched local fire 20260821-054355, worktree-isolated"
+   "note": "DONE and MERGED, local fire 20260821-054355. All eight remaining t47 rewriters hardened onto T167's shared shape; 144 red/green cases, 0 not-as-expected. Driver independently re-verified the incident (scratch copy of the current ADR) and the integrity anchors before and after. FOUND MORE THAN ITS BRIEF: the population is 27, not 9 -- raised as T187, driver-corroborated read-only."
   },
   {
    "id": "T179",
@@ -784,7 +784,7 @@
    "role": "coder",
    "executor": "agent",
    "model": "opus",
-   "status": "in_progress",
+   "status": "done",
    "dependencies": [
     "T167"
    ],
@@ -794,7 +794,7 @@
    ],
    "description": "The root cause behind T167, and P-48 in its purest form. T156's sweep classified an unguarded in-place rewriter of a RATIFIED DEC-n as GUARDED because its detection regex greps SOURCE TEXT for the word 'trap' -- and every match was that word inside PROSE STRINGS THE SCRIPT WRITES INTO THE ADR. The file was scored safe by the text it was writing. T158 measured 4 of 19 'guarded' hits carrying zero guards, so the true unguarded population is 115 not 111 -- re-derive that number yourself rather than inheriting it. Detect with a PARSER (ast for Python, a real shell parser or a documented refusal for sh), not a regex: a guard must be an actual try/finally/atexit/signal/trap NODE, not a byte sequence. T167 surfaced a SECOND engine bug worth closing with it: the same pattern text returns 3 matches in Python re and 0 in POSIX ERE because [^#\\n] means different things in each -- so a sweep's answer depends on which engine ran it. DRIVE IT RED (P-22) on both failure shapes: a file guarded only by the word in prose (must be REFUSED as unguarded) and a genuinely guarded file (must PASS -- not over-broad, per T169's lint precedent).",
    "attempts": 1,
-   "note": "dispatched local fire 20260821-054355, worktree-isolated"
+   "note": "DONE and MERGED, local fire 20260821-054355. Parser-based (ast) guard classifier replacing T156's regex; shell is a documented REFUSAL (250 .sh counted, never guessed). Engine divergence demonstrated: same bytes score 3 in Python re and 0 in grep -E/awk/sed. Reported that '115 not 111' is both stale AND unquotable in principle while half the corpus is unparsed. Not wired to anything automatic -- wiring spec in handoff, conformance.sh was held by T173."
   },
   {
    "id": "T180",
@@ -941,6 +941,25 @@
    ],
    "description": "Raised by T178 as its F-1 (out of its scope guard, correctly not actioned there) and INDEPENDENTLY RE-MEASURED BY THE DRIVER on main before registering: 21 of the 29 .py files under .softhouse/reviews/t41-probe/ open the RATIFIED DEC-1 at the RELATIVE path docs/adr/DEC-1-schedule-generator-adapter.md with io.open(P,'w') -- which is O_TRUNC, so the ADR is emptied before a byte of replacement is written -- and exactly ONE of the 29 contains any try/atexit/signal node at all. Four more (edit_go1..4.py) target the FROZEN contract.go, which G-3 forbids even gofmt from touching. TWO ARE LIVE AGAINST THE RATIFIED DEC-1 TODAY: the driver re-ran the anchor test read-only, WITHOUT EXECUTING EITHER SCRIPT, and edit2.py's anchor ('### 4.2 Dates: civil dates, one named zone, and a month-end rule anchored to the disbursement') and edit10.py's anchor ('### 4.6 Ordering: reproduce the oracle's emitted order') each occur EXACTLY ONCE in the current document -- which is the only precondition either script checks. Each takes no argv, so `python3 edit2.py` from the repo root silently amends a ratified DEC-n. THAT IS A HARD USER GATE BEING BYPASSED BY A SCRIPT THAT LOOKS LIKE A PROBE. REUSE T178's shared t178_guard.py rather than inventing a third shape -- atomic mkstemp+fsync+os.replace with st_dev asserted, sha256 content gates on target AND candidate (T178's measurement is that the CONTENT GATE is what actually closes the hole: neither 49dc8923... nor 0db73d4a... may be any script's BEFORE_SHA256), default-deny argv authorisation with no override reaching a ratified or frozen artefact, and no bare assert (python3 -O strips them). DRIVE EACH RED (P-22) ON SCRATCH COPIES ONLY, both halves (P-50): pre-fix mutates a scratch copy, post-fix REFUSES, post-fix still SUCCEEDS on its legitimate scratch target. NEVER execute any of these scripts from the repo root and NEVER against the real docs/adr/ or nexus/. Verify DEC-1 is byte-identical at sha256 49dc8923... and contract.go at 0db73d4a... before AND after, and STOP AND REPORT if either moves. Do the two LIVE ones FIRST. Also fold in T178's second finding: factoring the guard into a shared module made T167's sibling census score all eight hardened files as UNGUARDED, because that census reads guards from each file's OWN ast -- so whatever census you rely on must follow imports or be superseded, and say which you did. THREE INDEPENDENT COUNTS OF THIS POPULATION NOW DISAGREE AND YOU MAY INHERIT NONE OF THEM: T178 reported 21 targeting the ratified DEC-1 plus 4 targeting contract.go (25); the driver's read-only grep on main counted 21 files doing in-place truncating writes with a docs/adr/DEC-1 path and 8 files merely MENTIONING contract.go; T179's parser-based classifier, built independently in the same fire and not told about either, reported 22 (17 ADR, 5 contract.go). The counts differ because the counting RULES differ -- writes-to versus mentions, per-file versus per-site, and whether edit_go*.py's target resolves statically. STATE YOUR RULE FIRST, derive the number under it with a parser (P-48, never a regex), publish the per-file table so the three prior counts can be reconciled against yours cell by cell, and count what you skipped (P-40). A population number nobody can reproduce is exactly the defect T179 was sent to fix, one level up.",
    "note": "Raised by the driver from T178's F-1, local fire 20260821-054355, after re-measuring the live-reach claim read-only on main (21 DEC-1 writers, 1 file with any guard node, 2 anchors matching exactly once today). This is the same incident as T178, not a new class. Pair with a reviewer at dispatch. Corroborated independently by T179's parser classifier (as its own follow-up) at a different count -- see the description's reconciliation requirement."
+  },
+  {
+   "id": "T188",
+   "title": "Independent review of the DRIVER's own merge-defect fix to T173's guards (commit e93afc9) -- a driver fix is not exempt from review",
+   "role": "reviewer",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [
+    "T173"
+   ],
+   "files_hint": [
+    ".softhouse/capture/lib/check_no_narrow_catch.py",
+    ".softhouse/conformance.sh"
+   ],
+   "description": "The driver merged T173, found the merged harness RED on main (exit 2, NO probe line -- a HARD-guard failure, correctly not parked as an oracle outage), and fixed two defects ITSELF in e93afc9 rather than leaving main red. That fix has had no independent reviewer, and the driver is the layer this program has repeatedly caught being wrong (P-52, and the exit-127 and bad-probe errors in the last two RESUMEs). REVIEW IT. (A) The lint now excludes .claude/worktrees from its walk and RETURNS/PRINTS the exclusion. Re-derive: is the exclusion predicate right (it compares os.path.relpath(full, root) to the literal '.claude/worktrees' -- what happens when root is ITSELF inside a worktree, which is the normal case for every worker you and it dispatch? what about a nested .claude/worktrees deeper in the tree, or a symlinked worktree?). A guard that silently stops walking in a worker's own tree would be the same silent-scope defect one level down. (B) conformance.sh's census-presence check moved from grep -q to grep -c to survive EPIPE under pipefail. Re-derive whether any OTHER pipeline in conformance.sh has the same shape -- sweep for `| ... grep -q` and `| head` under set -o pipefail and report the count, since the driver fixed only the one that bit it (P-37: a starting point is not a sweep). DRIVE BOTH YOURSELF (P-22, P-50): plant a narrow-catch rig inside the commit's own tree AND inside a .claude/worktrees subtree, and show the first is refused and the second ignored; reproduce the EPIPE inversion at a size you determine yourself rather than inheriting the driver's 320,935 bytes. Verdict APPROVED / MICRO-FIX / REJECTED.",
+   "note": "Raised by the driver against its OWN fix, local fire 20260821-054355. The driver's first attempt to drive defect B red FAILED to reproduce at 3000 short lines (36 KB fits the 64 KB pipe buffer) and only reproduced at 320 KB -- so the size threshold is real and a reviewer inheriting the number rather than re-deriving it would learn nothing."
   }
  ],
  "cross_corroboration": {
