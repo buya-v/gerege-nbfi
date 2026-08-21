@@ -1,0 +1,34 @@
+{
+ "pairs": [
+  {
+   "pass2Id": "T117P2-R600p0-N104-B5",
+   "pass1Id": "T117-BS-R600p0-N104-B5",
+   "observedByteIdentical": true,
+   "inputFieldsCompared": 29,
+   "inputFieldsExcludedAndNamed": [
+    "tenantId"
+   ],
+   "inputDiffs": {},
+   "pass2TenantId": "t117p2_r600p0_n104_b5",
+   "pass1TenantId": "t117_bs_r600p0_n104_b5",
+   "tenantIdsDisjoint": true,
+   "status": "REPRODUCED"
+  },
+  {
+   "pass2Id": "T117P2-R600p0-N300-B3",
+   "pass1Id": "T117-BS-R600p0-N300-B3",
+   "observedByteIdentical": true,
+   "inputFieldsCompared": 29,
+   "inputFieldsExcludedAndNamed": [
+    "tenantId"
+   ],
+   "inputDiffs": {},
+   "pass2TenantId": "t117p2_r600p0_n300_b3",
+   "pass1TenantId": "t117_bs_r600p0_n300_b3",
+   "tenantIdsDisjoint": true,
+   "status": "REPRODUCED"
+  }
+ ],
+ "reproduced": 2,
+ "total": 2
+}
