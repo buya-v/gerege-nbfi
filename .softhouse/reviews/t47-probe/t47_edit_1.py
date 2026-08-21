@@ -1,15 +1,198 @@
 #!/usr/bin/env python3
 """T47 edit 1 - §4.1.1 step B: pin the packed rule, replace 'not yet captured'
-with the T46 non-separability proof.  Idempotent: refuses to run twice."""
+with the T46 non-separability proof.
+
+HISTORY.  This script performed the ADR edit committed as bf67a85 (19 Aug
+2026).  Both of its anchors were themselves rewritten by DEC-1 revisions 11
+and 12, so it can no longer apply to the ratified document at all, and its
+only remaining legitimate use is REPRODUCING that historical edit on a SCRATCH
+COPY of the revision-9 text.
+
+HARDENED BY T167 (21 Aug 2026) - P-22, P-48 rule 4.  As shipped by T47 this
+file ended in
+
+    io.open(DOC, "w", encoding="utf-8").write(s)
+
+with DOC hard-wired to docs/adr/DEC-1-schedule-generator-adapter.md - a
+RATIFIED DEC-n, which CLAUDE.md makes a hard `user` gate to amend.  There was
+no try, no finally, no except, no atexit, no signal handler and no
+authorisation of any kind.  `io.open(path, "w")` opens with O_TRUNC, so the
+document was EMPTIED before a single byte of replacement text was written, and
+any interruption from that instant until the last flush left it truncated or
+half-edited.  T156's guard sweep scored this file GUARDED because the word
+"trap" appears three times in it - all three inside prose strings this script
+WRITES INTO the ADR.  The file was scored safe by the text it was writing.
+
+Three things changed; THE EDIT ITSELF DID NOT.  Every anchor and every
+replacement string below is byte-for-byte T47's, and an authorised run is
+checked to reproduce bf67a85's ADR blob exactly (AFTER_SHA256).
+
+  1. ATOMIC WRITE.  The new text goes to a temp file created with
+     tempfile.mkstemp(dir=<the target's OWN directory>) - the same directory,
+     therefore the same filesystem by construction, and additionally asserted
+     by comparing st_dev - is fsync'd, and is then moved onto the target with
+     os.replace(), which is atomic on POSIX.  The target is never opened for
+     writing at all.  No trap is needed and none is used: an interruption
+     leaves either the whole old file or the whole new one and never a
+     mixture, INCLUDING under SIGKILL, which no handler could have caught.
+     The one `finally` below is ordinary temp-file cleanup on the catchable
+     paths, not a correctness guard - correctness comes from os.replace.
+  2. CONTENT GATE.  The target's sha256 must equal BEFORE_SHA256 or the run
+     refuses having written nothing, and the candidate text's sha256 must
+     equal AFTER_SHA256 before anything is moved into place.  A rewriter that
+     will edit whatever it finds is how a half-edited file gets edited again.
+  3. DEFAULT-DENY AUTHORISATION.  Nothing is hard-wired and there is no
+     default target.  A run must pass --target explicitly; the target must lie
+     OUTSIDE this repository working tree, must not sit under any directory
+     named `adr`, and must not be named like the ADR itself; and the run must
+     carry the literal --authorise token below.  The token is an argv word and
+     deliberately NOT an environment variable: an env var is exported once in
+     a wrapper, inherited by every child process and then forgotten, whereas
+     an argv token must be retyped at every single invocation, says in its own
+     text what it is authorising, and is recorded in the process table and in
+     the shell transcript.  There is deliberately NO override that reaches the
+     real ADR: amending a ratified DEC-n is a `user` gate, and a gate is not
+     crossed by a work-in-progress probe script from 19 August 2026.
+
+Exit codes: 0 ok / dry-run ok; 1 anchor mismatch; 2 refused (authorisation or
+target policy); 3 refused (unexpected target content); 4 refused (candidate
+content is not the historical result); 5 refused (temp file not on the
+target's filesystem); 6 post-write verification failed.
+"""
+import hashlib
 import io
 import os
 import sys
+import tempfile
+
+# The exact phrase that authorises a run.  Long, self-describing, argv-only.
+AUTHORISE_TOKEN = (
+    "I-AM-REPRODUCING-T47-EDIT-1-ON-A-SCRATCH-COPY-NOT-THE-RATIFIED-DEC-1")
+
+# sha256 of docs/adr/DEC-1-schedule-generator-adapter.md immediately BEFORE
+# and AFTER the commit this script produced.
+#   BEFORE = `git show bf67a85^:docs/adr/DEC-1-schedule-generator-adapter.md`
+#   AFTER  = `git show bf67a85 :docs/adr/DEC-1-schedule-generator-adapter.md`
+BEFORE_SHA256 = \
+    "32539607c6b43a23d17300b588c70f9fb643c9d554e280cb7a81a2e9847468f0"
+AFTER_SHA256 = \
+    "4f2387c821a01953503c77c2c70730bf72657c994491110c5ae3bc27a866dc37"
+
+ADR_BASENAME = "DEC-1-schedule-generator-adapter.md"
 
 W = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(
     os.path.abspath(__file__)))))
-DOC = os.path.join(W, "docs/adr/DEC-1-schedule-generator-adapter.md")
+REPO_ADR = os.path.join(W, "docs/adr", ADR_BASENAME)
 
-s = io.open(DOC, encoding="utf-8").read()
+USAGE = """\
+REFUSED.  This script rewrites a document in place and has no default target.
+
+  usage: t47_edit_1.py --target <path-to-a-SCRATCH-COPY> \\
+                       --authorise=%s \\
+                       [--dry-run]
+
+The edit it carries was applied to docs/adr/%s
+- a RATIFIED DEC-n.  CLAUDE.md: "Any change to a ratified DEC-n or the frozen
+adapter contract" is a `user` decision gate, and no agent may cross it.  This
+script therefore refuses to write anywhere inside the repository working tree,
+under any directory named `adr`, or to any file with the ADR's own name, and
+it offers no flag that lifts those refusals.
+""" % (AUTHORISE_TOKEN, ADR_BASENAME)
+
+
+def die(code, msg):
+    sys.stderr.write("edit1: REFUSED (%d): %s\n" % (code, msg))
+    sys.exit(code)
+
+
+def sha256_bytes(b):
+    return hashlib.sha256(b).hexdigest()
+
+
+def parse_args(argv):
+    target = None
+    authorised = False
+    dry_run = False
+    for a in argv:
+        if a.startswith("--target="):
+            target = a.split("=", 1)[1]
+        elif a == "--target":
+            die(2, "--target needs a value (use --target=PATH)")
+        elif a.startswith("--authorise="):
+            if a.split("=", 1)[1] != AUTHORISE_TOKEN:
+                die(2, "--authorise token does not match; nothing written")
+            authorised = True
+        elif a == "--dry-run":
+            dry_run = True
+        else:
+            die(2, "unknown argument %r" % a)
+    if target is None or not authorised:
+        sys.stderr.write(USAGE)
+        sys.exit(2)
+    return target, dry_run
+
+
+def resolve_target(path):
+    rp = os.path.realpath(path)
+    repo = os.path.realpath(W)
+    if rp == os.path.realpath(REPO_ADR):
+        die(2, "target IS the ratified DEC-1 ADR (%s); amending it is a "
+               "`user` gate and this script has no override" % rp)
+    if rp == repo or rp.startswith(repo + os.sep):
+        die(2, "target %s is inside the repository working tree %s; this "
+               "script writes only to scratch copies outside it" % (rp, repo))
+    if "adr" in rp.split(os.sep):
+        die(2, "target %s sits under a directory named `adr`" % rp)
+    if os.path.basename(rp) == ADR_BASENAME:
+        die(2, "target %s is named like the ratified ADR" % rp)
+    if not os.path.isfile(rp):
+        die(2, "target %s is not an existing regular file" % rp)
+    return rp
+
+
+def atomic_write(path, data):
+    """Write `data` over `path` atomically: temp file in the SAME directory,
+    fsync, os.replace.  os.replace is atomic on POSIX when source and
+    destination are on one filesystem; a temp file created in the target's own
+    directory is on that filesystem by construction, and st_dev is compared
+    below as well.  No signal handling is used or needed."""
+    d = os.path.dirname(path) or "."
+    fd, tmp = tempfile.mkstemp(dir=d, prefix=".t47-edit1-", suffix=".tmp")
+    try:
+        if os.stat(tmp).st_dev != os.stat(path).st_dev:
+            die(5, "temp file %s is not on the target's filesystem" % tmp)
+        os.fchmod(fd, os.stat(path).st_mode & 0o7777)
+        with os.fdopen(fd, "wb") as fh:
+            fh.write(data)
+            fh.flush()
+            os.fsync(fh.fileno())
+        os.replace(tmp, path)
+        tmp = None
+    finally:
+        if tmp is not None and os.path.exists(tmp):
+            os.unlink(tmp)
+    dfd = os.open(d, os.O_RDONLY)
+    try:
+        os.fsync(dfd)
+    finally:
+        os.close(dfd)
+
+
+TARGET, DRY_RUN = parse_args(sys.argv[1:])
+TARGET = resolve_target(TARGET)
+
+raw = io.open(TARGET, "rb").read()
+before = sha256_bytes(raw)
+if before != BEFORE_SHA256:
+    die(3, "target sha256 %s != expected pre-edit %s; this is not the "
+           "revision-9 document this edit applies to, and NOTHING was written"
+           % (before, BEFORE_SHA256))
+
+sys.stderr.write(
+    "edit1: AUTHORISED run on scratch target %s (sha256 %s)\n"
+    % (TARGET, before))
+
+s = raw.decode("utf-8")
 
 
 def rep(old, new):
@@ -63,7 +246,11 @@ old282 = (
     "step B pins the pair rather than either clause, and why §8 item **3f** grades "
     "the **pair** and not the special case alone.")
 
-assert s.count(old282) == 1, "edit1b anchor not found / not unique"
+# T167: was `assert`, which `python3 -O` strips - the anchor check would then
+# vanish and the replace below would silently do nothing.
+if s.count(old282) != 1:
+    die(1, "edit1b anchor not found / not unique (count=%d)"
+           % s.count(old282))
 
 new282 = (
     "**What that does NOT show — and revision 10 replaces revision 9's \"not yet "
@@ -203,5 +390,22 @@ new282 = (
 
 s = s.replace(old282, new282)
 
-io.open(DOC, "w", encoding="utf-8").write(s)
+# ---------------------------------------------------------------- T167 write
+new_bytes = s.encode("utf-8")
+after = sha256_bytes(new_bytes)
+if after != AFTER_SHA256:
+    die(4, "candidate content sha256 %s != the historical post-edit blob %s; "
+           "this run would NOT reproduce bf67a85, so nothing was written"
+           % (after, AFTER_SHA256))
+
+if DRY_RUN:
+    print("edit1: dry-run ok - %s -> %s, nothing written" % (before, after))
+    sys.exit(0)
+
+atomic_write(TARGET, new_bytes)
+
+landed = sha256_bytes(io.open(TARGET, "rb").read())
+if landed != AFTER_SHA256:
+    die(6, "post-write sha256 %s != %s" % (landed, AFTER_SHA256))
+sys.stderr.write("edit1: wrote %s atomically; sha256 %s\n" % (TARGET, landed))
 print("edit1: ok")
