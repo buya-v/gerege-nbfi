@@ -1523,3 +1523,45 @@ specifically in the file/redirection case, was never in the probe's search space
    — a grep binary that reports the same banner can behave differently across OS patch levels. Record the
    OS build next to the tool version whenever a reproduction depends on this kind of low-level parsing
    quirk.
+
+**P-56 — A GUARD'S SCOPE DEFECT IS INVISIBLE IN EVERY TREE EXCEPT THE ONE IT WILL RUN IN.** T173
+wired two guards, drove both red and green, and ran the full harness on a scratch merge — all green.
+The driver re-ran the *identical* harness on merged `main` and got **exit 2 with no probe line**: the
+narrow-catch lint was walking `.claude/worktrees/`, i.e. **43 other checkouts of this same repo**, one
+per worker ever dispatched. It graded **1954 `.java` files and refused on 2292 sites, all 2292 outside
+this commit's own content**. The scratch tree could not show this, because a scratch worktree has no
+`.claude/worktrees/` inside it — **the very property that makes a scratch tree clean is what hides a
+whole-repo walk's scope defect.** This is P-49 sharpened: it is not enough to test the merge, the
+merge must be tested **where the thing actually runs**.
+
+*Rules:*
+1. **A recursive walk rooted at the repo root must state what it EXCLUDES, and print it.** The fix
+   returns the exclusion list and prints it in the census line, so the graded root stays explicit
+   rather than merely narrower — T165's principle applied to a walk instead of a binary.
+2. **`.claude/worktrees/` is not part of your repository for grading purposes.** It is scratch space
+   holding historical checkouts. Any census that walks it re-reports every rig this program has ever
+   written, forever, and its count grows with the number of workers dispatched rather than with the
+   code.
+3. **Sanity-check a census against a known-clean measurement of the same tree.** 57 files / 20
+   directories versus 1954 / 622 is a 34× discrepancy that no reading of "whole repository" explains.
+
+**P-57 — THE MACHINERY THAT EXISTS TO CATCH A SILENT GUARD CAN INVERT ITSELF, AND IT INVERTS ON
+EXACTLY THE INPUTS THAT MATTER.** The same harness checks *presence before value* on its census line —
+correct discipline, the same the oracle probe follows. It was written as
+`printf '%s\n' "$out" | grep -q '^CENSUS '`. The census line is the **first** line the guard prints,
+so `grep -q` matched and exited immediately, the upstream `printf` died with **EPIPE**, and
+`set -o pipefail` (conformance.sh:396) made the pipeline non-zero — **inverting the test into "printed
+NO CENSUS LINE" when the line was line 1.** It fires only when the output is large enough that
+`printf` has not finished writing: harmless at 36 KB, wrong at 320 KB. So the P-35 machinery failed
+**precisely when a guard had a lot to say**, which is when it is least affordable.
+
+*Rules:*
+1. **This is the "never pipe a build into `head`" hazard (reading the wrong process's exit status)
+   turned against a guard.** Under `pipefail`, any early-exiting consumer — `grep -q`, `head`, `sed q`
+   — poisons the pipeline status. Use `grep -c` (consumes all input) and test the count.
+2. **Size the red probe from the real artefact.** The driver's first reproduction attempt used 3000
+   short lines, **did not reproduce**, and would have "proved" the bug absent — 36 KB fits inside the
+   64 KB pipe buffer. Recorded because *the negative result is what sized the real test.*
+3. **A presence check must itself be driven red both ways**: present-but-huge must read PRESENT, and
+   genuinely absent must still be an ERROR. Fixing only the first direction converts a false alarm
+   into a silent pass.
