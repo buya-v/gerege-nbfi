@@ -189,3 +189,19 @@ The same reasoning as P-4 applies, one level up:
 **Then close tier 0 and move to Tier A (GL/accounting).** Tier 0's purpose was to prove the pipeline end-to-end on the smallest real slice. It has: oracle pinned, two capture paths, harness green, contract ratified, port passing. Holding it open for prose polish while 16 contexts and ~533k LOC wait is the wrong trade.
 
 **Rationale.** The reviews earned their cost when they caught precision-vs-scale, the two silently-dropped inputs, and `n`'s definition — defects that change money. They stop earning it when they recurse on their own output. The vectors are the acceptance test; anything a vector already grades does not need a fifth prose draft to be true.
+
+---
+
+## P-6 · Freeze a gate write-up once its measurements reproduce
+
+**Decision (21 Aug 2026, standing until reversed).** P-5 stopped prose churn on *tasks* but named the wrong unit, so it did not reach *gate write-ups*. G-8 has now consumed ten tasks — T75, T83, T84, T100, T101, T112, T114, T122, T129, T140 — and every review says the same thing: the measurements reproduce. T114 "re-derived every load-bearing number in this section from scratch and all of it reproduced"; T129 rebuilt a 117-row scope audit and found "6 fail, every failure a scope or disposition statement and the measurements perfect". One fix even introduced a false sentence that the next task had to remove.
+
+**Rule.** A gate write-up is FROZEN as soon as one independent review has re-derived its load-bearing numbers and they reproduce. After that:
+
+- **Sentence-level corrections become obligations**, appended as a dated `> CORRECTION:` line under the gate, with the reviewer's own wording taken verbatim. No new task, no re-review, no rewrite of the section.
+- **A new task is justified only by a new MEASUREMENT** — a different cell set, a different family, a bound established or refuted. Measuring is work; re-phrasing is not.
+- **The measurement, not the prose, is the artefact.** If a sentence and a number disagree, the number wins and the sentence gets a correction line.
+
+**Exemption, same as P-4/P-5:** anything that changes a number the oracle would emit is not prose and blocks normally.
+
+**Applies to G-8 immediately.** Its measurements have reproduced twice under independent review. It is frozen: MNT 10.01 at n=3000, not a bound, two phenomena, family-B exemption clean at 761 cells / 0 diffs. Further wording issues are correction lines. The gate's *remedy* remains what it always was — a DEC-n amendment, and therefore a hard `user` gate for Buyan.
