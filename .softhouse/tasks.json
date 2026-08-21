@@ -2447,7 +2447,7 @@
     {
       "id": "T119",
       "title": "INDEPENDENT review of T110 — the duplicate-case_id refusal",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -2458,7 +2458,7 @@
         ".softhouse/reviews/"
       ],
       "description": "Paired reviewer for T110. Re-establish the pre-fix 43/5623 green from main's bytes, re-run all four mutations incl. the decisive warn-only-keep-grading leg, and verify the byte-identical baseline by cmp. THE CONSEQUENTIAL JUDGEMENT is the channel choice: T110 routes the refusal through FatalReasons -> EXIT 2, which is ALSO this pipeline's 'oracle is unusable' signal, and the program driver PARKS vector work on exit 2. Rule on whether that conflation is acceptable. Then rule on the shared root T110 found - conformance.sh's guard_no_float_in_vectors enumerates recursively while LoadStore is one level deep, and NOTHING COMPARES THE COUNTS - and answer the blast-radius question T110 left UNVERIFIED: could any historical run in this repo's history have been taken on a store carrying one of these defects?",
-      "note": "Raised and dispatched by the driver, local fire 20260821-080001."
+      "note": "Raised and dispatched by the driver, local fire 20260821-080001. || local fire 20260821-080001: DONE on softhouse/T119-review-t110 (5c8d193, 68bb3b1). VERDICT MICRO-FIX - 'T110 should be merged'. EVERY load-bearing claim reproduced from git-archive bytes with its OWN binaries: pre-fix 43/5623/PASS/exit 0 with stderr 0 bytes and P-00 printed twice at report lines 10-11; M3 the decisive mutation fails at store_integrity_test.go:148 (the COUNTS assertion) not :145 (exit code), so warn-only gets exit 2 RIGHT and is caught anyway on '48 results, 5623 graded cells, 43 parity passes' - T110's central claim holds; byte-identical baseline by cmp; M1/M2/M4; the RED leg on main (control PASSES, four FAIL); no t.Skip; and the whole E2-E6 census family incl. NFC/NFD at 44/5670 rendering as identical glyphs. IT EXPLAINED WHY T110's BYTE-IDENTITY COMPARISON WAS SOUND despite T105's absolute-store-path defect: both binaries were pointed at ONE scratch store, holding the only path-dependent field constant; the repo root is never printed. FINDINGS: F-T119-1 (P2, vector.go:908) 'store-wide' IS FALSE UNDER -context - LoadStore filters at :830-832 BEFORE collecting, so a cross-context duplicate with -context=loanschedule gives exit 0, 42 parity, NO REFUSAL. F-T119-2 (P3) mutation M5: deleting the outer sort.Slice ENTIRELY leaves the 50-iteration determinism sub-test PASSING, so the stated reason for its position is not the operative one (sortedKeys:924 / sort.Strings:929 are) - P-11. F-T119-3 (P3) vectors/README.md:424 still documents the REJECTED (context, case_id) rule that M4 is red against - P-21. ALSO CLOSED THREE OF T110's [UNVERIFIED] ITEMS: hard links, and duplicates that DISAGREE in content (main grades a different claim as the same case at 43/5623 exit 0). BLAST RADIUS: **NO** - all 15 commits touching .softhouse/vectors audited from their git trees against five defects, EVERY ONE CLEAN, with 'loadable files == distinct case_ids' on all 15 as a check not an assertion; every '43 parity' figure in the record is T104's or T110's labelled demonstration store. THE PROGRAM'S HEADLINE COVERAGE NUMBERS ARE NOT RETROACTIVELY CONTAMINATED. CENSUS RULING FOR T120: yes, but Go-side INSIDE LoadStore (a shell census can only check the shell's view and cannot see through a symlinked context dir), and NOT naive equal-counts - the two enumerations already disagree on the clean store (find 49, LoadStore 47: PIN.json and capabilities.json at the root). Charset [A-Za-z0-9._-] sound: 47 ids, 0 outside, 0 non-ASCII, clean across all 15 historical commits. IT ALSO FOUND A DEFECT IN THE DRIVER'S OWN SKILL FILE - see T124."
     },
     {
       "id": "T120",
@@ -2492,6 +2492,39 @@
       ],
       "description": "Applies T114's F-T114-1 (the sub-ulp claim is false on 4 of 29 family-B cells - exact-rational gaps of 2.43/1.62/1.08 ulp at n=104,105,106, so the explanation fails at the region's LOWER BOUNDARY where family B's cause will be decided; re-derive in exact rational arithmetic, never float - P-25), F-T114-2 (the F-4 fix itself introduced an unscoped claim; T84's largest n is 600 not 200), and F-T114-4 (restore the lost order-and-identity independence result: T84's 12 boundary cells re-asked with different tenant ids and reversed order, 12/12 identical). Records F-T114-5/6 without editing the executed probe sources. RESOLVES THE EVIL MERGE (F-T114-3): the branch must end with tasks.json EXACTLY as on current main. Verifies on a scratch merge into current main in a throwaway clone (P-24).",
       "note": "Raised and dispatched by the driver, local fire 20260821-080001, from T114's MICRO-FIX verdict."
+    },
+    {
+      "id": "T123",
+      "title": "Apply T119's findings to T110 — the cross-context duplicate hole",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [
+        "T119"
+      ],
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/conformance/",
+        ".softhouse/vectors/README.md"
+      ],
+      "description": "Applies F-T119-1 (the refusal is documented store-wide and is NOT: under -context, LoadStore filters at :830-832 BEFORE collecting, so a cross-context duplicate gives exit 0 / 42 parity / no refusal - prefer making it genuinely store-wide, since the report prints CASE without CONTEXT), F-T119-2 (M5: deleting the outer sort.Slice leaves the determinism test PASSING, so its stated reason is not the operative one - P-11; either extend the test until M5 goes red or stop claiming coverage), and F-T119-3 (vectors/README.md:424 documents the REJECTED (context, case_id) rule). Carries T119's two corrections to the T120 census design forward.",
+      "note": "Raised and dispatched by the driver, local fire 20260821-080001, from T119's MICRO-FIX verdict."
+    },
+    {
+      "id": "T124",
+      "title": "The driver's own skill file read a REFUSAL as an OUTAGE — exit 2 is ambiguous",
+      "status": "done",
+      "executor": "orchestrator",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [
+        "T119"
+      ],
+      "files_hint": [
+        ".claude/skills/softhouse-program/SKILL.md"
+      ],
+      "description": "Raised by T119 against .claude/skills/softhouse-program/SKILL.md:108-109 while reviewing T110. The file said 'Only exit 2 is the oracle-is-down stop condition'. Since T110, exit 2 carries TWO meanings: the oracle is unreachable, OR the corpus is unusable (ZERO VECTORS FOUND, an inadmissible vector, a duplicate case_id). A driver following the old rule would park all vector work with reason=oracle_unreachable over a duplicate file while the oracle sat healthy - the EXACT defect class T81 closed at exit 3, reappearing one level up in the skill that grades for it: a REFUSAL read as an OUTAGE. The disambiguator already exists and prints unconditionally before the binary runs (conformance.sh:296, 'probe = up|down'). Park condition is now 'exit 2 AND probe != up', both of them.",
+      "note": "Raised by T119, local fire 20260821-080001. FIXED BY THE DRIVER THE SAME FIRE: new table row for 'Exit 2 with probe = up' (task failure, park nothing), the false 'Only exit 2...' sentence deleted, and a standing blockquote after the STEP 4 table: read the probe line, never the exit code alone. Restatement sweep done across all three softhouse SKILL.md files (P-26): softhouse-uat:54 says only 'if the oracle is down, conformance reports exit 2, not a false PASS', which is TRUE and does not assert the converse - left alone. ENGINEERING, no RESERVED content, driver-decidable under CLAUDE.md 'Answering gates'. Buyan may reverse."
     }
   ]
 }
