@@ -148,10 +148,29 @@
 #   the loop body never runs, and plain, healthy bash is REFUSED. This probe uses
 #   a single `read` and grades the VARIABLE, not `read`'s status, so it is immune
 #   to that either way — but the newline is there so nothing downstream inherits
-#   the trap. `IFS=` stops a hostile inherited IFS from splitting the token away
+#   the trap. `IFS=` is there so that no inherited IFS can reach the `read` at all
 #   [VERIFIED: T97 — `IFS=oc`, `IFS=' '` and `IFS=$'\n'` in the environment, all
-#   ADMITTED; T113 re-measured `IFS=oc` and `IFS=' '` on 3.2.57 and 5.3.9], and
-#   `builtin` pins `eval`/`read`/`printf` to bash's own, so an exported function
+#   ADMITTED; T113 re-measured `IFS=oc`, `IFS=' '`, `IFS=e` and `env -i` on
+#   3.2.57 and on 5.3.9, all ADMITTED].
+#   BUT THE PREFIX IS BELT-AND-BRACES, NOT A MEASURED SAVE, and this file used to
+#   imply otherwise. T106 wrote that `IFS=e` "would have been a false refusal
+#   without the prefix, so the prefix earns its place", reasoning that the token
+#   `conformance-psub-live` contains an `e`. T113 tested that by DELETING the
+#   prefix and it is not so: `read` with a SINGLE variable assigns the whole line
+#   and strips only leading/trailing IFS *whitespace*, so a non-whitespace
+#   delimiter — even one occurring in the token, even as its first or last
+#   character — changes nothing. Prefix removed, the probe still returned the
+#   token intact under IFS = `oc`, `' '`, `e`, `c`, `-`, `l`, `v`, `i` and
+#   newline, and the whole harness was still ADMITTED
+#   [VERIFIED: T113, bash 3.2.57 and bash 5.3.9, both directions measured].
+#   The prefix stays: it costs nothing, and it is the difference between "cannot
+#   break today" and "cannot break if someone later reads two variables or puts
+#   whitespace in the token". It is documented as insurance, because a guard that
+#   is credited with a save it never made is the P-22 failure in miniature. And
+#   note this is a NORMALISATION, not a defence: `IFS` is not a command word, but
+#   nothing here stops a hostile environment either — see below.
+#
+#   Meanwhile `builtin` pins `eval`/`read`/`printf` to bash's own, so an exported function
 #   of one of those names cannot quietly take their place. `builtin eval` is not
 #   decoration: with a bare `eval`, an exported `eval()` function made bash
 #   5.2.37 refuse the harness, and that WOULD have been a false refusal

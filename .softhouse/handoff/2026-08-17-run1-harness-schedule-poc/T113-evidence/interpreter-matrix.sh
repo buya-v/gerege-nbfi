@@ -110,7 +110,16 @@ env_row "CONFORMANCE_PSUB_TOKEN=zzz"                   "CONFORMANCE_PSUB_TOKEN=z
 env_row "both pre-set to zzz"                          "CONFORMANCE_PSUB_TOKEN=zzz" "_conformance_psub_line=zzz"
 env_row "IFS=oc"                                       "IFS=oc"
 env_row "IFS=\$' '"                                    "IFS= "
+# IFS=e gets its own row because the token 'conformance-psub-live' CONTAINS an
+# 'e'. T106 named it as the case the probe's `IFS=` prefix saves the harness from.
+# T113 measured that and it is NOT so — see section [6], which removes the prefix
+# and shows the shell is admitted anyway. The row stays because it is a real
+# environment worth asserting on; the claim about WHY it passes has been withdrawn.
+env_row "IFS=e (the token contains 'e')"               "IFS=e"
 env_row "BASH_ENV=/dev/null"                           "BASH_ENV=/dev/null"
+# An empty environment cannot be an excuse for a refusal either.
+if [ "$hostbash_cap" = yes ]; then want "env -i (empty environment)" 0 env -i /bin/bash "$HARNESS" --help
+else                                 want "env -i (empty environment)" 3 env -i /bin/bash "$HARNESS" --help; fi
 echo
 
 echo "[4] POSIXLY_CORRECT — a capability change, so the decision must move with it"
@@ -124,6 +133,34 @@ echo "[5] bash -r — the one refusal that is NOT a capability verdict"
 # correct, and it is the false ADMISSION T97 closed.
 want "bash -r"           3 /bin/bash -r "$HARNESS"
 want "bash --posix -r"   3 /bin/bash --posix -r "$HARNESS"
+echo
+
+echo "[6] the probe's \`IFS=\` prefix is INSURANCE, not a measured save (T113 finding)"
+# T106 recorded, while approving T97: "IFS=e is worth naming: e occurs in the
+# token, so without the IFS= prefix in the probe this would have been a false
+# refusal — that prefix earns its place." That is a derivation, not a measurement,
+# and it does not survive one. `read` with a SINGLE variable assigns the whole
+# line and strips only leading/trailing IFS *whitespace*; a non-whitespace
+# delimiter, even one occurring in the token, is not removed. This section deletes
+# the prefix from a copy of the harness and requires the decision NOT to move.
+# Keeping the prefix is still right — it costs nothing and it survives a future
+# edit that reads two variables or puts whitespace in the token — but the file
+# must not be credited with a save it never made (P-22).
+NOIFS="$REPO_ROOT/.softhouse/.T113-matrix-noifs.sh"
+trap 'rm -f "$NOIFS"' EXIT
+sed 's|^      IFS= builtin read -r _conformance_psub_line|      builtin read -r _conformance_psub_line|' \
+  "$HARNESS" > "$NOIFS"
+if cmp -s "$HARNESS" "$NOIFS"; then
+  bad "IFS= prefix mutation" "the probe's \`IFS= builtin read\` line has moved — section [6] is inert"
+else
+  ok "IFS= prefix removed from a copy of the harness"
+  noifs_exp=3
+  [ "$hostbash_cap" = yes ] && noifs_exp=0
+  for v in oc e c ' ' '-'; do
+    want "no IFS= prefix, IFS=[$v]" "$noifs_exp" env IFS="$v" /bin/bash "$NOIFS" --help
+  done
+fi
+rm -f "$NOIFS"
 echo
 
 echo "======================================================================="
