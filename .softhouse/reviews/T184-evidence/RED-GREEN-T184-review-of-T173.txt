@@ -1,0 +1,385 @@
+T184 — drive transcript for the independent review of T173.
+Every run below is the FULL 'bash .softhouse/conformance.sh' on merged main's bytes in an
+isolated worktree (git diff main -- conformance.sh capture/lib/ was EMPTY). For each run the
+GUARD BLOCK (the first lines of output) and the VERDICT line are reproduced verbatim; the
+vector table in between is identical across the passing runs and is elided for readability.
+The driver scripts that produced every run are committed beside this file.
+
+=======================================================================
+RUN 1 — baseline, clean tree
+  file: t184-run1.txt   probe lines present: 1
+=======================================================================
+conformance: no-float guard — inspected 50 .json files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/vectors
+conformance: no-float guard — inspected 5 Go packages / 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module)
+conformance: gofmt guard — inspected 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module; contract.go exempt, gate G-3)
+conformance: wire-float round-trip guard — selftest OK, 5 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS wire-float round-trip — inspected 320 request bodies / 3976 numeric tokens across 6 capture rigs / 10 req directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/capture (recursive, whole capture tree)
+conformance: CENSUS float-shaped tokens PRESENT 278 (rates, charge percentages, tie probes — see the module docstring), ALTERED by a binary-double round trip 0
+conformance: narrow-catch guard — selftest OK, 4 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS narrow-catch — inspected 57 .java files across 20 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8 (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+
+=== GOLDEN-VECTOR CONFORMANCE — Fineract reference oracle vs Go module ===
+    store           /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/vectors
+    implementation  loanschedule-go
+    oracle probe    UP
+
+CASE                         CLASS            SEAM        OUTCOME       CELLS UNGRADED  REASON
+----------------------------------------------------------------------------------------------------------------------
+SELFTEST-01-two-period-ze... selftest         none        PASS             21        0  SELF-TEST FIXTURE — EXCLUDED FROM THE P...
+   … [vector table elided] …
+VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+
+=======================================================================
+RUN 2 — RED wire-float: probe body carries 1200000.00
+  file: t184-red-float.txt   probe lines present: 0
+=======================================================================
+conformance: no-float guard — inspected 50 .json files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/vectors
+conformance: no-float guard — inspected 5 Go packages / 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module)
+conformance: gofmt guard — inspected 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module; contract.go exempt, gate G-3)
+conformance: wire-float round-trip guard — selftest OK, 5 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS wire-float round-trip — inspected 321 request bodies / 3978 numeric tokens across 7 capture rigs / 11 req directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/capture (recursive, whole capture tree)
+conformance: CENSUS float-shaped tokens PRESENT 279 (rates, charge percentages, tie probes — see the module docstring), ALTERED by a binary-double round trip 1
+conformance: the wire-float round-trip guard REFUSED:
+REFUSED — a numeric token in a capture request body is NOT byte-preserved under a binary-double round trip. This is the P-25 defect T163 found in resolve7.py: the money that reaches the reference oracle is not the money that was written.
+  .softhouse/capture/t184-probe/req/probe-body.json:4  1200000.00  ->  1200000.0
+Fix: never re-serialise a request body through json.dumps of a parsed number. Splice the placeholder into the template bytes (.softhouse/capture/tierA-a2/resolve8.py is the worked example).
+conformance: narrow-catch guard — selftest OK, 4 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS narrow-catch — inspected 57 .java files across 20 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8 (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+   … [vector table elided] …
+conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+
+=======================================================================
+RUN 3 — GREEN wire-float: same rig, integer minor units
+  file: t184-green-float.txt   probe lines present: 1
+=======================================================================
+conformance: no-float guard — inspected 50 .json files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/vectors
+conformance: no-float guard — inspected 5 Go packages / 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module)
+conformance: gofmt guard — inspected 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module; contract.go exempt, gate G-3)
+conformance: wire-float round-trip guard — selftest OK, 5 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS wire-float round-trip — inspected 321 request bodies / 3978 numeric tokens across 7 capture rigs / 11 req directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/capture (recursive, whole capture tree)
+conformance: CENSUS float-shaped tokens PRESENT 278 (rates, charge percentages, tie probes — see the module docstring), ALTERED by a binary-double round trip 0
+conformance: narrow-catch guard — selftest OK, 4 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS narrow-catch — inspected 57 .java files across 20 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8 (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+
+=== GOLDEN-VECTOR CONFORMANCE — Fineract reference oracle vs Go module ===
+    store           /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/vectors
+    implementation  loanschedule-go
+    oracle probe    UP
+
+CASE                         CLASS            SEAM        OUTCOME       CELLS UNGRADED  REASON
+----------------------------------------------------------------------------------------------------------------------
+SELFTEST-01-two-period-ze... selftest         none        PASS             21        0  SELF-TEST FIXTURE — EXCLUDED FROM THE P...
+   … [vector table elided] …
+VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+
+=======================================================================
+RUN 4 — RED narrow-catch: new rig narrows the seam handler
+  file: t184-red-catch.txt   probe lines present: 0
+=======================================================================
+conformance: no-float guard — inspected 50 .json files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/vectors
+conformance: no-float guard — inspected 5 Go packages / 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module)
+conformance: gofmt guard — inspected 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module; contract.go exempt, gate G-3)
+conformance: wire-float round-trip guard — selftest OK, 5 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS wire-float round-trip — inspected 321 request bodies / 3978 numeric tokens across 7 capture rigs / 11 req directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/capture (recursive, whole capture tree)
+conformance: CENSUS float-shaped tokens PRESENT 278 (rates, charge percentages, tie probes — see the module docstring), ALTERED by a binary-double round trip 0
+conformance: narrow-catch guard — selftest OK, 4 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS narrow-catch — inspected 58 .java files across 21 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8 (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+conformance: the narrow-catch guard REFUSED:
+narrow load-bearing catch sites: 68 total, 67 in FROZEN files (34 files), 1 NEW
+REFUSED — a NEW capture rig narrows its seam handler. java.lang.Error is exactly what the reference oracle throws.
+  .softhouse/capture/t184-probe/src/CaptureT184Probe.java:6  } catch (RuntimeException e) {
+Fix: use ThrewOutcome (capture/lib/ThrewOutcome.java). Mechanical patch: capture/src/t169-red/build_harness_t169.py.
+conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+   … [vector table elided] …
+conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+
+=======================================================================
+RUN 5 — GREEN G1: same rig, seam handler widened to Throwable
+  file: t184-green-catch1.txt   probe lines present: 1
+=======================================================================
+conformance: no-float guard — inspected 50 .json files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/vectors
+conformance: no-float guard — inspected 5 Go packages / 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module)
+conformance: gofmt guard — inspected 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module; contract.go exempt, gate G-3)
+conformance: wire-float round-trip guard — selftest OK, 5 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS wire-float round-trip — inspected 321 request bodies / 3978 numeric tokens across 7 capture rigs / 11 req directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/capture (recursive, whole capture tree)
+conformance: CENSUS float-shaped tokens PRESENT 278 (rates, charge percentages, tie probes — see the module docstring), ALTERED by a binary-double round trip 0
+conformance: narrow-catch guard — selftest OK, 4 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS narrow-catch — inspected 58 .java files across 21 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8 (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+
+=== GOLDEN-VECTOR CONFORMANCE — Fineract reference oracle vs Go module ===
+    store           /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/vectors
+    implementation  loanschedule-go
+    oracle probe    UP
+
+CASE                         CLASS            SEAM        OUTCOME       CELLS UNGRADED  REASON
+----------------------------------------------------------------------------------------------------------------------
+SELFTEST-01-two-period-ze... selftest         none        PASS             21        0  SELF-TEST FIXTURE — EXCLUDED FROM THE P...
+   … [vector table elided] …
+VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+
+=======================================================================
+RUN 6 — GREEN G2 (P-52 control): narrow catch AWAY from the seam
+  file: t184-green-catch2.txt   probe lines present: 1
+=======================================================================
+conformance: no-float guard — inspected 50 .json files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/vectors
+conformance: no-float guard — inspected 5 Go packages / 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module)
+conformance: gofmt guard — inspected 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module; contract.go exempt, gate G-3)
+conformance: wire-float round-trip guard — selftest OK, 5 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS wire-float round-trip — inspected 321 request bodies / 3978 numeric tokens across 7 capture rigs / 11 req directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/capture (recursive, whole capture tree)
+conformance: CENSUS float-shaped tokens PRESENT 278 (rates, charge percentages, tie probes — see the module docstring), ALTERED by a binary-double round trip 0
+conformance: narrow-catch guard — selftest OK, 4 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS narrow-catch — inspected 58 .java files across 21 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8 (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+
+=== GOLDEN-VECTOR CONFORMANCE — Fineract reference oracle vs Go module ===
+    store           /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/vectors
+    implementation  loanschedule-go
+    oracle probe    UP
+
+CASE                         CLASS            SEAM        OUTCOME       CELLS UNGRADED  REASON
+----------------------------------------------------------------------------------------------------------------------
+SELFTEST-01-two-period-ze... selftest         none        PASS             21        0  SELF-TEST FIXTURE — EXCLUDED FROM THE P...
+   … [vector table elided] …
+VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+
+=======================================================================
+RUN 7 — V1b: ZERO request bodies (capture subtrees hidden, lib/ kept)
+  file: t184-v1b.txt   probe lines present: 0
+=======================================================================
+conformance: no-float guard — inspected 50 .json files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/vectors
+conformance: no-float guard — inspected 5 Go packages / 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module)
+conformance: gofmt guard — inspected 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module; contract.go exempt, gate G-3)
+conformance: wire-float round-trip guard — selftest OK, 5 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS wire-float round-trip — inspected 0 request bodies / 0 numeric tokens across 0 capture rigs / 0 req directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/capture (recursive, whole capture tree)
+conformance: CENSUS float-shaped tokens PRESENT 0 (rates, charge percentages, tie probes — see the module docstring), ALTERED by a binary-double round trip 0
+conformance: the wire-float round-trip guard REFUSED:
+REFUSED — INSPECTED 0 BODIES / 0 RIGS / 0 REQ DIRECTORIES under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/capture.
+A guard that inspects nothing passes everything. This is an ERROR, not a pass (P-35).
+conformance: narrow-catch guard — selftest OK, 4 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS narrow-catch — inspected 13 .java files across 5 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8 (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+   … [vector table elided] …
+conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+
+=======================================================================
+RUN 8 — V2: the guard SCRIPT is deleted
+  file: t184-v2.txt   probe lines present: 0
+=======================================================================
+conformance: no-float guard — inspected 50 .json files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/vectors
+conformance: no-float guard — inspected 5 Go packages / 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module)
+conformance: gofmt guard — inspected 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module; contract.go exempt, gate G-3)
+conformance: the wire-float round-trip guard is MISSING: expected /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/capture/lib/check_wire_float_roundtrip.py
+conformance: a guard that is not there cannot pass. This is an ERROR, not a pass.
+conformance: narrow-catch guard — selftest OK, 4 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS narrow-catch — inspected 57 .java files across 20 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8 (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+   … [vector table elided] …
+conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+
+=======================================================================
+RUN 9 — V3: the guard is a SILENT stub (exit 0, prints nothing)
+  file: t184-v3.txt   probe lines present: 0
+=======================================================================
+conformance: no-float guard — inspected 50 .json files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/vectors
+conformance: no-float guard — inspected 5 Go packages / 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module)
+conformance: gofmt guard — inspected 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module; contract.go exempt, gate G-3)
+conformance: wire-float round-trip guard — selftest OK, 1 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: the wire-float round-trip guard printed NO CENSUS LINE (exit 0).
+conformance: without it there is no evidence anything was inspected. ERROR, not a pass.
+
+conformance: narrow-catch guard — selftest OK, 4 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS narrow-catch — inspected 57 .java files across 20 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8 (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+   … [vector table elided] …
+conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+
+=======================================================================
+RUN 10 — V4: P-57 regression — 440,133 bytes, CENSUS on line 1
+  file: t184-v4.txt   probe lines present: 1
+=======================================================================
+conformance: no-float guard — inspected 50 .json files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/vectors
+conformance: no-float guard — inspected 5 Go packages / 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module)
+conformance: gofmt guard — inspected 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module; contract.go exempt, gate G-3)
+conformance: wire-float round-trip guard — selftest OK, 1 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS wire-float round-trip — stub, inspected 320 request bodies / 3976 numeric tokens across 6 capture rigs / 10 req directories
+conformance: narrow-catch guard — selftest OK, 4 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS narrow-catch — inspected 57 .java files across 20 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8 (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+
+=== GOLDEN-VECTOR CONFORMANCE — Fineract reference oracle vs Go module ===
+    store           /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/vectors
+    implementation  loanschedule-go
+    oracle probe    UP
+
+CASE                         CLASS            SEAM        OUTCOME       CELLS UNGRADED  REASON
+----------------------------------------------------------------------------------------------------------------------
+SELFTEST-01-two-period-ze... selftest         none        PASS             21        0  SELF-TEST FIXTURE — EXCLUDED FROM THE P...
+P-00                         parity           path_a_e... PASS             47        2  
+   … [vector table elided] …
+VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+
+=======================================================================
+RUN 11 — V5: stub census reporting 0/0/0, exit 0 — FU-T184-1
+  file: t184-v5.txt   probe lines present: 1
+=======================================================================
+conformance: no-float guard — inspected 50 .json files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/vectors
+conformance: no-float guard — inspected 5 Go packages / 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module)
+conformance: gofmt guard — inspected 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module; contract.go exempt, gate G-3)
+conformance: wire-float round-trip guard — selftest OK, 1 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS wire-float round-trip — inspected 0 request bodies / 0 numeric tokens across 0 capture rigs / 0 req directories under /nowhere
+conformance: narrow-catch guard — selftest OK, 4 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS narrow-catch — inspected 57 .java files across 20 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8 (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+
+=== GOLDEN-VECTOR CONFORMANCE — Fineract reference oracle vs Go module ===
+    store           /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/vectors
+    implementation  loanschedule-go
+    oracle probe    UP
+
+CASE                         CLASS            SEAM        OUTCOME       CELLS UNGRADED  REASON
+----------------------------------------------------------------------------------------------------------------------
+SELFTEST-01-two-period-ze... selftest         none        PASS             21        0  SELF-TEST FIXTURE — EXCLUDED FROM THE P...
+P-00                         parity           path_a_e... PASS             47        2  
+   … [vector table elided] …
+VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+
+=======================================================================
+RUN 12 — genuine oracle outage (bogus health URL)
+  file: t184-outage.txt   probe lines present: 1
+=======================================================================
+conformance: no-float guard — inspected 50 .json files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/vectors
+conformance: no-float guard — inspected 5 Go packages / 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module)
+conformance: gofmt guard — inspected 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/nexus (recursive, whole module; contract.go exempt, gate G-3)
+conformance: wire-float round-trip guard — selftest OK, 5 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS wire-float round-trip — inspected 320 request bodies / 3976 numeric tokens across 6 capture rigs / 10 req directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/capture (recursive, whole capture tree)
+conformance: CENSUS float-shaped tokens PRESENT 278 (rates, charge percentages, tie probes — see the module docstring), ALTERED by a binary-double round trip 0
+conformance: narrow-catch guard — selftest OK, 4 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS narrow-catch — inspected 57 .java files across 20 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8 (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)
+conformance: reference oracle (https://127.0.0.1:1/health) probe = down
+conformance: the reference oracle is UNREACHABLE.
+conformance: conformance reports EXIT 2, not a false PASS, and 2 never becomes 0.
+
+=== GOLDEN-VECTOR CONFORMANCE — Fineract reference oracle vs Go module ===
+    store           /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8/.softhouse/vectors
+    implementation  loanschedule-go
+    oracle probe    DOWN
+
+CASE                         CLASS            SEAM        OUTCOME       CELLS UNGRADED  REASON
+   … [vector table elided] …
+conformance: the reference oracle is UNREACHABLE.
+    * the reference oracle is UNREACHABLE: conformance is exit 2, which is not a PASS and never becomes one (.softhouse/reference-oracle.md)
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+=======================================================================
+CENSUS RE-DERIVATION under my own rule (t184-census.sh, t184-jq.sh)
+=======================================================================
+=== RULE (mine): a request body is (a) *.json whose PARENT DIRECTORY is named 'req',
+===              at any depth under .softhouse/capture, or (b) any *.req at any depth.
+
+-- (a) *.json under a dir named req:
+   req directories: 10
+   .json bodies:    320
+-- (b) *.req anywhere under capture:
+   .req files:      0
+-- rigs (first path component under .softhouse/capture that contributes >=1 body):
+   rigs:            6
+actualactual audit-t44 charges leapboundary pathb tierA-a2 
+
+=== .java census, my rule: every *.java under the repo root, pruning
+===   .git node_modules build .gradle AND .claude/worktrees
+   .java files:     57
+   directories:     20
+
+=== independent numeric-token count with jq (a different JSON parser entirely)
+jq present: jq-1.7.1-apple
+bodies: 320
+jq numeric-scalar total: 3976   (guard reports 3976)
+MY rule: numeric tokens total      3976   (guard reports 3976)
+MY rule: float-shaped tokens       278   (guard reports 278)
+MY rule: bodies carrying >=1 float 221   (T173 handoff claims 221 of 320)
+MY rule: float-valued keys by name:
+   interestRatePerPeriod        214
+   amount                       53
+   principal                    11
+
+=======================================================================
+THE PROPERTY, probed directly against a TRUE binary-double round trip
+=======================================================================
+token                      kind   guard renders              TRUE double round trip     guard flags?
+1200000                    int    1200000                    1200000.0                  no      int money, exact
+1200000.00                 float  1200000.0                  1200000.0                  YES     the T163 defect
+21.6                       float  21.6                       21.6                       no      a rate
+1162502.5                  float  1162502.5                  1162502.5                  no      the half-cent tie probe
+9007199254740993           int    9007199254740993           9007199254740992.0         no      INT token, 2**53+1 — a true double round trip LOSES this
+12345678901234567890       int    12345678901234567890       1.2345678901234567e+19     no      INT token, 20 digits — a true double round trip mangles this
+12345678901234567890.12    float  1.2345678901234567e+19     1.2345678901234567e+19     YES     FLOAT token, same magnitude
+1e2                        float  100.0                      100.0                      YES     exponent form
+-0                         int    0                          -0.0                       YES     negative zero as an int
+0.1                        float  0.1                        0.1                        no      0.1
+=== A. grep -q inside a pipeline (the P-57 EPIPE shape) in the T173 block (conformance.sh 670-815)
+77:  # `grep -q` exits on the FIRST match, and the census line is the FIRST line the guard
+
+=== B. fail-open shapes in the T173 block
+52:  # A MISSING GUARD IS AN ERROR, NOT A SKIP. `[ -f ... ] || return 0` would mean deleting
+61:  cases="$(printf '%s\n' "$out" | LC_ALL=C grep -ac '^  -> exit ' || true)"
+84:  census_lines="$(printf '%s\n' "$out" | LC_ALL=C grep -ac '^CENSUS ' || true)"
+
+=== C. every '|| true' in the T173 block, with what it masks
+61:  cases="$(printf '%s\n' "$out" | LC_ALL=C grep -ac '^  -> exit ' || true)"
+84:  census_lines="$(printf '%s\n' "$out" | LC_ALL=C grep -ac '^CENSUS ' || true)"
+
+=== D. swallowed exceptions in the two guard scripts
+.softhouse/capture/lib/check_wire_float_roundtrip.py:60:request body that is not a request body.  Nothing is swallowed into an `except: continue`
+.softhouse/capture/lib/check_wire_float_roundtrip.py:151:        except Exception as e:                                  # named, never swallowed
+
+=== E. 'pass' / 'continue' as an exception body
+1:60:request body that is not a request body.  Nothing is swallowed into an `except: continue`
+7:153-            continue
+
+=== F. does anything in the T173 block redirect stderr away?
+60:  out="$(python3 "$script" --selftest 2>&1)"; rc=$?
+72:  out="$(python3 "$script" "$REPO_ROOT" 2>&1)"; rc=$?
+
+=== G. bare 'grep -q' ANYWHERE that pipes from printf of a large var (whole file)
+896:    [ "$got" = "$want" ] && printf '%s' "$out" | LC_ALL=C grep -aqF -- "$needle" && ok=1
+1006:     && printf '%s' "$out8" | LC_ALL=C grep -aq 'self-test fixtures      PASS 1' \
+1007:     && printf '%s' "$out8" | LC_ALL=C grep -aq 'parity vectors          PASS 0' \
+1008:     && printf '%s' "$out8" | LC_ALL=C grep -aq 'SELF-TEST FIXTURE' \
+1009:     && printf '%s' "$out8" | LC_ALL=C grep -aq 'EXCLUDED from the parity count' \
+1010:     && printf '%s' "$out8" | LC_ALL=C grep -aq 'NOT a conformance PASS'; then
+1204:  printf '%s' "$out19a" | LC_ALL=C grep -aq 'WITHDRAWS from grading' || ok19=0
+1205:  printf '%s' "$out19a" | LC_ALL=C grep -aq 'P-02' || ok19=0
+1212:  printf '%s' "$out19b" | LC_ALL=C grep -aq 'killed by MONTHEND-CONTINUE-FROM-CLAMPED-DAY' || ok19=0
+1216:  printf '%s' "$out19b" | LC_ALL=C grep -aqE 'parity vectors +PASS [0-9]+ +FAIL 0' || ok19=0
+1290:    if printf '%s' "$out20" | LC_ALL=C grep -aqF -- 'INVARIANT principal_amortizes_to_zero VIOLATED'; then
+1300:    printf '%s' "$out20" | LC_ALL=C grep -aqF -- \
+1303:    printf '%s' "$out20" | LC_ALL=C grep -aqE 'invariant assertions +[1-9][0-9]* NOT RUN' || note20 \
+1308:    printf '%s' "$out20c" | LC_ALL=C grep -aqE 'principal_amortizes_to_zero +hold [1-9][0-9]* +violated 0' || note20 \
+   (count: 14)
