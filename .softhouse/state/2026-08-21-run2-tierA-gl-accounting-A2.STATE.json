@@ -1,0 +1,28 @@
+{
+  "squad": "2026-08-21-run2-tierA-gl-accounting-A2",
+  "written_by": "local fire 20260821-134344 (/softhouse-program driver)",
+  "written_at": "2026-08-21 (end of fire)",
+  "live_workers_at_exit": 0,
+  "current_item": "Tier A slice A2 (GL accounting) — port written, reviewed, HELD unmerged on a guard-coverage precondition",
+  "step": "seven workers dispatched, seven completed, all seven adjudicated and every branch either merged or explicitly held with a written reason",
+  "branches_merged": [
+    "A2-11",
+    "T154",
+    "T155",
+    "T156",
+    "T158",
+    "T117",
+    "T159",
+    "A2-9"
+  ],
+  "branches_held_unmerged": {
+    "softhouse/A2-8-ledger-port": "HELD on TWO grounds, neither lowered: (1) T166 is an unmet MERGE PRECONDITION and A2-9's F-E made it worse -- the no-float guards do not cover nexus/internal/apps/ledger/ AND the in-package scans use ReadDir('.') and skip subdirectories, so a planted float64 in ledger/sub/ passed both the package test and conformance.sh; (2) four non-money corrections required first: F-A (ApplicableSlotName inert), F-B (a [VERIFIED:] SQL SUBSTRING claim PostgreSQL refutes), F-C (a [VERIFIED:] count of 27 that measures 52), F-D (a correction misattributed to f50e006)."
+  },
+  "next_action": "Do T166 FIRST -- it is the only thing between 6,065 lines of new money code and main, and its red probe must be driven from a SUBDIRECTORY. Then apply A2-9's four corrections to A2-8's branch and merge it. Then A2-8's follow-on A2 slice work.",
+  "blocked_on": "nothing external. The reference oracle was UP for the whole fire.",
+  "open_questions": [
+    "Is the family-B unamortized residual bounded at all? Two workers have now raised the ceiling by asking a larger term (MNT 5.01 at n=1000, then MNT 10.01 at n=3000) and neither found a limit.",
+    "How many historical 'N asked / N observed / 0 errored' integrity claims are unsupported because the shared rig catches RuntimeException rather than Throwable? (T169)"
+  ],
+  "gate_pending": "G-8 (open, and its write-up is wrong in at least 25 places -> T170). G-10 (open, refined this fire to five products / six mapping rows). No RESERVED item is blocking any work."
+}

@@ -78,7 +78,7 @@
       "tier0-harness-schedule-poc"
     ],
     "parked_contexts": [],
-    "note": "Local fire 20260821-054355. SEVEN WORKERS DISPATCHED, SEVEN COMPLETED, ZERO LIVE AT EXIT, no isolation violation, no scope breach. MAIN MOVED 42 -> 43 PARITY VECTORS AND THE 43RD ARRIVED WITH ITS REVIEW: T149's vector (the first ever observed through the RUNNING Fineract server) was held unmerged last fire because the driver dispatched it without a paired reviewer; T153 is that review -- MICRO-FIX then APPROVED, no defect in any money path -- and the driver re-ran conformance on merged main after applying the micro-fix: probe line PRESENT reading up, VERDICT PASS exit 0, 43 parity 0 fail, 5664 cells, 0 invariant violations, 0 assertions NOT RUN, go1.26.6 build 0 / vet 0 / test ok. MERGED: A2-6, T149, T153, A2-5, A2-10, A2-7. HELD UNMERGED: T154 (money-path guard code, its reviewer T155 has not run -- the same call as T149, and the T149 precedent was VINDICATED this fire when T153 found two real overclaims). G-9 CLOSED (chart of accounts is DATA not code; launch with the minimal chart the vectors exercise) -- the DECISION stands on a correctly re-derived premise (0 of 1918 seed inserts target acc_gl_account). BUT THE DRIVER'S CONSEQUENCE WAS FALSE AND A2-7 REFUTED IT: 'the corpus holds 2 of the 9, all four accounts ASSET' was wrong three ways -- main already held 21 accounts across all five classifications and product 22 with all nine slots mapped. Root cause was the driver's own silent-skip enumerator (json.load inside except:continue, swallowing the psql .txt dumps). Recorded as P-40 and corrected in gates.md. A2-8's dependency on A2-7 removed; A2-8 IS NOW READY. A2-10 found a P-22 REGRESSION A2-5 ITSELF INTRODUCED (symlinked fabrication invisible to verify) -- third recorded instance of a fix task opening the defect class it was sent to close. A2-7 MEASURED the driver's [UNVERIFIED]: runtime and creation mandatory account sets DIFFER. G-10 RAISED: the oracle holds five product mappings whose GL account was retyped underneath them, serves them without complaint, refuses to re-create them, and the read-back structurally cannot reveal it. New patterns P-40..P-45."
+    "note": "Local fire 20260821-134344. SEVEN WORKERS DISPATCHED, SEVEN COMPLETED, ZERO LIVE AT EXIT, no isolation violation, no scope breach -- every branch's scope verified by the driver itself with three-dot diffs. MAIN VERIFIED BY THE DRIVER AT EXIT: probe line PRESENT reading up, VERDICT PASS exit 0, 43 parity / 4 contract-refusal / 0 refused / 0 inadmissible / 0 harness errors, 5664 cells graded, 0 invariant violations, no-float census 24 Go files / 56295 tokens; build 0, vet 0, tests ok, gofmt -l names exactly contract.go (G-3). MERGED: A2-11, T154, T155, T156, T158, T117, T159, A2-9. THE MONEY NON-NEGOTIABLE IS NOW ACTUALLY ENFORCED ON loanschedule: T154's three guard legs landed only after T155 drove every one of them RED with its own poison written before opening a single T154 fixture, and found two real defects the driver then applied and drove red itself. But T166 IS OPEN AND IS THE HEADLINE RISK: the guards cover loanschedule ONLY, and A2-9 measured a second level -- the in-package scans skip subdirectories, so a planted float64 in ledger/sub/ passed both the package test AND conformance.sh. A2-8's A2 PORT IS THEREFORE HELD UNMERGED ON A PRECONDITION THE DRIVER SET AND DID NOT LOWER. FOUR TIMES A WORKER OVERTURNED THE DRIVER: A2-11 caught a FABRICATED capture excerpt in MERGED evidence (P-46) that A2-8 was actively consuming; A2-8 refused half a driver instruction that would have broken parity with an oracle bug (P-47); T155 found a defect in its own rig and reported it; T159 corrected the driver's own brief. G-8's headline DOUBLED: T117 measured MNT 5.01 and warned it was not a bound, T159 asked past n=1000 and got MNT 10.01 at n=3000 -- still not a bound. THE REFERENCE ORACLE THROWS (StackOverflowError, non-monotone) and G-8 has no sentence for a third outcome. New patterns P-46, P-47, P-48. Fifteen tasks open, none blocked on a user gate."
   },
   "contexts": [
     {
@@ -1312,6 +1312,31 @@
         "P-44",
         "P-45"
       ]
+    },
+    {
+      "run_id": "2026-08-21-run2-tierA-gl-accounting-A2",
+      "fire": "local 20260821-134344",
+      "context": "tierA-gl-accounting (slice A2)",
+      "workers_dispatched": 7,
+      "workers_completed": 7,
+      "live_at_exit": 0,
+      "branches_merged": 8,
+      "branches_held": 1,
+      "reviewer_catches": [
+        "A2-11: a FABRICATED capture excerpt in already-merged evidence -- three keys quoted as null that occur ZERO times in the cited capture, with a false rule built on them, being consumed by a live coder. -> P-46",
+        "T155: two real defects in the no-float guards (D-1 introduced by T154, sharper than T154's own self-criticism; D-2 inherited and wrongly claimed closed), plus a hex-float 0x1p-2 attack structurally invisible to the byte regex, plus a defect in its OWN rig reported rather than hidden",
+        "T158: T156's sweep scored a file 'guarded' because the word 'trap' appears in prose the file WRITES into the ratified DEC-1 ADR; true unguarded population 115 not 111 -> P-48",
+        "A2-9: F-E -- the in-package no-float scans skip subdirectories; a planted float64 in ledger/sub/ passed the package test AND conformance.sh",
+        "T159: asked past n=1000 as instructed and DOUBLED the headline residual to MNT 10.01; found the reference oracle THROWS non-monotonically; found the shared rig catches RuntimeException not Throwable, by detonating it"
+      ],
+      "driver_self_catches": [
+        "P-47: instructed A2-8 to improve on an oracle bug in an observable string; A2-8 declined and was right",
+        "the T159 brief listed 13 principals while claiming 14",
+        "piped go build into head and read head's exit code as the compiler's -- the exact trap in the driver's own standing instructions",
+        "ran the plan gate over its own additions and caught rule-1 violations before dispatch (T158, T159)"
+      ],
+      "uat": "PASS -- driver-verified on merged main at exit: probe present reading up, exit 0, 43 parity / 5664 cells, 0 invariant violations, build 0, vet 0, tests ok",
+      "note": "NOT a cutover statement. Cutover remains a user gate."
     }
   ],
   "database": {
