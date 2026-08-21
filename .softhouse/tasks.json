@@ -904,6 +904,43 @@
    ],
    "description": "INDEPENDENT review of T175. Re-derive; do not accept the author's conclusions. Read the upstream handoff from the BRANCH (git show <branch>:.softhouse/handoff/<run_id>/T175.md) and the diff with git diff main...<branch> (THREE DOTS, P-41). Drive the author's guard/probe yourself: a guard that was never driven RED is not shipped (P-22), a prover must be falsifiable toward the FIX as well as the defect (P-50), and a check that inspects zero items is an ERROR not a pass (P-35). Verdict APPROVED / MICRO-FIX (<=10 lines, mechanical, never a number) / REJECTED with specifics. If you find nothing, state what you checked so silence is distinguishable from not looking.",
    "note": "Registered by the driver at dispatch of T175 (plan gate rule 1: every coder/analyst task gets a paired reviewer)."
+  },
+  {
+   "id": "T186",
+   "title": "Money appears on the capture wire in MAJOR-unit decimal form -- 11 req bodies carry \"principal\": 1162502.5, and the corpus-wide figure is larger",
+   "role": "analyst",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [
+    "T173"
+   ],
+   "files_hint": [
+    ".softhouse/capture/",
+    ".softhouse/reference-oracle.md"
+   ],
+   "description": "Raised by T173 as its FU-1 and INDEPENDENTLY CONFIRMED BY THE DRIVER on main: 11 files under a req/ dir carry \"principal\": 1162502.5 (T149/T153 HALF_UP half-cent tie probes); the driver's wider grep over all *.json under .softhouse/capture, including out/, names 38 files. T173 also measured 214 interestRatePerPeriod and 53 charge amount float-shaped tokens, and chose the WEAKER, defensible property (byte-preservation under a binary-double round trip) rather than a blanket ban, because a blanket ban would have refused the entire committed corpus and pinned conformance.sh at exit 2. THAT CHOICE IS CORRECT FOR THE GUARD AND DOES NOT SETTLE THE QUESTION. Settle it: CLAUDE.md's first non-negotiable says money is integer minor units in every path INCLUDING the wire, and Fineract's own REST API accepts principal as a major-unit decimal -- so a FAITHFUL capture of the oracle cannot send minor units. Distinguish, with citations to Fineract source for the API's declared type: (a) the oracle-facing capture wire, where fidelity to Fineract's API shape is what makes a vector admissible; (b) the Go module's OWN adapter/API surface, where the non-negotiable binds absolutely; (c) the STORED vector, where the expected value must be integer minor units. State which of the 38 files sit in which category and whether any is a PARITY vector rather than a discrimination probe. Note that 1162502.5 major = 116250250 MNT minor units EXACTLY and 0.5 is dyadic, so it round-trips a double exactly -- the defect, if any, is representational, not yet a measured arithmetic error; say so plainly rather than overstating. Do NOT relax the non-negotiable and do NOT rewrite committed captures; produce the ruling and the enforcement boundary it implies, and raise a gate only if the answer would change the frozen contract.",
+   "note": "Raised by the driver from T173's FU-1, local fire 20260821-054355, after re-measuring the claim on main (11 under req/, 38 across the whole capture tree). Pair with a reviewer at dispatch."
+  },
+  {
+   "id": "T187",
+   "title": "THE POPULATION IS 27, NOT 9 -- .softhouse/reviews/t41-probe/ holds 21 more unguarded in-place rewriters of the RATIFIED DEC-1, two of them LIVE today",
+   "role": "coder",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [
+    "T178"
+   ],
+   "files_hint": [
+    ".softhouse/reviews/t41-probe/"
+   ],
+   "description": "Raised by T178 as its F-1 (out of its scope guard, correctly not actioned there) and INDEPENDENTLY RE-MEASURED BY THE DRIVER on main before registering: 21 of the 29 .py files under .softhouse/reviews/t41-probe/ open the RATIFIED DEC-1 at the RELATIVE path docs/adr/DEC-1-schedule-generator-adapter.md with io.open(P,'w') -- which is O_TRUNC, so the ADR is emptied before a byte of replacement is written -- and exactly ONE of the 29 contains any try/atexit/signal node at all. Four more (edit_go1..4.py) target the FROZEN contract.go, which G-3 forbids even gofmt from touching. TWO ARE LIVE AGAINST THE RATIFIED DEC-1 TODAY: the driver re-ran the anchor test read-only, WITHOUT EXECUTING EITHER SCRIPT, and edit2.py's anchor ('### 4.2 Dates: civil dates, one named zone, and a month-end rule anchored to the disbursement') and edit10.py's anchor ('### 4.6 Ordering: reproduce the oracle's emitted order') each occur EXACTLY ONCE in the current document -- which is the only precondition either script checks. Each takes no argv, so `python3 edit2.py` from the repo root silently amends a ratified DEC-n. THAT IS A HARD USER GATE BEING BYPASSED BY A SCRIPT THAT LOOKS LIKE A PROBE. REUSE T178's shared t178_guard.py rather than inventing a third shape -- atomic mkstemp+fsync+os.replace with st_dev asserted, sha256 content gates on target AND candidate (T178's measurement is that the CONTENT GATE is what actually closes the hole: neither 49dc8923... nor 0db73d4a... may be any script's BEFORE_SHA256), default-deny argv authorisation with no override reaching a ratified or frozen artefact, and no bare assert (python3 -O strips them). DRIVE EACH RED (P-22) ON SCRATCH COPIES ONLY, both halves (P-50): pre-fix mutates a scratch copy, post-fix REFUSES, post-fix still SUCCEEDS on its legitimate scratch target. NEVER execute any of these scripts from the repo root and NEVER against the real docs/adr/ or nexus/. Verify DEC-1 is byte-identical at sha256 49dc8923... and contract.go at 0db73d4a... before AND after, and STOP AND REPORT if either moves. Do the two LIVE ones FIRST. Also fold in T178's second finding: factoring the guard into a shared module made T167's sibling census score all eight hardened files as UNGUARDED, because that census reads guards from each file's OWN ast -- so whatever census you rely on must follow imports or be superseded, and say which you did.",
+   "note": "Raised by the driver from T178's F-1, local fire 20260821-054355, after re-measuring the live-reach claim read-only on main (21 DEC-1 writers, 1 file with any guard node, 2 anchors matching exactly once today). This is the same incident as T178, not a new class. Pair with a reviewer at dispatch."
   }
  ],
  "cross_corroboration": {
