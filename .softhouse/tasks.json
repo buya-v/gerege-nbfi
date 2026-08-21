@@ -2384,7 +2384,7 @@
     {
       "id": "T115",
       "title": "Apply T107's MF-1..MF-3 to T91 before it merges",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "test",
@@ -2395,7 +2395,7 @@
         ".softhouse/capture/t91/"
       ],
       "description": "T107 reviewed T91 MICRO-FIX and specified three fixes in its §10 (9 lines, mechanical, no number and no money logic). All three are in the vacuous-pass class this run keeps finding (P-22) — notably verdict.sh PASSING VACUOUSLY ON CONTENT-FREE TRANSCRIPTS. Apply them on top of softhouse/T91-preconditions-copy and DRIVE MF-1 AND MF-2 RED before merge. Do not weaken any existing LC_ALL=C hardening.",
-      "note": "Raised by the driver, local fire 20260821-080001, from T107's §10. Blocked until T107b attests the review. Needs the oracle. || local fire 20260821-080001: DISPATCHED. Scope now FOUR micro-fixes - T107b added MF-4 (charges/bin/preconditions.sh:8 ships a false 17-vs-20/23 census in a SHIPPED file). MF-1/MF-2 already driven red+green by T107b in /tmp; T115 must drive them itself, not inherit. MUST NOT believe MF-2 closes N9 - only FU-1 does."
+      "note": "Raised by the driver, local fire 20260821-080001, from T107's §10. Blocked until T107b attests the review. Needs the oracle. || local fire 20260821-080001: DISPATCHED. Scope now FOUR micro-fixes - T107b added MF-4 (charges/bin/preconditions.sh:8 ships a false 17-vs-20/23 census in a SHIPPED file). MF-1/MF-2 already driven red+green by T107b in /tmp; T115 must drive them itself, not inherit. MUST NOT believe MF-2 closes N9 - only FU-1 does. || local fire 20260821-080001: DONE on softhouse/T115-t91-microfixes (5 commits, 2 files modified). ALL FOUR MICRO-FIXES APPLIED AND DRIVEN BY T115 ITSELF. MF-1 RED: ten committed transcripts replaced by one content-free line scored 'ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION' at EXIT 0 pre-fix; post-fix exit 1 with ten ERROR rows - and it CLOSED T107b's recorded residual (explicitly left 'to the next worker') by adding a SHAPE test beside T107's value test. MF-2 RED: emptied rig, pre-fix PRECONDITIONS_EXIT=0 exit 0 ZERO-BYTE transcript; post-fix exit 2, 162 bytes. GREEN: five callers identical cell for cell (22/0/0, 16/5/1, 12/9/1, 17/5/1, 22/0/0) against the live oracle. MF-2 DOES NOT CLOSE N9 OR N10, measured THROUGH the post-MF-2 shim: N9 exits 0 printing 'ALL PRECONDITIONS HOLD', N10 exits 0 running the attacker's stub - only FU-1 closes them, and T115 said so in both shims, in prove-guards.sh, four times in the handoff and on every driver run. MF-3 measured 5 FAIL before / 5 after, delta 0. MF-4 census re-measured from the tree: 20 distinct files, 23 executable call sites, independently equal to T107b. THE UNASSIGNED HALF - a vacuous-pass sweep finding EIGHT instances, FIVE NEW. V-A is the sharpest thing found this fire in this class: verdict.sh over a READ-ONLY transcript directory printed 'ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION' at EXIT 0 *WHILE ITS OWN TABLE SHOWED SIX ADMITS ROWS ON SCREEN*, because the pipeline-subshell failure channel lived in the directory under audit. Also V-C (a sed that does not match is a COPY, so a reformatted canary silently fires the pinned tie), V-E/V-F (shell-invariance.sh compared one side's file list and used the audited dir as scratch), V-G (two skip-branches returning success). All 8 fixed, each new one driven red by a committed guard. prove-guards.sh itself (T107's F-6) now ASSERTS, driven red two ways. IT CAUGHT THE SAME CLASS IN ITS OWN SCRIPT: the self-check discriminated on a string the post-fix shim contains IN A COMMENT, so it fired on the healthy tree. REPORTED NOT FIXED (V-B), and T138 must rule: verdict.sh's resistance to a dead oracle rests ENTIRELY AND ACCIDENTALLY on A4c/A7/A8 being CLEAN rows - retyping any one to BREACH creates a scorer that reports clean over an oracle that never answered. An accident-of-data hazard exactly like the accident-of-spelling T121 judged worth REMOVING rather than documenting. P-24 scratch merge run TWICE (main moved mid-run, 9cf1f90 then e35ea7b), both clean, all four artefacts re-run ON THE MERGED TREE. Every baseline a LITERAL IMMUTABLE SHA. LC_ALL=C grep -a untouched; the two comments stating its reason marked 'under adjudication by T108' asserting neither version - T108 has since ruled, so T138 supplies updated text. LEFTOVER: T91.md:8 still says '17 capture scripts and attest.py' vs the measured 20/23 - another worker's handoff, driver applies at merge. AWAITING REVIEW T138."
     },
     {
       "id": "T116",
@@ -2529,7 +2529,7 @@
     {
       "id": "T125",
       "title": "The HALF_UP attestation canary computes a verdict and GATES NOTHING — three live files",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -2541,7 +2541,7 @@
         ".softhouse/capture/pathb/t36/"
       ],
       "description": "Raised by T109's class sweep, driver-verified. charges/bin/attest.py:337, attest-t40.py:377 and pathb/t36/attest.py:437 compute the effective-rounding-mode canary verdict, write it into attestation.json, print it, and gate nothing - every sys.exit in those files is a precondition or an HTTP!=200 check, all positioned BEFORE the canary block. A HALF_EVEN JVM produces a complete, green-looking attestation TODAY. This is the FOURTH occurrence of the computed-printed-never-compared class this run, and it is the most consequential: HALF_UP is a RATIFIED TENANT PARAMETER (RoundingMode ordinal 4, Buyan 18 Aug 2026) whose stock Fineract default is HALF_EVEN, and P-9 records that a port inheriting the default matched the oracle on every graded cell at 29 vectors. The canary exists to catch exactly that and cannot. T80's P0-A supposedly closed this shape - establish whether these three were missed or forked before it.",
-      "note": "Raised by the driver, local fire 20260821-080001, from T109's class sweep / T96."
+      "note": "Raised by the driver, local fire 20260821-080001, from T109's class sweep / T96. || local fire 20260821-080001: DONE on softhouse/T125-attest-canary-gates (7a7acea). DROVE THE UNGATED CANARY GREEN ON A REAL HALF_EVEN JVM, NOT A SIMULATION - no scratch container was needed because THE SHARED ORACLE ALREADY RUNS ONE: one process, two tenants, default=HALF_EVEN and gerege=HALF_UP (DRIVER-CONFIRMED from docker logs). Both measured live on the pinned exact tie 1,162,502.50 x 0.018 = 20,925.045, both HTTP 200: gerege -> 20925.05, default -> 20925.04. With ONLY the outer precondition gate disabled, attest.py produced a COMPLETE attestation at EXIT 0 with MathContext(19, HALF_EVEN) and verdict 'MODE NOT CONFIRMED'. WORSE THAN THE BRIEF STATED: all four captures came back 'matches committed corpus: True' because THE PATH B RESPONSE BODIES ARE BYTE-IDENTICAL BETWEEN HALF_UP AND HALF_EVEN - so NO DIGEST ANYWHERE IN THE PATH B RIG CARRIES ONE BIT ABOUT THE ROUNDING MODE, the canary was the ONLY discriminator in the whole apparatus, and it was the one thing unchecked. That is P-9 with the alarm cut. FIX: one shared .softhouse/capture/lib/attest_gate.py IMPORTED (never inlined) by all three, refusing EXIT 4 on an env-supplied answer, a canary request failing its PINNED DIGEST (without which the gate is T77's tautology), HTTP!=200 or unreadable body, tie answer != 20925.05, PRECISION!=19, ordinal!=4, or JVM line != HALF_UP - running BEFORE any capture, with a second call before json.dump so no attestation.json claiming an unverified verdict can be written. Both siblings gated too. ALSO FOUND AND FIXED: two of the three parsed the canary's period-1 interest THROUGH A BINARY FLOAT - a float in a monetary path, inside the rounding-mode check itself (P-25). RED: live default, exit 4, refused, NO CAPTURES SPENT. GREEN: live gerege with both sidecars UNMODIFIED and full preconditions, exit 0, 29 re-captured bodies byte-identical to committed, 0 changed. gate-selftest.py 22 cases 0 failed. BLAST RADIUS RULED OUT ON EVIDENCE: all five committed attestations record HTTP 200, request_sha256 2a6621be... (the pinned exact tie, which forecloses T77's mode) and answered 20925.05 - the HALF_UP value - and all five name container_started_at 2026-08-18T09:51:53Z, the process STILL RUNNING TODAY and re-measured at HALF_UP; re-checkable via blast-radius.py, 5 graded 0 not clean, NO ATTESTATION BYTE EDITED. T80's P0-A: MISSED, NOT PREDATED - P0-A fixed the canary in preconditions.sh and T80 edited t36/attest.py TWICE without ever touching the verdict one level up (P-21 exactly); for the two charges copies it is ALSO miss-by-fork. BONUS: T80's own '[UNVERIFIED this fire]' on the HALF_EVEN limb is now VERIFIED LIVE - it had been reaching for the wrong tenant's product id. OPEN QUESTIONS ROUTED: charges/bin/attest.py is a STALE UNRUNNABLE FORK (proven by running it), gated anyway and headed as such; and charges/bin/preconditions.sh:36 still carries the pre-T76 env-overridable CANARY_EXPECT (DRIVER-CONFIRMED: CANARY_EXPECT=${CANARY_EXPECT:-20925.05}) -> T137. AWAITING REVIEW T136."
     },
     {
       "id": "T126",
@@ -2720,6 +2720,72 @@
       ],
       "description": "Paired reviewer for T99, whose branch is 8 rescued commits from a killed worker plus 3 from T99b. P-28 applies with force: verify T99b's byte-identity reproduction claim, which is the hinge on which the rescued half's admissibility turns. Drive all four of T85's findings red against git-archive main bytes. Attack F-5 hardest - reproduce the vacuous PASS on a non-negotiable, re-run all three of T99b's legs, test whether the WIDENED sweep pattern is now complete (try grep -q, grep -m1, [ -z ], test -s, and the P-33 BSD-vs-ugrep trap), and rule on how many committed Path B captures were taken through a preconditions.sh that could pass vacuously.",
       "note": "Raised by the driver, local fire 20260821-080001, from T99b's F-5."
+    },
+    {
+      "id": "T136",
+      "title": "INDEPENDENT review of T125 — the attestation canary gate",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [
+        "T125"
+      ],
+      "files_hint": [
+        ".softhouse/reviews/"
+      ],
+      "description": "Paired reviewer. See the branch handoff and the driver's dispatch brief.",
+      "note": "Raised and dispatched by the driver, local fire 20260821-080001."
+    },
+    {
+      "id": "T137",
+      "title": "charges/bin/preconditions.sh:36 — CANARY_EXPECT is still env-overridable",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [
+        "T115",
+        "T133"
+      ],
+      "files_hint": [
+        ".softhouse/capture/charges/bin/preconditions.sh"
+      ],
+      "description": "Driver-confirmed: CANARY_EXPECT=${CANARY_EXPECT:-20925.05}, the pre-T76 hole, still live. Exporting CANARY_EXPECT=20925.04 makes the rounding-mode canary PASS on a HALF_EVEN JVM - and T125 established that the Path B response bodies are BYTE-IDENTICAL between HALF_UP and HALF_EVEN, so the canary is the ONLY thing in that rig that can see the mode. Pin the expectation to a literal, refuse any env override, and drive it red on the live default (HALF_EVEN) tenant. SEQUENCE AFTER T115 and T133, which hold this file.",
+      "note": "Raised and dispatched by the driver, local fire 20260821-080001."
+    },
+    {
+      "id": "T138",
+      "title": "INDEPENDENT review of T115 — and the mergeable ruling for the T91 stream",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [
+        "T115"
+      ],
+      "files_hint": [
+        ".softhouse/reviews/"
+      ],
+      "description": "Paired reviewer. See the branch handoff and the driver's dispatch brief.",
+      "note": "Raised and dispatched by the driver, local fire 20260821-080001."
+    },
+    {
+      "id": "T139",
+      "title": "FU-1 — the identity/digest check on the sourced rig, the ONLY thing that closes N9 and N10",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [
+        "T138"
+      ],
+      "files_hint": [
+        ".softhouse/capture/t91/",
+        ".softhouse/capture/charges/bin/"
+      ],
+      "description": "T107's FU-1, re-established by T115 with measurements THROUGH the post-MF-2 shim: N9 (rig replaced by pre-hardening bytes) exits 0 printing 'ALL PRECONDITIONS HOLD'; N10 (symlinked shim) exits 0 running the attacker's stub. MF-2 does NOT close either, and three separate artefacts now say so out loud so nobody merges believing F-2 is discharged. FU-1 is an identity/digest check on the rig actually sourced at run time - the shim must verify it is executing the bytes it thinks it is. Pin to a literal immutable sha (P-24), drive N9 and N10 red, and confirm the five real callers stay identical cell for cell.",
+      "note": "Raised and dispatched by the driver, local fire 20260821-080001."
     }
   ]
 }
