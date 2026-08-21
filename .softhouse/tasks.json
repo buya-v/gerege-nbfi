@@ -2080,9 +2080,9 @@
         "T80",
         "T85"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
-      "note": "Raised by the driver, local fire 20260820-200002, from T85's lower-ranked findings. NEEDS THE ORACLE. Sequence after T80 merges. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260821-080001: PREVIOUS FIRE'S WORKER WAS KILLED before signalling done; no handoff written. WIP rescued to softhouse/rescued-agent-a23f30596288e4322-20260820-230001 - 7 substantive commits, 3533 insertions, all four of T85's findings apparently addressed with red/green proof scripts under capture/pathb/t99/. COMPLETENESS UNVERIFIED. Branch softhouse/T99-pathb-lower-findings re-pointed at the rescue. RE-DISPATCHED as T99b (opus, isolated worktree) to regenerate every proof rather than trust the committed transcripts, and to write the handoff."
+      "note": "Raised by the driver, local fire 20260820-200002, from T85's lower-ranked findings. NEEDS THE ORACLE. Sequence after T80 merges. || local fire 20260820-230001: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260821-080001: PREVIOUS FIRE'S WORKER WAS KILLED before signalling done; no handoff written. WIP rescued to softhouse/rescued-agent-a23f30596288e4322-20260820-230001 - 7 substantive commits, 3533 insertions, all four of T85's findings apparently addressed with red/green proof scripts under capture/pathb/t99/. COMPLETENESS UNVERIFIED. Branch softhouse/T99-pathb-lower-findings re-pointed at the rescue. RE-DISPATCHED as T99b (opus, isolated worktree) to regenerate every proof rather than trust the committed transcripts, and to write the handoff. || local fire 20260821-080001: DONE on softhouse/T99-pathb-lower-findings (11 commits: 8 rescued + 3 from T99b). THE RESCUED WORK REPRODUCES - before changing anything T99b re-ran all six scripts under both shells and diffed against the committed t99/out/: ALL TEN TRANSCRIPTS BYTE-IDENTICAL, including both live-oracle legs, and the rig then reproduced itself byte-identically across two further independent runs. The killed worker's evidence is real (P-28 vindicated a second time this fire). All four of T85's findings CLOSED, each driven red on git-archive main bytes and green on branch, both shells: F-1 resolved-path+shape+leaf+no-nesting guard, with EIGHT independent bypass shapes beyond the rig's own proof (trailing slash, .. traversal, deeper nesting, outside-tree, symlink into recapture-default/hidden) 8/8 admitted on main and 8/8 refused on branch, 3 happy paths still accepted, 5/5 same for attest.py; F-2 absolute-path tools in root-owned dirs (a literal table, so no resolution step to poison) PLUS a cross-check that COMPARES at sha256.sh:158 and demonstrably FIRES - a clever liar passing the known-answer test is caught by cross-implementation disagreement and no digest is returned, both canary digests re-derived with /usr/bin/openssl outside the rig; F-3 two counters (inspected, adjudicated) with exit 2 on either, T85's 27/8/0 property intact; F-4 closed via a content-addressed PROVENANCE-INDEX.json rather than a re-capture, correctly, because a re-capture would overwrite bytes six other sets are proved identical to. TWO NEW FINDINGS. F-5, P0-CLASS AND ON A NON-NEGOTIABLE: preconditions.sh P5/P6/P11 - the CLAUDE.md Oracle-Database/MySQL/MariaDB prohibition assertions - PASSED ON ZERO INPUT, because grep -icE over an empty stream is 0 and a dead psql returns empty, so a docker answering nothing printed THREE PASS LINES HAVING SCANNED NOTHING. And T99's OWN SWEEP COULD NOT SEE TWO OF THEM because its pattern was 'grep -c|grep -ac|wc -l' while those lines are 'grep -icE' - a sweep missing the instances it was written to find. Fixed with liveness operands: RED 18->21 FAIL with the tool stubbed and the three vacuous PASSes gone, GREEN live 22 PASS/0 FAIL WITH WITNESSES (47 env lines, 5406 jar entries), and a positive control with a fake docker emitting mariadb/mysql-connector still firing. F-6: two of T99's own verdict predicates were set by an ABSENCE (prove-f1's prefix_admitted, prove-f4's 4a), both now requiring positive artefacts and driven red; and run-all.sh PRINTED the sweep's and verifier's exit codes then DISCARDED them, so it could report 'ALL FOUR PROOFS CLOSED' over a failing verification. ORACLE UNDISTURBED: container StartedAt byte-identical to T85's, m_loan=0 on both tenants, rounding mode 4/true (gerege, the ratified HALF_UP) and 6/true (default, HALF_EVEN); only POST /loans?command=calculateLoanSchedule plus read-only queries. Scope: ZERO changed files outside .softhouse/capture/pathb/. ROUTED OUT OF SCOPE: the F-5 defect exists VERBATIM at capture/charges/bin/preconditions.sh:79,85,128 and audit-t44/charges/bin/preconditions-COPY.sh:79,85 -> T133. AWAITING REVIEW T135."
     },
     {
       "id": "T100",
@@ -2672,6 +2672,54 @@
       ],
       "description": "T108's F-T108-1, driver-confirmed at both call sites. conformance.sh:184 guard_no_float_in_vectors and :201 guard_no_float_in_harness use bare 'grep -Eq' with NEITHER LC_ALL=C NOR -a. Per T108's 360-cell matrix that means a vector file containing a float plus ONE INVALID BYTE BEFORE IT ON THE SAME LINE makes the float guard SILENTLY PASS - and this guards the first non-negotiable in CLAUDE.md, that money is integer minor units with no floating point anywhere. Apply the two-token fix ('LC_ALL=C grep -qaF' shape, per T108's exact replacement text in its handoff) at BOTH sites, and sweep conformance.sh and every rig for OTHER bare greps whose result is load-bearing (P-26: sweep the concept, not the sentence). DRIVE IT RED with a poisoned scratch vector before the fix and green after (P-22), and confirm the legitimate 42-vector store still gives PASS exit 0 / 5576 cells unchanged.",
       "note": "Raised by the driver, local fire 20260821-080001, from T108's F-T108-1. Sequenced after T130 and T131, which hold conformance.sh and rule on latent-vs-live respectively. NEEDS THE ORACLE to re-run the harness."
+    },
+    {
+      "id": "T133",
+      "title": "Transcribe T99b's F-5 liveness fix to the two charges copies of preconditions.sh",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [
+        "T115",
+        "T135"
+      ],
+      "files_hint": [
+        ".softhouse/capture/charges/",
+        ".softhouse/capture/audit-t44/"
+      ],
+      "description": "T99b's F-5 verbatim, in two more files: capture/charges/bin/preconditions.sh:79,85,128 and audit-t44/charges/bin/preconditions-COPY.sh:79,85 carry the SAME vacuous prohibited-engine assertions - grep -icE over an empty stream is 0 and a dead psql returns empty, so the CLAUDE.md Oracle-Database/MySQL/MariaDB prohibition can PASS HAVING SCANNED NOTHING. Transcribe the liveness-operand fix from .softhouse/capture/pathb/, drive each site RED with the tool stubbed and GREEN live with witnesses, and run T99b's positive control (a fake docker emitting mariadb/mysql-connector must still fire). ALSO still open in that same COPY: T85's follow-up 2, T77's stdout/stderr hole. SEQUENCE AFTER T115, which holds charges/bin/preconditions.sh this fire.",
+      "note": "Raised by the driver, local fire 20260821-080001, from T99b's F-5."
+    },
+    {
+      "id": "T134",
+      "title": "Audit EVERY CLAUDE.md non-negotiable's guard and prove which can actually fail",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [],
+      "files_hint": [
+        ".softhouse/nonnegotiable-guard-audit.md"
+      ],
+      "description": "Three separate workers this fire, on three unrelated tasks, each found a guard on a DIFFERENT non-negotiable that could report success having verified nothing - money/no-float (bare grep, T108), ratified HALF_UP (verdict computed and never gated, T109), and PostgreSQL-only/no-Oracle-MySQL-MariaDB (vacuous on zero input, T99b). Three for three, and nobody has ever checked the set AS A SET. Enumerate every non-negotiable, find its guard or record ABSENT, drive every existing guard RED in a scratch copy, and classify each FIRES / VACUOUS / ABSENT / UNGATED. Deliverable is a REGISTER, not repairs - three fixes are already in flight and a fix landing under another worker's feet is worth less than a complete map. Answer the blast-radius question per vacuous guard: what was certified through it while it was blind?",
+      "note": "Raised by the driver, local fire 20260821-080001, from T99b's F-5."
+    },
+    {
+      "id": "T135",
+      "title": "INDEPENDENT review of T99 — the Path B lower findings and the vacuous prohibited-engine guard",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [
+        "T99"
+      ],
+      "files_hint": [
+        ".softhouse/reviews/"
+      ],
+      "description": "Paired reviewer for T99, whose branch is 8 rescued commits from a killed worker plus 3 from T99b. P-28 applies with force: verify T99b's byte-identity reproduction claim, which is the hinge on which the rescued half's admissibility turns. Drive all four of T85's findings red against git-archive main bytes. Attack F-5 hardest - reproduce the vacuous PASS on a non-negotiable, re-run all three of T99b's legs, test whether the WIDENED sweep pattern is now complete (try grep -q, grep -m1, [ -z ], test -s, and the P-33 BSD-vs-ugrep trap), and rule on how many committed Path B captures were taken through a preconditions.sh that could pass vacuously.",
+      "note": "Raised by the driver, local fire 20260821-080001, from T99b's F-5."
     }
   ]
 }

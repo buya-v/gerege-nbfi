@@ -660,6 +660,31 @@ ran from a script: **both blind to a shell function by construction.**
 > cells refute nothing unless the failing shape is among the *N* — "I could not reproduce it" is a statement about
 > your probe until you have shown your probe can produce the effect at all.
 
+### P-34. Every non-negotiable that has a guard has a guard that can pass without checking — three for three
+
+**Fire `20260821-080001`.** Three separate workers, doing three unrelated tasks, each stumbled onto a guard
+protecting a different **CLAUDE.md non-negotiable**, and each guard could report success having verified nothing:
+
+| non-negotiable | guard | how it passes without checking |
+|---|---|---|
+| **Money is integer minor units, no floating point** | `conformance.sh:184`, `:201` | bare `grep -Eq`, neither `LC_ALL=C` nor `-a` — a float plus one invalid byte earlier on the same line is **invisible to BSD grep** (P-33) |
+| **Ratified rounding mode `HALF_UP` (ordinal 4)** | `attest.py:337`, `attest-t40.py:377`, `t36/attest.py:437` | the verdict is computed, written into `attestation.json`, printed — and **gates nothing**; a `HALF_EVEN` JVM attests green |
+| **PostgreSQL only; Oracle Database / MySQL / MariaDB prohibited** | `pathb/preconditions.sh` P5/P6/P11 | `grep -icE` over an **empty stream** is `0` and a dead `psql` returns `""` — a `docker` answering nothing printed **three PASS lines having scanned nothing** |
+
+None was found by reading the guard. Each was found by someone attacking a *neighbouring* rig and noticing. And in
+the third case, **the sweep written to find that exact class missed two of its own three instances**, because its
+pattern was `grep -c\|grep -ac\|wc -l` and the lines were `grep -icE`.
+
+The common shape is that a non-negotiable is *stated* in prose, and everyone downstream assumes the prose is
+enforced somewhere. The guard's existence is taken as the enforcement. **Nobody had ever checked the set as a
+set** — which is why three-for-three is the finding, not three separate bugs.
+
+> **Rule.** A rule you cannot violate in a test is a rule you are not enforcing. For **every** non-negotiable,
+> maintain a register naming its guard, the command that drives that guard **red**, and the date it was last seen
+> red — and treat `ABSENT` as a first-class entry, because the non-negotiables with no guard at all are the ones
+> this table cannot even list. When a guard is found vacuous, the next question is never "is it fixed" but **"what
+> was certified through it while it was blind?"**
+
 <!-- LEARNED PATTERNS END -->
 
 ### Run 2026-08-17-run1-harness-schedule-poc — fire `20260819-170001` (local, oracle REACHABLE) — 2026-08-19
