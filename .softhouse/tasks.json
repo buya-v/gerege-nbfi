@@ -234,7 +234,7 @@
     },
     {
       "id": "A2-6",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "sonnet",
       "target": "docs",
@@ -246,7 +246,7 @@
       "dependencies": [],
       "title": "Apply A2-2's micro-fix and its three missing UNVERIFIED markers to the A2 behaviour doc",
       "description": "A2-2 returned MICRO-FIX on A2-1 with all five priorities CONFIRMED. Apply exactly its findings, no rewrite -- P-5 (gates-proposed-answers.md) forbids a third draft of a prose item. F-4 (the micro-fix): JournalEntryType.java is cited as being in fineract-accounting; it is in fineract-core. Content and line numbers are correct. THIS IS THE ONE CITATION SLICE A1 IS EXPLICITLY TOLD TO FOLLOW, and it is itself an instance of A2-1's own headline finding B-1 (the slice's core types are not in the slice). F-1: replace A2-1's MECHANISM for TrialBalance.closing_balance -- it is written AT INSERT from SUM(je.amount), the UNSIGNED total, NOT by the accumulator at Tasklet:119-127, which is gated on `closing_balance IS NULL` against a NOT NULL column and whose only NULL-producing constructor has ZERO CALLERS. Mark that accumulator as unreachable dead code. F-2: the debit/credit grep claim is false as stated (zero hits in the whole glaccount path; the only in-scope hits are GOODWILL_CREDIT identifiers) -- the CONCLUSION survives a fortiori, so correct the evidence, not the conclusion. F-5: add the three missing [UNVERIFIED] markers -- F-1's mechanism, F-3's Spring Data null-argument question (leave it CONTESTED; A2-2 traced every writer of acc_product_mapping and proved NO money impact either way), and the savings charge path's unguarded null chargeId. Do not restructure the document and do not re-argue anything A2-2 confirmed.",
-      "note": "Raised by the driver from A2-2's F-1..F-5, local fire 20260821-134344. || local fire 20260821-054355: DISPATCHED (wave 1), isolated worktree, model sonnet."
+      "note": "Raised by the driver from A2-2's F-1..F-5, local fire 20260821-134344. || local fire 20260821-054355: DISPATCHED (wave 1), isolated worktree, model sonnet. || local fire 20260821-054355: DONE and MERGED on softhouse/A2-6-behaviour-doc-microfix (commit e47c756). Scope check clean via MERGE-BASE (three dots): exactly 2 files, the doc + its handoff, no orchestrator file touched. NOTE the two-dot `git diff main..branch` the skill's STEP 5 prescribes was MISLEADING here -- it showed gates.md -71 and tasks.json -84 purely because main had advanced past the fork point; use three dots when main has moved. Driver re-verified F-4 independently: `find /Users/buv/fineract -name JournalEntryType.java` returns exactly one path and it IS fineract-core, not fineract-accounting. The worker went beyond the brief in the right direction: it grepped the WHOLE doc for restatements of the F-1 mechanism and corrected all three sites (7 blockquote, 8 citation table, 8 'facts for the porter'), which is precisely the failure mode that permanently parked T2 -- corrections landing in the section the review named but not in the sections restating the same claim. It also noticed the F-1 correction makes the 'balances are derived, never written' tension WORSE, not better: the stored value is an UNSIGNED SUM wearing a balance's name. Divergence from brief reported honestly: the brief's F-2 paraphrase ('zero hits in the whole glaccount path') collapsed A2-2's finer distinction, and the worker used A2-2's verbatim replacement instead, as instructed."
     },
     {
       "id": "A2-7",
