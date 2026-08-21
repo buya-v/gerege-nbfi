@@ -1,0 +1,215 @@
+RED-then-GREEN transcript — A2-4 defect D-3: `manifest.py verify` is three kinds of blind.
+Task A2-5. Produced by `python3 prove-manifest-blind-red.py`, exit 0. Re-run it to reproduce.
+
+The pre-fix manifest.py is read from its immutable git blob cbc888d4698cb8211a8ceec31494314dc64d1a67
+(sha256 65e54af93a201fe7beb3c679f0fe15dabb2753d44287c69250adc1a6a1380a8b), which is manifest.py
+exactly as it stood on main before this task, per P-22. Every attack runs in a throwaway sandbox
+shaped like this capture; the real out/, req/ and sql/ are never read or written by the prover.
+
+WHAT IS DRIVEN RED, and what each proves:
+
+  D-3(i)    empty manifest over an empty capture. Pre-fix: "OK: 0 files match", exit 0 — the
+            vacuous pass. Post-fix: exit 1, "MANIFEST.sha256 lists 0 files — INSPECTED NOTHING".
+  D-3(i-b)  a manifest written by the OLD tool (out/req/sql only), verified by the NEW one.
+            Pre-fix: green on 11 files while the analysis doc and the rig go unchecked.
+            Post-fix: refused — a manifest that omits the REQUIRED files is not a manifest of
+            this capture. This is the same vacuous pass by a narrower route, and it is the case
+            that fires on the real tree (see the appendix).
+  D-3(ii)   out/sub/A2-999-fabricated.json. Pre-fix: green — os.listdir() never descended.
+            Post-fix: UNTRACKED, exit 1.
+  D-3(iii)  the reviewer's exact sentence "MNT rounds HALF_EVEN and money may be stored as float"
+            appended to CAPTURE-PLAN.md. Pre-fix: green. Post-fix: CHANGED CAPTURE-PLAN.md, exit 1.
+  D-3(iii)  manifest.py edits itself. Pre-fix: green. Post-fix: CHANGED manifest.py, exit 1.
+  D-3(iii)  cap.sh repointed at a different endpoint. Pre-fix: green. Post-fix: CHANGED cap.sh.
+  D-1 flag  FLAGGED-NOT-REPRODUCIBLE.txt deleted. Pre-fix: green (never covered it).
+            Post-fix: refused — the D-1 flag on the attempt1-* evidence cannot be dropped.
+
+  Three further refusals are new and have no pre-fix counterpart to be blind to, so they are
+  driven red on the fixed tool alone: flagged evidence deleted from disk, flagged evidence whose
+  manifest line was stripped, and a malformed manifest line.
+
+  A CONTROL run on an untampered sandbox goes green — without it, every RED above would be
+  consistent with a tool that simply always fails.
+
+NOT PROVEN, stated instead of claimed: the second zero-input refusal ("found 0 files … INSPECTED
+NOTHING") could not be driven red, because manifest.py now covers itself and is therefore always
+in the scanned set. It is belt-and-braces against a future edit that narrows the scan.
+
+================================================================================================
+====================================================================================================
+D-3  manifest.py verify — RED against the real pre-fix bytes, GREEN after
+====================================================================================================
+pre-fix  manifest.py: git blob cbc888d4698cb8211a8ceec31494314dc64d1a67  sha256 65e54af93a201fe7beb3c679f0fe15dabb2753d44287c69250adc1a6a1380a8b
+post-fix manifest.py: working tree           sha256 9043f07ccfaf8296ab759e8854b2d2a3f9a441122d314c1906bfa2ac86751561
+all attacks run in a throwaway sandbox; the real out/ req/ sql/ are never touched.
+
+----------------------------------------------------------------------------------------------------
+D-3(i)  empty manifest, empty capture — a guard that inspects NOTHING
+----------------------------------------------------------------------------------------------------
+  [RED ] pre-fix  verify -> exit 0
+           OK: 0 files match MANIFEST.sha256
+         pre-fix verdict: BLIND (passed the attack)
+  [GREEN] post-fix verify -> exit 1
+           REFUSING: MANIFEST.sha256 lists 0 files — INSPECTED NOTHING. A guard that checks nothing is not a guard (P-22).
+         post-fix verdict: CAUGHT (expected exit!=0 and INSPECTED NOTHING)
+
+----------------------------------------------------------------------------------------------------
+D-3(i-b)  a manifest written by the OLD tool (out/req/sql only) verified by the new one
+----------------------------------------------------------------------------------------------------
+  [RED ] pre-fix  verify -> exit 0
+           OK: 11 files match MANIFEST.sha256
+         pre-fix verdict: BLIND (passed the attack)
+  [GREEN] post-fix verify -> exit 1
+           REFUSING: MANIFEST.sha256 does not cover CAPTURE-PLAN.md, DEFECTS-FOUND-BY-REVIEW.md, FLAGGED-NOT-REPRODUCIBLE.txt, cap.sh, env.sh, manifest.py — this is not a manifest of this capture.
+         post-fix verdict: CAUGHT (expected exit!=0 and REFUSING + does not cover)
+
+----------------------------------------------------------------------------------------------------
+D-3(ii)  fabricated observation dropped in out/sub/
+----------------------------------------------------------------------------------------------------
+  [RED ] pre-fix  verify -> exit 0
+           OK: 11 files match MANIFEST.sha256
+         pre-fix verdict: BLIND (passed the attack)
+  [GREEN] post-fix verify -> exit 1
+           UNTRACKED out/sub/A2-999-fabricated.json
+           
+           FAIL: 1 discrepancy/ies
+         post-fix verdict: CAUGHT (expected exit!=0 and UNTRACKED + out/sub/A2-999-fabricated.json)
+
+----------------------------------------------------------------------------------------------------
+D-3(iii)  CAPTURE-PLAN.md poisoned with the reviewer's HALF_EVEN/float sentence
+----------------------------------------------------------------------------------------------------
+  [RED ] pre-fix  verify -> exit 0
+           OK: 11 files match MANIFEST.sha256
+         pre-fix verdict: BLIND (passed the attack)
+  [GREEN] post-fix verify -> exit 1
+           CHANGED   CAPTURE-PLAN.md
+             manifest cc3406f3b0e47fa95c806a3649021d85bc273ae433eda2e4bf1d2f337a1b5bab
+             actual   e00945450c44bef406276878a9fee25affb20fd77db58b92f1419ab6a4a40c62
+           
+           FAIL: 1 discrepancy/ies
+         post-fix verdict: CAUGHT (expected exit!=0 and CHANGED + CAPTURE-PLAN.md)
+
+----------------------------------------------------------------------------------------------------
+D-3(iii)  manifest.py edits ITSELF
+----------------------------------------------------------------------------------------------------
+  [RED ] pre-fix  verify -> exit 0
+           OK: 11 files match MANIFEST.sha256
+         pre-fix verdict: BLIND (passed the attack)
+  [GREEN] post-fix verify -> exit 1
+           CHANGED   manifest.py
+             manifest 9043f07ccfaf8296ab759e8854b2d2a3f9a441122d314c1906bfa2ac86751561
+             actual   5c91de0c486bda7f9ec4ac0005b74b629e56ac43ca79a271647435e2563d81f1
+           
+           FAIL: 1 discrepancy/ies
+         post-fix verdict: CAUGHT (expected exit!=0 and CHANGED + manifest.py)
+
+----------------------------------------------------------------------------------------------------
+D-3(iii)  the rig (cap.sh) is repointed at a different endpoint
+----------------------------------------------------------------------------------------------------
+  [RED ] pre-fix  verify -> exit 0
+           OK: 11 files match MANIFEST.sha256
+         pre-fix verdict: BLIND (passed the attack)
+  [GREEN] post-fix verify -> exit 1
+           CHANGED   cap.sh
+             manifest f78c9584ceb32cad3c7333e68f4a020c9461abc694f9b3ff04dba227e665b812
+             actual   582f019efc1c8d316bf0118727ba5697b404adfe8daebc6b8d815c9b38680fcf
+           
+           FAIL: 1 discrepancy/ies
+         post-fix verdict: CAUGHT (expected exit!=0 and CHANGED + cap.sh)
+
+----------------------------------------------------------------------------------------------------
+D-1 flag  FLAGGED-NOT-REPRODUCIBLE.txt deleted — the flag on real-bytes/false-recipes
+----------------------------------------------------------------------------------------------------
+  [RED ] pre-fix  verify -> exit 0
+           OK: 11 files match MANIFEST.sha256
+         pre-fix verdict: BLIND (passed the attack)
+  [GREEN] post-fix verify -> exit 1
+           MISSING   FLAGGED-NOT-REPRODUCIBLE.txt
+           REFUSING: FLAGGED-NOT-REPRODUCIBLE.txt is missing — the D-1 flag on the attempt1-* evidence cannot be dropped.
+         post-fix verdict: CAUGHT (expected exit!=0 and REFUSING + FLAGGED)
+
+----------------------------------------------------------------------------------------------------
+D-1 flag  flagged evidence DELETED from out/ (manifest line left in place)   (new refusal — driven red on the fixed tool alone)
+----------------------------------------------------------------------------------------------------
+           MISSING   out/attempt1-A2-prod-060-cash-with-channel-override.json
+           FLAGGED-BUT-ABSENT   out/attempt1-A2-prod-060-cash-with-channel-override.json  (flagged evidence must not be deleted)
+           
+           FAIL: 2 discrepancy/ies
+         exit 1 -> CAUGHT (expected FLAGGED-BUT-ABSENT)
+
+----------------------------------------------------------------------------------------------------
+D-1 flag  flagged evidence left on disk but its manifest line STRIPPED   (new refusal — driven red on the fixed tool alone)
+----------------------------------------------------------------------------------------------------
+           UNTRACKED out/attempt1-A2-prod-060-cash-with-channel-override.json
+           FLAGGED-BUT-UNCOVERED out/attempt1-A2-prod-060-cash-with-channel-override.json  (flagged evidence must stay in the manifest)
+           
+           FAIL: 2 discrepancy/ies
+         exit 1 -> CAUGHT (expected FLAGGED-BUT-UNCOVERED)
+
+----------------------------------------------------------------------------------------------------
+parser  a malformed MANIFEST.sha256 line   (new refusal — driven red on the fixed tool alone)
+----------------------------------------------------------------------------------------------------
+           MALFORMED MANIFEST.sha256 line 1: 'not-a-manifest-line'
+         exit 1 -> CAUGHT (expected MALFORMED)
+
+----------------------------------------------------------------------------------------------------
+CONTROL  untampered sandbox — the fixed tool must still pass, or the REDs prove nothing
+----------------------------------------------------------------------------------------------------
+           OK: 17 files match MANIFEST.sha256 (11 under out/ req/ sql/, 6 rig + docs, this script included)
+           FLAGGED, covered, NOT citable: 2 attempt1-* files — recipes provably false (D-1), see FLAGGED-NOT-REPRODUCIBLE.txt
+         exit 0 -> GREEN
+
+NOT DRIVEN RED, stated rather than claimed: the second zero-input refusal
+('found 0 files ... INSPECTED NOTHING') is unreachable in practice, because
+manifest.py is itself covered and therefore always present in the scanned set.
+It is belt-and-braces for a future edit that narrows the scan, not a proven guard.
+
+====================================================================================================
+RESULT: all three D-3 blind spots reproduced on the real pre-fix bytes and closed by the fix.
+
+====================================================================================================
+APPENDIX — the same blind spots, on the REAL capture tree (not a sandbox)
+====================================================================================================
+
+$ python3 manifest.py verify          # fixed tool, manifest exactly as it stood on main
+REFUSING: MANIFEST.sha256 does not cover CAPTURE-PLAN.md, DEFECTS-FOUND-BY-REVIEW.md,
+FLAGGED-NOT-REPRODUCIBLE.txt, cap.sh, env.sh, manifest.py — this is not a manifest of this capture.
+exit 1
+
+    That is D-3(iii) on the real evidence: the manifest A2-3 shipped — the one the A2-4 reviewer
+    poisoned CAPTURE-PLAN.md under, staying green — genuinely covered none of those files.
+
+$ python3 manifest.py write
+wrote MANIFEST.sha256 with 430 entries          # was 406
+
+$ diff <the 406-line manifest as it stood on main> <the first 406 lines of the new manifest>
+(no output — exit 0)
+
+    The evidence's hashes are not rewritten, only extended: all 406 pre-existing lines are
+    byte-identical AND in the same order, and the 24 added lines are all rig/doc files at the
+    top level. No file under out/, req/ or sql/ was modified by this task; `git status` after
+    the change lists zero paths under those three directories.
+
+$ python3 manifest.py verify
+OK: 430 files match MANIFEST.sha256 (406 under out/ req/ sql/, 24 rig + docs, this script included)
+FLAGGED, covered, NOT citable: 30 attempt1-* files — recipes provably false (D-1), see FLAGGED-NOT-REPRODUCIBLE.txt
+exit 0
+
+$ python3 prove-manifest-red.py       # A2-3's own prover, unmodified, against the new manifest
+baseline: GREEN (exit 0)
+  mutate  -> exit 1 CAUGHT
+  delete  -> exit 1 CAUGHT
+  add     -> exit 1 CAUGHT
+restored: GREEN (exit 0)
+RESULT: guard is demonstrably failable
+exit 0
+
+    Counts, so requirement 5 is checkable without re-deriving them: 406 evidence files before,
+    406 evidence files after, the same 30 flagged attempt1-* files present and covered
+    throughout, 24 rig/doc files newly covered.
+
+    Note for whoever runs the provers next: the 24 added lines cover these transcripts too, so
+    re-running a prover and overwriting its transcript WILL turn `verify` red until
+    `manifest.py write` is re-run. That is the guard working — the transcripts are pinned
+    artefacts, not scratch output. The final `write` of this task was taken with this appendix
+    already in place, so the shipped tree verifies green as committed.

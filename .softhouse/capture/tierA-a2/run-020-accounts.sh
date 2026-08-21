@@ -7,6 +7,6 @@ for n in gl-020-liability-header gl-021-overpayment gl-022-income-header \
          gl-026-recovery-income gl-027-expense-header gl-028-writeoff-expense \
          gl-029-goodwill-expense gl-030-equity-header gl-031-fund-source-alt \
          gl-032-disabled-asset gl-033-nomanual-asset; do
-  sh "$DIR/cap.sh" "A2-${n}" POST /glaccounts "req/$n.json"
+  sh "$DIR/cap.sh" "A2-${n}" POST /glaccounts "req/$n.json" || exit 1
   printf '   -> %s\n' "$(cat "$DIR/out/A2-${n}.json")"
 done

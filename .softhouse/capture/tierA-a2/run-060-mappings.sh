@@ -7,6 +7,6 @@ for n in prod-060-cash-with-channel-override prod-061-cash-no-override \
          prod-064-cash-no-mappings prod-065-map-missing-account \
          prod-066-bad-paymenttype prod-067-duplicate-channel \
          prod-068-accrual-missing-receivables prod-069-accrual-complete; do
-  sh "$DIR/cap.sh" "A2-${n}" POST /loanproducts "req/$n.json"
+  sh "$DIR/cap.sh" "A2-${n}" POST /loanproducts "req/$n.json" || exit 1
   printf '   -> %s\n' "$(head -c 260 "$DIR/out/A2-${n}.json")"
 done
