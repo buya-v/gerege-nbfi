@@ -1000,6 +1000,13 @@ than a reader would assume). **Only `exercised` permits grading.**
 The `ledger` capability rows this contract requires. **This is a specification for the registry,
 not the registry file itself** — authoring data files belongs to the grader task.
 
+> **The `in_graded_domain` column below is the TARGET STATE, not the value to author first. Read
+> §5.4's NORMATIVE SEQUENCING RULE before writing any of these rows into `capabilities.json`.**
+> Every row here lands `false` initially, and a `true` flips only in the change that promotes the
+> vector covering it. A `true` authored ahead of its vector turns **every** run in the repository
+> red — including `-context=loanschedule` — with no legal way to clear it, because §5.1 establishes
+> that no `ledger` vector can be admitted at all until §5.3's P-1…P-5 exist.
+
 | capability | description | `in_graded_domain` | status per seam |
 |---|---|---|---|
 | `gl.account.model` | classification, usage, parent link, hierarchy generation, decorated name | **true** | `ledger_db_readback`, `ledger_rest_admin`: `exercised` |
