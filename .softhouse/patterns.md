@@ -861,6 +861,93 @@ it, and publishes that refusal as a stated limit.
 > bytes** (T146 did: 45 lines, `cmp` byte-identical, all eleven inputs re-run against the extract). A published
 > command nobody has round-tripped is a claim, not a check.
 
+
+### Run 2026-08-21-run2-tierA-gl-accounting-A2 — fire 20260821-054355 (2nd of the day)
+
+- **What worked**: seven worktree-isolated workers, seven completions, zero live at exit. The driver
+  re-ran every load-bearing measurement itself in scratch worktrees instead of quoting a worker.
+- **What the independent reviewer caught / what workers caught above them**: A2-12 overturned its own
+  reviewer A2-9 (a defect measured at 3-of-48 is 6-of-96; A2-9 swept only one of two entry points, and the
+  second carries the MIRROR-IMAGE bug). T163 showed A2-11's committed prover exits 0 against the DEFECTIVE
+  script. T157 showed T154's committed "fail-closed" characterisation is backwards. T169 showed "0 errored"
+  was unfalsifiable across the program's whole history.
+- **Vectors added / contexts at parity**: none added. 43 parity vectors, 5664 cells, unchanged and
+  re-verified by the driver before and after every merge.
+- **Claims marked UNVERIFIED (carried forward)**: cap8.sh has never talked to Fineract; the cause of the
+  oracle's non-deterministic StackOverflowError; whether any committed claim resting on the two vacuous
+  Python checks is unsupported.
+- **Verifier**: build 0 · vet 0 · go test ./... ok (incl. ledger) · conformance PASS exit 0, probe = up ·
+  invariants 0 violations · gofmt -l names exactly contract.go (G-3).
+- **Backlog carried forward**: T171-T177 raised from this fire's findings.
+
+**P-49 — A guard developed against a tree that does not exist yet inherits none of that tree's collisions.
+Test the MERGE, not the branches.**
+
+T166 widened the no-float root to the whole Go module while `internal/apps/ledger/` was still unmerged, so
+its worktree never contained the tree it was about to start guarding. A2-12's own conformance run was green
+for the mirror-image reason: the guard was still `loanschedule`-only when it ran. Both branches were
+individually correct and individually green. Merged, they were a **permanent HARD-guard failure** — A2-8's
+in-package float scanner writes its forbidden table and red fixtures with the spellings UNSPLIT
+(`"float64": true`), which is exactly what `nofloat.go` documents as a self-reference trap and solves by
+splitting. Five hits, exit 2, no verdict.
+
+Nothing either worker could have done would have found this, and no reviewer reading either diff would
+either. **The driver found it by building the merged world in a scratch worktree and running the harness
+there before merging anything.** That step is now mandatory whenever a change widens what a guard inspects:
+widening a guard's DOMAIN is a change to every file that domain newly contains, including files that do not
+exist on your branch.
+
+Corollary, and the reason this is a pattern rather than an anecdote: **a guard's blast radius is not visible
+in the guard's own diff.**
+
+**P-50 — An assertion phrased to pass when the bug is PRESENT is a demonstration, not a regression test, and
+its exit code lies to every reader after you.**
+
+`.softhouse/reviews/A2-11/prove-resolve7-float-red.py` is committed evidence that a money-corruption defect
+exists. Run it against the defective script and it prints `FAILURES: 0` and **exits 0**, because its
+assertions read `PASS RED: resolve7.py accepts every one of them, exit 0 — it cannot refuse a float`. The
+assertion is true *because the bug is there*. Driver-reproduced on main.
+
+Two consequences, both bad. Any automation reading the exit code reads **health**. And after the fix, the
+same prover would go RED — so the next reader sees a fix "breaking" the prover that proved the bug.
+
+The P-35 rule ("phrase positively; report what you INSPECTED") has a second half this makes explicit:
+**a prover must be falsifiable in the direction of the FIX, not only in the direction of the defect.** The
+repair shape is T163's: assert internally that the pre-fix bytes drive the battery RED **and** the post-fix
+bytes drive it GREEN, so exactly one arrangement of the world passes. Widen such a prover rather than
+replacing it — the original demonstration is still the evidence that the defect was real.
+
+**P-51 — "N errored: 0" from a handler that cannot see the error class is not a wrong number. It is an
+unfalsifiable one, and it retroactively weakens every claim built on it.**
+
+The shared capture rig caught `RuntimeException`. `StackOverflowError` is an `Error`. T169 found two
+independent routes by which a throwing cell produced **no integrity line at all** — the `Error` escaped
+`main()` and killed the JVM before any JSON, and the caught-and-`printStackTrace` path tripped every
+runner's refuse-on-stderr rule. **No completed run in this program's history could have printed any value
+but `0 errored`.**
+
+A measurement that cannot come out any other way is not a measurement. The distinction T169 drew, and it is
+the honest one: T117's `287 asked / 287 observed / 0 errored` is **true about the run**. What is unsupported
+is the **inference** it carried — that the sweep covers its region. **Report the inference as unsupported;
+do not adjust the number, which was never wrong.**
+
+Fix shape: a throw is a FIRST-CLASS OUTCOME, distinct from success and from absence — `asked / observed /
+threw / skipped`, the tally must close, and a threw cell may neither be graded nor vanish.
+
+**P-52 — Before calling a guard broken because it ignored your probe, read its selftest. It may be
+correctly scoped, and you may be the one testing the wrong thing.**
+
+The driver planted a 35th capture rig with a narrow `catch (RuntimeException)` at T169's new lint and it was
+not flagged — which looked exactly like the vacuous-guard failure this program keeps finding. It was not.
+The lint deliberately flags only catches that wrap the **measured seam**, and its own selftest case (c)
+asserts it must NOT be over-broad. The driver's plant called a method the seam markers do not name. Replanted
+with a real seam marker, the lint refused it: exit 1, named at file:line.
+
+The instinct to distrust a green guard is right and has paid out repeatedly here. **The discipline that must
+go with it: a guard that declines your probe is either vacuous or correctly scoped, and its selftest
+distinguishes those two in one command.** Publishing the first reading without running the second would have
+sent a task to "fix" a guard that was working.
+
 <!-- LEARNED PATTERNS END -->
 
 ### Run 2026-08-17-run1-harness-schedule-poc — fire `20260819-170001` (local, oracle REACHABLE) — 2026-08-19
