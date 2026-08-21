@@ -122,8 +122,20 @@
 #   .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/ .]
 #   And the consequence was not cosmetic: a wrongly admitted run on a psub-dead
 #   shell reaches the HARD guards below, whose `while read … done < <(find …)`
-#   loops then return 0 having inspected ZERO files — the vacuous pass that
-#   line 53 of this file already warns about.
+#   loops would then return 0 having inspected ZERO files — a guard certifying
+#   "no floats" without opening a file. That is the P-22 failure mode ("a guard
+#   that cannot fail is worse than none, because it is believed"), and it is what
+#   makes THIS one different from the residual hijacks: a hijack refuses, and a
+#   refusal cannot turn a red run green; a forged admission can.
+#   [CITATION CORRECTED BY T113: T106's review, and the first draft of this
+#   paragraph, both said "the vacuous pass that line 53 of this file already warns
+#   about". It does not. The block that line number pointed at is `WHY IT EXISTS`
+#   above — named rather than numbered here, because the number is what drifted —
+#   and it says the psub in `guard_no_float_in_vectors` DIED under `sh` and was
+#   mistaken for an oracle outage. It says nothing about a guard returning 0 over
+#   an EMPTY file set, which is the opposite failure and the one F1 enables. The
+#   only P-22 sentence in this file before T113 was the `--help` comment far
+#   below. A citation nobody re-opens is a claim, not a fact (P-16).]
 #
 #   WHAT THE ASSIGNMENT DOES, AND WHAT IT DOES NOT. It makes the observation
 #   start from EMPTY, so the token can reach the comparison only by the read
