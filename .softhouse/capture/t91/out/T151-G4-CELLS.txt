@@ -1,0 +1,58 @@
+PRE  = 8c05f9a7190ee1e0f8be09b92bdccc02d62ea103  (literal immutable sha)
+POST = 9f287317bb1a1a68116f8cabf498c505d8c05898  (HEAD — the tree under test)
+
+asserted: the PRE tree carries the original (after-the-match) poison and NEITHER edit.
+
+=== THE FOUR CELLS: (shipped | fixed) x (healthy | the regression G-4 exists to catch)
+  PRE   healthy             G-4=OK      (want OK )  script exit=0 (want 0)   OK
+          A2a-mutated-canary-gerege.txt                  0      YES       no         ADMITS (printed the HALF_UP certification)
+          A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+             BSD  -qF  rc=0
+             BSD -aqF  rc=0
+
+  PRE   nolc                G-4=OK      (want OK )  script exit=0 (want 0)   OK
+          A2a-mutated-canary-gerege.txt                  0      YES       no         ADMITS (printed the HALF_UP certification)
+          A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+             BSD  -qF  rc=0
+             BSD -aqF  rc=0
+
+  POST  healthy             G-4=OK      (want OK )  script exit=0 (want 0)   OK
+          A2a-mutated-canary-gerege.txt                  0      YES       no         ADMITS (printed the HALF_UP certification)
+          A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+             BSD utf8    -aqF  rc=1   (1 = the silent miss; -a does NOT fix it)
+             BSD LC_ALL=C -aqF rc=0   (0 = correct; LC_ALL=C is what fixes it)
+
+  POST  nolc                G-4=RED     (want RED)  script exit=1 (want 1)   OK
+          A2a-mutated-canary-gerege.txt                  0      no        no         ADMITS (exited 0, expected a breach)
+          A2a-mutated-canary-gerege.txt ADMITS (exited 0, expected a breach)
+             BSD utf8    -aqF  rc=1   (1 = the silent miss; -a does NOT fix it)
+             BSD LC_ALL=C -aqF rc=0   (0 = correct; LC_ALL=C is what fixes it)
+
+=== the third mutation: the scanner fully blinded (what a silent-miss grep actually produces)
+  PRE   scanner             G-4=OK      (want OK )  script exit=0 (want 0)   OK
+          A2a-mutated-canary-gerege.txt                  0      no        no         ADMITS (exited 0, expected a breach)
+          A2a-mutated-canary-gerege.txt ADMITS (exited 0, expected a breach)
+             BSD  -qF  rc=0
+             BSD -aqF  rc=0
+
+  POST  scanner             G-4=RED     (want RED)  script exit=1 (want 1)   OK
+          A2a-mutated-canary-gerege.txt                  0      no        no         ADMITS (exited 0, expected a breach)
+          A2a-mutated-canary-gerege.txt ADMITS (exited 0, expected a breach)
+             BSD utf8    -aqF  rc=1   (1 = the silent miss; -a does NOT fix it)
+             BSD LC_ALL=C -aqF rc=0   (0 = correct; LC_ALL=C is what fixes it)
+
+=== BOTH edits are load-bearing: revert either one and the guard goes blind again
+  POST  nolc     -assertion G-4=OK      (want OK )  script exit=0 (want 0)   OK
+          A2a-mutated-canary-gerege.txt                  0      no        no         ADMITS (exited 0, expected a breach)
+          A2a-mutated-canary-gerege.txt ADMITS (exited 0, expected a breach)
+             BSD utf8    -aqF  rc=1   (1 = the silent miss; -a does NOT fix it)
+             BSD LC_ALL=C -aqF rc=0   (0 = correct; LC_ALL=C is what fixes it)
+
+  POST  nolc     -poison    G-4=OK      (want OK )  script exit=0 (want 0)   OK
+          A2a-mutated-canary-gerege.txt                  0      YES       no         ADMITS (printed the HALF_UP certification)
+          A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+             BSD utf8    -aqF  rc=0   (1 = the silent miss; -a does NOT fix it)
+             BSD LC_ALL=C -aqF rc=0   (0 = correct; LC_ALL=C is what fixes it)
+
+done — every cell behaved as specified.
+F-T138-1 REPRODUCED on PRE and CLOSED on POST.
