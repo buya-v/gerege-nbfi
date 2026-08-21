@@ -131,7 +131,9 @@ With C2 switched off — `-XX:TieredStopAtLevel=1` — the transition **never ha
 `[VERIFIED: out/ANALYSIS-matrixC.txt, extracted verbatim]` 8 attempts, 8 throws, and a flat elapsed
 time — no warm-up at all.
 
-And the **true depth reached at overflow rises as compilation proceeds**. With HotSpot's 1024-frame
+And the **true depth reached at overflow varies within a single JVM as compilation proceeds, and
+always exceeds the 1024 cap** — it does not rise monotonically; see the series below, where attempt 2
+falls below attempt 1 [T182 micro-fix]. With HotSpot's 1024-frame
 recording cap lifted (`-XX:MaxJavaStackTraceDepth=0`):
 
 | attempt | outcome | true frames at overflow |
@@ -169,7 +171,11 @@ out/matrixC/raw/t159prefix-0.stdout]`
 **T159 and T169 did not disagree about the oracle. They asked the same cell at different points in a
 JVM's warm-up curve, and the rig had no field in which to record that.**
 
-## 4. The "throwing region" is not a region of the input space
+## 4. The "throwing region" is not a region of the input space ALONE — it is a region of (inputs × JVM state)
+
+*[T182 micro-fix: qualifier added. At one FIXED cold state this rig's own headline table shows
+B = 1001 observed 9/9 and B = 10001 threw 33/33 at the same n — an input boundary. What is refuted
+is a boundary asserted across UNEQUAL JVM states, which is what G-8 cited.]*
 
 `T159-R600p0-N2000-B10001` — T159's detonation, the cell G-8's write-up cites as proof the throw is
 "not monotone in n" — behaves exactly like the disputed cell:
