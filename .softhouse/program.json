@@ -669,12 +669,15 @@
       "class": "PRODUCT",
       "context": "tierA-gl-accounting",
       "slice": "tierA-gl-accounting-A2",
-      "state": "OPEN — driver to decide next fire, Buyan may overrule",
+      "state": "CLOSED - DECIDED",
       "title": "Fineract ships NO default chart of accounts. Which chart does Gerege launch with?",
       "evidence": "A2-1 backlog B-5 (zero seed COA rows in the distribution), corroborated operationally by A2-3: tenant gerege had ZERO GL accounts before capture, so every account observed was one the task created.",
       "why_PRODUCT_not_RESERVED": "CLAUDE.md Answering gates: a greenfield design choice, not a licensing fact and not regulatory acceptance. It becomes RESERVED only if it turns on what the FRC has ACCEPTED rather than what it requires on paper.",
       "leaning": "Port the COA as DATA, not code; launch with the minimal chart the captured vectors exercise; an FRC-aligned production chart is a separate data-only deliverable. Per CLAUDE.md's PRODUCT preference: simplest configuration provable against the oracle, features deferred rather than shipped unvectored.",
-      "blocks": "the A2 coder task, which cannot be planned until the target chart is known"
+      "blocks": "the A2 coder task, which cannot be planned until the target chart is known",
+      "closed_by": "local fire 20260821-054355 (/softhouse-program driver)",
+      "chosen_by": "agent",
+      "decision": "(1) The chart of accounts is DATA, not code -- the Go port implements the GL account model, acc_product_mapping resolution and posting rules; the chart is seed data outside the port. Porting 'the chart' as Go code would invent a structure Fineract does not have, and an invented structure CANNOT BE GRADED against the oracle. (2) Launch with the minimal chart the captured vectors exercise (CLAUDE.md PRODUCT preference). (3) An FRC-aligned production chart is a separate data-only deliverable, downstream of CUTOVER which is already a hard user gate. PREMISE RE-DERIVED BY THE DRIVER, NOT TAKEN ON REPORT: across the two tenant seed changelogs 0002_initial_data.xml (1810 inserts) and 0003_postgresql_specific_initial_data.xml (108), ZERO of 1918 seed inserts target acc_gl_account; across ALL of db/changelog/tenant/parts the table appears only as createTable (0001_initial_schema.xml:49) and two createIndex, with the 21 mentioning files referencing it inside report parameter SQL that SELECTs from it. Fineract ships the table and no rows. BUT THE DECISION ALONE DOES NOT UNBLOCK THE A2 CODER: the whole A2 capture holds EXACTLY FOUR distinct GL accounts, ALL ASSET (10000/10100/10201/19999), while LoanProductDataValidator.java:663-710 makes NINE notNull() for cash AND accrual (plus three more for accrual at :761-777). THE CORPUS HOLDS 2 OF THE 9. Raised as task A2-7 (depends on A2-5, which is fixing the capture rig) rather than left for the coder to discover. UNVERIFIED: whether the product-creation mandatory set equals the runtime posting set -- the validator was read, the journal-entry writers were not; A2-7 must measure it. Buyan may reverse."
     }
   ],
   "history": [

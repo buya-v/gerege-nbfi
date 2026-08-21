@@ -244,6 +244,22 @@
       "title": "Apply A2-2's micro-fix and its three missing UNVERIFIED markers to the A2 behaviour doc",
       "description": "A2-2 returned MICRO-FIX on A2-1 with all five priorities CONFIRMED. Apply exactly its findings, no rewrite -- P-5 (gates-proposed-answers.md) forbids a third draft of a prose item. F-4 (the micro-fix): JournalEntryType.java is cited as being in fineract-accounting; it is in fineract-core. Content and line numbers are correct. THIS IS THE ONE CITATION SLICE A1 IS EXPLICITLY TOLD TO FOLLOW, and it is itself an instance of A2-1's own headline finding B-1 (the slice's core types are not in the slice). F-1: replace A2-1's MECHANISM for TrialBalance.closing_balance -- it is written AT INSERT from SUM(je.amount), the UNSIGNED total, NOT by the accumulator at Tasklet:119-127, which is gated on `closing_balance IS NULL` against a NOT NULL column and whose only NULL-producing constructor has ZERO CALLERS. Mark that accumulator as unreachable dead code. F-2: the debit/credit grep claim is false as stated (zero hits in the whole glaccount path; the only in-scope hits are GOODWILL_CREDIT identifiers) -- the CONCLUSION survives a fortiori, so correct the evidence, not the conclusion. F-5: add the three missing [UNVERIFIED] markers -- F-1's mechanism, F-3's Spring Data null-argument question (leave it CONTESTED; A2-2 traced every writer of acc_product_mapping and proved NO money impact either way), and the savings charge path's unguarded null chargeId. Do not restructure the document and do not re-argue anything A2-2 confirmed.",
       "note": "Raised by the driver from A2-2's F-1..F-5, local fire 20260821-134344. || local fire 20260821-054355: DISPATCHED (wave 1), isolated worktree, model sonnet."
+    },
+    {
+      "id": "A2-7",
+      "title": "Capture the SEVEN missing mandatory GL accounts — the A2 corpus holds 2 of the 9 a loan mapping requires, and all 4 accounts it has are ASSET",
+      "role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "status": "pending",
+      "dependencies": [
+        "A2-5"
+      ],
+      "files_hint": [
+        ".softhouse/capture/tierA-a2/"
+      ],
+      "description": "RAISED BY THE DRIVER FROM ITS OWN G-9 DECISION, local fire 20260821-054355, and the gap is MEASURED not suspected. G-9 is CLOSED: the chart of accounts is DATA not code, and Gerege launches with the minimal chart the captured vectors exercise. That decision is only actionable if the vectors exercise a chart a loan product mapping can be built on, AND THEY DO NOT. The entire A2 capture (327 files under out/) contains EXACTLY FOUR distinct GL accounts and ALL FOUR ARE ASSET: 10000 Assets (HEADER), 10100 Fund Source (DETAIL), 10201 Loan Portfolio (DETAIL), 19999 Clean Delete Target Renamed Again (HEADER). No INCOME, EXPENSE, LIABILITY or EQUITY account has EVER been created on tenant gerege. Meanwhile LoanProductDataValidator.java:663-710 makes NINE accounts notNull() for both cash-based and accrual-based loan accounting -- FUND_SOURCE, LOAN_PORTFOLIO, TRANSFERS_SUSPENSE, INTEREST_ON_LOANS, INCOME_FROM_FEES, INCOME_FROM_PENALTIES, INCOME_FROM_RECOVERY, LOSSES_WRITTEN_OFF, OVERPAYMENT -- and accrual adds three more at :761-777 (INTEREST_RECEIVABLE, FEES_RECEIVABLE, PENALTIES_RECEIVABLE). THE CORPUS HOLDS 2 OF THE 9. Create the missing seven on the live oracle spanning INCOME, EXPENSE and LIABILITY, then capture a product-to-account mapping observation, which is the thing A2 exists to port and which NOTHING in the corpus currently covers. DEPENDS ON A2-5 BECAUSE A2-5 IS FIXING THE RIG THIS TASK WOULD USE: cap.sh's transport-failure handler is unreachable under set -e, so a stale body can survive under a fresh captured-at-utc. Do not capture through the broken rig. ALSO SETTLE THE DRIVER'S OWN [UNVERIFIED]: whether the nine/twelve mandatory set at PRODUCT CREATION is the same set the POSTING paths require at RUNTIME -- the driver read the validator, not the journal-entry writers. MEASURE IT, do not infer it. Synthesise nothing; every account and every mapping must be observed from the running oracle.",
+      "note": "Raised by the driver from its own G-9 closure, local fire 20260821-054355. NEEDS THE ORACLE."
     }
   ],
   "cross_corroboration": {

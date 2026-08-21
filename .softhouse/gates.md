@@ -1647,3 +1647,74 @@ re-derived from the committed capture bytes in **exact rational and integer arit
 script sharing no code with T83's, T84's, T100's, T112's, T114's, T122's or T129's classifiers. It
 changed no vector, no `PIN.json`, no `capabilities.json`, no `contract.go` and no `nexus/` file, and
 it left `.softhouse/tasks.json` at the merge-base blob exactly as T122 did.
+
+---
+
+## G-9 — CLOSED (chart of accounts) — local fire 20260821-054355, `chosen_by: agent`
+
+**Class: PRODUCT.** Not RESERVED: CLAUDE.md's RESERVED list is licence facts, CUTOVER, regulatory
+acceptance/parallel-run sign-off, and anything spending real money / exposing a live endpoint /
+binding a third party. Choosing a launch chart of accounts is none of those. It would become
+RESERVED only if it turned on what the **FRC has accepted**, rather than what a greenfield business
+elects to launch with — and this decision deliberately does not touch that question.
+
+### The premise, re-derived by the driver rather than taken on report
+
+A2-1's backlog B-5 and A2-3's operational corroboration both claim Fineract ships no default chart.
+**Confirmed independently on the pinned checkout `426a23544`:**
+
+- Across the two tenant seed-data changelogs — `0002_initial_data.xml` (1,810 `<insert>` elements)
+  and `0003_postgresql_specific_initial_data.xml` (108) — **1,918 seed inserts, of which ZERO target
+  `acc_gl_account`** [VERIFIED: driver re-derivation, this fire].
+- Across **all** of `db/changelog/tenant/parts/`, `acc_gl_account` appears **only** as
+  `createTable` (`0001_initial_schema.xml:49`) and two `createIndex` statements. There is no
+  `<insert tableName="acc_gl_account">` anywhere in the changelog set. The 21 files that mention the
+  table at all mention it inside **report parameter SQL that SELECTs from it**
+  [VERIFIED: driver re-derivation, this fire].
+
+So Fineract ships **the table and no rows**. The gate's premise is sound.
+
+### DECISION
+
+1. **The chart of accounts is DATA, not code.** The Go port implements the GL account *model*,
+   `acc_product_mapping` resolution and the posting rules; the chart itself is seed data that lives
+   outside the port. This mirrors what the reference oracle actually does, and that is the point:
+   porting "the chart" as Go code would invent a structure Fineract does not have, and an invented
+   structure **cannot be graded against the oracle** because the oracle has nothing to compare to.
+2. **Launch with the minimal chart the captured vectors exercise** — CLAUDE.md's PRODUCT preference:
+   the simplest configuration provable against the oracle, features deferred rather than shipped
+   unvectored.
+3. **An FRC-aligned production chart is a separate, data-only deliverable.** It is not part of the
+   A2 port and adopting one in a live deployment sits downstream of CUTOVER, which is already a hard
+   `user` gate. Nothing here pre-empts that.
+
+Buyan may reverse any of the three.
+
+### THE DECISION ALONE DOES NOT UNBLOCK THE A2 CODER — the capture does not yet cover the chart
+
+Deciding "the minimal chart the vectors exercise" is only actionable if the vectors exercise a chart
+that a loan product mapping can actually be built on. **They do not, and this is a measured gap, not
+a worry:**
+
+- The entire A2 capture (327 files under `capture/tierA-a2/out/`) contains **exactly four distinct
+  GL accounts, and all four are `ASSET`**: `10000` Assets (HEADER), `10100` Fund Source (DETAIL),
+  `10201` Loan Portfolio (DETAIL), `19999` Clean Delete Target Renamed Again (HEADER)
+  [VERIFIED: driver enumeration over the committed capture bytes, this fire]. **No INCOME, EXPENSE,
+  LIABILITY or EQUITY account was ever created.**
+- `LoanProductDataValidator.java:663-710` makes **nine accounts `notNull()`** for *both* cash-based
+  and accrual-based loan accounting — FUND_SOURCE, LOAN_PORTFOLIO, TRANSFERS_SUSPENSE,
+  INTEREST_ON_LOANS, INCOME_FROM_FEES, INCOME_FROM_PENALTIES, INCOME_FROM_RECOVERY,
+  LOSSES_WRITTEN_OFF, OVERPAYMENT. Accrual adds **three more** at `:761-777` — INTEREST_RECEIVABLE,
+  FEES_RECEIVABLE, PENALTIES_RECEIVABLE. Everything else in those blocks (GOODWILL_CREDIT, the
+  `CHARGE_OFF_*` and `INCOME_FROM_GOODWILL_CREDIT_*` family) is `ignoreIfNull()`
+  [VERIFIED: driver read of the pinned source, this fire].
+
+**The capture holds 2 of the 9 mandatory accounts.** So the A2 coder is unblocked on the *decision*
+and still short of *evidence*: a capture task must first create the remaining seven — necessarily
+spanning INCOME, EXPENSE and LIABILITY types — before any product-to-account mapping can be observed
+from the oracle at all. Raised as **A2-7** rather than left as an assumption the coder would
+discover the hard way.
+
+`[UNVERIFIED]` — whether the nine/twelve mandatory set at *product creation* is the same set the
+*posting* paths require at runtime. The validator is what was read; the journal-entry writers were
+not. A2-7 should measure it rather than infer it.
