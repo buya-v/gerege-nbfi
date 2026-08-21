@@ -1631,9 +1631,11 @@ file the branch must not touch). **Do not "fix" that diff.** The check that mean
 post-merge one, and it passes: on a scratch merge into current `main` the merged tree's
 `tasks.json` blob equals `main`'s exactly and the path does not appear in the merge at all
 [VERIFIED by T122 against `main@79a67d1`, by T129 against `main@fdcdf09` and `main@e35ea7b`, and by
-T140 against `main@bcf2c55`. The line count of the three-dot diff is a function of how far `main`
-has moved since the merge base and is deliberately not quoted here — it was 1,097 lines at
-`main@e35ea7b` and 1,258 at `main@bcf2c55`].
+T140 against `main@c535841` — **four different `main` heads, none of which the disposition was
+designed against**, which is the whole point of it. The line count of that diff is a function of how
+far `main` has moved since the merge base, so no single value belongs in this file: it was 1,097
+lines at `main@e35ea7b`, 1,258 at `main@bcf2c55`, and 1,326 at `main@c535841` — three readings
+during a single task and its review].
 
 **T129's findings applied, committed on `softhouse/T140-g8-t129-fixes`** — this section as it now
 stands, plus the same five-site sweep applied to `T112.md`. T140 contacted the reference oracle
