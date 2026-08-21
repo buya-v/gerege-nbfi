@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -750,8 +751,15 @@ func TestMinorTextIsExact(t *testing.T) {
 	})
 }
 
-// TestNoFloatInTheLoanScheduleTree is the no-float guard, run as a test so it
+// TestNoFloatInTheGuardedGoTree is the no-float guard, run as a test so it
 // cannot be forgotten.
+//
+// IT WAS CALLED TestNoFloatInTheLoanScheduleTree UNTIL T166, AND SO WAS THE ROOT.
+// The name matched a root that had stopped describing the rule: `nexus/internal/
+// apps/ledger` and every SUBDIRECTORY in the module were outside it, so a float
+// planted there took the whole conformance run to VERDICT: PASS with a run log
+// byte-identical to the clean baseline. The root is now the Go module root and
+// the walk recurses; see nofloat.go's file comment for the measurement.
 //
 // It scans the Go TOKEN STREAM and inspects only identifiers, deliberately, rather
 // than grepping the file's bytes. A byte grep reports the frozen contract.go on
@@ -776,8 +784,8 @@ func TestMinorTextIsExact(t *testing.T) {
 // literal and one identifier and requires both to be reported. A guard nobody
 // has seen fail is a guard nobody has tested (P-22), and an external script that
 // proves it once does not protect the next rewrite of this function.
-func TestNoFloatInTheLoanScheduleTree(t *testing.T) {
-	root := filepath.Join(repoRoot(t), LoanScheduleTreeRel)
+func TestNoFloatInTheGuardedGoTree(t *testing.T) {
+	root := filepath.Join(repoRoot(t), GuardedGoTreeRel)
 
 	t.Run("the_committed_tree_is_clean", func(t *testing.T) {
 		census, err := ScanGoTreeForFloatingPoint(root)
@@ -787,14 +795,63 @@ func TestNoFloatInTheLoanScheduleTree(t *testing.T) {
 		// POSITIVE ASSERTIONS (P-35): say what was inspected, then say each
 		// count was zero. "No violations" over an unknown number of files is
 		// the vacuous phrasing this whole class of defect is made of.
-		if census.FilesScanned == 0 || census.TokensScanned == 0 {
-			t.Fatalf("the census inspected %d files / %d tokens under %s: a guard that inspects nothing "+
-				"passes everything", census.FilesScanned, census.TokensScanned, root)
+		if census.FilesScanned == 0 || census.TokensScanned == 0 || census.PackagesScanned == 0 {
+			t.Fatalf("the census inspected %d packages / %d files / %d tokens under %s: a guard that inspects "+
+				"nothing passes everything", census.PackagesScanned, census.FilesScanned,
+				census.TokensScanned, root)
 		}
 		for _, v := range census.Violations() {
 			t.Errorf("%s", v)
 		}
 		t.Logf("%s", census.Summary())
+		t.Logf("covered packages: %v", census.PackageDirs)
+	})
+
+	// THE ROOT COVERS THE WHOLE MODULE, ASSERTED AGAINST AN INDEPENDENT
+	// ENUMERATION (T166). The census counting N packages proves nothing on its
+	// own — the pre-T166 census also reported a healthy-looking 24 files while
+	// an entire package sat outside its root. So this walks the module a second
+	// time, by a different route, and requires the two sets to be EQUAL. A root
+	// narrowed back to one subtree fails here, and so does a walk that stops
+	// descending.
+	t.Run("every_go_package_in_the_module_is_covered", func(t *testing.T) {
+		census, err := ScanGoTreeForFloatingPoint(root)
+		if err != nil {
+			t.Fatalf("the no-float census could not run: %v", err)
+		}
+		covered := map[string]bool{}
+		for _, d := range census.PackageDirs {
+			covered[d] = true
+		}
+		onDisk := map[string]bool{}
+		if err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
+			if err != nil {
+				return err
+			}
+			if d.IsDir() || !strings.HasSuffix(path, ".go") {
+				return nil
+			}
+			rel, rerr := filepath.Rel(root, filepath.Dir(path))
+			if rerr != nil {
+				return rerr
+			}
+			onDisk[filepath.ToSlash(rel)] = true
+			return nil
+		}); err != nil {
+			t.Fatalf("independent enumeration of %s: %v", root, err)
+		}
+		if len(onDisk) == 0 {
+			t.Fatalf("the independent enumeration found ZERO Go packages under %s, so this test asserts "+
+				"nothing: that is an error, not a pass", root)
+		}
+		for dir := range onDisk {
+			if !covered[dir] {
+				t.Errorf("package %s holds Go files and the no-float census did NOT scan it: the guarded "+
+					"root does not cover the module", dir)
+			}
+		}
+		t.Logf("the no-float census covered all %d Go packages in the module: %v",
+			len(onDisk), census.PackageDirs)
 	})
 
 	// ANTI-VACUITY. Both arms of the rule must be able to fail, and the literal
@@ -844,11 +901,106 @@ func TestNoFloatInTheLoanScheduleTree(t *testing.T) {
 		t.Logf("%s", census.Summary())
 	})
 
-	// ZERO FILES INSPECTED IS AN ERROR, NOT A PASS.
+	// THE GUARD DESCENDS (T166, closing A2-9's F-E). A2-9 planted
+	// `var Rate float64 = 1.5` at nexus/internal/apps/ledger/sub/zz_sub.go and it
+	// passed BOTH `go test ./internal/apps/ledger/` and
+	// `bash .softhouse/conformance.sh`, because both in-package scans use
+	// os.ReadDir(".") and `continue` on e.IsDir(). This sub-test plants the same
+	// violation TWO directories deep, plus a literal three deep, and requires the
+	// census to find them and to count the nested directories as packages. A
+	// widening that only moved the root would still pass A2-9's plant; this is
+	// the assertion that says it does not.
+	t.Run("the_guard_descends_into_subdirectories", func(t *testing.T) {
+		dir := t.TempDir()
+		if err := os.WriteFile(filepath.Join(dir, "root.go"),
+			[]byte("package probe\n\nconst CleanMinorUnits int64 = 1250000\n"), 0o644); err != nil {
+			t.Fatalf("WriteFile: %v", err)
+		}
+		deep := filepath.Join(dir, "ledger", "sub")
+		if err := os.MkdirAll(deep, 0o755); err != nil {
+			t.Fatalf("MkdirAll: %v", err)
+		}
+		// A2-9's plant, verbatim in shape: identifier only, in a subdirectory.
+		if err := os.WriteFile(filepath.Join(deep, "zz_sub.go"),
+			[]byte("package sub\n\nvar Rate "+"float"+"64 = 1.5\n"), 0o644); err != nil {
+			t.Fatalf("WriteFile: %v", err)
+		}
+		deeper := filepath.Join(deep, "nested")
+		if err := os.MkdirAll(deeper, 0o755); err != nil {
+			t.Fatalf("MkdirAll: %v", err)
+		}
+		// Literal only, one level deeper again, declaring no forbidden identifier.
+		if err := os.WriteFile(filepath.Join(deeper, "zz_nested.go"),
+			[]byte("package nested\n\nvar monthly = 0.036 / 12.0\n"), 0o644); err != nil {
+			t.Fatalf("WriteFile: %v", err)
+		}
+		census, err := ScanGoTreeForFloatingPoint(dir)
+		if err != nil {
+			t.Fatalf("census: %v", err)
+		}
+		if census.FilesScanned != 3 {
+			t.Errorf("the probe tree has 3 .go files at three depths, the census scanned %d: %v",
+				census.FilesScanned, census.PackageDirs)
+		}
+		if census.PackagesScanned != 3 {
+			t.Errorf("the probe tree has 3 directories holding Go files, the census counted %d: %v",
+				census.PackagesScanned, census.PackageDirs)
+		}
+		if len(census.IdentifierViolations) != 1 {
+			t.Errorf("the subdirectory identifier plant (A2-9's F-E) was not reported: got %d identifier "+
+				"violations %v", len(census.IdentifierViolations), census.IdentifierViolations)
+		}
+		// 0.036 and 12.0 are two token.FLOATs, and 1.5 in the subdirectory is a
+		// third — the identifier plant carries a literal too.
+		if len(census.LiteralViolations) != 3 {
+			t.Errorf("wanted 3 nested literal violations (1.5, 0.036, 12.0), got %d: %v",
+				len(census.LiteralViolations), census.LiteralViolations)
+		}
+		t.Logf("%s", census.Summary())
+	})
+
+	// ZERO FILES AND ZERO PACKAGES INSPECTED ARE ERRORS, NOT PASSES.
 	t.Run("an_empty_tree_is_an_error", func(t *testing.T) {
-		if _, err := ScanGoTreeForFloatingPoint(t.TempDir()); err == nil {
+		empty := t.TempDir()
+		census, err := ScanGoTreeForFloatingPoint(empty)
+		if err == nil {
 			t.Fatal("the census returned no error over an EMPTY directory: " +
 				"\"I found nothing wrong\" over nothing inspected is the vacuous pass this guard exists not to be")
+		}
+		if census.PackagesScanned != 0 || census.FilesScanned != 0 {
+			t.Errorf("an empty tree reported %d packages / %d files",
+				census.PackagesScanned, census.FilesScanned)
+		}
+	})
+
+	// A TREE OF DIRECTORIES WITH NO GO FILE IS ALSO ZERO PACKAGES, AND ALSO AN
+	// ERROR. This is the shape a root that has been pointed one level too high or
+	// at a renamed directory produces: the walk succeeds, finds nothing, and
+	// would otherwise return a clean census over an unexamined module.
+	t.Run("directories_without_go_files_are_zero_packages_and_an_error", func(t *testing.T) {
+		dir := t.TempDir()
+		if err := os.MkdirAll(filepath.Join(dir, "a", "b"), 0o755); err != nil {
+			t.Fatalf("MkdirAll: %v", err)
+		}
+		// The spelling is SPLIT for the same reason nofloat.go splits its map
+		// keys: conformance.sh's shell cross-check byte-greps the stripped source
+		// and cannot tell a Go string literal from an identifier. Written whole,
+		// this line would make this file a permanent failure of that guard —
+		// which is exactly what it did on the first post-fix run, once the shell
+		// root widened to the module. Splitting it is the principled answer; an
+		// exemption entry would have been the one that rots.
+		if err := os.WriteFile(filepath.Join(dir, "a", "b", "notes.md"),
+			[]byte("a "+"float"+"64 named in prose must not be a package\n"), 0o644); err != nil {
+			t.Fatalf("WriteFile: %v", err)
+		}
+		census, err := ScanGoTreeForFloatingPoint(dir)
+		if err == nil {
+			t.Fatal("a tree with directories but NO Go file returned no error: zero packages inspected " +
+				"passes everything")
+		}
+		if census.PackagesScanned != 0 {
+			t.Errorf("wanted 0 packages over a Go-free tree, got %d: %v",
+				census.PackagesScanned, census.PackageDirs)
 		}
 	})
 }

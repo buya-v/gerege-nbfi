@@ -284,11 +284,20 @@ func WriteReport(w io.Writer, s *Summary) {
 	// of the no-float guards were exactly that until T154. The counts are the
 	// assertion: N files and T tokens were inspected, and each violation class
 	// was 0. A run showing `0 files` here has checked nothing and is exit 2.
-	p("    no-float census         %d Go files / %d tokens inspected under %s",
-		s.NoFloatCensus.FilesScanned, s.NoFloatCensus.TokensScanned, LoanScheduleTreeRel)
+	// T166 ADDED THE PACKAGE COUNT AND THE PACKAGE LIST. The file count alone
+	// read as healthy — "24 Go files" — on a repository where an entire second
+	// package and every subdirectory in the module were outside the walked root.
+	// A reader can only tell a full-module walk from a single-directory walk by
+	// seeing the SET, so the set is printed.
+	p("    no-float census         %d Go packages / %d Go files / %d tokens inspected under %s (recursive)",
+		s.NoFloatCensus.PackagesScanned, s.NoFloatCensus.FilesScanned,
+		s.NoFloatCensus.TokensScanned, GuardedGoTreeRel)
 	p("                            %d forbidden identifiers, %d floating-point or imaginary LITERALS, %d unscannable files",
 		len(s.NoFloatCensus.IdentifierViolations), len(s.NoFloatCensus.LiteralViolations),
 		len(s.NoFloatCensus.ScanErrors))
+	for _, dir := range s.NoFloatCensus.PackageDirs {
+		p("                            covered: %s/%s", GuardedGoTreeRel, dir)
+	}
 
 	if len(s.FatalReasons) > 0 {
 		p("")

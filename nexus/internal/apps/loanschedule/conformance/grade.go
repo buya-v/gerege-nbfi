@@ -242,7 +242,15 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 	// conformance run to exit 0 (T143/M-3). The census runs here, its counts are
 	// printed in the report whether or not anything is wrong, and any violation
 	// is fatal. Zero files scanned is an error returned by the census itself.
-	if census, cerr := ScanGoTreeForFloatingPoint(filepath.Join(opts.RepoRoot, LoanScheduleTreeRel)); cerr != nil {
+	//
+	// T166 WIDENED THE ROOT FROM ONE SUBTREE TO THE MODULE. Until T166 this call
+	// passed LoanScheduleTreeRel, so a float anywhere outside
+	// nexus/internal/apps/loanschedule — a whole new package, or any
+	// SUBDIRECTORY of one — reached VERDICT: PASS untouched. Measured, not
+	// theorised: three planted floats under nexus/internal/apps/ledger/ produced
+	// a run log byte-identical to the clean baseline. GuardedGoTreeRel is now the
+	// module root and the walk recurses, so a new package is covered by default.
+	if census, cerr := ScanGoTreeForFloatingPoint(filepath.Join(opts.RepoRoot, GuardedGoTreeRel)); cerr != nil {
 		s.FatalReasons = append(s.FatalReasons, "THE NO-FLOAT GUARD COULD NOT RUN: "+cerr.Error())
 	} else {
 		s.NoFloatCensus = census
@@ -263,6 +271,16 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 	if s.NoFloatCensus.FilesScanned == 0 {
 		s.FatalReasons = append(s.FatalReasons,
 			"THE NO-FLOAT CENSUS INSPECTED ZERO GO FILES: a guard that inspects nothing passes everything, "+
+				"so this is an ERROR and not a pass")
+	}
+	// T166: the SAME assertion on the PACKAGE count, and for the same reason it
+	// is a separate statement rather than an `||` on the line above. A file count
+	// cannot distinguish "the module was walked" from "one directory was walked";
+	// a package count of 1 on a multi-package module is the shape the pre-T166
+	// root had, and a package count of 0 is a walk that opened nothing.
+	if s.NoFloatCensus.PackagesScanned == 0 {
+		s.FatalReasons = append(s.FatalReasons,
+			"THE NO-FLOAT CENSUS INSPECTED ZERO GO PACKAGES: a guard that inspects nothing passes everything, "+
 				"so this is an ERROR and not a pass")
 	}
 

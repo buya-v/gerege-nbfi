@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go/scanner"
 	"go/token"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"sort"
@@ -14,8 +15,8 @@ import (
 //
 // CLAUDE.md's first non-negotiable: money is integer minor units, and there is
 // no floating point in any monetary code path — including intermediate
-// calculation. This file is the executable form of that sentence for the
-// loanschedule tree.
+// calculation. This file is the executable form of that sentence for the Go
+// module.
 //
 // WHY IT LIVES HERE AND NOT ONLY IN A TEST. Until T154 the only Go-side guard
 // was TestNoFloatInTheLoanScheduleTree, and `.softhouse/conformance.sh` does not
@@ -23,7 +24,49 @@ import (
 // take conformance.sh to exit 0 even on a day somebody did run the tests. The
 // census is a package function called by BOTH the test and Run, so the same
 // scan gates the test suite AND the conformance verdict, and there is exactly
-// one implementation of the rule.
+// one implementation of the rule. The same reasoning is why T166's widening had
+// to land HERE and in conformance.sh's own shell guard, and NOT in the ledger
+// package's in-package scans: those are `go test` checks, conformance.sh never
+// runs `go test`, and a test-only guard is not a guard (P-45).
+//
+// WHAT ROOT IT BINDS, AND WHY THAT ROOT IS DERIVED (T166).
+//
+// Until T166 this rule bound ONE HARD-CODED SUBTREE, `nexus/internal/apps/loanschedule`,
+// at three sites: this variable, `guard_no_float_in_harness` and `guard_gofmt`
+// in conformance.sh. The consequence was measured, not theorised: with a float
+// LITERAL, a float IDENTIFIER at a package root, and a float identifier in a
+// SUBDIRECTORY all planted under `nexus/internal/apps/ledger/`, a full
+// `bash .softhouse/conformance.sh` run produced output BYTE-IDENTICAL to the
+// clean baseline — `VERDICT: PASS (exit 0)`, 5664 cells graded, "24 Go files /
+// 56295 tokens" [VERIFIED: T166 red probe; `diff` of the clean and planted run
+// logs returned exit 0. The subdirectory half was independently measured first
+// by A2-9, finding F-E, with `nexus/internal/apps/ledger/sub/zz_sub.go`].
+// The guard was silent precisely because it never looked, which is this
+// program's signature failure: a green that means less than it appears to.
+//
+// The fix is NOT a second hard-coded path. Adding `ledger` beside `loanschedule`
+// reproduces the defect for the next package and every package after it (P-26:
+// sweep the concept, not the sentence). The root is therefore the GO MODULE
+// ROOT and the walk is recursive, so the guarded set is DERIVED from what is on
+// disk: a new package is covered BY DEFAULT wherever in the module it lands, at
+// whatever nesting depth, and there is no list for anyone to forget to update.
+//
+// WHY THE MODULE ROOT AND NOT `nexus/internal/apps`. A2-9's F-E prescribed
+// "recursive, rooted at internal/apps", which would have covered `ledger` and
+// `ledger/sub`. The module root is one level wider and is chosen because
+// `internal/apps` is itself a hard-coded path: a package landing at
+// `nexus/internal/domain/` or `nexus/pkg/` would be silently uncovered, and
+// SILENT is the defect class, not the particular directory. Today the two roots
+// select the identical file set — every .go file in the module is under
+// `internal/apps` — so the wider root costs nothing and removes the next
+// omission in advance.
+//
+// THERE IS NO EXEMPTION LIST, DELIBERATELY. An allowlist is the mechanism that
+// rots: an entry added for one honest reason outlives the reason, and nothing
+// ever revisits it. The two exemptions this guard grants are structural
+// properties of the token stream rather than entries in a table — comments are
+// skipped by the scanner, and a decimal inside a string literal is token.STRING —
+// and both are asserted by the guard's own test rather than assumed.
 //
 // WHAT IT INSPECTS, AND WHY BOTH HALVES ARE NEEDED.
 //
@@ -42,24 +85,37 @@ import (
 //     identifiers" (P-35's second question: does the guard detect every FORM the
 //     violation can take?).
 //
-// WHY THE TOKEN STREAM AND NOT A BYTE GREP. The frozen contract's doc comments
-// NAME the forbidden types in order to forbid them, so a byte grep fires on the
-// prohibition itself, and a guard that fires on its own rule is a guard somebody
-// switches off. go/scanner in mode 0 skips comments entirely, and it classifies
-// a number inside a string as token.STRING — so neither a doc comment nor a
-// decimal money fixture like "1250000.00" can trip it, with no exemption list to
-// rot.
+// WHY THE TOKEN STREAM AND NOT A BYTE GREP (P-48 — detect code with a parser).
+// The frozen contract's doc comments NAME the forbidden types in order to forbid
+// them, so a byte grep fires on the prohibition itself, and a guard that fires on
+// its own rule is a guard somebody switches off. go/scanner in mode 0 skips
+// comments entirely, and it classifies a number inside a string as token.STRING —
+// so neither a doc comment nor a decimal money fixture like "1250000.00" can trip
+// it, with no exemption list to rot. Twice in the last fire a guard was kept green
+// by PROSE in the file it was scanning, so the parser-based leg is the one to
+// widen when there is a choice, and T166 widened it first and furthest.
 //
-// PHRASED POSITIVELY (P-35). It reports what it INSPECTED — files, tokens,
-// identifiers, numeric literals — and every caller asserts a positive fact about
-// those counts. Zero files scanned is an ERROR, never a pass: "I found nothing
-// wrong" is vacuous on no input, which is the single shape shared by every
-// vacuous guard this program has found.
+// PHRASED POSITIVELY (P-35). It reports what it INSPECTED — packages, files,
+// tokens, identifiers, numeric literals — and every caller asserts a positive
+// fact about those counts. Zero files scanned is an ERROR, never a pass, and so
+// is zero PACKAGES. "I found nothing wrong" is vacuous on no input, which is the
+// single shape shared by every vacuous guard this program has found. The PACKAGE
+// count is T166's addition, because a file count alone cannot tell "the whole
+// module was walked" apart from "one directory was walked and the rest of the
+// module was never opened" — and the second is exactly the state the old root
+// left this repository in while printing a healthy-looking 24.
 
-// LoanScheduleTreeRel is the tree the no-float rule binds, relative to the
-// repository root. It is the same tree `guard_no_float_in_harness` walks in
-// .softhouse/conformance.sh.
-var LoanScheduleTreeRel = filepath.Join("nexus", "internal", "apps", "loanschedule")
+// GuardedGoTreeRel is the tree the no-float rule binds, relative to the
+// repository root. It is the GO MODULE ROOT, walked recursively, and it is the
+// same tree `guard_no_float_in_harness` and `guard_gofmt` walk in
+// .softhouse/conformance.sh — all three sites now derive their set from this one
+// concept instead of each naming a subtree of its own.
+//
+// IT WAS CALLED LoanScheduleTreeRel UNTIL T166, AND THE NAME WAS PART OF THE
+// DEFECT. A reader of grade.go saw `LoanScheduleTreeRel` and read it as a
+// deliberate scoping decision rather than as the accident it was. A name that
+// lies is how this hid, so the rename is not cosmetic.
+var GuardedGoTreeRel = "nexus"
 
 // forbiddenFloatIdentifiers is the identifier half of the rule.
 //
@@ -68,6 +124,12 @@ var LoanScheduleTreeRel = filepath.Join("nexus", "internal", "apps", "loanschedu
 // these very spellings. Written whole, this map would make THIS file a permanent
 // failure of that guard. Split, the bytes never appear contiguously and the Go
 // scanner still sees one string constant each.
+//
+// T166 widened that shell guard to the whole module, so this property now
+// protects this file against a guard whose root no longer merely HAPPENS to
+// contain it. Any future file that must name a forbidden spelling in code owes
+// the same split; that is the principled answer, and it is the reason no
+// exemption entry was needed for this file when the root grew.
 var forbiddenFloatIdentifiers = map[string]bool{
 	"float" + "32": true, "float" + "64": true,
 	"complex" + "64": true, "complex" + "128": true,
@@ -78,11 +140,22 @@ var forbiddenFloatIdentifiers = map[string]bool{
 
 // FloatingPointCensus is what the scan INSPECTED and what it found. Every field
 // is a positive count; a caller that reports "clean" without also reporting
-// FilesScanned has reported nothing.
+// PackagesScanned and FilesScanned has reported nothing.
 type FloatingPointCensus struct {
-	Root          string
-	FilesScanned  int
-	TokensScanned int
+	Root string
+
+	// PackagesScanned is the number of DIRECTORIES under Root that held at
+	// least one .go file. T166's addition: see the file comment — a file count
+	// alone cannot distinguish a full-module walk from a single-directory walk.
+	PackagesScanned int
+	FilesScanned    int
+	TokensScanned   int
+
+	// PackageDirs is every scanned directory, slash-separated and relative to
+	// Root, sorted. Reported so a reader can see the SET that was covered and
+	// not merely its size — including NESTED directories, whose absence from
+	// the in-package scans was A2-9's finding F-E.
+	PackageDirs []string
 
 	// IdentifierViolations and LiteralViolations are "<file>:<line>:<col>: …"
 	// strings, sorted, one per occurrence.
@@ -107,25 +180,34 @@ func (c FloatingPointCensus) Violations() []string {
 // Summary is the positive sentence: what was inspected and what each count was.
 func (c FloatingPointCensus) Summary() string {
 	return fmt.Sprintf(
-		"inspected %d Go files / %d tokens under %s: %d forbidden identifiers, %d floating-point or imaginary literals, %d unscannable files",
-		c.FilesScanned, c.TokensScanned, c.Root,
+		"inspected %d Go packages / %d Go files / %d tokens under %s: %d forbidden identifiers, %d floating-point or imaginary literals, %d unscannable files",
+		c.PackagesScanned, c.FilesScanned, c.TokensScanned, c.Root,
 		len(c.IdentifierViolations), len(c.LiteralViolations), len(c.ScanErrors))
 }
 
-// ScanGoTreeForFloatingPoint tokenises every .go file under root and censuses
-// the forbidden identifiers and the floating-point and imaginary LITERALS.
+// ScanGoTreeForFloatingPoint tokenises every .go file ANYWHERE under root —
+// recursively, at every nesting depth — and censuses the forbidden identifiers
+// and the floating-point and imaginary LITERALS.
 //
-// It returns an error only when the walk itself failed or when it scanned zero
-// files. A tree that scans clean returns a census whose counts a caller must
-// still check — this function deliberately does not decide the verdict, because
-// the test and the conformance run word it differently.
+// RECURSION IS THE POINT, NOT AN IMPLEMENTATION DETAIL. A2-9's finding F-E
+// measured two in-package scans built on `os.ReadDir(".")` that `continue` on
+// `e.IsDir()`: a float in ANY subdirectory had zero coverage from either. This
+// function uses filepath.WalkDir and descends, and its test plants a violation
+// two directories deep to keep it that way.
+//
+// It returns an error only when the walk itself failed, when it scanned zero
+// files, or when it scanned zero packages. A tree that scans clean returns a
+// census whose counts a caller must still check — this function deliberately
+// does not decide the verdict, because the test and the conformance run word it
+// differently.
 func ScanGoTreeForFloatingPoint(root string) (FloatingPointCensus, error) {
 	c := FloatingPointCensus{Root: root}
-	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+	pkgDirs := map[string]bool{}
+	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
-		if info.IsDir() || !strings.HasSuffix(path, ".go") {
+		if d.IsDir() || !strings.HasSuffix(path, ".go") {
 			return nil
 		}
 		raw, rerr := os.ReadFile(path)
@@ -133,6 +215,12 @@ func ScanGoTreeForFloatingPoint(root string) (FloatingPointCensus, error) {
 			return rerr
 		}
 		c.FilesScanned++
+		dir := filepath.Dir(path)
+		if rel, relErr := filepath.Rel(root, dir); relErr == nil {
+			pkgDirs[filepath.ToSlash(rel)] = true
+		} else {
+			pkgDirs[filepath.ToSlash(dir)] = true
+		}
 		fset := token.NewFileSet()
 		file := fset.AddFile(path, -1, len(raw))
 		var sc scanner.Scanner
@@ -166,10 +254,15 @@ func ScanGoTreeForFloatingPoint(root string) (FloatingPointCensus, error) {
 	if err != nil {
 		return c, fmt.Errorf("walking %s for the no-float census: %w", root, err)
 	}
-	if c.FilesScanned == 0 {
+	for dir := range pkgDirs {
+		c.PackageDirs = append(c.PackageDirs, dir)
+	}
+	sort.Strings(c.PackageDirs)
+	c.PackagesScanned = len(c.PackageDirs)
+	if c.FilesScanned == 0 || c.PackagesScanned == 0 {
 		return c, fmt.Errorf(
-			"the no-float census scanned ZERO Go files under %s: a guard that inspects nothing passes "+
-				"everything, so this is an ERROR and not a pass", root)
+			"the no-float census scanned %d Go packages / %d Go files under %s: a guard that inspects nothing "+
+				"passes everything, so this is an ERROR and not a pass", c.PackagesScanned, c.FilesScanned, root)
 	}
 	sort.Strings(c.ScanErrors)
 	sort.Strings(c.IdentifierViolations)
