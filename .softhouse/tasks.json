@@ -1236,9 +1236,10 @@
    "dependencies": [
     "A2-16"
    ],
-   "status": "pending",
-   "attempts": 0,
-   "note": "paired independent review of A2-16. SUBJECT IS ALREADY MERGED (fa35fe5) -- P-59 applies: main...branch returns EMPTY and reads as clean. Review the merge commit."
+   "status": "done",
+   "attempts": 1,
+   "note": "MERGED, fire 20260821-134344. VERDICT MICRO-FIX (applied, 7 lines, a cross-reference block quote; no number, no money logic -- driver inspected the diff and confirms it is mechanical). CONFIRMED A2-16 ON ALL SEVEN QUESTIONS BY INDEPENDENT RE-DERIVATION, not by reading its conclusions. Q1 the EMPTINESS claim is TRUE and it found the decisive leg itself: the only input carrier is Request's thirteen loanschedule fields (vector.go:279-293), decode is strict (:771-772), and this binds ALL THREE CLASSES including contract-refusal whose request is the same type -- so no vector of any class can carry a ledger input, and option (b) really is a memo. Q2 the FOURTH WALL is REAL, all four legs at exact lines (admit.go:518, :171-172, :131-143, strict decode). Q3 trip-wire trips, and A2-17 CLOSED THE LEG A2-16 LEFT IMPLICIT: the sentinels are declared in the frozen file at contract.go:2518 and :2530. Q4 IT OPENED THE DUMP -- A2-150-db-final-state.txt:65-70, header projects BOTH amount and currency_code, so 'db read-backs are money-free' is FALSE and A2-14's per-seam recommendation would have been WRONG; re-derived I-1 from raw bytes, debits 245,000,000 minor == credits 245,000,000 minor. Q5 all corrections verified at 426a23544. Q7 re-measured BOTH directions AND tested a claim A2-16 asserted but never measured -- the probe row turns -context=loanschedule red too; it does. FINDING A2-17-M1 (fixed): sec 4.10's table marked six rows in_graded_domain:true with NO pointer to sec 5.4's rule that every row lands false first, the only pointers being 330+ lines later; A2-17 MEASURED what following the table literally does -- every run in the repo exit 2 UNUSABLE with no legal way to clear it. ALSO EXONERATED A2-16 ON A DRIFT IT DID NOT CAUSE: three harness citations moved because of concurrent same-batch merges, proven by checking git show a2c3c78:.softhouse/conformance.sh where run_guards sits at 843 exactly. DRIVER ACTION TAKEN: A2-15 stays blocked (A2-17 verified the mechanism independently and ENDORSES not dispatching it); A2-17's added recommendation -- sequence F-4 (decide capabilities.json / PIN.json schema ids) BEFORE P-1..P-5 -- is recorded for the A2-15 successor.",
+   "branch": "softhouse/A2-17-review-dec2-rev2"
   },
   {
    "id": "T197",
@@ -1256,9 +1257,10 @@
    "dependencies": [
     "T194"
    ],
-   "status": "pending",
-   "attempts": 0,
-   "note": "paired independent review of T194. SUBJECT ALREADY MERGED (f83431c) -- P-59 applies."
+   "status": "done",
+   "attempts": 1,
+   "note": "MERGED, fire 20260821-134344. VERDICT APPROVED, with five non-blocking findings and ONE REFUTATION OF THE DRIVER'S OWN BRIEF. Q1 THE FLOOR IS GENUINELY DERIVED, proven by the single experiment that separates derived from pinned: git add a new tracked .java and the floor moves 57->58 with the harness UNEDITED. All five divergence cases measured: untracked fail-OPEN, tracked-but-deleted fail-CLOSED (exit 2), gitignore fail-OPEN, nested checkout fail-OPEN, .claude/worktrees consistent. Honest limit stated: it is a LOWER BOUND ONLY, no protection against over-walking, which is T173's actual historical incident. Q2 T160 IS STILL OPEN AND T197 MEASURED IT: deleting one parity vector on the POST-T194 harness gives VERDICT PASS exit 0, 42 parity vectors, 5617 cells, NO WARNING. Q4/Q5 IT BUILT THE STUB T194 DECLINED TO BUILD -- 8 lines of Python, opens no file, both polarities faked, true census 57 -> exit 0 VERDICT PASS. Residual real as declared, disposition adjudicated CORRECT (the closed class arrives by accident with no suspicious diff; the open class needs a deliberate glaring one), but T194's anti-hashing LEG 2 IS OVERSTATED: a stale digest fails closed/loud, a stale floor fails open/silent, so 'the same trap in another costume' is rhetoric. Q6 REPRODUCED AND SHARPER THAN CLAIMED: a hybrid differing by exactly ONE LINE accepts the stub at exit 0 AND PRINTS 'census figure READ: inspected 57 >= 57 (floor DERIVED, not pinned)' WHILE DOING IT -- fixing one head would have hidden the hole BEHIND THE NEW EVIDENCE LINE. F-1 (open): the extraction regex s/^CENSUS .*inspected \\([0-9][0-9]*\\).*$/\\1/p is GREEDY and takes the LAST 'inspected N' on a line -- latent today (one occurrence per line), polarity unknown so not safely fail-closed. Routed to T201. F-4 constructive: the git index is a third enumerator T160's brief overlooks, so T194's technique partially answers T160 at ~3 lines.",
+   "branch": "softhouse/T197-review-t194"
   },
   {
    "id": "T198",
@@ -1276,9 +1278,10 @@
    "dependencies": [
     "T196"
    ],
-   "status": "pending",
-   "attempts": 0,
-   "note": "paired independent review of T196. SUBJECT ALREADY MERGED (45f32fb) -- P-59 applies. Driver accepted T196's self-disclosed files_hint deviation onto .softhouse/reviews/t179-guard-classifier/; the reviewer should say whether that was the right call."
+   "status": "done",
+   "attempts": 1,
+   "note": "MERGED, fire 20260821-134344. VERDICT APPROVED. IT REBUILT ALL THREE CLASSIFIERS IN /tmp AND WROTE ITS OWN FIXTURES BEFORE READING T196'S ANSWERS. Both halves of T196's claim reproduce, and the substitution was NECESSARY: on T198's own fixture, an unguarded in-place rewrite of the ratified DEC-1 scores base=UNKNOWN (REPORTED) -> T183's patch=SCRATCH/SANDBOX (INVISIBLE IN BOTH LISTS, 0 and 0) -> T196=TRUSTED/ADR (correctly reported). T183's patch was a STRICT REGRESSION for the exact shape it was written to fix. THE DEEPEST FINDING OF THE FIRE: T183's own in-patch comment -- 'can only ever change the reported SCOPE tag, never a guard verdict' -- is technically true and MATERIALLY FALSE, because in this tool the scope tag IS the excuse mechanism (:975 turns UNGUARDED+SCRATCH into SANDBOX) and the SOLE --enforce input (:1280). The patch's own safety argument is the thing that is wrong, and shipping it would have merged a fail-open UNDER A REVIEWER'S ENDORSEMENT. Q2 no new fail-open, MEASURED not argued: zero sites lost from TRUSTED, zero dropped from both lists, union invariant 114->114, every move UNKNOWN->TRUSTED; the flat bare-name fallback it found is PRE-EXISTING. Q5 probed the resolver directly -- t178_guard genuinely resolves (IMPORT_MISSES {}), so 0 excused is AN ANSWER, NOT A LOOKUP FAILURE. Q8 count reproduced from a FIFTH instrument: 25/25, 20+7, 2 both, 27 pairs, base 22=17+5, set difference pinning the gap to exactly edit18/edit20/edit21. TWO CORRECTIONS THE DRIVER MUST CARRY: (1) F-2's REPAIR SCOPE IS MIS-STATED BY T196 -- T74/T64/T61 are bare truncations threatening THIRTEEN LIVE PARITY VECTORS (rank 1 = T74, 6 vectors), but T58 HAS AN UNCONDITIONAL OVERWRITE REFUSAL AND CANNOT TRUNCATE, so T196's 'each is...' wording is wrong for it; verdict unaffected, repair scope is. Routed to T203. (2) F-1 COSTS 4 FILES, NOT 33: guard_classify appears 0x in conformance.sh, and excluding fixtures the 26 split 22 CAPTURE (scripts writing their own out/ artefacts -- a tag-definition question) + 4 STORE; wiring --enforce on STORE/ADR/RIG/PATTERNS/PORT makes the cost EQUAL the F-2 repair, but needs a --tags option the tool lacks, which T198 DELIBERATELY DID NOT WRITE, for T183's own reason. Also: the 2>&1 restraint is correct polarity; the files_hint deviation was rightly accepted, but FIX THE HINT RATHER THAN NORMALISE THE DEVIATION.",
+   "branch": "softhouse/T198-review-t196"
   },
   {
    "id": "T199",
@@ -1296,9 +1299,10 @@
    "dependencies": [
     "T165"
    ],
-   "status": "pending",
-   "attempts": 0,
-   "note": "paired independent review of T165. SUBJECT ALREADY MERGED (400425c) -- P-59 applies. Highest-stakes review of the batch: the fix is now the sole enforcer of a hard user gate."
+   "status": "done",
+   "attempts": 1,
+   "note": "MERGED, fire 20260821-134344. VERDICT MICRO-FIX -- and it found a LIVE GATE BYPASS that T165's fix does not close. RED REPRODUCED, ALL THREE LEGS, from rebuilt pre-fix binaries at 5309cb0~1: a binary compiled from a tree carrying an UNRATIFIED DEC-1 contract edit exits 2 from its own tree (cd080a4a != pin 0db73d4a) and prints VERDICT PASS exit 0, 43 parity vectors FROM A SIBLING WORKTREE. Worst leg: from live worktree agent-a2027f85cea4effc9 (real .git, no .softhouse/vectors -- ELEVEN OF SEVENTY-ONE WORKTREES ARE IN THIS STATE) the unbounded climb escaped into MAIN and printed PASS, three trees in one run. T154's F-3 is FALSE and T199 says it cannot defend it. FINDING D-1, DRIVER-CONFIRMED INDEPENDENTLY IN THE SOURCE: CONFORMANCE_REPO_ROOT BYPASSES THE DEC-1 DIGEST GATE THROUGH THE SUPPORTED HARNESS. reporoot.go:247 precedence is -repo-root, then CONFORMANCE_REPO_ROOT, then the build anchor -- so ENV OUTRANKS THE ANCHOR -- while conformance.sh mentions CONFORMANCE_REPO_ROOT 0 times and -repo-root 0 times (driver re-measured both counts) and conformance.sh:402-409 DELIBERATELY delegates the digest gate to Go alone. On the real gate with the same tampered tree: plain run -> exit 2 digest mismatch; CONFORMANCE_REPO_ROOT=<main> -> EXIT 0, PASS 43. This falsifies T165's 'by construction' claim -- the anchor is THIRD in precedence, not first. NOT a rejection because T165 narrowed the hole from any accidental cd (silent) to a deliberate env var (loudly bannered in the report); NOT an approval because THE EXIT CODE IS STILL 0 and the driver reads only exit code + probe line. T199 SPECIFIED a 6-line refusal for conformance.sh and DELIBERATELY DID NOT APPLY IT -- outside T165's files_hint, gate-bearing harness, deserves its own task. Routed to T201. Q3: two of T165's three self-declared UNVERIFIEDs CLOSED -- -trimpath yields a relative anchor and exits 2 NAMING IT (no silent fallback), warm cache keeps byte-identical trees at two paths each reporting THEIR OWN anchor; non-macOS cross-build embeds the absolute anchor but could not be executed, so it STAYS [UNVERIFIED]. NO GRADED VALUE MOVED, PROVEN BYTE-FOR-BYTE: pre-fix and post-fix binaries against the identical tree and store differ by EXACTLY 4 ADDED HEADER LINES AND NOTHING ELSE. Honest non-reproduction stated rather than papered over: it could not reproduce the pre-fix '42 files' figure because main now HAS T165 merged and therefore has 44.",
+   "branch": "softhouse/T199-review-t165"
   },
   {
    "id": "T200",
@@ -1316,9 +1320,70 @@
    "dependencies": [
     "T190"
    ],
+   "status": "done",
+   "attempts": 1,
+   "note": "MERGED, fire 20260821-134344. VERDICT APPROVED. Every load-bearing claim reproduced under /bin/zsh 5.9. Q1 CONFIRMED EXACTLY, and it is the claim the whole fix rests on: clean -> pipestatus=(0 1) rc=1; corrupt index -> pipestatus=(128 1) rc=1; BYTE-IDENTICAL, so deleting || true alone would NOT have closed the fail-open and T190's argument is both stronger than T189's AND true. Q0 shell confirmed on all four legs, including that bash -n exits 0 and is genuinely NOT a discriminator. Q2 confirmed: from a subdir T189's `-- .` returns only the subdir and silently drops LOCKED_STATE.md; :(top) identical from root and subdir. Q5 17/17 byte-exact incl. 0/20/21/50k lines, UTF-8, renames, literal -n/-e; rc=141 pipestatus=(141 0) reproduced. Q6 RED reproduced (eval rc=0, DIRTY=[], CLEAN with real deliverables present); .git/index.lock does NOT fail (rc=0) so T190's correction of T189 holds; GREEN 15/15 sourced byte-for-byte from lines 239-254; T172 NOT reopened; no false alarms across 9 unusual repo states. Q8 CONFIRMED AND STRONGER THAN T190 ARGUED: zsh re-reads LARGE scripts incrementally, and T200 HIJACKED a running script by in-place rewrite at 15KB and 30KB while rename never did -- the real file is 16,438 B, ABOVE THE THRESHOLD, so the caution was warranted rather than ceremonial. TWO CORRECTIONS TO T190'S OWN ACCOUNT: (Q4) judgement correct, stated reason PARTLY FALSE -- :(exclude) does NOT unstage an already-staged LOCK and add -A RESOLVED an unmerged LOCK (3->0 entries) -- but the conclusion survives because the old grep produced a REACHABLE false 'rescued:' log whenever only the tracked LOCK was dirty, and no state strands or steals a lock (a foreign lock cannot reach the index: the losing fire exits at :102, BEFORE the trap at :132). (Q7) literally true, materially incomplete -- the LOCK file IS removed on SIGINT, but ZSH RESUMES AFTER THE HANDLER and T200 measured FIVE FURTHER TICKS RUNNING WITH THE LOCK DELETED, on SIGINT AND SIGTERM; SIGKILL strands it. Not introduced by this diff. NEW FINDING, THE UNFIXED TWIN TWENTY LINES BELOW THE PATCH: fire-program.sh:262 `WD=$(git -C \"$W\" status --porcelain | wc -l | tr -d ' ')` reads a FAILING git as a CLEAN worktree (wc prints 0) and silently continues -- abandoning exactly the stranded deliverables the comment above it was written for ('4,482 insertions stranded'). Same defect class, same function, and here the rc IS 128 and merely unread, so the repair is small. Routed to T202.",
+   "branch": "softhouse/T200-review-t190"
+  },
+  {
+   "id": "T201",
+   "title": "CONFORMANCE_REPO_ROOT bypasses the frozen DEC-1 digest gate through the SUPPORTED harness, and the exit code stays 0",
+   "description": "T199's D-1, driver-confirmed in the source. reporoot.go:247 sets precedence -repo-root, then CONFORMANCE_REPO_ROOT, then the build anchor -- ENV OUTRANKS THE ANCHOR -- while conformance.sh mentions CONFORMANCE_REPO_ROOT ZERO times and -repo-root ZERO times (driver re-measured both), and conformance.sh:402-409 DELIBERATELY delegates the frozen-contract digest gate to the Go binary alone. T199 measured the consequence on the real gate with a tampered tree: plain run exits 2 with a digest mismatch; CONFORMANCE_REPO_ROOT=<main> gives EXIT 0, PASS 43. T165 narrowed the hole from any accidental cd (silent) to a deliberate env var (loudly bannered IN THE REPORT) -- but THE EXIT CODE IS STILL 0, and the driver, the wrapper and every automation read the exit code and the probe line, not the report body. T199 SPECIFIED a 6-line refusal and deliberately did not apply it (outside T165's files_hint, gate-bearing). Apply it, having RE-DERIVED it. Decide and argue: refuse outright when the graded root differs from the harness's own $REPO_ROOT, or accept-and-report-with-a-non-zero-exit -- the test is what an automation that reads ONLY the exit code learns. ALSO IN THIS TASK, same file, keep the two changes clearly separated: T197's F-1 -- the census extraction regex s/^CENSUS .*inspected \\([0-9][0-9]*\\).*$/\\1/p is GREEDY and takes the LAST 'inspected N' on the line. Latent today (one occurrence per line) and T197 states the POLARITY IS UNKNOWN, so establish the polarity FIRST and say it, then fix. DRIVE BOTH RED (P-22) AND GREEN (P-50). The tampered-tree probe must be reverted and the digest re-verified -- T199 did exactly that and said so.",
+   "agent_role": "coder",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "files_hint": [
+    ".softhouse/conformance.sh"
+   ],
+   "context": "harness",
+   "dependencies": [
+    "T199",
+    "T197"
+   ],
    "status": "pending",
    "attempts": 0,
-   "note": "paired independent review of T190. SUBJECT ALREADY MERGED (9ca3a6d) -- P-59 applies. The subject is the wrapper that launches every future fire; a defect here is self-inflicted and recurring."
+   "note": "raised by T199 (D-1, with a specified but deliberately unapplied 6-line patch) and T197 (F-1). Driver independently confirmed the D-1 mechanism: 0 mentions of either override in conformance.sh, env ranked above the anchor at reporoot.go:247."
+  },
+  {
+   "id": "T202",
+   "title": "THE UNFIXED TWIN twenty lines below T190's patch — fire-program.sh:262 reads a FAILING git as a CLEAN worktree and abandons the stranded work the sweep exists to rescue",
+   "description": "T200's new finding, and it is the same defect class T190 just closed, in the same function. `WD=$(git -C \"$W\" status --porcelain | wc -l | tr -d ' ')` -- when git fails, `wc -l` prints 0, the guard reads the worktree as CLEAN and silently `continue`s, ABANDONING EXACTLY THE STRANDED DELIVERABLES the comment above it was written for ('4,482 insertions stranded', the real 2026-08-18 incident). Unlike the DIRTY site, here the rc IS 128 and merely unread, so the repair is small. FIX IT, and fix T200's two companions in the same file: (T-b) fire-program.sh:250's rescue `git add -A -- .` is still CWD-RELATIVE and can log 'rescued:' having staged nothing -- now ASYMMETRIC with the :(top) status check directly above it, which is worse than before because the two disagree; (T-c) THE SIGNAL TRAP: T200 measured that the LOCK file is removed on SIGINT but ZSH RESUMES AFTER THE HANDLER, and it observed FIVE FURTHER TICKS RUNNING WITH THE LOCK DELETED, on SIGINT AND SIGTERM -- a fire continuing to work while holding no lock is how two orchestrators end up in one repo, which STEP 0 exists to prevent. SIGKILL strands the lock instead; say what each signal should do and make it do that. THE SHELL IS ZSH 5.9 (shebang #!/bin/zsh; the launchd plist runs `/bin/zsh -lc`; T190 and T200 both established this independently) -- DRIVE RED AND GREEN UNDER ZSH, and note that `bash -n` on this file EXITS 0 and is NOT a discriminator. KEEP T172's ANCHOR REGRESSION GREEN. Do NOT modify the live /Users/buv/gerege-nbfi/.softhouse/bin/fire-program.sh while a fire is running -- work in your worktree; the merge replaces the inode and takes effect next fire. T200 measured that zsh re-reads LARGE scripts incrementally and HIJACKED a running script by in-place rewrite at 15KB/30KB while rename never did, and this file is 16,438 B -- ABOVE that threshold -- so the in-place caution is load-bearing, not ceremonial.",
+   "agent_role": "coder",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "files_hint": [
+    ".softhouse/bin/fire-program.sh"
+   ],
+   "context": "harness",
+   "dependencies": [
+    "T200"
+   ],
+   "status": "pending",
+   "attempts": 0,
+   "note": "raised by T200 as its highest-priority follow-up, plus its T-b and T-c. Same function and same defect class as T190, which is why it must not wait."
+  },
+  {
+   "id": "T203",
+   "title": "THREE unguarded truncating rewriters of the GOLDEN VECTOR STORE — thirteen live parity vectors, and T196's repair scope was wrong about the fourth",
+   "description": "T196's F-2, with T198's correction applied. The backstep classifier unhid four vector-store writers previously scored UNKNOWN. T198 re-derived the exposure and found T196's 'each is a bare truncation' wording WRONG for one of them: T74-promote-vectors.py, T64-promote-vectors.py and T61-promote-vectors.py ARE bare truncations and between them threaten THIRTEEN LIVE PARITY VECTORS (rank 1 is T74 at six vectors); T58-promote-vectors.py HAS AN UNCONDITIONAL OVERWRITE REFUSAL AND CANNOT TRUNCATE. Guard the three that can; verify T58's refusal rather than assuming it and say what you measured. THIS IS THE FLAGSHIP EXPOSURE OF THE PROGRAM: the vector store is what EVERY parity claim rests on -- 43 vectors, 5664 cells, the entire basis for saying the Go port matches the reference oracle -- so an unguarded in-place rewriter of it is at least as serious as one targeting DEC-1, and these sat hidden as UNKNOWN until T196's fix made them visible. USE THE ESTABLISHED IDIOM: the shared-guard pattern T178 adopted and T187 extended across 25 files (.softhouse/reviews/t41-probe/, shared t178_guard-style module), which T196's D-3 fix now correctly scores as GUARDED through one import hop -- do not invent a new one. Locations: .softhouse/handoff/T74-promote-vectors.py, .softhouse/handoff/T61-promote-vectors.py, .softhouse/handoff/T58-promote-vectors.py, .softhouse/capture/t64-zeroprincipal/src/T64-promote-vectors.py. SAFETY, NON-NEGOTIABLE: NEVER EXECUTE A PROMOTE SCRIPT FROM THE REPO ROOT -- these truncate the live store. Scratch copies only, and verify the vector store is byte-identical before and after your work (count the vectors AND digest the tree), plus both frozen digests. DRIVE RED (P-22): show a scratch store truncated by the unguarded script. DRIVE GREEN (P-50): show the guard refusing, and the harness still at exit 0 / 43 parity vectors / 5664 cells afterwards. Then run --enforce and report whether these four now classify correctly.",
+   "agent_role": "coder",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "files_hint": [
+    ".softhouse/handoff/",
+    ".softhouse/capture/t64-zeroprincipal/"
+   ],
+   "context": "harness",
+   "dependencies": [
+    "T196",
+    "T198"
+   ],
+   "status": "pending",
+   "attempts": 0,
+   "note": "raised by T196 (F-2) and CORRECTED by T198, which established T58 cannot truncate and ranked the exposure at 13 live parity vectors. Do not re-scope it back to four."
   }
  ],
  "cross_corroboration": {
