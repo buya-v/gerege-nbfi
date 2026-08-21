@@ -366,7 +366,7 @@
       "role": "reviewer",
       "executor": "agent",
       "model": "opus",
-      "status": "in_progress",
+      "status": "done",
       "dependencies": [
         "A2-7"
       ],
@@ -376,7 +376,7 @@
         ".softhouse/capture/tierA-a2/"
       ],
       "description": "Paired reviewer for A2-7 (plan gate rule 1; the driver registered it rather than repeating the T149/A2-5 omission a third time). A2-7 did something unusual and load-bearing: IT REFUTED THE DRIVER'S CENTRAL PREMISE and acted on its own measurement instead of the brief. That refutation is now written into gates.md and program.json as fact, so IF IT IS WRONG THE PROGRAM'S RECORD IS WRONG. Re-derive it: is the 21-row acc_gl_account dump genuinely pre-existing on main rather than something A2-7 created and back-dated? Does product 22 genuinely carry all nine mandatory slots? Check the git history of those files, not just their contents. THEN attack the new work: (a) re-issue its GET /loanproducts/{id} captures yourself and confirm the write/read field-name asymmetry and the absent type/usage; (b) re-derive the runtime-vs-creation finding -- a product with all nine notNull() slots that still 404s on charge-off and goodwill -- since that is the measurement A2-8's design now rests on; (c) re-derive the A2-214 403 and confirm G-10's framing is accurate and not overstated; (d) verify the double-entry balance claim (2,450,000 both sides) IN INTEGER MINOR UNITS yourself, and confirm no float anywhere in the probe scripts; (e) verify the manifest claim -- 430 -> 571, and that all 430 pre-existing hashes are byte-identical against the LITERAL fork-point sha, which you should recompute rather than trust; (f) A2-7 carried an honest [UNVERIFIED] that five of nine slots were never posted to because its probe used 0% rate / no charges / no overpayment / no transfer. Judge whether that materially weakens anything A2-8 is about to build on. Verdict APPROVED / MICRO-FIX / REJECTED with specifics.",
-      "note": "Registered by the driver with A2-7's merge, local fire 20260821-054355. || local fire 20260821-134344: DISPATCHED (wave 1), isolated worktree softhouse/A2-11-review-a2-7, model opus. Oracle UP. Told: the refutation is now written into gates.md and program.json AS FACT, so if it is wrong the program record is wrong; check GIT HISTORY of the 21-row dump not just its contents; recompute the 430 fork-point hashes rather than trusting them; judge whether A2-7 five-of-nine-slots-never-posted UNVERIFIED weakens what A2-8 is building RIGHT NOW.",
+      "note": "Registered by the driver with A2-7's merge, local fire 20260821-054355. || local fire 20260821-134344: DISPATCHED (wave 1), isolated worktree softhouse/A2-11-review-a2-7, model opus. Oracle UP. Told: the refutation is now written into gates.md and program.json AS FACT, so if it is wrong the program record is wrong; check GIT HISTORY of the 21-row dump not just its contents; recompute the 430 fork-point hashes rather than trusting them; judge whether A2-7 five-of-nine-slots-never-posted UNVERIFIED weakens what A2-8 is building RIGHT NOW. || local fire 20260821-134344: DONE and MERGED (e1ead9c), scope clean -- 44 files ALL under .softhouse/reviews/A2-11/, 2284 insertions, ZERO deletions, nothing in nexus/. VERDICT MICRO-FIX. It UPHELD A2-7's refutation of the driver on every load-bearing claim and re-derived it three ways, including the one that cannot be forged: commit 0e96841 (which introduced the 21-row dump) is a git ANCESTOR of A2-7's fork point 12a7f8d9 -- dates can be forged, ancestry cannot. It traced the driver's 'four, all ASSET' to A2-019, a pre-run-020 snapshot where gl 2 was still ASSET (P-32). AND IT CAUGHT A FABRICATED CAPTURE EXCERPT IN MERGED EVIDENCE -> P-46. Because A2-11 RECORDED its four corrections rather than APPLYING them, the fabricated lines were still standing on main after the merge; the driver verified the fabrication against raw bytes itself and struck them in a follow-up commit, and corrected A2-8 mid-flight. It also re-observed both runtime 404s on a NEW loan (A2-7's loan 5 is now closed and returns a STATUS 403 first, so it built loan 6 on product 46 -- byte-identical 404s, control repayment 200), recomputed all 430 fork-point hashes from blobs (0 differ, 0 dropped), and verified double-entry at 245,000,000 MINOR UNITS both sides in integer arithmetic with zero sub-minor residue.",
       "attempts": 1
     },
     {
@@ -484,6 +484,40 @@
       ],
       "description": "RAISED BY T156 as follow-up F-2. .softhouse/handoff/T61-mutations.py:265,289-291 wraps its mutation in a `finally` that covers SIGINT but NOT SIGTERM and not SIGKILL, so a killed driver leaves nexus/.../rounding.go MUTATED IN THE WORKING TREE. T156 classified this as the BENIGN half of the family because it fails LOUDLY -- a mutated rounding.go breaks the build or reds the conformance run rather than producing a quiet green. CONFIRM THAT CLASSIFICATION BEFORE ACTING ON IT, and if it is right, say so and fix it anyway: loud is not the same as harmless when the file it strands is a MONEY path (rounding is the first non-negotiable), and a developer who sees an unexplained red may `git checkout` the file and lose an unrelated local change. Extend the coverage to SIGTERM/SIGHUP, add start-up detection for the SIGKILL case, and DRIVE IT RED (P-22) on a scratch copy. Depends on T161 so the two unguarded-mutator fixes land in one coherent order and reuse ONE restore shape rather than three -- the P-26 lesson is that this family is the concept, not the sentence.",
       "note": "Raised by the driver from T156's F-2, local fire 20260821-134344. Lowest severity of T156's four follow-ups and deliberately routed to sonnet; it is mechanical once T161 sets the shape. No paired reviewer yet -- register one when dispatched (plan gate rule 1)."
+    },
+    {
+      "id": "T163",
+      "title": "resolve7.py rewrites money literals through float on the way to the ORACLE — 1200000.00 becomes 1200000.0 in the POSTed body",
+      "role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "status": "pending",
+      "attempts": 0,
+      "dependencies": [],
+      "files_hint": [
+        ".softhouse/capture/tierA-a2/"
+      ],
+      "description": "RAISED BY A2-11 during its review of A2-7, and DRIVEN RED by A2-11 (.softhouse/reviews/A2-11/prove-resolve7-float-red.py). This is the LIVE P-25 class and it is worse than the 74-scripts finding in T145, because T145's instances corrupt the ANALYSIS of captures whereas THIS ONE CORRUPTS THE REQUEST BODY SENT TO THE REFERENCE ORACLE. resolve7.py rewrites `1200000.00` and `1200000.000000` as `1200000.0` in the JSON body POSTed to Fineract. A2-11 states NO CAPTURE IS AFFECTED TODAY -- verify that claim yourself before relying on it, and say how you verified it. The danger is prospective and total: a capture rig that silently reshapes money literals on the wire cannot be trusted to have observed what it claims to have observed, and every vector it ever produces inherits the doubt. Fix with json.load/dumps(parse_float=Decimal) or integer minor units throughout, and make the request body a BYTE-FOR-BYTE artefact that is committed alongside the response so a reviewer can diff what was SENT, not only what came back. DRIVE IT RED (P-22) reusing A2-11's prover rather than writing a second one. Do NOT edit scripts that produced committed evidence -- record those and re-run from scratch copies (T114's standing ruling); if any committed capture IS affected, that is a REFUSAL to be reported, not a number to be adjusted.",
+      "note": "Raised by the driver from A2-11's review, local fire 20260821-134344. Distinct from T145 and MORE severe: T145 is the analysis layer deciding money claims in float; this is the CAPTURE layer mutating money on the wire to the oracle. Serialise against T145 -- both touch .softhouse/capture/. No paired reviewer yet; register one at dispatch (plan gate rule 1)."
+    },
+    {
+      "id": "T164",
+      "title": "analyze7.py's float guard is kept GREEN BY ITS OWN DOCSTRING — deleting parse_float from the code leaves it passing",
+      "role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "status": "pending",
+      "attempts": 0,
+      "dependencies": [
+        "T163"
+      ],
+      "files_hint": [
+        ".softhouse/capture/tierA-a2/"
+      ],
+      "description": "RAISED BY A2-11 during its review of A2-7. analyze7.py's float guard is a WHOLE-FILE SOURCE GREP, so it matches the word `parse_float` inside the file's OWN DOCSTRING. A2-11 measured the consequence: DELETE `parse_float` FROM THE ACTUAL CODE AND THE GUARD STILL PASSES. This is a textbook P-22 -- a guard that structurally cannot fail -- and it is the SIXTH recorded instance in this program, in a rig whose entire purpose is to keep float out of money analysis. It is also a second-order case of P-35 (phrase the guard positively): the guard asks 'does the string appear anywhere in this file' when the property is 'does every json.load call pass parse_float='. Fix by parsing the AST and checking the ACTUAL CALL SITES -- every json.load/json.loads must carry parse_float= -- not by grepping source text, and make ZERO CALL SITES INSPECTED an ERROR rather than a pass. DRIVE IT RED (P-22): delete parse_float from a real call site in a scratch copy and show the fixed guard fails where the old one passed; then show the legitimate rig still passes. Sweep the concept, not the sentence (P-26): any OTHER guard in .softhouse/ that greps whole-file source text for a token that also appears in its own comments or docstring has the same hole -- enumerate them and COUNT WHAT YOU SKIPPED (P-40). Depends on T163 so the two tierA-a2 rig fixes land in one order.",
+      "note": "Raised by the driver from A2-11's review, local fire 20260821-134344. Sixth recorded P-22 instance. No paired reviewer yet; register one at dispatch (plan gate rule 1)."
     }
   ],
   "cross_corroboration": {

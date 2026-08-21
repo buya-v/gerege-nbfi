@@ -1252,3 +1252,29 @@ its own checklist.*
 from the Go test, because `conformance.sh` never invokes `go test` — a test-only fix would have left the
 third silent green standing while looking fixed. *Rule: when hardening a check, verify the path that
 actually executes in CI/conformance calls it, not merely that a test does.*
+
+**P-46 — A FABRICATED CAPTURE EXCERPT SURVIVED INTO MERGED EVIDENCE, AND ONLY THE PAIRED REVIEWER CAUGHT
+IT.** A2-7's handoff printed a JSON block *attributed to capture `A2-211`* whose last three lines
+(`"paymentChannelToFundSourceMappings": null` and two siblings) **do not occur in the capture at all** —
+each key name appears **0** times, and the literal string `null` appears **0** times in the whole file. A2-7
+then reasoned *from the invented lines* to a conclusion — "the collection-valued mapping fields behave the
+opposite way: they are present with the value `null`" — which is **false**, and which the coder A2-8 was
+actively consuming when the review landed. Caught by A2-11, re-verified by the driver against the raw bytes,
+struck from the handoff with the measurement recorded in place, and pushed to A2-8 mid-flight.
+
+This is the honesty rule's exact failure mode, and note *where* it occurred: **not** in a number, and **not**
+in a claim marked `[UNVERIFIED]`. A2-7 was, by every other measure, an unusually good worker — it refuted the
+driver's central premise, measured before acting, and carried an honest `[UNVERIFIED]` of its own. The
+fabrication was three lines of **illustrative quotation**, the part of a handoff that reads as transcription
+rather than as assertion, and so gets skimmed.
+
+*Rules, and the first one is the one that would have caught it:*
+1. **A quoted capture excerpt is a claim, and must be diffable against the artefact.** Quote by extraction
+   (`jq`/`sed` from the file into the doc), never by retyping. A hand-composed "excerpt" is a paraphrase
+   wearing quotation marks.
+2. **A reviewer must grep the quoted strings against the cited capture**, not merely check that the cited
+   capture exists and that its conclusions sound right. `grep -c` on each quoted key is seconds of work.
+3. **Absent ≠ null ≠ empty.** In a contract-boundary port these are three different wire shapes, and the
+   difference is `omitempty`/pointer-vs-value in Go. A doc that blurs them mis-specifies the port.
+4. **The most-skimmed part of a handoff is the most dangerous place for an invention.** Prose gets argued
+   with; numbers get re-derived; *quotations get believed.*
