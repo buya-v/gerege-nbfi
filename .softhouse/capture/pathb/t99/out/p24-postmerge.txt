@@ -1,0 +1,61 @@
+=== T152 / P-24 — the four T99 proofs, ON A SCRATCH MERGE INTO CURRENT main
+source repo:   <REPO>
+branch:        softhouse/T152-t99-microfixes = 3e548605d4777b31e3cfc8399cc64a20fde0d0d1
+main:          6c13121c792502211d6049dda778ce0aa5b3bee0
+main is 143 commit(s) ahead of this branch's fork point
+
+--- the merge
+  exit 0
+    Auto-merging .softhouse/capture/pathb/t36/attest.py
+  merge commit:  aae4d0180c13b9993567aaabc8c217e8adf37cf0
+  conflicts:     0
+
+--- THE TRAP, shown live: in this state a baseline computed from `main` is the merge itself
+  git merge-base main HEAD = aae4d0180c13b9993567aaabc8c217e8adf37cf0
+  HEAD                     = aae4d0180c13b9993567aaabc8c217e8adf37cf0
+  IDENTICAL — so a proof using the computed ref would extract its 'before' tree from a commit
+  THAT CONTAINS THE FIX, and compare the fixed code against itself.
+  FORK-POINT-SHA           = ab2de89356986c8ed85a9d2e26c2bc86b0fb8720   <- literal, unchanged by any merge
+
+=== LEG A — the merged tree AS THIS BRANCH SHIPS IT (literal FORK-POINT-SHA)
+  prove-f1.sh -> exit 0   RESULT: F-1 (basename-only output-path guard) CLOSED — red before, green after.
+  prove-f2.sh -> exit 0   RESULT: F-2 (PATH-poisoned digest instrument) CLOSED — red before, green after.
+  prove-f3.sh -> exit 0   RESULT: F-3 (vacuous pass on zero files) CLOSED — red before, green after.
+  prove-f4.sh -> exit 0   RESULT: F-4 (stamp-absence ambiguity) CLOSED — red before, green after.
+  proofs at exit 0: 4 of 4
+
+=== LEG B — COUNTERPROOF 1: same merged tree, ONLY lib.sh reverted to the computed default
+    (T152's second fix — prove-f4's positive baseline assertion — is left in place, so this
+     leg measures what that assertion is worth ON ITS OWN)
+    reverted lib.sh to: PREFIX_REF=$(git -C "$T99" merge-base main HEAD)
+  prove-f1.sh -> exit 3   T99 PROOF ABORT: the pre-fix recapture.sh in the export is not the file the defect was found in
+  prove-f2.sh -> exit 3   T99 PROOF ABORT: the pre-fix preconditions.sh in the export is not the file the defect was found in
+  prove-f3.sh -> exit 3   T99 PROOF ABORT: the pre-fix forbidden-sentence.sh in the export is not the file the defect was found in
+  prove-f4.sh -> exit 3   T99 PROOF ABORT: baseline assertion: the pre-fix export ALREADY CONTAINS PROVENANCE-INDEX.json, so it is
+  proofs at exit 0: 0 of 4
+  prove-f4 aborts on the baseline assertion: 1 (1 = the belt-and-braces fired by itself)
+
+=== LEG C — COUNTERPROOF 2: the ACTUAL pre-T152 bytes, restored from the literal T99 head
+    8474bf0cc613e577cfa344428eb4b79c24a004c9
+    Both T152 fixes reverted.  This is the state T135 measured, and it is the state that
+    would have shipped: f1/f2/f3 abort on their digest pins, and prove-f4 — which has no pin
+    and, here, no baseline assertion either — does not refuse.  It CONCLUDES, and concludes
+    'F-4 NOT CLOSED' at exit 1: a false negative on the finding this branch closes.
+    restored lib.sh from 8474bf0cc613e577cfa344428eb4b79c24a004c9
+    restored prove-f4.sh from 8474bf0cc613e577cfa344428eb4b79c24a004c9
+  prove-f1.sh -> exit 3   T99 PROOF ABORT: the pre-fix recapture.sh in the export is not the file the defect was found in
+  prove-f2.sh -> exit 3   T99 PROOF ABORT: the pre-fix preconditions.sh in the export is not the file the defect was found in
+  prove-f3.sh -> exit 3   T99 PROOF ABORT: the pre-fix forbidden-sentence.sh in the export is not the file the defect was found in
+  prove-f4.sh -> exit 1   RESULT: F-4 (stamp-absence ambiguity) NOT CLOSED.
+  proofs at exit 0: 0 of 4
+  prove-f4 printed 'F-4 ... NOT CLOSED': 1  (1 = T135's measurement reproduced exactly)
+
+=== VERDICT
+  LEG A: 4 of 4 proofs exit 0 on merged main.  The literal baseline survives the merge.
+  LEG B: 0 of 4 exit 0, and prove-f4 REFUSED on its own baseline assertion — so the
+         assertion closes the f4 hole independently of the literal sha.
+  LEG C: 0 of 4 exit 0 on the real pre-T152 bytes, and prove-f4 reported 'NOT CLOSED'
+         at exit 1 — T135's measurement reproduced.  Leg A is a measurement of the fix and
+         not of a no-op.
+RESULT: P-24 CLOSED for T99's rig — red on the pre-fix bytes, green on the fixed bytes,
+        both measured ON THE MERGE, which is the only state where the question exists.
