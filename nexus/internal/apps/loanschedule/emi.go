@@ -658,7 +658,8 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     THAT FOUR-SITE COUNT IS THE CLOSURE, WITH THE FOUR-CONSTANT ENUM. A fifth
 //     route into :718 cannot appear without either a fifth Action constant or a
 //     fifth call site, and both are compile-visible edits to the pinned oracle
-//     that part 9's greps detect. INJECTIVITY OF SITE -> ACTION IS NOT PART OF
+//     that part 9's counts detect (counts, not "greps": graph 4 is a tokeniser,
+//     for the reason part 9 gives). INJECTIVITY OF SITE -> ACTION IS NOT PART OF
 //     THIS ARGUMENT AND IS NOT CLAIMED ANYWHERE IN THIS BLOCK; the cross-edges
 //     that :1751 and :1752 open are unreachable under the closure test's OWN
 //     ANSWER, since exactly one DISBURSEMENT into an EMPTY model fires term 1 of
@@ -685,10 +686,10 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     T96 closed. It is GRAPH 6 of part 9, and T96 drove that count RED on a
 //     throwaway copy of the pinned tree rather than assert that it could move.
 //
-//     That is why this rule can stop
-//     enumerating: the set of things able to choose a tillDate and a model state
-//     for :747 is FINITE, fixed by a grep-reproducible call-site count and by a
-//     Java enum, not by anyone's judgement about which shapes are exotic.
+//     That is why this rule can stop enumerating: the set of things able to
+//     choose a tillDate and a model state for :747 is FINITE, fixed by
+//     reproducible call-site counts and by a Java enum, not by anyone's
+//     judgement about which shapes are exotic.
 //
 //     AND IT IS WHY THE CONTRACT ALREADY KNEW THE ANSWER. The frozen contract
 //     names the same three non-disbursement widenings, twice: "It stops being
@@ -1002,8 +1003,9 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     stated SCOPES of graphs 1, 2 and 3 are widened at T96 for the reason given
 //     above. T73 independently walked all sixteen non-:747 sites of graph 5 to
 //     their enclosing signatures and found ZERO citation defects across this
-//     block, so the list in graph 5 is inherited rather than rewritten.] :1288
-//     is reached
+//     block, so the list in graph 5 is inherited rather than rewritten.]
+//
+//     :1288 is reached
 //     from :749 inside checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods
 //     (:1258-1309) with tillDate = relatedPeriodsFirstDueDate (:1278); T66 argues
 //     (a)-(g) carry over to that trial because the date equals
@@ -1051,8 +1053,10 @@ func (m *scheduleModel) checkCancel(i int) bool {
 //     AND NOTHING ELSE. What makes that closed is not the length of a list. It is
 //     that four censuses -- 3 write sites; 2 callers of :1221; 4 callers of :718
 //     carrying a 4-constant enum; and 1 caller of :1744 -- are each exhaustive
-//     by grep, and that widening any of them is a compile-visible edit to the
-//     pinned oracle.
+//     by a command part 9 writes out, and that widening any of them is a
+//     compile-visible edit to the pinned oracle that the command detects. The
+//     fourth of those censuses is graph 6, added at T96; without it the third
+//     one's conclusion about :1751/:1752 rested on an uncounted fact.
 //
 // So the memo does NOT cache the derivation of period i's state; it caches a pure
 // function of the model's CURRENT STORED FIELDS for periods 0..i. Every one of
