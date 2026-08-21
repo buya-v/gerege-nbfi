@@ -82,6 +82,19 @@ NOT_REWRITERS = {
     "t187-census.py": "T187's census; reads ASTs, writes nothing",
 }
 
+# Rewriters whose anchors match NO state of their target that has ever existed
+# in this repository, so no input exists on which they mutate anything.  Their
+# defect is structural (RED-1S below), not reachable, and saying so is the
+# point: an expectation recorded per script stays falsifiable in both
+# directions - if one of these ever became reachable, RED-1 would fail.
+NO_REACHABLE_INPUT = {
+    "edit22.py": "its FIRST anchor spells the comment wrap `... no deployment "
+                 "/ can produce ...` where every state of contract.go that "
+                 "contains the surrounding sentence spells it `... no "
+                 "deployment can / produce ...`; measured against all 21 "
+                 "distinct historical blobs, all 21 refuse with `found 0`",
+}
+
 FAILURES = []
 CHECKS = [0]
 
@@ -218,7 +231,13 @@ def body(sb, live_adr_path, live_go_path):
         hardened = io.open(hardened_path, "rb").read()
         c = consts(hardened_path)
         if "AUTHORISE_TOKEN" not in c:
-            print("\n%s: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)" % n)
+            # NOT a skip.  A rewriter in this family that carries no
+            # AUTHORISE_TOKEN is an UNGUARDED rewriter, which is the whole
+            # defect; a prover that quietly skipped it would be P-22's guard
+            # that cannot fail.  It is a hard failure and it is counted.
+            CHECKS[0] += 1
+            FAILURES.append("%s: UNGUARDED - no AUTHORISE_TOKEN in its AST" % n)
+            print("\n%s\n    **FAIL**  UNGUARDED - no AUTHORISE_TOKEN" % n)
             continue
         exercised.append(n)
         print("\n%s" % n)
@@ -231,6 +250,9 @@ def body(sb, live_adr_path, live_go_path):
     not_exercised = [n for n in ORDER if n not in exercised]
     print("NOT EXERCISED (%d): %s"
           % (len(not_exercised), ", ".join(not_exercised) or "none"))
+    if not_exercised:
+        FAILURES.append("%d rewriter(s) were not exercised: %s"
+                        % (len(not_exercised), ", ".join(not_exercised)))
     print("NOT REWRITERS (%d, named per P-40):" % len(NOT_REWRITERS))
     for k, v in sorted(NOT_REWRITERS.items()):
         print("  %-22s %s" % (k, v))
@@ -241,6 +263,32 @@ def body(sb, live_adr_path, live_go_path):
         return 1
     print("\nALL ASSERTIONS HELD.")
     return 0
+
+
+def strings(tree):
+    """Every string constant in the module EXCEPT the module docstring."""
+    out = []
+    doc = tree.body[0].value if (tree.body and isinstance(tree.body[0], ast.Expr)
+                                 and isinstance(tree.body[0].value,
+                                                ast.Constant)) else None
+    for n in ast.walk(tree):
+        if isinstance(n, ast.Constant) and isinstance(n.value, str) \
+                and n is not doc:
+            out.append(n.value)
+    return out
+
+
+def argv_for(two, want_go, path, other, tok):
+    """Build argv for one trial.  A single-target script takes `--target=`; a
+    two-target script takes `--target-adr=` and `--target-go=` and needs BOTH,
+    so the target under test is paired with the other one's legitimate fixture."""
+    if not two:
+        return ["--target=" + path, "--authorise=" + tok]
+    a = ["--target-" + ("go" if want_go else "adr") + "=" + path]
+    if other is not None:
+        a.append("--target-" + ("adr" if want_go else "go") + "=" + other)
+    a.append("--authorise=" + tok)
+    return a
 
 
 def targets_of(c):
@@ -263,6 +311,32 @@ def trial(n, pre, hardened_path, c, state, sb, live_adr_path,
     two = "BEFORE_ADR" in c
     tok = c["AUTHORISE_TOKEN"]
 
+    # ---- EDIT IDENTITY: every docstring in this family claims "the edit
+    # itself did not change".  That is a claim, so it is measured rather than
+    # asserted: the MULTISET of every string constant in the module, minus the
+    # module docstring (which T187 rewrote on purpose) and minus the constants
+    # T187 added, must be identical pre-fix and post-fix.  A dropped or altered
+    # anchor or replacement string fails here even for the two files that
+    # produce no output and therefore have no AFTER digest to compare.
+    # The hardening removes exactly five kinds of string and nothing else: the
+    # two hard-wired repo-relative target paths, the `"utf-8"` encoding
+    # argument and the `"w"` mode of the deleted io.open calls, and the `"/"`
+    # of `path.rsplit("/", 1)` in the old patch() helper.  Every OTHER string -
+    # every anchor, every replacement - must still be present.  Anything else
+    # disappearing is a silently altered edit and fails here.
+    added = {c.get("NAME"), c.get("AUTHORISE_TOKEN"), c.get("BEFORE_SHA256"),
+             c.get("AFTER_SHA256"), c.get("BEFORE_ADR"), c.get("AFTER_ADR"),
+             c.get("BEFORE_GO"), c.get("AFTER_GO"), None,
+             ADR_REL, GO_REL, "utf-8", "w", "/"}
+    pre_s = strings(ast.parse(pre.decode("utf-8")))
+    post_s = strings(ast.parse(io.open(hardened_path, encoding="utf-8").read()))
+    lost = sorted(set(pre_s) - set(post_s) - added)
+    check(not lost,
+          "IDENT  every anchor and replacement string survives the hardening "
+          "(%d string constants pre-fix, %d post-fix, %d lost)"
+          % (len(pre_s), len(post_s), len(lost))
+          + ("" if not lost else "  LOST: %r" % (lost[:2],)))
+
     # ---- RED-1: the pre-fix bytes mutate a scratch copy with no argv -------
     t = os.path.join(sb, "red1", n)
     os.makedirs(t)
@@ -272,9 +346,42 @@ def trial(n, pre, hardened_path, c, state, sb, live_adr_path,
     b_adr, b_go = sha_file(adr), sha_file(go)
     r = run_bytes(pre, [], t, sb)
     moved = (sha_file(adr) != b_adr) or (sha_file(go) != b_go)
-    check(moved,
-          "RED-1  pre-fix bytes mutate a scratch copy with no argv, no "
-          "authorisation and no content gate (rc=%d)" % r.returncode)
+    want = n not in NO_REACHABLE_INPUT
+    if want:
+        check(moved,
+              "RED-1  pre-fix bytes mutate a scratch copy with no argv, no "
+              "authorisation and no content gate (rc=%d)" % r.returncode)
+    else:
+        check(not moved,
+              "RED-1  pre-fix bytes mutate NOTHING, as recorded: %s (rc=%d)"
+              % (NO_REACHABLE_INPUT[n], r.returncode))
+
+    # RED-1S: the STRUCTURAL defect, read from the pre-fix AST rather than from
+    # behaviour, so it holds for the unreachable ones too.  This is the claim
+    # that makes every one of these a gate bypass whether or not it applies
+    # today: a truncating write to a hard-wired repo-relative path to a
+    # protected artefact, with no try / atexit / signal anywhere in the file.
+    tree = ast.parse(pre.decode("utf-8"))
+    hard = set()
+    trunc = 0
+    guards = 0
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.Try, ast.With)):
+            guards += 1
+        if isinstance(node, ast.Call):
+            f = node.func
+            nm = getattr(f, "attr", getattr(f, "id", None))
+            if nm in ("open",) and len(node.args) >= 2:
+                m = node.args[1]
+                if isinstance(m, ast.Constant) and "w" in str(m.value):
+                    trunc += 1
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            if node.value in (ADR_REL, GO_REL):
+                hard.add(node.value)
+    check(trunc >= 1 and bool(hard),
+          "RED-1S pre-fix AST: %d truncating write-open(s), hard-wired "
+          "repo-relative target(s) %s, %d try/with node(s)"
+          % (trunc, sorted(x.rsplit("/", 1)[-1] for x in hard), guards))
 
     # ---- RED-1L: the pre-fix bytes against copies of the LIVE artefacts ----
     t = os.path.join(sb, "red1L", n)
@@ -303,30 +410,51 @@ def trial(n, pre, hardened_path, c, state, sb, live_adr_path,
               "GATE   the reconstructed chain state matches the pinned "
               "BEFORE_SHA256%s" % tag)
 
-        # RED-2: refuse a target whose CONTENT is the live artefact.
+        # RED-2: refuse a target whose CONTENT is the live artefact.  For a
+        # two-target script the OTHER target is its legitimate fixture, so the
+        # trial isolates this one target's content gate.
         d = os.path.join(sb, "red2", n + label)
         os.makedirs(d)
         p = os.path.join(d, "scratch-copy-of-live" + suffix)
         shutil.copyfile(live_src, p)
-        r = run_file(hardened_path, ["--target=" + p, "--authorise=" + tok], d)
+        other = None
+        if two:
+            other = os.path.join(d, "scratch-other" +
+                                 (".md" if want_go else ".gotext"))
+            shutil.copyfile(os.path.join(state, "adr" if want_go else "go"),
+                            other)
+        r = run_file(hardened_path, argv_for(two, want_go, p, other, tok), d)
         check(r.returncode == 3 and sha_file(p) == live_sha,
               "RED-2  refuses a target holding the LIVE artefact's bytes "
               "(exit %d, wanted 3) and leaves it byte-identical%s"
               % (r.returncode, tag))
 
+        def reset():
+            """Re-seed BOTH scratch files.  A two-target script commits its
+            first target before refusing on its second, so a trial that reused
+            the previous trial's files would be gated on the wrong content -
+            which is exactly how this prover first mis-read RED-3b as exit 3."""
+            shutil.copyfile(live_src, p)
+            if other is not None:
+                shutil.copyfile(os.path.join(state, "adr" if want_go
+                                             else "go"), other)
+
         # RED-3a: no argv at all.
+        reset()
         r = run_file(hardened_path, [], d)
         check(r.returncode == 2,
               "RED-3a refuses a run with no argv (exit %d, wanted 2)%s"
               % (r.returncode, tag))
         # RED-3b: correct token, but the artefact's real path.
+        reset()
         real = live_go_path if want_go else live_adr_path
-        r = run_file(hardened_path, ["--target=" + real, "--authorise=" + tok], d)
+        r = run_file(hardened_path, argv_for(two, want_go, real, other, tok), d)
         check(r.returncode == 2 and sha_file(real) == live_sha,
               "RED-3b refuses the artefact's OWN path even with the correct "
               "token (exit %d, wanted 2)%s" % (r.returncode, tag))
         # RED-3c: right target, wrong token.
-        r = run_file(hardened_path, ["--target=" + p, "--authorise=nope"], d)
+        reset()
+        r = run_file(hardened_path, argv_for(two, want_go, p, other, "nope"), d)
         check(r.returncode == 2,
               "RED-3c refuses a wrong --authorise token (exit %d, wanted 2)%s"
               % (r.returncode, tag))
@@ -336,16 +464,13 @@ def trial(n, pre, hardened_path, c, state, sb, live_adr_path,
         os.makedirs(g)
         gp = os.path.join(g, "scratch-before" + suffix)
         shutil.copyfile(src_state, gp)
-        args = ["--target=" + gp, "--authorise=" + tok]
+        gother = None
         if two:
-            other = os.path.join(g, "scratch-other" +
-                                 (".md" if want_go else ".gotext"))
+            gother = os.path.join(g, "scratch-other" +
+                                  (".md" if want_go else ".gotext"))
             shutil.copyfile(os.path.join(state,
-                                         "adr" if want_go else "go"), other)
-            args = ["--target-" + ("go" if want_go else "adr") + "=" + gp,
-                    "--target-" + ("adr" if want_go else "go") + "=" + other,
-                    "--authorise=" + tok]
-        r = run_file(hardened_path, args, g)
+                                         "adr" if want_go else "go"), gother)
+        r = run_file(hardened_path, argv_for(two, want_go, gp, gother, tok), g)
         got = sha_file(gp)
         if after == "f" * 64:
             check(r.returncode == 1 and got == before,

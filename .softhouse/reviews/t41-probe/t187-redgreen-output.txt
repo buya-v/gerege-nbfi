@@ -29,10 +29,23 @@ RECONSTRUCTING T41's EDIT CHAIN (pre-fix bytes, scratch only)
   edit21.py    rc=1  ADR 5798acc948  GO 4f986bb157
   edit22.py    rc=1  ADR 5798acc948  GO 4f986bb157
 
-edit.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (24 string constants pre-fix, 25 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['DEC-1-schedule-generator-adapter.md'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: 35e513cdec -> 803aa92256 (rc=0)
 
 edit2.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (8 string constants pre-fix, 9 post-fix, 0 lost)
     PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['DEC-1-schedule-generator-adapter.md'], 0 try/with node(s)
     NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=0  live-mutated=True
     PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
     PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
@@ -42,22 +55,101 @@ edit2.py
     PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
     PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: 803aa92256 -> 2144cff350 (rc=0)
 
-edit3.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit3.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (13 string constants pre-fix, 14 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['DEC-1-schedule-generator-adapter.md'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: 2144cff350 -> 916887a75e (rc=0)
 
-edit4.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit4.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (13 string constants pre-fix, 14 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['DEC-1-schedule-generator-adapter.md'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: 916887a75e -> ad51e78d8b (rc=0)
 
-edit5.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit5.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (11 string constants pre-fix, 12 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['DEC-1-schedule-generator-adapter.md'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: ad51e78d8b -> 53d68a2d71 (rc=0)
 
-edit6.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit6.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (17 string constants pre-fix, 18 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['DEC-1-schedule-generator-adapter.md'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: 53d68a2d71 -> 6ae9a16351 (rc=0)
 
-edit7.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit7.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (19 string constants pre-fix, 20 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['DEC-1-schedule-generator-adapter.md'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: 6ae9a16351 -> 61b4d2e32c (rc=0)
 
-edit8.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit8.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (19 string constants pre-fix, 20 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['DEC-1-schedule-generator-adapter.md'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: 61b4d2e32c -> 3e475f1f31 (rc=0)
 
-edit9.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit9.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (15 string constants pre-fix, 16 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['DEC-1-schedule-generator-adapter.md'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: 3e475f1f31 -> 4e682455ed (rc=0)
 
 edit10.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (8 string constants pre-fix, 9 post-fix, 0 lost)
     PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['DEC-1-schedule-generator-adapter.md'], 0 try/with node(s)
     NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=0  live-mutated=True
     PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
     PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
@@ -67,39 +159,218 @@ edit10.py
     PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
     PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: 4e682455ed -> 3da914cebe (rc=0)
 
-edit11.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit11.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (19 string constants pre-fix, 20 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['DEC-1-schedule-generator-adapter.md'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: 3da914cebe -> ede0764bcc (rc=0)
 
-edit12.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit12.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (15 string constants pre-fix, 16 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['DEC-1-schedule-generator-adapter.md'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: ede0764bcc -> 46ec47a711 (rc=0)
 
-edit13.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit13.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (17 string constants pre-fix, 18 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['DEC-1-schedule-generator-adapter.md'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: 46ec47a711 -> d8c1466422 (rc=0)
 
-edit14.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit14.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (19 string constants pre-fix, 20 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['DEC-1-schedule-generator-adapter.md'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: d8c1466422 -> 1644db02cc (rc=0)
 
-edit_go1.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit_go1.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (21 string constants pre-fix, 22 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['contract.go'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: c7cb53819b -> b6a6e0308f (rc=0)
 
-edit_go2.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit_go2.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (15 string constants pre-fix, 16 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['contract.go'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: b6a6e0308f -> 5ec9b10060 (rc=0)
 
-edit_go3.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit_go3.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (15 string constants pre-fix, 16 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['contract.go'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: 5ec9b10060 -> aaee90a81b (rc=0)
 
-edit_go4.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit_go4.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (11 string constants pre-fix, 12 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['contract.go'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: aaee90a81b -> 0e5468c470 (rc=0)
 
-edit16.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit16.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (17 string constants pre-fix, 18 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['DEC-1-schedule-generator-adapter.md'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: 1644db02cc -> 123dc3c3ff (rc=0)
 
-edit17.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit17.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (8 string constants pre-fix, 9 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['DEC-1-schedule-generator-adapter.md'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: 123dc3c3ff -> 2eb3092aad (rc=0)
 
-edit18.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit18.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (17 string constants pre-fix, 42 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['DEC-1-schedule-generator-adapter.md', 'contract.go'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 [adr] is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256 [adr]
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical [adr]
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2) [adr]
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2) [adr]
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2) [adr]
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: 2eb3092aad -> 4bc1dfb9ff (rc=0) [adr]
+    PASS  GATE   BEFORE_SHA256 [go] is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256 [go]
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical [go]
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2) [go]
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2) [go]
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2) [go]
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: 0e5468c470 -> 4f986bb157 (rc=0) [go]
 
-edit19.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit19.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (15 string constants pre-fix, 16 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['DEC-1-schedule-generator-adapter.md'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: 4bc1dfb9ff -> e07d5f807f (rc=0)
 
-edit20.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit20.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (20 string constants pre-fix, 21 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['DEC-1-schedule-generator-adapter.md'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: e07d5f807f -> 6bc401b4b8 (rc=0)
 
-edit21.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit21.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (23 string constants pre-fix, 48 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=1)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['DEC-1-schedule-generator-adapter.md', 'contract.go'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 [adr] is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256 [adr]
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical [adr]
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2) [adr]
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2) [adr]
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2) [adr]
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: 6bc401b4b8 -> 5798acc948 (rc=1) [adr]
+    PASS  GATE   BEFORE_SHA256 [go] is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256 [go]
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical [go]
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2) [go]
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2) [go]
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2) [go]
+    PASS  GREEN  no reproducible edit exists for this file (its anchors match no blob in this repository's history): the authorised run passes authorisation and the content gate and stops at the anchor, exit 1 (wanted 1), scratch target byte-identical [go]
 
-edit22.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+edit22.py
+    PASS  IDENT  every anchor and replacement string survives the hardening (13 string constants pre-fix, 14 post-fix, 0 lost)
+    PASS  RED-1  pre-fix bytes mutate NOTHING, as recorded: its FIRST anchor spells the comment wrap `... no deployment / can produce ...` where every state of contract.go that contains the surrounding sentence spells it `... no deployment can / produce ...`; measured against all 21 distinct historical blobs, all 21 refuse with `found 0` (rc=1)
+    PASS  RED-1S pre-fix AST: 1 truncating write-open(s), hard-wired repo-relative target(s) ['contract.go'], 0 try/with node(s)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=1  live-mutated=False
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  no reproducible edit exists for this file (its anchors match no blob in this repository's history): the authorised run passes authorisation and the content gate and stops at the anchor, exit 1 (wanted 1), scratch target byte-identical
 
 ======================================================================
-EXERCISED 2 of 25 rewriters; 16 assertions.
-NOT EXERCISED (23): edit.py, edit3.py, edit4.py, edit5.py, edit6.py, edit7.py, edit8.py, edit9.py, edit11.py, edit12.py, edit13.py, edit14.py, edit_go1.py, edit_go2.py, edit_go3.py, edit_go4.py, edit16.py, edit17.py, edit18.py, edit19.py, edit20.py, edit21.py, edit22.py
+EXERCISED 25 of 25 rewriters; 264 assertions.
+NOT EXERCISED (0): none
 NOT REWRITERS (6, named per P-40):
   leakgrep.py            read-only grep over the ADR; opens nothing for writing
   t187-census.py         T187's census; reads ASTs, writes nothing
