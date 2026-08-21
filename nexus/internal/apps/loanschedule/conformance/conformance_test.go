@@ -12,13 +12,20 @@ import (
 )
 
 // repoRoot resolves the repository root once for every test in this file.
+//
+// It goes through ResolveRepoRoot, the SAME rule cmd/conformance uses, rather
+// than the old FindRepoRoot(".") — one resolution rule in the package, and the
+// tests exercise the one that grades. `go test` happens to run with the working
+// directory set to the package source directory, so the old call was correct
+// HERE by accident of the test runner while being wrong in the binary; keeping
+// two rules would have left the tested path and the graded path different.
 func repoRoot(t *testing.T) string {
 	t.Helper()
-	root, err := FindRepoRoot(".")
+	res, err := ResolveRepoRoot("")
 	if err != nil {
-		t.Fatalf("FindRepoRoot: %v", err)
+		t.Fatalf("ResolveRepoRoot: %v", err)
 	}
-	return root
+	return res.Root
 }
 
 func storeRoot(t *testing.T) string {

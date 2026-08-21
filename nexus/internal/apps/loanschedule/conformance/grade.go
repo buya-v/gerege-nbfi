@@ -84,6 +84,15 @@ type Summary struct {
 	StoreRoot          string
 	ContextFilter      string
 
+	// RepoRoot is the checkout that was graded and RepoRootRes is how it was
+	// chosen. Both are printed in the header. "store" alone was not enough: a
+	// store path says which CORPUS was read and says nothing about which tree
+	// the no-float census walked, which contract.go was hashed, or which
+	// checkout the capture_refs were resolved in — all four came from one root,
+	// and before T165 that root was the caller's working directory.
+	RepoRoot    string
+	RepoRootRes RepoRootResolution
+
 	Results []Result
 
 	// LoadErrors are files that could not be read or decoded at all.
@@ -183,6 +192,14 @@ type Options struct {
 	// path are resolved against it.
 	RepoRoot string
 
+	// RepoRootRes is HOW RepoRoot was decided, and it is printed on every run.
+	// cmd/conformance fills it from ResolveRepoRoot; a programmatic caller (the
+	// Go tests) may leave it zero, and the report then says so in as many words
+	// rather than implying the root was anchored when nothing recorded that it
+	// was. Before T165 there was nothing to record: the root came from the
+	// caller's working directory and no line of the report mentioned it.
+	RepoRootRes RepoRootResolution
+
 	// StoreRoot is the vector store, normally <RepoRoot>/.softhouse/vectors.
 	StoreRoot string
 
@@ -217,6 +234,8 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 		SelfTestMode:       opts.SelfTestMode,
 		StoreRoot:          opts.StoreRoot,
 		ContextFilter:      opts.ContextFilter,
+		RepoRoot:           opts.RepoRoot,
+		RepoRootRes:        opts.RepoRootRes,
 	}
 	if s.ImplementationName == "" {
 		s.ImplementationName = "(none)"

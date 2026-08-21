@@ -285,9 +285,25 @@ func roundingModeText(m contract.RoundingMode) string {
 	return fmt.Sprintf("RoundingMode(%d)", int32(m))
 }
 
-// FindRepoRoot walks up from start looking for the directory that holds both
-// .softhouse/vectors and the nexus module, so the harness and its Go test work
-// from any working directory.
+// FindRepoRoot walks up from start looking for a directory holding
+// .softhouse/vectors.
+//
+// IT IS NOT THE HARNESS'S ROOT-RESOLUTION RULE ANY MORE, and a new caller
+// almost certainly wants ResolveRepoRoot instead. `FindRepoRoot(".")` is how
+// cmd/conformance used to choose the checkout it graded, which made the corpus,
+// the no-float census tree, the contract.go hashed against the store pin and
+// every capture_ref depend on WHERE THE CALLER HAPPENED TO BE STANDING. T165
+// measured the consequence: one binary, compiled from a tree with an unratified
+// edit to the frozen DEC-1 contract, exit 2 from its own tree and VERDICT: PASS
+// from a clean sibling checkout.
+//
+// Two properties make it unsafe as a resolver and are retained because the
+// cross-check line in the report needs to reproduce exactly what the old rule
+// would have answered. First, the answer is the CWD's, not the binary's.
+// Second, the climb is UNBOUNDED: from inside a worktree that has no
+// .softhouse/vectors of its own it keeps going and returns the PARENT checkout,
+// silently. Its one remaining caller is ResolveRepoRoot, which uses it to print
+// "the tree you are standing in is not the tree that was graded".
 func FindRepoRoot(start string) (string, error) {
 	dir, err := filepath.Abs(start)
 	if err != nil {
