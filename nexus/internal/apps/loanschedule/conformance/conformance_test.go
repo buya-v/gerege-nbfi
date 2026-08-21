@@ -795,10 +795,11 @@ func TestNoFloatInTheGuardedGoTree(t *testing.T) {
 		// POSITIVE ASSERTIONS (P-35): say what was inspected, then say each
 		// count was zero. "No violations" over an unknown number of files is
 		// the vacuous phrasing this whole class of defect is made of.
-		if census.FilesScanned == 0 || census.TokensScanned == 0 || census.PackagesScanned == 0 {
-			t.Fatalf("the census inspected %d packages / %d files / %d tokens under %s: a guard that inspects "+
-				"nothing passes everything", census.PackagesScanned, census.FilesScanned,
-				census.TokensScanned, root)
+		if census.FilesScanned == 0 || census.TokensScanned == 0 || census.PackagesScanned == 0 ||
+			census.ImportsScanned == 0 {
+			t.Fatalf("the census inspected %d packages / %d files / %d tokens / %d import specs under %s: "+
+				"a guard that inspects nothing passes everything", census.PackagesScanned,
+				census.FilesScanned, census.TokensScanned, census.ImportsScanned, root)
 		}
 		for _, v := range census.Violations() {
 			t.Errorf("%s", v)
@@ -955,6 +956,66 @@ func TestNoFloatInTheGuardedGoTree(t *testing.T) {
 		if len(census.LiteralViolations) != 3 {
 			t.Errorf("wanted 3 nested literal violations (1.5, 0.036, 12.0), got %d: %v",
 				len(census.LiteralViolations), census.LiteralViolations)
+		}
+		t.Logf("%s", census.Summary())
+	})
+
+	// THE IMPORT LEG FIRES, AND ONLY ON THE PACKAGE IT BANS (T166).
+	//
+	// `x := math.Sqrt(y)` names no forbidden identifier and contains no
+	// floating-point literal, so both older arms are blind to it. This asserts
+	// that the parser leg catches it, that it catches an ALIASED import (a regex
+	// on `math\.` would not), and that math/big and math/bits — how this module
+	// does exact integer arithmetic — are NOT swept up with it.
+	t.Run("the_import_leg_bans_the_float_package_and_only_that_package", func(t *testing.T) {
+		dir := t.TempDir()
+		const violator = "package probe\n" +
+			"\n" +
+			"import (\n" +
+			"\tm \"math\"\n" + // ALIASED: the selector never reads `math.`
+			"\t\"math/big\"\n" + // legitimate: exact integer arithmetic
+			"\t\"math/bits\"\n" + // legitimate
+			")\n" +
+			"\n" +
+			"// A doc comment naming \"math\" must not trip the parser leg.\n" +
+			"func probe(p *big.Int) int64 {\n" +
+			"\t_ = bits.Len64(0)\n" +
+			"\t_ = p\n" +
+			"\treturn int64(m.Sqrt(m.Pi))\n" + // no FLOAT literal, no forbidden IDENT
+			"}\n" +
+			"\n" +
+			"const notAnImport = \"math\" // token.STRING must not trip it either\n"
+		if err := os.WriteFile(filepath.Join(dir, "probe.go"), []byte(violator), 0o644); err != nil {
+			t.Fatalf("WriteFile: %v", err)
+		}
+		census, err := ScanGoTreeForFloatingPoint(dir)
+		if err != nil {
+			t.Fatalf("census: %v", err)
+		}
+		if census.ImportsScanned != 3 {
+			t.Errorf("the probe file has 3 import specs, the census read %d", census.ImportsScanned)
+		}
+		if len(census.ImportViolations) != 1 {
+			t.Fatalf("wanted exactly 1 forbidden import (the aliased \"math\"), got %d: %v",
+				len(census.ImportViolations), census.ImportViolations)
+		}
+		if !strings.Contains(census.ImportViolations[0], `"math"`) {
+			t.Errorf("the violation does not name the import path: %s", census.ImportViolations[0])
+		}
+		// Match the QUOTED IMPORT PATH, not the free text: the diagnostic's own
+		// explanation names math/big and math/bits in order to say they are
+		// allowed, so a bare substring test here fires on the exemption it is
+		// checking for — the same self-reference trap the byte-grep leg has.
+		for _, v := range census.ImportViolations {
+			if strings.Contains(v, `forbidden import "math/big"`) ||
+				strings.Contains(v, `forbidden import "math/bits"`) {
+				t.Errorf("math/big or math/bits was swept up with math: %s", v)
+			}
+		}
+		// The point of this arm: the other two saw nothing at all.
+		if len(census.IdentifierViolations) != 0 || len(census.LiteralViolations) != 0 {
+			t.Errorf("the probe was supposed to be INVISIBLE to the identifier and literal arms, "+
+				"got %v / %v", census.IdentifierViolations, census.LiteralViolations)
 		}
 		t.Logf("%s", census.Summary())
 	})
