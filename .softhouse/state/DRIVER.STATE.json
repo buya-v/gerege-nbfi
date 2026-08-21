@@ -1,0 +1,23 @@
+{
+  "squad": "driver",
+  "fire": "20260821-054355",
+  "run_id": "2026-08-21-run2-tierA-gl-accounting-A2",
+  "step": "batch 1 dispatched, awaiting five workers",
+  "dispatched": ["T178", "T177", "T179", "T173", "T175"],
+  "reviewers_registered": ["T181", "T182", "T183", "T184", "T185"],
+  "integrity_anchors_measured_by_driver_at_dispatch": {
+    "docs/adr/DEC-1-schedule-generator-adapter.md": "49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab",
+    "nexus/internal/apps/loanschedule/contract/contract.go": "0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139",
+    "note": "Driver-measured on main at dfa1bfa. The DEC-1 digest CONFIRMS the T178 incident anchor (49dc8923...). Re-measure after every merge this fire: a ratified DEC-n changing is a hard user-gate breach, not a diff."
+  },
+  "file_ownership_this_batch": {
+    "T178": ".softhouse/reviews/t47-probe/",
+    "T177": ".softhouse/capture/t177-*/ (new)",
+    "T179": ".softhouse/reviews/t179-guard-classifier/ + .softhouse/patterns.md",
+    "T173": ".softhouse/conformance.sh + .softhouse/capture/tierA-a2/ + .softhouse/capture/lib/",
+    "T175": ".softhouse/capture/leapboundary/ + .softhouse/capture/audit-t44/"
+  },
+  "next_action": "await all five; verify each branch scope with git diff main...<branch> (THREE DOTS); re-measure integrity anchors; merge in dependency order; then batch 2 = reviewers T181-T185 plus T170 (needs T177's finding), T165, T171, T172",
+  "blocked_on": null,
+  "gate_pending": null
+}
