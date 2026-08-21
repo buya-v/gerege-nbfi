@@ -746,16 +746,22 @@ guard_gofmt() {
 # line is printed. That is not an outage. The driver's park condition is `exit 2` AND
 # `probe != up`, and on this path there is no probe line at all.
 
-# _run_capture_guard <script-basename> <human-label>
+# _run_capture_guard <script-basename> <human-label> <population-floor>
 # Shared body, because the two guards differ only in which program they run. Written once
 # rather than twice so that a later fix to the missing-script or empty-output handling
 # cannot be applied to one guard and forgotten on the other.
+#
+# <population-floor> IS MANDATORY AND MUST BE DERIVED BY THE CALLER, never a literal. See
+# the two callers below for how each derives its own, and the T194 block at the census
+# test for why a literal would be a second silent pass in the costume of a check. Omitting
+# it leaves `floor` empty, which this function treats as a FAILED DERIVATION and refuses —
+# so a third guard added later cannot be wired up without measuring its population.
 _run_capture_guard() {
-  local script="$REPO_ROOT/.softhouse/capture/lib/$1" label="$2"
+  local script="$REPO_ROOT/.softhouse/capture/lib/$1" label="$2" floor="${3:-}"
   # T188 MICRO-FIX: `census_lines` (added by e93afc9) was the one variable in this
   # function left un-`local`. It leaked into the global scope of a script that calls
   # this function twice, for two different guards. Mechanical; no number changed.
-  local out rc cases census_lines
+  local out rc cases census_lines red green inspected ins_all
 
   # A MISSING GUARD IS AN ERROR, NOT A SKIP. `[ -f ... ] || return 0` would mean deleting
   # the file silently switches the check off and the run still says PASS.
@@ -768,14 +774,35 @@ _run_capture_guard() {
   out="$(python3 "$script" --selftest 2>&1)"; rc=$?
   cases="$(printf '%s\n' "$out" | LC_ALL=C grep -ac '^  -> exit ' || true)"
   [ -n "$cases" ] || cases=0
-  if [ "$rc" -ne 0 ] || [ "$cases" -eq 0 ]; then
-    warn "conformance: the $label guard FAILED ITS OWN SELFTEST (exit $rc, $cases cases observed)."
+  # A COUNT OF LINES IS NOT EVIDENCE OF A DEMONSTRATION. `cases` counts how many times the
+  # selftest SPOKE, and ONE line satisfies `-ne 0`: a stub whose `--selftest` prints a single
+  # `  -> exit 0` was accepted here as "selftest OK, 1 cases" where the real guard reports 5
+  # and 8. That is the same defect as the census one below, one gate over — and fixing only
+  # the census one would have converted a known hole into a hidden one.
+  #
+  # WHAT IS CHECKED INSTEAD IS THE CLAIM THE NEXT TWO LINES ALREADY PRINT. They have always
+  # said the cases drive the guard RED on a planted defect AND GREEN on the clean equivalent
+  # (P-22 with P-50's second half). Nothing checked it. So: at least one case must exit
+  # NON-ZERO and at least one must exit ZERO. This is deliberately NOT a floor on the count —
+  # a number here would go stale the day a case is added or retired, and a stale number is a
+  # check that has stopped checking. Both polarities is a property of the demonstration, not
+  # of the corpus, so it cannot go stale at all. RESIDUAL, stated rather than papered over: a
+  # stub that prints exactly two lines, one of each polarity, still passes this gate; only
+  # pinning the guard's bytes closes that, and that is T194's recorded follow-up.
+  # [T194, from T184's FU-T184-1]
+  red="$(printf '%s\n' "$out" | LC_ALL=C grep -ac '^  -> exit [1-9]' || true)"
+  green="$(printf '%s\n' "$out" | LC_ALL=C grep -ac '^  -> exit 0$' || true)"
+  [ -n "$red" ] || red=0
+  [ -n "$green" ] || green=0
+  if [ "$rc" -ne 0 ] || [ "$cases" -eq 0 ] || [ "$red" -eq 0 ] || [ "$green" -eq 0 ]; then
+    warn "conformance: the $label guard FAILED ITS OWN SELFTEST (exit $rc, $cases cases observed,"
+    warn "conformance:   $red drove it RED, $green drove it GREEN — both directions are required)."
     warn "conformance: it can no longer be shown to refuse the defect it exists to refuse."
     warn "$out"
     return 1
   fi
-  say "conformance: $label guard — selftest OK, $cases cases (each drives it RED on a planted"
-  say "conformance:   defect and GREEN on the clean equivalent)"
+  say "conformance: $label guard — selftest OK, $cases cases ($red drive it RED on a planted"
+  say "conformance:   defect, $green stay GREEN on the clean equivalent; both directions READ)"
 
   out="$(python3 "$script" "$REPO_ROOT" 2>&1)"; rc=$?
   # THE CENSUS LINE MUST BE PRESENT BEFORE ITS VALUE IS READ. Same discipline the
@@ -797,9 +824,53 @@ _run_capture_guard() {
     warn "$out"
     return 1
   fi
+  # ...AND NOW ITS VALUE IS ACTUALLY READ. The comment above has said "BEFORE ITS VALUE IS
+  # READ" since T173 and the value was never read: `census_lines` is the COUNT OF LINES
+  # matching `^CENSUS `, so a guard replaced by a stub that prints `CENSUS 0 files / 0 dirs`
+  # and exits 0 reached `return 0` and the whole harness reported VERDICT PASS. Verified end
+  # to end by T184 (FU-T184-1) and re-driven by T194 against this file before the fix. The
+  # machinery built to prove a guard is not silent proved only that it SPOKE.
+  #
+  # THE FLOOR IS DERIVED, AND THAT IS THE WHOLE POINT. A literal (`-lt 300`) would be a
+  # second silent pass wearing the costume of a check: it goes stale the moment the corpus
+  # grows or shrinks, and nothing tells the next reader it has. Each caller measures its own
+  # population with `git ls-files` — a DIFFERENT program from the guard's `os.walk`, over the
+  # same set — so the floor moves with the corpus by construction and can never be "the
+  # number that was true in August".
+  #
+  # POLARITY, stated because P-57 rule 3 requires it. `>=`, not `==`, and the residual is
+  # fail-OPEN in exactly one direction: `git ls-files` sees only TRACKED files, so an
+  # untracked addition raises `inspected` above `floor` and is accepted. Everything else is
+  # fail-CLOSED — no `inspected N` in the census, a non-numeric figure, or a floor that did
+  # not derive all refuse. The cry-wolf case is a tracked file deleted from the working tree,
+  # and refusing a half-deleted corpus is the correct answer anyway.
+  #
+  # `sed` (BSD, /usr/bin/sed) consumes all input and never exits early, so this adds no
+  # member of the `| grep -q` / `| head` EPIPE family T191 repaired (P-57). Measured
+  # programs (P-58): under `bash` on this host `grep` is /usr/bin/grep, BSD 2.6.0-FreeBSD;
+  # `-a` and `LC_ALL=C` are kept on every expression so the same bytes hold if the ugrep
+  # shell function (which re-execs with `-I`) is ever in scope instead. [T194]
+  ins_all="$(printf '%s\n' "$out" | LC_ALL=C sed -n 's/^CENSUS .*inspected \([0-9][0-9]*\).*$/\1/p')"
+  inspected="${ins_all%%$'\n'*}"
+  case "$inspected" in ''|*[!0-9]*) inspected=-1 ;; esac
+  case "$floor"     in ''|*[!0-9]*) floor=-1 ;; esac
+  if [ "$floor" -lt 1 ]; then
+    warn "conformance: the $label guard's POPULATION FLOOR did not derive (caller passed '${3:-<nothing>}')."
+    warn "conformance: a floor of zero would readmit exactly the vacuous pass this test exists to"
+    warn "conformance:   refuse, so an underived floor is an ERROR, not a pass."
+    return 1
+  fi
+  if [ "$inspected" -lt "$floor" ]; then
+    warn "conformance: the $label guard's CENSUS FIGURE IS BELOW ITS DERIVED FLOOR:"
+    warn "conformance:   census says inspected $inspected; git tracks $floor file(s) it must open."
+    warn "conformance: a census line is not evidence unless its number is read. ERROR, not a pass."
+    warn "$out"
+    return 1
+  fi
   printf '%s\n' "$out" | LC_ALL=C grep -a '^CENSUS ' | while IFS= read -r line; do
     say "conformance: $line"
   done
+  say "conformance:   census figure READ: inspected $inspected >= $floor tracked by git (floor DERIVED, not pinned)"
   if [ "$rc" -ne 0 ]; then
     warn "conformance: the $label guard REFUSED:"
     warn "$(printf '%s\n' "$out" | LC_ALL=C grep -av '^CENSUS ')"
@@ -823,7 +894,19 @@ _run_capture_guard() {
 # money on the wire as a float at all — is a T173 follow-up with its population measured,
 # not a claim this guard makes.
 guard_no_float_in_capture_requests() {
-  _run_capture_guard check_wire_float_roundtrip.py "wire-float round-trip"
+  # THE FLOOR, DERIVED BY A DIFFERENT PROGRAM OVER THE SAME POPULATION (T194). The guard's
+  # own `derive()` takes every *.json whose DIRECT parent directory is named `req`, plus
+  # every *.req wire-bytes artefact, at any depth under .softhouse/capture
+  # [VERIFIED: .softhouse/capture/lib/check_wire_float_roundtrip.py:78-102]. `git ls-files`
+  # is asked for the same set from the index instead of from `os.walk`, so the two agree
+  # only if the guard actually opened the tree. Measured in this worktree: guard 320,
+  # floor 320. Tracked is a SUBSET of walked (untracked files raise the guard's figure and
+  # never the floor), which is why _run_capture_guard compares with `>=`.
+  local floor
+  floor="$(git -C "$REPO_ROOT" ls-files -z -- .softhouse/capture 2>/dev/null \
+           | LC_ALL=C tr '\0' '\n' \
+           | LC_ALL=C grep -acE '(/req/[^/]+\.json|\.req)$' || true)"
+  _run_capture_guard check_wire_float_roundtrip.py "wire-float round-trip" "$floor"
 }
 
 # guard_no_narrow_catch_in_capture_rigs: T169's lint, on the path that runs. A NEW capture
@@ -837,7 +920,19 @@ guard_no_float_in_capture_requests() {
 # `catch (Exception e)` with no seam marker inside the try is a BAD PROBE, and reading its
 # non-refusal as a vacuous guard is a cycle already burned once in this program.
 guard_no_narrow_catch_in_capture_rigs() {
-  _run_capture_guard check_no_narrow_catch.py "narrow-catch"
+  # THE FLOOR, same derivation, this guard's population: every *.java in the repository
+  # except the `.claude/worktrees` checkout root the lint excludes and NAMES
+  # [VERIFIED: .softhouse/capture/lib/check_no_narrow_catch.py:104-136]. The exclusion
+  # filter below is belt-and-braces — `.claude/worktrees/` is in .gitignore, so `git
+  # ls-files` never lists one — and it is written out anyway so that un-ignoring those
+  # trees would not silently push the floor above what the lint is willing to walk.
+  # Measured in this worktree: guard 57, floor 57 (and 57 on the filesystem).
+  local floor
+  floor="$(git -C "$REPO_ROOT" ls-files -z -- '*.java' 2>/dev/null \
+           | LC_ALL=C tr '\0' '\n' \
+           | LC_ALL=C grep -av '^\.claude/worktrees/' \
+           | LC_ALL=C grep -ac '\.java$' || true)"
+  _run_capture_guard check_no_narrow_catch.py "narrow-catch" "$floor"
 }
 
 run_guards() {
