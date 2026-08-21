@@ -5,13 +5,13 @@ T175 RED PROBE -- t55-analyse.py:352, the I6 money-decimal-places swallow
 
 ======== LEG A -- ORIGINAL vs the CLEAN corpus (baseline) ========
     | PLANTED  nothing -- clean copy
-    | scratch corpus: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t175-red-4upk7irh/clean  (33 sidecar files copied from /Users/buv/gerege-nbfi/.claude/worktrees/agent-a982e3fa98d08b3a4/.softhouse/capture/leapboundary/out)
+    | scratch corpus: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t175-red-802tu426/clean  (33 sidecar files copied from /Users/buv/gerege-nbfi/.claude/worktrees/agent-a982e3fa98d08b3a4/.softhouse/capture/leapboundary/out)
   AS PREDICTED      ORIGINAL I6 on the clean corpus (ok = no breach present): True
         detail: all cells
 
 ======== LEG B -- ORIGINAL vs a PARSEABLE 3-dp plant (control) ========
     | PLANTED  LB-LEAPIN-p7-exact.json  totalRepaymentExpected: '1232403.86' -> '1200000.000'
-    | scratch corpus: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t175-red-4upk7irh/parseable  (33 sidecar files copied from /Users/buv/gerege-nbfi/.claude/worktrees/agent-a982e3fa98d08b3a4/.softhouse/capture/leapboundary/out)
+    | scratch corpus: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t175-red-802tu426/parseable  (33 sidecar files copied from /Users/buv/gerege-nbfi/.claude/worktrees/agent-a982e3fa98d08b3a4/.softhouse/capture/leapboundary/out)
   AS PREDICTED      ORIGINAL I6 on a PARSEABLE three-decimal money cell (must VIOLATE): False
         detail: plan.totalRepaymentExpected=1200000.000
         -> the original's I6 is NOT simply broken. It catches a 3-dp breach
@@ -19,7 +19,7 @@ T175 RED PROBE -- t55-analyse.py:352, the I6 money-decimal-places swallow
 
 ======== LEG C -- ORIGINAL vs an UNPARSEABLE 3-dp plant (THE DEFECT) ========
     | PLANTED  LB-LEAPIN-p7-exact.json  totalRepaymentExpected: '1232403.86' -> '1,200,000.000'
-    | scratch corpus: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t175-red-4upk7irh/unparseable  (33 sidecar files copied from /Users/buv/gerege-nbfi/.claude/worktrees/agent-a982e3fa98d08b3a4/.softhouse/capture/leapboundary/out)
+    | scratch corpus: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t175-red-802tu426/unparseable  (33 sidecar files copied from /Users/buv/gerege-nbfi/.claude/worktrees/agent-a982e3fa98d08b3a4/.softhouse/capture/leapboundary/out)
   AS PREDICTED      ORIGINAL I6 on an UNPARSEABLE three-decimal money cell (defect => ok): True
         detail: all cells
         -> `1,200,000.000` is THREE decimal places in a 2-minor-unit currency,
@@ -62,7 +62,7 @@ T175 RED PROBE -- t55-analyse.py:352, the I6 money-decimal-places swallow
   AS PREDICTED      SUCCESSOR calls zero-captures an ERROR (P-35): True
   AS PREDICTED      SUCCESSOR calls zero-money-cells an ERROR (P-35): True
         --- and for contrast, the ORIGINAL on the same empty corpus:
-        | ORIGINAL raises FileNotFoundError: [Errno 2] No such file or directory: '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t175-red-4upk7irh/empty/LB-LEAPIN-p7-exact.json'  (it has no empty-corpus handling at all;
+        | ORIGINAL raises FileNotFoundError: [Errno 2] No such file or directory: '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t175-red-802tu426/empty/LB-LEAPIN-p7-exact.json'  (it has no empty-corpus handling at all;
         |  the file-not-found happens to be loud, but that is the LOADER,
         |  not the invariant -- :352 stays silent on every cell it drops.)
 

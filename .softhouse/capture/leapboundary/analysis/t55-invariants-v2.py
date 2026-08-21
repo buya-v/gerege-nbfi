@@ -6,7 +6,7 @@ WHY THIS FILE EXISTS
 `t55-analyse.py` is COMMITTED EVIDENCE and is left byte-identical (T114's ruling: committed
 evidence is not edited in place).  It carries two silent swallows on a money path:
 
-  t55-analyse.py:350-352   inside invariant I6, "every money cell is at most 2 dp (MNT minor
+  t55-analyse.py:350-353   inside invariant I6, "every money cell is at most 2 dp (MNT minor
                            unit)":   `try: exp = -Decimal(v).as_tuple().exponent
                                       except Exception: continue`
                            A money cell whose text will not parse as Decimal is DROPPED and I6
@@ -14,7 +14,7 @@ evidence is not edited in place).  It carries two silent swallows on a money pat
                            an empty denominator -- a vacuous pass on the FIRST non-negotiable in
                            CLAUDE.md ("money is integer minor units ... store 2").
 
-  t55-analyse.py:164-167   inside `diff()`, computing the WORST money delta of a pair:
+  t55-analyse.py:163-168   inside `diff()`, computing the WORST money delta of a pair:
                            `try: delta = abs((Decimal(av) - Decimal(bv)) / MINOR)
                             except Exception: pass`
                            A money cell whose delta cannot be computed can never become the
@@ -139,7 +139,7 @@ def i6(cid, doc):
 
 # ---------------------------------------------------------------- worst money delta, de-vacuumed
 def worst_delta(a_id, b_id):
-    """The `diff()` leg of t55-analyse.py:150-168, with the :167 swallow named and counted.
+    """The `diff()` leg of t55-analyse.py:149-169, with the :167 swallow named and counted.
 
     Returns (n_keys, n_differ, worst, worst_cell, considered, swallowed)."""
     A, B = t55.cells(t55.load(a_id)), t55.cells(t55.load(b_id))

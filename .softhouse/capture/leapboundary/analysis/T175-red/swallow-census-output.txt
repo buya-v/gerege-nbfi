@@ -35,10 +35,10 @@ root: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a982e3fa98d08b3a4
 ====================================================================================================
 DENOMINATORS (P-40)
 ====================================================================================================
-  .py files walked                      : 351
+  .py files walked                      : 353
   .py files UNREADABLE (named below)    : 0
   .py files UNPARSEABLE (named below)   : 0
-  except-handlers seen in total         : 85
+  except-handlers seen in total         : 87
   ...of which SWALLOW SITES by the definition above : 29
 
   WHAT THIS SWEEP STRUCTURALLY CANNOT FIND:

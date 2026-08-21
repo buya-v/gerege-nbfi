@@ -23,7 +23,7 @@ sha256 of the original, recorded before and after all T175 work, unchanged:
 
 ## The defects — two, in the same file
 
-**`t55-analyse.py:350-352`**, inside invariant I6, *"every money cell is at most 2 dp (MNT
+**`t55-analyse.py:350-353`**, inside invariant I6, *"every money cell is at most 2 dp (MNT
 minor unit)"*:
 
             try:
@@ -35,7 +35,7 @@ A money cell whose text will not parse as a `Decimal` is dropped and **I6 passes
 Nothing is printed and nothing is counted. With every cell unparseable, I6 reports `ok` over an
 empty denominator — a vacuous pass on the first non-negotiable in `CLAUDE.md`.
 
-**`t55-analyse.py:164-167`**, inside `diff()`, computing the worst money delta of a pair:
+**`t55-analyse.py:163-168`**, inside `diff()`, computing the worst money delta of a pair:
 
                 try:
                     delta = abs((Decimal(av) - Decimal(bv)) / MINOR)
@@ -58,8 +58,9 @@ three-decimal-place value `"1,200,000.000"` in every MONEYISH cell in turn — 3
 * **0 are reported by I6.**
 
 The swallowed 24 include `plan.totalRepaymentExpected`, `plan.totalPrincipalDisbursed`,
-`plan.totalPrincipalExpected`, `plan.totalFeeChargesCharged` and `plan.totalPenaltyCharges\
-Charged` — plan-level totals a reader would quote. Note also that the **disbursement row** is
+`plan.totalPrincipalExpected`, `plan.totalFeeChargesCharged` and
+`plan.totalPenaltyChargesCharged` — plan-level totals a reader would quote. Note also that the
+**disbursement row** is
 split out at `t55-analyse.py:312-316` and I1/I3/I5/I7 never iterate it, while `cells()` keeps
 it as `row0`: for that row, `:352` is the only money check there is.
 
