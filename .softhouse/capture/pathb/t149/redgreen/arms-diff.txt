@@ -1,0 +1,30 @@
+PRODUCT TWIN CHECK — m_product_loan id 10 @ fineract_default vs id 11 @ fineract_gerege
+  columns compared: 89   differing: 1   -> ['id']
+     id: default=10 gerege=11
+  VERDICT: TWINS — the rounding mode is the only remaining cause
+
+ROUNDING-MODE ARMS, same JVM, same request shape, same 89-column product
+  HALF_UP  arm: tenant gerege  (RoundingMode ordinal 4)  out/gerege/canary-halfcent-raw.json
+  HALF_EVEN arm: tenant default (RoundingMode ordinal 6)  out/default-HALF-EVEN-ARM/pmode2-default-raw.json
+
+  totalPrincipalDisbursed      HALF_UP     1162502.50   HALF_EVEN     1162502.50   delta +0
+  totalInterestCharged         HALF_UP      140457.89   HALF_EVEN      140457.88   delta +1   <-- DIVERGES
+  totalRepaymentExpected       HALF_UP     1302960.39   HALF_EVEN     1302960.38   delta +1   <-- DIVERGES
+
+  period 1   principalOriginalDue 87654.98/87654.99 (-1); principalDue 87654.98/87654.99 (-1); principalLoanBalanceOutstanding 1074847.52/1074847.51 (+1); interestOriginalDue 20925.05/20925.04 (+1); interestDue 20925.05/20925.04 (+1)
+  period 2   principalLoanBalanceOutstanding 985614.75/985614.74 (+1)
+  period 3   principalLoanBalanceOutstanding 894775.79/894775.78 (+1)
+  period 4   principalLoanBalanceOutstanding 802301.72/802301.71 (+1)
+  period 5   principalLoanBalanceOutstanding 708163.12/708163.11 (+1)
+  period 6   principalLoanBalanceOutstanding 612330.03/612330.02 (+1)
+  period 7   principalLoanBalanceOutstanding 514771.94/514771.93 (+1)
+  period 8   principalLoanBalanceOutstanding 415457.80/415457.79 (+1)
+  period 9   principalLoanBalanceOutstanding 314356.01/314356.00 (+1)
+  period 10  principalLoanBalanceOutstanding 211434.39/211434.38 (+1)
+  period 11  principalLoanBalanceOutstanding 106660.18/106660.17 (+1)
+  period 12  principalOriginalDue 106660.18/106660.17 (+1); principalDue 106660.18/106660.17 (+1); totalOriginalDueForPeriod 108580.06/108580.05 (+1)
+
+  money cells diverging: 20
+  widest single-cell disagreement: 1 minor unit(s) — totalInterestCharged: HALF_UP 140457.89 vs HALF_EVEN 140457.88
+
+  period-1 interest: HALF_UP 20925.05   HALF_EVEN 20925.04   (exact tie 1162502.50 x 0.018 = 20925.045)
