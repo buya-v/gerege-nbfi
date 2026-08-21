@@ -917,7 +917,7 @@
       "executor": "agent",
       "model": "opus",
       "target": "docs",
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
       "dependencies": [
         "T173"
@@ -927,7 +927,7 @@
         ".softhouse/reference-oracle.md"
       ],
       "description": "Raised by T173 as its FU-1 and INDEPENDENTLY CONFIRMED BY THE DRIVER on main: 11 files under a req/ dir carry \"principal\": 1162502.5 (T149/T153 HALF_UP half-cent tie probes); the driver's wider grep over all *.json under .softhouse/capture, including out/, names 38 files. T173 also measured 214 interestRatePerPeriod and 53 charge amount float-shaped tokens, and chose the WEAKER, defensible property (byte-preservation under a binary-double round trip) rather than a blanket ban, because a blanket ban would have refused the entire committed corpus and pinned conformance.sh at exit 2. THAT CHOICE IS CORRECT FOR THE GUARD AND DOES NOT SETTLE THE QUESTION. Settle it: CLAUDE.md's first non-negotiable says money is integer minor units in every path INCLUDING the wire, and Fineract's own REST API accepts principal as a major-unit decimal -- so a FAITHFUL capture of the oracle cannot send minor units. Distinguish, with citations to Fineract source for the API's declared type: (a) the oracle-facing capture wire, where fidelity to Fineract's API shape is what makes a vector admissible; (b) the Go module's OWN adapter/API surface, where the non-negotiable binds absolutely; (c) the STORED vector, where the expected value must be integer minor units. State which of the 38 files sit in which category and whether any is a PARITY vector rather than a discrimination probe. Note that 1162502.5 major = 116250250 MNT minor units EXACTLY and 0.5 is dyadic, so it round-trips a double exactly -- the defect, if any, is representational, not yet a measured arithmetic error; say so plainly rather than overstating. Do NOT relax the non-negotiable and do NOT rewrite committed captures; produce the ruling and the enforcement boundary it implies, and raise a gate only if the answer would change the frozen contract.",
-      "note": "dispatched local fire 20260821-125942 batch 1",
+      "note": "dispatched local fire 20260821-125942 batch 1 | MERGED. Ruling: (a) wire admits major-unit decimal bound by byte-fidelity, (b) Go surface refuses absolutely, (c) stored vector integer minor units. NO GATE. Three load-bearing claims driver-verified: getAsBigDecimal at the number branch, Double amount on ChargeRequest.java:41, and zero float-typed tokens across 50 vector files / 15545 scalars.",
       "branch": "softhouse/T186-wire-money-form-ruling"
     },
     {
@@ -1110,6 +1110,26 @@
       "status": "pending",
       "attempts": 0,
       "note": "raised by T188 (F-3, F-4, F-5). Serialised behind T191 -- both edit conformance.sh."
+    },
+    {
+      "id": "T193",
+      "title": "42 of the 43 PARITY vectors descend from capture-prod3* request bodies that NO guard inspects",
+      "description": "T186's FU-2, the biggest coverage gap its ruling found. T173's wire-float guard inspects request bodies under req/ dirs and the adversarial rigs, but the capture-prod3* request bodies that 42 of the 43 promoted parity vectors actually descend from are NOT in any guard's walk. So the corpus that carries the program's entire parity claim is the part least inspected. Extend the guard's walk to cover them, DRIVE IT RED on a planted violation in that exact location (P-22) and GREEN on the real corpus (P-50), and report the true inspected-item count before and after -- if the count before was zero for that path, say so plainly, because a guard inspecting zero items is an ERROR not a pass (P-35). Apply T186's ratified enforcement boundary: (a) the oracle-facing wire admits major-unit decimal and is bound by BYTE-FIDELITY; (b) the Go module's own surface refuses float absolutely; (c) the stored vector must be integer minor units. Do NOT replace byte-preservation with value-preservation -- T186 measured why: money tokens run to 10 significant digits against binary64's 17-digit cliff, so value-preservation is trivially satisfied and would grade nothing, while byte-preservation is the necessary-and-sufficient condition for surviving the one genuine Java double on a Fineract request path (ChargeRequest.java:41, driver-verified).",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/conformance.sh",
+        ".softhouse/capture/lib/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T191"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "raised by T186 (FU-2), local fire 20260821-125942. Serialised behind T191 -- both edit conformance.sh."
     }
   ],
   "cross_corroboration": {
