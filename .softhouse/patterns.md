@@ -1278,3 +1278,27 @@ rather than as assertion, and so gets skimmed.
    difference is `omitempty`/pointer-vs-value in Go. A doc that blurs them mis-specifies the port.
 4. **The most-skimmed part of a handoff is the most dangerous place for an invention.** Prose gets argued
    with; numbers get re-derived; *quotations get believed.*
+
+**P-47 — THE DRIVER GAVE A WORKER AN INSTRUCTION THAT WOULD HAVE BROKEN PARITY, AND THE WORKER REFUSED THE
+RIGHT HALF OF IT.** Mid-flight, the driver told A2-8 to model the colliding loan-account enums separately
+(right) *and* to make missing-slot rendering "pick the family that actually applies" (**wrong**). A2-8 took
+the first half, **declined the second, and said so**: at codes 22/24/25 that would **diverge from the oracle
+on an observable string**. It rendered exactly what the oracle renders — so `A2-224/225/092` grade
+message-for-message — and fell back only where the oracle would NPE, carrying both names with the diagnostic
+one never on the wire. *The driver has accepted the refusal; the instruction was wrong.*
+
+The error has a specific shape worth naming, because it will recur every time a port meets an oracle bug:
+the driver saw a **latent NPE** in Fineract's error-rendering path and reached for the **correct** behaviour.
+But **Fineract is the oracle**, and this project grades Go output against what Fineract *emits*, not against
+what it *should* emit. **Parity with an oracle bug beats a local improvement**, and an improvement smuggled
+in as a bug-fix is a silent divergence that no vector will catch — because the vector was captured from the
+oracle, and the port now disagrees with it *on purpose*.
+
+*Rules:*
+1. **When the oracle is wrong, reproduce it and record it.** A divergence is a `user` gate or a documented
+   deviation with a vector, never a worker's quiet judgement call — and never a driver's.
+2. **"Fix the bug" is not a porting instruction.** Before telling a worker to improve on the oracle, ask
+   whether the improvement is observable at the contract boundary. If it is, it is a divergence.
+3. **A worker refusing half an instruction, with a reason, is the system working.** Record the refusal, adjudicate
+   it, and correct the record — this is the fourth time this fire that a worker overturned the driver
+   (A2-7 → the premise, T155 → its own rig, A2-11 → the fabrication, A2-8 → this).
