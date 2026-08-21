@@ -337,3 +337,16 @@ correctly go red. That is the manifest working, not a failure.
 `manifest.py verify` is demonstrably failable — `prove-manifest-red.py` mutates, deletes and
 adds a file, confirms each is caught, and confirms the tree verifies green again afterwards.
 Transcript in the handoff.
+
+> **A2-5 correction to the paragraph above (21 Aug 2026).** That claim was true of the hash
+> *comparison* and overstated as a claim about the *manifest*. The A2-4 review (D-3) showed
+> `verify` then passed vacuously on empty input, did not recurse into `out/<subdir>/`, and
+> covered neither this document nor the rig nor itself — the reviewer appended a false money
+> claim to this very file and `verify` stayed green. All three are now closed and each was
+> driven RED against the real pre-fix bytes: see `prove-manifest-blind-red.py` /
+> `RED-GREEN-D3-manifest-blindness.txt`, and `prove-cap-transport-red.py` /
+> `RED-GREEN-D2-cap-transport.txt` for `cap.sh`'s unreachable transport-failure handler (D-2).
+> **Read `DEFECTS-FOUND-BY-REVIEW.md` before citing anything in this plan or under `out/`** —
+> in particular the 30 `attempt1-*` files listed in `FLAGGED-NOT-REPRODUCIBLE.txt`, which are
+> real oracle bytes with false recipes and are not citable. No captured byte under `out/`,
+> `req/` or `sql/` was altered by A2-5; its 406 manifest lines are unchanged.

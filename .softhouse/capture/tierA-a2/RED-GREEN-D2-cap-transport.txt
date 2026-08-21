@@ -1,0 +1,147 @@
+RED-then-GREEN transcript — A2-4 defect D-2: cap.sh's transport-failure handler cannot fire.
+Task A2-5. Produced by `python3 prove-cap-transport-red.py`, exit 0. Re-run it to reproduce.
+
+The pre-fix cap.sh is read from its immutable git blob 55d5d63af96820ada43544913b2a344478f0393d
+(sha256 5820f36361ef90d18aacbb1f3eb715ec34e56b794d04eda4935653dc93d6e62a), which is cap.sh
+exactly as it stood on main before this task, per P-22 ("run the counterproof against the real
+pre-fix bytes"). No real capture artefact is read or written: every run happens in a throwaway
+sandbox seeded with a fake stale observation, against the closed port 127.0.0.1:1.
+
+WHAT THE RED SHOWS. Under /bin/sh — the interpreter every run-*.sh actually uses — the pre-fix
+script exits 7 (curl's own status, i.e. `set -e` killed the shell at the assignment), the string
+"TRANSPORT FAILURE" never reaches stderr, the earlier fire's body and status are still on disk,
+and out/NAME.http now carries TODAY's captured-at-utc. That is the exact artefact D-2 describes:
+stale oracle bytes presented as a fresh observation.
+
+Two side observations from the matrix, recorded because they are true and were not predicted:
+  * the pre-fix script under -u on the NO-BODY branch dies earlier still, at `BODY=$4`
+    (unbound variable), exiting 1 before writing anything — a different failure, not the fix;
+  * curl never truncated the stale out/NAME.json, because it never connected. The stale body
+    survives byte-identically. That is why `rm -f` mattered and why writing the .http first was
+    the fatal ordering.
+
+WHAT THE GREEN SHOWS. The fixed script fires the handler and exits 1 in all 16 interpreter/option
+combinations tested (sh, bash, dash, zsh, ksh; -e, -u, -eu, -o pipefail, -eu -o pipefail; and by
+its own shebang), on BOTH the body and the no-body branch — 32 cases. In every one the earlier
+fire's body and status are byte-identical afterwards and out/NAME.http still carries its ORIGINAL
+2000-01-01 timestamp: nothing under out/ is written until the exchange completed, and pre-existing
+evidence is named in the diagnostic rather than deleted.
+
+================================================================================================
+====================================================================================================
+D-2  cap.sh transport-failure handler — RED against the real pre-fix bytes, GREEN after
+====================================================================================================
+pre-fix  cap.sh: git blob 55d5d63af96820ada43544913b2a344478f0393d  sha256 5820f36361ef90d18aacbb1f3eb715ec34e56b794d04eda4935653dc93d6e62a
+post-fix cap.sh: working tree            sha256 67640ea31eb16c0ba0f929cfd93459f4ced687be3dda0f10db00c1b2d31f542a
+endpoint under test: https://127.0.0.1:1/... (closed port; curl cannot connect)
+sandbox seeded with a STALE observation from an earlier fire:
+    out/A2-STALE-PROBE.json   sha256 d64a161086020b052b3936bbb34431346617ab4f2f3e910d386e98f138860547
+    out/A2-STALE-PROBE.status = 200
+    out/A2-STALE-PROBE.http   captured-at-utc: 2000-01-01T00:00:00Z
+
+----------------------------------------------------------------------------------------------------
+BRANCH: NO body file (GET branch)
+----------------------------------------------------------------------------------------------------
+
+  [RED] pre-fix cap.sh — the handler must NOT fire (that is the defect):
+  /bin/sh                             exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:51Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/sh -e                          exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:51Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/sh -u                          exit 1   handler_fired=False stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False
+                                      (pre-fix did not produce the stale-under-fresh artefact here)
+  /bin/sh -eu                         exit 1   handler_fired=False stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False
+                                      (pre-fix did not produce the stale-under-fresh artefact here)
+  /bin/bash                           exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:51Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/bash -e                        exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:51Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/bash -u                        exit 1   handler_fired=False stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False
+                                      (pre-fix did not produce the stale-under-fresh artefact here)
+  /bin/bash -o pipefail               exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:51Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/bash -eu -o pipefail           exit 1   handler_fired=False stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False
+                                      (pre-fix did not produce the stale-under-fresh artefact here)
+  /bin/dash                           exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:51Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/dash -e                        exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:52Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/zsh                            exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:52Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/zsh -e                         exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:52Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/ksh                            exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:52Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/ksh -e                         exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:52Z FRESH_STAMP_ON_STALE_BYTES=True
+  (shebang: ./cap.sh)                 exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:52Z FRESH_STAMP_ON_STALE_BYTES=True
+
+  pre-fix verdict under /bin/sh: handler_fired=False, stale body presented under captured-at-utc=2026-08-21T06:50:52Z  -> DEFECT REPRODUCED
+
+  [GREEN] post-fix cap.sh — the handler must fire in EVERY interpreter/option combination:
+  /bin/sh                             exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/sh -e                          exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/sh -u                          exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/sh -eu                         exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/bash                           exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/bash -e                        exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/bash -u                        exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/bash -o pipefail               exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/bash -eu -o pipefail           exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/dash                           exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/dash -e                        exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/zsh                            exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/zsh -e                         exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/ksh                            exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/ksh -e                         exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  (shebang: ./cap.sh)                 exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+
+----------------------------------------------------------------------------------------------------
+BRANCH: WITH body file (-d @req/probe.json)
+----------------------------------------------------------------------------------------------------
+
+  [RED] pre-fix cap.sh — the handler must NOT fire (that is the defect):
+  /bin/sh                             exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:55Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/sh -e                          exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:55Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/sh -u                          exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:55Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/sh -eu                         exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:55Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/bash                           exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:55Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/bash -e                        exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:55Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/bash -u                        exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:55Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/bash -o pipefail               exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:55Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/bash -eu -o pipefail           exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:55Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/dash                           exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:55Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/dash -e                        exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:55Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/zsh                            exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:55Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/zsh -e                         exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:56Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/ksh                            exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:56Z FRESH_STAMP_ON_STALE_BYTES=True
+  /bin/ksh -e                         exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:56Z FRESH_STAMP_ON_STALE_BYTES=True
+  (shebang: ./cap.sh)                 exit 7   handler_fired=False stale_body_intact=True  captured-at-utc=2026-08-21T06:50:56Z FRESH_STAMP_ON_STALE_BYTES=True
+
+  pre-fix verdict under /bin/sh: handler_fired=False, stale body presented under captured-at-utc=2026-08-21T06:50:56Z  -> DEFECT REPRODUCED
+
+  [GREEN] post-fix cap.sh — the handler must fire in EVERY interpreter/option combination:
+  /bin/sh                             exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/sh -e                          exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/sh -u                          exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/sh -eu                         exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/bash                           exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/bash -e                        exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/bash -u                        exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/bash -o pipefail               exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/bash -eu -o pipefail           exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/dash                           exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/dash -e                        exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/zsh                            exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/zsh -e                         exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/ksh                            exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  /bin/ksh -e                         exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+  (shebang: ./cap.sh)                 exit 1   handler_fired=True  stale_body_intact=True  captured-at-utc=2000-01-01T00:00:00Z FRESH_STAMP_ON_STALE_BYTES=False CAUGHT
+
+----------------------------------------------------------------------------------------------------
+D-2b  the CALLER: run-*.sh are deliberately not `set -e`, so a handler that fires
+      but is ignored still launders the stale body into the transcript.
+----------------------------------------------------------------------------------------------------
+  pre-fix cap.sh + old caller (no `|| exit 1`)
+    exit 0  stdout: '-> {"stale":"BODY FROM AN EARLIER FIRE - MUST NOT BE PRESENTED AS NEW"}'
+    stale body printed as an observation: True
+  post-fix cap.sh + new caller (`|| exit 1`)
+    exit 1  stdout: ''
+    stale body printed as an observation: False
+
+  shipped run-*.sh cap.sh call sites:
+    15/15 cap.sh call sites carry `|| exit 1`
+
+====================================================================================================
+RESULT: pre-fix handler proven UNREACHABLE (stale bytes under a fresh timestamp);
+        post-fix handler proven REACHABLE in every interpreter/option combination tested,
+        with the earlier fire's bytes left byte-identical and its timestamp untouched.
