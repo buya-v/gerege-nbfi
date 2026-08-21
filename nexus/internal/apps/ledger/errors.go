@@ -33,11 +33,23 @@ type LedgerError struct {
 	// empty when the refusal is source-derived and has not been observed.
 	Capture string
 	// ApplicableSlotName is set on a product-to-account-mapping miss. Message
-	// reproduces the oracle's own rendering, which for a loan ALWAYS goes
-	// through AccrualAccountsForLoan even on a cash-based product; this field
-	// carries the name from the enum that ACTUALLY APPLIES. The two differ at
-	// codes 22, 24 and 25 — trap 2 surfacing inside the oracle's own error
-	// path. It is diagnostic only and is never put on the wire.
+	// reproduces the oracle's own rendering, which for a LOAN always goes
+	// through AccrualAccountsForLoan even on a cash-based product and for a
+	// WORKING-CAPITAL LOAN always through CashAccountsForLoan; this field
+	// carries the name of the placeholder THE CALLER ACTUALLY PASSED. It is
+	// taken from the typed Slot (Slot.String()) and is never re-derived from
+	// the integer code, because the integer does not determine the family —
+	// that is trap 2, and re-deriving is what made this field inert before
+	// A2-12.
+	//
+	// The two names differ at codes 22, 24 and 25 — 6 of the 96 (entry point,
+	// code, family) rows, 3 per entry point — and are equal everywhere else
+	// [VERIFIED: A2-12's own enumeration through the public resolvers over all
+	// 48 (code, family) pairs on both entry points; asserted by
+	// TestApplicableSlotNameCarriesTheCallersFamily].
+	//
+	// It is diagnostic only and is never put on the wire: LedgerError carries
+	// no JSON tags and nothing in this package marshals it.
 	ApplicableSlotName string
 }
 

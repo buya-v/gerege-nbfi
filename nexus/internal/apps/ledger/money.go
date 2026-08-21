@@ -21,13 +21,39 @@ import (
 // WHICH VECTOR PROVES IT: none, and that is the point — it is stated rather
 // than chosen silently, as the task requires.
 //
-//   - What the corpus DOES prove: every money value in the A2 capture set is
-//     exact at two decimals. All 27 JSON `amount` fields and the psql dump's
-//     six acc_gl_journal_entry rows read ...000000 [VERIFIED: this worker
-//     enumerated every *.json under .softhouse/capture/tierA-a2/out/ with
-//     json.load(parse_float=decimal.Decimal) — no float, per P-25 — and every
-//     decimal token in the *.txt dumps]. So NO CAPTURE HAS EVER OBSERVED
-//     RESIDUE IN A MONEY COLUMN.
+//   - What the corpus DOES prove: every MONEY value in the A2 capture set is
+//     exact at two decimals.
+//
+//     THE MEASUREMENT, AS A RECIPE RATHER THAN A BARE NUMBER (P-46 rule 1;
+//     A2-8 published "27", which A2-9 could not reproduce and which A2-12
+//     re-measured). Counts below are A2-12's own, from the repo root:
+//
+//     LC_ALL=C /usr/bin/grep -aho '"amount"[[:space:]]*:' .softhouse/capture/tierA-a2/out/*.json | wc -l   -> 52
+//     LC_ALL=C /usr/bin/grep -aho '"amount"[[:space:]]*:' .softhouse/capture/tierA-a2/req/*.json | wc -l   -> 0
+//     python3 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-12-amount-census.py
+//
+//     The census walks every *.json under out/ with
+//     json.loads(parse_float=decimal.Decimal) — no float anywhere, per P-25 —
+//     and reports: 147 files parsed, 0 unparseable, 52 `amount` fields at any
+//     depth in 10 files, of which 7 are NOT exact at two decimals. All 7 are
+//     the `1.234500` chargeOptions percentages in A2-209c (see the near miss
+//     below). The remaining 45 are exact at two decimals; 40 of them read
+//     literally `....000000` and 5 do not (`0.100000`, `0.500000`, `3.750000`,
+//     also A2-209c percentages, so ZERO of the 34 money `amount` fields
+//     outside A2-209c is anything but `....000000`). 89 request bodies under
+//     req/ carry no `amount` field at all.
+//
+//     The psql dump agrees: A2-150-db-final-state.txt's journal-entry block is
+//     6 rows and every one reads `1200000.000000`.
+//
+//     WHERE "27" CAME FROM, since a number that cannot be reproduced is worse
+//     than no number: 27 is the count of DISTINCT (file, amount text) PAIRS,
+//     not of `amount` fields. It is a real grouping of this data, but the
+//     sentence attached to it was false under it too — 4 of those 27 pairs do
+//     not read `....000000`. Recorded so the next reader does not re-derive it
+//     and think the corpus moved.
+//
+//     So NO CAPTURE HAS EVER OBSERVED RESIDUE IN A MONEY COLUMN.
 //   - What that does NOT prove: that residue cannot occur. "Not observed" is a
 //     statement about the probe set. The probes carried a 0% interest rate, no
 //     charges, no overpayment and no transfer, so the arithmetic that would

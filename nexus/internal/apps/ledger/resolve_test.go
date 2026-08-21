@@ -432,6 +432,121 @@ func TestMissingMappingRefusalsMatchTheOracleMessages(t *testing.T) {
 	}
 }
 
+// renderedSlotName cuts the placeholder name back out of the oracle's message,
+// so a test can compare what was RENDERED against what APPLIES without
+// reaching into the resolver.
+func renderedSlotName(t *testing.T, message string) string {
+	t.Helper()
+	const marker = " does not exist for an account of type "
+	i := strings.Index(message, marker)
+	if i < 0 {
+		t.Fatalf("message %q is not the not-found message", message)
+	}
+	return message[i+len(marker):]
+}
+
+// TestApplicableSlotNameCarriesTheCallersFamily is the F-A regression test
+// (A2-9's finding, fixed by A2-12).
+//
+// LedgerError.Message reproduces the oracle's own rendering, which for a LOAN
+// always goes through AccrualAccountsForLoan and for a WORKING-CAPITAL LOAN
+// always through CashAccountsForLoan, regardless of the product's accounting
+// rule [VERIFIED: AccountingProcessorHelper.java:1208-1211 and :1024-1027].
+// ApplicableSlotName exists to carry the OTHER name — the placeholder the
+// caller actually holds. The two are the same thing at 19 of the 22 shared
+// codes and DIFFER at 22, 24 and 25, which is trap 2 surfacing inside the
+// oracle's own error path.
+//
+// Before the F-A fix ApplicableSlotName was re-derived from the bare integer
+// code, so it equalled the rendered name unconditionally and the field carried
+// no information at all. This test fails on that code.
+func TestApplicableSlotNameCarriesTheCallersFamily(t *testing.T) {
+	resolver, _, _ := tenant(t)
+
+	// Product 9999 is in no acc_product_mapping row in any capture, so every
+	// resolution below is a STEP 3 miss.
+	const missingProduct = int64(9999)
+
+	slots := make([]Slot, 0, 48)
+	for s := range cashLoanNames {
+		slots = append(slots, s)
+	}
+	for s := range accrualLoanNames {
+		slots = append(slots, s)
+	}
+	if len(slots) != 48 {
+		t.Fatalf("expected 48 (code, family) pairs across the two loan enums, got %d", len(slots))
+	}
+
+	entries := []struct {
+		name    string
+		resolve func(int64, Slot, *int64) (*GLAccount, error)
+	}{
+		{"loan", resolver.ResolveLoanProductAccount},
+		{"workingcapitalloan", resolver.ResolveWorkingCapitalLoanProductAccount},
+	}
+
+	// LEG 1 — the field must equal the caller's own placeholder name, always.
+	// This is the property; the codes below are the instances that bite.
+	differed := 0
+	for _, entry := range entries {
+		for _, slot := range slots {
+			_, err := entry.resolve(missingProduct, slot, nil)
+			var le *LedgerError
+			if !errors.As(err, &le) {
+				t.Fatalf("%s %s: expected a LedgerError, got %v", entry.name, slot.Name(), err)
+			}
+			if le.ApplicableSlotName != slot.String() {
+				t.Errorf("%s code %d: caller passed %q, ApplicableSlotName %q",
+					entry.name, slot.Code(), slot.String(), le.ApplicableSlotName)
+			}
+			if renderedSlotName(t, le.Message) != le.ApplicableSlotName {
+				differed++
+			}
+		}
+	}
+	// 3 per entry point: codes 22, 24 and 25, in the family the oracle does
+	// NOT render through.
+	if differed != 6 {
+		t.Errorf("expected the rendered and applicable names to differ on exactly 6 of the 96 "+
+			"(entry point, code, family) rows, got %d", differed)
+	}
+
+	// LEG 2 — the three colliding codes, named. On a CASH product the loan
+	// path renders the ACCRUAL name, so the field must NOT agree with the
+	// message. A field that agreed here would be the pre-fix defect.
+	collisions := []struct {
+		slot           Slot
+		wantApplicable string
+		wantRendered   string
+	}{
+		{CashLoanClassificationIncome, "CLASSIFICATION INCOME", "INCOME FROM CAPITALIZATION"},
+		{CashLoanIncomeFromDiscountFee, "INCOME FROM DISCOUNT FEE", "BUY DOWN EXPENSE"},
+		{CashLoanFeesReceivable, "FEES RECEIVABLE", "INCOME FROM BUY DOWN"},
+	}
+	for _, c := range collisions {
+		_, err := resolver.ResolveLoanProductAccount(missingProduct, c.slot, nil)
+		var le *LedgerError
+		if !errors.As(err, &le) {
+			t.Fatalf("code %d: expected a LedgerError, got %v", c.slot.Code(), err)
+		}
+		rendered := renderedSlotName(t, le.Message)
+		if rendered != c.wantRendered {
+			t.Errorf("code %d: rendered %q, want %q (the WIRE string — it must not move)",
+				c.slot.Code(), rendered, c.wantRendered)
+		}
+		if le.ApplicableSlotName != c.wantApplicable {
+			t.Errorf("code %d: ApplicableSlotName %q, want %q",
+				c.slot.Code(), le.ApplicableSlotName, c.wantApplicable)
+		}
+		if le.ApplicableSlotName == rendered {
+			t.Errorf("code %d: ApplicableSlotName equals the rendered name %q — the field carries "+
+				"no information at exactly the code where trap 2 bites",
+				c.slot.Code(), rendered)
+		}
+	}
+}
+
 // TestDuplicateMappingRowsRefuse grades the missing unique constraint. Product
 // 27 holds two rows at (27, LOAN, FUND_SOURCE, payment type 1) pointing at GL
 // 16 and GL 2, and the oracle refuses the disbursement rather than picking one.

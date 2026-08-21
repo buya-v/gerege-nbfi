@@ -280,7 +280,10 @@ func (r *Resolver) resolveProductAccount(
 
 	if mapping == nil {
 		if typedMiss {
-			return nil, r.mappingNotFound(keyType, productID, code)
+			// The TYPED slot is passed on, not the bare code: the caller's
+			// family is what ApplicableSlotName has to carry, and it cannot be
+			// recovered from the integer (trap 2).
+			return nil, r.mappingNotFound(keyType, productID, slot)
 		}
 		return nil, newErr(ErrMappingNilDereference, "",
 			"no acc_product_mapping row for product %d (%s) at placeholder %d; the reference oracle raises a NullPointerException here, not a typed refusal",
@@ -319,31 +322,40 @@ func (r *Resolver) resolveProductAccount(
 // Both names are carried: Message is oracle-faithful, ApplicableSlotName is the
 // truth, so a log or an operator can see the difference without the wire
 // contract moving.
-func (r *Resolver) mappingNotFound(keyType PortfolioProductType, productID int64, code int32) error {
-	var rendered, applicable string
+//
+// THE SLOT IS THE PARAMETER, NOT THE CODE, AND THAT IS THE WHOLE POINT.
+// The caller holds a typed Slot, which settles the applicable family by
+// construction — the Slot interface is closed (slotFamilyMarker is unexported,
+// so no type outside this package can implement it). Re-deriving the family
+// from the bare integer here is exactly the keying trap 2 calls unsafe, and it
+// would make ApplicableSlotName equal to rendered unconditionally — i.e. carry
+// no information at 22, 24 and 25, the three codes it exists for. That was the
+// state A2-9 found and A2-12 fixed; TestApplicableSlotNameCarriesTheCallersFamily
+// is the regression, and it fails on the pre-fix code.
+func (r *Resolver) mappingNotFound(keyType PortfolioProductType, productID int64, slot Slot) error {
+	code := slot.Code()
+	// The family the CALLER actually holds. Never re-derived from code.
+	applicable := slot.String()
+
+	var rendered string
 	cash, haveCash := CashLoanSlotFromCode(code)
 	accrual, haveAccrual := AccrualLoanSlotFromCode(code)
 
+	// fallbackName returns the primary enum's name when it has a member at
+	// this code — which is what the oracle renders — and otherwise the other
+	// loan enum's name, which is THIS PORT'S ONE DELIBERATE DIVERGENCE,
+	// documented above and confined to the codes where the oracle's own
+	// .toString() would be called on a null.
 	switch keyType {
 	case ProductWorkingCapitalLoan:
 		// [VERIFIED: AccountingProcessorHelper.java:1024-1027 renders through
 		// CashAccountsForLoan, which has no 7, 8 or 9.]
-		applicable = fallbackName(haveCash, cash, haveAccrual, accrual, code)
-		if haveCash {
-			rendered = cash.String()
-		} else {
-			rendered = applicable
-		}
+		rendered = fallbackName(haveCash, cash, haveAccrual, accrual, code)
 	default:
 		// [VERIFIED: AccountingProcessorHelper.java:1208-1211 renders through
 		// AccrualAccountsForLoan ALWAYS, even for a cash-based product, and
 		// AccrualAccountsForLoan has no 26.]
-		applicable = fallbackName(haveAccrual, accrual, haveCash, cash, code)
-		if haveAccrual {
-			rendered = accrual.String()
-		} else {
-			rendered = applicable
-		}
+		rendered = fallbackName(haveAccrual, accrual, haveCash, cash, code)
 	}
 
 	err := newErr(ErrProductToGLAccountMappingNotFound, "A2-224-chargeoff-unmapped",

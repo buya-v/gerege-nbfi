@@ -248,10 +248,42 @@ const hierarchyDecorationRule = "........................................"
 // e.g. hierarchy "." -> "Assets", ".2." -> "....Fund Source",
 // ".3.4." -> "........Loan Portfolio".
 //
-// Two edge behaviours are reproduced deliberately rather than "fixed":
-//   - a hierarchy with zero dots yields depth -1, and SQL SUBSTRING with a
-//     negative length yields the empty string, so the name is returned bare;
-//   - beyond 10 levels the 40-dot pad is exhausted and the prefix saturates.
+// Two edge behaviours, and they are NOT the same kind of claim:
+//
+//   - SATURATION IS REPRODUCED DELIBERATELY. Beyond 10 levels the 40-dot pad is
+//     exhausted and the prefix stops growing, because SUBSTRING clamps a length
+//     past the end of the string [VERIFIED by A2-12's own run against the
+//     reference instance's database, container fineract-db-1, PostgreSQL 18.3:
+//     `select length(substring('....(40 dots)....', 1, 44))` -> 40]. The port
+//     clamps width to len(hierarchyDecorationRule) to match.
+//
+//   - ZERO DOTS IS NOT REPRODUCED, AND CANNOT BE. A2-8's comment claimed the
+//     port "deliberately reproduces" a bare name for a zero-dot hierarchy on
+//     the ground that SQL SUBSTRING with a negative length returns the empty
+//     string. THAT IS FALSE ON POSTGRESQL, which is the only permitted
+//     database. [VERIFIED by A2-12's own run against fineract-db-1
+//     (PostgreSQL 18.3):
+//     `select substring('....(40 dots)....', 1, -4)` ->
+//     `ERROR:  negative substring length not allowed`, psql exit 1.]
+//     So the oracle would FAIL THE QUERY where this port returns a.Name.
+//
+//     The branch is UNREACHABLE with data the oracle itself writes:
+//     GLAccount.generateHierarchy() sets "." for a root account and
+//     parent.hierarchy + id + "." otherwise, so every hierarchy it emits has at
+//     least one dot [VERIFIED: GLAccount.java:186-197, A2-12's own read at the
+//     pinned checkout 426a23544], and all 21 rows in A2-150-db-final-state.txt
+//     have at least one dot (A2-12's own count of the acc_gl_account block:
+//     21 rows, 21 with >= 1 dot, 0 with zero dots).
+//     `width <= 0` therefore guards a state that cannot arise from the oracle,
+//     not a behaviour that is being matched. It is kept as a total function
+//     rather than a panic; a real implementation reading a hand-edited row with
+//     a dotless hierarchy diverges from PostgreSQL here, and that is recorded
+//     rather than asserted away.
+//
+//     A depth-0 account (hierarchy ".", one dot, width 0) is a DIFFERENT case
+//     and IS matched: `substring(pad, 1, 0)` returns the empty string
+//     [VERIFIED by A2-12's own run against fineract-db-1], so "Assets" is
+//     returned bare, exactly as the port does.
 func (a GLAccount) NameDecorated() string {
 	dots := strings.Count(a.Hierarchy, ".")
 	width := (dots - 1) * 4

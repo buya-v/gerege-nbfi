@@ -156,9 +156,18 @@ func TestGenerateHierarchyReproducesTheStoredStrings(t *testing.T) {
 // TestNameDecoratedSaturatesLikeTheOracleSql pins the two edge behaviours that
 // come from reproducing a SQL SUBSTRING over a literal 40-dot string rather
 // than a Go loop that "obviously" means the same thing.
+//
+// A2-12 CORRECTION (A2-9's F-B). Only ONE of the two is a reproduction. See
+// the block at NameDecorated: PostgreSQL does NOT return the empty string for
+// a negative SUBSTRING length, it raises `negative substring length not
+// allowed`, so the zero-dot leg below pins THIS PORT'S total-function choice
+// on input the oracle cannot write, not the oracle's behaviour. The assertion
+// is unchanged; what it means is.
 func TestNameDecoratedSaturatesLikeTheOracleSql(t *testing.T) {
-	// A hierarchy with zero dots gives depth -1; SQL SUBSTRING with a negative
-	// length is the empty string, so the name comes back bare.
+	// Zero dots gives depth -1. The oracle's SQL would ERROR here; no oracle
+	// writer can produce a dotless hierarchy (GLAccount.generateHierarchy
+	// always emits at least one dot), so this pins the port's own refusal to
+	// panic on unreachable input.
 	bare := GLAccount{Name: "Odd", Hierarchy: ""}
 	if got := bare.NameDecorated(); got != "Odd" {
 		t.Errorf("zero-dot hierarchy: %q, want %q", got, "Odd")
