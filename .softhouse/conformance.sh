@@ -713,7 +713,10 @@ guard_gofmt() {
 # cannot be applied to one guard and forgotten on the other.
 _run_capture_guard() {
   local script="$REPO_ROOT/.softhouse/capture/lib/$1" label="$2"
-  local out rc cases
+  # T188 MICRO-FIX: `census_lines` (added by e93afc9) was the one variable in this
+  # function left un-`local`. It leaked into the global scope of a script that calls
+  # this function twice, for two different guards. Mechanical; no number changed.
+  local out rc cases census_lines
 
   # A MISSING GUARD IS AN ERROR, NOT A SKIP. `[ -f ... ] || return 0` would mean deleting
   # the file silently switches the check off and the run still says PASS.
