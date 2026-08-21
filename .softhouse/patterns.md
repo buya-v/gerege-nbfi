@@ -469,6 +469,77 @@ where the bug is invisible.
 > post-merge re-run of the artefact — not of conformance, of the *artefact* — is what caught this; make it
 > a standing step.
 
+### P-25. The no-floating-point rule binds ANALYSIS scripts too — a float there is a money defect one remove
+
+**Fire `20260820-230001`, gate G-8, found by the driver correcting itself on `main`.** The non-negotiable is
+stated as *money is integer minor units — no floating point in any monetary code path, struct field, schema
+column, API field, or test fixture.* Every worker read that list as exhaustive, and the list does not contain
+**the scripts that analyse the captures**.
+
+T84's prediction/analysis script computed `B·a` in double precision, read a residual of `+4.8e-20` as an exact
+tie, and put a **wrong refutation count — 18 instead of 22 — into the gate write-up Buyan reads.** The port was
+never wrong. The vectors were never wrong. The number that reached the product owner was.
+
+The script never touches production, so no reviewer graded it as money code; and its output is a *count*, not
+an amount, so it does not look like money at all. That is precisely why it got through.
+
+> **Rule.** The rule binds anything whose output is used to reason about money — analysis scripts, prediction
+> scripts, boundary classifiers, sweep summarisers, the one-off `python3 -c` in a handoff. Use `decimal` or
+> integers, and at the tenant's ratified `MathContext(19, HALF_UP)` when the quantity is derived from an amount.
+> The test is not "does this run in production", it is **"if this number is wrong, does a wrong money claim
+> reach a human?"** An exact-tie test written in binary floating point is the canonical instance: `a == b` on
+> two doubles is not the question anyone meant to ask.
+
+### P-26. Sweep for the CONCEPT and the NUMBERS, not for the sentence — and state what the sweep could not have found
+
+**Fires `20260820-200002` and `20260820-230001`, T101 → T112; the second occurrence of P-21 by a new route.**
+P-21 already said a correction lands where the defect was *named* and not where it is *restated*. T112 met the
+sharper version: T100 had **scoped the discriminator table correctly** and left the **prose restatement nine
+lines later** unscoped, so `gates.md:1040` claimed "family A exists at all 12 rates swept" while the table at
+`:925` showed 11 of 12 — the missing rate being 600.0 %, **the rate that defines family B**. The document
+contradicted itself inside ten lines, and a grep for the corrected sentence would have found neither site.
+
+> **Rule.** After any correction, sweep for the **concept** and for the **numbers**, never for the wording — the
+> restatement that does damage is the one phrased differently. Grep the figures (`12`, `all 12`, `every rate`),
+> grep the entity (`family A`), and read every hit. Then **write down what the sweep could not have found**: a
+> claim restated as a chart, as a count in a summary table, in another file, or as a silence where a
+> qualification should be. A sweep whose limits are unstated reads as exhaustive.
+
+### P-27. Do not keep a second copy of a document you are correcting
+
+**Fire `20260820-230001`, T112.** An evidence directory held `g8-section.md`, a working copy of the gate section
+from `gates.md`. It had already drifted from the original, and it carried the false F-1 sentence **verbatim** —
+so correcting `gates.md` would have left a fully-formed, plausible, wrong copy sitting in the committed evidence
+for the next reader to cite. T112 deleted it.
+
+> **Rule.** A worker that wants a working copy of a document reads the document; it does not fork it. Where a
+> second copy genuinely must exist, it is generated from the first at build time, or it carries a loud pointer to
+> the original and no substantive prose of its own. **Two copies of a claim is one claim and one time bomb**, and
+> it is the same failure as P-21 with the drift built in from the start.
+
+### P-28. A rescued branch with no handoff is indistinguishable from an abandoned one — the ledger must say which
+
+**Fire `20260821-080001`, at entry.** The previous fire ended with three workers killed mid-flight. The wrapper's
+worktree sweep did its job and rescued all three to `rescued-agent-*` branches — the mechanism built after the
+2026-08-18 incident that stranded 4,482 insertions worked exactly as designed.
+
+What did not work was the **ledger**. All three tasks still read `in_progress`, which tells the next fire that
+work is happening when nothing is; none named its rescue branch; and the branches were named after opaque agent
+ids, not tasks. So the next fire's cheapest reading of the state was *"three tasks are mid-flight"* — and its
+second-cheapest was *"three tasks were abandoned, re-do them."*
+
+Both were wrong, and expensively so. Re-opening the rescues showed **T107's was a substantially complete 575-line
+independent review** carrying a MICRO-FIX verdict and all nine rulings its brief asked for, including the one
+that mattered most — *zero of 42 promoted parity vectors depend on the unhardened gate*. T99's was seven commits
+and 3,533 insertions covering all four of its findings with red/green proof scripts. **The only thing either was
+missing was the handoff that says "I am finished."** Discarding them would have thrown away most of a fire.
+
+> **Rule.** Rescuing the bytes is half the job; the other half is the ledger. A killed worker's task becomes
+> `needs_retry` — never `in_progress` — with a note naming its rescue branch and stating **completeness
+> unverified**. Re-point the real task branch at the rescue so the work is findable by task id rather than by
+> agent id. And the next fire's first move on a rescue is to **read it before judging it**: the handoff is the
+> last thing a worker writes, so its absence says nothing whatever about how much of the work was done.
+
 <!-- LEARNED PATTERNS END -->
 
 ### Run 2026-08-17-run1-harness-schedule-poc — fire `20260819-170001` (local, oracle REACHABLE) — 2026-08-19

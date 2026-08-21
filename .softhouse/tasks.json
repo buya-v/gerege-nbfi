@@ -2433,18 +2433,16 @@
     {
       "id": "T118",
       "title": "patterns.md: a float in an ANALYSIS script is a money defect one remove",
-      "status": "pending",
+      "status": "done",
       "executor": "orchestrator",
       "model": "sonnet",
       "target": "docs",
-      "dependencies": [
-        "T114"
-      ],
+      "dependencies": [],
       "files_hint": [
         ".softhouse/patterns.md"
       ],
       "description": "T112 follow-up 1, correctly flagged as the driver's to write. The no-floating-point rule was read as binding the port, the schema, the vectors and the fixtures — but NOT analysis and prediction scripts. T84's analysis script computed B*a in double precision, read a +4.8e-20 residual as an exact tie, and put a WRONG REFUTATION COUNT (18 instead of 22) into the gate the product owner reads. State the rule to cover analysis and prediction scripts explicitly. Also record T112 follow-ups 2 and 3: the corrections-leak remedy (after any correction sweep for the CONCEPT and the NUMBERS, not the sentence, and state what the sweep could not have found) and 'do not keep a second copy of a corrected document'.",
-      "note": "Raised by the driver, local fire 20260821-080001, from T112 follow-ups 1-3."
+      "note": "Raised by the driver, local fire 20260821-080001, from T112 follow-ups 1-3. || local fire 20260821-080001: DONE by the driver. Landed as P-25 (the no-float rule binds ANALYSIS scripts), P-26 (sweep the CONCEPT and the NUMBERS, not the sentence, and state what the sweep could not have found) and P-27 (do not keep a second copy of a document you are correcting). Dependency on T114 dropped: the float defect is already established on main (commit 95ec06a corrected the refutation count from 18 to 22 and named the cause), so recording the pattern does not wait on T112's review. ALSO added P-28 from this fire's own entry finding."
     }
   ]
 }
