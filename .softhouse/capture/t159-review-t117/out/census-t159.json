@@ -1,0 +1,1788 @@
+{
+ "asked": 47,
+ "probe_cases_in_capture": 47,
+ "observed": 45,
+ "errored": 2,
+ "errored_detail": [
+  {
+   "id": "T159-R600p0-N2000-B10001",
+   "n": 2000,
+   "B_minor": 10001,
+   "error": "java.lang.StackOverflowError: null",
+   "errorStackTop0": "java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)"
+  },
+  {
+   "id": "T159-R600p0-N3000-B100001",
+   "n": 3000,
+   "B_minor": 100001,
+   "error": "java.lang.StackOverflowError: null",
+   "errorStackTop0": "java.base/java.util.ArrayList.forEach(ArrayList.java:1596)"
+  }
+ ],
+ "family_B_count": 25,
+ "clean_count": 20,
+ "max_residual_minor": 1001,
+ "max_residual_cell": "T159-R600p0-N3000-B1001",
+ "famB_distinct_principals_minor": [
+  1,
+  11,
+  501,
+  503,
+  551,
+  601,
+  801,
+  999,
+  1001
+ ],
+ "predictions": {
+  "agree": 41,
+  "disagree": 4,
+  "unscorable_errored": 2,
+  "detail": [
+   {
+    "id": "T159-R600p0-N2000-B10001",
+    "leg": "TERM",
+    "n": 2000,
+    "B_minor": 10001,
+    "predictedFamilyB": false,
+    "observedFamily": "ERRORED",
+    "agrees": false,
+    "confidence": "low"
+   },
+   {
+    "id": "T159-R600p0-N401-B1",
+    "leg": "BAND",
+    "n": 401,
+    "B_minor": 1,
+    "predictedFamilyB": true,
+    "observedFamily": "clean",
+    "agrees": false,
+    "confidence": "high"
+   },
+   {
+    "id": "T159-R600p0-N392-B1",
+    "leg": "BAND",
+    "n": 392,
+    "B_minor": 1,
+    "predictedFamilyB": false,
+    "observedFamily": "clean",
+    "agrees": true,
+    "confidence": "high"
+   },
+   {
+    "id": "T159-R600p0-N2000-B501",
+    "leg": "TERM",
+    "n": 2000,
+    "B_minor": 501,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "moderate"
+   },
+   {
+    "id": "T159-R600p0-N3000-B100001",
+    "leg": "TERM",
+    "n": 3000,
+    "B_minor": 100001,
+    "predictedFamilyB": false,
+    "observedFamily": "ERRORED",
+    "agrees": false,
+    "confidence": "low"
+   },
+   {
+    "id": "T159-R600p0-N1200-B1",
+    "leg": "TERM",
+    "n": 1200,
+    "B_minor": 1,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "moderate"
+   },
+   {
+    "id": "T159-R600p0-N1200-B1001",
+    "leg": "TERM",
+    "n": 1200,
+    "B_minor": 1001,
+    "predictedFamilyB": false,
+    "observedFamily": "clean",
+    "agrees": true,
+    "confidence": "low"
+   },
+   {
+    "id": "T159-R600p0-N2000-B1",
+    "leg": "TERM",
+    "n": 2000,
+    "B_minor": 1,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "moderate"
+   },
+   {
+    "id": "T159-R600p0-N400-B1",
+    "leg": "BAND",
+    "n": 400,
+    "B_minor": 1,
+    "predictedFamilyB": false,
+    "observedFamily": "clean",
+    "agrees": true,
+    "confidence": "high"
+   },
+   {
+    "id": "T159-R600p0-N1500-B1001",
+    "leg": "TERM",
+    "n": 1500,
+    "B_minor": 1001,
+    "predictedFamilyB": false,
+    "observedFamily": "clean",
+    "agrees": true,
+    "confidence": "low"
+   },
+   {
+    "id": "T159-R600p0-N391-B1",
+    "leg": "BAND",
+    "n": 391,
+    "B_minor": 1,
+    "predictedFamilyB": false,
+    "observedFamily": "clean",
+    "agrees": true,
+    "confidence": "high"
+   },
+   {
+    "id": "T159-R600p0-N361-B1",
+    "leg": "BAND",
+    "n": 361,
+    "B_minor": 1,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "high"
+   },
+   {
+    "id": "T159-R600p0-N1200-B10001",
+    "leg": "TERM",
+    "n": 1200,
+    "B_minor": 10001,
+    "predictedFamilyB": false,
+    "observedFamily": "clean",
+    "agrees": true,
+    "confidence": "low"
+   },
+   {
+    "id": "T159-R600p0-N108-B11",
+    "leg": "REP",
+    "n": 108,
+    "B_minor": 11,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "high"
+   },
+   {
+    "id": "T159-R600p0-N150-B11",
+    "leg": "REP",
+    "n": 150,
+    "B_minor": 11,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "high"
+   },
+   {
+    "id": "T159-R600p0-N3000-B1001",
+    "leg": "TERM",
+    "n": 3000,
+    "B_minor": 1001,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "low"
+   },
+   {
+    "id": "T159-R600p0-N389-B1",
+    "leg": "BAND",
+    "n": 389,
+    "B_minor": 1,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "high"
+   },
+   {
+    "id": "T159-R600p0-N1500-B10001",
+    "leg": "TERM",
+    "n": 1500,
+    "B_minor": 10001,
+    "predictedFamilyB": false,
+    "observedFamily": "clean",
+    "agrees": true,
+    "confidence": "low"
+   },
+   {
+    "id": "T159-R600p0-N1000-B901",
+    "leg": "PRIN",
+    "n": 1000,
+    "B_minor": 901,
+    "predictedFamilyB": false,
+    "observedFamily": "clean",
+    "agrees": true,
+    "confidence": "low"
+   },
+   {
+    "id": "T159-R600p0-N1000-B503",
+    "leg": "PRIN",
+    "n": 1000,
+    "B_minor": 503,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "low"
+   },
+   {
+    "id": "T159-R600p0-N364-B1",
+    "leg": "BAND",
+    "n": 364,
+    "B_minor": 1,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "high"
+   },
+   {
+    "id": "T159-R600p0-N360-B1",
+    "leg": "BAND",
+    "n": 360,
+    "B_minor": 1,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "high"
+   },
+   {
+    "id": "T159-R600p0-N2000-B999",
+    "leg": "PRIN",
+    "n": 2000,
+    "B_minor": 999,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "low"
+   },
+   {
+    "id": "T159-R600p0-N3000-B1",
+    "leg": "TERM",
+    "n": 3000,
+    "B_minor": 1,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "moderate"
+   },
+   {
+    "id": "T159-R600p0-N3000-B10001",
+    "leg": "TERM",
+    "n": 3000,
+    "B_minor": 10001,
+    "predictedFamilyB": false,
+    "observedFamily": "clean",
+    "agrees": true,
+    "confidence": "low"
+   },
+   {
+    "id": "T159-R600p0-N1000-B501",
+    "leg": "REP",
+    "n": 1000,
+    "B_minor": 501,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "high"
+   },
+   {
+    "id": "T159-R600p0-N1000-B601",
+    "leg": "PRIN",
+    "n": 1000,
+    "B_minor": 601,
+    "predictedFamilyB": true,
+    "observedFamily": "clean",
+    "agrees": false,
+    "confidence": "low"
+   },
+   {
+    "id": "T159-R600p0-N390-B1",
+    "leg": "BAND",
+    "n": 390,
+    "B_minor": 1,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "high"
+   },
+   {
+    "id": "T159-R600p0-N2000-B601",
+    "leg": "PRIN",
+    "n": 2000,
+    "B_minor": 601,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "low"
+   },
+   {
+    "id": "T159-R600p0-N3000-B501",
+    "leg": "TERM",
+    "n": 3000,
+    "B_minor": 501,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "moderate"
+   },
+   {
+    "id": "T159-R600p0-N393-B1",
+    "leg": "BAND",
+    "n": 393,
+    "B_minor": 1,
+    "predictedFamilyB": false,
+    "observedFamily": "clean",
+    "agrees": true,
+    "confidence": "high"
+   },
+   {
+    "id": "T159-R600p0-N1000-B801",
+    "leg": "PRIN",
+    "n": 1000,
+    "B_minor": 801,
+    "predictedFamilyB": false,
+    "observedFamily": "B",
+    "agrees": false,
+    "confidence": "low"
+   },
+   {
+    "id": "T159-R600p0-N1000-B551",
+    "leg": "PRIN",
+    "n": 1000,
+    "B_minor": 551,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "low"
+   },
+   {
+    "id": "T159-R600p0-N1500-B501",
+    "leg": "TERM",
+    "n": 1500,
+    "B_minor": 501,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "moderate"
+   },
+   {
+    "id": "T159-R600p0-N362-B1",
+    "leg": "BAND",
+    "n": 362,
+    "B_minor": 1,
+    "predictedFamilyB": false,
+    "observedFamily": "clean",
+    "agrees": true,
+    "confidence": "high"
+   },
+   {
+    "id": "T159-R600p0-N2000-B801",
+    "leg": "PRIN",
+    "n": 2000,
+    "B_minor": 801,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "low"
+   },
+   {
+    "id": "T159-R600p0-N1000-B999",
+    "leg": "PRIN",
+    "n": 1000,
+    "B_minor": 999,
+    "predictedFamilyB": false,
+    "observedFamily": "clean",
+    "agrees": true,
+    "confidence": "low"
+   },
+   {
+    "id": "T159-R600p0-N363-B1",
+    "leg": "BAND",
+    "n": 363,
+    "B_minor": 1,
+    "predictedFamilyB": false,
+    "observedFamily": "clean",
+    "agrees": true,
+    "confidence": "high"
+   },
+   {
+    "id": "T159-R600p0-N1500-B1",
+    "leg": "TERM",
+    "n": 1500,
+    "B_minor": 1,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "moderate"
+   },
+   {
+    "id": "T159-R600p0-N3000-B1000001",
+    "leg": "TERM",
+    "n": 3000,
+    "B_minor": 1000001,
+    "predictedFamilyB": false,
+    "observedFamily": "clean",
+    "agrees": true,
+    "confidence": "low"
+   },
+   {
+    "id": "T159-R600p0-N365-B1",
+    "leg": "BAND",
+    "n": 365,
+    "B_minor": 1,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "high"
+   },
+   {
+    "id": "T159-R600p0-N1200-B501",
+    "leg": "TERM",
+    "n": 1200,
+    "B_minor": 501,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "moderate"
+   },
+   {
+    "id": "T159-R600p0-N121-B11",
+    "leg": "REP",
+    "n": 121,
+    "B_minor": 11,
+    "predictedFamilyB": true,
+    "observedFamily": "B",
+    "agrees": true,
+    "confidence": "high"
+   },
+   {
+    "id": "T159-R600p0-N1000-B751",
+    "leg": "PRIN",
+    "n": 1000,
+    "B_minor": 751,
+    "predictedFamilyB": false,
+    "observedFamily": "clean",
+    "agrees": true,
+    "confidence": "low"
+   },
+   {
+    "id": "T159-R600p0-N1000-B701",
+    "leg": "PRIN",
+    "n": 1000,
+    "B_minor": 701,
+    "predictedFamilyB": false,
+    "observedFamily": "clean",
+    "agrees": true,
+    "confidence": "low"
+   },
+   {
+    "id": "T159-R600p0-N399-B1",
+    "leg": "BAND",
+    "n": 399,
+    "B_minor": 1,
+    "predictedFamilyB": false,
+    "observedFamily": "clean",
+    "agrees": true,
+    "confidence": "high"
+   },
+   {
+    "id": "T159-R600p0-N2000-B1001",
+    "leg": "TERM",
+    "n": 2000,
+    "B_minor": 1001,
+    "predictedFamilyB": true,
+    "observedFamily": "clean",
+    "agrees": false,
+    "confidence": "low"
+   }
+  ]
+ },
+ "byte_identity": {
+  "compared": 17,
+  "identical": 17,
+  "differing": [],
+  "detail": [
+   {
+    "t159": "T159-R600p0-N392-B1",
+    "t117": "T117-NC-R600p0-N392-B1",
+    "observed_byte_identical": true,
+    "input_diffs_excluding_tenant_id": [],
+    "t159_tenantId": "t159_r600p0_n392_b1",
+    "t117_tenantId": "t117_nc_r600p0_n392_b1"
+   },
+   {
+    "t159": "T159-R600p0-N400-B1",
+    "t117": "T117-NC-R600p0-N400-B1",
+    "observed_byte_identical": true,
+    "input_diffs_excluding_tenant_id": [],
+    "t159_tenantId": "t159_r600p0_n400_b1",
+    "t117_tenantId": "t117_nc_r600p0_n400_b1"
+   },
+   {
+    "t159": "T159-R600p0-N391-B1",
+    "t117": "T117-NC-R600p0-N391-B1",
+    "observed_byte_identical": true,
+    "input_diffs_excluding_tenant_id": [],
+    "t159_tenantId": "t159_r600p0_n391_b1",
+    "t117_tenantId": "t117_nc_r600p0_n391_b1"
+   },
+   {
+    "t159": "T159-R600p0-N361-B1",
+    "t117": "T117-NC-R600p0-N361-B1",
+    "observed_byte_identical": true,
+    "input_diffs_excluding_tenant_id": [],
+    "t159_tenantId": "t159_r600p0_n361_b1",
+    "t117_tenantId": "t117_nc_r600p0_n361_b1"
+   },
+   {
+    "t159": "T159-R600p0-N108-B11",
+    "t117": "T117P2-R600p0-N108-B11",
+    "observed_byte_identical": true,
+    "input_diffs_excluding_tenant_id": [],
+    "t159_tenantId": "t159_r600p0_n108_b11",
+    "t117_tenantId": "t117p2_r600p0_n108_b11"
+   },
+   {
+    "t159": "T159-R600p0-N150-B11",
+    "t117": "T117P2-R600p0-N150-B11",
+    "observed_byte_identical": true,
+    "input_diffs_excluding_tenant_id": [],
+    "t159_tenantId": "t159_r600p0_n150_b11",
+    "t117_tenantId": "t117p2_r600p0_n150_b11"
+   },
+   {
+    "t159": "T159-R600p0-N389-B1",
+    "t117": "T117-NC-R600p0-N389-B1",
+    "observed_byte_identical": true,
+    "input_diffs_excluding_tenant_id": [],
+    "t159_tenantId": "t159_r600p0_n389_b1",
+    "t117_tenantId": "t117_nc_r600p0_n389_b1"
+   },
+   {
+    "t159": "T159-R600p0-N364-B1",
+    "t117": "T117-NC-R600p0-N364-B1",
+    "observed_byte_identical": true,
+    "input_diffs_excluding_tenant_id": [],
+    "t159_tenantId": "t159_r600p0_n364_b1",
+    "t117_tenantId": "t117_nc_r600p0_n364_b1"
+   },
+   {
+    "t159": "T159-R600p0-N360-B1",
+    "t117": "T117-NC-R600p0-N360-B1",
+    "observed_byte_identical": true,
+    "input_diffs_excluding_tenant_id": [],
+    "t159_tenantId": "t159_r600p0_n360_b1",
+    "t117_tenantId": "t117_nc_r600p0_n360_b1"
+   },
+   {
+    "t159": "T159-R600p0-N1000-B501",
+    "t117": "T117P2-R600p0-N1000-B501",
+    "observed_byte_identical": true,
+    "input_diffs_excluding_tenant_id": [],
+    "t159_tenantId": "t159_r600p0_n1000_b501",
+    "t117_tenantId": "t117p2_r600p0_n1000_b501"
+   },
+   {
+    "t159": "T159-R600p0-N390-B1",
+    "t117": "T117-NC-R600p0-N390-B1",
+    "observed_byte_identical": true,
+    "input_diffs_excluding_tenant_id": [],
+    "t159_tenantId": "t159_r600p0_n390_b1",
+    "t117_tenantId": "t117_nc_r600p0_n390_b1"
+   },
+   {
+    "t159": "T159-R600p0-N393-B1",
+    "t117": "T117-NC-R600p0-N393-B1",
+    "observed_byte_identical": true,
+    "input_diffs_excluding_tenant_id": [],
+    "t159_tenantId": "t159_r600p0_n393_b1",
+    "t117_tenantId": "t117_nc_r600p0_n393_b1"
+   },
+   {
+    "t159": "T159-R600p0-N362-B1",
+    "t117": "T117-NC-R600p0-N362-B1",
+    "observed_byte_identical": true,
+    "input_diffs_excluding_tenant_id": [],
+    "t159_tenantId": "t159_r600p0_n362_b1",
+    "t117_tenantId": "t117_nc_r600p0_n362_b1"
+   },
+   {
+    "t159": "T159-R600p0-N363-B1",
+    "t117": "T117-NC-R600p0-N363-B1",
+    "observed_byte_identical": true,
+    "input_diffs_excluding_tenant_id": [],
+    "t159_tenantId": "t159_r600p0_n363_b1",
+    "t117_tenantId": "t117_nc_r600p0_n363_b1"
+   },
+   {
+    "t159": "T159-R600p0-N365-B1",
+    "t117": "T117-NC-R600p0-N365-B1",
+    "observed_byte_identical": true,
+    "input_diffs_excluding_tenant_id": [],
+    "t159_tenantId": "t159_r600p0_n365_b1",
+    "t117_tenantId": "t117_nc_r600p0_n365_b1"
+   },
+   {
+    "t159": "T159-R600p0-N121-B11",
+    "t117": "T117P2-R600p0-N121-B11",
+    "observed_byte_identical": true,
+    "input_diffs_excluding_tenant_id": [],
+    "t159_tenantId": "t159_r600p0_n121_b11",
+    "t117_tenantId": "t117p2_r600p0_n121_b11"
+   },
+   {
+    "t159": "T159-R600p0-N399-B1",
+    "t117": "T117-NC-R600p0-N399-B1",
+    "observed_byte_identical": true,
+    "input_diffs_excluding_tenant_id": [],
+    "t159_tenantId": "t159_r600p0_n399_b1",
+    "t117_tenantId": "t117_nc_r600p0_n399_b1"
+   }
+  ]
+ },
+ "tie_description": [
+  {
+   "id": "T159-R600p0-N2000-B501",
+   "B_minor": 501,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 250,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N1200-B1",
+   "B_minor": 1,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 0,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N2000-B1",
+   "B_minor": 1,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 0,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N361-B1",
+   "B_minor": 1,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 0,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N108-B11",
+   "B_minor": 11,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 5,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N150-B11",
+   "B_minor": 11,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 5,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N3000-B1001",
+   "B_minor": 1001,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 500,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N389-B1",
+   "B_minor": 1,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 0,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N1000-B503",
+   "B_minor": 503,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 251,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N364-B1",
+   "B_minor": 1,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 0,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N360-B1",
+   "B_minor": 1,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 0,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N2000-B999",
+   "B_minor": 999,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 499,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N3000-B1",
+   "B_minor": 1,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 0,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N1000-B501",
+   "B_minor": 501,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 250,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N390-B1",
+   "B_minor": 1,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 0,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N2000-B601",
+   "B_minor": 601,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 300,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N3000-B501",
+   "B_minor": 501,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 250,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N1000-B801",
+   "B_minor": 801,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 400,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N1000-B551",
+   "B_minor": 551,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 275,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N1500-B501",
+   "B_minor": 501,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 250,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N2000-B801",
+   "B_minor": 801,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 400,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N1500-B1",
+   "B_minor": 1,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 0,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N365-B1",
+   "B_minor": 1,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 0,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N1200-B501",
+   "B_minor": 501,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 250,
+   "intermediate_total_eq_floor_Br": true
+  },
+  {
+   "id": "T159-R600p0-N121-B11",
+   "B_minor": 11,
+   "2Br_is_odd_integer": true,
+   "floor_Br": 5,
+   "intermediate_total_eq_floor_Br": true
+  }
+ ],
+ "rows": [
+  {
+   "id": "T159-R600p0-N360-B1",
+   "n": 360,
+   "rate": "600.0",
+   "B_minor": 1,
+   "errored": false,
+   "repayment_rows": 360,
+   "disbursed_minor": 1,
+   "amortized_minor": 0,
+   "unamortized_residual_minor": 1,
+   "totalPrincipalAmount_minor": 0,
+   "totalInterestAmount_minor": 1,
+   "final_balance_minor": 1,
+   "nonzero_principal_rows": 0,
+   "intermediate_total_minor_distinct": [
+    0
+   ],
+   "last_row_interest": "0.01",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N361-B1",
+   "n": 361,
+   "rate": "600.0",
+   "B_minor": 1,
+   "errored": false,
+   "repayment_rows": 361,
+   "disbursed_minor": 1,
+   "amortized_minor": 0,
+   "unamortized_residual_minor": 1,
+   "totalPrincipalAmount_minor": 0,
+   "totalInterestAmount_minor": 1,
+   "final_balance_minor": 1,
+   "nonzero_principal_rows": 0,
+   "intermediate_total_minor_distinct": [
+    0
+   ],
+   "last_row_interest": "0.01",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N362-B1",
+   "n": 362,
+   "rate": "600.0",
+   "B_minor": 1,
+   "errored": false,
+   "repayment_rows": 362,
+   "disbursed_minor": 1,
+   "amortized_minor": 1,
+   "unamortized_residual_minor": 0,
+   "totalPrincipalAmount_minor": 1,
+   "totalInterestAmount_minor": 13,
+   "final_balance_minor": 0,
+   "nonzero_principal_rows": 1,
+   "intermediate_total_minor_distinct": [
+    0,
+    1
+   ],
+   "last_row_interest": "0.00",
+   "family": "clean"
+  },
+  {
+   "id": "T159-R600p0-N363-B1",
+   "n": 363,
+   "rate": "600.0",
+   "B_minor": 1,
+   "errored": false,
+   "repayment_rows": 363,
+   "disbursed_minor": 1,
+   "amortized_minor": 1,
+   "unamortized_residual_minor": 0,
+   "totalPrincipalAmount_minor": 1,
+   "totalInterestAmount_minor": 13,
+   "final_balance_minor": 0,
+   "nonzero_principal_rows": 1,
+   "intermediate_total_minor_distinct": [
+    0,
+    1
+   ],
+   "last_row_interest": "0.00",
+   "family": "clean"
+  },
+  {
+   "id": "T159-R600p0-N364-B1",
+   "n": 364,
+   "rate": "600.0",
+   "B_minor": 1,
+   "errored": false,
+   "repayment_rows": 364,
+   "disbursed_minor": 1,
+   "amortized_minor": 0,
+   "unamortized_residual_minor": 1,
+   "totalPrincipalAmount_minor": 0,
+   "totalInterestAmount_minor": 1,
+   "final_balance_minor": 1,
+   "nonzero_principal_rows": 0,
+   "intermediate_total_minor_distinct": [
+    0
+   ],
+   "last_row_interest": "0.01",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N365-B1",
+   "n": 365,
+   "rate": "600.0",
+   "B_minor": 1,
+   "errored": false,
+   "repayment_rows": 365,
+   "disbursed_minor": 1,
+   "amortized_minor": 0,
+   "unamortized_residual_minor": 1,
+   "totalPrincipalAmount_minor": 0,
+   "totalInterestAmount_minor": 1,
+   "final_balance_minor": 1,
+   "nonzero_principal_rows": 0,
+   "intermediate_total_minor_distinct": [
+    0
+   ],
+   "last_row_interest": "0.01",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N389-B1",
+   "n": 389,
+   "rate": "600.0",
+   "B_minor": 1,
+   "errored": false,
+   "repayment_rows": 389,
+   "disbursed_minor": 1,
+   "amortized_minor": 0,
+   "unamortized_residual_minor": 1,
+   "totalPrincipalAmount_minor": 0,
+   "totalInterestAmount_minor": 1,
+   "final_balance_minor": 1,
+   "nonzero_principal_rows": 0,
+   "intermediate_total_minor_distinct": [
+    0
+   ],
+   "last_row_interest": "0.01",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N390-B1",
+   "n": 390,
+   "rate": "600.0",
+   "B_minor": 1,
+   "errored": false,
+   "repayment_rows": 390,
+   "disbursed_minor": 1,
+   "amortized_minor": 0,
+   "unamortized_residual_minor": 1,
+   "totalPrincipalAmount_minor": 0,
+   "totalInterestAmount_minor": 1,
+   "final_balance_minor": 1,
+   "nonzero_principal_rows": 0,
+   "intermediate_total_minor_distinct": [
+    0
+   ],
+   "last_row_interest": "0.01",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N391-B1",
+   "n": 391,
+   "rate": "600.0",
+   "B_minor": 1,
+   "errored": false,
+   "repayment_rows": 391,
+   "disbursed_minor": 1,
+   "amortized_minor": 1,
+   "unamortized_residual_minor": 0,
+   "totalPrincipalAmount_minor": 1,
+   "totalInterestAmount_minor": 13,
+   "final_balance_minor": 0,
+   "nonzero_principal_rows": 1,
+   "intermediate_total_minor_distinct": [
+    0,
+    1
+   ],
+   "last_row_interest": "0.00",
+   "family": "clean"
+  },
+  {
+   "id": "T159-R600p0-N392-B1",
+   "n": 392,
+   "rate": "600.0",
+   "B_minor": 1,
+   "errored": false,
+   "repayment_rows": 392,
+   "disbursed_minor": 1,
+   "amortized_minor": 1,
+   "unamortized_residual_minor": 0,
+   "totalPrincipalAmount_minor": 1,
+   "totalInterestAmount_minor": 13,
+   "final_balance_minor": 0,
+   "nonzero_principal_rows": 1,
+   "intermediate_total_minor_distinct": [
+    0,
+    1
+   ],
+   "last_row_interest": "0.00",
+   "family": "clean"
+  },
+  {
+   "id": "T159-R600p0-N393-B1",
+   "n": 393,
+   "rate": "600.0",
+   "B_minor": 1,
+   "errored": false,
+   "repayment_rows": 393,
+   "disbursed_minor": 1,
+   "amortized_minor": 1,
+   "unamortized_residual_minor": 0,
+   "totalPrincipalAmount_minor": 1,
+   "totalInterestAmount_minor": 13,
+   "final_balance_minor": 0,
+   "nonzero_principal_rows": 1,
+   "intermediate_total_minor_distinct": [
+    0,
+    1
+   ],
+   "last_row_interest": "0.00",
+   "family": "clean"
+  },
+  {
+   "id": "T159-R600p0-N399-B1",
+   "n": 399,
+   "rate": "600.0",
+   "B_minor": 1,
+   "errored": false,
+   "repayment_rows": 399,
+   "disbursed_minor": 1,
+   "amortized_minor": 1,
+   "unamortized_residual_minor": 0,
+   "totalPrincipalAmount_minor": 1,
+   "totalInterestAmount_minor": 13,
+   "final_balance_minor": 0,
+   "nonzero_principal_rows": 1,
+   "intermediate_total_minor_distinct": [
+    0,
+    1
+   ],
+   "last_row_interest": "0.00",
+   "family": "clean"
+  },
+  {
+   "id": "T159-R600p0-N400-B1",
+   "n": 400,
+   "rate": "600.0",
+   "B_minor": 1,
+   "errored": false,
+   "repayment_rows": 400,
+   "disbursed_minor": 1,
+   "amortized_minor": 1,
+   "unamortized_residual_minor": 0,
+   "totalPrincipalAmount_minor": 1,
+   "totalInterestAmount_minor": 13,
+   "final_balance_minor": 0,
+   "nonzero_principal_rows": 1,
+   "intermediate_total_minor_distinct": [
+    0,
+    1
+   ],
+   "last_row_interest": "0.00",
+   "family": "clean"
+  },
+  {
+   "id": "T159-R600p0-N401-B1",
+   "n": 401,
+   "rate": "600.0",
+   "B_minor": 1,
+   "errored": false,
+   "repayment_rows": 401,
+   "disbursed_minor": 1,
+   "amortized_minor": 1,
+   "unamortized_residual_minor": 0,
+   "totalPrincipalAmount_minor": 1,
+   "totalInterestAmount_minor": 13,
+   "final_balance_minor": 0,
+   "nonzero_principal_rows": 1,
+   "intermediate_total_minor_distinct": [
+    0,
+    1
+   ],
+   "last_row_interest": "0.00",
+   "family": "clean"
+  },
+  {
+   "id": "T159-R600p0-N1200-B1",
+   "n": 1200,
+   "rate": "600.0",
+   "B_minor": 1,
+   "errored": false,
+   "repayment_rows": 1200,
+   "disbursed_minor": 1,
+   "amortized_minor": 0,
+   "unamortized_residual_minor": 1,
+   "totalPrincipalAmount_minor": 0,
+   "totalInterestAmount_minor": 1,
+   "final_balance_minor": 1,
+   "nonzero_principal_rows": 0,
+   "intermediate_total_minor_distinct": [
+    0
+   ],
+   "last_row_interest": "0.01",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N1500-B1",
+   "n": 1500,
+   "rate": "600.0",
+   "B_minor": 1,
+   "errored": false,
+   "repayment_rows": 1500,
+   "disbursed_minor": 1,
+   "amortized_minor": 0,
+   "unamortized_residual_minor": 1,
+   "totalPrincipalAmount_minor": 0,
+   "totalInterestAmount_minor": 1,
+   "final_balance_minor": 1,
+   "nonzero_principal_rows": 0,
+   "intermediate_total_minor_distinct": [
+    0
+   ],
+   "last_row_interest": "0.01",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N2000-B1",
+   "n": 2000,
+   "rate": "600.0",
+   "B_minor": 1,
+   "errored": false,
+   "repayment_rows": 2000,
+   "disbursed_minor": 1,
+   "amortized_minor": 0,
+   "unamortized_residual_minor": 1,
+   "totalPrincipalAmount_minor": 0,
+   "totalInterestAmount_minor": 1,
+   "final_balance_minor": 1,
+   "nonzero_principal_rows": 0,
+   "intermediate_total_minor_distinct": [
+    0
+   ],
+   "last_row_interest": "0.01",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N3000-B1",
+   "n": 3000,
+   "rate": "600.0",
+   "B_minor": 1,
+   "errored": false,
+   "repayment_rows": 3000,
+   "disbursed_minor": 1,
+   "amortized_minor": 0,
+   "unamortized_residual_minor": 1,
+   "totalPrincipalAmount_minor": 0,
+   "totalInterestAmount_minor": 1,
+   "final_balance_minor": 1,
+   "nonzero_principal_rows": 0,
+   "intermediate_total_minor_distinct": [
+    0
+   ],
+   "last_row_interest": "0.01",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N108-B11",
+   "n": 108,
+   "rate": "600.0",
+   "B_minor": 11,
+   "errored": false,
+   "repayment_rows": 108,
+   "disbursed_minor": 11,
+   "amortized_minor": 5,
+   "unamortized_residual_minor": 6,
+   "totalPrincipalAmount_minor": 5,
+   "totalInterestAmount_minor": 546,
+   "final_balance_minor": 6,
+   "nonzero_principal_rows": 1,
+   "intermediate_total_minor_distinct": [
+    5
+   ],
+   "last_row_interest": "0.11",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N121-B11",
+   "n": 121,
+   "rate": "600.0",
+   "B_minor": 11,
+   "errored": false,
+   "repayment_rows": 121,
+   "disbursed_minor": 11,
+   "amortized_minor": 4,
+   "unamortized_residual_minor": 7,
+   "totalPrincipalAmount_minor": 4,
+   "totalInterestAmount_minor": 612,
+   "final_balance_minor": 7,
+   "nonzero_principal_rows": 1,
+   "intermediate_total_minor_distinct": [
+    5
+   ],
+   "last_row_interest": "0.12",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N150-B11",
+   "n": 150,
+   "rate": "600.0",
+   "B_minor": 11,
+   "errored": false,
+   "repayment_rows": 150,
+   "disbursed_minor": 11,
+   "amortized_minor": 2,
+   "unamortized_residual_minor": 9,
+   "totalPrincipalAmount_minor": 2,
+   "totalInterestAmount_minor": 759,
+   "final_balance_minor": 9,
+   "nonzero_principal_rows": 1,
+   "intermediate_total_minor_distinct": [
+    5
+   ],
+   "last_row_interest": "0.14",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N1000-B501",
+   "n": 1000,
+   "rate": "600.0",
+   "B_minor": 501,
+   "errored": false,
+   "repayment_rows": 1000,
+   "disbursed_minor": 501,
+   "amortized_minor": 0,
+   "unamortized_residual_minor": 501,
+   "totalPrincipalAmount_minor": 0,
+   "totalInterestAmount_minor": 250501,
+   "final_balance_minor": 501,
+   "nonzero_principal_rows": 0,
+   "intermediate_total_minor_distinct": [
+    250
+   ],
+   "last_row_interest": "7.51",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N1200-B501",
+   "n": 1200,
+   "rate": "600.0",
+   "B_minor": 501,
+   "errored": false,
+   "repayment_rows": 1200,
+   "disbursed_minor": 501,
+   "amortized_minor": 0,
+   "unamortized_residual_minor": 501,
+   "totalPrincipalAmount_minor": 0,
+   "totalInterestAmount_minor": 300501,
+   "final_balance_minor": 501,
+   "nonzero_principal_rows": 0,
+   "intermediate_total_minor_distinct": [
+    250
+   ],
+   "last_row_interest": "7.51",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N1500-B501",
+   "n": 1500,
+   "rate": "600.0",
+   "B_minor": 501,
+   "errored": false,
+   "repayment_rows": 1500,
+   "disbursed_minor": 501,
+   "amortized_minor": 0,
+   "unamortized_residual_minor": 501,
+   "totalPrincipalAmount_minor": 0,
+   "totalInterestAmount_minor": 375501,
+   "final_balance_minor": 501,
+   "nonzero_principal_rows": 0,
+   "intermediate_total_minor_distinct": [
+    250
+   ],
+   "last_row_interest": "7.51",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N2000-B501",
+   "n": 2000,
+   "rate": "600.0",
+   "B_minor": 501,
+   "errored": false,
+   "repayment_rows": 2000,
+   "disbursed_minor": 501,
+   "amortized_minor": 0,
+   "unamortized_residual_minor": 501,
+   "totalPrincipalAmount_minor": 0,
+   "totalInterestAmount_minor": 500501,
+   "final_balance_minor": 501,
+   "nonzero_principal_rows": 0,
+   "intermediate_total_minor_distinct": [
+    250
+   ],
+   "last_row_interest": "7.51",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N3000-B501",
+   "n": 3000,
+   "rate": "600.0",
+   "B_minor": 501,
+   "errored": false,
+   "repayment_rows": 3000,
+   "disbursed_minor": 501,
+   "amortized_minor": 0,
+   "unamortized_residual_minor": 501,
+   "totalPrincipalAmount_minor": 0,
+   "totalInterestAmount_minor": 750501,
+   "final_balance_minor": 501,
+   "nonzero_principal_rows": 0,
+   "intermediate_total_minor_distinct": [
+    250
+   ],
+   "last_row_interest": "7.51",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N1000-B503",
+   "n": 1000,
+   "rate": "600.0",
+   "B_minor": 503,
+   "errored": false,
+   "repayment_rows": 1000,
+   "disbursed_minor": 503,
+   "amortized_minor": 0,
+   "unamortized_residual_minor": 503,
+   "totalPrincipalAmount_minor": 0,
+   "totalInterestAmount_minor": 251503,
+   "final_balance_minor": 503,
+   "nonzero_principal_rows": 0,
+   "intermediate_total_minor_distinct": [
+    251
+   ],
+   "last_row_interest": "7.54",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N1000-B551",
+   "n": 1000,
+   "rate": "600.0",
+   "B_minor": 551,
+   "errored": false,
+   "repayment_rows": 1000,
+   "disbursed_minor": 551,
+   "amortized_minor": 0,
+   "unamortized_residual_minor": 551,
+   "totalPrincipalAmount_minor": 0,
+   "totalInterestAmount_minor": 275551,
+   "final_balance_minor": 551,
+   "nonzero_principal_rows": 0,
+   "intermediate_total_minor_distinct": [
+    275
+   ],
+   "last_row_interest": "8.26",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N1000-B601",
+   "n": 1000,
+   "rate": "600.0",
+   "B_minor": 601,
+   "errored": false,
+   "repayment_rows": 1000,
+   "disbursed_minor": 601,
+   "amortized_minor": 601,
+   "unamortized_residual_minor": 0,
+   "totalPrincipalAmount_minor": 601,
+   "totalInterestAmount_minor": 8019,
+   "final_balance_minor": 0,
+   "nonzero_principal_rows": 16,
+   "intermediate_total_minor_distinct": [
+    0,
+    192,
+    301
+   ],
+   "last_row_interest": "0.00",
+   "family": "clean"
+  },
+  {
+   "id": "T159-R600p0-N2000-B601",
+   "n": 2000,
+   "rate": "600.0",
+   "B_minor": 601,
+   "errored": false,
+   "repayment_rows": 2000,
+   "disbursed_minor": 601,
+   "amortized_minor": 0,
+   "unamortized_residual_minor": 601,
+   "totalPrincipalAmount_minor": 0,
+   "totalInterestAmount_minor": 600601,
+   "final_balance_minor": 601,
+   "nonzero_principal_rows": 0,
+   "intermediate_total_minor_distinct": [
+    300
+   ],
+   "last_row_interest": "9.01",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N1000-B701",
+   "n": 1000,
+   "rate": "600.0",
+   "B_minor": 701,
+   "errored": false,
+   "repayment_rows": 1000,
+   "disbursed_minor": 701,
+   "amortized_minor": 701,
+   "unamortized_residual_minor": 0,
+   "totalPrincipalAmount_minor": 701,
+   "totalInterestAmount_minor": 5912,
+   "final_balance_minor": 0,
+   "nonzero_principal_rows": 16,
+   "intermediate_total_minor_distinct": [
+    0,
+    295,
+    351
+   ],
+   "last_row_interest": "0.00",
+   "family": "clean"
+  },
+  {
+   "id": "T159-R600p0-N1000-B751",
+   "n": 1000,
+   "rate": "600.0",
+   "B_minor": 751,
+   "errored": false,
+   "repayment_rows": 1000,
+   "disbursed_minor": 751,
+   "amortized_minor": 751,
+   "unamortized_residual_minor": 0,
+   "totalPrincipalAmount_minor": 751,
+   "totalInterestAmount_minor": 5228,
+   "final_balance_minor": 0,
+   "nonzero_principal_rows": 16,
+   "intermediate_total_minor_distinct": [
+    0,
+    339,
+    376
+   ],
+   "last_row_interest": "0.00",
+   "family": "clean"
+  },
+  {
+   "id": "T159-R600p0-N1000-B801",
+   "n": 1000,
+   "rate": "600.0",
+   "B_minor": 801,
+   "errored": false,
+   "repayment_rows": 1000,
+   "disbursed_minor": 801,
+   "amortized_minor": 0,
+   "unamortized_residual_minor": 801,
+   "totalPrincipalAmount_minor": 0,
+   "totalInterestAmount_minor": 400801,
+   "final_balance_minor": 801,
+   "nonzero_principal_rows": 0,
+   "intermediate_total_minor_distinct": [
+    400
+   ],
+   "last_row_interest": "12.01",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N2000-B801",
+   "n": 2000,
+   "rate": "600.0",
+   "B_minor": 801,
+   "errored": false,
+   "repayment_rows": 2000,
+   "disbursed_minor": 801,
+   "amortized_minor": 0,
+   "unamortized_residual_minor": 801,
+   "totalPrincipalAmount_minor": 0,
+   "totalInterestAmount_minor": 800801,
+   "final_balance_minor": 801,
+   "nonzero_principal_rows": 0,
+   "intermediate_total_minor_distinct": [
+    400
+   ],
+   "last_row_interest": "12.01",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N1000-B901",
+   "n": 1000,
+   "rate": "600.0",
+   "B_minor": 901,
+   "errored": false,
+   "repayment_rows": 1000,
+   "disbursed_minor": 901,
+   "amortized_minor": 901,
+   "unamortized_residual_minor": 0,
+   "totalPrincipalAmount_minor": 901,
+   "totalInterestAmount_minor": 6485,
+   "final_balance_minor": 0,
+   "nonzero_principal_rows": 17,
+   "intermediate_total_minor_distinct": [
+    0,
+    170,
+    451
+   ],
+   "last_row_interest": "0.00",
+   "family": "clean"
+  },
+  {
+   "id": "T159-R600p0-N1000-B999",
+   "n": 1000,
+   "rate": "600.0",
+   "B_minor": 999,
+   "errored": false,
+   "repayment_rows": 1000,
+   "disbursed_minor": 999,
+   "amortized_minor": 999,
+   "unamortized_residual_minor": 0,
+   "totalPrincipalAmount_minor": 999,
+   "totalInterestAmount_minor": 7375,
+   "final_balance_minor": 0,
+   "nonzero_principal_rows": 17,
+   "intermediate_total_minor_distinct": [
+    0,
+    374,
+    500
+   ],
+   "last_row_interest": "0.00",
+   "family": "clean"
+  },
+  {
+   "id": "T159-R600p0-N2000-B999",
+   "n": 2000,
+   "rate": "600.0",
+   "B_minor": 999,
+   "errored": false,
+   "repayment_rows": 2000,
+   "disbursed_minor": 999,
+   "amortized_minor": 166,
+   "unamortized_residual_minor": 833,
+   "totalPrincipalAmount_minor": 166,
+   "totalInterestAmount_minor": 998833,
+   "final_balance_minor": 833,
+   "nonzero_principal_rows": 1,
+   "intermediate_total_minor_distinct": [
+    499
+   ],
+   "last_row_interest": "13.32",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N1200-B1001",
+   "n": 1200,
+   "rate": "600.0",
+   "B_minor": 1001,
+   "errored": false,
+   "repayment_rows": 1200,
+   "disbursed_minor": 1001,
+   "amortized_minor": 1001,
+   "unamortized_residual_minor": 0,
+   "totalPrincipalAmount_minor": 1001,
+   "totalInterestAmount_minor": 7885,
+   "final_balance_minor": 0,
+   "nonzero_principal_rows": 17,
+   "intermediate_total_minor_distinct": [
+    0,
+    369,
+    501
+   ],
+   "last_row_interest": "0.00",
+   "family": "clean"
+  },
+  {
+   "id": "T159-R600p0-N1500-B1001",
+   "n": 1500,
+   "rate": "600.0",
+   "B_minor": 1001,
+   "errored": false,
+   "repayment_rows": 1500,
+   "disbursed_minor": 1001,
+   "amortized_minor": 1001,
+   "unamortized_residual_minor": 0,
+   "totalPrincipalAmount_minor": 1001,
+   "totalInterestAmount_minor": 7885,
+   "final_balance_minor": 0,
+   "nonzero_principal_rows": 17,
+   "intermediate_total_minor_distinct": [
+    0,
+    369,
+    501
+   ],
+   "last_row_interest": "0.00",
+   "family": "clean"
+  },
+  {
+   "id": "T159-R600p0-N2000-B1001",
+   "n": 2000,
+   "rate": "600.0",
+   "B_minor": 1001,
+   "errored": false,
+   "repayment_rows": 2000,
+   "disbursed_minor": 1001,
+   "amortized_minor": 1001,
+   "unamortized_residual_minor": 0,
+   "totalPrincipalAmount_minor": 1001,
+   "totalInterestAmount_minor": 7885,
+   "final_balance_minor": 0,
+   "nonzero_principal_rows": 17,
+   "intermediate_total_minor_distinct": [
+    0,
+    369,
+    501
+   ],
+   "last_row_interest": "0.00",
+   "family": "clean"
+  },
+  {
+   "id": "T159-R600p0-N3000-B1001",
+   "n": 3000,
+   "rate": "600.0",
+   "B_minor": 1001,
+   "errored": false,
+   "repayment_rows": 3000,
+   "disbursed_minor": 1001,
+   "amortized_minor": 0,
+   "unamortized_residual_minor": 1001,
+   "totalPrincipalAmount_minor": 0,
+   "totalInterestAmount_minor": 1501001,
+   "final_balance_minor": 1001,
+   "nonzero_principal_rows": 0,
+   "intermediate_total_minor_distinct": [
+    500
+   ],
+   "last_row_interest": "15.01",
+   "family": "B"
+  },
+  {
+   "id": "T159-R600p0-N1200-B10001",
+   "n": 1200,
+   "rate": "600.0",
+   "B_minor": 10001,
+   "errored": false,
+   "repayment_rows": 1200,
+   "disbursed_minor": 10001,
+   "amortized_minor": 10001,
+   "unamortized_residual_minor": 0,
+   "totalPrincipalAmount_minor": 10001,
+   "totalInterestAmount_minor": 84670,
+   "final_balance_minor": 0,
+   "nonzero_principal_rows": 19,
+   "intermediate_total_minor_distinct": [
+    0,
+    4617,
+    5003
+   ],
+   "last_row_interest": "0.00",
+   "family": "clean"
+  },
+  {
+   "id": "T159-R600p0-N1500-B10001",
+   "n": 1500,
+   "rate": "600.0",
+   "B_minor": 10001,
+   "errored": false,
+   "repayment_rows": 1500,
+   "disbursed_minor": 10001,
+   "amortized_minor": 10001,
+   "unamortized_residual_minor": 0,
+   "totalPrincipalAmount_minor": 10001,
+   "totalInterestAmount_minor": 84670,
+   "final_balance_minor": 0,
+   "nonzero_principal_rows": 19,
+   "intermediate_total_minor_distinct": [
+    0,
+    4617,
+    5003
+   ],
+   "last_row_interest": "0.00",
+   "family": "clean"
+  },
+  {
+   "id": "T159-R600p0-N2000-B10001",
+   "n": 2000,
+   "rate": "600.0",
+   "B_minor": 10001,
+   "errored": true,
+   "error": "java.lang.StackOverflowError: null",
+   "errorStackTop0": "java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)",
+   "family": "ERRORED"
+  },
+  {
+   "id": "T159-R600p0-N3000-B10001",
+   "n": 3000,
+   "rate": "600.0",
+   "B_minor": 10001,
+   "errored": false,
+   "repayment_rows": 3000,
+   "disbursed_minor": 10001,
+   "amortized_minor": 10001,
+   "unamortized_residual_minor": 0,
+   "totalPrincipalAmount_minor": 10001,
+   "totalInterestAmount_minor": 84670,
+   "final_balance_minor": 0,
+   "nonzero_principal_rows": 19,
+   "intermediate_total_minor_distinct": [
+    0,
+    4617,
+    5003
+   ],
+   "last_row_interest": "0.00",
+   "family": "clean"
+  },
+  {
+   "id": "T159-R600p0-N3000-B100001",
+   "n": 3000,
+   "rate": "600.0",
+   "B_minor": 100001,
+   "errored": true,
+   "error": "java.lang.StackOverflowError: null",
+   "errorStackTop0": "java.base/java.util.ArrayList.forEach(ArrayList.java:1596)",
+   "family": "ERRORED"
+  },
+  {
+   "id": "T159-R600p0-N3000-B1000001",
+   "n": 3000,
+   "rate": "600.0",
+   "B_minor": 1000001,
+   "errored": false,
+   "repayment_rows": 3000,
+   "disbursed_minor": 1000001,
+   "amortized_minor": 1000001,
+   "unamortized_residual_minor": 0,
+   "totalPrincipalAmount_minor": 1000001,
+   "totalInterestAmount_minor": 8842552,
+   "final_balance_minor": 0,
+   "nonzero_principal_rows": 20,
+   "intermediate_total_minor_distinct": [
+    0,
+    339228,
+    500175
+   ],
+   "last_row_interest": "0.00",
+   "family": "clean"
+  }
+ ]
+}
