@@ -1,0 +1,183 @@
+
+==============================================================================
+== 0.  PROVENANCE
+==============================================================================
+scratch tree          : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t167-redprobe-xx1q1izn
+pre-fix script         : bf67a85:.softhouse/reviews/t47-probe/t47_edit_1.py
+  sha256               : 04cc3f4c4fee44e02ae57a863ed01ad660214bb7cdff91e8de736e96cf4fe39d  (13267 bytes)
+rev-9 ADR (pre-edit)   : bf67a85^:docs/adr/DEC-1-schedule-generator-adapter.md
+  sha256               : 32539607c6b43a23d17300b588c70f9fb643c9d554e280cb7a81a2e9847468f0  (328439 bytes)
+  expected BEFORE_SHA  : 32539607c6b43a23d17300b588c70f9fb643c9d554e280cb7a81a2e9847468f0  match=True
+expected AFTER_SHA     : 4f2387c821a01953503c77c2c70730bf72657c994491110c5ae3bc27a866dc37
+real ADR sha256 (start): 49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab
+
+==============================================================================
+== 0b. THE MISCLASSIFICATION, REPRODUCED (P-48)
+==============================================================================
+driver's guard regex over the PRE-FIX file  -> rc=1 out='0'
+T156's GUARD in PYTHON re (as T156 ran it)  -> 3 matches -> GUARDED=True
+the SAME pattern text through grep -E       -> rc=1 matches='0'
+   The two disagree, and neither is a typo: in Python `re` a bracket
+   expression honours the \n escape, so [^#\n] means `not # and not
+   newline`; in POSIX ERE it does not, so [^#\n] means `not #, not
+   backslash, not the letter n` - and every one of the three `trap`
+   occurrences has a letter n earlier on its line (`One trap worth`),
+   which the anchored [^#\n]* cannot cross.  Same characters, opposite
+   verdict.  P-33: a tool claim is a claim about the ENGINE too.
+lines containing 'trap'                     : [55, 145, 151]
+occurrences of 'trap' inside STRING LITERALS (AST): 3
+try/finally/except/atexit/signal handlers   (AST): 0
+=> the file matched T156's GUARD regex on prose it WRITES INTO the ADR.
+
+==============================================================================
+== 1.  PRE-FIX, DETERMINISTIC (no timing at all): a write that cannot finish
+==============================================================================
+scratch ADR before: 328439 bytes, sha 32539607c6b43a23d17300b588c70f9fb643c9d554e280cb7a81a2e9847468f0
+run: `ulimit -f 64` (32 KiB file-size limit), rc=1
+stderr tail: ['OSError: [Errno 27] File too large']
+scratch ADR after : DAMAGED  65536 bytes  sha cfd3abb83ac9beb4431ac86bc327c496c8ec8710f2abc70fc37a0b6b21c9d9a6
+   -> the ratified-ADR stand-in is DAMAGED. io.open(path,'w') applied O_TRUNC
+      before any content was written.
+
+==============================================================================
+== 2.  PRE-FIX, SIGNALS, window widened by padding (INT/TERM/HUP/KILL)
+==============================================================================
+padded scratch document: 62729207 bytes in, 62736412 bytes out after an uninterrupted run.
+  Padding is appended AFTER both anchors, so rep() still finds exactly
+  one of each; it changes the DURATION of the unprotected window, never
+  its existence.  The watcher below fires the signal the moment the
+  target's size drops BELOW its starting size - i.e. once O_TRUNC has
+  already destroyed the document and before the write has replaced it.
+  SIGINT   caught-mid-write=True  (attempt 1) rc=-2    scratch ADR: EMPTIED - every byte of the document gone
+  SIGTERM  caught-mid-write=True  (attempt 1) rc=-15   scratch ADR: EMPTIED - every byte of the document gone
+  SIGHUP   caught-mid-write=True  (attempt 1) rc=-1    scratch ADR: EMPTIED - every byte of the document gone
+  SIGKILL  caught-mid-write=True  (attempt 1) rc=-9    scratch ADR: EMPTIED - every byte of the document gone
+
+==============================================================================
+== 3.  PRE-FIX, real rev-9 size, randomized-delay trials (N=40 per signal)
+==============================================================================
+uninterrupted runtime at the real rev-9 size: 170671 us; delays are drawn
+uniformly from [0, 2x that], so the trials straddle completion.
+  SIGINT   {'COMPLETED': 34, 'UNTOUCHED': 6}
+  SIGTERM  {'UNTOUCHED': 13, 'COMPLETED': 27}
+  SIGHUP   {'COMPLETED': 37, 'DAMAGED': 1, 'UNTOUCHED': 2}
+  SIGKILL  {'COMPLETED': 37, 'UNTOUCHED': 3}
+  UNTOUCHED = killed before the open; COMPLETED = killed after the last flush;
+  DAMAGED/MISSING = the ratified document left broken on disk.  Read the tally
+  honestly: at the real 328 KB size almost all of the 167 ms run is the two
+  string replaces, and the unprotected window is well under a millisecond of
+  it, so a uniformly-drawn delay lands in the window only occasionally.  A rate
+  is the WRONG instrument for this claim.  Section 3b aims at the window
+  instead of sampling around it.
+
+==============================================================================
+== 3b. PRE-FIX, real rev-9 size, signal AIMED at the window (not sampled)
+==============================================================================
+Same watcher as section 2 - fire the moment the target's size drops
+below 328439 - but on the UNPADDED document, so this is the real
+ratified-ADR-sized case with nothing inflated.  Retried until caught.
+  SIGINT   caught-mid-write=True  (attempt 7 ) rc=-2    scratch ADR: DAMAGED   0 of 335644 bytes
+  SIGTERM  caught-mid-write=True  (attempt 1 ) rc=-15   scratch ADR: DAMAGED   0 of 335644 bytes
+  SIGHUP   caught-mid-write=True  (attempt 1 ) rc=-1    scratch ADR: DAMAGED   0 of 335644 bytes
+  SIGKILL  caught-mid-write=True  (attempt 2 ) rc=-9    scratch ADR: DAMAGED   0 of 335644 bytes
+
+==============================================================================
+== 4.  POST-FIX, the hardened in-repo script, same signals
+==============================================================================
+A. aimed: kill the instant a .t47-edit1-*.tmp appears - i.e. WHILE the
+   replacement text is being written and BEFORE os.replace() - retried
+   until the kill lands inside that window, exactly as section 3b does
+  SIGINT   killed-before-replace=True  (attempt 2 ) rc=-2   target: UNTOUCHED 328439 bytes  temp residue: []
+  SIGTERM  killed-before-replace=True  (attempt 6 ) rc=-15  target: UNTOUCHED 328439 bytes  temp residue: ['.t47-edit1-dyrb7jyf.tmp']
+  SIGHUP   killed-before-replace=True  (attempt 3 ) rc=-1   target: UNTOUCHED 328439 bytes  temp residue: ['.t47-edit1-46nodc0s.tmp']
+  SIGKILL  killed-before-replace=True  (attempt 2 ) rc=-9   target: UNTOUCHED 328439 bytes  temp residue: ['.t47-edit1-6jn5skx8.tmp']
+
+B. randomized-delay trials (N=40 per signal), delays drawn uniformly
+   from [0, 2x the 393216 us uninterrupted runtime] so the trials straddle
+   completion.  The claim: the target is ALWAYS exactly the old file or
+   exactly the new one, and never anything else.
+  SIGINT   {'UNTOUCHED': 16, 'COMPLETED': 24}
+  SIGTERM  {'UNTOUCHED': 15, 'COMPLETED': 25}
+  SIGHUP   {'COMPLETED': 30, 'UNTOUCHED': 10}
+  SIGKILL  {'COMPLETED': 26, 'UNTOUCHED': 14}
+  DAMAGED/MISSING is what the pre-fix script produced and is the class
+  os.replace() rules out by construction: the target is only ever
+  modified by one rename(2), which either has happened or has not.
+
+==============================================================================
+== 4b. WHICH SIGNALS ARE MOOT, AND WHY - stated rather than staged
+==============================================================================
+For the TARGET file all four are moot, and for the same single reason: the
+hardened script never opens the target for writing, so no signal can catch it
+in a half-written state.  What the four signals do differ in is the fate of the
+TEMP file, and that is a housekeeping question, not a correctness one:
+
+  SIGINT  - Python raises KeyboardInterrupt, the `finally` in atomic_write()
+            runs, and the temp file is unlinked.  Observed above.
+  SIGTERM - default action terminates the process; no Python code runs; the
+            temp file is left behind.  Observed above.
+  SIGHUP  - identical to SIGTERM in this respect.  Observed above.
+  SIGKILL - cannot be caught, blocked or handled at all.  A trap-based fix
+            would be defeated by it; os.replace() is not, because atomicity is
+            a property of rename(2) in the kernel rather than of any handler
+            the process gets to run.
+
+So the residue is a `.t47-edit1-*.tmp` file next to the target on three of the
+four paths.  It is inert - it is not the ADR, nothing reads it, and the next
+run creates a fresh one - and removing it would need exactly the signal
+handling this fix is designed not to require.  It is reported rather than
+hidden.
+
+==============================================================================
+== 5.  STRUCTURAL, NO TIMING: the target is never opened for writing
+==============================================================================
+pre-fix vs a mode-0444 target : rc=1  PermissionError: [Errno 13] Permission denied: '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t167-redprobe-xx1q1izn/fakerepo/docs/adr/DEC-1-schedule-generator-adapter.md'
+post-fix vs a mode-0444 target: rc=0  target=COMPLETED  mode=0o444
+   -> the hardened script SUCCEEDS on a read-only target because it never
+      opens it: it renames over it, which needs directory permission only.
+      The pre-fix script cannot, because O_TRUNC on the target is its whole
+      write mechanism.  Nothing here is timed.
+
+==============================================================================
+== 6.  THE REFUSALS: default-deny for a ratified DEC-n
+==============================================================================
+R1   rc=2   REFUSED.  This script rewrites a document in place and has no default target.
+R2   rc=2   REFUSED.  This script rewrites a document in place and has no default target.
+R3   rc=2   edit1: REFUSED (2): --authorise token does not match; nothing written
+R4   the REAL ratified ADR as the target, with a valid token:
+R4   rc=2   edit1: REFUSED (2): target IS the ratified DEC-1 ADR (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a80981b2616bd0c52/docs/adr/DEC-1-schedule-generat
+      watched file unchanged: True
+R5   a scratch file whose CONTENT would pass the sha gate, sitting
+     under a directory named `adr` with the ADR's own name:
+R5   rc=2   edit1: REFUSED (2): target /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t167-redprobe-xx1q1izn/mirror/docs/adr/DEC-1-schedule-generator-ad
+      watched file unchanged: True
+R6   authorised, correct name/place, but one byte of unexpected content:
+R6   rc=3   edit1: REFUSED (3): target sha256 4ddd41827063c4cd018376a233d227515aa97a430f1868aea07598857c0610c5 != expected pre-edit 32539607c6b43a23d17300b588c70f
+      watched file unchanged: True
+R7   authorised, correct place, exactly the revision-9 bytes, dry run:
+R7   rc=0   edit1: AUTHORISED run on scratch target /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t167-redprobe-xx1q1izn/data/dec1-scratch-rev9.md (sha
+      watched file unchanged: True
+R8   the same, for real:
+R8   rc=0   edit1: AUTHORISED run on scratch target /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t167-redprobe-xx1q1izn/data/dec1-scratch-rev9.md (sha
+      target now: COMPLETED  sha 4f2387c821a01953503c77c2c70730bf72657c994491110c5ae3bc27a866dc37
+      reproduces bf67a85:docs/adr/DEC-1-schedule-generator-adapter.md exactly: True
+R9   re-run against the file R8 just wrote (the 'edited again' case):
+R9   rc=3   edit1: REFUSED (3): target sha256 4f2387c821a01953503c77c2c70730bf72657c994491110c5ae3bc27a866dc37 != expected pre-edit 32539607c6b43a23d17300b588c70f
+      watched file unchanged: True
+R10  authorised run under `python3 -O` (asserts stripped):
+R10  rc=0   edit1: AUTHORISED run on scratch target /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t167-redprobe-xx1q1izn/data/dec1-scratch-rev9.md (sha
+      target now: COMPLETED  sha-matches-bf67a85: True
+
+==============================================================================
+== 7.  THE REAL RATIFIED ADR
+==============================================================================
+worktree docs/adr/DEC-1-schedule-generator-adapter.md
+  sha256 at probe start : 49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab
+  sha256 at probe end   : 49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab
+  sha256 of main:docs/adr/DEC-1-schedule-generator-adapter.md
+                        : 49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab   (main = a907e0b87496)
+  unchanged by this probe : True
+  identical to main       : True
+  `git status --porcelain docs/adr/` -> ''
+
+scratch tree left at /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t167-redprobe-xx1q1izn

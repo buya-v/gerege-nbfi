@@ -1,0 +1,26 @@
+target 1: docs/adr/DEC-1-schedule-generator-adapter.md   (432686 bytes)
+target 2: nexus/internal/apps/loanschedule/contract/contract.go   (151467 bytes)
+
+Both are hard `user` gates to amend: CLAUDE.md, "Any change to a ratified DEC-n
+ or the frozen adapter contract".
+
+file             try    atomic writes                         anchors   live anchors
+----------------------------------------------------------------------------------------------------
+t47_edit_1.py    2      True   DEC-1 ADR                      2         0
+t47_edit_2.py    0      False  DEC-1 ADR                      7         2
+t47_edit_3.py    0      False  DEC-1 ADR                      4         0
+t47_edit_4.py    0      False  DEC-1 ADR                      2         2   <<< ALL ANCHORS LIVE - would rewrite the target TODAY
+t47_edit_4c.py   0      False  DEC-1 ADR                      1         0
+t47_edit_5.py    0      False  DEC-1 ADR                      2         1
+t47_edit_6.py    0      False  DEC-1 ADR                      3         0
+t47_edit_7.py    0      False  contract.go                    5         1
+t47_edit_8.py    0      False  DEC-1 ADR                      5         1
+
+Reading:
+  try     - count of ast.Try nodes.  0 means no guard of any kind.
+  atomic  - does the file contain an os.replace() call.
+  anchors - how many string anchors the script must find before it writes.
+  live    - how many of those are still present EXACTLY ONCE in the live
+            target.  live < anchors means the script exits before its write;
+            live == anchors means it runs to completion and rewrites a
+            ratified/frozen artefact in place, with no authorisation.
