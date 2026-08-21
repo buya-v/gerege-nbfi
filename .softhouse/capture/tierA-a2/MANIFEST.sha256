@@ -265,6 +265,9 @@ c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f  out/A2-242-upd
 6a9a40a519b8faed63b36b970f328fefa9c1084c26b749a26e362f2489f72b99  out/A2-243-read-product-after-no-rule-change.http
 04b14461410412edcc8ae715749ac0a641f80885b45c92051be6fedba0c44921  out/A2-243-read-product-after-no-rule-change.json
 c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f  out/A2-243-read-product-after-no-rule-change.status
+4351b986bd62075705251d624c8d1680a7a333d2e197efc7c9438ad0afc4bf26  out/A2-250-loanproducts-list.http
+bd96d3efb50b171836da8095335122456553a40fa081a284e10e1e7095ae6f2e  out/A2-250-loanproducts-list.json
+c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f  out/A2-250-loanproducts-list.status
 041c1637bf0544726911c668d56d414096a2caaa66f30672a93baabb47098371  out/A2-bad-040-dup-glcode.http
 2b09fa6ec3f3b7fd4a44e005587ed373ecdd49f716f8d34f68cdb2906a890f87  out/A2-bad-040-dup-glcode.json
 97a58cc66d1cd6b51466af8ed52d6a38053b5572fee09a0ae8859c26b82bdf67  out/A2-bad-040-dup-glcode.status
