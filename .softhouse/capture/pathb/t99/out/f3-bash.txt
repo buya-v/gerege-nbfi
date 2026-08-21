@@ -91,10 +91,13 @@ pre-fix forbidden-sentence.sh sha256 71142e40b4af9ec873f0eca6a3ecb60d18033f2f0d3
         PASS  0 prohibited-engine hits in container env
         PASS  0 prohibited driver jars in fineract-provider.jar
         PASS  schema_connection_parameters is empty
+    (prohibition verdict lines shown: 3 — must be 3)
   fixed: EXIT=1  FAIL lines=21
     prohibition verdicts printed while docker answered nothing:
         FAIL  prohibited-engine scan of the container env INSPECTED NOTHING: `docker inspect fineract-fineract-1` returned no environment at all, so a count of 0 would mean 'not looked', not 'clea
+        FAIL  prohibited-driver-jar scan INSPECTED NOTHING: `unzip -l /app/fineract-provider.jar` in fineract-fineract-1 returned no listing at all, so a count of 0 would mean 'not looked', not 'c
         FAIL  schema_connection_parameters check INSPECTED NOTHING: the query against fineract_tenants returned no row at all for tenant 'gerege', so 'empty' would mean 'not read', not 'empty'. My
+    (prohibition verdict lines shown: 3 — must be 3)
   (a PASS on any of those three lines on the 'fixed' side would mean the correction failed)
 
 defect reproduces on the PRE-FIX bytes: YES
