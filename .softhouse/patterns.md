@@ -733,6 +733,33 @@ Two consequences worth carrying:
 > print on empty input, it is not a guard.** Then ask the second question, which the first does not cover: *does
 > this guard detect every FORM the violation can take, or only the form I happened to think of?*
 
+### P-36. An experiment whose input never arrives is a NULL CONTROL — and it looks exactly like a result
+
+**Fire `20260821-080001`, T130, retroactively invalidating four rounds of argument in one paragraph.** Four workers
+fought over whether a probe's `IFS=` prefix prevented a false refusal. T106 said it did. T113 refuted that and
+shipped a replacement reason. T121 refuted *that* and brute-forced **448** `IFS` values across three bash versions
+to settle it. Every one of them ran their rows as:
+
+```
+env IFS=… bash harness      # <- delivers nothing
+```
+
+**bash resets `IFS` to the default at startup and ignores an inherited one** — in plain mode, under `--posix`, with
+`argv[0]=sh`, and under `POSIXLY_CORRECT=1` alike. So **every row in all four experiments was a null control**, and
+not one of those workers ever tested the claim they were arguing about. The routes that do deliver are a `BASH_ENV`
+startup file and being sourced. T130 nearly shipped a third wrong reason on top of the first two.
+
+What makes this class dangerous is that a null control **does not look like an error**. It produces rows, counts,
+and a coherent table; 448 green cells read as overwhelming evidence. The experiment failed silently in exactly the
+way P-35's guards do — and for the same underlying reason, since "the probe did not fail" and "the probe never ran"
+are the same observation.
+
+> **Rule.** Before believing an experiment, prove the manipulated variable **reached the subject**. Assert the
+> delivery, do not assume it: read the value back from inside the process under test, or vary it and show the
+> *unmitigated* case changes. Every experiment needs a **positive control** — a condition known to produce the
+> effect — and if the positive control is flat, the apparatus is broken and the negative rows mean nothing. State
+> the delivery route in the write-up, because that is the line a later reader can check.
+
 <!-- LEARNED PATTERNS END -->
 
 ### Run 2026-08-17-run1-harness-schedule-poc — fire `20260819-170001` (local, oracle REACHABLE) — 2026-08-19

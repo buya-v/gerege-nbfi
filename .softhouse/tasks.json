@@ -2627,7 +2627,7 @@
     {
       "id": "T130",
       "title": "Apply T121's findings to T113 — and remove the accident of spelling",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -2638,7 +2638,7 @@
         ".softhouse/conformance.sh"
       ],
       "description": "Applies F-T121-1: T113 replaced a false reason with a DIFFERENT false reason - read also strips ONE trailing non-whitespace IFS delimiter when it occurs exactly once and is final - correct at conformance.sh:171-174, interpreter-matrix.sh:142-145 and T113.md:346-348. AND removes the underlying hazard: the probe token survives truncation only by an ACCIDENT OF SPELLING (its final 'e' recurs in 'conformance'), so the guard's correctness rests on a coincidence a rename would silently break. Make the token structurally immune or assert it round-trips, and DRIVE IT RED by renaming to a truncatable spelling. Plus F-T121-2 (three more print-without-asserting scripts - the concept T113 swept only as a sentence) and F-T121-3 (conformance.sh:59, and exit 2 now formally ambiguous since T110). Retires N-T113-5: bash 4.x measured, boundary bracketed to (4.4, 5.3.9].",
-      "note": "Raised and dispatched by the driver, local fire 20260821-080001."
+      "note": "Raised and dispatched by the driver, local fire 20260821-080001. || local fire 20260821-080001: DONE on softhouse/T130-t113-microfixes (4 commits). THE FINDING T121 DID NOT HAVE, AND IT IS BIGGER THAN THE RULE: every IFS row in T97's matrix, T106's review, T113's refutation and T121's 448-value brute force ran as `env IFS=... bash harness` - and BASH RESETS IFS AT STARTUP AND IGNORES AN INHERITED ONE, in plain mode, under --posix, with argv[0]=sh and under POSIXLY_CORRECT=1 alike. So ALL of those rows are NULL CONTROLS and neither side of a four-round argument ever tested its own claim. The routes that DO deliver are a BASH_ENV startup file and being sourced; seven routes enumerated, identical on all three bash majors. T130 says it nearly shipped a third wrong reason on top of the first two. Now P-36. CORRECTED STRIPPING RULE, re-derived as a PREDICATE and brute-forced rather than transcribed: read -r with a single variable strips leading/trailing IFS WHITESPACE, and also the final character when that character is a non-whitespace IFS delimiter AND that is the only position in the whole line holding ANY IFS delimiter - the sharpened clause being 'any delimiter', so abcze survives IFS=ze while abcz does not. 3,282 (line, IFS) pairs, 0 disagreements, on 3.2.57/4.4.0/5.3.9. Corrected at all three sites plus two new errata rows in T97.md. ACCIDENT OF SPELLING REMOVED BY ASSERTING THE INVARIANT, with the structural option costed and rejected for a stated reason: T106's rig greps for the literal psub and read lines, so changing the probe's SHAPE makes that rig INERT (exit 1) and changing its VALUE would make post-fix row [1]b go red for two reasons at once, destroying the discrimination T121 verified. New interpreter-matrix.sh section [6b] reads CONFORMANCE_PSUB_TOKEN OUT OF THE HARNESS (it used to be a duplicated literal) and asserts, spelling-independently, that it has no whitespace and that its last character occurs earlier - which together imply round-trip under EVERY IFS. RED PROOF: rename the token to conformance-psub-livz and T113's own matrix bytes report 26 passed 0 failed exit 0 (SILENTLY ADMITTED) while T130's reports 67 passed 4 failed, red at three levels including an end-to-end row at exit 3 - a genuine false refusal; green again on the real harness (69/0). Decisive table 2 spellings x prefix kept/dropped x 3 routes: 11 of 12 cells admit, EXACTLY ONE refuses, needing rename AND no prefix AND a delivering route. F-T121-2: all three print-without-asserting rigs fixed and each driven red (readonly rig against real pre-fix bytes 1/4; both containers by deleting the one `rm -f /dev/fd` line, 0/3 and 9/10), with honest scoping that standing regression coverage still lives in T97's row [7]. F-T121-3 applied: conformance.sh now states exit 2's formal ambiguity and the driver's 'exit 2 AND probe != up' park condition. N-T113-5 CLOSED independently - built GNU bash 4.4.0 from the tarball, 67/0, no false refusal, reproducing that bash 4.4 kills psub in POSIX mode. AND A DEFECT IN THE RIG IT WAS SENT TO CORRECT: interpreter-matrix.sh asserted `agree` on /bin/sh unconditionally and produced a FALSE FAILURE on Alpine, where /bin/sh is busybox ash WITH process substitution; fixed by asking what /bin/sh is first, both branches graded, neither skipped. T106's rig byte-unmodified, 8/0 pre-fix and 7/1 post-fix, healthy control green in both legs. P-24 scratch merge into current main: PASS exit 0, 42/5576, 0 violations, --prove 21/0, sh -> exit 3 with 0 verdict tokens, gofmt -l exactly contract.go, vectors and nexus diffs EMPTY. AWAITING REVIEW T150."
     },
     {
       "id": "T131",
@@ -2933,6 +2933,22 @@
       ],
       "description": "THIS TASK CARRIES AN EXPLICIT PROMOTION MANDATE. T136's backlog item, and it is the cheapest real coverage this program can buy. Today REFUSE-02-half-even-ungraded.json makes HALF_EVEN a CONTRACT REFUSAL, so the graded corpus is not blind - but 0 of 46 vectors carry either tie answer, so nothing in the parity corpus would notice a port that inherited Fineract's stock HALF_EVEN default. That is precisely P-9, whose original instance took SOLVING for an exact tie to expose. The tie is already solved and measured live on both tenants: 1,162,502.50 x 0.018 = 20,925.045 -> HALF_UP 20925.05 (gerege), HALF_EVEN 20925.04 (default), request sha256 2a6621be..., and T136 established the two product rows differ in 89 columns by only `id`, so the mode is the sole cause. Capture from the live oracle only; synthesise nothing. Pair with an independent reviewer.",
       "note": "Raised by the driver, local fire 20260821-080001, from T136 / T128."
+    },
+    {
+      "id": "T150",
+      "title": "INDEPENDENT review of T130 — the null-control finding and the interpreter-guard merge ruling",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [
+        "T130"
+      ],
+      "files_hint": [
+        ".softhouse/reviews/"
+      ],
+      "description": "Paired reviewer for T130, sixth in a chain where five consecutive workers have each found the previous one's central claim false. Verify FIRST and HARDEST the claim that bash resets IFS at startup and ignores an inherited one, which if true makes every IFS row in T97/T106/T113/T121 a NULL CONTROL. Then the fourth stated version of the read/IFS stripping rule (three have been wrong). Then rule on the assert-the-invariant vs restructure-the-probe judgement, and give an explicit mergeable ruling for the stream.",
+      "note": "Raised and dispatched by the driver, local fire 20260821-080001."
     }
   ]
 }
