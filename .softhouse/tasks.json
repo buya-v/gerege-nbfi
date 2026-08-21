@@ -269,7 +269,7 @@
       "role": "coder",
       "executor": "agent",
       "model": "opus",
-      "status": "pending",
+      "status": "in_progress",
       "dependencies": [],
       "title": "The no-float guards, consolidated — a money non-negotiable can silently pass THREE different ways (T132 + T143 + T120)",
       "files_hint": [
@@ -277,7 +277,7 @@
         "nexus/internal/apps/loanschedule/"
       ],
       "description": "CONSOLIDATION of T132, T143 and T120 by the driver, local fire 20260821-054355. They are three views of ONE defect surface and their files_hint collide, so they must be one worker, not three. ALL THREE ARE HOLES IN THE FIRST NON-NEGOTIABLE IN CLAUDE.md -- money is integer minor units, no floating point in ANY monetary path including intermediate calculation. Fix in this order; each leg must be DRIVEN RED BEFORE AND GREEN AFTER (P-22) with both transcripts committed, and each must leave the legitimate store at PASS exit 0 with its cell count UNCHANGED.\n\nLEG 1 (T132, cheapest, most direct): conformance.sh:184 guard_no_float_in_vectors and :201 guard_no_float_in_harness use bare 'grep -Eq' with NEITHER LC_ALL=C NOR -a. Per T108's 360-cell matrix, a vector file containing a float plus ONE INVALID BYTE BEFORE IT ON THE SAME LINE makes the float guard SILENTLY PASS. Apply the two-token fix ('LC_ALL=C grep -qaF' shape, per T108's exact replacement text in its handoff) at BOTH sites, then sweep conformance.sh and every rig for OTHER bare greps whose result is load-bearing (P-26: sweep the concept, not the sentence). Drive it red with a poisoned scratch vector; confirm the legitimate 42-vector store still gives PASS exit 0 / 5576 cells unchanged.\n\nLEG 2 (T143 / M-3): both guards inspect IDENTIFIERS, so a float LITERAL (token.FLOAT) such as `rate := 0.036 / 12.0` builds, passes TestNoFloatInTheLoanScheduleTree, and takes conformance.sh to exit 0. The fix is ~3 lines -- walk the AST for token.FLOAT / token.IMAG in addition to the identifier check -- and is currently FREE: T134 measured 0 float and 0 imaginary literals across the tree's 21 files. Drive it red with an injected literal, green on the clean tree. Phrase the guard POSITIVELY (P-35) and make zero-files-inspected an ERROR, not a pass.\n\nLEG 3 (T120, the structural one, and it also closes T143's M-5): guard_no_float_in_vectors enumerates the store with `find -name '*.json' -type f` (RECURSIVE, no symlink follow) while LoadStore reads ONE LEVEL DEEP and matches the suffix bytewise. The two disagree about what the store contains AND NOTHING COMPARES THEIR COUNTS. Measured consequences, all silent: a symlinked context directory is skipped entirely (F-1); a nested subdirectory is skipped (F-2); UPPER.JSON is not a vector (F-3); case-only case_id variants both grade at 43/5623 (F-4); NFC vs NFD Unicode-normalisation variants both grade AND RENDER IDENTICALLY in the report at 44/5670 (F-5). Fix: an explicit file census that REFUSES any .json under the store root the harness did not load, plus a case_id charset rule ([A-Za-z0-9._-]; all 47 committed ids are ASCII). Drive EVERY leg red and show the legitimate 42/5576 store is untouched. M-5: LoadStore reads only files inside a context dir, so for store-root JSON the defeatable shell guard is the only float check -- the census closes this, confirm that it does.\n\nCONSTRAINTS: NEVER gofmt -w contract.go (G-3). Do not change any vector, PIN.json, capabilities.json, contract.go, or any ratified DEC-n. Invoke the harness with bash, never sh. The store on main is 42 parity + 4 contract-refusal + 1 self-test = 47 files; if your census disagrees with that, SAY SO rather than adjusting the number to fit.",
-      "note": "Consolidated by the driver from T120+T132+T143, local fire 20260821-054355. Paired reviewer T155."
+      "note": "Consolidated by the driver from T120+T132+T143, local fire 20260821-054355. Paired reviewer T155. || local fire 20260821-054355: DISPATCHED (wave 2), isolated worktree, model opus."
     },
     {
       "id": "T155",
@@ -294,6 +294,39 @@
       ],
       "description": "Paired reviewer for T154 (plan gate rule 1). T154 rewrote the guards that enforce the FIRST non-negotiable in CLAUDE.md. The characteristic failure of this exact task is P-22: shipping a guard that structurally CANNOT FAIL -- at least five such were found in tier 0, two of them inside the task sent to fix the previous one. So do not read T154's guards and agree they look right: DRIVE EACH ONE RED YOURSELF, with your own poison, written without reading T154's test fixtures first. Verify independently that (i) the invalid-byte bypass is really closed at BOTH call sites; (ii) an injected float LITERAL is really caught, and an injected IMAGINARY literal too; (iii) the census really refuses a symlinked context dir, a nested subdir, UPPER.JSON, a case-only case_id variant and an NFC/NFD variant -- all five, separately; (iv) zero-files-inspected is an ERROR; (v) the legitimate store still gives PASS exit 0 with the cell count UNCHANGED and no vector, PIN.json, capabilities.json, contract.go or DEC-n altered. Report any guard you could not drive red AS A DEFECT.",
       "note": "Raised with T154 by the driver, local fire 20260821-054355."
+    },
+    {
+      "id": "A2-8",
+      "role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "status": "pending",
+      "dependencies": [
+        "A2-7",
+        "A2-5"
+      ],
+      "title": "A2 CODER — port the GL account model, product-to-account mapping resolution and financial activity accounts to Go",
+      "files_hint": [
+        "nexus/internal/apps/ledger/"
+      ],
+      "description": "THE A2 PORT ITSELF. It did not exist in the plan until now: G-9 blocked it from being WRITTEN, not merely from being run, and G-9 closed this fire (chart of accounts is DATA not code; launch with the minimal chart the vectors exercise). IN SCOPE: the A2 slice's fineract_paths ONLY (glaccount, producttoaccountmapping, financialactivityaccount across fineract-accounting and fineract-core, plus PortfolioProductType.java) -> nexus/internal/apps/ledger/. Anything discovered outside goes to backlog, not into a diff -- the per-run scope guard is unaffected by the program's full-codebase goal.\n\nBUILD ON THE EVIDENCE ALREADY BANKED, DO NOT RE-DERIVE IT FROM SCRATCH: docs/analysis/tierA-a2-behaviour.md 4 is the resolution order, and reviewer A2-2 re-derived it limb by limb from source and ruled 'Slice A1 can safely build account resolution on 4' -- the six NULL discriminators are literally six in the JPQL, the payment-type override is gated on value 1 in all three families, and savings alone consults m_charge. That document is corrected as of A2-6; read the CURRENT main version, and honour every [UNVERIFIED] marker in it as an open question rather than a fact.\n\nFOUR TRAPS THAT ARE ALREADY MEASURED -- a port that walks into one of these is a rejection, not a discussion:\n(1) PortfolioProductType.fromInt PERMUTES 3/4/5 relative to getValue(). A Go port that uses one integer mapping for both directions is silently wrong.\n(2) CashAccountsForLoan and AccrualAccountsForLoan COLLIDE at 22/24/25 WITH DIFFERENT MEANINGS. Do not model them as one enum.\n(3) acc_gl_journal_entry stores NO classification, so posted entries RETROACTIVELY RE-RENDER under a retyped account -- an append-only ledger displaying mutated history. THE GO PORT MUST CARRY CLASSIFICATION ON THE ENTRY. (That is A1's write path, but A2 owns the account model it reads, so model it so A1 CAN.)\n(4) Fineract's money columns are DECIMAL(19,6) -- SIX decimals, against MNT's minor unit of 2. Fineract can therefore hold SUB-MINOR-UNIT RESIDUE in a balance column. CLAUDE.md requires integer minor units in Go. The truncation rule is NOT SPECIFIED ANYWHERE IN THIS SLICE (docs/analysis/tierA-a2-behaviour.md 8). YOU MUST STATE THE RULE YOU APPLY AND WHICH VECTOR PROVES IT. Do not pick one silently.\n\nDO NOT port m_trial_balance as a balance store -- closing_balance is a WRITTEN, STORED, UNSIGNED sum wearing a balance's name, in direct tension with 'balances are derived, never written'. Make it a derived view or drop it; it is A3's anyway.\n\nGrade against the vectors A2-7 captures. If a vector cannot pass, REPORT THE DIFF -- do not weaken the test. Run `go build ./...` and `go vet ./...` and the conformance run (`bash .softhouse/conformance.sh`, never sh) before finishing. NEVER gofmt -w contract.go.",
+      "note": "Registered by the driver, local fire 20260821-054355, immediately on closing G-9 which had blocked it from being planned. Depends on A2-7 (the corpus holds 2 of the 9 mandatory accounts) and A2-5 (the capture rig A2-7 will use is broken)."
+    },
+    {
+      "id": "A2-9",
+      "role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "status": "pending",
+      "dependencies": [
+        "A2-8"
+      ],
+      "title": "INDEPENDENT review of A2-8 — RE-DERIVE the mapping resolution from Fineract source, do not read the port",
+      "files_hint": [
+        ".softhouse/reviews/"
+      ],
+      "description": "Paired reviewer for A2-8 (plan gate rule 1). You are INDEPENDENT: you did not plan this work, and you assume defects exist. Read the handoff FROM THE BRANCH (`git show <branch>:.softhouse/handoff/...`), read the diff with three dots (`git diff main...<branch>`) -- main moves during a fire and a two-dot diff will show you main's own advances as if they were the branch's deletions.\n\nRE-DERIVE THE RESOLUTION ORDER FROM FINERACT SOURCE YOURSELF. Do not read A2-8's Go and check it is self-consistent, and do NOT take docs/analysis/tierA-a2-behaviour.md as your source -- that document is the thing under test as much as the code is. Specifically re-derive: the six NULL discriminators in the JPQL; the payment-type override gate; the savings-only m_charge consultation; and the STEP-0 financial-activity fallback that the working-capital path does not have.\n\nGRADE THE FOUR MEASURED TRAPS INDIVIDUALLY AND SAY SO FOR EACH: (1) is fromInt's 3/4/5 permutation preserved in BOTH directions, or did the port collapse it to one mapping? (2) are CashAccountsForLoan and AccrualAccountsForLoan modelled as SEPARATE enums, given they collide at 22/24/25 with different meanings? (3) does the account model let A1 carry classification ON the entry, closing the retroactive-re-render defect? (4) WHAT TRUNCATION RULE did the port choose for DECIMAL(19,6) -> integer minor units, is it STATED, and WHICH VECTOR PROVES IT? An unstated or unvectored truncation rule in a money path is a rejection.\n\nAlso check the standing non-negotiables: integer minor units with no float anywhere including intermediates; append-only; balances derived never written (in particular that m_trial_balance was NOT ported as a balance store); the frozen contract intact; every [VERIFIED] claim traceable to real Fineract source or a real vector; the vectors actually pass and are NON-VACUOUS. Verdict APPROVED / MICRO-FIX (<=10 lines, mechanical, never a number and never money logic) / REJECTED with specifics. If you find nothing, state what you checked so silence is distinguishable from not looking.",
+      "note": "Registered with A2-8 by the driver, local fire 20260821-054355."
     }
   ],
   "cross_corroboration": {
