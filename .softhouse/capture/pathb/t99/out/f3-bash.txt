@@ -69,12 +69,33 @@ pre-fix forbidden-sentence.sh sha256 71142e40b4af9ec873f0eca6a3ecb60d18033f2f0d3
     EXIT=1   aborted before capturing: NO — it went on to capture
   fixed/recreate-products.sh, run in a breached environment (docker and curl stubbed):
     EXIT=1   aborted before capturing: YES
-      ABORT: preconditions breached — exit status 1, 18 FAIL line(s). NOTHING WAS CAPTURED.
+      ABORT: preconditions breached — exit status 1, 21 FAIL line(s). NOTHING WAS CAPTURED.
   fixed/emiloop-probe.sh, run in a breached environment (docker and curl stubbed):
     EXIT=1   aborted before capturing: YES
-      ABORT: preconditions breached — exit status 1, 18 FAIL line(s). NOTHING WAS CAPTURED.
+      ABORT: preconditions breached — exit status 1, 21 FAIL line(s). NOTHING WAS CAPTURED.
 
   (both are additionally reported in the handoff: they were NOT in T85's four findings.)
+
+--- 3f — T99b.  The F-3 shape again, in preconditions.sh, on the PostgreSQL-only prohibition.
+         P5's $banned and P6's $jarhits are `grep -icE` counts and P11's $scp is a psql
+         result; all three were adjudicated by `= 0` / `-z`, and an empty stream counts 0
+         and reads empty.  So a `docker` that answers NOTHING produced:
+             PASS  0 prohibited-engine hits in container env
+             PASS  0 prohibited driver jars in fineract-provider.jar
+             PASS  schema_connection_parameters is empty
+         — the Oracle Database / MySQL / MariaDB prohibition, PASSED WITHOUT LOOKING.
+         Below: the same stubbed run against both sides.  A liveness operand now makes an
+         empty scan a FAIL that says the scan did not happen.
+  prefix: EXIT=1  FAIL lines=18
+    prohibition verdicts printed while docker answered nothing:
+        PASS  0 prohibited-engine hits in container env
+        PASS  0 prohibited driver jars in fineract-provider.jar
+        PASS  schema_connection_parameters is empty
+  fixed: EXIT=1  FAIL lines=21
+    prohibition verdicts printed while docker answered nothing:
+        FAIL  prohibited-engine scan of the container env INSPECTED NOTHING: `docker inspect fineract-fineract-1` returned no environment at all, so a count of 0 would mean 'not looked', not 'clea
+        FAIL  schema_connection_parameters check INSPECTED NOTHING: the query against fineract_tenants returned no row at all for tenant 'gerege', so 'empty' would mean 'not read', not 'empty'. My
+  (a PASS on any of those three lines on the 'fixed' side would mean the correction failed)
 
 defect reproduces on the PRE-FIX bytes: YES
 defect refused by the FIXED bytes:      YES

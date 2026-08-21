@@ -157,8 +157,12 @@ for side in prefix fixed; do
       > "$EXPORT/f3f-$side.txt" 2>&1
   echo "  $side: EXIT=$?  FAIL lines=$(LC_ALL=C grep -ac '^  FAIL' "$EXPORT/f3f-$side.txt")"
   echo "    prohibition verdicts printed while docker answered nothing:"
-  LC_ALL=C grep -a 'prohibited-engine\|prohibited driver jars\|schema_connection_parameters' \
+  # The pattern must match BOTH spellings — the PASS says "prohibited driver jars" and the new
+  # FAIL says "prohibited-driver-jar scan".  A report that silently drops one of the three lines
+  # it exists to show is the same class of miss as the sweep pattern that could not see `grep -icE`.
+  LC_ALL=C grep -aE 'prohibited.engine|prohibited.driver.jar|schema_connection_parameters' \
     "$EXPORT/f3f-$side.txt" | cut -c1-190 | sed 's/^/      /'
+  echo "    (prohibition verdict lines shown: $(LC_ALL=C grep -acE 'prohibited.engine|prohibited.driver.jar|schema_connection_parameters' "$EXPORT/f3f-$side.txt") — must be 3)"
 done
 echo "  (a PASS on any of those three lines on the 'fixed' side would mean the correction failed)"
 

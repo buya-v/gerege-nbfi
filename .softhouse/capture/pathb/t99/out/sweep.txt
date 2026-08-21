@@ -95,8 +95,6 @@ t36/recreate-products.sh:115:for f in "$O"/B-0*-raw.json; do
 --- grep -c / wc -l results compared to 0 (a zero can mean 'clean' or 'read nothing')
 t80/summarise.sh:11:  p=$(grep -c '^  PASS' "$f" || true)
 t80/summarise.sh:12:  q=$(grep -c '^  FAIL' "$f" || true)
-t80/prove-f2.sh:33:# `grep -c` reported NOTHING for the very line that proves the defect.  And `-a` alone is NOT
-t80/prove-f2.sh:35:# sequence at all, so it returns 0 rather than 1 [measured: `grep -ac` -> 0, `LC_ALL=C grep -ac`
 t80/prove-f2.sh:41:  echo "  PASS lines ................. $(LC_ALL=C grep -ac '^  PASS' "$t" || true)"
 t80/prove-f2.sh:42:  echo "  FAIL lines ................. $(LC_ALL=C grep -ac '^  FAIL' "$t" || true)"
 t80/prove-f2.sh:43:  echo "  P7 breach reported ......... $(LC_ALL=C grep -ac 'PostgreSQL version is' "$t" || true)"
@@ -127,8 +125,27 @@ t36/recreate-products.sh:42:prefails=$(LC_ALL=C grep -ac '^  FAIL' "$O/precondit
 t36/recreate-products.sh:67:  n=$(diff "$W/req/$f.json" "$REQ/$f.json" | grep -c '^[<>]' || true)
 t36/preconditions.sh:110:# its grep pattern was `grep -c\|grep -ac\|wc -l` and these two lines use `grep -icE`.
 t36/preconditions.sh:116:env_lines=$(printf '%s\n' "$env_dump" | LC_ALL=C grep -c . || true)
+t36/preconditions.sh:125:  banned=$(printf '%s\n' "$env_dump" | grep -icE 'ojdbc|oracle\.jdbc|:1521|com\.mysql\.cj|mariadb|go-sql-driver')
 t36/preconditions.sh:134:jarlines=$(printf '%s\n' "$jarlist" | LC_ALL=C grep -c . || true)
+t36/preconditions.sh:138:  jarhits=$(printf '%s\n' "$jarlist" | grep -icE 'ojdbc|oracle-jdbc|mysql-connector|mariadb-java')
 t36/preconditions.sh:142:pgdrv=$(printf '%s\n' "$jarlist" | grep -c 'BOOT-INF/lib/postgresql-')
+
+--- absence assertions: a count or an empty string treated as PROOF OF CLEANLINESS
+    (each of these needs a LIVENESS OPERAND — evidence that the input was non-empty)
+t80/prove-f2.sh:88:[ "$canary_prefix" = "0" ] || { echo "UNEXPECTED: the pre-fix script ran the canary"; rc=1; }
+t80/prove-f2.sh:98:[ "$rc" = 0 ] || exit 1
+t80/forbidden-sentence.sh:74:[ "$bad" = "0" ] || exit 1
+t80/prove-f1.sh:91:echo "prefix-defect-reproduced=$prefix_broke   fixed-run-clean=$( [ "$rc" = 0 ] && echo yes || echo no )"
+t80/prove-f1.sh:93:[ "$rc" = 0 ] || exit 1
+t80/happy-path.sh:85:[ "$rc" = "0" ] && echo "RESULT: HAPPY PATH INTACT — every capture byte-identical across all six sets." \
+t80/shell-invariance.sh:38:[ "$diffs" = "0" ] || exit 1
+t36/preconditions.sh:101:# below asserted an ABSENCE (`[ "$banned" = "0" ]`), and `grep -icE` over an EMPTY stream returns
+t36/preconditions.sh:122:if [ -z "$env_dump" ]; then
+t36/preconditions.sh:126:  [ "$banned" = "0" ] && ok "0 prohibited-engine hits in container env ($env_lines env line(s) actually scanned)" \
+t36/preconditions.sh:135:if [ -z "$jarlist" ]; then
+t36/preconditions.sh:139:  [ "$jarhits" = "0" ] && ok "0 prohibited driver jars in fineract-provider.jar ($jarlines jar entry line(s) actually scanned)" \
+t36/preconditions.sh:188:# `[ -z "$scp" ]`, and a psql that never ran returns the empty string too, so a dead database, a
+t36/sha256.sh:154:    if [ -z "$_first" ]; then
 
 === 4. capture directories with no in-band provenance — the F-4 shape
   directory                                  stamp     tier-A   tenant
