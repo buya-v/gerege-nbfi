@@ -55,7 +55,10 @@ apart, and came back byte-identical both times.
 | `crosscheck-vs-patha.py` | closes T76's `[UNVERIFIED]` on `interestCalculationPeriodMethod` by comparing the 1.2M control against the promoted Path A vector `P-MNT-1M2`, with the day count controlled. |
 | `promote-vector.py` | transcribes the vector. Reads with `parse_float=str` throughout — Path B emits money as bare JSON numbers on the wire. |
 | `grade-scratch-store.sh` | grades a candidate in a scratch store before it goes near the real one. **Not** a conformance verdict; every verdict this task reports came from `bash .softhouse/conformance.sh`. |
-| `prove-redgreen.sh` | the three arms of the discrimination proof, with assertions rather than printed numbers. |
+| `prove-redgreen.sh` | the three arms of the discrimination proof, with assertions rather than printed numbers. **[T156]** It now restores the store from a `trap` on every exit path, verifies the restore instead of assuming it, and derives every arm size at runtime instead of asserting 42/43. |
+| `prove-exit-trap.py` | **[T156]** drives that trap RED against the real pre-fix bytes of `prove-redgreen.sh`, read from an immutable git blob, over six interruption classes in a throwaway sandbox. Never touches the real store. |
+| `t156-sweep-unguarded-mutators.py` | **[T156]** the P-26 sweep for the same shape elsewhere under `.softhouse/`, printing what it could not have covered. |
+| `t156-p24-scratch-merge.sh` | **[T156]** re-runs all three artefacts on a scratch merge into *current* `main`, because an assertion about the post-merge state can only be tested by merging (P-24). |
 
 ## The red/green proof
 
@@ -68,6 +71,22 @@ bash prove-redgreen.sh
 | 1 | the **42**-vector store, this vector parked | mutated to HALF_EVEN (`M7`) | FAIL 3 | parity PASS 39 FAIL 3 — `T61-HE-A/B/C` |
 | 2 | the **43**-vector store | mutated to HALF_EVEN (`M7`) | this vector RED | parity PASS 39 FAIL 4 — `T149-PATHB-TIE` + the three |
 | 3 | the **43**-vector store | unmutated | GREEN | `VERDICT: PASS (exit 0)`, 43 parity, 5,664 cells |
+
+**[T156] The 42 and 43 in that table are OBSERVATIONS OF 2026-08-21, not expectations.**
+The store's parity count has read 42, 43 and 44 in different fires. `prove-redgreen.sh`
+no longer contains either number: it reads each arm's size back out of the mutation
+driver's own unmutated baseline line and asserts the RELATIONS between the arms — arm 2's
+store is exactly one vector larger than arm 1's, each arm's PASS + FAIL accounts for its
+whole store, arm 2's killed-by list is arm 1's plus `T149-PATHB-TIE` and nothing else, and
+arm 3's unmutated PASS equals the size the driver measured. The three transcript
+filenames still carry `42`/`43` because the promoted vector's own `_note` cites
+`premise-refuted-42-vector-store.txt` by name, and a vector is not a task's to edit.
+
+**[T156] Arm 1 also had no `trap`.** It moves a vector out of the store and back with two
+`mv`s; an interruption between them left the store one vector short, and the harness
+grades whatever it finds — measured on a scratch copy, deleting exactly that file gives
+`VERDICT: PASS (exit 0) — 42 parity vectors ... 5576 cells compared`, exit 0, no warning.
+The fix and the six interruption classes it was driven red against are in `t156/`.
 
 The driver **asserts** each of those, it does not print them beside a prose expectation —
 that shape is the defect T136 recorded as F-2 in this very tree.
