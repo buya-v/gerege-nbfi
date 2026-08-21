@@ -2688,8 +2688,8 @@
         ".softhouse/capture/charges/",
         ".softhouse/capture/audit-t44/"
       ],
-      "description": "T99b's F-5 verbatim, in two more files: capture/charges/bin/preconditions.sh:79,85,128 and audit-t44/charges/bin/preconditions-COPY.sh:79,85 carry the SAME vacuous prohibited-engine assertions - grep -icE over an empty stream is 0 and a dead psql returns empty, so the CLAUDE.md Oracle-Database/MySQL/MariaDB prohibition can PASS HAVING SCANNED NOTHING. Transcribe the liveness-operand fix from .softhouse/capture/pathb/, drive each site RED with the tool stubbed and GREEN live with witnesses, and run T99b's positive control (a fake docker emitting mariadb/mysql-connector must still fire). ALSO still open in that same COPY: T85's follow-up 2, T77's stdout/stderr hole. SEQUENCE AFTER T115, which holds charges/bin/preconditions.sh this fire.",
-      "note": "Raised by the driver, local fire 20260821-080001, from T99b's F-5."
+      "description": "*** THE DRIVER'S ORIGINAL VERSION OF THIS TASK WAS WRONG TWICE AND T135 CORRECTED IT. *** (1) The two charges copies are BYTE-IDENTICAL and carry THREE F-5 sites, not two: capture/charges/bin/preconditions.sh and audit-t44/charges/bin/preconditions-COPY.sh. (2) TRANSCRIBING T99b's liveness fix is NOT SUFFICIENT - those copies predate T76/T77/T80/T85 entirely and, on a NON-TIE request, print 'PASS effective rounding mode canary ... (= HALF_UP)' AND 'ALL PRECONDITIONS HOLD' at EXIT 0. T135 demonstrated that live. So this task must bring both copies up to the hardened pathb/t36 baseline - the liveness operands AND the T76/T80 canary hardening (a pinned request digest and a non-overridable expectation, cf. T137's CANARY_EXPECT hole at :36) - not merely copy one fix across. Drive each site RED with the tool stubbed and GREEN live with witnesses, run T99b's positive control (a fake docker emitting mariadb/mysql-connector must still fire), and add a NON-TIE-REQUEST leg that must now FAIL where it used to print PASS. Also still open in that same COPY: T85's follow-up 2, T77's stdout/stderr hole. SEQUENCE AFTER T115 (merged) and alongside T137, which owns :36.",
+      "note": "Raised by the driver, local fire 20260821-080001, from T99b's F-5. || local fire 20260821-080001: BRIEF CORRECTED AT SOURCE after T135 refuted both halves of the driver's version. T115 is now merged, so charges/bin/ is free."
     },
     {
       "id": "T134",
@@ -2708,7 +2708,7 @@
     {
       "id": "T135",
       "title": "INDEPENDENT review of T99 — the Path B lower findings and the vacuous prohibited-engine guard",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -2719,7 +2719,7 @@
         ".softhouse/reviews/"
       ],
       "description": "Paired reviewer for T99, whose branch is 8 rescued commits from a killed worker plus 3 from T99b. P-28 applies with force: verify T99b's byte-identity reproduction claim, which is the hinge on which the rescued half's admissibility turns. Drive all four of T85's findings red against git-archive main bytes. Attack F-5 hardest - reproduce the vacuous PASS on a non-negotiable, re-run all three of T99b's legs, test whether the WIDENED sweep pattern is now complete (try grep -q, grep -m1, [ -z ], test -s, and the P-33 BSD-vs-ugrep trap), and rule on how many committed Path B captures were taken through a preconditions.sh that could pass vacuously.",
-      "note": "Raised by the driver, local fire 20260821-080001, from T99b's F-5."
+      "note": "Raised by the driver, local fire 20260821-080001, from T99b's F-5. || local fire 20260821-080001: DONE on softhouse/T135-review-t99 (0d6b9de). VERDICT MICRO-FIX. THE RESCUED HALF IS ADMISSIBLE: a fresh --no-local clone AT A DIFFERENT FILESYSTEM PATH, sh run-all.sh (5m41s), diff -rq committed vs regenerated -> exit 0, no output, ALL 10 BYTE-IDENTICAL including both live-oracle legs; the four PIN_PREFIX_* digests re-derived in GO against git archive ab2de89, 4/4 match, and git diff ab2de89..main -- pathb is empty so the 'before' side is main's live bytes. F-5 LEGS ALL RE-RUN PLUS A FOURTH: RED (docker+curl dead, main's bytes) exit 1, 3 PASS / 18 FAIL - AND THE ONLY THREE PASS LINES IN THE ENTIRE SUITE ARE THE THREE CLAUDE.MD DATABASE-PROHIBITION ASSERTIONS; branch 0 PASS / 21 FAIL. GREEN live branch 22/0 with witnesses, main also 22 so nothing weakened. Positive control with its own poisoned docker: both sides FAIL 3. FOURTH LEG T99b NEVER RAN - a PARTIAL outage (fineract gone, DB alive, real docker) - main still prints TWO vacuous PASSes, branch fails both. Second-order finding confirmed: T99's own pattern found ONE line and it was the one NON-vacuous site. BLAST RADIUS SETTLED FROM COMMITTED EVIDENCE WITH NO RE-CAPTURE, and the method is the result: each vacuous assertion reads a stream that ALSO FEEDS A CO-LOCATED POSITIVE ASSERTION IN THE SAME TRANSCRIPT (P5 -> driverClassName org.postgresql.Driver; P6 -> PostgreSQL JDBC driver present in the jar over the same unzip -l; P11 -> schema_server_port = 5432 from the same join/table/tenant); discriminator validated against its own red runs, then applied - PATH B 11/11, CHARGES 22/22. NO COMMITTED CAPTURE WAS TAKEN THROUGH A VACUOUS PASS. THREE REQUIRED CHANGES: P1, t99/lib.sh:25 uses `git merge-base main HEAD` - the anti-pattern main ALREADY DOCUMENTS AS HAVING FAILED TWICE (T98, then T102) - and on a scratch merge into current main prove-f4 EXITS 1 reporting 'F-4 NOT CLOSED' because no pin protects it; a literal fork sha restores 4/4 exit 0, verified. P2, THE DRIVER'S T133 BRIEF IS WRONG TWICE: the two charges copies are BYTE-IDENTICAL with THREE F-5 sites not two, and TRANSCRIPTION IS NOT SUFFICIENT because they predate T76/T77/T80/T85 and print 'PASS effective rounding mode canary (= HALF_UP)' AND 'ALL PRECONDITIONS HOLD' at exit 0 ON A NON-TIE REQUEST - demonstrated LIVE. P2, widen the sweep patterns and state the missing blind spot: over this tree today the widened pattern is complete and verified, but as a general detector 10 alternate spellings all fire on empty input and the patterns catch 1 of 10. T152 applies all three."
     },
     {
       "id": "T136",
@@ -2757,7 +2757,7 @@
     {
       "id": "T138",
       "title": "INDEPENDENT review of T115 — and the mergeable ruling for the T91 stream",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -2768,7 +2768,7 @@
         ".softhouse/reviews/"
       ],
       "description": "Paired reviewer. See the branch handoff and the driver's dispatch brief.",
-      "note": "Raised and dispatched by the driver, local fire 20260821-080001."
+      "note": "Raised and dispatched by the driver, local fire 20260821-080001. || local fire 20260821-080001: DONE and MERGED (477d1c3). VERDICT MICRO-FIX; **THE T91 STREAM IS MERGEABLE** and the driver merged it. Nothing inherited - it wrote 20 of its own drivers under reviews/T138-evidence/ and read no committed T115 transcript as evidence. V-A REPRODUCED EXACTLY: pre-fix verdict.sh over a mode-555 transcript dir prints SIX ADMITS ROWS ON SCREEN and the last line of the same run reads 'ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION' at exit 0 - and the Permission denied diagnostics go to STDERR, so any caller piping stdout to a transcript (which is every caller in this rig) loses them and keeps the false verdict. V-B RULING: report-not-fix was WRONG but does not block. It corrected T115's overstatement 3x - T115 says retyping 'ANY ONE' CLEAN row breaks it; retyping one (A7) still exits 1 with two REGRESSION rows, IT TAKES ALL THREE - and it showed T115's reason for declining does not apply to the cheapest correct fix, which changes NO ROW: a nine-line global assertion that at least one transcript carries the certification sentence, measured as a no-op on all 20 committed transcript dirs (SAME 20/20), exit 3 on a dead oracle, exit 3 on the retyped case that was exit 0. N9/N10 BOTH STILL OPEN AND F-2 IS NOT DISCHARGED, reproduced through the post-MF-2 shim on the branch AND AGAIN ON MERGED MAIN: N9 exit 0 with 'ALL PRECONDITIONS HOLD' and 'PASS effective rounding mode canary (= HALF_UP)'; N10 exit 0 running the attacker's stub. Only FU-1 (T139) closes them, and the disclosures saying so ship in both shims (driver-verified on the merged tree). EIGHT NEW FINDINGS, ONE THAT MATTERS: F-T138-1 (P2) prove-guards.sh's G-4 IS GREEN ON A TREE WITH LC_ALL=C REMOVED FROM THE SCANNER IT GUARDS, for two independent reasons - its assertion is satisfied by the exit-code rule alone, and its poison sits AFTER the match (T108's shape s02, the one shape BSD grep handles correctly) while both display arms run UNDER the mitigation (P-36). F-T138-2 (P2) the two 'under adjudication by T108' comments are AFFIRMATIVELY WRONG - they assert T80's BSD silent miss does not reproduce on this host, and it reproduces in one command. Plus T91.md:8 (17 vs the measured 20/23, now a THIRD independent measurement), a dangling out/t115-mf2/ pointer, V-F's stated condition wrong, 'each new one driven red by a committed guard' false for V-F and V-G, a citation to a directory that does not exist in a file shipping to main, and G-6/G-7 print-not-compare. T151 applies all eight ON MAIN."
     },
     {
       "id": "T139",
