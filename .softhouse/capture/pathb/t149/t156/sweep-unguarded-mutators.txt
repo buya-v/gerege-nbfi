@@ -1,0 +1,176 @@
+=== T156 / P-26 sweep — temporary mutation of an artefact a later reader trusts
+root: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a653ed421ea433121/.softhouse
+enumerated: 502 files (*.sh, *.py)
+NOT ENUMERATED: 2806 of the 3308 files under this root — every other extension.
+  the largest uncovered groups: .json 1398, .txt 744, .md 258, .status 147, .http 147, .java 48
+  a mutator written in Go, in a Makefile, or pasted out of a .md code block by a
+  human is therefore INVISIBLE to this sweep. So is anything outside /Users/buv/gerege-nbfi/.claude/worktrees/agent-a653ed421ea433121/.softhouse —
+  nexus/ and docs/ were not swept at all.
+
+matched a mutation VERB *and* a trusted TARGET: 130
+  of those, carrying no trap/finally/atexit anywhere in the file: 111
+  of those, writing only into a throwaway dir (mktemp/tmp): 46
+could not be read (named, counted, NOT skipped silently): 0
+
+--- FILES THAT MUTATE THE VECTOR STORE AT ALL (the exact shape T156 fixed)
+  .softhouse/capture/pathb/t149/promote-vector.py                        guard=**NO**  verbs=py:write
+  .softhouse/capture/pathb/t149/prove-exit-trap.py                       guard=yes  verbs=sh:mv,py:shutil,py:os-rename,py:write
+  .softhouse/capture/pathb/t149/prove-redgreen.sh                        guard=yes  verbs=sh:mv,sh:cp
+  .softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py         guard=yes  verbs=sh:sed-i,sh:git-checkout,py:write
+  .softhouse/capture/pathb/t36/attest.py                                 guard=**NO**  verbs=py:write
+  .softhouse/capture/src/run-pass3i.sh                                   guard=**NO**  verbs=py:write
+  .softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py          guard=**NO**  verbs=py:shutil,py:write
+        122 | shutil.copy(os.path.join(HERE, "t83grade.go.txt"), os.path.join(dd, "main.go"))
+        185 | shutil.copy(os.path.join(ROOT, ".softhouse/vectors", f_), os.path.join(store, f_))
+  .softhouse/capture/t64-zeroprincipal/src/T64-promote-vectors.py        guard=**NO**  verbs=py:write
+  .softhouse/capture/t64-zeroprincipal/src/run-harness-mutations.sh      guard=**NO**  verbs=sh:cp,py:write
+         40 | cp -R "$ROOT/.softhouse/vectors" "$dir/.softhouse/vectors"
+         42 | cp "$ROOT/.softhouse/conformance.sh" "$dir/.softhouse/conformance.sh"
+  .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py         guard=**NO**  verbs=py:shutil,py:write
+        183 | shutil.copy(os.path.join(HERE, "t83grade.go.txt"), os.path.join(dd, "main.go"))
+        226 | shutil.copy(os.path.join(ROOT, ".softhouse/vectors", f_), os.path.join(store, f_))
+  .softhouse/conformance.sh                                              guard=yes  verbs=sh:cp
+        696 | cp -R "$STORE_ROOT/." "$tmp/perturbed/"
+        711 | cp -R "$STORE_ROOT/." "$tmp/transcription/"
+        719 | cp "$STORE_ROOT/PIN.json" "$STORE_ROOT/capabilities.json" "$tmp/empty/"
+        756 | cp -R "$STORE_ROOT/." "$tmp/floaty/"
+        772 | cp -R "$STORE_ROOT/." "$tmp/overscale/"
+        786 | cp -R "$STORE_ROOT/." "$tmp/ratefactor/"
+        799 | cp -R "$STORE_ROOT/." "$tmp/corroboration/"
+        812 | cp -R "$STORE_ROOT/." "$tmp/structural/"
+        828 | cp -R "$STORE_ROOT/." "$tmp/unrecorded/"
+        854 | cp -R "$STORE_ROOT/." "$tmp/parity-money/"
+        871 | cp -R "$STORE_ROOT/." "$tmp/parity-date/"
+        887 | cp -R "$STORE_ROOT/." "$tmp/populated-unrecorded/"
+  .softhouse/handoff/T58-promote-vectors.py                              guard=**NO**  verbs=py:write
+  .softhouse/handoff/T61-promote-vectors.py                              guard=**NO**  verbs=py:write
+  .softhouse/handoff/T74-promote-vectors.py                              guard=**NO**  verbs=py:write
+  .softhouse/reviews/T84-evidence/src/exemption-demo.py                  guard=**NO**  verbs=py:shutil,py:write
+        116 | shutil.copy(os.path.join(HERE, "t83grade.go.txt"), os.path.join(dd, "main.go"))
+        149 | shutil.copy(os.path.join(ROOT, ".softhouse/vectors", f_), os.path.join(store, f_))
+
+--- IN-PLACE RESTORE IDIOMS — `git show ... > path` and `git checkout -- path`
+  .softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py   traps=0
+        148 | print("--- IN-PLACE RESTORE IDIOMS — `git show ... > path` and `git checkout -- path`")
+  .softhouse/capture/pathb/t80/prove-f1.sh                         traps=0
+         46 | git show "$PREFIX_COMMIT:.softhouse/capture/pathb/t36/attest.py" > "$W/t36/attest.py"
+         67 | git checkout -- "$W/t36/out/emiloop"
+  .softhouse/capture/pathb/t80/prove-f2.sh                         traps=0
+         24 | git show "$PREFIX_COMMIT:.softhouse/capture/pathb/t36/preconditions.sh" > "$O/.f2-prefix.sh"
+  .softhouse/capture/t91/t115-drive-mf1.sh                         traps=1
+         29 | ( cd "$ROOT" && git show "$PRE_SHA:.softhouse/capture/t91/verdict.sh" ) > "$S/verdict-PRE.sh" 2>"$S/err" || {
+  .softhouse/capture/t91/t151-drive-g4.sh                          traps=1
+         43 | (cd "$ROOT" && git show "$PRE_SHA:.softhouse/capture/t91/prove-guards.sh") > "$S/pre-pg.sh" 2>/dev/null || {
+  .softhouse/capture/t91/t151-drive-vb.sh                          traps=1
+         54 | (cd "$ROOT" && git show "$PRE_SHA:.softhouse/capture/t91/verdict.sh")  > "$PREV"  || { echo "ABORT: no PRE verdict.sh" >&2; exit 2
+         55 | (cd "$ROOT" && git show "$POST_SHA:.softhouse/capture/t91/verdict.sh") > "$POSTV" || { echo "ABORT: no POST verdict.sh" >&2; exit 
+  .softhouse/reviews/T138-evidence/r11-hygiene.sh                  traps=0
+         54 | a=$(git show "$T91:.softhouse/capture/t91/$f"  2>/dev/null | LC_ALL=C grep -ac 'LC_ALL=C')
+         55 | b=$(git show "$T115:.softhouse/capture/t91/$f" 2>/dev/null | LC_ALL=C grep -ac 'LC_ALL=C')
+         56 | c=$(git show "$T91:.softhouse/capture/t91/$f"  2>/dev/null | LC_ALL=C grep -ac 'grep -a')
+         57 | d=$(git show "$T115:.softhouse/capture/t91/$f" 2>/dev/null | LC_ALL=C grep -ac 'grep -a')
+  files using an in-place restore idiom: 7
+
+--- EVERY OTHER UNGUARDED HIT, for reading by hand
+  .softhouse/capture/actualactual/src/negative-tests.sh                  targets=CAPTURE verbs=sh:cp sandbox-only=False
+  .softhouse/capture/audit-t44/charges/bin/audit_recompute.py            targets=CAPTURE verbs=sh:cp,py:write sandbox-only=False
+  .softhouse/capture/audit-t44/charges/bin/spotcheck.py                  targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/capture/audit-t44/mathcontext/src/run-mathcontext2.sh       targets=CAPTURE verbs=sh:mv sandbox-only=False
+  .softhouse/capture/audit-t44/mathcontext/src/run-negative-tests.sh     targets=CAPTURE verbs=sh:cp,py:write sandbox-only=False
+  .softhouse/capture/charges/bin/attest-t40.py                           targets=CAPTURE,RIG verbs=py:write sandbox-only=True
+  .softhouse/capture/charges/bin/attest.py                               targets=CAPTURE,RIG verbs=py:write sandbox-only=True
+  .softhouse/capture/charges/bin/t46-exacttext.py                        targets=CAPTURE verbs=py:write_text sandbox-only=False
+  .softhouse/capture/charges/bin/t46-fix-paths.py                        targets=CAPTURE verbs=py:write_text sandbox-only=False
+  .softhouse/capture/charges/bin/t51-capture.sh                          targets=CAPTURE verbs=sh:sed-i sandbox-only=False
+  .softhouse/capture/charges/bin/t51-capture3.sh                         targets=CAPTURE verbs=sh:sed-i sandbox-only=False
+  .softhouse/capture/leapboundary/bin/t55-negative-tests.sh              targets=CAPTURE verbs=py:shutil sandbox-only=True
+  .softhouse/capture/mathcontext/src/run-mathcontext2.sh                 targets=CAPTURE verbs=sh:mv sandbox-only=False
+  .softhouse/capture/mathcontext/src/run-mathcontext3.sh                 targets=CAPTURE verbs=sh:mv,sh:cp sandbox-only=False
+  .softhouse/capture/mathcontext/src/run-negative-tests.sh               targets=CAPTURE verbs=sh:cp,py:write sandbox-only=False
+  .softhouse/capture/mathcontext/src/run-t50-tier1.sh                    targets=CAPTURE verbs=sh:mv sandbox-only=False
+  .softhouse/capture/mathcontext/src/run-t50-tier2.sh                    targets=CAPTURE verbs=sh:mv sandbox-only=False
+  .softhouse/capture/mathcontext/src/t46-assert-pathb-slot.sh            targets=CAPTURE verbs=py:write sandbox-only=True
+  .softhouse/capture/mathcontext/src/t46-negative-identity.sh            targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/capture/mathcontext/src/t50-negative-tests.sh               targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/capture/pathb/t147/mutate-blast-radius-provenance.py        targets=CAPTURE verbs=py:shutil,py:write sandbox-only=True
+  .softhouse/capture/pathb/t80/prove-f1.sh                               targets=CAPTURE,RIG verbs=sh:cp,sh:git-checkout sandbox-only=False
+  .softhouse/capture/pathb/t80/prove-f2.sh                               targets=CAPTURE,RIG verbs=sh:cp sandbox-only=False
+  .softhouse/capture/pathb/t99/prove-f3.sh                               targets=CAPTURE verbs=sh:cp sandbox-only=False
+  .softhouse/capture/pathb/t99/prove-f4.sh                               targets=CAPTURE verbs=sh:cp,py:write sandbox-only=False
+  .softhouse/capture/pathb/t99/prove-sweep-patterns.sh                   targets=CAPTURE verbs=sh:cp sandbox-only=True
+  .softhouse/capture/src/run-pass3b.sh                                   targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/capture/src/run-pass3c.sh                                   targets=PORT,CAPTURE,RIG verbs=py:write sandbox-only=False
+  .softhouse/capture/src/run-pass3d.sh                                   targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/capture/src/run-pass3e.sh                                   targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/capture/src/run-pass3f.sh                                   targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/capture/src/run-pass3g.sh                                   targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/capture/src/run-pass3h.sh                                   targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/capture/src/run-rc6-rounddown-attestation.sh                targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/capture/t100-g8-rescope/src/build_harness.py                targets=CAPTURE verbs=py:write sandbox-only=True
+  .softhouse/capture/t58-counterfactuals/src/apply-mutations-1.py        targets=PORT verbs=py:write sandbox-only=True
+  .softhouse/capture/t58-counterfactuals/src/apply-mutations-2.py        targets=PORT verbs=py:write sandbox-only=True
+  .softhouse/capture/t58-counterfactuals/src/apply-mutations-3.py        targets=PORT verbs=py:write sandbox-only=True
+  .softhouse/capture/t61-halfeven/src/run-counterfactuals.py             targets=PORT,CAPTURE verbs=py:shutil,py:write sandbox-only=True
+  .softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py        targets=PORT,CAPTURE verbs=py:shutil,py:write sandbox-only=True
+  .softhouse/capture/t83-nonamortizing/src/classify-boundary.py          targets=PORT verbs=py:write sandbox-only=False
+  .softhouse/capture/t83-nonamortizing/src/run-port.py                   targets=PORT,CAPTURE verbs=py:shutil,py:write sandbox-only=True
+  .softhouse/capture/t83-nonamortizing/src/run-t83.sh                    targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/handoff/T57-promote-emi-vectors.py                          targets=PORT,CAPTURE,RIG verbs=py:write sandbox-only=False
+  .softhouse/handoff/T61-sweep/run-sweep.py                              targets=PORT verbs=sh:mv,py:shutil,py:write sandbox-only=True
+  .softhouse/handoff/T8-promote-vectors.py                               targets=PORT,CAPTURE,RIG verbs=py:write sandbox-only=False
+  .softhouse/reviews/A2-10-probe/adjudicate-rmf-brief-literal.sh         targets=CAPTURE verbs=sh:cp,py:write sandbox-only=True
+  .softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh        targets=CAPTURE verbs=sh:cp sandbox-only=True
+  .softhouse/reviews/A2-10-probe/poison-d2-no-regression.py              targets=CAPTURE verbs=py:shutil,py:write sandbox-only=True
+  .softhouse/reviews/A2-10-probe/poison-d2-shell-matrix.sh               targets=CAPTURE verbs=sh:cp sandbox-only=True
+  .softhouse/reviews/A2-10-probe/poison-d2-transport-modes.py            targets=CAPTURE verbs=py:shutil,py:write sandbox-only=True
+  .softhouse/reviews/A2-10-probe/reissue-a2-4-corpus-property.py         targets=CAPTURE verbs=py:shutil sandbox-only=True
+  .softhouse/reviews/T135-evidence/f1-attack.sh                          targets=CAPTURE verbs=sh:cp sandbox-only=True
+  .softhouse/reviews/T135-evidence/f3-check.sh                           targets=CAPTURE verbs=sh:cp sandbox-only=True
+  .softhouse/reviews/T135-evidence/f4-check.sh                           targets=CAPTURE verbs=sh:mv,sh:cp,py:write sandbox-only=True
+  .softhouse/reviews/T135-evidence/f6-runall-red.sh                      targets=CAPTURE verbs=sh:cp sandbox-only=True
+  .softhouse/reviews/T138-evidence/r1-mf1.sh                             targets=CAPTURE verbs=sh:cp sandbox-only=False
+  .softhouse/reviews/T138-evidence/r13-vb.sh                             targets=CAPTURE verbs=sh:cp,sh:sed-i sandbox-only=True
+  .softhouse/reviews/T138-evidence/r14-g4fix.sh                          targets=CAPTURE verbs=sh:sed-i,py:write sandbox-only=True
+  .softhouse/reviews/T138-evidence/r14b-g4fix.sh                         targets=CAPTURE verbs=py:write sandbox-only=True
+  .softhouse/reviews/T138-evidence/r15-vbfix.sh                          targets=CAPTURE verbs=sh:cp,py:write sandbox-only=True
+  .softhouse/reviews/T138-evidence/r1b-mf1-red.sh                        targets=CAPTURE verbs=sh:cp sandbox-only=False
+  .softhouse/reviews/T138-evidence/r2-va.sh                              targets=CAPTURE verbs=sh:cp sandbox-only=False
+  .softhouse/reviews/T138-evidence/r4-guards-red.sh                      targets=CAPTURE verbs=sh:sed-i sandbox-only=True
+  .softhouse/reviews/T138-evidence/r5-mutate-g5-g7.sh                    targets=CAPTURE verbs=sh:sed-i sandbox-only=True
+  .softhouse/reviews/T138-evidence/r6-mf2.sh                             targets=CAPTURE verbs=sh:cp sandbox-only=True
+  .softhouse/reviews/T138-evidence/r7-mf3-mf4.sh                         targets=CAPTURE verbs=sh:cp sandbox-only=True
+  .softhouse/reviews/T84-evidence/src/classify.py                        targets=CAPTURE verbs=py:write sandbox-only=True
+  .softhouse/reviews/T84-evidence/src/eval-probe1.py                     targets=CAPTURE verbs=py:write sandbox-only=True
+  .softhouse/reviews/T84-evidence/src/eval-probe2.py                     targets=CAPTURE verbs=py:write sandbox-only=True
+  .softhouse/reviews/T84-evidence/src/gen-port.py                        targets=PORT,CAPTURE verbs=py:write sandbox-only=True
+  .softhouse/reviews/T84-evidence/src/run-port.py                        targets=PORT,CAPTURE verbs=py:shutil,py:write sandbox-only=True
+  .softhouse/reviews/t21v2/run-probe2-attested.sh                        targets=CAPTURE verbs=sh:cp sandbox-only=True
+  .softhouse/reviews/t27-probe/t27_mutate.py                             targets=CAPTURE verbs=py:write sandbox-only=True
+  .softhouse/reviews/t41-probe/edit.py                                   targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit10.py                                 targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit12.py                                 targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit13.py                                 targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit14.py                                 targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit16.py                                 targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit18.py                                 targets=PORT,RIG verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit2.py                                  targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit20.py                                 targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit21.py                                 targets=PORT,CAPTURE,RIG verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit22.py                                 targets=PORT,RIG verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit5.py                                  targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit6.py                                  targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit8.py                                  targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit_go1.py                               targets=PORT,CAPTURE,RIG verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit_go2.py                               targets=PORT,RIG verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit_go3.py                               targets=PORT,CAPTURE,RIG verbs=py:write sandbox-only=False
+  .softhouse/reviews/t41-probe/edit_go4.py                               targets=PORT,RIG verbs=py:write sandbox-only=False
+  .softhouse/reviews/t47-probe/t47_edit_2.py                             targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t47-probe/t47_edit_3.py                             targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t47-probe/t47_edit_4.py                             targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t47-probe/t47_edit_4c.py                            targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t47-probe/t47_edit_5.py                             targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t47-probe/t47_edit_6.py                             targets=CAPTURE verbs=py:write sandbox-only=False
+  .softhouse/reviews/t47-probe/t47_edit_7.py                             targets=PORT,CAPTURE,RIG verbs=py:write sandbox-only=False
+  .softhouse/reviews/t47-probe/t47_edit_8.py                             targets=PORT,CAPTURE,RIG verbs=py:write sandbox-only=False
+
+counts: enumerated=502  hits=130  unguarded=111  unreadable=0
