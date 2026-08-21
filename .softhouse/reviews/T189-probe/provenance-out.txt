@@ -1,0 +1,72 @@
+===== 1. inside a bash script launched from the Claude Code Bash tool =====
+    grep is /usr/bin/grep
+    command -v grep -> /usr/bin/grep
+    bare-grep --version -> grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+
+===== 2. inside zsh -lc (how launchd starts the real fire) =====
+    whence -a grep:
+      /usr/bin/grep
+    grep --version -> grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+
+===== 3. inside zsh -c (non-login) =====
+    grep --version -> grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+
+===== 4. env -i /bin/zsh -lc (no inherited env at all) =====
+    grep --version -> grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+
+===== 5. is the wrapper exported to children? =====
+    bash -c: file
+    zsh  -c: grep: command
+
+===== 6. the claude binary run as ugrep — what does it report? =====
+    CLAUDE_BIN=/Users/buv/.local/share/claude/versions/2.1.233
+    ugrep 7.5.0 aarch64-apple-macosx +neon/AArch64; -P:pcre2jit; -z:zlib,bzip2,zstd,brotli,7z,tar/pax/cpio/zip
+    License: BSD-3-Clause; ugrep user manual: <https://ugrep.com>
+    Written by Robert van Engelen and others: <https://github.com/Genivia/ugrep>
+
+===== 7. the BSD 'third mode' — exact stdout bytes, NUL fixture, no -a =====
+--- shape=file ---
+  exit=0
+  stdout od -c:
+    0000000    B   i   n   a   r   y       f   i   l   e       /   U   s   e
+    0000020    r   s   /   b   u   v   /   g   e   r   e   g   e   -   n   b
+    0000040    f   i   /   .   c   l   a   u   d   e   /   w   o   r   k   t
+    0000060    r   e   e   s   /   a   g   e   n   t   -   a   2   2   b   e
+    0000100    6   5   9   b   a   8   c   e   2   9   7   0   /   .   s   o
+    0000120    f   t   h   o   u   s   e   /   r   e   v   i   e   w   s   /
+    0000140    T   1   8   9   -   p   r   o   b   e   /   f   i   x   t   u
+    0000160    r   e   s   /   b   -   n   u   l   .   t   x   t       m   a
+    0000200    t   c   h   e   s  \n                                        
+    0000206
+  stderr:
+--- shape=redir ---
+  exit=0
+  stdout od -c:
+    0000000    B   i   n   a   r   y       f   i   l   e       (   s   t   a
+    0000020    n   d   a   r   d       i   n   p   u   t   )       m   a   t
+    0000040    c   h   e   s  \n                                            
+    0000045
+  stderr:
+--- shape=pipe ---
+  exit=0
+  stdout od -c:
+    0000000    B   i   n   a   r   y       f   i   l   e       (   s   t   a
+    0000020    n   d   a   r   d       i   n   p   u   t   )       m   a   t
+    0000040    c   h   e   s  \n                                            
+    0000045
+  stderr:
+
+===== 8. same NUL fixture WITH -a (the live flags) =====
+--- shape=file exit=0 ---
+    0000000    k   e   e   p   -   m   e  \n  \0   b   i   n   a   r   y  \n
+    0000020    a   l   s   o   -   k   e   e   p  \n                        
+    0000032
+--- shape=redir exit=0 ---
+    0000000    k   e   e   p   -   m   e  \n  \0   b   i   n   a   r   y  \n
+    0000020    a   l   s   o   -   k   e   e   p  \n                        
+    0000032
+--- shape=pipe exit=0 ---
+    0000000    k   e   e   p   -   m   e  \n  \0   b   i   n   a   r   y  \n
+    0000020    a   l   s   o   -   k   e   e   p  \n                        
+    0000032
+===== DONE =====

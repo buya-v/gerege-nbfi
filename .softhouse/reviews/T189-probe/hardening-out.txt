@@ -1,0 +1,28 @@
+=== S1  ONLY .softhouse/LOCK untracked  (all three MUST be empty) ===
+    raw> ?? .softhouse/LOCK
+  live     : []
+  wrapped  : []
+  proposed : []
+
+=== S2  LOCK + a real modification + a real new file (all three MUST list both, and NOT LOCK) ===
+    raw>  M base.txt
+    raw> ?? .softhouse/LOCK
+    raw> ?? new_deliverable.go
+  live     : [ M base.txt;?? new_deliverable.go;]
+  wrapped  : [ M base.txt;?? new_deliverable.go;]
+  proposed : [ M base.txt;?? new_deliverable.go]
+
+=== S3  T172's regression: a LOCK-PREFIXED sibling must NOT be swallowed ===
+  live     : [ M base.txt;?? .softhouse/LOCKED_STATE.md;?? new_deliverable.go;]
+  wrapped  : [ M base.txt;?? .softhouse/LOCKED_STATE.md;?? new_deliverable.go;]
+  proposed : [ M base.txt;?? .softhouse/LOCKED_STATE.md;?? new_deliverable.go]
+
+=== S4  a non-ASCII (valid UTF-8) path present — porcelain C-quotes it ===
+  live     : [ M base.txt;?? .softhouse/LOCKED_STATE.md;?? new_deliverable.go;?? "\320\260\320\266\320\270\320\273.go";]
+  wrapped  : [ M base.txt;?? .softhouse/LOCKED_STATE.md;?? new_deliverable.go;?? "\320\260\320\266\320\270\320\273.go";]
+  proposed : [ M base.txt;?? .softhouse/LOCKED_STATE.md;?? new_deliverable.go;?? "\320\260\320\266\320\270\320\273.go"]
+
+=== S5  git status FAILS (run outside any repo): who reports it? ===
+  live     : []  <-- empty means 'clean'
+  proposed : rc=128  out=[]  <-- rc is visible, so the guard can refuse
+=== DONE ===

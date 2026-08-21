@@ -1,0 +1,47 @@
+===== A. which grep resolves under the EXACT launchd PATH, in the script's own interpreter =====
+  launchd PATH = /Users/buv/.local/bin:/opt/homebrew/bin:/usr/local/bin:/Applications/Docker.app/Contents/Resources/bin:/usr/bin:/bin:/usr/sbin:/sbin
+    /usr/bin/grep
+    -> grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+  (fire-program.sh is #!/bin/zsh; launchd runs /bin/zsh -lc <script>, so the script
+   itself is a NON-login NON-interactive zsh: reads /etc/zshenv + ~/.zshenv only.)
+  /etc/zshenv exists? NO
+  ~/.zshenv exists?   NO
+
+===== B. can a poisoned byte reach a 'git status --porcelain' line at all? =====
+--- B1: try to CREATE a filename containing an invalid UTF-8 byte (APFS) ---
+    OSError(92, 'Illegal byte sequence') — filesystem REFUSED it
+--- B2: try a filename containing a NUL byte ---
+    ValueError: embedded null byte — refused
+--- B3: what does git status --porcelain emit for a NON-ASCII (valid UTF-8) name? ---
+    core.quotePath = (unset -> default true)
+    0000000    ?   ?       "   \   3   2   0   \   2   6   0   \   3   2   0
+    0000020    \   2   6   6   \   3   2   0   \   2   7   0   \   3   2   0
+    0000040    \   2   7   3   _   \   3   2   0   \   2   7   5   \   3   2
+    0000060    1   \   2   1   5   \   3   2   0   \   2   7   4   \   3   2
+    0000100    1   \   2   1   5   \   3   2   0   \   2   7   3   \   3   2
+    0000120    1   \   2   0   2   .   g   o   "  \n                        
+    0000132
+
+===== C. red/green: the live line vs the proposed hardening, on a REAL repo =====
+  live line 224: DIRTY=$(git status --porcelain | LC_ALL=C grep -av '^?? \.softhouse/LOCK$' || true)
+--- C1 live line (BSD, -av) ---
+    |  M base.txt
+    | ?? .softhouse/
+    | ?? "\320\260\320\266\320\270\320\273_\320\275\321\215\320\274\321\215\320\273\321\202.go"
+--- C2 live pattern through the ugrep WRAPPER ---
+    |  M base.txt
+    | ?? .softhouse/
+    | ?? "\320\260\320\266\320\270\320\273_\320\275\321\215\320\274\321\215\320\273\321\202.go"
+--- C3 proposed: git pathspec exclusion, no grep at all ---
+    |  M base.txt
+    | ?? .softhouse/
+    | ?? "\320\260\320\266\320\270\320\273_\320\275\321\215\320\274\321\215\320\273\321\202.go"
+
+--- C4 same three, with ONLY .softhouse/LOCK dirty (must all be EMPTY) ---
+  live:     [?? .softhouse/;?? "\320\260\320\266\320\270\320\273_\320\275\321\215\320\274\321\215\320\273\321\202.go";]
+  wrapped:  [?? .softhouse/;?? "\320\260\320\266\320\270\320\273_\320\275\321\215\320\274\321\215\320\273\321\202.go";]
+  proposed: [?? "\320\260\320\266\320\270\320\273_\320\275\321\215\320\274\321\215\320\273\321\202.go";]
+
+--- C5 does git status itself failing produce a silent 'clean'? ---
+  git status in a NON-repo -> DIRTY=[]  (empty => guard concludes 'clean')
+===== DONE =====
