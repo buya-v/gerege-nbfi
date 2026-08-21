@@ -949,7 +949,9 @@ of them was in **prose**, not in a measurement. So:
 3. **Sweep for the concept, never for the wording** (P-21 / P-26) — including your own change of
    mind. A correction you later reverse leaves its own restatements behind as fossils, and they are
    the most convincing fossils in the document because they were written by the person who now knows
-   better. Then **write down what the sweep could not have found**.
+   better. **A site list handed to you by a reviewer is a starting point, never the sweep** — T129
+   named five sites for that `tasks.json` fossil and a concept-grep found **seven**. Then **write
+   down what the sweep could not have found**.
 4. **Exact arithmetic only, including for display** (P-25). Any number re-derived for this section is
    integer minor units or `fractions.Fraction`; a float in an analysis script has already put a wrong
    count in front of the decision-maker once.
