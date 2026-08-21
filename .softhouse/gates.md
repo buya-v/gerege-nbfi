@@ -916,6 +916,12 @@ regulatory sign-off and licence facts are equally untouched and are not in Run 1
   backwards, and it carried the superseded **18**-refutation count. **T112 deleted it in the same
   commit that landed this section**, so this is now the only G-8 write-up in this file. Nothing it
   said correctly is lost; everything is restated below, scoped to the family it belongs to.
+  **That claim was audited claim-by-claim twice — by T114, which found exactly one loss (T84's
+  12-cell tenant-id/reversed-order re-ask, restored above), and again by T122, which re-read the
+  deleted block end to end and restored one further provenance clause (T83's probe topology: no
+  server, no database connection). Verified on a scratch merge into current `main` in a throwaway
+  clone: the merged file carries exactly ONE `## G-8` heading, and the only surviving mentions of the
+  deleted block are this bullet naming it.**
 
 ### Read this first: G-8 is TWO phenomena, and a remedy for one is not a remedy for the other
 
@@ -993,7 +999,15 @@ non-amortization predicts no order dependence at all"*,
 
 ### What was measured, and over what domain
 
-**T83's sweep — 330 cells, all family A** [T83, branch `softhouse/T83-nonamortizing-boundary`;
+**T83's sweep — 330 cells, all family A** [T83, branch `softhouse/T83-nonamortizing-boundary`. The
+probe is the **in-process Path A embeddable seam** in a throw-away container built from the pinned
+oracle image: it **does not start the Fineract server and opens no database connection**, and it
+writes nothing to the running reference-oracle container or its PostgreSQL database
+[VERIFIED by T122 at `src/run-t83.sh:5-10`; the seam source is pinned by `cmp` against the pinned
+checkout **and** by a sha256 literal in the script at `:99-107`, because two files mutated the same
+way compare equal under `cmp`]. Its prediction was committed as a strict ancestor of its evidence,
+and it calibrates against two already-committed captures with **zero input differences including
+tenant id**;
 reproduced by T84 byte-identically, canonical sha256 `01b41d9c…3101b`, 332 cases; T84 additionally
 re-asked **12 boundary cells with different tenant ids and in reversed order — 12 of 12 identical**,
 so the boundary is neither tenant-dependent nor order-of-emission dependent [`T84-review-t83.md`
