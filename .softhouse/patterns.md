@@ -1183,3 +1183,72 @@ would have become documentation of the corpus's blindness at the exact moment th
 pipeline wants: the brief is not evidence, and a task that can only be completed by asserting something false
 should come back refuted rather than complete. Fifth time a worker has caught the driver (P-20).
 
+
+---
+
+### Run 2026-08-21-run2-tierA-gl-accounting-A2 — slice A2 + carried money work (21 Aug 2026, local fire `20260821-054355`)
+
+- **What worked**: seven workers dispatched, **seven completed, zero live at exit**, no isolation violation,
+  no scope breach. `main` moved **42 → 43 parity vectors**, and the 43rd arrived **with** its review.
+- **What the independent reviewers caught** — the count that matters, and it was four for four:
+  - **T153 → T149**: MICRO-FIX. Two sentences claimed a tighter control than they held. It **measured the
+    missing control** (0 money-cell differences) rather than arguing, so both conclusions survived and only
+    the wording fell. It also re-observed the tie live and got responses **byte-for-byte identical** to
+    T149's, plus a *cleaner* counterfactual than T149 had, and re-derived **all twelve periods in exact
+    rational arithmetic** — a check T149 never ran.
+  - **A2-10 → A2-5**: found a **P-22 regression the fix task itself introduced** — `islink` clauses made a
+    symlinked fabrication invisible to `verify`, which the *pre-fix* code caught. **Third recorded instance
+    of a task sent to fix a P-22 defect opening another.** It also adjudicated all three of A2-5's
+    deviations by **building the prescribed fix and running it**, not by reasoning about it.
+  - **A2-7 → the driver**: refuted the driver's central premise and **acted on its own measurement instead
+    of the brief**, creating zero accounts because there were none to create.
+  - **A2-2 → A2-1** (carried in): corrected the driver's own `OBL-A3-1` ruling at the mechanism level.
+- **Vectors added / contexts at parity**: +1 parity vector (43 total, 5664 cells). No context cut over.
+- **Verifier on merged `main`**: probe `up` · conformance **exit 0, 43 PASS / 0 FAIL** · 0 invariant
+  violations · 0 assertions NOT RUN · `go1.26.6` build 0 / vet 0 / test ok · `gofmt -l` = exactly
+  `contract.go` (G-3, expected).
+
+**P-40 — An enumerator with a bare `except: continue` is a silent-skip guard, and the driver shipped one
+inside a gate decision.** To size a gap for G-9, the driver walked `out/**/*`, called `json.load` on each
+file inside `try/except Exception: continue`, and matched only dicts carrying **both** `glCode` and `name`.
+That swallowed every psql `.txt` dump — which is where the captured state actually lives — and every POST
+body, then **reported the surviving subset as the whole with no signal it had skipped anything.** It
+produced the confident, false claim *"the corpus holds 2 of the 9 mandatory accounts, and all four accounts
+are ASSET"*, when `main` already held **21 accounts across all five classifications** and a product with
+**all nine slots mapped**. A2-7 refuted it in its first minutes. *Rule: an enumerator must count what it
+skipped and say so. If it cannot parse a file it must name it, not drop it. `except: continue` over a
+directory you are measuring is the same defect as a guard that cannot fail — and it is worse in a gate
+decision, because the number gets ratified.*
+
+**P-41 — Use `git diff main...branch` (three dots), never two, while a fire is running.** `main` moves
+during a fire, and `main..branch` renders **main's own advances as the branch's deletions**. A2-6's
+scope check appeared to show it deleting 71 lines of `gates.md` and 84 of `tasks.json`; the merge-base diff
+showed exactly two files, both in scope. **The `/softhouse` SKILL.md STEP 5 text prescribes the two-dot
+form and is wrong.** Every scope check and every fork-freshness check in this program should use three dots.
+
+**P-42 — A brief's premise is not evidence, and the driver must re-derive its own before dispatch.** The
+driver wrote three "already measured" traps into A2-8's brief on A2-1's authority, then re-derived them
+from source *before* the task could be acted on. Both A2-1 claims were confirmed exactly — and the check
+found **a third hazard nobody had recorded**: across `CashAccountsForLoan`/`AccrualAccountsForLoan` the
+name↔code relation is **not a function in either direction** (`FEES_RECEIVABLE` is 25 under cash, 8 under
+accrual), so keying on the code cross-maps *and* keying on the name cross-maps. The fourth trap was
+deliberately **not** checked and was marked as unconfirmed rather than half-verified. *Rule: re-derive the
+premises you author before a worker spends a run on them; mark what you did not check as not checked.*
+
+**P-43 — Consolidate colliding tasks; do not run three workers over one defect surface.** T120, T132 and
+T143 were three views of the same guard with overlapping `files_hint`. Three concurrent workers would have
+produced contradictory guards; merged into T154 with a paired reviewer, all three legs landed coherently and
+each brief number reproduced exactly. *Corollary: the superseded rows stay in `tasks.json` and
+`obligations.md` marked `superseded_by`, never deleted — the content is the evidence.*
+
+**P-44 — Register the paired reviewer when you notice it missing, not after the work lands.** The driver
+dispatched A2-5 as a `coder` with **no paired reviewer** — the identical plan-gate rule-1 violation that
+left T149 unmerged. Caught mid-flight by running the plan gate over the driver's *own* additions, and A2-10
+was registered while A2-5 was still working. A2-10 then found a real regression. *Rule: run the plan gate
+over tasks you add yourself, with the same rigour as over a planner's output — the driver is not exempt from
+its own checklist.*
+
+**P-45 — A test-only guard is not a guard.** T154's float-literal census is called from **`Run`**, not only
+from the Go test, because `conformance.sh` never invokes `go test` — a test-only fix would have left the
+third silent green standing while looking fixed. *Rule: when hardening a check, verify the path that
+actually executes in CI/conformance calls it, not merely that a test does.*
