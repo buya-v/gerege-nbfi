@@ -881,7 +881,7 @@
       "executor": "agent",
       "model": "opus",
       "target": "docs",
-      "status": "in_progress",
+      "status": "done",
       "attempts": 1,
       "dependencies": [
         "T173"
@@ -891,7 +891,7 @@
         ".softhouse/capture/"
       ],
       "description": "INDEPENDENT review of T173. Re-derive; do not accept the author's conclusions. Read the upstream handoff from the BRANCH (git show <branch>:.softhouse/handoff/<run_id>/T173.md) and the diff with git diff main...<branch> (THREE DOTS, P-41). Drive the author's guard/probe yourself: a guard that was never driven RED is not shipped (P-22), a prover must be falsifiable toward the FIX as well as the defect (P-50), and a check that inspects zero items is an ERROR not a pass (P-35). Verdict APPROVED / MICRO-FIX (<=10 lines, mechanical, never a number) / REJECTED with specifics. If you find nothing, state what you checked so silence is distinguishable from not looking.",
-      "note": "Registered by the driver at dispatch of T173 (plan gate rule 1: every coder/analyst task gets a paired reviewer). | dispatched local fire 20260821-125942 batch 2; brief carries the P-59 non-empty-diff assertion",
+      "note": "MERGED. Verdict MICRO-FIX. T173 holds: guards reached at grade time, non-vacuous, every census number reproduced under a self-stated rule cross-checked with jq. Non-micro finding FU-T184-1 raised as T194; F1/F2 raised as T195.",
       "branch": "softhouse/T184-review-t173"
     },
     {
@@ -1134,6 +1134,46 @@
       "status": "pending",
       "attempts": 0,
       "note": "raised by T186 (FU-2), local fire 20260821-125942. Serialised behind T191 -- both edit conformance.sh."
+    },
+    {
+      "id": "T194",
+      "title": "P-35 INSIDE THE P-35 MACHINERY \u2014 the harness reads the census line's PRESENCE and never its NUMBERS, so a 0/0/0 stub is a PASS",
+      "description": "T184's FU-T184-1, driver-confirmed by reading _run_capture_guard in conformance.sh. The function tests 'census_lines -eq 0' -- the COUNT OF LINES matching ^CENSUS -- and never parses the figures on them. A guard replaced by a stub that prints 'CENSUS 0 files / 0 dirs' and exits 0 yields exit 0, VERDICT PASS (T184 verified this end to end). The comment directly above the test reads 'THE CENSUS LINE MUST BE PRESENT BEFORE ITS VALUE IS READ' -- and the value is never read. The selftest gate has the identical shape: 'cases' counts lines matching '^  -> exit ' so a stub printing ONE such line passes with 'selftest OK, 1 cases' where the real guard reports 5. So the machinery built to prove a guard is not silent proves only that it SPOKE, not that it INSPECTED ANYTHING. Fix: parse the census figures and require a floor that is DERIVED, not hard-coded -- a hard-coded floor becomes stale and then becomes a second silent pass. T184's own suggestion is worth weighing: the guards' P-35 enforcement lives inside the Python, which T173's FU-3 notes NOTHING HASHES, so consider whether the durable fix is to hash the guard scripts rather than to parse their output. DRIVE IT RED (P-22) with an actual stub and GREEN (P-50) with the real guards, and drive the SELFTEST-COUNT direction red too -- both gates have the defect, and fixing only the census one converts a known hole into a hidden one. NOTE T191 DOES NOT CLOSE THIS: different mechanism (T191 fixed EPIPE inversion, this is never-reading-the-value).",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        ".softhouse/conformance.sh"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T184",
+        "T191"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "raised by T184 (FU-T184-1), driver-confirmed by direct reading of _run_capture_guard. Serialise with T192/T193 -- all edit conformance.sh."
+    },
+    {
+      "id": "T195",
+      "title": "T184's two mechanical findings on T173 \u2014 the round-trip property is named more strongly than implemented, and the FROZEN/NEW split is invisible on a passing run",
+      "description": "T184 supplied both diffs UNAPPLIED because conformance.sh belonged to T191 at the time. Apply them, having re-derived each first. F1: the guard's property is byte-preservation under a PYTHON json.load/json.dumps round trip, NOT a binary-double one. Integer tokens go through int() and can never be flagged -- T184 measured 9007199254740993 and 12345678901234567890 passing the guard while a true binary-double round trip mangles both. The implementation is FAITHFUL to T163's defect model; it is the SENTENCE describing it that overstates the cover. This matters because INTEGER MINOR UNITS IS EXACTLY THE CLASS IT WAVES THROUGH, and because T186's merged ruling credits byte-preservation as the necessary-and-sufficient condition for a value to survive Fineract's one genuine Java double (ChargeRequest.java:41). T186 ruled on the PROPERTY; T184 measured that the IMPLEMENTATION does not carry it for integers. Do NOT silently widen the guard to close the gap -- T173 chose the weaker property deliberately, because a blanket ban would refuse the entire committed corpus and pin conformance at exit 2. Either correct the WORDING to match the implementation, or widen the implementation AND show the corpus still passes; say which you did and why. F2: the FROZEN/NEW split is invisible on a passing run because the line lacks the 'CENSUS ' prefix _run_capture_guard filters on, while T173's handoff claims it is 'printed by every conformance run' -- measured false, one word.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        ".softhouse/conformance.sh",
+        ".softhouse/capture/lib/"
+      ],
+      "context": "harness",
+      "dependencies": [
+        "T194"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "raised by T184 (F1, F2). Serialised behind T194 -- both edit conformance.sh."
     }
   ],
   "cross_corroboration": {
