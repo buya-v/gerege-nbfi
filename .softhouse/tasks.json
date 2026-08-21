@@ -2264,9 +2264,9 @@
       "dependencies": [
         "T91"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 0,
-      "note": "Raised by the driver, local fire 20260820-230001, from T91's non-reproduction of a T80 claim. NEEDS NO ORACLE - pure local tooling. Good cloud-fire work. || local fire 20260821-080001: KEPT IN SCOPE AND DISPATCHED. The driver proposed de-scoping this as overlapping T107b section 7; T107b REFUSED that and was right - the BSD half is now settled by two independent workers (T80 wrong, T91 right, BSD grep 2.6.0-FreeBSD matched 18/18) but the UGREP half is OPEN, not closed: there is no ugrep on this host at all, so T107's [VERIFIED] badge on it was downgraded to [UNVERIFIED] with ZERO committed evidence behind it. FOUR WORKERS HAVE NOW MADE FOUR DIFFERENT CLAIMS ABOUT ONE GREP. Brief widened accordingly: the answer space explicitly includes 'a tool not present on this host at all', every measurement gets a committed transcript with command + tool version + locale + hexdump, and 'T80 was simply wrong' is an acceptable finding."
+      "note": "Raised by the driver, local fire 20260820-230001, from T91's non-reproduction of a T80 claim. NEEDS NO ORACLE - pure local tooling. Good cloud-fire work. || local fire 20260821-080001: KEPT IN SCOPE AND DISPATCHED. The driver proposed de-scoping this as overlapping T107b section 7; T107b REFUSED that and was right - the BSD half is now settled by two independent workers (T80 wrong, T91 right, BSD grep 2.6.0-FreeBSD matched 18/18) but the UGREP half is OPEN, not closed: there is no ugrep on this host at all, so T107's [VERIFIED] badge on it was downgraded to [UNVERIFIED] with ZERO committed evidence behind it. FOUR WORKERS HAVE NOW MADE FOUR DIFFERENT CLAIMS ABOUT ONE GREP. Brief widened accordingly: the answer space explicitly includes 'a tool not present on this host at all', every measurement gets a committed transcript with command + tool version + locale + hexdump, and 'T80 was simply wrong' is an acceptable finding. || local fire 20260821-080001: DONE on softhouse/T108-grep-adjudication (50e8869). RULING: on this host the token 'grep' NAMES TWO DIFFERENT PROGRAMS and which one you get depends on WHERE YOU TYPE IT - inside a script it is /usr/bin/grep (BSD grep 2.6.0-FreeBSD, since shell functions are not exported to children); typed into the Claude Code Bash tool it is a SHELL FUNCTION from ~/.claude/shell-snapshots/<session>.sh that re-execs the claude binary with argv[0]=ugrep, i.e. ugrep 7.5.0 with -I HARD-CODED; and 'command grep'/'command -v grep' bypass the function BY DESIGN. There is no standalone ugrep binary - ugrep is EMBEDDED IN THE claude EXECUTABLE. That single fact explains all four contradictory claims: NOBODY LIED AND NOBODY WAS CARELESS WITH A NUMBER. The two programs fail in OPPOSITE ways: BSD grep goes blind to the rest of ONE LINE at and right of an invalid byte in a UTF-8 locale (count 0, exit 1, no stderr) - LC_ALL=C fixes it, -a does NOT; ugrep -I skips the WHOLE FILE printing nothing at all, not even 0 (exit 1, no stderr) - -a fixes it, LC_ALL=C does NOT. SO 'LC_ALL=C grep -a' IS RIGHT AND BOTH TOKENS ARE LOAD-BEARING AGAINST TWO DIFFERENT PROGRAMS; nothing was weakened and only the false reason was replaced. MATRIX: 360 cells (13 byte-exact shapes x 4 tools x 3 locales x 2 flag sets), SILENT-MISS 12, LOUD-MISS 0; BSD rows move with the LOCALE and not with -a, ugrep rows move with -a and not at all with the locale; the 12 BSD misses are exactly the three shapes where the invalid byte sits BEFORE the match ON THE SAME LINE; 'LC_ALL=C grep -qaF' is the only cell correct against both tools. WHAT T80 SAW, reproduced from first principles: the unbraced $PIN_PG_MAJOR_MINOR... yields 'PIN_PG_MAJOR_MINOR\\xe2: unbound variable' - a lone 0xE2, BEFORE the matched words, SAME LINE - and T80 was writing a SCRIPT, so it had BSD grep. ITS QUOTED NUMBERS REPRODUCE EXACTLY; only its summary sentence over-reached, saying 'a FILE' where the truth is 'the rest of a LINE', thereby describing the OTHER tool's failure mode. T91's NON-REPRODUCTION IS WITHDRAWN: its committed G-4 probe could not have reproduced T80 for two independent reasons - its Python splice puts the poison AFTER the match at end-of-line, and BOTH ARMS RUN UNDER LC_ALL=C, the very mitigation under test. T107 WAS RIGHT and T107b's C-7 downgrade should be RETIRED: T107b's probes used 'command -v' and ran from a script, both blind to a shell function BY CONSTRUCTION. NEW FINDING F-T108-1, AND IT REACHES A MONEY GUARD: conformance.sh:184 guard_no_float_in_vectors and :201 guard_no_float_in_harness are bare 'grep -Eq' with NEITHER TOKEN - driver confirmed both call sites - so a vector file carrying a float plus one invalid byte before it on the same line makes THE FLOAT GUARD SILENTLY PASS. That guards a CLAUDE.md non-negotiable. Routed to T132; conformance.sh was on T108's stay-out list and it correctly did not edit it. Now P-33. AWAITING REVIEW T131."
     },
     {
       "id": "T109",
@@ -2639,6 +2639,39 @@
       ],
       "description": "Applies F-T121-1: T113 replaced a false reason with a DIFFERENT false reason - read also strips ONE trailing non-whitespace IFS delimiter when it occurs exactly once and is final - correct at conformance.sh:171-174, interpreter-matrix.sh:142-145 and T113.md:346-348. AND removes the underlying hazard: the probe token survives truncation only by an ACCIDENT OF SPELLING (its final 'e' recurs in 'conformance'), so the guard's correctness rests on a coincidence a rename would silently break. Make the token structurally immune or assert it round-trips, and DRIVE IT RED by renaming to a truncatable spelling. Plus F-T121-2 (three more print-without-asserting scripts - the concept T113 swept only as a sentence) and F-T121-3 (conformance.sh:59, and exit 2 now formally ambiguous since T110). Retires N-T113-5: bash 4.x measured, boundary bracketed to (4.4, 5.3.9].",
       "note": "Raised and dispatched by the driver, local fire 20260821-080001."
+    },
+    {
+      "id": "T131",
+      "title": "INDEPENDENT review of T108 — the two-programs ruling and the float-guard hole",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [
+        "T108"
+      ],
+      "files_hint": [
+        ".softhouse/reviews/"
+      ],
+      "description": "Paired reviewer for T108. Test the load-bearing claim hardest and by more than one method: that 'grep' names BSD grep inside a script and an embedded-ugrep shell function in the Claude Code Bash tool. Re-run the 360-cell matrix from the committed generator. Rule on the three withdrawals (T80 substantially vindicated, T91's non-reproduction withdrawn, T107 vindicated and T107b's C-7 downgrade retired). And demonstrate F-T108-1 yourself, ruling LATENT vs LIVE: whether any committed vector can trigger the silent float-guard pass today.",
+      "note": "Raised and dispatched by the driver, local fire 20260821-080001."
+    },
+    {
+      "id": "T132",
+      "title": "The no-float guards are bare grep — a money non-negotiable can silently pass",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [
+        "T130",
+        "T131"
+      ],
+      "files_hint": [
+        ".softhouse/conformance.sh"
+      ],
+      "description": "T108's F-T108-1, driver-confirmed at both call sites. conformance.sh:184 guard_no_float_in_vectors and :201 guard_no_float_in_harness use bare 'grep -Eq' with NEITHER LC_ALL=C NOR -a. Per T108's 360-cell matrix that means a vector file containing a float plus ONE INVALID BYTE BEFORE IT ON THE SAME LINE makes the float guard SILENTLY PASS - and this guards the first non-negotiable in CLAUDE.md, that money is integer minor units with no floating point anywhere. Apply the two-token fix ('LC_ALL=C grep -qaF' shape, per T108's exact replacement text in its handoff) at BOTH sites, and sweep conformance.sh and every rig for OTHER bare greps whose result is load-bearing (P-26: sweep the concept, not the sentence). DRIVE IT RED with a poisoned scratch vector before the fix and green after (P-22), and confirm the legitimate 42-vector store still gives PASS exit 0 / 5576 cells unchanged.",
+      "note": "Raised by the driver, local fire 20260821-080001, from T108's F-T108-1. Sequenced after T130 and T131, which hold conformance.sh and rule on latent-vs-live respectively. NEEDS THE ORACLE to re-run the harness."
     }
   ]
 }

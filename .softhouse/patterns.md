@@ -629,6 +629,37 @@ inside the task sent to fix the second.
 > in the write-up. A plausible, internally consistent result over the wrong file is indistinguishable from a
 > correct one — so the check must happen before the analysis, not after it looks odd.
 
+### P-33. A tool claim is a claim about a binary, a version, a locale, an invocation AND an input shape — name all five
+
+**Fire `20260821-080001`, T108, settling a four-way contradiction that had been committed as evidence for three
+days.** T80 said BSD `grep -a` silently matches nothing in a UTF-8 locale on a file with an invalid multibyte
+sequence. T91 could not reproduce it. T107 said it *had* reproduced it — with `ugrep -I`. T107b could not find
+`ugrep` on the host at all and downgraded T107's `[VERIFIED]`. Four workers, four claims, all committed.
+
+**Nobody lied and nobody was careless with a number. On this host the token `grep` names two different programs,
+and which one you get depends on where you type it:**
+
+| where `grep` is typed | what runs |
+|---|---|
+| inside a script (`sh x.sh`, `bash x.sh`) | `/usr/bin/grep` — **BSD grep**. Shell functions are not exported to children. |
+| into the Claude Code **Bash tool** | a **shell function** re-execing the `claude` binary with `argv[0]=ugrep` — **ugrep with `-I` hard-coded** |
+| `command grep` / `command -v grep` | BSD grep — the function is bypassed **by design** |
+
+And the two programs fail in **opposite** ways: BSD grep goes blind to the rest of **one line** at and right of the
+invalid byte, which **`LC_ALL=C` fixes and `-a` does not**; ugrep `-I` skips the **whole file**, which **`-a` fixes
+and `LC_ALL=C` does not**. So `LC_ALL=C grep -a` is right, and **both tokens are load-bearing against different
+programs** — the hardening was correct all along and only its stated reason was wrong (P-11).
+
+The two failed reproductions failed for reasons worth naming. T91's probe put the poison **after** the match at
+end-of-line, and **ran both arms under `LC_ALL=C`** — the very mitigation under test. T107b used `command -v` and
+ran from a script: **both blind to a shell function by construction.**
+
+> **Rule.** Before recording a tool's behaviour, pin all five of **binary, version, locale, invocation path and
+> input shape**, and put them in the transcript. Use `type -a`, never `command -v`, when the question is *which
+> program runs*. Never run both arms of a comparison under the mitigation you are testing. And *N*-of-*N* green
+> cells refute nothing unless the failing shape is among the *N* — "I could not reproduce it" is a statement about
+> your probe until you have shown your probe can produce the effect at all.
+
 <!-- LEARNED PATTERNS END -->
 
 ### Run 2026-08-17-run1-harness-schedule-poc — fire `20260819-170001` (local, oracle REACHABLE) — 2026-08-19
