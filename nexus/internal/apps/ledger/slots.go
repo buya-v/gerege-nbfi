@@ -35,16 +35,16 @@ import (
 // there is no single keying that is safe, and the only correct model is
 // separate types.
 //
-// WHAT THIS FILE GUARANTEES, AND WHAT IT DOES NOT.
+// WHAT THE COMPILER ENFORCES HERE, AND WHAT IT DOES NOT.
 //
-// Guaranteed by the compiler: the five slot types are distinct named types with
+// Enforced by the compiler: the five slot types are distinct named types with
 // distinct constant spaces and no shared parent enum. No IMPLICIT conversion
 // exists in either direction; a function that takes a CashLoanSlot cannot be
 // called with an AccrualLoanSlot; a map keyed by one cannot be indexed by the
 // other; and the Slot interface below is closed by an unexported method, so a
 // raw integer can never be passed where a placeholder is expected.
 //
-// NOT guaranteed by the compiler, stated plainly rather than papered over: Go
+// NOT enforced by the compiler, stated plainly rather than papered over: Go
 // permits an EXPLICIT numeric conversion between two named integer types, so
 // AccrualLoanSlot(CashLoanFeesReceivable) compiles and yields
 // AccrualLoanIncomeFromBuyDown. Nothing in the language can stop that. What
