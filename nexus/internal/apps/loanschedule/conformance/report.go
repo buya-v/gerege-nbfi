@@ -25,6 +25,22 @@ func WriteReport(w io.Writer, s *Summary) {
 	} else {
 		p("=== GOLDEN-VECTOR CONFORMANCE — Fineract reference oracle vs Go module ===")
 	}
+	// THE GRADED CHECKOUT, PRINTED WHETHER OR NOT ANYTHING IS WRONG (P-35).
+	//
+	// One root decides four things — the corpus, the no-float census tree, the
+	// contract.go that is hashed against the store pin, and the checkout every
+	// capture_ref is resolved in. Until T165 that root was `FindRepoRoot(".")`,
+	// the caller's WORKING DIRECTORY, and no line of this report named it. One
+	// binary compiled from a tree carrying an unratified edit to the frozen
+	// DEC-1 contract printed exit 2 from its own tree and VERDICT: PASS from a
+	// clean sibling checkout — and the passing report was indistinguishable from
+	// an honest one, because nothing in it said which tree had been read.
+	//
+	// So the root is printed, and HOW it was decided is printed beside it, and
+	// the working directory's own answer is printed under it even when the two
+	// agree. A line that only appears when something is wrong cannot be told
+	// apart from a line that never runs.
+	writeRepoRootLines(p, s)
 	p("    store           %s", s.StoreRoot)
 	if s.ContextFilter != "" {
 		p("    context filter  %s", s.ContextFilter)
@@ -362,6 +378,70 @@ func sortedKeys[V any](m map[string]V) []string {
 	}
 	sort.Strings(out)
 	return out
+}
+
+// writeRepoRootLines prints WHICH checkout was graded and HOW that was decided.
+//
+// Every branch prints something. There is no arm of this function that stays
+// silent, because the failure it exists to expose — a run that graded a tree the
+// reader did not expect — looked exactly like a healthy run until T165 measured
+// it. Deterministic: no map iteration, no time, no set ordering (T90).
+func writeRepoRootLines(p func(string, ...any), s *Summary) {
+	res := s.RepoRootRes
+
+	switch {
+	case res.Root != "" && res.Source == RepoRootFromBuildAnchor:
+		p("    repo root       %s", res.Root)
+		p("                    resolved from the BUILD ANCHOR — the tree this binary was compiled from")
+		p("                    anchor: %s", res.AnchorFile)
+	case res.Root != "":
+		// An explicit override. It is legitimate and it is also the one way left
+		// to grade a tree other than the one the binary was built from, so the
+		// anchor is printed next to it and any divergence is called out.
+		p("    repo root       %s", res.Root)
+		p("                    resolved from %s — an EXPLICIT OVERRIDE of the build anchor", res.Source)
+		if res.AnchorRoot != "" {
+			p("                    build anchor would have graded: %s", res.AnchorRoot)
+			if res.AnchorRoot != res.Root {
+				p("                    *** OVERRIDE DIVERGES FROM THE COMPILED BYTES: this run grades source that")
+				p("                        is NOT what produced this binary. That is the caller's stated intent,")
+				p("                        recorded here so no reader has to infer it. ***")
+			}
+		} else {
+			p("                    build anchor unusable: %s", res.AnchorErr)
+		}
+	default:
+		// Programmatic caller (the Go tests drive Run directly). Say so; do not
+		// leave a blank where a provenance line belongs.
+		if s.RepoRoot != "" {
+			p("    repo root       %s", s.RepoRoot)
+		} else {
+			p("    repo root       (not recorded)")
+		}
+		p("                    resolution NOT RECORDED — this run was driven programmatically, not through")
+		p("                    cmd/conformance, so nothing attests which rule chose the root.")
+	}
+
+	// THE CROSS-CHECK, PRINTED IN BOTH DIRECTIONS. `SAME` is as important as
+	// `DIFFERENT`: it is the evidence that the check ran.
+	switch {
+	case res.CWD == "":
+		p("                    cwd cross-check: the working directory could not be read (%s)", res.CWDErr)
+	case res.Root == "":
+		p("                    cwd cross-check: not performed (no recorded resolution)")
+	case res.CWDRoot == "":
+		p("                    cwd cross-check: cwd %s resolves to NO repository (%s)", res.CWD, res.CWDErr)
+		p("                                     — pre-T165 this run would have REFUSED here instead of grading")
+	case res.CWDRoot == res.Root:
+		p("                    cwd cross-check: SAME — cwd %s resolves to the graded root", res.CWD)
+	default:
+		p("                    cwd cross-check: DIFFERENT — cwd %s resolves to", res.CWD)
+		p("                                     %s", res.CWDRoot)
+		p("                                     PRE-T165 THAT TREE, NOT THE ONE ABOVE, WOULD HAVE BEEN GRADED:")
+		p("                                     its corpus, its contract.go digest, its no-float census and its")
+		p("                                     capture_refs. The graded root is the build anchor and is correct;")
+		p("                                     this line exists so the divergence is never silent again.")
+	}
 }
 
 func anyViolation(ivs []InvariantResult) bool {
