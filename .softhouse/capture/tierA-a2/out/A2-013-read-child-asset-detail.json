@@ -1,0 +1,1 @@
+{"id":2,"name":"Fund Source","parentId":1,"glCode":"10100","disabled":false,"manualEntriesAllowed":true,"type":{"id":1,"code":"accountType.asset","value":"ASSET"},"usage":{"id":1,"code":"accountUsage.detail","value":"DETAIL"},"description":"A2 capture: child DETAIL under header id 1 (glCode 10000)","nameDecorated":"....Fund Source","tagId":{"id":0}}

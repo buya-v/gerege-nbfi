@@ -1,0 +1,6 @@
+PUT /glaccounts/1
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/upd-110-header-to-detail.json
+captured-at-utc: 2026-08-21T06:05:33Z

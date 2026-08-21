@@ -1,0 +1,6 @@
+POST /glaccounts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/gl-011-child-asset-detail.json
+captured-at-utc: 2026-08-21T05:57:37Z

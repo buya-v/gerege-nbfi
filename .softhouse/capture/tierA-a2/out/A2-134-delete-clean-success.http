@@ -1,0 +1,4 @@
+DELETE /glaccounts/23
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+captured-at-utc: 2026-08-21T06:06:06Z

@@ -1,0 +1,1 @@
+{"id":23,"name":"Clean Delete Target Renamed Again","glCode":"19999","disabled":false,"manualEntriesAllowed":false,"type":{"id":1,"code":"accountType.asset","value":"ASSET"},"usage":{"id":2,"code":"accountUsage.header","value":"HEADER"},"description":"A2: created solely to observe the DELETE success path","nameDecorated":"Clean Delete Target Renamed Again","tagId":{"id":0}}

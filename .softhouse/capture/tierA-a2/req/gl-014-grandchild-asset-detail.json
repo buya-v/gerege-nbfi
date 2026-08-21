@@ -1,0 +1,1 @@
+{"name":"Cash At Teller","glCode":"10101","manualEntriesAllowed":true,"type":1,"usage":1,"parentId":2,"description":"A2 capture: grandchild DETAIL under id 2 (glCode 10100) — third level, to observe hierarchy/nameDecorated depth encoding"}
