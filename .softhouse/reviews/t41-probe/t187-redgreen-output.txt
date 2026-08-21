@@ -1,0 +1,115 @@
+PROTECTED ARTEFACTS BEFORE THIS RUN
+  DEC-1       49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab
+  contract.go 0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139
+
+RECONSTRUCTING T41's EDIT CHAIN (pre-fix bytes, scratch only)
+  edit.py      rc=0  ADR 803aa92256  GO c7cb53819b
+  edit2.py     rc=0  ADR 2144cff350  GO c7cb53819b
+  edit3.py     rc=0  ADR 916887a75e  GO c7cb53819b
+  edit4.py     rc=0  ADR ad51e78d8b  GO c7cb53819b
+  edit5.py     rc=0  ADR 53d68a2d71  GO c7cb53819b
+  edit6.py     rc=0  ADR 6ae9a16351  GO c7cb53819b
+  edit7.py     rc=0  ADR 61b4d2e32c  GO c7cb53819b
+  edit8.py     rc=0  ADR 3e475f1f31  GO c7cb53819b
+  edit9.py     rc=0  ADR 4e682455ed  GO c7cb53819b
+  edit10.py    rc=0  ADR 3da914cebe  GO c7cb53819b
+  edit11.py    rc=0  ADR ede0764bcc  GO c7cb53819b
+  edit12.py    rc=0  ADR 46ec47a711  GO c7cb53819b
+  edit13.py    rc=0  ADR d8c1466422  GO c7cb53819b
+  edit14.py    rc=0  ADR 1644db02cc  GO c7cb53819b
+  edit_go1.py  rc=0  ADR 1644db02cc  GO b6a6e0308f
+  edit_go2.py  rc=0  ADR 1644db02cc  GO 5ec9b10060
+  edit_go3.py  rc=0  ADR 1644db02cc  GO aaee90a81b
+  edit_go4.py  rc=0  ADR 1644db02cc  GO 0e5468c470
+  edit16.py    rc=0  ADR 123dc3c3ff  GO 0e5468c470
+  edit17.py    rc=0  ADR 2eb3092aad  GO 0e5468c470
+  edit18.py    rc=0  ADR 4bc1dfb9ff  GO 4f986bb157
+  edit19.py    rc=0  ADR e07d5f807f  GO 4f986bb157
+  edit20.py    rc=0  ADR 6bc401b4b8  GO 4f986bb157
+  edit21.py    rc=1  ADR 5798acc948  GO 4f986bb157
+  edit22.py    rc=1  ADR 5798acc948  GO 4f986bb157
+
+edit.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit2.py
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=0  live-mutated=True
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: 803aa92256 -> 2144cff350 (rc=0)
+
+edit3.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit4.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit5.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit6.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit7.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit8.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit9.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit10.py
+    PASS  RED-1  pre-fix bytes mutate a scratch copy with no argv, no authorisation and no content gate (rc=0)
+    NOTE  RED-1L pre-fix vs a copy of the LIVE artefacts: rc=0  live-mutated=True
+    PASS  GATE   BEFORE_SHA256 is neither the ratified DEC-1 nor the frozen contract.go
+    PASS  GATE   the reconstructed chain state matches the pinned BEFORE_SHA256
+    PASS  RED-2  refuses a target holding the LIVE artefact's bytes (exit 3, wanted 3) and leaves it byte-identical
+    PASS  RED-3a refuses a run with no argv (exit 2, wanted 2)
+    PASS  RED-3b refuses the artefact's OWN path even with the correct token (exit 2, wanted 2)
+    PASS  RED-3c refuses a wrong --authorise token (exit 2, wanted 2)
+    PASS  GREEN  the recorded edit STILL APPLIES on the legitimate scratch target: 4e682455ed -> 3da914cebe (rc=0)
+
+edit11.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit12.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit13.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit14.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit_go1.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit_go2.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit_go3.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit_go4.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit16.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit17.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit18.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit19.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit20.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit21.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+edit22.py: SKIPPED - not yet hardened (no AUTHORISE_TOKEN)
+
+======================================================================
+EXERCISED 2 of 25 rewriters; 16 assertions.
+NOT EXERCISED (23): edit.py, edit3.py, edit4.py, edit5.py, edit6.py, edit7.py, edit8.py, edit9.py, edit11.py, edit12.py, edit13.py, edit14.py, edit_go1.py, edit_go2.py, edit_go3.py, edit_go4.py, edit16.py, edit17.py, edit18.py, edit19.py, edit20.py, edit21.py, edit22.py
+NOT REWRITERS (6, named per P-40):
+  leakgrep.py            read-only grep over the ADR; opens nothing for writing
+  t187-census.py         T187's census; reads ASTs, writes nothing
+  t187-redgreen.py       this prover
+  t41_discriminate.py    reads captures, writes nothing
+  t41_model.py           pure model, no file writes
+  t41_validate.py        reads captures, writes nothing
+
+ALL ASSERTIONS HELD.
+
+PROTECTED ARTEFACTS AFTER THIS RUN
+  DEC-1       49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab  UNMOVED
+  contract.go 0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139  UNMOVED
