@@ -1,0 +1,86 @@
+
+======== LEG 0 -- the original's committed recipe reproduces, so every leg below is about THAT run ========
+  AS PREDICTED      the original re-run is BYTE-IDENTICAL to its committed output
+
+======== LEG 1 -- REAL corpus: the ORIGINAL swallows real committed files and says nothing ========
+  files handed to it   : 128
+  of which UNPARSEABLE : 18
+  AS PREDICTED      words skip/unparse/unscanned/error/fail anywhere in the ORIGINAL's output: 0
+  AS PREDICTED      the ORIGINAL still prints its clean-bill-of-health sentence
+  --- the SAME input through the SUCCESSOR:
+  AS PREDICTED      SUCCESSOR exit status on the real corpus (must REFUSE): 1
+  AS PREDICTED      files the SUCCESSOR NAMES as unscanned: 18
+  first three named:
+      UNSCANNED  .softhouse/capture/periodratio/out/t39-determinism-raw.json
+      UNSCANNED  .softhouse/capture/periodratio/out/t39-neg5-raw.json
+      UNSCANNED  .softhouse/capture/periodratio/out/t39-neg6-raw.json
+
+======== LEG 2 -- PLANTED input: a file that is not JSON at all, alone in a directory ========
+  --- ORIGINAL output, verbatim:
+    | T44 - float round-trip hazard on the Path B (charges) raw captures
+    |   distinct bare non-integer literals: 0
+    |   total occurrences               : 0
+    | 
+    |   max decimal scale seen                    : 0
+    |   literals whose float repr() != the text   : 0
+    |   literals whose float VALUE != the decimal : 0
+    | 
+    |   => no literal changes VALUE on a float round-trip at these magnitudes and scales,
+    |      so no committed charges number is corrupted TODAY. The hazard is structural:
+    |      the wire format is float-shaped, so a consumer that does not force exact
+    |      decimal parsing violates the money rule by construction, and would corrupt
+    |      a value as soon as a magnitude or a scale grows.
+  AS PREDICTED      ORIGINAL's reported distinct literals (0 = it scanned NOTHING): 0
+  AS PREDICTED      the ORIGINAL certifies 'no committed charges number is corrupted
+                    TODAY' having successfully read ZERO files -- the vacuous pass
+  AS PREDICTED      SUCCESSOR exit status on the planted file: 1
+  AS PREDICTED      SUCCESSOR names the planted file by path: 1
+  --- SUCCESSOR verdict lines:
+      files REQUESTED     : 1
+      files PARSED        : 0
+      files SKIPPED       : 1      <-- t44_float_roundtrip.py:29 discarded these silently
+      FAIL  1 file(s) were skipped and no --expect-skips was given. A skipped file is an UNSCANNED file; the report below covers 0 of 1 requested files, NOT all of them.
+
+======== LEG 3 -- PLANTED input: a glob matching NOTHING (zero inspected must be an ERROR, P-35) ========
+  --- ORIGINAL output, verbatim:
+    | T44 - float round-trip hazard on the Path B (charges) raw captures
+    |   distinct bare non-integer literals: 0
+    |   total occurrences               : 0
+    | 
+    |   max decimal scale seen                    : 0
+    |   literals whose float repr() != the text   : 0
+    |   literals whose float VALUE != the decimal : 0
+    | 
+    |   => no literal changes VALUE on a float round-trip at these magnitudes and scales,
+    |      so no committed charges number is corrupted TODAY. The hazard is structural:
+    |      the wire format is float-shaped, so a consumer that does not force exact
+    |      decimal parsing violates the money rule by construction, and would corrupt
+    |      a value as soon as a magnitude or a scale grows.
+  AS PREDICTED      the ORIGINAL gives a clean bill of health for an EMPTY file set
+  AS PREDICTED      SUCCESSOR exit status on an empty file set: 1
+  AS PREDICTED      the SUCCESSOR calls zero-inspected an ERROR (P-35)
+
+======== LEG 4 -- the OTHER half (P-50): the SUCCESSOR PASSES the legitimate corpus ========
+  AS PREDICTED      SUCCESSOR exit status on the charges-only corpus (0 unparseable): 0
+  AS PREDICTED      SUCCESSOR skip count there: 0
+  --- its headline figures:
+    T175 SUCCESSOR to t44_float_roundtrip.py -- float round-trip hazard, with every
+      files REQUESTED     : 92
+      files PARSED        : 92
+      files SKIPPED       : 0      <-- t44_float_roundtrip.py:29 discarded these silently
+      distinct bare non-integer literals : 245
+      total occurrences                  : 9122
+      literals whose float VALUE != the decimal : 0 of 245
+    T175 SUCCESSOR: PASS -- 92 of 92 files scanned, 0 skipped, 245 distinct literals inspected.
+
+======== LEG 5 -- an EXPLICITLY acknowledged, exactly-matching skip count is accepted; a wrong one is not ========
+  AS PREDICTED      SUCCESSOR exit with --expect-skips 18: 0
+  AS PREDICTED      the count is still printed prominently, never as zero: 1
+  AS PREDICTED      SUCCESSOR exit with a WRONG --expect-skips 17 (must still refuse): 1
+  --- the 245/9122/0 figures are UNCHANGED from the original's, so this is a fix, not a rewrite:
+      distinct bare non-integer literals : 245
+      total occurrences                  : 9122
+      literals whose float VALUE != the decimal : 0 of 245
+
+======== VERDICT ========
+  ALL LEGS AS PREDICTED
