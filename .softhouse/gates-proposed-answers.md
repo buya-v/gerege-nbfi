@@ -166,3 +166,19 @@ Therefore, on T43's verdict:
 **Rationale.** Contract-first was correct and these reviews caught real defects (precision-vs-scale, two silently-dropped inputs, `n`'s definition, the per-period interest specification). But the contract cannot be proven correct by more reading; it can only be proven by a port running against the oracle. Freezing an imperfect boundary with its imperfections *written down and scheduled* beats an unfrozen perfect one that never ships.
 
 **This decision was stated on 18 Aug and not recorded in the repo, so no fire could act on it — which cost revisions 6, 7 and 8.** A decision that lives only in conversation does not exist.
+
+---
+
+## P-5 · Close tier 0 — obligations, not fifth drafts
+
+**Decision (21 Aug 2026, standing until reversed).** T10 passed conformance on its first run — 13/13 parity, 1,350 cells, 0 failures, 6/6 invariants, re-run by the driver rather than taken on report. The port is graded and green. Yet the task list has grown 46 → 153, and its open tail is documentation churn: `T70`/`T72`/`T78` are the third, fourth and **fifth** drafts of one `futureUnrecognizedInterest` write-up, with four more tasks in flight that apply findings from reviews of fixes to reviews.
+
+The same reasoning as P-4 applies, one level up:
+
+- **A finding already covered by a passing vector is an obligation, not a blocker.** Record it in DEC-1 §9 or the context's obligations list, naming the vector that grades it, and close the task.
+- **No third draft of a prose item.** If a wording/justification task has been rejected twice, the reviewer's text becomes the record of that item and the task closes `superseded_by_review`. Reviews are already committed artefacts; re-deriving prose a fifth time grades nothing.
+- **Money-changing findings are exempt** — they still block, still get fixed, still get re-reviewed. The test is the same as P-4's: does it change a number the oracle would emit? If not, it is an obligation.
+
+**Then close tier 0 and move to Tier A (GL/accounting).** Tier 0's purpose was to prove the pipeline end-to-end on the smallest real slice. It has: oracle pinned, two capture paths, harness green, contract ratified, port passing. Holding it open for prose polish while 16 contexts and ~533k LOC wait is the wrong trade.
+
+**Rationale.** The reviews earned their cost when they caught precision-vs-scale, the two silently-dropped inputs, and `n`'s definition — defects that change money. They stop earning it when they recurse on their own output. The vectors are the acceptance test; anything a vector already grades does not need a fifth prose draft to be true.
