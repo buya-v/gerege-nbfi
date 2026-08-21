@@ -13,21 +13,29 @@
 # the FULL GREEN RUN rows, and those are deliberately NOT here: run
 # `bash .softhouse/conformance.sh` for those.
 #
-# WHAT THIS RIG STRUCTURALLY CANNOT SEE (T106 F5, added by T113 — read this before
-# treating its green as coverage).
-#   Every row here runs the guard in a CLEAN environment, and the one row that
+# WHAT THIS RIG COULD NOT SEE UNTIL T113 (T106 F5 — read this before treating its
+# green as coverage).
+#   Rows [1]–[6] all run the guard in a CLEAN environment, and the one row that
 #   breaks the probe ([5]) breaks it by rewriting the redirection's SOURCE to
-#   /dev/null — a redirection that still OPENS and still leaves `read` with a
-#   valid, empty input. So this rig can only ever observe the pre-initialised
-#   value of `_conformance_psub_line` being empty, and it cannot detect the case
-#   T106 found: a redirection that fails at RUN TIME (open() fails) while an
-#   INHERITED `_conformance_psub_line` supplies the token the probe never read.
-#   Green here says nothing about that. It was green on the forgeable version of
-#   the guard, and it is green on the fixed one.
-#   The rig that DOES see it is
-#   .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/prove-token-forgeable.sh
-#   (T106's, kept unmodified), and the hostile-environment rows are in
-#   .../T113-evidence/interpreter-matrix.sh section [3]. Run all three.
+#   /dev/null — a redirection that still OPENS, so `read` succeeds and overwrites
+#   `_conformance_psub_line` with the empty string. That is the one broken shape
+#   in which an inherited value is irrelevant. So rows [1]–[6] could only ever see
+#   the variable start empty, and they were **green on the forgeable version of
+#   the guard and green on the fixed one** — they cannot tell the two apart.
+#   The case they miss is the one T106 found: a redirection that fails at RUN TIME
+#   (open() fails, e.g. bash 5.3.9 with /dev/fd removed) while an INHERITED
+#   `_conformance_psub_line` supplies the token the probe never read.
+#   Row [7], added by T113, closes that gap HERE, and it carries its own
+#   discrimination check so it cannot become another green-on-both row.
+#   Two companion rigs live next door and are not duplicated here:
+#     .../T113-evidence/prove-token-forgeable.sh   — T106's own, kept BYTE-FOR-BYTE
+#       unmodified. It is a DEFECT DETECTOR, not a regression test: it passes 8/8
+#       on the pre-fix bytes and is expected to report 7 passed / 1 failed on the
+#       fixed harness, the failing row being the forge that no longer works. Do
+#       not "fix" it; that is what closing the hole looks like from its side.
+#     .../T113-evidence/interpreter-matrix.sh      — the no-false-refusal matrix.
+#     .../T113-evidence/psub-dead-container.sh     — the same four rows on a REAL
+#       psub-dead bash 5.3.9 rather than on a mutant.
 set -u -o pipefail
 
 # The pre-fix bytes are pinned to an IMMUTABLE COMMIT SHA, not to `main:`.
@@ -198,6 +206,62 @@ if [ "$old_tail" != "$new_tail" ]; then
   ok "the retired '2,34p' would now end --help at: \"$(printf '%.48s' "$old_tail")…\""
 else
   bad "drift demo" "'2,34p' still happens to end where the sentinel does; this row proves nothing today"
+fi
+echo
+
+# ---------------------------------------------------------------------------
+echo "[7] POST-FIX — the token cannot be FORGED by an inherited variable (T106 F1)"
+# ---------------------------------------------------------------------------
+# The shape row [5] cannot reach: a redirection that PARSES and then fails to
+# OPEN. `builtin read` runs and never assigns, so before the F1 fix the very next
+# statement printed whatever `$_conformance_psub_line` already held — and an
+# exported one made a shell that genuinely cannot do process substitution admit
+# itself. Rewriting the redirection's source to a non-existent path reproduces on
+# any host what T106 observed on a real bash 5.3.9 with /dev/fd removed.
+#
+# Two rows, deliberately. The first is the regression test; the second is what
+# stops the first from silently becoming another row that is green either way
+# (P-22, and the exact reason rows [1]-[6] never caught this). The second row
+# takes the SAME forge mutant and additionally deletes the F1 assignment,
+# reconstructing the forgeable guard from today's bytes, and REQUIRES it to be
+# admitted. If that row ever refuses, the discrimination is gone and the row
+# above it is proving nothing.
+#
+# A mutant of today's bytes is used rather than a second pinned commit on purpose:
+# the pre-F1 bytes live only on a worker branch, and a pin that a squash-merge can
+# make unreachable would turn this rig red on main for a reason unrelated to the
+# guard. Row [1] already pins the immutable main-side baseline.
+FORGE_TOKEN="conformance-psub-live"
+FORGE="$REPO_ROOT/.softhouse/$(basename "$TMP")-forge-conformance.sh"
+UNFIXED="$REPO_ROOT/.softhouse/$(basename "$TMP")-forge-unfixed.sh"
+trap 'rm -rf "$TMP" "$PREFIX" "$BROKEN" "$FORGE" "$UNFIXED"' EXIT
+# The literal goes through the ENVIRONMENT, never `awk -v`: -v processes escape
+# sequences, so the `\n` would arrive as a real newline and the match would
+# silently never fire. That near-miss is what the cmp guards below are for.
+T97_PSUB_LIT='< <(builtin printf "%s\n" "$CONFORMANCE_PSUB_TOKEN")' awk '
+  BEGIN { lit = ENVIRON["T97_PSUB_LIT"] }
+  index($0, lit) > 0 && !done { print "           < /nonexistent-T113/nope"; done = 1; next }
+  { print }
+' "$HARNESS" > "$FORGE"
+if cmp -s "$HARNESS" "$FORGE"; then
+  bad "forge mutation" "the probe's redirection shape moved — row [7] is inert and proves nothing"
+else
+  ok "forge mutation applied: the probe's redirection now fails at open() time"
+  run_row 3 0 "run-time open failure + inherited _conformance_psub_line -> REFUSED" \
+    -- env "_conformance_psub_line=$FORGE_TOKEN" /bin/bash "$FORGE" --help
+  # Discrimination check: the same mutant WITHOUT the F1 assignment must admit.
+  grep -v '^      _conformance_psub_line=$' "$FORGE" > "$UNFIXED"
+  if cmp -s "$FORGE" "$UNFIXED"; then
+    bad "F1 assignment" "no '      _conformance_psub_line=' line in the harness — the fix is GONE, and the row above cannot fail"
+  else
+    env "_conformance_psub_line=$FORGE_TOKEN" /bin/bash "$UNFIXED" --help >/dev/null 2>&1
+    code=$?
+    if [ "$code" = 0 ]; then
+      ok "same mutant minus the F1 assignment -> ADMITTED (exit 0): the row above discriminates"
+    else
+      bad "forge discrimination" "expected the unfixed reconstruction to be ADMITTED (exit 0), got exit $code — row [7] may now be green for the wrong reason"
+    fi
+  fi
 fi
 echo
 

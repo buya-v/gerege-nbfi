@@ -260,7 +260,16 @@ if [ -n "$conformance_shell_why" ]; then
     "conformance: file and the 'Running it' section of .softhouse/vectors/README.md." >&2
   exit "$EXIT_WRONG_INTERPRETER"
 fi
-unset conformance_shell_why conformance_psub_seen CONFORMANCE_PSUB_TOKEN
+# `_conformance_psub_line` is in this list even though the probe assigns it only
+# inside a command substitution, i.e. in a subshell, so the parent normally never
+# has it. It is here for the one case where the parent DOES: the caller exported
+# it — which is exactly the forge above. Leaving an attacker-supplied name in the
+# environment of the 700 lines below it is not a defect anyone has demonstrated,
+# and it is not a defence either (`unset` is a command word and can be shadowed
+# like any other; see the hijack paragraph above). It is hygiene, and it is
+# written down as hygiene rather than dressed up as a control. (T106's companion
+# recommendation to F1, applied by T113.)
+unset conformance_shell_why conformance_psub_seen CONFORMANCE_PSUB_TOKEN _conformance_psub_line
 
 set -u -o pipefail
 
