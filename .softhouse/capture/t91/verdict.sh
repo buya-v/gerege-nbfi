@@ -18,24 +18,30 @@
 #     "the forbidden sentence is absent" into a lie.  Every grep below is `LC_ALL=C grep -a`, both
 #     halves deliberate.
 #
-#     *** THE HARDENING STANDS.  ITS STATED REASON IS UNDER ADJUDICATION BY T108. ***
-#     Do not remove `LC_ALL=C` or `-a` from any grep in this file on the strength of the paragraph
-#     below.  Fail-closed is right whichever way T108 rules; only the *reason* is in doubt, and
-#     nothing about the guard's correctness depends on settling it.
+#     *** SETTLED BY T108 (2026-08-21).  BOTH TOKENS ARE LOAD-BEARING, AGAINST TWO DIFFERENT
+#     PROGRAMS.  DO NOT REMOVE EITHER. ***
+#     On this host the token `grep` names two programs and which one you get depends on where you
+#     type it (P-33):
+#       * inside a script (`sh x.sh` / `bash x.sh`): /usr/bin/grep — BSD grep 2.6.0-FreeBSD.
+#       * typed into the Claude Code Bash tool: a shell function re-exec'ing the `claude` binary
+#         with argv[0]=ugrep — ugrep 7.5.0 with `-I` hard-coded.  There is NO ugrep binary on this
+#         host; ugrep is embedded in `claude`.  That is why every search for one came back empty.
+#     They fail in OPPOSITE ways:
+#       * BSD grep goes blind to the rest of ONE LINE, from an invalid multibyte byte rightwards.
+#         `LC_ALL=C` fixes it; `-a` does NOT.
+#       * ugrep `-I` skips the WHOLE FILE.  `-a` fixes it; `LC_ALL=C` does NOT.
+#     [VERIFIED: .softhouse/capture/t108-grep/MATRIX.md §1 and §3.1; out/matrix.tsv — 360 cells,
+#     12 silent misses, every one BSD grep in a UTF-8 locale; out/probe-flags.txt §B for ugrep.]
 #
-#     What is MEASURED and now reproduced by two independent workers (T91 and T107b): with
-#     /usr/bin/grep — BSD grep 2.6.0-FreeBSD — a silent miss does NOT reproduce, with an invalid
-#     multibyte sequence or an embedded NUL, in any locale.  T107b's probe matched 18 of 18
-#     combinations.  So **T80's stated BSD behaviour does not reproduce on this host** and is not
-#     repeated here as fact.
-#
-#     What is [UNVERIFIED] and is T108's question: T91 reported that `ugrep 7.5.0 -I` (which is what
-#     a `grep` on an interactive PATH can be) returns 1 — "absent" — on a poisoned transcript that
-#     does contain the sentence, and that `-a` fixes it.  T107b could NOT reproduce this: there is
-#     no `ugrep` on this host at all, and `prove-guards.sh:87-95` takes its `else` branch, so the
-#     committed `out/GUARDS-RED.txt` records the fallback text rather than a ugrep measurement.
-#     The claim therefore rests on unrecorded interactive runs and ZERO committed evidence — the
-#     defect class this run grades for, one layer out.  T115 does not assert either version.
+#     T80's MEASUREMENT was correct and is exactly reproduced.  Only T80's GENERALISATION — "matches
+#     nothing in a FILE" — was wrong: the BSD blindness is per line and directional, never per file.
+#     An earlier version of this comment said T80's behaviour "does not reproduce on this host".
+#     THAT WAS WRONG, and it was wrong for a reason worth keeping: T91's and T107b's probes put the
+#     invalid byte AFTER the match on the same line and ran both arms under LC_ALL=C — the very
+#     mitigation under test.  N-of-N green cells refute nothing unless the failing shape is among
+#     the N.  T138 re-measured on this host: byte BEFORE the match, `utf8 -qF` -> 1, `utf8 -aqF` ->
+#     1, `LC_ALL=C -qF` -> 0.  T107's ugrep limb is likewise no longer [UNVERIFIED]: T108 committed
+#     the evidence and retired C-7.
 #
 #     Independent of both: `LC_ALL=C` also defends against GNU grep on Linux, where a UTF-8 locale
 #     genuinely can fail to match across an invalid multibyte sequence.  These scripts run on macOS
@@ -157,6 +163,28 @@ echo
 if [ "$files" -eq 0 ]; then
   echo "ERROR: zero transcripts in $D — a scan over an empty file set proves NOTHING." >&2
   echo "       (this is the vacuous-pass defect class; it is an error here, not a pass)" >&2
+  exit 3
+fi
+# V-B (T115 found it, T138 ruled it, T151 applied it).  NOTHING IN THE TABLE ASSERTS THE ORACLE
+# ANSWERED.  `NEVER` forbids the certification sentence and `PINNED` merely PERMITS it — the whole
+# sentence check is gated on `if [ "$c" = YES ]`, so when the oracle is dead and `c=no` the PINNED
+# rows assert nothing at all.  The scorer's resistance to a dead oracle rested entirely on `A4c`,
+# `A7` and `A8` happening to be `CLEAN` rows: an accident of the data, not a decision.
+#
+# MEASURED, and T115's version of this hazard was overstated 3x.  T115 wrote that retyping ANY ONE
+# of those three rows to `BREACH` creates a scorer that reports clean over an oracle that never
+# answered.  It does not: retyping one (`A7`) still exits 1 with two `REGRESSION` rows.  It takes
+# ALL THREE — and then 13 dead-oracle transcripts score `ALL 13 ATTACKS MET THEIR DECLARED
+# EXPECTATION`, exit 0 [VERIFIED: T138 out/R13-VB.txt; reproduced by t151-drive-vb.sh].
+#
+# T115 declined to fix it on the grounds that changing the expectation table is a substantive act.
+# That reason is sound and it does not apply here: this assertion CHANGES NO ROW.  It converts the
+# accident into a decision for nine lines, and it is a no-op on every committed transcript
+# directory (20 of 20, exit code identical) while going exit 3 on a dead oracle and exit 3 on the
+# all-three-retyped case that scored exit 0.  Driven all three legs by t151-drive-vb.sh.
+if ! LC_ALL=C grep -alF "$S" "$D"/A*.txt >/dev/null 2>&1; then
+  echo "ERROR: not one transcript contains the rounding-mode certification sentence — the suite" >&2
+  echo "       never reached a live oracle.  Scoring it would grade an outage as a clean sweep." >&2
   exit 3
 fi
 [ "$files" = "$n" ] || echo "WARNING: $files transcripts on disk, $n attacks in the expectation table"

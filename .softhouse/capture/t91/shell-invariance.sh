@@ -37,9 +37,28 @@ norm() {
 # it printed `pairs compared: 1  differing: 0` and `RESULT: sh and bash agree`, exit 0.  An
 # invariance claim over a domain that is only one side's file list is not an invariance claim.
 # The domain is now the UNION of both sides; a name present on one side only is a difference.
-# Same class again: the normalised scratch files used to be written into $O, the directory under
-# audit.  A read-only $O would leave the previous run's .inv-a/.inv-b in place and the comparison
-# would silently grade STALE bytes.  Scratch now lives in a directory this script owns.
+# V-F (T115) — same class again: the normalised scratch files used to be written into $O, the
+# directory under audit.
+#
+# T151 (F-T138-4) — THE FIX IS RIGHT; ITS STATED REASON WAS WRONG, AND THE WRONG REASON UNDERSTATES
+# THE HAZARD.  T115 wrote "a read-only $O would leave the previous run's .inv-a/.inv-b in place and
+# the comparison would silently grade STALE bytes."  A read-only $O ALONE IS FAIL-CLOSED: a shell
+# redirect cannot CREATE a file in an unwritable directory, so `norm` writes nothing, `diff` reports
+# "No such file", and the script exits 1.  Loud and safe.
+#
+# What actually produces the vacuous pass is READ-ONLY SCRATCH FILES — .inv-a/.inv-b already present
+# and mode 444 — because a redirect to an EXISTING file needs write permission on the FILE, not on
+# the directory.  And then $O NEED NOT BE READ-ONLY AT ALL.  T138 drove all five cases over a pair
+# that genuinely differs [VERIFIED: T138 out/R3b-VF.txt]:
+#     $O writable, no scratch      -> DIFFERS, exit 1                     (control, caught)
+#     $O 555,      no scratch      -> false DIFFERS, exit 1               (fail-closed)
+#     $O 555,      scratch 644     -> DIFFERS, exit 1                     (caught)
+#     $O 555,      scratch 444     -> "pairs compared: 1  differing: 0", exit 0   <-- VACUOUS
+#     $O writable, scratch 444     -> the same vacuous pass               <-- $O irrelevant
+# Scratch now lives in a directory this script creates and owns, which closes both readings.
+# NOTE (T151, F-T138-5): no committed guard drives V-F red.  `prove-guards.sh` exits 0 with every
+# leg OK when this fix is reverted, so this paragraph and T138's transcript are the whole of the
+# evidence — do not cite GUARDS-RED.txt for it.
 INVDIR=$(mktemp -d "${TMPDIR:-/tmp}/shell-invariance.XXXXXX") || {
   echo "ERROR: cannot create a scratch directory — refusing to compare." >&2; exit 3; }
 trap 'rm -rf "$INVDIR"' EXIT

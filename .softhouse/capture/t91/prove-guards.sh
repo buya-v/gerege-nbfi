@@ -125,26 +125,47 @@ mkdir -p "$S/poison"
 cp "$ROOT/.softhouse/capture/t91/out/prefix-copy-sh"/A*.txt "$S/poison/" 2>/dev/null || \
   { echo "ABORT: no committed pre-fix transcripts to poison — G-4 cannot run, and a guard that" >&2
     echo "       did not run must not report success." >&2; exit 2; }
+# T151 (F-T138-1, edit 1 of 2).  THE POISON USED TO SIT IN THE ONE POSITION THAT CANNOT FAIL.
+# It was inserted at `j` — the newline AFTER the match, i.e. T108 shape `s02` — and s02 is exactly
+# the shape BSD grep handles CORRECTLY in every locale.  So this leg's input was structurally
+# incapable of producing the effect the leg exists to detect, and the guard stayed green with the
+# hardening removed from the scanner it guards.  It now goes in at `i`, BEFORE the match on the same
+# line (T108 shape s01/s06), which is the shape BSD grep goes blind on.
+# [VERIFIED: .softhouse/capture/t108-grep/out/matrix.tsv; re-measured by T138 (out/R12-GREP.txt) and
+#  driven end to end by .softhouse/capture/t91/t151-drive-g4.sh.]
+# The `assert` is deliberate: `b.find` returns -1 when the sentence is absent, and `b[:-1]` would
+# quietly poison the wrong place and produce a full-looking leg over an input nobody poisoned.
 python3 - "$S/poison/A2a-mutated-canary-gerege.txt" <<'PY'
 import sys
 p = sys.argv[1]
 b = open(p, 'rb').read()
 i = b.find(b'PASS  effective rounding mode canary')
-j = b.find(b'\n', i)
-open(p, 'wb').write(b[:j] + b'\xff\xfe' + b[j:])
-print('   poisoned the certification line itself with an invalid multibyte sequence')
+assert i >= 0, 'ABORT: the certification sentence is not in the transcript — nothing to poison'
+open(p, 'wb').write(b[:i] + b'\xff\xfe' + b[i:])
+print('   poisoned the certification line itself with an invalid multibyte sequence,')
+print('   inserted BEFORE the match on the same line (T108 shape s01/s06)')
 PY
 echo
-echo "-- what /usr/bin/grep (BSD) does with and without -a:"
-LC_ALL=C /usr/bin/grep -qF 'PASS  effective rounding mode canary' "$S/poison/A2a-mutated-canary-gerege.txt"
-echo "   BSD  -qF  rc=$?"
+echo "-- what /usr/bin/grep (BSD grep 2.6.0-FreeBSD) does in the two locales:"
+# T151 (F-T138-1, edit 3).  BOTH arms used to run under LC_ALL=C — the mitigation under test — so
+# the display showed two rc=0s and demonstrated nothing (P-33/P-36: the manipulated variable never
+# reached the subject).  One arm now runs in a UTF-8 locale, which is where the silent miss lives.
+# These two lines are a CHARACTERISATION OF THE HOST'S grep, printed and deliberately NOT graded:
+# grading them would make this guard fail on a host with a different grep, and the load-bearing
+# assertion is G-4's own verdict below, which IS compared.
+LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 /usr/bin/grep -aqF 'PASS  effective rounding mode canary' "$S/poison/A2a-mutated-canary-gerege.txt"
+echo "   BSD utf8    -aqF  rc=$?   (1 = the silent miss; -a does NOT fix it)"
 LC_ALL=C /usr/bin/grep -aqF 'PASS  effective rounding mode canary' "$S/poison/A2a-mutated-canary-gerege.txt"
-echo "   BSD -aqF  rc=$?"
-echo "   MEASURED: on this machine BSD grep matched EITHER WAY, and T107b independently reproduced"
-echo "   that (18 of 18 combinations).  T80 reported that BSD grep in a UTF-8 locale matches"
-echo "   nothing here; that does NOT reproduce and is not repeated as fact."
-echo "   *** THE LC_ALL=C grep -a HARDENING STANDS EITHER WAY.  Its stated REASON is under"
-echo "   adjudication by T108; fail-closed is right whichever way T108 rules. ***"
+echo "   BSD LC_ALL=C -aqF rc=$?   (0 = correct; LC_ALL=C is what fixes it)"
+echo "   NOTE (T151): the poison above is inserted BEFORE the match on the same line — T108 shape"
+echo "   s01/s06, the only shape BSD grep fails on.  An earlier version put it AFTER the match"
+echo "   (shape s02), which BSD grep handles correctly in every locale, so the leg could not"
+echo "   produce the effect it exists to detect."
+echo "   RULED BY T108 (2026-08-21), MATRIX.md §1/§3.1: BSD grep goes blind to the rest of ONE LINE"
+echo "   from an invalid byte rightwards — LC_ALL=C fixes it, -a does NOT.  ugrep -I skips the WHOLE"
+echo "   FILE — -a fixes it, LC_ALL=C does NOT.  T80's measurement was correct; only T80's"
+echo "   generalisation ('matches nothing in a FILE') was wrong."
+echo "   *** BOTH TOKENS ARE LOAD-BEARING AGAINST DIFFERENT PROGRAMS.  DO NOT REMOVE EITHER. ***"
 echo
 if command -v ugrep >/dev/null 2>&1; then
   LC_ALL=C ugrep -qF 'PASS  effective rounding mode canary' "$S/poison/A2a-mutated-canary-gerege.txt"
@@ -152,19 +173,27 @@ if command -v ugrep >/dev/null 2>&1; then
   LC_ALL=C ugrep -aqF 'PASS  effective rounding mode canary' "$S/poison/A2a-mutated-canary-gerege.txt"
   echo "   ugrep -aqF  rc=$?   (0 = present — correct)"
 else
-  echo "   ugrep is NOT on PATH here, so the ugrep limb WAS NOT MEASURED BY THIS RUN."
-  echo "   [UNVERIFIED] T91 reported interactively that ugrep 7.5.0 -I returns 1 ('absent') on this"
-  echo "   exact poisoned file and that -a fixes it.  T107b could not reproduce it — there is no"
-  echo "   ugrep on this host at all — and downgraded the claim from [VERIFIED].  It rests on"
-  echo "   unrecorded interactive runs and ZERO committed evidence.  T108 settles which tool T80"
-  echo "   actually observed.  This branch states the absence of a measurement; it does not stand"
-  echo "   in for one."
+  echo "   ugrep is not a BINARY on this host and never was.  T108 established that the token"
+  echo "   \`grep\` typed into the Claude Code Bash tool runs a shell FUNCTION re-exec'ing the"
+  echo "   \`claude\` binary with argv[0]=ugrep — ugrep 7.5.0 with -I hard-coded — which a script"
+  echo "   cannot reach, because shell functions are not exported to children.  So this branch is"
+  echo "   the EXPECTED one here, and the ugrep limb is no longer unmeasured: it is [VERIFIED] in"
+  echo "   .softhouse/capture/t108-grep/out/probe-flags.txt §B — -qF returns 1 ('absent') on a file"
+  echo "   that contains the sentence, in BOTH locales, and -qaF returns 0.  T107b's C-7 downgrade"
+  echo "   is retired.  ugrep -I skips the whole file; -a fixes it and LC_ALL=C does not."
 fi
 echo
 echo "-- verdict.sh (with -a) on the poisoned set: must still name A2a as an admission"
 sh "$HERE/verdict.sh" "$S/poison" > "$S/g4.txt" 2>&1
 LC_ALL=C /usr/bin/grep -a '^A2a' "$S/g4.txt"
-if LC_ALL=C /usr/bin/grep -aq "^A2a.*ADMITS" "$S/g4.txt"; then
+# T151 (F-T138-1, edit 2 of 2).  The old form `^A2a.*ADMITS` is satisfied by the EXIT-CODE rule
+# ALONE — A2a exits 0 and the table wants BREACH, so `ADMITS (exited 0, expected a breach)` prints
+# whatever the sentence scanner does — and the leg therefore stayed green with the scanner fully
+# blinded.  Assert the SENTENCE-SPECIFIC verdict instead: only `c=YES` can produce it, so only a
+# working `LC_ALL=C grep -a` can produce it.  MEASURED: this edit and the poison-position edit are
+# BOTH required; either alone leaves the guard green with `LC_ALL=C` removed from verdict.sh:135.
+# Driven, all six cells, by .softhouse/capture/t91/t151-drive-g4.sh (F-T138-1).
+if LC_ALL=C /usr/bin/grep -aq "^A2a.*ADMITS (printed the HALF_UP certification)" "$S/g4.txt"; then
   echo "   A2a named as an admission on the poisoned set   OK      [G-4]"
 else
   echo "   A2a NOT named as an admission   *** NOT AS EXPECTED ***   [G-4]"; BAD=$((BAD+1))
@@ -218,6 +247,18 @@ RECIPE=.softhouse/capture/charges/bin/preconditions.sh LABEL=g6-mutation-check S
   sh "$E/.softhouse/capture/t91/run-attacks.sh" > "$S/g6.txt" 2>&1
 expect "G-6 RED reformatted canary -> harness error, not an 'attack'" "$?" 2
 LC_ALL=C /usr/bin/grep -a 'HARNESS ERROR' "$S/g6.txt" | head -2 | sed 's/^/   /'
+# T151 (F-T138-7) — PRINTED, NOT COMPARED.  This line used to be the whole of the diagnostic check:
+# only the exit code was graded, so ANY exit-2 scored OK.  T138 demonstrated it — with
+# `assert_mutated` removed AND A7's symlink target broken, run-attacks.sh exited 2 for a completely
+# different reason ("A7's symlink does not read back as the canonical request") and G-6 still
+# printed OK while the script exited 0.  The exit code says the harness refused; only the message
+# says it refused for THIS reason.  Compare it.
+if LC_ALL=C /usr/bin/grep -aq 'is byte-identical to the canonical request' "$S/g6.txt"; then
+  echo "   G-6 refused for the RIGHT reason (the sed mutation did not take)   OK      [G-6]"
+else
+  echo "   *** G-6 exited 2 for the WRONG reason — the message is not the mutation-did-not-take one"
+  echo "   *** NOT AS EXPECTED ***   [G-6 reason]"; BAD=$((BAD+1))
+fi
 echo
 
 echo "=================================================================== G-7  (T115)"
@@ -234,6 +275,16 @@ printf 'TOTALLY DIFFERENT\nEXIT=9\n' > "$S/inv7/y-bash/A2.txt"
 sh "$HERE/shell-invariance.sh" "$S/inv7" y > "$S/g7red.txt" 2>&1
 expect "G-7 RED bash-only transcript" "$?" 1
 LC_ALL=C /usr/bin/grep -a 'MISSING' "$S/g7red.txt" | head -1 | sed 's/^/   /'
+# T151 (F-T138-7) — the same shape as G-6 above.  `shell-invariance.sh` exits 1 for a DIFFERING
+# pair as well as for a one-sided name, so the exit code alone does not say the union domain is
+# what caught it.  Assert the name that is missing, and assert it is the SH side — the side the
+# pre-fix loop iterated over and therefore the side it was structurally blind to.
+if LC_ALL=C /usr/bin/grep -aq "^MISSING  $S/inv7/y-sh/A2.txt" "$S/g7red.txt"; then
+  echo "   G-7 named the SH-side absence, which is what the union domain buys   OK      [G-7]"
+else
+  echo "   *** G-7 exited 1 without naming $S/inv7/y-sh/A2.txt as MISSING"
+  echo "   *** NOT AS EXPECTED ***   [G-7 reason]"; BAD=$((BAD+1))
+fi
 echo
 
 echo "=================================================================== VERDICT"
