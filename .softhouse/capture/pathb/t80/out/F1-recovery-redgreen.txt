@@ -1,0 +1,153 @@
+=== T161 — prove-f1.sh must leave the LIVE t36 rig exactly as it found it,
+           on every interruption path
+run at 2026-08-21T09:56:16Z
+repo: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a2e9867a380ff7d6a
+
+pre-fix   blob 06e6dd756effe16144348ec7c207d24031217404  sha256 c8d192b91ae43fb6318e3d36db3eed82e59e23409531ac5d0e76f23d8a63663f  (4620 bytes) — VERIFIED
+post-fix  worktree .softhouse/capture/pathb/t80/prove-f1.sh  sha256 b7c206712147f550e0f3a191c5440ce76af1b87366efbbc827fd482285970c44  (18792 bytes)
+`trap ` statements: pre-fix 0, post-fix 6
+
+sandbox: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t161-sandbox.rnjnawkx/repo  (clone at 5da64554bbb2)
+live t36/attest.py sha256 in the sandbox: 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2
+pre-fix t36/attest.py sha256 (813acb1)  : c56825ad6f915063703240ac7ea6a6a54608c4f06333f21d2ddff0327de52f92
+
+--- PRE-FIX   int       SIGINT  — a terminal Ctrl-C
+    script exit=-2  elapsed=31.1s
+    rig after: attest.py=PRE-FIX  stamp=PRESENT  emiloop=MUTATED(2)  marker=gone
+    ^^ THE LIVE ATTESTER IS AT THE PRE-FIX BYTES (c56825ad6f915063 != 567e4cf04a870474)
+       M .softhouse/capture/pathb/t36/out/emiloop/preconditions.txt
+       ?? .softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT
+    => DEFECT REPRODUCED — rig left corrupted
+
+--- POST-FIX  int       SIGINT  — a terminal Ctrl-C
+    script exit=130  elapsed=44.0s
+    rig after: attest.py=live  stamp=absent  emiloop=clean  marker=gone
+    => RIG INTACT — attester at its pre-run bytes, no stamp, evidence set clean
+
+--- PRE-FIX   term      SIGTERM — `kill <pid>`
+    script exit=-15  elapsed=33.0s
+    rig after: attest.py=PRE-FIX  stamp=PRESENT  emiloop=MUTATED(2)  marker=gone
+    ^^ THE LIVE ATTESTER IS AT THE PRE-FIX BYTES (c56825ad6f915063 != 567e4cf04a870474)
+       M .softhouse/capture/pathb/t36/out/emiloop/preconditions.txt
+       ?? .softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT
+    => DEFECT REPRODUCED — rig left corrupted
+
+--- POST-FIX  term      SIGTERM — `kill <pid>`
+    script exit=143  elapsed=39.4s
+    rig after: attest.py=live  stamp=absent  emiloop=clean  marker=gone
+    => RIG INTACT — attester at its pre-run bytes, no stamp, evidence set clean
+
+--- PRE-FIX   hup       SIGHUP  — the terminal or ssh session closed
+    script exit=-1  elapsed=29.9s
+    rig after: attest.py=PRE-FIX  stamp=PRESENT  emiloop=MUTATED(2)  marker=gone
+    ^^ THE LIVE ATTESTER IS AT THE PRE-FIX BYTES (c56825ad6f915063 != 567e4cf04a870474)
+       M .softhouse/capture/pathb/t36/out/emiloop/preconditions.txt
+       ?? .softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT
+    => DEFECT REPRODUCED — rig left corrupted
+
+--- POST-FIX  hup       SIGHUP  — the terminal or ssh session closed
+    script exit=129  elapsed=42.1s
+    rig after: attest.py=live  stamp=absent  emiloop=clean  marker=gone
+    => RIG INTACT — attester at its pre-run bytes, no stamp, evidence set clean
+
+--- PRE-FIX   quit      SIGQUIT — Ctrl-\ at a terminal
+    script exit=-3  elapsed=32.3s
+    rig after: attest.py=PRE-FIX  stamp=PRESENT  emiloop=MUTATED(2)  marker=gone
+    ^^ THE LIVE ATTESTER IS AT THE PRE-FIX BYTES (c56825ad6f915063 != 567e4cf04a870474)
+       M .softhouse/capture/pathb/t36/out/emiloop/preconditions.txt
+       ?? .softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT
+    => DEFECT REPRODUCED — rig left corrupted
+
+--- POST-FIX  quit      SIGQUIT — Ctrl-\ at a terminal
+    script exit=131  elapsed=44.4s
+    rig after: attest.py=live  stamp=absent  emiloop=clean  marker=gone
+    => RIG INTACT — attester at its pre-run bytes, no stamp, evidence set clean
+
+--- PRE-FIX   pipe      SIGPIPE — the proof was read through `| head`
+    script exit=-13  elapsed=31.5s
+    rig after: attest.py=PRE-FIX  stamp=PRESENT  emiloop=MUTATED(2)  marker=gone
+    ^^ THE LIVE ATTESTER IS AT THE PRE-FIX BYTES (c56825ad6f915063 != 567e4cf04a870474)
+       M .softhouse/capture/pathb/t36/out/emiloop/preconditions.txt
+       ?? .softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT
+    => DEFECT REPRODUCED — rig left corrupted
+
+--- POST-FIX  pipe      SIGPIPE — the proof was read through `| head`
+    script exit=141  elapsed=46.2s
+    rig after: attest.py=live  stamp=absent  emiloop=clean  marker=gone
+    => RIG INTACT — attester at its pre-run bytes, no stamp, evidence set clean
+
+--- PRE-FIX   exitfail  EXIT via a non-zero exit from inside the window (no signal)
+    script exit=7  elapsed=28.1s
+    rig after: attest.py=PRE-FIX  stamp=PRESENT  emiloop=MUTATED(2)  marker=gone
+    ^^ THE LIVE ATTESTER IS AT THE PRE-FIX BYTES (c56825ad6f915063 != 567e4cf04a870474)
+       M .softhouse/capture/pathb/t36/out/emiloop/preconditions.txt
+       ?? .softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT
+    => DEFECT REPRODUCED — rig left corrupted
+
+--- POST-FIX  exitfail  EXIT via a non-zero exit from inside the window (no signal)
+    script exit=7  elapsed=43.6s
+    rig after: attest.py=live  stamp=absent  emiloop=clean  marker=gone
+    => RIG INTACT — attester at its pre-run bytes, no stamp, evidence set clean
+
+--- PRE-FIX   kill9     SIGKILL — no trap can catch this
+    script exit=-9  elapsed=30.6s
+    rig after: attest.py=PRE-FIX  stamp=PRESENT  emiloop=MUTATED(2)  marker=gone
+    ^^ THE LIVE ATTESTER IS AT THE PRE-FIX BYTES (c56825ad6f915063 != 567e4cf04a870474)
+       M .softhouse/capture/pathb/t36/out/emiloop/preconditions.txt
+       ?? .softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT
+    => DEFECT REPRODUCED — rig left corrupted
+
+--- POST-FIX  kill9     SIGKILL — no trap can catch this
+    script exit=-9  elapsed=34.4s
+    rig after: attest.py=PRE-FIX  stamp=PRESENT  emiloop=MUTATED(2)  marker=left
+    ^^ THE LIVE ATTESTER IS AT THE PRE-FIX BYTES (c56825ad6f915063 != 567e4cf04a870474)
+       M .softhouse/capture/pathb/t36/out/emiloop/preconditions.txt
+       ?? .softhouse/capture/pathb/t36/out/emiloop/CAPTURED-FROM-TENANT
+    => stranded, as SIGKILL must be — the in-flight marker is on disk; start-up recovery is driven below
+
+--- POST-FIX  start-up recovery from the state the SIGKILLed run left behind
+    on entry: attest.py=PRE-FIX  stamp=PRESENT  emiloop=MUTATED(2)  marker=left
+    | RECOVERED: an earlier run died mid-swap and left .softhouse/capture/pathb/t36/attest.py at c56825ad6f915063703240ac7ea6a6a54608c4f06333f21d2ddff0327de52f92; restored to 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2 from blob 9e38fe5e273c959a004423faa7e612f0240f51bc
+    script exit=0  elapsed=77.5s
+    after   : attest.py=live  stamp=absent  emiloop=clean  marker=gone
+    => RECOVERED at start-up, and the proof then ran to a clean exit 0
+
+--- PRE-FIX   the same start-up state: nothing recovers it, and a re-run
+              PROMOTES the corruption instead
+    after a SIGKILLed pre-fix run: attest.py=PRE-FIX  stamp=PRESENT  emiloop=MUTATED(2)  marker=gone
+    re-run  : exit=1   attest.py=PRE-FIX  stamp=PRESENT  emiloop=MUTATED(2)  marker=gone
+    => NO RECOVERY — the pre-fix script has no start-up repair. Worse, its `cp "$W/t36/attest.py" "$O/.f1-fixed"` BACKS UP THE ALREADY-DOWNGRADED FILE and restores that at the end, so the downgrade survives every subsequent run
+
+--- the `wait` restructure: SIGTERM arriving while the attester is STILL RUNNING
+    delivered from OUTSIDE to the script's pid — the attester stays a DIRECT
+    child, as in production — and fired only once attest.py has been observed
+    at its pre-fix digest, i.e. deterministically inside the window
+    attester backgrounded + wait (the fix)   exit=143  signal at 15.3s  script ended 26.4s  (11.1s later)
+       rig after: attest.py=live  stamp=absent  emiloop=clean  marker=gone   => RIG INTACT
+    attester in the foreground (ABLATION)    exit=143  signal at 16.4s  script ended 36.3s  (19.9s later)
+       rig after: attest.py=live  stamp=absent  emiloop=clean  marker=gone   => RIG INTACT
+    Both restore.  The measured difference is WHEN the handler gets to run:
+    the backgrounded form's `wait` is interruptible, the ablated form cannot
+    act until the attester ends of its own accord.  That a HUNG attester would
+    hold the ablated form open FOREVER follows from the same deferral but was
+    NOT driven here — it is reasoning, not a measurement.
+
+=== SUMMARY
+| interruption | bytes | script exit | attest.py left at | stamp | emiloop |
+|---|---|---|---|---|---|
+| int | PRE-FIX | -2 | **PRE-FIX (downgraded)** | **PRESENT** | **MUTATED** |
+| int | POST-FIX | 130 | live | absent | clean |
+| term | PRE-FIX | -15 | **PRE-FIX (downgraded)** | **PRESENT** | **MUTATED** |
+| term | POST-FIX | 143 | live | absent | clean |
+| hup | PRE-FIX | -1 | **PRE-FIX (downgraded)** | **PRESENT** | **MUTATED** |
+| hup | POST-FIX | 129 | live | absent | clean |
+| quit | PRE-FIX | -3 | **PRE-FIX (downgraded)** | **PRESENT** | **MUTATED** |
+| quit | POST-FIX | 131 | live | absent | clean |
+| pipe | PRE-FIX | -13 | **PRE-FIX (downgraded)** | **PRESENT** | **MUTATED** |
+| pipe | POST-FIX | 141 | live | absent | clean |
+| exitfail | PRE-FIX | 7 | **PRE-FIX (downgraded)** | **PRESENT** | **MUTATED** |
+| exitfail | POST-FIX | 7 | live | absent | clean |
+| kill9 | PRE-FIX | -9 | **PRE-FIX (downgraded)** | **PRESENT** | **MUTATED** |
+| kill9 | POST-FIX | -9 | **PRE-FIX (downgraded)** | **PRESENT** | **MUTATED** |
+
+RESULT: PROOF HOLDS — every pre-fix interruption left the live attester downgraded with a forged-looking stamp beside it, and every post-fix path left the rig byte-identical (SIGKILL: repaired at start-up).
