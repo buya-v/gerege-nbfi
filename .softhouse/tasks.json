@@ -1007,9 +1007,10 @@
         "A2-8",
         "A2-12"
       ],
-      "status": "pending",
-      "attempts": 0,
-      "note": "raised by local fire 20260821-125942: .softhouse/vectors/ holds ONLY loanschedule/, so A2-8's merged GL port is graded by ZERO parity vectors. The store README's own layout is one directory per bounded context and conformance.sh already filters by context -- the harness was built for a second context that was never added. A GL context needs its own frozen contract before a vector can be admitted against it. DEC-n RATIFICATION is agent-decidable (CLAUDE.md), so drafting DEC-2 is not a user gate; amending the RATIFIED DEC-1 still is."
+      "status": "in_progress",
+      "attempts": 1,
+      "note": "raised by local fire 20260821-125942: .softhouse/vectors/ holds ONLY loanschedule/, so A2-8's merged GL port is graded by ZERO parity vectors. The store README's own layout is one directory per bounded context and conformance.sh already filters by context -- the harness was built for a second context that was never added. A GL context needs its own frozen contract before a vector can be admitted against it. DEC-n RATIFICATION is agent-decidable (CLAUDE.md), so drafting DEC-2 is not a user gate; amending the RATIFIED DEC-1 still is. | dispatched local fire 20260821-125942 batch 1 (6th worker)",
+      "branch": "softhouse/A2-13-dec2-gl-contract"
     },
     {
       "id": "A2-14",
