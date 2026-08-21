@@ -1,0 +1,484 @@
+A2-10 independent probe transcript — review of A2-5 (branch softhouse/A2-5-capture-rig-fixes, 9aceec1)
+Written by A2-10 BEFORE reading A2-5's own provers. Regenerate with the scripts in this directory.
+Pre-fix bytes come from main's immutable blobs:
+  cap.sh      blob 55d5d63af96820ada43544913b2a344478f0393d  sha256 5820f36361ef90d18aacbb1f3eb715ec34e56b794d04eda4935653dc93d6e62a
+  manifest.py blob cbc888d4698cb8211a8ceec31494314dc64d1a67  sha256 65e54af93a201fe7beb3c679f0fe15dabb2753d44287c69250adc1a6a1380a8b
+
+############ 1. D-2 shell/option matrix — PRE-FIX cap.sh (defect must reproduce) ############
+=== PRE-FIX :: /tmp/poison/cap-prefix.sh ===
+  *** LAUNDERED *** /bin/sh NONE body              exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:43Z)
+  *** LAUNDERED *** /bin/sh NONE nobody            exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:43Z)
+  *** LAUNDERED *** /bin/sh -e body                exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:44Z)
+  *** LAUNDERED *** /bin/sh -e nobody              exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:44Z)
+  *** LAUNDERED *** /bin/sh -u body                exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:44Z)
+  CAUGHT  /bin/sh -u nobody                        exit=1
+  *** LAUNDERED *** /bin/sh -eu body               exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:44Z)
+  CAUGHT  /bin/sh -eu nobody                       exit=1
+  *** LAUNDERED *** /bin/sh -e -o pipefail body    exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:45Z)
+  *** LAUNDERED *** /bin/sh -e -o pipefail nobody  exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:45Z)
+  *** LAUNDERED *** /bin/sh -eu -o pipefail body   exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:45Z)
+  CAUGHT  /bin/sh -eu -o pipefail nobody           exit=1
+  *** LAUNDERED *** /bin/sh -E -e body             exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:45Z)
+  *** LAUNDERED *** /bin/sh -E -e nobody           exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:46Z)
+  *** LAUNDERED *** /bin/bash NONE body            exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:46Z)
+  *** LAUNDERED *** /bin/bash NONE nobody          exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:46Z)
+  *** LAUNDERED *** /bin/bash -e body              exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:46Z)
+  *** LAUNDERED *** /bin/bash -e nobody            exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:46Z)
+  *** LAUNDERED *** /bin/bash -u body              exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:46Z)
+  CAUGHT  /bin/bash -u nobody                      exit=1
+  *** LAUNDERED *** /bin/bash -eu body             exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:47Z)
+  CAUGHT  /bin/bash -eu nobody                     exit=1
+  *** LAUNDERED *** /bin/bash -e -o pipefail body  exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:47Z)
+  *** LAUNDERED *** /bin/bash -e -o pipefail nobody exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:47Z)
+  *** LAUNDERED *** /bin/bash -eu -o pipefail body exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:47Z)
+  CAUGHT  /bin/bash -eu -o pipefail nobody         exit=1
+  *** LAUNDERED *** /bin/bash -E -e body           exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:48Z)
+  *** LAUNDERED *** /bin/bash -E -e nobody         exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:48Z)
+  *** LAUNDERED *** /bin/dash NONE body            exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:48Z)
+  *** LAUNDERED *** /bin/dash NONE nobody          exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:48Z)
+  *** LAUNDERED *** /bin/dash -e body              exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:48Z)
+  *** LAUNDERED *** /bin/dash -e nobody            exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:49Z)
+  *** LAUNDERED *** /bin/dash -u body              exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:49Z)
+  CAUGHT  /bin/dash -u nobody                      exit=2
+  *** LAUNDERED *** /bin/dash -eu body             exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:49Z)
+  CAUGHT  /bin/dash -eu nobody                     exit=2
+  skip    /bin/dash -e -o pipefail body            (shell refused the options)
+  skip    /bin/dash -e -o pipefail nobody          (shell refused the options)
+  skip    /bin/dash -eu -o pipefail body           (shell refused the options)
+  skip    /bin/dash -eu -o pipefail nobody         (shell refused the options)
+  *** LAUNDERED *** /bin/dash -E -e body           exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:50Z)
+  *** LAUNDERED *** /bin/dash -E -e nobody         exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:50Z)
+  *** LAUNDERED *** /bin/zsh NONE body             exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:50Z)
+  *** LAUNDERED *** /bin/zsh NONE nobody           exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:50Z)
+  *** LAUNDERED *** /bin/zsh -e body               exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:50Z)
+  *** LAUNDERED *** /bin/zsh -e nobody             exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:51Z)
+  *** LAUNDERED *** /bin/zsh -u body               exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:51Z)
+  CAUGHT  /bin/zsh -u nobody                       exit=1
+  *** LAUNDERED *** /bin/zsh -eu body              exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:51Z)
+  CAUGHT  /bin/zsh -eu nobody                      exit=1
+  *** LAUNDERED *** /bin/zsh -e -o pipefail body   exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:51Z)
+  *** LAUNDERED *** /bin/zsh -e -o pipefail nobody exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:52Z)
+  *** LAUNDERED *** /bin/zsh -eu -o pipefail body  exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:52Z)
+  CAUGHT  /bin/zsh -eu -o pipefail nobody          exit=1
+  *** LAUNDERED *** /bin/zsh -E -e body            exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:52Z)
+  *** LAUNDERED *** /bin/zsh -E -e nobody          exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:52Z)
+  *** LAUNDERED *** /bin/ksh NONE body             exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:53Z)
+  *** LAUNDERED *** /bin/ksh NONE nobody           exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:53Z)
+  *** LAUNDERED *** /bin/ksh -e body               exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:53Z)
+  *** LAUNDERED *** /bin/ksh -e nobody             exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:53Z)
+  *** LAUNDERED *** /bin/ksh -u body               exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:53Z)
+  *** LAUNDERED *** /bin/ksh -u nobody             exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:54Z)
+  *** LAUNDERED *** /bin/ksh -eu body              exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:54Z)
+  *** LAUNDERED *** /bin/ksh -eu nobody            exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:54Z)
+  *** LAUNDERED *** /bin/ksh -e -o pipefail body   exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:54Z)
+  *** LAUNDERED *** /bin/ksh -e -o pipefail nobody exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:54Z)
+  *** LAUNDERED *** /bin/ksh -eu -o pipefail body  exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:55Z)
+  *** LAUNDERED *** /bin/ksh -eu -o pipefail nobody exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:55Z)
+  *** LAUNDERED *** /bin/ksh -E -e body            exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:55Z)
+  *** LAUNDERED *** /bin/ksh -E -e nobody          exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:55Z)
+  *** LAUNDERED *** shebang body                   exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:56Z)
+  *** LAUNDERED *** shebang nobody                 exit=7  FRESH-TIMESTAMP(2026-08-21T07:12:56Z)
+PASS=11 FAIL=57 SKIP=4
+
+############ 2. D-2 shell/option matrix — POST-FIX cap.sh (A2-5) ############
+=== POST-FIX :: /tmp/poison/cap-postfix.sh ===
+  CAUGHT  /bin/sh NONE body                        exit=1
+  CAUGHT  /bin/sh NONE nobody                      exit=1
+  CAUGHT  /bin/sh -e body                          exit=1
+  CAUGHT  /bin/sh -e nobody                        exit=1
+  CAUGHT  /bin/sh -u body                          exit=1
+  CAUGHT  /bin/sh -u nobody                        exit=1
+  CAUGHT  /bin/sh -eu body                         exit=1
+  CAUGHT  /bin/sh -eu nobody                       exit=1
+  CAUGHT  /bin/sh -e -o pipefail body              exit=1
+  CAUGHT  /bin/sh -e -o pipefail nobody            exit=1
+  CAUGHT  /bin/sh -eu -o pipefail body             exit=1
+  CAUGHT  /bin/sh -eu -o pipefail nobody           exit=1
+  CAUGHT  /bin/sh -E -e body                       exit=1
+  CAUGHT  /bin/sh -E -e nobody                     exit=1
+  CAUGHT  /bin/bash NONE body                      exit=1
+  CAUGHT  /bin/bash NONE nobody                    exit=1
+  CAUGHT  /bin/bash -e body                        exit=1
+  CAUGHT  /bin/bash -e nobody                      exit=1
+  CAUGHT  /bin/bash -u body                        exit=1
+  CAUGHT  /bin/bash -u nobody                      exit=1
+  CAUGHT  /bin/bash -eu body                       exit=1
+  CAUGHT  /bin/bash -eu nobody                     exit=1
+  CAUGHT  /bin/bash -e -o pipefail body            exit=1
+  CAUGHT  /bin/bash -e -o pipefail nobody          exit=1
+  CAUGHT  /bin/bash -eu -o pipefail body           exit=1
+  CAUGHT  /bin/bash -eu -o pipefail nobody         exit=1
+  CAUGHT  /bin/bash -E -e body                     exit=1
+  CAUGHT  /bin/bash -E -e nobody                   exit=1
+  CAUGHT  /bin/dash NONE body                      exit=1
+  CAUGHT  /bin/dash NONE nobody                    exit=1
+  CAUGHT  /bin/dash -e body                        exit=1
+  CAUGHT  /bin/dash -e nobody                      exit=1
+  CAUGHT  /bin/dash -u body                        exit=1
+  CAUGHT  /bin/dash -u nobody                      exit=1
+  CAUGHT  /bin/dash -eu body                       exit=1
+  CAUGHT  /bin/dash -eu nobody                     exit=1
+  skip    /bin/dash -e -o pipefail body            (shell refused the options)
+  skip    /bin/dash -e -o pipefail nobody          (shell refused the options)
+  skip    /bin/dash -eu -o pipefail body           (shell refused the options)
+  skip    /bin/dash -eu -o pipefail nobody         (shell refused the options)
+  CAUGHT  /bin/dash -E -e body                     exit=1
+  CAUGHT  /bin/dash -E -e nobody                   exit=1
+  CAUGHT  /bin/zsh NONE body                       exit=1
+  CAUGHT  /bin/zsh NONE nobody                     exit=1
+  CAUGHT  /bin/zsh -e body                         exit=1
+  CAUGHT  /bin/zsh -e nobody                       exit=1
+  CAUGHT  /bin/zsh -u body                         exit=1
+  CAUGHT  /bin/zsh -u nobody                       exit=1
+  CAUGHT  /bin/zsh -eu body                        exit=1
+  CAUGHT  /bin/zsh -eu nobody                      exit=1
+  CAUGHT  /bin/zsh -e -o pipefail body             exit=1
+  CAUGHT  /bin/zsh -e -o pipefail nobody           exit=1
+  CAUGHT  /bin/zsh -eu -o pipefail body            exit=1
+  CAUGHT  /bin/zsh -eu -o pipefail nobody          exit=1
+  CAUGHT  /bin/zsh -E -e body                      exit=1
+  CAUGHT  /bin/zsh -E -e nobody                    exit=1
+  CAUGHT  /bin/ksh NONE body                       exit=1
+  CAUGHT  /bin/ksh NONE nobody                     exit=1
+  CAUGHT  /bin/ksh -e body                         exit=1
+  CAUGHT  /bin/ksh -e nobody                       exit=1
+  CAUGHT  /bin/ksh -u body                         exit=1
+  CAUGHT  /bin/ksh -u nobody                       exit=1
+  CAUGHT  /bin/ksh -eu body                        exit=1
+  CAUGHT  /bin/ksh -eu nobody                      exit=1
+  CAUGHT  /bin/ksh -e -o pipefail body             exit=1
+  CAUGHT  /bin/ksh -e -o pipefail nobody           exit=1
+  CAUGHT  /bin/ksh -eu -o pipefail body            exit=1
+  CAUGHT  /bin/ksh -eu -o pipefail nobody          exit=1
+  CAUGHT  /bin/ksh -E -e body                      exit=1
+  CAUGHT  /bin/ksh -E -e nobody                    exit=1
+  CAUGHT  shebang body                             exit=1
+  CAUGHT  shebang nobody                           exit=1
+PASS=68 FAIL=0 SKIP=4
+
+############ 3. D-2 other transport modes (partial transfer, curl absent, caller shapes) ############
+--- PRE-FIX ---
+=== PRE-FIX :: /tmp/poison/cap-prefix.sh ===
+A. PARTIAL TRANSFER (server closes mid-body, curl exits 18) on 127.0.0.1:50008
+  *LAUNDERED* partial-transfer body                          exit=18  FRESH-TIMESTAMP(2026-08-21T07:13:11Z) BODY-MUTATED(b'{"TRUNCATED-RESPONSE-NEVER-COMPLETED":true}')
+  *LAUNDERED* partial-transfer nobody                        exit=18  FRESH-TIMESTAMP(2026-08-21T07:13:11Z) BODY-MUTATED(b'{"TRUNCATED-RESPONSE-NEVER-COMPLETED":true}')
+B. CURL ABSENT (PATH stripped -> 127 from the command substitution)
+  CAUGHT    curl-absent body                               exit=1   
+  CAUGHT    curl-absent nobody                             exit=1   
+C. CALLER SHAPES (how a `|| exit 1` guard gets defeated), endpoint closed
+  CAUGHT    plain            || exit 1                     exit=1   
+  *LAUNDERED* pipeline to tee  || exit 1                     exit=0   STALE BODY ON STDOUT
+  CAUGHT    cmd-substitution || exit 1                     exit=1   
+  *LAUNDERED* subshell         || exit 1                     exit=0   STALE BODY ON STDOUT
+  *LAUNDERED* no guard at all                                exit=0   STALE BODY ON STDOUT
+PASS=4 FAIL=5
+--- POST-FIX ---
+=== POST-FIX :: /tmp/poison/cap-postfix.sh ===
+A. PARTIAL TRANSFER (server closes mid-body, curl exits 18) on 127.0.0.1:50016
+  CAUGHT    partial-transfer body                          exit=1   
+  CAUGHT    partial-transfer nobody                        exit=1   
+B. CURL ABSENT (PATH stripped -> 127 from the command substitution)
+  CAUGHT    curl-absent body                               exit=1   
+  CAUGHT    curl-absent nobody                             exit=1   
+C. CALLER SHAPES (how a `|| exit 1` guard gets defeated), endpoint closed
+  CAUGHT    plain            || exit 1                     exit=1   
+  *LAUNDERED* pipeline to tee  || exit 1                     exit=0   STALE BODY ON STDOUT
+  CAUGHT    cmd-substitution || exit 1                     exit=1   
+  *LAUNDERED* subshell         || exit 1                     exit=0   STALE BODY ON STDOUT
+  *LAUNDERED* no guard at all                                exit=0   STALE BODY ON STDOUT
+PASS=6 FAIL=3
+
+############ 4. D-2 non-regression: clean slate, success path, refusal, byte fidelity ############
+1. CLEAN SLATE + unreachable endpoint: out/ must be left EMPTY
+   pre-fix  exit=7   out/=['N.http']  <-- writes on failure
+   post-fix exit=1   out/=[]  OK
+2. SUCCESS PATH not regressed (200 with body)
+   pre-fix  exit=0   status=b'200\n' body=b'{"resourceId":42,"officeId":1}'
+            .http = b'POST /glaccounts\nFineract-Platform-TenantId: gerege\nAuthorization: Basic <mifos:password>\nContent-Type: application/json\nbody-file: req/b.json\ncaptured-at-utc: 2026-08-21T07:13:15Z\n'
+   post-fix exit=0   status=b'200\n' body=b'{"resourceId":42,"officeId":1}'
+            .http = b'POST /glaccounts\nFineract-Platform-TenantId: gerege\nAuthorization: Basic <mifos:password>\nContent-Type: application/json\nbody-file: req/b.json\ncaptured-at-utc: 2026-08-21T07:13:15Z\n'
+   .http records identical modulo the timestamp: OK
+3. REFUSAL is still an OBSERVATION (400 must exit 0 and be recorded)
+   pre-fix  exit=0   status=b'400\n' body=b'{"developerMessage":"validation.msg.glaccount.glCode.duplicate"}' OK
+   post-fix exit=0   status=b'400\n' body=b'{"developerMessage":"validation.msg.glaccount.glCode.duplicate"}' OK
+4. EMPTY 204 body and 100KB body (byte fidelity, no-body branch)
+   pre-fix  /glaccounts/empty    exit=0   bodylen=0       OK
+   post-fix /glaccounts/empty    exit=0   bodylen=0       OK
+   pre-fix  /glaccounts/large    exit=0   bodylen=100010  <-- BAD
+   post-fix /glaccounts/large    exit=0   bodylen=100010  <-- BAD
+
+REGRESSIONS/DEFECTS IN POST-FIX:
+  - /glaccounts/large: post-fix len=100010 expected=100011 rc=0
+
+############ 5. ADJUDICATION 1a: the brief's rm -f, naive form (|| rc=$? added, trailing rc=$? kept) ############
+--- counterfactual: the brief's fix (reachable handler + rm -f retained) ---
+19:rc=0
+35:              -d @"$DIR/$BODY" -o "$OUT" -w '%{http_code}') || rc=$?
+37:  code=$(curl -sk -X "$METHOD" "$B$RPATH" -H "$A" -H "$T" -o "$OUT" -w '%{http_code}') || rc=$?
+39:rc=$?
+41:  echo "TRANSPORT FAILURE (curl rc=$rc) for $NAME — NO OBSERVATION WAS MADE." >&2
+42:  rm -f "$OUT"
+
+=== COUNTERFACTUAL (the brief's prescribed fix), seeded with an earlier fire ===
+POISON                                       HTTP 000
+  exit=0
+  out/ now contains: POISON.http POISON.json POISON.status 
+  out/POISON.http captured-at-utc: 2026-08-21T07:13:16Z
+  out/POISON.json: {"stale":"BODY FROM AN EARLIER FIRE - MUST NOT BE RE-DATED"}
+  out/POISON.status: 000
+
+=== COUNTERFACTUAL, clean slate ===
+POISON                                       HTTP 000
+  exit=0
+  out/ now contains: POISON.http POISON.status 
+  out/POISON.http captured-at-utc: 2026-08-21T07:13:16Z
+  out/POISON.json: *** DELETED - EARLIER FIRE'S EVIDENCE DESTROYED ***
+  out/POISON.status: 000
+
+=== A2-5's SHIPPED FIX, same seeded sandbox ===
+TRANSPORT FAILURE (curl rc=7) for POISON — NO OBSERVATION WAS MADE.
+  NOTHING was written under out/ for POISON by this fire.
+  PRE-EXISTING from an EARLIER fire, left intact, NOT this fire's output: out/POISON.http
+  PRE-EXISTING from an EARLIER fire, left intact, NOT this fire's output: out/POISON.json
+  PRE-EXISTING from an EARLIER fire, left intact, NOT this fire's output: out/POISON.status
+  that earlier artefact's own captured-at-utc: 2000-01-01T00:00:00Z
+  exit=1
+  out/ now contains: POISON.http POISON.json POISON.status 
+  out/POISON.http captured-at-utc: 2000-01-01T00:00:00Z
+  out/POISON.json: {"stale":"BODY FROM AN EARLIER FIRE - MUST NOT BE RE-DATED"}
+  out/POISON.status: 200
+
+############ 6. ADJUDICATION 1b: the brief's rm -f, CORRECT form (handler genuinely reachable) ############
+--- brief-literal variant (reachable handler done right + rm -f kept) ---
+  echo "captured-at-utc: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+} > "$DIR/out/$NAME.http"
+
+if [ -n "$BODY" ]; then
+  code=$(curl -sk -X "$METHOD" "$B$RPATH" -H "$A" -H "$T" -H "$CT" \
+              -d @"$DIR/$BODY" -o "$OUT" -w '%{http_code}') || rc=$?
+else
+  code=$(curl -sk -X "$METHOD" "$B$RPATH" -H "$A" -H "$T" -o "$OUT" -w '%{http_code}') || rc=$?
+fi
+if [ $rc -ne 0 ]; then
+  echo "TRANSPORT FAILURE (curl rc=$rc) for $NAME — NO OBSERVATION WAS MADE." >&2
+  rm -f "$OUT"
+  exit 1
+fi
+
+echo "$code" > "$STATUS"
+printf '%-44s HTTP %s\n' "$NAME" "$code"
+
+manifest-relevant sha256 of the earlier fire's body BEFORE:
+978096bb3f8680b3095148a973f0eebbf2f46ad078734bf150d9457340f0caed  /tmp/poison/bl.ankgwL/out/POISON.json
+TRANSPORT FAILURE (curl rc=7) for POISON — NO OBSERVATION WAS MADE.
+  exit=1
+  out/ now contains: POISON.http POISON.status 
+  out/POISON.http captured-at-utc: 2026-08-21T07:13:17Z
+  out/POISON.json: *** DELETED by rm -f -- an EARLIER FIRE'S EVIDENCE, covered by MANIFEST.sha256 ***
+  out/POISON.status: 200
+
+############ 7. D-3 attack suite — PRE-FIX manifest.py ############
+=== PRE-FIX manifest.py :: /tmp/poison/manifest-prefix.py ===
+  green     CONTROL untampered sandbox (must be GREEN)           verify exit=0  
+  RED       (b) empty MANIFEST.sha256 - INSPECTED NOTHING        verify exit=1  
+  RED       (b) manifest stripped to a single line               verify exit=1  
+  green     (b) empty manifest AND empty capture dir             verify exit=0  <-- EXPECTED RED
+        tool said: OK: 0 files match MANIFEST.sha256
+  green     (c) fabricated out/sub/A2-999-FABRICATED.json        verify exit=0  <-- EXPECTED RED
+        tool said: OK: 5 files match MANIFEST.sha256
+  green     (c) fabricated out/a/b/c/A2-998.json (3 deep)        verify exit=0  <-- EXPECTED RED
+        tool said: OK: 5 files match MANIFEST.sha256
+  RED       (c) fabricated out/A2-997 (top level, pre-fix control) verify exit=1  
+  green     (d) false sentence appended to CAPTURE-PLAN.md       verify exit=0  <-- EXPECTED RED
+        tool said: OK: 5 files match MANIFEST.sha256
+  green     (d) cap.sh repointed at another endpoint             verify exit=0  <-- EXPECTED RED
+        tool said: OK: 5 files match MANIFEST.sha256
+  green     (d) env.sh switched to the WRONG TENANT              verify exit=0  <-- EXPECTED RED
+        tool said: OK: 5 files match MANIFEST.sha256
+  green     (d) run-020-accounts.sh recipe altered               verify exit=0  <-- EXPECTED RED
+        tool said: OK: 5 files match MANIFEST.sha256
+  green     (d) manifest.py appends to ITSELF                    verify exit=0  <-- EXPECTED RED
+        tool said: OK: 5 files match MANIFEST.sha256
+  green     (d) manifest.py NEUTERS its own verify() -> sys.exit(0) verify exit=0  <-- EXPECTED RED
+        tool said: 
+  green     (d) DEFECTS-FOUND-BY-REVIEW.md rewritten             verify exit=0  <-- EXPECTED RED
+        tool said: OK: 5 files match MANIFEST.sha256
+  RED       evidence file deleted from out/                      verify exit=1  
+  RED       FLAGGED attempt1-* evidence deleted                  verify exit=1  
+  green     FLAGGED-NOT-REPRODUCIBLE.txt deleted                 verify exit=0  <-- EXPECTED RED
+        tool said: OK: 5 files match MANIFEST.sha256
+  RED       flagged file's manifest line stripped                verify exit=1  
+  RED       evidence body mutated in place                       verify exit=1  
+  RED       malformed manifest line                              verify exit=1  
+  RED       EXTRA: fabricated observation dropped as a SYMLINK in out/ verify exit=1  
+  green     EXTRA: fabricated DIRECTORY symlinked as out/sub     verify exit=0  <-- EXPECTED RED
+        tool said: OK: 5 files match MANIFEST.sha256
+  green     EXTRA: fabricated observation in a NEW top-level dir out2/ verify exit=0  <-- EXPECTED RED
+        tool said: OK: 5 files match MANIFEST.sha256
+  RED       EXTRA: duplicate manifest line, second one a false hash verify exit=1  
+  green     EXTRA: flag file gutted to zero flagged paths        verify exit=0  <-- EXPECTED RED
+        tool said: OK: 5 files match MANIFEST.sha256
+
+attacks=25  as-expected=11  NOT-as-expected=14
+  NOT AS EXPECTED: (b) empty manifest AND empty capture dir exit 0
+  NOT AS EXPECTED: (c) fabricated out/sub/A2-999-FABRICATED.json exit 0
+  NOT AS EXPECTED: (c) fabricated out/a/b/c/A2-998.json (3 deep) exit 0
+  NOT AS EXPECTED: (d) false sentence appended to CAPTURE-PLAN.md exit 0
+  NOT AS EXPECTED: (d) cap.sh repointed at another endpoint exit 0
+  NOT AS EXPECTED: (d) env.sh switched to the WRONG TENANT exit 0
+  NOT AS EXPECTED: (d) run-020-accounts.sh recipe altered exit 0
+  NOT AS EXPECTED: (d) manifest.py appends to ITSELF exit 0
+  NOT AS EXPECTED: (d) manifest.py NEUTERS its own verify() -> sys.exit(0) exit 0
+  NOT AS EXPECTED: (d) DEFECTS-FOUND-BY-REVIEW.md rewritten exit 0
+  NOT AS EXPECTED: FLAGGED-NOT-REPRODUCIBLE.txt deleted exit 0
+  NOT AS EXPECTED: EXTRA: fabricated DIRECTORY symlinked as out/sub exit 0
+  NOT AS EXPECTED: EXTRA: fabricated observation in a NEW top-level dir out2/ exit 0
+  NOT AS EXPECTED: EXTRA: flag file gutted to zero flagged paths exit 0
+
+############ 8. D-3 attack suite — POST-FIX manifest.py (A2-5) ############
+=== POST-FIX manifest.py (A2-5) :: /tmp/poison/manifest-postfix.py ===
+  green     CONTROL untampered sandbox (must be GREEN)           verify exit=0  
+  RED       (b) empty MANIFEST.sha256 - INSPECTED NOTHING        verify exit=1  
+  RED       (b) manifest stripped to a single line               verify exit=1  
+  RED       (b) empty manifest AND empty capture dir             verify exit=1  
+  RED       (c) fabricated out/sub/A2-999-FABRICATED.json        verify exit=1  
+  RED       (c) fabricated out/a/b/c/A2-998.json (3 deep)        verify exit=1  
+  RED       (c) fabricated out/A2-997 (top level, pre-fix control) verify exit=1  
+  RED       (d) false sentence appended to CAPTURE-PLAN.md       verify exit=1  
+  RED       (d) cap.sh repointed at another endpoint             verify exit=1  
+  RED       (d) env.sh switched to the WRONG TENANT              verify exit=1  
+  RED       (d) run-020-accounts.sh recipe altered               verify exit=1  
+  RED       (d) manifest.py appends to ITSELF                    verify exit=1  
+  green     (d) manifest.py NEUTERS its own verify() -> sys.exit(0) verify exit=0  <-- EXPECTED RED
+        tool said: 
+  RED       (d) DEFECTS-FOUND-BY-REVIEW.md rewritten             verify exit=1  
+  RED       evidence file deleted from out/                      verify exit=1  
+  RED       FLAGGED attempt1-* evidence deleted                  verify exit=1  
+  RED       FLAGGED-NOT-REPRODUCIBLE.txt deleted                 verify exit=1  
+  RED       flagged file's manifest line stripped                verify exit=1  
+  RED       evidence body mutated in place                       verify exit=1  
+  RED       malformed manifest line                              verify exit=1  
+  RED       EXTRA: fabricated observation dropped as a SYMLINK in out/ verify exit=1  
+  green     EXTRA: fabricated DIRECTORY symlinked as out/sub     verify exit=0  <-- EXPECTED RED
+        tool said: OK: 14 files match MANIFEST.sha256 (5 under out/ req/ sql/, 9 rig + docs, this script included) | FLAGGED, covered, NOT citable: 1 attempt1-* files — recipes provably false (D-1), see FLAGGED-NOT-REPRODUCIBLE.txt
+  green     EXTRA: fabricated observation in a NEW top-level dir out2/ verify exit=0  <-- EXPECTED RED
+        tool said: OK: 14 files match MANIFEST.sha256 (5 under out/ req/ sql/, 9 rig + docs, this script included) | FLAGGED, covered, NOT citable: 1 attempt1-* files — recipes provably false (D-1), see FLAGGED-NOT-REPRODUCIBLE.txt
+  RED       EXTRA: duplicate manifest line, second one a false hash verify exit=1  
+  RED       EXTRA: flag file gutted to zero flagged paths        verify exit=1  
+
+attacks=25  as-expected=22  NOT-as-expected=3
+  NOT AS EXPECTED: (d) manifest.py NEUTERS its own verify() -> sys.exit(0) exit 0
+  NOT AS EXPECTED: EXTRA: fabricated DIRECTORY symlinked as out/sub exit 0
+  NOT AS EXPECTED: EXTRA: fabricated observation in a NEW top-level dir out2/ exit 0
+
+############ 9. D-3 attack suite — proposed 3-line MICRO-FIX ############
+=== MICRO-FIX candidate :: /tmp/poison/manifest-microfix2.py ===
+  green     CONTROL untampered sandbox (must be GREEN)           verify exit=0  
+  RED       (b) empty MANIFEST.sha256 - INSPECTED NOTHING        verify exit=1  
+  RED       (b) manifest stripped to a single line               verify exit=1  
+  RED       (b) empty manifest AND empty capture dir             verify exit=1  
+  RED       (c) fabricated out/sub/A2-999-FABRICATED.json        verify exit=1  
+  RED       (c) fabricated out/a/b/c/A2-998.json (3 deep)        verify exit=1  
+  RED       (c) fabricated out/A2-997 (top level, pre-fix control) verify exit=1  
+  RED       (d) false sentence appended to CAPTURE-PLAN.md       verify exit=1  
+  RED       (d) cap.sh repointed at another endpoint             verify exit=1  
+  RED       (d) env.sh switched to the WRONG TENANT              verify exit=1  
+  RED       (d) run-020-accounts.sh recipe altered               verify exit=1  
+  RED       (d) manifest.py appends to ITSELF                    verify exit=1  
+  green     (d) manifest.py NEUTERS its own verify() -> sys.exit(0) verify exit=0  <-- EXPECTED RED
+        tool said: 
+  RED       (d) DEFECTS-FOUND-BY-REVIEW.md rewritten             verify exit=1  
+  RED       evidence file deleted from out/                      verify exit=1  
+  RED       FLAGGED attempt1-* evidence deleted                  verify exit=1  
+  RED       FLAGGED-NOT-REPRODUCIBLE.txt deleted                 verify exit=1  
+  RED       flagged file's manifest line stripped                verify exit=1  
+  RED       evidence body mutated in place                       verify exit=1  
+  RED       malformed manifest line                              verify exit=1  
+  RED       EXTRA: fabricated observation dropped as a SYMLINK in out/ verify exit=1  
+  RED       EXTRA: fabricated DIRECTORY symlinked as out/sub     verify exit=1  
+  green     EXTRA: fabricated observation in a NEW top-level dir out2/ verify exit=0  <-- EXPECTED RED
+        tool said: OK: 14 files match MANIFEST.sha256 (5 under out/ req/ sql/, 9 rig + docs, this script included) | FLAGGED, covered, NOT citable: 1 attempt1-* files — recipes provably false (D-1), see FLAGGED-NOT-REPRODUCIBLE.txt
+  RED       EXTRA: duplicate manifest line, second one a false hash verify exit=1  
+  RED       EXTRA: flag file gutted to zero flagged paths        verify exit=1  
+
+attacks=25  as-expected=23  NOT-as-expected=2
+  NOT AS EXPECTED: (d) manifest.py NEUTERS its own verify() -> sys.exit(0) exit 0
+  NOT AS EXPECTED: EXTRA: fabricated observation in a NEW top-level dir out2/ exit 0
+
+############ 10. A2-10-D1: symlink laundering, payload outside the capture dir ############
+--- pre-fix vs post-fix ---
+=== PRE-FIX  ===
+  RED       symlink FILE into out/ -> payload outside the capture dir  exit=1  readable-as: ['out/A2-996-FABRICATED.json']
+  green *LAUNDERED* symlink DIR  as out/sub -> payload dir outside the capture dir exit=0  readable-as: ['out/sub/A2-995-FAB.json']
+  RED       REPLACE a tracked observation with a symlink to a fake     exit=1  readable-as: ['out/A2-020-real.json']
+  RED       HARDLINK a fabricated file into out/ (control: not a symlink) exit=1  readable-as: ['out/A2-993-FABRICATED.json']
+
+=== POST-FIX ===
+  green *LAUNDERED* symlink FILE into out/ -> payload outside the capture dir  exit=0  readable-as: ['out/A2-996-FABRICATED.json']
+  green *LAUNDERED* symlink DIR  as out/sub -> payload dir outside the capture dir exit=0  readable-as: ['out/sub/A2-995-FAB.json']
+  RED       REPLACE a tracked observation with a symlink to a fake     exit=1  readable-as: ['out/A2-020-real.json']
+  RED       HARDLINK a fabricated file into out/ (control: not a symlink) exit=1  readable-as: ['out/A2-993-FABRICATED.json']
+
+LAUNDERING PATHS FOUND:
+   ('PRE-FIX ', 'symlink DIR  as out/sub -> payload dir outside the capture dir', ['out/sub/A2-995-FAB.json'])
+   ('POST-FIX', 'symlink FILE into out/ -> payload outside the capture dir', ['out/A2-996-FABRICATED.json'])
+   ('POST-FIX', 'symlink DIR  as out/sub -> payload dir outside the capture dir', ['out/sub/A2-995-FAB.json'])
+--- post-fix vs micro-fix ---
+=== PRE-FIX  ===
+  green *LAUNDERED* symlink FILE into out/ -> payload outside the capture dir  exit=0  readable-as: ['out/A2-996-FABRICATED.json']
+  green *LAUNDERED* symlink DIR  as out/sub -> payload dir outside the capture dir exit=0  readable-as: ['out/sub/A2-995-FAB.json']
+  RED       REPLACE a tracked observation with a symlink to a fake     exit=1  readable-as: ['out/A2-020-real.json']
+  RED       HARDLINK a fabricated file into out/ (control: not a symlink) exit=1  readable-as: ['out/A2-993-FABRICATED.json']
+
+=== POST-FIX ===
+  RED       symlink FILE into out/ -> payload outside the capture dir  exit=1  readable-as: ['out/A2-996-FABRICATED.json']
+  RED       symlink DIR  as out/sub -> payload dir outside the capture dir exit=1  readable-as: ['out/sub/A2-995-FAB.json']
+  RED       REPLACE a tracked observation with a symlink to a fake     exit=1  readable-as: ['out/A2-020-real.json']
+  RED       HARDLINK a fabricated file into out/ (control: not a symlink) exit=1  readable-as: ['out/A2-993-FABRICATED.json']
+
+LAUNDERING PATHS FOUND:
+   ('PRE-FIX ', 'symlink FILE into out/ -> payload outside the capture dir', ['out/A2-996-FABRICATED.json'])
+   ('PRE-FIX ', 'symlink DIR  as out/sub -> payload dir outside the capture dir', ['out/sub/A2-995-FAB.json'])
+
+############ 11. ADJUDICATION 2: the guard A2-5 said could not be driven red ############
+=== A2-5 shipped manifest.py ===
+dir contents: ['MANIFEST.sha256', 'manifest.py']
+exit: 1
+REFUSING: found 0 files under out/, req/, sql/ or this directory — INSPECTED NOTHING.
+SECOND zero-input refusal FIRED: True
+exit=0
+=== MICRO-FIX v2 (islink clause removed) ===
+dir contents: ['MANIFEST.sha256', 'manifest.py']
+exit: 1
+REFUSING: MANIFEST.sha256 does not cover CAPTURE-PLAN.md, DEFECTS-FOUND-BY-REVIEW.md, FLAGGED-NOT-REPRODUCIBLE.txt, cap.sh, env.sh, manifest.py — this is not a manifest of this capture.
+SECOND zero-input refusal FIRED: False
+exit=1
+
+############ 12. (f) A2-4's corpus property, re-issued LIVE against the reference oracle ############
+selected 27 non-attempt1 POST recipes with a recorded 4xx
+
+byte-identical = 24   differs = 3   transport-error = 0
+
+DIFFERS A2-086-disburse-loan3-dupchannel  status 403 -> 403
+   was: b'{"developerMessage":"The request caused a data integrity issue to be fired by the database.","httpStatusCode":"403","defaultUserMessage":"More than on'
+   now: b'{"developerMessage":"Request was understood but caused a domain rule violation.","httpStatusCode":"403","defaultUserMessage":"Errors contain reason fo'
+DIFFERS A2-bad-045-no-usage  status 403 -> 403
+   was: b'{"developerMessage":"The request caused a data integrity issue to be fired by the database.","httpStatusCode":"403","defaultUserMessage":"Unknown data'
+   now: b'{"developerMessage":"The request caused a data integrity issue to be fired by the database.","httpStatusCode":"403","defaultUserMessage":"Unknown data'
+DIFFERS A2-prod-066-bad-paymenttype  status 404 -> 403
+   was: b'{"developerMessage":"The requested resource is not available.","httpStatusCode":"404","defaultUserMessage":"The requested resource is not available.",'
+   now: b'{"developerMessage":"Request was understood but caused a domain rule violation.","httpStatusCode":"403","defaultUserMessage":"Errors contain reason fo'
+
+committed capture dir manifest verify after the re-issue -> exit 0
+OK: 430 files match MANIFEST.sha256 (406 under out/ req/ sql/, 24 rig + docs, this script included)
+FLAGGED, covered, NOT citable: 30 attempt1-* files — recipes provably false (D-1), see FLAGGED-NOT-REPRODUCIBLE.txt
+sandbox was: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/reissue.nudf90_s
+
+############ 13. Real-tree verify with A2-5's shipped tool ############
+OK: 430 files match MANIFEST.sha256 (406 under out/ req/ sql/, 24 rig + docs, this script included)
+FLAGGED, covered, NOT citable: 30 attempt1-* files — recipes provably false (D-1), see FLAGGED-NOT-REPRODUCIBLE.txt
+exit=0
+
+############ 14. A2-5's shipped tool against MAIN's tree (D-3(iii) on the real evidence) ############
+REFUSING: MANIFEST.sha256 does not cover CAPTURE-PLAN.md, DEFECTS-FOUND-BY-REVIEW.md, FLAGGED-NOT-REPRODUCIBLE.txt, cap.sh, env.sh, manifest.py — this is not a manifest of this capture.
+exit=1
