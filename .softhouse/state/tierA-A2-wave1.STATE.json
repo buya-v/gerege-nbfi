@@ -2,14 +2,15 @@
   "squad": "tierA-A2-wave1",
   "run_id": "2026-08-21-run2-tierA-gl-accounting-A2",
   "fire": "20260821-134344",
-  "dispatched": [
-    {"task": "A2-1", "branch": "softhouse/A2-1-behaviour", "step": "behaviour extraction from pinned source", "next_action": "reviewer A2-2 re-derives from source", "blocked_on": null},
-    {"task": "A2-3", "branch": "softhouse/A2-3-capture", "step": "corpus mining + RAW oracle capture", "next_action": "reviewer A2-4 attacks the rig", "blocked_on": null},
-    {"task": "T149", "branch": "softhouse/T149-halfup-tie-vector", "step": "re-observe the tie live, promote a parity vector, prove red/green", "next_action": "independent reviewer", "blocked_on": null}
+  "exit": "CLEAN — 5 workers dispatched, 5 completed, 0 live at exit, nothing uncommitted, nothing stranded",
+  "merged": ["A2-1", "A2-2", "A2-3", "A2-4"],
+  "held_unmerged": [
+    {"task": "T149", "branch": "softhouse/T149-halfup-tie-vector", "why": "promoted a vector into the graded corpus but the driver dispatched it with NO paired reviewer (plan-gate rule 1). Not a defect in the work — conformance PASS 43 on its branch. T153 is the review.", "next_action": "run T153, then merge"}
   ],
-  "gate_pending": null,
+  "next_tasks": ["T153 (needs oracle)", "A2-5 (rig fixes, needs oracle)", "G-9 decision (no oracle)", "A2-6 (no oracle, cloud-fire suitable)"],
+  "gate_pending": "G-9 — chart of accounts, PRODUCT class, blocks the A2 coder",
   "open_questions": [
-    "A2-1's mapping-resolution answer is what slice A1 will build on; if it comes back [UNVERIFIED] the A1 coder cannot be planned yet.",
-    "Whether T149's live re-observation reproduces T136's 20925.05 / 20925.04. A disagreement is a finding, not a reconciliation job."
+    "G-9: which chart of accounts does Gerege launch with? Driver decides next fire unless Buyan overrules.",
+    "Whether slice A1 needs splitting again at plan time (11,535 LOC across 63 files)."
   ]
 }

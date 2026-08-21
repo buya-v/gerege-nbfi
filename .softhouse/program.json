@@ -78,7 +78,7 @@
       "tier0-harness-schedule-poc"
     ],
     "parked_contexts": [],
-    "note": "Local fire 20260821-134344. TIER 0 CLOSED under P-5 (Buyan, 21 Aug 2026). The fire opened by finding two completed-but-unmerged streams stranded by the 08:00 fire session limit (T151, T152) and merged both after a P-24 scratch-merge gate re-run by the driver on the merged tree. It then executed P-5: 26 open tasks recorded as obligations with what grades each, 7 money-exempt tasks kept live and carried into Tier A. THE HYGIENE SWEEP FOUND THE FAILURE THE HYGIENE RULE NAMES: six independent review documents (T67, T79, T101, T127, T131, T135; 296 KB) existed only on branches, so main carried the fixes those reviews forced but not the reasoning that forced them. All six recovered. Next: tierA-gl-accounting slice A2 (chart of accounts + product-to-account mapping, 6,636 LOC, 58 files) -- the reference data a journal-entry vector has nowhere to post without."
+    "note": "Local fire 20260821-134344. TIER 0 CLOSED under P-5 (gates-proposed-answers.md, Buyan, 21 Aug 2026); Tier A opened and slice A2's analysis+capture half is DONE AND MERGED. FIVE WORKERS DISPATCHED, FIVE COMPLETED, ZERO LIVE AT EXIT, no isolation violation, no scope breach. FOUR BRANCHES MERGED (A2-1 behaviour, A2-2 review, A2-3 capture, A2-4 review) after a P-24 scratch merge re-run by the driver: conformance probe=up, VERDICT PASS exit 0, 42 parity, 0 invariant violations. T149 IS DELIBERATELY UNMERGED. It promoted the first parity vector ever observed through the RUNNING Fineract server (all 42 others are the in-process Path A seam), conformance 42->43 PASS on its own branch -- but the driver dispatched it WITHOUT a paired reviewer, its own plan-gate rule-1 violation, and a promotion into the graded corpus does not enter main unreviewed. T153 is that review and is the next fire's first task. THE DRIVER WAS WRONG TWICE MORE AND WORKERS CAUGHT BOTH. T149 refuted the brief's central premise -- '0 of 46 vectors carry either tie answer SO nothing would notice a HALF_EVEN port' is FALSE BY THREE VECTORS (T61-HE-A/B/C, mutation M7, parity PASS 39 FAIL 3) -- and REFUSED to write the false sentence into the vector's own note. Recorded as P-13 and corrected at source. A2-2's F-1 corrected the driver's OWN OBL-A3-1 ruling at the mechanism level: closing_balance is written at insert from an UNSIGNED SUM, not by the running-balance accumulator, which is unreachable dead code A3 would otherwise have ported. A2-4 found twelve defects in the capture rig including two P-22 'cannot fail' guards -- cap.sh's transport-failure handler is unreachable under set -e, so a STALE body survives under a FRESH captured-at-utc -- and proved the 10 attempt1-* recipes FALSE. All recorded beside the evidence in capture/tierA-a2/DEFECTS-FOUND-BY-REVIEW.md WITHOUT mutating the captured bytes. It also confirmed the corpus is real: 24 of 27 recipes re-issue byte-identically 17h later. A2 scope was WIDENED to the Java package boundary (6,636 -> 9,007 LOC, 79 files) after A2-1's B-1 showed the slice's own core types live in fineract-core and the declared fineract-provider path does not hold the mapping helper at all. G-9 (no default chart of accounts -- PRODUCT) is open and gates the A2 coder."
   },
   "contexts": [
     {
@@ -663,6 +663,18 @@
       "driver_recommendation": "Prefer (a): it keeps the oracle authoritative, makes the divergence measured and visible rather than defined away, and may be reachable without spending a DEC-n amendment if the vector schema's existing invariant_exemptions mechanism covers it. Check that before assuming.",
       "raised_by": "local fire 20260820-170001 (T75, during its approval of T74)",
       "recorded_in": ".softhouse/gates.md"
+    },
+    {
+      "id": "G-9",
+      "class": "PRODUCT",
+      "context": "tierA-gl-accounting",
+      "slice": "tierA-gl-accounting-A2",
+      "state": "OPEN — driver to decide next fire, Buyan may overrule",
+      "title": "Fineract ships NO default chart of accounts. Which chart does Gerege launch with?",
+      "evidence": "A2-1 backlog B-5 (zero seed COA rows in the distribution), corroborated operationally by A2-3: tenant gerege had ZERO GL accounts before capture, so every account observed was one the task created.",
+      "why_PRODUCT_not_RESERVED": "CLAUDE.md Answering gates: a greenfield design choice, not a licensing fact and not regulatory acceptance. It becomes RESERVED only if it turns on what the FRC has ACCEPTED rather than what it requires on paper.",
+      "leaning": "Port the COA as DATA, not code; launch with the minimal chart the captured vectors exercise; an FRC-aligned production chart is a separate data-only deliverable. Per CLAUDE.md's PRODUCT preference: simplest configuration provable against the oracle, features deferred rather than shipped unvectored.",
+      "blocks": "the A2 coder task, which cannot be planned until the target chart is known"
     }
   ],
   "history": [

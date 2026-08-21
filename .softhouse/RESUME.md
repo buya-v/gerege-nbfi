@@ -7,7 +7,7 @@ session state.
 ## Current state (local fire `20260821-134344`, oracle REACHABLE)
 
 - **Program**: `fineract-to-go-full-codebase` — **active**
-- **TIER 0 IS CLOSED — `done`.** Contexts **1 done / 18**.
+- **TIER 0 IS CLOSED — `done`.** Contexts **1 done / 18**. Slice **A2** analysis+capture merged.
 - **Active run**: `2026-08-21-run2-tierA-gl-accounting-A2` — Tier A, slice **A2**
 - **Oracle**: UP. Pinned checkout `426a23544` clean. PostgreSQL only.
 - Previous run archived to `.softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json`.
@@ -54,33 +54,59 @@ hit its session limit without checkpointing. Verified on a **scratch merge** per
 
 ---
 
+## Slice A2 — analysis and capture halves DONE and MERGED
+
+Five workers dispatched, **five completed, zero live at exit.** No isolation violation, no scope breach.
+Four branches merged after a **P-24 scratch merge** re-run by the driver: `probe = up`, `VERDICT PASS exit 0`,
+42 parity, 0 invariant violations.
+
+| task | verdict | what landed |
+|---|---|---|
+| **A2-1** | — | Behaviour extraction, ~60 cited claims. **The mapping-resolution answer is delivered**, which was the gate on planning the A1 coder. |
+| **A2-2** | **MICRO-FIX** | All five priorities **re-derived from source and confirmed**. Of ~60 citations opened, one wrong path, **zero wrong line numbers**. "Slice A1 can safely build account resolution on §4." |
+| **A2-3** | — | 327 live observations, 406 files hashed, **promoted nothing** (correct — it had no mandate). |
+| **A2-4** | **MICRO-FIX** | Twelve defects, two of them P-22 "cannot fail" guards. Also **confirmed the corpus is real**: 24 of 27 recipes re-issue **byte-identically 17 h later**. |
+| **T149** | **held** | See below — deliberately unmerged. |
+
 ## THE NEXT FIRE STARTS HERE
 
-**Tier A, slice A2** — chart of accounts + product-to-account mapping + financial activity accounts.
-6,636 LOC / 58 files, re-verified against the pin this fire. `tierA-gl-accounting` won context selection
-because it **unblocks six downstream contexts** against loan-product-schedule's one; A2 is first because a
-journal-entry vector has nowhere to post until a chart of accounts and a mapping exist.
+1. **T153 — review T149, then merge it.** T149 promoted **the first parity vector in the store ever observed
+   through the RUNNING Fineract server** (all 42 others are the in-process Path A seam), conformance
+   **42 → 43 PASS** on its branch. It is **deliberately not on `main`**: the driver dispatched it **without a
+   paired reviewer** — its own plan-gate rule-1 violation — and a promotion into the graded corpus does not
+   enter `main` unreviewed. `main` stays at 42; the 43rd arrives with its review. **Needs the oracle.**
+2. **A2-5 — fix the capture rig before the next capture task uses it.** `cap.sh`'s transport-failure handler
+   is **unreachable** under `set -e`, so **a stale body and stale status survive under a FRESH
+   `captured-at-utc`** — a rig that can present old bytes as newly observed. Plus `manifest.py verify` passing
+   vacuously on empty input, non-recursively, and not covering the plan, the rig, or itself.
+3. **G-9 — decide the chart of accounts (PRODUCT).** Fineract ships **no default COA**. This **gates the A2
+   coder**. Leaning: port the COA as *data*, launch with the minimal chart the vectors exercise.
+4. **A2-6** — apply A2-2's micro-fix and three missing `[UNVERIFIED]` markers. No oracle. Good cloud-fire work.
+5. **Then the A2 coder**, then slices **A1** (journal posting, 11,535 LOC — check at plan time whether it
+   needs splitting again) and **A3** (period-end, 4,953).
 
-| task | what | needs oracle |
-|---|---|---|
-| **A2-1** | behaviour extraction from pinned source, every claim cited | no |
-| **A2-2** | independent review of A2-1 — **re-derive**, do not read and agree | no |
-| **A2-3** | corpus mining + **RAW observed** capture from the live oracle | **yes** |
-| **A2-4** | independent review of A2-3 — **attack the rig**, do not read it | some |
-| **T149** | promote the **HALF_UP/HALF_EVEN tie** parity vector (explicit promotion mandate) | **yes** |
+## Two driver errors this fire, both caught by workers (P-20, now five and six)
 
-**A2-1's mapping-resolution answer is the gate on planning the A1 coder.** If it returns `[UNVERIFIED]`, the
-posting engine cannot be planned yet — say so rather than proceeding on a guess.
+- **T149 refuted its own brief.** *"0 of 46 vectors carry either tie answer **so** nothing would notice a
+  `HALF_EVEN` port"* is **false by three vectors** — `T61-HE-A/B/C`, mutation `M7`, `parity PASS 39 FAIL 3`.
+  The worker **refused to write the false sentence** into the vector's own note. T136 stated the count
+  correctly with a *"but"*; T147 and then the driver replaced it with a *"so"*. Recorded as **P-13** and
+  corrected at source in `obligations.md`, `RESUME.md` and `T147.md`.
+- **A2-2's F-1 corrected the driver's own `OBL-A3-1` ruling** at the mechanism level: `closing_balance` is
+  written **at insert from an UNSIGNED `SUM`**, not by the running-balance accumulator — which is gated on
+  `IS NULL` against a `NOT NULL` column and whose only NULL-producing constructor has **zero callers**.
+  Unreachable dead code that A3 would otherwise have faithfully ported.
 
-**T149 — DONE, and it REFUTED THE DRIVER'S BRIEF.** The brief asserted that 0 of 46 vectors carry either tie
-answer **so** nothing would notice a `HALF_EVEN` port. The first clause is true of the literal characters; the
-inference is **false by three vectors** — `T61-HE-A/B/C`, measured with mutation `M7`: `parity PASS 39 FAIL 3`.
-The worker refused to write the false sentence and said so. Live tie reproduced exactly:
-`1,162,502.50 × 0.018 = 20,925.045` → `20925.05` (gerege) vs `20925.04` (default), 89 product columns differing
-only in `id`. Promoted for a better reason: **the first parity vector observed through the running server.**
+**A2 scope was widened** 6,636 → **9,007 LOC / 79 files** after A2-1's B-1: the slice's own core types
+(`GLAccount`, both enums, `AccountingConstants`, `PortfolioProductType`) live in `fineract-core`, and the
+declared `fineract-provider` path does **not** hold the mapping helper at all. Left as written, the A2 coder
+would have been rejected for going to get the types it cannot work without.
 
-Then: **A2 coder** (only once vectors exist), then slices **A1** (journal posting, 11,535 LOC — check at plan
-time whether it needs splitting again) and **A3** (period-end, 4,953).
+**Two findings that are design inputs to A1, not defects:** `acc_gl_journal_entry` stores **no
+classification**, so posted entries **retroactively re-render** under a retyped account — an append-only
+ledger displaying mutated history. The Go port must carry classification **on the entry**. And
+`PortfolioProductType.fromInt` **permutes 3/4/5** relative to `getValue()`, while `CashAccountsForLoan` and
+`AccrualAccountsForLoan` **collide at 22/24/25** with different meanings.
 
 ## STANDING INSTRUCTIONS
 
