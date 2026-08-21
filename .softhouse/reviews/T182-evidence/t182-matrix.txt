@@ -1,0 +1,5 @@
+# T182 independent re-run of T177's headline conditions. SERIES|RUNS|PLAN|JVM_FLAGS|HARNESS
+t182-headline-cold|4|cell:1001:3000:1||CaptureT177b
+t182-fresh-single|2|single|
+t182-repeat|1|repeat:6|
+t182-c1only|2|repeat:8|-XX:TieredStopAtLevel=1
