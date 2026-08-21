@@ -956,6 +956,71 @@ go with it: a guard that declines your probe is either vacuous or correctly scop
 distinguishes those two in one command.** Publishing the first reading without running the second would have
 sent a task to "fix" a guard that was working.
 
+**P-53 — A REGEX SWEEP HAS NO SINGLE ANSWER: THE SAME PATTERN TEXT SCORED 3 IN PYTHON `re` AND 0 IN FOUR
+POSIX ERE ENGINES, ON THE SAME BYTES.** T156's `GUARD` pattern, lifted out of its own source by `ast` and
+run against the immutable pre-fix blob `bf67a85:.softhouse/reviews/t47-probe/t47_edit_1.py`:
+
+| engine | matches |
+|---|---|
+| Python `re` (the engine T156 shipped) | **3 → GUARDED** |
+| `/usr/bin/grep -E`, shell `grep -E`, `/usr/bin/awk`, `/usr/bin/sed -nE` | **0, 0, 0, 0 → UNGUARDED** |
+
+Two independent incompatibilities in one pattern, each isolated by measurement rather than asserted
+[VERIFIED: `.softhouse/reviews/t179-guard-classifier/engine-divergence-output.txt`]:
+
+1. **`[^#\n]` is not the same bracket expression.** Python honours the `\n` escape (*not `#`, not newline*);
+   POSIX has no escapes inside brackets, so it reads *not `#`, not backslash, not the letter `n`*. The
+   anchored `[^#\n]*` then cannot cross a letter `n`, and every `trap` in the corpus sits after one
+   (`One trap worth…`). Isolated on two one-line inputs: `a trap here` → grep 1; `One trap worth naming` →
+   grep 0, Python 1 in both.
+2. **`\b` is not a word boundary in POSIX ERE.** `awk` scores 0 even on the line with no letter `n`, so
+   awk's zero has a *different* cause than grep's. One pattern, two engine-specific readings, three verdicts.
+
+*Rules:*
+1. **A count produced by a regex sweep is only quotable together with the engine that produced it.** Record
+   the interpreter in the transcript. "The sweep found N" is not a measurement; "Python `re` found N" is.
+2. **Never port a regex sweep between Python and shell and carry its numbers across.** Re-derive them. The
+   port is not a refactor; it is a different instrument.
+3. **This is the P-33 class reached from a new direction** — an unsupported feature returning zero looks
+   exactly like absence — so the demonstration script must FAIL when the engines agree, or it is P-22 again.
+
+**P-54 — DETECTING A GUARD IS AN AST QUESTION, AND "IS THERE A GUARD IN THIS FILE?" IS THE WRONG QUESTION.
+THE RIGHT ONE IS "IS A GUARD REACHABLE FROM THIS MUTATION?"** T179 replaced T156's file-level regex with a
+parser (`.softhouse/reviews/t179-guard-classifier/guard_classify.py`). Three defect shapes fall out, and only
+the first is the one P-48 named:
+
+- **prose-only** — guard words exist solely inside string literals. Re-derived at `4484cf1b`: of the 9 python
+  files T156 scores GUARDED, **4 carry zero guard nodes of any kind** — `try/finally` 0, live handlers 0,
+  restoring context managers 0. Two of them are **T158's own drive scripts**, written *by the review that
+  discovered this class*.
+- **right node, wrong place** — a real `ast.Try` with a `finalbody`, or a real `atexit.register`, that does
+  not enclose the mutation and is not on a live path. A naive AST check ("does the file contain a Try?")
+  reproduces T156's verdict exactly. The classifier's red fixture `red_guard_elsewhere.py` exists for this.
+- **target read from the wrong scope** — T156 matched its TARGET regexes anywhere in the file, so a file that
+  merely *mentions* `.softhouse/vectors` counted as mutating the vector store, and its `SANDBOXY` regex
+  excused a whole file for containing `tempfile.` once. Per-site resolution puts **272 of 410** sites in
+  SCRATCH at `4484cf1b`. The trap worth naming: **this repo's sandboxes mirror the repo layout**, so
+  `<tmp>/.softhouse/capture/newrig/src/` reads as a trusted capture path unless `mkdtemp` /
+  `TemporaryDirectory` / `"/tmp/…"` bindings are propagated through assignments — measured on
+  `capture/lib/check_no_narrow_catch.py`, whose `--selftest` sandbox was scored TRUSTED until they were.
+
+*Rules:*
+1. **A guard is a NODE on the mutation's ancestor chain** (`try/finally`, a restoring context manager) **or a
+   process handler proven reachable from module execution.** Anything else is a word.
+2. **Say which kind.** `GUARDED-FINALLY` and `GUARDED-PROCESS` are not the same claim: the second says a
+   handler is registered, never that it restores *this* artefact. Collapsing them re-creates the false
+   comfort the regex gave.
+3. **Refuse what you cannot parse, and COUNT the refusals.** There is no shell parser in the stdlib and
+   `bashlex` is not installed, so all **250** `.sh` files under `.softhouse` are `REFUSED-SHELL-NO-PARSER` —
+   named, tallied, and excluded from every conclusion. **"The unguarded population is N" is therefore not
+   derivable at all while half the population is unparsed**; a single N was only ever available because the
+   regex was willing to answer a question it could not read.
+4. **Both directions or it is half an instrument (P-50).** The selftest asserts the prose-guarded file is
+   refused *and* that five genuinely guarded shapes — `try/finally`, live `atexit`, a local restoring context
+   manager, `mkstemp`+`os.replace`, and an indirectly guarded helper — all pass.
+5. **Make the instrument pass its own measurement.** `guard_classify.py`'s single write is atomic, so its own
+   verdict on itself is ATOMIC and not UNGUARDED.
+
 <!-- LEARNED PATTERNS END -->
 
 ### Run 2026-08-17-run1-harness-schedule-poc — fire `20260819-170001` (local, oracle REACHABLE) — 2026-08-19

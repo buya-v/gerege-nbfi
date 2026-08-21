@@ -1,0 +1,139 @@
+=== T179 — population re-derived, both classifiers, one pinned tree
+ref                 : 4484cf1b3a999808c1f9a85f5d2cb25482c16e8a  (4484cf1b3a999808c1f9a85f5d2cb25482c16e8a)
+root                : .softhouse
+enumerator          : git ls-tree -r (the TREE, not the working copy)
+T156's regexes      : lifted from .softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py by ast, not retyped
+shell parser        : NONE — every .sh is REFUSED and counted
+
+--- DENOMINATORS
+  files under .softhouse at 4484cf1b3a99              : 3583
+  of which scripts (.py/.sh/.bash)          : 594
+    .py                                     : 344
+    .sh/.bash                               : 250
+  NON-script files, never inspected by either classifier: 2989
+    largest groups: .json 1432, .txt 841, .md 283, .status 160, .http 147, .java 55
+  NOT SWEPT AT ALL: everything outside .softhouse — nexus/, docs/, .claude/,
+    the repo root. Both classifiers share this blind spot.
+
+--- T156's CLASSIFIER, replicated at this ref (file-level, source-text regex)
+  hits (a mutation verb AND a trusted target anywhere in the file): 155
+    scored GUARDED   : 25
+    scored UNGUARDED : 130
+  unreadable         : 0
+  [T158 recorded hits=130 guarded=19 unguarded=111 at ITS ref; this run is
+   a different tree, so a difference here is drift, not a contradiction.]
+
+--- THE PARSER, same bytes
+  python files parsed                       : 344
+  python files REFUSED (syntax/decode)      : 0
+  shell files REFUSED (no shell parser)     : 250
+  mutation call SITES in python             : 410
+
+  scope x verdict (every site once):
+    scope     UNGUARDED                 GUARDED-PROCESS           GUARDED-FINALLY-INDIRECT  GUARDED-CONTEXTMANAGER    GUARDED-FINALLY           ATOMIC                    SANDBOX                   
+    TRUSTED   47                        0                         0                         0                         2                         0                         0                           (total 49)
+    UNKNOWN   83                        0                         0                         0                         4                         1                         0                           (total 88)
+    SCRATCH   0                         0                         0                         0                         0                         1                         272                         (total 273)
+
+  PYTHON files with >=1 UNGUARDED mutation of a TRUSTED artefact: 43
+      .softhouse/capture/audit-t44/charges/bin/analyse_probes.py
+      .softhouse/capture/audit-t44/charges/bin/audit_recompute.py
+      .softhouse/capture/audit-t44/charges/bin/spotcheck.py
+      .softhouse/capture/charges/bin/attest-t40.py
+      .softhouse/capture/pathb/t22-audit/mkmode.py
+      .softhouse/capture/pathb/t22-audit/mkmode2.py
+      .softhouse/capture/pathb/t22-audit/mkprobe.py
+      .softhouse/capture/pathb/t36/attest.py
+      .softhouse/capture/t100-g8-rescope/src/closed_form_check.py
+      .softhouse/capture/t100-g8-rescope/src/column_shape.py
+      .softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py
+      .softhouse/capture/t100-g8-rescope/src/largest_failing.py
+      .softhouse/handoff/T61-sweep/build-pass3f.py
+      .softhouse/reviews/t41-probe/edit.py
+      .softhouse/reviews/t41-probe/edit10.py
+      .softhouse/reviews/t41-probe/edit11.py
+      .softhouse/reviews/t41-probe/edit12.py
+      .softhouse/reviews/t41-probe/edit13.py
+      .softhouse/reviews/t41-probe/edit14.py
+      .softhouse/reviews/t41-probe/edit16.py
+      .softhouse/reviews/t41-probe/edit17.py
+      .softhouse/reviews/t41-probe/edit19.py
+      .softhouse/reviews/t41-probe/edit2.py
+      .softhouse/reviews/t41-probe/edit22.py
+      .softhouse/reviews/t41-probe/edit3.py
+      .softhouse/reviews/t41-probe/edit4.py
+      .softhouse/reviews/t41-probe/edit5.py
+      .softhouse/reviews/t41-probe/edit6.py
+      .softhouse/reviews/t41-probe/edit7.py
+      .softhouse/reviews/t41-probe/edit8.py
+      .softhouse/reviews/t41-probe/edit9.py
+      .softhouse/reviews/t41-probe/edit_go1.py
+      .softhouse/reviews/t41-probe/edit_go2.py
+      .softhouse/reviews/t41-probe/edit_go3.py
+      .softhouse/reviews/t41-probe/edit_go4.py
+      .softhouse/reviews/t47-probe/t47_edit_2.py
+      .softhouse/reviews/t47-probe/t47_edit_3.py
+      .softhouse/reviews/t47-probe/t47_edit_4.py
+      .softhouse/reviews/t47-probe/t47_edit_4c.py
+      .softhouse/reviews/t47-probe/t47_edit_5.py
+      .softhouse/reviews/t47-probe/t47_edit_6.py
+      .softhouse/reviews/t47-probe/t47_edit_7.py
+      .softhouse/reviews/t47-probe/t47_edit_8.py
+  PYTHON files whose only unguarded sites have an UNRESOLVED target: 63
+
+--- CROSS-TABULATION: where the two classifiers disagree
+  T156 'GUARDED' hits: 25  (9 python, 16 shell)
+    every python 'GUARDED' file, with its real guard nodes:
+      .softhouse/capture/pathb/t149/prove-exit-trap.py               try/finally=0 live-handlers=0 restoring-CMs=0  guard-words-in-string-literals=8  mutation-sites=9
+      .softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py try/finally=0 live-handlers=0 restoring-CMs=0  guard-words-in-string-literals=14  mutation-sites=0
+      .softhouse/capture/pathb/t80/prove-f1-recovery.py              try/finally=1 live-handlers=0 restoring-CMs=0  guard-words-in-string-literals=8  mutation-sites=5
+      .softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py try/finally=1 live-handlers=0 restoring-CMs=0  guard-words-in-string-literals=0  mutation-sites=3
+      .softhouse/capture/tierA-a2/prove-cap-transport-red.py         try/finally=2 live-handlers=0 restoring-CMs=0  guard-words-in-string-literals=0  mutation-sites=12
+      .softhouse/handoff/T61-mutations.py                            try/finally=1 live-handlers=0 restoring-CMs=0  guard-words-in-string-literals=2  mutation-sites=2
+      .softhouse/reviews/T158-drive-followups.py                     try/finally=0 live-handlers=0 restoring-CMs=0  guard-words-in-string-literals=10  mutation-sites=3
+      .softhouse/reviews/T158-drive-t156-refusals.py                 try/finally=0 live-handlers=0 restoring-CMs=0  guard-words-in-string-literals=9  mutation-sites=22
+      .softhouse/reviews/t47-probe/t47_edit_1.py                     try/finally=2 live-handlers=0 restoring-CMs=0  guard-words-in-string-literals=8  mutation-sites=2
+    -> python files T156 scored GUARDED with ZERO guard nodes of any kind: 4 of 9
+         .softhouse/capture/pathb/t149/prove-exit-trap.py
+         .softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py
+         .softhouse/reviews/T158-drive-followups.py
+         .softhouse/reviews/T158-drive-t156-refusals.py
+    python ones the parser contradicts (unguarded trusted site): 0
+    shell ones: 16 — NOT adjudicated. No shell parser; refused, not assumed.
+
+  T156 'UNGUARDED' hits: 130  (71 python, 59 shell)
+    python ones that perform NO MUTATION AT ALL by the parser: 1 of 71
+      (T156's hit criterion is 'a mutation verb matches ANYWHERE in the
+       file' — including inside its own regex literals, docstrings and
+       print() strings, so its hit set is not a set of mutators.)
+         .softhouse/reviews/t47-probe/t167-sibling-census.py
+    python ones the parser clears (no unguarded site at all): 18
+      .softhouse/capture/pathb/t147/mutate-blast-radius-provenance.py
+      .softhouse/capture/t58-counterfactuals/src/apply-mutations-1.py
+      .softhouse/capture/t58-counterfactuals/src/apply-mutations-2.py
+      .softhouse/capture/t58-counterfactuals/src/apply-mutations-3.py
+      .softhouse/handoff/T61-sweep/run-sweep.py
+      .softhouse/reviews/A2-10-probe/poison-d2-no-regression.py
+      .softhouse/reviews/A2-10-probe/poison-d2-transport-modes.py
+      .softhouse/reviews/A2-10-probe/reissue-a2-4-corpus-property.py
+      .softhouse/reviews/A2-11/prove-a2-7-guards-are-falsifiable.py
+      .softhouse/reviews/A2-11/prove-resolve7-float-red.py
+      .softhouse/reviews/T158-drive-untrapped-signals.py
+      .softhouse/reviews/T84-evidence/src/classify.py
+      .softhouse/reviews/T84-evidence/src/eval-probe1.py
+      .softhouse/reviews/T84-evidence/src/eval-probe2.py
+      .softhouse/reviews/T84-evidence/src/exemption-demo.py
+      .softhouse/reviews/T84-evidence/src/gen-port.py
+      .softhouse/reviews/T84-evidence/src/run-port.py
+      .softhouse/reviews/t27-probe/t27_mutate.py
+    shell ones: 59 — NOT adjudicated, for the same reason.
+
+--- WHAT CAN HONESTLY BE SAID ABOUT THE POPULATION AT 4484cf1b3a999808c1f9a85f5d2cb25482c16e8a
+  Adjudicable by a parser (python)        : 344 files
+  Not adjudicable here (shell, refused)   : 250 files
+  Python files with a proven unguarded
+    mutation of a trusted artefact        : 43
+  Python files with an unguarded mutation
+    of an UNRESOLVED target               : 63
+  A single 'the unguarded population is N' number is NOT derivable while
+  the shell half is refused. Anyone quoting one is quoting a regex.

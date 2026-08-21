@@ -1,0 +1,42 @@
+=== T179 — one pattern, two answers
+pattern source : .softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py:58 (read via ast, not retyped)
+pattern        : '(?m)^[^#\\n]*(\\btrap\\b|\\bfinally\\s*:|atexit\\.register|__exit__|contextmanager)'
+
+corpus 1       : bf67a85:.softhouse/reviews/t47-probe/t47_edit_1.py  (13267 bytes)
+  python re (T156's own engine)      re.findall on the whole buffer           3
+  /usr/bin/grep -E (POSIX ERE)       (?m) stripped: it is not ERE syntax      0
+  shell `grep` resolves to           grep is /usr/bin/grep                    -
+  shell `grep -E` (as typed above)   same characters again                    0
+  /usr/bin/awk (POSIX ERE)           third ERE implementation                 0
+  /usr/bin/sed -nE (POSIX ERE)       fourth ERE implementation                0
+
+  python re says 3; the POSIX ERE engines say 0, 0, 0, 0
+
+--- WHY.  `[^#\n]` is not the same bracket expression in the two engines.
+    Python re : \n inside a bracket expression is the NEWLINE escape, so
+                [^#\n] = 'any char except # and newline'.
+    POSIX ERE : there are no escapes inside a bracket expression, so
+                [^#\n] = 'any char except #, backslash and the LETTER n'.
+    The anchored [^#\n]* therefore cannot cross a letter `n`, and every
+    occurrence of `trap` in the corpus has an `n` earlier on its line
+    (`One trap worth ...`).
+
+--- The mechanism isolated on two one-line inputs
+    Line 1 has no letter `n` before `trap`; line 2 does. If line 1 matches
+    under an engine and line 2 does not, that engine's zero is caused by
+    `[^#\n]` and NOT by `\b` being unsupported — the confound is excluded
+    by measurement rather than by assertion.
+  a trap here              no letter n before `trap`    python re=1  grep -E=1  awk=0
+  One trap worth naming    a letter n before `trap`     python re=1  grep -E=0  awk=0
+  NOTE: awk scores 0 even on the line WITHOUT a letter n, so awk's zero
+        on the corpus is explained by `\b` (not a word boundary in
+        POSIX ERE), not by the bracket expression. Two different
+        incompatibilities, same single pattern text.
+
+DIVERGENCE ON THE REAL CORPUS : REPRODUCED
+DIVERGENCE ISOLATED TO `[^#\n]`: REPRODUCED
+
+CONSEQUENCE: T156's classifier has no single answer. Its committed number is
+the Python-re answer; the same file swept from a shell script would have
+produced a different population. Any port of a regex sweep between Python and
+shell must re-derive its counts, not carry them across.

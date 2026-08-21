@@ -1,0 +1,53 @@
+T179 — UNGUARDED mutations of a TRUSTED artefact, python only
+ref: 4484cf1b3a999808c1f9a85f5d2cb25482c16e8a (4484cf1b3a999808c1f9a85f5d2cb25482c16e8a)   python files read: 344
+shell files are REFUSED and therefore ABSENT from this list — absence here is not evidence of a guard
+
+.softhouse/capture/audit-t44/charges/bin/analyse_probes.py   :101   open(mode='w')       tags=CAPTURE   target=os.path.join(AUD, 'out', 'PROBES.md')
+.softhouse/capture/audit-t44/charges/bin/audit_recompute.py  :325   open(mode='w')       tags=CAPTURE   target=out
+.softhouse/capture/audit-t44/charges/bin/spotcheck.py        :65    open(mode='w')       tags=CAPTURE   target=OUT
+.softhouse/capture/charges/bin/attest-t40.py                 :134   open(mode='w')       tags=CAPTURE   target=os.path.join(OUT, 'preconditions.txt')
+.softhouse/capture/pathb/t22-audit/mkmode.py                 :23    open(mode='w')       tags=CAPTURE   target=os.path.join(OUT, 'pmode-mult1.json')
+.softhouse/capture/pathb/t22-audit/mkmode.py                 :31    open(mode='w')       tags=CAPTURE   target=os.path.join(OUT, 'calc-pmode-%s.json' % tenant)
+.softhouse/capture/pathb/t22-audit/mkmode2.py                :27    open(mode='w')       tags=CAPTURE   target=os.path.join(OUT, 'pmode2-halfcent.json')
+.softhouse/capture/pathb/t22-audit/mkmode2.py                :35    open(mode='w')       tags=CAPTURE   target=os.path.join(OUT, 'calc-pmode2-%s.json' % tenant)
+.softhouse/capture/pathb/t22-audit/mkprobe.py                :27    open(mode='w')       tags=CAPTURE   target=os.path.join(OUT, name + '.json')
+.softhouse/capture/pathb/t36/attest.py                       :257   open(mode='w')       tags=CAPTURE   target=os.path.join(OUT, 'preconditions.txt')
+.softhouse/capture/t100-g8-rescope/src/closed_form_check.py  :85    open(mode='w')       tags=CAPTURE   target=sys.argv[0].replace('/src/', '/out/').replace('closed_form_check.py', 
+.softhouse/capture/t100-g8-rescope/src/column_shape.py       :30    open(mode='w')       tags=CAPTURE   target=__file__.replace('/src/', '/out/').replace('column_shape.py', 'column-
+.softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py :205   open(mode='w')       tags=CAPTURE   target=os.path.join(ROOT, '.softhouse/capture/t100-g8-rescope/out/exemption-d
+.softhouse/capture/t100-g8-rescope/src/largest_failing.py    :50    open(mode='w')       tags=CAPTURE   target=__file__.replace('/src/', '/out/').replace('largest_failing.py', 'larg
+.softhouse/handoff/T61-sweep/build-pass3f.py                 :216   os.chmod             tags=CAPTURE   target=os.path.join(SRC, 'run-pass3f.sh')
+.softhouse/handoff/T61-sweep/build-pass3f.py                 :147   open(mode='w')       tags=CAPTURE   target=os.path.join(SRC, 'Capture3f.java')
+.softhouse/handoff/T61-sweep/build-pass3f.py                 :215   open(mode='w')       tags=CAPTURE   target=os.path.join(SRC, 'run-pass3f.sh')
+.softhouse/reviews/t41-probe/edit.py                         :170   io.open(mode='w')    tags=ADR       target=P
+.softhouse/reviews/t41-probe/edit10.py                       :249   io.open(mode='w')    tags=ADR       target=P
+.softhouse/reviews/t41-probe/edit11.py                       :90    io.open(mode='w')    tags=ADR       target=P
+.softhouse/reviews/t41-probe/edit12.py                       :105   io.open(mode='w')    tags=ADR       target=P
+.softhouse/reviews/t41-probe/edit13.py                       :131   io.open(mode='w')    tags=ADR       target=P
+.softhouse/reviews/t41-probe/edit14.py                       :94    io.open(mode='w')    tags=ADR       target=P
+.softhouse/reviews/t41-probe/edit16.py                       :81    io.open(mode='w')    tags=ADR       target=P
+.softhouse/reviews/t41-probe/edit17.py                       :49    io.open(mode='w')    tags=ADR       target=P
+.softhouse/reviews/t41-probe/edit19.py                       :66    io.open(mode='w')    tags=ADR       target=P
+.softhouse/reviews/t41-probe/edit2.py                        :116   io.open(mode='w')    tags=ADR       target=P
+.softhouse/reviews/t41-probe/edit22.py                       :65    io.open(mode='w')    tags=PORT,RIG  target=G
+.softhouse/reviews/t41-probe/edit3.py                        :82    io.open(mode='w')    tags=ADR       target=P
+.softhouse/reviews/t41-probe/edit4.py                        :50    io.open(mode='w')    tags=ADR       target=P
+.softhouse/reviews/t41-probe/edit5.py                        :113   io.open(mode='w')    tags=ADR       target=P
+.softhouse/reviews/t41-probe/edit6.py                        :123   io.open(mode='w')    tags=ADR       target=P
+.softhouse/reviews/t41-probe/edit7.py                        :81    io.open(mode='w')    tags=ADR       target=P
+.softhouse/reviews/t41-probe/edit8.py                        :169   io.open(mode='w')    tags=ADR       target=P
+.softhouse/reviews/t41-probe/edit9.py                        :99    io.open(mode='w')    tags=ADR       target=P
+.softhouse/reviews/t41-probe/edit_go1.py                     :196   io.open(mode='w')    tags=PORT,RIG  target=P
+.softhouse/reviews/t41-probe/edit_go2.py                     :92    io.open(mode='w')    tags=PORT,RIG  target=P
+.softhouse/reviews/t41-probe/edit_go3.py                     :118   io.open(mode='w')    tags=PORT,RIG  target=P
+.softhouse/reviews/t41-probe/edit_go4.py                     :32    io.open(mode='w')    tags=PORT,RIG  target=P
+.softhouse/reviews/t47-probe/t47_edit_2.py                   :160   io.open(mode='w')    tags=ADR       target=DOC
+.softhouse/reviews/t47-probe/t47_edit_3.py                   :117   io.open(mode='w')    tags=ADR       target=DOC
+.softhouse/reviews/t47-probe/t47_edit_4.py                   :158   io.open(mode='w')    tags=ADR       target=DOC
+.softhouse/reviews/t47-probe/t47_edit_4c.py                  :53    io.open(mode='w')    tags=ADR       target=DOC
+.softhouse/reviews/t47-probe/t47_edit_5.py                   :77    io.open(mode='w')    tags=ADR       target=DOC
+.softhouse/reviews/t47-probe/t47_edit_6.py                   :80    io.open(mode='w')    tags=ADR       target=DOC
+.softhouse/reviews/t47-probe/t47_edit_7.py                   :184   io.open(mode='w')    tags=PORT,RIG  target=GO
+.softhouse/reviews/t47-probe/t47_edit_8.py                   :88    io.open(mode='w')    tags=ADR       target=DOC
+
+sites: 47   files: 43
