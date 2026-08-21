@@ -1,0 +1,259 @@
+{
+ "schema": "gerege.loanschedule.vector/v1",
+ "case_id": "T83-NONAMORT-A",
+ "context": "loanschedule",
+ "class": "parity",
+ "title": "PROPOSED, NOT PROMOTED. Gate G-8: MNT 0.01 over 6 monthly repayments at 21.6% p.a., strictly inside the graded domain, where the reference oracle emits an outstanding-balance column that never reaches zero (0.01 on every row including the last) while its own principal column amortizes fully and its own totalOutstandingAmount reads 0.",
+ "dec1_revision": 12,
+ "_note": "PREPARED BY T83 FOR GATE G-8. NOT PROMOTED and NOT part of the conformance corpus. Every expect cell is transcribed from capture case T83-SW-R21p6-N6-B1 of .softhouse/capture/t83-nonamortizing/out/capture-t83-raw.json; the only transformation is exact textual major->minor scaling. The final row's outstanding_principal_minor is 1, which is what the reference oracle emitted and what T83's order-dependence probe showed to be a STALE MEMO (RepaymentPeriod.java:400 omits emi from the balance memo's dependency array; ProgressiveEMICalculator.java:1180 reads the balance before :1210 raises the EMI). This file exists to MEASURE what the harness does with such a vector, not to be merged.",
+ "capabilities_required": [
+  "schedule.core"
+ ],
+ "graded_against": [
+  {
+   "id": "G8-STALE-BALANCE-MEMO",
+   "capability": "schedule.core",
+   "description": "A port that recomputes the final row's outstanding balance AFTER the final-period EMI adjustment (as the Go port does) returns 0 where the reference oracle returns the whole principal. Measured across T83's sweep: 198 of 330 graded-domain cells diverge, every one of them in the outstanding-principal column of the FINAL ROW ONLY, one cell per case.",
+   "margin_minor": "1",
+   "evidence": "Observed at the ratified production MathContext (19, HALF_UP) in .softhouse/capture/t83-nonamortizing/out/capture-t83-raw.json (capture case T83-SW-R21p6-N6-B1) and in .softhouse/capture/t83-nonamortizing/out/port-vs-oracle.json. The port's control on the two already-promoted rounding-floor parity vectors T64-ZP-A / T64-ZP-B is 0 mismatch cells, so the divergence is not the port being broken on graded ground."
+  }
+ ],
+ "retires_when_capability_graded": "",
+ "provenance": {
+  "kind": "oracle-capture",
+  "note": "TRANSCRIBED, never computed, from Path A capture T83 (.softhouse/capture/t83-nonamortizing/src/run-t83.sh, CaptureT83.java), whose two rig calibrations reproduce pass 3g's committed T64-ZP-A and T64-ZP-B cell for cell with zero input differences.",
+  "capture_ref": ".softhouse/capture/t83-nonamortizing/out/capture-t83-raw.json",
+  "capture_sha256": "5a86e5b65cfcda4a25393f2726fc23438f913b0799b1b4a2bd0ba49431f3a55d",
+  "capture_case_id": "T83-SW-R21p6-N6-B1",
+  "citation": ""
+ },
+ "oracle": {
+  "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+  "seam": "path_a_embeddable",
+  "captured_at": "2026-08-20T12:15:27.091133250Z",
+  "threaded_mathcontext": {
+   "precision": 19,
+   "rounding_mode": "HALF_UP"
+  },
+  "ambient_mathcontext": {
+   "precision": 19,
+   "rounding_mode": "HALF_UP"
+  }
+ },
+ "request": {
+  "time_zone": "Asia/Ulaanbaatar",
+  "currency": {
+   "code": "MNT",
+   "minor_unit_digits": 2
+  },
+  "rounding": {
+   "significant_digits": 19,
+   "rate_factor_scale": 19,
+   "mode": "HALF_UP"
+  },
+  "schedule_start_date": {
+   "year": 2024,
+   "month": 1,
+   "day": 1
+  },
+  "disbursements": [
+   {
+    "date": {
+     "year": 2024,
+     "month": 1,
+     "day": 1
+    },
+    "amount_minor": "1"
+   }
+  ],
+  "number_of_repayments": 6,
+  "repayment_every": 1,
+  "repayment_frequency_unit": "MONTHS",
+  "annual_nominal_interest_rate": {
+   "numerator": 27,
+   "denominator": 125
+  },
+  "interest_method": "DECLINING_BALANCE",
+  "day_count": "FIXED_30_360",
+  "down_payment_percentage": {
+   "numerator": 0,
+   "denominator": 1
+  },
+  "installment_rounding_multiple_minor": "0"
+ },
+ "expect": {
+  "kind": "schedule",
+  "sentinel": "",
+  "last_repayment_due_date": null,
+  "observed_total_interest_minor": "0",
+  "periods": [
+   {
+    "kind": "DISBURSEMENT",
+    "installment_number": 0,
+    "from_date": {
+     "year": 2024,
+     "month": 1,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2024,
+     "month": 1,
+     "day": 1
+    },
+    "principal_minor": "1",
+    "principal_major_text": "0.01",
+    "interest_minor": "",
+    "interest_major_text": "",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [
+     "installment_number",
+     "interest_minor"
+    ],
+    "observed_total_due_minor": null
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 1,
+    "from_date": {
+     "year": 2024,
+     "month": 1,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2024,
+     "month": 2,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 2,
+    "from_date": {
+     "year": 2024,
+     "month": 2,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2024,
+     "month": 3,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 3,
+    "from_date": {
+     "year": 2024,
+     "month": 3,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2024,
+     "month": 4,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 4,
+    "from_date": {
+     "year": 2024,
+     "month": 4,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2024,
+     "month": 5,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 5,
+    "from_date": {
+     "year": 2024,
+     "month": 5,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2024,
+     "month": 6,
+     "day": 1
+    },
+    "principal_minor": "0",
+    "principal_major_text": "0.00",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "0"
+   },
+   {
+    "kind": "REPAYMENT",
+    "installment_number": 6,
+    "from_date": {
+     "year": 2024,
+     "month": 6,
+     "day": 1
+    },
+    "due_date": {
+     "year": 2024,
+     "month": 7,
+     "day": 1
+    },
+    "principal_minor": "1",
+    "principal_major_text": "0.01",
+    "interest_minor": "0",
+    "interest_major_text": "0.00",
+    "outstanding_principal_minor": "1",
+    "outstanding_principal_major_text": "0.01",
+    "unrecorded_fields": [],
+    "observed_total_due_minor": "1"
+   }
+  ]
+ },
+ "invariant_exemptions": [
+  {
+   "invariant": "principal_amortizes_to_zero",
+   "reason": "GATE G-8. The reference oracle emits a non-zero outstanding balance on the final row of this graded-domain shape. T83 observed the cause to be a stale memo, not a genuine failure to amortize: the same schedule's principal column sums to the disbursed amount and its own totalOutstandingAmount reads 0."
+  },
+  {
+   "invariant": "balance_roll_forward",
+   "reason": "GATE G-8, same shape. The final row's outstanding is the value carried in rather than max(0, carried in - principal), because the oracle's balance memo was populated before the final-period EMI adjustment."
+  }
+ ]
+}

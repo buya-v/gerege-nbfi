@@ -1,0 +1,135 @@
+{
+  "probe": "T83 order-dependence",
+  "question": "Is the reference oracle's non-zero final outstanding balance ORDER-DEPENDENT (a stale memo) or not (a genuine non-amortizing schedule)?",
+  "method": "After generate() returns, force the balance memo to recompute by moving a DECLARED dependency (paidPrincipal) and moving it back to the same value, then re-read. Memo.java recomputes on a declared dependency's hashCode change; RepaymentPeriod.java:400 declares {paidPrincipal, paidInterest, interestPeriods, totalDisbursedAmount} and NOT emi.",
+  "moneyHelperPrecision": 19,
+  "cases": [
+    {
+      "id": "OD2-FAM2-R600p0-N108-B1",
+      "purpose": "T84 FAMILY 2: MNT 0.01 / 108 x 600.0% -- oracle AND port both non-amortizing",
+      "inputs": {"disbursementAmount": "0.01", "principalMinorUnits": 1, "numberOfRepayments": 108, "annualNominalInterestRate": "600.0", "currencyDecimalPlaces": 2, "mathContextPrecision": 19, "mathContextRoundingMode": "HALF_UP", "mathContextRoundingModeOrdinal": 4, "tenantId": "od2_f2_a", "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP"},
+      "pathIdentity": {"identical": true, "note": "the instrumented plan is compared cell for cell against the PRISTINE seam's plan; if this is false nothing below is about the seam's computation"},
+      "emittedFinalRowBalance": "0.01",
+      "lastRepaymentPeriod": {
+        "emiAtRead": "0.01",
+        "duePrincipalAtRead": "0.00",
+        "paidPrincipalBefore": "0.00",
+        "paidPrincipalAfter": "0.00",
+        "paidPrincipalRestored": true,
+        "A_balanceAsEmitted": "0.01",
+        "intermediate_balanceWhilePerturbed": "0.01",
+        "B_balanceAfterForcedRecompute": "0.01",
+        "orderDependent": false
+      }
+    },
+    {
+      "id": "OD2-FAM2-R600p0-N120-B1",
+      "purpose": "T84 FAMILY 2: MNT 0.01 / 120 x 600.0%",
+      "inputs": {"disbursementAmount": "0.01", "principalMinorUnits": 1, "numberOfRepayments": 120, "annualNominalInterestRate": "600.0", "currencyDecimalPlaces": 2, "mathContextPrecision": 19, "mathContextRoundingMode": "HALF_UP", "mathContextRoundingModeOrdinal": 4, "tenantId": "od2_f2_b", "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP"},
+      "pathIdentity": {"identical": true, "note": "the instrumented plan is compared cell for cell against the PRISTINE seam's plan; if this is false nothing below is about the seam's computation"},
+      "emittedFinalRowBalance": "0.01",
+      "lastRepaymentPeriod": {
+        "emiAtRead": "0.01",
+        "duePrincipalAtRead": "0.00",
+        "paidPrincipalBefore": "0.00",
+        "paidPrincipalAfter": "0.00",
+        "paidPrincipalRestored": true,
+        "A_balanceAsEmitted": "0.01",
+        "intermediate_balanceWhilePerturbed": "0.01",
+        "B_balanceAfterForcedRecompute": "0.01",
+        "orderDependent": false
+      }
+    },
+    {
+      "id": "OD2-FAM2-R600p0-N104-B1",
+      "purpose": "T84 FAMILY 2: MNT 0.01 / 104 x 600.0%, the smallest n in family 2",
+      "inputs": {"disbursementAmount": "0.01", "principalMinorUnits": 1, "numberOfRepayments": 104, "annualNominalInterestRate": "600.0", "currencyDecimalPlaces": 2, "mathContextPrecision": 19, "mathContextRoundingMode": "HALF_UP", "mathContextRoundingModeOrdinal": 4, "tenantId": "od2_f2_c", "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP"},
+      "pathIdentity": {"identical": true, "note": "the instrumented plan is compared cell for cell against the PRISTINE seam's plan; if this is false nothing below is about the seam's computation"},
+      "emittedFinalRowBalance": "0.01",
+      "lastRepaymentPeriod": {
+        "emiAtRead": "0.01",
+        "duePrincipalAtRead": "0.00",
+        "paidPrincipalBefore": "0.00",
+        "paidPrincipalAfter": "0.00",
+        "paidPrincipalRestored": true,
+        "A_balanceAsEmitted": "0.01",
+        "intermediate_balanceWhilePerturbed": "0.01",
+        "B_balanceAfterForcedRecompute": "0.01",
+        "orderDependent": false
+      }
+    },
+    {
+      "id": "OD2-FAM1-R3p6-N360-B109",
+      "purpose": "T84 FAMILY 1 at an ordinary 30-year term: MNT 1.09 / 360 x 3.6%",
+      "inputs": {"disbursementAmount": "1.09", "principalMinorUnits": 109, "numberOfRepayments": 360, "annualNominalInterestRate": "3.6", "currencyDecimalPlaces": 2, "mathContextPrecision": 19, "mathContextRoundingMode": "HALF_UP", "mathContextRoundingModeOrdinal": 4, "tenantId": "od2_f1_a", "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP"},
+      "pathIdentity": {"identical": true, "note": "the instrumented plan is compared cell for cell against the PRISTINE seam's plan; if this is false nothing below is about the seam's computation"},
+      "emittedFinalRowBalance": "1.09",
+      "lastRepaymentPeriod": {
+        "emiAtRead": "1.09",
+        "duePrincipalAtRead": "1.09",
+        "paidPrincipalBefore": "0.00",
+        "paidPrincipalAfter": "0.00",
+        "paidPrincipalRestored": true,
+        "A_balanceAsEmitted": "1.09",
+        "intermediate_balanceWhilePerturbed": "0.01",
+        "B_balanceAfterForcedRecompute": "0.00",
+        "orderDependent": true
+      }
+    },
+    {
+      "id": "OD2-CLEAN-R600p0-N103-B1",
+      "purpose": "CONTROL: MNT 0.01 / 103 x 600.0%, one repayment short of family 2",
+      "inputs": {"disbursementAmount": "0.01", "principalMinorUnits": 1, "numberOfRepayments": 103, "annualNominalInterestRate": "600.0", "currencyDecimalPlaces": 2, "mathContextPrecision": 19, "mathContextRoundingMode": "HALF_UP", "mathContextRoundingModeOrdinal": 4, "tenantId": "od2_c_a", "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP"},
+      "pathIdentity": {"identical": true, "note": "the instrumented plan is compared cell for cell against the PRISTINE seam's plan; if this is false nothing below is about the seam's computation"},
+      "emittedFinalRowBalance": "0.00",
+      "lastRepaymentPeriod": {
+        "emiAtRead": "0.00",
+        "duePrincipalAtRead": "0.00",
+        "paidPrincipalBefore": "0.00",
+        "paidPrincipalAfter": "0.00",
+        "paidPrincipalRestored": true,
+        "A_balanceAsEmitted": "0.00",
+        "intermediate_balanceWhilePerturbed": "0.00",
+        "B_balanceAfterForcedRecompute": "0.00",
+        "orderDependent": false
+      }
+    },
+    {
+      "id": "OD2-CLEAN-R3p6-N360-B110",
+      "purpose": "CONTROL: MNT 1.10 / 360 x 3.6%, the smallest clean principal there",
+      "inputs": {"disbursementAmount": "1.10", "principalMinorUnits": 110, "numberOfRepayments": 360, "annualNominalInterestRate": "3.6", "currencyDecimalPlaces": 2, "mathContextPrecision": 19, "mathContextRoundingMode": "HALF_UP", "mathContextRoundingModeOrdinal": 4, "tenantId": "od2_c_b", "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP"},
+      "pathIdentity": {"identical": true, "note": "the instrumented plan is compared cell for cell against the PRISTINE seam's plan; if this is false nothing below is about the seam's computation"},
+      "emittedFinalRowBalance": "0.00",
+      "lastRepaymentPeriod": {
+        "emiAtRead": "0.00",
+        "duePrincipalAtRead": "0.00",
+        "paidPrincipalBefore": "0.00",
+        "paidPrincipalAfter": "0.00",
+        "paidPrincipalRestored": true,
+        "A_balanceAsEmitted": "0.00",
+        "intermediate_balanceWhilePerturbed": "0.00",
+        "B_balanceAfterForcedRecompute": "0.00",
+        "orderDependent": false
+      }
+    },
+    {
+      "id": "OD2-CLEAN-R21p6-N6-B120000000",
+      "purpose": "CONTROL: MNT 1,200,000 / 6 x 21.6% -- an ordinary loan",
+      "inputs": {"disbursementAmount": "1200000.00", "principalMinorUnits": 120000000, "numberOfRepayments": 6, "annualNominalInterestRate": "21.6", "currencyDecimalPlaces": 2, "mathContextPrecision": 19, "mathContextRoundingMode": "HALF_UP", "mathContextRoundingModeOrdinal": 4, "tenantId": "od2_c_c", "ambientMoneyHelperMathContext": "precision=19 roundingMode=HALF_UP"},
+      "pathIdentity": {"identical": true, "note": "the instrumented plan is compared cell for cell against the PRISTINE seam's plan; if this is false nothing below is about the seam's computation"},
+      "emittedFinalRowBalance": "0.00",
+      "lastRepaymentPeriod": {
+        "emiAtRead": "212787.30",
+        "duePrincipalAtRead": "209024.85",
+        "paidPrincipalBefore": "0.00",
+        "paidPrincipalAfter": "0.00",
+        "paidPrincipalRestored": true,
+        "A_balanceAsEmitted": "0.00",
+        "intermediate_balanceWhilePerturbed": "0.01",
+        "B_balanceAfterForcedRecompute": "0.00",
+        "orderDependent": false
+      }
+    }
+  ]
+}
+

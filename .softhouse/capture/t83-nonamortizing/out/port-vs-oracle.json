@@ -1,0 +1,5054 @@
+{
+ "note": "The Go port run on the SAME inputs as the committed T83 capture. No port logic was changed; the program was compiled into a scratch copy of the tree.",
+ "portSource": ".softhouse/capture/t83-nonamortizing/src/t83port.go.txt",
+ "captureRef": ".softhouse/capture/t83-nonamortizing/out/capture-t83-raw.json",
+ "calibrationMismatchCells": 0,
+ "calibrationNote": "cells on which the port disagrees with the ALREADY-PROMOTED parity vectors T64-ZP-A / T64-ZP-B. If this is not 0, nothing measured on novel ground means anything.",
+ "sweepCases": 330,
+ "sweepCasesWithAnyMismatch": 198,
+ "sweepCasesWhereBothAmortize": 132,
+ "sweepCasesWhereOnlyThePortAmortizes": 198,
+ "portRefusedAny": [],
+ "everyDivergenceConfinedToOutstandingColumn": true,
+ "divergencesOutsideOutstandingColumn": [],
+ "cases": [
+  {
+   "case": "P-CAL-ZPA",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "P-CAL-ZPB",
+   "cells": 167,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N2-B1",
+   "cells": 8,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N2-B2",
+   "cells": 8,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N2-B3",
+   "cells": 8,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N2-B4",
+   "cells": 8,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N2-B5",
+   "cells": 8,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N3-B1",
+   "cells": 11,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 3,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N3-B2",
+   "cells": 11,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N3-B3",
+   "cells": 11,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N3-B4",
+   "cells": 11,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N3-B5",
+   "cells": 11,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N4-B1",
+   "cells": 14,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 4,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N4-B2",
+   "cells": 14,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N4-B3",
+   "cells": 14,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N4-B4",
+   "cells": 14,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N4-B5",
+   "cells": 14,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N6-B1",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 6,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N6-B2",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 6,
+     "field": "outstanding_principal_minor",
+     "oracle": 2,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 2,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N6-B3",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N6-B4",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N6-B5",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N6-B6",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N12-B1",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 12,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N12-B2",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 12,
+     "field": "outstanding_principal_minor",
+     "oracle": 2,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 2,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N12-B3",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 12,
+     "field": "outstanding_principal_minor",
+     "oracle": 3,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 3,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N12-B4",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 12,
+     "field": "outstanding_principal_minor",
+     "oracle": 4,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 4,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N12-B5",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 12,
+     "field": "outstanding_principal_minor",
+     "oracle": 5,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 5,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N12-B6",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N12-B7",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N12-B8",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N12-B9",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N24-B1",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N24-B2",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 2,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 2,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N24-B3",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 3,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 3,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N24-B4",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 4,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 4,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N24-B5",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 5,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 5,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N24-B6",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 6,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 6,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N24-B7",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 7,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 7,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N24-B8",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 8,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 8,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N24-B9",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 9,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 9,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N24-B10",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N24-B11",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N24-B12",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N24-B13",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N36-B1",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N36-B2",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 2,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 2,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N36-B3",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 3,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 3,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N36-B4",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 4,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 4,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N36-B5",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 5,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 5,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N36-B6",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 6,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 6,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N36-B7",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 7,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 7,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N36-B8",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 8,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 8,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N36-B9",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 9,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 9,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N36-B10",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 10,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 10,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N36-B11",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 11,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 11,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N36-B12",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 12,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 12,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N36-B13",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 13,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 13,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N36-B14",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N36-B15",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N36-B16",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N36-B17",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N56-B1",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N56-B2",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 2,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 2,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N56-B3",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 3,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 3,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N56-B4",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 4,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 4,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N56-B5",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 5,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 5,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N56-B6",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 6,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 6,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N56-B7",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 7,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 7,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N56-B8",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 8,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 8,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N56-B9",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 9,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 9,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N56-B10",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 10,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 10,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N56-B11",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 11,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 11,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N56-B12",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 12,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 12,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N56-B13",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 13,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 13,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N56-B14",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 14,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 14,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N56-B15",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 15,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 15,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N56-B16",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 16,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 16,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N56-B17",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 17,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 17,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R21p6-N56-B18",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N56-B19",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N56-B20",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R21p6-N56-B21",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N2-B1",
+   "cells": 8,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N2-B2",
+   "cells": 8,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N2-B3",
+   "cells": 8,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N2-B4",
+   "cells": 8,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N2-B5",
+   "cells": 8,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N3-B1",
+   "cells": 11,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 3,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N3-B2",
+   "cells": 11,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N3-B3",
+   "cells": 11,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N3-B4",
+   "cells": 11,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N3-B5",
+   "cells": 11,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N4-B1",
+   "cells": 14,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 4,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N4-B2",
+   "cells": 14,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N4-B3",
+   "cells": 14,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N4-B4",
+   "cells": 14,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N4-B5",
+   "cells": 14,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N6-B1",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 6,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N6-B2",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 6,
+     "field": "outstanding_principal_minor",
+     "oracle": 2,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 2,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N6-B3",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N6-B4",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N6-B5",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N6-B6",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N12-B1",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 12,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N12-B2",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 12,
+     "field": "outstanding_principal_minor",
+     "oracle": 2,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 2,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N12-B3",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 12,
+     "field": "outstanding_principal_minor",
+     "oracle": 3,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 3,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N12-B4",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 12,
+     "field": "outstanding_principal_minor",
+     "oracle": 4,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 4,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N12-B5",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 12,
+     "field": "outstanding_principal_minor",
+     "oracle": 5,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 5,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N12-B6",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N12-B7",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N12-B8",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N12-B9",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N24-B1",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N24-B2",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 2,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 2,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N24-B3",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 3,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 3,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N24-B4",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 4,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 4,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N24-B5",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 5,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 5,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N24-B6",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 6,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 6,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N24-B7",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 7,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 7,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N24-B8",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 8,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 8,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N24-B9",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 9,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 9,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N24-B10",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 10,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 10,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N24-B11",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 11,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 11,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N24-B12",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N24-B13",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N24-B14",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N24-B15",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N36-B1",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N36-B2",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 2,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 2,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N36-B3",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 3,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 3,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N36-B4",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 4,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 4,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N36-B5",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 5,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 5,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N36-B6",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 6,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 6,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N36-B7",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 7,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 7,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N36-B8",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 8,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 8,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N36-B9",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 9,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 9,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N36-B10",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 10,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 10,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N36-B11",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 11,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 11,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N36-B12",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 12,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 12,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N36-B13",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 13,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 13,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N36-B14",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 14,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 14,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N36-B15",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 15,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 15,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N36-B16",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 16,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 16,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N36-B17",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N36-B18",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N36-B19",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N36-B20",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B1",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B2",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 2,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 2,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B3",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 3,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 3,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B4",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 4,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 4,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B5",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 5,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 5,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B6",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 6,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 6,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B7",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 7,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 7,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B8",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 8,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 8,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B9",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 9,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 9,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B10",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 10,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 10,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B11",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 11,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 11,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B12",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 12,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 12,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B13",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 13,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 13,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B14",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 14,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 14,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B15",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 15,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 15,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B16",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 16,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 16,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B17",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 17,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 17,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B18",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 18,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 18,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B19",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 19,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 19,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B20",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 20,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 20,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B21",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 21,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 21,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B22",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 22,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 22,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B23",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 23,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 23,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B24",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B25",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B26",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R7p0-N56-B27",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N2-B1",
+   "cells": 8,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N2-B2",
+   "cells": 8,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N2-B3",
+   "cells": 8,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N2-B4",
+   "cells": 8,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N2-B5",
+   "cells": 8,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N3-B1",
+   "cells": 11,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 3,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N3-B2",
+   "cells": 11,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N3-B3",
+   "cells": 11,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N3-B4",
+   "cells": 11,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N3-B5",
+   "cells": 11,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N4-B1",
+   "cells": 14,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 4,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N4-B2",
+   "cells": 14,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N4-B3",
+   "cells": 14,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N4-B4",
+   "cells": 14,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N4-B5",
+   "cells": 14,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N6-B1",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 6,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N6-B2",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 6,
+     "field": "outstanding_principal_minor",
+     "oracle": 2,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 2,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N6-B3",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N6-B4",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N6-B5",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N6-B6",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N12-B1",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 12,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N12-B2",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 12,
+     "field": "outstanding_principal_minor",
+     "oracle": 2,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 2,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N12-B3",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 12,
+     "field": "outstanding_principal_minor",
+     "oracle": 3,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 3,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N12-B4",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 12,
+     "field": "outstanding_principal_minor",
+     "oracle": 4,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 4,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N12-B5",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 12,
+     "field": "outstanding_principal_minor",
+     "oracle": 5,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 5,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N12-B6",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N12-B7",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N12-B8",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N12-B9",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N24-B1",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N24-B2",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 2,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 2,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N24-B3",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 3,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 3,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N24-B4",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 4,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 4,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N24-B5",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 5,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 5,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N24-B6",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 6,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 6,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N24-B7",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 7,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 7,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N24-B8",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 8,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 8,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N24-B9",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 9,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 9,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N24-B10",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 10,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 10,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N24-B11",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N24-B12",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N24-B13",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N24-B14",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N36-B1",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N36-B2",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 2,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 2,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N36-B3",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 3,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 3,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N36-B4",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 4,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 4,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N36-B5",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 5,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 5,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N36-B6",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 6,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 6,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N36-B7",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 7,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 7,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N36-B8",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 8,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 8,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N36-B9",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 9,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 9,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N36-B10",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 10,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 10,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N36-B11",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 11,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 11,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N36-B12",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 12,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 12,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N36-B13",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 13,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 13,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N36-B14",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 14,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 14,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N36-B15",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N36-B16",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N36-B17",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N36-B18",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B1",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B2",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 2,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 2,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B3",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 3,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 3,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B4",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 4,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 4,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B5",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 5,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 5,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B6",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 6,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 6,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B7",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 7,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 7,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B8",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 8,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 8,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B9",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 9,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 9,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B10",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 10,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 10,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B11",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 11,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 11,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B12",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 12,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 12,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B13",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 13,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 13,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B14",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 14,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 14,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B15",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 15,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 15,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B16",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 16,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 16,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B17",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 17,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 17,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B18",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 18,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 18,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B19",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 19,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 19,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B20",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B21",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B22",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R16p8-N56-B23",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N2-B1",
+   "cells": 8,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N2-B2",
+   "cells": 8,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N2-B3",
+   "cells": 8,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N2-B4",
+   "cells": 8,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N2-B5",
+   "cells": 8,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N3-B1",
+   "cells": 11,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 3,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N3-B2",
+   "cells": 11,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N3-B3",
+   "cells": 11,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N3-B4",
+   "cells": 11,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N3-B5",
+   "cells": 11,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N4-B1",
+   "cells": 14,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 4,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N4-B2",
+   "cells": 14,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N4-B3",
+   "cells": 14,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N4-B4",
+   "cells": 14,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N4-B5",
+   "cells": 14,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N6-B1",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 6,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N6-B2",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 6,
+     "field": "outstanding_principal_minor",
+     "oracle": 2,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 2,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N6-B3",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N6-B4",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N6-B5",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N6-B6",
+   "cells": 20,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N12-B1",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 12,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N12-B2",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 12,
+     "field": "outstanding_principal_minor",
+     "oracle": 2,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 2,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N12-B3",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 12,
+     "field": "outstanding_principal_minor",
+     "oracle": 3,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 3,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N12-B4",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 12,
+     "field": "outstanding_principal_minor",
+     "oracle": 4,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 4,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N12-B5",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N12-B6",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N12-B7",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N12-B8",
+   "cells": 38,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N24-B1",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N24-B2",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 2,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 2,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N24-B3",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 3,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 3,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N24-B4",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 4,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 4,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N24-B5",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 5,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 5,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N24-B6",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 6,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 6,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N24-B7",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 7,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 7,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N24-B8",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 24,
+     "field": "outstanding_principal_minor",
+     "oracle": 8,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 8,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N24-B9",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N24-B10",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N24-B11",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N24-B12",
+   "cells": 74,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N36-B1",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N36-B2",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 2,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 2,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N36-B3",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 3,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 3,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N36-B4",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 4,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 4,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N36-B5",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 5,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 5,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N36-B6",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 6,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 6,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N36-B7",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 7,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 7,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N36-B8",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 8,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 8,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N36-B9",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 9,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 9,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N36-B10",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 36,
+     "field": "outstanding_principal_minor",
+     "oracle": 10,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 10,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N36-B11",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N36-B12",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N36-B13",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N36-B14",
+   "cells": 110,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N56-B1",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 1,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 1,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N56-B2",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 2,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 2,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N56-B3",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 3,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 3,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N56-B4",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 4,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 4,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N56-B5",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 5,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 5,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N56-B6",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 6,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 6,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N56-B7",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 7,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 7,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N56-B8",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 8,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 8,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N56-B9",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 9,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 9,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N56-B10",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 10,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 10,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N56-B11",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 11,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 11,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N56-B12",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 12,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 12,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N56-B13",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 1,
+   "diffs": [
+    {
+     "row": 56,
+     "field": "outstanding_principal_minor",
+     "oracle": 13,
+     "port": 0
+    }
+   ],
+   "oracleFinalRowOutstandingMinor": 13,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": false
+  },
+  {
+   "case": "T83-SW-R36p0-N56-B14",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N56-B15",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N56-B16",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  },
+  {
+   "case": "T83-SW-R36p0-N56-B17",
+   "cells": 170,
+   "portRefused": false,
+   "mismatches": 0,
+   "diffs": [],
+   "oracleFinalRowOutstandingMinor": 0,
+   "portFinalRowOutstandingMinor": 0,
+   "portAmortizesToZero": true,
+   "oracleAmortizesToZero": true
+  }
+ ]
+}
