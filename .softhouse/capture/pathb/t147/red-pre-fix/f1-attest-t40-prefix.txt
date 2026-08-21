@@ -1,0 +1,51 @@
+=== T147 F-1 (T136 F-5) RED PROOF, PRE-FIX BYTES ===============================
+target: .softhouse/capture/charges/bin/attest-t40.py:115-121 as committed on
+        softhouse/T125-attest-canary-gates (= the bytes T147 inherits).
+
+-- the committed evidence transcript, BEFORE --
+4c3ff7f8c07e89d5a7e16b0d8e386b74a4b2c21e089052b546d336b9c51d1768  .softhouse/capture/charges/out/attested/preconditions.txt
+
+-- git-tracked? --
+.softhouse/capture/charges/out/attested/preconditions.txt
+
+-- run the PRE-FIX sidecar against the HALF_EVEN tenant --
+$ python3 .softhouse/capture/charges/bin/attest-t40.py default
+== T36 Path B preconditions, tenant 'default' ==
+  PASS  image digest sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a
+  PASS  jar git.commit.id 426a23544e8426a38ae43ae404670a0a7e85b9eb
+  PASS  jar git.dirty=false
+  PASS  MoneyHelper.PRECISION = 19 (deployed bytecode)
+  PASS  actuator/health UP
+  PASS  driverClassName org.postgresql.Driver
+  PASS  JDBC URL is jdbc:postgresql://…
+  PASS  0 prohibited-engine hits in container env
+  PASS  0 prohibited driver jars in fineract-provider.jar
+  PASS  PostgreSQL JDBC driver present in the jar
+  PASS  PostgreSQL version: PostgreSQL 18.3 (Debian 18.3-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+  PASS  tenant 'default' exists
+  PASS  rounding-mode row enabled
+  PASS  tenant schema_server_port = 5432
+  PASS  MNT seeded with decimal_places=2 (ISO 4217 496, minor unit 2)
+  PASS  MNT enabled for the tenant
+
+  FAIL  tenant timezone_id = 'Asia/Kolkata' — must be Asia/Ulaanbaatar or Asia/Hovd (CLAUDE.md)
+  FAIL  c_configuration.rounding-mode = '6' in fineract_default — ratified value is 4 (HALF_UP); 6 is HALF_EVEN and is NOT production-representative
+  FAIL  schema_connection_parameters = 'serverTimezone=UTC&useLegacyDatetimeCode=false&sessionVariables=time_zone='-00:00'' — must be empty on a capture tenant
+  FAIL  running JVM initialized tenant 'default' at a mode other than HALF_UP: 2026-08-18 09:53:01.504 - INFO 1  [        default] --- [           main] o.a.f.o.monetary.domain.MoneyHelper      : Initialized rounding mode for tenant `default`: HALF_EVEN
+  FAIL  effective rounding-mode canary returned period-1 interest '20925.04', expected '20925.05'; 20925.04 would mean the process is running HALF_EVEN
+PRECONDITIONS BREACHED: 5. DO NOT CAPTURE. Any file produced now is NOT an observation
+of the pinned reference oracle at the ratified (19, HALF_UP) settings — do not commit it, do not
+treat it as a vector, and do not 'normalise' it. Fix the environment and re-run.
+
+ABORT: preconditions breached — no capture attempted, no attestation written.
+EXIT=1
+
+-- the committed evidence transcript, AFTER --
+b74409be1cce491a984f8cd2fb5bf0f0d557b0c534f693fc0b161aabfccf8add  .softhouse/capture/charges/out/attested/preconditions.txt
+
+-- git status of the committed evidence tree --
+ M .softhouse/capture/charges/out/attested/preconditions.txt
+
+-- RESTORED from the branch immediately after the demonstration --
+4c3ff7f8c07e89d5a7e16b0d8e386b74a4b2c21e089052b546d336b9c51d1768  .softhouse/capture/charges/out/attested/preconditions.txt
+(empty above = tree clean)

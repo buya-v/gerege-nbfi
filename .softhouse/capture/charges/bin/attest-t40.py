@@ -113,13 +113,26 @@ canary, canary_pin_sha = attest_gate.canary_request_for(
     TENANT, os.path.join(PATHB, 't22-audit', 'req'))
 pre = subprocess.run('CANARY_REQ=%s sh %s %s' % (canary, os.path.join(HERE, 'preconditions.sh'), TENANT),
                      shell=True, capture_output=True, text=True)
+# T147, closing T85's F-1 where it was never swept.  Until now `os.makedirs(OUT)` and the
+# `preconditions.txt` write happened HERE, one line ABOVE the returncode check — so a breached
+# run printed "no capture attempted, no attestation written" having ALREADY overwritten the
+# committed transcript of a `gerege` capture set with a `default`-tenant one.  Demonstrated
+# live against these exact pre-fix bytes on 2026-08-21: committed
+# `charges/out/attested/preconditions.txt` went 4c3ff7f8… -> b74409be… while that sentence was
+# on screen (evidence: `capture/pathb/t147/red-pre-fix/f1-attest-t40-prefix.txt`; the file was
+# restored from the branch immediately).  T80 fixed exactly this in `pathb/t36/attest.py`
+# (commit 8d6be94, "attest.py's gate now runs before any write"); this fork never received it
+# (P-21/P-26) and T125 modified this file without noticing.  The abort now happens BEFORE any
+# directory is created and before any byte is written, and the message says so.
+if pre.returncode != 0:
+    sys.stderr.write(pre.stdout + pre.stderr)
+    sys.stderr.write('\nABORT: preconditions breached — no capture attempted, no attestation written, '
+                     'and nothing at all written into %r.\n' % OUT)
+    sys.exit(1)
+
 os.makedirs(OUT, exist_ok=True)
 with open(os.path.join(OUT, 'preconditions.txt'), 'w') as fh:
     fh.write(pre.stdout + pre.stderr)
-if pre.returncode != 0:
-    sys.stderr.write(pre.stdout + pre.stderr)
-    sys.stderr.write('\nABORT: preconditions breached — no capture attempted, no attestation written.\n')
-    sys.exit(1)
 
 # ------------------------------------------------------------------ the oracle
 image_id = sh("docker image inspect fineract:latest --format '{{.Id}}'")

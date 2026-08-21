@@ -81,7 +81,11 @@ attest_verdict = 'HALF_UP confirmed behaviourally'
 
 
 def doc_case(doc, key='matches_committed_corpus_bytes'):
-    return ('unknown = attest_gate.assert_attestation_is_verified(json.loads(%r), %r)\n'
+    # parse_float=str (T147, P-25): these synthetic documents carry money as exact text, and
+    # the rule that no monetary value passes through a binary float binds analysis and
+    # self-test code as well as production paths.
+    return ('unknown = attest_gate.assert_attestation_is_verified('
+            'json.loads(%r, parse_float=str), %r)\n'
             'print("DOC PASSED unknown=%%r" %% (unknown,))\n' % (json.dumps(doc), key))
 
 
@@ -154,6 +158,37 @@ CASES = [
                'captures': [{'id': 'FC-01', 'byte_identical_to_prior_issue': False}]},
               key='byte_identical_to_prior_issue'),
      4, 'is False for FC-01', None),
+
+    # ------------------------------------------------------------------ T147 (T136 F-3)
+    # The document grader used to be strict on the mode field (`is not True`) and loose on
+    # the per-capture identity field (`is False`).  Every case below was ACCEPTED, exit 0,
+    # against the pre-fix bytes — measured, not argued:
+    # `capture/pathb/t147/red-pre-fix/f4-doc-grader-prefix.txt`.  P-35: if the PASS sentence
+    # would still print on empty input, it is not a guard.
+    ('doc: ZERO captures REFUSES — a document that grades nothing verifies nothing (T147)',
+     doc_case(att(captures=[])), 4, 'EMPTY `captures` list', None),
+    ('doc: NO captures key at all REFUSES (T147)',
+     doc_case({'effective_mode_canary': {'verdict': attest_verdict,
+                                         'observed_period1_interest': '20925.05'},
+               'effective_math_context': {'matches_ratified_production_setting': True}}),
+     4, 'no `captures` key at all', None),
+    ('doc: `captures` of the wrong TYPE REFUSES (T147)',
+     doc_case(att(captures={'X-01': True})), 4, 'not a list', None),
+    ("doc: the STRING 'False' REFUSES — it used to pass (T147)",
+     doc_case(att(captures=[{'id': 'X-01', 'matches_committed_corpus_bytes': 'False'}])),
+     4, 'neither True nor None nor False', None),
+    ("doc: the STRING 'True' REFUSES too — same strictness as the mode field (T147)",
+     doc_case(att(captures=[{'id': 'X-01', 'matches_committed_corpus_bytes': 'True'}])),
+     4, 'neither True nor None nor False', None),
+    ('doc: a falsy 0 REFUSES rather than reading as False or as agreement (T147)',
+     doc_case(att(captures=[{'id': 'X-01', 'matches_committed_corpus_bytes': 0}])),
+     4, 'neither True nor None nor False', None),
+    ('doc: the identity key MISSING from a capture REFUSES (T147)',
+     doc_case(att(captures=[{'id': 'X-01'}])), 4, 'is MISSING from capture', None),
+    ('doc: a real bool True on a real capture still PASSES (T147 control)',
+     doc_case(att(captures=[{'id': 'X-01', 'matches_committed_corpus_bytes': True},
+                            {'id': 'X-02', 'matches_committed_corpus_bytes': None}])),
+     0, "DOC PASSED unknown=['X-02']", None),
 ]
 
 

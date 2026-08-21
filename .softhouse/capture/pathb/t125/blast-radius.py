@@ -47,7 +47,11 @@ COMMITTED = [
 
 
 def grade(rel):
-    d = json.load(open(os.path.join(CAPTURE, rel)))
+    # T147 (P-25, T136 F-4): parse_float=str.  Today every money value in these five
+    # attestations is serialised as a string, so no float materialises — measured, not
+    # assumed.  It becomes live the day any attestation field is written as a JSON
+    # number, and the rule binds analysis scripts too.
+    d = json.load(open(os.path.join(CAPTURE, rel)), parse_float=str)
     c = d.get('effective_mode_canary') or {}
     t = d.get('tenant') or {}
     e = d.get('effective_math_context') or {}

@@ -24,6 +24,40 @@ carries one bit about the rounding mode.  The canary is the ONLY discriminator t
 sidecars have, and `HALF_UP` is a RATIFIED TENANT PARAMETER (CLAUDE.md, Buyan 18 Aug 2026,
 `RoundingMode` ordinal 4) whose upstream default is HALF_EVEN.
 
+T136 measured that mode-blindness on THIRTEEN TIMES as many shapes as T125 did, and the
+result is stronger, not weaker.  It posted all 197 committed `calc-*.json` requests to BOTH
+tenants of the one running process and discarded the 8 whose `productId` names a different
+product on the two schemas (those measure the product, not the mode):
+
+    SOUND cross-mode comparisons (product row column-identical on both tenants)
+      both HTTP 200, response bytes IDENTICAL : 52
+      both HTTP 200, response bytes DIFFER    :  0
+    by corpus: leapboundary 22 | pathb/t36/req-emiloop 9 | charges (charge-free) 9
+               actualactual/pathb 8 | pathb/req 4  (calc-B-01..B-04, T125's own four)
+
+NOT ONE Path B digest is mode-sensitive.  Three refinements worth carrying:
+
+  * the four `B-0x` shapes are blind because 1,200,000 x 1.8 % = 21,600.00 EXACTLY — there is
+    no tie to round, and no tie occurs by accident anywhere in the standing set.  A
+    discriminating shape has to be SOLVED for (P-9), which is what 1,162,502.50 is.
+  * the 44 charge-bearing shapes are STRUCTURALLY UNTESTABLE by this method: `m_charge` has
+    0 rows on `default`, so they return HTTP 404 on the HALF_EVEN tenant.  Consequently
+    `attest-t40.py` HAS NO LIVE RED PROOF — nothing drives that file against a wrong-mode
+    tenant.  Its gate is this same shared call and `gate-selftest.py` covers the logic, but
+    the honest statement is "not proven red live", not "proven".
+  * the graded parity corpus is NOT blind to the parameter, contrary to what "no digest
+    carries one bit" invites you to conclude: 0 of 46 vector files contain either tie answer,
+    so no PARITY vector discriminates the mode — but
+    `vectors/loanschedule/REFUSE-02-half-even-ungraded.json` makes HALF_EVEN a CONTRACT
+    REFUSAL (`ErrNoDiscriminatingVector`), and conformance grades 4 contract-refusal cases
+    PASS 4 / FAIL 0.  A Go port cannot silently ship HALF_EVEN and pass; it must refuse.
+
+And the confound T125 asserted but never measured is now closed (T136): the two canary
+requests differ only in `productId`, and `to_jsonb(m_product_loan)` for id 10 @
+`fineract_default` vs id 11 @ `fineract_gerege` agrees on 89 of 89 columns, differing solely
+in `id`.  So `20925.05` vs `20925.04` is the ROUNDING MODE and nothing else — the pinned
+table below rests on a measurement, not on an assertion.
+
 Why this module exists rather than three copies of the same block.  The defect's proximate
 cause is that a fix landed in one file and not its forks: T80 hardened
 `capture/pathb/t36/attest.py`, while `capture/charges/bin/attest.py` and `attest-t40.py`
@@ -205,7 +239,20 @@ def assert_attestation_is_verified(att, capture_identity_key):
     `capture_identity_key` is the per-capture reproducibility claim in this sidecar's
     schema: 'matches_committed_corpus_bytes' (the two attest.py) or
     'byte_identical_to_prior_issue' (attest-t40.py). None means "no prior issue to compare
-    against", which is an absence and not a mismatch; False is a mismatch and is refused.
+    against", which is an absence and not a mismatch; anything that is not literally True or
+    None is refused.
+
+    T147 (P-35), closing T136's F-3.  This function used to grade the mode field strictly
+    (`is not True`) and the per-capture identity field loosely (`is False`), which made it
+    asymmetric in the direction that matters: measured on the pre-fix bytes, a document with
+    `captures: []` was ACCEPTED, a document with no `captures` key at all was ACCEPTED, and a
+    capture carrying the STRING 'False' was ACCEPTED, while the string 'True' on the mode
+    field was correctly REFUSED
+    (`capture/pathb/t147/red-pre-fix/f4-doc-grader-prefix.txt`).  Not exploitable then — all
+    three sidecars assign a real bool/None and CAPTURES is never empty — and exactly how a
+    guard drifts.  Both fields are now POSITIVE assertions: the document must SAY the thing,
+    with the right type, and a document that grades zero captures is refused rather than
+    passed.  If the PASS would still print on empty input, it is not a guard.
     """
     reasons = []
 
@@ -225,18 +272,60 @@ def assert_attestation_is_verified(att, capture_identity_key):
             'verdict, gated nothing until T125.'
             % (emc.get('matches_ratified_production_setting'), WANT_PRECISION, WANT_ROUNDING_NAME))
 
-    mismatched = [c.get('id') for c in att.get('captures') or []
-                  if c.get(capture_identity_key) is False]
+    # POSITIVE: the document must carry captures at all. A `captures` list that is absent or
+    # empty grades nothing, and "nothing to complain about" is not "verified" (P-35).
+    captures = att.get('captures')
+    if not isinstance(captures, list) or not captures:
+        reasons.append(
+            'the attestation carries %s. An attestation asserts that a NAMED SET of captures '
+            'was taken from the pinned oracle and reproduced the bytes on record; a document '
+            'that grades zero captures makes no such assertion, and passing it would be a '
+            'guard reporting success on empty input.'
+            % ('no `captures` key at all' if captures is None
+               else ('`captures` of type %s, not a list' % type(captures).__name__)
+                    if not isinstance(captures, list) else 'an EMPTY `captures` list'))
+
+    # POSITIVE: each capture must SAY True (byte-identical) or None (no prior to compare).
+    # Grading `is False` accepted every other value, including the STRING 'False' and 0.
+    _ABSENT = object()
+    mismatched, illtyped, absent = [], [], []
+    for c in captures if isinstance(captures, list) else []:
+        v = c.get(capture_identity_key, _ABSENT)
+        if v is True or v is None:
+            continue
+        if v is _ABSENT:
+            absent.append(c.get('id'))
+        elif v is False:
+            mismatched.append((c.get('id'), v))
+        else:
+            illtyped.append((c.get('id'), v))
+    if absent:
+        reasons.append(
+            '%s is MISSING from capture(s) %s. The per-capture reproducibility claim is not '
+            'optional: a capture that does not state it has not made it, and a document is '
+            'graded on what it says, not on what it declines to say.'
+            % (capture_identity_key, ', '.join(str(a) for a in absent)))
     if mismatched:
         reasons.append(
             '%s is False for %s. The oracle is pinned and deterministic, so a re-capture that '
             'differs from the bytes already on record means either the corpus or the oracle is '
             'not what it is documented to be. This field was computed and printed and gated '
-            'nothing until T125.' % (capture_identity_key, ', '.join(str(m) for m in mismatched)))
-
-    unknown = [c.get('id') for c in att.get('captures') or []
-               if c.get(capture_identity_key) is None]
+            'nothing until T125.'
+            % (capture_identity_key, ', '.join(str(m) for m, _ in mismatched)))
+    if illtyped:
+        reasons.append(
+            '%s is neither True nor None nor False for %s. The only readings this field has '
+            'are "reproduced the committed bytes" (True), "there was nothing to compare '
+            'against" (None) and "did not reproduce them" (False); any other value — the '
+            'STRING %r is the canonical trap — is an unverified claim wearing a verified '
+            'badge, and it used to pass.'
+            % (capture_identity_key,
+               ', '.join('%s=%r' % (i, v) for i, v in illtyped), 'False'))
 
     if reasons:
         refuse('the attestation about to be written carries an unverified claim', reasons)
+
+    unknown = [c.get('id') for c in captures if c.get(capture_identity_key) is None]
+    # The assertion, stated positively, for the caller to print: N captures were graded, and
+    # every one of them said True or said "no prior issue".
     return unknown

@@ -1,0 +1,13 @@
+=== T147 F-3 (T136 F-2) RED PROOF, PRE-FIX BYTES ==============================
+target: .softhouse/capture/pathb/t125/drive-canary-red.sh:42-43 — a value
+        computed, printed against a prose expectation, and compared to nothing.
+
+-- the two lines as committed --
+nchanged=$(diff "$T36/attest.py" "$SCRATCH" | grep -c '^[<>]')
+echo "changed lines: $nchanged (expect 4 = 2 substitutions x <old + >new)"
+
+-- what the script actually prints, with the substitution it makes today --
+changed lines: 2 (expect 4 = 2 substitutions x <old + >new)
+
+The script emits its own contradiction — 'changed lines: 2 (expect 4 ...)' — and
+continues to exit 0 on that line.  Nothing compares $nchanged to anything.

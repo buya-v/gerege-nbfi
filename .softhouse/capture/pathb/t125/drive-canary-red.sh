@@ -14,13 +14,22 @@
 # WHAT IS SIMULATED, STATED PLAINLY: exactly one thing — the OUTER precondition gate is
 # disabled, because preconditions.sh is today the ONLY thing that refuses a wrong-mode
 # tenant, and this script's whole question is what the INNER canary block does when it is
-# reached.  Two one-line substitutions are applied to a scratch copy of attest.py and the
-# resulting diff is printed and archived so a reviewer can see there is nothing else:
+# reached.  Two one-line substitutions are ATTEMPTED against a scratch copy of attest.py and
+# the resulting diff is printed, archived AND ASSERTED (T147) so a reviewer can see there is
+# nothing else:
 #   (1) `if pre.returncode != 0:` -> `if False:`        (the labelled bypass)
 #   (2) canary request calc-pmode2-gerege.json -> calc-pmode2-default.json
 #       (productId 11 exists only in `gerege`; the default tenant's twin of the SAME exact
 #        tie is productId 10, so the canary actually observes the mode instead of 404ing.
 #        Both files are committed; neither is edited.)
+#       Against post-T125 bytes (2) MATCHES NOTHING and is a no-op: attest.py now resolves the
+#       canary by tenant through attest_gate.canary_request_for(), so `default` already gets
+#       calc-pmode2-default.json without any edit.  It is kept so a re-introduced literal
+#       would still be switched, and the assertion below DERIVES the expected diff size from
+#       whether it matched instead of hard-coding "4" the way this script used to.
+#       [Confounder ruled out by T136: `m_product_loan` 10@fineract_default and
+#        11@fineract_gerege agree on 89 of 89 columns, differing only in `id` — so the
+#        20925.05 / 20925.04 split observed below is the ROUNDING MODE and nothing else.]
 # The canary verdict block itself is UNTOUCHED, and every capture, every DB read and the
 # canary POST are real requests to the real oracle.
 #
@@ -39,8 +48,42 @@ sed -e "s|^if pre.returncode != 0:|if False:  # T125 RED DEMO: OUTER preconditio
 mkdir -p "$OUTDIR"
 echo "== the ONLY changes made to attest.py for this run =="
 diff "$T36/attest.py" "$SCRATCH" | tee "$OUTDIR/scratch.diff"
-nchanged=$(diff "$T36/attest.py" "$SCRATCH" | grep -c '^[<>]')
-echo "changed lines: $nchanged (expect 4 = 2 substitutions x <old + >new)"
+
+# T147 (P-35), closing T136's F-2.  This line used to read
+#     echo "changed lines: $nchanged (expect 4 = 2 substitutions x <old + >new)"
+# with NOTHING comparing $nchanged to 4 — and on today's attest.py it printed
+# "changed lines: 2 (expect 4 ...)", the script emitting its own contradiction and carrying
+# on (`capture/pathb/t147/red-pre-fix/f3-drive-canary-red-prefix.txt`).  A value computed,
+# printed against a prose expectation and compared to nothing is exactly the shape T125
+# exists to close, and it was in T125's own driver.
+#
+# The honesty of this whole RED demo rests on that diff being the substitutions it claims and
+# nothing else, so the count is now DERIVED from what each -e clause could actually match and
+# ASSERTED.  Substitution (1) — the labelled bypass — MUST apply, or the demo is not testing
+# what it says.  Substitution (2) is a NO-OP against post-T125 bytes, because attest.py now
+# chooses the canary BY TENANT from attest_gate.PINNED_CANARY_BY_TENANT rather than carrying
+# the literal; it is retained so that a re-introduced literal is still switched, and whether
+# it matched is measured rather than assumed.  LC_ALL=C grep -a per P-33.
+n_literal=$(LC_ALL=C grep -ac "calc-pmode2-gerege.json" "$T36/attest.py" || true)
+n_bypass=$(LC_ALL=C grep -ac 'T125 RED DEMO: OUTER precondition gate DISABLED' "$SCRATCH" || true)
+expect_changed=$(( 2 + 2 * n_literal ))
+nchanged=$(diff "$T36/attest.py" "$SCRATCH" | LC_ALL=C grep -ac '^[<>]' || true)
+if [ "$n_bypass" -ne 1 ]; then
+  echo "FAIL: the labelled precondition bypass did not apply to the scratch copy" \
+       "(found $n_bypass occurrences, expected 1). This run would not be testing the INNER" \
+       "canary gate at all." >&2
+  rm -f "$SCRATCH"; exit 1
+fi
+if [ "$nchanged" -ne "$expect_changed" ]; then
+  echo "FAIL: the scratch copy differs from attest.py on $nchanged lines, but the" \
+       "substitutions this script makes account for exactly $expect_changed" \
+       "(bypass 2 + canary-literal $(( 2 * n_literal ))). Refusing to present an" \
+       "unexplained edit as 'the ONLY changes made'." >&2
+  rm -f "$SCRATCH"; exit 1
+fi
+echo "ASSERTED: changed lines = $nchanged, and that is exactly what these substitutions" \
+     "account for (labelled bypass 2 + canary literal $(( 2 * n_literal )) —" \
+     "the literal occurs $n_literal times in attest.py)."
 
 echo
 echo "== running: ATTEST_OUT=$OUTNAME python3 attest.py default pathb =="
