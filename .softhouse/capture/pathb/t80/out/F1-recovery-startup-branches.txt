@@ -1,0 +1,52 @@
+=== T161 — the start-up and pin branches the seven interruption cases never execute
+===================================================================================
+P-22: a branch that has never been executed is a guard that cannot fail.  The seven
+interruption classes in `F1-recovery-redgreen.txt` all take the same path through the
+start-up block (no marker present) and the same path through the pin (the attester matches
+the index).  Four branches are therefore never reached by them, and are driven here:
+
+  A  the attester is LOCALLY MODIFIED when the window opens.  The pin must then be a NEW
+     blob written with `git hash-object -w`, and the restore must give back the MODIFIED
+     bytes — silently reverting a local edit to the index would be its own data loss.
+  B  the marker names a blob that is not in the object store  -> refuse, touch nothing.
+  C  the marker's recorded digest is already the file's digest -> the IDEMPOTENT no-op,
+     i.e. running the restore twice is safe.
+  D  the marker's blob does not hash to the recorded sha256   -> refuse, touch nothing.
+
+B and D are the two ways the recovery could restore bytes it cannot identify.  Both must
+fail closed and leave the attester exactly as found; both are checked for that, not merely
+for a non-zero exit.
+
+Sandbox: a throwaway `git clone --shared` of the T161 branch.  The real rig is never used.
+Driver: /tmp scratch harness (not committed; it only plants a marker and reads digests).
+-----------------------------------------------------------------------------------
+sandbox: /tmp/t161-branches   (clone of the T161 branch)
+
+=== A — the attester is LOCALLY MODIFIED when the window opens
+  working-tree attest.py sha256 : 50e7a28a500fd7d1f2a63879a8ffe67da0f0eea5a21a049dfceaa176c70af4ee
+  index blob                    : 9e38fe5e273c959a004423faa7e612f0240f51bc  (its bytes are DIFFERENT)
+  prove-f1.sh exit=0
+    note: .softhouse/capture/pathb/t36/attest.py differs from the index; its working-tree bytes were pinned as a new blob
+    guard: pinned .softhouse/capture/pathb/t36/attest.py at sha256 50e7a28a500fd7d1f2a63879a8ffe67da0f0eea5a21a049dfceaa176c70af4ee as immutable blob d0db954b4a0c248756fd6b313f7311e104e5d9dd; marker /tmp/t161-branches/.softhouse/capture/pathb/t80/.f1-swap-in-progress
+    RESULT: F-1 CLOSED — the defect reproduces on the pre-fix file and is absent after the fix.
+  attest.py afterwards          : 50e7a28a500fd7d1f2a63879a8ffe67da0f0eea5a21a049dfceaa176c70af4ee
+  => PASS: the LOCAL bytes came back, not the index's
+
+=== B — a marker naming a blob that is not in the object store
+  prove-f1.sh exit=1
+    PROOF FAILED: in-flight marker names blob 0000000000000000000000000000000000000000, which is not in this repository's object store — repair .softhouse/capture/pathb/t36/attest.py by hand
+  => PASS: refused and touched nothing
+
+=== C — a marker whose recorded digest IS the file's digest (idempotent no-op)
+  prove-f1.sh exit=0
+    note: an in-flight marker from an earlier run was found; .softhouse/capture/pathb/t36/attest.py is already at the recorded bytes (567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2) — nothing to restore
+    RESULT: F-1 CLOSED — the defect reproduces on the pre-fix file and is absent after the fix.
+  => PASS: no-op, and the proof then ran normally
+
+=== D — a marker whose blob does not hash to the recorded sha256
+  prove-f1.sh exit=1
+    PROOF FAILED: blob 9e38fe5e273c959a004423faa7e612f0240f51bc does not hash to the 0000000000000000000000000000000000000000000000000000000000000000 recorded in /tmp/t161-branches/.softhouse/capture/pathb/t80/.f1-swap-in-progress — refusing to restore bytes I cannot identify
+  => PASS: refused and touched nothing
+
+final tree state (expect only the deliberate branch-A edit to be gone after reset):
+(end)
