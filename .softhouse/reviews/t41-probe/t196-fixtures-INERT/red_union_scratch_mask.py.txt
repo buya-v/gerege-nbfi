@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+"""T196 RED FIXTURE — the fail-open channel inside T183's OWN patch.
+
+T183's `PROPOSED-backstep.patch` merges the actual arguments of EVERY call site of a
+helper into one probe text.  `scope_of` checks `SCRATCH_RX` FIRST, so one caller
+passing a `/tmp/...` path makes the merged text look scratch-derived and the site is
+excused as SANDBOX — even though another caller hands the same helper the RATIFIED
+DEC-1.  One harmless call site launders a gate bypass.
+
+That is why T196 applies "worst case wins, per call site": if any single call site
+resolves TRUSTED on its own, only the TRUSTED call sites describe the parameter.
+
+REQUIRED:
+  * baseline (no backstep at all)      -> UNKNOWN, `--enforce` exit 0  (D-1 fail-open)
+  * T183's patch as written            -> SCRATCH/SANDBOX, exit 0      (this fail-open)
+  * T196                               -> TRUSTED/UNGUARDED, exit 1
+
+INERT.  Held as `.py.txt`; both calls are inside a function nothing calls.
+"""
+import io
+
+if __name__ == "__main__":
+    raise SystemExit("t196 fixture: parsed, never run")
+
+
+def patch(path, text):
+    io.open(path, "w", encoding="utf-8").write(text)               # T196-SITE
+
+
+def never_called():
+    patch("/tmp/t196-scratch/harmless-copy.md", "a harmless scratch write")
+    patch("docs/adr/DEC-1-schedule-generator-adapter.md", "A GATE BYPASS")

@@ -1,0 +1,10 @@
+#!/usr/bin/env python3
+"""GREEN by construction: a real atexit restore, registered from an imported module."""
+import io
+import mylib_guard
+
+P = "docs/adr/DEC-1-schedule-generator-adapter.md"
+
+mylib_guard.install_restore(P)
+s = io.open(P, encoding="utf-8").read()
+io.open(P, "w", encoding="utf-8").write(s.replace("a", "b"))       # T179-SITE
