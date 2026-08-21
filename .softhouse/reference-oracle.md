@@ -695,3 +695,77 @@ in whether an **intermediate** period falls on a holiday must differ in **zero**
 on a holiday must move the date. Both halves need observing — the zero is as much the finding as the
 difference, per the `chargeCalculationType` 5 precedent where linearity, not absence, hid the effect.
 `[UNVERIFIED: that a Path B capture reproduces this — nobody has observed it yet.]`
+
+## The declared wire type for money, and the oracle's own `double` sites — task T186
+
+Established by task T186 (`.softhouse/reviews/T186-wire-money-form-ruling.md`) from the pinned
+checkout `426a23544e8426a38ae43ae404670a0a7e85b9eb`. Read this before writing any capture harness or
+arguing about float-shaped tokens in a capture.
+
+### The loans request path is `BigDecimal` from token text — no `double`
+
+The oracle's REST API declares `principal` as a **major-unit decimal**, so a FAITHFUL capture
+**cannot** send minor units. The declared type is `BigDecimal`, and the JSON-number branch parses the
+**original token text**:
+
+- The resource method takes a **raw `String`** body, so Jackson never sees the numbers
+  [VERIFIED: `LoansApiResource.java:570-572`; `JerseyJacksonObjectArgumentHandler.java:62-63`].
+- `if (primitive.isNumber()) { value = primitive.getAsBigDecimal(); }`
+  [VERIFIED: `JsonParserHelper.java:151-152`].
+- Consumers: `LoanScheduleAssembler.java:267` (`principal`), `:252` (`interestRatePerPeriod`),
+  `LoanApplicationValidator.java:637-638`; entity `LoanProductRelatedDetail.java:61-62`, `:64-65`
+  (both `BigDecimal`, `scale = 6, precision = 19`); DDL `DECIMAL(19, 6)`
+  [VERIFIED: `db/changelog/tenant/parts/0001_initial_schema.xml:2040`, `:3117`].
+- Gson is a bare `new Gson()` with **no** `BigDecimal`/`Double`/`Number` adapter registered anywhere
+  [VERIFIED: `FromJsonHelper.java:57-60`; `GoogleGsonSerializerHelper.java:105-115`], pinned at
+  `gson:2.14.0` [VERIFIED: `buildSrc/src/main/groovy/org.apache.fineract.dependencies.gradle:55`].
+  `[UNVERIFIED: Gson's own `getAsBigDecimal()` internals — no Gson jar or source is present on this
+  host, so the final link of the loans chain rests on upstream library behaviour, not on repo source.]`
+
+### ⚠️ INVERSION — quoting a money value moves it ONTO a `double` path
+
+The intuitive "fix" is wrong. A **quoted** value takes the `else` branch
+[`JsonParserHelper.java:154-157`] into `convertFrom`, which ends:
+
+```java
+if (parsedNumber instanceof BigDecimal) { number = (BigDecimal) parsedNumber; }
+else { number = BigDecimal.valueOf(parsedNumber.doubleValue()); }   // line 737
+```
+[VERIFIED: `JsonParserHelper.java:732-738`]
+
+It also makes `locale` **mandatory** — a null locale throws
+`validation.msg.missing.locale.parameter` [VERIFIED: `JsonParserHelper.java:704-715`].
+**Send unquoted JSON numbers.** `[UNVERIFIED: whether line 737 is reachable — that depends on Spring's
+`NumberStyleFormatter` calling `setParseBigDecimal(true)`, and no `spring-context` source is present
+on this host.]`
+
+### Porter's hazard list — three genuine `double` sites in the oracle
+
+Recorded in the style of DEC-1 §4.1.2's `Money.java` list. **None of these is a licence to introduce a
+float in Go** (DEC-1:829). Reproduce the oracle's observed **output**; never import its arithmetic
+**type**.
+
+1. **`POST /charges` `amount` is a Java `Double` on the wire** — and unlike `PostLoansRequest` this
+   DTO is genuinely deserialized, because the resource method declares the DTO type rather than
+   `String`, so Jackson handles it and `USE_BIG_DECIMAL_FOR_FLOATS` is not enabled.
+   [VERIFIED: `ChargeRequest.java:41` (`private Double amount;`); `ChargesApiResource.java:139-142`;
+   `JerseyJacksonConverterConfig.java:48-54`]. Note the same class declares `minCap`/`maxCap` as
+   `BigDecimal` [`ChargeRequest.java:52-53`] and the column is `BigDecimal` [`Charge.java:76-77`] —
+   the `Double` is an inconsistency in one DTO, not a design.
+   **Consequence:** a charge `amount` survives the oracle exactly iff its token text is already the
+   shortest round-trip repr of its double — which is precisely the property
+   `.softhouse/capture/lib/check_wire_float_roundtrip.py` enforces.
+2. **The interest-rate getter launders `BigDecimal` through `Double.parseDouble` on every read** —
+   field and column are `DECIMAL(19,6)`, but
+   `BigDecimal.valueOf(Double.parseDouble(this.nominalInterestRatePerPeriod.stripTrailingZeros().toString()))`
+   [VERIFIED: `LoanProductRelatedDetail.java:344-346`].
+3. **The EMI kernel is `double`** — `FinanicalFunctions.pmt(double, double, double, double, boolean)`
+   [VERIFIED: `FinanicalFunctions.java:44-55`], reached via `LoanApplicationTerms.java:1604-1622`.
+
+### The OpenAPI spec disagrees with the server on loan products
+
+`LoanProductsApiResourceSwagger.java` declares `public Double principal;` / `Double interestRatePerPeriod;`
+(`:93`, `:112`), so the **generated OpenAPI advertises `number/double`** even though the server parses
+`BigDecimal`. `LoansApiResourceSwagger.PostLoansRequest` correctly says `BigDecimal` (`:1343`, `:1357`).
+Both are documentation-only classes, never instantiated on the request path — but a Go client generated
+from the published spec would inherit a `float64`, which is a Zone B rejection.
