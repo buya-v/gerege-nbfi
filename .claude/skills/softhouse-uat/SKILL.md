@@ -25,10 +25,31 @@ bash .softhouse/conformance.sh   # replays golden vectors through the Go module 
 
 Exit 0 = PASS, 1 = FAIL, 2 = could not run (e.g. oracle unreachable),
 **3 = wrong interpreter — the harness never started.** Run it with `bash` (or
-`./.softhouse/conformance.sh`); `sh`, `dash`, `zsh` and `bash --posix` are refused
-up front with exit 3. Exit 3 is **not** a verdict and **not** an oracle outage:
-nothing was graded and the oracle was never contacted. Re-invoke under bash and
-grade again — never park a task on it. Full table: `.softhouse/vectors/README.md`.
+`./.softhouse/conformance.sh`).
+
+The guard tests a **capability, never a shell's name**: before anything else the
+harness must *observe* a token come back through `< <(…)`, the construct it is
+built on. Anything that cannot deliver that token is refused up front with exit 3
+— a shell that is not bash (`dash`, `zsh`, `ksh`, busybox `ash`), a bash with
+process substitution switched off (bash 3.2 in POSIX mode, which is what **both**
+`sh conformance.sh` and `bash --posix conformance.sh` give you on macOS), and a
+restricted `bash -r`, which stops the probe from running at all. Where `/bin/sh`
+**is** a bash 5.x — Fedora, RHEL, and any distro that links `sh` to bash —
+`sh conformance.sh` is **admitted, and the harness starts normally**, so "`sh` is
+refused" is not the rule; "this shell could not be seen to do process
+substitution" is
+[VERIFIED: T97 — bash 5.2.37 / 5.3.9 admitted plain, under `--posix`, and with
+`argv[0]=sh`; bash 3.2.57 as `/bin/sh` refused; `bash -r` refused. T113 re-ran
+the same shapes on bash 5.3.9].
+It used to say "admitted **and works**". That claimed more than anyone has
+observed and was corrected by T113 (T106 F4): **no complete graded run under any
+bash 5.x exists** — every green conformance run on record is macOS bash 3.2.57.
+What has been measured under bash 5.x is admission plus a correctly resolved
+`SCRIPT_DIR`; the 800 lines after the guard are [UNVERIFIED] there.
+
+Exit 3 is **not** a verdict and **not** an oracle outage: nothing was graded and
+the oracle was never contacted. Re-invoke under bash and grade again — never park
+a task on it. Full table: `.softhouse/vectors/README.md`.
 
 ### HARD checks — must be zero
 
