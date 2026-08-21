@@ -112,7 +112,11 @@ def _read_dec1_state():
     pin = os.path.join(SOFTHOUSE, 'vectors', 'PIN.json')
     try:
         with open(pin) as fh:
-            rev = json.load(fh).get('dec1_revision')
+            # parse_float=str throughout (T147, P-25): the rule binds every load in a file
+            # that reasons about money, not only the loads that happen to touch a money cell
+            # today. A field promoted to a JSON number later must not silently acquire a
+            # binary float on the way in.
+            rev = json.load(fh, parse_float=str).get('dec1_revision')
     except Exception as exc:                                         # noqa: BLE001
         notes.append('UNREAD dec1_revision — %s (%s)' % (exc, pin))
     ratified = None
@@ -399,7 +403,8 @@ att = {
         'image_tag': 'fineract:latest',
         'image_id': image_id,
         'image_created': image_created,
-        'image_repo_digests': json.loads(image_repodigests) if image_repodigests else None,
+        'image_repo_digests': (json.loads(image_repodigests, parse_float=str)
+                               if image_repodigests else None),
         'container': FIN,
         'container_started_at': container_started,
         'jar_git_commit_id': gp.get('git.commit.id'),
@@ -453,7 +458,14 @@ att = {
     'effective_mode_canary': {
         'purpose': 'behavioural proof of the rounding mode actually in force: period-1 interest is an '
                    'exact half-cent tie (1,162,502.50 x 0.018 = 20,925.045)',
-        'request_file': 't22-audit/req/calc-pmode2-gerege.json',
+        # T147: DERIVED from the request actually sent, not a hard-coded literal. Until now
+        # this line named `calc-pmode2-gerege.json` on EVERY tenant while `request_sha256`
+        # beside it was computed from the bytes really posted — so a `default` run wrote a
+        # document naming one file and recording another file's digest. Visible today in the
+        # committed `capture/pathb/t125/red-pre-fix-default/attestation.json`, which names
+        # calc-pmode2-gerege.json and carries 1461810087… (that is calc-pmode2-default.json).
+        # Same shape as everything else this task closes: a value written and never compared.
+        'request_file': os.path.relpath(canary, PATHB),
         'request_sha256': sha256(canary_bytes),
         'response_file': os.path.relpath(canary_out, PATHB),
         'http_status': int(canary_code) if canary_code else None,

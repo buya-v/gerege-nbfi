@@ -1,0 +1,15 @@
+=== T147 F-2 (T136 F-1) RED PROOF, PRE-FIX BYTES ==============================
+target: .softhouse/capture/pathb/t125/compare-bytes.py:41-72 — 'a guard that
+        inspects zero files must be an error, not a pass' (P-22/P-35).
+
+$ python3 compare-bytes.py            # no arguments at all
+  --
+  byte-identical: 0   CHANGED: 0   no committed counterpart: 0
+EXIT=0
+
+$ python3 compare-bytes.py /tmp/t147/definitely-not-a-directory
+  --
+  byte-identical: 0   CHANGED: 0   no committed counterpart: 0
+EXIT=0
+
+Both print a reassuring 'CHANGED: 0' having hashed nothing, and both exit 0.

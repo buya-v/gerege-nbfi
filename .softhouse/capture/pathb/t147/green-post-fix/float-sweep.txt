@@ -1,0 +1,18 @@
+==============================================================================
+ T147 — P-25 structural float sweep over every .py T147 authored or touched
+==============================================================================
+
+  file                                                       floats    div  json!
+  ------------------------------------------------------------------------------
+  lib/attest_gate.py                                              0      0      0
+  pathb/t125/compare-bytes.py                                     0      0      0
+  pathb/t125/gate-selftest.py                                     0      0      0
+  pathb/t125/blast-radius.py                                      0      0      0
+  pathb/t147/cp-digest-census.py                                  0      0      0
+  pathb/t147/probe-doc-grader.py                                  0      0      0
+  pathb/t147/mutate-blast-radius-provenance.py                    0      0      0
+  pathb/t36/attest.py                                             0      0      0
+  charges/bin/attest-t40.py                                       0      0      0
+  ------------------------------------------------------------------------------
+  ASSERTED: 9 files parsed, and across all of them ZERO float literals, ZERO
+  float()/round() calls, ZERO true divisions and ZERO bare json.load(s).

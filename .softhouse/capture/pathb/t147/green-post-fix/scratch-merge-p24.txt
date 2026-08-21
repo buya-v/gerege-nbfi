@@ -1,0 +1,190 @@
+==============================================================================
+ T147 — P-24 verification: a SCRATCH MERGE into CURRENT main, in a throwaway
+ clone, with every artefact RE-RUN on the merged tree (not on the branch).
+==============================================================================
+
+This is not ceremony. It caught a real defect on the first attempt: T147's own
+new assertion in drive-canary-red.sh counted the BARE filename
+'calc-pmode2-gerege.json' and matched a PROSE COMMENT that sed cannot substitute,
+so it demanded a diff size that can never occur and the merged run exited 1. The
+needle is now the exact string the -e clause substitutes, quotes included.
+A guard derived from the wrong operand is still a wrong guard, and it took a
+merged-tree re-run of the ARTEFACT — not of conformance — to show it.
+
+=== current main in the scratch clone ===
+2f3d7d2 softhouse: MERGE the G-8 stream — the gate Buyan reads is now correct, and it carries a rule for the next editor
+
+=== merging softhouse/T147-t125-microfixes into current main ===
+MERGE: CLEAN
+
+=== files T147 authored, as they land on merged main ===
+ .softhouse/capture/charges/bin/attest-t40.py       |  89 ++-
+ .softhouse/capture/charges/bin/attest.py           |  51 +-
+ .softhouse/capture/lib/attest_gate.py              | 355 ++++++++++
+ .softhouse/capture/pathb/t125/README.md            |  60 ++
+ .softhouse/capture/pathb/t125/blast-radius.py      | 138 ++++
+ .softhouse/capture/pathb/t125/compare-bytes.py     | 116 ++++
+ .../capture/pathb/t125/drive-canary-green.sh       |  49 ++
+ .softhouse/capture/pathb/t125/drive-canary-red.sh  | 123 ++++
+ .softhouse/capture/pathb/t125/drive-stale-fork.sh  |  65 ++
+ .softhouse/capture/pathb/t125/gate-selftest.py     | 228 +++++++
+ .../t125/green-t36-gerege/B-01-baseline-raw.json   |   1 +
+ .../green-t36-gerege/B-02-multiplesof100-raw.json  |   1 +
+ .../B-03-diycs-fullleapyear-raw.json               |   1 +
+ .../green-t36-gerege/B-04-diycs-feb29only-raw.json |   1 +
+ .../t125/green-t36-gerege/CAPTURED-FROM-TENANT     |   1 +
+ .../pathb/t125/green-t36-gerege/attestation.json   | 230 +++++++
+ .../t125/green-t36-gerege/canary-halfcent-raw.json |   1 +
+ .../pathb/t125/green-t36-gerege/preconditions.txt  |  25 +
+ .../capture/pathb/t125/green-t36-gerege/stderr.txt |   0
+ .../capture/pathb/t125/green-t36-gerege/stdout.txt |   7 +
+ .../pathb/t125/green-t40-gerege/CTRL-B-01-raw.json |   1 +
+ .../FC-01-flat-disbursement-raw.json               |   1 +
+ .../FC-02-flat-instalment-raw.json                 |   1 +
+ .../FC-03-pctamount-disbursement-raw.json          |   1 +
+ .../FC-04-pctinterest-instalment-raw.json          |   1 +
+ .../FC-05-pctamountinterest-instalment-raw.json    |   1 +
+ .../FC-06-penalty-inside-p3-raw.json               |   1 +
+ .../FC-07-fee-on-p3-duedate-raw.json               |   1 +
+ .../FC-08-penalty-instalment-raw.json              |   1 +
+ .../FC-09-pctamount-instalment-raw.json            |   1 +
+ .../FC-10-pctamount-inside-p6-raw.json             |   1 +
+ .../FC-11-fee-on-disbursement-date-raw.json        |   1 +
+ .../FC-12-fee-on-final-duedate-raw.json            |   1 +
+ .../green-t40-gerege/FC-13-fee-inside-p12-raw.json |   1 +
+ .../green-t40-gerege/FC-14-fee-inside-p1-raw.json  |   1 +
+ .../FC-15-combined-fee-and-penalty-raw.json        |   1 +
+ .../FC-16-fee-on-p1-duedate-raw.json               |   1 +
+ .../FC-17-fee-after-final-duedate-raw.json         |   1 +
+ .../FC-19-pctinterest-sdd-inside-p6-raw.json       |   1 +
+ .../FC-20-pctinterest-sdd-on-disb-raw.json         |   1 +
+ .../FC-21-pctamtint-sdd-inside-p6-raw.json         |   1 +
+ ...alty-instalment-plus-sdd-on-p3-duedate-raw.json |   1 +
+ .../XR-01-fee-before-disbursement-HTTP403.json     |   1 +
+ .../pathb/t125/green-t40-gerege/attestation.json   | 713 +++++++++++++++++++++
+ .../t125/green-t40-gerege/canary-halfcent-raw.json |   1 +
+ .../pathb/t125/green-t40-gerege/preconditions.txt  |  24 +
+ .../capture/pathb/t125/green-t40-gerege/stderr.txt |   0
+ .../capture/pathb/t125/green-t40-gerege/stdout.txt |  29 +
+ .../t125/red-post-fix-default/CAPTURED-FROM-TENANT |   1 +
+ .../red-post-fix-default/canary-halfcent-raw.json  |   1 +
+ .../t125/red-post-fix-default/preconditions.txt    |  26 +
+ .../pathb/t125/red-post-fix-default/scratch.diff   |   4 +
+ .../pathb/t125/red-post-fix-default/stderr.txt     |  12 +
+ .../pathb/t125/red-post-fix-default/stdout.txt     |   0
+ .../red-pre-fix-default/B-01-baseline-raw.json     |   1 +
+ .../B-02-multiplesof100-raw.json                   |   1 +
+ .../B-03-diycs-fullleapyear-raw.json               |   1 +
+ .../B-04-diycs-feb29only-raw.json                  |   1 +
+ .../t125/red-pre-fix-default/CAPTURED-FROM-TENANT  |   1 +
+ .../t125/red-pre-fix-default/attestation.json      | 230 +++++++
+ .../red-pre-fix-default/canary-halfcent-raw.json   |   1 +
+ .../t125/red-pre-fix-default/preconditions.txt     |  26 +
+ .../pathb/t125/red-pre-fix-default/scratch.diff    |   8 +
+ .../pathb/t125/red-pre-fix-default/stderr.txt      |   0
+ .../pathb/t125/red-pre-fix-default/stdout.txt      |   6 +
+ .../pathb/t125/stale-fork-proof/default.stderr.txt |  12 +
+ .../pathb/t125/stale-fork-proof/default.stdout.txt |   0
+ .../pathb/t125/stale-fork-proof/gerege.stderr.txt  |   4 +
+ .../pathb/t125/stale-fork-proof/gerege.stdout.txt  |   0
+ .../pathb/t125/stale-fork-proof/scratch.diff       |   4 +
+ .softhouse/capture/pathb/t147/cp-digest-census.py  |  98 +++
+ .../pathb/t147/green-post-fix/conformance.txt      | 147 +++++
+ .../green-post-fix/f6-blast-radius-mutation.txt    |  13 +
+ .../t147/green-post-fix/green-live-gerege.txt      | 116 ++++
+ .../t147/green-post-fix/ordering-differential.txt  |  42 ++
+ .../pathb/t147/green-post-fix/postfix-proofs.txt   | 124 ++++
+ .../pathb/t147/green-post-fix/red-live-default.txt |  43 ++
+ .../pathb/t147/mutate-blast-radius-provenance.py   |  71 ++
+ .softhouse/capture/pathb/t147/probe-doc-grader.py  |  76 +++
+ .../t147/red-pre-fix/f1-attest-t40-prefix.txt      |  51 ++
+ .../t147/red-pre-fix/f2-compare-bytes-prefix.txt   |  15 +
+ .../red-pre-fix/f3-drive-canary-red-prefix.txt     |  13 +
+ .../t147/red-pre-fix/f4-doc-grader-prefix.txt      |  20 +
+ .softhouse/capture/pathb/t36/attest.py             |  53 +-
+ .../2026-08-17-run1-harness-schedule-poc/T125.md   | 544 ++++++++++++++++
+ 85 files changed, 4083 insertions(+), 15 deletions(-)
+
+=== RE-RUN THE ARTEFACT ITSELF ON THE MERGED TREE (P-24) ===================
+
+--- gate-selftest.py ---
+  PASS doc: a real bool True on a real capture still PASSES (T147 control)      exit 0
+  --
+  30 cases, 0 failed
+EXIT=0
+
+--- T125's ORIGINAL 22-case suite, against merged bytes ---
+  PASS doc: the t40 schema key is graded too, not just the pathb one            exit 4
+  --
+  22 cases, 0 failed
+EXIT=0
+
+--- blast-radius.py ---
+discriminating observation whose value is the HALF_UP one. The scripts did not CHECK
+that at the time; T125 is why they do now. The claim was true; the process did not
+establish it, and that distinction is the erratum, not the numbers.
+EXIT=0
+
+--- mutation proof of the new blast-radius clause ---
+  --
+  4 mutations, 0 not detected
+  ASSERTED: every mutation of the provenance operand was detected, and the
+  unmutated tree grades 5 committed attestations, 0 not clean.
+EXIT=0
+
+--- cp-digest-census.py ---
+  total rigs exhibiting the phenomenon: 11
+
+  ASSERTED: 11 rigs inspected; 6 name the variable and 5 do not, summing to the
+  registered total of 11. A fixer that greps `CP_DIGEST` reaches 6 of 11.
+EXIT=0
+
+--- compare-bytes.py with zero input (must be exit 2, not 0) ---
+EXIT=2
+
+--- attest-t40.py against the HALF_EVEN tenant, on merged main ---
+EXIT=1
+committed transcript before: 4c3ff7f8c07e89d5a7e16b0d8e386b74a4b2c21e089052b546d336b9c51d1768
+committed transcript after : 4c3ff7f8c07e89d5a7e16b0d8e386b74a4b2c21e089052b546d336b9c51d1768
+UNCHANGED -- the abort precedes every write.
+(empty above = the committed evidence tree is untouched on merged main)
+
+--- drive-canary-red.sh live, on merged main ---
+EXIT=1
+ASSERTED: changed lines = 2, and that is exactly what these substitutions account for (labelled bypass 2 + canary literal 0 — the literal occurs 0 times in attest.py).
+--- EXIT CODE: 1 ---
+--- attestation.json was NOT written ---
+capture bodies spent: 0 (must be 0)
+
+--- conformance on merged main ---
+EXIT=0
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+    parity vectors          PASS 42   FAIL 0
+    cells compared          5576 graded, 84 ungraded (never recorded by the capture)
+    invariant violations    0
+    invariant assertions    0 NOT RUN (a cell nobody observed; listed above, never inferred)
+VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
+
+--- and the one step above that was mis-invoked, re-run correctly ---------
+(the out dir was named t147-merge-check, which does not end in '-default', so
+ T80's provenance guard refused it -- correctly. Re-run as t147-merge-default:)
+ASSERTED: changed lines = 2, and that is exactly what these substitutions account for (labelled bypass 2 + canary literal 0 — the literal occurs 0 times in attest.py).
+
+== running: ATTEST_OUT=t147-merge-default python3 attest.py default pathb ==
+--- stdout ---
+--- stderr ---
+
+==============================================================================
+ATTESTATION REFUSED — the effective rounding mode is NOT the ratified MathContext(19, HALF_UP)
+==============================================================================
+  * EFFECTIVE ROUNDING MODE IS NOT HALF_UP: on the pinned exact tie the oracle answered period-1 interest '20925.04'; HALF_UP gives 20925.05 and HALF_EVEN gives 20925.04. That is exactly the HALF_EVEN answer. The process is running Fineract's STOCK DEFAULT, not the ratified tenant pin.
+  * c_configuration.rounding-mode for tenant 'default' is 6, ratified ordinal is 4 (HALF_UP). Ordinal 6 is HALF_EVEN and is not production-representative.
+  * the running JVM initialized tenant 'default' at 'HALF_EVEN', not HALF_UP. MoneyHelper caches the mode per tenant at startup, so this — not the DB row — is what the arithmetic used.
+
+No attestation.json was written. An attestation asserts the reference oracle was
+observed at the RATIFIED tenant setting MathContext(19, HALF_UP); a run that cannot
+establish that has nothing to attest, and a file claiming a verdict it did not
+verify is worse than no file at all.
+--- EXIT CODE: 4 ---
+--- attestation.json was NOT written ---
+T125 RED DEMO exit code was 4

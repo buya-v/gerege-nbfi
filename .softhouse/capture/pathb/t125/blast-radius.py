@@ -36,6 +36,9 @@ import attest_gate                                                   # noqa: E40
 
 PIN_IMAGE = 'sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a'
 PINNED_TIE_DIGESTS = {sha for _n, sha in attest_gate.PINNED_CANARY_BY_TENANT.values()}
+# T147: which pinned request each digest belongs to, so an attestation can be checked for
+# naming the request whose digest it records.
+PINNED_NAME_BY_DIGEST = {sha: name for name, sha in attest_gate.PINNED_CANARY_BY_TENANT.values()}
 
 COMMITTED = [
     'charges/out/attested/attestation.json',
@@ -47,7 +50,11 @@ COMMITTED = [
 
 
 def grade(rel):
-    d = json.load(open(os.path.join(CAPTURE, rel)))
+    # T147 (P-25, T136 F-4): parse_float=str.  Today every money value in these five
+    # attestations is serialised as a string, so no float materialises — measured, not
+    # assumed.  It becomes live the day any attestation field is written as a JSON
+    # number, and the rule binds analysis scripts too.
+    d = json.load(open(os.path.join(CAPTURE, rel)), parse_float=str)
     c = d.get('effective_mode_canary') or {}
     t = d.get('tenant') or {}
     e = d.get('effective_math_context') or {}
@@ -57,6 +64,21 @@ def grade(rel):
     if c.get('request_sha256') not in PINNED_TIE_DIGESTS:
         findings.append('canary request digest %r is not a pinned exact tie — the recorded '
                         'answer does not discriminate the modes' % c.get('request_sha256'))
+    else:
+        # T147. The document must NAME the request whose digest it records. All three sidecars
+        # wrote the LITERAL 'calc-pmode2-gerege.json' into `request_file` on every tenant while
+        # `request_sha256` beside it was computed from the bytes actually posted — so the
+        # committed `red-pre-fix-default/attestation.json` names calc-pmode2-gerege.json and
+        # carries 1461810087…, which is calc-pmode2-default.json. That is this rig's own shape
+        # once more: a value written and never compared. The source is fixed (the field is now
+        # derived in pathb/t36/attest.py and charges/bin/attest-t40.py); this is the read-time
+        # guard, so a re-introduced literal cannot pass a blast-radius grading.
+        _want = PINNED_NAME_BY_DIGEST[c['request_sha256']]
+        _named = c.get('request_file')
+        if not isinstance(_named, str) or os.path.basename(_named) != _want:
+            findings.append(
+                'canary NAMES %r but records the sha256 of %r — the attestation disagrees '
+                'with itself about which request produced its own observation' % (_named, _want))
     if c.get('http_status') != 200:
         findings.append('canary http_status %r — the mode was never observed' % c.get('http_status'))
     p1 = c.get('observed_period1_interest')

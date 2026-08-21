@@ -1,0 +1,13 @@
+==============================================================================
+ T147 — blast-radius.py, the NEW provenance clause, driven RED
+ (T136 already proved the other seven operands: 7 tamperings, 7 detected)
+==============================================================================
+
+  PASS tamper: canary NAMES the default request while recording the gerege digest exit 1
+  PASS tamper: canary request_file is missing entirely                        exit 1
+  PASS tamper: canary request_file is a bare basename of the wrong file       exit 1
+  PASS tamper: canary request_file is not a string at all                     exit 1
+  --
+  4 mutations, 0 not detected
+  ASSERTED: every mutation of the provenance operand was detected, and the
+  unmutated tree grades 5 committed attestations, 0 not clean.

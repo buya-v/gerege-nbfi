@@ -1,0 +1,124 @@
+==============================================================================
+ T147 POST-FIX — the same attacks that succeeded pre-fix, now driven RED
+ Pre-fix transcripts, against the real pre-fix bytes: ../red-pre-fix/
+==============================================================================
+
+--- FIX 1: attest-t40.py aborts BEFORE any write --------------------------
+committed evidence transcript BEFORE:
+4c3ff7f8c07e89d5a7e16b0d8e386b74a4b2c21e089052b546d336b9c51d1768  .softhouse/capture/charges/out/attested/preconditions.txt
+
+$ python3 .softhouse/capture/charges/bin/attest-t40.py default
+of the pinned reference oracle at the ratified (19, HALF_UP) settings — do not commit it, do not
+treat it as a vector, and do not 'normalise' it. Fix the environment and re-run.
+
+ABORT: preconditions breached — no capture attempted, no attestation written, and nothing at all written into '/Users/buv/gerege-nbfi/.claude/worktrees/agent-a94b45ba6b5458b33/.softhouse/capture/charges/out/attested'.
+EXIT=1
+
+committed evidence transcript AFTER:
+4c3ff7f8c07e89d5a7e16b0d8e386b74a4b2c21e089052b546d336b9c51d1768  .softhouse/capture/charges/out/attested/preconditions.txt
+git status of the committed evidence tree (empty = untouched):
+  ^^ pre-fix this printed ' M .../attested/preconditions.txt' (4c3ff7f8 -> b74409be)
+
+--- FIX 2: compare-bytes.py refuses to pass on zero files -----------------
+$ python3 compare-bytes.py            # no arguments
+  --
+  *** BYTE-IDENTITY CHECK NOT PERFORMED *** no capture directory was named on the command line.
+      Zero files inspected is an ERROR, not agreement (P-35). This script asserts
+      that N bodies were compared and each equalled its committed counterpart; it
+      cannot make that assertion about N = 0.
+EXIT=2
+
+$ python3 compare-bytes.py /tmp/t147/definitely-not-a-directory
+  --
+  *** BYTE-IDENTITY CHECK NOT PERFORMED *** these named directories do not exist: /tmp/t147/definitely-not-a-directory
+      Zero files inspected is an ERROR, not agreement (P-35). This script asserts
+      that N bodies were compared and each equalled its committed counterpart; it
+      cannot make that assertion about N = 0.
+EXIT=2
+
+$ python3 compare-bytes.py <an EXISTING but EMPTY directory>
+  --
+  byte-identical: 0   CHANGED: 0   no committed counterpart: 0
+  --
+  *** BYTE-IDENTITY CHECK NOT PERFORMED *** 1 directories were read and NOT ONE body had a committed counterpart to compare against (0 had none).
+      Zero files inspected is an ERROR, not agreement (P-35). This script asserts
+      that N bodies were compared and each equalled its committed counterpart; it
+      cannot make that assertion about N = 0.
+EXIT=2
+
+  (pre-fix all three printed 'byte-identical: 0  CHANGED: 0' and exited 0)
+
+--- FIX 3: drive-canary-red.sh asserts its own diff ------------------------
+The POSITIVE case is exercised live in red-live-default.txt, which prints
+  'ASSERTED: changed lines = 2, ... (labelled bypass 2 + canary literal 0 ...)'.
+Here is the NEGATIVE: a scratch copy carrying an UNEXPLAINED third edit.
+  n_bypass=1  n_literal=0  expect_changed=2  nchanged=4
+  -> the assertion FIRES: 4 != 2, the run exits 1 and never
+     presents an unexplained edit as 'the ONLY changes made'.
+
+  And the OTHER limb: if the labelled bypass fails to apply at all, n_bypass is 0
+  and the run exits 1 rather than silently testing nothing:
+  n_bypass on an UNSUBSTITUTED copy = 0 (guard requires exactly 1)
+
+--- FIX 4: the document grader, same inputs as the pre-fix table -----------
+==============================================================================
+ T147 — attest_gate.assert_attestation_is_verified, probed on 7 documents
+==============================================================================
+
+document handed to the DOCUMENT grader                     result
+------------------------------------------------------------------------------
+captures: []                            (ZERO captures graded) REFUSED  (exit 4)
+captures key absent entirely                               REFUSED  (exit 4)
+matches_committed_corpus_bytes: 'False'  (the STRING)      REFUSED  (exit 4)
+matches_committed_corpus_bytes: 0        (falsy, not False) REFUSED  (exit 4)
+matches_committed_corpus_bytes: 'True'   (the STRING)      REFUSED  (exit 4)
+matches_ratified_production_setting: 'True' (the STRING) -- the strict field REFUSED  (exit 4)
+the honest good document                 (control)         ACCEPTED (exit 0)
+------------------------------------------------------------------------------
+
+Run this against the PRE-FIX bytes (git show softhouse/T125-attest-canary-gates:) and
+the first FIVE rows read ACCEPTED: the mode field was graded `is not True` (strict) while
+the per-capture identity field was graded `is False` (loose), so every non-False value
+passed -- including the STRING 'False' -- and a document with no captures at all passed
+having compared zero captures.  Run it against the T147 bytes and only the control is
+ACCEPTED.  P-35: if the PASS sentence would still print on empty input, it is not a guard.
+
+Committed transcripts: ../red-pre-fix/f4-doc-grader-prefix.txt (all ACCEPTED) and
+../green-post-fix/postfix-proofs.txt (all REFUSED but the control).
+
+--- and every clause fired individually in the self-test -------------------
+  PASS doc: a capture with NO prior is reported, not refused, and not counted as agreement exit 0
+  PASS doc: the t40 schema key is graded too, not just the pathb one            exit 4
+  PASS doc: ZERO captures REFUSES — a document that grades nothing verifies nothing (T147) exit 4
+  PASS doc: NO captures key at all REFUSES (T147)                               exit 4
+  PASS doc: `captures` of the wrong TYPE REFUSES (T147)                         exit 4
+  PASS doc: the STRING 'False' REFUSES — it used to pass (T147)                 exit 4
+  PASS doc: the STRING 'True' REFUSES too — same strictness as the mode field (T147) exit 4
+  PASS doc: a falsy 0 REFUSES rather than reading as False or as agreement (T147) exit 4
+  PASS doc: the identity key MISSING from a capture REFUSES (T147)              exit 4
+  PASS doc: a real bool True on a real capture still PASSES (T147 control)      exit 0
+  --
+  30 cases, 0 failed
+
+--- FIX 5: the CP_DIGEST census -------------------------------------------
+  shell rig (relative to .softhouse/capture)                 CP_DIGEST   inline
+  ------------------------------------------------------------------------------
+  actualactual/src/run-actualactual.sh                               2        0
+  audit-t44/mathcontext/src/run-mathcontext.sh                       2        0
+  audit-t44/mathcontext/src/run-mathcontext2.sh                      0        1
+  audit-t44/rerun-periodratio/src/run-periodratio.sh                 2        0
+  mathcontext/src/run-mathcontext.sh                                 2        0
+  mathcontext/src/run-mathcontext2.sh                                0        1
+  mathcontext/src/run-mathcontext3.sh                                0        1
+  mathcontext/src/run-t50-tier1.sh                                   0        1
+  mathcontext/src/run-t50-tier2.sh                                   0        1
+  periodratio/src/run-periodratio.sh                                 2        0
+  periodratio/src/run-t46-periodratio.sh                             2        0
+  ------------------------------------------------------------------------------
+  rigs naming the variable CP_DIGEST : 6
+  rigs using the INLINE, UNNAMED form: 5
+  total rigs exhibiting the phenomenon: 11
+
+  ASSERTED: 11 rigs inspected; 6 name the variable and 5 do not, summing to the
+  registered total of 11. A fixer that greps `CP_DIGEST` reaches 6 of 11.
+EXIT=0
