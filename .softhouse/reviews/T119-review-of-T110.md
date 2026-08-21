@@ -9,9 +9,13 @@ rationale rather than in behaviour**, plus one required edit that belongs to the
 this diff. Nothing here justifies a rejection or a retry of the code.
 
 - **Branch reviewed:** `softhouse/T110-duplicate-caseid-refusal` @ `105589b`, 1 commit, 4 files.
-- **Baseline:** `main` @ `41132e5`. `git merge-base main <branch>` = `8faee44`. `main` has moved since
-  the fork by exactly three files — `.softhouse/patterns.md`, `.softhouse/state/fire-20260821-080001.STATE.json`,
-  `.softhouse/tasks.json` — **disjoint** from T110's four, so the merge is trivially clean (P-24 check below).
+- **Baseline:** the `main` tree I graded is `6d2a1e9` (`git archive main`, taken at the start of this
+  review; it does **not** carry the fix — `grep -c DuplicateCaseIDs` = 0). `main` advanced to `f7e3d59`
+  while I worked and **still does not carry the fix**. `git merge-base main <T110 branch>` = `8faee44`;
+  `main` has moved since that fork in five files — `.softhouse/RESUME.md`, `.softhouse/patterns.md`,
+  `.softhouse/program.json`, `.softhouse/state/fire-20260821-080001.STATE.json`, `.softhouse/tasks.json`
+  — **disjoint** from T110's four, so the merge is trivially clean (P-24 check below). Re-verified
+  against `f7e3d59`, not only against the `main` that existed when I started.
 - **Toolchain:** `go1.26.6 darwin/arm64`, repo-local per `.softhouse/bin/go-env.sh`.
 - **Reference oracle (Fineract):** UP; probed read-only by `conformance.sh`'s own probe → `probe = up`.
   No container restarted, rebuilt, re-seeded or written. Oracle Database appears nowhere; PostgreSQL only.
