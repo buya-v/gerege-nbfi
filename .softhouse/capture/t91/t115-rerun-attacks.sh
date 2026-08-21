@@ -34,8 +34,14 @@ abort() { echo "ABORT: $*" >&2; exit 2; }
 # The PRE tree gets main's actual pre-hardening bytes at the shim's path.
 ( cd "$ROOT" && git cat-file blob "$PRE_SHIM_BLOB" ) > "$S/pre/$SHIMREL" || abort "cannot resolve $PRE_SHIM_BLOB"
 [ -s "$S/pre/$SHIMREL" ] || abort "the pre-hardening blob is empty — nothing would be proved"
-LC_ALL=C grep -aq 'CANARY_EXPECT:-20925.05' "$S/pre/$SHIMREL" || abort "the pre blob is not the unhardened copy"
-LC_ALL=C grep -aq 'CANARY_EXPECT:-20925.05' "$S/post/$SHIMREL" && abort "the post tree still has the unhardened copy"
+# Discriminate on an EXECUTABLE line, not on a string that also appears in a COMMENT.  My first
+# draft of this guard tested for `CANARY_EXPECT:-20925.05`, which the post-fix shim contains in the
+# comment DESCRIBING the old defect — so the guard fired on the healthy tree.  Same defect class as
+# the ones this task is fixing, caught by running it.  The structural discriminator is the
+# call-through itself: the hardened shim dot-sources the rig, the unhardened copy does not.
+LC_ALL=C grep -aq '^\. "\$RIG"' "$S/post/$SHIMREL" || abort "the post tree's shim is not the call-through"
+LC_ALL=C grep -aq '^\. "\$RIG"' "$S/pre/$SHIMREL"  && abort "the pre tree already carries the call-through"
+LC_ALL=C grep -aq '^CANARY_EXPECT=' "$S/pre/$SHIMREL" || abort "the pre blob is not the unhardened copy (no executable CANARY_EXPECT= assignment)"
 
 echo "pre  shim: blob $PRE_SHIM_BLOB   sha256 $(shasum -a 256 < "$S/pre/$SHIMREL"  | cut -c1-16)"
 echo "post shim: HEAD $(cd "$ROOT" && git rev-parse --short HEAD)          sha256 $(shasum -a 256 < "$S/post/$SHIMREL" | cut -c1-16)"
