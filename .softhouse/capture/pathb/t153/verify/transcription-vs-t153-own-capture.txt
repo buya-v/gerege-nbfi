@@ -1,0 +1,10 @@
+vector rows 13   response rows 13
+MISMATCHES: 0
+invariants re-derived from the vector alone:
+  sum(principal_minor)        = 116250250   disbursed = 116250250
+  sum(interest_minor)         = 14045789   declared total = 14045789
+  final outstanding_principal = 0
+  rows where principal + interest != total_due: none
+
+EVERY recorded cell is the exact text the oracle emitted, and every withdrawn
+cell is genuinely absent from the response.
