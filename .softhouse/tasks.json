@@ -635,7 +635,7 @@
    "executor": "agent",
    "model": "opus",
    "target": "docs",
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
    "dependencies": [
     "T169"
@@ -644,7 +644,7 @@
     ".softhouse/gates.md"
    ],
    "description": "THE G-8 WRITE-UP IS NOW WRONG IN AT LEAST 25 PLACES AND BUYAN READS IT. T117 listed nine affected sentences and explicitly marked that list a STARTING POINT, NOT THE SWEEP (P-37); T159's section 9 enumerates 25 sites, six of them not on T117's nine, including gates.md:978 ('balance column | constant at the disbursed amount'), which the partial cells falsify. Both workers correctly REFUSED to edit gates.md, because its STANDING RULE demands a full sentence-by-sentence scope rebuild and parallel workers were live. Do the rebuild. REQUIREMENTS: (1) Work from T159 section 9's 25 sites as the FLOOR, not the ceiling -- re-sweep and report any site neither worker found, and COUNT WHAT YOU SKIPPED (P-40). (2) Every residual figure must be stated WITH ITS TERM ('MNT 10.01 at n=3000') and must still say it is the largest OBSERVED, not a bound -- two independent workers have now raised the ceiling by asking a larger term and neither found a limit, so a bare number repeats one level up the exact error T117 was sent to correct. (3) ADD THE SENTENCE G-8 DOES NOT HAVE: a third outcome in which the oracle produces NO SCHEDULE AT ALL (java.lang.StackOverflowError, non-monotone in the inputs). A graded domain that can express only 'amortizes' and 'does not amortize' will silently classify a crash as one of them, and option (b) amends the graded domain, so it CANNOT be drafted without this. (4) Distinguish the FULL non-amortization shape from the PARTIAL-shortfall shape throughout -- four partial cells are now known and the record treats family B as uniformly total. (5) Do NOT decide the gate. Options (b) and (c) remain hard user gates; option (a) is T116's. Rewrite what is FALSE; decide nothing.",
-   "note": "Raised by the driver from T159's section 9, local fire 20260821-134344. Depends on T169 because the rig's catch-narrowing may change what 'observed' means in the very sweeps this rebuild cites. Pair with a reviewer at dispatch (plan gate rule 1) -- a prose task rewriting a gate Buyan decides on is exactly where P-46 (fabricated quotation) and P-37 (a starting point mistaken for a sweep) both live. | dispatched batch 2, local fire 20260821-054355, worktree-isolated"
+   "note": "DONE and MERGED, local fire 20260821-054355. G-8 rebuilt under its STANDING RULE. Denominator measured BEFORE verdicts: 239 paragraph claim units, 239 read, 0 skipped; 57 touched (17 FALSE as written, 23 TRUE-but-unscoped, 17 structural), 182 left byte-identical, 140 new. T159's 25 sites were the floor -- found 16 more, six of which only exist because the rebuild moved every line (a reviewer's site list cannot contain a site the fix creates). Added the THIRD OUTCOME block (oracle produces no schedule at all), deliberately NOT as a family row. Folded in T177 without over-claiming and says TWICE that the MNT 10.01 headline is not in doubt. FULL vs PARTIAL now distinguished: 202 of 209 cells full, 7 measurements over 4 shapes partial. Decided nothing -- (b) and (c) stay user gates. Also fixed two stale 42/5576 figures. FOLLOW-UP: gates.md still has TWO ## G-8 headings (both predate T170); the NOTICE block is marked SUPERSEDED but not merged, left because parallel workers were live."
   },
   {
    "id": "T171",
@@ -652,7 +652,7 @@
    "role": "coder",
    "executor": "agent",
    "model": "sonnet",
-   "status": "in_progress",
+   "status": "done",
    "dependencies": [
     "T157"
    ],
@@ -662,7 +662,7 @@
    ],
    "description": "Raised by T157 and CONFIRMED BY THE DRIVER on a second grep implementation. T154's handoff (Blockers section 1) asserts the grep at fire-program.sh:224 was 'fail-closed' because a blind grep -v fails to match so the line is kept and DIRTY is non-empty. THE OPPOSITE IS TRUE on seekable input: one invalid byte anywhere makes grep print NOTHING for the whole input and exit 1 -- DIRTY is silently EMPTY, which is fail-OPEN and is the dangerous direction for an exit-protocol guard. Reproduced by T157 on BSD grep 2.6.0-FreeBSD and INDEPENDENTLY by the driver on ugrep 7.5.0, so it is binary-detection behaviour shared across implementations, not a vendor quirk. The claim is now in merged evidence and will be inherited. Correct it where it is recorded; state the reachability honestly (NOT reachable through the live anonymous pipe, and APFS refuses an invalid-UTF-8 filename with EILSEQ) rather than overstating the risk to make the correction sound urgent. This is a correction to the RECORD, not a code change.",
    "attempts": 1,
-   "note": "dispatched batch 2, local fire 20260821-054355, worktree-isolated"
+   "note": "DONE and MERGED, local fire 20260821-054355 -- MERGED WITH A DRIVER ADDENDUM RESTRICTING ITS SCOPE. Its P-55 finding is correct and valuable: T155's 'independent' confirmation used cat|grep, the one invocation shape that cannot exhibit the claimed bug, so it confirmed nothing. BUT its headline direction (fail-OPEN) rests on T157's single observation, and T171's OWN reproduction (6 spellings x 18+ shapes) was NEGATIVE, as was the driver's. The driver measured further at merge time: invalid UTF-8 suppresses nothing in three locales seekable or piped, while a real NUL byte yields 'Binary file ... matches' with lines suppressed -- a THIRD mode, DIRTY non-empty but carrying a message instead of paths. Addendum committed to nonnegotiable-guard-audit.md; T189 adjudicates. T171 reported its own negative honestly rather than burying it, which is why this is known."
   },
   {
    "id": "T172",
@@ -670,7 +670,7 @@
    "role": "coder",
    "executor": "agent",
    "model": "sonnet",
-   "status": "in_progress",
+   "status": "done",
    "dependencies": [
     "T157"
    ],
@@ -679,7 +679,7 @@
    ],
    "description": "Raised by T157 as an unrelated defect found in the same line, correctly left out of its diff as outside files_hint intent. The pattern '^?? \\.softhouse/LOCK' has no end anchor, so the exit-protocol dirty-check would ALSO discard an untracked file named .softhouse/LOCKFILE, .softhouse/LOCK.bak or .softhouse/LOCKED -- i.e. it can hide real uncommitted work from the very guard that exists to rescue it. Same fail-open direction as T157's finding. Anchor it, and DRIVE IT RED (P-22) by creating each over-matched filename in a scratch tree and showing the pre-fix guard swallows it and the post-fix guard reports it. Verify with zsh -n (the file is #!/bin/zsh -- bash -n is the wrong interpreter check) and with --probe, and quote both.",
    "attempts": 1,
-   "note": "dispatched batch 2, local fire 20260821-054355, worktree-isolated"
+   "note": "DONE and MERGED, local fire 20260821-054355. One-line anchor fix at fire-program.sh:224 ('^?? \\.softhouse/LOCK' -> '...LOCK$'), driven red and green against the REAL pre-fix bytes extracted with git show rather than a retyped pattern: pre-fix silently drops a planted .softhouse/LOCKED_STATE.md sibling from DIRTY, post-fix keeps it while still excluding the real LOCK. Swept the rest of the file (P-37): only one grep exists; 4 pattern constructs reviewed, 2 fail-open shapes catalogued and deliberately NOT touched because they sit in locking/control flow the task forbade changing -- raised as follow-ups instead. bash -n and zsh -n clean, --probe still exit 0. Driver re-verified line 224 post-merge."
   },
   {
    "id": "T173",
@@ -964,6 +964,26 @@
    ],
    "description": "The driver merged T173, found the merged harness RED on main (exit 2, NO probe line -- a HARD-guard failure, correctly not parked as an oracle outage), and fixed two defects ITSELF in e93afc9 rather than leaving main red. That fix has had no independent reviewer, and the driver is the layer this program has repeatedly caught being wrong (P-52, and the exit-127 and bad-probe errors in the last two RESUMEs). REVIEW IT. (A) The lint now excludes .claude/worktrees from its walk and RETURNS/PRINTS the exclusion. Re-derive: is the exclusion predicate right (it compares os.path.relpath(full, root) to the literal '.claude/worktrees' -- what happens when root is ITSELF inside a worktree, which is the normal case for every worker you and it dispatch? what about a nested .claude/worktrees deeper in the tree, or a symlinked worktree?). A guard that silently stops walking in a worker's own tree would be the same silent-scope defect one level down. (B) conformance.sh's census-presence check moved from grep -q to grep -c to survive EPIPE under pipefail. Re-derive whether any OTHER pipeline in conformance.sh has the same shape -- sweep for `| ... grep -q` and `| head` under set -o pipefail and report the count, since the driver fixed only the one that bit it (P-37: a starting point is not a sweep). DRIVE BOTH YOURSELF (P-22, P-50): plant a narrow-catch rig inside the commit's own tree AND inside a .claude/worktrees subtree, and show the first is refused and the second ignored; reproduce the EPIPE inversion at a size you determine yourself rather than inheriting the driver's 320,935 bytes. Verdict APPROVED / MICRO-FIX / REJECTED.",
    "note": "Raised by the driver against its OWN fix, local fire 20260821-054355. The driver's first attempt to drive defect B red FAILED to reproduce at 3000 short lines (36 KB fits the 64 KB pipe buffer) and only reproduced at 320 KB -- so the size threshold is real and a reviewer inheriting the number rather than re-deriving it would learn nothing."
+  },
+  {
+   "id": "T189",
+   "title": "ADJUDICATE the grep invalid-byte claim -- it now has TWO positives and TWO negatives, and a correction asserting it has been written into the record",
+   "role": "analyst",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [
+    "T171",
+    "T172"
+   ],
+   "files_hint": [
+    ".softhouse/nonnegotiable-guard-audit.md",
+    ".softhouse/reviews/"
+   ],
+   "description": "THE RECORD NOW ASSERTS SOMETHING FOUR ATTEMPTS DISAGREE ABOUT. History: T154 called fire-program.sh:224 'fail-closed'. T157 drove it and reported the OPPOSITE -- on SEEKABLE input one invalid byte makes BSD grep print nothing and exit 1, emptying DIRTY, which is fail-OPEN. A previous fire's driver recorded an independent reproduction on ugrep 7.5.0. T171 (this fire) then drove SIX invalid-byte spellings across 18+ byte/input-shape combinations on /usr/bin/grep 2.6.0-FreeBSD, macOS 26.5.1 build 25F80, and COULD NOT REPRODUCE IT AT ALL -- reported honestly as a material negative rather than buried. THE DRIVER THEN MEASURED IT TOO, and got a second negative plus a new discriminator: (i) \\xff\\xfe invalid UTF-8 in a seekable file does NOT suppress output under /usr/bin/grep -v in LC_ALL=C, en_US.UTF-8 or POSIX -- all lines printed, exit 0, identical on piped input; (ii) a real NUL byte DOES change behaviour -- grep prints 'Binary file g.txt matches' and suppresses the lines, exit 0. So the trigger may be NUL, not invalid UTF-8, and the NUL shape does NOT empty the output either: DIRTY would be NON-empty but contain a message instead of paths, which is a THIRD failure mode nobody has characterised and is neither cleanly fail-open nor fail-closed. ALSO NOTE: on the driver's shell `which -a grep` shows grep resolving to a SHELL FUNCTION wrapper, and ugrep is not on PATH -- so the earlier ugrep corroboration could not be re-checked and the binary actually invoked may differ between measurements. SETTLE IT: determine what the ACTUAL discriminator is (NUL vs invalid UTF-8 vs --binary-files mode vs seekable-vs-pipe vs grep implementation vs OS build vs a shell function wrapper intercepting the call), with every trial's implementation, version, OS build, locale, input shape and invocation path recorded. Then RE-SCOPE what the record asserts: T171 merged a correction whose headline says the true direction is fail-OPEN, resting on ONE observation that two subsequent attempts could not reproduce, and the driver appended its own measured addendum. Do not settle this by vote and do not simply revert to T154 -- 'fail-closed' has no more support than 'fail-open' does. If the honest answer is that the behaviour is not reproducible on this machine class and the claim must be reduced to a scoped observation, SAY THAT. P-46: quote by extraction. Note T172 has already ANCHORED the pattern, which is a separate and settled defect -- do not re-open it.",
+   "note": "Raised by the driver, local fire 20260821-054355, after its own measurement contradicted the premise of a correction it was about to merge. Two positives (T157, a previous fire's driver) versus two negatives (T171, this driver). The driver merged T171 anyway because P-55 and the T155 probe-shape finding are independently valuable and correct, and appended a measured addendum rather than leaving the overstatement standing."
   }
  ],
  "cross_corroboration": {
