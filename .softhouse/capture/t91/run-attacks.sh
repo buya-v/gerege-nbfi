@@ -41,9 +41,41 @@ sed 's/"principal": 1162502.5,/"principal": 1162502.55,/' "$CANON" > "$O/req-mut
 # Paired with CANARY_EXPECT=20925.04 it makes the rig print the HALF_UP certification sentence
 # while displaying the value its own comment says means HALF_EVEN.  Both operands attacker-supplied.
 sed 's/"principal": 1162502.5,/"principal": 1162502.4,/' "$CANON" > "$O/req-crafted-04.json"
+
+# V-C (T115) — AN ATTACK THAT IS NOT AN ATTACK IS A VACUOUS PASS (P-22).
+# `sed` is not `grep`: a substitution whose pattern does not match is not an error, it is a COPY.
+# MEASURED by T115: a non-matching `sed s///` over $CANON yields a file byte-identical to $CANON.
+# So if the canonical request is ever reformatted — a different key order, a space after the colon,
+# `1162502.50` instead of `1162502.5` — both "mutated canary" attacks silently degrade into firing
+# the PINNED TIE at the rig.  A2a and A2c would then produce full-looking transcripts of an attack
+# that never happened, and post-fix they would pass the digest pin and be scored as clean by
+# whatever expectation the table happens to hold.  Nothing in T91 asserted the mutation took.
+#
+# So assert it: the crafted request must DIFFER from the canonical one and must carry the intended
+# principal.  A mutation that did not take is a HARNESS ERROR, never an attack result.
+assert_mutated() {  # assert_mutated <file> <expected-principal>
+  if cmp -s "$1" "$CANON"; then
+    echo "HARNESS ERROR: '$1' is byte-identical to the canonical request — the sed substitution" >&2
+    echo "  did not take, so this 'attack' would fire the PINNED TIE at the rig and prove nothing." >&2
+    echo "  The canonical request has probably been reformatted; fix the pattern, do not proceed." >&2
+    exit 2
+  fi
+  if ! LC_ALL=C grep -aqF "\"principal\": $2," "$1"; then
+    echo "HARNESS ERROR: '$1' does not carry principal $2 — the mutation is not the one intended." >&2
+    exit 2
+  fi
+}
+assert_mutated "$O/req-mutated-55.json" 1162502.55
+assert_mutated "$O/req-crafted-04.json" 1162502.4
+
 # ATTACK 7: a symlink whose CONTENT is the pinned tie.  A digest pin must accept this (it grades
 # bytes, not paths); a path pin would wrongly reject it.  Invariance test, not an exploit.
-rm -f "$O/link-to-canon.json"; ln -s "$CANON" "$O/link-to-canon.json"
+rm -f "$O/link-to-canon.json"
+ln -s "$CANON" "$O/link-to-canon.json" || { echo "HARNESS ERROR: could not create A7's symlink" >&2; exit 2; }
+# Same class: a symlink that does not resolve turns A7 from an invariance test into a missing-file
+# test, which is A3b.  Assert it reads back as the pinned tie.
+cmp -s "$O/link-to-canon.json" "$CANON" || {
+  echo "HARNESS ERROR: A7's symlink does not read back as the canonical request" >&2; exit 2; }
 
 hdr() {
   echo "=== $1"

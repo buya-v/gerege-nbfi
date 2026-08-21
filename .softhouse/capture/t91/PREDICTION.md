@@ -11,7 +11,7 @@ Three files that were, at some point, the same bytes:
 | path | role |
 |---|---|
 | `.softhouse/capture/pathb/t36/preconditions.sh` | the rig T76+T80 hardened. Read-only to me. |
-| `.softhouse/capture/charges/bin/preconditions.sh` | **live** twin, invoked by 17 capture scripts |
+| `.softhouse/capture/charges/bin/preconditions.sh` | **live** twin, ~~invoked by 17 capture scripts~~ — **CORRECTED by T115 (MF-4): 20 distinct files, 23 executable call sites**, re-measured by `t115-drive-mf3-mf4.sh`. "17 capture scripts" omitted `leapboundary/bin/t55-negative-tests.sh:52`, a *direct* invoker in another subtree. |
 | `.softhouse/capture/audit-t44/charges/bin/preconditions-COPY.sh` | the file T91 names; invoked by nothing |
 
 The latter two are **byte-identical to each other** (`sha256 9256b881…a46b54`, measured).
@@ -60,3 +60,20 @@ The latter two are **byte-identical to each other** (`sha256 9256b881…a46b54`,
 - **PR-10.** `t51-negative.sh` calls the script with **no** `CANARY_REQ`, so post-fix it gains one
   extra breach line. It is a negative control that already exits 1; I predict the exit status is
   unchanged and only the breach count rises.
+
+## Outcome, scored by T115 — the predictions ABOVE ARE LEFT AS WRITTEN
+
+This section is an APPENDIX, not an edit. The predictions above are a pre-registered record and
+rewriting one would destroy the very thing that makes it evidence (P-9: the prediction commit is a
+parent of the evidence commit). But before T115 this document ended at PR-10 with **no scoring
+section at all**, so a reader who opened it and stopped met PR-10 asserted and never refuted —
+and PR-10 is **wrong**. That is the P-12/P-21 leak: T91 scored PR-10 as wrong in its handoff and
+left the claim standing here *and* in the shipped shim header (which T115's MF-3 corrects).
+
+| id | predicted | MEASURED | verdict |
+|---|---|---|---|
+| **PR-9** | call-through on tenant `gerege` gives **21 PASS / 0 FAIL** | **22 PASS / 0 FAIL / exit 0** | **near miss.** The count rises by one, not stays: the hardened rig emits one *added* line, `PASS  canary request pinned by DIGEST COMPARISON …`. The substance of PR-9 — "the happy path is unchanged and only the attack paths move" — holds. |
+| **PR-10** | `t51-negative.sh` "gains one extra breach line … the breach count rises" | **16 PASS / 5 FAIL / exit 1 BEFORE, and 16 PASS / 5 FAIL / exit 1 AFTER**, on both `/bin/sh` and `/bin/bash`. Breach delta **0**. | **REFUTED.** The hardened rig *replaces* the `rounding-mode canary NOT run` breach with a longer-worded one naming the required file and its sha256. It does not add a sixth. |
+
+Re-derive both rows with `sh .softhouse/capture/t91/t115-drive-mf3-mf4.sh`, which prints the two
+FAIL sets side by side so the replacement is visible rather than asserted.

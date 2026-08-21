@@ -5,8 +5,17 @@
 # blob e6c1795a172168105d788321a71ee4ca62b73e36, sha256
 # 9256b881153d3deab2013cb9d95fae95258b68b398cdf22e5da9a8a416a46b54 — the bytes T40 lifted out of
 # `pathb/t36/preconditions.sh` before T76 and T80 hardened the original.  Those two hardened the
-# ORIGINAL and left the copies behind, so this file — which 17 capture scripts and `attest.py`
-# actually invoke — still admitted both P0s T80 closed:
+# ORIGINAL and left the copies behind, so this file — which **20 distinct files invoke from 23
+# executable call sites** (5 direct: `bin/run-preconditions.sh:9`, `bin/attest.py:90`,
+# `bin/attest-t40.py:91`, `bin/t51-negative.sh:21`, `leapboundary/bin/t55-negative-tests.sh:52`;
+# plus 18 sites in 15 files through the T40 wrapper) — still admitted both P0s T80 closed:
+#
+# MF-4 (T115): the sentence above used to read "17 capture scripts and `attest.py`", which was
+# wrong in both directions — it omitted `t55-negative-tests.sh`, a DIRECT invoker in a different
+# subtree, and it counted files where the load-bearing figure is call sites.  Re-measured from the
+# tree by `.softhouse/capture/t91/t115-drive-mf3-mf4.sh`, which prints the inclusion rule, names
+# the deliberate exclusions (`selfcheck.sh:15` is a `grep -v`, not a call) and states what a grep
+# census structurally cannot find.  Re-run it rather than trusting this number.
 #
 #   * the canary REQUEST was unpinned.  Any readable file was accepted, so T77's one-character edit
 #     (principal 1162502.5 -> 1162502.55, no longer a half-minor-unit tie) made
@@ -45,8 +54,16 @@
 #
 # The hardened rig requires CANARY_REQ to be the digest-pinned half-cent tie
 # (pathb/t22-audit/req/calc-pmode2-gerege.json, sha256 2a6621be…352154).  bin/run-preconditions.sh
-# and bin/attest.py already pass exactly that file.  bin/t51-negative.sh passes none, so it now
-# reports one further breach; it is a negative control that already exited 1 and still does.
+# and bin/attest.py already pass exactly that file.  bin/t51-negative.sh passes none.
+#
+# MF-3 (T115): this sentence used to claim t51-negative.sh "now reports one further breach".  It
+# does not.  MEASURED, tenant `default`, no CANARY_REQ, on BOTH interpreters: 16 PASS / 5 FAIL /
+# exit 1 before T91 and 16 PASS / 5 FAIL / exit 1 after — delta ZERO.  The hardened rig REPLACES
+# the "rounding-mode canary NOT run" breach with a longer-worded one naming the required file and
+# its sha256; it does not add a sixth.  The false version was PR-10's error, which T91's own
+# prediction table scored as WRONG and then left standing here — the correction landed where the
+# claim was scored, not where it was restated (P-12/P-21).  Re-derive with
+# `.softhouse/capture/t91/t115-drive-mf3-mf4.sh`, which prints both FAIL sets side by side.
 set -u
 
 RIG=$(cd "$(dirname "$0")/../.." 2>/dev/null && pwd)/pathb/t36/preconditions.sh

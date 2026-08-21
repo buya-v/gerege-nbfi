@@ -16,13 +16,30 @@
 # Two traps this run has already hit, both guarded here:
 #   * A grep that silently reports NO MATCH on a transcript containing a stray non-UTF-8 byte turns
 #     "the forbidden sentence is absent" into a lie.  Every grep below is `LC_ALL=C grep -a`, both
-#     halves deliberate.  MEASURED on this machine: with /usr/bin/grep (BSD) I could NOT reproduce
-#     a silent miss either with an invalid multibyte sequence or with an embedded NUL, in either
-#     locale — so T80's stated BSD behaviour did not reproduce for me and I am not repeating it as
-#     fact.  What DID reproduce: `ugrep 7.5.0 -I` (which is what a `grep` on an interactive PATH
-#     can be) returns 1 — "absent" — on exactly the poisoned transcript that does contain the
-#     sentence, and `-a` fixes it.  The guard was driven RED against that grep before `-a` was
-#     added.
+#     halves deliberate.
+#
+#     *** THE HARDENING STANDS.  ITS STATED REASON IS UNDER ADJUDICATION BY T108. ***
+#     Do not remove `LC_ALL=C` or `-a` from any grep in this file on the strength of the paragraph
+#     below.  Fail-closed is right whichever way T108 rules; only the *reason* is in doubt, and
+#     nothing about the guard's correctness depends on settling it.
+#
+#     What is MEASURED and now reproduced by two independent workers (T91 and T107b): with
+#     /usr/bin/grep — BSD grep 2.6.0-FreeBSD — a silent miss does NOT reproduce, with an invalid
+#     multibyte sequence or an embedded NUL, in any locale.  T107b's probe matched 18 of 18
+#     combinations.  So **T80's stated BSD behaviour does not reproduce on this host** and is not
+#     repeated here as fact.
+#
+#     What is [UNVERIFIED] and is T108's question: T91 reported that `ugrep 7.5.0 -I` (which is what
+#     a `grep` on an interactive PATH can be) returns 1 — "absent" — on a poisoned transcript that
+#     does contain the sentence, and that `-a` fixes it.  T107b could NOT reproduce this: there is
+#     no `ugrep` on this host at all, and `prove-guards.sh:87-95` takes its `else` branch, so the
+#     committed `out/GUARDS-RED.txt` records the fallback text rather than a ugrep measurement.
+#     The claim therefore rests on unrecorded interactive runs and ZERO committed evidence — the
+#     defect class this run grades for, one layer out.  T115 does not assert either version.
+#
+#     Independent of both: `LC_ALL=C` also defends against GNU grep on Linux, where a UTF-8 locale
+#     genuinely can fail to match across an invalid multibyte sequence.  These scripts run on macOS
+#     today and nothing pins that.  [UNVERIFIED on Linux — no Linux host available.]
 #   * A check that passes VACUOUSLY ON ZERO FILES is the defect class this run keeps finding.  An
 #     empty transcript set, or an attack named in the table with no transcript, is an ERROR here.
 #
@@ -55,7 +72,29 @@ A7-symlinked-canary.txt|CLEAN|PINNED|invariance: a digest pin grades BYTES, so a
 A8-foreign-cwd.txt|CLEAN|PINNED|invariance: resolution must not depend on the working directory
 '
 
-rm -f "$D/.score-fail"
+# V-A (T115).  The scoring loop below runs in a PIPELINE SUBSHELL, so a failed row cannot set a
+# variable the tail of the script can see; the ONLY channel is this file.  Until T115 it lived in
+# $D — the transcript directory — and if $D was not writable EVERY append failed, `[ -s ]` was
+# false, and the script printed "ALL 13 ATTACKS MET THEIR DECLARED EXPECTATION" and exited 0 WHILE
+# ITS OWN TABLE SHOWED SIX `ADMITS` ROWS ON SCREEN.  Measured by T115 with `chmod a-w` on a copy of
+# the real pre-fix transcripts: six admissions visible, verdict "ALL 13", exit 0.  A read-only
+# checkout, an export owned by another user or a mounted volume is all it takes; no attacker
+# required.  This is T80's F-1 shape — a message that is FALSE at the moment it prints — recurring
+# inside the file whose own honesty note is about that class.
+#
+# Two changes: the channel moves to a directory this script creates and owns, and its writability
+# is ASSERTED before any scoring happens.  A guard that cannot record a failure must refuse to run.
+FAILDIR=$(mktemp -d "${TMPDIR:-/tmp}/verdict-score.XXXXXX") || {
+  echo "ERROR: cannot create a scratch directory for the failure channel — refusing to score." >&2
+  exit 3; }
+FAILS=$FAILDIR/score-fail
+trap 'rm -rf "$FAILDIR"' EXIT
+if ! : >> "$FAILS" 2>/dev/null || [ ! -w "$FAILS" ]; then
+  echo "ERROR: the failure channel '$FAILS' is not writable — a scorer that cannot RECORD a" >&2
+  echo "       failure would report every run as clean.  Refusing to score." >&2
+  exit 3
+fi
+rm -f "$D/.score-fail"          # tidy up the pre-T115 location if an old run left one
 printf '%-46s %-6s %-9s %-10s %s\n' TRANSCRIPT EXIT CANARY-OK DIGEST-PIN VERDICT
 printf '%-46s %-6s %-9s %-10s %s\n' '---' '---' '---' '---' '---'
 echo "$TABLE" | while IFS='|' read -r name want sent why; do
@@ -63,7 +102,7 @@ echo "$TABLE" | while IFS='|' read -r name want sent why; do
   f=$D/$name
   if [ ! -f "$f" ]; then
     printf '%-46s %-6s %-9s %-10s %s\n' "$name" '-' '-' '-' 'MISSING TRANSCRIPT'
-    echo "$name MISSING" >> "$D/.score-fail"
+    echo "$name MISSING" >> "$FAILS"
     continue
   fi
   # MF-1 (T115, closing T107's F-1).  Zero FILES was already an error below; zero CONTENT was not.
@@ -90,7 +129,7 @@ echo "$TABLE" | while IFS='|' read -r name want sent why; do
   esac
   if [ "$shape" = bad ]; then
     printf '%-46s %-6s %-9s %-10s %s\n' "$name" "-" "-" "-" 'ERROR (no EXIT= line — the transcript has no attack body)'
-    echo "$name NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)" >> "$D/.score-fail"
+    echo "$name NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)" >> "$FAILS"
     continue
   fi
   if LC_ALL=C grep -aqF "$S" "$f"; then c=YES; else c=no; fi
@@ -109,7 +148,7 @@ echo "$TABLE" | while IFS='|' read -r name want sent why; do
     esac
   fi
   printf '%-46s %-6s %-9s %-10s %s\n' "$name" "$st" "$c" "$d" "$v"
-  [ "$v" = OK ] || echo "$name $v" >> "$D/.score-fail"
+  [ "$v" = OK ] || echo "$name $v" >> "$FAILS"
 done
 
 n=$(echo "$TABLE" | grep -c '|')
@@ -121,10 +160,9 @@ if [ "$files" -eq 0 ]; then
   exit 3
 fi
 [ "$files" = "$n" ] || echo "WARNING: $files transcripts on disk, $n attacks in the expectation table"
-if [ -s "$D/.score-fail" ]; then
-  echo "EXPECTATIONS NOT MET ($(wc -l < "$D/.score-fail" | tr -d ' ')):"
-  cat "$D/.score-fail"
-  rm -f "$D/.score-fail"
+if [ -s "$FAILS" ]; then
+  echo "EXPECTATIONS NOT MET ($(wc -l < "$FAILS" | tr -d ' ')):"
+  cat "$FAILS"
   exit 1
 fi
 echo "ALL $n ATTACKS MET THEIR DECLARED EXPECTATION."
