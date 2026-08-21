@@ -56,10 +56,10 @@ type GLAccountRepository interface {
 // reported as such rather than silently skipping the precedence level — a
 // silently-skipped precedence level is a wrong account, not a missing feature.
 type Resolver struct {
-	Mappings           MappingRepository
+	Mappings            MappingRepository
 	FinancialActivities FinancialActivityRepository
-	Accounts           GLAccountRepository
-	Charges            ChargeRepository
+	Accounts            GLAccountRepository
+	Charges             ChargeRepository
 }
 
 // resolveOrganisationAccount is STEP 0, shared verbatim by the loan, savings

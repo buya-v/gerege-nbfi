@@ -191,15 +191,15 @@ type GLAccount struct {
 	// decision anywhere reads it, there is no roll-up and no fallback to a
 	// parent account [VERIFIED: it is read at exactly one site, the
 	// nameDecorated SQL at GLAccountReadPlatformServiceImpl.java:49].
-	Hierarchy           string
-	Name                string
-	GLCode              string
-	Disabled            bool
+	Hierarchy            string
+	Name                 string
+	GLCode               string
+	Disabled             bool
 	ManualEntriesAllowed bool
-	Classification      Classification
-	Usage               Usage
-	Description         string
-	TagID               *int64 // nullable
+	Classification       Classification
+	Usage                Usage
+	Description          string
+	TagID                *int64 // nullable
 }
 
 // IsHeader and IsDetail mirror GLAccount.isHeaderAccount / isDetailAccount,

@@ -157,7 +157,7 @@ var cashLoanNames = map[CashLoanSlot]string{
 	CashLoanPenaltiesReceivable:              "PENALTIES_RECEIVABLE",
 }
 
-func (s CashLoanSlot) Code() int32                        { return int32(s) }
+func (s CashLoanSlot) Code() int32                         { return int32(s) }
 func (s CashLoanSlot) ProductFamily() PortfolioProductType { return ProductLoan }
 func (s CashLoanSlot) Rule() AccountingRule                { return AccountingRuleCashBased }
 func (s CashLoanSlot) IsFamilyReferenceSlot() bool         { return s == CashLoanFundSource }

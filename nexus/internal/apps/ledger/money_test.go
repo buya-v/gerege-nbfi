@@ -21,10 +21,10 @@ func TestMinorUnitsFromDecimalTextIsExact(t *testing.T) {
 		{"200000.000000", 20000000},
 		{"1000000.000000", 100000000},
 		{"50000.000000", 5000000},
-		{"100.5", 10050},   // fewer digits than the scale: padded
-		{"100.50", 10050},  // and the same amount
-		{"-12.34", -1234},  // sign preserved
-		{"0.01", 1},        // one minor unit
+		{"100.5", 10050},  // fewer digits than the scale: padded
+		{"100.50", 10050}, // and the same amount
+		{"-12.34", -1234}, // sign preserved
+		{"0.01", 1},       // one minor unit
 	}
 	for _, c := range cases {
 		got, err := MinorUnitsFromDecimalText(c.text, MNTMinorDigits)
@@ -72,11 +72,11 @@ func TestMinorUnitsRefusesMalformedText(t *testing.T) {
 func TestEveryCapturedJournalEntryAmountIsExactAtTwoDecimals(t *testing.T) {
 	type jeRead struct {
 		PageItems []struct {
-			ID           json.Number `json:"id"`
-			GLAccountID  json.Number `json:"glAccountId"`
-			GLAccountCode string     `json:"glAccountCode"`
-			Amount       json.Number `json:"amount"`
-			EntryType    struct {
+			ID            json.Number `json:"id"`
+			GLAccountID   json.Number `json:"glAccountId"`
+			GLAccountCode string      `json:"glAccountCode"`
+			Amount        json.Number `json:"amount"`
+			EntryType     struct {
 				ID    json.Number `json:"id"`
 				Value string      `json:"value"`
 			} `json:"entryType"`

@@ -759,8 +759,8 @@ func TestSlotTypeValidationMatchesTheRefusalCaptures(t *testing.T) {
 		capture   string
 		accountID int64
 	}{
-		{"A2-214-create-fundsource-retyped", 2},  // Fund Source, retyped to INCOME
-		{"A2-prod-063-map-wrong-type", 8},        // Interest On Loans, INCOME
+		{"A2-214-create-fundsource-retyped", 2}, // Fund Source, retyped to INCOME
+		{"A2-prod-063-map-wrong-type", 8},       // Interest On Loans, INCOME
 	} {
 		account := accountByID(t, chart, tc.accountID)
 		err := ValidateLoanSlotAccountType(CashLoanFundSource.Code(), AccountingRuleCashBased, &account)

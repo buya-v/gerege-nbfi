@@ -58,6 +58,29 @@ import "fmt"
 // usage as {id, code, value} objects while the write takes bare integers
 // [OBSERVED: A2-201, A2-012 against req/gl-010..gl-033.json].
 
+// A RULE-CHANGE UPDATE IS A WHOLESALE REPLACEMENT, NOT A MERGE. When the
+// accounting rule changes, the oracle re-runs the CREATE validator, DELETES
+// EVERY MAPPING for the product, and recreates the set from the request alone
+// [VERIFIED: ProductToGLAccountMappingWritePlatformServiceImpl.java:409-414 —
+// validateForLoanProductCreate, then deleteLoanProductToGLAccountMapping, then
+// createLoanProductToGLAccountMapping; the else branch at :416-429 is the
+// per-field merge and runs ONLY when the rule did not change].
+//
+// Two consequences a port must model:
+//   - Any payment-channel, charge, reason or classification mapping not present
+//     in the same request is DESTROYED, not migrated.
+//   - The create-mandatory set is re-imposed, which is why a PUT flipping cash
+//     to accrual with no receivable accounts is refused 400 listing all twelve
+//     even though validateForUpdate marks every account parameter
+//     ignoreIfNull() [OBSERVED: A2-240-update-cash-to-accrual, HTTP 400,
+//     against the one-variable control A2-242-update-no-rule-change, HTTP 200].
+//
+// Note also that for the bulk arrays an EMPTY array deletes every existing
+// mapping of that kind while an ABSENT array is a no-op — absent is not empty,
+// and that distinction is contract-visible [VERIFIED:
+// ProductToGLAccountMappingHelper.java:336-337, :416-417, :492-493, :557-558,
+// each inside an `if (...Array != null)` guard].
+
 // SlotAPIShape is one row of the loan-product accounting-mapping contract.
 type SlotAPIShape struct {
 	// WriteParam is the POST/PUT body key, e.g. "fundSourceAccountId".
