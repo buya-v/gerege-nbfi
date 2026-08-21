@@ -1,3 +1,4 @@
+export: 69989116cab420cabf282fb8ed669bb3f8d21aa8, 2292 files (asserted non-empty)
 =================================================================== G-1
 GUARD: the call-through refuses when the hardened rig is absent, and says so BEFORE it
        could have asserted anything.  The message 'PRECONDITIONS NOT RUN' must be TRUE AT
@@ -5,29 +6,37 @@ GUARD: the call-through refuses when the hardened rig is absent, and says so BEF
 
 -- GREEN first (rig present): expect exit 0 and 'ALL PRECONDITIONS HOLD'
 ALL PRECONDITIONS HOLD — tenant 'gerege' at MathContext(19, HALF_UP), PostgreSQL only.
-   exit=0
+   exit=0   EXPECTED 0   OK      [G-1 GREEN rig present]
 
 -- RED (rig deleted): expect exit 2, no assertion made
-  FAIL  the hardened Path B precondition rig is missing: '/tmp/t91-guards.50255/export/.softhouse/capture/pathb/t36/preconditions.sh'
+  FAIL  the hardened Path B precondition rig is missing: '/tmp/t91-guards.3795/export/.softhouse/capture/pathb/t36/preconditions.sh'
 PRECONDITIONS NOT RUN. DO NOT CAPTURE — nothing was asserted about the oracle.
-   exit=2
+   exit=2   EXPECTED 2   OK      [G-1 RED rig deleted]
 
 -- RED through the T40 wrapper too (bin/run-preconditions.sh must propagate it)
 PRECONDITIONS_EXIT=2
+   exit=2   EXPECTED 2   OK      [G-1 RED through the wrapper]
+
+-- RED with the rig EMPTY rather than deleted (MF-2; the [ ! -f ] branch must NOT be what fires)
+PRECONDITIONS NOT RUN: the rig at '/tmp/t91-guards.3795/export/.softhouse/capture/pathb/t36/preconditions.sh' returned without exiting — nothing was asserted.
+   exit=2   EXPECTED 2   OK      [G-1b RED rig empty (MF-2)]
+   NOTE: MF-2 closes the EMPTY-rig limb only.  A rig SUBSTITUTED with different bytes, and a
+   shim reached through a symlink, both still admit — see t115-drive-mf2.sh, which measures
+   them.  Only FU-1 (an identity check on the rig) closes those.
 
 =================================================================== G-2
 GUARD: verdict.sh treats an EMPTY transcript set as an ERROR, not a pass.
        'a check that passes vacuously on zero files' is the defect class this run keeps
        finding, so it must not be reintroduced by the thing that checks for it.
 
-   exit=3   (expect 3)
-ERROR: zero transcripts in /tmp/t91-guards.50255/empty — a scan over an empty file set proves NOTHING.
+   exit=3   EXPECTED 3   OK      [G-2 verdict.sh over an empty set]
+ERROR: zero transcripts in /tmp/t91-guards.3795/empty — a scan over an empty file set proves NOTHING.
        (this is the vacuous-pass defect class; it is an error here, not a pass)
 
 =================================================================== G-3
 GUARD: shell-invariance.sh treats ZERO compared pairs as an ERROR.
 
-   exit=3   (expect 3)
+   exit=3   EXPECTED 3   OK      [G-3 shell-invariance.sh over zero pairs]
 ERROR: compared ZERO transcript pairs — proves nothing.
 
 =================================================================== G-4
@@ -40,15 +49,63 @@ GUARD: verdict.sh's greps are 'LC_ALL=C grep -a'.
 -- what /usr/bin/grep (BSD) does with and without -a:
    BSD  -qF  rc=0
    BSD -aqF  rc=0
-   MEASURED: on this machine BSD grep matched EITHER WAY.  T80 reported that BSD grep in a
-   UTF-8 locale matches nothing here; that did NOT reproduce for me and I do not repeat it
-   as fact.  What DID reproduce is below.
+   MEASURED: on this machine BSD grep matched EITHER WAY, and T107b independently reproduced
+   that (18 of 18 combinations).  T80 reported that BSD grep in a UTF-8 locale matches
+   nothing here; that does NOT reproduce and is not repeated as fact.
+   *** THE LC_ALL=C grep -a HARDENING STANDS EITHER WAY.  Its stated REASON is under
+   adjudication by T108; fail-closed is right whichever way T108 rules. ***
 
-   ugrep is not on PATH here; the ugrep limb was measured interactively and is reported
-   in the handoff.  Without -a it returned 1 ('absent') on this exact poisoned file.
+   ugrep is NOT on PATH here, so the ugrep limb WAS NOT MEASURED BY THIS RUN.
+   [UNVERIFIED] T91 reported interactively that ugrep 7.5.0 -I returns 1 ('absent') on this
+   exact poisoned file and that -a fixes it.  T107b could not reproduce it — there is no
+   ugrep on this host at all — and downgraded the claim from [VERIFIED].  It rests on
+   unrecorded interactive runs and ZERO committed evidence.  T108 settles which tool T80
+   actually observed.  This branch states the absence of a measurement; it does not stand
+   in for one.
 
 -- verdict.sh (with -a) on the poisoned set: must still name A2a as an admission
 A2a-mutated-canary-gerege.txt                  0      YES       no         ADMITS (printed the HALF_UP certification)
 A2a-mutated-canary-gerege.txt ADMITS (printed the HALF_UP certification)
+   A2a named as an admission on the poisoned set   OK      [G-4]
 
-=================================================================== done
+=================================================================== G-5  (T115)
+GUARD: verdict.sh refuses when it cannot RECORD a failure.
+       The scoring loop runs in a pipeline subshell, so its only channel is a file.  When
+       that file lived in the transcript directory and the directory was read-only, every
+       append failed silently and the scorer printed 'ALL 13 ATTACKS MET THEIR DECLARED
+       EXPECTATION', exit 0, WHILE ITS OWN TABLE SHOWED SIX ADMITS ROWS.
+
+-- GREEN: the real pre-fix transcripts must still score SIX admissions, exit 1
+   exit=1   EXPECTED 1   OK      [G-5 GREEN discriminates]
+   admissions named: 12   (expect 12 = 6 rows + 6 recorded)
+
+-- RED: the same transcripts in a READ-ONLY directory
+   exit=1   EXPECTED 1   OK      [G-5 RED read-only transcript dir still reports the 6 admissions]
+   no false 'ALL 13' verdict   OK      [G-5]
+
+=================================================================== G-6  (T115)
+GUARD: run-attacks.sh refuses when its canary MUTATION did not take.
+       sed is not grep: a substitution whose pattern does not match is a COPY, so a
+       reformatted canonical request would silently turn both 'mutated canary' attacks into
+       firing the PINNED TIE at the rig — a full-looking transcript of an attack that never
+       happened.
+
+   exit=2   EXPECTED 2   OK      [G-6 RED reformatted canary -> harness error, not an 'attack']
+   HARNESS ERROR: '/tmp/t91-guards.3795/export/.softhouse/capture/t91/out/g6-mutation-check-sh/req-mutated-55.json' is byte-identical to the canonical request — the sed substitution
+
+=================================================================== G-7  (T115)
+GUARD: shell-invariance.sh compares the UNION of both sides, not just the sh side.
+       It used to iterate over the sh directory only, so a transcript present on the bash
+       side and absent on the sh side was never compared, and it still reported agreement.
+
+   exit=0   EXPECTED 0   OK      [G-7 GREEN matched pair]
+   exit=1   EXPECTED 1   OK      [G-7 RED bash-only transcript]
+   MISSING  /tmp/t91-guards.3795/inv7/y-sh/A2.txt  (present under y-bash only)
+
+=================================================================== VERDICT
+MF-1 and MF-2 are driven red and green by their own committed scripts, not here:
+   sh .softhouse/capture/t91/t115-drive-mf1.sh
+   sh .softhouse/capture/t91/t115-drive-mf2.sh      (also measures N9/N10, which stay OPEN)
+   sh .softhouse/capture/t91/t115-drive-mf3-mf4.sh  (MF-3's breach count, MF-4's census)
+
+done — every leg behaved as expected.
