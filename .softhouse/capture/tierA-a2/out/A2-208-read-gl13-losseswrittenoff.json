@@ -1,0 +1,1 @@
+{"id":13,"name":"Losses Written Off","glCode":"50100","disabled":false,"manualEntriesAllowed":true,"type":{"id":5,"code":"accountType.expense","value":"EXPENSE"},"usage":{"id":1,"code":"accountUsage.detail","value":"DETAIL"},"description":"","nameDecorated":"Losses Written Off","tagId":{"id":0}}

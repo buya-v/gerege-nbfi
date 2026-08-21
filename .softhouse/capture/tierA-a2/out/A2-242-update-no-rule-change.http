@@ -1,0 +1,6 @@
+PUT /loanproducts/46
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/a2-7-upd-242-no-rule-change.json
+captured-at-utc: 2026-08-21T07:30:18Z
