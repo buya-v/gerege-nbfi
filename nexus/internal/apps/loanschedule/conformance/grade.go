@@ -251,6 +251,21 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 		}
 	}
 
+	// D-1 (T155): the census's own zero-files check lives INSIDE
+	// ScanGoTreeForFloatingPoint, so it only fires when the census actually RUNS.
+	// Delete the call site above and nothing runs, NoFloatCensus stays zero-valued,
+	// and the report prints "0 Go files / 0 tokens" beside VERDICT: PASS on a tree
+	// containing 0.036 — while report.go's own comment says 0 files means exit 2.
+	// `go test` catches that deletion; `conformance.sh` does not run `go test`
+	// (P-45), which is the exact shape T154 was dispatched to close. So the
+	// assertion lives HERE, as a SEPARATE statement, precisely so that a minimal
+	// deletion of the block above leaves it standing and it fires.
+	if s.NoFloatCensus.FilesScanned == 0 {
+		s.FatalReasons = append(s.FatalReasons,
+			"THE NO-FLOAT CENSUS INSPECTED ZERO GO FILES: a guard that inspects nothing passes everything, "+
+				"so this is an ERROR and not a pass")
+	}
+
 	pin, err := LoadPin(filepath.Join(opts.StoreRoot, "PIN.json"))
 	if err != nil {
 		s.FatalReasons = append(s.FatalReasons, err.Error())

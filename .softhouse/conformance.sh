@@ -473,6 +473,16 @@ load_toolchain() {
     warn "conformance: EXIT 2 — the harness is unusable. This is NOT a pass."
     exit "$EXIT_UNUSABLE"
   fi
+  # D-2 (T155): the P-35 counter counts files ENUMERATED, not files SCANNED. Both
+  # no-float shell guards pipe every file through perl; with perl truly absent they
+  # enumerate, inspect nothing, print "inspected 1 files" and RETURN 0 on a plainly
+  # visible float. Closing ABSENCE only — "perl ran and died on one file" is a
+  # separate hole and stays open as a follow-up, not a micro-fix.
+  if ! command -v perl >/dev/null 2>&1; then
+    warn "conformance: no perl. Both no-float guards pipe every file through perl; without it they"
+    warn "conformance: enumerate files and inspect none. EXIT 2 — the harness is unusable. NOT a pass."
+    exit "$EXIT_UNUSABLE"
+  fi
 }
 
 # ---------------------------------------------------------------------------
