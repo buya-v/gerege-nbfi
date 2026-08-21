@@ -635,8 +635,8 @@
    "executor": "agent",
    "model": "opus",
    "target": "docs",
-   "status": "pending",
-   "attempts": 0,
+   "status": "in_progress",
+   "attempts": 1,
    "dependencies": [
     "T169"
    ],
@@ -644,7 +644,7 @@
     ".softhouse/gates.md"
    ],
    "description": "THE G-8 WRITE-UP IS NOW WRONG IN AT LEAST 25 PLACES AND BUYAN READS IT. T117 listed nine affected sentences and explicitly marked that list a STARTING POINT, NOT THE SWEEP (P-37); T159's section 9 enumerates 25 sites, six of them not on T117's nine, including gates.md:978 ('balance column | constant at the disbursed amount'), which the partial cells falsify. Both workers correctly REFUSED to edit gates.md, because its STANDING RULE demands a full sentence-by-sentence scope rebuild and parallel workers were live. Do the rebuild. REQUIREMENTS: (1) Work from T159 section 9's 25 sites as the FLOOR, not the ceiling -- re-sweep and report any site neither worker found, and COUNT WHAT YOU SKIPPED (P-40). (2) Every residual figure must be stated WITH ITS TERM ('MNT 10.01 at n=3000') and must still say it is the largest OBSERVED, not a bound -- two independent workers have now raised the ceiling by asking a larger term and neither found a limit, so a bare number repeats one level up the exact error T117 was sent to correct. (3) ADD THE SENTENCE G-8 DOES NOT HAVE: a third outcome in which the oracle produces NO SCHEDULE AT ALL (java.lang.StackOverflowError, non-monotone in the inputs). A graded domain that can express only 'amortizes' and 'does not amortize' will silently classify a crash as one of them, and option (b) amends the graded domain, so it CANNOT be drafted without this. (4) Distinguish the FULL non-amortization shape from the PARTIAL-shortfall shape throughout -- four partial cells are now known and the record treats family B as uniformly total. (5) Do NOT decide the gate. Options (b) and (c) remain hard user gates; option (a) is T116's. Rewrite what is FALSE; decide nothing.",
-   "note": "Raised by the driver from T159's section 9, local fire 20260821-134344. Depends on T169 because the rig's catch-narrowing may change what 'observed' means in the very sweeps this rebuild cites. Pair with a reviewer at dispatch (plan gate rule 1) -- a prose task rewriting a gate Buyan decides on is exactly where P-46 (fabricated quotation) and P-37 (a starting point mistaken for a sweep) both live."
+   "note": "Raised by the driver from T159's section 9, local fire 20260821-134344. Depends on T169 because the rig's catch-narrowing may change what 'observed' means in the very sweeps this rebuild cites. Pair with a reviewer at dispatch (plan gate rule 1) -- a prose task rewriting a gate Buyan decides on is exactly where P-46 (fabricated quotation) and P-37 (a starting point mistaken for a sweep) both live. | dispatched batch 2, local fire 20260821-054355, worktree-isolated"
   },
   {
    "id": "T171",
@@ -652,7 +652,7 @@
    "role": "coder",
    "executor": "agent",
    "model": "sonnet",
-   "status": "pending",
+   "status": "in_progress",
    "dependencies": [
     "T157"
    ],
@@ -660,7 +660,9 @@
     ".softhouse/nonnegotiable-guard-audit.md",
     ".softhouse/patterns.md"
    ],
-   "description": "Raised by T157 and CONFIRMED BY THE DRIVER on a second grep implementation. T154's handoff (Blockers section 1) asserts the grep at fire-program.sh:224 was 'fail-closed' because a blind grep -v fails to match so the line is kept and DIRTY is non-empty. THE OPPOSITE IS TRUE on seekable input: one invalid byte anywhere makes grep print NOTHING for the whole input and exit 1 -- DIRTY is silently EMPTY, which is fail-OPEN and is the dangerous direction for an exit-protocol guard. Reproduced by T157 on BSD grep 2.6.0-FreeBSD and INDEPENDENTLY by the driver on ugrep 7.5.0, so it is binary-detection behaviour shared across implementations, not a vendor quirk. The claim is now in merged evidence and will be inherited. Correct it where it is recorded; state the reachability honestly (NOT reachable through the live anonymous pipe, and APFS refuses an invalid-UTF-8 filename with EILSEQ) rather than overstating the risk to make the correction sound urgent. This is a correction to the RECORD, not a code change."
+   "description": "Raised by T157 and CONFIRMED BY THE DRIVER on a second grep implementation. T154's handoff (Blockers section 1) asserts the grep at fire-program.sh:224 was 'fail-closed' because a blind grep -v fails to match so the line is kept and DIRTY is non-empty. THE OPPOSITE IS TRUE on seekable input: one invalid byte anywhere makes grep print NOTHING for the whole input and exit 1 -- DIRTY is silently EMPTY, which is fail-OPEN and is the dangerous direction for an exit-protocol guard. Reproduced by T157 on BSD grep 2.6.0-FreeBSD and INDEPENDENTLY by the driver on ugrep 7.5.0, so it is binary-detection behaviour shared across implementations, not a vendor quirk. The claim is now in merged evidence and will be inherited. Correct it where it is recorded; state the reachability honestly (NOT reachable through the live anonymous pipe, and APFS refuses an invalid-UTF-8 filename with EILSEQ) rather than overstating the risk to make the correction sound urgent. This is a correction to the RECORD, not a code change.",
+   "attempts": 1,
+   "note": "dispatched batch 2, local fire 20260821-054355, worktree-isolated"
   },
   {
    "id": "T172",
@@ -668,14 +670,16 @@
    "role": "coder",
    "executor": "agent",
    "model": "sonnet",
-   "status": "pending",
+   "status": "in_progress",
    "dependencies": [
     "T157"
    ],
    "files_hint": [
     ".softhouse/bin/fire-program.sh"
    ],
-   "description": "Raised by T157 as an unrelated defect found in the same line, correctly left out of its diff as outside files_hint intent. The pattern '^?? \\.softhouse/LOCK' has no end anchor, so the exit-protocol dirty-check would ALSO discard an untracked file named .softhouse/LOCKFILE, .softhouse/LOCK.bak or .softhouse/LOCKED -- i.e. it can hide real uncommitted work from the very guard that exists to rescue it. Same fail-open direction as T157's finding. Anchor it, and DRIVE IT RED (P-22) by creating each over-matched filename in a scratch tree and showing the pre-fix guard swallows it and the post-fix guard reports it. Verify with zsh -n (the file is #!/bin/zsh -- bash -n is the wrong interpreter check) and with --probe, and quote both."
+   "description": "Raised by T157 as an unrelated defect found in the same line, correctly left out of its diff as outside files_hint intent. The pattern '^?? \\.softhouse/LOCK' has no end anchor, so the exit-protocol dirty-check would ALSO discard an untracked file named .softhouse/LOCKFILE, .softhouse/LOCK.bak or .softhouse/LOCKED -- i.e. it can hide real uncommitted work from the very guard that exists to rescue it. Same fail-open direction as T157's finding. Anchor it, and DRIVE IT RED (P-22) by creating each over-matched filename in a scratch tree and showing the pre-fix guard swallows it and the post-fix guard reports it. Verify with zsh -n (the file is #!/bin/zsh -- bash -n is the wrong interpreter check) and with --probe, and quote both.",
+   "attempts": 1,
+   "note": "dispatched batch 2, local fire 20260821-054355, worktree-isolated"
   },
   {
    "id": "T173",
