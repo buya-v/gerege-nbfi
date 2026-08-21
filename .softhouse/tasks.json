@@ -181,7 +181,7 @@
     },
     {
       "id": "A2-4",
-      "status": "pending",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "target": "docs",
@@ -195,7 +195,7 @@
         "A2-3"
       ],
       "description": "Review A2-3's capture work by ATTACKING the rig, not by reading it. This program's dominant finding across the whole tier-0 run was a CLASS (P-22): at least five guards, canaries and controls that COULD NOT FAIL, every one found by attacking rather than reading, and two of them inside the task sent to fix the previous one. Assume the same is true here until you have driven it red. Specifically: (a) can any assertion in the rig pass on EMPTY INPUT? Drive it and show the transcript -- this exact defect has been found in this repo more than once (three PostgreSQL-only prohibition assertions once passed on zero input). (b) Is every claimed observation traceable to a request you can re-issue, and does re-issuing it reproduce the recorded bytes? (c) Does anything in the capture assert a MONEY value that was read through binary floating point on the way in? json.load without parse_float=Decimal turns every money literal into a double -- that is live obligation T145 and it already put a wrong number into a gate write-up Buyan reads. (d) Did A2-3 promote anything into .softhouse/vectors/? It had NO promotion mandate; if it promoted, that is an automatic REJECT. Read the upstream work from the BRANCH, not the working tree. Deliverable: .softhouse/reviews/A2-4-review-of-A2-3.md with an explicit verdict.",
-      "note": "Paired reviewer for A2-3 (plan gate rule 1)."
+      "note": "Paired reviewer for A2-3 (plan gate rule 1). || local fire 20260821-054355 (driver): STATUS CORRECTED pending->done. The prior fire MERGED this reviewer's output to main (merge commit 1601366 'softhouse/A2-4-review-a2-3'; twelve defects recorded at .softhouse/capture/tierA-a2/DEFECTS-FOUND-BY-REVIEW.md, 4902 bytes on main) but never updated tasks.json. STEP 5.5 exit-protocol rule 2 miss by the previous fire, not a work gap. Its findings D-2/D-3 are already carried as A2-5."
     },
     {
       "id": "T153",
