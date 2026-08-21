@@ -1,0 +1,220 @@
+==============================================================================
+T163 — P-26 sibling census over .softhouse/capture/tierA-a2/
+==============================================================================
+
+POPULATION: 22 Python file(s), 15 shell file(s)
+
+CANDIDATES (mechanical) -> CLASSIFICATION (declared, hand-read).  17 candidate(s).
+  file                             verdict  why it is / is not a request-body writer
+  audit-req-float-roundtrip.py     READS    reads req/ and out/; writes nothing
+  census-json-float-siblings.py    READS    reads source; writes nothing
+  manifest.py                      READS    hashes req/; writes only MANIFEST.sha256
+  mkreq.py                         WIRE     generates committed req/*.json bodies; that is its purpose
+  mkreq2.py                        WIRE     generates committed req/*.json bodies
+  mkreq3.py                        WIRE     generates committed req/*.json bodies
+  mkreq4.py                        WIRE     generates committed req/*.json bodies
+  mkreq5.py                        WIRE     generates committed req/*.json bodies
+  mkreq6.py                        WIRE     generates committed req/*.json bodies
+  mkreq7.py                        WIRE     generates committed req/*.json bodies (A2-7's leg)
+  prove-cap-transport-red.py       SANDBOX  tempfile.mkdtemp (line 92); req/ is the sandbox's
+  prove-cap8-wire-bytes.py         SANDBOX  tempfile.mkdtemp; local server, not the oracle
+  prove-manifest-blind-red.py      SANDBOX  tempfile.mkdtemp
+  prove-mkreq7-guard-red.py        SANDBOX  tempfile.mkdtemp (line 36); req/ is the sandbox's
+  prove-resolve8-float-red.py      SANDBOX  tempfile.mkdtemp; runs COPIES of the resolvers
+  resolve7.py                      WIRE     wrote committed req/a2-7-loan-220-resolved.json; FROZEN, superseded
+  resolve8.py                      WIRE     T163's replacement resolver
+
+WIRE WRITERS (9): ['mkreq.py', 'mkreq2.py', 'mkreq3.py', 'mkreq4.py', 'mkreq5.py', 'mkreq6.py', 'mkreq7.py', 'resolve7.py', 'resolve8.py']
+
+R1/R2/R3 — Python, by AST
+  file                               reaches   hits   routes
+  analyze7.py                        ANALYSIS  1      R1
+  audit-req-float-roundtrip.py       ANALYSIS  4      R2,R3
+  census-json-float-siblings.py      INERT     0      -
+  manifest.py                        INERT     0      -
+  mkreq.py                           WIRE      1      R2
+  mkreq2.py                          WIRE      1      R2
+  mkreq3.py                          WIRE      1      R2
+  mkreq4.py                          WIRE      1      R2
+  mkreq5.py                          WIRE      1      R2
+  mkreq6.py                          WIRE      1      R2
+  mkreq7.py                          WIRE      1      R2
+  prove-a2-7-additive.py             INERT     0      -
+  prove-cap-transport-red.py         INERT     0      -
+  prove-cap8-wire-bytes.py           INERT     0      -
+  prove-manifest-blind-red.py        INERT     0      -
+  prove-manifest-red.py              INERT     0      -
+  prove-mkreq7-guard-red.py          ANALYSIS  9      R1,R2
+  prove-resolve8-float-red.py        ANALYSIS  2      R2,R3
+  rename1.py                         INERT     0      -
+  resolve7.py                        WIRE      3      R1,R2
+  resolve8.py                        WIRE      3      R2
+  show.py                            ANALYSIS  2      R1,R2
+
+DETAIL — every hit, printed in full, not sampled
+  analyze7.py   [ANALYSIS]
+      R1  line 43   json.load(...) with no parse_float=
+  audit-req-float-roundtrip.py   [ANALYSIS]
+      R2  line 73   json.dumps(...) re-serialises
+      R2  line 243  json.dumps(...) re-serialises
+      R2  line 72   json.dumps(...) re-serialises
+      R3  line 73   float(...) constructed explicitly
+  mkreq.py   [WIRE]
+      R2  line 20   json.dump(...) re-serialises
+  mkreq2.py   [WIRE]
+      R2  line 34   json.dump(...) re-serialises
+  mkreq3.py   [WIRE]
+      R2  line 21   json.dump(...) re-serialises
+  mkreq4.py   [WIRE]
+      R2  line 13   json.dump(...) re-serialises
+  mkreq5.py   [WIRE]
+      R2  line 23   json.dump(...) re-serialises
+  mkreq6.py   [WIRE]
+      R2  line 25   json.dump(...) re-serialises
+  mkreq7.py   [WIRE]
+      R2  line 197  json.dumps(...) re-serialises
+  prove-mkreq7-guard-red.py   [ANALYSIS]
+      R1  line 70   json.loads(...) with no parse_float=
+      R2  line 106  json.dump(...) re-serialises
+      R2  line 109  json.dump(...) re-serialises
+      R2  line 117  json.dump(...) re-serialises
+      R2  line 124  json.dump(...) re-serialises
+      R1  line 126  json.load(...) with no parse_float=
+      R2  line 132  json.dump(...) re-serialises
+      R2  line 73   json.dump(...) re-serialises
+      R1  line 119  json.load(...) with no parse_float=
+  prove-resolve8-float-red.py   [ANALYSIS]
+      R3  line 178  float(...) constructed explicitly
+      R2  line 134  json.dumps(...) re-serialises
+  resolve7.py   [WIRE]
+      R1  line 24   json.load(...) with no parse_float=
+      R1  line 25   json.load(...) with no parse_float=
+      R2  line 36   json.dumps(...) re-serialises
+  resolve8.py   [WIRE]
+      R2  line 126  json.dumps(...) re-serialises
+      R2  line 128  json.dumps(...) re-serialises
+      R2  line 180  json.dumps(...) re-serialises
+  show.py   [ANALYSIS]
+      R1  line 31   json.load(...) with no parse_float=
+      R2  line 41   json.dumps(...) re-serialises
+
+R4 — json.load inside a `python3 -c` in a SHELL script (invisible to any .py sweep)
+  run-210-a2-7-mapping.sh:29  json.load with no parse_float
+      import json,sys;d=json.load(open(sys.argv[1]));print(d.get("resourceId",""))
+  run-220-a2-7-runtime.sh:34  json.load with no parse_float
+      import json,sys;print(json.load(open(sys.argv[1])).get("loanId",""))
+  run-232-a2-7-writeoff-recovery.sh:18  json.load with no parse_float
+      import json,sys;print(json.load(open(sys.argv[1])).get("loanId",""))
+
+  LIMIT OF THIS ROUTE, STATED (P-26): this finds `python3 -c '...'` in SINGLE
+  quotes only.  A double-quoted -c, a heredoc, a `python3 - <<EOF`, or a snippet
+  built by string concatenation would not be found.  I grepped for those forms by
+  hand across the 15 shell files and found none, but that hand-check is a claim
+  about this rig on this date, not a property the sweep enforces.
+
+  PASS  SWEEP IS NON-EMPTY — zero files swept would be an ERROR, not a pass
+          22 .py, 15 .sh
+  PASS  EVERY PYTHON FILE WAS PARSED — an unparsed file is a hole, not a clean result
+          unparsed: []
+  PASS  EVERY PYTHON FILE IS IN EXACTLY ONE BUCKET
+          22 rows for 22 files
+  PASS  EVERY MECHANICAL CANDIDATE IS CLASSIFIED — a new script that touches req/ CANNOT slip through unread, which is what turns a hand-read table from an allowlist into a checkpoint (P-48 rule 3)
+          unclassified: []
+R5 — a float LITERAL in a script that writes a request body
+  mkreq*.py build their bodies from Python literals and `json.dump` them.  They
+  have no json.load at all, so R1 cannot reach them — but `json.dumps(1200000.00)`
+  emits `1200000.0` just the same.  Their safety today rests entirely on every
+  literal in them being an int or a string, which nothing was checking.
+  none — 0 float literals across all 22 Python files (measured, by AST)
+
+SUPERSESSION REGISTER (SUPERSEDED.txt) — 3 entr(ies)
+  cap.sh                         -> cap8.sh                          exists (shell — checked by prove-cap8-wire-bytes.py, not by this AST sweep)
+  resolve7.py                    -> resolve8.py                      CLEAN (AST-verified, 0 R1)
+  run-220-a2-7-runtime.sh        -> run-220-a2-7-runtime-v8.sh       exists (shell — checked by prove-cap8-wire-bytes.py, not by this AST sweep)
+
+  PASS  EVERY WIRE WRITER IS EITHER CLEAN OR REDIRECTED to a named replacement — no request-body writer is left reading JSON through a binary double with nowhere to go
+          flagged with no replacement: []
+  PASS  EVERY REDIRECT POINTS AT A REPLACEMENT THAT EXISTS AND IS ITSELF CLEAN — this is a redirect, not an allowlist: naming a dirty or missing replacement FAILS
+          3 redirect(s) verified
+  PASS  NO REQUEST-BODY WRITER CONTAINS A FLOAT LITERAL (R5) — scope is WIRE plus every UNCLASSIFIED candidate, so a new script cannot be invisible to this guard merely by not having been classified yet
+          0 float literal(s) across 9 file(s) in scope: none
+
+OUT OF SCOPE HERE, STATED SO THE SWEEP IS NOT READ AS EXHAUSTIVE (P-26):
+  * The ANALYSIS-tier R1 hits below are the T145 class (74 .py files across
+    .softhouse/ read money through a binary double).  T145 is a separate OPEN task
+    and this sweep neither fixes nor grades them:
+      analyze7.py                        R1 at line(s) 43
+      prove-mkreq7-guard-red.py          R1 at line(s) 70,126,119
+      show.py                            R1 at line(s) 31
+  * analyze7.py's float guard passes on its own DOCSTRING (P-48) — open as T164,
+    which depends on this task.  Not touched here.
+  * The R4 shell hits above extract an id into a URL, not money into a body.  They
+    are still the same shape and are carried as follow-ups, not fixed here.
+  * This sweep covers .softhouse/capture/tierA-a2/ ONLY, which is T163's files_hint.
+
+FAILURES: 0
+############################################################################
+# P-22 — the census must be FALSIFIABLE.  Four sabotages, each on a scratch
+# copy in /tmp/t163-sabotage-run.  The committed rig is never touched.
+############################################################################
+
+=== SABOTAGE 0 (control): the rig as committed, unmodified ===
+OUT OF SCOPE HERE, STATED SO THE SWEEP IS NOT READ AS EXHAUSTIVE (P-26):
+  * The ANALYSIS-tier R1 hits below are the T145 class (74 .py files across
+    .softhouse/ read money through a binary double).  T145 is a separate OPEN task
+    and this sweep neither fixes nor grades them:
+      analyze7.py                        R1 at line(s) 43
+      prove-mkreq7-guard-red.py          R1 at line(s) 70,126,119
+      show.py                            R1 at line(s) 31
+  * analyze7.py's float guard passes on its own DOCSTRING (P-48) — open as T164,
+    which depends on this task.  Not touched here.
+  * The R4 shell hits above extract an id into a URL, not money into a body.  They
+    are still the same shape and are carried as follow-ups, not fixed here.
+  * This sweep covers .softhouse/capture/tierA-a2/ ONLY, which is T163's files_hint.
+
+FAILURES: 0
+   exit=0
+
+=== SABOTAGE 1: delete the resolve7.py -> resolve8.py redirect ===
+  FAIL  EVERY WIRE WRITER IS EITHER CLEAN OR REDIRECTED to a named replacement — no request-body writer is left reading JSON through a binary double with nowhere to go
+          flagged with no replacement: ['resolve7.py']
+  PASS  EVERY REDIRECT POINTS AT A REPLACEMENT THAT EXISTS AND IS ITSELF CLEAN — this is a redirect, not an allowlist: naming a dirty or missing replacement FAILS
+--
+  - EVERY WIRE WRITER IS EITHER CLEAN OR REDIRECTED to a named replacement — no request-body writer is left reading JSON through a binary double with nowhere to go
+   exit=1
+
+=== SABOTAGE 2: point the redirect at a DIRTY replacement (resolve7.py itself) ===
+  FAIL  EVERY REDIRECT POINTS AT A REPLACEMENT THAT EXISTS AND IS ITSELF CLEAN — this is a redirect, not an allowlist: naming a dirty or missing replacement FAILS
+          resolve7.py -> resolve7.py (ITSELF FLAGGED R1 at 24,25)
+  PASS  NO REQUEST-BODY WRITER CONTAINS A FLOAT LITERAL (R5) — scope is WIRE plus every UNCLASSIFIED candidate, so a new script cannot be invisible to this guard merely by not having been classified yet
+--
+  - EVERY REDIRECT POINTS AT A REPLACEMENT THAT EXISTS AND IS ITSELF CLEAN — this is a redirect, not an allowlist: naming a dirty or missing replacement FAILS
+   exit=1
+
+=== SABOTAGE 3: point the redirect at a replacement that does NOT EXIST ===
+  FAIL  EVERY REDIRECT POINTS AT A REPLACEMENT THAT EXISTS AND IS ITSELF CLEAN — this is a redirect, not an allowlist: naming a dirty or missing replacement FAILS
+          resolve7.py -> resolve99.py (MISSING ON DISK)
+  PASS  NO REQUEST-BODY WRITER CONTAINS A FLOAT LITERAL (R5) — scope is WIRE plus every UNCLASSIFIED candidate, so a new script cannot be invisible to this guard merely by not having been classified yet
+--
+  - EVERY REDIRECT POINTS AT A REPLACEMENT THAT EXISTS AND IS ITSELF CLEAN — this is a redirect, not an allowlist: naming a dirty or missing replacement FAILS
+   exit=1
+
+=== SABOTAGE 4: drop in a NEW, UNCLASSIFIED req/-writing script carrying a FLOAT ===
+  FAIL  EVERY MECHANICAL CANDIDATE IS CLASSIFIED — a new script that touches req/ CANNOT slip through unread, which is what turns a hand-read table from an allowlist into a checkpoint (P-48 rule 3)
+          unclassified: ['mkreq9.py']
+R5 — a float LITERAL in a script that writes a request body
+--
+  FAIL  NO REQUEST-BODY WRITER CONTAINS A FLOAT LITERAL (R5) — scope is WIRE plus every UNCLASSIFIED candidate, so a new script cannot be invisible to this guard merely by not having been classified yet
+          1 float literal(s) across 10 file(s) in scope: [('mkreq9.py', 3, '1200000.0')]
+
+--
+  - EVERY MECHANICAL CANDIDATE IS CLASSIFIED — a new script that touches req/ CANNOT slip through unread, which is what turns a hand-read table from an allowlist into a checkpoint (P-48 rule 3)
+  - NO REQUEST-BODY WRITER CONTAINS A FLOAT LITERAL (R5) — scope is WIRE plus every UNCLASSIFIED candidate, so a new script cannot be invisible to this guard merely by not having been classified yet
+   exit=1
+
+NOTE ON SABOTAGE 4, recorded because it CHANGED THE FIX.  The first version of R5
+scoped itself to WIRE writers only, so this sabotage left it printing
+"0 float literal(s) in WIRE writers" -- true, and useless, because mkreq9.py was
+not classified as WIRE yet.  Two guards each relying on the other having run first
+is the P-36 shape.  R5's scope is now WIRE plus every UNCLASSIFIED candidate, and
+both guards fire independently above.

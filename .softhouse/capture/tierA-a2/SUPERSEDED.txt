@@ -1,0 +1,42 @@
+# T163 — SUPERSESSION REGISTER for the tierA-a2 capture rig.
+#
+# WHY THIS FILE EXISTS
+# --------------------
+# Three scripts in this rig carry the P-25 defect A2-11 raised (a money literal reshaped
+# by a binary-double round trip), or the structural gap behind it (no record of the bytes
+# that went over the wire).  All three PRODUCED COMMITTED EVIDENCE, so T114's standing
+# ruling forbids editing them in place: the committed artefacts must stay re-derivable
+# from the scripts that actually made them.  The fix therefore lives in scratch copies,
+# and this file is the redirect from the frozen original to its replacement.
+#
+# HOW IT IS ENFORCED, AND WHY IT IS NOT AN ALLOWLIST
+# ---------------------------------------------------
+# census-json-float-siblings.py reads this file.  An entry does NOT excuse the original.
+# It only passes if the named REPLACEMENT EXISTS AND IS ITSELF VERIFIED CLEAN BY THE SAME
+# SWEEP.  Naming a replacement that is missing, or that is itself flagged, FAILS the
+# census.  That is the difference between a redirect and the unexamined allowlist P-48
+# rule 3 warns about.
+#
+# FORMAT:  <frozen original>  ->  <replacement>
+#
+# --- the P-25 defect on the way TO the reference oracle (A2-11's finding, T163's fix) ---
+# resolve7.py json.load()s BOTH the template and the observed response with no
+# parse_float, then json.dumps() the result AS THE REQUEST BODY THAT IS POSTED.
+# Committed evidence it produced: req/a2-7-loan-220-resolved.json.
+resolve7.py -> resolve8.py
+
+# --- the structural gap: nothing recorded what was SENT ---
+# cap.sh's .http record writes `body-file: req/foo.json`, a POINTER — and `curl -d @FILE`
+# strips newlines, so the file was never the wire bytes anyway (measured: 102 of 102
+# bodied captures differ, whitespace only, 0 numeric tokens affected).
+# cap8.sh uses --data-binary and commits out/NAME.req + out/NAME.req.sha256.
+# Committed evidence cap.sh produced: 441 files under out/.
+cap.sh -> cap8.sh
+
+# --- the recipe that wires the two together ---
+# run-220-a2-7-runtime.sh:27 invokes resolve7.py and feeds its output straight to cap.sh.
+# Committed evidence it produced: out/A2-220 .. out/A2-231.
+# NOTE its outputs are NOT re-derivable in any case — the leg creates a new loan and the
+# oracle assigns a fresh id each run — so the frozen copy is a RECORD OF WHAT WAS DONE,
+# not a re-runnable derivation.  Re-run the v8 recipe, never this one.
+run-220-a2-7-runtime.sh -> run-220-a2-7-runtime-v8.sh

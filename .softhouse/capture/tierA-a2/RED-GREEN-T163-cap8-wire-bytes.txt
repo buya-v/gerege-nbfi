@@ -1,0 +1,65 @@
+==============================================================================
+T163 — what actually goes over the wire, measured against a recording HTTP server
+==============================================================================
+  recording server: http://127.0.0.1:52369   sandbox: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t163-wire-baoaxz9p
+
+POSITIVE CONTROL (P-36) — can this apparatus observe a wire difference at all?
+  file bytes            : b'{\n  "principal": 1200000.00,\n  "note": "two lines"\n}\n'
+  cap.sh  put on wire   : b'{  "principal": 1200000.00,  "note": "two lines"}'
+  cap8.sh put on wire   : b'{\n  "principal": 1200000.00,\n  "note": "two lines"\n}\n'
+  PASS  the apparatus DISCRIMINATES — the two flags put different bytes on the wire, so a flat result below would be a real result and not a broken rig
+          cap.sh sent 49 byte(s), cap8.sh sent 53 byte(s)
+
+RED — cap.sh, UNCHANGED by T163
+  PASS  RED: cap.sh's wire bytes are NOT the body file's bytes  (`curl -d @FILE` strips carriage returns and newlines — measured here, not quoted)
+          file sha256 88072ffd1cc31b2d0e1f59f8780d6ee05da9cbcf56adfd5d7654159f6f7e1dc4 != wire sha256 0b98a4723a582840d80ccab0c56249e0883db035e01e1d62e1765087658b03dd
+  cap.sh's request record, in full:
+      POST /CTRL-old
+      Fineract-Platform-TenantId: gerege
+      Authorization: Basic <mifos:password>
+      Content-Type: application/json
+      body-file: req/CTRL-old.json
+      captured-at-utc: 2026-08-21T09:31:40Z
+  PASS  RED: cap.sh writes NO artefact of the wire bytes — out/NAME.req does not exist
+          out/ after cap.sh: ['CTRL-old.http', 'CTRL-old.json', 'CTRL-old.status']
+  PASS  RED: cap.sh's record carries only a POINTER (`body-file:`) and no digest, so a later rewrite of req/ is undetectable from the capture
+          body-file present=True, body-sha256 present=False
+
+GREEN — cap8.sh
+  cap8.sh's request record, in full:
+      POST /CTRL-new
+      Fineract-Platform-TenantId: gerege
+      Authorization: Basic <mifos:password>
+      Content-Type: application/json
+      body-file: req/CTRL-new.json
+      body-wire-bytes-artefact: CTRL-new.req
+      body-sha256: 88072ffd1cc31b2d0e1f59f8780d6ee05da9cbcf56adfd5d7654159f6f7e1dc4
+      body-bytes: 53
+      captured-at-utc: 2026-08-21T09:31:40Z
+  PASS  cap8.sh writes out/NAME.req
+  PASS  GREEN: out/NAME.req IS BYTE-FOR-BYTE WHAT THE SERVER RECEIVED — the artefact is the wire, not a pointer at a file that may drift
+          artefact sha256 88072ffd1cc31b2d0e1f59f8780d6ee05da9cbcf56adfd5d7654159f6f7e1dc4 ; received sha256 88072ffd1cc31b2d0e1f59f8780d6ee05da9cbcf56adfd5d7654159f6f7e1dc4
+  PASS  GREEN: and the wire equals the BODY FILE too — `--data-binary` sends the file verbatim, so all three (file, artefact, wire) are one set of bytes
+          file sha256 88072ffd1cc31b2d0e1f59f8780d6ee05da9cbcf56adfd5d7654159f6f7e1dc4 ; wire sha256 88072ffd1cc31b2d0e1f59f8780d6ee05da9cbcf56adfd5d7654159f6f7e1dc4
+  PASS  cap8.sh writes out/NAME.req.sha256 and it matches the artefact
+          88072ffd1cc31b2d0e1f59f8780d6ee05da9cbcf56adfd5d7654159f6f7e1dc4  CTRL-new.req
+  PASS  cap8.sh's .http record carries the digest and the byte count, so the three artefacts cross-check each other
+          expected body-sha256 88072ffd1cc31b2d0e1f59f8780d6ee05da9cbcf56adfd5d7654159f6f7e1dc4 and body-bytes 53
+
+END TO END — resolve8.py -> cap8.sh, on a money literal that really occurs in the corpus
+  PASS  resolve8.py resolved the template
+  bytes on the wire: b'{\n  "productId": 46,\n  "principal": 1200000.00,\n  "fee": 1200000.000000\n}\n'
+  PASS  END TO END: `1200000.00` and `1200000.000000` reach the wire EXACTLY as written, and the wire is committed as out/E2E.req
+          wire sha256 17142937434b5f66a558eb4828caba7d402fdb82ba779e29302b39e388f41ea0
+
+A2-5's D-2 TRANSPORT FIXES, RE-PROVEN AGAINST cap8.sh RATHER THAN ASSUMED
+  PASS  a TRANSPORT FAILURE exits non-zero
+          rc=1
+  PASS  a TRANSPORT FAILURE writes NOTHING under out/ — including the new .req and .req.sha256, so a failed fire cannot leave a fresh-looking wire artefact
+          5 file(s) before, 5 after, 0 changed
+  PASS  the handler NAMES every pre-existing artefact it left intact, .req included
+          TRANSPORT FAILURE (curl rc=7) for D — NO OBSERVATION WAS MADE. |   NOTHING was written under out/ for D by this fire. |   PRE-EXISTING from an EARLIER fire, left intact, NOT this fire's output: out/D.http |   PRE-EXISTING from an EARLIER fire, left intact, NOT this fire's output: out/D.json |   PRE-
+  PASS  cap8.sh REFUSES a missing body file rather than sending an empty body — a wire artefact of a body that did not exist would be the worst possible artefact
+          rc=2, stderr=REFUSING: body file req/nope.json does not exist — nothing to send and nothing to record.
+
+FAILURES: 0
