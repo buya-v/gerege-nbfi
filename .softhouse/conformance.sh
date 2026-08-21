@@ -483,6 +483,16 @@ load_toolchain() {
     warn "conformance: enumerate files and inspect none. EXIT 2 — the harness is unusable. NOT a pass."
     exit "$EXIT_UNUSABLE"
   fi
+  # T173, same D-2 shape as perl above. The two CAPTURE-RIG guards are Python programs, and
+  # ABSENCE of the interpreter must be an outright refusal rather than a skipped guard: a
+  # `command -v python3 || return 0` would have turned "the interpreter is missing" into a
+  # silent PASS on a wire-side float, which is the exact P-45 defect T173 exists to close.
+  if ! command -v python3 >/dev/null 2>&1; then
+    warn "conformance: no python3. The capture-rig guards (wire-float round trip, narrow seam"
+    warn "conformance: handler) are Python; without it they inspect nothing and their absence"
+    warn "conformance: would read as a pass. EXIT 2 — the harness is unusable. NOT a pass."
+    exit "$EXIT_UNUSABLE"
+  fi
 }
 
 # ---------------------------------------------------------------------------
@@ -660,11 +670,132 @@ guard_gofmt() {
   return 0
 }
 
+# ---------------------------------------------------------------------------
+# THE CAPTURE-RIG GUARDS (T173). Everything above this line inspects the VECTOR
+# STORE and the GO MODULE. Nothing above it has ever opened a capture rig — and the
+# capture rigs are what produce the vectors, so a defect there is upstream of every
+# guard the harness already had.
+#
+# WHY THEY ARE HERE AND NOT IN A `go test` OR A README (P-45).
+# T163 shipped a request-body float guard and an audit; T169 shipped a narrow-catch
+# lint. Both are falsifiable and both were correct. NEITHER WAS INVOKED BY ANYTHING
+# THAT RUNS. `conformance.sh` never runs `go test`, so a Go-test-only guard is not a
+# guard here either; and a Python script a handoff recommends running is a
+# recommendation, not a check. In that state the next capture rig can reintroduce the
+# wire-side float round trip and every automated check in this repository stays green.
+# This file is the path that actually executes, so this is where they go.
+#
+# THE INSPECTED SET IS DERIVED, EXACTLY AS T166 MADE THE GO-SIDE ROOTS DERIVED.
+# Neither guard names a rig. The float guard walks `.softhouse/capture` recursively and
+# takes every `*.json` under any directory named `req` plus every `*.req` wire-bytes
+# artefact, at any depth; the narrow-catch lint walks the whole repository for `*.java`.
+# A rig that does not exist yet is therefore covered on the day it lands. Hard-coding a
+# subtree is precisely how T163's own audit came to inspect one rig out of six while
+# printing a healthy-looking number, and how 7,018 lines of new money code got passed by
+# never being looked at.
+#
+# EACH GUARD RUNS ITS OWN SELFTEST FIRST, IN THE SAME INVOCATION.
+# A wired guard that has been quietly neutered is worse than an unwired one, because it
+# is believed (P-22). So the selftest — which drives the guard RED on a planted defect
+# AND requires it to stay GREEN on a clean tree (P-50) — runs on every conformance run,
+# not on the day someone remembers. It is pure Python over temporary directories: it
+# never reads the real tree, never contacts the reference oracle, and costs well under a
+# second. Its output is captured and summarised to one line, and DUMPED IN FULL on
+# failure, so a green run stays readable and a red run stays diagnosable.
+#
+# BOTH ARE HARD GUARDS: a failure exits 2 through run_guards, BEFORE the oracle probe
+# line is printed. That is not an outage. The driver's park condition is `exit 2` AND
+# `probe != up`, and on this path there is no probe line at all.
+
+# _run_capture_guard <script-basename> <human-label>
+# Shared body, because the two guards differ only in which program they run. Written once
+# rather than twice so that a later fix to the missing-script or empty-output handling
+# cannot be applied to one guard and forgotten on the other.
+_run_capture_guard() {
+  local script="$REPO_ROOT/.softhouse/capture/lib/$1" label="$2"
+  local out rc cases
+
+  # A MISSING GUARD IS AN ERROR, NOT A SKIP. `[ -f ... ] || return 0` would mean deleting
+  # the file silently switches the check off and the run still says PASS.
+  if [ ! -f "$script" ]; then
+    warn "conformance: the $label guard is MISSING: expected $script"
+    warn "conformance: a guard that is not there cannot pass. This is an ERROR, not a pass."
+    return 1
+  fi
+
+  out="$(python3 "$script" --selftest 2>&1)"; rc=$?
+  cases="$(printf '%s\n' "$out" | LC_ALL=C grep -ac '^  -> exit ' || true)"
+  [ -n "$cases" ] || cases=0
+  if [ "$rc" -ne 0 ] || [ "$cases" -eq 0 ]; then
+    warn "conformance: the $label guard FAILED ITS OWN SELFTEST (exit $rc, $cases cases observed)."
+    warn "conformance: it can no longer be shown to refuse the defect it exists to refuse."
+    warn "$out"
+    return 1
+  fi
+  say "conformance: $label guard — selftest OK, $cases cases (each drives it RED on a planted"
+  say "conformance:   defect and GREEN on the clean equivalent)"
+
+  out="$(python3 "$script" "$REPO_ROOT" 2>&1)"; rc=$?
+  # THE CENSUS LINE MUST BE PRESENT BEFORE ITS VALUE IS READ. Same discipline the
+  # oracle probe follows: test for presence first, then value. A program that died
+  # before printing anything must not be read as a clean tree, and a `rc -eq 0` test
+  # on its own would do exactly that if the script were ever replaced by a stub.
+  if ! printf '%s\n' "$out" | LC_ALL=C grep -aq '^CENSUS '; then
+    warn "conformance: the $label guard printed NO CENSUS LINE (exit $rc)."
+    warn "conformance: without it there is no evidence anything was inspected. ERROR, not a pass."
+    warn "$out"
+    return 1
+  fi
+  printf '%s\n' "$out" | LC_ALL=C grep -a '^CENSUS ' | while IFS= read -r line; do
+    say "conformance: $line"
+  done
+  if [ "$rc" -ne 0 ]; then
+    warn "conformance: the $label guard REFUSED:"
+    warn "$(printf '%s\n' "$out" | LC_ALL=C grep -av '^CENSUS ')"
+    return 1
+  fi
+  return 0
+}
+
+# guard_no_float_in_capture_requests: no numeric token in any capture REQUEST BODY may be
+# rewritten by a binary-double round trip. That is T163's audit, generalised from one named
+# rig to the derived whole-capture-tree set.
+#
+# WHAT IT IS NOT, STATED HERE SO NOBODY READS MORE INTO A GREEN RUN THAN IT MEANS. It is
+# not "no float-shaped token on the wire". 221 of the 320 committed request bodies already
+# carry one — 214 `interestRatePerPeriod` (a RATE), 53 charge `amount`, and 11 `principal`
+# `1162502.5`, the T149/T153 half-cent TIE probes where the half-cent IS the observation.
+# Refusing those would refuse the entire committed corpus on the first run and pin this
+# harness at exit 2 forever; a guard that refuses everything is not a guard. The census
+# line prints float-shaped tokens PRESENT and ALTERED as two separate numbers so the
+# weaker property can never be mistaken for the stronger one. The stronger question —
+# money on the wire as a float at all — is a T173 follow-up with its population measured,
+# not a claim this guard makes.
+guard_no_float_in_capture_requests() {
+  _run_capture_guard check_wire_float_roundtrip.py "wire-float round-trip"
+}
+
+# guard_no_narrow_catch_in_capture_rigs: T169's lint, on the path that runs. A NEW capture
+# rig may not wrap the measured seam in `catch (RuntimeException|Exception)` — java.lang.Error
+# is exactly what the reference oracle throws, so a narrow handler silently converts a thrown
+# outcome into no outcome at all.
+#
+# READ T169'S SELFTEST BEFORE PROBING THIS ONE (P-52). Cases (b) and (c) deliberately assert
+# the lint must NOT be over-broad: a seam handler already widened to Throwable, and a narrow
+# catch that is nowhere near the seam, must BOTH pass. A probe that plants a bare
+# `catch (Exception e)` with no seam marker inside the try is a BAD PROBE, and reading its
+# non-refusal as a vacuous guard is a cycle already burned once in this program.
+guard_no_narrow_catch_in_capture_rigs() {
+  _run_capture_guard check_no_narrow_catch.py "narrow-catch"
+}
+
 run_guards() {
   local failed=0
-  guard_no_float_in_vectors || failed=1
-  guard_no_float_in_harness || failed=1
-  guard_gofmt               || failed=1
+  guard_no_float_in_vectors           || failed=1
+  guard_no_float_in_harness           || failed=1
+  guard_gofmt                         || failed=1
+  guard_no_float_in_capture_requests  || failed=1
+  guard_no_narrow_catch_in_capture_rigs || failed=1
   if [ "$failed" -ne 0 ]; then
     warn "conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass."
     exit "$EXIT_UNUSABLE"

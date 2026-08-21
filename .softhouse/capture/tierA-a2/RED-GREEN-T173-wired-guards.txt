@@ -1,0 +1,165 @@
+T173 — RED/GREEN for the two capture-rig guards wired into .softhouse/conformance.sh
+====================================================================================
+
+WHAT IS BEING PROVEN (P-22, both halves per P-50)
+
+  1. PRE-wiring, with BOTH defects sitting in the tree, the harness PASSES.
+     That is the gap: T163's float guard and T169's narrow-catch lint both existed,
+     both were falsifiable, and NOTHING RAN THEM.
+  2. POST-wiring, on the SAME tree, the harness REFUSES BOTH, naming each at file:line.
+  3. POST-wiring, with the defects removed, the harness returns a clean PASS.
+     A guard that refuses everything is not a guard either.
+
+THE PLANTED DEFECTS — one new rig directory, two files, created and deleted in the
+same task. Nothing committed carries them.
+
+  A) .softhouse/capture/t173-red-probe/req/probe-body.json
+       "principal": 1200000.00      <- a json.load/json.dumps round trip re-emits
+                                       1200000.0. This is T163's resolve7.py defect
+                                       reintroduced by a rig that did not exist when
+                                       T163's audit was written.
+
+  B) .softhouse/capture/t173-red-probe/src/CaptureT173Probe.java
+       try { plan = generator.generate(mc, config); }
+       catch (RuntimeException e) { record(e); }
+                                    <- the SEAM MARKER is inside the try, which is what
+                                       makes the narrow catch load-bearing. P-52: a probe
+                                       with no seam marker inside the try is a BAD PROBE
+                                       and T169's own selftest cases (b) and (c) exist to
+                                       assert the lint must NOT fire on one.
+
+Both files sit in a rig NOBODY NAMED. That is the point: the inspected set is derived by
+recursive walk, so the count moves when a rig lands. It did — 320 -> 321 request bodies,
+6 -> 7 rigs, 10 -> 11 req directories, 55 -> 56 .java files, 19 -> 20 directories.
+
+--------------------------------------------------------------------------------------
+LEG 1 — PRE-WIRING, BOTH DEFECTS PLANTED.  bash .softhouse/conformance-PRE-T173.sh
+        (the harness as committed on main, extracted with `git show main:...` and placed
+        in .softhouse/ so SCRIPT_DIR/REPO_ROOT resolve identically; deleted afterwards)
+--------------------------------------------------------------------------------------
+EXIT CODE: 0
+occurrences of the string "t173-red-probe" anywhere in 159 lines of output: 0
+
+first four lines — the only three guards that existed:
+
+conformance: no-float guard — inspected 50 .json files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a645abd7386556b85/.softhouse/vectors
+conformance: no-float guard — inspected 5 Go packages / 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a645abd7386556b85/nexus (recursive, whole module)
+conformance: gofmt guard — inspected 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a645abd7386556b85/nexus (recursive, whole module; contract.go exempt, gate G-3)
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+
+last four lines:
+
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+         This means "matches the reference oracle on captured vectors, within the graded domain".
+         IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a user gate.
+
+--------------------------------------------------------------------------------------
+LEG 2 — POST-WIRING, THE SAME TREE, THE SAME TWO DEFECTS.  bash .softhouse/conformance.sh
+--------------------------------------------------------------------------------------
+EXIT CODE: 2
+occurrences of the "reference oracle (...) probe = " line: 0
+
+THAT ZERO IS THE EXIT-CODE DISCIPLINE, NOT AN OMISSION. A HARD-guard failure exits 2
+BEFORE the oracle is probed, so there is no probe line at all. The driver parks on
+`exit 2` AND `probe != up`; test for the line's PRESENCE first, then its value. Absent
+line = corpus/guard defect, to be fixed in this fire. It is NOT an outage.
+
+Full output, 20 lines:
+
+conformance: no-float guard — inspected 50 .json files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a645abd7386556b85/.softhouse/vectors
+conformance: no-float guard — inspected 5 Go packages / 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a645abd7386556b85/nexus (recursive, whole module)
+conformance: gofmt guard — inspected 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a645abd7386556b85/nexus (recursive, whole module; contract.go exempt, gate G-3)
+conformance: wire-float round-trip guard — selftest OK, 5 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS wire-float round-trip — inspected 321 request bodies / 3980 numeric tokens across 7 capture rigs / 11 req directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a645abd7386556b85/.softhouse/capture (recursive, whole capture tree)
+conformance: CENSUS float-shaped tokens PRESENT 280 (rates, charge percentages, tie probes — see the module docstring), ALTERED by a binary-double round trip 1
+conformance: the wire-float round-trip guard REFUSED:
+REFUSED — a numeric token in a capture request body is NOT byte-preserved under a binary-double round trip. This is the P-25 defect T163 found in resolve7.py: the money that reaches the reference oracle is not the money that was written.
+  .softhouse/capture/t173-red-probe/req/probe-body.json:5  1200000.00  ->  1200000.0
+Fix: never re-serialise a request body through json.dumps of a parsed number. Splice the placeholder into the template bytes (.softhouse/capture/tierA-a2/resolve8.py is the worked example).
+conformance: narrow-catch guard — selftest OK, 4 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS narrow-catch — inspected 56 .java files across 20 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a645abd7386556b85 (recursive, whole repository)
+conformance: the narrow-catch guard REFUSED:
+narrow load-bearing catch sites: 68 total, 67 in FROZEN files (34 files), 1 NEW
+REFUSED — a NEW capture rig narrows its seam handler. java.lang.Error is exactly what the reference oracle throws.
+  .softhouse/capture/t173-red-probe/src/CaptureT173Probe.java:10  } catch (RuntimeException e) {
+Fix: use ThrewOutcome (capture/lib/ThrewOutcome.java). Mechanical patch: capture/src/t169-red/build_harness_t169.py.
+conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+
+--------------------------------------------------------------------------------------
+LEG 3 — POST-WIRING, DEFECTS REMOVED.  bash .softhouse/conformance.sh
+--------------------------------------------------------------------------------------
+EXIT CODE: 0
+
+guard section:
+
+conformance: no-float guard — inspected 50 .json files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a645abd7386556b85/.softhouse/vectors
+conformance: no-float guard — inspected 5 Go packages / 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a645abd7386556b85/nexus (recursive, whole module)
+conformance: gofmt guard — inspected 42 .go files under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a645abd7386556b85/nexus (recursive, whole module; contract.go exempt, gate G-3)
+conformance: wire-float round-trip guard — selftest OK, 5 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS wire-float round-trip — inspected 320 request bodies / 3976 numeric tokens across 6 capture rigs / 10 req directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a645abd7386556b85/.softhouse/capture (recursive, whole capture tree)
+conformance: CENSUS float-shaped tokens PRESENT 278 (rates, charge percentages, tie probes — see the module docstring), ALTERED by a binary-double round trip 0
+conformance: narrow-catch guard — selftest OK, 4 cases (each drives it RED on a planted
+conformance:   defect and GREEN on the clean equivalent)
+conformance: CENSUS narrow-catch — inspected 55 .java files across 19 directories under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a645abd7386556b85 (recursive, whole repository)
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+
+verdict:
+
+VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+         This means "matches the reference oracle on captured vectors, within the graded domain".
+         IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a user gate.
+
+--------------------------------------------------------------------------------------
+LEG 4 — EXIT-CODE DISCIPLINE, RE-MEASURED AFTER THE WIRING
+--------------------------------------------------------------------------------------
+  sh .softhouse/conformance.sh                          -> exit 3   (wrong interpreter;
+                                                                     nothing graded, oracle
+                                                                     never contacted)
+  CONFORMANCE_ORACLE_HEALTH_URL=https://127.0.0.1:1/health
+    bash .softhouse/conformance.sh                      -> exit 2   AND the line
+       "conformance: reference oracle (https://127.0.0.1:1/health) probe = down"
+                                                                    (a GENUINE outage: the
+                                                                     probe line is PRESENT
+                                                                     and reads down)
+  bash .softhouse/conformance.sh --help                 -> exit 0
+  bash .softhouse/conformance.sh --prove                -> exit 0, PROOFS: 21 passed, 0 failed
+
+  So the three exit-2 populations stay distinguishable:
+     HARD-guard failure : exit 2, NO probe line          (leg 2)
+     oracle outage      : exit 2, probe line = down      (leg 4)
+     clean graded run   : exit 0, probe line = up        (leg 3)
+
+--------------------------------------------------------------------------------------
+LEG 5 — THE GUARDS' OWN SELFTESTS, WHICH NOW RUN ON EVERY CONFORMANCE RUN
+--------------------------------------------------------------------------------------
+Wiring a guard is not enough if the guard can later be neutered silently, so each guard's
+selftest runs in the same invocation, before the guard itself, and its failure is a HARD
+guard failure. Both are pure Python over temporary directories: they never read the real
+tree and never contact the reference oracle.
+
+  python3 .softhouse/capture/lib/check_wire_float_roundtrip.py --selftest   -> exit 0, 5 cases
+     (a) a body carrying 1200000.00                       -> REFUSED
+     (b) integer money + a float-shaped RATE + a float
+         INSIDE A STRING                                  -> PASSED  (not over-broad; a
+                                                             regex would have fired on the
+                                                             string)
+     (c) an empty capture tree                            -> REFUSED (P-35: zero inspected
+                                                             is an ERROR, not a pass)
+     (d) an unparseable file in the derived set           -> REFUSED and NAMED, never
+                                                             swallowed into except: continue
+     (e) a body two directories deeper in a rig nobody
+         named                                            -> REACHED and REFUSED (this is
+                                                             the T166 defect in its
+                                                             capture-rig form)
+
+  python3 .softhouse/capture/lib/check_no_narrow_catch.py --selftest        -> exit 0, 4 cases
+     (a) a NEW rig with a narrow seam handler             -> REFUSED
+     (b) the same rig, handler widened to Throwable       -> PASSED  (not over-broad)
+     (c) a narrow catch nowhere near the seam             -> PASSED  (not over-broad)
+     (d) a tree with no .java file at all                 -> REFUSED (added by T173; before
+                                                             it, this returned 0 and printed
+                                                             "clean")
