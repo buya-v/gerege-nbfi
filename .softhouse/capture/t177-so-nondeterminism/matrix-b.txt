@@ -1,0 +1,23 @@
+# T177 matrix B — mechanism, and the cells G-8's HEADLINE actually rests on.
+# SERIES|RUNS|PLAN|JVM_FLAGS|HARNESS   (HARNESS optional, defaults to CaptureT177)
+#
+# xss-*          the disputed cell as the FIRST seam call of a cold JVM, at a range of thread stack
+#                sizes. If the outcome moves with -Xss while the inputs are held fixed, the outcome
+#                is not a property of the cell.
+# thread-single  one probe on a FRESHLY SPAWNED thread (stackSize 0 = the JVM default), cold JVM.
+# thread-repeat  8 probes, EACH ON ITS OWN FRESH THREAD, in one JVM. If the transition still happens
+#                when every probe gets a brand-new stack, the state that changes is JVM-wide.
+# headline-cold  B = 1001 minor units, n = 3000. THIS is the cell carrying G-8's headline
+#                "MNT 10.01 residual at n = 3000": T159 committed totalDisbursedAmount 10.01 with
+#                totalPrincipalAmount 0.00 for T159-R600p0-N3000-B1001. Asked from 8 cold JVMs.
+# red-cold       B = 10001 minor units, n = 2000 — T159's detonation, from 8 cold JVMs.
+xss-512k|2|single|-Xss512k
+xss-1m|2|single|-Xss1m
+xss-2m|2|single|-Xss2m
+xss-4m|2|single|-Xss4m
+xss-8m|2|single|-Xss8m
+xss-16m|2|single|-Xss16m
+thread-single|3|thread:0:1|
+thread-repeat|1|thread:0:8|
+headline-cold|8|cell:1001:3000:1||CaptureT177b
+red-cold|8|cell:10001:2000:1||CaptureT177b

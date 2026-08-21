@@ -1,0 +1,6 @@
+RUN series=calib idx=0 plan=calib flags=[] exit=0 wall_s=0 stdout_bytes=31631 stderr_bytes=0
+RUN series=pilot-single idx=0 plan=single flags=[] exit=0 wall_s=12 stdout_bytes=2563 stderr_bytes=0
+RUN series=pilot-single idx=1 plan=single flags=[] exit=0 wall_s=12 stdout_bytes=2563 stderr_bytes=0
+RUN series=pilot-single idx=2 plan=single flags=[] exit=0 wall_s=14 stdout_bytes=2524 stderr_bytes=0
+RUN series=pilot-repeat idx=0 plan=repeat:5 flags=[] exit=0 wall_s=152 stdout_bytes=7629 stderr_bytes=0
+MATRIX COMPLETE

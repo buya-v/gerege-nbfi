@@ -1,0 +1,19 @@
+# T177 matrix C — the direct reconciliation, and the two mechanism probes.
+# SERIES|RUNS|PLAN|JVM_FLAGS|HARNESS   (HARNESS optional, defaults to CaptureT177)
+#
+# t159prefix     replays T159's COMMITTED case list, in T159's COMMITTED ORDER, for the 24 sweep
+#                cells that preceded T159-R600p0-N3000-B10001, then asks the disputed cell. If the
+#                disputed cell is OBSERVED here while it THROWS from a cold JVM, then T159 and T169
+#                disagreed about WHERE IN THE RUN the cell was asked, and nothing else.
+# headline-warm  G-8's headline cell (B = 1001 minor units, n = 3000) asked 8 times in ONE JVM.
+# red-warm       T159's detonation (B = 10001 minor units, n = 2000) asked 8 times in ONE JVM. If it
+#                stops throwing, the "throwing region" is not a region of the input space at all.
+# depth-uncapped MaxJavaStackTraceDepth=0, so errorStackDepthTotal reports the TRUE depth at
+#                overflow instead of HotSpot's default 1024-frame recording cap.
+# c1only         TieredStopAtLevel=1 turns the C2 optimising compiler off. If the within-JVM
+#                transition disappears, the warming agent is the optimising JIT.
+t159prefix|1|t159prefix:1|
+headline-warm|1|cell:1001:3000:8||CaptureT177b
+red-warm|1|cell:10001:2000:8||CaptureT177b
+depth-uncapped|1|repeat:6|-XX:MaxJavaStackTraceDepth=0
+c1only|1|repeat:8|-XX:TieredStopAtLevel=1

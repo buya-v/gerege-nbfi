@@ -1,0 +1,18 @@
+image sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a
+openjdk version "21.0.11" 2026-04-21 LTS
+OpenJDK Runtime Environment Zulu21.50+19-CA (build 21.0.11+10-LTS)
+OpenJDK 64-Bit Server VM Zulu21.50+19-CA (build 21.0.11+10-LTS, mixed mode, sharing)
+--- flags ---
+     intx CICompilerCount                          = 4                                         {product} {ergonomic}
+     bool CICompilerCountPerCPU                    = true                                      {product} {default}
+     intx CompilerThreadStackSize                  = 2040                                   {pd product} {default}
+     intx MaxJavaStackTraceDepth                   = 1024                                      {product} {default}
+     intx ThreadStackSize                          = 2040                                   {pd product} {default}
+     intx Tier3InvocationThreshold                 = 200                                       {product} {default}
+     intx Tier4InvocationThreshold                 = 5000                                      {product} {default}
+     bool TieredCompilation                        = true                                   {pd product} {default}
+     intx TieredStopAtLevel                        = 4                                         {product} {default}
+     intx VMThreadStackSize                        = 2040                                   {pd product} {default}
+--- nproc / memory ---
+10
+max

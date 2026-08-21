@@ -1,0 +1,6 @@
+P-CAL-ZPA vs pass 3g T64-ZP-A: 8 totals + 57 period rows compared
+P-CAL-ZPB vs pass 3g T64-ZP-B: 8 totals + 56 period rows compared
+CALIBRATION: 131 fields/rows compared, 0 differ
+CALIBRATION PASSED -- CaptureT177 reproduces pass 3g cell for cell, so it is the same
+measurement apparatus as the rigs whose disagreement T177 is investigating.
+calibration exit 0

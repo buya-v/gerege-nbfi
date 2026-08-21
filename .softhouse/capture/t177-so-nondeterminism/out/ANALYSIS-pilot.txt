@@ -1,0 +1,64 @@
+T159 committed cells EXTRACTED from .softhouse/capture/t159-review-t117/out/capture-t159-raw.json.gz: 49
+  T159-R600p0-N3000-B10001 -> ('observed', '846.70')
+
+====================================================================================================
+PER-SERIES TALLY — PROBE TRIALS ONLY (the disputed cell: B = 10001 minor units, n = 3000, rate 600.0)
+====================================================================================================
+series             plan             cell (B minor units, n)       JVMs  asked  observed  threwSOE  other  flags
+pilot-repeat       repeat:5         B=10001 minor, n=3000            1      5         1         4      0  (none)
+pilot-single       single           B=10001 minor, n=3000            3      3         0         3      0  (none)
+
+ALL PROBE TRIALS: 8 asked / 1 observed / 7 threw StackOverflowError / 0 other
+
+NON-PROBE TRIALS (warm / prefix / calib cells — reported so no seam call is unaccounted for)
+  phase=calib   observed                                 2
+
+====================================================================================================
+OUTCOME BY PROBE INDEX WITHIN THE JVM  (o = observed, X = threw StackOverflowError)
+====================================================================================================
+  pilot     pilot-repeat       run 0   seq0=0   XXXXo         elapsedMs: 15647,14194,13914,16049,91568
+  pilot     pilot-single       run 0   seq0=0   X             elapsedMs: 11896
+  pilot     pilot-single       run 1   seq0=0   X             elapsedMs: 11380
+  pilot     pilot-single       run 2   seq0=0   X             elapsedMs: 14779
+
+====================================================================================================
+COLD START — probe trials that are the JVM's VERY FIRST seam call (seq == 0)
+====================================================================================================
+  T177-PROBE-R600p0-N3000-B10001     default -Xss (measured 2040k)    C2 on    JVMs 4   observed 0   threwSOE 4  
+
+====================================================================================================
+ATTEMPT-INDEX TALLY — probe trials at the JVM DEFAULT stack size, by attempt number
+within the JVM (attempt 1 = the cell's first seam call in that process)
+====================================================================================================
+  default JIT                    T177-PROBE-R600p0-N3000-B10001     attempt 1   JVMs 4   observed 0   threwSOE 4  
+  default JIT                    T177-PROBE-R600p0-N3000-B10001     attempt 2   JVMs 1   observed 0   threwSOE 1  
+  default JIT                    T177-PROBE-R600p0-N3000-B10001     attempt 3   JVMs 1   observed 0   threwSOE 1  
+  default JIT                    T177-PROBE-R600p0-N3000-B10001     attempt 4   JVMs 1   observed 0   threwSOE 1  
+  default JIT                    T177-PROBE-R600p0-N3000-B10001     attempt 5   JVMs 1   observed 1   threwSOE 0  
+
+RECORDED STACK DEPTH AT OVERFLOW (errorStackDepthTotal; HotSpot caps recorded frames at
+MaxJavaStackTraceDepth, default 1024, so a flat 1024 is the CAP, not the depth)
+  pilot-repeat       flags=(none)                             n=4   min=1024 max=1024 distinct=[1024]
+  pilot-single       flags=(none)                             n=3   min=1024 max=1024 distinct=[1024]
+
+====================================================================================================
+MONEY CHECK — every OBSERVED disputed-cell probe against T159's committed value
+====================================================================================================
+  T177-PROBE-R600p0-N3000-B10001     observed   1 time(s); distinct totalInterestAmount: {'846.70': 1}
+      matches committed T159-R600p0-N3000-B10001 = 846.70
+  money comparisons made: 1; observed probes with no committed counterpart: 0
+  When the oracle answers at all it answers with the SAME NUMBER as the committed capture.
+  The nondeterminism is in WHETHER it answers, not in WHAT it answers.
+
+====================================================================================================
+P-40 ACCOUNTING — every java process, what it was asked for and what it delivered
+====================================================================================================
+  TOTAL: 5 java processes, 10 seam calls asked, 10 emitted, 0 NEVER REACHED, 0 plans with an unknown count
+
+====================================================================================================
+RUN-LEVEL ANOMALIES (classified SEPARATELY — never folded into observed or threw)
+====================================================================================================
+  none: every java process exited 0, wrote empty stderr, and printed its footer.
+
+ANALYZER VERDICT: clean
+analyzer exit 0 for pilot
