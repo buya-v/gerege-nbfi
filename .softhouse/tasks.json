@@ -2302,9 +2302,9 @@
       "dependencies": [
         "T104"
       ],
-      "status": "in_progress",
+      "status": "done",
       "attempts": 0,
-      "note": "Raised by the driver, local fire 20260820-230001, from T104's F-T104-3. NEEDS THE ORACLE to run the harness. Sequence with T105 - same package. || local fire 20260821-080001: DISPATCHED (wave 1), isolated worktree, model opus. Brief extended beyond T104's F-T104-3: also enumerate the OTHER ways the store can lie about its own size (zero-cell vector, same case_id in different subdirs, case/Unicode-normalisation collisions, symlinked duplicate)."
+      "note": "Raised by the driver, local fire 20260820-230001, from T104's F-T104-3. NEEDS THE ORACLE to run the harness. Sequence with T105 - same package. || local fire 20260821-080001: DISPATCHED (wave 1), isolated worktree, model opus. Brief extended beyond T104's F-T104-3: also enumerate the OTHER ways the store can lie about its own size (zero-cell vector, same case_id in different subdirs, case/Unicode-normalisation collisions, symlinked duplicate). || local fire 20260821-080001: DONE on softhouse/T110-duplicate-caseid-refusal (105589b, 4 files, scope clean, vectors diff EMPTY). T104's 43/5623/PASS/exit-0 green REPRODUCED from git-archive'd main bytes with zero 'duplicate|WARN' tokens in the report. Fix: LoadStore calls DuplicateCaseIDs after sorting; Run appends to FatalReasons and returns BEFORE the grading loop -> exit 2 UNUSABLE naming both paths. Not a warning, not a dedup. Baseline proved unchanged by cmp, not inspection: report byte-identical between main and fixed binaries (one sha256 db047faa). FOUR MUTATIONS of the fix all caught, the decisive one being warn-only-keep-grading, which gets the exit code RIGHT and is still caught because the guard asserts 0 results / 0 graded cells / 0 parity passes - that is the proof the refusal precedes grading. Also self-caught a vacuity in its own first draft (hard-coded filenames + t.Skip). AWAITING REVIEW T119."
     },
     {
       "id": "T111",
@@ -2443,6 +2443,39 @@
       ],
       "description": "T112 follow-up 1, correctly flagged as the driver's to write. The no-floating-point rule was read as binding the port, the schema, the vectors and the fixtures — but NOT analysis and prediction scripts. T84's analysis script computed B*a in double precision, read a +4.8e-20 residual as an exact tie, and put a WRONG REFUTATION COUNT (18 instead of 22) into the gate the product owner reads. State the rule to cover analysis and prediction scripts explicitly. Also record T112 follow-ups 2 and 3: the corrections-leak remedy (after any correction sweep for the CONCEPT and the NUMBERS, not the sentence, and state what the sweep could not have found) and 'do not keep a second copy of a corrected document'.",
       "note": "Raised by the driver, local fire 20260821-080001, from T112 follow-ups 1-3. || local fire 20260821-080001: DONE by the driver. Landed as P-25 (the no-float rule binds ANALYSIS scripts), P-26 (sweep the CONCEPT and the NUMBERS, not the sentence, and state what the sweep could not have found) and P-27 (do not keep a second copy of a document you are correcting). Dependency on T114 dropped: the float defect is already established on main (commit 95ec06a corrected the refutation count from 18 to 22 and named the cause), so recording the pattern does not wait on T112's review. ALSO added P-28 from this fire's own entry finding."
+    },
+    {
+      "id": "T119",
+      "title": "INDEPENDENT review of T110 — the duplicate-case_id refusal",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "dependencies": [
+        "T110"
+      ],
+      "files_hint": [
+        ".softhouse/reviews/"
+      ],
+      "description": "Paired reviewer for T110. Re-establish the pre-fix 43/5623 green from main's bytes, re-run all four mutations incl. the decisive warn-only-keep-grading leg, and verify the byte-identical baseline by cmp. THE CONSEQUENTIAL JUDGEMENT is the channel choice: T110 routes the refusal through FatalReasons -> EXIT 2, which is ALSO this pipeline's 'oracle is unusable' signal, and the program driver PARKS vector work on exit 2. Rule on whether that conflation is acceptable. Then rule on the shared root T110 found - conformance.sh's guard_no_float_in_vectors enumerates recursively while LoadStore is one level deep, and NOTHING COMPARES THE COUNTS - and answer the blast-radius question T110 left UNVERIFIED: could any historical run in this repo's history have been taken on a store carrying one of these defects?",
+      "note": "Raised and dispatched by the driver, local fire 20260821-080001."
+    },
+    {
+      "id": "T120",
+      "title": "The store and the float-guard disagree about what is IN the store, and nothing compares the counts",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "dependencies": [
+        "T119"
+      ],
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/conformance/",
+        ".softhouse/conformance.sh"
+      ],
+      "description": "T110's F-T110-1..5 and their shared root, to be scoped by T119's ruling. conformance.sh's guard_no_float_in_vectors enumerates the store with `find -name '*.json' -type f` (RECURSIVE, no symlink follow) while LoadStore reads ONE LEVEL DEEP and matches the suffix bytewise. The two therefore disagree about what the store contains and no check compares their counts. Measured consequences, all silent: a symlinked context directory is skipped entirely (F-1), a nested subdirectory is skipped (F-2), UPPER.JSON is not a vector (F-3), case-only case_id variants both grade at 43/5623 (F-4), and NFC vs NFD Unicode-normalisation variants both grade AND RENDER IDENTICALLY in the report at 44/5670 (F-5). Fix: an explicit file census that REFUSES any .json under the store root the harness did not load, plus a case_id charset rule ([A-Za-z0-9._-]; all 47 committed ids are ASCII). DRIVE EVERY LEG RED (P-22) and show the legitimate 42/5576 store is untouched.",
+      "note": "Raised by the driver, local fire 20260821-080001, from T110's F-T110-1..5. The census is the real fix - the individual five are symptoms of one disagreement. Sequence after T110+T119 and after T105 (same package). NEEDS THE ORACLE."
     }
   ]
 }
