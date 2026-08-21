@@ -1,0 +1,126 @@
+==============================================================================
+ T147 — P-26 sweep for RESTATEMENTS of the corrected CP_DIGEST count
+ Sweep for the CONCEPT and the NUMBERS, never for the wording.
+==============================================================================
+
+--- net 1: the token itself, anywhere under .softhouse that is not a rig ---
+.softhouse/capture/pathb/t147/cp-digest-census.py:2:"""T147 — census of the `CP_DIGEST` backlog item, by BYTES, so the fixer is not misled.
+.softhouse/capture/pathb/t147/cp-digest-census.py:4:T125's handoff §7 registered the classpath-digest backlog as *"`CP_DIGEST` — 11 rigs"*.  The
+.softhouse/capture/pathb/t147/cp-digest-census.py:7:at all — so a fixer who greps the symbol `CP_DIGEST` finds SIX of eleven and silently leaves
+.softhouse/capture/pathb/t147/cp-digest-census.py:32:NAMED = b'CP_DIGEST'
+.softhouse/capture/pathb/t147/cp-digest-census.py:58:    print('  %-58s %9s %8s' % ('shell rig (relative to .softhouse/capture)', 'CP_DIGEST', 'inline'))
+.softhouse/capture/pathb/t147/cp-digest-census.py:69:    print('  rigs naming the variable CP_DIGEST : %d' % named)
+.softhouse/capture/pathb/t147/cp-digest-census.py:75:        bad.append('rigs naming CP_DIGEST is %d, expected %d' % (named, EXPECT_NAMED))
+.softhouse/capture/pathb/t147/cp-digest-census.py:92:    print('  registered total of %d. A fixer that greps `CP_DIGEST` reaches %d of %d.'
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T125.md:472:(`grep -rn 'EXPECTED_CP\|PIN_CP\|CP_DIGEST_EXPECT' .softhouse` → **zero hits**):
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T125.md:475:> This item was headed "`CP_DIGEST` — 11 rigs". The phenomenon count of 11 is confirmed by an
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T125.md:476:> independent byte-scan, but the **token `CP_DIGEST` appears in only 6 of them**. The other
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T125.md:480:> **Whoever fixes this must not grep for `CP_DIGEST`: it reaches 6 of 11.** That is T125's own
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T125.md:487:                                                            CP_DIGEST  inline-only
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T147.md:144:### F-5 (T136 F-6) — the `CP_DIGEST` backlog count named the wrong symbol
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T147.md:146:T125 §7 headed the item *"`CP_DIGEST` — 11 rigs"*. **The 11 rigs and the 11 paths are right;
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T147.md:151:rigs naming the variable CP_DIGEST : 6
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T147.md:154:ASSERTED: a fixer that greps `CP_DIGEST` reaches 6 of 11.
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T147.md:159:`11`, the token `CP_DIGEST` and the word `classpath` across `.softhouse/**` — the only
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T147.md:317:6. **The `CP_DIGEST` and `capturesCanonicalSha256` backlogs are corrected, not fixed.** Eleven
+
+--- net 2: the phrase-free numeral, in prose near the concept ---
+.softhouse/capture/charges/bin/t46-mark-superseded.py:25:    ("T39-periodratio-observation.md", 15, "116 of 116",
+.softhouse/capture/charges/bin/t46-mark-superseded.py:27:     "whole-months AND no special case also matches 116 of 116. See CORRECTIONS.]"),
+.softhouse/capture/pathb/t147/green-post-fix/p26-sweep.txt:8:.softhouse/capture/pathb/t147/cp-digest-census.py:4:T125's handoff §7 registered the classpath-digest backlog as *"`CP_DIGEST` — 11 rigs"*.  The
+.softhouse/capture/pathb/t147/green-post-fix/p26-sweep.txt:16:.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T125.md:475:> This item was headed "`CP_DIGEST` — 11 rigs". The phenomenon count of 11 is confirmed by an
+.softhouse/capture/pathb/t147/green-post-fix/p26-sweep.txt:18:.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T125.md:480:> **Whoever fixes this must not grep for `CP_DIGEST`: it reaches 6 of 11.** That is T125's own
+.softhouse/capture/pathb/t147/green-post-fix/p26-sweep.txt:21:.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T147.md:146:T125 §7 headed the item *"`CP_DIGEST` — 11 rigs"*. **The 11 rigs and the 11 paths are right;
+.softhouse/capture/pathb/t147/green-post-fix/p26-sweep.txt:23:.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T147.md:154:ASSERTED: a fixer that greps `CP_DIGEST` reaches 6 of 11.
+.softhouse/capture/pathb/t147/green-post-fix/scratch-merge-p24.txt:138:  ASSERTED: 11 rigs inspected; 6 name the variable and 5 do not, summing to the
+.softhouse/capture/pathb/t147/green-post-fix/scratch-merge-p24.txt:139:  registered total of 11. A fixer that greps `CP_DIGEST` reaches 6 of 11.
+.softhouse/capture/pathb/t147/green-post-fix/postfix-proofs.txt:122:  ASSERTED: 11 rigs inspected; 6 name the variable and 5 do not, summing to the
+.softhouse/capture/pathb/t147/green-post-fix/postfix-proofs.txt:123:  registered total of 11. A fixer that greps `CP_DIGEST` reaches 6 of 11.
+.softhouse/capture/pathb/t147/cp-digest-census.py:4:T125's handoff §7 registered the classpath-digest backlog as *"`CP_DIGEST` — 11 rigs"*.  The
+.softhouse/capture/pathb/t147/cp-digest-census.py:6:the eleven rigs compute the same digest inline, inside the `ok "..."` line, with no variable
+.softhouse/handoff/T39-periodratio-observation.md:15:**116 disagreeing cells**, the oracle agrees **116 of 116** with the routine that includes those  **[SUPERSEDED by T46 C-1: the null hypothesis is the wrong one -- a port with naive whole-months AND no special case also matches 116 of 116. See CORRECTIONS.]**
+.softhouse/handoff/T39-periodratio-observation.md:390:**This handoff says:** *"the oracle agrees 116 of 116 with the routine that includes those four lines
+.softhouse/handoff/T41-dec1-v8.md:258:116 of 116.
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T125.md:471:**The classpath digest — 11 rigs, computed and echoed, with no `EXPECTED_*` anywhere in the repository**
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T125.md:474:> **CORRECTED BY T147 (T136 F-6). The 11 rigs are right; the SYMBOL is not.**
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T125.md:475:> This item was headed "`CP_DIGEST` — 11 rigs". The phenomenon count of 11 is confirmed by an
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T125.md:480:> **Whoever fixes this must not grep for `CP_DIGEST`: it reaches 6 of 11.** That is T125's own
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T147.md:146:T125 §7 headed the item *"`CP_DIGEST` — 11 rigs"*. **The 11 rigs and the 11 paths are right;
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T147.md:154:ASSERTED: a fixer that greps `CP_DIGEST` reaches 6 of 11.
+.softhouse/vectors/loanschedule/P-DRIFT-D-drift-36x21pt6pct-50M.json:26:      "evidence": "Derived at the ratified production MathContext (19, HALF_UP). Every OBSERVED value below is transcribed from capture case P-DRIFT-D of .softhouse/capture/out/capture-prod3e-raw.json; only the counterfactual is derived.\nMARGIN. Over this vector's graded money cells the counterfactual diverges on 106 of 110. The widest single-cell disagreement is at period[29], column outstanding_principal_minor: the oracle OBSERVED 1240755688 minor units against the counterfactual's 68655501, so the margin is |1240755688 - 68655501| = 1172100187 MINOR UNITS.\nCOUNTERFACTUAL PROVENANCE. The counterfactual value is MEASURED, not asserted: a scratch copy of the port at /tmp/t58mut with exactly one named change applied, run on this vector's own request. The patches are .softhouse/capture/t58-counterfactuals/src/apply-mutations-*.py and the runner is src/t58cf.go.txt; the raw per-cell output is out/t58-counterfactuals-*.json. The model's faithfulness is not assumed -- with the change switched OFF it reproduces all 508 graded money cells of the 20 in-domain capture cases it was run against, with ZERO mismatches, so the only thing a reported margin can be measuring is the named change."
+.softhouse/vectors/loanschedule/P-DRIFT-D-drift-36x21pt6pct-50M.json:47:      "evidence": "Derived at the ratified production MathContext (19, HALF_UP). Every OBSERVED value below is transcribed from capture case P-DRIFT-D of .softhouse/capture/out/capture-prod3e-raw.json; only the counterfactual is derived.\nMARGIN. Over this vector's graded money cells the counterfactual diverges on 106 of 110. The widest single-cell disagreement is at period[35], column outstanding_principal_minor: the oracle OBSERVED 184851370 minor units against the counterfactual's 227179182, so the margin is |184851370 - 227179182| = 42327812 MINOR UNITS.\nCOUNTERFACTUAL PROVENANCE. The counterfactual value is MEASURED, not asserted: a scratch copy of the port at /tmp/t58mut with exactly one named change applied, run on this vector's own request. The patches are .softhouse/capture/t58-counterfactuals/src/apply-mutations-*.py and the runner is src/t58cf.go.txt; the raw per-cell output is out/t58-counterfactuals-*.json. The model's faithfulness is not assumed -- with the change switched OFF it reproduces all 508 graded money cells of the 20 in-domain capture cases it was run against, with ZERO mismatches, so the only thing a reported margin can be measuring is the named change."
+.softhouse/reviews/t45-probe/t45_extra.py:65:    (packed=True, special=False) = the reading T39 refuted 116 of 116.
+.softhouse/reviews/t47-probe/t47_edit_7.py:93:	// 116 of 116 discriminating cells (captures T39-ME-A..T39-ME-D). It cannot
+.softhouse/reviews/t47-probe/t47_edit_7.py:103:	// MNT 3,924,149 loan, refuted on 116 of 116 discriminating cells (captures
+.softhouse/reviews/t47-probe/t47_extra.py:65:    (packed=True, special=False) = the reading T39 refuted 116 of 116.
+.softhouse/reviews/t47-probe/t47_edit_1.py:187:    "| **packed** | **absent** | **NO — diverges on 45,253 of 112,147,776 pairs; refuted on 116 of 116 discriminating cells** |\n"
+.softhouse/reviews/T43-DEC-1-v8-rereview.md:434:- **415 of 415 / 0 of 415, and 116 of 116 / 0 of 116.** Read directly from T39's
+.softhouse/reviews/t41-probe/edit_go1.py:75:	// 116 of 116 discriminating cells (captures T39-ME-A..T39-ME-D). It cannot
+.softhouse/reviews/t41-probe/edit5.py:88:    "4 shapes and **116 disagreeing cells** the oracle agrees **116 of 116** with the "
+.softhouse/reviews/t41-probe/edit17.py:39:       "T39 observed it load-bearing on 116 of 116 discriminating cells [VERIFIED: captures "
+.softhouse/reviews/t41-probe/edit13.py:76:    "by an observed **MNT 83,959.76** on one six-month MNT 3.9 M loan, refuted on 116 of 116 "
+.softhouse/reviews/t41-probe/edit16.py:21:    "with the oracle agreeing with the special-case-present routine on **116 of 116** disagreeing "
+.softhouse/reviews/t41-probe/edit16.py:27:    "with the oracle agreeing with the special-case-present routine on **116 of 116** disagreeing "
+.softhouse/reviews/t41-probe/edit16.py:45:    "refuted on 116 of 116 discriminating cells across 4 shapes | captures `T39-ME-A`…`T39-ME-D` "
+.softhouse/reviews/t41-probe/edit16.py:49:    "refuted on 116 of 116 discriminating cells across 4 shapes — **and separately refuted by 3 "
+.softhouse/reviews/t41-probe/edit16.py:66:    "Across 4 shapes and **116 disagreeing cells** the oracle agrees **116 of 116** with the "
+.softhouse/reviews/t41-probe/edit16.py:70:    "Across 4 shapes and **116 disagreeing cells** the oracle agrees **116 of 116** with the "
+.softhouse/reviews/t41-probe/edit8.py:81:    "**116 disagreeing cells** the oracle agrees **116 of 116** with the special case present and "
+.softhouse/reviews/t41-probe/edit14.py:60:  **§8 item 3e SPLITS into 3e and 3f, and the binding widens from six vectors to SEVEN (T39's N-2).** `periodRatio`'s **month-end special case** [`ProgressiveEMICalculator.java:1426-1436`, predicate at `:1432`] is live, load-bearing and now observed: omitting it roughly doubles `periodRatio` on alternate periods and overcharges by **MNT 83,959.76** on one six-month MNT 3.9 M loan, refuted **116 of 116** discriminating cells. It cannot share a vector with 3e, and the reason is **measured**: over 51,729 same-month pairs × 3 terms the special case fires on **210**, and on **0 of those 210** does `ScheduleStartDate ≠ Disbursement.Date` — the two questions are disjoint in shape space. §4.1.1 step B now states the predicate literally and §9 gains obligation (f).
+.softhouse/reviews/t41-probe/edit7.py:46:    "refuted on 116 of 116 discriminating cells across 4 shapes | captures `T39-ME-A`…`T39-ME-D` "
+.softhouse/reviews/t41-probe/edit_go3.py:50://     alternate periods and is refuted on 116 of 116 discriminating cells.
+.softhouse/reviews/T44-capture-audit.md:124:T39 states: *"the oracle agrees **116 of 116** with the routine that includes those four lines and
+
+--- net 3: the CONCEPT, however phrased ---
+.softhouse/capture/PASS3B-REPORT.md
+.softhouse/capture/README-pass3i.md
+.softhouse/capture/README-pass3f.md
+.softhouse/capture/README-pass3b.md
+.softhouse/capture/README-pass3c.md
+.softhouse/handoff/T61-mutation-hunt-round-2.md
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T74.md
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T64.md
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T7.md
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T70.md
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T125.md
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T72.md
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T147.md
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T68.md
+.softhouse/handoff/T58-close-surviving-mutations.md
+.softhouse/handoff/T35-patha-admissibility.md
+.softhouse/reviews/T75-pathA-multiplesof-review.md
+.softhouse/reviews/driver-rederivation-20260820-140000.md
+.softhouse/reviews/T71-fui-marker-review.md
+.softhouse/reviews/T84-review-t83.md
+
+--- net 4: the sibling backlog count, so it is not left inconsistent ---
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T125.md:455:**`capturesCanonicalSha256` — 8 rigs, computed, written, printed, and read by no code.** Its own
+
+--- net 5: the register the orchestrator reads (must be UNTOUCHED, P-31) ---
+0
+  ^ occurrences of CP_DIGEST in tasks.json (0 = nothing to correct there)
+
+WHAT THIS SWEEP STRUCTURALLY COULD NOT HAVE FOUND (P-26):
+  * a restatement carrying no number at all ('several rigs', 'these rigs');
+  * a count spelled out in words in a phrasing net 2 does not enumerate;
+  * the claim rendered as a chart, a table cell or a diagram;
+  * any restatement outside .softhouse/ (docs/, nexus/, commit messages);
+  * a SILENCE where a qualification should be -- e.g. a future task brief that
+    says 'fix the CP_DIGEST rigs' and inherits the 6-of-11 blind spot by omission.
+
+READING THE NETS -------------------------------------------------------------
+net 1: the token appears ONLY in T125.md (the corrected item), T147.md and this
+       task's own census script. Every other occurrence in the repo is inside a
+       .sh rig -- i.e. the phenomenon itself, which is the backlog, not a
+       restatement of its count.
+net 2: every hit is either the corrected site, this task's own output, or NOISE:
+       '6 of 11' is a substring of '116 of 116', which is T39's month-end result
+       and has nothing to do with classpath digests. Reported rather than tuned
+       away, because a net narrowed until it is quiet is a net that has stopped
+       being a net.
+net 3: 20 files mention the concept. Re-grepped for a NUMERIC claim about a
+       count of rigs -- ZERO hits. They are the rigs' own READMEs and reports
+       describing the digest, not restating how many rigs compute one.
+net 4: the sibling backlog 'capturesCanonicalSha256 -- 8 rigs' appears exactly
+       once, at T125.md:455, and T136 independently CONFIRMED 8. Left as is.
+net 5: tasks.json carries no copy, and is untouched (P-31).
