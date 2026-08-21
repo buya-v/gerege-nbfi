@@ -547,21 +547,49 @@ guard_no_float_in_vectors() {
   return "$bad"
 }
 
-# guard_no_float_in_harness: no floating-point identifier in the loanschedule Go
-# tree. Implemented in Go (TestNoFloatInTheLoanScheduleTree) over the TOKEN
-# stream, because the frozen contract's doc comments name the forbidden types in
-# order to forbid them and a byte grep therefore fires on the prohibition itself.
-# Repeated here only as a cross-check that skips comments the same way.
+# guard_no_float_in_harness: no floating-point identifier ANYWHERE in the Go
+# module. Implemented in Go (TestNoFloatInTheGuardedGoTree, and — the part that
+# actually gates a verdict — the census that grade.go runs inside the harness
+# binary) over the TOKEN stream, because the frozen contract's doc comments name
+# the forbidden types in order to forbid them and a byte grep therefore fires on
+# the prohibition itself. Repeated here only as a cross-check that skips comments
+# the same way.
 #
 # IT INSPECTS IDENTIFIERS, AND A FLOAT LITERAL IS NOT AN IDENTIFIER. `rate :=
 # 0.036 / 12.0` carries no forbidden identifier at all, so neither this guard nor
-# the Go test caught it until T154 added the LITERAL check to the Go test
-# (TestNoFloatLiteralsInTheLoanScheduleTree). That check is the one that covers
-# literals; this one stays as written and covers identifiers.
+# the Go test caught it until T154 added the LITERAL check on the Go side. That
+# check is the one that covers literals; this one stays as written and covers
+# identifiers.
 #
-# Same positive phrasing as above: zero files inspected is an ERROR.
+# T166 WIDENED THE ROOT FROM ONE SUBTREE TO THE MODULE, AND ADDED A PACKAGE
+# COUNT. Until T166 this find was rooted at "$NEXUS_DIR/internal/apps/loanschedule",
+# as were the Go-side census root and guard_gofmt below. All three looked at one
+# subtree, so a float64 on a money path in ANY other package — and a float in any
+# SUBDIRECTORY of any package — passed every automated check in this repository.
+# Measured, not theorised: with three floats planted under
+# nexus/internal/apps/ledger/ (a literal, an identifier at the package root, and
+# an identifier one directory deeper), a full run of this script produced output
+# BYTE-IDENTICAL to the clean baseline — VERDICT: PASS, exit 0, 5664 cells, and
+# the very same "24 .go files" line this function prints. Unchanged precisely
+# because it never looked.
+#
+# THE ROOT IS NOW DERIVED, NOT ENUMERATED. `find` recurses by default, so rooting
+# at "$NEXUS_DIR" — the Go module root — means a NEW PACKAGE IS COVERED BY
+# DEFAULT, wherever in the module it lands and however deeply it nests. Adding
+# `ledger` as a second hard-coded path would have reproduced the defect for the
+# next package and every package after it (P-26: sweep the concept, not the
+# sentence). There is deliberately NO exemption list: an allowlist outlives the
+# reason it was added, and the one file in this module that must NAME the
+# forbidden spellings in code — nofloat.go — instead splits them across string
+# concatenations so the bytes never appear contiguously, which is the principled
+# form of the same exemption and cannot rot.
+#
+# Same positive phrasing as above, now on BOTH counts: zero files inspected is an
+# ERROR, and so is zero PACKAGES. A file count alone cannot tell a module-wide
+# walk apart from a single-directory walk, and the single-directory walk is the
+# state this guard was in while printing a healthy-looking number.
 guard_no_float_in_harness() {
-  local bad=0 seen=0 f
+  local bad=0 seen=0 pkgs=0 f
   while IFS= read -r f; do
     seen=$((seen + 1))
     # Drop // comments and /* */ comments, then look for a float identifier.
@@ -570,13 +598,17 @@ guard_no_float_in_harness() {
       warn "conformance: FLOATING-POINT IDENTIFIER in $f"
       bad=1
     fi
-  done < <(find "$NEXUS_DIR/internal/apps/loanschedule" -name '*.go' -type f | sort)
-  if [ "$seen" -eq 0 ]; then
-    warn "conformance: guard_no_float_in_harness INSPECTED ZERO FILES under $NEXUS_DIR/internal/apps/loanschedule."
+  done < <(find "$NEXUS_DIR" -name '*.go' -type f | sort)
+  # The package count, derived from the same enumeration: distinct directories
+  # holding at least one .go file.
+  pkgs="$(find "$NEXUS_DIR" -name '*.go' -type f | sed 's|/[^/]*$||' | sort -u | LC_ALL=C grep -ac '' || true)"
+  [ -n "$pkgs" ] || pkgs=0
+  if [ "$seen" -eq 0 ] || [ "$pkgs" -eq 0 ]; then
+    warn "conformance: guard_no_float_in_harness INSPECTED $pkgs PACKAGES / $seen FILES under $NEXUS_DIR."
     warn "conformance: a guard that inspects nothing passes everything. This is an ERROR, not a pass."
     return 1
   fi
-  say "conformance: no-float guard — inspected $seen .go files under $NEXUS_DIR/internal/apps/loanschedule"
+  say "conformance: no-float guard — inspected $pkgs Go packages / $seen .go files under $NEXUS_DIR (recursive, whole module)"
   return "$bad"
 }
 
@@ -593,19 +625,38 @@ guard_no_float_in_harness() {
 # formatting rewrite of them is a rewrite of the spec. Every captured golden
 # vector is expressed in those types.
 #
-# So this guard formats NOTHING (never `gofmt -w`, never `go fmt ./...`) and it
-# checks only the files the harness introduced. If it checked contract.go it
-# would either fail forever or tempt a later agent to "fix" a frozen artefact,
-# and the second outcome is the dangerous one.
+# So this guard formats NOTHING (never `gofmt -w`, never `go fmt ./...`). If it
+# formatted contract.go it would either fail forever or tempt a later agent to
+# "fix" a frozen artefact, and the second outcome is the dangerous one.
+#
+# T166 WIDENED IT FROM TWO NAMED DIRECTORIES TO THE MODULE, for the same reason
+# as guard_no_float_in_harness above: it named "$HARNESS_PKG" and one `cmd`
+# directory, so every package outside those two — the whole ledger port included
+# — was unchecked. `gofmt -l` on a directory recurses, so rooting at "$NEXUS_DIR"
+# derives the set and a new package is covered by default. The contract.go
+# exemption stays, and stays expressed as a path filter on the OUTPUT rather than
+# as a narrowed root, so that widening the root can never silently re-include it
+# and narrowing it can never silently drop everything else.
+#
+# Positively phrased, like its neighbours: it reports how many files it inspected,
+# and zero is an ERROR.
 guard_gofmt() {
-  local unformatted
-  unformatted="$(gofmt -l "$HARNESS_PKG" "$NEXUS_DIR/internal/apps/loanschedule/conformance/cmd" 2>/dev/null \
+  local unformatted seen
+  seen="$(find "$NEXUS_DIR" -name '*.go' -type f | LC_ALL=C grep -ac '' || true)"
+  [ -n "$seen" ] || seen=0
+  if [ "$seen" -eq 0 ]; then
+    warn "conformance: guard_gofmt INSPECTED ZERO FILES under $NEXUS_DIR."
+    warn "conformance: a guard that inspects nothing passes everything. This is an ERROR, not a pass."
+    return 1
+  fi
+  unformatted="$(gofmt -l "$NEXUS_DIR" 2>/dev/null \
                  | LC_ALL=C grep -av "/contract/contract.go$" || true)"
   if [ -n "$unformatted" ]; then
     warn "conformance: not gofmt-clean:"
     warn "$unformatted"
     return 1
   fi
+  say "conformance: gofmt guard — inspected $seen .go files under $NEXUS_DIR (recursive, whole module; contract.go exempt, gate G-3)"
   return 0
 }
 

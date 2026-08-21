@@ -284,11 +284,36 @@ func WriteReport(w io.Writer, s *Summary) {
 	// of the no-float guards were exactly that until T154. The counts are the
 	// assertion: N files and T tokens were inspected, and each violation class
 	// was 0. A run showing `0 files` here has checked nothing and is exit 2.
-	p("    no-float census         %d Go files / %d tokens inspected under %s",
-		s.NoFloatCensus.FilesScanned, s.NoFloatCensus.TokensScanned, LoanScheduleTreeRel)
-	p("                            %d forbidden identifiers, %d floating-point or imaginary LITERALS, %d unscannable files",
+	// T166 ADDED THE PACKAGE COUNT AND THE PACKAGE LIST. The file count alone
+	// read as healthy — "24 Go files" — on a repository where an entire second
+	// package and every subdirectory in the module were outside the walked root.
+	// A reader can only tell a full-module walk from a single-directory walk by
+	// seeing the SET, so the set is printed.
+	p("    no-float census         %d Go packages / %d Go files / %d tokens / %d import specs inspected under %s (recursive)",
+		s.NoFloatCensus.PackagesScanned, s.NoFloatCensus.FilesScanned,
+		s.NoFloatCensus.TokensScanned, s.NoFloatCensus.ImportsScanned, GuardedGoTreeRel)
+	p("                            %d forbidden identifiers, %d floating-point or imaginary LITERALS, %d forbidden imports, %d unscannable files",
 		len(s.NoFloatCensus.IdentifierViolations), len(s.NoFloatCensus.LiteralViolations),
-		len(s.NoFloatCensus.ScanErrors))
+		len(s.NoFloatCensus.ImportViolations), len(s.NoFloatCensus.ScanErrors))
+	for _, dir := range s.NoFloatCensus.PackageDirs {
+		p("                            covered: %s/%s", GuardedGoTreeRel, dir)
+	}
+	// THE ABSOLUTE ROOT, PRINTED BECAUSE "nexus" IS A RELATIVE PATH AND A
+	// RELATIVE PATH CANNOT SAY WHICH CHECKOUT WAS GRADED.
+	//
+	// grade.go joins this census root onto opts.RepoRoot, which cmd/conformance
+	// resolves with FindRepoRoot(".") — from the CALLER'S working directory, not
+	// from the script's location. conformance.sh's own shell guards derive their
+	// root from "$SCRIPT_DIR/..". The two therefore disagree whenever the script
+	// is invoked by absolute path from a different checkout, and T166 MEASURED
+	// that disagreement: running this worktree's conformance.sh with the CWD set
+	// to the main checkout printed the WORKTREE's path in the shell guard line
+	// and 56295 tokens — the MAIN checkout's count — in the census line, in one
+	// run, with VERDICT: PASS and nothing to say the two legs had graded
+	// different trees. That resolution defect belongs to T165 and is not fixed
+	// here; what is fixed here is the SILENCE, because a guard that names one
+	// tree and inspects another is the same class of defect T166 exists to close.
+	p("                            census root walked: %s", s.NoFloatCensus.Root)
 
 	if len(s.FatalReasons) > 0 {
 		p("")
