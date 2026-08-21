@@ -430,3 +430,43 @@ named and superseded, never rewritten in place:
 **Already correct, no fix needed:** `.softhouse/RESUME.md:85` and `.softhouse/tasks.json` (lines 415,
 651, 663) already state the corrected fail-open direction accurately — these were written after T157's
 finding and do not need correction.
+
+---
+
+## DRIVER ADDENDUM to the fail-open correction — local fire `20260821-054355`
+
+**Scope warning on the section above.** T171's correction states that the true direction is
+**fail-open**. The driver merged that correction, because P-55 and the finding about T155's probe
+shape are independently valuable and correct. **But the fail-open direction itself now has two
+positives and two negatives, and the reader must not inherit it as settled.**
+
+| attempt | implementation | result on invalid UTF-8, seekable input |
+|---|---|---|
+| T157 | BSD grep 2.6.0-FreeBSD | reported: prints nothing, exit 1 → `DIRTY` empty (**fail-open**) |
+| a previous fire's driver | recorded as ugrep 7.5.0 | reported: reproduced |
+| T171 (this fire) | /usr/bin/grep 2.6.0-FreeBSD, macOS 26.5.1 build 25F80 | **did NOT reproduce**, 6 spellings × 18+ shapes |
+| **this driver** (this fire) | /usr/bin/grep 2.6.0-FreeBSD, same host | **did NOT reproduce** |
+
+**What the driver measured, at the merge of T171** — commands and outputs, not recollection:
+
+- `printf 'keep-me\n\xff\xfe invalid bytes here\nalso-keep\n' > f.txt`, then
+  `/usr/bin/grep -v 'nomatch' f.txt` → **all three lines printed, exit 0**. Identical under
+  `LC_ALL=C`, `LC_ALL=en_US.UTF-8` and `LC_ALL=POSIX`, and identical again through a pipe
+  (`cat f.txt | ...`). So on this host, **invalid UTF-8 does not suppress anything**, and the
+  seekable-vs-pipe distinction the correction leans on was not observable at all.
+- A **real NUL byte** *does* change behaviour: `printf 'keep-me\n\x00binary\nalso-keep\n' > g.txt`,
+  `LC_ALL=C /usr/bin/grep -v 'nomatch' g.txt` → **`Binary file g.txt matches`, exit 0**, with the
+  lines suppressed. **This is a THIRD failure mode and nobody has characterised it.** It is neither
+  cleanly fail-open nor fail-closed: `DIRTY` comes back **non-empty**, so the exit guard would treat
+  the tree as dirty, but its contents are a **message instead of paths**, so anything downstream that
+  reads those lines as filenames gets one that does not exist.
+- Provenance caveat the driver hit on its own machine: `which -a grep` resolves `grep` to a **shell
+  function wrapper** here, and **`ugrep` is not on `PATH`** — so the earlier ugrep corroboration could
+  not be re-checked, and the binary actually invoked may differ between any two of the four attempts
+  above. **A version string is not provenance** (T171's P-55 rule 4, confirmed a second time).
+
+**Standing instruction until `T189` settles it:** cite this dispute as *unresolved*. Do not write
+"fail-open" or "fail-closed" as an established property of `fire-program.sh:224` — **neither
+direction currently has more support than the other**, and the NUL shape suggests the question may
+have been framed around the wrong byte class from the start. The **anchoring** defect at the same
+line is a separate matter and **is** settled: T172 fixed and red/green-proved it.
