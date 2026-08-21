@@ -19,7 +19,14 @@ set -u
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../../../.." && pwd)"
-PREFIX_REF="${1:-softhouse/T97-guard-positive-probe}"   # the bytes before the F1 fix
+# The baseline is pinned to an IMMUTABLE COMMIT SHA, never to the branch NAME.
+# P-24: a ref that can be moved will be moved exactly when nobody is watching, and
+# a baseline that follows the fix compares the fix against itself. f2813c8 is the
+# tip of softhouse/T97-guard-positive-probe — T97's positive probe WITHOUT T113's
+# one-line F1 fix — and its sha256 is asserted below, so if the pin ever stops
+# naming those bytes this script SAYS SO instead of reporting a green.
+PREFIX_REF="${1:-f2813c8d51199ef676eb2924ca180041d00242db}"
+PREFIX_SHA256=c69e30ff6617debbd2e013cefd903479dcab0f8c9b0c4e3ea273e88b1907951a
 PREFIX="$REPO_ROOT/.softhouse/.T113-prefix-conformance.sh"
 IMAGE=eclipse-temurin:21-jdk
 INNER="$REPO_ROOT/.softhouse/.T113-inner.sh"
@@ -37,6 +44,12 @@ fi
 if grep -q '^      _conformance_psub_line=$' "$PREFIX"; then
   echo "T113: $PREFIX_REF ALREADY contains the fix, so it is not a pre-fix baseline." >&2
   echo "T113: INERT, so exit 1. (P-24: a baseline that follows the fix proves nothing.)" >&2
+  exit 1
+fi
+got="$(shasum -a 256 "$PREFIX" | cut -d' ' -f1)"
+if [ "$got" != "$PREFIX_SHA256" ] && [ "${1:-}" = "" ]; then
+  echo "T113: the pinned baseline hashes $got, not the recorded $PREFIX_SHA256." >&2
+  echo "T113: the pin no longer names the pre-fix bytes. INERT, so exit 1." >&2
   exit 1
 fi
 
