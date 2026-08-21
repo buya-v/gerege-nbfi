@@ -73,12 +73,12 @@
   "cursor": {
     "current_context": "tierA-gl-accounting",
     "current_slice": "tierA-gl-accounting-A2",
-    "current_run_id": null,
+    "current_run_id": "2026-08-21-run2-tierA-gl-accounting-A2",
     "completed_contexts": [
       "tier0-harness-schedule-poc"
     ],
     "parked_contexts": [],
-    "note": "Local fire 20260821-134344. TIER 0 CLOSED under P-5 (gates-proposed-answers.md, Buyan, 21 Aug 2026); Tier A opened and slice A2's analysis+capture half is DONE AND MERGED. FIVE WORKERS DISPATCHED, FIVE COMPLETED, ZERO LIVE AT EXIT, no isolation violation, no scope breach. FOUR BRANCHES MERGED (A2-1 behaviour, A2-2 review, A2-3 capture, A2-4 review) after a P-24 scratch merge re-run by the driver: conformance probe=up, VERDICT PASS exit 0, 42 parity, 0 invariant violations. T149 IS DELIBERATELY UNMERGED. It promoted the first parity vector ever observed through the RUNNING Fineract server (all 42 others are the in-process Path A seam), conformance 42->43 PASS on its own branch -- but the driver dispatched it WITHOUT a paired reviewer, its own plan-gate rule-1 violation, and a promotion into the graded corpus does not enter main unreviewed. T153 is that review and is the next fire's first task. THE DRIVER WAS WRONG TWICE MORE AND WORKERS CAUGHT BOTH. T149 refuted the brief's central premise -- '0 of 46 vectors carry either tie answer SO nothing would notice a HALF_EVEN port' is FALSE BY THREE VECTORS (T61-HE-A/B/C, mutation M7, parity PASS 39 FAIL 3) -- and REFUSED to write the false sentence into the vector's own note. Recorded as P-13 and corrected at source. A2-2's F-1 corrected the driver's OWN OBL-A3-1 ruling at the mechanism level: closing_balance is written at insert from an UNSIGNED SUM, not by the running-balance accumulator, which is unreachable dead code A3 would otherwise have ported. A2-4 found twelve defects in the capture rig including two P-22 'cannot fail' guards -- cap.sh's transport-failure handler is unreachable under set -e, so a STALE body survives under a FRESH captured-at-utc -- and proved the 10 attempt1-* recipes FALSE. All recorded beside the evidence in capture/tierA-a2/DEFECTS-FOUND-BY-REVIEW.md WITHOUT mutating the captured bytes. It also confirmed the corpus is real: 24 of 27 recipes re-issue byte-identically 17h later. A2 scope was WIDENED to the Java package boundary (6,636 -> 9,007 LOC, 79 files) after A2-1's B-1 showed the slice's own core types live in fineract-core and the declared fineract-provider path does not hold the mapping helper at all. G-9 (no default chart of accounts -- PRODUCT) is open and gates the A2 coder."
+    "note": "Local fire 20260821-054355. SEVEN WORKERS DISPATCHED, SEVEN COMPLETED, ZERO LIVE AT EXIT, no isolation violation, no scope breach. MAIN MOVED 42 -> 43 PARITY VECTORS AND THE 43RD ARRIVED WITH ITS REVIEW: T149's vector (the first ever observed through the RUNNING Fineract server) was held unmerged last fire because the driver dispatched it without a paired reviewer; T153 is that review -- MICRO-FIX then APPROVED, no defect in any money path -- and the driver re-ran conformance on merged main after applying the micro-fix: probe line PRESENT reading up, VERDICT PASS exit 0, 43 parity 0 fail, 5664 cells, 0 invariant violations, 0 assertions NOT RUN, go1.26.6 build 0 / vet 0 / test ok. MERGED: A2-6, T149, T153, A2-5, A2-10, A2-7. HELD UNMERGED: T154 (money-path guard code, its reviewer T155 has not run -- the same call as T149, and the T149 precedent was VINDICATED this fire when T153 found two real overclaims). G-9 CLOSED (chart of accounts is DATA not code; launch with the minimal chart the vectors exercise) -- the DECISION stands on a correctly re-derived premise (0 of 1918 seed inserts target acc_gl_account). BUT THE DRIVER'S CONSEQUENCE WAS FALSE AND A2-7 REFUTED IT: 'the corpus holds 2 of the 9, all four accounts ASSET' was wrong three ways -- main already held 21 accounts across all five classifications and product 22 with all nine slots mapped. Root cause was the driver's own silent-skip enumerator (json.load inside except:continue, swallowing the psql .txt dumps). Recorded as P-40 and corrected in gates.md. A2-8's dependency on A2-7 removed; A2-8 IS NOW READY. A2-10 found a P-22 REGRESSION A2-5 ITSELF INTRODUCED (symlinked fabrication invisible to verify) -- third recorded instance of a fix task opening the defect class it was sent to close. A2-7 MEASURED the driver's [UNVERIFIED]: runtime and creation mandatory account sets DIFFER. G-10 RAISED: the oracle holds five product mappings whose GL account was retyped underneath them, serves them without complaint, refuses to re-create them, and the read-back structurally cannot reveal it. New patterns P-40..P-45."
   },
   "contexts": [
     {
@@ -1252,6 +1252,66 @@
       "uat": "PASS -- build/vet/test 0/0/0, conformance VERDICT PASS exit 0 with probe = up, 42 parity vectors, 5576 cells, 0 invariant violations",
       "reviewer_catches": "The dominant finding of the run was a CLASS, not an instance (P-22): guards, canaries and controls that COULD NOT FAIL -- at least five found, every one by ATTACKING the rig rather than reading it, two of them inside the task sent to fix the previous one. The driver was wrong at least four times and workers caught every one (P-20): the bijection framing (T79), the bash-via-sh constraint (T81), its own G-8 reframing on its own stated discriminator (T84), and the G-8 family A/B attribution three separate times (T114). Six of those reviews were themselves nearly lost -- see the branch register.",
       "note": "Tier 0 is done in the PORTING sense. Cutover is untouched and remains a hard user gate."
+    },
+    {
+      "run_id": "2026-08-21-run2-tierA-gl-accounting-A2",
+      "fire": "local 20260821-054355",
+      "context": "tierA-gl-accounting",
+      "slice": "tierA-gl-accounting-A2",
+      "date": "2026-08-21",
+      "status": "active — slice A2 analysis+capture+rig complete, coder A2-8 ready, T154 held for review",
+      "workers_dispatched": 7,
+      "workers_completed": 7,
+      "workers_live_at_exit": 0,
+      "merged": [
+        "A2-6",
+        "T149",
+        "T153",
+        "A2-5",
+        "A2-10",
+        "A2-7"
+      ],
+      "held_unmerged": [
+        "T154 — pending its reviewer T155"
+      ],
+      "reviewer_catches": [
+        "T153 -> T149: MICRO-FIX; two sentences claimed a tighter control than they held. It MEASURED the missing control (0 money-cell differences) so both conclusions survived and only the wording fell. Re-observed the tie live, byte-for-byte identical to T149's captures, with a cleaner counterfactual, and re-derived all twelve periods in exact rational arithmetic.",
+        "A2-10 -> A2-5: found a P-22 REGRESSION THE FIX TASK ITSELF INTRODUCED -- islink clauses made a symlinked fabrication invisible to verify, which the PRE-FIX code caught. Adjudicated all three of A2-5's deviations by BUILDING the prescribed fix and running it, all three in A2-5's favour. Guards it could not drive red: none.",
+        "A2-7 -> THE DRIVER: refuted the driver's central premise and acted on its own measurement instead of the brief, creating zero accounts because there were none to create."
+      ],
+      "driver_self_catches": [
+        "A2-5 dispatched as a coder with NO paired reviewer -- the same plan-gate rule-1 violation that left T149 unmerged. Caught mid-flight by running the plan gate over the driver's own additions; A2-10 registered while A2-5 was still working, and it found a real regression.",
+        "The driver's G-9 gap measurement was produced by a silent-skip enumerator and was false (P-40).",
+        "The A2-10 brief's '22-line run-120 hunk' premise was a --stat misreading by the driver; 11 identical || exit 1 lines rendered as 11 deletions + 11 insertions.",
+        "T153's files_hint was too narrow for the task the driver commissioned -- reviews/ only, while the brief ORDERED live re-observation, which necessarily writes captures.",
+        "The driver re-derived A2-8's own brief before dispatch and found a third enum hazard nobody had recorded (name<->code is not a function in either direction)."
+      ],
+      "uat": "PASS on merged main: probe up, conformance exit 0, 43 parity / 0 fail, 5664 cells, 0 invariant violations, 0 assertions NOT RUN, go1.26.6 build 0 / vet 0 / test ok, gofmt -l = exactly contract.go (G-3 expected)",
+      "vectors": "42 -> 43 parity",
+      "gates": {
+        "closed": [
+          "G-9"
+        ],
+        "raised": [
+          "G-10"
+        ],
+        "still_open": [
+          "G-4",
+          "G-5",
+          "G-8",
+          "G-10",
+          "N9",
+          "N10"
+        ]
+      },
+      "new_patterns": [
+        "P-40",
+        "P-41",
+        "P-42",
+        "P-43",
+        "P-44",
+        "P-45"
+      ]
     }
   ],
   "database": {
