@@ -1,0 +1,36 @@
+{
+ "pairs": [
+  {
+   "t117Id": "T117-CTRL-R600p0-N103-B1",
+   "referenceFile": "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a01a923149efe1b57/.softhouse/reviews/T84-evidence/out/capture-t84b-raw.json.gz",
+   "referenceId": "T84B-NSW-R600p0-N103-B1",
+   "observedByteIdentical": true,
+   "inputFieldsCompared": 29,
+   "inputFieldsExcludedAndNamed": [
+    "tenantId"
+   ],
+   "inputDiffs": {},
+   "t117TenantId": "t117_ctrl_r600p0_n103_b1",
+   "referenceTenantId": "t84b_nsw_r600p0_n103_b1",
+   "tenantIdsDisjoint": true,
+   "status": "REPRODUCED"
+  },
+  {
+   "t117Id": "T117-CTRL-R600p0-N250-B1",
+   "referenceFile": "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a01a923149efe1b57/.softhouse/capture/t100-g8-rescope/out/capture-t100-raw.json",
+   "referenceId": "T100-FAMB-R600p0-N250-B1",
+   "observedByteIdentical": true,
+   "inputFieldsCompared": 29,
+   "inputFieldsExcludedAndNamed": [
+    "tenantId"
+   ],
+   "inputDiffs": {},
+   "t117TenantId": "t117_ctrl_r600p0_n250_b1",
+   "referenceTenantId": "t100_famb_r600p0_n250_b1",
+   "tenantIdsDisjoint": true,
+   "status": "REPRODUCED"
+  }
+ ],
+ "reproduced": 2,
+ "total": 2
+}
