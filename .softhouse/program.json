@@ -160,11 +160,47 @@
             "fineract-accounting/src/main/java/org/apache/fineract/accounting/glaccount",
             "fineract-accounting/src/main/java/org/apache/fineract/accounting/producttoaccountmapping",
             "fineract-accounting/src/main/java/org/apache/fineract/accounting/financialactivityaccount",
-            "fineract-provider/src/main/java/org/apache/fineract/accounting/productaccountmapping"
+            "fineract-core/src/main/java/org/apache/fineract/accounting/glaccount",
+            "fineract-core/src/main/java/org/apache/fineract/accounting/common",
+            "fineract-core/src/main/java/org/apache/fineract/accounting/producttoaccountmapping",
+            "fineract-core/src/main/java/org/apache/fineract/accounting/financialactivityaccount",
+            "fineract-core/src/main/java/org/apache/fineract/portfolio/PortfolioProductType.java",
+            "fineract-loan/src/main/java/org/apache/fineract/accounting/productaccountmapping"
           ],
-          "measured_loc": 6636,
-          "files": 58,
-          "why_first": "It is the reference data and the mapping resolution the posting engine cannot run without: a journal-entry vector has nowhere to post until a chart of accounts and a product-to-account mapping exist. Smallest of the three, and it unblocks A1."
+          "measured_loc": 9007,
+          "files": 79,
+          "why_first": "It is the reference data and the mapping resolution the posting engine cannot run without: a journal-entry vector has nowhere to post until a chart of accounts and a product-to-account mapping exist. Smallest of the three, and it unblocks A1.",
+          "scope_widened": {
+            "decided_by": "agent",
+            "chosen_by": "agent",
+            "fire": "20260821-134344",
+            "class": "ENGINEERING",
+            "raised_by": "A2-1 backlog item B-1, then VERIFIED INDEPENDENTLY by the driver against the pin before acting",
+            "finding": "The slice's own core types are not in the slice. GLAccount, GLAccountType, GLAccountUsage, GLAccountData, GLAccountJsonInputParams and AccountingConstants all live in fineract-core under the SAME Java package names; PortfolioProductType lives in fineract-core/portfolio; LoanProductToGLAccountMappingHelper lives in fineract-loan in a split package shared with fineract-provider.",
+            "verification": "Driver measured at pin 426a23544: fineract-core accounting/{glaccount 11f/859, common 3f/761, producttoaccountmapping 4f/146, financialactivityaccount 1f/30}, portfolio/PortfolioProductType.java 82, fineract-loan accounting/productaccountmapping 1f/493. The originally declared fineract-provider/.../productaccountmapping path does NOT hold the helper -- it is in fineract-loan -- so the original scope named a path that could not supply what A2 needs.",
+            "decision": "WIDEN A2's fineract_paths to the Java PACKAGE boundary rather than the Gradle DIRECTORY boundary. New total 6,636 + 2,371 = 9,007 LOC across 79 files -- still well under the 25,000 split threshold and still a single bounded context.",
+            "why": "Under the standing scope guard a worker that reads outside its fineract_paths is a rejection. Left as written, the A2 coder would have had NO account entity and NO enums, and would have been rejected for going to get them -- punished for doing the only correct thing available. A scope that makes correct work a violation is a defect in the scope, not in the worker.",
+            "alternative_rejected": "Leave the paths as measured and let the coder 'read for context' outside them. Rejected: it makes the scope guard advisory, and the guard is one of the few mechanical checks this pipeline has."
+          },
+          "open_product_gate": {
+            "id": "G-9",
+            "class": "PRODUCT",
+            "state": "OPEN - driver to decide before the A2 coder is planned",
+            "title": "Fineract ships NO default chart of accounts. Gerege must choose one.",
+            "evidence": "A2-1 backlog B-5: zero seed COA rows in the Fineract distribution. A2-3 corroborated operationally -- tenant gerege had ZERO GL accounts before its capture, so every account it observed was one it created.",
+            "why_it_is_PRODUCT_not_RESERVED": "CLAUDE.md's Answering gates: this is a greenfield design choice, not a licensing fact and not regulatory acceptance. The driver decides it and records the reasoning; Buyan retains veto. It becomes RESERVED only if it turns on what the FRC has ACCEPTED, as opposed to what the FRC requires on paper.",
+            "leaning": "Port the COA as DATA, not as code, and launch with the minimal chart the captured vectors actually exercise -- per CLAUDE.md's PRODUCT preference for the simplest configuration provable against the oracle, with features deferred rather than shipped unvectored. An FRC-aligned production chart is a separate, later, data-only deliverable.",
+            "not_decided_yet": "Recorded now because it gates the A2 coder. The driver decides it next fire, or Buyan overrules."
+          },
+          "a3_obligation": {
+            "id": "OBL-A3-1",
+            "raised_by": "A2-1",
+            "for_slice": "tierA-gl-accounting-A3",
+            "finding": "TrialBalance persists a WRITTEN STORED BALANCE: TrialBalance.amount and .closingBalance map to DECIMAL(19,6) NOT NULL with no precision/scale on the annotation. A2-3 separately observed acc_gl_journal_entry.amount is numeric(19,6).",
+            "tension": "Direct tension with the CLAUDE.md non-negotiable 'the ledger is double-entry and append-only; balances are DERIVED, never written'.",
+            "ruling": "The Go port DERIVES the trial-balance closing balance and does NOT port a written balance column. Adopting Fineract's schema does not oblige us to adopt a stored-balance WRITE PATH -- schema-first is about reading the same tables, and a derived balance can be reconciled against Fineract's stored one during shadow parity, which is strictly more checking than copying it. Money columns are integer minor units in the Go module regardless of Fineract's DECIMAL(19,6).",
+            "status": "Recorded for A3. Not actionable in A2. Reviewer A2-2 was asked to verify the underlying claim."
+          }
         },
         {
           "id": "tierA-gl-accounting-A1",
