@@ -196,10 +196,12 @@
             "id": "OBL-A3-1",
             "raised_by": "A2-1",
             "for_slice": "tierA-gl-accounting-A3",
-            "finding": "TrialBalance persists a WRITTEN STORED BALANCE: TrialBalance.amount and .closingBalance map to DECIMAL(19,6) NOT NULL with no precision/scale on the annotation. A2-3 separately observed acc_gl_journal_entry.amount is numeric(19,6).",
+            "finding": "TrialBalance persists a WRITTEN STORED BALANCE at DECIMAL(19,6) NOT NULL. MECHANISM (corrected by A2-2 F-1 -- A2-1's account was wrong): closing_balance is written AT INSERT from SUM(je.amount), the UNSIGNED total (JournalEntryRepository:61 -> Tasklet:81). It is NOT written by the running-balance accumulator at Tasklet:119-127, which is gated on `closing_balance IS NULL` against a NOT NULL column and whose only NULL-producing constructor (TrialBalance.getInstance) has ZERO CALLERS -- unreachable dead code, and A2-1 left it unmarked.",
             "tension": "Direct tension with the CLAUDE.md non-negotiable 'the ledger is double-entry and append-only; balances are DERIVED, never written'.",
-            "ruling": "The Go port DERIVES the trial-balance closing balance and does NOT port a written balance column. Adopting Fineract's schema does not oblige us to adopt a stored-balance WRITE PATH -- schema-first is about reading the same tables, and a derived balance can be reconciled against Fineract's stored one during shadow parity, which is strictly more checking than copying it. Money columns are integer minor units in the Go module regardless of Fineract's DECIMAL(19,6).",
-            "status": "Recorded for A3. Not actionable in A2. Reviewer A2-2 was asked to verify the underlying claim."
+            "ruling": "Unchanged in direction and now better founded: the Go port DERIVES the trial-balance closing balance and ports NO written balance column. Schema-first obliges us to read the same tables, not to adopt a stored-balance WRITE PATH. During shadow parity the derived balance is reconciled against Fineract's stored one, which is strictly more checking than copying it. Note the stored value is an UNSIGNED sum, so it is not even the signed balance a reader would assume -- reconciliation must compare like with like. Money is integer minor units in the Go module regardless of Fineract's DECIMAL(19,6).",
+            "status": "Recorded for A3. Not actionable in A2. Reviewer A2-2 was asked to verify the underlying claim.",
+            "mechanism_corrected_by": "A2-2 finding F-1, local fire 20260821-134344",
+            "why_the_correction_matters": "It makes the non-negotiable tension WORSE, not better. A3 reading A2-1's version would have ported a running-balance accumulator that Fineract never runs, and would have graded it against an oracle that does something else entirely -- a port faithful to dead code. This is precisely what an independent reviewer that RE-DERIVES is for: the review did not soften the finding, it corrected its mechanism and sharpened it."
           }
         },
         {
