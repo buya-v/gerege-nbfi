@@ -989,6 +989,67 @@
       "description": "THE RECORD NOW ASSERTS SOMETHING FOUR ATTEMPTS DISAGREE ABOUT. History: T154 called fire-program.sh:224 'fail-closed'. T157 drove it and reported the OPPOSITE -- on SEEKABLE input one invalid byte makes BSD grep print nothing and exit 1, emptying DIRTY, which is fail-OPEN. A previous fire's driver recorded an independent reproduction on ugrep 7.5.0. T171 (this fire) then drove SIX invalid-byte spellings across 18+ byte/input-shape combinations on /usr/bin/grep 2.6.0-FreeBSD, macOS 26.5.1 build 25F80, and COULD NOT REPRODUCE IT AT ALL -- reported honestly as a material negative rather than buried. THE DRIVER THEN MEASURED IT TOO, and got a second negative plus a new discriminator: (i) \\xff\\xfe invalid UTF-8 in a seekable file does NOT suppress output under /usr/bin/grep -v in LC_ALL=C, en_US.UTF-8 or POSIX -- all lines printed, exit 0, identical on piped input; (ii) a real NUL byte DOES change behaviour -- grep prints 'Binary file g.txt matches' and suppresses the lines, exit 0. So the trigger may be NUL, not invalid UTF-8, and the NUL shape does NOT empty the output either: DIRTY would be NON-empty but contain a message instead of paths, which is a THIRD failure mode nobody has characterised and is neither cleanly fail-open nor fail-closed. ALSO NOTE: on the driver's shell `which -a grep` shows grep resolving to a SHELL FUNCTION wrapper, and ugrep is not on PATH -- so the earlier ugrep corroboration could not be re-checked and the binary actually invoked may differ between measurements. SETTLE IT: determine what the ACTUAL discriminator is (NUL vs invalid UTF-8 vs --binary-files mode vs seekable-vs-pipe vs grep implementation vs OS build vs a shell function wrapper intercepting the call), with every trial's implementation, version, OS build, locale, input shape and invocation path recorded. Then RE-SCOPE what the record asserts: T171 merged a correction whose headline says the true direction is fail-OPEN, resting on ONE observation that two subsequent attempts could not reproduce, and the driver appended its own measured addendum. Do not settle this by vote and do not simply revert to T154 -- 'fail-closed' has no more support than 'fail-open' does. If the honest answer is that the behaviour is not reproducible on this machine class and the claim must be reduced to a scoped observation, SAY THAT. P-46: quote by extraction. Note T172 has already ANCHORED the pattern, which is a separate and settled defect -- do not re-open it.",
       "note": "dispatched local fire 20260821-125942 batch 1",
       "branch": "softhouse/T189-grep-adjudication-final"
+    },
+    {
+      "id": "A2-13",
+      "title": "DRAFT DEC-2 \u2014 the frozen adapter contract for the GL/accounting bounded context, so the merged A2 ledger port can be graded at all",
+      "description": "See handoff brief. Draft only; the author does not ratify.",
+      "agent_role": "spec_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        "docs/adr/",
+        ".softhouse/handoff/"
+      ],
+      "context": "tierA-gl-accounting",
+      "dependencies": [
+        "A2-8",
+        "A2-12"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "raised by local fire 20260821-125942: .softhouse/vectors/ holds ONLY loanschedule/, so A2-8's merged GL port is graded by ZERO parity vectors. The store README's own layout is one directory per bounded context and conformance.sh already filters by context -- the harness was built for a second context that was never added. A GL context needs its own frozen contract before a vector can be admitted against it. DEC-n RATIFICATION is agent-decidable (CLAUDE.md), so drafting DEC-2 is not a user gate; amending the RATIFIED DEC-1 still is."
+    },
+    {
+      "id": "A2-14",
+      "title": "INDEPENDENT review of A2-13's DEC-2 draft \u2014 re-derive the GL posting rules from Fineract source, do not read the author's conclusions first",
+      "description": "See handoff brief.",
+      "agent_role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/reviews/"
+      ],
+      "context": "tierA-gl-accounting",
+      "dependencies": [
+        "A2-13"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "paired reviewer, required by the plan gate: no contract is ratified on its author's word."
+    },
+    {
+      "id": "A2-15",
+      "title": "Promote the A2 raw captures into PARITY vectors under .softhouse/vectors/<gl-context>/ and extend the conformance harness to grade a second bounded context",
+      "description": "See handoff brief. Honours G-10 option (c): capture/promote only on products whose mappings the oracle would still accept today.",
+      "agent_role": "test_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "test",
+      "files_hint": [
+        ".softhouse/vectors/",
+        "nexus/internal/apps/ledger/"
+      ],
+      "context": "tierA-gl-accounting",
+      "dependencies": [
+        "A2-13",
+        "A2-14"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "blocked until DEC-2 exists and has passed independent review -- a vector cannot be admitted against a contract that does not exist. G-10 is OPEN and its driver recommendation (c) is a PRECONDITION on which products may be promoted from."
     }
   ],
   "cross_corroboration": {
