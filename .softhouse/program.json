@@ -78,7 +78,7 @@
    "tier0-harness-schedule-poc"
   ],
   "parked_contexts": [],
-  "note": "Local fire 20260821-054355 (3rd of the day). Batch 1: FIVE dispatched, FIVE completed, FIVE merged. The driver then found TWO defects in T173's merged guards BY RUNNING THE HARNESS ON MERGED MAIN (P-49) -- a whole-repo walk that graded 43 other checkouts under .claude/worktrees (2292 refusals, none in this commit's content), and a census-presence check that inverted itself on large output via grep -q + pipefail. Both fixed in e93afc9, both driven red and green, and raised as T188 for independent review because a driver fix is not exempt. Batch 2 dispatched: T170 (G-8 rebuild, now unblocked by T177), T171, T172. Merged main: conformance exit 0, probe = up, 43 vectors / 5664 cells."
+  "note": "Local fire 20260821-054355 (3rd of the day). EIGHT DISPATCHED, EIGHT COMPLETED, EIGHT MERGED, ZERO LIVE AT EXIT. The driver found TWO defects in T173's merged guards by running the harness on the REAL merged main (P-56, P-57) -- a scratch merge could not show either -- fixed both, drove them red and green, and raised T188 so its own fix gets reviewed. It also measured a contradiction to a claim it was about to merge (T171's fail-open direction) and committed a scope-restricting addendum rather than letting the record assert it. Four tasks raised, all re-measured by the driver before registering. Next fire starts at T187 (a LIVE gate bypass: 21 unguarded rewriters of the ratified DEC-1, two of whose anchors match the ADR today), then T188, T189, T165, T174, T176, T180."
  },
  "contexts": [
   {
@@ -1395,19 +1395,29 @@
     "T175",
     "T177",
     "T178",
-    "T179"
+    "T179",
+    "T170",
+    "T171",
+    "T172"
    ],
    "driver_fixes": [
     "e93afc9 \u2014 two defects in T173's merged guards, found on the merge, driven red and green"
    ],
    "tasks_raised": [
-    "T186 (money in major-unit decimal on the capture wire)",
-    "T187 (21 more unguarded rewriters of the ratified DEC-1, two live today)",
-    "T188 (review the driver's own merge fix)"
+    "T186 money as major-unit decimal on the capture wire",
+    "T187 21 more unguarded rewriters of the ratified DEC-1, two live today",
+    "T188 review the driver's own merge fix",
+    "T189 adjudicate the grep invalid-byte claim (2 positives vs 2 negatives + a third uncharacterised mode)"
    ],
    "headline": "T177 answered the StackOverflowError question: it is a function of JVM state (warm-up/JIT/-Xss), not of the cell's inputs -- 107 trials across 75 fresh JVMs, cold start 33/33 threw, attempt 5+ never threw. T159 and T169 never disagreed about the oracle. 'The throwing region' is not a region of the input space at all.",
-   "uat": "conformance exit 0, probe line PRESENT and reading up, 43 parity vectors / 5664 cells, invariant violations 0; go build 0, go vet 0, go test ok; gofmt -l names exactly contract.go (expected, G-3)",
-   "anchors": "DEC-1 49dc8923... and contract.go 0db73d4a... unmoved before, during and after every merge"
+   "uat": "FINAL on merged main: conformance exit 0, probe line PRESENT reading up, 43 parity vectors / 5664 cells, invariant violations 0; go build+vet+test exit 0; DEC-1 49dc8923... and contract.go 0db73d4a... unmoved throughout",
+   "anchors": "DEC-1 49dc8923... and contract.go 0db73d4a... unmoved before, during and after every merge",
+   "batch2": "T170 (G-8 rebuild), T171 (fail-open correction, merged WITH a driver addendum restricting its scope), T172 (LOCK anchor)",
+   "patterns_added": [
+    "P-55 (T171)",
+    "P-56 (driver)",
+    "P-57 (driver)"
+   ]
   }
  ],
  "database": {
