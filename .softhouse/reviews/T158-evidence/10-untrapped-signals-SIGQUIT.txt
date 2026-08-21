@@ -1,0 +1,5 @@
+SIGQUIT  script exit=-3       vector-in-store=False park-left=True  restored-msg=False
+         -> next run: RECOVERED=True   vector back=True
+SIGPIPE  script exit=-13      vector-in-store=True  park-left=False restored-msg=True
+SIGUSR1  script exit=-30      vector-in-store=True  park-left=False restored-msg=True
+SIGALRM  script exit=-14      vector-in-store=True  park-left=False restored-msg=True

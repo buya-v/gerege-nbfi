@@ -1,0 +1,10 @@
+BUILD=0
+VET=0
+--- gofmt -l internal (G-3: contract.go is EXPECTED; never -w) ---
+internal/apps/loanschedule/contract/contract.go
+--- go test ./... ---
+ok  	github.com/gerege/nexus/internal/apps/loanschedule	8.189s
+ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	27.445s
+?   	github.com/gerege/nexus/internal/apps/loanschedule/conformance/cmd/conformance	[no test files]
+?   	github.com/gerege/nexus/internal/apps/loanschedule/contract	[no test files]
+TEST=0

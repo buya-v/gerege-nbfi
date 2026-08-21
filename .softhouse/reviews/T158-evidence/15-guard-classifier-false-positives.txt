@@ -1,0 +1,20 @@
+.softhouse/capture/pathb/t149/prove-exit-trap.py   real guards=0   GUARD-matching lines=7
+        2 | """T156 — drive the missing-EXIT-trap defect RED against the REAL pre-fix bytes of
+        7 | two `mv`s and, before this fix, no `trap`.  A Ctrl-C, a `kill`, a closed terminal or an
+       31 | Run:  python3 prove-exit-trap.py
+       88 | ("kill9", "SIGKILL to the script — no trap can catch this"),
+
+.softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py   real guards=0   GUARD-matching lines=4
+        3 | EXIT trap, not for its wording.
+       19 | * `trap` / `finally` / `atexit` in a file is evidence a guard EXISTS somewhere in that
+      126 | print("  of those, carrying no trap/finally/atexit anywhere in the file: %d" % len(unguarded))
+      160 | ntrap = len(re.findall(r"(?m)^\s*trap\s", src))
+
+.softhouse/capture/pathb/t99/prove-p24-postmerge.sh   real guards=0   GUARD-matching lines=1
+       77 | echo "  NOT identical — the trap did not arm in this configuration, so leg B below bounds nothing."
+
+.softhouse/reviews/t47-probe/t47_edit_1.py   real guards=0   GUARD-matching lines=3
+       55 | "`.softhouse/reviews/t45-probe/t45-extra-output.txt`, leg C3]. **One trap worth "
+      145 | "`.softhouse/reviews/t47-probe/t47-monthend-output.txt`]. **One trap worth "
+      151 | "112,147,776-pair form has no such trap, because it sweeps date pairs directly "
+
