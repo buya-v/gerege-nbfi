@@ -891,7 +891,7 @@ regulatory sign-off and licence facts are equally untouched and are not in Run 1
 
 ---
 
-## G-8 — TWO phenomena at the rounding floor, under one gate id
+## G-8 — TWO phenomena at the rounding floor (one of them in TWO shapes), and a THIRD outcome in which there is no schedule at all, under one gate id
 
 - **id**: G-8
 - **class**: ENGINEERING to measure; the *remedy* is a DEC-n amendment, which is a hard `user` gate
@@ -905,10 +905,20 @@ regulatory sign-off and licence facts are equally untouched and are not in Run 1
   (applied T114's findings), T129 (independent review of T122 — rebuilt the sentence-by-sentence
   scope audit from scratch, 117 rows, 6 fail, **every failure a scope or disposition statement and
   the measurements perfect**; MICRO-FIX), T140 (applied T129's six findings and adopted the standing
-  rule below)
+  rule below), **T117** (measured family B past n = 1000, moved the residual to MNT 5.01 at n = 1000
+  and found the **PARTIAL** shape; refused to edit this section and said why), **T159** (independent
+  review of T117 — APPROVED, then asked past n = 1000 and **doubled** the residual to **MNT 10.01 at
+  n = 3000**, found the fourth partial cell, detonated the shared rig's `RuntimeException` handler,
+  and produced the 25-site list this rebuild works from; also refused to edit this section),
+  **T169** (fixed the shared capture rig to `catch (Throwable)`), **T177** (measured that the
+  oracle's `StackOverflowError` is a function of **JVM state**, not of the cell's inputs, and
+  reconciled T159 against T169), **T170** (this rebuild: applied T159's 25 sites plus the further
+  sites it found itself, split every family-B sentence into FULL and PARTIAL, added the THIRD
+  OUTCOME block, and folded in T177)
 - **context**: tier0-harness-schedule-poc / loan-schedule
-- **state**: **OPEN** — blocks nothing today. T112 fixed the write-up and T122 fixed two sentences in
-  T112's fix; **neither decided the gate, and neither may.**
+- **state**: **OPEN** — blocks nothing today. T112 fixed the write-up, T122 fixed two sentences in
+  T112's fix, and T170 rebuilt the family-B half after T117 and T159 moved the measurement;
+  **none of them decided the gate, and none of them may.**
 - **raised_by**: local fire 20260820-170001, from T75's approval of T74
 - **recorded_in**: `.softhouse/gates.md`
 - **supersedes**: the block `## G-8 — UPDATE from local fire 20260820-200002` that stood on `main`
@@ -932,11 +942,19 @@ regulatory sign-off and licence facts are equally untouched and are not in Run 1
 ### STANDING RULE — how to edit this section (adopted at T140, proposed by T129)
 
 This section is the artefact **Buyan reads to decide a `user` gate**, and it has now carried a wrong
-number or a wrong scope statement to that reader **four separate times**: a family A/B inversion, an
+number or a wrong scope statement to that reader **five separate times**: a family A/B inversion, an
 18-instead-of-22 refutation count born of a float in an analysis script (P-25), an unscoped
-"largest n" sentence that contradicted the section ten lines away (P-26), and a `tasks.json`
-disposition that the author had already reversed and never swept (P-21 by a third route). Every one
-of them was in **prose**, not in a measurement. So:
+"largest n" sentence that contradicted the section ten lines away (P-26), a `tasks.json`
+disposition that the author had already reversed and never swept (P-21 by a third route), and — the
+fifth, found by T117 and T159 and repaired by T170 — **a whole family description that was true when
+written and went FALSE when the measured set grew**: family B was described as *"it sums to 0.00 …
+no row carries a non-zero principal … principal MNT 0.01, no other principal has produced a
+family-B cell … nothing above n = 250 has ever been asked"*, and the partial shape, 20 distinct
+principals and terms to n = 3000 falsified all of it. Every one of the five
+was in **prose**, not in a measurement. **The fifth has a different mechanism from the other four
+and is the one to guard against next: nobody wrote anything wrong. A sentence with no scope on it
+is a standing claim about every future measurement, and it fails silently the day somebody asks a
+bigger question.** So:
 
 1. **Nobody edits this section without rebuilding the sentence-by-sentence scope table.** Not a
    grep for the sentence you are changing — a rebuild, claim by claim, of what every sentence
@@ -961,7 +979,7 @@ of them was in **prose**, not in a measurement. So:
    `## G-8` heading, no conflict on `.softhouse/tasks.json`, and `gates.md` resolving to your
    branch's blob.
 
-### Read this first: G-8 is TWO phenomena, and a remedy for one is not a remedy for the other
+### Read this first: G-8 is TWO phenomena and THREE outcomes, and a remedy for one is not a remedy for the other
 
 Everything below is scoped to the family it was measured on. A sentence about family A is not a
 sentence about family B, and neither is a sentence about the graded domain as a whole — the domain
@@ -969,24 +987,47 @@ is graded **by sampling**, and rate, principal and `NumberOfRepayments` are unbo
 [VERIFIED by T100 at `nexus/internal/apps/loanschedule/contract/contract.go:1163-1170`: *"are graded
 by sampling rather than by enumeration … No claim is made that any un-sampled value is safe"*].
 
+**And family B itself has TWO shapes, not one** — the **FULL** shape, in which the principal column
+sums to `0.00` and nothing is repaid, and the **PARTIAL** shape, in which it sums to a non-zero
+amount that is still short of the disbursement. The partial shape was found by T117 and extended by
+T159; **every family-B sentence written before them describes the full shape only**, and the two are
+distinguished throughout below. There is also a **third outcome** — the oracle producing **no
+schedule at all** — which is neither family and has its own block after this one.
+
 | | **FAMILY A — stale derived column** | **FAMILY B — genuine non-amortization** |
 |---|---|---|
-| principal column sums to the disbursed amount | **yes** | **NO — it sums to 0.00** |
-| `totalPrincipalAmount` | = the disbursement | **0.00** |
-| non-zero principal rows | exactly **one**, the last, carrying the whole disbursement | **none** |
-| last row's interest | `0.00` | `0.01` |
-| balance column | constant at the disbursed amount | constant at the disbursed amount |
-| `totalOutstandingAmount` | `0` | `0` — **so this field does not discriminate** |
-| forcing the oracle's own balance `Memo` to recompute | balance goes to **`0.00`** | **does not move** |
-| the Go port | **diverges**, on exactly one cell per case | **reproduces it cell for cell — no divergence at all** |
-| `invariant_exemptions` as a remedy | **inert** — the failure is a cell diff | **decisive** — the failure is purely invariant |
-| measured at | **11** of the 12 annual rates swept (all but 600.0 %), `3 ≤ n ≤ 600`, **312 cells** | **one** annual rate (600.0 %), `104 ≤ n ≤ 250`, **29 cells** |
+| principal column sums to the disbursed amount | **yes** | **NO.** FULL: sums to `0.00`. PARTIAL: sums to a non-zero amount short of the disbursement |
+| `totalPrincipalAmount` | = the disbursement | FULL: **`0.00`** · PARTIAL: `0.02` / `0.04` / `0.05` / `1.66` on the four shapes measured |
+| non-zero principal rows | exactly **one**, the last, carrying the whole disbursement | FULL: **none** · PARTIAL: exactly **one**, the last, carrying **part** of the disbursement |
+| last row's interest | `0.00` | `0.01` **only where the disbursement is 1 minor unit** (150 of the 209 cells); 19 distinct values across the full shape, and `0.11` / `0.12` / `0.14` / `13.32` on the four partial shapes |
+| balance column | constant at the disbursed amount | FULL: constant at the disbursed amount · PARTIAL: **two** values — the disbursed amount, then the residual on the last row |
+| `totalOutstandingAmount` | `0` | `0` on all 209 — **so this field does not discriminate** |
+| forcing the oracle's own balance `Memo` to recompute | balance goes to **`0.00`** | **does not move** — but measured on **3** of the 29 record cells only, all at 1 minor unit; **UNMEASURED** on all 180 cells T117 and T159 added, and on every partial cell |
+| the Go port | **diverges**, on exactly one cell per case | **reproduces it cell for cell — no divergence at all** on the **29** record cells (T84's 22, T100's 1 through the real grader, and T101's re-grade of all 29); **UNMEASURED** on all 180 cells T117 and T159 added, and never on a partial cell |
+| `invariant_exemptions` as a remedy | **inert** — the failure is a cell diff | **decisive** — the failure is purely invariant — **established on ONE full cell** (600.0 % / MNT 0.01 / n = 108). On a partial cell nobody has checked whether the port even reproduces the oracle, so "purely invariant" is **unmeasured** there |
+| measured at | **11** of the 12 annual rates swept (all but 600.0 %), `3 ≤ n ≤ 600`, **312 cells** | **one** annual rate (600.0 %), `104 ≤ n ≤ 3000`, principals **1 … 1001 minor units**, **209 cells** |
 
-Cells behind that table: **312 family-A** (198 T83 + 111 T84 + 3 T100) and **29 family-B** (22 T84 +
-7 T100), each re-derived from the committed raw captures by T100's own classifier
-[`.softhouse/capture/t100-g8-rescope/src/classify_two_families.py`, `out/column-shape-{t83,t84,t100}.json`].
-Every row of that table holds on **every** cell of its family in those captures — no exceptions, no
-mixed cases. The two families are disjoint and each is internally uniform on what was swept.
+Cells behind that table: **312 family-A** (198 T83 + 111 T84 + 3 T100) and **209 family-B** — the
+**29** of the four record captures (22 T84 + 7 T100) plus **180** added by T117 (155) and T159 (25).
+The 312 and the 29 were re-derived from the committed raw captures by T100's own classifier
+[`.softhouse/capture/t100-g8-rescope/src/classify_two_families.py`, `out/column-shape-{t83,t84,t100}.json`];
+**all 209 family-B cells and all 312 family-A cells were re-derived again, in integer minor units
+from the `.gz` raw captures alone, by T170** [`.softhouse/capture/t170-g8-rebuild/src/extract_t170.py`,
+`src/aggregate_t170.py`, `out/extract-t170.json`, `out/aggregate-t170.json` — 1,035 cases read across
+seven committed captures, 0 skipped, 0 unclassifiable]. The 209 family-B cells cover **190 distinct
+(rate, n, principal) shapes**; the difference is deliberate re-asks under disjoint tenant ids, not
+new shapes.
+
+**Every row of that table holds on every cell of its family in the FOUR RECORD captures (T83, T84,
+T84b, T100) — no exceptions, no mixed cases.** It is **not** uniform over the 209: the partial shape
+splits **four** of the rows (principal-column-sums, `totalPrincipalAmount`, non-zero principal rows,
+balance column), a fifth (last row's interest) turns out to have been a statement about a
+1-minor-unit disbursement rather than about family B, and **three** of the rows (memo recompute, the
+Go port, `invariant_exemptions`) are simply **unmeasured** on the 180 new cells. That
+distinction is the whole reason this table now carries a FULL and a PARTIAL entry. The two
+*families* remain disjoint, and the discriminator that separates them — *does the principal column
+sum to the disbursed amount?* — is **untouched** by any of this [re-derived by T170 over all 1,035
+cases; every family-B cell fails it and every family-A cell passes it].
 
 **What was found originally.** T75 registered a prediction, committed it, and only then ran a
 calibrated probe against the pinned oracle image (its calibrations reproduced `T64-ZP-A`/`T64-ZP-B`
@@ -1010,11 +1051,117 @@ and it sets two of this project's own rules against each other:
 **On family B it is worse and it is different: there is no port-vs-oracle divergence to arbitrate,
 because the port agrees with the oracle — both emit a schedule that never repays the loan.** A
 declared-divergence mechanism would have to be able to say *"both are wrong"*, which the harness
-cannot express today.
+cannot express today. **That sentence is measured on the 29 record cells only** — all of them full
+shape, all at a 1-minor-unit disbursement. **Nobody has graded the port on a PARTIAL cell, or on any
+of the 180 cells T117 and T159 added**, so "the port agrees with the oracle" is a claim about 29
+cells and not about family B [T170; the gap is stated, not filled — T170 ran no port grading].
 
-Today `conformance.sh` reports PASS with 42 parity vectors and 0 invariant violations — **only
-because no vector covers either family.** That is precisely the blind spot the conformance gate
-exists to eliminate, so a green bar is not evidence against this finding.
+Today `conformance.sh` reports PASS with **43 parity vectors, 5,664 graded cells** and 0 invariant
+violations — **only because no vector covers either family.** That is precisely the blind spot the
+conformance gate exists to eliminate, so a green bar is not evidence against this finding.
+[T170 re-ran it: `bash .softhouse/conformance.sh` → VERDICT PASS, exit 0, 43 parity vectors PASS /
+0 FAIL, 5664 cells graded, 0 invariant violations, 0 assertions NOT RUN. The **42 / 5576** this
+paragraph and the closing paragraph both carried was T112's and T140's measurement and is stale, not
+wrong-at-the-time — a count in this section must name the run that produced it.]
+
+---
+
+## THE THIRD OUTCOME — the reference oracle can produce NO SCHEDULE AT ALL
+
+**Added at T170, because until now this section had no sentence for it.** Every other sentence in
+G-8 is about *what the oracle emitted*. There is a third possibility, and it has been observed:
+
+> **The reference oracle can answer the request by throwing `java.lang.StackOverflowError`, emitting
+> no schedule at all.** So the outcome of asking the oracle a cell in this region is one of **three**
+> things — it amortizes, it emits a schedule that does not amortize, or **there is no schedule**.
+
+This matters to the gate and not only to the write-up. **Option (b) proposes to refuse a region from
+the graded domain, and a graded domain that can express only "amortizes" and "does not amortize"
+will silently classify a crash as one of the two.** Option (b) cannot be drafted without this third
+outcome in it. **T170 does not decide option (b); it remains a hard `user` gate.**
+
+**What was observed.** Two of the 49 cases in T159's committed capture carry no `observed` block at
+all and an `error` of `java.lang.StackOverflowError: null` — `T159-R600p0-N2000-B10001` and
+`T159-R600p0-N3000-B100001` [VERIFIED by T170 by extraction from the raw
+`.softhouse/capture/t159-review-t117/out/capture-t159-raw.json.gz`: 49 cases, **47 observed / 2
+errored**, `out/extract-t170.json` → `summary.errored_cells`]. The captured `errorStackTop` on both
+is the reference oracle recursing into itself: frames repeating the pair
+`ProgressiveEMICalculator.calculateLastUnpaidRepaymentPeriodEMI(…:1183)` →
+`lambda$calculateLastUnpaidRepaymentPeriodEMI$66(…:1214)` through `java.util.Optional.ifPresent`
+[VERIFIED by T170 from the same captured frames; the source reading of `:1183` / `:1211-1212` /
+`:1214` at the pinned commit `426a23544` is T159's].
+
+**And the throw is a function of JVM STATE, not of the cell's inputs — T177 measured this, and it
+changes what may be said here** [`.softhouse/reviews/T177-stackoverflow-nondeterminism.md`,
+`.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T177.md`; 139 probe trials, 348 seam
+calls, 75 java processes]:
+
+- **Cold start throws every time.** The disputed cell (B = 10001 minor units, n = 3000) as the
+  JVM's very first seam call, default `-Xss`, C2 on: **33 JVMs, 0 observed, 33 threw.** T159's
+  detonation (B = 10001, n = 2000): **9 JVMs, 0 observed, 9 threw** [T177,
+  `out/ANALYSIS-ALL.txt` "COLD START" block].
+- **Warm-up removes it, as a step function.** Inside one JVM the disputed cell flips from threw to
+  observed at **attempt 5** and never flips back — **7 of 7** independent default-flag JVMs, and in
+  **107 trials** of that cell no `observed` was ever followed by a `threw` in the same process. The
+  warming need not be the same cell: 50 prior calls on a different, never-throwing cell buys the
+  same thing (3/3), while 1 and 10 do not (0/3 and 0/3).
+- **It moves with `-Xss` and with the JIT.** First call of a cold JVM, 2 JVMs per size: 512k, 1m, 2m
+  and 4m **throw 2/2**; 8m and 16m **observe 2/2**. With C2 off (`-XX:TieredStopAtLevel=1`) the
+  transition **never happens** — 8 attempts, 8 throws.
+- **Therefore "the throwing region" is not a region of the input space at all.** Any sentence whose
+  premise is a boundary in (B, n) is **refuted at the premise**, not merely imprecise — including
+  the *"it is not monotone: `(B=10001, n=2000)` dies while `(B=10001, n=3000)` succeeds"* sentence in
+  the NOTICE block at the end of this file, which is corrected there. Under equal JVM state both
+  cells throw (cold) and both answer (warm).
+- **T159 and T169 never disagreed about the oracle.** T177 replayed T159's committed case list in
+  T159's committed order: the only two cells that threw are exactly the two that threw in T159's
+  committed capture, and the money reproduces — **24 comparisons against committed T159 values, 0
+  mismatches** [T177, `out/ANALYSIS-ALL.txt` money block]. They asked the same cell at different
+  points on a JVM's warm-up curve, and the rig had no field in which to record that.
+
+**G-8's headline number is NOT at risk from this, and the two cells must not be confused.** The
+MNT 10.01 residual belongs to **B = 1001 minor units** at n = 3000 (`T159-R600p0-N3000-B1001`). The
+cell that throws is **B = 10001**, and **when the oracle answers it, it amortizes fully** — it is not
+a family-B cell at all: `totalPrincipalAmount 100.01` against a `100.01` disbursement, final balance
+`0.00`, 19 non-zero principal rows [VERIFIED by T170 by extraction from T159's raw capture, where
+that cell was observed]. T177 asked the **headline**
+cell from **9 cold starts: 9 observed, 0 threw**, with `totalInterestAmount 15010.01` on all 16 of
+its observations, matching T159's committed value. **The headline cell is cold-safe.** *The two ids
+differ by one digit and the driver's own brief for T177 conflated them; T177 refused that premise
+and was right.*
+
+**One artefact to stop misreading.** Every `errorStackDepthTotal` of exactly `1024` in this program's
+captures is **HotSpot's recording cap, not a depth** [T177; T170 notes that T159's own capture does
+not carry the field at all — it records `error`, `errorCause` and `errorStackTop` only, so the
+warning bites on T169-era and later captures]. With the cap lifted
+(`-XX:MaxJavaStackTraceDepth=0`) the true depth reached at overflow **rises** as compilation
+proceeds — 5119, 4683, 4683, then **8400** frames on the fourth attempt in one JVM, and on the fifth
+it fits. T177 measured frame *depth*, not frame *size*, and **asserts no mechanism**.
+
+**What is NOT known about the third outcome, and must not be filled in:**
+
+- **Its extent.** Only **three** cells have ever been asked as probes under controlled JVM state —
+  (B = 10001, n = 3000), (B = 10001, n = 2000) and (B = 1001, n = 3000) — plus a warm-up control at
+  (B = 10001, n = 200) and a one-pass replay of T159's 24-cell prefix. Whether
+  any **other** committed capture in this program is affected is `[UNVERIFIED]` — T177 did not
+  re-run T83, T84, T100 or T117, and neither did T170.
+- **The exact `-Xss` boundary.** Measured only that 4m throws and 8m observes, 2 JVMs each; the
+  interval was not bisected. `[UNVERIFIED]`
+- **The mechanism inside C2**, and whether "attempt 5" is a constant or a compilation threshold this
+  cell happens to cross at 5. `[UNVERIFIED]`
+- **Whether de-optimisation can flip an observed cell back to throwing.** Never seen in 139 trials;
+  no run was long enough to force one. `[UNVERIFIED]`
+- **Whether the Go port must reproduce it.** T177 offers, explicitly **as a reasoned inference and
+  not as a measurement**, that the throw is an environmental limit of the JVM rather than a semantic
+  the port owes. Nothing in this file grades a port on a throwing cell. `[UNVERIFIED]`
+
+**A rig note, because it changes how the older "0 errored" lines should be read.** Before T169 the
+shared capture rig caught `RuntimeException`, not `Throwable`, so **no completed run in the history
+of this program could print anything other than `0 errored`** [T169]. T169 landed the shared
+`catch (Throwable)` recorder (`.softhouse/capture/lib/ThrewOutcome.java`,
+`lib/sweep_integrity.py`, `lib/check_no_narrow_catch.py`); T159's own harness had already made the
+one behavioural change to `catch (Throwable)`, which is why its two throws were recorded at all.
+**An older capture's "0 errored" is therefore not evidence that nothing threw.**
 
 ---
 
@@ -1201,21 +1348,66 @@ of G-8, and in that unscoped form it is **false**; see family B.
 
 ---
 
-## FAMILY B — the principal column itself never repays the loan
+## FAMILY B — the principal column does not repay the loan, in FULL or in PART
 
 ### Discriminator for family B
 
-A cell is family B when the REPAYMENT rows' `principal` column **does not sum to the disbursed
-amount**. On every family-B cell measured so far it sums to **0.00** against a **0.01** disbursement,
-`totalPrincipalAmount` reads `0.00`, **no** row carries a non-zero principal, the last row carries
-`interest 0.01`, and forcing the memo to recompute **does not move the balance**. This is exactly
-the test the driver's re-derivation named in advance as fatal to the family-A reframing when applied
-to all of G-8: *"If it ever fails to sum, the reframing above is **wrong** and G-8 is the broader
-finding after all."* It failed.
+**The discriminator is unchanged and still separates the families cleanly:** a cell is family B when
+the REPAYMENT rows' `principal` column **does not sum to the disbursed amount** [re-derived by T170
+over all 1,035 cases of the seven committed captures: every family-B cell fails this test, every
+family-A cell passes it, 0 exceptions]. What has changed is the **description** attached to it, which
+was written when only one shape had been seen. **There are two shapes:**
 
-### What was measured, and over what domain — a MUCH narrower domain than family A
+- **FULL — 202 of the 209 cells measured.** The principal column sums to **`0.00`**,
+  `totalPrincipalAmount` reads `0.00`, **no** row carries a non-zero principal, and the balance
+  column is constant at the disbursed amount. Where the disbursement is 1 minor unit — 150 of the
+  209 — the last row carries `interest 0.01`.
+- **PARTIAL — 7 measurements over 4 distinct shapes, all found after this section was written.** The
+  principal column sums to a **non-zero** amount that is still **short** of the disbursement,
+  exactly **one** row (the **last**) carries a non-zero principal, and the balance column takes
+  **two** values — the disbursed amount, then the residual on the final row. Measured
+  [VERIFIED by T170 by extraction, integer minor units, from
+  `capture-t117p2-raw.json.gz` and `capture-t159-raw.json.gz`]:
 
-**T84 measured 22 family-B cells; T100 measured 7 more.** Union of what has been observed:
+| shape (600.0 %) | disbursed | amortized | **residual** | `totalPrincipalAmount` | balance column | last row's interest |
+|---|---|---|---|---|---|---|
+| n = 108, B = 11 minor | 11 | **5** | **6** | `0.05` | `0.11` → `0.06` | `0.11` |
+| n = 121, B = 11 minor | 11 | **4** | **7** | `0.04` | `0.11` → `0.07` | `0.12` |
+| n = 150, B = 11 minor | 11 | **2** | **9** | `0.02` | `0.11` → `0.09` | `0.14` |
+| n = 2000, B = 999 minor | 999 | **166** | **833** | `1.66` | `9.99` → `8.33` | `13.32` |
+
+The first three were found by T117 and re-asked by T159 under **disjoint tenant ids**; the fourth is
+T159's and is far larger than the other three. **T170 re-verified the re-ask independently: each
+pair's whole `observed` block is byte-identical under a canonical dump (`sort_keys=True`,
+`separators=(',',':')`), 3 of 3, while the tenant ids differ (`t117p2_r600p0_n108_b11` vs
+`t159_r600p0_n108_b11`, and so on).** So the partial shape is neither a tenant artefact nor a
+one-run fluke.
+
+**On all 209 family-B cells the unamortized residual equals the final row's `balance` exactly, and
+`totalOutstandingAmount` reads `0`** — 209 of 209, 0 exceptions [T170]. So `totalOutstandingAmount`
+still does not discriminate, on either shape.
+
+Forcing the memo to recompute **does not move the balance** — but that was measured on **3** cells,
+all full shape, all at a 1-minor-unit disbursement, and it is **unmeasured on every partial cell and
+on all 180 cells T117 and T159 added.**
+
+The discriminator is exactly the test the driver's re-derivation named in advance as fatal to the
+family-A reframing when applied to all of G-8: *"If it ever fails to sum, the reframing above is
+**wrong** and G-8 is the broader finding after all."* It failed.
+
+### What was measured, and over what domain — narrower than family A in RATE, and now WIDER in TERM and in the largest failing PRINCIPAL
+
+**This heading used to read "a MUCH narrower domain than family A", and in the dimensions a reader
+cares about that is now false.** Family B is still narrower in **rate** — one annual rate against
+eleven — and in the *number* of distinct failing principals: **20** (all odd) against family A's
+**66**. But it is now **wider in term** — family A's failing cells run `3 ≤ n ≤ 600` and family B's
+run `104 ≤ n ≤ 3000` — and **wider in the largest failing principal**: **1001 minor units
+(MNT 10.01)** against family A's **291 minor units (MNT 2.91)** [all four figures re-derived by T170
+from the raw captures in integer minor units].
+
+**T84 measured 22 family-B cells; T100 measured 7 more; T117 measured 155 and T159 measured 25 —
+209 in total, over 190 distinct (rate, n, principal) shapes** [each count re-derived by T170 from
+the raw `.gz` captures; `out/extract-t170.json`]. Union of what has been observed:
 
 - annual rate **600.0 % — and no other rate has ever produced a family-B cell.** T84 swept 300.0 %
   with B = 2 at n = 100, 150, **170…204 contiguously**, 220 and 260 — **41 cells, all clean** — and
@@ -1226,42 +1418,87 @@ finding after all."* It failed.
   204 is the top of the *contiguous* run only, and an earlier revision said "B = 2 through n = 204",
   which under-stated the domain. The 41 B = 2 cells cover 39 distinct n; n = 175 and n = 196 were
   each asked twice and agree].
-- principal **MNT 0.01 (1 minor unit)** — no other principal has produced a family-B cell.
-- repayment counts **n ∈ {104…122} ∪ {150, 200, 250}**: T84 measured 104…121 contiguously plus 150
-  and 200 (22 cells, of which n = 108 and n = 120 were measured twice, once in each of its two
-  probes, agreeing); **T100 added n = 122 — one above T84's contiguous top of 121, but NOT above the
-  largest n T84 asked *at this shape*, which is 200 — and n = 250, which IS above every n T84 asked
-  *at 600.0 % / MNT 0.01*. Both are family B.** (T84's largest n **anywhere** is **600**, at 0.12 % —
-  `T84B-XL-R0p12-N600-B291` — so neither sentence holds unscoped; both hold at the family-B shape.
-  Nothing above n = 250 has ever been asked at the family-B shape.) At **n = 103** the same shape is
-  **clean** [T84; re-measured by T100. The n-set and the contiguity re-derived by T112 from the raw
-  captures, which also show T84's n at 600.0 % / MNT 0.01 running 88…121 contiguously plus 60, 150
-  and 200. An earlier revision said both new cells were above the top of n T84 swept; only n = 250
-  is — T101 F-4. The scope qualifiers were added by T122 — T114 F-T114-2 — after re-deriving T84's
-  full n-set from its two committed raw captures: max n **600** overall (at rates {0.12, 1.2, 3.6}),
-  max n **200** at 600.0 % / MNT 0.01. The unscoped form contradicted this same section at
-  *"terms up to n = 600"* and at *"n from 1 to 600"* below].
+- principal: **20 distinct values, every one ODD**, from **1 to 1001 minor units** —
+  `1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 51, 101, 501, 503, 551, 601, 801, 999, 1001`
+  [re-derived by T170 from the raw captures: the four record captures contain exactly one of them
+  (**1**); T117's two captures contain **14** — `1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 51, 101,
+  501`; and T159 added **6** — `503, 551, 601, 801, 999, 1001`]. **This bullet used to read
+  *"principal MNT 0.01 (1 minor unit) — no other
+  principal has produced a family-B cell"*, which was true of the four record captures and is now
+  false.** Every family-B principal observed is odd; **that is an observation over 209 cells, not a
+  law**, and no even principal has been shown to be safe.
+- repayment counts: **`104 ≤ n ≤ 3000`**. Family B has been observed at terms across that whole
+  range — **but NOT at every term in it**; there are measured clean gaps inside otherwise-contiguous
+  family-B stretches, which is the band structure below.
+  - **The four record captures** (T84, T100) cover **n ∈ {104…122} ∪ {150, 200, 250}** at
+    600.0 % / MNT 0.01: T84 measured 104…121 contiguously plus 150 and 200 (22 cells, of which
+    n = 108 and n = 120 were measured twice, once in each of its two probes, agreeing); T100 added
+    n = 122 and n = 250. At **n = 103** that shape is **clean** [T84; re-measured by T100; n-set and
+    contiguity re-derived by T112, and again by T170].
+  - **T117** added **155** family-B cells — 122 in its pass 1 (principals 1, 3, 5) and 33 in its
+    pass 2 (principals 5, 7, 9, 11, 13, 15, 17, 19, 21, 51, 101, 501). Its family-B terms run
+    104, 108, 121, 150, 250, then **300…361 and 364…390** — 362 and 363 are absent from the
+    family-B set, which is the band structure showing through — then 620, 630, 640, 650, 860, 870,
+    910, 920, 930, 940, 950, 960, 970, 980, 990, 995…1000. **115 distinct terms**, topping out at
+    **n = 1000** [term set extracted by T170 from the two raw `.gz` captures].
+  - **T159** added **25** more, at principals 1, 11, 501, 503, 551, 601, 801, 999, 1001 and
+    `n ∈ {108, 121, 150, 360, 361, 364, 365, 389, 390, 1000, 1200, 1500, 2000, 3000}`.
+  - **The old sentence *"Nothing above n = 250 has ever been asked at the family-B shape"* is
+    false.** It has been asked to **n = 3000**, and it is family B there. **n = 3000 is simply the
+    largest term anyone has asked** — see the residual bound below.
+  - Family B is **not a half-line in n and not a bounded island**: T117 found an interleaved band
+    structure, with clean gaps inside otherwise-contiguous family-B stretches [T117, reviewed and
+    approved by T159]. So a five-point ladder in n cannot bound it, and T159's own registered
+    "threshold term of order 2·B" model was **refuted** by its own measurement — B = 801 is family B
+    at n = 1000 while B = 601, 701, 751, 901 and 999 are clean at the same term, and B = 1001 is
+    clean at n = 1200, 1500 and 2000 and only turns family B at n = 3000.
+  - *(Scope note kept from earlier revisions, because it is still the thing that goes wrong here:
+    T84's largest n **anywhere** is **600**, at 0.12 % — `T84B-XL-R0p12-N600-B291` — and its largest
+    n at 600.0 % / MNT 0.01 is **200**. An unscoped "largest n" sentence contradicted this section
+    twice before — T101 F-4, T114 F-T114-2. Every n above is scoped to the shape it was asked at.)*
 
-**The Go port reproduces family B cell for cell — 0 divergent cells** [T84 over all 22; T100 through
-the real grader on `T100-FAMB-R600p0-N108-B1`: **761 graded cells, 0 cell diffs**]. On family B there
-is **no oracle/port divergence at all**; both compute a schedule that does not repay the loan.
+**The Go port reproduces family B cell for cell — 0 divergent cells — on the 29 cells of the four
+record captures, and ON NOTHING ELSE** [T84 over its 22; T100 through the real grader on
+`T100-FAMB-R600p0-N108-B1`: **761 graded cells, 0 cell diffs**; T101 re-graded all **29** through the
+real `conformance.Run` on `main`'s current port: **25,751 graded cells, 0 cell diffs**]. On those 29
+there is **no oracle/port divergence at all**; both compute a schedule that does not repay the loan.
+**Nobody has graded the port on any of the 180 cells T117 and T159 added, and nobody has graded it on
+a PARTIAL cell at all.** That matters more than it looks: "the port agrees with the oracle" is the
+entire reason family B is described as *"both are wrong"* rather than as a port defect, and on the
+partial shape it is simply **unmeasured** `[UNVERIFIED]`.
 
-**Family B is NOT order-dependent** [T84, 3 of 3; **re-run by T100**, 3 of 3 unmoved at n = 104, 108,
-120 while the family-A control in the same run moved 1.09 → 0.00]. So the family-A mechanism above
-does **not** explain family B, and no claim is made that it does.
+**Family B is NOT order-dependent — measured on 3 cells** [T84, 3 of 3; **re-run by T100**, 3 of 3
+unmoved at n = 104, 108, 120, all at a 1-minor-unit disbursement, while the family-A control in the
+same run moved 1.09 → 0.00]. So the family-A mechanism above does **not** explain family B, and no
+claim is made that it does. **Order-dependence has never been tested on a partial cell, nor on any
+of the 180 new cells** `[UNVERIFIED]`.
 
 ### What is NOT known about family B
 
 - **Its cause.** T84 measured *that* it is not order-dependent and *that* the principal column sums
-  to zero; it did not locate the code path, and neither did T100. `[UNVERIFIED]`
-- **Whether it exists at any other rate, at any other principal, or below n = 104.** Every family-B
-  cell ever measured is 600.0 % / MNT 0.01 / n ≥ 104. `[UNVERIFIED]`
-- **Whether it terminates.** n = 250 fails; nothing above n = 250 has been asked. `[UNVERIFIED]`
+  to zero; it did not locate the code path, and neither did T100, T117 or T159. **Nobody has looked
+  for it.** `[UNVERIFIED]` A candidate mechanism must now also explain the **partial** shape — one
+  non-zero principal row, on the last period — and must explain why B = 801 is family B at n = 1000
+  while B = 601, 701, 751, 901 and 999 are clean at the same term.
+- **Whether it exists at any other RATE, or below n = 104.** Every family-B cell ever measured is at
+  **600.0 %** and at `n ≥ 104`. `[UNVERIFIED]` **The "at any other principal" half of this question
+  is ANSWERED and the old sentence is deleted, not softened:** 20 distinct principals from 1 to 1001
+  minor units are family B, so "every family-B cell ever measured is 600.0 % / MNT 0.01 / n ≥ 104"
+  is **false**.
+- **Whether it terminates.** It does **not** terminate anywhere anyone has looked: n = 3000 fails,
+  and **nothing above n = 3000 has been asked**. The largest unamortized residual rose from
+  MNT 0.01 to **MNT 5.01 at n = 1000** (T117) to **MNT 10.01 at n = 3000** (T159) — **each time
+  because somebody asked a larger term, and neither worker found a limit.** `[UNVERIFIED]`
+- **Whether the Go port reproduces the 180 new cells, or any partial cell.** Never graded.
+  `[UNVERIFIED]`
+- **Whether any of the 180 new cells is order-dependent.** Never tested. `[UNVERIFIED]`
 - **`MinorUnitDigits ≠ 2`, and Path B / REST.** Not measured, by anyone. `[UNVERIFIED]`
+- **Whether an EVEN principal can be family B.** All 20 observed are odd; no even principal has been
+  shown safe, and no claim is made either way. `[UNVERIFIED]`
 
 ---
 
-## Option (a), RESCOPED — reachable today on family B, needs a port change on family A
+## Option (a), RESCOPED — reachable today on a FULL family-B cell, needs a port change on family A, UNMEASURED on a PARTIAL cell
 
 Option (a) is *"promote a parity vector for the region with an explicit invariant exemption."*
 Whether that works **depends entirely on which family the vector covers**, because
@@ -1286,10 +1523,17 @@ run reproduces its numbers].
 
 So:
 
-- **On family B, option (a) is reachable TODAY** — with the existing mechanism, **no port change**,
-  and no DEC-n amendment. The failure there is purely invariant, because the port agrees with the
-  oracle. This is the cheap option the gate's earlier text said did not exist; it exists, on the
-  family T83 never sampled.
+- **On a FULL family-B cell, option (a) is reachable TODAY** — with the existing mechanism, **no
+  port change**, and no DEC-n amendment. The failure there is purely invariant, because the port
+  agrees with the oracle. This is the cheap option the gate's earlier text said did not exist; it
+  exists, on the family T83 never sampled. **Scope it exactly: this was demonstrated on ONE cell,
+  600.0 % / MNT 0.01 / n = 108, and the port has never been graded on a PARTIAL cell.** On a partial
+  cell the oracle emits a non-zero principal on the last row; whether the port emits the same number
+  is unmeasured, so whether the failure there is "purely invariant" or a **cell diff** — which
+  `invariant_exemptions` cannot touch — is **not known** `[UNVERIFIED]`. **Anything promoted under
+  option (a) must name the shape it covers.** And per T177, a capture that promotes a cell must also
+  state the JVM state it was taken in (see THE THIRD OUTCOME above): T177 measured G-8's headline
+  cell observed **9/9 from cold**, and has **no** cold-start datum for any other family-B cell.
 - **On family A, option (a) still requires a port change**, exactly as T83 concluded. Its full shape
   is: change the port to emit the oracle's stale balance, *and then* carry the exemptions, because
   at that point the port's own output would violate them. That is a port change no agent has made or
@@ -1341,13 +1585,31 @@ graded domain. Restated, with the domain named each time:
 - **Over the union of every cell T83, T84 and T100 have swept** (687 cells; 12 rates from 0.12 % to
   600.0 %; n from 1 to 600): the largest failing principal is **MNT 2.91**, at 0.12 % / n = 600
   [T84 measured it; **T100 re-measured that exact shape independently and reproduced it**, and
-  measured MNT 2.92 clean at the same shape; both re-derived again by T112 from the raw captures].
-  **The two absolute figures are the statement — MNT 0.23 over T83's grid, MNT 2.91 over the union,
-  a ratio of 291 ÷ 23 = 12.65×.** An earlier revision wrote "**11.6×** the old bound". That
-  multiple was taken against a *different* denominator — the "below MNT 0.25" bound this file
-  asserted before T83's grid was measured (2.91 ÷ 0.25 = 11.64) — and the rewrite deleted every
-  mention of MNT 0.25, leaving a ratio whose denominator the reader could no longer find. It is
-  given in absolutes here so it cannot drift again [T101 F-2].
+  measured MNT 2.92 clean at the same shape; both re-derived again by T112 from the raw captures,
+  and again by T170]. **The two absolute figures are the statement — MNT 0.23 over T83's grid,
+  MNT 2.91 over the union, a ratio of 291 ÷ 23 = 12.65×.** An earlier revision wrote "**11.6×** the
+  old bound". That multiple was taken against a *different* denominator — the "below MNT 0.25" bound
+  this file asserted before T83's grid was measured (2.91 ÷ 0.25 = 11.64) — and the rewrite deleted
+  every mention of MNT 0.25, leaving a ratio whose denominator the reader could no longer find. It is
+  given in absolutes here so it cannot drift again [T101 F-2]. **MNT 2.91 is a FAMILY-A figure over
+  the four record captures, and it is no longer the record for G-8** — see the next bullet.
+- **Over the union that includes T117's and T159's captures, the largest unamortized residual is
+  MNT 10.01 AT n = 3000** — `T159-R600p0-N3000-B1001`, 600.0 %, a disbursement of 1001 minor units,
+  **3000** REPAYMENT rows every one of them `principal "0.00"`, `totalPrincipalAmount 0.00`,
+  balance frozen at `10.01` from `2024-02-01` to `2274-01-01`, and `totalInterestAmount 15010.01`
+  [VERIFIED by T170 by extraction from `capture-t159-raw.json.gz` in integer minor units: disbursed
+  1001, amortized 0, residual 1001; 3000 of 3000 REPAYMENT rows at zero principal; one distinct
+  balance value across all 3000 rows]. It is a **family-B** cell, not the 0.12 % family-A one.
+  - **State it with its term, always: "MNT 10.01 at n = 3000".** The figure was MNT 0.01 while only
+    n ≤ 250 had been asked, **MNT 5.01 at n = 1000** once T117 asked (`T117P2-R600p0-N1000-B501` —
+    501 minor disbursed, 1000 rows of `principal "0.00"`, `totalInterestAmount 2505.01`, balance
+    frozen at `5.01` to `2107-05-01` [VERIFIED by T170 the same way]), and **MNT 10.01 at n = 3000**
+    once T159 asked. **The residual doubled when the term tripled, and it doubled because somebody
+    asked a bigger question, not because a boundary was found.**
+  - **MNT 10.01 is the largest OBSERVED residual, NOT A BOUND.** n = 3000 is simply the largest term
+    anyone has asked. **Two independent workers have now raised this ceiling by asking a larger term
+    and neither found a limit.** Writing "MNT 10.01" without its term would repeat, one level up,
+    exactly the error the MNT 0.23 / MNT 2.91 restatement above was written to correct.
 - **MNT 1.09 fails at 3.6 % p.a. over n = 360 — an ordinary 30-year monthly term at an ordinary
   rate** [T84; **re-measured by T100**, `T100-FAMA-R3p6-N360-B109`, with MNT 1.10 clean beside it].
   This is not sub-MNT dust and must not be described as such. It is still an absurdly small *loan*,
@@ -1363,11 +1625,22 @@ only MNT, only DAYS_30/DAYS_360, only MONTHS/1, only a single disbursement on th
 date, no down payment, no charges, both multiples-of inputs null, only `(19, HALF_UP)`. Only twelve
 annual rates were ever asked — {0.12, 1.2, 3.6, 7.0, 12.0, 16.8, 21.6, 36.0, 48.0, 96.0, 300.0,
 600.0} — out of a continuum; nothing between 3.6 % and 7.0 %, nothing between 96 % and 300 %,
-nothing above 600 %, nothing at or below 0 %. **No term above n = 600 has ever been asked**, and
-since the largest failing principal grows with n, **the measurement establishes no upper bound on
-the failing principal over the graded domain as a whole** — only over the grid swept. The
-practical reading — that no commercially realistic Mongolian loan *amount* has been observed to fail
-— holds **over that grid**, and is not a proof about the domain.
+nothing above 600 %, nothing at or below 0 %. **T117 and T159 added no new rate: every one of their
+180 family-B cells is at 600.0 %.**
+
+**On the term, the premise of this paragraph has changed and the conclusion has not.** It used to
+read *"No term above n = 600 has ever been asked"*. That is **false**: terms have been asked to
+**n = 3000**, at 600.0 % only, and family B is still there. **The conclusion — that the measurement
+establishes no upper bound on the failing principal over the graded domain as a whole — is now
+confirmed by measurement rather than inferred**, because each of the two workers who asked a larger
+term got a larger residual. Above `n = 600` nothing has been asked at any rate but 600.0 %, and
+nothing at all has been asked above `n = 3000`.
+
+The practical reading — that no commercially realistic Mongolian loan *amount* has been observed to
+fail — still holds over everything swept to date: the largest failing disbursement anywhere in the
+record is **1001 minor units, MNT 10.01**. **It is not a proof about the domain, and it is a weaker
+statement than it was**, because the same reading would have said "MNT 0.23" before T84 asked,
+"MNT 2.91" before T117 asked and "MNT 5.01" before T159 asked.
 
 ## The closed form — TESTED AND FALSIFIED outside the sampled grid
 
@@ -1383,9 +1656,12 @@ captures, **320 held, 22 refuted, 0 exact ties**
 [`src/closed_form_check.py`, `out/closed-form-check.json`]. **Every one of the 22 refutations is a
 family-B cell** — 600.0 % / B = 1 / n ≥ 104 — where the closed form predicts CLEAN (the exact gap
 `B·a − ½` is positive: `+2.429e-19` at n = 104, falling to `+3.025e-36` at n = 200) and the oracle
-**fails**. The gap is below the ulp of ½ at 19 significant digits (**1e-19**) on **25 of the 29**
-measured family-B cells — and **NOT** on the four at **n = 104, 105 and 106**, where it is **2.43,
-1.62 and 1.08 ulp** respectively. So a sub-ulp argument does not reach the cells at the region's
+**fails**. The gap is below the ulp of ½ at 19 significant digits (**1e-19**) on **25 of the 29
+family-B cells OF THE FOUR RECORD CAPTURES** — and **NOT** on the four at **n = 104, 105 and 106**,
+where it is **2.43, 1.62 and 1.08 ulp** respectively. **Every "29" and every "25 of 29" in this
+closed-form block is scoped to those four captures. The closed form has NEVER been evaluated on the
+180 family-B cells T117 and T159 added, nor on any partial cell** — T170 did not evaluate it either
+`[UNVERIFIED]`. So a sub-ulp argument does not reach the cells at the region's
 **lower boundary**, which is where the phenomenon starts and therefore where its cause will be
 decided. Sub-ulp quantization of the EMI in the oracle's own `(19, HALF_UP)` arithmetic is offered
 as a possible explanation **for the other 25**, not as a verified mechanism, and it is **not** an
@@ -1393,7 +1669,8 @@ explanation for n = 104…106 `[UNVERIFIED]`.
 
 [Re-derived independently by T122 in **exact rational arithmetic** (`fractions.Fraction`, money
 parsed as integer minor units, the comparison made against `Fraction(1, 10**19)` — no float on any
-decision path, P-25) over all 29 family-B cells of the four committed raw captures. Exact gaps:
+decision path, P-25) over all 29 family-B cells of the four committed raw captures — **and over
+those only; the 180 cells T117 and T159 added are not in this evaluation**. Exact gaps:
 n=104 `+2.4293e-19` = 2.43 ulp (two cells, `T84B-NSW-R600p0-N104-B1` and `T100-FAMB-R600p0-N104-B1`,
 agreeing); n=105 `+1.6195e-19` = 1.62 ulp; n=106 `+1.0797e-19` = 1.08 ulp; then n=107 `+7.1979e-20`
 = 0.72 ulp and everything above it strictly smaller, down to n=250 `+4.7441e-45`. The gap is
@@ -1416,11 +1693,13 @@ mechanism is still `[UNVERIFIED]` and this narrows what may be assumed about it:
   condition starts at n = 107. A cause that tracked the sub-ulp condition would have put the
   region's edge at 107. It is at 104, so the two are different thresholds and at most one of them
   can be the cause.
-- **Consequently the sub-ulp observation is a correlate over 25 of 29 cells, not the explanation of
-  the family**, and it must not be used to argue that family B is confined to residuals too small to
-  matter. The next worker on family B should start at **n = 104**, not in the sub-ulp tail, and
-  should treat locating the code path — which neither T84, T100, T101, T112 nor T114 did — as the
-  open work.
+- **Consequently the sub-ulp observation is a correlate over 25 of the four record captures' 29
+  cells, not the explanation of the family**, and it must not be used to argue that family B is
+  confined to residuals too small to matter. **That last warning is now settled by measurement
+  rather than by caution: the residual reaches MNT 10.01 at n = 3000**, and the closed form was
+  never evaluated at those terms at all. The next worker on family B should start at **n = 104**,
+  not in the sub-ulp tail, and should treat locating the code path — which neither T84, T100, T101,
+  T112, T114, T117, T159 nor T170 did — as the open work.
 
 **A count correction — and its cause is a FLOAT.** T84's write-up records **18** refutations;
 T100's exact-rational evaluation over the same 342 cells finds **22**. **T101 adjudicated the
@@ -1494,46 +1773,76 @@ day-count.
 ## The three options, still undecided — (b) and (c) remain a hard `user` gate
 
 - **(a)** promote a parity vector for the region with an explicit invariant exemption. **Reachable
-  today on family B with zero port change; requires a port change on family A.** Scope any decision
-  to one family; a vector for one says nothing about the other.
+  today on a FULL family-B cell with zero port change; requires a port change on family A; UNKNOWN
+  on a PARTIAL family-B cell, because the port has never been graded on one.** Scope any decision to
+  one family *and to one shape*; a vector for one says nothing about the other. Per T177 the capture
+  behind any promotion must also record the JVM state it was taken in.
 - **(b)** refuse the region from the graded domain as a documented contract-refusal vector. Cheap in
-  code for family A over the grid swept — but the region is **not** fully bounded (see the bound
-  above: no term beyond n = 600 has been asked, and family B has been seen at only one rate), and it
-  is a **graded-domain amendment**.
+  code for family A over the grid swept — but the region is **not** fully bounded, and it is a
+  **graded-domain amendment**. Three things it must now account for, none of which existed when this
+  option was first written:
+  - **The term half of the old "not fully bounded" reason has changed and the reason still holds.**
+    It used to read *"no term beyond n = 600 has been asked"*; terms have since been asked to
+    **n = 3000** and family B is still there, with a larger residual each time somebody asked. The
+    other half — **family B has been seen at only one rate** — is unchanged and still true.
+  - **THE THIRD OUTCOME.** Part of this region cannot be evaluated by the reference implementation
+    on demand at all: it can throw `java.lang.StackOverflowError` and emit no schedule. A refusal
+    drafted in a graded domain that can express only "amortizes" and "does not amortize" will
+    silently classify a crash as one of them. See the THIRD OUTCOME block above.
+  - **And the throwing is not a property of the inputs** (T177), so a refusal cannot be written as a
+    set of (rate, principal, term) that "the oracle cannot evaluate" — the same inputs answer or
+    throw depending on the JVM's warm-up state.
 - **(c)** treat it as an oracle defect and diverge deliberately, keeping the port's `0`. That is what
-  the port does *today, ungraded, on family A only* — **on family B the port emits the same
-  non-amortizing schedule the oracle does, so there is nothing to diverge from and (c) does not
-  describe family B at all.**
+  the port does *today, ungraded, on family A only* — **on the 29 record family-B cells the port
+  emits the same non-amortizing schedule the oracle does, so there is nothing to diverge from and
+  (c) does not describe them at all.** On the 180 cells T117 and T159 added, and on every partial
+  cell, **the port has never been graded**, so whether (c) describes them is **unknown**
+  `[UNVERIFIED]`.
 
 **(b) and (c) both amend the graded domain, which is a change to a ratified DEC-n — a hard `user`
-gate no agent may cross.** Buyan decides. T83, T84, T100, T101, T112, **T114, T122, T129 and T140**
-have each handled them and
+gate no agent may cross.** Buyan decides. T83, T84, T100, T101, T112, **T114, T122, T129, T140 and
+T170** have each handled them and
 **decided none, recommended none, and pre-implemented none**; they attach only the measurement and
 the scoping. T112's whole mandate was the write-up: it corrected sentences and deleted a superseded
-block, and it moved nothing about the gate's substance; T114, T122, T129 and T140 likewise touched
-only the prose. **This roster is the section's own non-decision attestation, so it must name every
+block, and it moved nothing about the gate's substance; T114, T122, T129, T140 and T170 likewise
+touched only the prose. **T117, T159, T169 and T177 measured for this gate and deliberately edited
+nothing in it** — T117 and T159 both refused to edit `gates.md` because this STANDING RULE demands a
+full sentence-by-sentence rebuild and parallel workers were live; T170 is that rebuild.
+**This roster is the section's own non-decision attestation, so it must name every
 task that has reviewed or edited the section — T114 and T122 were missing until T140 added them
 (T129 F-T129-4), and the omission was invisible to a reader. If you edit this section, add
 yourself here.**
 
-**What unblocks it**: a `user` decision, now on **two** phenomena rather than one. **What it
+**What unblocks it**: a `user` decision, now on **two** phenomena, **two shapes of the second one**,
+and **a third outcome in which there is no schedule at all**. **What it
 blocks**: nothing today — no vector covers either family and the conformance run is exit 0 without
-them. **What it leaves uncovered**: over the union of everything T83, T84 and T100 swept, **341
-measured divergent-or-invalid cells** sit outside the corpus — **312 family-A port-vs-oracle
-divergences** plus **29 family-B cells where the PORT ITSELF emits a schedule that does not repay
-the loan and no vector says so**. The last 29 are the worse half. (T84's narrower accounting gave
-**331** — 198 T83 + 111 T84 family-A plus 22 family-B — because it predates T100's own cells;
-331 is right on T84's set and 341 is right on this section's union, which is the set every other
-figure here is stated over — T101 F-6. T101 then re-graded the whole union through the real
-`conformance.Run` and the real port on current `main`: all **312** family-A cells give **exactly
-one** diff each, always the final row's `outstanding_principal_minor`, and all **29** family-B
-cells give **0 cell diffs across 25,751 graded cells**. Family counts re-derived independently
-again by T112 from the four committed raw captures: 687 swept / 312 family A / 29 family B / 346
-clean.)
+them. **What it leaves uncovered**:
 
-**Conformance is unmoved by this rewrite**: `bash .softhouse/conformance.sh` → **VERDICT PASS, exit
-0, 42 parity vectors, 5576 graded cells, 0 invariant violations**. Nothing was promoted; `PIN.json`
-and `capabilities.json` are untouched.
+- **Over the union of everything T83, T84 and T100 swept**, **341 measured divergent-or-invalid
+  cells** sit outside the corpus — **312 family-A port-vs-oracle divergences** plus **29 family-B
+  cells where the PORT ITSELF emits a schedule that does not repay the loan and no vector says
+  so**. The last 29 are the worse half. (T84's narrower accounting gave
+  **331** — 198 T83 + 111 T84 family-A plus 22 family-B — because it predates T100's own cells;
+  331 is right on T84's set and 341 is right on that union — T101 F-6. T101 then re-graded the whole
+  union through the real
+  `conformance.Run` and the real port on current `main`: all **312** family-A cells give **exactly
+  one** diff each, always the final row's `outstanding_principal_minor`, and all **29** family-B
+  cells give **0 cell diffs across 25,751 graded cells**. Family counts re-derived independently
+  again by T112 from the four committed raw captures: 687 swept / 312 family A / 29 family B / 346
+  clean; re-derived a further time by T170.)
+- **Plus 180 further family-B cells** from T117 and T159 that no vector covers **and that nobody has
+  graded against the port at all** — so they cannot be added to the "341" figure, which is a count of
+  cells whose port behaviour was *measured*. **Uncovered cells: 341 measured + 180 ungraded = 521
+  known family-A-or-B cells outside the corpus.** Stating them separately is deliberate: an
+  ungraded cell is a worse position than a graded divergent one, not a better one.
+- **And an unknown number of inputs on which the oracle throws instead of answering**, which no
+  vector and no invariant can express today.
+
+**Conformance is unmoved by this rebuild**: `bash .softhouse/conformance.sh` → **VERDICT PASS, exit
+0, 43 parity vectors, 5664 graded cells, 0 invariant violations, 0 assertions NOT RUN** [measured by
+T170 on its own branch. T140's rewrite recorded **42 / 5576** at the time and that figure is now
+stale — a corpus count in this section must name the run it came from]. Nothing was promoted;
+`PIN.json` and `capabilities.json` are untouched.
 
 ### Evidence
 
@@ -1575,7 +1884,10 @@ and `capabilities.json` are untouched.
 > T129 reproduced the wrong numbers exactly, and **T140 reproduced them a third time** — running its
 > own classifier over the extracts gives **370** total swept cells and **16** family B (distinct
 > n = {104, 105, 108, 120, 121, 122, 150, 200, 250}, of which n = 104 twice and n = 105 give the 3
-> non-sub-ulp exceptions), against the true **687** and **29**.
+> non-sub-ulp exceptions), against the true **687** and **29** **of those four captures** — the
+> family-B total across all seven committed captures is **209**, see the discriminator table above.
+> [T170 hit this warning too and obeyed it: every T170 figure is derived from the `.gz` where a `.gz`
+> exists, and its script names each input path and prints the sha256 of the bytes it read.]
 
 **The two-family split, committed on `softhouse/T100-g8-two-families`** —
 `.softhouse/capture/t100-g8-rescope/`: `PREDICTION.md` (registered in an ancestor commit),
@@ -1647,6 +1959,45 @@ re-derived from the committed capture bytes in **exact rational and integer arit
 script sharing no code with T83's, T84's, T100's, T112's, T114's, T122's or T129's classifiers. It
 changed no vector, no `PIN.json`, no `capabilities.json`, no `contract.go` and no `nexus/` file, and
 it left `.softhouse/tasks.json` at the merge-base blob exactly as T122 did.
+
+**The measurement that moved family B, committed on `softhouse/T117-familyb-probe`** —
+`.softhouse/capture/t117-familyb/`, notably `out/capture-t117-raw.json.gz` (202 cases) and
+`out/capture-t117p2-raw.json.gz` (89 cases), plus `PREDICTION*.md`, `src/`, and the analysis under
+`out/`. Handoff: `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T117.md`.
+
+**The independent review that approved it and then doubled its headline, committed on
+`softhouse/T159-review-t117`** — `.softhouse/capture/t159-review-t117/`, notably
+`out/capture-t159-raw.json.gz` (49 cases, **47 observed / 2 errored**), `out/rederive-t159.json`,
+`out/census-t159.json`, `out/quote-audit-t159.json` (the 102-check P-46 audit) and
+`out/guard-red-drives.txt`. Review pointer: `.softhouse/reviews/T159-review-of-T117.md`; the review
+in full is `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T159.md`, whose §9 carries the
+25-site `gates.md` sweep this rebuild started from.
+
+**The shared rig fix, committed on `softhouse/T169-capture-rig-throwable`** —
+`.softhouse/capture/lib/ThrewOutcome.java`, `lib/sweep_integrity.py`,
+`lib/check_no_narrow_catch.py`, and the controlled pre/post pair under `capture/src/t169-red/`.
+
+**The JVM-state measurement behind the THIRD OUTCOME block, committed on
+`softhouse/T177-stackoverflow-nondeterminism`** — `.softhouse/capture/t177-so-nondeterminism/`:
+`src/CaptureT177{,b}.java`, the four trial matrices, per-process raw stdout/stderr for all **75**
+java processes under `out/{pilot,matrixA,matrixB,matrixC}/raw/`, every `out/ANALYSIS-*.txt`
+transcript, `out/jvm-defaults.txt` and `MANIFEST.sha256`. Write-up:
+`.softhouse/reviews/T177-stackoverflow-nondeterminism.md`; handoff:
+`.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T177.md`.
+
+**This rebuild, committed on `softhouse/T170-g8-rebuild`** — `.softhouse/capture/t170-g8-rebuild/`:
+`src/extract_t170.py` (every figure T170 carries into this section, re-derived **by extraction** in
+integer minor units from the seven committed raw captures — no float anywhere, no worker's analysis
+layer read, `.gz` preferred wherever one exists, each input's sha256 printed),
+`src/aggregate_t170.py` (the FULL-vs-PARTIAL shape facts and the family-A control),
+`src/split_claims_t170.py` (the denominator for the sentence-by-sentence rebuild the STANDING RULE
+requires), and under `out/`: `extract-t170.json`, `aggregate-t170.json`, `claim-units-t170.json`,
+plus `SCOPE-TABLE-T170.md`. **T170 contacted the reference oracle not at all for any G-8 figure**:
+the only thing it executed against this repository's own tooling was `bash .softhouse/conformance.sh`
+(exit 0, 43 parity vectors, 5664 cells), and every G-8 number it wrote came out of the committed
+capture bytes. It changed no vector, no `PIN.json`, no `capabilities.json`, no `contract.go`, no
+DEC-n and no `nexus/` file. Handoff:
+`.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T170.md`.
 
 ---
 
@@ -1822,25 +2173,38 @@ why trap (3) requires the Go port to carry classification **on the entry**.
 
 ---
 
-## G-8 — NOTICE, local fire `20260821-134344`: T117's measurement moves the bound. **REVIEWED — T159 APPROVED. See the UPDATE at the end of this block: the number has since DOUBLED.**
+## G-8 — NOTICE, local fire `20260821-134344`: T117's measurement moves the bound. **REVIEWED — T159 APPROVED; the number then DOUBLED; T170 has since APPLIED all of this to the G-8 write-up above.**
 
-**Status of this block: T117 has reported; its paired reviewer T159 has NOT.** The driver is recording the
+**Status of this block, as of T170: SUPERSEDED BY THE SECTION ABOVE, and kept as the record of how the
+measurement moved.** Everything in it that was still true has been folded into G-8 itself — the FULL vs
+PARTIAL split of family B, the MNT 10.01-at-n=3000 residual, the enlarged rate/term/principal domain, and
+the third outcome, which now has its own block (**THE THIRD OUTCOME — the reference oracle can produce NO
+SCHEDULE AT ALL**). **Read G-8 above, not this block.** Two things in it are corrected in place below:
+the *"not monotone"* sentence, refuted by **T177**, and the framing that made the cell which throws look
+like the cell behind the headline residual — **it is not**.
+
+*Original status line, kept because the record is the point:* **"T117 has reported; its paired reviewer
+T159 has NOT."** The driver was recording the
 measurement here rather than rewriting G-8, because rewriting a gate Buyan decides on, on the strength of a
 single unreviewed worker report, is precisely the mistake that produced **P-40** and **P-46** this same fire.
-**Nothing below may be quoted to Buyan, or into any disclosure, until T159 returns a verdict.** The
-sentence-by-sentence rebuild G-8's STANDING RULE requires has deliberately **not** been done.
+**Nothing below could be quoted to Buyan, or into any disclosure, until T159 returned a verdict** — it has
+(APPROVED), and **the rebuild the STANDING RULE requires has since been done, by T170.**
 
-### The headline, if it survives review
+### The headline as T117 reported it — SUPERSEDED BY T159 IN THE UPDATE BELOW; every figure here is T117's
 
 **The failing principal EXCEEDS one minor unit, and no upper bound is established.**
 
 - Largest unamortized residual observed: **501 minor units = MNT 5.01**, at 600.0 % / n = 1000 — 1000 rows
   of `principal "0.00"`, balance frozen at 5.01 for 83 years, MNT 2,505.01 of scheduled interest, principal
-  never repaid. That also exceeds the whole-corpus **family-A** record of MNT 2.91.
+  never repaid. That also exceeds the whole-corpus **family-A** record of MNT 2.91. **[T159 has since
+  measured MNT 10.01 at n = 3000 — see the UPDATE below. MNT 5.01 is T117's figure, not the record.]**
 - **"Sub-minor-unit dust" is dead.** The open question T117 was sent to settle asked whether the failing
-  principal could exceed one minor unit. Answer: yes, by a factor of 501.
+  principal could exceed one minor unit. Answer: yes, by a factor of 501 — **and by 1001 once T159 asked a
+  larger term.**
 - **No bound.** The first failing term grows with the principal (B ≤ 51 fails at n=108; B=101 at 250; B=501
-  at 1000; B ≥ 1001 clean at all five terms asked). Because the largest failing principal **tracks the
+  at 1000; **B ≥ 1001 clean at all five terms T117 asked** — *and B = 1001 is family B at n = 3000, which
+  T159 asked and T117 did not; the clean reading was a property of the probe set, exactly as this bullet
+  goes on to warn*). Because the largest failing principal **tracks the
   largest term asked**, and nothing above n = 1000 has ever been asked, **MNT 5.01 is the largest OBSERVED,
   not a bound.** T159 has been sent to ask beyond n = 1000 specifically to test whether this is a real trend
   or an artefact of the probe set. *That answer, not this one, is what should reach Buyan.*
@@ -1853,8 +2217,11 @@ T117 reports that `gates.md`'s claim "on every family-B cell it sums to 0.00" is
 cells (B=11, n ∈ {108,121,150}, principal column summing to 5, 4 and 2 minor units against an 11-minor-unit
 disbursement — a **partial** shortfall, a shape the record did not contain).
 
-The sentence it refers to is at **`gates.md:1209`**, and it actually reads *"On every family-B cell **measured
-so far** it sums to **0.00** against a **0.01** disbursement"*. So:
+The sentence it refers to was the opening of G-8's **"Discriminator for family B"**, and it actually read
+*"On every family-B cell **measured so far** it sums to **0.00** against a **0.01** disbursement"*.
+**T170 has since rewritten that whole paragraph into a FULL shape and a PARTIAL shape, so the wording quoted
+here no longer appears in the file; it is preserved in this NOTICE because the correction is the record.**
+So:
 
 - **It was true when written**, and it is explicitly hedged (`measured so far`) and explicitly scoped to a
   `0.01` disbursement — which *is* the B=1 case. T117 slightly overstates by calling it an unqualified
@@ -1862,12 +2229,19 @@ so far** it sums to **0.00** against a **0.01** disbursement"*. So:
 - **But T117 is right where it counts:** the *measured set* has now grown, and the hedge is what carried the
   sentence — not a scoping decision anyone made deliberately. Any reader who took `0.00` as the family-B
   signature now has a wrong mental model, and the **partial-shortfall shape is genuinely new**.
-- The row at **`gates.md:974`** (`principal column sums to the disbursed amount | yes | NO — it sums to 0.00`)
-  carries **no hedge at all** and is the one that needs the rebuild.
+- The **discriminator-table row** *"principal column sums to the disbursed amount | yes | NO — it sums to
+  0.00"* carried **no hedge at all** and was the one that needed the rebuild. **Repaired by T170**: it now
+  reads *"NO. FULL: sums to `0.00`. PARTIAL: sums to a non-zero amount short of the disbursement."*
 
 *Recording both halves because a reviewer's finding is not improved by overstating it, and a gate is not
-protected by understating it.* T159 has been asked to complete the sweep — T117 listed **nine** affected
-sentences and correctly marked that list a starting point, not the sweep (**P-37**).
+protected by understating it.* T159 was asked to complete the sweep — T117 listed **nine** affected
+sentences and correctly marked that list a starting point, not the sweep (**P-37**); T159 found **25**, and
+T170 took those 25 as a floor and swept again.
+
+**A note on the file:line citations in this NOTICE block.** They were accurate against the `gates.md` that
+stood when the block was written, and **T170's rebuild moved every line in G-8**. Each one has therefore been
+replaced above by the name of the sentence or table row it points at, which does not drift. *A line number in
+a document that is actively edited is a citation with a shelf life — cite the claim, not the coordinate.*
 
 ### What is NOT in question
 
@@ -1911,24 +2285,55 @@ question*, not because a boundary was found.
 
 1. **THE REFERENCE ORACLE THROWS.** Two cells died with `java.lang.StackOverflowError` —
    `ProgressiveEMICalculator.calculateLastUnpaidRepaymentPeriodEMI` recursing into itself at
-   `ProgressiveEMICalculator.java:1214`. **It is not monotone**: `(B=10001, n=2000)` dies while
-   `(B=10001, n=3000)` succeeds, so this is not a simple size limit and cannot be excluded by bounding the
-   inputs. **G-8's write-up has no sentence for a third outcome in which no schedule is produced at all** —
-   it contemplates "amortizes" and "does not amortize", not "the oracle throws". **Option (b) needs one**,
-   because a graded domain that cannot express "no answer" will silently classify a crash as something else.
+   `ProgressiveEMICalculator.java:1214`. **G-8's write-up has no sentence for a third outcome in which no
+   schedule is produced at all** — it contemplates "amortizes" and "does not amortize", not "the oracle
+   throws". **Option (b) needs one**, because a graded domain that cannot express "no answer" will silently
+   classify a crash as something else. **This finding STANDS and now has its own block in G-8 above
+   (THE THIRD OUTCOME), added by T170.**
+
+   > **CORRECTED BY T177 — the reasoning attached to it, not the finding.** This entry originally continued:
+   > *"**It is not monotone**: `(B=10001, n=2000)` dies while `(B=10001, n=3000)` succeeds, so this is not a
+   > simple size limit and cannot be excluded by bounding the inputs."* **The premise is refuted.** T177
+   > measured **139 probe trials across 75 java processes** and found the throw to be a function of **JVM
+   > state — warm-up / JIT tier / `-Xss` — not of the cell's inputs**: from a cold JVM, `(B=10001, n=3000)`
+   > threw **33 of 33** times and `(B=10001, n=2000)` **9 of 9**; from attempt 5 inside a JVM neither throws.
+   > The two cells differ in **run position**, not in behaviour — the first was T159's sweep cell #1 and the
+   > second its #27. **So "the throwing region" is not a region of the input space at all**, and any sentence
+   > whose premise is a boundary in (B, n) is refuted rather than merely imprecise. The **conclusion** —
+   > that this cannot be excluded by bounding the inputs — may still hold; **T177 did not test it**, and it
+   > no longer rests on that pair of cells. See the THIRD OUTCOME block above.
+
+   > **AND THE CELL THAT THROWS IS NOT THE CELL BEHIND THE HEADLINE RESIDUAL.** T177 corrected its own
+   > dispatch brief on this and it is worth stating here, because the two are one digit apart: the MNT 10.01
+   > residual is **B = 1001 minor units** (`T159-R600p0-N3000-B1001`); the cell that throws is
+   > **B = 10001**, which **amortizes fully** and is not a family-B cell at all. T177 asked the **headline**
+   > cell from **9 cold starts: 9 observed, 0 threw**, `totalInterestAmount 15010.01` every time.
+   > **G-8's headline number is cold-safe and is not in doubt.**
 2. **A LATENT HOLE IN THE SHARED RIG**, inherited by T83, T84, T100 **and** T117 alike: it catches
    `RuntimeException`, **not** `Throwable`. T159 found it **by detonating it**. T117's "0 errored" is sound
    *for the run that completed*, but the rig **cannot distinguish "none errored" from "none asked that
    errors"** — and a `StackOverflowError` is an `Error`, not a `RuntimeException`, so it is exactly what
-   slips through. Raised as **T169**.
-3. **`gates.md:978`** — *"balance column | constant at the disbursed amount"* is **also falsified** by the
-   partial cells, and is **not** on T117's list of nine.
+   slips through. Raised as **T169** — **which landed**: T169 measured that the hole was not merely blind
+   but **unfalsifiable** (no completed run in this program's history could have printed anything but
+   `0 errored`) and shipped the shared `catch (Throwable)` recorder. **T177 then explained the apparent
+   T159-vs-T169 disagreement about the disputed cell: there was none about the oracle** — replaying T159's
+   committed case list in T159's committed order reproduces T159 cell for cell, with **24 money comparisons
+   and 0 mismatches**. They asked the same cell at different points on a JVM's warm-up curve.
+3. **The discriminator table's `balance column` row** (`gates.md:978` when this was written) —
+   *"balance column | constant at the disbursed amount"* is **also falsified** by the
+   partial cells, and is **not** on T117's list of nine. **Repaired by T170**: that row now reads FULL
+   *"constant at the disbursed amount"* / PARTIAL *"two values — the disbursed amount, then the residual on
+   the last row"*, measured on all four partial shapes.
 
-### The rebuild is a task, not a footnote
+### The rebuild is a task, not a footnote — **and it has been DONE, by T170**
 
 T159's §9 lists **25 `gates.md` sites**, six of them not on T117's nine. Neither worker edited `gates.md` —
 correctly, because its STANDING RULE demands a full sentence-by-sentence scope rebuild and parallel workers
-were live. **The list is produced; the rebuild is raised as T170** and must be done before G-8 goes to Buyan.
+were live. **The list was produced; the rebuild was raised as T170 and T170 executed it**, taking those 25
+as a floor rather than a ceiling and re-sweeping the file for the concept (P-26/P-37). T170 re-derived every
+figure it carried into G-8 **by extraction** from the committed raw `.gz` captures in integer minor units,
+reading no worker's analysis layer. **T170 decided nothing**: options (b) and (c) remain hard `user` gates
+and option (a) remains T116's.
 
 ### Driver's own errors in this exchange, recorded because the record is the point
 

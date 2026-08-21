@@ -1,0 +1,157 @@
+{
+ "all_cells": 209,
+ "b1_cells": 150,
+ "b1_final_interest_values": [
+  "0.01"
+ ],
+ "b1_totalPrincipalAmount_values": [
+  "0.00"
+ ],
+ "balance_column_cardinality_full": [
+  1
+ ],
+ "balance_column_cardinality_partial": [
+  2
+ ],
+ "distinct_shapes_all": 190,
+ "distinct_shapes_new": 169,
+ "family_a_balance_cardinality": [
+  1
+ ],
+ "family_a_failing_cells_record": 312,
+ "family_a_final_interest_values": [
+  "0.00"
+ ],
+ "family_a_max_final_balance_cell": "T84B-XL-R0p12-N600-B291",
+ "family_a_max_final_balance_minor": 291,
+ "family_a_max_residual_cell": "T83-SW-R21p6-N3-B1",
+ "family_a_max_residual_minor": 0,
+ "family_a_n_max": 600,
+ "family_a_nonzero_principal_row_counts": [
+  1
+ ],
+ "family_a_nonzero_row_is_last": true,
+ "family_a_rates": [
+  "0.12",
+  "1.2",
+  "12.0",
+  "16.8",
+  "21.6",
+  "3.6",
+  "300.0",
+  "36.0",
+  "48.0",
+  "7.0",
+  "96.0"
+ ],
+ "final_interest_full_distinct_count": 19,
+ "final_interest_full_top": [
+  [
+   "0.01",
+   150
+  ],
+  [
+   "0.07",
+   7
+  ],
+  [
+   "7.51",
+   6
+  ],
+  [
+   "0.04",
+   5
+  ],
+  [
+   "0.31",
+   5
+  ],
+  [
+   "0.13",
+   5
+  ],
+  [
+   "0.76",
+   5
+  ],
+  [
+   "0.10",
+   5
+  ]
+ ],
+ "final_interest_partial": {
+  "T117P2-R600p0-N108-B11": "0.11",
+  "T117P2-R600p0-N121-B11": "0.12",
+  "T117P2-R600p0-N150-B11": "0.14",
+  "T159-R600p0-N108-B11": "0.11",
+  "T159-R600p0-N121-B11": "0.12",
+  "T159-R600p0-N150-B11": "0.14",
+  "T159-R600p0-N2000-B999": "13.32"
+ },
+ "n_max": 3000,
+ "n_min": 104,
+ "new_cells": 180,
+ "new_full": 173,
+ "new_partial": 7,
+ "nonzero_principal_row_count_full": [
+  0
+ ],
+ "nonzero_principal_row_count_partial": [
+  1
+ ],
+ "nonzero_principal_row_is_last_partial": true,
+ "old_cells": 29,
+ "old_full": 29,
+ "old_partial": 0,
+ "partial_measurements": [
+  "T117P2-R600p0-N108-B11",
+  "T117P2-R600p0-N121-B11",
+  "T117P2-R600p0-N150-B11",
+  "T159-R600p0-N108-B11",
+  "T159-R600p0-N121-B11",
+  "T159-R600p0-N150-B11",
+  "T159-R600p0-N2000-B999"
+ ],
+ "partial_shapes": [
+  [
+   "600.0",
+   108,
+   11
+  ],
+  [
+   "600.0",
+   121,
+   11
+  ],
+  [
+   "600.0",
+   150,
+   11
+  ],
+  [
+   "600.0",
+   2000,
+   999
+  ]
+ ],
+ "principal_max_minor": 1001,
+ "principal_min_minor": 1,
+ "principals_all_odd": true,
+ "rates": [
+  "600.0"
+ ],
+ "residual_equals_final_balance_all": true,
+ "residual_ne_final_balance": [],
+ "totalOutstandingAmount_values": [
+  "0"
+ ],
+ "totalPrincipalAmount_values_full": [
+  "0.00"
+ ],
+ "totalPrincipalAmount_values_partial": [
+  "0.02",
+  "0.04",
+  "0.05",
+  "1.66"
+ ]
+}
