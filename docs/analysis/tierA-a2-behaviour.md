@@ -589,8 +589,9 @@ Two divergences that matter for a port and for refusal vectors:
   `NullPointerException`, not a `error.msg.productToAccountMapping.not.found`.
 - **The working-capital-loan path has no STEP 0** — it never consults financial activity accounts,
   and it additionally requires `paymentTypeId != null` before attempting the payment-channel lookup
-  (which the loan path does not; `findBy…PaymentTypeId(…, null)` is issued with a null argument and
-  simply matches nothing).
+  (which the loan path does not; `findBy…PaymentTypeId(…, null)` is issued with a null argument.
+  **`[UNVERIFIED]`** whether Spring Data JPA translates that into `payment_type IS NULL` — matching
+  the core row, not nothing — or into a literal `= NULL` that matches nothing; see §11).
 
 ### 4.3 CHARGE resolution — a different and *inconsistent* algorithm per family
 
@@ -913,8 +914,9 @@ guarded against product mappings. §10 D-7.
 Neither `acc_gl_account`, nor `acc_product_mapping`, nor `acc_gl_financial_activity_account` carries
 a sign, a normal-balance flag, or a debit/credit indicator. `GLAccountType` (§3.2) records
 ASSET/LIABILITY/EQUITY/INCOME/EXPENSE and **nothing in the four scope paths derives a normal balance
-from it**. Grep of the scope paths for `debit`/`credit` finds hits only in the trial-balance job
-described below and in Swagger example strings.
+from it**. Case-insensitive grep of the four scope paths for `debit`/`credit` returns **zero** hits —
+including the trial-balance job and the Swagger API resource — other than the `GOODWILL_CREDIT`
+placeholder identifier and its API parameter strings, which name an account role, not a sign.
 
 The **one** place this slice *consumes* a sign convention is the trial-balance tasklet
 (`glaccount/jobs/updatetrialbalancedetails/UpdateTrialBalanceDetailsTasklet.java:72`), and the
@@ -927,14 +929,22 @@ SELECT je.office.id, je.glAccount.id,
        je.transactionDate, je.createdDate, SUM(je.amount)                    // :59-61
 ```
 
-and `JournalEntryType` (`fineract-accounting/.../journalentry/domain/JournalEntryType.java:23-24`) is
-`CREDIT(1)`, `DEBIT(2)`. So:
+and `JournalEntryType` (`fineract-core/src/main/java/org/apache/fineract/accounting/journalentry/domain/JournalEntryType.java:23-24`,
+**not `fineract-accounting`** — the type lives in `fineract-core`; only `JournalEntryRepository` is in
+`fineract-accounting`) is `CREDIT(1)`, `DEBIT(2)`. So:
 
 > **For the trial balance only: `je.amount` is stored unsigned with a separate type discriminator,
 > and the signed movement is `+amount` for a DEBIT (type 2) and `−amount` for a CREDIT (type 1).**
-> `UpdateTrialBalanceDetailsTasklet.java:119-127` then accumulates `closingBalance += amount` over
-> rows ordered by `created_date, entry_date` (`TrialBalanceRepository.java:31-32`).
-> Cited from A1's files; **A2 does not define this and A1 must re-derive it from
+> That signed movement is what gets written to `m_trial_balance.amount` at **insert** time
+> (`row[2]` → `UpdateTrialBalanceDetailsTasklet.java:78`). `closing_balance` is written **at the same
+> insert**, from the **unsigned** `SUM(je.amount)` projected by `JournalEntryRepository.java:61`
+> (`row[5]` → `Tasklet.java:81`) — it is not produced by an accumulator. The running-accumulation
+> branch at `UpdateTrialBalanceDetailsTasklet.java:119-127` is **`[UNVERIFIED: reachable]`**: it only
+> selects rows where `closing_balance IS NULL` (`TrialBalanceRepository.java:31-32`, `:47-52`), the
+> column is `NOT NULL` on both the DDL (`0001_initial_schema.xml:4676-4678`) and the entity
+> (`TrialBalance.java:58`), and the one constructor that omits `closingBalance`
+> (`TrialBalance.getInstance`, `TrialBalance.java:61-65`) has zero callers anywhere in the checkout.
+> See §11. Cited from A1's files; **A2 does not define this and A1 must re-derive it from
 > `JournalEntry`/`JournalEntryType` directly, not from this document.**
 
 ---
@@ -950,8 +960,8 @@ types in `producttoaccountmapping`, `financialactivityaccount` or `productaccoun
 | `glaccount/domain/TrialBalance.java:49-50` | `@Column(name="amount", nullable=false) BigDecimal amount` — **no `precision`/`scale` on the annotation** | `m_trial_balance.amount` = **`DECIMAL(19, 6)` NOT NULL** — `0001_initial_schema.xml:4669-4671` |
 | `glaccount/domain/TrialBalance.java:58-59` | `@Column(name="closing_balance", nullable=false) BigDecimal closingBalance` — no precision/scale | `m_trial_balance.closing_balance` = **`DECIMAL(19, 6)` NOT NULL** — `0001_initial_schema.xml:4676-4678` |
 | `glaccount/domain/TrialBalanceRepository.java:45` | `List<BigDecimal> findLastClosingBalance(…)` | (projection of the above) |
-| `glaccount/jobs/…/UpdateTrialBalanceDetailsTasklet.java:78, :81` | casts JPQL result columns to `BigDecimal` | as above |
-| `…Tasklet.java:108, :114-117, :119-127` | running accumulation, seeded `BigDecimal.ZERO` `:116`, `closingBalance.add(row.getAmount())` `:124` | as above |
+| `glaccount/jobs/…/UpdateTrialBalanceDetailsTasklet.java:71-89` | insert path — `amount` set from the signed movement (`row[2]` → `:78`); `closingBalance` set from the **unsigned** `SUM(je.amount)` (`row[5]` → `:81`, `JournalEntryRepository.java:61`) | as above |
+| `…Tasklet.java:99-128` | accumulation branch, seeded `BigDecimal.ZERO` `:116`, `closingBalance.add(row.getAmount())` `:124` — gated on `closing_balance IS NULL` against a `NOT NULL` column; the only feeder constructor has zero callers. **`[UNVERIFIED: reachable]`**, see §11 | as above, if reached |
 
 **No `java.lang.Double`, `java.lang.Float`, `double` or `float` occurs anywhere in the four scope
 paths.** `TrialBalance.equals/hashCode` (`:67-81`) use `Objects.equals` on the `BigDecimal`s — which
@@ -967,10 +977,13 @@ Two facts for the porter:
    decimals means Fineract can hold sub-minor-unit residue in a balance column. Any parity vector
    comparing a Go integer-minor-unit balance to a Fineract `DECIMAL(19,6)` must state the truncation
    rule it applies. That rule is **not** specified anywhere in this slice.
-2. **`m_trial_balance.closing_balance` is a WRITTEN, STORED balance**, computed by a batch job and
-   `UPDATE`d in place (`UpdateTrialBalanceDetailsTasklet.java:126` sets it on a managed entity inside
-   a transactional tasklet). This is in direct tension with the project non-negotiable *"balances are
-   derived, never written"*. It is a **reporting cache**, not the ledger — the ledger itself is
+2. **`m_trial_balance.closing_balance` is a WRITTEN, STORED balance.** It is populated **at insert**
+   (`UpdateTrialBalanceDetailsTasklet.java:81`) as the unsigned `SUM(je.amount)` projected by
+   `JournalEntryRepository.java:61` — not, on this revision's own gating, by the running accumulator
+   at `:119-127` (`[UNVERIFIED: reachable]`, see §11). Either way it is written, not derived at read
+   time, which is in direct tension with the project non-negotiable *"balances are derived, never
+   written"* — and worse than a simple running balance, since the stored value is an unsigned sum
+   wearing a balance's name. It is a **reporting cache**, not the ledger — the ledger itself is
    `acc_gl_journal_entry`, which A1 owns. The A2 porter must not carry `m_trial_balance` across as a
    balance store; it should be a derived view or be dropped. §10 D-9, and it is a design decision,
    not a transcription.
@@ -1048,6 +1061,28 @@ Each of these is a *gap*, not a guess. None was papered over.
     `usage` explicitly, so the default should be unreachable except by direct SQL.
 12. **`rs.wasNull()` mis-ordering** (§9) — the ordering is verified in source; the resulting
     `tagId` value was not observed.
+13. **Reachability of the trial-balance accumulation branch** (§7, §8,
+    `UpdateTrialBalanceDetailsTasklet.java:99-128`). It is gated on `closing_balance IS NULL`
+    (`TrialBalanceRepository.java:31-32`, `:47-52`) against a column that is `NOT NULL` on both the
+    DDL (`0001_initial_schema.xml:4676-4678`) and the entity (`TrialBalance.java:58`), and the one
+    constructor that would produce a NULL row (`TrialBalance.getInstance`, `:61-65`) has zero callers
+    anywhere in the checkout. On this revision's own code the branch looks unreachable; it was not
+    executed to confirm.
+14. **Whether `findBy…PaymentTypeId(…, null)` matches the core row or matches nothing** (§4.2). This
+    is a Spring Data JPA derived-query semantics question, not a Fineract one: a `null` bound to an
+    equality-derived query parameter is conventionally translated to `IS NULL`, which would match the
+    core (`payment_type IS NULL`) row rather than matching nothing as originally stated. Not
+    resolvable from this checkout — Boot 3.5.15 is pinned but no `spring-data-jpa` artefact is
+    resolvable locally to inspect the generated JPQL. **Contested, not settled.** Money impact is nil
+    under every write path this worker traced back to `acc_product_mapping` (only one
+    `payment_type IS NULL` row can exist per `financial_account_type = 1`), but the two readings
+    diverge the moment a duplicate row exists, which §5.2 shows is possible.
+15. **The savings charge path dereferences `chargeId` with no null guard.**
+    `AccountingProcessorHelper.java:1255` calls
+    `chargeRepositoryWrapper.findOneWithNotFoundDetection(chargeId)` unconditionally inside the
+    `accountMappingTypeId ∈ {4,5}` branch (§4.3), unlike the loan charge path's `chargeId != null`
+    guard at `:1229`. What the savings path does when that branch is reached with a null `chargeId`
+    was not traced.
 
 ---
 
@@ -1106,7 +1141,8 @@ Every file this document cites, so the reviewer can re-open them in one pass. Al
 - `fineract-provider/src/main/resources/application.properties` (lines 496–497 only)
 - `fineract-core/src/main/java/org/apache/fineract/portfolio/PortfolioProductType.java`
 - `fineract-provider/src/main/java/org/apache/fineract/accounting/journalentry/service/AccountingProcessorHelper.java`
-- `fineract-accounting/src/main/java/org/apache/fineract/accounting/journalentry/domain/{JournalEntryRepository,JournalEntryType}.java`
+- `fineract-accounting/src/main/java/org/apache/fineract/accounting/journalentry/domain/JournalEntryRepository.java`
+- `fineract-core/src/main/java/org/apache/fineract/accounting/journalentry/domain/JournalEntryType.java`
 - `fineract-accounting/src/main/java/org/apache/fineract/accounting/journalentry/JournalEntryMapper.java` (line 79 only)
 - `fineract-loan/src/main/java/org/apache/fineract/accounting/productaccountmapping/service/LoanProductToGLAccountMappingHelper.java` (existence/location only)
 - `fineract-investor/src/main/java/org/apache/fineract/investor/accounting/journalentry/service/InvestorAccountingHelper.java` (lines 92, 123 only)
