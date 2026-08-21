@@ -1,0 +1,14 @@
+#!/usr/bin/env python3
+"""A file whose ONLY 'protection' is a bare `assert`, which `python3 -O` strips.
+
+If a classifier scored this GUARDED it would be over-reporting guardedness on a
+path that does not exist under -O.
+"""
+import io
+
+P = "docs/adr/DEC-1-schedule-generator-adapter.md"
+
+s = io.open(P, encoding="utf-8").read()
+assert s.count("MathContext") == 1, "anchor missing"
+assert len(s) > 0
+io.open(P, "w", encoding="utf-8").write(s.replace("a", "b"))   # T179-SITE
