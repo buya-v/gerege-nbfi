@@ -71,11 +71,14 @@
     "gate_scope": "A gate on a CONTRACT blocks work that CONSUMES the contract (any coder task, anything under the go_target), not work that produces knowledge the decision needs anyway. While tier0 is blocked_on_gate, every other context is READY-FOR-ANALYSIS: analyst behaviour extraction from pinned source, test-corpus mining into capture plans, RAW observed vector capture on an oracle-reaching fire, and the Tier-C gap audit may all proceed. Contract-shaped storage, Go code, and amending the gated DEC-n may not. An open gate must never mean an idle factory."
   },
   "cursor": {
-    "current_context": "tier0-harness-schedule-poc",
-    "current_run_id": "2026-08-17-run1-harness-schedule-poc",
-    "completed_contexts": [],
+    "current_context": "tierA-gl-accounting",
+    "current_slice": "tierA-gl-accounting-A2",
+    "current_run_id": null,
+    "completed_contexts": [
+      "tier0-harness-schedule-poc"
+    ],
     "parked_contexts": [],
-    "note": "Local fire 20260820-200002. TEN workers dispatched, TEN completed, ZERO live at exit, no isolation violation, no scope breach. FIVE BRANCHES MERGED to main (T81+T86 interpreter guard, T88+T89 the futureUnrecognizedInterest comment CLOSED after six workers and five rejections, T80+T85 Path B hardening, T84's review evidence). Verification gate re-run by the driver on merged main with the pinned toolchain: gofmt -l names exactly contract.go, go build/vet/test 0/0/0, conformance VERDICT PASS exit 0, 42 parity vectors, 5576 cells, 0 invariant violations, 0 assertions NOT RUN; and `sh conformance.sh` now exits 3 with ZERO verdict tokens. THE FIRE'S DOMINANT FINDING IS A CLASS, NOT AN INSTANCE: five separate guards/canaries/controls that COULD NOT FAIL were found and closed (P-22), every one of them by someone ATTACKING the rig, and two of them inside the task sent to fix the previous one. THE DRIVER WAS WRONG THREE TIMES AND WORKERS CAUGHT ALL THREE: T79 refused the bijection framing (site->Action is not injective); T81 refused the bash-via-sh constraint (on this host /bin/sh IS bash 3.2.57 and 3.2 disables process substitution in POSIX mode); and T84 refuted the driver's own G-8 reframing on the driver's own stated discriminator, finding a SECOND family that genuinely does not amortize. G-8 IS NOW MEASURED AND INDEPENDENTLY REPRODUCED (T83's capture re-run byte-identically by T84, canonical sha256 01b41d9c...) and rewritten on main as TWO phenomena; option (a) turns out to be reachable for FAMILY B with ZERO port change (761 cells, 0 cell diffs) and NOT for family A (2525 cells, ONE cell diff per case, FAIL unchanged under exemption - an exemption cannot cure a parity diff); the earlier 'family A' wording here was the driver's own error, corrected on main in 95ec06a. The region reaches MNT 1.09 at an ordinary 30-year term, not sub-MNT-0.25 dust. G-8 stays OPEN and (b)/(c) remain untouched hard user gates. T83 and T82 were REJECTED by their reviewers and are NOT merged - correctly, since main therefore carries nothing false; T100 reworks G-8's write-up and T82 is one micro-fix round from merge."
+    "note": "Local fire 20260821-134344. TIER 0 CLOSED under P-5 (Buyan, 21 Aug 2026). The fire opened by finding two completed-but-unmerged streams stranded by the 08:00 fire session limit (T151, T152) and merged both after a P-24 scratch-merge gate re-run by the driver on the merged tree. It then executed P-5: 26 open tasks recorded as obligations with what grades each, 7 money-exempt tasks kept live and carried into Tier A. THE HYGIENE SWEEP FOUND THE FAILURE THE HYGIENE RULE NAMES: six independent review documents (T67, T79, T101, T127, T131, T135; 296 KB) existed only on branches, so main carried the fixes those reviews forced but not the reasoning that forced them. All six recovered. Next: tierA-gl-accounting slice A2 (chart of accounts + product-to-account mapping, 6,636 LOC, 58 files) -- the reference data a journal-entry vector has nowhere to post without."
   },
   "contexts": [
     {
@@ -88,10 +91,41 @@
       "main_loc": 182,
       "go_target": "nexus/internal/apps/loanschedule",
       "dependencies": [],
-      "status": "active",
+      "status": "done",
       "run_id": "2026-08-17-run1-harness-schedule-poc",
       "cutover_gate": false,
-      "notes": "Planned. Everything else depends on the harness existing. || cloud fire 20260817-2000: BLOCKED at gate G-1 (ratify DEC-1), which is NOT YET ANSWERABLE - the draft was independently REJECTED (T5) and the defect it turns on is one the current corpus provably cannot detect. Every other context in this program declares tier 0 as a transitive dependency, so the whole program is behind this gate. Measured this fire against the pin: the module is src/main 92 LOC + misc/Main.java 90 = 182, which settles the '~182 LOC' figure on record. || fire 20260818-173900: four workers landed and merged. The two capture audits are done; DEC-1 v2 was drafted and independently re-reviewed. G-1 did NOT close - T23 found three P0 defects, the sharpest being that the EMI re-adjust loop is LIVE inside the graded domain (7 of 10 graded-domain requests diverge from the contract as specified, and no vector in the corpus trips it). The contract-domain / graded-domain split itself SURVIVED review, and the reviewer proved mechanically that there is no third silently-dropped component beyond the known two. || G-1 CLOSED 2026-08-19: DEC-1 revision 12 RATIFIED by the driver under P-2 after ten independent rounds. T6 done; T7 (conformance harness) is now the bottleneck with T9-T15 behind it. TWO CONSTRAINTS FOR T7: charge conformance can only be graded on Path B (the Path A embeddable seam hard-wires loanCharges to null, T50-N2), and NO GO TOOLCHAIN EXISTS ON THIS HOST so go build/go test cannot run - the harness can be designed but not executed against Go until one is installed."
+      "notes": "Planned. Everything else depends on the harness existing. || cloud fire 20260817-2000: BLOCKED at gate G-1 (ratify DEC-1), which is NOT YET ANSWERABLE - the draft was independently REJECTED (T5) and the defect it turns on is one the current corpus provably cannot detect. Every other context in this program declares tier 0 as a transitive dependency, so the whole program is behind this gate. Measured this fire against the pin: the module is src/main 92 LOC + misc/Main.java 90 = 182, which settles the '~182 LOC' figure on record. || fire 20260818-173900: four workers landed and merged. The two capture audits are done; DEC-1 v2 was drafted and independently re-reviewed. G-1 did NOT close - T23 found three P0 defects, the sharpest being that the EMI re-adjust loop is LIVE inside the graded domain (7 of 10 graded-domain requests diverge from the contract as specified, and no vector in the corpus trips it). The contract-domain / graded-domain split itself SURVIVED review, and the reviewer proved mechanically that there is no third silently-dropped component beyond the known two. || G-1 CLOSED 2026-08-19: DEC-1 revision 12 RATIFIED by the driver under P-2 after ten independent rounds. T6 done; T7 (conformance harness) is now the bottleneck with T9-T15 behind it. TWO CONSTRAINTS FOR T7: charge conformance can only be graded on Path B (the Path A embeddable seam hard-wires loanCharges to null, T50-N2), and NO GO TOOLCHAIN EXISTS ON THIS HOST so go build/go test cannot run - the harness can be designed but not executed against Go until one is installed. || CLOSED 2026-08-21 by local fire 20260821-134344 under P-5. Tier 0 proved the pipeline end-to-end on the smallest real slice: oracle pinned and build-attested, two capture paths, harness green, DEC-1 rev 12 ratified and frozen, port passing 42 parity vectors. Holding it open for prose polish while 16 contexts and ~533k LOC wait was the wrong trade -- Buyan.",
+      "closed_by": "local fire 20260821-134344 (/softhouse-program driver) under P-5, ratified by Buyan 2026-08-21",
+      "closed_on": "2026-08-21",
+      "closure_evidence": {
+        "conformance": "VERDICT PASS exit 0, probe = up, 42 parity vectors, 5576 cells graded / 84 ungraded, 0 invariant violations, 0 invariant assertions NOT RUN, 0 refused, 0 inadmissible, 0 harness errors",
+        "build": "go build / go vet / go test -count=1 -> 0 / 0 / 0 on the merged tree (go1.26.6 darwin/arm64, repo-local toolchain)",
+        "gofmt": "gofmt -l names exactly contract.go -- EXPECTED under G-3 (OPTION A: the ratified artefact is not reformatted)",
+        "contract": "DEC-1 revision 12 RATIFIED, frozen in nexus/internal/apps/loanschedule/contract/contract.go",
+        "corpus": "42 parity + 4 contract-refusal + 1 self-test = 47 files; the self-test is refused from the parity count by the harness",
+        "oracle": "pinned Fineract 426a23544, PostgreSQL 18.3, build-attested via the image jar BOOT-INF/classes/git.properties",
+        "verified_by": "the driver re-ran every one of these on merged main this fire, not taken on a worker report"
+      },
+      "carried_forward": {
+        "money_exempt_live_tasks": [
+          "T149",
+          "T143",
+          "T132",
+          "T145",
+          "T120",
+          "T116",
+          "T117"
+        ],
+        "why": "P-5 exempts money-changing findings from obligation closure. These seven change, or can silently mis-decide, a number the oracle would emit -- three of them are holes in the FIRST non-negotiable in CLAUDE.md (no floating point in any monetary path). They move with the program rather than holding tier 0 open.",
+        "register": ".softhouse/obligations.md"
+      },
+      "open_gates_at_closure": {
+        "G-8": "OPEN. Two phenomena under one id: family A (a stale derived column) and family B (a genuine non-amortization the Go port reproduces cell for cell). Options (b) and (c) amend the graded domain and are HARD USER GATES. Closing tier 0 does not close G-8 and does not decide it.",
+        "G-4": "OPEN, ENGINEERING -- wording-only amendment to a ratified DEC-1. Buyan decides.",
+        "G-5": "OPEN, ENGINEERING -- same class as G-4.",
+        "N9_N10": "OPEN. Only FU-1 (obligation T139) closes them; the disclosures on main saying so must survive."
+      },
+      "not_cutover": "Tier 0 is DONE in the porting sense only. CUTOVER from Fineract to Go remains a hard user gate for this and every context: it needs vectors passing AND a clean shadow-parity window AND regulatory/parallel-run sign-off. None of the latter two exists."
     },
     {
       "id": "tierA-gl-accounting",
@@ -1132,6 +1166,22 @@
         "T100 G-8 write-up rework",
         "T101 review of T100"
       ]
+    },
+    {
+      "run_id": "2026-08-17-run1-harness-schedule-poc",
+      "context": "tier0-harness-schedule-poc",
+      "closed_by": "local fire 20260821-134344",
+      "closed_on": "2026-08-21",
+      "outcome": "DONE",
+      "tasks": {
+        "total": 153,
+        "done": 120,
+        "closed_as_obligation": 26,
+        "money_exempt_carried_forward": 7
+      },
+      "uat": "PASS -- build/vet/test 0/0/0, conformance VERDICT PASS exit 0 with probe = up, 42 parity vectors, 5576 cells, 0 invariant violations",
+      "reviewer_catches": "The dominant finding of the run was a CLASS, not an instance (P-22): guards, canaries and controls that COULD NOT FAIL -- at least five found, every one by ATTACKING the rig rather than reading it, two of them inside the task sent to fix the previous one. The driver was wrong at least four times and workers caught every one (P-20): the bijection framing (T79), the bash-via-sh constraint (T81), its own G-8 reframing on its own stated discriminator (T84), and the G-8 family A/B attribution three separate times (T114). Six of those reviews were themselves nearly lost -- see the branch register.",
+      "note": "Tier 0 is done in the PORTING sense. Cutover is untouched and remains a hard user gate."
     }
   ],
   "database": {
