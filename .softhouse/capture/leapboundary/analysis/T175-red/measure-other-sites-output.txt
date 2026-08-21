@@ -1,0 +1,21 @@
+T175 -- does each OTHER swallow site drop anything on today's committed tree?
+root: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a982e3fa98d08b3a4
+
+================================================================================================
+SITE  capture/charges/bin/t46-exacttext.py:108   `except json.JSONDecodeError: continue`
+================================================================================================
+  raw capture files it would consider : 57
+  files it would SILENTLY SKIP        : 0
+  VERDICT: LOAD-BEARING on the no-float non-negotiable (this is the tool that
+           closes T44-X1 and its docstring claims 'identity is proved, not
+           asserted'); DROPS 0 file(s) TODAY.
+
+================================================================================================
+SITE  leapboundary/analysis/t55-prior-capture-assessment.py:103   `except Exception: pass`
+================================================================================================
+  pairs compared                      : 12
+  money deltas CONSIDERED             : 772
+  money deltas SWALLOWED / excluded   : 0
+  VERDICT: same shape as t55-analyse.py:167, and its committed output
+           T55-PRIOR-CAPTURE-ASSESSMENT.txt publishes 'max N minor units' four
+           times, so it IS load-bearing on a published magnitude.
