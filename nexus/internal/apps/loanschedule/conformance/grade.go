@@ -133,6 +133,12 @@ type Summary struct {
 	// which no parity vector kills a named wrong implementation. An unbacked
 	// claim, and a fatal reason.
 	UncoveredGradedCapabilities []string
+
+	// NoFloatCensus is what the no-float guard INSPECTED on this run — files,
+	// tokens, and the count of each violation class. It is reported whether or
+	// not anything was found, because a guard that only speaks when it fails is
+	// indistinguishable from a guard that never ran (P-35).
+	NoFloatCensus FloatingPointCensus
 }
 
 // ExitCode is the harness's verdict as a process exit status.
@@ -227,6 +233,22 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 	for _, defect := range HarnessDeclarationDefects() {
 		s.FatalReasons = append(s.FatalReasons,
 			"HARNESS DECLARATION DEFECT (structural.go): "+defect)
+	}
+
+	// THE NO-FLOAT CENSUS GATES THE VERDICT, not merely the test suite.
+	//
+	// conformance.sh does not run `go test`; it builds and runs this binary. So
+	// before T154 a floating-point LITERAL on a money path could take the whole
+	// conformance run to exit 0 (T143/M-3). The census runs here, its counts are
+	// printed in the report whether or not anything is wrong, and any violation
+	// is fatal. Zero files scanned is an error returned by the census itself.
+	if census, cerr := ScanGoTreeForFloatingPoint(filepath.Join(opts.RepoRoot, LoanScheduleTreeRel)); cerr != nil {
+		s.FatalReasons = append(s.FatalReasons, "THE NO-FLOAT GUARD COULD NOT RUN: "+cerr.Error())
+	} else {
+		s.NoFloatCensus = census
+		for _, v := range census.Violations() {
+			s.FatalReasons = append(s.FatalReasons, "FLOATING POINT ON A MONEY PATH: "+v)
+		}
 	}
 
 	pin, err := LoadPin(filepath.Join(opts.StoreRoot, "PIN.json"))

@@ -279,6 +279,16 @@ func WriteReport(w io.Writer, s *Summary) {
 	p("    invariant violations    %d", s.InvariantViolations)
 	p("    invariant assertions    %d NOT RUN (a cell nobody observed; listed above, never inferred)",
 		s.InvariantAssertionsNotRun)
+	// PRINTED WHETHER OR NOT ANYTHING IS WRONG (P-35). A guard that speaks only
+	// when it fails cannot be told apart from a guard that never ran, and both
+	// of the no-float guards were exactly that until T154. The counts are the
+	// assertion: N files and T tokens were inspected, and each violation class
+	// was 0. A run showing `0 files` here has checked nothing and is exit 2.
+	p("    no-float census         %d Go files / %d tokens inspected under %s",
+		s.NoFloatCensus.FilesScanned, s.NoFloatCensus.TokensScanned, LoanScheduleTreeRel)
+	p("                            %d forbidden identifiers, %d floating-point or imaginary LITERALS, %d unscannable files",
+		len(s.NoFloatCensus.IdentifierViolations), len(s.NoFloatCensus.LiteralViolations),
+		len(s.NoFloatCensus.ScanErrors))
 
 	if len(s.FatalReasons) > 0 {
 		p("")

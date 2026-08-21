@@ -1,0 +1,178 @@
+package conformance
+
+import (
+	"fmt"
+	"go/scanner"
+	"go/token"
+	"os"
+	"path/filepath"
+	"sort"
+	"strings"
+)
+
+// THE NO-FLOAT GUARD, OVER THE GO TOKEN STREAM.
+//
+// CLAUDE.md's first non-negotiable: money is integer minor units, and there is
+// no floating point in any monetary code path — including intermediate
+// calculation. This file is the executable form of that sentence for the
+// loanschedule tree.
+//
+// WHY IT LIVES HERE AND NOT ONLY IN A TEST. Until T154 the only Go-side guard
+// was TestNoFloatInTheLoanScheduleTree, and `.softhouse/conformance.sh` does not
+// run `go test` — it builds and runs the harness binary. So a violation could
+// take conformance.sh to exit 0 even on a day somebody did run the tests. The
+// census is a package function called by BOTH the test and Run, so the same
+// scan gates the test suite AND the conformance verdict, and there is exactly
+// one implementation of the rule.
+//
+// WHAT IT INSPECTS, AND WHY BOTH HALVES ARE NEEDED.
+//
+//   - IDENTIFIERS. The named floating-point types and the strconv helpers that
+//     produce them. This half has existed since T7.
+//   - LITERALS — token.FLOAT and token.IMAG. This half is T154's, closing
+//     T143/M-3. It is the hole that mattered: `rate := 0.036 / 12.0` declares no
+//     forbidden identifier at all. Go infers an untyped float constant, the
+//     arithmetic is IEEE-754 binary floating point, and the identifier scan sees
+//     nothing. Measured before the fix, with that exact expression added to the
+//     tree: `go build` exit 0, `go test -run TestNoFloatInTheLoanScheduleTree`
+//     ok, `bash .softhouse/conformance.sh` exit 0 with no diagnostic
+//     [VERIFIED: T134's guard register, .softhouse/nonnegotiable-guard-audit.md
+//     row M-3; re-observed by T154, .softhouse/capture/t154-nofloat/out/].
+//     The rule was "no floating point"; the guard implemented "no float-typed
+//     identifiers" (P-35's second question: does the guard detect every FORM the
+//     violation can take?).
+//
+// WHY THE TOKEN STREAM AND NOT A BYTE GREP. The frozen contract's doc comments
+// NAME the forbidden types in order to forbid them, so a byte grep fires on the
+// prohibition itself, and a guard that fires on its own rule is a guard somebody
+// switches off. go/scanner in mode 0 skips comments entirely, and it classifies
+// a number inside a string as token.STRING — so neither a doc comment nor a
+// decimal money fixture like "1250000.00" can trip it, with no exemption list to
+// rot.
+//
+// PHRASED POSITIVELY (P-35). It reports what it INSPECTED — files, tokens,
+// identifiers, numeric literals — and every caller asserts a positive fact about
+// those counts. Zero files scanned is an ERROR, never a pass: "I found nothing
+// wrong" is vacuous on no input, which is the single shape shared by every
+// vacuous guard this program has found.
+
+// LoanScheduleTreeRel is the tree the no-float rule binds, relative to the
+// repository root. It is the same tree `guard_no_float_in_harness` walks in
+// .softhouse/conformance.sh.
+var LoanScheduleTreeRel = filepath.Join("nexus", "internal", "apps", "loanschedule")
+
+// forbiddenFloatIdentifiers is the identifier half of the rule.
+//
+// THE SPLIT STRING LITERALS ARE LOAD-BEARING, NOT A STYLE. `guard_no_float_in_harness`
+// in conformance.sh strips comments and then byte-greps the remaining source for
+// these very spellings. Written whole, this map would make THIS file a permanent
+// failure of that guard. Split, the bytes never appear contiguously and the Go
+// scanner still sees one string constant each.
+var forbiddenFloatIdentifiers = map[string]bool{
+	"float" + "32": true, "float" + "64": true,
+	"complex" + "64": true, "complex" + "128": true,
+	"Float": true, "Float" + "32": true, "Float" + "64": true,
+	"Parse" + "Float": true, "Format" + "Float": true, "Append" + "Float": true,
+	"Decimal": true,
+}
+
+// FloatingPointCensus is what the scan INSPECTED and what it found. Every field
+// is a positive count; a caller that reports "clean" without also reporting
+// FilesScanned has reported nothing.
+type FloatingPointCensus struct {
+	Root          string
+	FilesScanned  int
+	TokensScanned int
+
+	// IdentifierViolations and LiteralViolations are "<file>:<line>:<col>: …"
+	// strings, sorted, one per occurrence.
+	IdentifierViolations []string
+	LiteralViolations    []string
+
+	// ScanErrors are malformed-source diagnostics from go/scanner. A file that
+	// cannot be tokenised has NOT been checked, so these are violations of the
+	// guard's own precondition and are reported as such rather than ignored.
+	ScanErrors []string
+}
+
+// Violations is every reason the tree fails the rule, in a stable order.
+func (c FloatingPointCensus) Violations() []string {
+	out := make([]string, 0, len(c.ScanErrors)+len(c.IdentifierViolations)+len(c.LiteralViolations))
+	out = append(out, c.ScanErrors...)
+	out = append(out, c.IdentifierViolations...)
+	out = append(out, c.LiteralViolations...)
+	return out
+}
+
+// Summary is the positive sentence: what was inspected and what each count was.
+func (c FloatingPointCensus) Summary() string {
+	return fmt.Sprintf(
+		"inspected %d Go files / %d tokens under %s: %d forbidden identifiers, %d floating-point or imaginary literals, %d unscannable files",
+		c.FilesScanned, c.TokensScanned, c.Root,
+		len(c.IdentifierViolations), len(c.LiteralViolations), len(c.ScanErrors))
+}
+
+// ScanGoTreeForFloatingPoint tokenises every .go file under root and censuses
+// the forbidden identifiers and the floating-point and imaginary LITERALS.
+//
+// It returns an error only when the walk itself failed or when it scanned zero
+// files. A tree that scans clean returns a census whose counts a caller must
+// still check — this function deliberately does not decide the verdict, because
+// the test and the conformance run word it differently.
+func ScanGoTreeForFloatingPoint(root string) (FloatingPointCensus, error) {
+	c := FloatingPointCensus{Root: root}
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() || !strings.HasSuffix(path, ".go") {
+			return nil
+		}
+		raw, rerr := os.ReadFile(path)
+		if rerr != nil {
+			return rerr
+		}
+		c.FilesScanned++
+		fset := token.NewFileSet()
+		file := fset.AddFile(path, -1, len(raw))
+		var sc scanner.Scanner
+		sc.Init(file, raw, func(pos token.Position, msg string) {
+			c.ScanErrors = append(c.ScanErrors,
+				fmt.Sprintf("%s: could not be tokenised (%s), so it has NOT been checked for floating point", pos, msg))
+		}, 0) // mode 0: comments are skipped entirely
+		for {
+			pos, tok, lit := sc.Scan()
+			if tok == token.EOF {
+				break
+			}
+			c.TokensScanned++
+			switch {
+			case tok == token.FLOAT || tok == token.IMAG:
+				// THE T143/M-3 HOLE. A literal carries no identifier, so the
+				// identifier arm below never sees it. `0.036`, `1e-4`, `3i` and
+				// `0x1p-2` are all this token class.
+				c.LiteralViolations = append(c.LiteralViolations, fmt.Sprintf(
+					"%s: floating-point literal %q: money is integer minor units, and no floating-point value may "+
+						"appear on a money path — including for intermediate calculation (CLAUDE.md, first non-negotiable)",
+					fset.Position(pos), lit))
+			case tok == token.IDENT && forbiddenFloatIdentifiers[lit]:
+				c.IdentifierViolations = append(c.IdentifierViolations, fmt.Sprintf(
+					"%s: identifier %q: no floating-point type may appear on a money path, "+
+						"including for intermediate calculation", fset.Position(pos), lit))
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		return c, fmt.Errorf("walking %s for the no-float census: %w", root, err)
+	}
+	if c.FilesScanned == 0 {
+		return c, fmt.Errorf(
+			"the no-float census scanned ZERO Go files under %s: a guard that inspects nothing passes "+
+				"everything, so this is an ERROR and not a pass", root)
+	}
+	sort.Strings(c.ScanErrors)
+	sort.Strings(c.IdentifierViolations)
+	sort.Strings(c.LiteralViolations)
+	return c, nil
+}

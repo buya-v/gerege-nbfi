@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"go/scanner"
-	"go/token"
 	"os"
 	"path/filepath"
 	"strings"
@@ -767,54 +765,92 @@ func TestMinorTextIsExact(t *testing.T) {
 // string literals rather than identifiers, so there is no exemption list to rot.
 // And it proves the ABSENCE of known-bad patterns and nothing more: .softhouse/
 // patterns.md is explicit that a grep-based HARD check never proves correctness.
+// IT NOW COVERS LITERALS AS WELL AS IDENTIFIERS (T154, closing T143/M-3), and the
+// scan itself lives in nofloat.go so that Run — and therefore conformance.sh —
+// enforces the identical rule. `rate := 0.036 / 12.0` declares no forbidden
+// identifier, so before T154 it built, passed this test, and took conformance.sh
+// to exit 0.
+//
+// THE GUARD IS DRIVEN RED BY THE GUARD'S OWN TEST. The `the_guard_fires`
+// sub-test below runs the same census over a synthetic tree containing one
+// literal and one identifier and requires both to be reported. A guard nobody
+// has seen fail is a guard nobody has tested (P-22), and an external script that
+// proves it once does not protect the next rewrite of this function.
 func TestNoFloatInTheLoanScheduleTree(t *testing.T) {
-	root := filepath.Join(repoRoot(t), "nexus", "internal", "apps", "loanschedule")
-	forbidden := map[string]bool{
-		"float" + "32": true, "float" + "64": true,
-		"complex" + "64": true, "complex" + "128": true,
-		"Float": true, "Float" + "32": true, "Float" + "64": true,
-		"Parse" + "Float": true, "Format" + "Float": true, "Append" + "Float": true,
-		"Decimal": true,
-	}
-	scanned := 0
-	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+	root := filepath.Join(repoRoot(t), LoanScheduleTreeRel)
+
+	t.Run("the_committed_tree_is_clean", func(t *testing.T) {
+		census, err := ScanGoTreeForFloatingPoint(root)
 		if err != nil {
-			return err
+			t.Fatalf("the no-float census could not run: %v", err)
 		}
-		if info.IsDir() || !strings.HasSuffix(path, ".go") {
-			return nil
+		// POSITIVE ASSERTIONS (P-35): say what was inspected, then say each
+		// count was zero. "No violations" over an unknown number of files is
+		// the vacuous phrasing this whole class of defect is made of.
+		if census.FilesScanned == 0 || census.TokensScanned == 0 {
+			t.Fatalf("the census inspected %d files / %d tokens under %s: a guard that inspects nothing "+
+				"passes everything", census.FilesScanned, census.TokensScanned, root)
 		}
-		raw, rerr := os.ReadFile(path)
-		if rerr != nil {
-			return rerr
+		for _, v := range census.Violations() {
+			t.Errorf("%s", v)
 		}
-		scanned++
-		fset := token.NewFileSet()
-		file := fset.AddFile(path, -1, len(raw))
-		var sc scanner.Scanner
-		sc.Init(file, raw, func(pos token.Position, msg string) {
-			t.Errorf("%s: scan error: %s", pos, msg)
-		}, 0) // mode 0: comments are skipped entirely
-		for {
-			pos, tok, lit := sc.Scan()
-			if tok == token.EOF {
-				break
-			}
-			if tok != token.IDENT || !forbidden[lit] {
-				continue
-			}
-			t.Errorf("%s: identifier %q: no floating-point type may appear on a money path, "+
-				"including for intermediate calculation", fset.Position(pos), lit)
-		}
-		return nil
+		t.Logf("%s", census.Summary())
 	})
-	if err != nil {
-		t.Fatalf("walking %s: %v", root, err)
-	}
-	if scanned == 0 {
-		t.Fatalf("scanned no Go files under %s: a guard that inspects nothing passes everything", root)
-	}
-	t.Logf("scanned %d Go files under %s for floating-point identifiers", scanned, root)
+
+	// ANTI-VACUITY. Both arms of the rule must be able to fail, and the literal
+	// arm must fail on an expression that declares NO forbidden identifier —
+	// which is precisely what made T143/M-3 invisible to every guard in the repo.
+	t.Run("the_guard_fires", func(t *testing.T) {
+		dir := t.TempDir()
+		const violator = "package probe\n" +
+			"\n" +
+			"// A doc comment naming " + "float" + "64 must NOT trip the guard: comments are skipped.\n" +
+			"func rateProbe(p int64) int64 {\n" +
+			"\trate := 0.036 / 12.0\n" + // token.FLOAT twice, no forbidden identifier
+			"\tspin := 3i\n" + // token.IMAG
+			"\t_ = spin\n" +
+			"\treturn p + int64(rate)\n" +
+			"}\n" +
+			"\n" +
+			"var typed " + "float" + "64 // token.IDENT\n" +
+			"\n" +
+			"const decimalInAString = \"1250000.00\" // token.STRING must NOT trip the guard\n"
+		if err := os.WriteFile(filepath.Join(dir, "probe.go"), []byte(violator), 0o644); err != nil {
+			t.Fatalf("WriteFile: %v", err)
+		}
+		census, err := ScanGoTreeForFloatingPoint(dir)
+		if err != nil {
+			t.Fatalf("census: %v", err)
+		}
+		if census.FilesScanned != 1 {
+			t.Fatalf("the probe tree has 1 file, the census scanned %d", census.FilesScanned)
+		}
+		// 0.036, 12.0 -> FLOAT ; 3i -> IMAG
+		if len(census.LiteralViolations) != 3 {
+			t.Errorf("wanted 3 literal violations (0.036, 12.0, 3i), got %d: %v",
+				len(census.LiteralViolations), census.LiteralViolations)
+		}
+		if len(census.IdentifierViolations) != 1 {
+			t.Errorf("wanted 1 identifier violation (the declared type), got %d: %v",
+				len(census.IdentifierViolations), census.IdentifierViolations)
+		}
+		// The two exemptions the token stream buys, asserted rather than assumed:
+		// a doc comment naming the type, and a decimal money fixture in a string.
+		for _, v := range census.Violations() {
+			if strings.Contains(v, "1250000.00") {
+				t.Errorf("a decimal inside a STRING literal tripped the guard: %s", v)
+			}
+		}
+		t.Logf("%s", census.Summary())
+	})
+
+	// ZERO FILES INSPECTED IS AN ERROR, NOT A PASS.
+	t.Run("an_empty_tree_is_an_error", func(t *testing.T) {
+		if _, err := ScanGoTreeForFloatingPoint(t.TempDir()); err == nil {
+			t.Fatal("the census returned no error over an EMPTY directory: " +
+				"\"I found nothing wrong\" over nothing inspected is the vacuous pass this guard exists not to be")
+		}
+	})
 }
 
 // parityPassViolations returns one line per parity PASS the run has not earned.
