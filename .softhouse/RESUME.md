@@ -4,120 +4,129 @@ Written by the orchestrator at every checkpoint; read by the next fire of `/soft
 human) to see exactly where the factory paused. **The repo is the only memory** — never rely on an agent's
 session state.
 
-## Current state (local fire `20260821-054355`, oracle REACHABLE)
+## Current state (local fire `20260821-054355`, oracle REACHABLE, clean exit)
 
-- **Program**: `fineract-to-go-full-codebase` — **active**
-- Contexts **1 done / 18**. Tier 0 closed. Active run `2026-08-21-run2-tierA-gl-accounting-A2`, slice **A2**.
-- **Oracle**: UP. Pinned checkout `426a23544` clean. PostgreSQL only.
-- **⚠ THIS SECTION IS A MID-FIRE SAFETY CHECKPOINT.** Two workers were still live when it was written
-  (**T154** no-float guards, **A2-10** review of A2-5). If the fire died before the final rewrite, treat
-  both as **killed mid-flight**: check `softhouse/T154-nofloat-guards` and `softhouse/A2-10-review-a2-5`
-  for commits, mark them `needs_retry` with completeness unverified, and DO NOT assume they finished.
+- **Program**: `fineract-to-go-full-codebase` — **active**. Contexts **1 done / 18**. Tier 0 closed.
+- **Active run**: `2026-08-21-run2-tierA-gl-accounting-A2` — Tier A, slice **A2**.
+- **Seven workers dispatched, seven completed, ZERO LIVE AT EXIT.** No isolation violation, no scope breach.
+- **Oracle**: UP throughout. Pinned checkout `426a23544`. PostgreSQL only.
 
 ---
 
 # THE HEADLINE: `main` is at 43 parity vectors, and the 43rd arrived WITH its review
 
-**`main` moved 42 → 43.** T149's vector — the first in the store ever observed through the **running
-Fineract server**, where all 42 others come from the in-process Path A seam — was held unmerged last fire
-because the driver had dispatched it **without a paired reviewer**, its own plan-gate rule-1 violation.
-**T153 is that review, and it is done: MICRO-FIX → APPROVED, no defect in any money path.** The promotion
-entered `main` with its review, never without. The violation is closed.
+T149's vector — the first in the store ever observed through the **running Fineract server**, where all 42
+others come from the in-process Path A seam — was held unmerged last fire because the driver had dispatched
+it **without a paired reviewer**. **T153 is that review: MICRO-FIX → APPROVED, no defect in any money path.**
+The violation is closed, and holding it was right: T153 found two real overclaims.
 
-T153 did not take T149 on report. It re-observed the tie live under **its own** request sha
-`b126725a…` and got responses **byte-for-byte identical** to T149's committed captures on both arms — and
-got a *cleaner* counterfactual than T149 had (same request bytes at the **same product id 1** on both
-tenants). It ran two checks T149 never did: **all twelve periods re-derived in exact rational arithmetic**
-(12/12 + total agree, EMI 10858003), and transcription checked **in both directions** (0 mismatches, every
-`unrecorded_fields` cell verified genuinely absent).
-
-**Driver re-ran conformance on merged `main` after applying the micro-fix** — not taken on the reviewer's
-report either:
+**Driver re-ran everything on merged `main` after applying the micro-fix — nothing here is on a worker's report:**
 
 ```
-probe line PRESENT at line 1: conformance: reference oracle (https://localhost:8443/...) probe = up
+probe line PRESENT, line 1: conformance: reference oracle (https://localhost:8443/...) probe = up
 VERDICT: PASS (exit 0) — 43 parity vectors, 5664 cells graded
          contract-refusal 4 · self-test 1 · refused 0 · inadmissible 0 · harness errors 0
          invariant violations 0 · invariant assertions 0 NOT RUN
+go1.26.6 (repo-local, `. .softhouse/bin/go-env.sh`): build 0 · vet 0 · test ./... ok
+gofmt -l names exactly contract.go — EXPECTED under G-3
          IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a user gate.
 ```
 
-**The micro-fix the driver applied**: two sentences claimed a tighter control than they held —
-(1) "differing in exactly one input" ignored that `tenants.timezone_id` **also** differs (Asia/Kolkata vs
-Asia/Ulaanbaatar); inertness `[UNVERIFIED]`, since testing it means **writing** to the shared oracle;
-(2) "ICPM is the only remaining difference" ignored that the start year differs too (2024-01-01 vs
-2026-01-01) — **T153 measured the missing control and found 0 money-cell differences**, so the conclusion
-survived and only the wording was wrong. T153's coverage caveat was written **onto the vector**: it
-**cannot discriminate day count** (products 9, 11 and 1 all return digest `39f56dc2…`), so `FIXED_30_360`
-is TRUE but must never be read as coverage.
-
-## G-9 CLOSED — and closing it exposed that the A2 coder had never been planned at all
-
-**Decision** (PRODUCT, `chosen_by: agent`, Buyan may reverse): the chart of accounts is **DATA, not code**;
-launch with the minimal chart the vectors exercise; an FRC-aligned production chart is a separate data-only
-deliverable downstream of CUTOVER. Porting "the chart" as Go code would invent a structure Fineract does not
-have, and **an invented structure cannot be graded against the oracle**.
-
-Premise **re-derived by the driver**, not taken from A2-1: across the two tenant seed changelogs,
-**0 of 1,918 `<insert>` elements target `acc_gl_account`**; across all of `db/changelog/tenant/parts/` the
-table appears only as `createTable` + two `createIndex`. Fineract ships the table and no rows.
-
-**Two consequences that were not visible before:**
-1. **The decision alone does not unblock the coder.** The whole A2 capture holds **four** GL accounts, **all
-   ASSET**, while `LoanProductDataValidator.java:663-710` makes **nine** mandatory for cash-based accounting
-   (twelve for accrual, `:761-777`). **The corpus holds 2 of the 9.** Raised as **A2-7**.
-2. **The A2 coder did not exist in the plan.** G-9 had blocked it from being *written*, not just run.
-   Registered as **A2-8** with reviewer **A2-9**.
+**Merged this fire**: `A2-6`, `T149`, `T153`, `A2-5`, `A2-10`, `A2-7`.
+**Held unmerged**: `T154` — see below.
 
 ## THE NEXT FIRE STARTS HERE
 
-1. **Adjudicate T154 and A2-10** (see the warning above — verify they actually finished).
-2. **A2-7** — capture the seven missing mandatory GL accounts. **Needs the oracle.** Depends on A2-5.
-3. **A2-8 → A2-9** — the A2 port itself, then its independent review.
-4. **T155** — review of T154. **T156** — the unguarded `mv` that leaves a green `PASS 42`.
-5. Remaining carried money tasks: **T116**, **T117**, **T145** (all collide with `.softhouse/capture/`;
-   serialise them behind A2-5/A2-7).
+1. **T155 — review T154, then merge it. NEEDS THE ORACLE.** T154 (the consolidated no-float guards) is
+   **deliberately unmerged**: it is money-path guard code and its paired reviewer has not run. This is
+   exactly the T149 call, and the T149 precedent was **vindicated this fire**. Its branch verified green
+   (build/vet/test 0, conformance exit 0, and a post-merge scratch at 43/5664), but a green branch is not a
+   review. **Tell T155 that T154 self-corrected three inherited claims and found a P-24 bug in its own rig —
+   it should hunt for any hard-coded expectation left in its provers, since main's parity count keeps moving.**
+2. **A2-8 — THE A2 CODER. IT IS READY.** Its dependency on A2-7 was removed (the driver's false premise).
+   Its brief has been re-derived and amended; read it in full, and read `A2-7.md` and G-10 first.
+3. **A2-11** — review of A2-7. It should attack the refutation that overturned the driver, not just the new
+   captures: that refutation is now written into `gates.md` and `program.json` **as fact**.
+4. **A2-9** after A2-8. **T156** (unguarded `mv` leaves a green `PASS 42`). **T157** (last unhardened grep).
+5. Carried money work still open: **T116**, **T117**, **T145** — all collide on `.softhouse/capture/`;
+   serialise them.
 
-## Driver self-catches this fire (P-20 — worth measuring, the count keeps rising)
+## G-9 CLOSED — and the driver's own consequence was FALSE
 
-- **A2-5 was dispatched as a `coder` with no paired reviewer** — the *same* plan-gate rule-1 violation that
-  left T149 unmerged. Caught mid-flight by running the plan gate over the driver's own additions; **A2-10**
-  registered while A2-5 was still running.
-- **T153's `files_hint` was too narrow for the task the driver commissioned** — `.softhouse/reviews/` alone,
-  while the brief *ordered* it to re-observe from the live oracle, which necessarily writes captures. The
-  worker was right to write them; the plan was wrong. Not charged against the worker.
-- **The driver re-derived its own brief before dispatching it.** A2-8's three "already measured" traps were
-  re-checked against source: both A2-1 claims **confirmed exactly** (`fromInt` is a 3-cycle 3→5→4→3; the
-  enums collide at exactly 22/24/25, and at code 24 an INCOME member faces an EXPENSE one, so a cross-map
-  hits the wrong **side**). The check found **a third hazard nobody had recorded**: the name↔code relation
-  is **not a function in either direction** — `FEES_RECEIVABLE` is 25 under cash but 8 under accrual — so
-  keying on the code cross-maps *and* keying on the name cross-maps. The brief now requires two entirely
-  separate Go types. The fourth trap was deliberately **not** checked and is marked as A2-1's, not confirmed.
-- **T120 + T132 + T143 consolidated into T154** (+ reviewer T155): one defect surface, colliding
-  `files_hint`; three concurrent workers would have produced contradictory guards.
-- **`git diff main..branch` (two dots) is the wrong scope check during a fire** — `main` moves, and its own
-  advances render as branch deletions. A2-6 looked like it had deleted 71 lines of `gates.md`. **Use three
-  dots.** The skill's STEP 5 text says two; it is wrong.
+**Decision (stands, `chosen_by: agent`, reversible):** the chart of accounts is **DATA, not code**; launch
+with the minimal chart the vectors exercise; an FRC-aligned chart is a separate data-only deliverable
+downstream of CUTOVER. Premise re-derived correctly: **0 of 1,918 seed `<insert>` elements** target
+`acc_gl_account`; it appears only as `createTable` + two `createIndex`. Fineract ships the table and no rows.
+
+**What was wrong, and it was the driver's:** it claimed the corpus held "four accounts, all ASSET" and
+"2 of the 9" mandatory. **False three ways.** `main` already held a **21-row dump across all five
+classifications** and **product 22 with all nine slots mapped**. A2-7 refuted it *before acting* and created
+zero accounts. Cause: an enumerator with `json.load` inside `except Exception: continue`, swallowing the
+psql `.txt` dumps where the state actually lives, reporting the subset as the whole. **Recorded as P-40.**
+
+## What A2-7 established instead — these are design inputs to A2-8
+
+- **Zero `GET /loanproducts/{id}` existed in the entire corpus** (eleven POSTs, no reads). The mapping A2-8
+  must port had **never been observed at the contract boundary**. Write and read field names differ for
+  **every** slot (`fundSourceAccountId` → `fundSourceAccount`); the read returns `{id, name, glCode}` and
+  **no type/usage**; unmapped optional slots are **absent, not null**.
+- **Runtime and creation mandatory sets DIFFER — measured.** A product with all nine `notNull()` slots still
+  404s on charge-off and goodwill, both `ignoreIfNull()` at creation. **Fineract will create a product that
+  cannot complete every posting path.**
+- **G-10 (OPEN)**: the oracle holds five mappings whose GL account was retyped ASSET→INCOME underneath them,
+  serves them without complaint, and **refuses to re-create them** (403) — and the read-back structurally
+  cannot reveal it. Driver recommends **(c)**: take vectors only from products the oracle would still accept.
+
+## Reviewer catches this fire — four for four
+
+- **T153 → T149**: measured the missing control rather than arguing it; both conclusions survived, the
+  wording fell. Re-observed the tie live, byte-for-byte identical, with a *cleaner* counterfactual than T149.
+- **A2-10 → A2-5**: found a **P-22 regression the fix task itself introduced** (symlinked fabrication
+  invisible to `verify`; the pre-fix code caught it). **Third instance** of a P-22 fix opening another.
+  Adjudicated A2-5's three deviations by **building the prescribed fix and running it** — all three A2-5's way.
+- **A2-7 → the driver**: refuted the central premise and acted on its own measurement.
+- Driver applied both micro-fixes and **drove A2-10's fix RED itself** in a sandbox before believing it.
+
+## Driver self-catches (P-20 — the count keeps rising, and that is the system working)
+
+- **A2-5 was dispatched with no paired reviewer** — the same rule-1 violation as T149. Caught mid-flight by
+  running the plan gate over the driver's *own* additions (**P-44**). A2-10 then found a real regression.
+- **The A2-10 brief's "22-line hunk"** was a `--stat` misreading; 11 identical `|| exit 1` lines.
+- **T153's `files_hint` was too narrow** for the task the driver commissioned. Not charged to the worker.
+- **The driver re-derived A2-8's own brief before dispatch** (**P-42**) and found a hazard nobody had
+  recorded: across `CashAccountsForLoan`/`AccrualAccountsForLoan` the name↔code relation is **not a function
+  in either direction** (`FEES_RECEIVABLE` = 25 cash, 8 accrual), so keying on the code cross-maps *and*
+  keying on the name cross-maps. Trap 4 deliberately **not** checked and marked unconfirmed.
 
 ## STANDING INSTRUCTIONS
 
-- **Invoke the harness with `bash`, never `sh`.** Exit 3 is the interpreter guard's **refusal** — *not* an
-  oracle outage. Only exit **2** *with a probe line that was actually PRINTED and reads `down`* is the
-  oracle-down condition; **test for the line's presence first**, since a failed HARD guard exits 2 in silence.
+- **`git diff main...branch` — THREE DOTS, always (P-41).** `main` moves during a fire and the two-dot form
+  renders main's own advances as the branch's deletions. **`/softhouse` SKILL.md STEP 5 says two dots and is
+  wrong.**
+- **Invoke the harness with `bash`, never `sh`.** Exit 3 is the interpreter guard's **refusal**, not an
+  oracle outage. Only exit **2** with a probe line **actually printed** and reading `down` is the oracle-down
+  condition — **test for the line's presence first**; a failed HARD guard exits 2 in silence.
+- **The Go toolchain is repo-local and NOT on PATH**: `. /Users/buv/gerege-nbfi/.softhouse/bin/go-env.sh`.
+  A bare `go build` reports "command not found", and `go build ./... | head` will report **`head`'s** exit
+  code as if it were the compiler's. Do not read that as a pass.
 - **Never `gofmt -w` `contract.go`** (G-3). `gofmt -l` naming exactly that file is EXPECTED.
-- **Ship no guard you have not driven RED** (P-22). A2-5 modelled this correctly: its provers read the real
+- **Ship no guard you have not driven RED** (P-22). A2-5 set the shape to copy: provers read the real
   pre-fix bytes from **immutable git blobs** and refuse on sha mismatch, so they cannot drift into testing
-  the fixed code. Copy that shape.
+  the fixed code. **A test-only guard is not a guard (P-45)** — `conformance.sh` never runs `go test`.
+- **An enumerator must count what it skipped and say so (P-40).** `except: continue` over a directory you
+  are measuring is the same defect as a guard that cannot fail.
 - **Verify post-merge assertions on a scratch merge** (P-24), against the **real pre-fix bytes**.
-- **An obligation is not a proof.** Where `obligations.md` says *Ungraded*, nothing runs that would catch it.
+- **An obligation is not a proof.** Where `obligations.md` says *Ungraded*, nothing catches the thing.
 
 ## Open gates — none blocks work today
 
-- **G-4**, **G-5** (OPEN, ENGINEERING) — wording-only amendments to a **ratified** DEC-1. Not crossed: the
-  skill's never-cross list names *any change to a ratified DEC-n*. Both corrected readings are already
-  operationally in force. **Buyan decides.**
-- **G-8** (OPEN) — options (b) and (c) amend the graded domain and are hard `user` gates.
+- **G-4**, **G-5** (OPEN, ENGINEERING) — wording-only amendments to a **ratified** DEC-1; the skill's
+  never-cross list names *any change to a ratified DEC-n*. Both corrected readings are already operationally
+  in force. **Buyan decides.**
+- **G-8** (OPEN) — options (b) and (c) amend the graded domain: hard `user` gates.
+- **G-10** (OPEN, ENGINEERING, raised this fire) — driver recommends (c), which is free and reversible.
+  (b) narrows the graded domain and is a hard `user` gate.
 - **N9 / N10** (OPEN) — only FU-1 (obligation T139) closes them.
-- **G-9** — **CLOSED this fire** (agent-decided, reversible).
+- **G-9** — **CLOSED this fire**, decision intact, its false consequence corrected in writing.
 - **CUTOVER** — untouched, every context. Needs vectors passing **and** a clean shadow-parity window **and**
   regulatory/parallel-run sign-off. The latter two do not exist.
