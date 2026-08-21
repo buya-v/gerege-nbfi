@@ -1819,3 +1819,60 @@ refuses to *disable* an account a product points at (`validateForAttachedProduct
 any Fineract deployment can reach the same state. Combined with `acc_gl_journal_entry` carrying no
 classification column, a retype retroactively re-renders every entry ever posted to that account — which is
 why trap (3) requires the Go port to carry classification **on the entry**.
+
+---
+
+## G-8 — PROVISIONAL NOTICE, local fire `20260821-134344`: T117's measurement moves the bound. **UNREVIEWED — DO NOT CITE YET.**
+
+**Status of this block: T117 has reported; its paired reviewer T159 has NOT.** The driver is recording the
+measurement here rather than rewriting G-8, because rewriting a gate Buyan decides on, on the strength of a
+single unreviewed worker report, is precisely the mistake that produced **P-40** and **P-46** this same fire.
+**Nothing below may be quoted to Buyan, or into any disclosure, until T159 returns a verdict.** The
+sentence-by-sentence rebuild G-8's STANDING RULE requires has deliberately **not** been done.
+
+### The headline, if it survives review
+
+**The failing principal EXCEEDS one minor unit, and no upper bound is established.**
+
+- Largest unamortized residual observed: **501 minor units = MNT 5.01**, at 600.0 % / n = 1000 — 1000 rows
+  of `principal "0.00"`, balance frozen at 5.01 for 83 years, MNT 2,505.01 of scheduled interest, principal
+  never repaid. That also exceeds the whole-corpus **family-A** record of MNT 2.91.
+- **"Sub-minor-unit dust" is dead.** The open question T117 was sent to settle asked whether the failing
+  principal could exceed one minor unit. Answer: yes, by a factor of 501.
+- **No bound.** The first failing term grows with the principal (B ≤ 51 fails at n=108; B=101 at 250; B=501
+  at 1000; B ≥ 1001 clean at all five terms asked). Because the largest failing principal **tracks the
+  largest term asked**, and nothing above n = 1000 has ever been asked, **MNT 5.01 is the largest OBSERVED,
+  not a bound.** T159 has been sent to ask beyond n = 1000 specifically to test whether this is a real trend
+  or an artefact of the probe set. *That answer, not this one, is what should reach Buyan.*
+- Family B is **neither a half-line in n nor a bounded island** — an interleaved band structure, with clean
+  gaps inside otherwise-contiguous family-B stretches.
+
+### One correction the driver makes to T117's own reading, in T117's favour and against it
+
+T117 reports that `gates.md`'s claim "on every family-B cell it sums to 0.00" is falsified by three partial
+cells (B=11, n ∈ {108,121,150}, principal column summing to 5, 4 and 2 minor units against an 11-minor-unit
+disbursement — a **partial** shortfall, a shape the record did not contain).
+
+The sentence it refers to is at **`gates.md:1209`**, and it actually reads *"On every family-B cell **measured
+so far** it sums to **0.00** against a **0.01** disbursement"*. So:
+
+- **It was true when written**, and it is explicitly hedged (`measured so far`) and explicitly scoped to a
+  `0.01` disbursement — which *is* the B=1 case. T117 slightly overstates by calling it an unqualified
+  universal.
+- **But T117 is right where it counts:** the *measured set* has now grown, and the hedge is what carried the
+  sentence — not a scoping decision anyone made deliberately. Any reader who took `0.00` as the family-B
+  signature now has a wrong mental model, and the **partial-shortfall shape is genuinely new**.
+- The row at **`gates.md:974`** (`principal column sums to the disbursed amount | yes | NO — it sums to 0.00`)
+  carries **no hedge at all** and is the one that needs the rebuild.
+
+*Recording both halves because a reviewer's finding is not improved by overstating it, and a gate is not
+protected by understating it.* T159 has been asked to complete the sweep — T117 listed **nine** affected
+sentences and correctly marked that list a starting point, not the sweep (**P-37**).
+
+### What is NOT in question
+
+G-8's options **(b)** and **(c)** amend the graded domain and remain **hard `user` gates**. T117 decided
+nothing about the gate, touched no vector, and did not go near them. **T116** (option (a), the family-B
+promotion) is **not** invalidated — its target cell is untouched — but it is deliberately **not dispatched**
+this fire: it would move the store's vector count while two reviewers are actively measuring store counts,
+and the deflation manifest (**T160**) that would make such a move safe does not exist yet.
