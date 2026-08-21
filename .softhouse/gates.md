@@ -1718,3 +1718,59 @@ discover the hard way.
 `[UNVERIFIED]` — whether the nine/twelve mandatory set at *product creation* is the same set the
 *posting* paths require at runtime. The validator is what was read; the journal-entry writers were
 not. A2-7 should measure it rather than infer it.
+
+### G-9 CORRECTION — the driver's "2 of the 9" consequence was FALSE. Refuted by A2-7, verified by the driver.
+
+**The DECISION above stands unchanged.** It rests on the seed-changelog measurement (0 of 1,918 `<insert>`
+elements target `acc_gl_account`), which was re-derived correctly and independently. **What follows is a
+correction to the CONSEQUENCE the driver attached to it**, which was wrong on every count.
+
+The driver wrote that the A2 capture held "exactly four distinct GL accounts, all `ASSET`", that no INCOME,
+EXPENSE, LIABILITY or EQUITY account had ever been created on tenant `gerege`, and that "the corpus holds
+2 of the 9" mandatory accounts. **All three claims are false**, and A2-7 refuted them *before acting on the
+brief* rather than dutifully creating seven accounts that already existed.
+
+Driver-verified against the bytes already committed on `main`, not taken on A2-7's report:
+
+- `out/A2-150-db-final-state.txt` is a **21-row `acc_gl_account` dump spanning all five classifications** —
+  including `20100 Overpayment Liability` (2), `40100 Interest On Loans` (4), `40200 Income From Fees` (4),
+  `40300 Income From Penalties` (4), `40400 Recoveries` (4), `50100 Losses Written Off` (5),
+  `50200 Goodwill Credit` (5) and `30000 Equity` (3).
+- `out/A2-072-db-product-mapping-rows.txt` shows **product 22 with all nine mandatory slots mapped**
+  (`financial_account_type` 1,2,3,4,5,6,10,11,12), plus goodwill (13) and a payment-channel override.
+- A2-7 additionally cites fourteen `POST /glaccounts`, every one HTTP 200, `resourceId` 5–18.
+
+**Root cause, and it is the driver's, stated exactly.** The enumeration walked `out/**/*`, called
+`json.load` on each file inside `try/except Exception: continue`, and matched only dicts carrying **both**
+`glCode` and `name`. That silently swallowed every psql `.txt` dump — which is where the real state lives —
+and every POST request body, which does not carry that shape. The script could only ever find a subset, and
+**reported the subset as the whole, with no signal that it had skipped anything.**
+
+This is the program's own recurring failure class — *a check that stops checking and says so nowhere* —
+committed by the driver **inside a gate decision, in the paragraph claiming to have measured the gap.**
+It is P-32 (a snapshot read as the current state; the driver also passed A2-7 a likely-origin hypothesis it
+independently corroborated: `out/A2-019-db-glaccount-rows.txt` is a snapshot taken *before*
+`run-020-accounts.sh` ran) compounded by a silent-skip enumerator.
+
+**Consequences for the plan, corrected:**
+
+- **A2-8 (the A2 coder) is NOT blocked on missing accounts.** It never was. The chart and a full nine-slot
+  cash mapping were already in the corpus. The dependency A2-8 → A2-7 was justified by a false premise.
+- **A2-7 was still worth running, on its own findings rather than the driver's.** What genuinely did not
+  exist: any **REST read-back of a non-ASSET GL account**, and **any `GET /loanproducts/{id}` at all** —
+  eleven POSTs and **zero reads** in the whole corpus, so the product-to-account mapping had never once been
+  observed *at the contract boundary* that A2-8 must port.
+- **The runtime-vs-creation question the driver marked `[UNVERIFIED]` is now MEASURED, and the answer is
+  NO — the sets differ.** On product 46 (all nine `notNull()` slots mapped, no `ignoreIfNull()` ones),
+  charge-off returns **404 `… does not exist for an account of type CHARGE OFF EXPENSE`** and goodwillCredit
+  returns **404 `… GOODWILL CREDIT`** — both `ignoreIfNull()` at creation. A product Fineract will happily
+  create therefore cannot complete every posting path.
+- **A2-7 also refuted its own source reading**, which is the behaviour this pipeline wants: `validateForUpdate`
+  marks everything `ignoreIfNull()`, so a PUT flipping cash→accrual without receivables *should* pass — it is
+  **refused 400 listing all twelve**, because `ProductToGLAccountMappingWritePlatformServiceImpl.java:410-411`
+  re-runs the *create* validator **iff the accounting rule changed**.
+- **New, and it is a design input to A2-8, not a defect to fix here:** `A2-214` re-sends a mapping the oracle
+  itself accepted as product 23 and gets **403**, because GL account 2 was retyped ASSET→INCOME underneath
+  five live product mappings. **The oracle holds that state, reports it without complaint, and will not
+  re-create it — and the read-back structurally cannot reveal it**, since `GET /loanproducts/{id}` returns
+  `{id, name, glCode}` per slot and **no type or usage at all**. Raised as G-10.
