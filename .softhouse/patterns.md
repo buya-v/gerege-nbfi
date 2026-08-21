@@ -1490,6 +1490,20 @@ guard *looks* like it is testing the property and its output *looks* like a meas
 4. **Prefer atomicity to trapping where it is available.** `os.replace()` of a temp file in the same
    directory is atomic on POSIX and needs no signal handling at all — strictly better than any trap.
 
+> **P-55's LESSON STANDS; ITS WORKED EXAMPLE IS REFUTED. Corrected by T189, local fire
+> `20260821-125942`.** Read the rule, not the mechanism below it. The paragraph that follows explains
+> T155's false confirmation by a **seekable-vs-pipe** distinction in **BSD grep** — and T189 measured
+> 124 cells across five pinned axes and showed **no such distinction exists**: BSD grep does not go
+> blind on either shape, and input shape is not the discriminator. **The discriminator is WHICH
+> PROGRAM the token `grep` names** — see **P-33**, which had it right. T157's measurement was correct
+> and its *attribution* was wrong: its transcript shows bare `grep`, which on this host is a shell
+> function re-execing as **ugrep with `-I`**, while its Apparatus paragraph names `/usr/bin/grep`.
+>
+> **The irony is the point, and it is why P-55 survives:** T155 confirmed a wrong claim by inheriting
+> the author's invocation shape, and then the *correction* to that claim was itself recorded with the
+> wrong mechanism, for the same reason — nobody re-derived **which binary ran**. P-55 caught itself
+> one level down. The rule below is what you should carry away; the story is now P-33's.
+
 **P-55 — A "CONFIRMATION" PROBE THAT REUSES THE CLAIM'S OWN INVOCATION SHAPE WILL CONFIRM THE CLAIM
 EVEN WHEN IT IS WRONG, BECAUSE IT NEVER TESTS THE SHAPE THAT ACTUALLY FAILS.** T154 characterized the
 unhardened grep at `fire-program.sh:224` as **"fail-closed."** T157 drove it directly and found the
@@ -1565,3 +1579,58 @@ NO CENSUS LINE" when the line was line 1.** It fires only when the output is lar
 3. **A presence check must itself be driven red both ways**: present-but-huge must read PRESENT, and
    genuinely absent must still be an ERROR. Fixing only the first direction converts a false alarm
    into a silent pass.
+
+---
+
+**P-58 — WHEN N ATTEMPTS DISAGREE ABOUT A TOOL, COUNT THE PROGRAMS BEFORE YOU COUNT THE VOTES.**
+Local fire `20260821-125942`, T189, settling a dispute that had stood at "two positives versus two
+negatives" and had already had a **withdrawn direction written into the record as a correction**.
+
+The tally was **not** 2–2. `grep` on this host resolves to a **shell function** that re-execs the
+`claude` binary as **ugrep with `-I` hard-coded**; `/usr/bin/grep` is **BSD grep 2.6.0-FreeBSD**.
+T157 and the earlier "independent ugrep 7.5.0 reproduction" are **one program measured twice**, not
+two corroborating observations. T171's and the driver's negatives measured the other program. T154's
+original "fail-closed" was **never measured at all**. **Every attempt was right; the disagreement was
+an artefact of counting observations instead of programs.**
+
+*Rules:*
+1. **A vote count over tool measurements is meaningless until every trial's resolved program is
+   pinned.** Two agreeing results are not corroboration if they ran the same binary; two disagreeing
+   results are not a contradiction if they ran different ones. Settle by **re-derivation**, never by
+   majority — the money-math rule, and it generalises to tools.
+2. **A measurement and its attribution are two separate claims and can have opposite truth values.**
+   T157's numbers were right and its named binary was wrong, and the wrong half is what propagated —
+   because a transcript's *numbers* get re-read and its *Apparatus* paragraph does not.
+3. **The corroborating source is the one to check hardest**, because it is the one nobody checks. The
+   ugrep 7.5.0 reproduction *was* the second program, mislabelled as independent support.
+4. **`-a` and `LC_ALL=C` are both load-bearing, against different programs** (P-33). A hardening can
+   be correct while every stated reason for it is wrong (P-11).
+5. The driver's own caveat the previous fire — *"the binary actually invoked may differ between
+   measurements"* — **was the entire answer**, recorded as an aside and not pulled on for a fire.
+   **When you write down a possible confound, the next step is to eliminate it, not to file it.**
+
+---
+
+**P-59 — A REVIEWER DISPATCHED AFTER ITS SUBJECT WAS MERGED REVIEWS AN EMPTY DIFF, AND `main...branch`
+REPORTS THAT AS CLEAN.** Local fire `20260821-125942`, caught by **T182** against the **driver's own
+dispatch**, and it generalises to every paired reviewer this program sends late.
+
+`git diff main...<branch>` — the three-dot form P-41 correctly mandates, because `main` moves under
+workers — diffs the branch against its **merge base**. Once the branch has been merged, the merge base
+*is* the branch tip, so the diff is **empty**. The reviewer sees no change, finds no defect, and
+"found nothing" is indistinguishable from "there was nothing to find" (P-35, one level up: a review
+that inspects zero lines is an ERROR, not an approval).
+
+**P-41 and P-59 are not in tension — they answer different questions.** Three dots is right while the
+subject is unmerged; it is *silently wrong* afterwards. The driver dispatched five such reviewers this
+fire and only T182 noticed, because it went and re-derived from raw evidence instead of trusting the
+diff it was handed.
+
+*Rules:*
+1. **Before reviewing, assert the diff is non-empty.** `git diff --stat main...<branch>` returning
+   nothing is a **STOP**, not a start.
+2. **If the subject is already merged, review the merge commit** (`git show -m <merge>`), or the
+   branch's own commits (`git log -p <base>..<branch>`) — and say in the handoff which you used.
+3. **The dispatcher owns this.** A brief that names a diff command must also name the state that
+   command is valid in. This was the driver's defect, not the reviewers'.
+

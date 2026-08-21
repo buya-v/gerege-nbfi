@@ -1132,11 +1132,22 @@ calls, 75 java processes]:
 - **It moves with `-Xss` and with the JIT.** First call of a cold JVM, 2 JVMs per size: 512k, 1m, 2m
   and 4m **throw 2/2**; 8m and 16m **observe 2/2**. With C2 off (`-XX:TieredStopAtLevel=1`) the
   transition **never happens** — 8 attempts, 8 throws.
-- **Therefore "the throwing region" is not a region of the input space at all.** Any sentence whose
-  premise is a boundary in (B, n) is **refuted at the premise**, not merely imprecise — including
-  the *"it is not monotone: `(B=10001, n=2000)` dies while `(B=10001, n=3000)` succeeds"* sentence in
-  the NOTICE block at the end of this file, which is corrected there. Under equal JVM state both
-  cells throw (cold) and both answer (warm).
+- **Therefore a boundary in (B, n) measured by asking each cell ONCE is not a boundary in the input
+  space — it is the probe's own warm-up curve.** Any sentence whose premise is such a boundary is
+  **refuted at the premise**, not merely imprecise — including the *"it is not monotone:
+  `(B=10001, n=2000)` dies while `(B=10001, n=3000)` succeeds"* sentence in the NOTICE block at the
+  end of this file, which is corrected there. Under equal JVM state both cells throw (cold) and both
+  answer (warm).
+
+  > **CORRECTED BY T182 (independent review of T177), local fire `20260821-125942`.** This bullet
+  > previously read *"the throwing region is **not** a region of the input space at all"* — a
+  > universal, and **T177's own headline table falsifies it**: at one fixed cold state, `B = 1001`
+  > was **observed 9/9** while `B = 10001` **threw 33/33 at the same n**. That **is** an input
+  > boundary, at a stated JVM state. The defensible claim — which T177 states correctly in its own
+  > follow-up 1 and then contradicts in its Impact §1 — is the one now written above: input
+  > dependence is only meaningful **relative to a pinned JVM state**, and a once-per-cell probe pins
+  > nothing. This matters practically, because cold-start-per-cell is the design T177 itself
+  > recommends and it asks each cell exactly once.
 - **T159 and T169 never disagreed about the oracle.** T177 replayed T159's committed case list in
   T159's committed order: the only two cells that threw are exactly the two that threw in T159's
   committed capture, and the money reproduces — **24 comparisons against committed T159 values, 0
@@ -1158,9 +1169,22 @@ and was right.*
 captures is **HotSpot's recording cap, not a depth** [T177; T170 notes that T159's own capture does
 not carry the field at all — it records `error`, `errorCause` and `errorStackTop` only, so the
 warning bites on T169-era and later captures]. With the cap lifted
-(`-XX:MaxJavaStackTraceDepth=0`) the true depth reached at overflow **rises** as compilation
+(`-XX:MaxJavaStackTraceDepth=0`) the true depth reached at overflow **varies** as compilation
 proceeds — 5119, 4683, 4683, then **8400** frames on the fourth attempt in one JVM, and on the fifth
 it fits. T177 measured frame *depth*, not frame *size*, and **asserts no mechanism**.
+
+> **CORRECTED BY T182, local fire `20260821-125942`.** This passage previously said the depth
+> **"rises"**. It does not monotonically rise: the series **falls 8.5 %** at attempt 2 (5119 → 4683),
+> and the "rises" reading only holds if 8400 is compared to 4683 rather than to the 5119 it started
+> from. It is **four points from a single JVM** — too few for a trend either way. What the four points
+> *do* support is the weaker and sufficient claim: the depth is **not stable**, so a fixed recorded
+> value is not a measurement of it.
+>
+> **T182 also supplied a stronger argument for the cap than T177 gave**, and it is worth stating
+> because it does not depend on the four-point series at all: across the 512k → 4m `-Xss` sweep the
+> recorded depth is **exactly 1024, with zero variance, over ~72 throws**. An eightfold change in
+> stack size cannot leave a true depth bit-identical — **invariance under a variable that must move
+> it is itself proof of a recording artefact.**
 
 **What is NOT known about the third outcome, and must not be filled in:**
 
