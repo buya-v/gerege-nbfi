@@ -1,5 +1,6 @@
 === T99 F-1 — a capture must not be filed one directory down inside another tenant's
 prefix ref:  <PREFIX-COMMIT>
+baseline:    literal 40-hex sha from t99/FORK-POINT-SHA — NOT a ref computed from `main` (T102/T135)
 fixed ref:   HEAD = <HEAD-COMMIT>
 export:      <EXPORT>   (git archive, so nothing uncommitted can leak into a proof)
 pre-fix recapture.sh sha256 efccb0a4323628b45952a7e2dff12590e7dce3a2705ae66aa73aa53cd3b0d7d7 — matches the pin, this IS main's byte sequence

@@ -57,15 +57,16 @@ t36/sha256.sh:2:# T99 — a sha256 that a PATH-poisoned `shasum` cannot answer f
 t36/sha256.sh:6:# shape — but computed the digest with the bare word `shasum`, resolved through $PATH:
 t36/sha256.sh:8:#     creqsha=$(shasum -a 256 "$CANARY_REQ" | cut -d' ' -f1)     # preconditions.sh:195, pre-T99
 t36/sha256.sh:10:# A `shasum` earlier on $PATH that prints the pinned constant for any input collapses the two
-t36/sha256.sh:26:#  3. TWO INDEPENDENT IMPLEMENTATIONS MUST AGREE.  Perl (`shasum`), C (`sha256sum`), LibreSSL
-t36/sha256.sh:27:#     (`openssl dgst`) and CPython (`hashlib`) are four separate implementations; at least two must
-t36/sha256.sh:33:# (the perl `shasum` is a perl script — `head -1 /usr/bin/shasum` is `#!/usr/bin/perl`), PYTHONPATH
-t36/sha256.sh:72:    shasum)    _cands='/usr/bin/shasum /bin/shasum' ;;
-t36/sha256.sh:73:    sha256sum) _cands='/sbin/sha256sum /usr/bin/sha256sum /bin/sha256sum' ;;
-t36/sha256.sh:91:    shasum)    $SHA256_ENV -i $SHA256_MINENV "$_p" -a 256 "$_f" 2>/dev/null \
-t36/sha256.sh:93:    sha256sum) $SHA256_ENV -i $SHA256_MINENV "$_p" "$_f" 2>/dev/null \
-t36/sha256.sh:121:  for _t in shasum sha256sum openssl python3; do
-t36/sha256.sh:146:  for _t in shasum sha256sum openssl python3; do
+t36/sha256.sh:32:#     (/usr/bin/shasum, /sbin/sha256sum, /usr/bin/openssl, /usr/bin/python3, /usr/bin/awk,
+t36/sha256.sh:38:#  3. TWO INDEPENDENT IMPLEMENTATIONS MUST AGREE.  Perl (`shasum`), C (`sha256sum`), LibreSSL
+t36/sha256.sh:39:#     (`openssl dgst`) and CPython (`hashlib`) are four separate implementations; at least two must
+t36/sha256.sh:45:# (the perl `shasum` is a perl script — `head -1 /usr/bin/shasum` is `#!/usr/bin/perl`), PYTHONPATH
+t36/sha256.sh:84:    shasum)    _cands='/usr/bin/shasum /bin/shasum' ;;
+t36/sha256.sh:85:    sha256sum) _cands='/sbin/sha256sum /usr/bin/sha256sum /bin/sha256sum' ;;
+t36/sha256.sh:103:    shasum)    $SHA256_ENV -i $SHA256_MINENV "$_p" -a 256 "$_f" 2>/dev/null \
+t36/sha256.sh:105:    sha256sum) $SHA256_ENV -i $SHA256_MINENV "$_p" "$_f" 2>/dev/null \
+t36/sha256.sh:133:  for _t in shasum sha256sum openssl python3; do
+t36/sha256.sh:158:  for _t in shasum sha256sum openssl python3; do
 
 --- OTHER unpinned externals in the two scripts that decide whether a capture is admissible
     (reported, not fixed: see the handoff.  A poisoned `docker` defeats P1-P3 and P5-P13;
@@ -92,7 +93,8 @@ t36/recapture.sh:209:for f in "$O"/B-0*-raw.json; do
 t36/emiloop-probe.sh:58:for f in "$O"/emiloop-*-raw.json; do
 t36/recreate-products.sh:115:for f in "$O"/B-0*-raw.json; do
 
---- grep -c / wc -l results compared to 0 (a zero can mean 'clean' or 'read nothing')
+--- 3a. counting invocations (a zero can mean 'clean' or 'read nothing')
+t22-probe/capture.sh:18:  echo "$f -> $(wc -c < "$P/out/$f-$TAG-raw.json") bytes"
 t80/summarise.sh:11:  p=$(grep -c '^  PASS' "$f" || true)
 t80/summarise.sh:12:  q=$(grep -c '^  FAIL' "$f" || true)
 t80/prove-f2.sh:41:  echo "  PASS lines ................. $(LC_ALL=C grep -ac '^  PASS' "$t" || true)"
@@ -118,6 +120,11 @@ t80/prove-f1.sh:85:  echo "  RESULT: committed set UNCHANGED — all $(wc -l < "
 t80/happy-path.sh:37:echo "PASS lines: $(grep -c '^  PASS' "$O/recapture-gerege/preconditions.txt")"
 t80/happy-path.sh:38:echo "FAIL lines: $(grep -c '^  FAIL' "$O/recapture-gerege/preconditions.txt" || true)"
 t80/happy-path.sh:73:  c=$(digests "$n" | awk '{print $1}' | sort -u | wc -l | tr -d ' ')
+t22-audit/probe.sh:25:  echo "$t -> $(wc -c < "$O/$t-raw.json") bytes"
+t22-audit/modeprobe.sh:26:  echo "$t capture -> $(wc -c < "$O/pmode-$t-raw.json") bytes"
+t22-audit/modeprobe2.sh:26:  echo "$t capture -> $(wc -c < "$O/pmode2-$t-raw.json") bytes"
+t22-audit/fresh-tenant.sh:50:  echo "B-$n -> $(wc -c < "$O/B-$n-raw.json") bytes"
+t22-audit/rerun-default.sh:16:  echo "B-$n -> $(wc -c < "$O/B-$n-raw.json") bytes"
 t36/recapture.sh:164:prefails=$(LC_ALL=C grep -ac '^  FAIL' "$O/preconditions.txt" || true)
 t36/emiloop-probe.sh:33:prefails=$(LC_ALL=C grep -ac '^  FAIL' "$O/preconditions.txt" || true)
 t36/recreate-products.sh:34:# being grepped and the ABORT was unreachable; the `grep -c … > /dev/null 2>&1 || true` line above
@@ -130,22 +137,43 @@ t36/preconditions.sh:134:jarlines=$(printf '%s\n' "$jarlist" | LC_ALL=C grep -c 
 t36/preconditions.sh:138:  jarhits=$(printf '%s\n' "$jarlist" | grep -icE 'ojdbc|oracle-jdbc|mysql-connector|mariadb-java')
 t36/preconditions.sh:142:pgdrv=$(printf '%s\n' "$jarlist" | grep -c 'BOOT-INF/lib/postgresql-')
 
---- absence assertions: a count or an empty string treated as PROOF OF CLEANLINESS
+--- 3b. absence assertions: a count or an empty string treated as PROOF OF CLEANLINESS
     (each of these needs a LIVENESS OPERAND — evidence that the input was non-empty)
 t80/prove-f2.sh:88:[ "$canary_prefix" = "0" ] || { echo "UNEXPECTED: the pre-fix script ran the canary"; rc=1; }
 t80/prove-f2.sh:98:[ "$rc" = 0 ] || exit 1
+t80/forbidden-sentence.sh:62:if [ "$inspected" -eq 0 ]; then
+t80/forbidden-sentence.sh:68:if [ "$adjudicated" -eq 0 ]; then
 t80/forbidden-sentence.sh:74:[ "$bad" = "0" ] || exit 1
 t80/prove-f1.sh:91:echo "prefix-defect-reproduced=$prefix_broke   fixed-run-clean=$( [ "$rc" = 0 ] && echo yes || echo no )"
 t80/prove-f1.sh:93:[ "$rc" = 0 ] || exit 1
 t80/happy-path.sh:85:[ "$rc" = "0" ] && echo "RESULT: HAPPY PATH INTACT — every capture byte-identical across all six sets." \
 t80/shell-invariance.sh:38:[ "$diffs" = "0" ] || exit 1
+t36/rundiff.sh:13:echo "OVERALL: $([ $rc -eq 0 ] && echo 'NO NUMBER MOVED' || echo 'AT LEAST ONE NUMBER MOVED')"
 t36/preconditions.sh:101:# below asserted an ABSENCE (`[ "$banned" = "0" ]`), and `grep -icE` over an EMPTY stream returns
 t36/preconditions.sh:122:if [ -z "$env_dump" ]; then
 t36/preconditions.sh:126:  [ "$banned" = "0" ] && ok "0 prohibited-engine hits in container env ($env_lines env line(s) actually scanned)" \
 t36/preconditions.sh:135:if [ -z "$jarlist" ]; then
 t36/preconditions.sh:139:  [ "$jarhits" = "0" ] && ok "0 prohibited driver jars in fineract-provider.jar ($jarlines jar entry line(s) actually scanned)" \
 t36/preconditions.sh:188:# `[ -z "$scp" ]`, and a psql that never ran returns the empty string too, so a dead database, a
-t36/sha256.sh:154:    if [ -z "$_first" ]; then
+t36/preconditions.sh:244:if [ -z "$CANARY_REQ" ]; then
+t36/sha256.sh:166:    if [ -z "$_first" ]; then
+
+--- 3c. the same verdict written WITHOUT a count and WITHOUT a string test
+    (grep -q as an absence test, [ -s file ], awk NR==0, case-on-empty)
+t80/forbidden-sentence.sh:45:  if LC_ALL=C grep -qaF "$S" "$f"; then
+t80/forbidden-sentence.sh:47:    if LC_ALL=C grep -qaF "$D" "$f" && LC_ALL=C grep -qa "tenant 'gerege'" "$f" \
+t80/forbidden-sentence.sh:48:       && ! LC_ALL=C grep -qa "tenant 'default'" "$f"; then
+t36/preconditions.sh:232:# substring.  Substring matching is what T77 defeated: grep -qF '"principal": 1162502.5'
+
+--- 3d. the Python side of the same shape (len()==0, not x, == [], no counter)
+t22-probe/rederive.py:188:        if not m:
+t22-audit/t22_crosspath.py:52:    if not ok:
+provenance.py:176:            if not tenants:
+provenance.py:390:    if not ipath:
+provenance.py:403:    if not hits:
+provenance.py:440:    if not a.file:
+t36/t36_emiloop_search.py:107:        if not fires:
+t36/attest.py:316:    if not row:
 
 === 4. capture directories with no in-band provenance — the F-4 shape
   directory                                  stamp     tier-A   tenant
@@ -177,5 +205,44 @@ t36/sha256.sh:154:    if [ -z "$_first" ]; then
     literal name never appears at the call site.
   * A vacuous check whose emptiness comes from something other than a glob — an empty SQL result,
     an empty JSON array, a `for` over an unset variable.
+
+  * >>> THE ONE THAT ALREADY BIT THIS PROGRAM, AND THE ONE WIDENING CANNOT CLOSE <<<
+    A VACUOUS CHECK WRITTEN IN A SPELLING GREP 3 DOES NOT ENUMERATE.  Grep 3 is a LIST OF IDIOMS,
+    not a decision procedure, and the set of ways to write "I found nothing wrong" in shell is
+    unbounded.  ZERO HITS FROM GREP 3 IS THEREFORE NOT EVIDENCE OF ABSENCE.  This is not a
+    hypothetical limit: it is the exact failure that produced two P0s in this tree.
+
+    T99's original pattern was the three literals `grep -c`, `grep -ac`, `wc -l`.  It found ONE
+    line in preconditions.sh — and that line (`pgdrv`) was the one site in the block that is NOT
+    vacuous, because it asserts PRESENCE.  The two Oracle-Database/MySQL/MariaDB prohibition
+    assertions it existed to find were written `grep -icE`, and it could not match them.
+
+    T135 then measured the widened pattern against a corpus of TEN alternate spellings of the same
+    shape.  ALL TEN pass vacuously on empty input; T99b's two patterns matched 1 line each.  The
+    ten, named so a later reader can re-run them rather than trust this paragraph:
+
+      1.  grep -i -c 'x'                      split flag cluster — `-c` is not adjacent to `grep -`
+      2.  grep --count 'x'                    the GNU long form
+      3.  [ "$n" -eq 0 ]                      -eq instead of =
+      4.  BANNED=$(... ); [ "$BANNED" = "0" ] an UPPERCASE variable name
+      5.  if ! grep -q 'x'; then ...          no count and no number anywhere
+      6.  [ "x$out" = "x" ]                   the x-prefix empty-string idiom
+      7.  [ ${#out} -eq 0 ]                   the string-length idiom
+      8.  [ -s scan.txt ] || ...              a file test, not a variable test
+      9.  awk 'END{if(NR==0) print "PASS"}'   the verdict inside another language
+      10. case "$out" in "") echo PASS ;;     a case arm, not a test
+
+    Grep 3 was widened by T152 (3a split flags + `--count` + `wc -c`; 3b uppercase, `==`, `-eq`,
+    `x$`, `${#}`, `[[`, bracketless `test -z`; 3c `grep -q`, `[ -s ]`, `NR==0`, case-on-empty; 3d
+    the Python forms) and now matches all ten.  THAT DOES NOT MAKE IT A DETECTOR.  It makes it a
+    list of eleven idioms instead of two.  Number twelve — a helper function `is_clean()`, a
+    `[ $(...) -lt 1 ]`, a Python `sum(1 for ...) < 1`, a jq `length == 0`, a check whose emptiness
+    is delivered through a variable this sweep never reads — is invisible here and will stay
+    invisible.
+
+    THE ONLY THING THAT ACTUALLY CLOSES THIS CLASS IS NOT A SWEEP.  Per P-35: write the assertion
+    POSITIVELY — "N items were inspected, and each equalled its expected value" — and make ZERO
+    INSPECTED an error.  The reviewer's one-line test is "would the PASS sentence still print on
+    empty input?"  A sweep can only ever suggest where to ask that question.
   * Whether a capture's recorded tenant is TRUE.  The index records what the evidence says and what
     tier it is; it cannot promote tier-B prose into an observation, and it does not try.

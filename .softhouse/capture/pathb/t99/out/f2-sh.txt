@@ -1,6 +1,7 @@
 === T99 F-2 — the digest pin must not be answerable by $PATH
 recipe interpreter under test: sh
 prefix ref:  <PREFIX-COMMIT>
+baseline:    literal 40-hex sha from t99/FORK-POINT-SHA — NOT a ref computed from `main` (T102/T135)
 fixed ref:   HEAD = <HEAD-COMMIT>
 export:      <EXPORT>   (git archive, so nothing uncommitted can leak into a proof)
 pre-fix preconditions.sh sha256 7c68f2dcc539a27648f2fb0623927c1231c9b3729bdfb77eb01bd90e67ae876b — matches the pin, this IS main's byte sequence

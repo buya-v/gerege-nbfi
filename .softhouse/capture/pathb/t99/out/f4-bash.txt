@@ -1,7 +1,11 @@
 === T99 F-4 — 'no stamp because it predates the mechanism' vs 'no stamp because it was removed'
 prefix ref:  <PREFIX-COMMIT>
+baseline:    literal 40-hex sha from t99/FORK-POINT-SHA — NOT a ref computed from `main` (T102/T135)
 fixed ref:   HEAD = <HEAD-COMMIT>
 export:      <EXPORT>   (git archive, so nothing uncommitted can leak into a proof)
+
+  baseline assertion: PROVENANCE-INDEX.json is ABSENT from the pre-fix export — this really
+                      is a tree from before the remedy, not the merged fix compared to itself
 
 --- 4a.prefix — delete the stamp from a directory that HAS one, then compare the two
   precondition: t80/out/recapture-gerege HAS a stamp and 7 files; t36/out/recapture-gerege has 8 files
