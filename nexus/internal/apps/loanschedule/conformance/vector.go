@@ -852,15 +852,14 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 		}
 	}
 	// (context, case_id, PATH) — three keys, and the third is what makes the order
-	// TOTAL (T90's sweep). Nothing rejects two files carrying the same case_id in
-	// one context, and on that input the two-key comparator declares neither less
-	// than the other: sort.Slice is not stable, so which row printed first would be
-	// decided by an unspecified rule rather than by the data. Path is the file's
-	// store-relative name, unique by construction, so no tie can survive it and the
-	// row order of the whole report is a function of the store's CONTENTS. Inert on
-	// today's store — all 47 case_ids are distinct, and the report is byte-identical
-	// with and without this key — which is the point: it costs nothing now and it
-	// removes a way for the table to reorder itself later.
+	// TOTAL (T90's sweep). Two files carrying the same case_id in one context are
+	// now REFUSED outright (DuplicateCaseIDs, below), but the comparator keeps the
+	// path key regardless: it is what makes the row order a function of the store's
+	// CONTENTS rather than of pdqsort's behaviour on a tie, and the sort runs BEFORE
+	// the duplicate check so that the refusal itself names its files in a
+	// deterministic order. Inert on today's store — all 47 case_ids are distinct,
+	// and the report is byte-identical with and without this key (T104 §7(iii),
+	// measured by reverting only this key).
 	sort.Slice(vectors, func(i, j int) bool {
 		if vectors[i].Context != vectors[j].Context {
 			return vectors[i].Context < vectors[j].Context
@@ -870,7 +869,79 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 		}
 		return vectors[i].Path < vectors[j].Path
 	})
+	if err := DuplicateCaseIDs(vectors); err != nil {
+		// Returned as the third value, NOT as a LoadError: a LoadError is a
+		// property of ONE file ("this one could not be read"), and no single file
+		// here is at fault — the defect is the relationship between two files.
+		// Run turns this into a fatal reason and returns BEFORE the grading loop,
+		// so nothing is graded and no count is printed that could be believed.
+		// loadErrs travels with it so a store that is both malformed and
+		// duplicated still reports both.
+		return nil, loadErrs, err
+	}
 	return vectors, loadErrs, nil
+}
+
+// DuplicateCaseIDs returns an error naming every case_id declared by more than
+// one vector file, and nil if every case_id in the store is unique.
+//
+// WHY THIS IS A REFUSAL AND NOT A WARNING, AND NOT A DEDUP.
+//
+// A case_id is a vector's identity. It is what the report's first column prints,
+// what a handoff cites, and what a gate write-up names. The two numbers this
+// program quotes as its evidence of coverage — "N parity vectors" and "M graded
+// cells" — are both computed by summing over the loaded vectors, so a store that
+// accidentally contains the same case twice reports MORE coverage than it has,
+// and every other check stays green. Measured on main's bytes with one file
+// copied under a second name: 43 parity vectors / 5623 graded cells / VERDICT
+// PASS / exit 0, with no warning anywhere in the report (T110; T104's F-T104-3,
+// raised against T90).
+//
+// A warning would not do, because the inflated numbers would still be printed
+// and quoted. A silent de-duplication would be worse: the two files are not
+// known to be identical — the second may carry a different expectation, a
+// different provenance or a different capture reference — so dropping one is a
+// choice about WHICH claim is true, made by the harness, invisibly. Refusing is
+// the only outcome that cannot be mistaken for either a larger corpus or a
+// smaller one.
+//
+// The key is the case_id ALONE, store-wide, not (context, case_id). Two files in
+// different context directories with one case_id are the same lie: the report
+// prints CASE without CONTEXT, so a reader cannot tell the two rows apart, and
+// both still add to the same headline totals. Scoping the check per-context
+// would let that pass. This also catches a symlinked or hard-linked copy of a
+// vector file, which arrives as two distinct paths carrying one case_id.
+//
+// Ordering: the caller sorts first, and both the outer list of case_ids and the
+// inner list of paths are sorted here, so the message is a function of the
+// store's contents alone.
+func DuplicateCaseIDs(vectors []*Vector) error {
+	byCase := make(map[string][]string, len(vectors))
+	for _, v := range vectors {
+		byCase[v.CaseID] = append(byCase[v.CaseID], v.Path)
+	}
+	var dups []string
+	for _, caseID := range sortedKeys(byCase) {
+		paths := append([]string(nil), byCase[caseID]...)
+		if len(paths) < 2 {
+			continue
+		}
+		sort.Strings(paths)
+		dups = append(dups, fmt.Sprintf("%q is declared by %d files: %s",
+			caseID, len(paths), strings.Join(paths, " AND ")))
+	}
+	if len(dups) == 0 {
+		return nil
+	}
+	return fmt.Errorf(
+		"DUPLICATE case_id IN THE VECTOR STORE — %s. A case_id is a vector's IDENTITY, and the two "+
+			"numbers this program quotes as its coverage evidence (parity vectors, graded cells) are sums "+
+			"over the loaded vectors: grading one case twice inflates BOTH while every other check stays "+
+			"green. This run is REFUSED and NOTHING WAS GRADED — exit 2, which is not a PASS and does not "+
+			"become one. The harness does NOT de-duplicate: the files are not known to agree, so dropping "+
+			"one would be the same lie in the other direction, told by the harness instead of by the store. "+
+			"Give each vector a unique case_id, or delete the copy",
+		strings.Join(dups, "; "))
 }
 
 // LoadError is a vector file that could not be read, decoded, or that carried a
