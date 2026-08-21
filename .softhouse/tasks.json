@@ -45,7 +45,7 @@
     {
       "id": "T120",
       "title": "The store and the float-guard disagree about what is IN the store, and nothing compares the counts",
-      "status": "pending",
+      "status": "superseded",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -57,13 +57,14 @@
         ".softhouse/conformance.sh"
       ],
       "description": "T110's F-T110-1..5 and their shared root, to be scoped by T119's ruling. conformance.sh's guard_no_float_in_vectors enumerates the store with `find -name '*.json' -type f` (RECURSIVE, no symlink follow) while LoadStore reads ONE LEVEL DEEP and matches the suffix bytewise. The two therefore disagree about what the store contains and no check compares their counts. Measured consequences, all silent: a symlinked context directory is skipped entirely (F-1), a nested subdirectory is skipped (F-2), UPPER.JSON is not a vector (F-3), case-only case_id variants both grade at 43/5623 (F-4), and NFC vs NFD Unicode-normalisation variants both grade AND RENDER IDENTICALLY in the report at 44/5670 (F-5). Fix: an explicit file census that REFUSES any .json under the store root the harness did not load, plus a case_id charset rule ([A-Za-z0-9._-]; all 47 committed ids are ASCII). DRIVE EVERY LEG RED (P-22) and show the legitimate 42/5576 store is untouched.",
-      "note": "Raised by the driver, local fire 20260821-080001, from T110's F-T110-1..5. The census is the real fix - the individual five are symptoms of one disagreement. Sequence after T110+T119 and after T105 (same package). NEEDS THE ORACLE. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md §1.",
-      "carried_from": "2026-08-17-run1-harness-schedule-poc"
+      "note": "Raised by the driver, local fire 20260821-080001, from T110's F-T110-1..5. The census is the real fix - the individual five are symptoms of one disagreement. Sequence after T110+T119 and after T105 (same package). NEEDS THE ORACLE. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md §1. || local fire 20260821-054355: SUPERSEDED BY T154. Not dropped and not downgraded: T120, T132 and T143 are three views of ONE defect surface (the no-float guards + the store census) and their files_hint collide on .softhouse/conformance.sh and nexus/internal/apps/loanschedule/. Plan-gate rule 7 forbids concurrent workers on overlapping files_hint, and three agents independently rewriting the same guard would produce contradictory guards. T154 carries all three descriptions verbatim and is paired with reviewer T155.",
+      "carried_from": "2026-08-17-run1-harness-schedule-poc",
+      "superseded_by": "T154"
     },
     {
       "id": "T132",
       "title": "The no-float guards are bare grep — a money non-negotiable can silently pass",
-      "status": "pending",
+      "status": "superseded",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -75,13 +76,14 @@
         ".softhouse/conformance.sh"
       ],
       "description": "T108's F-T108-1, driver-confirmed at both call sites. conformance.sh:184 guard_no_float_in_vectors and :201 guard_no_float_in_harness use bare 'grep -Eq' with NEITHER LC_ALL=C NOR -a. Per T108's 360-cell matrix that means a vector file containing a float plus ONE INVALID BYTE BEFORE IT ON THE SAME LINE makes the float guard SILENTLY PASS - and this guards the first non-negotiable in CLAUDE.md, that money is integer minor units with no floating point anywhere. Apply the two-token fix ('LC_ALL=C grep -qaF' shape, per T108's exact replacement text in its handoff) at BOTH sites, and sweep conformance.sh and every rig for OTHER bare greps whose result is load-bearing (P-26: sweep the concept, not the sentence). DRIVE IT RED with a poisoned scratch vector before the fix and green after (P-22), and confirm the legitimate 42-vector store still gives PASS exit 0 / 5576 cells unchanged.",
-      "note": "Raised by the driver, local fire 20260821-080001, from T108's F-T108-1. Sequenced after T130 and T131, which hold conformance.sh and rule on latent-vs-live respectively. NEEDS THE ORACLE to re-run the harness. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md §1.",
-      "carried_from": "2026-08-17-run1-harness-schedule-poc"
+      "note": "Raised by the driver, local fire 20260821-080001, from T108's F-T108-1. Sequenced after T130 and T131, which hold conformance.sh and rule on latent-vs-live respectively. NEEDS THE ORACLE to re-run the harness. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md §1. || local fire 20260821-054355: SUPERSEDED BY T154. Not dropped and not downgraded: T120, T132 and T143 are three views of ONE defect surface (the no-float guards + the store census) and their files_hint collide on .softhouse/conformance.sh and nexus/internal/apps/loanschedule/. Plan-gate rule 7 forbids concurrent workers on overlapping files_hint, and three agents independently rewriting the same guard would produce contradictory guards. T154 carries all three descriptions verbatim and is paired with reviewer T155.",
+      "carried_from": "2026-08-17-run1-harness-schedule-poc",
+      "superseded_by": "T154"
     },
     {
       "id": "T143",
       "title": "M-3 — a float LITERAL is invisible to both no-float guards",
-      "status": "pending",
+      "status": "superseded",
       "executor": "agent",
       "model": "opus",
       "target": "code",
@@ -92,8 +94,9 @@
         "nexus/internal/apps/loanschedule/"
       ],
       "description": "T134's worst money row, driver-verified in its decisive limb: both guards inspect IDENTIFIERS, so a float literal (token.FLOAT) such as `rate := 0.036 / 12.0` builds, passes TestNoFloatInTheLoanScheduleTree, and takes conformance.sh to exit 0. This is a hole in the FIRST non-negotiable in CLAUDE.md. Fix is ~3 lines (walk the AST for token.FLOAT / token.IMAG in addition to the identifier check) and is currently FREE - T134 measured 0 float and 0 imaginary literals across the tree's 21 files. DRIVE IT RED with an injected literal and GREEN on the clean tree. Phrase the guard POSITIVELY (P-35) and make zero-files-inspected an error. Also fix M-5 if in scope: LoadStore reads only files inside a context dir, so for store-root JSON the defeatable shell guard is the only float check.",
-      "note": "Raised by the driver, local fire 20260821-080001, from T134 / T127 / T129. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md §1.",
-      "carried_from": "2026-08-17-run1-harness-schedule-poc"
+      "note": "Raised by the driver, local fire 20260821-080001, from T134 / T127 / T129. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md §1. || local fire 20260821-054355: SUPERSEDED BY T154. Not dropped and not downgraded: T120, T132 and T143 are three views of ONE defect surface (the no-float guards + the store census) and their files_hint collide on .softhouse/conformance.sh and nexus/internal/apps/loanschedule/. Plan-gate rule 7 forbids concurrent workers on overlapping files_hint, and three agents independently rewriting the same guard would produce contradictory guards. T154 carries all three descriptions verbatim and is paired with reviewer T155.",
+      "carried_from": "2026-08-17-run1-harness-schedule-poc",
+      "superseded_by": "T154"
     },
     {
       "id": "T145",
@@ -260,6 +263,37 @@
       ],
       "description": "RAISED BY THE DRIVER FROM ITS OWN G-9 DECISION, local fire 20260821-054355, and the gap is MEASURED not suspected. G-9 is CLOSED: the chart of accounts is DATA not code, and Gerege launches with the minimal chart the captured vectors exercise. That decision is only actionable if the vectors exercise a chart a loan product mapping can be built on, AND THEY DO NOT. The entire A2 capture (327 files under out/) contains EXACTLY FOUR distinct GL accounts and ALL FOUR ARE ASSET: 10000 Assets (HEADER), 10100 Fund Source (DETAIL), 10201 Loan Portfolio (DETAIL), 19999 Clean Delete Target Renamed Again (HEADER). No INCOME, EXPENSE, LIABILITY or EQUITY account has EVER been created on tenant gerege. Meanwhile LoanProductDataValidator.java:663-710 makes NINE accounts notNull() for both cash-based and accrual-based loan accounting -- FUND_SOURCE, LOAN_PORTFOLIO, TRANSFERS_SUSPENSE, INTEREST_ON_LOANS, INCOME_FROM_FEES, INCOME_FROM_PENALTIES, INCOME_FROM_RECOVERY, LOSSES_WRITTEN_OFF, OVERPAYMENT -- and accrual adds three more at :761-777 (INTEREST_RECEIVABLE, FEES_RECEIVABLE, PENALTIES_RECEIVABLE). THE CORPUS HOLDS 2 OF THE 9. Create the missing seven on the live oracle spanning INCOME, EXPENSE and LIABILITY, then capture a product-to-account mapping observation, which is the thing A2 exists to port and which NOTHING in the corpus currently covers. DEPENDS ON A2-5 BECAUSE A2-5 IS FIXING THE RIG THIS TASK WOULD USE: cap.sh's transport-failure handler is unreachable under set -e, so a stale body can survive under a fresh captured-at-utc. Do not capture through the broken rig. ALSO SETTLE THE DRIVER'S OWN [UNVERIFIED]: whether the nine/twelve mandatory set at PRODUCT CREATION is the same set the POSTING paths require at RUNTIME -- the driver read the validator, not the journal-entry writers. MEASURE IT, do not infer it. Synthesise nothing; every account and every mapping must be observed from the running oracle.",
       "note": "Raised by the driver from its own G-9 closure, local fire 20260821-054355. NEEDS THE ORACLE."
+    },
+    {
+      "id": "T154",
+      "role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "status": "pending",
+      "dependencies": [],
+      "title": "The no-float guards, consolidated — a money non-negotiable can silently pass THREE different ways (T132 + T143 + T120)",
+      "files_hint": [
+        ".softhouse/conformance.sh",
+        "nexus/internal/apps/loanschedule/"
+      ],
+      "description": "CONSOLIDATION of T132, T143 and T120 by the driver, local fire 20260821-054355. They are three views of ONE defect surface and their files_hint collide, so they must be one worker, not three. ALL THREE ARE HOLES IN THE FIRST NON-NEGOTIABLE IN CLAUDE.md -- money is integer minor units, no floating point in ANY monetary path including intermediate calculation. Fix in this order; each leg must be DRIVEN RED BEFORE AND GREEN AFTER (P-22) with both transcripts committed, and each must leave the legitimate store at PASS exit 0 with its cell count UNCHANGED.\n\nLEG 1 (T132, cheapest, most direct): conformance.sh:184 guard_no_float_in_vectors and :201 guard_no_float_in_harness use bare 'grep -Eq' with NEITHER LC_ALL=C NOR -a. Per T108's 360-cell matrix, a vector file containing a float plus ONE INVALID BYTE BEFORE IT ON THE SAME LINE makes the float guard SILENTLY PASS. Apply the two-token fix ('LC_ALL=C grep -qaF' shape, per T108's exact replacement text in its handoff) at BOTH sites, then sweep conformance.sh and every rig for OTHER bare greps whose result is load-bearing (P-26: sweep the concept, not the sentence). Drive it red with a poisoned scratch vector; confirm the legitimate 42-vector store still gives PASS exit 0 / 5576 cells unchanged.\n\nLEG 2 (T143 / M-3): both guards inspect IDENTIFIERS, so a float LITERAL (token.FLOAT) such as `rate := 0.036 / 12.0` builds, passes TestNoFloatInTheLoanScheduleTree, and takes conformance.sh to exit 0. The fix is ~3 lines -- walk the AST for token.FLOAT / token.IMAG in addition to the identifier check -- and is currently FREE: T134 measured 0 float and 0 imaginary literals across the tree's 21 files. Drive it red with an injected literal, green on the clean tree. Phrase the guard POSITIVELY (P-35) and make zero-files-inspected an ERROR, not a pass.\n\nLEG 3 (T120, the structural one, and it also closes T143's M-5): guard_no_float_in_vectors enumerates the store with `find -name '*.json' -type f` (RECURSIVE, no symlink follow) while LoadStore reads ONE LEVEL DEEP and matches the suffix bytewise. The two disagree about what the store contains AND NOTHING COMPARES THEIR COUNTS. Measured consequences, all silent: a symlinked context directory is skipped entirely (F-1); a nested subdirectory is skipped (F-2); UPPER.JSON is not a vector (F-3); case-only case_id variants both grade at 43/5623 (F-4); NFC vs NFD Unicode-normalisation variants both grade AND RENDER IDENTICALLY in the report at 44/5670 (F-5). Fix: an explicit file census that REFUSES any .json under the store root the harness did not load, plus a case_id charset rule ([A-Za-z0-9._-]; all 47 committed ids are ASCII). Drive EVERY leg red and show the legitimate 42/5576 store is untouched. M-5: LoadStore reads only files inside a context dir, so for store-root JSON the defeatable shell guard is the only float check -- the census closes this, confirm that it does.\n\nCONSTRAINTS: NEVER gofmt -w contract.go (G-3). Do not change any vector, PIN.json, capabilities.json, contract.go, or any ratified DEC-n. Invoke the harness with bash, never sh. The store on main is 42 parity + 4 contract-refusal + 1 self-test = 47 files; if your census disagrees with that, SAY SO rather than adjusting the number to fit.",
+      "note": "Consolidated by the driver from T120+T132+T143, local fire 20260821-054355. Paired reviewer T155."
+    },
+    {
+      "id": "T155",
+      "role": "reviewer",
+      "executor": "agent",
+      "model": "opus",
+      "status": "pending",
+      "dependencies": [
+        "T154"
+      ],
+      "title": "INDEPENDENT review of T154 — attack the guards, do not read them and agree",
+      "files_hint": [
+        ".softhouse/reviews/"
+      ],
+      "description": "Paired reviewer for T154 (plan gate rule 1). T154 rewrote the guards that enforce the FIRST non-negotiable in CLAUDE.md. The characteristic failure of this exact task is P-22: shipping a guard that structurally CANNOT FAIL -- at least five such were found in tier 0, two of them inside the task sent to fix the previous one. So do not read T154's guards and agree they look right: DRIVE EACH ONE RED YOURSELF, with your own poison, written without reading T154's test fixtures first. Verify independently that (i) the invalid-byte bypass is really closed at BOTH call sites; (ii) an injected float LITERAL is really caught, and an injected IMAGINARY literal too; (iii) the census really refuses a symlinked context dir, a nested subdir, UPPER.JSON, a case-only case_id variant and an NFC/NFD variant -- all five, separately; (iv) zero-files-inspected is an ERROR; (v) the legitimate store still gives PASS exit 0 with the cell count UNCHANGED and no vector, PIN.json, capabilities.json, contract.go or DEC-n altered. Report any guard you could not drive red AS A DEFECT.",
+      "note": "Raised with T154 by the driver, local fire 20260821-054355."
     }
   ],
   "cross_corroboration": {
