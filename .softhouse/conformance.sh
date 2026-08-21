@@ -740,7 +740,16 @@ _run_capture_guard() {
   # oracle probe follows: test for presence first, then value. A program that died
   # before printing anything must not be read as a clean tree, and a `rc -eq 0` test
   # on its own would do exactly that if the script were ever replaced by a stub.
-  if ! printf '%s\n' "$out" | LC_ALL=C grep -aq '^CENSUS '; then
+  # `grep -q` exits on the FIRST match, and the census line is the FIRST line the guard
+  # prints, so the upstream `printf` dies with EPIPE and `set -o pipefail` (line 396) makes
+  # the whole pipeline non-zero -- inverting this test into "NO CENSUS LINE" WHEN THE LINE IS
+  # PRESENT. That is this harness's own "never pipe into head" hazard (reading the wrong
+  # process's status) turned against the P-35 machinery meant to catch a silent guard.
+  # `grep -c` consumes all input, so nothing closes the pipe early.
+  # [T173 merge defect B, found by the driver on merged main, local fire 20260821-054355]
+  census_lines="$(printf '%s\n' "$out" | LC_ALL=C grep -ac '^CENSUS ' || true)"
+  [ -n "$census_lines" ] || census_lines=0
+  if [ "$census_lines" -eq 0 ]; then
     warn "conformance: the $label guard printed NO CENSUS LINE (exit $rc)."
     warn "conformance: without it there is no evidence anything was inspected. ERROR, not a pass."
     warn "$out"

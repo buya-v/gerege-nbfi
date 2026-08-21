@@ -98,8 +98,26 @@ def scan(root):
     hits = []
     seen = 0
     dirs = set()
+    excluded = []
     for dirpath, dirnames, filenames in os.walk(root):
-        dirnames[:] = [d for d in dirnames if d not in ('.git', 'node_modules', 'build', '.gradle')]
+        # `.claude/worktrees` holds OTHER checkouts of this repo -- one per worker ever
+        # dispatched. Walking them makes this lint grade 40-odd trees the report does not
+        # name, which is the very defect T165 exists to close, and it re-reports every
+        # historical rig forever: on the driver's machine the whole-repo walk found 1954
+        # .java files and 2292 NEW sites, ALL 2292 of them under .claude/worktrees and
+        # NONE in this commit's own content. The exclusions are RETURNED and PRINTED, so
+        # the graded root stays explicit rather than merely narrower. [T173 merge defect A,
+        # found by the driver on merged main, local fire 20260821-054355]
+        keep = []
+        for d in dirnames:
+            if d in ('.git', 'node_modules', 'build', '.gradle'):
+                continue
+            full = os.path.join(dirpath, d)
+            if os.path.relpath(full, root).replace(os.sep, '/') == '.claude/worktrees':
+                excluded.append(os.path.relpath(full, root).replace(os.sep, '/'))
+                continue
+            keep.append(d)
+        dirnames[:] = keep
         for fn in filenames:
             if not fn.endswith('.java'):
                 continue
@@ -114,15 +132,17 @@ def scan(root):
                     continue
                 if JAVA_CATCH.search(line) and any(m in try_block_for(lines, n) for m in SEAM_MARKERS):
                     hits.append((rel, n + 1, s))
-    return hits, seen, dirs
+    return hits, seen, dirs, excluded
 
 
 def check(root):
-    hits, seen, dirs = scan(root)
+    hits, seen, dirs, excluded = scan(root)
     new = [h for h in hits if h[0] not in FROZEN]
     frozen_hit_files = {h[0] for h in hits if h[0] in FROZEN}
     print('CENSUS narrow-catch — inspected %d .java files across %d directories under %s '
-          '(recursive, whole repository)' % (seen, len(dirs), os.path.abspath(root)))
+          '(recursive, whole repository; EXCLUDED %d other checkout root(s): %s)'
+          % (seen, len(dirs), os.path.abspath(root), len(excluded),
+             ', '.join(excluded) if excluded else 'none'))
     print('narrow load-bearing catch sites: %d total, %d in FROZEN files (%d files), %d NEW'
           % (len(hits), len(hits) - len(new), len(frozen_hit_files), len(new)))
     if seen == 0 or not dirs:
