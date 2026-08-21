@@ -1,0 +1,26 @@
+T159 — P-22 GUARD RED DRIVES. "A guard that cannot fail is worse than none, because it is believed."
+T117 claims a runner that REFUSES the run unless the emitted id list equals the registered list
+exactly and in order. T159 drove that refusal red three ways plus the attestation pin, against the
+REAL committed T159 capture, using the REAL postcheck. All four went red. Verbatim:
+
+$ postcheck_t159.py <capture> <ref3g> <commit> <harness-sha> <seam-sha> /tmp/t159-ids-MISSING.json
+RUN FAILED: id list differs (asked 48, got 49). missing=0 [] extra=1 ['T159-R600p0-N2000-B1001'] reordered=False
+EXIT 1
+
+$ postcheck_t159.py ... /tmp/t159-ids-REORDERED.json      (two ids transposed, same set)
+RUN FAILED: id list differs (asked 49, got 49). missing=0 [] extra=0 [] reordered=True
+EXIT 1
+
+$ postcheck_t159.py ... /tmp/t159-ids-PHANTOM.json        (one id that was never emitted)
+RUN FAILED: id list differs (asked 50, got 49). missing=1 ['T159-PHANTOM-CELL'] extra=0 [] reordered=False
+EXIT 1
+
+$ postcheck_t159.py ... DELIBERATELY_WRONG_HARNESS_SHA ...
+AssertionError at postcheck_t159.py:91  ->  assert srcs['/cap/src/CaptureT159.java'] == harness_sha
+EXIT 1
+
+The REORDERED drive is the one that matters: a set-equality check would have passed it, and the
+guard caught it and named it `reordered=True`. T117's refusal is NOT vacuous.
+
+WHAT THE GUARD DOES **NOT** CATCH, and T159 found this by driving it: an `Error` (as opposed to a
+`RuntimeException`) thrown by the seam is not caught by the shared rig at all -- see the handoff.
