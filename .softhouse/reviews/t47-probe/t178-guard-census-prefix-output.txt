@@ -1,0 +1,34 @@
+T178 guard census   (scanning /tmp/t178/prefix-scan)
+live target 1: docs/adr/DEC-1-schedule-generator-adapter.md  sha256 49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab
+live target 2: nexus/internal/apps/loanschedule/contract/contract.go  sha256 0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139
+
+Both are hard `user` gates to amend: CLAUDE.md, "Any change to a ratified DEC-n
+or the frozen adapter contract".  contract.go additionally carries gate G-3.
+
+file             guard     writes      target        anchors   live   content gate
+--------------------------------------------------------------------------------------------------------
+t47_edit_1.py    GUARDED   os.replace  DEC-1 ADR     2         0      closed (32539607...)
+t47_edit_2.py    UNGUARDED open(...,'w') DEC-1 ADR     7         2      NONE - any content   (unguarded; inert only because 5/7 anchors are gone)
+t47_edit_3.py    UNGUARDED open(...,'w') DEC-1 ADR     4         0      NONE - any content   (unguarded; inert only because 4/4 anchors are gone)
+t47_edit_4.py    UNGUARDED open(...,'w') DEC-1 ADR     2         2      NONE - any content   <<< ALL ANCHORS LIVE - would rewrite the target TODAY
+t47_edit_4c.py   UNGUARDED open(...,'w') DEC-1 ADR     1         0      NONE - any content   (unguarded; inert only because 1/1 anchors are gone)
+t47_edit_5.py    UNGUARDED open(...,'w') DEC-1 ADR     2         1      NONE - any content   (unguarded; inert only because 1/2 anchors are gone)
+t47_edit_6.py    UNGUARDED open(...,'w') DEC-1 ADR     3         0      NONE - any content   (unguarded; inert only because 3/3 anchors are gone)
+t47_edit_7.py    UNGUARDED open(...,'w') contract.go   5         1      NONE - any content   (unguarded; inert only because 4/5 anchors are gone)
+t47_edit_8.py    UNGUARDED open(...,'w') DEC-1 ADR     5         1      NONE - any content   (unguarded; inert only because 4/5 anchors are gone)
+
+Reading:
+  guard        GUARDED = every write is atomic (os.replace) or delegated to
+               t178_guard.commit, and the file opens no path for writing.
+  anchors      string anchors the script must find before it writes.
+  live         how many are still present EXACTLY ONCE in the LIVE artefact.
+               This is a fact about today's document, never a guarantee.
+  content gate `closed` = the file pins a BEFORE_SHA256 that is NOT the live
+               artefact's, so it cannot reach it whatever the anchors say.
+               `NONE` = it will edit whatever it finds.
+
+files measured        9
+files UNMEASURED      0
+unguarded + all anchors live (LIVE BYPASS)   1 - t47_edit_4.py
+unguarded + no content gate, inert TODAY ONLY 7 - t47_edit_2.py, t47_edit_3.py, t47_edit_4c.py, t47_edit_5.py, t47_edit_6.py, t47_edit_7.py, t47_edit_8.py
+EXIT=1

@@ -1,22 +1,88 @@
 #!/usr/bin/env python3
 """T47 edit 2 - finding 1 leak sites: §4.1.1 restatements, §8 items 1/3f/6,
-§9 obligation (f)."""
-import io
+§9 obligation (f).
+
+
+HARDENED BY T178 (21 August 2026) - P-22, P-48 rule 4, reusing T167's shape.
+As shipped by T47 this file ended in
+
+    io.open(DOC, "w", encoding="utf-8").write(s)
+
+with DOC hard-wired to docs/adr/DEC-1-schedule-generator-adapter.md
+- a RATIFIED DEC-n, which CLAUDE.md makes a hard `user` gate to amend.  There was no
+try, no finally, no except, no atexit, no signal handler and no authorisation
+of any kind.  `io.open(path, "w")` opens with O_TRUNC, so the target was
+EMPTIED before a single byte of replacement text was written, and any
+interruption from that instant until the last flush left it truncated or
+half-edited.
+
+REACH, MEASURED ON SCRATCH COPIES ON 21 AUGUST 2026, NOT ASSERTED.
+INERT TODAY - refused at its first anchor with `found 0`, exit 1, the scratch copy byte-identical afterwards.
+An anchor that does not match today is not a guarantee for tomorrow - the
+document is a living artefact and a later revision can restore a phrase - so
+this file is hardened regardless of whether it currently applies.
+
+THE EDIT ITSELF DID NOT CHANGE.  Every anchor and every replacement string
+below is byte-for-byte T47's.  What changed is the head and the tail:
+
+  * the hard-wired target and the unguarded read are gone; the target now
+    arrives from argv under default-deny authorisation;
+  * the write is atomic (`mkstemp` in the target's own directory, `st_dev`
+    compared, `fsync`, `os.replace`) and is gated on sha256 BOTH on the target
+    read and on the candidate text;
+  * `rep`'s anchor check exits 1 explicitly - it was `sys.exit(<str>)` before
+    and is never a bare `assert`, which `python3 -O` strips.
+
+PINNED CONTENT GATE, and this is what actually closes the bypass.
+  BEFORE_SHA256 = `git show 58dfec2^:docs/adr/DEC-1-schedule-generator-adapter.md`
+  AFTER_SHA256  = the deterministic result of running THIS SCRIPT on that
+                  exact blob, measured by T178 - it is NOT a committed blob, because commit
+                  58dfec2 carried hand edits alongside this script's output;
+                  the pair is (that blob) -> (this script's deterministic
+                  output on it), re-measurable by anyone in one command.
+The ratified DEC-1 currently on `main` is sha256
+49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab and the
+frozen contract.go is 0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139;
+neither is any script's BEFORE_SHA256, so no run of this file can reach either
+artefact's CURRENT contents even if every other guard were stripped.
+
+Guard, exit codes and the argv-token rationale: see `t178_guard.py` beside
+this file.  Exit codes are unchanged from t47_edit_1.py's:
+0 ok / dry-run ok; 1 anchor mismatch; 2 refused (authorisation or target
+policy); 3 refused (unexpected target content); 4 refused (candidate content
+is not the historical result); 5 refused (temp file not on the target's
+filesystem); 6 post-write verification failed.
+"""
 import os
 import sys
 
-W = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(
-    os.path.abspath(__file__)))))
-DOC = os.path.join(W, "docs/adr/DEC-1-schedule-generator-adapter.md")
-s = io.open(DOC, encoding="utf-8").read()
+# The guard lives beside this script.  Inserting THIS FILE's own directory at
+# the front of sys.path means the module cannot be shadowed from the cwd or
+# from PYTHONPATH; a missing or unimportable guard raises ImportError and this
+# script exits non-zero having written nothing - it fails CLOSED.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import t178_guard as guard  # noqa: E402
+
+NAME = "edit2"
+
+# The exact phrase that authorises a run.  Long, self-describing, argv-only -
+# never an environment variable.  There is deliberately NO override that can
+# reach the ratified DEC-1.
+AUTHORISE_TOKEN = (
+    "I-AM-REPRODUCING-T47-EDIT-2-ON-A-SCRATCH-COPY-NOT-THE-RATIFIED-DEC-1")
+
+BEFORE_SHA256 = \
+    "4f2387c821a01953503c77c2c70730bf72657c994491110c5ae3bc27a866dc37"
+AFTER_SHA256 = \
+    "dcb04d14f0c1fba47d4aec9bf9a29596b995c4c740afc32c6640d9b8f3f705c5"
+
+s = guard.load(NAME, __file__, AUTHORISE_TOKEN, BEFORE_SHA256, AFTER_SHA256,
+               guard.RATIFIED_ADR)
 
 
 def rep(old, new):
     global s
-    n = s.count(old)
-    if n != 1:
-        sys.exit("edit2: expected 1 occurrence, found %d for: %.100s" % (n, old))
-    s = s.replace(old, new)
+    s = guard.rep(s, old, new)
 
 
 # --- §4.1.1, the "month-end special case is OBSERVED live" paragraph --------
@@ -157,5 +223,4 @@ rep("**The Go module must additionally reproduce (f) §4.1.1 step B's month-end 
     "clauses, `packed ∧ no special case`, is exactly the one a port lands on by "
     "implementing (c) and forgetting (f), which is why they are one obligation.")
 
-io.open(DOC, "w", encoding="utf-8").write(s)
-print("edit2: ok")
+guard.commit(s)

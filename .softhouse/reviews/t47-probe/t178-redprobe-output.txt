@@ -1,0 +1,173 @@
+T178 red/green prover - eight unguarded in-place rewriters
+repo            /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0d0a5c20aad048db
+pre-fix bytes   git show dfa1bfa96084a2175f0d89d0a401a8c105d9a35f:.softhouse/reviews/t47-probe/t47_edit_N.py
+
+INTEGRITY BEFORE DEC-1 49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab
+INTEGRITY BEFORE contract.go 0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139
+
+=== t47_edit_2.py  (edit2, target docs/adr/DEC-1-schedule-generator-adapter.md)
+  RED-A      as expected     pre-fix, NO argv: exit 0, 4f2387c8 -> dcb04d14 (edit2: ok)
+  RED-B      as expected     inert TODAY: exit 1, 49dc8923 unchanged (edit2: expected 1 occurrence, found 0 for: **The reading refuted is `packed whole-months ∧ no sp)
+  RED-C      as expected     pre-fix interrupted at O_TRUNC: exit -2, target left 0 bytes (was 335644)
+  R1         as expected     no argv -> exit 2 (REFUSED.  edit2.py rewrites a document in place and has no default target.)
+  R2         as expected     --target with no --authorise -> exit 2, target untouched
+  R3         as expected     wrong token -> exit 2, target untouched
+  R4         as expected     --target = the REAL protected artefact -> exit 2, real file untouched (edit2: REFUSED (2): target IS the protected artefact (/Users/buv/gerege-nbfi/.claude/worktrees/a)
+  R5         as expected     --target inside the repo working tree -> exit 2
+  R6         as expected     --target under a directory named `adr` -> exit 2
+  R7         as expected     --target named like the ratified ADR -> exit 2
+  R8         as expected     CONTENT GATE: a scratch copy of the CURRENT artefact -> exit 3, untouched. This is what closes RED-B.
+  R9         as expected     --dry-run on the legitimate target -> exit 0, nothing written
+  R10        as expected     GREEN: legitimate scratch target -> exit 0, 4f2387c8 -> dcb04d14 (edit2: ok)
+  R11        as expected     GREEN under `python3 -O` (no bare assert survives -O) -> exit 0
+  R12        as expected     post-fix under the SAME interruption harness -> exit -2, target is whole (unchanged)
+  R13        as expected     CANDIDATE GATE: a tampered edit -> exit 4, target untouched
+  R14        as expected     FAIL CLOSED: guard module removed -> exit 1, nothing written
+  R15        as expected     unknown argument -> exit 2
+
+=== t47_edit_3.py  (edit3, target docs/adr/DEC-1-schedule-generator-adapter.md)
+  RED-A      as expected     pre-fix, NO argv: exit 0, fc6d1720 -> 5bbf7efb (edit3: ok)
+  RED-B      as expected     inert TODAY: exit 1, 49dc8923 unchanged (edit3: expected 1 occurrence, found 0 for: | `installmentAmountInMultiplesOf` | The field exists)
+  RED-C      as expected     pre-fix interrupted at O_TRUNC: exit -2, target left 0 bytes (was 341326)
+  R1         as expected     no argv -> exit 2 (REFUSED.  edit3.py rewrites a document in place and has no default target.)
+  R2         as expected     --target with no --authorise -> exit 2, target untouched
+  R3         as expected     wrong token -> exit 2, target untouched
+  R4         as expected     --target = the REAL protected artefact -> exit 2, real file untouched (edit3: REFUSED (2): target IS the protected artefact (/Users/buv/gerege-nbfi/.claude/worktrees/a)
+  R5         as expected     --target inside the repo working tree -> exit 2
+  R6         as expected     --target under a directory named `adr` -> exit 2
+  R7         as expected     --target named like the ratified ADR -> exit 2
+  R8         as expected     CONTENT GATE: a scratch copy of the CURRENT artefact -> exit 3, untouched. This is what closes RED-B.
+  R9         as expected     --dry-run on the legitimate target -> exit 0, nothing written
+  R10        as expected     GREEN: legitimate scratch target -> exit 0, fc6d1720 -> 5bbf7efb (edit3: ok)
+  R11        as expected     GREEN under `python3 -O` (no bare assert survives -O) -> exit 0
+  R12        as expected     post-fix under the SAME interruption harness -> exit -2, target is whole (unchanged)
+  R13        as expected     CANDIDATE GATE: a tampered edit -> exit 4, target untouched
+  R14        as expected     FAIL CLOSED: guard module removed -> exit 1, nothing written
+  R15        as expected     unknown argument -> exit 2
+
+=== t47_edit_4.py  (edit4, target docs/adr/DEC-1-schedule-generator-adapter.md)
+  RED-A      as expected     pre-fix, NO argv: exit 0, f9deda22 -> 9385f907 (edit4: ok)
+  RED-B      as expected     LIVE BYPASS: pre-fix rewrites the CURRENT ratified artefact: exit 0, 49dc8923 -> cabc2aeb
+  RED-C      as expected     pre-fix interrupted at O_TRUNC: exit -2, target left 0 bytes (was 344836)
+  R1         as expected     no argv -> exit 2 (REFUSED.  edit4.py rewrites a document in place and has no default target.)
+  R2         as expected     --target with no --authorise -> exit 2, target untouched
+  R3         as expected     wrong token -> exit 2, target untouched
+  R4         as expected     --target = the REAL protected artefact -> exit 2, real file untouched (edit4: REFUSED (2): target IS the protected artefact (/Users/buv/gerege-nbfi/.claude/worktrees/a)
+  R5         as expected     --target inside the repo working tree -> exit 2
+  R6         as expected     --target under a directory named `adr` -> exit 2
+  R7         as expected     --target named like the ratified ADR -> exit 2
+  R8         as expected     CONTENT GATE: a scratch copy of the CURRENT artefact -> exit 3, untouched. This is what closes RED-B.
+  R9         as expected     --dry-run on the legitimate target -> exit 0, nothing written
+  R10        as expected     GREEN: legitimate scratch target -> exit 0, f9deda22 -> 9385f907 (edit4: ok)
+  R11        as expected     GREEN under `python3 -O` (no bare assert survives -O) -> exit 0
+  R12        as expected     post-fix under the SAME interruption harness -> exit -2, target is whole (unchanged)
+  R13        as expected     CANDIDATE GATE: a tampered edit -> exit 4, target untouched
+  R14        as expected     FAIL CLOSED: guard module removed -> exit 1, nothing written
+  R15        as expected     unknown argument -> exit 2
+
+=== t47_edit_4c.py  (edit4c, target docs/adr/DEC-1-schedule-generator-adapter.md)
+  RED-A      as expected     pre-fix, NO argv: exit 0, f9deda22 -> 7b14fa36 (edit4c: ok)
+  RED-B      as expected     inert TODAY: exit 1, 49dc8923 unchanged (edit4c: expected 1 occurrence, found 0)
+  RED-C      as expected     pre-fix interrupted at O_TRUNC: exit -2, target left 0 bytes (was 344836)
+  R1         as expected     no argv -> exit 2 (REFUSED.  edit4c.py rewrites a document in place and has no default target.)
+  R2         as expected     --target with no --authorise -> exit 2, target untouched
+  R3         as expected     wrong token -> exit 2, target untouched
+  R4         as expected     --target = the REAL protected artefact -> exit 2, real file untouched (edit4c: REFUSED (2): target IS the protected artefact (/Users/buv/gerege-nbfi/.claude/worktrees/)
+  R5         as expected     --target inside the repo working tree -> exit 2
+  R6         as expected     --target under a directory named `adr` -> exit 2
+  R7         as expected     --target named like the ratified ADR -> exit 2
+  R8         as expected     CONTENT GATE: a scratch copy of the CURRENT artefact -> exit 3, untouched. This is what closes RED-B.
+  R9         as expected     --dry-run on the legitimate target -> exit 0, nothing written
+  R10        as expected     GREEN: legitimate scratch target -> exit 0, f9deda22 -> 7b14fa36 (edit4c: ok)
+  R11        as expected     GREEN under `python3 -O` (no bare assert survives -O) -> exit 0
+  R12        as expected     post-fix under the SAME interruption harness -> exit -2, target is whole (unchanged)
+  R13        as expected     CANDIDATE GATE: a tampered edit -> exit 4, target untouched
+  R14        as expected     FAIL CLOSED: guard module removed -> exit 1, nothing written
+  R15        as expected     unknown argument -> exit 2
+
+=== t47_edit_5.py  (edit5, target docs/adr/DEC-1-schedule-generator-adapter.md)
+  RED-A      as expected     pre-fix, NO argv: exit 0, f9deda22 -> e0b1a30d (edit5: ok)
+  RED-B      as expected     inert TODAY: exit 1, 49dc8923 unchanged (edit5: expected 1 occurrence, found 0 for: (f) a percentage landing on an exact half-cent tie, w)
+  RED-C      as expected     pre-fix interrupted at O_TRUNC: exit -2, target left 0 bytes (was 344836)
+  R1         as expected     no argv -> exit 2 (REFUSED.  edit5.py rewrites a document in place and has no default target.)
+  R2         as expected     --target with no --authorise -> exit 2, target untouched
+  R3         as expected     wrong token -> exit 2, target untouched
+  R4         as expected     --target = the REAL protected artefact -> exit 2, real file untouched (edit5: REFUSED (2): target IS the protected artefact (/Users/buv/gerege-nbfi/.claude/worktrees/a)
+  R5         as expected     --target inside the repo working tree -> exit 2
+  R6         as expected     --target under a directory named `adr` -> exit 2
+  R7         as expected     --target named like the ratified ADR -> exit 2
+  R8         as expected     CONTENT GATE: a scratch copy of the CURRENT artefact -> exit 3, untouched. This is what closes RED-B.
+  R9         as expected     --dry-run on the legitimate target -> exit 0, nothing written
+  R10        as expected     GREEN: legitimate scratch target -> exit 0, f9deda22 -> e0b1a30d (edit5: ok)
+  R11        as expected     GREEN under `python3 -O` (no bare assert survives -O) -> exit 0
+  R12        as expected     post-fix under the SAME interruption harness -> exit -2, target is whole (unchanged)
+  R13        as expected     CANDIDATE GATE: a tampered edit -> exit 4, target untouched
+  R14        as expected     FAIL CLOSED: guard module removed -> exit 1, nothing written
+  R15        as expected     unknown argument -> exit 2
+
+=== t47_edit_6.py  (edit6, target docs/adr/DEC-1-schedule-generator-adapter.md)
+  RED-A      as expected     pre-fix, NO argv: exit 0, 8a39c226 -> be252dba (edit6: ok)
+  RED-B      as expected     inert TODAY: exit 1, 49dc8923 unchanged (edit6: expected 1 occurrence, found 0 for:    is ignored**, observed on one percentage and one f)
+  RED-C      as expected     pre-fix interrupted at O_TRUNC: exit -2, target left 0 bytes (was 356913)
+  R1         as expected     no argv -> exit 2 (REFUSED.  edit6.py rewrites a document in place and has no default target.)
+  R2         as expected     --target with no --authorise -> exit 2, target untouched
+  R3         as expected     wrong token -> exit 2, target untouched
+  R4         as expected     --target = the REAL protected artefact -> exit 2, real file untouched (edit6: REFUSED (2): target IS the protected artefact (/Users/buv/gerege-nbfi/.claude/worktrees/a)
+  R5         as expected     --target inside the repo working tree -> exit 2
+  R6         as expected     --target under a directory named `adr` -> exit 2
+  R7         as expected     --target named like the ratified ADR -> exit 2
+  R8         as expected     CONTENT GATE: a scratch copy of the CURRENT artefact -> exit 3, untouched. This is what closes RED-B.
+  R9         as expected     --dry-run on the legitimate target -> exit 0, nothing written
+  R10        as expected     GREEN: legitimate scratch target -> exit 0, 8a39c226 -> be252dba (edit6: ok)
+  R11        as expected     GREEN under `python3 -O` (no bare assert survives -O) -> exit 0
+  R12        as expected     post-fix under the SAME interruption harness -> exit -2, target is whole (unchanged)
+  R13        as expected     CANDIDATE GATE: a tampered edit -> exit 4, target untouched
+  R14        as expected     FAIL CLOSED: guard module removed -> exit 1, nothing written
+  R15        as expected     unknown argument -> exit 2
+
+=== t47_edit_7.py  (edit7, target nexus/internal/apps/loanschedule/contract/contract.go)
+  RED-A      as expected     pre-fix, NO argv: exit 0, c9a0ad65 -> 5cac5f0f (edit7: ok)
+  RED-B      as expected     inert TODAY: exit 1, 0db73d4a unchanged (edit7: expected 1 occurrence, found 0 for: // This is not hypothetical. The capture seam the Run)
+  RED-C      as expected     pre-fix interrupted at O_TRUNC: exit -2, target left 0 bytes (was 136444)
+  R1         as expected     no argv -> exit 2 (REFUSED.  edit7.py rewrites a document in place and has no default target.)
+  R2         as expected     --target with no --authorise -> exit 2, target untouched
+  R3         as expected     wrong token -> exit 2, target untouched
+  R4         as expected     --target = the REAL protected artefact -> exit 2, real file untouched (edit7: REFUSED (2): target IS the protected artefact (/Users/buv/gerege-nbfi/.claude/worktrees/a)
+  R5         as expected     --target inside the repo working tree -> exit 2
+  R6         as expected     --target under a directory named `contract` -> exit 2
+  R7         as expected     --target is a `.go` file (G-3) -> exit 2
+  R8         as expected     CONTENT GATE: a scratch copy of the CURRENT artefact -> exit 3, untouched. This is what closes RED-B.
+  R9         as expected     --dry-run on the legitimate target -> exit 0, nothing written
+  R10        as expected     GREEN: legitimate scratch target -> exit 0, c9a0ad65 -> 5cac5f0f (edit7: ok)
+  R11        as expected     GREEN under `python3 -O` (no bare assert survives -O) -> exit 0
+  R12        as expected     post-fix under the SAME interruption harness -> exit -2, target is whole (unchanged)
+  R13        as expected     CANDIDATE GATE: a tampered edit -> exit 4, target untouched
+  R14        as expected     FAIL CLOSED: guard module removed -> exit 1, nothing written
+  R15        as expected     unknown argument -> exit 2
+
+=== t47_edit_8.py  (edit8, target docs/adr/DEC-1-schedule-generator-adapter.md)
+  RED-A      as expected     pre-fix, NO argv: exit 0, 92ba7b47 -> 9e5c8c36 (edit8: ok)
+  RED-B      as expected     inert TODAY: exit 1, 49dc8923 unchanged (edit8: expected 1 occurrence, found 0 for: **Status: DRAFT (revision 9) — the RATIFICATION CANDI)
+  RED-C      as expected     pre-fix interrupted at O_TRUNC: exit -2, target left 0 bytes (was 360390)
+  R1         as expected     no argv -> exit 2 (REFUSED.  edit8.py rewrites a document in place and has no default target.)
+  R2         as expected     --target with no --authorise -> exit 2, target untouched
+  R3         as expected     wrong token -> exit 2, target untouched
+  R4         as expected     --target = the REAL protected artefact -> exit 2, real file untouched (edit8: REFUSED (2): target IS the protected artefact (/Users/buv/gerege-nbfi/.claude/worktrees/a)
+  R5         as expected     --target inside the repo working tree -> exit 2
+  R6         as expected     --target under a directory named `adr` -> exit 2
+  R7         as expected     --target named like the ratified ADR -> exit 2
+  R8         as expected     CONTENT GATE: a scratch copy of the CURRENT artefact -> exit 3, untouched. This is what closes RED-B.
+  R9         as expected     --dry-run on the legitimate target -> exit 0, nothing written
+  R10        as expected     GREEN: legitimate scratch target -> exit 0, 92ba7b47 -> 9e5c8c36 (edit8: ok)
+  R11        as expected     GREEN under `python3 -O` (no bare assert survives -O) -> exit 0
+  R12        as expected     post-fix under the SAME interruption harness -> exit -2, target is whole (unchanged)
+  R13        as expected     CANDIDATE GATE: a tampered edit -> exit 4, target untouched
+  R14        as expected     FAIL CLOSED: guard module removed -> exit 1, nothing written
+  R15        as expected     unknown argument -> exit 2
+
+INTEGRITY AFTER  DEC-1 49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab
+INTEGRITY AFTER  contract.go 0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139
+
+mode           normal
+cases run      144
+NOT AS EXPECTED 0

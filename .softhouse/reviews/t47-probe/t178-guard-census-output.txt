@@ -1,0 +1,33 @@
+T178 guard census   (scanning /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0d0a5c20aad048db/.softhouse/reviews/t47-probe)
+live target 1: docs/adr/DEC-1-schedule-generator-adapter.md  sha256 49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab
+live target 2: nexus/internal/apps/loanschedule/contract/contract.go  sha256 0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139
+
+Both are hard `user` gates to amend: CLAUDE.md, "Any change to a ratified DEC-n
+or the frozen adapter contract".  contract.go additionally carries gate G-3.
+
+file             guard     writes      target        anchors   live   content gate
+--------------------------------------------------------------------------------------------------------
+t47_edit_1.py    GUARDED   os.replace  DEC-1 ADR     2         0      closed (32539607...)
+t47_edit_2.py    GUARDED   guard.commit DEC-1 ADR     7         2      closed (4f2387c8...)
+t47_edit_3.py    GUARDED   guard.commit DEC-1 ADR     4         0      closed (fc6d1720...)
+t47_edit_4.py    GUARDED   guard.commit DEC-1 ADR     2         2      closed (f9deda22...)
+t47_edit_4c.py   GUARDED   guard.commit DEC-1 ADR     1         0      closed (f9deda22...)
+t47_edit_5.py    GUARDED   guard.commit DEC-1 ADR     2         1      closed (f9deda22...)
+t47_edit_6.py    GUARDED   guard.commit DEC-1 ADR     3         0      closed (8a39c226...)
+t47_edit_7.py    GUARDED   guard.commit contract.go   5         1      closed (c9a0ad65...)
+t47_edit_8.py    GUARDED   guard.commit DEC-1 ADR     5         1      closed (92ba7b47...)
+
+Reading:
+  guard        GUARDED = every write is atomic (os.replace) or delegated to
+               t178_guard.commit, and the file opens no path for writing.
+  anchors      string anchors the script must find before it writes.
+  live         how many are still present EXACTLY ONCE in the LIVE artefact.
+               This is a fact about today's document, never a guarantee.
+  content gate `closed` = the file pins a BEFORE_SHA256 that is NOT the live
+               artefact's, so it cannot reach it whatever the anchors say.
+               `NONE` = it will edit whatever it finds.
+
+files measured        9
+files UNMEASURED      0
+unguarded + all anchors live (LIVE BYPASS)   0
+unguarded + no content gate, inert TODAY ONLY 0

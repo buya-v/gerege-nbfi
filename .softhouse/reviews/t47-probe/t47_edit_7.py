@@ -1,22 +1,87 @@
 #!/usr/bin/env python3
 """T47 edit 7 - contract.go: the same four findings, in the artefact whose doc
-comments ARE the specification."""
-import io
+comments ARE the specification.
+
+
+HARDENED BY T178 (21 August 2026) - P-22, P-48 rule 4, reusing T167's shape.
+As shipped by T47 this file ended in
+
+    io.open(GO, "w", encoding="utf-8").write(s)
+
+with GO hard-wired to nexus/internal/apps/loanschedule/contract/contract.go
+- the FROZEN adapter contract, which CLAUDE.md makes a hard `user` gate to amend.  There was no
+try, no finally, no except, no atexit, no signal handler and no authorisation
+of any kind.  `io.open(path, "w")` opens with O_TRUNC, so the target was
+EMPTIED before a single byte of replacement text was written, and any
+interruption from that instant until the last flush left it truncated or
+half-edited.
+
+REACH, MEASURED ON SCRATCH COPIES ON 21 AUGUST 2026, NOT ASSERTED.
+INERT TODAY against the frozen contract.go on `main` - refused at its first anchor with `found 0`, exit 1.  It is nonetheless the second-highest-reach script in the set, because its target is the FROZEN adapter contract, which gate G-3 forbids even `gofmt -w` from touching.
+An anchor that does not match today is not a guarantee for tomorrow - the
+document is a living artefact and a later revision can restore a phrase - so
+this file is hardened regardless of whether it currently applies.
+
+THE EDIT ITSELF DID NOT CHANGE.  Every anchor and every replacement string
+below is byte-for-byte T47's.  What changed is the head and the tail:
+
+  * the hard-wired target and the unguarded read are gone; the target now
+    arrives from argv under default-deny authorisation;
+  * the write is atomic (`mkstemp` in the target's own directory, `st_dev`
+    compared, `fsync`, `os.replace`) and is gated on sha256 BOTH on the target
+    read and on the candidate text;
+  * `rep`'s anchor check exits 1 explicitly - it was `sys.exit(<str>)` before
+    and is never a bare `assert`, which `python3 -O` strips.
+
+PINNED CONTENT GATE, and this is what actually closes the bypass.
+  BEFORE_SHA256 = `git show aaa6ed0^:nexus/internal/apps/loanschedule/contract/contract.go`
+  AFTER_SHA256  = the deterministic result of running THIS SCRIPT on that
+                  exact blob, measured by T178 - and for this script that result is EXACTLY the
+                  committed blob `git show aaa6ed0:nexus/internal/apps/loanschedule/contract/contract.go`,
+                  so the pair reproduces the historical commit.
+The ratified DEC-1 currently on `main` is sha256
+49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab and the
+frozen contract.go is 0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139;
+neither is any script's BEFORE_SHA256, so no run of this file can reach either
+artefact's CURRENT contents even if every other guard were stripped.
+
+Guard, exit codes and the argv-token rationale: see `t178_guard.py` beside
+this file.  Exit codes are unchanged from t47_edit_1.py's:
+0 ok / dry-run ok; 1 anchor mismatch; 2 refused (authorisation or target
+policy); 3 refused (unexpected target content); 4 refused (candidate content
+is not the historical result); 5 refused (temp file not on the target's
+filesystem); 6 post-write verification failed.
+"""
 import os
 import sys
 
-W = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(
-    os.path.abspath(__file__)))))
-GO = os.path.join(W, "nexus/internal/apps/loanschedule/contract/contract.go")
-s = io.open(GO, encoding="utf-8").read()
+# The guard lives beside this script.  Inserting THIS FILE's own directory at
+# the front of sys.path means the module cannot be shadowed from the cwd or
+# from PYTHONPATH; a missing or unimportable guard raises ImportError and this
+# script exits non-zero having written nothing - it fails CLOSED.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import t178_guard as guard  # noqa: E402
+
+NAME = "edit7"
+
+# The exact phrase that authorises a run.  Long, self-describing, argv-only -
+# never an environment variable.  There is deliberately NO override that can
+# reach the frozen contract.go.
+AUTHORISE_TOKEN = (
+    "I-AM-REPRODUCING-T47-EDIT-7-ON-A-SCRATCH-COPY-NOT-THE-FROZEN-CONTRACT")
+
+BEFORE_SHA256 = \
+    "c9a0ad65df3d58f4e1ac451965555554710f0605df68c39dabe201b57242e1af"
+AFTER_SHA256 = \
+    "5cac5f0f0e24c4f515abf0da9bb33b294f4c1ef3fa5eb146408b7caf057d5740"
+
+s = guard.load(NAME, __file__, AUTHORISE_TOKEN, BEFORE_SHA256, AFTER_SHA256,
+               guard.FROZEN_CONTRACT)
 
 
 def rep(old, new):
     global s
-    n = s.count(old)
-    if n != 1:
-        sys.exit("edit7: expected 1 occurrence, found %d for: %.100s" % (n, old))
-    s = s.replace(old, new)
+    s = guard.rep(s, old, new)
 
 
 # ---- finding 2: installmentAmountInMultiplesOf is lost BY CALLER ---------
@@ -181,5 +246,4 @@ rep("""	// 13 shapes generated fine. The list above is a PORTER'S HAZARD LIST ov
 	// ambient mode too. All six are down-payment computations, and
 	// DownPaymentPercentage is pinned to Rate{0, 1} in the graded domain.""")
 
-io.open(GO, "w", encoding="utf-8").write(s)
-print("edit7: ok")
+guard.commit(s)
