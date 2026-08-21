@@ -66,7 +66,33 @@ echo "$TABLE" | while IFS='|' read -r name want sent why; do
     echo "$name MISSING" >> "$D/.score-fail"
     continue
   fi
-  st=$(LC_ALL=C tail -1 "$f" | sed 's/EXIT=//')
+  # MF-1 (T115, closing T107's F-1).  Zero FILES was already an error below; zero CONTENT was not.
+  # `st` was never validated, and the ten BREACH rows are scored `[ "$st" != 0 ]`, which ANY string
+  # satisfies — so ten content-free transcripts scored "ALL 13 ATTACKS MET THEIR DECLARED
+  # EXPECTATION", exit 0.  A transcript with no `EXIT=<digits>` last line has no attack body: it is
+  # an ERROR, never a pass.  Driven RED against exactly that input by `t115-drive-mf1.sh`.
+  #
+  # Two tests, deliberately, and the ORDER matters:
+  #   (a) the SHAPE of the last line must be exactly `EXIT=<digits>`.  T107b recorded that the
+  #       value-only test below still accepts a transcript whose final line is a bare numeral
+  #       (e.g. `5`), left the decision to the next worker, and T115 closes it: `5` is not an
+  #       EXIT line and a truncation that happens to end in a digit must not read as a status.
+  #   (b) the VALUE test as T107 specified it, kept as well.  It is redundant given (a) and that
+  #       is the point — this is the file whose own honesty note is about vacuous passes.
+  last=$(LC_ALL=C tail -1 "$f")
+  st=$(printf '%s\n' "$last" | sed 's/EXIT=//')
+  case "$last" in
+    EXIT=*) shape=ok ;;
+    *)      shape=bad ;;
+  esac
+  case "$st" in
+    ''|*[!0-9]*) shape=bad ;;
+  esac
+  if [ "$shape" = bad ]; then
+    printf '%-46s %-6s %-9s %-10s %s\n' "$name" "-" "-" "-" 'ERROR (no EXIT= line — the transcript has no attack body)'
+    echo "$name NO EXIT LINE — ERROR (no EXIT= line; the transcript has no attack body)" >> "$D/.score-fail"
+    continue
+  fi
   if LC_ALL=C grep -aqF "$S" "$f"; then c=YES; else c=no; fi
   if LC_ALL=C grep -aqF "$DG" "$f"; then d=YES; else d=no; fi
   if LC_ALL=C grep -aq "tenant 'gerege'" "$f" && ! LC_ALL=C grep -aq "tenant 'default'" "$f"; then g=YES; else g=no; fi

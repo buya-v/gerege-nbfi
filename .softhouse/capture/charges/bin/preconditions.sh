@@ -58,3 +58,19 @@ fi
 # Dot-source, not exec: `exec sh` would pin the interpreter and break the sh-vs-bash invariance
 # T85 required.  Sourcing keeps the caller's interpreter and inherits "$@" unchanged.
 . "$RIG"
+
+# MF-2 (T115, closing the first limb of T107's F-2).  Reaching this line is impossible when the rig
+# ran: the hardened rig terminates with an explicit `exit 0` or `exit 1`, which in a SOURCED script
+# exits this shell.  So control arriving here means the rig was EMPTY, TRUNCATED or NEUTERED and
+# returned having asserted nothing — and before MF-2 that scored as exit 0, a zero-byte transcript,
+# and `attest.py` stamping 'ALL PASS' over it.  A guard that inspects nothing must be an error, not
+# a pass (P-22).  Driven RED against an emptied rig by `.softhouse/capture/t91/t115-drive-mf2.sh`.
+#
+# MF-2 does NOT close F-2.  It closes ONLY the empty-rig limb (T107's N8a).  The shim still selects
+# its rig by a $0-relative path with NO identity check, so N9 (the rig replaced by main's
+# pre-hardening bytes) and N10 (the shim reached through a symlink into a foreign tree) BOTH STILL
+# ADMIT — measured by T115, transcripts under .softhouse/capture/t91/out/t115-mf2/.  Only FU-1 (a
+# digest pin or a recorded sha256 of the rig) closes them.  Do not read this guard as more than it
+# is.
+echo "PRECONDITIONS NOT RUN: the rig at '$RIG' returned without exiting — nothing was asserted." >&2
+exit 2

@@ -59,3 +59,15 @@ fi
 # Dot-source, not exec: `exec sh` would pin the interpreter and break the sh-vs-bash invariance
 # T85 required.  Sourcing keeps the caller's interpreter and inherits "$@" unchanged.
 . "$RIG"
+
+# MF-2 (T115, closing the first limb of T107's F-2) — see the fuller note in
+# `charges/bin/preconditions.sh`, which is the live twin.  The hardened rig always terminates with
+# an explicit `exit 0` / `exit 1`, and in a SOURCED script that exits this shell; so control
+# reaching this line means the rig was empty, truncated or neutered and asserted nothing.  Before
+# MF-2 that scored exit 0 over a zero-byte transcript.
+#
+# MF-2 does NOT close F-2 — only its empty-rig limb.  The rig is still selected by a $0-relative
+# path with no identity check, so a substituted rig (N9) and a symlinked shim (N10) still admit.
+# FU-1 is what closes those.
+echo "PRECONDITIONS NOT RUN: the rig at '$RIG' returned without exiting — nothing was asserted." >&2
+exit 2
