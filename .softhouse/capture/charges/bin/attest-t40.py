@@ -421,7 +421,10 @@ att = {
     'effective_mode_canary': {
         'purpose': 'behavioural proof of the rounding mode actually in force: period-1 interest is an '
                    'exact half-cent tie (1,162,502.50 x 0.018 = 20,925.045)',
-        'request_file': '.softhouse/capture/pathb/t22-audit/req/calc-pmode2-gerege.json',
+        # T147: DERIVED from the request actually sent (see the note in pathb/t36/attest.py).
+        # A hard-coded `calc-pmode2-gerege.json` here would name one file while the digest on
+        # the next line records another, on any tenant but `gerege`.
+        'request_file': os.path.relpath(canary, W),
         'request_sha256': sha256(canary_bytes),
         'response_file': os.path.relpath(canary_out, W),
         'http_status': int(canary_code) if canary_code else None,

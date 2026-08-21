@@ -64,7 +64,11 @@ diff "$T36/attest.py" "$SCRATCH" | tee "$OUTDIR/scratch.diff"
 # chooses the canary BY TENANT from attest_gate.PINNED_CANARY_BY_TENANT rather than carrying
 # the literal; it is retained so that a re-introduced literal is still switched, and whether
 # it matched is measured rather than assumed.  LC_ALL=C grep -a per P-33.
-n_literal=$(LC_ALL=C grep -ac "calc-pmode2-gerege.json" "$T36/attest.py" || true)
+# NOTE the quotes in the needle: it must be the EXACT string the -e clause substitutes, not
+# the bare filename.  T147's first attempt counted the bare filename and got 1 — a hit on a
+# prose comment that sed cannot match — which would have made this assertion demand a diff
+# size that can never occur.  A guard derived from the wrong operand is still a wrong guard.
+n_literal=$(LC_ALL=C grep -ac "'calc-pmode2-gerege.json'" "$T36/attest.py" || true)
 n_bypass=$(LC_ALL=C grep -ac 'T125 RED DEMO: OUTER precondition gate DISABLED' "$SCRATCH" || true)
 expect_changed=$(( 2 + 2 * n_literal ))
 nchanged=$(diff "$T36/attest.py" "$SCRATCH" | LC_ALL=C grep -ac '^[<>]' || true)

@@ -264,6 +264,30 @@ def assert_attestation_is_verified(att, capture_identity_key):
         reasons.append('effective_mode_canary.observed_period1_interest is %r, not %r.'
                        % (canary.get('observed_period1_interest'), EXPECTED_UNDER_HALF_UP))
 
+    # NOT GATED HERE — ROUTED. T147 found, while deriving the red driver's assertion, that all
+    # three sidecars wrote the LITERAL 'calc-pmode2-gerege.json' into
+    # `effective_mode_canary.request_file` on EVERY tenant, while `request_sha256` beside it was
+    # computed from the bytes actually posted. The committed
+    # `capture/pathb/t125/red-pre-fix-default/attestation.json` shows the consequence: it names
+    # calc-pmode2-gerege.json and carries 1461810087…, which is calc-pmode2-default.json — a
+    # document disagreeing with itself about which request produced its own observation.
+    #
+    # T147 fixed the SOURCE (the field is now derived from the request actually sent, in
+    # `pathb/t36/attest.py` and `charges/bin/attest-t40.py`) and gates the CLASS at read time in
+    # `capture/pathb/t125/blast-radius.py`, which grades the committed attestations. The
+    # write-time clause belongs here too and is deliberately NOT added by T147: it was a
+    # self-discovered sixth finding on a task scoped to five, and adding it would silently move
+    # the verification bar — T125's own 22-case fixture file goes 22/2 against it, because two
+    # of its synthetic documents omit `request_sha256` altogether. Routed with the working form:
+    #
+    #     _name_by_sha = {sha: name for name, sha in PINNED_CANARY_BY_TENANT.values()}
+    #     rsha, rfile = canary.get('request_sha256'), canary.get('request_file')
+    #     if rsha not in _name_by_sha:               refuse: not a pinned exact tie
+    #     elif os.path.basename(rfile or '') != _name_by_sha[rsha]:
+    #                                                refuse: names one file, records another
+    #
+    # Whoever lands it must complete those two fixtures in `gate-selftest.py` in the same diff.
+
     emc = att.get('effective_math_context') or {}
     if emc.get('matches_ratified_production_setting') is not True:
         reasons.append(

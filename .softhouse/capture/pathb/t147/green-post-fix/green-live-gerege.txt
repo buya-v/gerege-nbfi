@@ -1,0 +1,116 @@
+=== T147 — T125's GREEN proof, re-run live on the ratified gerege tenant ====
+Both sidecars UNMODIFIED, FULL preconditions, real oracle. Nothing is bypassed.
+
+-- digests of the two committed green evidence dirs BEFORE (they must be restored) --
+04df085c4d14772abfb6d5787dbdb2299037b1f6f7cb0d2224f65ab54e8db09f  .softhouse/capture/pathb/t125/green-t36-gerege/attestation.json
+4f23f919036d106bd601e9b3e9dfa526b338c722ac564b7db7fbef3830dc651c  .softhouse/capture/pathb/t125/green-t40-gerege/attestation.json
+
+
+==================================================================
+GREEN: pathb/t36/attest.py gerege pathb
+==================================================================
+wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a94b45ba6b5458b33/.softhouse/capture/pathb/t125/green-t36-gerege/attestation.json
+GATE: effective rounding mode PROVEN HALF_UP — pinned exact tie calc-pmode2-gerege.json answered 20925.05 (HALF_EVEN would answer 20925.04)
+effective MathContext: MathContext(19, HALF_UP)   matches ratified: True
+  B-01  HTTP 200  sha256 713a35601b8909f4  matches committed corpus: True
+  B-02  HTTP 200  sha256 9de8757deeb02476  matches committed corpus: True
+  B-03  HTTP 200  sha256 892dd6f537ef34f5  matches committed corpus: True
+  B-04  HTTP 200  sha256 c80f62b01721ab15  matches committed corpus: True
+EXIT CODE: 0
+
+==================================================================
+GREEN: charges/bin/attest-t40.py gerege
+==================================================================
+wrote /Users/buv/gerege-nbfi/.claude/worktrees/agent-a94b45ba6b5458b33/.softhouse/capture/pathb/t125/green-t40-gerege/attestation.json
+GATE: effective rounding mode PROVEN HALF_UP — pinned exact tie calc-pmode2-gerege.json answered 20925.05 (HALF_EVEN would answer 20925.04)
+GATE: 1 capture(s) had no first-issue counterpart to compare against (CTRL-B-01) — an absence, not a mismatch, and NOT a determinism claim.
+effective MathContext: MathContext(19, HALF_UP)   matches ratified: True
+canary: 20925.05 (HALF_UP confirmed behaviourally)
+  CTRL-B-01                                          HTTP 200  sha256 713a35601b8909f4  == prior issue: None
+  FC-01-flat-disbursement                            HTTP 200  sha256 18bc7b0e30ed14d6  == prior issue: True
+  FC-02-flat-instalment                              HTTP 200  sha256 eb121bcb048d9781  == prior issue: True
+  FC-03-pctamount-disbursement                       HTTP 200  sha256 04c3c58545ca0c45  == prior issue: True
+  FC-04-pctinterest-instalment                       HTTP 200  sha256 4b350ecf532bf892  == prior issue: True
+  FC-05-pctamountinterest-instalment                 HTTP 200  sha256 2f2a242fa80ca563  == prior issue: True
+  FC-06-penalty-inside-p3                            HTTP 200  sha256 000f9f6bc6b73382  == prior issue: True
+  FC-07-fee-on-p3-duedate                            HTTP 200  sha256 dffaf0001a4f3b31  == prior issue: True
+  FC-08-penalty-instalment                           HTTP 200  sha256 a08d24d7042263e4  == prior issue: True
+  FC-09-pctamount-instalment                         HTTP 200  sha256 090fce5d47b04d79  == prior issue: True
+  FC-10-pctamount-inside-p6                          HTTP 200  sha256 71c23d4d1795c0e6  == prior issue: True
+  FC-11-fee-on-disbursement-date                     HTTP 200  sha256 d157b0a21c893ec0  == prior issue: True
+  FC-12-fee-on-final-duedate                         HTTP 200  sha256 fbb8d67050a6672a  == prior issue: True
+  FC-13-fee-inside-p12                               HTTP 200  sha256 fbb8d67050a6672a  == prior issue: True
+  FC-14-fee-inside-p1                                HTTP 200  sha256 d157b0a21c893ec0  == prior issue: True
+  FC-15-combined-fee-and-penalty                     HTTP 200  sha256 6dfe679c85915dbf  == prior issue: True
+  FC-16-fee-on-p1-duedate                            HTTP 200  sha256 d157b0a21c893ec0  == prior issue: True
+  FC-17-fee-after-final-duedate                      HTTP 200  sha256 713a35601b8909f4  == prior issue: True
+  FC-19-pctinterest-sdd-inside-p6                    HTTP 200  sha256 a214f3ae361dd2f1  == prior issue: True
+  FC-20-pctinterest-sdd-on-disb                      HTTP 200  sha256 713a35601b8909f4  == prior issue: True
+  FC-21-pctamtint-sdd-inside-p6                      HTTP 200  sha256 52eb83b1ce973075  == prior issue: True
+  FC-22-penalty-instalment-plus-sdd-on-p3-duedate    HTTP 200  sha256 f7c4d6a88d1d9f33  == prior issue: True
+  XR-01                                              HTTP 403  (REFUSAL, not a capture)
+NOTES: none — every attested field was read from a primary source.
+EXIT CODE: 0
+
+==================================================================
+BYTE-IDENTITY: did any previously-passing capture change its bytes?
+==================================================================
+  BYTE-IDENTICAL            B-01-baseline-raw.json             == out/B-01-baseline-raw.json
+  BYTE-IDENTICAL            B-02-multiplesof100-raw.json       == out/B-02-multiplesof100-raw.json
+  BYTE-IDENTICAL            B-03-diycs-fullleapyear-raw.json   == out/B-03-diycs-fullleapyear-raw.json
+  BYTE-IDENTICAL            B-04-diycs-feb29only-raw.json      == out/B-04-diycs-feb29only-raw.json
+  BYTE-IDENTICAL            canary-halfcent-raw.json           == t36/out/recapture-gerege/canary-halfcent-raw.json
+  BYTE-IDENTICAL            CTRL-B-01-raw.json                 == ../charges/out/attested/CTRL-B-01-raw.json
+  BYTE-IDENTICAL            FC-01-flat-disbursement-raw.json   == ../charges/out/attested/FC-01-flat-disbursement-raw.json
+  BYTE-IDENTICAL            FC-02-flat-instalment-raw.json     == ../charges/out/attested/FC-02-flat-instalment-raw.json
+  BYTE-IDENTICAL            FC-03-pctamount-disbursement-raw.json == ../charges/out/attested/FC-03-pctamount-disbursement-raw.json
+  BYTE-IDENTICAL            FC-04-pctinterest-instalment-raw.json == ../charges/out/attested/FC-04-pctinterest-instalment-raw.json
+  BYTE-IDENTICAL            FC-05-pctamountinterest-instalment-raw.json == ../charges/out/attested/FC-05-pctamountinterest-instalment-raw.json
+  BYTE-IDENTICAL            FC-06-penalty-inside-p3-raw.json   == ../charges/out/attested/FC-06-penalty-inside-p3-raw.json
+  BYTE-IDENTICAL            FC-07-fee-on-p3-duedate-raw.json   == ../charges/out/attested/FC-07-fee-on-p3-duedate-raw.json
+  BYTE-IDENTICAL            FC-08-penalty-instalment-raw.json  == ../charges/out/attested/FC-08-penalty-instalment-raw.json
+  BYTE-IDENTICAL            FC-09-pctamount-instalment-raw.json == ../charges/out/attested/FC-09-pctamount-instalment-raw.json
+  BYTE-IDENTICAL            FC-10-pctamount-inside-p6-raw.json == ../charges/out/attested/FC-10-pctamount-inside-p6-raw.json
+  BYTE-IDENTICAL            FC-11-fee-on-disbursement-date-raw.json == ../charges/out/attested/FC-11-fee-on-disbursement-date-raw.json
+  BYTE-IDENTICAL            FC-12-fee-on-final-duedate-raw.json == ../charges/out/attested/FC-12-fee-on-final-duedate-raw.json
+  BYTE-IDENTICAL            FC-13-fee-inside-p12-raw.json      == ../charges/out/attested/FC-13-fee-inside-p12-raw.json
+  BYTE-IDENTICAL            FC-14-fee-inside-p1-raw.json       == ../charges/out/attested/FC-14-fee-inside-p1-raw.json
+  BYTE-IDENTICAL            FC-15-combined-fee-and-penalty-raw.json == ../charges/out/attested/FC-15-combined-fee-and-penalty-raw.json
+  BYTE-IDENTICAL            FC-16-fee-on-p1-duedate-raw.json   == ../charges/out/attested/FC-16-fee-on-p1-duedate-raw.json
+  BYTE-IDENTICAL            FC-17-fee-after-final-duedate-raw.json == ../charges/out/attested/FC-17-fee-after-final-duedate-raw.json
+  BYTE-IDENTICAL            FC-19-pctinterest-sdd-inside-p6-raw.json == ../charges/out/attested/FC-19-pctinterest-sdd-inside-p6-raw.json
+  BYTE-IDENTICAL            FC-20-pctinterest-sdd-on-disb-raw.json == ../charges/out/attested/FC-20-pctinterest-sdd-on-disb-raw.json
+  BYTE-IDENTICAL            FC-21-pctamtint-sdd-inside-p6-raw.json == ../charges/out/attested/FC-21-pctamtint-sdd-inside-p6-raw.json
+  BYTE-IDENTICAL            FC-22-penalty-instalment-plus-sdd-on-p3-duedate-raw.json == ../charges/out/attested/FC-22-penalty-instalment-plus-sdd-on-p3-duedate-raw.json
+  BYTE-IDENTICAL            XR-01-fee-before-disbursement-HTTP403.json == ../charges/out/attested/XR-01-fee-before-disbursement-HTTP403.json
+  BYTE-IDENTICAL            canary-halfcent-raw.json           == t36/out/recapture-gerege/canary-halfcent-raw.json
+  --
+  byte-identical: 29   CHANGED: 0   no committed counterpart: 0
+  ASSERTED: 29 bodies were compared against their committed counterparts and each was byte-identical.
+
+T125 GREEN overall: 0 (0 = every gate passed on the ratified tenant)
+
+--- drive-canary-green.sh exit code: 0 ---
+
+--- committed evidence trees untouched? (empty = yes) ---
+(end)
+
+--- T125's COMMITTED green evidence, re-run and diffed field by field --------
+green-t36-gerege/attestation.json : 185 fields, 5 differing  -- ALL *_at_utc
+green-t40-gerege/attestation.json : 600 fields, 24 differing -- ALL *_at_utc
+every raw response body            : byte-identical
+(reproduces T136's numbers exactly). Note that effective_mode_canary.request_file
+does NOT appear in the diff: T147 derived it from the request actually sent, and on
+the gerege limb the derived value equals the literal it replaced. The fix changes
+only what a NON-gerege run would have written.
+Both directories were restored from the branch afterwards:
+04df085c4d14772abfb6d5787dbdb2299037b1f6f7cb0d2224f65ab54e8db09f  .softhouse/capture/pathb/t125/green-t36-gerege/attestation.json
+4f23f919036d106bd601e9b3e9dfa526b338c722ac564b7db7fbef3830dc651c  .softhouse/capture/pathb/t125/green-t40-gerege/attestation.json
+ M .softhouse/capture/pathb/t125/blast-radius.py
+ M .softhouse/capture/pathb/t125/drive-canary-red.sh
+ M .softhouse/capture/pathb/t125/gate-selftest.py
+(empty above = restored clean)
+
+--- the RED re-run output directory was DELETED after the transcript was taken.
+    T125 already commits red-post-fix-default/ for exactly this observation, and two
+    copies of one claim is one claim and one time bomb (P-27).
