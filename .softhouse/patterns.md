@@ -774,6 +774,45 @@ are the same observation.
 > effect — and if the positive control is flat, the apparatus is broken and the negative rows mean nothing. State
 > the delivery route in the write-up, because that is the line a later reader can check.
 
+### P-37. A reviewer's site list is a STARTING POINT, never the sweep
+
+**Fire `20260821-080001`, T140 — the fourth consecutive task on one section to be handed a list of sites and find
+more.** T129 reviewed the G-8 write-up, rebuilt a 117-row scope table, and named **five** places carrying a
+superseded claim. T140 was dispatched to fix those five. Grepping the *concept* — `wholesale`, `main's copy`,
+`reset it to`, `diff main -- tasks.json`, `tasks.json … empty` — across every `.md`/`.txt`/`.json`/`.sh`/`.py`
+under `.softhouse/` found **seven**.
+
+That is P-26 landing **inside the task sent to close P-26's third occurrence**, which is the fourth round running
+on this one section. The mechanism is not carelessness: a reviewer reads to *judge*, hits enough instances to be
+sure the claim is false, and stops — because finding a sixth would not change the verdict. The fixer's job is the
+opposite one, and needs the opposite reading.
+
+> **Rule.** When a review hands you file:line sites, fix those and then **run the sweep yourself, on the concept and
+> the numbers** (P-26), and report the count you found against the count you were given. Include **your own change
+> of mind** in the sweep: T122's leaked claim described an approach it had itself abandoned mid-task. And state
+> what the sweep structurally could not have found — remembering (P-33) that the Bash tool's `grep` cannot see a
+> gitignored path at all.
+
+### P-38. A digest claim is a claim about a CANONICALISATION — name the recipe or the digest is uncheckable
+
+**Fire `20260821-080001`, T140.** This program pins evidence with lines like *"canonical sha256 `01b41d9c…`"*, and
+readers treat them as re-runnable. T140 tried to re-run two of them and **both mismatched** — not because the bytes
+had changed, but because it serialised with `json.dumps(..., ensure_ascii=False)` while the original used the
+recipe at `run-t84.sh:109`. Under the original recipe both matched exactly.
+
+A digest over *bytes on disk* is self-describing. A digest over a **re-serialised data structure** is a digest of
+one particular serialiser's output — separator spacing, key ordering, `ensure_ascii`, float repr, trailing
+newline — and none of that is recoverable from the hex string. So "canonical sha256 X" without the recipe is not a
+check anybody can perform; it is a number that will mismatch for the next reader, who will then have to decide
+whether the evidence moved or their `json.dumps` differs.
+
+This is **P-33 generalised from tools to digests**: a tool claim needs binary, version, locale, invocation and
+input shape; a digest claim needs **the exact canonicalisation and where it lives**.
+
+> **Rule.** Every published digest names what it is over and **how that was serialised**, by file and line — or it
+> is a digest of raw file bytes and says so. When you cannot reproduce a published digest, suspect the recipe
+> before you suspect the evidence, and record which it turned out to be.
+
 <!-- LEARNED PATTERNS END -->
 
 ### Run 2026-08-17-run1-harness-schedule-poc — fire `20260819-170001` (local, oracle REACHABLE) — 2026-08-19
