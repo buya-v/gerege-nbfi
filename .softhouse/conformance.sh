@@ -142,6 +142,14 @@
 #   that cannot fail is worse than none, because it is believed"), and it is what
 #   makes THIS one different from the residual hijacks: a hijack refuses, and a
 #   refusal cannot turn a red run green; a forged admission can.
+#   [CORRECTED BY T154, and the correction NARROWS this paragraph rather than
+#   retiring it. "Would then return 0 having inspected ZERO files" was true when
+#   it was written and is now FALSE: both guards count what they inspected and
+#   return 1 with a named error at zero, and the Go census in nofloat.go /
+#   census.go does the same on its own two surfaces. So the psub-dead route no
+#   longer reaches a vacuous float guard. Everything else here stands — the
+#   interpreter guard is still the difference between a refusal and a forged
+#   admission, and a forged admission still reaches the rest of this file.]
 #   [CITATION CORRECTED BY T113: T106's review, and the first draft of this
 #   paragraph, both said "the vacuous pass that line 53 of this file already warns
 #   about". It does not. The block that line number pointed at is `WHY IT EXISTS`

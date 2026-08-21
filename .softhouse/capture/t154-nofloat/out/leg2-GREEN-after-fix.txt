@@ -23,17 +23,17 @@ OK    post clean: conformance 0
   post build=0  no-float test=1  conformance=2   (wanted 0 / 1 / 2 — build still fine, guard RED, verdict RED)
 
   --- what the PRE-fix guard said about the injected float ---
-      ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	0.247s
+      ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	0.242s
       VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576 cells compared.
   --- what the POST-fix guard says ---
-      --- FAIL: TestNoFloatInTheLoanScheduleTree (0.06s)
-          --- FAIL: TestNoFloatInTheLoanScheduleTree/the_committed_tree_is_clean (0.06s)
-              conformance_test.go:795: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg2.ir27tTY4je/post/nexus/internal/apps/loanschedule/t154probe.go:3:49: floating-point literal "0.036": money is integer minor units, and no floating-point value may appear on a money path — including for intermediate calculation (CLAUDE.md, first non-negotiable)
-              conformance_test.go:795: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg2.ir27tTY4je/post/nexus/internal/apps/loanschedule/t154probe.go:3:57: floating-point literal "12.0": money is integer minor units, and no floating-point value may appear on a money path — including for intermediate calculation (CLAUDE.md, first non-negotiable)
-          no-float census         24 Go files / 53980 tokens inspected under nexus/internal/apps/loanschedule
-          * FLOATING POINT ON A MONEY PATH: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg2.ir27tTY4je/post/nexus/internal/apps/loanschedule/t154probe.go:3:49: floating-point literal "0.036": money is integer minor units, and no floating-point value may appear on a money path — including for intermediate calculation (CLAUDE.md, first non-negotiable)
-          * FLOATING POINT ON A MONEY PATH: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg2.ir27tTY4je/post/nexus/internal/apps/loanschedule/t154probe.go:3:57: floating-point literal "12.0": money is integer minor units, and no floating-point value may appear on a money path — including for intermediate calculation (CLAUDE.md, first non-negotiable)
-          * FLOATING POINT ON A MONEY PATH: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg2.ir27tTY4je/post/nexus/internal/apps/loanschedule/t154probe.go:3:77: floating-point literal "1.0": money is integer minor units, and no floating-point value may appear on a money path — including for intermediate calculation (CLAUDE.md, first non-negotiable)
+      --- FAIL: TestNoFloatInTheLoanScheduleTree (0.03s)
+          --- FAIL: TestNoFloatInTheLoanScheduleTree/the_committed_tree_is_clean (0.02s)
+              conformance_test.go:795: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg2.jZj0UUqz6w/post/nexus/internal/apps/loanschedule/t154probe.go:3:49: floating-point literal "0.036": money is integer minor units, and no floating-point value may appear on a money path — including for intermediate calculation (CLAUDE.md, first non-negotiable)
+              conformance_test.go:795: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg2.jZj0UUqz6w/post/nexus/internal/apps/loanschedule/t154probe.go:3:57: floating-point literal "12.0": money is integer minor units, and no floating-point value may appear on a money path — including for intermediate calculation (CLAUDE.md, first non-negotiable)
+          no-float census         25 Go files / 56301 tokens inspected under nexus/internal/apps/loanschedule
+          * FLOATING POINT ON A MONEY PATH: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg2.jZj0UUqz6w/post/nexus/internal/apps/loanschedule/t154probe.go:3:49: floating-point literal "0.036": money is integer minor units, and no floating-point value may appear on a money path — including for intermediate calculation (CLAUDE.md, first non-negotiable)
+          * FLOATING POINT ON A MONEY PATH: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg2.jZj0UUqz6w/post/nexus/internal/apps/loanschedule/t154probe.go:3:57: floating-point literal "12.0": money is integer minor units, and no floating-point value may appear on a money path — including for intermediate calculation (CLAUDE.md, first non-negotiable)
+          * FLOATING POINT ON A MONEY PATH: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg2.jZj0UUqz6w/post/nexus/internal/apps/loanschedule/t154probe.go:3:77: floating-point literal "1.0": money is integer minor units, and no floating-point value may appear on a money path — including for intermediate calculation (CLAUDE.md, first non-negotiable)
       VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
 
 OK    PRE  probe: go build exit 0 — a float literal compiles, of course
@@ -47,7 +47,7 @@ OK    POST probe: conformance names it as FLOATING POINT ON A MONEY PATH
 
 === [3] THE GUARD SPEAKS WHEN IT IS HAPPY, TOO (P-35) ===
   A guard that reports only failures cannot be told apart from one that never ran.
-          no-float census         23 Go files / 53948 tokens inspected under nexus/internal/apps/loanschedule
+          no-float census         24 Go files / 56269 tokens inspected under nexus/internal/apps/loanschedule
                                   0 forbidden identifiers, 0 floating-point or imaginary LITERALS, 0 unscannable files
 OK    POST clean conformance PRINTS the census (files, tokens, each violation count)
 OK    PRE clean conformance printed NO census — the guard was silent whether or not it ran

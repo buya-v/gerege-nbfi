@@ -273,3 +273,61 @@ Baselines for the pristine tree, recorded before and after every experiment:
 pinned reference oracle, 5576 cells compared"*; `bash .softhouse/conformance.sh --prove` → **exit 0**,
 *"PROOFS: 21 passed, 0 failed"*. No file outside this register and
 `.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T134.md` was modified.
+
+---
+
+## APPENDED BY T154 — closure record for the money rows. T134's measurements above are NOT edited.
+
+**This section is additive on purpose (P-27).** The table above is T134's *measurement*, taken on
+21 Aug 2026 on the bytes of that day. Rewriting its cells to say "fixed" would destroy the evidence
+that the holes existed and would make the register unable to answer P-34's real question — *what was
+certified through this guard while it was blind?* The rows stand; this section records what closed
+them, the command that drives each guard **red**, and the date it was last seen red.
+
+| row | closed by | the command that drives it RED | last seen RED |
+|---|---|---|---|
+| **M-1** `guard_no_float_in_vectors` — bare `grep -Eq`, no `LC_ALL=C`, no `-a` | T154 leg 1 | `bash .softhouse/capture/t154-nofloat/regen-leg1-red.sh` (runs the guard's own pre-fix bytes from a pinned sha against a poisoned corpus) | 2026-08-21 |
+| **M-1/M-2** zero files inspected returns 0 | T154 leg 1 — both guards now count what they inspected and treat 0 as an ERROR | same script, section [3] | 2026-08-21 |
+| **M-2** `guard_no_float_in_harness` — same bare grep | T154 leg 1 | same script, `harness` rows | 2026-08-21 |
+| **M-3** float LITERALS invisible to both guards | T154 leg 2 — `ScanGoTreeForFloatingPoint` censuses `token.FLOAT` / `token.IMAG`, and it is called by `Run`, so it gates the conformance VERDICT and not only `go test` | `bash .softhouse/capture/t154-nofloat/regen-leg2-red.sh`; in process, `go test -run TestNoFloatInTheLoanScheduleTree/the_guard_fires` | 2026-08-21 |
+| **M-5** a store-root `.json` is never decoded by Go | T154 leg 3 — `StoreFileCensus` refuses any `.json` under the store root the harness did not load | `bash .softhouse/capture/t154-nofloat/regen-leg3-red.sh`; in process, `go test -run TestStoreFileCensus` | 2026-08-21 |
+
+**Two corrections to the rows above, both measured rather than argued:**
+
+1. **M-3's "21 files" is 22.** A token-stream scan of `nexus/internal/apps/loanschedule` on the same
+   pinned tree reports **22** `.go` files, not 21 — and **0** `token.FLOAT` / `token.IMAG` literals,
+   which is the part that mattered and which reproduces exactly. The fix was free, as stated.
+   [VERIFIED: T154, `go run` over `go/scanner`; and `find … -name '*.go' | wc -l` = 22.]
+2. **M-5's "for store-root files M-1 is the ONLY float check" is true only for a store-root file that
+   is neither `PIN.json` nor `capabilities.json`.** `LoadPin` (`admit.go:58`) and
+   `LoadCapabilityRegistry` (`capability.go:110`) each call `RejectFloatTokens` on their own bytes,
+   so a float in `PIN.json` was already refused before T154 — measured with the **pre-fix binary**,
+   which reports `FLOAT TOKEN "19.0"`. T154's own first draft repeated M-5's sentence unqualified and
+   its `wanted PRE 0` expectation was refuted by its own probe; the expectation and the source comment
+   were corrected to the measurement rather than the code adjusted to fit the guess.
+   [VERIFIED: `.softhouse/capture/t154-nofloat/out/leg3-GREEN-after-fix.txt`, section 3b.]
+
+**And what T154 measured that this register did not have.** T120's structural finding is six modes,
+not one, and four of them are silent on the committed corpus. Every figure below is the **pre-fix**
+harness with the corpus otherwise intact [VERIFIED:
+`.softhouse/capture/t154-nofloat/out/leg3-RED-before-fix.txt`, the PRE column]:
+
+| mode | pre-fix result |
+|---|---|
+| a symlinked EXTRA context directory holding a float | exit 0 · 42 parity · 5576 cells |
+| a vector one directory too deep | exit 0 · 42 parity · 5576 cells |
+| `T154-UPPER.JSON` holding a float | exit 0 · 42 parity · 5576 cells |
+| a store-root `.json` with a float behind one invalid byte | exit 0 · 42 parity · 5576 cells |
+| `P-00` and `p-00` — case-only `case_id` variants | exit 0 · **43** parity · **5623** cells |
+| NFC and NFD spellings of one `case_id` | exit 0 · **44** parity · **5670** cells |
+
+The last two are the dangerous pair: they do not hide a defect, they **inflate the two numbers this
+program quotes as its evidence of coverage**, and every other check stays green while they do it.
+
+**Baselines re-taken after all three legs**, unchanged from T134's: `bash .softhouse/conformance.sh`
+→ **exit 0**, *"VERDICT: PASS (exit 0) — 42 parity vectors match the pinned reference oracle, 5576
+cells compared"*; `--prove` → **exit 0**, *"PROOFS: 21 passed, 0 failed"*.
+
+**Still open in this register after T154:** D-1/D-2/D-3 (PostgreSQL-only preconditions vacuous on
+zero input), R-5/R-6 (the rounding canary), X-1, X-2, Z-2, and the eight non-negotiables with no
+executable guard at all. T154 touched none of them.

@@ -436,3 +436,162 @@ func TestDuplicateCaseIDRefusesTheRun(t *testing.T) {
 		}
 	})
 }
+
+// TestStoreFileCensus drives every mode of the enumerator disagreement RED in
+// process, so a later rewrite of LoadStore cannot reopen one silently.
+//
+// THE DEFECT (T120, closing T143's M-5). The shell float guard enumerates the
+// store with `find -name '*.json' -type f` — recursive, case-sensitive, no
+// symlink following — and LoadStore reads ONE LEVEL DEEP matching the suffix
+// bytewise. The two disagree about what the store contains, and before T154
+// NOTHING COMPARED THEIR COUNTS. Measured on the pre-fix harness with the
+// committed corpus otherwise intact, every row exit 0 with no warning:
+//
+//	symlinked extra context holding a float   42 parity / 5576 cells
+//	a vector one directory too deep           42 parity / 5576 cells
+//	T154-UPPER.JSON holding a float           42 parity / 5576 cells
+//	P-00 and p-00 both present                43 parity / 5623 cells
+//	NFC and NFD spellings of one case_id      44 parity / 5670 cells
+//
+// The last two are the dangerous pair: they do not hide a defect, they INFLATE
+// the two numbers this program quotes as its evidence of coverage.
+//
+// EVERY SUB-TEST ASSERTS THE REFUSAL'S OWN WORDS, not merely that an error came
+// back. A store defect refused for an unrelated reason is a check that has
+// quietly stopped being the check it claims to be.
+func TestStoreFileCensus(t *testing.T) {
+	pristine := storeRoot(t)
+
+	// ANTI-VACUITY, first and unconditionally: the committed store must pass the
+	// census. Without this row every refusal below could be the census refusing
+	// everything, and the suite would look identical.
+	t.Run("the_committed_store_is_accounted_for", func(t *testing.T) {
+		vectors, loadErrs, err := LoadStore(pristine, "")
+		if err != nil {
+			t.Fatalf("the committed store must pass the census: %v", err)
+		}
+		if len(loadErrs) != 0 {
+			t.Fatalf("unexpected load errors: %v", loadErrs)
+		}
+		if err := StoreFileCensus(pristine, vectors, nil); err != nil {
+			t.Fatalf("StoreFileCensus refuses the committed store: %v", err)
+		}
+		t.Logf("the census accounts for every .json under %s across %d loaded vectors", pristine, len(vectors))
+	})
+
+	// A refusal, its required words, and the fixture that produces it.
+	refuses := func(t *testing.T, mutate func(t *testing.T, dir string), wants ...string) {
+		t.Helper()
+		dir := copyStore(t, pristine)
+		mutate(t, dir)
+		_, _, err := LoadStore(dir, "")
+		if err == nil {
+			t.Fatal("LoadStore ACCEPTED the store. Before T154 this is exactly what happened, and the run " +
+				"then reported a parity count over a set of files that is not the set on disk")
+		}
+		for _, w := range wants {
+			if !strings.Contains(err.Error(), w) {
+				t.Errorf("the refusal must say %q; it said: %v", w, err)
+			}
+		}
+		t.Logf("refused: %v", err)
+	}
+
+	write := func(t *testing.T, path, body string) {
+		t.Helper()
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			t.Fatalf("MkdirAll: %v", err)
+		}
+		if err := os.WriteFile(path, []byte(body), 0o644); err != nil {
+			t.Fatalf("WriteFile %s: %v", path, err)
+		}
+	}
+	// A real vector re-cased, so the fixture cannot drift from what the loader
+	// actually accepts.
+	recased := func(t *testing.T, dir, destRel, newCaseID string) {
+		t.Helper()
+		src := filepath.Join(dir, "loanschedule", "P-00-baseline-6x7pct.json")
+		raw, err := os.ReadFile(src)
+		if err != nil {
+			t.Fatalf("ReadFile: %v", err)
+		}
+		out := strings.Replace(string(raw), `"case_id": "P-00"`, `"case_id": "`+newCaseID+`"`, 1)
+		if out == string(raw) {
+			t.Fatal(`P-00-baseline-6x7pct.json no longer renders its case_id as "case_id": "P-00"; ` +
+				"this fixture would be vacuous")
+		}
+		write(t, filepath.Join(dir, destRel), out)
+	}
+
+	t.Run("F1_a_symlinked_context_directory", func(t *testing.T) {
+		refuses(t, func(t *testing.T, dir string) {
+			outside := t.TempDir()
+			write(t, filepath.Join(outside, "HIDDEN.json"), "{\n  \"n\": 3.6\n}\n")
+			if err := os.Symlink(outside, filepath.Join(dir, "extra")); err != nil {
+				t.Fatalf("Symlink: %v", err)
+			}
+		}, "SYMLINK", "extra")
+	})
+
+	t.Run("F2_a_subdirectory_of_a_context_directory", func(t *testing.T) {
+		refuses(t, func(t *testing.T, dir string) {
+			recased(t, dir, filepath.Join("loanschedule", "sub", "NESTED.json"), "T154-NESTED")
+		}, "directory INSIDE a context directory", "loanschedule/sub")
+	})
+
+	t.Run("F3_an_uppercase_JSON_extension", func(t *testing.T) {
+		refuses(t, func(t *testing.T, dir string) {
+			write(t, filepath.Join(dir, "loanschedule", "T154-UPPER.JSON"), "{\n  \"n\": 3.6\n}\n")
+		}, "DID NOT LOAD", "T154-UPPER.JSON")
+	})
+
+	t.Run("F4_case_only_case_id_variants", func(t *testing.T) {
+		refuses(t, func(t *testing.T, dir string) {
+			recased(t, dir, filepath.Join("loanschedule", "T154-lowercase-p00.json"), "p-00")
+		}, "differing only in letter case", `"P-00"`, `"p-00"`)
+	})
+
+	t.Run("F5_NFC_and_NFD_spellings_of_one_case_id", func(t *testing.T) {
+		refuses(t, func(t *testing.T, dir string) {
+			// U+00E9 as one code point, and e + U+0301 as two. Two distinct
+			// case_ids that render identically in the report.
+			recased(t, dir, filepath.Join("loanschedule", "T154-nfc.json"), "P-NFC-é")
+			recased(t, dir, filepath.Join("loanschedule", "T154-nfd.json"), "P-NFC-é")
+		}, "[A-Za-z0-9._-]+", "T154-nfc.json", "T154-nfd.json")
+	})
+
+	t.Run("M5_a_json_at_the_store_root", func(t *testing.T) {
+		// NO FLOAT IN IT. The point of this row is structural: the shell guard
+		// has nothing to find here even when it is working, so a refusal can
+		// only be the census's.
+		refuses(t, func(t *testing.T, dir string) {
+			write(t, filepath.Join(dir, "T154-ROOT-CLEAN.json"), "{\n  \"n\": 6\n}\n")
+		}, "STORE ROOT", "never float-checked by Go", "T154-ROOT-CLEAN.json")
+	})
+
+	t.Run("an_allowlisted_root_file_is_float_checked", func(t *testing.T) {
+		// BELT AND BRACES, AND SAID SO. LoadPin and LoadCapabilityRegistry
+		// already call RejectFloatTokens, so this is not the closure of M-5 —
+		// but they are called from Run, and this check runs under LoadStore
+		// alone, which is how every test in this package reaches the store.
+		refuses(t, func(t *testing.T, dir string) {
+			path := filepath.Join(dir, "PIN.json")
+			raw, err := os.ReadFile(path)
+			if err != nil {
+				t.Fatalf("ReadFile: %v", err)
+			}
+			out := strings.Replace(string(raw), `"significant_digits": 19`, `"significant_digits": 19.0`, 1)
+			if out == string(raw) {
+				t.Fatal("PIN.json no longer renders significant_digits as an integer 19; fixture vacuous")
+			}
+			write(t, path, out)
+		}, "FLOAT TOKEN", "PIN.json")
+	})
+
+	t.Run("a_census_over_no_files_is_an_error", func(t *testing.T) {
+		if err := StoreFileCensus(t.TempDir(), nil, nil); err == nil {
+			t.Fatal("the census returned no error over an EMPTY store root: a census that inspects " +
+				"nothing accounts for everything, which is the vacuous pass this check exists not to be")
+		}
+	})
+}

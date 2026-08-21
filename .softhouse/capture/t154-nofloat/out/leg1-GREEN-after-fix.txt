@@ -34,11 +34,11 @@ g3-clean-int.go                      SILENT   SILENT   SILENT   SILENT    NEGATI
 
 === [3] ZERO FILES INSPECTED IS AN ERROR, NOT A PASS (P-35) ===
   vectors  PRE  exit 0   POST exit 1
-  vectors  POST says: conformance: guard_no_float_in_vectors INSPECTED ZERO FILES under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg1.LidBQe4PeT/empty-vectors. conformance: a guard that inspects nothing passes everything. This is an ERROR, not a pass.
+  vectors  POST says: conformance: guard_no_float_in_vectors INSPECTED ZERO FILES under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg1.OfTT2DXvCG/empty-vectors. conformance: a guard that inspects nothing passes everything. This is an ERROR, not a pass.
 OK    PRE  vectors over an EMPTY directory returned 0 — the vacuous pass
 OK    POST vectors over an EMPTY directory returned 1 — an ERROR
   harness  PRE  exit 0   POST exit 1
-  harness  POST says: conformance: guard_no_float_in_harness INSPECTED ZERO FILES under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg1.LidBQe4PeT/empty-harness/internal/apps/loanschedule. conformance: a guard that inspects nothing passes everything. This is an ERROR, not a pass.
+  harness  POST says: conformance: guard_no_float_in_harness INSPECTED ZERO FILES under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t154-leg1.OfTT2DXvCG/empty-harness/internal/apps/loanschedule. conformance: a guard that inspects nothing passes everything. This is an ERROR, not a pass.
 OK    PRE  harness over an EMPTY directory returned 0 — the vacuous pass
 OK    POST harness over an EMPTY directory returned 1 — an ERROR
 
