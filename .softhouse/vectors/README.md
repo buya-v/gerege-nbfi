@@ -68,32 +68,75 @@ mechanically, so a file cannot become something it is not by being renamed:
 
 ### What the store actually holds today
 
-The store holds **42 promoted parity vectors** (all in `loanschedule/`, all
-captured at the production MathContext `(19, HALF_UP)`), **4 contract-refusal
-vectors** and **1 self-test fixture** — 47 files. `conformance.sh` exits **0**:
-42 parity PASS, 0 FAIL, 0 refused, 0 inadmissible, 5,576 cells graded, 84 ungraded,
+The store holds **43 promoted parity vectors** (all in `loanschedule/`, all
+captured at the production MathContext `(19, HALF_UP)`; **42 on the
+`path_a_embeddable` seam and 1 on `path_b_server`**), **4 contract-refusal
+vectors** and **1 self-test fixture** — 48 files. `conformance.sh` exits **0**:
+43 parity PASS, 0 FAIL, 0 refused, 0 inadmissible, 5,664 cells graded, 87 ungraded,
 0 invariant violations, 0 invariant assertions not run. `conformance.sh --prove`
 reports **21 passed, 0 failed**.
 
-The last six promotions are task **T74**'s `T74-E-*` — the `36 x 16.8 %` shape at
+The last promotion is task **T149**'s `T149-PATHB-TIE`, and it is the **first parity
+vector in this store observed through the running Fineract server** — POST
+`/loans?command=calculateLoanSchedule` over REST against PostgreSQL, tenant `gerege`.
+Every one of the other 42 is the in-process `path_a_embeddable` seam. It carries the
+exact half-minor-unit tie the capture rigs have used as their behavioural
+rounding-mode canary since T36 — MNT 1,162,502.50 over `12 x 21.6 %`, so period-1
+interest is exactly `1,162,502.50 × 0.018 = 20,925.045` — and it grades
+`MONEY-QUANTIZATION-HALF-EVEN`: the oracle answers `20925.05` under the ratified
+HALF_UP and `20925.04` under its own stock HALF_EVEN default.
+
+Two things about it are worth reading before the next promotion task repeats them.
+
+* **Its counterfactual contains no model, and the second arm is not a mutation of the
+  port.** It is the same JVM answering the same request shape on a tenant whose
+  `RoundingMode` ordinal is 6 instead of 4, with the two loan-product rows re-verified
+  as twins in 89 columns (only `id` differs). 20 money cells diverge, every one of them
+  by exactly 1 minor unit.
+* **It did not create HALF_EVEN coverage; it deepened it.** The task that commissioned
+  it recorded that *"0 of 46 vectors carry either tie answer — so nothing in the parity
+  corpus would notice a port that inherited Fineract's stock HALF_EVEN default."* The
+  first clause is true of the literal characters and **the inference is false**: T61's
+  `T61-HE-A/B/C` are ties at the same quantization on other principals, and mutating the
+  port to banker's rounding at `Money.java:52` (named mutation `M7` of
+  `.softhouse/handoff/T61-mutations.py`) over the **42**-vector store gives parity
+  PASS 39 / FAIL 3 — exactly those three. Measured, both arms, in
+  `.softhouse/capture/pathb/t149/redgreen/`. Searching the store for a *value* is not
+  the same question as asking what the store *kills*, and the `graded_against` section
+  below exists because the two questions come apart.
+
+Promoting any Path B capture required closing T76's `[UNVERIFIED]` on
+`interestCalculationPeriodMethod`, which DEC-1 pins **unset** and which the running
+server always populates. It is closed **by measurement, on this shape only**: a
+companion capture on a fixed-30/360 same-as-repayment-period product at principal
+MNT 1,200,000 came back **byte-identical** to the committed `B-01` capture and agrees
+with the already-promoted `P-MNT-1M2` — ICPM unset, same day count — in all 12 rows and
+in total interest. With the day count controlled the pin is the only remaining
+difference and it moves nothing here. It licenses nothing about a daily interest
+calculation, where the setting is live, and it does not disturb T76's refusal of
+`B-01..B-04`, each of which fails a *different* test.
+
+The six before it are task **T74**'s `T74-E-*` — the `36 x 16.8 %` shape at
 principals from **MNT 4.00** to MNT 6,940.00, asked for by T21 required change P1-11.
 They are the first vectors in this store whose counterfactual is
 `MATHCONTEXT-PRECISION-12-INSTEAD-OF-RATIFIED-19`, and they change what the corpus
 can see: mutating the port to run its intermediate arithmetic at 12 significant
 digits instead of the ratified 19 was **caught by two of the previous 36** — `P-01`
 at MNT 87,654,321 and `P-RND-S1` at MNT 21,021,587.50, both multi-million-tugrik
-loans — and is caught by **eight of 42** now, six of them at principals under seven
-thousand tugriks, the smallest being **MNT 4.00**. That is T21 §6.2's finding made mechanical:
+loans — and is caught by **eight of those 42** now, six of them at principals under seven
+thousand tugriks, the smallest being **MNT 4.00**. (T149's Path B vector, the 43rd, has
+**not** been measured against this counterfactual, so it is counted on neither side.)
+That is T21 §6.2's finding made mechanical:
 precision sensitivity is a rounding-boundary property of the `(principal, n, rate)`
 triple, **not** a magnitude property — the same `36 x 16.8 %` shape at MNT 50,000,000
 (`P-MNT-50M`, promoted) is precision-**insensitive**.
 
-Their counterfactual is also unlike every other one in this store: **it contains no
-model.** Both arms are observations of the reference oracle, taken in the same run of
-`run-pass3i.sh` through the same seam, differing in exactly one input. The other
-counterfactuals here (T58, T61, T64) are measured by mutating the Go port and need a
-control proving the unmutated model reproduces the oracle before their margins mean
-anything.
+Their counterfactual is one of only **two** in this store that **contain no model** —
+the other is T149's, above. Both arms are observations of the reference oracle, taken in
+the same run of `run-pass3i.sh` through the same seam, differing in exactly one input.
+The remaining counterfactuals here (T58, T61, T64) are measured by mutating the Go port
+and need a control proving the unmutated model reproduces the oracle before their
+margins mean anything.
 
 The four before them are task **T64**'s `T64-ZP-*` — the first vectors in this
 store containing a REPAYMENT row that amortizes **exactly zero principal** while
@@ -604,13 +647,26 @@ and is still graded.** A `DISBURSEMENT` row's `interest_minor` and
 `installment_number` are `0` normatively — *"its InterestMinor is 0, and its
 InstallmentNumber is 0 because it is not payable"*, `contract.go:1509-1510` — so
 the replay's `0` there is the **contract's own value**, not an invention. This is
-not a convenience: all **42** promoted parity vectors withdraw exactly those two
-cells — re-verified mechanically by the driver on 2026-08-21 over the whole store
-(42 parity / 4 contract-refusal / 1 self-test = 47 files; 42 `DISBURSEMENT` periods,
-**0 exceptions**), not asserted from the earlier 36-vector corpus —
+not a convenience: **42 of the 43** promoted parity vectors withdraw exactly those two
+cells and nothing else — re-verified mechanically by the driver on 2026-08-21 over the
+whole store (42 parity / 4 contract-refusal / 1 self-test = 47 files; 42 `DISBURSEMENT`
+periods, **0 exceptions**), not asserted from the earlier 36-vector corpus —
 and treating them as placeholders would have turned `splits_sum_to_whole`'s
 interest-column total into a no-op across the entire corpus. The same argument was
 already ratified for `installment_number` by finding **T9-F1c**.
+
+**The 43rd, `T149-PATHB-TIE`, withdraws a THIRD cell on its disbursement row, and the
+reason is a property of its seam rather than of the rule above.** Path B's disbursement
+row is `{dueDate, principalDisbursed, principalLoanBalanceOutstanding, feeChargesDue,
+feeChargesOutstanding, totalOriginalDueForPeriod, totalDueForPeriod,
+totalOutstandingForPeriod, totalOverdue, totalActualCostOfLoanForPeriod,
+downPaymentPeriod}` — there is **no `fromDate` field on it at all**, where the Path A
+pass-3b rig records one. So `from_date` is withdrawn on that row. It is emphatically
+**not** covered by the "the contract already fixes it" exemption: the contract fixes a
+disbursement row's `InterestMinor` and `InstallmentNumber` at `0`, and fixes nothing
+about its `FromDate`. Filling it from the due date would be deriving a cell and storing
+it as an observation. This is the first instance of the **seam** deciding which cells
+exist, and a second Path B promotion should expect the same three.
 
 `outstanding_principal_minor` on a disbursement row is **deliberately excluded**
 from that exemption although the contract fixes it too, because it is fixed *as a

@@ -42,7 +42,8 @@ import attest_gate                                                   # noqa: E40
 
 TENANT = sys.argv[1] if len(sys.argv) > 1 else 'gerege'
 # Which capture set to attest.  'pathb' = the four committed B-0x sets (T22 P0-6 re-capture);
-# 'emiloop' = the T36 EMI re-adjust-loop probes (T22 P1-11, second clause).
+# 'emiloop' = the T36 EMI re-adjust-loop probes (T22 P1-11, second clause);
+# 't149' = the HALF_UP/HALF_EVEN exact-tie set (task T149).
 CAPTURE_SET = sys.argv[2] if len(sys.argv) > 2 else 'pathb'
 # ATTEST_OUT (added by T76) lets an INDEPENDENT re-run write its own evidence directory
 # instead of overwriting T36's committed capture set.  Re-running a generator over the
@@ -130,7 +131,30 @@ EMILOOP_PRINCIPALS = [1200000, 1200001, 1200004, 1200027, 1200033, 1200039, 1200
 EMILOOP_CAPTURES = [('EL-%d' % p, 'EMI re-adjust-loop probe, principal %d MNT' % p,
                      't36/req-emiloop', 'calc-emiloop-%d.json' % p, 'emiloop-%d-raw.json' % p)
                     for p in EMILOOP_PRINCIPALS]
-CAPTURES = PATHB_CAPTURES if CAPTURE_SET == 'pathb' else EMILOOP_CAPTURES
+# T149: the HALF_UP/HALF_EVEN exact-tie set. The same principal as the PINNED CANARY
+# (1,162,502.50 x 0.018 = 20,925.045 -- an exact half-minor-unit tie) posted against loan
+# products whose day-count settings differ, plus MNT 1,200,000 controls against the
+# already-promoted Path A vector P-MNT-1M2. Product 9 is SAME_AS_REPAYMENT_PERIOD +
+# fixed 30/360; product 1 is SAME_AS_REPAYMENT_PERIOD + actual/actual, which is what the
+# pinned canary's product 11 also is.
+T149_CAPTURES = [
+    ('T149-TIE-P9', 'exact tie, product 9 (SARP + fixed 30/360)',
+     't149/req', 'calc-t149-tie-p9.json', 'T149-TIE-P9-raw.json'),
+    ('T149-TIE-P1', 'exact tie, product 1 (SARP + actual/actual)',
+     't149/req', 'calc-t149-tie-p1.json', 'T149-TIE-P1-raw.json'),
+    ('T149-CTRL-P9-1M2', 'control MNT 1,200,000, product 9 (SARP + fixed 30/360)',
+     't149/req', 'calc-t149-ctrl-p9-1m2.json', 'T149-CTRL-P9-1M2-raw.json'),
+    ('T149-CTRL-P1-1M2', 'control MNT 1,200,000, product 1 (SARP + actual/actual)',
+     't149/req', 'calc-t149-ctrl-p1-1m2.json', 'T149-CTRL-P1-1M2-raw.json'),
+]
+CAPTURE_SETS = {'pathb': PATHB_CAPTURES, 'emiloop': EMILOOP_CAPTURES, 't149': T149_CAPTURES}
+if CAPTURE_SET not in CAPTURE_SETS:
+    _abort('unknown capture set %r. Known: %s' % (CAPTURE_SET, ', '.join(sorted(CAPTURE_SETS))))
+CAPTURES = CAPTURE_SETS[CAPTURE_SET]
+# Which product rows to persist into the attestation, per set. A set that probes products
+# 1 and 9 must record THOSE rows; recording 1-4 for every set would attest products the run
+# never used and stay silent about the ones it did.
+PRODUCT_IDS = {'pathb': (1, 2, 3, 4), 'emiloop': (1, 2, 3, 4), 't149': (1, 9, 11)}[CAPTURE_SET]
 
 notes = []
 SOFTHOUSE = os.path.normpath(os.path.join(HERE, '..', '..', '..'))   # .softhouse/
@@ -341,7 +365,7 @@ attest_gate.assert_effective_rounding_mode(
 
 # --------------------------------------------------------- products, from the rows
 products = []
-for pid in (1, 2, 3, 4):
+for pid in PRODUCT_IDS:
     row = q(schema, "select to_jsonb(t) from m_product_loan t where id=%d;" % pid)
     if not row:
         products.append({'id': pid, '_unread': 'no m_product_loan row'})
@@ -423,7 +447,8 @@ att = {
                        'unable to abort until T80 (T77 P0-T77-2)',
                    'T22 P0-6 (production-settings tenant re-capture)':
                        'T36, commits fab040a and 60c08ad'},
-    'capture_set': 'pathb-B01..B04' if CAPTURE_SET == 'pathb' else 'pathb-emiloop-probes',
+    'capture_set': {'pathb': 'pathb-B01..B04', 'emiloop': 'pathb-emiloop-probes',
+                    't149': 'pathb-t149-halfup-halfeven-exact-tie'}[CAPTURE_SET],
     'capture_path': 'Path B — running Fineract server (REST + PostgreSQL)',
     # ATTEST_TASK / ATTEST_BRANCH (added by T76): a sidecar produced by a LATER task must
     # not claim T36 produced it.  Provenance that names the wrong author is a false record,

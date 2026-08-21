@@ -105,3 +105,41 @@ Not raised as three gates, because they are one decision with an order:
 
 Until then the honest state of the store is the one it already reports: `REFUSE-01` refuses ACT/ACT,
 and B-01..B-04 sit in `.softhouse/capture/pathb/` as **attested, admissible, unpromoted** evidence.
+
+---
+
+## AMENDED by T149, 2026-08-21 — the `[UNVERIFIED]` is closed, and B-01..B-04 are still refused
+
+**Nothing above is withdrawn.** T76's verdict on these four captures stands: B-01 kills nothing
+new and its product is ACT/ACT, B-02 needs a ratified DEC-1 §4.7 amendment, B-03/B-04 need the
+frozen contract to grow a component. All three routes remain gate work.
+
+What changed is the **residual question** in T76's own B-01 paragraph:
+
+> *Its request sets `interestCalculationPeriodType = 1` (SAME_AS_REPAYMENT_PERIOD), while the
+> contract **pins** `interestCalculationPeriodMethod` **unset** … Whether SARP is behaviourally
+> identical to unset is **[UNVERIFIED]** — I did not test it, and no capture in this set can.*
+
+**It is now closed by measurement, on this shape only.** T76 could not test it because B-01's
+product is ACTUAL/ACTUAL, so any comparison against a fixed-30/360 Path A vector confounds two
+settings. T149 posted the same request to product **9** (`T22 probe p09-sarp-360-30`, SARP +
+fixed 30/360), which controls the day count and leaves ICPM as the only difference:
+
+| observation | result |
+|---|---|
+| `T149-CTRL-P9-1M2` (product 9, SARP + 30/360, MNT 1,200,000) vs the **committed `B-01` capture** (product 1, SARP + ACT/ACT) | **byte-identical**, sha256 `713a3560…` |
+| the same capture vs the **promoted Path A vector `P-MNT-1M2`** (ICPM unset, 30/360) | 12 of 12 rows agree in principal, interest, outstanding balance and row total; total interest `14,498,847` minor units both sides |
+
+Transcript: `.softhouse/capture/pathb/t149/redgreen/crosscheck-vs-patha.txt`; script:
+`t149/crosscheck-vs-patha.py`.
+
+So on **this** shape — monthly, single disbursement on the schedule start date, declining balance —
+`interestCalculationPeriodMethod = SAME_AS_REPAYMENT_PERIOD` moves nothing, and the mechanism is
+visible in source: its only reader on this path is `ProgressiveEMICalculator.addDisbursement`
+(`:127-132`), which resolves `effectiveDueDate` to the from-date of the first repayment period whose
+due date is after the disbursement — which **is** the disbursement date when the loan is disbursed
+on the schedule start. It licenses **nothing** about a daily interest calculation, where the setting
+is live, and it is not a general finding about the pin.
+
+That closure is what let T149 promote `T149-PATHB-TIE` — a **different** capture, on a
+**fixed-30/360** product, that kills a named counterfactual. It does not reopen B-01..B-04.

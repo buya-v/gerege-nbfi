@@ -1,0 +1,22 @@
+Path A vector : P-MNT-1M2   (seam path_a_embeddable, day_count FIXED_30_360)
+Path B capture: T149-CTRL-P9-1M2  (product 9, SARP + fixed 30/360)
+rows: Path A 12   Path B 12
+  period 1   ok
+  period 2   ok
+  period 3   ok
+  period 4   ok
+  period 5   ok
+  period 6   ok
+  period 7   ok
+  period 8   ok
+  period 9   ok
+  period 10  ok
+  period 11  ok
+  period 12  ok
+  total interest  Path A 14498847   Path B 14498847   ok
+
+RESULT: 12 of 12 rows and the total agree in EVERY compared minor unit.
+        With the day count controlled at fixed 30/360, the only remaining
+        difference between the two observations is interestCalculationPeriodMethod
+        (SAME_AS_REPAYMENT_PERIOD on Path B, unset on Path A). It moves NOTHING on
+        this shape. T76's [UNVERIFIED] is closed BY MEASUREMENT, on this shape only.

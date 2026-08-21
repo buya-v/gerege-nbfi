@@ -1,0 +1,6 @@
+Taken on tenant `default`, whose effective rounding mode is HALF_EVEN (RoundingMode
+ordinal 6). Gerege's ratified tenant parameter is HALF_UP (ordinal 4). NOTHING IN THIS
+DIRECTORY IS PROMOTABLE and nothing here carries an attestation, because an attestation
+asserts capture at MathContext(19, HALF_UP) and this was not.
+
+It is the OBSERVED counterfactual arm for the parity vector T149-PATHB-TIE.

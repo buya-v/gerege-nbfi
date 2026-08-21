@@ -1,0 +1,11 @@
+=== BASELINE (true implementation) ===
+baseline: exit=0 parity PASS=42 FAIL=0 invariants_violated=0
+
+M7   MONEY-QUANTIZATION-HALF-EVEN                         exit=1 KILLED       PASS=39 FAIL=3  T61-HE-A,T61-HE-B,T61-HE-C
+
+=== TABLE ===
+| mutation | verdict | parity PASS | parity FAIL | killed by |
+|---|---|---|---|---|
+| `MONEY-QUANTIZATION-HALF-EVEN` (M7) | **KILLED** | 39 | 3 | T61-HE-A, T61-HE-B, T61-HE-C |
+
+reverted: exit=0 parity PASS=42 FAIL=0
