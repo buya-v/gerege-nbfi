@@ -674,6 +674,20 @@ ran from a script: **both blind to a shell function by construction.**
 > a sibling worktree. That is the exact command shape census and sweep tasks use, so **every repo-wide sweep run
 > through the Bash tool has been blind to every worktree and every gitignored path.** When a sweep must be
 > exhaustive, run it through `/usr/bin/grep` or `git grep`, and say in the artefact which one you used.
+>
+> Same string, same start point, same moment, two tools, opposite answers:
+> ```
+> Bash-tool  grep -rl '<canary>' .                 -> exit 1, NO OUTPUT
+> BSD  LC_ALL=C command grep -arl '<canary>' .     -> 2 hits, exit 0
+> ```
+> **Neither `LC_ALL=C` nor `-a` recovers it** — this is a third failure mode the two-token rule does not cover, and
+> the mechanism is *descent*, not the file: restarting the search below the ignore file finds the hits again.
+>
+> Two details make it worse than an ordinary wrong answer. **The blind arm is also the fast arm** — the seeing arm
+> took over two minutes across a 135 MB tree while the blind one returned "not found" instantly, so an agent under
+> time pressure will prefer the fast wrong answer. And in the run that demonstrated it, **one of the two missed hits
+> was the review document doing the demonstrating**: the sweep an auditor runs to find restatements of a claim is
+> exactly the sweep that cannot see them. That is P-26's failure mode with the blindness built into the instrument.
 
 ### P-34. Every non-negotiable that has a guard has a guard that can pass without checking — three for three
 
