@@ -104,11 +104,13 @@ does NOT appear in the diff: T147 derived it from the request actually sent, and
 the gerege limb the derived value equals the literal it replaced. The fix changes
 only what a NON-gerege run would have written.
 Both directories were restored from the branch afterwards:
-04df085c4d14772abfb6d5787dbdb2299037b1f6f7cb0d2224f65ab54e8db09f  .softhouse/capture/pathb/t125/green-t36-gerege/attestation.json
-4f23f919036d106bd601e9b3e9dfa526b338c722ac564b7db7fbef3830dc651c  .softhouse/capture/pathb/t125/green-t40-gerege/attestation.json
- M .softhouse/capture/pathb/t125/blast-radius.py
- M .softhouse/capture/pathb/t125/drive-canary-red.sh
- M .softhouse/capture/pathb/t125/gate-selftest.py
+5004dd36081d160fa7ce736cc8deda1a89a031378069b9e558bb90d43f092a03  .softhouse/capture/pathb/t125/green-t36-gerege/attestation.json
+49b4b652591ec15bd964bfa751d2a55c09e9f395c38fc47001d642558fd6794f  .softhouse/capture/pathb/t125/green-t40-gerege/attestation.json
+ M .softhouse/capture/pathb/t125/green-t36-gerege/attestation.json
+ M .softhouse/capture/pathb/t125/green-t36-gerege/preconditions.txt
+ M .softhouse/capture/pathb/t125/green-t36-gerege/stdout.txt
+ M .softhouse/capture/pathb/t125/green-t40-gerege/attestation.json
+ M .softhouse/capture/pathb/t125/green-t40-gerege/stdout.txt
 (empty above = restored clean)
 
 --- the RED re-run output directory was DELETED after the transcript was taken.

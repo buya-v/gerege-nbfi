@@ -112,7 +112,11 @@ def _read_dec1_state():
     pin = os.path.join(SOFTHOUSE, 'vectors', 'PIN.json')
     try:
         with open(pin) as fh:
-            rev = json.load(fh).get('dec1_revision')
+            # parse_float=str throughout (T147, P-25): the rule binds every load in a file
+            # that reasons about money, not only the loads that happen to touch a money cell
+            # today. A field promoted to a JSON number later must not silently acquire a
+            # binary float on the way in.
+            rev = json.load(fh, parse_float=str).get('dec1_revision')
     except Exception as exc:                                         # noqa: BLE001
         notes.append('UNREAD dec1_revision — %s (%s)' % (exc, pin))
     ratified = None
@@ -399,7 +403,8 @@ att = {
         'image_tag': 'fineract:latest',
         'image_id': image_id,
         'image_created': image_created,
-        'image_repo_digests': json.loads(image_repodigests) if image_repodigests else None,
+        'image_repo_digests': (json.loads(image_repodigests, parse_float=str)
+                               if image_repodigests else None),
         'container': FIN,
         'container_started_at': container_started,
         'jar_git_commit_id': gp.get('git.commit.id'),
