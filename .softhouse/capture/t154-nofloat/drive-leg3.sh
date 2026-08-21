@@ -118,16 +118,42 @@ scenario() {
   echo
 }
 
+# EXPECTATIONS ARE RELATIVE TO THE MEASURED CONTROL, NEVER HARD-CODED.
+#
+# The first draft of this script wrote 0:42:5576, 0:43:5623 and 0:44:5670 as
+# literals. They were right on T154's fork point and WRONG the moment the script
+# was merged: current main has since promoted another parity vector, so the same
+# committed store grades 43 / 5664 and every literal row would have failed
+# against a perfectly healthy harness. That is P-24 exactly — a baseline that can
+# follow main will follow it the moment you stop watching — and it was caught by
+# running a scratch merge into current main rather than by reading the script.
+#
+# So the control run below MEASURES the baseline, and every other row is stated
+# as BASE, BASE+1, BASE+2 for parity and BASE_CELLS or >BASE_CELLS for cells. The
+# absolute numbers are still printed, so the transcript records what was seen.
+BASE_PARITY=""; BASE_CELLS=""
+resolve_want() { # resolve_want <token> <got>
+  case "$1" in
+    '*')            printf '%s' "$2" ;;                       # do not care
+    BASE)           printf '%s' "$BASE_PARITY" ;;
+    BASE+1)         printf '%s' "$((BASE_PARITY + 1))" ;;
+    BASE+2)         printf '%s' "$((BASE_PARITY + 2))" ;;
+    BASE_CELLS)     printf '%s' "$BASE_CELLS" ;;
+    '>BASE_CELLS')  if [ "$2" != '-' ] && [ "$2" -gt "$BASE_CELLS" ] 2>/dev/null; then printf '%s' "$2"; else printf 'MORE-THAN-%s' "$BASE_CELLS"; fi ;;
+    *)              printf '%s' "$1" ;;
+  esac
+}
 check_row() {
   local label="$1" got="$2" want="$3" i g w
-  local okrow=1
+  local okrow=1 shown=""
   for i in 1 2 3; do
     g="$(printf '%s' "$got"  | cut -d'|' -f$i)"
     w="$(printf '%s' "$want" | cut -d':' -f$i)"
-    [ "$w" = '*' ] && continue
+    w="$(resolve_want "$w" "$g")"
+    shown="$shown:$w"
     [ "$g" = "$w" ] || okrow=0
   done
-  [ "$okrow" = 1 ] && ok "$label = $got" || bad "$label = $got, wanted $want"
+  [ "$okrow" = 1 ] && ok "$label = $got" || bad "$label = $got, wanted ${shown#:} (from $want)"
 }
 
 # ---------------------------------------------------------------------------
@@ -178,29 +204,41 @@ m_pin_float() {
 }
 
 echo "=== [2] CONTROL — an unmutated copy of the committed store ==="
-scenario control m_control "0:42:5576" "0:42:5576" \
-  "anti-no-op: without this, every 'the poison changed nothing' row is a null control"
+echo "  This row MEASURES the baseline every other row is stated against, and it is also the"
+echo "  anti-no-op: without it, every 'the poison changed nothing' row could be a null control."
+scenario control m_control "0:*:*" "0:*:*" \
+  "the baseline: whatever the committed store grades today, on both arms"
+BASE_PARITY="$(printf '%s' "$res_post" | cut -d'|' -f2)"
+BASE_CELLS="$(printf '%s' "$res_post"  | cut -d'|' -f3)"
+case "$BASE_PARITY" in ''|*[!0-9]*) echo "APPARATUS BROKEN: no baseline parity count"; exit 2 ;; esac
+case "$BASE_CELLS"  in ''|*[!0-9]*) echo "APPARATUS BROKEN: no baseline cell count";   exit 2 ;; esac
+if [ "$(printf '%s' "$res_pre" | cut -d'|' -f2)" != "$BASE_PARITY" ]; then
+  echo "APPARATUS BROKEN: PRE and POST disagree on the CLEAN store, so no later row is attributable"
+  exit 2
+fi
+echo "  BASELINE: $BASE_PARITY parity vectors, $BASE_CELLS graded cells."
+echo
 
 echo "=== [3] THE SIX FAILURE MODES ==="
 scenario F1-symlinked-context m_f1_symlink "*:*:*" "2:*:*" \
   "the whole loanschedule/ context reached through a symlink"
-scenario F1-symlinked-extra   m_f1_extra   "0:42:5576" "2:*:*" \
+scenario F1-symlinked-extra   m_f1_extra   "0:BASE:BASE_CELLS" "2:*:*" \
   "an EXTRA context directory that is a symlink, holding a float — invisible to find AND to LoadStore"
-scenario F2-nested-vector     m_f2_nested  "0:42:5576" "2:*:*" \
+scenario F2-nested-vector     m_f2_nested  "0:BASE:BASE_CELLS" "2:*:*" \
   "a vector one level too deep: silently NOT graded, and the count does not move"
 scenario F2-nested-float      m_f2_float   "2:*:*"     "2:*:*" \
   "a float in a nested subdirectory: find DOES see this one, so the shell guard catches it"
-scenario F3-upper-json        m_f3_upper   "0:42:5576" "2:*:*" \
+scenario F3-upper-json        m_f3_upper   "0:BASE:BASE_CELLS" "2:*:*" \
   "UPPER.JSON is a vector to NEITHER enumerator, so a float in it is unchecked and ungraded"
-scenario F4-case-only-caseid  m_f4_case    "0:43:5623" "2:*:*" \
+scenario F4-case-only-caseid  m_f4_case    "0:BASE+1:>BASE_CELLS" "2:*:*" \
   "P-00 and p-00 both grade — the corpus reports MORE coverage than it has"
-scenario F5-nfc-vs-nfd        m_f5_nfc_nfd "0:44:5670" "2:*:*" \
+scenario F5-nfc-vs-nfd        m_f5_nfc_nfd "0:BASE+2:>BASE_CELLS" "2:*:*" \
   "two case_ids that RENDER IDENTICALLY both grade"
 scenario M5-store-root-float  m_m5_root    "2:*:*"     "2:*:*" \
   "a store-root .json with a CLEAN float: the shell guard sees it even pre-fix, so this row is NOT the hole"
-scenario M5-store-root-poison m_m5_poison  "0:42:5576" "2:*:*" \
+scenario M5-store-root-poison m_m5_poison  "0:BASE:BASE_CELLS" "2:*:*" \
   "the same file with one invalid byte: pre-fix NOTHING checks it — Go never decodes a store-root .json"
-scenario M5-store-root-clean  m_m5_clean   "0:42:5576" "2:*:*" \
+scenario M5-store-root-clean  m_m5_clean   "0:BASE:BASE_CELLS" "2:*:*" \
   "a store-root .json with NO float: nothing for the float guard to find, so a refusal here is STRUCTURAL"
 
 echo "=== [3b] M-5 CLOSED BY THE CENSUS, WITH THE SHELL GUARD TAKEN OUT OF THE CIRCUIT ==="

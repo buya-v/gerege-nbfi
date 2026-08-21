@@ -64,11 +64,15 @@ POST has census    : no
     47 / 47
 
 === [2] CONTROL — an unmutated copy of the committed store ===
---- control : anti-no-op: without this, every 'the poison changed nothing' row is a null control
-    PRE  exit=0 parity=42 cells=5576   (wanted 0:42:5576)
-    POST exit=0 parity=42 cells=5576   (wanted 0:42:5576)
+  This row MEASURES the baseline every other row is stated against, and it is also the
+  anti-no-op: without it, every 'the poison changed nothing' row could be a null control.
+--- control : the baseline: whatever the committed store grades today, on both arms
+    PRE  exit=0 parity=42 cells=5576   (wanted 0:*:*)
+    POST exit=0 parity=42 cells=5576   (wanted 0:*:*)
 OK    control PRE = 0|42|5576
 OK    control POST = 0|42|5576
+
+  BASELINE: 42 parity vectors, 5576 graded cells.
 
 === [3] THE SIX FAILURE MODES ===
 --- F1-symlinked-context : the whole loanschedule/ context reached through a symlink
@@ -78,16 +82,16 @@ OK    F1-symlinked-context PRE = 2|0|21
 OK    F1-symlinked-context POST = 2|0|21
 
 --- F1-symlinked-extra : an EXTRA context directory that is a symlink, holding a float — invisible to find AND to LoadStore
-    PRE  exit=0 parity=42 cells=5576   (wanted 0:42:5576)
+    PRE  exit=0 parity=42 cells=5576   (wanted 0:BASE:BASE_CELLS)
     POST exit=0 parity=42 cells=5576   (wanted 2:*:*)
 OK    F1-symlinked-extra PRE = 0|42|5576
-FAIL  F1-symlinked-extra POST = 0|42|5576, wanted 2:*:*
+FAIL  F1-symlinked-extra POST = 0|42|5576, wanted 2:42:5576 (from 2:*:*)
 
 --- F2-nested-vector : a vector one level too deep: silently NOT graded, and the count does not move
-    PRE  exit=0 parity=42 cells=5576   (wanted 0:42:5576)
+    PRE  exit=0 parity=42 cells=5576   (wanted 0:BASE:BASE_CELLS)
     POST exit=0 parity=42 cells=5576   (wanted 2:*:*)
 OK    F2-nested-vector PRE = 0|42|5576
-FAIL  F2-nested-vector POST = 0|42|5576, wanted 2:*:*
+FAIL  F2-nested-vector POST = 0|42|5576, wanted 2:42:5576 (from 2:*:*)
 
 --- F2-nested-float : a float in a nested subdirectory: find DOES see this one, so the shell guard catches it
     PRE  exit=2 parity=- cells=-   (wanted 2:*:*)
@@ -96,22 +100,22 @@ OK    F2-nested-float PRE = 2|-|-
 OK    F2-nested-float POST = 2|-|-
 
 --- F3-upper-json : UPPER.JSON is a vector to NEITHER enumerator, so a float in it is unchecked and ungraded
-    PRE  exit=0 parity=42 cells=5576   (wanted 0:42:5576)
+    PRE  exit=0 parity=42 cells=5576   (wanted 0:BASE:BASE_CELLS)
     POST exit=0 parity=42 cells=5576   (wanted 2:*:*)
 OK    F3-upper-json PRE = 0|42|5576
-FAIL  F3-upper-json POST = 0|42|5576, wanted 2:*:*
+FAIL  F3-upper-json POST = 0|42|5576, wanted 2:42:5576 (from 2:*:*)
 
 --- F4-case-only-caseid : P-00 and p-00 both grade — the corpus reports MORE coverage than it has
-    PRE  exit=0 parity=43 cells=5623   (wanted 0:43:5623)
+    PRE  exit=0 parity=43 cells=5623   (wanted 0:BASE+1:>BASE_CELLS)
     POST exit=0 parity=43 cells=5623   (wanted 2:*:*)
 OK    F4-case-only-caseid PRE = 0|43|5623
-FAIL  F4-case-only-caseid POST = 0|43|5623, wanted 2:*:*
+FAIL  F4-case-only-caseid POST = 0|43|5623, wanted 2:43:5623 (from 2:*:*)
 
 --- F5-nfc-vs-nfd : two case_ids that RENDER IDENTICALLY both grade
-    PRE  exit=0 parity=44 cells=5670   (wanted 0:44:5670)
+    PRE  exit=0 parity=44 cells=5670   (wanted 0:BASE+2:>BASE_CELLS)
     POST exit=0 parity=44 cells=5670   (wanted 2:*:*)
 OK    F5-nfc-vs-nfd PRE = 0|44|5670
-FAIL  F5-nfc-vs-nfd POST = 0|44|5670, wanted 2:*:*
+FAIL  F5-nfc-vs-nfd POST = 0|44|5670, wanted 2:44:5670 (from 2:*:*)
 
 --- M5-store-root-float : a store-root .json with a CLEAN float: the shell guard sees it even pre-fix, so this row is NOT the hole
     PRE  exit=2 parity=- cells=-   (wanted 2:*:*)
@@ -120,16 +124,16 @@ OK    M5-store-root-float PRE = 2|-|-
 OK    M5-store-root-float POST = 2|-|-
 
 --- M5-store-root-poison : the same file with one invalid byte: pre-fix NOTHING checks it — Go never decodes a store-root .json
-    PRE  exit=0 parity=42 cells=5576   (wanted 0:42:5576)
+    PRE  exit=0 parity=42 cells=5576   (wanted 0:BASE:BASE_CELLS)
     POST exit=0 parity=42 cells=5576   (wanted 2:*:*)
 OK    M5-store-root-poison PRE = 0|42|5576
-FAIL  M5-store-root-poison POST = 0|42|5576, wanted 2:*:*
+FAIL  M5-store-root-poison POST = 0|42|5576, wanted 2:42:5576 (from 2:*:*)
 
 --- M5-store-root-clean : a store-root .json with NO float: nothing for the float guard to find, so a refusal here is STRUCTURAL
-    PRE  exit=0 parity=42 cells=5576   (wanted 0:42:5576)
+    PRE  exit=0 parity=42 cells=5576   (wanted 0:BASE:BASE_CELLS)
     POST exit=0 parity=42 cells=5576   (wanted 2:*:*)
 OK    M5-store-root-clean PRE = 0|42|5576
-FAIL  M5-store-root-clean POST = 0|42|5576, wanted 2:*:*
+FAIL  M5-store-root-clean POST = 0|42|5576, wanted 2:42:5576 (from 2:*:*)
 
 === [3b] M-5 CLOSED BY THE CENSUS, WITH THE SHELL GUARD TAKEN OUT OF THE CIRCUIT ===
   The brief said the census SHOULD close M-5 and told me to confirm it rather than assume it.
