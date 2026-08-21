@@ -1,0 +1,328 @@
+==============================================================================
+T163 — float-round-trip audit of the WHOLE committed tierA-a2 capture
+==============================================================================
+
+POPULATION
+  files walked (req/ out/ sql/ + top level) : 585
+  files the JSON parser ACCEPTED           : 383
+  files registered as SKIPPED              : 202
+  numeric tokens inspected                 : 4063
+
+SKIP REGISTER — printed in full, never counted-and-hidden (P-35 / the G-9 failure)
+  NOT-JSON     202 file(s)
+      CAPTURE-PLAN.md                                            NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      DEFECTS-FOUND-BY-REVIEW.md                                 NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      FLAGGED-NOT-REPRODUCIBLE.txt                               NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      MANIFEST.sha256                                            NOT-JSON: JSONDecodeError: Extra data: line 1 column 2 (char 1)
+      RED-GREEN-A2-7-guards.txt                                  NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      RED-GREEN-D2-cap-transport.txt                             NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      RED-GREEN-D3-manifest-blindness.txt                        NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      RED-GREEN-T163-cap8-wire-bytes.txt                         NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      RED-GREEN-T163-census-sabotage.txt                         NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      RED-GREEN-T163-resolve7-float.txt                          NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      SUPERSEDED.txt                                             NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      T163-AUDIT-no-capture-affected.txt                         NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      analyze7.py                                                NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      audit-req-float-roundtrip.py                               NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      cap.sh                                                     NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      cap8.sh                                                    NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      census-json-float-siblings.py                              NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      env.sh                                                     NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      manifest.py                                                NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      mkreq.py                                                   NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      mkreq2.py                                                  NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      mkreq3.py                                                  NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      mkreq4.py                                                  NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      mkreq5.py                                                  NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      mkreq6.py                                                  NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      mkreq7.py                                                  NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-000-glaccounts-preexisting.http                     NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-001-glaccount-template.http                         NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-002-financialactivityaccount-template.http          NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-003-financialactivityaccounts-preexisting.http      NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-010-create-header-asset.http                        NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-011-create-child-asset-detail.http                  NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-012-read-header-asset.http                          NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-013-read-child-asset-detail.http                    NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-014-create-grandchild-asset-detail.http             NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-015-read-grandchild.http                            NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-016-create-header-child.http                        NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-017-create-level3-detail.http                       NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-018-read-level3-detail.http                         NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-019-db-glaccount-rows.txt                           NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-072-db-product-mapping-rows.txt                     NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-080-loan-a.http                                     NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-081-loan-b.http                                     NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-082-loan-c.http                                     NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-083a-approve-loan1.http                             NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-083b-approve-loan2.http                             NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-083c-approve-loan3.http                             NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-084-disburse-loan1-paymenttype1.http                NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-085-disburse-loan2-paymenttype2.http                NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-086-disburse-loan3-dupchannel.http                  NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-087-journalentries-loan1.http                       NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-088-journalentries-loan2.http                       NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-090-loan-on-product24-header.http                   NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-091a-approve-loan4.http                             NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-091b-disburse-loan4-headeraccount.http              NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-091c-journalentries-loan4.http                      NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-092-chargeoff-loan1-unmapped.http                   NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-110-update-header-to-detail.http                    NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-111-update-retype-mapped.http                       NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-112-update-disable-mapped.http                      NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-113-update-nomanual.http                            NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-114-finactivity-update.http                         NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-120-delete-has-children.http                        NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-121-delete-product-mapped.http                      NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-122-delete-three-guards.http                        NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-123-delete-finactivity-mapped.http                  NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-124-delete-clean-success.http                       NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-125-delete-not-found.http                           NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-130-create-clean-for-delete.http                    NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-131-update-usage-with-name.http                     NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-132-update-manual-with-name.http                    NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-133-read-after-updates.http                         NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-134-delete-clean-success.http                       NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-135-read-after-delete.http                          NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-140-create-fresh-for-update.http                    NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-141-update-usage-only.http                          NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-142-update-manual-only.http                         NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-143-update-usage-same-value.http                    NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-150-db-final-state.txt                              NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-200-glaccounts-live-precheck.http                   NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-201-read-gl16-fundsource.http                       NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-202-read-gl4-loanportfolio.http                     NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-203-read-gl17-transferssuspense.http                NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-204-read-gl8-interestonloans.http                   NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-205-read-gl9-incomefromfees.http                    NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-206-read-gl10-incomefrompenalty.http                NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-207-read-gl11-incomefromrecov.http                  NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-208-read-gl13-losseswrittenoff.http                 NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-209-read-gl6-overpayment.http                       NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-209b-read-gl2-retyped-fundsrc.http                  NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-209c-loanproducts-template.http                     NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-210-create-cash-nine-mandatory.http                 NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-211-read-product-nine-mandatory.http                NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-212-read-product22-channel-override.http            NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-213-read-product28-accrual.http                     NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-214-create-fundsource-retyped.http                  NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-220-loan-on-nine-mandatory.http                     NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-221-approve-loan.http                               NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-222-disburse-loan.http                              NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-223-je-after-disburse.http                          NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-224-chargeoff-unmapped.http                         NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-225-goodwillcredit-unmapped.http                    NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-225b-loan-state-after-refusals.http                 NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-226-repayment.http                                  NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-227-je-after-repayment.http                         NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-228-writeoff.http                                   NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-229-je-after-writeoff.http                          NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-230-recoverypayment.http                            NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-231-je-after-recovery.http                          NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-232-writeoff-on-transactions.http                   NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-233-je-after-writeoff.http                          NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-234-recoverypayment-after-writeoff.http             NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-235-je-after-recovery.http                          NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-240-update-cash-to-accrual.http                     NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-241-read-product-after-accrual-switch.http          NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-242-update-no-rule-change.http                      NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-243-read-product-after-no-rule-change.http          NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-250-loanproducts-list.http                          NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-bad-040-dup-glcode.http                             NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-bad-041-empty-body.http                             NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-bad-042-no-name.http                                NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-bad-043-no-glcode.http                              NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-bad-044-no-type.http                                NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-bad-045-no-usage.http                               NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-bad-046-type-9.http                                 NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-bad-047-type-0.http                                 NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-bad-048-usage-5.http                                NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-bad-049-parent-missing.http                         NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-bad-050-type-mismatch-parent.http                   NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-bad-051-glcode-too-long.http                        NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-bad-052-name-too-long.http                          NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-bad-053-unknown-param.http                          NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-bad-054-blank-name.http                             NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-bad-055-blank-glcode.http                           NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-fin-100-liability-transfer.http                     NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-fin-101-asset-transfer.http                         NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-fin-102-duplicate-activity.http                     NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-fin-103-wrong-account-type.http                     NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-fin-104-unknown-activity.http                       NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-fin-105-missing-account.http                        NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-fin-106-header-account.http                         NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-gl-020-liability-header.http                        NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-gl-021-overpayment.http                             NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-gl-022-income-header.http                           NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-gl-023-interest-income.http                         NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-gl-024-fee-income.http                              NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-gl-025-penalty-income.http                          NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-gl-026-recovery-income.http                         NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-gl-027-expense-header.http                          NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-gl-028-writeoff-expense.http                        NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-gl-029-goodwill-expense.http                        NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-gl-030-equity-header.http                           NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-gl-031-fund-source-alt.http                         NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-gl-032-disabled-asset.http                          NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-gl-033-nomanual-asset.http                          NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-prod-060-cash-with-channel-override.http            NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-prod-061-cash-no-override.http                      NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-prod-062-map-header-account.http                    NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-prod-063-map-wrong-type.http                        NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-prod-064-cash-no-mappings.http                      NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-prod-065-map-missing-account.http                   NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-prod-065b-map-missing-account.http                  NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-prod-066-bad-paymenttype.http                       NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-prod-067-duplicate-channel.http                     NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-prod-068-accrual-missing-receivables.http           NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/A2-prod-069-accrual-complete.http                      NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/attempt1-A2-prod-060-cash-with-channel-override.http   NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/attempt1-A2-prod-061-cash-no-override.http             NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/attempt1-A2-prod-062-map-header-account.http           NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/attempt1-A2-prod-063-map-wrong-type.http               NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/attempt1-A2-prod-064-cash-no-mappings.http             NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/attempt1-A2-prod-065-map-missing-account.http          NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/attempt1-A2-prod-066-bad-paymenttype.http              NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/attempt1-A2-prod-067-duplicate-channel.http            NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/attempt1-A2-prod-068-accrual-missing-receivables.http  NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      out/attempt1-A2-prod-069-accrual-complete.http             NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      prove-a2-7-additive.py                                     NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      prove-cap-transport-red.py                                 NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      prove-cap8-wire-bytes.py                                   NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      prove-census-red.sh                                        NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      prove-manifest-blind-red.py                                NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      prove-manifest-red.py                                      NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      prove-mkreq7-guard-red.py                                  NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      prove-resolve8-float-red.py                                NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      rename1.py                                                 NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      resolve7.py                                                NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      resolve8.py                                                NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      run-020-accounts.sh                                        NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      run-040-refusals.sh                                        NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      run-060-mappings.sh                                        NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      run-100-finactivity.sh                                     NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      run-120-delete-update.sh                                   NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      run-200-a2-7-readbacks.sh                                  NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      run-210-a2-7-mapping.sh                                    NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      run-220-a2-7-runtime-v8.sh                                 NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      run-220-a2-7-runtime.sh                                    NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      run-232-a2-7-writeoff-recovery.sh                          NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      run-240-a2-7-update-path.sh                                NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      show.py                                                    NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      sql/q1-glaccount-rows.sql                                  NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      sql/q2-product-mapping-rows.sql                            NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+      sql/q3-final-state.sql                                     NOT-JSON: JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+  PASS  ENUMERATION IS NON-EMPTY — zero files walked would be an ERROR, not a pass
+          585 files walked
+  PASS  PARSE SET IS NON-EMPTY — zero JSON files would be an ERROR, not a pass
+          383 files parsed as JSON
+  PASS  TOKEN SET IS NON-EMPTY — an audit that inspected zero numbers proves nothing
+          4063 numeric tokens inspected
+  PASS  EVERY SKIPPED FILE IS ACCOUNTED FOR BY NAME AND REASON
+          202 skipped, 202 registered
+
+THE CLASS QUESTION — is any committed numeric token NOT byte-preserved by a float
+round trip?  (i.e. would the defect have altered it, had it passed through)
+
+  resolve7.py touches numbers on BOTH sides, so the population is split on both:
+    REQUEST  side  req/**  — bodies resolve7.py/mkreq*.py WRITE and cap.sh POSTs.
+                             A defect here is CORRUPTION OF A COMMITTED ARTEFACT.
+    RESPONSE side  out/**  — raw curl bytes from the oracle. No Python wrote them,
+                             so they CANNOT be corrupted by this defect — but
+                             resolve7.py:25 json.load()s them with no parse_float,
+                             so a value read from here and injected into a request
+                             is corrupted ON THE WAY BACK OUT.  These rows are the
+                             AMMUNITION: they prove the mangling-prone literals are
+                             really present in this corpus.
+
+  DISTINCT offending literals across the whole capture (24 distinct, 236 occurrences):
+    kind   as committed               as the defect emits        exact residue
+    float  0.00                       0.0                        0.00
+    float  0.000000                   0.0                        0.000000
+    float  0.100000                   0.1                        0.000000
+    float  0.500000                   0.5                        0.000000
+    float  1.234500                   1.2345                     0.000000
+    float  1000000.000000             1000000.0                  0.000000
+    float  1162502.500000             1162502.5                  0.000000
+    float  1163000.000000             1163000.0                  0.000000
+    float  1190000.000000             1190000.0                  0.000000
+    float  1200.000000                1200.0                     0.000000
+    float  1200000.000000             1200000.0                  0.000000
+    float  15000.000000               15000.0                    0.000000
+    float  200000.000000              200000.0                   0.000000
+    float  21.600000                  21.6                       0.000000
+    float  2500.000000                2500.0                     0.000000
+    float  3.750000                   3.75                       0.000000
+    float  50.00                      50.0                       0.00
+    float  5000.000000                5000.0                     0.000000
+    float  50000.000000               50000.0                    0.000000
+    float  5000000.000000             5000000.0                  0.000000
+    float  7000.000000                7000.0                     0.000000
+    float  7500.000000                7500.0                     0.000000
+    float  8000.000000                8000.0                     0.000000
+    float  9000.000000                9000.0                     0.000000
+
+  FILES CARRYING AT LEAST ONE (21 files) — full list, not a sample:
+    out/A2-083a-approve-loan1.json                                    1 token(s)   [RESPONSE]
+    out/A2-083b-approve-loan2.json                                    1 token(s)   [RESPONSE]
+    out/A2-083c-approve-loan3.json                                    1 token(s)   [RESPONSE]
+    out/A2-087-journalentries-loan1.json                              2 token(s)   [RESPONSE]
+    out/A2-088-journalentries-loan2.json                              2 token(s)   [RESPONSE]
+    out/A2-091a-approve-loan4.json                                    1 token(s)   [RESPONSE]
+    out/A2-091c-journalentries-loan4.json                             2 token(s)   [RESPONSE]
+    out/A2-209c-loanproducts-template.json                           22 token(s)   [RESPONSE]
+    out/A2-211-read-product-nine-mandatory.json                       4 token(s)   [RESPONSE]
+    out/A2-212-read-product22-channel-override.json                   4 token(s)   [RESPONSE]
+    out/A2-213-read-product28-accrual.json                            4 token(s)   [RESPONSE]
+    out/A2-223-je-after-disburse.json                                 2 token(s)   [RESPONSE]
+    out/A2-225b-loan-state-after-refusals.json                       45 token(s)   [RESPONSE]
+    out/A2-227-je-after-repayment.json                                4 token(s)   [RESPONSE]
+    out/A2-229-je-after-writeoff.json                                 4 token(s)   [RESPONSE]
+    out/A2-231-je-after-recovery.json                                 4 token(s)   [RESPONSE]
+    out/A2-233-je-after-writeoff.json                                 6 token(s)   [RESPONSE]
+    out/A2-235-je-after-recovery.json                                 8 token(s)   [RESPONSE]
+    out/A2-241-read-product-after-accrual-switch.json                 4 token(s)   [RESPONSE]
+    out/A2-243-read-product-after-no-rule-change.json                 4 token(s)   [RESPONSE]
+    out/A2-250-loanproducts-list.json                               111 token(s)   [RESPONSE]
+
+  PASS  REQUEST SIDE: NO COMMITTED REQUEST BODY CARRIES A TOKEN THE DEFECT WOULD ALTER — this is A2-11's exculpatory claim, and it HOLDS
+          0 offending token(s) in req/ out of 493 tokens inspected there
+  PASS  RESPONSE SIDE IS NON-EMPTY — the danger is CONCRETE, not hypothetical: the oracle really does emit numeric(19,6) literals that a float round trip reshapes
+          236 occurrences across 21 response captures
+  PASS  ALL residues are EXACTLY ZERO — the reshaping here is of the TEXT, not of the value; the defect's damage in this corpus is to the WIRE FORM, and value loss needs >17 significant digits, which MathContext(19, HALF_UP) permits
+          max |residue| = 0.000000
+
+THE NARROW QUESTION — the artefacts resolve7.py itself WROTE
+  resolve7.py's output convention is req/*-resolved.json; found: ['a2-7-loan-220-resolved.json']
+  PASS  resolve7.py produced EXACTLY ONE committed artefact
+          found ['a2-7-loan-220-resolved.json']
+  template  a2-7-loan-220.json                 sha256 441e26f30972759e487633edafb7ccab96e10ac255993f4bb931f7923679b73d
+  resolved  a2-7-loan-220-resolved.json        sha256 487d168d32f44601c541d67f29b289021ef7d54348116c2831879f41b02bfcfb
+  observed  A2-210-create-cash-nine-mandatory.json sha256 844dd6dbe60792daee627d1af99e4fff0df7deae642a78da2f12487b8bfc1e58
+  PASS  EVERY numeric token in the TEMPLATE is an int — none can be float-mangled
+          11 tokens, kinds=['int']
+  PASS  EVERY numeric token in the RESOLVED BODY THAT WAS POSTED is an int
+          12 tokens: 1, 46, 1200000, 6, 2, 6, 1, 2, 0, 0, 1, 1
+  PASS  the POSTed body carries principal 1200000 EXACTLY, as an int
+          principal=1200000 (int)
+  PASS  EVERY numeric token in the OBSERVED RESPONSE resolve7.py read is an int too — the SECOND corruption path (resp[key] is also json.load()ed with no parse_float) was not exercised either
+          1 tokens: 46
+  PASS  the resolved productId equals the OBSERVED resourceId — not a guessed value
+          resolved productId=46, observed resourceId=46
+  PASS  the committed resolved body IS the template with ONLY the placeholder substituted — byte-for-byte, so no other literal was reshaped
+          rebuilt sha256 487d168d32f44601c541d67f29b289021ef7d54348116c2831879f41b02bfcfb vs committed 487d168d32f44601c541d67f29b289021ef7d54348116c2831879f41b02bfcfb
+
+WIRE-BYTES CENSUS — for how many committed captures do the req/ bytes differ from
+what cap.sh actually put on the wire, and did that ever alter a numeric token?
+  captures that carried a request body        : 102
+  ... whose wire bytes differ from the file   : 102
+  ... where a NUMERIC TOKEN differs           : 0
+  PASS  WIRE-BYTES CENSUS IS NON-EMPTY — a census over zero captures would be an ERROR
+          102 bodied captures
+  PASS  THE WIRE/FILE GAP IS REAL AND CORPUS-WIDE — it is not a hypothetical, and it is why 'the committed req/ file' was never a record of what was SENT
+          102 of 102 bodied captures
+  PASS  THE GAP IS WHITESPACE ONLY — NO numeric token differs between file and wire on any committed capture, so no observation is invalidated by it
+          0 capture(s) with a differing numeric token: []
+
+FAILURES: 0
