@@ -582,14 +582,14 @@
       "executor": "agent",
       "model": "opus",
       "target": "code",
-      "status": "in_progress",
+      "status": "done",
       "attempts": 0,
       "dependencies": [],
       "files_hint": [
         ".softhouse/reviews/t47-probe/"
       ],
       "description": "RAISED BY T158 as finding 3 and VERIFIED BY THE DRIVER AT THE FILE. .softhouse/reviews/t47-probe/t47_edit_1.py opens docs/adr/DEC-1-schedule-generator-adapter.md -- A RATIFIED DEC-n, which CLAUDE.md makes a hard user gate to amend -- and rewrites it IN PLACE with io.open(DOC,'w',encoding='utf-8').write(s), with NO protection of any kind. Driver measurement: `grep -nE '^\\s*(try:|finally:|except)|atexit|signal\\.'` over the file returns NOTHING. Zero try, zero finally, zero except, zero atexit, zero signal handler. An interruption mid-write leaves the ratified DEC-1 ADR TRUNCATED OR HALF-EDITED on disk. WHY IT WAS MISSED, AND THIS IS THE INSTRUCTIVE PART: T156's P-26 sweep classified this file as GUARDED because its guard-detection regex greps SOURCE TEXT for the word 'trap' -- and all three matches are the word appearing inside PROSE STRINGS THE SCRIPT WRITES INTO THE DEC-1 DOCUMENT ('One trap worth ...'). The file was scored safe BY THE TEXT IT WAS WRITING. T158 measured the blast radius: 4 of 19 'guarded' hits carry zero guards, so the true unguarded population is 115, not 111. FIX: (1) make this rewriter atomic -- write to a temp file in the same directory and os.replace() it, which is atomic on POSIX and needs no trap at all, and is strictly better than a trap here; (2) verify the target's sha before and after and REFUSE on unexpected content; (3) since the target is a RATIFIED DEC-n, make the script REFUSE ALTOGETHER unless explicitly authorised -- an agent amending a ratified DEC-n is a hard user gate, so a script that can do it silently is a gate bypass wearing a probe's clothes, and THAT is the most serious thing about this finding. DRIVE IT RED (P-22) on a SCRATCH COPY of the ADR -- never interrupt this against the real docs/adr/. Then re-audit the other 3 mis-scored files T158 names.",
-      "note": "dispatched local fire 20260821-054355 (2nd fire of day), worktree-isolated",
+      "note": "MERGED. Atomic os.replace + sha gates on target AND candidate + default-deny authorisation with NO override that reaches the real ADR. Red probe: pre-fix all four signals leave the scratch ADR at 0 of 335,644 bytes (O_TRUNC empties before a byte is written), post-fix byte-identical over 160 randomized trials, plus a timing-free 0444 proof. DRIVER-REPRODUCED THE BIGGER FINDING: t47_edit_4.py's anchors are STILL LIVE in the ratified DEC-1 -- driver ran it against a scratch copy of today's ADR, exit 0 'edit4: ok', sha 49dc8923 -> cabc2aeb. A loaded gun, not a latent one. Real ADR verified byte-identical before and after. Also: T158's materiality reason for prove-p24-postmerge.sh is wrong (it says no mutation line; there are five incl. an env-overridable rm -rf) -- verdict stands, evidence does not; it diagnosed a regex failure using a regex.",
       "branch": "softhouse/T167-adr-rewriter-atomic-and-refusing"
     },
     {
@@ -754,6 +754,37 @@
         ".softhouse/reviews/"
       ],
       "description": "Raised by T169 and marked [UNVERIFIED] rather than guessed, which is why it is worth running. T159 observed (B=10001 minor, n=3000) CLEANLY -- it is the cell behind G-8's headline MNT 10.01 residual. T169 asked the same cell on the same pinned image and it THREW java.lang.StackOverflowError. So whether the oracle throws depends on something outside the cell's inputs -- JVM stack depth, thread, warmup, or container state are the obvious candidates and NONE is established. THIS RE-SCOPES ANY ATTEMPT TO BOUND THE THROWING REGION BEFORE ORACLE TIME IS SPENT ON IT: a probe that maps the boundary by asking each cell ONCE is measuring noise, not a boundary. Establish what the throw actually depends on, with repeated trials per cell and the trial count reported. This BLOCKS the sensible design of T116 and of G-8 option (a), because a vector promoted from a cell that throws intermittently is not reproducible."
+    },
+    {
+      "id": "T178",
+      "title": "EIGHT more unguarded in-place rewriters — and t47_edit_4.py's anchors are LIVE in the ratified DEC-1 TODAY, while t47_edit_7.py targets the frozen contract.go",
+      "role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "status": "pending",
+      "dependencies": [
+        "T167"
+      ],
+      "files_hint": [
+        ".softhouse/reviews/t47-probe/"
+      ],
+      "description": "Raised by T167 as its P0 and REPRODUCED BY THE DRIVER. t47_edit_1.py, which T167 hardened, was one of NINE. DO t47_edit_4.py FIRST AND TREAT IT AS AN INCIDENT, NOT A CHORE: both its anchors still match the ratified DEC-1 today, so running it in the repo right now rewrites a ratified DEC-n in place, unauthorised, with no trap and no atomicity. The driver proved it on a scratch copy of the CURRENT ADR: exit 0, 'edit4: ok', sha256 49dc8923... -> cabc2aeb.... Amending a ratified DEC-n is a HARD USER GATE, so a script that can do it silently is a gate bypass wearing a probe's clothes. t47_edit_7.py targets the FROZEN contract.go and G-3 forbids even gofmt touching it. REUSE T167's shape rather than inventing a second one -- atomic mkstemp+fsync+os.replace with st_dev asserted, sha gates on target AND candidate, default-deny argv authorisation with no override that reaches a ratified artefact, and no bare `assert` (python3 -O strips them). DRIVE EACH RED (P-22) ON SCRATCH COPIES ONLY -- never against the real docs/adr/ or nexus/. Verify the real DEC-1 ADR is byte-identical to main at sha256 49dc8923... before AND after your work, and STOP AND REPORT if it ever is not."
+    },
+    {
+      "id": "T179",
+      "title": "Replace T156's regex guard-classifier with a parser-based check — it scored a file safe by the prose that file was writing, and its regex is engine-dependent",
+      "role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "status": "pending",
+      "dependencies": [
+        "T167"
+      ],
+      "files_hint": [
+        ".softhouse/reviews/",
+        ".softhouse/patterns.md"
+      ],
+      "description": "The root cause behind T167, and P-48 in its purest form. T156's sweep classified an unguarded in-place rewriter of a RATIFIED DEC-n as GUARDED because its detection regex greps SOURCE TEXT for the word 'trap' -- and every match was that word inside PROSE STRINGS THE SCRIPT WRITES INTO THE ADR. The file was scored safe by the text it was writing. T158 measured 4 of 19 'guarded' hits carrying zero guards, so the true unguarded population is 115 not 111 -- re-derive that number yourself rather than inheriting it. Detect with a PARSER (ast for Python, a real shell parser or a documented refusal for sh), not a regex: a guard must be an actual try/finally/atexit/signal/trap NODE, not a byte sequence. T167 surfaced a SECOND engine bug worth closing with it: the same pattern text returns 3 matches in Python re and 0 in POSIX ERE because [^#\\n] means different things in each -- so a sweep's answer depends on which engine ran it. DRIVE IT RED (P-22) on both failure shapes: a file guarded only by the word in prose (must be REFUSED as unguarded) and a genuinely guarded file (must PASS -- not over-broad, per T169's lint precedent)."
     }
   ],
   "cross_corroboration": {
