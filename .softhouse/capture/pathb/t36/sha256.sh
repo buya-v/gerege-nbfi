@@ -18,8 +18,20 @@
 #
 #  1. ABSOLUTE PATHS ONLY, IN ROOT-OWNED SYSTEM DIRECTORIES.  Never a bare word, so $PATH is not
 #     consulted — not for the digest tools, and not for the `awk`/`mktemp`/`rm` this file uses to
-#     drive them.  /usr/local/bin and /opt/homebrew/bin are deliberately NOT candidates: they are
-#     user-writable, which is the same capability a $PATH attacker already has.
+#     drive them.  /usr/local/bin and /opt/homebrew/bin are deliberately NOT candidates.
+#     T152 CORRECTION (T135 §7.3, re-measured): the stated REASON was wrong on this host.  As
+#     `buv` (uid 501), MEASURED 2026-08-21 with `ls -ld` and a `touch` probe:
+#       /usr/local/bin     drwxr-xr-x root wheel   touch probe FAILS — not writable by this user
+#       /opt/homebrew/bin  ABSENT
+#       /usr/bin /bin /sbin /usr/sbin  all drwxr-xr-x root wheel, none writable by this user
+#     So "they are user-writable" is FALSE HERE.  The EXCLUSION is still right, and for a reason
+#     that does not depend on this host: /usr/local/bin is user-writable on a great many macOS
+#     installs and /opt/homebrew/bin is the default Homebrew prefix on Apple silicon, so a
+#     candidate table that includes them is only as strong as the machine it happens to run on.
+#     Excluding them costs nothing because every tool this file actually selects
+#     (/usr/bin/shasum, /sbin/sha256sum, /usr/bin/openssl, /usr/bin/python3, /usr/bin/awk,
+#     /usr/bin/env, /usr/bin/mktemp, /bin/rm) is root-owned -rwxr-xr-x and unwritable by this user
+#     — also measured.  Do not "fix" this by adding them back.
 #  2. A KNOWN-ANSWER TEST PER TOOL, EVERY RUN.  Each candidate must reproduce sha256("") and
 #     sha256("abc") before it is allowed to answer anything.  A tool that constant-returns the
 #     pinned digest dies here even if it somehow occupies /usr/bin.
