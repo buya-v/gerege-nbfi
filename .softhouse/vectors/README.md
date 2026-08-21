@@ -604,7 +604,10 @@ and is still graded.** A `DISBURSEMENT` row's `interest_minor` and
 `installment_number` are `0` normatively — *"its InterestMinor is 0, and its
 InstallmentNumber is 0 because it is not payable"*, `contract.go:1509-1510` — so
 the replay's `0` there is the **contract's own value**, not an invention. This is
-not a convenience: all 36 promoted parity vectors withdraw exactly those two cells,
+not a convenience: all **42** promoted parity vectors withdraw exactly those two
+cells — re-verified mechanically by the driver on 2026-08-21 over the whole store
+(42 parity / 4 contract-refusal / 1 self-test = 47 files; 42 `DISBURSEMENT` periods,
+**0 exceptions**), not asserted from the earlier 36-vector corpus —
 and treating them as placeholders would have turned `splits_sum_to_whole`'s
 interest-column total into a no-op across the entire corpus. The same argument was
 already ratified for `installment_number` by finding **T9-F1c**.
