@@ -2653,3 +2653,37 @@ suspect** — and when a tool never consults the record at all, it is not disagr
 > - **Negative controls are not optional even for vocabulary.** `T248`'s own reassurance word-list, bare
 >   `zero` / `above` / `empty`, matched a **section header** and would have promoted a file to TIER 1 **on
 >   non-evidence**. The instrument that catches false reassurance can itself be falsely reassured.
+
+---
+
+## P-78 — A revision whose CONTENT is line citations into a MOVING file must be PREPARED AND LANDED IN ONE FIRE
+
+**Found by:** `T251` (C-1, HIGH), cloud catch-up fire 2026-08-22T12:00Z, re-derived by the driver at `66b7453`.
+
+`T247` prepared **DEC-2 revision 7** to fix `G-14` — a gate raised precisely because DEC-2's banner carried
+**stale evidence**. `T247` re-measured all 46 line assertions, shipped a `verify-line-numbers.py`, and
+correctly landed nothing. Then `main` moved **four merges** under it, and `T248`'s `c13e9d8` added **+30
+lines above `run_guards`**. By the commit where revision 7 would have landed, its freshly *"RE-MEASURED"*
+citations were **already stale**: `run_guards` drafted at `1474-1500`, actually `1504-1530`.
+
+**The fix for a stale-evidence gate had itself gone stale before it could land.** That is `G-14` re-enacted
+inside the repair of `G-14`.
+
+**The rule.** *Prepare-then-review-then-land* is sound for a **normative** change, whose truth does not
+depend on where any line sits. It is **unsound for an EVIDENTIAL one whose propositions ARE coordinates into
+a file other tasks are editing.** For those:
+
+- **Re-measure LAST**, immediately before the commit that lands, never at drafting time.
+- **Re-run the line verifier on the commit you are about to land** and require **exit 0** — not on your fork
+  point, and not on the commit you drafted against.
+- **Prepare and land in the SAME fire.** Handing a prepared revision to a later fire hands it a *different
+  file*.
+- Where the citation can be a **NAME instead of an ordinal or a line number, use the name.** `T251`'s C-2 and
+  C-4 are both ordinal defects: `guard_ledger_invariants` is the **seventh invoked** and the **sixth
+  tallied**, and rev 7 replaced one silently-wrong ordinal with another. **An ordinal used as an identifier
+  goes wrong silently; a name goes wrong loudly.**
+
+**Corollary, and it is the expensive half.** A **two-fire program** — one host that can run the BAR and one
+that cannot — cannot split *prepare* from *land* across the two for this class of change. The cloud fire may
+**review** such a revision (a review is a claim about a commit, and it stamps that commit); it may not
+**prepare** one for a local fire to land.
