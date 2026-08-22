@@ -2178,9 +2178,10 @@
     "T231",
     "T232"
    ],
-   "status": "pending",
-   "attempts": 0,
-   "note": "Raised by the driver from T223's named tail. || EXTENDED by the driver, local fire 20260822-140002: second concept (the falsified n/2 ceiling) added, dependencies now include T231 and T232 because it must run AFTER the G-8 rebuild and WITH P-72's calibration rule in hand. SERIALISED with T231 (gates.md) and T232 (patterns.md) -- both merged this fire, so it is unblocked. || THIRD concept added by the driver, fire 20260822-060013: T219 superseded MNT 10.01 -> 44.99/29.99/30.00 at the SAME term n=3000. Sweep it, but the correction shape is 'name the axis', not 'change the digits'."
+   "status": "in_progress",
+   "attempts": 1,
+   "note": "Raised by the driver from T223's named tail. || EXTENDED by the driver, local fire 20260822-140002: second concept (the falsified n/2 ceiling) added, dependencies now include T231 and T232 because it must run AFTER the G-8 rebuild and WITH P-72's calibration rule in hand. SERIALISED with T231 (gates.md) and T232 (patterns.md) -- both merged this fire, so it is unblocked. || THIRD concept added by the driver, fire 20260822-060013: T219 superseded MNT 10.01 -> 44.99/29.99/30.00 at the SAME term n=3000. Sweep it, but the correction shape is 'name the axis', not 'change the digits'. || DISPATCHED local fire 20260822-060013, wave 2, at main d039d29. FORK POINT NOT ASSERTED -- the worker was told to MEASURE it and to rebase onto main before forming a finding, per the P-71 SECOND CORRECTION (both stated rules now falsified). BAR given as the CURRENT figures: loanschedule 46/7884 plus ledger 4 parity / 2 oracle-refusal / 21 money cells, store 8968c559 (moved today when A2-15 landed).",
+   "branch": "softhouse/T228-dead-concept-sweep"
   },
   {
    "id": "T229",
@@ -2360,9 +2361,10 @@
    "dependencies": [
     "A2-15"
    ],
-   "status": "pending",
-   "attempts": 0,
-   "note": "Registered by the driver, local fire 20260822-060013, BEFORE dispatching A2-15 (plan-gate rule 1: every coder/test_writer task has a paired reviewer depending on it). A2-15 is the first task in the program to produce a contract-shaped vector for tierA-gl-accounting; G-11 was ratified last fire, so nothing gates it any more except this review."
+   "status": "in_progress",
+   "attempts": 1,
+   "note": "Registered by the driver, local fire 20260822-060013, BEFORE dispatching A2-15 (plan-gate rule 1: every coder/test_writer task has a paired reviewer depending on it). A2-15 is the first task in the program to produce a contract-shaped vector for tierA-gl-accounting; G-11 was ratified last fire, so nothing gates it any more except this review. || DISPATCHED local fire 20260822-060013, wave 2, at main d039d29. FORK POINT NOT ASSERTED -- the worker was told to MEASURE it and to rebase onto main before forming a finding, per the P-71 SECOND CORRECTION (both stated rules now falsified). BAR given as the CURRENT figures: loanschedule 46/7884 plus ledger 4 parity / 2 oracle-refusal / 21 money cells, store 8968c559 (moved today when A2-15 landed).",
+   "branch": "softhouse/A2-34-review-a2-15"
   },
   {
    "id": "T236",
