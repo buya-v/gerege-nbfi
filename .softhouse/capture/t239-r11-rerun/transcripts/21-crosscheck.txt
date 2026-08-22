@@ -1,0 +1,27 @@
+PWD=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a63a7abf43fa9b0dc  HEAD=f747a46aa5bc85f02fe24bba78fe195548d3e82a
+
+=== (1) POSITIVE CONTROL on the POPULATION — substring 'main', engine -E, tree T115 ===
+   hit lines: 43
+   ^ non-zero here means the route WORKS and the zeros below are real findings, not a dead rig.
+   files touched by that control: 36
+
+=== (2) THE FOUR LITERAL ALTERNATIVES, ONE AT A TIME, engine -E ===
+   alternative           @T115    @HEAD
+   merge-base                0        0
+   main:                     0        2
+   origin/main               0        0
+   rev-parse main            0        1
+
+   and the 5th term:
+   \bmain\b                 38       64   (engine -P, sound)
+
+   WHICH FILES supply the @HEAD-only literal hits (the ones T234 saw and r11 could not):
+     -- merge-base @HEAD:
+     -- origin/main @HEAD:
+
+=== (3) INDEPENDENT ENGINE — BSD /usr/bin/grep -E over git show of every population file ===
+    (BSD grep honours \b per transcripts/00-engines.txt; it cannot take a commit arg, so the
+     tree content is streamed to it file by file.)
+    BSD grep -E '\bmain\b' : 38 hit lines across 33 files
+    git grep -P  '\bmain\b' : 38 hit lines   <-- must agree
+    AGREE — two independent sound engines, same count.

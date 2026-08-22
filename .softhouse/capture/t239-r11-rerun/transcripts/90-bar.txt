@@ -1,0 +1,92 @@
+=== provenance ===
+branch          : softhouse/T239-r11-hygiene-rerun
+HEAD            : fad76630eee565bd4ef21980ba82b2783e7ca6f3
+merge-base      : 477dc2da0f9edf3922e7d29e689bc6473289befc
+origin/main     : 8275f8b4ca49ea62b46c4d3d34e98b145f817414
+vector digest   : 8968c559fa613e8642ab030bd0a029c17d147054
+  expected      : 8968c559fa613e8642ab030bd0a029c17d147054  (UNCHANGED BY ME)
+
+=== go build / vet / test (module root nexus/) ===
+go build   rc=0
+go vet     rc=0
+ok  	github.com/gerege/nexus/internal/apps/ledger	0.414s
+ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	2.974s
+ok  	github.com/gerege/nexus/internal/apps/loanschedule	8.598s
+ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	95.088s
+?   	github.com/gerege/nexus/internal/apps/loanschedule/conformance/cmd/conformance	[no test files]
+?   	github.com/gerege/nexus/internal/apps/loanschedule/contract	[no test files]
+go test    rc=0
+
+=== gofmt -l (must be exactly contract.go; NEVER gofmt -w it, G-3) ===
+internal/apps/loanschedule/contract/contract.go
+--- end gofmt list ---
+
+=== conformance harness (bash, never sh) ===
+harness exit code: 0
+
+--- PROBE LINE: test PRESENCE first (four exit-2 paths precede it) ---
+7:conformance: CENSUS float-shaped tokens PRESENT 304 (rates, charge percentages, tie probes — see the module docstring), ALTERED by a binary-double round trip 0
+85:conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+94:    oracle probe    UP
+
+--- VERDICT / counts ---
+17:conformance:   census figure READ: inspected 398 >= 398 tracked by git (floor DERIVED, not pinned)
+21:conformance:   census figure READ: inspected 63 >= 63 tracked by git (floor DERIVED, not pinned)
+22:ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)
+23:ledger-invariants: CENSUS ledger-invariants — inspected 54 Go files / 6 packages / 620 funcs (1 hold-named) / 926 assignment or inc-dec statements / 484 write targets / 5494 string literals in 4816 concatenation groups / 6172 calls under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a63a7abf43fa9b0dc/nexus (recursive, whole Go tree)
+24:ledger-invariants: CENSUS ledger-invariants SQL surface — 133 SQL-shaped literals, of which 6 carry a DML verb (UPPER BOUND: English prose containing "update" satisfies it) and 0 name an actual table; 0 exec-family calls (0 mutating). Findings: 0
+25:ledger-invariants: CENSUS   covered: internal/apps/ledger
+26:ledger-invariants: CENSUS   covered: internal/apps/ledger/conformance
+27:ledger-invariants: CENSUS   covered: internal/apps/loanschedule
+28:ledger-invariants: CENSUS   covered: internal/apps/loanschedule/conformance
+29:ledger-invariants: CENSUS   covered: internal/apps/loanschedule/conformance/cmd/conformance
+30:ledger-invariants: CENSUS   covered: internal/apps/loanschedule/contract
+31:ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/financialactivity_test.go:62:13  %d is creatable but NOT settable on update
+32:ledger-invariants: CENSUS   DML-classified literal: internal/apps/ledger/financialactivity_test.go:67:13  %d should be settable on update
+33:ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/exemption.go:389:7  invariant_exemptions switches off %q and THIS VECTOR CITES NO CAPTURE AT ALL (provenance.capture_ref is empty) - %s. A vector with no cap...
+34:ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/exemption.go:523:8  invariant_exemptions switches off %q, BUT THAT INVARIANT HOLDS OUTRIGHT ON THE SCHEDULE THIS VECTOR ITSELF RECORDED, with no assertion wi...
+35:ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/exemption.go:541:8  invariant_exemptions switches off %q, but that invariant reports %q on the schedule this vector recorded — with NOTHING withdrawn, so t...
+36:ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/vector.go:1130:3  DUPLICATE case_id IN THE VECTOR STORE — %s. A case_id is a vector's IDENTITY, and the two numbers this program quotes as its coverage e...
+37:ledger-invariants: CENSUS   hold-named func: internal/apps/ledger/slots_test.go:187:1  TestPlaceholderDisjointnessHolds
+38:ledger-invariants: NIL-COVERAGE — the SQL surface inspected 5494 string literals and found ZERO SQL DML statements of any kind under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a63a7abf43fa9b0dc/nexus. This tree contains no SQL: the I-4 SQL classes (I4-DML, I3-SQL-BALANCE) are proven by this program's --selftest and NOT by this tree. Do not read this run as evidence that the SQL detector works on real ledger SQL; there is none yet.
+39:ledger-invariants: NIL-COVERAGE — zero mutating driver calls (Exec/ExecContext/SendBatch/CopyFrom/Prepare) exist under this root, so class OPAQUE-SQL inspected an empty population. The Go module declares no database driver at all.
+40:ledger-invariants:   census figure READ: inspected 54 >= 54 tracked by git (floor DERIVED, not pinned)
+41:ledger-invariants: CANNOT-CATCH — the honest limits of this guard, printed on every run, pass or fail:
+42:ledger-invariants:   1. DYNAMIC SQL. A statement assembled at run time (fmt.Sprintf, strings.Builder, a query
+43:ledger-invariants:      builder's own AST) is not readable as text. The guard converts that blind spot into a
+44:ledger-invariants:      REFUSAL for the mutating driver family (class OPAQUE-SQL) — but only where it recognises
+45:ledger-invariants:      the call. A mutating call through an interface method it does not name, or through
+46:ledger-invariants:      reflection, is invisible.
+47:ledger-invariants:   2. INDIRECTION THROUGH A NAME THAT IS NOT A BALANCE. A field called Amount, Total, Net or
+48:ledger-invariants:      Position that IS a stored balance is not detected: the surface is the NAME, because
+49:ledger-invariants:      without a type checker there is nothing else to key on. Renaming a balance defeats it.
+50:ledger-invariants:   3. STORED PROCEDURES, TRIGGERS AND MIGRATIONS. This guard walks Go only. An UPDATE inside a
+51:ledger-invariants:      Liquibase changelog, a Postgres trigger or a hand-run psql script is out of its reach,
+52:ledger-invariants:      and the schema is Fineract's, which HAS such objects.
+53:ledger-invariants:   4. I-5. "A correction that mutates a leg instead of adding a reversing pair" is only
+54:ledger-invariants:      decidable once a leg type and a correction path exist in the Go tree. Neither does. The
+55:ledger-invariants:      mechanical half (a write to a committed row, a write to a balance) IS covered; the
+56:ledger-invariants:      semantic half is not, and is not claimed.
+57:ledger-invariants:   5. SEMANTICS OF DERIVATION. A function that CACHES a balance in a map keyed by account, then
+58:ledger-invariants:      returns the cache, is caught only if the cache is named as a balance (class I3-PKG-STATE
+59:ledger-invariants:      covers the package-level case). A struct-field cache inside a service object with a
+60:ledger-invariants:      non-balance name is not.
+61:ledger-invariants:   6. NON-GO CALLERS. Anything that reaches the database without going through this module.
+62:ledger-invariants:   7. TWO MEASURED OVER-MATCHES, NAMED SO NOBODY REDISCOVERS THEM AS BUGS. (i) The DML-verb
+63:ledger-invariants:      test fires on English prose: on nexus/ at the commit this guard was written, all three
+64:ledger-invariants:      DML-classified literals are message text, not SQL — which is why every one is PRINTED
+65:ledger-invariants:      with its position and why the NIL-COVERAGE notice keys on the narrower "names a table"
+66:ledger-invariants:      count. (ii) The hold-name matcher fires on "...Holds" meaning "the property holds":
+67:ledger-invariants:      nexus/internal/apps/ledger/slots_test.go:187 TestPlaceholderDisjointnessHolds is counted
+68:ledger-invariants:      as a hold-named function. Neither over-match can produce a FINDING on its own — a finding
+69:ledger-invariants:      additionally requires a protected table, a balance column, or a balance write — so both
+70:ledger-invariants:      are noise in a count, never a false rejection.
+71:ledger-invariants:   8. TESTS ARE INSPECTED, NOT EXEMPTED. A _test.go file that assigns a balance field as a
+72:ledger-invariants:      FIXTURE is reported as a violation. That is fail-CLOSED by choice; if a legitimate
+73:ledger-invariants:      fixture ever trips it, the fix is a constructor, not an exemption.
+74:ledger-invariants: PASS — I-3 (balances are derived) and I-4 (append-only) hold over the
+75:ledger-invariants:   Go tree AS FAR AS A SOURCE-LEVEL GUARD CAN SEE. Read the CANNOT-CATCH
+76:ledger-invariants:   block and the NIL-COVERAGE lines before quoting this as coverage.
+77:conformance: ledger-invariants LIMITS (CANNOT-CATCH, condensed; the full 33-line block is
+99:P-00                         parity           path_a_e... PASS             47        2  
+100:P-01                         parity           path_a_e... PASS            131        2  

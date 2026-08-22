@@ -1,0 +1,37 @@
+PWD=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a63a7abf43fa9b0dc  HEAD=f747a46aa5bc85f02fe24bba78fe195548d3e82a
+
+planted blob: 0acb5786c64b9f8ed5379e30867b7c4c8876e6d6
+planted content:
+    #!/bin/sh
+    # planted by T239 to drive r11 s2 RED
+    BASE=$(git rev-list -1 main)
+    git archive "$BASE" > /tmp/x.tar
+
+scratch commit (unreachable, not on any branch): 8d3a9c34ad4da7ff4c1b0ea84c87cb96892daf61
+  parent: bd59187cf83c7c7161db23668e91d45bd46be2a8
+  planted file present in scratch tree? -> YES
+
+==================================================================
+RED DRIVE — the ORIGINAL instrument (git grep -E) against the plant
+==================================================================
+exit code: 1
+hit lines: 0
+    ^^^ the planted violation is NOT here. The guard passes a tree that contains
+        a baseline computed from main. THE GUARD IS RED-BLIND.
+
+==================================================================
+GREEN CONTROL — the SOUND instrument (git grep -P) against the same tree
+==================================================================
+exit code: 0
+hit lines: 39
+    the planted line, as the sound instrument reports it:
+    8d3a9c34ad4da7ff4c1b0ea84c87cb96892daf61:.softhouse/capture/t91/t239-planted-baseline.sh:3:BASE=$(git rev-list -1 main)
+
+==================================================================
+SUMMARY OF THE RED DRIVE
+==================================================================
+    original -E, total hit lines       0
+    original -E, PLANT detected        0
+    sound -P, total hit lines          39
+    sound -P, PLANT detected           1
+    RESULT: RED DRIVE SUCCEEDED — guard blind, sound instrument sees it.

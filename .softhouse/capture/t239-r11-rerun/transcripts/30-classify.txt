@@ -1,0 +1,65 @@
+hits to classify (the delta the original NEVER SAW): 38
+source: .softhouse/capture/t239-r11-rerun/evidence/delta-unseen.txt
+
+==============================================================================
+CLASSIFICATION OF ALL 38 PREVIOUSLY-UNSEEN HITS
+==============================================================================
+  COMPLIANT    1
+  PROSE        7
+  JVM-LOG     29
+  OTHER        1
+  TOTAL       38   <- must equal the delta above (P-40: count what you skipped)
+
+--- COMPLIANT (1) ---
+    .softhouse/capture/t91/t115-rerun-attacks.sh:22
+        "1a71ee4ca62b73e36   # main's pre-hardening charg"
+
+--- OTHER (1) ---
+    .softhouse/capture/t91/out/T115-MF2-RED-GREEN.txt:46
+        "its path REPLACED by main's pre-hardening bytes"
+
+--- PROSE (7) ---
+    .softhouse/capture/charges/bin/preconditions.sh:87
+        "(the rig replaced by main's"
+    .softhouse/capture/t91/t115-drive-mf1.sh:12
+        'line that can follow `main` will follow it exact'
+    .softhouse/capture/t91/t115-drive-mf2.sh:150
+        "its path REPLACED by main's pre-hardening bytes"
+    .softhouse/capture/t91/t115-drive-mf2.sh:17
+        "N9 (rig replaced by main's pre-hardening bytes"
+    .softhouse/capture/t91/t115-drive-mf2.sh:30
+        'a ref computed from `main` (P-24).'
+    .softhouse/capture/t91/t115-rerun-attacks.sh:2
+        "th interpreters, from main's"
+    .softhouse/capture/t91/t115-rerun-attacks.sh:34
+        "# The PRE tree gets main's actual pre-hardenin"
+
+--- JVM-LOG (29) ---
+    28 captured JVM transcripts, all the same Spring Boot startup line,
+    thread name 'main'. Sample context: 'ault] --- [           main] o.a.f.o.monetary.dom'
+      .softhouse/capture/t91/out/T115-MF3-MF4-MEASURED.txt  x2
+      .softhouse/capture/t91/out/happy/T44-control-reproduced-POSTFIX.txt  x1
+      .softhouse/capture/t91/out/happy/default-nocanary-POSTFIX.txt  x1
+      .softhouse/capture/t91/out/happy/default-nocanary-PREFIX.txt  x1
+      ... 28 files total, full list in evidence/classified.json
+
+==============================================================================
+THE CHECK'S REAL PREDICATE, evaluated WITHOUT the regex
+==============================================================================
+r11 §2 asks: 'every baseline in T115's scripts must be a LITERAL sha'.
+So the decisive question is not 'does the word main appear' but 'does any script
+RESOLVE a git revision from main'. Evaluated over every .sh in the population:
+
+  .sh files in population: 10
+  *** RESOLVES A MOVING REF: .softhouse/capture/t91/prove-guards.sh:45  (cd "$ROOT" && git archive HEAD) > "$S/export.tar" 2>"$S/archive.err" || {
+  *** RESOLVES A MOVING REF: .softhouse/capture/t91/prove-guards.sh:58  echo "export: $(cd "$ROOT" && git rev-parse HEAD), $(find "$E" -type f | wc -l | tr -d ' ') files (asserted non-empty)"
+  *** RESOLVES A MOVING REF: .softhouse/capture/t91/t115-drive-mf2.sh:40  ( cd "$ROOT" && git archive HEAD        ) | tar -x -C "$S/post" || abort "git archive HEAD failed"
+  *** RESOLVES A MOVING REF: .softhouse/capture/t91/t115-drive-mf2.sh:54  echo "post export: $(cd "$ROOT" && git rev-parse HEAD) (MF-2 present, asserted)"
+  *** RESOLVES A MOVING REF: .softhouse/capture/t91/t115-rerun-attacks.sh:30  ( cd "$ROOT" && git archive HEAD ) | tar -x -C "$S/pre"  || abort "git archive failed"
+  *** RESOLVES A MOVING REF: .softhouse/capture/t91/t115-rerun-attacks.sh:31  ( cd "$ROOT" && git archive HEAD ) | tar -x -C "$S/post" || abort "git archive failed"
+  *** RESOLVES A MOVING REF: .softhouse/capture/t91/t115-rerun-attacks.sh:47  echo "post shim: HEAD $(cd "$ROOT" && git rev-parse --short HEAD)          sha256 $(shasum -a 256 < "$S/post/$SHIMREL" |
+  git revision-resolving invocations found : 15
+  of those, resolving main/origin/main/HEAD: 7
+  breakdown by subcommand: {'archive': 7, 'rev-parse': 3, 'show': 1, 'cat-file': 4}
+
+VERDICT ON THE CHECK ITSELF: VIOLATIONS PRESENT

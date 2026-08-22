@@ -1,0 +1,243 @@
+PWD=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a63a7abf43fa9b0dc
+HEAD=f747a46aa5bc85f02fe24bba78fe195548d3e82a
+T115=bd59187cf83c7c7161db23668e91d45bd46be2a8  type=commit
+T115 is an ancestor of HEAD? -> YES
+T115 subject: T115: record the second scratch merge — main moved mid-run (9cf1f90 -> e35ea7b), both merges clean
+T115 date   : 2026-08-21T09:08:08+08:00
+
+==================================================================
+POPULATION A — the tree r11 ACTUALLY searched: T115, 3 pathspecs
+==================================================================
+files          : 200
+  under .softhouse/capture/t91/ : 198
+  .softhouse/capture/charges/bin/preconditions.sh present? : YES
+  .softhouse/capture/audit-t44/charges/bin/preconditions-COPY.sh present? : YES
+TOTAL LINES in population A: 8170
+
+--- the file list (population A) ---
+     1	.softhouse/capture/audit-t44/charges/bin/preconditions-COPY.sh
+     2	.softhouse/capture/charges/bin/preconditions.sh
+     3	.softhouse/capture/t91/PREDICTION.md
+     4	.softhouse/capture/t91/out/CONFORMANCE-T115.txt
+     5	.softhouse/capture/t91/out/CONFORMANCE.txt
+     6	.softhouse/capture/t91/out/GUARDS-RED-META-nongit.txt
+     7	.softhouse/capture/t91/out/GUARDS-RED.txt
+     8	.softhouse/capture/t91/out/T115-ATTACK-RERUN.txt
+     9	.softhouse/capture/t91/out/T115-MF1-RED-GREEN.txt
+    10	.softhouse/capture/t91/out/T115-MF2-RED-GREEN.txt
+    11	.softhouse/capture/t91/out/T115-MF3-MF4-MEASURED.txt
+    12	.softhouse/capture/t91/out/happy/T44-control-reproduced-POSTFIX.txt
+    13	.softhouse/capture/t91/out/happy/default-nocanary-POSTFIX.txt
+    14	.softhouse/capture/t91/out/happy/default-nocanary-PREFIX.txt
+    15	.softhouse/capture/t91/out/happy/gerege-POSTFIX.txt
+    16	.softhouse/capture/t91/out/happy/gerege-PREFIX.txt
+    17	.softhouse/capture/t91/out/postfix-copy-bash/A2a-mutated-canary-gerege.txt
+    18	.softhouse/capture/t91/out/postfix-copy-bash/A2b-mutated-canary-default.txt
+    19	.softhouse/capture/t91/out/postfix-copy-bash/A2c-crafted-canary-and-expectation-gerege.txt
+    20	.softhouse/capture/t91/out/postfix-copy-bash/A3a-swapped-canary-gerege.txt
+    21	.softhouse/capture/t91/out/postfix-copy-bash/A3b-missing-canary.txt
+    22	.softhouse/capture/t91/out/postfix-copy-bash/A3c-no-canary.txt
+    23	.softhouse/capture/t91/out/postfix-copy-bash/A4a-expect-override-default.txt
+    24	.softhouse/capture/t91/out/postfix-copy-bash/A4b-expect-override-gerege.txt
+    25	.softhouse/capture/t91/out/postfix-copy-bash/A4c-decoy-variable.txt
+    26	.softhouse/capture/t91/out/postfix-copy-bash/A5-helpful-correct-override.txt
+    27	.softhouse/capture/t91/out/postfix-copy-bash/A6-canary-is-a-directory.txt
+    28	.softhouse/capture/t91/out/postfix-copy-bash/A7-symlinked-canary.txt
+    29	.softhouse/capture/t91/out/postfix-copy-bash/A8-foreign-cwd.txt
+    30	.softhouse/capture/t91/out/postfix-copy-bash/req-crafted-04.json
+    31	.softhouse/capture/t91/out/postfix-copy-bash/req-mutated-55.json
+    32	.softhouse/capture/t91/out/postfix-copy-sh/A2a-mutated-canary-gerege.txt
+    33	.softhouse/capture/t91/out/postfix-copy-sh/A2b-mutated-canary-default.txt
+    34	.softhouse/capture/t91/out/postfix-copy-sh/A2c-crafted-canary-and-expectation-gerege.txt
+    35	.softhouse/capture/t91/out/postfix-copy-sh/A3a-swapped-canary-gerege.txt
+    36	.softhouse/capture/t91/out/postfix-copy-sh/A3b-missing-canary.txt
+    37	.softhouse/capture/t91/out/postfix-copy-sh/A3c-no-canary.txt
+    38	.softhouse/capture/t91/out/postfix-copy-sh/A4a-expect-override-default.txt
+    39	.softhouse/capture/t91/out/postfix-copy-sh/A4b-expect-override-gerege.txt
+    40	.softhouse/capture/t91/out/postfix-copy-sh/A4c-decoy-variable.txt
+    41	.softhouse/capture/t91/out/postfix-copy-sh/A5-helpful-correct-override.txt
+    42	.softhouse/capture/t91/out/postfix-copy-sh/A6-canary-is-a-directory.txt
+    43	.softhouse/capture/t91/out/postfix-copy-sh/A7-symlinked-canary.txt
+    44	.softhouse/capture/t91/out/postfix-copy-sh/A8-foreign-cwd.txt
+    45	.softhouse/capture/t91/out/postfix-copy-sh/req-crafted-04.json
+    46	.softhouse/capture/t91/out/postfix-copy-sh/req-mutated-55.json
+    47	.softhouse/capture/t91/out/postfix-livetwin-bash/A2a-mutated-canary-gerege.txt
+    48	.softhouse/capture/t91/out/postfix-livetwin-bash/A2b-mutated-canary-default.txt
+    49	.softhouse/capture/t91/out/postfix-livetwin-bash/A2c-crafted-canary-and-expectation-gerege.txt
+    50	.softhouse/capture/t91/out/postfix-livetwin-bash/A3a-swapped-canary-gerege.txt
+    51	.softhouse/capture/t91/out/postfix-livetwin-bash/A3b-missing-canary.txt
+    52	.softhouse/capture/t91/out/postfix-livetwin-bash/A3c-no-canary.txt
+    53	.softhouse/capture/t91/out/postfix-livetwin-bash/A4a-expect-override-default.txt
+    54	.softhouse/capture/t91/out/postfix-livetwin-bash/A4b-expect-override-gerege.txt
+    55	.softhouse/capture/t91/out/postfix-livetwin-bash/A4c-decoy-variable.txt
+    56	.softhouse/capture/t91/out/postfix-livetwin-bash/A5-helpful-correct-override.txt
+    57	.softhouse/capture/t91/out/postfix-livetwin-bash/A6-canary-is-a-directory.txt
+    58	.softhouse/capture/t91/out/postfix-livetwin-bash/A7-symlinked-canary.txt
+    59	.softhouse/capture/t91/out/postfix-livetwin-bash/A8-foreign-cwd.txt
+    60	.softhouse/capture/t91/out/postfix-livetwin-bash/req-crafted-04.json
+    61	.softhouse/capture/t91/out/postfix-livetwin-bash/req-mutated-55.json
+    62	.softhouse/capture/t91/out/postfix-livetwin-sh/A2a-mutated-canary-gerege.txt
+    63	.softhouse/capture/t91/out/postfix-livetwin-sh/A2b-mutated-canary-default.txt
+    64	.softhouse/capture/t91/out/postfix-livetwin-sh/A2c-crafted-canary-and-expectation-gerege.txt
+    65	.softhouse/capture/t91/out/postfix-livetwin-sh/A3a-swapped-canary-gerege.txt
+    66	.softhouse/capture/t91/out/postfix-livetwin-sh/A3b-missing-canary.txt
+    67	.softhouse/capture/t91/out/postfix-livetwin-sh/A3c-no-canary.txt
+    68	.softhouse/capture/t91/out/postfix-livetwin-sh/A4a-expect-override-default.txt
+    69	.softhouse/capture/t91/out/postfix-livetwin-sh/A4b-expect-override-gerege.txt
+    70	.softhouse/capture/t91/out/postfix-livetwin-sh/A4c-decoy-variable.txt
+    71	.softhouse/capture/t91/out/postfix-livetwin-sh/A5-helpful-correct-override.txt
+    72	.softhouse/capture/t91/out/postfix-livetwin-sh/A6-canary-is-a-directory.txt
+    73	.softhouse/capture/t91/out/postfix-livetwin-sh/A7-symlinked-canary.txt
+    74	.softhouse/capture/t91/out/postfix-livetwin-sh/A8-foreign-cwd.txt
+    75	.softhouse/capture/t91/out/postfix-livetwin-sh/req-crafted-04.json
+    76	.softhouse/capture/t91/out/postfix-livetwin-sh/req-mutated-55.json
+    77	.softhouse/capture/t91/out/prefix-copy-bash/A2a-mutated-canary-gerege.txt
+    78	.softhouse/capture/t91/out/prefix-copy-bash/A2b-mutated-canary-default.txt
+    79	.softhouse/capture/t91/out/prefix-copy-bash/A2c-crafted-canary-and-expectation-gerege.txt
+    80	.softhouse/capture/t91/out/prefix-copy-bash/A3a-swapped-canary-gerege.txt
+    81	.softhouse/capture/t91/out/prefix-copy-bash/A3b-missing-canary.txt
+    82	.softhouse/capture/t91/out/prefix-copy-bash/A3c-no-canary.txt
+    83	.softhouse/capture/t91/out/prefix-copy-bash/A4a-expect-override-default.txt
+    84	.softhouse/capture/t91/out/prefix-copy-bash/A4b-expect-override-gerege.txt
+    85	.softhouse/capture/t91/out/prefix-copy-bash/A4c-decoy-variable.txt
+    86	.softhouse/capture/t91/out/prefix-copy-bash/A5-helpful-correct-override.txt
+    87	.softhouse/capture/t91/out/prefix-copy-bash/A6-canary-is-a-directory.txt
+    88	.softhouse/capture/t91/out/prefix-copy-bash/A7-symlinked-canary.txt
+    89	.softhouse/capture/t91/out/prefix-copy-bash/A8-foreign-cwd.txt
+    90	.softhouse/capture/t91/out/prefix-copy-bash/req-crafted-04.json
+    91	.softhouse/capture/t91/out/prefix-copy-bash/req-mutated-55.json
+    92	.softhouse/capture/t91/out/prefix-copy-sh/A2a-mutated-canary-gerege.txt
+    93	.softhouse/capture/t91/out/prefix-copy-sh/A2b-mutated-canary-default.txt
+    94	.softhouse/capture/t91/out/prefix-copy-sh/A2c-crafted-canary-and-expectation-gerege.txt
+    95	.softhouse/capture/t91/out/prefix-copy-sh/A3a-swapped-canary-gerege.txt
+    96	.softhouse/capture/t91/out/prefix-copy-sh/A3b-missing-canary.txt
+    97	.softhouse/capture/t91/out/prefix-copy-sh/A3c-no-canary.txt
+    98	.softhouse/capture/t91/out/prefix-copy-sh/A4a-expect-override-default.txt
+    99	.softhouse/capture/t91/out/prefix-copy-sh/A4b-expect-override-gerege.txt
+   100	.softhouse/capture/t91/out/prefix-copy-sh/A4c-decoy-variable.txt
+   101	.softhouse/capture/t91/out/prefix-copy-sh/A5-helpful-correct-override.txt
+   102	.softhouse/capture/t91/out/prefix-copy-sh/A6-canary-is-a-directory.txt
+   103	.softhouse/capture/t91/out/prefix-copy-sh/A7-symlinked-canary.txt
+   104	.softhouse/capture/t91/out/prefix-copy-sh/A8-foreign-cwd.txt
+   105	.softhouse/capture/t91/out/prefix-copy-sh/req-crafted-04.json
+   106	.softhouse/capture/t91/out/prefix-copy-sh/req-mutated-55.json
+   107	.softhouse/capture/t91/out/prefix-livetwin-bash/A2a-mutated-canary-gerege.txt
+   108	.softhouse/capture/t91/out/prefix-livetwin-bash/A2b-mutated-canary-default.txt
+   109	.softhouse/capture/t91/out/prefix-livetwin-bash/A2c-crafted-canary-and-expectation-gerege.txt
+   110	.softhouse/capture/t91/out/prefix-livetwin-bash/A3a-swapped-canary-gerege.txt
+   111	.softhouse/capture/t91/out/prefix-livetwin-bash/A3b-missing-canary.txt
+   112	.softhouse/capture/t91/out/prefix-livetwin-bash/A3c-no-canary.txt
+   113	.softhouse/capture/t91/out/prefix-livetwin-bash/A4a-expect-override-default.txt
+   114	.softhouse/capture/t91/out/prefix-livetwin-bash/A4b-expect-override-gerege.txt
+   115	.softhouse/capture/t91/out/prefix-livetwin-bash/A4c-decoy-variable.txt
+   116	.softhouse/capture/t91/out/prefix-livetwin-bash/A5-helpful-correct-override.txt
+   117	.softhouse/capture/t91/out/prefix-livetwin-bash/A6-canary-is-a-directory.txt
+   118	.softhouse/capture/t91/out/prefix-livetwin-bash/A7-symlinked-canary.txt
+   119	.softhouse/capture/t91/out/prefix-livetwin-bash/A8-foreign-cwd.txt
+   120	.softhouse/capture/t91/out/prefix-livetwin-bash/req-crafted-04.json
+   121	.softhouse/capture/t91/out/prefix-livetwin-bash/req-mutated-55.json
+   122	.softhouse/capture/t91/out/prefix-livetwin-sh/A2a-mutated-canary-gerege.txt
+   123	.softhouse/capture/t91/out/prefix-livetwin-sh/A2b-mutated-canary-default.txt
+   124	.softhouse/capture/t91/out/prefix-livetwin-sh/A2c-crafted-canary-and-expectation-gerege.txt
+   125	.softhouse/capture/t91/out/prefix-livetwin-sh/A3a-swapped-canary-gerege.txt
+   126	.softhouse/capture/t91/out/prefix-livetwin-sh/A3b-missing-canary.txt
+   127	.softhouse/capture/t91/out/prefix-livetwin-sh/A3c-no-canary.txt
+   128	.softhouse/capture/t91/out/prefix-livetwin-sh/A4a-expect-override-default.txt
+   129	.softhouse/capture/t91/out/prefix-livetwin-sh/A4b-expect-override-gerege.txt
+   130	.softhouse/capture/t91/out/prefix-livetwin-sh/A4c-decoy-variable.txt
+   131	.softhouse/capture/t91/out/prefix-livetwin-sh/A5-helpful-correct-override.txt
+   132	.softhouse/capture/t91/out/prefix-livetwin-sh/A6-canary-is-a-directory.txt
+   133	.softhouse/capture/t91/out/prefix-livetwin-sh/A7-symlinked-canary.txt
+   134	.softhouse/capture/t91/out/prefix-livetwin-sh/A8-foreign-cwd.txt
+   135	.softhouse/capture/t91/out/prefix-livetwin-sh/req-crafted-04.json
+   136	.softhouse/capture/t91/out/prefix-livetwin-sh/req-mutated-55.json
+   137	.softhouse/capture/t91/out/t115-post-bash/A2a-mutated-canary-gerege.txt
+   138	.softhouse/capture/t91/out/t115-post-bash/A2b-mutated-canary-default.txt
+   139	.softhouse/capture/t91/out/t115-post-bash/A2c-crafted-canary-and-expectation-gerege.txt
+   140	.softhouse/capture/t91/out/t115-post-bash/A3a-swapped-canary-gerege.txt
+   141	.softhouse/capture/t91/out/t115-post-bash/A3b-missing-canary.txt
+   142	.softhouse/capture/t91/out/t115-post-bash/A3c-no-canary.txt
+   143	.softhouse/capture/t91/out/t115-post-bash/A4a-expect-override-default.txt
+   144	.softhouse/capture/t91/out/t115-post-bash/A4b-expect-override-gerege.txt
+   145	.softhouse/capture/t91/out/t115-post-bash/A4c-decoy-variable.txt
+   146	.softhouse/capture/t91/out/t115-post-bash/A5-helpful-correct-override.txt
+   147	.softhouse/capture/t91/out/t115-post-bash/A6-canary-is-a-directory.txt
+   148	.softhouse/capture/t91/out/t115-post-bash/A7-symlinked-canary.txt
+   149	.softhouse/capture/t91/out/t115-post-bash/A8-foreign-cwd.txt
+   150	.softhouse/capture/t91/out/t115-post-bash/VERDICT.txt
+   151	.softhouse/capture/t91/out/t115-post-sh/A2a-mutated-canary-gerege.txt
+   152	.softhouse/capture/t91/out/t115-post-sh/A2b-mutated-canary-default.txt
+   153	.softhouse/capture/t91/out/t115-post-sh/A2c-crafted-canary-and-expectation-gerege.txt
+   154	.softhouse/capture/t91/out/t115-post-sh/A3a-swapped-canary-gerege.txt
+   155	.softhouse/capture/t91/out/t115-post-sh/A3b-missing-canary.txt
+   156	.softhouse/capture/t91/out/t115-post-sh/A3c-no-canary.txt
+   157	.softhouse/capture/t91/out/t115-post-sh/A4a-expect-override-default.txt
+   158	.softhouse/capture/t91/out/t115-post-sh/A4b-expect-override-gerege.txt
+   159	.softhouse/capture/t91/out/t115-post-sh/A4c-decoy-variable.txt
+   160	.softhouse/capture/t91/out/t115-post-sh/A5-helpful-correct-override.txt
+   161	.softhouse/capture/t91/out/t115-post-sh/A6-canary-is-a-directory.txt
+   162	.softhouse/capture/t91/out/t115-post-sh/A7-symlinked-canary.txt
+   163	.softhouse/capture/t91/out/t115-post-sh/A8-foreign-cwd.txt
+   164	.softhouse/capture/t91/out/t115-post-sh/VERDICT.txt
+   165	.softhouse/capture/t91/out/t115-pre-bash/A2a-mutated-canary-gerege.txt
+   166	.softhouse/capture/t91/out/t115-pre-bash/A2b-mutated-canary-default.txt
+   167	.softhouse/capture/t91/out/t115-pre-bash/A2c-crafted-canary-and-expectation-gerege.txt
+   168	.softhouse/capture/t91/out/t115-pre-bash/A3a-swapped-canary-gerege.txt
+   169	.softhouse/capture/t91/out/t115-pre-bash/A3b-missing-canary.txt
+   170	.softhouse/capture/t91/out/t115-pre-bash/A3c-no-canary.txt
+   171	.softhouse/capture/t91/out/t115-pre-bash/A4a-expect-override-default.txt
+   172	.softhouse/capture/t91/out/t115-pre-bash/A4b-expect-override-gerege.txt
+   173	.softhouse/capture/t91/out/t115-pre-bash/A4c-decoy-variable.txt
+   174	.softhouse/capture/t91/out/t115-pre-bash/A5-helpful-correct-override.txt
+   175	.softhouse/capture/t91/out/t115-pre-bash/A6-canary-is-a-directory.txt
+   176	.softhouse/capture/t91/out/t115-pre-bash/A7-symlinked-canary.txt
+   177	.softhouse/capture/t91/out/t115-pre-bash/A8-foreign-cwd.txt
+   178	.softhouse/capture/t91/out/t115-pre-bash/VERDICT.txt
+   179	.softhouse/capture/t91/out/t115-pre-sh/A2a-mutated-canary-gerege.txt
+   180	.softhouse/capture/t91/out/t115-pre-sh/A2b-mutated-canary-default.txt
+   181	.softhouse/capture/t91/out/t115-pre-sh/A2c-crafted-canary-and-expectation-gerege.txt
+   182	.softhouse/capture/t91/out/t115-pre-sh/A3a-swapped-canary-gerege.txt
+   183	.softhouse/capture/t91/out/t115-pre-sh/A3b-missing-canary.txt
+   184	.softhouse/capture/t91/out/t115-pre-sh/A3c-no-canary.txt
+   185	.softhouse/capture/t91/out/t115-pre-sh/A4a-expect-override-default.txt
+   186	.softhouse/capture/t91/out/t115-pre-sh/A4b-expect-override-gerege.txt
+   187	.softhouse/capture/t91/out/t115-pre-sh/A4c-decoy-variable.txt
+   188	.softhouse/capture/t91/out/t115-pre-sh/A5-helpful-correct-override.txt
+   189	.softhouse/capture/t91/out/t115-pre-sh/A6-canary-is-a-directory.txt
+   190	.softhouse/capture/t91/out/t115-pre-sh/A7-symlinked-canary.txt
+   191	.softhouse/capture/t91/out/t115-pre-sh/A8-foreign-cwd.txt
+   192	.softhouse/capture/t91/out/t115-pre-sh/VERDICT.txt
+   193	.softhouse/capture/t91/prove-guards.sh
+   194	.softhouse/capture/t91/run-attacks.sh
+   195	.softhouse/capture/t91/shell-invariance.sh
+   196	.softhouse/capture/t91/t115-drive-mf1.sh
+   197	.softhouse/capture/t91/t115-drive-mf2.sh
+   198	.softhouse/capture/t91/t115-drive-mf3-mf4.sh
+   199	.softhouse/capture/t91/t115-rerun-attacks.sh
+   200	.softhouse/capture/t91/verdict.sh
+
+==================================================================
+POPULATION B — what T234's instrument 21 searched: WORKING TREE
+==================================================================
+files          : 207
+TOTAL LINES in population B: 8984
+
+==================================================================
+A vs B — are they the same population?
+==================================================================
+files only in A (T115) : 0
+files only in B (HEAD) : 7
+files in both          : 200
+
+--- only in A ---
+--- only in B ---
+    .softhouse/capture/t91/out/T151-G4-CELLS.txt
+    .softhouse/capture/t91/out/T151-G67-RED-GREEN.txt
+    .softhouse/capture/t91/out/T151-VB-LEGS.txt
+    .softhouse/capture/t91/t151-drive-g4.sh
+    .softhouse/capture/t91/t151-drive-g67.sh
+    .softhouse/capture/t91/t151-drive-vb.sh
+    .softhouse/capture/t91/t151-merge-check.sh
+
+--- of the files in BOTH, how many differ in content between T115 and HEAD? ---
+    identical: 196    differing: 4

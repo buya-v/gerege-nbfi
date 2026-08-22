@@ -1,0 +1,25 @@
+population: 200 files at bd59187cf83c
+
+=== CALIBRATION of the multi-line route on a synthetic known positive ===
+  fixture: 'alpha main omega\nbeta rev-parse \\\n   main gamma\n'
+  line-oriented 'rev-parse main'       -> 0 match(es) []
+  multi-line 'rev-parse \\\n main'     -> 1 match(es) ['rev-parse \\\n   main']
+  ^ the second finds the split invocation, the first does not. Route is live.
+
+==============================================================================
+MULTI-LINE RESULTS — matches that SPAN a newline (impossible for r11 to see)
+==============================================================================
+  (none)
+
+  newline-spanning matches: 0
+
+==============================================================================
+LINE-ORIENTED CONTROL over the same whole-file reads (must reproduce 20-rerun.sh)
+==============================================================================
+  rev-parse main      0 hit lines
+  origin/main         0 hit lines
+  merge-base          0 hit lines
+  main:               0 hit lines
+  \bmain\b           38 hit lines
+
+  ^ '\bmain\b' here must equal the 38 that git grep -P and BSD grep both reported.

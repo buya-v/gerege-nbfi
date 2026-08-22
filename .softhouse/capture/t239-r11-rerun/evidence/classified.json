@@ -1,0 +1,230 @@
+[
+ {
+  "class": "PROSE",
+  "file": ".softhouse/capture/charges/bin/preconditions.sh",
+  "line": 87,
+  "context": "(the rig replaced by main's"
+ },
+ {
+  "class": "OTHER",
+  "file": ".softhouse/capture/t91/out/T115-MF2-RED-GREEN.txt",
+  "line": 46,
+  "context": "its path REPLACED by main's pre-hardening bytes"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/T115-MF3-MF4-MEASURED.txt",
+  "line": 20,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/T115-MF3-MF4-MEASURED.txt",
+  "line": 25,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/happy/T44-control-reproduced-POSTFIX.txt",
+  "line": 19,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/happy/default-nocanary-POSTFIX.txt",
+  "line": 19,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/happy/default-nocanary-PREFIX.txt",
+  "line": 19,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/postfix-copy-bash/A2b-mutated-canary-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/postfix-copy-bash/A4a-expect-override-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/postfix-copy-sh/A2b-mutated-canary-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/postfix-copy-sh/A4a-expect-override-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/postfix-livetwin-bash/A2b-mutated-canary-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/postfix-livetwin-bash/A4a-expect-override-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/postfix-livetwin-sh/A2b-mutated-canary-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/postfix-livetwin-sh/A4a-expect-override-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/prefix-copy-bash/A2b-mutated-canary-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/prefix-copy-bash/A4a-expect-override-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/prefix-copy-sh/A2b-mutated-canary-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/prefix-copy-sh/A4a-expect-override-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/prefix-livetwin-bash/A2b-mutated-canary-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/prefix-livetwin-bash/A4a-expect-override-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/prefix-livetwin-sh/A2b-mutated-canary-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/prefix-livetwin-sh/A4a-expect-override-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/t115-post-bash/A2b-mutated-canary-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/t115-post-bash/A4a-expect-override-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/t115-post-sh/A2b-mutated-canary-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/t115-post-sh/A4a-expect-override-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/t115-pre-bash/A2b-mutated-canary-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/t115-pre-bash/A4a-expect-override-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/t115-pre-sh/A2b-mutated-canary-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "JVM-LOG",
+  "file": ".softhouse/capture/t91/out/t115-pre-sh/A4a-expect-override-default.txt",
+  "line": 26,
+  "context": "ault] --- [           main] o.a.f.o.monetary.dom"
+ },
+ {
+  "class": "PROSE",
+  "file": ".softhouse/capture/t91/t115-drive-mf1.sh",
+  "line": 12,
+  "context": "line that can follow `main` will follow it exact"
+ },
+ {
+  "class": "PROSE",
+  "file": ".softhouse/capture/t91/t115-drive-mf2.sh",
+  "line": 150,
+  "context": "its path REPLACED by main's pre-hardening bytes"
+ },
+ {
+  "class": "PROSE",
+  "file": ".softhouse/capture/t91/t115-drive-mf2.sh",
+  "line": 17,
+  "context": "N9 (rig replaced by main's pre-hardening bytes"
+ },
+ {
+  "class": "PROSE",
+  "file": ".softhouse/capture/t91/t115-drive-mf2.sh",
+  "line": 30,
+  "context": "a ref computed from `main` (P-24)."
+ },
+ {
+  "class": "COMPLIANT",
+  "file": ".softhouse/capture/t91/t115-rerun-attacks.sh",
+  "line": 22,
+  "context": "1a71ee4ca62b73e36   # main's pre-hardening charg"
+ },
+ {
+  "class": "PROSE",
+  "file": ".softhouse/capture/t91/t115-rerun-attacks.sh",
+  "line": 2,
+  "context": "th interpreters, from main's"
+ },
+ {
+  "class": "PROSE",
+  "file": ".softhouse/capture/t91/t115-rerun-attacks.sh",
+  "line": 34,
+  "context": "# The PRE tree gets main's actual pre-hardenin"
+ }
+]

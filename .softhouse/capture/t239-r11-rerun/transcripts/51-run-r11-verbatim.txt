@@ -1,0 +1,146 @@
+instrument under test : .softhouse/reviews/T138-evidence/r11-hygiene.sh
+blob sha              : 429482680e2b7438d1bfe7369dcc6372ae7d6fd2
+shebang               : #!/bin/sh
+invoked as            : bash <script> <repo>
+repo argument         : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a63a7abf43fa9b0dc
+does /tmp/T138-merge exist? -> NO - section 4 will cd-fail
+
+############### BEGIN VERBATIM OUTPUT ###############
+==================================================================
+1. ADDITIVITY — did T115 modify any of T91's own out/ transcripts?
+==================================================================
+files T115 changed under .softhouse/capture/t91/out/ that are NOT t115-*:
+   A	.softhouse/capture/t91/out/CONFORMANCE-T115.txt
+   A	.softhouse/capture/t91/out/GUARDS-RED-META-nongit.txt
+   M	.softhouse/capture/t91/out/GUARDS-RED.txt
+   A	.softhouse/capture/t91/out/T115-ATTACK-RERUN.txt
+   A	.softhouse/capture/t91/out/T115-MF1-RED-GREEN.txt
+   A	.softhouse/capture/t91/out/T115-MF2-RED-GREEN.txt
+   A	.softhouse/capture/t91/out/T115-MF3-MF4-MEASURED.txt
+   (only GUARDS-RED.txt / new files expected above)
+
+modified (M) files in the whole T115-vs-T91 diff:
+   M	.softhouse/capture/audit-t44/charges/bin/preconditions-COPY.sh
+   M	.softhouse/capture/charges/bin/preconditions.sh
+   M	.softhouse/capture/t91/PREDICTION.md
+   M	.softhouse/capture/t91/out/GUARDS-RED.txt
+   M	.softhouse/capture/t91/prove-guards.sh
+   M	.softhouse/capture/t91/run-attacks.sh
+   M	.softhouse/capture/t91/shell-invariance.sh
+   M	.softhouse/capture/t91/verdict.sh
+
+T91's four transcript dirs — blob identity T91 vs T115:
+   prefix-copy-sh             84cde2f14c93  IDENTICAL
+   prefix-copy-bash           8d9128b6bdbc  IDENTICAL
+   prefix-livetwin-sh         97dd355c8b4d  IDENTICAL
+   prefix-livetwin-bash       a4f4472bc7ed  IDENTICAL
+   postfix-copy-sh            e88d5c294e64  IDENTICAL
+   postfix-copy-bash          f5958159675f  IDENTICAL
+   postfix-livetwin-sh        90dbc9a89c44  IDENTICAL
+   postfix-livetwin-bash      34337c9a53b0  IDENTICAL
+   happy                      c040f5399900  IDENTICAL
+
+==================================================================
+2. BASELINES — every baseline in T115's scripts must be a LITERAL sha
+==================================================================
+--- any use of a ref computed from main (P-24's exact trap):
+   (nothing above, or only prose, = clean)
+
+--- literal 40-hex shas and blob ids used as baselines:
+   bd59187cf83c7c7161db23668e91d45bd46be2a8:.softhouse/capture/t91/run-attacks.sh:34:PIN=2a6621beb48f753c5a078b0b6ca775c317d36f815f08be3c6ce6e8ab93352154
+   bd59187cf83c7c7161db23668e91d45bd46be2a8:.softhouse/capture/t91/t115-drive-mf1.sh:23:PRE_SHA=ccf3c14171dea52bd044d81d5ca67aba8054b74c   # T91's tip, the bytes T107 reviewed
+   bd59187cf83c7c7161db23668e91d45bd46be2a8:.softhouse/capture/t91/t115-drive-mf2.sh:31:PRE_SHA=ccf3c14171dea52bd044d81d5ca67aba8054b74c   # T91's tip, the bytes T107 reviewed
+   bd59187cf83c7c7161db23668e91d45bd46be2a8:.softhouse/capture/t91/t115-drive-mf2.sh:154:PRE_RIG_BLOB=e6c1795a172168105d788321a71ee4ca62b73e36
+   bd59187cf83c7c7161db23668e91d45bd46be2a8:.softhouse/capture/t91/t115-drive-mf3-mf4.sh:29:PRE_SHIM_BLOB=e6c1795a172168105d788321a71ee4ca62b73e36   # the pre-T91 copied bytes, per the header
+   bd59187cf83c7c7161db23668e91d45bd46be2a8:.softhouse/capture/t91/t115-rerun-attacks.sh:22:PRE_SHIM_BLOB=e6c1795a172168105d788321a71ee4ca62b73e36   # main's pre-hardening charges/bin twin
+
+--- git revisions each T115 script actually resolves:
+   -- t115-drive-mf1.sh
+      29:( cd "$ROOT" && git show "$PRE_SHA:.softhouse/capture/t91/verdict.sh" ) > "$S/verdict-PRE.sh" 2>"$S/err" || {
+   -- t115-drive-mf2.sh
+      22:# Everything destructive happens inside a `git archive` export under /tmp.  The oracle is read only.
+      39:( cd "$ROOT" && git archive "$PRE_SHA"  ) | tar -x -C "$S/pre"  || abort "git archive $PRE_SHA failed"
+      40:( cd "$ROOT" && git archive HEAD        ) | tar -x -C "$S/post" || abort "git archive HEAD failed"
+      41:# An unchecked `git archive` producing an empty export is T107's F-6; do not repeat it here.
+      54:echo "post export: $(cd "$ROOT" && git rev-parse HEAD) (MF-2 present, asserted)"
+      155:if ( cd "$ROOT" && git cat-file -e "$PRE_RIG_BLOB" ) 2>/dev/null; then
+      156:  ( cd "$ROOT" && git cat-file blob "$PRE_RIG_BLOB" ) > "$S/n9/$RIGREL"
+   -- t115-drive-mf3-mf4.sh
+      20:#     throwaway `git archive` export and is not a caller in the capture pipeline — it is reported
+      39:( cd "$ROOT" && git cat-file blob "$PRE_SHIM_BLOB" ) > "$S/pre-shim.sh" 2>/dev/null \
+   -- t115-rerun-attacks.sh
+      15:# tenant write.  Destructive work is confined to `git archive` exports under /tmp.
+      30:( cd "$ROOT" && git archive HEAD ) | tar -x -C "$S/pre"  || abort "git archive failed"
+      31:( cd "$ROOT" && git archive HEAD ) | tar -x -C "$S/post" || abort "git archive failed"
+      35:( cd "$ROOT" && git cat-file blob "$PRE_SHIM_BLOB" ) > "$S/pre/$SHIMREL" || abort "cannot resolve $PRE_SHIM_BLOB"
+      47:echo "post shim: HEAD $(cd "$ROOT" && git rev-parse --short HEAD)          sha256 $(shasum -a 256 < "$S/post/$SHIMREL" | cut -c1-16)"
+   -- prove-guards.sh
+      7:# It is destructive, so it works ONLY inside a `git archive` export under /tmp that it creates
+      12:# `git archive` failed, the export was EMPTY, all three G-1 legs died with "No such file or
+      15:#   1. `git archive | tar` was never checked.  Now asserted non-empty; an empty export ABORTS.
+      45:(cd "$ROOT" && git archive HEAD) > "$S/export.tar" 2>"$S/archive.err" || {
+      46:  echo "ABORT: git archive failed — there is nothing to prove anything against." >&2
+      48:[ -s "$S/export.tar" ] || { echo "ABORT: git archive produced an EMPTY tar." >&2; exit 2; }
+      58:echo "export: $(cd "$ROOT" && git rev-parse HEAD), $(find "$E" -type f | wc -l | tr -d ' ') files (asserted non-empty)"
+
+==================================================================
+3. LC_ALL=C grep -a INTEGRITY (P-33) — T115 must not have weakened it
+==================================================================
+   verdict.sh             LC_ALL=C:  5 ->  7     grep -a:  4 ->  4
+   run-attacks.sh         LC_ALL=C:  1 ->  2     grep -a:  0 ->  1
+   shell-invariance.sh    LC_ALL=C:  1 ->  1     grep -a:  0 ->  0
+   prove-guards.sh        LC_ALL=C:  6 -> 13     grep -a:  5 -> 11
+
+--- any BARE grep (no LC_ALL=C, no -a) on a transcript, in the T115 rig:
+   verdict.sh:17:#   * A grep that silently reports NO MATCH on a transcript containing a stray non-UTF-8 byte turns
+   verdict.sh:27:#     /usr/bin/grep — BSD grep 2.6.0-FreeBSD — a silent miss does NOT reproduce, with an invalid
+   verdict.sh:32:#     What is [UNVERIFIED] and is T108's question: T91 reported that `ugrep 7.5.0 -I` (which is what
+   verdict.sh:33:#     a `grep` on an interactive PATH can be) returns 1 — "absent" — on a poisoned transcript that
+   verdict.sh:35:#     no `ugrep` on this host at all, and `prove-guards.sh:87-95` takes its `else` branch, so the
+   verdict.sh:36:#     committed `out/GUARDS-RED.txt` records the fallback text rather than a ugrep measurement.
+   verdict.sh:154:n=$(echo "$TABLE" | grep -c '|')
+   run-attacks.sh:46:# `sed` is not `grep`: a substitution whose pattern does not match is not an error, it is a COPY.
+   prove-guards.sh:22:# poison, and the `command -v ugrep` else-branch, which printed an interactive measurement nobody
+   prove-guards.sh:138:echo "-- what /usr/bin/grep (BSD) does with and without -a:"
+   prove-guards.sh:143:echo "   MEASURED: on this machine BSD grep matched EITHER WAY, and T107b independently reproduced"
+   prove-guards.sh:144:echo "   that (18 of 18 combinations).  T80 reported that BSD grep in a UTF-8 locale matches"
+   prove-guards.sh:149:if command -v ugrep >/dev/null 2>&1; then
+   prove-guards.sh:151:  echo "   ugrep  -qF  rc=$?   (1 = 'absent' — WRONG, the sentence is there)"
+   prove-guards.sh:153:  echo "   ugrep -aqF  rc=$?   (0 = present — correct)"
+   prove-guards.sh:155:  echo "   ugrep is NOT on PATH here, so the ugrep limb WAS NOT MEASURED BY THIS RUN."
+   prove-guards.sh:156:  echo "   [UNVERIFIED] T91 reported interactively that ugrep 7.5.0 -I returns 1 ('absent') on this"
+   prove-guards.sh:158:  echo "   ugrep on this host at all — and downgraded the claim from [VERIFIED].  It rests on"
+   prove-guards.sh:203:echo "       sed is not grep: a substitution whose pattern does not match is a COPY, so a"
+
+--- the two comments T115 marked 'under adjudication by T108':
+   verdict.sh:21:#     *** THE HARDENING STANDS.  ITS STATED REASON IS UNDER ADJUDICATION BY T108. ***
+   prove-guards.sh:147:echo "   adjudication by T108; fail-closed is right whichever way T108 rules. ***"
+
+==================================================================
+4. THE KNOWN LEFTOVER — T91.md:8
+==================================================================
+        1	# T91 — the pre-hardening copy of the Path B precondition script
+        2	
+        3	Branch `softhouse/T91-preconditions-copy`. Nothing promoted. No vector touched. Oracle read only.
+        4	
+        5	**Headline.** The brief's description of the defect is **wrong in its specifics and wrong about
+        6	which file matters.** The named copy is older than the version the brief describes and carries
+        7	*different* holes; and the file nobody named — `.softhouse/capture/charges/bin/preconditions.sh`,
+        8	byte-identical to the named copy — is the one that **17 capture scripts and `attest.py` actually
+        9	invoke**. The named copy is invoked by nothing. Both are now call-throughs to the one hardened rig.
+       10	Measured: 6 of 13 attack classes ADMITTED before, 0 after, under both `sh` and `bash`.
+       11	
+       12	---
+
+--- every other restatement of '17 capture scripts' anywhere in the merged tree:
+   (searched the MERGED tree)
+############### END VERBATIM OUTPUT (exit=0) ###############
+
+ANNOTATIONS:
+ * Section 2's first sub-check printed NO hit lines, then its own reassurance
+   '(nothing above, or only prose, = clean)'. Measured truth for that population:
+   38 hit lines exist (git grep -P, BSD grep -E and python3 re all agree).
+ * Section 4 printed '(searched the MERGED tree)' with nothing above it, because
+   'cd /tmp/T138-merge 2>/dev/null && git grep ...' short-circuited on a missing
+   directory. The echo on the next line is UNCONDITIONAL. Fail-OPEN.
+ * Script exit code was 0.
