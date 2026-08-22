@@ -1764,14 +1764,33 @@ earlier. **The same fire that corrected one uncounted denominator shipped anothe
 **Why it is worse than a typo.** The sentence is *epistemically* right and *quantitatively* wrong, so it
 reads as careful. It concedes a limitation, cites the guard's own output, and names the mechanism — every
 signal a reader uses to decide a claim has been checked. And it **understates** coverage in a place where
-understating sounds like rigour: "three of four" says the guard is 25% live; "three of seven" says 57%.
+understating sounds like rigour: "three of four" says the guard is 25% live; "three of seven" says 43%.
 A claim that flatters the speaker's caution gets less scrutiny than one that flatters their result.
 
 **P-63 said: re-derive every figure from the live artefact at the moment of dispatch. P-67 is the
 narrower, sharper form:** a figure with a **denominator** needs the denominator measured, not inherited.
-"Three of four" and "three of seven" share the numerator, the source, and the reasoning — and only one of
-them is a fact. **Before certifying a ratio, count both terms in the live artefact, and say where you
-counted.**
+**Before certifying a ratio, count both terms in the live artefact, and say where you counted.**
+
+> **⚠ CORRECTION (A2-32 → the driver, fire `20260822-140002`). THIS PATTERN SHIPPED THE VERY DEFECT IT
+> NAMES, ONE TERM OVER.** As first written, P-67 fixed the denominator (four → **seven**) and then used
+> *"three* of seven" as its worked example, concluding that "three of four" and "three of seven" *"share
+> the numerator … and only one of them is a fact."*
+>
+> **Neither is.** The numerator is **FOUR**. `I4-BUILDER`'s population under `nexus/` is **zero** — a
+> fourth class inspecting an empty population — and unlike the other three, **its emptiness is not
+> announced by the guard**, which is exactly why counting the announcements undercounts the classes.
+> [VERIFIED: A2-32 measured it with a probe copying `mutatingCallRe`, `calleeName` and `prunedDirs`
+> verbatim from the guard, driven both polarities against the real `ledgerguard` binary — green 0,
+> red 3 planted verbs `REFUSED [I4-BUILDER]` — and its censuses reproduce the guard's own `CENSUS`
+> line to the digit, 47 files / 5045 calls. Driver-confirmed on merged `main` at `7fd5568`.] The live
+> figure is **four of seven = 43 %**, corrected in the sentence above.
+>
+> So P-67 corrected an inherited denominator while inheriting its numerator from the same sentence, and
+> then **certified the pair as the fact**. The lesson survives its example and is strengthened by it:
+> "count both terms" means **both**, and the term you did not think to doubt is the one that bites.
+> A2-31 rejected DEC-2 rev 4 for this same numerator; the correction landed in the ADR and **not here**,
+> which is P-66's "a correction lands where named and not where restated" — the defect that has now
+> killed four DEC-2 revisions — reappearing inside the pattern file that documents it.
 
 ### P-68. A run that graded NOTHING reported every capability backed — and "latent" was true of the exit code, not the report
 
