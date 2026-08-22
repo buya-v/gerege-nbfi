@@ -746,6 +746,54 @@ guard_gofmt() {
 # line is printed. That is not an outage. The driver's park condition is `exit 2` AND
 # `probe != up`, and on this path there is no probe line at all.
 
+# census_inspected: read the census's SUBJECT COUNT off stdin — the FIRST `inspected N` on
+# each CENSUS line — and print one figure per line. Factored out of _run_capture_guard so it
+# can be driven RED and GREEN on synthetic lines by --prove; an extraction buried inside a
+# guard is an extraction nothing can falsify.
+#
+# THE DEFECT IT REPLACES (T197 F-1, polarity established by T201 before the fix).
+# The shipped expression was:
+#     sed -n 's/^CENSUS .*inspected \([0-9][0-9]*\).*$/\1/p'
+# `.*` is greedy, so the leading `.*` runs to the END of the line and backtracks — the
+# capture therefore lands on the **LAST** `inspected N`, not the first. MEASURED, one line
+# per case, /usr/bin/sed (BSD, this host), LC_ALL=C, input a plain text file:
+#     `… inspected 7 rigs / inspected 320 tokens`   OLD -> 320   (subject count is 7)
+#     `… inspected 320 bodies / inspected 7 rigs`   OLD -> 7     (subject count is 320)
+#     `… inspected 57 .java under /x/inspected 0 fixtures/repo`  OLD -> 0  (count is 57)
+#
+# POLARITY, STATED BECAUSE T197 RECORDED IT AS UNKNOWN AND A FIX SHIPPED WITHOUT IT IS THE
+# DEFECT CLASS THIS PROGRAM KEEPS FINDING. The figure feeds `[ "$inspected" -lt "$floor" ]`,
+# refuse-if-below. So the direction is decided by which of the two figures is bigger:
+#   * trailing figure LARGER  -> the floor is cleared by a number that is not the subject
+#     count. FAIL-OPEN, SILENT PASS. A guard that opened 7 of 320 files is accepted because
+#     an unrelated 320 sits later on the same line. This is the direction that matters.
+#   * trailing figure SMALLER -> spurious refusal. FAIL-CLOSED, cry wolf, exit 2 over a
+#     clean tree. Loud, and it needs NO code change to fire: a checkout path containing the
+#     token `inspected 0` is enough (third case above), and the census line interpolates an
+#     absolute path today.
+# BOTH are reachable, and which one fires is chosen by the PROSE of a census line that no
+# test constrains — one appended sub-count is the whole distance to the fail-open direction.
+# Latent only because every census line currently carries exactly one `inspected N`; the
+# live figures 320, 57 and 44 are unchanged by this fix, which is the point.
+#
+# HOW THE REPLACEMENT IS FIRST-WINS. `s///` without `g` rewrites the LEFTMOST match, and
+# dropping the leading `.*` leaves nothing to backtrack over: the pattern must start at an
+# `inspected ` that is actually followed by a digit, and the leftmost such position is the
+# first one. `.*$` then eats the rest of the line, and `s/^.*[^0-9]//` (greedy, to the last
+# NON-digit) strips the surviving prefix. The address keeps a CENSUS line carrying no
+# `inspected N` producing no output, exactly as the old expression did.
+#
+# P-57: `sed` consumes all of stdin and never exits early, so this is not a member of the
+# `| grep -q` / `| head` EPIPE family. P-58: measured under `bash` on this host, where `sed`
+# is /usr/bin/sed (BSD); `LC_ALL=C` is kept so the byte semantics hold under any locale.
+census_inspected() {
+  LC_ALL=C sed -n '/^CENSUS .*inspected [0-9]/{
+s/inspected \([0-9][0-9]*\).*$/\1/
+s/^.*[^0-9]//
+p
+}'
+}
+
 # _run_capture_guard <script-basename> <human-label> <population-floor>
 # Shared body, because the two guards differ only in which program they run. Written once
 # rather than twice so that a later fix to the missing-script or empty-output handling
@@ -850,7 +898,12 @@ _run_capture_guard() {
   # programs (P-58): under `bash` on this host `grep` is /usr/bin/grep, BSD 2.6.0-FreeBSD;
   # `-a` and `LC_ALL=C` are kept on every expression so the same bytes hold if the ugrep
   # shell function (which re-execs with `-I`) is ever in scope instead. [T194]
-  ins_all="$(printf '%s\n' "$out" | LC_ALL=C sed -n 's/^CENSUS .*inspected \([0-9][0-9]*\).*$/\1/p')"
+  #
+  # THE EXTRACTION IS NO LONGER WRITTEN HERE. It used to be a greedy one-liner that read the
+  # LAST `inspected N` on the line instead of the first — see census_inspected above for the
+  # measurement, the established polarity and why first-wins is the correct reading.
+  # [T197 F-1, polarity established and fixed by T201]
+  ins_all="$(printf '%s\n' "$out" | census_inspected)"
   inspected="${ins_all%%$'\n'*}"
   case "$inspected" in ''|*[!0-9]*) inspected=-1 ;; esac
   case "$floor"     in ''|*[!0-9]*) floor=-1 ;; esac
@@ -935,8 +988,110 @@ guard_no_narrow_catch_in_capture_rigs() {
   _run_capture_guard check_no_narrow_catch.py "narrow-catch" "$floor"
 }
 
+# guard_graded_root_is_this_tree: the tree the Go binary is about to GRADE must be the tree
+# this harness just GUARDED.
+#
+# THE HOLE (T199 D-1; re-derived from source by T201 before it was fixed, not taken on
+# trust). ResolveRepoRoot's precedence is `-repo-root`, then CONFORMANCE_REPO_ROOT, then the
+# build anchor — ENV OUTRANKS THE ANCHOR [VERIFIED: nexus/internal/apps/loanschedule/
+# conformance/reporoot.go:247 states it, and the switch at :281-294 implements it, testing
+# `case envValue != ""` BEFORE `case r.AnchorRoot != ""`]. This script names NEITHER lever:
+# `CONFORMANCE_REPO_ROOT` and `-repo-root` each occur ZERO times in it (measured on this
+# file with /usr/bin/grep, BSD 2.6.0-FreeBSD, `LC_ALL=C grep -c`; both returned 0, exit 1).
+# And lines 402-409 record, deliberately, that the frozen DEC-1 digest gate is delegated to
+# the Go binary ALONE. So an exported environment variable moved the graded tree out from
+# under every guard in this file AND out from under the digest gate, and the harness had
+# nothing whatsoever to say about it.
+#
+# MEASURED END TO END (T201, this fire, on a tree whose contract.go had a single comment
+# line appended and which was reverted and re-hashed to the pin afterwards):
+#   bash .softhouse/conformance.sh
+#     -> EXIT 2, "frozen contract … digest 4af70fa9… does not match the store pin 0db73d4a…"
+#   CONFORMANCE_REPO_ROOT=<clean checkout> bash .softhouse/conformance.sh
+#     -> EXIT 0, "parity vectors PASS 43 FAIL 0", "VERDICT: PASS (exit 0) … 5664 cells"
+# T165 narrowed this from any accidental `cd` to a deliberate env var and made the second
+# run print a five-line `*** OVERRIDE DIVERGES FROM THE COMPILED BYTES ***` banner in the
+# report BODY. THE EXIT CODE STAYED 0. The driver, the launchd wrapper and every automation
+# in this program read the exit code and the `probe = up|down` line, not the body.
+#
+# WHY REFUSE. Under THIS script the override can never be legitimate. build_binary compiles
+# CMD_PKG from $NEXUS_DIR = $REPO_ROOT/nexus with no -trimpath, so the build anchor IS
+# $REPO_ROOT on every run this file performs [MEASURED: the clean baseline report reads
+# "resolved from the BUILD ANCHOR" with the anchor inside $REPO_ROOT/nexus]. The env var
+# therefore has exactly one available effect here — point the grading away from the tree
+# whose corpus, contract digest, no-float census and gofmt state were just checked — so
+# refusing it forfeits no capability at all. An operator who genuinely wants another tree
+# graded runs THAT tree's own .softhouse/conformance.sh, which then guards what it grades.
+#
+# REJECTED ALTERNATIVE — accept-and-report with a non-zero exit. Rejected on three counts.
+#  (1) THERE IS NO HONEST CODE FOR IT. 1 is this file's GRADED FAIL, "a mismatch or a
+#      violated property invariant, a definite reproducible defect"; an automation reading 1
+#      would open a defect against the Go port when the fault is the invocation. 2 is what a
+#      failed HARD guard already returns and does mean "no verdict is available" — but
+#      "grade it anyway, then exit 2" still emits a full `parity vectors PASS 43` table over
+#      a foreign tree, and T165 already proved that a banner standing next to those numbers
+#      does not stop them being pasted into a handoff as parity evidence.
+#  (2) IT MIXES EVIDENCE FROM TWO TREES. run_guards inspects $REPO_ROOT's vectors, capture
+#      rigs, Java sources and Go sources; the binary would grade the OTHER checkout's corpus
+#      and contract. No reader can afterwards attribute a cell to a tree.
+#  (3) THE TEST IS WHAT AN AUTOMATION THAT READS ONLY THE EXIT CODE LEARNS. On refusal it
+#      learns "this run produced nothing", which is true. On accept-and-report it learns "43
+#      vectors were compared and something was wrong" — false in both halves.
+#
+# EXIT 2 THROUGH run_guards, and it cannot be misread as an oracle outage: this runs BEFORE
+# probe_oracle, so the `reference oracle (…) probe = up|down` line is ABSENT, not `down`,
+# and the driver parks only on `exit 2` AND a probe line PRESENT and reading `down`. It is
+# the fifth member of the pre-probe exit-2 family already documented at lines 745-747.
+guard_graded_root_is_this_tree() {
+  local env_root="${CONFORMANCE_REPO_ROOT:-}" graded here
+  # Unset or empty: the anchor decides, and the anchor is this tree. Nothing to say, and
+  # saying something would be noise on every ordinary run.
+  [ -n "$env_root" ] || return 0
+  # PHYSICAL paths on BOTH sides. $REPO_ROOT is built by `cd … && pwd`, so a raw string
+  # comparison would call a symlinked spelling of the SAME tree a divergence — cry wolf —
+  # and would also split on a trailing slash. Each `cd` runs inside a command substitution,
+  # i.e. a subshell: the harness's own working directory is never moved. That matters
+  # because grading whichever tree the caller stood in is precisely the defect T165 removed,
+  # and a guard against it must not reintroduce it.
+  graded="$(cd "$env_root" 2>/dev/null && pwd -P)" || graded=""
+  here="$(cd "$REPO_ROOT" 2>/dev/null && pwd -P)" || here=""
+  if [ -z "$here" ]; then
+    warn "conformance: this harness cannot resolve its OWN \$REPO_ROOT ('$REPO_ROOT') to a"
+    warn "conformance: physical path, so it cannot be compared with CONFORMANCE_REPO_ROOT."
+    warn "conformance: ERROR, not a pass — an unanswerable question is not a clean answer."
+    return 1
+  fi
+  if [ -n "$graded" ] && [ "$graded" = "$here" ]; then
+    say "conformance: CONFORMANCE_REPO_ROOT is set and names THIS tree ($here) — no divergence."
+    return 0
+  fi
+  warn "conformance: CONFORMANCE_REPO_ROOT IS SET AND POINTS AWAY FROM THIS HARNESS."
+  warn "conformance:   this harness guards:   $here"
+  warn "conformance:   the binary would grade: ${graded:-<unresolvable: '$env_root'>}"
+  warn "conformance: The frozen DEC-1 digest gate, the vector corpus, the no-float census and"
+  warn "conformance: the gofmt state are ALL read from the GRADED root, so this run would"
+  warn "conformance: certify a tree that none of the guards in this file inspected — and,"
+  warn "conformance: before T201, would have exited 0 while doing it. REFUSED: no verdict is"
+  warn "conformance: available. Unset CONFORMANCE_REPO_ROOT, or run the other checkout's own"
+  warn "conformance: .softhouse/conformance.sh so that what is guarded is what is graded."
+  return 1
+}
+
 run_guards() {
   local failed=0
+  # FIRST, and it SHORT-CIRCUITS rather than joining the `failed=1` tally the others use.
+  # Two reasons, both learned the expensive way. (1) Every guard below answers a question
+  # about $REPO_ROOT; until it is settled that $REPO_ROOT is the tree being GRADED, none of
+  # their answers is about the run in progress, and a dozen green census lines printed under
+  # a refusal read as "mostly fine". That is the T165 failure mode exactly — the true
+  # statement was in the output and the reader took the summary instead. (2) The tally style
+  # exists so that one bad guard does not hide another; here there is nothing to hide, the
+  # divergence subsumes every downstream result.
+  guard_graded_root_is_this_tree || {
+    warn "conformance: EXIT 2 — no verdict is available, and NO other guard was run: their"
+    warn "conformance: results would describe a tree this run was not going to grade."
+    exit "$EXIT_UNUSABLE"
+  }
   guard_no_float_in_vectors           || failed=1
   guard_no_float_in_harness           || failed=1
   guard_gofmt                         || failed=1
@@ -1012,6 +1167,11 @@ main_grade() {
 # case states the exit code it demands and the run fails if the harness disagrees.
 prove() {
   load_toolchain
+  # --prove does NOT go through run_guards, but it does build_binary and then run that
+  # binary — which resolves its repo root from CONFORMANCE_REPO_ROOT exactly as a graded run
+  # does. Guarding only main_grade would have converted a known hole into a hidden one, which
+  # is the same mistake the census block above records at "fixing only the census one".
+  guard_graded_root_is_this_tree || exit "$EXIT_UNUSABLE"
   local rc pass=0 fail=0 bin tmp
   CONF_BIN="$(mktemp -t conformance)" || exit "$EXIT_UNUSABLE"
   CONF_TMP="$(mktemp -d -t conformance-prove)" || exit "$EXIT_UNUSABLE"
@@ -1470,6 +1630,127 @@ prove() {
     printf '%s\n' "$out20c" | LC_ALL=C grep -aE 'principal_amortizes_to_zero|invariant assertions|VERDICT'
     say ""
   fi
+
+  # 21. CONFORMANCE_REPO_ROOT MUST NOT BE ABLE TO MOVE THE GRADED TREE. [T201, from T199 D-1]
+  #     RED and GREEN, at the function AND at the whole-harness level (P-56: the guard is
+  #     tested where it runs, not only where it is defined).
+  #
+  #     The stand-in root is built to be VALID — `.softhouse/vectors/` and `nexus/go.mod`,
+  #     the two things reporoot.go's validateExplicitRoot stats. That is deliberate: if the
+  #     refusal only fired on a malformed path it would be proving the wrong thing. It fires
+  #     because the root DIVERGES, not because it is broken.
+  #
+  #     `--self-test` is used for the end-to-end arms because it exercises the identical
+  #     load_toolchain -> run_guards path a graded run takes, contacts NO oracle, and costs
+  #     about 7s. The RED arm must also show it never reached the guards downstream of the
+  #     divergence check — a refusal printed AFTER a census would mean the census had already
+  #     read the wrong tree.
+  do_prove21() {
+    local other="$tmp/other-checkout" script="$REPO_ROOT/.softhouse/conformance.sh"
+    local ok21=1 why21="" out rc
+    mkdir -p "$other/.softhouse/vectors" "$other/nexus" || { say "PROOF FAIL could not build the stand-in root"; fail=$((fail+1)); return; }
+    printf 'module stand-in\n\ngo 1.22\n' > "$other/nexus/go.mod"
+    note21() { ok21=0; why21="$why21 [$1]"; }
+
+    # --- GREEN: unset. The anchor decides and the anchor is this tree. ---
+    ( unset CONFORMANCE_REPO_ROOT; guard_graded_root_is_this_tree ) >/dev/null 2>&1 \
+      || note21 "GREEN(unset): the guard refused a run that set nothing at all."
+    # --- GREEN: set, but naming THIS tree, including a trailing-slash spelling. `pwd -P` on
+    #     both sides must make those the same tree, or the guard is a cry-wolf machine. ---
+    ( CONFORMANCE_REPO_ROOT="$REPO_ROOT"  guard_graded_root_is_this_tree ) >/dev/null 2>&1 \
+      || note21 "GREEN(same): the guard refused CONFORMANCE_REPO_ROOT set to its OWN root."
+    ( CONFORMANCE_REPO_ROOT="$REPO_ROOT/" guard_graded_root_is_this_tree ) >/dev/null 2>&1 \
+      || note21 "GREEN(same+slash): a trailing slash was treated as a different tree."
+    # --- RED: a different, VALID checkout root. ---
+    if ( CONFORMANCE_REPO_ROOT="$other" guard_graded_root_is_this_tree ) >/dev/null 2>&1; then
+      note21 "RED(diverged): the guard ACCEPTED a valid root that is not this tree."
+    fi
+    # --- RED: a path that does not exist. Unresolvable is not clean. ---
+    if ( CONFORMANCE_REPO_ROOT="$tmp/no-such-tree" guard_graded_root_is_this_tree ) >/dev/null 2>&1; then
+      note21 "RED(missing): the guard ACCEPTED a CONFORMANCE_REPO_ROOT that does not exist."
+    fi
+
+    # --- RED, END TO END: the whole harness, invoked the way the driver invokes it. ---
+    out="$(CONFORMANCE_REPO_ROOT="$other" bash "$script" --self-test 2>&1)"; rc=$?
+    [ "$rc" = "$EXIT_UNUSABLE" ] || note21 "RED(e2e): exit $rc, wanted $EXIT_UNUSABLE — THIS IS THE WHOLE DEFECT: T199 measured exit 0 here."
+    printf '%s\n' "$out" | LC_ALL=C grep -aqF 'CONFORMANCE_REPO_ROOT IS SET AND POINTS AWAY FROM THIS HARNESS' \
+      || note21 "RED(e2e): refused without naming the divergence, so a reader cannot tell why."
+    if printf '%s\n' "$out" | LC_ALL=C grep -aqE '^conformance: CENSUS '; then
+      note21 "RED(e2e): a guard downstream of the divergence check still ran and censused a tree."
+    fi
+    # --- GREEN, END TO END: the anti-no-op control. If this arm ever fails, the guard has
+    #     stopped being a guard and started being an unconditional refusal. ---
+    out="$(CONFORMANCE_REPO_ROOT="$REPO_ROOT" bash "$script" --self-test 2>&1)"; rc=$?
+    [ "$rc" = 0 ] || note21 "GREEN(e2e): exit $rc over its OWN root — the guard now refuses everything."
+    printf '%s\n' "$out" | LC_ALL=C grep -aqF 'names THIS tree' \
+      || note21 "GREEN(e2e): the guard did not record that it had checked and agreed."
+    printf '%s\n' "$out" | LC_ALL=C grep -aqF 'SELF-TEST PASS' \
+      || note21 "GREEN(e2e): the run did not complete, so the guard cannot be shown to be pass-through."
+
+    if [ "$ok21" = 1 ]; then
+      say "PROOF OK   T201/T199-D1: CONFORMANCE_REPO_ROOT cannot move the graded tree — RED on a diverged root (exit $EXIT_UNUSABLE, not 0), GREEN on its own"
+      pass=$((pass+1))
+    else
+      say "PROOF FAIL T201/T199-D1: the repo-root divergence refusal is not as claimed:$why21"
+      fail=$((fail+1))
+    fi
+    say ""
+  }
+  do_prove21
+
+  # 22. THE CENSUS FIGURE MUST BE THE FIRST `inspected N`, NOT THE LAST. [T201, from T197 F-1]
+  #     Both directions, and the RED arm is run against the EXACT expression this file used
+  #     to ship, inline, so the proof demonstrates it would have caught the old code rather
+  #     than merely agreeing with the new code.
+  do_prove22() {
+    local ok22=1 why22="" cases old new
+    note22() { ok22=0; why22="$why22 [$1]"; }
+    # Line shapes: the two the live guards actually print (subject counts 320 and 57), then
+    # a two-figure ASCENDING line (the FAIL-OPEN direction), a two-figure DESCENDING line and
+    # a line whose interpolated PATH carries the token (both FAIL-CLOSED), then a CENSUS line
+    # with no figure at all, which must yield nothing from either expression.
+    cases="$(printf '%s\n' \
+      'CENSUS wire-float round-trip — inspected 320 request bodies / 3976 numeric tokens across 6 capture rigs / 10 req directories under /x/.softhouse/capture (recursive, whole capture tree)' \
+      'CENSUS narrow-catch — inspected 57 .java files across 20 directories under /x (recursive, whole repository; EXCLUDED 0 other checkout root(s): none)' \
+      'CENSUS ascending — inspected 7 rigs / inspected 320 tokens' \
+      'CENSUS descending — inspected 320 bodies / inspected 7 rigs' \
+      'CENSUS pathword — inspected 57 .java files under /x/inspected 0 fixtures/repo (recursive)' \
+      'CENSUS no-figure — nothing was counted here')"
+
+    # GREEN: the shipped extraction reads the subject count on every shape.
+    new="$(printf '%s\n' "$cases" | census_inspected | LC_ALL=C tr '\n' ' ')"
+    [ "$new" = "320 57 7 320 57 " ] \
+      || note22 "GREEN: census_inspected read [$new], wanted the first figure of each line [320 57 7 320 57 ]."
+
+    # RED: the same input through the greedy expression this file shipped until T201. It must
+    # DISAGREE, or the fix is a no-op and this proof is decoration.
+    old="$(printf '%s\n' "$cases" | LC_ALL=C sed -n 's/^CENSUS .*inspected \([0-9][0-9]*\).*$/\1/p' | LC_ALL=C tr '\n' ' ')"
+    [ "$old" != "$new" ] || note22 "RED: the greedy expression and the fixed one agree on every case — the proof cannot fail, so it proves nothing."
+    [ "$old" = "320 57 320 7 0 " ] \
+      || note22 "RED: the greedy expression read [$old]; the recorded defect is [320 57 320 7 0 ] (last-wins)."
+    # The fail-OPEN member, named on its own so the polarity is asserted and not merely implied:
+    # on the ascending line the old expression returns a figure ABOVE the subject count, which
+    # is how a guard that inspected 7 of 320 files clears a floor of 320.
+    printf '%s\n' 'CENSUS ascending — inspected 7 rigs / inspected 320 tokens' \
+      | LC_ALL=C sed -n 's/^CENSUS .*inspected \([0-9][0-9]*\).*$/\1/p' \
+      | LC_ALL=C grep -aqx '320' \
+      || note22 "the FAIL-OPEN case no longer reproduces against the old expression; the polarity claim in census_inspected's header is stale."
+    # A CENSUS line with no figure must stay silent, not become 0 — 0 would be P-35's vacuous
+    # pass arriving through the front door.
+    if printf '%s\n' 'CENSUS no-figure — nothing was counted here' | census_inspected | LC_ALL=C grep -aq .; then
+      note22 "a CENSUS line carrying no 'inspected N' produced a figure; it must produce nothing."
+    fi
+
+    if [ "$ok22" = 1 ]; then
+      say "PROOF OK   T201/T197-F-1: the census figure is the FIRST 'inspected N' — new [$new] vs the shipped greedy [$old]"
+      pass=$((pass+1))
+    else
+      say "PROOF FAIL T201/T197-F-1: the census extraction is not as claimed:$why22"
+      fail=$((fail+1))
+    fi
+    say ""
+  }
+  do_prove22
 
   say "======================================================================="
   say "PROOFS: $pass passed, $fail failed"
