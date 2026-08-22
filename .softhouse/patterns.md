@@ -471,6 +471,20 @@ conclusions T83 had written into `gates.md` — *the artefact the decision-maker
 - G-8 is **two phenomena**, not one. A second family (600 % p.a., MNT 0.01, n ≥ 104, 22 cells) fails to sum at
   all and survives a forced memo recompute, so it is a genuine non-amortization — refuting the driver's
   reframing on the driver's own stated discriminator.
+
+  > **CORRECTION — `T228`, measured at `f8436b4`. THE PARENTHETICAL ABOVE IS T84's OBSERVED SET, NOT A
+  > DEFINITION OF THE FAMILY, and it is left byte-identical because every figure in it is correct over that
+  > domain.** *"600 % p.a., MNT 0.01, n ≥ 104, 22 cells"* was the whole of what anybody had asked on
+  > 20 August 2026. **`T223` has since observed family B at `36.0 %` p.a. (MNT 0.50, n = 1324) and at
+  > `300.0 %` (MNT 0.02, n = 800), so family B is NOT a property of 600 %**, and it derived the term edge as
+  > `n* ≈ 19/log10(1+r)` — **a property of the RATE**, which makes `n ≥ 104` the edge *at 600 % only* and not
+  > a fact about the family. `T229` and `T219` then added principals to **4499 minor units**. The live
+  > statement of the region is `gates.md` § `G-8`; read it there, never from this parenthetical.
+  >
+  > **This is the pattern's own rule failing on the pattern's own example.** P-23 says *"every sentence must
+  > name the domain it was measured over"* — and its illustrative parenthetical did not, so it read as a
+  > definition and stayed readable as one for two days after it was falsified. **An example inside a pattern
+  > is a claim with the pattern's authority behind it, and it must carry a domain like any other.**
 - "`invariant_exemptions` is inert, so option (a) needs a port change" holds only on the sub-family where the
   port diverges; elsewhere the exemption yields PASS with **zero port change**.
 - "Everything is far below one MNT" was false at **MNT 1.09 / 3.6 % / n=360** — an ordinary 30-year term.
@@ -531,6 +545,14 @@ sharper version: T100 had **scoped the discriminator table correctly** and left 
 lines later** unscoped, so `gates.md:1040` claimed "family A exists at all 12 rates swept" while the table at
 `:925` showed 11 of 12 — the missing rate being 600.0 %, **the rate that defines family B**. The document
 contradicted itself inside ten lines, and a grep for the corrected sentence would have found neither site.
+
+> **CORRECTION — `T228`, measured at `f8436b4`. The incident's NUMBERS stand; the phrase *"the rate that
+> defines family B"* does not.** Family A being absent at 600.0 % — 11 of 12, not 12 of 12 — is exactly what
+> T101 measured and it is untouched. But 600.0 % **does not define family B**: `T223` observed family B at
+> `36.0 %` p.a. and at `300.0 %`, and derived the region in variables that contain no particular rate. At the
+> time of the T101 → T112 incident 600.0 % was **the only rate anybody had asked**, which is why the phrase
+> was written and why it read as a definition. Substitute *"the only rate at which family B had then been
+> observed"*. `[VERIFIED: T223's capture; live statement in `gates.md` § `G-8`.]`
 
 > **Rule.** After any correction, sweep for the **concept** and for the **numbers**, never for the wording — the
 > restatement that does damage is the one phrased differently. Grep the figures (`12`, `all 12`, `every rate`),
