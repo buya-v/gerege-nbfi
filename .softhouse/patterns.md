@@ -1995,3 +1995,34 @@ findings would have been a false negative**.
 
 Related: **P-70** (a search result stated as a world fact), **P-66** (state where you looked),
 **P-5** (worktree/state assumptions).
+
+> **⚠ CORRECTION (the driver against itself, local fire `20260822-140002`). THE TITLE IS WRONG: IT IS THE
+> DISPATCH COMMIT, NOT THE SESSION-START COMMIT.** Measured this fire on all four wave-1 worktrees:
+>
+> ```
+> session start (my HEAD on entry)          8f0edeb
+> driver committed the re-dispatch note     33d19a6   <- HEAD at the moment of dispatch
+> driver committed DRIVER.STATE.json        8a21934   (AFTER dispatch)
+> git merge-base main softhouse/A2-32-dec2-rev5          -> 33d19a6
+> git merge-base main softhouse/T227-retracted-claim-...  -> 33d19a6
+> git merge-base main softhouse/T229-g8-rescue-site3      -> 33d19a6
+> git merge-base main softhouse/T230-rework-t222-grounding-> 33d19a6
+> ```
+>
+> All four forked from `33d19a6` — **`HEAD` at dispatch time**, which was neither the session-start commit
+> (`8f0edeb`) nor the driver's final `main` (`8a21934`). So the mechanism is "fork from `HEAD` when the
+> `Agent` call is made". In `T225`'s fire the two coincided because the driver had not committed between
+> session start and that dispatch; **P-71 generalised from a case where its two candidate explanations were
+> indistinguishable.**
+>
+> **This matters, and it cost something here:** acting on P-71 as written, the driver told all four workers
+> *"your fork point is `8f0edeb`"*. **That was false for every one of them.** It was harmless only by luck —
+> `8f0edeb..33d19a6` is a single note in `tasks.json` — but a driver that commits a real artefact and then
+> dispatches would have handed four workers a confidently wrong fork point, which is precisely the failure
+> P-71 exists to prevent, re-manufactured by the fix.
+>
+> **The corrected duty:** the fork point is **`git rev-parse HEAD` immediately before the `Agent` call** —
+> so *state it from that*, never from memory of when the session began, and **commit everything the workers
+> need BEFORE dispatching, not after**. Duties 2 and 3 above are unaffected and still in force: never infer
+> "absent" from a worktree, and a review task is still the sharpest case. **P-69 applies to this pattern
+> itself** — the claim "worktrees fork from session-start" had a shelf life of exactly one fire.
