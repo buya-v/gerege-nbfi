@@ -1,0 +1,244 @@
+worktree HEAD: 90c21d6
+
+===== .softhouse/conformance.sh:1152-1153
+    guard_ledger_invariants() {
+      local rc=0
+
+===== .softhouse/conformance.sh:1186-1190
+      return "$rc"
+    }
+    
+    run_guards() {
+      local failed=0
+
+===== .softhouse/conformance.sh:1209-1213
+      guard_ledger_invariants             || failed=1
+      if [ "$failed" -ne 0 ]; then
+        warn "conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass."
+        exit "$EXIT_UNUSABLE"
+      fi
+
+===== .softhouse/conformance.sh:1254-1254
+      [ -n "$context" ] && args+=("-context=$context")
+
+===== .softhouse/conformance.sh:401-401
+    NEXUS_DIR="$REPO_ROOT/nexus"
+
+===== .softhouse/conformance.sh:411-411
+    CMD_PKG="./internal/apps/loanschedule/conformance/cmd/conformance"
+
+===== .softhouse/conformance.sh:718-721
+    # WHY THEY ARE HERE AND NOT IN A `go test` OR A README (P-45).
+    # T163 shipped a request-body float guard and an audit; T169 shipped a narrow-catch
+    # lint. Both are falsifiable and both were correct. NEITHER WAS INVOKED BY ANYTHING
+    # THAT RUNS. `conformance.sh` never runs `go test`, so a Go-test-only guard is not a
+
+===== .softhouse/conformance.sh:1180-1186
+      say "conformance:   guard prints on every run and its head DROPS on the pass path — FU-T208-1):"
+      say "conformance:   the detection surface is the NAME, so RENAMING A BALANCE DEFEATS THIS GUARD;"
+      say "conformance:   dynamic SQL is caught only through the call set it recognises; triggers,"
+      say "conformance:   migrations and stored procedures are not walked at all; I-5's semantic half"
+      say "conformance:   and non-Go callers are not covered. A PASS here means 'no violation is visible"
+      say "conformance:   to a source-level guard over the Go tree', NOT 'the ledger tree is covered'."
+      return "$rc"
+
+===== .softhouse/guards/ledgerguard/main.go:852-853
+    		fmt.Printf("NIL-COVERAGE — zero hold-named functions exist under this root, so class " +
+    			"I6-HOLD-BALANCE inspected an empty population. I-6 is UNPROVEN on this tree.\n")
+
+===== nexus/internal/apps/ledger/slots_test.go:187-187
+    func TestPlaceholderDisjointnessHolds(t *testing.T) {
+
+===== nexus/internal/apps/ledger/glaccount.go:324-324
+    type PostedAccountSnapshot struct {
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/vector.go:16-18
+    // VectorSchemaV1 is the only schema string this harness accepts. A vector
+    // carrying any other value is INADMISSIBLE, never merely skipped.
+    const VectorSchemaV1 = "gerege.loanschedule.vector/v1"
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/vector.go:77-81
+    func SchemaContexts() []string {
+    	// Sorted, and returned by value, so the refusal message below is a function
+    	// of the schema and not of anything a caller can perturb.
+    	return []string{SelfTestDir, LoanScheduleContext}
+    }
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/vector.go:83-91
+    // IsSchemaContext reports whether ctx is one of SchemaContexts().
+    func IsSchemaContext(ctx string) bool {
+    	for _, c := range SchemaContexts() {
+    		if ctx == c {
+    			return true
+    		}
+    	}
+    	return false
+    }
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/vector.go:542-546
+    type Counterfactual struct {
+    	// ID names the wrong implementation, stably, so two vectors killing the same
+    	// candidate defect can be seen to do so. Screaming-kebab by convention, e.g.
+    	// "PLAIN-ACTACT-NO-PER-YEAR-SEGMENTATION".
+    	ID string `json:"id"`
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/vector.go:647-649
+    func StructuralCellFields() []string {
+    	return []string{"kind", "from_date", "due_date"}
+    }
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/vector.go:1006-1009
+    	// T154: the census is what makes "the store" mean the same set of files to
+    	// the shell float guard and to this loader. It is taken over `all` and over
+    	// the WHOLE tree, filter or no filter — for the same reason the duplicate
+    	// census is (T123): the filter narrows what is GRADED, never what is CHECKED.
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/vector.go:1016-1018
+    	if contextFilter == "" {
+    		return all, loadErrs, nil
+    	}
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/admit.go:109-110
+    	if v.Schema != VectorSchemaV1 {
+    		bad("schema %q, want %q", v.Schema, VectorSchemaV1)
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/admit.go:115-117
+    	if v.Context == "" {
+    		bad("context is empty")
+    	}
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/admit.go:139-147
+    	if v.Context != "" && !IsSchemaContext(v.Context) {
+    		bad("context %q is not a context this harness grades — %q accepts only %s. A vector "+
+    			"declaring an unknown context is INADMISSIBLE and not merely unmatched: the harness "+
+    			"would grade it by loanschedule rules against the loanschedule comparator while "+
+    			"reporting it under a heading that claims coverage of something else, which is how a "+
+    			"copied parity vector once raised the headline count to 44/5711. A second context "+
+    			"arrives as a second SCHEMA with its own comparator (DEC-2 §5.2), and it declares its "+
+    			"own contexts there — not by widening this list",
+    			v.Context, VectorSchemaV1, strings.Join(SchemaContexts(), ", "))
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/admit.go:149-149
+    	if v.DEC1Revision != pin.DEC1Revision {
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/admit.go:159-162
+    	switch v.Class {
+    	case ClassSelfTest:
+    		if !inSelfTestDir {
+    			bad("class %q must live under %s/ and this file is in %q", v.Class, SelfTestDir, dirOfFile)
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/admit.go:160-170
+    	case ClassSelfTest:
+    		if !inSelfTestDir {
+    			bad("class %q must live under %s/ and this file is in %q", v.Class, SelfTestDir, dirOfFile)
+    		}
+    		if v.Provenance.Kind != ProvenanceHandAuthored {
+    			bad("class %q requires provenance.kind %q, got %q", v.Class, ProvenanceHandAuthored, v.Provenance.Kind)
+    		}
+    		if v.Provenance.Note != HandAuthoredNote {
+    			bad("class %q requires provenance.note to be exactly %q, got %q",
+    				v.Class, HandAuthoredNote, v.Provenance.Note)
+    		}
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/admit.go:384-388
+    		bad("graded_against[%d] (%s) divergent_cells[%d] %q names field %q, which is not one of the "+
+    			"non-money cells this harness compares (%s). A cell the harness never compares cannot be the "+
+    			"site of a kill anything could detect",
+    			i, id, j, cell, field, strings.Join(StructuralCellFields(), ", "))
+    		return problems
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/admit.go:417-421
+    // DivergentCellForm is how ParseDivergentCell reports a cell name it could not
+    // resolve. There is one parser for divergent cell names in this harness and this
+    // is its vocabulary: two parsers that disagreed about what "period[2].due_date"
+    // means would be a defect of exactly the shape finding T9-F1b describes — one
+    // half of the harness policing a cell name the other half resolves differently.
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/admit.go:545-545
+    		bad("a parity vector must expect a schedule; a refusal is not an oracle observation")
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/capability.go:245-247
+    // A REFUSED VECTOR BACKS NOTHING (finding A2-19 F3), and this function decides
+    // that for itself rather than trusting the caller to have filtered. That is the
+    // whole shape of the defect it fixes: Run handed in every vector it had not
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/capability.go:262-278
+    func (r *CapabilityRegistry) CounterfactualCoverage(vectors []*Vector) (map[string][]string, []string) {
+    	covered := map[string][]string{}
+    	for _, v := range vectors {
+    		if v.Class != ClassParity {
+    			continue
+    		}
+    		if verdict := r.RefusalFor(v); !verdict.Gradeable {
+    			// "Not a pass, not a failure": the seam is blind to something this case
+    			// needs, a required capability is outside the graded domain, the seam or
+    			// a capability is not in the registry at all, or the request itself is
+    			// outside the graded domain. In every one of those five cases the vector
+    			// separated no implementation from any other, so it kills nothing — and
+    			// a kill that catches nothing must not back a capability and must not
+    			// print as killing anything. Same rule as the withdrawn structural cell
+    			// below, reached by a different route.
+    			continue
+    		}
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/capability.go:351-356
+    func (r *CapabilityRegistry) Assess(seamName string, required []string) CapabilityVerdict {
+    	seam, ok := r.bySeam[seamName]
+    	if !ok {
+    		return CapabilityVerdict{
+    			Reason: ReasonUnknownSeam,
+    			Detail: []string{fmt.Sprintf(
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/grade.go:373-379
+    	if s.NoFloatCensus.PackagesScanned == 0 {
+    		s.FatalReasons = append(s.FatalReasons,
+    			"THE NO-FLOAT CENSUS INSPECTED ZERO GO PACKAGES: a guard that inspects nothing passes everything, "+
+    				"so this is an ERROR and not a pass")
+    	}
+    
+    	pin, err := LoadPin(filepath.Join(opts.StoreRoot, "PIN.json"))
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/grade.go:473-474
+    			s.Errored++
+    		}
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/grade.go:478-480
+    	// by a parity vector that kills a named wrong implementation for it?
+    	// THE POPULATION IS "GRADED", NOT "NOT INADMISSIBLE" (finding A2-19 F3).
+    	//
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/grade.go:561-561
+    	r := Result{
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/registry.go:11-11
+    	"github.com/gerege/nexus/internal/apps/loanschedule/contract"
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/registry.go:26-28
+    var (
+    	implMu sync.RWMutex
+    	impls  = map[string]contract.ScheduleGenerator{}
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/registry.go:34-34
+    func Register(name string, g contract.ScheduleGenerator) {
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/registry.go:173-173
+    		req, cerr := v.Request.ContractRequest()
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/enums.go:92-104
+    // sentinelByName resolves a refusal sentinel's contract name.
+    func sentinelByName(s string) (error, error) {
+    	switch s {
+    	case "ErrInvalidRequest":
+    		return contract.ErrInvalidRequest, nil
+    	case "ErrUnsupportedConfiguration":
+    		return contract.ErrUnsupportedConfiguration, nil
+    	case "ErrNoDiscriminatingVector":
+    		return contract.ErrNoDiscriminatingVector, nil
+    	}
+    	return nil, fmt.Errorf("%q is not one of ErrInvalidRequest, ErrUnsupportedConfiguration, "+
+    		"ErrNoDiscriminatingVector", s)
+    }
+
+===== /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus/internal/apps/loanschedule/conformance/coverage_refusal_test.go:50-50
+    //
+

@@ -1,0 +1,38 @@
+=== A2-31: I4-BUILDER population, BOTH POLARITIES (P-22 / P-50) ===
+worktree HEAD: 90c21d6
+
+--- GREEN ARM: the real worktree tree ---
+root=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus
+files=45 calls=4795
+OPAQUE-SQL population  (mutatingExecRe callee) = 0
+I4-BUILDER population  (mutatingCallRe callee) = 0
+I6-HOLD-BALANCE population (holdFuncRe funcdecl) = 1
+    HOLD-FUNC internal/apps/ledger/slots_test.go:187  TestPlaceholderDisjointnessHolds
+
+--- RED ARM: /tmp scratch copy with three query-builder verbs planted ---
+root=/tmp/a231-i4b/nexuscopy
+files=46 calls=4798
+OPAQUE-SQL population  (mutatingExecRe callee) = 0
+I4-BUILDER population  (mutatingCallRe callee) = 3
+I6-HOLD-BALANCE population (holdFuncRe funcdecl) = 1
+  verb Delete     x1
+  verb Save       x1
+  verb Update     x1
+    BUILDER-CALL internal/apps/probe/planted.go:11  r.Update(...)
+    BUILDER-CALL internal/apps/probe/planted.go:12  r.Delete(...)
+    BUILDER-CALL internal/apps/probe/planted.go:13  r.Save(...)
+    HOLD-FUNC internal/apps/ledger/slots_test.go:187  TestPlaceholderDisjointnessHolds
+
+--- the REAL ledgerguard binary on the same two roots ---
+[GREEN]
+NIL-COVERAGE — the SQL surface inspected 4180 string literals and found ZERO SQL DML statements of any kind under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee/nexus. This tree contains no SQL: the I-4 SQL classes (I4-DML, I3-SQL-BALANCE) are proven by this program's --selftest and NOT by this tree. Do not read this run as evidence that the SQL detector works on real ledger SQL; there is none yet.
+NIL-COVERAGE — zero mutating driver calls (Exec/ExecContext/SendBatch/CopyFrom/Prepare) exist under this root, so class OPAQUE-SQL inspected an empty population. The Go module declares no database driver at all.
+     with its position and why the NIL-COVERAGE notice keys on the narrower "names a table"
+clean: no balance write path, no UPDATE/DELETE against a journal-entry table, and no hold touching a posted balance, across 45 Go files in 5 packages.
+[RED]
+REFUSED — the double-entry invariants DEC-2 §4.4 obliges are violated in the Go tree:
+  [I4-BUILDER] internal/apps/probe/planted.go:11:2
+  [I4-BUILDER] internal/apps/probe/planted.go:12:2
+NIL-COVERAGE — the SQL surface inspected 4183 string literals and found ZERO SQL DML statements of any kind under /tmp/a231-i4b/nexuscopy. This tree contains no SQL: the I-4 SQL classes (I4-DML, I3-SQL-BALANCE) are proven by this program's --selftest and NOT by this tree. Do not read this run as evidence that the SQL detector works on real ledger SQL; there is none yet.
+NIL-COVERAGE — zero mutating driver calls (Exec/ExecContext/SendBatch/CopyFrom/Prepare) exist under this root, so class OPAQUE-SQL inspected an empty population. The Go module declares no database driver at all.
+     with its position and why the NIL-COVERAGE notice keys on the narrower "names a table"
