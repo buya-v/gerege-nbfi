@@ -1,0 +1,26 @@
+# spawner  : /bin/zsh -lc /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/./lock-recovery.zsh   (the launchd ProgramArguments shape)
+# session  : start_new_session=True (setsid)
+# disposit.: restore_signals=True -- INT/QUIT/PIPE reset to SIG_DFL in the child
+#            (this is the P-55 control: without it the probe measures itself)
+--- no signal sent (control run) ---
+EXIT LATENCY (signal -> wrapper exit) = 0.000s
+subject rc = 0
+transcript = /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/out-lockrec-postfix.txt
+--- subject transcript --------------------------------------------------
+subject bytes: /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/bin/fire-program.sh
+extracting lock_holder_is_dead() verbatim...
+  lines 115-128 (14 lines)
+
+host=Buyanmunkhs-Mac-mini  self=40797  deadpid=40817  livepid=40818
+
+  PASS  1 dead pid on this host           -> DEAD (expected DEAD)
+  PASS  2 LIVE pid on this host           -> ALIVE (expected ALIVE)
+  PASS  3 our OWN pid                     -> ALIVE (expected ALIVE)
+  PASS  4 dead pid on a DIFFERENT host    -> ALIVE (expected ALIVE)
+  PASS  5 junk pid                        -> ALIVE (expected ALIVE)
+  PASS  6 no pid key                      -> ALIVE (expected ALIVE)
+  PASS  7 lock file absent                -> ALIVE (expected ALIVE)
+
+LOCK-RECOVERY REGRESSION: all 7 cases correct — T202's recovery is INTACT under T211
+LOCKREC DONE
+--- end transcript -----------------------------------------------------

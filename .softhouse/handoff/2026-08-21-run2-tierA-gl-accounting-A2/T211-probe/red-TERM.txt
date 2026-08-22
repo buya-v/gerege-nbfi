@@ -1,0 +1,38 @@
+############################################################
+# CASE red-TERM   signal=SIGTERM
+# subject bytes: /tmp/t211-scratch/fire-program-PREFIX.sh
+# zsh: zsh 5.9 (arm64-apple-darwin25.0)
+############################################################
+extracted from /tmp/t211-scratch/fire-program-PREFIX.sh
+  trap block : lines 159-206  (48 lines, 2603 bytes)
+  run_driver : lines 237-291  (55 lines, 2493 bytes)
+  run_driver first line : run_driver() {
+  run_driver last  line : }
+
+scratch repo ready at /tmp/t211-scratch/repo (LOCK present, no remote 'origin' -- push failures are expected and are the real code path)
+
+# spawner  : /bin/zsh -lc /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/subject.zsh   (the launchd ProgramArguments shape)
+# session  : start_new_session=True (setsid)
+# disposit.: restore_signals=True -- INT/QUIT/PIPE reset to SIG_DFL in the child
+#            (this is the P-55 control: without it the probe measures itself)
+--- t=0.000  sending SIGTERM to pid 13836 (sid=13836, own session, default dispositions) ---
+!!! t= 45.015  subject STILL ALIVE 45s after the signal -- the harness SIGKILLs it now
+EXIT LATENCY (signal -> wrapper exit) = 45.018s   <-- DEFERRED/HUNG, harness had to SIGKILL
+subject rc = -9   (python reports -N for death by signal N -> signal 9)
+transcript = /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/out-red-TERM.txt
+--- subject transcript --------------------------------------------------
+[1787361511.297019000] SUBJECT pid=13836 pgid=13836 sid=0
+[1787361511.311597000] LOCK present at start = YES
+[1787361511.322146000] READY
+[1787361511.334813000] invoking driver (chain iteration 1/1)
+[1787361511.345828000] background-task wait ceiling: disabled (CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0)
+INIT session t211-fake
+TOOL Bash :: {"command":"echo t211"}
+--- end transcript -----------------------------------------------------
+
+=== post-mortem (measured after the wrapper process was reaped) ===
+LOCK        = PRESENT-STRANDED   <-- the next fire parks behind it for up to 6h
+DRIVER CHILD= ORPHANED, pid 13852 STILL RUNNING   <-- unlocked driver still alive
+13852     1 13836 /bin/sleep 300
+              (harness killed it so it cannot pollute the next case)
+
