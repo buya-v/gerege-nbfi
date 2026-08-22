@@ -1,0 +1,14 @@
+{
+  "officeId": 1,
+  "transactionDate": "01 August 2026",
+  "currencyCode": "MNT",
+  "comments": "A2-29 drift probe leg 2: posted after glCode 19929 was retyped to INCOME",
+  "debits": [
+    {"glAccountId": 34, "amount": 500000}
+  ],
+  "credits": [
+    {"glAccountId": 33, "amount": 500000}
+  ],
+  "locale": "en",
+  "dateFormat": "dd MMMM yyyy"
+}

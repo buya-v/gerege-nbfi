@@ -1,0 +1,29 @@
+Border style is 2.
+=== Q6.0 the constraint that makes the predicate a no-op HERE ===
++-------------------------------+-----------+-------------------+---------------+-------------+----------------+
+|          column_name          | data_type | numeric_precision | numeric_scale | is_nullable | column_default |
++-------------------------------+-----------+-------------------+---------------+-------------+----------------+
+| is_running_balance_calculated | boolean   |                   |               | NO          | false          |
+| office_running_balance        | numeric   |                19 |             6 | NO          | 0              |
+| organization_running_balance  | numeric   |                19 |             6 | NO          | 0              |
++-------------------------------+-----------+-------------------+---------------+-------------+----------------+
+(3 rows)
+
+=== Q6.1 rows the predicate ADMITS vs EXCLUDES, over the whole table ===
++----------+-----------------------+-----------------------+
+| all_rows | admitted_by_predicate | excluded_by_predicate |
++----------+-----------------------+-----------------------+
+|       60 |                    60 |                     0 |
++----------+-----------------------+-----------------------+
+(1 row)
+
+=== Q6.2 the openingbalance cell A2-472 observed, re-derived here in MINOR UNITS ===
+--- report parameters: officeId 1, GLAccountNO 4, startDate 2026-05-01 ---
+--- the report SQL uses `entry_date <= date(startDate) - interval 3 day` ---
++---------------------------------------+-------------+
+| openingbalance_minor_asset_or_expense | rows_summed |
++---------------------------------------+-------------+
+|                             548954942 |          11 |
++---------------------------------------+-------------+
+(1 row)
+
