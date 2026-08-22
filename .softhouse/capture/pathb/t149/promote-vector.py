@@ -19,6 +19,47 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 RAW = os.path.join(HERE, 'out', 'gerege', 'T149-TIE-P9-raw.json')
 ATT = os.path.join(HERE, 'out', 'gerege', 'attestation.json')
 
+# HARDENED BY T206 (22 August 2026) - P-22, P-48 rule 4.  This is T203's SEVENTH
+# writer of the live golden-vector store, uninspected by T196, T198 and T203
+# itself (T203's own handoff names it explicitly as out-of-scope backlog: "a
+# seventh promote-shaped writer, not inspected").  Unlike the six T203 already
+# guarded, this one takes its OUTPUT PATH as `sys.argv[1]` rather than binding
+# it to a module constant derived from `__file__` -- the docstring above shows
+# both a /tmp destination and THE LIVE STORE PATH as equally valid invocations.
+# MEASURED, NOT ASSERTED (T206-evidence/RED-a-*.txt): the pre-fix `with
+# open(out_path, 'w') as fh: json.dump(...)` destroys whatever pre-existing
+# file occupies argv[1], unconditionally, exit 0 -- a bare O_TRUNC exactly like
+# T74/T61/T64/T57/T8, differing only in where the destination is bound. A live
+# vector already occupies this script's own documented default name
+# (T149-PATHB-TIE-1M162502pt50-12x21pt6pct.json), so this is not a
+# hypothetical: T206 also measured that the LIVE file has been hand-edited
+# since promotion (T153's review added caveat prose the script's own hardcoded
+# NOTE/KILL_EV strings do not contain), so a re-run would not just risk
+# truncation -- it would silently REGRESS the vector's content.
+#
+# THIS REUSES T203's SHARED MODULE VERBATIM -- `t203_store_guard.py`, T178's
+# shape transposed to a create-only store writer -- and introduces no second
+# guard idiom. This script sits at `.softhouse/capture/pathb/t149`, a
+# DIFFERENT depth from `.softhouse/handoff`, so the shared module is reached
+# exactly as T64-promote-vectors.py reaches it: four dirnames up from
+# `__file__` lands on `.softhouse`, then `handoff`. The resolved directory
+# goes at the FRONT of sys.path so the module cannot be shadowed from the cwd
+# or the environment; a missing module fails CLOSED.
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))))), "handoff"))
+import t203_store_guard as guard_store  # noqa: E402
+
+NAME = 'T149-promote-vector'
+
+# Argv-only authorisation phrase - never an environment variable, for the
+# reason recorded in the guard module. Authorises CREATING a new vector in the
+# live store only; it does NOT authorise overwriting an existing one, and
+# nothing does. `main(sys.argv[1])` below reads only the first positional
+# argument, so this token can be passed as a second/third argv word without
+# changing what the script treats as its destination.
+AUTHORISE_TOKEN = (
+    'I-AM-PROMOTING-T149-PATHB-TIE-INTO-THE-LIVE-GOLDEN-VECTOR-STORE')
+
 TITLE = (
     "THE PINNED HALF_UP EXACT TIE, GRADED. MNT 1,162,502.50 over 12 monthly repayments at "
     "21.6% p.a., disbursed 2026-01-01, so period-1 interest is exactly 1,162,502.50 x 0.018 = "
@@ -251,9 +292,15 @@ def main(out_path):
         },
         'invariant_exemptions': [],
     }
-    with open(out_path, 'w') as fh:
-        json.dump(v, fh, indent=2)
-        fh.write('\n')
+    # `json.dumps(v, indent=2) + '\n'` is byte-for-byte what `json.dump(v, fh,
+    # indent=2)` followed by `fh.write('\n')` produced -- T206 proved the
+    # emitted bytes unchanged by promoting into an empty scratch store and
+    # diffing byte-for-byte against a control run of the pre-fix code path.
+    store_dir = os.path.dirname(out_path) or '.'
+    filename = os.path.basename(out_path)
+    out_path = guard_store.write_vector(
+        NAME, AUTHORISE_TOKEN, store_dir, filename,
+        json.dumps(v, indent=2) + '\n')
     print('wrote %s (%d periods)' % (out_path, len(periods)))
     print('  case_id %s   seam %s   capture sha256 %s'
           % (v['case_id'], v['oracle']['seam'], v['provenance']['capture_sha256'][:16]))

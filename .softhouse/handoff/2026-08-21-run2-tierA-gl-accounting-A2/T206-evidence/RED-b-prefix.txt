@@ -1,0 +1,38 @@
+T206 item (b) -- RED proof, .softhouse/handoff/T61-sweep/build-pass3f.py:147,215,216
+
+Setup: scratch mirror at REAL DEPTH (<scratch>/.softhouse/handoff/T61-sweep/build-pass3f.py,
+<scratch>/.softhouse/capture/src/{Capture3e.java,run-pass3e.sh}) staged from `git show HEAD:...`
+(pre-fix, immutable blob), plus CANARY sentinels standing in for the two ALREADY-COMMITTED
+build outputs (Capture3f.java, run-pass3f.sh -- both exist today in the real repo, being
+outputs of a prior run of this same script).
+
+Commands and output:
+
+  $ git hash-object .softhouse/handoff/T61-sweep/build-pass3f.py
+  080fd4712207a0a91add50f3a9985ed4b5cc422e
+
+  $ mkdir -p /tmp/t206-b-red/.softhouse/handoff/T61-sweep
+  $ mkdir -p /tmp/t206-b-red/.softhouse/capture/src
+  $ git show HEAD:.softhouse/handoff/T61-sweep/build-pass3f.py > .../build-pass3f.py
+  $ git show HEAD:.softhouse/capture/src/Capture3e.java > .../Capture3e.java
+  $ git show HEAD:.softhouse/capture/src/run-pass3e.sh > .../run-pass3e.sh
+  $ printf 'CANARY-SENTINEL-T206-b-JAVA ...\n' > .../Capture3f.java
+  $ printf 'CANARY-SENTINEL-T206-b-SH ...\n' > .../run-pass3f.sh
+  $ chmod 600 .../run-pass3f.sh          # before: mode 100600
+
+  $ python3 /tmp/t206-b-red/.softhouse/handoff/T61-sweep/build-pass3f.py
+  built .softhouse/capture/src/Capture3f.java and run-pass3f.sh from pass 3e
+  EXIT=0
+
+  --- after ---
+  Capture3f.java: canary text GONE, replaced with real built PASS 3f content
+  run-pass3f.sh:  canary text GONE, replaced with real built PASS 3f content
+  mode of run-pass3f.sh: 100755 (silently widened from 100600 by the unguarded os.chmod)
+
+RESULT: both `open(path, "w").write(...)` sites (build-pass3f.py:147, :215) are bare O_TRUNC
+with no existence check, and the `os.chmod(path, 0o755)` (build-pass3f.py:216) runs
+unconditionally regardless of what occupied the path. All three destroy/alter a
+committed artefact with exit 0.
+
+Real repo state throughout: `git status --porcelain .softhouse/capture/src/` -> clean,
+i.e. the real Capture3f.java / run-pass3f.sh were never touched by this test.

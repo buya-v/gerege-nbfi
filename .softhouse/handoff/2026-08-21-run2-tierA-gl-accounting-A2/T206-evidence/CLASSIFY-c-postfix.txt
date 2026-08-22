@@ -1,0 +1,44 @@
+=== T179 parser-based guard classifier
+root                : <explicit file list>
+python parser       : ast (stdlib, authoritative for Python)
+shell parser        : NONE — every .sh file is REFUSED, and counted
+
+--- POPULATION, with denominators
+  script files enumerated (.py/.sh/.bash)   : 2
+    of which Python, parsed                 : 2
+    of which REFUSED                        : 0
+  non-script files under the same root      : 0 (never inspected)
+    largest uninspected groups              : 
+  mutation call sites found in Python       : 2
+
+--- MUTATION SITES: scope x verdict (every site appears exactly once)
+  scope      UNGUARDED                 GUARDED-PROCESS-IMPORTED  GUARDED-PROCESS           GUARDED-FINALLY-INDIRECT  GUARDED-CONTEXTMANAGER    GUARDED-FINALLY           ATOMIC                    SANDBOX                   
+  TRUSTED    0                         0                         0                         0                         0                         0                         0                         0                            (total 0)
+  UNKNOWN    0                         0                         0                         0                         0                         0                         1                         0                            (total 1)
+  SCRATCH    0                         0                         0                         0                         0                         0                         0                         1                            (total 1)
+  ALL        0                         0                         0                         0                         0                         0                         1                         1                            (total 2)
+
+--- UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)
+
+--- UNGUARDED MUTATIONS WHOSE TARGET COULD NOT BE RESOLVED (0 sites in 0 files)
+    These are NOT clean and NOT dirty. They are unresolved, and they are
+    printed so nothing is silently dropped (P-40).
+
+--- P-48 DETECTOR: files T156's regex would score GUARDED on prose alone
+    (guard words present ONLY inside string literals; zero try/finally nodes)
+  none in this root
+
+--- T196-3: ONE IMPORT HOP, FOR GUARDS (D-3)
+  files importing a module that defines a restoring CM : 0
+  files importing a module with a module-scope handler  : 0
+  SITES EXCUSED ONLY BY AN IMPORTED CM                  : 0
+  SITES EXCUSED ONLY BY AN IMPORTED HANDLER             : 0
+  imports NOT followed — module not found under the repo root: 8 distinct
+      decimal, hashlib, io, json, math, os, sys, tempfile
+  imports NOT followed — AMBIGUOUS basename (refused, never guessed): 0
+  NOTE: exactly ONE hop is taken. A guard reached through two imports is
+        invisible, and every line above is a REFUSAL, not a clean bill.
+
+--- REFUSED FILES, NAMED (a refusal is an outcome, not a skip)
+  refused total: 0
+c-postfix exit: 0

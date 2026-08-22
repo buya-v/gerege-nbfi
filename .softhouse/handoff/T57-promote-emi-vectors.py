@@ -91,20 +91,40 @@ TITLE = {
 }
 
 
+# HARDENED BY T206 (22 August 2026), pre-existing defect flagged (not T57's
+# fault, and not the store-truncation class T203/T206(a) fixed above) but the
+# SAME root cause the guard module above refuses to repeat: "NO BARE `assert`
+# ANYWHERE. `python3 -O` strips them, and a guard that vanishes under a flag
+# is P-22's vacuous guard with a delay fuse." Every one of this file's
+# invariant checks -- money-text sanity, the smoothing-loop guard actually
+# tripping, the fourteen capture preconditions gating `build()`, the final
+# disbursement-row cross-checks -- was a bare `assert`, and `python3 -O`
+# removes every one of them, silently, while leaving the promotion itself
+# running to completion. MEASURED (T206-evidence/RED-c-*.txt): running this
+# file's checks under `-O` executes zero of them, exit 0, where `-OO` also
+# strips docstrings besides. `require` below is `if not cond: sys.exit(msg)`,
+# T203's own rule for the guard module applied here: an `if` and an explicit
+# exit, never a bare `assert`, so the check runs identically with or without
+# `-O`.
+def require(cond, msg):
+    if not cond:
+        sys.exit(msg)
+
+
 def minor(text, digits=MINOR_DIGITS):
     """Exact major-unit decimal string -> integer minor-unit string. Textual only."""
     s = text.strip()
-    assert s and not s.startswith("-"), "unexpected sign in %r" % text
+    require(s and not s.startswith("-"), "unexpected sign in %r" % text)
     if "." in s:
         ip, fp = s.split(".", 1)
     else:
         ip, fp = s, ""
-    assert ip.isdigit() and (fp == "" or fp.isdigit()), "non-numeric %r" % text
+    require(ip.isdigit() and (fp == "" or fp.isdigit()), "non-numeric %r" % text)
     if len(fp) > digits:
         excess = fp[digits:]
-        assert excess.strip("0") == "", (
+        require(excess.strip("0") == "", (
             "SCALE VIOLATION: %r carries significant digits beyond %d minor-unit digits; per "
-            "README this is a harness bug, not something to round" % (text, digits))
+            "README this is a harness bug, not something to round" % (text, digits)))
         fp = fp[:digits]
     fp = fp + "0" * (digits - len(fp))
     return (ip + fp).lstrip("0") or "0"
@@ -122,7 +142,7 @@ def date_obj(iso):
 def rate_rational(percent_text):
     q = Decimal(percent_text) / Decimal(100)
     sign, digits, exp = q.as_tuple()
-    assert sign == 0
+    require(sign == 0, "unexpected negative rate %r" % percent_text)
     if exp >= 0:
         num, den = int(q), 1
     else:
@@ -151,11 +171,13 @@ def cf_emi_smoothing_loop(case_id, inp, obs):
     n = int(inp["numberOfRepayments"])
     m = noloop_schedule(inp["disbursementAmount"], n, inp["annualNominalInterestRate"])
     g = guard(n, m["lastEmi"], m["penultEmi"])
-    assert g["trips"], (
-        "%s DOES NOT TRIP THE GUARD -- do not promote it as a smoothing-loop vector" % case_id)
+    require(g["trips"], (
+        "%s DOES NOT TRIP THE GUARD -- do not promote it as a smoothing-loop vector" % case_id))
 
     rows = paying_rows(obs)
-    assert len(rows) == len(m["rows"]) == n
+    require(len(rows) == len(m["rows"]) == n,
+            "row count mismatch for %s: obs=%d model=%d n=%d"
+            % (case_id, len(rows), len(m["rows"]), n))
 
     worst = (0, None, None, None, None)
     differing = 0
@@ -171,7 +193,7 @@ def cf_emi_smoothing_loop(case_id, inp, obs):
             if abs(o - c) > worst[0]:
                 worst = (abs(o - c), k, label, o, c)
     margin, wk, wcol, wobs, wcf = worst
-    assert margin > 0, case_id
+    require(margin > 0, "%s: counterfactual margin is not positive (%r)" % (case_id, margin))
 
     obs_ti = int(minor(obs["totalInterestAmount"]))
     cf_ti = int(m["totalInterest"] * 100)
@@ -333,20 +355,20 @@ def build(case_id):
     c = cases[case_id]
     inp, obs = c["inputs"], c["observed"]
 
-    assert inp["mathContextPrecision"] == "19", case_id
-    assert inp["mathContextRoundingMode"] == "HALF_UP", case_id
-    assert inp["ambientMoneyHelperPrecision"] == "19", case_id
-    assert inp["ambientMoneyHelperRoundingMode"] == "HALF_UP", case_id
-    assert inp["currencyDecimalPlaces"] == "2", case_id
-    assert inp["daysInMonth"] == "DAYS_30" and inp["daysInYear"] == "DAYS_360", case_id
-    assert inp["interestMethod"] == "DECLINING_BALANCE", case_id
-    assert inp["repaymentFrequencyType"] == "MONTHS" and inp["repaymentFrequency"] == "1", case_id
-    assert inp["downPaymentEnabled"] is False and inp["downPaymentPercentage"] == "0", case_id
-    assert inp["installmentAmountInMultiplesOf"] is None, case_id
-    assert inp["currencyInMultiplesOf"] is None, case_id
-    assert inp["fixedLength"] is None, case_id
-    assert inp["daysInYearCustomStrategy"] is None, case_id
-    assert case_id not in PIN["never_promotable_capture_case_ids"], case_id
+    require(inp["mathContextPrecision"] == "19", case_id)
+    require(inp["mathContextRoundingMode"] == "HALF_UP", case_id)
+    require(inp["ambientMoneyHelperPrecision"] == "19", case_id)
+    require(inp["ambientMoneyHelperRoundingMode"] == "HALF_UP", case_id)
+    require(inp["currencyDecimalPlaces"] == "2", case_id)
+    require(inp["daysInMonth"] == "DAYS_30" and inp["daysInYear"] == "DAYS_360", case_id)
+    require(inp["interestMethod"] == "DECLINING_BALANCE", case_id)
+    require(inp["repaymentFrequencyType"] == "MONTHS" and inp["repaymentFrequency"] == "1", case_id)
+    require(inp["downPaymentEnabled"] is False and inp["downPaymentPercentage"] == "0", case_id)
+    require(inp["installmentAmountInMultiplesOf"] is None, case_id)
+    require(inp["currencyInMultiplesOf"] is None, case_id)
+    require(inp["fixedLength"] is None, case_id)
+    require(inp["daysInYearCustomStrategy"] is None, case_id)
+    require(case_id not in PIN["never_promotable_capture_case_ids"], case_id)
 
     periods = []
     for p in obs["periods"]:
@@ -442,9 +464,9 @@ def build(case_id):
     }
 
     disb = [p for p in periods if p["kind"] == "DISBURSEMENT"]
-    assert len(disb) == 1, case_id
-    assert disb[0]["principal_minor"] == v["request"]["disbursements"][0]["amount_minor"], case_id
-    assert disb[0]["outstanding_principal_minor"] == disb[0]["principal_minor"], case_id
+    require(len(disb) == 1, case_id)
+    require(disb[0]["principal_minor"] == v["request"]["disbursements"][0]["amount_minor"], case_id)
+    require(disb[0]["outstanding_principal_minor"] == disb[0]["principal_minor"], case_id)
     return v
 
 
