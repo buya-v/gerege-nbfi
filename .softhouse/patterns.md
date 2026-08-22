@@ -1880,6 +1880,37 @@ had been conflating them too.
 state **where you looked**. If the answer does not include every place the thing is kept, the finding is
 "I did not find it", and those are not the same claim.
 
+### Run 2026-08-21-run2-tierA-gl-accounting-A2 — local fire `20260822-000013` (thirteen workers, all thirteen merged)
+
+**Oracle REACHABLE throughout.** Pinned checkout `426a23544`. PostgreSQL only. **THIRTEEN DISPATCHED, THIRTEEN COMPLETED, THIRTEEN MERGED, ZERO LIVE AT EXIT.** No isolation violation; every branch scope-checked by the driver on the **three-dot** diff before merge.
+
+- **What worked**: two waves against non-overlapping `files_hint`, merging as each returned. **Attacking the GATE rather than the task it blocked** — `RESUME.md` said `A2-15` was unblocked; the driver held it and sent `A2-25` at G-11's own stated unblocking condition instead. `A2-25` then **measured** that §5.2 requirement 6, the requirement that would have graded `A2-15`, **cannot be satisfied on the bytes it specifies** — so dispatching A2-15 would have sent it at an impossible instruction whose nearest improvisation is the defect §5.1.1 retracts. **Pairing every finder with an adversary in the next wave** (`T116`→`T220`, `A2-24`→`A2-27`, `A2-25`→`A2-28`, `A2-26`→`A2-29`) — three of the four adversaries changed the finding they inherited.
+
+- **Vectors added / contexts at parity**: **43 parity vectors → 46**, 5664 → **7884 cells**, kills 103 → **106 money** + 7 structural, **4 invariant assertions EXEMPTED BY A VECTOR** each printed with its full reason. Store `ce821c63…` → **`73c3ea7b43dd75f04884072719a87fc8e1d255c1`**. First corpus movement in three fires. `T116` executed **G-8 option (a)**; `T220` independently re-derived it and **APPROVED**.
+
+- **What the independent workers caught — including four against the driver**:
+  - **`A2-25` → the driver**: *"three of its **four** detection classes"* is a **wrong denominator asserted as measurement**, propagated by the driver into four files after being **certified "EXACT"**. The guard declares **seven** classes. Origin: §4.4.1's "four things the guard cannot see" — four **blind spots** — read as four **classes**. **P-67**.
+  - **`T214` → the driver**, three times: the basename cross-check has **four** coincidental hits not three; *"the other 19 branches need nothing"* is true of **paths** and over-claims for **content** (63 same-path/different-content pairs, 10 novel, **four targeting `contract.go` or the DEC-1 ADR — landing them would have been a gate bypass**); and **`T22` is not one of the four branches**.
+  - **`A2-26` → the driver**: the brief's list of journal-entry observations was **7 of 9**.
+  - **`A2-27` → the driver**: the evidence path in its brief does not exist.
+  - **`T220` → the record**: found **family B's MECHANISM**, which `T116` explicitly could not. `ProgressiveEMICalculator.java:1962` consumes `mc.getPrecision()` = 19 as **decimal places**; `RepaymentPeriod.java:217` is `reduce(BigDecimal.ONE, BigDecimal::add)` — **no MathContext**. So `rateFactorPlus1` carries **20 significant digits inside a precision-19 context**, the EMI dips below half a minor unit at exactly the observed boundary, and **an EMI of zero repays nothing**. Both sites driver-verified. **This is DEC-1's known `MathContext` double-sense producing a money outcome.**
+  - **`A2-27` → `A2-24`**: refused to adopt A2-24's archived probe. Its six `t.Fatal*` are **preconditions**; the measurement goes to `t.Logf` and is **never asserted** — on the revert it prints 51 instead of 37 and **still passes**. Adopting it would have shipped the vacuous guard it was meant to prevent.
+  - **`A2-28` → the driver's own correction**: only **two** of the three NIL-COVERAGE sites fire, and **`I4-BUILDER`'s population it did not establish** — so it claimed **no corrected numerator**, which is the discipline whose absence produced P-67.
+  - **`T215` → itself**: its first draft's census pattern was strict, so a widened-pathspec mutation could **vanish from the count (2→1) instead of failing** — a population a defect can shrink out of.
+  - **`T217` → its own brief**: `rm -f "$LOCK"` is the *first* statement in `release_lock`, so the unbounded push was **never** a lock-safety hazard; bounded anyway because it could hang the **signal handler** past launchd's grace.
+  - **`A2-29` → the obvious conclusion**: a full recompute healed all 54 drifted rows — *"which alone would have been the wrong conclusion"*. Retype-after-compute beat the recompute.
+
+- **New knowledge**: **P-66** (deps resolve in run archives; `T116` was never blocked), **P-67** (certify a ratio only after counting **both** terms), **P-68** (a run that graded nothing claimed every capability backed), **P-69** (measured claims went stale **inside one fire**), **P-70** (four ways a search result was stated as a world fact).
+
+- **Gates**: **G-12 RAISED and MEASURED in one fire** — `acc_gl_journal_entry.{office,organization}_running_balance` is a **SECOND SOURCE OF TRUTH, not a cache**: drift of **MNT 2,000,000.00** survived **four** organisation-wide recomputes and reached the contract boundary. One exposing route is **HTTP 500 on PostgreSQL** (`GLAccountReadPlatformServiceImpl.java:130-131`, MySQL-only `GROUP BY … DESC`) — **it has never worked on the only database this program permits**. **G-11 stays `OPEN — NOT RATIFIABLE`**: `A2-25` **REJECTED** rev 3, `A2-28` wrote rev 4, and `A2-31` must review it clean. **G-8 stays OPEN**; option (a) executed, (b) and (c) untouched.
+
+- **Claims marked UNVERIFIED** (carried forward): `A2-28` did not establish `I4-BUILDER`'s population; `A2-29` could not break the uncorrelated seed join and could not reach `LIMIT 10000` / multi-office / the NULL predicate; `T217`'s stop-grace calibration used a **tool-free single-turn** `claude`, not a fire's agentic session; `A2-26` marks product 24's header-account slot unverified (the 403 names one slot — the validator throws rather than accumulates).
+
+- **Verifier** (driver-run on merged `main`, re-run not quoted): conformance **PASS exit 0**, probe **present** and `up`, **46 parity vectors / 7884 cells**, contract-refusal 4 · self-test 1 · refused 0 · inadmissible 0 · harness errors 0 · invariant violations 0 · **0 NOT RUN** · **4 EXEMPTED BY A VECTOR** · kills 106 money + 7 structural · `--prove` **23/23** · `go build` 0 · `go vet` 0 · `go test -count=1` ok · `gofmt -l` exactly `contract.go` (G-3 expected) · store `73c3ea7b43dd75f04884072719a87fc8e1d255c1`.
+  **This means "matches the reference oracle on captured vectors, within the graded domain". It does NOT mean safe to cut over.**
+
+- **Backlog carried forward**: `A2-31` (rev 4 review — G-11's condition), `A2-15` (**still gated**), `T219`+`T223` (G-8's region is stated in rates/terms; the phenomenon is an EMI half-minor-unit floor), `T222` (no corpus-wide exemption tripwire), `T221` (`T108.md` still carries the claims its own review disproved), `T224` (the retracted claim survives in `conformance.sh:1115-1116`), `A2-27`/`A2-30`, `T145`, `T160`, `T164`, `T174`, `T192`, `T195`, `T207`, `T213`, `T216`, `A2-23`.
+
 ### Run 2026-08-21-run2-tierA-gl-accounting-A2 — local fire `20260822-080001`, round 2 (ten workers, all ten merged)
 
 **Oracle REACHABLE throughout.** Pinned checkout `426a23544`. PostgreSQL only. **TEN DISPATCHED, TEN COMPLETED, TEN MERGED, ZERO LIVE AT EXIT.** No isolation violation; every branch scope-checked on the three-dot diff before merge.
