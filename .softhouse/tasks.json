@@ -3075,7 +3075,7 @@
   {
    "id": "T268",
    "title": "T259's R-VPA rule FAILS OPEN: it prints REFUSED NIL COVERAGE in its body while its exit code says GREEN — the P-45 shape inside the eliminator",
-   "status": "in_progress",
+   "status": "in_review",
    "executor": "agent",
    "model": "opus",
    "target": "code",
@@ -3093,7 +3093,7 @@
    ],
    "contract_independent": true,
    "description": "RAISED BY T262 (F-1, HIGH) reviewing T259, and CONFIRMED live rather than theoretical. R-VPA gates nil coverage GLOBALLY at line 294 while MEASURING it PER FILE, so a two-file invocation -- which is the obvious next step for B-1 -- prints `REFUSED  NIL COVERAGE` in the body and still exits 0 GREEN. **A rule written to make a silent disagreement impossible to print is itself printing a refusal and reporting green.** That is the sixth-plus P-45 instance in this program and the second time this fire that an instrument broke the rule it was written to enforce (P-80).\n\nALSO FROM T262, same file:\n  F-2 (MED) FOUR error paths, not two. The two untested ones -- `raise SystemExit(str)` at lines 79 and 144 -- exit **1**, the code RESERVED FOR A MEASURED NEGATIVE. T259's handoff claim of two is FALSE. Conflating an error with a measured negative is exactly P-80, in the file that cites P-80.\n  F-3 (MED) 8 of 12 invented shapes MISSED SILENTLY: verdict as an object or a bare int; verdict key named `result` or `conclusion`; predicate `null`, `\"false\"`, or `0`; predicate in a nested list; row nested one level deeper; top-level array. Two shapes were caught ONLY by nil coverage and FLIP TO MISS WHEN BATCHED -- which is F-1 again, from the other side.\n\nTHE JOB: fix the global-vs-per-file gating so nil coverage on ANY file refuses; make all four error paths exit 2 and never 1; widen the selector to the missed shapes or state, per shape, why it is out of scope. DRIVE EACH RED THROUGH THE BATCHED ROUTE, not the single-file one -- the single-file route is what hid this. **THIS TASK BLOCKS WIRING (T269): an unwired rule that lies harms nothing, a WIRED one that lies is worse than no rule at all.**",
-   "note": "dispatched by local fire 20260822-060013b in an isolated worktree; driver awaiting completion",
+   "note": "Committed 81eb16f. ROOT CAUSE reproduced first-hand before any edit: check_file printed 'REFUSED NIL COVERAGE' per file but recorded it NOWHERE, while the gate computed nil from rep.rows == 0 summed ACROSS THE BATCH -- so ONE populated file switched the refusal off for every other file. Three fixes, 23/23 red-green legs, each leg running the rule TWICE on identical inputs: pre-fix extracted by PINNED BLOB SHA 86f4285 (not HEAD:path, which would silently become the fixed file once committed) against the live file, passing only if BOTH exits match. It counted SIX error paths where its own handoff said two and the review said four, and marked the two it could not drive as UNVERIFIED. It measured F-3's widening against the real evidence BEFORE writing it, predicted zero count change, and got zero. T259's own 14-leg battery still 14/14. BAR PASS with the frontier re-measured at 11 == 11 with its files STAGED, because the census reads git ls-files and an unstaged run would not have seen them.",
    "branch": "softhouse/t268-rvpa-failopen"
   },
   {
@@ -3109,7 +3109,8 @@
    "slice": null,
    "dependencies": [
     "T268",
-    "T274"
+    "T274",
+    "T271"
    ],
    "attempts": 0,
    "files_hint": [
@@ -3120,7 +3121,7 @@
    ],
    "contract_independent": true,
    "description": "THREE independent reviews (T263, T262, T261) each ruled that an unwired guard MAY merge but only on the condition that a WIRING TASK EXISTS WITH AN OWNER AND A RED-DRIVE REQUIREMENT. T262 put it best, turning T259's own argument back on it: **PROSE DOES NOT FIRE ON THE NEXT FIRE.** This task is that condition. It was filed BEFORE the branches merged, deliberately.\n\nAll three were unwired for the same reason: `conformance.sh` was held by T253 this fire and the scope guard held. That is the guard working, not failing -- but it means the program has just produced three artefacts in the exact P-45 condition each was written to remove, which is now the SIXTH, SEVENTH and EIGHTH recorded instance.\n\nTHE JOB: wire each into the AUTOMATIC path and DRIVE EACH RED THROUGH THE ROUTE THAT RUNS IT (P-22 -- a standalone red is not a wired red; you must watch it fail through the harness). For each, DECIDE AND ARGUE hard-guard (exit 2, before the probe) vs soft. **STATE THE HAZARD IN THAT CHOICE**: a HARD guard failure exits 2 BEFORE the probe line is ever printed, and this program has already had to correct a rule that would have misread that silence as an ORACLE OUTAGE (P-83). If you make it hard, say what a reader must check to tell the two apart.\n\nPRECONDITIONS, both hard: (a) `conformance.sh` must be free -- check the contention map in RESUME.md before dispatch; (b) **T268 must land first for R-VPA.** Wiring a rule that prints a refusal and exits green would install a fail-open into the harness, which is strictly worse than leaving it unwired.\n\nT263's condition on T164's guard additionally requires that the SUPERSEDED trap be closed -- see T270.\n\nADDED BY THE DRIVER AT G-14 CLOSURE, from T260's RATIFY review of DEC-2 revision 8. The DEC-2 anchor checker is the FOURTH artefact this task must wire, and it carries three conditions of its own:\n  (a) FU-T255-1 -- the checker is HAND-RUN. T255's refusal to touch T253's conformance.sh was correct, but 'wrote the wiring' is not 'installed'. Install it.\n  (b) T260 F-1 (MED) -- the checker parses 22 of the document's 25 `[ANCHOR` tokens. TWO LIVE ANCHORS carrying a trailing `; MEASURED by ...` are SILENTLY UNCHECKED, which contradicts the checker's own P-66/P-70 claim about stating where it looked. Both resolve today (T260 verified by hand), so this is a coverage hole, not a live falsehood -- fix it before wiring, or the wired gate inherits a silent blind spot.\n  (c) T260 F-2 (MED) -- A NON-UNIQUE ANCHOR YIELDS 2 MATCHES AND `git grep` EXITS 0, AND NOTHING FLAGS IT. A deleted or edited anchor gives 0 matches and exit 1, which is loud and strictly better than a rotted line number -- but non-uniqueness is the NEW ROT and it is silent. The wired gate MUST refuse on a non-unique anchor. Also record that anchors are WORSE than line numbers under reformatting (measured: one inserted space -> ROT), so the wiring should say so rather than let the document read as invulnerable.\n  (d) Regenerate SS4.4.1's DERIVED fence (a ninth invocation exists) and carry a NEGATIVE CONTROL.\nT260 requires this task fix (b), (c) and (d) in the same pass that wires it.",
-   "note": "Filed by the driver, local fire 20260822-060013, as a MERGE CONDITION set by an independent review."
+   "note": "DEPENDENCY ADDED BY THE DRIVER on T268's MEASUREMENT, not on a guess: wiring classify-t219.json turns the BAR RED TODAY -- driven, exit 1, unacknowledged=4 -- and that is exactly B-1/T271. So T269 either waits for T271 or wires t229 only. T271 is now a hard dependency. T268 also recommends making the target list a COMMITTED EVIDENCE FILE so T271 adds its file without a second contended conformance.sh edit; adopt that. And carry T268's P-84 hazard into the wiring: an R-VPA REFUSAL (its exit 1) surfaces at the harness boundary as EXIT 2 WITH NO PROBE LINE, which is indistinguishable from an oracle outage unless the reader greps the run output for 'conformance: R-VPA' -- printed before the exit. Wire that grep hint into the failure text itself; a reader who must remember it will not."
   },
   {
    "id": "T270",
@@ -3149,7 +3150,7 @@
   {
    "id": "T271",
    "title": "B-1: the same verdict/predicate defect in t219-g8-residual — and T259's stated expectation about it is FALSIFIED",
-   "status": "pending",
+   "status": "in_progress",
    "executor": "agent",
    "model": "opus",
    "target": "code",
@@ -3167,7 +3168,8 @@
    ],
    "contract_independent": true,
    "description": "RAISED BY T259 as its own out-of-scope finding (correctly measured read-only, changed nothing), then CONFIRMED AND SHARPENED by T262 (F-4).\n\n`.softhouse/capture/t219-g8-residual/out/classify-t219.json` carries the same shape as T229's: a verdict field that never consults its own recorded predicate, on **3 rows / 4 pairs** (`T219-R600p0-N103-B1` x2, `-B4499`, `-B3001`). In no handoff. Nobody had looked.\n\n**THE PART THAT MAKES THIS MORE THAN A REPEAT.** T262 re-derived all SEVEN t219 carriers from raw capture in integer minor units and got agreement **6 of 7, NOT 7 of 7**. `T219-R600p0-N103-B1` carries a **CORRECTED** predicate that is FALSE under an affirmative verdict (raw-verified: n=103, E=1, B=1, P=1 -> 103 against observed interest 13). **T259 flagged `-B4499` as the risky one; that one behaves as expected, and the one it did not flag does not.** So T259's recorded expectation is falsified, and the 'disagrees nowhere' leg of its argument is weakened -- its RULING still survives, but on the STRUCTURAL argument alone (verdict is computed at lines 95/100, every `P2_*` key is assigned at 103-106, AFTER; it structurally cannot read them).\n\nTHE JOB: re-derive all seven carriers YOURSELF in integer minor units, `parse_float=Decimal` everywhere, `assert type(v) is int` on every quantity -- no floating point, including intermediates. Establish what `-B1` actually is: a genuine counterexample to the corrected predicate, a data defect, or a different row structure. **T262 notes the corrected identity `interest = totalRepayment - principalRepaid` is EXACT AND UNCONDITIONAL (6/6), while `totalRepayment = n*E + B` is CONDITIONAL and holds only 4/6** -- it needs the EMI-plus-balloon row structure, NOT full amortisation (three partial cells satisfy it exactly). Start there: `-B1` may simply not have that structure.\n\nT114/T176 BIND: `classify-t219.json` is committed evidence. DO NOT retro-edit it. Check first whether a manifest pins the bytes (T236's convention). Materiality is expected LOW -- verify rather than assume, and state it plainly. **G-8's region must not move, and options (b)/(c) must not be put to Buyan, unconditionally.**",
-   "note": "Filed by the driver, local fire 20260822-060013, as a MERGE CONDITION set by an independent review."
+   "note": "dispatched by local fire 20260822-060013b; PROMOTED because T268 measured that it BLOCKS T269 wiring (classify-t219.json turns the BAR red, exit 1, unacknowledged=4)",
+   "branch": "softhouse/t271-b1-t219"
   },
   {
    "id": "T273",
@@ -3372,6 +3374,50 @@
    ],
    "description": "This is the third layer of the same fix: driver wrote STEP 0, T265 found four blockers, T279 fixed them. Assume T279 introduced a fifth. Attack the PARTITION PROOF first -- an enumeration is only as good as the state space it enumerates over, so check the space itself is complete before checking the coverage. Then drive the post-checkout hook RED yourself: spawn a worktree with an unpushed dispatch record and confirm it actually refuses, because a hook that exists and does not fire is exactly the failure class this program has recorded five times. Verify the wrapper and SKILL.md agree on a case where file mtime and push recency DISAGREE -- construct that case, do not assume it. Confirm F-5 and F-6 were recorded and NOT silently fixed (scope creep in a lock protocol is its own hazard).",
    "acceptance": "Verdict APPROVED / MICRO-FIX / REJECTED with specifics; the state space itself audited for completeness before the enumeration is graded; hook driven RED first-hand; wrapper/SKILL.md agreement demonstrated on a constructed disagreement case."
+  },
+  {
+   "id": "T281",
+   "title": "INDEPENDENT review of T268's R-VPA fail-open fix — attack the 23-leg battery, not the narrative",
+   "status": "in_progress",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "agent_role": "reviewer",
+   "role": "reviewer",
+   "context": "tier0-harness",
+   "slice": null,
+   "dependencies": [
+    "T268"
+   ],
+   "attempts": 0,
+   "contract_independent": true,
+   "files_hint": [
+    ".softhouse/reviews/t281-review-t268/"
+   ],
+   "description": "T268 fixed a fail-open inside the eliminator built to catch fail-opens. Its proof is a 23-leg battery where each leg runs the rule twice -- pre-fix extracted by pinned blob sha 86f4285, and live -- passing only if both exits match. ATTACK THE BATTERY. (1) Confirm the pinned blob really is the pre-fix file and that the HEAD:path hazard T268 names is real. (2) Re-run all 23 legs yourself; then construct a 24th the battery does not cover and see whether the fixed rule still fails open. (3) T268 counted SIX error paths where its handoff said two and the review said four, driving four red and marking two UNVERIFIED -- verify the count is six and that the two undriven ones are genuinely read-only. (4) F-3 widened classification on four axes and was predicted to change no count on real evidence; check the prediction was made BEFORE the change and that the zero is a measured zero, not an unrun one. (5) Confirm T259's 14-leg battery is unmodified and still 14/14, and that the byte-pin legs still fire.",
+   "acceptance": "All 23 legs re-run first-hand; at least one novel leg constructed and its result reported; the six-error-path count independently confirmed; verdict APPROVED / MICRO-FIX / REJECTED with specifics.",
+   "branch": "softhouse/t281-review-t268"
+  },
+  {
+   "id": "T282",
+   "title": "SETTLE the P-number drift: patterns.md and three merged instruments cite P-80/81/83/84 differently, and the manifest already propagated one off-by-one into ten worker prompts",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "agent_role": "coder",
+   "role": "coder",
+   "context": "tier0-harness",
+   "slice": null,
+   "dependencies": [],
+   "attempts": 0,
+   "contract_independent": true,
+   "files_hint": [
+    ".softhouse/patterns.md",
+    ".softhouse/capture/t282-pnumber-drift/"
+   ],
+   "description": "RAISED BY T268 AS FU-T268-2, and it is the SECOND instance of this defect in two fires. patterns.md defines P-80/P-81/P-83/P-84 differently from how T259, T262 and lint_failopen_t259.py CITE them -- they say P-80 where they mean P-81, and P-83 where they mean P-84. T268 used the numbers patterns.md actually defines and deliberately did NOT mass-edit merged prose, which was the right call and leaves the contradiction standing.\n\nThe first instance is already recorded at the top of RESUME.md: the STANDING INSTRUCTIONS block was off by one for P-78..P-83 and the fire PROPAGATED IT INTO ALL TEN WORKER PROMPTS. patterns.md:2691 records that those six were renumbered on landing; the renumbering reached patterns.md and never reached the place that restated it. Note what that means -- THE CORRECTED CARDINAL ROTTED INSIDE THE MANIFEST THAT TEACHES THE RULE ABOUT CORRECTED CARDINALS ROTTING.\n\nDecide which side is authoritative (patterns.md is the obvious answer; say so and say why), then FIX THE CITATIONS -- and do not stop at the four numbers T268 named. Sweep every citation of a P-number anywhere in the repo against patterns.md's actual definitions and report the full population, because a defect found twice by accident has a population nobody has measured.\n\nThen build the thing that stops the third instance. Materiality has been LOW both times for one reason, and it is the lesson: NOT ONE WORKER WAS MISDIRECTED, because every prompt wrote the FULL RULE TEXT beside the id. The number was decoration; the sentence carried the instruction. So the mechanical fix is a checker that verifies a cited P-number's accompanying sentence matches the rule patterns.md defines under that number -- not merely that the number exists. A guard that only checks the number would pass every instance of this defect.",
+   "acceptance": "Authoritative side named with a reason; FULL population of drifted citations measured and reported, not just the four named; checker verifies the SENTENCE against the definition, not just the id; checker driven RED on a known-drifted citation and GREEN after repair; no merged money prose silently mass-edited."
   }
  ],
  "cross_corroboration": {
