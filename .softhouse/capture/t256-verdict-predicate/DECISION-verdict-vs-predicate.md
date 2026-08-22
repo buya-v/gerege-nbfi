@@ -232,8 +232,9 @@ acknowledgements are pinned to bytes. Full statement in the module docstring of
 **P-78 says: after you register a prediction, grep for who READS it.** Applied to T259's own fix,
 via `census_verdict_shape.py` over **1,499** JSON files under `.softhouse/capture/`:
 
-- **13** files carry the classification shape; **1,450** do not; **36** were skipped as
+- **12** files carry the classification shape; **1,451** do not; **36** were skipped as
   unparseable (raw gzip/NDJSON captures) and are counted, not waved past (P-40).
+  [figures as printed in `run-output.txt:139-159`, the committed transcript]
 - **8 disagreements total.** Three are T229's known rows. **Four are in
   `.softhouse/capture/t219-g8-residual/out/classify-t219.json`** — rows `T219-R600p0-N103-B1`
   (two predicates), `T219-R600p0-N3000-B4499`, `T219-R600p0-N3000-B3001`. One is T259's own

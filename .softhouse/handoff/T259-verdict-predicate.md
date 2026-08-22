@@ -180,8 +180,9 @@ or P5 were ever evaluated (they were not); that the calibration statuses are con
 
 ## 6. What P-78 turned up when pointed at my own fix
 
-`census_verdict_shape.py` over the whole capture tree — **1,499** JSON files, **13** with the
-classification shape, **1,450** without, **36** skipped as unparseable and counted (P-40).
+`census_verdict_shape.py` over the whole capture tree — **1,499** JSON files, **12** with the
+classification shape, **1,451** without, **36** skipped as unparseable and counted (P-40).
+Figures as printed in the committed transcript `run-output.txt:139-159`.
 **8 disagreements total.** Three are T229's. One is my own red fixture. **Four are new:**
 
 > **B-1 (BACKLOG, OUT OF T259's SCOPE).**
@@ -213,6 +214,33 @@ classification shape, **1,450** without, **36** skipped as unparseable and count
 
 ---
 
+## 6a. BAR — `bash .softhouse/conformance.sh`, run TWICE
+
+Once before the commit and once **after**, because the harness's fail-open census reads
+`git ls-files` and would not have seen T259's scripts while they were untracked. That second run
+is the one that matters and it is the one quoted.
+
+| BAR item | measured |
+|---|---|
+| probe line PRESENT (tested before its value, P-83) | ✔ `frontier 11, pinned at 11`, then `frontier == pinned (all 11 rows, by path)` |
+| VERDICT | **PASS (exit 0)** |
+| loanschedule | **46 parity** PASS / 0 FAIL, **7884 cells** graded (93 ungraded, never recorded) |
+| contract-refusal | 4 PASS / 0 FAIL |
+| LEDGER | **4 parity** PASS + **2 oracle-refusal** PASS, **21 money cells** in int64 minor units |
+| refused / inadmissible / harness errors | **0 / 0 / 0** |
+| invariant violations / NOT RUN | **0 / 0** |
+| census pins | **9**, every one `== pinned` |
+| frontier | `== pinned`, count read LIVE |
+| gofmt guard | 56 `.go` files inspected, `contract.go` exempt per G-3; never `-w`'d |
+| vector-store digest | `13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d`, **unchanged by T259** |
+
+**The check worth naming:** the fail-open instrument census went **918 → 927** tracked `.sh`/`.py`
+files — T259's nine scripts — and the **frontier stayed at 11, pinned at 11**. T259 added no
+fail-open frontier row. That is the project's own P-80 detector agreeing with T259's self-lint,
+which is the point of running the self-lint first rather than trusting it.
+
+---
+
 ## 7. WHAT I SKIPPED, counted (P-40)
 
 | skipped | count | why |
@@ -221,7 +249,7 @@ classification shape, **1,450** without, **36** skipped as unparseable and count
 | `.softhouse/capture/lib/` | 1 dir | held by T250 |
 | `.softhouse/capture/tierA-a2/` | 1 dir | held by T164. **Read** for the manifest question; nothing written. |
 | `.softhouse/capture/t219-g8-residual/` | 1 dir, **4 live disagreements** | outside `files_hint`. Measured read-only; B-1. |
-| other capture dirs with the shape, 0 disagreements | 9 files | `charges/out/attested/attestation-exact.json`, `t117-familyb/out/ctrl-reproduction.json`, `t117-familyb/out/rp-reproduction-pass2.json`, `t219-g8-residual/out/check-promoted-t219.json`, `t223-g8-region-predicate/out/classify-t223.json` + my own 4 fixtures. Clean; nothing to do. |
+| other files with the shape, 0 disagreements | 9 files, of which **5 are out of scope** | `charges/out/attested/attestation-exact.json`, `t117-familyb/out/ctrl-reproduction.json`, `t117-familyb/out/rp-reproduction-pass2.json`, `t219-g8-residual/out/check-promoted-t219.json`, `t223-g8-region-predicate/out/classify-t223.json`. Clean under R-VPA; nothing to do. The other 4 are T259's own GREEN-control fixtures. |
 | JSON files skipped as unparseable by the census | **36** | raw gzip/NDJSON captures under `actualactual/`, `mathcontext/`, `periodratio/`, `audit-t44/rerun-periodratio/`, `dec1-binding/`, `t131-grep/corpus/` (the last are deliberately poisoned fixtures). Each is **named on the census transcript**, never waved past. |
 | `site3.py`, `classify_t229.py`, `prediction.json`, `classify-t229.json` | 4 files | **committed evidence.** T114/T176: not edited, byte-verified unchanged (§4). |
 
