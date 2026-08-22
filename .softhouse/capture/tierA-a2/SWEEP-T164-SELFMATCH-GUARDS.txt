@@ -1,0 +1,151 @@
+P-26 CONCEPT SWEEP for T164: which OTHER guards under .softhouse/ can be kept green by
+their target's prose?
+
+Produced by:  python3 sweep-t164-selfmatch-guards.py
+Exit code:    0
+Host:         darwin/arm64, Python 3.9.6
+Branch point: a71c1408d3315493bca763472598680c85b9ad0b
+Vector store: 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d  (UNCHANGED)
+Oracle:       NOT contacted. READ-ONLY: this sweep writes nothing but stdout.
+
+P-75: no bare `grep` and no `rg` anywhere in this instrument. Python files are walked with
+`ast`; the prose/code split of a Python target is done with `tokenize`, so a COMMENT or a
+STRING token is never confused with code. Shell and Go are handled with `python3 re`, and
+that weaker coverage is stated in WHAT WAS SKIPPED rather than left implied.
+
+P-66/P-70: the 742 sites whose target file cannot be resolved statically are NOT a
+measured negative. They are UNMEASURED, they are counted, and the denominator is printed
+in words.
+
+============================================================================== stdout
+==============================================================================
+T164 -- P-26 concept sweep: source-grep assertions kept green by prose
+==============================================================================
+ROOT: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ab0be4544b8a0a8/.softhouse
+
+POPULATION WALKED
+  files under .softhouse/ ......... 5145
+  .py  (AST-scanned) ............. 511
+  .sh/.zsh/.bash (regex-scanned) . 441
+  .go  (regex-scanned) ........... 5
+  SKIPPED, not instruments ....... 4188  (.md .json .txt .http .status .sql ...)
+
+BOTH TERMS (P-67)
+  TERM 1 -- literal-token-in-whole-file-source SITES ... 796
+            ... WIRED TO A VERDICT, i.e. actual GUARDS   191
+            ... not wired (evidence dumps, generators)   605
+            ... target file resolved statically ....... 54
+            ... target NOT statically resolvable ...... 742  (counted, listed below -- P-40)
+  TERM 2 -- resolved sites WITH THE SELF-MATCH HOLE .... 8
+            ... of those, WIRED TO A VERDICT (real) ... 1
+            ... of those, token in prose ONLY ......... 4  (the assertion is satisfied by prose alone TODAY)
+            ... of those, the grep is SELF-directed ... 0
+            resolved sites with NO prose occurrence ... 46 (of which wired: 10)
+
+  DENOMINATOR STATED PLAINLY (P-66/P-70): of 54 resolvable-target source-grep sites, 11 are wired to a verdict; 1 of those 11 have the hole. The other 742 sites could not have their target resolved statically and are NOT a measured negative -- they are unmeasured, and counted as such.
+
+THE HOLES -- every one, with which file's prose supplies the token
+  .softhouse/capture/tierA-a2/prove-mkreq7-guard-red.py:143  [py]
+      token   'parse_float=decimal.Decimal'
+      target  .softhouse/capture/tierA-a2/analyze7.py
+      shape   'parse_float=decimal.Decimal' in src
+      wiring  argument to check(...)
+      verdict PROSE-ONLY (the assertion is TRUE OF THE PROSE ALONE)
+  .softhouse/capture/t243-wiring/instruments/10-wrongimpl-red-drive.sh:91  [sh]
+      token   'go test'
+      target  .softhouse/conformance.sh
+      shape   LC_ALL=C /usr/bin/grep -c -aF 'go test' .softhouse/conformance.sh || true
+      wiring  NOT wired to a verdict (evidence dump, or a generator splicing a template) -- reported, not graded as a guard
+      verdict PROSE-ONLY (the assertion is TRUE OF THE PROSE ALONE)
+  .softhouse/reviews/T184-evidence/t184-sweep.sh:15  [sh]
+      token   'except'
+      target  .softhouse/capture/lib/check_wire_float_roundtrip.py
+      shape   grep -n 'except' .softhouse/capture/lib/check_wire_float_roundtrip.py .softhouse/capture/lib/check_no_narrow_c
+      wiring  NOT wired to a verdict (evidence dump, or a generator splicing a template) -- reported, not graded as a guard
+      verdict prose+code (code occurrence exists today; deleting it leaves the guard green)
+  .softhouse/reviews/T184-evidence/t184-sweep.sh:18  [sh]
+      token   'except'
+      target  .softhouse/capture/lib/check_wire_float_roundtrip.py
+      shape   grep -n -A2 'except' .softhouse/capture/lib/check_wire_float_roundtrip.py | grep -n 'pass$\|continue' || echo 
+      wiring  NOT wired to a verdict (evidence dump, or a generator splicing a template) -- reported, not graded as a guard
+      verdict prose+code (code occurrence exists today; deleting it leaves the guard green)
+  .softhouse/reviews/a2-34-review-a2-15/bar-and-oracle.sh:76  [sh]
+      token   'A2-348'
+      target  nexus/internal/apps/ledger/conformance/invariants.go
+      shape   LC_ALL=C /usr/bin/grep -n -aF 'A2-348' nexus/internal/apps/ledger/conformance/invariants.go | head -4
+      wiring  NOT wired to a verdict (evidence dump, or a generator splicing a template) -- reported, not graded as a guard
+      verdict PROSE-ONLY (the assertion is TRUE OF THE PROSE ALONE)
+  .softhouse/reviews/a2-34-review-a2-15/bar-and-oracle.sh:77  [sh]
+      token   'I-5'
+      target  nexus/internal/apps/ledger/conformance/invariants.go
+      shape   LC_ALL=C /usr/bin/grep -n -aF 'I-5' nexus/internal/apps/ledger/conformance/invariants.go | head -6
+      wiring  NOT wired to a verdict (evidence dump, or a generator splicing a template) -- reported, not graded as a guard
+      verdict PROSE-ONLY (the assertion is TRUE OF THE PROSE ALONE)
+  .softhouse/reviews/a2-34-review-a2-15/check-money-and-additive.sh:60  [sh]
+      token   'AmountMinor'
+      target  nexus/internal/apps/ledger/conformance/vector.go
+      shape   LC_ALL=C /usr/bin/grep -n -aF 'AmountMinor' nexus/internal/apps/ledger/conformance/vector.go | head -20
+      wiring  NOT wired to a verdict (evidence dump, or a generator splicing a template) -- reported, not graded as a guard
+      verdict prose+code (code occurrence exists today; deleting it leaves the guard green)
+  .softhouse/reviews/a2-34-review-a2-15/check-money-and-additive.sh:61  [sh]
+      token   'TotalDebitsMinor'
+      target  nexus/internal/apps/ledger/conformance/vector.go
+      shape   LC_ALL=C /usr/bin/grep -n -aF 'TotalDebitsMinor' nexus/internal/apps/ledger/conformance/vector.go | head -5
+      wiring  NOT wired to a verdict (evidence dump, or a generator splicing a template) -- reported, not graded as a guard
+      verdict prose+code (code occurrence exists today; deleting it leaves the guard green)
+
+TARGET NOT STATICALLY RESOLVABLE -- counted, not swept (P-40/P-66: this is a statement about the search)
+  .softhouse/capture/leapboundary/analysis/t55-prior-capture-assessment.py:46 [py] token='"interestRatePerPeriod":\\s*([0-9.]+)' target-expr=None
+  .softhouse/capture/pathb/provenance.py:175 [py] token='Fineract-Platform-TenantId: ([A-Za-z0-9_-]+)' target-expr=None
+  .softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py:160 [py] token='(?m)^\\s*trap\\s' target-expr=None
+  .softhouse/capture/pathb/t36/attest.py:187 [py] token='G-1 · **CLOSED — RATIFIED**' target-expr=None
+  .softhouse/capture/pathb/t36/attest.py:189 [py] token='G-1 ·' target-expr=None
+  .softhouse/capture/t100-g8-rescope/src/build_harness.py:31 [py] token='CaptureT84B' target-expr=None
+  .softhouse/capture/t100-g8-rescope/src/build_harness.py:34 [py] token=' * TWO RIG CALIBRATIONS' target-expr=None
+  .softhouse/capture/t100-g8-rescope/src/build_harness.py:34 [py] token=' * WHY THIS PASS EXISTS' target-expr=None
+  .softhouse/capture/t100-g8-rescope/src/build_harness.py:55 [py] token='cases.add(prodDates(' target-expr=None
+  .softhouse/capture/t116-familyb-promotion/src/build_harness_t116.py:47 [py] token='CaptureT100' target-expr=None
+  .softhouse/capture/t116-familyb-promotion/src/build_harness_t116.py:50 [py] token=' * TWO RIG CALIBRATIONS' target-expr=None
+  .softhouse/capture/t116-familyb-promotion/src/build_harness_t116.py:50 [py] token=' * WHY THIS PASS EXISTS' target-expr=None
+  .softhouse/capture/t116-familyb-promotion/src/build_harness_t116.py:87 [py] token='catch (RuntimeException e) {\n            // T21 P1-9' target-expr=None
+  .softhouse/capture/t116-familyb-promotion/src/build_harness_t116.py:88 [py] token='printStackTrace' target-expr=None
+  .softhouse/capture/t116-familyb-promotion/src/build_harness_t116.py:89 [py] token='ThrewOutcome.appendThrew' target-expr=None
+  .softhouse/capture/t116-familyb-promotion/src/build_harness_t116.py:109 [py] token='catch (RuntimeException' target-expr=None
+  .softhouse/capture/t116-familyb-promotion/src/build_harness_t116.py:112 [py] token='cases.add(prodDates(' target-expr=None
+  .softhouse/capture/t117-familyb/src/build_harness.py:40 [py] token='CaptureT100' target-expr=None
+  .softhouse/capture/t117-familyb/src/build_harness.py:43 [py] token=' * TWO RIG CALIBRATIONS' target-expr=None
+  .softhouse/capture/t117-familyb/src/build_harness.py:43 [py] token=' * WHY THIS PASS EXISTS' target-expr=None
+  .softhouse/capture/t117-familyb/src/build_harness.py:65 [py] token='cases.add(prodDates(' target-expr=None
+  .softhouse/capture/t117-familyb/src/build_harness_pass2.py:34 [py] token='CaptureT100' target-expr=None
+  .softhouse/capture/t117-familyb/src/build_harness_pass2.py:36 [py] token=' * TWO RIG CALIBRATIONS' target-expr=None
+  .softhouse/capture/t117-familyb/src/build_harness_pass2.py:36 [py] token=' * WHY THIS PASS EXISTS' target-expr=None
+  .softhouse/capture/t117-familyb/src/build_harness_pass2.py:56 [py] token='cases.add(prodDates(' target-expr=None
+  .softhouse/capture/t159-review-t117/src/build_harness_t159.py:100 [py] token='CaptureT100' target-expr=None
+  .softhouse/capture/t159-review-t117/src/build_harness_t159.py:103 [py] token='catch (RuntimeException e) {\n            // T21 P1-9' target-expr=None
+  .softhouse/capture/t159-review-t117/src/build_harness_t159.py:104 [py] token='printStackTrace' target-expr=None
+  .softhouse/capture/t159-review-t117/src/build_harness_t159.py:107 [py] token=' * TWO RIG CALIBRATIONS' target-expr=None
+  .softhouse/capture/t159-review-t117/src/build_harness_t159.py:107 [py] token=' * WHY THIS PASS EXISTS' target-expr=None
+  .softhouse/capture/t159-review-t117/src/build_harness_t159.py:128 [py] token='cases.add(prodDates(' target-expr=None
+  .softhouse/capture/t219-g8-residual/src/make_harness_t219.py:45 [py] token='        // ---- T229 PROBE CELLS ----' target-expr=None
+  .softhouse/capture/t219-g8-residual/src/make_harness_t219.py:46 [py] token='        StringBuilder sb = new StringBuilder();' target-expr=None
+  .softhouse/capture/t223-g8-region-predicate/src/patch_harness_t223.py:31 [py] token='        // ---- T84 SECOND PROBE ----' target-expr=None
+  .softhouse/capture/t223-g8-region-predicate/src/patch_harness_t223.py:32 [py] token='        StringBuilder sb = new StringBuilder();' target-expr=None
+  .softhouse/capture/t223-g8-region-predicate/src/patch_harness_t223.py:35 [py] token='T223-R36p0-N1324-B50' target-expr=None
+  .softhouse/capture/t223-g8-region-predicate/src/patch_harness_t223.py:36 [py] token='T116-FAMB' target-expr=None
+  .softhouse/capture/t229-g8-site3/src/make_harness_t229.py:45 [py] token='        // ---- T223 PROBE CELLS ----' target-expr=None
+  .softhouse/capture/t229-g8-site3/src/make_harness_t229.py:46 [py] token='        StringBuilder sb = new StringBuilder();' target-expr=None
+  .softhouse/capture/t234-sweep-instrument-audit/instruments/12-sweep-census.py:74 [py] token='cd\\s+"?(/Users/buv/gerege-nbfi/\\.claude/worktrees/[A-Za-z0-9_-]+)' target-expr=None
+  ... and 702 more
+
+WHAT WAS SKIPPED, AND WHY (P-40)
+   4188 non-instrument files (.md .json .txt .http .status .sql .sha256 ...) -- they contain no assertions.
+      0 Python file(s) that would not parse -- named above, not dropped silently.
+    742 site(s) whose target expression is not static (a loop variable, an argv, a glob). The sweep cannot say what file they grade without executing them, so it says so instead of guessing.
+      Shell coverage is a REGEX over grep/git-grep/rg invocations with a quoted literal and a file operand; a pattern built in a variable, or a heredoc'd python -c, is NOT seen. Go coverage is a REGEX over strings.Contains(x, "lit") only.
+      Routes OTHER than 'literal token in whole-file source' -- an AST guard with a wrong selector, a numeric threshold, a regex over a captured stdout -- are a different concept and are out of this sweep.
+
+SCOPE OF REPAIR: T164's files_hint is .softhouse/capture/tierA-a2/ ONLY. Holes outside it are BACKLOG ITEMS reported here, not fixed.
+
+SITES=796 RESOLVED=54 HOLES=8 UNRESOLVED=742
+
+(stderr was empty; exit 0)
