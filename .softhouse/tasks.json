@@ -495,8 +495,8 @@
    "executor": "agent",
    "model": "sonnet",
    "target": "code",
-   "status": "pending",
-   "attempts": 0,
+   "status": "in_progress",
+   "attempts": 1,
    "dependencies": [
     "T161"
    ],
@@ -504,7 +504,7 @@
     ".softhouse/handoff/"
    ],
    "description": "RAISED BY T156 as follow-up F-2. .softhouse/handoff/T61-mutations.py:265,289-291 wraps its mutation in a `finally` that covers SIGINT but NOT SIGTERM and not SIGKILL, so a killed driver leaves nexus/.../rounding.go MUTATED IN THE WORKING TREE. T156 classified this as the BENIGN half of the family because it fails LOUDLY -- a mutated rounding.go breaks the build or reds the conformance run rather than producing a quiet green. CONFIRM THAT CLASSIFICATION BEFORE ACTING ON IT, and if it is right, say so and fix it anyway: loud is not the same as harmless when the file it strands is a MONEY path (rounding is the first non-negotiable), and a developer who sees an unexplained red may `git checkout` the file and lose an unrelated local change. Extend the coverage to SIGTERM/SIGHUP, add start-up detection for the SIGKILL case, and DRIVE IT RED (P-22) on a scratch copy. Depends on T161 so the two unguarded-mutator fixes land in one coherent order and reuse ONE restore shape rather than three -- the P-26 lesson is that this family is the concept, not the sentence.",
-   "note": "Raised by the driver from T156's F-2, local fire 20260821-134344. Lowest severity of T156's four follow-ups and deliberately routed to sonnet; it is mechanical once T161 sets the shape. No paired reviewer yet -- register one when dispatched (plan gate rule 1)."
+   "note": "fire 20260822-080001 batch 1b: dispatched worktree-isolated to softhouse/T162-mutator-sigterm-coverage; unguarded-mutator family (T162/T168/T180) run concurrently, each told to reuse T161's restore shape and report divergence for driver reconciliation at merge"
   },
   {
    "id": "T163",
@@ -600,8 +600,8 @@
    "executor": "agent",
    "model": "sonnet",
    "target": "code",
-   "status": "pending",
-   "attempts": 0,
+   "status": "in_progress",
+   "attempts": 1,
    "dependencies": [
     "T167"
    ],
@@ -609,7 +609,7 @@
     ".softhouse/capture/pathb/t149/"
    ],
    "description": "RAISED BY T158 as finding 2 -- the ONE of nine attack states where T156's fix did not hold. Measured by T158: SIGQUIT (Ctrl-backslash) is not caught by the EXIT/INT/TERM/HUP trap, exits -3 with NO restore message, and strands the store exactly as SIGKILL does; SIGPIPE/USR1/ALRM DO run the EXIT trap. Only T156's start-up recovery catches it, so A CONFORMANCE RUN IN BETWEEN IS THE SILENT GREEN -- the defect T156 was sent to close, reachable through one more signal. T158 named a two-line fix and deliberately did not apply it (reviewer remit). Apply it, add SIGQUIT to the trap list, and DRIVE IT RED (P-22) on a scratch store: show pre-fix SIGQUIT strands and post-fix restores. P-26 -- sweep the concept: audit EVERY trap in .softhouse/ for the same signal-list omission rather than fixing this one site, and COUNT WHAT YOU SKIPPED (P-40). Note T158's separate correction while you are in this file: the empty-census refusal at :98 is pre-empted by the `[ -f \"$VEC\" ] || fail` at :94 on every realistic state, so the protection is real but comes from a DIFFERENT LINE than the handoff headlines -- fix the claim, not the code.",
-   "note": "Raised by the driver from T158's finding 2, local fire 20260821-134344. DRIVER DISCLOSURE: the driver ROUTED this rather than applying T158's two-line fix inline, because the budget remaining this fire is reserved for two live reviewers (T159, A2-9) and the exit protocol. That is a scheduling choice, not a judgement that it is unimportant -- it is a real strand with a real silent green behind it. Low-ish severity only because start-up recovery already limits the window. No paired reviewer yet; register one at dispatch."
+   "note": "fire 20260822-080001 batch 1b: dispatched worktree-isolated to softhouse/T168-sigquit-trap-sweep; unguarded-mutator family (T162/T168/T180) run concurrently, each told to reuse T161's restore shape and report divergence for driver reconciliation at merge"
   },
   {
    "id": "T169",
@@ -809,14 +809,16 @@
    "role": "coder",
    "executor": "agent",
    "model": "opus",
-   "status": "pending",
+   "status": "in_progress",
    "dependencies": [
     "T161"
    ],
    "files_hint": [
     ".softhouse/capture/pathb/t80/"
    ],
-   "description": "Raised by T161 and MEASURED, not suggested. T161 made the live-attester overwrite recoverable on every interruption path; this removes the need to overwrite at all. attest.py derives OUT from its OWN directory, which is why T158's 'run it from a scratch path like prove-f2.sh' breaks the guard under test -- but T161 measured that a SIBLING FILE IN THE SAME DIRECTORY reproduces the defect exactly with the live attester untouched (evidence at out/F1-sibling-scratch-alternative.txt). Adopt that shape. NOTE T161's own caveat and do not drop it: the trap machinery is STILL NEEDED either way, because the evidence set is mutated regardless -- so this REDUCES blast radius, it does not retire the recovery. DRIVE IT RED (P-22) on scratch clones only, never against the real t36 rig, and verify t36/attest.py is 567e4cf0... before AND after. Reuse T161's now-deterministic trigger (poll until the digest changes); do NOT reintroduce a sleep, which is the vacuous arm T161 caught in its own probe."
+   "description": "Raised by T161 and MEASURED, not suggested. T161 made the live-attester overwrite recoverable on every interruption path; this removes the need to overwrite at all. attest.py derives OUT from its OWN directory, which is why T158's 'run it from a scratch path like prove-f2.sh' breaks the guard under test -- but T161 measured that a SIBLING FILE IN THE SAME DIRECTORY reproduces the defect exactly with the live attester untouched (evidence at out/F1-sibling-scratch-alternative.txt). Adopt that shape. NOTE T161's own caveat and do not drop it: the trap machinery is STILL NEEDED either way, because the evidence set is mutated regardless -- so this REDUCES blast radius, it does not retire the recovery. DRIVE IT RED (P-22) on scratch clones only, never against the real t36 rig, and verify t36/attest.py is 567e4cf0... before AND after. Reuse T161's now-deterministic trigger (poll until the digest changes); do NOT reintroduce a sleep, which is the vacuous arm T161 caught in its own probe.",
+   "attempts": 1,
+   "note": "fire 20260822-080001 batch 1b: dispatched worktree-isolated to softhouse/T180-remove-attester-overwrite; unguarded-mutator family (T162/T168/T180) run concurrently, each told to reuse T161's restore shape and report divergence for driver reconciliation at merge"
   },
   {
    "id": "T181",
