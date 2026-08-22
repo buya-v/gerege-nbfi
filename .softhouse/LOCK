@@ -1,9 +1,10 @@
 {
-  "holder": "local-launchd",
-  "host": "Buyanmunkhs-Mac-mini",
-  "pid": 48294,
-  "started_at": "2026-08-22T06:00:08Z",
-  "log": "/Users/buv/Library/Logs/gerege-nbfi/fire-20260822-140002.log",
-  "oracle": "REACHABLE at https://localhost:8443/fineract-provider/actuator/health",
-  "postgres": "reachable at localhost:5432"
+  "holder": "cloud-routine",
+  "host": "claude-code-remote-sandbox",
+  "pid": 0,
+  "started_at": "2026-08-22T12:10:00Z",
+  "log": "cloud session (no local log)",
+  "oracle": "NOT REACHABLE from cloud sandbox — vector/conformance work parked oracle_unreachable",
+  "postgres": "not reachable",
+  "note": "Took over stale local-launchd lock started_at 2026-08-22T06:00:08Z (>6h old); HEAD 2871f17 attests that fire closed clean with zero live workers."
 }
