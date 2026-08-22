@@ -1,0 +1,16 @@
+subject bytes: /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/bin/fire-program.sh
+extracting lock_holder_is_dead() verbatim...
+  lines 115-128 (14 lines)
+
+host=Buyanmunkhs-Mac-mini  self=40797  deadpid=40817  livepid=40818
+
+  PASS  1 dead pid on this host           -> DEAD (expected DEAD)
+  PASS  2 LIVE pid on this host           -> ALIVE (expected ALIVE)
+  PASS  3 our OWN pid                     -> ALIVE (expected ALIVE)
+  PASS  4 dead pid on a DIFFERENT host    -> ALIVE (expected ALIVE)
+  PASS  5 junk pid                        -> ALIVE (expected ALIVE)
+  PASS  6 no pid key                      -> ALIVE (expected ALIVE)
+  PASS  7 lock file absent                -> ALIVE (expected ALIVE)
+
+LOCK-RECOVERY REGRESSION: all 7 cases correct — T202's recovery is INTACT under T211
+LOCKREC DONE

@@ -169,6 +169,117 @@ release_lock() {
   git push -q origin main 2>/dev/null || log "WARN: could not push lock release"
   log "lock released"
 }
+
+# T211 — STOPPING THE DRIVER, which a signal handler must do BEFORE it releases
+# the lock. All of this is measured under zsh 5.9 through the real launchd shape
+# (`/bin/zsh -lc <script>`, own session, DEFAULT signal dispositions); the
+# transcripts are in .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/
+# T211-probe/ and the four facts it rests on are:
+#
+#   1. `setopt monitor` is REFUSED in this shape — zsh 5.9 answers
+#      "can't change option: monitor" with no controlling terminal
+#      [T211-probe/semantics.txt, S5b]. So there is NO job control, so a
+#      background job does NOT get its own process group: every descendant
+#      shares the WRAPPER'S pgid [semantics2.txt, S4b; and the live fire
+#      20260822-080001, where wrapper 65843 and `claude` 5329 both sit in pgid
+#      65843]. `kill -- -$$` would therefore signal the wrapper itself, so the
+#      one-line process-group kill is not available to us.
+#   2. `$!` of a bare background PIPELINE is its LAST member — `jq`, not the
+#      driver [semantics2.txt, S4-clean]. `$!` of `( … ) &` is the SUBSHELL,
+#      which is the parent of every member [S4b]. run_driver uses the subshell
+#      form for exactly that reason.
+#   3. The tree is THREE levels deep, because /usr/bin/caffeinate EXECS the
+#      utility in place and leaves its assertion-holder as a CHILD of it
+#      [semantics.txt S7, treewalk.txt]. Measured shape:
+#          $!  zsh          ( … ) & subshell
+#           ├─ zsh          the { … } group == pipeline member 1
+#           │   └─ claude   caffeinate exec'd it in place  <-- the one that matters
+#           │       └─ caffeinate   assertion holder
+#           ├─ tee
+#           └─ jq
+#      So `kill $!` alone MISSES `claude` by two levels [treewalk.txt].
+#   4. SIGINT is SIG_IGN in an asynchronous child of a non-job-control shell
+#      (the POSIX rule that produced T202's P-55 false reading), while SIGTERM
+#      is not [semantics.txt, S6]. A handler that forwarded SIGINT would be a
+#      dead letter; TERM-then-KILL is what actually stops the job.
+#
+# WHY THIS IS NOT OPTIONAL: `background + wait + exit` on its own exits in
+# 0.130s but leaves the child RUNNING, reparented to pid 1
+# [waittrap-matrix.txt, cell bg/exit]. That would trade a stranded LOCK for an
+# unlocked `claude` still writing to the repo — strictly worse. Killing the
+# tree is the half of the fix that makes the prompt exit safe.
+DRIVER_JOB_PID=0
+DRIVER_STOP_GRACE_SECS="${DRIVER_STOP_GRACE_SECS:-3}"
+typeset -ga DRIVER_TREE; DRIVER_TREE=()
+
+# Fills DRIVER_TREE with $1 and every descendant, parents before children.
+# PROGRAM NAMED (P-58): /bin/ps, the BSD ps shipped with macOS; `-o pid=,ppid=`
+# with empty headers, so there is no header line to skip and no locale-dependent
+# column title to parse. ONE snapshot, not a `pgrep -P` per level: repeated
+# pgrep calls each see a different instant, so a process that forks between two
+# of them is invisible to the walk, and the walk cannot tell that from "no such
+# child". A single snapshot cannot tear that way.
+# POLARITY: fail-CLOSED — if ps does not answer, it returns 1 and says so rather
+# than reporting an empty tree that looks like "nothing to kill".
+driver_tree() {
+  local root=$1 line pid ppid depth added snap
+  local -a lines f
+  DRIVER_TREE=()
+  [[ "$root" == <1-> ]] || return 1
+  snap=$(/bin/ps -Ao pid=,ppid= 2>/dev/null) || return 1
+  lines=(${(f)snap})
+  (( ${#lines} > 1 )) || return 1        # a one-line process table is not a table
+  DRIVER_TREE=("$root")
+  # depth cap 6: the measured tree is 3 deep; the cap makes the loop total even
+  # if the process table were somehow cyclic.
+  for depth in 1 2 3 4 5 6; do
+    added=0
+    for line in $lines; do
+      f=(${=line})
+      pid=$f[1]; ppid=$f[2]
+      [[ "$pid" == <1-> && "$ppid" == <1-> ]] || continue
+      (( ${DRIVER_TREE[(I)$ppid]} )) || continue     # parent not (yet) in the tree
+      (( ${DRIVER_TREE[(I)$pid]}  )) && continue     # already collected
+      DRIVER_TREE+=("$pid"); added=1
+    done
+    (( added )) || break
+  done
+  return 0
+}
+
+# Stop the driver job and everything under it. Safe to call at ANY point in the
+# fire: DRIVER_JOB_PID is 0 whenever no driver is running, and it is zeroed
+# before any killing starts, so a second signal arriving mid-handler is a no-op
+# rather than a second round of kills.
+stop_driver() {
+  local job=$DRIVER_JOB_PID
+  (( job > 0 )) || return 0
+  DRIVER_JOB_PID=0
+  if ! driver_tree "$job"; then
+    log "ERROR: could not enumerate the driver's process tree (/bin/ps did not answer) — signalling ONLY the job pid $job. The driver's own children may survive as ORPHANS; treat this fire's processes as UNVERIFIED and look for a stray claude/caffeinate by hand."
+    kill -TERM "$job" 2>/dev/null
+    return 1
+  fi
+  log "stopping the driver: ${#DRIVER_TREE} process(es) — ${DRIVER_TREE[*]}"
+  # SIGTERM, never SIGINT: INT is SIG_IGN in an async child here (measured).
+  kill -TERM "${DRIVER_TREE[@]}" 2>/dev/null
+  /bin/sleep "$DRIVER_STOP_GRACE_SECS"
+  local -a survivors; survivors=()
+  local p st
+  for p in "${DRIVER_TREE[@]}"; do
+    st=$(/bin/ps -o stat= -p "$p" 2>/dev/null)
+    # a Z is already dead and merely unreaped; kill -0 cannot tell the two apart
+    [[ -n "$st" && "$st" != Z* ]] && survivors+=("$p")
+  done
+  if (( ${#survivors} )); then
+    log "driver did not stop on SIGTERM within ${DRIVER_STOP_GRACE_SECS}s — SIGKILLing ${survivors[*]}"
+    kill -KILL "${survivors[@]}" 2>/dev/null
+  else
+    log "driver stopped on SIGTERM; no survivors"
+  fi
+  return 0
+}
+
 # T202 — `trap release_lock EXIT INT TERM` released the lock and then LET THE
 # SCRIPT CARRY ON. Measured under zsh 5.9 against these very bytes: a SIGINT at
 # tick 2 of 40 ran release_lock, deleted the LOCK, and the body then executed
@@ -193,9 +304,17 @@ release_lock() {
 #              handled OUT of process by lock_holder_is_dead() above.
 # `release_lock` is re-entrant-guarded, so the EXIT trap that follows the
 # handler's `exit` is a no-op rather than a second git round-trip.
+#
+# T211 — the handler now STOPS THE DRIVER FIRST, then releases the lock.
+# That order is the point: the lock exists to keep two orchestrators out of one
+# repo, so releasing it while `claude` is still alive opens exactly the window
+# it was written to close. Stopping first costs DRIVER_STOP_GRACE_SECS (3s by
+# default) against launchd's ~20s SIGTERM->SIGKILL grace, and against the 6h a
+# stranded lock costs the next fire.
 on_signal() {
   local sig=$1 rc=$2
-  log "SIG$sig received — releasing the lock and TERMINATING (rc=$rc). A fire must never keep working after its lock is gone."
+  log "SIG$sig received — stopping the driver, releasing the lock and TERMINATING (rc=$rc). A fire must never keep working after its lock is gone."
+  stop_driver
   release_lock
   exit $rc
 }
@@ -270,21 +389,85 @@ DIGEST='
 CAFFEINATE=()
 [[ -x /usr/bin/caffeinate ]] && CAFFEINATE=(/usr/bin/caffeinate -i -m -s)
 
+# T211 — WHY THE DRIVER IS BACKGROUNDED AND `wait`ed ON, instead of run in the
+# foreground. zsh DEFERS a trap until the current FOREGROUND child exits, and
+# this fire's foreground child is `claude`, which runs for HOURS. launchd stops
+# a job with SIGTERM then SIGKILL, so with a foreground child the SIGKILL strand
+# is the NORMAL outcome of stopping a fire, not the exotic one — and a stranded
+# fire leaves .softhouse/LOCK on disk, which parks the NEXT fire at STEP 0 for
+# up to LOCK_MAX_AGE_SECS (6h) behind a holder that is already dead.
+#
+# Measured under zsh 5.9 through the real launchd shape, with these very bytes
+# and the pre-fix bytes as the control
+# [.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/]:
+#
+#   shape                        signal->exit   trap ran?   LOCK        child
+#   FOREGROUND (pre-fix)         >45.0s HUNG    NO          STRANDED    ORPHANED
+#   background + wait (this)       ~0.2s        YES         released    killed
+#
+# THREE THINGS `wait` ALONE DOES NOT GIVE YOU, each measured rather than assumed:
+#
+#   a. THE HANDLER MUST `exit`. `wait` is RESTARTED after a handler that merely
+#      returns: in the bg/return cell the handler ran at +1.35s and the shell
+#      then went straight back to waiting and had to be SIGKILLed at +20s
+#      [waittrap-matrix.txt]. T202 already made every handler terminate, and
+#      that is now load-bearing for this fix, not just for the lock.
+#   b. THE CHILD MUST BE KILLED. bg/exit exits in 0.130s and still leaves the
+#      child running, reparented to pid 1 [waittrap-matrix.txt]. See
+#      stop_driver() above; that is why on_signal calls it first.
+#   c. `${pipestatus[1]}` DIES. After `wait`, $pipestatus holds ONE element, not
+#      the pipeline's three [semantics.txt, S4/S5] — so the old
+#      `RC=${pipestatus[1]}` would silently start reporting something that is
+#      not the driver's status. The driver's real exit code is therefore written
+#      to a file by the `{ … }` group below and read back after the wait.
+#
+# The `( … ) &` subshell form is deliberate: `$!` of a bare background pipeline
+# is its LAST member (jq), while `$!` of `( … ) &` is the subshell that PARENTS
+# every member — which is what stop_driver needs as its root [semantics2.txt].
+DRIVER_RC_FILE="$LOG_DIR/fire-$STAMP.driver-rc"
+rm -f "$DRIVER_RC_FILE"
+
 if [[ -x /usr/bin/jq ]]; then
-  "${CAFFEINATE[@]}" "$CLAUDE_BIN" -p "$PROMPT" \
-    --permission-mode bypassPermissions \
-    --add-dir "$FINERACT_SRC" \
-    --output-format stream-json --verbose \
-  | tee "$RAW" \
-  | /usr/bin/jq -r --unbuffered "$DIGEST" 2>/dev/null
-  RC=${pipestatus[1]}
+  ( { "${CAFFEINATE[@]}" "$CLAUDE_BIN" -p "$PROMPT" \
+        --permission-mode bypassPermissions \
+        --add-dir "$FINERACT_SRC" \
+        --output-format stream-json --verbose
+      print -r -- $? > "$DRIVER_RC_FILE" } \
+    | tee "$RAW" \
+    | /usr/bin/jq -r --unbuffered "$DIGEST" 2>/dev/null ) &
+  DRIVER_JOB_PID=$!
+  log "driver job pid=$DRIVER_JOB_PID — backgrounded; the wrapper now sits in \`wait\`, so a SIGTERM is handled in a fraction of a second instead of waiting out the driver"
+  wait "$DRIVER_JOB_PID"
+  DRIVER_WAIT_RC=$?
+  DRIVER_JOB_PID=0
   log "raw event stream: $RAW"
 else
-  "${CAFFEINATE[@]}" "$CLAUDE_BIN" -p "$PROMPT" \
-    --permission-mode bypassPermissions \
-    --add-dir "$FINERACT_SRC" \
-    --output-format text
-  RC=$?
+  ( { "${CAFFEINATE[@]}" "$CLAUDE_BIN" -p "$PROMPT" \
+        --permission-mode bypassPermissions \
+        --add-dir "$FINERACT_SRC" \
+        --output-format text
+      print -r -- $? > "$DRIVER_RC_FILE" } ) &
+  DRIVER_JOB_PID=$!
+  log "driver job pid=$DRIVER_JOB_PID — backgrounded; the wrapper now sits in \`wait\`, so a SIGTERM is handled in a fraction of a second instead of waiting out the driver"
+  wait "$DRIVER_JOB_PID"
+  DRIVER_WAIT_RC=$?
+  DRIVER_JOB_PID=0
+fi
+
+# Recover the DRIVER's own exit code — not the job's, which is the last pipeline
+# member's (measured: a `{ exit 37 } | cat | cat` job waits rc=0 while the file
+# correctly holds 37 [semantics2.txt, S9]).
+# POLARITY: fail-CLOSED. The chain loop below stops on a non-zero RC and chains
+# a fresh driver on a zero one, so "we could not read the driver's status" must
+# never be spelled the same way as "the driver succeeded".
+if [[ -r "$DRIVER_RC_FILE" ]] && [[ "$(<"$DRIVER_RC_FILE")" == <0-255> ]]; then
+  RC=$(<"$DRIVER_RC_FILE")
+elif (( DRIVER_WAIT_RC != 0 )); then
+  RC=$DRIVER_WAIT_RC
+  log "WARN: driver rc file $DRIVER_RC_FILE is missing or unreadable — falling back to the job's own status rc=$RC"
+else
+  RC=70
+  log "ERROR: driver rc file $DRIVER_RC_FILE is missing or unreadable AND the job reported success. REFUSING to record a clean driver exit this fire did not observe — reporting rc=70 so the chain STOPS instead of launching a fresh driver on an unknown outcome."
 fi
 
   log "driver exited rc=$RC"

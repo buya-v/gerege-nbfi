@@ -1,0 +1,28 @@
+=== S4-clean  $! and the child set for a REAL 3-stage background pipeline ===
+shell pid = 26991   $! = 26997
+children of the shell:
+   26995 26991 26991 /bin/sleep
+   26996 26991 26991 /bin/cat
+   26997 26991 26991 /bin/cat
+  -> $! identifies which member?  (compare pids above)
+wait $! rc=0
+
+=== S4b  '( a | b | c ) &' -- the subshell shape the fix uses ===
+$! = 27364
+   subshell: 27364 26991 26991 /bin/zsh
+   descendants of $! (this is the tree a handler has to stop):
+      27364 26991 26991 /bin/zsh
+      27365 27364 26991 /bin/sleep
+      27367 27364 26991 /bin/cat
+      27368 27364 26991 /bin/cat
+   pgid of every one of them vs shell pgid 26991
+wait rc=0
+
+=== S8  does 'wait $!' on a subshell return the SUBSHELL's status? ===
+( exit 42 ) & ; wait $!  -> rc=42   (expect 42)
+
+=== S9  rc-through-a-file, the replacement for ${pipestatus[1]} ===
+subshell wait rc = 0   (this is the LAST member's status, not the driver's)
+rc file contents = 37   (expect 37 -- the driver's real status)
+
+SEMANTICS2 DONE

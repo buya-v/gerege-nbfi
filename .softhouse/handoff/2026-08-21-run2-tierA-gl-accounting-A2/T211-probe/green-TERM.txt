@@ -1,0 +1,41 @@
+############################################################
+# CASE green-TERM   signal=SIGTERM
+# subject bytes: /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/bin/fire-program.sh
+# zsh: zsh 5.9 (arm64-apple-darwin25.0)
+############################################################
+extracted from /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/bin/fire-program.sh
+  trap block : lines 159-325  (167 lines, 8626 bytes)
+  run_driver : lines 356-474  (119 lines, 6441 bytes)
+  run_driver first line : run_driver() {
+  run_driver last  line : }
+
+scratch repo ready at /tmp/t211-scratch/repo (LOCK present, no remote 'origin' -- push failures are expected and are the real code path)
+
+# spawner  : /bin/zsh -lc /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/subject.zsh   (the launchd ProgramArguments shape)
+# session  : start_new_session=True (setsid)
+# disposit.: restore_signals=True -- INT/QUIT/PIPE reset to SIG_DFL in the child
+#            (this is the P-55 control: without it the probe measures itself)
+--- t=0.000  sending SIGTERM to pid 35523 (sid=35523, own session, default dispositions) ---
+EXIT LATENCY (signal -> wrapper exit) = 3.830s
+subject rc = 143   (128+15)
+transcript = /Users/buv/gerege-nbfi/.claude/worktrees/agent-aee5211d1552d8546/.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/out-green-TERM.txt
+--- subject transcript --------------------------------------------------
+[1787362068.237003000] SUBJECT pid=35523 pgid=35523 sid=0
+[1787362068.249871000] LOCK present at start = YES
+[1787362068.259845000] READY
+[1787362068.267813000] invoking driver (chain iteration 1/1)
+[1787362068.277492000] background-task wait ceiling: disabled (CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0)
+[1787362068.309464000] driver job pid=35540 — backgrounded; the wrapper now sits in `wait`, so a SIGTERM is handled in a fraction of a second instead of waiting out the driver
+INIT session t211-fake
+TOOL Bash :: {"command":"echo t211"}
+[1787362070.115183000] SIGTERM received — stopping the driver, releasing the lock and TERMINATING (rc=143). A fire must never keep working after its lock is gone.
+[1787362070.191740000] stopping the driver: 6 process(es) — 35540 35541 35543 35544 35545 35546
+[1787362073.458985000] driver stopped on SIGTERM; no survivors
+[1787362073.758245000] WARN: could not push lock release
+[1787362073.769691000] lock released
+--- end transcript -----------------------------------------------------
+
+=== post-mortem (measured after the wrapper process was reaped) ===
+LOCK        = released
+DRIVER CHILD= reaped, pid 35544 is gone
+

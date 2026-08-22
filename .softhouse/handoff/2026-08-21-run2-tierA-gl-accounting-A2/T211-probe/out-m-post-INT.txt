@@ -1,0 +1,13 @@
+[1787362369.660798000] SUBJECT pid=43836 pgid=43836 sid=0
+[1787362369.674177000] LOCK present at start = YES
+[1787362369.684032000] READY
+[1787362369.695035000] invoking driver (chain iteration 1/1)
+[1787362369.705064000] background-task wait ceiling: disabled (CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0)
+[1787362369.728903000] driver job pid=43853 — backgrounded; the wrapper now sits in `wait`, so a SIGTERM is handled in a fraction of a second instead of waiting out the driver
+INIT session t211-fake
+TOOL Bash :: {"command":"echo t211"}
+[1787362371.518112000] SIGINT received — stopping the driver, releasing the lock and TERMINATING (rc=130). A fire must never keep working after its lock is gone.
+[1787362371.588161000] stopping the driver: 6 process(es) — 43853 43854 43856 43857 43858 43859
+[1787362374.836417000] driver stopped on SIGTERM; no survivors
+[1787362375.072072000] WARN: could not push lock release
+[1787362375.080140000] lock released

@@ -1,0 +1,7 @@
+[1787361511.297019000] SUBJECT pid=13836 pgid=13836 sid=0
+[1787361511.311597000] LOCK present at start = YES
+[1787361511.322146000] READY
+[1787361511.334813000] invoking driver (chain iteration 1/1)
+[1787361511.345828000] background-task wait ceiling: disabled (CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0)
+INIT session t211-fake
+TOOL Bash :: {"command":"echo t211"}
