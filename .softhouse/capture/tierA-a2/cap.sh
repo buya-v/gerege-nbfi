@@ -58,7 +58,11 @@ STATUS="$DIR/out/$NAME.status"
 HTTP="$DIR/out/$NAME.http"
 
 TMPD=$(mktemp -d "${TMPDIR:-/tmp}/cap.XXXXXX")
-trap 'rm -rf "$TMPD"' EXIT HUP INT TERM
+# T216: QUIT added alongside EXIT HUP INT TERM.  Per T156/T168
+# (.softhouse/capture/pathb/t149/prove-exit-trap.py), bash does not run the EXIT trap
+# for an untrapped SIGQUIT (unlike SIGPIPE/SIGUSR1/SIGALRM) -- without this, Ctrl-\
+# during a capture leaks this $TMPD scratch dir instead of cleaning it up.
+trap 'rm -rf "$TMPD"' EXIT HUP INT TERM QUIT
 TMPBODY="$TMPD/body"
 
 # Stamped before the request is issued, written only if the request completed.

@@ -1,0 +1,7 @@
+=== PRE-FIX (pinned git blobs) -- expect RED (leak) on both ===
+--- PRE-FIX  cap.sh (blob 22baf85faa50)           exit=-3 leaked-dirs=['cap.iljYWU'] => RED (LEAKED)
+--- PRE-FIX  cap8.sh (blob 62b8406081a1)          exit=-3 leaked-dirs=['cap8.93xZGb'] => RED (LEAKED)
+=== LIVE (current on-disk script) -- diagnostic, no assertion ===
+--- LIVE     cap.sh (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a4afe8b2b7cc067e9/.softhouse/capture/tierA-a2/cap.sh) exit=1 leaked-dirs=[] => GREEN (CLEANED)
+--- LIVE     cap8.sh (/Users/buv/gerege-nbfi/.claude/worktrees/agent-a4afe8b2b7cc067e9/.softhouse/capture/tierA-a2/cap8.sh) exit=1 leaked-dirs=[] => GREEN (CLEANED)
+RESULT: pre-fix reproduced on all sites / live phase printed above (read verdicts by eye)
