@@ -1,0 +1,12 @@
+
+files inspected                                  : 12
+TRUE MONEYISH leaves in the corpus               : 1554
+leaves cells() actually hands to the delta loop  : 1554
+SILENTLY DROPPED before any delta is computed    : 0
+
+files containing at least one BARE JSON NUMBER   : 0 of 12
+
+=> the published '772 money deltas, 0 swallowed' is NOT understated ON THIS CORPUS.
+   It holds because every money cell here happens to be a JSON STRING, not because
+   measure-other-sites.py checks. It reports no drop counter at all: a corpus with
+   one bare number would shrink the denominator with no line of output saying so.

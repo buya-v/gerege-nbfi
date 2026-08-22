@@ -1,0 +1,295 @@
+================================================================================================
+T185 INDEPENDENT SWEEP -- DENOMINATORS (P-40)
+================================================================================================
+  .py files walked under .softhouse/ : 389
+  files UNREADABLE (named, not skipped): 0
+  files UNPARSEABLE (named, not skipped): 0
+  `except` handlers seen              : 100
+  ...of which SWALLOW SITES (net 1)   : 40
+
+  SWALLOW  .softhouse/capture/audit-t44/analysis/t44_float_roundtrip.py:29   except Exception:
+  SWALLOW  .softhouse/capture/charges/bin/t46-exacttext.py:108   except json.JSONDecodeError:
+  SWALLOW  .softhouse/capture/leapboundary/analysis/t55-analyse.py:352   except Exception:
+  SWALLOW  .softhouse/capture/leapboundary/analysis/t55-analyse.py:167   except Exception:
+  SWALLOW  .softhouse/capture/leapboundary/analysis/t55-prior-capture-assessment.py:103   except Exception:
+  SWALLOW  .softhouse/capture/mathcontext/analysis/t46_assert_pathb_slot.py:144   except ValueError:
+  SWALLOW  .softhouse/capture/out/t35-byte-identity.py:83   except Exception:
+  SWALLOW  .softhouse/capture/pathb/provenance.py:116   except Exception:                                                    # noqa: BLE
+  SWALLOW  .softhouse/capture/pathb/provenance.py:134   except OSError:
+  SWALLOW  .softhouse/capture/pathb/provenance.py:144   except Exception:                                                    # noqa: BLE
+  SWALLOW  .softhouse/capture/pathb/provenance.py:196   except Exception:                                                    # noqa: BLE
+  SWALLOW  .softhouse/capture/pathb/provenance.py:171   except OSError:
+  SWALLOW  .softhouse/capture/pathb/t149/prove-exit-trap.py:174   except subprocess.TimeoutExpired:
+  SWALLOW  .softhouse/capture/pathb/t149/prove-exit-trap.py:180   except (ProcessLookupError, PermissionError):
+  SWALLOW  .softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py:154   except (OSError, UnicodeDecodeError):
+  SWALLOW  .softhouse/capture/pathb/t80/prove-f1-recovery.py:235   except subprocess.TimeoutExpired:
+  SWALLOW  .softhouse/capture/pathb/t80/prove-f1-recovery.py:230   except ProcessLookupError:
+  SWALLOW  .softhouse/capture/t74-multiplesof/T82-guard-proofs/sweep-census.py:108   except (OSError, IsADirectoryError):
+  SWALLOW  .softhouse/capture/tierA-a2/census-json-float-siblings.py:108   except SyntaxError:
+  SWALLOW  .softhouse/capture/tierA-a2/prove-cap-transport-red.py:113   except FileNotFoundError:
+  SWALLOW  .softhouse/capture/tierA-a2/prove-resolve8-float-red.py:217   except decimal.InvalidOperation:
+  SWALLOW  .softhouse/reviews/A2-10-probe/poison-d2-transport-modes.py:76   except OSError:
+  SWALLOW  .softhouse/reviews/A2-10-probe/poison-d2-transport-modes.py:83   except OSError:
+  SWALLOW  .softhouse/reviews/A2-10-probe/poison-d3-symlink.py:76   except OSError:
+  SWALLOW  .softhouse/reviews/T158-bash-signal-semantics.py:16   except subprocess.TimeoutExpired:
+  SWALLOW  .softhouse/reviews/T158-drive-followups.py:79   except (OSError, FileNotFoundError):
+  SWALLOW  .softhouse/reviews/T158-drive-t156-refusals.py:88   except subprocess.TimeoutExpired:
+  SWALLOW  .softhouse/reviews/T158-drive-untrapped-signals.py:43   except subprocess.TimeoutExpired:
+  SWALLOW  .softhouse/reviews/T158-drive-untrapped-signals.py:57   except subprocess.TimeoutExpired:
+  SWALLOW  .softhouse/reviews/t179-guard-classifier/guard_classify.py:1025   except Exception:
+  SWALLOW  .softhouse/reviews/t179-guard-classifier/guard_classify.py:201   except Exception:                                       # pragma: no cover
+  SWALLOW  .softhouse/reviews/t179-guard-classifier/guard_classify.py:820   except (OSError, UnicodeDecodeError, SyntaxError, RecursionError):
+  SWALLOW  .softhouse/reviews/t34-probe/t34_sweep.py:34   except ValueError:
+  SWALLOW  .softhouse/reviews/t47-probe/t167-reaudit-guards.py:60   except Exception:                                     # pragma: no cover
+  SWALLOW  .softhouse/reviews/t47-probe/t167-redprobe.py:247   except OSError:
+  SWALLOW  .softhouse/reviews/t47-probe/t167-redprobe.py:353   except OSError:
+  SWALLOW  .softhouse/reviews/t47-probe/t167-redprobe.py:217   except OSError:
+  SWALLOW  .softhouse/reviews/t47-probe/t167-redprobe.py:279   except OSError:
+  SWALLOW  .softhouse/reviews/t47-probe/t167-sibling-census.py:72   except Exception:
+  SWALLOW  .softhouse/reviews/t47-probe/t167-sibling-census.py:62   except Exception:
+
+================================================================================================
+NET 2 -- silent narrowing with NO except clause, inside a money-ish loop
+(T175 named this its LARGEST BLIND SPOT and enumerated exactly ONE instance by hand)
+================================================================================================
+  candidate `if ...: continue` narrowings in money-ish loops : 240
+  NARROW   .softhouse/capture/actualactual/analysis/discriminate.py:256   if not o or c.get("family") == "EXACTNESS-CANARY":
+  NARROW   .softhouse/capture/actualactual/analysis/discriminate.py:259   if "note" in p or "error" in p:
+  NARROW   .softhouse/capture/actualactual/analysis/discriminate.py:259   if "note" in p or "error" in p:
+  NARROW   .softhouse/capture/audit-t44/analysis/t44_detail.py:13   if want and c['id'] not in want:
+  NARROW   .softhouse/capture/audit-t44/charges/bin/analyse_probes.py:86   if a.get("period") is None:
+  NARROW   .softhouse/capture/audit-t44/charges/bin/audit_recompute.py:195   if p.get("period") is None:
+  NARROW   .softhouse/capture/audit-t44/charges/bin/audit_recompute.py:208   if p.get("period") is None:
+  NARROW   .softhouse/capture/audit-t44/charges/bin/audit_recompute.py:225   if p.get("period") is None:
+  NARROW   .softhouse/capture/audit-t44/mathcontext/analysis/audit_crosschecks.py:95   if D.get("observed") is None:
+  NARROW   .softhouse/capture/audit-t44/mathcontext/analysis/audit_invariants.py:39   if obs is None:
+  NARROW   .softhouse/capture/audit-t44/mathcontext/analysis/audit_invariants.py:92   if p["type"] != "REPAYMENT":
+  NARROW   .softhouse/capture/audit-t44/mathcontext/analysis/audit_invariants.py:108   if "balance" not in p:
+  NARROW   .softhouse/capture/audit-t44/mathcontext/analysis/audit_invariants.py:49   if k not in MONEY_KEYS:
+  NARROW   .softhouse/capture/audit-t44/mathcontext/analysis/audit_invariants.py:92   if p["type"] != "REPAYMENT":
+  NARROW   .softhouse/capture/audit-t44/mathcontext/analysis/audit_invariants.py:108   if "balance" not in p:
+  NARROW   .softhouse/capture/audit-t44/mathcontext/analysis/audit_invariants_failability.py:37   if p["type"] != "REPAYMENT":
+  NARROW   .softhouse/capture/audit-t44/rerun-periodratio/analysis/discriminate.py:87   if cap is None:
+  NARROW   .softhouse/capture/charges/bin/attest-t40.py:241   if not row:
+  NARROW   .softhouse/capture/charges/bin/attest.py:227   if not row:
+  NARROW   .softhouse/capture/charges/bin/fullcell.py:173   if not f.endswith("-raw.json"):
+  NARROW   .softhouse/capture/charges/bin/invariants.py:58   if not f.endswith("-raw.json"):
+  NARROW   .softhouse/capture/charges/bin/t46-exacttext.py:99   if not d.is_dir():
+  NARROW   .softhouse/capture/charges/bin/t46-exacttext.py:102   if not f.endswith(".json") or f.endswith("-exact.json"):
+  NARROW   .softhouse/capture/charges/bin/t46-exacttext.py:161   if not p.exists():
+  NARROW   .softhouse/capture/charges/bin/t46-exacttext.py:102   if not f.endswith(".json") or f.endswith("-exact.json"):
+  NARROW   .softhouse/capture/charges/bin/t46-fix-paths.py:33   if p.name == "t46-fix-paths.py" or not p.is_file():
+  NARROW   .softhouse/capture/charges/bin/t46-fix-paths.py:36   if STALE not in text:
+  NARROW   .softhouse/capture/charges/bin/t48-analyse.py:178   if "period" not in p:
+  NARROW   .softhouse/capture/charges/bin/t48-analyse.py:178   if "period" not in p:
+  NARROW   .softhouse/capture/charges/bin/t51-analyse.py:339   if "periods" not in doc:
+  NARROW   .softhouse/capture/charges/bin/t51-analyse.py:250   if "period" not in p:
+  NARROW   .softhouse/capture/dec1-binding/analysis/discriminate.py:136   if wkw is None:
+  NARROW   .softhouse/capture/emiloop/t37-crosscheck.py:37   if len(oa["periods"]) != len(ob["periods"]):
+  NARROW   .softhouse/capture/emiloop/t37-crosscheck.py:43   if ka not in pa or kb not in pb:
+  NARROW   .softhouse/capture/leapboundary/analysis/T175-red/measure-other-sites.py:81   if not (os.path.exists(fa) and os.path.exists(fb)):
+  NARROW   .softhouse/capture/leapboundary/analysis/T175-red/measure-other-sites.py:89   if av == bv:
+  NARROW   .softhouse/capture/leapboundary/analysis/T175-red/measure-other-sites.py:91   if k.split(".", 1)[1] not in m.MONEYISH:
+  NARROW   .softhouse/capture/leapboundary/analysis/T175-red/measure-other-sites.py:97   if not (av and bv):
+  NARROW   .softhouse/capture/leapboundary/analysis/T175-red/measure-other-sites.py:89   if av == bv:
+  NARROW   .softhouse/capture/leapboundary/analysis/T175-red/measure-other-sites.py:91   if k.split(".", 1)[1] not in m.MONEYISH:
+  NARROW   .softhouse/capture/leapboundary/analysis/T175-red/measure-other-sites.py:97   if not (av and bv):
+  NARROW   .softhouse/capture/leapboundary/analysis/t55-analyse.py:270   if "period" not in p:                     # the disbursement row
+  NARROW   .softhouse/capture/leapboundary/analysis/t55-analyse.py:426   if pair != "p7 vs p4":
+  NARROW   .softhouse/capture/leapboundary/analysis/t55-invariants-v2.py:124   if fld not in t55.MONEYISH:
+  NARROW   .softhouse/capture/leapboundary/analysis/t55-invariants-v2.py:154   if av == bv:
+  NARROW   .softhouse/capture/leapboundary/analysis/t55-invariants-v2.py:158   if fld not in t55.MONEYISH:
+  NARROW   .softhouse/capture/leapboundary/analysis/t55-invariants-v2.py:160   if av is None or bv is None:
+  NARROW   .softhouse/capture/leapboundary/analysis/t55-prior-capture-assessment.py:62   if "period" not in p:
+  NARROW   .softhouse/capture/mathcontext/analysis/discriminate.py:117   if not interesting:
+  NARROW   .softhouse/capture/mathcontext/analysis/t46_assert_pathb_slot.py:92   if op != "invokestatic" or GET_MC not in args:
+  NARROW   .softhouse/capture/mathcontext/analysis/t46_assert_pathb_slot.py:97   if i + 1 >= len(insns):
+  NARROW   .softhouse/capture/mathcontext/analysis/t46_assert_pathb_slot.py:103   if slot is None or not nop.startswith("astore"):
+  NARROW   .softhouse/capture/mathcontext/analysis/t46_assert_pathb_slot.py:128   if not consumers:
+  NARROW   .softhouse/capture/mathcontext/analysis/t46_assert_pathb_slot.py:92   if op != "invokestatic" or GET_MC not in args:
+  NARROW   .softhouse/capture/mathcontext/analysis/t46_assert_pathb_slot.py:97   if i + 1 >= len(insns):
+  NARROW   .softhouse/capture/mathcontext/analysis/t46_assert_pathb_slot.py:103   if slot is None or not nop.startswith("astore"):
+  NARROW   .softhouse/capture/mathcontext/analysis/t46_assert_pathb_slot.py:128   if not consumers:
+  NARROW   .softhouse/capture/mathcontext/analysis/t46_m5_identity.py:111   if HARNESS_FRAME.match(va) and HARNESS_FRAME.match(vb):
+  NARROW   .softhouse/capture/mathcontext/analysis/t46_m5_identity.py:111   if HARNESS_FRAME.match(va) and HARNESS_FRAME.match(vb):
+  NARROW   .softhouse/capture/out/t21-probe-invariants.py:45   if o is None:
+  NARROW   .softhouse/capture/out/t21-probe-rederive.py:210   if cid not in obs:
+  NARROW   .softhouse/capture/out/t35-newcolumn-checks.py:54   if o is None:
+  NARROW   .softhouse/capture/pathb/t149/compare-arms.py:87   if 'period' not in a:
+  NARROW   .softhouse/capture/pathb/t149/promote-vector.py:163   if 'period' not in p:                                   # the DISBURSEMENT row
+  NARROW   .softhouse/capture/pathb/t22-audit/t22_invariants.py:52   if k in MONEY_KEYS_SKIP:
+  NARROW   .softhouse/capture/pathb/t22-probe/rederive.py:158   if "period" not in p:
+  NARROW   .softhouse/capture/pathb/t36/attest.py:370   if not row:
+  NARROW   .softhouse/capture/pathb/t36/t36_diff.py:65   if k not in fa or k not in fb:
+  NARROW   .softhouse/capture/pathb/t36/t36_diff.py:70   if ma is None or mb is None:
+  NARROW   .softhouse/capture/pathb/t76/t76_crosscheck.py:41   if p.get('period') is None:
+  NARROW   .softhouse/capture/periodratio/analysis/discriminate.py:87   if cap is None:
+  NARROW   .softhouse/capture/periodratio/analysis/t46_arms_ratio.py:161   if c.get("observed") is None:
+  NARROW   .softhouse/capture/periodratio/analysis/t46_arms_ratio.py:173   if p["type"] != "REPAYMENT":
+  NARROW   .softhouse/capture/periodratio/analysis/t46_arms_ratio.py:161   if c.get("observed") is None:
+  NARROW   .softhouse/capture/periodratio/analysis/t46_arms_ratio.py:173   if p["type"] != "REPAYMENT":
+  NARROW   .softhouse/capture/periodratio/analysis/t46_arms_ratio.py:173   if p["type"] != "REPAYMENT":
+  NARROW   .softhouse/capture/t100-g8-rescope/src/closed_form_check.py:50   if c['id'].startswith('P-CAL'):
+  NARROW   .softhouse/capture/t100-g8-rescope/src/closed_form_check.py:50   if c['id'].startswith('P-CAL'):
+  NARROW   .softhouse/capture/t100-g8-rescope/src/largest_failing.py:17   if cap['id'].startswith('P-CAL'):
+  NARROW   .softhouse/capture/t100-g8-rescope/src/largest_failing.py:30   if not v['fail']:
+  NARROW   .softhouse/capture/t100-g8-rescope/src/largest_failing.py:17   if cap['id'].startswith('P-CAL'):
+  NARROW   .softhouse/capture/t117-familyb/src/classify_t117.py:124   if r is None:
+  NARROW   .softhouse/capture/t117-familyb/src/residual_census.py:45   if cap.get('observed') is None:
+  NARROW   .softhouse/capture/t117-familyb/src/residual_census.py:45   if cap.get('observed') is None:
+  NARROW   .softhouse/capture/t117-familyb/src/shape_check.py:70   if cap.get('observed') is None:
+  NARROW   .softhouse/capture/t117-familyb/src/shape_check.py:76   if not in_scope:
+  NARROW   .softhouse/capture/t117-familyb/src/tie_profile.py:42   if cap.get('observed') is None:
+  NARROW   .softhouse/capture/t159-review-t117/src/census_t159.py:105   if c["id"].startswith("P-CAL"):
+  NARROW   .softhouse/capture/t177-so-nondeterminism/analyze_t177.py:319   if ref is None:
+  NARROW   .softhouse/capture/t177-so-nondeterminism/analyze_t177.py:323   if ref[0] != 'observed':
+  NARROW   .softhouse/capture/t177-so-nondeterminism/calibrate_t177.py:41   if mid not in mine:
+  NARROW   .softhouse/capture/t177-so-nondeterminism/calibrate_t177.py:44   if rid not in refmap:
+  NARROW   .softhouse/capture/t177-so-nondeterminism/calibrate_t177.py:47   if mine[mid].get('outcome') != 'observed':
+  NARROW   .softhouse/capture/t177-so-nondeterminism/t159_context.py:21   if not o:
+  NARROW   .softhouse/capture/t64-zeroprincipal/check-prediction.py:47   if cid not in caps:
+  NARROW   .softhouse/capture/t64-zeroprincipal/check-prediction.py:51   if cap.get("observed") is None:
+  NARROW   .softhouse/capture/t64-zeroprincipal/check-prediction.py:56   if len(prows) != len(orows):
+  NARROW   .softhouse/capture/t66-unrecognized-interest/check-prediction.py:35   if not isinstance(m, dict) or not m.get("periods"):
+  NARROW   .softhouse/capture/t66-unrecognized-interest/check-prediction.py:81   if not notfp:
+  NARROW   .softhouse/capture/t74-multiplesof/build-counterfactuals.py:112   if ra.get(capkey) is None or rb.get(capkey) is None:
+  NARROW   .softhouse/capture/t74-multiplesof/build-counterfactuals.py:112   if ra.get(capkey) is None or rb.get(capkey) is None:
+  NARROW   .softhouse/capture/t74-multiplesof/build-counterfactuals.py:112   if ra.get(capkey) is None or rb.get(capkey) is None:
+  NARROW   .softhouse/capture/t74-multiplesof/check-prediction.py:69   if a not in cases or b not in cases:
+  NARROW   .softhouse/capture/t74-multiplesof/check-prediction.py:89   if cid not in cases:
+  NARROW   .softhouse/capture/t74-multiplesof/check-prediction.py:105   if len(gp) != len(wp):
+  NARROW   .softhouse/capture/t74-multiplesof/check-prediction.py:123   if cid not in cases:
+  NARROW   .softhouse/capture/t74-multiplesof/check-prediction.py:127   if sc != 0:
+  NARROW   .softhouse/capture/t74-multiplesof/check-prediction.py:152   if cid not in cases:
+  NARROW   .softhouse/capture/t74-multiplesof/extract-t21v2-AB.py:37   if m:
+  NARROW   .softhouse/capture/t74-multiplesof/extract-t21v2-AB.py:48   if m and cur:
+  NARROW   .softhouse/capture/t83-nonamortizing/src/check-prediction.py:87   if case['amortizes']:
+  NARROW   .softhouse/capture/t83-nonamortizing/src/run-port.py:97   if pr.get("error"):
+  NARROW   .softhouse/capture/t83-nonamortizing/src/run-port.py:102   if len(rows) != len(cap["observed"]["periods"]):
+  NARROW   .softhouse/capture/tierA-a2/prove-cap-transport-red.py:248   if not (fn.startswith("run-") and fn.endswith(".sh")):
+  NARROW   .softhouse/handoff/T57-transcription-audit.py:165   if r["kind"] != "REPAYMENT":
+  NARROW   .softhouse/handoff/T58-transcription-audit.py:141   if case_id not in by_case:
+  NARROW   .softhouse/handoff/T58-transcription-audit.py:230   if not present:
+  NARROW   .softhouse/handoff/T58-transcription-audit.py:230   if not present:
+  NARROW   .softhouse/handoff/T58-transcription-audit.py:230   if not present:
+  NARROW   .softhouse/handoff/T61-transcription-audit.py:162   if mkey in p.get("unrecorded_fields", []):
+  NARROW   .softhouse/handoff/T61-transcription-audit.py:168   if wire is None:
+  NARROW   .softhouse/handoff/T61-transcription-audit.py:162   if mkey in p.get("unrecorded_fields", []):
+  NARROW   .softhouse/handoff/T61-transcription-audit.py:168   if wire is None:
+  NARROW   .softhouse/handoff/T61-transcription-audit.py:162   if mkey in p.get("unrecorded_fields", []):
+  NARROW   .softhouse/handoff/T61-transcription-audit.py:168   if wire is None:
+  NARROW   .softhouse/handoff/T8-transcription-audit.py:127   if not seen:
+  NARROW   .softhouse/handoff/T8-transcription-audit.py:140   if r["kind"] != "REPAYMENT":
+  NARROW   .softhouse/handoff/t57-fraction-crosscheck.py:26   if ck not in p:
+  NARROW   .softhouse/handoff/t57-fraction-crosscheck.py:26   if ck not in p:
+  NARROW   .softhouse/handoff/t57-fraction-crosscheck.py:26   if ck not in p:
+  NARROW   .softhouse/reviews/T182-evidence/t182_independent_tally.py:106   if t['outcome'] != 'observed':
+  NARROW   .softhouse/reviews/T84-evidence/src/eval-probe1.py:16   if not c['id'].startswith('T84-'):
+  NARROW   .softhouse/reviews/T84-evidence/src/eval-probe1.py:59   if ref is None:
+  NARROW   .softhouse/reviews/T84-evidence/src/eval-probe2.py:14   if not c['id'].startswith('T84B-'):
+  NARROW   .softhouse/reviews/T84-evidence/src/run-port.py:39   if pr.get("error"):
+  NARROW   .softhouse/reviews/T84-evidence/src/run-port.py:42   if len(rows) != len(per):
+  NARROW   .softhouse/reviews/T84-evidence/src/run-port.py:48   if pp.get(wire) is None: continue
+  NARROW   .softhouse/reviews/T84-evidence/src/run-port.py:48   if pp.get(wire) is None: continue
+  NARROW   .softhouse/reviews/T84-evidence/src/run-port.py:48   if pp.get(wire) is None: continue
+  NARROW   .softhouse/reviews/t179-guard-classifier/selftest.py:96   if not os.path.exists(path):
+  NARROW   .softhouse/reviews/t179-guard-classifier/selftest.py:101   if res["refused"]:
+  NARROW   .softhouse/reviews/t179-guard-classifier/selftest.py:105   if site is None:
+  NARROW   .softhouse/reviews/t21v2/t21v2-crosspass.py:12   if a not in sa or b not in sb:
+  NARROW   .softhouse/reviews/t21v2/t21v2-invariants.py:49   if o is None:
+  NARROW   .softhouse/reviews/t21v2/t21v2-invariants.py:91   if p["type"] == "DISBURSEMENT":
+  NARROW   .softhouse/reviews/t21v2/t21v2-invariants.py:91   if p["type"] == "DISBURSEMENT":
+  NARROW   .softhouse/reviews/t23-probe/t23_compare.py:22   if not line.startswith("CASE "):
+  NARROW   .softhouse/reviews/t24-probe/t24_check_prod_corpus.py:31   if i["repaymentFrequencyType"] != "MONTHS" or i["daysInMonth"] != "DAYS_30" \
+  NARROW   .softhouse/reviews/t26-probe/t26_scan.py:22   if not f:
+  NARROW   .softhouse/reviews/t26-probe/t26_scan.py:22   if not f:
+  NARROW   .softhouse/reviews/t26-probe/t26_variants.py:65   if not fires:
+  NARROW   .softhouse/reviews/t29-probe/t29_sweep.py:82   if a is None:
+  NARROW   .softhouse/reviews/t32-probe/t32_sweep.py:48   if not strictly_inside(start, n, d):
+  NARROW   .softhouse/reviews/t34-probe/t34_capture_check.py:38   if i["mathContextPrecision"] != 19:
+  NARROW   .softhouse/reviews/t34-probe/t34_capture_check.py:42   if i["daysInMonth"] != "DAYS_30" or i["daysInYear"] != "DAYS_360":
+  NARROW   .softhouse/reviews/t34-probe/t34_scan_broad.py:37   if not (start <= disb < bounds[-1][1]):
+  NARROW   .softhouse/reviews/t34-probe/t34_scan_broad.py:37   if not (start <= disb < bounds[-1][1]):
+  NARROW   .softhouse/reviews/t34-probe/t34_scan_broad.py:37   if not (start <= disb < bounds[-1][1]):
+  NARROW   .softhouse/reviews/t34-probe/t34_sweep.py:36   if disb < start:
+  NARROW   .softhouse/reviews/t34-probe/t34_sweep.py:36   if disb < start:
+  NARROW   .softhouse/reviews/t38-probe/t38_corpus_blind.py:43   if i["daysInMonth"] != "DAYS_30" or i["daysInYear"] != "DAYS_360":
+  NARROW   .softhouse/reviews/t38-probe/t38_corpus_blind.py:43   if i["daysInMonth"] != "DAYS_30" or i["daysInYear"] != "DAYS_360":
+  NARROW   .softhouse/reviews/t38-probe/t38_disbrow_coverage.py:40   if not os.path.exists(path):
+  NARROW   .softhouse/reviews/t38-probe/t38_disbrow_coverage.py:49   if p["type"] != "DISBURSEMENT":
+  NARROW   .softhouse/reviews/t38-probe/t38_disbrow_coverage.py:73   if not os.path.exists(path):
+  NARROW   .softhouse/reviews/t38-probe/t38_disbrow_coverage.py:49   if p["type"] != "DISBURSEMENT":
+  NARROW   .softhouse/reviews/t38-probe/t38_disbrow_coverage.py:49   if p["type"] != "DISBURSEMENT":
+  NARROW   .softhouse/reviews/t38-probe/t38_discriminate.py:55   if i["mathContextPrecision"] != 19:
+  NARROW   .softhouse/reviews/t38-probe/t38_discriminate.py:57   if i["daysInMonth"] != "DAYS_30" or i["daysInYear"] != "DAYS_360":
+  NARROW   .softhouse/reviews/t38-probe/t38_discriminate.py:68   if p["type"] != "REPAYMENT":
+  NARROW   .softhouse/reviews/t38-probe/t38_discriminate.py:55   if i["mathContextPrecision"] != 19:
+  NARROW   .softhouse/reviews/t38-probe/t38_discriminate.py:57   if i["daysInMonth"] != "DAYS_30" or i["daysInYear"] != "DAYS_360":
+  NARROW   .softhouse/reviews/t38-probe/t38_discriminate.py:68   if p["type"] != "REPAYMENT":
+  NARROW   .softhouse/reviews/t38-probe/t38_discriminate.py:68   if p["type"] != "REPAYMENT":
+  NARROW   .softhouse/reviews/t38-probe/t38_pass2_membership.py:173   if j >= n:
+  NARROW   .softhouse/reviews/t38-probe/t38_pass2_membership.py:173   if j >= n:
+  NARROW   .softhouse/reviews/t38-probe/t38_pass2_membership.py:173   if j >= n:
+  NARROW   .softhouse/reviews/t38-probe/t38_pass2_membership.py:173   if j >= n:
+  NARROW   .softhouse/reviews/t38-probe/t38_periodratio_scan.py:37   if not (start <= disb < bounds[-1][1]):
+  NARROW   .softhouse/reviews/t38-probe/t38_periodratio_scan.py:37   if not (start <= disb < bounds[-1][1]):
+  NARROW   .softhouse/reviews/t38-probe/t38_periodratio_scan.py:37   if not (start <= disb < bounds[-1][1]):
+  NARROW   .softhouse/reviews/t38-probe/t38_periodratio_sweep.py:30   if not (start <= disb < bounds[-1][1]):
+  NARROW   .softhouse/reviews/t38-probe/t38_periodratio_sweep.py:30   if not (start <= disb < bounds[-1][1]):
+  NARROW   .softhouse/reviews/t38-probe/t38_validate.py:116   if p["type"] != "REPAYMENT":
+  NARROW   .softhouse/reviews/t38-probe/t38_validate.py:140   if i["mathContextPrecision"] != 19:
+  NARROW   .softhouse/reviews/t38-probe/t38_validate.py:144   if i["daysInMonth"] != "DAYS_30" or i["daysInYear"] != "DAYS_360":
+  NARROW   .softhouse/reviews/t41-probe/t41_discriminate.py:236   if "period" not in pa:
+  NARROW   .softhouse/reviews/t41-probe/t41_discriminate.py:236   if "period" not in pa:
+  NARROW   .softhouse/reviews/t41-probe/t41_validate.py:152   if p.get("type") != "REPAYMENT":
+  NARROW   .softhouse/reviews/t41-probe/t41_validate.py:156   if key not in p or p[key] is None:
+  NARROW   .softhouse/reviews/t41-probe/t41_validate.py:178   if skip:
+  NARROW   .softhouse/reviews/t41-probe/t41_validate.py:181   if i.get("daysInMonth") != "DAYS_30" or i.get("daysInYear") != "DAYS_360":
+  NARROW   .softhouse/reviews/t41-probe/t41_validate.py:265   if not fn.endswith("-raw.json"):
+  NARROW   .softhouse/reviews/t41-probe/t41_validate.py:273   if "period" not in p:
+  NARROW   .softhouse/reviews/t41-probe/t41_validate.py:156   if key not in p or p[key] is None:
+  NARROW   .softhouse/reviews/t41-probe/t41_validate.py:273   if "period" not in p:
+  NARROW   .softhouse/reviews/t45-probe/t45_citecheck.py:86   if key in seen:
+  NARROW   .softhouse/reviews/t45-probe/t45_citecheck.py:95   if not cands:
+  NARROW   .softhouse/reviews/t45-probe/t45_citecheck.py:86   if key in seen:
+  NARROW   .softhouse/reviews/t45-probe/t45_citecheck.py:95   if not cands:
+  NARROW   .softhouse/reviews/t45-probe/t45_discriminate.py:236   if "period" not in pa:
+  NARROW   .softhouse/reviews/t45-probe/t45_discriminate.py:236   if "period" not in pa:
+  NARROW   .softhouse/reviews/t45-probe/t45_extra.py:165   if int(i["mathContextPrecision"]) != 19:
+  NARROW   .softhouse/reviews/t45-probe/t45_extra.py:234   if not fn.startswith("B-0") or not fn.endswith("-raw.json"):
+  NARROW   .softhouse/reviews/t45-probe/t45_extra.py:348   if not fn.endswith("-raw.json"):
+  NARROW   .softhouse/reviews/t45-probe/t45_extra.py:361   if not os.path.exists(rp):
+  NARROW   .softhouse/reviews/t45-probe/t45_extra.py:354   if p.get("period") is None:
+  NARROW   .softhouse/reviews/t45-probe/t45_extra.py:369   if tt == "DISBURSEMENT":
+  NARROW   .softhouse/reviews/t45-probe/t45_extra.py:354   if p.get("period") is None:
+  NARROW   .softhouse/reviews/t45-probe/t45_extra.py:369   if tt == "DISBURSEMENT":
+  NARROW   .softhouse/reviews/t45-probe/t45_validate.py:152   if p.get("type") != "REPAYMENT":
+  NARROW   .softhouse/reviews/t45-probe/t45_validate.py:156   if key not in p or p[key] is None:
+  NARROW   .softhouse/reviews/t45-probe/t45_validate.py:178   if skip:
+  NARROW   .softhouse/reviews/t45-probe/t45_validate.py:181   if i.get("daysInMonth") != "DAYS_30" or i.get("daysInYear") != "DAYS_360":
+  NARROW   .softhouse/reviews/t45-probe/t45_validate.py:265   if not fn.endswith("-raw.json"):
+  NARROW   .softhouse/reviews/t45-probe/t45_validate.py:273   if "period" not in p:
+  NARROW   .softhouse/reviews/t45-probe/t45_validate.py:156   if key not in p or p[key] is None:
+  NARROW   .softhouse/reviews/t45-probe/t45_validate.py:273   if "period" not in p:
+  NARROW   .softhouse/reviews/t47-probe/t47_citecheck.py:86   if key in seen:
+  NARROW   .softhouse/reviews/t47-probe/t47_citecheck.py:95   if not cands:
+  NARROW   .softhouse/reviews/t47-probe/t47_citecheck.py:86   if key in seen:
+  NARROW   .softhouse/reviews/t47-probe/t47_citecheck.py:95   if not cands:
+  NARROW   .softhouse/reviews/t47-probe/t47_discriminate.py:236   if "period" not in pa:
+  NARROW   .softhouse/reviews/t47-probe/t47_discriminate.py:236   if "period" not in pa:
+  NARROW   .softhouse/reviews/t47-probe/t47_extra.py:165   if int(i["mathContextPrecision"]) != 19:
+  NARROW   .softhouse/reviews/t47-probe/t47_extra.py:234   if not fn.startswith("B-0") or not fn.endswith("-raw.json"):
+  NARROW   .softhouse/reviews/t47-probe/t47_extra.py:348   if not fn.endswith("-raw.json"):
+  NARROW   .softhouse/reviews/t47-probe/t47_extra.py:361   if not os.path.exists(rp):
+  NARROW   .softhouse/reviews/t47-probe/t47_extra.py:354   if p.get("period") is None:
+  NARROW   .softhouse/reviews/t47-probe/t47_extra.py:369   if tt == "DISBURSEMENT":
+  NARROW   .softhouse/reviews/t47-probe/t47_extra.py:354   if p.get("period") is None:
+  NARROW   .softhouse/reviews/t47-probe/t47_extra.py:369   if tt == "DISBURSEMENT":
+  NARROW   .softhouse/reviews/t47-probe/t47_validate.py:152   if p.get("type") != "REPAYMENT":
+  NARROW   .softhouse/reviews/t47-probe/t47_validate.py:156   if key not in p or p[key] is None:
+  NARROW   .softhouse/reviews/t47-probe/t47_validate.py:178   if skip:
+  NARROW   .softhouse/reviews/t47-probe/t47_validate.py:181   if i.get("daysInMonth") != "DAYS_30" or i.get("daysInYear") != "DAYS_360":
+  NARROW   .softhouse/reviews/t47-probe/t47_validate.py:265   if not fn.endswith("-raw.json"):
+  NARROW   .softhouse/reviews/t47-probe/t47_validate.py:273   if "period" not in p:
+  NARROW   .softhouse/reviews/t47-probe/t47_validate.py:156   if key not in p or p[key] is None:
+  NARROW   .softhouse/reviews/t47-probe/t47_validate.py:273   if "period" not in p:
