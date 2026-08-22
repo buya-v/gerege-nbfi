@@ -1,0 +1,245 @@
+CALIBRATION OK: positive found, negative absent, no fabrication, no miss
+FILE docs/adr/DEC-2-gl-accounting-adapter.md  lines=3039
+
+======== F1 ledger-vector-existence
+   10 | > 1. **No `ledger` vector exists.** `.softhouse/vectors/` holds `loanschedule/` and `_selftest/` and
+   12 | > 2. **No `ledger` vector is EXPRESSIBLE.** The store's only accepted schema is
+   20 | >    wrote here *"No `ledger` vector **CAN** exist"*, §8.1 wrote *"Zero `ledger` vectors **CAN**
+   21 | >    exist"*, and §4.10 wrote *"no `ledger` vector can be admitted **at all**"*. **Admission**-impossibility
+  134 | it **falsified by measurement** — *"no `ledger` vector CAN exist"*. A relabelled `loanschedule`
+  815 |   NO**, because no `ledger` vector of any shape is currently expressible (§5).
+  823 | | **I-5** | Corrections are reversing entries | A correction adds a leg pair; it never mutates one | **PARTLY — AND REVISION 6 CORRECTS THE REASON REVISIONS 1-5 GAVE, WHICH WAS FALSE WHEN REVISION 5 WAS RATIFIED.** Revisions 1-5 said *"The A2 corpus contains n
+ 1364 | > **(a)** Revision 2 wrote *"no `ledger` vector can be **admitted at all**"*. **That was FALSE** —
+ 1504 | ### 5.1 No `ledger` vector is expressible against the frozen vector schema — MEASURED
+ 1612 | ### 5.1.1 RETRACTION — "no `ledger` vector CAN exist" was FALSE, and PC-3 is why it was believed
+ 1622 | | Banner, item 2 | *"**No `ledger` vector CAN exist.**"* |
+ 1623 | | §8.1, fact 2 | *"**Zero `ledger` vectors CAN exist**"* |
+ 1624 | | §4.10 (`A2-17`'s micro-fix) | *"…because §5.1 establishes that no `ledger` vector can be admitted **at all** until §5.3's P-1…P-5 exist."* |
+ 1626 | **What is true.** §5.1's heading: **no `ledger` vector is EXPRESSIBLE** against the frozen vector
+ 2359 | 1. **Zero `ledger` vectors exist.** The store's only context directories are `loanschedule/` and
+ 2361 | 2. **Zero `ledger` vectors are EXPRESSIBLE** — §5.1, established in code in five legs, all five
+ 2363 |    **⚠ RETRACTION, revision 3: revision 2 wrote *"Zero `ledger` vectors CAN exist"* here, and the
+ 2865 |      §8.1 fact 2, §4.10).** Revision 2's *"no `ledger` vector **CAN** exist"* / *"can be admitted at
+ 2987 |      **three positive controls that were run**, not reasoned — that no `ledger` vector is
+  -- 19 line(s)
+
+======== F2 expressibility
+   12 | > 2. **No `ledger` vector is EXPRESSIBLE.** The store's only accepted schema is
+   22 | >    is strictly stronger than **expression**-impossibility, it is not what §5.1's five legs prove,
+  312 | - The Go expression of it belongs in a new package — recommended name
+  459 | asserting a money cell — or any other `ledger` cell — is currently expressible at all. `I-1` and
+  711 | is expressible is a separate question, answered no in §5.
+  815 |   NO**, because no `ledger` vector of any shape is currently expressible (§5).
+ 1071 | `guard_gofmt` roots at `"$NEXUS_DIR"` with the `contract.go` exemption expressed as a filter on
+ 1360 | > vector can be *expressed* until **§5.3's** P-1…P-5 exist, and §5.1's five legs are unaffected by
+ 1480 | promoted vectors** — and, revision 2 adds, **that could not be EXPRESSED if somebody tried** (revision 3: *expressed*, not *admitted* — §5.1.1 retracts the stronger word, which was false).
+ 1504 | ### 5.1 No `ledger` vector is expressible against the frozen vector schema — MEASURED
+ 1626 | **What is true.** §5.1's heading: **no `ledger` vector is EXPRESSIBLE** against the frozen vector
+ 1720 | quietly reworded.** A silent downgrade from *"CAN exist"* to *"is expressible"* would leave the next
+ 1734 | has an encoding or a class. So "grade only what the schema expresses" is not a narrower DEC-2 — it
+ 2198 | *expresses a ledger claim*, which is the only kind that clearing this fatal ought to accept. That is not a hypothetical: it
+ 2361 | 2. **Zero `ledger` vectors are EXPRESSIBLE** — §5.1, established in code in five legs, all five
+ 2368 |    is strictly stronger than **expression**-impossibility and was never established. §5.1.1 carries
+ 2988 |      expressible: the schema string names `loanschedule`, `Request`'s thirteen fields have no home
+  -- 17 line(s)
+
+======== F3 nothing-grades
+    3 | > # ⚠ NOTHING GRADES THIS CONTEXT'S MONEY. NOTHING GRADES THIS CONTEXT AT ALL.
+    7 | > *must* do. **Not one of them is currently checked by anything.** Four separate facts, each
+   76 | > admissibility standard. It would buy **no grading whatsoever** until the machinery in §5.3
+  805 | can be graded today**. Saying which, and saying why the two statements differ, is the honest half of
+  817 | | id | Invariant | Statement, checkable | In principle, from the captures in hand? | Graded today? |
+  823 | | **I-5** | Corrections are reversing entries | A correction adds a leg pair; it never mutates one | **PARTLY — AND REVISION 6 CORRECTS THE REASON REVISIONS 1-5 GAVE, WHICH WAS FALSE WHEN REVISION 5 WAS RATIFIED.** Revisions 1-5 said *"The A2 corpus contains n
+  828 | GL/accounting context, and **grades none of them today.** **I-3 and I-4 must be enforced by a
+ 1309 | > for it is precondition **P-2** in §5.3. **Every row of the (b) table is therefore ungraded today**,
+ 1398 | string — the named reason — only on the `blind` and `ungraded` paths; a capability that is *defined*
+ 1401 | read; `capDef.Evidence` appears in the `blind` and `ungraded` messages and in neither `unknown`
+ 1440 |     cells compared          7884 graded, 93 ungraded
+ 1640 |     cells compared          5711 graded, 89 ungraded (never recorded by the capture)
+ 1795 |    for orientation only and expected to be stale:** `46 / 4 / 1 / 7884 graded, 93 ungraded`, store
+ 1838 |    >     cells compared   7884 graded, 93 ungraded
+ 2260 |   admitted and left ungraded — an admitted-but-ungraded charge entry point would be exactly the
+ 2268 |   make the savings resolver correct — it makes it ungraded. DEC-2 refuses it either way.
+ 2345 | ### 8.1 NOTHING GRADES THE LEDGER — say it here, not only in the banner
+ 3009 |      captures in hand* (**yes**) and *graded today* (**no**).
+ 3017 |   6. **"Nothing grades the ledger" made structurally unmissable** — the banner at the head of the
+ 3024 |      interpolates the named reason only on the `blind`/`ungraded` paths — an ABSENT row refuses with
+  -- 20 line(s)
+
+======== F4 conformance-PASS
+  292 | parallel-run sign-off, and licence facts remain hard `user` gates. A conformance PASS on the
+  825 | | **I-7** | `Idempotency-Key` on every money-movement POST | — | **NOT APPLICABLE TO THIS CONTRACT, and that must be said rather than assumed.** DEC-2's surface exposes no HTTP endpoint and moves no money; it is a value computation. The obligation is real and 
+ 2434 | - **A `ledger` conformance PASS would mean "matches the reference oracle on captured vectors, inside
+ 2437 |   twenty-three cash placeholder slots. **Today there is no such PASS to misread.**
+  -- 4 line(s)
+
+======== F5 A2-15
+   87 | revision 5** under standing policy **P-2**; until then `A2-15` (promote GL vectors) stays blocked,
+   88 | and §5.3 names work that must land before `A2-15` could succeed even against a ratified contract.
+  262 | contract for the GL/accounting bounded context, so that `A2-15` has something to build a grader
+  316 | - Until that file exists, `A2-15`'s grader must read its admissibility rules from **this
+  389 |   `out/A2-150-db-final-state.txt`: `(27, 1, 1, payment_type 1) → n = 2, gl_account_ids {16,2}`].
+  391 |   `A2-150`: GL 21 `Liability Under Asset`, `classification_enum = 2`, `parent_id = 1`, whose
+  415 | | **B-4** | **The office.** | `acc_gl_financial_activity_account` is tenant-global — **two** columns plus id, no office dimension [**CORRECTED in revision 3, and RE-OPENED at the pinned checkout**: revision 2 said *"three columns plus id"*, carried from A2-1/A
+  436 | - `A2-150`'s `acc_gl_journal_entry` dump projects **both** `amount` and `currency_code`: six rows,
+  438 |   `A2-150-db-final-state.txt`].
+  586 | | `ledger_db_readback` | A read-only `SELECT` against PostgreSQL: `acc_gl_account`, `acc_gl_financial_activity_account`, `acc_product_mapping`, `acc_gl_journal_entry`. | **YES** — `A2-019`, `A2-072`, `A2-150`. |
+  592 | GL account 2 with `classification_enum = 1` (ASSET) and `A2-150` reports it as `4` (INCOME)
+  593 | [VERIFIED by this task from `A2-150`'s `acc_gl_account` dump, row
+  629 | | **G-02** | Products 22, 23, 24, 27, 28 are all `product_type = 1` [VERIFIED by this task from `A2-150`'s per-product mapping-count table — five rows, every `product_type` = 1]; product 46 likewise [VERIFIED BY A2-8 from `A2-072`, NOT RE-OPENED HERE]. | The t
+  634 | | **G-07** | Every journal entry in the corpus is MNT [VERIFIED by this task: `A2-150`'s journal-entry dump, all six rows `currency_code = MNT`]. | No other currency is captured. |
+  636 | | **G-09 / G-10** | All five classifications and both usages appear: `A2-150`'s `acc_gl_account` is **21 rows** spanning `classification_enum ∈ {1,2,3,4,5}` and `account_usage ∈ {1,2}` [VERIFIED by this task, dump read row by row]. | Nothing outside 1..5 / 1..
+  637 | | **G-11** | **Only four slots were ever posted to.** `A2-150`'s six journal-entry rows touch GL 4 (`LOAN_PORTFOLIO`), GL 16 and GL 2 (`FUND_SOURCE`) and GL 1 (`LOAN_PORTFOLIO` on product 24, a **HEADER** account) [VERIFIED by this task from the dump]. `A2-235
+  702 |   and `currency_code` [VERIFIED by this task, `A2-150-db-final-state.txt:65-70`], so "db read-backs
+  740 | | PostgreSQL | `acc_gl_journal_entry.amount` is `numeric(19,6)` | [VERIFIED by this task: `A2-150`'s `information_schema` projection reads `numeric_precision 19, numeric_scale 6`; and `JournalEntry.java:91` declares `@Column(name = "amount", scale = 6, precisi
+  819 | | **I-1** | Debits equal credits | For every transaction, `Σ debit legs == Σ credit legs`, compared as `int64` minor units | **YES.** `A2-235`'s eight legs: debits `120,000,000 + 20,000,000 + 100,000,000 + 5,000,000 = 245,000,000` minor units, credits the same
+  823 | | **I-5** | Corrections are reversing entries | A correction adds a leg pair; it never mutates one | **PARTLY — AND REVISION 6 CORRECTS THE REASON REVISIONS 1-5 GAVE, WHICH WAS FALSE WHEN REVISION 5 WAS RATIFIED.** Revisions 1-5 said *"The A2 corpus contains n
+ 1111 | - **A HEADER account is a valid posting target.** [VERIFIED by this task: `A2-150` journal entry
+ 1127 |    `classification_enum = 1`, `A2-150` reads `4` [VERIFIED by this task for `A2-150`; `A2-072`
+ 1133 |    task from `A2-150`: `(27, 1, 1, payment_type 1) → n = 2, gl_account_ids {16,2}`].
+ 1153 | 8. **The tenant's financial-activity mapping is in the same state.** `A2-150` shows activity
+ 1156 |    [VERIFIED by this task: the `acc_gl_financial_activity_account` dump in `A2-150`, and
+ 1178 |   `fundSourceAccountId: 16`, an ASSET [VERIFIED by this task from `A2-211` and from `A2-150`'s
+ 1298 | retyped account, which this task re-verified from `A2-150`.]
+ 1386 | | `financialactivity.model` | the seven activities, their values, codes and required classifications; the create/update asymmetry | **true** for the model | `ledger_db_readback`: `exercised` (three rows in `A2-150`); `ledger_rest_admin`: `exercised` for the re
+ 1501 |    observation. **`A2-15` must treat `glAccountType` as excluded from the graded domain or as a
+ 1736 | purpose is to give `A2-15` something to build a grader against. A contract that can never be graded
+ 1852 |    > both halves.** A conscientious `A2-15` would have hit an impossible instruction and improvised,
+ 1983 |    > decision, the guard and the context binding — **yet §8.2 tells `A2-15` it "cannot start without
+ 1985 |    > it created no vacuous guard, but it would have surfaced as an argument during `A2-15`.
+ 2021 | ### 5.3 Preconditions on `A2-15` — RE-ORDERED in revision 3, and one of them has since LANDED
+ 2023 | `A2-15` cannot promote a `ledger` vector until **all** of the following exist. They are
+ 2041 | | **5th** | **P-10** | **NEW in revision 4.** A **mechanism that actually RUNS a named wrong implementation and shows it going red** — either a `ledger` implementation registered under a name and selected with the binary's `-impl` flag (`registry.go:34` `Regis
+ 2286 |   entry in the corpus is MNT [VERIFIED: `A2-150`'s dump, six rows]. A second currency with a
+ 2338 |   harness is `A2-15`'s work, not this ADR's, and §5.2 requirement 7's bottom-left cell cannot be
+ 2417 | - `A2-15` has an admissibility standard: §4.2's predicates, §4.6's A-1…A-4, §4.10's registry, §5.5's
+ 2422 |   P-8 has landed — and `A2-15` cannot start without them.**
+ 2536 |    source and its data is graded against `A2-150`, but no capture exercises a posting that routes
+ 2573 |     *"committed journal dump"* clause is true of **`A2-150` and only of it** — a snapshot taken when
+ 2744 |      seven.** Requirement 6 is one of two requirements that will grade `A2-15`, and **it could not
+ 2883 |   2. **`A2-19` F2 resolved (§5.2) — the specification `A2-15` is graded against was satisfiable by
+ 2995 |      §5.3 turns §5 into **eight named preconditions on `A2-15`**, none of which exists.
+  -- 45 line(s)
+
+======== F6 ratification-status
+   80 | **Status: DRAFT (revision 5), 22 August 2026, drafted by task `A2-32`. NOT RATIFIED. `A2-32` is NOT
+   85 | rejections.** Gate **G-11 remains OPEN — NOT RATIFIABLE** in `.softhouse/gates.md` and
+  621 | G-11  for a POSTING-TIME grading only:  SlotCode ∈ {1, 2, 6, 12}
+  637 | | **G-11** | **Only four slots were ever posted to.** `A2-150`'s six journal-entry rows touch GL 4 (`LOAN_PORTFOLIO`), GL 16 and GL 2 (`FUND_SOURCE`) and GL 1 (`LOAN_PORTFOLIO` on product 24, a **HEADER** account) [VERIFIED by this task from the dump]. `A2-235
+  713 | **Two gradings that are NOT posting-time and must not be conflated with G-11:**
+ 1234 | **G-11** confines posting-time grading to `{1, 2, 6, 12}` for exactly this reason. §9 item 12.
+ 2614 |   **NOT RATIFIED; `A2-32` is NOT AUTHORISED to ratify it and does not, and says so in the status
+ 2615 |   block, the banner and here.** Gate **G-11 stays OPEN — NOT RATIFIABLE** until a **further
+ 2681 |   **`2e97162`**. **NOT RATIFIED; `A2-28` is NOT AUTHORISED to ratify it and does not, and says so
+ 2682 |   in the status block, the banner and here.** Gate **G-11 stays OPEN — NOT RATIFIABLE** until a
+ 2841 |   `contract.go` (**G-3 CLOSED-OPTION-A**). **No gate was crossed. G-11 remains OPEN; G-10 remains
+ 2847 |   `A2-25`'s handoff. **NOT RATIFIED; `A2-21` was NOT AUTHORISED to ratify it and did not.**
+ 2856 | - **Revision 3 (as drafted)** — DRAFT, task `A2-21`, 22 August 2026. **NOT RATIFIED; `A2-21` is
+ 2858 |   revision 2, recorded as gate **G-11 (OPEN — NOT RATIFIABLE)**. A further independent review must
+ 2955 |   **No gate was crossed and none is newly raised by the text.** **G-11 remains OPEN and revision 3
+ 2971 |   **G-11 (OPEN — NOT RATIFIABLE)**. `A2-17` returned MICRO-FIX on it and applied its own 7-line fix,
+ 2977 | - **Revision 2 (as drafted)** — DRAFT, task `A2-16`, 21 August 2026. **NOT RATIFIED; `A2-16` does
+ 3034 | - **Revision 1** — DRAFT, task `A2-13`, 21 August 2026. First draft. **Not ratified, no PIN digest,
+  -- 18 line(s)
+
+======== F7 machinery-5.3
+   16 | >    review re-opened and confirmed. **This is not a gap somebody forgot to fill; it is machinery
+   76 | > admissibility standard. It would buy **no grading whatsoever** until the machinery in §5.3
+   88 | and §5.3 names work that must land before `A2-15` could succeed even against a ratified contract.
+  140 | precondition split** (§5.3), and corrects the **one wrong citation** in 64 (§2.2 B-4, "three
+  158 | DEC-1, this ADR is not written against an existing frozen Go file. **This is load-bearing for §5.3's
+  159 | P-7**, whose revision-2 premise §1.1 contradicts — see the adjudication in §5.3.
+  461 | machinery**; they are not gradeable **today**. §4.4 now says that in those words.
+  786 | cell §5.3 introduces **must** adopt that pairing: the graded value is the minor-unit integer string;
+  814 |   grader? This is a question about the machinery, and for **every row in this table the answer is
+  841 | > `A2-18` built the guard on exactly the independence §5.3 P-8 claims, and `T208` wired it into
+ 1061 | ratifies this document ratifies that residue along with it, knowingly. §5.3 **P-8 is accordingly
+ 1309 | > for it is precondition **P-2** in §5.3. **Every row of the (b) table is therefore ungraded today**,
+ 1360 | > vector can be *expressed* until **§5.3's** P-1…P-5 exist, and §5.1's five legs are unaffected by
+ 1368 | > attributed P-1…P-5 to §5.1; they are **§5.3's**, and the composite claim is §5.1 + §5.4, not §5.1
+ 1507 | machinery, and that is the argument for it"* **— was false.** Revision 2 retracts it. The
+ 1511 | The store's admission machinery is a **loan-schedule** machine. Not a generic one with a
+ 1584 | Revision 1 asserted machinery adequacy without exercising it. Revision 2 exercised it. Method: build
+ 1624 | | §4.10 (`A2-17`'s micro-fix) | *"…because §5.1 establishes that no `ledger` vector can be admitted **at all** until §5.3's P-1…P-5 exist."* |
+ 1713 | - **§5.3's preconditions stand** (as re-ordered in revision 3).
+ 1726 | ### 5.2 The decision: EXTEND the machinery — and DEC-2 grades nothing until it exists
+ 1728 | Two dispositions were open. **(a) extend the vector schema**, which is real machinery and must stop
+ 1739 | **(a) is adopted. The machinery is named, it is not built here, and this document does not pretend
+ 1813 | > requirement in 1–5 that the new machinery be demonstrated to **work**. **P-22: a control that
+ 1928 |    > money comparator had never once been driven red.** §5.3's **P-5** requires money cells to
+ 1973 |    > **⚠ THE BOTTOM-LEFT CELL NEEDS A MECHANISM §5.3 DOES NOT YET NAME. This is `A2-25`'s F-9, and
+ 1981 |    > mutation harness. **No §5.3 precondition named either for `ledger`** — P-1…P-9 cover schema,
+ 1986 |    > **Revision 4 adds precondition P-10 (§5.3) and requirement 7 now points at it.**
+ 1993 |      declaration as the demonstration has not filled the bottom-left cell** (§5.3 **P-10**).
+ 2012 | **But the argument for 3 is NOT "it needs no new machinery" — that was revision 1's argument and it
+ 2013 | was false.** The argument is: **the machinery it needs is bounded, nameable and separable (§5.3), and
+ 2204 | 1. **The §5.3 machinery lands first** (P-1…P-5, and P-10 for requirement 7's bottom-left cell), with
+ 2322 |   **One conditional that a builder of §5.3's machinery must not walk into.** The harness resolves a
+ 2331 | - **Writing the `ledger` vector schema, comparator or cell whitelist** — §5.3's remaining **nine**
+ 2333 |   reason. Naming machinery is not building it, and revisions 2, 3 and 4 are careful to claim only
+ 2362 |    re-opened and confirmed by independent review. Preconditions P-1…P-5 (§5.3) do not exist.
+ 2415 |   `A2-20` [`admit.go:139-147`]. It **stays unusable until the §5.3 machinery lands**, at which point
+ 2421 |   specification. **Nine of the ten §5.3 preconditions remain — P-1…P-7, P-9 and the new P-10; only
+ 2490 | - **The `graded_against` machinery is genuine enforcement, and it fires on the REGISTRY ROWS, not on
+ 2586 |     §4.4 I-4, §4.4.1, §5.3's P-8 row, §8.1 fact 3, §8.3 and §10 (`A2-31` F-2). **`I4-BUILDER` is the
+ 2664 |      | 7 | **§5.3, `P-8` row** | *"three of its **seven** declared detection classes"* | yes |
+ 2729 |      >    banner (item 3), §4.4.1's headline, §5.3's P-8 row, §8.1 fact 3 and §8.3. The `A2-25` F-2
+ 2791 |   7. **`A2-25` F-8 and F-9 — WEIGHED AND BOTH ADOPTED (§5.2 requirement 7, §5.3).**
+ 2801 |      grading path executes it; the registry route or a mutation harness is needed, and **no §5.3
+ 2896 |   3. **`A2-19`'s adjudication on the precondition split APPLIED (§5.3).** **P-6 (`capabilities.json`)
+ 2918 |      - **§4.4.1, §4.4, banner fact 3, §8.1 fact 3, §5.3 P-8, §7, §8.3: the `I-3`/`I-4` source guard
+ 2939 |   7. **`A2-19` F5 and F6 corrected inside §4.10's block.** P-1…P-5 are **§5.3's**, not §5.1's, and
+ 2985 |   1. **R-1 resolved (§5.1, §5.2, §5.3).** Revision 1's *"Disposition 3 needs no new machinery, and
+ 2995 |      §5.3 turns §5 into **eight named preconditions on `A2-15`**, none of which exists.
+  -- 48 line(s)
+
+======== F8 money-cells
+  459 | asserting a money cell — or any other `ledger` cell — is currently expressible at all. `I-1` and
+  616 |                                — binds ONLY a vector that asserts a MONEY CELL (see below)
+  618 |                                — binds ONLY a vector that asserts a MONEY CELL (see below)
+  696 | `G-07` and `G-08` bind **a vector that asserts a money cell**, and only such a vector. They do not
+  819 | | **I-1** | Debits equal credits | For every transaction, `Σ debit legs == Σ credit legs`, compared as `int64` minor units | **YES.** `A2-235`'s eight legs: debits `120,000,000 + 20,000,000 + 100,000,000 + 5,000,000 = 245,000,000` minor units, credits the same
+ 1565 | literally, and refuses anything else with *"names field %q, which is not one of the non-money cells
+ 1573 | fields are *"exactly the NON-MONEY cells `diffSchedule` actually compares"*, and the stated reason
+ 1601 |       "gl_account_id", which is not one of the non-money cells this harness compares
+ 1747 |   **(i)** `StructuralCellFields()`'s safety property is *"exactly the non-money cells `diffSchedule`
+ 1925 |    > code, **or** a money cell"*, and every money constraint that followed was **conditional** on
+ 1928 |    > money comparator had never once been driven red.** §5.3's **P-5** requires money cells to
+ 1931 |    > that *"a `ledger` corpus whose money cells only ever kill structurally has graded no amount"*,
+ 1942 |      - **(ii) one MONEY cell, perturbed by exactly ONE MINOR UNIT**, in `int64` minor units
+ 1960 |      D-4), and a `ledger` corpus whose money cells only ever kill structurally has graded no amount.
+ 1982 |    > `dec1_revision`, refusal expectation, class, comparator, money cells, the `capabilities.json`
+ 2039 | | **4th** | **P-5** | **Money cells** — `int64` minor-unit **strings**, paired with the oracle's own emitted characters as a transcription cross-check only | §4.3, T186 (c); required for `I-1`/`I-2` to be gradeable at all | P-1, P-4 |
+ 2243 | right **starting list**, plus money cells per P-5. **What revision 2 changes is the claim about what
+ 2795 |      replaced by a conjunction**: at least one structural cell **and** at least one money cell
+ 3007 |      refuses; `G-07`/`G-08` are kept and **scoped to vectors that assert a money cell**, which is
+  -- 19 line(s)
+
+======== F9 ls-vectors
+   10 | > 1. **No `ledger` vector exists.** `.softhouse/vectors/` holds `loanschedule/` and `_selftest/` and
+   11 | >    nothing else [VERIFIED by this task: `ls .softhouse/vectors/`].
+   25 | >    `loanschedule` parity vector into `.softhouse/vectors/ledger/`, change **only** `case_id` and
+  183 | against a **temporary copy** of the vector store; **no file under `.softhouse/vectors/` or `nexus/`
+  247 | `.softhouse/vectors/` contains exactly two context directories, `loanschedule/` and `_selftest/`
+  248 | [VERIFIED: `ls .softhouse/vectors/`, by this task]. Task **A2-8** merged the port of the GL
+  255 | `.softhouse/vectors/README.md` shows the store was designed for exactly this: its layout is
+  499 | adopt `ledger` as the second `<context>` directory in `.softhouse/vectors/`.
+  778 | | **(c)** the **stored vector**, `.softhouse/vectors/**` | **REJECTION** — money is `int64` minor units, and the measured state is **zero violations** across 50 files | revision 1 *implied* this by placing the conversion at "the capture-transcription step". **
+  785 | `.softhouse/vectors/loanschedule/T149-PATHB-TIE-1M162502pt50-12x21pt6pct.json`]. Any `ledger` money
+ 1340 | DEC-2 adopts `.softhouse/vectors/capabilities.json`'s method wholesale, including the sentence
+ 1445 | `.softhouse/vectors/loanschedule/` holds 50 .json files: 46 class:parity + 4 class:contract-refusal
+ 1446 | `.softhouse/vectors/_selftest/`     holds 1
+ 1449 | `.softhouse/vectors/` holds **46 promoted parity vectors, all `loanschedule`** [MEASURED above; the
+ 1633 | `loanschedule` parity vector into `.softhouse/vectors/ledger/`, change **only** `case_id` (to clear
+ 1782 | 1. **Before/after digests of EVERY `.json` file under `.softhouse/vectors/loanschedule/` — the
+ 1869 |      `.softhouse/vectors/ledger/` carrying a `ledger` request (product id, product type, accounting
+ 2116 | store in `/tmp`, an empty `ledger/` directory added, `.softhouse/vectors/` never written to. **Both
+ 2141 | `.softhouse/vectors/capabilities.json` was not modified, and
+ 2413 | - `.softhouse/vectors/ledger/` becomes a legal context directory **for the second schema, and only
+ 2491 |   an empty directory** (§5.4, measured both ways). An empty `.softhouse/vectors/ledger/` passes at
+ 2617 |   of revision 4. **Analyst task: no Go was written into `nexus/`; `nexus/`, `.softhouse/vectors/`,
+ 2684 |   **REJECTION** of revision 3. **Analyst task: no Go was written; `nexus/`, `.softhouse/vectors/`,
+ 2784 |      `.softhouse/vectors/loanschedule/` holds **50** `.json` files — **46** `class: parity` + **4**
+ 2860 |   touched, `.softhouse/vectors/` was not touched, and the diff is this file plus the task handoff.**
+ 2961 |   `nexus/`, `.softhouse/vectors/`, `.softhouse/conformance.sh` or `.softhouse/bin/` was modified.
+  -- 26 line(s)
