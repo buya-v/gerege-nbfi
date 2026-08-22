@@ -1,0 +1,43 @@
+{
+ "calibration": {
+  "corruptedField": "last row interest 0.01 -> 0.02",
+  "cellsCompared": 736,
+  "diffsRaised": 1,
+  "status": "DETECTED"
+ },
+ "cells": [
+  {
+   "cell": "T219-R600p0-N103-B1",
+   "vector": "T116-G8-CLEAN-nonexempt-mnt0pt01-103x600pct.json",
+   "exemptions": [],
+   "cellsCompared": 729,
+   "diffCount": 0,
+   "diffs": [],
+   "VERDICT": "REPRODUCED"
+  },
+  {
+   "cell": "T219-R600p0-N104-B1",
+   "vector": "T116-G8-FAMB-nonamortizing-mnt0pt01-104x600pct.json",
+   "exemptions": [
+    "principal_portions_sum_to_disbursed",
+    "principal_amortizes_to_zero"
+   ],
+   "cellsCompared": 736,
+   "diffCount": 0,
+   "diffs": [],
+   "VERDICT": "REPRODUCED"
+  },
+  {
+   "cell": "T219-R600p0-N108-B1",
+   "vector": "T116-G8-FAMB-nonamortizing-mnt0pt01-108x600pct.json",
+   "exemptions": [
+    "principal_portions_sum_to_disbursed",
+    "principal_amortizes_to_zero"
+   ],
+   "cellsCompared": 764,
+   "diffCount": 0,
+   "diffs": [],
+   "VERDICT": "REPRODUCED"
+  }
+ ]
+}

@@ -27,7 +27,7 @@ Built by local fire `20260821-125942`.
 | **G-5** | ENGINEERING | **OPEN — HARD `user` GATE** | Buyan. Amends a **ratified** DEC-n. | `## G-5` |
 | **G-6** | PRODUCT | **CLOSED — ACCEPTED** | local fire `20260820-140000`, `chosen_by: agent`. Authorises **no cutover**. | `## G-6` |
 | **G-7** | — | **NEVER ALLOCATED** | — | The id was skipped. Nothing is missing; do not go looking for it. |
-| **G-8** | ENGINEERING | **OPEN — SITE 3 NOW CHARACTERISED (`T229`), AND IT FALSIFIED THIS SECTION'S CEILING BY MEASUREMENT: the failing principal is bounded by `(δ+½)·n`, not `n/2` — MNT 5.40 at n = 360, THREE TIMES the MNT 1.80 that stood here until `T231`.** "600 % only" is still dead (`T223`, family B at 36.0 % p.a.). | Not yet asking for a decision — **options (b)/(c) STILL MUST NOT be put to Buyan.** The reason has changed: no longer "an uncharacterised rescue mechanism", but **two named gaps — a verified pre-rescue instalment `E`, and the balance-reduction path behind seven corpus cells.** The only region statable today is a **conservative superset** (`B_minor < 1.5·n`), and it rests on the unproven conjecture `δ ≤ 1`. | `## G-8 — TWO phenomena at the rounding floor…` (ceiling and prose rebuilt by `T231` from `T229`'s measurement). `## G-8-NOTICE` is SUPERSEDED history. |
+| **G-8** | ENGINEERING | **OPEN — SITE 3 NOW CHARACTERISED (`T229`), AND IT FALSIFIED THIS SECTION'S CEILING BY MEASUREMENT: the failing principal is bounded by `(δ+½)·n`, not `n/2` — MNT 5.40 at n = 360, THREE TIMES the MNT 1.80 that stood here until `T231`. `T219` then MEASURED that ceiling at a second term (n = 3000: `4499` fails, `4501` amortizes, law says 4500) and TRIPLED THE RESIDUAL RECORD WITHOUT ASKING A LARGER TERM — MNT 10.01 → MNT 30.00, both at n = 3000; the largest failing disbursement on record is now MNT 44.99.** "600 % only" is still dead (`T223`, family B at 36.0 % p.a.). | Not yet asking for a decision — **options (b)/(c) STILL MUST NOT be put to Buyan**, and `T219` strengthens that: the failing region got three times wider at a term this file had already declared measured. The reason is unchanged — **two named gaps: a verified pre-rescue instalment `E` (now wrong on 3 cells, not 2), and the balance-reduction path behind seven corpus cells.** The only region statable today is a **conservative superset** (`B_minor < 1.5·n`), and it rests on the unproven conjecture `δ ≤ 1`. | `## G-8 — TWO phenomena at the rounding floor…` (ceiling and prose rebuilt by `T231` from `T229`'s measurement; residual record and the seventh STANDING-RULE mechanism added by `T219`). `## G-8-NOTICE` is SUPERSEDED history. |
 | **G-9** | PRODUCT | **CLOSED — DECIDED** | local fire `20260821-054355`, `chosen_by: agent`. Carries a `driver_error_correction`: the decision stands, the driver's stated *consequence* was false. | `## G-9 — CLOSED` |
 | **G-10** | ENGINEERING | **OPEN — driver recommends (c), Buyan may overrule** | Blocks nothing today. | `## G-10 — REFINED…` |
 | **G-11** | CONTRACT | **CLOSED — RATIFIED. DEC-2 revision 5 (`A2-32`) passed `A2-33`'s independent review CLEAN, local fire `20260822-140002`. Five revisions, four rejections, one ratification.** `chosen_by: agent` (driver), per CLAUDE.md § Answering gates. **Buyan may reverse it.** | Nothing — the gate is closed. **A ratified DEC-n may not be amended by an agent**; any change to DEC-2 from here is a fresh `user` gate. | `## G-11 — RATIFIED (rev 5, A2-33)` |
@@ -1063,7 +1063,12 @@ regulatory sign-off and licence facts are equally untouched and are not in Run 1
   named with their line numbers in its handoff), **T231** (this rebuild: applied T229's five
   corrections, replaced the ceiling and the prose that reasoned from it, added the *SITE 3,
   CHARACTERISED* block, carried T229's three gaps forward unsmoothed, added the sixth mechanism to
-  the STANDING RULE, and folded T229's four new family-B cells into the census)
+  the STANDING RULE, and folded T229's four new family-B cells into the census),
+  **T219** (registered before probing that the residual record is a function of the PRINCIPAL asked
+  and not of the term, then **TRIPLED it at T159's own term** — MNT 30.00 at n = 3000, with no
+  larger term asked than T159 asked; reproduced T159's record cell exactly as a control; measured
+  the `(δ + ½)·n` ceiling at n = 3000 as well as at n = 200; and re-observed the three PROMOTED
+  vectors against the live oracle)
 - **context**: tier0-harness-schedule-poc / loan-schedule
 - **state**: **OPEN** — blocks nothing today. T112 fixed the write-up, T122 fixed two sentences in
   T112's fix, T170 rebuilt the family-B half after T117 and T159 moved the measurement, **T223
@@ -1096,8 +1101,8 @@ regulatory sign-off and licence facts are equally untouched and are not in Run 1
 ### STANDING RULE — how to edit this section (adopted at T140, proposed by T129)
 
 This section is the artefact **Buyan reads to decide a `user` gate**, and it has now carried a wrong
-number or a wrong scope statement to that reader **six separate times** (the sixth is at the bottom
-of this preamble and it is a NEW mechanism): a family A/B inversion, an
+number or a wrong scope statement to that reader **seven separate times** (the sixth and the seventh
+are at the bottom of this preamble and each is a NEW mechanism): a family A/B inversion, an
 18-instead-of-22 refutation count born of a float in an analysis script (P-25), an unscoped
 "largest n" sentence that contradicted the section ten lines away (P-26), a `tasks.json`
 disposition that the author had already reversed and never swept (P-21 by a third route), and — the
@@ -1142,6 +1147,30 @@ bigger question.** So:
 > section** because doing the rebuild badly is the failure this rule exists to prevent; T117 and T159
 > refused the same edit for the same reason. **Refusing to edit is a legitimate outcome of this rule
 > and it must not be read as an omission.**
+
+> **THE SEVENTH — AND IT IS NOT ANY OF THE SIX. T219 measured it and applied it.** The sentence
+> *"the largest unamortized residual is **MNT 10.01 at n = 3000**"* was **not** unscoped: this file
+> insisted, in bold, that the figure be *"stated with its term, always"*, and every restatement of it
+> obeyed. It was a correct measurement, correctly attributed, carrying a domain — **and the domain
+> named the wrong variable.** The residual is `min(B_minor, n·δ)`: the principal is what it is a fact
+> about and the term is only the cap. T117 and T159 topped out at principals of 501 and 1001 minor
+> units at terms whose caps were 1000 and 3000, so the figure was a fact about **the biggest
+> principal anybody had asked**, wearing a term as its label. **T219 tripled it without touching the
+> term.**
+>
+> **Why this is a distinct mechanism.** The fifth is a sentence with no scope. The sixth is a
+> predicate with an unmeasured input. The seventh is **a sentence WITH a scope, whose scope is on the
+> wrong axis** — and it is the most durable of the three, because every remedy the section had
+> already adopted was applied to it and none of them could catch it. The section demanded a term and
+> got one; nobody asked *"is the term the variable this number depends on?"*, and the file's own law,
+> two screens away, already answered no.
+>
+> **The clause this adds: when you attach a domain to a measurement, name the variable the
+> measurement is a FUNCTION of, not the variable you happened to vary.** If the mechanism is written
+> down anywhere in the section, check the figure against it — a domain that the section's own law
+> contradicts is a defect even when every number in it is right. And the test that catches it is the
+> one T219 ran: **try to beat the record while holding the labelled variable FIXED.** If you can, the
+> label was wrong.
 
 1. **Nobody edits this section without rebuilding the sentence-by-sentence scope table.** Not a
    grep for the sentence you are changing — a rebuild, claim by claim, of what every sentence
@@ -1192,7 +1221,7 @@ schedule at all** — which is neither family and has its own block after this o
 | forcing the oracle's own balance `Memo` to recompute | balance goes to **`0.00`** | **does not move** — but measured on **3** of the 29 record cells only, all at 1 minor unit; **UNMEASURED** on all 180 cells T117 and T159 added, and on every partial cell |
 | the Go port | **diverges**, on exactly one cell per case | **reproduces it cell for cell — no divergence at all** on the **29** record cells (T84's 22, T100's 1 through the real grader, and T101's re-grade of all 29); **UNMEASURED** on all 180 cells T117 and T159 added, and never on a partial cell |
 | `invariant_exemptions` as a remedy | **inert** — the failure is a cell diff | **decisive** — the failure is purely invariant — **established on ONE full cell** (600.0 % / MNT 0.01 / n = 108). On a partial cell nobody has checked whether the port even reproduces the oracle, so "purely invariant" is **unmeasured** there |
-| measured at | **11** of the 12 annual rates swept (all but 600.0 %), `3 ≤ n ≤ 600`, **312 cells** | **THREE** annual rates — 600.0 % (**212** cells, `104 ≤ n ≤ 3000`, principals 1 … 1001 minor), **36.0 %** (**3** cells: n = 1324 and 1500 at principal 50 minor, and n = 1400 at principal 150 minor) and **300.0 %** (1 cell, n = 800, principal 2 minor) — **216 cells**. *This row read "**one** annual rate (600.0 %) … 209 cells" until T223 measured the other two rates against the live oracle, and "209 / 2 / 1 — 212 cells" until T229 added four more.* |
+| measured at | **11** of the 12 annual rates swept (all but 600.0 %), `3 ≤ n ≤ 600`, **312 cells** | **THREE** annual rates — 600.0 % (**215** cells, `104 ≤ n ≤ 3000`, principals 1 … **4499** minor), **36.0 %** (**3** cells: n = 1324 and 1500 at principal 50 minor, and n = 1400 at principal 150 minor) and **300.0 %** (1 cell, n = 800, principal 2 minor) — **219 cells**. *This row read "**one** annual rate (600.0 %) … 209 cells" until T223 measured the other two rates against the live oracle, "209 / 2 / 1 — 212 cells" until T229 added four more, and "**212** cells … principals 1 … **1001** minor — 216 cells" until T219 added three at 600.0 % / n = 3000 (`2999`, `3001`, `4499`).* |
 
 Cells behind that table: **312 family-A** (198 T83 + 111 T84 + 3 T100) and **209 family-B** — the
 **29** of the four record captures (22 T84 + 7 T100) plus **180** added by T117 (155) and T159 (25).
@@ -1345,7 +1374,9 @@ calls, 75 java processes]:
   points on a JVM's warm-up curve, and the rig had no field in which to record that.
 
 **G-8's headline number is NOT at risk from this, and the two cells must not be confused.** The
-MNT 10.01 residual belongs to **B = 1001 minor units** at n = 3000 (`T159-R600p0-N3000-B1001`). The
+MNT 10.01 residual — **T159's figure, superseded as the record by T219's MNT 30.00 at the same term,
+but still the correct residual of this particular cell** — belongs to **B = 1001 minor units** at
+n = 3000 (`T159-R600p0-N3000-B1001`). The
 cell that throws is **B = 10001**, and **when the oracle answers it, it amortizes fully** — it is not
 a family-B cell at all: `totalPrincipalAmount 100.01` against a `100.01` disbursement, final balance
 `0.00`, 19 non-zero principal rows [VERIFIED by T170 by extraction from T159's raw capture, where
@@ -1637,9 +1668,11 @@ in an ancestor commit and the oracle returned exactly those three numbers. Their
 outstanding. **`T229-R600p0-N200-B299` is the cell that falsified the ceiling this section carried**
 — MNT 2.99 failing at n = 200, where the old text said nothing above MNT 1.00 could fail — and it is
 why the ceiling paragraph in *THE REGION* below had to be rewritten. **They are NOT the largest
-residual on record; that is still MNT 10.01 at n = 3000. And no claim is made that MNT 2.99 is the
-largest failing disbursement at a short term** — T231 did not sweep for that and does not know
-`[UNVERIFIED]`.
+residual on record; that is `3000` minor units — MNT 30.00 — at n = 3000** [T219; this sentence read
+*"that is still MNT 10.01 at n = 3000"* until T219 measured a larger one at that same term, and both
+figures are family-B cells at 600.0 %]. **And no claim is made that MNT 2.99 is the
+largest failing disbursement at a short term** — T231 did not sweep for that and does not know, and
+**neither did T219, which asked nothing at n = 200 at all** `[UNVERIFIED]`.
 
 **On all 209 family-B cells the unamortized residual equals the final row's `balance` exactly, and
 `totalOutstandingAmount` reads `0`** — 209 of 209, 0 exceptions [T170]. So `totalOutstandingAmount`
@@ -1662,11 +1695,23 @@ family-A reframing when applied to all of G-8: *"If it ever fails to sum, the re
 cares about that is now false.** Family B is still narrower in **rate** — **three** annual rates
 against eleven — and in the *number* of distinct failing principals: **22** against family A's
 **66**. But it is now **wider in term** — family A's failing cells run `3 ≤ n ≤ 600` and family B's
-run `104 ≤ n ≤ 3000` — and **wider in the largest failing principal**: **1001 minor units
-(MNT 10.01)** against family A's **291 minor units (MNT 2.91)** [the four T170 figures re-derived by
+run `104 ≤ n ≤ 3000` — and **wider in the largest failing principal**: **4499 minor units
+(MNT 44.99)** against family A's **291 minor units (MNT 2.91)** [the four T170 figures re-derived by
 T170 from the raw captures in integer minor units; **T223 raises the rate count from one to three and
 the distinct-principal count from 20 to 22** — it added 50 minor at 36.0 % and 2 minor at 300.0 %,
-and it added **no** larger residual, so MNT 10.01 at n = 3000 stands untouched].
+and it added **no** larger residual].
+
+> **THE LARGEST FAILING PRINCIPAL FIGURE IN THIS PARAGRAPH WAS `1001 minor units (MNT 10.01)` UNTIL
+> T219, AND IT IS SUPERSEDED BY MEASUREMENT, NOT BY ARGUMENT.** `T219-R600p0-N3000-B4499` is a live
+> family-B PARTIAL cell at **4499 minor units — MNT 44.99** — disbursed at 600.0 % over n = 3000,
+> repaying 1499 and leaving 3000 minor units outstanding [VERIFIED by T219 by extraction in integer
+> minor units from `.softhouse/capture/t219-g8-residual/out/capture-t219-raw.json.gz`]. **It
+> supersedes T159's figure as the largest failing principal and it does NOT supersede T159's
+> measurement**, which T219 re-asked as a control and reproduced exactly. See *THE RESIDUAL RECORD,
+> RE-MEASURED* below for why the two are different statements — and note that **"largest failing
+> principal" and "largest unamortized residual" stopped being the same number the moment T229
+> measured a PARTIAL cell**, because a PARTIAL cell fails while repaying part of itself. This
+> paragraph is about the **principal**; the residual is **MNT 30.00**.
 
 > **CORRECTED BY T223.** This paragraph said *"one annual rate against eleven"* and *"**20** (all
 > odd)"*. Both were true of everything measured before T223 and are now false as counts. **The
@@ -1716,7 +1761,9 @@ the raw `.gz` captures; `out/extract-t170.json`]. Union of what has been observe
   501`; and T159 added **6** — `503, 551, 601, 801, 999, 1001`; **T223 added 2 more at the two new
   rates — `50` at 36.0 % and `2` at 300.0 % — for 22 distinct values**; **T229 then added 4 more —
   `201`, `251` and `299` at 600.0 % and `150` at 36.0 % — for 26 distinct values**, verified by T231
-  against the list above]. **This bullet used to read
+  against the list above; **T219 then added 3 more, all at 600.0 % and all at n = 3000 —
+  `2999` (FULL), `3001` and `4499` (both PARTIAL) — for 29 distinct values, and the range's top end
+  moves from 1001 to 4499 minor units**]. **This bullet used to read
   *"principal MNT 0.01 (1 minor unit) — no other
   principal has produced a family-B cell"*, which was true of the four record captures and is now
   false.**
@@ -1819,14 +1866,30 @@ of the 180 new cells** `[UNVERIFIED]`.
   The old sentence — *"Every family-B cell ever measured is **600.0 %** and at `n ≥ 104`"* — is
   **false as of T223** and is struck rather than softened. **The "at any other principal" half was
   already answered by T117/T159** (20 distinct principals from 1 to 1001 minor units), and T223 adds
-  2 more, **and T229 adds 4 more — 26 distinct principals across three rates.**
+  2 more, **and T229 adds 4 more, and T219 adds 3 more — 29 distinct principals across three rates,
+  from 1 to 4499 minor units.**
 - **Whether it exists BELOW n = 104 at 600.0 %.** Still `[UNVERIFIED]` — nothing T223 did touches it,
   and the predicate below says it should not: at 600.0 % the region's lower edge is where the
   instalment first quantizes below the first period's interest, and that is n = 104.
 - **Whether it terminates.** It does **not** terminate anywhere anyone has looked: n = 3000 fails,
   and **nothing above n = 3000 has been asked**. The largest unamortized residual rose from
-  MNT 0.01 to **MNT 5.01 at n = 1000** (T117) to **MNT 10.01 at n = 3000** (T159) — **each time
-  because somebody asked a larger term, and neither worker found a limit.** `[UNVERIFIED]`
+  MNT 0.01 to **MNT 5.01 at n = 1000** (T117) to **MNT 10.01 at n = 3000** (T159) to
+  **MNT 30.00, still at n = 3000** (T219). `[UNVERIFIED]`
+  > **THE CAUSAL HALF OF THIS BULLET IS FALSIFIED BY MEASUREMENT — T219.** It read *"each time
+  > because somebody asked a larger term, and neither worker found a limit"*. **T219 asked no
+  > larger term at all** — it asked n = 3000, exactly T159's term — and tripled the residual by
+  > asking a **larger principal**. The residual of an unrescued family-B cell is
+  > `min(B_minor, n·δ)`; the term enters only as the **cap**, and T159 had used one third of the
+  > cap available at its own term. **The record did not rise because the term rose; it rose because
+  > each worker asked a bigger principal, and n = 3000 with δ = 1 caps it at 3000 minor units.**
+  > Both T117's and T159's numbers are correct measurements and neither is superseded as a
+  > measurement; the *explanation* attached to them was wrong. See *THE RESIDUAL RECORD,
+  > RE-MEASURED* below.
+  >
+  > **What is still open, and it is the same question one level up:** whether the residual
+  > terminates in **n** is now known to be the wrong question, and the right one — whether `δ` can
+  > exceed 1 — is the conjecture the whole conservative region already rests on. **Nothing above
+  > n = 3000 has been asked and no `δ ≥ 2` cell has ever been constructed** `[UNVERIFIED]`.
 - **Whether the Go port reproduces the 180 new cells, the 7 T223/T229 added, or any partial cell.**
   Never graded. `[UNVERIFIED]`
 - **Whether any of the 180 new cells, or the 7 T223/T229 added, is order-dependent.** Never tested.
@@ -2077,6 +2140,20 @@ rests on **two** things that are not proven: the predicate is incomplete (below)
 conjecture over 296 corpus cells plus 9 probe cells, with no argument that `δ = 2` is impossible**.
 **If a `δ ≥ 2` cell exists the ceiling is not `1.5·n` and this paragraph is wrong again.**
 
+> **THE `(δ + ½)·n` CEILING IS NOW MEASURED AT A SECOND TERM, FIFTEEN TIMES THE FIRST — T219.** At
+> 600.0 % / **n = 3000** the law puts the boundary at `1.5·n = 4500` minor units. Observed:
+> **`T219-R600p0-N3000-B4499` is family B and `T219-R600p0-N3000-B4501` amortizes** — the second
+> boundary this program has predicted in an ancestor commit and then landed within one minor unit,
+> and the first at a term of this size. **That is the strongest evidence this file has that the
+> ceiling scales linearly in `n` as the law says.** It is **still not a proof**, and it does not
+> touch `δ ≤ 1`: every T219 cell has `δ ∈ {0, 1}`, and T219 registered in advance that it chose no
+> cell to look for `δ ≥ 2`. **A confirmation at one more term is not the missing argument.**
+>
+> **And it did NOT make the region smaller.** T219's other measurement — the residual record moving
+> from MNT 10.01 to **MNT 30.00 at n = 3000, without asking a larger term** — is what the same law
+> predicts, and it is a reminder that this ceiling is generous: at n = 3000 it permits a failing
+> disbursement of MNT 44.99, and one was measured.
+
 ### What was measured, and it is 7 for 7
 
 Probed against the **live** reference oracle (Fineract) on 2026-08-22, pinned image
@@ -2242,7 +2319,9 @@ extraction, not a transcription of T229's table.]
 
 **The rescue boundary was predicted before it was measured and it landed within one minor unit.** At
 600.0 % / n = 200 the law puts it at `B_minor = 1.5·n = 300`. Observed: **`299` is family B, `301`
-amortizes.**
+amortizes.** **T219 repeated this at 600.0 % / n = 3000, where the law puts it at `1.5·n = 4500`:
+observed `4499` family B, `4501` amortizes** — two boundaries an order of magnitude apart, each
+registered before probing and each landing within one minor unit.
 
 ### The gaps, carried forward verbatim rather than smoothed
 
@@ -2267,9 +2346,11 @@ These are **T229's own residuals**, and the conservative ceiling above depends o
    mechanism. The model says the balance is frozen while `E ≤ I₁q`; these cells say it is not. T229
    did not chase it and did not guess; T231 did not either.]`**
 3. **`δ ≤ 1` is a CONJECTURE, not a result.** It holds on all **296** corpus stuck cells
-   (histogram `{0: 113, 1: 183}`) and all **9** probe cells. **The conservative ceiling `1.5·n`
-   depends on it entirely.** **`[UNVERIFIED — that `δ` cannot reach 2. No `δ ≥ 2` cell was
-   constructed and there is no argument that none exists.]`**
+   (histogram `{0: 113, 1: 183}`), all **9** of T229's probe cells and all **8** of T219's observed
+   probe cells. **The conservative ceiling `1.5·n` depends on it entirely.** **`[UNVERIFIED — that
+   `δ` cannot reach 2. No `δ ≥ 2` cell was constructed and there is no argument that none exists.
+   T219 registered IN ADVANCE that it chose no cell to hunt for one, so its 8 clean observations
+   are NOT evidence for the conjecture and it does not offer them as any.]`**
 
 Four further limits, stated so the law cannot be over-read: **the rescued branch is not modelled** —
 only *that* site 3 fires, never what instalment it lands on, and both refuted cells came back with a
@@ -2289,14 +2370,189 @@ exit 0 with the probe present and `up`.
   refuses every failing cell and some clean ones too.
 - **An EXACT region is NOT stateable.** It is a function of `δ`, `δ` is a function of the pre-rescue
   `E`, and **no verified predictor of `E` exists** — T223's emulator is wrong by one minor unit on at
-  least 2 of the 9 cells asked, and one minor unit is exactly the resolution the boundary lives at.
-  The seven cells in gap 2 are a second, independent reason.
+  least **3 cells across two probes** (T229's `B199` and `B1450`, and **T219's
+  `T219-R600p0-N3000-B1999`**), and one minor unit is exactly the resolution the boundary lives at.
+  The seven cells in gap 2 are a second, independent reason. **This count read "at least 2 of the 9
+  cells asked" until T219.**
 - **Options (b) and (c) still MUST NOT be put to Buyan**, and the reason has changed. It is no longer
   *"a rescue mechanism nobody has characterised"*; it is now two named and much smaller gaps — **a
   verified pre-rescue `E`**, and **the balance-reduction path behind the seven cells**. Narrowing a
   graded domain is a hard `user` gate stated **as a region**, and the only region this file can state
   is conservative-only. **T229 and T231 decided nothing, recommended nothing, and pre-implemented
   nothing.**
+
+---
+
+## THE RESIDUAL RECORD, RE-MEASURED — the record moved at a term nobody had to enlarge (T219, registered before probing and then MEASURED)
+
+**This block exists because the residual figure this section carried was a correct measurement
+reported under the wrong variable, and no amount of re-reading could establish that — only asking
+the oracle could.** T219 was sent to reconcile *"MNT 10.01 at n = 3000"* against the corpus T116
+promoted. It did not reconcile it by editing prose. It registered a prediction, asked the live
+reference oracle, and the record moved.
+
+**The thesis, registered before any cell was asked**
+(`.softhouse/capture/t219-g8-residual/PREDICTION.md` and `prediction.json`, committed at
+**`741c6483a5b4785490c44da38e323019a4faa17d`**, a strict ancestor of the capture commit
+`6eacc067ec891cb20fe385a9965bb2331e17973d` — `git merge-base --is-ancestor 741c648 6eacc06` → exit
+0): under the law already in this file, the residual of an unrescued family-B cell is
+
+```
+residual = B_minor − max(0, B_minor − n·δ) = min(B_minor, n·δ)
+```
+
+— **a function of the PRINCIPAL asked, capped by `n·δ`.** The term enters only as the cap. T117 and
+T159 each got a larger residual because each asked a **larger principal** (501, then 1001 minor
+units); the larger term merely lifted the cap out of the way. **At n = 3000 with δ = 1 the cap is
+3000 minor units — MNT 30.00 — and T159's cell used one third of it.** So the record should be
+beatable at T159's own term, with no larger term asked at all.
+
+### What was measured
+
+Live reference oracle (Fineract), 2026-08-22, pinned image `sha256:e596339626bf…`, pinned commit
+`426a23544…` **clean**, Path A embeddable seam in a throw-away `docker run --rm`, **`(19, HALF_UP)`**,
+MNT dp 2, tenant ids all new (`t219_*`), emission order scrambled. **Run 1 asked every cell EXACTLY
+ONE TIME.** Both rig calibrations reproduce the already-promoted `T64-ZP-A` / `T64-ZP-B` observed
+blocks **byte-identically under a canonical dump, with zero input differences**. Predictions came
+from **T229's committed `site3.py`, unmodified**; nothing was fitted to any cell.
+
+| cell (600.0 %) | n | B minor | registered | **OBSERVED** | repaid | **residual** | verdict |
+|---|---|---|---|---|---|---|---|
+| `T219-R600p0-N103-B1` | 103 | 1 | clean, last row carries all principal | clean, one principal row (the last) | 1 of 1 | 0 | **as registered** |
+| `T219-R600p0-N104-B1` | 104 | 1 | family B FULL | family B FULL | 0 of 1 | 1 | **as registered** |
+| `T219-R600p0-N108-B1` | 108 | 1 | family B FULL | family B FULL | 0 of 1 | 1 | **as registered** |
+| `T219-R600p0-N3000-B1001` | 3000 | 1001 | family B FULL, repays 0 | family B FULL | 0 of 1001 | **1001** | **as registered — CONTROL, reproduces T159** |
+| `T219-R600p0-N3000-B2999` | 3000 | 2999 | family B FULL, repays 0 | family B FULL | 0 of 2999 | **2999** | **as registered** |
+| `T219-R600p0-N3000-B3001` | 3000 | 3001 | family B PARTIAL, repays **1** | family B PARTIAL | **1** of 3001 | **3000** | **as registered** |
+| `T219-R600p0-N3000-B4499` | 3000 | 4499 | family B PARTIAL, repays **1499** | family B PARTIAL | **1499** of 4499 | **3000** | **as registered** |
+| `T219-R600p0-N3000-B4501` | 3000 | 4501 | **RESCUED** — amortizes | amortizes, 19 principal rows | 4501 of 4501 | 0 | **as registered** (run 3) |
+| `T219-R600p0-N3000-B1999` | 3000 | 1999 | family B FULL, repays 0 | **amortizes**, 19 principal rows | 1999 of 1999 | 0 | **REFUTED** (run 3) |
+
+**8 of 9 as registered, 1 refuted.** [Every row extracted by T219 in integer minor units from
+`.softhouse/capture/t219-g8-residual/out/capture-t219-raw.json.gz` (runs 1) and
+`…/capture-t219-run3-raw.json.gz` (run 3); `out/classify-t219.json`.]
+
+### The three things this changes
+
+1. **THE LARGEST UNAMORTIZED RESIDUAL IS `3000` MINOR UNITS — MNT 30.00 — AT n = 3000.** Two cells
+   reach it, `T219-R600p0-N3000-B3001` and `T219-R600p0-N3000-B4499`, and both leave exactly `n·δ`
+   with `δ = 1`, which is the cap the law names. The largest **FULL** family-B residual is
+   **MNT 29.99** (`B2999`). **MNT 10.01 is superseded as the record and T159's MEASUREMENT IS NOT
+   SUPERSEDED**: T219 re-asked T159's exact cell under a new tenant id and got 1001 minor units
+   unamortized, 3000 of 3000 rows at zero principal and `totalInterestAmount 15010.01` — T159's
+   committed value to the minor unit.
+2. **THE CAUSAL STORY THIS FILE TOLD ABOUT THAT NUMBER WAS WRONG, AND IT IS WRONG IN THE DIRECTION
+   THAT MATTERS.** *"Each time because somebody asked a larger term"* and *"the residual doubled
+   when the term tripled"* both attribute the growth to `n`. **T219 asked no larger term.** A reader
+   who believed the term story would conclude that a product with a sane term is safe **because the
+   term is sane**; the actual protection is that `B_minor` must sit under `(δ + ½)·n`, which is a
+   statement about the **amount**.
+3. **THE `(δ + ½)·n` CEILING IS NOW MEASURED AT A SECOND TERM, FIFTEEN TIMES THE FIRST.** T229
+   landed the boundary within one minor unit at n = 200 (`299` family B, `301` amortizes, law says
+   `1.5·n = 300`). At **n = 3000** the law says `1.5·n = 4500`; observed **`4499` is family B and
+   `4501` amortizes.** Two boundaries, two orders of magnitude apart, each landing within one minor
+   unit of a figure registered in an ancestor commit. **This strengthens the conservative superset
+   `B_minor < 1.5·n` and does not prove it** — see the gaps below.
+
+### The refutation, recorded rather than tuned away
+
+`T219-R600p0-N3000-B1999` was registered **family B FULL** and **amortizes**. T223's emulator
+supplied `E = 999`, giving `δ = 1` and `a = 1`, so `a > δ` is false and the law says no rescue. The
+observed row-1 total is **1000**, which is `I₁q` exactly. **This is T229's gap 1 recurring at a third
+cell** — `T229-R600p0-N200-B199` and `T229-R36p0-N1400-B1450` are the other two, and all three are
+the emulator's `E` being one minor unit low. **T219 registered this cell in advance as one of the
+likeliest refutations in the set (falsification condition F2), for exactly this reason, and it
+refuses the circular move of recomputing `δ` from the observed post-rescue instalment and declaring
+the law vindicated.** `[UNVERIFIED — whether the pre-rescue E for B1999 was 999 or 1000. Row 1 of a
+rescued cell is POST-rescue and no instrument in this program observes the pre-rescue instalment.]`
+
+**Note what the refutation does NOT touch.** `B2999`, one cell away in the same probe and at the
+same `a = 1`, came back **family B FULL with `E = 1499` exactly as emulated** — so the emulator is
+not uniformly low, and the record-moving cells are not standing on the input that failed.
+
+### The three PROMOTED vectors sit exactly where this section says the region is — RE-OBSERVED LIVE
+
+T116's three promoted vectors were re-asked of the live oracle under new tenant ids and compared
+field by field against their committed `expect` blocks, in integer minor units:
+
+| vector | shape | cells compared | diffs |
+|---|---|---|---|
+| `T116-G8-CLEAN-nonexempt-mnt0pt01-103x600pct` | 600.0 % / MNT 0.01 / n = 103, **no exemption** | **729** | **0** |
+| `T116-G8-FAMB-nonamortizing-mnt0pt01-104x600pct` | 600.0 % / MNT 0.01 / n = 104, 2 exemptions | **736** | **0** |
+| `T116-G8-FAMB-nonamortizing-mnt0pt01-108x600pct` | 600.0 % / MNT 0.01 / n = 108, 2 exemptions | **764** | **0** |
+
+**The comparator was calibrated on a known negative before it was believed (P-72), and it needed to
+be.** The raw capture and the vector do **not** share field names — the capture emits the oracle's
+decimal strings under `type` / `principal` / `interest` / `balance`, the vector emits the frozen
+contract's integer minor units under `kind` / `principal_minor` / `interest_minor` /
+`outstanding_principal_minor`. **T219's first comparator matched by name, compared ZERO cells and
+printed "REPRODUCED" on all three.** The committed one asserts, before reporting anything, that a
+deliberate one-minor-unit corruption of the last row's interest produces a diff
+[`src/check_promoted_t219.py`, `out/check-promoted-t219.json`].
+
+So: **n = 103 clean, n = 104 and n = 108 family B, at 600.0 % / MNT 0.01 — which is what this
+section's prose says, confirmed against the live oracle** at gates.md commit `2d41838` (P-69). And
+the predicate accounts for all three without being asked to: at n = 103 the emulated instalment is
+`E = 1 = I₁q`, so `δ = 0` and the last row carries the whole principal; at n = 104 and n = 108
+`E = 0` against `I₁q = 1`, so `δ = 1` and `B_minor = 1 ≤ n·δ` — FULL family B.
+
+### G-8's THIRD OUTCOME fired again, and it constrained this probe
+
+**Two of the nine cells returned `java.lang.StackOverflowError` and no schedule at all in run 1** —
+`T219-R600p0-N3000-B1999` and `T219-R600p0-N3000-B4501`, the two cells whose verdicts are marked
+"run 3" above. Their frames are the same self-recursion T170 recorded
+(`calculateLastUnpaidRepaymentPeriodEMI` ↔ `lambda$…$66` through `Optional.ifPresent`), and both
+`errorStackDepthTotal` read exactly `1024` — **HotSpot's recording cap, not a depth**, per T177/T182.
+
+- **Run 2 applied T177's measured warm-up recipe — 50 prior seam calls on a never-throwing cell —
+  and BOTH CELLS THREW AGAIN.** [T219, `out/capture-t219-run2-raw.json.gz`; 50 warm-up cells, 0
+  threw.] **T177 measured that recipe at 3/3 on the (B = 10001, n = 3000) cell; it did not
+  generalise to these two.** T219's warm-up cell was the ZP-A shape at **n = 56**, and T177's was at
+  **n = 200**; whether the warm-up must be *deep in n* to compile the recursive path is
+  `[UNVERIFIED — T219 did not vary it, and this is a one-run observation against T177's, not a
+  refutation of T177].`
+- **Run 3 raised `-Xss` to 16m and both cells answered**, which is T177's own 8m/16m result. **`-Xss`
+  is not a production setting and no parity claim rests on it**; it was used only to establish
+  whether a schedule exists at all. The money it returned is used for exactly two statements — that
+  `B4501` amortizes and that `B1999` amortizes — and **for no residual figure in this section**:
+  every residual quoted above comes from run 1, at default flags.
+- **Runs 2 and 3 are SECOND AND THIRD ASKS of two cells and are declared as such.** Nothing observed
+  in run 1 was re-asked, revised or replaced.
+
+### What T219 did NOT do, stated so this block cannot be over-read
+
+- **It promoted no vector.** `.softhouse/vectors` is byte-unchanged at
+  `73c3ea7b43dd75f04884072719a87fc8e1d255c1`, and `bash .softhouse/conformance.sh` on T219's branch
+  gives probe **present** and `up`, **VERDICT PASS (exit 0), 46 parity vectors, 7884 cells, 0
+  inadmissible, 0 harness errors, 0 invariant violations, 4 EXEMPTED / 4 GROUNDED / 0 UNGROUNDED /
+  0 UNDETERMINED**, `--prove` 23/0.
+- **It graded no Go port cell.** Whether the port reproduces `B2999`, `B3001` or `B4499` is
+  **unmeasured** `[UNVERIFIED]` — and `B3001` and `B4499` are PARTIAL, the shape on which "the port
+  agrees with the oracle" has **never** been checked at all. **The three record-moving cells are
+  therefore NOT candidates for option (a) on today's evidence.**
+- **It asked ONE rate — 600.0 % — and one new term, n = 3000.** It is not evidence about 36.0 %,
+  300.0 %, or any unswept rate, and it says nothing about whether the residual at a *different* term
+  is `n·δ` there too. `n·δ` was measured at n = 3000 and at no other term.
+- **It did not hunt for `δ ≥ 2`, and finding none is NOT evidence that none exists.** T219 registered
+  that in advance. Every cell it observed has `δ ∈ {0, 1}`, which adds 8 cells to a conjecture that
+  already had 305 and moves it not at all. **The conservative ceiling still rests entirely on
+  `δ ≤ 1`** `[UNVERIFIED]`.
+- **It did not model the rescued branch.** On `B4501` the registered claim was only *that* the cell
+  amortizes. That it did so over **19** principal rows is reported as an observation, not as a
+  prediction that landed.
+- **It says nothing about `MinorUnitDigits ≠ 2`, Path B / REST, other day-count conventions, other
+  frequencies, down payments, charges or multiples-of.**
+- **It did not re-open the Fineract source.** Every source citation in *SITE 3, CHARACTERISED* above
+  remains T229's `[UNVERIFIED by T219]`.
+- **A defect in T229's committed rig, found by this measurement and NOT fixed here.**
+  `site3.py`'s docstring and its `predictedTotalInterestMinor` field both say
+  *"TOTAL INTEREST = n*E + B for any unrescued cell"*. **That is false on a PARTIAL cell**:
+  `B3001` observed `4503000` against `n·E + B = 4503001`, and `B4499` observed `6750000` against
+  `6751499`. The correct form is `n·E + B − principal`, which is **already what this file states**
+  in the T231 re-derivation under *THE LAW* above, and which matches all four T219 cells exactly.
+  **The defect is in `.softhouse/capture/t229-g8-site3/src/site3.py`, not in this section**, and it
+  is out of T219's scope to edit. **It affects no verdict here** — the classifier compares principal
+  and outcome, not that field.
 
 ---
 
@@ -2331,23 +2587,39 @@ graded domain. Restated, with the domain named each time:
   every mention of MNT 0.25, leaving a ratio whose denominator the reader could no longer find. It is
   given in absolutes here so it cannot drift again [T101 F-2]. **MNT 2.91 is a FAMILY-A figure over
   the four record captures, and it is no longer the record for G-8** — see the next bullet.
-- **Over the union that includes T117's and T159's captures, the largest unamortized residual is
-  MNT 10.01 AT n = 3000** — `T159-R600p0-N3000-B1001`, 600.0 %, a disbursement of 1001 minor units,
+- **Over the union that includes T117's and T159's captures — and ONLY over the principals those
+  two captures asked, the largest of which is 1001 minor units — the largest unamortized residual is
+  MNT 10.01 AT n = 3000.** **That domain qualifier is T219's correction and it is the whole of the
+  correction: the number below is right, and it was reported as if `n = 3000` were the binding
+  variable when the binding variable is the PRINCIPAL. Over the principals actually asked at
+  n = 3000 the record is now MNT 30.00 — see *THE RESIDUAL RECORD, RE-MEASURED* below, and read
+  this bullet as the historical record of T159's cell, which T219 re-asked and reproduced
+  exactly.** The cell — `T159-R600p0-N3000-B1001`, 600.0 %, a disbursement of 1001 minor units,
   **3000** REPAYMENT rows every one of them `principal "0.00"`, `totalPrincipalAmount 0.00`,
   balance frozen at `10.01` from `2024-02-01` to `2274-01-01`, and `totalInterestAmount 15010.01`
   [VERIFIED by T170 by extraction from `capture-t159-raw.json.gz` in integer minor units: disbursed
   1001, amortized 0, residual 1001; 3000 of 3000 REPAYMENT rows at zero principal; one distinct
   balance value across all 3000 rows]. It is a **family-B** cell, not the 0.12 % family-A one.
-  - **State it with its term, always: "MNT 10.01 at n = 3000".** The figure was MNT 0.01 while only
-    n ≤ 250 had been asked, **MNT 5.01 at n = 1000** once T117 asked (`T117P2-R600p0-N1000-B501` —
-    501 minor disbursed, 1000 rows of `principal "0.00"`, `totalInterestAmount 2505.01`, balance
-    frozen at `5.01` to `2107-05-01` [VERIFIED by T170 the same way]), and **MNT 10.01 at n = 3000**
-    once T159 asked. **The residual doubled when the term tripled, and it doubled because somebody
-    asked a bigger question, not because a boundary was found.**
-  - **MNT 10.01 is the largest OBSERVED residual, NOT A BOUND.** n = 3000 is simply the largest term
-    anyone has asked. **Two independent workers have now raised this ceiling by asking a larger term
-    and neither found a limit.** Writing "MNT 10.01" without its term would repeat, one level up,
-    exactly the error the MNT 0.23 / MNT 2.91 restatement above was written to correct.
+  - **State it with its term AND with the principals asked at that term.** The figure was MNT 0.01
+    while only n ≤ 250 had been asked, **MNT 5.01 at n = 1000** once T117 asked
+    (`T117P2-R600p0-N1000-B501` — 501 minor disbursed, 1000 rows of `principal "0.00"`,
+    `totalInterestAmount 2505.01`, balance frozen at `5.01` to `2107-05-01` [VERIFIED by T170 the
+    same way]), and **MNT 10.01 at n = 3000** once T159 asked.
+    > **THE SENTENCE THAT STOOD HERE IS FALSIFIED — T219.** It read *"The residual doubled when the
+    > term tripled, and it doubled because somebody asked a bigger question, not because a boundary
+    > was found."* The second half is right and the first half named the wrong variable: **T219
+    > tripled it again WITHOUT tripling the term, or moving it at all.** Stating the term alone is
+    > not enough, because the term is only the cap; **the principals asked are what the figure is
+    > actually a fact about**, and T117 and T159 topped out at 501 and 1001 minor units
+    > respectively.
+  - **MNT 10.01 was the largest OBSERVED residual over the principals then asked, and it was NEVER A
+    BOUND — and it is no longer the largest observed.** **T219 replaced it at the same term**;
+    the current figure is **MNT 30.00 at n = 3000**, below. n = 3000 is still simply the largest
+    term anyone has asked. **Three independent workers have now raised this ceiling and none found a
+    limit — two by asking a larger term, and the third by asking a larger principal at a term
+    already asked.** Writing any of these figures without both its term and its principal repeats,
+    one level up, exactly the error the MNT 0.23 / MNT 2.91 restatement above was written to
+    correct.
 - **MNT 1.09 fails at 3.6 % p.a. over n = 360 — an ordinary 30-year monthly term at an ordinary
   rate** [T84; **re-measured by T100**, `T100-FAMA-R3p6-N360-B109`, with MNT 1.10 clean beside it].
   This is not sub-MNT dust and must not be described as such. It is still an absurdly small *loan*,
@@ -2378,14 +2650,20 @@ read *"No term above n = 600 has ever been asked"*. That is **false**: terms hav
 **n = 3000**, at 600.0 % only, and family B is still there. **The conclusion — that the measurement
 establishes no upper bound on the failing principal over the graded domain as a whole — is now
 confirmed by measurement rather than inferred**, because each of the two workers who asked a larger
-term got a larger residual. Above `n = 600` nothing has been asked at any rate but 600.0 %, and
-nothing at all has been asked above `n = 3000`.
+term got a larger residual, **and because T219 then got a larger one again without asking a larger
+term at all.** Above `n = 600` nothing has been asked at any rate but 600.0 %, and nothing at all
+has been asked above `n = 3000`.
 
 The practical reading — that no commercially realistic Mongolian loan *amount* has been observed to
 fail — still holds over everything swept to date: the largest failing disbursement anywhere in the
-record is **1001 minor units, MNT 10.01**. **It is not a proof about the domain, and it is a weaker
-statement than it was**, because the same reading would have said "MNT 0.23" before T84 asked,
-"MNT 2.91" before T117 asked and "MNT 5.01" before T159 asked.
+record is **4499 minor units, MNT 44.99** (`T219-R600p0-N3000-B4499`), leaving the largest
+unamortized residual on record, **3000 minor units, MNT 30.00**. **It is not a proof about the
+domain, and it is a weaker statement than it was**, because the same reading would have said
+"MNT 0.23" before T84 asked, "MNT 2.91" before T117 asked, "MNT 5.01" before T159 asked and
+"MNT 10.01" before T219 asked. **This figure read `1001 minor units, MNT 10.01` until T219, and it
+is superseded by measurement.** The practical margin against MNT 1,000,000 is still about
+**22,000×** on the disbursement, and the *mechanism* argument — the `(δ + ½)·n` ceiling below — is
+what actually carries the conclusion; this sweep figure never did.
 
 ## The closed form — TESTED AND FALSIFIED outside the sampled grid
 
@@ -2441,7 +2719,8 @@ mechanism is still `[UNVERIFIED]` and this narrows what may be assumed about it:
 - **Consequently the sub-ulp observation is a correlate over 25 of the four record captures' 29
   cells, not the explanation of the family**, and it must not be used to argue that family B is
   confined to residuals too small to matter. **That last warning is now settled by measurement
-  rather than by caution: the residual reaches MNT 10.01 at n = 3000**, and the closed form was
+  rather than by caution: the residual reaches MNT 30.00 at n = 3000** [T219; it read
+  *"MNT 10.01 at n = 3000"* until T219 measured a larger one at the same term], and the closed form was
   never evaluated at those terms at all. The next worker on family B should start at **n = 104**,
   not in the sub-ulp tail, and should treat locating the code path — which neither T84, T100, T101,
   T112, T114, T117, T159 nor T170 did — as the open work.
@@ -2540,7 +2819,10 @@ day-count.
     T231 is drafted against `n/2` and refuses too little.
   - **The term half of the old "not fully bounded" reason has changed and the reason still holds.**
     It used to read *"no term beyond n = 600 has been asked"*; terms have since been asked to
-    **n = 3000** and family B is still there, with a larger residual each time somebody asked.
+    **n = 3000** and family B is still there, with a larger residual each time somebody asked —
+    **and T219 then got a larger one still at a term already asked, which is the sharper form of the
+    same warning: an option (b) draft that refuses a TERM band would not have refused
+    `T219-R600p0-N3000-B4499`, because n = 3000 was already inside every band anyone had drawn.**
     ~~The other half — **family B has been seen at only one rate** — is unchanged and still true.~~
     **THAT HALF IS NOW FALSE TOO — T223 measured family B at 36.0 % and at 300.0 %.** So a refusal
     written as a rate band would be wrong in the same way a refusal written as a term band would be:
@@ -2563,7 +2845,7 @@ day-count.
 
 **(b) and (c) both amend the graded domain, which is a change to a ratified DEC-n — a hard `user`
 gate no agent may cross.** Buyan decides. T83, T84, T100, T101, T112, **T114, T122, T129, T140,
-T170, T223, T229 and T231** have each handled them and
+T170, T223, T229, T231 and T219** have each handled them and
 **decided none, recommended none, and pre-implemented none**; they attach only the measurement and
 the scoping. **T223 measured a new region and restated it; it decided nothing, promoted no vector,
 graded no port, and left `.softhouse/vectors` byte-unchanged. T229 characterised the rescue site,
@@ -2571,7 +2853,13 @@ falsified this section's ceiling by measurement, promoted no vector, graded no p
 DELIBERATELY EDITED NOTHING HERE — leaving the five falsified sentences named with their line
 numbers for whoever did the rebuild properly. T231 is that rebuild: it corrected the prose, promoted
 no vector, ran no capture, wrote no Go, and left `.softhouse/vectors` byte-unchanged at
-`73c3ea7b43dd75f04884072719a87fc8e1d255c1`.**
+`73c3ea7b43dd75f04884072719a87fc8e1d255c1`. T219 both measured and edited: it registered a thesis,
+tripled the residual record against the live oracle at a term already asked, corrected the figures
+and the causal prose that depended on them, and added the seventh mechanism to the STANDING RULE —
+and it too decided nothing, recommended nothing, promoted no vector, graded no port and left
+`.softhouse/vectors` byte-unchanged at the same digest. It makes NO recommendation on (b) or (c),
+and its measurement STRENGTHENS the case that neither may be put to Buyan yet: the failing region
+just got three times wider at a term this file had already declared measured.**
 T112's whole mandate was the write-up: it corrected sentences and deleted a superseded
 block, and it moved nothing about the gate's substance; T114, T122, T129, T140, T170 and T231 likewise
 touched only the prose. **T117, T159, T169, T177 and T229 measured for this gate and deliberately
