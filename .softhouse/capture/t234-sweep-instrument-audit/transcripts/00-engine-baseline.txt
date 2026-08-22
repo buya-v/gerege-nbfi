@@ -1,0 +1,46 @@
+### host
+Darwin Buyanmunkhs-Mac-mini.local 25.5.0 Darwin Kernel Version 25.5.0: Mon Apr 27 20:41:26 PDT 2026; root:xnu-12377.121.6~2/RELEASE_ARM64_T8132 arm64
+
+### git
+git version 2.50.1 (Apple Git-155)
+
+### /usr/bin/grep  (what a #!/usr/bin/env bash script gets when PATH is normal)
+grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+
+### command -v grep, in THIS script's environment
+/usr/bin/grep
+
+### is 'grep' a shell FUNCTION exported into scripts?
+NO - grep is not a function in this script env
+0
+BASH_FUNC_grep not exported
+
+### env -i /bin/bash: the most stripped-down script environment
+/usr/bin/grep
+grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+
+### ugrep present on disk?
+no standalone ugrep binary on PATH
+
+### THE CORE MEASUREMENT: does each engine honour \b ?
+-- corpus /tmp/t234_probe.txt --
+cat: illegal option -- A
+usage: cat [-belnstuv] [file ...]
+
+/usr/bin/grep -E  pat=balance column      probefile-hits=3
+/usr/bin/grep -E  pat=\balance column     probefile-hits=0
+0
+/usr/bin/grep -P  pat=balance column      probefile-hits=0
+/usr/bin/grep -P  pat=\balance column     probefile-hits=0
+git grep -E       pat=balance column      git-tracked-hit-lines=218
+git grep -E       pat=\balance column     git-tracked-hit-lines=218
+git grep -P       pat=balance column      git-tracked-hit-lines=218
+git grep -P       pat=\balance column     git-tracked-hit-lines=0
+
+### /usr/bin/grep -P supported?
+grep: invalid option -- P
+usage: grep [-abcdDEFGHhIiJLlMmnOopqRSsUVvwXxZz] [-A num] [-B num] [-C[num]]
+	[-e pattern] [-f file] [--binary-files=value] [--color=when]
+	[--context[=num]] [--directories=action] [--label] [--line-buffered]
+	[--null] [pattern] [file ...]
+  exit=2 (2 => -P unsupported by BSD grep)

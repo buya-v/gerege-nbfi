@@ -1,0 +1,1387 @@
+[
+ {
+  "file": ".softhouse/RESUME.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": true,
+  "d3": 1,
+  "d3_sample": [
+   [
+    94,
+    "returns a clean exit and an empty result, which reads exactly like \"the population is closed.\"**"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/audit-t44/analysis/T175-red/census.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/audit-t44/analysis/t44_float_scan.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/audit-t44/analysis/t44_r2_vs_r4_sweep.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/leapboundary/analysis/T175-red/field-census.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/leapboundary/analysis/T175-red/swallow-census.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "python re": 1
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/leapboundary/analysis/T207/census-at-rev.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/leapboundary/analysis/T207/json-load-census.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "grep BRE": 2
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/lib/sweep_integrity.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/pathb/t147/cp-digest-census.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "grep BRE": 1,
+   "python re": 1
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/pathb/t147/float-sweep.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "grep BRE": 1
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "python re": 17
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/pathb/t99/prove-sweep-patterns.sh",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 1,
+  "d3_sample": [
+   [
+    18,
+    "#          no second copy to drift (P-27) \u2014 over that corpus, for the OLD patterns (read from git"
+   ]
+  ],
+  "engines": {
+   "grep BRE": 12,
+   "grep -E": 3
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/pathb/t99/sweep.sh",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "grep BRE": 28,
+   "grep -E": 6
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/src/t169-red/census_catch_narrowing.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "python re": 4
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/t100-g8-rescope/g8-section.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": false,
+  "d3": 1,
+  "d3_sample": [
+   [
+    4,
+    "floor, under one gate id`. There is no second copy, deliberately.**"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/t117-familyb/src/residual_census.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/t159-review-t117/src/census_t159.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/t223-g8-region-predicate/src/scan.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/t74-multiplesof/T82-guard-proofs/sweep-census.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "grep BRE": 1,
+   "python re": 3
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/tierA-a2/census-a2-26.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "python re": 1
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/tierA-a2/census-json-float-siblings.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "python re": 2
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/capture/tierA-a2/prove-census-red.sh",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "grep BRE": 5
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/conformance.sh",
+  "kind": "script",
+  "d1": false,
+  "d2": true,
+  "d3": 1,
+  "d3_sample": [
+   [
+    783,
+    "# artefact, at any depth; the narrow-catch lint walks the whole repository for `*.java`."
+   ]
+  ],
+  "engines": {
+   "grep BRE": 68,
+   "grep -E": 14,
+   "git grep BRE": 2
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T102.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": false,
+  "d3": 1,
+  "d3_sample": [
+   [
+    257,
+    "- **[UNVERIFIED]** that no fourth restatement of the baseline claim exists somewhere I did not"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T112.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": false,
+  "d3": 1,
+  "d3_sample": [
+   [
+    108,
+    "**What the sweep found, outside the named line.** Three restatement sites, all now handled:"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T134.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": false,
+  "d3": 1,
+  "d3_sample": [
+   [
+    131,
+    "that was blind may have been hiding a hit. (It was not, per the sweep above, but the order matters"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T90.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": false,
+  "d3": 1,
+  "d3_sample": [
+   [
+    221,
+    "emit nothing at all. That is the honest reason the sweep found them by reading and not by"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T91.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": false,
+  "d3": 1,
+  "d3_sample": [
+   [
+    313,
+    "* **`[UNVERIFIED]` \u2014 that no fourth copy exists anywhere.** See the five sweep limitations above."
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T96.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": true,
+  "d3": 1,
+  "d3_sample": [
+   [
+    305,
+    "- Repo-wide sweep for the census outside `emi.go`: the only live restatements are"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-12-amount-census.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": false,
+  "d3": 2,
+  "d3_sample": [
+   [
+    70,
+    "| 4 | Retracted-claim sweep | `/usr/bin/grep -nE` over the whole ADR for the strong claim's wordings **and its concept** (`can be admitted`, `admitted at all`, `impossib`, `a wall`, `no enco"
+   ],
+   [
+    555,
+    "legitimate population intact at 43/4/1/5664. The retracted claim has **no fifth surviving site**."
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": false,
+  "d3": 1,
+  "d3_sample": [
+   [
+    50,
+    "**No fifth surviving assertion of the negation exists.**"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": true,
+  "d3": 4,
+  "d3_sample": [
+   [
+    43,
+    "5. Whole-repo sweep."
+   ],
+   [
+    48,
+    "> **\u26a0 DISCLOSURE, because a clean claim of independence here would be false.** The whole-repo sweep"
+   ],
+   [
+    260,
+    "# F-3 \u2014 the whole-repo sweep. TWO live survivors outside the ADR, one of them NOT accounted for by T224"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh",
+  "kind": "script",
+  "d1": true,
+  "d2": true,
+  "d3": 1,
+  "d3_sample": [
+   [
+    2,
+    "# A2-32 whole-repo sweep for THE CLAIM, not the sentence."
+   ]
+  ],
+  "engines": {
+   "git grep BRE": 1,
+   "git grep -E": 1
+  },
+  "voids": [],
+  "deadcd": [
+   "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a356a016636abdd7e",
+   false
+  ]
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": true,
+  "d3": 2,
+  "d3_sample": [
+   [
+    110,
+    "returned no second live site in the ADR: `git grep -n -i -E 'DROPS on the pass path|head"
+   ],
+   [
+    218,
+    "1. **I did not open all 2,246 hits individually.** I opened every hit in the eleven claim-bearing"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-33.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": true,
+  "d3": 1,
+  "d3_sample": [
+   [
+    176,
+    "4. **I did not open all 8,120 hit lines individually.** I opened every hit in every live"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T154.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": false,
+  "d3": 1,
+  "d3_sample": [
+   [
+    275,
+    "- **`[UNVERIFIED]` \u2014 that the sweep found every load-bearing grep in the program.** It covered"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T172.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": false,
+  "d3": 1,
+  "d3_sample": [
+   [
+    141,
+    "305-line file is listed in the table above; there is no fifth site I am aware of and did not report."
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T181.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": false,
+  "d3": 1,
+  "d3_sample": [
+   [
+    68,
+    "- **Exhaustiveness of the population** \u2014 I relied on **T183's** whole-repo sweep rather than re-running it; my census covers the 25 t41 rewriters only. `t178-wider-family.py` still misses `s"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T183.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": false,
+  "d3": 1,
+  "d3_sample": [
+   [
+    87,
+    "Every one of them is in `.softhouse/reviews/t41-probe/`; the whole-repo sweep found"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T187.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": false,
+  "d3": 1,
+  "d3_sample": [
+   [
+    267,
+    "`.softhouse/reviews/*/` directories may hold the same shape; a repo-wide sweep under the R5 rule"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T191.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": false,
+  "d3": 1,
+  "d3_sample": [
+   [
+    232,
+    "excluded root \u2014 **no other occurrence of `worktrees` anywhere in the output**. Observed:"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/t203-enumerate-targets.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "python re": 1
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T204.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": false,
+  "d3": 2,
+  "d3_sample": [
+   [
+    16,
+    "T178's own transcript is untouched byte-for-byte below the new banner.** Swept the whole repo for other"
+   ],
+   [
+    102,
+    "**Honest negative:** I found no third site *inside* `.softhouse/handoff/` beyond the two sentences in"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T210.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": false,
+  "d3": 1,
+  "d3_sample": [
+   [
+    226,
+    "`.softhouse/bin/fire-program.sh` for this; a repo-wide sweep was out of scope (scope guard: edit only"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": true,
+  "d3": 5,
+  "d3_sample": [
+   [
+    9,
+    "whole repository for the same claim under other wording \u2014 the sweep A2-28 scoped to the ADR only."
+   ],
+   [
+    78,
+    "**Terms swept**, the six named in the brief plus phrasings I added because P-26 says sweep the"
+   ],
+   [
+    93,
+    "**Every hit was opened.** I did not stop at the first plausible match; population and disposition"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": true,
+  "d3": 3,
+  "d3_sample": [
+   [
+    212,
+    "fifth surviving live assertion of the claim exists in this repository\"*. The sweep's measured"
+   ],
+   [
+    233,
+    "> Before a repository sweep may support the sentence \"the population is closed\", it must be run"
+   ],
+   [
+    466,
+    "- **`[UNVERIFIED]` completeness of the S3/S4/S5 line-level triage.** I opened every file in those"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T232.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": true,
+  "d3": 1,
+  "d3_sample": [
+   [
+    163,
+    "- **`[UNVERIFIED]` that P-72's own rule was applied to a fresh repo-wide sweep.** I did not re-sweep the"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/T49-dec1-v10-rereview.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": false,
+  "d3": 1,
+  "d3_sample": [
+   [
+    640,
+    "swept the whole file for banned patterns; I did not re-derive every one of its 2,416 lines against \u00a74."
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/T57-float-scan.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "grep BRE": 1,
+   "python re": 2
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/handoff/T61-sweep/run-sweep.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/patterns.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": true,
+  "d3": 5,
+  "d3_sample": [
+   [
+    707,
+    "> a sibling worktree. That is the exact command shape census and sweep tasks use, so **every repo-wide sweep run"
+   ],
+   [
+    981,
+    "the interpreter in the transcript. \"The sweep found N\" is not a measurement; \"Python `re` found N\" is."
+   ],
+   [
+    2048,
+    "> *\"no fourth or fifth surviving live assertion of the claim exists in this repository outside the two"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/program.json",
+  "kind": "prose",
+  "d1": false,
+  "d2": true,
+  "d3": 1,
+  "d3_sample": [
+   [
+    81,
+    "\"note\": \"Local fire 20260822-140002 (oracle REACHABLE throughout). EIGHT DISPATCHED IN TWO WAVES, EIGHT COMPLETED, EIGHT MERGED, ZERO LIVE AT EXIT. Wave 1: A2-32, T227, T229, T230. Wave 2: A"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/A2-11/enumerate-corpus.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "python re": 4
+  },
+  "voids": [],
+  "deadcd": [
+   "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ac3d56d665ff7da",
+   false
+  ]
+ },
+ {
+  "file": ".softhouse/reviews/T114-review-of-T112.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": false,
+  "d3": 1,
+  "d3_sample": [
+   [
+    188,
+    "The sweep found no other \"nothing to do with G-8\" restatement anywhere in the tree."
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/T135-evidence/sweep-broad.sh",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "grep BRE": 11,
+   "grep -E": 5
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/T135-evidence/sweep-misscheck.sh",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "grep BRE": 2,
+   "grep -E": 2
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/T135-evidence/sweep-missprobe.sh",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "grep BRE": 3,
+   "grep -E": 1
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/T135-evidence/sweep-pattern-check.sh",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "grep BRE": 11,
+   "grep -E": 3
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/T138-evidence/r7b-census.sh",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "grep BRE": 13,
+   "grep -E": 1
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/prove-iii-census.sh",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "grep BRE": 4,
+   "grep -E": 3
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/prove-ix-sweep-and-help.sh",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "grep BRE": 17,
+   "grep -E": 4
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/prove-v-census-counts.sh",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "grep BRE": 2,
+   "grep -E": 2
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/T155-probe/prove-xiv-sweep-coverage.sh",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "grep -E": 3,
+   "grep BRE": 7
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/T158-compare-enumerators.sh",
+  "kind": "script",
+  "d1": true,
+  "d2": true,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "grep -E": 3
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/T158-rederive-sweep.py",
+  "kind": "script",
+  "d1": true,
+  "d2": true,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "python re": 17
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/T181-review-of-T178.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": false,
+  "d3": 1,
+  "d3_sample": [
+   [
+    306,
+    "whole-repo sweep; I relied on **T183's** (386 Python files / 280 write sites) for exhaustiveness and"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/T184-evidence/t184-census.sh",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": [
+   "/Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8",
+   false
+  ]
+ },
+ {
+  "file": ".softhouse/reviews/T184-evidence/t184-sweep.sh",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "grep BRE": 14
+  },
+  "voids": [],
+  "deadcd": [
+   "/Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8",
+   false
+  ]
+ },
+ {
+  "file": ".softhouse/reviews/T49-DEC-1-v10-rereview.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": false,
+  "d3": 1,
+  "d3_sample": [
+   [
+    640,
+    "swept the whole file for banned patterns; I did not re-derive every one of its 2,416 lines against \u00a74."
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh",
+  "kind": "script",
+  "d1": true,
+  "d2": true,
+  "d3": 1,
+  "d3_sample": [
+   [
+    2,
+    "# A2-31 PROBE \u2014 the WHOLE-REPO sweep for every claim DEC-2 rev 4 says it retracted or"
+   ]
+  ],
+  "engines": {
+   "git grep BRE": 2,
+   "grep BRE": 2,
+   "git grep -E": 1
+  },
+  "voids": [],
+  "deadcd": [
+   "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee",
+   false
+  ]
+ },
+ {
+  "file": ".softhouse/reviews/a2-33-dec2-rev5/REVIEW.md",
+  "kind": "prose",
+  "d1": false,
+  "d2": true,
+  "d3": 1,
+  "d3_sample": [
+   [
+    335,
+    "them because I swept the whole repo and silence would be indistinguishable from not looking."
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/a2-33-dec2-rev5/sweep-output-live-population.txt",
+  "kind": "prose",
+  "d1": true,
+  "d2": true,
+  "d3": 1,
+  "d3_sample": [
+   [
+    6055,
+    ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32.md:110:returned no second live site in the ADR: `git grep -n -i -E 'DROPS on the pass path|head"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/a2-33-dec2-rev5/sweep.sh",
+  "kind": "script",
+  "d1": true,
+  "d2": true,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "git grep -E": 1,
+   "grep -E": 1
+  },
+  "voids": [],
+  "deadcd": [
+   "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39",
+   false
+  ]
+ },
+ {
+  "file": ".softhouse/reviews/t185-probe/t185-independent-sweep.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/t23-probe/t23_scan_readjust.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/t26-probe/t26_scan.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/t29-probe/t29_sweep.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/t32-probe/t32_sweep.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/t34-probe/t34_scan_broad.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/t34-probe/t34_sweep.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/t38-probe/t38_periodratio_scan.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/t38-probe/t38_periodratio_sweep.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/t41-probe/leakgrep.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "grep BRE": 1,
+   "python re": 1
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/t41-probe/t187-census.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/t45-probe/t45_leakgrep.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "grep BRE": 2,
+   "python re": 2
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/t47-probe/t167-sibling-census.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/t47-probe/t181-census-zero-inspection.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/t47-probe/t181-split-census.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/reviews/t47-probe/t47_leakgrep.py",
+  "kind": "script",
+  "d1": true,
+  "d2": false,
+  "d3": 0,
+  "d3_sample": [],
+  "engines": {
+   "grep BRE": 2,
+   "python re": 2
+  },
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json",
+  "kind": "prose",
+  "d1": false,
+  "d2": true,
+  "d3": 1,
+  "d3_sample": [
+   [
+    2967,
+    "\"note\": \"Raised and dispatched by the driver, local fire 20260821-080001. || local fire 20260821-080001: DONE and MERGED (d202552, 4be0ae5). GRAPH 4 CAN CATCH ALL FOUR EDITS, but NOT as a li"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ },
+ {
+  "file": ".softhouse/tasks.json",
+  "kind": "prose",
+  "d1": false,
+  "d2": true,
+  "d3": 6,
+  "d3_sample": [
+   [
+    842,
+    "\"note\": \"MERGED, fire 20260822-080001. VERDICT MICRO-FIX (6 lines, exit 3 on an empty scan, no number moved). P-59 HIT IT EXACTLY AS BRIEFED AND IT HANDLED IT: three-dot returned 0 BYTES and"
+   ],
+   [
+    1843,
+    "\"note\": \"local fire 20260822-000013: DONE on softhouse/A2-25-dec2-rev3-review (88af349), merged. VERDICT REJECTED -- G-11 STAYS OPEN, NOT RATIFIABLE. IT REFUSED THE CLEAN VERDICT THE DRIVER "
+   ],
+   [
+    1915,
+    "\"note\": \"local fire 20260822-000013: DONE on softhouse/A2-28-dec2-rev4 (1b6b3cf), merged. Diff is the ADR + handoff, NOTHING ELSE (driver-verified, 2 files). ALL SEVEN OF A2-25's ITEMS ADDRE"
+   ]
+  ],
+  "engines": {},
+  "voids": [],
+  "deadcd": null
+ }
+]

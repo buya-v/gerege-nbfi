@@ -1,0 +1,4460 @@
+[
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/capture/leapboundary/analysis/T175-red/field-census.py",
+  "line": 57,
+  "text": "invariants(CID)\\n            except Exception as exc:\\n                return \"CRASHES -- %s, from an unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py",
+  "line": 23,
+  "text": "guard\\n    that cannot fail.\\n\\nRun:  python3 t156-sweep-unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py",
+  "line": 126,
+  "text": "guarded))\\n    print(\"  of those, writing only into a throwaway dir (mktemp/tmp): %d\"\\n          % len([h for h in unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py",
+  "line": 167,
+  "text": "GUARDED HIT, for reading by hand\")\\n    for h in unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py",
+  "line": 174,
+  "text": "guarded=%d  unreadable=%d\"\\n          % (len(files), len(hits), len(unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/capture/pathb/t149/t156/sweep-unguarded-mutators.txt",
+  "line": 18,
+  "text": "guard=yes  verbs=sh:mv,sh:cp\\n  .softhouse/capture/pathb/t149/t156-sweep-unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/capture/src/run-pass3i.sh",
+  "line": 614,
+  "text": "guard that cannot go red\\n# converts \"not checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/capture/t154-nofloat/drive-leg3.sh",
+  "line": 230,
+  "text": "guard catches it\"\\nscenario F3-upper-json        m_f3_upper   \"0:BASE:BASE_CELLS\" \"2:*:*\" \\\\n  \"UPPER.JSON is a vector to NEITHER enumerator, so a float in it is unchecked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/conformance.sh",
+  "line": 735,
+  "text": "guard_no_float_in_harness above: it named \"$HARNESS_PKG\" and one `cmd`\\n# directory, so every package outside those two \u2014 the whole ledger port included\\n# \u2014 was unchecked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/conformance.sh",
+  "line": 885,
+  "text": "guard RED on a planted defect AND GREEN on the clean equivalent\\n  # (P-22 with P-50's second half). Nothing checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/conformance.sh",
+  "line": 1173,
+  "text": "guard over the Go tree\" \u2014 NOT\\n# \"the ledger tree is covered\". DEC-2 \u00a74.4 once recorded this guard as not existing"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/conformance.sh",
+  "line": 1996,
+  "text": "guard ACCEPTED a valid root that is not this tree.\"\\n    fi\\n    # --- RED: a path that does not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/conformance.sh",
+  "line": 1999,
+  "text": "guard_graded_root_is_this_tree ) >/dev/null 2>&1; then\\n      note21 \"RED(missing): the guard ACCEPTED a CONFORMANCE_REPO_ROOT that does not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/gates.md",
+  "line": 1871,
+  "text": "invariant, because the port\\n  agrees with the oracle. This is the cheap option the gate's earlier text said did not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/guards/ledgerguard/main.go",
+  "line": 1,
+  "text": "guard that DEC-2 \u00a74.4 requires for I-3 and I-4.\\n//\\n// \u26a0 CORRECTION (T227, 22 August 2026). This line read \"...the source-level guard that DEC-2\\n// \u00a74.4.1 records as NOT EXISTING"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/guards/ledgerguard/main.go",
+  "line": 5,
+  "text": "guard into run_guards; DEC-2 \u00a78.3 retracted the claim; and \u00a74.4.1 is today\\n// titled \"THE GUARD I-3 AND I-4 REQUIRE \u2014 IT DID NOT EXIST"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T135.md",
+  "line": 112,
+  "text": "guard holed. Port the whole\\n  T76/T77/T80/T85 hardening generation, and decide what happens to `preconditions-COPY.sh`, which\\n  under P-27 should not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T69.md",
+  "line": 254,
+  "text": "guard\\nhoists (`updateOutstandingBalances` and `calculateLevelInstallment`) both read a\\nstrictly earlier period than the invalidation point. **I found no unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-14.md",
+  "line": 137,
+  "text": "guard_gofmt`, `guard_no_float_in_capture_requests`,\\n   `guard_no_narrow_catch_in_capture_rigs`. All five concern float, formatting and exception scope.\\n   **Nothing checks"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-16.md",
+  "line": 374,
+  "text": "ledger/`. Ratifying DEC-2 without it means\\n  obliging two invariants nothing checks"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-17.md",
+  "line": 206,
+  "text": "invariants walks straight into \u00a74.4.1**, whose heading shouts\\n   `THE GUARD I-3 AND I-4 REQUIRE DOES NOT EXIST"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md",
+  "line": 80,
+  "text": "ledger` = 18 | All **correct** |\\n\\n---\\n\\n## Findings (graded)\\n\\n### F-1 \u2014 REJECT. \u00a78.3 still says the `I-3`/`I-4` guard does not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md",
+  "line": 92,
+  "text": "guard must be able to *see* the tree before it\\n> can check anything in it, and **certain to be read as saying the invariants are checked. They are\\n> not checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md",
+  "line": 525,
+  "text": "I-3/I-4\\n  SOURCE GUARD that DEC-2 \u00a74.4 requires and \u00a74.4.1 **records as not existing"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md",
+  "line": 30,
+  "text": "I-3`/`I-4` WALK OF THE GO TREE\"*, and cited \u00a74.4.1 \u2014 whose heading is *\"IT DID NOT\\nEXIST"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md",
+  "line": 34,
+  "text": "guard for either exists`,\\n`no such guard`, `does not exist`, `did not exist`, `nothing checks`, `are not checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md",
+  "line": 53,
+  "text": "I-3/I-4 SOURCE GUARD that DEC-2 \u00a74.4 requires and \u00a74.4.1 **records as not\\nexisting"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md",
+  "line": 286,
+  "text": "guard itself. NOT covered by T224.\\n\\n```\\n.softhouse/guards/ledgerguard/main.go:1:\\n// Command ledgerguard is the source-level guard that DEC-2 \u00a74.4.1 records as NOT EXISTING"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md",
+  "line": 295,
+  "text": "guard whose existence refutes it**,\\nin the present tense, asserting a false thing about the CURRENT \u00a74.4.1 (whose heading is *\"IT DID NOT\\nEXIST"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md",
+  "line": 482,
+  "text": "guard's\\n  own `CANNOT-CATCH` (ii) names. \u00a74.4.1 states this honestly.\\n- **`A2-25`'s F-1 is properly discharged.** \u00a78.3's *\"They are not checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md",
+  "line": 581,
+  "text": "guards/ledgerguard/main.go:1` carries the retracted \"records as NOT\\n  EXISTING"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt",
+  "line": 1148,
+  "text": "enforce-unknown-full-repo.txt:6:--- POPULATION, with\\n.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/RED-1-nonexistent"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-8.md",
+  "line": 232,
+  "text": "guards.** A missing capture directory is a `t.Fatal`, never a `t.Skip` \u2014 a skip would convert\\n\"not checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T156.md",
+  "line": 229,
+  "text": "guard *somewhere in the file* and were not adjudicated\\n  line by line.** Named in `t156/sweep-unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T158.md",
+  "line": 330,
+  "text": "guard=yes\"` on that transcript returns **4** \u2014 only the hits that also match the\\n`STORE` target are printed with a guard flag; the \"EVERY OTHER UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T158.md",
+  "line": 540,
+  "text": "guarded count from 111 to 115** and re-commit\\n   `t156/sweep-unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T158.md",
+  "line": 545,
+  "text": "guarded hit**, so F-5's pointer becomes true, and add\\n   `.softhouse/reviews/t47-probe/t47_edit_1.py:206` (unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T166.md",
+  "line": 382,
+  "text": "ledger/`) **does not exist on `main` and does not\\n     exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T166.md",
+  "line": 412,
+  "text": "ledger/` contains 6,065 lines of\\n  unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T178.md",
+  "line": 292,
+  "text": "Guard census** (`t178-guard-census.py`), the standing tripwire:\\n\\n- against **today's tree**: 9 files measured, 0 unmeasured, **0 live bypasses, 0 unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T178.md",
+  "line": 345,
+  "text": "guard-census.py` a HARD check in the verifier so this class cannot reappear silently.\\n  It exits 1 on any unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 37,
+  "text": "GUARDED-FINALLY-INDIRECT` = the\\n   one interprocedural step taken: every in-file call of the enclosing function is inside a\\n   `try/finally` (a single unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 59,
+  "text": "GUARDED on its own docstring too**].\\n\\nExit codes: `0` report / clean, `1` `--enforce` with an unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 77,
+  "text": "GUARDED** |\\n| `red_guard_elsewhere.py` \u2014 a REAL `try/finally` in another function + a REAL `atexit.register` in a function nothing calls | **UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 93,
+  "text": "GUARDED-FINALLY-INDIRECT |\\n| `unknown_target.py` | UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 104,
+  "text": "guarded site** |\\n\\nSo T167's fix is confirmed by an instrument that did not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 149,
+  "text": "GUARDED-CONTEXTMANAGER` and `GUARDED-FINALLY-INDIRECT` are all **0** in this\\nrepo \u2014 no committed rig uses those shapes.)\\n\\n- **Python files with \u22651 proven unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 153,
+  "text": "guarded-sites-main.txt`.\\n- **Python files whose only unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 184,
+  "text": "GUARDED |\\n| `/usr/bin/grep -E` | **0** | UNGUARDED |\\n| shell `grep -E` (resolves to `/usr/bin/grep` here) | **0** | UNGUARDED |\\n| `/usr/bin/awk` | **0** | UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 220,
+  "text": "guarded population is 115, not 111\"** \u2014 P-48 in `patterns.md`, and T158's handoff.\\n   - *Original:* hits 130 / guarded 19 / unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 225,
+  "text": "guarded\" hits are shell files.** No shell parser exists here, so no parser-based\\n     statement about them is possible. **A single number for \"the unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 234,
+  "text": "guard words in literals).\\n     - `capture/pathb/t149/t156-sweep-unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 314,
+  "text": "guarded rewriters of\\n  the ratified DEC-1\") in commit `4484cf1`** \u2014 I am corroborating it with a per-site list, not\\n  claiming it. Exact figures are in `trusted-unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T183.md",
+  "line": 130,
+  "text": "guard is imported**:\\n\\n```\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T183.md",
+  "line": 141,
+  "text": "guard into a shared module \u2014 the thing this program keeps\\nasking workers to do \u2014 and the enforcement step calls you unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T183.md",
+  "line": 145,
+  "text": "guard.py`, so on\\n`t47_edit_2.py` T179's tool reports **zero mutation sites**, not UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T183.md",
+  "line": 176,
+  "text": "guard-classifier`) it reports 6\\nUNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T183.md",
+  "line": 198,
+  "text": "guard_classify.py`,\\n   `selftest.py`, `rederive_population.py`, `engine_divergence.py`,\\n   `list_trusted_unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T183.md",
+  "line": 232,
+  "text": "GUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T183.md",
+  "line": 337,
+  "text": "guards, or \u2014 cheaper and probably better \u2014 make the tool emit a\\n  distinct verdict such as `UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T183.md",
+  "line": 345,
+  "text": "guard.py` shape \u2014 and see F-3 first, or the instrument will call the fixed files broken.\\n- **F-5 \u2014 `.softhouse/reviews/t179-guard-classifier/trusted-unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T187.md",
+  "line": 196,
+  "text": "guards from each file's OWN ast. It would score all 25 hardened\\n  files here as `try 0 / atomic False` \u2014 UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T190.md",
+  "line": 81,
+  "text": "guard that stops depending on an invariant it does\\nnot check"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T196.md",
+  "line": 35,
+  "text": "enforce` over `.softhouse` at today's\\n`main` reports **33 UNGUARDED sites on a TRUSTED target across 27 files**\\n[VERIFIED: `list_trusted_unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T196.md",
+  "line": 123,
+  "text": "guarded_funcs`' own conservatism (there,\\none unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T196.md",
+  "line": 232,
+  "text": "guard-classifier/fixtures/green_contextmanager.py:20` \u2014 **ACCEPTED**\\n\\n`UNKNOWN/UNGUARDED` \u2192 `TRUSTED/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T196.md",
+  "line": 293,
+  "text": "enforce` over `t41-probe` at today's `main` under the **strengthened** classifier:\\n  **exit 0**, 16 sites, all `SCRATCH/SANDBOX`, **0 UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T196.md",
+  "line": 322,
+  "text": "enforce` **exit 1**, all three `TRUSTED`, `tags=ADR` / `PORT,RIG,ADR`, UNRESOLVED \u2192 0 | fires |\\n| **B** | `--enforce` **exit 1**, `TRUSTED/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T196.md",
+  "line": 346,
+  "text": "enforce` still fires\\non `TRUSTED \u2227 UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T196.md",
+  "line": 421,
+  "text": "enforce` over `.softhouse` reports 33\\n  TRUSTED-UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T198.md",
+  "line": 76,
+  "text": "guard verdict.\"* In this tool the scope tag **is** the excuse mechanism:\\n> `guard_classify.py:975-976` \u2014 `if verdict == UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T198.md",
+  "line": 78,
+  "text": "enforce` predicate, fires **only** on\\n> `scope == TRUSTED and verdict == UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T198.md",
+  "line": 218,
+  "text": "guard-classifier/fixtures/green_contextmanager.py:20`\\n\\n**Same five as T196, member for member.** My adjudication:\\n\\n**1, 3, 4 \u2014 ACCEPT, `TRUSTED/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T198.md",
+  "line": 362,
+  "text": "guarded writes to the GOLDEN VECTOR STORE. CONFIRMED, and RANKED.\\n\\nAll four confirmed present, all `tags=STORE`, all `TRUSTED/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T199.md",
+  "line": 146,
+  "text": "guards` at `:938-949` runs\\nfive guards, none of them a digest guard]. **So the Go binary is the sole enforcer, and an unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T201.md",
+  "line": 434,
+  "text": "guard printing two CENSUS lines has its second figure silently\\n  unchecked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/CLASSIFY-postfix.txt",
+  "line": 21,
+  "text": "GUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/t203-guard-arms.py",
+  "line": 154,
+  "text": "Guard called directly, live store,\\n    # a filename that does NOT exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203.md",
+  "line": 259,
+  "text": "enforce` classification\\n\\nPre-fix, the four files the brief names (`CLASSIFY-prefix.txt`):\\n\\n```\\nENFORCE: 4 unguarded mutation(s) of a trusted artefact\\n  TRUSTED    UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203.md",
+  "line": 278,
+  "text": "guard module (`CLASSIFY-postfix.txt`), **`ENFORCE_EXIT=0`**:\\n\\n```\\n  mutation call sites found in Python       : 2\\n  scope      UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203.md",
+  "line": 292,
+  "text": "guarding verdicts.\\n\\n## Findings\\n\\n**F-1 (against T196 and T198, HIGH). The population is six, not four, and two live-store\\ntruncators were left unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T204.md",
+  "line": 89,
+  "text": "guard** (`.softhouse/handoff/` only):\\n   - `.softhouse/tasks.json` \u2014 the task-raising entry for T187 (title: \"\u2026holds **21** more unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/DIFFERENTIAL-repo-sweep.txt",
+  "line": 5,
+  "text": "GUARDED -> TRUSTED/UNGUARDED   tags=CAPTURE  chain=True\\n      target: path\\n  .softhouse/capture/pathb/t36/attest.py:255 open(mode='w')\\n      UNKNOWN/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/DIFFERENTIAL-repo-sweep.txt",
+  "line": 8,
+  "text": "GUARDED   tags=CAPTURE  chain=True\\n      target: _stamp\\n  .softhouse/capture/pathb/t36/attest.py:559 open(mode='w')\\n      UNKNOWN/UNGUARDED -> TRUSTED/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/DIFFERENTIAL-repo-sweep.txt",
+  "line": 20,
+  "text": "GUARDED -> TRUSTED/UNGUARDED   tags=CAPTURE  chain=True\\n      target: out\\n  .softhouse/capture/t83-nonamortizing/src/run-port.py:155 open(mode='w')\\n      UNKNOWN/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/DIFFERENTIAL-repo-sweep.txt",
+  "line": 23,
+  "text": "GUARDED   tags=CAPTURE  chain=True\\n      target: outp\\n\\nBEFORE UNKNOWN+UNGUARDED=83  TRUSTED+UNGUARDED=29  SCRATCH(any)=337  scope_via_chain=0\\nAFTER  UNKNOWN+UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/GREEN-six-prefix-AFTER.txt",
+  "line": 1,
+  "text": "ENFORCE-DISCLOSURE: 0 unguarded site(s) with an UNRESOLVED target \u2014 NOT fatal without --enforce-unknown; this is a fail-open (T203 F-2)\\nENFORCE: 6 unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/GREEN-six-prefix-AFTER.txt",
+  "line": 50,
+  "text": "GUARDED\\n      target: path\\n  prefix/T8-promote-vectors.py:541  open(mode='w')  tags=STORE  verdict=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-A2-honour-scratch-chain.txt",
+  "line": 29,
+  "text": "GUARDED=True  (expected True)  OK\\n                             why: every in-file call of _write() is inside a try/finally\\n\\n  unknown_target.py          parser=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-A2-honour-scratch-chain.txt",
+  "line": 48,
+  "text": "GUARDED=True\\n\\n  DISAGREEMENT CHECK on shape (a): T156=GUARDED, parser=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-A2-honour-scratch-chain.txt",
+  "line": 51,
+  "text": "guarded/atomic -> OK\\n  T205 DIFFERENTIAL: runtime-ROOT store write=TRUSTED/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-B-chain-disabled.txt",
+  "line": 29,
+  "text": "GUARDED=True  (expected True)  OK\\n                             why: every in-file call of _write() is inside a try/finally\\n\\n  unknown_target.py          parser=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-B-chain-disabled.txt",
+  "line": 48,
+  "text": "GUARDED=True\\n\\n  DISAGREEMENT CHECK on shape (a): T156=GUARDED, parser=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-B-chain-disabled.txt",
+  "line": 51,
+  "text": "guarded/atomic -> OK\\n  T205 DIFFERENTIAL: runtime-ROOT store write=UNKNOWN/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-B-chain-disabled.txt",
+  "line": 53,
+  "text": "GUARDED -> OK\\n\\nSELFTEST FAILED (2):\\n  - red_runtime_root.py: parser said UNGUARDED/UNKNOWN at line 30, expected UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/RED-t57t8-alone-BEFORE.txt",
+  "line": 21,
+  "text": "GUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/selftest-AFTER.txt",
+  "line": 29,
+  "text": "GUARDED=True  (expected True)  OK\\n                             why: every in-file call of _write() is inside a try/finally\\n\\n  unknown_target.py          parser=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/selftest-AFTER.txt",
+  "line": 48,
+  "text": "GUARDED=True\\n\\n  DISAGREEMENT CHECK on shape (a): T156=GUARDED, parser=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/selftest-AFTER.txt",
+  "line": 51,
+  "text": "guarded/atomic -> OK\\n  T205 DIFFERENTIAL: runtime-ROOT store write=TRUSTED/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/sweep-repo-AFTER.txt",
+  "line": 93,
+  "text": "guard-classifier/fixtures/red_prose_guard.py:28  open(mode='w')  tags=STORE\\n      target: STORE\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/sweep-repo-BEFORE.txt",
+  "line": 79,
+  "text": "guard-classifier/fixtures/red_prose_guard.py:28  open(mode='w')  tags=STORE\\n      target: STORE\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/t205-diff-scopes.py",
+  "line": 24,
+  "text": "GUARDED\"]\\n    t = [k for k in d if d[k][\"scope\"] == \"TRUSTED\" and d[k][\"verdict\"] == \"UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 77,
+  "text": "enforce-unknown` \u2014 **opt-in fail-CLOSED**\\n\\nMakes UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 81,
+  "text": "ENFORCE-DISCLOSURE` on stderr \u2014 **neutral (visibility)**\\n\\nEvery `--enforce` run now prints the residual UNKNOWN+UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 98,
+  "text": "GUARDED (STORE) | TRUSTED / UNGUARDED (STORE) | no |\\n| `T61-promote-vectors.py` | `:329 open(mode='w')` | TRUSTED / UNGUARDED (STORE) | TRUSTED / UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 100,
+  "text": "GUARDED (STORE) | TRUSTED / UNGUARDED (STORE) | no |\\n| `T58-promote-vectors.py` | `:708 open(mode='w')` | TRUSTED / UNGUARDED (STORE) | TRUSTED / UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 102,
+  "text": "GUARDED (no tag)** | **TRUSTED / UNGUARDED (STORE)** | **yes** |\\n| **`T8-promote-vectors.py`** | `:541 open(mode='w')` | **UNKNOWN / UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 103,
+  "text": "GUARDED (STORE)** | **yes** |\\n\\n`--enforce` over all six: **BEFORE exit 1, \"4 unguarded mutation(s)\"; AFTER exit 1,\\n\"6 unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 129,
+  "text": "GUARDED -> TRUSTED/UNGUARDED, scope_via_chain=True\\n  ZERO moved in any other direction.\\n\\n                  BEFORE   AFTER\\nUNKNOWN+UNGUARDED   83       76\\nTRUSTED+UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 164,
+  "text": "guarded and the target is under a trusted tree.\\n\\n### 4b. Population `--enforce`-on-UNKNOWN-by-default *would* create\\n\\n**76 UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 201,
+  "text": "GUARDED \u2026                             (total 2)\\n--- UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 247,
+  "text": "guard_classify.py` + `selftest.py` \u2192 1 site, ATOMIC, 0\\nUNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 256,
+  "text": "GUARDED, 29 TRUSTED+UNGUARDED |\\n| repo sweep AFTER | 402 Python files, 466 sites | 76 UNKNOWN+UNGUARDED, 36 TRUSTED+UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 280,
+  "text": "guards*\\n  (T196-3); there is none for *mutations*. The six hardened rewriters in \u00a73b are\\n  exactly this blind spot.\\n* **A non-existent"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/CLASSIFY-a-postfix.txt",
+  "line": 21,
+  "text": "GUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/CLASSIFY-a-prefix.txt",
+  "line": 21,
+  "text": "GUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/CLASSIFY-b-postfix.txt",
+  "line": 21,
+  "text": "GUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/CLASSIFY-c-postfix.txt",
+  "line": 21,
+  "text": "GUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/GREEN-b-postfix.txt",
+  "line": 25,
+  "text": "guard-classifier/guard_classify.py --file ... --enforce,\\nread-only invocation, no edits made to that directory):\\n  pre-fix : ENFORCE: 3 unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/RED-GREEN-c-assert-under-O.txt",
+  "line": 57,
+  "text": "guard-classifier/guard_classify.py,\\nno edits made there): T57-promote-emi-vectors.py + t203_store_guard.py -> 0 unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206.md",
+  "line": 136,
+  "text": "enforce` exits **0** \u2014 a **false\\n  negative**, the same root cause T205's own task (F-2) is chartered to close for T57/T8.\\n  Recorded, not hidden.\\n- Post-fix: 0 UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206.md",
+  "line": 139,
+  "text": "guard module's own\\n  `os.replace` (ATOMIC) and `mkstemp` (SANDBOX). `--enforce` exits 0.\\n\\n## (b) Three unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206.md",
+  "line": 186,
+  "text": "ENFORCE: 3 unguarded mutation(s) of a trusted artefact` (all three\\n  named lines, `tags=CAPTURE`), exit 1; post-fix 0 unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T207.md",
+  "line": 420,
+  "text": "guard-proofs/prove-promote-guards.py` (5).\\n   Full list in `json-load-census-output.txt`.\\n2. **`measure-other-sites.py:85,86` are deliberately still unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/BONUS-RED-4-shell-only-file.txt",
+  "line": 23,
+  "text": "GUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/BONUS-RED-5-syntax-error-only.txt",
+  "line": 23,
+  "text": "GUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/BONUS-RED-6-root-dir-only-sh.txt",
+  "line": 23,
+  "text": "GUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/BONUS-RED-7-permission-denied.txt",
+  "line": 23,
+  "text": "GUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/BONUS-RED-8-non-script-extension.txt",
+  "line": 22,
+  "text": "GUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/CONTROL-mixed-population-passes.txt",
+  "line": 23,
+  "text": "GUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/GREEN-selftest.txt",
+  "line": 29,
+  "text": "GUARDED=True  (expected True)  OK\\n                             why: every in-file call of _write() is inside a try/finally\\n\\n  unknown_target.py          parser=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/GREEN-selftest.txt",
+  "line": 48,
+  "text": "GUARDED=True\\n\\n  DISAGREEMENT CHECK on shape (a): T156=GUARDED, parser=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/GREEN-selftest.txt",
+  "line": 51,
+  "text": "guarded/atomic -> OK\\n  T205 DIFFERENTIAL: runtime-ROOT store write=TRUSTED/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-full-repo.txt",
+  "line": 91,
+  "text": "guard-classifier/fixtures/red_runtime_root.py:30  open(mode='w')  tags=STORE\\n      target: path\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-full-repo.txt",
+  "line": 185,
+  "text": "GUARDED\\n      target: path\\n  .softhouse/capture/pathb/t36/attest.py:255  open(mode='w')  tags=CAPTURE  verdict=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-full-repo.txt",
+  "line": 189,
+  "text": "GUARDED\\n      target: path\\n  .softhouse/capture/t61-halfeven/src/run-counterfactuals.py:145  open(mode='w')  tags=CAPTURE  verdict=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-full-repo.txt",
+  "line": 193,
+  "text": "GUARDED\\n      target: path\\n  .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py:232  open(mode='w')  tags=CAPTURE  verdict=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-full-repo.txt",
+  "line": 197,
+  "text": "GUARDED\\n      target: outp\\n  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/t206-a-green.py:182  os.remove  tags=STORE  verdict=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-full-repo.txt",
+  "line": 471,
+  "text": "ENFORCE-DISCLOSURE: 78 unguarded site(s) with an UNRESOLVED target \u2014 NOT fatal without --enforce-unknown; this is a fail-open (T203 F-2)\\nENFORCE: 35 unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-unknown-full-repo.txt",
+  "line": 91,
+  "text": "guard-classifier/fixtures/red_runtime_root.py:30  open(mode='w')  tags=STORE\\n      target: path\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-unknown-full-repo.txt",
+  "line": 185,
+  "text": "GUARDED\\n      target: path\\n  .softhouse/capture/pathb/t36/attest.py:255  open(mode='w')  tags=CAPTURE  verdict=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-unknown-full-repo.txt",
+  "line": 189,
+  "text": "GUARDED\\n      target: path\\n  .softhouse/capture/t61-halfeven/src/run-counterfactuals.py:145  open(mode='w')  tags=CAPTURE  verdict=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-unknown-full-repo.txt",
+  "line": 193,
+  "text": "GUARDED\\n      target: path\\n  .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py:232  open(mode='w')  tags=CAPTURE  verdict=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-unknown-full-repo.txt",
+  "line": 197,
+  "text": "GUARDED\\n      target: outp\\n  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/t206-a-green.py:182  os.remove  tags=STORE  verdict=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-unknown-full-repo.txt",
+  "line": 471,
+  "text": "ENFORCE-DISCLOSURE: 78 unguarded site(s) with an UNRESOLVED target \u2014 FATAL (--enforce-unknown)\\nENFORCE: 35 unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-full-repo.txt",
+  "line": 91,
+  "text": "guard-classifier/fixtures/red_runtime_root.py:30  open(mode='w')  tags=STORE\\n      target: path\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-full-repo.txt",
+  "line": 185,
+  "text": "GUARDED\\n      target: path\\n  .softhouse/capture/pathb/t36/attest.py:255  open(mode='w')  tags=CAPTURE  verdict=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-full-repo.txt",
+  "line": 189,
+  "text": "GUARDED\\n      target: path\\n  .softhouse/capture/t61-halfeven/src/run-counterfactuals.py:145  open(mode='w')  tags=CAPTURE  verdict=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-full-repo.txt",
+  "line": 193,
+  "text": "GUARDED\\n      target: path\\n  .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py:232  open(mode='w')  tags=CAPTURE  verdict=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-full-repo.txt",
+  "line": 197,
+  "text": "GUARDED\\n      target: outp\\n  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/t206-a-green.py:182  os.remove  tags=STORE  verdict=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-full-repo.txt",
+  "line": 471,
+  "text": "ENFORCE-DISCLOSURE: 78 unguarded site(s) with an UNRESOLVED target \u2014 NOT fatal without --enforce-unknown; this is a fail-open (T203 F-2)\\nENFORCE: 35 unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-unknown-full-repo.txt",
+  "line": 91,
+  "text": "guard-classifier/fixtures/red_runtime_root.py:30  open(mode='w')  tags=STORE\\n      target: path\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-unknown-full-repo.txt",
+  "line": 185,
+  "text": "GUARDED\\n      target: path\\n  .softhouse/capture/pathb/t36/attest.py:255  open(mode='w')  tags=CAPTURE  verdict=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-unknown-full-repo.txt",
+  "line": 189,
+  "text": "GUARDED\\n      target: path\\n  .softhouse/capture/t61-halfeven/src/run-counterfactuals.py:145  open(mode='w')  tags=CAPTURE  verdict=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-unknown-full-repo.txt",
+  "line": 193,
+  "text": "GUARDED\\n      target: path\\n  .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py:232  open(mode='w')  tags=CAPTURE  verdict=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-unknown-full-repo.txt",
+  "line": 197,
+  "text": "GUARDED\\n      target: outp\\n  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/t206-a-green.py:182  os.remove  tags=STORE  verdict=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-unknown-full-repo.txt",
+  "line": 471,
+  "text": "ENFORCE-DISCLOSURE: 78 unguarded site(s) with an UNRESOLVED target \u2014 FATAL (--enforce-unknown)\\nENFORCE: 35 unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/RED-1-nonexistent-file.txt",
+  "line": 23,
+  "text": "GUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/RED-2-empty-string-file-arg.txt",
+  "line": 23,
+  "text": "GUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/RED-3-unexpanded-glob.txt",
+  "line": 23,
+  "text": "GUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212.md",
+  "line": 205,
+  "text": "GUARDED | 35 \u2192 35 | 35 \u2192 35 |\\n| UNKNOWN+UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T218.md",
+  "line": 246,
+  "text": "guard,\\n   the recovery-command fix, the F-2 sweep across `mutate.py`/`prove-promote-guards.py`/`T82.md`) do not\\n   exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md",
+  "line": 19,
+  "text": "guard_ledger_invariants: the I-3/I-4 SOURCE GUARD that DEC-2 \u00a74.4 requires and \u00a74.4.1 records\\n# as not existing"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md",
+  "line": 20,
+  "text": "I-3) and \"the ledger is append-only\"\\n```\\n\\nThis is exactly A2-28's F-1 pattern one file over: the guard's own comment asserted the guard it is\\nattached to does not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md",
+  "line": 34,
+  "text": "guard over the Go tree\" \u2014 NOT\\n# \"the ledger tree is covered\". DEC-2 \u00a74.4 once recorded this guard as not existing"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md",
+  "line": 82,
+  "text": "guard`\\n3. `does not exist`\\n4. `did not exist`\\n5. `nothing checks`\\n6. `no guard for either` (case-insensitive, covers \"No guard for either exists\")\\n7. Added: `unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md",
+  "line": 87,
+  "text": "guard`, `not enforced` / `is not enforced` / `no enforcement`\\n8. Added: `\\bnot exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md",
+  "line": 89,
+  "text": "guard`/`invariant`/`ledger`/`I-3`/`I-4` near\\n   `exist`/`checked`/`no such`/`nothing checks"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md",
+  "line": 121,
+  "text": "I-3/I-4 ledger guard. Not a survivor. |\\n| `docs/adr/DEC-1-schedule-generator-adapter.md:90` | \"that method does not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 35,
+  "text": "guard that DEC-2 \u00a74.4 requires for I-3 and I-4.\\n//\\n// \u26a0 CORRECTION (T227, 22 August 2026). This line read \"...the source-level guard that DEC-2\\n// \u00a74.4.1 records as NOT EXISTING"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 39,
+  "text": "guard into run_guards; DEC-2 \u00a78.3 retracted the claim; and \u00a74.4.1 is today\\n// titled \"THE GUARD I-3 AND I-4 REQUIRE \u2014 IT DID NOT EXIST"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 135,
+  "text": "ledgerguard is the source-level guard that DEC-2 \u00a74.4.1 records as NOT EXISTING.\\n\\n=== T224's terms, as its handoff lists them (1-9) ===\\nT1  not checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 139,
+  "text": "guards/ledgerguard/main.go:816:  \"parsed was not checked, and is never silently skipped:\")\\nT2  no such guard                                    hits=0\\nT3  does not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 144,
+  "text": "guard for either (-i)                         hits=0\\nT7a unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 146,
+  "text": "guard                                  hits=0\\nT7c not enforced / no enforcement                    hits=0\\nT8  \\bnot exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 153,
+  "text": "guards/ledgerguard/main.go:1:// Command ledgerguard is the source-level guard that DEC-2 \u00a74.4.1 records as NOT EXISTING.\\nC2  records as not existing"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 182,
+  "text": "guard_ledger_invariants: the I-3/I-4 SOURCE GUARD that DEC-2 \u00a74.4 requires and \u00a74.4.1 records\\n# as not existing"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 183,
+  "text": "I-3) and \"the ledger is append-only\"\\n\\n=== T224's terms 1-9 against the file it fixed ===\\nT1  not checked (+variants)     hits-in-file=0    hits-at-1110s=0\\nT2  no such guard"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 191,
+  "text": "guard for either (-i)    hits-in-file=0    hits-at-1110s=0\\nT7a unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 193,
+  "text": "guard             hits-in-file=0    hits-at-1110s=0\\nT7c not enforced/no enforcement hits-in-file=0    hits-at-1110s=0\\nT8  \\bnot exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 287,
+  "text": "guard\\|invariant\\|I-3\\|I-4\\|ledger)[^\\n]{0,90}(not exist\\|no such\\|does not exist\\|never exist\\|absent\\|ABSENT\\|nothing (checks\\|looks\\|enforces)\\|unenforced\\|no enforcement"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 287,
+  "text": "enforced)` and its mirror | 73 |\\n| S3 | `no guard` in any form | `no guard` \u00b7 `no source[- ]level guard` \u00b7 `no such guard"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T232.md",
+  "line": 47,
+  "text": "guards/ledgerguard/main.go | sed -n '1p;13p'\\n// Command ledgerguard is the source-level guard that DEC-2 \u00a74.4.1 records as NOT EXISTING"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T232.md",
+  "line": 52,
+  "text": "guard_ledger_invariants: the I-3/I-4 SOURCE GUARD that DEC-2 \u00a74.4 requires and \u00a74.4.1 records\\n# as not existing"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T233.md",
+  "line": 124,
+  "text": "guard shape this program has found seven\\ntimes.\\n\\n**The single most valuable thing this closes** \u2014 and it was completely unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T233.md",
+  "line": 349,
+  "text": "invariant, not a pass\\n```\\n\\n### RED 4 \u2014 the cited artefact does not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/T60-unrecorded-cell-grading.md",
+  "line": 218,
+  "text": "invariants honour it too, and say what they could not\\n   check"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/handoff/T61-sweep/build-pass3f.py",
+  "line": 39,
+  "text": "guarded_create` below is T203's/T178's core rule -- THE TARGET MUST\\n# NOT EXIST"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/nonnegotiable-guard-audit.md",
+  "line": 111,
+  "text": "guards. Fix: call `run_guards` from `prove()` too, or add three proof cases that drive M-1/M-2/C-2 red. |\\n| X-3 | **The UAT skill advertises four checks that do not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/nonnegotiable-guard-audit.md",
+  "line": 252,
+  "text": "invariants and cannot say they discriminate.\\n7. **I did not check"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/patterns.md",
+  "line": 904,
+  "text": "guard inspects:\\nwidening a guard's DOMAIN is a change to every file that domain newly contains, including files that do not\\nexist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/patterns.md",
+  "line": 965,
+  "text": "GUARDED** |\\n| `/usr/bin/grep -E`, shell `grep -E`, `/usr/bin/awk`, `/usr/bin/sed -nE` | **0, 0, 0, 0 \u2192 UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/patterns.md",
+  "line": 1021,
+  "text": "guard_classify.py`'s single write is atomic, so its own\\n   verdict on itself is ATOMIC and not UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/patterns.md",
+  "line": 1854,
+  "text": "enforced in the skill's STEP 1 and in `ready-tasks.py`:** before recording that a\\ndependency, a file, a vector, a guard or a citation **does not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/patterns.md",
+  "line": 2053,
+  "text": "guard's own source**, and had been since `A2-18` wrote it:\\n\\n```go\\n// Command ledgerguard is the source-level guard that DEC-2 \u00a74.4.1 records as NOT EXISTING"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/A2-14-DEC2-gl-accounting-contract-review.md",
+  "line": 160,
+  "text": "ledger_inprocess_resolver` seam \u2014 the one\\nseam \u00a74.1 records as **\"NO \u2014 does not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/A2-14-DEC2-gl-accounting-contract-review.md",
+  "line": 344,
+  "text": "guard_no_narrow_catch_in_capture_rigs`\\n  [VERIFIED: `.softhouse/conformance.sh:804-811`]. All five are about float, formatting and\\n  exception scope. **Nothing checks"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/A2-4-review-of-A2-3.md",
+  "line": 481,
+  "text": "guard | drove RED? |\\n|---|---|\\n| Path B preconditions, tenant `default` | **YES** \u2014 exit 1, 5 breaches |\\n| Path B preconditions, nonexistent"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/A2-9-review-of-A2-8.md",
+  "line": 299,
+  "text": "guard at `:1024`). **I read both sites myself.** The port reproduces this, so the three graded\\nmessages match. Perturbing the wording to `does not exists"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/T107-review-of-T91.md",
+  "line": 782,
+  "text": "guards.sh` from a non-git export \u2192 `git archive`\\n  fails unchecked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/T107-review-of-T91.md",
+  "line": 785,
+  "text": "guard output.\\n* **\u00a75, the back-fitting audit.** The *ordering* claim (\"the table was not set to match an\\n  observation\") is not checkable"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/T138-evidence/r4-guards-red.sh",
+  "line": 94,
+  "text": "guards (it sets RECIPE itself), so instead break A7's symlink target.\\nLC_ALL=C sed -i.bak 's|^ln -s \"\\$CANON\" \"\\$O/link-to-canon.json\" .*$|ln -s /nonexistent"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/T155-probe/rerun-t154-provers-postmerge.sh",
+  "line": 11,
+  "text": "guards\\n#                  + git commit-tree            (nothing checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/T155-review-of-T154.md",
+  "line": 40,
+  "text": "guards see, so every probe runs via `bash script.sh`.\\n- Scratch merge built with `git merge-tree --write-tree` + `git commit-tree` \u2014 nothing checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/T158-evidence/02-t156-sweep-rerun-branch-tip.txt",
+  "line": 18,
+  "text": "guard=yes  verbs=sh:mv,sh:cp\\n  .softhouse/capture/pathb/t149/t156-sweep-unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/T158-evidence/15-guard-classifier-false-positives.txt",
+  "line": 9,
+  "text": "guard EXISTS somewhere in that\\n      126 | print(\"  of those, carrying no trap/finally/atexit anywhere in the file: %d\" % len(unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/T181-review-of-T178.md",
+  "line": 166,
+  "text": "guard idiom scored **0 of 25 files as \"one hop\"** \u2014 i.e.\\nevery file UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/T181-review-of-T178.md",
+  "line": 243,
+  "text": "GUARDED / guard.commit`), reports `files measured 9` and `files UNMEASURED 0` as **values**, and is\\n**proven able to fail** (fork-point scan \u2192 1 live + 7 unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/T183-evidence/drive-probes-output.txt",
+  "line": 8,
+  "text": "guard lives ENTIRELY in an\\nimported module (a real restoring @contextmanager, and a real atexit restore).\\nCorrect answer: GUARDED.  Expected defect: UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/T183-evidence/drive-probes-output.txt",
+  "line": 55,
+  "text": "GUARDED.\\nENFORCE: 1 unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/T183-evidence/drive-probes-output.txt",
+  "line": 77,
+  "text": "GUARDED MUTATIONS OF A TRUSTED ARTEFACT (1 sites in 1 files)\\n  assert_only.py:14  io.open(mode='w')  tags=ADR\\n      target: P\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/T183-evidence/drive-probes-output.txt",
+  "line": 94,
+  "text": "guard_classify.py            ast.Assert nodes: 0 []\\n    list_trusted_unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/T183-evidence/drive-probes-output.txt",
+  "line": 125,
+  "text": "GUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/T183-evidence/drive-probes-output.txt",
+  "line": 163,
+  "text": "GUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/T183-evidence/drive-probes.sh",
+  "line": 28,
+  "text": "guard lives ENTIRELY in an\"\\necho \"imported module (a real restoring @contextmanager, and a real atexit restore).\"\\necho \"Correct answer: GUARDED.  Expected defect: UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/T183-evidence/fixtures-INERT/assert_only.py.txt",
+  "line": 4,
+  "text": "GUARDED it would be over-reporting guardedness on a\\npath that does not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/T183-evidence/fixtures-INERT/green_imported_cm.py.txt",
+  "line": 2,
+  "text": "guard.\\n\\nThe restoring context manager is real and it covers the mutation. Any classifier\\nthat reads guards only from this file's own AST will call this UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/T85-review-t80.md",
+  "line": 212,
+  "text": "guard runs first and no committed directory is reachable \u2014 so I do not ask for it to change.\\n\\n`[UNVERIFIED]` I did not check"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/a2-19-dec2-rev2/REVIEW.md",
+  "line": 424,
+  "text": "invariants are\\n   checked. They are not checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh",
+  "line": 35,
+  "text": "ledger.{0,20}vector.{0,20}cannot be admitted'\\n\\nsweep \"R2 \u2014 'no guard for I-3/I-4 exists' / '4.4.1 records it as not existing"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh",
+  "line": 38,
+  "text": "guard for either' \\\\n  'no such guard exists' \\\\n  'records as not existing' \\\\n  'record[s]? .{0,25}as not existing"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 32,
+  "text": "guard for either\\n.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md:40:1. Delete or correct **\u00a78.3's** *\"They are not checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 37,
+  "text": "guard for either exists\"* \u2014 DELETED\\n.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md:34:the NEGATION of the corrected claim.** Terms: `not checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 38,
+  "text": "guard for either exists`,\\n.softhouse/patterns.md:1827:| DEC-2 \u00a78.3 \"They are not checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 42,
+  "text": "guard_ledger_invaria\\ndocs/adr/DEC-2-gl-accounting-adapter.md:2357:  > are checked. **They are not checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 43,
+  "text": "guard for either exists** (\u00a74.4.1).\"*\\ndocs/adr/DEC-2-gl-accounting-adapter.md:2369:  > the corrected claim, not the claim** \u2014 `not checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 44,
+  "text": "guard for either exists`, `no such\\ndocs/adr/DEC-2-gl-accounting-adapter.md:2517:  1. **`A2-25` F-1 \u2014 \u00a78.3's *\"They are not checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 45,
+  "text": "guard for either exists\"* DELETED (\u00a78.3).**\\ndocs/adr/DEC-2-gl-accounting-adapter.md:2524:     NEGATION of the corrected claim, not the claim** \u2014 `not checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 46,
+  "text": "guard for either exists`,\\n--- pattern: no such guard"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 50,
+  "text": "I-3 row (*\"Revision 2 said 'no such guard exists'; that was true when written\\n--- pattern: records as not existing"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 56,
+  "text": "guard_ledger_invaria\\ndocs/adr/DEC-2-gl-accounting-adapter.md:2380:  > requires and \u00a74.4.1 **records as not existing"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 64,
+  "text": "guard_ledger_invaria\\ndocs/adr/DEC-2-gl-accounting-adapter.md:2380:  > requires and \u00a74.4.1 **records as not existing"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 68,
+  "text": "guard is the only mechanism that can\"\\n.softhouse/guards/ledgerguard/main.go:1:// Command ledgerguard is the source-level guard that DEC-2 \u00a74.4.1 records as NOT EXISTING"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/a2-33-dec2-rev5/sweep-counts-full-population.txt",
+  "line": 817,
+  "text": "enforce-unknown-full-repo.txt  x1\\nF2-07  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/RED-1-nonexistent"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/a2-33-dec2-rev5/sweep-output-live-population.txt",
+  "line": 2627,
+  "text": "enforce-unknown-full-repo.txt:6:--- POPULATION, with denominators\\n.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/RED-1-nonexistent"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/a2-33-dec2-rev5/sweep-output-live-population.txt",
+  "line": 6323,
+  "text": "invariants.sh:193:  # reader to read. T208 found the block absent from every green run and named the fix: widen\\n.softhouse/guards/check-ledger-invariants.sh:233:# not checking"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/fixtures/chain_scratch_discard.py",
+  "line": 12,
+  "text": "GUARDED \u2014 never SANDBOX;\\n  * classified with a SCRATCH entry INJECTED into the resolver's chain map by the\\n    selftest, it must STILL be UNKNOWN/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/fixtures/red_guard_elsewhere.py",
+  "line": 6,
+  "text": "guards a different function, and the registration sits in a function\\nnothing calls.  Neither is reachable from the mutation site.  Verdict: UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/fixtures/red_runtime_root.py",
+  "line": 10,
+  "text": "enforce`.  The only difference\\nbetween the two is the `os.path.join(ROOT, \u2026)` on the line below.\\n\\nMUST NOW BE: verdict UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 2,
+  "text": "guard-classifier.\\n\\nWHY THIS EXISTS (P-48, in its purest form).\\n  T156's sweep (`.softhouse/capture/pathb/t149/t156-sweep-unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 59,
+  "text": "enforce` exited 0 on a\\n    directory containing exactly the three `t41-probe` rewriters that write through\\n    `def patch(path, pairs)`, each an unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 86,
+  "text": "GUARDED trusted-target site\\n     (--enforce)\\n  1  --enforce and at least one UNGUARDED site on a TRUSTED target; or\\n     --enforce-unknown and at least one UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 103,
+  "text": "enforce` still trips on TRUSTED only, because the measured\\n  UNKNOWN+UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 122,
+  "text": "guard and t41-probe is clean today\\n  under this stricter tool [VERIFIED: same transcript, PROBE F \u2014 exit 0, 0 UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 146,
+  "text": "GUARDED_PROCESS_IMPORT = \"GUARDED-PROCESS-IMPORTED\"\\nATOMIC = \"ATOMIC\"\\nSANDBOX = \"SANDBOX\"\\n\\nVERDICT_ORDER = [UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 406,
+  "text": "guarded_funcs`' own conservatism (there,\\n                # one UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1105,
+  "text": "GUARDED and scope == SCRATCH:\\n            verdict, why = SANDBOX, \"target resolves to a temp/scratch path\"\\n\\n        if verdict == UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1111,
+  "text": "GUARDED_FINALLY\\n                why = \"enclosed by try/finally at line %d\" % t.lineno\\n        if verdict == UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1116,
+  "text": "GUARDED_CM\\n                why = \"enclosed by `with %s` at line %d (restoring CM)\" % (nm, w.lineno)\\n        if verdict == UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1121,
+  "text": "GUARDED_INDIRECT\\n                why = \"every in-file call of %s() is inside a try/finally\" % fn.name\\n        if verdict == UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1291,
+  "text": "guarded = [(r, s) for r in py for s in r[\"sites\"]\\n                         if s[\"scope\"] == TRUSTED and s[\"verdict\"] == UNGUARDED]\\n    w(\"--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1294,
+  "text": "guarded),\\n         len({r[\"path\"] for r, _ in trusted_unguarded})))\\n    for r, s in trusted_unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1301,
+  "text": "guarded = [(r, s) for r in py for s in r[\"sites\"]\\n                         if s[\"scope\"] == UNKNOWN and s[\"verdict\"] == UNGUARDED]\\n    w(\"--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1304,
+  "text": "guarded),\\n                    len({r[\"path\"] for r, _ in unknown_unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1392,
+  "text": "enforce\", action=\"store_true\",\\n                    help=\"exit 1 if any TRUSTED-target site is UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1394,
+  "text": "enforce-unknown\", action=\"store_true\",\\n                    help=\"ALSO exit 1 if any UNRESOLVED-target site is UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1450,
+  "text": "enforce`.  MEASURED, not\\n    # estimated, over the whole repo at this commit: after the resolver fix there\\n    # are 76 UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1500,
+  "text": "GUARDED]\\n        unres = [(r[\"path\"], s) for r in results for s in r.get(\"sites\", [])\\n                 if s[\"scope\"] == UNKNOWN and s[\"verdict\"] == UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1507,
+  "text": "enforce-unknown; this is a \"\\n                           \"fail-open (T203 F-2)\"))\\n        if bad:\\n            sys.stderr.write(\"ENFORCE: %d unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1512,
+  "text": "enforce_unknown and unres:\\n            sys.stderr.write(\"ENFORCE-UNKNOWN: %d unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/population-output.txt",
+  "line": 20,
+  "text": "GUARDED   : 25\\n    scored UNGUARDED : 130\\n  unreadable         : 0\\n  [T158 recorded hits=130 guarded=19 unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/population-output.txt",
+  "line": 87,
+  "text": "guard-words-in-string-literals=8  mutation-sites=9\\n      .softhouse/capture/pathb/t149/t156-sweep-unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/population-output.txt",
+  "line": 96,
+  "text": "GUARDED with ZERO guard nodes of any kind: 4 of 9\\n         .softhouse/capture/pathb/t149/prove-exit-trap.py\\n         .softhouse/capture/pathb/t149/t156-sweep-unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/population-output.txt",
+  "line": 101,
+  "text": "guarded trusted site): 0\\n    shell ones: 16 \u2014 NOT adjudicated. No shell parser; refused, not assumed.\\n\\n  T156 'UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/population-output.txt",
+  "line": 134,
+  "text": "guarded\\n    mutation of a trusted artefact        : 43\\n  Python files with an unguarded mutation\\n    of an UNRESOLVED target               : 63\\n  A single 'the unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 157,
+  "text": "GUARD.search(src)),\\n                     \"sandboxy\": bool(SANDBOXY.search(src))}\\n\\n    hits = len(t156)\\n    guarded = [r for r, v in t156.items() if v[\"guard\"]]\\n    unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 166,
+  "text": "GUARDED   : %d\" % len(guarded))\\n    print(\"    scored UNGUARDED : %d\" % len(unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 221,
+  "text": "GUARDED})\\n    files_unknown_unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 224,
+  "text": "GUARDED})\\n    print(\"  PYTHON files with >=1 UNGUARDED mutation of a TRUSTED artefact: %d\"\\n          % len(files_trusted_unguarded))\\n    for f in files_trusted_unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 229,
+  "text": "guarded sites have an UNRESOLVED target: %d\"\\n          % len([f for f in files_unknown_unguarded\\n                 if f not in files_trusted_unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 237,
+  "text": "GUARDED, parser says an unguarded trusted site exists\\n    fn = []          # T156 UNGUARDED, parser finds no unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 243,
+  "text": "GUARDED and s[\"scope\"] == gc.TRUSTED\\n               for s in r[\"sites\"]):\\n            fp.append(rel)\\n    for rel in unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 253,
+  "text": "guarded_py = [r for r in guarded if r.endswith(\".py\")]\\n    guarded_sh = [r for r in guarded if not r.endswith(\".py\")]\\n    unguarded_py = [r for r in unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 275,
+  "text": "guarded_py)))\\n    for rel in prose_only:\\n        print(\"         %s\" % rel)\\n    print(\"    python ones the parser contradicts (unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 282,
+  "text": "GUARDED and\\n               s[\"scope\"] == gc.TRUSTED]\\n        print(\"      %s  (%d unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 289,
+  "text": "guarded_sh))\\n    print()\\n    print(\"  T156 'UNGUARDED' hits: %d  (%d python, %d shell)\"\\n          % (len(unguarded), len(unguarded_py), len(unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 315,
+  "text": "guarded\")\\n    print(\"    mutation of a trusted artefact        : %d\" % len(files_trusted_unguarded))\\n    print(\"  Python files with an unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 319,
+  "text": "guarded if f not in files_trusted_unguarded]))\\n    print(\"  A single 'the unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/selftest-output.txt",
+  "line": 29,
+  "text": "GUARDED=True  (expected True)  OK\\n                             why: every in-file call of _write() is inside a try/finally\\n\\n  unknown_target.py          parser=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/selftest-output.txt",
+  "line": 40,
+  "text": "GUARDED=True\\n\\n  DISAGREEMENT CHECK on shape (a): T156=GUARDED, parser=UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/selftest.py",
+  "line": 3,
+  "text": "guarded code (P-22 + P-50: a selftest that only proves refusal proves half\\nthe instrument).\\n\\nCases, all under fixtures/:\\n\\n  RED \u2014 must be classified UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/selftest.py",
+  "line": 11,
+  "text": "guard_elsewhere.py  a real try/finally + a real atexit.register, neither\\n                               reachable from the mutation site\\n\\n  GREEN \u2014 must NOT be UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/selftest.py",
+  "line": 27,
+  "text": "enforce` exited 0 on a live-store truncation.\\n                               Must now be TRUSTED/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/selftest.py",
+  "line": 60,
+  "text": "guarded)\\n    (\"red_prose_guard.py\", gc.UNGUARDED, gc.TRUSTED, True),\\n    (\"red_guard_elsewhere.py\", gc.UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/selftest.py",
+  "line": 67,
+  "text": "GUARDED_INDIRECT, gc.TRUSTED, True),\\n    (\"unknown_target.py\", gc.UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/selftest.py",
+  "line": 161,
+  "text": "guard.py\")\\n    disagree = bool(T156_GUARD.search(src_a)) and bool(site_a) and \\\\n        site_a[\"verdict\"] == gc.UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t179-guard-classifier/selftest.py",
+  "line": 169,
+  "text": "guard against over-broadness: at least one GREEN case must be\\n    # non-UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t202-probe/green-Tb.zsh",
+  "line": 5,
+  "text": "guard         (sed -n '313,348p' of the branch file)\\n#   BA   = POST but pathspec left cwd-relative  (the original defect)\\n#   BB   = POST but the commit rc unchecked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t187-census-prefix-output.txt",
+  "line": 55,
+  "text": "GUARDED truncating write to DEC-1\\n  edit10.py: UNGUARDED truncating write to DEC-1\\n  edit11.py: UNGUARDED truncating write to DEC-1\\n  edit12.py: UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t187-census-prefix-output.txt",
+  "line": 59,
+  "text": "GUARDED truncating write to DEC-1\\n  edit14.py: UNGUARDED truncating write to DEC-1\\n  edit16.py: UNGUARDED truncating write to DEC-1\\n  edit17.py: UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t187-census-prefix-output.txt",
+  "line": 63,
+  "text": "GUARDED truncating write to DEC-1, contract.go\\n  edit19.py: UNGUARDED truncating write to DEC-1\\n  edit2.py: UNGUARDED truncating write to DEC-1\\n  edit20.py: UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t187-census-prefix-output.txt",
+  "line": 67,
+  "text": "GUARDED truncating write to DEC-1, contract.go\\n  edit22.py: UNGUARDED truncating write to contract.go\\n  edit3.py: UNGUARDED truncating write to DEC-1\\n  edit4.py: UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t187-census-prefix-output.txt",
+  "line": 71,
+  "text": "GUARDED truncating write to DEC-1\\n  edit6.py: UNGUARDED truncating write to DEC-1\\n  edit7.py: UNGUARDED truncating write to DEC-1\\n  edit8.py: UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t187-census-prefix-output.txt",
+  "line": 75,
+  "text": "GUARDED truncating write to DEC-1\\n  edit_go1.py: UNGUARDED truncating write to contract.go\\n  edit_go2.py: UNGUARDED truncating write to contract.go\\n  edit_go3.py: UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t187-census.py",
+  "line": 5,
+  "text": "guards\\nfrom each file's OWN ast, so T178's shared-module refactor made it score eight\\nhardened files as UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t187-census.py",
+  "line": 283,
+  "text": "guarded:\\n                PROBLEMS.append(\"%s: UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t187-redgreen.py",
+  "line": 236,
+  "text": "guard\\n            # that cannot fail.  It is a hard failure and it is counted.\\n            CHECKS[0] += 1\\n            FAILURES.append(\"%s: UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t196-drive-output.txt",
+  "line": 14,
+  "text": "enforce exit = 0   <-- 0 is the FAIL-OPEN\\n  T183 --enforce exit = 1\\n  T196 --enforce exit = 1\\n  --- BASE saw:\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t196-drive-output.txt",
+  "line": 52,
+  "text": "guard IMPORTED\\n  BASE --enforce exit = 1   <-- 1: punishes the hardening idiom\\n  T196 --enforce exit = 0\\n  --- BASE called these UNGUARDED:\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t196-drive-output.txt",
+  "line": 78,
+  "text": "enforce exit = 1\\n  T196 --enforce exit = 1   <-- MUST be 1\\n--- UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t196-drive-output.txt",
+  "line": 106,
+  "text": "enforce exit = 0\\n  mutation call sites found in Python       : 16\\n\\n--- MUTATION SITES: scope x verdict (every site appears exactly once)\\n  scope      UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t196-drive-output.txt",
+  "line": 146,
+  "text": "GUARDED tags=[]   ->   TRUSTED/UNGUARDED tags=['CAPTURE']\\n          target: path\\n    MOVED handoff/T58-promote-vectors.py:708 open(mode='w')\\n          UNKNOWN/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t196-drive-output.txt",
+  "line": 149,
+  "text": "GUARDED tags=['CAPTURE']\\n          target: path\\n    MOVED handoff/T61-promote-vectors.py:329 open(mode='w')\\n          UNKNOWN/UNGUARDED tags=[]   ->   TRUSTED/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t196-drive-output.txt",
+  "line": 157,
+  "text": "guard-classifier/fixtures/green_contextmanager.py:20 os.replace\\n          UNKNOWN/UNGUARDED tags=[]   ->   TRUSTED/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t196-drive-output.txt",
+  "line": 167,
+  "text": "GUARDED tags=[]   ->   TRUSTED/UNGUARDED tags=['STORE']\\n          target: path\\n    MOVED handoff/T58-promote-vectors.py:708 open(mode='w')\\n          UNKNOWN/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t196-drive-output.txt",
+  "line": 170,
+  "text": "GUARDED tags=['STORE']\\n          target: path\\n    MOVED handoff/T61-promote-vectors.py:329 open(mode='w')\\n          UNKNOWN/UNGUARDED tags=[]   ->   TRUSTED/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t196-drive-output.txt",
+  "line": 178,
+  "text": "guard-classifier/fixtures/green_contextmanager.py:20 os.replace\\n          UNKNOWN/UNGUARDED tags=[]   ->   TRUSTED/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t196-drive.sh",
+  "line": 94,
+  "text": "enforce exit = $(run gc_t196 \"$SB/A\" A-t196)\"\\necho \"  --- BASE saw:\"\\nsed -n '/COULD NOT BE RESOLVED/,/^$/p' \"$SB/A-base.txt\"\\necho \"  --- T196 sees:\"\\nsed -n '/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t196-drive.sh",
+  "line": 121,
+  "text": "enforce exit = $(run gc_t196 \"$SB/C\" C-t196)\"\\necho \"  --- BASE called these UNGUARDED:\"\\nsed -n '/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t196-drive.sh",
+  "line": 134,
+  "text": "enforce exit = $(run gc_base \"$SB/D\" D-base)\"\\necho \"  T196 --enforce exit = $(run gc_t196 \"$SB/D\" D-t196)   <-- MUST be 1\"\\nsed -n '/UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t196-fixtures-INERT/green_imported_cm.py.txt",
+  "line": 2,
+  "text": "guard.\\n\\nThe restoring context manager is real and it covers the mutation. Any classifier\\nthat reads guards only from this file's own AST will call this UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t41-probe/t196-fixtures-INERT/red_import_not_covered.py.txt",
+  "line": 7,
+  "text": "guarded\", `--enforce` exits 0 here and the check is worthless: any careless\\nworker closes any finding by adding one import line.\\n\\nREQUIRED: UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t47-probe/t167-redprobe.py",
+  "line": 120,
+  "text": "guard regex over the PRE-FIX file  -> rc=%d out=%r\"\\n      % (drv.returncode, drv.stdout.strip()))\\nimport ast\\nimport re\\n# T156's GUARD, verbatim from t156-sweep-unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census-output.txt",
+  "line": 32,
+  "text": "guarded + all anchors live (LIVE BYPASS)   0\\nunguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census-prefix-output.txt",
+  "line": 10,
+  "text": "GUARDED   os.replace  DEC-1 ADR     2         0      closed (32539607...)\\nt47_edit_2.py    UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census-prefix-output.txt",
+  "line": 11,
+  "text": "guarded; inert only because 5/7 anchors are gone)\\nt47_edit_3.py    UNGUARDED open(...,'w') DEC-1 ADR     4         0      NONE - any content   (unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census-prefix-output.txt",
+  "line": 13,
+  "text": "GUARDED open(...,'w') DEC-1 ADR     2         2      NONE - any content   <<< ALL ANCHORS LIVE - would rewrite the target TODAY\\nt47_edit_4c.py   UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census-prefix-output.txt",
+  "line": 14,
+  "text": "guarded; inert only because 1/1 anchors are gone)\\nt47_edit_5.py    UNGUARDED open(...,'w') DEC-1 ADR     2         1      NONE - any content   (unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census-prefix-output.txt",
+  "line": 16,
+  "text": "GUARDED open(...,'w') DEC-1 ADR     3         0      NONE - any content   (unguarded; inert only because 3/3 anchors are gone)\\nt47_edit_7.py    UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census-prefix-output.txt",
+  "line": 17,
+  "text": "guarded; inert only because 4/5 anchors are gone)\\nt47_edit_8.py    UNGUARDED open(...,'w') DEC-1 ADR     5         1      NONE - any content   (unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census-prefix-output.txt",
+  "line": 32,
+  "text": "guarded + all anchors live (LIVE BYPASS)   1 - t47_edit_4.py\\nunguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census.py",
+  "line": 10,
+  "text": "guard and seven time bombs.  The consequence, which is P-48 and\\nP-49 arriving together: **T167's census reads the hardened files as\\n`try 0 / atomic False` - i.e. UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census.py",
+  "line": 23,
+  "text": "guard.commit` and never opens its target for writing.\\n     A file that does neither and calls `open(..., \"w\")` / `write_text` on a\\n     path it hard-wires is UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census.py",
+  "line": 252,
+  "text": "GUARDED\", \"os.replace\"\\n    elif delegates_commit(tree) and pol and not raw:\\n        gu, how = \"GUARDED\", \"guard.commit\"\\n    else:\\n        gu, how = \"UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census.py",
+  "line": 275,
+  "text": "GUARDED\" and not gate_blocks:\\n        note = \"   (unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census.py",
+  "line": 299,
+  "text": "guarded + all anchors live (LIVE BYPASS)   %d%s\"\\n      % (len(reachable), (\" - \" + \", \".join(reachable)) if reachable else \"\"))\\nprint(\"unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t47-probe/t181-census-zero-inspection-POSTFIX-output.txt",
+  "line": 16,
+  "text": "guarded + all anchors live (LIVE BYPASS)   0\\n   unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t47-probe/t181-census-zero-inspection-output.txt",
+  "line": 16,
+  "text": "guarded + all anchors live (LIVE BYPASS)   0\\n   unguarded"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/reviews/t47-probe/t181-drive-t41-idiom.py",
+  "line": 7,
+  "text": "guard\\n\\nT183's finding D-3 was that a classifier reading a single file scored this\\nidiom as UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/tasks.json",
+  "line": 313,
+  "text": "ledger/\"\\n      ],\\n      \"description\": \"THE A2 PORT ITSELF. It did not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/tasks.json",
+  "line": 579,
+  "text": "guard-widening\"\\n    },\\n    {\\n      \"id\": \"T167\",\\n      \"title\": \"AN UNGUARDED"
+ },
+ {
+  "term": "S1-fwd",
+  "file": ".softhouse/tasks.json",
+  "line": 1696,
+  "text": "guard-classifier/\"\\n      ],\\n      \"description\": \"T205's honest negative, reported against its own deliverable rather than left for a reviewer. A non-existent"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 829,
+  "text": "guard, not by a vector**, and DEC-2 states that as a normative requirement\\nrather than a hope.\\n\\n### 4.4.1 THE GUARD I-3 AND I-4 REQUIRE \u2014 IT DID NOT EXIST"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2377,
+  "text": "invariant violations 0` at commit `2e97162`.\\n   **\u26a0 Revision 2 said no such guard"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2454,
+  "text": "guard must be able to\\n  > see the tree before it can check anything in it, and certain to be read as saying the invariants\\n  > are checked. **They are not checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2459,
+  "text": "I-3`/`I-4` WALK OF THE GO TREE\".** It cited \u00a74.4.1, whose\\n  > heading is *\"IT DID NOT EXIST"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2468,
+  "text": "guard for either exists`, `no such\\n  > guard`, `does not exist`, `did not exist`, `nothing checks"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2471,
+  "text": "I-3 row (*\"Revision 2 said 'no such guard exists'; that was true when written\\n  > and is stale\"* \u2014 a labelled retraction), \u00a75's *\"a contract that does not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2478,
+  "text": "I-3/I-4 SOURCE GUARD that DEC-2 \u00a74.4\\n  > requires and \u00a74.4.1 **records as not existing"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2692,
+  "text": "guard for either exists`,\\n     `no such guard`, `does not exist`, `did not exist`, `nothing checks"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 3010,
+  "text": "ledger\" made structurally unmissable** \u2014 the banner at the head of the\\n     document, **\u00a74.4.1** (the `I-3`/`I-4` guard did not exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "nexus/internal/apps/ledger/resolve.go",
+  "line": 125,
+  "text": "ENFORCES THAT (see\\n// assertPlaceholderDisjointness). This port splits the two, so the ambiguity\\n// cannot exist"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "nexus/internal/apps/ledger/slots_test.go",
+  "line": 274,
+  "text": "guard that has never failed has\\n\t// not been tested, and an assertion that cannot fail converts \"not checked"
+ },
+ {
+  "term": "S1-fwd",
+  "file": "nexus/internal/apps/loanschedule/conformance/vector.go",
+  "line": 50,
+  "text": "ledger/` while grading a LOAN SCHEDULE, so the report read\\n// as GL/ledger coverage that does not exist"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/capture/README-pass3i.md",
+  "line": 77,
+  "text": "not checked\" into \"checked and fine\" \u2014 pattern **P-15**.\\n\\n## The guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/capture/leapboundary/NEGATIVE-TESTS.md",
+  "line": 14,
+  "text": "not exist | `tenant 't55-no-such-tenant' has no row in fineract_tenants.tenants` |\\n| **N3** | one money cell perturbed by **one minor unit** in memory | `I3"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/capture/leapboundary/analysis/T175-red/drive-red-output.txt",
+  "line": 30,
+  "text": "unguarded Decimal() elsewhere, and 0 are reported BY I6.\\n  AS PREDICTED      ORIGINAL's whole invariant"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/capture/leapboundary/analysis/T175-red/drive-red.py",
+  "line": 108,
+  "text": "unguarded Decimal() elsewhere, and 0 are reported BY I6.\")\\n        m = load_original(unp)\\n        allres = m.invariant"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/capture/out/t35-newcolumn-checks.py",
+  "line": 4,
+  "text": "not exist.\\n\\nThe existing invariant checkers do NOT cover them: `t21v2-invariant"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/capture/pathb/t125/compare-bytes.py",
+  "line": 16,
+  "text": "non-existent\\ndirectory, both exit 0 (`capture/pathb/t147/red-pre-fix/f2-compare-bytes-prefix.txt`).  That\\nis `patterns.md`'s own rule verbatim \u2014 *a guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py",
+  "line": 126,
+  "text": "unguarded))\\n    print(\"  of those, writing only into a throwaway dir (mktemp/tmp): %d\"\\n          % len([h for h in unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py",
+  "line": 167,
+  "text": "UNGUARDED HIT, for reading by hand\")\\n    for h in unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py",
+  "line": 174,
+  "text": "unguarded=%d  unreadable=%d\"\\n          % (len(files), len(hits), len(unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/capture/pathb/t149/t156/sweep-unguarded-mutators.txt",
+  "line": 19,
+  "text": "unguarded-mutators.py         guard=yes  verbs=sh:sed-i,sh:git-checkout,py:write\\n  .softhouse/capture/pathb/t36/attest.py                                 guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/capture/src/run-pass3i.sh",
+  "line": 615,
+  "text": "not checked\" into \"checked and fine\" (pattern P-15). Removed rather than repaired,\\n# because the property they were reaching for is already enforce"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/conformance.sh",
+  "line": 1174,
+  "text": "not existing \u2014 that was\\n# revision 2, true when written; DEC-2 \u00a78.3 has since retracted it, and \u00a74.4.1 and \u00a78.1 fact 3\\n# describe the guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/conformance.sh",
+  "line": 1998,
+  "text": "not exist. Unresolvable is not clean. ---\\n    if ( CONFORMANCE_REPO_ROOT=\"$tmp/no-such-tree\" guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/gates.md",
+  "line": 131,
+  "text": "not exist.\\n- Baseline reproduces exactly; store and capture censuses exact at their stamps; **seven** guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/gates.md",
+  "line": 139,
+  "text": "NOT EXISTING\"*\\n   claim \u2014 a **third file**, on line 1 of the guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/guards/ledgerguard/main.go",
+  "line": 4,
+  "text": "NOT EXISTING.\" That was TRUE THE DAY A2-18 WROTE IT and it is FALSE NOW.\\n// T208 wired this guard into run_guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/guards/ledgerguard/main.go",
+  "line": 10,
+  "text": "not existING\", not \"not exist\"). A2-31 found it here,\\n// on LINE 1 of the guard whose existence refutes it. See T227's handoff for the method defect.\\n//\\n// WHAT IT ENFORCE"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T115.md",
+  "line": 166,
+  "text": "not exist, which is the same defect\\nclass this section is about, one layer out.</ins>\\n\\n<ins>**THREE of the guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-14.md",
+  "line": 85,
+  "text": "not exist\"** and \u00a74.2 `G-01` admits only\\n`ledger_rest_admin`, `ledger_rest_posting`, `ledger"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-14.md",
+  "line": 139,
+  "text": "Nothing checks for a balance write path, or for an `UPDATE`/`DELETE` against\\n   `acc_gl_journal_entry`.**\\n\\nSo the correct statement is: *the ledger"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-17.md",
+  "line": 207,
+  "text": "NOT EXIST` \u2014 placed exactly where revision 1's reader would\\n   have merged the requirement with the adjacent paragraph about guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-18.md",
+  "line": 1,
+  "text": "not existing\\n\\nRun `2026-08-21-run2-tierA-gl-accounting-A2`. Branch `softhouse/A2-18-ledger-invariant-guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md",
+  "line": 71,
+  "text": "not checked\\|no such guard\\|does not exist\"` | **One surviving site \u2192 F-1** |\\n| 6 | Guard count | Counted **two independent ways**: (a) `guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md",
+  "line": 94,
+  "text": "not checked. No guard for either exists** (\u00a74.4.1).\\n\\nThis is **false on the live tree** [VERIFIED: `.softhouse/conformance.sh:1117-1152` defines\\n`guard_ledger_invariant"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-27.md",
+  "line": 100,
+  "text": "not exist\\n[VERIFIED: `find`]) contains **`t.Logf` and no `t.Errorf` anywhere**. It is a\\nmeasuring instrument, not a guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md",
+  "line": 26,
+  "text": "not checked. No guard for either exists\"* \u2014 DELETED\\n\\nRemoved from \u00a78.3's guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md",
+  "line": 34,
+  "text": "not checked`, `No guard for either exists`,\\n`no such guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md",
+  "line": 35,
+  "text": "not checked`. **17 hits,\\nevery one opened.** All surviving hits are legitimate [VERIFIED by me at `2e97162`]:\\n\\n| site | why it survives |\\n|---|---|\\n| \u00a74.4 I-3"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md",
+  "line": 41,
+  "text": "not exist\"* \u2014 the deadlock argument |\\n| \u00a74.1 seam table, \u00a74.2 G-01 | `ledger"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-3.md",
+  "line": 87,
+  "text": "not exist for an account of type CHARGE OFF EXPENSE\"`, `args: [\"LOAN\", 22,\\n   \"CHARGE OFF EXPENSE\"]`. \u2192 `out/A2-092-chargeoff-loan1-unmapped.json`\\n\\n5. **A fourth delete guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md",
+  "line": 148,
+  "text": "unchecked inference into an apparent measurement.\\n4. **It bears directly on what a ratifier is being sold.** \u00a74.4.1's job is to state what the guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md",
+  "line": 296,
+  "text": "NOT\\nEXIST, IT DOES NOW\"*).\\n\\n**And `A2-28` opened this exact file** \u2014 \u00a710 and its handoff both record re-deriving\\n`ledgerguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md",
+  "line": 569,
+  "text": "not\\n   exist; I make no claim either way about whether a builder can satisfy them.\\n5. **Whether `I3-FIELD-WRITE` and `I3"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T158.md",
+  "line": 293,
+  "text": "unguarded=111`.**\\n[VERIFIED: `.softhouse/reviews/T158-rederive-sweep.py`, `T158-evidence/11-\u2026`]\\n\\n### FINDING 3 \u2014 the GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T158.md",
+  "line": 329,
+  "text": "unguarded-mutators.txt`.\"*\\n`grep -c \"guard=yes\"` on that transcript returns **4** \u2014 only the hits that also match the\\n`STORE` target are printed with a guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T158.md",
+  "line": 331,
+  "text": "UNGUARDED HIT\" section\\niterates `unguarded` and skips guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T158.md",
+  "line": 540,
+  "text": "unguarded count from 111 to 115** and re-commit\\n   `t156/sweep-unguarded-mutators.txt`, after tightening `GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T167.md",
+  "line": 80,
+  "text": "unguarded-mutators.py:58`), run the way\\nT156 ran it \u2014 Python `re` \u2014 returns **3 matches \u2192 GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T167.md",
+  "line": 261,
+  "text": "unguarded; T158's *reason* is wrong; still not load-bearing, but it carries an unbounded `rm -rf`.\\n\\nBoth guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T167.md",
+  "line": 394,
+  "text": "unguarded-mutators.txt` with **every** guarded hit named, correcting T158's F-4.\\n   Evidence: `t167-reaudit-guards-output.txt`, and the prototype in `t167-reaudit-guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T175.md",
+  "line": 256,
+  "text": "unguarded-mutators.py:154` (which carries the\\n  in-source comment *\"already counted and named above; not a new silent \u2026\"*),\\n  `t167-reaudit-guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T178.md",
+  "line": 294,
+  "text": "unguarded**, exit 0.\\n- against the **fork-point bytes** (`--scan=` a directory of the pre-fix copies): **1 LIVE BYPASS\\n  (`t47_edit_4.py`) + 7 unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 56,
+  "text": "UNGUARDED`\\n   [VERIFIED: `worktree-sweep-output.txt`, UNKNOWN/ATOMIC = 2, and the file is absent from the\\n   unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 77,
+  "text": "UNGUARDED** | **GUARDED** |\\n| `red_guard_elsewhere.py` \u2014 a REAL `try/finally` in another function + a REAL `atexit.register` in a function nothing calls | **UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 94,
+  "text": "UNGUARDED in scope **UNKNOWN** \u2014 reported, not folded into \"clean\" |\\n\\n`OVER-BROADNESS CHECK: 5/5 green fixtures classified as guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 106,
+  "text": "not exist when it was made, and the defect is\\nreproduced on the exact bytes that carried it. [VERIFIED: both runs, `guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 111,
+  "text": "UNGUARDED by construction \u2014 a signal landing during the restore still leaves the artefact short.\\n`--enforce` therefore reports 2 sites on a \"correctly guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 152,
+  "text": "unguarded mutation of a trusted artefact: 43** (47 sites), every\\n  one listed in `trusted-unguarded-sites-main.txt`.\\n- **Python files whose only unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 185,
+  "text": "UNGUARDED |\\n| shell `grep -E` (resolves to `/usr/bin/grep` here) | **0** | UNGUARDED |\\n| `/usr/bin/awk` | **0** | UNGUARDED |\\n| `/usr/bin/sed -nE` | **0** | UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 220,
+  "text": "unguarded population is 115, not 111\"** \u2014 P-48 in `patterns.md`, and T158's handoff.\\n   - *Original:* hits 130 / guarded 19 / unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 222,
+  "text": "unguarded 130**. The\\n     tree grew; 111 and 115 are **stale**, not wrong-at-the-time.\\n   - *The deeper problem, which drift does not explain:* **59 of the 130 \"unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md",
+  "line": 314,
+  "text": "unguarded rewriters of\\n  the ratified DEC-1\") in commit `4484cf1`** \u2014 I am corroborating it with a per-site list, not\\n  claiming it. Exact figures are in `trusted-unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T183.md",
+  "line": 139,
+  "text": "UNGUARDED / TRUSTED**, and `--enforce`\\n**fires**. Consequence, and it matters more than the fixture: **the check punishes the exact\\nfix T178 applied.** Factor your guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T183.md",
+  "line": 153,
+  "text": "unguarded\\nmutation (`mylib_guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T183.md",
+  "line": 167,
+  "text": "UNGUARDED-TRUSTED list.** It does not do what T156 did.\\n- It **self-flags** in its own P-48 detector: `guard_classify.py guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T183.md",
+  "line": 194,
+  "text": "UNGUARDED / TRUSTED**, `--enforce` exit 1.\\n   **So the tool does not over-report guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T183.md",
+  "line": 215,
+  "text": "UNGUARDED \u2192 GUARDED-FINALLY` and is caught | **exit 1** |\\n| **RED \u2014 never guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T183.md",
+  "line": 232,
+  "text": "UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T183.md",
+  "line": 338,
+  "text": "UNGUARDED-BUT-IMPORTS-A-GUARD-MODULE` when a mutation site's file\\n  imports a module that defines a restoring CM or an `atexit` restore, so the shared-guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T187.md",
+  "line": 197,
+  "text": "UNGUARDED \u2014 for exactly the reason T178 recorded. I did\\n  **not** rely on it.\\n- **T178's `t178-guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T196.md",
+  "line": 36,
+  "text": "UNGUARDED sites on a TRUSTED target across 27 files**\\n[VERIFIED: `list_trusted_unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T196.md",
+  "line": 58,
+  "text": "UNGUARDED`.\\n   `UNKNOWN` is not `TRUSTED`. **`--enforce"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T196.md",
+  "line": 154,
+  "text": "UNGUARDED.\\nT179's docstring disclosed the cross-file **mutation** case and not the cross-file **guard**\\ncase \u2014 and the guard case is the one that trips `--enforce"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T196.md",
+  "line": 323,
+  "text": "UNGUARDED tags=ADR` | fires |\\n| **C** | `--enforce` **exit 0**, both excused and **both named** in the import-hop section | passes |\\n| **D (RED for the fix)** | `--enforce"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T196.md",
+  "line": 429,
+  "text": "UNGUARDED` after. The vector store is the parity oracle's output; a half-written\\n  vector is worse than a missing one. T178's `t178_guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T198.md",
+  "line": 77,
+  "text": "UNGUARDED and scope == SCRATCH: verdict = SANDBOX`\\n> \u2014 and `:1280-1281`, the `--enforce` predicate, fires **only** on\\n> `scope == TRUSTED and verdict == UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T198.md",
+  "line": 239,
+  "text": "UNGUARDED` is still the **correct classifier verdict** \u2014\\n`with open(...)` merely closes a handle and is not a restoring guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T198.md",
+  "line": 362,
+  "text": "unguarded writes to the GOLDEN VECTOR STORE. CONFIRMED, and RANKED.\\n\\nAll four confirmed present, all `tags=STORE`, all `TRUSTED/UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T201.md",
+  "line": 435,
+  "text": "unchecked. Pre-existing, unchanged by this task, and changing it would move live numbers.\\n- **FU-T201-3.** T194's recorded residual still stands: a guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/CLASSIFY-handoff-dir.txt",
+  "line": 1,
+  "text": "unguarded mutation(s) of a trusted artefact\\n=== T179 parser-based guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/CLASSIFY-handoff-dir.txt",
+  "line": 23,
+  "text": "UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (4 sites in 2 files)\\n  2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/t203-guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/CLASSIFY-postfix.txt",
+  "line": 21,
+  "text": "UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/CLASSIFY-prefix.txt",
+  "line": 1,
+  "text": "unguarded mutation(s) of a trusted artefact\\n=== T179 parser-based guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/t203-guard-arms.py",
+  "line": 155,
+  "text": "NOT exist, NO token.  Must exit 2 having written\\n    # nothing.  If the guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203.md",
+  "line": 264,
+  "text": "unguarded mutation(s) of a trusted artefact\\n  TRUSTED    UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T204.md",
+  "line": 84,
+  "text": "unguarded\" / \"population \u2026 21\" \u2014 none found; the only other hits were unrelated\\n   (`A2-18.md`'s \"P-22 over the real population\" is about ledger-invariant guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T204.md",
+  "line": 95,
+  "text": "unguarded rewriters of the ratified DEC-1, two live today\"`.\\n   - **I did not edit either file.** My scope guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/DIFFERENTIAL-repo-sweep.txt",
+  "line": 5,
+  "text": "UNGUARDED -> TRUSTED/UNGUARDED   tags=CAPTURE  chain=True\\n      target: path\\n  .softhouse/capture/pathb/t36/attest.py:255 open(mode='w')\\n      UNKNOWN/UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/DIFFERENTIAL-repo-sweep.txt",
+  "line": 8,
+  "text": "UNGUARDED   tags=CAPTURE  chain=True\\n      target: _stamp\\n  .softhouse/capture/pathb/t36/attest.py:559 open(mode='w')\\n      UNKNOWN/UNGUARDED -> TRUSTED/UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/DIFFERENTIAL-repo-sweep.txt",
+  "line": 20,
+  "text": "UNGUARDED -> TRUSTED/UNGUARDED   tags=CAPTURE  chain=True\\n      target: out\\n  .softhouse/capture/t83-nonamortizing/src/run-port.py:155 open(mode='w')\\n      UNKNOWN/UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/DIFFERENTIAL-repo-sweep.txt",
+  "line": 23,
+  "text": "UNGUARDED   tags=CAPTURE  chain=True\\n      target: outp\\n\\nBEFORE UNKNOWN+UNGUARDED=83  TRUSTED+UNGUARDED=29  SCRATCH(any)=337  scope_via_chain=0\\nAFTER  UNKNOWN+UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/GREEN-six-prefix-AFTER.txt",
+  "line": 1,
+  "text": "unguarded site(s) with an UNRESOLVED target \u2014 NOT fatal without --enforce-unknown; this is a fail-open (T203 F-2)\\nENFORCE: 6 unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/GREEN-six-prefix-AFTER.txt",
+  "line": 50,
+  "text": "UNGUARDED\\n      target: path\\n  prefix/T8-promote-vectors.py:541  open(mode='w')  tags=STORE  verdict=UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/GREEN-t57t8-alone-AFTER.txt",
+  "line": 1,
+  "text": "unguarded mutation(s) of a trusted artefact\\n=== T179 parser-based guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-A2-honour-scratch-chain.txt",
+  "line": 4,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-A2-honour-scratch-chain.txt",
+  "line": 8,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-A2-honour-scratch-chain.txt",
+  "line": 32,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-A2-honour-scratch-chain.txt",
+  "line": 36,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-A2-honour-scratch-chain.txt",
+  "line": 40,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-A2-honour-scratch-chain.txt",
+  "line": 50,
+  "text": "UNGUARDED -> OK\\n  OVER-BROADNESS CHECK: 5/5 green fixtures classified as guarded/atomic -> OK\\n  T205 DIFFERENTIAL: runtime-ROOT store write=TRUSTED/UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-B-chain-disabled.txt",
+  "line": 4,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-B-chain-disabled.txt",
+  "line": 8,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-B-chain-disabled.txt",
+  "line": 32,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-B-chain-disabled.txt",
+  "line": 36,
+  "text": "UNGUARDED                  expected=UNGUARDED                  **FAIL**\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-B-chain-disabled.txt",
+  "line": 40,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-B-chain-disabled.txt",
+  "line": 50,
+  "text": "UNGUARDED -> OK\\n  OVER-BROADNESS CHECK: 5/5 green fixtures classified as guarded/atomic -> OK\\n  T205 DIFFERENTIAL: runtime-ROOT store write=UNKNOWN/UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-B-chain-disabled.txt",
+  "line": 53,
+  "text": "UNGUARDED -> OK\\n\\nSELFTEST FAILED (2):\\n  - red_runtime_root.py: parser said UNGUARDED/UNKNOWN at line 30, expected UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/RED-six-prefix-BEFORE.txt",
+  "line": 1,
+  "text": "unguarded mutation(s) of a trusted artefact\\n=== T179 parser-based guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/RED-t57t8-alone-BEFORE.txt",
+  "line": 21,
+  "text": "UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/selftest-AFTER.txt",
+  "line": 4,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/selftest-AFTER.txt",
+  "line": 8,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/selftest-AFTER.txt",
+  "line": 32,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/selftest-AFTER.txt",
+  "line": 36,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/selftest-AFTER.txt",
+  "line": 40,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/selftest-AFTER.txt",
+  "line": 50,
+  "text": "UNGUARDED -> OK\\n  OVER-BROADNESS CHECK: 5/5 green fixtures classified as guarded/atomic -> OK\\n  T205 DIFFERENTIAL: runtime-ROOT store write=TRUSTED/UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/t205-diff-scopes.py",
+  "line": 24,
+  "text": "UNGUARDED\"]\\n    t = [k for k in d if d[k][\"scope\"] == \"TRUSTED\" and d[k][\"verdict\"] == \"UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 79,
+  "text": "UNGUARDED+UNRESOLVED sites fatal. Not the default; see \u00a74.\\n\\n### Change 3 \u2014 `ENFORCE-DISCLOSURE` on stderr \u2014 **neutral (visibility)**\\n\\nEvery `--enforce"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 83,
+  "text": "UNGUARDED count and says in\\nwords that it is not fatal. The report already *listed* those sites; what made T203's\\nF-1 possible is that the **enforce"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 98,
+  "text": "UNGUARDED (STORE) | TRUSTED / UNGUARDED (STORE) | no |\\n| `T61-promote-vectors.py` | `:329 open(mode='w')` | TRUSTED / UNGUARDED (STORE) | TRUSTED / UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 100,
+  "text": "UNGUARDED (STORE) | TRUSTED / UNGUARDED (STORE) | no |\\n| `T58-promote-vectors.py` | `:708 open(mode='w')` | TRUSTED / UNGUARDED (STORE) | TRUSTED / UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 102,
+  "text": "UNGUARDED (no tag)** | **TRUSTED / UNGUARDED (STORE)** | **yes** |\\n| **`T8-promote-vectors.py`** | `:541 open(mode='w')` | **UNKNOWN / UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 103,
+  "text": "UNGUARDED (STORE)** | **yes** |\\n\\n`--enforce` over all six: **BEFORE exit 1, \"4 unguarded mutation(s)\"; AFTER exit 1,\\n\"6 unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 129,
+  "text": "UNGUARDED -> TRUSTED/UNGUARDED, scope_via_chain=True\\n  ZERO moved in any other direction.\\n\\n                  BEFORE   AFTER\\nUNKNOWN+UNGUARDED   83       76\\nTRUSTED+UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 164,
+  "text": "unguarded and the target is under a trusted tree.\\n\\n### 4b. Population `--enforce`-on-UNKNOWN-by-default *would* create\\n\\n**76 UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 201,
+  "text": "UNGUARDED \u2026                             (total 2)\\n--- UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 226,
+  "text": "UNGUARDED / **TRUSTED** / tag STORE / `scope_via_chain=True`.\\n* `fixtures/chain_scratch_discard.py` \u2014 the polarity guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md",
+  "line": 256,
+  "text": "UNGUARDED, 29 TRUSTED+UNGUARDED |\\n| repo sweep AFTER | 402 Python files, 466 sites | 76 UNKNOWN+UNGUARDED, 36 TRUSTED+UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/CLASSIFY-a-postfix.txt",
+  "line": 21,
+  "text": "UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/CLASSIFY-a-prefix.txt",
+  "line": 21,
+  "text": "UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/CLASSIFY-b-postfix.txt",
+  "line": 21,
+  "text": "UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/CLASSIFY-b-prefix.txt",
+  "line": 1,
+  "text": "unguarded mutation(s) of a trusted artefact\\n=== T179 parser-based guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/CLASSIFY-c-postfix.txt",
+  "line": 21,
+  "text": "UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206.md",
+  "line": 14,
+  "text": "UNGUARDED sites on\\n> CAPTURE-tagged targets. Inside my scope directory but not a vector-store rewriter.\\n> `T57-promote-emi-vectors.py` uses bare `assert` for its invariant"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206.md",
+  "line": 139,
+  "text": "UNGUARDED sites; the two remaining call sites are the guard module's own\\n  `os.replace` (ATOMIC) and `mkstemp` (SANDBOX). `--enforce` exits 0.\\n\\n## (b) Three unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206.md",
+  "line": 186,
+  "text": "unguarded mutation(s) of a trusted artefact` (all three\\n  named lines, `tags=CAPTURE`), exit 1; post-fix 0 unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/BONUS-RED-4-shell-only-file.txt",
+  "line": 23,
+  "text": "UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/BONUS-RED-5-syntax-error-only.txt",
+  "line": 23,
+  "text": "UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/BONUS-RED-6-root-dir-only-sh.txt",
+  "line": 23,
+  "text": "UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/BONUS-RED-7-permission-denied.txt",
+  "line": 23,
+  "text": "UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/BONUS-RED-8-non-script-extension.txt",
+  "line": 22,
+  "text": "UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/CONTROL-mixed-population-passes.txt",
+  "line": 1,
+  "text": "unguarded site(s) with an UNRESOLVED target \u2014 NOT fatal without --enforce-unknown; this is a fail-open (T203 F-2)\\n=== T179 parser-based guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/CONTROL-mixed-population-passes.txt",
+  "line": 23,
+  "text": "UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/GREEN-selftest.txt",
+  "line": 4,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/GREEN-selftest.txt",
+  "line": 8,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/GREEN-selftest.txt",
+  "line": 32,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/GREEN-selftest.txt",
+  "line": 36,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/GREEN-selftest.txt",
+  "line": 40,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/GREEN-selftest.txt",
+  "line": 50,
+  "text": "UNGUARDED -> OK\\n  OVER-BROADNESS CHECK: 5/5 green fixtures classified as guarded/atomic -> OK\\n  T205 DIFFERENTIAL: runtime-ROOT store write=TRUSTED/UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-full-repo.txt",
+  "line": 185,
+  "text": "UNGUARDED\\n      target: path\\n  .softhouse/capture/pathb/t36/attest.py:255  open(mode='w')  tags=CAPTURE  verdict=UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-full-repo.txt",
+  "line": 189,
+  "text": "UNGUARDED\\n      target: path\\n  .softhouse/capture/t61-halfeven/src/run-counterfactuals.py:145  open(mode='w')  tags=CAPTURE  verdict=UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-full-repo.txt",
+  "line": 193,
+  "text": "UNGUARDED\\n      target: path\\n  .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py:232  open(mode='w')  tags=CAPTURE  verdict=UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-full-repo.txt",
+  "line": 197,
+  "text": "UNGUARDED\\n      target: outp\\n  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/t206-a-green.py:182  os.remove  tags=STORE  verdict=UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-full-repo.txt",
+  "line": 201,
+  "text": "UNGUARDED\\n      target: path\\n\\n--- P-48 DETECTOR: files T156's regex would score GUARDED on prose alone\\n    (guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-full-repo.txt",
+  "line": 471,
+  "text": "unguarded site(s) with an UNRESOLVED target \u2014 NOT fatal without --enforce-unknown; this is a fail-open (T203 F-2)\\nENFORCE: 35 unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-unknown-full-repo.txt",
+  "line": 185,
+  "text": "UNGUARDED\\n      target: path\\n  .softhouse/capture/pathb/t36/attest.py:255  open(mode='w')  tags=CAPTURE  verdict=UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-unknown-full-repo.txt",
+  "line": 189,
+  "text": "UNGUARDED\\n      target: path\\n  .softhouse/capture/t61-halfeven/src/run-counterfactuals.py:145  open(mode='w')  tags=CAPTURE  verdict=UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-unknown-full-repo.txt",
+  "line": 193,
+  "text": "UNGUARDED\\n      target: path\\n  .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py:232  open(mode='w')  tags=CAPTURE  verdict=UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-unknown-full-repo.txt",
+  "line": 197,
+  "text": "UNGUARDED\\n      target: outp\\n  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/t206-a-green.py:182  os.remove  tags=STORE  verdict=UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-unknown-full-repo.txt",
+  "line": 201,
+  "text": "UNGUARDED\\n      target: path\\n\\n--- P-48 DETECTOR: files T156's regex would score GUARDED on prose alone\\n    (guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-unknown-full-repo.txt",
+  "line": 471,
+  "text": "unguarded site(s) with an UNRESOLVED target \u2014 FATAL (--enforce-unknown)\\nENFORCE: 35 unguarded mutation(s) of a trusted artefact\\nENFORCE-UNKNOWN: 78 unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-full-repo.txt",
+  "line": 185,
+  "text": "UNGUARDED\\n      target: path\\n  .softhouse/capture/pathb/t36/attest.py:255  open(mode='w')  tags=CAPTURE  verdict=UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-full-repo.txt",
+  "line": 189,
+  "text": "UNGUARDED\\n      target: path\\n  .softhouse/capture/t61-halfeven/src/run-counterfactuals.py:145  open(mode='w')  tags=CAPTURE  verdict=UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-full-repo.txt",
+  "line": 193,
+  "text": "UNGUARDED\\n      target: path\\n  .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py:232  open(mode='w')  tags=CAPTURE  verdict=UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-full-repo.txt",
+  "line": 197,
+  "text": "UNGUARDED\\n      target: outp\\n  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/t206-a-green.py:182  os.remove  tags=STORE  verdict=UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-full-repo.txt",
+  "line": 201,
+  "text": "UNGUARDED\\n      target: path\\n\\n--- P-48 DETECTOR: files T156's regex would score GUARDED on prose alone\\n    (guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-full-repo.txt",
+  "line": 471,
+  "text": "unguarded site(s) with an UNRESOLVED target \u2014 NOT fatal without --enforce-unknown; this is a fail-open (T203 F-2)\\nENFORCE: 35 unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-unknown-full-repo.txt",
+  "line": 185,
+  "text": "UNGUARDED\\n      target: path\\n  .softhouse/capture/pathb/t36/attest.py:255  open(mode='w')  tags=CAPTURE  verdict=UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-unknown-full-repo.txt",
+  "line": 189,
+  "text": "UNGUARDED\\n      target: path\\n  .softhouse/capture/t61-halfeven/src/run-counterfactuals.py:145  open(mode='w')  tags=CAPTURE  verdict=UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-unknown-full-repo.txt",
+  "line": 193,
+  "text": "UNGUARDED\\n      target: path\\n  .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py:232  open(mode='w')  tags=CAPTURE  verdict=UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-unknown-full-repo.txt",
+  "line": 197,
+  "text": "UNGUARDED\\n      target: outp\\n  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/t206-a-green.py:182  os.remove  tags=STORE  verdict=UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-unknown-full-repo.txt",
+  "line": 201,
+  "text": "UNGUARDED\\n      target: path\\n\\n--- P-48 DETECTOR: files T156's regex would score GUARDED on prose alone\\n    (guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-unknown-full-repo.txt",
+  "line": 471,
+  "text": "unguarded site(s) with an UNRESOLVED target \u2014 FATAL (--enforce-unknown)\\nENFORCE: 35 unguarded mutation(s) of a trusted artefact\\nENFORCE-UNKNOWN: 78 unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/RED-1-nonexistent-file.txt",
+  "line": 23,
+  "text": "UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/RED-2-empty-string-file-arg.txt",
+  "line": 23,
+  "text": "UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/RED-3-unexpanded-glob.txt",
+  "line": 23,
+  "text": "UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212.md",
+  "line": 101,
+  "text": "non-existent `--file` path** (T205's own honest-negative, driven):\\n```\\n$ python3 .../guard_classify.py --enforce --file /tmp/t212-does-not-exist-xyz123.py\\nENFORCE"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212.md",
+  "line": 110,
+  "text": "nonexistent-file.txt`.\\n\\n**RED 2 \u2014 empty `--file` argument** (`--file \"\"`):\\n```\\n$ python3 .../guard_classify.py --enforce --file \"\"\\nENFORCE"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212.md",
+  "line": 142,
+  "text": "non-existent path \u2014 real inspection happened, so the\\nnew guard must NOT fire:\\n```\\n$ python3 .../guard_classify.py --enforce"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212.md",
+  "line": 205,
+  "text": "UNGUARDED | 35 \u2192 35 | 35 \u2192 35 |\\n| UNKNOWN+UNGUARDED (`ENFORCE"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212.md",
+  "line": 239,
+  "text": "not check whether any *other* caller in this program invokes\\n  `guard_classify.py --enforce` (or `--enforce"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T215.md",
+  "line": 260,
+  "text": "not check for one\\n  having been added since.\\n- Whether the exit-protocol guard has any LOCK-exclusion call site sharing this exact pathspec fragment\\n  OUTSIDE `run_exit_guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T218.md",
+  "line": 247,
+  "text": "not\\n   exist anywhere on `main` \u2014 T109's actual script changes were never merged, only its prose and one\\n   evidence transcript were. If the digest-comparison guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md",
+  "line": 20,
+  "text": "not existing \u2014 \"balances are DERIVED, never written\" (I-3) and \"the ledger is append-only\"\\n```\\n\\nThis is exactly A2-28's F-1 pattern one file over: the guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md",
+  "line": 24,
+  "text": "not exist.\\n\\n**New text** (full diff \u2014 comment lines only, function body untouched):\\n\\n```\\n# guard_ledger_invariants: the I-3/I-4 SOURCE GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md",
+  "line": 35,
+  "text": "not existing \u2014 that was\\n# revision 2, true when written; DEC-2 \u00a78.3 has since retracted it, and \u00a74.4.1 and \u00a78.1 fact 3\\n# describe the guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md",
+  "line": 81,
+  "text": "not checked` / `is not checked` / `are not checked` / `were not checked` / `has not been checked`\\n2. `no such guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md",
+  "line": 83,
+  "text": "not exist`\\n4. `did not exist`\\n5. `nothing checks`\\n6. `no guard for either` (case-insensitive, covers \"No guard for either exists\")\\n7. Added: `unguarded`, `no source guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md",
+  "line": 87,
+  "text": "not enforced` / `is not enforced` / `no enforcement`\\n8. Added: `\\bnot exist\\b` without `does`/`did`, to catch other tenses\\n9. Added: a combined-proximity search for `guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md",
+  "line": 114,
+  "text": "not existing\" | **THE defect this task exists to fix.** Fixed in Part 1. |\\n| `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-18.md:1` | title: \"the I-3/I-4"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 26,
+  "text": "NOT EXISTING.\\n```\\n\\n[VERIFIED: `git show 33d19a6:.softhouse/guards/ledgerguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 38,
+  "text": "NOT EXISTING.\" That was TRUE THE DAY A2-18 WROTE IT and it is FALSE NOW.\\n// T208 wired this guard into run_guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 125,
+  "text": "not checked` / `is not checked` \u2026 9. Added: a combined-proximity\\nsearch for `guard`/`invariant`/`ledger`/`I-3`/`I-4"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 135,
+  "text": "NOT EXISTING.\\n\\n=== T224's terms, as its handoff lists them (1-9) ===\\nT1  not checked (+variants)                          hits=1\\n90c21d6:.softhouse/guards/ledgerguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 139,
+  "text": "not checked, and is never silently skipped:\")\\nT2  no such guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 142,
+  "text": "not exist                                    hits=0\\nT5  nothing checks                                   hits=0\\nT6  no guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 145,
+  "text": "unguarded                                        hits=0\\nT7b no source guard                                  hits=0\\nT7c not enforced / no enforce"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 152,
+  "text": "not existing                                     hits=1\\n90c21d6:.softhouse/guards/ledgerguard/main.go:1:// Command ledgerguard is the source-level guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 153,
+  "text": "NOT EXISTING.\\nC2  records as not existing                          hits=1\\n90c21d6:\u2026/main.go:1:// Command ledgerguard is the source-level guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 155,
+  "text": "NOT EXISTING.\\nC3  proximity, UNANCHORED exist                      hits=2\\n90c21d6:\u2026/main.go:1:// Command ledgerguard is the source-level guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 157,
+  "text": "NOT EXISTING.\\n90c21d6:\u2026/main.go:8://\tI-3"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 186,
+  "text": "not checked (+variants)     hits-in-file=0    hits-at-1110s=0\\nT2  no such guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 189,
+  "text": "not exist               hits-in-file=0    hits-at-1110s=0\\nT5  nothing checks              hits-in-file=0    hits-at-1110s=0\\nT6  no guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 192,
+  "text": "unguarded                   hits-in-file=0    hits-at-1110s=0\\nT7b no source guard             hits-in-file=0    hits-at-1110s=0\\nT7c not enforced/no enforce"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 199,
+  "text": "not existing                hits-in-file=1    hits-at-1110s=1\\n90c21d6:.softhouse/conformance.sh:1116:# as not existing \u2014 \"balances are DERIVED, never written\" (I-3"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 334,
+  "text": "not existing \u2014 that was revision 2, true when written\"* | T224's own replacement, correctly past-tense and self-dating. Left. |\\n| `.softhouse/guards/check-ledger-invariant"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T232.md",
+  "line": 48,
+  "text": "NOT EXISTING.\\n// and \u00a74.4.1 lists, item by item, what nothing in the repository looks for:\\n\\n$ git show 90c21d6:.softhouse/conformance.sh | sed -n '1115,1116p'\\n# guard_ledger"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/handoff/T61-sweep/build-pass3f.py",
+  "line": 26,
+  "text": "unguarded mutations, not a\\n# vector-store rewrite -- so T203's `t203_store_guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/nonnegotiable-guard-audit.md",
+  "line": 95,
+  "text": "nonexistent path \u2192 still **exit 2** (`os.ReadFile` error is returned, not swallowed). Not starvable. | None. |\\n| C-2 | `guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/patterns.md",
+  "line": 891,
+  "text": "not exist yet inherits none of that tree's collisions.\\nTest the MERGE, not the branches.**\\n\\nT166 widened the no-float root to the whole Go module while `internal/apps/ledger"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/patterns.md",
+  "line": 905,
+  "text": "not\\nexist on your branch.\\n\\nCorollary, and the reason this is a pattern rather than an anecdote: **a guard's blast radius is not visible\\nin the guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/patterns.md",
+  "line": 966,
+  "text": "UNGUARDED** |\\n\\nTwo independent incompatibilities in one pattern, each isolated by measurement rather than asserted\\n[VERIFIED: `.softhouse/reviews/t179-guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/patterns.md",
+  "line": 1396,
+  "text": "not check as not checked.*\\n\\n**P-43 \u2014 Consolidate colliding tasks; do not run three workers over one defect surface.** T120, T132 and\\nT143 were three views of the same guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/patterns.md",
+  "line": 1476,
+  "text": "unguarded population is **115, not 111**.\\n\\nBoth are P-22 (a guard that cannot fail) reached by a specific route worth naming on its own, because the\\nguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/patterns.md",
+  "line": 2043,
+  "text": "not\\nchecked. No guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/patterns.md",
+  "line": 2056,
+  "text": "NOT EXISTING.\\n```\\n\\n[VERIFIED: `git show 90c21d6:.softhouse/guards/ledgerguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/patterns.md",
+  "line": 2141,
+  "text": "not exist\\b` without `does`/`did` \u2026 9. Added: a combined-proximity\\n   search for `guard`/`invariant`/`ledger`/`I-3`/`I-4"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/patterns.md",
+  "line": 2173,
+  "text": "not existing` on `:1116`), and T232 measured\\nthat `:1115` contains no inflection of `exist` and `:1116` contains no `guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/program.json",
+  "line": 1365,
+  "text": "unguarded population 115 not 111 -> P-48\",\\n        \"A2-9: F-E -- the in-package no-float scans skip subdirectories; a planted float64 in ledger"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/A2-14-DEC2-gl-accounting-contract-review.md",
+  "line": 360,
+  "text": "not existing** and \u00a74.2 `G-01` admits only `ledger_rest_admin`,\\n`ledger_rest_posting` and `ledger"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/T107-review-of-T91.md",
+  "line": 783,
+  "text": "unchecked, the G-1 GREEN leg prints `exit=0` beside `No such file or directory` because `$?`\\n  follows a `| tail -1`, and the script **exits 0**. The committed `GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/T127-review-of-T109.md",
+  "line": 678,
+  "text": "nothing checked the bytes. \u00a71.2. |\\n| M-2 | `FORK-POINT-SHA:46`, `prove-guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/T131-review-of-T108.md",
+  "line": 237,
+  "text": "not exist for `guard_no_float_in_harness`, which strips\\n   comments only** \u2014 a Go string literal is not stripped. Go source must be valid UTF-8 to compile, so that\\n   guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/T135-review-of-T99.md",
+  "line": 740,
+  "text": "not exist on `default`). The override defect is therefore demonstrated with a stub\\n  `curl` (\u00a76.2a) \u2014 a statement about the guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/T138-evidence/r4-guards-red.sh",
+  "line": 93,
+  "text": "nonexistent file is not\\n# possible from prove-guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/T158-evidence/02-t156-sweep-rerun-branch-tip.txt",
+  "line": 19,
+  "text": "unguarded-mutators.py         guard=yes  verbs=sh:sed-i,sh:git-checkout,py:write\\n  .softhouse/capture/pathb/t36/attest.py                                 guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/T158-evidence/11-sweep-rederived-git-ls-files.txt",
+  "line": 2,
+  "text": "unguarded=111\\n\\nTHE GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/T158-evidence/15-guard-classifier-false-positives.txt",
+  "line": 10,
+  "text": "unguarded))\\n      160 | ntrap = len(re.findall(r\"(?m)^\\s*trap\\s\", src))\\n\\n.softhouse/capture/pathb/t99/prove-p24-postmerge.sh   real guards=0   GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/T158-rederive-sweep.py",
+  "line": 42,
+  "text": "unguarded=%d\" % (hits, len(guarded), hits - len(guarded)))\\nprint()\\nprint(\"THE GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/T181-review-of-T178.md",
+  "line": 167,
+  "text": "UNGUARDED \u2014 because it substring-matched\\n`os.path.dirname(os.path.abspath(__file__))` while the real idiom wraps that expression **across a\\nline break**. The files were guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/T183-evidence/drive-probes-output.txt",
+  "line": 10,
+  "text": "UNGUARDED.\\nENFORCE: 2 unguarded mutation(s) of a trusted artefact\\n=== T179 parser-based guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/T183-evidence/drive-probes-output.txt",
+  "line": 55,
+  "text": "UNGUARDED.\\nENFORCE: 1 unguarded mutation(s) of a trusted artefact\\n=== T179 parser-based guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/T183-evidence/drive-probes-output.txt",
+  "line": 77,
+  "text": "UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (1 sites in 1 files)\\n  assert_only.py:14  io.open(mode='w')  tags=ADR\\n      target: P\\n\\n--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/T183-evidence/drive-probes-output.txt",
+  "line": 125,
+  "text": "UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/T183-evidence/drive-probes-output.txt",
+  "line": 163,
+  "text": "UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (0 sites in 0 files)\\n\\n--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/T183-evidence/drive-probes.sh",
+  "line": 30,
+  "text": "UNGUARDED.\"\\nmkdir -p \"$SCRATCH/imp\"\\ncp \"$HERE/fixtures-INERT/mylib_guard.py.txt\"          \"$SCRATCH/imp/mylib_guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/T183-evidence/drive-probes.sh",
+  "line": 41,
+  "text": "UNGUARDED.\"\\nmkdir -p \"$SCRATCH/asrt\"\\ncp \"$HERE/fixtures-INERT/assert_only.py.txt\" \"$SCRATCH/asrt/assert_only.py\"\\npython3 \"$GC\" --root \"$SCRATCH/asrt\" --enforce"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/T183-evidence/fixtures-INERT/green_imported_cm.py.txt",
+  "line": 5,
+  "text": "UNGUARDED.\\n\"\"\"\\nimport io\\nimport mylib_guard\\n\\nP = \"docs/adr/DEC-1-schedule-generator-adapter.md\"\\n\\nwith mylib_guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/T73-fui-marker-rereview.md",
+  "line": 345,
+  "text": "not enforceable by the harness**, and\\nthen fenced exactly one such pin by prose. The rate-change route is a second unenforce"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/a2-19-dec2-rev2/REVIEW.md",
+  "line": 425,
+  "text": "not checked.\"*\\n\\nI verified the underlying fact by extraction: `run_guards` invokes exactly five guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh",
+  "line": 37,
+  "text": "not existing' (T208 built it)\" \\\\n  'no guard for either' \\\\n  'no such guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh",
+  "line": 40,
+  "text": "not existing' \\\\n  'record[s]? .{0,25}as not existing' \\\\n  '4\\.4\\.1 (records|record)'\\n\\nsweep \"R3 \u2014 'three of its FOUR detection classes' (P-67; the guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 30,
+  "text": "not existing' (T208 built it)\\n############################################################\\n--- pattern: no guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 34,
+  "text": "not checked\\|no such guard\\|does not exist\"` | **One surviving site \u2192 F-1** |\\n.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md:94:> not checked. No guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 38,
+  "text": "not checked`, `No guard for either exists`,\\n.softhouse/patterns.md:1827:| DEC-2 \u00a78.3 \"They are not checked. **No guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 43,
+  "text": "not checked. No guard for either exists** (\u00a74.4.1).\"*\\ndocs/adr/DEC-2-gl-accounting-adapter.md:2369:  > the corrected claim, not the claim** \u2014 `not checked`, `No guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 46,
+  "text": "not checked`, `No guard for either exists`,\\n--- pattern: no such guard exists\\n.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md:40:| \u00a74.4 I-3"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 48,
+  "text": "no such guard exists'; that was true when written and is stale\"* |\\ndocs/adr/DEC-2-gl-accounting-adapter.md:810:| **I-3"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 50,
+  "text": "no such guard exists'; that was true when written\\n--- pattern: records as not existing\\n.softhouse/guards/ledgerguard/main.go:1:// Command ledgerguard is the source-level guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 52,
+  "text": "NOT EXISTING.\\n.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-18.md:1:# A2-18 \u2014 the I-3 / I-4 source guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 53,
+  "text": "not existing\\n.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md:526:  SOURCE GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 57,
+  "text": "not existing**\"* [VERIFIED by `A2-28` at commit `2e97162`].\\n--- pattern: record[s]? .{0,25}as not existing\\n.softhouse/guards/ledgerguard/main.go:1:// Command ledgerguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 59,
+  "text": "NOT EXISTING.\\n.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-18.md:1:# A2-18 \u2014 the I-3 / I-4 source guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 60,
+  "text": "not existing\\n.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md:526:  SOURCE GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 65,
+  "text": "not existing**\"* [VERIFIED by `A2-28` at commit `2e97162`].\\n--- pattern: 4\\.4\\.1 (records|record)\\n.softhouse/conformance.sh:1115:# guard_ledger_invariants: the I-3/I-4"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 69,
+  "text": "NOT EXISTING.\\n.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-18.md:1:# A2-18 \u2014 the I-3 / I-4 source guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 70,
+  "text": "not existing\\n.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-18.md:275:# guard_ledger_invariants: the I-3/I-4 SOURCE GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/a2-33-dec2-rev5/sweep-output-live-population.txt",
+  "line": 6324,
+  "text": "not checking anything, and a green run through it means nothing.\\n.softhouse/guards/check-ledger-invariant"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/engine_divergence.py",
+  "line": 31,
+  "text": "unguarded-mutators.py\")\\nPREFIX_BLOB = \"bf67a85:.softhouse/reviews/t47-probe/t47_edit_1.py\"\\n\\n\\ndef pattern_from_t156_source():\\n    \"\"\"Extract GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/fixtures/chain_scratch_discard.py",
+  "line": 12,
+  "text": "UNGUARDED \u2014 never SANDBOX;\\n  * classified with a SCRATCH entry INJECTED into the resolver's chain map by the\\n    selftest, it must STILL be UNKNOWN/UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 5,
+  "text": "unguarded-mutators.py:58`)\\n  decided whether a mutating script protects itself with\\n\\n      GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 72,
+  "text": "UNGUARDED and tripped `--enforce` \u2014 i.e. the\\n    check punished the shared-`t178_guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 86,
+  "text": "UNGUARDED trusted-target site\\n     (--enforce)\\n  1  --enforce and at least one UNGUARDED site on a TRUSTED target; or\\n     --enforce-unknown and at least one UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 98,
+  "text": "UNGUARDED is empty, so exit 0 would be a pass\\n     that measured nothing. See T212's handoff for the enumerated routes.\\n\\nENFORCE"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 104,
+  "text": "UNGUARDED population over this repo is 76 sites in 57 files and making\\n  that fatal by default turns the instrument off \u2014 but every `--enforce"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 138,
+  "text": "UNGUARDED = \"UNGUARDED\"\\nGUARDED_FINALLY = \"GUARDED-FINALLY\"\\nGUARDED_CM = \"GUARDED-CONTEXTMANAGER\"\\nGUARDED_INDIRECT = \"GUARDED-FINALLY-INDIRECT\"\\nGUARDED_PROCESS = \"GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 150,
+  "text": "UNGUARDED, GUARDED_PROCESS_IMPORT, GUARDED_PROCESS,\\n                 GUARDED_INDIRECT, GUARDED_CM, GUARDED_FINALLY, ATOMIC, SANDBOX]\\nGUARDING = {GUARDED_FINALLY, GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 758,
+  "text": "UNGUARDED and tripped `--enforce`.  That\\n# is the direction that actually fires, and it fires on precisely the shared-guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 948,
+  "text": "un-guarded call site disqualifies the function.  A function with zero\\n    in-file call sites is NOT considered guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1105,
+  "text": "UNGUARDED and scope == SCRATCH:\\n            verdict, why = SANDBOX, \"target resolves to a temp/scratch path\"\\n\\n        if verdict == UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1113,
+  "text": "UNGUARDED:\\n            w, nm = enclosing_restoring_with(node, parents, local_cms, imported_cms)\\n            if w is not None:\\n                verdict = GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1118,
+  "text": "UNGUARDED:\\n            fn = enclosing_func(node, parents)\\n            if fn is not None and fn.name in indirect:\\n                verdict = GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1123,
+  "text": "UNGUARDED and handlers:\\n            verdict = GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1127,
+  "text": "UNGUARDED and imported_handlers:\\n            verdict = GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1291,
+  "text": "unguarded = [(r, s) for r in py for s in r[\"sites\"]\\n                         if s[\"scope\"] == TRUSTED and s[\"verdict\"] == UNGUARDED]\\n    w(\"--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1294,
+  "text": "unguarded),\\n         len({r[\"path\"] for r, _ in trusted_unguarded})))\\n    for r, s in trusted_unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1301,
+  "text": "unguarded = [(r, s) for r in py for s in r[\"sites\"]\\n                         if s[\"scope\"] == UNKNOWN and s[\"verdict\"] == UNGUARDED]\\n    w(\"--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1304,
+  "text": "unguarded),\\n                    len({r[\"path\"] for r, _ in unknown_unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1308,
+  "text": "unguarded[:400]:\\n        w(\"  %s:%d  %s   target: %s\\n\" % (r[\"path\"], s[\"line\"], s[\"verb\"], s[\"target\"]))\\n    w(\"    ^ DEFAULT `--enforce"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1393,
+  "text": "UNGUARDED\")\\n    ap.add_argument(\"--enforce-unknown\", action=\"store_true\",\\n                    help=\"ALSO exit 1 if any UNRESOLVED-target site is UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1447,
+  "text": "UNGUARDED because the\\n    #    classifier cannot see an `os.path.exists` refusal).\\n    #\\n    # WHY UNKNOWN IS NOT FOLDED INTO THE DEFAULT `--enforce"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1500,
+  "text": "UNGUARDED]\\n        unres = [(r[\"path\"], s) for r in results for s in r.get(\"sites\", [])\\n                 if s[\"scope\"] == UNKNOWN and s[\"verdict\"] == UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1504,
+  "text": "unguarded site(s) with an UNRESOLVED target \u2014 \"\\n            \"%s\\n\" % (len(unres),\\n                      \"FATAL (--enforce-unknown)\" if args.enforce"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1510,
+  "text": "unguarded mutation(s) of a trusted \"\\n                             \"artefact\\n\" % len(bad))\\n        if args.enforce_unknown and unres:\\n            sys.stderr.write(\"ENFORCE"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/guard_classify.py",
+  "line": 1513,
+  "text": "unguarded mutation(s) whose target \"\\n                             \"could not be resolved\\n\" % len(unres))\\n        if bad or (args.enforce"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/list_trusted_unguarded.py",
+  "line": 9,
+  "text": "unguarded.py [--ref main]\\n\"\"\"\\nimport argparse\\nimport os\\nimport subprocess\\nimport sys\\n\\nHERE = os.path.dirname(os.path.abspath(__file__))\\nsys.path.insert(0, HERE)\\nimport guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/population-output.txt",
+  "line": 21,
+  "text": "UNGUARDED : 130\\n  unreadable         : 0\\n  [T158 recorded hits=130 guarded=19 unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/population-output.txt",
+  "line": 82,
+  "text": "unguarded sites have an UNRESOLVED target: 63\\n\\n--- CROSS-TABULATION: where the two classifiers disagree\\n  T156 'GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/population-output.txt",
+  "line": 101,
+  "text": "unguarded trusted site): 0\\n    shell ones: 16 \u2014 NOT adjudicated. No shell parser; refused, not assumed.\\n\\n  T156 'UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/population-output.txt",
+  "line": 134,
+  "text": "unguarded\\n    mutation of a trusted artefact        : 43\\n  Python files with an unguarded mutation\\n    of an UNRESOLVED target               : 63\\n  A single 'the unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 167,
+  "text": "UNGUARDED : %d\" % len(unguarded))\\n    print(\"  unreadable         : %d\" % len(unreadable))\\n    print(\"  [T158 recorded hits=130 guarded=19 unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 221,
+  "text": "UNGUARDED})\\n    files_unknown_unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 224,
+  "text": "UNGUARDED})\\n    print(\"  PYTHON files with >=1 UNGUARDED mutation of a TRUSTED artefact: %d\"\\n          % len(files_trusted_unguarded))\\n    for f in files_trusted_unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 229,
+  "text": "unguarded sites have an UNRESOLVED target: %d\"\\n          % len([f for f in files_unknown_unguarded\\n                 if f not in files_trusted_unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 237,
+  "text": "unguarded trusted site exists\\n    fn = []          # T156 UNGUARDED, parser finds no unguarded site at all\\n    for rel in guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 243,
+  "text": "UNGUARDED and s[\"scope\"] == gc.TRUSTED\\n               for s in r[\"sites\"]):\\n            fp.append(rel)\\n    for rel in unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 250,
+  "text": "UNGUARDED for s in r[\"sites\"]):\\n            fn.append(rel)\\n\\n    guarded_py = [r for r in guarded if r.endswith(\".py\")]\\n    guarded_sh = [r for r in guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 255,
+  "text": "unguarded_py = [r for r in unguarded if r.endswith(\".py\")]\\n    unguarded_sh = [r for r in unguarded if not r.endswith(\".py\")]\\n    print(\"  T156 'GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 278,
+  "text": "unguarded trusted site): %d\"\\n          % len(fp))\\n    for rel in sorted(fp):\\n        r = py_by_path[rel]\\n        bad = [s for s in r[\"sites\"] if s[\"verdict\"] == gc.UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 284,
+  "text": "unguarded trusted site(s), first at :%d, \"\\n              \"guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 291,
+  "text": "UNGUARDED' hits: %d  (%d python, %d shell)\"\\n          % (len(unguarded), len(unguarded_py), len(unguarded_sh)))\\n    zero_sites = [rel for rel in sorted(unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 315,
+  "text": "unguarded\")\\n    print(\"    mutation of a trusted artefact        : %d\" % len(files_trusted_unguarded))\\n    print(\"  Python files with an unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/rederive_population.py",
+  "line": 319,
+  "text": "unguarded if f not in files_trusted_unguarded]))\\n    print(\"  A single 'the unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/selftest-output.txt",
+  "line": 4,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/selftest-output.txt",
+  "line": 8,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/selftest-output.txt",
+  "line": 32,
+  "text": "UNGUARDED                  expected=UNGUARDED                  OK\\n                             T156 regex says GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/selftest-output.txt",
+  "line": 42,
+  "text": "UNGUARDED -> OK\\n  OVER-BROADNESS CHECK: 5/5 green fixtures classified as guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/selftest.py",
+  "line": 8,
+  "text": "UNGUARDED, and T156's regex must DISAGREE (that\\n  disagreement is the whole finding, so it is asserted, not narrated):\\n    a1 red_prose_guard.py      guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/selftest.py",
+  "line": 28,
+  "text": "UNGUARDED with tag STORE.\\n    e  chain_scratch_discard.py the POLARITY GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/selftest.py",
+  "line": 55,
+  "text": "unguarded-mutators.py:58\\nT156_GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/selftest.py",
+  "line": 61,
+  "text": "UNGUARDED, gc.TRUSTED, True),\\n    (\"red_guard_elsewhere.py\", gc.UNGUARDED, gc.TRUSTED, True),\\n    (\"green_try_finally.py\", gc.GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/selftest.py",
+  "line": 74,
+  "text": "UNGUARDED, gc.UNKNOWN, False),\\n]\\n\\nSHELL_CASES = [\"red_prose_guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/selftest.py",
+  "line": 163,
+  "text": "UNGUARDED\\n    print(\"  DISAGREEMENT CHECK on shape (a): T156=GUARDED, parser=UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t179-guard-classifier/selftest.py",
+  "line": 177,
+  "text": "UNGUARDED)\\n    print(\"  OVER-BROADNESS CHECK: %d/%d green fixtures classified as guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t41-probe/t187-census-prefix-output.txt",
+  "line": 55,
+  "text": "UNGUARDED truncating write to DEC-1\\n  edit10.py: UNGUARDED truncating write to DEC-1\\n  edit11.py: UNGUARDED truncating write to DEC-1\\n  edit12.py: UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t41-probe/t187-census-prefix-output.txt",
+  "line": 59,
+  "text": "UNGUARDED truncating write to DEC-1\\n  edit14.py: UNGUARDED truncating write to DEC-1\\n  edit16.py: UNGUARDED truncating write to DEC-1\\n  edit17.py: UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t41-probe/t187-census-prefix-output.txt",
+  "line": 63,
+  "text": "UNGUARDED truncating write to DEC-1, contract.go\\n  edit19.py: UNGUARDED truncating write to DEC-1\\n  edit2.py: UNGUARDED truncating write to DEC-1\\n  edit20.py: UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t41-probe/t187-census-prefix-output.txt",
+  "line": 67,
+  "text": "UNGUARDED truncating write to DEC-1, contract.go\\n  edit22.py: UNGUARDED truncating write to contract.go\\n  edit3.py: UNGUARDED truncating write to DEC-1\\n  edit4.py: UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t41-probe/t187-census-prefix-output.txt",
+  "line": 71,
+  "text": "UNGUARDED truncating write to DEC-1\\n  edit6.py: UNGUARDED truncating write to DEC-1\\n  edit7.py: UNGUARDED truncating write to DEC-1\\n  edit8.py: UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t41-probe/t187-census-prefix-output.txt",
+  "line": 75,
+  "text": "UNGUARDED truncating write to DEC-1\\n  edit_go1.py: UNGUARDED truncating write to contract.go\\n  edit_go2.py: UNGUARDED truncating write to contract.go\\n  edit_go3.py: UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t41-probe/t187-redgreen.py",
+  "line": 235,
+  "text": "UNGUARDED rewriter, which is the whole\\n            # defect; a prover that quietly skipped it would be P-22's guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t41-probe/t187-redgreen.py",
+  "line": 239,
+  "text": "UNGUARDED - no AUTHORISE_TOKEN in its AST\" % n)\\n            print(\"\\n%s\\n    **FAIL**  UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t41-probe/t196-drive-output.txt",
+  "line": 55,
+  "text": "UNGUARDED:\\n--- UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t41-probe/t196-drive-output.txt",
+  "line": 146,
+  "text": "UNGUARDED tags=[]   ->   TRUSTED/UNGUARDED tags=['CAPTURE']\\n          target: path\\n    MOVED handoff/T58-promote-vectors.py:708 open(mode='w')\\n          UNKNOWN/UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t41-probe/t196-drive-output.txt",
+  "line": 149,
+  "text": "UNGUARDED tags=['CAPTURE']\\n          target: path\\n    MOVED handoff/T61-promote-vectors.py:329 open(mode='w')\\n          UNKNOWN/UNGUARDED tags=[]   ->   TRUSTED/UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t41-probe/t196-drive-output.txt",
+  "line": 155,
+  "text": "UNGUARDED tags=[]   ->   TRUSTED/UNGUARDED tags=['CAPTURE']\\n          target: path\\n    MOVED reviews/t179-guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t41-probe/t196-drive-output.txt",
+  "line": 167,
+  "text": "UNGUARDED tags=[]   ->   TRUSTED/UNGUARDED tags=['STORE']\\n          target: path\\n    MOVED handoff/T58-promote-vectors.py:708 open(mode='w')\\n          UNKNOWN/UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t41-probe/t196-drive-output.txt",
+  "line": 170,
+  "text": "UNGUARDED tags=['STORE']\\n          target: path\\n    MOVED handoff/T61-promote-vectors.py:329 open(mode='w')\\n          UNKNOWN/UNGUARDED tags=[]   ->   TRUSTED/UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t41-probe/t196-drive-output.txt",
+  "line": 176,
+  "text": "UNGUARDED tags=[]   ->   TRUSTED/UNGUARDED tags=['STORE']\\n          target: path\\n    MOVED reviews/t179-guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t41-probe/t196-drive.sh",
+  "line": 111,
+  "text": "UNGUARDED MUTATIONS OF A TRUSTED/,/^$/p' \"$SB/B-t196.txt\"\\n\\n# --- PROBE C \u2014 D-3 GREEN.  The shared-guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t41-probe/t196-drive.sh",
+  "line": 122,
+  "text": "UNGUARDED:\"\\nsed -n '/UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t41-probe/t196-fixtures-INERT/green_imported_cm.py.txt",
+  "line": 5,
+  "text": "UNGUARDED.\\n\"\"\"\\nimport io\\nimport mylib_guard\\n\\nP = \"docs/adr/DEC-1-schedule-generator-adapter.md\"\\n\\nwith mylib_guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t47-probe/t167-reaudit-guards.py",
+  "line": 31,
+  "text": "unguarded-mutators.py\",\\n    \".softhouse/capture/pathb/t99/prove-p24-postmerge.sh\",\\n    \".softhouse/reviews/t47-probe/t47_edit_1.py\",     # the one T167 fixed\\n]\\n\\nGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census-output.txt",
+  "line": 32,
+  "text": "unguarded + all anchors live (LIVE BYPASS)   0\\nunguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census-prefix-output.txt",
+  "line": 11,
+  "text": "UNGUARDED open(...,'w') DEC-1 ADR     7         2      NONE - any content   (unguarded; inert only because 5/7 anchors are gone)\\nt47_edit_3.py    UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census-prefix-output.txt",
+  "line": 12,
+  "text": "unguarded; inert only because 4/4 anchors are gone)\\nt47_edit_4.py    UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census-prefix-output.txt",
+  "line": 14,
+  "text": "UNGUARDED open(...,'w') DEC-1 ADR     1         0      NONE - any content   (unguarded; inert only because 1/1 anchors are gone)\\nt47_edit_5.py    UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census-prefix-output.txt",
+  "line": 15,
+  "text": "unguarded; inert only because 1/2 anchors are gone)\\nt47_edit_6.py    UNGUARDED open(...,'w') DEC-1 ADR     3         0      NONE - any content   (unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census-prefix-output.txt",
+  "line": 17,
+  "text": "UNGUARDED open(...,'w') contract.go   5         1      NONE - any content   (unguarded; inert only because 4/5 anchors are gone)\\nt47_edit_8.py    UNGUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census-prefix-output.txt",
+  "line": 18,
+  "text": "unguarded; inert only because 4/5 anchors are gone)\\n\\nReading:\\n  guard        GUARDED = every write is atomic (os.replace) or delegated to\\n               t178_guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census-prefix-output.txt",
+  "line": 32,
+  "text": "unguarded + all anchors live (LIVE BYPASS)   1 - t47_edit_4.py\\nunguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census.py",
+  "line": 25,
+  "text": "UNGUARDED.\\n  2. WHAT DOES IT WRITE?  Resolved from the hard-wired `DOC`/`GO` constant\\n     (pre-fix shape) or from the `guard.RATIFIED_ADR` / `guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census.py",
+  "line": 275,
+  "text": "UNGUARDED\" and not gate_blocks:\\n        note = \"   (unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t47-probe/t178-guard-census.py",
+  "line": 299,
+  "text": "unguarded + all anchors live (LIVE BYPASS)   %d%s\"\\n      % (len(reachable), (\" - \" + \", \".join(reachable)) if reachable else \"\"))\\nprint(\"unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t47-probe/t181-census-zero-inspection-POSTFIX-output.txt",
+  "line": 16,
+  "text": "unguarded + all anchors live (LIVE BYPASS)   0\\n   unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t47-probe/t181-census-zero-inspection-output.txt",
+  "line": 16,
+  "text": "unguarded + all anchors live (LIVE BYPASS)   0\\n   unguard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t47-probe/t181-census-zero-inspection.py",
+  "line": 4,
+  "text": "unguarded t41-probe rewriters (two of them LIVE):\\n\\n    \"`t178-guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t47-probe/t181-drive-t41-idiom.py",
+  "line": 10,
+  "text": "UNGUARDED.  That is a defect in the CLASSIFIER.  The question this\\nscript asks is the other one, and it is the one that matters:\\n\\n    IS THE FILE ACTUALLY GUARD"
+ },
+ {
+  "term": "S2-rev",
+  "file": ".softhouse/reviews/t47-probe/t181-drive-t41-idiom.py",
+  "line": 73,
+  "text": "UNGUARDED\" -- because the real\\n        # idiom wraps that expression across a line break.  The files were\\n        # guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 124,
+  "text": "not checked. No\\nguard for either exists\"* **ten lines below** the same bullet's statement that the guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 226,
+  "text": "not check. Revision 4 re-took all\\nof them at `2e97162` and records the running drift: `run_guards` 843 \u2192 938 \u2192 1154 \u2192 **1189**;\\n`guard_ledger_invariant"
+ },
+ {
+  "term": "S2-rev",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 832,
+  "text": "NOT EXIST, IT DOES NOW, AND WHAT IT CANNOT SEE\\n\\nRevision 1 stated the requirement correctly and never claimed the guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 839,
+  "text": "NOT EXIST\"*, and the banner and \u00a78.1 both\\n> asserted it as a measured fact. **It was true when revision 2 was written and it is false now.**\\n> `A2-18` built the guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 1659,
+  "text": "not exist.** The 44th vector graded a **loan schedule**\\n   while sitting in `ledger/` and printing a `ledger"
+ },
+ {
+  "term": "S2-rev",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2362,
+  "text": "not exist.\\n   **\u26a0 RETRACTION, revision 3: revision 2 wrote *\"Zero `ledger"
+ },
+ {
+  "term": "S2-rev",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2468,
+  "text": "not checked`, `No guard for either exists`, `no such\\n  > guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2469,
+  "text": "nothing checks` \u2014 across the whole document, and\\n  > inspect **every** hit rather than the ones the reviewer named. The surviving hits are all\\n  > legitimate: \u00a74.4's I-3"
+ },
+ {
+  "term": "S2-rev",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2692,
+  "text": "not checked`, `No guard for either exists`,\\n     `no such guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": "nexus/internal/apps/ledger/capture_test.go",
+  "line": 31,
+  "text": "not checked\" into a green run, which is P-22's vacuous\\n//    guard"
+ },
+ {
+  "term": "S2-rev",
+  "file": "nexus/internal/apps/ledger/errors.go",
+  "line": 141,
+  "text": "not exist \"]\\n\tErrGLAccountNotFound = &Ledger"
+ },
+ {
+  "term": "S2-rev",
+  "file": "nexus/internal/apps/ledger/resolve.go",
+  "line": 86,
+  "text": "not exist\", code)\\n\t}\\n\tacct, ok := r.Accounts.AccountByID(row.GLAccountID)\\n\tif !ok {\\n\t\treturn nil, true, newErr(ErrGLAccountNotFound, \"\",\\n\t\t\t\"General Ledger"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/capture/t108-grep/MATRIX.md",
+  "line": 203,
+  "text": "not\\nexist"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/gates.md",
+  "line": 2939,
+  "text": "not\\n  exist"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T67.md",
+  "line": 181,
+  "text": "not\\nexist"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T91.md",
+  "line": 302,
+  "text": "not\\n  exist"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md",
+  "line": 30,
+  "text": "NOT\\nEXIST"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md",
+  "line": 53,
+  "text": "not\\nexisting"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md",
+  "line": 410,
+  "text": "not\\n  existing"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md",
+  "line": 296,
+  "text": "NOT\\nEXIST"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md",
+  "line": 569,
+  "text": "not\\n   exist"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md",
+  "line": 581,
+  "text": "NOT\\n  EXISTING"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-7.md",
+  "line": 521,
+  "text": "not\\n  exist"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T166.md",
+  "line": 382,
+  "text": "not\\n     exist"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206.md",
+  "line": 153,
+  "text": "not\\nexist"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T218.md",
+  "line": 247,
+  "text": "not\\n   exist"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md",
+  "line": 98,
+  "text": "not\\nexist"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/handoff/T58-close-surviving-mutations.md",
+  "line": 18,
+  "text": "not\\nexist"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/patterns.md",
+  "line": 905,
+  "text": "not\\nexist"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/patterns.md",
+  "line": 2089,
+  "text": "not\\nexist"
+ },
+ {
+  "term": "S3-bare",
+  "file": ".softhouse/reviews/T77-pathb-recapture-review.md",
+  "line": 244,
+  "text": "not\\nexist"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/guards/ledgerguard/main.go",
+  "line": 5,
+  "text": "4.4.1 is today\\n// titled \"THE GUARD I-3 AND I-4 REQUIRE \u2014 IT DID NOT EXIST"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-17.md",
+  "line": 206,
+  "text": "4.4.1**, whose heading shouts\\n   `THE GUARD I-3 AND I-4 REQUIRE DOES NOT EXIST"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md",
+  "line": 30,
+  "text": "4.4.1 \u2014 whose heading is *\"IT DID NOT\\nEXIST"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md",
+  "line": 53,
+  "text": "4.4.1 **records as not\\nexisting"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md",
+  "line": 410,
+  "text": "4.4.1 *\"records as not\\n  existing"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md",
+  "line": 296,
+  "text": "4.4.1 (whose heading is *\"IT DID NOT\\nEXIST"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md",
+  "line": 483,
+  "text": "4.4.1 states this honestly.\\n- **`A2-25`'s F-1 is properly discharged.** \u00a78.3's *\"They are not checked. No guard"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md",
+  "line": 19,
+  "text": "4.4.1 records\\n# as not existing"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 39,
+  "text": "4.4.1 is today\\n// titled \"THE GUARD I-3 AND I-4 REQUIRE \u2014 IT DID NOT EXIST"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 153,
+  "text": "4.4.1 records as NOT EXISTING.\\nC2  records as not existing"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 182,
+  "text": "4.4.1 records\\n# as not existing"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md",
+  "line": 205,
+  "text": "4.4.1 records` /\\n`# as not existing`), and every term in the list is line-oriented, so even a term containing\\n\"records as not existing"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T232.md",
+  "line": 52,
+  "text": "4.4.1 records\\n# as not existing"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/nonnegotiable-guard-audit.md",
+  "line": 90,
+  "text": "4.4.1 before acting on it.** |\\n| L-2 | *\"Holds \u2026 alter `available` only, never posted `balance`.\"* (`:14`) | \u2014 | **ABSENT"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/nonnegotiable-guard-audit.md",
+  "line": 133,
+  "text": "4.4.1 states. L-1 is\\ntherefore **no longer \"no guard exists in any executable form\"**; see the row above. **This task did\\nnot recount the FIRES/VACUOUS/UNGATED/ABSENT"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh",
+  "line": 37,
+  "text": "4.4.1 records it as not existing' (T208 built it)\" \\\\n  'no guard for either' \\\\n  'no such guard exists' \\\\n  'records as not existing' \\\\n  'record[s]? .{0,25}as not existing"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 30,
+  "text": "4.4.1 records it as not existing' (T208 built it)\\n############################################################\\n--- pattern: no guard"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 35,
+  "text": "4.4.1).\\n.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md:557:carries the bolded sentence **\"No guard"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 43,
+  "text": "4.4.1).\"*\\ndocs/adr/DEC-2-gl-accounting-adapter.md:2369:  > the corrected claim, not the claim** \u2014 `not checked`, `No guard"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 52,
+  "text": "4.4.1 records as NOT EXISTING.\\n.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-18.md:1:# A2-18 \u2014 the I-3 / I-4 source guard DEC-2 \u00a74.4.1 records as not existing"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 57,
+  "text": "4.4.1 **records as not existing**\"* [VERIFIED by `A2-28` at commit `2e97162`].\\n--- pattern: record[s]? .{0,25}as not existing"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 59,
+  "text": "4.4.1 records as NOT EXISTING.\\n.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-18.md:1:# A2-18 \u2014 the I-3 / I-4 source guard DEC-2 \u00a74.4.1 records as not existing"
+ },
+ {
+  "term": "S4-441",
+  "file": ".softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt",
+  "line": 69,
+  "text": "4.4.1 records as NOT EXISTING.\\n.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-18.md:1:# A2-18 \u2014 the I-3 / I-4 source guard DEC-2 \u00a74.4.1 records as not existing"
+ },
+ {
+  "term": "S4-441",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2459,
+  "text": "4.4.1, whose\\n  > heading is *\"IT DID NOT EXIST"
+ },
+ {
+  "term": "S4-441",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 2686,
+  "text": "4.4.1\\n     (whose heading is *\"IT DID NOT EXIST"
+ },
+ {
+  "term": "S5-records",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md",
+  "line": 53,
+  "text": "records as not\\nexisting"
+ },
+ {
+  "term": "S5-records",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md",
+  "line": 410,
+  "text": "records as not\\n  existing"
+ },
+ {
+  "term": "S5-records",
+  "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md",
+  "line": 581,
+  "text": "records as NOT\\n  EXISTING"
+ },
+ {
+  "term": "S5-records",
+  "file": ".softhouse/patterns.md",
+  "line": 2089,
+  "text": "records as not\\nexist"
+ },
+ {
+  "term": "S6-noguard",
+  "file": "docs/adr/DEC-2-gl-accounting-adapter.md",
+  "line": 124,
+  "text": "No\\nguard for either"
+ }
+]

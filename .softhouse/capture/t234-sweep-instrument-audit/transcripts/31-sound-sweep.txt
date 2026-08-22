@@ -1,0 +1,152 @@
+================================================================================
+CALIBRATION (P-72) — the instrument is pointed at KNOWN POSITIVES first.
+Engine for every number below: python3 re, 3.9.6 (P-53 rule 1).
+================================================================================
+
+  known positive: .softhouse/guards/ledgerguard/main.go:1 @ 90c21d6  -- the survivor T224 MISSED (A2-18 wrote it)
+    text: '// Command ledgerguard is the source-level guard that DEC-2 §4.4.1 records as NOT EXISTING.'
+    T224's 9 prose terms, recall here : 0/9   NONE
+    T234 SOUND NET,       recall here : 5/6  ['S1-fwd', 'S2-rev', 'S3-bare', 'S4-441', 'S5-records']
+
+  known positive: .softhouse/conformance.sh:1116 @ 90c21d6  -- the site T224 was HANDED BY LINE NUMBER and fixed
+    text: '# as not existing — "balances are DERIVED, never written" (I-3) and "the ledger is append-only"'
+    T224's 9 prose terms, recall here : 0/9   NONE
+    T234 SOUND NET,       recall here : 3/6  ['S2-rev', 'S3-bare', 'S4-441']
+
+  CALIBRATION VERDICT: PASS — the sound net fires on the known positives; its negatives are meaningful.
+
+================================================================================
+LIVE RE-RUN — sound net, MULTI-LINE, over the whole tracked worktree at HEAD
+================================================================================
+  corpus: 4865 tracked files (whole repo, not just .softhouse/)
+  skipped (binary or >4MB): 25
+
+  S1-fwd       hits=525    files=155
+  S2-rev       hits=499    files=151
+  S3-bare      hits=466    files=199
+  S4-441       hits=56     files=17
+  S5-records   hits=48     files=14
+  S6-noguard   hits=44     files=12
+
+  --- S5 (records ... as not existing) + S6 (no guard for either): the RETRACTED CLAIM, verbatim ---
+    S5-records  .softhouse/gates.md:139  records as NOT EXISTING
+    S5-records  .softhouse/guards/ledgerguard/main.go:4  records as NOT EXISTING
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-18.md:1  records as not existing
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md:526  records as not existing
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md:53  records as not\nexisting
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md:410  records as not\n  existing
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md:280  records it as not existing
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md:290  records as NOT EXISTING
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md:581  records as NOT\n  EXISTING
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md:114  records as not existing
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md:115  records as not existing
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md:26  records as NOT EXISTING
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md:38  records as NOT EXISTING
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md:135  records as NOT EXISTING
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md:153  records as NOT EXISTING
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md:154  records as not existing
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md:155  records as NOT EXISTING
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md:157  records as NOT EXISTING
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md:165  records as not exist
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md:207  records as not existing
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md:275  records as not existing
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md:306  records as not existing
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md:329  records as not existing
+    S5-records  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T232.md:48  records as NOT EXISTING
+    S5-records  .softhouse/patterns.md:2056  records as NOT EXISTING
+    S5-records  .softhouse/patterns.md:2089  records as not\nexist
+    S5-records  .softhouse/patterns.md:2149  records as not existing
+    S5-records  .softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh:37  records it as not existing
+    S5-records  .softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh:40  records as not existing
+    S5-records  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:30  records it as not existing
+    S5-records  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:51  records as not existing
+    S5-records  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:52  records as NOT EXISTING
+    S5-records  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:53  records as not existing
+    S5-records  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:54  records as not existing
+    S5-records  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:57  records as not existing
+    S5-records  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:59  records as NOT EXISTING
+    S5-records  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:60  records as not existing
+    S5-records  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:61  records as not existing
+    S5-records  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:65  records as not existing
+    S5-records  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:69  records as NOT EXISTING
+    S5-records  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:70  records as not existing
+    S5-records  .softhouse/tasks.json:1915  records as not existing
+    S5-records  .softhouse/tasks.json:2054  RECORDS AS NOT EXISTING
+    S5-records  .softhouse/tasks.json:2072  records as NOT EXISTING
+    S5-records  .softhouse/tasks.json:2137  records as NOT EXISTING
+    S5-records  .softhouse/tasks.json:2153  records as not existING
+    S5-records  .softhouse/tasks.json:2245  records as not existING
+    S5-records  docs/adr/DEC-2-gl-accounting-adapter.md:2479  records as not existing
+    S6-noguard  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-14.md:594  no guard for I-3
+    S6-noguard  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md:40  No guard for either
+    S6-noguard  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md:71  No guard for either
+    S6-noguard  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md:94  No guard for either
+    S6-noguard  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md:557  No guard for either
+    S6-noguard  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md:26  No guard for either
+    S6-noguard  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md:34  No guard for either
+    S6-noguard  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md:280  no guard for I-3
+    S6-noguard  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md:484  No guard for either
+    S6-noguard  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md:86  no guard for either
+    S6-noguard  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md:86  No guard for either
+    S6-noguard  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md:144  no guard for either
+    S6-noguard  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md:191  no guard for either
+    S6-noguard  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md:275  no guard for either
+    S6-noguard  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T232.md:72  no guard for either
+    S6-noguard  .softhouse/patterns.md:1849  No guard for either
+    S6-noguard  .softhouse/patterns.md:2044  No guard for either
+    S6-noguard  .softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh:37  no guard for I-3
+    S6-noguard  .softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh:38  no guard for either
+    S6-noguard  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:30  no guard for I-3
+    S6-noguard  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:32  no guard for either
+    S6-noguard  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:33  No guard for either
+    S6-noguard  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:34  No guard for either
+    S6-noguard  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:35  No guard for either
+    S6-noguard  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:36  No guard for either
+    S6-noguard  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:37  No guard for either
+    S6-noguard  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:38  No guard for either
+    S6-noguard  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:39  No guard for either
+    S6-noguard  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:41  No guard for either
+    S6-noguard  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:43  No guard for either
+    S6-noguard  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:44  No guard for either
+    S6-noguard  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:45  No guard for either
+    S6-noguard  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:46  No guard for either
+    S6-noguard  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:90  No guard for either
+    S6-noguard  .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt:110  No guard for either
+    S6-noguard  .softhouse/tasks.json:1217  no guard for I-3
+    S6-noguard  .softhouse/tasks.json:1843  No guard for either
+    S6-noguard  .softhouse/tasks.json:1914  No guard for either
+    S6-noguard  .softhouse/tasks.json:2054  no guard for either
+    S6-noguard  docs/adr/DEC-2-gl-accounting-adapter.md:124  No\nguard for either
+    S6-noguard  docs/adr/DEC-2-gl-accounting-adapter.md:2456  No guard for either
+    S6-noguard  docs/adr/DEC-2-gl-accounting-adapter.md:2468  No guard for either
+    S6-noguard  docs/adr/DEC-2-gl-accounting-adapter.md:2685  No guard for either
+    S6-noguard  docs/adr/DEC-2-gl-accounting-adapter.md:2692  No guard for either
+
+  --- MULTI-LINE-ONLY hits: matches that SPAN a newline and therefore could NOT be found
+      by ANY line-oriented sweep in this chain (T224, T227, T232, A2-31/32/33) ---
+      count: 743  (in 161 files)
+      .softhouse/reviews/t179-guard-classifier/guard_classify.py                               46
+      .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt                                      34
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md                        33
+      .softhouse/reviews/t179-guard-classifier/rederive_population.py                          26
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205.md                        23
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md                        22
+      docs/adr/DEC-2-gl-accounting-adapter.md                                                  21
+      .softhouse/patterns.md                                                                   17
+      .softhouse/reviews/t41-probe/t196-drive-output.txt                                       17
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md                        16
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md                       15
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T183.md                        15
+      .softhouse/reviews/t179-guard-classifier/selftest.py                                     14
+      .softhouse/reviews/t47-probe/t178-guard-census-prefix-output.txt                         14
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md                       13
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T196.md                        12
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-full-repo.txt 12
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-unknown-full-repo.txt 12
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-full-repo.txt 12
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-unknown-full-repo.txt 12
+      .softhouse/reviews/t41-probe/t187-census-prefix-output.txt                               12
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-B-chain-disabled.txt 11
+      .softhouse/reviews/T183-evidence/drive-probes-output.txt                                 11
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/MUTANT-A2-honour-scratch-chain.txt 9
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/selftest-AFTER.txt 9

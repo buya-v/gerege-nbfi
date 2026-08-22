@@ -1,0 +1,274 @@
+SWEEP-INSTRUMENT CENSUS  (corpus: 4800 tracked files under .softhouse/, this dir excluded)
+  matched the sweep predicate : 94   (script instruments 60, prose-only 34)
+
+### SCRIPT INSTRUMENTS — engine + verdict
+  .softhouse/capture/audit-t44/analysis/T175-red/census.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/capture/audit-t44/analysis/t44_float_scan.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/capture/audit-t44/analysis/t44_r2_vs_r4_sweep.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/capture/leapboundary/analysis/T175-red/field-census.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/capture/leapboundary/analysis/T175-red/swallow-census.py
+      engines : python re x1
+      verdict : SOUND-on-escapes
+  .softhouse/capture/leapboundary/analysis/T207/census-at-rev.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/capture/leapboundary/analysis/T207/json-load-census.py
+      engines : grep BRE x2
+      verdict : SOUND-on-escapes
+  .softhouse/capture/lib/sweep_integrity.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/capture/pathb/t147/cp-digest-census.py
+      engines : grep BRE x1, python re x1
+      verdict : SOUND-on-escapes
+  .softhouse/capture/pathb/t147/float-sweep.py
+      engines : grep BRE x1
+      verdict : SOUND-on-escapes
+  .softhouse/capture/pathb/t149/t156-sweep-unguarded-mutators.py
+      engines : python re x17
+      verdict : SOUND-on-escapes
+  .softhouse/capture/pathb/t99/prove-sweep-patterns.sh
+      engines : grep -E x3, grep BRE x12
+      verdict : SOUND-on-escapes
+  .softhouse/capture/pathb/t99/sweep.sh
+      engines : grep -E x6, grep BRE x28
+      verdict : SOUND-on-escapes
+  .softhouse/capture/src/t169-red/census_catch_narrowing.py
+      engines : python re x4
+      verdict : SOUND-on-escapes
+  .softhouse/capture/t117-familyb/src/residual_census.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/capture/t159-review-t117/src/census_t159.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/capture/t223-g8-region-predicate/src/scan.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/capture/t74-multiplesof/T82-guard-proofs/sweep-census.py
+      engines : grep BRE x1, python re x3
+      verdict : SOUND-on-escapes
+  .softhouse/capture/tierA-a2/census-a2-26.py
+      engines : python re x1
+      verdict : SOUND-on-escapes
+  .softhouse/capture/tierA-a2/census-json-float-siblings.py
+      engines : python re x2
+      verdict : SOUND-on-escapes
+  .softhouse/capture/tierA-a2/prove-census-red.sh
+      engines : grep BRE x5
+      verdict : SOUND-on-escapes
+  .softhouse/conformance.sh
+      engines : git grep BRE x2, grep -E x14, grep BRE x68
+      verdict : SOUND-on-escapes
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-12-amount-census.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+      engines : git grep -E x1, git grep BRE x1
+      verdict : UNREPRODUCIBLE-DEAD-CD
+      hard path: .../agent-a356a016636abdd7e  exists=False
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/t203-enumerate-targets.py
+      engines : python re x1
+      verdict : SOUND-on-escapes
+  .softhouse/handoff/T57-float-scan.py
+      engines : grep BRE x1, python re x2
+      verdict : SOUND-on-escapes
+  .softhouse/handoff/T61-sweep/run-sweep.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/A2-11/enumerate-corpus.py
+      engines : python re x4
+      verdict : UNREPRODUCIBLE-DEAD-CD
+      hard path: .../agent-a3ac3d56d665ff7da  exists=False
+  .softhouse/reviews/T135-evidence/sweep-broad.sh
+      engines : grep -E x5, grep BRE x11
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/T135-evidence/sweep-misscheck.sh
+      engines : grep -E x2, grep BRE x2
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/T135-evidence/sweep-missprobe.sh
+      engines : grep -E x1, grep BRE x3
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/T135-evidence/sweep-pattern-check.sh
+      engines : grep -E x3, grep BRE x11
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/T138-evidence/r7b-census.sh
+      engines : grep -E x1, grep BRE x13
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/T155-probe/prove-iii-census.sh
+      engines : grep -E x3, grep BRE x4
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/T155-probe/prove-ix-sweep-and-help.sh
+      engines : grep -E x4, grep BRE x17
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/T155-probe/prove-v-census-counts.sh
+      engines : grep -E x2, grep BRE x2
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/T155-probe/prove-xiv-sweep-coverage.sh
+      engines : grep -E x3, grep BRE x7
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/T158-compare-enumerators.sh
+      engines : grep -E x3
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/T158-rederive-sweep.py
+      engines : python re x17
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/T184-evidence/t184-census.sh
+      engines : (none parsed)
+      verdict : UNREPRODUCIBLE-DEAD-CD
+      hard path: .../agent-ae0f13a1bbf7c82f8  exists=False
+  .softhouse/reviews/T184-evidence/t184-sweep.sh
+      engines : grep BRE x14
+      verdict : UNREPRODUCIBLE-DEAD-CD
+      hard path: .../agent-ae0f13a1bbf7c82f8  exists=False
+  .softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh
+      engines : git grep -E x1, git grep BRE x2, grep BRE x2
+      verdict : UNREPRODUCIBLE-DEAD-CD
+      hard path: .../agent-a3fcb4c7f1ea451ee  exists=False
+  .softhouse/reviews/a2-33-dec2-rev5/sweep.sh
+      engines : git grep -E x1, grep -E x1
+      verdict : UNREPRODUCIBLE-DEAD-CD
+      hard path: .../agent-a5244bad2b6814a39  exists=False
+  .softhouse/reviews/t185-probe/t185-independent-sweep.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/t23-probe/t23_scan_readjust.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/t26-probe/t26_scan.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/t29-probe/t29_sweep.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/t32-probe/t32_sweep.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/t34-probe/t34_scan_broad.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/t34-probe/t34_sweep.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/t38-probe/t38_periodratio_scan.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/t38-probe/t38_periodratio_sweep.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/t41-probe/leakgrep.py
+      engines : grep BRE x1, python re x1
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/t41-probe/t187-census.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/t45-probe/t45_leakgrep.py
+      engines : grep BRE x2, python re x2
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/t47-probe/t167-sibling-census.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/t47-probe/t178-guard-census.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/t47-probe/t181-census-zero-inspection.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/t47-probe/t181-split-census.py
+      engines : (none parsed)
+      verdict : SOUND-on-escapes
+  .softhouse/reviews/t47-probe/t47_leakgrep.py
+      engines : grep BRE x2, python re x2
+      verdict : SOUND-on-escapes
+
+### PROSE-ONLY SWEEPS — a closure claim in a .md with no committed instrument
+###   UNAUDITABLE BY CONSTRUCTION: the commands were never recorded.
+  .softhouse/tasks.json                                                                        closure-claim lines: 6
+        :842  "note": "MERGED, fire 20260822-080001. VERDICT MICRO-FIX (6 lines, exit 3 on an empty scan, no number moved). P-59 HIT IT EXACTLY AS BRIEFED AND IT HA
+        :1843  "note": "local fire 20260822-000013: DONE on softhouse/A2-25-dec2-rev3-review (88af349), merged. VERDICT REJECTED -- G-11 STAYS OPEN, NOT RATIFIABLE. 
+        :1915  "note": "local fire 20260822-000013: DONE on softhouse/A2-28-dec2-rev4 (1b6b3cf), merged. Diff is the ADR + handoff, NOTHING ELSE (driver-verified, 2 
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T224.md                            closure-claim lines: 5
+        :9  whole repository for the same claim under other wording — the sweep A2-28 scoped to the ADR only.
+        :78  **Terms swept**, the six named in the brief plus phrasings I added because P-26 says sweep the
+        :93  **Every hit was opened.** I did not stop at the first plausible match; population and disposition
+  .softhouse/patterns.md                                                                       closure-claim lines: 5
+        :707  > a sibling worktree. That is the exact command shape census and sweep tasks use, so **every repo-wide sweep run
+        :981  the interpreter in the transcript. "The sweep found N" is not a measurement; "Python `re` found N" is.
+        :2048  > *"no fourth or fifth surviving live assertion of the claim exists in this repository outside the two
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-31.md                           closure-claim lines: 4
+        :43  5. Whole-repo sweep.
+        :48  > **⚠ DISCLOSURE, because a clean claim of independence here would be false.** The whole-repo sweep
+        :260  # F-3 — the whole-repo sweep. TWO live survivors outside the ADR, one of them NOT accounted for by T224
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md                            closure-claim lines: 3
+        :212  fifth surviving live assertion of the claim exists in this repository"*. The sweep's measured
+        :233  > Before a repository sweep may support the sentence "the population is closed", it must be run
+        :466  - **`[UNVERIFIED]` completeness of the S3/S4/S5 line-level triage.** I opened every file in those
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md                           closure-claim lines: 2
+        :70  | 4 | Retracted-claim sweep | `/usr/bin/grep -nE` over the whole ADR for the strong claim's wordings **and its concept** (`can be admitted`, `admitted
+        :555  legitimate population intact at 43/4/1/5664. The retracted claim has **no fifth surviving site**.
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32.md                           closure-claim lines: 2
+        :110  returned no second live site in the ADR: `git grep -n -i -E 'DROPS on the pass path|head
+        :218  1. **I did not open all 2,246 hits individually.** I opened every hit in the eleven claim-bearing
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T204.md                            closure-claim lines: 2
+        :16  T178's own transcript is untouched byte-for-byte below the new banner.** Swept the whole repo for other
+        :102  **Honest negative:** I found no third site *inside* `.softhouse/handoff/` beyond the two sentences in
+  .softhouse/RESUME.md                                                                         closure-claim lines: 1
+        :94  returns a clean exit and an empty result, which reads exactly like "the population is closed."**
+  .softhouse/capture/t100-g8-rescope/g8-section.md                                             closure-claim lines: 1
+        :4  floor, under one gate id`. There is no second copy, deliberately.**
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T102.md                              closure-claim lines: 1
+        :257  - **[UNVERIFIED]** that no fourth restatement of the baseline claim exists somewhere I did not
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T112.md                              closure-claim lines: 1
+        :108  **What the sweep found, outside the named line.** Three restatement sites, all now handled:
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T134.md                              closure-claim lines: 1
+        :131  that was blind may have been hiding a hit. (It was not, per the sweep above, but the order matters
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T90.md                               closure-claim lines: 1
+        :221  emit nothing at all. That is the honest reason the sweep found them by reading and not by
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T91.md                               closure-claim lines: 1
+        :313  * **`[UNVERIFIED]` — that no fourth copy exists anywhere.** See the five sweep limitations above.
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T96.md                               closure-claim lines: 1
+        :305  - Repo-wide sweep for the census outside `emi.go`: the only live restatements are
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md                           closure-claim lines: 1
+        :50  **No fifth surviving assertion of the negation exists.**
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-33.md                           closure-claim lines: 1
+        :176  4. **I did not open all 8,120 hit lines individually.** I opened every hit in every live
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T154.md                            closure-claim lines: 1
+        :275  - **`[UNVERIFIED]` — that the sweep found every load-bearing grep in the program.** It covered
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T172.md                            closure-claim lines: 1
+        :141  305-line file is listed in the table above; there is no fifth site I am aware of and did not report.
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T181.md                            closure-claim lines: 1
+        :68  - **Exhaustiveness of the population** — I relied on **T183's** whole-repo sweep rather than re-running it; my census covers the 25 t41 rewriters only
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T183.md                            closure-claim lines: 1
+        :87  Every one of them is in `.softhouse/reviews/t41-probe/`; the whole-repo sweep found
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T187.md                            closure-claim lines: 1
+        :267  `.softhouse/reviews/*/` directories may hold the same shape; a repo-wide sweep under the R5 rule
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T191.md                            closure-claim lines: 1
+        :232  excluded root — **no other occurrence of `worktrees` anywhere in the output**. Observed:
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T210.md                            closure-claim lines: 1
+        :226  `.softhouse/bin/fire-program.sh` for this; a repo-wide sweep was out of scope (scope guard: edit only
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T232.md                            closure-claim lines: 1
+        :163  - **`[UNVERIFIED]` that P-72's own rule was applied to a fresh repo-wide sweep.** I did not re-sweep the
+  .softhouse/handoff/T49-dec1-v10-rereview.md                                                  closure-claim lines: 1
+        :640  swept the whole file for banned patterns; I did not re-derive every one of its 2,416 lines against §4.
+  .softhouse/program.json                                                                      closure-claim lines: 1
+        :81  "note": "Local fire 20260822-140002 (oracle REACHABLE throughout). EIGHT DISPATCHED IN TWO WAVES, EIGHT COMPLETED, EIGHT MERGED, ZERO LIVE AT EXIT. Wa
+  .softhouse/reviews/T114-review-of-T112.md                                                    closure-claim lines: 1
+        :188  The sweep found no other "nothing to do with G-8" restatement anywhere in the tree.
+  .softhouse/reviews/T181-review-of-T178.md                                                    closure-claim lines: 1
+        :306  whole-repo sweep; I relied on **T183's** (386 Python files / 280 write sites) for exhaustiveness and
+  .softhouse/reviews/T49-DEC-1-v10-rereview.md                                                 closure-claim lines: 1
+        :640  swept the whole file for banned patterns; I did not re-derive every one of its 2,416 lines against §4.
+  .softhouse/reviews/a2-33-dec2-rev5/REVIEW.md                                                 closure-claim lines: 1
+        :335  them because I swept the whole repo and silence would be indistinguishable from not looking.
+  .softhouse/reviews/a2-33-dec2-rev5/sweep-output-live-population.txt                          closure-claim lines: 1
+        :6055  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32.md:110:returned no second live site in the ADR: `git grep -n -i -E 'DROPS on the pass 
+  .softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json                              closure-claim lines: 1
+        :2967  "note": "Raised and dispatched by the driver, local fire 20260821-080001. || local fire 20260821-080001: DONE and MERGED (d202552, 4be0ae5). GRAPH 4 C
