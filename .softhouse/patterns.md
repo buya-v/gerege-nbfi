@@ -1764,7 +1764,7 @@ earlier. **The same fire that corrected one uncounted denominator shipped anothe
 **Why it is worse than a typo.** The sentence is *epistemically* right and *quantitatively* wrong, so it
 reads as careful. It concedes a limitation, cites the guard's own output, and names the mechanism — every
 signal a reader uses to decide a claim has been checked. And it **understates** coverage in a place where
-understating sounds like rigour: "three of four" says the guard is 25% live; "three of seven" says 43%.
+understating sounds like rigour: "three of four" says the guard is 25% live; "four of seven" says 43% live.
 A claim that flatters the speaker's caution gets less scrutiny than one that flatters their result.
 
 **P-63 said: re-derive every figure from the live artefact at the moment of dispatch. P-67 is the
@@ -1783,7 +1783,10 @@ narrower, sharper form:** a figure with a **denominator** needs the denominator 
 > verbatim from the guard, driven both polarities against the real `ledgerguard` binary — green 0,
 > red 3 planted verbs `REFUSED [I4-BUILDER]` — and its censuses reproduce the guard's own `CENSUS`
 > line to the digit, 47 files / 5045 calls. Driver-confirmed on merged `main` at `7fd5568`.] The live
-> figure is **four of seven = 43 %**, corrected in the sentence above.
+> figure is **FOUR of seven classes EMPTY**, i.e. **three of seven LIVE = 43 % live**, corrected in the
+> sentence above. (Arithmetic, since this ratio has now been miscounted in three separate ways: the
+> sentence measures LIVE coverage, so "three of four empty" = 1/4 = 25 % live, "three of seven empty"
+> = 4/7 = **57 %** live, and the true "four of seven empty" = 3/7 = **43 %** live.)
 >
 > So P-67 corrected an inherited denominator while inheriting its numerator from the same sentence, and
 > then **certified the pair as the fact**. The lesson survives its example and is strengthened by it:
@@ -1938,7 +1941,7 @@ state **where you looked**. If the answer does not include every place the thing
 
 - **What the independent workers caught — including four against the driver**:
   - **A2-21 → the driver**: `run_guards` invokes **SEVEN** guards, not six. `RESUME.md`, the fire headline and the driver's own T209 brief all said six — a count that took only the `|| failed=1` arm and silently dropped `guard_graded_root_is_this_tree`, a HARD guard with an early-exit shape.
-  - **A2-21 → the record**: *"I-3/I-4 went from ZERO enforcement to HARNESS-ENFORCED"* is an **overstatement**. Driver-verified from the guard's own green-run output: three of its **seven declared** detection classes inspect an **empty population** — 3955 string literals scanned, zero SQL DML anywhere under `nexus`, and no database driver declared at all. `I4-DML` and `I3-SQL-BALANCE` are proven by `--selftest`, **not by this tree**.
+  - **A2-21 → the record**: *"I-3/I-4 went from ZERO enforcement to HARNESS-ENFORCED"* is an **overstatement**. Driver-verified from the guard's own green-run output: **FOUR** of its **seven declared** detection classes inspect an **empty population** [*was "three" — driver error, corrected here by* `A2-33`, *fire* `20260822-140002`; `I4-BUILDER` *is empty too and its emptiness is the one the guard does NOT announce, which is exactly why counting the* `NIL-COVERAGE` *lines undercounts the classes. See* **P-67** *and its correction box*] — 3955 string literals scanned, zero SQL DML anywhere under `nexus`, and no database driver declared at all. `I4-DML` and `I3-SQL-BALANCE` are proven by `--selftest`, **not by this tree**.
   - **T212 → the driver**: the brief demanded `SCRATCH 337→337` and 7 chain moves; truth at `cc33f7f` is **357→357 and 9**. It reported the discrepancy rather than tuning to hit the driver's figure, and proved polarity-neutrality the right way — byte-identical before/after runs.
   - **T180 → T161**: T161's own prover asserted `attester == PRE-FIX` on the SIGKILL/POST-FIX row, which would have failed on the fixed script *for the right reason*. Corrected rather than left to rot.
   - **T211 → its own brief**: `wait` alone is **not** sufficient (a handler that RETURNS restarts the wait, hanging 20s); background+wait+exit **still orphans the child**, trading a stranded LOCK for an *unlocked* `claude` still writing to the repo — strictly worse; and `${pipestatus[1]}` dies because `$pipestatus` holds one element after `wait`.
