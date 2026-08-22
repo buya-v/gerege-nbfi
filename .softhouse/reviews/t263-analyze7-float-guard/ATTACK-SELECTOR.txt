@@ -1,0 +1,48 @@
+====================================================================================================
+T263 -- ADVERSARIAL SELECTOR DRIVE of guard-parse-float-ast.py
+guard: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a8b0f7b84e947d39c/.softhouse/reviews/t263-analyze7-float-guard/scratch/t164/.softhouse/capture/tierA-a2/guard-parse-float-ast.py
+====================================================================================================
+SHAPE                            VERDICT  rc   runtime amount type    adversary named in output?
+A-varalias-load                  MISSED   0    float                  NO
+B-modalias-assign                MISSED   0    float                  NO
+C-star-import                    MISSED   0    float                  NO
+D-import-submodule               MISSED   0    float                  NO
+E-parse-float-indirect-builtin   MISSED   0    float                  yes
+F-parse-float-lambda-float       MISSED   0    float                  yes
+G-kwargs-forward                 CAUGHT   1    float                  yes
+H-nested-and-comprehension       CAUGHT   1    float                  yes
+I-conditional-import             CAUGHT   1    float                  yes
+J-try-except-import-alias        CAUGHT   1    float                  yes
+K-decorator-wrapped-loader       MISSED   0    float                  NO
+L-jsondecoder-decode             MISSED   0    float                  NO
+M-functools-partial              MISSED   0    float                  NO
+N-getattr                        MISSED   0    float                  NO
+O-try-except-body                CAUGHT   1    float                  yes
+P-parse-float-float-literal      CAUGHT   1    float                  yes
+Q-subdirectory                   MISSED   0    float                  NO
+
+TOTAL SHAPES ......... 17
+CAUGHT (exit 1) ...... 6
+REFUSED (exit 2) ..... 0
+MISSED (exit 0 PASS) . 11
+  ... of which the shape REALLY produces a binary double at run time: 11
+
+  MISSED   A-varalias-load                  loader bound to a local variable: f = json.load; f(fp)
+  MISSED   B-modalias-assign                module bound to a variable: j = json; j.load(fp)
+  MISSED   C-star-import                    from json import * ; load(fp)
+  MISSED   D-import-submodule               import json.decoder binds the name `json`; json.load(fp)
+  MISSED   E-parse-float-indirect-builtin   parse_float=pf where pf IS the builtin float
+  MISSED   F-parse-float-lambda-float       parse_float=lambda s: float(s) -- a keyword that satisfies the check and still doubles
+  CAUGHT   G-kwargs-forward                 json.load(fp, **opts) with opts carrying no parse_float
+  CAUGHT   H-nested-and-comprehension       the call lives in a nested function inside a comprehension
+  CAUGHT   I-conditional-import             import performed inside an if-branch
+  CAUGHT   J-try-except-import-alias        try: import simplejson as json / except: import json  -- then json.load(fp)
+  MISSED   K-decorator-wrapped-loader       the loader is wrapped by a decorator and called through the wrapper
+  MISSED   L-jsondecoder-decode             json.JSONDecoder().decode(text) -- never named load/loads
+  MISSED   M-functools-partial              functools.partial(json.load)
+  MISSED   N-getattr                        getattr(json, "load")(fp)
+  CAUGHT   O-try-except-body                a plain json.load inside try/except (control: SHOULD be caught)
+  CAUGHT   P-parse-float-float-literal      parse_float=float (control: T164 claims this is a dodge and fails)
+  MISSED   Q-subdirectory                   a non-compliant json.load in a SUBDIRECTORY of the root
+
+EVERY shape above was EXECUTED against {"amount": 1200000.25}, so a MISS is a measured miss on a file that really doubles, not a miss on dead code.
