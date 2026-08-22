@@ -22,7 +22,7 @@
     ".softhouse/capture/"
    ],
    "description": "THIS TASK CARRIES AN EXPLICIT PROMOTION MANDATE, which T112 correctly refused to take without one. *** THE DRIVER'S FIRST VERSION OF THIS TASK NAMED THE WRONG FAMILY AND WOULD HAVE SENT YOU ON AN IMPOSSIBLE ERRAND. Corrected by T114, which refused the brief (P-20). *** The promotable family is B, NOT A. FAMILY B: option (a) is reachable TODAY with ZERO port change and NO DEC-n amendment - 761 cells, ZERO cell diffs, FAIL on two invariants without the exemption, PASS with it. That is the vector to promote. FAMILY A: NOT reachable by exemption - 2525 cells with exactly ONE cell diff per case (the final row's outstanding_principal_minor, e.g. expected 109 got 0), and it stays FAIL UNCHANGED under the exemption, because an invariant exemption cannot cure a PARITY diff. Do not attempt family A here. NOTE THE PARADOX AND STATE IT IN THE VECTOR'S OWN NOTE: family B is the family where the oracle genuinely does not amortize AND the Go port reproduces it cell for cell, so promoting it records a shape on which the port is faithful and the loan is not repaid. That is exactly why it is promotable and exactly why the exemption must be loud. T83 STEP 5 recorded invariant_exemptions as INERT on this divergence while T101/T112 graded it working - settle that contradiction FIRST and report it; the likely resolution is that T83 tested it against family A. Capture from the live oracle only; synthesise nothing. The exemption must be declared, narrow, and legible in the report - an exemption that silences an invariant without saying so is the vacuous-guard class (P-22). Options (b) and (c) amend the graded domain and are HARD USER GATES - do not touch them.",
-   "note": "Raised by the driver, local fire 20260821-080001, from T112 follow-up 4. NEEDS THE ORACLE. Gated on T114's verdict because promoting a vector on the strength of an unreviewed write-up is exactly the mistake this pipeline exists to prevent. Pair with an independent reviewer. || local fire 20260821-080001: FAMILY CORRECTED A->B after T114 refused the driver's brief. The A/B attribution has now been stated backwards by the driver THREE times, twice AFTER the correction landed on main in 95ec06a. Check gates.md:978 before restating it. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md §1. || local fire 20260821-134344: NOT DISPATCHED THIS FIRE, deliberately, and this is a scheduling call not a doubt about the task. T117 confirms T116 is NOT invalidated -- its target cell is untouched -- but promoting a vector MOVES THE STORE'S VECTOR COUNT while T155 and T158 are actively measuring store counts (43/5664 is the baseline both are grading against), and the deflation manifest T160 that would make such a move detectable does not exist yet. T116 must also read T117 handoff section 4 before writing its vector's note. Dispatch after T155, T158 and T159 land.",
+   "note": "Raised by the driver, local fire 20260821-080001, from T112 follow-up 4. NEEDS THE ORACLE. Gated on T114's verdict because promoting a vector on the strength of an unreviewed write-up is exactly the mistake this pipeline exists to prevent. Pair with an independent reviewer. || local fire 20260821-080001: FAMILY CORRECTED A->B after T114 refused the driver's brief. The A/B attribution has now been stated backwards by the driver THREE times, twice AFTER the correction landed on main in 95ec06a. Check gates.md:978 before restating it. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md §1. || local fire 20260821-134344: NOT DISPATCHED THIS FIRE, deliberately, and this is a scheduling call not a doubt about the task. T117 confirms T116 is NOT invalidated -- its target cell is untouched -- but promoting a vector MOVES THE STORE'S VECTOR COUNT while T155 and T158 are actively measuring store counts (43/5664 is the baseline both are grading against), and the deflation manifest T160 that would make such a move detectable does not exist yet. T116 must also read T117 handoff section 4 before writing its vector's note. Dispatch after T155, T158 and T159 land. DRIVER NOTE fire 20260822-080001: dependency T114 has NO ENTRY in tasks.json (archived run). T116 is blocked on a task this file cannot resolve — re-scope or re-point the dependency before it can ever become READY.",
    "carried_from": "2026-08-17-run1-harness-schedule-poc"
   },
   {
@@ -823,8 +823,8 @@
    "executor": "agent",
    "model": "opus",
    "target": "docs",
-   "status": "pending",
-   "attempts": 0,
+   "status": "in_progress",
+   "attempts": 1,
    "dependencies": [
     "T178"
    ],
@@ -833,7 +833,8 @@
     ".softhouse/handoff/"
    ],
    "description": "INDEPENDENT review of T178. Re-derive; do not accept the author's conclusions. Read the upstream handoff from the BRANCH (git show <branch>:.softhouse/handoff/<run_id>/T178.md) and the diff with git diff main...<branch> (THREE DOTS, P-41). Drive the author's guard/probe yourself: a guard that was never driven RED is not shipped (P-22), a prover must be falsifiable toward the FIX as well as the defect (P-50), and a check that inspects zero items is an ERROR not a pass (P-35). Verdict APPROVED / MICRO-FIX (<=10 lines, mechanical, never a number) / REJECTED with specifics. If you find nothing, state what you checked so silence is distinguishable from not looking.",
-   "note": "Registered by the driver at dispatch of T178 (plan gate rule 1: every coder/analyst task gets a paired reviewer)."
+   "note": "DISPATCHED fire 20260822-080001, worktree-isolated, model opus.",
+   "branch": "softhouse/T181-review-t178"
   },
   {
    "id": "T182",
@@ -902,8 +903,8 @@
    "executor": "agent",
    "model": "opus",
    "target": "docs",
-   "status": "pending",
-   "attempts": 0,
+   "status": "in_progress",
+   "attempts": 1,
    "dependencies": [
     "T175"
    ],
@@ -911,7 +912,8 @@
     ".softhouse/capture/"
    ],
    "description": "INDEPENDENT review of T175. Re-derive; do not accept the author's conclusions. Read the upstream handoff from the BRANCH (git show <branch>:.softhouse/handoff/<run_id>/T175.md) and the diff with git diff main...<branch> (THREE DOTS, P-41). Drive the author's guard/probe yourself: a guard that was never driven RED is not shipped (P-22), a prover must be falsifiable toward the FIX as well as the defect (P-50), and a check that inspects zero items is an ERROR not a pass (P-35). Verdict APPROVED / MICRO-FIX (<=10 lines, mechanical, never a number) / REJECTED with specifics. If you find nothing, state what you checked so silence is distinguishable from not looking.",
-   "note": "Registered by the driver at dispatch of T175 (plan gate rule 1: every coder/analyst task gets a paired reviewer)."
+   "note": "DISPATCHED fire 20260822-080001, worktree-isolated, model opus.",
+   "branch": "softhouse/T185-review-t175"
   },
   {
    "id": "T186",
@@ -1341,9 +1343,10 @@
     "T199",
     "T197"
    ],
-   "status": "pending",
-   "attempts": 0,
-   "note": "raised by T199 (D-1, with a specified but deliberately unapplied 6-line patch) and T197 (F-1). Driver independently confirmed the D-1 mechanism: 0 mentions of either override in conformance.sh, env ranked above the anchor at reporoot.go:247."
+   "status": "in_progress",
+   "attempts": 1,
+   "note": "DISPATCHED fire 20260822-080001, worktree-isolated, model opus.",
+   "branch": "softhouse/T201-repo-root-bypass"
   },
   {
    "id": "T202",
@@ -1360,9 +1363,10 @@
    "dependencies": [
     "T200"
    ],
-   "status": "pending",
-   "attempts": 0,
-   "note": "raised by T200 as its highest-priority follow-up, plus its T-b and T-c. Same function and same defect class as T190, which is why it must not wait."
+   "status": "in_progress",
+   "attempts": 1,
+   "note": "DISPATCHED fire 20260822-080001, worktree-isolated, model opus.",
+   "branch": "softhouse/T202-fireprogram-twin"
   },
   {
    "id": "T203",
@@ -1381,9 +1385,51 @@
     "T196",
     "T198"
    ],
-   "status": "pending",
-   "attempts": 0,
-   "note": "raised by T196 (F-2) and CORRECTED by T198, which established T58 cannot truncate and ranked the exposure at 13 live parity vectors. Do not re-scope it back to four."
+   "status": "in_progress",
+   "attempts": 1,
+   "note": "DISPATCHED fire 20260822-080001, worktree-isolated, model opus.",
+   "branch": "softhouse/T203-vectorstore-rewriters"
+  },
+  {
+   "id": "A2-18",
+   "title": "DEC-2 P-8 — build the I-3/I-4 source guard that does not exist: nothing anywhere looks for a balance write path or an UPDATE/DELETE against the journal",
+   "role": "coder",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "status": "in_progress",
+   "attempts": 1,
+   "dependencies": [],
+   "files_hint": [
+    ".softhouse/guards/"
+   ],
+   "description": "DEC-2 rev 2 precondition P-8, and §5.3 states it is INDEPENDENT of P-1..P-5 and could be written today. The banner at the top of docs/adr/DEC-2-gl-accounting-adapter.md says it plainly: run_guards invokes exactly five guards and ALL FIVE are about floating point, gofmt and exception scope; NOTHING in this repository looks for a balance write path, or for an UPDATE/DELETE against acc_gl_journal_entry. I-3 (balances are derived, never written) and I-4 (append-only ledger) are CLAUDE.md non-negotiables with zero enforcement. Build the guard as a STANDALONE executable under .softhouse/guards/ — do NOT edit .softhouse/conformance.sh in this task (T201 holds that file this fire); wiring into run_guards is a separate follow-up you must specify but not perform.",
+   "acceptance": null,
+   "note": "DISPATCHED fire 20260822-080001, worktree-isolated, model opus.",
+   "contract_independent": true,
+   "branch": "softhouse/A2-18-ledger-invariant-guard"
+  },
+  {
+   "id": "A2-19",
+   "title": "SECOND independent review of DEC-2 revision 2 as it now stands post-micro-fix — the review whose verdict decides ratification",
+   "role": "reviewer",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "status": "in_progress",
+   "attempts": 1,
+   "dependencies": [
+    "A2-16",
+    "A2-17"
+   ],
+   "files_hint": [
+    ".softhouse/reviews/"
+   ],
+   "description": "DEC-2 rev 2 carries: 'A further independent review must pass clean before the driver may ratify.' A2-17 WAS a review and returned MICRO-FIX, applying its own 7-line fix — so the document AS IT NOW STANDS has been reviewed by nobody. This is that review. Its verdict is what the driver acts on for ratification. Also adjudicate A2-17's sequencing recommendation (decide P-6/P-7 — the capabilities.json and PIN.json schema ids — BEFORE P-1..P-5).",
+   "acceptance": null,
+   "note": "DISPATCHED fire 20260822-080001, worktree-isolated, model opus.",
+   "contract_independent": true,
+   "branch": "softhouse/A2-19-review-dec2-rev2-second"
   }
  ],
  "cross_corroboration": {
