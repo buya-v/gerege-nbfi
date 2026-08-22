@@ -1,0 +1,17 @@
+.softhouse/bin/go-env.sh
+.softhouse/capture/t253-portability/evidence/10-mktemp-matrix.txt
+.softhouse/capture/t253-portability/evidence/20-apply-d1.txt
+.softhouse/capture/t253-portability/evidence/30-d2-red-drive.txt
+.softhouse/capture/t253-portability/evidence/40-BAR-mac-after.txt
+.softhouse/capture/t253-portability/evidence/50-t234-residue-probe.txt
+.softhouse/capture/t253-portability/evidence/60-hardcoded-toolchain-census.txt
+.softhouse/capture/t253-portability/evidence/70-cross-impl-compare.txt
+.softhouse/capture/t253-portability/evidence/80-BAR-mac-final.txt
+.softhouse/capture/t253-portability/instruments/10-mktemp-matrix.sh
+.softhouse/capture/t253-portability/instruments/20-apply-d1.py
+.softhouse/capture/t253-portability/instruments/30-d2-red-drive.sh
+.softhouse/capture/t253-portability/instruments/50-t234-residue-probe.sh
+.softhouse/capture/t253-portability/instruments/60-hardcoded-toolchain-census.py
+.softhouse/capture/t253-portability/instruments/70-cross-impl-compare.sh
+.softhouse/conformance.sh
+.softhouse/handoff/T253-harness-portability.md

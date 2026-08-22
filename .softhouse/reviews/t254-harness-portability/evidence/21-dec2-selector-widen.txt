@@ -1,0 +1,14 @@
+WIDE population: lines mentioning conformance.sh = 59
+  of which instrument-20 (forward form) matched   = 9
+  UNMATCHED but carrying a 3-4 digit number       = 3
+
+--- every unmatched mention that carries a number (manual adjudication) ---
+DEC-2:428  nums=['130', '159', '894', '1254']
+    `admit.go`'s class switch ~130 → **159**; `conformance.sh`'s `-context` append 894 → **1254**.
+DEC-2:1718  nums=['2026']
+    [MEASURED by A2-28, commit 2e97162, 22 August 2026, `bash .softhouse/conformance.sh` unfiltered]
+DEC-2:2484  nums=['7884']
+    | unfiltered — **what `conformance.sh` performs** | **exit 0**, `VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared`. **The string "ledger" occurs exactl
+
+--- P-40: unmatched mentions with NO number at all (nothing to rot) ---
+    47 lines skipped as un-numbered prose

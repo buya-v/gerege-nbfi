@@ -1,0 +1,64 @@
+======================================================================
+T254 F-x: STALE INHERITED GOROOT — cloud vs mac go-env.sh
+stage:  /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t254-goroot.YHsaNE4OtF   (outside any git repo, no toolchain)
+bogus:  GOROOT=/nonexistent/t254/goroot
+go on PATH: /Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go (go version go1.26.6 darwin/arm64)
+======================================================================
+control: git rev-parse --git-common-dir in stage -> rc=128 (non-zero = outside a repo, as required)
+
+----------------------------------------------------------------------
+### cloud  —  sourcing with a BOGUS GOROOT already exported
+----------------------------------------------------------------------
+gerege go-env: THE PINNED GO TOOLCHAIN IS NOT ON THIS HOST.
+gerege go-env:   looked for an executable go/bin/go under, in order:
+gerege go-env:     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t254-goroot.YHsaNE4OtF/cloud/.softhouse/toolchain   ABSENT
+gerege go-env: SUBSTITUTING the go already on PATH:   /Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go
+gerege go-env:   go: cannot find GOROOT directory: /nonexistent/t254/goroot
+gerege go-env:   WHY: the pinned toolchain is gitignored and host-local, so it is absent on
+gerege go-env:   every host but the one it was installed on. Refusing here would make the
+gerege go-env:   harness unrunnable rather than safer — the compiler-absent refusals in
+gerege go-env:   check-ledger-invariants.sh and conformance.sh:load_toolchain still stand.
+gerege go-env:   GOROOT/GOPATH/GOCACHE/GOMODCACHE are deliberately NOT exported on this path;
+gerege go-env:   this go uses its own built-in GOROOT.
+gerege go-env: THIS IS A TOOLCHAIN SUBSTITUTION AND IT IS STATED, NOT HIDDEN. It is fine for
+gerege go-env:   building and for the source-level guards. It is NOT a pinned-toolchain run,
+gerege go-env:   and any PARITY claim must name the toolchain above. GEREGE_GO_STRICT=1
+gerege go-env:   refuses instead of substituting.
+--- POST-SOURCE STATE ---
+GOROOT after source     = /nonexistent/t254/goroot
+GEREGE_GO_SOURCE        = substituted:/Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go
+command -v go           = /Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go
+--- DOES THE ANNOUNCED go ACTUALLY RUN? ---
+go version rc=2
+go version out: go: cannot find GOROOT directory: /nonexistent/t254/goroot
+### cloud: final rc from the sourced-then-run probe = 2
+
+----------------------------------------------------------------------
+### mac  —  sourcing with a BOGUS GOROOT already exported
+----------------------------------------------------------------------
+go-env.sh: dropping inherited GOROOT=/nonexistent/t254/goroot — that directory does not exist.
+go-env.sh: the PINNED Go toolchain was NOT found on this host.
+go-env.sh:   searched (needed <cand>/go/bin/go):
+    /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t254-goroot.YHsaNE4OtF/mac/.softhouse/bin/../../toolchain
+go-env.sh:   anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t254-goroot.YHsaNE4OtF/mac/.softhouse/bin (git rev-parse --git-common-dir rc=128)
+go-env.sh: FALLBACK IN EFFECT — using the `go` already on PATH:
+go-env.sh:   /Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go
+go-env.sh:   go version go1.26.6 darwin/arm64
+go-env.sh: THIS IS NOT THE PINNED TOOLCHAIN. It is announced, never silent.
+go-env.sh: Guards may build with it; VECTOR CAPTURE and any parity claim must
+go-env.sh: use the pinned toolchain. GEREGE_GO_SOURCE=fallback-path.
+--- POST-SOURCE STATE ---
+GOROOT after source     = <unset>
+GEREGE_GO_SOURCE        = fallback-path
+command -v go           = /Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go
+--- DOES THE ANNOUNCED go ACTUALLY RUN? ---
+go version rc=0
+go version out: go version go1.26.6 darwin/arm64
+### mac: final rc from the sourced-then-run probe = 0
+
+======================================================================
+READING: rc=0 with a real version string means the announced fallback
+WORKS. rc!=0 with 'cannot find GOROOT directory' means the script
+announced a substitution to a compiler that CANNOT RUN — the very error
+its own header describes.
+======================================================================

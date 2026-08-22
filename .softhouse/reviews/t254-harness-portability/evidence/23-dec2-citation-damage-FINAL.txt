@@ -1,0 +1,25 @@
+==========================================================================
+DEC-2 CITATION DAMAGE  --  T255 rev8 FINAL TIP b334786 (P-69 closing re-measure)
+document: .softhouse/reviews/t254-harness-portability/evidence/.dec2-rev8-final.md  (3541 lines)
+hypothetical edit: insert +52 lines at conformance.sh line 570
+==========================================================================
+TERM-1  conformance.sh line-citations in the document ....... 9
+TERM-2  distinct line NUMBERS inside those citations ........ 16
+TERM-3  citations containing >=1 number at/below line 570 .. 9
+TERM-4  individual line NUMBERS that would rot .............. 16
+        -> 100.0% of harness line numbers rot
+
+--- every citation, with rot verdict ---
+  DEC-2:96    conformance.sh:1152-1187                     ROT (1152,1187 -> 1204,1239)
+  DEC-2:1059  conformance.sh:1152-1187                     ROT (1152,1187 -> 1204,1239)
+  DEC-2:1116  conformance.sh:1189-1213                     ROT (1189,1213 -> 1241,1265)
+  DEC-2:1773  conformance.sh:718                           ROT (718 -> 770)
+  DEC-2:2470  conformance.sh:1254                          ROT (1254 -> 1306)
+  DEC-2:2769  conformance.sh:1152-1187                     ROT (1152,1187 -> 1204,1239)
+  DEC-2:2903  conformance.sh:1115-1116                     ROT (1115,1116 -> 1167,1168)
+  DEC-2:3207  conformance.sh:1115-1116                     ROT (1115,1116 -> 1167,1168)
+  DEC-2:3423  conformance.sh:1189-1213                     ROT (1189,1213 -> 1241,1265)
+
+--- P-40 SKIPPED: prose mentions of conformance.sh with NO line number ---
+  51 un-numbered mentions (not counted as rot; nothing to rot)
+==========================================================================

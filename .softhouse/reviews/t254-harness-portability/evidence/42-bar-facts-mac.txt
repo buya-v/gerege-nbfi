@@ -1,0 +1,32 @@
+==========================================================================
+BAR FACTS — MAC candidate 0208477 (residue PRESENT)
+==========================================================================
+[1] PROBE LINE PRESENT? .......... YES
+    (matched 1 line(s) containing 'probe =')
+[2] PROBE LINE VALUE ............. conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+
+[3] VERDICT LINE(S) .............. 1
+    VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+
+[4] BASELINE INVARIANTS (driver baseline @ c0e88c6: PASS, 46 parity /
+    7884 cells, frontier 11 == pinned 11, 9 exemption pins, 6/6 killed)
+    parity vectors / cells                       46 parity vectors match the pinned reference oracle, 7884 cells compared.
+    fail-open frontier line                      frontier 11, pinned at 11.
+    exemption census line                        ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/conformance/exemption.go:389:7  invariant_exemptions switches off %q and THIS VECTOR CITES NO CAPTURE AT ALL (provenance.capture_ref is empty) - %s. A vector with no cap...
+    wrong-impl line                              --- WHAT THIS RUN ACTUALLY GRADES (named wrong implementations killed) ---
+
+[5] FAIL-OPEN GUARD LINES ........ 2
+    conformance: CENSUS fail-open instruments — inspected 924 tracked .sh/.py file(s) under
+    conformance:   TIER1 = dead path AND a printing failure arm (fail-open, live). TIER1B = enters a
+
+[6] LINES MENTIONING A TIER ...... 2
+    conformance:   TIER1 = dead path AND a printing failure arm (fail-open, live). TIER1B = enters a
+    conformance:   directory that is not there and carries on, whatever it prints afterwards. TIER2 =
+
+[7] TOOLCHAIN NOTICE on STDOUT ... 0 line(s)
+    TOOLCHAIN NOTICE on STDERR ... 0 line(s)
+
+[8] GUARD/GATE-PREFIXED LINES .... 0
+
+[9] stdout lines=528  stderr lines=0
+==========================================================================
