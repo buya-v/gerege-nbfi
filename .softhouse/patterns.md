@@ -1696,3 +1696,41 @@ reports before the driver knew it had a defect.
 
 **The general rule:** if a check's value moves when the *observer* moves, it is not an integrity check. Test
 any digest you intend to circulate from **two different working directories** before you circulate it.
+
+### P-62. Verifying a REFUSAL by its exit code is a null control — an empty input refuses with the same code
+
+**Caught by the driver against itself, fire `20260822-080001`, while verifying `A2-20`.**
+
+The driver set out to confirm that a planted unknown-context vector was now refused. It ran:
+
+```
+cd nexus && go build …            # cwd is now nexus/
+cp -R .softhouse/vectors /tmp/…   # FAILS — no such path from nexus/
+<binary> -store=/tmp/…            # graded an EMPTY store
+```
+
+Result: **`EXIT=2`, `VERDICT: UNUSABLE`**. Which is *exactly* what a correct refusal looks like.
+
+The `cp` printed one line of error into a wall of output; the run then graded **zero vectors** and exited 2
+because a store with no parity vector is unusable — **the same exit code the refusal produces, for an
+entirely different reason.** Had the driver read the exit code and stopped, it would have recorded "the fix
+refuses" on the strength of a run where **the fix was never exercised at all**.
+
+It was caught only by reading the intermediate counts: `parity vectors PASS 0`, `cells compared 0`. The real
+verification shows `parity vectors PASS 43`, `contract-refusal PASS 4`, and the planted rows listed as
+`INADMISSIBLE` **by name**.
+
+**Two rules, and the second is the general one:**
+
+1. **When verifying a refusal, assert on what the refusal SAYS and what the surviving population IS** — the
+   planted case named, the legitimate counts still present. Never on the exit code alone. This is **P-36**
+   (a null control looks exactly like a result) meeting the fact that `exit 2` in this harness is
+   deliberately overloaded: unusable corpus, failed hard guard, unreachable oracle, wrong repo root, and —
+   since `T208` — an I-3/I-4 violation.
+2. **The shell's working directory persists between tool calls**, and it is the standing instruction this
+   program has now violated twice. A prior fire ran a `git merge` inside the Fineract checkout for the same
+   reason. **Anchor destructive or comparative commands with an absolute path or an explicit `cd` to the
+   repo root** rather than trusting where the previous call left you.
+
+The generalisation worth keeping: **a check whose PASS and whose NOT-RUN are the same observable is not a
+check.** Ask of any verification — *if my setup had silently failed, would this look different?*
