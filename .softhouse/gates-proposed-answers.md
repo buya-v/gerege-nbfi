@@ -205,3 +205,29 @@ The same reasoning as P-4 applies, one level up:
 **Exemption, same as P-4/P-5:** anything that changes a number the oracle would emit is not prose and blocks normally.
 
 **Applies to G-8 immediately.** Its measurements have reproduced twice under independent review. It is frozen: MNT 10.01 at n=3000, not a bound, two phenomena, family-B exemption clean at 761 cells / 0 diffs. Further wording issues are correction lines. The gate's *remedy* remains what it always was — a DEC-n amendment, and therefore a hard `user` gate for Buyan.
+
+> **CORRECTION — `T228`, measured at `f8436b4`. THE RULE ABOVE STANDS. THE ILLUSTRATION IN ITS LAST PARAGRAPH
+> DOES NOT, AND THE WAY IT FAILED IS THE POINT.**
+>
+> - ***"MNT 10.01 at n=3000"* — the MEASUREMENT stands and was reproduced exactly by `T219` under a fresh
+>   tenant id. What was wrong is that the domain NAMED THE WRONG VARIABLE.** The unamortized residual is
+>   `min(B_minor, n·δ)` — **a function of the PRINCIPAL**, with the term entering only as the cap. T117 and
+>   T159 topped out at principals of 501 and 1001 minor units, so MNT 10.01 was a fact about *the largest
+>   principal anybody had asked*, wearing a term as its label. **`T219` tripled it WITHOUT ASKING A LARGER
+>   TERM**: at the same `n = 3000` the largest unamortized residual is **MNT 30.00** (`B3001`, `B4499`), the
+>   largest FULL family-B residual is **MNT 29.99** (`B2999`), and the largest failing disbursement is
+>   **MNT 44.99** (`B4499`). **Do not restate any of these without the PRINCIPAL.**
+> - ***"not a bound"* is CORRECT and is the clause this paragraph got right** — it is precisely what `T117`
+>   warned and what `T219` then demonstrated for the second time. Keep it.
+> - ***"two phenomena"* is now two phenomena and a THIRD OUTCOME** (the oracle emits no schedule at all).
+> - ***"family-B exemption clean at 761 cells / 0 diffs"* is CORRECT over its named domain** — T100's demo at
+>   600.0 % / MNT 0.01 / n = 108 — and is left untouched.
+>
+> **What this costs P-6, and it is not nothing.** *"Frozen"* was read as *"the figures are settled"*, and
+> since it was written the gate's headline numbers have moved **four times**, every one of them by a NEW
+> MEASUREMENT: `T117` (MNT 5.01), `T159` (MNT 10.01), `T223` (the rate axis — *"600 % only"* dead),
+> `T229` (the ceiling, wrong by 3×), `T219` (the residual, wrong by 3× at the same term). **P-6's own
+> exemption already covered every one of them** — *"a new task is justified only by a new MEASUREMENT"* — so
+> the rule was never violated; only its illustration went stale. **Read P-6 as freezing PROSE CHURN, never as
+> freezing a NUMBER.** The live figures live in `gates.md` § `G-8` and nowhere else; this file must not carry
+> a second copy of them (P-27).
