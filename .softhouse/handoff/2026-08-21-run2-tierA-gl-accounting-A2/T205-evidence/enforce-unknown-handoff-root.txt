@@ -1,0 +1,81 @@
+=== T179 parser-based guard classifier
+root                : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac45912554060fb6a/.softhouse/handoff
+python parser       : ast (stdlib, authoritative for Python)
+shell parser        : NONE — every .sh file is REFUSED, and counted
+
+--- POPULATION, with denominators
+  script files enumerated (.py/.sh/.bash)   : 36
+    of which Python, parsed                 : 21
+    of which REFUSED                        : 15
+      REFUSED-SHELL-NO-PARSER               : 15
+  non-script files under the same root      : 205 (never inspected)
+    largest uninspected groups              : .md 165, .out 26, .txt 12, <none> 1, .go 1
+  mutation call sites found in Python       : 16
+
+--- MUTATION SITES: scope x verdict (every site appears exactly once)
+  scope      UNGUARDED                 GUARDED-PROCESS-IMPORTED  GUARDED-PROCESS           GUARDED-FINALLY-INDIRECT  GUARDED-CONTEXTMANAGER    GUARDED-FINALLY           ATOMIC                    SANDBOX                   
+  TRUSTED    3                         0                         0                         0                         0                         0                         0                         0                            (total 3)
+  UNKNOWN    5                         0                         0                         0                         0                         1                         1                         0                            (total 7)
+  SCRATCH    0                         0                         0                         0                         0                         0                         0                         6                            (total 6)
+  ALL        8                         0                         0                         0                         0                         1                         1                         6                            (total 16)
+
+--- UNGUARDED MUTATIONS OF A TRUSTED ARTEFACT (3 sites in 1 files)
+  T61-sweep/build-pass3f.py:216  os.chmod  tags=CAPTURE
+      target: os.path.join(SRC, 'run-pass3f.sh')
+  T61-sweep/build-pass3f.py:147  open(mode='w')  tags=CAPTURE
+      target: os.path.join(SRC, 'Capture3f.java')
+  T61-sweep/build-pass3f.py:215  open(mode='w')  tags=CAPTURE
+      target: os.path.join(SRC, 'run-pass3f.sh')
+
+--- UNGUARDED MUTATIONS WHOSE TARGET COULD NOT BE RESOLVED (5 sites in 3 files)
+    These are NOT clean and NOT dirty. They are unresolved, and they are
+    printed so nothing is silently dropped (P-40).
+  2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/t203-guard-arms.py:100  shutil.rmtree   target: tmproot
+  2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/t203-redgreen.py:131  shutil.rmtree   target: out
+  2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/t203-redgreen.py:208  shutil.rmtree   target: tmproot
+  2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/t203-redgreen.py:141  io.open(mode='wb')   target: p
+  T61-mutations.py:291  open(mode='w')   target: path
+    ^ DEFAULT `--enforce` DOES NOT TRIP ON THESE. That is a FAIL-OPEN, and it
+      is the one T203's F-2 measured: two live-vector-store truncators sat in
+      this section and `--enforce` exited 0. Use `--enforce-unknown` to make
+      them fatal; see the polarity note in main().
+
+--- T205: SITES SCOPED ONLY BY THE TRANSITIVE FRAGMENT CLOSURE (0 sites in 0 files)
+    Target is `os.path.join(RUNTIME_ROOT, …)`: no module constant resolves it,
+    so the ordinary probe said UNKNOWN and the chain said TRUSTED. This step
+    can ONLY move a site UNKNOWN -> TRUSTED; a chain probe returning SCRATCH is
+    discarded, so it can never excuse a write.
+  none in this root
+
+--- P-48 DETECTOR: files T156's regex would score GUARDED on prose alone
+    (guard words present ONLY inside string literals; zero try/finally nodes)
+  none in this root
+
+--- T196-3: ONE IMPORT HOP, FOR GUARDS (D-3)
+  files importing a module that defines a restoring CM : 0
+  files importing a module with a module-scope handler  : 0
+  SITES EXCUSED ONLY BY AN IMPORTED CM                  : 0
+  SITES EXCUSED ONLY BY AN IMPORTED HANDLER             : 0
+  imports NOT followed — module not found under the repo root: 14 distinct
+      decimal, fractions, hashlib, io, json, math, os, pathlib, re, shutil, subprocess, sys, tempfile, util
+  imports NOT followed — AMBIGUOUS basename (refused, never guessed): 0
+  NOTE: exactly ONE hop is taken. A guard reached through two imports is
+        invisible, and every line above is a REFUSAL, not a clean bill.
+
+--- REFUSED FILES, NAMED (a refusal is an outcome, not a skip)
+  2026-08-17-run1-harness-schedule-poc/T106-evidence/prove-token-forgeable.sh REFUSED-SHELL-NO-PARSER
+  2026-08-17-run1-harness-schedule-poc/T113-evidence/bash5-matrix-container.sh REFUSED-SHELL-NO-PARSER
+  2026-08-17-run1-harness-schedule-poc/T113-evidence/hostile-env-matrix.sh REFUSED-SHELL-NO-PARSER
+  2026-08-17-run1-harness-schedule-poc/T113-evidence/interpreter-matrix.sh REFUSED-SHELL-NO-PARSER
+  2026-08-17-run1-harness-schedule-poc/T113-evidence/prove-token-forgeable.sh REFUSED-SHELL-NO-PARSER
+  2026-08-17-run1-harness-schedule-poc/T113-evidence/psub-dead-container.sh REFUSED-SHELL-NO-PARSER
+  2026-08-17-run1-harness-schedule-poc/T113-evidence/readonly-sourced-edge.sh REFUSED-SHELL-NO-PARSER
+  2026-08-17-run1-harness-schedule-poc/T130-evidence/ifs-routes.sh REFUSED-SHELL-NO-PARSER
+  2026-08-17-run1-harness-schedule-poc/T130-evidence/read-ifs-predicate.sh REFUSED-SHELL-NO-PARSER
+  2026-08-17-run1-harness-schedule-poc/T130-evidence/token-spelling-crossproduct.sh REFUSED-SHELL-NO-PARSER
+  2026-08-17-run1-harness-schedule-poc/T97-evidence/prove-interpreter-guard.sh REFUSED-SHELL-NO-PARSER
+  2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/drive-red.sh REFUSED-SHELL-NO-PARSER
+  2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/run-conformance.sh REFUSED-SHELL-NO-PARSER
+  2026-08-21-run2-tierA-gl-accounting-A2/T203-evidence/t82-parity.sh REFUSED-SHELL-NO-PARSER
+  T8-run-conformance.sh                                            REFUSED-SHELL-NO-PARSER
+  refused total: 15

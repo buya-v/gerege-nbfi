@@ -21,6 +21,16 @@ Cases, all under fixtures/:
   SCOPE — must be reported, not dropped:
     c  unknown_target.py       target is a parameter: scope UNKNOWN, verdict UNGUARDED
 
+  T205 — the runtime-computed-constant fail-open (T203's F-2), both polarities:
+    d  red_runtime_root.py     target is `os.path.join(RUNTIME_ROOT, …)` into the
+                               live vector store.  Scored UNKNOWN before T205, so
+                               `--enforce` exited 0 on a live-store truncation.
+                               Must now be TRUSTED/UNGUARDED with tag STORE.
+    e  chain_scratch_discard.py the POLARITY GUARD on that fix: a transitive
+                               fragment that looks like a temp path must NEVER
+                               excuse a site.  Asserted twice — as written, and
+                               with a SCRATCH entry injected into the chain map.
+
   SHELL — must be REFUSED, symmetrically:
     s1 red_prose_guard.sh      `trap` only inside an echoed string
     s2 green_real_trap.sh      a real trap on every exit path
@@ -56,6 +66,12 @@ CASES = [
     ("green_atomic.py", gc.ATOMIC, gc.TRUSTED, False),
     ("green_indirect.py", gc.GUARDED_INDIRECT, gc.TRUSTED, True),
     ("unknown_target.py", gc.UNGUARDED, gc.UNKNOWN, False),
+    # T205 (d): the shape that hid T57 and T8.  If this line ever reads
+    # `gc.UNKNOWN` again, the fail-open is back.
+    ("red_runtime_root.py", gc.UNGUARDED, gc.TRUSTED, False),
+    # T205 (e): must NOT be excused, and must NOT be widened into TRUSTED either —
+    # the chain has nothing trusted to say about it.
+    ("chain_scratch_discard.py", gc.UNGUARDED, gc.UNKNOWN, False),
 ]
 
 SHELL_CASES = ["red_prose_guard.sh", "green_real_trap.sh"]
@@ -164,6 +180,65 @@ def main():
                      "OK" if all(greens) else "**FAIL**"))
     if not all(greens):
         failures.append("over-broadness: a genuinely guarded fixture was refused")
+
+    # ------------------------------------------------------------------
+    # T205 CHECK 1 — the DIFFERENTIAL that is the whole finding.  `red_runtime_root`
+    # and `unknown_target` must NOT be classified alike: the first is now resolvable
+    # through the chain, the second genuinely is not.  Asserting only "d is TRUSTED"
+    # would pass if the chain had been widened until everything is TRUSTED.
+    # ------------------------------------------------------------------
+    def _site(fn):
+        s = open(os.path.join(FIX, fn), encoding="utf-8").read()
+        r = gc.classify_python(fn, s)
+        return interesting_site(r, s, fn)
+
+    d_site, c_site = _site("red_runtime_root.py"), _site("unknown_target.py")
+    differ = (d_site["scope"] == gc.TRUSTED and c_site["scope"] == gc.UNKNOWN
+              and "STORE" in d_site["target_tags"] and d_site["scope_via_chain"])
+    print("  T205 DIFFERENTIAL: runtime-ROOT store write=%s/%s (chain=%s, tags=%s) vs "
+          "unresolved param=%s -> %s"
+          % (d_site["scope"], d_site["verdict"], d_site["scope_via_chain"],
+             ",".join(d_site["target_tags"]), c_site["scope"],
+             "OK" if differ else "**FAIL**"))
+    if not differ:
+        failures.append("T205: the chain did not separate a runtime-computed store "
+                        "path from a genuinely unresolved one")
+
+    # ------------------------------------------------------------------
+    # T205 CHECK 2 — POLARITY, driven rather than asserted.  Inject a temp-looking
+    # fragment into the resolver's chain map for the very name the fixture writes
+    # through.  The chain probe then says SCRATCH; the site must STILL be UNKNOWN/
+    # UNGUARDED.  Flipping `if scope2 == TRUSTED` to `if scope2 != UNKNOWN` in
+    # classify_python makes this line print SANDBOX and fail.
+    # ------------------------------------------------------------------
+    _real = gc.ConstResolver
+
+    class _InjectScratch(_real):
+        def __init__(self, tree):
+            _real.__init__(self, tree)
+            self.chain["dest"] = "/tmp/t205-injected-scratch"
+
+    fn_e = "chain_scratch_discard.py"
+    src_e = open(os.path.join(FIX, fn_e), encoding="utf-8").read()
+    try:
+        gc.ConstResolver = _InjectScratch
+        res_e = gc.classify_python(fn_e, src_e)
+    finally:
+        gc.ConstResolver = _real
+    site_e = interesting_site(res_e, src_e, fn_e)
+    # Sanity first (P-35): the injection must actually reach the probe, or this
+    # check inspects nothing and is an ERROR, not a pass.
+    injected_reached = gc.SCRATCH_RX.search(
+        _InjectScratch(__import__("ast").parse(src_e)).chain.get("dest", "")) is not None
+    held = injected_reached and site_e["scope"] == gc.UNKNOWN and \
+        site_e["verdict"] == gc.UNGUARDED
+    print("  T205 POLARITY (injected SCRATCH chain fragment must be DISCARDED): "
+          "injection-live=%s site=%s/%s -> %s"
+          % (injected_reached, site_e["scope"], site_e["verdict"],
+             "OK" if held else "**FAIL**"))
+    if not held:
+        failures.append("T205: a transitive SCRATCH fragment excused a site — the "
+                        "fix reintroduced the fail-open it exists to close")
 
     print()
     if failures:

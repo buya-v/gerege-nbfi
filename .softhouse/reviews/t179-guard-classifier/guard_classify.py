@@ -37,12 +37,23 @@ WHAT THIS TOOL STILL CANNOT DO — read this before quoting its numbers.
     intent, and a registration that runs AFTER the mutation is indistinguishable from
     one that runs before by static order alone.  Treat it as "a handler exists on this
     path", i.e. weaker than `GUARDED-FINALLY`.
-  * Name resolution is module constants PLUS ONE INTRA-FILE INTERPROCEDURAL STEP
-    (T196-1, from T183's D-1): a target that is a function PARAMETER is resolved from
-    the actual arguments at that function's in-file call sites, scoped to that
-    function.  A target computed at runtime, or arriving from another module, still
-    resolves to `UNKNOWN` — and `UNKNOWN` is REPORTED as its own scope, never folded
-    into "not a trusted target".
+  * Name resolution is module constants, PLUS ONE INTRA-FILE INTERPROCEDURAL STEP
+    (T196-1, from T183's D-1) — a target that is a function PARAMETER is resolved
+    from the actual arguments at that function's in-file call sites, scoped to that
+    function — PLUS a TRANSITIVE FRAGMENT CLOSURE for targets computed at runtime
+    (T205, from T203's F-2; see `ConstResolver.chain`).  A target arriving from
+    ANOTHER MODULE still resolves to `UNKNOWN` — and `UNKNOWN` is REPORTED as its
+    own scope, never folded into "not a trusted target".
+    HISTORY, because it is the argument for the closure: `OUT = os.path.join(ROOT,
+    ".softhouse", "vectors", "loanschedule")` with `ROOT` computed from `__file__`
+    does not RESOLVE, so before T205 a write through it scored UNKNOWN — and
+    `--enforce` does not trip on UNKNOWN.  T203 measured the consequence: two
+    rewriters of the LIVE golden vector store, `T57-promote-emi-vectors.py` and
+    `.softhouse/handoff/T8-promote-vectors.py`, between them 13 parity vectors
+    including the corpus baseline `P-00-baseline-6x7pct.json`, were bare
+    truncations that this tool scored clean — while `T74/T61/T64/T58`, whose store
+    path is a module constant that RESOLVES, were caught.  One `os.path.join(ROOT,
+    …)` apart.
     HISTORY, because it is the argument for the step: before T196 the target was read
     from module constants ONLY, while GUARDS already got the same call-site walk
     (`indirectly_guarded_funcs`).  The gap was a FAIL-OPEN — `--enforce` exited 0 on a
@@ -74,9 +85,18 @@ WHAT THIS TOOL STILL CANNOT DO — read this before quoting its numbers.
 Exit codes:
   0  sweep completed (report mode), or completed with no UNGUARDED trusted-target site
      (--enforce)
-  1  --enforce and at least one UNGUARDED site on a TRUSTED target
+  1  --enforce and at least one UNGUARDED site on a TRUSTED target; or
+     --enforce-unknown and at least one UNGUARDED site on an UNRESOLVED target
   2  usage error
   3  ZERO files inspected — an error, never a pass (P-35)
+
+ENFORCEMENT POLARITY (T205 — do not conflate the two directions):
+  UNKNOWN fails OPEN and HIDES exposures; a false positive fails CLOSED and only
+  cries wolf.  `--enforce` still trips on TRUSTED only, because the measured
+  UNKNOWN+UNGUARDED population over this repo is 76 sites in 57 files and making
+  that fatal by default turns the instrument off — but every `--enforce` run now
+  PRINTS that residual to stderr, so this fail-open can never again be silent, and
+  `--enforce-unknown` makes it fatal on a narrow root.  Full argument in `main()`.
 
 A NOTE ON THE POPULATION NUMBER THIS TOOL WAS USED TO PUBLISH.
   T179's handoff F-2 reported "22 unguarded in-place rewriters of a ratified/frozen
@@ -418,6 +438,86 @@ class ConstResolver:
                             grew = True
             if not grew:
                 break
+        # ------------------------------------------------------------------
+        # T205 — THE RUNTIME-COMPUTED-CONSTANT CASE.  Origin: T203's F-2, which is
+        # the ROOT CAUSE of T203's F-1 (two live-store truncators, T57 and T8,
+        # invisible to `--enforce`), not a second defect.
+        #
+        #     ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+        #     OUT  = os.path.join(ROOT, ".softhouse", "vectors", "loanschedule")
+        #     path = os.path.join(OUT, SLUG[case_id] + ".json")
+        #     open(path, "w")                                    # -> UNKNOWN
+        #
+        # `ROOT` is runtime, so `OUT` does not RESOLVE and lands only in `partial`
+        # (fragments ".softhouse"/"vectors"/"loanschedule").  Two things then stop
+        # that evidence reaching `path`:
+        #   (i)  `partial` DOES NOT CHAIN.  The second pass above harvests a Name
+        #        only when it is in `self.consts`; a name that is itself merely
+        #        `partial` contributes nothing.
+        #   (ii) that pass uses `setdefault`, and pass one already claimed `path`
+        #        with the single constant ".json" it does contain — so even the
+        #        `consts` lookup never got a chance to run on it.
+        # Both together are why T74/T61/T64/T58 (module constant
+        # `VECTORS = ".softhouse/vectors/loanschedule"`, which RESOLVES) were caught
+        # and T57/T8 were not.  Same write, same store, one `os.path.join(ROOT, …)`
+        # apart.  MEASURED: `--enforce` over the pre-hardening T57+T8 alone exits 0.
+        #
+        # `chain` is that closure, computed by fixpoint and kept SEPARATE from
+        # `partial` so nothing existing changes shape.
+        # POLARITY — read this before widening it.  This map is consulted ONLY by
+        # `probe(..., chain=True)`, and `classify_python` calls that ONLY when the
+        # ordinary probe already said UNKNOWN, and honours the result ONLY when it
+        # says TRUSTED.  A chain probe that says SCRATCH is DISCARDED and the site
+        # stays UNKNOWN.  So this step is strictly fail-CLOSED: it can move a site
+        # UNKNOWN -> TRUSTED and it can move nothing anywhere else.  It cannot
+        # excuse a site, it cannot create a SANDBOX, and it cannot touch a guard
+        # verdict.  Its only failure mode is crying wolf on a site whose fragments
+        # look trusted, which is the direction this instrument is allowed to be
+        # wrong in — and every such site prints its target expression.
+        # ------------------------------------------------------------------
+        self.chain = {}
+        # The assigned expression is walked ONCE, into an ordered recipe of
+        # ("k", literal) / ("n", name) steps; the fixpoint below then re-reads the
+        # recipe instead of re-walking the AST.  Not a micro-optimisation: these
+        # files carry multi-kilobyte dict and f-string literals, and re-walking
+        # them eight times per assignment made the repo sweep unusably slow.
+        _recipes = []
+        for st in ast.walk(tree):
+            if not (isinstance(st, ast.Assign) and len(st.targets) == 1
+                    and isinstance(st.targets[0], ast.Name)):
+                continue
+            nm = st.targets[0].id
+            if nm in self.consts:
+                continue                # fully resolved already; nothing to add
+            steps = []
+            for n in ast.walk(st.value):
+                if isinstance(n, ast.Constant) and isinstance(n.value, str):
+                    steps.append(("k", n.value))
+                elif isinstance(n, ast.Name) and n.id != nm:
+                    steps.append(("n", n.id))
+            if steps:
+                _recipes.append((nm, steps))
+        for _ in range(8):
+            grew = False
+            for nm, steps in _recipes:
+                frags = []
+                for kind, val in steps:
+                    if kind == "k":
+                        frags.append(val)
+                        continue
+                    # first hit wins, richest source first
+                    for src in (self.consts, self.chain, self.partial):
+                        if val in src:
+                            frags.append(src[val])
+                            break
+                if not frags:
+                    continue
+                txt = "/".join(dict.fromkeys(frags))
+                if self.chain.get(nm) != txt:
+                    self.chain[nm] = txt
+                    grew = True
+            if not grew:
+                break
 
     def resolve(self, node):
         if isinstance(node, ast.Constant) and isinstance(node.value, str):
@@ -452,7 +552,7 @@ class ConstResolver:
                     return self.resolve(node.args[0])
         return None
 
-    def probe(self, node, fname=None):
+    def probe(self, node, fname=None, chain=False):
         """(resolved_or_None, text_probe).
 
         The text probe is built from the ARGUMENT SUBTREE only — every string
@@ -462,21 +562,31 @@ class ConstResolver:
         It is the scope key for T196-1's interprocedural parameter bindings, so a
         parameter named `path` on one function can never describe a `path` in
         another.  Omitting it is safe and merely loses those bindings.
+
+        `chain` (T205) ADDITIONALLY folds in the transitive fragment closure, for
+        the runtime-computed-constant case.  With `chain=False` — the default, and
+        what every pre-T205 caller gets — the text produced is byte-identical to
+        T196's.  See the polarity note on `self.chain`.
         """
         resolved = self.resolve(node)
         pieces = [unparse(node)]
         for n in ast.walk(node):
             if isinstance(n, ast.Constant) and isinstance(n.value, str):
                 pieces.append(n.value)
-            elif isinstance(n, ast.Name) and n.id in self.consts:
+                continue
+            if not isinstance(n, ast.Name):
+                continue
+            if n.id in self.consts:
                 pieces.append(self.consts[n.id])
-            elif isinstance(n, ast.Name) and n.id in self.scratch_names:
+            elif n.id in self.scratch_names:
                 pieces.append("tempfile.")   # marks the subtree as scratch-derived
-            elif isinstance(n, ast.Name) and \
-                    (fname, n.id) in getattr(self, "param_frags", {}):
+            elif (fname, n.id) in getattr(self, "param_frags", {}):
                 pieces.append(self.param_frags[(fname, n.id)])
-            elif isinstance(n, ast.Name) and n.id in self.partial:
+            elif n.id in self.partial:
                 pieces.append(self.partial[n.id])
+            # T205: purely ADDITIVE, and only when explicitly asked for.
+            if chain and n.id in getattr(self, "chain", {}):
+                pieces.append(self.chain[n.id])
         if resolved:
             pieces.append(resolved)
         return resolved, "\n".join(pieces)
@@ -948,12 +1058,24 @@ def classify_python(rel, src, abspath=None):
         node = m["node"]
         _site_fn = enclosing_func(node, parents)
         _site_fn = _site_fn.name if _site_fn else None
+        chained = False
         if m["target_node"] is None:
             scope, tags, target_text = UNKNOWN, [], "<no target argument>"
         else:
             resolved, probe = resolver.probe(m["target_node"], _site_fn)
             scope, tags = scope_of(probe)
             target_text = unparse(m["target_node"])[:120]
+            # T205 — ESCAPE FROM UNKNOWN, ONE DIRECTION ONLY.  Consulted only when
+            # the ordinary probe already failed to say anything, and honoured only
+            # when the transitive closure says TRUSTED.  A chain probe returning
+            # SCRATCH is DISCARDED (the site stays UNKNOWN) so a runtime-derived
+            # fragment can never excuse a write — that would be the fail-OPEN this
+            # task exists to close, reintroduced by its own fix.
+            if scope == UNKNOWN:
+                _r2, probe2 = resolver.probe(m["target_node"], _site_fn, chain=True)
+                scope2, tags2 = scope_of(probe2)
+                if scope2 == TRUSTED:
+                    scope, tags, chained = TRUSTED, tags2, True
 
         verdict, why = UNGUARDED, "no try/finally, context manager or live handler " \
                                   "encloses this call"
@@ -1001,7 +1123,11 @@ def classify_python(rel, src, abspath=None):
 
         sites.append({"line": node.lineno, "verb": m["verb"], "scope": scope,
                       "target_tags": tags, "target": target_text,
-                      "verdict": verdict, "why": why})
+                      "verdict": verdict, "why": why,
+                      # T205: this site is TRUSTED only because of the transitive
+                      # fragment closure.  Named in the report so a reader can
+                      # always separate the widened population from the original.
+                      "scope_via_chain": chained})
 
     n_try_finally = len([n for n in ast.walk(tree)
                          if isinstance(n, ast.Try) and n.finalbody])
@@ -1173,6 +1299,26 @@ def report(results, other_ext, excluded, root, out=sys.stdout):
       "    printed so nothing is silently dropped (P-40).\n")
     for r, s in unknown_unguarded[:400]:
         w("  %s:%d  %s   target: %s\n" % (r["path"], s["line"], s["verb"], s["target"]))
+    w("    ^ DEFAULT `--enforce` DOES NOT TRIP ON THESE. That is a FAIL-OPEN, and it\n"
+      "      is the one T203's F-2 measured: two live-vector-store truncators sat in\n"
+      "      this section and `--enforce` exited 0. Use `--enforce-unknown` to make\n"
+      "      them fatal; see the polarity note in main().\n")
+    w("\n")
+
+    # T205: the widened population, named separately so it is always auditable.
+    chained = [(r, s) for r in py for s in r["sites"] if s.get("scope_via_chain")]
+    w("--- T205: SITES SCOPED ONLY BY THE TRANSITIVE FRAGMENT CLOSURE (%d sites in "
+      "%d files)\n" % (len(chained), len({r["path"] for r, _ in chained})))
+    w("    Target is `os.path.join(RUNTIME_ROOT, …)`: no module constant resolves it,\n"
+      "    so the ordinary probe said UNKNOWN and the chain said TRUSTED. This step\n"
+      "    can ONLY move a site UNKNOWN -> TRUSTED; a chain probe returning SCRATCH is\n"
+      "    discarded, so it can never excuse a write.\n")
+    for r, s in chained[:200]:
+        w("  %s:%d  %s  tags=%s  verdict=%s\n      target: %s\n"
+          % (r["path"], s["line"], s["verb"], ",".join(s["target_tags"]),
+             s["verdict"], s["target"]))
+    if not chained:
+        w("  none in this root\n")
     w("\n")
 
     # P-48 detector: files whose guard WORDS live only in string literals.
@@ -1237,6 +1383,9 @@ def main(argv=None):
     ap.add_argument("--json", default=None, help="write full results as JSON")
     ap.add_argument("--enforce", action="store_true",
                     help="exit 1 if any TRUSTED-target site is UNGUARDED")
+    ap.add_argument("--enforce-unknown", action="store_true",
+                    help="ALSO exit 1 if any UNRESOLVED-target site is UNGUARDED "
+                         "(implies --enforce). Fail-closed; see the polarity note.")
     ap.add_argument("--file", action="append", default=[],
                     help="classify these files only (no sweep)")
     args = ap.parse_args(argv)
@@ -1276,12 +1425,49 @@ def main(argv=None):
             os.fsync(f.fileno())
         os.replace(tmp, args.json)
 
-    if args.enforce:
+    # ----------------------------------------------------------------------
+    # T205 — ENFORCEMENT POLARITY.  The two directions are NOT symmetric and must
+    # not be conflated; conflating them is how this defect class kept recurring.
+    #
+    #  * UNKNOWN currently FAILS OPEN: an unresolved target HIDES a real exposure.
+    #    T203's F-1 is the measurement — `T57-promote-emi-vectors.py` and
+    #    `.softhouse/handoff/T8-promote-vectors.py`, between them 13 live parity
+    #    vectors including the corpus baseline `P-00-baseline-6x7pct.json`, sat in
+    #    the UNKNOWN section while `--enforce` exited 0.  T205's resolver fix is the
+    #    remedy for the SHAPE they had; this flag is the remedy for the CLASS.
+    #  * A FALSE POSITIVE fails CLOSED: it cries wolf and hides nothing.  T203
+    #    measured one (`T58-promote-vectors.py` flagged UNGUARDED because the
+    #    classifier cannot see an `os.path.exists` refusal).
+    #
+    # WHY UNKNOWN IS NOT FOLDED INTO THE DEFAULT `--enforce`.  MEASURED, not
+    # estimated, over the whole repo at this commit: after the resolver fix there
+    # are 76 UNGUARDED sites with an unresolved target, across 57 files, almost all
+    # of them analysis scripts writing a derived `*-output.txt` next to themselves
+    # via a runtime `HERE`, plus deliberate RED probes.  Making that fatal by
+    # default turns the instrument off, which is worse than the disclosure below.
+    # So: the default stays TRUSTED-only, the residual is ALWAYS PRINTED to stderr
+    # at the enforcement boundary (a fail-open of this class can no longer be
+    # silent), and `--enforce-unknown` is available for a NARROW root where every
+    # unresolved write is meant to be adjudicated.
+    # ----------------------------------------------------------------------
+    if args.enforce or args.enforce_unknown:
         bad = [(r["path"], s) for r in results for s in r.get("sites", [])
                if s["scope"] == TRUSTED and s["verdict"] == UNGUARDED]
+        unres = [(r["path"], s) for r in results for s in r.get("sites", [])
+                 if s["scope"] == UNKNOWN and s["verdict"] == UNGUARDED]
+        sys.stderr.write(
+            "ENFORCE-DISCLOSURE: %d unguarded site(s) with an UNRESOLVED target — "
+            "%s\n" % (len(unres),
+                      "FATAL (--enforce-unknown)" if args.enforce_unknown
+                      else "NOT fatal without --enforce-unknown; this is a "
+                           "fail-open (T203 F-2)"))
         if bad:
             sys.stderr.write("ENFORCE: %d unguarded mutation(s) of a trusted "
                              "artefact\n" % len(bad))
+        if args.enforce_unknown and unres:
+            sys.stderr.write("ENFORCE-UNKNOWN: %d unguarded mutation(s) whose target "
+                             "could not be resolved\n" % len(unres))
+        if bad or (args.enforce_unknown and unres):
             return 1
     return 0
 
