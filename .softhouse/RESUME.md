@@ -4,14 +4,14 @@ Written by the orchestrator at every checkpoint; read by the next fire of `/soft
 human) to see exactly where the factory paused. **The repo is the only memory** — never rely on an agent's
 session state.
 
-## Current state (local fire `20260822-060013`, oracle REACHABLE throughout, clean exit)
+## Current state (local fire `20260822-140002`, oracle REACHABLE throughout, clean exit)
 
 - **Program**: `fineract-to-go-full-codebase` — **active**. Contexts **1 done / 18**. Tier 0 closed.
-- **Active run**: `2026-08-21-run2-tierA-gl-accounting-A2` — Tier A slice **A2**, plus Tier-0 harness work.
-- **SIX DISPATCHED IN TWO WAVES, SIX COMPLETED, SIX MERGED, ZERO LIVE AT EXIT.** Every branch
-  scope-checked by the driver on the **three-dot** diff before merge; the BAR re-run by the driver on the
-  **merge result** after every merge, never quoted from a worker.
-- **Oracle**: UP throughout. Pinned checkout `426a23544`. PostgreSQL 18.3 only.
+- **Active run**: `2026-08-21-run2-tierA-gl-accounting-A2` — Tier A slice **A2**.
+- **FIVE DISPATCHED, FIVE COMPLETED, FIVE MERGED, ZERO LIVE AT EXIT.** Every branch scope-checked by the
+  driver on the **three-dot** diff before merge; the BAR re-run by the driver on the **merge result** after
+  every merge, **never quoted from a worker**.
+- **Oracle**: UP throughout. Pinned checkout `426a23544`. PostgreSQL 18.3 only. No prohibited engine.
 
 **Driver-verified on merged `main` at exit:**
 
@@ -20,164 +20,151 @@ probe line PRESENT, and it reads: probe = up
 VERDICT: PASS (exit 0)
   loanschedule  46 parity · 7884 graded cells
   LEDGER         4 parity · 2 oracle-refusal · 21 money cells
-  ledger citations  12 PART-TWO resolutions: 1 ARTEFACT-BYTES · 8 HTTP-SIDECAR · 3 FILE-NAME-ONLY  <-- NEW
   refused 0 · inadmissible 0 · harness errors 0 · invariant violations 0 · 0 NOT RUN
   all 9 census pins == pinned
-  vector store  13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d   (MOVED — see below)
-  PIN-ledger.json  dec2_revision: 5   DELIBERATELY NOT BUMPED
+  fail-open frontier  10 == pinned 10      (moved 9 -> 10 by T248)
+  vector store  13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d   UNMOVED ALL FIRE
          IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a user gate.
 ```
 
-**THE STORE DIGEST MOVED AGAIN**, `8968c559…` → **`13b8342e…`**, when `T242` landed. **Every BAR quoting
-`8968c559…` or `73c3ea7b…` is now stale.** The driver verified before accepting it that the move is
-confined to `capabilities-ledger.json`: the `loanschedule`, `_selftest` and `ledger` subtrees are
-byte-identical either side and all four PIN/capability/README blobs are unchanged. **No graded payload moved.**
+**The store digest did not move this fire.** No task touched the money corpus. Any BAR pinning
+`8968c559…` or `73c3ea7b…` is still stale; `13b8342e…` is current. **Read it live** —
+`git rev-parse HEAD:.softhouse/vectors` (P-61: the git tree hash IS the canonical recipe).
 
 ---
 
-# HEADLINE 1: DEC-2 REVISION 6 IS RATIFIED AND LANDED — G-13 CLOSED
+# HEADLINE 1: THE DRIVER DECIDED A GATE'S SCOPE, FIXED THE INSTRUMENT THAT DISAGREED — AND SHIPPED A FAIL-OPEN DOING IT
 
-`T244` PREPARED it and landed nothing. `T246` reviewed it **independently**, re-deriving against the live
-oracle, and returned **ACCEPT** conditional on two corrections. **The driver applied both, ratified
-`chosen_by: agent`, landed it, and re-ran the bar.** Buyan may reverse it.
+The previous fire left a boxed note refusing to act on `ready-tasks.py`'s printed inference that G-14
+forbids all Go under `nexus/`, and asked the next fire to settle it explicitly. **Settled, and the suspicion
+was justified.**
 
-The corrected evidential reason, re-derived by **both** workers: **8 reversed originals + 8 reversing legs
-= 16 rows, 3 pairs, 6 transaction ids**, equal `amount` and flipped `type_enum` 8 of 8. **No obligation
-moved** — the invariant statement, column 5's `Graded today? NO`, the `ErrNoDiscriminatingVector` refusal
-and the rule paragraph are all untouched. Only the ground moved, from *"no reversal exists"* to *"no
-reversal capture has been PROMOTED to a vector"*.
+That sentence was **hardcoded** and printed for *every* open CONTRACT gate, reading **no per-gate field** —
+so it could not have been about G-14 at all. It encodes **G-11**, where DEC-2 was UNRATIFIED and its
+*shape* was under negotiation. G-14 is a stale-evidence correction to a **ratified** document and moves no
+obligation, field, rounding rule or graded cell. `gates.md`'s authoritative register had said *"Blocks
+nothing today"* from the moment G-14 was raised. **The machine copy and the authoritative copy disagreed,
+and the machine one was wrong.** Filed as **`P-77`**.
 
-- **`T246` found a SECOND SITE `T244` had already found and the task had not named** (§9 item 13) — and
-  demonstrated that the phrase matching site one does **not** match site two.
-- **`F-2` stopped a fresh unsupported inference entering a ratified contract.** The draft cited *"all 16
-  rows show `last_modified_on_utc > created_on_utc`"* with no denominator. **60 of 60** rows carry it,
-  clustered at the G-12 recompute. **100 % of the subgroup AND 100 % of the population discriminates
-  nothing.** The conclusion was right by a stronger route — a snapshot never observes a write at all — and
-  the landed text says that instead.
-- **`F-3`** required a re-measure stamp **at ratification**; `main` had moved five times since drafting.
-  The landed text carries **both** stamps.
-- **⚠ `PIN-ledger.json` STAYS AT 5.** `admit.go:49-52` compares vector-to-pin and never reads the ADR.
-  `T246` drove it four ways including `pin6/vec6 → 0`, the direction `T244` did not drive — which shows the
-  check is **relative**, so the argument against bumping both is **P-61**, not correctness.
+**Then the driver's own fix was FAIL-OPEN, and `T249` — the reviewer the driver filed against itself —
+caught it.** The patch read `str(g.get("blocks", "")).strip()`, so the **five most likely encodings of "no
+value"** (`None`, `False`, `0`, `[]`, `{}`) all stringify **truthy** and printed under
+`=> SCOPE RECORDED ON THIS GATE`. A gate with `blocks: null` rendered as *"SCOPE RECORDED … None"*, **which
+reads as "nothing is blocked."** **The pre-patch code was fail-CLOSED; the patch made it fail-OPEN** — a
+fresh **P-45** instance created *in the very commit that filed P-77 about unenforced permission surfaces*.
+Fixed at `925fdfc`, red-driven nine ways.
 
-# HEADLINE 2: G-14 RAISED — DEC-2's OPENING BANNER IS FALSE, AND IT NAMES THE INSTRUMENT THAT REFUTES IT
+`T249` also found the **selector** failed open independently: `g.get("class") == "CONTRACT"` **silently
+drops any gate with no `class` key** — and **`G-13` is exactly that shape** [VERIFIED at HEAD:
+`class=None`]. An unclassified OPEN gate would have been invisible to the section that exists to catch it.
 
-`T246`'s **F-1 (HIGH)**, found while reviewing a *different* correction to the same document — the argument
-for independent review in one sentence.
+**`T249` CONFIRMED the DECISION itself correct**, by a route the driver never stated: **the banner errs
+PESSIMISTICALLY.** It says nothing is graded when 4 ledger parity + 2 oracle-refusal + 21 money cells are —
+**no direction of that error licenses Go that a corrected banner would forbid.** The harm is *epistemic*,
+not *normative*; the remedy is a briefing, not a prohibition. It explicitly did **not** find the driver
+rationalised past a gate.
 
-DEC-2 opens, under *"read this before any other sentence in this document"*, with **"NOTHING GRADES THIS
-CONTEXT'S MONEY. NOTHING GRADES THIS CONTEXT AT ALL."** The harness grades **LEDGER 4 parity / 2
-oracle-refusal / 21 money cells** on every run. Its fact 1 cites **`ls .softhouse/vectors/`** as evidence
-that no ledger vector exists; the driver re-ran that exact command and it lists `ledger/` holding **six**
-`LDG-*` files. **Seven sites** (L3, L7, L10, L815, L819, L825, L2437) plus a third live falsehood at **L87**
-(*"until then A2-15 stays blocked"* — `A2-15` is `done`).
+# HEADLINE 2: ONE STALE-EVIDENCE SHAPE, THREE INSTANCES, ALL IN THE GATE REGISTER, ALL FOUND THIS FIRE
 
-Cause: **P-69 at maximum blast radius.** Revision 5 was written **2h13m before** `A2-15` promoted the ledger
-vectors, and DEC-2 had not been touched since. Every sentence was true when written.
+**P-69 is not an incident, it is the register's default failure mode.** Every one was true when written.
 
-**`T247` PREPARES revision 7 and must not land it.** It is told explicitly that the banner's **warning
-function is legitimate and must survive in corrected form** — the graded domain really is narrow, and a
-green ledger section really is not a cutover argument. **Correct what is false; do not delete the caution.**
+| Site | Found by | State |
+|---|---|---|
+| DEC-2's opening banner (G-14) | `T246`, last fire | rev 7 **PREPARED** by `T247`; **awaiting `T251`** |
+| `G-12`'s `blocks` field | `T249` | **ground corrected** this fire, obligation untouched |
+| `gates.md:98`, inside **G-11's own ratification block** | `T247` (FU-T247-2) | **corrected** at `cb337d7` |
 
-> **⚠ A QUESTION THE NEXT FIRE MUST SETTLE BEFORE IT DISPATCHES TIER-A GO WORK.**
-> `ready-tasks.py` now prints G-14 as an **OPEN CONTRACT gate** and infers *"no task may write Go under
-> `nexus/` … until it closes."* **The driver believes that inference is over-broad here and did NOT act on
-> it.** That rule was written for G-11, where the contract was **UNRATIFIED**. DEC-2 is **ratified** (rev 5,
-> then rev 6); G-14 is a **stale-evidence correction to a ratified document**, and blocking all Go writes on
-> a false banner would park Tier A over a sentence that changes no obligation. **This is ENGINEERING and the
-> next fire may decide it** — but decide it explicitly and record the reasoning; do not let the resolver's
-> default quietly park the tier. Filed as a note here rather than silently overridden.
+`G-12` had read *"No ledger vector exists yet (G-11), so no vector grades the column."* Six exist. The
+conclusion survives by a **stronger** route: the gate blocks nothing because **no vector grades the
+running-balance COLUMNS**, not because nothing grades the ledger. `gates.md:98` was **struck through, not
+deleted** — it was true when written and that record is the evidence for how this happens.
 
-# HEADLINE 3: THE DRIVER DROVE T243's NEW GUARD AND IT DID NOT FIRE — P-76
+# HEADLINE 3: T245 — THE DRIVER FIXED THE INVENTORY AND LEFT THE INSTRUCTION (HIGH)
 
-`T243` wired three unwired guards and reported **RED 13/0**. True, and **narrower than it reads**. The
-driver planted a fail-open instrument (P-22) and **the harness stayed green**. Calibrating the probe (P-72)
-got the linter to **name the file** — and `conformance.sh` **still exited 0**.
+The pin file's **"Connection facts for vector capture"** table still prescribed **`tenantIdentifier=default`
+and `psql -d fineract_default`** — about **sixty lines below** the warning describing exactly that hazard,
+in the same file, unchanged by the same commit. Of **5,129** tracked files, **10** carry a copyable
+`default` instruction, **9 are deliberate negative controls**, and **the pin file was the only prescriptive
+one.** Fixed by `T245`; both tenant selection forms verified HTTP 200 live.
 
-```sh
-# COVERED — the reassuring echo is an ARM of the failing construct
-( cd "$WT" && git grep ... ) || echo "   (no hits)"
-# NOT COVERED — UNCONDITIONAL, on the next line
-cd /tmp/T138-merge 2>/dev/null && git grep ... 
-echo "   (searched the MERGED tree)"
-```
+**Claim (5) — the one the driver INFERRED — is now MEASURED three ways, and the decisive leg trusts no
+document:** every entity the six ledger vectors name exists in `fineract_gerege` and is **absent** from
+`fineract_default`, which holds **0 GL accounts, 0 journal entries, 0 loans**. **No HIGH finding of a vector
+captured against the `Asia/Kolkata` tenant.** Claim (1) was **overstated**; claim (4) was true at `c0be92b`
+(74/71) and **already stale** at `9b6c596` (88/78).
 
-**`r11-hygiene.sh` is flagged ZERO times** — the site `T239` measured live **this fire**, and the site the
-driver relayed to `T238` **as the reason for widening the brief**. Of two known live sites the boundary
-splits them one and one.
+# HEADLINE 4: T248 — THE GUARD WAS BLIND IN ITS SELECTOR, NOT ITS CONDITIONS
 
-**`P-76` filed, and it is NOT `P-45`.** Every prior P-45 is a guard that ran *nowhere*. This one runs, is
-reached, passes its own red drive, and is blind in part — **because `T243` planted the shape the rule was
-written from.** A red drive built from the same example as the rule is a tautology with a transcript.
-**Duty: drive every guard red on a shape you did NOT design the rule around, and when a task was widened
-because of a specific site, that site is a MANDATORY red-drive case.** Filed as **`T248`**.
+Sent to widen a guard's *conditions*, `T248` measured first and found the defect one level up:
+**`RE_REPOWIDE`, the corpus SELECTOR, was itself blind.** Shape **R4 satisfied BOTH conditions and was never
+inspected**, because the selector never put it in front of them.
 
-# HEADLINE 4: P-75 — `grep` AND `rg` IN AN AGENT SHELL ARE NOT THE PROGRAMS YOU THINK
+C1's real rule was a **four-root allow-list** (`/Users`, `/home`, `/opt`, `/var`) — `/tmp`, `/nonexistent`,
+`/srv`, `/data`, `/mnt`, `/private`, `/scratch` all invisible. The driver's hypothesis about
+`r11-hygiene.sh` was right, but **the precise version mattered: widening C2 alone would have put r11 on the
+frontier at TIER 2, whose printed meaning is "corpus reachable today" — a FALSE claim about a directory gone
+for days.** The fix would have *created* a false claim while closing a true one.
 
-Found by `T242`, sharpened by `T244`, all of it re-derived by the driver — which had circulated the **wrong**
-version to four workers earlier in the same fire and corrected them **mid-flight**.
+Widening **proved STRICTLY ADDITIVE** (20 → 22 detections, **LOST = none**). Frontier **9 → 10**, the new row
+**NEWLY VISIBLE, not newly introduced**. **THREE of the five red-drive shapes CHANGED THE RULE when first
+driven** — that, not the transcript, is what makes it P-76 rather than a re-enactment. **P-76 addendum
+adopted**: *a rule's blind spots live in its POPULATION SELECTOR as much as in its conditions.*
 
-`~/.claude/shell-snapshots/…` defines `grep` and `rg` as **shell functions**:
-- **`grep`** execs bundled **ugrep 7.5.0** with `-G --ignore-files --hidden -I` and **six** `--exclude-dir`
-  flags silently prepended. Measured on a purpose-built fixture: bare `grep -r` finds **1 of 3** needles,
-  `/usr/bin/grep` finds **3 of 3**. **33 % recall, exit 0, hits printed, nothing saying anything was skipped.**
-- **`rg` DOES NOT EXIST IN A SCRIPT** — no binary in any of the 13 PATH dirs. `rg P F` exits **127**;
-  **`rg P F | head` exits 0.** The pipeline swallows it, and `pattern | head` is the shape of nearly every
-  sweep script. Under `set -euo pipefail` it correctly dies 127. `T244`'s own sweep was killed by this and
-  **saved only by its fail-closed calibration**.
-- **`git grep -E` is broken BOTH ways** — it misses true hits **and FABRICATES** (`bmainb` matches
-  `\bmain\b`). All prior lore called it recall-only. So **"I got hits, so my rig works" is not a valid
-  calibration.**
-- **`git grep -P` is sound and available**, and was never recorded — the lore only ever said
-  `/usr/bin/grep -P` does not exist.
-- It **reconciles two contradictory measurements that were both right**: `T239`'s *"ugrep is not
-  installed"* (true — no such binary) and RESUME's *"ugrep honours `\b`"* (also true — it is what `grep`
-  runs). **The NAME and the PROGRAM had come apart**, which is what P-33 exists to prevent.
+# HEADLINE 5: T247 PREPARED REV 7, LANDED NOTHING, AND FOUND 26 SITES BEYOND T246's 8
 
-**Consequence:** RESUME's exoneration of `T224` (*"it ran under ugrep where `\b` works"*) is **`[UNVERIFIED]`**.
+Verified by the driver on the three-dot diff: `docs/adr/`, `gates.md`, `program.json`, `vectors/`,
+`PIN-ledger.json`, `nexus/`, `conformance.sh` — **touched zero times.**
+
+Worst misses: **L820**, the row directly beneath a named site reading only *"NO. Same reason."*, carrying
+**no keyword any wording-sweep could hit**; and **§8.1 at L2345-2409**, restating all four banner facts in
+full **2,300 lines below**, where §8 tells a ratifier to read **last**. **Two live banner falsehoods nobody
+had named:** L76 (*ratification "would buy no grading whatsoever"* — DEC-2 **is** ratified), and fact 3's
+**ordinal** (*"seven guards … the seventh"* — it is **eight**, and the guard is **sixth**, since `T243`
+wired one after `A2-28`'s stamp). **An ordinal used as an identifier goes wrong silently.**
+
+It **refused to certify §5.3's adequacy** after measuring it, and reported **P-5 is named nowhere in the
+ledger package**. The caution survives **with a denominator**: 6 of 14 declared capabilities graded, 8
+declared out by name — **both terms counted**.
 
 ---
 
-## Corrections made against the DRIVER this fire — SEVEN
+## Corrections made against the DRIVER this fire — FIVE
 
-1. **The oracle PIN FILE did not name the database every ledger vector came from.** `reference-oracle.md`
-   omitted `fineract_gerege` entirely, and the two tenants are in **different time zones** — tenant 1
-   `default` is **`Asia/Kolkata` (+05:30)**, which CLAUDE.md permits nowhere. Corrected; **`T245` filed to
-   re-derive it, because the driver found it and fixed it in one fire.**
-2. **Two PENDING task BARs pinned a DEAD vector-store digest** (`T226`, `T235`). A worker handed an
-   unmeetable BAR either reports red on a green repo or **mutates the money corpus to satisfy a stale
-   sentence**. Corrected to read the digest live. The 22 `done` tasks quoting it are stamped historical
-   records and were deliberately left alone.
-3. **`P-73` was a numbering HOLE with a live pointer into it**; `P-71`'s heading still asserted a rule two
-   fires had falsified in opposite directions.
-4. **The engine roster in four worker briefings was wrong** (ugrep). Corrected mid-flight, not at merge.
-5. **The driver's own `FINDINGS.md` mislabelled its engine as "BSD grep"** when it was the shadowing ugrep
-   function. Result stands; the label did not. **P-33.**
-6. **The GATE REGISTER was DESYNCED**: `G-13` was asserted RAISED in `program.json`, `RESUME.md` and
-   `DRIVER.STATE.json` while `gates.md` — the file the program calls authoritative — contained the string
-   **zero** times. **P-73**, second instance.
-7. **`files_hint` under-specified THREE TIMES IN TWO FIRES** (`T219`, `T242`, `T243`). Always the same
-   shape: **the task TEXT and the `files_hint` are written to different scopes, and only the hint is
-   machine-checked.** `T242`'s and `T243`'s overruns were both unavoidable and both correct.
+1. **The driver's `ready-tasks.py` patch was FAIL-OPEN** (`T249`). Pre-patch was fail-CLOSED. The driver
+   made a guard worse while fixing it, in the commit that filed the pattern about exactly this.
+2. **The driver's `reference-oracle.md` correction fixed the inventory and left the instruction** (`T245`,
+   HIGH). The only prescriptive wrong-tenant instruction in 5,129 files was in the pin file itself.
+3. **Two of the driver's own verification probes were BROKEN** (`P-72`), each producing a false reading it
+   nearly acted on: grepping `SCOPE RECORDED` also matched the fallback **`NO SCOPE RECORDED`** as a
+   substring, reporting every arm permissive; and lowercase `` no `class` KEY `` missed uppercase output,
+   reporting a working guard as vacuous. **Both were the probe, not the code.**
+4. **The driver's `:125` citation was unstamped** — true at `9b6c596^`, but a reader at HEAD finds different
+   code there. Stamped in both `patterns.md` and `gates.md`.
+5. **`gates.md` said G-14 blocks "NOTHING" flat at two sites** while the decision names a real residual
+   DEC-2 prohibition — permissive in the wrong direction. Both corrected.
 
 ## STANDING INSTRUCTIONS
 
-- **P-75: never bare `grep`, never `rg`, in a committed instrument.** Use `/usr/bin/grep`, `git grep`, or
-  `python3 re`. **`set -euo pipefail` in every script.** `type grep` before you trust `grep`.
-- **Calibrate on a known POSITIVE and a known NEGATIVE** — `git grep -E` fabricates.
-- **P-76: drive every guard red on a shape you did NOT design the rule around.** A widened task's
-  motivating site is a **mandatory** red-drive case.
-- **P-71: the fork point is UNPREDICTABLE — MEASURE it.** Four fires, three distinct values, no rule
-  survives. It is `origin/main` **at worktree creation**, and `main` moves during a wave.
-- **NEVER `git commit -m` a message containing a backtick — use a heredoc + `git commit -F`** (P-74).
-  **Never amend a commit whose sha you have circulated.** Verify with `git merge-base --is-ancestor`.
-- **Report the sha you MERGED, never the one you LOOKED AT.** `main` is not quiescent during a wave.
-- **Before recording that anything DOES NOT EXIST, state where you looked AND your scope** (P-66/P-70).
-- **Before certifying a ratio, count BOTH terms and say where you counted** (P-67).
-- **Prefer ENUMERATION over pattern-matching where the population is small enough to read** — `T246`
-  settled "is there a third site?" by reading all 15 occurrences, which is stronger than any sweep.
-- **A measured claim has a shelf life shorter than a busy fire (P-69).** Stamp claims with the commit.
-- **Oracle-down is exit 2 AND a probe line actually PRINTED AND reading `down`** — test **presence** first.
+- **P-75: never bare `grep`, never `rg`, in a committed instrument.** `grep` is bundled **ugrep 7.5.0** with
+  six `--exclude-dir` flags silently prepended (**33 % recall** measured); **`rg` has no binary** and
+  `rg P F | head` exits **0**; **`git grep -E` misses AND fabricates** (`bmainb` matches `\bmain\b`).
+  Use `/usr/bin/grep`, `git grep -P` (sound, available), or `python3 re`. `set -euo pipefail` everywhere.
+- **Calibrate on a known POSITIVE and a known NEGATIVE — and make the probe DISCRIMINATE.** A negative
+  string that is a **substring** of the positive one matches both. This bit the driver twice in one fire.
+- **P-76: drive every guard red on a shape you did NOT design the rule around — and on a TYPE you did not
+  either.** The driver drove both its arms as *strings*; the defect was in the *types*.
+- **P-76 addendum: check your SELECTOR before you trust your CONDITIONS.**
+- **P-77: a gate's scope belongs to the gate, not its class.** Record it in
+  `program.json gates_pending[].blocks`. A tool that answers a question the authoritative record already
+  answers is a **second source of truth**.
+- **P-69 is the register's default failure mode. STAMP every measured claim with its commit**, and
+  re-measure when you finish — `main` moved **four merges** under `T247` alone.
+- **P-71: the fork point is UNPREDICTABLE — MEASURE it.** `T249` reported P-77 "exists nowhere" — **true at
+  its fork, stale against main.** Not an error; read fork points before calling a finding a miss.
+- **P-67: count BOTH terms.** **P-66/P-70: state where you looked before recording a non-existence.**
+- **NEVER `git commit -m` with a backtick — heredoc + `git commit -F`** (P-74). **Report the sha you
+  MERGED, not the one you looked at.**
+- **Prefer ENUMERATION over sweeping** where the population is readable.
 - **The Go module root is `nexus/`**; `. .softhouse/bin/go-env.sh`. Invoke the harness with **`bash`**
   (exit 3 = wrong interpreter). **Never `gofmt -w` `contract.go`** (G-3).
 
@@ -185,34 +172,39 @@ version to four workers earlier in the same fire and corrected them **mid-flight
 
 ## THE NEXT FIRE STARTS HERE
 
-**Run `python3 .softhouse/bin/ready-tasks.py` first.** At exit: **0 in progress, 15 READY, 0 blocked, 0
-unresolved edges, G-14 the only open contract gate** (read the boxed note under HEADLINE 2 before letting
-it park Tier A).
+**Run `python3 .softhouse/bin/ready-tasks.py` first.** At exit: **0 in progress, 14 READY, 0 blocked, 0
+unresolved edges, G-14 the only open contract gate — and it now carries its OWN recorded scope**, so the
+resolver no longer asserts a blanket prohibition it never measured.
 
-1. **`T247` — PREPARE DEC-2 revision 7 for the false banner (G-14).** Do not land it. Preserve the caution.
-2. **`T248` — the P-76 gap.** Characterise C1's real matching rule **before** widening C2 — probe 1's
-   `/nonexistent/...` path was not detected at all while probe 2's `.claude/worktrees/…` was, so if C1 is
-   anchored to known roots then widening C2 alone fixes nothing.
-3. **`T245` — independent check of the driver's own `reference-oracle.md` correction.** Claim (5), that the
-   ledger vectors were captured against tenant `gerege`, was **INFERRED by the driver, not measured**.
-4. **`T226`** (`v3`, the third P-45) and **`T235`** — both hold `conformance.sh`, as does `T248`.
-   **Serialise all three.** Their BARs were corrected this fire and now read the digest live.
-5. **`T241`** (gates.md; `T229`'s `site3.py` formula false on PARTIAL), **`T236`**, **`T237`**.
-6. Then `T145` (denominator **438**), `T160`, `T164`, `T174`, `T192`, `T195`, `A2-23`.
+1. **`T251` — INDEPENDENT review of DEC-2 revision 7.** **Highest value in the queue**: the last thing
+   between G-14 and closure. `T247` prepared it and landed nothing; **the driver has committed not to
+   ratify without this review.** T251 may not land it either.
+2. **`T252`** — `T248`'s two unfixed findings: a probable **third live fail-open site whose false claims are
+   printed COUNTS, not sentences** (so no reassurance vocabulary reaches it), and **TIER 3's label asserting
+   "fails closed" while the classifier verifies that for no file** — P-45 at the taxonomy level.
+3. **`T250`** — `T245`'s F-2: `cap.sh`/`cap8.sh`/`cap9.sh` send `-H "$T"` but write the sidecar's tenant
+   line as a **hard-coded literal**. A sidecar that cannot disagree with its run is decoration, not
+   evidence. **Do not retro-edit historical sidecars.**
+4. **SERIALISE `T226`, `T235`, `T250`, `T252`** — all hold `conformance.sh` or the capture lib.
+5. **`T241`** (gates.md), **`T236`**, then `T145` (denominator **438**), `T160`, `T164`, `T174`, `T192`,
+   `T195`, `A2-23`.
 
-**Carried forward, unfixed, with scope stated:** `r11-hygiene.sh`, both `t184` scripts, `T234`'s own
-re-runner and `A2-32-evidence/sweep.sh` are **pinned, not repaired** — `T243`'s framing stands, **the pin
-is a FRONTIER, NOT AN AMNESTY**, and `sweep-ORIGINAL.sh` must stay on it **permanently** because it is a
-**specimen, not an instrument**. Also: `gate_exemption_census`'s missing retraction, the capture-rig gap
-behind the three FILE-NAME-ONLY citations, and a 262-instrument advisory tail with its denominator stated.
+**Carried forward, unfixed, with scope stated:** `r11-hygiene.sh` is now **on the frontier at TIER 1** but
+**still not repaired** — `T243`'s framing stands and **the pin is a FRONTIER, NOT AN AMNESTY**;
+`sweep-ORIGINAL.sh` stays on it **permanently** because it is a **specimen, not an instrument**. Also: both
+`t184` scripts, `T234`'s re-runner, `A2-32-evidence/sweep.sh`, `gate_exemption_census`'s missing retraction,
+the capture-rig gap behind the three FILE-NAME-ONLY citations, and `a2-31`/`t185` instruments that hardcode
+dead worktree paths and cannot rerun without a source edit. **DEC-2 still calls itself "DRAFT (revision 5),
+NOT RATIFIED" while being a ratified revision 6** — revision 6 landed with no §10 entry and no status-block
+update; rev 7 addresses it, pending `T251`.
 
 ## What is NOT true, and must not be inferred from the green bar
 
 **The ledger is graded on six captured cases and no more.** Accrual, account transfers (gl 17), charge-off,
-multi-currency, opening balances, `GLClosure` and **slot resolution** are all ungraded — and since `T242`
-the harness **prints all eight** not-graded rows, derived from the registry rather than hand-written.
-**Two of the 46 loanschedule vectors have `principal_amortizes_to_zero` switched OFF**, legitimately and
-loudly. **G-4, G-5, G-8, G-10, G-12 and G-14 remain OPEN**; G-4 and G-5 are hard `user` gates. **G-8's
-region is a conservative superset only**, resting on the unproven conjecture `δ ≤ 1`, and **options (b)/(c)
-must not be put to Buyan — unconditionally, with no expiry.** **Nothing was cut over, and nothing here
-authorises it.** The gate register at the top of `gates.md` is authoritative.
+multi-currency, opening balances, `GLClosure` and **slot resolution** are all ungraded — the harness prints
+all eight not-graded rows from the registry. **Two of the 46 loanschedule vectors have
+`principal_amortizes_to_zero` switched OFF**, legitimately and loudly. **G-4, G-5, G-8, G-10, G-12 and G-14
+remain OPEN**; **G-4 and G-5 are hard `user` gates**. **G-8's region is a conservative superset only**,
+resting on the unproven conjecture `δ ≤ 1`, and **options (b)/(c) must not be put to Buyan — unconditionally,
+with no expiry.** **Nothing was cut over, and nothing here authorises it.** The gate register at the top of
+`gates.md` is authoritative.

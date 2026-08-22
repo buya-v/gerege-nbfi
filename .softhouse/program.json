@@ -755,7 +755,8 @@
    "raised_by": "local fire 20260822-060013 (driver, on T246's F-1, after independently re-running the banner's own cited instrument)",
    "recorded_in": ".softhouse/gates.md",
    "blocks_decided_by": "driver, local fire 20260822-140002",
-   "blocks_reviewed_by": "T249 (PENDING) -- this scope decision is NOT independently checked yet"
+   "blocks_reviewed_by": "T249 (DONE, merged bfde578) — verdict MICRO-FIX. The SCOPE DECISION was CONFIRMED CORRECT by independent re-derivation, and by a route the driver did not state: the banner errs PESSIMISTICALLY, so no direction of that error licenses Go that a corrected banner would forbid; the harm is epistemic, not normative, and the remedy is a briefing not a prohibition. T249 explicitly did NOT find the driver rationalised past a gate. The PATCH was rejected as FAIL-OPEN and the driver fixed it at 925fdfc, red-driven nine ways.",
+   "closure_route": "Revision 7 PREPARED by T247 (merged fc36f0c, landed NOTHING). AWAITING INDEPENDENT REVIEW = T251, filed and dependency-ready. The driver has committed NOT to ratify without it. Route is prepare -> independent review -> driver ratification, the same one G-13 took."
   }
  ],
  "history": [
@@ -1826,6 +1827,45 @@
     "P-76 (a guard driven red only on the shape it was built from proves the wiring, not the coverage)"
    ],
    "notes": "P-71 gained a FOURTH data point landing outside BOTH stated rules: T243 and T246 both forked at 693c768, origin/main at WORKTREE CREATION, which is the dispatch commit's parent. Scoreboard across four fires: session-start / dispatch / session-start / neither. The mechanism is now visible — main moves between the driver's dispatch decision and the harness's worktree creation."
+  },
+  {
+   "run": "2026-08-21-run2-tierA-gl-accounting-A2",
+   "fire": "local 20260822-140002",
+   "context": "tierA-gl-accounting / slice A2",
+   "tasks_dispatched": 5,
+   "tasks_completed": 5,
+   "tasks_merged": 5,
+   "live_at_exit": 0,
+   "tasks": [
+    "T247",
+    "T248",
+    "T245",
+    "T249",
+    "T237"
+   ],
+   "new_tasks_filed": [
+    "T249",
+    "T250",
+    "T251",
+    "T252"
+   ],
+   "reviewer_catches": [
+    "T249 vs the DRIVER: the driver's own ready-tasks.py patch was FAIL-OPEN — blocks = None/False/0/[]/{} all stringify truthy and printed 'SCOPE RECORDED'. Pre-patch was fail-CLOSED. Fixed at 925fdfc.",
+    "T249: the SELECTOR also failed open — g.get('class')=='CONTRACT' silently drops any gate with no class key, and G-13 is that shape.",
+    "T249: G-12's blocks field was FALSE at HEAD (same P-69 shape as G-14's banner). Ground corrected, obligation untouched.",
+    "T245 vs the DRIVER, HIGH: the driver's reference-oracle.md correction fixed the INVENTORY and left the INSTRUCTION — the connection-facts table still prescribed tenantIdentifier=default and psql -d fineract_default, ~60 lines below the warning describing that hazard. Of 5,129 tracked files it was the ONLY prescriptive one.",
+    "T245: the driver's claim (1) was OVERSTATED and claim (4) was already STALE within a day (74/71 -> 88/78).",
+    "T247: found 26 sites beyond T246's 8, plus TWO live banner falsehoods nobody had named (L76; and an ordinal — seven guards/seventh when it is eight/sixth).",
+    "T247: found gates.md:98, inside G-11's own ratification block, still reading 'Nothing grades the ledger's money yet'. Corrected by the driver at cb337d7.",
+    "T248: the guard was blind in its POPULATION SELECTOR, not its conditions — R4 satisfied both conditions and was never inspected."
+   ],
+   "driver_self_corrections": [
+    "Introduced a fail-OPEN in the very commit that filed P-77 about unenforced permission surfaces; caught by the reviewer it had itself filed.",
+    "Two of its own verification probes were broken (P-72): 'SCOPE RECORDED' matched the fallback 'NO SCOPE RECORDED' as a substring; lowercase 'no `class` KEY' missed uppercase output. Both nearly produced wrong conclusions."
+   ],
+   "uat": "PASS — bar re-run by the driver on EVERY merge result, never quoted from a worker. Final: probe PRESENT and up, VERDICT PASS exit 0, 46 parity / 7884 graded cells, ledger 4 parity / 2 oracle-refusal / 21 money cells, refused 0, inadmissible 0, harness errors 0, invariant violations 0, 0 NOT RUN, 9/9 census pins, frontier 10 == pinned 10.",
+   "vector_store_digest": "13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d — UNMOVED all fire. No task touched the money corpus.",
+   "cutover": "NONE. Nothing here authorises one."
   }
  ],
  "database": {
