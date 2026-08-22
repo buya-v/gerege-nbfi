@@ -1,0 +1,21 @@
+### T273 selector agreement
+  linter population (Python re, whole file text) : 70
+  guard  population (git grep -E, line-based)    : 85
+  --- files the GUARD sees and the LINTER does not (15) — harmless, the guard is wider:
+        .softhouse/capture/charges/bin/selfcheck.sh
+        .softhouse/capture/mathcontext/analysis/t46_mathcontext_inventory.sh
+        .softhouse/capture/pathb/t99/prove-sweep-patterns.sh
+        .softhouse/capture/pathb/t99/sweep.sh
+        .softhouse/capture/t131-grep/probe-ignorefiles.sh
+        .softhouse/capture/t91/t115-drive-mf3-mf4.sh
+        .softhouse/reviews/T135-evidence/sweep-broad.sh
+        .softhouse/reviews/T138-evidence/r7-mf3-mf4.sh
+        .softhouse/reviews/T138-evidence/r7b-census.sh
+        .softhouse/reviews/T155-probe/prove-ix-sweep-and-help.sh
+        .softhouse/reviews/T155-probe/prove-xiv-sweep-coverage.sh
+        .softhouse/reviews/t246-dec2-rev6/drive-pin-red.sh
+        .softhouse/reviews/t246-dec2-rev6/sweep-vectors-reversal.sh
+        .softhouse/reviews/t43-probe/t43_ambient_sites.sh
+        .softhouse/reviews/t45-probe/gen-ambient-sites.sh
+  --- files the LINTER sees and the GUARD does not (0) — EACH ONE IS A HOLE:
+VERDICT: SUPERSET — every file the fail-open linter classifies is read by the guard.

@@ -3,7 +3,27 @@
 # "x1 y", so x\dy could not match under ANY reading; the row proved nothing).
 # Also reconciles T232's reported "= 14" against what this tree measures.
 set -u
-C=/tmp/t234_matrix2.txt
+# T273 — THE FIXTURE IS NOW SELF-OWNED SCRATCH, NOT A LITERAL PATH IN /tmp.
+#
+# It used to be `C=/tmp/t234_matrix2.txt`, created by the very next line. That one
+# literal made THE HARNESS'S VERDICT a property of the LINTING HOST'S FILESYSTEM
+# rather than of this tree. The fail-open linter's C1 rule reads an absolute path
+# in an assignment position and asks `os.path.exists`; its ownership filter looks
+# for a literal `> /tmp/t234_matrix2.txt` and the redirection here is `> "$C"`, so
+# the filter never fired. The answer to `exists` was therefore YES only on a host
+# where this script had ALREADY BEEN RUN ONCE — which flipped this file TIER2 (C2
+# only) on such a host and TIER1 (C1+C2) on a clean one, and the tier token is part
+# of FAILOPEN_PIN_FILE_LIST, so the whole BAR went EXIT 2 WITH NO PROBE LINE the
+# moment macOS cleared /tmp on reboot. Measured both ways, this tree, this host:
+# .softhouse/capture/t273-residue/evidence/10-PREFIX-reproduction.txt.
+#
+# `mktemp`'s XXXXXXXXXX template is not a path and no linter can resolve it to one,
+# so no classification can depend on it; the directory is created here, owned here,
+# and removed on EXIT. The instrument's OUTPUT is unchanged — it never printed $C —
+# and that is proved byte-for-byte in evidence/20-instrument-output-{BEFORE,AFTER}.txt.
+D="$(mktemp -d "${TMPDIR:-/tmp}/t234-escape-matrix.XXXXXXXXXX")" || exit 2
+trap 'rm -rf "$D"' EXIT
+C="$D/matrix2.txt"
 { printf 'x1y\n'; printf 'xdy\n'; printf 'x y\n'; printf 'xsy\n'; printf 'x_y\n'; printf 'xwy\n'; } > "$C"
 echo "### corpus (each line discriminates class-reading from literal-reading)"; nl -ba "$C"; echo
 echo "  x1y : matches x\\dy ONLY if \\d = digit class"

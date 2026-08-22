@@ -1545,6 +1545,225 @@ guard_no_fail_open_instruments() {
   return 0
 }
 
+# ---------------------------------------------------------------------------
+# guard_no_host_state_in_lint_corpus: THE FAIL-OPEN FRONTIER MUST BE A PROPERTY
+# OF THE TREE AND NOT OF THIS MAC'S /tmp.  [T273]
+# ---------------------------------------------------------------------------
+# EVERY GREEN BAR THIS PROGRAM RECORDED BEFORE T273 WAS CONTINGENT ON A 24-BYTE
+# FILE IN /tmp THAT NO COMMIT CONTAINED. Measured on merged main by the driver, and
+# again first-hand in T273's own worktree, both directions, same tree, changing only
+# whether `/tmp/t234_matrix2.txt` existed
+# (.softhouse/capture/t273-residue/evidence/10-PREFIX-reproduction.txt):
+#
+#     residue PRESENT -> frontier 11 rows, ...02-escape-matrix-fix.sh at TIER2,
+#                        frontier == pinned, VERDICT: PASS, exit 0, probe line count 1
+#     residue ABSENT  -> frontier 11 rows, ...02-escape-matrix-fix.sh at TIER1,
+#                        frontier != pinned, EXIT 2, PROBE LINE COUNT 0
+#
+# The count was 11 in both arms and the PATH SET was identical in both arms. What
+# differed was the TIER TOKEN, and the pin carries the tier token, so the guard above
+# refused — correctly. The mechanism: `02-escape-matrix-fix.sh` declared
+# `C=/tmp/t234_matrix2.txt` and created it on the NEXT LINE through `> "$C"`. The
+# linter's C1 rule reads the literal and asks `os.path.exists`; its ownership filter
+# looks for a literal `> /tmp/t234_matrix2.txt` and never resolves the variable. So
+# the answer to `exists` was YES only on a host where that instrument had already run
+# once — and macOS clears /tmp on reboot, which made the FIRST FIRE AFTER A RESTART
+# exit 2 with no probe line: the most ambiguous signal this harness can emit, since
+# it reads the same as "the corpus is unusable" and as "the oracle is unreachable".
+#
+# T273 repaired the instrument — its fixture is now a `mktemp -d` scratch directory it
+# owns and removes on EXIT, and `mktemp`'s XXXXXXXXXX template is not a path that any
+# linter can resolve, so no classification can depend on it. THAT REPAIR IS ONE FILE.
+# THIS GUARD IS THE CLASS (P-26), because a repair nothing enforces is the shape this
+# program has now been punished for five times: manifest.py verify, t44_float_roundtrip
+# _v3, T173's float guard, guard_ledger_invariants, and T238's own linter, each of them
+# correct and each of them inert until someone wired it.
+#
+# THE RULE, STATED AS A PROPERTY AND NOT AS A LIST. A file that the fail-open linter
+# CLASSIFIES may not assign a literal absolute path under a SHARED TEMPORARY ROOT
+# (/tmp, /private/tmp, /var/tmp) to a name. Such a path is host state three times over:
+# it is shared between every worktree on the machine, no commit records whether it
+# exists, and the operating system deletes it on reboot. C1 and C6 both decide tier by
+# asking whether a path EXISTS, so any such assignment is a shape CAPABLE of moving a
+# tier without a single byte of the tree changing.
+#
+# THE PIN IS DELIBERATELY WIDER THAN THE DEFECT, AND SAYS SO. Some of the rows below
+# are filtered by the linter's ownership rule today and therefore do NOT move a tier
+# today — `t239-r11-rerun/instruments/50-red-drive.sh` is the clear case: it writes
+# `export GIT_INDEX_FILE=/tmp/t239-red-index` at :35 and `rm -f /tmp/t239-red-index`
+# at :42, and the literal `rm` makes C1's owned-path filter fire, which is why that
+# file is pinned TIER2 even though the path does not exist right now [VERIFIED by
+# reading both lines and by the frontier being TIER2 with the path absent]. This guard
+# still lists it. Refusing the SHAPE rather than the currently-live subset is the
+# choice, because "this one is filtered today" is a fact about the linter's current
+# rules, and T266 is under way to change exactly those rules.
+#
+# THE POPULATION SELECTOR IS A MEASURED SUPERSET OF THE LINTER'S, NOT AN ASSUMED ONE.
+# The linter selects repo-wide search instruments with a Python `re` over the whole
+# file text; this guard uses `git grep -E`, which is POSIX ERE, line-based, and has no
+# `\b`. Two engines and two spellings, so the agreement was MEASURED rather than
+# asserted (.softhouse/capture/t273-residue/instruments/40-selector-agreement.py,
+# evidence/40-selector-agreement.txt): linter 70 files, this guard 85, files the linter
+# sees and this guard does not = ZERO. A superset is the property the guard needs; a
+# subset would be a hole an author could walk through by choosing a spelling.
+#
+# FAIL-CLOSED, three ways, because a census that inspects nothing passes everything:
+#   * `git grep` EXITS 1 ON NO MATCH AND >1 ON ERROR. Anything above 1 — including the
+#     9 this guard's subshell raises when it cannot enter $REPO_ROOT — is an ERROR and
+#     refuses. Treating any nonzero as "clean" is precisely how this class fails open;
+#   * the SELECTOR must return at least one file. Zero repo-wide search instruments in
+#     a 996-file corpus means the selector broke, not that the tree is clean (P-35);
+#   * the guard PRINTS what it compared on the way past, every run, pass or fail. A
+#     guard that speaks only when it fires cannot be told from one that never ran.
+# NO PIPELINE ANYWHERE IN IT (P-57): every read is a `sed`/`grep` over a FILE.
+#
+# THE PIN IS A FRONTIER, NOT AN AMNESTY — the same terms as FAILOPEN_PIN_FILE_LIST
+# twenty lines up. A '+' row is a NEW site: repair it with `mktemp` scratch rather than
+# pinning it. A '-' row is a site that was REPAIRED or DELETED, which is good news, and
+# the pin must lose that row IN THE SAME COMMIT or it starts excusing a weakness that
+# is no longer there. T273 REMOVED EXACTLY ONE ROW IN THE COMMIT THAT EARNED IT: this
+# census is EIGHTEEN at the parent commit and SEVENTEEN here, and the row that left is
+# `…/02-escape-matrix-fix.sh | C=/tmp/t234_matrix2.txt` [VERIFIED: the census expression
+# run against HEAD prints that file's line 6 and exits 0; the same expression against
+# the working tree exits 1, and `git grep` exits 1 on NO MATCH and >1 on ERROR, so the
+# 1 is an ABSENCE and not a failure].
+#
+# Rows are `PATH | NAME=ABSPATH`, with the line NUMBER deliberately absent: line numbers
+# rot on every insertion above them, and this program has already paid for a pin that
+# was restated as line numbers in four places (T255/T258).
+#
+# WHAT THIS GUARD DOES NOT CLAIM. It does not claim the seventeen rows below currently
+# move a tier — most do not, and the check that would say which is the linter's own,
+# not this one's. It does not claim to have found every way a graded run can read state
+# outside the repo: $HOME, an env var, a sibling worktree and a previously-run instrument
+# are all still open, and T273's handoff lists what it looked at and what it did not
+# (P-66/P-70 — "not found" is a statement about the search, never about the world).
+# It claims exactly one thing: no NEW literal shared-temp assignment can enter the
+# fail-open linter's corpus without a source edit to this file that a reviewer reads.
+HOSTSTATE_PIN_TEMP_ASSIGN_LIST='.softhouse/capture/t116-familyb-promotion/src/run-harness-mutations-t116.sh | SCRATCH=/tmp/t116-harness
+.softhouse/capture/t234-sweep-instrument-audit/instruments/01-escape-matrix.sh | C=/tmp/t234_matrix.txt
+.softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh | GIT_INDEX_FILE=/tmp/t239-red-index
+.softhouse/capture/t91/t115-drive-mf3-mf4.sh | S=/tmp/t115-mf34.$$
+.softhouse/reviews/T138-evidence/r7-mf3-mf4.sh | B=/tmp/T138-mf2-post
+.softhouse/reviews/T138-evidence/r7-mf3-mf4.sh | X=/tmp/T138-mf3
+.softhouse/reviews/T138-evidence/r7b-census.sh | B=/tmp/T138-mf2-post
+.softhouse/reviews/T155-probe/prove-ix-sweep-and-help.sh | POST=/tmp/t155/post
+.softhouse/reviews/T155-probe/prove-ix-sweep-and-help.sh | PRE=/tmp/t155/pre
+.softhouse/reviews/T155-probe/prove-xiv-sweep-coverage.sh | P=/tmp/t155/post2
+.softhouse/reviews/T158-compare-enumerators.sh | C=/tmp/t158-clone
+.softhouse/reviews/t246-dec2-rev6/drive-pin-red.sh | SCRATCH=/tmp/t246-pin-red
+.softhouse/reviews/t260-dec2-rev8/instruments/50-collision-and-red-drive.sh | RED=/tmp/t260/red
+.softhouse/reviews/t260-dec2-rev8/instruments/50-collision-and-red-drive.sh | SH=/tmp/t260/sh
+.softhouse/reviews/t260-dec2-rev8/instruments/50-collision-and-red-drive.sh | p=/tmp/t260/red/.softhouse/conformance.sh
+.softhouse/reviews/t260-dec2-rev8/instruments/50-collision-and-red-drive.sh | p=/tmp/t260/red/.softhouse/conformance.sh
+.softhouse/reviews/t260-dec2-rev8/instruments/50-collision-and-red-drive.sh | p=/tmp/t260/red/.softhouse/conformance.sh'
+
+guard_no_host_state_in_lint_corpus() {
+  local rw as list raw got want rc n m self f
+  local -a corpus
+  self='.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py'
+  # The linter's repo-wide-instrument selector, transliterated to POSIX ERE.
+  rw='(git[[:space:]]+(-[A-Za-z][[:space:]]+[^[:space:]]+[[:space:]]+|--[A-Za-z-]+=[^[:space:]]+[[:space:]]+|-[A-Za-z]+[[:space:]]+)*(grep|ls-files)|grep[[:space:]]+-[a-zA-Z]*[rR])'
+  # A NAME assigned a literal absolute path under a shared temporary root. Anchored at
+  # the start of the line, so a `#` comment can never match: `#` is not [A-Za-z_].
+  as='^[[:space:]]*(export[[:space:]]+)?[A-Za-z_][A-Za-z0-9_]*=["'"'"']?/(tmp|private/tmp|var/tmp)/'
+
+  list="$(mktemp "${TMPDIR:-/tmp}/conformance-hoststate-list.XXXXXXXXXX")" || return 1
+  raw="$(mktemp  "${TMPDIR:-/tmp}/conformance-hoststate-raw.XXXXXXXXXX")"  || return 1
+  got="$(mktemp  "${TMPDIR:-/tmp}/conformance-hoststate-got.XXXXXXXXXX")"  || return 1
+  want="$(mktemp "${TMPDIR:-/tmp}/conformance-hoststate-want.XXXXXXXXXX")" || return 1
+
+  ( cd "$REPO_ROOT" || exit 9; LC_ALL=C git grep -l -E "$rw" -- '*.sh' '*.py' ) >"$list.raw" 2>/dev/null
+  rc=$?
+  if [ "$rc" -gt 1 ]; then
+    warn "conformance: the host-state selector exited $rc. \`git grep\` exits 1 on NO MATCH and >1 on"
+    warn "conformance: ERROR — 9 is this guard's own code for 'could not enter $REPO_ROOT'. An error is"
+    warn "conformance: never an empty result, and an empty result here would read as a clean tree."
+    rm -f "$list" "$list.raw" "$raw" "$got" "$want" "$want.raw"
+    return 1
+  fi
+  # The linter never lints ITSELF; neither does this guard, for the same reason and so
+  # that the two populations stay comparable.
+  LC_ALL=C grep -v -x -F "$self" "$list.raw" >"$list" 2>/dev/null || true
+  n="$(LC_ALL=C grep -ac '' "$list" || true)"
+  [ -n "$n" ] || n=0
+  if [ "$n" -lt 1 ]; then
+    warn "conformance: the host-state selector matched ZERO repo-wide search instruments in a corpus"
+    warn "conformance: that has hundreds. The selector is broken, not the tree clean (P-35). REFUSED."
+    rm -f "$list" "$list.raw" "$raw" "$got" "$want" "$want.raw"
+    return 1
+  fi
+
+  corpus=()
+  while IFS= read -r f; do
+    [ -n "$f" ] || continue
+    corpus[${#corpus[@]}]="$f"
+  done <"$list"
+
+  ( cd "$REPO_ROOT" || exit 9; LC_ALL=C git grep -n -E "$as" -- "${corpus[@]}" ) >"$raw" 2>/dev/null
+  rc=$?
+  if [ "$rc" -gt 1 ]; then
+    warn "conformance: the host-state census exited $rc from \`git grep\`. >1 is an ERROR, and this"
+    warn "conformance: guard will not read an error as 'no sites found'."
+    rm -f "$list" "$list.raw" "$raw" "$got" "$want" "$want.raw"
+    return 1
+  fi
+
+  # PATH | NAME=ABSPATH. The line NUMBER is dropped on purpose (it rots on every
+  # insertion above it, and this program has already paid for a pin restated as line
+  # numbers in four places — T255/T258). Quotes around the value are dropped and the
+  # rest of the line — `; rm -rf …`, a trailing comment — is dropped with them, so a
+  # row is the assignment and nothing else.
+  LC_ALL=C sed -n 's%^\([^:]*\):[0-9][0-9]*:[[:space:]]*\(export[[:space:]][[:space:]]*\)\{0,1\}\([A-Za-z_][A-Za-z0-9_]*\)=["'"'"']\{0,1\}\(/[^;()&|[:space:]"'"'"']*\).*$%\1 | \3=\4%p' "$raw" >"$got.raw"
+  # A `sed -n …p` DROPS what it cannot match, and a dropped row is a site that leaves
+  # the census silently — the fail-open shape this whole guard exists to refuse. So the
+  # two line counts are COMPARED, and a normalisation that lost anything refuses.
+  rc="$(LC_ALL=C grep -ac '' "$raw" || true)";     [ -n "$rc" ] || rc=0
+  m="$(LC_ALL=C grep -ac '' "$got.raw" || true)";  [ -n "$m" ]  || m=0
+  if [ "$rc" -ne "$m" ]; then
+    warn "conformance: the host-state census matched $rc line(s) but could normalise only $m."
+    warn "conformance: a row this guard cannot read is a row that would leave the census silently."
+    LC_ALL=C sed -n '1,12p' "$raw" >&2
+    rm -f "$list" "$list.raw" "$raw" "$got" "$got.raw" "$want" "$want.raw"
+    return 1
+  fi
+  LC_ALL=C sort "$got.raw" >"$got"
+  if [ -n "$HOSTSTATE_PIN_TEMP_ASSIGN_LIST" ]; then
+    printf '%s\n' "$HOSTSTATE_PIN_TEMP_ASSIGN_LIST" >"$want.raw"
+  else
+    : >"$want.raw"
+  fi
+  LC_ALL=C sort "$want.raw" >"$want"
+  m="$(LC_ALL=C grep -ac '' "$got" || true)"
+  [ -n "$m" ] || m=0
+
+  say "conformance: CENSUS host state in the lint corpus — $n repo-wide search instrument(s)"
+  say "conformance:   read from git grep over tracked *.sh/*.py under $REPO_ROOT; sites that assign a"
+  say "conformance:   literal /tmp, /private/tmp or /var/tmp path to a name: $m, pinned at 17."
+  say "conformance:   Such a path is host state — shared across worktrees, absent from every commit,"
+  say "conformance:   and deleted on reboot — and C1/C6 decide TIER by asking whether a path EXISTS."
+  if ! diff -u "$want" "$got" >"$raw.diff" 2>&1; then
+    warn "conformance:"
+    warn "conformance: THE HOST-STATE CENSUS IS NOT THE PINNED CENSUS (- pinned, + measured):"
+    LC_ALL=C sed -n '3,60p' "$raw.diff" >&2
+    warn "conformance:"
+    warn "conformance: A '+' line is a NEW instrument whose fail-open TIER can be decided by this"
+    warn "conformance: host's /tmp instead of by the tree. Repair it — \`D=\$(mktemp -d \"\${TMPDIR:-/tmp}/"
+    warn "conformance: name.XXXXXXXXXX\")\` with a \`trap 'rm -rf \"\$D\"' EXIT\` is the adoptable shape, and"
+    warn "conformance: an XXXXXXXXXX template is not a path any linter can resolve — rather than pinning it."
+    warn "conformance: A '-' line is a site that was REPAIRED or DELETED: that is good news, and the pin"
+    warn "conformance: must lose the row IN THE SAME COMMIT, or it starts excusing a weakness that is"
+    warn "conformance: no longer there."
+    warn "conformance: The pin is HOSTSTATE_PIN_TEMP_ASSIGN_LIST in .softhouse/conformance.sh."
+    warn "conformance: EXIT 2 — no verdict is available. This is NOT a pass."
+    rm -f "$list" "$list.raw" "$raw" "$raw.diff" "$got" "$got.raw" "$want" "$want.raw"
+    return 1
+  fi
+  say "conformance:   census == pinned (all $m site(s), by path and source line)."
+  rm -f "$list" "$list.raw" "$raw" "$raw.diff" "$got" "$got.raw" "$want" "$want.raw"
+  return 0
+}
+
 run_guards() {
   local failed=0
   # FIRST, and it SHORT-CIRCUITS rather than joining the `failed=1` tally the others use.
@@ -1567,6 +1786,7 @@ run_guards() {
   guard_no_narrow_catch_in_capture_rigs || failed=1
   guard_ledger_invariants             || failed=1
   guard_no_fail_open_instruments      || failed=1
+  guard_no_host_state_in_lint_corpus  || failed=1
   if [ "$failed" -ne 0 ]; then
     warn "conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass."
     exit "$EXIT_UNUSABLE"
