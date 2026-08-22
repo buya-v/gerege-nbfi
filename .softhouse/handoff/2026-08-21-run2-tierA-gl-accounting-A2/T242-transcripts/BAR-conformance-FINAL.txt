@@ -37,7 +37,7 @@ ledger-invariants: CENSUS   DML-classified literal: internal/apps/loanschedule/c
 ledger-invariants: CENSUS   hold-named func: internal/apps/ledger/slots_test.go:187:1  TestPlaceholderDisjointnessHolds
 ledger-invariants: NIL-COVERAGE — the SQL surface inspected 5646 string literals and found ZERO SQL DML statements of any kind under /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5094250349275df4/nexus. This tree contains no SQL: the I-4 SQL classes (I4-DML, I3-SQL-BALANCE) are proven by this program's --selftest and NOT by this tree. Do not read this run as evidence that the SQL detector works on real ledger SQL; there is none yet.
 ledger-invariants: NIL-COVERAGE — zero mutating driver calls (Exec/ExecContext/SendBatch/CopyFrom/Prepare) exist under this root, so class OPAQUE-SQL inspected an empty population. The Go module declares no database driver at all.
-ledger-invariants:   census figure READ: inspected 56 >= 54 tracked by git (floor DERIVED, not pinned)
+ledger-invariants:   census figure READ: inspected 56 >= 56 tracked by git (floor DERIVED, not pinned)
 ledger-invariants: CANNOT-CATCH — the honest limits of this guard, printed on every run, pass or fail:
 ledger-invariants:   1. DYNAMIC SQL. A statement assembled at run time (fmt.Sprintf, strings.Builder, a query
 ledger-invariants:      builder's own AST) is not readable as text. The guard converts that blind spot into a

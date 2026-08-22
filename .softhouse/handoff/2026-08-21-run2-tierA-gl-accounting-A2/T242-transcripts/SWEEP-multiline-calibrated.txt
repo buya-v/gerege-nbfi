@@ -1,0 +1,38 @@
+CALIBRATION  known positive (split across a newline): MATCHED
+CALIBRATION  known negative (fabrication check)     : correctly absent
+
+MULTI-LINE / MARKUP-TOLERANT sweep results:
+   1  ./.softhouse/RESUME.md
+   1  ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-15-handoff.md
+   1  ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-26.md
+   5  ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-handoff.md
+   3  ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-transcripts/BAR-conformance-FINAL.txt
+   3  ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-transcripts/RD1-plant-a-row-APPEARS.txt
+   3  ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-transcripts/RD2-remove-a-row-DISAPPEARS.txt
+   3  ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-transcripts/RD4-account-activity-TRACKS-THE-STORE.txt
+   3  ./.softhouse/reviews/a2-34-review-a2-15/REVIEW.md
+   1  ./.softhouse/reviews/a2-34-review-a2-15/transcripts/A2-34-RD1-one-minor-unit.txt
+   1  ./.softhouse/reviews/a2-34-review-a2-15/transcripts/A2-34-RD2-I2-alone.txt
+   1  ./.softhouse/reviews/a2-34-review-a2-15/transcripts/A2-34-RD4-deflation.txt
+   1  ./.softhouse/reviews/a2-34-review-a2-15/transcripts/A2-34-RD5-inflation.txt
+   1  ./.softhouse/reviews/a2-34-review-a2-15/transcripts/A2-34-RD6-exclusion-closed.txt
+   1  ./.softhouse/reviews/a2-34-review-a2-15/transcripts/A2-34-RD7-note-enforced.txt
+   1  ./.softhouse/reviews/a2-34-review-a2-15/transcripts/A2-34-RD8-exemption-refused.txt
+   1  ./.softhouse/reviews/a2-34-review-a2-15/transcripts/A2-34-conformance-full.txt
+   1  ./.softhouse/reviews/a2-34-review-a2-15/transcripts/A2-34-wrongimpl-CONTROL-correct.txt
+   1  ./.softhouse/reviews/a2-34-review-a2-15/transcripts/A2-34-wrongimpl-code-ignored.txt
+   1  ./.softhouse/reviews/a2-34-review-a2-15/transcripts/A2-34-wrongimpl-header-refusing.txt
+   1  ./.softhouse/reviews/a2-34-review-a2-15/transcripts/A2-34-wrongimpl-manual-permission-ignored.txt
+   1  ./.softhouse/reviews/a2-34-review-a2-15/transcripts/A2-34-wrongimpl-netting-totals.txt
+   1  ./.softhouse/reviews/a2-34-review-a2-15/transcripts/A2-34-wrongimpl-split-drift.txt
+   1  ./.softhouse/reviews/a2-34-review-a2-15/transcripts/A2-34-wrongimpl-truncating.txt
+   2  ./.softhouse/tasks.json
+   2  ./.softhouse/vectors/capabilities-ledger.json
+   1  ./nexus/internal/apps/ledger/conformance/capability.go
+   3  ./nexus/internal/apps/ledger/conformance/notgraded.go
+   1  ./nexus/internal/apps/loanschedule/conformance/report.go
+
+=== SITES THE LINE-ORIENTED LITERAL SWEEP MISSED ===
+  MISSED BY THE LINE SWEEP -> ./.softhouse/RESUME.md
+  MISSED BY THE LINE SWEEP -> ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-15-handoff.md
+  MISSED BY THE LINE SWEEP -> ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-26.md
