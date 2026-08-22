@@ -1,0 +1,47 @@
+POPULATION: 27 tracked files under nexus/internal/apps/ledger (P-66: this is WHERE I looked)
+    nexus/internal/apps/ledger/accountingrule.go
+    nexus/internal/apps/ledger/apishape.go
+    nexus/internal/apps/ledger/capture_test.go
+    nexus/internal/apps/ledger/conformance/admit.go
+    nexus/internal/apps/ledger/conformance/capability.go
+    nexus/internal/apps/ledger/conformance/conformance_test.go
+    nexus/internal/apps/ledger/conformance/grade.go
+    nexus/internal/apps/ledger/conformance/impl.go
+    nexus/internal/apps/ledger/conformance/invariants.go
+    nexus/internal/apps/ledger/conformance/notgraded.go
+    nexus/internal/apps/ledger/conformance/notgraded_test.go
+    nexus/internal/apps/ledger/conformance/vector.go
+    nexus/internal/apps/ledger/doc.go
+    nexus/internal/apps/ledger/errors.go
+    nexus/internal/apps/ledger/financialactivity.go
+    nexus/internal/apps/ledger/financialactivity_test.go
+    nexus/internal/apps/ledger/glaccount.go
+    nexus/internal/apps/ledger/glaccount_test.go
+    nexus/internal/apps/ledger/mapping.go
+    nexus/internal/apps/ledger/money.go
+    nexus/internal/apps/ledger/money_test.go
+    nexus/internal/apps/ledger/producttype.go
+    nexus/internal/apps/ledger/producttype_test.go
+    nexus/internal/apps/ledger/resolve.go
+    nexus/internal/apps/ledger/resolve_test.go
+    nexus/internal/apps/ledger/slots.go
+    nexus/internal/apps/ledger/slots_test.go
+
+=== word-anchored counts over that population ===
+    P-1   3
+    P-2   5
+    P-3   3
+    P-4   2
+    P-5   0
+    P-6   4
+    P-7   4
+    P-8   1
+    P-9   3
+    P-10  8
+    P-99  0
+
+
+=== \b discrimination, measured where both needles EXIST (.softhouse/patterns.md) ===
+    \bP-5\b  12      \bP-50\b 2      unanchored 'P-5' 40
+
+VERDICT: the claim reproduces at this commit

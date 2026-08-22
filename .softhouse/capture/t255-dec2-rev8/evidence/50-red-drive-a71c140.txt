@@ -1,0 +1,59 @@
+real tree, before: DEC-2 09e456b887506288c642a595c8b4f39bdb7d34205a7cf5c8995b02057fab8164
+                   conformance.sh 7f72481588856a706a1ba6ca360b9a4d4e5d80a24e68d353cb5eebe0f8f6ba58
+
+=== R0  CALIBRATION — unperturbed scratch copy ===
+  R0 unperturbed                                             anchors exit 0 (want 0)  OK
+      a checker that fails on a clean tree proves nothing when it fails on a dirty one
+      rev-7's hand-listed line-number checker, run against the PRE-revision-8
+      DEC-2 (restored from HEAD) so only conformance.sh varies: exit 1
+      -> 3 of 46 rows already MOVED at a71c140, BEFORE any perturbation,
+         and ALL of them are its four conformance.sh rows.
+         That is G-14 re-enacting itself: revision 7's replacements, and the
+         review's re-measurement of them, are BOTH stale at this commit.
+      SCOPE, both terms counted (P-67): that checker's SH_ROWS holds 4 rows;
+      DEC-2 carried 115 `path:NNNN` citations at a71c140, 90 of them into this
+      repository. A hand-written row list answers a question about its author's
+      memory, not about the document (P-66).
+
+=== R1  THE T253 COLLISION — 30 lines inserted ABOVE every guard citation ===
+    T253 rewrote ten `mktemp -t` sites in .softhouse/conformance.sh in this fire,
+    the first four of them ABOVE every citation DEC-2 carries. This arm reproduces
+    that shape: a change that alters NOTHING any citation refers to.
+  R1 30 lines inserted above the citations                   anchors exit 0 (want 0)  OK
+      ANCHORS ARE INDIFFERENT TO IT — which is the entire point of revision 8
+      rev-7's line-number checker, same isolation: exit 1, 3 of 46 rows MOVED
+      AND THIS IS WHY IT IS NOT CLERICAL — a dead line number does not resolve to
+      nothing. It resolves to a plausible neighbour, so a reader is MISLED, not STOPPED:
+        the review re-measured `run_guards`                               to :1504, which now reads
+            local lint="$REPO_ROOT/.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py"
+        the review re-measured `guard_ledger_invariants || failed=1`      to :1524, which now reads
+            warn "conformance: finish. An empty frontier from a linter that never ran reads exactly like a"
+        the review re-measured `guard_no_fail_open_instruments || failed=1` to :1525, which now reads
+            warn "conformance: clean tree, which is the defect this guard exists to refuse."
+
+=== R2  the ANCHORED THING is renamed — the anchor MUST bite ===
+  R2 anchored function renamed                               anchors exit 1 (want 1)  OK
+      expected: ROT on three anchor rows AND a DERIVED mismatch
+
+=== R3  an anchor's text is DUPLICATED — uniqueness MUST bite ===
+  R3 anchor duplicated                                       anchors exit 1 (want 1)  OK
+      an anchor that matches twice names nothing; AMBIG, not a silent pass
+
+=== R4  a guard is REMOVED from run_guards — the DERIVED count MUST bite ===
+  R4 guard_gofmt removed from run_guards                     anchors exit 1 (want 1)  OK
+      expected: fence != source, invoked 8->7, tallied 7->6, ordinal shifts
+
+=== R5  two guards are REORDERED — the DERIVED ORDER MUST bite ===
+    (a count-only check would pass this. It is here because it would.)
+  R5 two tallied guards swapped                              anchors exit 1 (want 1)  OK
+      counts are unchanged at 8/7 — only the ORDER moved, and it is caught
+
+=== R6  the DOCUMENT's own [DERIVED: ...] token is edited — MUST bite ===
+  R6 document claims 9 tallied guards                        anchors exit 1 (want 1)  OK
+      the document lying about the source is caught as readily as the reverse
+
+real tree, after:  DEC-2 09e456b887506288c642a595c8b4f39bdb7d34205a7cf5c8995b02057fab8164
+                   conformance.sh 7f72481588856a706a1ba6ca360b9a4d4e5d80a24e68d353cb5eebe0f8f6ba58
+UNCHANGED — every mutation happened in a scratch tree, which is now deleted.
+
+RED DRIVE: ALL ARMS BEHAVED AS REQUIRED

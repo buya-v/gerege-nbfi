@@ -1,0 +1,53 @@
+T255 anchor + derived-fact verifier
+ROOT: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae89b66052d604a02
+calibration: negative control 0 hits, positive control >=1 hit. OK.
+
+=== ANCHORS (population DERIVED from docs/adr/DEC-2-gl-accounting-adapter.md, not from a hand-written list) ===
+anchors found in the document: 22
+  ok      nexus/internal/apps/loanschedule/conformance/admit.go :: if v.Context != "" && !IsSchemaContext(v.Context) {
+  ok      nexus/internal/apps/loanschedule/conformance/vector.go :: return []string{SelfTestDir, LoanScheduleContext}
+  ok      nexus/internal/apps/ledger/conformance/vector.go :: const SchemaV1 = "gerege.ledger.vector/v1"
+  ok      nexus/internal/apps/ledger/conformance/vector.go :: return []string{LedgerContext}
+  ok      .softhouse/conformance.sh :: guard_ledger_invariants() {
+  ok      .softhouse/conformance.sh :: guard_no_fail_open_instruments() {
+  ok      nexus/internal/apps/loanschedule/conformance/vector.go :: func SchemaContexts() []string {
+  ok      nexus/internal/apps/loanschedule/conformance/admit.go :: strings.Join(SchemaContexts(), ", "))
+  ok      nexus/internal/apps/ledger/conformance/admit.go :: add("dec2_revision %d but the store pins %d", v.DEC2Revision, opts.Pin.DEC2Rev
+  ok      .softhouse/conformance.sh :: THE PIN REMAINS A FRONTIER, NOT AN AMNESTY.
+  ok      .softhouse/conformance.sh :: run_guards() {
+  ok      .softhouse/conformance.sh :: guard_ledger_invariants() {
+  ok      .softhouse/conformance.sh :: NEXUS_DIR="$REPO_ROOT/nexus"
+  ok      .softhouse/conformance.sh :: so a Go-test-only guard is not a
+  ok      nexus/internal/apps/ledger/conformance/vector.go :: // It is the string DEC-2 §5.2 names: "gerege.ledger.vector/v1".
+  ok      .softhouse/conformance.sh :: CMD_PKG="./internal/apps/loanschedule/conformance/cmd/conformance"
+  ok      .softhouse/conformance.sh :: [ -n "$context" ] && args+=("-context=$context")
+  ok      nexus/internal/apps/ledger/conformance/vector.go :: // SchemaV1 is the only schema string this package accepts.
+  ok      .softhouse/conformance.sh :: guard_ledger_invariants() {
+  ok      nexus/internal/apps/loanschedule/conformance/vector.go :: // IsSchemaContext reports whether ctx is one of SchemaContexts().
+  ok      nexus/internal/apps/loanschedule/conformance/admit.go :: "declaring an unknown context is INADMISSIBLE and not merely unmatched: the ha
+  ok      nexus/internal/apps/ledger/conformance/vector.go :: func SchemaContexts() []string {
+
+=== DERIVED: run_guards() re-derived from .softhouse/conformance.sh ===
+  invoked  (8): guard_graded_root_is_this_tree, guard_no_float_in_vectors, guard_no_float_in_harness, guard_gofmt, guard_no_float_in_capture_requests, guard_no_narrow_catch_in_capture_rigs, guard_ledger_invariants, guard_no_fail_open_instruments
+  short-circuits (1): guard_graded_root_is_this_tree
+  tallied  (7): guard_no_float_in_vectors, guard_no_float_in_harness, guard_gofmt, guard_no_float_in_capture_requests, guard_no_narrow_catch_in_capture_rigs, guard_ledger_invariants, guard_no_fail_open_instruments
+  DEC-2 fence  (8): guard_graded_root_is_this_tree, guard_no_float_in_vectors, guard_no_float_in_harness, guard_gofmt, guard_no_float_in_capture_requests, guard_no_narrow_catch_in_capture_rigs, guard_ledger_invariants, guard_no_fail_open_instruments
+  ok      the fence equals the source's invocation list, in order.
+  DEC-2 token: invokes 8 | tallies 7 | `guard_ledger_invariants` invocation #7, tallied #6
+  ok      every derived fact re-derived from source and equal.
+
+=== RESIDUAL `conformance.sh:NNNN` line citations still in DEC-2: 9 line(s) ===
+EVERY ONE IS PRINTED, so a reviewer classifies them rather than trusting a count.
+Revision 8 converted every LIVE one; what remains must all be HISTORY — a quotation
+of what a past revision wrote, which may not be reworded without falsifying the record.
+    L96    >    `guard_ledger_invariants`"* with `.softhouse/conformance.sh:1152-1187` / `:1189-1213` / `:1209`.
+    L1059  | **I-3** | Balances are DERIVED, never written | No write path to any balance column exists in the Go tree | **NO — STRUCTURAL ONLY.** A vector is a 
+    L1116  `.softhouse/conformance.sh:1189-1213`, and listed **seven** names, **omitting
+    L1773  (P-45). **⚠ Revisions 1–7 cited `conformance.sh:718` and `:721` and said *"both occurrences"*.
+    L2470  **⚠ Revisions 1–7 cited `.softhouse/conformance.sh:1254` for this. That line is a comment about
+    L2769  `.softhouse/conformance.sh:1152-1187` / `:1209`, correct at `2e97162` and stale by revision 7;
+    L2903  > `.softhouse/conformance.sh:1115-1116` read *"the I-3/I-4 SOURCE GUARD that DEC-2 §4.4 requires
+    L3207  `.softhouse/conformance.sh:1115-1116` and is **raised, not fixed** — out of scope
+    L3423  wired it**. `run_guards` invokes **seven** guards, not five (`conformance.sh:1189-1213`), and
+
+ALL ANCHORS AND DERIVED FACTS HOLD: 0 failing row(s)
