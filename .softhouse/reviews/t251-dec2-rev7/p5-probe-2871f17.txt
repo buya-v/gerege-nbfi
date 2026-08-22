@@ -1,0 +1,64 @@
+COMMIT: 2871f175ed6606d1f7b091e31c180917f3a3ff82
+
+POPULATION SEARCHED:
+  nexus/internal/apps/ledger/accountingrule.go
+  nexus/internal/apps/ledger/apishape.go
+  nexus/internal/apps/ledger/capture_test.go
+  nexus/internal/apps/ledger/conformance/admit.go
+  nexus/internal/apps/ledger/conformance/capability.go
+  nexus/internal/apps/ledger/conformance/conformance_test.go
+  nexus/internal/apps/ledger/conformance/grade.go
+  nexus/internal/apps/ledger/conformance/impl.go
+  nexus/internal/apps/ledger/conformance/invariants.go
+  nexus/internal/apps/ledger/conformance/notgraded.go
+  nexus/internal/apps/ledger/conformance/notgraded_test.go
+  nexus/internal/apps/ledger/conformance/vector.go
+  nexus/internal/apps/ledger/doc.go
+  nexus/internal/apps/ledger/errors.go
+  nexus/internal/apps/ledger/financialactivity.go
+  nexus/internal/apps/ledger/financialactivity_test.go
+  nexus/internal/apps/ledger/glaccount.go
+  nexus/internal/apps/ledger/glaccount_test.go
+  nexus/internal/apps/ledger/mapping.go
+  nexus/internal/apps/ledger/money.go
+  nexus/internal/apps/ledger/money_test.go
+  nexus/internal/apps/ledger/producttype.go
+  nexus/internal/apps/ledger/producttype_test.go
+  nexus/internal/apps/ledger/resolve.go
+  nexus/internal/apps/ledger/resolve_test.go
+  nexus/internal/apps/ledger/slots.go
+  nexus/internal/apps/ledger/slots_test.go
+  ---- 27 tracked files
+
+PER-PRECONDITION HIT COUNTS in nexus/internal/apps/ledger (word-anchored PCRE):
+  P-1   3
+  P-2   5
+  P-3   3
+  P-4   2
+  P-5   0
+  P-6   4
+  P-7   4
+  P-8   1
+  P-9   3
+  P-10  8
+
+NEGATIVE CONTROL — does \b actually discriminate P-5 from P-50?
+  (an unanchored substring probe matches P-5, P-50 and P-51 alike; if the
+   anchored and unanchored counts agree, the anchoring is not biting and
+   the P-5 result would be void)
+  anchored    \bP-5\b  = 0
+  anchored    \bP-50\b = 0
+  UNanchored  P-5      = 0
+
+WIDER POPULATION — is P-5 named anywhere under nexus/ at all?
+  (none under nexus/)
+
+AND where IS P-5 defined? (so 'not found' is anchored to a real referent)
+docs/adr/DEC-2-gl-accounting-adapter.md:146:contradict-at-the-point-of-claim technique; and P-8's independence of P-1…P-5.
+docs/adr/DEC-2-gl-accounting-adapter.md:1360:> vector can be *expressed* until **§5.3's** P-1…P-5 exist, and §5.1's five legs are unaffected by
+docs/adr/DEC-2-gl-accounting-adapter.md:1368:> attributed P-1…P-5 to §5.1; they are **§5.3's**, and the composite claim is §5.1 + §5.4, not §5.1
+docs/adr/DEC-2-gl-accounting-adapter.md:1624:| §4.10 (`A2-17`'s micro-fix) | *"…because §5.1 establishes that no `ledger` vector can be admitted **at all** until §5.3's P-1…P-5 exist."* |
+docs/adr/DEC-2-gl-accounting-adapter.md:1928:   > money comparator had never once been driven red.** §5.3's **P-5** requires money cells to
+docs/adr/DEC-2-gl-accounting-adapter.md:1943:       (**P-5**), reported as a **money** kill with a **non-zero `margin_minor`**.
+docs/adr/DEC-2-gl-accounting-adapter.md:2039:| **4th** | **P-5** | **Money cells** — `int64` minor-unit **strings**, paired with the oracle's own emitted characters as a transcription cross-check only | §4.3, T186 (c); required for `I-1`/`I-2` to be gradeable at all | P-1, P-4 |
+docs/adr/DEC-2-gl-accounting-adapter.md:2041:| **5th** | **P-10** | **NEW in revision 4.** A **mechanism that actually RUNS a named wrong implementation and shows it going red** — either a `ledger` implementation registered under a name and selected with the binary's `-impl` flag (`registry.go:34` `Register`, `Lookup`), or a mutation harness. **`graded_against` is a DECLARATIVE record and does not execute anything** [VERIFIED by `A2-28` at commit `2e97162`: `vector.go:542-…`; admission validates the declaration's shape only] | `A2-25` F-9. §5.2 requirement 7's matrix demands **RED against the named wrong implementation** and §8.2 tells `A2-15` it cannot start without the preconditions — but no precondition named the mechanism that cell needs. **Without this, the bottom-left cell is satisfiable by writing a JSON row**, which is P-22 in the one place §5.2 was written to close it | P-1, P-4, P-5 |

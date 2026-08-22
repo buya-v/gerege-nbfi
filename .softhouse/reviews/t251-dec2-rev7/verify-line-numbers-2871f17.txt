@@ -1,0 +1,59 @@
+
+=== NEGATIVE CONTROL (expect 1 MOVED)  (docs/adr/DEC-2-gl-accounting-adapter.md, 3039 lines) ===
+  MOVED  L1     expected 'ZZQQ-T247-THIS-MUST-NOT-MATCH'
+         got      '# DEC-2 — GL / accounting adapter contract'
+
+=== DEC-2 ADR  (docs/adr/DEC-2-gl-accounting-adapter.md, 3039 lines) ===
+  ok     L3     NOTHING GRADES THIS CONTEXT'S MONEY. NOTHING GRADES THIS CONTEXT AT ALL.
+  ok     L7     Not one of them is currently checked by anything.
+  ok     L10    **No `ledger` vector exists.**
+  ok     L87    until then `A2-15` (promote GL vectors) stays blocked,
+  ok     L815   no `ledger` vector of any shape is currently expressible
+  ok     L819   no admissible vector can carry a money cell, or any `ledger` cell
+  ok     L825   there is no `ledger` conformance PASS to say nothing with
+  ok     L2437  Today there is no such PASS to misread.
+  ok     L12    **No `ledger` vector is EXPRESSIBLE.** The store's only accepted schema is
+  ok     L38    `run_guards` invokes **seven**
+  ok     L39    guards, not five; the seventh is `guard_ledger_invariants`
+  ok     L54    The "PASS 46" everybody quotes is `loanschedule`
+  ok     L70    advance: `conformance.sh`'s hard guards *do* walk `nexus/internal/apps/led
+  ok     L76    no grading whatsoever
+  ok     L247   contains exactly two context directories
+  ok     L250   not one parity vector grades it
+  ok     L458   Being statable is not being graded.
+  ok     L711   is expressible is a separate question, answered no in §5.
+  ok     L820   | **NO.** Same reason. |
+  ok     L828   grades none of them today.
+  ok     L1304  THE (b) COLUMN OF THIS TABLE CANNOT CURRENTLY BE WRITTEN DOWN.
+  ok     L1309  Every row of the (b) table is therefore ungraded today
+  ok     L1449  holds **46 promoted parity vectors, all `loanschedule`**
+  ok     L1450  **The `ledger` context has
+  ok     L1504  ### 5.1 No `ledger` vector is expressible against the frozen vector schema
+  ok     L1626  **What is true.** §5.1's heading:
+  ok     L2023  cannot promote a `ledger` vector until **all** of the following exist
+  ok     L2044  **Nine open, one landed.**
+  ok     L2345  ### 8.1 NOTHING GRADES THE LEDGER
+  ok     L2359  **Zero `ledger` vectors exist.**
+  ok     L2361  **Zero `ledger` vectors are EXPRESSIBLE**
+  ok     L2407  **Ratifying DEC-2 changes none of the four.**
+  ok     L2411  ### 8.2 If ratified
+  ok     L2415  stays unusable until the §5.3 machinery lands
+  ok     L2421  **Nine of the ten §5.3 preconditions remain
+  ok     L2423  **"PASS 46" remains the
+  ok     L2424  only thing anyone can say about the ledger
+  ok     L2432  ### 8.3 If ratified, these remain true and must not be misread
+  ok     L2611  ## 10. Revision history
+  ok     L80    **Status: DRAFT (revision 5)
+  ok     L90    **Revision 5 changes exactly two things and nothing else**
+  ok     L827   **The rule this table encodes:**
+
+=== conformance.sh  (.softhouse/conformance.sh, 2574 lines) ===
+  ok     L1300  guard_ledger_invariants() {
+  MOVED  L1474  expected 'run_guards() {'
+         got      '  LC_ALL=C sort "$got.raw" >"$got"'
+  MOVED  L1494  expected 'guard_ledger_invariants             || failed=1'
+         got      '    warn "conformance: The pin is FAILOPEN_PIN_FILE_LIST in .softhouse/conformance.sh."'
+  MOVED  L1495  expected 'guard_no_fail_open_instruments      || failed=1'
+         got      '    warn "conformance: EXIT 2 — no verdict is available. This is NOT a pass."'
+
+STALE — RE-MEASURE BEFORE APPLYING: 3 row(s) MOVED out of 46 checked
