@@ -2036,6 +2036,16 @@ state **where you looked**. If the answer does not include every place the thing
 > note that each was correct about the fire that took it. **Retitled by the driver, local fire
 > `20260822-060013`, because the heading is what gets grepped and quoted — and a heading that asserts a dead
 > rule will keep being quoted as one.** The surviving duty is the title.
+>
+> **FOURTH DATA POINT, same fire, and it lands OUTSIDE BOTH RULES.** `T243` measured its fork point at
+> **`693c768`** — `origin/main` **at worktree creation**, per its reflog (*"branch: Created from origin/main"*).
+> Session start was `477dc2d`, 26 commits behind; the dispatch commit was `f13bf4a`, whose **parent** is the
+> fork point. A **third distinct value**, so the measurement discriminates. `T246`, dispatched in the same
+> wave, measured `693c768` too — also the dispatch commit's parent. **Scoreboard across four fires:
+> session-start / dispatch / session-start / NEITHER.** The mechanism is now visible and it is why no rule
+> survives: the fork is `origin/main` *at the moment the worktree is cut*, and on a busy fire `main` moves
+> between the driver's dispatch decision and the harness's worktree creation. `T246` watched `origin/main`
+> move **between two consecutive commands of its own setup**. **Measure it. There is nothing else to do.**
 
 **Caught by `T225`, local fire `20260822-000013`, against the driver.** The `/softhouse` skill states:
 *"Before any batch: commit and push main — workers fork from current main."* **They do not.**
@@ -2463,3 +2473,62 @@ name the binary and the version; this is why.
 `P-72` (calibrate). `P-73` (this was knowable from the snapshot file the whole time). `T238`'s dead-`cd`
 class — same fail-open shape, different cause. `P-57`/`T192` — the pipefail sites that already exist are
 what would have caught consequence 2.
+
+
+
+## P-76 — A GUARD DRIVEN RED ONLY ON THE SHAPE IT WAS BUILT FROM PROVES THE WIRING, NOT THE COVERAGE
+
+**Caught by the driver, local fire `20260822-060013`, against `T243` — by driving `T243`'s freshly wired
+guard rather than reading its transcripts.** Evidence:
+`.softhouse/capture/driver-20260822-060013/T243-REDDRIVE-GAP.md`.
+
+**This is a NEW shape, and it is not P-45.** Every prior P-45 instance in this program is a guard that
+**ran nowhere** — built, never invoked, failing only when called by hand. This one **runs, is reached on
+the automatic path, and passes its own red drive** — and still cannot see the case that motivated it.
+
+### What happened
+
+`T243` wired `T238`'s fail-open linter into `conformance.sh` and reported **RED 13/0**. True. The driver
+planted a fail-open instrument anyway (P-22) and **the harness stayed green**. Calibrating the probe
+(P-72; and T239's *"not found is a statement about the search"*) got the linter to **name the file** — and
+`conformance.sh` **still exited 0**, because the plant classified below the pinned frontier.
+
+Two shapes, both fail-open, only one covered:
+
+```sh
+# COVERED — the reassuring echo is an ARM of the failing construct
+( cd "$WT" && git grep ... ) || echo "   (no hits)"
+
+# NOT COVERED — the echo is UNCONDITIONAL, on the next line
+cd /tmp/T138-merge 2>/dev/null && git grep ... 
+echo "   (searched the MERGED tree)"
+```
+
+Both exit 0 having searched nothing. **The uncovered one is `r11-hygiene.sh:77-79` — the site `T239`
+measured live in that same fire, and the site the driver relayed to `T238` mid-flight as the second
+confirmed instance of the class.** It is flagged **zero** times. Of two known live sites, the classifier's
+boundary splits them one and one.
+
+### Why the author could not have caught it
+
+`T243` planted the covered shape — **because that is the shape the rule was written from.** A red drive
+built from the same example as the rule is a **tautology with a transcript**: it exercises the path the
+author already had in mind, and its passing tells you the wiring is connected and nothing about what the
+rule can see. The transcript is honest; the inference from it is too strong.
+
+### The duty
+
+1. **Drive every guard red on at least one shape you did NOT design the rule around**, and say which one.
+2. **State what you would accept as a falsification** before you run it.
+3. **When a task was widened because of a specific site, that site is a MANDATORY red-drive case.** Here
+   the whole reason `T238`'s brief was widened was `r11-hygiene.sh`, and it is the case the delivered
+   guard misses.
+4. **Distinguish the two claims in writing**: *"the guard is wired and reached"* and *"the guard covers
+   the class"*. `T243` proved the first. Only the second closes anything, and only a census of the class
+   against the rule can establish it.
+
+**Related.** `P-45` (a guard invoked nowhere) — this is its harder sibling: invoked everywhere, blind in
+part. `P-22` (drive it red) — satisfied in letter, not in substance. `P-35` (a check that inspected zero
+items is not a pass) — here it inspected 892 files and still saw nothing. `P-72` (calibrate the
+instrument) — the driver's first probe failed and calibrating it was what turned a wrong conclusion into
+a finding.

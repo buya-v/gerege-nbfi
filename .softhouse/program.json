@@ -70,7 +70,7 @@
   "park_after_retries": true,
   "gate_scope": "A gate on a CONTRACT blocks work that CONSUMES the contract (any coder task, anything under the go_target), not work that produces knowledge the decision needs anyway. While tier0 is blocked_on_gate, every other context is READY-FOR-ANALYSIS: analyst behaviour extraction from pinned source, test-corpus mining into capture plans, RAW observed vector capture on an oracle-reaching fire, and the Tier-C gap audit may all proceed. Contract-shaped storage, Go code, and amending the gated DEC-n may not. An open gate must never mean an idle factory."
  },
- "cursor": "tierA-gl-accounting (slice A2) — first ledger vectors LANDED, review in flight",
+ "cursor": "tierA-gl-accounting (slice A2) + tier0-harness — DEC-2 rev 6 RATIFIED AND LANDED (G-13 closed); G-14 raised on the false opening banner; three unwired guards wired, one with a measured coverage gap (P-76)",
  "contexts": [
   {
    "id": "tier0-harness-schedule-poc",
@@ -1775,6 +1775,54 @@
     "T234's headline overstated the A2-33 fail-open as undermining a RATIFIED decision; re-derived and re-scoped — A2-33's own transcript has 6334 hit lines, so its sweep did search."
    ],
    "cutover": "NONE. Nothing here authorises one. Cutover remains a hard user gate."
+  },
+  {
+   "run_id": "2026-08-21-run2-tierA-gl-accounting-A2",
+   "fire": "local 20260822-060013",
+   "contexts": [
+    "tierA-gl-accounting (slice A2)",
+    "tier0-harness"
+   ],
+   "dispatched": 6,
+   "completed": 6,
+   "merged": 6,
+   "live_at_exit": 0,
+   "waves": 2,
+   "tasks": [
+    "T239",
+    "T242",
+    "T244",
+    "T238",
+    "T246",
+    "T243"
+   ],
+   "uat": "PASS — driver-re-verified on merged main 68889db after EVERY merge, never quoted from a worker: probe line PRESENT and reading up; VERDICT PASS exit 0; loanschedule 46 parity / 7884 cells; LEDGER 4 parity / 2 oracle-refusal / 21 money cells; ledger citations 12 part-two resolutions (1 ARTEFACT-BYTES / 8 HTTP-SIDECAR / 3 FILE-NAME-ONLY); refused 0, inadmissible 0, harness errors 0, invariant violations 0, 0 NOT RUN; all 9 census pins == pinned.",
+   "vector_store_digest": "8968c559fa613e8642ab030bd0a029c17d147054 -> 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d (T242; driver-verified confined to capabilities-ledger.json, all three graded subtrees byte-identical)",
+   "gates": "G-13 CLOSED — RATIFIED (DEC-2 rev 6 landed). G-14 RAISED (DEC-2's opening banner is false).",
+   "reviewer_catches": [
+    "T246 F-1 HIGH: DEC-2's opening banner asserts NOTHING GRADES THIS CONTEXT AT ALL and NAMES THE INSTRUMENT THAT REFUTES IT (ls .softhouse/vectors/). Seven sites. Raised as G-14.",
+    "T246 F-2: the rev-6 draft cited 'all 16 rows' with no denominator; 60 of 60 rows carry the property, so it discriminates nothing. Corrected before landing.",
+    "T246 F-3: the landed text needed a re-measure stamp AT ratification, not only T244's drafting-time stamp. Applied.",
+    "T244: a SECOND site of the falsehood at DEC-2 section 9 item 13, in different words — fixing the named site alone would have left it standing.",
+    "T239: T234's 95.3% recall loss is a figure about the WRONG POPULATION; over the real T115 tree the loss is 38/38 = 100%.",
+    "T238: T234's own re-runner is in the fail-open class it was built to detect; T234's L-1b characterisation falsified (86 under all four engines, 81 under none) — which STRENGTHENS A2-33.",
+    "T242: the gl-16 defect was not a stale list but a SLOT/ACCOUNT CONFLATION; deleting the id would have removed the symptom and left the cause."
+   ],
+   "driver_corrections": [
+    "reference-oracle.md omitted fineract_gerege, the tenant database every ledger vector came from; tenant 1 is Asia/Kolkata (+05:30), which CLAUDE.md permits nowhere. T245 filed against the driver's own fix.",
+    "T226 and T235 BARs pinned a DEAD vector-store digest; a worker could have mutated the money corpus to satisfy a stale sentence.",
+    "P-73 was a numbering hole with a live pointer into it; P-71's heading asserted a rule falsified twice.",
+    "Four worker briefings carried a false engine roster (ugrep); corrected mid-flight, not at merge.",
+    "The driver's own FINDINGS.md mislabelled its engine as BSD grep when it was the shadowing ugrep function (P-33).",
+    "The GATE REGISTER was desynced: G-13 asserted RAISED in three driver state files while gates.md held it zero times (P-73).",
+    "files_hint under-specified three times in two fires (T219, T242, T243) — task text and hint written to different scopes, and only the hint is machine-checked."
+   ],
+   "patterns_filed": [
+    "P-73 (a measured fact filed where its reader will not look)",
+    "P-75 (grep and rg in an agent shell are shell functions; rg does not exist in a script)",
+    "P-76 (a guard driven red only on the shape it was built from proves the wiring, not the coverage)"
+   ],
+   "notes": "P-71 gained a FOURTH data point landing outside BOTH stated rules: T243 and T246 both forked at 693c768, origin/main at WORKTREE CREATION, which is the dispatch commit's parent. Scoreboard across four fires: session-start / dispatch / session-start / neither. The mechanism is now visible — main moves between the driver's dispatch decision and the harness's worktree creation."
   }
  ],
  "database": {
