@@ -1,0 +1,76 @@
+=== T180 — green transcript: t80/prove-f1.sh end to end, in a throwaway clone
+run at 2026-08-22T01:35:05Z
+source repo : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae714ce0fae65b988
+sandbox     : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t180-green.ydZdDnT4/repo   (clone at 60109a4c7014)
+script under test: .softhouse/capture/pathb/t80/prove-f1.sh sha256 5d9283714aa11560ef01793963b89a9841684068fff51684e1387bf47a4100c3
+
+live .softhouse/capture/pathb/t36/attest.py
+  BEFORE: 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2
+
+=== T85 F-1 — a breached attest.py run must write NOTHING
+run at 2026-08-22T01:35:07Z
+victim set: t36/out/emiloop  (11 EL-* captures taken on tenant gerege, plus attestation and transcripts)
+
+--- BEFORE: 14 files
+4c3ff7f8c07e89d5a7e16b0d8e386b74a4b2c21e089052b546d336b9c51d1768  t36/out/emiloop/preconditions.txt
+  stamp present: no
+
+guard: WATCHING .softhouse/capture/pathb/t36/attest.py at sha256 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2 — it is never written by this proof (T180)
+guard: the pre-fix bytes go to the SCRATCH SIBLING .softhouse/capture/pathb/t36/.f1-prefix-attest.py; marker /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t180-green.ydZdDnT4/repo/.softhouse/capture/pathb/t80/.f1-swap-in-progress
+--- 1. PRE-FIX attest.py (813acb1, blob 8e9f865ba6e9f8841c9be81962770e3c818fe53f, sha256 c56825ad6f915063703240ac7ea6a6a54608c4f06333f21d2ddff0327de52f92)
+    run from the SCRATCH SIBLING .softhouse/capture/pathb/t36/.f1-prefix-attest.py — same directory, so HERE/PATHB/OUT and the
+    directory-shape guard are identical; the live .softhouse/capture/pathb/t36/attest.py is NOT touched
+    invocation: python3 t36/.f1-prefix-attest.py default emiloop
+EXIT=1
+  
+  ABORT: preconditions breached — no capture attempted, no attestation written.
+  stamp now present: YES, contents: default
+  live .softhouse/capture/pathb/t36/attest.py sha256: 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2
+  ^^ unchanged from the start-up digest 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2 — the defect below was reproduced WITHOUT touching the live attester
+  RESULT: COMMITTED SET MUTATED BY A RUN THAT SAID IT WROTE NOTHING:
+    0a1
+    > 01666ec060466c14b9fa06c613fbac449163f2a2017558fe16526209ab78c6b0  t36/out/emiloop/CAPTURED-FROM-TENANT
+    13c14
+    < 4c3ff7f8c07e89d5a7e16b0d8e386b74a4b2c21e089052b546d336b9c51d1768  t36/out/emiloop/preconditions.txt
+    ---
+    > b78989d6a2bf288736e87e84ee525b2400e4fce67cb13bd6272e14995c098e3a  t36/out/emiloop/preconditions.txt
+    transcript first line is now: == T36 Path B preconditions, tenant 'default' ==
+
+guard: removed the scratch sibling attester .softhouse/capture/pathb/t36/.f1-prefix-attest.py
+guard: removed the stray CAPTURED-FROM-TENANT stamp from t36/out/emiloop
+guard: restored the committed evidence set t36/out/emiloop from git
+--- evidence restored from git: all digests back to BEFORE; the scratch sibling is gone
+    and .softhouse/capture/pathb/t36/attest.py never moved off 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2
+
+--- 2. FIXED attest.py (.softhouse/capture/pathb/t36/attest.py, sha256 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2), same invocation: python3 t36/attest.py default emiloop
+EXIT=1
+  
+  ABORT: preconditions breached — no capture attempted, no attestation written, and nothing at all written into '/private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t180-green.ydZdDnT4/repo/.softhouse/capture/pathb/t36/out/emiloop'.
+  stamp present: no
+  RESULT: committed set UNCHANGED — all 14 digests identical, including preconditions.txt
+
+--- T180 invariant
+  .softhouse/capture/pathb/t36/attest.py  at start-up: 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2
+  .softhouse/capture/pathb/t36/attest.py  now        : 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2
+  the live attester was never written by this proof, on either arm
+
+prefix-defect-reproduced=1   fixed-run-clean=yes
+RESULT: F-1 CLOSED — the defect reproduces on the pre-fix file and is absent after the fix,
+        and the live attester was not overwritten at any point (T180).
+guard: .softhouse/capture/pathb/t36/attest.py is UNTOUCHED at 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2 — this proof no longer overwrites it (T180)
+guard: evidence set restored — 14 files, census identical to the pre-run census
+
+prove-f1.sh EXIT=0
+
+live .softhouse/capture/pathb/t36/attest.py
+  BEFORE: 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2
+  AFTER : 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2
+  sibling t36/.f1-prefix-attest.py present after the run: no
+  in-flight marker present after the run                : no
+  git status over the whole capture tree:
+     M .softhouse/capture/pathb/t80/prove-f1.sh
+    (the line above for t80/prove-f1.sh is this script copying the bytes under test in;
+     anything else would be residue the proof failed to clean)
+
+VERDICT: the live attester did NOT move — 567e4cf04a8704742800e9492fb18c252de7618ffba36a3d812c85b1320502c2
+RESULT: GREEN

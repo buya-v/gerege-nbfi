@@ -3,13 +3,23 @@
 bytes, then GREEN against the fixed script, one interruption path at a time.
 
 THE DEFECT (raised by T156 as follow-up F-1, confirmed by T158, verified by the driver).
-`prove-f1.sh` writes PRE-FIX BYTES OVER THE LIVE `t36/attest.py`, runs them — which stamps
-`t36/out/emiloop/CAPTURED-FROM-TENANT` and replaces the committed `preconditions.txt` with
-a breached one — and only then undoes all three.  `grep -c '^[[:space:]]*trap '` over the
-pre-fix file is 0.  Any interruption inside that window leaves the attester at pre-fix
-bytes AND the forged-looking stamp in place.  `t36/attest.py` is on the enforced
-precondition path, so a silently downgraded attester keeps producing attestations that
-look entirely normal.
+The pinned PRE-FIX `prove-f1.sh` writes PRE-FIX BYTES OVER THE LIVE `t36/attest.py`, runs
+them — which stamps `t36/out/emiloop/CAPTURED-FROM-TENANT` and replaces the committed
+`preconditions.txt` with a breached one — and only then undoes all three.
+`grep -c '^[[:space:]]*trap '` over the pre-fix file is 0.  Any interruption inside that
+window leaves the attester at pre-fix bytes AND the forged-looking stamp in place.
+`t36/attest.py` is on the enforced precondition path, so a silently downgraded attester
+keeps producing attestations that look entirely normal.
+
+T180 UPDATE — READ THIS BEFORE GRADING A ROW.  The current `prove-f1.sh` no longer writes
+the live attester at all: the pre-fix bytes are run from a SIBLING FILE in the same
+directory, `t36/.f1-prefix-attest.py`.  So on the POST-FIX arms the attester is expected to
+read `live` even after SIGKILL, and the state this prover watches for corruption now
+includes that scratch sibling.  What did NOT change, and what this prover still exists to
+defend, is that the pre-fix attester MUTATES THE COMMITTED EVIDENCE SET `t36/out/emiloop`
+whichever file it runs from — so every trap, the evidence cleanup and the start-up recovery
+are still required, and every interruption path below still has to leave that set clean.
+The removal of the overwrite is graded separately, by `prove-f1-noswap.py`.
 
 HOW THIS PROVES IT (P-22: ship no guard you have not driven red).
   * The PRE-FIX bytes come from an IMMUTABLE GIT BLOB named by its object sha, never from
@@ -27,8 +37,8 @@ HOW THIS PROVES IT (P-22: ship no guard you have not driven red).
   * Positive controls on the inputs: refuses if pre == post, if the pinned pre-fix bytes
     already contain a `trap`, or if the fixed bytes contain none.
   * SIGKILL is graded honestly: no trap can catch it, so the fixed script is expected to
-    be stranded too, and the claim tested is that the NEXT invocation repairs it at
-    start-up.
+    leave the EVIDENCE SET stranded too (post-T180 the live attester is not at risk), and
+    the claim tested is that the NEXT invocation repairs it at start-up.
 
 Run:  python3 prove-f1-recovery.py
 Exit 0 only if every pre-fix case corrupted the rig and every post-fix case did not
@@ -52,6 +62,10 @@ REL_SHA256 = ".softhouse/capture/pathb/t36/sha256.sh"
 REL_EMILOOP = ".softhouse/capture/pathb/t36/out/emiloop"
 REL_STAMP = REL_EMILOOP + "/CAPTURED-FROM-TENANT"
 REL_GUARD = ".softhouse/capture/pathb/t80/.f1-swap-in-progress"
+# T180: the scratch sibling the fixed script runs the pre-fix bytes from, instead of
+# overwriting the live attester.  An interrupted run can leave it behind, so it is part of
+# the state this prover grades.
+REL_SIBLING = ".softhouse/capture/pathb/t36/.f1-prefix-attest.py"
 
 # The PRE-FIX prove-f1.sh, pinned as a git OBJECT plus the sha256 of its bytes.
 # Immutable by construction: `main` may move, this blob cannot.
@@ -97,9 +111,10 @@ fi
 # The signal must land while the attester is ACTUALLY RUNNING, and "sleep N seconds" does
 # not establish that — measured on this host the window does not even OPEN until ~12s in
 # (`out/F1-recovery-window-timing.txt`), so a 5s sleep signalled a script that had not yet
-# touched anything and proved nothing.  The trigger is therefore DETERMINISTIC: poll the
-# sandbox's attest.py until its sha256 IS the pre-fix digest — which is true only between
-# the overwrite and the undo — then let the attester get going and signal.
+# touched anything and proved nothing.  The trigger is therefore DETERMINISTIC: poll
+# the sandbox until the pre-fix digest APPEARS — at `t36/attest.py` for the pre-fix script,
+# at `t36/.f1-prefix-attest.py` for the T180 script, whichever shows it first — which is
+# true only between the write and the cleanup; then let the attester get going and signal.
 IN_WINDOW_SETTLE = 2.0
 IN_WINDOW_TIMEOUT = 120.0
 
@@ -113,9 +128,12 @@ CASES = [
     ("kill9",    "SIGKILL — no trap can catch this"),
 ]
 
-BG_ATTESTER = (b'python3 t36/attest.py default emiloop > "$O/.f1-out1" 2>&1 &\n'
+# T180: part 1 runs the SIBLING, not the live attester.  The ablation swaps the
+# backgrounded `wait` for a foreground call; it REFUSES if it matches nothing, so a rename
+# here becomes a refusal rather than a silently unmodified "ablation" arm.
+BG_ATTESTER = (b'python3 "$SIB" default emiloop > "$O/.f1-out1" 2>&1 &\n'
                b'ATTEST_PID=$!\nwait "$ATTEST_PID"\nst1=$?')
-FG_ATTESTER = (b'python3 t36/attest.py default emiloop > "$O/.f1-out1" 2>&1\n'
+FG_ATTESTER = (b'python3 "$SIB" default emiloop > "$O/.f1-out1" 2>&1\n'
                b'st1=$?\nATTEST_PID=""')
 
 RUN_TIMEOUT = 180
@@ -194,6 +212,7 @@ class Sandbox:
         return {
             "attester": att,
             "attester_sha": a,
+            "sibling": os.path.exists(os.path.join(self.path, REL_SIBLING)),
             "stamp": os.path.exists(os.path.join(self.path, REL_STAMP)),
             "emiloop_dirty": [l for l in dirty.splitlines() if l.strip()],
             "guard": os.path.exists(os.path.join(self.path, REL_GUARD)),
@@ -210,10 +229,11 @@ class Sandbox:
                                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
         fired_at = None
         if signal_in_window is not None:
-            att = os.path.join(self.path, REL_ATTEST)
+            watched = [os.path.join(self.path, REL_ATTEST),
+                       os.path.join(self.path, REL_SIBLING)]
             deadline = time.time() + IN_WINDOW_TIMEOUT
             while time.time() < deadline:
-                if sha256_file(att) == PREFIX_ATTEST_SHA256:
+                if any(sha256_file(w) == PREFIX_ATTEST_SHA256 for w in watched):
                     break
                 if proc.poll() is not None:
                     break
@@ -246,6 +266,7 @@ class Sandbox:
 
 def describe(st):
     bits = ["attest.py=%s" % st["attester"],
+            "sibling=%s" % ("PRESENT" if st["sibling"] else "absent"),
             "stamp=%s" % ("PRESENT" if st["stamp"] else "absent"),
             "emiloop=%s" % ("MUTATED(%d)" % len(st["emiloop_dirty"])
                             if st["emiloop_dirty"] else "clean"),
@@ -254,7 +275,11 @@ def describe(st):
 
 
 def corrupt(st):
-    return st["attester"] != "live" or st["stamp"] or bool(st["emiloop_dirty"])
+    # T180: a leftover scratch sibling is corruption too — it is an untracked copy of a
+    # KNOWN-BAD attester sitting in the rig directory, which is the thing this whole family
+    # of tasks exists to keep out of the tree.
+    return (st["attester"] != "live" or st["stamp"] or bool(st["emiloop_dirty"])
+            or st["sibling"])
 
 
 def main():
@@ -309,9 +334,18 @@ def main():
                     verdict = ("DEFECT REPRODUCED — rig left corrupted" if good
                                else "the defect did NOT reproduce on this path")
                 elif mode == "kill9":
-                    good = (st["attester"] == "PRE-FIX" and st["guard"])
-                    verdict = ("stranded, as SIGKILL must be — the in-flight marker is on "
-                               "disk; start-up recovery is driven below" if good
+                    # T180: the live attester is no longer at risk, so the expected stranded
+                    # state is the EVIDENCE SET and the scratch sibling — and the attester
+                    # must be UNTOUCHED.  Grading this as `attester == "PRE-FIX"`, as it was
+                    # before T180, would now fail on the fixed script for the right reason,
+                    # which is exactly the sort of stale assertion this prover exists to
+                    # avoid.
+                    good = (st["attester"] == "live" and st["guard"]
+                            and (st["stamp"] or st["emiloop_dirty"] or st["sibling"]))
+                    verdict = ("the EVIDENCE SET is stranded, as SIGKILL must leave it — the "
+                               "in-flight marker is on disk and start-up recovery is driven "
+                               "below; the LIVE ATTESTER is untouched, because T180 removed "
+                               "the write entirely" if good
                                else "UNEXPECTED state after SIGKILL")
                 else:
                     good = not corrupt(st)
@@ -391,18 +425,20 @@ def main():
         sb.destroy()
 
     print("=== SUMMARY")
-    print("| interruption | bytes | script exit | attest.py left at | stamp | emiloop |")
-    print("|---|---|---|---|---|---|")
+    print("| interruption | bytes | script exit | attest.py left at | sibling | stamp | emiloop |")
+    print("|---|---|---|---|---|---|---|")
     for mode, which, r, st, verdict in rows:
-        print("| %s | %s | %s | %s | %s | %s |"
+        print("| %s | %s | %s | %s | %s | %s | %s |"
               % (mode, which, r["rc"],
                  "**PRE-FIX (downgraded)**" if st["attester"] == "PRE-FIX" else st["attester"],
+                 "**PRESENT**" if st["sibling"] else "absent",
                  "**PRESENT**" if st["stamp"] else "absent",
                  "**MUTATED**" if st["emiloop_dirty"] else "clean"))
     print()
     print("RESULT: %s" % ("PROOF HOLDS — every pre-fix interruption left the live attester "
                           "downgraded with a forged-looking stamp beside it, and every post-fix "
-                          "path left the rig byte-identical (SIGKILL: repaired at start-up)."
+                          "path left the rig byte-identical (SIGKILL: evidence set repaired at "
+                          "start-up; post-T180 the live attester was never at risk)."
                           if ok else "PROOF FAILED — see the cases marked UNEXPECTED / FIX FAILED."))
     return 0 if ok else 1
 
