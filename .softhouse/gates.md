@@ -27,7 +27,7 @@ Built by local fire `20260821-125942`.
 | **G-5** | ENGINEERING | **OPEN — HARD `user` GATE** | Buyan. Amends a **ratified** DEC-n. | `## G-5` |
 | **G-6** | PRODUCT | **CLOSED — ACCEPTED** | local fire `20260820-140000`, `chosen_by: agent`. Authorises **no cutover**. | `## G-6` |
 | **G-7** | — | **NEVER ALLOCATED** | — | The id was skipped. Nothing is missing; do not go looking for it. |
-| **G-8** | ENGINEERING | **OPEN — REGION NOW MEASURED IN ITS OWN VARIABLES (`T223`). "600 % only" IS DEAD: family B OBSERVED at 36.0 % p.a.** | Not yet asking for a decision — **and options (b)/(c) MUST NOT be put to Buyan until `T229` characterises site 3**, because a region whose boundary is set by an uncharacterised rescue mechanism cannot be refused correctly. | `## G-8 — TWO phenomena at the rounding floor…` (rebuilt by `T223`). `## G-8-NOTICE` is SUPERSEDED history. |
+| **G-8** | ENGINEERING | **OPEN — SITE 3 NOW CHARACTERISED (`T229`), AND IT FALSIFIED THIS SECTION'S CEILING BY MEASUREMENT: the failing principal is bounded by `(δ+½)·n`, not `n/2` — MNT 5.40 at n = 360, THREE TIMES the MNT 1.80 that stood here until `T231`.** "600 % only" is still dead (`T223`, family B at 36.0 % p.a.). | Not yet asking for a decision — **options (b)/(c) STILL MUST NOT be put to Buyan.** The reason has changed: no longer "an uncharacterised rescue mechanism", but **two named gaps — a verified pre-rescue instalment `E`, and the balance-reduction path behind seven corpus cells.** The only region statable today is a **conservative superset** (`B_minor < 1.5·n`), and it rests on the unproven conjecture `δ ≤ 1`. | `## G-8 — TWO phenomena at the rounding floor…` (ceiling and prose rebuilt by `T231` from `T229`'s measurement). `## G-8-NOTICE` is SUPERSEDED history. |
 | **G-9** | PRODUCT | **CLOSED — DECIDED** | local fire `20260821-054355`, `chosen_by: agent`. Carries a `driver_error_correction`: the decision stands, the driver's stated *consequence* was false. | `## G-9 — CLOSED` |
 | **G-10** | ENGINEERING | **OPEN — driver recommends (c), Buyan may overrule** | Blocks nothing today. | `## G-10 — REFINED…` |
 | **G-11** | CONTRACT | **OPEN — NOT RATIFIABLE. rev 4 REJECTED by `A2-31`, local fire `20260822-000013`. FOUR revisions, FOUR rejections.** | The driver, once a DEC-2 revision passes an independent review **clean**. `chosen_by: agent` is permitted here; ratifying an un-clean revision is not. **Rev 5 is `A2-32`.** | `## G-11 — rev 4 REJECTED (A2-31)` |
@@ -1002,12 +1002,23 @@ regulatory sign-off and licence facts are equally untouched and are not in Run 1
   OUTCOME block, and folded in T177), **T223** (derived the region as a PREDICATE from T220's
   mechanism, registered it before probing, found a THIRD load-bearing source site T220's note omits,
   and **measured family B at 36.0 % p.a. and at 300.0 % — killing "600 % only"**; restated the region
-  in the variables the phenomenon actually has)
+  in the variables the phenomenon actually has), **T229** (derived site 3's rescue condition from the
+  pinned source, registered it in an ancestor commit, measured it live, and **FALSIFIED T223's
+  ceiling by measurement** — `T229-R600p0-N200-B299` is family B at MNT 2.99 where this section said
+  MNT 1.00 was the limit; **deliberately edited nothing here** and left the five falsified sentences
+  named with their line numbers in its handoff), **T231** (this rebuild: applied T229's five
+  corrections, replaced the ceiling and the prose that reasoned from it, added the *SITE 3,
+  CHARACTERISED* block, carried T229's three gaps forward unsmoothed, added the sixth mechanism to
+  the STANDING RULE, and folded T229's four new family-B cells into the census)
 - **context**: tier0-harness-schedule-poc / loan-schedule
 - **state**: **OPEN** — blocks nothing today. T112 fixed the write-up, T122 fixed two sentences in
-  T112's fix, T170 rebuilt the family-B half after T117 and T159 moved the measurement, and **T223
-  restated the region as a predicate and measured family B at two rates other than 600 %**;
+  T112's fix, T170 rebuilt the family-B half after T117 and T159 moved the measurement, **T223
+  restated the region as a predicate and measured family B at two rates other than 600 %**, and
+  **T229 characterised the rescue site and falsified T223's ceiling — the corrected figure is three
+  times the one this section carried, and T231 applied it**;
   **none of them decided the gate, and none of them may.**
+  **The region this file can state is CONSERVATIVE ONLY** (`B_minor < 1.5·n`, a superset), and
+  **options (b) and (c) still must not be put to Buyan** — see *SITE 3, CHARACTERISED* below.
 - **raised_by**: local fire 20260820-170001, from T75's approval of T74
 - **recorded_in**: `.softhouse/gates.md`
 - **supersedes**: the block `## G-8 — UPDATE from local fire 20260820-200002` that stood on `main`
@@ -1031,7 +1042,8 @@ regulatory sign-off and licence facts are equally untouched and are not in Run 1
 ### STANDING RULE — how to edit this section (adopted at T140, proposed by T129)
 
 This section is the artefact **Buyan reads to decide a `user` gate**, and it has now carried a wrong
-number or a wrong scope statement to that reader **five separate times**: a family A/B inversion, an
+number or a wrong scope statement to that reader **six separate times** (the sixth is at the bottom
+of this preamble and it is a NEW mechanism): a family A/B inversion, an
 18-instead-of-22 refutation count born of a float in an analysis script (P-25), an unscoped
 "largest n" sentence that contradicted the section ten lines away (P-26), a `tasks.json`
 disposition that the author had already reversed and never swept (P-21 by a third route), and — the
@@ -1053,6 +1065,29 @@ bigger question.** So:
 > **That is the method this rule should now prefer: when a sentence's domain is the set of cells
 > somebody happened to run, the fix is a predicate, not a wider sweep.** The two rate-scoped
 > sentences that fell are corrected in place below, and each says what it used to read.
+
+> **THE SIXTH — AND IT IS A NEW MECHANISM, BECAUSE IT DEFEATED THE FIFTH'S REMEDY. T229 measured it;
+> T231 applied it.** The sentence *"the failing disbursement is bounded by roughly `n/2` minor units …
+> about **MNT 1.80** at `n ≤ 360`"* was **not** an unscoped report of a sweep. It was exactly what the
+> fifth mechanism's remedy prescribes: **a predicate, derived from the mechanism, registered in an
+> ancestor commit before probing.** It was still wrong by a factor of three, and the live
+> counterexample is `T229-R600p0-N200-B299` — **MNT 2.99 failing at n = 200, where the sentence said
+> nothing above MNT 1.00 could fail.**
+>
+> **Why it was wrong is the lesson.** The predicate was sound; **one of its INPUTS was assumed.** The
+> rescue condition has two terms and T223 wrote down one of them, silently setting the other
+> (`δ = I₁q − E`) to zero because the pre-rescue instalment `E` had never been measured. A derived
+> predicate inherits every unmeasured quantity it is built on, **and states the result with the
+> confidence of a derivation.** That is strictly more dangerous than an unscoped sweep report,
+> because a sweep report at least announces that it is a report.
+>
+> **So the rule the fifth mechanism gave us needs one more clause: when you replace a sweep with a
+> predicate, ENUMERATE THE PREDICATE'S INPUTS AND SAY WHICH OF THEM YOU MEASURED.** Anything you did
+> not measure is a conjecture the conclusion rests on, and it must be named next to the conclusion —
+> not in a footnote. T229 did exactly this, named three such gaps, and **refused to edit this
+> section** because doing the rebuild badly is the failure this rule exists to prevent; T117 and T159
+> refused the same edit for the same reason. **Refusing to edit is a legitimate outcome of this rule
+> and it must not be read as an omission.**
 
 1. **Nobody edits this section without rebuilding the sentence-by-sentence scope table.** Not a
    grep for the sentence you are changing — a rebuild, claim by claim, of what every sentence
@@ -1103,7 +1138,7 @@ schedule at all** — which is neither family and has its own block after this o
 | forcing the oracle's own balance `Memo` to recompute | balance goes to **`0.00`** | **does not move** — but measured on **3** of the 29 record cells only, all at 1 minor unit; **UNMEASURED** on all 180 cells T117 and T159 added, and on every partial cell |
 | the Go port | **diverges**, on exactly one cell per case | **reproduces it cell for cell — no divergence at all** on the **29** record cells (T84's 22, T100's 1 through the real grader, and T101's re-grade of all 29); **UNMEASURED** on all 180 cells T117 and T159 added, and never on a partial cell |
 | `invariant_exemptions` as a remedy | **inert** — the failure is a cell diff | **decisive** — the failure is purely invariant — **established on ONE full cell** (600.0 % / MNT 0.01 / n = 108). On a partial cell nobody has checked whether the port even reproduces the oracle, so "purely invariant" is **unmeasured** there |
-| measured at | **11** of the 12 annual rates swept (all but 600.0 %), `3 ≤ n ≤ 600`, **312 cells** | **THREE** annual rates — 600.0 % (209 cells, `104 ≤ n ≤ 3000`, principals 1 … 1001 minor), **36.0 %** (2 cells, n = 1324 and 1500, principal 50 minor) and **300.0 %** (1 cell, n = 800, principal 2 minor) — **212 cells**. *This row read "**one** annual rate (600.0 %) … 209 cells" until T223 measured the other two rates against the live oracle.* |
+| measured at | **11** of the 12 annual rates swept (all but 600.0 %), `3 ≤ n ≤ 600`, **312 cells** | **THREE** annual rates — 600.0 % (**212** cells, `104 ≤ n ≤ 3000`, principals 1 … 1001 minor), **36.0 %** (**3** cells: n = 1324 and 1500 at principal 50 minor, and n = 1400 at principal 150 minor) and **300.0 %** (1 cell, n = 800, principal 2 minor) — **216 cells**. *This row read "**one** annual rate (600.0 %) … 209 cells" until T223 measured the other two rates against the live oracle, and "209 / 2 / 1 — 212 cells" until T229 added four more.* |
 
 Cells behind that table: **312 family-A** (198 T83 + 111 T84 + 3 T100) and **209 family-B** — the
 **29** of the four record captures (22 T84 + 7 T100) plus **180** added by T117 (155) and T159 (25).
@@ -1115,6 +1150,25 @@ from the `.gz` raw captures alone, by T170** [`.softhouse/capture/t170-g8-rebuil
 seven committed captures, 0 skipped, 0 unclassifiable]. The 209 family-B cells cover **190 distinct
 (rate, n, principal) shapes**; the difference is deliberate re-asks under disjoint tenant ids, not
 new shapes.
+
+**RUNNING TOTAL — stated once here, so the scoped counts elsewhere in this section need not move and
+must not be read as the union.** Every **"209"** below is T170's re-derivation over the **seven**
+captures committed at that time, and it stays correct **as scoped**. Two live probes have added
+family-B cells since, and neither is in any "209":
+
+| added by | cells | shapes | which |
+|---|---|---|---|
+| **T223** | **3** | 3 | `T223-R36p0-N1324-B50`, `T223-R36p0-N1500-B50` (36.0 %, 50 minor), `T223-R300p0-N800-B2` (300.0 %, 2 minor) |
+| **T229** | **4** | 4 | `T229-R600p0-N200-B201`, `-B251`, `-B299` (600.0 %, n = 200 — all **PARTIAL**) and `T229-R36p0-N1400-B150` (36.0 %, 150 minor — **FULL**) |
+
+**Union: 216 family-B cells over 197 distinct (rate, n, principal) shapes.** All seven additions are
+shapes T170's 190 does not contain — T223's three are at rates the seven captures never asked at all,
+and T229's three 600.0 % cells are at principals **201, 251 and 299**, none of which appears in the
+principal list below [VERIFIED by T231 against that list; the four T229 cells re-derived by T231 in
+integer minor units from `.softhouse/capture/t229-g8-site3/out/capture-t229-raw.json.gz`, and each
+fails the family-B discriminator: 1 of 201, 51 of 251, 99 of 299, 0 of 150].
+**None of the seven has been graded against the Go port**, and **none of the three rows of the table
+above that are marked UNMEASURED on T117/T159's 180 has been measured on them either.**
 
 **Every row of that table holds on every cell of its family in the FOUR RECORD captures (T83, T84,
 T84b, T100) — no exceptions, no mixed cases.** It is **not** uniform over the 209: the partial shape
@@ -1154,13 +1208,21 @@ shape, all at a 1-minor-unit disbursement. **Nobody has graded the port on a PAR
 of the 180 cells T117 and T159 added**, so "the port agrees with the oracle" is a claim about 29
 cells and not about family B [T170; the gap is stated, not filled — T170 ran no port grading].
 
-Today `conformance.sh` reports PASS with **43 parity vectors, 5,664 graded cells** and 0 invariant
-violations — **only because no vector covers either family.** That is precisely the blind spot the
-conformance gate exists to eliminate, so a green bar is not evidence against this finding.
-[T170 re-ran it: `bash .softhouse/conformance.sh` → VERDICT PASS, exit 0, 43 parity vectors PASS /
-0 FAIL, 5664 cells graded, 0 invariant violations, 0 assertions NOT RUN. The **42 / 5576** this
-paragraph and the closing paragraph both carried was T112's and T140's measurement and is stale, not
-wrong-at-the-time — a count in this section must name the run that produced it.]
+Today `conformance.sh` reports PASS with **46 parity vectors, 7,884 graded cells**, 0 invariant
+violations and **4 invariant assertions EXEMPTED BY A VECTOR** — the exemptions being T116's option-(a)
+promotion, which covers **two FULL family-B cells at 600.0 % / MNT 0.01 and nothing else.** So the
+green bar is *still* not evidence against this finding: **214 of the 216 known family-B cells, every
+PARTIAL cell, and all 312 family-A cells remain uncovered.** That is precisely the blind spot the
+conformance gate exists to eliminate.
+[**T231 re-ran it on its own branch**: `. .softhouse/bin/go-env.sh`, then
+`bash .softhouse/conformance.sh` → probe present and reading `up`, **VERDICT PASS, exit 0, 46 parity
+PASS / 0 FAIL, 4 contract-refusal PASS, 1 self-test PASS, 7884 cells graded / 93 ungraded, 0
+refused, 0 inadmissible, 0 harness errors, 106 money + 7 structural kills, 0 invariant violations,
+0 assertions NOT RUN, 4 EXEMPTED BY A VECTOR (4 GROUNDED / 0 UNGROUNDED)**; vector store
+`73c3ea7b43dd75f04884072719a87fc8e1d255c1` unchanged.
+The **43 / 5664** this paragraph carried was **T170's** measurement, and the **42 / 5576** before
+that was T112's and T140's — each was right about its own run and went stale on the next promotion,
+which is why **a count in this section must name the run that produced it.**]
 
 ---
 
@@ -1483,13 +1545,19 @@ was written when only one shape had been seen. **There are two shapes:**
 - **FULL — 202 of the 209 cells measured.** The principal column sums to **`0.00`**,
   `totalPrincipalAmount` reads `0.00`, **no** row carries a non-zero principal, and the balance
   column is constant at the disbursed amount. Where the disbursement is 1 minor unit — 150 of the
-  209 — the last row carries `interest 0.01`.
-- **PARTIAL — 7 measurements over 4 distinct shapes, all found after this section was written.** The
+  209 — the last row carries `interest 0.01`. *(Over the **216**-cell union of the running total
+  above: **206 FULL** — 202 + T223's three + T229's `R36p0-N1400-B150`, whose balance column is
+  constant at `1.50` across all 1,400 rows and whose `totalPrincipalAmount` is `0.00` [VERIFIED by
+  T231 by extraction] — and **10 PARTIAL**.)*
+- **PARTIAL — 10 measurements over 7 distinct shapes, all found after this section was written.** The
   principal column sums to a **non-zero** amount that is still **short** of the disbursement,
   exactly **one** row (the **last**) carries a non-zero principal, and the balance column takes
-  **two** values — the disbursed amount, then the residual on the final row. Measured
-  [VERIFIED by T170 by extraction, integer minor units, from
-  `capture-t117p2-raw.json.gz` and `capture-t159-raw.json.gz`]:
+  **two** values — the disbursed amount, then the residual on the final row. **That description holds
+  on all ten, including T229's three, which is the first time it was tested against a prediction
+  rather than observed after the fact.** Measured
+  [rows 1-4 VERIFIED by T170 by extraction, integer minor units, from
+  `capture-t117p2-raw.json.gz` and `capture-t159-raw.json.gz`; rows 5-7 VERIFIED by T231 the same
+  way from `.softhouse/capture/t229-g8-site3/out/capture-t229-raw.json.gz`]:
 
 | shape (600.0 %) | disbursed | amortized | **residual** | `totalPrincipalAmount` | balance column | last row's interest |
 |---|---|---|---|---|---|---|
@@ -1497,6 +1565,9 @@ was written when only one shape had been seen. **There are two shapes:**
 | n = 121, B = 11 minor | 11 | **4** | **7** | `0.04` | `0.11` → `0.07` | `0.12` |
 | n = 150, B = 11 minor | 11 | **2** | **9** | `0.02` | `0.11` → `0.09` | `0.14` |
 | n = 2000, B = 999 minor | 999 | **166** | **833** | `1.66` | `9.99` → `8.33` | `13.32` |
+| **n = 200, B = 201 minor** (T229) | 201 | **1** | **200** | `0.01` | `2.01` → `2.00` | `3.00` |
+| **n = 200, B = 251 minor** (T229) | 251 | **51** | **200** | `0.51` | `2.51` → `2.00` | `3.25` |
+| **n = 200, B = 299 minor** (T229) | 299 | **99** | **200** | `0.99` | `2.99` → `2.00` | `3.49` |
 
 The first three were found by T117 and re-asked by T159 under **disjoint tenant ids**; the fourth is
 T159's and is far larger than the other three. **T170 re-verified the re-ask independently: each
@@ -1505,13 +1576,27 @@ pair's whole `observed` block is byte-identical under a canonical dump (`sort_ke
 `t159_r600p0_n108_b11`, and so on).** So the partial shape is neither a tenant artefact nor a
 one-run fluke.
 
+**The last three are different in kind and that is why they are here: they were PREDICTED, by amount,
+before the oracle was asked.** T229 registered "family B PARTIAL, repaying 1 / 51 / 99 minor units"
+in an ancestor commit and the oracle returned exactly those three numbers. Their residual is
+`B_minor − n·δ` with `δ = 1` and `n = 200`, which is why all three leave **exactly 200 minor units**
+outstanding. **`T229-R600p0-N200-B299` is the cell that falsified the ceiling this section carried**
+— MNT 2.99 failing at n = 200, where the old text said nothing above MNT 1.00 could fail — and it is
+why the ceiling paragraph in *THE REGION* below had to be rewritten. **They are NOT the largest
+residual on record; that is still MNT 10.01 at n = 3000. And no claim is made that MNT 2.99 is the
+largest failing disbursement at a short term** — T231 did not sweep for that and does not know
+`[UNVERIFIED]`.
+
 **On all 209 family-B cells the unamortized residual equals the final row's `balance` exactly, and
 `totalOutstandingAmount` reads `0`** — 209 of 209, 0 exceptions [T170]. So `totalOutstandingAmount`
-still does not discriminate, on either shape.
+still does not discriminate, on either shape. **This also holds on all four of T229's family-B cells
+— 4 of 4, `totalOutstandingAmount` `0` on every one** [VERIFIED by T231 by extraction], so it is now
+**213 of 213** across everything T231 checked, and **216 of 216 if T223's three are added on T223's
+report** `[UNVERIFIED by T231 for T223's three — T231 did not open T223's capture]`.
 
 Forcing the memo to recompute **does not move the balance** — but that was measured on **3** cells,
-all full shape, all at a 1-minor-unit disbursement, and it is **unmeasured on every partial cell and
-on all 180 cells T117 and T159 added.**
+all full shape, all at a 1-minor-unit disbursement, and it is **unmeasured on every partial cell,
+on all 180 cells T117 and T159 added, and on all seven T223 and T229 added.**
 
 The discriminator is exactly the test the driver's re-derivation named in advance as fatal to the
 family-A reframing when applied to all of G-8: *"If it ever fails to sum, the reframing above is
@@ -1575,7 +1660,9 @@ the raw `.gz` captures; `out/extract-t170.json`]. Union of what has been observe
   [re-derived by T170 from the raw captures: the four record captures contain exactly one of them
   (**1**); T117's two captures contain **14** — `1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 51, 101,
   501`; and T159 added **6** — `503, 551, 601, 801, 999, 1001`; **T223 added 2 more at the two new
-  rates — `50` at 36.0 % and `2` at 300.0 % — for 22 distinct values**]. **This bullet used to read
+  rates — `50` at 36.0 % and `2` at 300.0 % — for 22 distinct values**; **T229 then added 4 more —
+  `201`, `251` and `299` at 600.0 % and `150` at 36.0 % — for 26 distinct values**, verified by T231
+  against the list above]. **This bullet used to read
   *"principal MNT 0.01 (1 minor unit) — no other
   principal has produced a family-B cell"*, which was true of the four record captures and is now
   false.**
@@ -1588,6 +1675,14 @@ the raw `.gz` captures; `out/extract-t170.json`]. Union of what has been observe
   > "odd" was its shadow at one rate.** The old sentence's own hedge — *"that is an observation over
   > 209 cells, not a law"* — was right, and it is the reason this correction is a refinement and not
   > a contradiction.
+  >
+  > **THE RESONANCE CONDITION HAS SINCE BEEN TESTED PREDICTIVELY, AND IT HELD — T229, applied here by
+  > T231.** T229's four new family-B principals were chosen *from* the condition, not found by
+  > sweeping: `201`, `251` and `299` are **odd**, so at `r = 1/2` each puts `B_minor × r` on a
+  > half-minor-unit boundary; and **`150` is EVEN and satisfies `150 ≡ 50 (mod 100)` at
+  > `r = 0.03`** — a second even family-B principal at 36.0 %, at a term (n = 1400) nobody had asked.
+  > **The condition was used to predict and the oracle agreed on 4 of 4.** [VERIFIED by T231 by
+  > integer arithmetic on the four principals and by extraction of the four observed schedules.]
 - repayment counts: **`104 ≤ n ≤ 3000`**. Family B has been observed at terms across that whole
   range — **but NOT at every term in it**; there are measured clean gaps inside otherwise-contiguous
   family-B stretches, which is the band structure below.
@@ -1604,6 +1699,11 @@ the raw `.gz` captures; `out/extract-t170.json`]. Union of what has been observe
     **n = 1000** [term set extracted by T170 from the two raw `.gz` captures].
   - **T159** added **25** more, at principals 1, 11, 501, 503, 551, 601, 801, 999, 1001 and
     `n ∈ {108, 121, 150, 360, 361, 364, 365, 389, 390, 1000, 1200, 1500, 2000, 3000}`.
+  - **T223** added **3** at two new rates — 36.0 % at `n ∈ {1324, 1500}` and 300.0 % at `n = 800`.
+  - **T229** added **4** — 600.0 % at **`n = 200`** (principals 201, 251, 299) and 36.0 % at
+    **`n = 1400`** (principal 150). **Both terms are inside `104 ≤ n ≤ 3000`, so the range above does
+    not move; what moved is the PRINCIPAL at a short term** — `n = 200` at 600.0 % was previously
+    known family B only at MNT 0.01, and it is now measured family B at MNT 2.01, 2.51 and 2.99.
   - **The old sentence *"Nothing above n = 250 has ever been asked at the family-B shape"* is
     false.** It has been asked to **n = 3000**, and it is family B there. **n = 3000 is simply the
     largest term anyone has asked** — see the residual bound below.
@@ -1613,6 +1713,12 @@ the raw `.gz` captures; `out/extract-t170.json`]. Union of what has been observe
     "threshold term of order 2·B" model was **refuted** by its own measurement — B = 801 is family B
     at n = 1000 while B = 601, 701, 751, 901 and 999 are clean at the same term, and B = 1001 is
     clean at n = 1200, 1500 and 2000 and only turns family B at n = 3000.
+    **The `B = 801` half of that is now explained** — site 3's rescue condition gives `δ = 1`,
+    `a = 1`, `a > δ` false, no rescue [T229]. **The other five are NOT explained: T231 computed
+    neither `δ` nor `a` for `B = 601, 701, 751, 901, 999` and makes no claim about why they are
+    clean** `[UNVERIFIED]`. **A "threshold term" model in `(B, n)` alone remains refuted either way**,
+    because the rescue condition is not a function of `(B, n)` alone — it is a function of `δ`, and
+    `δ` depends on the pre-rescue instalment, which nothing in this program measures.
   - *(Scope note kept from earlier revisions, because it is still the thing that goes wrong here:
     T84's largest n **anywhere** is **600**, at 0.12 % — `T84B-XL-R0p12-N600-B291` — and its largest
     n at 600.0 % / MNT 0.01 is **200**. An unscoped "largest n" sentence contradicted this section
@@ -1623,10 +1729,12 @@ record captures, and ON NOTHING ELSE** [T84 over its 22; T100 through the real g
 `T100-FAMB-R600p0-N108-B1`: **761 graded cells, 0 cell diffs**; T101 re-graded all **29** through the
 real `conformance.Run` on `main`'s current port: **25,751 graded cells, 0 cell diffs**]. On those 29
 there is **no oracle/port divergence at all**; both compute a schedule that does not repay the loan.
-**Nobody has graded the port on any of the 180 cells T117 and T159 added, and nobody has graded it on
-a PARTIAL cell at all.** That matters more than it looks: "the port agrees with the oracle" is the
-entire reason family B is described as *"both are wrong"* rather than as a port defect, and on the
-partial shape it is simply **unmeasured** `[UNVERIFIED]`.
+**Nobody has graded the port on any of the 180 cells T117 and T159 added, nor on the 7 T223 and T229
+added, and nobody has graded it on a PARTIAL cell at all.** That matters more than it looks: "the
+port agrees with the oracle" is the entire reason family B is described as *"both are wrong"* rather
+than as a port defect, and on the partial shape it is simply **unmeasured** `[UNVERIFIED]`.
+**T229 added three of the sharpest partial cells on record and graded none of them** — it was a
+capture task, not a grading task, and it says so.
 
 **Family B is NOT order-dependent — measured on 3 cells** [T84, 3 of 3; **re-run by T100**, 3 of 3
 unmoved at n = 104, 108, 120, all at a 1-minor-unit disbursement, while the family-A control in the
@@ -1641,13 +1749,23 @@ of the 180 new cells** `[UNVERIFIED]`.
   for it.** `[UNVERIFIED]` A candidate mechanism must now also explain the **partial** shape — one
   non-zero principal row, on the last period — and must explain why B = 801 is family B at n = 1000
   while B = 601, 701, 751, 901 and 999 are clean at the same term.
+  > **PARTLY ANSWERED — and it is important not to over-read how much. T220 found the mechanism that
+  > makes the instalment fall below the interest; T223 named the site that can rescue it; T229
+  > characterised that site and derived the FULL/PARTIAL split from it** — `TOTAL PRINCIPAL =
+  > max(0, B_minor − n·δ)`, which predicted the amount repaid on three partial cells before they were
+  > asked and matched all three. **So the partial shape is no longer unexplained.** What remains
+  > `[UNVERIFIED]` is (i) the `B = 601 … 999` half of the sentence above, and (ii) **a second
+  > balance-reduction path that none of the three accounts contains** — seven corpus cells, and
+  > `T229-R600p0-N200-B199` live, reduce the balance where every model here says it is frozen. See
+  > gap 2 of *SITE 3, CHARACTERISED* below. **T229 could not derive it, did not guess, and neither
+  > did T231.**
 - ~~**Whether it exists at any other RATE**~~ — **ANSWERED BY MEASUREMENT, T223. It does.** Family B
   is measured at **36.0 % p.a.** (MNT 0.50, n = 1324 and n = 1500) and at **300.0 %** (MNT 0.02,
   n = 800), against the live reference oracle, from a predicate registered in an ancestor commit.
   The old sentence — *"Every family-B cell ever measured is **600.0 %** and at `n ≥ 104`"* — is
   **false as of T223** and is struck rather than softened. **The "at any other principal" half was
   already answered by T117/T159** (20 distinct principals from 1 to 1001 minor units), and T223 adds
-  2 more.
+  2 more, **and T229 adds 4 more — 26 distinct principals across three rates.**
 - **Whether it exists BELOW n = 104 at 600.0 %.** Still `[UNVERIFIED]` — nothing T223 did touches it,
   and the predicate below says it should not: at 600.0 % the region's lower edge is where the
   instalment first quantizes below the first period's interest, and that is n = 104.
@@ -1655,12 +1773,18 @@ of the 180 new cells** `[UNVERIFIED]`.
   and **nothing above n = 3000 has been asked**. The largest unamortized residual rose from
   MNT 0.01 to **MNT 5.01 at n = 1000** (T117) to **MNT 10.01 at n = 3000** (T159) — **each time
   because somebody asked a larger term, and neither worker found a limit.** `[UNVERIFIED]`
-- **Whether the Go port reproduces the 180 new cells, or any partial cell.** Never graded.
+- **Whether the Go port reproduces the 180 new cells, the 7 T223/T229 added, or any partial cell.**
+  Never graded. `[UNVERIFIED]`
+- **Whether any of the 180 new cells, or the 7 T223/T229 added, is order-dependent.** Never tested.
   `[UNVERIFIED]`
-- **Whether any of the 180 new cells is order-dependent.** Never tested. `[UNVERIFIED]`
 - **`MinorUnitDigits ≠ 2`, and Path B / REST.** Not measured, by anyone. `[UNVERIFIED]`
-- **Whether an EVEN principal can be family B.** All 20 observed are odd; no even principal has been
-  shown safe, and no claim is made either way. `[UNVERIFIED]`
+- ~~**Whether an EVEN principal can be family B.** All 20 observed are odd; no even principal has been
+  shown safe, and no claim is made either way.~~ — **ANSWERED: IT CAN. Struck by T231, and it was a
+  FOSSIL — T223 refuted this two bullets earlier and left this restatement standing.** `50` at
+  36.0 % and `2` at 300.0 % are even family-B principals (T223), and `150` at 36.0 % is a third
+  (T229). **"Odd" was only ever the resonance condition's shadow at `r = 1/2`.** What is still
+  `[UNVERIFIED]` is the *converse*: no principal of either parity has been **shown safe** at an
+  unswept (rate, term), and no claim is made that one is.
 
 ---
 
@@ -1840,7 +1964,7 @@ Then
 |---|---|
 | `E_q > I₁` | **not family B** — every period leaves `E_q − I₁ > 0` for principal, so the loan amortizes, however slowly |
 | `E_q = I₁` | **not family B** — no interest deficit accrues, so the final-row residual is applied as **principal** |
-| `E_q < I₁` | **FAMILY B**, unless the third site rescues it, which needs both `B_minor > ⌊n/2⌋` and `2·B_minor ≥ n` |
+| `E_q < I₁` | **FAMILY B**, unless the third site rescues it. **The rescue condition is `B_minor > ⌊n/2⌋` ∧ `a > δ`** — see *SITE 3, CHARACTERISED* below for `δ` and `a`. **This row read *"which needs both `B_minor > ⌊n/2⌋` and `2·B_minor ≥ n`"* until T231. That second conjunct is this same condition with `δ` forced to 0, and it is FALSIFIED BY MEASUREMENT — T229 asked the live oracle three cells it predicted rescued (`B201`, `B251`, `B299` at 600.0 % / n = 200) and the oracle rescued none of them** |
 
 ### What that says about the region, in the phenomenon's own variables
 
@@ -1856,18 +1980,48 @@ every n**, by `I₁·(1+r)^−n / (1 − (1+r)^−n)` — an excess that decays 
 - **The PRINCIPAL enters twice, and neither time as a magnitude.** Once as **resonance** — `I₁` must
   land on a half-minor-unit boundary, which at `r = 1/2` is exactly "`B_minor` odd", at `r = 0.03` is
   `B_minor ≡ 50 (mod 100)`, and at `r = 1/4` is `B_minor ≡ 2 (mod 4)`. And once as the third site's
-  **rescue threshold `B_minor ≳ n/2`**, which is a **ceiling on the failing principal that does not
-  depend on the rate at all** — and which is the same `≈ n/2 minor units` law this file already
-  records for family A at 0.12 % (59, 118, 176, 234, 291 minor at n = 120, 240, 360, 480, 600).
+  **rescue ceiling**, which is **`(δ + ½)·n` minor units** and depends on the rate only through `δ`.
+  **This bullet's second half read *"rescue threshold `B_minor ≳ n/2`, … a ceiling that does not
+  depend on the rate at all — and which is the same `≈ n/2 minor units` law this file already
+  records for family A at 0.12 %"* until T231. Both halves of that are struck.** The threshold is
+  `(δ + ½)·n`, not `n/2`; and **the family-A resemblance was a numerical coincidence at `δ = 0`, not
+  a shared law** — family A's 59 / 118 / 176 / 234 / 291 minor units at n = 120 / 240 / 360 / 480 /
+  600 is a **measurement of a different phenomenon**, with a different mechanism (a stale derived
+  column, not a rescue that did not fire), and it is left standing where it is measured, under *The
+  bound on the failing principal* below. **Nothing about family A is evidence about this ceiling and
+  nothing about this ceiling is evidence about family A.**
 
-**The single most decision-relevant consequence for Buyan.** The failing disbursement is bounded by
-roughly **`n/2` minor units** — i.e. **MNT `n/200`** — *whatever the rate.* At any term a real
-Mongolian NBFI product would carry (`n ≤ 360`) that ceiling is about **MNT 1.80**. A family-B cell at
-an ordinary loan amount would need a term of order `2 × B_minor` periods: MNT 1,000,000 would need
-**~200,000,000 monthly repayments**. **That is a much stronger statement than "no commercially
-realistic loan amount has been observed to fail", which is all this file could say before — it is a
-statement about the mechanism rather than about the sweep.** It is still **not a proof**: it is the
-predicate's consequence, and the predicate is known to be incomplete (below).
+**The single most decision-relevant consequence for Buyan — CORRECTED, AND THE OLD FIGURE WAS
+FALSIFIED BY MEASUREMENT.**
+
+> **What this paragraph said until T231, verbatim, because the number reached the decision-maker:**
+> *"The failing disbursement is bounded by roughly **`n/2` minor units** — i.e. **MNT `n/200`** —
+> whatever the rate. At any term a real Mongolian NBFI product would carry (`n ≤ 360`) that ceiling
+> is about **MNT 1.80**. A family-B cell at an ordinary loan amount would need a term of order
+> `2 × B_minor` periods: MNT 1,000,000 would need **~200,000,000 monthly repayments**."*
+>
+> **`T229-R600p0-N200-B299` is a live, observed family-B cell at MNT 2.99 with n = 200, where that
+> text says nothing above MNT 1.00 can fail.** It repays 99 of its 299 minor units over 200
+> instalments and leaves 200 minor units unamortized. Two more of the same kind were measured in the
+> same run — `B201` (repays 1 of 201) and `B251` (repays 51 of 251). **[VERIFIED by T231 by
+> extraction in integer minor units from `.softhouse/capture/t229-g8-site3/out/capture-t229-raw.json.gz`:
+> disbursed 299 / `totalPrincipalAmount` 0.99 / one non-zero principal row, the last / balance column
+> `2.99` then `2.00`.]**
+
+The failing disbursement is bounded by **`(δ + ½)·n` minor units**, where `δ = I₁q − E` is the
+per-period interest deficit in whole minor units (below). **`δ` has never been observed above 1**,
+and **at `δ = 1` the ceiling is `1.5·n` minor units — MNT `0.015·n`, so MNT 5.40 at n = 360, three
+times the MNT 1.80 this file carried.** A family-B cell at an ordinary loan amount would need
+`2·B_minor < 3n`: MNT 1,000,000 is 100,000,000 minor units, so it would need **at least 66,666,667
+monthly repayments — about 5.6 million years** [exact integer arithmetic: `n > 2·100,000,000 / 3`].
+
+**The decision-relevant conclusion survives the correction and the number did not.** "No commercially
+realistic loan amount can fail" still holds by a factor of about **185,000** at n = 360 — MNT 5.40
+against MNT 1,000,000 — and it is still
+a statement about the mechanism rather than about the sweep. But it is **not a proof**, and it now
+rests on **two** things that are not proven: the predicate is incomplete (below), and **`δ ≤ 1` is a
+conjecture over 296 corpus cells plus 9 probe cells, with no argument that `δ = 2` is impossible**.
+**If a `δ ≥ 2` cell exists the ceiling is not `1.5·n` and this paragraph is wrong again.**
 
 ### What was measured, and it is 7 for 7
 
@@ -1915,6 +2069,19 @@ family classification. [`.softhouse/capture/t223-g8-region-predicate/out/capture
   committed cell — `T159-R600p0-N1000-B801`**, where the rescue threshold says "rescued" and the
   oracle emitted family B. **That is a known defect of this predicate, recorded in
   `prediction.json` before any probe ran.**
+  - **`T159-R600p0-N1000-B801` IS NOW CLOSED — T229.** With the rescue condition stated correctly,
+    `δ = 1` and `a = ⌊801/1000 + ½⌋ = 1`, so `a > δ` is **false**, **no rescue**, family B — which is
+    what the oracle emitted. T229's `src/site3.py` reproduces the committed observation cell for cell
+    (`E = 400`, principal `0.00`, total interest `4008.01 = 1000·400 + 801`). **It was never a defect
+    of the mechanism; it was the visible consequence of forcing `δ` to 0.** [T229; the arithmetic
+    re-derived by T231 in integer minor units.]
+  - **The rest of the 64 misses are NOT closed, and neither is the neighbourhood of `B801`.** Site 3
+    is now characterised, but the emulated instalment `E` is still an **input** T223's emulator
+    supplies and nobody has verified — and `E` is what `δ` is computed from. **T231 did not evaluate
+    the corrected law on the other 63 misses, and makes no claim about them** `[UNVERIFIED]`. In
+    particular the standing question *"why is `B = 801` family B at n = 1000 while `B = 601`, `701`,
+    `751`, `901` and `999` are clean at the same term?"* is **still open**: the corrected law explains
+    the `801` half and **T231 computed neither `δ` nor `a` for the other five** `[UNVERIFIED]`.
 - **It is scoped to the FULL family-B shape.** It makes no claim about the **PARTIAL** shape and is
   not evidence about it either way.
 - **It says nothing about the THIRD OUTCOME**, nothing about the **Go port** (T223 graded no port),
@@ -1926,6 +2093,156 @@ family classification. [`.softhouse/capture/t223-g8-region-predicate/out/capture
   `73c3ea7b43dd75f04884072719a87fc8e1d255c1`, and `bash .softhouse/conformance.sh` on T223's branch
   gives probe present and `up`, **VERDICT PASS (exit 0), 46 parity vectors, 7884 cells, 0
   inadmissible, 0 invariant violations, 4 EXEMPTED BY A VECTOR**.
+
+---
+
+## SITE 3, CHARACTERISED — the rescue law, and the ceiling it actually implies (T229, registered before probing and then MEASURED)
+
+**This block exists because the ceiling this section carried until T231 was three times too tight,
+and it was falsified by measurement rather than by argument.** T223 named the third site and correctly said it
+is what puts a ceiling on the failing principal; it did not finish reverse-engineering the site, and
+the placeholder it used — `2·B_minor ≥ n` — is the real condition with one term deleted. T229 derived
+the site from the pinned source, **registered the derivation at `29ed78c30cbf77885e7351868465cb47cc7920f9`,
+which is a strict ancestor of the capture commit `bb35cc85ff7fb59e528ecbc4121c25db8ee22df6`**
+(`git merge-base --is-ancestor 29ed78c bb35cc8` → exit 0, re-run by T231 on its own branch), and then
+asked the live reference oracle nine cells. **7 of 9 landed as registered; 2 were refuted, and both
+refutations are recorded below rather than tuned away.**
+
+### The two facts the earlier accounts do not contain
+
+- **FACT A — the residual handed to site 3 is `B`, exactly, and does not grow with the interest
+  deficit.** `RepaymentPeriod.getDueInterest()` clamps each period's interest to the instalment, so in
+  the non-amortizing regime `Σ dueInterest = Σ emi = n·E` and the `diff` added to the last row is
+  `B + n·E − n·E = B`, in integer minor units, for **every** `n` and however far `E` sits below `I₁`.
+  Site 3 therefore sees `emiDifference = B` and `originalEmi = E`. **MEASURED, not only derived: on
+  183 of 183 `δ ≥ 1` stuck cells across the whole committed corpus, and on all four unrescued T229
+  probe cells, `last-row total − row-1 total == B` exactly** [T229, `out/validate-corpus.json`,
+  `out/classify-t229.json`; re-derived by T231 in integer minor units from
+  `.softhouse/capture/t229-g8-site3/out/capture-t229-raw.json.gz` on all four T229 cells —
+  `B201`: 301 − 100 = 201 · `B251`: 376 − 125 = 251 · `B299`: 448 − 149 = 299 ·
+  `B150` at 36.0 %: 154 − 4 = 150].
+- **FACT B — a guard T223's account omits entirely, and it is the one that decides the region.** The
+  raised instalment is applied to a **copy**, and `hasLessEmiDifference` requires the copy's own
+  `emiDifference` to be **strictly smaller in absolute value** or the loop `break`s; the write-back
+  sits **below** that break, so on failure the copy is discarded and the instalment does not move. If
+  the raised instalment `E + a` is still `≤ I₁`, the copy is in the same regime, its `diff` is `B`
+  again by FACT A, `|diff′| = |diff|` is not strictly less — **break, no rescue.**
+
+Both facts are bound in T229's `src/site3.py` docstring **by the text matched, not by line number** —
+deliberately, because `:1962`'s text occurs twice in `ProgressiveEMICalculator.java`. **T231 did not
+re-open the Fineract source; the source citations here are T229's** `[UNVERIFIED by T231]`.
+
+### THE LAW
+
+In integer minor units, with `E` the **pre-rescue** instalment, `I₁q` the first period's interest
+quantized HALF_UP to whole minor units, `δ = I₁q − E`, and `a = ⌊B_minor/n + ½⌋`:
+
+```
+SITE 3 RESCUES  ⟺  B_minor > ⌊n/2⌋  ∧  a > δ           [T229's combined form: 2·B_minor ≥ (2δ+1)·n]
+```
+
+**T223's rule is exactly this law with `δ` forced to 0** — `a > 0 ⟺ 2·B_minor ≥ n` — which is
+precisely why it failed outright on `T159-R600p0-N1000-B801` and why it predicted "rescued" for three
+cells the oracle did not rescue. *(The combined inequality and the conjunction differ at exactly one
+edge — `2·B_minor = n` with `δ = 0`, where the conjunction refuses and the combined form permits.
+`δ = 0` is the `E_q = I₁` row of the predicate table above, which is not family B at all, so the edge
+lies outside the branch this law governs. [VERIFIED by T231 by integer arithmetic; it is T231's own
+observation, not T229's.])*
+
+The shape of an **unrescued** cell follows from FACT A plus the deficit carry:
+
+```
+last row EMI = E + B ;   TOTAL PRINCIPAL = max(0, B_minor − n·δ)
+FULL family B    ⟺ δ ≥ 1 ∧ B_minor ≤ n·δ
+PARTIAL family B ⟺ δ ≥ 1 ∧ n·δ < B_minor < (δ + ½)·n , repaying exactly B_minor − n·δ
+```
+
+[Re-derived by T231 in integer minor units on all four of T229's family-B cells, including the total
+interest, which is `n·E + B − principal`: `B201` 200·100 + 201 − 1 = 20200 · `B251`
+200·125 + 251 − 51 = 25200 · `B299` 200·149 + 299 − 99 = 30000 · `B150` 1400·4 + 150 − 0 = 5750. All
+four match the captured `totalInterestAmount` exactly.]
+
+### What was measured — 7 of 9 as registered, and the boundary landed within one minor unit
+
+Live reference oracle, 2026-08-22, pinned image `sha256:e596339626bf…`, pinned commit `426a23544…`
+clean, Path A embeddable seam in a throw-away `docker run --rm`, **`(19, HALF_UP)`**, MNT dp 2, tenant
+ids all new (`t229_*`), emission order scrambled. **Every cell asked EXACTLY ONE TIME, nothing
+retried, ZERO cells threw**; both rig calibrations reproduce `T64-ZP-A` / `T64-ZP-B` byte-identically.
+Nothing here is a discrimination probe.
+
+| cell | rate % | n | B minor | registered prediction | **OBSERVED** | verdict |
+|---|---|---|---|---|---|---|
+| `T229-R600p0-N200-B301` | 600.0 | 200 | 301 | RESCUED | amortizes, spread over 12 rows | **as registered** |
+| `T229-R600p0-N200-B303` | 600.0 | 200 | 303 | RESCUED | amortizes, spread over 12 rows | **as registered** |
+| `T229-R36p0-N1400-B2150` | 36.0 | 1400 | 2150 | RESCUED | amortizes, spread over 128 rows | **as registered** |
+| `T229-R600p0-N200-B201` | 600.0 | 200 | 201 | family B PARTIAL, repays **1** | **1 of 201** | **as registered** |
+| `T229-R600p0-N200-B251` | 600.0 | 200 | 251 | family B PARTIAL, repays **51** | **51 of 251** | **as registered** |
+| `T229-R600p0-N200-B299` | 600.0 | 200 | 299 | family B PARTIAL, repays **99** | **99 of 299** | **as registered** |
+| `T229-R36p0-N1400-B150` | 36.0 | 1400 | 150 | family B FULL, repays **0** | **0 of 150** | **as registered** |
+| `T229-R600p0-N200-B199` | 600.0 | 200 | 199 | family B FULL | **amortizes** — 13 stuck rows, then a tail | **REFUTED** |
+| `T229-R36p0-N1400-B1450` | 36.0 | 1400 | 1450 | family B PARTIAL, repays 50 | **amortizes** over 148 rows | **REFUTED** |
+
+[Every row re-derived by T231 in integer minor units from
+`.softhouse/capture/t229-g8-site3/out/capture-t229-raw.json.gz` — the observed column is T231's own
+extraction, not a transcription of T229's table.]
+
+**The rescue boundary was predicted before it was measured and it landed within one minor unit.** At
+600.0 % / n = 200 the law puts it at `B_minor = 1.5·n = 300`. Observed: **`299` is family B, `301`
+amortizes.**
+
+### The gaps, carried forward verbatim rather than smoothed
+
+These are **T229's own residuals**, and the conservative ceiling above depends on all three:
+
+1. **`E` is an INPUT to this law and T229 did not derive it.** `src/site3.py` takes the pre-rescue
+   instalment from T223's committed emulator. **Both refutations are that input being ONE MINOR UNIT
+   LOW**, which flipped `δ` from 0 to 1 and so flipped `a > δ`: `B199` — emulator `E = 99`, observed
+   row-1 total `100`; `B1450` — emulator `E = 43`, observed row-1 total `44`. **T229 explicitly
+   REFUSED the circular move of recomputing `δ` from the post-rescue observed value and declaring the
+   law vindicated**, and this section does not make it either. **`[UNVERIFIED — whether the
+   pre-rescue `E` for `B199` and `B1450` was 99/43 or 100/44. No instrument in this program observes
+   the pre-rescue instalment; the seam emits only the final schedule, and on a rescued cell row 1 is
+   POST-rescue.]`** **This is the single gap between the conservative region below and an exact one.**
+2. **Seven corpus cells reduce the balance by a path this model does not contain.** All at `δ = 1`,
+   all partially amortizing where the shape law says zero: `T117P2-R600p0-N108-B11` (5 of 11),
+   `-N121-B11` (4), `-N150-B11` (2), the three identical `T159-` re-observations, and
+   `T159-R600p0-N2000-B999` (166 of 999). **And `T229-R600p0-N200-B199`'s observed schedule is the
+   same thing seen live** — 13 rows stuck at total 100 / balance 199, then a geometric amortization
+   tail across rows 14…26, then a zero-EMI tail [VERIFIED by T231 by extraction: 13 zero-principal
+   rows, first non-zero principal at row 14, last at row 26, final balance 0]. **`[UNVERIFIED — the
+   mechanism. The model says the balance is frozen while `E ≤ I₁q`; these cells say it is not. T229
+   did not chase it and did not guess; T231 did not either.]`**
+3. **`δ ≤ 1` is a CONJECTURE, not a result.** It holds on all **296** corpus stuck cells
+   (histogram `{0: 113, 1: 183}`) and all **9** probe cells. **The conservative ceiling `1.5·n`
+   depends on it entirely.** **`[UNVERIFIED — that `δ` cannot reach 2. No `δ ≥ 2` cell was
+   constructed and there is no argument that none exists.]`**
+
+Four further limits, stated so the law cannot be over-read: **the rescued branch is not modelled** —
+only *that* site 3 fires, never what instalment it lands on, and both refuted cells came back with a
+zero-EMI tail the law says nothing about; **the over-amortization edge of `hasLessEmiDifference` is
+not evaluated** (it compares *absolute* values, so a rescue that overshoots far enough could also
+break — declared in T229's `PREDICTION.md` §3 in advance, still unevaluated); the law is scoped to
+**the FULL and PARTIAL family-B shapes of the G-8 shape only** — no claim about the THIRD OUTCOME, the
+Go port, `minorUnitDigits ≠ 2`, Path B / REST, other day-count conventions, other frequencies, down
+payments, charges, multiples-of, or any rate not asked; and **T229 promoted no vector** —
+`.softhouse/vectors` byte-unchanged at `73c3ea7b43dd75f04884072719a87fc8e1d255c1`, conformance PASS
+exit 0 with the probe present and `up`.
+
+### What this does and does not unblock — and it does NOT close the gate
+
+- **A CONSERVATIVE region is stateable today.** Conditional on `δ ≤ 1`, the failing principal is
+  bounded by **`B_minor < 1.5·n`**. That is a **SUPERSET** of the failing region, so refusing it
+  refuses every failing cell and some clean ones too.
+- **An EXACT region is NOT stateable.** It is a function of `δ`, `δ` is a function of the pre-rescue
+  `E`, and **no verified predictor of `E` exists** — T223's emulator is wrong by one minor unit on at
+  least 2 of the 9 cells asked, and one minor unit is exactly the resolution the boundary lives at.
+  The seven cells in gap 2 are a second, independent reason.
+- **Options (b) and (c) still MUST NOT be put to Buyan**, and the reason has changed. It is no longer
+  *"a rescue mechanism nobody has characterised"*; it is now two named and much smaller gaps — **a
+  verified pre-rescue `E`**, and **the balance-reduction path behind the seven cells**. Narrowing a
+  graded domain is a hard `user` gate stated **as a region**, and the only region this file can state
+  is conservative-only. **T229 and T231 decided nothing, recommended nothing, and pre-implemented
+  nothing.**
 
 ---
 
@@ -1986,6 +2303,13 @@ graded domain. Restated, with the domain named each time:
   minor units, which is what the closed form below predicts in the limit r → 0
   [T100's re-derivation, `out/largest-failing.json`; every one of those bracketed by a measured clean
   cell one minor unit above].
+  - **This `≈ n/2` is FAMILY A, and it is NOT the same law as family B's rescue ceiling. Do not
+    connect them again.** *THE REGION* above used to argue from the resemblance — *"the same
+    `≈ n/2 minor units` law this file already records for family A"* — and that link is now
+    **struck**: family B's ceiling is `(δ + ½)·n`, and it coincides with `n/2` only at `δ = 0` —
+    while **the only `δ` T229 reports on a family-B cell is `δ = 1`**. **The resemblance held at a
+    value of `δ` the phenomenon has not been observed to take.** The family-A figures above stay exactly
+    where they are measured; nothing about them is evidence about family B.
 
 **What was NOT swept, and therefore what this bound does not cover.** Only `MinorUnitDigits = 2`,
 only MNT, only DAYS_30/DAYS_360, only MONTHS/1, only a single disbursement on the schedule start
@@ -2146,8 +2470,20 @@ day-count.
   behind any promotion must also record the JVM state it was taken in.
 - **(b)** refuse the region from the graded domain as a documented contract-refusal vector. Cheap in
   code for family A over the grid swept — but the region is **not** fully bounded, and it is a
-  **graded-domain amendment**. Three things it must now account for, none of which existed when this
+  **graded-domain amendment**. Four things it must now account for, none of which existed when this
   option was first written:
+  - **THE ONLY REGION THIS FILE CAN STATE IS A CONSERVATIVE SUPERSET, and an EXACT one is not
+    available.** Site 3's rescue condition is now characterised (T229), and it puts the failing
+    principal below **`(δ + ½)·n` minor units** — **`1.5·n`, conditional on the unproven `δ ≤ 1`.**
+    An exact region needs `δ`, `δ` needs the **pre-rescue instalment `E`**, and **no verified
+    predictor of `E` exists**; the emulator this program has is wrong by one minor unit on at least
+    2 of the 9 cells T229 asked, and one minor unit is the resolution the boundary lives at. **So an
+    option (b) draft written today would refuse a superset — every failing cell plus some clean ones
+    — and Buyan would have to be told that in the same sentence as the region.** See *SITE 3,
+    CHARACTERISED* above, including its three gaps.
+  - **THE FIGURE IN THIS SECTION WAS WRONG BY A FACTOR OF THREE UNTIL T231, and it was wrong in the
+    direction that matters** — it under-stated what can fail. Any option (b) draft that predates
+    T231 is drafted against `n/2` and refuses too little.
   - **The term half of the old "not fully bounded" reason has changed and the reason still holds.**
     It used to read *"no term beyond n = 600 has been asked"*; terms have since been asked to
     **n = 3000** and family B is still there, with a larger residual each time somebody asked.
@@ -2167,24 +2503,55 @@ day-count.
 - **(c)** treat it as an oracle defect and diverge deliberately, keeping the port's `0`. That is what
   the port does *today, ungraded, on family A only* — **on the 29 record family-B cells the port
   emits the same non-amortizing schedule the oracle does, so there is nothing to diverge from and
-  (c) does not describe them at all.** On the 180 cells T117 and T159 added, and on every partial
-  cell, **the port has never been graded**, so whether (c) describes them is **unknown**
-  `[UNVERIFIED]`.
+  (c) does not describe them at all.** On the 180 cells T117 and T159 added, on the 7 T223 and T229
+  added, and on every partial cell, **the port has never been graded**, so whether (c) describes them
+  is **unknown** `[UNVERIFIED]`.
 
 **(b) and (c) both amend the graded domain, which is a change to a ratified DEC-n — a hard `user`
 gate no agent may cross.** Buyan decides. T83, T84, T100, T101, T112, **T114, T122, T129, T140,
-T170 and T223** have each handled them and
+T170, T223, T229 and T231** have each handled them and
 **decided none, recommended none, and pre-implemented none**; they attach only the measurement and
 the scoping. **T223 measured a new region and restated it; it decided nothing, promoted no vector,
-graded no port, and left `.softhouse/vectors` byte-unchanged.** T112's whole mandate was the write-up: it corrected sentences and deleted a superseded
-block, and it moved nothing about the gate's substance; T114, T122, T129, T140 and T170 likewise
-touched only the prose. **T117, T159, T169 and T177 measured for this gate and deliberately edited
-nothing in it** — T117 and T159 both refused to edit `gates.md` because this STANDING RULE demands a
-full sentence-by-sentence rebuild and parallel workers were live; T170 is that rebuild.
+graded no port, and left `.softhouse/vectors` byte-unchanged. T229 characterised the rescue site,
+falsified this section's ceiling by measurement, promoted no vector, graded no port, and
+DELIBERATELY EDITED NOTHING HERE — leaving the five falsified sentences named with their line
+numbers for whoever did the rebuild properly. T231 is that rebuild: it corrected the prose, promoted
+no vector, ran no capture, wrote no Go, and left `.softhouse/vectors` byte-unchanged at
+`73c3ea7b43dd75f04884072719a87fc8e1d255c1`.**
+T112's whole mandate was the write-up: it corrected sentences and deleted a superseded
+block, and it moved nothing about the gate's substance; T114, T122, T129, T140, T170 and T231 likewise
+touched only the prose. **T117, T159, T169, T177 and T229 measured for this gate and deliberately
+edited nothing in it** — T117, T159 and T229 all refused to edit `gates.md` because this STANDING
+RULE demands a full sentence-by-sentence rebuild; T170 is that rebuild for T117/T159, and T231 is
+that rebuild for T229. **Three separate workers refusing the same edit for the same stated reason is
+the rule working, not three omissions.**
 **This roster is the section's own non-decision attestation, so it must name every
 task that has reviewed or edited the section — T114 and T122 were missing until T140 added them
 (T129 F-T129-4), and the omission was invisible to a reader. If you edit this section, add
 yourself here.**
+
+> **WHAT T231's SWEEP COULD NOT HAVE FOUND** (STANDING RULE 3 requires this to be written down, so
+> here it is rather than in a capture directory T231 did not create):
+>
+> - **It was scoped to `.softhouse/gates.md` and to the G-8 section within it** — plus the G-8 row of
+>   the GATE REGISTER at the top of this file, which T231 did correct. **It did not sweep
+>   `patterns.md`, `obligations.md`, `gates-proposed-answers.md`, `tasks.json`, the `docs/` tree, any
+>   handoff or review, or the `T116-G8-FAMB-*` vector reason strings.** If the falsified `n/2`
+>   ceiling was restated in any of those, **T231 did not find it and cannot say it is absent** —
+>   P-70. **T223's follow-up 1, "sweep the `n/2` ceiling concept OUTSIDE this section", is still
+>   open, and T229 re-raised it.**
+> - **It re-derived T229's numbers, not T229's source reading.** Every figure attributed to a T229
+>   capture above was re-extracted by T231 from `capture-t229-raw.json.gz` in integer minor units.
+>   **The Fineract source citations behind FACT A, FACT B and the law were NOT re-opened by T231**;
+>   they are T229's, bound by matched text at the pinned commit `426a23544…`, and they carry T229's
+>   attestation, not a second one.
+> - **It graded nothing.** No port run, no capture, no vector. Every "the port does X" sentence in
+>   this section is still exactly as old as the run that measured it.
+> - **`gates.md:423`** — the DEC-1 P0 defect list says the adjustment loop's guard *"does not depend
+>   on installment rounding at all"*. **T229 flagged that as true of `shouldBeAdjusted` and false of
+>   the LOOP**, whose `hasLessEmiDifference` guard reads the quantized instalment. **T231 did not
+>   touch it**: it is in the G-1 section, about a **ratified DEC-1**, and outside this task's scope.
+>   **It is flagged here so it is not lost, and it is NOT fixed.**
 
 **What unblocks it**: a `user` decision, now on **two** phenomena, **two shapes of the second one**,
 and **a third outcome in which there is no schedule at all**. **What it
@@ -2203,19 +2570,26 @@ them. **What it leaves uncovered**:
   cells give **0 cell diffs across 25,751 graded cells**. Family counts re-derived independently
   again by T112 from the four committed raw captures: 687 swept / 312 family A / 29 family B / 346
   clean; re-derived a further time by T170.)
-- **Plus 180 further family-B cells** from T117 and T159 that no vector covers **and that nobody has
-  graded against the port at all** — so they cannot be added to the "341" figure, which is a count of
-  cells whose port behaviour was *measured*. **Uncovered cells: 341 measured + 180 ungraded = 521
+- **Plus 187 further family-B cells** — **180 from T117 and T159, 3 from T223 and 4 from T229** —
+  that no vector covers **and that nobody has graded against the port at all**, so they cannot be
+  added to the "341" figure, which is a count of cells whose port behaviour was *measured*.
+  **Uncovered cells: 341 measured + 187 ungraded = 528
   known family-A-or-B cells outside the corpus.** Stating them separately is deliberate: an
-  ungraded cell is a worse position than a graded divergent one, not a better one.
+  ungraded cell is a worse position than a graded divergent one, not a better one. *(This bullet read
+  "180 ungraded = 521" until T231; the 180 was T170's figure and T223's and T229's live probes were
+  never folded in. **Three of the seven are PARTIAL-shape cells — the shape the port has never been
+  graded on at all** — so the ungraded set got worse in kind as well as in count.)*
 - **And an unknown number of inputs on which the oracle throws instead of answering**, which no
   vector and no invariant can express today.
 
-**Conformance is unmoved by this rebuild**: `bash .softhouse/conformance.sh` → **VERDICT PASS, exit
-0, 43 parity vectors, 5664 graded cells, 0 invariant violations, 0 assertions NOT RUN** [measured by
-T170 on its own branch. T140's rewrite recorded **42 / 5576** at the time and that figure is now
-stale — a corpus count in this section must name the run it came from]. Nothing was promoted;
-`PIN.json` and `capabilities.json` are untouched.
+**Conformance is unmoved by this rebuild**: `. .softhouse/bin/go-env.sh` then
+`bash .softhouse/conformance.sh` → probe present and reading `up`, **VERDICT PASS, exit 0, 46 parity
+vectors, 7884 graded cells, 0 inadmissible, 0 invariant violations, 0 assertions NOT RUN, 4 EXEMPTED
+BY A VECTOR**; vector store `73c3ea7b43dd75f04884072719a87fc8e1d255c1` **unchanged** [measured by
+**T231** on its own branch. T170 recorded **43 / 5664** and T140 **42 / 5576**; each was right about
+its own run — **a corpus count in this section must name the run it came from**]. Nothing was
+promoted; `PIN.json` and `capabilities.json` are untouched. **T231 ran no capture and contacted the
+reference oracle only through this health probe.**
 
 ### Evidence
 
@@ -2371,6 +2745,34 @@ the only thing it executed against this repository's own tooling was `bash .soft
 capture bytes. It changed no vector, no `PIN.json`, no `capabilities.json`, no `contract.go`, no
 DEC-n and no `nexus/` file. Handoff:
 `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T170.md`.
+
+**The region predicate, committed on `softhouse/T223-g8-region-predicate`** —
+`.softhouse/capture/t223-g8-region-predicate/`: `PREDICTION.md`, `prediction.json` (both in a commit
+that is a strict ancestor of the capture), `src/*`, `out/capture-t223-raw.json.gz`,
+`out/classify-t223.json`.
+
+**Site 3's rescue law, committed on `softhouse/T229-g8-rescue-site3`** —
+`.softhouse/capture/t229-g8-site3/`: `PREDICTION.md`, `prediction.json`, `src/site3.py` (the
+derivation, with every source citation **bound by the text matched, not by line number**),
+`src/cells-t229.json`, `src/dump_rows.py`, `src/validate_corpus.py`, and under `out/`:
+`capture-t229-raw.json.gz` (11 captures — 9 cells plus 2 calibrations, **0 throws**),
+`classify-t229.json`, `validate-corpus.json`, `classpath-sha256.txt`, `oracle-log.txt`. **The
+prediction commit `29ed78c30cbf77885e7351868465cb47cc7920f9` is a STRICT ANCESTOR of the capture
+commit `bb35cc85ff7fb59e528ecbc4121c25db8ee22df6`** — `git merge-base --is-ancestor 29ed78c bb35cc8`
+exits 0, re-run by T231. Handoff:
+`.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T229.md`, whose closing section names the
+five sentences it falsified **with their line numbers** — the list this rebuild started from.
+
+**This rebuild, committed on `softhouse/T231-g8-section-rebuild`** — **a DOCS task with no capture
+directory, deliberately.** T231 **contacted the reference oracle not at all**, ran no probe, promoted
+no vector, wrote no Go, and created no file under `.softhouse/capture/`. It touched exactly two
+files: this one and
+`.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T231.md`. Every figure it re-derived came
+out of `.softhouse/capture/t229-g8-site3/out/capture-t229-raw.json.gz` **by extraction in integer
+minor units** (STANDING RULE 4 and 5 — the `.gz`, never a plain-`.json` extract, and no float on any
+decision path); the extraction scripts were run from `/tmp` and are **not** committed, precisely so
+that no executed probe source in this gate's evidence set is disturbed. `.softhouse/vectors` is
+byte-unchanged at `73c3ea7b43dd75f04884072719a87fc8e1d255c1`.
 
 ---
 
