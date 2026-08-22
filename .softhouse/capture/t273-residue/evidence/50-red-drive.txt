@@ -1,2 +1,56 @@
-T273: REFUSING — the mutation targets are already modified; a restore would destroy work:
- M .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+### T273 RED DRIVE
+  tree : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad4264728c497493b
+  HEAD : ea82ff42c0206c8548857c193d2bd49fc4fde637
+  bash : 3.2.57(1)-release
+  date : 2026-08-22T14:27:50Z
+
+=== CONTROL — unmutated tree, /tmp/t234_matrix2.txt ABSENT ===
+  BAR exit code    : 0
+  PROBE LINE COUNT : 1
+  VERDICT line     : VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+  first refusal    : 
+  diff rows        : (none — no pin diverged)
+  log              : .softhouse/capture/t273-residue/evidence/50-reddrive-control.log
+  => GREEN, as required before any negative below is believed (P-72).
+
+=== R1 — genuine TIER regression planted in 02-escape-matrix-fix.sh ===
+  planted: SRC=/Users/buv/t273-red-drive-corpus-that-does-not-exist/x
+  path exists on this host? NO
+  BAR exit code    : 2
+  PROBE LINE COUNT : 0
+  VERDICT line     : (none)
+  first refusal    : conformance: THE FAIL-OPEN FRONTIER IS NOT THE PINNED FRONTIER (- pinned, + measured):
+  diff rows        :
+      +TIER1 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+      -TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+  log              : .softhouse/capture/t273-residue/evidence/50-reddrive-r1-tier-regression.log
+  => R1 CAUGHT (exit 2). The tier detection survived the residue repair.
+
+=== R2 — a NEW literal /tmp assignment planted in a repo-wide search instrument ===
+  planted: T273_PLANTED=/tmp/t273-planted-scratch
+  BAR exit code    : 2
+  PROBE LINE COUNT : 0
+  VERDICT line     : (none)
+  first refusal    : conformance: THE FAIL-OPEN FRONTIER IS NOT THE PINNED FRONTIER (- pinned, + measured):
+  diff rows        :
+      +TIER1 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+      -TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+      +.softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh | T273_PLANTED=/tmp/t273-planted-scratch
+  log              : .softhouse/capture/t273-residue/evidence/50-reddrive-r2-new-host-state-site.log
+  => R2 CAUGHT (exit 2). A new host-state site cannot enter the lint corpus silently.
+
+=== R3 — one pinned site GENUINELY REPAIRED, pin left stale (the amnesty rule) ===
+  repaired line now reads: 4:C="$(mktemp -d "${TMPDIR:-/tmp}/t158-clone.XXXXXXXXXX")"
+  BAR exit code    : 2
+  PROBE LINE COUNT : 0
+  VERDICT line     : (none)
+  first refusal    : conformance: THE HOST-STATE CENSUS IS NOT THE PINNED CENSUS (- pinned, + measured):
+  diff rows        :
+      -.softhouse/reviews/T158-compare-enumerators.sh | C=/tmp/t158-clone
+  log              : .softhouse/capture/t273-residue/evidence/50-reddrive-r3-stale-pin-minus-row.log
+  => R3 CAUGHT (exit 2). A '-' row refuses: the pin cannot outlive the weakness.
+
+### RESTORED — mutation targets modified after restore: 0 (0 required)
+### residue /tmp/t234_matrix2.txt at exit: ABSENT
+### SUMMARY  R1=2  R2=2  R3=2   (2 = caught, anything else = a hole)
+### RED DRIVE: 3/3 CAUGHT, tree restored.
