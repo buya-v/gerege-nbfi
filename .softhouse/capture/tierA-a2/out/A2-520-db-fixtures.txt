@@ -1,0 +1,90 @@
+Border style is 2.
+--- m_charge: is there a charge fixture at all, and are any of them penalties? ---
++----+-----------------------------------------------------------+---------------+------------+------------------------+------------------+-------------------------+--------------+-----------+------------+
+| id |                           name                            | currency_code | is_penalty | charge_applies_to_enum | charge_time_enum | charge_calculation_enum |    amount    | is_active | is_deleted |
++----+-----------------------------------------------------------+---------------+------------+------------------------+------------------+-------------------------+--------------+-----------+------------+
+|  1 | T40 flat fee at disbursement                              | MNT           | f          |                      1 |                1 |                       1 | 15000.000000 | t         | f          |
+|  2 | T40 flat fee per instalment                               | MNT           | f          |                      1 |                8 |                       1 |  2500.000000 | t         | f          |
+|  3 | T40 percent of amount at disbursement                     | MNT           | f          |                      1 |                1 |                       2 |     1.234500 | t         | f          |
+|  4 | T40 percent of interest per instalment                    | MNT           | f          |                      1 |                8 |                       4 |     3.750000 | t         | f          |
+|  5 | T40 percent of amount plus interest per instalment        | MNT           | f          |                      1 |                8 |                       3 |     1.234500 | t         | f          |
+|  6 | T40 PENALTY flat on specified due date                    | MNT           | t          |                      1 |                2 |                       1 |  7500.000000 | t         | f          |
+|  7 | T40 flat fee on specified due date                        | MNT           | f          |                      1 |                2 |                       1 |  9000.000000 | t         | f          |
+|  8 | T40 PENALTY flat per instalment                           | MNT           | t          |                      1 |                8 |                       1 |  1200.000000 | t         | f          |
+|  9 | T40 percent of amount per instalment                      | MNT           | f          |                      1 |                8 |                       2 |     0.500000 | t         | f          |
+| 10 | T40 percent of amount on specified due date               | MNT           | f          |                      1 |                2 |                       2 |     1.234500 | t         | f          |
+| 11 | T40 percent of interest on specified due date             | MNT           | f          |                      1 |                2 |                       4 |     3.750000 | t         | f          |
+| 12 | T40 percent of amount plus interest on specified due date | MNT           | f          |                      1 |                2 |                       3 |     1.234500 | t         | f          |
+| 13 | T48 percent of disbursement amount TRANCHE                | MNT           | f          |                      1 |               12 |                       5 |     1.234500 | t         | f          |
+| 14 | T51 flat TRANCHE disbursement                             | MNT           | f          |                      1 |               12 |                       1 |  7000.000000 | t         | f          |
+| 15 | T51 pct of disbursement TRANCHE maxCap5000                | MNT           | f          |                      1 |               12 |                       5 |     1.234500 | t         | f          |
+| 16 | T51 pct of amount DISB maxCap5000                         | MNT           | f          |                      1 |                1 |                       2 |     1.234500 | t         | f          |
+| 17 | T51 pct of disbursement TRANCHE minCap8000                | MNT           | f          |                      1 |               12 |                       5 |     0.100000 | t         | f          |
+| 18 | T51 pct of amount DISB minCap8000                         | MNT           | f          |                      1 |                1 |                       2 |     0.100000 | t         | f          |
++----+-----------------------------------------------------------+---------------+------------+------------------------+------------------+-------------------------+--------------+-----------+------------+
+(18 rows)
+
+--- m_code: do the reason code TYPES exist? ---
++----+------------------+-------------------+
+| id |    code_name     | is_system_defined |
++----+------------------+-------------------+
+| 26 | WriteOffReasons  | t                 |
+| 39 | ChargeOffReasons | t                 |
++----+------------------+-------------------+
+(2 rows)
+
+--- m_code_value: are any reason VALUES seeded under them? (the actual blocker) ---
++----+---------+-----------+------------+-----------+
+| id | code_id | code_name | code_value | is_active |
++----+---------+-----------+------------+-----------+
++----+---------+-----------+------------+-----------+
+(0 rows)
+
+--- m_code_value: total row count, so an empty result above is not read as an empty table ---
++-------------------+
+| total_code_values |
++-------------------+
+|                22 |
++-------------------+
+(1 row)
+
+--- m_payment_type: the second resolution dimension, for reference ---
++----+---------------------------------+-----------------+---------------------------------+-------------------+
+| id |              value              | is_cash_payment |            code_name            | is_system_defined |
++----+---------------------------------+-----------------+---------------------------------+-------------------+
+|  1 | Money Transfer                  | f               |                                 | f                 |
+|  2 | Repayment Adjustment Chargeback | f               | REPAYMENT_ADJUSTMENT_CHARGEBACK | t                 |
+|  3 | Repayment Adjustment Refund     | f               | REPAYMENT_ADJUSTMENT_REFUND     | t                 |
++----+---------------------------------+-----------------+---------------------------------+-------------------+
+(3 rows)
+
+--- acc_product_mapping DDL: which reason/classification columns carry an FK ---
+                                     Table "public.acc_product_mapping"
++--------------------------------------+----------+-----------+----------+----------------------------------+
+|                Column                |   Type   | Collation | Nullable |             Default              |
++--------------------------------------+----------+-----------+----------+----------------------------------+
+| id                                   | bigint   |           | not null | generated by default as identity |
+| gl_account_id                        | bigint   |           |          |                                  |
+| product_id                           | bigint   |           |          |                                  |
+| product_type                         | smallint |           |          |                                  |
+| payment_type                         | integer  |           |          |                                  |
+| charge_id                            | bigint   |           |          |                                  |
+| financial_account_type               | smallint |           |          |                                  |
+| charge_off_reason_id                 | integer  |           |          |                                  |
+| capitalized_income_classification_id | integer  |           |          |                                  |
+| buydown_fee_classification_id        | integer  |           |          |                                  |
+| write_off_reason_id                  | bigint   |           |          |                                  |
++--------------------------------------+----------+-----------+----------+----------------------------------+
+Indexes:
+    "acc_product_mapping_pkey" PRIMARY KEY, btree (id)
+    "FK_acc_product_mapping_m_charge" btree (charge_id)
+    "FK_acc_product_mapping_m_payment_type" btree (payment_type)
+    "IND_acc_product_mapping_product_id" btree (product_id)
+Foreign-key constraints:
+    "FK_acc_product_mapping_gl_account_id" FOREIGN KEY (gl_account_id) REFERENCES acc_gl_account(id) ON UPDATE RESTRICT ON DELETE RESTRICT
+    "FK_acc_product_mapping_m_charge" FOREIGN KEY (charge_id) REFERENCES m_charge(id) ON UPDATE RESTRICT ON DELETE RESTRICT
+    "FK_acc_product_mapping_m_payment_type" FOREIGN KEY (payment_type) REFERENCES m_payment_type(id) ON UPDATE RESTRICT ON DELETE RESTRICT
+    "fk_acc_product_mapping_buydown_fee_classification" FOREIGN KEY (buydown_fee_classification_id) REFERENCES m_code_value(id)
+    "fk_acc_product_mapping_capitalized_income_classification" FOREIGN KEY (capitalized_income_classification_id) REFERENCES m_code_value(id)
+    "fk_acc_product_mapping_charge_off_reason" FOREIGN KEY (charge_off_reason_id) REFERENCES m_code_value(id)
+

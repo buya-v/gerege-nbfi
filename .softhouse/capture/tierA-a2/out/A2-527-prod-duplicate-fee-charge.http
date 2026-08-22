@@ -1,0 +1,9 @@
+POST /loanproducts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/t275-084-duplicate-fee-charge.json
+body-wire-bytes-artefact: A2-527-prod-duplicate-fee-charge.req
+body-sha256: a44dff46bd9b7482364ebb73783f59747c5b91fc9d9d570f7ffcd670175cdec4
+body-bytes: 1101
+captured-at-utc: 2026-08-22T14:10:51Z

@@ -1,0 +1,9 @@
+PUT /loanproducts/23
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/t275-072-p23-description-only.json
+body-wire-bytes-artefact: A2-508-p23-description-only.req
+body-sha256: 99c915c13b1335e41c29f6c2c290f64c9bc3a725406cf53d9ed34559c1acaba5
+body-bytes: 118
+captured-at-utc: 2026-08-22T14:08:17Z

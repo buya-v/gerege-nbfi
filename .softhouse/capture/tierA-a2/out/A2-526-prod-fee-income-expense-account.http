@@ -1,0 +1,9 @@
+POST /loanproducts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/t275-083-fee-income-expense-account.json
+body-wire-bytes-artefact: A2-526-prod-fee-income-expense-account.req
+body-sha256: e86dfd6eaa6d045208afa37847fe6ada941fe8de34e5a04db00863e949a7ea39
+body-bytes: 1068
+captured-at-utc: 2026-08-22T14:10:51Z

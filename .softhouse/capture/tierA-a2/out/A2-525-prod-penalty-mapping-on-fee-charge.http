@@ -1,0 +1,9 @@
+POST /loanproducts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/t275-082-penalty-mapping-on-fee-charge.json
+body-wire-bytes-artefact: A2-525-prod-penalty-mapping-on-fee-charge.req
+body-sha256: 158b212c6a6432c30a3cf8ada11b504360066d775611b759086f8492c1e05989
+body-bytes: 1157
+captured-at-utc: 2026-08-22T14:10:51Z

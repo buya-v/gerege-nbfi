@@ -1,0 +1,9 @@
+PUT /loanproducts/23
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/upd-071-add-channel.json
+body-wire-bytes-artefact: A2-514-p23-channel-readd.req
+body-sha256: 8e24fe3701fef9e98188a3f8e6b12c899b5c1c8df1c37540b4f0df8014fae29e
+body-bytes: 106
+captured-at-utc: 2026-08-22T14:10:00Z

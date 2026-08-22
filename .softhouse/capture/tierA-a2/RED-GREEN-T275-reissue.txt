@@ -1,0 +1,78 @@
+== LEG 1: is any T275 recipe already STALE (the D-1 defect, live)? ==
+    VERIFIED     A2-500-db-mapping-before                           sql/q8-t275-mapping-ids.sql == executed == recorded digest 8225655ffa0ce81f
+    VERIFIED     A2-501-loanproduct23-before                        no body -- a GET; nothing to go stale
+    VERIFIED     A2-502-p23-repoint-fundsource                      req/upd-070-repoint-fundsource.json == wire == recorded digest 602a2261be031641
+    VERIFIED     A2-503-db-mapping-after-repoint                    sql/q8-t275-mapping-ids.sql == executed == recorded digest 8225655ffa0ce81f
+    VERIFIED     A2-505-p23-add-channel                             req/upd-071-add-channel.json == wire == recorded digest 8e24fe3701fef9e9
+    VERIFIED     A2-506-db-mapping-after-channel                    sql/q8-t275-mapping-ids.sql == executed == recorded digest 8225655ffa0ce81f
+    VERIFIED     A2-508-p23-description-only                        req/t275-072-p23-description-only.json == wire == recorded digest 99c915c13b1335e4
+    VERIFIED     A2-509-db-mapping-after-description                sql/q8-t275-mapping-ids.sql == executed == recorded digest 8225655ffa0ce81f
+    VERIFIED     A2-510-p23-channel-empty                           req/t275-073-p23-channel-empty.json == wire == recorded digest 12c736e99b32d6b3
+    VERIFIED     A2-511-db-mapping-after-channel-empty              sql/q8-t275-mapping-ids.sql == executed == recorded digest 8225655ffa0ce81f
+    VERIFIED     A2-512-loanproduct23-final                         no body -- a GET; nothing to go stale
+    VERIFIED     A2-513-db-q2-product-mapping-rows                  sql/q2-product-mapping-rows.sql == executed == recorded digest 1b7b5d4390ff59e1
+    VERIFIED     A2-514-p23-channel-readd                           req/upd-071-add-channel.json == wire == recorded digest 8e24fe3701fef9e9
+    VERIFIED     A2-515-db-mapping-after-readd                      sql/q8-t275-mapping-ids.sql == executed == recorded digest 8225655ffa0ce81f
+    VERIFIED     A2-516-p23-channel-resend-identical                req/upd-071-add-channel.json == wire == recorded digest 8e24fe3701fef9e9
+    VERIFIED     A2-517-db-mapping-after-resend                     sql/q8-t275-mapping-ids.sql == executed == recorded digest 8225655ffa0ce81f
+    VERIFIED     A2-518-p23-channel-repoint                         req/t275-075-p23-channel-repoint.json == wire == recorded digest ab05932771cc71e4
+    VERIFIED     A2-519-db-mapping-after-channel-repoint            sql/q8-t275-mapping-ids.sql == executed == recorded digest 8225655ffa0ce81f
+    VERIFIED     A2-520-db-fixtures                                 sql/q9-t275-fixture-state.sql == executed == recorded digest 15e7f0274d03192b
+    VERIFIED     A2-521-loanproduct23-after-channel-repoint         no body -- a GET; nothing to go stale
+    VERIFIED     A2-522-prod-charge-mappings                        req/t275-080-charge-mappings.json == wire == recorded digest d77b67222eed5d4a
+    VERIFIED     A2-523-prod-charge-mappings-readback               no body -- a GET; nothing to go stale
+    VERIFIED     A2-524-prod-fee-charge-not-attached                req/t275-081-fee-charge-not-attached.json == wire == recorded digest 917c83ba0c4efa05
+    VERIFIED     A2-525-prod-penalty-mapping-on-fee-charge          req/t275-082-penalty-mapping-on-fee-charge.json == wire == recorded digest 158b212c6a6432c3
+    VERIFIED     A2-526-prod-fee-income-expense-account             req/t275-083-fee-income-expense-account.json == wire == recorded digest e86dfd6eaa6d0452
+    VERIFIED     A2-527-prod-duplicate-fee-charge                   req/t275-084-duplicate-fee-charge.json == wire == recorded digest a44dff46bd9b7482
+    VERIFIED     A2-528-db-mapping-after-charge-dimension           sql/q8-t275-mapping-ids.sql == executed == recorded digest 8225655ffa0ce81f
+    VERIFIED     A2-540-prod-writeoff-reason-dangling               req/t275-090-writeoff-reason-dangling.json == wire == recorded digest 5aaa908264da31ad
+    VERIFIED     A2-541-prod-writeoff-reason-dangling-nonexpense    req/t275-091-writeoff-reason-dangling-nonexpense.json == wire == recorded digest 68dcdbe71f961229
+    VERIFIED     A2-542-prod-chargeoff-reason-dangling              req/t275-092-chargeoff-reason-dangling.json == wire == recorded digest b93c64ca496c28fd
+    VERIFIED     A2-543-prod-chargeoff-reason-dangling-nonexpense   req/t275-093-chargeoff-reason-dangling-nonexpense.json == wire == recorded digest fdec364596307105
+    VERIFIED     A2-544-db-mapping-after-reason-probes              sql/q8-t275-mapping-ids.sql == executed == recorded digest 8225655ffa0ce81f
+  PASS  all 32 T275 captures VERIFIED: every recipe names the bytes that were sent
+
+== LEG 1b: the same check over the 10 attempt1-* recipes D-1 declared false ==
+    UNVERIFIABLE attempt1-A2-prod-060-cash-with-channel-override    no wire-byte artefact (cap.sh era)
+    UNVERIFIABLE attempt1-A2-prod-061-cash-no-override              no wire-byte artefact (cap.sh era)
+    UNVERIFIABLE attempt1-A2-prod-062-map-header-account            no wire-byte artefact (cap.sh era)
+    UNVERIFIABLE attempt1-A2-prod-063-map-wrong-type                no wire-byte artefact (cap.sh era)
+    UNVERIFIABLE attempt1-A2-prod-064-cash-no-mappings              no wire-byte artefact (cap.sh era)
+    UNVERIFIABLE attempt1-A2-prod-065-map-missing-account           no wire-byte artefact (cap.sh era)
+    UNVERIFIABLE attempt1-A2-prod-066-bad-paymenttype               no wire-byte artefact (cap.sh era)
+    UNVERIFIABLE attempt1-A2-prod-067-duplicate-channel             no wire-byte artefact (cap.sh era)
+    UNVERIFIABLE attempt1-A2-prod-068-accrual-missing-receivables   no wire-byte artefact (cap.sh era)
+    UNVERIFIABLE attempt1-A2-prod-069-accrual-complete              no wire-byte artefact (cap.sh era)
+  PASS  all 10 attempt1-* recipes are UNVERIFIABLE, not VERIFIED -- this check cannot launder them
+
+== LEG 1c: D-1 demonstrated from committed bytes alone, no trust required ==
+    recorded response demands isInterestRecalculationEnabled : True
+    the body the recipe names CONTAINS it                    : True
+  PASS  D-1 reproduced from committed bytes: the recipe cannot have produced that response
+
+== LEG 2: drive LEG 1 RED by changing ONE BYTE of one request body ==
+    mutated req/upd-070-repoint-fundsource.json by exactly 1 byte (44 bytes, unchanged length)
+    LEG 1 verdict on the victim: STALE -- req/upd-070-repoint-fundsource.json a72119a9e6b27e2b != wire 602a2261be031641
+  PASS  LEG 1 goes STALE on exactly the mutated capture and stays VERIFIED on the other 31 -- it is failable AND specific
+
+== LEG 3: RE-ISSUE the idempotent captures against the live oracle, right now ==
+  PASS  A2-521-loanproduct23-after-channel-repoint re-issued BYTE-IDENTICAL (81032da4449d68ac)
+  PASS  A2-523-prod-charge-mappings-readback re-issued BYTE-IDENTICAL (5520b787ffc0dd1a)
+  PASS  A2-501-loanproduct23-before correctly SUPERSEDED: differs from its own snapshot (92121b59baf33f34) and equals the current-state capture (81032da4449d68ac)
+  PASS  A2-512-loanproduct23-final correctly SUPERSEDED: differs from its own snapshot (447ca25d61612fc5) and equals the current-state capture (81032da4449d68ac)
+  PASS  A2-544-db-mapping-after-reason-probes re-issued BYTE-IDENTICAL (cefe2a593f2724f6)
+  PASS  A2-520-db-fixtures re-issued BYTE-IDENTICAL (611915567d712dca)
+
+== The MUTATING captures, and what is and is not claimed about them ==
+    16 captures write state. NONE of them can re-issue to the same
+    RESPONSE, and this script does not claim they can. What LEG 1 proves about each
+    is that the REQUEST is re-issuable: the body the recipe names is byte-identical
+    to the body that went over the wire. Their PRECONDITION is the oracle state
+    recorded in out/A2-500-db-mapping-before.txt (product 23 mapping ids 12-21, the
+    generic FUND_SOURCE row id 12 -> GL 2, no payment-channel row, acc_product_mapping
+    max(id) 94, m_product_loan max(id) 55). Replaying them on a tenant not in that
+    state reproduces the BEHAVIOUR and not the IDS -- CAPTURE-PLAN.md §6's standing
+    warning, which applies to this batch exactly as it applies to the original one.
+
+PASS -- every leg held.

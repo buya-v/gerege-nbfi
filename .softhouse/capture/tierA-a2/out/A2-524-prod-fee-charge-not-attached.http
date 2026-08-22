@@ -1,0 +1,9 @@
+POST /loanproducts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/t275-081-fee-charge-not-attached.json
+body-wire-bytes-artefact: A2-524-prod-fee-charge-not-attached.req
+body-sha256: 917c83ba0c4efa05a3fd19210a1864708281f2ce7fc024c735cbc788b114b9b8
+body-bytes: 1065
+captured-at-utc: 2026-08-22T14:10:50Z

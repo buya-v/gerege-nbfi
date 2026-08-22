@@ -1,0 +1,9 @@
+POST /loanproducts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/t275-093-chargeoff-reason-dangling-nonexpense.json
+body-wire-bytes-artefact: A2-543-prod-chargeoff-reason-dangling-nonexpense.req
+body-sha256: fdec3645963071054f12ce80dc895c37959adc104bf3c67941733ee4fcb2bc48
+body-bytes: 1090
+captured-at-utc: 2026-08-22T14:11:41Z

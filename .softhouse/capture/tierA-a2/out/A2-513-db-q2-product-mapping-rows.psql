@@ -1,0 +1,8 @@
+docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f -
+tenant-database: fineract_gerege
+query-file: sql/q2-product-mapping-rows.sql
+query-bytes-artefact: A2-513-db-q2-product-mapping-rows.sql
+query-sha256: 1b7b5d4390ff59e17f0da4624f05556340628dc70b703ccdd02c147f4b455c90
+query-bytes: 916
+psql-exit-status: 0
+captured-at-utc: 2026-08-22T14:08:19Z
