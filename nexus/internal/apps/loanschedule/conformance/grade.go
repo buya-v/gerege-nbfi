@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 	"github.com/gerege/nexus/internal/apps/loanschedule/contract"
 )
 
@@ -249,6 +250,23 @@ type Summary struct {
 	// not anything was found, because a guard that only speaks when it fails is
 	// indistinguishable from a guard that never ran (P-35).
 	NoFloatCensus FloatingPointCensus
+
+	// Ledger is the SECOND bounded context's half of this run — DEC-2 §5.2.
+	//
+	// IT IS A SEPARATE STRUCT WITH SEPARATE COUNTERS, and that separation is a
+	// normative requirement rather than a style choice. DEC-2 §5.2 requirement
+	// 6a: the ledger vector must be reported "under its own comparator and its
+	// own count — NOT folded into `parity vectors PASS <B.parity>`. The
+	// loanschedule parity count must still read exactly B.parity and the cell
+	// count exactly B.cells … A submission where B.parity becomes B.parity + 1
+	// has reproduced the defect §5.1.1 retracts." Two string edits to a copied
+	// vector once raised this program's headline parity figure from 43 to 44;
+	// nothing about the ledger context may be allowed to do it again by
+	// arithmetic.
+	//
+	// nil when the store carries no ledger vector at all, which is how the run
+	// looked before A2-15 and how a -context=loanschedule run looks now.
+	Ledger *ledgerconf.Summary
 }
 
 // ExitCode is the harness's verdict as a process exit status.
@@ -270,6 +288,20 @@ type Summary struct {
 func (s *Summary) ExitCode() int {
 	if s.ParityFail+s.ContractFail+s.SelfTestFail > 0 || s.InvariantViolations > 0 {
 		return 1
+	}
+	// THE LEDGER HALF CAN ONLY MAKE THE VERDICT WORSE, and it is folded in HERE
+	// rather than into the counters above so that the loanschedule figures a
+	// reader quotes are never a sum over two contexts. A ledger FAIL or a ledger
+	// invariant violation is exit 1 for the same reason a loanschedule one is:
+	// it is a definite, actionable finding.
+	if s.Ledger != nil {
+		if s.Ledger.ParityFail+s.Ledger.RefusalFail > 0 || s.Ledger.InvariantViolations > 0 {
+			return 1
+		}
+		if s.Ledger.Inadmissible > 0 || s.Ledger.Errored > 0 ||
+			len(s.Ledger.LoadErrors) > 0 || len(s.Ledger.Fatal) > 0 {
+			return 2
+		}
 	}
 	if len(s.FatalReasons) > 0 || len(s.LoadErrors) > 0 ||
 		s.Refused > 0 || s.Inadmissible > 0 || s.Errored > 0 {
@@ -319,6 +351,16 @@ type Options struct {
 	// (conformance.sh probes with curl) and DEFAULTS TO DOWN when empty, so a
 	// caller that forgets to probe cannot obtain exit 0.
 	OracleProbe string
+
+	// LedgerImplName selects a registered LEDGER implementation by name.
+	//
+	// DEC-2 precondition P-10 is what this field is for: "a mechanism that
+	// actually RUNS a named wrong implementation and shows it going red …
+	// graded_against is a DECLARATIVE record and does not execute anything".
+	// Empty means "the single registered CORRECT implementation"; a
+	// deliberately-wrong one must be named explicitly, so no default selection
+	// can ever land on one.
+	LedgerImplName string
 
 	// SelfTestMode grades the harness rather than an implementation. In self-test
 	// mode the parity-vector requirement and the oracle probe are not applied,
@@ -584,6 +626,28 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 			strings.Join(uncovered, ", ")))
 	}
 
+	// ---------------------------------------------------------------------
+	// THE LEDGER HALF — a second schema, a second comparator, its own counts
+	// ---------------------------------------------------------------------
+	//
+	// It runs LAST and it touches nothing above it. Every loanschedule figure in
+	// this Summary is already final by the time this block executes, which is
+	// the mechanical form of DEC-2 §5.2 requirement 2's demand that "nothing old
+	// moved".
+	//
+	// SELF-TEST MODE SKIPS IT, and the reason is the one admit.go gives for
+	// excluding self-test fixtures from the parity count: -self-test grades the
+	// HARNESS by replaying the loanschedule store through a replay generator
+	// that computes nothing. There is no ledger replay, and inventing one would
+	// be a ledger implementation living inside the harness that grades ledger
+	// implementations.
+	if !opts.SelfTestMode {
+		lsum := gradeLedger(opts)
+		if lsum != nil {
+			s.Ledger = lsum
+		}
+	}
+
 	if !opts.SelfTestMode && s.ParityPass == 0 && len(vectors) > 0 {
 		s.FatalReasons = append(s.FatalReasons,
 			"NO PARITY VECTOR WAS GRADED. Self-test fixtures and contract-refusal vectors do not make a "+
@@ -592,6 +656,117 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 				"the port matches Fineract, and it will not pretend to.")
 	}
 	return s, nil
+}
+
+// gradeLedger loads and grades the ledger half of the store.
+//
+// It returns nil when the store carries NO ledger vector, so that a run over a
+// store without one is byte-identical to the run before this code existed. That
+// is not leniency: a store with no ledger vector has nothing for this comparator
+// to say, and printing an empty ledger section with five zeroes would be a
+// report that looks like coverage.
+//
+// A ledger PIN or CAPABILITY file that is present-but-broken, or ABSENT while
+// ledger vectors exist, is FATAL. A ledger vector graded against a registry that
+// could not be loaded would be a vector graded with the default-deny rule
+// switched off.
+func gradeLedger(opts Options) *ledgerconf.Summary {
+	// A CONTEXT FILTER NAMING SOMEBODY ELSE'S CONTEXT SWITCHES THIS HALF OFF
+	// ENTIRELY, and this is the one place that decision is taken.
+	//
+	// MEASURED, NOT ANTICIPATED: without this, `bash .softhouse/conformance.sh
+	// loanschedule` went from exit 0 to exit 2 on this branch. The ledger loader
+	// honoured the filter and returned zero vectors; the CAPABILITY COVERAGE rule
+	// then correctly observed that six capabilities marked in_graded_domain were
+	// killed by nothing, and refused. Every part of that was right and the
+	// conclusion was wrong, because "no ledger vector was SELECTED" is not "no
+	// ledger vector KILLS": the filter narrows what is GRADED and says nothing
+	// about the corpus. DEC-2 §5.2 requirement 3 demands the filtered run be
+	// unchanged, and it was the requirement that caught this.
+	//
+	// WHAT IS **NOT** NARROWED BY THE FILTER, deliberately: the store FILE census
+	// (LoadStore hands every ledger-schema file to StoreFileCensus whatever the
+	// filter says) and the ledger corpus's own duplicate-case_id check. T123's
+	// rule, second context: the filter narrows what is GRADED, never what is
+	// CHECKED.
+	if opts.ContextFilter != "" && !ledgerconf.IsSchemaContext(opts.ContextFilter) {
+		return nil
+	}
+	paths, err := ledgerconf.LedgerFilePaths(opts.StoreRoot)
+	if err != nil {
+		return &ledgerconf.Summary{Fatal: []string{
+			"the ledger half of the store could not be enumerated: " + err.Error()}}
+	}
+	if len(paths) == 0 {
+		return nil
+	}
+	lopts := ledgerconf.Options{
+		RepoRoot:      opts.RepoRoot,
+		StoreRoot:     opts.StoreRoot,
+		ContextFilter: opts.ContextFilter,
+	}
+	var fatal []string
+	pin, perr := ledgerconf.LoadPin(filepath.Join(opts.StoreRoot, ledgerconf.PinFileName))
+	if perr != nil {
+		fatal = append(fatal, perr.Error())
+	} else {
+		lopts.Pin = pin
+	}
+	reg, rerr := ledgerconf.LoadCapabilityRegistry(
+		filepath.Join(opts.StoreRoot, ledgerconf.CapabilityFileName))
+	if rerr != nil {
+		fatal = append(fatal, rerr.Error())
+	} else {
+		lopts.Registry = reg
+	}
+	if len(fatal) > 0 {
+		return &ledgerconf.Summary{Fatal: fatal}
+	}
+
+	names := ledgerconf.CorrectImplementationNames()
+	switch {
+	case opts.LedgerImplName != "":
+		impl, ok := ledgerconf.Lookup(opts.LedgerImplName)
+		if !ok {
+			return &ledgerconf.Summary{Fatal: []string{fmt.Sprintf(
+				"no ledger implementation named %q is registered (have: %s)",
+				opts.LedgerImplName, strings.Join(ledgerconf.RegisteredNames(), ", "))}}
+		}
+		lopts.Implementation = impl
+		lopts.ImplementationName = opts.LedgerImplName
+	case len(names) == 1:
+		impl, _ := ledgerconf.Lookup(names[0])
+		lopts.Implementation = impl
+		lopts.ImplementationName = names[0]
+	}
+	sum := ledgerconf.Run(lopts)
+
+	// THE COVERAGE RULE, applied to the ledger registry: a capability marked
+	// in_graded_domain that no graded vector kills for is a capability marked
+	// graded on nobody's authority. Same rule, same reason, second context.
+	var gradedVectors []*ledgerconf.Vector
+	vs, _, lerr := ledgerconf.LoadStore(opts.StoreRoot, opts.ContextFilter)
+	if lerr == nil {
+		byID := map[string]bool{}
+		for _, r := range sum.Results {
+			if r.Outcome == ledgerconf.OutcomePass || r.Outcome == ledgerconf.OutcomeFail {
+				byID[r.CaseID] = true
+			}
+		}
+		for _, v := range vs {
+			if byID[v.CaseID] {
+				gradedVectors = append(gradedVectors, v)
+			}
+		}
+		if unc := reg.UncoveredGradedCapabilities(gradedVectors); len(unc) > 0 {
+			sum.Fatal = append(sum.Fatal, fmt.Sprintf(
+				"THESE LEDGER CAPABILITIES ARE MARKED in_graded_domain BUT NO GRADED VECTOR KILLS A NAMED "+
+					"WRONG IMPLEMENTATION FOR THEM: %s. Either promote a vector with a graded_against "+
+					"entry, or set in_graded_domain false in %s.",
+				strings.Join(unc, ", "), ledgerconf.CapabilityFileName))
+		}
+	}
+	return sum
 }
 
 func gradeVector(ctx context.Context, v *Vector, pin *Pin, registry *CapabilityRegistry,

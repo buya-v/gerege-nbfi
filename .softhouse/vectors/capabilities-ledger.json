@@ -1,0 +1,122 @@
+{
+  "schema": "gerege.ledger.capabilities/v1",
+  "dec2_revision": 5,
+
+  "_note": "WHICH CAPABILITY CLASSES EACH LEDGER CAPTURE SEAM STRUCTURALLY EXERCISES, AND WHICH IT DOES NOT. This file, not any vector, is what refuses a ledger vector on capability grounds, and it is DATA on purpose: a blind spot discovered later is added here and every affected vector starts being refused with NO vector file changing and no code change. Statuses: exercised (gradeable) | blind (structurally invisible: an implementation honouring it and one ignoring it score identically) | partial (reached, but on a narrower subset than a reader would assume). ONLY 'exercised' permits grading, and an ABSENT entry REFUSES too -- default-deny, DEC-2 §4.10, because an unaudited input is assumed invisible and never assumed wired. THIS IS A SEPARATE FILE FROM capabilities.json AND THAT IS DEC-2 PRECONDITION P-6, DECIDED: capabilities.json's schema id is the hard constant `gerege.loanschedule.capabilities/v1` and its `dec1_revision` is a DEC-1 revision number, so appending ledger rows there would make an amendment of the LOANSCHEDULE contract the thing that re-stamps this context's capability data, and would leave a file whose own schema string names a context half its rows do not belong to. The rejected alternative and the full argument are in nexus/internal/apps/ledger/conformance/capability.go.",
+
+  "capabilities": [
+    {
+      "name": "ledger.money.minor.unit.conversion",
+      "description": "The conversion boundary: the reference oracle's MAJOR-unit decimal characters, as emitted on the wire at scale 6, converted to an int64 count of MINOR units by exact integer/string arithmetic, refusing any non-zero digit beyond the currency's minor unit rather than truncating or rounding it.",
+      "in_graded_domain": true,
+      "evidence": "DEC-2 §4.3, normative consequences 1 and 2, and predicate G-08. EXERCISED AND NON-VACUOUS ONLY SINCE A2-26: before that fire every ledger amount in the A2 corpus was a WHOLE TUGRIK, so a port that dropped or mis-rounded minor units was BYTE-INDISTINGUISHABLE from a correct one on every capture ever taken (DEC-2 §5.0.1). The corpus now carries legs at 270450.580000, 22049.420000, 889549.420000, 20298.820000, 90151.760000, 125000.620000, 25000.370000 and 100000.250000, and the registered wrong implementation `ledger-wrong-truncating` is killed by every one of the four parity vectors. NOTE WHAT IS STILL NOT EXERCISED: no capture carries a NON-ZERO digit beyond two decimal places, so the REFUSAL half of G-08 -- the residue rule -- is specified from source and killed by nothing. A2-8 already stated plainly that no vector proves the truncation rule and that is still true."
+    },
+    {
+      "name": "ledger.journal.entry.readback",
+      "description": "A posted journal entry read back at the contract boundary: its legs, each leg's GL account id and code, each leg's DEBIT/CREDIT side, the leg count, and the entry's debit and credit totals.",
+      "in_graded_domain": true,
+      "evidence": "Exercised by GET /journalentries (A2-338, A2-347, A2-383) and by the ledger_db_readback seam (A2-390). THE CELL THIS DELIBERATELY EXCLUDES is glAccountType: A2-26 observed the identical row rendering ASSET in A2-088 and INCOME in A2-320, every other cell byte-identical, with NO entry edited, because the field projects the ACCOUNT'S CURRENT classification rather than the entry's and GL account 2 was retyped underneath five live product mappings (G-10). So NO VECTOR IN THIS STORE GRADES A GL ACCOUNT'S CLASSIFICATION, and a port that resolves an entry's classification wrongly is not caught here."
+    },
+    {
+      "name": "ledger.accounting.path.loan.repayment",
+      "description": "A journal entry the reference oracle's own LOAN ACCOUNTING produced -- a repayment or an overpayment on a live loan -- as opposed to one a caller posted by hand.",
+      "in_graded_domain": true,
+      "evidence": "Exercised on product 55 (CASH BASED) / loan 7 by A2-337/A2-338 (transaction L25, four legs) and A2-382/A2-383 (transaction L27, four legs). PRODUCTS 22, 23, 24, 27 AND 28 ARE INADMISSIBLE and the pin denylists them: A2-26 re-sent each of their mappings (A2-300..A2-315) and the oracle returned 403 on every one. WHAT IS NOT EXERCISED: DISBURSEMENT and FEE entries exist in the same captures (L21, L23) but are TWO-LEG WHOLE-TUGRIK entries and are not promoted, because promoting them would re-create exactly the corpus A2-26 was sent to fix. ACCRUAL is entirely absent -- no accrual product has a loan, no accrual or COB job has run, and gl 18, 22 and 16 have zero receivable entries. CHARGE-OFF is unmapped on both admissible products. Neither is graded by anything here."
+    },
+    {
+      "name": "ledger.manual.entry.posting",
+      "description": "A manual journal entry posted through POST /journalentries, and the domain rules the oracle applies to one: the balance rule, and the target account's manual_journal_entries_allowed permission.",
+      "in_graded_domain": true,
+      "evidence": "Exercised by A2-343 (accepted, three legs), A2-344 (refused 403, unbalanced by exactly one minor unit), A2-345 (ACCEPTED on a HEADER account) and A2-346 (refused 403, manual adjustments not permitted). THE PRECEDENCE BETWEEN THE TWO REFUSALS IS UNOBSERVED: A2-346's request is balanced and A2-344's legs are both on manual-permitted accounts, so no captured request violates both rules and nothing in this corpus orders them."
+    },
+    {
+      "name": "ledger.header.account.posting",
+      "description": "Posting a journal entry leg to a SUMMARY (HEADER) account rather than a DETAIL one.",
+      "in_graded_domain": true,
+      "evidence": "A2-345 posted a debit leg at GL 1 -- account_usage = 2, the root 'Assets' node -- and the oracle returned HTTP 200 and created transaction a28f573ffb9b [OBSERVED: A2-345.status, and the two stored legs in A2-390]. THE POINT OF GRADING IT is that the reasonable-looking port refuses this, and refusing it DIVERGES FROM THE ORACLE. STRICTLY SCOPED: this says nothing about whether a HEADER account would be refused at PRODUCT CREATE time. A2-312 threw on gl 2 first and never reached the loanPortfolioAccountId: 1 case, so that question is [UNVERIFIED] and no vector asserts it."
+    },
+    {
+      "name": "ledger.refusal.parity",
+      "description": "An ORACLE-OBSERVED refusal: the HTTP status, the oracle's own globalisation code and its message text, as returned on the wire and captured.",
+      "in_graded_domain": true,
+      "evidence": "Exercised by A2-344 and A2-346, both HTTP 403 with distinct globalisation codes. It is graded on all THREE cells because a port returning 403 with an invented code is not matching the oracle. WHAT IS NOT COVERED: validateBusinessRulesForJournalEntries refuses an entry dated before the latest GLClosure and refuses a future-dated entry [VERIFIED: JournalEntryWritePlatformServiceJpaRepositoryImpl.java:626-640]. NEITHER refusal is observed -- the tenant has no GLClosure at all and no future-dated entry was ever posted -- so neither is graded. Both are cheap captures and both belong in this class when somebody takes them."
+    },
+    {
+      "name": "ledger.slot.resolution",
+      "description": "Resolving a loan product's placeholder slot to a GL account through acc_product_mapping, including the payment-type precedence chain and the cash/accrual family selection.",
+      "in_graded_domain": false,
+      "evidence": "NOT GRADED BY ANY VECTOR IN THIS STORE. The four parity vectors assert a journal ENTRY read back from the oracle; none of them asserts that a (product, slot, payment type) triple resolves to a particular account. The resolver exists in the Go port (Resolver.ResolveLoanProductAccount) and A2-8 graded resolution against the product read-back, but that grading was never promoted into a vector and this task did not promote it either: doing so needs a request shape whose slot_code names ONE slot, and every entry in the multi-leg corpus spans several. Marked false so that a vector claiming this capability is REFUSED rather than graded against nothing."
+    },
+    {
+      "name": "ledger.accrual.entry",
+      "description": "An accrual journal entry -- INTEREST_RECEIVABLE, FEES_RECEIVABLE or PENALTIES_RECEIVABLE.",
+      "in_graded_domain": false,
+      "evidence": "ENTIRELY UNGRADED, and the reason is that the observations do not exist rather than that the machinery does not. Product 28 is the only ACCRUAL_PERIODIC product, it HAS NO LOAN, no accrual or COB job has ever run, and gl 18, 22 and 16 carry ZERO journal entries. Product 28's own mapping is inadmissible today (A2-314, 403). An accrual vector needs a NEW accrual product on clean accounts PLUS a job run; neither is in this task's scope and neither is cheap."
+    },
+    {
+      "name": "ledger.transfers.suspense",
+      "description": "TRANSFERS_SUSPENSE (gl 17) reached through the ACCOUNTING PATH, i.e. by an account transfer.",
+      "in_graded_domain": false,
+      "evidence": "gl 17 has rows in this corpus only as a MANUAL target (A2-343, and LDG-01 promotes it as one). It has NO accounting-path entry at all. The path that reaches it is account transfers, which slice A2 never exercised. A vector claiming this capability would be claiming coverage of a code path no capture has ever entered."
+    },
+    {
+      "name": "ledger.charge.off",
+      "description": "Charge-off, and the charge-off income slots.",
+      "in_graded_domain": false,
+      "evidence": "UNMAPPED ON BOTH ADMISSIBLE PRODUCTS. Product 55 does not map chargeOffExpenseAccountId, so command=charge-off would 404 exactly as A2-224 did on product 46. The charge-off income slots (14, 15, 18 in CashAccountsForLoan) are unreachable without a NEW product."
+    },
+    {
+      "name": "ledger.multi.currency.entry",
+      "description": "A journal entry whose legs are denominated in more than one currency.",
+      "in_graded_domain": false,
+      "evidence": "UNTOUCHED. Every journal entry in the corpus is MNT [re-confirmed by A2-15 against the live oracle: sql/q4-a2-26-ledger-state.sql, every row currency_code = MNT]. There is NO OBSERVATION of a multi-currency entry, so DEC-2 §4.2 G-07 pins MNT and this capability refuses."
+    },
+    {
+      "name": "ledger.opening.balance.and.closure",
+      "description": "Opening balances, GLClosure, and the two refusals a closure implies: an entry dated before the latest closure, and a future-dated entry.",
+      "in_graded_domain": false,
+      "evidence": "NO OPENING BALANCES AND NO GLClosure EXIST IN THIS TENANT. validateBusinessRulesForJournalEntries refuses both shapes [VERIFIED: JournalEntryWritePlatformServiceJpaRepositoryImpl.java:626-640] and NEITHER refusal is observed. Both are CHEAP captures and both belong in a refusal vector; nobody has taken them."
+    },
+    {
+      "name": "ledger.reversal.entry",
+      "description": "A correction posted as a reversing entry (I-5).",
+      "in_graded_domain": false,
+      "evidence": "A REVERSAL NOW EXISTS IN THE CORPUS -- A2-348 reversed transaction a28f573f34c7 and A2-349 read the three legs back carrying reversed = true -- which CORRECTS DEC-2 §4.4's stated reason ('the A2 corpus contains no reversal'), written before that capture was taken. What is still missing is the other half of I-5's statement: 'a correction ADDS a leg pair; it never MUTATES one'. The read-back shows the reversed FLAG SET on the original rows, and distinguishing 'flags and adds' from 'flags and rewrites' needs the WRITE path, not a snapshot. So this stays out of the graded domain with a corrected reason, and no reversal vector is promoted."
+    },
+    {
+      "name": "ledger.running.balance",
+      "description": "acc_gl_journal_entry.office_running_balance / organization_running_balance, and the endpoints that serve them.",
+      "in_graded_domain": false,
+      "evidence": "PERMANENTLY REFUSED WHILE GATE G-12 IS OPEN, and the ledger vector schema has no field for either column so a vector could not express one anyway. A2-29 MEASURED the stored balance to be a SECOND SOURCE OF TRUTH rather than a cache: made to disagree with the derived sum by MNT 2,000,000.00 on the live oracle, surviving four organisation-wide recomputes, propagating into a FRESHLY COMPUTED row because the recompute seeds from its own prior output, and served at the contract boundary flagged runningBalanceComputed: true. Also /glaccounts?fetchRunningBalance=true is HTTP 500 on PostgreSQL (GLAccountReadPlatformServiceImpl.java:127-131 emits MySQL-only 'group by ... desc'), so that reader has never worked on the only database this program permits. Balances are DERIVED, never written, and never read back."
+    }
+  ],
+
+  "seams": [
+    {
+      "name": "ledger_rest_posting",
+      "description": "POST /journalentries and GET /journalentries against the running reference oracle over REST, on PostgreSQL. This is the seam that produced every promoted vector except LDG-04.",
+      "status": {
+        "ledger.money.minor.unit.conversion": "exercised",
+        "ledger.journal.entry.readback": "exercised",
+        "ledger.accounting.path.loan.repayment": "exercised",
+        "ledger.manual.entry.posting": "exercised",
+        "ledger.refusal.parity": "exercised"
+      }
+    },
+    {
+      "name": "ledger_db_readback",
+      "description": "A read-only SQL projection of acc_gl_account and acc_gl_journal_entry against the reference oracle's PostgreSQL. It sees the stored rows, so it can observe an entry whose REST accept response carried no legs; it is NOT the contract boundary and it cannot observe a refusal at all.",
+      "status": {
+        "ledger.money.minor.unit.conversion": "exercised",
+        "ledger.journal.entry.readback": "exercised",
+        "ledger.manual.entry.posting": "exercised",
+        "ledger.header.account.posting": "exercised"
+      }
+    },
+    {
+      "name": "ledger_rest_admin",
+      "description": "The GL-account and product-mapping administration endpoints. DECLARED WITH NO CAPABILITY EXERCISED, deliberately: the seam is real and DEC-2 §4.2 G-01 admits it, but NO VECTOR IN THIS STORE USES IT, so every capability status is absent and absent REFUSES. A vector arriving on this seam is refused by default until somebody records what it actually exercises.",
+      "status": {}
+    }
+  ]
+}

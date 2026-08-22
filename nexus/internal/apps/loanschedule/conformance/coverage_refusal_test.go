@@ -9,6 +9,8 @@ import (
 	"sort"
 	"strings"
 	"testing"
+
+	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 )
 
 // FINDING A2-19 F3 — A REFUSED VECTOR'S KILLS USED TO BACK A CAPABILITY.
@@ -709,12 +711,25 @@ func injectOneCorroborationIntoEveryVector(t *testing.T, storeDir string) int {
 			return nil
 		}
 		switch filepath.Base(path) {
-		case "PIN.json", "capabilities.json":
+		case "PIN.json", "capabilities.json",
+			// A2-15: the LEDGER context's two store-root configuration files.
+			// They are not vectors, exactly as the first two are not.
+			"PIN-ledger.json", "capabilities-ledger.json":
 			return nil
 		}
 		raw, rerr := os.ReadFile(path)
 		if rerr != nil {
 			return rerr
+		}
+		// A2-15: a LEDGER-schema vector is not this schema's vector, and this
+		// helper's whole job is to inject a corroboration into every
+		// LOANSCHEDULE vector and then assert the harness credits exactly that
+		// many. The ledger schema carries no `corroborated_by` concept at all,
+		// so injecting into one would inflate `count` above anything the
+		// loanschedule report can credit and the test would fail for a reason
+		// unrelated to what it measures.
+		if ledgerconf.DeclaresLedgerSchema(raw) {
+			return nil
 		}
 		dec := json.NewDecoder(bytes.NewReader(raw))
 		dec.UseNumber()

@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 )
 
 // THE DEFECT THESE GUARDS EXIST FOR (T110, from T104's F-T104-3 against T90).
@@ -473,10 +475,37 @@ func TestStoreFileCensus(t *testing.T) {
 		if len(loadErrs) != 0 {
 			t.Fatalf("unexpected load errors: %v", loadErrs)
 		}
-		if err := StoreFileCensus(pristine, vectors, nil); err != nil {
+		// A2-15: the committed store now carries a SECOND SCHEMA's vectors, whose
+		// loader lives in nexus/internal/apps/ledger/conformance. LoadStore hands
+		// those files over rather than loading them, so this direct call has to
+		// supply what LoadStore itself supplies -- otherwise the sub-test asserts
+		// that the census refuses a store the harness accepts, which is a check
+		// measuring the test's own omission.
+		//
+		// THE PATHS ARE DERIVED, NOT LISTED. LedgerFilePaths walks the store and
+		// answers "which files declare the ledger schema", so a ledger vector
+		// added or removed later needs no edit here. A hard-coded list would go
+		// stale on the next promotion and would go stale SILENTLY, since a
+		// missing entry reads as a census refusal rather than as a stale test.
+		ledgerPaths, lerr := ledgerconf.LedgerFilePaths(pristine)
+		if lerr != nil {
+			t.Fatalf("the ledger half of the committed store could not be enumerated: %v", lerr)
+		}
+		if err := StoreFileCensus(pristine, vectors, nil, ledgerPaths...); err != nil {
 			t.Fatalf("StoreFileCensus refuses the committed store: %v", err)
 		}
-		t.Logf("the census accounts for every .json under %s across %d loaded vectors", pristine, len(vectors))
+		// ANTI-VACUITY ON THE HAND-OVER ITSELF. If LedgerFilePaths ever returned
+		// nothing, the line above would degrade into the pre-A2-15 call and pass
+		// only because the ledger vectors had vanished -- the deflation shape this
+		// program keeps paying for. The committed store carries ledger vectors, so
+		// an empty answer here is an ERROR.
+		if len(ledgerPaths) == 0 {
+			t.Fatal("LedgerFilePaths found NO ledger vector in the committed store. Either the ledger " +
+				"corpus has been deleted, or the schema probe has stopped recognising it; both make the " +
+				"census call above pass for the wrong reason")
+		}
+		t.Logf("the census accounts for every .json under %s across %d loaded vectors and %d handed to "+
+			"the ledger schema", pristine, len(vectors), len(ledgerPaths))
 	})
 
 	// A refusal, its required words, and the fixture that produces it.

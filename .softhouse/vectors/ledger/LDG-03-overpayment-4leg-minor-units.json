@@ -1,0 +1,197 @@
+{
+  "schema": "gerege.ledger.vector/v1",
+  "case_id": "LDG-03-overpayment-4leg-minor-units",
+  "context": "ledger",
+  "class": "parity",
+  "title": "The ACCOUNTING-PATH journal entry for an OVERPAYMENT on loan 7 (product 55, CASH BASED): FOUR legs, one debit of 1000000.000000 against credits of 889549.420000 principal, 20298.820000 interest and 90151.760000 to the OVERPAYMENT LIABILITY account. It is the only vector in this store whose splits reach a LIABILITY, and the only one where three independent fractional credits must sum to a whole tugrik.",
+  "dec2_revision": 5,
+  "_note": "GL_ACCOUNT_TYPE IS EXCLUDED FROM EVERY LEG OF THIS VECTOR, AND HERE IS THE OBSERVATION THAT FORCED IT. glAccountType in a /journalentries response is a projection of the ACCOUNT'S CURRENT classification, not of the entry. A2-26 observed the identical row rendering ASSET in A2-088 (2026-08-21) and INCOME in A2-320 (2026-08-22) -- every other cell BYTE-IDENTICAL, six diff lines all inside glAccountType -- with NO ENTRY EDITED, because GL account 2 was retyped ASSET->INCOME underneath five live product mappings and acc_gl_journal_entry carries no classification column (G-10). A vector grading that cell WILL GO RED on a GL-account edit that touched no journal entry. DEC-2's brief offered two ways out: (a) exclude the cell, or (b) grade it against a separately captured GET /glaccounts/{id} taken IN THE SAME WINDOW. THIS VECTOR TAKES (a). Reason (b) was rejected: the same-window pairing makes the vector's truth depend on two captures having been taken close enough together, which is a property of the capture session and not of the oracle, and nothing in the store could check that the window was actually shared. Excluding the cell states plainly that this corpus does not grade classification -- which is TRUE -- instead of grading it against evidence whose validity nobody can re-derive. THE CONSEQUENCE, STATED AND NOT HIDDEN: no vector in this store grades a GL account's classification at all, so a port that resolves the entry's classification WRONGLY is not caught here. The classification rendered at capture time is recorded in this note for the record and is graded by nothing: leg 0 (GL 4, 10201) rendered ASSET; leg 1 (GL 8, 40100) rendered INCOME; leg 2 (GL 6, 20100) rendered LIABILITY; leg 3 (GL 16, 10300) rendered ASSET. NO BALANCE IS GRADED. acc_gl_journal_entry carries office_running_balance and organization_running_balance, and GATE G-12 IS OPEN on exactly them: A2-29 MEASURED them to be a SECOND SOURCE OF TRUTH rather than a cache -- made to disagree with the derived sum by MNT 2,000,000.00 on the live oracle, surviving four organisation-wide recomputes, propagating into a freshly computed row because the recompute seeds from its own prior output, and served at the contract boundary flagged runningBalanceComputed: true. This vector's schema has NO FIELD for either column, the capture it cites was taken without runningBalance=true, and /glaccounts?fetchRunningBalance=true is HTTP 500 on PostgreSQL anyway (GLAccountReadPlatformServiceImpl.java:127-131 emits MySQL-only 'group by ... desc'). Balances are DERIVED, never written, and never read back. WHAT MAKES THIS DIFFERENT FROM LDG-02, stated so the pair is not mistaken for a duplicate: all THREE credit legs here carry non-zero minor units (42, 82, 76) and they sum to a whole tugrik, so a port that rounded each leg independently would still balance and would still be wrong on every leg. LDG-02 has one whole-tugrik credit and cannot make that discrimination.",
+  "capabilities_required": [
+    "ledger.journal.entry.readback",
+    "ledger.money.minor.unit.conversion",
+    "ledger.accounting.path.loan.repayment"
+  ],
+  "provenance": {
+    "kind": "capture",
+    "capture_ref": ".softhouse/capture/tierA-a2/out/A2-383-je-after-overpay.json",
+    "capture_sha256": "efc4bfa0dc39815ad8bbadf55319c68784a7c1e2cded6fb787658e205d9f216f",
+    "capture_case_id": "A2-383-je-after-overpay",
+    "request_capture_ref": ".softhouse/capture/tierA-a2/out/A2-382-repayment-overpay.req",
+    "request_capture_sha256": "b93a498a4efb499f19d12e102f13f55bfbef36235fa14aceae64042e4cc5f1d8",
+    "request_capture_case_id": "A2-382-repayment-overpay",
+    "rerun_invariant": "Re-running A2-382 must produce a FOUR-leg entry with an OVERPAYMENT LIABILITY credit (GL 6, 20100). 88954942 + 2029882 + 9015176 must equal 100000000 minor units exactly. If the oracle stops emitting the liability leg, or emits it at a different amount, this vector is false.",
+    "citation": "A2-15. Legs read from the RAW BYTES of A2-383 by entry id (55, 56, 57, 58). Re-confirmed against the live oracle: q4 reports L27 at 4 legs, 100000000 minor units on each side, difference 0."
+  },
+  "oracle": {
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "seam": "ledger_rest_posting",
+    "captured_at": "2026-08-22T02:23:27Z"
+  },
+  "request": {
+    "product_id": 55,
+    "product_type": "LOAN",
+    "accounting_rule": "CASH_BASED",
+    "slot_family": "CashLoanSlot",
+    "slot_code": 0,
+    "payment_type_id": null,
+    "seam": "ledger_rest_posting",
+    "office_id": 1,
+    "currency": {
+      "code": "MNT",
+      "minor_unit_digits": 2
+    },
+    "transaction_id": "L27",
+    "manual_entry": false,
+    "transaction_amount_major_text": "1000000",
+    "accounts": [
+      {
+        "id": 4,
+        "gl_code": "10201",
+        "name": "Loan Portfolio",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 8,
+        "gl_code": "40100",
+        "name": "Interest On Loans",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 6,
+        "gl_code": "20100",
+        "name": "Overpayment Liability",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 16,
+        "gl_code": "10300",
+        "name": "Fund Source Alternate",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      }
+    ],
+    "legs": [
+      {
+        "gl_account_id": 4,
+        "entry_side": "CREDIT",
+        "amount_major_text": "889549.420000"
+      },
+      {
+        "gl_account_id": 8,
+        "entry_side": "CREDIT",
+        "amount_major_text": "20298.820000"
+      },
+      {
+        "gl_account_id": 6,
+        "entry_side": "CREDIT",
+        "amount_major_text": "90151.760000"
+      },
+      {
+        "gl_account_id": 16,
+        "entry_side": "DEBIT",
+        "amount_major_text": "1000000.000000"
+      }
+    ]
+  },
+  "expect": {
+    "kind": "journal-entry",
+    "http_status": 200,
+    "legs": [
+      {
+        "gl_account_id": 4,
+        "gl_account_code": "10201",
+        "entry_side": "CREDIT",
+        "amount_minor": "88954942",
+        "amount_major_text": "889549.420000",
+        "excluded_fields": [
+          "gl_account_type"
+        ]
+      },
+      {
+        "gl_account_id": 8,
+        "gl_account_code": "40100",
+        "entry_side": "CREDIT",
+        "amount_minor": "2029882",
+        "amount_major_text": "20298.820000",
+        "excluded_fields": [
+          "gl_account_type"
+        ]
+      },
+      {
+        "gl_account_id": 6,
+        "gl_account_code": "20100",
+        "entry_side": "CREDIT",
+        "amount_minor": "9015176",
+        "amount_major_text": "90151.760000",
+        "excluded_fields": [
+          "gl_account_type"
+        ]
+      },
+      {
+        "gl_account_id": 16,
+        "gl_account_code": "10300",
+        "entry_side": "DEBIT",
+        "amount_minor": "100000000",
+        "amount_major_text": "1000000.000000",
+        "excluded_fields": [
+          "gl_account_type"
+        ]
+      }
+    ],
+    "total_debits_minor": "100000000",
+    "total_credits_minor": "100000000",
+    "refusal": {
+      "http_status": 0,
+      "code": "",
+      "message": ""
+    }
+  },
+  "graded_against": [
+    {
+      "impl": "ledger-wrong-truncating",
+      "kind": "money",
+      "margin_minor": "-82",
+      "divergent_cells": [
+        "legs[].amount_minor",
+        "total_credits_minor"
+      ],
+      "note": "Three fractional credit legs, each losing its minor units."
+    },
+    {
+      "impl": "ledger-wrong-split-drift",
+      "kind": "money",
+      "margin_minor": "1",
+      "divergent_cells": [
+        "legs[].amount_minor"
+      ],
+      "note": "THE I-2 INDEPENDENCE PROOF. This implementation keeps the entry internally balanced -- double_entry_balances still HOLDS on it -- and moves the REQUESTED transaction total by one minor unit, so splits_sum_to_whole goes RED on its own. Without a vector that kills it, I-2 would be a second green line no implementation could turn red independently of I-1."
+    },
+    {
+      "impl": "ledger-wrong-netting-totals",
+      "kind": "structural",
+      "margin_minor": "0",
+      "divergent_cells": [
+        "total_debits_minor",
+        "total_credits_minor"
+      ],
+      "note": "Netting reports both totals as 0."
+    },
+    {
+      "impl": "ledger-wrong-code-ignored",
+      "kind": "structural",
+      "margin_minor": "0",
+      "divergent_cells": [
+        "legs[].gl_account_code"
+      ],
+      "note": "The overpayment liability code 20100 is one of four that vanish."
+    }
+  ],
+  "invariant_exemptions": []
+}

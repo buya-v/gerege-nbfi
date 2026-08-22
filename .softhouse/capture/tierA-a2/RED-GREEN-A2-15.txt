@@ -1,0 +1,67 @@
+=======================================================================
+A2-15 RED/GREEN DRIVES — every new assertion driven RED through
+bash .softhouse/conformance.sh, the route that actually executes (P-45).
+ledger vector-set digest before: cc9acd24c106904864194ec1c3e130e3786640df8aa672e18f508821ba46336b
+=======================================================================
+
+GREEN OK   exit 0   control: the pristine committed store (anti-no-op — if this ever fails, every RED below is meaningless)
+
+RED  OK    exit 2   CASE 1 — ONE MINOR UNIT on a promoted leg (27045058 -> 27045059) must be a MONEY kill with a non-zero margin
+           matched: legs[0].amount_minor: MONEY want 27045059, got 27045058 (margin -1 minor units)
+           |         legs[0].amount_minor: MONEY want 27045059, got 27045058 (margin -1 minor units)
+
+RED  OK    exit 2   CASE 2 — a resolved gl_account_code (10201 -> 10202) must be a STRUCTURAL kill, reported as a cell difference and not as money
+           matched: legs[0].gl_account_code: want "10202", got "10201"
+           |         legs[0].gl_account_code: want "10202", got "10201"
+
+RED  OK    exit 2   CASE 3a — one credit leg moved by ONE MINOR UNIT must make the run RED, with the port REFUSING an entry the oracle accepted
+           matched: the implementation REFUSED a request the oracle ACCEPTED (HTTP 403 error.msg.glJournalEntry.invalid.mismatch.debits.credits)
+           |         the implementation REFUSED a request the oracle ACCEPTED (HTTP 403 error.msg.glJournalEntry.invalid.mismatch.debits.credits): Sum of All Debits must equal the sum of all Credits for a Journal Entry
+
+RED  OK    exit 2   CASE 4 — I-2 ALONE: the requested total moved by one minor unit must make splits_sum_to_whole VIOLATED while double_entry_balances still HOLDS
+           matched: INVARIANT splits_sum_to_whole VIOLATED
+           |         INVARIANT splits_sum_to_whole VIOLATED: the REQUESTED transaction amount against the CREDIT splits: ledger: splits sum to 30000000, whole is 30000100 (minor units)
+
+RED  OK    exit 2   CASE 5 — a declared invariant_exemptions entry must be INADMISSIBLE in the ledger schema (no grounding classifier exists for it)
+           matched: THIS SCHEMA ADMITS NONE
+           |         this vector declares 1 invariant_exemptions and THIS SCHEMA ADMITS NONE. The loanschedule schema has a grounding classifier behind its exemptions (T222/T225/T230/T233) that decides GROUNDED / UNDETERMINED-ON-THE-RECORD / UNGROUNDED against the recorded output; this schema has no such classifier, so admitting an exemption would switch an invariant off with nothing checking that the thing it excuses is visible in the record. Re-observe rather than exempt (P-8)
+
+RED  OK    exit 2   CASE 6 — INFLATION: a seventh ledger vector must fail the pinned ledger parity count
+           matched: exemption census MISMATCH: LEDGER parity vectors        = 5, but this file pins 4
+           | conformance:   exemption census MISMATCH: LEDGER parity vectors        = 5, but this file pins 4.
+
+RED  OK    exit 2   CASE 7 — DEFLATION: with EVERY ledger vector deleted the run must REFUSE, not pass over a corpus that vanished
+           matched: the exemption census gate could not find the LEDGER-parity-PASS figure
+           | conformance: the exemption census gate could not find the LEDGER-parity-PASS figure in the run's report.
+
+RED  OK    exit 1   CASE 8/ledger-wrong-truncating
+           |         legs[0].amount_minor: MONEY want 10000025, got 10000000 (margin -25 minor units)
+           |         legs[0].amount_minor: MONEY want 10000025, got 10000000 (margin -25 minor units)
+
+RED  OK    exit 1   CASE 8/ledger-wrong-truncating
+           |         INVARIANT double_entry_balances VIOLATED: ledger: double entry does not balance: debits 30000000, credits 29999900 (minor units)
+
+RED  OK    exit 1   CASE 8/ledger-wrong-header-refusing
+           |         the implementation REFUSED a request the oracle ACCEPTED (HTTP 403 error.msg.glJournalEntry.invalid.header.account): Journal entries may not be posted to a summary account
+
+RED  OK    exit 1   CASE 8/ledger-wrong-manual-permission-ignored
+           |         expected an ORACLE REFUSAL and the implementation returned a posted entry instead
+
+RED  OK    exit 1   CASE 8/ledger-wrong-netting-totals
+           |         total_debits_minor: MONEY want 12500062, got 0 (margin -12500062 minor units)
+
+RED  OK    exit 1   CASE 8/ledger-wrong-code-ignored
+           |         legs[0].gl_account_code: want "10300", got ""
+
+RED  OK    exit 1   CASE 8/ledger-wrong-split-drift
+           |         INVARIANT splits_sum_to_whole VIOLATED: the REQUESTED transaction amount against the CREDIT splits: ledger: splits sum to 30000000, whole is 30000001 (minor units)
+           |         INVARIANT splits_sum_to_whole VIOLATED: the REQUESTED transaction amount against the CREDIT splits: ledger: splits sum to 100000000, whole is 100000001 (minor units)
+
+=======================================================================
+ledger vector-set digest after:  cc9acd24c106904864194ec1c3e130e3786640df8aa672e18f508821ba46336b
+REVERT OK  — the ledger vector set is byte-identical to where it started.
+GREEN OK   exit 0   control: the pristine committed store, AFTER every drive
+
+=======================================================================
+A2-15 RED/GREEN: 17 passed, 0 failed
+=======================================================================

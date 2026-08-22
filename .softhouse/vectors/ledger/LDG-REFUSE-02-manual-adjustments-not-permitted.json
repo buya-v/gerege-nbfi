@@ -1,0 +1,102 @@
+{
+  "schema": "gerege.ledger.vector/v1",
+  "case_id": "LDG-REFUSE-02-manual-adjustments-not-permitted",
+  "context": "ledger",
+  "class": "oracle-refusal",
+  "title": "THE ORACLE REFUSES A MANUAL JOURNAL ENTRY WHOSE LEG POINTS AT AN ACCOUNT THAT FORBIDS MANUAL ADJUSTMENTS. A2-346 debited GL 18 -- \"No Manual Entries Asset\", manual_journal_entries_allowed = false -- and the oracle returned HTTP 403 with error.msg.glJournalEntry.invalid.account.manual.adjustments.not.permitted. The request is otherwise BALANCED, which is what makes it a clean test of the permission rule alone.",
+  "dec2_revision": 5,
+  "_note": "WHAT THIS VECTOR GRADES: that the port READS acc_gl_account.manual_journal_entries_allowed and refuses on it. The flag is a column a port can adopt from Fineract's schema and then never read, which is exactly the wrong implementation this vector kills. THE CHART ROW IS DATA (DEC-2 \u00a74.5) and is transcribed into request.accounts from the A2-15 re-run of sql/q4-a2-26-ledger-state.sql, where GL 18 reads manual_journal_entries_allowed = f; the RULE is what the port supplies. WHAT IT DOES NOT SETTLE, stated rather than left to be assumed: the PRECEDENCE between this refusal and the unbalanced refusal is [UNVERIFIED]. This request is balanced and A2-344's legs are both on manual-permitted accounts, so no captured request violates BOTH rules and nothing in this corpus can order them. A port that checks them in the other order passes both of these vectors. NO BALANCE IS GRADED. acc_gl_journal_entry carries office_running_balance and organization_running_balance, and GATE G-12 IS OPEN on exactly them: A2-29 MEASURED them to be a SECOND SOURCE OF TRUTH rather than a cache -- made to disagree with the derived sum by MNT 2,000,000.00 on the live oracle, surviving four organisation-wide recomputes, propagating into a freshly computed row because the recompute seeds from its own prior output, and served at the contract boundary flagged runningBalanceComputed: true. This vector's schema has NO FIELD for either column, the capture it cites was taken without runningBalance=true, and /glaccounts?fetchRunningBalance=true is HTTP 500 on PostgreSQL anyway (GLAccountReadPlatformServiceImpl.java:127-131 emits MySQL-only 'group by ... desc'). Balances are DERIVED, never written, and never read back.",
+  "capabilities_required": [
+    "ledger.refusal.parity",
+    "ledger.manual.entry.posting"
+  ],
+  "provenance": {
+    "kind": "capture",
+    "capture_ref": ".softhouse/capture/tierA-a2/out/A2-346-manual-je-nomanual.json",
+    "capture_sha256": "8c25952d36d3f21095b40e57c92edd05d7d20cb2dac1c06b95af8b3cba1711d5",
+    "capture_case_id": "A2-346-manual-je-nomanual",
+    "request_capture_ref": ".softhouse/capture/tierA-a2/out/A2-346-manual-je-nomanual.req",
+    "request_capture_sha256": "26d581ea3feeac7f3cc05d5c17fcab8e85eb9071f653d5394f1b2e749db39d6b",
+    "request_capture_case_id": "A2-346-manual-je-nomanual",
+    "rerun_invariant": "Re-posting A2-346's body while GL 18 still carries manual_journal_entries_allowed = false must return HTTP 403 with error.msg.glJournalEntry.invalid.account.manual.adjustments.not.permitted. If the flag is flipped on GL 18 the request becomes legal and this vector is false -- it must then be re-captured on a different account, not exempted.",
+    "citation": "A2-15. Status 403 from the .status artefact; code and message from errors[0] of the captured body, whose args carry the account name \"No Manual Entries Asset\"."
+  },
+  "oracle": {
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "seam": "ledger_rest_posting",
+    "captured_at": "2026-08-22T02:21:18Z"
+  },
+  "request": {
+    "product_id": 0,
+    "product_type": "",
+    "accounting_rule": "",
+    "slot_family": "",
+    "slot_code": 0,
+    "payment_type_id": null,
+    "seam": "ledger_rest_posting",
+    "office_id": 1,
+    "currency": {
+      "code": "MNT",
+      "minor_unit_digits": 2
+    },
+    "transaction_id": "",
+    "manual_entry": true,
+    "transaction_amount_major_text": "",
+    "accounts": [
+      {
+        "id": 18,
+        "gl_code": "10500",
+        "name": "No Manual Entries Asset",
+        "usage": "DETAIL",
+        "manual_entries_allowed": false,
+        "disabled": false
+      },
+      {
+        "id": 21,
+        "gl_code": "99008",
+        "name": "Liability Under Asset",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      }
+    ],
+    "legs": [
+      {
+        "gl_account_id": 18,
+        "entry_side": "DEBIT",
+        "amount_major_text": "100000.25"
+      },
+      {
+        "gl_account_id": 21,
+        "entry_side": "CREDIT",
+        "amount_major_text": "100000.25"
+      }
+    ]
+  },
+  "expect": {
+    "kind": "refusal",
+    "http_status": 403,
+    "legs": [],
+    "total_debits_minor": "",
+    "total_credits_minor": "",
+    "refusal": {
+      "http_status": 403,
+      "code": "error.msg.glJournalEntry.invalid.account.manual.adjustments.not.permitted",
+      "message": "Target account does not allow manual adjustments"
+    }
+  },
+  "graded_against": [
+    {
+      "impl": "ledger-wrong-manual-permission-ignored",
+      "kind": "structural",
+      "margin_minor": "0",
+      "divergent_cells": [
+        "refusal.http_status",
+        "refusal.code",
+        "refusal.message"
+      ],
+      "note": "A port that never reads manual_journal_entries_allowed posts the entry the oracle refused with 403."
+    }
+  ],
+  "invariant_exemptions": []
+}

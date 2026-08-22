@@ -5,6 +5,8 @@ import (
 	"io"
 	"sort"
 	"strings"
+
+	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 )
 
 // WriteReport prints the per-vector table and the summary.
@@ -509,6 +511,8 @@ func WriteReport(w io.Writer, s *Summary) {
 	}
 	p("")
 
+	writeLedgerSection(p, s)
+
 	p("--- SUMMARY ---")
 	p("    parity vectors          PASS %-4d FAIL %d", s.ParityPass, s.ParityFail)
 	p("    contract-refusal        PASS %-4d FAIL %d   (derived from the ratified contract, NOT oracle-observed)",
@@ -706,4 +710,142 @@ func firstLine(s string) string {
 		return s[:i]
 	}
 	return s
+}
+
+// writeLedgerSection prints the SECOND bounded context's own section, under its
+// own comparator and its own counts.
+//
+// DEC-2 §5.2 requirement 6a is the reason every figure below is separate from
+// the loanschedule figures above it, and the reason this function refuses to add
+// them together anywhere: "the summary must report the ledger vector under its
+// own comparator and its own count — NOT folded into `parity vectors PASS
+// <B.parity>`."
+//
+// IT PRINTS ITS OWN LIMITS ON EVERY RUN, PASS OR FAIL (P-35, P-22). A ledger
+// PASS is a much narrower claim than a reader would assume, and a section that
+// stated its limits only when something went wrong would be indistinguishable
+// from one that had none.
+func writeLedgerSection(p func(string, ...any), s *Summary) {
+	if s.SelfTestMode {
+		// A DISTINCT LINE FOR A DISTINCT STATE, and the distinction is
+		// load-bearing rather than cosmetic. -self-test grades the HARNESS by
+		// replaying the loanschedule store through a generator that computes
+		// nothing; there is no ledger replay and inventing one would put a
+		// ledger implementation inside the harness that grades ledger
+		// implementations. So the ledger half does not run.
+		//
+		// IT MUST NOT PRINT THE SAME BANNER AS AN EMPTY STORE. conformance.sh's
+		// census gate reads the ledger figures and compares them for EQUALITY,
+		// and the deflation case it exists to catch — every ledger vector
+		// deleted — prints the empty-store banner. If a not-run run and an
+		// empty-store run were indistinguishable in the report, the gate would
+		// have to skip on both, and the deflation arm would be dead. This line
+		// is what lets the gate skip exactly one of them and say which.
+		p("--- LEDGER (tierA-gl-accounting) ---")
+		p("    LEDGER NOT RUN IN SELF-TEST MODE — the ledger half grades a port, and -self-test grades")
+		p("    the harness by replay. No ledger figure below is a measurement of anything, and none is")
+		p("    printed. This is NOT the same state as a store with no ledger vector in it.")
+		p("")
+		return
+	}
+	if s.Ledger == nil && s.ContextFilter != "" && !ledgerconf.IsSchemaContext(s.ContextFilter) {
+		// A THIRD DISTINCT STATE, for the same reason the self-test one is
+		// distinct: the census gate must be able to tell "this run did not look"
+		// from "there is nothing there", and only one of those two is the
+		// deflation the pin exists to catch.
+		p("--- LEDGER (tierA-gl-accounting) ---")
+		p("    LEDGER NOT SELECTED — this run was filtered to context %q, so the ledger half was not",
+			s.ContextFilter)
+		p("    graded and no ledger figure is printed. Run without a filter to grade it. This is NOT the")
+		p("    same state as a store with no ledger vector in it.")
+		p("")
+		return
+	}
+	if s.Ledger == nil {
+		// NOT SILENT. "There are no ledger vectors" is a fact about the corpus
+		// that a reader of a green run needs, and it is exactly the fact G-11's
+		// closure notes were careful to keep saying: "Nothing grades the
+		// ledger's money yet". A blank here would let that stop being said the
+		// moment somebody stopped looking.
+		p("--- LEDGER (tierA-gl-accounting) ---")
+		p("    NO LEDGER VECTOR IS IN THIS STORE, so NOTHING in this run grades a GL account, a mapping,")
+		p("    a financial activity or a journal entry. Every figure in the SUMMARY below is a")
+		p("    loanschedule figure and says nothing whatever about the ledger.")
+		p("")
+		return
+	}
+	l := s.Ledger
+	p("--- LEDGER (tierA-gl-accounting) — SECOND SCHEMA, SECOND COMPARATOR, SEPARATE COUNTS ---")
+	p("    implementation          %s", l.ImplementationName)
+	if l.ImplementationWrong != "" {
+		p("    ⚠ THIS IS A DELIBERATELY WRONG IMPLEMENTATION, selected with -ledger-impl:")
+		p("      %s", l.ImplementationWrong)
+		p("      A RED below is the EXPECTED result and is not a defect in the port.")
+	}
+	for _, r := range l.Results {
+		p("    %-46s %-14s %-22s %-14s %4d cells (%d money)",
+			trunc(r.CaseID, 46), r.Class, trunc(r.Seam, 22), r.Outcome, r.GradedCells, r.MoneyCells)
+		for _, d := range r.Detail {
+			p("        %s", d)
+		}
+		for _, iv := range r.Invariants {
+			// INDEPENDENT / DEPENDENT IS PRINTED ON EVERY LINE, not only when it
+			// matters, because a reader counting green lines has no other way to
+			// tell two assertions from one assertion counted twice. On a
+			// one-against-N journal entry the leg-derived form of
+			// splits_sum_to_whole IS the equation double_entry_balances asserts;
+			// it becomes independent only where the recorded request carries its
+			// own transaction amount.
+			dep := "DEPENDENT"
+			if iv.Independent {
+				dep = "INDEPENDENT"
+			}
+			if iv.Status == ledgerconf.InvariantNotApplicable {
+				dep = "—"
+			}
+			p("        INVARIANT %-24s %-4s (%d assertion(s), %s)  %s",
+				iv.Name, iv.Status, iv.Assertions, dep, firstLine(iv.Detail))
+		}
+	}
+	for _, le := range l.LoadErrors {
+		p("    LEDGER FILE THAT COULD NOT BE READ: %s: %v", le.Path, le.Err)
+	}
+	for _, f := range l.Fatal {
+		p("    LEDGER FATAL: %s", f)
+	}
+	p("    ledger parity           PASS %-4d FAIL %d", l.ParityPass, l.ParityFail)
+	p("    ledger oracle-refusal   PASS %-4d FAIL %d   (an HTTP status and error code the ORACLE returned",
+		l.RefusalPass, l.RefusalFail)
+	p("                                              and a capture recorded — NOT a contract sentinel)")
+	p("    ledger inadmissible     %d", l.Inadmissible)
+	p("    ledger harness errors   %d", l.Errored)
+	p("    ledger cells compared   %d graded, of which %d are MONEY cells in int64 minor units",
+		l.GradedCells, l.MoneyCells)
+	p("    ledger kills named      %d money, %d structural", l.MoneyKills, l.StructuralKills)
+	p("    ledger invariants       %d violation(s), %d non-vacuous assertion(s) made, of which %d are",
+		l.InvariantViolations, l.InvariantAssertions, l.IndependentAssertions)
+	p("                            INDEPENDENT (able to go RED while every other invariant on the same")
+	p("                            entry stays GREEN). A DEPENDENT hold is not a second piece of evidence.")
+	p("    ledger exemptions       %d DECLARED (this schema ADMITS NONE; a declared exemption is",
+		l.DeclaredExemptions)
+	p("                                        INADMISSIBLE, so this figure is pinned at 0 by")
+	p("                                        conformance.sh and both directions of drift are gated)")
+	p("")
+	p("    WHAT A GREEN LEDGER SECTION DOES **NOT** MEAN — printed every run, not only when it fails:")
+	p("      * ACCRUAL IS ENTIRELY UNGRADED. No accrual product has a loan, no accrual/COB job has run,")
+	p("        and INTEREST_RECEIVABLE / FEES_RECEIVABLE / PENALTIES_RECEIVABLE (gl 18, 22, 16) have")
+	p("        ZERO journal entries. Product 28 is accrual and its own mapping is inadmissible (A2-314).")
+	p("      * TRANSFERS_SUSPENSE (gl 17) is reached here only as a MANUAL target. It has NO")
+	p("        accounting-path entry; the path that reaches it is account transfers, never exercised.")
+	p("      * CHARGE-OFF IS UNMAPPED on both admissible products, so the charge-off income slots are")
+	p("        unreachable without a new product.")
+	p("      * MULTI-CURRENCY IS UNTOUCHED. Every captured entry is MNT; no entry with legs in two")
+	p("        currencies has ever been observed.")
+	p("      * THERE ARE NO OPENING BALANCES AND NO GLClosure. Neither of")
+	p("        validateBusinessRulesForJournalEntries' two refusals — an entry dated before the latest")
+	p("        closure, and a future-dated entry — is observed, so neither is graded.")
+	p("      * NO BALANCE IS GRADED AT ALL, and GATE G-12 is why: A2-29 measured")
+	p("        acc_gl_journal_entry.{office,organization}_running_balance to be a SECOND SOURCE OF")
+	p("        TRUTH, not a cache. This schema has no field for either column.")
+	p("")
 }

@@ -29,6 +29,7 @@ import (
 	"os"
 	"path/filepath"
 
+	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 	"github.com/gerege/nexus/internal/apps/loanschedule/conformance"
 )
 
@@ -41,7 +42,11 @@ func main() {
 		selfTest      = flag.Bool("self-test", false, "grade the HARNESS using the replay implementation instead of a port. Never a conformance PASS.")
 		replayStore   = flag.String("replay-store", "", "with -self-test: the PRISTINE store the replay implementation answers from. Point -store at a perturbed copy to prove the harness goes red.")
 		listImpls     = flag.Bool("list-implementations", false, "print the registered implementations and exit")
-		repoRootFlag  = flag.String("repo-root", "",
+		ledgerImpl    = flag.String("ledger-impl", "",
+			"registered LEDGER implementation to grade (default: the only CORRECT one). "+
+				"DEC-2 precondition P-10: naming a deliberately-wrong implementation here is what makes "+
+				"a graded_against row EXECUTABLE rather than a sentence nobody can run.")
+		repoRootFlag = flag.String("repo-root", "",
 			"the checkout to grade. Default: the tree this binary was COMPILED from (runtime anchor). "+
 				"There is no working-directory fallback — see reporoot.go and T165.")
 	)
@@ -77,16 +82,29 @@ func main() {
 		for _, n := range names {
 			fmt.Println(n)
 		}
+		// THE LEDGER REGISTRY IS PRINTED TOO, and the WRONG implementations are
+		// printed WITH THEIR DEFECT. DEC-2 precondition P-10 exists because
+		// `graded_against` is declarative; a list a reader can see and a flag a
+		// reader can run is what turns it into evidence. A wrong implementation
+		// nobody can enumerate is one nobody will ever execute.
+		for _, n := range ledgerconf.RegisteredNames() {
+			if defect, bad := ledgerconf.IsRegisteredWrong(n); bad {
+				fmt.Printf("%s   [-ledger-impl] DELIBERATELY WRONG: %s\n", n, defect)
+				continue
+			}
+			fmt.Printf("%s   [-ledger-impl]\n", n)
+		}
 		return
 	}
 
 	opts := conformance.Options{
-		RepoRoot:      repoRoot,
-		RepoRootRes:   rootRes,
-		StoreRoot:     store,
-		ContextFilter: *contextFilter,
-		OracleProbe:   *oracleProbe,
-		SelfTestMode:  *selfTest,
+		RepoRoot:       repoRoot,
+		RepoRootRes:    rootRes,
+		StoreRoot:      store,
+		ContextFilter:  *contextFilter,
+		OracleProbe:    *oracleProbe,
+		SelfTestMode:   *selfTest,
+		LedgerImplName: *ledgerImpl,
 	}
 
 	switch {
