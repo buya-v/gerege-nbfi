@@ -48,6 +48,26 @@ Logs: `~/Library/Logs/gerege-nbfi/fire-*.log`. Probe the environment without run
 
 **READY** = `status == "pending"` AND every `dependencies` entry is `done` AND it is not blocked by a pending `user` gate of its own.
 
+> **Resolve dependencies against the ARCHIVES too — `tasks.json` is not the whole graph.** Completed tasks
+> are archived into `.softhouse/runs/<run-id>.tasks.json` and **dropped** from the current `tasks.json`, so
+> an edge pointing into an earlier run resolves to *nothing* there. Read as "cannot ever resolve", that is a
+> **permanent** false block. It happened: `T116` — the G-8 option (a) vector promotion, runnable under the
+> **ratified** DEC-1 — was carried across several fires under the recorded claim that its dependency `T114`
+> "has NO ENTRY in `tasks.json` and can never resolve", while `T114` sat `done` in the run-1 archive with its
+> handoff and review both merged on `main`. When the resolver was finally written, **seven** edges pointed
+> outside the current file and **all seven** resolved in the archive; none was missing. The program had
+> meanwhile been reporting "no vector added for two fires" as though the cause were external. See **P-66**.
+>
+> **Use `python3 .softhouse/bin/ready-tasks.py`** rather than eyeballing `tasks.json`. It prints where every
+> edge resolved (current file / which archive / genuinely nowhere), lists dispatched tasks separately, flags
+> an `in_progress` task with no `branch` as a suspected isolation violation, and prints any **OPEN CONTRACT
+> gate** beside the ready list — because *dependency-ready* and *permitted to run* are different questions.
+> A task can be READY and still forbidden: while a context's DEC-n is unratified, no task may write Go under
+> `nexus/` or store a **contract-shaped** vector for it. Raw observed capture stays permitted.
+>
+> **"Not found" is a statement about the search, never about the world.** Before recording that a
+> dependency, file, vector or citation does not exist, state **where you looked**.
+
 **READY-FOR-ANALYSIS** = `status == "pending"` AND its unmet dependencies are only `blocked_on_gate` (not `failed`, not `parked`) — meaning the blocker is a human decision, not missing work. A gate on a *contract* blocks work that **consumes** the contract; it does not block work that produces knowledge the contract decision will need anyway.
 
 Runnable in this state (contract-independent):
