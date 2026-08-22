@@ -1,0 +1,32 @@
+{
+  "_about": [
+    "T259. Every boolean-valued key that appears in a classification row must be classified here",
+    "as PREDICATE (a claim this capture makes about ITSELF, whose falsity contradicts an",
+    "affirmative verdict) or DESCRIPTIVE (a recorded input, a rival rule's opinion, or a fact",
+    "about the run, whose falsity contradicts nothing). Anything matching ^P[0-9]+_ is",
+    "auto-classified PREDICATE and need not be listed. Everything else is UNCLASSIFIED until",
+    "written down here, and UNCLASSIFIED is a REFUSAL, not a pass.",
+    "",
+    "Why fail-closed: the defect T259 exists for is a boolean whose meaning everyone assumed and",
+    "nobody read. A register that defaults to 'probably descriptive' reproduces that defect."
+  ],
+  "autoPredicatePattern": "^P[0-9]+_",
+  "keys": {
+    "t223RulePredictedRescue": {
+      "class": "DESCRIPTIVE",
+      "reason": "Records what a RIVAL rule (T223's emulator) predicts for this cell, not what T229 claims. PREDICTION.md section 2 states outright that 'Five of the nine are cells where T229 and T223 give OPPOSITE verdicts' -- so a false value here is EXPECTED and disagrees with nothing. Registered DESCRIPTIVE deliberately: it is the one boolean in this corpus that would generate a false alarm, and pretending otherwise would train readers to ignore the alarm."
+    },
+    "inputsIdentical": {
+      "class": "PREDICATE",
+      "reason": "A conjunct of registered prediction P6 (PREDICTION.md section 2): the rig calibrations P-CAL-ZPA/ZPB must reproduce the already-promoted T64-ZP-A/B cell for cell with zero input differences. P6 also says 'If they do not, nothing else in this capture is admissible' -- so a false value under an affirmative calibration status is the same defect shape as P2, one container over."
+    },
+    "observedIdentical": {
+      "class": "PREDICATE",
+      "reason": "Conjunct of registered prediction P6, as above."
+    },
+    "threwIdentical": {
+      "class": "PREDICATE",
+      "reason": "Conjunct of registered prediction P6, as above."
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+ "_shape": "GREEN CONTROL. All predicates true under an affirmative verdict.",
+ "trials": [
+  {"id": "SCRATCH-G2", "P7_lastRowExcessEqualsB": true, "P8_other": true, "verdict": "PASS"}
+ ]
+}

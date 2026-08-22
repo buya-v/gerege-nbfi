@@ -1,0 +1,439 @@
+================================================================================
+T259 R-VPA RED/GREEN BATTERY
+checker      : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+real evidence: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t229-g8-site3/out/classify-t229.json
+sha256(real) : f831736f07f1a6fecd4ee69b5a1de8dac0abcae89210f997e72526070f62821a
+HEAD         : a71c1408d3315493bca763472598680c85b9ad0b
+vector store : 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d
+================================================================================
+
+--- LEG R1-fresh-predicate-fresh-verdict-word
+    argv          : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t256-verdict-predicate/red/fixtures/R1-fresh-predicate-fresh-verdict-word.json
+    exit expected : 1
+    exit actual   : 1
+    probe line    : PRESENT (1)
+    probe         : T259-VPA: REFUSED files=1 rows=1 predicates=2 disagreements=1 acknowledged=0 unacknowledged=1 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    assert OK     : REFUSED
+    assert OK     : rows=1
+    assert OK     : predicates=2
+    assert OK     : disagreements=1
+    assert OK     : acknowledged=0
+    assert OK     : unacknowledged=1
+    assert OK     : unclassifiedKeys=0
+    assert OK     : unclassifiedVerdicts=0
+    ---- the instrument's own words:
+    | R-VPA -- verdict/predicate agreement (T259)
+    | ==============================================================================
+    | FILE .softhouse/capture/t256-verdict-predicate/red/fixtures/R1-fresh-predicate-fresh-verdict-word.json
+    |      sha256 1c513a1fc4479d9c4bafd9ccdf87b522e567a31a16fb732f503622740125738d
+    | 
+    |   *** DISAGREEMENT [UNACKNOWLEDGED] observations[0]
+    |       recorded predicate : P7_lastRowExcessEqualsB = false
+    |       recorded verdict   : outcomeVerdict='CONFIRMED'
+    |       NO ACKNOWLEDGEMENT. This row asserts its prediction held while recording that
+    |       one of its own predicates did not. Decide which is wrong and write it down;
+    |       do not summarise past it.
+    | 
+    | ------------------------------------------------------------------------------
+    |   files inspected           : 1
+    |   rows inspected            : 1
+    |   predicate booleans read   : 2
+    |   disagreements found       : 1   (acknowledged 0, unacknowledged 1)
+    |   void acknowledgement blocks: 0
+    |   unclassified boolean keys : 0
+    |   unclassified verdict words: 0
+    | 
+    |   THIS DOES NOT ESTABLISH: that any verdict is correct, that any predicate is correctly
+    |   stated, or that a row with no recorded predicate was checked at all. It establishes
+    |   only that no row printed an affirmative verdict over its own false predicate unremarked.
+    | T259-VPA: REFUSED files=1 rows=1 predicates=2 disagreements=1 acknowledged=0 unacknowledged=1 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    LEG R1-fresh-predicate-fresh-verdict-word: PASS
+
+--- LEG R2-unclassified-verdict-word
+    argv          : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t256-verdict-predicate/red/fixtures/R2-unclassified-verdict-word.json
+    exit expected : 1
+    exit actual   : 1
+    probe line    : PRESENT (1)
+    probe         : T259-VPA: REFUSED files=1 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=1 nilCoverage=0
+    assert OK     : REFUSED
+    assert OK     : rows=1
+    assert OK     : disagreements=0
+    assert OK     : unclassifiedVerdicts=1
+    ---- the instrument's own words:
+    | R-VPA -- verdict/predicate agreement (T259)
+    | ==============================================================================
+    | FILE .softhouse/capture/t256-verdict-predicate/red/fixtures/R2-unclassified-verdict-word.json
+    |      sha256 b8083d5a95b3bf4dcddc750350e25cf5871fc16c20d6463d43423c445d5ec15e
+    |   REFUSED  trials[0]:SCRATCH-X1: verdict key 'verdict' has value 'LOOKS FINE', which is
+    |            in neither the AFFIRMATIVE nor the NEGATIVE vocabulary. A verdict word this
+    |            rule cannot read is not a pass -- register it or rename it.
+    | 
+    | ------------------------------------------------------------------------------
+    |   files inspected           : 1
+    |   rows inspected            : 1
+    |   predicate booleans read   : 1
+    |   disagreements found       : 0   (acknowledged 0, unacknowledged 0)
+    |   void acknowledgement blocks: 0
+    |   unclassified boolean keys : 0
+    |   unclassified verdict words: 1
+    | 
+    |   THIS DOES NOT ESTABLISH: that any verdict is correct, that any predicate is correctly
+    |   stated, or that a row with no recorded predicate was checked at all. It establishes
+    |   only that no row printed an affirmative verdict over its own false predicate unremarked.
+    | T259-VPA: REFUSED files=1 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=1 nilCoverage=0
+    LEG R2-unclassified-verdict-word: PASS
+
+--- LEG R3-unclassified-boolean-key
+    argv          : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t256-verdict-predicate/red/fixtures/R3-unclassified-boolean-key.json
+    exit expected : 1
+    exit actual   : 1
+    probe line    : PRESENT (1)
+    probe         : T259-VPA: REFUSED files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=1 unclassifiedVerdicts=0 nilCoverage=0
+    assert OK     : REFUSED
+    assert OK     : rows=1
+    assert OK     : disagreements=0
+    assert OK     : unclassifiedKeys=1
+    ---- the instrument's own words:
+    | R-VPA -- verdict/predicate agreement (T259)
+    | ==============================================================================
+    | FILE .softhouse/capture/t256-verdict-predicate/red/fixtures/R3-unclassified-boolean-key.json
+    |      sha256 99d2b52c15c8682aff58916eba3e8c62687ab66f4d620a2a47495f6b1a0a0423
+    |   REFUSED  trials[0]:SCRATCH-X2: boolean key 'sanityCheckHeld' is unclassified. Add it to boolean-key-register.json
+    |            as PREDICATE or DESCRIPTIVE, with a reason. Guessing is how P2 got past.
+    | 
+    | ------------------------------------------------------------------------------
+    |   files inspected           : 1
+    |   rows inspected            : 1
+    |   predicate booleans read   : 0
+    |   disagreements found       : 0   (acknowledged 0, unacknowledged 0)
+    |   void acknowledgement blocks: 0
+    |   unclassified boolean keys : 1
+    |   unclassified verdict words: 0
+    | 
+    |   THIS DOES NOT ESTABLISH: that any verdict is correct, that any predicate is correctly
+    |   stated, or that a row with no recorded predicate was checked at all. It establishes
+    |   only that no row printed an affirmative verdict over its own false predicate unremarked.
+    | T259-VPA: REFUSED files=1 rows=1 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=1 unclassifiedVerdicts=0 nilCoverage=0
+    LEG R3-unclassified-boolean-key: PASS
+
+--- LEG N1-nil-coverage
+    argv          : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t256-verdict-predicate/red/fixtures/N1-nil-coverage.json
+    exit expected : 1
+    exit actual   : 1
+    probe line    : PRESENT (1)
+    probe         : T259-VPA: REFUSED files=1 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1
+    assert OK     : REFUSED
+    assert OK     : rows=0
+    assert OK     : nilCoverage=1
+    ---- the instrument's own words:
+    | R-VPA -- verdict/predicate agreement (T259)
+    | ==============================================================================
+    | FILE .softhouse/capture/t256-verdict-predicate/red/fixtures/N1-nil-coverage.json
+    |      sha256 c940ebc0c217a58bec03c464525c0719ccaf2a0366598bcc9f1e6651069fd849
+    |   REFUSED  NIL COVERAGE -- this file contains no inspectable row. An empty measurement
+    |            REFUTES rather than passes through.
+    | 
+    | ------------------------------------------------------------------------------
+    |   files inspected           : 1
+    |   rows inspected            : 0
+    |   predicate booleans read   : 0
+    |   disagreements found       : 0   (acknowledged 0, unacknowledged 0)
+    |   void acknowledgement blocks: 0
+    |   unclassified boolean keys : 0
+    |   unclassified verdict words: 0
+    | 
+    |   THIS DOES NOT ESTABLISH: that any verdict is correct, that any predicate is correctly
+    |   stated, or that a row with no recorded predicate was checked at all. It establishes
+    |   only that no row printed an affirmative verdict over its own false predicate unremarked.
+    | T259-VPA: REFUSED files=1 rows=0 predicates=0 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=1
+    LEG N1-nil-coverage: PASS
+
+--- LEG G1-false-predicate-negative-verdict
+    argv          : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t256-verdict-predicate/red/fixtures/G1-false-predicate-negative-verdict.json
+    exit expected : 0
+    exit actual   : 0
+    probe line    : PRESENT (1)
+    probe         : T259-VPA: GREEN files=1 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    assert OK     : GREEN
+    assert OK     : rows=1
+    assert OK     : predicates=1
+    assert OK     : disagreements=0
+    ---- the instrument's own words:
+    | R-VPA -- verdict/predicate agreement (T259)
+    | ==============================================================================
+    | FILE .softhouse/capture/t256-verdict-predicate/red/fixtures/G1-false-predicate-negative-verdict.json
+    |      sha256 5236b742cbfa8f72fd3bd428d02efc4f1e8fb2f6c3b3cbc983580a422e25dc9c
+    | 
+    | ------------------------------------------------------------------------------
+    |   files inspected           : 1
+    |   rows inspected            : 1
+    |   predicate booleans read   : 1
+    |   disagreements found       : 0   (acknowledged 0, unacknowledged 0)
+    |   void acknowledgement blocks: 0
+    |   unclassified boolean keys : 0
+    |   unclassified verdict words: 0
+    | 
+    |   THIS DOES NOT ESTABLISH: that any verdict is correct, that any predicate is correctly
+    |   stated, or that a row with no recorded predicate was checked at all. It establishes
+    |   only that no row printed an affirmative verdict over its own false predicate unremarked.
+    | T259-VPA: GREEN files=1 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    LEG G1-false-predicate-negative-verdict: PASS
+
+--- LEG G2-all-true-affirmative-verdict
+    argv          : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t256-verdict-predicate/red/fixtures/G2-all-true-affirmative-verdict.json
+    exit expected : 0
+    exit actual   : 0
+    probe line    : PRESENT (1)
+    probe         : T259-VPA: GREEN files=1 rows=1 predicates=2 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    assert OK     : GREEN
+    assert OK     : rows=1
+    assert OK     : predicates=2
+    assert OK     : disagreements=0
+    ---- the instrument's own words:
+    | R-VPA -- verdict/predicate agreement (T259)
+    | ==============================================================================
+    | FILE .softhouse/capture/t256-verdict-predicate/red/fixtures/G2-all-true-affirmative-verdict.json
+    |      sha256 5db037923262de789ff2981f361f15bb36142a1584bdb8c404588377106d135e
+    | 
+    | ------------------------------------------------------------------------------
+    |   files inspected           : 1
+    |   rows inspected            : 1
+    |   predicate booleans read   : 2
+    |   disagreements found       : 0   (acknowledged 0, unacknowledged 0)
+    |   void acknowledgement blocks: 0
+    |   unclassified boolean keys : 0
+    |   unclassified verdict words: 0
+    | 
+    |   THIS DOES NOT ESTABLISH: that any verdict is correct, that any predicate is correctly
+    |   stated, or that a row with no recorded predicate was checked at all. It establishes
+    |   only that no row printed an affirmative verdict over its own false predicate unremarked.
+    | T259-VPA: GREEN files=1 rows=1 predicates=2 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    LEG G2-all-true-affirmative-verdict: PASS
+
+--- LEG L1-real-evidence-green
+    argv          : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t229-g8-site3/out/classify-t229.json
+    exit expected : 0
+    exit actual   : 0
+    probe line    : PRESENT (1)
+    probe         : T259-VPA: GREEN files=1 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    assert OK     : GREEN
+    assert OK     : rows=11
+    assert OK     : predicates=24
+    assert OK     : disagreements=3
+    assert OK     : acknowledged=3
+    assert OK     : unacknowledged=0
+    ---- the instrument's own words:
+    | R-VPA -- verdict/predicate agreement (T259)
+    | ==============================================================================
+    | FILE .softhouse/capture/t229-g8-site3/out/classify-t229.json
+    |      sha256 f831736f07f1a6fecd4ee69b5a1de8dac0abcae89210f997e72526070f62821a
+    | 
+    |   *** DISAGREEMENT [ACKNOWLEDGED] cells[3]:T229-R600p0-N200-B251
+    |       recorded predicate : P2_totalInterestEqualsNEplusB = false
+    |       recorded verdict   : verdict='AS PREDICTED'
+    |       disposition        : PREDICATE-AS-REGISTERED-WAS-WRONG; VERDICT STANDS
+    |       reason             : As B201. Cell-table proposition held: FAMILY_B_PARTIAL == observed, predicted principal 51 == observed 51.
+    |       corrected form     : observed 25200 == 200*125 + 251 - 51. HOLDS.
+    |       verdict scope      : classify_t229.py's `verdict` is a function of exactly TWO things, re-read from source at HEAD a71c140 (lines beginning `pp = p["predictedTotalPrincipalMinor"]`): the observed OUTCOME family versus `predictedOutcome`, and `observedPrincipalMinor == predictedTotalPrincipalMinor`. Those are precisely the two graded columns of PREDICTION.md section 2's nine-cell table. It therefore means 'THE CELL TABLE ROW HELD' and NOTHING MORE. It does not cover P1..P6, which are computed after it (P2) or not computed at all (P1, P3, P4, P5). The field's name does not say this; nothing in the directory said it before T259.
+    | 
+    |   *** DISAGREEMENT [ACKNOWLEDGED] cells[6]:T229-R600p0-N200-B201
+    |       recorded predicate : P2_totalInterestEqualsNEplusB = false
+    |       recorded verdict   : verdict='AS PREDICTED'
+    |       disposition        : PREDICATE-AS-REGISTERED-WAS-WRONG; VERDICT STANDS
+    |       reason             : P2's third conjunct as registered ('totalInterestAmount = n*E + B') is arithmetically wrong: n*E + B is the total REPAYMENT column, not the interest column. The recorded false is a correct measurement of an incorrect claim. The cell-table proposition the verdict grades did hold: predictedOutcome FAMILY_B_PARTIAL == observed, and predicted principal 1 == observed 1.
+    |       corrected form     : totalInterest == n*E + B - principalRepaid. Re-derived independently in rederive_counts_t259.py: observed 20200 == 200*100 + 201 - 1. HOLDS.
+    |       verdict scope      : classify_t229.py's `verdict` is a function of exactly TWO things, re-read from source at HEAD a71c140 (lines beginning `pp = p["predictedTotalPrincipalMinor"]`): the observed OUTCOME family versus `predictedOutcome`, and `observedPrincipalMinor == predictedTotalPrincipalMinor`. Those are precisely the two graded columns of PREDICTION.md section 2's nine-cell table. It therefore means 'THE CELL TABLE ROW HELD' and NOTHING MORE. It does not cover P1..P6, which are computed after it (P2) or not computed at all (P1, P3, P4, P5). The field's name does not say this; nothing in the directory said it before T259.
+    | 
+    |   *** DISAGREEMENT [ACKNOWLEDGED] cells[8]:T229-R600p0-N200-B299
+    |       recorded predicate : P2_totalInterestEqualsNEplusB = false
+    |       recorded verdict   : verdict='AS PREDICTED'
+    |       disposition        : PREDICATE-AS-REGISTERED-WAS-WRONG; VERDICT STANDS
+    |       reason             : As B201. Cell-table proposition held: FAMILY_B_PARTIAL == observed, predicted principal 99 == observed 99.
+    |       corrected form     : observed 30000 == 200*149 + 299 - 99. HOLDS.
+    |       verdict scope      : classify_t229.py's `verdict` is a function of exactly TWO things, re-read from source at HEAD a71c140 (lines beginning `pp = p["predictedTotalPrincipalMinor"]`): the observed OUTCOME family versus `predictedOutcome`, and `observedPrincipalMinor == predictedTotalPrincipalMinor`. Those are precisely the two graded columns of PREDICTION.md section 2's nine-cell table. It therefore means 'THE CELL TABLE ROW HELD' and NOTHING MORE. It does not cover P1..P6, which are computed after it (P2) or not computed at all (P1, P3, P4, P5). The field's name does not say this; nothing in the directory said it before T259.
+    | 
+    | ------------------------------------------------------------------------------
+    |   files inspected           : 1
+    |   rows inspected            : 11
+    |   predicate booleans read   : 24
+    |   disagreements found       : 3   (acknowledged 3, unacknowledged 0)
+    |   void acknowledgement blocks: 0
+    |   unclassified boolean keys : 0
+    |   unclassified verdict words: 0
+    | 
+    |   THIS DOES NOT ESTABLISH: that any verdict is correct, that any predicate is correctly
+    |   stated, or that a row with no recorded predicate was checked at all. It establishes
+    |   only that no row printed an affirmative verdict over its own false predicate unremarked.
+    | T259-VPA: GREEN files=1 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    LEG L1-real-evidence-green: PASS
+
+--- LEG L2-loudness: a GREEN run must STILL PRINT every disagreement
+    (an acknowledgement changes the EXIT CODE only -- never the noise)
+    DISAGREEMENT blocks printed on the GREEN run: 3 (expected 3)
+    LEG L2-loudness: PASS
+
+--- LEG Va-byte-pin-whitespace-only-mutation
+    argv          : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.DYNA1Jj2L3/Va.json --acknowledgements /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.DYNA1Jj2L3/Va-ack.json
+    exit expected : 1
+    exit actual   : 1
+    probe line    : PRESENT (1)
+    probe         : T259-VPA: REFUSED files=1 rows=11 predicates=24 disagreements=3 acknowledged=0 unacknowledged=3 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    assert OK     : REFUSED
+    assert OK     : rows=11
+    assert OK     : disagreements=3
+    assert OK     : acknowledged=0
+    assert OK     : unacknowledged=3
+    ---- the instrument's own words:
+    | R-VPA -- verdict/predicate agreement (T259)
+    | ==============================================================================
+    | FILE /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.DYNA1Jj2L3/Va.json
+    |      sha256 12b03d26dfb24662bffaa468bc9b70f1bdb69bc44803d31de382cbf863074b12
+    | 
+    |   *** DISAGREEMENT [UNACKNOWLEDGED] cells[3]:T229-R600p0-N200-B251
+    |       recorded predicate : P2_totalInterestEqualsNEplusB = false
+    |       recorded verdict   : verdict='AS PREDICTED'
+    |       NO ACKNOWLEDGEMENT. This row asserts its prediction held while recording that
+    |       one of its own predicates did not. Decide which is wrong and write it down;
+    |       do not summarise past it.
+    | 
+    |   *** DISAGREEMENT [UNACKNOWLEDGED] cells[6]:T229-R600p0-N200-B201
+    |       recorded predicate : P2_totalInterestEqualsNEplusB = false
+    |       recorded verdict   : verdict='AS PREDICTED'
+    |       NO ACKNOWLEDGEMENT. This row asserts its prediction held while recording that
+    |       one of its own predicates did not. Decide which is wrong and write it down;
+    |       do not summarise past it.
+    | 
+    |   *** DISAGREEMENT [UNACKNOWLEDGED] cells[8]:T229-R600p0-N200-B299
+    |       recorded predicate : P2_totalInterestEqualsNEplusB = false
+    |       recorded verdict   : verdict='AS PREDICTED'
+    |       NO ACKNOWLEDGEMENT. This row asserts its prediction held while recording that
+    |       one of its own predicates did not. Decide which is wrong and write it down;
+    |       do not summarise past it.
+    | 
+    | ------------------------------------------------------------------------------
+    |   files inspected           : 1
+    |   rows inspected            : 11
+    |   predicate booleans read   : 24
+    |   disagreements found       : 3   (acknowledged 0, unacknowledged 3)
+    |   void acknowledgement blocks: 0
+    |   unclassified boolean keys : 0
+    |   unclassified verdict words: 0
+    | 
+    |   THIS DOES NOT ESTABLISH: that any verdict is correct, that any predicate is correctly
+    |   stated, or that a row with no recorded predicate was checked at all. It establishes
+    |   only that no row printed an affirmative verdict over its own false predicate unremarked.
+    | T259-VPA: REFUSED files=1 rows=11 predicates=24 disagreements=3 acknowledged=0 unacknowledged=3 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    LEG Va-byte-pin-whitespace-only-mutation: PASS
+mutated T229-R36p0-N1400-B150.P2_totalInterestEqualsNEplusB True -> False; wrote /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.DYNA1Jj2L3/Vb.json
+
+--- LEG Vb-byte-pin-semantic-mutation
+    argv          : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.DYNA1Jj2L3/Vb.json --acknowledgements /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.DYNA1Jj2L3/Vb-ack.json
+    exit expected : 1
+    exit actual   : 1
+    probe line    : PRESENT (1)
+    probe         : T259-VPA: REFUSED files=1 rows=11 predicates=24 disagreements=4 acknowledged=0 unacknowledged=4 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    assert OK     : REFUSED
+    assert OK     : rows=11
+    assert OK     : disagreements=4
+    assert OK     : acknowledged=0
+    assert OK     : unacknowledged=4
+    ---- the instrument's own words:
+    | R-VPA -- verdict/predicate agreement (T259)
+    | ==============================================================================
+    | FILE /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.DYNA1Jj2L3/Vb.json
+    |      sha256 e0b89816c9308bff9a744af2f1650d8de180fddb593201920a993b9166db2ae2
+    | 
+    |   *** DISAGREEMENT [UNACKNOWLEDGED] cells[3]:T229-R600p0-N200-B251
+    |       recorded predicate : P2_totalInterestEqualsNEplusB = false
+    |       recorded verdict   : verdict='AS PREDICTED'
+    |       NO ACKNOWLEDGEMENT. This row asserts its prediction held while recording that
+    |       one of its own predicates did not. Decide which is wrong and write it down;
+    |       do not summarise past it.
+    | 
+    |   *** DISAGREEMENT [UNACKNOWLEDGED] cells[6]:T229-R600p0-N200-B201
+    |       recorded predicate : P2_totalInterestEqualsNEplusB = false
+    |       recorded verdict   : verdict='AS PREDICTED'
+    |       NO ACKNOWLEDGEMENT. This row asserts its prediction held while recording that
+    |       one of its own predicates did not. Decide which is wrong and write it down;
+    |       do not summarise past it.
+    | 
+    |   *** DISAGREEMENT [UNACKNOWLEDGED] cells[7]:T229-R36p0-N1400-B150
+    |       recorded predicate : P2_totalInterestEqualsNEplusB = false
+    |       recorded verdict   : verdict='AS PREDICTED'
+    |       NO ACKNOWLEDGEMENT. This row asserts its prediction held while recording that
+    |       one of its own predicates did not. Decide which is wrong and write it down;
+    |       do not summarise past it.
+    | 
+    |   *** DISAGREEMENT [UNACKNOWLEDGED] cells[8]:T229-R600p0-N200-B299
+    |       recorded predicate : P2_totalInterestEqualsNEplusB = false
+    |       recorded verdict   : verdict='AS PREDICTED'
+    |       NO ACKNOWLEDGEMENT. This row asserts its prediction held while recording that
+    |       one of its own predicates did not. Decide which is wrong and write it down;
+    |       do not summarise past it.
+    | 
+    | ------------------------------------------------------------------------------
+    |   files inspected           : 1
+    |   rows inspected            : 11
+    |   predicate booleans read   : 24
+    |   disagreements found       : 4   (acknowledged 0, unacknowledged 4)
+    |   void acknowledgement blocks: 0
+    |   unclassified boolean keys : 0
+    |   unclassified verdict words: 0
+    | 
+    |   THIS DOES NOT ESTABLISH: that any verdict is correct, that any predicate is correctly
+    |   stated, or that a row with no recorded predicate was checked at all. It establishes
+    |   only that no row printed an affirmative verdict over its own false predicate unremarked.
+    | T259-VPA: REFUSED files=1 rows=11 predicates=24 disagreements=4 acknowledged=0 unacknowledged=4 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    LEG Vb-byte-pin-semantic-mutation: PASS
+
+--- LEG E1-missing-target
+    argv          : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.DYNA1Jj2L3/does-not-exist.json
+    exit expected : 2
+    exit actual   : 2
+    probe line    : ABSENT -- expected, an ERROR exits before the probe is reached
+    ---- the instrument's own words:
+    | ERROR: no such file: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.DYNA1Jj2L3/does-not-exist.json
+    LEG E1-missing-target: PASS
+
+--- LEG E2-unreadable-register
+    argv          : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t229-g8-site3/out/classify-t229.json --register /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.DYNA1Jj2L3/no-such-register.json
+    exit expected : 2
+    exit actual   : 2
+    probe line    : ABSENT -- expected, an ERROR exits before the probe is reached
+    ---- the instrument's own words:
+    | ERROR: register unreadable: FileNotFoundError: [Errno 2] No such file or directory: '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.DYNA1Jj2L3/no-such-register.json'
+    LEG E2-unreadable-register: PASS
+
+--- LEG S-self-failopen-lint: my own instruments
+    | T259 fail-open lint
+    |   root            : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a32233d2fa4af3374/.softhouse/capture/t256-verdict-predicate
+    |   files seen      : 21
+    |   files SCANNED   : 9  (.sh and .py, this file included)
+    |   files SKIPPED   : 12  (not .sh/.py -- json, md, txt; counted, P-40)
+    |   findings        : 0
+    lint exit: 0
+    LEG S-self-failopen-lint: PASS
+
+--- LEG S2-lint-driven-red: plant a fail-open, the lint must catch it
+planted /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.DYNA1Jj2L3/planted/planted.sh
+    | T259 fail-open lint
+    |   root            : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.DYNA1Jj2L3/planted
+    |   files seen      : 1
+    |   files SCANNED   : 1  (.sh and .py, this file included)
+    |   files SKIPPED   : 0  (not .sh/.py -- json, md, txt; counted, P-40)
+    |   -- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.DYNA1Jj2L3/planted/planted.sh
+    |      line 3: short-circuit-to-echo prints an absence over an error (P-80)   [n=$(git grep -c PATTERN FILE || echo 0)]
+    |      line 3: bare grep is bundled ugrep with hidden --exclude-dir (P-75)   [n=$(git grep -c PATTERN FILE || echo 0)]
+    |      line 4: short-circuit-to-true swallows the exit status   [grep -q thing file || true]
+    |      line 4: bare grep is bundled ugrep with hidden --exclude-dir (P-75)   [grep -q thing file || true]
+    |      line 5: stderr sent to the null device -- an error becomes an absence   [rg other file 2>/dev/null]
+    |      line 5: that tool has no binary here and exits 0 through a pipe (P-75)   [rg other file 2>/dev/null]
+    |   findings        : 6
+    lint exit on planted tree: 1 (expected 1)
+    LEG S2-lint-driven-red: PASS
+
+================================================================================
+BATTERY: 14 passed, 0 failed
+vector store at end: 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d
+sha256(real) at end: f831736f07f1a6fecd4ee69b5a1de8dac0abcae89210f997e72526070f62821a
+================================================================================

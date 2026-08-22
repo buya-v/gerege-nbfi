@@ -1,0 +1,6 @@
+{
+ "_shape": "Evasion by renaming. If an unrecognised verdict word were treated as non-affirmative, any author could escape R-VPA by inventing a synonym. UNCLASSIFIED must therefore be a refusal, not a pass.",
+ "trials": [
+  {"id": "SCRATCH-X1", "P9_holds": true, "verdict": "LOOKS FINE"}
+ ]
+}
