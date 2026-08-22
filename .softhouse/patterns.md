@@ -2532,3 +2532,62 @@ part. `P-22` (drive it red) — satisfied in letter, not in substance. `P-35` (a
 items is not a pass) — here it inspected 892 files and still saw nothing. `P-72` (calibrate the
 instrument) — the driver's first probe failed and calibrating it was what turned a wrong conclusion into
 a finding.
+
+## P-77 — A GATE'S SCOPE IS A PROPERTY OF THAT GATE. A TOOL THAT HARDCODES ONE SCOPE FOR A WHOLE GATE **CLASS** IS ASSERTING, NOT READING
+
+**Found and fixed by the driver against its own instrument, local fire `20260822-140002`. Independent
+re-derivation filed as `T249` — this entry is NOT yet reviewed.**
+
+`.softhouse/bin/ready-tasks.py` printed, under every open **CONTRACT** gate:
+
+> `=> no task may write Go under nexus/ or store a CONTRACT-SHAPED vector for this context until it closes.`
+
+That sentence was **hardcoded at `:125`** and emitted in a loop over `contract_open`. It read **no per-gate
+field**, so it could not have distinguished one CONTRACT gate from another — and it printed with exactly the
+authority of a measurement.
+
+It encodes **`G-11`**: DEC-2 **UNRATIFIED**, its *shape* the thing under negotiation, so anything consuming
+or shaping the contract genuinely had to wait. Correct there. Then `G-14` opened — a **stale-evidence
+correction to an already-RATIFIED document**, moving no obligation, no field, no rounding rule, no graded
+cell — and the same sentence printed, now claiming that all Tier-A Go was forbidden.
+
+**Two authorities disagreed and the machine-readable one was wrong.** `gates.md`'s GATE REGISTER — the file
+this program calls authoritative — recorded `blocks: NOTHING` for `G-14` from the moment it was raised. The
+tool the driver runs first at every STEP 1 said the opposite. **The previous fire noticed the smell and
+refused to act on it**, leaving a boxed note asking the next fire to settle it explicitly rather than let a
+default quietly park a tier. That refusal is the reason this was caught rather than obeyed.
+
+### Why this is not P-45, and not P-73
+
+- **`P-45`** is a guard invoked **nowhere**. This one is invoked every fire, prints every fire, and is read.
+- **`P-73`** is a measured fact filed where its reader will not look. Here the fact was filed *exactly* where
+  the reader looks — in the authoritative register — and a **second, louder, wrong copy** shouted over it.
+- The nearest relative is **`P-76`**: a rule generalised from the one example it was written against, and
+  then applied to a population it was never measured on.
+
+### The rule
+
+1. **Scope belongs to the instance, not the class.** A gate records what it blocks; a tool **reads** that
+   field. `CUTOVER`, `CONTRACT`, `ENGINEERING` are classes of *decision*, not of *consequence* — this program
+   already has open gates in the same class that block a whole tier and gates that block nothing at all.
+2. **When a tool must fall back to a default, it must SAY it is falling back**, name the field it wanted, and
+   tell the reader the default is an assumption and not a measurement. The patched resolver prints the
+   recorded scope when present, and otherwise prints the conservative text **labelled as an assumption**
+   together with an instruction to decide and record the real scope. A silent conservative default is
+   indistinguishable from a measured one, and gets obeyed the same way.
+3. **Free text that a tool prints as authoritative is an unenforced permission surface.** Nothing checks who
+   wrote a gate's `blocks`, whether it was reviewed, or whether it is true — a future worker could widen it
+   into a self-issued permission slip. `T249` is asked to propose an enforcement; **it is not enforced today,
+   and this entry must not be read as saying it is.**
+4. **Drive both arms before you commit an instrument.** Positive (scope present → printed) and a **negative
+   control** (scope stripped from a throwaway copy → fallback printed). Per `P-76`, note honestly that **both
+   of those arms are shapes the author designed**; `T249` is instructed to drive the ones the author did not
+   — empty string, whitespace, non-string types, a scope that does not actually grant permission, and two
+   open CONTRACT gates at once, a case that never existed when the code was written.
+
+### The generalisation, which is the part worth carrying
+
+**A tool that answers a question the underlying record already answers is a SECOND SOURCE OF TRUTH.** The
+same shape as `G-12`'s stored running balance: a value that looks derived, is actually written, and is
+believed because it is convenient. **When a tool and the authoritative record disagree, the tool is the
+suspect** — and when a tool never consults the record at all, it is not disagreeing, it is guessing out loud.
