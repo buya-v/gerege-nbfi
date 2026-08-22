@@ -1,0 +1,54 @@
+T248 -- RED DRIVE ON SHAPES THE RULE WAS NOT BUILT FROM
+repo   : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9c36a94f97f3eb82
+HEAD   : 9b6c596c2b66769e7b7e7b5c2ca012b7f3df122a
+linter : 9b6c596:.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py  [RE-DERIVATION MODE: descriptive, no expectations enforced]
+engine : python3 re + subprocess list-argv; no grep, no rg, no verdict-carrying pipe
+
+=== 0. BASELINE (nothing planted): frontier 9 row(s), linter exit 1
+      TIER1 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+      TIER1 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+      TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+      TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+      TIER2 .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+      TIER2 .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
+      TIER2 .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+      TIER2 .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh
+      TIER2 .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh
+
+=== 1. LINTER BATTERY -- all six shapes planted at once
+    linter exit 1, frontier 10 row(s)
+
+    SHAPE                                EXPECT   TIER     FRONTIER  VERDICT
+    ------------------------------------------------------------------------------------------------
+    C0-a2-33-covered-shape.txt           TIER1    TIER1    YES       (descriptive)
+    N1-negative-fatal-cd.txt             TIER3    clean    no        (descriptive)
+    N2-negative-live-corpus.txt          clean    clean    no        (descriptive)
+    R1-r11-real-shape.txt                TIER1    clean    no        (descriptive)
+    R2-swallow-search-then-claim.txt     TIER1    clean    no        (descriptive)
+    R3-dead-root-via-variable.txt        TIER1    clean    no        (descriptive)
+    R4-git-C-nonexistent-root.txt        TIER1    clean    no        (descriptive)
+    R5-arm-on-continuation.txt           TIER1    clean    no        (descriptive)
+
+    Conditions fired, verbatim:
+      C0-a2-33-covered-shape.txt
+          C1 :11  dead absolute path: /Users/buv/gerege-nbfi/.claude/worktrees/agent-adeadbeefdeadbeef
+          C2 :12  failure arm PRINTS instead of exiting: ( cd "$WT" && git grep -n -I -i -E 'pattern' -- . ) || echo "   (no hits)"
+      N1-negative-fatal-cd.txt
+          (no condition fired)
+      N2-negative-live-corpus.txt
+          (no condition fired)
+      R1-r11-real-shape.txt
+          (no condition fired)
+      R2-swallow-search-then-claim.txt
+          (no condition fired)
+      R3-dead-root-via-variable.txt
+          (no condition fired)
+      R4-git-C-nonexistent-root.txt
+          (no condition fired)
+      R5-arm-on-continuation.txt
+          (no condition fired)
+
+=== VERDICT
+  RE-DERIVATION MODE against 9b6c596 -- reported, not graded. Read the FRONTIER column:
+  the control C0 (the shape the rule was written from) reaches it; R1, the SAME
+  defect with the reassurance moved one line down, does not.

@@ -1,0 +1,110 @@
+{
+ "KNOWN-POSITIVE": {
+  "line": "cd /Users/buv/gerege-nbfi/.claude/worktrees/agent-adeadbeefdeadbeef && git grep -n x -- .",
+  "what": "CALIBRATION: dead path under a root C1 is known to watch",
+  "c1": true,
+  "tier": 3
+ },
+ "KNOWN-NEGATIVE": {
+  "line": "cd /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9c36a94f97f3eb82 && git grep -n x -- .",
+  "what": "CALIBRATION: path that EXISTS right now",
+  "c1": false,
+  "tier": null
+ },
+ "root-tmp": {
+  "line": "cd /tmp/T138-merge 2>/dev/null && git grep -n x -- .",
+  "what": "r11-hygiene.sh's ACTUAL dead path",
+  "c1": true,
+  "tier": 3
+ },
+ "root-nonexistent": {
+  "line": "cd /nonexistent/worktree/agent-adeadbeefdeadbeef && git grep -n x -- .",
+  "what": "the driver's probe-1 path",
+  "c1": true,
+  "tier": 3
+ },
+ "root-Users": {
+  "line": "cd /Users/nobodyhere/deadpath12345 && git grep -n x -- .",
+  "what": "dead under /Users",
+  "c1": true,
+  "tier": 3
+ },
+ "root-home": {
+  "line": "cd /home/nobodyhere/deadpath12345 && git grep -n x -- .",
+  "what": "dead under /home",
+  "c1": true,
+  "tier": 3
+ },
+ "root-opt": {
+  "line": "cd /opt/nobodyhere/deadpath12345 && git grep -n x -- .",
+  "what": "dead under /opt",
+  "c1": true,
+  "tier": 3
+ },
+ "root-var": {
+  "line": "cd /var/nobodyhere/deadpath12345 && git grep -n x -- .",
+  "what": "dead under /var",
+  "c1": true,
+  "tier": 3
+ },
+ "root-srv": {
+  "line": "cd /srv/nobodyhere/deadpath12345 && git grep -n x -- .",
+  "what": "dead under /srv",
+  "c1": true,
+  "tier": 3
+ },
+ "root-data": {
+  "line": "cd /data/nobodyhere/deadpath12345 && git grep -n x -- .",
+  "what": "dead under /data",
+  "c1": true,
+  "tier": 3
+ },
+ "root-mnt": {
+  "line": "cd /mnt/nobodyhere/deadpath12345 && git grep -n x -- .",
+  "what": "dead under /mnt",
+  "c1": true,
+  "tier": 3
+ },
+ "root-private": {
+  "line": "cd /private/nobodyhere/deadpath12345 && git grep -n x -- .",
+  "what": "dead under /private (macOS real /tmp)",
+  "c1": true,
+  "tier": 3
+ },
+ "root-scratch": {
+  "line": "cd /scratch/nobodyhere/deadpath12345 && git grep -n x -- .",
+  "what": "dead under an arbitrary root",
+  "c1": true,
+  "tier": 3
+ },
+ "tail-short": {
+  "line": "cd /Users/x12 && git grep -n x -- .",
+  "what": "dead under a watched root, TAIL SHORTER THAN 6 CHARS",
+  "c1": true,
+  "tier": 3
+ },
+ "tail-exactly6": {
+  "line": "cd /Users/abcdef && git grep -n x -- .",
+  "what": "dead under a watched root, tail exactly 6 chars",
+  "c1": true,
+  "tier": 3
+ },
+ "prefix-colon": {
+  "line": "git grep -n x -- . | sed \"s|^|:/Users/nobodyhere/deadpath12345|\"",
+  "what": "watched root preceded by ':' (not in C1's lead-char class)",
+  "c1": false,
+  "tier": null
+ },
+ "prefix-equals": {
+  "line": "D=/Users/nobodyhere/deadpath12345; git grep -n x -- . ; cd \"$D\"",
+  "what": "watched root preceded by '=' (in C1's lead-char class)",
+  "c1": true,
+  "tier": 3
+ },
+ "var-indirect": {
+  "line": "WT=\"$HOME/gone/deadpath12345\"; cd \"$WT\" && git grep -n x -- .",
+  "what": "dead path reached through a VARIABLE, no literal in the line",
+  "c1": false,
+  "tier": null
+ }
+}

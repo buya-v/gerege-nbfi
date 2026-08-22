@@ -1,0 +1,11 @@
+#!/bin/sh
+# SHAPE R1 -- THE MANDATORY CASE. This is `.softhouse/reviews/T138-evidence/r11-hygiene.sh:76-79`
+# reproduced structurally: a `cd` to a directory that does not exist, silenced with
+# 2>/dev/null, the search hanging off a backslash continuation, and a sentence on the NEXT
+# line that the reader will take as a measurement. Exit 0, nothing searched, a claim printed.
+# T243's wired guard flagged this shape ZERO times. It is why T248 exists.
+set -u
+echo "--- every other restatement of the claim anywhere in the merged tree:"
+cd /tmp/T248-merge-does-not-exist 2>/dev/null && \
+  git grep -n -a -E 'some claim|another claim' -- . | sed 's/^/   /'
+echo "   (searched the MERGED tree)"
