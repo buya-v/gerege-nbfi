@@ -20,11 +20,9 @@
   "caveat": "PASS means 'matches the reference oracle on captured vectors, within the graded domain'. IT DOES NOT MEAN SAFE TO CUT OVER."
  },
  "live_workers": {
-  "T255": "softhouse/T255-dec2-rev8",
-  "T253": "softhouse/T253-harness-portability",
-  "T250": "softhouse/T250-tenant-attestation",
-  "T259": "softhouse/T259-verdict-predicate",
-  "T164": "softhouse/T164-analyze7-float-guard"
+  "T254b": "softhouse/T254-review-portability-mac",
+  "T260": "softhouse/T260-review-dec2-rev8",
+  "T261": "softhouse/T261-review-tenant-attestation"
  },
  "next_fire_starts_here": [
   "T251 — INDEPENDENT review of DEC-2 revision 7 (PREPARED by T247, merged fc36f0c, landed nothing). THE HIGHEST-VALUE ITEM: it is the last thing between G-14 and closure, and the driver has committed not to ratify without it.",
@@ -77,5 +75,44 @@
   "capture/tierA-a2": [
    "T174"
   ]
+ },
+ "merges": [
+  {
+   "task": "T164",
+   "review": "T263 MICRO-FIX",
+   "conditions_filed": [
+    "T269",
+    "T270"
+   ]
+  },
+  {
+   "task": "T259",
+   "review": "T262 MICRO-FIX",
+   "conditions_filed": [
+    "T268",
+    "T271"
+   ]
+  },
+  {
+   "task": "T263",
+   "kind": "review artefact"
+  },
+  {
+   "task": "T262",
+   "kind": "review artefact"
+  }
+ ],
+ "bar_on_merge_result": {
+  "commit": "2bec865",
+  "verdict": "PASS exit 0",
+  "probe_line": "PRESENT, reads up",
+  "parity_vectors": 46,
+  "cells": 7884,
+  "failopen_frontier": "11 == pinned 11",
+  "failopen_census_population": "918 -> 943 tracked .sh/.py; NONE joined the frontier",
+  "census_pins": "9/9 matched",
+  "wrong_ledger_impls_killed": "6/6",
+  "store_digest": "13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d (unmoved)",
+  "note": "Run by the DRIVER on the MERGE RESULT, never quoted from a worker."
  }
 }
