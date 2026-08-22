@@ -1,0 +1,166 @@
+{
+  "schema": "gerege.ledger.vector/v1",
+  "case_id": "LDG-01-manual-je-3leg-minor-units",
+  "context": "ledger",
+  "class": "parity",
+  "title": "A MANUAL journal entry with THREE legs and a non-round minor-unit amount on every one of them: debits 100000.25 + 25000.37 against a single credit of 125000.62, transaction a28f573f34c7, posted 01 June 2026 and read back through GET /journalentries. It is the first vector in this program to grade a journal entry at all, and the first that a port dropping minor units could fail.",
+  "dec2_revision": 5,
+  "_note": "GL_ACCOUNT_TYPE IS EXCLUDED FROM EVERY LEG OF THIS VECTOR, AND HERE IS THE OBSERVATION THAT FORCED IT. glAccountType in a /journalentries response is a projection of the ACCOUNT'S CURRENT classification, not of the entry. A2-26 observed the identical row rendering ASSET in A2-088 (2026-08-21) and INCOME in A2-320 (2026-08-22) -- every other cell BYTE-IDENTICAL, six diff lines all inside glAccountType -- with NO ENTRY EDITED, because GL account 2 was retyped ASSET->INCOME underneath five live product mappings and acc_gl_journal_entry carries no classification column (G-10). A vector grading that cell WILL GO RED on a GL-account edit that touched no journal entry. DEC-2's brief offered two ways out: (a) exclude the cell, or (b) grade it against a separately captured GET /glaccounts/{id} taken IN THE SAME WINDOW. THIS VECTOR TAKES (a). Reason (b) was rejected: the same-window pairing makes the vector's truth depend on two captures having been taken close enough together, which is a property of the capture session and not of the oracle, and nothing in the store could check that the window was actually shared. Excluding the cell states plainly that this corpus does not grade classification -- which is TRUE -- instead of grading it against evidence whose validity nobody can re-derive. THE CONSEQUENCE, STATED AND NOT HIDDEN: no vector in this store grades a GL account's classification at all, so a port that resolves the entry's classification WRONGLY is not caught here. The classification rendered at capture time is recorded in this note for the record and is graded by nothing: leg 0 (GL 16, 10300) rendered ASSET; leg 1 (GL 17, 10400) rendered ASSET; leg 2 (GL 21, 99008) rendered LIABILITY. NO BALANCE IS GRADED. acc_gl_journal_entry carries office_running_balance and organization_running_balance, and GATE G-12 IS OPEN on exactly them: A2-29 MEASURED them to be a SECOND SOURCE OF TRUTH rather than a cache -- made to disagree with the derived sum by MNT 2,000,000.00 on the live oracle, surviving four organisation-wide recomputes, propagating into a freshly computed row because the recompute seeds from its own prior output, and served at the contract boundary flagged runningBalanceComputed: true. This vector's schema has NO FIELD for either column, the capture it cites was taken without runningBalance=true, and /glaccounts?fetchRunningBalance=true is HTTP 500 on PostgreSQL anyway (GLAccountReadPlatformServiceImpl.java:127-131 emits MySQL-only 'group by ... desc'). Balances are DERIVED, never written, and never read back. WHY THIS ENTRY AND NOT A DISBURSEMENT: before A2-26 every journal entry in the A2 corpus had EXACTLY TWO LEGS and every amount was a WHOLE TUGRIK, so \"splits sum to the whole\" was graded by nothing and a port that dropped minor units was BYTE-INDISTINGUISHABLE from a correct one on every capture ever taken. This entry is 3 legs and 3 non-round amounts, so both facts are now false. SLOT FIELDS ARE ZERO/EMPTY HERE BECAUSE THIS IS A MANUAL ENTRY: no product and no slot took part in it, and DEC-2 precondition P-1 requires the fields to EXIST, not to be populated where nothing populated them.",
+  "capabilities_required": [
+    "ledger.journal.entry.readback",
+    "ledger.money.minor.unit.conversion",
+    "ledger.manual.entry.posting"
+  ],
+  "provenance": {
+    "kind": "capture",
+    "capture_ref": ".softhouse/capture/tierA-a2/out/A2-347-je-manual-readback.json",
+    "capture_sha256": "a942e4d2503fe97a0a327b366d1093c37aa3e61d94c727e023a7c45898c20d16",
+    "capture_case_id": "A2-347-je-manual-readback",
+    "request_capture_ref": ".softhouse/capture/tierA-a2/out/A2-343-manual-je-3leg.req",
+    "request_capture_sha256": "be692ac41b58081baf1da542ced41e6483afc494bcc017c681389ecd3145f3e5",
+    "request_capture_case_id": "A2-343-manual-je-3leg",
+    "rerun_invariant": "Re-running A2-343 with the same body and re-reading transaction a28f573f34c7 must return THREE legs whose amounts are 100000.250000 / 25000.370000 / 125000.620000 at the oracle's scale of 6, on GL 16 / 17 / 21, DEBIT / DEBIT / CREDIT in that order. The transaction id itself will differ on a re-post -- it is server-assigned -- so the re-run is over the LEGS, never over the id. If the oracle returns two legs, or a whole tugrik anywhere, this vector is false.",
+    "citation": "A2-15, promoting A2-26's multi-leg minor-unit captures. Response legs read from the RAW BYTES of A2-347 (the \"amount\" tokens are 100000.250000, 25000.370000, 125000.620000 -- scale 6, exactly as the oracle emitted them). Request bytes are A2-343's committed .req wire-bytes artefact, which is why this vector is graded on a recorded request rather than on a response alone."
+  },
+  "oracle": {
+    "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
+    "seam": "ledger_rest_posting",
+    "captured_at": "2026-08-22T02:21:18Z"
+  },
+  "request": {
+    "product_id": 0,
+    "product_type": "",
+    "accounting_rule": "",
+    "slot_family": "",
+    "slot_code": 0,
+    "payment_type_id": null,
+    "seam": "ledger_rest_posting",
+    "office_id": 1,
+    "currency": {
+      "code": "MNT",
+      "minor_unit_digits": 2
+    },
+    "transaction_id": "a28f573f34c7",
+    "manual_entry": true,
+    "transaction_amount_major_text": "",
+    "accounts": [
+      {
+        "id": 16,
+        "gl_code": "10300",
+        "name": "Fund Source Alternate",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 17,
+        "gl_code": "10400",
+        "name": "Disabled Asset",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      },
+      {
+        "id": 21,
+        "gl_code": "99008",
+        "name": "Liability Under Asset",
+        "usage": "DETAIL",
+        "manual_entries_allowed": true,
+        "disabled": false
+      }
+    ],
+    "legs": [
+      {
+        "gl_account_id": 16,
+        "entry_side": "DEBIT",
+        "amount_major_text": "100000.250000"
+      },
+      {
+        "gl_account_id": 17,
+        "entry_side": "DEBIT",
+        "amount_major_text": "25000.370000"
+      },
+      {
+        "gl_account_id": 21,
+        "entry_side": "CREDIT",
+        "amount_major_text": "125000.620000"
+      }
+    ]
+  },
+  "expect": {
+    "kind": "journal-entry",
+    "http_status": 200,
+    "legs": [
+      {
+        "gl_account_id": 16,
+        "gl_account_code": "10300",
+        "entry_side": "DEBIT",
+        "amount_minor": "10000025",
+        "amount_major_text": "100000.250000",
+        "excluded_fields": [
+          "gl_account_type"
+        ]
+      },
+      {
+        "gl_account_id": 17,
+        "gl_account_code": "10400",
+        "entry_side": "DEBIT",
+        "amount_minor": "2500037",
+        "amount_major_text": "25000.370000",
+        "excluded_fields": [
+          "gl_account_type"
+        ]
+      },
+      {
+        "gl_account_id": 21,
+        "gl_account_code": "99008",
+        "entry_side": "CREDIT",
+        "amount_minor": "12500062",
+        "amount_major_text": "125000.620000",
+        "excluded_fields": [
+          "gl_account_type"
+        ]
+      }
+    ],
+    "total_debits_minor": "12500062",
+    "total_credits_minor": "12500062",
+    "refusal": {
+      "http_status": 0,
+      "code": "",
+      "message": ""
+    }
+  },
+  "graded_against": [
+    {
+      "impl": "ledger-wrong-truncating",
+      "kind": "money",
+      "margin_minor": "-62",
+      "divergent_cells": [
+        "legs[].amount_minor",
+        "total_debits_minor",
+        "total_credits_minor"
+      ],
+      "note": "A port that reads the major-unit text as a whole number loses the 25, 37 and 62 on the three legs. This is the defect a whole-tugrik corpus could not see."
+    },
+    {
+      "impl": "ledger-wrong-netting-totals",
+      "kind": "structural",
+      "margin_minor": "0",
+      "divergent_cells": [
+        "total_debits_minor",
+        "total_credits_minor"
+      ],
+      "note": "Netting credits against debits makes both totals 0 while every per-leg cell still matches, so I-1 would hold by construction."
+    },
+    {
+      "impl": "ledger-wrong-code-ignored",
+      "kind": "structural",
+      "margin_minor": "0",
+      "divergent_cells": [
+        "legs[].gl_account_code"
+      ],
+      "note": "A port carrying account ids and never joining the chart."
+    }
+  ],
+  "invariant_exemptions": []
+}

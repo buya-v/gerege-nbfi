@@ -1,0 +1,20 @@
+SQL sql/q7-a2-15-ledger-state-json.sql
+transport: docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f - < sql/q7-a2-15-ledger-state-json.sql
+seam: ledger_db_readback  (READ-ONLY -- every statement in the file is a SELECT)
+body: <none>
+capture-case-id: A2-390-db-ledger-state-a2-15
+captured-at-utc: 2026-08-22T08:02:00Z
+taken-by: A2-15
+note: psql emits two \pset notices ("Border style is 0.", "Output format is unaligned.")
+      before the row. They are stripped and the remainder -- one json_build_object row --
+      IS the capture. It is committed as .json so that
+      .softhouse/capture/lib/check_wire_float_roundtrip.py can open it: that guard REFUSES
+      a capture record a stored vector cites and that does not parse as JSON, and A2-15 hit
+      that refusal on its first run with the psql-table form of the same query.
+note: NO running-balance column is projected. GATE G-12 is open on
+      office_running_balance / organization_running_balance and A2-29 measured them to be a
+      SECOND source of truth, not a cache. A capture carrying them would invite a later
+      vector to grade one.
+note: THIS IS THE P-69 RE-RUN. A2-370 is a snapshot; the oracle has moved since (A2-29
+      added 2 GL accounts, 3 manual entries, a reversal, a retype and six running-balance
+      recalculations), so no number here is cited from A2-370.

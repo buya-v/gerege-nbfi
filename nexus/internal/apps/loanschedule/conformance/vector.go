@@ -10,6 +10,7 @@ import (
 	"sort"
 	"strings"
 
+	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 	"github.com/gerege/nexus/internal/apps/loanschedule/contract"
 )
 
@@ -927,6 +928,9 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 	var all []*Vector    // every context — the domain of the duplicate census
 	var graded []*Vector // the subset this run grades: all, or one context of it
 	var loadErrs []LoadError
+	// ledgerClaimed: files the SECOND schema's loader owns. Collected here only
+	// so the file census can be told; nothing in this function grades them.
+	var ledgerClaimed []string
 	for _, e := range entries {
 		if !e.IsDir() {
 			continue
@@ -943,7 +947,32 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 				continue
 			}
 			rel := filepath.Join(ctx, f.Name())
-			v, err := LoadVector(filepath.Join(dir, f.Name()), rel)
+			abs := filepath.Join(dir, f.Name())
+			// THE SCHEMA ROUTE (A2-15, DEC-2 §5.2). A file whose top-level
+			// `schema` is `gerege.ledger.vector/v1` belongs to the SECOND
+			// schema, whose loader, comparator, capability registry and context
+			// allowlist all live in nexus/internal/apps/ledger/conformance. It
+			// is not this loader's file and it is not a LoadError here.
+			//
+			// IT IS STILL ACCOUNTED FOR. `ledgerClaimed` carries it to
+			// StoreFileCensus below, so it cannot become the thing the census
+			// exists to refuse: a .json under the store root that no loader
+			// took and nothing grades.
+			//
+			// WHY THE PROBE IS THE WEAKEST POSSIBLE TEST, and why that is
+			// deliberate: DeclaresLedgerSchema decodes ONE field, non-strictly,
+			// and answers yes/no. It must not validate. A MALFORMED ledger
+			// vector has to reach the LEDGER loader and be reported there BY
+			// NAME; if this probe validated, such a file would fall through to
+			// LoadVector and be reported as an unknown loanschedule field —
+			// which is A2-28's measured BEFORE state (`decode: json: unknown
+			// field "product_id"`) surviving the very change that was meant to
+			// end it.
+			if ledgerconf.FileDeclaresLedgerSchema(abs) {
+				ledgerClaimed = append(ledgerClaimed, filepath.ToSlash(rel))
+				continue
+			}
+			v, err := LoadVector(abs, rel)
 			if err != nil {
 				if selected {
 					loadErrs = append(loadErrs, LoadError{Path: rel, Err: err})
@@ -1007,7 +1036,7 @@ func LoadStore(storeRoot, contextFilter string) ([]*Vector, []LoadError, error) 
 	// the shell float guard and to this loader. It is taken over `all` and over
 	// the WHOLE tree, filter or no filter — for the same reason the duplicate
 	// census is (T123): the filter narrows what is GRADED, never what is CHECKED.
-	if err := StoreFileCensus(storeRoot, all, loadErrs); err != nil {
+	if err := StoreFileCensus(storeRoot, all, loadErrs, ledgerClaimed...); err != nil {
 		refusals = append(refusals, err)
 	}
 	if len(refusals) > 0 {

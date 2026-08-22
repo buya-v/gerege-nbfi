@@ -470,6 +470,88 @@ EXEMPTION_PIN_GROUNDED=4
 EXEMPTION_PIN_UNDETERMINED=0
 EXEMPTION_PIN_UNGROUNDED=0
 
+# ---------------------------------------------------------------------------
+# THE LEDGER EXEMPTION PIN  [A2-15]
+# ---------------------------------------------------------------------------
+# The five figures above are properties of the LOANSCHEDULE corpus, and they are
+# unchanged by A2-15's promotion. That is a MEASUREMENT and not an assumption, and
+# it is worth stating plainly because the dispatch predicted the opposite:
+# promoting a vector was expected to move them. It did not, and each figure is
+# argued rather than left to speak for itself:
+#
+#   EXEMPTED     = 4 -- the four exempted ASSERTIONS both belong to the two G-8
+#                       family-B loanschedule vectors T116 promoted. A2-15 added
+#                       no loanschedule vector at all, so this population could
+#                       not move.
+#   DECLARED     = 4 -- the same four, counted as DECLARATIONS in the loaded
+#                       files. Two vectors x two invariants.
+#   GROUNDED     = 4 -- all four are GROUNDED: the recorded schedule genuinely
+#                       violates the exempted invariant in both files.
+#   UNDETERMINED = 0 -- and this is the figure the dispatch expected to move,
+#                       because T230 reworked the grounding rule so that an
+#                       exemption paired with an `unrecorded_fields` entry is
+#                       reported UNDETERMINED-ON-THE-RECORD instead of refused.
+#                       A2-15 CONFIRMED THAT T230'S SHAPE DOES NOT FIT ITS NEED,
+#                       which T230 itself had flagged [UNVERIFIED] on its side.
+#                       A2-15's exclusion is of a CELL (`gl_account_type`), not of
+#                       an INVARIANT, and neither of the two gradeable ledger
+#                       invariants (I-1 debits==credits, I-2 splits sum to whole)
+#                       reads a GL account's classification. So there is nothing
+#                       for an exemption to switch off and no exemption is
+#                       declared. T230's rework is correct and is simply not on
+#                       A2-15's path. The full argument is in A2-15's handoff.
+#   UNGROUNDED   = 0 -- no exemption in the store is refuted by its own record.
+#
+# WHAT IS NEW IS THE SIXTH FIGURE, and it closes for the ledger corpus exactly the
+# hole T233 closed for the loanschedule one. The ledger schema REFUSES an
+# `invariant_exemptions` entry outright (it has no grounding classifier, so
+# admitting one would switch an invariant off with nothing checking that the thing
+# it excuses is visible in the record). "Refuses" is a property of the code; the
+# POPULATION is a property of the corpus, and an uncounted population drifts in
+# both directions with nothing noticing -- which is T220-N1 and T160 in one
+# sentence. So the ledger report COUNTS its declared exemptions on every run, and
+# this pin compares that count for EQUALITY.
+#
+#   LEDGER_DECLARED = 0 -- the six promoted ledger vectors declare zero
+#                          exemptions between them. Argued, not defaulted: an
+#                          exemption here would be inadmissible, so a corpus with
+#                          one would already be exit 2 -- but a corpus that LOST
+#                          the refusal and gained an exemption would move this
+#                          number, and a corpus whose ledger vectors were all
+#                          deleted would leave it at 0 while the population
+#                          vanished, which is why the ledger PARITY figures are
+#                          pinned below it.
+EXEMPTION_PIN_LEDGER_DECLARED=0
+
+# ---------------------------------------------------------------------------
+# THE LEDGER CORPUS PIN  [A2-15]
+# ---------------------------------------------------------------------------
+# DEFLATION IS THE HALF NOBODY NOTICES (the T160 shape, and the reason every pin
+# in this file is an EQUALITY rather than a floor). A pin on the exemption count
+# alone would sit happily at 0 over a store from which every ledger vector had
+# been deleted -- the report would print the "NO LEDGER VECTOR IS IN THIS STORE"
+# banner, the loanschedule half would still be green, and the verdict would still
+# be PASS. So the ledger POPULATION is pinned too.
+#
+#   LEDGER_PARITY   = 4 -- LDG-01 (manual, 3 legs), LDG-02 (accounting path,
+#                          4 legs), LDG-03 (accounting path, 4 legs, overpayment),
+#                          LDG-04 (header account accepted, 2 legs).
+#   LEDGER_REFUSAL  = 2 -- LDG-REFUSE-01 (unbalanced by one minor unit) and
+#                          LDG-REFUSE-02 (manual adjustments not permitted).
+#   LEDGER_MONEYCELLS = 21 -- the count of MONEY cells compared in int64 minor
+#                          units. It is pinned SEPARATELY from the cell total
+#                          because DEC-2 §5.5 warns that "a ledger corpus whose
+#                          money cells only ever kill structurally has graded no
+#                          amount": a corpus that quietly stopped comparing money
+#                          would keep its vector counts and lose this one.
+#                          Derivation: LDG-01 5 (3 legs + 2 totals), LDG-02 6
+#                          (4 + 2), LDG-03 6 (4 + 2), LDG-04 4 (2 + 2), and 0 on
+#                          each refusal vector, which asserts no amount at all.
+#                          5 + 6 + 6 + 4 = 21.
+EXEMPTION_PIN_LEDGER_PARITY=4
+EXEMPTION_PIN_LEDGER_REFUSAL=2
+EXEMPTION_PIN_LEDGER_MONEYCELLS=21
+
 # Scratch paths are script-global, not function-local: an EXIT trap fires after the
 # function that created them has returned, so a `local` would be out of scope by
 # then and `set -u` would abort the cleanup.
@@ -1384,11 +1466,75 @@ gate_exemption_census() {
       warn "conformance:   exemption census MISMATCH: $1 = $2, but this file pins $3."
     fi
   }
+  # THE LEDGER FIGURES. Read with the same fail-closed `_census_one` -- an ABSENT
+  # figure is an ERROR and never a 0, and a figure matching more than one line is
+  # an ERROR because "the value" of an ambiguous match is whichever line sed
+  # reached last. A store that LOST every ledger vector prints the empty-store
+  # banner and NONE of these four lines, so all four reads fail and the run is
+  # exit 2 -- which is the deflation arm, working.
+  #
+  # THE ONE STATE THAT IS SKIPPED, AND WHY IT IS SAFE TO SKIP IT. `--self-test`
+  # grades the HARNESS by replaying the loanschedule store; the ledger half does
+  # not run at all, so there is no ledger figure to compare and demanding one
+  # would refuse every self-test run. The report announces that state on its own
+  # dedicated line -- deliberately NOT the empty-store banner, because if the two
+  # were indistinguishable here the deflation arm above would be dead. The skip is
+  # PRINTED, so a run that skipped and a run that compared cannot be confused
+  # (P-35), and this arm was found by `--prove` case 21's GREEN control refusing
+  # after the ledger pins were added, which is that control doing its job.
+  # TWO states skip, and each announces itself on its OWN line so that neither can
+  # be confused with the third -- an empty ledger corpus -- which must still refuse.
+  local selftest_ledger filtered_ledger ledger_cmp=1
+  selftest_ledger="$(LC_ALL=C grep -ac '^    LEDGER NOT RUN IN SELF-TEST MODE' "$report" || true)"
+  [ -n "$selftest_ledger" ] || selftest_ledger=0
+  filtered_ledger="$(LC_ALL=C grep -ac '^    LEDGER NOT SELECTED' "$report" || true)"
+  [ -n "$filtered_ledger" ] || filtered_ledger=0
+  if [ "$filtered_ledger" -gt 0 ]; then selftest_ledger=1; fi
+
+  local l_declared="" l_parity="" l_refusal="" l_money=""
+  if [ "$selftest_ledger" -gt 0 ]; then
+    say "conformance:   exemption census: the report declares the ledger half NOT RUN (self-test mode) or"
+    say "conformance:     NOT SELECTED (a context filter naming another context), so the four LEDGER"
+    say "conformance:     figures are NOT COMPARED on this run. They ARE compared on every unfiltered"
+    say "conformance:     graded run, which is the run a verdict is quoted from. An EMPTY ledger corpus is"
+    say "conformance:     a THIRD state and is NOT skipped: it refuses."
+    # NO FIGURE IS ASSIGNED HERE, and the four _cmp lines below are SKIPPED rather
+    # than fed the pin's own values. Seeding them from the pin would print
+    # "LEDGER parity vectors = 4 == pinned 4" on a run that measured nothing --
+    # a comparison of a constant with itself, printed in the same words as a real
+    # measurement. That is the self-certifying shape P-22 and P-35 are about, and
+    # it is worse here than silence because it reads as evidence.
+    ledger_cmp=0
+  else
+    ledger_cmp=1
+    l_declared="$(_census_one "$report" \
+      's/^ *ledger exemptions  *\([0-9][0-9]*\) DECLARED.*$/\1/p' \
+      'LEDGER-declared-exemptions')" || rc=1
+    l_parity="$(_census_one "$report" \
+      's/^ *ledger parity  *PASS \([0-9][0-9]*\)  *FAIL [0-9][0-9]*$/\1/p' \
+      'LEDGER-parity-PASS')" || rc=1
+    l_refusal="$(_census_one "$report" \
+      's/^ *ledger oracle-refusal  *PASS \([0-9][0-9]*\)  *FAIL [0-9][0-9]*.*$/\1/p' \
+      'LEDGER-oracle-refusal-PASS')" || rc=1
+    l_money="$(_census_one "$report" \
+      's/^ *ledger cells compared  *[0-9][0-9]* graded, of which \([0-9][0-9]*\) are MONEY cells.*$/\1/p' \
+      'LEDGER-money-cells')" || rc=1
+  fi
+
   _cmp "exempted assertions (graded)" "$exempted"     "$EXEMPTION_PIN_EXEMPTED"
   _cmp "declared exemptions (loaded)" "$declared"     "$EXEMPTION_PIN_DECLARED"
   _cmp "GROUNDED                    " "$grounded"     "$EXEMPTION_PIN_GROUNDED"
   _cmp "UNDETERMINED-ON-THE-RECORD  " "$undetermined" "$EXEMPTION_PIN_UNDETERMINED"
   _cmp "UNGROUNDED                  " "$ungrounded"   "$EXEMPTION_PIN_UNGROUNDED"
+  if [ "$ledger_cmp" -eq 1 ]; then
+    _cmp "LEDGER declared exemptions  " "$l_declared"   "$EXEMPTION_PIN_LEDGER_DECLARED"
+    _cmp "LEDGER parity vectors       " "$l_parity"     "$EXEMPTION_PIN_LEDGER_PARITY"
+    _cmp "LEDGER oracle-refusal vector" "$l_refusal"    "$EXEMPTION_PIN_LEDGER_REFUSAL"
+    _cmp "LEDGER money cells compared " "$l_money"      "$EXEMPTION_PIN_LEDGER_MONEYCELLS"
+  else
+    say "conformance:   exemption census: LEDGER figures NOT COMPARED on this run (see above). Nothing"
+    say "conformance:     is printed as a match, because a constant compared with itself is not one."
+  fi
 
   if [ "$ok" -ne 1 ]; then
     warn "conformance:"

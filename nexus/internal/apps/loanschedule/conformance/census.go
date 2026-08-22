@@ -66,7 +66,18 @@ import (
 // case-insensitive filesystem the two names address one file, and on a
 // case-sensitive one they address two. Requiring the exact bytes means the
 // census's answer does not depend on which filesystem the store is sitting on.
-var storeRootNonVectorFiles = []string{"PIN.json", "capabilities.json"}
+// A2-15 adds the LEDGER context's two store-root files. They are configuration
+// for the SECOND schema (nexus/internal/apps/ledger/conformance) exactly as the
+// first two are for this one: LoadStore never decodes them and the ledger
+// harness reads them by name. DEC-2 precondition P-6 decided that the ledger
+// context gets its OWN capability file rather than rows appended to
+// `capabilities.json`, whose schema id is a hard constant naming this context
+// and whose `dec1_revision` is a DEC-1 revision number; the decision and the
+// rejected alternative are recorded in that package's capability.go.
+var storeRootNonVectorFiles = []string{
+	"PIN.json", "capabilities.json",
+	"PIN-ledger.json", "capabilities-ledger.json",
+}
 
 // caseIDRune reports whether r may appear in a case_id.
 //
@@ -215,8 +226,24 @@ func sortedKeysOfPaths(m map[string][]string) []string {
 //     store — and that it binds ANY file later added to the allowlist, rather
 //     than depending on whoever adds it remembering to write a loader that
 //     checks.
-func StoreFileCensus(storeRoot string, loaded []*Vector, accountedErrs []LoadError) error {
-	claimed := make(map[string]string, len(loaded)+len(accountedErrs))
+//
+// alsoClaimed names store-relative paths that a DIFFERENT schema's loader has
+// taken responsibility for. It is VARIADIC so that every existing call site —
+// fifteen in store_integrity_test.go alone — keeps compiling and keeps meaning
+// exactly what it meant: "nothing else claims anything".
+//
+// WITHOUT IT, PROMOTING THE FIRST LEDGER VECTOR WOULD MAKE THIS CENSUS REFUSE
+// THE RUN, and the census would be RIGHT: a .json under the store root that this
+// loader did not load is, from here, indistinguishable from a vector somebody
+// believes they promoted and nothing grades. The fix is not to loosen the
+// census; it is to let the other loader SAY it has the file.
+func StoreFileCensus(storeRoot string, loaded []*Vector, accountedErrs []LoadError,
+	alsoClaimed ...string) error {
+
+	claimed := make(map[string]string, len(loaded)+len(accountedErrs)+len(alsoClaimed))
+	for _, rel := range alsoClaimed {
+		claimed[filepath.ToSlash(rel)] = "loaded by the ledger schema's own loader"
+	}
 	for _, v := range loaded {
 		claimed[filepath.ToSlash(v.Path)] = "loaded as vector " + v.CaseID
 	}
