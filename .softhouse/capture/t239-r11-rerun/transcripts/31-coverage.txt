@@ -1,0 +1,24 @@
+PWD=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a63a7abf43fa9b0dc  HEAD=f747a46aa5bc85f02fe24bba78fe195548d3e82a
+
+=== (a) does r11 §2's pattern contain any HEAD term? ===
+    pattern: merge-base|main:|origin/main|rev-parse main|\bmain\b
+    contains 'HEAD'? -> NO — HEAD is not in the alternation at all
+    \bHEAD\b hit lines in the population (engine -P, sound): 8
+    ^ a sound engine + the SAME pattern still reports none of these.
+
+=== (b) sub-check at r11:43-47 — hard-coded file list vs actual population ===
+    files the sub-check names: 5
+    .sh files actually in the population: 10
+
+    --- .sh files in the population NOT named by the sub-check ---
+        .softhouse/capture/audit-t44/charges/bin/preconditions-COPY.sh   (revision-resolving invocations inside: 1)
+        .softhouse/capture/charges/bin/preconditions.sh   (revision-resolving invocations inside: 1)
+        .softhouse/capture/t91/run-attacks.sh   (revision-resolving invocations inside: 0)
+        .softhouse/capture/t91/shell-invariance.sh   (revision-resolving invocations inside: 0)
+        .softhouse/capture/t91/verdict.sh   (revision-resolving invocations inside: 0)
+    UNCOVERED: 5 of 10 .sh files
+
+=== (c) do the 7 HEAD-resolving sites fall inside or outside the named 5? ===
+    .softhouse/capture/t91/prove-guards.sh                     HEAD-sites=2   named-by-subcheck=YES
+    .softhouse/capture/t91/t115-drive-mf2.sh                   HEAD-sites=2   named-by-subcheck=YES
+    .softhouse/capture/t91/t115-rerun-attacks.sh               HEAD-sites=3   named-by-subcheck=YES

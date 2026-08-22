@@ -1,0 +1,53 @@
+PWD=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a63a7abf43fa9b0dc  HEAD=f747a46aa5bc85f02fe24bba78fe195548d3e82a
+population: T115 tree (bd59187cf83c7c7161db23668e91d45bd46be2a8), 3 pathspecs — 200 files / 8170 lines [10-population.sh]
+
+==================================================================
+A. THE ORIGINAL INSTRUMENT, VERBATIM — git grep -E, five alternatives
+==================================================================
+hit lines: 0
+
+==================================================================
+B. FOUR ALTERNATIVES ONLY (the literal ones) — isolates the 5th term
+==================================================================
+hit lines: 0
+  => under git grep -E the 5th term contributes 0 lines
+
+==================================================================
+C. THE SOUND INSTRUMENT — git grep -P, five alternatives, SAME TREE
+==================================================================
+hit lines: 38
+four-alternative under -P: 0
+  => under git grep -P the 5th term contributes 38 lines
+
+==================================================================
+D. THE RATIO — BOTH TERMS NAMED, BOTH COUNTED IN THE LIVE ARTEFACT (P-67)
+==================================================================
+  NUMERATOR   (hit lines the sound instrument found that the original did NOT) = 38
+  DENOMINATOR (hit lines the sound instrument found in total)                  = 38
+  recall of the ORIGINAL instrument = 0 / 38 = 0.0%
+  RECALL LOSS                       = 38 / 38 = 100.0%
+  counted in: .softhouse/capture/t239-r11-rerun/evidence/hits-original-E-five.txt and .softhouse/capture/t239-r11-rerun/evidence/hits-sound-P-five.txt, both committed.
+
+==================================================================
+E. THE DELTA — exactly what the check NEVER SAW
+==================================================================
+lines the SOUND instrument found and the ORIGINAL missed : 38
+lines the ORIGINAL found and the SOUND one does NOT      : 0
+  (the second number is NOT necessarily zero: git grep -E's \bmain\b matches the literal
+   string 'bmainb', so the defective engine can produce a FALSE POSITIVE as well as misses)
+
+--- ORIGINAL-ONLY lines, if any ---
+
+==================================================================
+F. WHICH MECHANISM KILLED IT? (P-72 — two mechanisms, one zero)
+==================================================================
+Mechanism 2 (engine reads \b as literal b):
+   git grep -E -c 'bmainb' over the population : 0
+   git grep -E -c '\bmain\b' over the population: 0
+   git grep -P -c '\bmain\b' over the population: 38
+
+Mechanism 1 (right-anchoring an inflected stem — T224's killer):
+   'main' is not a stem being inflected here. Control: does the population contain
+   tokens where \bmain\b would wrongly fail but a stem match would succeed?
+   -P 'main[a-z]+' (main as a PREFIX of a longer word, which \bmain\b correctly excludes): 0
+   -P '[a-z]+main' (main as a SUFFIX, e.g. domain):                                      34
