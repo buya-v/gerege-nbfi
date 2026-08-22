@@ -1620,6 +1620,38 @@ Prepared and **NOT promoted**, for both families:
 family A at 21.6 % / MNT 0.01 / n = 6), `.softhouse/reviews/T84-evidence/proposed-vector-family2-{no-exemption,with-exemption}.json`
 (T84, family B).
 
+> **SUPERSEDED FOR FAMILY B — updated by local fire `20260822-000013` on merging `T116`, which flagged
+> that this section had begun to UNDERSTATE the corpus.** "Prepared and not promoted" is still true of
+> the four files named above, which remain unpromoted drafts. It is **no longer true of family B as a
+> shape**: `T116` executed **G-8 option (a)** and promoted **three** vectors captured fresh from the live
+> oracle at 600.0 % / MNT 0.01 —
+> `T116-G8-FAMB-nonamortizing-mnt0pt01-{104,108}x600pct.json` (family B, **two** invariant exemptions
+> each: `principal_portions_sum_to_disbursed` and `principal_amortizes_to_zero`) and
+> `T116-G8-CLEAN-nonexempt-mnt0pt01-103x600pct.json` (the amortizing cell **one repayment below the
+> boundary**, promoted with **no exemption at all**, so the exemption cannot be read as "600 % is
+> exempt").
+>
+> **T100's proposed third exemption — `balance_roll_forward` — was DROPPED: it HOLDS unexempted.**
+>
+> **Driver-verified on merged `main`, re-run not quoted:** probe present and `up`, `PASS (exit 0)`,
+> **46 parity vectors / 7884 cells** (was 43 / 5664), kills **106** money + 7 structural (was 103),
+> invariant violations **0**, assertions **0 NOT RUN**, **4 EXEMPTED BY A VECTOR** — each printed in the
+> run output **with its full reason**, which `report.go` did not do before this fire. Vector store
+> `73c3ea7b43dd75f04884072719a87fc8e1d255c1` (recipe: `git rev-parse HEAD:.softhouse/vectors`, **P-61**).
+>
+> **G-8 itself stays OPEN.** Option (a) is now executed for family B; options **(b)** and **(c)** narrow
+> the graded domain and remain **hard `user` gates**, untouched. **Family A was not attempted and is not
+> reachable this way** — an invariant exemption cannot cure a **parity** diff, and `T116` re-measured
+> that it stays `FAIL` unchanged under the exemption.
+>
+> Two records this supersedes rather than contradicts: **the T83-vs-T101/T112 contradiction over whether
+> `invariant_exemptions` is INERT was never a contradiction.** T83's demonstration ran on
+> `T83-SW-R21p6-N6-B1`, whose own committed output reads `advanced == repaid == 1` — that is **family
+> A**, where every invariant already holds and the FAIL is a cell diff. "INERT" is correct *about family
+> A*. `CheckInvariants` reads what the **implementation returned** (`invariants.go:190-215`), so on
+> family B two invariants go red and the exemption is decisive. Both records were right about different
+> families.
+
 ---
 
 ## The bound on the failing principal, RESTATED OVER THE DOMAIN ACTUALLY SWEPT
