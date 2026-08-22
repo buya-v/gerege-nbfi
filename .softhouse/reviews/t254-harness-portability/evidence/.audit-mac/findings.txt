@@ -1,0 +1,5 @@
+B5 rc-conflation  .softhouse/bin/go-env.sh
+B1? mixed-grep    .softhouse/capture/t253-portability/instruments/60-hardcoded-toolchain-census.py  (has both a bare token and a sound form - manual look)
+B1? mixed-grep    .softhouse/conformance.sh  (has both a bare token and a sound form - manual look)
+B4 no-set-euo     .softhouse/conformance.sh
+B5 rc-conflation  .softhouse/conformance.sh

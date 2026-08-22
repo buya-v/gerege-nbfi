@@ -1,0 +1,8 @@
+======================================================================
+BAR RUN: 41-BAR-cloud-d7a7ea3
+tree:   /Users/buv/gerege-nbfi/.claude/worktrees/t254-bar-cloud
+date:   2026-08-22T13:14:13Z
+residue /tmp/t234_matrix2.txt: PRESENT
+residue /tmp/t234_matrix.txt:  PRESENT
+======================================================================
+BAR_EXIT=0

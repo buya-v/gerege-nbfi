@@ -1,0 +1,124 @@
+======================================================================
+T234 /tmp-RESIDUE ADJUDICATION
+tree: /Users/buv/gerege-nbfi/.claude/worktrees/t254-merge
+======================================================================
+residue /tmp/t234_matrix2.txt PRESENT at start; backed up to /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab127f52f3e194646/.softhouse/reviews/t254-harness-portability/evidence/.t234_matrix2.backup
+
+### ARM 1: residue PRESENT
+  BAR_EXIT=0
+  --- ARM: present ---
+  (a) BAR_EXIT ............... 0
+  (b) PROBE LINE PRESENT? .... YES
+      value: conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+  (c) conformance:   /Users/buv/gerege-nbfi/.claude/worktrees/t254-merge (git ls-files, whole repository); frontier 11, pinned at 11.
+  (c) conformance:   frontier == pinned (all 11 rows, by path).
+  (d) frontier rows printed .. 0
+
+### ARM 2: residue ABSENT
+  BAR_EXIT=2
+  --- ARM: absent ---
+  (a) BAR_EXIT ............... 2
+  (b) PROBE LINE PRESENT? .... NO — NOT PRINTED
+  (c) conformance:   /Users/buv/gerege-nbfi/.claude/worktrees/t254-merge (git ls-files, whole repository); frontier 11, pinned at 11.
+  (d) frontier rows printed .. 8
+
+======================================================================
+ADJUDICATION
+======================================================================
+exit codes:  present=0   absent=2
+
+--- diff of the frontier PATH SETS (empty == the Mac's claim holds) ---
+--- /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab127f52f3e194646/.softhouse/reviews/t254-harness-portability/evidence/70-residue-present.paths.txt	2026-08-22 21:22:26
++++ /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab127f52f3e194646/.softhouse/reviews/t254-harness-portability/evidence/70-residue-absent.paths.txt	2026-08-22 21:22:40
+@@ -0,0 +1,8 @@
++TIER1 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
++TIER1 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
++TIER1 .softhouse/reviews/T138-evidence/r11-hygiene.sh
++TIER1B .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
++TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
++TIER2 .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
++TIER2 .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
++TIER2 .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+
+--- diff of the FULL stdout (what the residue actually changes) ---
+--- /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab127f52f3e194646/.softhouse/reviews/t254-harness-portability/evidence/70-residue-present.stdout.txt	2026-08-22 21:22:26
++++ /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab127f52f3e194646/.softhouse/reviews/t254-harness-portability/evidence/70-residue-absent.stdout.txt	2026-08-22 21:22:40
+@@ -88,441 +88,3 @@
+ conformance:   TIER1 = dead path AND a printing failure arm (fail-open, live). TIER1B = enters a
+ conformance:   directory that is not there and carries on, whatever it prints afterwards. TIER2 =
+ conformance:   printing arm only, corpus reachable today. All are pinned by PATH, not by count.
+-conformance:   frontier == pinned (all 11 rows, by path).
+-conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+-
+-=== GOLDEN-VECTOR CONFORMANCE — Fineract reference oracle vs Go module ===
+-    repo root       /Users/buv/gerege-nbfi/.claude/worktrees/t254-merge
+-                    resolved from the BUILD ANCHOR — the tree this binary was compiled from
+-                    anchor: /Users/buv/gerege-nbfi/.claude/worktrees/t254-merge/nexus/internal/apps/loanschedule/conformance/reporoot.go
+-                    cwd cross-check: SAME — cwd /Users/buv/gerege-nbfi/.claude/worktrees/t254-merge resolves to the graded root
+-    store           /Users/buv/gerege-nbfi/.claude/worktrees/t254-merge/.softhouse/vectors
+-    implementation  loanschedule-go
+-    oracle probe    UP
+-
+-CASE                         CLASS            SEAM        OUTCOME       CELLS UNGRADED  REASON
+-----------------------------------------------------------------------------------------------------------------------
+-SELFTEST-01-two-period-ze... selftest         none        PASS             21        0  SELF-TEST FIXTURE — EXCLUDED FROM THE P...
+-P-00                         parity           path_a_e... PASS             47        2  
+-P-01                         parity           path_a_e... PASS            131        2  
+-P-02                         parity           path_a_e... PASS             47        2  
+-P-02b                        parity           path_a_e... PASS             47        2  
+-P-03                         parity           path_a_e... PASS             47        2  
+-P-04f                        parity           path_a_e... PASS             47        2  
+-P-04t                        parity           path_a_e... PASS             47        2  
+-P-DRIFT-A                    parity           path_a_e... PASS             47        2  
+-P-DRIFT-B                    parity           path_a_e... PASS             47        2  
+-P-DRIFT-C                    parity           path_a_e... PASS             89        2  
+-P-DRIFT-D                    parity           path_a_e... PASS            257        2  
+-P-DRIFT-E                    parity           path_a_e... PASS             47        2  
+-P-DRIFT-F                    parity           path_a_e... PASS             47        2  
+-P-DRIFT-G                    parity           path_a_e... PASS             47        2  
+-P-DRIFT-H                    parity           path_a_e... PASS             47        2  
+-P-EMI-36-127704              parity           path_a_e... PASS            257        2  
+-P-EMI-6-1M014632             parity           path_a_e... PASS             47        2  
+-P-LAT-MID                    parity           path_a_e... PASS             47        2  
+-P-LAT-Q0a                    parity           path_a_e... PASS             47        2  
+-P-ME-A                       parity           path_a_e... PASS             47        2  
+-P-ME-B                       parity           path_a_e... PASS             47        2  
+-P-ME-C                       parity           path_a_e... PASS             47        2  
+-P-ME-D                       parity           path_a_e... PASS             47        2  
+-P-MNT-1M2                    parity           path_a_e... PASS             89        2  
+-P-MNT-4M999                  parity           path_a_e... PASS            131        2  
+-P-MNT-50M                    parity           path_a_e... PASS            257        2  
+-P-MNT-5M                     parity           path_a_e... PASS            131        2  
+-P-RND-S1-21021587pt50-6x2... parity           path_a_e... PASS             47        2  
+-P-RND-S2-3139845pt86-6x7pct  parity           path_a_e... PASS             47        2  
+-REFUSE-01-actual-actual-u... contract-refusal none        PASS              1        0  
+-REFUSE-02-half-even-ungraded contract-refusal none        PASS              1        0  
+-REFUSE-03-annual-fixed303... contract-refusal none        PASS              1        0  
+-REFUSE-04-disbursement-af... contract-refusal none        PASS              1        0  
+-T116-G8-CLEAN-N103           parity           path_a_e... PASS            726        2  
+-T116-G8-FAMB-N104            parity           path_a_e... PASS            733        2  
+-T116-G8-FAMB-N108            parity           path_a_e... PASS            761        2  
+-T149-PATHB-TIE               parity           path_b_s... PASS             88        3  
+-T61-HE-A                     parity           path_a_e... PASS             47        2  
+-T61-HE-B                     parity           path_a_e... PASS             47        2  
+-T61-HE-C                     parity           path_a_e... PASS             47        2  
+-T64-ZP-A                     parity           path_a_e... PASS            397        2  
+-T64-ZP-B                     parity           path_a_e... PASS            390        2  
+-T64-ZP-C                     parity           path_a_e... PASS            243        2  
+-T64-ZP-D                     parity           path_a_e... PASS            509        2  
+-T74-E-P340                   parity           path_a_e... PASS            257        2  
+-T74-E-P4                     parity           path_a_e... PASS            257        2  
+-T74-E-P426                   parity           path_a_e... PASS            257        2  
+-T74-E-P59                    parity           path_a_e... PASS            257        2  
+-T74-E-P6940                  parity           path_a_e... PASS            257        2  
+-T74-E-P72                    parity           path_a_e... PASS            257        2  
+-
+---- WHAT THIS RUN ACTUALLY GRADES (named wrong implementations killed) ---
+-    Gradeability is NOT "two captures differing only in a setting differ in some cell". That test is
+-    false in both directions: LB-DEC31 reports ZERO cells differing across the day-count setting and
+-    still kills a no-arm port by 6,015 minor units (finding T55-N1). An all-products-identical capture
+-    is therefore not evidence of non-gradeability.
+-    counterfactuals named by GRADED vectors: 113  (106 money kills, 7 structural kills)
+-    kills carried by REFUSED vectors: 0, credited to NOTHING (0 corroboration claims likewise)
+-    kills carried by HARNESS-ERROR vectors: 0, credited to NOTHING (0 corroboration claims likewise)
+[restore] residue put back at /tmp/t234_matrix2.txt

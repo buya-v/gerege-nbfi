@@ -1,0 +1,76 @@
+==============================================================================
+DEC-2 rev-8 conformance.sh citations, resolved against MAIN
+file: .softhouse/reviews/t254-harness-portability/evidence/.conf-main.sh  (2617 lines)
+hypothetical: insert +52 lines at 570 (the CLOUD diff shape)
+==============================================================================
+
+### DEC-2:96  cites conformance.sh:1152-1187
+  NOW  1152: # Measured in this worktree: guard 57, floor 57 (and 57 on the filesystem).
+  NOW  1187: # WHY REFUSE. Under THIS script the override can never be legitimate. build_binary compiles
+  AFTER CLOUD MERGE the same numbers 1152-1187 would point at:
+       1152: # Measured in this worktree: guard 57, floor 57 (and 57 on the filesystem).   <-- unchanged number, DIFFERENT code
+  the cited code MOVED to 1204-1239
+
+### DEC-2:428  cites conformance.sh:1254
+  NOW  1254: # I4-DML, I6-HOLD-BALANCE, OPAQUE-SQL]. Its own PASS text, printed by this function below, states
+  AFTER CLOUD MERGE the same numbers 1254 would point at:
+       1254: # I4-DML, I6-HOLD-BALANCE, OPAQUE-SQL]. Its own PASS text, printed by this function below, states   <-- unchanged number, DIFFERENT code
+  the cited code MOVED to 1306
+
+### DEC-2:1059  cites conformance.sh:1152-1187
+  NOW  1152: # Measured in this worktree: guard 57, floor 57 (and 57 on the filesystem).
+  NOW  1187: # WHY REFUSE. Under THIS script the override can never be legitimate. build_binary compiles
+  AFTER CLOUD MERGE the same numbers 1152-1187 would point at:
+       1152: # Measured in this worktree: guard 57, floor 57 (and 57 on the filesystem).   <-- unchanged number, DIFFERENT code
+  the cited code MOVED to 1204-1239
+
+### DEC-2:1116  cites conformance.sh:1189-1213
+  NOW  1189: # $REPO_ROOT on every run this file performs [MEASURED: the clean baseline report reads
+  NOW  1213: # and the driver parks only on `exit 2` AND a probe line PRESENT and reading `down`. It is
+  AFTER CLOUD MERGE the same numbers 1189-1213 would point at:
+       1189: # $REPO_ROOT on every run this file performs [MEASURED: the clean baseline report reads   <-- unchanged number, DIFFERENT code
+  the cited code MOVED to 1241-1265
+
+### DEC-2:1773  cites conformance.sh:718
+  NOW  718: # guard_no_float_in_harness: no floating-point identifier ANYWHERE in the Go
+  AFTER CLOUD MERGE the same numbers 718 would point at:
+       718: # guard_no_float_in_harness: no floating-point identifier ANYWHERE in the Go   <-- unchanged number, DIFFERENT code
+  the cited code MOVED to 770
+
+### DEC-2:2470  cites conformance.sh:1254
+  NOW  1254: # I4-DML, I6-HOLD-BALANCE, OPAQUE-SQL]. Its own PASS text, printed by this function below, states
+  AFTER CLOUD MERGE the same numbers 1254 would point at:
+       1254: # I4-DML, I6-HOLD-BALANCE, OPAQUE-SQL]. Its own PASS text, printed by this function below, states   <-- unchanged number, DIFFERENT code
+  the cited code MOVED to 1306
+
+### DEC-2:2769  cites conformance.sh:1152-1187
+  NOW  1152: # Measured in this worktree: guard 57, floor 57 (and 57 on the filesystem).
+  NOW  1187: # WHY REFUSE. Under THIS script the override can never be legitimate. build_binary compiles
+  AFTER CLOUD MERGE the same numbers 1152-1187 would point at:
+       1152: # Measured in this worktree: guard 57, floor 57 (and 57 on the filesystem).   <-- unchanged number, DIFFERENT code
+  the cited code MOVED to 1204-1239
+
+### DEC-2:2903  cites conformance.sh:1115-1116
+  NOW  1115: # P-57: every stage here consumes all of its input — `git grep`, `sed`, `grep`, `sort`,
+  NOW  1116: # `wc` — so no member of the `| grep -q` / `| head` EPIPE family is introduced. P-58:
+  AFTER CLOUD MERGE the same numbers 1115-1116 would point at:
+       1115: # P-57: every stage here consumes all of its input — `git grep`, `sed`, `grep`, `sort`,   <-- unchanged number, DIFFERENT code
+  the cited code MOVED to 1167-1168
+
+### DEC-2:3207  cites conformance.sh:1115-1116
+  NOW  1115: # P-57: every stage here consumes all of its input — `git grep`, `sed`, `grep`, `sort`,
+  NOW  1116: # `wc` — so no member of the `| grep -q` / `| head` EPIPE family is introduced. P-58:
+  AFTER CLOUD MERGE the same numbers 1115-1116 would point at:
+       1115: # P-57: every stage here consumes all of its input — `git grep`, `sed`, `grep`, `sort`,   <-- unchanged number, DIFFERENT code
+  the cited code MOVED to 1167-1168
+
+### DEC-2:3423  cites conformance.sh:1189-1213
+  NOW  1189: # $REPO_ROOT on every run this file performs [MEASURED: the clean baseline report reads
+  NOW  1213: # and the driver parks only on `exit 2` AND a probe line PRESENT and reading `down`. It is
+  AFTER CLOUD MERGE the same numbers 1189-1213 would point at:
+       1189: # $REPO_ROOT on every run this file performs [MEASURED: the clean baseline report reads   <-- unchanged number, DIFFERENT code
+  the cited code MOVED to 1241-1265
+
+==============================================================================
+distinct cited RANGES: 5   total citations: 10
+==============================================================================

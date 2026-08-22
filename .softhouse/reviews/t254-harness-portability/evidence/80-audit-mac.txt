@@ -1,0 +1,17 @@
+======================================================================
+INSTRUMENT AUDIT — MAC 0208477   (blobs read from softhouse/T253b-harness-portability-mac)
+======================================================================
+TERM-1  .sh/.py instruments added by this branch ....... 8  (.sh=6 .py=2)
+TERM-2  B1 bare grep (ugrep wrapper hazard) ............ 0
+TERM-3  B2 rg ......................................... 0
+TERM-4  B3 git grep -E with \b ........................ 0
+TERM-5  B4 .sh missing set -euo pipefail .............. 1
+TERM-6  B5 || true / || echo rc-conflation ............ 2
+
+--- per-file findings ---
+B5 rc-conflation  .softhouse/bin/go-env.sh
+B1? mixed-grep    .softhouse/capture/t253-portability/instruments/60-hardcoded-toolchain-census.py  (has both a bare token and a sound form - manual look)
+B1? mixed-grep    .softhouse/conformance.sh  (has both a bare token and a sound form - manual look)
+B4 no-set-euo     .softhouse/conformance.sh
+B5 rc-conflation  .softhouse/conformance.sh
+--- end MAC 0208477 ---
