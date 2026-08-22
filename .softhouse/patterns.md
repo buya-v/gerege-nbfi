@@ -1987,7 +1987,16 @@ state **where you looked**. If the answer does not include every place the thing
 
 ---
 
-## P-71 — agent worktrees fork from the SESSION-START commit, not from current `main`
+## P-71 — a worker's fork point is UNPREDICTABLE: MEASURE IT, NEVER ASSERT IT (both stated rules have been falsified)
+
+> **READ THE TITLE, THEN THE TWO CORRECTIONS BELOW BEFORE THE BODY.** This section was twice titled with a
+> *rule* — first "workers fork from current `main`" (the `/softhouse` skill's claim), then "from the
+> SESSION-START commit", then "from the DISPATCH commit". **Every one of those has now been falsified by a
+> fire's measurement**, and the last two were falsified in **opposite directions on consecutive fires**. The
+> body below is kept intact as the evidence trail; read it as *three measurements*, not as three rules, and
+> note that each was correct about the fire that took it. **Retitled by the driver, local fire
+> `20260822-060013`, because the heading is what gets grepped and quoted — and a heading that asserts a dead
+> rule will keep being quoted as one.** The surviving duty is the title.
 
 **Caught by `T225`, local fire `20260822-000013`, against the driver.** The `/softhouse` skill states:
 *"Before any batch: commit and push main — workers fork from current main."* **They do not.**
@@ -2258,6 +2267,50 @@ the concept, not the sentence; P-72 is what stops "I widened my terms" from bein
 `\b` on an inflected stem, and a `\b` the engine does not implement, are both exactly that.
 **P-33** — a tool claim names the binary, the version and the invocation: `-E` and `-P` are different
 languages, and `grep` on `PATH` may be neither.
+
+
+## P-73 — a fact this program HAS measured, filed where the reader who needs it will not look
+
+**Diagnosed by `T234` and given its number here by the driver, local fire `20260822-060013`.** The number
+`P-73` was a **hole**: `T234`'s handoff cited *"P-72/P-73 should cross-reference P-53"* at
+`.softhouse/capture/t234-sweep-instrument-audit/HANDOFF.md:411`, and `P-73` **existed nowhere in the repo** —
+verified by `git grep -n "P-73" -- .` over the whole tree, which returned exactly that one reference and no
+heading. `P-72` and `P-74` both exist. So the file carried a live pointer into empty space, which is itself a
+small instance of what this pattern is about.
+
+**The shape.** The program measures something, writes it down correctly, and then **re-discovers it later at
+full cost** — because the place it was written is not the place the next reader looks. The knowledge was never
+missing. Only the **route to it** was.
+
+**Instance 1 — `T234`, on `P-53`.** The `\b`-under-ERE defect was **measured and written down twice before
+`T232` re-discovered it**: `patterns.md` `P-53` states it **verbatim**, and `P-12` records a second
+measurement. `T232` spent a task rediscovering a defect that had been in force, and documented, for two runs.
+`T234`'s verdict, which is the one that matters: **a filing failure, not a knowledge gap.**
+
+**Instance 2 — the driver, on `.softhouse/reference-oracle.md` (D-3, this fire).** The pin file that says of
+itself *"every vector capture must cite this file's pin"* named `fineract_tenants` and `fineract_default` as
+the databases and **omitted `fineract_gerege`**, the tenant database the six ledger parity vectors were
+captured from. Meanwhile the tenant distinction that makes the omission dangerous — tenant 1 `default` is
+**`Asia/Kolkata` (+05:30)**, tenant 2 `gerege` is **`Asia/Ulaanbaatar` (+08)**, and CLAUDE.md permits neither
+Kolkata nor a hard-coded offset — is recorded across **66 tracked files** of capture evidence. The program
+knew. The pin file did not say. Evidence: `.softhouse/capture/driver-20260822-060013/`.
+
+**Why it is worth its own number rather than being folded into P-26 or P-70.** `P-70` is about stating a
+*search result* as a *world fact*; `P-26` is about sweeping the concept rather than the sentence. Both are
+about the **search**. This one is about the **destination**: the search was never run because the reader had
+no reason to think there was anything to find. The tell is retrospective and reliable — *someone spent a task
+establishing something this repo already stated, and both statements are correct.* When that happens, the
+remedy is **never** to write it down a third time. It is to make the place the reader **will** look point at
+the place it is already written.
+
+**Duty.** When you record a fact that a future task would be harmed by not knowing, ask **where that task
+will be standing when it needs this**, and put a pointer there — not only where the fact was discovered. And
+when you find a stale or incomplete entry in a file *whose stated purpose is to be cited*, treat it as this
+pattern and not as a typo: the citation makes the omission load-bearing.
+
+**Related.** `P-53`, `P-12` (the measurements that were filed and lost). `P-69` — a measured claim has a
+shelf life; this is what happens when the claim does not even reach its reader. `P-66`/`P-70` — where you
+looked. `P-72` — calibrate the instrument.
 
 
 ## P-74 — an unescaped backtick in a `git commit -m "..."` message EXECUTES; it has now silently deleted a word and silently amended a commit
