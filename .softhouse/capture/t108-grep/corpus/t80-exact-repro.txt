@@ -1,0 +1,6 @@
+=== T85 F-2 - a guard that dies instead of firing
+  PASS P1 image digest pinned
+  PASS P2 container up
+  PASS P3 tenant reachable
+  FAIL P7 PostgreSQL version is 9.9.9
+t36/preconditions.sh: line 166: PIN_PG_MAJOR_MINORâ: unbound variable

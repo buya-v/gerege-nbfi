@@ -51,3 +51,30 @@ merged.
 
 This closes the triage item recorded in `.softhouse/RESUME.md` under *"Stranded work found during this
 fire's exit sweep"*.
+
+### T214 re-checked this decision mechanically (22 August 2026) — it stands
+
+The paragraph above is the only place on `main` that records why `rescued-agent-a353b03c0dea4dd41-…` is not
+merged, so **T214 re-derived its load-bearing claim instead of transcribing it.** The claim is *"the raw
+observations it contains are already on `main`"*.
+
+Each of the branch's four attestation sidecars states the sha256 of the response it attests. Compared
+against the bytes of the corresponding file on `main`:
+
+| attestation on the branch | `response.sha256` it records | `.softhouse/capture/pathb/out/…-raw.json` on `main` |
+|---|---|---|
+| `B-01-baseline-attestation.json` | `713a3560…c062009` | **identical** |
+| `B-02-multiplesof100-attestation.json` | `9de8757d…d99d02f8` | **identical** |
+| `B-03-diycs-fullleapyear-attestation.json` | `892dd6f5…f7da58bf` | **identical** |
+| `B-04-diycs-feb29only-attestation.json` | `c80f62b0…b65c724a80` | **identical** |
+
+[VERIFIED by T214: `git show <branch>:<attestation>` → `response.sha256`, against
+`shasum -a 256` of `git show main:<raw>`, all four MATCH.] The four replacement artefacts this file names —
+`pathb/t36/attest.py`, `t36/preconditions.sh`, `t36/mutation-test.sh`, `capture/src/run-pass3b.sh` — were
+also confirmed present on `main`, as was `capture/src/Capture3.java`, the file the branch *modifies*.
+
+So the 15 files are **derived sidecars over observations `main` already holds**, and the decision not to
+merge them is a supersession, not a loss. **This branch is the one of T214's four that was deliberately
+abandoned; the other three (`T108-grep-adjudication`, `T109-fork-point-digest-compare`, `T131-review-t108`)
+were accidental omissions and their 64 evidence paths were landed on `main` by T214** — see
+`.softhouse/obligations.md` §4.4. The branch is still not deleted, and is still the only copy.

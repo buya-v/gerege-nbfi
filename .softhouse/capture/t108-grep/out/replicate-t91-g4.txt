@@ -1,0 +1,24 @@
+built t91-shape.txt (poison AFTER match) and t80-shape.txt (poison BEFORE match)
+
+hexdump of the poisoned line, T91 shape:
+00000030: 2069 6e74 6572 6573 7420 3230 3932 352e   interest 20925.
+00000040: 3034 2028 3d20 4841 4c46 5f55 5029 fffe  04 (= HALF_UP)..
+00000050: 0a                                       .
+hexdump of the poisoned line, T80 shape:
+00000000: 2020 fffe 5041 5353 2020 6566 6665 6374    ..PASS  effect
+00000010: 6976 6520 726f 756e 6469 6e67 206d 6f64  ive rounding mod
+00000020: 6520 6361 6e61 7279 3a20 7065 7269 6f64  e canary: period
+
+SHAPE        LOCALE   FLAGS  EXIT   MEANING
+t91-shape    posixC   -qF    0      FOUND (correct)
+t91-shape    posixC   -aqF   0      FOUND (correct)
+t91-shape    utf8     -qF    0      FOUND (correct)
+t91-shape    utf8     -aqF   0      FOUND (correct)
+t80-shape    posixC   -qF    0      FOUND (correct)
+t80-shape    posixC   -aqF   0      FOUND (correct)
+t80-shape    utf8     -qF    1      ABSENT (WRONG - the sentence IS there)
+t80-shape    utf8     -aqF   1      ABSENT (WRONG - the sentence IS there)
+
+T91 ran only the two 'posixC' rows of the t91-shape block.
+Both of them are FOUND, so it concluded T80 did not reproduce.
+The row that reproduces T80 is  t80-shape / utf8 / -aqF.

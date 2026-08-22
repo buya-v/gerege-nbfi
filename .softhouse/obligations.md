@@ -120,10 +120,10 @@ lands `bin/` + recipe + SHA-256 and leaves `out/` regenerable.
 | `T42-mathcontext-inforce` | 7 | 61 | the `(19, HALF_UP)` in-force evidence |
 | `T39-periodratio-observation` | 6 | 47 | |
 | `T22-pathb-audit-rescued` | 1 | 39 | |
-| `T108-grep-adjudication` | 1 | 30 | the 360-cell grep matrix behind **T132** (money-exempt, §1) |
-| `T109-fork-point-digest-compare` | 5 | 19 | superseded in substance by the merged T142/T127 corrections |
+| `T108-grep-adjudication` | 1 | 30 | the 360-cell grep matrix behind **T132** (money-exempt, §1) — **28 evidence paths LANDED by T214**, see §4.4 |
+| `T109-fork-point-digest-compare` | 5 | 19 | superseded in substance by the merged T142/T127 corrections — but **8 evidence paths LANDED by T214**, see §4.4 |
 | `T21-pass3-audit-rescued` | 1 | 14 | |
-| `T131-review-t108` | 2 | 30 | review **recovered** above; `t131-grep/` corpus held |
+| `T131-review-t108` | 2 | 30 | review **recovered** above; **the 28-file `t131-grep/` corpus LANDED by T214**, see §4.4 |
 
 ### 4.3 Explicitly abandoned, with reason
 
@@ -138,3 +138,61 @@ lands `bin/` + recipe + SHA-256 and leaves `out/` regenerable.
 Pruned this fire: `rescued-agent-a23f3059…-20260820-230001` and `T99-pathb-lower-findings` (clean, fully
 merged, worktrees removed). **Nothing in §4.2 or §4.3 has been deleted** — every branch still exists and any
 fire may revisit it.
+
+### 4.4 T214 — the §4.1 recovery was partial, and the reason given for the remainder did not apply
+
+**Measured by T214, fire `20260822-080001`, re-derived from the object store and not inherited from the
+driver's figure.** 23 `softhouse/*` branches carry commits not on `main`. Across them **79 file-paths exist
+on the branch and at NO path on `main`**, concentrated in four branches: `T131-review-t108` (28),
+`T108-grep-adjudication` (28), `rescued-agent-a353b03c0dea4dd41-20260818-200001` (15),
+`T109-fork-point-digest-compare` (8). Method: for each branch, `git diff --name-only main...<branch>`, then
+exact-path membership against `git ls-tree -r --name-only main`; the totals equal a whole-tree
+`comm -23` against the same set, so no path is an artefact of the diff base.
+
+**§4.1's stated reason for keeping the remainder off `main` — "raw `capture/*/out/` trees … artefacts are
+stored as recipe + SHA-256, not committed whole" — is falsified by measurement on these three branches.**
+The hygiene rule's threshold is a capture output over **~5,000 lines**. The 64 paths on `T108`/`T109`/`T131`
+total **6,245 lines / 408 KB across 64 files**, and the **largest single file is 727 lines**. Not one of them
+is a raw dump in the sense the rule names. The omission was therefore **accidental in effect**, whatever it
+was in intent: `main` carried the reviews and not the evidence they grade.
+
+What made it a broken evidence chain rather than a filesystem detail — every one on-`main`, citing a path
+that was not:
+
+| citing document on `main` | cites |
+|---|---|
+| `.softhouse/conformance.sh:506` — **the live harness** | `[VERIFIED: … .softhouse/capture/t108-grep/MATRIX.md]` |
+| `.softhouse/capture/t91/verdict.sh:33`, `prove-guards.sh:134,181`, `out/GUARDS-RED.txt:68` | `t108-grep/MATRIX.md`, `out/matrix.tsv`, `out/probe-flags.txt` |
+| `.softhouse/reviews/T131-review-of-T108.md:5` | `handoff/…/T108.md`, `MATRIX.md`, and `t131-grep/` throughout |
+| `.softhouse/reviews/T127-review-of-T109.md` M-1/M-3/M-5/M-6/M-7 | **line-numbered micro-fixes into `T109.md`** and `every-invocation.txt` |
+| `.softhouse/handoff/…/T115.md`, `T123.md`, `.softhouse/reviews/T138-review-of-T115.md` | `t108-grep/` |
+
+**LANDED by T214 — 64 paths, by `git checkout <branch> -- <path>`, never a branch merge.** All 64 are pure
+additions; every landed blob was verified `git hash-object`-identical to the branch blob. The branches'
+*modifications* to files `main` already has were deliberately **not** taken (T108: `T80.md`, `tasks.json`;
+T109: 11 files under `T82-guard-proofs/` plus `T102.md`/`T82.md`, whose superseding corrections from
+T127/T142 are already on `main`; T131: the review and handoff, recovered in §4.1). A wholesale merge of
+these old fork-points would have regressed them.
+
+**`rescued-agent-a353…` was NOT landed — it is a genuine, already-documented abandonment.**
+`.softhouse/reviews/t24-probe/README-PROVENANCE.md` on `main` names the branch, lists its 15 files and gives
+the reason. T214 verified that decision mechanically rather than restating it: all four
+`B-0*-attestation.json` sidecars record a `response.sha256` that **matches the corresponding
+`.softhouse/capture/pathb/out/B-0*-raw.json` on `main` byte-for-byte**, so the raw observations really are
+preserved and only derived, stale-by-T42's-standard sidecars would have been added. Two of its files also
+sit in a `req/` directory and would have joined `guard_no_float_in_capture_requests`'s population, raising
+that guard's floor for evidence no document asks for.
+
+**A correction to the sweep's own summary, in the spirit of P-65.** "The other 19 branches are fully
+represented on `main` and need nothing" is true of *paths* and over-claims for *content*: 12 of those 19
+carry a path whose branch bytes differ from `main`'s. T214 tested each such pair for whether the branch blob
+ever existed at that path anywhere in `main`'s history. **53 of 63 pairs: yes** — the branch is simply stale
+and nothing is lost. **10 are novel bytes**, and every one belongs to a branch already abandoned with a
+reason in §4.3: `T38-dec1-v7` (`contract.go`, the DEC-1 ADR, its handoff), `T4-dec1-retry-rescued` and
+`rescued-agent-a7b052ea…` (`contract.go`), `rescued-agent-a2027f85…` (the DEC-1 ADR),
+`T16b-capture-plan-corrections`, `rescued-agent-a1be0f4d…` (`T99.md`), `rescued-agent-a8581c69…`
+(`t91/prove-guards.sh`), `rescued-agent-a353…` (`Capture3.java`). Four of the ten target
+`contract.go` or `DEC-1-schedule-generator-adapter.md` — **ratified, frozen artefacts**; landing any of them
+from a branch would be a `user`-gate bypass, not a rescue. Nothing further to land.
+
+**No `softhouse/*` branch was deleted by T214.**

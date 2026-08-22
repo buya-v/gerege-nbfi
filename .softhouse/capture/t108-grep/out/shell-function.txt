@@ -1,0 +1,32 @@
+The Claude Code Bash-tool `grep` shell function, verbatim.
+Source: $HOME/.claude/shell-snapshots/<session>.sh (regenerated per session).
+Captured 2026-08-21T00:55:41Z from the snapshot in force for T108.
+
+=== /Users/buv/.claude/shell-snapshots/snapshot-zsh-1787270426748-3up36x.sh   (newest snapshot on this host that defines it)
+
+# Shadow find/grep with embedded bfs/ugrep
+unalias find 2>/dev/null || true
+unalias grep 2>/dev/null || true
+function grep {
+  local _cc_a
+  for _cc_a in ${1+"$@"}; do
+    case "$_cc_a" in -*-filter*|-*-pager*|-*-view*|-*-format-open*|-*-config*|---*|-@*|-*-save-config*|-[Zz]*|-[!-]*[Zz]*|--null|--null-data) command grep ${1+"$@"}; return ;; esac
+  done
+  local _cc_bin="${CLAUDE_CODE_EXECPATH:-}"
+  [[ -x $_cc_bin ]] || _cc_bin=/Users/buv/.local/bin/claude
+  if [[ ! -x $_cc_bin ]]; then command grep ${1+"$@"}; return; fi
+  if [[ -n ${ZSH_VERSION:-} ]]; then
+    ARGV0=ugrep "$_cc_bin" -G --ignore-files --hidden -I --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.hg --exclude-dir=.bzr --exclude-dir=.jj --exclude-dir=.sl ${1+"$@"}
+  elif [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "win32" ]]; then
+    ARGV0=ugrep "$_cc_bin" -G --ignore-files --hidden -I --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.hg --exclude-dir=.bzr --exclude-dir=.jj --exclude-dir=.sl ${1+"$@"}
+  else
+    (exec -a ugrep "$_cc_bin" -G --ignore-files --hidden -I --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.hg --exclude-dir=.bzr --exclude-dir=.jj --exclude-dir=.sl ${1+"$@"})
+  fi
+}
+
+NOTE: `find` is shadowed the same way, onto an embedded `bfs`.
+
+The three flags that decide this whole adjudication:
+  -G              basic regular expressions, grep compatibility mode
+  -I              SKIP FILES THAT LOOK BINARY  <-- the silent-miss cause
+  --ignore-files  obey .gitignore-style ignore files

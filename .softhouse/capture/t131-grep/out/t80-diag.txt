@@ -1,0 +1,1 @@
+/tmp/t131-unbound.sh: line 2: PIN_PG_MAJOR_MINORâ: unbound variable
