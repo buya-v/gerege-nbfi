@@ -1,0 +1,20 @@
+T251 capabilities-ledger.json BOTH TERMS at a6bec72 (P-67)
+
+rows: 14 carrying in_graded_domain: 14
+TRUE: 6
+FALSE: 8
+OMITTED: 0
+  True   None
+  True   None
+  True   None
+  True   None
+  True   None
+  True   None
+  False  None
+  False  None
+  False  None
+  False  None
+  False  None
+  False  None
+  False  None
+  False  None

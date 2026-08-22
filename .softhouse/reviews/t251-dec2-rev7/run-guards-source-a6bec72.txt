@@ -1,0 +1,40 @@
+T251 SOURCE READ: run_guards() in .softhouse/conformance.sh at a6bec72
+
+ 1504|run_guards() {
+ 1505|  local failed=0
+ 1506|  # FIRST, and it SHORT-CIRCUITS rather than joining the `failed=1` tally the others use.
+ 1507|  # Two reasons, both learned the expensive way. (1) Every guard below answers a question
+ 1508|  # about $REPO_ROOT; until it is settled that $REPO_ROOT is the tree being GRADED, none of
+ 1509|  # their answers is about the run in progress, and a dozen green census lines printed under
+ 1510|  # a refusal read as "mostly fine". That is the T165 failure mode exactly — the true
+ 1511|  # statement was in the output and the reader took the summary instead. (2) The tally style
+ 1512|  # exists so that one bad guard does not hide another; here there is nothing to hide, the
+ 1513|  # divergence subsumes every downstream result.
+ 1514|  guard_graded_root_is_this_tree || {
+ 1515|    warn "conformance: EXIT 2 — no verdict is available, and NO other guard was run: their"
+ 1516|    warn "conformance: results would describe a tree this run was not going to grade."
+ 1517|    exit "$EXIT_UNUSABLE"
+ 1518|  }
+ 1519|  guard_no_float_in_vectors           || failed=1
+ 1520|  guard_no_float_in_harness           || failed=1
+ 1521|  guard_gofmt                         || failed=1
+ 1522|  guard_no_float_in_capture_requests  || failed=1
+ 1523|  guard_no_narrow_catch_in_capture_rigs || failed=1
+ 1524|  guard_ledger_invariants             || failed=1
+ 1525|  guard_no_fail_open_instruments      || failed=1
+ 1526|  if [ "$failed" -ne 0 ]; then
+ 1527|    warn "conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass."
+ 1528|    exit "$EXIT_UNUSABLE"
+ 1529|  fi
+ 1530|}
+
+guard_*() definitions in file:
+    676 guard_no_float_in_vectors() {
+    759 guard_no_float_in_harness() {
+    827 guard_gofmt() {
+   1084 guard_no_float_in_capture_requests() {
+   1145 guard_no_narrow_catch_in_capture_rigs() {
+   1215 guard_graded_root_is_this_tree() {
+   1300 guard_ledger_invariants() {
+   1430 guard_no_fail_open_instruments() {
+   1504 run_guards() {

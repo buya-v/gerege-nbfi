@@ -1,0 +1,38 @@
+T251 the 35th-site enumeration: carriers of the guard citation in the ADR at a6bec72
+
+### 1152-1187
+     40| >    `T208` [VERIFIED by `A2-28` at commit `2e97162`: `.softhouse/conformance.sh:1152-1187` defines
+    821| | **I-3** | Balances are DERIVED, never written | No write path to any balance column exists in the Go tree | **NO — STRUCTURAL ONLY.** A vector is a snapshot of oracle output; it cannot observe the *
+    873| `2e97162`: `.softhouse/conformance.sh:1152-1187`, the definition and its in-file commentary read in
+   2376|    [`.softhouse/conformance.sh:1152-1187` defines it, `:1209` invokes it], built by `A2-18` and
+
+### 1189-1213
+     41| >    it, `:1189-1213` is `run_guards` invoking all seven, `:1209` is the invocation; `A2-28`'s own
+    848| `.softhouse/conformance.sh:1189-1213`, opened and read line by line; the first short-circuits with
+   2920|        wired it**. `run_guards` invokes **seven** guards, not five (`conformance.sh:1189-1213`), and
+
+### :1209\b
+     41| >    it, `:1189-1213` is `run_guards` invoking all seven, `:1209` is the invocation; `A2-28`'s own
+    821| | **I-3** | Balances are DERIVED, never written | No write path to any balance column exists in the Go tree | **NO — STRUCTURAL ONLY.** A vector is a snapshot of oracle output; it cannot observe the *
+   2376|    [`.softhouse/conformance.sh:1152-1187` defines it, `:1209` invokes it], built by `A2-18` and
+
+### invokes?\s+\*?\*?(seven|SEVEN)
+     38| >    it did not, and that was true when revision 2 was written.** `run_guards` invokes **seven**
+    847| **`run_guards` invokes SEVEN guards** [VERIFIED by `A2-28` at commit `2e97162`,
+   2375|    `run_guards` invokes **seven** guards, not five; the seventh is `guard_ledger_invariants`
+   2920|        wired it**. `run_guards` invokes **seven** guards, not five (`conformance.sh:1189-1213`), and
+
+### (?i)the seventh
+     39| >    guards, not five; the seventh is `guard_ledger_invariants`, built by `A2-18` and **wired** by
+    821| | **I-3** | Balances are DERIVED, never written | No write path to any balance column exists in the Go tree | **NO — STRUCTURAL ONLY.** A vector is a snapshot of oracle output; it cannot observe the *
+    872| **The seventh does, and this is what it actually delivers** [VERIFIED by `A2-28` at commit
+   2375|    `run_guards` invokes **seven** guards, not five; the seventh is `guard_ledger_invariants`
+   2921|        the seventh is `guard_ledger_invariants` (`:1117-1152`, invoked `:1174`). §4.4.1 is retitled
+
+### (?i)all seven
+     41| >    it, `:1189-1213` is `run_guards` invoking all seven, `:1209` is the invocation; `A2-28`'s own
+    741| | REST, product template | the **same-shaped** `"amount"` field also carries **non-money**: seven `chargeOptions` percentages read `1.234500` | [VERIFIED BY A2-8 AND RE-CENSUSED BY A2-12 over 147 file
+
+cause of the move:
+c13e9d8 T248: the fail-open guard widened until it sees the site that motivated it
+conformance.sh lines at 9b6c596: 2543  at a6bec72: 2573

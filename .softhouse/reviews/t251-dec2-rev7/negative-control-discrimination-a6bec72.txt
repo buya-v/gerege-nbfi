@@ -1,0 +1,11 @@
+T251 NEGATIVE-CONTROL DISCRIMINATION TEST at a6bec72
+needle on line 1 changed ZZQQ-T247-THIS-MUST-NOT-MATCH -> DEC-2 (which IS on line 1)
+expected: the script refuses to report and exits 2
+
+
+=== NEGATIVE CONTROL (expect 1 MOVED)  (docs/adr/DEC-2-gl-accounting-adapter.md, 3039 lines) ===
+  ok     L1     DEC-2
+
+CALIBRATION FAIL: the negative control did not fail. Results are void.
+
+exit code above was 2 = CALIBRATION FAIL as required

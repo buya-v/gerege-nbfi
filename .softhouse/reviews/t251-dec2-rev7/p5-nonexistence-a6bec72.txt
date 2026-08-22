@@ -1,0 +1,19 @@
+T251 P-5 non-existence, both controls, at a6bec72 (P-66/P-70)
+population: 27 tracked files under nexus/internal/apps/ledger
+
+P-1 : 3 hit(s)
+P-2 : 5 hit(s)
+P-3 : 3 hit(s)
+P-4 : 2 hit(s)
+P-5 : 0 hit(s)
+P-6 : 4 hit(s)
+P-7 : 4 hit(s)
+P-8 : 1 hit(s)
+P-9 : 3 hit(s)
+P-10 : 7 hit(s)
+
+P-5 across ALL of nexus/ : 0 hit(s)
+NEGATIVE control P-99 in ledger pkg : 0 hit(s)
+
+the P-8 hit:
+nexus/internal/apps/ledger/conformance/admit.go:201:			"exempt (P-8)", len(v.InvariantExemptions))
