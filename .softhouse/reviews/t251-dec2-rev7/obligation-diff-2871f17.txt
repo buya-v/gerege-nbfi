@@ -1,0 +1,15 @@
+COMMIT: 2871f175ed6606d1f7b091e31c180917f3a3ff82
+
+=== 1. Is H-10's BEFORE byte-identical to the live ADR L827-830? ===
+  YES — byte-identical (305 chars).
+
+=== 2. Are both declared obligations present, verbatim, in BOTH? ===
+  obligation 1: BEFORE=True  AFTER=True   'DEC-2 **obliges** I-1 through I-5 on any implementation of the GL/acco'
+  obligation 2: BEFORE=True  AFTER=True   '**I-3 and I-4 must be enforced by a harness-level source guard, not by'
+  -> BOTH OBLIGATIONS CARRIED FORWARD VERBATIM
+
+=== 3. Residue: what is in AFTER that is NOT one of the obligations? ===
+   **The rule this table encodes:** █OBLIGATION█. **Revisions 1–6 added "and grades none of them today"; REVISION 7 CORRECTS THAT CLAUSE AND ONLY THAT CLAUSE — it grades I-1 and I-2, on four vectors, and grades I-3, I-4 and I-5 by nothing** [MEASURED by `T247` at `9b6c596`]. █OBLIGATION█ — **unchanged by revision 7, and unchanged BY the six vectors**: a vector is a snapshot of oracle output and cannot observe the absence of a write, so no growth of this corpus will ever discharge them.
+
+=== 4. Residue: what was in BEFORE that is NOT one of the obligations? ===
+   **The rule this table encodes:** █OBLIGATION█, and **grades none of them today.** █OBLIGATION█.
