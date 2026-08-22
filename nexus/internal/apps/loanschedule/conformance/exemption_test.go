@@ -2,11 +2,16 @@ package conformance
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"testing"
+
+	"github.com/gerege/nexus/internal/apps/loanschedule/contract"
 )
 
 // FINDING T220-N1 — THE EXEMPTION MECHANISM HAD NO CORPUS-WIDE TRIPWIRE.
@@ -132,14 +137,23 @@ func inadmissibleDetail(t *testing.T, s *Summary, caseID string) string {
 // TestExemptionMustBeGroundedInARecordedViolation is the mechanism guard.
 //
 // THE RULE, POSITIVELY (P-35): an exempted invariant, re-run against the schedule
-// ITS OWN VECTOR RECORDED and honouring that vector's unrecorded_fields, must
-// come back VIOLATED. Not "the reason does not contain a weasel word" — the
-// property the report already claims for every exemption, asserted.
+// ITS OWN VECTOR RECORDED and honouring that vector's unrecorded_fields, is
+// admissible when it comes back VIOLATED there, and INADMISSIBLE when the record
+// REFUTES it — HOLD outright, or nothing to assert at all. Not "the reason does
+// not contain a weasel word" — the property the report already claims for every
+// exemption, asserted.
 //
-// DRIVEN RED. Each subtest below builds a store copy that is admissible on main's
-// bytes and shows the run refusing it here. Measured on the PRE-T222 bytes (the
-// admit.go loop that checked only the invariant name and a non-empty reason),
-// every one of the three fixtures below graded clean:
+// AND WHEN THE RECORD IS SILENT — a cell the invariant reads was withdrawn by
+// this vector's own unrecorded_fields — THE VERDICT IS
+// UNDETERMINED-ON-THE-RECORD, WHICH IS REPORTED AND ADMITTED. T222 refused that
+// case too; finding T225-F1 measured what it cost, and exemption.go's doctrine
+// block carries the argument. "The record does not say" is not "the record says
+// no", and concluding otherwise is finding T58-N2 one level up.
+//
+// DRIVEN RED. Each REFUSAL subtest below builds a store copy that is admissible on
+// pre-T222 bytes and shows the run refusing it here. Measured on the PRE-T222
+// bytes (the admit.go loop that checked only the invariant name and a non-empty
+// reason), every fixture below graded clean:
 //
 //	decoration        T116-G8-FAMB-N104 outcome PASS; parity 46 PASS 0 FAIL,
 //	                  contract-refusal 4, inadmissible 0, 7884 graded cells,
@@ -154,7 +168,10 @@ func inadmissibleDetail(t *testing.T, s *Summary, caseID string) string {
 //
 // — that is, the corpus's own headline numbers absorbed all three without a word,
 // and in the withdrawn-cells case the ONLY trace anywhere in the output was one
-// extra ungraded cell. The transcripts are reproduced in the T222 handoff.
+// extra ungraded cell [VERIFIED: T222's transcripts, reproduced independently by
+// T225 item 6 to the cell]. The withdrawn-cells row is why that case is now
+// REPORTED rather than admitted silently: it must leave a mark in the output, and
+// the subtest below fails if it does not.
 func TestExemptionMustBeGroundedInARecordedViolation(t *testing.T) {
 	pristine := storeRoot(t)
 
@@ -211,7 +228,11 @@ func TestExemptionMustBeGroundedInARecordedViolation(t *testing.T) {
 		s := selfTestRun(t, store)
 		detail := inadmissibleDetail(t, s, "T116-G8-FAMB-N104")
 		for _, want := range []string{
-			"HOLDS ON THE SCHEDULE THIS VECTOR ITSELF RECORDED",
+			"HOLDS OUTRIGHT ON THE SCHEDULE THIS VECTOR ITSELF RECORDED",
+			// "with no assertion withheld" is the half T225-F2 found missing: a
+			// PARTIAL hold used to reach this same refusal, and the refusal then
+			// described a schedule the invariant had not fully read.
+			"with no assertion withheld",
 			InvBalanceRollForward,
 			"silences NOTHING",
 		} {
@@ -237,12 +258,23 @@ func TestExemptionMustBeGroundedInARecordedViolation(t *testing.T) {
 		t.Logf("refused: %s", firstLine(detail))
 	})
 
-	// SHAPE 2 — THE DANGEROUS PAIRING. An exemption whose invariant reads ONLY
-	// cells the same vector's unrecorded_fields has withdrawn. unrecorded_fields
-	// takes the cells out of the diff; the exemption takes out the invariant that
-	// would have noticed; and the exemption's REASON — a sentence about what the
-	// oracle does on this shape — then rests on numbers nobody recorded.
-	t.Run("RED_the_dangerous_pairing_an_exemption_over_withdrawn_cells", func(t *testing.T) {
+	// SHAPE 2 — THE WITHDRAWN-CELLS PAIRING: REPORTED BY NAME, NOT REFUSED.
+	//
+	// T222 shipped this as an exit-2 refusal and T225's F-1 measured what that
+	// costs: the SAME classification fires on an ordinary capture gap and takes a
+	// legitimate vector, its cells and its named money kills out of the corpus.
+	// The rule now separates "the record refutes the exemption" (DECORATION,
+	// NOT-EVALUABLE — still refused) from "the record cannot say"
+	// (UNDETERMINED-ON-THE-RECORD — admitted and named). See exemption.go's
+	// doctrine block for the argument against extending T9-F1b here.
+	//
+	// DRIVEN RED, in the direction that is left: the CENSUS must move and the
+	// report must NAME it. Before this classification existed, the whole trace of
+	// this pairing in the run output was one extra ungraded cell, 93 -> 94
+	// [VERIFIED: T222's own pre-bytes measurement, reproduced by T225 item 6].
+	// The subtest fails if the pairing is silently folded into GROUNDED — which is
+	// the one-line shortcut that would have re-created finding T220-N1.
+	t.Run("REPORTED_the_withdrawn_cells_pairing_is_named_not_refused", func(t *testing.T) {
 		store := copyStore(t, pristine)
 		editVector(t, store, fambN104File, func(t *testing.T, m map[string]any) {
 			periods := periodsOf(t, m)
@@ -263,41 +295,228 @@ func TestExemptionMustBeGroundedInARecordedViolation(t *testing.T) {
 			t.Fatalf("the fixture store does not even load: %v / %v", lerr, loadErrs)
 		}
 		// The fixture withdraws a cell; it adds no exemption. The exemption it
-		// makes ungrounded is one T116 committed.
+		// makes undetermined is one T116 committed.
 		c := InspectExemptions(vectors)
 		if c.Declared != 4 {
 			t.Fatalf("the fixture must not change the number of exemptions; declared %d", c.Declared)
 		}
-		if c.Ungrounded != 1 {
-			t.Fatalf("expected exactly 1 ungrounded exemption, got %d: %v", c.Ungrounded, c.UngroundedNames)
+		if c.Undetermined != 1 {
+			t.Fatalf("expected exactly 1 UNDETERMINED exemption, got %d (grounded %d, ungrounded %d %v). "+
+				"If this reads 0 with grounded 4, the undetermined case has been folded back into "+
+				"GROUNDED and the exempted-count evidence is inflated again (finding T220-N1)",
+				c.Undetermined, c.Grounded, c.Ungrounded, c.UngroundedNames)
+		}
+		if c.Ungrounded != 0 {
+			t.Fatalf("a capture gap must not make a vector inadmissible (finding T225-F1); ungrounded %d: %v",
+				c.Ungrounded, c.UngroundedNames)
+		}
+		if c.Grounded+c.Undetermined+c.Ungrounded != c.Declared {
+			t.Fatalf("the census does not partition the declarations: %d + %d + %d != %d",
+				c.Grounded, c.Undetermined, c.Ungrounded, c.Declared)
 		}
 
 		s := selfTestRun(t, store)
-		detail := inadmissibleDetail(t, s, "T116-G8-FAMB-N104")
-		for _, want := range []string{
-			"WITHDRAW EVERY CELL THAT INVARIANT READS",
-			InvPrincipalAmortizes,
-			"outstanding_principal_minor",
-			"removes the cells from the cell diff AND removes the invariant that would",
-		} {
-			if !strings.Contains(detail, want) {
-				t.Errorf("the refusal must say %q; it said:\n%s", want, detail)
+		// ADMITTED. The vector keeps grading, and the run stays green.
+		for _, r := range s.Results {
+			if r.CaseID != "T116-G8-FAMB-N104" {
+				continue
+			}
+			if r.Outcome != OutcomePass {
+				t.Fatalf("the pairing made the vector %q; it must be admitted and reported\n%s",
+					r.Outcome, strings.Join(r.Detail, "\n"))
+			}
+			if r.GradedCells == 0 {
+				t.Errorf("the vector contributed 0 graded cells, so it was admitted in name only")
 			}
 		}
-		// It must NOT fire on the OTHER exemption of the same vector, whose cells
-		// are all still recorded. A check that refuses the whole vector's
-		// exemptions the moment one is bad would be over-broad and would teach the
-		// next author to delete the mechanism.
-		if strings.Contains(detail, InvPrincipalSum) {
-			t.Errorf("the refusal also fired on %s, whose cells are recorded and which is genuinely "+
-				"grounded:\n%s", InvPrincipalSum, detail)
+		if s.Inadmissible != 0 || s.ExitCode() != 0 {
+			t.Fatalf("inadmissible %d, exit %d; want 0 and 0\n%s", s.Inadmissible, s.ExitCode(), render(s))
 		}
+		// NAMED. A guard that admits silently is not a guard.
+		out := render(s)
+		for _, want := range []string{
+			"UNDETERMINED: T116-G8-FAMB-N104 — " + InvPrincipalAmortizes + " [UNDETERMINED-ON-THE-RECORD]",
+			"THE RECORD COULD NOT SAY:",
+			"outstanding_principal_minor",
+			"3 GROUNDED (the recorded schedule VIOLATES the exempted invariant), 0 UNGROUNDED.",
+			"1 UNDETERMINED-ON-THE-RECORD",
+		} {
+			if !strings.Contains(out, want) {
+				t.Errorf("the report must say %q; the section reads:\n%s",
+					want, grepLines(out, "GROUNDED")+"\n"+grepLines(out, "COULD NOT SAY"))
+			}
+		}
+		// And it must NOT reclassify the OTHER exemption of the same vector, whose
+		// cells are all still recorded and which is genuinely grounded.
+		if strings.Contains(out, "UNDETERMINED: T116-G8-FAMB-N104 — "+InvPrincipalSum) {
+			t.Errorf("%s was also called undetermined; its cells are all recorded:\n%s",
+				InvPrincipalSum, grepLines(out, "UNDETERMINED"))
+		}
+		t.Logf("admitted and named: %s", grepLines(out, "UNDETERMINED"))
+	})
+
+	// FINDING T225-F1, THE ACCEPTANCE TEST. This is the vector T222's rule refused
+	// and the reason this task exists, built from T225's probe fixture verbatim:
+	// an ordinary capture gap — ONE repayment row's principal_minor never recorded
+	// — on a vector whose exemption is committed, load-bearing and GROUNDED today.
+	//
+	// The two views of the same schedule disagree, which is the whole defect:
+	//
+	//	GROUNDING VIEW (recorded schedule + THIS VECTOR'S placeholders)  N/A
+	//	PORT-MODE VIEW (same schedule, placeholders EMPTY)               VIOLATED
+	//
+	// A real port computes every cell and implements no PlaceholderReporter, so
+	// grading runs the port-mode view — where the exemption is the ONLY thing
+	// standing between this vector and a false RED. T222 refused it on the
+	// grounding view and printed a remedy ("drop the exemption and let the harness
+	// report the assertion as NOT RUN") that is false in exactly the mode that
+	// matters. Both halves are asserted below.
+	t.Run("T225_F1_a_capture_gap_under_a_grounded_exemption_is_ADMITTED", func(t *testing.T) {
+		store := copyStore(t, pristine)
+		editVector(t, store, fambN104File, func(t *testing.T, m map[string]any) {
+			row, ok := periodsOf(t, m)[5].(map[string]any)
+			if !ok || row["kind"] != "REPAYMENT" {
+				t.Fatalf("period 5 is not a REPAYMENT row: %v", periodsOf(t, m)[5])
+			}
+			// "Marked unrecorded means EMPTY" (finding T9-F1a).
+			row["unrecorded_fields"] = []any{"principal_minor"}
+			row["principal_minor"] = ""
+			row["principal_major_text"] = ""
+		})
+
+		vectors, loadErrs, lerr := LoadStore(store, "")
+		if lerr != nil || len(loadErrs) != 0 {
+			t.Fatalf("the fixture store does not even load: %v / %v", lerr, loadErrs)
+		}
+		var target *Vector
+		for _, v := range vectors {
+			if v.CaseID == "T116-G8-FAMB-N104" {
+				target = v
+			}
+		}
+		if target == nil {
+			t.Fatal("fixture vector missing")
+		}
+		sched, ph, rerr := RecordedSchedule(target)
+		if rerr != nil {
+			t.Fatalf("RecordedSchedule: %v", rerr)
+		}
+		withPH := runInvariant(InvPrincipalSum, target, sched, ph)
+		noPH := runInvariant(InvPrincipalSum, target, sched, PlaceholderCells{})
+		t.Logf("GROUNDING VIEW (recorded schedule + this vector's placeholders): %s — %s",
+			withPH.Status, firstLine(withPH.Detail))
+		t.Logf("PORT-MODE VIEW (same schedule, placeholders empty):              %s — %s",
+			noPH.Status, firstLine(noPH.Detail))
+		// THE FIXTURE'S OWN ANTI-VACUITY. If the two views ever agree, this
+		// subtest is asserting nothing about the defect it is named for.
+		if withPH.Status == noPH.Status {
+			t.Fatalf("the two views agree (%s), so this fixture no longer exhibits T225-F1", withPH.Status)
+		}
+		if noPH.Status != InvariantViolated {
+			t.Fatalf("port-mode view is %s, want VIOLATED — the exemption would not be load-bearing "+
+				"and the refusal would have cost nothing", noPH.Status)
+		}
+
+		// THE ACCEPTANCE. The whole run is clean: the vector is admitted, it still
+		// grades its cells, the corpus is whole and the exit code is 0.
+		s := selfTestRun(t, store)
+		if s.Inadmissible != 0 {
+			t.Fatalf("the capture gap made %d vector(s) INADMISSIBLE. THE T225-F1 REGRESSION IS BACK.\n%s",
+				s.Inadmissible, render(s))
+		}
+		if s.ExitCode() != 0 {
+			t.Fatalf("exit %d, want 0\n%s", s.ExitCode(), render(s))
+		}
+		if s.ParityPass != 46 {
+			t.Errorf("parity vectors PASS %d, want 46 — the vector was dropped from the corpus",
+				s.ParityPass)
+		}
+		if s.InvariantViolations != 0 {
+			t.Errorf("invariant violations %d, want 0 — the exemption must still silence the one it "+
+				"is grounded in", s.InvariantViolations)
+		}
+		for _, r := range s.Results {
+			if r.CaseID == "T116-G8-FAMB-N104" {
+				t.Logf("N104: outcome=%s graded=%d ungraded=%d", r.Outcome, r.GradedCells, r.UngradedCells)
+				if r.Outcome != OutcomePass || r.GradedCells == 0 {
+					t.Errorf("the vector must keep grading; outcome %s, %d graded cells",
+						r.Outcome, r.GradedCells)
+				}
+			}
+		}
+		// AND IT IS REPORTED, not admitted silently.
 		out := render(s)
 		if !strings.Contains(out,
-			"UNGROUNDED: T116-G8-FAMB-N104 — "+InvPrincipalAmortizes+" [RESTS-ON-WITHDRAWN-CELLS]") {
-			t.Errorf("the report does not name the pairing:\n%s", grepLines(out, "UNGROUNDED"))
+			"UNDETERMINED: T116-G8-FAMB-N104 — "+InvPrincipalSum+" [UNDETERMINED-ON-THE-RECORD]") {
+			t.Errorf("the report does not name the undetermined exemption:\n%s",
+				grepLines(out, "UNDETERMINED"))
 		}
-		t.Logf("refused: %s", firstLine(detail))
+		// THE FALSE REMEDY IS GONE. Nothing in the run may tell an author that
+		// dropping this exemption yields NOT RUN; in port mode it yields VIOLATED.
+		if strings.Contains(out, "let the harness report the assertion as NOT RUN, which is what it is") {
+			t.Errorf("the run still prints T222's false remedy:\n%s", grepLines(out, "NOT RUN, which is"))
+		}
+	})
+
+	// FINDING T225-F2. A PARTIAL hold — the invariant held on every assertion it
+	// could make, and one it could not — was classified DECORATION and refused,
+	// while T222's own honesty note said such a case was "still GROUNDED and is
+	// not reported". Both halves were wrong. It is UNDETERMINED-ON-THE-RECORD.
+	t.Run("T225_F2_a_partial_hold_is_UNDETERMINED_not_a_decoration", func(t *testing.T) {
+		store := copyStore(t, pristine)
+		editVector(t, store, fambN108File, func(t *testing.T, m map[string]any) {
+			row, ok := periodsOf(t, m)[5].(map[string]any)
+			if !ok {
+				t.Fatal("period 5 is not an object")
+			}
+			row["unrecorded_fields"] = []any{"principal_minor"}
+			row["principal_minor"] = ""
+			row["principal_major_text"] = ""
+			addExemption(t, m, InvBalanceRollForward,
+				"T230 fixture (from T225's probe): an exemption on an invariant that only PARTIALLY held "+
+					"on the record, because one row's principal was never captured.")
+		})
+		vectors, loadErrs, lerr := LoadStore(store, "")
+		if lerr != nil || len(loadErrs) != 0 {
+			t.Fatalf("the fixture store does not even load: %v / %v", lerr, loadErrs)
+		}
+		var seen bool
+		for _, v := range vectors {
+			if v.CaseID != "T116-G8-FAMB-N108" {
+				continue
+			}
+			sched, ph, _ := RecordedSchedule(v)
+			res := runInvariant(InvBalanceRollForward, v, sched, ph)
+			if res.Status != InvariantHold || len(res.NotAsserted) == 0 {
+				t.Fatalf("the fixture did not produce a PARTIAL hold (status %s, %d unmade assertions), "+
+					"so this subtest proves nothing", res.Status, len(res.NotAsserted))
+			}
+			for _, g := range CheckExemptionGrounding(v) {
+				if g.Invariant != InvBalanceRollForward {
+					continue
+				}
+				seen = true
+				t.Logf("balance_roll_forward on the record: %s with %d assertion(s) NOT MADE -> %s",
+					res.Status, len(res.NotAsserted), g.Status)
+				if g.Status != ExemptionUndetermined {
+					t.Errorf("a partial hold classified %s; want %s", g.Status, ExemptionUndetermined)
+				}
+			}
+		}
+		if !seen {
+			t.Fatal("the fixture's exemption was never classified, so this subtest is vacuous")
+		}
+		s := selfTestRun(t, store)
+		if s.Inadmissible != 0 || s.ExitCode() != 0 {
+			t.Fatalf("a partial hold must not refuse the vector; inadmissible %d exit %d\n%s",
+				s.Inadmissible, s.ExitCode(), render(s))
+		}
+		// T222's DECORATION refusal predicted "the invariant will hold, unexempted,
+		// and the report will say so" on a schedule where it did NOT fully hold.
+		// That prediction must not be reachable from a partial hold any more.
+		if strings.Contains(render(s), "the invariant will hold, unexempted") {
+			t.Errorf("the run still predicts an unexempted hold on a partially-withheld invariant")
+		}
 	})
 
 	// SHAPE 3 — AN EXEMPTION WITH NO SCHEDULE UNDER IT. A contract-refusal vector
@@ -333,9 +552,18 @@ func TestExemptionMustBeGroundedInARecordedViolation(t *testing.T) {
 		if s.ExemptionCensus.Ungrounded != 0 {
 			t.Fatalf("committed store reports ungrounded exemptions %v", s.ExemptionCensus.UngroundedNames)
 		}
+		if s.ExemptionCensus.Undetermined != 0 {
+			t.Fatalf("committed store reports undetermined exemptions %v",
+				s.ExemptionCensus.UndeterminedExemptions)
+		}
 		out := render(s)
-		if !strings.Contains(out, "4 GROUNDED (the recorded schedule VIOLATES the exempted invariant), 0 UNGROUNDED.") {
-			t.Errorf("the report does not state the grounding result:\n%s", grepLines(out, "GROUNDED"))
+		for _, want := range []string{
+			"4 GROUNDED (the recorded schedule VIOLATES the exempted invariant), 0 UNGROUNDED.",
+			"0 UNDETERMINED-ON-THE-RECORD",
+		} {
+			if !strings.Contains(out, want) {
+				t.Errorf("the report does not state %q:\n%s", want, grepLines(out, "GROUNDED"))
+			}
 		}
 	})
 }
@@ -460,6 +688,23 @@ func TestExemptionCountIsPinnedCorpusWide(t *testing.T) {
 		t.Errorf("store census: %d declared / %d grounded / %d vectors exempting, want 4 / 4 / 2",
 			c.Declared, c.Grounded, c.VectorsExempting)
 	}
+	// THE UNDETERMINED COUNT IS PINNED AT ZERO, for the same reason the exempted
+	// count is pinned at 4 (finding T225-F1). UNDETERMINED-ON-THE-RECORD is
+	// ADMITTED rather than refused, so nothing at RUN time stops the first one
+	// arriving — this is the tripwire that makes its arrival a deliberate edit a
+	// reviewer sees, in the same commit as the vector that brought it. An
+	// undetermined exemption is not evidence: it is a check the corpus declares
+	// switched off over a violation the capture never recorded.
+	if c.Undetermined != 0 {
+		t.Errorf("UNDETERMINED exemptions: got %d, want 0: %v. If a promotion legitimately brought one, "+
+			"move this number and say in the commit which cell the capture could not record, why it "+
+			"could not, and what still holds the exemption honest without it",
+			c.Undetermined, c.UndeterminedExemptions)
+	}
+	if c.Grounded+c.Undetermined+c.Ungrounded != c.Declared {
+		t.Errorf("the census does not partition the declarations: %d + %d + %d != %d",
+			c.Grounded, c.Undetermined, c.Ungrounded, c.Declared)
+	}
 	// The two counts answer different questions over different populations
 	// (graded vs loaded) and happen to agree today. Assert the agreement rather
 	// than assume it: they diverge the moment an exempting vector is refused or
@@ -553,11 +798,31 @@ func TestExemptionCountIsPinnedCorpusWide(t *testing.T) {
 }
 
 // TestRecordedScheduleIsTheOneBuilder pins the property that makes the grounding
-// check trustworthy: the schedule an exemption is judged against is BYTE-FOR-BYTE
-// the schedule the replay implementation answers with, because there is one
-// builder. Two builders that disagreed about which cells are placeholders would be
-// the T9-F1b shape all over again — one half of the harness policing a cell the
-// other half resolves differently.
+// check trustworthy: the schedule an exemption is judged against is CELL FOR CELL
+// the schedule the replay implementation answers with, and the placeholder SETS
+// are the same SETS — because there is one builder. Two builders that disagreed
+// about which cells are placeholders, or about what the cells are, would be the
+// T9-F1b shape all over again: one half of the harness policing a cell the other
+// half resolves differently.
+//
+// FINDING T225-F3 — WHAT THIS TEST USED TO COMPARE. It compared ph.Count(), one
+// integer, and NOTHING ELSE, while its own docstring and T222's handoff claimed
+// "BYTE-FOR-BYTE" and "the two now cannot drift". T225 mutated it twice and both
+// mutations PASSED:
+//
+//	M1  a second, DIVERGENT placeholder builder in NewReplayImplementation, with
+//	    the same COUNT of placeholder cells on different cells
+//	        --- PASS, while printing "47 schedule vectors agree"
+//	M2  the replay answering a materially different schedule (final row's
+//	    OutstandingPrincipalMinor forced to 0), placeholders untouched
+//	        --- PASS
+//
+// The corpus makes the count comparison thinner still: the placeholder histogram
+// over the store is map[0:46 1:1] [VERIFIED: T225's probe, re-measured by T230],
+// so the old assertion was 0 == 0 on 46 rows and 1 == 1 on one. Both mutations are
+// re-run against the version below in T230's handoff; both go RED, M1 naming the
+// cell the two builders disagree about and M2 naming the row, the field and the
+// two values.
 func TestRecordedScheduleIsTheOneBuilder(t *testing.T) {
 	pristine := storeRoot(t)
 	vectors, loadErrs, err := LoadStore(pristine, "")
@@ -572,7 +837,7 @@ func TestRecordedScheduleIsTheOneBuilder(t *testing.T) {
 	if !ok {
 		t.Fatal("the replay implementation no longer reports placeholders")
 	}
-	checked, withPlaceholders := 0, 0
+	checked, withPlaceholders, cellsCompared, placeholderCells := 0, 0, 0, 0
 	for _, v := range vectors {
 		if v.Expect.Kind != "schedule" {
 			continue
@@ -581,14 +846,44 @@ func TestRecordedScheduleIsTheOneBuilder(t *testing.T) {
 		if cerr != nil {
 			t.Fatalf("%s: %v", v.CaseID, cerr)
 		}
-		_, ph, rerr := RecordedSchedule(v)
+		recorded, ph, rerr := RecordedSchedule(v)
 		if rerr != nil {
 			t.Fatalf("%s: RecordedSchedule: %v", v.CaseID, rerr)
 		}
-		if got, want := ph.Count(), reporter.PlaceholderCells(req).Count(); got != want {
-			t.Errorf("%s: RecordedSchedule reports %d placeholder cells, the replay reports %d",
-				v.CaseID, got, want)
+		answered, gerr := impl.Generate(context.Background(), req)
+		if gerr != nil {
+			t.Fatalf("%s: the replay refused a schedule vector: %v", v.CaseID, gerr)
 		}
+
+		// THE SCHEDULE, CELL BY CELL. Not reflect.DeepEqual: a mismatch has to
+		// name the row and the field, because "the schedules differ" is exactly
+		// the message that would send the next reader looking in the wrong place.
+		if len(recorded.Periods) != len(answered.Periods) {
+			t.Errorf("%s: RecordedSchedule built %d rows, the replay answered %d",
+				v.CaseID, len(recorded.Periods), len(answered.Periods))
+			continue
+		}
+		for i := range recorded.Periods {
+			for _, cell := range scheduleCells(recorded.Periods[i], answered.Periods[i]) {
+				cellsCompared++
+				if cell.recorded != cell.answered {
+					t.Errorf("%s row %d %s: RecordedSchedule says %s, the replay answers %s. "+
+						"THE GROUNDING CHECK AND THE REPLAY ARE NO LONGER JUDGING THE SAME SCHEDULE",
+						v.CaseID, i, cell.field, cell.recorded, cell.answered)
+				}
+			}
+		}
+
+		// THE PLACEHOLDER SET, NOT ITS SIZE. Equal counts on different cells is
+		// M1, and it is the mutation the old assertion could not see.
+		answeredPH := reporter.PlaceholderCells(req)
+		for _, cell := range placeholderDiff(ph, answeredPH) {
+			t.Errorf("%s: placeholder disagreement at row %d %s — RecordedSchedule says %v, "+
+				"the replay says %v. One half of the harness would police a cell the other half "+
+				"resolves differently (the T9-F1b shape)",
+				v.CaseID, cell.period, cell.field, cell.inRecorded, cell.inAnswered)
+		}
+		placeholderCells += ph.Count()
 		if ph.Count() > 0 {
 			withPlaceholders++
 		}
@@ -597,10 +892,194 @@ func TestRecordedScheduleIsTheOneBuilder(t *testing.T) {
 	if checked == 0 {
 		t.Fatal("checked ZERO schedule vectors, so this test is vacuous")
 	}
-	// P-35 fixture bite: an all-zero agreement proves nothing about placeholders.
-	if withPlaceholders == 0 {
-		t.Fatal("not one vector in the store produces a placeholder cell, so the agreement asserted " +
-			"above is 0 == 0 on every row")
+	if cellsCompared == 0 {
+		t.Fatal("compared ZERO cells, so the schedule agreement asserted above is asserted of nothing")
 	}
-	t.Logf("%d schedule vectors agree, %d of them carrying placeholder cells", checked, withPlaceholders)
+	// P-35 fixture bite: an all-empty agreement proves nothing about placeholders.
+	if withPlaceholders == 0 || placeholderCells == 0 {
+		t.Fatal("not one vector in the store produces a placeholder cell, so the placeholder-set " +
+			"agreement asserted above is empty == empty on every row")
+	}
+	// THE ATTESTATION IS CONDITIONAL ON HAVING PASSED. Under T225's M1 the old
+	// test printed "47 schedule vectors agree" WHILE THEY DID NOT AGREE — a guard
+	// attesting the property it was failing to check. A log line that says "agree"
+	// may only be emitted by a run that found agreement.
+	if t.Failed() {
+		return
+	}
+	t.Logf("%d schedule vectors agree on %d cells; %d of them carry placeholders, %d placeholder cell(s) "+
+		"corpus-wide, sets compared as sets", checked, cellsCompared, withPlaceholders, placeholderCells)
+}
+
+// scheduleCell is one cell of one row, rendered, from both builders.
+type scheduleCell struct {
+	field              string
+	recorded, answered string
+}
+
+// scheduleCells renders EVERY cell of one row from both schedules.
+//
+// Every cell, not the money ones: the first observed defect in DEC-1 lived in the
+// cells a three-scalar check never looked at (diffSchedule's own doc comment), and
+// a builder that drifted on a row KIND or a due date would be just as invisible.
+// Money is rendered with %d off the int64 — no float, no formatting library.
+func scheduleCells(recorded, answered contract.Period) []scheduleCell {
+	return []scheduleCell{
+		{"kind", periodKindName(recorded.Kind), periodKindName(answered.Kind)},
+		{FieldInstallmentNumber,
+			fmt.Sprintf("%d", recorded.InstallmentNumber), fmt.Sprintf("%d", answered.InstallmentNumber)},
+		{FieldFromDate, civil(recorded.FromDate), civil(answered.FromDate)},
+		{FieldDueDate, civil(recorded.DueDate), civil(answered.DueDate)},
+		{FieldPrincipalMinor,
+			fmt.Sprintf("%d", recorded.PrincipalMinor), fmt.Sprintf("%d", answered.PrincipalMinor)},
+		{FieldInterestMinor,
+			fmt.Sprintf("%d", recorded.InterestMinor), fmt.Sprintf("%d", answered.InterestMinor)},
+		{FieldOutstandingPrincipalMinor,
+			fmt.Sprintf("%d", recorded.OutstandingPrincipalMinor),
+			fmt.Sprintf("%d", answered.OutstandingPrincipalMinor)},
+	}
+}
+
+// placeholderCellDiff is one cell the two placeholder sets disagree about.
+type placeholderCellDiff struct {
+	period                 int
+	field                  string
+	inRecorded, inAnswered bool
+}
+
+// placeholderDiff compares two placeholder sets AS SETS, in both directions, so a
+// cell present in one and absent from the other is named whichever way round it
+// is and whatever the two counts happen to be.
+func placeholderDiff(a, b PlaceholderCells) []placeholderCellDiff {
+	var out []placeholderCellDiff
+	seen := map[int]map[string]bool{}
+	note := func(period int, field string) {
+		if seen[period] == nil {
+			seen[period] = map[string]bool{}
+		}
+		if seen[period][field] {
+			return
+		}
+		seen[period][field] = true
+		if a.Has(period, field) != b.Has(period, field) {
+			out = append(out, placeholderCellDiff{
+				period: period, field: field,
+				inRecorded: a.Has(period, field), inAnswered: b.Has(period, field),
+			})
+		}
+	}
+	for period, row := range a {
+		for field := range row {
+			note(period, field)
+		}
+	}
+	for period, row := range b {
+		for field := range row {
+			note(period, field)
+		}
+	}
+	sort.Slice(out, func(i, j int) bool {
+		if out[i].period != out[j].period {
+			return out[i].period < out[j].period
+		}
+		return out[i].field < out[j].field
+	})
+	return out
+}
+
+// FINDING T225-F5 — SCHEDULE-UNREADABLE HAD NO TEST, AND NOR DID THE default: ARM.
+//
+// T225 grepped exemption_test.go for both and found zero hits, then drove
+// SCHEDULE-UNREADABLE red by hand and reported it REACHABLE AND CORRECT. So these
+// are missing tests, not dead branches, and the branches stay.
+func TestExemptionGroundingRefusesAnUnreadableSchedule(t *testing.T) {
+	store := copyStore(t, storeRoot(t))
+	editVector(t, store, fambN104File, func(t *testing.T, m map[string]any) {
+		periodsOf(t, m)[5].(map[string]any)["kind"] = "NOT_A_KIND"
+	})
+	vectors, loadErrs, err := LoadStore(store, "")
+	if err != nil || len(loadErrs) != 0 {
+		t.Fatalf("the fixture store does not load: %v / %v", err, loadErrs)
+	}
+	var checked int
+	for _, v := range vectors {
+		if v.CaseID != "T116-G8-FAMB-N104" {
+			continue
+		}
+		for _, g := range CheckExemptionGrounding(v) {
+			checked++
+			if g.Status != ExemptionScheduleUnreadable {
+				t.Errorf("%s classified %s, want %s", g.Invariant, g.Status, ExemptionScheduleUnreadable)
+			}
+			if len(g.NotAsserted) != 0 {
+				t.Errorf("%s: SCHEDULE-UNREADABLE must carry no unmade assertions (the invariant never "+
+					"ran); it carries %v", g.Invariant, g.NotAsserted)
+			}
+			if !g.Inadmissible() {
+				t.Errorf("%s: an exemption nothing could check must be inadmissible", g.Invariant)
+			}
+		}
+		problems := admitExemptions(v)
+		if len(problems) != 2 {
+			t.Fatalf("expected both exemptions refused, got %d problem(s): %v", len(problems), problems)
+		}
+		joined := strings.Join(problems, "\n")
+		for _, want := range []string{
+			"COULD NOT BE DETERMINED",
+			"do not form a schedule",
+			`"NOT_A_KIND" is not one of DISBURSEMENT, DOWN_PAYMENT, REPAYMENT`,
+			// It must not be confused with the capture-gap case, which is admitted.
+			"that is UNDETERMINED-ON-THE-RECORD and is reported, not refused",
+		} {
+			if !strings.Contains(joined, want) {
+				t.Errorf("the refusal must say %q; it said:\n%s", want, joined)
+			}
+		}
+		t.Logf("refused: %s", firstLine(problems[0]))
+	}
+	if checked != 2 {
+		t.Fatalf("classified %d exemption(s); the fixture vector carries 2, so this test is not "+
+			"exercising what it names", checked)
+	}
+}
+
+// The default: arm — a grounding status refuseUngroundedExemptions does not
+// classify. It is unreachable through CheckExemptionGrounding by construction,
+// which is exactly why the function takes the verdicts as an argument: an arm no
+// test can execute is an arm nobody knows the behaviour of (P-22), and the one
+// thing it must NOT do is fall through into a silent pass.
+func TestUnclassifiedGroundingStatusIsRefusedNotPassed(t *testing.T) {
+	invented := ExemptionGrounding{
+		Invariant: InvPrincipalSum,
+		Status:    ExemptionGroundingStatus("A-STATUS-FROM-THE-FUTURE"),
+	}
+	if invented.Grounded() || invented.Undetermined() {
+		t.Fatal("an invented status must be neither grounded nor undetermined, or this test is vacuous")
+	}
+	if !invented.Inadmissible() {
+		t.Fatal("an unclassified grounding status must be INADMISSIBLE by default: a verdict nobody has " +
+			"thought about must not be a pass")
+	}
+	problems := refuseUngroundedExemptions([]ExemptionGrounding{invented})
+	if len(problems) != 1 {
+		t.Fatalf("the default arm produced %d problem(s), want 1: %v", len(problems), problems)
+	}
+	for _, want := range []string{
+		"A-STATUS-FROM-THE-FUTURE",
+		"does not classify",
+		"not a pass",
+		InvPrincipalSum,
+	} {
+		if !strings.Contains(problems[0], want) {
+			t.Errorf("the default arm must say %q; it said:\n%s", want, problems[0])
+		}
+	}
+	// And the two admissible statuses must NOT reach it.
+	for _, ok := range []ExemptionGroundingStatus{ExemptionGrounded, ExemptionUndetermined} {
+		if got := refuseUngroundedExemptions([]ExemptionGrounding{
+			{Invariant: InvPrincipalSum, Status: ok}}); len(got) != 0 {
+			t.Errorf("%s produced a refusal: %v", ok, got)
+		}
+	}
+	t.Logf("default arm: %s", problems[0])
 }
