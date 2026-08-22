@@ -294,14 +294,10 @@ func WriteReport(w io.Writer, s *Summary) {
 	p("    implementation reproduces it, because there the assertion would be a claim about the oracle")
 	p("    rather than about the port — and that is a graded-domain question, not a harness one. Every")
 	p("    exemption below is named, scoped to one vector, and carries its own reason in full.")
-	exemptCount := 0
-	for _, r := range s.Results {
-		for _, iv := range r.Invariants {
-			if iv.Status == InvariantExempted {
-				exemptCount++
-			}
-		}
-	}
+	// The count comes from the SUMMARY, not from a second walk of the results
+	// (T220-N1). A number the report recomputes for itself is a number no test can
+	// pin, and this one is now a corpus-wide tripwire.
+	exemptCount := s.InvariantsExempted
 	if exemptCount == 0 {
 		p("    NONE — every invariant was asserted against every vector.")
 	} else {
@@ -313,6 +309,40 @@ func WriteReport(w io.Writer, s *Summary) {
 				p("    %s — %s [EXEMPT]", r.CaseID, iv.Name)
 				p("        REASON: %s", iv.Detail)
 			}
+		}
+	}
+	p("")
+
+	// FINDING T220-N1 — THE EXEMPTION MECHANISM'S OWN POPULATION, STATED.
+	//
+	// The section above lists the exemptions that were EXERCISED on the graded
+	// vectors. This one states what the ADMISSIBILITY check inspected, which is a
+	// wider population (every loaded vector) and a different question: not "which
+	// checks were switched off" but "was each one switched off over a violation
+	// the capture actually recorded". It is printed whether or not anything is
+	// wrong, because a guard that speaks only when it fires cannot be told apart
+	// from a guard that never ran (P-22, P-35) — and if the corpus ever carries no
+	// exemption at all, the NIL-COVERAGE notice says so in as many words rather
+	// than letting an empty population read as a clean bill of health.
+	ec := s.ExemptionCensus
+	p("--- EXEMPTION GROUNDING (every exemption re-run against the schedule ITS OWN VECTOR recorded) ---")
+	p("    An exemption is admissible only where the REFERENCE ORACLE ITSELF violates the invariant. That")
+	p("    is asserted, not assumed: each exempted invariant is re-run against the vector's own recorded")
+	p("    schedule, honouring that vector's unrecorded_fields, and must come back VIOLATED there. An")
+	p("    exemption on an invariant that HOLDS silences nothing and only inflates the count above; one")
+	p("    whose every cell the same vector withdrew from grading removes the cells AND the check that")
+	p("    would have noticed. Both are INADMISSIBLE, refused in Admit, never a warning.")
+	if ec.Declared == 0 {
+		p("    NIL-COVERAGE — no vector in this store exempts any invariant, so the exemption-grounding")
+		p("    check inspected an empty population. It inspected %d loaded vector(s) to find that out.",
+			ec.VectorsInspected)
+	} else {
+		p("    INSPECTED %d loaded vector(s); %d of them exempt at least one invariant; %d exemption "+
+			"declaration(s) examined.", ec.VectorsInspected, ec.VectorsExempting, ec.Declared)
+		p("    %d GROUNDED (the recorded schedule VIOLATES the exempted invariant), %d UNGROUNDED.",
+			ec.Grounded, ec.Ungrounded)
+		for _, name := range ec.UngroundedNames {
+			p("        UNGROUNDED: %s", name)
 		}
 	}
 	p("")

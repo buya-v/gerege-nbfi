@@ -259,14 +259,13 @@ func Admit(v *Vector, pin *Pin, repoRoot string) []string {
 	problems = append(problems, admitCorroborations(v)...)
 	problems = append(problems, admitRequest(&v.Request)...)
 	problems = append(problems, admitPeriods(v)...)
-	for _, ex := range v.InvariantExemptions {
-		if !knownInvariant(ex.Invariant) {
-			bad("invariant_exemptions names unknown invariant %q", ex.Invariant)
-		}
-		if strings.TrimSpace(ex.Reason) == "" {
-			bad("invariant_exemptions for %q carries no reason", ex.Invariant)
-		}
-	}
+	// THE EXEMPTION CHECKS LIVE IN exemption.go (finding T220-N1). Two of them are
+	// the ones that were always here — known invariant, non-empty reason — and the
+	// third is the one that was missing: an exemption must be GROUNDED in a
+	// violation the capture itself recorded, or it silences nothing and only moves
+	// a count. See that file's head comment for why this is a refusal rather than
+	// a report line.
+	problems = append(problems, admitExemptions(v)...)
 	return problems
 }
 

@@ -186,55 +186,81 @@ func NewReplayImplementation(storeRoot, contextFilter string) (contract.Schedule
 			g.byRequestKey[key] = replayAnswer{refusal: sent}
 			continue
 		}
-		var sched contract.Schedule
-		placeholders := PlaceholderCells{}
-		for i, ep := range v.Expect.Periods {
-			kind, kerr := periodKindByName(ep.Kind)
-			if kerr != nil {
-				return nil, 0, fmt.Errorf("replay store: vector %s (%s) period %d kind: %w",
-					v.CaseID, v.Path, i, kerr)
-			}
-			unrecorded := map[string]bool{}
-			for _, f := range ep.UnrecordedFields {
-				unrecorded[f] = true
-				// FINDING T58-N2. diffSchedule always honoured unrecorded_fields.
-				// The property invariants did not, and they read this same
-				// schedule — so a cell the replay stands in for has to be
-				// DECLARED, not merely skipped by the cell diff. Every withdrawn
-				// cell is a placeholder except the ones the frozen contract fixes
-				// at 0 for this row kind, where 0 is the contract's own value and
-				// therefore a real answer.
-				if !contractFixesCellAtZero(kind, f) {
-					placeholders.Add(i, f)
-				}
-			}
-			// The replay answers 0 (or the zero date) for a cell the capture never
-			// recorded. The value is never compared — diffSchedule counts an
-			// unrecorded cell as UNGRADED and skips it, and CheckInvariants now
-			// declines to assert anything that reads one — so this is a
-			// placeholder for a cell nobody observed, not an expectation.
-			principal, e1 := replayMinorCell(v, i, "principal_minor", ep.PrincipalMinor, unrecorded)
-			interest, e2 := replayMinorCell(v, i, "interest_minor", ep.InterestMinor, unrecorded)
-			outstanding, e3 := replayMinorCell(v, i, "outstanding_principal_minor",
-				ep.OutstandingPrincipalMinor, unrecorded)
-			for _, err := range []error{e1, e2, e3} {
-				if err != nil {
-					return nil, 0, err
-				}
-			}
-			sched.Periods = append(sched.Periods, contract.Period{
-				Kind:                      kind,
-				InstallmentNumber:         ep.InstallmentNumber,
-				FromDate:                  ep.FromDate.Contract(),
-				DueDate:                   ep.DueDate.Contract(),
-				PrincipalMinor:            principal,
-				InterestMinor:             interest,
-				OutstandingPrincipalMinor: outstanding,
-			})
+		sched, placeholders, rerr := RecordedSchedule(v)
+		if rerr != nil {
+			return nil, 0, rerr
 		}
 		g.byRequestKey[key] = replayAnswer{schedule: sched, placeholders: placeholders}
 	}
 	return g, len(g.byRequestKey), nil
+}
+
+// RecordedSchedule rebuilds the schedule THE CAPTURE ITSELF RECORDED for one
+// vector, together with the PlaceholderCells its own unrecorded_fields imply.
+//
+// It is the one place in the harness that turns `expect.periods` into a
+// contract.Schedule, and it has two callers on purpose:
+//
+//   - NewReplayImplementation, which answers requests with it in self-test mode;
+//   - CheckExemptionGrounding (exemption.go), which re-runs an exempted invariant
+//     against it to ask whether the exemption is grounded in anything.
+//
+// ONE BUILDER, DELIBERATELY. If the exemption check built its own schedule it
+// could disagree with the replay's about which cells are placeholders — and a
+// disagreement about that is precisely the T9-F1b shape, one half of the harness
+// policing a cell the other half resolves differently. The two now cannot drift.
+//
+// The returned schedule is the ORACLE'S OWN OUTPUT as transcribed, never a
+// derivation: every cell comes from the file, and a cell the file withdrew is a
+// declared placeholder rather than an invented number.
+func RecordedSchedule(v *Vector) (contract.Schedule, PlaceholderCells, error) {
+	var sched contract.Schedule
+	placeholders := PlaceholderCells{}
+	for i, ep := range v.Expect.Periods {
+		kind, kerr := periodKindByName(ep.Kind)
+		if kerr != nil {
+			return contract.Schedule{}, nil, fmt.Errorf(
+				"replay store: vector %s (%s) period %d kind: %w", v.CaseID, v.Path, i, kerr)
+		}
+		unrecorded := map[string]bool{}
+		for _, f := range ep.UnrecordedFields {
+			unrecorded[f] = true
+			// FINDING T58-N2. diffSchedule always honoured unrecorded_fields.
+			// The property invariants did not, and they read this same
+			// schedule — so a cell the replay stands in for has to be
+			// DECLARED, not merely skipped by the cell diff. Every withdrawn
+			// cell is a placeholder except the ones the frozen contract fixes
+			// at 0 for this row kind, where 0 is the contract's own value and
+			// therefore a real answer.
+			if !contractFixesCellAtZero(kind, f) {
+				placeholders.Add(i, f)
+			}
+		}
+		// The replay answers 0 (or the zero date) for a cell the capture never
+		// recorded. The value is never compared — diffSchedule counts an
+		// unrecorded cell as UNGRADED and skips it, and CheckInvariants now
+		// declines to assert anything that reads one — so this is a
+		// placeholder for a cell nobody observed, not an expectation.
+		principal, e1 := replayMinorCell(v, i, "principal_minor", ep.PrincipalMinor, unrecorded)
+		interest, e2 := replayMinorCell(v, i, "interest_minor", ep.InterestMinor, unrecorded)
+		outstanding, e3 := replayMinorCell(v, i, "outstanding_principal_minor",
+			ep.OutstandingPrincipalMinor, unrecorded)
+		for _, err := range []error{e1, e2, e3} {
+			if err != nil {
+				return contract.Schedule{}, nil, err
+			}
+		}
+		sched.Periods = append(sched.Periods, contract.Period{
+			Kind:                      kind,
+			InstallmentNumber:         ep.InstallmentNumber,
+			FromDate:                  ep.FromDate.Contract(),
+			DueDate:                   ep.DueDate.Contract(),
+			PrincipalMinor:            principal,
+			InterestMinor:             interest,
+			OutstandingPrincipalMinor: outstanding,
+		})
+	}
+	return sched, placeholders, nil
 }
 
 // replayMinorCell reads one money cell for the replay implementation: 0 for a

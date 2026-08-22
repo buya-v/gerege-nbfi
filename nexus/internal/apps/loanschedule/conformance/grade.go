@@ -110,6 +110,27 @@ type Summary struct {
 	GradedCells, UngradedCells     int
 	InvariantViolations            int
 
+	// InvariantsExempted counts the individual invariant assertions a VECTOR
+	// switched off by name (finding T116-N1, pinned corpus-wide by T220-N1). It is
+	// the exemption count's home in the summary rather than a number report.go
+	// recomputes for itself, so that a test can pin it the way the kill counts are
+	// pinned: 4 on the committed corpus, on 46 parity vectors.
+	//
+	// It counts the GRADED population, the same one InvariantViolations counts,
+	// because it is read next to that number and must partition the same set of
+	// assertions: an invariant that is exempted is an invariant that did not
+	// contribute a HOLD or a VIOLATED. The population an exemption's ADMISSIBILITY
+	// is checked over is wider (every loaded vector) and is reported separately in
+	// ExemptionCensus.
+	InvariantsExempted int
+
+	// ExemptionCensus is what the exemption-grounding check inspected: how many
+	// vectors, how many exemption entries, how many grounded. Printed whether or
+	// not anything is wrong, with a NIL-COVERAGE notice when the corpus declares
+	// no exemption at all — a guard that speaks only when it fires cannot be told
+	// apart from one that never ran (P-22, P-35).
+	ExemptionCensus ExemptionCensus
+
 	// InvariantAssertionsNotRun counts the individual invariant assertions that
 	// could NOT be made because a cell they read was never observed (finding
 	// T58-N2). It is reported next to the violation count and printed in full in
@@ -433,6 +454,13 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 				"zero vectors would be the single worst outcome available to it.", where))
 	}
 
+	// THE POPULATION THE EXEMPTION-GROUNDING CHECK INSPECTS, recorded before the
+	// grading loop and printed by the report whether or not anything is wrong.
+	// It is the LOADED vectors — the same set Admit runs over — because an
+	// exemption's grounding is a property of the file and does not depend on
+	// whether the vector was graded, refused or errored.
+	s.ExemptionCensus = InspectExemptions(vectors)
+
 	for _, v := range vectors {
 		r := gradeVector(ctx, v, pin, registry, opts)
 		s.Results = append(s.Results, r)
@@ -443,6 +471,9 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 		for _, iv := range r.Invariants {
 			if iv.Status == InvariantViolated {
 				s.InvariantViolations++
+			}
+			if iv.Status == InvariantExempted {
+				s.InvariantsExempted++
 			}
 			s.InvariantAssertionsNotRun += len(iv.NotAsserted)
 		}
