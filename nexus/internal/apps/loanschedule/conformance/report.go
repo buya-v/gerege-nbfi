@@ -105,8 +105,19 @@ func WriteReport(w io.Writer, s *Summary) {
 	p("    false in both directions: LB-DEC31 reports ZERO cells differing across the day-count setting and")
 	p("    still kills a no-arm port by 6,015 minor units (finding T55-N1). An all-products-identical capture")
 	p("    is therefore not evidence of non-gradeability.")
-	p("    counterfactuals named by admissible vectors: %d  (%d money kills, %d structural kills)",
+	p("    counterfactuals named by GRADED vectors: %d  (%d money kills, %d structural kills)",
 		s.CounterfactualsNamed, s.MoneyKills, s.StructuralKills)
+	// PRINTED WHETHER OR NOT IT IS ZERO (P-35). A disclosure that only appears
+	// when something is wrong is indistinguishable from one that never ran, and
+	// on the committed store this line reads 0 — which is itself the evidence
+	// that today's exposure is nil rather than merely unmeasured.
+	p("    kills carried by REFUSED vectors: %d, credited to NOTHING (%d corroboration claims likewise)",
+		s.RefusedCounterfactualsNamed, s.RefusedCorroborationsClaimed)
+	p("        A refusal is not a pass and not a failure: it says no discriminating vector exists here, or")
+	p("        the seam is blind to the behaviour. A vector that graded nothing kills nothing, so its named")
+	p("        kills do not enter the count above and do not remove a capability from the UNBACKED list.")
+	p("        Until A2-22 they did both, and a refusal therefore made this report QUIETER — the one case")
+	p("        with LESS evidence going silent (finding A2-19 F3).")
 	p("    The two are NEVER merged. A MONEY kill separates the oracle from a wrong implementation by a")
 	p("    non-zero minor-unit margin. A STRUCTURAL kill separates it by a cell that carries no money at")
 	p("    all — a due date, a period boundary, a row kind, the row order — and its margin is honestly 0.")
@@ -178,7 +189,8 @@ func WriteReport(w io.Writer, s *Summary) {
 	p("    A second attestation of the same output corroborates only the columns it actually prints. This")
 	p("    harness refuses any vector claiming corroboration a source cannot give, and prints the gap here")
 	p("    so that a partial match is never read as a whole-row match.")
-	p("    corroboration claims made by admissible vectors: %d", s.CorroborationsClaimed)
+	p("    corroboration claims made by GRADED vectors: %d (a further %d are carried by REFUSED vectors "+
+		"and counted nowhere)", s.CorroborationsClaimed, s.RefusedCorroborationsClaimed)
 	for _, src := range AttestationSources() {
 		p("    %s — %s", src.ID, src.Citation)
 		for _, rk := range src.RowKinds() {

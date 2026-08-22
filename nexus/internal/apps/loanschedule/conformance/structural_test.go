@@ -697,7 +697,10 @@ func TestReportNeverMergesMoneyAndStructuralKills(t *testing.T) {
 	s := &Summary{SelfTestMode: true, CounterfactualsNamed: 3, MoneyKills: 1, StructuralKills: 2}
 	out := render(s)
 	for _, want := range []string{
-		"counterfactuals named by admissible vectors: 3  (1 money kills, 2 structural kills)",
+		// "GRADED", not "admissible": A2-22 narrowed the population to the vectors
+		// the harness actually graded, because a REFUSED vector is admissible and
+		// kills nothing.
+		"counterfactuals named by GRADED vectors: 3  (1 money kills, 2 structural kills)",
 		"kills named             1 money, 2 structural",
 		"The two are NEVER merged",
 	} {

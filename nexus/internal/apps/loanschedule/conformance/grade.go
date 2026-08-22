@@ -421,21 +421,39 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 
 	// Counterfactual coverage: is every capability we CALL graded actually backed
 	// by a parity vector that kills a named wrong implementation for it?
-	admissible := make([]*Vector, 0, len(vectors))
+	// THE POPULATION IS "GRADED", NOT "NOT INADMISSIBLE" (finding A2-19 F3).
+	//
+	// This list used to be every vector the run had not declared INADMISSIBLE, and
+	// a REFUSED vector is not inadmissible — so the kills of vectors the harness
+	// had just declined to grade were credited into the coverage report, the kill
+	// count and the corroboration count alike. A refusal is "not a pass, not a
+	// failure": it says no discriminating vector exists here, or the seam is blind
+	// to the behaviour. A vector that graded nothing kills nothing.
+	//
+	// The counts it sheds are RECORDED, in RefusedCounterfactualsNamed and
+	// RefusedCorroborationsClaimed, and printed by the report whether they are
+	// zero or not. A number that silently disappears is a number nobody can audit,
+	// and this fix must not be the thing that hides the next refusal.
+	//
+	// CounterfactualCoverage re-applies the same predicate for itself, so the two
+	// cannot drift apart and no future caller can lose the rule by passing the
+	// wrong list. Belt and braces on the exact defect that bit here.
+	graded := make([]*Vector, 0, len(vectors))
 	for i, v := range vectors {
-		if s.Results[i].Outcome == OutcomeInadmissible {
+		switch s.Results[i].Outcome {
+		case OutcomeInadmissible:
 			continue
-		}
-		if s.Results[i].Outcome == OutcomeRefused {
+		case OutcomeRefused:
 			s.RefusedCounterfactualsNamed += len(v.GradedAgainst)
 			s.RefusedCorroborationsClaimed += len(v.Provenance.CorroboratedBy)
+			continue
 		}
-		admissible = append(admissible, v)
+		graded = append(graded, v)
 	}
-	covered, uncovered := registry.CounterfactualCoverage(admissible)
+	covered, uncovered := registry.CounterfactualCoverage(graded)
 	s.CounterfactualCoverage = covered
 	s.UncoveredGradedCapabilities = uncovered
-	for _, v := range admissible {
+	for _, v := range graded {
 		s.CounterfactualsNamed += len(v.GradedAgainst)
 		s.CorroborationsClaimed += len(v.Provenance.CorroboratedBy)
 		for _, cf := range v.GradedAgainst {

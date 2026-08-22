@@ -1,0 +1,21 @@
+=== RUN   TestLiveStoreRefusedVectorBlastRadius
+    coverage_refusal_test.go:108: BLAST RADIUS, MEASURED: 48 vectors inspected, 2 graded capabilities ([monthend.reanchor schedule.core]), 0 vectors refused [], 0 kills carried by refused vectors, 0 graded capabilities backed only by a refusal []
+--- PASS: TestLiveStoreRefusedVectorBlastRadius (0.34s)
+=== RUN   TestRefusedVectorCannotBackACapability
+    coverage_refusal_test.go:245: control: a gradeable vector naming A2-22-RED-KILL backs schedule.core with [A2-22-RED-KILL], and schedule.core is not reported unbacked — the assertion below can therefore fail
+=== RUN   TestRefusedVectorCannotBackACapability/SEAM_BLIND
+=== RUN   TestRefusedVectorCannotBackACapability/UNGRADED_CAPABILITY
+=== RUN   TestRefusedVectorCannotBackACapability/UNKNOWN_CAPABILITY
+=== RUN   TestRefusedVectorCannotBackACapability/UNKNOWN_SEAM
+=== RUN   TestRefusedVectorCannotBackACapability/UNGRADED_REQUEST
+--- PASS: TestRefusedVectorCannotBackACapability (0.00s)
+    --- PASS: TestRefusedVectorCannotBackACapability/SEAM_BLIND (0.00s)
+    --- PASS: TestRefusedVectorCannotBackACapability/UNGRADED_CAPABILITY (0.00s)
+    --- PASS: TestRefusedVectorCannotBackACapability/UNKNOWN_CAPABILITY (0.00s)
+    --- PASS: TestRefusedVectorCannotBackACapability/UNKNOWN_SEAM (0.00s)
+    --- PASS: TestRefusedVectorCannotBackACapability/UNGRADED_REQUEST (0.00s)
+=== RUN   TestRefusedVectorDoesNotSilenceUnbackedEndToEnd
+    coverage_refusal_test.go:340: perturbation refused 14 vectors of 48
+--- PASS: TestRefusedVectorDoesNotSilenceUnbackedEndToEnd (2.36s)
+PASS
+ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	3.015s
