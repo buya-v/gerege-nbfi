@@ -1,6 +1,6 @@
 ### T273 selector agreement
-  linter population (Python re, whole file text) : 70
-  guard  population (git grep -E, line-based)    : 85
+  linter population (Python re, whole file text) : 71
+  guard  population (git grep -E, line-based)    : 86
   --- files the GUARD sees and the LINTER does not (15) — harmless, the guard is wider:
         .softhouse/capture/charges/bin/selfcheck.sh
         .softhouse/capture/mathcontext/analysis/t46_mathcontext_inventory.sh

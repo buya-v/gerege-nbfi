@@ -1603,9 +1603,11 @@ guard_no_fail_open_instruments() {
 # file text; this guard uses `git grep -E`, which is POSIX ERE, line-based, and has no
 # `\b`. Two engines and two spellings, so the agreement was MEASURED rather than
 # asserted (.softhouse/capture/t273-residue/instruments/40-selector-agreement.py,
-# evidence/40-selector-agreement.txt): linter 70 files, this guard 85, files the linter
+# evidence/40-selector-agreement.txt): linter 71 files, this guard 86, files the linter
 # sees and this guard does not = ZERO. A superset is the property the guard needs; a
-# subset would be a hole an author could walk through by choosing a spelling.
+# subset would be a hole an author could walk through by choosing a spelling. Those two
+# COUNTS will drift as instruments are written — the property that must not drift is the
+# ZERO, and 40-selector-agreement.py exits 1 the moment it stops holding.
 #
 # FAIL-CLOSED, three ways, because a census that inspects nothing passes everything:
 #   * `git grep` EXITS 1 ON NO MATCH AND >1 ON ERROR. Anything above 1 — including the
