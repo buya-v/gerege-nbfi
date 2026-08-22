@@ -2,44 +2,64 @@
 # T210 -- live-anchored regression probe for the .softhouse/LOCK exclusion
 # guard inside fire-program.sh's exit-protocol dirty-tree check.
 #
-# SUPERSEDES run-pre-fix.sh / run-post-fix.sh as the LIVE regression gate.
-# Those two scripts replay BYTES captured at T172 time into
-# pre-fix-line224.txt / post-fix-line224.txt and say nothing about the file
-# as it exists today -- measured 22 Aug 2026 (T210): T190 deleted the exact
-# grep pattern those files replay ("LC_ALL=C grep -av '^?? \.softhouse/LOCK'"
-# and its anchored fix), so `grep -c` for that pattern against the CURRENT
-# fire-program.sh returns 0, yet both old scripts kept passing against
-# frozen bytes that exist nowhere in the real file any more.
-#   P-22 (patterns.md): a control that cannot fail is worse than none,
-#   because it is believed.
-#   P-35 (patterns.md): a check inspecting zero items is an ERROR, not a
-#   pass.
+# T215 EXTENSION (22 Aug 2026): T210 bound to exactly ONE of the guard's TWO
+# call sites -- ANCHOR_PATTERN='DIRTY=\$\(git status --porcelain' matches only
+# the DETECT site (the `git status --porcelain` line that computes $DIRTY).
+# The driver measured that mutating the OTHER site -- the `git add -A`
+# rescue/STAGE site, which actually commits the rescue -- left T210's probe
+# green: BOTH CHECKS PASSED, VERDICT PASS, exit 0, against a file with a
+# broken STAGE guard. That is the more dangerous half: a broken DETECT site
+# makes a fire noisy (it reports dirt that was already handled); a broken
+# STAGE site makes `git add -A` silently skip every LOCK-prefixed sibling
+# (e.g. .softhouse/LOCKED_STATE.md) at commit time, so the rescue claims
+# success while never staging the file it was rescuing.
 #
-# This script instead:
-#   1. EXTRACTS the current DIRTY=... guard line from the TARGET file by
-#      grep PATTERN, never by line number -- line numbers drift on every
-#      rewrite (T172 was :224 pre-T190; T190/T202 moved the equivalent
-#      logic to :313 and changed its shape from a piped grep to a git
-#      pathspec exclusion).
-#   2. ERRORS LOUDLY, naming the pattern and the file, if that extraction
-#      matches the target ZERO times or MORE THAN ONCE (an anchor used to
-#      pull a single line must be unique).
-#   3. Confirms the matched line still concerns .softhouse/LOCK exclusion --
-#      if that reference is gone, this script SAYS SO and exits nonzero
-#      rather than inventing a replacement anchor to keep a green bar.
-#   4. EVALUATES the extracted line VERBATIM (never a hand-transcribed
-#      copy) against a fresh scratch git repo fixture and checks the
-#      property T172 fixed: a sibling path sharing LOCK's directory prefix
-#      (.softhouse/LOCKED_STATE.md) must survive the filter, and
-#      .softhouse/LOCK itself must not.
+# FIX SHAPE: population rule, not a second hard-coded anchor. Both sites
+# share one literal pathspec fragment -- the exact quoted argument
+# ':(top,exclude).softhouse/LOCK' -- which appears nowhere else in the file
+# (grep -Fc counted 2, both at the guard sites, measured 22 Aug 2026). This
+# script now:
+#   1. Enumerates EVERY line containing that fragment, by CONTENT, never by
+#      line number (line numbers drift on every rewrite of fire-program.sh --
+#      T172:224 -> T190/T202:313 -> T211:496, and the STAGE site drifted
+#      alongside it: T172:245ish -> T202:334 -> T211:517).
+#   2. ERRORS LOUDLY (P-35, patterns.md) if that enumeration is EMPTY --
+#      a run that finds zero LOCK-exclusion sites is an ERROR, not a pass --
+#      exactly as T210 already did for its single anchor, generalised to a
+#      population of any size.
+#   3. For EACH site found, checks it is PAIRED with the top-anchor
+#      pathspec ':(top)' (T190's fix for the old cwd-relative-pathspec bug;
+#      a site with the exclusion but not the anchor is malformed) and
+#      CLASSIFIES it by the git subcommand it appears on:
+#        - `git status --porcelain ...`  -> DETECT site
+#        - `git add -A ...`              -> STAGE site
+#        - anything else                 -> UNRECOGNISED: this script does
+#          not know how to evaluate it and REFUSES rather than silently
+#          skipping it (a 3rd site in a shape this probe cannot exercise
+#          must fail the run, not pass it by omission -- P-22).
+#   4. EVALUATES each classified site's line VERBATIM (never a
+#      hand-transcribed copy) against a FRESH scratch git-repo fixture per
+#      site, and checks the property T172 fixed AT THAT SITE:
+#        DETECT: $DIRTY must include the sibling .softhouse/LOCKED_STATE.md
+#                and must exclude .softhouse/LOCK itself.
+#        STAGE:  the git INDEX after the `git add -A` line runs must include
+#                .softhouse/LOCKED_STATE.md and must exclude .softhouse/LOCK.
+#   5. Reports EVERY site's line number, classification, and per-site
+#      verdict BY NAME, so a caller can tell which site failed -- "both
+#      mutations turn it red" is a weaker report than "site 2 (STAGE, line
+#      602) is broken" (T215 brief).
+#
+# Overall exit 0 only if: at least one site was found, every found site was
+# classified (none UNRECOGNISED), and every classified site's checks passed.
 #
 # Usage:
 #   zsh check-lock-exclusion-anchor.sh [TARGET_FILE]
 #     TARGET_FILE defaults to the live .softhouse/bin/fire-program.sh,
 #     resolved relative to this script's own location. Pass a scratch
 #     COPY here to drive RED / zero-match demonstrations without ever
-#     touching the live file -- see run-red-demo.sh and
-#     run-zero-match-demo.sh in this same directory.
+#     touching the live file -- see run-red-demo-site1.sh,
+#     run-red-demo-site2.sh and run-zero-match-demo.sh in this same
+#     directory.
 #
 # grep binding (P-58, patterns.md): in this repo's interactive shells,
 # `grep` is shadowed by a function that re-execs as ugrep with -G -I
@@ -72,92 +92,209 @@ if [[ ! -f "$TARGET" ]]; then
   exit 2
 fi
 
-# --- 1/2: locate the guard line by pattern, error loudly on 0 or >1 -------
-ANCHOR_PATTERN='DIRTY=\$\(git status --porcelain'
-LOCK_REF_PATTERN='\.softhouse/LOCK'
+# --- population scan: every line carrying the LOCK-exclusion fragment -----
+# Fixed-string match (-F), not a regex -- the fragment contains `(` `)` `.`
+# which are ERE metacharacters and add nothing here; -F sidesteps escaping
+# entirely and matches the exact bytes git needs in the pathspec argument.
+#
+# CENSUS_FRAGMENT is deliberately LOOSE (no closing quote): it exists only
+# to FIND every line that is *about* excluding .softhouse/LOCK from this
+# pathspec, even a line where that exclusion has been corrupted. Measured
+# 22 Aug 2026 (T215): an earlier draft of this probe used the closing-quote
+# form as BOTH the census and the well-formedness test in one, and a
+# widened mutant (`':(top,exclude).softhouse/LOCK*'`, the exact shape the
+# T215 driver measurement used) no longer contained that exact substring --
+# so the site VANISHED from the population instead of failing, and the
+# probe passed on the one site, silently. WELLFORMED_FRAGMENT below is the
+# separate, exact check that catches that case as a NAMED per-site failure
+# instead of a shrunken-but-green census (P-22: a census that a defect can
+# shrink out of is a vacuous guard wearing a different hat).
+CENSUS_FRAGMENT=':(top,exclude).softhouse/LOCK'
+WELLFORMED_FRAGMENT="':(top,exclude).softhouse/LOCK'"
+TOP_ANCHOR="':(top)'"
 
-MATCH_COUNT=$(LC_ALL=C "$GREP" -Ea -c -- "$ANCHOR_PATTERN" "$TARGET")
+MATCH_COUNT=$(LC_ALL=C "$GREP" -Fa -c -- "$CENSUS_FRAGMENT" "$TARGET")
 GREP_RC=$?
-# BSD grep: rc=0 match found, rc=1 legitimately zero matches (still prints
-# "0"), rc>=2 a real read/pattern error. Only >=2 is "grep itself broke".
 if (( GREP_RC >= 2 )); then
-  print -u2 -- "ERROR: grep failed reading target (rc=$GREP_RC) -- cannot conclude anything about the anchor."
-  print -u2 -- "  pattern: $ANCHOR_PATTERN"
-  print -u2 -- "  file:    $TARGET"
+  print -u2 -- "ERROR: grep failed reading target (rc=$GREP_RC) -- cannot conclude anything about the LOCK-exclusion population."
+  print -u2 -- "  fragment: $CENSUS_FRAGMENT"
+  print -u2 -- "  file:     $TARGET"
   exit 2
 fi
 
 if (( MATCH_COUNT == 0 )); then
-  print -u2 -- "ERROR (P-35, patterns.md): anchor pattern matched ZERO times -- this is not a pass."
-  print -u2 -- "  pattern: $ANCHOR_PATTERN"
-  print -u2 -- "  file:    $TARGET"
-  print -u2 -- "The guard line this probe checks no longer exists at that text in the target file. Investigate and re-point the anchor by hand; do NOT treat a zero-match as green."
+  print -u2 -- "ERROR (P-35, patterns.md): the LOCK-exclusion pathspec fragment matched ZERO times -- this is not a pass."
+  print -u2 -- "  fragment: $CENSUS_FRAGMENT"
+  print -u2 -- "  file:     $TARGET"
+  print -u2 -- "Either the guard has been rewritten to a different shape (re-scope this probe by hand) or it has been removed entirely. Do NOT treat a zero-match as green."
   exit 1
 fi
 
-if (( MATCH_COUNT > 1 )); then
-  print -u2 -- "ERROR: anchor pattern matched $MATCH_COUNT times -- not unique, refusing to guess which line to extract."
-  print -u2 -- "  pattern: $ANCHOR_PATTERN"
-  print -u2 -- "  file:    $TARGET"
-  exit 1
-fi
-
-GUARD_LINE=$(LC_ALL=C "$GREP" -Ea -- "$ANCHOR_PATTERN" "$TARGET")
-
-# --- 3: the matched line must still be ABOUT .softhouse/LOCK exclusion ----
-if ! print -r -- "$GUARD_LINE" | LC_ALL=C "$GREP" -Eaq -- "$LOCK_REF_PATTERN"; then
-  print -u2 -- "STOP: the guard line matched the anchor but no longer references .softhouse/LOCK at all:"
-  print -u2 -- "  $GUARD_LINE"
-  print -u2 -- "The LOCK-exclusion property this probe exists to check appears to have been removed or moved elsewhere. Refusing to invent a replacement anchor -- re-scope this probe by hand after confirming where (or whether) the property still lives."
-  exit 1
-fi
-
-echo "anchor: extracted from $TARGET"
-echo "  $GUARD_LINE"
+echo "population scan: '$CENSUS_FRAGMENT' found $MATCH_COUNT time(s) in $TARGET"
 echo
 
-# --- 4: replay the EXTRACTED bytes against a fresh scratch fixture --------
+# grep -Fn output is "SITE_LINENO:content"; read into an array, one element per
+# matched line, preserving order of appearance in the file.
+typeset -a MATCH_LINES
+MATCH_LINES=("${(@f)$(LC_ALL=C "$GREP" -Fan -- "$CENSUS_FRAGMENT" "$TARGET")}")
+
+if (( ${#MATCH_LINES[@]} != MATCH_COUNT )); then
+  print -u2 -- "ERROR: grep -c reported $MATCH_COUNT but grep -n produced ${#MATCH_LINES[@]} lines -- inconsistent, refusing to proceed on a count we can't reconcile."
+  exit 2
+fi
+
 zsh "${HERE}/setup-scratch-repo.sh" >/dev/null
 SCRATCH=/tmp/t172-scratch-repo
-if [[ ! -d "$SCRATCH/.git" ]]; then
-  print -u2 -- "ERROR: scratch repo fixture missing at $SCRATCH after setup-scratch-repo.sh ran."
-  exit 2
+
+OVERALL_PASS=1
+SITE_INDEX=0
+COUNT_DETECT=0
+COUNT_STAGE=0
+
+for RAW in "${MATCH_LINES[@]}"; do
+  SITE_INDEX=$((SITE_INDEX + 1))
+  SITE_LINENO="${RAW%%:*}"
+  LINE_TEXT="${RAW#*:}"
+
+  echo "--- site $SITE_INDEX: line $SITE_LINENO ---"
+  echo "  $LINE_TEXT"
+
+  # classify by git subcommand present on the line. Done BEFORE the
+  # well-formedness checks below so a CORRUPTED pathspec is still
+  # attributed to its category (DETECT/STAGE) rather than falling out of
+  # the count silently -- see COUNT_DETECT/COUNT_STAGE floor check after
+  # the loop.
+  if print -r -- "$LINE_TEXT" | "$GREP" -Fq -- "git status --porcelain"; then
+    SITE_TYPE="DETECT"
+  elif print -r -- "$LINE_TEXT" | "$GREP" -Fq -- "git add -A"; then
+    SITE_TYPE="STAGE"
+  else
+    print -u2 -- "  FAIL: site $SITE_INDEX (line $SITE_LINENO) carries the LOCK-exclusion fragment on a git subcommand this probe does not recognise ('git status --porcelain' or 'git add -A' expected). Refusing to guess how to evaluate it -- extend this probe by hand before trusting a pass that omits this site."
+    OVERALL_PASS=0
+    continue
+  fi
+  echo "  classified: $SITE_TYPE"
+  if [[ "$SITE_TYPE" == "DETECT" ]]; then
+    COUNT_DETECT=$((COUNT_DETECT + 1))
+  else
+    COUNT_STAGE=$((COUNT_STAGE + 1))
+  fi
+
+  # well-formedness 1: must be paired with the top-anchor pathspec too.
+  if ! print -r -- "$LINE_TEXT" | "$GREP" -Fq -- "$TOP_ANCHOR"; then
+    print -u2 -- "  FAIL: site $SITE_INDEX (line $SITE_LINENO, $SITE_TYPE) has the LOCK-exclusion fragment but is missing the top-anchor pathspec $TOP_ANCHOR -- malformed (T190's cwd-relative-pathspec bug shape)."
+    OVERALL_PASS=0
+    continue
+  fi
+
+  # well-formedness 2: the pathspec argument must close EXACTLY after
+  # .softhouse/LOCK -- a widened/narrowed exclusion (e.g. trailing `*`
+  # turning it into a glob) still contains CENSUS_FRAGMENT as a substring,
+  # so it stays IN the population count, but it is not the intended
+  # single-file exclusion and must be named as malformed rather than
+  # evaluated as if it were correct.
+  if ! print -r -- "$LINE_TEXT" | "$GREP" -Fq -- "$WELLFORMED_FRAGMENT"; then
+    print -u2 -- "  FAIL: site $SITE_INDEX (line $SITE_LINENO, $SITE_TYPE) matched the LOCK-exclusion census but the pathspec argument is not the exact expected token $WELLFORMED_FRAGMENT -- it appears WIDENED or otherwise corrupted."
+    OVERALL_PASS=0
+    continue
+  fi
+
+  # reference to .softhouse/LOCK must still be present on the line (T210's
+  # existing sanity check, applied per-site now).
+  if ! print -r -- "$LINE_TEXT" | "$GREP" -Fq -- ".softhouse/LOCK"; then
+    print -u2 -- "  STOP: site $SITE_INDEX (line $SITE_LINENO) matched the population fragment but does not reference .softhouse/LOCK at all -- something is inconsistent, refusing to evaluate."
+    OVERALL_PASS=0
+    continue
+  fi
+
+  # fresh scratch fixture per site so a STAGE site's `git add` (which
+  # mutates the index) cannot leak into the next site's evaluation.
+  zsh "${HERE}/setup-scratch-repo.sh" >/dev/null
+  if [[ ! -d "$SCRATCH/.git" ]]; then
+    print -u2 -- "  ERROR: scratch repo fixture missing at $SCRATCH after setup-scratch-repo.sh ran."
+    exit 2
+  fi
+
+  ( builtin cd "$SCRATCH" || exit 2
+
+    if [[ "$SITE_TYPE" == "DETECT" ]]; then
+      eval "$LINE_TEXT"
+      EVAL_RC=$?
+      if (( EVAL_RC != 0 )); then
+        print -u2 -- "  ERROR: site $SITE_INDEX's git command exited $EVAL_RC in the scratch repo -- cannot conclude anything about filtering."
+        exit 2
+      fi
+      SITE_PASS=1
+      if print -r -- "$DIRTY" | "$GREP" -Faq -- 'LOCKED_STATE.md'; then
+        echo "  CHECK 1 PASS: sibling .softhouse/LOCKED_STATE.md survived in \$DIRTY"
+      else
+        echo "  CHECK 1 FAIL: sibling .softhouse/LOCKED_STATE.md was DROPPED from \$DIRTY -- DETECT site is broken"
+        SITE_PASS=0
+      fi
+      if print -r -- "$DIRTY" | "$GREP" -Fxq -- '?? .softhouse/LOCK'; then
+        echo "  CHECK 2 FAIL: .softhouse/LOCK itself is present in \$DIRTY -- DETECT site is not excluding the real lock file"
+        SITE_PASS=0
+      else
+        echo "  CHECK 2 PASS: .softhouse/LOCK is correctly excluded from \$DIRTY"
+      fi
+      exit $((1 - SITE_PASS))
+    else
+      # STAGE: eval the `git add -A ...` line, then read the INDEX back --
+      # this is the check T210 never had, because T210 only ever bound to
+      # the DETECT site.
+      eval "$LINE_TEXT"
+      EVAL_RC=$?
+      if (( EVAL_RC != 0 )); then
+        print -u2 -- "  ERROR: site $SITE_INDEX's git command exited $EVAL_RC in the scratch repo -- cannot conclude anything about staging."
+        exit 2
+      fi
+      STAGED=$(git diff --cached --name-only)
+      SITE_PASS=1
+      if print -r -- "$STAGED" | "$GREP" -Faq -- 'LOCKED_STATE.md'; then
+        echo "  CHECK 1S PASS: sibling .softhouse/LOCKED_STATE.md was STAGED (not silently skipped)"
+      else
+        echo "  CHECK 1S FAIL: sibling .softhouse/LOCKED_STATE.md was NOT staged -- STAGE site is broken; \`git add -A\` skipped a genuine deliverable and a checkpoint would report success while losing it (the 2026-08-18 17:22 hazard)"
+        SITE_PASS=0
+      fi
+      if print -r -- "$STAGED" | "$GREP" -Fxq -- '.softhouse/LOCK'; then
+        echo "  CHECK 2S FAIL: .softhouse/LOCK itself was staged -- STAGE site is not excluding the real lock file"
+        SITE_PASS=0
+      else
+        echo "  CHECK 2S PASS: .softhouse/LOCK is correctly excluded from staging"
+      fi
+      exit $((1 - SITE_PASS))
+    fi
+  )
+  SUBSHELL_RC=$?
+  if (( SUBSHELL_RC != 0 )); then
+    OVERALL_PASS=0
+  fi
+  echo
+done
+
+# --- categorical floor: both KNOWN categories must still be represented --
+# The population rule lets a THIRD site of a KNOWN type (DETECT or STAGE)
+# join automatically. It must NOT let an EXISTING category silently drop to
+# zero because one sibling site was deleted outright while another of a
+# different type survives -- that is a whole guard vanishing, and a census
+# that only checks ">= 1 site total" would call it a pass. Require >=1 of
+# each category currently known to exist in fire-program.sh's exit-protocol
+# guard.
+echo "category counts: DETECT=$COUNT_DETECT STAGE=$COUNT_STAGE"
+if (( COUNT_DETECT == 0 )); then
+  print -u2 -- "FAIL: zero DETECT-classified sites found -- the 'git status --porcelain' LOCK-exclusion guard appears to have been removed entirely, not merely mutated."
+  OVERALL_PASS=0
 fi
-
-builtin cd "$SCRATCH" || { print -u2 -- "ERROR: could not cd into scratch repo $SCRATCH"; exit 2; }
-
-eval "$GUARD_LINE"
-EVAL_RC=$?
-if (( EVAL_RC != 0 )); then
-  print -u2 -- "ERROR: the extracted guard line's git command exited $EVAL_RC in the scratch repo -- cannot conclude anything about filtering."
-  exit 2
+if (( COUNT_STAGE == 0 )); then
+  print -u2 -- "FAIL: zero STAGE-classified sites found -- the 'git add -A' LOCK-exclusion guard appears to have been removed entirely, not merely mutated."
+  OVERALL_PASS=0
 fi
-
-echo "DIRTY (from the live-extracted guard line, run against the scratch fixture) ="
-print -r -- "$DIRTY"
 echo
 
-PASS=1
-
-if print -r -- "$DIRTY" | "$GREP" -Faq -- 'LOCKED_STATE.md'; then
-  echo "CHECK 1 PASS: sibling .softhouse/LOCKED_STATE.md survived the filter (not silently dropped)"
-else
-  echo "CHECK 1 FAIL: sibling .softhouse/LOCKED_STATE.md was DROPPED from DIRTY -- the prefix-collision regression T172 fixed is reproduced"
-  PASS=0
-fi
-
-if print -r -- "$DIRTY" | "$GREP" -Fxq -- '?? .softhouse/LOCK'; then
-  echo "CHECK 2 FAIL: .softhouse/LOCK itself is present in DIRTY -- the guard is not excluding the real lock file at all"
-  PASS=0
-else
-  echo "CHECK 2 PASS: .softhouse/LOCK is correctly excluded from DIRTY (no over-correction)"
-fi
-
-echo
-if (( PASS )); then
-  echo "VERDICT: PASS -- live LOCK-exclusion anchor holds against $TARGET"
+if (( OVERALL_PASS )); then
+  echo "VERDICT: PASS -- all $MATCH_COUNT live LOCK-exclusion site(s) hold against $TARGET (DETECT=$COUNT_DETECT, STAGE=$COUNT_STAGE)"
   exit 0
 else
-  echo "VERDICT: FAIL -- live LOCK-exclusion anchor is BROKEN against $TARGET"
+  echo "VERDICT: FAIL -- at least one live LOCK-exclusion site is BROKEN, unrecognised, or an entire category is missing against $TARGET (see per-site output above for WHICH one)"
   exit 1
 fi
