@@ -12,12 +12,27 @@ Nothing here is ever committed in mutated form.
     python3 .softhouse/handoff/T61-mutations.py            # run all
     python3 .softhouse/handoff/T61-mutations.py M1 M5      # run some
     python3 .softhouse/handoff/T61-mutations.py --list
+
+T162: a killed driver used to leave a mutated rounding.go/emi.go sitting in the
+working tree. `finally` covers a plain exception and SIGINT (CPython turns
+SIGINT into KeyboardInterrupt), but the OS default disposition for SIGTERM and
+SIGHUP tears the process down without running any Python-level cleanup, and
+SIGKILL cannot be caught by anything running in the process at all. This file
+now: (1) installs handlers for SIGTERM/SIGHUP that raise a BaseException so the
+existing finally block runs and restores the files before the process exits;
+(2) pins each mutation's pre-mutation bytes into the git object store and
+records the pointer in an on-disk marker BEFORE mutating, so a SIGKILLed run
+can be repaired by the NEXT invocation's start-up check, which runs before
+anything else (including the baseline conformance call); (3) verifies every
+restore by re-reading the file after writing it, rather than assuming the
+write succeeded.
 """
-import os, re, subprocess, sys
+import hashlib, json, os, re, signal, subprocess, sys
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 EMI = os.path.join(ROOT, "nexus/internal/apps/loanschedule/emi.go")
 RND = os.path.join(ROOT, "nexus/internal/apps/loanschedule/rounding.go")
+MARKER_PATH = os.path.join(ROOT, ".softhouse", "handoff", ".t61-mutation-inprogress.json")
 
 TRUE_FOLD = """	rateFactorN := big.NewRat(1, 1)
 	for i, p := range related {
@@ -224,6 +239,157 @@ MUTATIONS = [
 BY_ID = {m[0]: m for m in MUTATIONS}
 
 
+class _Signalled(BaseException):
+    """Raised from a signal handler so the existing try/finally restores
+    mutated files before the process exits. BaseException, not Exception,
+    so it is not swallowed by an `except Exception` anywhere else in this
+    file -- there is none today, but a future one must not re-introduce
+    the hole this class exists to close."""
+
+    def __init__(self, signum):
+        self.signum = signum
+        super().__init__("signal %d" % signum)
+
+
+def _install_signal_traps():
+    # SIGINT already reaches the existing `finally` block unmodified: CPython's
+    # default SIGINT handler raises KeyboardInterrupt, which unwinds through
+    # `finally` like any other exception. SIGTERM and SIGHUP have no such
+    # default in CPython -- the OS default action for both is immediate
+    # termination, no Python bytecode runs, no `finally` fires. Installing a
+    # handler that raises turns them into ordinary Python-level exceptions
+    # that the `finally` block already knows how to unwind through.
+    def _handler(signum, _frame):
+        raise _Signalled(signum)
+
+    signal.signal(signal.SIGTERM, _handler)
+    signal.signal(signal.SIGHUP, _handler)
+    # SIGKILL (and SIGSTOP) cannot be caught, blocked, or ignored by any
+    # process -- POSIX guarantees the default action runs. There is no trap
+    # to add here; see _recover_startup() for the start-up-side repair.
+
+
+def _sha256_text(text):
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def _git(args, input_bytes=None, check=True):
+    r = subprocess.run(["git"] + args, cwd=ROOT, input=input_bytes, capture_output=True)
+    if check and r.returncode != 0:
+        raise RuntimeError("git %s failed (exit %d): %s" % (" ".join(args), r.returncode, r.stderr.decode(errors="replace")))
+    return r
+
+
+def _pin_blob(text):
+    """Write `text`'s exact bytes into the git object store and return the
+    blob sha. Content-addressed, so pinning the same bytes twice (e.g. two
+    mutations that both touch RND) returns the same sha and creates nothing
+    new. This is the ORIGINAL working-tree bytes at mutation time, not
+    `git show HEAD:path` -- if the file already carried an uncommitted local
+    edit before this script ran, that is what gets pinned and restored, not
+    whatever HEAD happens to hold."""
+    r = _git(["hash-object", "-w", "--stdin"], input_bytes=text.encode("utf-8"))
+    return r.stdout.decode().strip()
+
+
+def _write_verified(path, text):
+    """Write `text` to `path` and then RE-READ the file to confirm the bytes
+    on disk are the bytes asked for. A write() call that raises is already
+    visible; the point of re-reading is to catch the write that reports
+    success but didn't land -- do not assume, verify."""
+    with open(path, "w") as f:
+        f.write(text)
+    with open(path) as f:
+        got = f.read()
+    if got != text:
+        raise RuntimeError("restore of %s did not verify: bytes on disk differ from what was written" % path)
+
+
+def _write_marker(mid, originals):
+    """Record, BEFORE any mutation is applied, enough to reconstruct the
+    original files even if this process is SIGKILLed one instruction later:
+    a git blob pointer per path plus an independent sha256 of the same bytes,
+    so a corrupted or forged marker is caught by the digest check even if the
+    blob lookup alone would not catch it."""
+    files = {}
+    for path, text in originals.items():
+        files[path] = {"blob": _pin_blob(text), "sha256": _sha256_text(text)}
+    payload = {"mid": mid, "files": files}
+    tmp = MARKER_PATH + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(payload, f, indent=2, sort_keys=True)
+        f.flush()
+        os.fsync(f.fileno())
+    os.replace(tmp, MARKER_PATH)
+
+
+def _clear_marker():
+    try:
+        os.remove(MARKER_PATH)
+    except FileNotFoundError:
+        pass
+
+
+def _recover_startup():
+    """Runs before anything else in main(), including the baseline
+    conformance call. If a previous invocation was SIGKILLed mid-mutation it
+    left MARKER_PATH behind and (at least one of) RND/EMI mutated. No trap
+    could have caught SIGKILL; this is the only place that hole can be
+    closed. Fails CLOSED: a marker that cannot be verified byte-for-byte
+    stops the script rather than guessing or silently proceeding over a
+    still-mutated money path."""
+    if not os.path.exists(MARKER_PATH):
+        return
+    try:
+        with open(MARKER_PATH) as f:
+            marker = json.load(f)
+        files = marker["files"]
+        mid = marker.get("mid", "?")
+    except Exception as e:
+        raise SystemExit(
+            "STARTUP RECOVERY FAILED: marker at %s is unreadable/malformed (%s) -- "
+            "a mutated rounding.go/emi.go may still be on disk; repair by hand, "
+            "then remove the marker" % (MARKER_PATH, e))
+    if not files:
+        # An empty census is a refusal, never a silently-satisfied comparison.
+        raise SystemExit(
+            "STARTUP RECOVERY FAILED: marker at %s names zero files -- refusing "
+            "to treat that as 'nothing to restore'" % MARKER_PATH)
+    for path, info in sorted(files.items()):
+        blob, want_sha256 = info.get("blob"), info.get("sha256")
+        # Idempotence check FIRST: a marker can legitimately be left behind by
+        # a kill that landed before the mutation was ever written (the window
+        # between _write_marker() and the first patched write()), in which
+        # case the file on disk already matches the recorded bytes. Say so
+        # honestly rather than printing "RECOVERED" for a repair that never
+        # happened (T161's Case C: an empty restore is not a fact, P-40).
+        if os.path.exists(path):
+            with open(path) as f:
+                current_sha256 = _sha256_text(f.read())
+            if current_sha256 == want_sha256:
+                print("note: an in-flight marker from an earlier run was found for %s; "
+                      "it is already at the recorded bytes (sha256 %s) -- nothing to "
+                      "restore" % (path, want_sha256))
+                continue
+        t = _git(["cat-file", "-t", blob], check=False)
+        if t.returncode != 0 or t.stdout.decode().strip() != "blob":
+            raise SystemExit(
+                "STARTUP RECOVERY FAILED: marker names blob %s for %s, not present "
+                "in this repository's object store -- refusing to guess; repair by "
+                "hand" % (blob, path))
+        rb = _git(["cat-file", "blob", blob])
+        got_sha256 = hashlib.sha256(rb.stdout).hexdigest()
+        if got_sha256 != want_sha256:
+            raise SystemExit(
+                "STARTUP RECOVERY FAILED: blob %s for %s hashes to %s, not the %s "
+                "recorded in the marker -- refusing to restore bytes that don't "
+                "match what was recorded" % (blob, path, got_sha256, want_sha256))
+        _write_verified(path, rb.stdout.decode("utf-8"))
+        print("RECOVERED: an earlier run of mutation %s died mid-swap and left %s "
+              "mutated; restored to sha256 %s from blob %s" % (mid, path, want_sha256, blob))
+    _clear_marker()
+
+
 def run_conformance():
     env = dict(os.environ)
     tc = "/Users/buv/gerege-nbfi/.softhouse/toolchain"
@@ -245,6 +411,12 @@ def summarise(out):
 
 
 def main():
+    # Start-up recovery FIRST, before anything else -- including the baseline
+    # conformance call, which must not be allowed to grade a tree that a prior
+    # SIGKILLed run left mutated.
+    _recover_startup()
+    _install_signal_traps()
+
     args = [a for a in sys.argv[1:] if not a.startswith("-")]
     if "--list" in sys.argv:
         for mid, name, _, why in MUTATIONS:
@@ -263,6 +435,12 @@ def main():
     for mid in ids:
         mid_, name, patches, why = BY_ID[mid]
         originals = {p[0]: open(p[0]).read() for p in patches}
+        # Pin the ORIGINAL bytes into the git object store and record the
+        # pointer BEFORE mutating anything. If this process is SIGKILLed
+        # between here and the restore below, the marker is what lets the
+        # NEXT invocation's _recover_startup() find and repair the damage --
+        # no trap can run for SIGKILL, so the record has to already exist.
+        _write_marker(mid, originals)
         try:
             cur = dict(originals)
             miss = False
@@ -287,8 +465,24 @@ def main():
                 print(out[-3000:])
             results.append((mid, name, verdict, npass, nfail, failed))
         finally:
+            # SIGTERM/SIGHUP land here via _Signalled, same as any other
+            # exception; SIGINT lands here via CPython's own KeyboardInterrupt.
+            # Restore is VERIFIED (re-read after write), not assumed, and the
+            # marker is cleared only once every path has verified clean --
+            # a partial restore leaves the marker so the next start-up check
+            # still catches it rather than reporting false confidence.
+            restored_all = True
             for path, text in originals.items():
-                open(path, "w").write(text)
+                try:
+                    _write_verified(path, text)
+                except Exception as e:
+                    restored_all = False
+                    print("RESTORE FAILED for %s: %s" % (path, e), file=sys.stderr)
+            if restored_all:
+                _clear_marker()
+            else:
+                print("marker left at %s for the next run's start-up recovery" % MARKER_PATH,
+                      file=sys.stderr)
 
     print("\n=== TABLE ===")
     print("| mutation | verdict | parity PASS | parity FAIL | killed by |")
@@ -303,4 +497,13 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except _Signalled as sig:
+        # Files are already restored (and verified) by the finally block that
+        # unwound on the way here; this only sets the conventional exit code.
+        sys.stderr.write("terminated by signal %d -- mutated files were restored before exit\n" % sig.signum)
+        sys.exit(128 + sig.signum)
+    except KeyboardInterrupt:
+        sys.stderr.write("interrupted (SIGINT) -- mutated files were restored before exit\n")
+        sys.exit(130)
