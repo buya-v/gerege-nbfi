@@ -111,7 +111,7 @@
     ".softhouse/capture/"
    ],
    "description": "T134's blast-radius finding, and the only LIVE money exposure it found. 74 of 240 .py files under .softhouse/ call json.load with no parse_float=, so every money literal in a capture becomes a binary double the moment it is read. Worst instance: capture/actualactual/analysis/discriminate.py:160 decides a money claim by BINARY-FLOAT EQUALITY and then prints 'ALL n PERIODS REPRODUCED DIGIT FOR DIGIT'. This is the P-25 class that already put 18-instead-of-22 into the gate write-up Buyan reads. Fix json.load(parse_float=Decimal) or integers throughout; do NOT edit scripts that produced committed evidence (record those and re-run from scratch copies, per T114's ruling). Report which published numbers, if any, change.",
-   "note": "Raised by the driver, local fire 20260821-080001, from T134 / T127 / T129. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md §1.",
+   "note": "DRIVER NOTE fire 20260822-080001: T185 RE-MEASURED this task's premise and T134's '74 of 240' DENOMINATOR NO LONGER EXISTS. On main at 1672d85, by AST (python 3.9.6, 0 unparseable files): 389 .py files, 323 json.load call sites, 211 LACKING parse_float=, in 114 files. START FROM 211/114, not 74/240. Two programs counted per P-33: /usr/bin/grep -la says 192 files, the AST says 184; the delta is comments and docstrings. capture/actualactual/analysis/discriminate.py:160 -- the worst instance, deciding a money claim by BINARY-FLOAT EQUALITY and then printing 'ALL n PERIODS REPRODUCED DIGIT FOR DIGIT' -- is confirmed unrepaired and untouched. T175 moved the number UP by 8; T185's own review branch adds 2 more deliberately (a script reproducing the defect under measurement) and recorded that against itself rather than leaving it for the next reviewer.",
    "carried_from": "2026-08-17-run1-harness-schedule-poc"
   },
   {
@@ -904,7 +904,7 @@
    "executor": "agent",
    "model": "opus",
    "target": "docs",
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
    "dependencies": [
     "T175"
@@ -913,8 +913,9 @@
     ".softhouse/capture/"
    ],
    "description": "INDEPENDENT review of T175. Re-derive; do not accept the author's conclusions. Read the upstream handoff from the BRANCH (git show <branch>:.softhouse/handoff/<run_id>/T175.md) and the diff with git diff main...<branch> (THREE DOTS, P-41). Drive the author's guard/probe yourself: a guard that was never driven RED is not shipped (P-22), a prover must be falsifiable toward the FIX as well as the defect (P-50), and a check that inspects zero items is an ERROR not a pass (P-35). Verdict APPROVED / MICRO-FIX (<=10 lines, mechanical, never a number) / REJECTED with specifics. If you find nothing, state what you checked so silence is distinguishable from not looking.",
-   "note": "DISPATCHED fire 20260822-080001, worktree-isolated, model opus.",
-   "branch": "softhouse/T185-review-t175"
+   "note": "MERGED, fire 20260822-080001. VERDICT APPROVED, and it answered the question it was actually sent to answer rather than the easier one. P-59 fired exactly as briefed: three-dot returned 0 lines; it used `git diff dfa1bfa..fecea5f` CROSS-CHECKED against `git show -m --stat 0c35634`, both giving 19 files / 2,437 insertions / 0 deletions -- 'A' on every line, so T175 REMOVED NOTHING and shipped successors beside byte-identical originals, which is the correct reading of T114's ruling. THE CENTRAL QUESTION -- do the de-vacuumed checks now FAIL on what they used to swallow -- ANSWERED YES BY CONSTRUCTION, on 16 input classes, 11 of which T175 explicitly disclaimed: t55-invariants-v2.py caught 11/11 (empty string, 'null', U+2212 minus, NBSP separators, full-width digits, bare JSON number, JSON null, nested object, exponent form, + T175's two) -- AND THE ORIGINAL ANSWERED 'I6 ok' ON SEVEN OF THEM, i.e. seven real MNT minor-unit breaches the merged instrument called clean. P-50's other half driven too: clean corpus -> exit 0, 33/33 captures, 1,236 money cells, 212 deltas. SITES T175 MISSED: ZERO -- an honest negative, reached by an INDEPENDENTLY WRITTEN AST classifier that reproduced T175's denominators EXACTLY (353 files, 87 handlers). Its own net says 37 swallows vs T175's 29 and it did not claim the difference as defects: all 8 extras are visible-sentinel handlers, a definitional difference. THREE new swallow-shaped sites appeared on main AFTER T175, in T179's guard_classify.py:201,820,1025 -- not chargeable to T175. F-1 [MED]: t44_float_roundtrip_v2.py prints 'SUCCESSOR: PASS' and exits 0 when a money literal IS value-corrupted by a float round-trip -- the detector fires but is never appended to `failures`, and the PASS banner is NEW IN THE SUCCESSOR. T185 deliberately did NOT call it MICRO-FIX, on a real argument: the file carries an explicit 'HAZARD CHARACTERISATION ONLY' statement, so making it fail would put a float-derived predicate on a VERDICT PATH -- a conscious decision for the next owner, not a mechanical repair. That is the right call. F-2 [MED]: T175 ADDED 8 json.load sites with no parse_float= (193 -> 201); its two deliverable sites are correct, the 8 are probe tooling, but measure-other-sites.py:85,86 sit on the money-delta path that published '12/12 pairs, 772 deltas'. F-3: measure-other-sites.py omits the cells() drop counter T175 invented -- 1,554 MONEYISH leaves / 1,554 kept / 0 dropped, so the published figure HOLDS BY CORPUS LUCK, NOT BY CHECK, which is verbatim T175's own diagnosis of the 18 -raw.json files now applying to its own tool. T145's NUMBER RE-MEASURED, which was the point of asking: T134's '74 of 240' DENOMINATOR NO LONGER EXISTS. On main at 1672d85 (AST, python 3.9.6, 0 unparseable): 389 .py files, 323 call sites, 211 lacking parse_float, in 114 files. T145 STARTS FROM 211/114. Two programs counted per P-33 (grep -la 192 files vs AST 184; delta is comments/docstrings). discriminate.py:160 unrepaired and untouched.",
+   "branch": "softhouse/T185-review-t175",
+   "merged": "cee0392"
   },
   {
    "id": "T186",
@@ -1387,10 +1388,11 @@
     "T196",
     "T198"
    ],
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
-   "note": "DISPATCHED fire 20260822-080001, worktree-isolated, model opus.",
-   "branch": "softhouse/T203-vectorstore-rewriters"
+   "note": "DONE + MERGED 28f8fd9, fire 20260822-080001. IT ENLARGED THE EXPOSURE THE BRIEF GAVE IT, which is the outcome a scope guard is supposed to permit: the brief said four writers / thirteen vectors, from T196's F-2 as corrected by T198. TRUTH: SIX promote rewriters of the live store, FIVE of them bare truncations, reaching TWENTY-SIX of the 43 parity vectors -- INCLUDING P-00-baseline-6x7pct.json, the corpus baseline. T57-promote-emi-vectors.py (2 vectors) and T8-promote-vectors.py (11 vectors) were MISSED BY BOTH T196 AND T198. T58 VERDICT: T198 IS RIGHT AND T196's WORDING IS WRONG -- verified by extraction AND by driving it (0 of 3 canaries destroyed, exit 1, while the others destroyed 13/13). But T203 refused to stop at the brief's question: 'cannot truncate' != 'is safe'. T58's protection is EXISTENCE-KEYED, not AUTHORISATION-KEYED, so it created two unauthorised vectors in the scratch store, is not atomic on the create path, and its os.path.exists FOLLOWS SYMLINKS. All three closed; its original refusal left verbatim. RED: 18 canary destructions from COMMITTED PRE-FIX BYTES (git show HEAD:), staged at REAL DEPTH because T57/T8 derive ROOT from __file__ and a /tmp copy cannot run -- with an explicit pre-flight abort and a store-digest check after EVERY arm. No promote script ever ran against the live store. GREEN: 18 -> 0. FOURTEEN falsification arms, 14 PASS, including NON-VACUITY across all six (42 live vectors re-emitted BYTE-IDENTICALLY, so the corpus provably did not move), live-store default-deny, token-cannot-lift-truncation-refusal, path traversal, dangling symlink, and refusal surviving `python3 -O`. T82 regression: 9 modes, pre- vs post-fix, 9 identical 0 differing. --enforce PRE-fix flagged 4 UNGUARDED/TRUSTED INCLUDING T58 -- a FALSE POSITIVE, and T203 correctly diagnosed its polarity as fail-CLOSED (cries wolf, hides nothing). Post-fix exit 0. DRIVER-VERIFIED INDEPENDENTLY in a throwaway git worktree of merged main (never the live tree): T8, T74 and T61 invoked with NO ARGV -- the live-store default, the exact dangerous invocation -- all THREE exit 2, NOTHING written, 50 vectors before and after, tree digest unmoved. The refusal text also establishes something stronger than the brief asked for: the authorisation token permits CREATING a new vector only, and no token, flag or environment variable can authorise OVERWRITING an existing one.",
+   "branch": "softhouse/T203-vectorstore-rewriters",
+   "merged": "28f8fd9"
   },
   {
    "id": "A2-18",
@@ -1504,6 +1506,66 @@
     ".softhouse/handoff/"
    ],
    "description": "T181's F-1. T178's prose publishes the unguarded-rewriter split as 21 DEC-1 / 4 contract.go. The truth -- settled by the T187/T183 BLIND convergence and reached a THIRD time by T181 via a different method (reading the target from the guard constant that is the actual argument to the write path) -- is 25 files / 20 DEC-1 / 7 contract.go / 2 both / 27 pairs. The TOTAL of 25 is correct and only the SPLIT is wrong, so no file went unhardened: this is a reporting defect, not a coverage defect, and the correction must say so rather than reading as a coverage scare. Note that BOTH of T178's errors UNDERSTATE contract.go, the higher-severity target, and that T178's prose contradicts ITS OWN COMMITTED TRANSCRIPT (which sums to 20/5). DO NOT re-litigate the population -- it is settled. Correct the number where a future fire will read it, cite the three converging derivations, and leave T178's transcript intact as evidence.",
+   "acceptance": null,
+   "note": null,
+   "contract_independent": true
+  },
+  {
+   "id": "T205",
+   "title": "The T179 classifier scores a runtime-computed target UNKNOWN, and --enforce does not trip on UNKNOWN — this is why T57 and T8 were invisible",
+   "role": "coder",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [
+    "T203"
+   ],
+   "files_hint": [
+    ".softhouse/reviews/t179-guard-classifier/"
+   ],
+   "description": "T203's F-2, and it is the ROOT CAUSE of T203's F-1 rather than a separate defect: targets computed as os.path.join(ROOT, ...) with a RUNTIME ROOT resolve to UNKNOWN, and --enforce does not trip on UNKNOWN. That is why T57-promote-emi-vectors.py and T8-promote-vectors.py -- between them 13 of the 43 live parity vectors, including the corpus baseline P-00 -- were invisible to T196 AND T198 AND the classifier. T196-1 closed the FUNCTION PARAMETER case; the RUNTIME-COMPUTED-CONSTANT case is still open. Note the polarity carefully before choosing the fix: UNKNOWN currently fails OPEN (hides), while T203 measured that T58 was flagged UNGUARDED as a FALSE POSITIVE which fails CLOSED (cries wolf) -- the two directions want different remedies and conflating them is how this class keeps recurring. DRIVE RED on T57/T8's own shape and GREEN on the real corpus; report the classification of all six promote rewriters before and after.",
+   "acceptance": null,
+   "note": null,
+   "contract_independent": true
+  },
+  {
+   "id": "T206",
+   "title": "A seventh promote-shaped writer and three unguarded capture-target sites, all uninspected",
+   "role": "coder",
+   "executor": "agent",
+   "model": "sonnet",
+   "target": "code",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [
+    "T203"
+   ],
+   "files_hint": [
+    ".softhouse/capture/"
+   ],
+   "description": "T203's backlog, deliberately kept out of its diff to hold scope. (a) .softhouse/capture/pathb/t149/promote-vector.py -- a SEVENTH promote-shaped writer of the vector store, uninspected by T196, T198 or T203. Establish whether it can truncate, and guard it with the SAME shared-module idiom T203 used (.softhouse/handoff/t203_store_guard.py) -- do not invent a second one. (b) T61-sweep/build-pass3f.py:147,215,216 -- three UNGUARDED capture-target write sites. (c) T57's bare `assert` invariants, pre-existing: a bare assert vanishes under `python3 -O`, and T203 specifically proved its own guard survives -O, so this is a live asymmetry. SAFETY, NON-NEGOTIABLE: never execute a promote script from the repo root; scratch copies at REAL DEPTH only (T203 measured that these scripts derive ROOT from __file__, so a /tmp copy cannot run and a naive scratch test is a NULL CONTROL). Verify the store is byte-identical before and after: 50 .json files, and publish the digest WITH ITS RECIPE.",
+   "acceptance": null,
+   "note": null,
+   "contract_independent": true
+  },
+  {
+   "id": "T207",
+   "title": "t44_float_roundtrip_v2.py prints SUCCESSOR: PASS and exits 0 on a value-corrupted money literal — decide whether a float-derived predicate may reach a verdict",
+   "role": "coder",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [
+    "T185"
+   ],
+   "files_hint": [
+    ".softhouse/capture/"
+   ],
+   "description": "T185's F-1, and T185 deliberately did NOT micro-fix it, correctly: the detector fires when a money literal IS value-corrupted by a float round-trip, but is never appended to `failures`, so the script prints 'SUCCESSOR: PASS' and exits 0 -- and the PASS banner is NEW IN THE SUCCESSOR, i.e. T175 introduced it. The reason it is a task and not a micro-fix: the file carries an explicit 'HAZARD CHARACTERISATION ONLY -- these floats never touch a verdict' statement, so making it fail puts a FLOAT-DERIVED PREDICATE ON A VERDICT PATH. That is a decision, not a repair. Decide it and argue it, applying T186's ratified enforcement boundary (oracle-facing wire admits major-unit decimal and is bound by BYTE-FIDELITY; the Go module's own surface refuses float absolutely; the stored vector must be integer minor units). ALSO IN SCOPE, same class: T185's F-2 (T175 added 8 json.load sites with no parse_float=, 193 -> 201, of which measure-other-sites.py:85,86 sit on the money-delta path that published '12/12 pairs, 772 deltas') and F-3 (measure-other-sites.py omits the cells() drop counter, so its published figure holds BY CORPUS LUCK, NOT BY CHECK -- 1,554 leaves, 1,554 kept, 0 dropped).",
    "acceptance": null,
    "note": null,
    "contract_independent": true
