@@ -9,7 +9,9 @@ set -uo pipefail
 
 ROOT=$(cd "$(dirname "$0")/../../../.." && pwd)
 OUT="$ROOT/.softhouse/reviews/t261-tenant-attestation/evidence"
-LOG="$OUT/90-bar.txt"
+# Output name is a parameter so a later run cannot silently overwrite the log
+# an earlier finding cites.  Default keeps the historical name.
+LOG="$OUT/${1:-90-bar.txt}"
 
 # shellcheck disable=SC1091
 . /Users/buv/gerege-nbfi/.softhouse/bin/go-env.sh

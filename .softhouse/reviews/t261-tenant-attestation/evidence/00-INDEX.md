@@ -24,3 +24,8 @@ Nothing is synthesised.
 | `92-bar-merged-T250.txt` | Summary of that same final run: probe PRESENCE first, then value; frontier 11 == pinned 11; 9/9 exemption pins. |
 | `91-bar-baseline-noT250*.txt` | Attribution run with T250's files held aside — also PASS. |
 | `93-bar-FAILING-run-tmp-race.txt` | **A BAR run that EXITED 2.** Kept deliberately. Its cause is finding **F-11**: the fail-open frontier flips on whether `/tmp/t234_matrix2.txt` exists. It is NOT T250's defect and NOT this review's verdict. |
+| `94-bar-t261-branch-final*.txt` | P-69 RE-MEASURE after my own commit landed: my 11 instruments are now TRACKED, so the fail-open linter's corpus grows 918 -> 929. **frontier still 11 == pinned 11, zero rows mine.** VERDICT PASS exit 0, probe PRESENT then `up`. Store digest `13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d` UNMOVED. |
+
+`90-bar.txt` is written by `instruments/t261-bar.sh` and was being overwritten by
+each run; the instrument now takes the log name as an argument so a later run
+cannot silently replace a log an earlier finding cites.
