@@ -9,18 +9,48 @@
 >
 > 1. **No `ledger` vector exists.** `.softhouse/vectors/` holds `loanschedule/` and `_selftest/` and
 >    nothing else [VERIFIED by this task: `ls .softhouse/vectors/`].
-> 2. **No `ledger` vector CAN exist.** The store's only accepted schema is
->    `gerege.loanschedule.vector/v1` and its `Request`/`Expect` shapes are loan-schedule shapes. §5
->    establishes this in code and by three failing positive controls. **This is not a gap somebody
->    forgot to fill; it is machinery that has not been built.**
-> 3. **No guard enforces `I-3` (balances are derived) or `I-4` (append-only).** `run_guards` invokes
->    exactly five guards and **all five are about floating point, `gofmt` and exception scope**
->    [VERIFIED by this task: `.softhouse/conformance.sh:843-849`]. **Nothing anywhere in this
->    repository looks for a balance write path, or for an `UPDATE`/`DELETE` against
->    `acc_gl_journal_entry`.**
+> 2. **No `ledger` vector is EXPRESSIBLE.** The store's only accepted schema is
+>    `gerege.loanschedule.vector/v1`, its `Request`/`Expect` shapes are loan-schedule shapes, and its
+>    cell whitelist is three loan-schedule cells — so **no `ledger` input and no `ledger` output can
+>    be written down**. §5.1 establishes this in code, in five legs, all five of which an independent
+>    review re-opened and confirmed. **This is not a gap somebody forgot to fill; it is machinery
+>    that has not been built.**
+>
+>    **⚠ RETRACTION, revision 3 — this item said something stronger, and it was FALSE.** Revision 2
+>    wrote here *"No `ledger` vector **CAN** exist"*, §8.1 wrote *"Zero `ledger` vectors **CAN**
+>    exist"*, and §4.10 wrote *"no `ledger` vector can be admitted **at all**"*. **Admission**-impossibility
+>    is strictly stronger than **expression**-impossibility, it is not what §5.1's five legs prove,
+>    and it was falsified by measurement — **twice, independently**: by review task `A2-19`, and
+>    again by the driver on `main`'s own bytes before revision 3 was commissioned. Copy any promoted
+>    `loanschedule` parity vector into `.softhouse/vectors/ledger/`, change **only** `case_id` and
+>    `context`, and the harness reported **`VERDICT: PASS (exit 0) — 44 parity vectors match the
+>    pinned reference oracle, 5711 cells compared`**. Both reproductions agree to the digit: **44 /
+>    5711**, against 43 / 5664 for the same store without the copy. The headline number this entire
+>    program quotes was inflatable by two string edits, over a corpus whose 44th vector graded a
+>    **loan schedule** while filed as `ledger`. §5.1.1 carries the full retraction, the cause, and the
+>    corrected positive control. **The hole has since been closed by `A2-20`** — but the sentence was
+>    false when it was written, in the unsafe direction, and the reason it was believed is recorded
+>    rather than quietly reworded.
+> 3. **A guard for `I-3` (balances are derived) and `I-4` (append-only) NOW EXISTS — revision 2 said
+>    it did not, and that was true when revision 2 was written.** `run_guards` invokes **seven**
+>    guards, not five; the seventh is `guard_ledger_invariants`, built by `A2-18` and **wired** by
+>    `T208` [VERIFIED by this task: `.softhouse/conformance.sh:1117-1152` defines it, `:1154-1179`
+>    is `run_guards` invoking all seven, `:1174` is the invocation; this task's own unfiltered run
+>    prints `ledger-invariants: PASS` and `invariant violations 0` (MEASURED, §5.4)]. **This does
+>    NOT mean the ledger is covered, and the guard says so itself**: its PASS text reads *"no
+>    violation is visible to a source-level guard over the Go tree"*, **not** *"the ledger tree is
+>    covered"*; the detection surface is the **name**, so renaming a balance defeats it; and it
+>    prints two `NIL-COVERAGE` lines because this Go tree declares **no database driver and contains
+>    no SQL at all**, so the `I-4` DML classes are proven by the guard's own self-test and by
+>    **nothing in this repository**. §4.4.1 carries the correction and the limits.
 > 4. **The "PASS 43" everybody quotes is `loanschedule`'s.** All 43 promoted parity vectors are in
 >    the `loanschedule/` directory. **Zero of them touch a GL account, a mapping, a financial
->    activity or a journal entry.**
+>    activity or a journal entry.** **Revision 2 leaned on this as though the `loanschedule/`
+>    directory boundary were ENFORCED. It was not** — that is exactly what item 2's retraction is
+>    about, and it is why 43 became 44. **It is enforced now**, at admission, by an allowlist tied to
+>    the schema rather than to the directory [VERIFIED by this task:
+>    `nexus/internal/apps/loanschedule/conformance/vector.go:77-81`, `SchemaContexts()` returns
+>    `{_selftest, loanschedule}`; `admit.go:139-147` refuses any other `context` as **INADMISSIBLE**].
 >
 > **§8 contains a sentence that is true and will be misread**, so it is contradicted here in
 > advance: `conformance.sh`'s hard guards *do* walk `nexus/internal/apps/ledger/`. They walk it
@@ -33,13 +63,30 @@
 > exists. Ratification is not coverage, and this document must never be cited as though it were.
 
 
-**Status: DRAFT (revision 2), 21 August 2026, drafted by task `A2-16`. NOT RATIFIED. `A2-16` may
-not ratify it and does not.** Revision 1 (`A2-13`) was **REJECTED** by independent review
-(`A2-14`, local fire `20260821-125942`) on three shape findings, all three resolved here — §5 for
-R-1 and R-2, §2.2/§3.2/§4.2/§4.4 for R-3, §9 item 10 for the review's finding F-A. **A further
-independent review must pass clean before the driver may ratify** under standing policy **P-2**;
-until then `A2-15` (promote GL vectors) stays blocked, and §5.3 names work that must land before
-`A2-15` could succeed even against a ratified contract.
+**Status: DRAFT (revision 3), 22 August 2026, drafted by task `A2-21`. NOT RATIFIED. `A2-21` is NOT
+AUTHORISED to ratify it and does not.** **Revision 2 (`A2-16`) was REJECTED** by independent review
+(`A2-19`) and is recorded as gate **G-11 — OPEN, NOT RATIFIABLE** in `.softhouse/gates.md` and
+`.softhouse/program.json`. Revision 1 (`A2-13`) had been **REJECTED** before it by `A2-14` (local
+fire `20260821-125942`) on three shape findings, all three resolved in revision 2. **Ratification
+requires a FURTHER independent review passing clean** under standing policy **P-2**; until then
+`A2-15` (promote GL vectors) stays blocked, and §5.3 names work that must land before `A2-15` could
+succeed even against a ratified contract.
+
+**Why revision 2 was rejected, in one paragraph, because it is the thing a ratifier most needs to
+know.** `A2-19` found **one rejection-grade defect**: a single claim, asserted in three places, that
+it **falsified by measurement** — *"no `ledger` vector CAN exist"*. A relabelled `loanschedule`
+parity vector was admitted, graded and counted at **`VERDICT: PASS (exit 0) — 44 parity vectors …
+5711 cells`**. The driver reproduced it independently to the same figures. **Revision 3 retracts the
+claim at all three sites (§5.1.1, banner item 2, §8.1 fact 2, §4.10)**, restates the true and weaker
+claim §5.1's heading already carried, adds the **positive control and required RED demonstration**
+§5.2's specification was missing (`A2-19` F2), applies `A2-19`'s **adjudication on the P-6/P-7
+precondition split** (§5.3), and corrects the **one wrong citation** in 64 (§2.2 B-4, "three
+columns" → **two**). It additionally corrects three claims that were **true when revision 2 was
+written and have since gone stale** because the harness moved under them — the `I-3`/`I-4` guard now
+exists (§4.4.1), the context boundary is now enforced (§8.2), and `A2-20` has closed the admission
+hole. **What `A2-19` CONFIRMED and revision 3 does not disturb:** all 47 Fineract citations hit at
+their exact lines; §5.1's five legs; §5.4's retraction and both its measurements; §8.3's
+contradict-at-the-point-of-claim technique; and P-8's independence of P-1…P-5.
 
 **What survived the rejection, so that it is not re-litigated.** A2-14 opened over thirty source
 and capture citations and found **every `[VERIFIED]` claim traced to real source at the exact
@@ -51,7 +98,8 @@ Claims carried forward unchanged from revision 1 keep revision 1's citation tier
 task re-opened are marked as such.
 
 **No PIN digest appears in this document**, and §1.1 explains why one *cannot* appear yet: unlike
-DEC-1, this ADR is not written against an existing frozen Go file.
+DEC-1, this ADR is not written against an existing frozen Go file. **This is load-bearing for §5.3's
+P-7**, whose revision-2 premise §1.1 contradicts — see the adjudication in §5.3.
 
 **Terminology.** In this document "**the reference oracle**" always means the **Fineract
 reference implementation** at the pinned commit — the implementation this program grades Go
@@ -68,7 +116,7 @@ committed file under `.softhouse/capture/tierA-a2/`. Every material claim carrie
 **`[VERIFIED BY <task>, NOT RE-OPENED HERE]`**, which is a third and weaker thing, and the
 distinction is deliberate.
 
-**Reading "this task" across two revisions.** Unqualified *"this task"* means **`A2-13`**, the
+**Reading "this task" across THREE revisions.** Unqualified *"this task"* means **`A2-13`**, the
 author of revision 1, and its verifications stand — an independent review re-opened over thirty of
 them and every one traced to real source at the exact cited line. Where **`A2-16`** re-opened a
 claim, corrected one, or measured something new, the citation says so explicitly: **`[VERIFIED by
@@ -78,7 +126,21 @@ this task]`** for a harness run this task actually performed rather than reasone
 against a **temporary copy** of the vector store; **no file under `.softhouse/vectors/` or `nexus/`
 was modified by revision 2.**
 
-**Harness `file:line` citations drift, and revision 2 re-took the ones it relies on.** Several
+**Revision 3's own marks are `[VERIFIED by this task]` / `[MEASURED by this task]` written by
+`A2-21`**, which re-opened: §1.1 (before acting on the P-7 adjudication), §2.2 B-4 at the pinned
+Fineract checkout, `admit.go`'s context checks and `A2-20`'s allowlist, `conformance.sh`'s
+`run_guards` and `guard_ledger_invariants`, `capability.go`'s coverage loop, `grade.go`'s
+remediation text, `capabilities.json` and `PIN.json`'s schema ids, and the full unfiltered
+conformance run. **`A2-21` is an ANALYST and wrote no code: its diff touches this file and its
+handoff, and nothing else.** The vector store is unchanged — `git rev-parse HEAD:.softhouse/vectors`
+= `ce821c638724237652b6b29627148d34b72fab3b`, the canonical recipe (**P-61**; never
+`find | shasum | shasum`, which hashes path text and moves with the caller's cwd).
+
+**Harness `file:line` citations drift, and revisions 2 and 3 re-took the ones they rely on.**
+Revision 3 re-took every harness citation it touched and states the drift where it found it: `A2-19`
+recorded `run_guards` as having moved 843 → 938 between revisions; it is at **1154** in revision 3's
+tree, and `capability.go`'s coverage loop moved 243 → **246**. **Drift is disclosed, never
+silently patched over.** Several
 harness line numbers moved between revision 1 and revision 2 as unrelated tasks landed — for example
 the `-context` flag append and `run_guards`, both cited by revision 1's reviewer at line numbers that
 no longer hold. Every harness citation in §4.4.1, §5.1, §5.2 and §5.4 was re-taken by `A2-16` against
@@ -261,7 +323,7 @@ see, each demonstrated from source rather than asserted:
 | **B-1** | **The product's accounting rule.** | Not a parameter. Consequence at `:1210`: the miss message is rendered by `AccrualAccountsForLoan.fromInt(accountMappingTypeId).toString()` **always**, even for a cash product; the working-capital path renders through `CashAccountsForLoan` **always** at `:1026` [VERIFIED, both lines opened by this task]. At codes **22, 24, 25** the two enums render *different words*, so the oracle emits the wrong family's word for one of the two rules. At code **26** (cash-only) and **7/8/9** (accrual-only) the rendering enum's `fromInt` returns null and `.toString()` throws an NPE instead of producing a refusal. |
 | **B-2** | **The resolved account's classification, usage or `disabled` flag.** | The body ends `glAccount = accountMapping.getGlAccount();` at `:1213` and `return glAccount;` at `:1215`, with no reference to any of the three [VERIFIED by this task, the whole method read]. **This is the mechanism of G-10** (§4.6): a retype is invisible to resolution because resolution never looks. A2-9 re-derived the same for all four resolvers and concluded resolution gradings are immune to the retyped chart [VERIFIED BY A2-9, NOT RE-OPENED HERE]. |
 | **B-3** | **A charge.** | The charge resolvers are `private` and every caller is inside `AccountingProcessorHelper` itself [VERIFIED by this task: `grep -rn` over the checkout excluding `/build/` returns, for `getLinkedGLAccountForLoanCharges`, only `:402`, `:404`, `:764`, `:1430` — all in that file — plus three comment mentions in an integration test]. **So an in-process seam bound to the public method cannot grade a charge**, by construction. This is structurally the same fact as DEC-1's `loanCharges = null` at `ProgressiveLoanScheduleGenerator.java:83`, reached by a different mechanism: Java visibility rather than a hard-wired null. |
-| **B-4** | **The office.** | `acc_gl_financial_activity_account` is tenant-global — three columns plus id, no office dimension [VERIFIED BY A2-1 AND A2-2 from `0001_initial_schema.xml:99-109`, NOT RE-OPENED HERE; corroborated by this task from `A2-150`, whose dump of that table projects `id, financial_activity_type, gl_account_id` and joins the account]. |
+| **B-4** | **The office.** | `acc_gl_financial_activity_account` is tenant-global — **two** columns plus id, no office dimension [**CORRECTED in revision 3, and RE-OPENED at the pinned checkout**: revision 2 said *"three columns plus id"*, carried from A2-1/A2-2 in the document's weakest citation tier. It is **two**. `fineract-provider/src/main/resources/db/changelog/tenant/parts/0001_initial_schema.xml:98-110` is `changeSet id="4"`, whose `createTable` declares exactly `id` (`:100-102`, autoincrement primary key), `gl_account_id` (`:103-105`) and `financial_activity_type` (`:106-108`) and nothing else [VERIFIED by this task, file opened at `/Users/buv/fineract` @ `426a23544e8426a38ae43ae404670a0a7e85b9eb`, re-confirmed by `git rev-parse HEAD`]. **The load-bearing claim is unaffected and is TRUE: there is no office dimension** — the adjacent `acc_gl_journal_entry` table does declare `office_id` (`:119-121`, in `changeSet id="5"`) and this one does not. The miscount was refuted from inside the same sentence, whose own corroboration lists three names of which one is `id` — and it is the ONE wrong claim an independent citation audit found in 64, in the tier the document itself flags as weakest, which is evidence the tier convention works. Corroborated by this task from `A2-150`, whose dump of that table projects `id, financial_activity_type, gl_account_id` and joins the account]. |
 | **B-5** | **Any amount, and any currency.** | Neither is a parameter and neither appears in the body [VERIFIED by this task, the whole method read]. **No money flows through THIS METHOD at all.** Scope, and revision 2 states it in the row rather than leaving it to be inferred: this is a fact about `getLinkedGLAccountForLoanProduct`, which is the analogue of the **`ledger_inprocess_resolver`** seam — **the one seam `G-01` refuses** (§4.1, §4.2). It is **not** a fact about the contract, which is anchored on three other seams, two of which carry money. |
 
 **B-5's scope, corrected in revision 2 — this is finding R-3, and it is the same defect class as
@@ -667,8 +729,8 @@ columns**, because the difference between them is the whole of finding R-1:
 |---|---|---|---|---|
 | **I-1** | Debits equal credits | For every transaction, `Σ debit legs == Σ credit legs`, compared as `int64` minor units | **YES.** `A2-235`'s eight legs: debits `120,000,000 + 20,000,000 + 100,000,000 + 5,000,000 = 245,000,000` minor units, credits the same [the eight `"amount":` tokens RE-VERIFIED by this task from the raw bytes; the total matches A2-8's stated 245,000,000]. `A2-150`'s six rows are three balanced pairs at 120,000,000 each [VERIFIED by this task from the dump, lines 65-70]. | **NO.** §5 — no admissible vector can carry a money cell, or any `ledger` cell. |
 | **I-2** | Splits sum to whole | `whole == Σ splits`, `int64` minor units | **YES.** `120,000,000 = 20,000,000 + 100,000,000` — disbursed principal against repayment plus write-off [re-derived by this task from the same legs]. | **NO.** Same reason. |
-| **I-3** | Balances are DERIVED, never written | No write path to any balance column exists in the Go tree | **NO — STRUCTURAL ONLY.** A vector is a snapshot of oracle output; it cannot observe the *absence* of a write path. Gradeable only by a source-level guard over the Go tree. And the oracle is **not** a positive example: `m_trial_balance.closing_balance` is a written, stored, **unsigned** sum wearing a balance's name [VERIFIED BY A2-2's re-derivation of `UpdateTrialBalanceDetailsTasklet.java:81` reading `JournalEntryRepository.java:61`, NOT RE-OPENED HERE]. It is deliberately **not ported** (§7). | **NO, AND NOT BY ANYTHING ELSE EITHER.** No such guard exists. `run_guards` invokes five guards and all five are about float, `gofmt` and exception scope [VERIFIED by this task: `.softhouse/conformance.sh:843-849`]. See the correction below. |
-| **I-4** | The ledger is append-only | No `UPDATE`/`DELETE` against `acc_gl_journal_entry` from application code | **NO — STRUCTURAL ONLY.** "No update ever happened" is not observable from a capture. Partial exception: a reversal is observable *as a row*, because the table carries a `reversed` flag [VERIFIED BY A2-13 from `JournalEntry.java:79`, NOT RE-OPENED HERE]. | **NO, AND NOT BY ANYTHING ELSE EITHER.** Same as I-3: no guard looks for an `UPDATE`/`DELETE` against `acc_gl_journal_entry`. |
+| **I-3** | Balances are DERIVED, never written | No write path to any balance column exists in the Go tree | **NO — STRUCTURAL ONLY.** A vector is a snapshot of oracle output; it cannot observe the *absence* of a write path. Gradeable only by a source-level guard over the Go tree. And the oracle is **not** a positive example: `m_trial_balance.closing_balance` is a written, stored, **unsigned** sum wearing a balance's name [VERIFIED BY A2-2's re-derivation of `UpdateTrialBalanceDetailsTasklet.java:81` reading `JournalEntryRepository.java:61`, NOT RE-OPENED HERE]. It is deliberately **not ported** (§7). | **NO BY A VECTOR — AND, SINCE REVISION 2, YES BY A SOURCE GUARD, PARTIALLY.** Revision 2 said *"no such guard exists"*; that was true when written and is **stale**. `guard_ledger_invariants` (built by `A2-18`, **wired** by `T208`) is the seventh guard `run_guards` invokes and it walks the Go tree for a write path to a balance [VERIFIED by this task: `.softhouse/conformance.sh:1117-1152`, `:1174`; MEASURED: `invariant violations 0`]. **Its limits are load-bearing and §4.4.1 states them** — the detection surface is the NAME, so renaming a balance defeats it. |
+| **I-4** | The ledger is append-only | No `UPDATE`/`DELETE` against `acc_gl_journal_entry` from application code | **NO — STRUCTURAL ONLY.** "No update ever happened" is not observable from a capture. Partial exception: a reversal is observable *as a row*, because the table carries a `reversed` flag [VERIFIED BY A2-13 from `JournalEntry.java:79`, NOT RE-OPENED HERE]. | **NO BY A VECTOR — AND THE SOURCE GUARD'S I-4 ARM INSPECTED AN EMPTY POPULATION HERE.** The same `guard_ledger_invariants` looks for DML against the journal table, but its own two `NIL-COVERAGE` lines say this Go tree contains **no SQL and declares no database driver**, so the `I-4` DML classes are proven by the guard's self-test and **not** by this tree [MEASURED by this task from the unfiltered run: *"zero mutating driver calls … class OPAQUE-SQL inspected an empty population"*]. **P-35: a check that inspected zero items is not a pass**, and the guard says so itself rather than leaving it to be inferred. |
 | **I-5** | Corrections are reversing entries | A correction adds a leg pair; it never mutates one | **UNGRADED TODAY.** The A2 corpus contains no reversal: `A2-150`'s journal dump does not project `reversed` or `reversal_id` and its six rows are three ordinary pairs [VERIFIED by this task]; A2-8's grading table lists no reversal grading [VERIFIED BY A2-8, NOT RE-OPENED HERE]. Refused with `ErrNoDiscriminatingVector`; retired by one capture. §9 item 13. | **NO.** Nothing to grade, and nothing to grade it with. |
 | **I-6** | Holds are postings and alter `available` only, never posted `balance` | — | **OUT OF THE CONTRACT DOMAIN.** No hold concept exists in A2's three tables. Refused with `ErrUnsupportedConfiguration`. | **N/A.** |
 | **I-7** | `Idempotency-Key` on every money-movement POST | — | **NOT APPLICABLE TO THIS CONTRACT, and that must be said rather than assumed.** DEC-2's surface exposes no HTTP endpoint and moves no money; it is a value computation. The obligation is real and lands on **A1** (the posting engine) and on the adapter's HTTP layer. A `ledger` conformance PASS says nothing whatever about it. | **N/A** — and note that today there is no `ledger` conformance PASS to say nothing with. |
@@ -678,25 +740,36 @@ GL/accounting context, and **grades none of them today.** **I-3 and I-4 must be 
 harness-level source guard, not by a vector**, and DEC-2 states that as a normative requirement
 rather than a hope.
 
-### 4.4.1 THE GUARD I-3 AND I-4 REQUIRE DOES NOT EXIST
+### 4.4.1 THE GUARD I-3 AND I-4 REQUIRE — IT DID NOT EXIST, IT DOES NOW, AND WHAT IT CANNOT SEE
 
 Revision 1 stated the requirement correctly and never claimed the guard existed. It also never said
 it **doesn't**, and it placed the requirement four lines above a paragraph about guards that *do*
 run. A reader will merge them. **This subsection exists so they cannot be merged.**
 
-**`run_guards` invokes exactly five guards** [VERIFIED by this task, `.softhouse/conformance.sh:843-849`,
-opened and read]:
+> **⚠ STALE BY LANDING — corrected in revision 3, and it moves in the SAFE direction.** Revision 2's
+> heading here read *"THE GUARD I-3 AND I-4 REQUIRE DOES NOT EXIST"*, and the banner and §8.1 both
+> asserted it as a measured fact. **It was true when revision 2 was written and it is false now.**
+> `A2-18` built the guard on exactly the independence §5.3 P-8 claims, and `T208` wired it into
+> `run_guards`. Revision 3 does not repeat the claim, and does not silently drop it either: **the
+> requirement below is now SATISFIED IN PART, and the part it does not reach is the part a ratifier
+> must read.** Nothing else in this subsection changes — the requirement it states, and the reason
+> a vector can never discharge it, both stand.
+
+**`run_guards` invokes SEVEN guards** [VERIFIED by this task, `.softhouse/conformance.sh:1154-1179`,
+opened and read; the first short-circuits with `exit` rather than joining the `failed` tally]:
 
 ```
+  guard_graded_root_is_this_tree        # short-circuits: is $REPO_ROOT the tree being graded?
   guard_no_float_in_vectors
   guard_no_float_in_harness
   guard_gofmt
   guard_no_float_in_capture_requests
   guard_no_narrow_catch_in_capture_rigs
+  guard_ledger_invariants               # I-3 / I-4 — A2-18, wired by T208
 ```
 
-**All five concern floating point, source formatting and exception scope. Not one of them looks
-for:**
+**Five of the seven still concern floating point, source formatting and exception scope, and a
+sixth concerns the repo root. None of those six looks for:**
 
 - a write path to any balance column (that is **I-3**);
 - an `UPDATE` or `DELETE` statement against `acc_gl_journal_entry`, or any Go call that would emit
@@ -704,11 +777,44 @@ for:**
 - a derived-balance function that caches instead of deriving;
 - a correction path that mutates a leg instead of adding a reversing pair (that is **I-5**).
 
-**So the normative requirement in the table above is, today, unsatisfied.** The correct reading of
-this whole subsection is: *DEC-2 obliges I-3 and I-4, names the only mechanism that could enforce
-them, and records that the mechanism has not been written.* Anyone who ratifies this document
-ratifies that gap along with it, knowingly. Writing the guard is named as a precondition in §5.3 and
-as a follow-up; it is **not** done by this ADR, which writes no code.
+**The seventh does, and this is what it actually delivers** [VERIFIED by this task:
+`.softhouse/conformance.sh:1080-1152`, the definition and its in-file commentary read in full;
+MEASURED by this task from its own unfiltered run, quoted verbatim]:
+
+```
+ledger-invariants: selftest OK — 15 cases, 13 RED, 2 GREEN (P-22 and P-50)
+ledger-invariants: CENSUS ledger-invariants — inspected 44 Go files / 5 packages / 502 funcs
+  (1 hold-named) / 645 assignment or inc-dec statements / 296 write targets / 3955 string
+  literals in 3531 concatenation groups / 4572 calls under …/nexus (recursive, whole Go tree)
+ledger-invariants: PASS — I-3 (balances are derived) and I-4 (append-only) hold over the
+ledger-invariants:   Go tree AS FAR AS A SOURCE-LEVEL GUARD CAN SEE.
+```
+
+It carries a self-test that runs **both polarities** (13 RED, 2 GREEN) — the P-22/P-50 shape, so the
+guard is falsifiable in the direction of the fix and not only in the direction of the defect — and
+it derives its file-count floor from `git ls-files` rather than pinning it, so a shrinking
+population is a refusal rather than a quiet pass.
+
+**FOUR THINGS IT CANNOT SEE, and a ratifier who quotes the PASS without them has been misled.** The
+guard prints these itself, condensed, on every run [MEASURED, `conformance.sh:1143-1150`]:
+
+1. **The detection surface is the NAME. Renaming a balance defeats the guard.**
+2. **Dynamic SQL is caught only through the call set it recognises**; triggers, migrations and
+   stored procedures are not walked at all.
+3. **`I-5`'s semantic half and non-Go callers are not covered.**
+4. **The `I-4` SQL classes inspected an empty population in THIS tree** — two `NIL-COVERAGE` lines
+   report zero SQL DML literals and zero mutating driver calls, because the Go module declares no
+   database driver. **P-35 applies exactly: a class that inspected zero items has not been
+   exercised**, and the guard says so instead of counting it as clean. Its detection of real ledger
+   SQL is proven by its self-test and by nothing in this repository.
+
+**So the normative requirement in the table above is now SATISFIED IN PART: a source-level guard
+runs, it is falsifiable, and its blast radius is a source-level Go tree that contains no SQL.**
+The correct reading of this whole subsection is: *DEC-2 obliges I-3 and I-4, names the only
+mechanism that could enforce them, and that mechanism now exists over the Go tree while three of its
+four detection classes wait for a tree with a database in it.* Anyone who ratifies this document
+ratifies that residue along with it, knowingly. §5.3 **P-8 is accordingly marked LANDED**, and what
+replaces it is narrower.
 
 **One inherited claim this draft CORRECTS rather than repeats.** A2-8's follow-up **F-1** records
 that `conformance.sh`'s hard guards were scoped to `loanschedule`, so a float in
@@ -1004,8 +1110,24 @@ not the registry file itself** — authoring data files belongs to the grader ta
 > §5.4's NORMATIVE SEQUENCING RULE before writing any of these rows into `capabilities.json`.**
 > Every row here lands `false` initially, and a `true` flips only in the change that promotes the
 > vector covering it. A `true` authored ahead of its vector turns **every** run in the repository
-> red — including `-context=loanschedule` — with no legal way to clear it, because §5.1 establishes
-> that no `ledger` vector can be admitted at all until §5.3's P-1…P-5 exist.
+> red — including `-context=loanschedule` — and **the only legal way to clear it is to withdraw the
+> row to `in_graded_domain: false`**, because **§5.1 and §5.4 together** establish that no `ledger`
+> vector can be *expressed* until **§5.3's** P-1…P-5 exist, and §5.1's five legs are unaffected by
+> `A2-20`'s admission-time context allowlist.
+>
+> **⚠ RETRACTION, revision 3 — two corrections to the sentence above, both from `A2-19`.**
+> **(a)** Revision 2 wrote *"no `ledger` vector can be **admitted at all**"*. **That was FALSE** —
+> a relabelled `loanschedule` parity vector was admitted, graded, and counted, taking the headline
+> to `PASS 44` / `5711 cells` at exit 0 (banner item 2; §5.1.1). The true claim is
+> **expressibility**, which is what §5.1 proves and what the sentence now says. **(b)** Revision 2
+> attributed P-1…P-5 to §5.1; they are **§5.3's**, and the composite claim is §5.1 + §5.4, not §5.1
+> alone. **(c)** Revision 2 wrote *"no legal way to clear it"*; the harness's own remediation text
+> names **two** outs — *"Either promote a vector with a `graded_against` entry, or set
+> `in_graded_domain` false in `capabilities.json`"* [VERIFIED by this task: `grade.go:432-433`] — and
+> §5.1 closes only the first. The second is
+> legal, immediate, and is step 2 of §5.4's own sequencing rule. Revision 2 overstated in the
+> **fail-loud** direction, which is the safe one; it is corrected because a document that is being
+> ratified as an admissibility standard may not be approximately right about what the harness does.
 
 | capability | description | `in_graded_domain` | status per seam |
 |---|---|---|---|
@@ -1082,7 +1204,7 @@ What *does* exist, and it is substantial but it is **not** the same thing:
 
 **The honest consequence, stated so nobody reads a green bar as coverage:** ratifying DEC-2 would
 freeze a contract whose graded domain (§4.2) is *justified* by observations that are **not yet
-promoted vectors** — and, revision 2 adds, **that could not be promoted if somebody tried.**
+promoted vectors** — and, revision 2 adds, **that could not be EXPRESSED if somebody tried** (revision 3: *expressed*, not *admitted* — §5.1.1 retracts the stronger word, which was false).
 
 ### 5.1 No `ledger` vector is expressible against the frozen vector schema — MEASURED
 
@@ -1190,6 +1312,116 @@ PC-2's refusals, quoted verbatim from the run [MEASURED by this task]:
 bug to be fixed; it is a machine doing exactly what it was built to do, to a vector from a context
 it was never built for.
 
+**But PC-3 was a FALSE NEGATIVE, and revision 2 read it as a wall. §5.1.1 is that retraction.**
+
+### 5.1.1 RETRACTION — "no `ledger` vector CAN exist" was FALSE, and PC-3 is why it was believed
+
+**This subsection is the whole of revision 2's rejection (`A2-19`, finding F1), and it is placed
+here, inside §5.1, because §5.1's own heading was already carrying the correct claim while the
+banner, §8.1 and §4.10 carried a stronger one.**
+
+**What was claimed.** In three places, and asserted as *measured fact* rather than inference:
+
+| site | revision 2's words |
+|---|---|
+| Banner, item 2 | *"**No `ledger` vector CAN exist.**"* |
+| §8.1, fact 2 | *"**Zero `ledger` vectors CAN exist**"* |
+| §4.10 (`A2-17`'s micro-fix) | *"…because §5.1 establishes that no `ledger` vector can be admitted **at all** until §5.3's P-1…P-5 exist."* |
+
+**What is true.** §5.1's heading: **no `ledger` vector is EXPRESSIBLE** against the frozen vector
+schema. That is what the five legs prove, an independent review re-opened all five at their exact
+cited lines and confirmed them, and it is fully sufficient for §5.2's rejection of disposition (b).
+**Admission-impossibility is strictly stronger than inexpressibility**, the five legs do not reach
+it, and it is false.
+
+**How it was falsified — MEASURED, and reproduced twice independently.** Copy any promoted
+`loanschedule` parity vector into `.softhouse/vectors/ledger/`, change **only** `case_id` (to clear
+the duplicate-id check) and `context` (to match its new directory), leave `capabilities_required`,
+`graded_against`, `oracle.seam`, `provenance` and the recorded `sha256` **untouched** — and:
+
+```
+LEDGER-PARITY-PURE-A219      parity           path_a_e...  PASS             47        2
+    parity vectors          PASS 44   FAIL 0
+    cells compared          5711 graded, 89 ungraded (never recorded by the capture)
+VERDICT: PASS (exit 0) — 44 parity vectors match the pinned reference oracle, 5711 cells compared.
+```
+
+against **43 / 5664** for the same store without the copy.
+
+| reproduction | by | figures |
+|---|---|---|
+| first | review task **`A2-19`**, temp store, binary built from `CMD_PKG`; raw transcript committed at `.softhouse/reviews/a2-19-dec2-rev2/E8-ledger-PARITY-counted-as-44.txt` | **44 parity / 5711 cells**, exit 0 |
+| second | **the driver**, independently, with its own probe vector on `main`'s own bytes, before revision 3 was commissioned | **44 parity / 5711 cells**, exit 0 |
+
+**The two agree to the digit.** The lighter form was measured too: the same copy of a
+`contract-refusal` vector was admitted and passed, moving contract-refusal **4 → 5** and cells
+**5664 → 5665**, also at exit 0.
+
+**Two distinct harms, and the second is the worse one.**
+
+1. **The headline number was inflatable by two string edits.** `44 parity vectors match the pinned
+   reference oracle` is the sentence this entire program quotes as its evidence.
+2. **The report claimed coverage that does not exist.** The 44th vector graded a **loan schedule**
+   while sitting in `ledger/` and printing a `ledger`-context row with `PASS` on it — which is
+   precisely the false green DEC-2 is being written to prevent.
+
+**The cause was one missing check, not a design flaw.** `context` was constrained **only** to be
+non-empty and to equal its own directory name [VERIFIED by this task at
+`nexus/internal/apps/loanschedule/conformance/admit.go:115-117` (`context is empty`) and `:119-120`
+(*"context %q does not match the directory %q the file lives in"*)]. Both constraints are satisfied
+by `cp`. **No allowlist of context names existed anywhere in the package.**
+
+**Why revision 2 believed it: PC-3 was a FALSE NEGATIVE — pattern P-50.** The strong claim rested
+on positive control **PC-3** above, *"the same case filed as `class: "contract-refusal"`"*,
+reported INADMISSIBLE. Read PC-3's own quoted refusals: it failed on **two author-correctable
+defects**, not on a structural wall —
+
+- `expect.sentinel: "ErrGLAccountMappingNotFound" is not one of ErrInvalidRequest,
+  ErrUnsupportedConfiguration, ErrNoDiscriminatingVector` — the author chose a non-contract
+  sentinel; the schema already offers three legal ones.
+- `class "contract-refusal" requires oracle.seam "none": nothing was captured` — the author set a
+  seam; the schema already requires `none` for that class.
+
+Correct both, as the schema itself instructs, and the vector is **admitted**. **`A2-16` built a
+control that failed and read it as a wall; `A2-17` re-derived the argument but did not re-run the
+corrected control.** That is **P-50** exactly: *a prover must be falsifiable in the direction of the
+FIX, not only in the direction of the defect.* PC-3 could only ever go red, so its red was read as
+proof. **PC-3 is hereby reclassified from "a positive control that establishes a wall" to "a
+demonstration that an incorrectly-authored vector is refused" — which is a much weaker statement
+and is all it ever supported.**
+
+**The hole is CLOSED — by `A2-20`, after the claim was made, and closing it does not rescue the
+claim.** `SchemaContexts()` now returns the complete set of contexts a `gerege.loanschedule.vector/v1`
+vector may claim — `{_selftest, loanschedule}` — and `admit.go` refuses any other as **INADMISSIBLE**
+[VERIFIED by this task: `vector.go:31-81` declares and documents it; `admit.go:139-147` is the
+refusal; `IsSchemaContext` at `vector.go:83-91`]. **Both** shapes are now refused: the parity form
+and the `contract-refusal` form, and the refusal lives at **admission** rather than at the
+comparator precisely because a `contract-refusal` vector consults no comparator at all — a check
+phrased as *"the comparator for this class does not exist"* would have let the second form straight
+through. This task re-ran the unfiltered harness on its own tree and reproduced the driver's
+baseline exactly: **`VERDICT: PASS (exit 0) — 43 parity vectors … 5664 cells`**, contract-refusal
+`PASS 4`, self-test `PASS 1`, `refused 0`, `inadmissible 0`, `invariant violations 0`, probe line
+present and reading `up` [MEASURED by this task].
+
+**What this retraction does NOT change**, so that a reader does not over-correct:
+
+- **§5.1's five legs all stand.** All five were re-opened at their exact cited lines by an
+  independent review and confirmed.
+- **§5.2's rejection of disposition (b) stands**, because it rests on inexpressibility, not on
+  inadmissibility. The intersection is still empty.
+- **§5.3's preconditions stand** (as re-ordered in revision 3).
+- **§5.4's retraction and its measurements stand** — independently reproduced.
+- **The falsifying vector graded NOTHING about the ledger.** It was a loanschedule capture in a
+  ledger costume. DEC-2's substantive position was never the thing that was wrong; the *statement*
+  of the wall was, and it was overstated in the unsafe direction.
+
+**And the discipline this records, because it is the reason the sentence is retracted rather than
+quietly reworded.** A silent downgrade from *"CAN exist"* to *"is expressible"* would leave the next
+reader unable to tell that a measured green `PASS 44` ever happened, or that a positive control
+failed for the wrong reason and was believed. **The failure class this program keeps catching is a
+check that cannot fail (P-22), reached through a prover that was never made falsifiable toward the
+fix (P-50).** Both are on the record here, named.
+
 ### 5.2 The decision: EXTEND the machinery — and DEC-2 grades nothing until it exists
 
 Two dispositions were open. **(a) extend the vector schema**, which is real machinery and must stop
@@ -1250,6 +1482,78 @@ improvised:
    never `gofmt -w` `contract.go`; `gofmt -l` reporting exactly that one file is the expected state
    (standing instruction, **G-3 CLOSED-OPTION-A**).
 
+> **⚠ REQUIREMENTS 1–5 ARE PURE NON-REGRESSION, AND REVISION 3 ADDS 6 AND 7 BECAUSE OF IT.** This is
+> `A2-19`'s finding **F2**, and it is the failure class this program has paid for more than any
+> other. **Every one of requirements 1–5 is satisfied by a builder who adds nothing at all.** A dead
+> second schema no vector uses, a comparator nothing calls, an empty file — all five pass perfectly,
+> because all five are *guards against change*, and doing nothing changes nothing. There is no
+> requirement in 1–5 that the new machinery be demonstrated to **work**. **P-22: a control that
+> cannot fail is worse than none, because it is believed. P-35: a check that inspected zero items is
+> an ERROR, not a pass.** The program has already paid for this twice — `T9-F1b` printed nine killed
+> capabilities at exit 0 over a store whose dates were garbage, and `T156` was the red/green exit
+> trap. Requirements **6** and **7** are therefore **normative and not optional**: a submission that
+> satisfies 1–5 and not 6–7 **has not satisfied §5.2**, and a reviewer should read it as an
+> extension that does nothing.
+
+6. **POSITIVE CONTROL — the extension must NEWLY DO something today's harness demonstrably does
+   NOT.** State it as a before/after pair on the **same bytes**, and both halves must be shown:
+   - **BEFORE (today, on `main`): a `ledger` vector is INADMISSIBLE.** Author the vector the
+     extension is meant to make legal — a `gerege.ledger.vector/v1` file under
+     `.softhouse/vectors/ledger/` carrying a `ledger` request (product id, product type, accounting
+     rule, slot family, slot code, payment type id, seam) and a `ledger` expectation. On today's
+     harness it must **fail to load or be refused**, and the demonstration must quote **the refusal
+     text and the surviving population**, never the exit code — `exit 2` is overloaded across at
+     least five distinct conditions (**P-62**), so an exit code proves nothing about *which* refusal
+     fired. The two refusals it must quote are the schema check (`admit.go:109-110`, a vector whose
+     `schema` is not `gerege.loanschedule.vector/v1` is INADMISSIBLE) and the context allowlist
+     (`admit.go:139-147`, `SchemaContexts()` = `{_selftest, loanschedule}`).
+   - **AFTER: the same bytes are ADMITTED, GRADED and reported.** The per-vector table must carry a
+     `ledger`-context row, and the summary must report the ledger vector **under its own comparator
+     and its own count** — *not* folded into `parity vectors PASS 43`. **The loanschedule parity
+     count must still read exactly 43 and the cell count exactly 5664**, which is what requirement 2
+     already demands and what makes 6 and 2 jointly meaningful: 6 proves something new is graded, 2
+     proves nothing old moved. A submission where 43 becomes 44 has reproduced the defect §5.1.1
+     retracts.
+   - **The `_selftest/` corpus is not a substitute.** A self-test fixture is hand-authored and is
+     excluded from the parity count by construction (`admit.go:131-143`); it demonstrates that the
+     comparator *runs*, never that a promoted `ledger` vector is admissible.
+
+7. **REQUIRED RED DEMONSTRATION — the new comparator must be shown to GO RED, on a defect it is
+   supposed to catch, and GREEN on the pristine bytes.** Exactly one arrangement of the world may
+   pass. State all four cells of the matrix, and a submission missing any one of them is incomplete:
+
+   | | pristine expectation | perturbed expectation |
+   |---|---|---|
+   | **correct implementation** | **GREEN** — required | **RED** — required |
+   | **named wrong implementation** (`graded_against`) | **RED** — required | not required |
+
+   - **The perturbation must be a single cell, and it must be a cell §4.2 or §4.4 makes normative** —
+     a resolved `gl_code`, a resolved account id, a refusal's HTTP status or error code, or a money
+     cell in `int64` minor units (**P-5**). Perturbing a field the comparator does not compare
+     demonstrates nothing, and is the shape of **T9-F1b**: a whitelist that no longer means what it
+     says. Perturb by **one minor unit** where the cell is money — a comparator that only detects
+     large divergences is not a comparator, and DEC-1's own history (a one-minor-unit error in
+     period 5 that never heals) is the argument.
+   - **A money perturbation must be RED for a money reason.** The transcript must show the divergence
+     reported as a **money** kill with a non-zero `margin_minor`, not as a structural cell
+     difference. §5.5 is explicit that the harness prints that distinction for a reason (finding
+     D-4), and a `ledger` corpus whose money cells only ever kill structurally has graded no amount.
+   - **RED must be shown by the DIAGNOSTIC, not by the exit code (P-62).** Quote the failing cell,
+     the expected and actual values, and the vector's `case_id`. An empty or unloadable corpus exits
+     with the same code as a correctly-detected divergence.
+   - **The `graded_against` row must kill something.** §5.5's rule applies from the first vector: *a
+     capture that kills nothing is a capture, not a grader*. The RED in the bottom-left cell is what
+     licenses the corresponding `capabilities.json` row to flip to `in_graded_domain: true` under
+     §5.4 step 3, and nothing else does.
+   - **The demonstration itself must be falsifiable toward the fix (P-50).** Assert internally that
+     the pre-fix bytes drive the battery **RED** *and* the post-fix bytes drive it **GREEN**, so the
+     prover cannot be read as healthy while the defect is present. A prover that passes because the
+     bug is there is a demonstration, not a regression test.
+
+**Requirements 6 and 7 are what make 1–5 mean anything.** 1–5 say *"you broke nothing"*; 6 and 7 say
+*"you built something, and it can tell right from wrong"*. **Neither half is sufficient alone**, and
+revision 2 shipped only the first half.
+
 **Third — Disposition 3 survives, on a different argument.** Three dispositions were open on
 ratification-versus-vectors, carried forward from revision 1 unchanged:
 
@@ -1272,25 +1576,71 @@ grading has not arrived. That proviso is what §8.1, §4.4.1, §4.9 and the bann
 
 It remains a **recommendation to the ratifier**, not a decision this task may take.
 
-### 5.3 Preconditions on `A2-15` — none of which exist today
+### 5.3 Preconditions on `A2-15` — RE-ORDERED in revision 3, and one of them has since LANDED
 
 `A2-15` cannot promote a `ledger` vector until **all** of the following exist. They are
 preconditions, not follow-ups, and §8 repeats the consequence.
 
-| # | precondition | why, in one line |
-|---|---|---|
-| **P-1** | A **`ledger` vector schema** with a request shape covering product id, product type, accounting rule, slot family, slot code, payment type id and seam | §5.1 (2) — strict decode rejects every one of them today |
-| **P-2** | An **expectation shape for an oracle-faithful refusal** — HTTP status, error code, message text — that is **not** one of the three contract sentinels and is **not** confusable with them | §5.1 (3), §4.9(b); this is the context's commonest graded output |
-| **P-3** | A **class** an observed non-schedule oracle answer can be filed under, since `parity` requires a schedule and `contract-refusal` requires `oracle.seam == "none"` | §5.1 (4) — the hardest of the five |
-| **P-4** | A **comparator** for `ledger` outputs, and a **cell whitelist derived from it** rather than authored beside it | §5.1 (5); the whitelist's meaning is "what the comparator compares" (T9-F1b) |
-| **P-5** | **Money cells** — `int64` minor-unit **strings**, paired with the oracle's own emitted characters as a transcription cross-check only | §4.3, T186 (c); required for `I-1`/`I-2` to be gradeable at all |
-| **P-6** | A **decision on `capabilities.json`** — its schema id is the hard constant `gerege.loanschedule.capabilities/v1` and `dec1_revision` is singular. Appending `ledger` rows works today, but the file is named and versioned for one context | §4.10; **not DEC-2's decision to take**, and it must not be improvised |
-| **P-7** | The same decision for **`PIN.json`** — schema `gerege.loanschedule.pin/v1`, singular `contract_file` / `contract_sha256` [VERIFIED by this task: `admit.go:65-66`] | a second context implies a second pinned contract file, and the pin has one slot |
-| **P-8** | The **`I-3`/`I-4` source guard** §4.4.1 requires | it does not exist; without it, ratifying DEC-2 obliges two invariants nothing checks |
+**THE IDENTIFIERS ARE STABLE; THE ORDER IS THE NORMATIVE PART.** `P-1`…`P-9` are referred to by name
+from §4.10, §5.2, §5.4, §5.5, §8.2, the harness source and three task handoffs, so revision 3 does
+**not** renumber them. It re-orders the table, and the **DEPENDS ON** column is what a builder
+schedules against.
 
-**P-1 through P-5 are the schema extension. P-6 and P-7 are decisions. P-8 is independent of all of
-them** — it is a guard over the Go tree and could be written today, against the ported package that
-already exists.
+| order | # | precondition | why, in one line | depends on |
+|---|---|---|---|---|
+| **1st** | **P-6** | A **decision on `capabilities.json`** — its schema id is the hard constant `gerege.loanschedule.capabilities/v1` and `dec1_revision` is singular [VERIFIED by this task: `capabilities.json:2-3`]. Appending `ledger` rows works today, but the file is named and versioned for one context | §4.10; **not DEC-2's decision to take**, and it must not be improvised. **MOVED TO FIRST in revision 3** — see the adjudication below | — |
+| **2nd** | **P-1** | A **`ledger` vector schema** with a request shape covering product id, product type, accounting rule, slot family, slot code, payment type id and seam | §5.1 (2) — strict decode rejects every one of them today | P-6 |
+| **3rd** | **P-7** | **RE-SCOPED in revision 3.** What `dec1_revision` a **non-`loanschedule`** vector declares, given that it is checked per-vector against the single store pin [VERIFIED by this task: `admit.go:149`, `if v.DEC1Revision != pin.DEC1Revision`]. A `ledger` vector asserting `dec1_revision: 12` is asserting a **`loanschedule`** contract revision, which is semantically wrong | the question is real; the premise revision 2 gave for it was not — see the adjudication below | P-1 |
+| **4th** | **P-2** | An **expectation shape for an oracle-faithful refusal** — HTTP status, error code, message text — that is **not** one of the three contract sentinels and is **not** confusable with them | §5.1 (3), §4.9(b); this is the context's commonest graded output | P-1 |
+| **4th** | **P-3** | A **class** an observed non-schedule oracle answer can be filed under, since `parity` requires a schedule and `contract-refusal` requires `oracle.seam == "none"` | §5.1 (4) — the hardest of the five | P-1 |
+| **4th** | **P-4** | A **comparator** for `ledger` outputs, and a **cell whitelist derived from it** rather than authored beside it | §5.1 (5); the whitelist's meaning is "what the comparator compares" (T9-F1b) | P-1 |
+| **4th** | **P-5** | **Money cells** — `int64` minor-unit **strings**, paired with the oracle's own emitted characters as a transcription cross-check only | §4.3, T186 (c); required for `I-1`/`I-2` to be gradeable at all | P-1, P-4 |
+| **5th** | **P-9** | **NEW in revision 3.** The `ledger` schema must **declare its own contexts** and the store must refuse a vector whose `context` is not one its schema, comparator and capabilities belong to | §5.1.1 — without this the parity count itself is not context-safe, which is how `43` became `44`. **`A2-20` has discharged the `loanschedule` half** (`SchemaContexts()`, `vector.go:31-81`; `admit.go:139-147`); the obligation transfers to the second schema, which is not written | P-1, P-4 |
+| **—** | **P-8** | **LANDED.** The **`I-3`/`I-4` source guard** §4.4.1 requires | **Built by `A2-18`, wired by `T208`**; it runs on every invocation and this task measured `invariant violations 0`. Its four residual blind spots are §4.4.1's, and three of its detection classes inspected an **empty population** in this tree (**P-35**) | **independent of all the above — that independence is what licensed it to be built first** |
+
+**Eight open, one landed.** P-6, P-1, P-7, P-2, P-3, P-4, P-5 and P-9 remain; **P-8 is done** and is
+kept in the table with its residue rather than deleted, so that a later reader can tell "discharged,
+with limits" from "never required".
+
+**THE ADJUDICATION ON P-6 AND P-7 — revision 3 applies `A2-19`'s ruling, and states both halves.**
+
+`A2-17` proposed that **P-6 and P-7 both** be decided **before** P-1…P-5. `A2-19` adjudicated: the
+proposal is directionally right, it **bundles two unlike things**, and the bundle is **SPLIT**.
+
+- **P-6 moves FIRST. Accepted, and the third reason is decisive.** (i) The file is **shared by
+  design** — §5.2's adopted disposition names "the capability registry" as one of the five things
+  the second schema shares, so the registry is explicitly *not* separable from the extension.
+  (ii) **DEC-2 itself declines to decide it**: §4.10's closing paragraph refuses to add a fifth
+  status because "`capabilities.json`'s schema is shared with the `loanschedule` context … which is
+  not DEC-2's to make". (iii) **§5.4's NORMATIVE SEQUENCING RULE cannot be obeyed without it.** Step
+  2 of that rule says rows are authored `in_graded_domain: false` **first**. A builder cannot author
+  a single row — not even a `false` one — without knowing whether `ledger` rows live in this file or
+  in another. **P-6 blocks step 1 of the rule that is itself supposed to come first**, which is a
+  real ordering inversion. §5.1.1 strengthens this: the store-level files are the natural chokepoint
+  at which a context/schema/capability mismatch is refusable, which is what makes P-9 closable.
+- **P-7 does NOT move, and its premise is retracted.** Revision 2 gave P-7's rationale as *"a second
+  context implies a second pinned contract file, and the pin has one slot."* **§1.1 contradicts that
+  premise, and this task re-opened §1.1 to confirm it before acting**: §1.1 states that this ADR
+  *"does not create or freeze a Go file, and could not"*, that *"there is no counterpart file for
+  this context"*, that *"this ADR deliberately writes no Go"*, and the status block states that **no
+  PIN digest appears in this document at all**. There is **no second contract file to pin**, and
+  there will not be one until a `ledger` contract is frozen — a separate, later gate. What *does*
+  need deciding is narrower: **what contract revision a non-`loanschedule` vector declares.** That
+  question **depends on** P-1 fixing the ledger vector's shape rather than blocking it, so P-7 is
+  re-scoped and placed **after P-1**.
+
+**Adjudicated sequencing, which is what the table above encodes:**
+
+```
+P-6  ->  P-1  ->  P-7 (narrowed to the dec1_revision question)
+         P-1  ->  P-2, P-3, P-4, P-5  ->  P-9
+P-8  ->  LANDED (A2-18 / T208); it was independent of every one of the above,
+         which is exactly why it could be, and was, built first
+```
+
+**P-1 through P-5 are the schema extension. P-6 and P-7 are decisions. P-9 is the context binding.
+P-8 was independent of all of them** — a guard over the Go tree, writable against the ported package
+that already existed — **and it has now been written.**
 
 ### 5.4 What actually enforces Disposition 3 in the DEFAULT run — R-2, corrected and MEASURED
 
@@ -1341,14 +1691,37 @@ VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT 
 [MEASURED by this task. The row was added to a temp store only; `.softhouse/vectors/capabilities.json`
 was not modified.]
 
+> **⚠ A CAVEAT ON THIS LEG, RECORDED IN REVISION 3 AND NOT FIXED HERE (`A2-19` finding F3).** The
+> capability fatal really is registry-wide — that claim was re-verified independently at
+> `capability.go` (`for _, v := range vectors`, `r.GradedCapabilities()`, no context scoping anywhere
+> in it). **But the loop filters on CLASS only — `if v.Class != ClassParity { continue }` — and not
+> on whether the vector was ADMITTED** [RE-VERIFIED by this task at `capability.go:246-247`;
+> `A2-19` cited `:243-244` and the lines have since drifted +3 — the code is the same]. So a vector the harness **REFUSED** still contributes
+> coverage: `A2-19` measured a refused `ledger` parity vector both **silencing** the `UNBACKED`
+> fatal entirely (`grep -c UNBACKED` went 1 → **0**) and **inflating** the named-kill tally
+> (103 → 104 money kills) [MEASURED by `A2-19`, transcript committed at
+> `.softhouse/reviews/a2-19-dec2-rev2/E7-refused-vector-silences-unbacked.txt`]. **It is not
+> exploitable to green today** — the refusal itself forces `refused 1` and exit 2 — so the run stays
+> red, **but for a different reason than this section states**, and the specific enforcement §5.4
+> leans on is weaker than the words above imply. **This is a HARNESS defect, not DEC-2's to fix**; it
+> is recorded here because §5.4 presents this leg as the thing that makes Disposition 3 safe, and a
+> ratifier is entitled to know its exact strength. Blast radius unclosed: nobody has proved that no
+> *currently committed* vector is affected; the baseline reports `refused 0`, so today the answer is
+> almost certainly none, but **that is an inference, not a measurement** [UNVERIFIED].
+
 **So the enforcement is real, and it fires on the REGISTRY ROWS, not on the empty directory.**
 Revision 1 presented those two as interchangeable legs of one argument and they are not
 interchangeable at all: if §4.10's rows are never authored, or are authored `in_graded_domain:
 false`, `ledger/` stays empty and **invisible indefinitely**, at exit 0, in every run.
 
 **And §5.1 sits on top of this, which produces the ordering rule below.** Once the rows land as
-`true`, the fatal fires — and until P-1…P-5 exist, **no admissible `ledger` vector can be written to
-clear it.** The run would be permanently red with no legal way out. That is not a hypothetical: it
+`true`, the fatal fires — and until P-1…P-5 exist, **no MEANINGFUL `ledger` vector can be written to
+clear it.** The run would be permanently red, and the only legal way out is to withdraw the row to
+`in_graded_domain: false` (§4.10's retraction (c); `grade.go:432-433`) — not to author a vector.
+**Revision 3's precision, and it matters here**: a `ledger`-context *file* is refusable at admission
+today (`A2-20`), and before `A2-20` a relabelled `loanschedule` vector was admitted and would have
+cleared the fatal while grading nothing about the ledger (§5.1.1). What P-1…P-5 gate is a vector that
+*expresses a ledger claim*, which is the only kind that clearing this fatal ought to accept. That is not a hypothetical: it
 is exactly the state the measurement above puts the harness in.
 
 **NORMATIVE SEQUENCING RULE, and revision 2 adds it because the measurement forces it.** `ledger`
@@ -1479,9 +1852,11 @@ Named, because a contract is defined as much by its edges as by its interior.
   task finds itself unable to avoid touching `contract.go`, **that is the moment to stop and raise a
   gate**, not to make a one-line change to a file whose whole purpose is that it does not move.
 
-- **Writing the `ledger` vector schema, comparator, cell whitelist or `I-3`/`I-4` guard** — §5.3's
-  eight preconditions. **This ADR writes no code**, and §1.1 gives the reason. Naming machinery is
-  not building it, and revision 2 is careful to claim only the former.
+- **Writing the `ledger` vector schema, comparator or cell whitelist** — §5.3's remaining eight
+  preconditions. **This ADR writes no code**, and §1.1 gives the reason. Naming machinery is not
+  building it, and revisions 2 and 3 are careful to claim only the former. **The `I-3`/`I-4` guard is
+  the one item that has since left this list**: `A2-18` built it and `T208` wired it, discharging
+  **P-8** with the residue §4.4.1 records.
 
 ---
 
@@ -1497,12 +1872,31 @@ merge with it.
 
 1. **Zero `ledger` vectors exist.** The store's only context directories are `loanschedule/` and
    `_selftest/`.
-2. **Zero `ledger` vectors CAN exist** — §5.1, established in code and by three positive controls
-   that were run. Preconditions P-1…P-5 (§5.3) do not exist.
-3. **Zero guards enforce `I-3` or `I-4`.** `run_guards` invokes five and all five are about float,
-   `gofmt` and exception scope [`.softhouse/conformance.sh:843-849`]. §4.4.1.
+2. **Zero `ledger` vectors are EXPRESSIBLE** — §5.1, established in code in five legs, all five
+   re-opened and confirmed by independent review. Preconditions P-1…P-5 (§5.3) do not exist.
+   **⚠ RETRACTION, revision 3: revision 2 wrote *"Zero `ledger` vectors CAN exist"* here, and the
+   banner and §4.10 said the same. That was FALSE.** A relabelled `loanschedule` parity vector —
+   two string edits, `case_id` and `context` — was **admitted, graded and counted**, taking the
+   headline to **`VERDICT: PASS (exit 0) — 44 parity vectors … 5711 cells`**, measured twice
+   independently (`A2-19`, and the driver on `main`) to identical figures. **Admission**-impossibility
+   is strictly stronger than **expression**-impossibility and was never established. §5.1.1 carries
+   the retraction, the cause (a positive control that was a false negative — **P-50**), and the fact
+   that `A2-20` has since closed the hole. It is restated here rather than reworded because a silent
+   downgrade would hide that a green `PASS 44` ever happened.
+3. **A source guard for `I-3` and `I-4` now RUNS, and three of its four detection classes inspected
+   an EMPTY population in this tree.** `run_guards` invokes **seven** guards, not five; the seventh
+   is `guard_ledger_invariants` [`.softhouse/conformance.sh:1117-1152`, `:1174`], built by `A2-18`
+   and wired by `T208`, and this task measured `invariant violations 0`. **⚠ Revision 2 said no such
+   guard existed. That was true when written and is stale.** What it does **not** buy: the detection
+   surface is the **name**, so renaming a balance defeats it; triggers, migrations and stored
+   procedures are not walked; `I-5`'s semantic half and non-Go callers are uncovered; and the `I-4`
+   SQL classes found **zero** SQL DML literals and **zero** mutating driver calls, because this Go
+   module declares no database driver — so they are proven by the guard's self-test and by nothing
+   in this repository (**P-35**). §4.4.1.
 4. **The 43 passing parity vectors are `loanschedule`'s.** None touches a GL account, a mapping, a
-   financial activity or a journal entry.
+   financial activity or a journal entry. The directory boundary **was not enforced** when revision
+   2 leaned on it (fact 2's retraction); **it is enforced now**, at admission, by a context allowlist
+   tied to the schema [`conformance/vector.go:77-81`, `admit.go:139-147`].
 
 **Ratifying DEC-2 changes none of the four.** It writes down a boundary; it grades nothing. The two
 must never be confused, and a citation of this document as evidence of ledger coverage is a
@@ -1510,13 +1904,22 @@ misreading of it.
 
 ### 8.2 If ratified
 
-- `.softhouse/vectors/ledger/` becomes a legal context directory — **and stays unusable until the
-  §5.3 machinery lands**, at which point `conformance.sh ledger` becomes a meaningful command.
-- `A2-15` has an admissibility standard: §4.2's predicates, §4.6's A-1…A-4, §4.10's registry, and
-  §5.5's `graded_against` requirement — **and eight preconditions (§5.3) it cannot start without.**
+- `.softhouse/vectors/ledger/` becomes a legal context directory **for the second schema, and only
+  for it** — a `gerege.loanschedule.vector/v1` file placed there is INADMISSIBLE, by name, since
+  `A2-20` [`admit.go:139-147`]. It **stays unusable until the §5.3 machinery lands**, at which point
+  `conformance.sh ledger` becomes a meaningful command.
+- `A2-15` has an admissibility standard: §4.2's predicates, §4.6's A-1…A-4, §4.10's registry, §5.5's
+  `graded_against` requirement, and **§5.2's requirements 1–7** — the last two of which are a
+  positive control and a required RED demonstration, without which an extension that does nothing
+  would satisfy the specification. **Eight of the nine §5.3 preconditions remain; it cannot start
+  without them.**
 - The GL/accounting context acquires a boundary a regulator can be shown. **"PASS 43" remains the
   only thing anyone can say about the ledger, and what it says is "this is about a different
-  context".**
+  context."** **⚠ Revision 3 records what this sentence cost in revision 2**: it was written as a
+  structural guarantee and it was not one. The `ledger` context *could* contribute to the parity
+  count, and did, at `PASS 44` (§5.1.1). The sentence is true today **because `A2-20` made it true
+  in code**, not because the schema made it true by construction — and the distinction is the
+  difference between a guarantee and a convention that happened to hold.
 
 ### 8.3 If ratified, these remain true and must not be misread
 
@@ -1524,8 +1927,13 @@ misreading of it.
   the graded domain".** It would not mean the ledger is correct, and it would mean nothing at all
   about savings, shares, working-capital loans, charges, reversals, holds, or nineteen of the
   twenty-three cash placeholder slots. **Today there is no such PASS to misread.**
-- **`conformance.sh`'s hard guards DO cover `nexus/internal/apps/ledger/` today — FOR FLOATING POINT
-  AND `gofmt`, AND FOR NOTHING ELSE.** T166 widened both roots to the Go module root, re-verified by
+- **`conformance.sh`'s hard guards DO cover `nexus/internal/apps/ledger/` today — FOR FLOATING POINT,
+  `gofmt`, AND (since `T208`) A SOURCE-LEVEL `I-3`/`I-4` WALK OF THE GO TREE, AND FOR NOTHING ELSE.**
+  **Revision 3 corrects revision 2's "and for nothing else", which was true when written**: the
+  seventh guard exists now (§4.4.1). **It does not make the ledger covered** — its own transcript
+  says a PASS means *"no violation is visible to a source-level guard over the Go tree"*, not *"the
+  ledger tree is covered"*, and three of its four detection classes inspected an empty population
+  here. The original warning is unchanged and still the point: T166 widened both roots to the Go module root, re-verified by
   this task (§4.4), and this task's own unfiltered run printed `covered: nexus/internal/apps/ledger`
   in the no-float census [MEASURED]. **That coverage is not `I-3` and it is not `I-4`.** Revision 1
   wrote *"That is what makes I-3 and I-4 enforceable at all"* — true in the sense that a guard must
@@ -1533,6 +1941,11 @@ misreading of it.
   the invariants are checked. They are not checked. No guard for either exists** (§4.4.1). What
   remains true from revision 1 is the forward warning: **re-narrowing either root would silently
   un-cover this tree**, and would do so while still printing a healthy-looking file count.
+- **A `ledger` file's CONTEXT is now checked at admission** — a `gerege.loanschedule.vector/v1`
+  vector claiming any context outside `{_selftest, loanschedule}` is INADMISSIBLE
+  [`vector.go:77-81`, `admit.go:139-147`]. **Until `A2-20`, it was not**, and a two-string-edit copy
+  of a promoted parity vector reported `PASS 44` at exit 0 (§5.1.1). **A second schema inherits this
+  obligation and does not inherit this check** — that is precondition **P-9**.
 - **The `graded_against` machinery is genuine enforcement, and it fires on the REGISTRY ROWS, not on
   an empty directory** (§5.4, measured both ways). An empty `.softhouse/vectors/ledger/` passes at
   exit 0 in the default run today; a `ledger` capability row marked `in_graded_domain: true` with no
@@ -1615,7 +2028,128 @@ different claims and only one of them is honest about the cost of closing it.
 
 ## 10. Revision history
 
-- **Revision 2 (this document)** — DRAFT, task `A2-16`, 21 August 2026. **NOT RATIFIED; `A2-16` does
+- **Revision 3 (this document)** — DRAFT, task `A2-21`, 22 August 2026. **NOT RATIFIED; `A2-21` is
+  NOT AUTHORISED to ratify it and does not.** Drafted in response to `A2-19`'s **REJECTION** of
+  revision 2, recorded as gate **G-11 (OPEN — NOT RATIFIABLE)**. A further independent review must
+  pass clean before the driver may ratify. **Analyst task: no Go was written, `nexus/` was not
+  touched, `.softhouse/vectors/` was not touched, and the diff is this file plus the task handoff.**
+
+  **Changes, all of them:**
+
+  1. **`A2-19` F1 RETRACTED at all three sites — the rejection-grade finding (§5.1.1, banner item 2,
+     §8.1 fact 2, §4.10).** Revision 2's *"no `ledger` vector **CAN** exist"* / *"can be admitted at
+     all"* was **FALSE**, and it failed in the **unsafe** direction: a relabelled `loanschedule`
+     parity vector — two string edits, `case_id` and `context` — was **admitted, graded and counted**
+     at **`VERDICT: PASS (exit 0) — 44 parity vectors … 5711 cells`**, against 43 / 5664 without it;
+     a relabelled `contract-refusal` vector likewise passed, moving 4 → 5 and 5664 → 5665.
+     **Reproduced twice independently to identical figures** — by `A2-19`, and by the driver on
+     `main`'s own bytes. The true and weaker claim, which §5.1's own heading already carried, is
+     **inexpressibility**, and that is what the document now says. **New §5.1.1** records what was
+     claimed, that it was false, how it was falsified, what is true, the cause — **one line:
+     `context` was constrained only to be non-empty and to equal its own directory name
+     (`admit.go:115-117`, `:119-120`), with no allowlist anywhere** — and why it was believed:
+     **positive control PC-3 was a FALSE NEGATIVE**, failing on two **author-correctable** defects (a
+     non-contract sentinel; `oracle.seam != none`) rather than on a structural wall. That is
+     **P-50**: the prover was never made falsifiable in the direction of the fix. **PC-3 is
+     reclassified** from "a control establishing a wall" to "a demonstration that a badly-authored
+     vector is refused". **`A2-20` has since closed the hole** (`SchemaContexts()`,
+     `vector.go:31-81`; `admit.go:139-147`) — recorded, and explicitly **not** treated as rescuing
+     the sentence, which was false when written.
+  2. **`A2-19` F2 resolved (§5.2) — the specification `A2-15` is graded against was satisfiable by
+     an extension that does NOTHING.** All five of revision 2's requirements are non-regression
+     guards on `loanschedule`, and doing nothing changes nothing. **Requirements 6 and 7 are added
+     and are normative:** **(6) a POSITIVE CONTROL** — a stated before/after on the same bytes, where
+     the `ledger` vector is INADMISSIBLE today (quoting the refusal **text** and the surviving
+     population, **never** the exit code, **P-62**) and is admitted, graded and reported under **its
+     own count** afterwards, with `loanschedule` still at exactly 43 / 5664; and **(7) a REQUIRED
+     RED DEMONSTRATION** — a four-cell matrix in which the comparator goes **RED** on a one-cell
+     perturbation of a normative cell (one **minor unit** where it is money), **GREEN** on the
+     pristine bytes, and **RED** against the named wrong implementation, with a money divergence
+     reported as a **money** kill with a non-zero `margin_minor`, RED shown by the **diagnostic**,
+     and the prover itself falsifiable toward the fix (**P-50**). **P-22** and **P-35** are cited at
+     the point of the requirement.
+  3. **`A2-19`'s adjudication on the precondition split APPLIED (§5.3).** **P-6 (`capabilities.json`)
+     moves BEFORE P-1…P-5**, because §5.4 step 2 cannot be obeyed without it — a builder cannot
+     author even a `false` row without knowing which file `ledger` rows live in. **P-7 does NOT
+     move**: its revision-2 premise (*"a second context implies a second pinned contract file"*) is
+     contradicted by **§1.1**, which this task **re-opened and confirmed before acting** — §1.1 says
+     this ADR *"does not create or freeze a Go file, and could not"*, that there is *"no counterpart
+     file for this context"*, and that it *"deliberately writes no Go"*, and the status block states
+     no PIN digest appears at all. P-7 is **re-scoped** to the `dec1_revision` question
+     (`admit.go:149`) and placed **after P-1**. **P-9 is added** — the schema must declare its own
+     contexts (`A2-19`'s recommendation; `A2-20` discharged the `loanschedule` half, the second
+     schema inherits the obligation). **Identifiers are NOT renumbered** — they are referenced from
+     six sections, the harness source and three handoffs — so the table gains an explicit **order**
+     and **depends-on** column instead.
+  4. **The one wrong citation in 64 CORRECTED (§2.2, B-4).** *"three columns plus id"* → **two**.
+     Re-opened at the pinned checkout: `0001_initial_schema.xml:98-110`, `changeSet id="4"`, declares
+     `id`, `gl_account_id`, `financial_activity_type` and nothing else. **The load-bearing claim — no
+     office dimension — is unaffected and TRUE**, and the adjacent `acc_gl_journal_entry` *does*
+     carry `office_id` (`:119-121`), which is the contrast that makes the point.
+  5. **THREE CLAIMS THAT WERE TRUE WHEN REVISION 2 WAS WRITTEN AND HAVE SINCE GONE STALE — corrected
+     rather than left to rot, and flagged as stale-by-landing rather than as errors.** These are
+     **beyond `A2-19`'s findings**, because the harness moved after `A2-19` measured it, and a
+     reviewer should scrutinise them as revision 3's own additions.
+     - **§4.4.1, §4.4, banner fact 3, §8.1 fact 3, §5.3 P-8, §7, §8.3: the `I-3`/`I-4` source guard
+       NOW EXISTS.** `A2-18` built it on exactly the independence `A2-19` confirmed, and **`T208`
+       wired it**. `run_guards` invokes **seven** guards, not five (`conformance.sh:1154-1179`), and
+       the seventh is `guard_ledger_invariants` (`:1117-1152`, invoked `:1174`). §4.4.1 is retitled
+       and states **four things it cannot see**, including that **three of its four detection classes
+       inspected an EMPTY population in this tree** — no SQL, no database driver, two `NIL-COVERAGE`
+       lines — so they are proven by its self-test and **by nothing in this repository** (**P-35**).
+       **P-8 is marked LANDED, kept in the table with its residue rather than deleted.**
+     - **Banner fact 4, §8.2, §8.3: the `loanschedule/` directory boundary is now ENFORCED.** It was
+       not when revision 2 leaned on it — that is change 1 — and §8.2's *"PASS 43 remains the only
+       thing anyone can say about the ledger"* is now true **because `A2-20` made it true in code**,
+       not by construction. The distinction is stated at the point of the claim.
+     - **Harness line drift disclosed, not patched over**: `run_guards` 843 → 938 → **1154**;
+       `capability.go`'s coverage loop 243 → **246**.
+  6. **`A2-19` F3 recorded as a CAVEAT and NOT fixed (§5.4).** `CounterfactualCoverage` filters on
+     **class only**, never on whether the vector was **admitted**, so a **refused** vector still
+     contributes coverage — `A2-19` measured it silencing the `UNBACKED` fatal (1 → 0) and inflating
+     the kill tally (103 → 104). Not exploitable to green today, because the refusal itself forces
+     exit 2 — **but for a different reason than §5.4 states**, so the leg §5.4 calls strong is weaker
+     than its words. **This is a HARNESS defect, not DEC-2's to fix**; it is raised, not made. Blast
+     radius left explicitly `[UNVERIFIED]`.
+  7. **`A2-19` F5 and F6 corrected inside §4.10's block.** P-1…P-5 are **§5.3's**, not §5.1's, and
+     the composite claim is §5.1 + §5.4. *"No legal way to clear it"* overstated: the harness names
+     **two** outs (`grade.go:432-433`) and §5.1 closes only the first; the second — withdraw the row
+     to `false` — is legal, immediate, and is step 2 of §5.4's own rule. Revision 2 erred in the
+     **fail-loud** direction, which is the safe one; it is corrected because a document ratified as
+     an admissibility standard may not be approximately right about what the harness does.
+
+  **What `A2-19` CONFIRMED and revision 3 deliberately leaves untouched:** all **47/47** Fineract
+  citations hit at their exact lines (overall `[VERIFIED]` hit rate **62/64 = 96.9 %**, one drift and
+  one wrong, **neither a money claim** — and the one wrong was in the tier the document itself flags
+  as weakest, which is evidence the tier convention works); **§5.1's five legs**, all re-opened;
+  **§5.4's retraction and both its measurements**, reproduced exactly; the banner + §8.1 + §8.3
+  **do** defuse the `I-3`/`I-4` misreading, and §8.3's contradict-at-the-point-of-claim technique is
+  the model change 1 should have followed; and **P-8's independence of P-1…P-5**, which is what
+  licensed `A2-18` to build the guard.
+
+  **No gate was crossed and none is newly raised by the text.** **G-11 remains OPEN and revision 3
+  does not close it** — `A2-21` is not authorised to ratify, and ratification is the driver's after a
+  clean independent review. G-9 is applied as closed; **G-10 remains OPEN and is not decided here**;
+  **G-4, G-5 and G-8 are untouched**; cutover, regulatory sign-off and licence facts remain hard
+  `user` gates. `docs/adr/DEC-1-schedule-generator-adapter.md` and
+  `nexus/internal/apps/loanschedule/contract/contract.go` were **not modified**; nothing under
+  `nexus/`, `.softhouse/vectors/`, `.softhouse/conformance.sh` or `.softhouse/bin/` was modified.
+  The unfiltered harness run was **re-measured after the edit** and reproduces the driver's
+  pre-dispatch baseline exactly: probe line **present** and reading `up`, `VERDICT: PASS (exit 0) —
+  43 parity vectors, 5664 cells`, contract-refusal 4, self-test 1, refused 0, inadmissible 0,
+  invariant violations 0.
+
+- **Revision 2** — DRAFT, task `A2-16`, 21 August 2026. **REJECTED** by independent review `A2-19`;
+  full review at `.softhouse/reviews/a2-19-dec2-rev2/REVIEW.md`, with the falsifying transcripts
+  committed beside it (`E4-ledger-refusal-ADMITTED-PASS.txt`,
+  `E8-ledger-PARITY-counted-as-44.txt`, `E7-refused-vector-silences-unbacked.txt`). Recorded as gate
+  **G-11 (OPEN — NOT RATIFIABLE)**. `A2-17` returned MICRO-FIX on it and applied its own 7-line fix,
+  which left revision 2 as merged reviewed by nobody; `A2-19` reviewed the post-micro-fix document,
+  deliberately applied **no** fix — F1 is an admissibility predicate, which its brief forbade a
+  micro-fix from touching — and rejected. **The original revision-2 entry follows unchanged, as the
+  record of what revision 2 claimed.**
+
+- **Revision 2 (as drafted)** — DRAFT, task `A2-16`, 21 August 2026. **NOT RATIFIED; `A2-16` does
   not ratify it.** A further independent review must pass clean first, and ratification is then the
   driver's under standing policy **P-2**. Drafted in response to `A2-14`'s **REJECTION** of revision
   1 — a rejection on **shape**, not on honesty or research, with every one of revision 1's
@@ -1656,7 +2190,8 @@ different claims and only one of them is honest about the cost of closing it.
      replaced by the ruling, and T186 **(c)** — the stored vector carries integer minor units — is
      stated as an explicit rule for `ledger` vectors.
   6. **"Nothing grades the ledger" made structurally unmissable** — the banner at the head of the
-     document, **§4.4.1** (the `I-3`/`I-4` guard does not exist; the five guards are enumerated),
+     document, **§4.4.1** (the `I-3`/`I-4` guard did not exist when revision 2 was written; the guards
+   are enumerated — **revision 3 corrects this: it exists now, and §4.4.1 states its limits**),
      **§4.9**'s block on the unrepresentable 404, and **§8.1**. Revision 1's §8 sentence about guard
      coverage is kept, marked **true for float and `gofmt` only**, and explicitly contradicted where
      it would otherwise be read as covering the append-only and derived-balance invariants.
