@@ -595,3 +595,246 @@ func TestStoreFileCensus(t *testing.T) {
 		}
 	})
 }
+
+// THE DEFECT THIS GUARDS (A2-19 finding F1; reproduced independently by the
+// driver, and a third time by A2-20 before a line of the fix was written).
+//
+// `context` used to be constrained only to be NON-EMPTY (admit.go:115) and to
+// EQUAL ITS OWN DIRECTORY NAME (admit.go:119-120). No allowlist existed, and both
+// constraints are satisfied by a file copy. Copy any promoted loanschedule parity
+// vector into a new `ledger/` directory, change `case_id` and `context` and
+// nothing else, and the harness on main's bytes reported:
+//
+//	DRIVER-F1-PROBE   parity   path_a_e...   PASS   47 cells
+//	parity vectors    PASS 44   FAIL 0
+//	cells compared    5711 graded
+//	VERDICT: PASS (exit 0) — 44 parity vectors match the pinned reference oracle
+//
+// against 43 / 5664 for the same store without the copy. "43 parity vectors,
+// 5664 cells" is what "the Go port matches the reference oracle" MEANS in this
+// program — it is the number every parity claim rests on — and it was inflatable
+// by `cp` plus two string edits.
+//
+// The inflation is the smaller half. The fake vector sat in `ledger/` while
+// grading a LOAN SCHEDULE, so the report read as GL/ledger coverage that does not
+// exist: precisely the claim DEC-2 is being written to make honestly.
+//
+// WHY THIS TEST GOES THROUGH Run AND NOT THROUGH Admit ALONE. The defect was
+// never "Admit returned the wrong slice"; it was "the headline number moved". A
+// unit assertion on Admit cannot see 44, and 44 is the thing that had to stop
+// happening. The sub-tests below therefore assert on the SUMMARY: the parity
+// count, the graded-cell count and the exit code.
+func TestUnknownContextIsInadmissible(t *testing.T) {
+	root := repoRoot(t)
+	pristine := storeRoot(t)
+
+	// The probe is built the way the driver built it: read a real promoted parity
+	// vector and change exactly two fields. Every step is anti-vacuity checked,
+	// because a replacement that silently matched nothing would leave this test
+	// planting a duplicate (which a different guard catches) and reporting green
+	// for the wrong reason.
+	source := filepath.Join("loanschedule", "P-00-baseline-6x7pct.json")
+	raw, err := os.ReadFile(filepath.Join(pristine, source))
+	if err != nil {
+		t.Fatalf("ReadFile %s: %v", source, err)
+	}
+	withID := strings.Replace(string(raw), `"case_id": "P-00"`, `"case_id": "DRIVER-F1-PROBE"`, 1)
+	if withID == string(raw) {
+		t.Fatalf("%s no longer declares case_id P-00; this fixture would plant a duplicate instead "+
+			"of an unknown context, and would prove nothing about the context guard", source)
+	}
+	probe := strings.Replace(withID, `"context": "loanschedule"`, `"context": "ledger"`, 1)
+	if probe == withID {
+		t.Fatalf("%s no longer declares context loanschedule; this fixture would be vacuous", source)
+	}
+	// Exactly two lines differ from the original. If a future edit to the source
+	// vector makes this fixture differ in more, the refusal under test could be
+	// attributable to something other than the context.
+	if n := countDifferingLines(string(raw), probe); n != 2 {
+		t.Fatalf("the probe must differ from %s in exactly the 2 lines case_id and context, it "+
+			"differs in %d; the refusal would not be attributable to the context alone", source, n)
+	}
+	if !IsSchemaContext("loanschedule") || IsSchemaContext("ledger") {
+		t.Fatalf("SchemaContexts() must contain loanschedule and must NOT contain ledger, it is %v; "+
+			"every assertion below depends on that", SchemaContexts())
+	}
+
+	impl, _, ierr := NewReplayImplementation(pristine, "")
+	if ierr != nil {
+		t.Fatalf("NewReplayImplementation: %v", ierr)
+	}
+	runOn := func(t *testing.T, dir string) *Summary {
+		t.Helper()
+		return mustRun(t, Options{
+			RepoRoot: root, StoreRoot: dir,
+			Implementation: impl, ImplementationName: "replay", SelfTestMode: true,
+		})
+	}
+
+	// (0) THE CONTROL. Establishes the numbers the perturbed runs are compared
+	// against, from the store rather than from a literal — a hard-coded 43 in a
+	// test goes stale the day a vector is promoted, and a stale expectation is
+	// repaired by editing the number, which is how a guard stops guarding.
+	clean := copyStore(t, pristine)
+	control := runOn(t, clean)
+	if got := control.ExitCode(); got != 0 {
+		t.Fatalf("the pristine store must grade clean before it is perturbed, got exit %d\n%s",
+			got, render(control))
+	}
+	if control.ParityPass == 0 || control.GradedCells == 0 {
+		t.Fatalf("the control graded %d parity vectors over %d cells; with zero of either, no "+
+			"assertion below could distinguish a working guard from a harness that grades nothing",
+			control.ParityPass, control.GradedCells)
+	}
+
+	// (1) THE DRIVER'S PROBE, IN ITS PARITY FORM. This is the exact reproduction:
+	// a loanschedule parity vector filed as `ledger`.
+	t.Run("a_parity_vector_copied_into_an_unknown_context_is_refused", func(t *testing.T) {
+		dir := copyStore(t, pristine)
+		if err := os.MkdirAll(filepath.Join(dir, "ledger"), 0o755); err != nil {
+			t.Fatalf("MkdirAll: %v", err)
+		}
+		planted := filepath.Join("ledger", "DRIVER-F1-PROBE.json")
+		if err := os.WriteFile(filepath.Join(dir, planted), []byte(probe), 0o644); err != nil {
+			t.Fatalf("WriteFile: %v", err)
+		}
+
+		s := runOn(t, dir)
+		if got := s.ExitCode(); got != 2 {
+			t.Fatalf("a vector declaring an unknown context must make the run UNUSABLE (exit 2), "+
+				"got exit %d\n%s", got, render(s))
+		}
+		if s.Inadmissible != 1 {
+			t.Errorf("want exactly 1 inadmissible vector, got %d", s.Inadmissible)
+		}
+		// THE POINT OF THE WHOLE TEST: the headline number must not move.
+		if s.ParityPass != control.ParityPass {
+			t.Errorf("the parity count moved from %d to %d — the copied vector was counted, which "+
+				"is the defect (measured on main: 43 -> 44)", control.ParityPass, s.ParityPass)
+		}
+		if s.GradedCells != control.GradedCells {
+			t.Errorf("the graded-cell count moved from %d to %d — the copied vector was graded, "+
+				"which is the defect (measured on main: 5664 -> 5711)",
+				control.GradedCells, s.GradedCells)
+		}
+		report := render(s)
+		if strings.Contains(report, "VERDICT: PASS") {
+			t.Errorf("a store containing a mislabelled context printed a PASS verdict:\n%s", report)
+		}
+		for _, want := range []string{planted, "is not a context this harness grades", "INADMISSIBLE"} {
+			if !strings.Contains(report, want) {
+				t.Errorf("the report must name %q; got:\n%s", want, report)
+			}
+		}
+	})
+
+	// (2) THE SAME COPY, FILED WHERE IT BELONGS, IS ADMITTED — so the refusal in
+	// (1) is attributable to the CONTEXT and to nothing else about the file.
+	//
+	// Without this control, (1) is also what a harness that refused every planted
+	// file would produce, and the guard would be structurally incapable of telling
+	// a context check from a paranoid one.
+	t.Run("the_same_bytes_in_the_right_context_are_admitted", func(t *testing.T) {
+		dir := copyStore(t, pristine)
+		planted := filepath.Join("loanschedule", "DRIVER-F1-PROBE.json")
+		if err := os.WriteFile(filepath.Join(dir, planted), []byte(withID), 0o644); err != nil {
+			t.Fatalf("WriteFile: %v", err)
+		}
+		s := runOn(t, dir)
+		if got := s.ExitCode(); got != 0 {
+			t.Fatalf("the same vector in its own context must still grade, got exit %d\n%s",
+				got, render(s))
+		}
+		if s.ParityPass != control.ParityPass+1 {
+			t.Fatalf("the copy in loanschedule/ must be graded as a 44th parity vector "+
+				"(%d+1), got %d — if it is not admissible here, sub-test (1) proves nothing about "+
+				"the context", control.ParityPass, s.ParityPass)
+		}
+	})
+
+	// (3) THE CONTRACT-REFUSAL FORM, WHICH IS WHY THE CHECK IS AT ADMISSION AND
+	// NOT AT THE COMPARATOR.
+	//
+	// A contract-refusal vector consults no oracle comparator at all — its
+	// expectation is derived from the frozen contract's own doc comments. So a
+	// refusal phrased as "the comparator for this class does not exist for this
+	// context" would let this form straight through. Measured on main: admitted,
+	// PASS, exit 0, contract-refusal 4 -> 5 and cells 5664 -> 5665.
+	t.Run("a_contract_refusal_vector_in_an_unknown_context_is_refused_too", func(t *testing.T) {
+		dir := copyStore(t, pristine)
+		refSource := filepath.Join("loanschedule", "REFUSE-01-actual-actual-ungraded.json")
+		refRaw, rerr := os.ReadFile(filepath.Join(pristine, refSource))
+		if rerr != nil {
+			t.Fatalf("ReadFile %s: %v", refSource, rerr)
+		}
+		refProbe := strings.Replace(string(refRaw),
+			`"case_id": "REFUSE-01-actual-actual-ungraded"`, `"case_id": "DRIVER-F1-PROBE-REFUSAL"`, 1)
+		refProbe = strings.Replace(refProbe, `"context": "loanschedule"`, `"context": "ledger"`, 1)
+		if n := countDifferingLines(string(refRaw), refProbe); n != 2 {
+			t.Fatalf("the contract-refusal probe must differ in exactly 2 lines, it differs in %d", n)
+		}
+		if err := os.MkdirAll(filepath.Join(dir, "ledger"), 0o755); err != nil {
+			t.Fatalf("MkdirAll: %v", err)
+		}
+		planted := filepath.Join("ledger", "DRIVER-F1-PROBE-REFUSAL.json")
+		if err := os.WriteFile(filepath.Join(dir, planted), []byte(refProbe), 0o644); err != nil {
+			t.Fatalf("WriteFile: %v", err)
+		}
+		s := runOn(t, dir)
+		if got := s.ExitCode(); got != 2 {
+			t.Fatalf("a contract-refusal vector in an unknown context must be exit 2, got %d\n%s",
+				got, render(s))
+		}
+		if s.ContractPass != control.ContractPass {
+			t.Errorf("the contract-refusal count moved from %d to %d (measured on main: 4 -> 5)",
+				control.ContractPass, s.ContractPass)
+		}
+		if s.GradedCells != control.GradedCells {
+			t.Errorf("the graded-cell count moved from %d to %d (measured on main: 5664 -> 5665)",
+				control.GradedCells, s.GradedCells)
+		}
+	})
+
+	// (4) THE EMPTY-CONTEXT MESSAGE IS NOT DOUBLED. A vector with no context at
+	// all has ONE defect and must report one, not that defect plus a derived echo
+	// of it — a refusal that lists two problems for one cause trains its reader to
+	// discount refusals.
+	t.Run("an_empty_context_reports_one_defect_not_two", func(t *testing.T) {
+		pin, perr := LoadPin(filepath.Join(pristine, "PIN.json"))
+		if perr != nil {
+			t.Fatalf("LoadPin: %v", perr)
+		}
+		v := &Vector{Schema: VectorSchemaV1, CaseID: "X", Context: "", Class: ClassParity,
+			DEC1Revision: pin.DEC1Revision, Path: filepath.Join("loanschedule", "X.json")}
+		problems := Admit(v, pin, root)
+		if !containsSubstring(problems, "context is empty") {
+			t.Errorf("an empty context must be named as such, got %v", problems)
+		}
+		if containsSubstring(problems, "is not a context this harness grades") {
+			t.Errorf("an empty context must not ALSO be reported as an unknown context, got %v",
+				problems)
+		}
+	})
+}
+
+// countDifferingLines is the fixtures' anti-vacuity measure: how many lines of a
+// and b are not equal, treating a length difference as a difference on every
+// extra line. It exists so a fixture can assert it perturbed EXACTLY what it
+// meant to perturb.
+func countDifferingLines(a, b string) int {
+	la, lb := strings.Split(a, "\n"), strings.Split(b, "\n")
+	n := 0
+	for i := 0; i < len(la) || i < len(lb); i++ {
+		var x, y string
+		if i < len(la) {
+			x = la[i]
+		}
+		if i < len(lb) {
+			y = lb[i]
+		}
+		if x != y {
+			n++
+		}
+	}
+	return n
+}
