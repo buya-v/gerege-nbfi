@@ -1765,7 +1765,7 @@
       "executor": "agent",
       "model": "opus",
       "target": "code",
-      "status": "in_progress",
+      "status": "done",
       "attempts": 0,
       "dependencies": [
         "A2-22"
@@ -1775,8 +1775,13 @@
       ],
       "description": "SELF-FLAGGED BY A2-22 IN ITS OWN FOLLOW-UPS, which is why this is a review task and not a rejection. A2-22's graded finding was that CounterfactualCoverage credits kills from REFUSED vectors; that is closed, driver-verified, and correct. While there it ALSO narrowed CorroborationsClaimed to graded vectors 'on the same reasoning, but with no independent finding behind it'. Both counts are 0 on the committed store, so TODAY the narrowed and un-narrowed versions are INDISTINGUISHABLE -- which is precisely the condition under which a change cannot be validated by the harness and must be argued from semantics instead. A2-22 says it is a two-line revert.\n\nYou are an INDEPENDENT reviewer. Do not read A2-22's conclusion and agree with it. Decide, from the source and from what a corroboration MEANS in this harness, whether a REFUSED vector may corroborate. The parallel to kills is suggestive but not binding: a kill is a claim the vector DISCRIMINATES, whereas a corroboration may be a weaker claim that survives refusal. Argue it from the definitions in the registry, not from symmetry.\n\nConstruct a store where the two versions DIFFER (A2-22 showed how -- blind a seam so vectors refuse) and show what each reports. A change you cannot make differ is a change you cannot test; if you genuinely cannot construct a divergence, say so and recommend the revert on the ground that an untestable narrowing is not worth carrying.\n\nVerdict: APPROVED (keep the narrowing, with the semantic argument recorded) / REVERT (two lines) / REJECTED with specifics. Bar: probe present and up, PASS exit 0, 43 parity vectors, 5664 cells, kills named 103 money / 7 structural. Report a refusal by what it SAYS and what population SURVIVES, never by exit code (P-62).",
       "acceptance": null,
-      "note": "raised by the driver, fire 20260822-080001, from A2-22's own self-flagged follow-up | DISPATCHED local fire 20260822-000013 wave 1, worktree-isolated, forked from main ee2c532.",
-      "branch": "softhouse/A2-24-corroborations-adjudication"
+      "note": "local fire 20260822-000013: DONE on softhouse/A2-24-corroborations-adjudication (fc9f68d), merged ea503de. VERDICT APPROVED -- KEEP A2-22's NARROWING. It did NOT take the escape hatch the brief offered: it CONSTRUCTED the divergence (t.TempDir store copy, one admissible corroboration injected into all 48 vectors, monthend.reanchor blinded so 14 refuse) and ran both arms -- narrowed 34, un-narrowed 48, RefusedCorroborationsClaimed 14 in both. ARGUED FROM THE DEFINITIONS, NOT THE KILL SYMMETRY, which is what the brief demanded and what A2-22 could not supply: a kill is a claim about DISCRIMINATION whose antecedent is grading, so refusal leaves it unrealised; a corroboration is a claim about the RECORD (vector.go:290), validated offline at admission, and none of the five refusal reasons impugns it -- so A2-22's 'equally uncashed' OVERSTATES and the claim stays true. The narrowing survives on a different ground: the report scopes by POLARITY -- hazards take the widest population (RateFactorsRecorded/OverScaledCells counted BEFORE the refusal return, grade.go:504-513), support takes the narrowest. A corroboration is support. Clincher: on an all-refused store the un-narrowed rule prints '0 cells compared' beside 'corroboration claims: 48' -- the limiting form of the confidence-nobody-measured defect T17-F2 exists to prevent. ARM B also proved the revert cannot ship without a FALSE report sentence. Diff is handoff+evidence ONLY -- driver three-dot scope check: 6 files, 761 insertions, ZERO .go, ZERO vectors, ZERO harness. Bar re-run by the worker and the final run diffs byte-identical to its pre-experiment baseline; store restored to ce821c63.",
+      "branch": "softhouse/A2-24-corroborations-adjudication",
+      "findings_not_applied": [
+        "FU-A2-24-1 grade.go:155 stale comment",
+        "FU-A2-24-2 zero test coverage for the approved semantics",
+        "FU-A2-24-3 OutcomeError vectors enter the graded population (latent)"
+      ]
     },
     {
       "id": "T216",
@@ -1854,6 +1859,23 @@
       "contract_independent": true,
       "note": "Registered by the driver, fire 20260822-000013. | DISPATCHED local fire 20260822-000013 wave 1, worktree-isolated, forked from main ee2c532.",
       "branch": "softhouse/A2-26-ledger-capture-readiness"
+    },
+    {
+      "id": "A2-27",
+      "title": "A2-24's three findings, deliberately not applied because its verdict was APPROVED — the comment is confirmed wrong and the semantics are untested",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "role": "coder",
+      "target": "code",
+      "dependencies": [
+        "A2-24"
+      ],
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/conformance/"
+      ],
+      "description": "A2-24 returned APPROVED and therefore correctly applied NOTHING. Its three findings are still live. F1 -- DRIVER-CONFIRMED INDEPENDENTLY, do not re-litigate, just fix it: grade.go:120 reads 'CounterfactualsNamed is how many wrong implementations the GRADED vectors...' while grade.go:155 still reads 'CorroborationsClaimed is how many cross-check claims the ADMISSIBLE vectors make'. Both are incremented at :457/:458, AFTER the refusal return at :447/:448, so both count GRADED vectors and the second comment is false. A2-24 calls this the tell that the corroboration half of 9f32bbf rode along without its own reasoning -- the neighbouring comment WAS updated and this one was not. F2 IS THE SUBSTANTIVE ONE: with A2-22's narrowing REVERTED, `go test ./... -count=1` is ALL GREEN. Nothing in the suite pins the population, so the semantics A2-24 just argued for are held in place by nobody. A2-24 archived a probe ready to adopt at .softhouse/reviews/A2-24-evidence/corroboration-population-probe_test.go.txt -- READ IT, but do not adopt it unexamined: it was written by the reviewer whose verdict it would now defend. Make the test FAIL on the revert and pass on HEAD, and show both runs. F3 -- OutcomeError vectors still enter the graded population. A2-24 reached this independently and it corroborates A2-22's follow-up 3. It is LATENT ONLY: the single reachable cause already makes the run fatal. Decide whether latent-but-unreachable is worth closing or worth documenting, and say which you chose and why -- do not close it silently either way. BAR: probe line PRESENT and up, PASS exit 0, 43 parity vectors (or whatever T116 leaves it at -- RE-DERIVE, do not inherit), vector store digest UNCHANGED by you. Invoke with bash, never sh. Never gofmt -w contract.go (G-3).",
+      "note": "Registered by the driver, local fire 20260822-000013, on merging A2-24. F1 driver-confirmed at nexus/internal/apps/loanschedule/conformance/grade.go:120 vs :155."
     }
   ],
   "cross_corroboration": {
