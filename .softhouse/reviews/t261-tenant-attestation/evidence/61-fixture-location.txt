@@ -1,0 +1,62 @@
+guard population (its OWN derive()): 393 files, 7 rigs, 21 req dirs
+
+T250 files INSIDE the guard's graded population : 10
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-0/probe.req                 parses as JSON
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-1/probe.req                 parses as JSON
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-2/probe.req                 parses as JSON
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-3/probe.req                 parses as JSON
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-4/probe.req                 parses as JSON
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-5/probe.req                 parses as JSON
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-6/probe.req                 parses as JSON
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-7/probe.req                 parses as JSON
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/out/probe.req                   parses as JSON
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/req/bad-office.json             parses as JSON
+
+No malformed file inside the guard's population from T250.
+
+every T250-added file whose name mentions `req` or `inject`:
+    .softhouse/capture/t250-tenant-attestation/evidence/redA/derived/t-default.reqhdr            in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redA/derived/t-gerege.reqhdr             in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/out/probe.req                       in-population=True
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/out/probe.req.sha256                in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/out/probe.reqhdr                    in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-0/probe.req                     in-population=True
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-0/probe.req.sha256              in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-0/probe.reqhdr                  in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-7/probe.req                     in-population=True
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-7/probe.req.sha256              in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-7/probe.reqhdr                  in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-6/probe.req                     in-population=True
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-6/probe.req.sha256              in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-6/probe.reqhdr                  in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-1/probe.req                     in-population=True
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-1/probe.req.sha256              in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-1/probe.reqhdr                  in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-4/probe.req                     in-population=True
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-4/probe.req.sha256              in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-4/probe.reqhdr                  in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-3/probe.req                     in-population=True
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-3/probe.req.sha256              in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-2/probe.req                     in-population=True
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-2/probe.req.sha256              in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-2/probe.reqhdr                  in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-5/probe.req                     in-population=True
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-5/probe.req.sha256              in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redB/arm-5/probe.reqhdr                  in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redC/out/dup.reqhdr                      in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redC/out/inject.http                     in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redC/out/inject.json                     in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redC/out/inject.req.NOT-JSON-BY-DESIGN.txt in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redC/out/inject.req.sha256.txt           in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redC/out/inject.reqhdr                   in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redC/out/inject.status                   in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redC/out/longhdr.reqhdr                  in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redC/out/notremoved.reqhdr               in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redC/out/removed.reqhdr                  in-population=False
+    .softhouse/capture/t250-tenant-attestation/evidence/redC/req/injection.txt                   in-population=False
+
+counter-check: rename the fixture BACK to *.req and ask derive() again --
+the guard must then reach it, or 'renamed out' would mean nothing.
+    fixture copied to .softhouse/capture/t250-tenant-attestation/evidence/redC/out/T261PROBE.req -> derive() reaches it: True
+    and it does NOT parse (JSONDecodeError) -- so under its old name it DID trip the guard
+    probe removed; population back to 393

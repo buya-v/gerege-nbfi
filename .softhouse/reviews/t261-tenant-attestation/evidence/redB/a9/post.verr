@@ -1,0 +1,6 @@
+ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa1570a5ac5acb88a/.softhouse/reviews/t261-tenant-attestation/evidence/redB/a9/post.http
+  header-record digest MISMATCH: sidecar claims aecab7453a9eb1f4ed7efe6435e2cb8d9e52ad2e3b815cb8f17db0b52c269920, file is 955c34f8d8e9d239aee80dc992a376cb089859b4ff7bca3ecc298e19af22c583
+  sidecar OMITS a line that was sent: 'GET /fineract-provider/api/v1/offices HTTP/1.1'
+  sidecar OMITS a line that was sent: 'Fineract-Platform-TenantId: gerege'
+  sidecar ASSERTS a line that was NOT sent: 'POST /fineract-provider/api/v1/offices HTTP/1.1'
+  sidecar ASSERTS a line that was NOT sent: 'Content-Length: 108'

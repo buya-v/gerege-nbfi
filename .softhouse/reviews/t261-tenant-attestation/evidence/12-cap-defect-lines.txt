@@ -1,0 +1,20 @@
+===== .softhouse/reviews/t261-tenant-attestation/scratch/base/.softhouse/capture/tierA-a2/cap.sh =====
+    97:   echo "Fineract-Platform-TenantId: gerege"
+    98:   echo "Authorization: Basic <mifos:password>"
+   100:     echo "Content-Type: application/json"
+
+===== .softhouse/reviews/t261-tenant-attestation/scratch/base/.softhouse/capture/tierA-a2/cap8.sh =====
+   116:   echo "Fineract-Platform-TenantId: gerege"
+   117:   echo "Authorization: Basic <mifos:password>"
+   119:     echo "Content-Type: application/json"
+
+===== .softhouse/reviews/t261-tenant-attestation/scratch/base/.softhouse/capture/tierA-a2/cap9.sh =====
+    95:   echo "Fineract-Platform-TenantId: gerege"
+    96:   echo "Authorization: Basic <mifos:password>"
+    99:     echo "Content-Type: application/json"
+
+===== .softhouse/reviews/t261-tenant-attestation/scratch/base/.softhouse/capture/tierA-a2/cap10.sh =====
+   113:   echo "Fineract-Platform-TenantId: gerege"
+   114:   echo "Authorization: Basic <mifos:password>"
+   117:     echo "Content-Type: application/json"
+

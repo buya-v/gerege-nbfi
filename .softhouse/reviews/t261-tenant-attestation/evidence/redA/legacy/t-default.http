@@ -1,0 +1,5 @@
+GET /offices
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+captured-at-utc: 2026-08-22T13:38:17Z

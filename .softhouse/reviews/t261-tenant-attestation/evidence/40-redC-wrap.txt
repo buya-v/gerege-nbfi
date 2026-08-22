@@ -1,0 +1,47 @@
+T261 RED-DRIVE C -- trace-ascii wrap reassembly
+curl: curl 8.7.1 (x86_64-apple-darwin25.0) libcurl/8.7.1 (SecureTransport) LibreSSL/3.3.6 zlib/1.2.12 nghttp2/1.68.1
+
+Header value lengths swept across the 64-byte wrap boundary and well beyond.
+'attested' is the length of the value recovered from the derived sidecar.
+
+  L1             len=1     attested=1     EXACT
+  L10            len=10    attested=10    EXACT
+  L60            len=60    attested=60    EXACT
+  L61            len=61    attested=61    EXACT
+  L62            len=62    attested=62    EXACT
+  L63            len=63    attested=63    EXACT
+  L64            len=64    attested=64    EXACT
+  L65            len=65    attested=65    EXACT
+  L66            len=66    attested=66    EXACT
+  L127           len=127   attested=127   EXACT
+  L128           len=128   attested=128   EXACT
+  L129           len=129   attested=129   EXACT
+  L200           len=200   attested=200   EXACT
+  L300           len=300   attested=300   EXACT
+  L1000          len=1000  attested=1000  EXACT
+  L4000          len=4000  attested=4000  EXACT
+
+--- mixed shape: a long value CONTAINING colons and spaces ---
+  Lmix           len=360   attested=360   EXACT
+
+--- duplicated IDENTICAL header, one copy deleted from the sidecar ---
+  wire record carries the header 2 time(s); sidecar carries it 2 time(s)
+  dropped ONE of the 2 identical copies from the sidecar
+  verify rc=0  <-- GAP: multiplicity is NOT checked (set membership only)
+
+--- CRLF injected into a header value ---
+  record lines mentioning X-T261:
+      'X-T261-Inj: safe.X-T261-Evil: injected'
+
+--- multibyte body: is the Content-Length crosscheck byte-exact? ---
+  body bytes on disk: 58 (chars 35)
+  Content-Length on the wire : 58
+  crosscheck line            : content-length-crosscheck: MATCH (58 bytes)
+  committed .req size        : 58
+  truncated-mid-multibyte body, all assertions intact -> verify rc=1
+      ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa1570a5ac5acb88a/.softhouse/reviews/t261-tenant-attestation/evidence/redC/mbtrunc/mb.http
+        body-sha256 MISMATCH against the artefact
+        body-bytes MISMATCH: sidecar says 58, artefact is 57
+        Content-Length SENT (58) != committed body artefact (57 bytes)
+
+RESULT: every swept length attested EXACTLY
