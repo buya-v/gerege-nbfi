@@ -1,0 +1,54 @@
+R-VPA under review: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a0bc8fb0112f20ee1/.softhouse/capture/t256-verdict-predicate/check_verdict_predicate_agreement.py
+scratch: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t262-attack-pivfjr09
+
+PART A -- invented adversarial shapes. Ground truth for all: REFUSED (exit 1).
+====================================================================================================
+fixture                                rc    probe    state    rows   disagr  OUTCOME
+A1-nested-one-level-deeper              1  PRESENT  REFUSED       0        0  CAUGHT
+A2-toplevel-array                       1  PRESENT  REFUSED       0        0  CAUGHT
+A3-verdict-as-int-enum                  1  PRESENT  REFUSED       1        1  CAUGHT
+A3b-verdict-as-object                   0  PRESENT    GREEN       1        0  MISS -- GREEN over a live disagreement
+A4-verdict-key-named-result             0  PRESENT    GREEN       1        0  MISS -- GREEN over a live disagreement
+A4b-verdict-key-named-conclusion        0  PRESENT    GREEN       1        0  MISS -- GREEN over a live disagreement
+A5-predicate-null                       0  PRESENT    GREEN       1        0  MISS -- GREEN over a live disagreement
+A6-predicate-string-false               0  PRESENT    GREEN       1        0  MISS -- GREEN over a live disagreement
+A7-predicate-zero                       0  PRESENT    GREEN       1        0  MISS -- GREEN over a live disagreement
+A8-predicate-in-nested-list             0  PRESENT    GREEN       1        0  MISS -- GREEN over a live disagreement
+C0-control-flat-shape                   1  PRESENT  REFUSED       1        1  CAUGHT
+
+PART B -- the batching fail-open: a NIL-COVERAGE file alongside a populated one
+====================================================================================================
+  empty file ALONE                  : rc=1 probe=PRESENT state=REFUSED
+  empty file BATCHED with a populated one:
+    rc                              : 0
+    body printed 'REFUSED  NIL COVERAGE' : True
+    probe line                      : T259-VPA: GREEN files=2 rows=1 predicates=1 disagreements=0 acknowledged=0 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+    >>> FAIL-OPEN: the body prints REFUSED and the exit code and probe say GREEN.
+
+PART C -- exit-code classification (P-80: 1 = measured negative, >1 = ERROR, never mixed)
+====================================================================================================
+  E1 missing target        : rc=2 probeAbsent=True stderr='ERROR: no such file: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/'
+  E2 unreadable register   : rc=2 probeAbsent=True stderr='ERROR: register unreadable: JSONDecodeError: Expecting property name e'
+  E3 wrong autoPredicatePattern (an ERROR by the module's own words):
+     rc=1  probeAbsent=True  stderr='ERROR: unexpected autoPredicatePattern in register; refusing to guess'
+     >>> CONFLATION: an ERROR exits 1, the code reserved for a REAL measured negative.
+  E4 rule run with NO .git ancestor (repo_root raises SystemExit(str)):
+     rc=1  probeAbsent=True  stderr='ERROR: no .git ancestor of /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000g'
+     >>> CONFLATION: an ERROR exits 1, same code as a measured refusal.
+
+PART D -- does R-VPA, AS WIRED, ever open t219? (default target when run.sh calls it)
+====================================================================================================
+  files opened with no args: ['FILE .softhouse/capture/t229-g8-site3/out/classify-t229.json']
+  t219 mentioned anywhere in output: False
+
+====================================================================================================
+MISSES (8):
+  - A3b-verdict-as-object                  rc=0 state=GREEN
+  - A4-verdict-key-named-result            rc=0 state=GREEN
+  - A4b-verdict-key-named-conclusion       rc=0 state=GREEN
+  - A5-predicate-null                      rc=0 state=GREEN
+  - A6-predicate-string-false              rc=0 state=GREEN
+  - A7-predicate-zero                      rc=0 state=GREEN
+  - A8-predicate-in-nested-list            rc=0 state=GREEN
+  - B1-nil-coverage-batched                rc=0 state=GREEN
+TOTAL SHAPES TRIED: 11 (part A) + 1 (part B batching)

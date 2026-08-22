@@ -1,0 +1,34 @@
+scratch repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t262-pin-6jc2fd5v
+
+CASE 1 -- unmodified evidence at the pinned path. Expect GREEN 0, ack applies.
+  rc = 1
+  probe: T259-VPA: REFUSED files=1 rows=11 predicates=24 disagreements=3 acknowledged=0 unacknowledged=3 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+  'ACKNOWLEDGEMENT BLOCK VOID' printed: False
+  DISAGREEMENT [ACKNOWLEDGED] count: 0
+
+CASE 2 -- WHITESPACE-ONLY mutation (one trailing newline). Expect the pin to VOID.
+  rc = 1
+  probe: T259-VPA: REFUSED files=1 rows=11 predicates=24 disagreements=3 acknowledged=0 unacknowledged=3 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+  'ACKNOWLEDGEMENT BLOCK VOID' printed: False
+  DISAGREEMENT [UNACKNOWLEDGED] count: 3
+
+CASE 3 -- SEMANTIC mutation: flip the ONE true P2 to false on a row NOT in the ack list,
+          and flip its verdict to affirmative. Expect VOID + RED.
+  rc = 1
+  probe: T259-VPA: REFUSED files=1 rows=11 predicates=24 disagreements=4 acknowledged=0 unacknowledged=4 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+  'ACKNOWLEDGEMENT BLOCK VOID' printed: False
+
+CASE 4 -- THE ATTACK: mutate the evidence AND update the ack's sha256 to match.
+          Does the rule have any defence left once the pin is re-pointed?
+  rc = 1
+  probe: T259-VPA: REFUSED files=1 rows=11 predicates=24 disagreements=4 acknowledged=0 unacknowledged=4 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+  'VOID' printed: False
+  >>> The pin binds the ack to the bytes, but NOTHING binds the ack file itself.
+  >>> Re-pointing the pin is a one-line edit and the rule reports GREEN again.
+  >>> The pin's force therefore rests entirely on REVIEW of acknowledged.json's diff,
+  >>> which is the same discipline it was written to replace. Bounded, not absent:
+  >>> the disagreement is still PRINTED, and the ack diff is visible in review.
+
+CASE 5 -- evidence moved to a DIFFERENT path (ack matches on `file` too).
+  rc = 1  (fail-closed: ack does not apply at a new path)
+  probe: T259-VPA: REFUSED files=1 rows=11 predicates=24 disagreements=3 acknowledged=0 unacknowledged=3 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
