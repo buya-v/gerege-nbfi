@@ -1112,9 +1112,16 @@ guard_graded_root_is_this_tree() {
   return 1
 }
 
-# guard_ledger_invariants: the I-3/I-4 SOURCE GUARD that DEC-2 §4.4 requires and §4.4.1 records
-# as not existing — "balances are DERIVED, never written" (I-3) and "the ledger is append-only"
-# (I-4), both first-tier CLAUDE.md non-negotiables. A2-18 (commit 2a3eefd) BUILT and PROVED it
+# guard_ledger_invariants: the I-3/I-4 SOURCE GUARD that DEC-2 §4.4 requires — "balances are
+# DERIVED, never written" (I-3) and "the ledger is append-only" (I-4), both first-tier CLAUDE.md
+# non-negotiables. It declares SEVEN detection classes [VERIFIED: .softhouse/guards/ledgerguard/
+# main.go, the `Class: "..."` literals — I3-FIELD-WRITE, I3-PKG-STATE, I3-SQL-BALANCE, I4-BUILDER,
+# I4-DML, I6-HOLD-BALANCE, OPAQUE-SQL]. Its own PASS text, printed by this function below, states
+# the limit precisely: "no violation is visible to a source-level guard over the Go tree" — NOT
+# "the ledger tree is covered". DEC-2 §4.4 once recorded this guard as not existing — that was
+# revision 2, true when written; DEC-2 §8.3 has since retracted it, and §4.4.1 and §8.1 fact 3
+# describe the guard as it runs today, with the same PASS-text limit quoted above. A2-18 (commit
+# 2a3eefd) BUILT and PROVED it
 # and deliberately did not wire it, because T201 held this file the same fire; T208 is that
 # wiring. Between those two commits the guard existed and enforced NOTHING at grade time, which
 # is the P-22 failure this program keeps finding: a guard that only fails when invoked by hand.
