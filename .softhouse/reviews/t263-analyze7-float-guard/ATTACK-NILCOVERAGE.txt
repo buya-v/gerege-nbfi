@@ -1,0 +1,19 @@
+==============================================================================
+T263 -- NIL-COVERAGE / REFUSAL ARMS, driven independently of T164's harness
+guard: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a8b0f7b84e947d39c/.softhouse/reviews/t263-analyze7-float-guard/scratch/t164/.softhouse/capture/tierA-a2/guard-parse-float-ast.py
+==============================================================================
+  ok    empty directory (0 files at all)           exit=2 (want 2)  "PASS" printed=no
+        first refusal line: REFUSING: NIL COVERAGE -- 0 Python files under /tmp/t263-nil-wUpfi5/empty-dir. INSPECTED NOTHING. A guard that finds nothing and reports success is the defect this guard was written to remove (P-45).
+  ok    directory of NON-Python files only         exit=2 (want 2)  "PASS" printed=no
+        first refusal line: REFUSING: NIL COVERAGE -- 0 Python files under /tmp/t263-nil-wUpfi5/no-py. INSPECTED NOTHING. A guard that finds nothing and reports success is the defect this guard was written to remove (P-45).
+  ok    Python files but ZERO json.load call sites exit=2 (want 2)  "PASS" printed=no
+        first refusal line: REFUSING: NIL COVERAGE -- 2 Python file(s) inspected, 0 json.load/loads call sites found. INSPECTED NOTHING, so there is nothing to certify. This is an ERROR, not a pass (P-45/P-80).
+  ok    one file that will not parse               exit=2 (want 2)  "PASS" printed=no
+        first refusal line: REFUSING: broken.py will not parse: invalid syntax (broken.py, line 1) -- a file the guard cannot read is not a file the guard may skip
+  ok    a single EMPTY .py file                    exit=2 (want 2)  "PASS" printed=no
+        first refusal line: REFUSING: NIL COVERAGE -- 1 Python file(s) inspected, 0 json.load/loads call sites found. INSPECTED NOTHING, so there is nothing to certify. This is an ERROR, not a pass (P-45/P-80).
+  ok    a root that does not exist                 exit=2 (want 2)  "PASS" printed=no
+        first refusal line: REFUSING: root /tmp/t263-nil-wUpfi5/nope-not-here is not a directory
+  ok    CONTROL: a compliant root still passes     exit=0 (want 0)  "PASS" printed=yes
+
+ARMS FAILED: 0

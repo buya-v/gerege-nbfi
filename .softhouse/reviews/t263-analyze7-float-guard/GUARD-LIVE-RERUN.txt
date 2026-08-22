@@ -1,0 +1,60 @@
+==============================================================================
+T164 -- json.load/loads call-site guard (AST, not source grep)
+==============================================================================
+ROOT: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a8b0f7b84e947d39c/.softhouse/reviews/t263-analyze7-float-guard/scratch/t164/.softhouse/capture/tierA-a2
+
+SELECTOR SELF-TEST: 4 synthetic call sites found across 4 alias shapes; 3 decoy line(s)
+  (`parse_float` in a docstring, a comment and a string literal -- all three invisible to the selector)
+
+DECLARATION REGISTER (PARSE-FLOAT-EXEMPT.txt) -- 6 record(s), every one printed, default-deny
+  ALLOW   prove-mkreq7-guard-red.py:70   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; produced RED-GREEN-A2-7-guards.txt
+          reason: sandbox-only; reads mkreq7.py's own generated bodies inside tempfile.mkdtemp. MEASURED: 12 generated bodies, 0 JSON-float leaves, so the omission is non-material today.
+  ALLOW   prove-mkreq7-guard-red.py:119  FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; produced RED-GREEN-A2-7-guards.txt
+          reason: sandbox-only; reads the resolver sandbox output {"clientId": 1, "productId": 46}. MEASURED: 0 JSON-float leaves; no float leaf is constructible from that document.
+  ALLOW   prove-mkreq7-guard-red.py:126  FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; produced RED-GREEN-A2-7-guards.txt
+          reason: sandbox-only; same document as line 119. MEASURED: 0 JSON-float leaves.
+  ALLOW   resolve7.py:24   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; produced req/a2-7-loan-220-resolved.json
+          reason: MATERIAL: 117 req/*.json templates carry 11 JSON-float leaves (e.g. /debits/0/amount 100000.25). Frozen under T114; fixed in resolve8.py, redirected in SUPERSEDED.txt.
+  ALLOW   resolve7.py:25   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; produced req/a2-7-loan-220-resolved.json
+          reason: MATERIAL: the 5 out/A2-21*.json observation files carry 12 JSON-float leaves (e.g. /principal 1200000.0). Frozen under T114; fixed in resolve8.py, redirected in SUPERSEDED.txt.
+  ALLOW   verify-provenance-a2-15.py:24   FROZEN-T114        frozen: sha256 matches MANIFEST.sha256; produced PROVENANCE-A2-15.txt
+          reason: reads .softhouse/vectors/ledger/*.json. MEASURED: 6 vectors, 0 JSON-float leaves — every promoted money cell is a STRING (amount_major_text, amount_minor), so no money value passes through a binary double here.
+
+POPULATION -- both terms (P-67)
+  Python files inspected .................. 32
+  json.load/loads CALL SITES inspected .... 20
+  ... carrying parse_float= ............... 14
+  ... carrying parse_float=float (a dodge)  0
+  ... declared in the register ............ 6
+  ... VIOLATIONS .......................... 0
+
+parse_float= VALUE EXPRESSIONS ACTUALLY PASSED (5 distinct) -- listed so a reader can audit them, not allowlisted
+  D                  1 site(s): census-a2-26.py:49
+  JsonNumber         2 site(s): resolve8.py:101, resolve8.py:265
+  _Raw               1 site(s): prove-resolve8-float-red.py:107
+  decimal.Decimal    9 site(s): a2-29-retype-path.py:25, analyze7.py:39, audit-req-float-roundtrip.py:226, audit-req-float-roundtrip.py:236, mkje-a2-29.py:42, mkje-a2-29.py:151, prove-mkreq7-guard-red.py:148, prove-resolve8-float-red.py:152, show.py:14
+  hook('float')      1 site(s): audit-req-float-roundtrip.py:65
+
+EVERY CALL SITE, GRADED
+  ok          a2-29-retype-path.py            :25   json.loads  parse_float=decimal.Decimal
+  ok          analyze7.py                     :39   json.load   parse_float=decimal.Decimal
+  ok          audit-req-float-roundtrip.py    :65   json.loads  parse_float=hook('float')
+  ok          audit-req-float-roundtrip.py    :226  json.loads  parse_float=decimal.Decimal
+  ok          audit-req-float-roundtrip.py    :236  json.loads  parse_float=decimal.Decimal
+  ok          census-a2-26.py                 :49   json.loads  parse_float=D
+  ok          mkje-a2-29.py                   :42   json.loads  parse_float=decimal.Decimal
+  ok          mkje-a2-29.py                   :151  json.loads  parse_float=decimal.Decimal
+  DECLARED FROZEN-T114 prove-mkreq7-guard-red.py       :70   json.loads  parse_float=MISSING
+  DECLARED FROZEN-T114 prove-mkreq7-guard-red.py       :119  json.load   parse_float=MISSING
+  DECLARED FROZEN-T114 prove-mkreq7-guard-red.py       :126  json.load   parse_float=MISSING
+  ok          prove-mkreq7-guard-red.py       :148  json.loads  parse_float=decimal.Decimal
+  ok          prove-resolve8-float-red.py     :107  json.loads  parse_float=_Raw
+  ok          prove-resolve8-float-red.py     :152  json.loads  parse_float=decimal.Decimal
+  DECLARED FROZEN-T114 resolve7.py                     :24   json.load   parse_float=MISSING
+  DECLARED FROZEN-T114 resolve7.py                     :25   json.load   parse_float=MISSING
+  ok          resolve8.py                     :101  json.loads  parse_float=JsonNumber
+  ok          resolve8.py                     :265  json.loads  parse_float=JsonNumber
+  ok          show.py                         :14   json.load   parse_float=decimal.Decimal
+  DECLARED FROZEN-T114 verify-provenance-a2-15.py      :24   json.load   parse_float=MISSING
+
+PASS -- 20 call site(s) across 32 file(s): 14 carry parse_float=, 6 are declared and their preconditions hold, 0 violations.
