@@ -1,0 +1,195 @@
+PROOF OK   exit 2 (wanted 2)   no implementation named
+--- last 6 lines of that run -------------------------------------------
+conformance: no implementation named "__none__" is registered (have: [loanschedule-go])
+
+PROOF OK   exit 2 (wanted 2)   reference oracle unreachable (probe aimed at a closed port; live instance untouched)
+--- last 6 lines of that run -------------------------------------------
+                            census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a16a40447c53c3512/nexus
+
+--- WHY THIS RUN CANNOT BE TRUSTED ---
+    * the reference oracle is UNREACHABLE: conformance is exit 2, which is not a PASS and never becomes one (.softhouse/reference-oracle.md)
+
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+PROOF OK   exit 0 (wanted 0)   harness self-test over the pristine store
+--- last 6 lines of that run -------------------------------------------
+                            covered: nexus/internal/apps/loanschedule/conformance
+                            covered: nexus/internal/apps/loanschedule/conformance/cmd/conformance
+                            covered: nexus/internal/apps/loanschedule/contract
+                            census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a16a40447c53c3512/nexus
+
+VERDICT: SELF-TEST PASS (exit 0). The harness grades correctly. NOT a conformance PASS.
+
+PROOF OK   exit 1 (wanted 1)   one-minor-unit perturbation of an expected value
+--- last 6 lines of that run -------------------------------------------
+                            covered: nexus/internal/apps/loanschedule/conformance
+                            covered: nexus/internal/apps/loanschedule/conformance/cmd/conformance
+                            covered: nexus/internal/apps/loanschedule/contract
+                            census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a16a40447c53c3512/nexus
+
+VERDICT: FAIL (exit 1) — 1 mismatched vector(s), 0 invariant violation(s).
+
+PROOF OK   exit 2 (wanted 2)   integer perturbed but the oracle wire text not (transcription error)
+--- last 6 lines of that run -------------------------------------------
+                            covered: nexus/internal/apps/loanschedule/conformance
+                            covered: nexus/internal/apps/loanschedule/conformance/cmd/conformance
+                            covered: nexus/internal/apps/loanschedule/contract
+                            census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a16a40447c53c3512/nexus
+
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+PROOF OK   exit 2 (wanted 2)   empty vector store
+--- last 6 lines of that run -------------------------------------------
+                            census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a16a40447c53c3512/nexus
+
+--- WHY THIS RUN CANNOT BE TRUSTED ---
+    * ZERO VECTORS FOUND under /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/conformance-prove.UR2qjddk0F/empty: an empty vector set is exit 2. A harness that reported PASS over zero vectors would be the single worst outcome available to it.
+
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+PROOF OK   exit 2 (wanted 2)   absent vector store
+--- last 6 lines of that run -------------------------------------------
+                            census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a16a40447c53c3512/nexus
+
+--- WHY THIS RUN CANNOT BE TRUSTED ---
+    * store pin: open /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/conformance-prove.UR2qjddk0F/does-not-exist/PIN.json: no such file or directory
+
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+PROOF OK   exit 2 (wanted 2)   self-test fixture excluded from the parity count
+--- last 6 lines of that run -------------------------------------------
+
+--- WHY THIS RUN CANNOT BE TRUSTED ---
+    * THESE CAPABILITIES ARE MARKED in_graded_domain BUT NO PARITY VECTOR KILLS A NAMED WRONG IMPLEMENTATION FOR THEM: monthend.reanchor, schedule.core. "In the graded domain" means a vector exists that can tell a correct implementation from an incorrect one, and pair difference is NOT that test — LB-DEC31 reports zero cells differing across the day-count setting and still kills a no-arm port by 6,015 minor units (T55-N1). Either promote a vector with a graded_against entry, or set in_graded_domain false in capabilities.json.
+    * NO PARITY VECTOR WAS GRADED. Self-test fixtures and contract-refusal vectors do not make a parity claim: the first is hand-authored, the second is derived from the ratified contract rather than observed from the oracle. Until a capture is promoted, this harness cannot say the port matches Fineract, and it will not pretend to.
+
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+PROOF OK   exit 0               the fixture PASSES and parity stays 0, stamped NOT a conformance PASS
+    parity vectors          PASS 0    FAIL 0
+    self-test fixtures      PASS 1    FAIL 0   (hand-authored; EXCLUDED from the parity count)
+VERDICT: SELF-TEST PASS (exit 0). The harness grades correctly. NOT a conformance PASS.
+
+PROOF OK   exit 2 (wanted 2)   float token in a vector file
+--- last 6 lines of that run -------------------------------------------
+                            covered: nexus/internal/apps/loanschedule/conformance
+                            covered: nexus/internal/apps/loanschedule/conformance/cmd/conformance
+                            covered: nexus/internal/apps/loanschedule/contract
+                            census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a16a40447c53c3512/nexus
+
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+PROOF OK   exit 2 (wanted 2)   T17-F5: an UNDECLARED over-scaled money wire text is inadmissible
+--- last 6 lines of that run -------------------------------------------
+                            covered: nexus/internal/apps/loanschedule/conformance
+                            covered: nexus/internal/apps/loanschedule/conformance/cmd/conformance
+                            covered: nexus/internal/apps/loanschedule/contract
+                            census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a16a40447c53c3512/nexus
+
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+PROOF OK   exit 2 (wanted 2)   T17-F6: a rate factor claiming exactness is inadmissible
+--- last 6 lines of that run -------------------------------------------
+                            covered: nexus/internal/apps/loanschedule/conformance
+                            covered: nexus/internal/apps/loanschedule/conformance/cmd/conformance
+                            covered: nexus/internal/apps/loanschedule/contract
+                            census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a16a40447c53c3512/nexus
+
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+PROOF OK   exit 2 (wanted 2)   T17-F2: a corroboration claiming an unattested column is inadmissible
+--- last 6 lines of that run -------------------------------------------
+                            covered: nexus/internal/apps/loanschedule/conformance
+                            covered: nexus/internal/apps/loanschedule/conformance/cmd/conformance
+                            covered: nexus/internal/apps/loanschedule/contract
+                            census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a16a40447c53c3512/nexus
+
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+PROOF OK   exit 2 (wanted 2)   D-4: a structural counterfactual naming a money column is inadmissible
+--- last 6 lines of that run -------------------------------------------
+                            covered: nexus/internal/apps/loanschedule/conformance
+                            covered: nexus/internal/apps/loanschedule/conformance/cmd/conformance
+                            covered: nexus/internal/apps/loanschedule/contract
+                            census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a16a40447c53c3512/nexus
+
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+PROOF OK   exit 0 (wanted 0)   D-5: an unrecorded money cell costs the CELL, not the vector
+--- last 6 lines of that run -------------------------------------------
+                            covered: nexus/internal/apps/loanschedule/conformance
+                            covered: nexus/internal/apps/loanschedule/conformance/cmd/conformance
+                            covered: nexus/internal/apps/loanschedule/contract
+                            census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a16a40447c53c3512/nexus
+
+VERDICT: SELF-TEST PASS (exit 0). The harness grades correctly. NOT a conformance PASS.
+
+PROOF OK   exit 1 (wanted 1)   T9-F5: a one-minor-unit perturbation of a PARITY vector goes red
+--- last 6 lines of that run -------------------------------------------
+                            covered: nexus/internal/apps/loanschedule/conformance
+                            covered: nexus/internal/apps/loanschedule/conformance/cmd/conformance
+                            covered: nexus/internal/apps/loanschedule/contract
+                            census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a16a40447c53c3512/nexus
+
+VERDICT: FAIL (exit 1) — 1 mismatched vector(s), 0 invariant violation(s).
+
+PROOF OK   exit 1 (wanted 1)   T9-F5: a DATE cell of a PARITY vector goes red, naming the row and both dates
+--- last 6 lines of that run -------------------------------------------
+                            covered: nexus/internal/apps/loanschedule/conformance
+                            covered: nexus/internal/apps/loanschedule/conformance/cmd/conformance
+                            covered: nexus/internal/apps/loanschedule/contract
+                            census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a16a40447c53c3512/nexus
+
+VERDICT: FAIL (exit 1) — 1 mismatched vector(s), 0 invariant violation(s).
+
+PROOF OK   exit 2 (wanted 2)   T9-F1a: a POPULATED non-money cell withdrawn from grading is inadmissible
+--- last 6 lines of that run -------------------------------------------
+                            covered: nexus/internal/apps/loanschedule/conformance
+                            covered: nexus/internal/apps/loanschedule/conformance/cmd/conformance
+                            covered: nexus/internal/apps/loanschedule/contract
+                            census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a16a40447c53c3512/nexus
+
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+PROOF OK   exit 2 (wanted 2)   T9-F1b: a structural kill naming a cell the vector withdrew is inadmissible
+--- last 6 lines of that run -------------------------------------------
+                            covered: nexus/internal/apps/loanschedule/conformance
+                            covered: nexus/internal/apps/loanschedule/conformance/cmd/conformance
+                            covered: nexus/internal/apps/loanschedule/contract
+                            census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a16a40447c53c3512/nexus
+
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+
+PROOF OK   exit 2/0       T9-F1b: withdrawn cells STOP backing the kill; recorded ones still back it
+        113 kills and no UNBACKED claim at all. Reachable, not hypothetical: it is the standing
+        kills do not enter the count above and do not remove a capability from the UNBACKED list.
+    monthend.reanchor                          killed by MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY [structural], MONTHEND-CONTINUE-FROM-CLAMPED-DAY [structural], MONTHEND-CONTINUE-FROM-CLAMPED-DAY [structural], MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28, MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28, MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28, MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28, MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28, MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28, MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28, MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28 [structural]
+VERDICT: UNUSABLE (exit 2) — no trustworthy verdict is available. THIS IS NOT A PASS.
+    monthend.reanchor                          killed by MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY, MONTHEND-CONTINUE-FROM-CLAMPED-DAY [structural], MONTHEND-CONTINUE-FROM-CLAMPED-DAY [structural], MONTHEND-CONTINUE-FROM-CLAMPED-DAY [structural], MONTHEND-CONTINUE-FROM-CLAMPED-DAY [structural], MONTHEND-CONTINUE-FROM-CLAMPED-DAY [structural], MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28, MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28, MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28, MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28, MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28, MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28, MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28, MONTHEND-REANCHOR-GUARD-STRICTLY-GREATER-THAN-28 [structural]
+    parity vectors          PASS 46   FAIL 0
+VERDICT: SELF-TEST PASS (exit 0). The harness grades correctly. NOT a conformance PASS.
+
+PROOF OK   exit 0/0       T58-N2/T60: a withdrawn cell an invariant reads is NOT RUN, not a HOLD and not a VIOLATION
+    principal_amortizes_to_zero            hold 0    violated 0    exempt 0    n/a 1    not-asserted 1
+    existed: balance_roll_forward went RED on a placeholder, and principal_amortizes_to_zero went
+    SELFTEST-01-two-period-zero-rate — principal_amortizes_to_zero [N/A]
+        NOT ASSERTED: row 2: final outstanding == 0 cannot be asserted (outstanding_principal_minor never recorded by the capture, so the implementation supplied a placeholder)
+        NOT ASSERTED: row 2: REPAYMENT: the roll-forward cannot be asserted (outstanding_principal_minor never recorded by the capture, so the implementation supplied a placeholder)
+    invariant assertions    2 NOT RUN (a cell nobody observed; listed above, never inferred)
+    invariant assertions    0 EXEMPTED BY A VECTOR (switched off on purpose; each one's reason is listed above)
+VERDICT: SELF-TEST PASS (exit 0). The harness grades correctly. NOT a conformance PASS.
+    principal_amortizes_to_zero            hold 45   violated 0    exempt 2    n/a 0    not-asserted 0
+    T116-G8-FAMB-N104 — principal_amortizes_to_zero [EXEMPT]
+    T116-G8-FAMB-N108 — principal_amortizes_to_zero [EXEMPT]
+    existed: balance_roll_forward went RED on a placeholder, and principal_amortizes_to_zero went
+    invariant assertions    0 NOT RUN (a cell nobody observed; listed above, never inferred)
+    invariant assertions    4 EXEMPTED BY A VECTOR (switched off on purpose; each one's reason is listed above)
+VERDICT: SELF-TEST PASS (exit 0). The harness grades correctly. NOT a conformance PASS.
+
+PROOF OK   T201/T199-D1: CONFORMANCE_REPO_ROOT cannot move the graded tree — RED on a diverged root (exit 2, not 0), GREEN on its own
+
+PROOF OK   T201/T197-F-1: the census figure is the FIRST 'inspected N' — new [320 57 7 320 57 ] vs the shipped greedy [320 57 320 7 0 ]
+
+=======================================================================
+PROOFS: 23 passed, 0 failed
+=======================================================================

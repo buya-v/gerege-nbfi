@@ -1,0 +1,337 @@
+package conformance
+
+import (
+	"encoding/json"
+	"strings"
+	"testing"
+)
+
+// T225 — INDEPENDENT REVIEW PROBE for T222. NOT PART OF THE SHIPPED SUITE.
+// Every fixture here is built by the reviewer, on vectors and invariants T222's
+// own suite does not use, in t.TempDir copies. The pristine store is never
+// written.
+
+// ---------------------------------------------------------------------------
+// A. MY OWN RED DRILLS — different vectors, different invariants than T222 used.
+// ---------------------------------------------------------------------------
+
+// T222's own decoration drill used balance_roll_forward on FAMB-N104. Mine uses
+// monotonic_due_dates on P-00-baseline, a vector with NO exemptions at all.
+func TestT225_MyOwnDecorationDrill(t *testing.T) {
+	store := copyStore(t, storeRoot(t))
+	editVector(t, store, "P-00-baseline-6x7pct.json", func(t *testing.T, m map[string]any) {
+		addExemption(t, m, InvMonotonicDueDates,
+			"T225 reviewer fixture: prose. The due dates on this vector are strictly increasing and "+
+				"contiguous, so this exemption silences nothing.")
+	})
+	s := selfTestRun(t, store)
+	detail := inadmissibleDetail(t, s, "P-00")
+	t.Logf("REFUSED: %s", firstLine(detail))
+	if !strings.Contains(detail, "HOLDS ON THE SCHEDULE THIS VECTOR ITSELF RECORDED") {
+		t.Errorf("wrong refusal:\n%s", detail)
+	}
+	if !strings.Contains(render(s), "UNGROUNDED: P-00 — "+InvMonotonicDueDates+" [DECORATION]") {
+		t.Errorf("census does not name it:\n%s", grepLines(render(s), "UNGROUNDED"))
+	}
+	if s.ExitCode() != 2 {
+		t.Errorf("exit %d, want 2", s.ExitCode())
+	}
+}
+
+// My own NOT-EVALUABLE drill: a different refusal vector and a different
+// invariant than T222 used (it used REFUSE-01 + principal_amortizes_to_zero).
+func TestT225_MyOwnNotEvaluableDrill(t *testing.T) {
+	store := copyStore(t, storeRoot(t))
+	editVector(t, store, "REFUSE-03-annual-fixed30360-precedence.json", func(t *testing.T, m map[string]any) {
+		addExemption(t, m, InvOrdering, "T225 reviewer fixture: no schedule under this at all.")
+	})
+	s := selfTestRun(t, store)
+	detail := inadmissibleDetail(t, s, "REFUSE-03-annual-fixed30360-precedence")
+	t.Logf("REFUSED: %s", firstLine(detail))
+	if !strings.Contains(detail, "no periods") {
+		t.Errorf("wrong refusal:\n%s", detail)
+	}
+}
+
+// My own RESTS-ON-WITHDRAWN-CELLS drill: withdraw every repayment DUE DATE and
+// exempt monotonic_due_dates. T222 used the final row's outstanding balance and
+// principal_amortizes_to_zero.
+func TestT225_MyOwnWithdrawnCellsDrill(t *testing.T) {
+	store := copyStore(t, storeRoot(t))
+	editVector(t, store, "P-01-18x18pt5pct-principal-87654321.json", func(t *testing.T, m map[string]any) {
+		for _, raw := range periodsOf(t, m) {
+			p := raw.(map[string]any)
+			if p["kind"] != "REPAYMENT" {
+				continue
+			}
+			p["unrecorded_fields"] = []any{"due_date"}
+			p["due_date"] = map[string]any{
+				"year": json.Number("0"), "month": json.Number("0"), "day": json.Number("0"),
+			}
+		}
+		addExemption(t, m, InvMonotonicDueDates, "T225 reviewer fixture: the dangerous pairing.")
+	})
+	vs, le, err := LoadStore(store, "")
+	if err != nil || len(le) != 0 {
+		t.Fatalf("fixture does not load: %v / %v", err, le)
+	}
+	var found bool
+	for _, v := range vs {
+		if v.CaseID != "P-01" {
+			continue
+		}
+		for _, g := range CheckExemptionGrounding(v) {
+			t.Logf("grounding: %s -> %s", g.Invariant, g.Status)
+			if g.Status == ExemptionRestsOnWithdrawnCells {
+				found = true
+			}
+		}
+	}
+	if !found {
+		t.Error("expected RESTS-ON-WITHDRAWN-CELLS")
+	}
+}
+
+// ---------------------------------------------------------------------------
+// B. THE ATTACK ON THE RULE ITSELF.
+//
+// The grounding check judges the exemption against RecordedSchedule + THIS
+// VECTOR'S PLACEHOLDERS. The exemption ACTS, at grading time, on the schedule
+// THE PORT RETURNED — and a real port implements no PlaceholderReporter, so
+// grading runs with placeholders EMPTY (grade.go:699-704). The two schedules are
+// not the same object and the invariants behave differently on them.
+//
+// Consequence: an exemption that is NECESSARY in port mode can be REFUSED here.
+// ---------------------------------------------------------------------------
+
+func TestT225_LegitimateExemptionRefused_PartialWithdrawal(t *testing.T) {
+	store := copyStore(t, storeRoot(t))
+	// A legitimate, ordinary capture gap: ONE repayment row's principal was not
+	// recorded. The store already carries unrecorded_fields on the disbursement
+	// row of many vectors, so this is the mechanism working as designed — not a
+	// contrived pairing. The vector's OWN, COMMITTED, TODAY-GROUNDED exemption
+	// (principal_portions_sum_to_disbursed, family B: the oracle advances 1 minor
+	// unit and repays 0) is unchanged.
+	editVector(t, store, fambN104File, func(t *testing.T, m map[string]any) {
+		row := periodsOf(t, m)[5].(map[string]any)
+		if row["kind"] != "REPAYMENT" {
+			t.Fatalf("period 5 is not a REPAYMENT row")
+		}
+		row["unrecorded_fields"] = []any{"principal_minor"}
+		row["principal_minor"] = ""
+		row["principal_major_text"] = ""
+	})
+
+	vs, le, err := LoadStore(store, "")
+	if err != nil || len(le) != 0 {
+		t.Fatalf("fixture does not load: %v / %v", err, le)
+	}
+	var target *Vector
+	for _, v := range vs {
+		if v.CaseID == "T116-G8-FAMB-N104" {
+			target = v
+		}
+	}
+	if target == nil {
+		t.Fatal("fixture vector missing")
+	}
+
+	sched, ph, rerr := RecordedSchedule(target)
+	if rerr != nil {
+		t.Fatalf("RecordedSchedule: %v", rerr)
+	}
+
+	// (1) What the GROUNDING CHECK sees — recorded schedule WITH placeholders.
+	withPH := runInvariant(InvPrincipalSum, target, sched, ph)
+	t.Logf("GROUNDING VIEW  (recorded schedule + this vector's placeholders): %s — %s",
+		withPH.Status, firstLine(withPH.Detail))
+
+	// (2) What a REAL PORT'S GRADED RUN sees — same numbers, NO placeholders,
+	//     because a port computes every cell and implements no PlaceholderReporter.
+	noPH := runInvariant(InvPrincipalSum, target, sched, PlaceholderCells{})
+	t.Logf("PORT-MODE VIEW  (same schedule, placeholders empty): %s — %s",
+		noPH.Status, firstLine(noPH.Detail))
+
+	if withPH.Status == noPH.Status {
+		t.Fatalf("the two views agree (%s), so this probe demonstrates nothing", withPH.Status)
+	}
+	if noPH.Status != InvariantViolated {
+		t.Fatalf("port-mode view is %s, expected VIOLATED — the exemption would not be needed",
+			noPH.Status)
+	}
+
+	// (3) And the harness REFUSES the whole vector for it.
+	s := selfTestRun(t, store)
+	detail := inadmissibleDetail(t, s, "T116-G8-FAMB-N104")
+	t.Logf("HARNESS VERDICT: INADMISSIBLE, exit %d", s.ExitCode())
+	t.Logf("REFUSAL TEXT: %s", firstLine(detail))
+	if !strings.Contains(detail, "WITHDRAW EVERY CELL THAT INVARIANT READS") {
+		t.Errorf("expected the RESTS-ON-WITHDRAWN-CELLS refusal, got:\n%s", detail)
+	}
+	// The refusal's prescribed remedy, quoted from exemption.go:229-230.
+	if !strings.Contains(detail, "let the harness report the assertion as NOT RUN, which is what it is") {
+		t.Errorf("the refusal no longer carries the remedy this probe is about:\n%s", detail)
+	}
+	// That remedy is FALSE in port mode: dropping the exemption yields VIOLATED,
+	// not NOT RUN, because the port supplies the cell.
+	t.Logf("BUT: with the exemption dropped, port-mode grading of %s reports %s, not NOT RUN.",
+		InvPrincipalSum, noPH.Status)
+
+	// The vector's cells are lost from the corpus entirely.
+	for _, r := range s.Results {
+		if r.CaseID == "T116-G8-FAMB-N104" {
+			t.Logf("cells this vector now contributes: %d graded", r.GradedCells)
+		}
+	}
+	t.Logf("parity vectors now: PASS %d (was 46)", s.ParityPass)
+}
+
+// A PARTIAL HOLD is classified DECORATION, identically to a full HOLD, and the
+// refusal then predicts "the invariant will hold, unexempted" — a claim about a
+// run that has not happened, on a schedule that is not the graded one.
+func TestT225_PartialHoldIsCalledADecoration(t *testing.T) {
+	store := copyStore(t, storeRoot(t))
+	editVector(t, store, fambN108File, func(t *testing.T, m map[string]any) {
+		row := periodsOf(t, m)[5].(map[string]any)
+		row["unrecorded_fields"] = []any{"principal_minor"}
+		row["principal_minor"] = ""
+		row["principal_major_text"] = ""
+		addExemption(t, m, InvBalanceRollForward,
+			"T225 reviewer fixture: an exemption on an invariant that only PARTIALLY held.")
+	})
+	vs, le, err := LoadStore(store, "")
+	if err != nil || len(le) != 0 {
+		t.Fatalf("fixture does not load: %v / %v", err, le)
+	}
+	for _, v := range vs {
+		if v.CaseID != "T116-G8-FAMB-N108" {
+			continue
+		}
+		sched, ph, _ := RecordedSchedule(v)
+		res := runInvariant(InvBalanceRollForward, v, sched, ph)
+		t.Logf("balance_roll_forward on the recorded schedule: status=%s, assertions NOT MADE=%d",
+			res.Status, len(res.NotAsserted))
+		if res.Status != InvariantHold || len(res.NotAsserted) == 0 {
+			t.Fatalf("fixture did not produce a PARTIAL hold (status %s, notAsserted %d)",
+				res.Status, len(res.NotAsserted))
+		}
+		for _, g := range CheckExemptionGrounding(v) {
+			if g.Invariant == InvBalanceRollForward {
+				t.Logf("CLASSIFIED AS: %s  (a partial hold, %d unmade assertions, is indistinguishable "+
+					"here from a full hold)", g.Status, len(g.NotAsserted))
+				if g.Status != ExemptionDecoration {
+					t.Fatalf("expected DECORATION, got %s", g.Status)
+				}
+				if len(g.NotAsserted) != 0 {
+					t.Logf("FINDING: exemption.go:132-135 documents NotAsserted as \"Non-empty exactly "+
+						"on ExemptionRestsOnWithdrawnCells\". Here it is non-empty on a DECORATION: %v",
+						g.NotAsserted)
+				}
+			}
+		}
+	}
+	s := selfTestRun(t, store)
+	detail := inadmissibleDetail(t, s, "T116-G8-FAMB-N108")
+	if !strings.Contains(detail, "the invariant will hold, unexempted, and the report will say so") {
+		t.Errorf("the refusal no longer carries the prediction this probe is about:\n%s", detail)
+	}
+	t.Logf("SHIPPED REFUSAL PREDICTS: \"the invariant will hold, unexempted, and the report will say so\" "+
+		"— on a schedule where it did NOT fully hold. exit=%d", s.ExitCode())
+}
+
+// ---------------------------------------------------------------------------
+// C. WHAT THE PINNING TEST ACTUALLY COMPARES.
+// ---------------------------------------------------------------------------
+
+// TestRecordedScheduleIsTheOneBuilder claims the two schedules are
+// "BYTE-FOR-BYTE" the same. It compares ph.Count() and nothing else. This probe
+// measures how much slack that leaves.
+func TestT225_WhatTheOneBuilderTestCompares(t *testing.T) {
+	pristine := storeRoot(t)
+	vs, _, err := LoadStore(pristine, "")
+	if err != nil {
+		t.Fatalf("LoadStore: %v", err)
+	}
+	impl, _, ierr := NewReplayImplementation(pristine, "")
+	if ierr != nil {
+		t.Fatalf("replay: %v", ierr)
+	}
+	reporter := impl.(PlaceholderReporter)
+	total, withPH, cellsTotal := 0, 0, 0
+	for _, v := range vs {
+		if v.Expect.Kind != "schedule" {
+			continue
+		}
+		req, _ := v.Request.ContractRequest()
+		_, ph, _ := RecordedSchedule(v)
+		total++
+		if ph.Count() > 0 {
+			withPH++
+			cellsTotal += ph.Count()
+		}
+		_ = reporter.PlaceholderCells(req)
+	}
+	t.Logf("schedule vectors: %d; with >0 placeholder cells: %d; total placeholder cells corpus-wide: %d",
+		total, withPH, cellsTotal)
+	// How many DISTINCT placeholder counts exist? If every vector with
+	// placeholders has the same count, a which-cell mutation is invisible.
+	counts := map[int]int{}
+	for _, v := range vs {
+		if v.Expect.Kind != "schedule" {
+			continue
+		}
+		_, ph, _ := RecordedSchedule(v)
+		counts[ph.Count()]++
+	}
+	t.Logf("placeholder-count histogram across the corpus: %v", counts)
+}
+
+// ---------------------------------------------------------------------------
+// D. ARE THE TWO ROUTES TO THE COUNT INDEPENDENT?
+// ---------------------------------------------------------------------------
+
+func TestT225_TheTwoCountRoutes(t *testing.T) {
+	pristine := storeRoot(t)
+	s := selfTestRun(t, pristine)
+	vs, _, _ := LoadStore(pristine, "")
+	c := InspectExemptions(vs)
+	t.Logf("route 1 (grading loop, counts InvariantExempted statuses): %d", s.InvariantsExempted)
+	t.Logf("route 2 (store census, counts declarations):               %d", c.Declared)
+	t.Logf("both read v.InvariantExemptions; route 1 via CheckInvariants' exempt map, "+
+		"route 2 via CheckExemptionGrounding's slice walk")
+
+	// Do they diverge when a vector is refused? Route 1 counts only vectors that
+	// reach CheckInvariants.
+	refusedCount := 0
+	for _, r := range s.Results {
+		if r.Outcome == OutcomeRefused {
+			refusedCount++
+		}
+	}
+	t.Logf("refused vectors in this run: %d (route 2 would still count their exemptions)", refusedCount)
+}
+
+// ---------------------------------------------------------------------------
+// E. THE OUTCOMES NOTHING HAS EVER DRIVEN RED.
+//
+// SCHEDULE-UNREADABLE and the default: arm of admitExemptions have no test in
+// T222's suite. Is SCHEDULE-UNREADABLE reachable at all, or a dead branch?
+// ---------------------------------------------------------------------------
+
+func TestT225_ScheduleUnreadableReachability(t *testing.T) {
+	store := copyStore(t, storeRoot(t))
+	editVector(t, store, fambN104File, func(t *testing.T, m map[string]any) {
+		periodsOf(t, m)[5].(map[string]any)["kind"] = "NOT_A_KIND"
+	})
+	vs, le, err := LoadStore(store, "")
+	t.Logf("LoadStore: err=%v loadErrs=%d", err, len(le))
+	for _, v := range vs {
+		if v.CaseID != "T116-G8-FAMB-N104" {
+			continue
+		}
+		for _, g := range CheckExemptionGrounding(v) {
+			t.Logf("grounding %s -> %s (%s)", g.Invariant, g.Status, firstLine(g.Detail))
+		}
+		t.Logf("admitExemptions says: %v", admitExemptions(v))
+	}
+}
