@@ -1,0 +1,15 @@
+=== A2-526-prod-fee-income-expense-account ===
+  committed status: 403   re-issued status: 403
+  RESPONSE BYTE-IDENTICAL
+=== A2-540-prod-writeoff-reason-dangling ===
+  committed status: 400   re-issued status: 400
+  RESPONSE BYTE-IDENTICAL
+=== A2-541-prod-writeoff-reason-dangling-nonexpense ===
+  committed status: 400   re-issued status: 400
+  RESPONSE BYTE-IDENTICAL
+=== A2-542-prod-chargeoff-reason-dangling ===
+  committed status: 400   re-issued status: 400
+  RESPONSE BYTE-IDENTICAL
+=== A2-543-prod-chargeoff-reason-dangling-nonexpense ===
+  committed status: 400   re-issued status: 400
+  RESPONSE BYTE-IDENTICAL
