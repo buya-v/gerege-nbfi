@@ -1444,15 +1444,16 @@
    "executor": "agent",
    "model": "opus",
    "target": "code",
-   "status": "pending",
-   "attempts": 0,
+   "status": "in_progress",
+   "attempts": 1,
    "dependencies": [],
    "files_hint": [
     "nexus/internal/apps/loanschedule/conformance/"
    ],
    "description": "A2-19's F1, REPRODUCED INDEPENDENTLY BY THE DRIVER with its own probe vector before this task was written (P-42). Copy ANY loanschedule parity vector into .softhouse/vectors/ledger/, change ONLY case_id and context, and the harness reports 'VERDICT: PASS (exit 0) -- 44 parity vectors match the pinned reference oracle, 5711 cells compared' with the fake case listed class=parity seam=path_a_embeddable. A2-19's numbers and the driver's agree EXACTLY: 44 / 5711. This is the number every parity claim in this program rests on, and it is inflatable by `cp` plus two string edits -- and worse, the inflated vector sits in a ledger/ directory while grading a LOANSCHEDULE schedule, so it reads as GL coverage that does not exist. CAUSE, one line: `context` is constrained only to be non-empty and to equal its own directory name (admit.go:115, :119-120); NO ALLOWLIST EXISTS. Fix it so a context the harness has no comparator for cannot be admitted as parity. DRIVE RED with the driver's exact probe (copy P-00 into ledger/, rename case_id and context) and GREEN on the pristine store at 43/5664. THE 43 MUST STILL PASS, same cell count. Consider, and argue, whether the right refusal is at admission (unknown context) or at classification (a parity class whose comparator does not exist) -- they differ in what they say to whoever builds the ledger schema next.",
    "acceptance": null,
-   "note": null
+   "note": "DISPATCHED fire 20260822-080001 batch 2, worktree-isolated.",
+   "branch": "softhouse/A2-20-context-allowlist"
   },
   {
    "id": "A2-21",
@@ -1498,8 +1499,8 @@
    "executor": "agent",
    "model": "sonnet",
    "target": "docs",
-   "status": "pending",
-   "attempts": 0,
+   "status": "in_progress",
+   "attempts": 1,
    "dependencies": [
     "T181"
    ],
@@ -1508,8 +1509,9 @@
    ],
    "description": "T181's F-1. T178's prose publishes the unguarded-rewriter split as 21 DEC-1 / 4 contract.go. The truth -- settled by the T187/T183 BLIND convergence and reached a THIRD time by T181 via a different method (reading the target from the guard constant that is the actual argument to the write path) -- is 25 files / 20 DEC-1 / 7 contract.go / 2 both / 27 pairs. The TOTAL of 25 is correct and only the SPLIT is wrong, so no file went unhardened: this is a reporting defect, not a coverage defect, and the correction must say so rather than reading as a coverage scare. Note that BOTH of T178's errors UNDERSTATE contract.go, the higher-severity target, and that T178's prose contradicts ITS OWN COMMITTED TRANSCRIPT (which sums to 20/5). DO NOT re-litigate the population -- it is settled. Correct the number where a future fire will read it, cite the three converging derivations, and leave T178's transcript intact as evidence.",
    "acceptance": null,
-   "note": null,
-   "contract_independent": true
+   "note": "DISPATCHED fire 20260822-080001 batch 2, worktree-isolated.",
+   "contract_independent": true,
+   "branch": "softhouse/T204-correct-t178-split"
   },
   {
    "id": "T205",
@@ -1518,8 +1520,8 @@
    "executor": "agent",
    "model": "opus",
    "target": "code",
-   "status": "pending",
-   "attempts": 0,
+   "status": "in_progress",
+   "attempts": 1,
    "dependencies": [
     "T203"
    ],
@@ -1528,8 +1530,9 @@
    ],
    "description": "T203's F-2, and it is the ROOT CAUSE of T203's F-1 rather than a separate defect: targets computed as os.path.join(ROOT, ...) with a RUNTIME ROOT resolve to UNKNOWN, and --enforce does not trip on UNKNOWN. That is why T57-promote-emi-vectors.py and T8-promote-vectors.py -- between them 13 of the 43 live parity vectors, including the corpus baseline P-00 -- were invisible to T196 AND T198 AND the classifier. T196-1 closed the FUNCTION PARAMETER case; the RUNTIME-COMPUTED-CONSTANT case is still open. Note the polarity carefully before choosing the fix: UNKNOWN currently fails OPEN (hides), while T203 measured that T58 was flagged UNGUARDED as a FALSE POSITIVE which fails CLOSED (cries wolf) -- the two directions want different remedies and conflating them is how this class keeps recurring. DRIVE RED on T57/T8's own shape and GREEN on the real corpus; report the classification of all six promote rewriters before and after.",
    "acceptance": null,
-   "note": null,
-   "contract_independent": true
+   "note": "DISPATCHED fire 20260822-080001 batch 2, worktree-isolated.",
+   "contract_independent": true,
+   "branch": "softhouse/T205-classifier-unknown"
   },
   {
    "id": "T206",
@@ -1538,8 +1541,8 @@
    "executor": "agent",
    "model": "sonnet",
    "target": "code",
-   "status": "pending",
-   "attempts": 0,
+   "status": "in_progress",
+   "attempts": 1,
    "dependencies": [
     "T203"
    ],
@@ -1548,8 +1551,9 @@
    ],
    "description": "T203's backlog, deliberately kept out of its diff to hold scope. (a) .softhouse/capture/pathb/t149/promote-vector.py -- a SEVENTH promote-shaped writer of the vector store, uninspected by T196, T198 or T203. Establish whether it can truncate, and guard it with the SAME shared-module idiom T203 used (.softhouse/handoff/t203_store_guard.py) -- do not invent a second one. (b) T61-sweep/build-pass3f.py:147,215,216 -- three UNGUARDED capture-target write sites. (c) T57's bare `assert` invariants, pre-existing: a bare assert vanishes under `python3 -O`, and T203 specifically proved its own guard survives -O, so this is a live asymmetry. SAFETY, NON-NEGOTIABLE: never execute a promote script from the repo root; scratch copies at REAL DEPTH only (T203 measured that these scripts derive ROOT from __file__, so a /tmp copy cannot run and a naive scratch test is a NULL CONTROL). Verify the store is byte-identical before and after: 50 .json files, and publish the digest WITH ITS RECIPE.",
    "acceptance": null,
-   "note": null,
-   "contract_independent": true
+   "note": "DISPATCHED fire 20260822-080001 batch 2, worktree-isolated.",
+   "contract_independent": true,
+   "branch": "softhouse/T206-seventh-writer"
   },
   {
    "id": "T207",
@@ -1578,8 +1582,8 @@
    "executor": "agent",
    "model": "opus",
    "target": "code",
-   "status": "pending",
-   "attempts": 0,
+   "status": "in_progress",
+   "attempts": 1,
    "dependencies": [
     "A2-18",
     "T201"
@@ -1589,7 +1593,8 @@
    ],
    "description": "A2-18 built and proved the I-3/I-4 source guard DEC-2 section 5.3 P-8 requires, and deliberately did NOT wire it in, because T201 held conformance.sh the same fire. The consequence A2-18 stated against itself and which must not be softened: run_guards still invokes five guards, all about float/gofmt/exception-scope, so 'balances are derived' and 'append-only' -- two CLAUDE.md non-negotiables -- are enforced by NOTHING at grade time, and the conformance transcript being byte-identical before and after A2-18 is the proof of exactly that. The wiring specification is verbatim in .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-18.md, ANCHORED ON TEXT rather than line numbers because T201's merge moved them: add a guard_ledger_invariants shim above run_guards and a `guard_ledger_invariants || failed=1` call after guard_no_narrow_catch_in_capture_rigs. run_guards maps any non-zero to EXIT_UNUSABLE so exit semantics need no change. Do NOT reuse _run_capture_guard -- A2-18 measured that it hardcodes .softhouse/capture/lib/$1. RE-DERIVE the insertion point against post-T201 conformance.sh rather than trusting the anchor text, DRIVE RED (a planted violation must now turn the HARNESS red, not just the standalone guard) and GREEN (43 parity vectors / 5664 cells / exit 0 / probe present and up). Cost measured at 2.8 s. Carry A2-18's NIL-COVERAGE and CANNOT-CATCH notices through to the harness output -- a guard whose limits stop being printed when it is wired in is the P-22 failure this program keeps finding.",
    "acceptance": null,
-   "note": null
+   "note": "DISPATCHED fire 20260822-080001 batch 2, worktree-isolated.",
+   "branch": "softhouse/T208-wire-ledger-guard"
   }
  ],
  "cross_corroboration": {
