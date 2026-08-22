@@ -1,0 +1,130 @@
+T260 — independent `path:NNNN` citation census over /tmp/t260/rev8.md
+================================================================================================
+TOTAL  path:NNNN citations : 110
+  FINERACT-pinned (no drift): 26
+  REPO-pointing (perishable): 84
+  P-67 both terms sum       : 26 + 84 = 110
+
+### REPO citations grouped by file (this is the population a wired checker would need)
+    24  admit.go
+    14  vector.go
+     7  .softhouse/conformance.sh
+     7  capability.go
+     6  grade.go
+     6  registry.go
+     4  enums.go
+     3  coverage_refusal_test.go
+     2  conformance.sh
+     1  nexus/internal/apps/ledger/glaccount.go
+     1  invariants.go
+     1  .softhouse/guards/ledgerguard/main.go
+     1  main.go
+     1  nexus/internal/apps/ledger/slots_test.go
+     1  .softhouse/guards/check-ledger-invariants.sh
+     1  producttype.go
+     1  nexus/internal/apps/loanschedule/conformance/vector.go
+     1  nexus/internal/apps/loanschedule/conformance/admit.go
+     1  capabilities.json
+     1  0001_initial_schema.xml
+
+### FINERACT citations grouped by file
+     6  AccountingProcessorHelper.java
+     6  AccountingConstants.java
+     2  JournalEntry.java
+     2  ProductToGLAccountMappingWritePlatformServiceImpl.java
+     1  PortfolioProductType.java
+     1  ProgressiveLoanScheduleGenerator.java
+     1  fineract-provider/src/main/resources/db/changelog/tenant/parts/0001_initial_schema.xml
+     1  fineract-provider/src/main/java/org/apache/fineract/accounting/productaccountmapping/service/ProductToGLAccountMappingWritePlatformServiceImpl.java
+     1  UpdateTrialBalanceDetailsTasklet.java
+     1  JournalEntryRepository.java
+     1  GLAccountReadPlatformServiceImpl.java
+     1  GLAccountWritePlatformServiceJpaRepositoryImpl.java
+     1  LoanProductDataValidator.java
+     1  SavingsProductToGLAccountMappingHelper.java
+
+### every REPO citation, with its line in the document
+  doc:96    .softhouse/conformance.sh:1152-1187
+  doc:135   vector.go:77-81
+  doc:135   admit.go:139-147
+  doc:783   nexus/internal/apps/ledger/glaccount.go:324
+  doc:1059  .softhouse/conformance.sh:1152-1187
+  doc:1061  invariants.go:36-47
+  doc:1116  .softhouse/conformance.sh:1189-1213
+  doc:1220  .softhouse/guards/ledgerguard/main.go:151
+  doc:1248  main.go:852
+  doc:1250  nexus/internal/apps/ledger/slots_test.go:187
+  doc:1279  .softhouse/guards/check-ledger-invariants.sh:210-219
+  doc:1515  producttype.go:162
+  doc:1655  grade.go:473-474
+  doc:1684  capability.go:351-392
+  doc:1773  conformance.sh:718
+  doc:1831  nexus/internal/apps/loanschedule/conformance/vector.go:16-18
+  doc:1832  admit.go:109-110
+  doc:1839  vector.go:345-419
+  doc:1846  vector.go:484-511
+  doc:1847  admit.go:208-222
+  doc:1848  enums.go:92-104
+  doc:1861  admit.go:159-206
+  doc:1865  admit.go:545
+  doc:1866  admit.go:180-201
+  doc:1866  enums.go:93-103
+  doc:1867  admit.go:160-170
+  doc:1877  vector.go:647-649
+  doc:1879  admit.go:384-388
+  doc:1883  admit.go:417-435
+  doc:1890  vector.go:647-649
+  doc:1980  nexus/internal/apps/loanschedule/conformance/admit.go:115-117
+  doc:2006  vector.go:31-81
+  doc:2006  admit.go:139-147
+  doc:2007  vector.go:83-91
+  doc:2075  enums.go:93-103
+  doc:2075  registry.go:11
+  doc:2079  registry.go:26-28
+  doc:2079  grade.go:561
+  doc:2079  registry.go:173
+  doc:2165  admit.go:109-110
+  doc:2166  admit.go:139-147
+  doc:2219  admit.go:109-110
+  doc:2221  admit.go:139-147
+  doc:2229  admit.go:109-110
+  doc:2234  admit.go:160-170
+  doc:2301  vector.go:542
+  doc:2304  registry.go:34
+  doc:2390  capabilities.json:2-3
+  doc:2392  admit.go:149
+  doc:2397  vector.go:31-81
+  doc:2397  admit.go:139-147
+  doc:2398  registry.go:34
+  doc:2398  vector.go:542
+  doc:2464  grade.go:373-379
+  doc:2466  vector.go:1016-1018
+  doc:2470  .softhouse/conformance.sh:1254
+  doc:2475  grade.go:478-480
+  doc:2492  capability.go:262-300
+  doc:2516  capability.go:262-278
+  doc:2525  capability.go:245-247
+  doc:2531  coverage_refusal_test.go:50
+  doc:2546  capability.go:262-278
+  doc:2557  grade.go:473-474
+  doc:2586  vector.go:1006-1009
+  doc:2687  enums.go:93-103
+  doc:2687  registry.go:11
+  doc:2769  .softhouse/conformance.sh:1152-1187
+  doc:2903  .softhouse/conformance.sh:1115-1116
+  doc:2917  vector.go:77-81
+  doc:2917  admit.go:139-147
+  doc:3031  capability.go:262-278
+  doc:3033  coverage_refusal_test.go:50
+  doc:3207  .softhouse/conformance.sh:1115-1116
+  doc:3249  admit.go:109-110
+  doc:3250  admit.go:139-147
+  doc:3265  capability.go:262-278
+  doc:3270  coverage_refusal_test.go:50
+  doc:3378  admit.go:115-117
+  doc:3384  vector.go:31-81
+  doc:3384  admit.go:139-147
+  doc:3407  admit.go:149
+  doc:3413  0001_initial_schema.xml:98-110
+  doc:3423  conformance.sh:1189-1213
+  doc:3444  grade.go:473-474

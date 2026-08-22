@@ -1,0 +1,48 @@
+T260 LEG C — exhaustive pipe-table cell census
+====================================================================================================
+rev7 table rows: 140    rev8 table rows: 140
+duplicate first-cell keys (rev7 7, rev8 7) — reported, first wins
+rows present in BOTH: 133   IDENTICAL: 129   CHANGED: 4
+rows only in rev7 (REMOVED): 0   only in rev8 (ADDED): 0
+
+### ROWS REMOVED (present rev7, absent rev8) — every one must be justified
+
+### ROWS ADDED
+
+### ROWS CHANGED — per-cell verdict
+
+  ROW 4.4 :: **I-1**   (rev7 5 cells, rev8 5 cells)
+    cell[0] SAME  sha7=d61b16f33b22 sha8=d61b16f33b22  len7=7 len8=7
+    cell[1] SAME  sha7=e53d30a90706 sha8=e53d30a90706  len7=20 len8=20
+    cell[2] SAME  sha7=49f432823157 sha8=49f432823157  len7=87 len8=87
+    cell[3] SAME  sha7=9d2e22c933d4 sha8=9d2e22c933d4  len7=373 len8=373
+    cell[4] DIFF  sha7=48e6c18b7bb6 sha8=af0e5a6ee3ea  len7=79 len8=968
+      -7: **NO.** §5 — no admissible vector can carry a money cell, or any `ledger` cell.
+      +8: **YES, SINCE `A2-15` — AND REVISION 7 CORRECTS WHAT REVISIONS 1–6 SAID HERE, WHICH WAS *"NO. §5 — no admissible vector can carry a money cell, or any `ledger` cell."*** Four promoted `ledger` parity vectors each carry the assertion, and the harness reports it per vector as `INVARIANT double_entry_balances HOLD (2 assertion(s), INDEPENDENT)` — `LDG-01` debits `12500062` == credits `12500062` over 3 legs; `LDG-02` `30000000` over 4; `LDG-03` `100000000` over 4; `LDG-04` `10000025` over 2 — all in `int64` minor units [MEASURED by `T255` at `a71c140` from its own `VERDICT: PASS (exit 0)` run; `LED
+
+  ROW 4.4 :: **I-2**   (rev7 5 cells, rev8 5 cells)
+    cell[0] SAME  sha7=16235ca34a49 sha8=16235ca34a49  len7=7 len8=7
+    cell[1] SAME  sha7=43cc14f120cd sha8=43cc14f120cd  len7=19 len8=19
+    cell[2] SAME  sha7=0328d1d3c34e sha8=0328d1d3c34e  len7=40 len8=40
+    cell[3] SAME  sha7=cd1f91ff5810 sha8=cd1f91ff5810  len7=150 len8=150
+    cell[4] DIFF  sha7=0c668adf6ae1 sha8=35070df1ba72  len7=20 len8=1228
+      -7: **NO.** Same reason.
+      +8: **YES, ON TWO OF THE FOUR — AND THE HARNESS REFUSES TO COUNT THE OTHER TWO, WHICH IS THE POINT.** Revisions 1–6 said *"NO. Same reason."*, inheriting `I-1`'s now-dead ground. **`LDG-02` and `LDG-03` grade it INDEPENDENTLY**: the whole comes from the **recorded REQUEST**, not from a leg — `30000000 == sum of 3 splits` and `100000000 == sum of 3 splits`, `int64` minor units. **`LDG-01` reports `DEPENDENT` and `LDG-04` reports `N/A`**, and the harness says why in its own words: on `LDG-01` *"the whole here IS one of the entry's own legs, so this equation is character-for-character the one `I-1` a
+
+  ROW 4.4 :: **I-3**   (rev7 5 cells, rev8 5 cells)
+    cell[0] SAME  sha7=a48ac995c372 sha8=a48ac995c372  len7=7 len8=7
+    cell[1] SAME  sha7=db456ea9374c sha8=db456ea9374c  len7=35 len8=35
+    cell[2] SAME  sha7=4a4396ea577b sha8=4a4396ea577b  len7=57 len8=57
+    cell[3] SAME  sha7=3b909e9cac89 sha8=3b909e9cac89  len7=499 len8=499
+    cell[4] DIFF  sha7=213dccff7a09 sha8=38ce6501f24f  len7=1348 len8=1813
+      -7: **NO BY A VECTOR — AND, SINCE REVISION 2, YES BY A SOURCE GUARD, PARTIALLY.** Revision 2 said *"no such guard exists"*; that was true when written and is **stale**. `guard_ledger_invariants` (built by `A2-18`, **wired** by `T208`) is the seventh guard `run_guards` invokes and it walks the Go tree for a write path to a balance [VERIFIED by `A2-28` at commit `2e97162`: `.softhouse/conformance.sh:1152-1187` defines it, `:1209` invokes it; MEASURED: `invariant violations 0`]. **Its limits are load-bearing and §4.4.1 states them** — the detection surface is the NAME, so renaming a balance defeats i
+      +8: **NO BY A VECTOR — AND, SINCE REVISION 2, YES BY A SOURCE GUARD, PARTIALLY.** Revision 2 said *"no such guard exists"*; that was true when written and is **stale**. `guard_ledger_invariants` (built by `A2-18`, **wired** by `T208`) is one of the guards `run_guards` invokes — **§4.4.1 carries the single DERIVED-FROM-SOURCE enumeration and this row restates no count from it (`P-79`)** — and it walks the Go tree for a write path to a balance [ANCHOR .softhouse/conformance.sh :: `guard_ledger_invariants() {`; MEASURED by `T255` at `a71c140`: `invariant violations 0`]. **⚠ Revisions 3–7 said *"is th
+
+  ROW 4.4 :: **I-7**   (rev7 5 cells, rev8 5 cells)
+    cell[0] SAME  sha7=8e8d40bcc7f6 sha8=8e8d40bcc7f6  len7=7 len8=7
+    cell[1] SAME  sha7=261c61542124 sha8=261c61542124  len7=46 len8=46
+    cell[2] SAME  sha7=bda050585a00 sha8=bda050585a00  len7=1 len8=1
+    cell[3] SAME  sha7=5e956f8b0851 sha8=5e956f8b0851  len7=324 len8=324
+    cell[4] DIFF  sha7=7a2d10e7ecb0 sha8=54b3e26a2c35  len7=88 len8=529
+      -7: **N/A** — and note that today there is no `ledger` conformance PASS to say nothing with.
+      +8: **N/A** — and, CORRECTED IN REVISION 7, **there IS now a `ledger` conformance PASS, and it still says nothing whatever about `I-7`.** Revisions 1–6 read *"today there is no `ledger` conformance PASS to say nothing with"*. There is: 4 parity / 2 oracle-refusal / 21 money cells, green [MEASURED by `T255` at `a71c140`]. **The correction makes this row MORE important, not less** — the `Idempotency-Key` obligation is unmoved, no ledger vector tests it, and a green ledger section is now available to be misquoted as though it did.

@@ -1,0 +1,72 @@
+T260 — C-item verification against the LANDED revision 8
+====================================================================================================
+
+### C-1 — every `.softhouse/conformance.sh:NNNN` citation ELIMINATED (not re-measured)
+  rev7 lines carrying conformance.sh:NNNN : 13
+  rev8 lines carrying conformance.sh:NNNN : 9
+  EVERY rev8 residual, printed so it is CLASSIFIED not counted:
+    L96    [HISTORY] >    `guard_ledger_invariants`"* with `.softhouse/conformance.sh:1152-1187` / `:1189-1213` / `:1209`.
+    L1059  [HISTORY] | **I-3** | Balances are DERIVED, never written | No write path to any balance column exists in the Go tree | **NO — STRUCTURAL ON
+    L1116  [HISTORY] `.softhouse/conformance.sh:1189-1213`, and listed **seven** names, **omitting
+    L1773  [HISTORY] (P-45). **⚠ Revisions 1–7 cited `conformance.sh:718` and `:721` and said *"both occurrences"*.
+    L2470  [*** LIVE ***] **⚠ Revisions 1–7 cited `.softhouse/conformance.sh:1254` for this. That line is a comment about
+    L2769  [HISTORY] `.softhouse/conformance.sh:1152-1187` / `:1209`, correct at `2e97162` and stale by revision 7;
+    L2903  [*** LIVE ***] > `.softhouse/conformance.sh:1115-1116` read *"the I-3/I-4 SOURCE GUARD that DEC-2 §4.4 requires
+    L3207  [*** LIVE ***] `.softhouse/conformance.sh:1115-1116` and is **raised, not fixed** — out of scope
+    L3423  [*** LIVE ***] wired it**. `run_guards` invokes **seven** guards, not five (`conformance.sh:1189-1213`), and
+  -> residuals classified LIVE by this instrument: 4
+
+### C-2 — §4.4's I-3 row: answer column unchanged, citation now an ANCHOR
+  'NO BY A VECTOR' present rev7=2 rev8=2
+  I-3 row still carries the ANCHOR: 5 occurrence(s)
+  'is the seventh guard `run_guards` invokes' rev7=1 rev8=1
+
+### C-3 — §4.4.1's fenced guard enumeration: eight names, DERIVED-FROM-SOURCE
+  DERIVED-FROM-SOURCE sentinel lines in rev8: 3 at [291, 1100, 3064]
+    (not inside a fence)
+    fence at L1099 lists 8: ['guard_graded_root_is_this_tree', 'guard_no_float_in_vectors', 'guard_no_float_in_harness', 'guard_gofmt', 'guard_no_float_in_capture_requests', 'guard_no_narrow_catch_in_capture_rigs', 'guard_ledger_invariants', 'guard_no_fail_open_instruments']
+    equals the expected eight, in order: True
+  rev7 bare guard-name lines (the incomplete fence): ['guard_graded_root_is_this_tree', 'guard_no_float_in_vectors', 'guard_no_float_in_harness', 'guard_gofmt', 'guard_no_float_in_capture_requests', 'guard_no_narrow_catch_in_capture_rigs', 'guard_ledger_invariants']
+  rev7 mentions guard_no_fail_open_instruments at all: 0 time(s)
+
+### C-4 — the ordinal: one DERIVED token carrying BOTH counting bases
+  [DERIVED: ...] tokens in rev8: 2
+    [DERIVED: run_guards invokes 8 | tallies 7 | `guard_ledger_invariants` is invocation #7 and tallied #6]
+    [DERIVED: …]
+  prose 'the seventh guard'  rev7=1 rev8=3
+  prose 'the seventh'        rev7=4 rev8=6
+  prose 'the sixth tallied'  rev8=0
+  prose 'is the sixth'       rev8=0
+
+### C-5 — §5's heading
+  rev7 L1426: ## 5. What DEC-2 would be frozen against — and today that is ZERO vectors
+  rev8 L1710: ## 5. What DEC-2 is frozen against — and (revisions 1–7) "today that is ZERO vectors"
+
+### C-6 / C-7 — §8.3's 'the seventh guard' x2 -> the NAME
+  rev7 L821: | **I-3** | Balances are DERIVED, never written | No write path to any balance column exists in the Go tree | **NO — STRUCTURAL ONLY.** A vector is a 
+  rev7 L2441: seventh guard exists now (§4.4.1). **It does not make the ledger covered** — its own transcript
+  rev8 L298: > **3. An ORDINAL IS NOT AN IDENTIFIER; THE NAME IS.** *"The seventh guard"* was true under one
+  rev8 L1059: | **I-3** | Balances are DERIVED, never written | No write path to any balance column exists in the Go tree | **NO — STRUCTURAL ONLY.** A vector is a 
+  rev8 L1119: restated in prose anywhere else**: *"the seventh guard"* was TRUE on the all-invocations basis and
+  rev8 L2861: count — `P-79`). **⚠ Revisions 3–7 called it *"the seventh guard"* here and again four lines
+
+### C-8 — bare `admit.go` / `vector.go:77-81` ambiguity
+  'admit.go:139-147'    rev7=10 rev8=8
+  'vector.go:77-81'     rev7=3 rev8=2
+  ambiguity NAMED in rev8 ('exists in TWO packages'): 1
+  BARE `admit.go:N` / `vector.go:N` citations still present: rev7=39 rev8=38
+
+### the 35th site — §4.4's lead paragraph
+  'none of them\ncan be graded today' rev7=1 rev8=0
+  rev8 L1034: **⚠ THIS PARAGRAPH IS THE 35th SITE, AND IT IS RECORDED AS SUCH.** Revision 7 corrected the bullet
+  rev8 L3071: ratified at 6. *§0*, *§2.2*, *§4.2*. *§4.4:* the **lead paragraph** — the 35th site, nine lines
+
+### the four LIVE stale sites T255 says neither review enumerated
+  'conformance.sh:718'  rev7=1 rev8=1
+  'conformance.sh:721'  rev7=1 rev8=0
+  'conformance.sh:1254' rev7=1 rev8=1
+  'conformance.sh:401'  rev7=1 rev8=0
+  'conformance.sh:411'  rev7=1 rev8=0
+  'conformance.sh:1115' rev7=2 rev8=2
+  'records as not existing' rev7=1 rev8=2
+  'both occurrences'    rev7=0 rev8=1
