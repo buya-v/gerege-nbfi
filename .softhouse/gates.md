@@ -95,9 +95,7 @@ on G-11. Its other precondition, `T230`, also landed this fire.
 
 **Still not, and nothing here changes them:** **CUTOVER** remains a hard `user` gate; regulatory /
 parallel-run sign-off remains a hard `user` gate; and **a ratified DEC-n may not be amended by an agent** —
-any change to DEC-2 from here is a fresh `user` gate. **Nothing grades the ledger's money yet**: all 46
-passing vectors are `loanschedule`'s and **zero** touch a GL account, a mapping, a financial activity or a
-journal entry. Ratifying the contract is not evidence about the port.
+any change to DEC-2 from here is a fresh `user` gate. ~~**Nothing grades the ledger's money yet**: all 46 passing vectors are `loanschedule`'s and **zero** touch a GL account, a mapping, a financial activity or a journal entry.~~ **[FALSE AT HEAD — corrected by the driver, local fire `20260822-140002`, at merge commit `fc36f0c`, on `T247`'s FU-T247-2. Struck rather than deleted, because it was TRUE when written and the record of that matters.]** The harness now grades **LEDGER 4 parity vectors / 2 oracle-refusal / 21 money cells** on every run, from the six `LDG-*` vectors `A2-15` promoted. This is the **same `P-69` stale-evidence defect as G-14's opening banner and G-12's blocks field** — three instances of one shape, all in the gate register, all true when written. **The CAUTION it was making is still sound and survives**, with the denominator it lacked: the ledger is graded on **six captured cases and no more** — accrual, account transfers (gl 17), charge-off, multi-currency, opening balances, `GLClosure` and slot resolution are all **ungraded**, and since `T242` the harness prints all eight not-graded rows from the registry rather than by hand. **Ratifying the contract is still not evidence about the port, and none of this authorises a cutover.**
 
 ---
 
