@@ -2219,15 +2219,24 @@
    ],
    "contract_independent": true,
    "description": "MEASURED THIS FIRE on Linux (cloud catch-up fire 2026-08-22T12:00Z), on clean main at 2b1e2e7: `bash .softhouse/conformance.sh` EXITS 2 WITH NO PROBE LINE PRINTED. Per the softhouse-program decision table that is NOT an oracle outage and NOTHING may be parked for it — it is a harness failure to be fixed. Two independent host-portability defects, both invisible on Buyan's Mac where the BAR reads PASS:\n\nD1 — `mktemp -t NAME` (10 sites: conformance.sh:1438,1439,1440,1441,1787,1811,1886,1901,1959,1960). BSD/macOS mktemp treats -t's argument as a PREFIX and appends its own suffix; GNU coreutils requires the template to end in >=3 X's and refuses otherwise. On Linux the first site reached (1438, inside the FAIL-OPEN guard) dies with `mktemp: too few X's in template 'conformance-failopen'` and takes the whole run down. Sites 1787+ were never reached and are equally latent. NOTE THE IRONY AND STATE IT: the guard that cannot run is the fail-open detector.\n\nD2 — `.softhouse/bin/go-env.sh:12` hardcodes GEREGE_TOOLCHAIN=/Users/buv/gerege-nbfi/.softhouse/toolchain, so on any other host it exports a GOROOT that does not exist. Result: `ledger-invariants: the guard DID NOT COMPILE ... EXIT 2 — NOT a pass` with `go: cannot find GOROOT directory`. The guard's REFUSAL is correct and fail-closed — do not touch that. The defect is that go-env.sh SILENTLY exports a broken GOROOT instead of either resolving the toolchain relative to itself or refusing loudly, converting 'toolchain not installed on this host' into the far more confusing 'a HARD money guard did not compile'.\n\nTHE JOB:\n(1) Fix D1 at ALL TEN sites so the template is portable on BOTH GNU coreutils and BSD/macOS mktemp. Do not fix only the one that fired. State how you verified the BSD arm without a BSD host — if you cannot verify it, say so and pick the form that is specified by POSIX/both man pages rather than the one that merely works here (P-66: state where you looked).\n(2) Fix D2 by deriving the toolchain location from the script's own path (a worktree must still resolve the MAIN checkout — `git rev-parse --git-common-dir` is the honest route), and decide, as an ENGINEERING call under CLAUDE.md's Answering gates, what happens when the pinned toolchain is absent: refuse loudly, or fall back to a `go` on PATH. If you choose fallback it MUST print which toolchain it used and why, so the BAR output states the substitution rather than hiding it. Record the alternative you rejected.\n(3) RED-DRIVE both fixes on shapes you did not design the rule around (P-76), and CHECK YOUR SELECTOR before your conditions (P-76 addendum) — enumerate all mktemp sites, do not sweep for the one string you already know.\n\nBAR FOR THIS TASK, and it is NOT the usual one — READ IT. The reference oracle is UNREACHABLE from this host (curl rc=7, no docker daemon, pg 5432 refused), so a parity VERDICT is unavailable and MUST NOT be claimed. Your bar is exactly this and you must show the output: `bash .softhouse/conformance.sh` must now REACH AND PRINT the probe line. It will read `probe = down` and the run will exit 2 — THAT IS THE CORRECT AND EXPECTED RESULT HERE and it is what proves every guard ahead of the probe ran to completion. Printing the probe line is the deliverable; a PASS verdict is not available on this host and claiming one is a rejection. Also report the guard-by-guard lines that now appear between the last one seen today and the probe.\n\nSCOPE: `.softhouse/conformance.sh`, `.softhouse/bin/go-env.sh`, and evidence under `.softhouse/capture/t253-portability/`. Do NOT touch `.softhouse/vectors/` (the store digest must not move — read it live with `git rev-parse HEAD:.softhouse/vectors`), `nexus/`, `docs/adr/`, `.softhouse/gates.md`, `.softhouse/program.json`, or `PIN-ledger.json`. Never `gofmt -w` contract.go (G-3). Never bare `grep`/`rg` in a committed instrument (P-75) — use /usr/bin/grep, `git grep -P`, or python3 re. `set -euo pipefail`. Never `git commit -m` with a backtick — heredoc + `git commit -F` (P-74).",
-   "note": "RAISED BY THE DRIVER on cloud catch-up fire 2026-08-22T12:00Z from a first-hand measurement no Mac fire could have made. DRIVER CORRECTION, same fire: the note first read 'any Linux CI running this harness dies identically'. THAT WAS AN OVERCLAIM and is retracted — there is NO CI in this repo: no .github directory exists and no file under .github/ or ci/ invokes conformance.sh [MEASURED at a6bec72; both paths searched, neither exists]. What IS measured: the harness runs on exactly ONE host today, Buyan's Mac. The present, non-hypothetical consequence is that the CLOUD catch-up fire can never run the BAR at all — not even the guard half that needs no oracle — which is a live limitation of the two-fire design. The CI consequence is CONDITIONAL on a CI that does not yet exist, and CLAUDE.md's PostgreSQL non-negotiable contemplates one ('Every environment — ... CI — runs on PostgreSQL'). | WORKER KILLED WITH THE CLOUD SANDBOX. Branch softhouse/T253-harness-portability exists NEITHER on origin NOR locally [VERIFIED by the local driver: git ls-remote --heads origin and git branch --list, both empty], so its WIP is GONE, not merely unpushed. NOT in_progress — nothing is happening. Re-dispatch from scratch. Its FINDING stands and is first-hand: the harness cannot run on Linux. | DISPATCHED local fire 20260822-060013 at c0e88c6, worktree-isolated, opus. || CLOUD-FIRE CORRECTION 2026-08-22T12:40Z: THE BRANCH IS NOT GONE — softhouse/T253-harness-portability IS PUSHED TO ORIGIN at d7a7ea3. The local driver's reading was CORRECT WHEN MADE (branches were unpushed; P-69). WORK IS COMPLETE, ~211k worker tokens: all 10 mktemp -t sites fixed via conf_mktemp/conf_mktemp_d; go-env.sh derives the toolchain via git rev-parse --git-common-dir, falls back to PATH go and PRINTS the substitution (GEREGE_GO_STRICT=1 restores refusal). Red/green 14/0 and 24/0. DO NOT RE-DISPATCH FROM SCRATCH — review and merge the branch. It did NOT reach the probe and SAID SO: fixing D1 unmasked a THIRD defect, the t234 escape-matrix instrument's fail-open TIER depending on leftover /tmp state on the LINTING host, and it REFUSED to move the pin to make its own bar green. T254 reviewing on softhouse/T254-review-portability (pushed). Full handoff: .softhouse/handoff/CLOUD-FIRE-20260822-2000.md | LOCAL FIRE 20260822-060013: the driver read RESUME.md's \"branch GONE, re-dispatch from scratch\" and dispatched a SECOND worker before fetching. The GONE measurement was TRUE when made and STALE when acted on -- P-69 in its purest form, and the driver's error, not any worker's. Rather than kill the live worker (which destroys work), it was redirected to branch softhouse/T253b-harness-portability-mac and told to finish INDEPENDENTLY before reading the cloud's. The duplication is now deliberate and its value is specific: the cloud fire CANNOT RUN THE BAR AT ALL, so only the Mac arm can prove the fix does not break the one host that captures vectors. Reconcile the two; where they agree that is corroboration, where they differ that is the finding. | T253b COMPLETE on the Mac branch. Driver-VERIFIED: conformance.sh is 2617 lines BEFORE AND AFTER and every hunk is in-place (10 ins / 10 del) -- so NO line number in conformance.sh moves and T255 rev-8 citations are unharmed. Peer-compared against the cloud impl: same ten sites, same D2 decision, found independently. Cloud impl is +72/-21 and shifts every line below ~570, which would have rotted DEC-2 rev 8 ON THE MERGE. In review at T254 (both candidates).",
+   "note": "RAISED BY THE DRIVER on cloud catch-up fire 2026-08-22T12:00Z from a first-hand measurement no Mac fire could have made. DRIVER CORRECTION, same fire: the note first read 'any Linux CI running this harness dies identically'. THAT WAS AN OVERCLAIM and is retracted — there is NO CI in this repo: no .github directory exists and no file under .github/ or ci/ invokes conformance.sh [MEASURED at a6bec72; both paths searched, neither exists]. What IS measured: the harness runs on exactly ONE host today, Buyan's Mac. The present, non-hypothetical consequence is that the CLOUD catch-up fire can never run the BAR at all — not even the guard half that needs no oracle — which is a live limitation of the two-fire design. The CI consequence is CONDITIONAL on a CI that does not yet exist, and CLAUDE.md's PostgreSQL non-negotiable contemplates one ('Every environment — ... CI — runs on PostgreSQL'). | WORKER KILLED WITH THE CLOUD SANDBOX. Branch softhouse/T253-harness-portability exists NEITHER on origin NOR locally [VERIFIED by the local driver: git ls-remote --heads origin and git branch --list, both empty], so its WIP is GONE, not merely unpushed. NOT in_progress — nothing is happening. Re-dispatch from scratch. Its FINDING stands and is first-hand: the harness cannot run on Linux. | DISPATCHED local fire 20260822-060013 at c0e88c6, worktree-isolated, opus. || CLOUD-FIRE CORRECTION 2026-08-22T12:40Z: THE BRANCH IS NOT GONE — softhouse/T253-harness-portability IS PUSHED TO ORIGIN at d7a7ea3. The local driver's reading was CORRECT WHEN MADE (branches were unpushed; P-69). WORK IS COMPLETE, ~211k worker tokens: all 10 mktemp -t sites fixed via conf_mktemp/conf_mktemp_d; go-env.sh derives the toolchain via git rev-parse --git-common-dir, falls back to PATH go and PRINTS the substitution (GEREGE_GO_STRICT=1 restores refusal). Red/green 14/0 and 24/0. DO NOT RE-DISPATCH FROM SCRATCH — review and merge the branch. It did NOT reach the probe and SAID SO: fixing D1 unmasked a THIRD defect, the t234 escape-matrix instrument's fail-open TIER depending on leftover /tmp state on the LINTING host, and it REFUSED to move the pin to make its own bar green. T254 reviewing on softhouse/T254-review-portability (pushed). Full handoff: .softhouse/handoff/CLOUD-FIRE-20260822-2000.md | LOCAL FIRE 20260822-060013: the driver read RESUME.md's \"branch GONE, re-dispatch from scratch\" and dispatched a SECOND worker before fetching. The GONE measurement was TRUE when made and STALE when acted on -- P-69 in its purest form, and the driver's error, not any worker's. Rather than kill the live worker (which destroys work), it was redirected to branch softhouse/T253b-harness-portability-mac and told to finish INDEPENDENTLY before reading the cloud's. The duplication is now deliberate and its value is specific: the cloud fire CANNOT RUN THE BAR AT ALL, so only the Mac arm can prove the fix does not break the one host that captures vectors. Reconcile the two; where they agree that is corroboration, where they differ that is the finding. | T253b COMPLETE on the Mac branch. Driver-VERIFIED: conformance.sh is 2617 lines BEFORE AND AFTER and every hunk is in-place (10 ins / 10 del) -- so NO line number in conformance.sh moves and T255 rev-8 citations are unharmed. Peer-compared against the cloud impl: same ten sites, same D2 decision, found independently. Cloud impl is +72/-21 and shifts every line below ~570, which would have rotted DEC-2 rev 8 ON THE MERGE. In review at T254 (both candidates). | CLOUD T254 (aa148c7) reviewed the CLOUD implementation: MICRO-FIX, two blocking corrections filed as T266/T267. It settled the BSD arm BETTER than either implementation and by a route the driver had ruled out: it fetched Apple shell_cmds mktemp.c -- the actual source of /usr/bin/mktemp on this Mac -- COMPILED it, and drove the new form against the real program, 12 OK / 0 FAIL, confirming the ten-X template is byte-for-byte the one BSD mktemp builds for itself (mktemp.c:166,168). THE DRIVER WAS WRONG that only a Mac fire could settle that arm, and says so. It also reproduced the t234 residue more tightly than T253 did: touching /tmp/t234_matrix2.txt makes the probe line appear -- so T253 HAD AN INVISIBLE ROUTE TO A GREEN BAR AND DID NOT TAKE IT, which is a credit to it, not a defect.",
    "branch_cloud": "softhouse/T253-harness-portability",
    "branch_mac": "softhouse/T253b-harness-portability-mac",
-   "tip": "0208477"
+   "tip": "0208477",
+   "cloud_review": {
+    "task": "T254 (cloud)",
+    "verdict": "MICRO-FIX",
+    "tip": "aa148c7",
+    "blocking": [
+     "T266 (linter patch must be re-proved against the 722-line linter)",
+     "T267 (substitution notice is 32 lines on stderr, 0 on stdout)"
+    ]
+   }
   },
   {
    "id": "T254",
    "title": "INDEPENDENT review of T253 — re-derive the portability claims yourself; a fix verified only on the host that motivated it is verified on one arm",
-   "status": "in_progress",
+   "status": "done",
    "executor": "agent",
    "model": "opus",
    "target": "docs",
@@ -2237,14 +2246,14 @@
    "dependencies": [
     "T253"
    ],
-   "attempts": 1,
+   "attempts": 0,
    "files_hint": [
     ".softhouse/reviews/t254-harness-portability/"
    ],
    "contract_independent": true,
    "description": "You are an INDEPENDENT reviewer. You did not write T253. ASSUME DEFECTS EXIST. T253 claims two host-portability defects in the BAR harness and fixes them. Re-derive, do not read: (1) ENUMERATE every mktemp site yourself and confirm T253 fixed ALL of them, not just the ones that fired — check its SELECTOR, not only its conditions (P-76 addendum). (2) The BSD/macOS arm is the one that CANNOT be executed on this host: judge whether T253's justification for it is evidence or assertion, and say which. A fix that repairs Linux and breaks Buyan's Mac is a HIGH rejection — the Mac is the ONLY host that can capture vectors. (3) Re-run the bar yourself and confirm the probe line is PRESENT; confirm it reads `down` and that NO PASS verdict is claimed anywhere in the handoff (claiming parity without a reachable oracle is a rejection). (4) Confirm the vector-store digest did not move: `git rev-parse HEAD:.softhouse/vectors` against the value in RESUME.md, read live. (5) Judge T253's absent-toolchain decision on its merits and on whether the substitution is STATED in the harness output rather than hidden. WRITE ONLY under `.softhouse/reviews/t254-harness-portability/` and your handoff. You may NOT edit conformance.sh, go-env.sh, or anything T253 touched — a reviewer that edits the artefact it reviews leaves it reviewed by nobody (A2-17).",
-   "note": "Paired independent reviewer required by CLAUDE.md/softhouse for every coder task. | Dispatched by the cloud fire off d7a7ea3; branch pushed. Check the branch before re-dispatching. | DRIVER CORRECTION, local fire 20260822-060013: NOT in_progress -- nothing is happening. origin/softhouse/T254-review-portability is at d7a7ea3, BYTE-IDENTICAL to T253 tip: the cloud reviewer was killed with its sandbox before its first commit. Zero review output exists. Re-dispatch from scratch. Leaving it in_progress would have told the next fire that a review was under way when none was. | DISPATCHED local fire 20260822-060013, worktree-isolated, opus. T254 reviews BOTH implementations (cloud d7a7ea3 and Mac 0208477) and must return a per-candidate merge recommendation. New branch name because the plain one is a dead cloud branch.",
-   "branch": "softhouse/T254-review-portability-mac"
+   "note": "Paired independent reviewer required by CLAUDE.md/softhouse for every coder task. | Dispatched by the cloud fire off d7a7ea3; branch pushed. Check the branch before re-dispatching. | DRIVER CORRECTION, local fire 20260822-060013: NOT in_progress -- nothing is happening. origin/softhouse/T254-review-portability is at d7a7ea3, BYTE-IDENTICAL to T253 tip: the cloud reviewer was killed with its sandbox before its first commit. Zero review output exists. Re-dispatch from scratch. Leaving it in_progress would have told the next fire that a review was under way when none was. || DONE at aa148c7, VERDICT MICRO-FIX. THE MAC IS NOT AT RISK, on evidence STRONGER than T253's: T254 fetched Apple's own shell_cmds/mktemp/mktemp.c -- the actual source of /usr/bin/mktemp on Buyan's Mac -- COMPILED IT and drove the new positional form against the real BSD program, 12 OK / 0 FAIL, instrument and both C sources committed. Three legs: (a) the new form is accepted by the real BSD binary, file and -d, with a negative control that still fails so every '|| return 1' arm keeps firing; (b) the TEN-X template T253 chose is BYTE-FOR-BYTE the one BSD mktemp builds for itself (mktemp.c:166,168) and hands to the same mkstemp -- which closes the gap left by linking glibc rather than Darwin libc, because if ten X's failed on Darwin then mktemp -t could never have worked there either; (c) every #ifdef __APPLE__ block sits on the -t/-p path (:94-98, :147-155), which the new form never enters -- the Mac-specific code is on the path T253 REMOVED. D2 likewise: from a main checkout AND from an isolated worktree the derivation returns exactly the old hardcoded value with ZERO substitution lines, so Mac behaviour is unchanged. THE THIRD DEFECT REPRODUCED BY A TIGHTER EXPERIMENT than T253's: changing ONE BIT of host state, touch /tmp/t234_matrix2.txt, MADE THE PROBE LINE APPEAR (probe = down); removed again. So T253 HAD AN INVISIBLE ROUTE TO A GREEN BAR AND DID NOT TAKE IT. Not one of T253's reproducible numbers was wrong (14/0, 24/0, 5/5, 904/10, digest 13b8342e... unmoved at HEAD, main and fork). UNEXECUTED AND STATED: zsh is absent on this host so go-env.sh's ${(%):-%x} arm is untested; it cannot affect the harness, which sources from bash at conformance.sh:656. | RECONCILED by local fire 20260822-060013: this is the CLOUD T254, done at aa148c7, and it reviewed the CLOUD implementation only -- it could not know a second implementation existed. A SECOND review is live as T254b on branch softhouse/T254-review-portability-mac, covering BOTH candidates plus the question neither cloud task could see: the cloud diff is +72/-21 and shifts every line below ~570 in conformance.sh, which would rot DEC-2 revision 8 citations ON THE MERGE while T255 lands them in this same fire. The Mac implementation is net ZERO lines.",
+   "branch": "softhouse/T254-review-portability"
   },
   {
    "id": "T255",
@@ -2268,6 +2277,29 @@
    "description": "T251 reviewed DEC-2 revision 7 INDEPENDENTLY and returned MICRO-FIX. The load-bearing check PASSED -- NO OBLIGATION MOVED, re-derived character by character on H-10 and applied to all 17 hunks -- and the caution SURVIVES and is strengthened, with both terms counted (14 declared capabilities, 6 true / 8 false, 0 omitted). So the SHAPE of revision 7 is right and it is close. It is the CITATIONS that are wrong.\n\nAPPLY, in T251's numbering (full argument in .softhouse/reviews/t251-dec2-rev7/REVIEW.md):\n  C-1 HIGH  Re-measure every conformance.sh citation AT THE LANDING COMMIT. Rev 7 drafted run_guards at 1474-1500; T248's c13e9d8 added +30 lines above it and it is 1504-1530 [DRIVER-CONFIRMED at 66b7453]. Tallied 1519-1525 (drafted 1489-1495); invocation 1524 (drafted 1494); guard_no_fail_open_instruments 1525 (drafted 1495). Definition 1300-1339 still holds. Require verify-line-numbers.py EXIT 0 at the landing commit.\n  C-2 HIGH  THE 35th SITE: L821, the I-3 row of the very table rev 7 rewrites three rows of, unenumerated in both the edit list and the HISTORY list. Says 'is the seventh guard run_guards invokes', cites :1152-1187 / :1209. Its 'Graded today?' answer is still NO and still correct, so NO WORDING SWEEP REACHES IT -- the falsehood is in the supporting citation [DRIVER-CONFIRMED at 66b7453].\n  C-3 HIGH  Section 4.4.1 L847-874, also unenumerated, including a FENCED ENUMERATION OF THE GUARDS BY NAME at L854-861 that lists seven and OMITS guard_no_fail_open_instruments -- a list that reads as authoritative and is materially incomplete [DRIVER-CONFIRMED at 66b7453]. Plus L863-864's arithmetic and L872's 'The seventh does'.\n  C-4 MED   THE ORDINAL WAS REBUILT ON AN UNESTABLISHED PREMISE. On the document's own all-invocations basis (L41 'invoking all seven'; the L854-861 fence starting with guard_graded_root_is_this_tree) 'the seventh is guard_ledger_invariants' is STILL TRUE -- the COUNT went false, not the ordinal. T247 switched counting basis silently and published a NEW ordinal in the banner. KEEP THE COUNT; DROP 'is the sixth'. An ordinal used as an identifier goes wrong silently: prefer the NAME.\n  C-5 MED   Section 5 heading L1426 'and today that is ZERO vectors', unenumerated, asserts the proposition H-12 retracts 26 lines below it.\n  C-6/7/8 LOW  Section 8.3 L2441/L2449 still say 'the seventh guard' and H-15's re-stamp bullet carries no line citations so it cannot reach them; section 10 L2613 'Revision 5 (this document)'; bare admit.go:139-147 is ambiguous between two packages (it means loanschedule/) and loanschedule/conformance/vector.go:77-81 is :78-82.\n\nTHE PROCESS CONSTRAINT, WHICH IS THE REAL LESSON AND IS BINDING ON THIS TASK: PREPARE AND LAND IN THE SAME FIRE. Rev 7 was prepared in one fire, main moved FOUR merges under it, and its freshly-re-measured citations were ALREADY STALE at the commit where it would have landed -- which is G-14's own defect reproduced inside the fix for G-14. Do not hand a prepared revision to a later fire. Re-measure LAST, immediately before committing, and re-run verify-line-numbers.py on the commit you are about to land.\n\nMUST RUN ON A LOCAL (Mac) FIRE: landing an ADR amendment requires the BAR, and the BAR needs a reachable reference oracle (Fineract). Ratification after landing is the DRIVER's act, chosen_by: agent per CLAUDE.md -- NOT this worker's, and NOT a cloud fire's.\n\nDO NOT re-litigate what T251 settled: no obligation moved; the caution survives; PIN-ledger.json stays at 5 (admit.go:49-52 compares vector-to-pin and never reads the ADR); the vector-store digest must not move; T247's section 5.3 refusal was CORRECT and dodged nothing (P-5 measured at 0 hits across all 27 tracked files under nexus/internal/apps/ledger AND across all of nexus/, with P-1..P-4 and P-6..P-10 hitting and P-99 at 0 as controls).\n\n=== FOLDED IN FROM THE LOCAL FIRE'S SUPERSEDED T253 (merged d20836e), local fire 20260822-140002 ===\nThe local fire filed a prepare-only 'revision 7b' task before it saw this one. THIS TASK SUPERSEDES IT — prepare-AND-LAND in one fire is strictly better, because the gap between preparing and landing is exactly where the citations rot. Its unique content is folded in here so nothing is lost:\n(a) SITES THE CLOUD REVIEW DID NOT REPORT, both from the local T251 and both to be closed by revision 8: DEC-2 §4.4's own LEAD PARAGRAPH at L804-805 reads 'and none of them can be graded today' and sits NINE LINES ABOVE the bullet the revision corrects to 'YES, SINCE A2-15' — landing without it leaves §4.4 contradicting itself within twenty lines; and two more of the same kind at §5.2 (L1726, L1739). Both prior passes share one failure mode: A SITE THAT RESTATES A BANNER FACT WITHOUT RESTATING ITS WORDS. ENUMERATE, do not sweep (P-75). RE-MEASURE these line numbers at YOUR commit; they were measured at 2871f17 and main has moved.\n(b) FIX THE ROT MECHANISM, not just the hunks. Three passes in a row have shipped stale line numbers (T246 F-4; T247's rev 7; and rev 7's replacements were stale before T251 read them). The worst property is that dead numbers RESOLVE TO PLAUSIBLE-LOOKING 'warn' STRINGS, so a reader following one is MISLED RATHER THAN STOPPED. Landing in one fire is half the fix; the other half is to BIND CITATIONS BY CONTENT (a quoted anchor or a function name) with the line number demoted to a NON-NORMATIVE HINT. ARGUE and adopt. A revision 8 that lands correct numbers and leaves them as the binding has bought one cycle.\n(c) DO NOT WEAKEN THE CAUTION and DO NOT LET ANY OBLIGATION MOVE — both reviews confirmed rev 7 moved none, and that is the single thing G-14 exists to protect. Prove it the same way: word-level diff showing the obligations verbatim either side.",
    "note": "Filed by the driver on cloud catch-up fire 2026-08-22T12:00Z from T251's verdict. G-14 remains OPEN. The driver did NOT ratify and explicitly declined to land rev 7. | Local fire 20260822-140002 folded its superseded prepare-only T253 into this task and did NOT file a competing one. | DISPATCHED local fire 20260822-060013 at c0e88c6, worktree-isolated, opus.",
    "branch": "softhouse/T255-dec2-rev8"
+  },
+  {
+   "id": "T256",
+   "title": "The Mac toolchain path is hardcoded in 30 executable instruments — and reference-oracle.md PRESCRIBES it as the activation line",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "agent_role": "coder",
+   "role": "coder",
+   "context": "tier0-harness",
+   "slice": null,
+   "dependencies": [
+    "T253"
+   ],
+   "attempts": 0,
+   "files_hint": [
+    ".softhouse/capture/t256-toolchain-population/",
+    ".softhouse/reference-oracle.md"
+   ],
+   "contract_independent": true,
+   "description": "The cloud fire's T253 reported six other tracked instruments hardcoding the Mac toolchain path. Its driver RE-MEASURED and counted BOTH TERMS: 40 tracked files -- 30 executable instruments (29 besides go-env.sh) and 10 prose/transcript records that MUST NOT be edited. RE-MEASURE BOTH TERMS YOURSELF at your own commit (P-67, P-69) and state where you looked (P-66/P-70) -- do not quote 6, 30 or 40.\n\nTHE SHARPEST SITE IS NOT AN INSTRUMENT: `.softhouse/reference-oracle.md:616` PRESCRIBES the absolute Mac path as the activation line. That is T245's shape exactly -- the inventory was corrected and the INSTRUCTION was left behind, so every future reader is told to do the thing that was just fixed. Fixing 30 scripts while the document still instructs the hardcoded path buys nothing.\n\nDISTINGUISH THE TWO POPULATIONS AND TREAT THEM OPPOSITELY: an executable instrument should DERIVE the toolchain (a worktree must still resolve the MAIN checkout -- `git rev-parse --git-common-dir`); a prose/transcript RECORD of what was actually run must stay BYTE-IDENTICAL (T114 binds). A task that rewrites transcripts to look portable has destroyed evidence. Say which files you put in which bucket and why, and COUNT WHAT YOU SKIPPED (P-40).\n\nDEPENDS ON T253 landing, since go-env.sh is the root fix.",
+   "note": "Filed by the driver, local fire 20260822-060013."
   },
   {
    "id": "T257",
@@ -2328,6 +2360,181 @@
    "branch": "softhouse/T259-verdict-predicate",
    "attempts": 1,
    "tip": "8d72844"
+  },
+  {
+   "id": "T260",
+   "title": "INDEPENDENT review of T255 — DEC-2 revision 8, LANDED. Re-derive; do not read T255's conclusions.",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "agent_role": "reviewer",
+   "role": "reviewer",
+   "context": "tierA-gl-accounting",
+   "slice": "tierA-gl-accounting-A2",
+   "dependencies": [
+    "T255"
+   ],
+   "attempts": 0,
+   "files_hint": [
+    ".softhouse/reviews/t260-dec2-rev8/"
+   ],
+   "contract_independent": false,
+   "description": "You are an INDEPENDENT reviewer. You did not write T255. ASSUME DEFECTS EXIST. T255 was told to PREPARE AND LAND DEC-2 revision 8 in one fire, applying T251's C-1..C-8, and — the load-bearing instruction — to FIX THE CITATION-ROT MECHANISM rather than the six hunks. Three consecutive passes (rev 6, rev 7, and rev 7's own 're-measured' citations) have shipped stale line numbers.\n\nRE-DERIVE, at YOUR OWN commit, and STAMP it (P-69):\n(1) THE OBLIGATION CHECK IS THE ONE THAT MATTERS. For EVERY hunk revision 8 applied, prove NO NORMATIVE OBLIGATION MOVED: diff the BEFORE text character by character against the live ADR, and confirm each obligation appears verbatim on both sides. DEC-2 is RATIFIED; an agent may not amend a ratified DEC-n's obligations, and a stale-evidence correction that silently relaxes one is a HIGH rejection and a gate violation.\n(2) RE-MEASURE EVERY CONFORMANCE.SH CITATION IN THE LANDED DOCUMENT YOURSELF, at HEAD, by reading conformance.sh — not by reading T255's table. Report both terms (P-67): how many citations the document makes, and how many resolve to what they claim. NOTE: T253 was dispatched IN THE SAME FIRE and edits conformance.sh. If revision 8's citations rotted because of a merge that happened after T255 measured, that is NOT an excuse — it is the exact defect T255 was sent to eliminate, and it means the mechanism fix FAILED. Judge it on that basis.\n(3) JUDGE THE MECHANISM, NOT THE HUNKS. Did T255 make the citations DERIVED (bound to a stable anchor, verified by a runnable checker wired to something automatic) or did it merely write down 2026-08-22's line numbers again? A revision that buys one cycle is a rejection on that ground, and you must say so plainly. If T255 added a checker, DRIVE IT RED yourself: perturb a scratch copy of conformance.sh and prove the checker fails. A checker you did not see fail is a checker you have not verified (P-22).\n(4) ENUMERATE T251's C-1..C-8 and report, one line each, APPLIED / NOT APPLIED / APPLIED WRONG. C-2 (L821's I-3 row), C-3 (the L847-874 fenced seven-guard enumeration that OMITS guard_no_fail_open_instruments) and C-5 (L1426's 'today that is ZERO vectors') were UNENUMERATED in rev 7's own edit list — check them specifically, and check the 35th site (§4.4's lead paragraph 'none of them can be graded today' nine lines above the bullet that says 'YES, SINCE A2-15').\n(5) Confirm DEC-2 no longer calls itself 'DRAFT (revision 5), NOT RATIFIED' while being a ratified revision 8.\n(6) Confirm the vector-store digest did NOT move: read it live, `git rev-parse HEAD:.softhouse/vectors`, and compare to 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d. A docs task that moved the money corpus is a HIGH rejection.\n(7) Say whether G-14 is CLOSEABLE on this artefact, and give the driver a one-paragraph verdict it can act on: RATIFY / MICRO-FIX / REJECT.\n\nWRITE ONLY under .softhouse/reviews/t260-dec2-rev8/ and your handoff. You may NOT edit DEC-2 — a reviewer that edits the artefact it reviews leaves it reviewed by nobody (A2-17). Use /usr/bin/grep, git grep -P or python3 re — never bare grep, never rg (P-75). Classify git grep exit status: 0 matched, 1 real negative, >1 ABORT (P-80).",
+   "note": "Paired independent reviewer registered at dispatch, local fire 20260822-060013 (plan gate rule 1)."
+  },
+  {
+   "id": "T261",
+   "title": "INDEPENDENT review of T250 — the capture sidecar attestation fix.",
+   "status": "in_progress",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "agent_role": "reviewer",
+   "role": "reviewer",
+   "context": null,
+   "slice": null,
+   "dependencies": [
+    "T250"
+   ],
+   "attempts": 1,
+   "files_hint": [
+    ".softhouse/reviews/t261-tenant-attestation/"
+   ],
+   "contract_independent": true,
+   "description": "You are an INDEPENDENT reviewer. You did not write T250. ASSUME DEFECTS EXIST.\n\n(1) RE-MEASURE THE POPULATION YOURSELF. T250 was told not to take cap.sh/cap8.sh/cap9.sh as the population. ENUMERATE every capture script in the tree that writes an attestation line, and report BOTH TERMS (P-67): how many write a literal where a variable was available, how many T250 fixed. CHECK ITS SELECTOR, NOT ONLY ITS CONDITIONS (P-76 addendum) — a fix applied to the three named files and called a sweep is the defect this program keeps re-finding.\n(2) THE FIX MUST BE DRIVEN RED THROUGH A SHAPE T250 DID NOT DESIGN IT AROUND. Change the tenant yourself in a scratch copy and prove the sidecar changes with it; then prove a MISMATCH between sent and recorded is DETECTED rather than merely unlikely. If T250's only evidence is that the script works when used correctly, say so — that is not red-driving.\n(3) NO RETRO-EDITING. Confirm no committed sidecar was rewritten to look correct. `git diff --name-status main...<branch>` and judge every touched path. T114's ruling binds: files that produced committed evidence stay byte-identical and are superseded by scratch copies, never edited.\n(4) THE VECTOR STORE MUST NOT MOVE. Read `git rev-parse HEAD:.softhouse/vectors` live and compare to 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d. If T250 implemented T245's default-deny `tenant` field on OracleStamp, verify it made NO existing vector inadmissible and moved NO digest — T246 drove that exact hazard four ways on PIN-ledger.json.\n(5) Any new instrument T250 committed must itself survive the fail-open rules: no `|| echo`, no `|| true`, no bare grep, no rg, `set -euo pipefail`, and git grep exit >1 must ABORT (P-75/P-80). Three separate workers last fire wrote fail-opens INTO instruments meant to enforce the rule they broke (P-80) — check T250's own instruments before you check anything else.\n(6) Re-run the BAR yourself and report the probe line's PRESENCE first, then its value (P-83).\n\nWRITE ONLY under .softhouse/reviews/t261-tenant-attestation/ and your handoff. You may NOT edit anything T250 touched.",
+   "note": "Paired independent reviewer registered at dispatch, local fire 20260822-060013 (plan gate rule 1). | DISPATCHED local fire 20260822-060013, worktree-isolated, opus.",
+   "branch": "softhouse/T261-review-tenant-attestation"
+  },
+  {
+   "id": "T262",
+   "title": "INDEPENDENT review of T259 — the verdict field that never consults its own predicate.",
+   "status": "in_progress",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "agent_role": "reviewer",
+   "role": "reviewer",
+   "context": null,
+   "slice": null,
+   "dependencies": [
+    "T259"
+   ],
+   "attempts": 1,
+   "files_hint": [
+    ".softhouse/reviews/t262-verdict-predicate/"
+   ],
+   "contract_independent": false,
+   "description": "You are an INDEPENDENT reviewer. You did not write T259. ASSUME DEFECTS EXIST.\n\n(1) RE-DERIVE THE UNDERLYING MEASUREMENT FROM THE FILE, not from T259's handoff: read .softhouse/capture/t229-g8-site3/out/classify-t229.json at HEAD, state the commit, and independently report how many rows carry P2_totalInterestEqualsNEplusB: false, and how many of those carry verdict \"AS PREDICTED\". The driver's figure is five and three; confirm or refute it.\n(2) T259 HAD TO CHOOSE between 'the verdict field is wrong' and 'the predicate is misnamed' — opposite fixes. Judge the ARGUMENT, not the outcome. If T259 assumed the verdict was the broken half without arguing it, that is a finding. Read how `verdict` is actually computed in site3.py and say which propositions it reads.\n(3) THE BINDING CONSTRAINT: classify-t229.json and site3.py are COMMITTED EVIDENCE of what T229 ran, and site3.py reproduces the registered prediction.json BYTE FOR BYTE — the strict-ancestor falsifiability guarantee depends on that. Verify with `git diff main...<branch>` that this was NOT broken. If it was, that is a HIGH rejection regardless of how good the fix is.\n(4) DRIVE THE NEW RULE RED YOURSELF on a row T259 did not design it around (P-76): construct a scratch row whose recorded predicate contradicts its verdict and prove the rule REFUSES or LOUDLY FLAGS it. A rule that only fires on the three known rows is not a rule.\n(5) MATERIALITY: T259 was told to state plainly that no verdict, vector, region boundary or gate conclusion moves. Confirm that is true rather than assumed — in particular that G-8's region boundary is untouched. G-8 options (b)/(c) must not be put to Buyan, unconditionally.\n(6) T259's own instruments must survive P-75/P-80: no bare grep, no rg, no `|| echo`/`|| true` swallowing errors, `set -euo pipefail`, git grep exit >1 ABORTS.\n\nWRITE ONLY under .softhouse/reviews/t262-verdict-predicate/ and your handoff. You may NOT edit anything T259 touched.",
+   "note": "Paired independent reviewer registered at dispatch, local fire 20260822-060013 (plan gate rule 1). | DISPATCHED local fire 20260822-060013, worktree-isolated, opus.",
+   "branch": "softhouse/T262-review-verdict-predicate"
+  },
+  {
+   "id": "T263",
+   "title": "INDEPENDENT review of T164 — the float guard kept green by its own docstring.",
+   "status": "in_progress",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "agent_role": "reviewer",
+   "role": "reviewer",
+   "context": null,
+   "slice": null,
+   "dependencies": [
+    "T164"
+   ],
+   "attempts": 1,
+   "files_hint": [
+    ".softhouse/reviews/t263-analyze7-float-guard/"
+   ],
+   "contract_independent": false,
+   "description": "You are an INDEPENDENT reviewer. You did not write T164. ASSUME DEFECTS EXIST. This is the SIXTH recorded P-22 in this program (a guard that structurally cannot fail), in a rig whose whole purpose is keeping float out of money analysis.\n\n(1) RE-DERIVE THE DEFECT: prove for yourself, on a scratch copy, that the OLD whole-file-grep guard passes with parse_float deleted from a real call site. If you cannot reproduce that, the premise is wrong and you must say so.\n(2) DRIVE THE NEW GUARD RED (P-22): delete parse_float from a real json.load call site in a scratch copy and show the AST-based guard FAILS where the old one PASSED; then show the legitimate rig still passes. A guard you did not see fail is unverified.\n(3) ZERO CALL SITES INSPECTED MUST BE AN ERROR, NOT A PASS. Verify that specifically, by making the guard find nothing and confirming it exits non-zero. This is the fail-open class (P-45/P-80) and it is exactly how the original defect worked.\n(4) SWEEP THE CONCEPT, NOT THE SENTENCE (P-26): T164 was told to enumerate every OTHER guard under .softhouse/ that greps whole-file source text for a token that also appears in its own comments or docstring. Re-derive that enumeration independently, state BOTH TERMS (P-67) and COUNT WHAT WAS SKIPPED (P-40). State where you looked (P-66/P-70) before recording any non-existence.\n(5) SCOPE: T164's files_hint is .softhouse/capture/tierA-a2/ only. `git diff --name-status main...<branch>` — anything outside is a scope violation and must be reported, not merged. NOTE that .softhouse/capture/tierA-a2/ carries manifest.py, whose `verify` covers the whole rig INCLUDING ITSELF and was silently RED across two merges. If T164 edited a rig file it must have re-run `manifest.py write` — check, and check the manifest verifies clean at its branch tip.\n(6) T164's own instruments must survive P-75/P-80: no bare grep, no rg, `set -euo pipefail`, git grep exit >1 ABORTS.\n\nWRITE ONLY under .softhouse/reviews/t263-analyze7-float-guard/ and your handoff. You may NOT edit anything T164 touched.",
+   "note": "Paired independent reviewer registered at dispatch, local fire 20260822-060013 (plan gate rule 1). | DISPATCHED local fire 20260822-060013, worktree-isolated, opus.",
+   "branch": "softhouse/T263-review-analyze7-float-guard"
+  },
+  {
+   "id": "T264",
+   "title": "INDEPENDENT review of the cloud fire's T241 branch (df0aed2) — money-adjacent claims that have had NO reviewer",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "agent_role": "reviewer",
+   "role": "reviewer",
+   "context": "tierA-gl-accounting",
+   "slice": null,
+   "dependencies": [],
+   "attempts": 0,
+   "files_hint": [
+    ".softhouse/reviews/t264-review-cloud-t241/"
+   ],
+   "contract_independent": true,
+   "description": "The cloud fire's T241 is COMPLETE and UNMERGED at origin/softhouse/T241-g8-evidence-hygiene @ df0aed2, and the cloud's own handoff says plainly that it HAS HAD NO INDEPENDENT REVIEWER. It edits `.softhouse/gates.md` (+108 lines) and adds ~21k lines of capture output. A DIFFERENT T241 was already merged locally at d20836e; the cloud's REACHES FURTHER. You are reviewing the CLOUD branch against merged main.\n\nRE-DERIVE, DO NOT READ. Its money-adjacent claims are the point: (a) the 120-of-296 re-bucketing -- recount it yourself from the source data and state both terms (P-67); (b) the claimed `gates.md:2283` failure -- go and read that line at YOUR commit and say whether the claim holds, since line numbers in this repo rot within a single fire (that is the entire subject of G-14); (c) whether anything it writes into gates.md alters a GATE CONCLUSION as opposed to the evidence beneath it -- a review artefact may correct evidence, it may NOT move a gate.\n\nHARD CHECKS: the vector-store digest must not move (read `git rev-parse HEAD:.softhouse/vectors` live and compare to 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d). G-8's region is a conservative superset resting on the unproven conjecture delta <= 1, and G-8 OPTIONS (b) AND (c) MUST NOT BE PUT TO BUYAN, unconditionally and with no expiry -- if the branch proposes them, that alone is a HIGH rejection. Confirm site3.py still reproduces its registered prediction.json BYTE-FOR-BYTE (the strict-ancestor falsifiability guarantee depends on it) and that nothing was retro-edited: `git diff --name-status main...origin/softhouse/T241-g8-evidence-hygiene`.\n\nIts instruments must survive P-75/P-80 -- the cloud's OWN census script was caught last fire using `grep -c || echo 0`, which collapses 'zero matches' and 'I broke' onto one printed zero, in a script written to enforce its own calibration rule. Check its instruments before its conclusions.\n\nGive the driver an actionable verdict: MERGE / MICRO-FIX / REJECT, and say what merging it would change about any gate. WRITE ONLY under `.softhouse/reviews/t264-review-cloud-t241/`. You may NOT edit the branch you review (A2-17).",
+   "note": "Filed by the driver, local fire 20260822-060013."
+  },
+  {
+   "id": "T265",
+   "title": "INDEPENDENT re-derivation of the DRIVER's own lock fix — it found the defect and fixed it in the same fire (the T245/T249 precedent)",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "agent_role": "reviewer",
+   "role": "reviewer",
+   "context": "tier0-harness",
+   "slice": null,
+   "dependencies": [],
+   "attempts": 0,
+   "files_hint": [
+    ".softhouse/reviews/t265-review-lock-fix/"
+   ],
+   "contract_independent": true,
+   "description": "On local fire 20260822-060013 the driver rewrote STEP 0 of `.claude/skills/softhouse-program/SKILL.md` and patched `.softhouse/bin/fire-program.sh`, replacing `started_at`-based staleness with PUSH-RECENCY on origin/main as the authoritative liveness signal, keeping `heartbeat` as corroboration only. The driver found the defect class and shipped the fix in ONE fire with no independent eye, which is exactly the shape T249 was filed for and confirmed as worth reviewing. REVIEW IT.\n\n(1) IS THE DIAGNOSIS RIGHT? The driver argues a heartbeat field is the WRONG fix because it is a thing somebody must remember to refresh (P-45, five recorded instances), while push-recency is DERIVED from doing the work. Attack that. The obvious counter is that a fire can legitimately think for over 6h WITHOUT pushing -- in which case push-recency declares a live holder dead, which is the SAME failure with the sign flipped. Work out whether that is reachable in practice given this driver's actual push cadence (read the git history and MEASURE the longest real gap between pushes by a single fire; state both terms). If it IS reachable, the fix is unsound as written and you must say so.\n(2) DRIVE IT RED. Construct the four STEP 0 cases -- released, held-and-pushing, genuinely stale, dead-pid -- and show the rule as written returns the right answer for each. A rule nobody has seen fail is unverified (P-22). Pay special attention to case 3: BOTH signals must be old, so a fresh clone with no local history must not misread it.\n(3) CHECK THE WRAPPER PATCH ACTUALLY PARSES AND STILL RELEASES. `.softhouse/bin/fire-program.sh` is what launchd runs twice a day; if the driver broke it, the program stops firing and nothing announces that. `zsh -n` is necessary and NOT sufficient -- check the release path and the trap still work, since a stranded LOCK costs the next fire six hours.\n(4) THE DRIVER MAY HAVE FIXED THE WRONG LAYER. P-85 says the incident's true cause was that the holder COMMITTED its lock refresh and dispatch record and NEVER PUSHED THEM -- so a heartbeat would have sat in the same unpushed commits and changed nothing. Judge whether the landed fix actually addresses that, or whether it addresses the more comfortable adjacent problem. Say so plainly if it is the latter.\n\nWRITE ONLY under `.softhouse/reviews/t265-review-lock-fix/`. You may NOT edit SKILL.md or fire-program.sh.",
+   "note": "Filed by the driver, local fire 20260822-060013."
+  },
+  {
+   "id": "T266",
+   "title": "T253 deferred the fail-open linter's variable-indirect ownership blind spot to T252 THREE TIMES — T252 has already landed and did NOT fix it, so the deferral points at finished work",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "agent_role": "coder",
+   "context": "tier0-harness",
+   "slice": null,
+   "dependencies": [
+    "T253",
+    "T254"
+   ],
+   "attempts": 0,
+   "files_hint": [
+    ".softhouse/capture/t238-failopen/instruments/50-failopen-lint.py",
+    ".softhouse/capture/t266-linter-ownership/"
+   ],
+   "contract_independent": true,
+   "description": "RAISED BY T254 as F-2 (MEDIUM, routing) and RE-DERIVED BY THE DRIVER before filing.\n\nT253 found that the fail-open linter's ownership exemption is defeated when the path is held in a VARIABLE: C1 calls /tmp/t234_matrix2.txt a dead path, while LINE 7 of .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh CREATES it via `{ ... } > \"$C\"` after `C=/tmp/t234_matrix2.txt`. Consequence: the instrument's fail-open TIER is a property of the LINTING HOST'S FILESYSTEM, not of the file -- TIER2 on Buyan's Mac where the leftover /tmp file survives, TIER1 on a clean host. T253 proved a fix 5/5 AGAINST A COPY and applied it nowhere, deferring to T252 in three separate places.\n\nTHE DEFERRAL IS STALE. T252 LANDED and did NOT fix it [DRIVER-VERIFIED at d9f04df: 2674f7c and 63555c1 are both ancestors of main; the linter grew 476 -> 722 lines; it still decides tier with os.path.exists at :366 and :447 and still never resolves the variable]. T254 independently ran main's post-T252 linter and reports 02-escape-matrix-fix.sh STILL TIER1 on a clean host.\n\nTHE JOB: (1) RE-PROVE T253's 30-proposed-linter-fix.py AGAINST THE 722-LINE LINTER. Its 5/5 is a result about a 476-line file that NO LONGER EXISTS ON main -- P-71/P-69 exactly, a measurement whose subject moved underneath it. Do NOT port the patch on the assumption it still applies; re-drive it. (2) Fix the blind spot so tier stops depending on host filesystem state. (3) Additivity must be EXACT and both negative controls must DISCRIMINATE, as T253 measured for the old linter. (4) DO NOT move the fail-open pin to make anything green -- T253 and T254 both refused that route and both were right; the pin is a FRONTIER, NOT AN AMNESTY. If the frontier moves, justify each row as NEWLY VISIBLE, not newly introduced.\n\nALSO IN SCOPE, same shape, both named by T253: 01-escape-matrix.sh:7 (TIER3, off-frontier) and 12-sweep-census.py:74,76 which is host-dependent in the OTHER direction.\n\nSERIALISE against T226/T235/T250 and anything else holding conformance.sh or the capture lib. Never bare grep/rg in a committed instrument (P-75). Do not touch .softhouse/vectors/ or nexus/.",
+   "note": "Filed by the cloud catch-up fire 2026-08-22T12:50Z from T254's F-2, after the driver independently confirmed T252 landed without fixing it. ID T266 chosen above the max on origin (T265) to avoid colliding with the concurrently-running local fire."
+  },
+  {
+   "id": "T267",
+   "title": "go-env.sh's toolchain-substitution notice goes to STDERR only — 32 lines there, 0 on stdout — so the BAR's verdict block never states which Go compiled the money guard",
+   "status": "pending",
+   "executor": "agent",
+   "model": "sonnet",
+   "target": "code",
+   "agent_role": "coder",
+   "context": "tier0-harness",
+   "slice": null,
+   "dependencies": [
+    "T253"
+   ],
+   "attempts": 0,
+   "files_hint": [
+    ".softhouse/conformance.sh"
+   ],
+   "contract_independent": true,
+   "description": "RAISED BY T254 as F-3 (MICRO, prophylactic). T253's D2 decision was to FALL BACK to a go on PATH and PRINT the substitution, on the reasoning that the real defect was SILENCE, not substitution. T254 judged the decision SOUND and NOT a rationalisation -- but MEASURED that the notice is 32 lines on STDERR and 0 on STDOUT. A BAR transcript that captures stdout therefore records a guard_ledger_invariants result WITHOUT recording which toolchain compiled it, which is most of the way back to the silence the decision was meant to end.\n\nFIX: add a line to conformance.sh's VERDICT BLOCK, on STDOUT, naming the toolchain -- e.g. `conformance: toolchain ${GEREGE_GO_SOURCE:-unknown}`. Prophylactic: on Buyan's Mac the pinned toolchain resolves and there is no substitution to report, so this changes nothing there and matters only where it fires.\n\nSERIALISE against T226/T235/T250/T266 -- all hold conformance.sh.",
+   "note": "Filed by the cloud catch-up fire from T254's F-3. ID chosen above origin's max (T265) to avoid colliding with the concurrent local fire."
   },
   {
    "id": "A2-10",
@@ -2818,143 +3025,9 @@
    "branch": "softhouse/A2-34-review-a2-15"
   },
   {
-   "id": "T260",
-   "title": "INDEPENDENT review of T255 — DEC-2 revision 8, LANDED. Re-derive; do not read T255's conclusions.",
-   "status": "pending",
-   "executor": "agent",
-   "model": "opus",
-   "target": "docs",
-   "agent_role": "reviewer",
-   "role": "reviewer",
-   "context": "tierA-gl-accounting",
-   "slice": "tierA-gl-accounting-A2",
-   "dependencies": [
-    "T255"
-   ],
-   "attempts": 0,
-   "files_hint": [
-    ".softhouse/reviews/t260-dec2-rev8/"
-   ],
-   "contract_independent": false,
-   "description": "You are an INDEPENDENT reviewer. You did not write T255. ASSUME DEFECTS EXIST. T255 was told to PREPARE AND LAND DEC-2 revision 8 in one fire, applying T251's C-1..C-8, and — the load-bearing instruction — to FIX THE CITATION-ROT MECHANISM rather than the six hunks. Three consecutive passes (rev 6, rev 7, and rev 7's own 're-measured' citations) have shipped stale line numbers.\n\nRE-DERIVE, at YOUR OWN commit, and STAMP it (P-69):\n(1) THE OBLIGATION CHECK IS THE ONE THAT MATTERS. For EVERY hunk revision 8 applied, prove NO NORMATIVE OBLIGATION MOVED: diff the BEFORE text character by character against the live ADR, and confirm each obligation appears verbatim on both sides. DEC-2 is RATIFIED; an agent may not amend a ratified DEC-n's obligations, and a stale-evidence correction that silently relaxes one is a HIGH rejection and a gate violation.\n(2) RE-MEASURE EVERY CONFORMANCE.SH CITATION IN THE LANDED DOCUMENT YOURSELF, at HEAD, by reading conformance.sh — not by reading T255's table. Report both terms (P-67): how many citations the document makes, and how many resolve to what they claim. NOTE: T253 was dispatched IN THE SAME FIRE and edits conformance.sh. If revision 8's citations rotted because of a merge that happened after T255 measured, that is NOT an excuse — it is the exact defect T255 was sent to eliminate, and it means the mechanism fix FAILED. Judge it on that basis.\n(3) JUDGE THE MECHANISM, NOT THE HUNKS. Did T255 make the citations DERIVED (bound to a stable anchor, verified by a runnable checker wired to something automatic) or did it merely write down 2026-08-22's line numbers again? A revision that buys one cycle is a rejection on that ground, and you must say so plainly. If T255 added a checker, DRIVE IT RED yourself: perturb a scratch copy of conformance.sh and prove the checker fails. A checker you did not see fail is a checker you have not verified (P-22).\n(4) ENUMERATE T251's C-1..C-8 and report, one line each, APPLIED / NOT APPLIED / APPLIED WRONG. C-2 (L821's I-3 row), C-3 (the L847-874 fenced seven-guard enumeration that OMITS guard_no_fail_open_instruments) and C-5 (L1426's 'today that is ZERO vectors') were UNENUMERATED in rev 7's own edit list — check them specifically, and check the 35th site (§4.4's lead paragraph 'none of them can be graded today' nine lines above the bullet that says 'YES, SINCE A2-15').\n(5) Confirm DEC-2 no longer calls itself 'DRAFT (revision 5), NOT RATIFIED' while being a ratified revision 8.\n(6) Confirm the vector-store digest did NOT move: read it live, `git rev-parse HEAD:.softhouse/vectors`, and compare to 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d. A docs task that moved the money corpus is a HIGH rejection.\n(7) Say whether G-14 is CLOSEABLE on this artefact, and give the driver a one-paragraph verdict it can act on: RATIFY / MICRO-FIX / REJECT.\n\nWRITE ONLY under .softhouse/reviews/t260-dec2-rev8/ and your handoff. You may NOT edit DEC-2 — a reviewer that edits the artefact it reviews leaves it reviewed by nobody (A2-17). Use /usr/bin/grep, git grep -P or python3 re — never bare grep, never rg (P-75). Classify git grep exit status: 0 matched, 1 real negative, >1 ABORT (P-80).",
-   "note": "Paired independent reviewer registered at dispatch, local fire 20260822-060013 (plan gate rule 1)."
-  },
-  {
-   "id": "T261",
-   "title": "INDEPENDENT review of T250 — the capture sidecar attestation fix.",
+   "id": "T254b",
+   "title": "SECOND independent review of T253 — covers BOTH implementations and the DEC-2 citation-shift question",
    "status": "in_progress",
-   "executor": "agent",
-   "model": "opus",
-   "target": "docs",
-   "agent_role": "reviewer",
-   "role": "reviewer",
-   "context": null,
-   "slice": null,
-   "dependencies": [
-    "T250"
-   ],
-   "attempts": 1,
-   "files_hint": [
-    ".softhouse/reviews/t261-tenant-attestation/"
-   ],
-   "contract_independent": true,
-   "description": "You are an INDEPENDENT reviewer. You did not write T250. ASSUME DEFECTS EXIST.\n\n(1) RE-MEASURE THE POPULATION YOURSELF. T250 was told not to take cap.sh/cap8.sh/cap9.sh as the population. ENUMERATE every capture script in the tree that writes an attestation line, and report BOTH TERMS (P-67): how many write a literal where a variable was available, how many T250 fixed. CHECK ITS SELECTOR, NOT ONLY ITS CONDITIONS (P-76 addendum) — a fix applied to the three named files and called a sweep is the defect this program keeps re-finding.\n(2) THE FIX MUST BE DRIVEN RED THROUGH A SHAPE T250 DID NOT DESIGN IT AROUND. Change the tenant yourself in a scratch copy and prove the sidecar changes with it; then prove a MISMATCH between sent and recorded is DETECTED rather than merely unlikely. If T250's only evidence is that the script works when used correctly, say so — that is not red-driving.\n(3) NO RETRO-EDITING. Confirm no committed sidecar was rewritten to look correct. `git diff --name-status main...<branch>` and judge every touched path. T114's ruling binds: files that produced committed evidence stay byte-identical and are superseded by scratch copies, never edited.\n(4) THE VECTOR STORE MUST NOT MOVE. Read `git rev-parse HEAD:.softhouse/vectors` live and compare to 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d. If T250 implemented T245's default-deny `tenant` field on OracleStamp, verify it made NO existing vector inadmissible and moved NO digest — T246 drove that exact hazard four ways on PIN-ledger.json.\n(5) Any new instrument T250 committed must itself survive the fail-open rules: no `|| echo`, no `|| true`, no bare grep, no rg, `set -euo pipefail`, and git grep exit >1 must ABORT (P-75/P-80). Three separate workers last fire wrote fail-opens INTO instruments meant to enforce the rule they broke (P-80) — check T250's own instruments before you check anything else.\n(6) Re-run the BAR yourself and report the probe line's PRESENCE first, then its value (P-83).\n\nWRITE ONLY under .softhouse/reviews/t261-tenant-attestation/ and your handoff. You may NOT edit anything T250 touched.",
-   "note": "Paired independent reviewer registered at dispatch, local fire 20260822-060013 (plan gate rule 1). | DISPATCHED local fire 20260822-060013, worktree-isolated, opus.",
-   "branch": "softhouse/T261-review-tenant-attestation"
-  },
-  {
-   "id": "T262",
-   "title": "INDEPENDENT review of T259 — the verdict field that never consults its own predicate.",
-   "status": "in_progress",
-   "executor": "agent",
-   "model": "opus",
-   "target": "docs",
-   "agent_role": "reviewer",
-   "role": "reviewer",
-   "context": null,
-   "slice": null,
-   "dependencies": [
-    "T259"
-   ],
-   "attempts": 1,
-   "files_hint": [
-    ".softhouse/reviews/t262-verdict-predicate/"
-   ],
-   "contract_independent": false,
-   "description": "You are an INDEPENDENT reviewer. You did not write T259. ASSUME DEFECTS EXIST.\n\n(1) RE-DERIVE THE UNDERLYING MEASUREMENT FROM THE FILE, not from T259's handoff: read .softhouse/capture/t229-g8-site3/out/classify-t229.json at HEAD, state the commit, and independently report how many rows carry P2_totalInterestEqualsNEplusB: false, and how many of those carry verdict \"AS PREDICTED\". The driver's figure is five and three; confirm or refute it.\n(2) T259 HAD TO CHOOSE between 'the verdict field is wrong' and 'the predicate is misnamed' — opposite fixes. Judge the ARGUMENT, not the outcome. If T259 assumed the verdict was the broken half without arguing it, that is a finding. Read how `verdict` is actually computed in site3.py and say which propositions it reads.\n(3) THE BINDING CONSTRAINT: classify-t229.json and site3.py are COMMITTED EVIDENCE of what T229 ran, and site3.py reproduces the registered prediction.json BYTE FOR BYTE — the strict-ancestor falsifiability guarantee depends on that. Verify with `git diff main...<branch>` that this was NOT broken. If it was, that is a HIGH rejection regardless of how good the fix is.\n(4) DRIVE THE NEW RULE RED YOURSELF on a row T259 did not design it around (P-76): construct a scratch row whose recorded predicate contradicts its verdict and prove the rule REFUSES or LOUDLY FLAGS it. A rule that only fires on the three known rows is not a rule.\n(5) MATERIALITY: T259 was told to state plainly that no verdict, vector, region boundary or gate conclusion moves. Confirm that is true rather than assumed — in particular that G-8's region boundary is untouched. G-8 options (b)/(c) must not be put to Buyan, unconditionally.\n(6) T259's own instruments must survive P-75/P-80: no bare grep, no rg, no `|| echo`/`|| true` swallowing errors, `set -euo pipefail`, git grep exit >1 ABORTS.\n\nWRITE ONLY under .softhouse/reviews/t262-verdict-predicate/ and your handoff. You may NOT edit anything T259 touched.",
-   "note": "Paired independent reviewer registered at dispatch, local fire 20260822-060013 (plan gate rule 1). | DISPATCHED local fire 20260822-060013, worktree-isolated, opus.",
-   "branch": "softhouse/T262-review-verdict-predicate"
-  },
-  {
-   "id": "T263",
-   "title": "INDEPENDENT review of T164 — the float guard kept green by its own docstring.",
-   "status": "in_progress",
-   "executor": "agent",
-   "model": "opus",
-   "target": "docs",
-   "agent_role": "reviewer",
-   "role": "reviewer",
-   "context": null,
-   "slice": null,
-   "dependencies": [
-    "T164"
-   ],
-   "attempts": 1,
-   "files_hint": [
-    ".softhouse/reviews/t263-analyze7-float-guard/"
-   ],
-   "contract_independent": false,
-   "description": "You are an INDEPENDENT reviewer. You did not write T164. ASSUME DEFECTS EXIST. This is the SIXTH recorded P-22 in this program (a guard that structurally cannot fail), in a rig whose whole purpose is keeping float out of money analysis.\n\n(1) RE-DERIVE THE DEFECT: prove for yourself, on a scratch copy, that the OLD whole-file-grep guard passes with parse_float deleted from a real call site. If you cannot reproduce that, the premise is wrong and you must say so.\n(2) DRIVE THE NEW GUARD RED (P-22): delete parse_float from a real json.load call site in a scratch copy and show the AST-based guard FAILS where the old one PASSED; then show the legitimate rig still passes. A guard you did not see fail is unverified.\n(3) ZERO CALL SITES INSPECTED MUST BE AN ERROR, NOT A PASS. Verify that specifically, by making the guard find nothing and confirming it exits non-zero. This is the fail-open class (P-45/P-80) and it is exactly how the original defect worked.\n(4) SWEEP THE CONCEPT, NOT THE SENTENCE (P-26): T164 was told to enumerate every OTHER guard under .softhouse/ that greps whole-file source text for a token that also appears in its own comments or docstring. Re-derive that enumeration independently, state BOTH TERMS (P-67) and COUNT WHAT WAS SKIPPED (P-40). State where you looked (P-66/P-70) before recording any non-existence.\n(5) SCOPE: T164's files_hint is .softhouse/capture/tierA-a2/ only. `git diff --name-status main...<branch>` — anything outside is a scope violation and must be reported, not merged. NOTE that .softhouse/capture/tierA-a2/ carries manifest.py, whose `verify` covers the whole rig INCLUDING ITSELF and was silently RED across two merges. If T164 edited a rig file it must have re-run `manifest.py write` — check, and check the manifest verifies clean at its branch tip.\n(6) T164's own instruments must survive P-75/P-80: no bare grep, no rg, `set -euo pipefail`, git grep exit >1 ABORTS.\n\nWRITE ONLY under .softhouse/reviews/t263-analyze7-float-guard/ and your handoff. You may NOT edit anything T164 touched.",
-   "note": "Paired independent reviewer registered at dispatch, local fire 20260822-060013 (plan gate rule 1). | DISPATCHED local fire 20260822-060013, worktree-isolated, opus.",
-   "branch": "softhouse/T263-review-analyze7-float-guard"
-  },
-  {
-   "id": "T256",
-   "title": "The Mac toolchain path is hardcoded in 30 executable instruments — and reference-oracle.md PRESCRIBES it as the activation line",
-   "status": "pending",
-   "executor": "agent",
-   "model": "opus",
-   "target": "code",
-   "agent_role": "coder",
-   "role": "coder",
-   "context": "tier0-harness",
-   "slice": null,
-   "dependencies": [
-    "T253"
-   ],
-   "attempts": 0,
-   "files_hint": [
-    ".softhouse/capture/t256-toolchain-population/",
-    ".softhouse/reference-oracle.md"
-   ],
-   "contract_independent": true,
-   "description": "The cloud fire's T253 reported six other tracked instruments hardcoding the Mac toolchain path. Its driver RE-MEASURED and counted BOTH TERMS: 40 tracked files -- 30 executable instruments (29 besides go-env.sh) and 10 prose/transcript records that MUST NOT be edited. RE-MEASURE BOTH TERMS YOURSELF at your own commit (P-67, P-69) and state where you looked (P-66/P-70) -- do not quote 6, 30 or 40.\n\nTHE SHARPEST SITE IS NOT AN INSTRUMENT: `.softhouse/reference-oracle.md:616` PRESCRIBES the absolute Mac path as the activation line. That is T245's shape exactly -- the inventory was corrected and the INSTRUCTION was left behind, so every future reader is told to do the thing that was just fixed. Fixing 30 scripts while the document still instructs the hardcoded path buys nothing.\n\nDISTINGUISH THE TWO POPULATIONS AND TREAT THEM OPPOSITELY: an executable instrument should DERIVE the toolchain (a worktree must still resolve the MAIN checkout -- `git rev-parse --git-common-dir`); a prose/transcript RECORD of what was actually run must stay BYTE-IDENTICAL (T114 binds). A task that rewrites transcripts to look portable has destroyed evidence. Say which files you put in which bucket and why, and COUNT WHAT YOU SKIPPED (P-40).\n\nDEPENDS ON T253 landing, since go-env.sh is the root fix.",
-   "note": "Filed by the driver, local fire 20260822-060013."
-  },
-  {
-   "id": "T264",
-   "title": "INDEPENDENT review of the cloud fire's T241 branch (df0aed2) — money-adjacent claims that have had NO reviewer",
-   "status": "pending",
-   "executor": "agent",
-   "model": "opus",
-   "target": "docs",
-   "agent_role": "reviewer",
-   "role": "reviewer",
-   "context": "tierA-gl-accounting",
-   "slice": null,
-   "dependencies": [],
-   "attempts": 0,
-   "files_hint": [
-    ".softhouse/reviews/t264-review-cloud-t241/"
-   ],
-   "contract_independent": true,
-   "description": "The cloud fire's T241 is COMPLETE and UNMERGED at origin/softhouse/T241-g8-evidence-hygiene @ df0aed2, and the cloud's own handoff says plainly that it HAS HAD NO INDEPENDENT REVIEWER. It edits `.softhouse/gates.md` (+108 lines) and adds ~21k lines of capture output. A DIFFERENT T241 was already merged locally at d20836e; the cloud's REACHES FURTHER. You are reviewing the CLOUD branch against merged main.\n\nRE-DERIVE, DO NOT READ. Its money-adjacent claims are the point: (a) the 120-of-296 re-bucketing -- recount it yourself from the source data and state both terms (P-67); (b) the claimed `gates.md:2283` failure -- go and read that line at YOUR commit and say whether the claim holds, since line numbers in this repo rot within a single fire (that is the entire subject of G-14); (c) whether anything it writes into gates.md alters a GATE CONCLUSION as opposed to the evidence beneath it -- a review artefact may correct evidence, it may NOT move a gate.\n\nHARD CHECKS: the vector-store digest must not move (read `git rev-parse HEAD:.softhouse/vectors` live and compare to 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d). G-8's region is a conservative superset resting on the unproven conjecture delta <= 1, and G-8 OPTIONS (b) AND (c) MUST NOT BE PUT TO BUYAN, unconditionally and with no expiry -- if the branch proposes them, that alone is a HIGH rejection. Confirm site3.py still reproduces its registered prediction.json BYTE-FOR-BYTE (the strict-ancestor falsifiability guarantee depends on it) and that nothing was retro-edited: `git diff --name-status main...origin/softhouse/T241-g8-evidence-hygiene`.\n\nIts instruments must survive P-75/P-80 -- the cloud's OWN census script was caught last fire using `grep -c || echo 0`, which collapses 'zero matches' and 'I broke' onto one printed zero, in a script written to enforce its own calibration rule. Check its instruments before its conclusions.\n\nGive the driver an actionable verdict: MERGE / MICRO-FIX / REJECT, and say what merging it would change about any gate. WRITE ONLY under `.softhouse/reviews/t264-review-cloud-t241/`. You may NOT edit the branch you review (A2-17).",
-   "note": "Filed by the driver, local fire 20260822-060013."
-  },
-  {
-   "id": "T265",
-   "title": "INDEPENDENT re-derivation of the DRIVER's own lock fix — it found the defect and fixed it in the same fire (the T245/T249 precedent)",
-   "status": "pending",
    "executor": "agent",
    "model": "opus",
    "target": "docs",
@@ -2962,14 +3035,17 @@
    "role": "reviewer",
    "context": "tier0-harness",
    "slice": null,
-   "dependencies": [],
-   "attempts": 0,
-   "files_hint": [
-    ".softhouse/reviews/t265-review-lock-fix/"
+   "dependencies": [
+    "T253"
    ],
+   "attempts": 1,
+   "branch": "softhouse/T254-review-portability-mac",
    "contract_independent": true,
-   "description": "On local fire 20260822-060013 the driver rewrote STEP 0 of `.claude/skills/softhouse-program/SKILL.md` and patched `.softhouse/bin/fire-program.sh`, replacing `started_at`-based staleness with PUSH-RECENCY on origin/main as the authoritative liveness signal, keeping `heartbeat` as corroboration only. The driver found the defect class and shipped the fix in ONE fire with no independent eye, which is exactly the shape T249 was filed for and confirmed as worth reviewing. REVIEW IT.\n\n(1) IS THE DIAGNOSIS RIGHT? The driver argues a heartbeat field is the WRONG fix because it is a thing somebody must remember to refresh (P-45, five recorded instances), while push-recency is DERIVED from doing the work. Attack that. The obvious counter is that a fire can legitimately think for over 6h WITHOUT pushing -- in which case push-recency declares a live holder dead, which is the SAME failure with the sign flipped. Work out whether that is reachable in practice given this driver's actual push cadence (read the git history and MEASURE the longest real gap between pushes by a single fire; state both terms). If it IS reachable, the fix is unsound as written and you must say so.\n(2) DRIVE IT RED. Construct the four STEP 0 cases -- released, held-and-pushing, genuinely stale, dead-pid -- and show the rule as written returns the right answer for each. A rule nobody has seen fail is unverified (P-22). Pay special attention to case 3: BOTH signals must be old, so a fresh clone with no local history must not misread it.\n(3) CHECK THE WRAPPER PATCH ACTUALLY PARSES AND STILL RELEASES. `.softhouse/bin/fire-program.sh` is what launchd runs twice a day; if the driver broke it, the program stops firing and nothing announces that. `zsh -n` is necessary and NOT sufficient -- check the release path and the trap still work, since a stranded LOCK costs the next fire six hours.\n(4) THE DRIVER MAY HAVE FIXED THE WRONG LAYER. P-85 says the incident's true cause was that the holder COMMITTED its lock refresh and dispatch record and NEVER PUSHED THEM -- so a heartbeat would have sat in the same unpushed commits and changed nothing. Judge whether the landed fix actually addresses that, or whether it addresses the more comfortable adjacent problem. Say so plainly if it is the latter.\n\nWRITE ONLY under `.softhouse/reviews/t265-review-lock-fix/`. You may NOT edit SKILL.md or fire-program.sh.",
-   "note": "Filed by the driver, local fire 20260822-060013."
+   "files_hint": [
+    ".softhouse/reviews/t254-harness-portability/"
+   ],
+   "description": "Dispatched by local fire 20260822-060013 before the cloud T254 was visible. Kept rather than cancelled because it answers a question the cloud T254 structurally could not: which of the TWO implementations to merge, and what the cloud diff line-shift would do to DEC-2 revision 8 citations being landed by T255 in the same fire. Duplication of review has already paid twice in this program (T251 ran twice and the two site lists were COMPLEMENTARY, neither finding the other s).",
+   "note": "Second independent review, deliberate. Reconciled with the cloud T254 by the driver."
   }
  ],
  "cross_corroboration": {
