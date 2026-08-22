@@ -2503,9 +2503,10 @@
    "dependencies": [
     "A2-34"
    ],
-   "status": "pending",
-   "attempts": 0,
-   "note": "A2-34's F-7 (FOURTH P-45 instance) and F-3. Serialise against T226, which also holds conformance.sh for the third P-45 instance -- consider planning them together."
+   "status": "in_progress",
+   "attempts": 1,
+   "note": "A2-34's F-7 (FOURTH P-45 instance) and F-3. Serialise against T226, which also holds conformance.sh for the third P-45 instance -- consider planning them together. | DISPATCHED wave 2 of local fire 20260822-060013 at main 693c768. Worker told to MEASURE its own fork point and to read the vector digest LIVE (13b8342e, MOVED this fire). Briefed with the NEW P-75 engine facts. DRIVER WIDENED THE BRIEF: T243 also wires T238's fail-open LINTER, which merged UNWIRED today because conformance.sh was held. Same file, same P-45 defect, same fire — leaving it would make it the FIFTH recorded P-45 instance.",
+   "branch": "softhouse/T243-wire-the-guards"
   },
   {
    "id": "T244",
@@ -2561,9 +2562,10 @@
    "dependencies": [
     "T244"
    ],
-   "status": "pending",
-   "attempts": 0,
-   "note": "Raised by the driver at T244's merge. This is G-13's stated unblock condition: independent review of revision 6, then the driver ratifies chosen_by: agent as it did revision 5. Terms 2-4 of T244's reversal measurement (the union returning 8 not 16, the 3 pairs, the 6 transaction ids) rest on T244 ALONE -- the driver measured only the two 8s."
+   "status": "in_progress",
+   "attempts": 1,
+   "note": "Raised by the driver at T244's merge. This is G-13's stated unblock condition: independent review of revision 6, then the driver ratifies chosen_by: agent as it did revision 5. Terms 2-4 of T244's reversal measurement (the union returning 8 not 16, the 3 pairs, the 6 transaction ids) rest on T244 ALONE -- the driver measured only the two 8s. | DISPATCHED wave 2 of local fire 20260822-060013 at main 693c768. Worker told to MEASURE its own fork point and to read the vector digest LIVE (13b8342e, MOVED this fire). Briefed with the NEW P-75 engine facts.",
+   "branch": "softhouse/T246-review-dec2-rev6"
   }
  ],
  "cross_corroboration": {
