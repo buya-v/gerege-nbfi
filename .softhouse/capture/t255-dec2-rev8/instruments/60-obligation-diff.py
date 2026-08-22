@@ -135,10 +135,10 @@ def sha(s):
     return hashlib.sha256(s.encode("utf-8")).hexdigest()
 
 
-def head_blob():
-    p = subprocess.run(["git", "-C", ROOT, "show", "HEAD:" + ADR_REL], capture_output=True, text=True)
+def head_blob(ref):
+    p = subprocess.run(["git", "-C", ROOT, "show", ref + ":" + ADR_REL], capture_output=True, text=True)
     if p.returncode != 0:
-        raise IOError("git show HEAD:%s failed: %s" % (ADR_REL, p.stderr.strip()))
+        raise IOError("git show %s:%s failed: %s" % (ref, ADR_REL, p.stderr.strip()))
     return p.stdout
 
 
@@ -163,8 +163,16 @@ def modal_lines(text):
 
 
 def main():
+    # BASELINE REF. Default `HEAD`, which is right while revision 8 is still in
+    # the working tree. ONCE IT IS COMMITTED, `HEAD` carries revision 8 too and
+    # the comparison is vacuous -- so this script REFUSES with exit 2 rather
+    # than printing a green verdict about nothing (P-35). `T260` re-runs it as:
+    #     python3 .../60-obligation-diff.py HEAD~1
+    # or against whatever commit preceded revision 8 on this branch.
+    ref = sys.argv[1] if len(sys.argv) > 1 else "HEAD"
+    print("BASELINE REF: %s   (pass a ref as argv[1]; after revision 8 is committed, use HEAD~1)" % ref)
     try:
-        before = head_blob()
+        before = head_blob(ref)
     except IOError as exc:
         print("REFUSE (exit 2): %s" % exc)
         return 2

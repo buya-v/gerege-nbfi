@@ -88,6 +88,24 @@ order mismatch (a count-only check passes this; the arm exists because it would)
 own token edited → mismatch. R0 calibrates clean. The instrument asserts the real tree is
 byte-identical before and after, and it is.
 
+### THE REAL COLLISION — `instruments/55-real-t253-collision.py`, exit 0
+
+R1 was my *model* of `T253`. This arm takes `.softhouse/conformance.sh` **straight out of
+`origin/softhouse/T253-harness-portability`** (blob `fd25b910`, **67 insertions / 59 deletions**
+against my `029439ba`) and runs revision 8's citations against it.
+
+* **Revision 8: ALL ANCHORS AND DERIVED FACTS HOLD, exit 0.** `run_guards` moved `:1548` → `:1556`
+  and every tallied invocation with it; the document did not notice, because it does not contain
+  those numbers.
+* **`verify-line-numbers.py`: 4 of 4 conformance.sh rows MOVED, exit 1** — including **`:1300`, the
+  definition row, the one row that survived every prior pass.** Under T253, revision 7's citations
+  would have been wrong in *every* position. `:1474` now reads a `FAILOPEN_PIN_FILE_LIST` row,
+  `:1494` reads an **empty line**, `:1495` a comment about the linter's JSON destination.
+
+**`T253` has not merged yet** (`main:.softhouse/conformance.sh` still equals my fork's blob), so the
+collision is pending — and revision 8 is already indifferent to it. **The defect was met, not
+modelled.**
+
 ## 3. No obligation moved — VERDICT: NO
 
 `instruments/60-obligation-diff.py` → **`NO OBLIGATION MOVED: 0 finding(s)`**. Three complementary
@@ -129,7 +147,7 @@ in the transcript; `\b` discrimination proved where both needles exist (`pattern
 | **probe line PRESENT?** | **YES — printed.** `70-bar-final.log:92` `reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up`, repeated at `:101` as `oracle probe UP`. Presence read first, then value (`P-83`). |
 | **verdict** | `70-bar-final.log:506` **`VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.`** Exit **0**. |
 | **ledger** | parity 4/0 · oracle-refusal 2/0 · inadmissible 0 · harness errors 0 · 70 cells graded, 21 MONEY in `int64` minor units · invariants 0 violations, 11 non-vacuous assertions, 10 INDEPENDENT · all 6 wrong ledger implementations killed through the harness |
-| **fail-open frontier** | 918 tracked `.sh`/`.py` inspected, **frontier 11 == pinned 11**. My instruments did not join it. **Re-run AFTER committing**, because the linter's population is `git ls-files` and an untracked instrument is not inspected — the first run's silence would have been a statement about the search, not the tree (`P-66`). |
+| **fail-open frontier** | **RE-RUN AFTER COMMITTING** (`transcripts/80-bar-postcommit.log`), because the linter's population is `git ls-files` and an untracked instrument is NOT inspected — the pre-commit run's silence would have been a statement about my search, not about the tree (`P-66`). Post-commit: **924** tracked `.sh`/`.py` inspected, up from **918**, i.e. my six instruments WERE in the population; **frontier 11 == pinned 11**, so none of them joined it. Both terms counted. |
 | **vector store** | `13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d`, read live. **UNCHANGED.** |
 | **`.softhouse/conformance.sh`** | **NOT TOUCHED.** It is `T253`'s this fire. |
 

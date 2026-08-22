@@ -112,6 +112,23 @@ byte-identical before and after, and they are.
 
 **`RED DRIVE: ALL ARMS BEHAVED AS REQUIRED`.**
 
+### And then the REAL collision, not the simulation
+
+`instruments/55-real-t253-collision.py`, transcript `evidence/55-real-t253-collision.txt`. R1 was my
+*model* of what `T253` would do. This arm takes `.softhouse/conformance.sh` **straight out of
+`origin/softhouse/T253-harness-portability`** — blob `fd25b910`, **67 insertions / 59 deletions**
+against my `029439ba` — and runs revision 8's citations against it.
+
+| | result |
+|---|---|
+| **revision 8's anchors + DERIVED facts** | **ALL HOLD. exit 0.** Nothing re-measured, nothing edited. `run_guards` moved from `:1548` to `:1556` and every tallied invocation moved with it; the document did not notice, because it does not contain those numbers. |
+| **`verify-line-numbers.py`'s four `conformance.sh` rows** | **4 of 4 MOVED. exit 1.** Including **`:1300`, the definition row — the ONE row that had survived every prior pass.** Revision 7's citations would have been wrong in *every* position under T253, not three of four. |
+| **and, again, the misleading resolutions** | `:1474` now reads `TIER2 .softhouse/capture/t234-…/00-engine-baseline.sh`; `:1494` reads an EMPTY LINE; `:1495` reads a comment about the linter's JSON destination. |
+
+**This is the arm that settles it.** The defect was not modelled and defeated; it was met and
+defeated. `T253` has not merged yet — `main:.softhouse/conformance.sh` still equals my fork's blob —
+so the collision is still *pending*, and revision 8 is already indifferent to it.
+
 ### What the mechanism does NOT do, stated rather than implied
 
 * **It is not wired into `conformance.sh`.** `.softhouse/conformance.sh` is `T253`'s this fire and is

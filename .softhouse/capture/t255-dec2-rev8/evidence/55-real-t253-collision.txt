@@ -1,0 +1,65 @@
+conformance.sh at MY commit : 029439ba6124ed10394554cf5ac9128cf3c42100
+conformance.sh on T253's br : fd25b910192964da2501752a8fdabe53e4e8cf53
+diff: .softhouse/conformance.sh | 126 ++++++++++++++++++++++++---------------------- |  1 file changed, 67 insertions(+), 59 deletions(-)
+
+=== where T253 moved the things DEC-2 used to cite by number ===
+    :1556  run_guards() {
+    :1571  guard_no_float_in_vectors           || failed=1
+    :1572  guard_no_float_in_harness           || failed=1
+    :1573  guard_gofmt                         || failed=1
+    :1574  guard_no_float_in_capture_requests  || failed=1
+    :1575  guard_no_narrow_catch_in_capture_rigs || failed=1
+    :1576  guard_ledger_invariants             || failed=1
+    :1577  guard_no_fail_open_instruments      || failed=1
+
+    Revision 7 was drafted with run_guards at :1474; its reviewer re-measured
+    :1504; at my own commit it is :1548. Compare the column above.
+
+=== revision 8's ANCHORS against T253's conformance.sh ===
+    ok      nexus/internal/apps/loanschedule/conformance/admit.go :: if v.Context != "" && !IsSchemaContext(v.Context) {
+    ok      nexus/internal/apps/loanschedule/conformance/vector.go :: return []string{SelfTestDir, LoanScheduleContext}
+    ok      nexus/internal/apps/ledger/conformance/vector.go :: const SchemaV1 = "gerege.ledger.vector/v1"
+    ok      nexus/internal/apps/ledger/conformance/vector.go :: return []string{LedgerContext}
+    ok      .softhouse/conformance.sh :: guard_ledger_invariants() {
+    ok      .softhouse/conformance.sh :: guard_no_fail_open_instruments() {
+    ok      nexus/internal/apps/loanschedule/conformance/vector.go :: func SchemaContexts() []string {
+    ok      nexus/internal/apps/loanschedule/conformance/admit.go :: strings.Join(SchemaContexts(), ", "))
+    ok      nexus/internal/apps/ledger/conformance/admit.go :: add("dec2_revision %d but the store pins %d", v.DEC2Revision, opts.Pin.DEC2Rev
+    ok      .softhouse/conformance.sh :: THE PIN REMAINS A FRONTIER, NOT AN AMNESTY.
+    ok      .softhouse/conformance.sh :: run_guards() {
+    ok      .softhouse/conformance.sh :: guard_ledger_invariants() {
+    ok      .softhouse/conformance.sh :: NEXUS_DIR="$REPO_ROOT/nexus"
+    ok      .softhouse/conformance.sh :: so a Go-test-only guard is not a
+    ok      nexus/internal/apps/ledger/conformance/vector.go :: // It is the string DEC-2 §5.2 names: "gerege.ledger.vector/v1".
+    ok      .softhouse/conformance.sh :: CMD_PKG="./internal/apps/loanschedule/conformance/cmd/conformance"
+    ok      .softhouse/conformance.sh :: [ -n "$context" ] && args+=("-context=$context")
+    ok      nexus/internal/apps/ledger/conformance/vector.go :: // SchemaV1 is the only schema string this package accepts.
+    ok      .softhouse/conformance.sh :: guard_ledger_invariants() {
+    ok      nexus/internal/apps/loanschedule/conformance/vector.go :: // IsSchemaContext reports whether ctx is one of SchemaContexts().
+    ok      nexus/internal/apps/loanschedule/conformance/admit.go :: "declaring an unknown context is INADMISSIBLE and not merely unmatched: the ha
+    ok      nexus/internal/apps/ledger/conformance/vector.go :: func SchemaContexts() []string {
+    invoked  (8): guard_graded_root_is_this_tree, guard_no_float_in_vectors, guard_no_float_in_harness, guard_gofmt, guard_no_float_in_capture_requests, guard_no_narrow_catch_in_capture_rigs, guard_ledger_invariants, guard_no_fail_open_instruments
+    tallied  (7): guard_no_float_in_vectors, guard_no_float_in_harness, guard_gofmt, guard_no_float_in_capture_requests, guard_no_narrow_catch_in_capture_rigs, guard_ledger_invariants, guard_no_fail_open_instruments
+    ok      the fence equals the source's invocation list, in order.
+    DEC-2 token: invokes 8 | tallies 7 | `guard_ledger_invariants` invocation #7, tallied #6
+    ok      every derived fact re-derived from source and equal.
+    ALL ANCHORS AND DERIVED FACTS HOLD: 0 failing row(s)
+    -> exit 0
+
+=== revision 7's LINE NUMBERS against the same file (pre-rev-8 DEC-2 restored) ===
+    === NEGATIVE CONTROL (expect 1 MOVED)  (docs/adr/DEC-2-gl-accounting-adapter.md, 3039 lines) ===
+      MOVED  L1     expected 'ZZQQ-T247-THIS-MUST-NOT-MATCH'
+             got      '# DEC-2 — GL / accounting adapter contract'
+      MOVED  L1300  expected 'guard_ledger_invariants() {'
+             got      '}'
+      MOVED  L1474  expected 'run_guards() {'
+             got      'TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh'
+      MOVED  L1494  expected 'guard_ledger_invariants             || failed=1'
+             got      ''
+      MOVED  L1495  expected 'guard_no_fail_open_instruments      || failed=1'
+             got      "  # The JSON is diverted to scratch. The linter's default destination is a"
+    STALE — RE-MEASURE BEFORE APPLYING: 4 row(s) MOVED out of 46 checked
+    -> exit 1
+
+VERDICT: revision 8's citations SURVIVE the real T253 edit, unchanged and unmeasured.
+         The line-number citations they replaced do not.
