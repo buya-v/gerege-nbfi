@@ -1,0 +1,5 @@
+GET /offices
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+body: <none>
+captured-at-utc: <fixed-for-diff>

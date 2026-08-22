@@ -1,0 +1,3 @@
+ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-1/probe.http
+  sidecar OMITS a line that was sent: 'Fineract-Platform-TenantId: default'
+  sidecar ASSERTS a line that was NOT sent: 'Fineract-Platform-TenantId: gerege'

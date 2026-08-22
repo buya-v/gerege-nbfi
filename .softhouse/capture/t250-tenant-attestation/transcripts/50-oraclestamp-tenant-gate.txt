@@ -1,0 +1,53 @@
+LIVE store digest at HEAD           : 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d
+files inside the pinned tree        : 62
+  of which store PINS                : 2  ['.softhouse/vectors/PIN-ledger.json', '.softhouse/vectors/PIN.json']
+
+FACT 1 -- the PINS ARE INSIDE THE PINNED TREE.
+  `.softhouse/vectors/PIN.json` and `.softhouse/vectors/PIN-ledger.json` are
+  both members of the tree whose hash is the store digest. Editing EITHER
+  changes its blob hash, and a git tree hash is computed over its members'
+  hashes, so the store digest MOVES. This is not an opinion about git; it
+  is demonstrated below.
+
+  PIN-ledger.json blob hash as committed        : 30595a7364db38f3ac55f1a1a1f6ed50f2260c82
+  same file with dec2_revision 5 -> 6           : b865732ccb4e3528b5f4962eb918885adfe0a123
+  identical? NO   -> editing a pin MOVES the tree hash
+
+FACT 2 -- default-deny grading against the CURRENT corpus
+  vector files in the store (PINs excluded)    : 59
+  carrying a `tenant` field TODAY              : 0
+  carrying NO `tenant` field                   : 59
+  unreadable, SKIPPED                          : 0
+  `Seam` is the model T245 says to copy, and its grading reads:
+      "ABSENT REFUSES: default-deny, DEC-2 4.10"  [admit.go:118-123]
+  So a `tenant` graded that way REFUSES all 59.
+
+THE THREE ROUTES, EACH AGAINST T250's TWO CONSTRAINTS
+
+  A. add the field, grade default-deny, re-stamp every vector with `tenant: gerege`
+      (i)  store digest : MOVES the digest: 59 vector blobs change
+      (ii) admissibility: no vector left inadmissible
+      -> VIOLATES (i)
+
+  B. add the field, grade default-deny, do NOT re-stamp
+      (i)  store digest : digest unmoved
+      (ii) admissibility: all 59 vectors REFUSE
+      -> VIOLATES (ii)
+
+  C. add the field, grade it PERMISSIVELY (absent == ok)
+      (i)  store digest : digest unmoved
+      (ii) admissibility: no vector inadmissible
+      -> VIOLATES THE POINT
+
+  Route C additionally requires the pin to carry the permitted value, and
+  BOTH pins live inside the pinned tree (FACT 1), so even route C moves the
+  digest the moment the pin names a tenant. There is no route that
+  satisfies (i) and (ii) together.
+
+VERDICT: NOT IMPLEMENTED. The constraint is not merely unmet by the obvious
+  route -- it is unmeetable by any route, because the artefact that must
+  record the permitted tenant is itself inside the tree whose hash must not
+  move. T245's own words apply to route C: item 1 without item 2 is
+  COSMETIC, and a field graded permissively is a NEW P-45 artefact -- one
+  that exists, is committed, is read, and grades nothing. Shipping that
+  under the banner of fixing a fail-open would be the defect, re-committed.

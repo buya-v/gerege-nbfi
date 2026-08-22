@@ -1,0 +1,113 @@
+SCOPE: git ls-files of /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd ; suffix .sh/.py ; must invoke curl or psql
+  .sh/.py scanned                              : 918
+  binary, SKIPPED                              : 0
+
+A. scripts that SEND a tenant selector to the oracle      : 50
+      .softhouse/capture/actualactual/src/pathb-capture.sh
+      .softhouse/capture/audit-t44/charges/bin/rerun.sh
+      .softhouse/capture/audit-t44/charges/bin/runprobes.sh
+      .softhouse/capture/charges/bin/attest-t40.py
+      .softhouse/capture/charges/bin/attest.py
+      .softhouse/capture/charges/bin/create-charges.sh
+      .softhouse/capture/charges/bin/create-charges2.sh
+      .softhouse/capture/charges/bin/lib.sh
+      .softhouse/capture/charges/bin/t48-capture.sh
+      .softhouse/capture/charges/bin/t51-capture.sh
+      .softhouse/capture/charges/bin/t51-capture2.sh
+      .softhouse/capture/charges/bin/t51-capture3.sh
+      .softhouse/capture/charges/bin/t51-capture4.sh
+      .softhouse/capture/charges/bin/t51-capture5.sh
+      .softhouse/capture/charges/bin/t51-capture6.sh
+      .softhouse/capture/charges/bin/t51-determinism.sh
+      .softhouse/capture/charges/bin/t51-negative.sh
+      .softhouse/capture/leapboundary/bin/t55-capture.sh
+      .softhouse/capture/leapboundary/bin/t55-determinism.sh
+      .softhouse/capture/leapboundary/bin/t55-negative-tests.sh
+      .softhouse/capture/pathb/t149/capture-halfeven-arm.sh
+      .softhouse/capture/pathb/t22-audit/fresh-tenant.sh
+      .softhouse/capture/pathb/t22-audit/modeprobe.sh
+      .softhouse/capture/pathb/t22-audit/modeprobe2.sh
+      .softhouse/capture/pathb/t22-audit/probe.sh
+      .softhouse/capture/pathb/t22-audit/rerun-default.sh
+      .softhouse/capture/pathb/t22-probe/capture.sh
+      .softhouse/capture/pathb/t22-probe/repro.sh
+      .softhouse/capture/pathb/t36/attest.py
+      .softhouse/capture/pathb/t36/emiloop-probe.sh
+      .softhouse/capture/pathb/t36/preconditions.sh
+      .softhouse/capture/pathb/t36/recapture.sh
+      .softhouse/capture/pathb/t36/recreate-products.sh
+      .softhouse/capture/src/run-rc6-rounddown-attestation.sh
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals-part2.sh
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.sh
+      .softhouse/capture/tierA-a2/cap.sh
+      .softhouse/capture/tierA-a2/cap10.sh
+      .softhouse/capture/tierA-a2/cap8.sh
+      .softhouse/capture/tierA-a2/cap9.sh
+      .softhouse/capture/tierA-a2/prove-cap-transport-red.py
+      .softhouse/capture/tierA-a2/prove-cap8-wire-bytes.py
+      .softhouse/capture/tierA-a2/prove-quit-trap-cap.py
+      .softhouse/capture/tierA-a2/prove-quit-trap-cap9.py
+      .softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh
+      .softhouse/reviews/A2-10-probe/poison-d2-transport-modes.py
+      .softhouse/reviews/A2-11/re-derive-runtime.sh
+      .softhouse/reviews/A2-11/re-observe.sh
+      .softhouse/reviews/t245-oracle-pin/measure.sh
+      .softhouse/reviews/t246-dec2-rev6/measure-reversals.sh
+
+B. of those, that ATTEST the tenant into a record at all  : 5
+C. of those attesters, attesting it as a LITERAL (F-2)    : 5
+      .softhouse/capture/tierA-a2/cap.sh:97  LITERAL  `gerege`
+      .softhouse/capture/tierA-a2/cap10.sh:113  LITERAL  `gerege`
+      .softhouse/capture/tierA-a2/cap8.sh:116  LITERAL  `gerege`
+      .softhouse/capture/tierA-a2/cap9.sh:95  LITERAL  `gerege`
+      .softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh:27  LITERAL  `gerege`
+      .softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh:34  LITERAL  `gerege`
+   ... attesting it DERIVED from the value in force       : 0
+
+D. SEND a tenant but attest NO tenant line anywhere       : 45
+   (strictly worse than a literal: no line to be wrong)
+      .softhouse/capture/actualactual/src/pathb-capture.sh
+      .softhouse/capture/audit-t44/charges/bin/rerun.sh
+      .softhouse/capture/audit-t44/charges/bin/runprobes.sh
+      .softhouse/capture/charges/bin/attest-t40.py
+      .softhouse/capture/charges/bin/attest.py
+      .softhouse/capture/charges/bin/create-charges.sh
+      .softhouse/capture/charges/bin/create-charges2.sh
+      .softhouse/capture/charges/bin/lib.sh
+      .softhouse/capture/charges/bin/t48-capture.sh
+      .softhouse/capture/charges/bin/t51-capture.sh
+      .softhouse/capture/charges/bin/t51-capture2.sh
+      .softhouse/capture/charges/bin/t51-capture3.sh
+      .softhouse/capture/charges/bin/t51-capture4.sh
+      .softhouse/capture/charges/bin/t51-capture5.sh
+      .softhouse/capture/charges/bin/t51-capture6.sh
+      .softhouse/capture/charges/bin/t51-determinism.sh
+      .softhouse/capture/charges/bin/t51-negative.sh
+      .softhouse/capture/leapboundary/bin/t55-capture.sh
+      .softhouse/capture/leapboundary/bin/t55-determinism.sh
+      .softhouse/capture/leapboundary/bin/t55-negative-tests.sh
+      .softhouse/capture/pathb/t149/capture-halfeven-arm.sh
+      .softhouse/capture/pathb/t22-audit/fresh-tenant.sh
+      .softhouse/capture/pathb/t22-audit/modeprobe.sh
+      .softhouse/capture/pathb/t22-audit/modeprobe2.sh
+      .softhouse/capture/pathb/t22-audit/probe.sh
+      .softhouse/capture/pathb/t22-audit/rerun-default.sh
+      .softhouse/capture/pathb/t22-probe/capture.sh
+      .softhouse/capture/pathb/t22-probe/repro.sh
+      .softhouse/capture/pathb/t36/attest.py
+      .softhouse/capture/pathb/t36/emiloop-probe.sh
+      .softhouse/capture/pathb/t36/preconditions.sh
+      .softhouse/capture/pathb/t36/recapture.sh
+      .softhouse/capture/pathb/t36/recreate-products.sh
+      .softhouse/capture/src/run-rc6-rounddown-attestation.sh
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals-part2.sh
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.sh
+      .softhouse/capture/tierA-a2/prove-cap-transport-red.py
+      .softhouse/capture/tierA-a2/prove-cap8-wire-bytes.py
+      .softhouse/capture/tierA-a2/prove-quit-trap-cap.py
+      .softhouse/capture/tierA-a2/prove-quit-trap-cap9.py
+      .softhouse/reviews/A2-10-probe/poison-d2-transport-modes.py
+      .softhouse/reviews/A2-11/re-derive-runtime.sh
+      .softhouse/reviews/A2-11/re-observe.sh
+      .softhouse/reviews/t245-oracle-pin/measure.sh
+      .softhouse/reviews/t246-dec2-rev6/measure-reversals.sh

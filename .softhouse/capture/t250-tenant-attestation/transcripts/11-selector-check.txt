@@ -1,0 +1,118 @@
+SCOPE: every path in `git ls-files` of /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd
+tracked files                                  : 5215
+  binary, SKIPPED                              : 12
+  tracked but absent from disk, SKIPPED        : 0
+
+NARROWING A -- suffix filter
+  files (ANY suffix) emitting >=1 literal `Key: value` : 152
+  of those NOT .sh/.py (would have been missed)        : 14
+      .softhouse/capture/pathb/t149/t156/sweep-unguarded-mutators.txt
+      .softhouse/capture/pathb/t99/out/sweep.txt
+      .softhouse/capture/t238-failopen/transcripts/60-multiline-sweep.txt
+      .softhouse/capture/t239-r11-rerun/transcripts/51-run-r11-verbatim.txt
+      .softhouse/capture/t244-dec2-rev6/sweep-output.txt
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T194.md
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T245.md
+      .softhouse/reviews/T138-evidence/out/R11-HYGIENE.txt
+      .softhouse/reviews/T138-evidence/out/R3-VCEFG.txt
+      .softhouse/reviews/T138-review-of-T115.md
+      .softhouse/reviews/T158-evidence/02-t156-sweep-rerun-branch-tip.txt
+      .softhouse/reviews/T77-pathb-recapture-review.md
+      .softhouse/reviews/t245-oracle-pin/REVIEW.md
+      .softhouse/reviews/t245-oracle-pin/measure-output.txt
+
+NARROWING B -- `curl|psql` in-file filter
+  .sh/.py attestation writers with NO curl/psql        : 109
+  of those that call a known transport helper          : 10
+      .softhouse/capture/charges/bin/capture.sh
+      .softhouse/capture/charges/bin/control.sh
+      .softhouse/capture/charges/bin/t46-capture.sh
+      .softhouse/capture/lib/check_wire_float_roundtrip.py
+      .softhouse/capture/pathb/t99/prove-p24-postmerge.sh
+      .softhouse/capture/tierA-a2/a2-29-retype-path.py
+      .softhouse/capture/tierA-a2/manifest.py
+      .softhouse/capture/tierA-a2/prove-a2-26-guards-red.sh
+      .softhouse/capture/tierA-a2/prove-manifest-blind-red.py
+      .softhouse/reviews/A2-10-probe/poison-d2-shell-matrix.sh
+
+NARROWING C -- exact-value match in shadowing_var
+  REDACTION CLASS: same header key held by an in-scope var,
+  emitted literal differs (unfalsifiable but deliberate) : 4
+      .softhouse/capture/tierA-a2/cap.sh:98  emitted `Authorization: Basic <mifos:password>`  while $A = `Authorization: Basic bWlmb3M6cGFzc3dvcmQ=`
+      .softhouse/capture/tierA-a2/cap10.sh:114  emitted `Authorization: Basic <mifos:password>`  while $A = `Authorization: Basic bWlmb3M6cGFzc3dvcmQ=`
+      .softhouse/capture/tierA-a2/cap8.sh:117  emitted `Authorization: Basic <mifos:password>`  while $A = `Authorization: Basic bWlmb3M6cGFzc3dvcmQ=`
+      .softhouse/capture/tierA-a2/cap9.sh:96  emitted `Authorization: Basic <mifos:password>`  while $A = `Authorization: Basic bWlmb3M6cGFzc3dvcmQ=`
+
+CROSS-CHECK -- files naming a `.http` sidecar path      : 72
+      .softhouse/bin/build-oracle-image.sh
+      .softhouse/capture/pathb/t149/t156/sweep-unguarded-mutators.txt
+      .softhouse/capture/t234-sweep-instrument-audit/evidence/census.json
+      .softhouse/capture/t243-wiring/evidence/redA.txt
+      .softhouse/capture/t243-wiring/evidence/redB.txt
+      .softhouse/capture/t243-wiring/instruments/31-citation-census.py
+      .softhouse/capture/tierA-a2/DEFECTS-FOUND-BY-REVIEW.md
+      .softhouse/capture/tierA-a2/FLAGGED-NOT-REPRODUCIBLE.txt
+      .softhouse/capture/tierA-a2/MANIFEST.sha256
+      .softhouse/capture/tierA-a2/RED-GREEN-A2-26-guards.txt
+      .softhouse/capture/tierA-a2/RED-GREEN-D2-cap-transport.txt
+      .softhouse/capture/tierA-a2/RED-GREEN-T163-cap8-wire-bytes.txt
+      .softhouse/capture/tierA-a2/SUPERSEDED.txt
+      .softhouse/capture/tierA-a2/T163-AUDIT-no-capture-affected.txt
+      .softhouse/capture/tierA-a2/audit-req-float-roundtrip.py
+      .softhouse/capture/tierA-a2/cap.sh
+      .softhouse/capture/tierA-a2/cap10.sh
+      .softhouse/capture/tierA-a2/cap8.sh
+      .softhouse/capture/tierA-a2/cap9.sh
+      .softhouse/capture/tierA-a2/census-a2-26.py
+      .softhouse/capture/tierA-a2/prove-a2-26-guards-red.sh
+      .softhouse/capture/tierA-a2/prove-cap-transport-red.py
+      .softhouse/capture/tierA-a2/prove-cap8-wire-bytes.py
+      .softhouse/capture/tierA-a2/prove-manifest-blind-red.py
+      .softhouse/capture/tierA-a2/run-210-a2-7-mapping.sh
+      .softhouse/capture/tierA-a2/show.py
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-10.md
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-11.md
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-15-handoff.md
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-26.md
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep-output.txt
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-5.md
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-7.md
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-9.md
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T163.md
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T179.md
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/sweep-repo-AFTER.txt
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T205-evidence/sweep-repo-BEFORE.txt
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-full-repo.txt
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-AFTER-enforce-unknown-full-repo.txt
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-full-repo.txt
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T212-evidence/POLARITY-BEFORE-enforce-unknown-full-repo.txt
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T216-handoff.md
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T243-handoff.md
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T245.md
+      .softhouse/reviews/A2-10-probe/TRANSCRIPT.txt
+      .softhouse/reviews/A2-10-probe/adjudicate-rmf-brief-literal.sh
+      .softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh
+      .softhouse/reviews/A2-10-probe/poison-d2-no-regression.py
+      .softhouse/reviews/A2-10-probe/poison-d2-shell-matrix.sh
+      .softhouse/reviews/A2-10-probe/poison-d2-transport-modes.py
+      .softhouse/reviews/A2-10-probe/reissue-a2-4-corpus-property.py
+      .softhouse/reviews/A2-10-review-of-A2-5.md
+      .softhouse/reviews/A2-11/TRANSCRIPT-A2-11.txt
+      .softhouse/reviews/A2-11/enumerate-corpus.py
+      .softhouse/reviews/A2-4-review-of-A2-3.md
+      .softhouse/reviews/A2-9-review-of-A2-8.md
+      .softhouse/reviews/T158-evidence/02-t156-sweep-rerun-branch-tip.txt
+      .softhouse/reviews/a2-33-dec2-rev5/sweep-output-live-population.txt
+      .softhouse/reviews/a2-34-review-a2-15/REVIEW.md
+      .softhouse/reviews/a2-34-review-a2-15/bar-and-oracle.sh
+      .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+      .softhouse/reviews/t179-guard-classifier/population-output.txt
+      .softhouse/reviews/t179-guard-classifier/worktree-sweep-output.txt
+      .softhouse/reviews/t245-oracle-pin/REVIEW.md
+      .softhouse/reviews/t245-oracle-pin/measure-output.txt
+      .softhouse/reviews/t245-oracle-pin/measure.sh
+      .softhouse/reviews/t246-dec2-rev6/sweep-vectors-reversal.txt
+      .softhouse/tasks.json
+      docs/adr/DEC-2-gl-accounting-adapter.md
+      nexus/internal/apps/ledger/conformance/admit.go
+      nexus/internal/apps/ledger/conformance/vector.go
