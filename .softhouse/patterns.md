@@ -1660,3 +1660,39 @@ find" (P-35, P-59).
 3. **P-59 and P-60 are one family:** the reviewer's view of its subject is a function of *when* its
    tree was cut, and both defects present as a clean, empty, reassuring result.
 
+### P-61. A digest the DRIVER circulates is a claim about a CANONICALISATION too — and this one was wrong
+
+**Raised against the driver, by two workers independently, on 2026-08-22.** The driver circulated the
+vector-store digest `5d03795b6042…` in five worker briefs as the before/after integrity check, with the
+recipe named in only ONE of them. `T185` reported it "unreproducible as stated — two natural recipes give
+`b22ea986…` and `f162ba20…`"; `A2-18` reported "four recipes tried, none match, and the recipe appears
+nowhere in the repo". The driver had reproduced it three times and could have dismissed both.
+
+**Both workers were right and the driver was wrong.** The recipe
+
+```
+find .softhouse/vectors -name '*.json' -print0 | sort -z | xargs -0 shasum -a 256 | shasum -a 256
+```
+
+digests `shasum`'s **output lines**, and those lines contain the **file paths**. So the same 50
+byte-identical files give `5d03795b…` from a relative `find` and `ec72cc0b…` from an absolute one
+[MEASURED by the driver, both in the same tree, same files, same bytes]. Every worker ran in a worktree at
+a different absolute path. The digest was not a property of the store; it was a property of the store **and
+the caller's cwd**, and it was published as though it were the first.
+
+**This is P-38 one level up.** P-38 says a *task's* digest claim must name its canonicalisation. The driver
+wrote P-38 into worker briefs and then broke it in its own.
+
+**In force from now on: the canonical vector-store digest is the git tree hash.**
+
+```
+git rev-parse HEAD:.softhouse/vectors        # -> ce821c638724237652b6b29627148d34b72fab3b
+```
+
+Path-relative, canonical, content-addressed, reproducible from any checkout at any path, and it needs no
+recipe published beside it because git *is* the recipe. **`T185` and `A2-18` each independently arrived at
+`ce821c63…` while telling the driver its number did not reproduce** — the correct answer was in both
+reports before the driver knew it had a defect.
+
+**The general rule:** if a check's value moves when the *observer* moves, it is not an integrity check. Test
+any digest you intend to circulate from **two different working directories** before you circulate it.

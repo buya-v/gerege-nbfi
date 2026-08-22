@@ -1401,7 +1401,7 @@
    "executor": "agent",
    "model": "opus",
    "target": "code",
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
    "dependencies": [],
    "files_hint": [
@@ -1409,9 +1409,10 @@
    ],
    "description": "DEC-2 rev 2 precondition P-8, and §5.3 states it is INDEPENDENT of P-1..P-5 and could be written today. The banner at the top of docs/adr/DEC-2-gl-accounting-adapter.md says it plainly: run_guards invokes exactly five guards and ALL FIVE are about floating point, gofmt and exception scope; NOTHING in this repository looks for a balance write path, or for an UPDATE/DELETE against acc_gl_journal_entry. I-3 (balances are derived, never written) and I-4 (append-only ledger) are CLAUDE.md non-negotiables with zero enforcement. Build the guard as a STANDALONE executable under .softhouse/guards/ — do NOT edit .softhouse/conformance.sh in this task (T201 holds that file this fire); wiring into run_guards is a separate follow-up you must specify but not perform.",
    "acceptance": null,
-   "note": "DISPATCHED fire 20260822-080001, worktree-isolated, model opus.",
+   "note": "DONE + MERGED 2a3eefd, fire 20260822-080001. DEC-2 P-8 BUILT AND PROVEN -- AND DELIBERATELY NOT WIRED IN, which the worker put in its own headline rather than letting the driver discover it: run_guards STILL invokes five guards, all float/gofmt/exception-scope, and the conformance transcript is BYTE-IDENTICAL before and after. That identity is simultaneously the proof it broke nothing AND the proof that I-3/I-4 REMAIN UNGRADED AT GRADE TIME. DEC-2 section 4.4.1 is still true as written; ratifying DEC-2 today still ratifies the gap. P-8 is now SATISFIABLE ON ONE EDIT, not satisfied. ARTEFACTS: .softhouse/guards/ledgerguard/main.go (1238 lines, go/parser AST, zero deps -- and it ARGUED the choice: a regex would fire inside comments, since the guard's own doc comment names acc_gl_journal_entry four times, and would mistake `a.Balance == 0` for an assignment); check-ledger-invariants.sh (the head: derives the floor with git ls-files, PARSES the census figure, requires both selftest polarities, --prove drives itself red); drive-red-ledger-invariants.sh. DETECTION SURFACE derived from DEC-2 4.4/4.4.1 with each class traced to a QUOTED SENTENCE: I3-FIELD-WRITE, I3-SQL-BALANCE (incl. the m_trial_balance populated-at-INSERT shape 4.4 names), I3-PKG-STATE, I4-DML, I4-BUILDER (4.4.1's 'any Go call that would emit one' -- db.Model(&JournalEntry{}).Delete() has no SQL text), I6-HOLD-BALANCE, OPAQUE-SQL. THREE ARGUED NON-DETECTIONS, and the first is the good one: INSERT into the journal is NOT flagged, because THAT ABSENCE IS APPEND-ONLY. PROOF: RED 8/8 classes planted in scratch copies of the REAL tree, each refused WITH THE EXPECTED CLASS ASSERTED -- the worker's own reasoning being that exit code alone would let a P-35 gate masquerade as a detection. Plus 15 selftest cases, 13 RED / 2 GREEN. GREEN: exit 0 on nexus/, 44 files / 5 packages / 498 funcs / 640 assignments / 3867 string literals / 4462 calls. P-35: five populations gated at zero, floor from a SECOND PROGRAM (WalkDir 44, git ls-files 44), and the head READS THE VALUE -- --prove shows it exits 1 on a stub printing 'inspected 0' with exit 0, which is T194's exact defect. DRIVER-RE-RAN BOTH on merged main: guard exit 0, --prove exit 0. HONEST NEGATIVES PRINTED ON EVERY RUN, not buried in the handoff: NIL-COVERAGE -- the tree has NO DB driver and NO SQL, so the SQL classes are proven by selftest and NOT by this tree; two measured OVER-MATCHES named in the census (the DML-verb test fires on English prose -- all 3 'DML' literals in nexus/ are message text -- and the hold matcher fires on TestPlaceholderDisjointnessHolds); CANNOT-CATCH -- dynamic SQL beyond the recognised call set, RENAMING A BALANCE DEFEATS THE GUARD (the surface is the name, there is no type checker), triggers/migrations/stored procs, I-5's semantic half, non-Go callers. WIRING SPECIFIED AND NOT PERFORMED, anchored ON TEXT rather than line numbers precisely because T201's edit was landing in the same file the same fire: two edits, verbatim in the handoff; run_guards maps any non-zero to EXIT_UNUSABLE so exit semantics need no change; cost 2.8 s; _run_capture_guard CANNOT be reused because it hardcodes .softhouse/capture/lib/$1. Routed as T208. IT ALSO CAUGHT A DRIVER DEFECT: it reported the circulated store digest 5d03795b... as unreproducible across four recipes. IT WAS RIGHT -- see P-61.",
    "contract_independent": true,
-   "branch": "softhouse/A2-18-ledger-invariant-guard"
+   "branch": "softhouse/A2-18-ledger-invariant-guard",
+   "merged": "2a3eefd"
   },
   {
    "id": "A2-19",
@@ -1569,6 +1570,26 @@
    "acceptance": null,
    "note": null,
    "contract_independent": true
+  },
+  {
+   "id": "T208",
+   "title": "Wire A2-18's ledger-invariant guard into run_guards — until this lands, I-3 and I-4 are enforced by nothing at grade time",
+   "role": "coder",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [
+    "A2-18",
+    "T201"
+   ],
+   "files_hint": [
+    ".softhouse/conformance.sh"
+   ],
+   "description": "A2-18 built and proved the I-3/I-4 source guard DEC-2 section 5.3 P-8 requires, and deliberately did NOT wire it in, because T201 held conformance.sh the same fire. The consequence A2-18 stated against itself and which must not be softened: run_guards still invokes five guards, all about float/gofmt/exception-scope, so 'balances are derived' and 'append-only' -- two CLAUDE.md non-negotiables -- are enforced by NOTHING at grade time, and the conformance transcript being byte-identical before and after A2-18 is the proof of exactly that. The wiring specification is verbatim in .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-18.md, ANCHORED ON TEXT rather than line numbers because T201's merge moved them: add a guard_ledger_invariants shim above run_guards and a `guard_ledger_invariants || failed=1` call after guard_no_narrow_catch_in_capture_rigs. run_guards maps any non-zero to EXIT_UNUSABLE so exit semantics need no change. Do NOT reuse _run_capture_guard -- A2-18 measured that it hardcodes .softhouse/capture/lib/$1. RE-DERIVE the insertion point against post-T201 conformance.sh rather than trusting the anchor text, DRIVE RED (a planted violation must now turn the HARNESS red, not just the standalone guard) and GREEN (43 parity vectors / 5664 cells / exit 0 / probe present and up). Cost measured at 2.8 s. Carry A2-18's NIL-COVERAGE and CANNOT-CATCH notices through to the harness output -- a guard whose limits stop being printed when it is wired in is the P-22 failure this program keeps finding.",
+   "acceptance": null,
+   "note": null
   }
  ],
  "cross_corroboration": {
