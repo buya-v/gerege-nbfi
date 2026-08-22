@@ -412,11 +412,31 @@ is REFUSED, default-deny), and the harness **prints all of them on every run, pa
 under `WHAT A GREEN LEDGER SECTION DOES **NOT** MEAN`. A guard that states its limits only when it
 fails is indistinguishable from one that has none.
 
+> **[CORRECTED BY T242 — A2-34 F-5. The sentence above was OVERSTATED WHEN WRITTEN.]** The harness
+> did **not** print all of them. `capabilities-ledger.json` carried **eight** `in_graded_domain:
+> false` rows and `report.go`'s block was **hardcoded prose listing six**. The two it dropped were
+> `ledger.reversal.entry` and — **`ledger.slot.resolution`, the sixth gap this very section adds
+> below.** T242 replaced the hardcoded block with one DERIVED from the registry, so the claim is
+> now true by construction and a row added to that file prints itself. See `T242-handoff.md` §2.
+
 1. **ACCRUAL IS ENTIRELY UNGRADED.** Product 28 is the only `ACCRUAL_PERIODIC` product, it **has
    no loan**, no accrual or COB job has ever run, and `INTEREST_RECEIVABLE` / `FEES_RECEIVABLE` /
    `PENALTIES_RECEIVABLE` (gl 18, 22, 16) have **zero** journal entries. Product 28's own mapping
    is inadmissible today (A2-314, 403). An accrual vector needs a **new** accrual product on clean
    accounts **plus a job run**. Neither is cheap and neither is in this task's scope.
+
+   > **[CORRECTED BY T242 — A2-34 F-4. The struck clause is FALSE and was printed by the harness
+   > as a measured fact on every run.]** Re-derived against the live PostgreSQL reference oracle:
+   > **gl 18 → 0, gl 22 → 0, gl 16 → SIXTEEN** — more journal entries than any other account in
+   > the tenant, and gl 16 is a promoted leg of **LDG-01, LDG-02 and LDG-03**, three of the four
+   > parity vectors. **The conclusion "accrual is entirely ungraded" STANDS; the evidence clause
+   > does not.** The error was structural, not clerical: **one GL account backs several slots.**
+   > gl 16 is `PENALTIES_RECEIVABLE` (slot 9) on product 28 **and** `FUND_SOURCE` (slot 1) on
+   > products 22, 27, 46, 54 and 55, and all sixteen of its rows arrive through the latter,
+   > because product 28 has no loan. **The SLOT is unposted; the ACCOUNT is not empty.** The
+   > registry now records the three slots as structured `unposted_slots` data and the harness
+   > measures each backing account's activity against the promoted corpus on every run. Full
+   > re-derivation, with the queries and the commit: `T242-handoff.md` §1.
 2. **`TRANSFERS_SUSPENSE` (gl 17) IS REACHED ONLY AS A MANUAL TARGET.** LDG-01 promotes it as
    one. It has **no accounting-path entry at all**; the path that reaches it is **account
    transfers**, which slice A2 never exercised.

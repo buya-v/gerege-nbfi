@@ -314,6 +314,15 @@ type Summary struct {
 	// the loanschedule four.
 	DeclaredExemptions int
 
+	// NotGraded is this context's account of its own coverage gaps, DERIVED from
+	// the capability registry on every run rather than hand-written beside it.
+	//
+	// It is a SUMMARY FIELD and not a report-time lookup so that the block is
+	// computed by the package that owns the registry, at the moment the store is
+	// loaded, with the vectors in hand — the account-activity annotation is
+	// measured from those vectors. See notgraded.go.
+	NotGraded []NotGradedCapability
+
 	Results    []Result
 	LoadErrors []LoadError
 	Fatal      []string
@@ -344,6 +353,29 @@ func Run(opts Options) *Summary {
 
 	vectors, loadErrs, err := LoadStore(opts.StoreRoot, opts.ContextFilter)
 	s.LoadErrors = loadErrs
+
+	// THE NOT-GRADED BLOCK IS BUILT BEFORE ANY EARLY RETURN IN THIS FUNCTION, and
+	// deliberately so. The declared gaps are a property of the REGISTRY, not of
+	// whether this run managed to grade anything, and the run that most needs
+	// its limits printed is the one that went wrong. Building it after the
+	// `len(vectors) == 0` return would make the gaps disappear exactly when the
+	// corpus did.
+	//
+	// SCOPE OF THAT CLAIM, STATED RATHER THAN LEFT TO BE ASSUMED — this is the
+	// task that exists because a coverage claim was broader than what backed it.
+	// It covers the early returns BELOW. It does NOT cover the one a level up:
+	// the loanschedule harness returns a nil Summary before ever calling Run
+	// when the ledger half of the store holds no file at all, and prints its
+	// empty-store banner instead. So on a TOTALLY EMPTY ledger corpus the
+	// declared gaps are still not printed. That state is exit 2 on the
+	// population pins regardless [MEASURED at T242's own commit: the four LEDGER
+	// pins mismatch and the run refuses], so nothing passes silently — but the
+	// gaps are a registry property and printing them there would be strictly
+	// better. Left alone because that early return is a deliberately distinct
+	// report state the exemption-census deflation arm reads, and widening it is
+	// a change to the loanschedule reporter rather than to this context.
+	s.NotGraded = notGradedRows(opts.Registry, vectors)
+
 	if err != nil {
 		s.Fatal = append(s.Fatal, err.Error())
 		return s
