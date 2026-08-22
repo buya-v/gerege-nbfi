@@ -1,0 +1,149 @@
+===== SNAPSHOT G0 baseline =====
+Border style is 2.
++-----+------------+-----+----+-----------+----+
+| id  | product_id | fat | pt | charge_id | gl |
++-----+------------+-----+----+-----------+----+
+|  12 |         23 |   1 |    |           | 16 |
+|  13 |         23 |   2 |    |           |  4 |
+|  14 |         23 |  10 |    |           | 17 |
+|  15 |         23 |   3 |    |           |  8 |
+|  16 |         23 |   4 |    |           |  9 |
+|  17 |         23 |   5 |    |           | 10 |
+|  18 |         23 |  12 |    |           | 11 |
+|  19 |         23 |   6 |    |           | 13 |
+|  20 |         23 |  13 |    |           | 14 |
+|  21 |         23 |  11 |    |           |  6 |
+| 155 |         23 |   1 |  1 |           | 16 |
+| 156 |         23 |   1 |  2 |           | 17 |
++-----+------------+-----+----+-----------+----+
+(12 rows)
+
++----------------------------+
+| max_acc_product_mapping_id |
++----------------------------+
+|                        156 |
++----------------------------+
+(1 row)
+
+===== PUT G1 generic FUND_SOURCE value change GL 16 -> 18 (both ASSET)  body: {"fundSourceAccountId": 18, "locale": "en"} =====
+HTTP 200
+{"resourceId":23,"changes":{"locale":"en","fundSourceAccountId":18}}
+===== SNAPSHOT G1 after =====
+Border style is 2.
++-----+------------+-----+----+-----------+----+
+| id  | product_id | fat | pt | charge_id | gl |
++-----+------------+-----+----+-----------+----+
+|  12 |         23 |   1 |    |           | 18 |
+|  13 |         23 |   2 |    |           |  4 |
+|  14 |         23 |  10 |    |           | 17 |
+|  15 |         23 |   3 |    |           |  8 |
+|  16 |         23 |   4 |    |           |  9 |
+|  17 |         23 |   5 |    |           | 10 |
+|  18 |         23 |  12 |    |           | 11 |
+|  19 |         23 |   6 |    |           | 13 |
+|  20 |         23 |  13 |    |           | 14 |
+|  21 |         23 |  11 |    |           |  6 |
+| 155 |         23 |   1 |  1 |           | 16 |
+| 156 |         23 |   1 |  2 |           | 17 |
++-----+------------+-----+----+-----------+----+
+(12 rows)
+
++----------------------------+
+| max_acc_product_mapping_id |
++----------------------------+
+|                        156 |
++----------------------------+
+(1 row)
+
+===== PUT G2 generic FUND_SOURCE value change GL 18 -> 21 (ASSET -> LIABILITY)  body: {"fundSourceAccountId": 21, "locale": "en"} =====
+HTTP 200
+{"resourceId":23,"changes":{"locale":"en","fundSourceAccountId":21}}
+===== SNAPSHOT G2 after =====
+Border style is 2.
++-----+------------+-----+----+-----------+----+
+| id  | product_id | fat | pt | charge_id | gl |
++-----+------------+-----+----+-----------+----+
+|  12 |         23 |   1 |    |           | 21 |
+|  13 |         23 |   2 |    |           |  4 |
+|  14 |         23 |  10 |    |           | 17 |
+|  15 |         23 |   3 |    |           |  8 |
+|  16 |         23 |   4 |    |           |  9 |
+|  17 |         23 |   5 |    |           | 10 |
+|  18 |         23 |  12 |    |           | 11 |
+|  19 |         23 |   6 |    |           | 13 |
+|  20 |         23 |  13 |    |           | 14 |
+|  21 |         23 |  11 |    |           |  6 |
+| 155 |         23 |   1 |  1 |           | 16 |
+| 156 |         23 |   1 |  2 |           | 17 |
++-----+------------+-----+----+-----------+----+
+(12 rows)
+
++----------------------------+
+| max_acc_product_mapping_id |
++----------------------------+
+|                        156 |
++----------------------------+
+(1 row)
+
+===== PUT G3 RESTORE generic FUND_SOURCE back to GL 16  body: {"fundSourceAccountId": 16, "locale": "en"} =====
+HTTP 200
+{"resourceId":23,"changes":{"locale":"en","fundSourceAccountId":16}}
+===== SNAPSHOT G3 after =====
+Border style is 2.
++-----+------------+-----+----+-----------+----+
+| id  | product_id | fat | pt | charge_id | gl |
++-----+------------+-----+----+-----------+----+
+|  12 |         23 |   1 |    |           | 16 |
+|  13 |         23 |   2 |    |           |  4 |
+|  14 |         23 |  10 |    |           | 17 |
+|  15 |         23 |   3 |    |           |  8 |
+|  16 |         23 |   4 |    |           |  9 |
+|  17 |         23 |   5 |    |           | 10 |
+|  18 |         23 |  12 |    |           | 11 |
+|  19 |         23 |   6 |    |           | 13 |
+|  20 |         23 |  13 |    |           | 14 |
+|  21 |         23 |  11 |    |           |  6 |
+| 155 |         23 |   1 |  1 |           | 16 |
+| 156 |         23 |   1 |  2 |           | 17 |
++-----+------------+-----+----+-----------+----+
+(12 rows)
+
++----------------------------+
+| max_acc_product_mapping_id |
++----------------------------+
+|                        156 |
++----------------------------+
+(1 row)
+
+===== PUT G4 RESTORE channel to the single T275 end-state entry pt2 -> GL 17  body: {"locale": "en", "paymentChannelToFundSourceMappings": [{"paymentTypeId": 2, "fundSourceAccountId": 17}]} =====
+HTTP 200
+{"resourceId":23,"changes":{"locale":"en","paymentChannelToFundSourceMappings":"[{\"paymentTypeId\":2,\"fundSourceAccountId\":17}]"}}
+===== PUT G5 RESTORE description to the T275 end-state string  body: {"description": "T275 unrelated-field update probe: no accounting parameter is present in this body", "locale": "en"} =====
+HTTP 200
+{"resourceId":23,"changes":{"locale":"en","description":"T275 unrelated-field update probe: no accounting parameter is present in this body"}}
+===== SNAPSHOT G5 after (restored) =====
+Border style is 2.
++-----+------------+-----+----+-----------+----+
+| id  | product_id | fat | pt | charge_id | gl |
++-----+------------+-----+----+-----------+----+
+|  12 |         23 |   1 |    |           | 16 |
+|  13 |         23 |   2 |    |           |  4 |
+|  14 |         23 |  10 |    |           | 17 |
+|  15 |         23 |   3 |    |           |  8 |
+|  16 |         23 |   4 |    |           |  9 |
+|  17 |         23 |   5 |    |           | 10 |
+|  18 |         23 |  12 |    |           | 11 |
+|  19 |         23 |   6 |    |           | 13 |
+|  20 |         23 |  13 |    |           | 14 |
+|  21 |         23 |  11 |    |           |  6 |
+| 156 |         23 |   1 |  2 |           | 17 |
++-----+------------+-----+----+-----------+----+
+(11 rows)
+
++----------------------------+
+| max_acc_product_mapping_id |
++----------------------------+
+|                        156 |
++----------------------------+
+(1 row)
+
