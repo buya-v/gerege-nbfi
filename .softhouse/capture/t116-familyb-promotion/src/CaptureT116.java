@@ -370,7 +370,10 @@ public class CaptureT116 {
                 ambientPrecision = String.valueOf(ambient.getPrecision());
                 ambientRoundingMode = "\"" + ambient.getRoundingMode().name() + "\"";
                 ambientRoundingModeOrdinal = String.valueOf(ambient.getRoundingMode().ordinal());
-            } catch (RuntimeException e) {
+            } catch (Throwable e) {
+                // T116: Throwable, not RuntimeException. An Error raised while READING the ambient
+                // MathContext would otherwise escape and kill the JVM before any JSON is printed,
+                // which is the same class of hole T169 closed at the seam. See T169 follow-up 2.
                 ambientMathContext = e.getClass().getName() + ": " + e.getMessage();
                 ambientPrecision = "null";
                 ambientRoundingMode = "null";
@@ -430,25 +433,21 @@ public class CaptureT116 {
         final LoanSchedulePlan plan;
         try {
             plan = generator.generate(mc, config);
-        } catch (RuntimeException e) {
-            // T21 P1-9: keep the frames. A discarded stack trace is a lost finding.
-            b.append("      \"observed\": null,\n");
-            b.append("      \"error\": \"").append(e.getClass().getName()).append(": ")
-                    .append(String.valueOf(e.getMessage()).replace("\"", "'").replace("\n", " ")).append("\",\n");
-            b.append("      \"errorStackTop\": [");
-            StackTraceElement[] st = e.getStackTrace();
-            int n = Math.min(st.length, 25);
-            for (int i = 0; i < n; i++) {
-                b.append(i == 0 ? "" : ", ").append(q(st[i].toString()));
+        } catch (Throwable t) {
+            // T169. Throwable, NOT RuntimeException. java.lang.StackOverflowError is an Error, so
+            // the handler this replaces could not see it at all: it escaped run(), escaped main(),
+            // and killed the JVM before a byte of JSON was printed. A throw is now a FIRST-CLASS
+            // OUTCOME -- neither an observation nor an absence. The fatal rule, and the reason the
+            // frames go to the JSON instead of to stderr, are documented in ThrewOutcome.java.
+            if (ThrewOutcome.isFatal(t)) {
+                ThrewOutcome.announceFatal(c.id(), t);
+                throw t;
             }
-            b.append("],\n");
-            Throwable cause = e.getCause();
-            b.append("      \"errorCause\": ").append(q(cause == null ? null : cause.getClass().getName() + ": " + cause.getMessage())).append("\n");
-            b.append("    }");
-            e.printStackTrace(System.err);
+            ThrewOutcome.appendThrew(b, t, 25);
             return b.toString();
         }
 
+        b.append("      \"outcome\": \"observed\",\n");
         b.append("      \"observed\": {\n");
         b.append("        \"loanTermInDays\": ").append(plan.getLoanTermInDays()).append(",\n");
         b.append("        \"totalDisbursedAmount\": \"").append(pl(plan.getTotalDisbursedAmount())).append("\",\n");

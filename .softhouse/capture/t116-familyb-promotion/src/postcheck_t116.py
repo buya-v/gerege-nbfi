@@ -2,6 +2,8 @@
 """T116 — postconditions on the capture. Derived from T100's committed postcheck.py (copied, not
 edited in place — T114's standing ruling), with the harness filename changed and TWO additions:
 
+  * every case must carry outcome "observed" -- T169 made the outcome a FIELD, and T116 promotes
+    only observed cells;
   * the id list is required to match /tmp/t116-ids.json EXACTLY AND IN ORDER, and any mismatch is
     reported as missing / extra / reordered rather than as a bare failure;
   * money is read as INTEGER MINOR UNITS from JSON strings, and json.load is called with
@@ -41,6 +43,11 @@ for c in caps:
         bad.append("%s: observed null" % c['id'])
     if 'error' in c:
         bad.append("%s: error %s" % (c['id'], c['error']))
+    # T169 made the outcome a FIELD rather than an inference. A cell that THREW is neither an
+    # observation nor an absence, and T116 promotes only observed cells, so anything else is a
+    # refusal rather than something to reason around.
+    if c.get('outcome') != 'observed':
+        bad.append("%s: outcome %r, not 'observed'" % (c['id'], c.get('outcome')))
     if i.get('mathContextPrecision') != 19 or i.get('mathContextRoundingModeOrdinal') != 4:
         bad.append("%s: not (19, HALF_UP)" % c['id'])
     if i.get('ambientMoneyHelperPrecision') != 19 or i.get('ambientMoneyHelperRoundingModeOrdinal') != 4:
@@ -82,6 +89,8 @@ assert mh['effectiveMathContextPrecision'] == 19 and mh['effectiveRoundingMode']
 assert att['fineract']['gitCommitId'] == commit and att['fineract']['gitDirty'] == 'false'
 srcs = {s['file']: s['sha256'] for s in att['sources']}
 assert srcs['/cap/src/CaptureT116.java'] == harness_sha
+assert srcs['/cap/src/ThrewOutcome.java'] == \
+    'de816eb330441d62e47f524d5b4e2ec297485512bf1b287c2fba5cd6b033465e', srcs['/cap/src/ThrewOutcome.java']
 assert srcs['/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java'] == seam_sha
 
 canon = json.dumps(caps, sort_keys=True, separators=(',', ':'), default=str).encode()

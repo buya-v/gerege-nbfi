@@ -361,12 +361,20 @@ func TestRefusedVectorDoesNotSilenceUnbackedEndToEnd(t *testing.T) {
 
 	// The kill count must shed exactly the refused vectors' kills, and the shed
 	// count must be DISCLOSED rather than dropped. 14 refused vectors carry 62
-	// kills (56 money, 6 structural) of the store's 110 (103 money, 7 structural).
+	// kills (56 money, 6 structural) of the store's 113 (106 money, 7 structural).
+	//
+	// THESE THREE NUMBERS ARE CORPUS-WIDE TRIPWIRES AND THEY MOVED WITH T116.
+	// 110 -> 113 and 103 -> 106 money kills, because T116 promoted three parity
+	// vectors carrying one money counterfactual each (G-8 family B and its clean
+	// boundary control); the credited count moved 48 -> 51 for the same reason,
+	// none of the three being among the 14 the perturbation refuses. The refused
+	// count (62) and the structural counts (7 and 1) are UNMOVED, which is what
+	// says the change is additive and touched no existing vector.
 	if s.RefusedCounterfactualsNamed != 62 {
 		t.Errorf("kills carried by refused vectors: got %d, want 62", s.RefusedCounterfactualsNamed)
 	}
-	if s.CounterfactualsNamed != 48 || s.MoneyKills != 47 || s.StructuralKills != 1 {
-		t.Errorf("credited kills: got %d (%d money, %d structural), want 48 (47 money, 1 structural)",
+	if s.CounterfactualsNamed != 51 || s.MoneyKills != 50 || s.StructuralKills != 1 {
+		t.Errorf("credited kills: got %d (%d money, %d structural), want 51 (50 money, 1 structural)",
 			s.CounterfactualsNamed, s.MoneyKills, s.StructuralKills)
 	}
 	if !strings.Contains(out, "kills carried by REFUSED vectors") {
@@ -390,9 +398,9 @@ func TestRefusedVectorDoesNotSilenceUnbackedEndToEnd(t *testing.T) {
 		t.Errorf("kills carried by refused vectors on the committed store: got %d, want 0",
 			ps.RefusedCounterfactualsNamed)
 	}
-	if ps.CounterfactualsNamed != 110 || ps.MoneyKills != 103 || ps.StructuralKills != 7 {
+	if ps.CounterfactualsNamed != 113 || ps.MoneyKills != 106 || ps.StructuralKills != 7 {
 		t.Errorf("the committed store's kill count moved: got %d (%d money, %d structural), "+
-			"want 110 (103 money, 7 structural)",
+			"want 113 (106 money, 7 structural)",
 			ps.CounterfactualsNamed, ps.MoneyKills, ps.StructuralKills)
 	}
 	if len(ps.UncoveredGradedCapabilities) != 0 {

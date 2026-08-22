@@ -264,6 +264,45 @@ func WriteReport(w io.Writer, s *Summary) {
 	// FINDING T58-N2. An assertion that did not run is reported here in full,
 	// never inferred from a HOLD. A HOLD carrying skipped rows is a PARTIAL hold
 	// and this section is the only place a reader can see which rows it covered.
+	// FINDING T116-N1. An EXEMPTED invariant is a check that was switched off BY
+	// THE VECTOR, on purpose, and until this section existed the only trace of it
+	// in the run output was a count in the `exempt` column above — the reason was
+	// readable nowhere but the JSON. That is the vacuous-guard class (P-22) with
+	// extra steps: a silenced check that does not say who silenced it or why is
+	// indistinguishable, from the report alone, from a check that passed.
+	//
+	// The rule this section enforces is the same one the NOT-RUN section below
+	// enforces for placeholders: A CHECK THAT STOPS CHECKING SAYS SO, IN WRITING,
+	// in the output a reader actually reads.
+	p("--- INVARIANT ASSERTIONS DELIBERATELY EXEMPTED BY A VECTOR (the vector says why, here) ---")
+	p("    An exemption is a check the VECTOR switched off, not one the harness could not run. It is")
+	p("    admissible only for a shape where the REFERENCE ORACLE ITSELF violates the invariant and the")
+	p("    implementation reproduces it, because there the assertion would be a claim about the oracle")
+	p("    rather than about the port — and that is a graded-domain question, not a harness one. Every")
+	p("    exemption below is named, scoped to one vector, and carries its own reason in full.")
+	exemptCount := 0
+	for _, r := range s.Results {
+		for _, iv := range r.Invariants {
+			if iv.Status == InvariantExempted {
+				exemptCount++
+			}
+		}
+	}
+	if exemptCount == 0 {
+		p("    NONE — every invariant was asserted against every vector.")
+	} else {
+		for _, r := range s.Results {
+			for _, iv := range r.Invariants {
+				if iv.Status != InvariantExempted {
+					continue
+				}
+				p("    %s — %s [EXEMPT]", r.CaseID, iv.Name)
+				p("        REASON: %s", iv.Detail)
+			}
+		}
+	}
+	p("")
+
 	p("--- INVARIANT ASSERTIONS THAT COULD NOT RUN (a cell the capture never recorded) ---")
 	p("    An invariant reads the schedule the implementation RETURNED. Where the implementation could not")
 	p("    compute a cell — only the self-test replay ever can't, and only for a cell the vector's own")
@@ -307,6 +346,11 @@ func WriteReport(w io.Writer, s *Summary) {
 	p("    invariant violations    %d", s.InvariantViolations)
 	p("    invariant assertions    %d NOT RUN (a cell nobody observed; listed above, never inferred)",
 		s.InvariantAssertionsNotRun)
+	// T116-N1. Exemptions belong beside the violation count, not only in the
+	// coverage table, so that "invariant violations 0" can never be read without
+	// the number of checks that were switched off to get there.
+	p("    invariant assertions    %d EXEMPTED BY A VECTOR (switched off on purpose; each one's reason is listed above)",
+		exemptCount)
 	// PRINTED WHETHER OR NOT ANYTHING IS WRONG (P-35). A guard that speaks only
 	// when it fails cannot be told apart from a guard that never ran, and both
 	// of the no-float guards were exactly that until T154. The counts are the

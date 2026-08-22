@@ -37,16 +37,22 @@ SEAM_SHA=$(shasum -a 256 "$CAP/src/EmbeddableProgressiveLoanScheduleGenerator.ja
 [ "$SEAM_SHA" = "$EXPECTED_SEAM_SHA" ] || fail "seam sha $SEAM_SHA"
 [ "$(shasum -a 256 "$REF3G_JSON" | cut -d' ' -f1)" = "$EXPECTED_REF3G_SHA" ] || fail "calibration reference sha"
 HARNESS_SHA=$(shasum -a 256 "$CAP/src/CaptureT116.java" | cut -d' ' -f1)
+# T169's shared throw recorder, compiled alongside the harness. It is READ from
+# .softhouse/capture/lib/ and never written by this task; its digest is pinned so a change to it
+# under T116's feet is a precondition failure rather than a silent difference.
+EXPECTED_THREW_SHA="de816eb330441d62e47f524d5b4e2ec297485512bf1b287c2fba5cd6b033465e"
+THREW_SHA=$(shasum -a 256 "$CAP/src/ThrewOutcome.java" | cut -d' ' -f1)
+[ "$THREW_SHA" = "$EXPECTED_THREW_SHA" ] || fail "ThrewOutcome.java sha $THREW_SHA"
 RUN_ID="t116-$(date -u +%Y%m%dT%H%M%SZ)"
-printf 'preconditions OK\n  image %s\n  fineract %s (clean)\n  seam %s\n  harness %s\n  run %s\n' \
-  "$ACTUAL_IMAGE_ID" "$ACTUAL_COMMIT" "$SEAM_SHA" "$HARNESS_SHA" "$RUN_ID"
+printf 'preconditions OK\n  image %s\n  fineract %s (clean)\n  seam %s\n  harness %s\n  ThrewOutcome %s\n  run %s\n' \
+  "$ACTUAL_IMAGE_ID" "$ACTUAL_COMMIT" "$SEAM_SHA" "$HARNESS_SHA" "$THREW_SHA" "$RUN_ID"
 
 set +e
 docker run --rm --user 0 --entrypoint sh \
   -e ATTEST_IMAGE_REF="$EXPECTED_IMAGE_REF" -e ATTEST_IMAGE_ID="$ACTUAL_IMAGE_ID" \
   -e ATTEST_PINNED_COMMIT="$ACTUAL_COMMIT" -e ATTEST_PINNED_PATH="$PINNED_FINERACT" \
   -e ATTEST_RUN_ID="$RUN_ID" \
-  -e ATTEST_SOURCES="/cap/src/CaptureT116.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java" \
+  -e ATTEST_SOURCES="/cap/src/CaptureT116.java:/cap/src/EmbeddableProgressiveLoanScheduleGenerator.java:/cap/src/ThrewOutcome.java" \
   -e ATTEST_CLASSPATH_OUT="/cap/out/classpath-sha256.txt" \
   -v "$CAP:/cap" "$EXPECTED_IMAGE_REF" -c '
 set -e
@@ -54,7 +60,7 @@ mkdir -p /work && cd /work
 unzip -q /app/fineract-provider.jar -d /work/jar
 CP="/work/jar/BOOT-INF/classes:$(ls /work/jar/BOOT-INF/lib/*.jar | tr "\n" ":")"
 mkdir -p /work/classes
-javac -nowarn -cp "$CP" -d /work/classes /cap/src/CaptureT116.java /cap/src/EmbeddableProgressiveLoanScheduleGenerator.java
+javac -nowarn -cp "$CP" -d /work/classes /cap/src/CaptureT116.java /cap/src/EmbeddableProgressiveLoanScheduleGenerator.java /cap/src/ThrewOutcome.java
 java -cp "/work/classes:$CP" CaptureT116
 ' > "$RAW" 2> "$ERR"
 RC=$?

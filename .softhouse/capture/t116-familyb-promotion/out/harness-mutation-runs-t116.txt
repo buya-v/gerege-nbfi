@@ -1,0 +1,25 @@
+==========================================================================
+CONTROL — the UNMUTATED port, unmutated store. Must be GREEN in both
+configurations, or nothing below is evidence (P-64).
+==========================================================================
+  CONTROL   @43 vectors (T116 removed)   exit 0  |  parity vectors          PASS 43   FAIL 0  |  invariant violations    0  |  probe line present: 1
+  CONTROL   @46 vectors (as committed)   exit 0  |  parity vectors          PASS 46   FAIL 0  |  invariant violations    0  |  probe line present: 1
+
+==========================================================================
+PROOF 1 — MUTATION G8-FINAL-ROW-SETTLES-THE-BALANCE
+==========================================================================
+  BEFORE  @43 vectors (T116 removed)     exit 0  |  parity vectors          PASS 43   FAIL 0  |  invariant violations    0  |  probe line present: 1
+  AFTER   @46 vectors (as committed)     exit 1  |  parity vectors          PASS 44   FAIL 2  |  invariant violations    2  |  probe line present: 1
+  => CLOSED A BLIND SPOT: green at 43, RED at 46.
+
+==========================================================================
+PROOF 2 — IS THE EXEMPTION LOAD-BEARING? (P-22 vacuity check)
+Unmutated port. Only difference: the two family-B vectors'
+invariant_exemptions arrays are EMPTIED.
+==========================================================================
+  WITHOUT the exemption  @46 vectors     exit 1  |  parity vectors          PASS 44   FAIL 2  |  invariant violations    4  |  probe line present: 1
+  => THE EXEMPTION IS LOAD-BEARING: without it the run is RED.
+         invariant principal_portions_sum_to_disbursed VIOLATED: principal advanced 1 minor units, principal repaid 0 minor units, difference -1
+         invariant principal_amortizes_to_zero VIOLATED: final row (REPAYMENT, due 2032-09-01) leaves 1 minor units outstanding, not 0
+         invariant principal_portions_sum_to_disbursed VIOLATED: principal advanced 1 minor units, principal repaid 0 minor units, difference -1
+         invariant principal_amortizes_to_zero VIOLATED: final row (REPAYMENT, due 2033-01-01) leaves 1 minor units outstanding, not 0
