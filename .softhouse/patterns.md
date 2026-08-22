@@ -1940,3 +1940,39 @@ state **where you looked**. If the answer does not include every place the thing
   **This means "matches the reference oracle on captured vectors, within the graded domain". It does NOT mean safe to cut over.**
 
 - **Backlog carried forward**: T214 (79 unmerged evidence paths), T215 (probe covers one of two LOCK-exclusion sites), T216 (3 traps still lacking QUIT), T217 (unbounded `git push` in `release_lock`; `DRIVER_STOP_GRACE_SECS` uncalibrated against a real `claude`), A2-24 (`CorroborationsClaimed` narrowing), FU-T209-1 (`conformance.sh`'s now-partly-redundant condensation and its stale comment).
+
+---
+
+## P-71 — agent worktrees fork from the SESSION-START commit, not from current `main`
+
+**Caught by `T225`, local fire `20260822-000013`, against the driver.** The `/softhouse` skill states:
+*"Before any batch: commit and push main — workers fork from current main."* **They do not.**
+
+**Measured.** Every harness-created agent worktree in that fire was cut at `90c21d6`, the commit `main`
+pointed at when the *session* began — including workers dispatched in wave 2, after five wave-1 merges had
+already landed. `T225` was dispatched to review `T222` three minutes after `T222` was merged, and
+`exemption.go` — the entire artefact under review — **was absent from the tree it was handed**.
+
+Driver-verified at merge:
+```
+git log --oneline -1 worktree-agent-a16a40447c53c3512   -> 90c21d6   (session start)
+git log --oneline -1 worktree-agent-a01b5f9f0ceec59f4   -> 90c21d6   (same, a wave-1 worker)
+merge T222 landed at 90e0be2, 11:37:19
+T225 dispatched at   d8db450, 11:40:22
+```
+
+**Why it is dangerous rather than merely annoying.** The worker does not get an error. It gets a tree in
+which the thing it was sent to examine *does not exist* — and the natural next step is to report that it does
+not exist. That is **P-70 manufactured by the dispatch mechanism itself**: a statement true about the
+*search* and false about the *world*, with no signal that the search was scoped wrongly. `T225` checked its
+fork point, said so, and moved itself to current `main`; it noted that had it not, **every one of its
+findings would have been a false negative**.
+
+**The driver's duty, in force from now on:**
+1. **Any task whose dependency was merged in the same fire must be told its fork point explicitly**, and
+   instructed to verify it and rebase onto current `main` before forming any finding.
+2. **Never infer "absent" from a worktree.** Confirm against `main` in the primary checkout.
+3. A review task is the sharpest case, because "the artefact isn't there" reads as a finding.
+
+Related: **P-70** (a search result stated as a world fact), **P-66** (state where you looked),
+**P-5** (worktree/state assumptions).
