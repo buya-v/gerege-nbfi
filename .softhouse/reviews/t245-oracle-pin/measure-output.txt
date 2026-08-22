@@ -1,0 +1,193 @@
+T245 measurement — STAMPED AT COMMIT: 9b6c596c2b66769e7b7e7b5c2ca012b7f3df122a
+wall clock (UTC):  2026-08-22T11:24:12Z
+type grep     -> grep is /usr/bin/grep
+/usr/bin/grep -> grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+
+=== ORACLE REACHABILITY ===
+{"status":"UP","groups":["liveness","readiness"]}
+fineract-fineract-1  fineract:latest  Up 4 days (healthy)
+fineract-db-1  postgres:18.3  Up 5 days (healthy)
+
+=== CLAIM (2): THREE Fineract databases; fineract_gerege has 281 public tables and is tenant 2 ===
+datname
+fineract_default
+fineract_gerege
+fineract_tenants
+postgres
+root
+template0
+template1
+(7 rows)
+fineract_tenants   public tables = 6
+fineract_default   public tables = 281
+fineract_gerege    public tables = 281
+
+=== CLAIM (3): tenant registry, and the tenant -> database MAPPING (measured, not inferred) ===
+id|identifier|name|timezone_id|schema_name|schema_server|schema_server_port
+1|default|Default Demo Tenant|Asia/Kolkata|fineract_default|db|5432
+2|gerege|Gerege T22 Audit Tenant (Asia/Ulaanbaatar)|Asia/Ulaanbaatar|fineract_gerege|db|5432
+(2 rows)
+
+=== CLAIM (5) LEG 1: the tenant header in each committed capture .http sidecar ===
+  A2-343-manual-je-3leg                    POST /journalentries                                 ['Fineract-Platform-TenantId: gerege']
+  A2-347-je-manual-readback                GET /journalentries?transactionId=a28f573f34c7&limit ['Fineract-Platform-TenantId: gerege']
+  A2-337-repayment-split                   POST /loans/7/transactions?command=repayment         ['Fineract-Platform-TenantId: gerege']
+  A2-338-je-after-repayment-coverage       GET /journalentries?loanId=7&limit=80                ['Fineract-Platform-TenantId: gerege']
+  A2-382-repayment-overpay                 POST /loans/7/transactions?command=repayment         ['Fineract-Platform-TenantId: gerege']
+  A2-383-je-after-overpay                  GET /journalentries?loanId=7&limit=100               ['Fineract-Platform-TenantId: gerege']
+  A2-344-manual-je-unbalanced              POST /journalentries                                 ['Fineract-Platform-TenantId: gerege']
+  A2-345-manual-je-header                  POST /journalentries                                 ['Fineract-Platform-TenantId: gerege']
+  A2-346-manual-je-nomanual                POST /journalentries                                 ['Fineract-Platform-TenantId: gerege']
+  A2-390-db-ledger-state-a2-15             SQL sql/q7-a2-15-ledger-state-json.sql               ['transport: docker exec -i fineract-db-1 psql -U root -d fineract_gerege -f - < sql/q7-a2-15-ledger-state-json.sql']
+
+  capture env.sh (sourced by cap.sh / cap8.sh / cap9.sh):
+6:T='Fineract-Platform-TenantId: gerege'          # ratified production tenant, Asia/Ulaanbaatar, HALF_UP
+  BUT the .http sidecar line is a HARD-CODED LITERAL, not an echo of $T:
+.softhouse/capture/tierA-a2/cap.sh:97:  echo "Fineract-Platform-TenantId: gerege"
+.softhouse/capture/tierA-a2/cap8.sh:116:  echo "Fineract-Platform-TenantId: gerege"
+.softhouse/capture/tierA-a2/cap9.sh:95:  echo "Fineract-Platform-TenantId: gerege"
+  (contrast cap9.sh, which DOES echo the variable for the idempotency key:)
+97:  echo "Idempotency-Key: $KEY"
+
+=== CLAIM (5) LEG 2: THE DECISIVE ONE — the rows themselves, in BOTH tenant databases ===
+-- LDG-01 cites transaction a28f573f34c7 --
+   fineract_gerege:
+transaction_id|account_id|type_enum|amount|currency_code
+a28f573f34c7|16|2|100000.250000|MNT
+a28f573f34c7|17|2|25000.370000|MNT
+a28f573f34c7|21|1|125000.620000|MNT
+(3 rows)
+   fineract_default:
+transaction_id|account_id|type_enum|amount|currency_code
+(0 rows)
+-- LDG-04 cites transaction a28f573ffb9b --
+transaction_id|account_id|type_enum|amount
+a28f573ffb9b|1|2|100000.250000
+a28f573ffb9b|21|1|100000.250000
+(2 rows)
+rows_in_default
+0
+(1 row)
+-- LDG-02 / LDG-03 legs --
+transaction_id|account_id|type_enum|amount|loan_transaction_id
+L25|4|1|270450.580000|25
+L25|8|1|22049.420000|25
+L25|10|1|7500.000000|25
+L25|16|2|300000.000000|25
+L27|4|1|889549.420000|27
+L27|8|1|20298.820000|27
+L27|6|1|90151.760000|27
+L27|16|2|1000000.000000|27
+(8 rows)
+rows_in_default
+0
+(1 row)
+-- LDG-REFUSE-01/02 name GL 16/18/21 by id, code, name and manual_journal_entries_allowed --
+id|gl_code|name|account_usage|manual_journal_entries_allowed
+1|10000|Assets|2|t
+4|10201|Loan Portfolio|1|t
+6|20100|Overpayment Liability|1|t
+8|40100|Interest On Loans|1|t
+10|40300|Income From Penalties|1|t
+16|10300|Fund Source Alternate|1|t
+17|10400|Disabled Asset|1|t
+18|10500|No Manual Entries Asset|1|f
+21|99008|Liability Under Asset|1|t
+(9 rows)
+   the SAME query against fineract_default:
+id|gl_code|name|account_usage|manual_journal_entries_allowed
+(0 rows)
+-- and the whole-database emptiness that settles it --
+   fineract_gerege    journal_entries=60 gl_accounts=23 loans=7 loan_products=29
+   fineract_default   journal_entries=0 gl_accounts=0 loans=0 loan_products=10
+
+=== CLAIM (5) LEG 3: the vectors cite EXACTLY these committed artefacts (sha256) ===
+  provenance digest check: MATCH=12 MISMATCH=0
+
+=== CLAIM (1): the PRE-EDIT pin file. Instrument = python3 re over raw BYTES, whole file, NOT line-oriented ===
+  CALIBRATION  known POSITIVE b"fineract_default" in PRE  -> 3
+  CALIBRATION  known NEGATIVE b"zzq_nonexistent"  in PRE  -> 0
+  b'fineract_gerege'   PRE=0    POST=6
+  b'gerege'            PRE=6    POST=13
+  b'Gerege'            PRE=1    POST=2
+  b'Asia/Ulaanbaatar'  PRE=4    POST=6
+  b'Asia/Kolkata'      PRE=6    POST=8
+  MULTI-LINE probe rb"fineract[\s\S]{0,40}?gerege" in PRE -> 0
+  every PRE line naming the tenant gerege (case-insensitive):
+    119: Rebuild the image after moving the pin: `/Users/buv/gerege-nbfi/.softhouse/bin/build-oracle-image.sh`
+    290: ### The `gerege` tenant is the production-representative one
+    305: T36 re-captured `B-01`…`B-04` **twice** on the `gerege` tenant (byte-verbatim requests against the existing
+    544: already declares `module github.com/gerege/nexus`, `go 1.23`.
+    547: endpoint and binds Gerege to nobody. It is ordinary developer setup and the driver would normally just do
+    568: | `GOROOT` | `/Users/buv/gerege-nbfi/.softhouse/toolchain/go` |
+    571: | Activation | `. /Users/buv/gerege-nbfi/.softhouse/bin/go-env.sh` (committed) |
+
+=== CLAIM (4): tracked-file counts. git grep -F, CALIBRATED, cross-checked against an independent python byte scan ===
+  CALIB positive  'fineract_gerege' @HEAD .softhouse/  :       88
+  CALIB negative  'zzq_nonexistent' @HEAD .softhouse/  :        0
+  c0be92b  under .softhouse/: gerege=74 default=71   | whole tree: gerege=74 default=71
+  358c3b9  under .softhouse/: gerege=77 default=74   | whole tree: gerege=77 default=74
+  HEAD  under .softhouse/: gerege=88 default=78   | whole tree: gerege=90 default=78
+
+=== THE FINDING THE DRIVER'S EDIT DID NOT REACH: the pin file's OPERATIVE instruction table ===
+142:## Connection facts for vector capture
+143-
+144-| Fact | Value |
+145-|---|---|
+146-| Base URL | `https://localhost:8443/fineract-provider/api/v1` (self-signed TLS — `curl -k`) |
+147-| Auth | HTTP Basic `mifos:password` (verified: `GET /offices` → Head Office) |
+148-| Tenant header/param | `tenantIdentifier=default` |
+149-| Postgres | `psql -U root -d fineract_default` inside `fineract-db-1` |
+  tracked files in the WHOLE repo carrying the string 'tenantIdentifier=default':        1
+
+=== SWEEP (task item 5): files naming a tenant DATABASE without naming a tenant IDENTIFIER ===
+  scope: ALL 5129 tracked files at HEAD, read as BYTES (binaries included),
+         matcher = python3 re over the WHOLE FILE -> multi-line, NOT line-oriented.
+  CALIB DB     positive .softhouse/reference-oracle.md      -> True
+  CALIB DB     negative .softhouse/vectors/PIN.json         -> False
+  CALIB STRICT positive .softhouse/capture/tierA-a2/env.sh  -> True
+  CALIB STRICT negative .softhouse/vectors/PIN-ledger.json  -> False
+  names a tenant DATABASE                      : 170
+  ... and names NO tenant identifier anywhere  : 37
+      .softhouse/capture/charges/ATTESTATION-T46.md
+      .softhouse/capture/charges/bin/create-charges2.sh
+      .softhouse/capture/charges/bin/t48-mkreq.py
+      .softhouse/capture/charges/bin/t51-capture6.sh
+      .softhouse/capture/charges/bin/t51-determinism.sh
+      .softhouse/capture/charges/bin/t51-negative.sh
+      .softhouse/capture/driver-20260822-060013/oracle-rederivation.txt
+      .softhouse/capture/leapboundary/NEGATIVE-TESTS-OUTPUT.txt
+      .softhouse/capture/leapboundary/NEGATIVE-TESTS.md
+      .softhouse/capture/leapboundary/bin/t55-negative-tests.sh
+      .softhouse/capture/pathb/t153/README.md
+      .softhouse/capture/pathb/t99/out/sweep.txt
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals-part2.sh
+      .softhouse/capture/t244-dec2-rev6/rederive-reversals.sh
+      .softhouse/capture/tierA-a2/out/A2-390-db-ledger-state-a2-15.http
+      .softhouse/capture/tierA-a2/out/A2-410-db-running-balance-drift.txt
+      .softhouse/capture/tierA-a2/out/A2-421-db-after-recompute.txt
+      .softhouse/capture/tierA-a2/out/A2-441-db-after-retype-and-recompute.txt
+      .softhouse/capture/tierA-a2/out/A2-462-db-after-office-scope.txt
+      .softhouse/capture/tierA-a2/out/A2-464-db-after-org-recompute.txt
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-15-handoff.md
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-26.md
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-3.md
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-handoff.md
+      .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md
+      .softhouse/handoff/T50-ambient-vs-threaded-rounding.md
+      .softhouse/patterns.md
+      .softhouse/reviews/T135-evidence/blast-measure.sh
+      .softhouse/reviews/T138-evidence/out/R6-MF2.txt
+      .softhouse/reviews/T138-evidence/out/R6b-MF2-GREEN.txt
+      .softhouse/reviews/T138-evidence/r6b-mf2-green.sh
+      .softhouse/reviews/t246-dec2-rev6/REVIEW.md
+      .softhouse/reviews/t246-dec2-rev6/measure-mutation-claim.sh
+      .softhouse/reviews/t246-dec2-rev6/measure-reversals-output.txt
+      .softhouse/reviews/t246-dec2-rev6/measure-reversals.sh
+      CLAUDE.md
+      nexus/internal/apps/ledger/conformance/notgraded.go
+  AND SEPARATELY, the two STORE-LEVEL PINS, which name NEITHER:
+     .softhouse/vectors/PIN.json            names a database=False  names a tenant=False
+     .softhouse/vectors/PIN-ledger.json     names a database=False  names a tenant=False
+
+T245 measurement COMPLETE — re-stamp at finish: 9b6c596c2b66769e7b7e7b5c2ca012b7f3df122a
