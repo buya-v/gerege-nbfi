@@ -1,4 +1,14 @@
-// Command ledgerguard is the source-level guard that DEC-2 §4.4.1 records as NOT EXISTING.
+// Command ledgerguard is the source-level guard that DEC-2 §4.4 requires for I-3 and I-4.
+//
+// ⚠ CORRECTION (T227, 22 August 2026). This line read "...the source-level guard that DEC-2
+// §4.4.1 records as NOT EXISTING." That was TRUE THE DAY A2-18 WROTE IT and it is FALSE NOW.
+// T208 wired this guard into run_guards; DEC-2 §8.3 retracted the claim; and §4.4.1 is today
+// titled "THE GUARD I-3 AND I-4 REQUIRE — IT DID NOT EXIST, IT DOES NOW, AND WHAT IT CANNOT
+// SEE" [VERIFIED: docs/adr/DEC-2-gl-accounting-adapter.md:821 on main]. The sentence is not
+// deleted evidence — it is a live claim in a source comment, corrected in place and labelled.
+// T224 swept the repository for this retracted claim and reported the population closed; its
+// terms could not match this spelling ("not existING", not "not exist"). A2-31 found it here,
+// on LINE 1 of the guard whose existence refutes it. See T227's handoff for the method defect.
 //
 // WHAT IT ENFORCES, AND WHERE THE TARGET COMES FROM
 // -------------------------------------------------
@@ -10,7 +20,9 @@
 //	I-4 | The ledger is append-only            | "No UPDATE/DELETE against acc_gl_journal_entry
 //	    | from application code" ... "'No update ever happened' is not observable from a capture."
 //
-// and §4.4.1 lists, item by item, what nothing in the repository looks for:
+// and §4.4.1 LISTED, item by item, what nothing in the repository looked for when this program
+// was written — the list it exists to answer. (Tense corrected by T227: the same retracted claim
+// as line 1, one paragraph over. The four items below are unchanged and still name the targets.)
 //
 //   - a write path to any balance column (that is I-3);
 //   - an UPDATE or DELETE statement against acc_gl_journal_entry, or any Go call that would
