@@ -1,0 +1,159 @@
+root     : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5202f4ca25d93a9b
+HEAD     : 6e22eed6cb3b58ccff067febb78d1f06d0481bf6
+measured : 2026-08-22T09:47:40Z UTC
+
+################ CALIBRATION — POSITIVE **AND** NEGATIVE ################
+-- known POSITIVE: 'corpus contains no reversal' (DEC-2:823). Must be >= 1 everywhere.
+  git grep -P      : 12 file(s)
+  BSD grep -E      : 14 file(s)
+
+-- known NEGATIVE (driver point 1): a token that is NOWHERE in the tree.
+   Chosen so it cannot self-match: it is built at runtime and never written to disk.
+  token            : zzqT244NEVERPRESENTXQ
+  git grep -P      : 0 hit(s)  [expect 0]
+  BSD grep -E      : 1 hit(s)  [expect 0]
+
+-- FABRICATION PROBE: the \b trap, run against the REAL tree, both engines.
+   If an engine fabricates, these two counts will DISAGREE.
+  git grep -P  \brevers\b   : 523 hit line(s)
+  BSD grep -E  \brevers\b   : 538 hit line(s)
+  git grep -E  \brevers\b   : 0 hit line(s)  <-- UNSOUND ENGINE, shown for contrast
+
+################ THE LOAD-BEARING RESULT, UNDER SOUND ENGINES ################
+The claim: the stale reason survives at exactly TWO live sites, both in DEC-2.
+
+--- PATTERN: corpus contains no revers
+  [git grep -P]
+    .softhouse/RESUME.md:189:   corpus contains no reversal") is false — 8 reversal rows measured live. **G-13 is RAISED**; the driver
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-13.md:193:| **I-5** | corrections are reversing entries | **UNGRADED TODAY.** The A2 corp
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-15-handoff.md:447:are reversing entries) as ungraded because *"the A2 corpus contains no 
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:204:-| **I-5** | Corrections are reversing entries | A correction adds a leg
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:292:- `docs/adr/DEC-2-gl-accounting-adapter.md:823` says `I-5` is ungraded b
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:433:engine 1 BSD grep  'corpus contains no reversal' -> hit lines: 15
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:434:engine 2 git grep  'corpus contains no reversal' -> hit lines:  8
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:435:engine 3 python3   'corpus contains no reversal' -> hit lines: 18
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:455:| `docs/adr/DEC-2-gl-accounting-adapter.md:823` | *"The A2 corpus contai
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:462:| `.softhouse/handoff/…/A2-13.md:193` | revision 1's own table: *"**UNGR
+    .softhouse/program.json:732:   "what": "DEC-2 revision 5 §4.4 (line 823) justifies leaving I-5 ungraded on the ground that 'the corpus contains no rev
+    .softhouse/tasks.json:2510:   "description": "A2-15 found it, A2-34 confirmed it, and BOTH correctly declined to act on it.\n\nTHE DEFECT. `docs/adr/D
+    .softhouse/vectors/capabilities-ledger.json:84:      "evidence": "A REVERSAL NOW EXISTS IN THE CORPUS -- A2-348 reversed transaction a28f573f34c7 and 
+    docs/adr/DEC-2-gl-accounting-adapter.md:823:| **I-5** | Corrections are reversing entries | A correction adds a leg pair; it never mutates one | **UNG
+    nexus/internal/apps/ledger/conformance/invariants.go:38:// "the A2 corpus contains no reversal". THAT IS NO LONGER TRUE: A2-348 reversed
+  [BSD grep -E]
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:204:-| **I-5** | Corrections are reversing entries | A correction adds a l
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:292:- `docs/adr/DEC-2-gl-accounting-adapter.md:823` says `I-5` is ungraded
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:433:engine 1 BSD grep  'corpus contains no reversal' -> hit lines: 15
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:434:engine 2 git grep  'corpus contains no reversal' -> hit lines:  8
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:435:engine 3 python3   'corpus contains no reversal' -> hit lines: 18
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:455:| `docs/adr/DEC-2-gl-accounting-adapter.md:823` | *"The A2 corpus cont
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:462:| `.softhouse/handoff/…/A2-13.md:193` | revision 1's own table: *"**UN
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-15-handoff.md:447:are reversing entries) as ungraded because *"the A2 corpus contains n
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-13.md:193:| **I-5** | corrections are reversing entries | **UNGRADED TODAY.** The A2 co
+    ./.softhouse/program.json:732:   "what": "DEC-2 revision 5 §4.4 (line 823) justifies leaving I-5 ungraded on the ground that 'the corpus contains no r
+    ./.softhouse/vectors/capabilities-ledger.json:84:      "evidence": "A REVERSAL NOW EXISTS IN THE CORPUS -- A2-348 reversed transaction a28f573f34c7 an
+    ./.softhouse/RESUME.md:189:   corpus contains no reversal") is false — 8 reversal rows measured live. **G-13 is RAISED**; the driver
+    ./.softhouse/tasks.json:2510:   "description": "A2-15 found it, A2-34 confirmed it, and BOTH correctly declined to act on it.\n\nTHE DEFECT. `docs/adr
+    ./docs/adr/DEC-2-gl-accounting-adapter.md:823:| **I-5** | Corrections are reversing entries | A correction adds a leg pair; it never mutates one | **U
+    ./nexus/internal/apps/ledger/conformance/invariants.go:38:// "the A2 corpus contains no reversal". THAT IS NO LONGER TRUE: A2-348 reversed
+
+--- PATTERN: contains no revers
+  [git grep -P]
+    .softhouse/RESUME.md:189:   corpus contains no reversal") is false — 8 reversal rows measured live. **G-13 is RAISED**; the driver
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-13.md:193:| **I-5** | corrections are reversing entries | **UNGRADED TODAY.** The A2 corp
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-15-handoff.md:447:are reversing entries) as ungraded because *"the A2 corpus contains no 
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:204:-| **I-5** | Corrections are reversing entries | A correction adds a leg
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:292:- `docs/adr/DEC-2-gl-accounting-adapter.md:823` says `I-5` is ungraded b
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:390:/usr/bin/grep -rn -i -E 'no reversal|contains no revers' docs/          
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:433:engine 1 BSD grep  'corpus contains no reversal' -> hit lines: 15
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:434:engine 2 git grep  'corpus contains no reversal' -> hit lines:  8
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:435:engine 3 python3   'corpus contains no reversal' -> hit lines: 18
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:455:| `docs/adr/DEC-2-gl-accounting-adapter.md:823` | *"The A2 corpus contai
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:462:| `.softhouse/handoff/…/A2-13.md:193` | revision 1's own table: *"**UNGR
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:497:  `grep -rn -i 'no reversal\|contains no revers' docs/` returns **exactl
+    .softhouse/program.json:732:   "what": "DEC-2 revision 5 §4.4 (line 823) justifies leaving I-5 ungraded on the ground that 'the corpus contains no rev
+    .softhouse/reviews/a2-34-review-a2-15/bar-and-oracle.sh:73:LC_ALL=C /usr/bin/grep -n -aF 'contains no reversal' docs/adr/DEC-2-gl-accounting-adapter.m
+    .softhouse/tasks.json:2510:   "description": "A2-15 found it, A2-34 confirmed it, and BOTH correctly declined to act on it.\n\nTHE DEFECT. `docs/adr/D
+    .softhouse/vectors/capabilities-ledger.json:84:      "evidence": "A REVERSAL NOW EXISTS IN THE CORPUS -- A2-348 reversed transaction a28f573f34c7 and 
+    docs/adr/DEC-2-gl-accounting-adapter.md:823:| **I-5** | Corrections are reversing entries | A correction adds a leg pair; it never mutates one | **UNG
+    nexus/internal/apps/ledger/conformance/invariants.go:38:// "the A2 corpus contains no reversal". THAT IS NO LONGER TRUE: A2-348 reversed
+  [BSD grep -E]
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:204:-| **I-5** | Corrections are reversing entries | A correction adds a l
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:292:- `docs/adr/DEC-2-gl-accounting-adapter.md:823` says `I-5` is ungraded
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:390:/usr/bin/grep -rn -i -E 'no reversal|contains no revers' docs/        
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:433:engine 1 BSD grep  'corpus contains no reversal' -> hit lines: 15
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:434:engine 2 git grep  'corpus contains no reversal' -> hit lines:  8
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:435:engine 3 python3   'corpus contains no reversal' -> hit lines: 18
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:455:| `docs/adr/DEC-2-gl-accounting-adapter.md:823` | *"The A2 corpus cont
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:462:| `.softhouse/handoff/…/A2-13.md:193` | revision 1's own table: *"**UN
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:497:  `grep -rn -i 'no reversal\|contains no revers' docs/` returns **exac
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-15-handoff.md:447:are reversing entries) as ungraded because *"the A2 corpus contains n
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-13.md:193:| **I-5** | corrections are reversing entries | **UNGRADED TODAY.** The A2 co
+    ./.softhouse/program.json:732:   "what": "DEC-2 revision 5 §4.4 (line 823) justifies leaving I-5 ungraded on the ground that 'the corpus contains no r
+    ./.softhouse/vectors/capabilities-ledger.json:84:      "evidence": "A REVERSAL NOW EXISTS IN THE CORPUS -- A2-348 reversed transaction a28f573f34c7 an
+    ./.softhouse/RESUME.md:189:   corpus contains no reversal") is false — 8 reversal rows measured live. **G-13 is RAISED**; the driver
+    ./.softhouse/tasks.json:2510:   "description": "A2-15 found it, A2-34 confirmed it, and BOTH correctly declined to act on it.\n\nTHE DEFECT. `docs/adr
+    ./.softhouse/reviews/a2-34-review-a2-15/bar-and-oracle.sh:73:LC_ALL=C /usr/bin/grep -n -aF 'contains no reversal' docs/adr/DEC-2-gl-accounting-adapter
+    ./docs/adr/DEC-2-gl-accounting-adapter.md:823:| **I-5** | Corrections are reversing entries | A correction adds a leg pair; it never mutates one | **U
+    ./nexus/internal/apps/ledger/conformance/invariants.go:38:// "the A2 corpus contains no reversal". THAT IS NO LONGER TRUE: A2-348 reversed
+
+--- PATTERN: no reversal appears
+  [git grep -P]
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:127:same false claim in different words: *"It cannot today: **no reversal ap
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:214:-13. **Whether the A2 corpus can grade a reversal.** It cannot today: no
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:456:| `docs/adr/DEC-2-gl-accounting-adapter.md:2568-2569` | *"no reversal ap
+    docs/adr/DEC-2-gl-accounting-adapter.md:2568:13. **Whether the A2 corpus can grade a reversal.** It cannot today: no reversal appears, and the
+  [BSD grep -E]
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:127:same false claim in different words: *"It cannot today: **no reversal 
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:214:-13. **Whether the A2 corpus can grade a reversal.** It cannot today: 
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:456:| `docs/adr/DEC-2-gl-accounting-adapter.md:2568-2569` | *"no reversal 
+    ./docs/adr/DEC-2-gl-accounting-adapter.md:2568:13. **Whether the A2 corpus can grade a reversal.** It cannot today: no reversal appears, and the
+
+--- PATTERN: retired by one capture
+  [git grep -P]
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-13.md:193:| **I-5** | corrections are reversing entries | **UNGRADED TODAY.** The A2 corp
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:204:-| **I-5** | Corrections are reversing entries | A correction adds a leg
+    docs/adr/DEC-2-gl-accounting-adapter.md:823:| **I-5** | Corrections are reversing entries | A correction adds a leg pair; it never mutates one | **UNG
+  [BSD grep -E]
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:204:-| **I-5** | Corrections are reversing entries | A correction adds a l
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-13.md:193:| **I-5** | corrections are reversing entries | **UNGRADED TODAY.** The A2 co
+    ./docs/adr/DEC-2-gl-accounting-adapter.md:823:| **I-5** | Corrections are reversing entries | A correction adds a leg pair; it never mutates one | **U
+
+################ DO THE TWO SOUND ENGINES AGREE? ################
+  git grep -P    : 22 hit line(s)
+  BSD grep -E    : 22 hit line(s)
+  (BSD searches the tree on disk incl. untracked; git grep searches TRACKED files.
+   A difference is explained by that, not by unsoundness — the file LIST is printed below.)
+
+  git grep -P files:
+    .softhouse/RESUME.md
+    .softhouse/capture/t244-dec2-rev6/line2568-2569-verbatim.txt
+    .softhouse/capture/t244-dec2-rev6/line823-verbatim.txt
+    .softhouse/capture/t244-dec2-rev6/sweep-output.txt
+    .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-13.md
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-15-handoff.md
+    .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md
+    .softhouse/program.json
+    .softhouse/reviews/a2-34-review-a2-15/bar-and-oracle.sh
+    .softhouse/tasks.json
+    .softhouse/vectors/capabilities-ledger.json
+    docs/adr/DEC-2-gl-accounting-adapter.md
+    nexus/internal/apps/ledger/conformance/invariants.go
+  BSD grep -E files:
+    ./.softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh
+    ./.softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt
+    ./.softhouse/capture/t244-dec2-rev6/line2568-2569-verbatim.txt
+    ./.softhouse/capture/t244-dec2-rev6/sweep-output.txt
+    ./.softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh
+    ./.softhouse/capture/t244-dec2-rev6/line823-verbatim.txt
+    ./.softhouse/capture/t244-dec2-rev6/engine-table.txt
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-15-handoff.md
+    ./.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-13.md
+    ./.softhouse/program.json
+    ./.softhouse/vectors/capabilities-ledger.json
+    ./.softhouse/RESUME.md
+    ./.softhouse/tasks.json
+    ./.softhouse/reviews/a2-34-review-a2-15/bar-and-oracle.sh
+    ./docs/adr/DEC-2-gl-accounting-adapter.md
+    ./nexus/internal/apps/ledger/conformance/invariants.go

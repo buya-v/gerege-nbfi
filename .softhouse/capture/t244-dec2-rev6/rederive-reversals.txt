@@ -1,0 +1,57 @@
+instrument     : .softhouse/capture/t244-dec2-rev6/rederive-reversals.sh
+resolved root  : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5202f4ca25d93a9b
+git HEAD       : 477dc2da0f9edf3922e7d29e689bc6473289befc
+git branch     : softhouse/T244-dec2-rev6-prepared
+origin/main    : 477dc2da0f9edf3922e7d29e689bc6473289befc
+worktree dirty : 1 path(s)
+measured at    : 2026-08-22T09:22:33Z UTC
+fineract pin   : 426a23544e8426a38ae43ae404670a0a7e85b9eb
+oracle health  : {"status":"UP","groups":["liveness","readiness"]}
+
+--- Q1  total journal-entry rows ---
+SQL: select count(*) from acc_gl_journal_entry;
+60
+
+--- Q2  rows flagged reversed = true (the ORIGINALS that have been reversed) ---
+SQL: select count(*) from acc_gl_journal_entry where reversed = true;
+8
+
+--- Q3  rows carrying reversal_id IS NOT NULL (the REVERSING legs) ---
+SQL: select count(*) from acc_gl_journal_entry where reversal_id is not null;
+8
+
+--- Q4  UNION: rows participating in a reversal either way ---
+SQL: select count(*) from acc_gl_journal_entry where reversed = true or reversal_id is not null;
+8
+
+--- Q5  the rows themselves (full projection of the reversal columns) ---
+ id | account_id | transaction_id | reversed | reversal_id | type_enum |     amount     | entry_date | manual_entry 
+----+------------+----------------+----------+-------------+-----------+----------------+------------+--------------
+ 33 |         16 | a28f54bfdaf3   | t        |          38 |         2 |  100000.250000 | 2026-06-01 | t
+ 34 |         17 | a28f54bfdaf3   | t        |          39 |         2 |   25000.300000 | 2026-06-01 | t
+ 35 |         21 | a28f54bfdaf3   | t        |          40 |         1 |  125000.550000 | 2026-06-01 | t
+ 45 |         16 | a28f573f34c7   | t        |          50 |         2 |  100000.250000 | 2026-06-01 | t
+ 46 |         17 | a28f573f34c7   | t        |          51 |         2 |   25000.370000 | 2026-06-01 | t
+ 47 |         21 | a28f573f34c7   | t        |          52 |         1 |  125000.620000 | 2026-06-01 | t
+ 59 |         33 | a28f605fcdeb   | t        |          63 |         2 | 1000000.000000 | 2026-07-01 | t
+ 60 |         34 | a28f605fcdeb   | t        |          64 |         1 | 1000000.000000 | 2026-07-01 | t
+(8 rows)
+
+
+--- Q6  distinct transactions touched by a reversal ---
+SQL: select count(distinct transaction_id) from acc_gl_journal_entry where reversed = true or reversal_id is not null;
+3
+
+--- Q7  double-entry check on those rows: debits vs credits, MNT minor units (scale 2) ---
+ transaction_id | debit_minor | credit_minor | legs 
+----------------+-------------+--------------+------
+ a28f54bfdaf3   |    12500055 |     12500055 |    3
+ a28f573f34c7   |    12500062 |     12500062 |    3
+ a28f605fcdeb   |   100000000 |    100000000 |    2
+(3 rows)
+
+
+--- Q8  CALIBRATION: the same query shape against a predicate known to be FALSE ---
+SQL: select count(*) from acc_gl_journal_entry where reversed = true and reversed = false;
+0
+(a zero here proves the instrument CAN return zero, so the non-zero above is a measurement)

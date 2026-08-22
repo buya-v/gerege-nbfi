@@ -1,0 +1,2 @@
+13. **Whether the A2 corpus can grade a reversal.** It cannot today: no reversal appears, and the
+    committed journal dump does not project the reversal columns. §4.4 I-5.
