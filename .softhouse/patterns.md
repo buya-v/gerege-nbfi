@@ -2542,7 +2542,7 @@ re-derivation filed as `T249` — this entry is NOT yet reviewed.**
 
 > `=> no task may write Go under nexus/ or store a CONTRACT-SHAPED vector for this context until it closes.`
 
-That sentence was **hardcoded at `:125`** and emitted in a loop over `contract_open`. It read **no per-gate
+That sentence was **hardcoded at `:125` as of commit `9b6c596^`** — stamped, because the driver has since rewritten this file and a reader at HEAD will find different code on that line [VERIFIED at `9b6c596^` by the driver and independently by `T249`] — and emitted in a loop over `contract_open`. It read **no per-gate
 field**, so it could not have distinguished one CONTRACT gate from another — and it printed with exactly the
 authority of a measurement.
 
@@ -2591,3 +2591,31 @@ default quietly park a tier. That refusal is the reason this was caught rather t
 same shape as `G-12`'s stored running balance: a value that looks derived, is actually written, and is
 believed because it is convenient. **When a tool and the authoritative record disagree, the tool is the
 suspect** — and when a tool never consults the record at all, it is not disagreeing, it is guessing out loud.
+
+> **⚠ P-77 WAS ITSELF FAIL-OPEN WHEN FIRST FILED, AND `T249` CAUGHT IT IN THE SAME FIRE.** The driver's
+> patch — the one this entry holds up as the fix — read `str(g.get("blocks", "")).strip()`. The **five most
+> likely encodings of "no value"** (`None`, `False`, `0`, `[]`, `{}`) all stringify **truthy** (`"None"`,
+> `"False"`, `"0"`, `"[]"`, `"{}"`), suppressed the conservative fallback, and printed under
+> **`=> SCOPE RECORDED ON THIS GATE`**. A gate carrying `blocks: null` rendered as *"SCOPE RECORDED … None"*,
+> **which reads as "nothing is blocked."** The **pre-patch code was fail-CLOSED; the patch made it
+> fail-OPEN** — a fresh `P-45` instance, created **in the very commit that filed this pattern about
+> unenforced permission surfaces.** Fixed at `925fdfc`: only a genuine non-empty **string** counts, anything
+> else falls back **and is reported as MALFORMED**, because a malformed scope is a defect to surface, not a
+> value to silently treat as absent.
+>
+> `T249` also found the **selector** failed open independently: `g.get("class") == "CONTRACT"` **silently
+> drops any gate with no `class` key**, and `G-13` is exactly that shape [VERIFIED at HEAD: `class=None`].
+> An unclassified gate that was OPEN would have been invisible to the section that exists to catch it.
+>
+> **The lesson is sharper than the fix.** Point 4 of this entry told the reader to drive both arms, and the
+> driver *did* — and both arms it drove were **strings**. `""` and `"…"` are the two shapes you reach for
+> when you are thinking in strings, and neither can reveal a type error. **P-76 says drive a shape you did
+> not design the rule around; this adds: drive a shape of a TYPE you did not design the rule around.** The
+> author's imagination is the boundary of the author's red drive, which is the whole argument for
+> independent review — `T249` existed only because the driver filed it against itself.
+>
+> **Two of the driver's own verification probes were broken here and each produced a false reading it nearly
+> acted on** (`P-72`): grepping `SCOPE RECORDED` also matched the fallback text **`NO SCOPE RECORDED`** as a
+> substring, reporting every arm as permissive; and grepping lowercase `` no `class` KEY `` against output
+> reading uppercase **`` NO `class` KEY ``** reported a working guard as vacuous. **Both were the probe, not
+> the code.** A probe must be calibrated to *discriminate*, not merely to match.
