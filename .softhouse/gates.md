@@ -30,10 +30,10 @@ Built by local fire `20260821-125942`.
 | **G-8** | ENGINEERING | **OPEN — SITE 3 NOW CHARACTERISED (`T229`), AND IT FALSIFIED THIS SECTION'S CEILING BY MEASUREMENT: the failing principal is bounded by `(δ+½)·n`, not `n/2` — MNT 5.40 at n = 360, THREE TIMES the MNT 1.80 that stood here until `T231`.** "600 % only" is still dead (`T223`, family B at 36.0 % p.a.). | Not yet asking for a decision — **options (b)/(c) STILL MUST NOT be put to Buyan.** The reason has changed: no longer "an uncharacterised rescue mechanism", but **two named gaps — a verified pre-rescue instalment `E`, and the balance-reduction path behind seven corpus cells.** The only region statable today is a **conservative superset** (`B_minor < 1.5·n`), and it rests on the unproven conjecture `δ ≤ 1`. | `## G-8 — TWO phenomena at the rounding floor…` (ceiling and prose rebuilt by `T231` from `T229`'s measurement). `## G-8-NOTICE` is SUPERSEDED history. |
 | **G-9** | PRODUCT | **CLOSED — DECIDED** | local fire `20260821-054355`, `chosen_by: agent`. Carries a `driver_error_correction`: the decision stands, the driver's stated *consequence* was false. | `## G-9 — CLOSED` |
 | **G-10** | ENGINEERING | **OPEN — driver recommends (c), Buyan may overrule** | Blocks nothing today. | `## G-10 — REFINED…` |
-| **G-11** | CONTRACT | **OPEN — NOT RATIFIABLE. rev 4 REJECTED by `A2-31`, local fire `20260822-000013`. FOUR revisions, FOUR rejections.** | The driver, once a DEC-2 revision passes an independent review **clean**. `chosen_by: agent` is permitted here; ratifying an un-clean revision is not. **Rev 5 is `A2-32`.** | `## G-11 — rev 4 REJECTED (A2-31)` |
+| **G-11** | CONTRACT | **CLOSED — RATIFIED. DEC-2 revision 5 (`A2-32`) passed `A2-33`'s independent review CLEAN, local fire `20260822-140002`. Five revisions, four rejections, one ratification.** `chosen_by: agent` (driver), per CLAUDE.md § Answering gates. **Buyan may reverse it.** | Nothing — the gate is closed. **A ratified DEC-n may not be amended by an agent**; any change to DEC-2 from here is a fresh `user` gate. | `## G-11 — RATIFIED (rev 5, A2-33)` |
 | **G-12** | ENGINEERING | **OPEN — MEASURED by `A2-29`; analyst recommends (a)+(b′), driver decides.** The stored balance is a **SECOND SOURCE OF TRUTH**, not a cache — made to disagree with the derived sum by **MNT 2,000,000.00** on the live oracle, surviving 4 recomputes, served through 2 REST endpoints flagged `computed: true`. | The driver, for (a). Option (c) would narrow the graded domain and stays a hard `user` gate. Blocks nothing today. | `## G-12 — MEASURED (A2-29)` — the LIVE block. `## G-12 — Fineract STORES a running balance on the entry` is the RAISING record only. |
 
-**Open right now: G-4, G-5, G-8, G-10, G-11, G-12.** *(Register refreshed by local fire `20260822-000013`.)* Of those, **G-4 and G-5 are hard `user` gates** (each amends a
+**Open right now: G-4, G-5, G-8, G-10, G-12.** *(**G-11 CLOSED — RATIFIED** by the driver, local fire `20260822-140002`, on `A2-33`'s clean independent review of DEC-2 rev 5.)* *(Register refreshed by local fire `20260822-000013`.)* Of those, **G-4 and G-5 are hard `user` gates** (each amends a
 ratified DEC-n); **G-8, G-10 and G-12 block no work today**. The driver has recorded a recommendation on **G-8 and G-10**.
 **G-12's measurement is now DONE** (`A2-29`, local fire `20260822-000013`) and it answered the question the
 driver deliberately refused to pre-judge: the stored balance is a **second source of truth, not a cache**.
@@ -41,11 +41,65 @@ driver deliberately refused to pre-judge: the stored balance is a **second sourc
 
 ## Open
 
-## G-11 — rev 4 REJECTED (`A2-31`), local fire `20260822-000013` — **THE LIVE BLOCK**
+## G-11 — **RATIFIED** (rev 5, `A2-33`), local fire `20260822-140002`
 
-- **id**: G-11 · **class**: CONTRACT · **state**: **OPEN — NOT RATIFIABLE**
+- **id**: G-11 · **class**: CONTRACT · **state**: **CLOSED — RATIFIED**
 - **context**: `tierA-gl-accounting` / slice `tierA-gl-accounting-A2`
-- **unblocking condition, verbatim and unchanged**: *a further independent review passing CLEAN*. **NOT MET.**
+- **unblocking condition, verbatim and unchanged**: *a further independent review passing CLEAN*. **MET.**
+- **ratified_by**: the driver · **chosen_by**: `agent` · **Buyan retains veto and may reverse this.**
+
+### The ratification, and exactly what it rests on
+
+`A2-32` authored **revision 5** fixing precisely `A2-31`'s F-1 and F-2 and **nothing else** — it even
+disclosed two over-reaches it began and reverted, so a reviewer could check the diff for them. It
+**refused to ratify its own revision**, correctly. `A2-33` then reviewed it independently and returned
+**APPROVED**, having re-derived rather than inherited every load-bearing claim:
+
+- **F-1 discharged by running it**: `merge-base --is-ancestor 03e9094 2e97162` exits 0, and `A2-33` read the
+  guard head *at `2e97162`* itself — the pass-path `awk` block gated on `rc = 0` was already there, so rev 4's
+  claim was **false at its own stamp**. It ran the harness and **counted eight** numbered CANNOT-CATCH limits
+  on a `PASS (exit 0)` run.
+- **F-2 discharged by measurement, both polarities**, with a from-scratch AST probe: `I4-BUILDER` = 0 green /
+  4 red; real `ledgerguard` clean green and `REFUSED [I4-BUILDER]` red. **The calibration that makes the zero
+  a measurement**: its census (47 files / 5 pkgs / 5210 calls) reproduces the guard's own `CENSUS` line to the
+  digit.
+- **`A2-33` closed a gap `A2-32` left**, and this is the part that mattered: `I3-PKG-STATE`'s population is
+  printed on **no** `CENSUS` line, so **nobody had ever measured it** — had it been empty, the ratio would be
+  **five** of seven and rev 5 wrong again. Measured: **59**. Four-of-seven now has **every term measured**.
+- **No tenth site**: its own 34-pattern sweep over 4,844 files / 8,120 hits, **instrument calibrated on a known
+  positive first** (rev 4's ADR) at **17/17 recall, MISSES = 0**. It reproduced `T232`'s `\b`-under-`git grep -E`
+  defect itself and confirmed **neither its patterns nor `A2-32`'s** contain a backslash escape — so `A2-32`'s
+  sweep is **not void by that mechanism**, and it replaced that enumeration anyway rather than inherit it.
+- **No extra authorship**: all 16 hunks classified; both disclosed reverts verified in committed bytes.
+- **54 Fineract citations re-resolved BY CONTENT at `426a23544`: 54 resolve, 0 fail.**
+
+### What the ratification does NOT rest on, stated so it cannot be read in later
+
+`A2-33` raised **three findings, none of which rejects rev 5** — all three are **driver-owned, outside DEC-2,
+and post-date the fork**. Two were defects in the driver's own `patterns.md` P-67 correction (the corrected
+percentage placed under the uncorrected numerator; and the same claim asserted as current fact one *section*
+over — **P-67 breaking itself a fourth time**); both were **fixed by the driver this fire**. The third is LOW
+and already covered by §4.4.1's blind spot 1.
+
+**Recorded, and deliberately not made a sixth revision:** `T227` merged *between* `A2-32`'s fork and its
+merge, so rev 5's `conformance.sh` line-number claim is **true at its stamp and stale at `main`**. It is
+properly stamped, it was routed to `T227`, and `T227` has discharged it.
+
+### What is now UNBLOCKED, and what is still not
+
+**Unblocked:** tasks for `tierA-gl-accounting` may now write Go under `nexus/` and store **contract-shaped**
+vectors for this context. **`A2-15`** — promoting the A2 raw captures into parity vectors — is no longer gated
+on G-11. Its other precondition, `T230`, also landed this fire.
+
+**Still not, and nothing here changes them:** **CUTOVER** remains a hard `user` gate; regulatory /
+parallel-run sign-off remains a hard `user` gate; and **a ratified DEC-n may not be amended by an agent** —
+any change to DEC-2 from here is a fresh `user` gate. **Nothing grades the ledger's money yet**: all 46
+passing vectors are `loanschedule`'s and **zero** touch a GL account, a mapping, a financial activity or a
+journal entry. Ratifying the contract is not evidence about the port.
+
+---
+
+### Superseded history — rev 4's rejection, kept because it is why rev 5 is trusted
 
 **Four revisions, four rejections.** rev 1 (`A2-14`, three shape findings) · rev 2 (`A2-17` returned MICRO-FIX
 and applied its **own** fix, leaving that text reviewed by nobody; `A2-19` then REJECTED) · rev 3 (`A2-25`,

@@ -78,8 +78,8 @@
       "tier0-harness-schedule-poc"
     ],
     "parked_contexts": [],
-    "note": "Local fire 20260822-000013 SECOND PASS (oracle REACHABLE throughout). EIGHT DISPATCHED, EIGHT COMPLETED, EIGHT MERGED, ZERO LIVE AT EXIT. Wave 1: A2-31, T223, T222, T224, T221, T213, T207. Wave 2: T225. Plus A2-30 executed inline by the driver. HEADLINE 1 -- G-8: \"600 %% ONLY\" IS DEAD. T223 restated the region as a predicate in its own variables and OBSERVED family B at 36.0 %% p.a. The phenomenon is bounded by ~MNT n/200 whatever the rate; what keeps it out of a real product is the TERM, not the rate. Prediction committed BEFORE the capture (c2771fb, strict ancestor), 7 of 7 confirmed. HEADLINE 2 -- G-11: rev 4 REJECTED by A2-31. FOUR revisions, FOUR rejections. But A2-25 HARDEST finding (requirement 6 unsatisfiable) is DISCHARGED -- A2-31 RAN it. Rev 5 is A2-32. HEADLINE 3 -- T222 was MERGED AND THEN REJECTED by its own reviewer T225, which found the failure T222 could not find by construction: the grounding rule REFUSES A LEGITIMATE EXEMPTION (measured, parity 46->45, INADMISSIBLE exit 2). main is GREEN today; the defect is LATENT and lands directly on A2-15. Rework is T230. HEADLINE 4 -- P-71: AGENT WORKTREES FORK FROM SESSION-START HEAD, NOT CURRENT main. T225 caught it against the driver; the artefact it was sent to review was ABSENT from the tree it was handed. THE DRIVER WAS CORRECTED FIVE TIMES: T221 (64 is the ADDED-path count, and the review-corrections population is 134 not 64); T213 (the briefed two-condition prune rule would have removed a LIVE worker worktree); T207 (the \"240 scripts\" denominator is dead, it is 438); A2-31 (program.json own \"3 of 4\" is FOUR of SEVEN, where BOTH corrections failed to land); T225 (the dispatch fork point). Bar UNCHANGED and driver-re-verified after every merge: probe PRESENT and up, PASS exit 0, 46 parity vectors, 7884 cells, 0 inadmissible, 0 invariant violations, 4 EXEMPTED, 4 GROUNDED 0 UNGROUNDED, --prove 23/0, store 73c3ea7b UNCHANGED. NO VECTOR WAS ADDED THIS FIRE and none was claimed.",
-    "last_fire": "20260822-000013"
+    "note": "Local fire 20260822-140002 (oracle REACHABLE throughout). EIGHT DISPATCHED IN TWO WAVES, EIGHT COMPLETED, EIGHT MERGED, ZERO LIVE AT EXIT. Wave 1: A2-32, T227, T229, T230. Wave 2: A2-33, T231, T232, T233. *** HEADLINE 1 -- G-11 IS RATIFIED AND CLOSED. *** DEC-2 rev 5 passed A2-33's independent review CLEAN after four consecutive rejections. A2-32 authored it and REFUSED TO RATIFY ITS OWN WORK; A2-33 re-derived everything and additionally measured I3-PKG-STATE (59) -- a term NOBODY had measured, and had it been empty the ratio would have been five of seven and rev 5 wrong again. THIS UNBLOCKS A2-15 AND CONTRACT-SHAPED LEDGER VECTORS. *** HEADLINE 2 -- THE PREVIOUS FIRE DESTROYED ITSELF AND THIS ONE PROVED NOTHING WAS LOST. *** Fire 20260822-080001 dispatched wave 1 and hit the SESSION LIMIT three minutes later, killing all four workers; it had violated the skill's own rule 'only dispatch what you have the budget to see through'. This fire swept all 44 worktrees, found ZERO dirty and ZERO branches, established no WIP existed, and re-dispatched the identical four. *** HEADLINE 3 -- T229 FALSIFIED THE G-8 CEILING BY 3x AND T231 REBUILT THE SECTION. *** gates.md told Buyan the failing principal was bounded by ~MNT 1.80 at n=360; measured counterexample T229-R600p0-N200-B299 is MNT 2.99 family B, and the true ceiling is (delta+1/2)*n = MNT 5.40. T229 registered its law at 29ed78c BEFORE probing (driver-checked strict ancestor). Options (b)/(c) STILL must not go to Buyan -- only a CONSERVATIVE superset region is statable. *** HEADLINE 4 -- T232 MEASURED THAT git grep -E READS \\\\b AS A LITERAL 'b' HERE *** and returns ZERO with exit 1, no error, no warning. T224's stated widest net matched 0 files where -P matches 172. This potentially voids 'the population is closed' claims across the program -> T234 registered; the driver warned the LIVE A2-33 mid-flight, and A2-33 checked and cleared its own and A2-32's instruments. THE DRIVER WAS CORRECTED FOUR TIMES: A2-32 (patterns.md P-67 still said 'three of seven' -- the pattern about an unmeasured DENOMINATOR had shipped an unmeasured NUMERATOR; and tasks.json certified the same short count as EXACT); A2-33 TWICE MORE on the driver's OWN P-67 FIX (corrected percentage under the uncorrected numerator, and the same claim asserted as current fact one SECTION over -- P-67 breaking itself a FOURTH time); and the driver against ITSELF on P-71, which said worktrees fork from SESSION-START HEAD -- FALSIFIED, they fork from the DISPATCH commit, and the driver had handed all four wave-1 workers a fork point that was wrong for every one of them. Bar driver-re-verified after EVERY merge batch, never quoted from a worker: probe PRESENT and up, PASS exit 0, 46 parity vectors, 7884 cells, 0 inadmissible, 0 harness errors, 0 invariant violations, 4 EXEMPTED, 4 GROUNDED / 0 UNGROUNDED / 0 UNDETERMINED, 4 citations minted 4/4 resolved, 4 REPRODUCED 0 DIVERGED, --prove 23/0, build/vet/test green, gofmt -l exactly contract.go, store 73c3ea7b43dd75f04884072719a87fc8e1d255c1 UNCHANGED. NO VECTOR WAS ADDED THIS FIRE and none was claimed.",
+    "last_fire": "20260822-140002"
   },
   "contexts": [
     {
@@ -701,7 +701,7 @@
     {
       "id": "G-11",
       "class": "CONTRACT",
-      "state": "OPEN - NOT RATIFIABLE (rev 4 REJECTED by A2-31, local fire 20260822-000013)",
+      "state": "CLOSED - RATIFIED (driver, local fire 20260822-140002)",
       "context": "tierA-gl-accounting",
       "slice": "tierA-gl-accounting-A2",
       "title": "DEC-2 is NOT RATIFIABLE \u2014 revisions 1, 2, 3 and 4 have all been REJECTED",
@@ -712,7 +712,9 @@
       "what_A2_19_confirmed": "47/47 Fineract citations hit at their exact lines; overall [VERIFIED] hit rate 62/64 = 96.9% with one drift and one wrong, neither a money claim; section 5.4's retraction reproduced exactly; banner + 8.1 + 8.3 DO defuse the I-3/I-4 misreading; and P-8 is GENUINELY INDEPENDENT of P-1..P-5, which is what licensed A2-18 to build the ledger-invariant guard the same fire.",
       "raised_by": "local fire 20260822-080001 (A2-19, driver-reproduced)",
       "recorded_in": ".softhouse/gates.md",
-      "what_A2_31_discharged": "Requirement 6 IS FIXED and A2-31 RAN it rather than reasoning: 6a BEFORE produces exactly what it demands (decode: json: unknown field \"product_id\", inadmissible 0, population intact 46/4/1/7884); 6b emits BOTH mandated refusals together, inadmissible 1, parity unmoved. A2-25 hardest finding is discharged. Also confirmed clean: baseline reproduces exactly; seven guards; only two of three NIL-COVERAGE arms fire (A2-28 correct); ALL 30 Fineract citations resolve BY CONTENT at 426a23544; no undisclosed new authorship."
+      "what_A2_31_discharged": "Requirement 6 IS FIXED and A2-31 RAN it rather than reasoning: 6a BEFORE produces exactly what it demands (decode: json: unknown field \"product_id\", inadmissible 0, population intact 46/4/1/7884); 6b emits BOTH mandated refusals together, inadmissible 1, parity unmoved. A2-25 hardest finding is discharged. Also confirmed clean: baseline reproduces exactly; seven guards; only two of three NIL-COVERAGE arms fire (A2-28 correct); ALL 30 Fineract citations resolve BY CONTENT at 426a23544; no undisclosed new authorship.",
+      "resolution": "DEC-2 revision 5 (A2-32) passed A2-33's INDEPENDENT review CLEAN. Five revisions, four rejections, one ratification. chosen_by: agent (driver), per CLAUDE.md Answering-gates: DEC-n ratification is agent-decidable once the contract passes an independent review clean. BUYAN MAY REVERSE IT. A2-32 authored rev 5 fixing EXACTLY A2-31's F-1 and F-2, disclosed two over-reaches it began and REVERTED, and correctly REFUSED TO RATIFY ITS OWN WORK. A2-33 re-derived rather than inherited: F-1 discharged by RUNNING the harness and COUNTING eight CANNOT-CATCH limits on a PASS exit 0 run, plus reading the guard head AT 2e97162 (the rc=0 awk block was already there, so rev 4's claim was false at its own stamp); F-2 by a from-scratch AST probe driven BOTH polarities, calibrated by reproducing the guard's own CENSUS line TO THE DIGIT (47 files / 5 pkgs / 5210 calls). *** A2-33 CLOSED A GAP A2-32 LEFT: I3-PKG-STATE's population is printed on NO CENSUS line and had NEVER been measured -- had it been empty the ratio would be FIVE of seven and rev 5 wrong again. Measured 59. Four-of-seven now has EVERY TERM MEASURED. *** No tenth site: A2-33's own 34-pattern sweep over 4844 files / 8120 hits, INSTRUMENT CALIBRATED ON A KNOWN POSITIVE FIRST at 17/17 recall MISSES=0; it reproduced T232's \\\\b-under-git-grep-E defect itself and confirmed neither its patterns nor A2-32's contain a backslash escape, so A2-32's sweep is NOT void by that mechanism -- and it replaced that enumeration anyway. All 16 hunks classified, both disclosed reverts verified in committed bytes. 54 Fineract citations re-resolved BY CONTENT at 426a23544: 54 resolve, 0 fail. A2-33's THREE findings are ALL driver-owned, OUTSIDE DEC-2 and POST-DATE THE FORK -- two were defects in the driver's own P-67 correction (P-67 breaking itself a FOURTH time), both FIXED by the driver this fire; the third is LOW and already covered by 4.4.1 blind spot 1. RECORDED, not made a sixth revision: T227 merged BETWEEN A2-32's fork and its merge, so rev 5's conformance.sh line-number claim is true at its stamp and stale at main -- properly stamped, routed to T227, discharged.",
+      "unblocks": "tierA-gl-accounting tasks may now write Go under nexus/ and store CONTRACT-SHAPED vectors for this context. A2-15 is no longer gated on G-11 (its other precondition, T230, also landed this fire). STILL HARD USER GATES, unchanged: CUTOVER; regulatory/parallel-run sign-off; and a ratified DEC-n may not be amended by an agent -- any change to DEC-2 from here is a FRESH user gate."
     },
     {
       "id": "G-12",
@@ -1684,6 +1686,44 @@
       "new_patterns": [
         "P-71 \u2014 agent worktrees fork from session-start HEAD, not current main"
       ]
+    },
+    {
+      "run_id": "2026-08-21-run2-tierA-gl-accounting-A2",
+      "fire": "20260822-140002",
+      "date": "2026-08-22",
+      "context": "tierA-gl-accounting / slice A2 (+ tier0-harness)",
+      "tasks_dispatched": 8,
+      "tasks_completed": 8,
+      "tasks_merged": 8,
+      "live_at_exit": 0,
+      "waves": {
+        "wave1": [
+          "A2-32",
+          "T227",
+          "T229",
+          "T230"
+        ],
+        "wave2": [
+          "A2-33",
+          "T231",
+          "T232",
+          "T233"
+        ]
+      },
+      "gate_closed": "G-11 RATIFIED (DEC-2 rev 5, on A2-33's clean independent review). chosen_by: agent. Buyan may reverse.",
+      "reviewer_catches": [
+        "A2-33 -> the driver x2: the driver's own P-67 correction put the corrected percentage under the UNCORRECTED numerator, and the same claim was still asserted as current fact one SECTION over. P-67 breaking itself a FOURTH time. Both fixed this fire.",
+        "A2-33 -> A2-32: I3-PKG-STATE's population appears on NO CENSUS line and had never been measured; had it been empty the ratio would be FIVE of seven and rev 5 wrong again. Measured 59.",
+        "A2-32 -> the driver x2: patterns.md P-67 and tasks.json both still carried 'three of seven', the latter certified EXACT. It is FOUR. Both fixed this fire.",
+        "T227 -> T224: T224's sweep had ZERO RECALL on the positive it already held (0/9 on the site it had itself just fixed), because it right-anchored an inflected stem. It then reported the population closed.",
+        "T232 -> T227 and the whole program: git grep -E does not implement \\\\b here at all -- it reads it as a literal 'b', returning zero with exit 1 and no warning. 172 files under -P vs 0 under -E for the same written pattern.",
+        "T229 -> T223/gates.md: the failing-principal ceiling was wrong by 3x, falsified by a measured counterexample.",
+        "T230 -> T225: T225's own F-1 figures were understated -- 7884->7151 not 7837, and the vector contributes 733 graded cells not 47.",
+        "the driver -> itself: P-71 said worktrees fork from SESSION-START HEAD. Falsified; they fork from the DISPATCH commit. The driver had briefed all four wave-1 workers with a wrong fork point."
+      ],
+      "vectors_added": 0,
+      "uat": "PASS -- driver-re-verified on merged main dd60e95: probe PRESENT and up, exit 0, 46 parity / 7884 cells, 0 inadmissible, 0 harness errors, 0 invariant violations, 4 EXEMPTED, 4 GROUNDED / 0 UNGROUNDED / 0 UNDETERMINED, --prove 23/0, build/vet/test green, gofmt -l exactly contract.go, store 73c3ea7b UNCHANGED.",
+      "note": "The previous fire (20260822-080001) dispatched this same wave 1 and was killed by the session limit three minutes later. This fire PROVED no WIP was lost (44 worktrees swept: 0 dirty, 0 branches) before re-dispatching."
     }
   ],
   "database": {
