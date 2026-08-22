@@ -1062,9 +1062,10 @@
     "A2-21",
     "A2-20"
    ],
-   "status": "pending",
-   "attempts": 0,
-   "note": "Brief authored by A2-30 (driver task), local fire 20260822-000013, re-derived from A2-26 merged handoff. GATED on G-11. || local fire 20260822-140002: *** UNBLOCKED. G-11 IS RATIFIED AND CLOSED *** (DEC-2 rev 5, on A2-33's clean independent review) -- contract-shaped ledger vectors for tierA-gl-accounting are now PERMITTED. Its other precondition ALSO landed this fire: T230 reworked T222's grounding rule, so an exemption paired with an unrecorded_fields entry is now ADMITTED AND REPORTED as UNDETERMINED-ON-THE-RECORD instead of refused INADMISSIBLE -- which is exactly the shape A2-15 must produce when it excludes glAccountType (A2-26 observed that cell rendering ASSET in A2-088 and INCOME in A2-320 with no entry edited). CAVEAT TO CARRY, T230's own words: it did NOT read A2-15's brief or A2-26's observation, so 'the fix matches A2-15's actual need' is [UNVERIFIED] on its side -- A2-15's dispatcher MUST CONFIRM IT against the real glAccountType exclusion before relying on it. ALSO NEW SINCE THE BRIEF WAS WRITTEN: T233 now REQUIRES every exemption to carry a three-part capture citation that RESOLVES (artefact exists and is non-empty; capture_case_id occurs in its bytes; re-run invariant sentence non-empty), and conformance.sh now GATES the exemption census for EQUALITY against pinned figures -- so A2-15 promoting a vector WILL move EXEMPTION_PIN_* and must update it deliberately. A2-15 IS NOW THE HIGHEST-VALUE TASK IN THE PROGRAM: nothing in the 46-vector corpus grades a GL account, a mapping, a financial activity or a journal entry."
+   "status": "in_progress",
+   "attempts": 1,
+   "note": "Brief authored by A2-30 (driver task), local fire 20260822-000013, re-derived from A2-26 merged handoff. GATED on G-11. || local fire 20260822-140002: *** UNBLOCKED. G-11 IS RATIFIED AND CLOSED *** (DEC-2 rev 5, on A2-33's clean independent review) -- contract-shaped ledger vectors for tierA-gl-accounting are now PERMITTED. Its other precondition ALSO landed this fire: T230 reworked T222's grounding rule, so an exemption paired with an unrecorded_fields entry is now ADMITTED AND REPORTED as UNDETERMINED-ON-THE-RECORD instead of refused INADMISSIBLE -- which is exactly the shape A2-15 must produce when it excludes glAccountType (A2-26 observed that cell rendering ASSET in A2-088 and INCOME in A2-320 with no entry edited). CAVEAT TO CARRY, T230's own words: it did NOT read A2-15's brief or A2-26's observation, so 'the fix matches A2-15's actual need' is [UNVERIFIED] on its side -- A2-15's dispatcher MUST CONFIRM IT against the real glAccountType exclusion before relying on it. ALSO NEW SINCE THE BRIEF WAS WRITTEN: T233 now REQUIRES every exemption to carry a three-part capture citation that RESOLVES (artefact exists and is non-empty; capture_case_id occurs in its bytes; re-run invariant sentence non-empty), and conformance.sh now GATES the exemption census for EQUALITY against pinned figures -- so A2-15 promoting a vector WILL move EXEMPTION_PIN_* and must update it deliberately. A2-15 IS NOW THE HIGHEST-VALUE TASK IN THE PROGRAM: nothing in the 46-vector corpus grades a GL account, a mapping, a financial activity or a journal entry. || DISPATCHED local fire 20260822-060013, wave 1, fork point 8611e754 (the DISPATCH commit, corrected P-71). Model as recorded. Driver-verified baseline at 2d41838: probe PRESENT and up, PASS exit 0, 46 parity / 7884 cells, 4 EXEMPTED / 4 GROUNDED / 0 UNGROUNDED / 0 UNDETERMINED, --prove 23/0, go build+vet+test green, gofmt -l exactly contract.go, store 73c3ea7b43dd75f04884072719a87fc8e1d255c1. A2-15 is the ONE task permitted to move the vector-store digest off 73c3ea7b; its BAR line is 'state the NEW digest and confirm it moved for the added vectors and nothing else'. Paired reviewer A2-34 registered at 8611e754 BEFORE dispatch.",
+   "branch": "softhouse/A2-15-ledger-parity-vectors"
   },
   {
    "id": "T190",
@@ -1791,8 +1792,8 @@
    "executor": "agent",
    "model": "sonnet",
    "target": "code",
-   "status": "pending",
-   "attempts": 0,
+   "status": "in_progress",
+   "attempts": 1,
    "dependencies": [
     "T168"
    ],
@@ -1802,7 +1803,8 @@
    ],
    "description": "T168's P-40 accounting, honoured. T168 swept every multi-signal trap under .softhouse/ for the SIGQUIT omission, fixed its own site, found 4 already covered, and SKIPPED 3 that still carry the live gap because another worker held those paths during fire 20260822-080001. It named all three rather than letting the sweep silently narrow -- which is the behaviour P-40 exists to produce. Close the tail.\n\nTHE THREE SITES, each `trap ... EXIT HUP INT TERM` with no QUIT:\n  .softhouse/capture/tierA-a2/cap.sh   -- leaks a mktemp scratch dir on SIGQUIT\n  .softhouse/capture/tierA-a2/cap8.sh  -- same\n  .softhouse/reviews/t179-guard-classifier/fixtures/green_real_trap.sh -- a fixture on a *-never-run* path\n\nMATERIALITY IS LOW AND YOU SHOULD SAY SO. None of these strands a VECTOR the way prove-redgreen.sh did; they leak a temp directory, and the third is a fixture. Do not write this up as though a money path were at risk -- T168 did not, and inflating it would be its own defect. The reason to do it anyway is that a signal-list omission is a CONCEPT (P-26), and a family fixed at 5 of 8 sites is a family that grows back.\n\nTHINK ABOUT THE FIXTURE BEFORE YOU EDIT IT. green_real_trap.sh is a FIXTURE for the guard classifier -- its trap list may be part of what the classifier is being tested against, in which case changing it changes the test's meaning. Check what reads it. If adding QUIT would alter a classification, DO NOT add it; report that instead. This is the more interesting half of the task.\n\nDRIVE RED and GREEN per site, or state why a site cannot be driven and what you did instead. Re-run T168's sweep afterwards and report the new census (it should be 8 of 8, or say why not). Two independent grep programs, named (P-58) -- the interactive `grep` here is a shell function re-execing as ugrep -I, /usr/bin/grep is BSD 2.6.0-FreeBSD. AND BEWARE THE DRIVER'S OWN MISTAKE ON THIS EXACT SWEEP: its one-line regex matched a COMMENT QUOTING OLD CODE and it briefly concluded fire-program.sh lacked QUIT when lines 202-206 set it. Make your census distinguish live code from commentary, and say how.\n\nDo NOT modify .softhouse/bin/fire-program.sh. Bar: probe present and up, PASS exit 0, 43 parity vectors, 5664 cells.",
    "acceptance": null,
-   "note": "raised by the driver, fire 20260822-080001, from T168's own P-40 skip accounting"
+   "note": "raised by the driver, fire 20260822-080001, from T168's own P-40 skip accounting || DISPATCHED local fire 20260822-060013, wave 1, fork point 8611e754 (the DISPATCH commit, corrected P-71). Model as recorded. Driver-verified baseline at 2d41838: probe PRESENT and up, PASS exit 0, 46 parity / 7884 cells, 4 EXEMPTED / 4 GROUNDED / 0 UNGROUNDED / 0 UNDETERMINED, --prove 23/0, go build+vet+test green, gofmt -l exactly contract.go, store 73c3ea7b43dd75f04884072719a87fc8e1d255c1. DRIVER CORRECTION AT DISPATCH: this task's stored BAR said '43 parity vectors, 5664 cells' -- STALE. The worker was given the driver-verified 46 / 7884 instead.",
+   "branch": "softhouse/T216-quit-trap-tail"
   },
   {
    "id": "T217",
@@ -1954,7 +1956,7 @@
   {
    "id": "T219",
    "title": "T159's MNT 10.01-at-n-3000 figure in gates.md G-8 is unreconciled with the promoted corpus",
-   "status": "pending",
+   "status": "in_progress",
    "executor": "agent",
    "model": "opus",
    "role": "reviewer",
@@ -1966,7 +1968,9 @@
     ".softhouse/gates.md"
    ],
    "description": "T116's third follow-up. The driver reconciled the 'Prepared and NOT promoted' block on merging T116 (family B is now PROMOTED; 46 vectors), but T116 also flagged T159's MNT 10.01-at-n-3000 residual figure as needing reconciling and the driver did NOT do that one -- it is a MEASUREMENT, and reconciling a measurement by editing prose is exactly what this program forbids. T117 moved the family-B residual to MNT 5.01 at n=1000; T159 reviewed T117, APPROVED, then asked past n=1000 and DOUBLED the residual to MNT 10.01 at n=3000. T116 has now promoted family-B vectors at n=104 and n=108 at 600.0%/MNT 0.01. DETERMINE, BY MEASUREMENT AGAINST THE LIVE ORACLE, whether the residual bound as stated is still correct, and whether the promoted vectors sit where G-8's prose says the region is. Re-derive T159's figure independently before deciding whether it needs changing -- it may be perfectly correct and merely need its domain named, which is the correction T101 F-8 already made once to the MNT 0.23 claim in this same section. If the figure is right, say so and name the domain it holds over; do not edit it. If it is wrong, correct it AND say which task's measurement it supersedes. DO NOT edit any measurement to agree with another document -- measure. SCOPE: .softhouse/gates.md's G-8 section and your handoff. Do NOT touch the promoted vectors, the harness or nexus/. BAR: probe present and up, PASS exit 0, 46 parity vectors / 7884 cells, store 73c3ea7b43dd75f04884072719a87fc8e1d255c1 UNCHANGED by you.",
-   "note": "Registered by the driver, local fire 20260822-000013, from T116's follow-up 3. The driver reconciled the promotion text and deliberately left this one to measurement."
+   "note": "Registered by the driver, local fire 20260822-000013, from T116's follow-up 3. The driver reconciled the promotion text and deliberately left this one to measurement. || DISPATCHED local fire 20260822-060013, wave 1, fork point 8611e754 (the DISPATCH commit, corrected P-71). Model as recorded. Driver-verified baseline at 2d41838: probe PRESENT and up, PASS exit 0, 46 parity / 7884 cells, 4 EXEMPTED / 4 GROUNDED / 0 UNGROUNDED / 0 UNDETERMINED, --prove 23/0, go build+vet+test green, gofmt -l exactly contract.go, store 73c3ea7b43dd75f04884072719a87fc8e1d255c1.",
+   "branch": "softhouse/T219-g8-residual-measurement",
+   "attempts": 1
   },
   {
    "id": "T220",
@@ -2315,9 +2319,10 @@
    "dependencies": [
     "T232"
    ],
-   "status": "pending",
-   "attempts": 0,
-   "note": "Raised by the driver, local fire 20260822-140002, from T232's FU-T232-3. HIGH VALUE: this is the instrument behind several 'the population is closed' claims, including DEC-2's. The driver has already warned the LIVE A2-33 reviewer by direct message so it does not inherit A2-32's enumeration."
+   "status": "in_progress",
+   "attempts": 1,
+   "note": "Raised by the driver, local fire 20260822-140002, from T232's FU-T232-3. HIGH VALUE: this is the instrument behind several 'the population is closed' claims, including DEC-2's. The driver has already warned the LIVE A2-33 reviewer by direct message so it does not inherit A2-32's enumeration. || DISPATCHED local fire 20260822-060013, wave 1, fork point 8611e754 (the DISPATCH commit, corrected P-71). Model as recorded. Driver-verified baseline at 2d41838: probe PRESENT and up, PASS exit 0, 46 parity / 7884 cells, 4 EXEMPTED / 4 GROUNDED / 0 UNGROUNDED / 0 UNDETERMINED, --prove 23/0, go build+vet+test green, gofmt -l exactly contract.go, store 73c3ea7b43dd75f04884072719a87fc8e1d255c1.",
+   "branch": "softhouse/T234-sweep-instrument-audit"
   },
   {
    "id": "T235",

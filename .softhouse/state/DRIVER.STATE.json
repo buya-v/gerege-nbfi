@@ -1,58 +1,42 @@
 {
-  "fire": "20260822-140002",
-  "started_at": "2026-08-22T06:00:13Z",
-  "driver": "softhouse-program",
-  "run_id": "2026-08-21-run2-tierA-gl-accounting-A2",
-  "oracle": "REACHABLE https://localhost:8443/fineract-provider/actuator/health (given by wrapper, not re-probed)",
-  "postgres": "localhost:5432",
-  "fork_point_for_this_fires_worktrees": "wave 1 forked 33d19a6; wave 2 forked 8f193b5 -- BOTH are HEAD-at-dispatch, NOT session start (8f0edeb). P-71 corrected this fire.",
-  "main_at_dispatch": "33d19a6",
-  "prior_fire_finding": {
-    "what": "fire 20260822-080001 dispatched wave 1 (A2-32, T230, T229, T227) at 12:09:27+0800 and hit the session limit at 12:12:45+0800, rc=1. All four workers were killed ~3 minutes after dispatch.",
-    "wip_lost": "NONE. Driver swept all 44 worktrees this fire: zero dirty, zero softhouse/{A2-32,T227,T229,T230}-* branches. The workers died before writing anything.",
-    "defect": "The prior fire violated the skill's own rule: 'Only dispatch what you have the budget to see through.' It dispatched four opus workers on a session that had minutes left. Cost: one full fire of throughput, no output.",
-    "session_limit_reset": "1pm Asia/Ulaanbaatar; this fire starts 14:00 UTB with a fresh budget."
-  },
-  "live_workers": [],
-  "next_action": "Fire complete. Next fire: run ready-tasks.py, then dispatch A2-15 WITH a paired independent reviewer (plan-gate rule 1), plus T234/T228/T235.",
-  "baseline_bar": {
-    "verdict": "PASS exit 0",
+  "squad": "DRIVER",
+  "fire": "local 20260822-060013",
+  "host": "Buyanmunkhs-Mac-mini",
+  "current_item": "run 2026-08-21-run2-tierA-gl-accounting-A2 -- wave 1 dispatched, awaiting all four",
+  "step": "wave 1 in flight",
+  "dispatch_commit": "8611e754",
+  "oracle": "UP -- probe line PRESENT and reading 'up', driver-verified at 2d41838",
+  "baseline_verified_by_driver_at": "2d41838",
+  "baseline": {
+    "probe_line": "PRESENT, reads: probe = up",
+    "verdict": "PASS (exit 0)",
     "parity_vectors": 46,
     "cells": 7884,
     "inadmissible": 0,
+    "harness_errors": 0,
     "invariant_violations": 0,
     "exempted": 4,
     "grounded": 4,
     "ungrounded": 0,
-    "prove": "23 passed 0 failed",
-    "vector_store": "73c3ea7b43dd75f04884072719a87fc8e1d255c1",
-    "note": "MUST be re-run by the driver on merged main, never quoted from a worker."
+    "undetermined": 0,
+    "go_build": 0,
+    "go_vet": 0,
+    "go_test": "ok",
+    "gofmt_l": "exactly nexus/internal/apps/loanschedule/contract/contract.go (expected, G-3)",
+    "vector_store_digest": "73c3ea7b43dd75f04884072719a87fc8e1d255c1"
   },
-  "gates_open": [
-    "G-4",
-    "G-5",
-    "G-8",
-    "G-10",
-    "G-11",
-    "G-12"
+  "wave_1": [
+    {"id": "A2-15", "model": "opus", "branch": "softhouse/A2-15-ledger-parity-vectors", "what": "promote the A2 raw captures into the FIRST ledger parity vectors; extend the harness to grade a second bounded context"},
+    {"id": "T234", "model": "opus", "branch": "softhouse/T234-sweep-instrument-audit", "what": "audit every committed sweep instrument for engine-dependent escapes and RE-RUN the voided ones"},
+    {"id": "T219", "model": "opus", "branch": "softhouse/T219-g8-residual-measurement", "what": "re-derive T159's MNT 10.01-at-n-3000 residual by measurement against the live oracle"},
+    {"id": "T216", "model": "sonnet", "branch": "softhouse/T216-quit-trap-tail", "what": "close T168's named QUIT-trap tail; decide the classifier fixture rather than edit it blindly"}
   ],
-  "blocked_on_gate": "A2-15 is gated on G-11 and practically on T230",
-  "wave1_result": "ALL FOUR MERGED, driver-verified on merged main 7fd5568: probe PRESENT and up, PASS exit 0, 46 parity / 7884 cells, 0 inadmissible, 0 invariant violations, 4 EXEMPTED, 4 GROUNDED / 0 UNGROUNDED / 0 UNDETERMINED, --prove 23/0, build/vet/test green, gofmt -l exactly contract.go, store 73c3ea7b43dd75f04884072719a87fc8e1d255c1 UNCHANGED. NO VECTOR ADDED and none claimed.",
-  "driver_self_corrections_this_fire": [
-    "P-67 in patterns.md: the pattern about an unmeasured DENOMINATOR had itself shipped an unmeasured NUMERATOR. Four of seven, not three. Caught by A2-32 against the driver. FIXED.",
-    "tasks.json certified 'three of the ledger guard's SEVEN classes ... is EXACT' as driver-verified. It is FOUR. FIXED.",
-    "P-71 said worktrees fork from the SESSION-START commit. FALSIFIED this fire: all four wave-1 worktrees forked from 33d19a6, HEAD at DISPATCH. The driver had told all four workers their fork point was 8f0edeb -- wrong for every one of them, harmless only because the two commits differ by one note. CORRECTED in patterns.md.",
-    "A2-32 flagged T227's conformance.sh target as wider than briefed and at :1187 not :1180. ADJUDICATED: T227 had already handled the wider 25-line block. Flag CLOSED, no action."
+  "next_action": "await all four; scope-check each branch on the THREE-DOT diff (git diff --stat main...<branch>) against files_hint; re-run conformance on merged main after every merge batch, never quote a worker's numbers; then dispatch wave 2 -- A2-34 (the registered reviewer of A2-15), T228 (gates.md, serialised behind T219), T226 (conformance.sh, serialised behind A2-15).",
+  "blocked_on": null,
+  "open_questions": [
+    "Does T230's grounding rework actually fit A2-15's real glAccountType exclusion? T230 marked this [UNVERIFIED] on its own side; A2-15 must discharge it.",
+    "A2-15 will move EXEMPTION_PIN_* and the vector-store digest. The new digest must be propagated into every BAR-carrying document -- which is exactly T235's structural complaint about P-61."
   ],
-  "exit": {
-    "clean": true,
-    "live_workers_at_exit": 0,
-    "dispatched": 8,
-    "completed": 8,
-    "merged": 8,
-    "gate_closed": "G-11 RATIFIED (DEC-2 rev 5, A2-33 clean independent review). chosen_by: agent. Buyan may reverse.",
-    "vectors_added": 0,
-    "final_verified_head": "see git log; bar re-run by the driver on merged main after every merge batch",
-    "next_fire_first_task": "A2-15 -- promote the A2 raw captures into PARITY vectors. Both blockers cleared this fire. Nothing in the 46-vector corpus grades a GL account."
-  }
+  "gate_pending": null,
+  "no_vector_added_yet_this_fire": true
 }
