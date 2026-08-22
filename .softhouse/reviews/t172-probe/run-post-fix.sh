@@ -1,4 +1,16 @@
 #!/bin/zsh
+# HISTORICAL RECORD ONLY -- NOT the live regression gate (T210, 22 Aug 2026).
+#
+# This replays BYTES captured at T172 time (post-fix-line224.txt), frozen
+# in this file. T190 subsequently deleted that exact grep-based guard from
+# fire-program.sh and replaced it with a git-pathspec exclusion (see line
+# ~313 of the live file) -- so this script's pattern now matches ZERO times
+# against the current fire-program.sh. Keep this file as a historical
+# record of the T172 fix; use check-lock-exclusion-anchor.sh in this same
+# directory for the LIVE gate -- it extracts and replays the CURRENT guard
+# line by pattern (never a frozen transcript) and errors loudly if that
+# pattern ever matches zero times again.
+#
 # Runs the REAL post-fix line-224 bytes (captured via
 # `sed -n '224p' .softhouse/bin/fire-program.sh` on the T172 branch, into
 # post-fix-line224.txt, committed alongside this script) against the SAME
