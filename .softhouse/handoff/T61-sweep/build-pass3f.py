@@ -9,7 +9,7 @@ comment. The script asserts that every substitution it makes actually matched.
 
     python3 .softhouse/handoff/T61-sweep/build-pass3f.py
 """
-import os, re, sys
+import os, re, sys, tempfile
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 SRC = os.path.join(ROOT, ".softhouse/capture/src")
@@ -19,6 +19,67 @@ def sub1(text, old, new, what):
     if text.count(old) < 1:
         sys.exit("BUILD FAILED: anchor not found (%s)" % what)
     return text.replace(old, new)
+
+
+# HARDENED BY T206 (22 August 2026) - P-22, P-48 rule 4.  T203's backlog named
+# this file's three write sites (then :147/:215/:216, unchanged by this fix's
+# line count above them) as CAPTURE-tagged unguarded mutations, not a
+# vector-store rewrite -- so T203's `t203_store_guard.py` does not apply as-is
+# (it requires a `.json` target and speaks of "the live golden-vector store";
+# neither is true of `Capture3f.java` / `run-pass3f.sh`).  MEASURED, NOT
+# ASSERTED (T206-evidence/RED-b-prefix.txt): both `open(path, "w").write(...)`
+# calls are bare O_TRUNC with no existence check, and the trailing
+# `os.chmod(path, 0o755)` runs unconditionally regardless of what (if
+# anything) is at that path -- against a scratch mirror seeded with sentinels
+# at BOTH already-built targets, the pre-fix bytes destroyed both canaries and
+# silently widened run-pass3f.sh's mode from 0600 to 0755, exit 0.
+# `Capture3f.java` and `run-pass3f.sh` are themselves ALREADY COMMITTED build
+# outputs of a prior run of this exact script (`ls .softhouse/capture/src/`),
+# so re-running it today is not a hypothetical -- it would truncate them in
+# place. `guarded_create` below is T203's/T178's core rule -- THE TARGET MUST
+# NOT EXIST; no override -- applied locally rather than through the shared
+# vector-store module, because the target here is a build artefact, not a
+# vector, and forcing it through a `.json`-only, vector-store-worded guard
+# would be a second lie layered on the first. It performs the identical
+# mkstemp/fchmod/fsync/os.replace/fsync-dir sequence as
+# `t203_store_guard._atomic_create`, so no interruption between the first
+# byte and the fsync'd replace can leave a partial or half-permissioned file,
+# and the `os.chmod` follow-up call is eliminated entirely -- the mode is set
+# on the temp file, atomically, before it becomes the target, so there is no
+# window where the finished file exists with the wrong mode and no third
+# call left to forget a guard on.
+def guarded_create(path, data, what, mode=None):
+    """Create `path` with `data` (bytes or str), or refuse if it already
+    exists.  No flag lifts the refusal: this script's whole job is to BUILD
+    pass 3f from pass 3e, and a rebuild after a prior build already ran must
+    be a deliberate `rm` in a reviewable commit, never an implicit
+    overwrite -- exactly T203's rule for the vector store, applied here to a
+    committed capture-harness artefact instead of a `.json` vector."""
+    if os.path.lexists(path):
+        sys.exit("BUILD FAILED: %s already exists at %r; refusing to overwrite it "
+                  "(O_TRUNC would destroy it before the replacement exists). "
+                  "Delete it deliberately in a reviewable commit first if this "
+                  "pass is genuinely being rebuilt." % (what, path))
+    data = data.encode("utf-8") if isinstance(data, str) else data
+    target_dir = os.path.dirname(path)
+    fd, tmp = tempfile.mkstemp(dir=target_dir, prefix=".build-pass3f-", suffix=".tmp")
+    try:
+        if mode is not None:
+            os.fchmod(fd, mode)
+        with os.fdopen(fd, "wb") as fh:
+            fh.write(data)
+            fh.flush()
+            os.fsync(fh.fileno())
+        os.replace(tmp, path)
+        tmp = None
+    finally:
+        if tmp is not None and os.path.exists(tmp):
+            os.unlink(tmp)
+    dfd = os.open(target_dir, os.O_RDONLY)
+    try:
+        os.fsync(dfd)
+    finally:
+        os.close(dfd)
 
 
 # --------------------------------------------------------------------------
@@ -144,7 +205,7 @@ old_extends = re.search(r'sb\.append\("  \\"extends\\": .*?\);\n', java, re.S).g
 java = java.replace(old_extends,
     'sb.append("  \\"extends\\": \\"Capture3e.java / capture-prod3e-raw.json — same rig, same columns, same attestation, same emission rules, all three calibrations carried over unchanged plus a FOURTH (P-CAL-LATQ0a, inputs identical to pass 3e P-LAT-Q0a); a NEW case list of three on-lattice MNT loans that land the currency quantization on an exact tie, so that a port applying HALF_EVEN where the tenant pins HALF_UP is separated in a payable amount.\\",\\n");\n')
 
-open(os.path.join(SRC, "Capture3f.java"), "w").write(java)
+guarded_create(os.path.join(SRC, "Capture3f.java"), java, "Capture3f.java")
 
 # --------------------------------------------------------------------------
 # 2. run-pass3f.sh = run-pass3e.sh with the new ids and a fourth calibration.
@@ -212,7 +273,6 @@ CAL_PRECISION = {'P-CAL': 12, 'P-CAL-P00': 19, 'P-CAL-EMI6': 19}""",
 CAL_PRECISION = {'P-CAL': 12, 'P-CAL-P00': 19, 'P-CAL-EMI6': 19, 'P-CAL-LATQ0a': 19}""",
     "calibrations")
 
-open(os.path.join(SRC, "run-pass3f.sh"), "w").write(sh)
-os.chmod(os.path.join(SRC, "run-pass3f.sh"), 0o755)
+guarded_create(os.path.join(SRC, "run-pass3f.sh"), sh, "run-pass3f.sh", mode=0o755)
 
 print("built .softhouse/capture/src/Capture3f.java and run-pass3f.sh from pass 3e")

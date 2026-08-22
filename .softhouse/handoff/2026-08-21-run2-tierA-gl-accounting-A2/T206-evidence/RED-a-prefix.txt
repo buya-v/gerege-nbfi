@@ -1,0 +1,18 @@
+promote-vector.py git blob sha1 (pre-fix, this run): a142b7a6b5964947000096633732ce8f92ccb378
+STORE BEFORE: digest=ce821c638724237652b6b29627148d34b72fab3b count=50 (recipe: git rev-parse HEAD:.softhouse/vectors)
+ARM canary: rc=0 destroyed=True (exists=True, len_before=75, len_after=18280)
+  [after ARM canary] store digest=ce821c638724237652b6b29627148d34b72fab3b count=50
+ARM live-bytes: rc=0 changed=True (live sha256=f2e54c6ec7f25d60..., after sha256=4311791fb5c6183f...)
+  [after ARM live-bytes] store digest=ce821c638724237652b6b29627148d34b72fab3b count=50
+ARM live-shape (scratch .../loanschedule/<live-name>): rc=0 destroyed=True
+  [after ARM live-shape] store digest=ce821c638724237652b6b29627148d34b72fab3b count=50
+
+SUMMARY: {
+  "canary_destroyed": true,
+  "canary_rc": 0,
+  "livebytes_changed": true,
+  "livebytes_rc": 0,
+  "liveshape_destroyed": true
+}
+
+RED PROOF ESTABLISHED: the committed, unmodified promote-vector.py (blob a142b7a6b5964947000096633732ce8f92ccb378) destroys whatever pre-existing file occupies its argv[1] destination, unconditionally, with exit 0. It is a bare O_TRUNC writer exactly like T74/T61/T64/T57/T8, differing only in where the destination is bound (argv, not a module constant).

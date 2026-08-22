@@ -1,0 +1,28 @@
+STORE BEFORE: digest=ce821c638724237652b6b29627148d34b72fab3b count=50
+promote-vector.py sha256 (working tree, post-fix): db80b518ac58d7cea7bc63a06917388486027bc3d7089d123fd297f9f709b702
+ARM canary (post-fix): rc=3 destroyed=False
+  stderr tail:   scratch store and diff.  NOTHING was written.
+  [after ARM canary] store digest=ce821c638724237652b6b29627148d34b72fab3b count=50
+ARM live-shape (post-fix): rc=3 destroyed=False
+  [after ARM live-shape] store digest=ce821c638724237652b6b29627148d34b72fab3b count=50
+G1 non-vacuity: rc=0 written=True identical_to_live=False
+  [after G1] store digest=ce821c638724237652b6b29627148d34b72fab3b count=50
+G2 (live store, existing target, VALID token -> must still refuse, exit 3): harness_rc=0 stdout='refused, code=3'
+G3 (live store, NEW name, NO token -> must refuse, exit 2, nothing created): harness_rc=0 stdout='refused, code=2'
+  [after G2/G3] store digest=ce821c638724237652b6b29627148d34b72fab3b count=50
+
+SUMMARY: {
+  "canary_rc": 3,
+  "canary_destroyed": false,
+  "liveshape_rc": 3,
+  "liveshape_destroyed": false,
+  "g1_rc": 0,
+  "g1_written": true,
+  "g1_identical_to_live": false,
+  "g2-existing-with-token_refused": true,
+  "g2-existing-with-token_harness_rc": 0,
+  "g3-new-no-token_refused": true,
+  "g3-new-no-token_harness_rc": 0
+}
+
+GREEN PROOF ESTABLISHED: hardened promote-vector.py refuses to overwrite an existing target (canary and live-shape arms, exit != 0, sentinel intact), still succeeds into an empty scratch store and reproduces the live vector's schema (G1), and the shared guard's live-store default-deny holds even with a valid token when the target already exists (G2) and with no token on a brand-new name (G3). Live store unmoved throughout.

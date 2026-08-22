@@ -1,0 +1,35 @@
+STORE DIGEST -- canonical recipe (P-38 / P-61): `git rev-parse HEAD:.softhouse/vectors`
+(a git tree hash -- NOT `find | shasum | shasum`, which the driver used this fire and which
+embedded file PATHS into what it hashed, giving a cwd-dependent value two workers correctly
+reported as unreproducible).
+
+BEFORE any T206 edit (measured at fork point, before touching promote-vector.py,
+build-pass3f.py or T57-promote-emi-vectors.py):
+  ce821c638724237652b6b29627148d34b72fab3b   (count: 50 .json files)
+
+AFTER all T206 edits -- items (a), (b) and (c) applied:
+  ce821c638724237652b6b29627148d34b72fab3b   (count: 50 .json files)
+
+UNMOVED.
+
+Frozen artefacts, before == after (neither touched by any T206 edit):
+  49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab  docs/adr/DEC-1-schedule-generator-adapter.md
+  0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139  nexus/internal/apps/loanschedule/contract/contract.go
+
+git status --porcelain (worktree, at time of this check):
+ M .softhouse/capture/pathb/t149/promote-vector.py
+ M .softhouse/handoff/T57-promote-emi-vectors.py
+ M .softhouse/handoff/T61-sweep/build-pass3f.py
+?? .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T206-evidence/
+
+Exactly the three files named in items (a)/(b)/(c), plus this run's own evidence directory.
+No file under .softhouse/vectors/ appears in the diff.
+
+Conformance harness (`bash .softhouse/conformance.sh`, never `sh`; toolchain via
+`.softhouse/bin/go-env.sh`'s exported vars, sourced from the absolute path in the MAIN
+checkout so the worktree shares one toolchain):
+  BEFORE (after item (a), before (b)/(c)): VERDICT: PASS (exit 0) -- 43 parity vectors,
+    5664 cells compared.
+  AFTER (all three items applied):         VERDICT: PASS (exit 0) -- 43 parity vectors,
+    5664 cells compared.
+Full transcripts: conformance-BEFORE-bc.txt, conformance-AFTER-all.txt.

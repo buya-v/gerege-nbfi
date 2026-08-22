@@ -1,0 +1,33 @@
+T206 item (b) -- GREEN proof, hardened .softhouse/handoff/T61-sweep/build-pass3f.py
+
+ARM 1 -- CANARY (same scratch mirror shape as RED, hardened script):
+  $ python3 /tmp/t206-b-green-canary/.softhouse/handoff/T61-sweep/build-pass3f.py
+  BUILD FAILED: Capture3f.java already exists at '.../Capture3f.java'; refusing to
+  overwrite it (O_TRUNC would destroy it before the replacement exists). Delete it
+  deliberately in a reviewable commit first if this pass is genuinely being rebuilt.
+  EXIT=1
+
+  after: both canary files INTACT (byte-identical to what was seeded), run-pass3f.sh
+  mode still 100600 (unchanged -- the refusal fires before Capture3f.java is even
+  reached, so run-pass3f.sh's write/chmod never runs at all).
+
+ARM 2 -- non-vacuity (G1): fresh scratch mirror, NO pre-existing Capture3f.java /
+run-pass3f.sh:
+  $ python3 /tmp/t206-b-green-fresh/.softhouse/handoff/T61-sweep/build-pass3f.py
+  built .softhouse/capture/src/Capture3f.java and run-pass3f.sh from pass 3e
+  EXIT=0
+  mode of run-pass3f.sh: 100755 (correct, set atomically via fchmod on the temp file,
+  no separate os.chmod call needed)
+  diff vs the REAL committed .softhouse/capture/src/Capture3f.java -> IDENTICAL
+  diff vs the REAL committed .softhouse/capture/src/run-pass3f.sh  -> IDENTICAL
+  no leftover .build-pass3f-*.tmp files in the scratch store dir
+
+CLASSIFIER (.softhouse/reviews/t179-guard-classifier/guard_classify.py --file ... --enforce,
+read-only invocation, no edits made to that directory):
+  pre-fix : ENFORCE: 3 unguarded mutation(s) of a trusted artefact, tags=CAPTURE,
+            exit 1 -- exactly build-pass3f.py:147 (Capture3f.java), :215 (run-pass3f.sh),
+            :216 (os.chmod on run-pass3f.sh)
+  post-fix: 0 UNGUARDED sites; the 2 remaining call sites are the local guarded_create's
+            own os.replace (ATOMIC/TRUSTED) and mkstemp (SANDBOX). exit 0.
+
+Real repo .softhouse/capture/src/ untouched throughout (git status --porcelain clean).
