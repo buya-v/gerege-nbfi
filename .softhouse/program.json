@@ -714,7 +714,7 @@
     {
       "id": "G-12",
       "class": "ENGINEERING",
-      "state": "OPEN — measurement required before a recommendation",
+      "state": "OPEN — MEASURED by A2-29; driver recommends (a)+narrowed(b), Buyan may overrule",
       "context": "tierA-gl-accounting",
       "slice": "tierA-gl-accounting-A2",
       "task": "A2-29",
@@ -724,7 +724,9 @@
       "blocks": "Nothing today. No ledger vector exists yet (G-11), so no vector grades the column.",
       "what_must_be_measured_first": "Whether the columns are ever READ to serve a balance or only written; whether they reach any contract-boundary response or are purely internal; and whether the stored value can DISAGREE with the derived sum. A stored balance that always equals the derived one is a CACHE; one that can drift is a second source of truth, and the two have completely different consequences for the port.",
       "raised_by": "A2-26, local fire 20260822-000013",
-      "recorded_in": ".softhouse/gates.md"
+      "recorded_in": ".softhouse/gates.md",
+      "measured": "SECOND SOURCE OF TRUTH, not a cache. A2-29 made the stored value disagree with the derived sum by MNT 2,000,000.00 on the live oracle; the drift survived FOUR organisation-wide recomputes, sat on rows flagged is_running_balance_calculated=true, propagated into a freshly computed row, and reached the contract boundary. The writer seeds each incremental recompute from its own prior STORED output. One exposing route, /glaccounts?fetchRunningBalance=true, is HTTP 500 on PostgreSQL -- GLAccountReadPlatformServiceImpl.java:130-131 uses MySQL-only 'GROUP BY ... DESC' (driver-verified at 426a23544), so it has never worked on the only database this program permits.",
+      "recommendation": "(a) for BEHAVIOUR without qualification -- derive, never read those columns back -- plus a NARROWED (b) for STORAGE: keep the columns at the DDL default and ship no recompute. AGAINST (c): it would narrow the graded domain (hard user gate) and is not needed, since both exposing routes are opt-in and one is broken on Postgres. PRICE, stated: a table-level parity diff must EXCLUDE these columns, and that exclusion has to be written down."
     }
   ],
   "history": [
