@@ -1,18 +1,38 @@
 {
-  "squad": "DRIVER",
-  "fire": "20260822-000013 (second pass)",
+  "fire": "20260822-140002",
+  "started_at": "2026-08-22T06:00:13Z",
+  "driver": "softhouse-program",
   "run_id": "2026-08-21-run2-tierA-gl-accounting-A2",
-  "current_item": "none — all eight dispatched workers completed and merged; zero live at exit",
-  "step": "exit protocol complete",
-  "branch": "main",
-  "next_action": "Dispatch A2-32 (DEC-2 rev 5) FIRST — it is the only path to G-11. Then T230 BEFORE A2-15, because T230's defect refuses exactly the vector shape A2-15 must produce.",
-  "blocked_on": "G-11 OPEN — NOT RATIFIABLE (rev 4 REJECTED). No Go under nexus/ and no contract-shaped ledger vector for tierA-gl-accounting.",
-  "open_questions": [
-    "G-8 options (b)/(c) cannot be put to Buyan until T229 characterises rescue site 3.",
-    "T222 is merged with a REJECTED review. main is green; the defect is latent. T230 is the rework.",
-    "P-71: worktrees fork from session-start HEAD. Every same-fire-dependency task must be told its fork point."
+  "oracle": "REACHABLE https://localhost:8443/fineract-provider/actuator/health (given by wrapper, not re-probed)",
+  "postgres": "localhost:5432",
+  "fork_point_for_this_fires_worktrees": "8f0edeb",
+  "main_at_dispatch": "33d19a6",
+  "prior_fire_finding": {
+    "what": "fire 20260822-080001 dispatched wave 1 (A2-32, T230, T229, T227) at 12:09:27+0800 and hit the session limit at 12:12:45+0800, rc=1. All four workers were killed ~3 minutes after dispatch.",
+    "wip_lost": "NONE. Driver swept all 44 worktrees this fire: zero dirty, zero softhouse/{A2-32,T227,T229,T230}-* branches. The workers died before writing anything.",
+    "defect": "The prior fire violated the skill's own rule: 'Only dispatch what you have the budget to see through.' It dispatched four opus workers on a session that had minutes left. Cost: one full fire of throughput, no output.",
+    "session_limit_reset": "1pm Asia/Ulaanbaatar; this fire starts 14:00 UTB with a fresh budget."
+  },
+  "live_workers": [
+    {"task": "A2-32", "branch": "softhouse/A2-32-dec2-rev5", "model": "opus", "target": "docs", "files": ["docs/adr/DEC-2-gl-accounting-adapter.md"], "goal": "DEC-2 rev 5 — A2-31 F-1 and F-2 ONLY"},
+    {"task": "T230", "branch": "softhouse/T230-rework-t222-grounding", "model": "opus", "target": "code", "files": ["nexus/internal/apps/loanschedule/conformance/"], "goal": "rework T222 on T225 F-1/F-2/F-3/F-5; unblocks A2-15"},
+    {"task": "T229", "branch": "softhouse/T229-g8-rescue-site3", "model": "opus", "target": "docs", "files": [".softhouse/gates.md", ".softhouse/capture/"], "goal": "characterise G-8 rescue site 3; blocks G-8 options (b)/(c)"},
+    {"task": "T227", "branch": "softhouse/T227-retracted-claim-third-file", "model": "opus", "target": "code", "files": [".softhouse/guards/ledgerguard/", ".softhouse/conformance.sh"], "goal": "third-file retracted claim + WHY T224's sweep missed a verbatim hit"}
   ],
-  "gate_pending": ["G-4", "G-5", "G-8", "G-10", "G-11", "G-12"],
-  "bar_at_exit": "probe PRESENT and up; PASS exit 0; 46 parity vectors; 7884 cells; 0 inadmissible; 0 invariant violations; 4 EXEMPTED; 4 GROUNDED 0 UNGROUNDED; --prove 23/0; store 73c3ea7b43dd75f04884072719a87fc8e1d255c1",
-  "vectors_added_this_fire": 0
+  "next_action": "AWAIT all four. Do not exit with a live worker (they die with the session). Then: scope-check each on the THREE-DOT diff, adjudicate, merge in dependency order, re-run conformance on merged main, update program.json + RESUME.md, push.",
+  "baseline_bar": {
+    "verdict": "PASS exit 0",
+    "parity_vectors": 46,
+    "cells": 7884,
+    "inadmissible": 0,
+    "invariant_violations": 0,
+    "exempted": 4,
+    "grounded": 4,
+    "ungrounded": 0,
+    "prove": "23 passed 0 failed",
+    "vector_store": "73c3ea7b43dd75f04884072719a87fc8e1d255c1",
+    "note": "MUST be re-run by the driver on merged main, never quoted from a worker."
+  },
+  "gates_open": ["G-4", "G-5", "G-8", "G-10", "G-11", "G-12"],
+  "blocked_on_gate": "A2-15 is gated on G-11 and practically on T230"
 }
