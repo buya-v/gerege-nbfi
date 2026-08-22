@@ -3,12 +3,33 @@
 **Branch:** `softhouse/T234-sweep-instrument-audit`. **Role:** analyst / auditor.
 **Date:** 22 August 2026. **Depends on:** `T232`.
 
-**Fork point — CORRECTION TO THE BRIEF.** The dispatch brief named `8611e754` as the fork point,
-"verified by the driver". In this worktree `git rev-parse HEAD` = **`2d41838cdbbe5332bd62deb5cdec9f52f3df91f3`**
-and `git merge-base HEAD main` = **`2d41838…`**, i.e. the tip of `main` at dispatch, *not* `8611e754`.
-`8611e754` is not reachable from this worktree at all. Everything below is measured at `2d41838`
-unless a rev is stated. This is a datapoint for P-71's successor: the driver's *stated* fork point was
-wrong again, in the opposite direction from last fire's error.
+**Fork point — CORRECTION TO THE BRIEF, AND A THIRD DATA POINT FOR P-71.** The brief named
+`8611e754` as the fork point, "`git rev-parse HEAD` at the moment of dispatch, verified by the
+driver". Measured in this worktree:
+
+```
+git rev-parse HEAD          = 2d41838cdbbe5332bd62deb5cdec9f52f3df91f3
+git merge-base HEAD main    = 2d41838cdbbe5332bd62deb5cdec9f52f3df91f3
+```
+
+`2d41838` is **two commits behind** the stated `8611e754` — `git log 2d41838..main` shows
+`8611e75` ("register A2-34…") and `f84d0f5` ("wave 1 dispatched: A2-15, T234, T219, T216 —
+fork point 8611e754") sitting between them. And `2d41838` is **exactly the commit this session's
+opening `gitStatus` reported as `main`'s tip.**
+
+So for T234 the worktree forked from **the session-start commit**, which is P-71 **as originally
+written** — the rule the brief told me had been "falsified last fire", and which the driver has since
+replaced twice (`251be22`: *"P-71 SECOND CORRECTION — both fork-point rules now falsified"*).
+
+**Neither rule is right, because the question is malformed.** "Session-start" and "dispatch commit"
+coincide whenever the driver commits nothing between the two, and diverge whenever it does — which is
+exactly what happened here: the driver registered A2-34 and the wave *after* the session snapshot but
+*before* dispatch. The only sound instruction is the one every worker can execute unaided:
+**`git merge-base HEAD main`, measured in your own worktree, and stated in the handoff.** A driver
+should stop asserting the fork point in the brief at all; it has now been wrong three fires running,
+in three different directions.
+
+Everything below is measured at `2d41838` unless a rev is stated.
 
 **Vector store in my tree:** `git rev-parse HEAD:.softhouse/vectors` =
 `73c3ea7b43dd75f04884072719a87fc8e1d255c1` — **UNCHANGED**, as required. I authored nothing under
@@ -392,6 +413,7 @@ workers this fire.
 | **L-5** | `T224.md` (no script), `T227.md` (`/tmp`, gone), + 32 more | `12-sweep-census.py` | **34** prose-only sweep records. A closure claim whose instrument was never committed is uncheckable in principle. |
 | **L-6** | brief for T234; any restatement of T232 | §5.1, ugrep measurement | T224's `\bnot exist\b` was **not** killed by the engine — its prose implies ugrep, where `\b` works. It was killed by the right-anchor (P-72 M-1). Correct this before it hardens into program lore. |
 | **L-7** | `T232.md:89` | `02-escape-matrix-fix.sh` | T232's `= 14` reproduces at **no** scope I tried (81/162 at `90c21d6`; 101/218 at `2d41838`; 97/213 in `.softhouse`). Shape confirmed independently; **scalar unreconciled, `[UNVERIFIED]`**. |
+| **L-8** | T234's dispatch brief; P-71 and both its corrections | `git merge-base` in this worktree | My fork point is `2d41838` = the **session-start** commit, not the briefed dispatch commit `8611e754`. Third fire, third answer. The two rules coincide unless the driver commits between snapshot and dispatch — which it did here (`8611e75`, `f84d0f5`). **Drop the fork-point assertion from dispatch briefs; require each worker to measure and state `git merge-base HEAD main` instead.** |
 
 **No `user` gate is implicated.** Nothing here touches cutover, licensing, regulatory sign-off, or the
 frozen contract.
