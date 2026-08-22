@@ -4,5 +4,5 @@
 # a shell parser this tool cannot tell these two files apart.
 set -euo pipefail
 cp .softhouse/vectors/t179-fixture-never-run/case.json /tmp/x.bak
-trap 'mv /tmp/x.bak .softhouse/vectors/t179-fixture-never-run/case.json' EXIT INT TERM HUP
+trap 'mv /tmp/x.bak .softhouse/vectors/t179-fixture-never-run/case.json' EXIT INT TERM HUP QUIT
 sed -i '' 's/a/b/' .softhouse/vectors/t179-fixture-never-run/case.json

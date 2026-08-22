@@ -1,0 +1,78 @@
+
+=== .softhouse/bin/fire-program.sh ===
+415:trap 'on_signal INT  130' INT
+416:trap 'on_signal TERM 143' TERM
+417:trap 'on_signal HUP  129' HUP
+418:trap 'on_signal QUIT 131' QUIT
+419:trap release_lock EXIT
+
+=== .softhouse/capture/audit-t44/analysis/T207/T207-red/drive-red-v3.sh ===
+60:trap 'rm -rf "$SCRATCH"' EXIT
+
+=== .softhouse/capture/pathb/t149/prove-exit-trap.py ===
+
+=== .softhouse/capture/pathb/t149/prove-redgreen.sh ===
+124:    trap - EXIT INT TERM HUP QUIT     # never re-enter, whatever the handler itself does
+159:trap restore_store EXIT
+170:trap 'echo "INTERRUPTED (SIGINT) — restoring the store" >&2;  exit 130' INT
+171:trap 'echo "INTERRUPTED (SIGTERM) — restoring the store" >&2; exit 143' TERM
+172:trap 'echo "INTERRUPTED (SIGHUP) — restoring the store" >&2;  exit 129' HUP
+173:trap 'echo "INTERRUPTED (SIGQUIT) — restoring the store" >&2; exit 131' QUIT
+
+=== .softhouse/capture/pathb/t80/prove-f1-recovery.py ===
+
+=== .softhouse/capture/pathb/t80/prove-f1-sandbox-run.sh ===
+34:trap cleanup EXIT INT TERM HUP QUIT PIPE
+
+=== .softhouse/capture/pathb/t80/prove-f1.sh ===
+259:  trap - EXIT INT TERM HUP QUIT PIPE
+307:trap f1_guard_exit EXIT
+323:trap 'echo "INTERRUPTED (SIGINT) — restoring the rig" >&2;  exit 130' INT
+324:trap 'echo "INTERRUPTED (SIGTERM) — restoring the rig" >&2; exit 143' TERM
+325:trap 'echo "INTERRUPTED (SIGHUP) — restoring the rig" >&2;  exit 129' HUP
+326:trap 'echo "INTERRUPTED (SIGQUIT) — restoring the rig" >&2; exit 131' QUIT
+327:trap 'echo "INTERRUPTED (SIGPIPE) — restoring the rig" >&2; exit 141' PIPE
+
+=== .softhouse/capture/pathb/t99/prove-f5-legs.sh ===
+
+=== .softhouse/capture/pathb/t99/prove-p24-postmerge.sh ===
+
+=== .softhouse/capture/t154-nofloat/drive-leg2.sh ===
+32:trap 'rm -rf "$TMP"' EXIT
+
+=== .softhouse/capture/t91/prove-guards.sh ===
+32:trap 'rm -rf "$S"' EXIT
+
+=== .softhouse/capture/t91/shell-invariance.sh ===
+64:trap 'rm -rf "$INVDIR"' EXIT
+
+=== .softhouse/capture/t91/t151-drive-g67.sh ===
+37:trap 'rm -rf "$S"' EXIT
+
+=== .softhouse/capture/t91/t151-merge-check.sh ===
+24:trap 'rm -rf "$W"' EXIT
+76:trap 'rm -rf "$W" "$W-main"' EXIT
+
+=== .softhouse/capture/tierA-a2/cap.sh ===
+65:trap 'rm -rf "$TMPD"' EXIT HUP INT TERM QUIT
+
+=== .softhouse/capture/tierA-a2/cap8.sh ===
+67:trap 'rm -rf "$TMPD"' EXIT HUP INT TERM QUIT
+
+=== .softhouse/capture/tierA-a2/cap9.sh ===
+49:trap 'rm -rf "$TMPD"' EXIT HUP INT TERM
+
+=== .softhouse/capture/tierA-a2/prove-a2-26-guards-red.sh ===
+25:trap 'rm -rf "$TMP"' EXIT HUP INT TERM QUIT
+
+=== .softhouse/capture/tierA-a2/prove-quit-trap-a226.py ===
+
+=== .softhouse/capture/tierA-a2/prove-quit-trap-cap.py ===
+7:    trap 'rm -rf "$TMPD"' EXIT HUP INT TERM
+
+=== .softhouse/conformance.sh ===
+483:trap cleanup EXIT
+
+=== .softhouse/guards/drive-red-ledger-invariants.sh ===
+42:trap 'rm -rf "$WORK"' EXIT
+xargs: command line cannot be assembled, too long

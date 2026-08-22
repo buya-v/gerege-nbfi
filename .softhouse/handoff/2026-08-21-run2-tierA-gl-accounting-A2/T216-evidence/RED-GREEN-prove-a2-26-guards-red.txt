@@ -1,0 +1,5 @@
+=== PRE-FIX (pinned git blob 69d6b13a567e) -- expect RED ===
+--- PRE-FIX preamble (verbatim lines 1-23)        exit=-3 leaked-dirs=['a226prove.1LOGUv'] => RED (LEAKED)
+=== LIVE (current on-disk file) -- diagnostic ===
+--- LIVE preamble (verbatim lines 1-25)           exit=0 leaked-dirs=[] => GREEN (CLEANED)
+RESULT: done

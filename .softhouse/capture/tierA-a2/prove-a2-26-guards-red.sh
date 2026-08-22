@@ -20,7 +20,9 @@ set -u
 DIR=$(cd "$(dirname "$0")" && pwd)
 FAIL=0
 TMP=$(mktemp -d "${TMPDIR:-/tmp}/a226prove.XXXXXX")
-trap 'rm -rf "$TMP"' EXIT HUP INT TERM
+# T216: QUIT added alongside EXIT HUP INT TERM -- same P-40 tail as cap.sh/cap8.sh in
+# this same directory (see prove-quit-trap-a226.py). Without it, Ctrl-\ leaks $TMP.
+trap 'rm -rf "$TMP"' EXIT HUP INT TERM QUIT
 
 say() { printf '\n===== %s =====\n' "$1"; }
 
