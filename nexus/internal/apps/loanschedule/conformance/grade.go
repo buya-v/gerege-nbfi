@@ -117,11 +117,29 @@ type Summary struct {
 	// worse than a red one. 0 on the committed corpus.
 	InvariantAssertionsNotRun int
 
-	// CounterfactualsNamed is how many wrong implementations the admissible
-	// vectors between them claim to kill, and CounterfactualCoverage maps each
-	// graded capability to the counterfactual ids covering it.
+	// CounterfactualsNamed is how many wrong implementations the GRADED vectors
+	// between them claim to kill, and CounterfactualCoverage maps each graded
+	// capability to the counterfactual ids covering it.
 	CounterfactualsNamed   int
 	CounterfactualCoverage map[string][]string
+
+	// RefusedCounterfactualsNamed and RefusedCorroborationsClaimed are the claims
+	// carried by REFUSED vectors. They are counted and PRINTED, and they are
+	// credited to nothing (finding A2-19 F3).
+	//
+	// A refusal is "not a pass, not a failure": it says no discriminating vector
+	// exists here, or the seam is blind to the behaviour. A vector that graded
+	// nothing cannot back anything, so its named kills must not enter
+	// CounterfactualsNamed and must not remove a capability from
+	// UncoveredGradedCapabilities. Before A2-22 they did both, which meant a
+	// refusal made the coverage report QUIETER — the one case with less evidence
+	// going silent.
+	//
+	// They are counted rather than dropped because a number that vanishes is a
+	// number nobody can audit: a reader must be able to see that 62 claims were
+	// withheld and why, not merely that the total fell.
+	RefusedCounterfactualsNamed  int
+	RefusedCorroborationsClaimed int
 
 	// MoneyKills and StructuralKills split CounterfactualsNamed by kind, and the
 	// report prints them separately (driver finding D-4). Merging them would let a
@@ -403,16 +421,39 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 
 	// Counterfactual coverage: is every capability we CALL graded actually backed
 	// by a parity vector that kills a named wrong implementation for it?
-	admissible := make([]*Vector, 0, len(vectors))
+	// THE POPULATION IS "GRADED", NOT "NOT INADMISSIBLE" (finding A2-19 F3).
+	//
+	// This list used to be every vector the run had not declared INADMISSIBLE, and
+	// a REFUSED vector is not inadmissible — so the kills of vectors the harness
+	// had just declined to grade were credited into the coverage report, the kill
+	// count and the corroboration count alike. A refusal is "not a pass, not a
+	// failure": it says no discriminating vector exists here, or the seam is blind
+	// to the behaviour. A vector that graded nothing kills nothing.
+	//
+	// The counts it sheds are RECORDED, in RefusedCounterfactualsNamed and
+	// RefusedCorroborationsClaimed, and printed by the report whether they are
+	// zero or not. A number that silently disappears is a number nobody can audit,
+	// and this fix must not be the thing that hides the next refusal.
+	//
+	// CounterfactualCoverage re-applies the same predicate for itself, so the two
+	// cannot drift apart and no future caller can lose the rule by passing the
+	// wrong list. Belt and braces on the exact defect that bit here.
+	graded := make([]*Vector, 0, len(vectors))
 	for i, v := range vectors {
-		if s.Results[i].Outcome != OutcomeInadmissible {
-			admissible = append(admissible, v)
+		switch s.Results[i].Outcome {
+		case OutcomeInadmissible:
+			continue
+		case OutcomeRefused:
+			s.RefusedCounterfactualsNamed += len(v.GradedAgainst)
+			s.RefusedCorroborationsClaimed += len(v.Provenance.CorroboratedBy)
+			continue
 		}
+		graded = append(graded, v)
 	}
-	covered, uncovered := registry.CounterfactualCoverage(admissible)
+	covered, uncovered := registry.CounterfactualCoverage(graded)
 	s.CounterfactualCoverage = covered
 	s.UncoveredGradedCapabilities = uncovered
-	for _, v := range admissible {
+	for _, v := range graded {
 		s.CounterfactualsNamed += len(v.GradedAgainst)
 		s.CorroborationsClaimed += len(v.Provenance.CorroboratedBy)
 		for _, cf := range v.GradedAgainst {
@@ -498,24 +539,17 @@ func gradeVector(ctx context.Context, v *Vector, pin *Pin, registry *CapabilityR
 		}
 	}
 
-	// Capability gating comes before the request's own graded-domain check,
-	// because a seam that cannot see something is a stronger obstruction than a
-	// value nobody has promoted a vector for.
-	verdict := registry.Assess(v.Oracle.Seam, v.CapabilitiesRequired)
-	if !verdict.Gradeable {
+	// THE REFUSAL PREDICATE LIVES IN ONE PLACE (A2-22). Capability gating comes
+	// before the request's own graded-domain check, because a seam that cannot see
+	// something is a stronger obstruction than a value nobody has promoted a
+	// vector for — and that precedence is now stated once, inside RefusalFor, so
+	// that the coverage report and this loop cannot disagree about which vectors
+	// are refused. They used to: the coverage report never asked at all.
+	if verdict := registry.RefusalFor(v); !verdict.Gradeable {
 		r.Outcome = OutcomeRefused
 		r.Reason = verdict.Reason
 		r.Detail = verdict.Detail
 		return r
-	}
-
-	if v.Expect.Kind == "schedule" {
-		if ok, why := GradedDomain(v); !ok {
-			r.Outcome = OutcomeRefused
-			r.Reason = ReasonUngradedRequest
-			r.Detail = why
-			return r
-		}
 	}
 
 	if opts.Implementation == nil {

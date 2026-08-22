@@ -241,10 +241,39 @@ func (r *CapabilityRegistry) GradedCapabilities() []string {
 //
 // Returned maps are capability -> the counterfactual ids covering it, and the
 // sorted list of graded capabilities with no coverage at all.
+//
+// A REFUSED VECTOR BACKS NOTHING (finding A2-19 F3), and this function decides
+// that for itself rather than trusting the caller to have filtered. That is the
+// whole shape of the defect it fixes: Run handed in every vector it had not
+// declared INADMISSIBLE, a refused vector is not inadmissible, and so kills from
+// vectors the harness had just declined to grade were credited as coverage. The
+// measured effect was that adding a refused vector took UNBACKED from 1 to 0 —
+// the case with LESS evidence produced the QUIETER report.
+//
+// Deciding it here rather than at the call site is deliberate. Coverage is the
+// number a reader trusts, the caller-side filter is what failed, and a second
+// caller (a future report, a tool, a test) would have had to rediscover the rule.
+// Re-asking is idempotent: a caller that has already dropped its refused vectors
+// gets exactly the same answer.
+//
+// ADMISSIBILITY IS STILL THE CALLER'S JOB. It needs the pin and the repo root,
+// which this registry does not have, and it is a different question — an
+// inadmissible file is not a vector at all. Run filters it before calling.
 func (r *CapabilityRegistry) CounterfactualCoverage(vectors []*Vector) (map[string][]string, []string) {
 	covered := map[string][]string{}
 	for _, v := range vectors {
 		if v.Class != ClassParity {
+			continue
+		}
+		if verdict := r.RefusalFor(v); !verdict.Gradeable {
+			// "Not a pass, not a failure": the seam is blind to something this case
+			// needs, a required capability is outside the graded domain, the seam or
+			// a capability is not in the registry at all, or the request itself is
+			// outside the graded domain. In every one of those five cases the vector
+			// separated no implementation from any other, so it kills nothing — and
+			// a kill that catches nothing must not back a capability and must not
+			// print as killing anything. Same rule as the withdrawn structural cell
+			// below, reached by a different route.
 			continue
 		}
 		for _, cf := range v.GradedAgainst {
@@ -277,6 +306,38 @@ func (r *CapabilityRegistry) CounterfactualCoverage(vectors []*Vector) (map[stri
 		sort.Strings(covered[k])
 	}
 	return covered, uncovered
+}
+
+// RefusalFor is THE refusal predicate for a whole vector: does this harness
+// decline to grade it, and on what ground.
+//
+// It exists because there were two answers to that question and only one of them
+// was ever consulted twice. gradeVector asked Assess and then GradedDomain,
+// inline, and decided the OUTCOME; every other reader of "is this vector
+// refused?" — the coverage report above all — had to re-derive it or, as the
+// coverage report did, not derive it at all (finding A2-19 F3). One predicate,
+// one answer, and a caller that cannot accidentally consult half of it.
+//
+// It deliberately does NOT re-check admissibility. That needs the pin and the
+// repo root, and it is a different question: an inadmissible file is not a vector
+// at all, whereas a refused vector is a well-formed vector this corpus cannot
+// grade. Callers filter inadmissible separately, as Run does.
+//
+// The order matches gradeVector's normative precedence: the capability
+// obstruction is reported before the request one, because a seam that cannot see
+// something is a stronger obstruction than a value nobody has promoted a vector
+// for, and the two must not disagree about which comes first depending on who
+// asked.
+func (r *CapabilityRegistry) RefusalFor(v *Vector) CapabilityVerdict {
+	if verdict := r.Assess(v.Oracle.Seam, v.CapabilitiesRequired); !verdict.Gradeable {
+		return verdict
+	}
+	if v.Expect.Kind == "schedule" {
+		if ok, why := GradedDomain(v); !ok {
+			return CapabilityVerdict{Reason: ReasonUngradedRequest, Detail: why}
+		}
+	}
+	return CapabilityVerdict{Gradeable: true}
 }
 
 // Assess answers whether a vector's required capabilities can be graded against
