@@ -1,0 +1,11 @@
+engine: git grep, Apple Git 2.50.1. paths as r11-hygiene.sh passes them.
+  git grep -E  five-alternative=3   four-alternative=3   \bmain\b contributes=0
+  git grep -P  five-alternative=64   four-alternative=3   \bmain\b contributes=61
+
+  what \bmain\b WOULD have contributed if the engine honoured it (git grep -P, five vs four):
+    -P five=64  four=3  genuine contribution of the word-boundary term = 61 lines
+
+  literal proof the term degrades to 'bmainb':
+    git grep -E -c 'bmainb' repo-wide  : 0
+    git grep -E -c '\bmain\b' repo-wide : 0
+    git grep -P -c '\bmain\b' repo-wide : 17646
