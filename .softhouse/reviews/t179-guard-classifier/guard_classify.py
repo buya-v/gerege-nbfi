@@ -89,6 +89,14 @@ Exit codes:
      --enforce-unknown and at least one UNGUARDED site on an UNRESOLVED target
   2  usage error
   3  ZERO files inspected — an error, never a pass (P-35)
+  4  --enforce or --enforce-unknown, and the request named/enumerated at least one
+     path, but ZERO of them were Python files this tool could actually parse — an
+     error, never a pass (P-35, T212). A non-existent --file path, an --file entry
+     that resolves to a directory, an unexpanded glob passed through literally by
+     the shell, and a --file list of only .sh files all collapse to this: `results`
+     is non-empty (the refusal is counted, per T179's design) but the population
+     that could be judged GUARDED/UNGUARDED is empty, so exit 0 would be a pass
+     that measured nothing. See T212's handoff for the enumerated routes.
 
 ENFORCEMENT POLARITY (T205 — do not conflate the two directions):
   UNKNOWN fails OPEN and HIDES exposures; a false positive fails CLOSED and only
@@ -1451,6 +1459,43 @@ def main(argv=None):
     # unresolved write is meant to be adjudicated.
     # ----------------------------------------------------------------------
     if args.enforce or args.enforce_unknown:
+        # ------------------------------------------------------------------
+        # T212 — an --enforce run whose INSPECTED POPULATION IS ZERO must FAIL,
+        # for ANY reason, not just when `results` itself is empty (the `if not
+        # results` guard above already covers that case with exit 3).  Here
+        # `results` is non-empty — files were named or enumerated — but every
+        # single one of them was REFUSED before a single mutation site could be
+        # judged: a non-existent --file path (REFUSED-UNREADABLE), a --file
+        # entry that resolves to a directory such as the empty string ""
+        # (REFUSED-UNREADABLE via IsADirectoryError — what an "empty --file
+        # list" collapses to when naively joined/split by a caller), an
+        # unexpanded shell glob passed through literally because it matched
+        # nothing (REFUSED-UNREADABLE via FileNotFoundError), or a --file list
+        # of only .sh files this classifier has no parser for
+        # (REFUSED-SHELL-NO-PARSER).  Each of those refusals is correctly
+        # COUNTED (P-40 — a refusal is an outcome, never a silent skip), but
+        # counting the refusal is not the same as having measured anything, and
+        # exiting 0 here is P-35's exact shape: a check that inspected zero
+        # items scored a pass. Same failure class as T194's census defect and
+        # T181's F-2 (a census that globbed nothing and exited 0).
+        #
+        # The population that matters for enforcement is "Python files this
+        # tool actually parsed" — the same `lang == "python" and not refused`
+        # filter `report()` uses to print "of which Python, parsed". A
+        # legitimate zero SITES count (a real Python file with no mutations)
+        # is not this defect and must keep passing; only zero PARSED FILES is.
+        py_inspected = [r for r in results
+                        if r.get("lang") == "python" and not r.get("refused")]
+        if not py_inspected:
+            reasons = sorted({r.get("refused") or "NOT-A-SCRIPT" for r in results})
+            sys.stderr.write(
+                "ENFORCE-ERROR: zero Python files were successfully parsed — the "
+                "inspected population is zero (P-35: a check inspecting zero "
+                "items is an ERROR, not a pass; T212). %d path(s) named/"
+                "enumerated, ALL refused: %s\n"
+                % (len(results), ", ".join(reasons)))
+            return 4
+        # ------------------------------------------------------------------
         bad = [(r["path"], s) for r in results for s in r.get("sites", [])
                if s["scope"] == TRUSTED and s["verdict"] == UNGUARDED]
         unres = [(r["path"], s) for r in results for s in r.get("sites", [])
