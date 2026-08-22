@@ -1,0 +1,205 @@
+{
+ "calibrations": [
+  {
+   "id": "P-CAL-ZPA",
+   "inputDiffs": [],
+   "observedIdentical": true,
+   "reproduces": "T64-ZP-A"
+  },
+  {
+   "id": "P-CAL-ZPB",
+   "inputDiffs": [],
+   "observedIdentical": true,
+   "reproduces": "T64-ZP-B"
+  }
+ ],
+ "cells": [
+  {
+   "annualRate": "36.0",
+   "bMinor": 50,
+   "disbursedMinor": 50,
+   "distinctBalanceValuesMinor": [
+    0,
+    50
+   ],
+   "id": "T223-R36p0-N1323-B50",
+   "instalmentMatchesPrediction": true,
+   "lastRowInterest": "0.02",
+   "lastRowPrincipal": "0.50",
+   "n": 1323,
+   "nonZeroPrincipalRows": 1,
+   "observedFamilyB": false,
+   "observedPeriod1InstalmentMinor": 2,
+   "predictedEmiQuantizedMinor": 2,
+   "predictedFamilyB": false,
+   "repaidMinor": 50,
+   "rowCount": 1323,
+   "rowCountMatchesN": true,
+   "totalInterestAmount": "26.46",
+   "totalOutstandingAmount": "0",
+   "totalPrincipalAmount": "0.50",
+   "verdict": "AGREES"
+  },
+  {
+   "annualRate": "36.0",
+   "bMinor": 50,
+   "disbursedMinor": 50,
+   "distinctBalanceValuesMinor": [
+    50
+   ],
+   "id": "T223-R36p0-N1324-B50",
+   "instalmentMatchesPrediction": true,
+   "lastRowInterest": "0.51",
+   "lastRowPrincipal": "0.00",
+   "n": 1324,
+   "nonZeroPrincipalRows": 0,
+   "observedFamilyB": true,
+   "observedPeriod1InstalmentMinor": 1,
+   "predictedEmiQuantizedMinor": 1,
+   "predictedFamilyB": true,
+   "repaidMinor": 0,
+   "rowCount": 1324,
+   "rowCountMatchesN": true,
+   "totalInterestAmount": "13.74",
+   "totalOutstandingAmount": "0",
+   "totalPrincipalAmount": "0.00",
+   "verdict": "AGREES"
+  },
+  {
+   "annualRate": "36.0",
+   "bMinor": 50,
+   "disbursedMinor": 50,
+   "distinctBalanceValuesMinor": [
+    50
+   ],
+   "id": "T223-R36p0-N1500-B50",
+   "instalmentMatchesPrediction": true,
+   "lastRowInterest": "0.51",
+   "lastRowPrincipal": "0.00",
+   "n": 1500,
+   "nonZeroPrincipalRows": 0,
+   "observedFamilyB": true,
+   "observedPeriod1InstalmentMinor": 1,
+   "predictedEmiQuantizedMinor": 1,
+   "predictedFamilyB": true,
+   "repaidMinor": 0,
+   "rowCount": 1500,
+   "rowCountMatchesN": true,
+   "totalInterestAmount": "15.50",
+   "totalOutstandingAmount": "0",
+   "totalPrincipalAmount": "0.00",
+   "verdict": "AGREES"
+  },
+  {
+   "annualRate": "300.0",
+   "bMinor": 2,
+   "disbursedMinor": 2,
+   "distinctBalanceValuesMinor": [
+    0,
+    1,
+    2
+   ],
+   "id": "T223-R300p0-N500-B2",
+   "instalmentMatchesPrediction": true,
+   "lastRowInterest": "0.00",
+   "lastRowPrincipal": "0.00",
+   "n": 500,
+   "nonZeroPrincipalRows": 2,
+   "observedFamilyB": false,
+   "observedPeriod1InstalmentMinor": 1,
+   "predictedEmiQuantizedMinor": 1,
+   "predictedFamilyB": false,
+   "repaidMinor": 2,
+   "rowCount": 500,
+   "rowCountMatchesN": true,
+   "totalInterestAmount": "0.13",
+   "totalOutstandingAmount": "0",
+   "totalPrincipalAmount": "0.02",
+   "verdict": "AGREES"
+  },
+  {
+   "annualRate": "300.0",
+   "bMinor": 2,
+   "disbursedMinor": 2,
+   "distinctBalanceValuesMinor": [
+    2
+   ],
+   "id": "T223-R300p0-N800-B2",
+   "instalmentMatchesPrediction": true,
+   "lastRowInterest": "0.02",
+   "lastRowPrincipal": "0.00",
+   "n": 800,
+   "nonZeroPrincipalRows": 0,
+   "observedFamilyB": true,
+   "observedPeriod1InstalmentMinor": 0,
+   "predictedEmiQuantizedMinor": 0,
+   "predictedFamilyB": true,
+   "repaidMinor": 0,
+   "rowCount": 800,
+   "rowCountMatchesN": true,
+   "totalInterestAmount": "0.02",
+   "totalOutstandingAmount": "0",
+   "totalPrincipalAmount": "0.00",
+   "verdict": "AGREES"
+  },
+  {
+   "annualRate": "300.0",
+   "bMinor": 2,
+   "disbursedMinor": 2,
+   "distinctBalanceValuesMinor": [
+    0,
+    1,
+    2
+   ],
+   "id": "T223-R300p0-N1200-B2",
+   "instalmentMatchesPrediction": true,
+   "lastRowInterest": "0.00",
+   "lastRowPrincipal": "0.00",
+   "n": 1200,
+   "nonZeroPrincipalRows": 2,
+   "observedFamilyB": false,
+   "observedPeriod1InstalmentMinor": 1,
+   "predictedEmiQuantizedMinor": 1,
+   "predictedFamilyB": false,
+   "repaidMinor": 2,
+   "rowCount": 1200,
+   "rowCountMatchesN": true,
+   "totalInterestAmount": "0.13",
+   "totalOutstandingAmount": "0",
+   "totalPrincipalAmount": "0.02",
+   "verdict": "AGREES"
+  },
+  {
+   "annualRate": "21.6",
+   "bMinor": 250,
+   "disbursedMinor": 250,
+   "distinctBalanceValuesMinor": [
+    0,
+    250
+   ],
+   "id": "T223-R21p6-N3000-B250",
+   "instalmentMatchesPrediction": true,
+   "lastRowInterest": "0.05",
+   "lastRowPrincipal": "2.50",
+   "n": 3000,
+   "nonZeroPrincipalRows": 1,
+   "observedFamilyB": false,
+   "observedPeriod1InstalmentMinor": 5,
+   "predictedEmiQuantizedMinor": 5,
+   "predictedFamilyB": false,
+   "repaidMinor": 250,
+   "rowCount": 3000,
+   "rowCountMatchesN": true,
+   "totalInterestAmount": "150.00",
+   "totalOutstandingAmount": "0",
+   "totalPrincipalAmount": "2.50",
+   "verdict": "AGREES"
+  }
+ ],
+ "summary": {
+  "agree": 7,
+  "calibrationsIdentical": true,
+  "refute": 0,
+  "threw": 0
+ }
+}
