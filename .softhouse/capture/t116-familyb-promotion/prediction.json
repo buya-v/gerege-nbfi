@@ -1,0 +1,59 @@
+{
+ "caseCount": 3,
+ "currency": {
+  "code": "MNT",
+  "minorUnitDigits": 2
+ },
+ "emissionOrder": [
+  "T116-FAMB-R600p0-N104-B1",
+  "T116-CLEAN-R600p0-N103-B1",
+  "T116-FAMB-R600p0-N108-B1"
+ ],
+ "gate": "G-8",
+ "mathContext": {
+  "precision": 19,
+  "roundingMode": "HALF_UP"
+ },
+ "option": "(a) promote a parity vector with an explicit invariant exemption",
+ "predictions": {
+  "T116-CLEAN-R600p0-N103-B1": {
+   "B_minor": 1,
+   "annualRate": "600.0",
+   "basis": "the amortizing cell immediately below the family-B lower boundary",
+   "confidence": "high",
+   "leg": "BOUNDARY-BELOW",
+   "n": 103,
+   "predictedFamilyB": false,
+   "predictedFinalRowBalanceMinor": 0,
+   "predictedPrincipalRepaidMinor": 1,
+   "predictedRepaymentRowCount": 103
+  },
+  "T116-FAMB-R600p0-N104-B1": {
+   "B_minor": 1,
+   "annualRate": "600.0",
+   "basis": "the lowest family-B cell ever observed; the sub-ulp explanation does not reach it (F-T114-1)",
+   "confidence": "high",
+   "leg": "BOUNDARY-AT",
+   "n": 104,
+   "predictedFamilyB": true,
+   "predictedFinalRowBalanceMinor": 1,
+   "predictedPrincipalRepaidMinor": 0,
+   "predictedRepaymentRowCount": 104
+  },
+  "T116-FAMB-R600p0-N108-B1": {
+   "B_minor": 1,
+   "annualRate": "600.0",
+   "basis": "the family-B cell T100's exemption demo graded at 761 cells / 0 diffs",
+   "confidence": "high",
+   "leg": "GRADED-BY-T100",
+   "n": 108,
+   "predictedFamilyB": true,
+   "predictedFinalRowBalanceMinor": 1,
+   "predictedPrincipalRepaidMinor": 0,
+   "predictedRepaymentRowCount": 108
+  }
+ },
+ "registeredBeforeObservation": true,
+ "scrambleSeed": 20260822,
+ "task": "T116"
+}
