@@ -1,0 +1,87 @@
+{
+  "schema": "gerege.loanschedule.vector/v1",
+  "case_id": "LEDGER-REFUSE-A219",
+  "context": "ledger",
+  "class": "contract-refusal",
+  "title": "A2-19 probe: a ledger-context contract-refusal vector with PC-3 defects corrected.",
+  "dec1_revision": 12,
+  "capabilities_required": [
+    "schedule.core"
+  ],
+  "provenance": {
+    "kind": "contract",
+    "note": "Derived from the ratified contract's own normative text, which IS the specification. No oracle output is compared, so this vector carries no monetary value at all and is tallied separately from parity.",
+    "capture_ref": "",
+    "capture_sha256": "",
+    "capture_case_id": "",
+    "citation": "A2-19 probe citation"
+  },
+  "oracle": {
+    "fineract_commit": "",
+    "seam": "none",
+    "captured_at": "",
+    "threaded_mathcontext": {
+      "precision": 0,
+      "rounding_mode": ""
+    },
+    "ambient_mathcontext": {
+      "precision": 0,
+      "rounding_mode": ""
+    }
+  },
+  "request": {
+    "time_zone": "Asia/Ulaanbaatar",
+    "currency": {
+      "code": "MNT",
+      "minor_unit_digits": 2
+    },
+    "rounding": {
+      "significant_digits": 19,
+      "rate_factor_scale": 19,
+      "mode": "HALF_UP"
+    },
+    "schedule_start_date": {
+      "year": 2024,
+      "month": 1,
+      "day": 1
+    },
+    "disbursements": [
+      {
+        "date": {
+          "year": 2024,
+          "month": 1,
+          "day": 1
+        },
+        "amount_minor": "120000000"
+      }
+    ],
+    "number_of_repayments": 12,
+    "repayment_every": 1,
+    "repayment_frequency_unit": "MONTHS",
+    "annual_nominal_interest_rate": {
+      "numerator": 27,
+      "denominator": 125
+    },
+    "interest_method": "DECLINING_BALANCE",
+    "day_count": "ACTUAL_ACTUAL",
+    "down_payment_percentage": {
+      "numerator": 0,
+      "denominator": 1
+    },
+    "installment_rounding_multiple_minor": "0"
+  },
+  "expect": {
+    "kind": "refusal",
+    "sentinel": "ErrNoDiscriminatingVector",
+    "last_repayment_due_date": {
+      "year": 2025,
+      "month": 1,
+      "day": 1
+    },
+    "observed_total_interest_minor": null,
+    "periods": []
+  },
+  "graded_against": [],
+  "retires_when_capability_graded": "",
+  "invariant_exemptions": []
+}
