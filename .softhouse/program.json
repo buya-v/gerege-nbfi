@@ -733,8 +733,11 @@
    "why_a_gate": "CLAUDE.md routes 'any change to a ratified DEC-n' to executor: user, and the amendment that made DEC-n RATIFICATION agent-decidable states explicitly that a ratified DEC-n still cannot be amended by an agent without raising a gate. DEC-2 rev 5 is ratified. The driver OVERRULED A2-34's recommendation to treat this as an ordinary ADR task.",
    "found_by": "A2-15 (finding 4), confirmed by A2-34; both correctly declined to amend",
    "what_unblocks_it": "T244 prepares revision 6 as a proposed diff (evidential reason only) plus an independent review; the driver may then ratify as it did rev 5, or Buyan may take it.",
-   "blocks": "nothing — no task is parked on it; the program continues",
-   "driver_recommendation": "ratify revision 6 once independently reviewed, chosen_by: agent, exactly as revision 5 was handled. Buyan may reverse."
+   "blocks": "NOTHING. No task is parked on this; the program continues past it.",
+   "driver_recommendation": "ratify revision 6 once independently reviewed, chosen_by: agent, exactly as revision 5 was handled. Buyan may reverse.",
+   "recorded_in": ".softhouse/gates.md",
+   "state": "OPEN — RAISED; DEC-2 revision 6 PREPARED by T244 (local fire 20260822-060013), NOT LANDED. Block PLACED in gates.md by the driver this fire, verbatim from T244 handoff §3, plus a register row and the Open-right-now line. THE REGISTER HAD BEEN DESYNCED: G-13 was asserted RAISED in program.json, RESUME.md and DRIVER.STATE.json while gates.md contained the string zero times (driver-verified, G-12 returning 7 as a positive control on the same instrument). Reconciled.",
+   "unblocked_by": "T246 — independent review of revision 6, re-deriving the reversal count against the live oracle. Then the driver ratifies chosen_by: agent, as it did revision 5. Buyan may reverse."
   }
  ],
  "history": [

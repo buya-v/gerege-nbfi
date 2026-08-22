@@ -1029,7 +1029,7 @@ Two independent incompatibilities in one pattern, each isolated by measurement r
 > | `git grep` (basic) | line 1 | sound |
 > | `/usr/bin/grep -E` (BSD) | line 1 | sound |
 > | `/usr/bin/grep` (basic BSD) | line 1 | sound |
-> | `rg` 14.1.1 (rev `939d4325be`) | line 1 | sound, and **present** |
+> | `rg` 14.1.1 (rev `939d4325be`) | line 1 | sound — **but see the correction below: present at a PROMPT, absent in every SCRIPT** |
 > | `python3 re` | line 1 | sound |
 > | **`ugrep`** | — | **NOT INSTALLED** — `command -v ugrep`/`ug` empty across all 13 PATH dirs |
 > | `/usr/bin/grep -P` | — | option does not exist; **exit 2, silent** |
@@ -2382,3 +2382,84 @@ No measurement was invalidated — the trees are identical — but **every recor
 
 Related: **P-71** (fork points, measured not asserted), **P-69** (a measured claim has a short shelf life), **P-66/P-70** (state where you looked).
 
+
+## P-75 — `grep` and `rg` IN AN AGENT SHELL ARE NOT THE PROGRAMS YOU THINK, AND THEY DO NOT SURVIVE INTO A SCRIPT
+
+**Found by `T242` (its finding 1) and sharpened by `T244`, local fire `20260822-060013`; every measurement
+below re-derived by the driver, which had circulated the wrong version to four workers earlier in the same
+fire.** This is the root cause sitting *under* `P-53`, `P-72` and the fail-open class, and it went unnamed
+for the whole program.
+
+### The mechanism
+
+`~/.claude/shell-snapshots/snapshot-*.sh` defines `grep` and `rg` as **shell functions** that shadow the
+binaries. The `grep` function execs a bundled **ugrep 7.5.0** with these flags **silently prepended**:
+
+```
+-G --ignore-files --hidden -I --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.hg
+   --exclude-dir=.bzr --exclude-dir=.jj --exclude-dir=.sl
+```
+
+Read directly out of the snapshot file by the driver. `T242` reported the first four flags; **there are six
+more.**
+
+### Consequence 1 — `--ignore-files` is a SILENT RECALL HOLE in every bare-`grep` sweep
+
+Measured on a purpose-built fixture (`git init`; three files each containing the needle; two of them named
+in `.gitignore`, one of those also dot-prefixed):
+
+| invocation | found | of |
+|---|---|---|
+| bare `grep -rn NEEDLE .` (= the shadowing function) | **1** | 3 |
+| `/usr/bin/grep -rn NEEDLE .` (the real BSD grep) | **3** | 3 |
+| `rg -n NEEDLE .` | 1 | 3 |
+| `rg -n --no-ignore NEEDLE .` | 2 | 3 — *still* misses the dot-prefixed file |
+
+**33 % recall, exit 0, hits printed.** Nothing in the transcript says anything was skipped. This is the
+fail-open shape *at the engine level*: the instrument reports success while silently narrowing its own
+population. Every "I swept the repo and found N" in this program that used bare `grep` has an **unstated
+population** — and `P-67` says count both terms and say where you counted.
+
+### Consequence 2 — `rg` DOES NOT EXIST IN A SCRIPT, and the failure is fail-OPEN
+
+`rg` is a shell function, not a binary: **no `rg` in any of the 13 `PATH` directories.** So it works at an
+agent prompt and vanishes the moment a sweep is committed as a `.sh` file. Driver-measured:
+
+```
+#!/bin/sh
+rg NEEDLE file            ->  rg: command not found   ; exit 127   (fail-closed, catchable)
+rg NEEDLE file | head -1  ->  rg: command not found   ; exit 0     <-- FAIL-OPEN
+#!/bin/bash + set -euo pipefail
+rg NEEDLE file | head -1  ->  rg: command not found   ; exit 127   (fail-closed)
+```
+
+**The pipeline swallows the 127.** And `pattern | head`, `pattern | wc -l`, `pattern | sort` *is* the shape
+of nearly every sweep script. Without `pipefail` a committed `rg` sweep prints nothing, exits 0, and reads
+exactly like *"I searched and the concept is absent"* — the same reading as the dead-`cd` class (`T238`),
+reached by a different route. **`T244`'s own sweep was killed by this and saved only by its fail-closed
+calibration**, which is `P-72` paying for itself inside the fire that reinforced it.
+
+### Consequence 3 — it reconciles two contradictory "measurements" that were both right
+
+`T239` measured *"ugrep is not installed"* — **true**, no binary of that name. `RESUME.md` claimed *"ugrep
+honours `\b`"* — **also true**, because ugrep is what `grep` runs. The driver merged the first as a
+correction against the second. **Both were right and neither was complete**, and the thing that dissolves
+the contradiction is that the NAME and the PROGRAM had come apart. `P-33` already demanded that a tool claim
+name the binary and the version; this is why.
+
+### The duty
+
+1. **In any committed instrument, invoke an ABSOLUTE PATH** — `/usr/bin/grep`, or `git grep` (a real
+   subcommand, always present), or `python3 -c` with `re`. **Never bare `grep`, never `rg`.**
+2. **State the binary AND how you resolved it.** `type grep` before you trust `grep`. *"BSD grep"* is a
+   claim about a path, not about a word — the driver made exactly this mislabel in its own `FINDINGS.md`
+   this fire and had to correct it.
+3. **`set -euo pipefail` in every sweep script.** It is what converts this class from fail-open to
+   fail-closed, and it is free.
+4. **Calibrate on a known positive AND a known negative** (`P-72`, as amended under `P-53`), and — because
+   `--ignore-files` narrows silently — **put one of your known positives inside an ignored or hidden file.**
+
+**Related.** `P-53` (engine divergence; amended this fire for fabrication). `P-33` (name the binary).
+`P-72` (calibrate). `P-73` (this was knowable from the snapshot file the whole time). `T238`'s dead-`cd`
+class — same fail-open shape, different cause. `P-57`/`T192` — the pipefail sites that already exist are
+what would have caught consequence 2.

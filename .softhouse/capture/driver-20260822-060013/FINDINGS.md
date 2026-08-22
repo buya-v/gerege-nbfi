@@ -41,8 +41,18 @@ are **three** Fineract databases, and the missing one is the one that matters:
 
 `fineract_gerege` is named in **74** tracked files under `.softhouse/`; `fineract_default` in **71**.
 It is the tenant the six ledger vectors were captured from. It appears **nowhere** in the pin file —
-verified by a literal-string grep over the whole of `.softhouse/reference-oracle.md` (BSD grep, no
-regex, no anchoring), which is the scope of that negative and the whole of it (P-66/P-70).
+verified by a literal-string grep over the whole of `.softhouse/reference-oracle.md` (**see the engine
+correction below** — no regex, no anchoring), which is the scope of that negative and the whole of it
+(P-66/P-70).
+
+> **⚠ ENGINE LABEL CORRECTED — the driver against itself, same fire.** The sentence above originally read
+> *"(BSD grep, no regex, no anchoring)"*. **That label was false.** `grep` in this agent shell is a **shell
+> function** from `~/.claude/shell-snapshots/…`, not `/usr/bin/grep`, and it execs **ugrep 7.5.0** with
+> `-G --ignore-files --hidden -I --exclude-dir=.git --exclude-dir=.svn --exclude-dir=.hg --exclude-dir=.bzr
+> --exclude-dir=.jj --exclude-dir=.sl` silently prepended. Found by `T242`; flags read by the driver
+> directly out of the snapshot file. **The RESULT above still stands** — `reference-oracle.md` is tracked,
+> not ignored, not hidden, and a single named file is not subject to `--ignore-files` — but the *claim about
+> which binary produced it* was wrong, and under `P-33` a tool claim names the binary. See **P-75**.
 
 **Why this is more than a typo.** The two tenants sit in **different time zones**, and one of them is
 `Asia/Kolkata` — an offset that CLAUDE.md's two-timezone non-negotiable does not permit anywhere in

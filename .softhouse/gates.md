@@ -32,8 +32,9 @@ Built by local fire `20260821-125942`.
 | **G-10** | ENGINEERING | **OPEN — driver recommends (c), Buyan may overrule** | Blocks nothing today. | `## G-10 — REFINED…` |
 | **G-11** | CONTRACT | **CLOSED — RATIFIED. DEC-2 revision 5 (`A2-32`) passed `A2-33`'s independent review CLEAN, local fire `20260822-140002`. Five revisions, four rejections, one ratification.** `chosen_by: agent` (driver), per CLAUDE.md § Answering gates. **Buyan may reverse it.** | Nothing — the gate is closed. **A ratified DEC-n may not be amended by an agent**; any change to DEC-2 from here is a fresh `user` gate. | `## G-11 — RATIFIED (rev 5, A2-33)` |
 | **G-12** | ENGINEERING | **OPEN — MEASURED by `A2-29`; analyst recommends (a)+(b′), driver decides.** The stored balance is a **SECOND SOURCE OF TRUTH**, not a cache — made to disagree with the derived sum by **MNT 2,000,000.00** on the live oracle, surviving 4 recomputes, served through 2 REST endpoints flagged `computed: true`. | The driver, for (a). Option (c) would narrow the graded domain and stays a hard `user` gate. Blocks nothing today. | `## G-12 — MEASURED (A2-29)` — the LIVE block. `## G-12 — Fineract STORES a running balance on the entry` is the RAISING record only. |
+| **G-13** | CONTRACT | **OPEN — RAISED; revision 6 PREPARED by `T244`, NOT LANDED.** DEC-2 §4.4's *evidential reason* for leaving `I-5` ungraded ("The A2 corpus contains no reversal") is **FALSE** — driver- and `T244`-measured on the live oracle: **8 reversed originals + 8 reversing legs = 16 rows, 3 pairs, 6 transaction ids**. **A SECOND SITE** (§9 item 13, lines 2568-2569) restates it in different words. **Nothing DEC-2 OBLIGES changes.** | An **independent review** of revision 6 re-deriving the count against the live oracle, then the driver ratifies `chosen_by: agent` as it did revision 5. **Blocks nothing today.** ⚠ **Whoever lands it must NOT bump `PIN-ledger.json`** (`admit.go:49-52`). | `## G-13 — DEC-2 §4.4's EVIDENTIAL REASON…` |
 
-**Open right now: G-4, G-5, G-8, G-10, G-12.** *(**G-11 CLOSED — RATIFIED** by the driver, local fire `20260822-140002`, on `A2-33`'s clean independent review of DEC-2 rev 5.)* *(Register refreshed by local fire `20260822-000013`.)* Of those, **G-4 and G-5 are hard `user` gates** (each amends a
+**Open right now: G-4, G-5, G-8, G-10, G-12, G-13.** *(**G-11 CLOSED — RATIFIED** by the driver, local fire `20260822-140002`, on `A2-33`'s clean independent review of DEC-2 rev 5.)* *(Register refreshed by local fire `20260822-000013`.)* Of those, **G-4 and G-5 are hard `user` gates** (each amends a
 ratified DEC-n); **G-8, G-10 and G-12 block no work today**. The driver has recorded a recommendation on **G-8 and G-10**.
 **G-12's measurement is now DONE** (`A2-29`, local fire `20260822-000013`) and it answered the question the
 driver deliberately refused to pre-judge: the stored balance is a **second source of truth, not a cache**.
@@ -3733,3 +3734,65 @@ No non-negotiable was changed. No vector was created, promoted or altered. Nothi
 LIABILITY), 3 manual journal entries, 1 reversal, 1 retype, 6 running-balance recalculations. The tenant now
 has every entry flagged `calculated = true` with every stored balance equal to its derived sum
 [OBSERVED: `A2-464`, `A2-480`–`A2-482`].
+
+
+---
+
+## G-13 — DEC-2 §4.4's EVIDENTIAL REASON for leaving `I-5` ungraded is FALSE (revision 6 PREPARED by `T244`, NOT LANDED)
+
+- **id**: G-13 · **class**: CONTRACT · **state**: **OPEN — RAISED, revision 6 drafted and awaiting independent review**
+- **context**: `tierA-gl-accounting` / slice `tierA-gl-accounting-A2`
+- **raised**: local fire `20260822-060013`; revision 6 prepared by `T244`, local fire of 2026-08-22
+- **found_by**: `A2-15` (finding 4), confirmed by `A2-34`. **BOTH CORRECTLY DECLINED TO AMEND THE ADR**, and both should be credited with that restraint — `A2-15` recorded the corrected reason in CODE (`invariants.go`, `capabilities-ledger.json`) and left the ratified document alone.
+- **blocks**: **NOTHING.** No task is parked on this. The program continues past it.
+
+### Classification — BOTH halves must be said
+
+- **ENGINEERING in substance.** Source and the live oracle settle it completely; no judgement is left over, no preference is involved, and nothing here is a PRODUCT or LEGAL question.
+- **PROCEDURALLY GATED because the artefact is RATIFIED.** CLAUDE.md lists *"Any change to a ratified DEC-n or the frozen adapter contract"* under **Blocking questions — `user` decision gates**, routed `executor: "user"`; and the later amendment that made DEC-n *ratification* agent-decidable states explicitly that **"a ratified DEC-n still cannot be amended by an agent without raising a gate."** **DEC-2 revision 5 is RATIFIED (G-11, local fire `20260822-140002`).**
+- **The driver OVERRULED `A2-34`'s recommendation** to handle this "through the normal ADR route, not a gate", on the rule as written. Recorded here so the overruling is visible and reversible. The value of "ratified" is that it does not move quietly; the first amendment waved through as too-small-to-gate sets the precedent for the next.
+
+### What was PROVEN
+
+- `docs/adr/DEC-2-gl-accounting-adapter.md:823` says `I-5` is ungraded because **"The A2 corpus contains no reversal"**. **FALSE.**
+- **Captures:** `A2-348` (reverse, HTTP 200), `A2-349` (read-back, three legs each `"reversed":true`), `A2-460` (a third reversal) — all under `.softhouse/capture/tierA-a2/out/`.
+- **LIVE ORACLE, re-derived by `T244` at commit `477dc2d`, 2026-08-22T09:22Z, Fineract pin `426a23544`, PostgreSQL `fineract_gerege`:** **8** rows `reversed = true`; **8** further reversing legs; **16** rows total in **3** pairs over **6** transaction ids; equal `amount` and flipped `type_enum` on **8 of 8** pairs. Instrument and transcripts: `.softhouse/capture/t244-dec2-rev6/`.
+- **A SECOND SITE, not named in the task:** **§9 item 13, lines 2568-2569**, restates the same falsehood. A fix to line 823 alone would leave it standing — the defect class that rejected this document three times.
+- **What is NOT wrong:** nothing DEC-2 **obliges** changes. The invariant statement, column 5 (`Graded today? NO`), the `ErrNoDiscriminatingVector` refusal, and the rule paragraph are all still correct. Only the **stated ground** is wrong.
+
+### What is being ASKED
+
+Permission to land **DEC-2 revision 6**, changing the **evidential reason only**, at the **two** sites above. The full diff is in `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md` §2 and is **not applied**.
+
+### What UNBLOCKS it
+
+1. An **independent review** of revision 6 — the same bar revision 5 met (`A2-33` reviewed `A2-32`), re-deriving the count against the live oracle rather than inheriting it.
+2. Then **the driver ratifies**, `chosen_by: agent`, exactly as it ratified revision 5 under CLAUDE.md § Answering gates. **Buyan may reverse it.**
+
+### ⚠ WHOEVER LANDS IT: **DO NOT BUMP `.softhouse/vectors/PIN-ledger.json`**
+
+`admit.go:49-52` marks a ledger vector INADMISSIBLE when its `dec2_revision` differs from the store pin, and all six `LDG-*` vectors and `PIN-ledger.json` currently say **5**. The check compares vector-to-pin and **never reads the ADR**, so revision 6 landing under `docs/adr/` keeps the bar green on its own. Bumping the pin to 6 without the vectors makes all six INADMISSIBLE (ledger census `0/4/2/21` fails); bumping both **moves the vector-store digest** that every BAR pins under P-61. **Revision 6 changes no obligation, so the pin correctly stays at 5** — stated here so a later reader does not "tidy" the mismatch. [MEASURED by `T244` at `477dc2d`.]
+
+### Driver recommendation
+
+**Ratify revision 6 once independently reviewed.** This is the narrowest possible amendment — a false statement of evidence replaced by a measured one, with every obligation untouched — and leaving a known-false sentence inside a ratified contract is worse than amending it through the gate the rules require.
+
+### Also noticed while preparing this, and NOT part of the amendment asked for
+
+**DEC-2's own status header (lines 78-85) still reads "DRAFT (revision 5) … NOT RATIFIED … G-11 remains OPEN — NOT RATIFIABLE".** G-11 is **CLOSED — RATIFIED**; the ratification never re-stamped the document (last touch is `cab9e82`, `A2-32`, revision 5). The ADR therefore contradicts this register, and a reader of DEC-2 alone would believe it is an editable draft. **Driver's call whether to fold the re-stamp into revision 6 or handle it separately — but it should not be left standing.**
+
+> **PLACED BY THE DRIVER, local fire `20260822-060013`, VERBATIM from `T244`'s handoff §3.** `T244`
+> wrote this block and, as instructed, **did not edit `gates.md`** — the three-dot diff of its branch
+> shows `.softhouse/gates.md` at 0 files changed. The driver placed it, added the register row, and
+> updated the *Open right now* line.
+>
+> **THE REGISTER WAS DESYNCED AND THAT IS THE DRIVER'S DEFECT.** `G-13` was already asserted RAISED in
+> `.softhouse/program.json` (`gates_pending`), `.softhouse/RESUME.md` and `DRIVER.STATE.json`, while
+> `gates.md` contained the string `G-13` **zero times** — driver-verified, with `G-12` returning 7 as a
+> positive control on the same file and the same instrument. `RESUME.md` states in terms that *the gate
+> register at the top of `gates.md` is authoritative*, and the register calls itself *rebuilt from
+> `program.json.gates_pending` at every fire that touches a gate*. **That rebuild did not happen.** So a
+> gate was circulated in three driver-owned state files and never reached the one file the program calls
+> authoritative — a **`P-73`** instance (filed where the reader who needs it will not look), and the
+> second one found this fire. Reconciled here.
+
