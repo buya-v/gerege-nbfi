@@ -2023,7 +2023,7 @@
     {
       "id": "T223",
       "title": "G-8's region is stated in rates and terms; T220 proved the phenomenon is an EMI half-minor-unit floor -- restate it or the user is asked the wrong question",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "role": "analyst",
@@ -2035,7 +2035,7 @@
         ".softhouse/gates.md"
       ],
       "description": "T220's second carry-forward, and it bears on what BUYAN IS ASKED, which is why it is registered rather than folded into a note. The driver has recorded the MECHANISM in gates.md G-8 (setScale(mc.getPrecision()) at ProgressiveEMICalculator.java:1962 consuming 19 as DECIMAL PLACES, plus RepaymentPeriod.java:217's reduce(BigDecimal.ONE, BigDecimal::add) with NO MathContext -- both driver-verified at 426a23544 -- giving rateFactorPlus1 twenty significant digits inside a precision-19 context, so the EMI dips below half a minor unit and an EMI of zero repays nothing). WHAT THE DRIVER DID NOT DO is restate the REGION, because that needs measurement. FAMILY B IS NOT A PROPERTY OF '600%' OR OF 'n >= 104'. The boundary MOVES WITH PRINCIPAL, RATE AND TERM. Every statement of G-8's region in this file is in rates and terms -- MNT 0.23 over T83's grid, MNT 2.91 over the union, MNT 5.01 at n=1000, MNT 10.01 at n=3000 -- and those are descriptions of THE CELLS THAT HAPPEN TO HAVE BEEN SWEPT, not of the phenomenon. DERIVE THE BOUNDARY AS A PREDICATE over (principal, rate, term, minor-unit digits) from the mechanism, then TEST THE PREDICATE against the live oracle on cells NOBODY HAS SWEPT -- including at least one where the predicate says family B at a MODEST rate, because if that exists it is a far more important fact than anything at 600%. If the predicate is wrong, THAT is the finding; report it and do not tune the predicate to the cells you already have. This matters because options (b) and (c) would NARROW THE GRADED DOMAIN BY DESCRIBING A REGION, and a region described in the wrong variables cannot be narrowed correctly. Settle it BEFORE either option is put to a decision. Coordinate with T219, which is measuring T159's MNT 10.01-at-n-3000 figure in the same section -- if you and T219 disagree, say so explicitly rather than silently overwriting. You may NOT take options (b) or (c); they narrow the graded domain and are HARD USER GATES. Recommend only. BAR: probe present and up, PASS exit 0, 46/7884, store UNCHANGED (docs + raw captures only; nothing under .softhouse/vectors/ or nexus/).",
-      "note": "dispatched local fire 20260822-000013 wave 1, worktree-isolated, branch softhouse/T223-*"
+      "note": "MERGED local fire 20260822-000013. *** THE HEADLINE: \"600 % only\" IS DEAD, AND FAMILY B IS OBSERVED AT A MODEST RATE. *** The predicate held 7 FOR 7 against the live oracle. FALSIFIABILITY DISCIPLINE DRIVER-VERIFIED: prediction.json committed at c2771fb, a STRICT ANCESTOR of the capture commit fdddd1c -- registered BEFORE any observation existed (T75/T64 discipline). REGION IN ITS OWN VARIABLES: term enters only as (1+r)^n vs 10^19, giving n* ~= 19/log10(1+r) -- A PROPERTY OF THE RATE ALONE; principal enters only as RESONANCE (B*r on a half-minor-unit boundary) and as a rescue CEILING B_minor <~ n/2. The resonance condition EXPLAINS the previously-unexplained observation that all 20 family-B principals are odd (at r=1/2 those coincide). MEASURED ON CELLS NOBODY HAD SWEPT: MNT 0.50 at 36.0%% p.a. over n=1324 IS FAMILY B -- 1324 rows, every one principal 0.00, balance frozen; n=1323 clean. And 300%%/MNT 0.02 is clean at n=500, family B at n=800, CLEAN AGAIN at n=1200 -- the BAND structure, predicted before measurement. Calibrations byte-identical, 0 throws, one attempt each. DECISION-RELEVANT RESTATEMENT FOR BUYAN, which is what this task existed to produce: the failing disbursement is bounded by ~n/2 minor units = MNT n/200 WHATEVER THE RATE. At n <= 360 that is ~MNT 1.80. WHAT KEEPS THIS OUT OF A REAL PRODUCT IS THE TERM, NOT THE RATE. IT ALSO CORRECTED T220: a THIRD load-bearing site T220 note omits -- checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods (:1258-1308) + EmiAdjustment. A predicate on :1962 + :217 ALONE IS WRONG; site 3 rescues cells and imposes the failing-principal ceiling. Both T220 sites re-verified BY CONTENT; :1962 text occurs twice (also :1979) and the G-8 shape reaches :1962. WHERE THE PREDICATE IS WRONG, RECORDED BEFORE PROBING RATHER THAN AFTER: instalment emulation matches 971/1035 committed cells and ALL 64 MISSES ARE SITE-3 RESCUES; the classification rule FAILS OUTRIGHT on T159-R600p0-N1000-B801. Both were written into prediction.json at c2771fb before any observation and both are stated in gates.md. Scoped to the FULL shape only -- no claim about PARTIAL, the third outcome, or the port. STANDING RULE FOLLOWED: scope rebuild first (1416 claims, 94 scope-bearing, 6 FALSIFIED, each corrected in place saying what it used to read); merge verified BY MERGING against then-current main. MNT 0.23 / 2.91 / 10.01 LEFT UNTOUCHED -- all correct over their named domains, and T223 own largest residual is smaller. It did not edit a measurement to agree with a document. DRIVER-VERIFIED POST-MERGE: probe PRESENT and up; PASS exit 0; 46 parity / 7884 cells; 0 inadmissible; 0 invariant violations; 4 EXEMPTED; 4 GROUNDED 0 UNGROUNDED; store 73c3ea7b UNCHANGED. FOLLOW-UPS: the \"600 %% only\" concept was NOT swept outside the G-8 section (registered T228); site 3 needs finishing before option (b) can be drafted AT ALL."
     },
     {
       "id": "T224",
@@ -2057,7 +2057,7 @@
     {
       "id": "A2-31",
       "title": "INDEPENDENT review of DEC-2 revision 4 \u2014 G-11's unblocking condition, second attempt; and adjudicate the RE-MEASURE GATE",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "role": "reviewer",
@@ -2069,7 +2069,7 @@
         ".softhouse/reviews/a2-31-dec2-rev4/"
       ],
       "description": "G-11 states its unblocking condition verbatim and it has now been attempted twice: 'a further independent review passing CLEAN'. A2-25 reviewed rev 3 and REJECTED it on four claims false about main. A2-28 wrote rev 4 addressing all seven of A2-25's items. YOU ARE THE FURTHER INDEPENDENT REVIEW. You are NOT authorised to ratify; you return a verdict and the driver decides. READ A2-25's HANDOFF AND A2-28's HANDOFF FROM GIT, NOT DISK, and read them AFTER forming your own findings; say at what point you read each. THE HISTORY YOU ARE UP AGAINST, because it is the same defect three times: rev 1 REJECTED (A2-14, three shape findings). rev 2 -- A2-17 returned MICRO-FIX and applied its OWN fix, leaving that text reviewed by nobody; A2-19 then REJECTED rev 2. rev 3 REJECTED by A2-25, and its F-1 was A CORRECTION APPLIED WHERE NAMED AND MISSED WHERE RESTATED -- the same class that killed rev 2. A2-28 then found the SAME CLAIM surviving one FILE over, in conformance.sh:1115-1116. SO: SWEEP FOR CLAIMS, NOT SENTENCES, AND DO NOT SCOPE THE SWEEP TO THE ADR. SPECIFIC THINGS TO ATTACK. (1) A2-28 re-derived the guard and found only TWO of the three NIL-COVERAGE sites FIRE, and DID NOT ESTABLISH I4-BUILDER's population -- verify both, and verify it claimed no numerator it had not measured. (2) Requirement 6 was rewritten to demand a strict-decode load failure and split into 6a/6b. A2-25 MEASURED that the old requirement 6 could not be satisfied; MEASURE WHETHER THE NEW ONE CAN -- author the bytes and run them. This is the requirement that will grade A2-15, and it has now been wrong once. (3) A2-28 adopted F-8 and F-9, turning requirement 7's perturbation disjunction into a CONJUNCTION and adding P-10; check that requirement 7 can now be satisfied at all -- a requirement made too strong is as bad as one made vacuous. (4) Every [MEASURED ... at commit] stamp: check the stamp is real and the claim still holds at HEAD. ADJUDICATE A2-28's OWN RECOMMENDATION, which is the structural question: THE CENSUS FIGURES MOVED BETWEEN A2-25's RUN AND A2-28's RUN INSIDE ONE FIRE (4063->4074 literals, 658->659 statements) because T116 touched report.go, AND NEITHER WAS WRONG. A2-28 concludes stamps make staleness VISIBLE but cannot PREVENT it, so ratification needs a RE-MEASURE GATE. Decide whether that is right and what the gate should concretely be -- a document whose measured claims go stale between the review and the ratification cannot be ratified by a review alone. VERDICT: APPROVED (the driver may ratify) / MICRO-FIX (<=10 lines, mechanical only -- never a number, never a normative requirement, never a retraction's wording) / REJECTED with specifics. THE INCENTIVE, STATED SO YOU CAN DISCOUNT IT: a clean verdict unblocks A2-15, the ledger vector work, and the whole tierA-gl-accounting slice, and this is the fourth revision. THAT IS NOT A REASON TO APPROVE. A2-25 was told the same and rejected anyway; that is the standard. If you find nothing, STATE WHAT YOU CHECKED, so silence is distinguishable from not looking.",
-      "note": "dispatched local fire 20260822-000013 wave 1, worktree-isolated, branch softhouse/A2-31-*"
+      "note": "MERGED local fire 20260822-000013. VERDICT: REJECTED. G-11 unblocking condition -- \"a further independent review passing CLEAN\" -- is NOT MET. Fourth revision, fourth rejection. Neither finding is MICRO-FIX-eligible (one is a harness-behaviour claim, one is a number). F-1: a [VERIFIED] claim FALSE AT ITS OWN STAMP. DEC-2:953-957 says, stamped \"[VERIFIED by A2-28 at commit 2e97162]\", that the guard head DROPS the CANNOT-CATCH block on the pass path. It does not -- A2-31 green run prints all eight limits. T209 (03e9094, 09:18) closed FU-T208-1 and IS AN ANCESTOR of 2e97162 (10:34), so this is NOT staleness: it is A2-25 F-4 shape (a caveat outliving its defect) recurring ONE REVISION LATER under a FRESH stamp. F-2: \"three of its SEVEN detection classes inspected an empty population\" is FOUR, MEASURED. I4-BUILDER population under nexus/ is 0. Driven BOTH polarities: A2-31 probe returns 3 on a /tmp tree with three builder verbs planted and the real ledgerguard REFUSES it [I4-BUILDER]; both return 0 on the real tree; its census (45 files / 4795 calls) matches the guard own transcript exactly. The ratio appears at FIVE sites, the I4-BUILDER caveat travels to ONE, and section 10 item 2 says \"The denominator is dropped\" when it is present at all five -- a CHANGE LOG FALSE ABOUT ITS OWN ARTEFACT, the same thing that made A2-25 F-1 rejection-grade. A2-25 predicted this in its open item 4 and DECLINED to measure it; the measurement costs one `go run`. REQUIREMENT 6 IS FIXED, AND A2-31 RAN IT RATHER THAN REASONING: 6a BEFORE produces exactly what it demands (decode: json: unknown field \"product_id\"; inadmissible 0; population intact 46/4/1/7884); 6b emits BOTH mandated refusals together, inadmissible 1, parity unmoved. A2-25 HARDEST FINDING IS DISCHARGED. It claims nothing about 6a AFTER, which needs machinery that does not exist. SWEEP: 123 hits, whole repo, EVERY ONE OPENED. THREE live survivors outside the ADR, none chargeable to A2-28 -- and one of them CORRECTS T224 THIS SAME FIRE: .softhouse/guards/ledgerguard/main.go LINE 1 carries the retracted \"records as NOT EXISTING\" claim, a THIRD file, on line 1 of the guard that refutes it, NOT NAMED BY T224. Also conformance.sh:1180 prints the CLOSED FU-T208-1 on every run, and program.json:1596 still said \"3 of 4\". ALL THREE DRIVER-VERIFIED. CONFIRMED CLEAN: baseline reproduces exactly; store and capture censuses exact at their stamps; seven guards; only two of three NIL-COVERAGE arms fire (A2-28 correct); ALL 30 Fineract citations resolve BY CONTENT at 426a23544; A2-25 F-1/F-4/F-8/F-9 properly discharged; no undisclosed new authorship. Bar undisturbed; no ADR edit, no Go, no vectors -- it did NOT author its own fix, unlike A2-17."
     },
     {
       "id": "T225",
@@ -2110,6 +2110,86 @@
       "status": "pending",
       "attempts": 0,
       "note": "Raised by the driver from T207's named tail. THIRD instance of P-45 in this program."
+    },
+    {
+      "id": "A2-32",
+      "title": "DEC-2 revision 5 \u2014 A2-31's two rejection-grade findings, and NOTHING else",
+      "description": "G-11 is OPEN and NOT RATIFIABLE. A2-31 REJECTED rev 4. This is rev 5 and it must fix EXACTLY TWO things. F-1: DEC-2:953-957 carries a [VERIFIED by A2-28 at commit 2e97162] claim that the guard's head DROPS the CANNOT-CATCH block on the pass path. IT DOES NOT -- A2-31's green run prints all eight limits, and T209 (03e9094) closed FU-T208-1 and IS AN ANCESTOR of 2e97162. So the claim was FALSE AT ITS OWN STAMP. Fix the claim AND remove the caveat that outlived its defect. F-2: 'three of its SEVEN detection classes inspected an empty population' is FOUR. I4-BUILDER's population under nexus/ is ZERO, and unlike the other empty classes ITS EMPTINESS IS NOT ANNOUNCED. The ratio appears at FIVE sites; the I4-BUILDER caveat travels to ONE; and section 10 item 2 claims 'The denominator is dropped' when it is present at ALL FIVE. *** THE THING THAT HAS KILLED FOUR REVISIONS IN A ROW: A CORRECTION LANDING WHERE NAMED AND NOT WHERE RESTATED. *** rev 2 died of it, rev 3 died of it one SECTION over, and A2-28 then found it one FILE over. SO: for each of the two findings, sweep for THE CLAIM, NOT THE SENTENCE, ACROSS THE WHOLE REPO -- not the ADR. A2-31's sweep (123 hits, all opened) is committed at .softhouse/reviews/a2-31-dec2-rev4/sweep-output.txt: READ IT FIRST and use it as your starting population, then say how you WIDENED it. *** DO NOT AUTHOR ANYTHING BEYOND THESE TWO FINDINGS. *** rev 2 died because its reviewer applied its own unreviewed fix. New authorship beyond A2-31's items is itself rejection-grade; register a third defect, do not fix it. Note the three survivors A2-31 found OUTSIDE the ADR are NOT yours: ledgerguard/main.go:1 and conformance.sh:1180 are T227; program.json:1596 is already FIXED by the driver. BAR: probe PRESENT and up; PASS exit 0; 46 parity / 7884 cells; 0 inadmissible; 0 invariant violations; 4 EXEMPTED; 4 GROUNDED 0 UNGROUNDED; store 73c3ea7b43dd75f04884072719a87fc8e1d255c1 UNCHANGED. Docs only -- no Go, no vectors. G-11 is OPEN: nothing may write Go under nexus/ or store a contract-shaped ledger vector for this context.",
+      "agent_role": "spec_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        "docs/adr/DEC-2-gl-accounting-adapter.md"
+      ],
+      "context": "tierA-gl-accounting",
+      "dependencies": [
+        "A2-31"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Rev 5. Rev 1-4 all rejected; twice for the same correction-leak class."
+    },
+    {
+      "id": "T227",
+      "title": "The retracted I-3/I-4 claim survives in a THIRD file \u2014 ledgerguard/main.go LINE 1 \u2014 and T224's sweep missed it",
+      "description": "FOUND BY A2-31, and it is a correction to T224 IN THE SAME FIRE T224 landed. T224 swept for the retracted 'DEC-2 records this guard as NOT EXISTING' claim, fixed conformance.sh:1115-1116 and nonnegotiable-guard-audit.md L-1/L-2, and reported the population closed. IT MISSED .softhouse/guards/ledgerguard/main.go LINE 1, which reads verbatim: '// Command ledgerguard is the source-level guard that DEC-2 4.4.1 records as NOT EXISTING.' DRIVER-VERIFIED at merge. That is LINE 1 OF THE GUARD WHOSE EXISTENCE REFUTES THE CLAIM -- the same irony T224 was dispatched to fix, one file further out. THE INTERESTING QUESTION IS NOT THE EDIT, IT IS WHY THE SWEEP MISSED IT. T224 searched broadly (added 'unguarded', 'no source guard', 'not enforced', tense variants, proximity search) and STILL missed a verbatim hit. Determine why -- was the path excluded, the pattern anchored, the file type skipped? -- and say so plainly. A sweep that misses a VERBATIM instance of its own target phrase has a defect in its METHOD, and the method is reused. That finding is worth more than the one-line fix. ALSO: conformance.sh:1180 prints the CLOSED FU-T208-1 on every run as though it were an available fix (T209/03e9094 closed it). Fix that too. THEN RE-RUN THE SWEEP PROPERLY and report the population, how you enumerated it, and WHAT YOU SKIPPED (P-40). 'Not found' is a statement about the search, never about the world (P-66/P-70) -- state your scope. Do NOT rewrite evidence to make a citation resolve (T114/T176): a quotation correctly attributed is not a defect. BAR: probe PRESENT and up; PASS exit 0; 46 parity / 7884 cells; 0 inadmissible; 0 invariant violations; 4 EXEMPTED; 4 GROUNDED 0 UNGROUNDED; --prove 23/0; go build/vet/test green; gofmt -l EXACTLY contract.go, NEVER -w (G-3); store 73c3ea7b43dd75f04884072719a87fc8e1d255c1 UNCHANGED. Comment-only changes -- the numbers must be byte-identical. Invoke the harness with bash, never sh (exit 3 = wrong-interpreter refusal); it is pipefail with known early-exiting-consumer hazards (P-57), do not restructure a pipeline.",
+      "agent_role": "coder",
+      "executor": "agent",
+      "model": "opus",
+      "target": "code",
+      "files_hint": [
+        ".softhouse/guards/ledgerguard/",
+        ".softhouse/conformance.sh"
+      ],
+      "context": "tier0-harness",
+      "dependencies": [
+        "A2-31",
+        "T224"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Corrects T224 in the same fire. The METHOD defect matters more than the edit."
+    },
+    {
+      "id": "T228",
+      "title": "Sweep the '600 % only' concept OUTSIDE the G-8 section \u2014 T223 killed the claim but only restated it in one place",
+      "description": "T223's own named follow-up, and it is this program's signature failure class pointed at T223's OWN result. T223 proved family B is NOT a property of 600 % -- it OBSERVED family B at 36.0 %% p.a. (MNT 0.50, n=1324) and derived the region as n* ~= 19/log10(1+r) with a principal ceiling of ~n/2 minor units. It restated G-8's region in gates.md. IT DID NOT SWEEP THE '600 %% only' CONCEPT ANYWHERE ELSE, and said so. Every rejection in this program's DEC-2 history is a correction landing where NAMED and not where RESTATED. Find every place in the repo -- handoffs, reviews, patterns.md, program.json, tasks.json, vector notes, capture READMEs, the DEC ADRs -- that states or implies family B is a 600 %% phenomenon, an 'n >= 104' phenomenon, or otherwise describes the region in RATES AND TERMS rather than in the variables T223 established. Sweep the CONCEPT, not the sentence (P-26). For each hit decide: labelled-historical (leave, it is evidence), quotation correctly attributed (leave), or LIVE CLAIM (correct it, citing T223's measurement). DO NOT rewrite evidence to make it agree (T114/T176) -- a superseded claim gets a labelled correction, not a silent edit. CAUTION, and this is the part to get right: T223 left MNT 0.23 / 2.91 / 10.01 UNTOUCHED because each is CORRECT OVER ITS NAMED DOMAIN. Do not 'fix' a correct figure. The defect is an UNNAMED or WRONG domain, not a small number. Where a figure is right but its domain is unstated, NAME THE DOMAIN and leave the figure -- that is the T101 F-8 correction shape this section has already used once. Report the whole population and how you enumerated it; COUNT WHAT YOU SKIPPED (P-40). BAR: probe PRESENT and up; PASS exit 0; 46 parity / 7884 cells; 0 inadmissible; 0 invariant violations; 4 EXEMPTED; store 73c3ea7b43dd75f04884072719a87fc8e1d255c1 UNCHANGED. Docs only.",
+      "agent_role": "spec_writer",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/gates.md",
+        ".softhouse/patterns.md"
+      ],
+      "context": "tier0-harness",
+      "dependencies": [
+        "T223"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "Raised by the driver from T223's named tail."
+    },
+    {
+      "id": "T229",
+      "title": "G-8 site 3 must be finished before option (b) can be drafted AT ALL \u2014 T223's blocking residual",
+      "description": "T223's chief follow-up, and it BLOCKS the G-8 remedy. T223 found a THIRD load-bearing site that T220's mechanism note omits: checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods (ProgressiveEMICalculator.java:1258-1308) plus EmiAdjustment. This site RESCUES cells and imposes the CEILING on the failing principal, so a predicate built on :1962 + :217 alone IS WRONG. T223's own honesty about where its predicate fails points here: instalment emulation matches 971/1035 committed cells and ALL 64 MISSES ARE SITE-3 RESCUES; the classification rule FAILS OUTRIGHT on T159-R600p0-N1000-B801. WHY IT BLOCKS: G-8 option (b) is 'refuse the region from the graded domain'. Narrowing a graded domain is a HARD USER GATE and it is stated as a REGION -- so the region must be correct before Buyan is asked. A region whose boundary is set by a rescue mechanism nobody has characterised cannot be refused correctly. Options (b) and (c) MUST NOT be put to Buyan until this is done. DERIVE site 3's rescue condition from the pinned source at 426a23544, BIND CITATIONS BY CONTENT not line number (:1962's text occurs twice, also at :1979 -- T223 verified this), then TEST IT AGAINST THE LIVE ORACLE, including specifically T159-R600p0-N1000-B801 where T223's rule fails outright. REGISTER THE PREDICTION IN A COMMIT BEFORE PROBING, as T223 did at c2771fb and T75 did before it -- a prediction committed after the observation proves nothing. If the rescue condition cannot be derived, SAY SO and say exactly what you established and what remains -- do not tune a predicate to the cells you have. That is the failure T223 was written to prevent and it applies to its successor. BAR: probe PRESENT and up; PASS exit 0; 46 parity / 7884 cells; 0 inadmissible; 0 invariant violations; 4 EXEMPTED; store 73c3ea7b43dd75f04884072719a87fc8e1d255c1 UNCHANGED -- you are measuring, not promoting. Never synthesise a value not observed from the oracle; record throws as observations (T177: the oracle's StackOverflowError is NOT a pure function of the cell's inputs) and say how many attempts you made. Captures at the production MathContext (19, HALF_UP) only; anything else is a discrimination probe and must be labelled one. Honour gates.md's STANDING RULE for editing the G-8 section.",
+      "agent_role": "analyst",
+      "executor": "agent",
+      "model": "opus",
+      "target": "docs",
+      "files_hint": [
+        ".softhouse/gates.md",
+        ".softhouse/capture/"
+      ],
+      "context": "tier0-harness",
+      "dependencies": [
+        "T223"
+      ],
+      "status": "pending",
+      "attempts": 0,
+      "note": "BLOCKS G-8 options (b) and (c). Raised by the driver from T223's chief residual."
     }
   ],
   "cross_corroboration": {
