@@ -1068,7 +1068,15 @@ regulatory sign-off and licence facts are equally untouched and are not in Run 1
   and not of the term, then **TRIPLED it at T159's own term** — MNT 30.00 at n = 3000, with no
   larger term asked than T159 asked; reproduced T159's record cell exactly as a control; measured
   the `(δ + ½)·n` ceiling at n = 3000 as well as at n = 200; and re-observed the three PROMOTED
-  vectors against the live oracle)
+  vectors against the live oracle),
+  **T241** (evidence hygiene; **no measurement of its own against the reference oracle, which was
+  UNREACHABLE on its host** — re-derived T219's two counterexamples from the mechanism and the
+  committed `.gz` captures rather than transcribing them; **annotated** T229's `site3.py` instead of
+  editing it (`.softhouse/capture/t229-g8-site3/CORRECTION-T241.md`); **did the STANDING-RULE-1
+  rebuild T219 declared it had substituted a concept sweep for** — 2322 claims, 730 scope-bearing,
+  255 hand-read, **one failure**, the over-broad `unrescued` antecedent under *THE LAW*, corrected in
+  place with what it used to read; and added a labelled pointer to the `## G-8-NOTICE` imperative
+  without altering a syllable of that block)
 - **context**: tier0-harness-schedule-poc / loan-schedule
 - **state**: **OPEN** — blocks nothing today. T112 fixed the write-up, T122 fixed two sentences in
   T112's fix, T170 rebuilt the family-B half after T117 and T159 moved the measurement, **T223
@@ -1194,6 +1202,19 @@ bigger question.** So:
 6. **Verify the merge by merging** (P-24), in a throwaway clone against *current* `main`: exactly one
    `## G-8` heading, no conflict on `.softhouse/tasks.json`, and `gates.md` resolving to your
    branch's blob.
+
+> **RULE 1 WAS TESTED AGAINST ITS OWN COST AND IT SURVIVED — T241, at `ea34404`.** `T219` moved
+> three records here and **declared** that it had done a five-pattern concept sweep (rule 3) instead
+> of the rebuild rule 1 asks for. T241 did the rebuild — **2322 claims enumerated, 730 scope-bearing
+> flagged, 255 hand-read** (`.softhouse/capture/t241-g8-evidence/`, a successor to T223's instrument,
+> which is not edited) — and the choice offered to T241 was *do it, or argue with the rule quoted
+> that the concept sweep discharges it.* **It does not, and the rebuild proves that by measurement
+> rather than by argument.** The single failure it found — the over-broad `unrescued` antecedent in
+> *THE LAW* below — carries **no figure, no term, no rate and no superlative**, so none of T219's
+> five patterns, and no widening of a figure-shaped pattern, could ever have matched it. **A concept
+> sweep finds restatements of a concept you already named; rule 1 finds a domain nobody checked.**
+> The rule stands unamended. T129's ratio held a third time: **the measurements were perfect and the
+> one failure was a scope statement.**
 
 ### Read this first: G-8 is TWO phenomena and THREE outcomes, and a remedy for one is not a remedy for the other
 
@@ -2280,13 +2301,31 @@ edge — `2·B_minor = n` with `δ = 0`, where the conjunction refuses and the c
 lies outside the branch this law governs. [VERIFIED by T231 by integer arithmetic; it is T231's own
 observation, not T229's.])*
 
-The shape of an **unrescued** cell follows from FACT A plus the deficit carry:
+The shape of an **unrescued** cell **on which FACT A holds** follows from FACT A plus the deficit
+carry:
 
 ```
 last row EMI = E + B ;   TOTAL PRINCIPAL = max(0, B_minor − n·δ)
 FULL family B    ⟺ δ ≥ 1 ∧ B_minor ≤ n·δ
 PARTIAL family B ⟺ δ ≥ 1 ∧ n·δ < B_minor < (δ + ½)·n , repaying exactly B_minor − n·δ
 ```
+
+> **[T241 CORRECTION — the antecedent, not the arithmetic.]** This sentence read *"The shape of an
+> **unrescued** cell follows from FACT A plus the deficit carry"* until T241. **No figure below it
+> changes and none is wrong**; what was too wide is the word `unrescued`. **FACT A does not hold on
+> every unrescued cell.** Re-derived by T241 in integer minor units from T229's own committed corpus
+> census (`.softhouse/capture/t229-g8-site3/out/validate-corpus.json`, commit `bb35cc8`, 296 stuck
+> cells): FACT A holds on **183 of 183** cells at `δ ≥ 1` and on only **37 of 113** at `δ = 0`, and
+> `last row EMI = E + B` holds on **exactly** those 220 and on **none** of the other 76 — e.g.
+> `T117-NC-R600p0-N398-B1`, where the last row's total is **one minor unit BELOW `E`**, not `B`
+> above it. The two `⟺` lines already carry `δ ≥ 1` and are untouched, and
+> `TOTAL PRINCIPAL = max(0, B_minor − n·δ)` is correct at `δ = 0` too (**113 of 113**). This is the
+> **fifth mechanism** in the STANDING RULE above — a sentence whose domain is wider than the
+> measurement under it — and it is the **same word** as the defect T241 annotated in T229's
+> instrument (see the T241 bullet under *What T219 did NOT do* below).
+> **T219's five-pattern concept sweep could not have reached it: the sentence carries no figure, no
+> term, no rate and no superlative.** It was found by the STANDING-RULE-1 rebuild,
+> `.softhouse/capture/t241-g8-evidence/SCOPE-TABLE-T241.md`. Measured at `ea34404`.
 
 [Re-derived by T231 in integer minor units on all four of T229's family-B cells, including the total
 interest, which is `n·E + B − principal`: `B201` 200·100 + 201 − 1 = 20200 · `B251`
@@ -2553,6 +2592,34 @@ the predicate accounts for all three without being asked to: at n = 103 the emul
   **The defect is in `.softhouse/capture/t229-g8-site3/src/site3.py`, not in this section**, and it
   is out of T219's scope to edit. **It affects no verdict here** — the classifier compares principal
   and outcome, not that field.
+  > **[T241 — ANNOTATED, NOT REWRITTEN, and the defect is WIDER than "on a PARTIAL cell".]**
+  > `site3.py` is left **byte-identical** to T229's prediction commit `29ed78c` (T114/T176:
+  > committed evidence gets a labelled correction, never a silent edit); the label is
+  > **`.softhouse/capture/t229-g8-site3/CORRECTION-T241.md`**, with a pointer beside the
+  > byte-identical copy at `.softhouse/capture/t219-g8-residual/CORRECTION-T241.md`.
+  > **T241 re-derived T219's two counterexamples rather than transcribing them** — `E`, `I₁q`,
+  > `δ`, the three guards and the principal from the mechanism, the observations re-summed from the
+  > individual schedule rows of `capture-t219-raw.json.gz` (commit `6eacc06`), all in integer minor
+  > units, by `.softhouse/capture/t241-g8-evidence/src/rederive_t241.py`:
+  > `B3001` — `E = 1500`, `I₁q = 1501`, `δ = 1`, principal `3001 - 3000 = 1`, so
+  > `n·E + B = 4503001` against an observed **4503000**; `B4499` — `E = 2249`, `I₁q = 2250`,
+  > `δ = 1`, principal `4499 - 3000 = 1499`, so `n·E + B = 6751499` against an observed
+  > **6750000**. In both cells `n·E + B` is, to the unit, the observed **`totalRepaymentAmount`**
+  > — which is the diagnosis: **the field computes the total REPAYMENT and calls it interest.**
+  > **What four cells could not show:** the claim is false well beyond the PARTIAL shape. Over the
+  > 296 stuck cells of T229's own committed corpus census, `n·E + B` equals the observed interest
+  > on **176**, fails on **120**, and fails on **all 113** `δ = 0` cells; the corrected form holds
+  > on **220 of 220** cells where FACT A holds, and the identity `TOTAL REPAYMENT = n·E + B`
+  > discriminates FACT A **220/220 versus 0/76**. So the corrected form must itself be quoted
+  > **with FACT A as its antecedent** — see the T241 correction under *THE LAW* above — and
+  > `δ = 0` is not a safe domain for either form. **The refutation was already inside the
+  > evidence**: `out/classify-t229.json` at commit `bb35cc8` records
+  > `"P2_totalInterestEqualsNEplusB": false` on `B201` and `B251` beside `"verdict": "AS
+  > PREDICTED"`, and `validate-corpus.json` records `interestLaw_holds: 176` against
+  > `stuckCellsExamined: 296`. **Nothing quoted either number, so nothing downstream was wrong —
+  > and it still affects NO verdict**, here or anywhere: no classifier reads
+  > `predictedTotalInterestMinor` on a decision path, and **T241 changed no figure in this section
+  > on account of it.** Measured at `ea34404`.
 
 ---
 
@@ -2845,7 +2912,7 @@ day-count.
 
 **(b) and (c) both amend the graded domain, which is a change to a ratified DEC-n — a hard `user`
 gate no agent may cross.** Buyan decides. T83, T84, T100, T101, T112, **T114, T122, T129, T140,
-T170, T223, T229, T231 and T219** have each handled them and
+T170, T223, T229, T231, T219 and T241** have each handled them and
 **decided none, recommended none, and pre-implemented none**; they attach only the measurement and
 the scoping. **T223 measured a new region and restated it; it decided nothing, promoted no vector,
 graded no port, and left `.softhouse/vectors` byte-unchanged. T229 characterised the rescue site,
@@ -2859,7 +2926,14 @@ and the causal prose that depended on them, and added the seventh mechanism to t
 and it too decided nothing, recommended nothing, promoted no vector, graded no port and left
 `.softhouse/vectors` byte-unchanged at the same digest. It makes NO recommendation on (b) or (c),
 and its measurement STRENGTHENS the case that neither may be put to Buyan yet: the failing region
-just got three times wider at a term this file had already declared measured.**
+just got three times wider at a term this file had already declared measured.
+T241 measured NOTHING against the reference oracle — it was UNREACHABLE on T241's host, and T241
+claims no conformance verdict of any kind. It re-derived T219's two counterexamples from the
+mechanism and the committed `.gz` captures, annotated T229's instrument rather than editing it, did
+the STANDING-RULE-1 rebuild and corrected the one scope statement it found, and added a pointer to
+the superseded-history block. It promoted no vector, graded no port, wrote no Go, and left
+`.softhouse/vectors` byte-unchanged at `13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d`. It makes NO
+recommendation on (b) or (c) and states, unconditionally, that neither may be put to Buyan.**
 T112's whole mandate was the write-up: it corrected sentences and deleted a superseded
 block, and it moved nothing about the gate's substance; T114, T122, T129, T140, T170 and T231 likewise
 touched only the prose. **T117, T159, T169, T177 and T229 measured for this gate and deliberately
@@ -3397,6 +3471,32 @@ question*, not because a boundary was found.
 > say it is the largest OBSERVED and not a bound.** Two independent workers have now raised this ceiling by
 > asking a larger term, and neither found a limit. Writing "MNT 10.01" without its term would repeat, one
 > level up, exactly the error T117 was sent to correct.
+
+**[T241 POINTER — added because the two lines above are an INSTRUCTION, not a measurement. Nothing
+in this block is altered, deleted or restated; every figure above and below stands exactly as its
+author wrote it.]** The `must` above is addressed to **future** readers and they obeyed it: every
+restatement of the residual in this program carried the term, correctly, and reproduced the wrong
+axis anyway. **The residual is `min(B_minor, n·δ)` — a function of the PRINCIPAL, capped by the
+term** — so the term is the cap, not the variable, and the live G-8 section above now records
+**MNT 30.00 at n = 3000** on two cells, measured by T219 **without asking a larger term than T159
+asked**. Read *"MNT 10.01 at n = 3000"* everywhere in this block as **T159's measurement, still
+exactly reproducible and reproduced by T219** — it was never wrong and is not corrected here — but
+**do not carry the instruction out of this block.** Disclosures follow the live section: state the
+residual with **the principals asked at that term**, and still say it is the largest OBSERVED and
+not a bound.
+
+*Why a pointer and not silence, and why not an edit.* **Rejected: leave the block entirely**, on the
+ground that its header already says SUPERSEDED — T219's call, honoured by T228, and right about the
+five past-tense restatements, which are inert. It is not right about **an imperative**: a header
+makes a *record* historical, but an instruction in the imperative mood still reads as guidance to
+anyone who lands here by search, and this block is the most-searched copy of that figure in the
+file. **Also rejected: change the five `MNT 10.01` mentions.** Each is a correct report of what T159
+measured, reproduced exactly by T219; editing them would destroy the record and is precisely the
+T114/T176 error. A pointer adds what is known now without altering a syllable of what was said then,
+which is this block's own practice — it already carries in-place corrections labelled by T170 and
+T177. **ENGINEERING call, `chosen_by: agent`** (CLAUDE.md answering gates); Buyan may reverse it.
+T241, measured at `ea34404`; `T228` reached this block, honoured T219's decision, edited nothing —
+its commit `617b8ea` touches four files and `gates.md` is not one of them.
 
 ### THREE THINGS NOBODY HAD RECORDED, and the first one needs a sentence G-8 does not have
 
