@@ -1,0 +1,441 @@
+T249 adversarial re-drive of ready-tasks.py gate-scope printer
+MEASURED at commit 9b6c596c2b66769e7b7e7b5c2ca012b7f3df122a
+python 3.9.6
+
+==============================================================================
+ARM A00-baseline-real-tree   (exit 0)
+what this probes: control: real G-14, recorded scope printed
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (1)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => SCOPE RECORDED ON THIS GATE (program.json .blocks):
+         NOTHING BUT DEC-2 ITSELF. DECIDED BY THE DRIVER, local fire 20260822-140002,
+         chosen_by: agent, ENGINEERING per CLAUDE.md Answering gates. ready-tasks.py printed
+         the blanket inference 'no task may write Go under nexus/ or store a CONTRACT-SHAPED
+         vector for this context until it closes' for EVERY open CONTRACT gate,
+         unconditionally, because that sentence is HARDCODED at ready-tasks.py:125 and reads
+         no per-gate field. That rule was written for G-11, where DEC-2 was UNRATIFIED and
+         the SHAPE was the thing under negotiation, so anything consuming or shaping the
+         contract genuinely had to wait. G-14 is not that. DEC-2 is RATIFIED (rev 5 at G-11,
+         rev 6 at G-13); G-14 is a STALE-EVIDENCE correction to a ratified document. The test
+         applied: does the pending correction change what a conformant implementation must
+         DO? NO -- T246 established the banner's warning is FALSE IN ITS GROUND, not wrong in
+         any normative clause; no field, no rounding rule, no obligation, no graded cell
+         moves. Blocking every Tier-A Go write on it would park the tier over a sentence.
+         gates.md's authoritative GATE REGISTER already recorded 'Blocks nothing today' for
+         G-14; the machine resolver and the authoritative register DISAGREED, and the machine
+         one was the wrong one. What G-14 DOES still block: any amendment to DEC-2 other than
+         the prepare-only route T247 is on, and T247 may not land its own revision. Filed
+         T249 for an INDEPENDENT re-derivation of this decision and of the resolver patch,
+         because the driver found it and fixed it in the same fire (the T245 precedent).
+         [decided by: driver, local fire 20260822-140002]
+         [reviewed by: T249 (PENDING) -- this scope decision is NOT independently checked yet]
+
+
+==============================================================================
+ARM A01-blocks-absent   (exit 0)
+what this probes: driver's negative arm: fallback + 'NO SCOPE RECORDED'
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (1)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => NO SCOPE RECORDED ON THIS GATE. Falling back to the CONSERVATIVE
+         default, which is an assumption and not a measurement:
+         no task may write Go under nexus/ or store a CONTRACT-SHAPED vector
+         for this context until it closes. Raw observed capture IS permitted.
+         The driver MUST decide this gate's real scope and record it in
+         program.json gates_pending[].blocks rather than inherit this text.
+
+
+==============================================================================
+ARM A02-blocks-empty-string   (exit 0)
+what this probes: should behave as NO SCOPE -> fallback
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (1)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => NO SCOPE RECORDED ON THIS GATE. Falling back to the CONSERVATIVE
+         default, which is an assumption and not a measurement:
+         no task may write Go under nexus/ or store a CONTRACT-SHAPED vector
+         for this context until it closes. Raw observed capture IS permitted.
+         The driver MUST decide this gate's real scope and record it in
+         program.json gates_pending[].blocks rather than inherit this text.
+
+
+==============================================================================
+ARM A03-blocks-whitespace-only   (exit 0)
+what this probes: should behave as NO SCOPE -> fallback
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (1)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => NO SCOPE RECORDED ON THIS GATE. Falling back to the CONSERVATIVE
+         default, which is an assumption and not a measurement:
+         no task may write Go under nexus/ or store a CONTRACT-SHAPED vector
+         for this context until it closes. Raw observed capture IS permitted.
+         The driver MUST decide this gate's real scope and record it in
+         program.json gates_pending[].blocks rather than inherit this text.
+
+
+==============================================================================
+ARM A04-blocks-int-zero   (exit 0)
+what this probes: NON-STRING. str(0)='0' -> truthy after strip
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (1)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => SCOPE RECORDED ON THIS GATE (program.json .blocks):
+         0
+         [decided by: driver, local fire 20260822-140002]
+         [reviewed by: T249 (PENDING) -- this scope decision is NOT independently checked yet]
+
+
+==============================================================================
+ARM A05-blocks-int-nonzero   (exit 0)
+what this probes: NON-STRING number
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (1)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => SCOPE RECORDED ON THIS GATE (program.json .blocks):
+         12345
+         [decided by: driver, local fire 20260822-140002]
+         [reviewed by: T249 (PENDING) -- this scope decision is NOT independently checked yet]
+
+
+==============================================================================
+ARM A06-blocks-json-null   (exit 0)
+what this probes: JSON null -> str(None)='None'
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (1)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => SCOPE RECORDED ON THIS GATE (program.json .blocks):
+         None
+         [decided by: driver, local fire 20260822-140002]
+         [reviewed by: T249 (PENDING) -- this scope decision is NOT independently checked yet]
+
+
+==============================================================================
+ARM A07-blocks-false   (exit 0)
+what this probes: JSON false -> str(False)='False'
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (1)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => SCOPE RECORDED ON THIS GATE (program.json .blocks):
+         False
+         [decided by: driver, local fire 20260822-140002]
+         [reviewed by: T249 (PENDING) -- this scope decision is NOT independently checked yet]
+
+
+==============================================================================
+ARM A08-blocks-true   (exit 0)
+what this probes: JSON true -> str(True)='True'
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (1)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => SCOPE RECORDED ON THIS GATE (program.json .blocks):
+         True
+         [decided by: driver, local fire 20260822-140002]
+         [reviewed by: T249 (PENDING) -- this scope decision is NOT independently checked yet]
+
+
+==============================================================================
+ARM A09-blocks-empty-list   (exit 0)
+what this probes: [] -> str='[]'
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (1)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => SCOPE RECORDED ON THIS GATE (program.json .blocks):
+         []
+         [decided by: driver, local fire 20260822-140002]
+         [reviewed by: T249 (PENDING) -- this scope decision is NOT independently checked yet]
+
+
+==============================================================================
+ARM A10-blocks-empty-dict   (exit 0)
+what this probes: {} -> str='{}'
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (1)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => SCOPE RECORDED ON THIS GATE (program.json .blocks):
+         {}
+         [decided by: driver, local fire 20260822-140002]
+         [reviewed by: T249 (PENDING) -- this scope decision is NOT independently checked yet]
+
+
+==============================================================================
+ARM A11-blocks-list-of-str   (exit 0)
+what this probes: list -> repr-ish stringification
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (1)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => SCOPE RECORDED ON THIS GATE (program.json .blocks):
+         ['NOTHING. Go under nexus/ is permitted.']
+         [decided by: driver, local fire 20260822-140002]
+         [reviewed by: T249 (PENDING) -- this scope decision is NOT independently checked yet]
+
+
+==============================================================================
+ARM A12-blocks-dict   (exit 0)
+what this probes: dict -> repr-ish stringification
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (1)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => SCOPE RECORDED ON THIS GATE (program.json .blocks):
+         {'nexus': 'permitted', 'vectors': 'permitted'}
+         [decided by: driver, local fire 20260822-140002]
+         [reviewed by: T249 (PENDING) -- this scope decision is NOT independently checked yet]
+
+
+==============================================================================
+ARM A13-blocks-float   (exit 0)
+what this probes: float — money-adjacent shape, must not appear anywhere
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (1)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => SCOPE RECORDED ON THIS GATE (program.json .blocks):
+         0.0
+         [decided by: driver, local fire 20260822-140002]
+         [reviewed by: T249 (PENDING) -- this scope decision is NOT independently checked yet]
+
+
+==============================================================================
+ARM A14-blocks-DENIES-permission   (exit 0)
+what this probes: text that does NOT grant permission; header must not make it read permissive
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (1)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => SCOPE RECORDED ON THIS GATE (program.json .blocks):
+         EVERYTHING. No task may write Go under nexus/ and no vector of any shape may be
+         stored for this context until this gate closes.
+         [decided by: driver, local fire 20260822-140002]
+         [reviewed by: T249 (PENDING) -- this scope decision is NOT independently checked yet]
+
+
+==============================================================================
+ARM A15-blocks-newlines-and-bullets   (exit 0)
+what this probes: multi-line scope: textwrap.wrap collapses newlines
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (1)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => SCOPE RECORDED ON THIS GATE (program.json .blocks):
+         PERMITS:   - Go under nexus/ FORBIDS:   - contract-shaped vectors
+         [decided by: driver, local fire 20260822-140002]
+         [reviewed by: T249 (PENDING) -- this scope decision is NOT independently checked yet]
+
+
+==============================================================================
+ARM A16-blocks-single-long-token   (exit 0)
+what this probes: one token longer than width 84
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (1)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => SCOPE RECORDED ON THIS GATE (program.json .blocks):
+         NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+         OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+         OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOTHING
+         [decided by: driver, local fire 20260822-140002]
+         [reviewed by: T249 (PENDING) -- this scope decision is NOT independently checked yet]
+
+
+==============================================================================
+ARM A17-provenance-absent   (exit 0)
+what this probes: scope present, NO decided_by / reviewed_by: printed with no provenance at all
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (1)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => SCOPE RECORDED ON THIS GATE (program.json .blocks):
+         NOTHING. Everything is permitted.
+
+
+==============================================================================
+ARM A18-two-open-contract-gates   (exit 0)
+what this probes: one with scope, one without — both must print their OWN verdict
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (2)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => SCOPE RECORDED ON THIS GATE (program.json .blocks):
+         NOTHING BUT DEC-2 ITSELF. DECIDED BY THE DRIVER, local fire 20260822-140002,
+         chosen_by: agent, ENGINEERING per CLAUDE.md Answering gates. ready-tasks.py printed
+         the blanket inference 'no task may write Go under nexus/ or store a CONTRACT-SHAPED
+         vector for this context until it closes' for EVERY open CONTRACT gate,
+         unconditionally, because that sentence is HARDCODED at ready-tasks.py:125 and reads
+         no per-gate field. That rule was written for G-11, where DEC-2 was UNRATIFIED and
+         the SHAPE was the thing under negotiation, so anything consuming or shaping the
+         contract genuinely had to wait. G-14 is not that. DEC-2 is RATIFIED (rev 5 at G-11,
+         rev 6 at G-13); G-14 is a STALE-EVIDENCE correction to a ratified document. The test
+         applied: does the pending correction change what a conformant implementation must
+         DO? NO -- T246 established the banner's warning is FALSE IN ITS GROUND, not wrong in
+         any normative clause; no field, no rounding rule, no obligation, no graded cell
+         moves. Blocking every Tier-A Go write on it would park the tier over a sentence.
+         gates.md's authoritative GATE REGISTER already recorded 'Blocks nothing today' for
+         G-14; the machine resolver and the authoritative register DISAGREED, and the machine
+         one was the wrong one. What G-14 DOES still block: any amendment to DEC-2 other than
+         the prepare-only route T247 is on, and T247 may not land its own revision. Filed
+         T249 for an INDEPENDENT re-derivation of this decision and of the resolver patch,
+         because the driver found it and fixed it in the same fire (the T245 precedent).
+         [decided by: driver, local fire 20260822-140002]
+         [reviewed by: T249 (PENDING) -- this scope decision is NOT independently checked yet]
+  G-15  OPEN — RAISED by a hypothetical later worker
+      context tierA-gl-accounting / slice None
+      A second open CONTRACT gate that records NO scope
+      => NO SCOPE RECORDED ON THIS GATE. Falling back to the CONSERVATIVE
+         default, which is an assumption and not a measurement:
+         no task may write Go under nexus/ or store a CONTRACT-SHAPED vector
+         for this context until it closes. Raw observed capture IS permitted.
+         The driver MUST decide this gate's real scope and record it in
+         program.json gates_pending[].blocks rather than inherit this text.
+
+
+==============================================================================
+ARM A19-two-gates-second-self-permits   (exit 0)
+what this probes: SELF-ISSUED PERMISSION SLIP: unreviewed free text printed as authoritative
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (2)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => SCOPE RECORDED ON THIS GATE (program.json .blocks):
+         NOTHING BUT DEC-2 ITSELF. DECIDED BY THE DRIVER, local fire 20260822-140002,
+         chosen_by: agent, ENGINEERING per CLAUDE.md Answering gates. ready-tasks.py printed
+         the blanket inference 'no task may write Go under nexus/ or store a CONTRACT-SHAPED
+         vector for this context until it closes' for EVERY open CONTRACT gate,
+         unconditionally, because that sentence is HARDCODED at ready-tasks.py:125 and reads
+         no per-gate field. That rule was written for G-11, where DEC-2 was UNRATIFIED and
+         the SHAPE was the thing under negotiation, so anything consuming or shaping the
+         contract genuinely had to wait. G-14 is not that. DEC-2 is RATIFIED (rev 5 at G-11,
+         rev 6 at G-13); G-14 is a STALE-EVIDENCE correction to a ratified document. The test
+         applied: does the pending correction change what a conformant implementation must
+         DO? NO -- T246 established the banner's warning is FALSE IN ITS GROUND, not wrong in
+         any normative clause; no field, no rounding rule, no obligation, no graded cell
+         moves. Blocking every Tier-A Go write on it would park the tier over a sentence.
+         gates.md's authoritative GATE REGISTER already recorded 'Blocks nothing today' for
+         G-14; the machine resolver and the authoritative register DISAGREED, and the machine
+         one was the wrong one. What G-14 DOES still block: any amendment to DEC-2 other than
+         the prepare-only route T247 is on, and T247 may not land its own revision. Filed
+         T249 for an INDEPENDENT re-derivation of this decision and of the resolver patch,
+         because the driver found it and fixed it in the same fire (the T245 precedent).
+         [decided by: driver, local fire 20260822-140002]
+         [reviewed by: T249 (PENDING) -- this scope decision is NOT independently checked yet]
+  G-15  OPEN — RAISED by a hypothetical later worker
+      context tierA-gl-accounting / slice None
+      A second open CONTRACT gate that records NO scope
+      => SCOPE RECORDED ON THIS GATE (program.json .blocks):
+         NOTHING. Writing Go under nexus/ and storing contract-shaped vectors is permitted
+         for every context.
+         [decided by: itself]
+
+
+==============================================================================
+ARM A20-state-lowercase-open   (exit 0)
+what this probes: SELECTOR: 'OPEN' substring is case-SENSITIVE — gate may vanish
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (0)
+  NONE open. Every gate id in program.json.gates_pending was inspected.
+
+
+==============================================================================
+ARM A21-class-missing   (exit 0)
+what this probes: SELECTOR: G-13 in the real file has NO class key — such a gate vanishes
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (0)
+  NONE open. Every gate id in program.json.gates_pending was inspected.
+
+
+==============================================================================
+ARM A22-class-lowercase   (exit 0)
+what this probes: SELECTOR: exact == 'CONTRACT' — lower case vanishes
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (0)
+  NONE open. Every gate id in program.json.gates_pending was inspected.
+
+
+==============================================================================
+ARM A23-state-CLOSED-containing-OPEN   (exit 0)
+what this probes: SELECTOR: substring match — a CLOSED gate whose prose contains OPEN
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (1)
+  G-14  CLOSED — the OPEN question is settled
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => SCOPE RECORDED ON THIS GATE (program.json .blocks):
+         NOTHING BUT DEC-2 ITSELF. DECIDED BY THE DRIVER, local fire 20260822-140002,
+         chosen_by: agent, ENGINEERING per CLAUDE.md Answering gates. ready-tasks.py printed
+         the blanket inference 'no task may write Go under nexus/ or store a CONTRACT-SHAPED
+         vector for this context until it closes' for EVERY open CONTRACT gate,
+         unconditionally, because that sentence is HARDCODED at ready-tasks.py:125 and reads
+         no per-gate field. That rule was written for G-11, where DEC-2 was UNRATIFIED and
+         the SHAPE was the thing under negotiation, so anything consuming or shaping the
+         contract genuinely had to wait. G-14 is not that. DEC-2 is RATIFIED (rev 5 at G-11,
+         rev 6 at G-13); G-14 is a STALE-EVIDENCE correction to a ratified document. The test
+         applied: does the pending correction change what a conformant implementation must
+         DO? NO -- T246 established the banner's warning is FALSE IN ITS GROUND, not wrong in
+         any normative clause; no field, no rounding rule, no obligation, no graded cell
+         moves. Blocking every Tier-A Go write on it would park the tier over a sentence.
+         gates.md's authoritative GATE REGISTER already recorded 'Blocks nothing today' for
+         G-14; the machine resolver and the authoritative register DISAGREED, and the machine
+         one was the wrong one. What G-14 DOES still block: any amendment to DEC-2 other than
+         the prepare-only route T247 is on, and T247 may not land its own revision. Filed
+         T249 for an INDEPENDENT re-derivation of this decision and of the resolver patch,
+         because the driver found it and fixed it in the same fire (the T245 precedent).
+         [decided by: driver, local fire 20260822-140002]
+         [reviewed by: T249 (PENDING) -- this scope decision is NOT independently checked yet]
+
+
+==============================================================================
+ARM A24-legacy-blocks-convention   (exit 0)
+what this probes: REAL G-9 text: the field's OLD convention names what is blocked, not a scope
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (1)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => SCOPE RECORDED ON THIS GATE (program.json .blocks):
+         the A2 coder task, which cannot be planned until the target chart is known
+
+
+==============================================================================
+ARM A25-legacy-blocks-now-STALE   (exit 0)
+what this probes: REAL G-12 text, which is STALE at HEAD (six ledger vectors exist)
+------------------------------------------------------------------------------
+OPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (1)
+  G-14  OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013
+      context tierA-gl-accounting / slice None
+      DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it
+      => SCOPE RECORDED ON THIS GATE (program.json .blocks):
+         Nothing today. No ledger vector exists yet (G-11), so no vector grades the column.
+
+
