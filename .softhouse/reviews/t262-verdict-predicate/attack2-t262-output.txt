@@ -1,0 +1,10 @@
+COMPOUND: <blind fixture> batched with the REAL committed classify-t229.json
+Ground truth: every fixture carries an affirmative verdict over a false predicate.
+================================================================================================
+fixture (batched with real file)       rc    probe     state    rows   disagr  OUTCOME
+A1-nested-one-level-deeper              0  PRESENT     GREEN      11        3  MISS   (alone: rc=1)
+A2-toplevel-array                       0  PRESENT     GREEN      11        3  MISS   (alone: rc=1)
+A3c-verdict-as-int-only                 0  PRESENT     GREEN      12        3  MISS   (alone: rc=0)
+
+Reading: any fixture that flips from rc=1 ALONE to rc=0 BATCHED was being caught ONLY by
+the global nil-coverage test, which one populated file in the same invocation switches off.

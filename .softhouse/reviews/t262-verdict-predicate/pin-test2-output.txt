@@ -1,0 +1,24 @@
+scratch repo: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t262-pin2-akyzchnj
+
+CASE 1 -- unmodified evidence at the pinned path. Expect GREEN 0, 3 ACKNOWLEDGED.
+  rc = 0   VOID printed = False   [ACK]=3  [UNACK]=0
+  probe: T259-VPA: GREEN files=1 rows=11 predicates=24 disagreements=3 acknowledged=3 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+
+CASE 2 -- WHITESPACE-ONLY mutation (one appended newline). Expect VOID + RED 1.
+  rc = 1   VOID printed = True   [ACK]=0  [UNACK]=3
+  probe: T259-VPA: REFUSED files=1 rows=11 predicates=24 disagreements=3 acknowledged=0 unacknowledged=3 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+
+CASE 3 -- SEMANTIC mutation on a row NOT in the ack list (flip the one true P2).
+  rc = 1   VOID printed = True   [ACK]=0  [UNACK]=4
+  probe: T259-VPA: REFUSED files=1 rows=11 predicates=24 disagreements=4 acknowledged=0 unacknowledged=4 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+
+CASE 4 -- THE ATTACK: mutate the evidence AND re-point the ack sha256 to the new bytes,
+          adding an acknowledgement for the row just falsified.
+  rc = 0   VOID printed = False   [ACK]=4  [UNACK]=0
+  probe: T259-VPA: GREEN files=1 rows=11 predicates=24 disagreements=4 acknowledged=4 unacknowledged=0 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0
+  >>> If rc is 0 here, the pin binds the ack to the bytes but NOTHING binds the ack file
+  >>> itself: re-pointing it is a one-line edit. Force rests on REVIEWING the ack diff.
+
+CASE 5 -- restore the true bytes but keep the re-pointed (now stale) ack. Expect VOID.
+  rc = 1   VOID printed = True   [ACK]=0  [UNACK]=3
+  probe: T259-VPA: REFUSED files=1 rows=11 predicates=24 disagreements=3 acknowledged=0 unacknowledged=3 unclassifiedKeys=0 unclassifiedVerdicts=0 nilCoverage=0

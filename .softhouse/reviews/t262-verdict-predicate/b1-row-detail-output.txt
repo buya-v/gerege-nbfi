@@ -1,0 +1,49 @@
+=== recorded row T219-R600p0-N103-B1 ===
+  id                                 'T219-R600p0-N103-B1'
+  rate                               '600.0'
+  n                                  103
+  bMinor                             1
+  predictedOutcome                   'LAST_ROW_CARRIES_ALL_PRINCIPAL'
+  predictedPrincipalMinor            1
+  predictedEmiMinor                  1
+  predictedDelta                     0
+  aMinor                             0
+  t223RulePredictedRescue            False
+  observedRepaymentRows              103
+  observedPrincipalMinor             1
+  observedInterestMinor              13
+  observedDisbursedMinor             1
+  observedRow1TotalMinor             1
+  observedRow1InterestMinor          1
+  observedLastTotalMinor             0
+  observedEmiDifferenceMinor         -1
+  observedDistinctTotalsExLast       [0, 1]
+  observedDistinctTotalsExLastCount  2
+  observedOutcome                    'AMORTIZES_FULLY(last-row-only)'
+  _obsDeltaFromRow1                  0
+  verdict                            'AS PREDICTED'
+  P2_emiDifferenceEqualsB            False
+  P2_emiObservedEqualsPredicted      True
+  P2_totalInterestEqualsNEplusB      False
+
+raw sha256 8d3cce9de4c665183eb717daf8e3b9a442041c994d15f0d4305e6aac32efb86b
+
+=== from the raw emitted schedule rows ===
+  repayment rows            : 103
+  sum of row totals         : 14
+  sum of principal          : 1  (header 1 )
+  sum of interest           : 13  (header 13 )
+  row-1 total E             : 1
+  last row total            : 0
+  distinct totals ex-last   : [0, 1]
+  n*E + B                   : 104
+  n*E + B - principalRepaid : 103
+  total repayment == n*E+B  : False
+  interest == total - prin  : True   (this identity is unconditional)
+
+  REGISTERED predicate  interest == n*E+B          : False
+  CORRECTED  predicate  interest == n*E+B - P      : False
+  recorded verdict                                 : AS PREDICTED
+
+  >>> CORRECTED predicate is FALSE and the verdict is AFFIRMATIVE.
+  >>> This is a row where a CORRECT predicate DISAGREES with the verdict.
