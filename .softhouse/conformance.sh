@@ -1154,37 +1154,47 @@ guard_graded_root_is_this_tree() {
 #
 # COST: 2.8-2.9 s wall, measured twice by T208 on this host (2.776 s, 2.912 s), agreeing with
 # A2-18's 2.8 s — a `go build` of a dependency-free module, 15 selftest cases, one walk of
-# nexus/. It also adds 26 lines to a previously 172-line green transcript: 18 from the guard's
-# head (selftest, census, coverage and NIL-COVERAGE) and the 8 below.
+# nexus/. TRANSCRIPT COST — T208 recorded 26 lines (18 head + the 8 below) against a then
+# 172-line green transcript. ⚠ CORRECTION (T227): T209 widened the head's pass-path filter, so
+# the 33-line CANNOT-CATCH block now prints too. MEASURED on this branch's green run, not
+# estimated: 62 lines of a 284-line transcript — 18 head lines before the block (selftest, two
+# CENSUS headers, five covered-package lines, six DML-classified literals, one hold-named func,
+# two NIL-COVERAGE notices, the census-figure-READ line), 33 CANNOT-CATCH lines, 3 PASS-text
+# lines, and the 8 below. Recount it before quoting it; every figure in this paragraph has now
+# been stale once.
 guard_ledger_invariants() {
   local rc=0
   bash "$REPO_ROOT/.softhouse/guards/check-ledger-invariants.sh" || rc=$?
 
-  # THE LIMITS MUST TRAVEL WITH THE VERDICT, AND ONE OF THEM DOES NOT ARRIVE ON ITS OWN.
+  # THE LIMITS MUST TRAVEL WITH THE VERDICT. THEY NOW ARRIVE TWICE, AND THAT IS THE STATE.
   #
-  # MEASURED BY T208, and it corrects A2-18's §7 as written. The guard binary prints a 33-line
-  # CANNOT-CATCH block on every one of ITS runs — but its head captures that output into a
-  # variable and, on the PASS path, re-prints only `^CENSUS ` and `^NIL-COVERAGE ` lines
-  # (check-ledger-invariants.sh:185). So:
-  #   * the two NIL-COVERAGE notices DO reach this transcript verbatim (this Go tree has no DB
-  #     driver and no SQL, so the I-4 SQL classes are proven by the guard's selftest and NOT by
-  #     this tree) — nothing was lost by wiring;
-  #   * the CANNOT-CATCH block does NOT — and did not standalone either, so wiring is not what
-  #     dropped it. On the REFUSAL path it survives, because the head warns every line that is
-  #     not a CENSUS line.
-  # The head's own PASS text ends "Read the CANNOT-CATCH block", and on a green run that block
-  # is not present anywhere in the output. That is a defect in the head; the head is A2-18's
-  # artefact and outside T208's scope, so it is RAISED as FU-T208-1, not fixed here.
+  # HISTORY, KEPT BECAUSE IT EXPLAINS WHY THESE EIGHT LINES EXIST. T208 measured, correcting
+  # A2-18's §7 as written, that the guard binary prints a 33-line CANNOT-CATCH block on every
+  # one of ITS runs while its head, on the PASS path, re-printed only `^CENSUS ` and
+  # `^NIL-COVERAGE ` lines. So the two NIL-COVERAGE notices reached this transcript verbatim
+  # (this Go tree has no DB driver and no SQL, so the I-4 SQL classes are proven by the guard's
+  # selftest and NOT by this tree) but the CANNOT-CATCH block did not — and did not standalone
+  # either, so wiring was not what dropped it. T208 raised that as FU-T208-1 rather than fixing
+  # a file outside its scope, and printed the 8-line condensation below meanwhile, stating the
+  # trade rather than taking it silently: 8 lines naming the load-bearing limits, against 33.
   #
-  # What IS in scope is refusing to let a green harness transcript carry this verdict without
-  # its limits — that is exactly how "the guards cover the ledger tree" becomes a false claim.
-  # THE TRADE, stated rather than taken silently: 8 lines on every run naming the load-bearing
-  # limits, against 33 for the full block. If 8 is judged too thin the fix is FU-T208-1, which
-  # puts the whole block back at its source — NOT a longer copy maintained in this file, where
-  # it would drift away from the guard it describes. Printed on BOTH paths, pass or fail.
+  # ⚠ CORRECTION (T227, 22 August 2026). FU-T208-1 IS CLOSED — T209 (commit 03e9094) widened
+  # the head's pass-path filter, so the full 33-line block DOES reach every green transcript
+  # [VERIFIED: check-ledger-invariants.sh, the `if [ "$rc" -eq 0 ]` awk extraction after the
+  # `^CENSUS |^NIL-COVERAGE ` grep; and MEASURED on this branch's green run, where the block
+  # prints in full immediately ABOVE these eight lines]. Until this correction the say line
+  # below still named FU-T208-1 as an available fix and still said the head "DROPS" the block
+  # on the pass path — a caveat outliving its defect, printed on every run, three lines under
+  # the very block it claimed was absent. Same failure class A2-31 rejected DEC-2 rev 4 for.
+  #
+  # WHAT IS NOT DECIDED HERE. These eight lines are now a REDUNDANT condensation of a block the
+  # transcript already carries in full. T209 raised that as FU-T209-1 and it is still open;
+  # removing them changes the harness's OUTPUT, which is not a comment-only change and is not
+  # T227's scope. They stay, correctly labelled, until FU-T209-1 is worked. Printed on BOTH
+  # paths, pass or fail.
   say "conformance: ledger-invariants LIMITS (CANNOT-CATCH, condensed; the full 33-line block is"
-  say "conformance:   the cannotCatch const in .softhouse/guards/ledgerguard/main.go, which the"
-  say "conformance:   guard prints on every run and its head DROPS on the pass path — FU-T208-1):"
+  say "conformance:   the cannotCatch const in .softhouse/guards/ledgerguard/main.go, which its"
+  say "conformance:   head prints IN FULL ABOVE since T209 — so this is a redundant restatement):"
   say "conformance:   the detection surface is the NAME, so RENAMING A BALANCE DEFEATS THIS GUARD;"
   say "conformance:   dynamic SQL is caught only through the call set it recognises; triggers,"
   say "conformance:   migrations and stored procedures are not walked at all; I-5's semantic half"
