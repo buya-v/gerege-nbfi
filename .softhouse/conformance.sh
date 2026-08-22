@@ -950,15 +950,50 @@ guard_no_float_in_capture_requests() {
   # THE FLOOR, DERIVED BY A DIFFERENT PROGRAM OVER THE SAME POPULATION (T194). The guard's
   # own `derive()` takes every *.json whose DIRECT parent directory is named `req`, plus
   # every *.req wire-bytes artefact, at any depth under .softhouse/capture
-  # [VERIFIED: .softhouse/capture/lib/check_wire_float_roundtrip.py:78-102]. `git ls-files`
-  # is asked for the same set from the index instead of from `os.walk`, so the two agree
-  # only if the guard actually opened the tree. Measured in this worktree: guard 320,
-  # floor 320. Tracked is a SUBSET of walked (untracked files raise the guard's figure and
-  # never the floor), which is why _run_capture_guard compares with `>=`.
-  local floor
-  floor="$(git -C "$REPO_ROOT" ls-files -z -- .softhouse/capture 2>/dev/null \
+  # [VERIFIED: .softhouse/capture/lib/check_wire_float_roundtrip.py, `derive()`]. `git
+  # ls-files` is asked for the same set from the index instead of from `os.walk`, so the two
+  # agree only if the guard actually opened the tree. Measured in this worktree: bodies 320.
+  # Tracked is a SUBSET of walked (untracked files raise the guard's figure and never the
+  # floor), which is why _run_capture_guard compares with `>=`.
+  #
+  # SECOND TERM — THE STORE-CITED CAPTURE RECORDS (T193). The guard's second arm opens every
+  # file a stored vector names in `provenance.capture_ref` and grades the numeric tokens
+  # inside its recorded-request blocks. 42 of the 43 parity vectors name a
+  # `capture-prod3*-raw.json` and the 43rd names a Path B raw [re-derived by T193 by reading
+  # provenance.capture_ref as a FIELD across .softhouse/vectors/**], and BEFORE T193 the
+  # guard's walk reached ZERO of them — a `req/`-shaped walk cannot see a Path A capture
+  # whose request is driven in-process by Capture3*.java and never committed under `req/`.
+  #
+  # The floor term is DERIVED BY A DIFFERENT PROGRAM AGAIN: `git grep` + `sed` over the
+  # tracked vector store, against the guard's `os.walk` + `json.loads`. They agree only if
+  # both actually read the citations. Distinct refs, because two vectors may cite one record
+  # and the guard opens it once. The empty `capture_ref` a hand-authored or contract vector
+  # carries is dropped by `grep -v '^$'` — admit.go requires the citation only of a PARITY
+  # vector, so counting the empties would inflate the floor above what the guard can open and
+  # cry wolf on a clean tree. Measured in this worktree: records 8, floor 320 + 8 = 328.
+  #
+  # WHY THE SUM AND NOT TWO FLOORS: the guard's FIRST census line carries the figure
+  # `_run_capture_guard` reads (census_inspected is first-wins, per line, and takes the first
+  # line's figure), and that line reports total DOCUMENTS opened. One number, one comparison.
+  # The per-arm breakdown is on the later CENSUS lines, which are printed for the human.
+  #
+  # P-57: every stage here consumes all of its input — `git grep`, `sed`, `grep`, `sort`,
+  # `wc` — so no member of the `| grep -q` / `| head` EPIPE family is introduced. P-58:
+  # measured under `bash` on this host, where `grep`/`sed` are the BSD binaries in /usr/bin;
+  # `LC_ALL=C` is on every expression so the same bytes hold if the ugrep shell function
+  # (which re-execs with `-I`) is ever in scope instead.
+  local floor bodies records
+  bodies="$(git -C "$REPO_ROOT" ls-files -z -- .softhouse/capture 2>/dev/null \
            | LC_ALL=C tr '\0' '\n' \
            | LC_ALL=C grep -acE '(/req/[^/]+\.json|\.req)$' || true)"
+  records="$(git -C "$REPO_ROOT" grep -h -E '"capture_ref"[[:space:]]*:' -- .softhouse/vectors 2>/dev/null \
+           | LC_ALL=C sed -E 's/.*"capture_ref"[[:space:]]*:[[:space:]]*"([^"]*)".*/\1/' \
+           | LC_ALL=C grep -av '^$' \
+           | LC_ALL=C sort -u \
+           | LC_ALL=C grep -ac . || true)"
+  case "$bodies"  in ''|*[!0-9]*) bodies=0 ;; esac
+  case "$records" in ''|*[!0-9]*) records=0 ;; esac
+  floor=$((bodies + records))
   _run_capture_guard check_wire_float_roundtrip.py "wire-float round-trip" "$floor"
 }
 
