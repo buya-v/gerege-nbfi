@@ -739,7 +739,7 @@
    "role": "coder",
    "executor": "agent",
    "model": "sonnet",
-   "status": "in_progress",
+   "status": "done",
    "dependencies": [
     "T169"
    ],
@@ -748,7 +748,7 @@
    ],
    "description": "Raised by T169. Benign in substance -- two hunks were applied by hand -- but the generator does not reproduce the artefact it is supposed to generate, so the chain from recipe to committed evidence is broken and a future reader cannot re-derive CaptureT159.java. Make the generator reproduce the committed bytes exactly, or if the hand hunks were correct and the generator is wrong, say so and fix the generator to emit them. Prove it with a byte-for-byte diff of generated vs committed. Do NOT edit the committed CaptureT159.java to match a broken generator -- that would be repairing the evidence to fit the tool.",
    "attempts": 1,
-   "note": "fire 20260822-080001 batch 1: dispatched worktree-isolated to branch softhouse/T176-t159-generator-reproduces; driver baseline on main cc33f7f = probe present/up, PASS exit 0, 43 parity, 5664 cells, vector tree ce821c63"
+   "note": "fire 20260822-080001: DONE+MERGED on softhouse/T176-t159-generator-reproduces. Scope clean. Outcome 1 (generator fixed to emit the hand hunks), with a substantive justification the brief did not supply: StackOverflowError is an Error not a RuntimeException, so the generator's original catch could NEVER have caught the failure mode T159 exists to probe, and run-t159.sh refuses non-empty stderr so printStackTrace would have aborted the sweep. Committed CaptureT159.java NOT edited. Byte-identity proven (48687 bytes, sha256 fecea4b2...). SELF-DISCLOSED PROCESS DEFECT, credit it: ran verification against the shared main checkout instead of its worktree and left a stray file; caught and removed it. Driver confirmed main clean."
   },
   {
    "id": "T177",
@@ -1627,7 +1627,7 @@
    "executor": "agent",
    "model": "sonnet",
    "target": "code",
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
    "dependencies": [
     "T208"
@@ -1637,7 +1637,7 @@
    ],
    "description": "T208's FU-T208-1, found while wiring A2-18's guard and correctly raised rather than fixed (out of T208's scope). check-ledger-invariants.sh:185 filters its pass path to '^CENSUS |^NIL-COVERAGE ', while the guard's own PASS text says 'Read the CANNOT-CATCH block and the NIL-COVERAGE lines before quoting this as coverage'. The CANNOT-CATCH block is therefore ABSENT FROM EVERY GREEN RUN -- and was absent standalone too, so wiring dropped nothing; the head already did. This matters because the limits are what stop 'the guards cover the ledger tree' becoming the false claim DEC-2's banner exists to prevent, and the load-bearing one is that RENAMING A BALANCE DEFEATS THE GUARD (the surface is the name; there is no type checker). Fix it AT SOURCE in the guard head rather than growing T208's 8-line condensation in conformance.sh, where it would drift -- that is T208's own recommendation and the driver endorses it. Weigh the transcript cost honestly (T208 measured 33 lines vs its 8-line condensation, ~19% of a 198-line transcript) and say what you chose. DRIVE RED and GREEN; the harness must stay at exit 0 / 43 parity / 5664 cells / probe present and up.",
    "acceptance": null,
-   "note": "fire 20260822-080001 batch 1: dispatched worktree-isolated to branch softhouse/T209-cannot-catch-reaches-green; driver baseline on main cc33f7f = probe present/up, PASS exit 0, 43 parity, 5664 cells, vector tree ce821c63"
+   "note": "fire 20260822-080001: DONE+MERGED on softhouse/T209-cannot-catch-reaches-green (03e9094). Scope clean, fixed at source in the guard head as T208 recommended; conformance.sh not opened. DRIVER-VERIFIED post-merge: CANNOT-CATCH now appears in the GREEN run (3 hits, 198->230 lines) with PASS exit 0 / 43 parity / 5664 cells / probe present and up. Worker self-caught a defect in its own first draft (unconditional extraction duplicated the block on the refusal path) and gated on rc==0. Filed FU-T209-1: conformance.sh's 8-line condensation is now partly redundant and its comment 'the block does NOT arrive' is stale."
   },
   {
    "id": "T210",
@@ -1646,7 +1646,7 @@
    "executor": "agent",
    "model": "sonnet",
    "target": "test",
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
    "dependencies": [
     "T202"
@@ -1656,7 +1656,7 @@
    ],
    "description": "T202's caveat, measured not guessed: the committed t172-probe scripts replay `line224` bytes that T190 DELETED, and `grep -c` for the probe's pattern in the current fire-program.sh returns ZERO. The probe still passes -- against bytes that no longer exist. That is a regression test that has silently stopped testing, which is this program's single most recurring failure class (P-22: a control that cannot fail is worse than none, because it is believed; P-35: a check inspecting zero items is an ERROR, not a pass). Re-point it at the CURRENT anchor, and make it FAIL LOUDLY if its pattern ever matches zero times again rather than passing vacuously. DRIVE RED (mutate the live anchor, probe must fail) and GREEN (unmutated, probe passes) UNDER ZSH 5.9 -- the shebang is #!/bin/zsh and the launchd plist runs `/bin/zsh -lc`; note that `bash -n` exits 0 on this file and is NOT a discriminator.",
    "acceptance": null,
-   "note": "fire 20260822-080001 batch 1: dispatched worktree-isolated to branch softhouse/T210-anchor-regression-unfreeze; driver baseline on main cc33f7f = probe present/up, PASS exit 0, 43 parity, 5664 cells, vector tree ce821c63"
+   "note": "fire 20260822-080001: DONE+MERGED on softhouse/T210-anchor-regression-unfreeze (802394a). Scope clean. Core claim DRIVER-REPRODUCED: LC_ALL=C /usr/bin/grep -Fac for the old line224 pattern returns 0 against the live fire-program.sh, and the live anchor is now the git pathspec form at :313. New checker binds by pattern AT RUN TIME and errors loudly on zero-match. DRIVER-FOUND RESIDUAL, not a rejection -> T215: the LOCK-exclusion pathspec exists at TWO sites (:313 DIRTY detect, :334 git add -A stage) and the probe binds only to the first. The driver mutated ONLY :334 to ...LOCK*' in a throwaway worktree and the probe stayed GREEN, exit 0, both CHECKs PASS."
   },
   {
    "id": "T211",
@@ -1734,6 +1734,25 @@
    "acceptance": null,
    "note": "raised by the driver, local fire 20260822-080001, from the worktree-hygiene sweep; splits the committed-but-unmerged half out of T213",
    "contract_independent": true
+  },
+  {
+   "id": "T215",
+   "title": "T210's re-pointed probe covers only ONE of the TWO LOCK-exclusion sites -- mutating the `git add -A` pathspec leaves it green",
+   "role": "coder",
+   "executor": "agent",
+   "model": "sonnet",
+   "target": "test",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [
+    "T210"
+   ],
+   "files_hint": [
+    ".softhouse/reviews/t172-probe/"
+   ],
+   "description": "RAISED AND MEASURED BY THE DRIVER while verifying T210, in a throwaway worktree, before T210 was merged. T210 is GOOD work and was approved -- it did exactly what its brief named, and its zero-match guard is real. This is the half its brief did not name.\n\nMEASUREMENT, reproduce it before trusting it: `.softhouse/bin/fire-program.sh` carries the LOCK-exclusion pathspec at TWO sites --\n  :313  DIRTY=$(git status --porcelain -- ':(top)' ':(top,exclude).softhouse/LOCK')     <- the DETECT path\n  :334  git add -A -- ':(top)' ':(top,exclude).softhouse/LOCK'                          <- the STAGE path\nT210's check-lock-exclusion-anchor.sh binds ANCHOR_PATTERN='DIRTY=\\$\\(git status --porcelain', which matches :313 only. The driver mutated ONLY :334 to \"...exclude).softhouse/LOCK*'\" and re-ran the probe against the mutated file: BOTH CHECKS PASSED, VERDICT PASS, exit 0. The probe cannot see it.\n\nWHY IT IS THE MORE DANGEROUS HALF. A widened pathspec at :334 makes `git add -A` skip every LOCK-PREFIXED SIBLING at stage time -- e.g. .softhouse/LOCKED_STATE.md -- so the checkpoint would run, report success, and SILENTLY FAIL TO COMMIT state files. That is the exact 'work destroyed because it was never committed' hazard STEP 5.5 of the softhouse-program skill exists to prevent, and the 2026-08-18 17:22 incident that stranded 4,482 insertions is the precedent. A defect on the DETECT path makes a fire noisy; a defect on the STAGE path makes it lose work quietly.\n\nWHAT TO DO. (1) Reproduce the driver's mutation and confirm the green -- if it does NOT reproduce, say so and stop; yours wins. (2) Extend the probe to cover the STAGE site too. (3) PREFER A POPULATION RULE OVER A SECOND HARD-CODED ANCHOR: enumerate every occurrence of the LOCK-exclusion pathspec in the target and assert each one is well-formed, so a THIRD site added later is covered on the day it appears rather than needing a T216. If you hard-code two anchors instead, say why the population rule was rejected. (4) Keep T210's zero-match error and add an equivalent for the population form -- a run that enumerates ZERO sites is an ERROR, not a pass (P-35). DRIVE RED at BOTH sites independently and GREEN unmutated, under zsh 5.9; `bash -n` is NOT a discriminator here.\n\nDo NOT modify .softhouse/bin/fire-program.sh -- a fire runs from it, and T211 owns it this fire; mutate scratch copies only. Hardcode /usr/bin/grep as T210 did (P-58): the interactive `grep` is a shell function re-execing as ugrep -I.\n\nBar: probe line present and up, PASS exit 0, 43 parity vectors, 5664 cells.",
+   "acceptance": null,
+   "note": "raised by the driver, fire 20260822-080001, from independent verification of T210 rather than from T210's own report"
   }
  ],
  "cross_corroboration": {
