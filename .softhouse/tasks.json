@@ -1487,7 +1487,7 @@
    "executor": "agent",
    "model": "opus",
    "target": "code",
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
    "dependencies": [],
    "files_hint": [
@@ -1495,7 +1495,7 @@
    ],
    "description": "A2-19's F3, raised not made. A REFUSED vector's kills are counted into CounterfactualCoverage: A2-19 measured UNBACKED going 1 -> 0 and kills 103 -> 104 on a store where the contributing vector was refused. A refusal is explicitly 'not a pass, not a failure', so it must not be able to BACK a capability. A2-19 could not close the blast radius across all classes and notes the live baseline shows 'refused 0', so the exposure is likely nil TODAY -- establish that first and say it, then fix. DRIVE RED and GREEN; the 43 must still pass at 5664 cells.",
    "acceptance": null,
-   "note": "fire 20260822-080001 batch 1: dispatched worktree-isolated to branch softhouse/A2-22-refused-vector-coverage; driver baseline on main cc33f7f = probe present/up, PASS exit 0, 43 parity, 5664 cells, vector tree ce821c63"
+   "note": "fire 20260822-080001: DONE+MERGED on softhouse/A2-22-refused-vector-coverage (0e66921 RED, 9f32bbf GREEN, 935c882 handoff). Scope clean, no float introduced. OBEYED THE ORDER OF WORK: established the blast radius FIRST, three independent ways, and reported it as NIL TODAY rather than letting the fix imply a live hole was closed -- 'it closed no live hole, it closed a live trap', and it names the uncomfortable part, that the exposure was nil ONLY because refused==0 and nothing else was defending it. CLOSED A2-19's OPEN QUESTION the brief said it might not be able to close: all FIVE refusal reasons can carry kills, each driven red with a constructed fixture, the worst being UNGRADED_REQUEST where the capability gate passes IN FULL and every kill the vector names was still credited; one sub-case (empty capabilities_required) provably cannot contribute because admission makes such a file inadmissible rather than refused. Root cause named structurally: the refusal predicate lived inline in gradeVector's two blocks and existed nowhere a second reader could call it -- WHICH IS WHY COVERAGE NEVER ASKED. Extracted as CapabilityRegistry.RefusalFor. Change is strictly LOUDER, and the zero-valued disclosure lines print unconditionally (P-35). DRIVER-VERIFIED POST-MERGE: PASS exit 0, probe present and up, 43 parity, 5664 cells, refused 0, inadmissible 0, harness errors 0, kills named 103 money / 7 structural UNCHANGED, invariant violations 0; go build clean, go test ok across all packages. SELF-FLAGGED JUDGEMENT CALL carried to A2-24: it also narrowed CorroborationsClaimed to graded vectors on the same reasoning but with NO independent finding behind it; both counts are 0 on the committed store so it is indistinguishable from the alternative today, and it is a two-line revert."
   },
   {
    "id": "T204",
@@ -1684,7 +1684,7 @@
    "executor": "agent",
    "model": "sonnet",
    "target": "code",
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
    "dependencies": [
     "T205"
@@ -1694,7 +1694,7 @@
    ],
    "description": "T205's honest negative, reported against its own deliverable rather than left for a reviewer. A non-existent --file path scores REFUSED-UNREADABLE and the run exits 0. T205 notes it is COUNTED AND NAMED so it is not silent -- which is why this is a task and not a rejection -- but it is still a route to an --enforce run that passes having measured nothing, which is P-35's exact shape (a check inspecting zero items is an ERROR, not a pass) and the same family as T194's census defect and T181's F-2 (a census that globbed nothing and exited 0). Make an --enforce run whose inspected population is zero, for ANY reason, fail. DRIVE RED (a bad --file path, an empty --file list, a glob matching nothing) and GREEN (the real corpus, unchanged classifications). Preserve T205's polarity discipline: this is a fail-CLOSED change and must not perturb the 465-site sweep (SCRATCH must stay 337->337, and the 7 UNKNOWN->TRUSTED moves must not grow).",
    "acceptance": null,
-   "note": "fire 20260822-080001 batch 1: dispatched worktree-isolated to branch softhouse/T212-enforce-zero-population; driver baseline on main cc33f7f = probe present/up, PASS exit 0, 43 parity, 5664 cells, vector tree ce821c63"
+   "note": "fire 20260822-080001: DONE+MERGED on softhouse/T212-enforce-zero-population (d73b3f5). Scope clean, 45 additive lines to guard_classify.py, classification logic untouched. New exit code 4 for a zero-population enforce run. ROOT CAUSE named precisely: the enforcement block only counted sites with verdict==UNGUARDED, and a refused file has sites==[] so it contributed nothing to bad/unres, while `results` stayed non-empty so the pre-existing `if not results` guard never fired. EIGHT routes enumerated and driven RED (not the three the brief asked for), plus a mixed good+bad control confirming the guard does not over-fire. *** T212 CORRECTED A SECOND STALE NUMBER THE DRIVER CIRCULATED. *** The brief required SCRATCH 337->337 and exactly 7 UNKNOWN->TRUSTED moves. T212 measured 357->357 and 9, and correctly reported the discrepancy INSTEAD OF TUNING TO MATCH: those figures came from T205's earlier fork point and the corpus grew before cc33f7f. It proved the change was polarity-neutral the right way -- byte-identical before/after full-repo runs -- rather than by hitting the number the driver asked for. THIS IS THE SECOND TIME THIS FIRE THE DRIVER PASTED A FIGURE OUT OF AN OLD TASK DESCRIPTION WITHOUT RE-DERIVING IT AT DISPATCH (the other: 'run_guards invokes six guards', corrected by A2-21). Honest [UNVERIFIED] carried: the UnicodeDecodeError route was inferred from a shared except clause, not independently driven."
   },
   {
    "id": "T213",
@@ -1753,6 +1753,25 @@
    "description": "RAISED AND MEASURED BY THE DRIVER while verifying T210, in a throwaway worktree, before T210 was merged. T210 is GOOD work and was approved -- it did exactly what its brief named, and its zero-match guard is real. This is the half its brief did not name.\n\nMEASUREMENT, reproduce it before trusting it: `.softhouse/bin/fire-program.sh` carries the LOCK-exclusion pathspec at TWO sites --\n  :313  DIRTY=$(git status --porcelain -- ':(top)' ':(top,exclude).softhouse/LOCK')     <- the DETECT path\n  :334  git add -A -- ':(top)' ':(top,exclude).softhouse/LOCK'                          <- the STAGE path\nT210's check-lock-exclusion-anchor.sh binds ANCHOR_PATTERN='DIRTY=\\$\\(git status --porcelain', which matches :313 only. The driver mutated ONLY :334 to \"...exclude).softhouse/LOCK*'\" and re-ran the probe against the mutated file: BOTH CHECKS PASSED, VERDICT PASS, exit 0. The probe cannot see it.\n\nWHY IT IS THE MORE DANGEROUS HALF. A widened pathspec at :334 makes `git add -A` skip every LOCK-PREFIXED SIBLING at stage time -- e.g. .softhouse/LOCKED_STATE.md -- so the checkpoint would run, report success, and SILENTLY FAIL TO COMMIT state files. That is the exact 'work destroyed because it was never committed' hazard STEP 5.5 of the softhouse-program skill exists to prevent, and the 2026-08-18 17:22 incident that stranded 4,482 insertions is the precedent. A defect on the DETECT path makes a fire noisy; a defect on the STAGE path makes it lose work quietly.\n\nWHAT TO DO. (1) Reproduce the driver's mutation and confirm the green -- if it does NOT reproduce, say so and stop; yours wins. (2) Extend the probe to cover the STAGE site too. (3) PREFER A POPULATION RULE OVER A SECOND HARD-CODED ANCHOR: enumerate every occurrence of the LOCK-exclusion pathspec in the target and assert each one is well-formed, so a THIRD site added later is covered on the day it appears rather than needing a T216. If you hard-code two anchors instead, say why the population rule was rejected. (4) Keep T210's zero-match error and add an equivalent for the population form -- a run that enumerates ZERO sites is an ERROR, not a pass (P-35). DRIVE RED at BOTH sites independently and GREEN unmutated, under zsh 5.9; `bash -n` is NOT a discriminator here.\n\nDo NOT modify .softhouse/bin/fire-program.sh -- a fire runs from it, and T211 owns it this fire; mutate scratch copies only. Hardcode /usr/bin/grep as T210 did (P-58): the interactive `grep` is a shell function re-execing as ugrep -I.\n\nBar: probe line present and up, PASS exit 0, 43 parity vectors, 5664 cells.",
    "acceptance": null,
    "note": "raised by the driver, fire 20260822-080001, from independent verification of T210 rather than from T210's own report"
+  },
+  {
+   "id": "A2-24",
+   "title": "A2-22 also narrowed CorroborationsClaimed to graded vectors with no independent finding behind it -- adjudicate or revert",
+   "role": "reviewer",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [
+    "A2-22"
+   ],
+   "files_hint": [
+    "nexus/internal/apps/loanschedule/conformance/"
+   ],
+   "description": "SELF-FLAGGED BY A2-22 IN ITS OWN FOLLOW-UPS, which is why this is a review task and not a rejection. A2-22's graded finding was that CounterfactualCoverage credits kills from REFUSED vectors; that is closed, driver-verified, and correct. While there it ALSO narrowed CorroborationsClaimed to graded vectors 'on the same reasoning, but with no independent finding behind it'. Both counts are 0 on the committed store, so TODAY the narrowed and un-narrowed versions are INDISTINGUISHABLE -- which is precisely the condition under which a change cannot be validated by the harness and must be argued from semantics instead. A2-22 says it is a two-line revert.\n\nYou are an INDEPENDENT reviewer. Do not read A2-22's conclusion and agree with it. Decide, from the source and from what a corroboration MEANS in this harness, whether a REFUSED vector may corroborate. The parallel to kills is suggestive but not binding: a kill is a claim the vector DISCRIMINATES, whereas a corroboration may be a weaker claim that survives refusal. Argue it from the definitions in the registry, not from symmetry.\n\nConstruct a store where the two versions DIFFER (A2-22 showed how -- blind a seam so vectors refuse) and show what each reports. A change you cannot make differ is a change you cannot test; if you genuinely cannot construct a divergence, say so and recommend the revert on the ground that an untestable narrowing is not worth carrying.\n\nVerdict: APPROVED (keep the narrowing, with the semantic argument recorded) / REVERT (two lines) / REJECTED with specifics. Bar: probe present and up, PASS exit 0, 43 parity vectors, 5664 cells, kills named 103 money / 7 structural. Report a refusal by what it SAYS and what population SURVIVES, never by exit code (P-62).",
+   "acceptance": null,
+   "note": "raised by the driver, fire 20260822-080001, from A2-22's own self-flagged follow-up"
   }
  ],
  "cross_corroboration": {
