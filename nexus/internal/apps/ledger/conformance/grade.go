@@ -314,6 +314,15 @@ type Summary struct {
 	// the loanschedule four.
 	DeclaredExemptions int
 
+	// NotGraded is this context's account of its own coverage gaps, DERIVED from
+	// the capability registry on every run rather than hand-written beside it.
+	//
+	// It is a SUMMARY FIELD and not a report-time lookup so that the block is
+	// computed by the package that owns the registry, at the moment the store is
+	// loaded, with the vectors in hand — the account-activity annotation is
+	// measured from those vectors. See notgraded.go.
+	NotGraded []NotGradedCapability
+
 	Results    []Result
 	LoadErrors []LoadError
 	Fatal      []string
@@ -344,6 +353,14 @@ func Run(opts Options) *Summary {
 
 	vectors, loadErrs, err := LoadStore(opts.StoreRoot, opts.ContextFilter)
 	s.LoadErrors = loadErrs
+
+	// THE NOT-GRADED BLOCK IS BUILT BEFORE ANY EARLY RETURN, and deliberately so.
+	// The declared gaps are a property of the REGISTRY, not of whether this run
+	// managed to grade anything, and the run that most needs its limits printed
+	// is the one that went wrong. Building it after the `len(vectors) == 0`
+	// return would have made the gaps disappear exactly when the corpus did.
+	s.NotGraded = notGradedRows(opts.Registry, vectors)
+
 	if err != nil {
 		s.Fatal = append(s.Fatal, err.Error())
 		return s

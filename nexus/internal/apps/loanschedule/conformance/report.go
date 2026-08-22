@@ -831,21 +831,24 @@ func writeLedgerSection(p func(string, ...any), s *Summary) {
 	p("                                        INADMISSIBLE, so this figure is pinned at 0 by")
 	p("                                        conformance.sh and both directions of drift are gated)")
 	p("")
-	p("    WHAT A GREEN LEDGER SECTION DOES **NOT** MEAN — printed every run, not only when it fails:")
-	p("      * ACCRUAL IS ENTIRELY UNGRADED. No accrual product has a loan, no accrual/COB job has run,")
-	p("        and INTEREST_RECEIVABLE / FEES_RECEIVABLE / PENALTIES_RECEIVABLE (gl 18, 22, 16) have")
-	p("        ZERO journal entries. Product 28 is accrual and its own mapping is inadmissible (A2-314).")
-	p("      * TRANSFERS_SUSPENSE (gl 17) is reached here only as a MANUAL target. It has NO")
-	p("        accounting-path entry; the path that reaches it is account transfers, never exercised.")
-	p("      * CHARGE-OFF IS UNMAPPED on both admissible products, so the charge-off income slots are")
-	p("        unreachable without a new product.")
-	p("      * MULTI-CURRENCY IS UNTOUCHED. Every captured entry is MNT; no entry with legs in two")
-	p("        currencies has ever been observed.")
-	p("      * THERE ARE NO OPENING BALANCES AND NO GLClosure. Neither of")
-	p("        validateBusinessRulesForJournalEntries' two refusals — an entry dated before the latest")
-	p("        closure, and a future-dated entry — is observed, so neither is graded.")
-	p("      * NO BALANCE IS GRADED AT ALL, and GATE G-12 is why: A2-29 measured")
-	p("        acc_gl_journal_entry.{office,organization}_running_balance to be a SECOND SOURCE OF")
-	p("        TRUTH, not a cache. This schema has no field for either column.")
-	p("")
+
+	// THE NOT-GRADED BLOCK IS NOT WRITTEN HERE ANY MORE. It used to be sixteen
+	// lines of hand-written prose in this function, and A2-34 found both defects
+	// that shape guarantees: it printed SIX of the EIGHT `in_graded_domain: false`
+	// rows the registry declares (F-5, and one of the two it dropped had been
+	// added by the very task that told the driver all of them were printed), and
+	// one of the six it did print was measurably FALSE against the live oracle
+	// (F-4 — "gl 18, 22, 16 have ZERO journal entries", where gl 16 has sixteen,
+	// more than any other account, and is a promoted leg of three of the four
+	// parity vectors printed as PASS a dozen lines above).
+	//
+	// The ledger context now renders its own coverage prose from its own
+	// registry: the row set is derived, the slot names are decoded through the
+	// ported Fineract enum, and each slot's account activity is MEASURED from the
+	// promoted corpus at render time. This loop composes nothing — which is the
+	// point, because anything composed here is a second place for the account of
+	// the ledger's coverage to disagree with the ledger's own registry.
+	for _, line := range l.NotGradedLines() {
+		p("%s", line)
+	}
 }

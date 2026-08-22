@@ -124,6 +124,22 @@ type Capability struct {
 	Description    string `json:"description"`
 	InGradedDomain bool   `json:"in_graded_domain"`
 	Evidence       string `json:"evidence"`
+
+	// UnpostedSlots is the STRUCTURED half of a not-graded row's reason: the
+	// product/slot pairs this corpus has never posted through.
+	//
+	// It exists because the prose half was where A2-34 F-4 lived. "gl 18, 22, 16
+	// have ZERO journal entries" was a hand-maintained list of account ids
+	// making a live-database claim, printed as a measured fact on every run, and
+	// wrong on one of the three — in the direction that understated activity, on
+	// the account this corpus exercises MOST. Recording the SLOT instead makes
+	// the claim checkable: the slot name is derived from the ported enum at load
+	// time and the account's activity is measured from the store at render time.
+	// See notgraded.go for the full derivation and for what is still NOT
+	// derivable.
+	//
+	// OPTIONAL. Most not-graded rows have no slot to name.
+	UnpostedSlots []UnpostedSlot `json:"unposted_slots,omitempty"`
 }
 
 // Seam records which capabilities one capture seam structurally exercises.
@@ -168,6 +184,27 @@ func LoadCapabilityRegistry(path string) (*CapabilityRegistry, error) {
 	}
 	if len(r.Seams) == 0 {
 		return nil, fmt.Errorf("ledger capability registry %s: declares no seams", path)
+	}
+	// UNPOSTED SLOTS ARE VALIDATED AT LOAD, so a slot code the oracle's own enum
+	// does not define REFUSES THE RUN (exit 2) instead of reaching the report as
+	// a name nobody checked. This is the gate that stands where A2-34 F-4's
+	// hand-maintained account list used to stand.
+	for _, c := range r.Capabilities {
+		if len(c.UnpostedSlots) == 0 {
+			continue
+		}
+		if c.InGradedDomain {
+			return nil, fmt.Errorf(
+				"ledger capability registry %s: capability %q is in_graded_domain TRUE and also "+
+					"declares unposted_slots. A slot this corpus has never posted through cannot be "+
+					"part of a capability the corpus grades; one of the two statements is wrong",
+				path, c.Name)
+		}
+		for _, u := range c.UnpostedSlots {
+			if err := u.validate(c.Name); err != nil {
+				return nil, fmt.Errorf("ledger capability registry %s: %w", path, err)
+			}
+		}
 	}
 	return &r, nil
 }
