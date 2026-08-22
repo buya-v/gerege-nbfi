@@ -1,0 +1,59 @@
+T207 -- json.load/json.loads census, BOTH TERMS (P-67)
+root      : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a4aaeba76a779881c
+commit    : 90c21d635d702a59d612dfc17349274f42431aad
+
+POPULATION INSPECTED -- stated, not implied:
+  git-tracked *.py files in the whole repo : 438
+    of which under .softhouse/             : 438
+    of which elsewhere                     : 0
+
+================================================================================================
+BOTH TERMS
+================================================================================================
+  json.load / json.loads CALL SITES, total        : 344   <-- the DENOMINATOR
+  ... carrying parse_float=                       : 120
+  ... carrying NO parse_float=                    : 224   <-- the NUMERATOR
+  files that failed to AST-parse (NOT inspected)  : 0
+  sites passing **kwargs (undecidable statically) : 0
+
+================================================================================================
+THE T175-ADDED SUBSET -- T185 said '8', listed here so the figure is auditable
+================================================================================================
+  0   .softhouse/capture/audit-t44/analysis/t44_float_roundtrip_v2.py
+  2   .softhouse/capture/audit-t44/analysis/T175-red/census.py
+  2   .softhouse/capture/leapboundary/analysis/T175-red/measure-other-sites.py
+  0   .softhouse/capture/leapboundary/analysis/T175-red/drive-red.py
+  3   .softhouse/capture/leapboundary/analysis/T175-red/field-census.py
+  1   .softhouse/capture/leapboundary/analysis/T175-red/plant.py
+  0   .softhouse/capture/leapboundary/analysis/T175-red/show-sites.py
+  0   .softhouse/capture/leapboundary/analysis/T175-red/swallow-census.py
+  T175-authored files, sites with NO parse_float  : 8
+
+================================================================================================
+TOP FILES BY UNGUARDED SITE COUNT (the tail T145 owns, not T207)
+================================================================================================
+  6    .softhouse/handoff/T58-promote-vectors.py
+  6    .softhouse/reviews/t27-probe/t27_verify_claims.py
+  5    .softhouse/capture/charges/bin/t48-analyse.py
+  5    .softhouse/capture/charges/bin/t51-analyse.py
+  5    .softhouse/capture/t74-multiplesof/T82-guard-proofs/prove-promote-guards.py
+  5    .softhouse/reviews/t45-probe/t45_extra.py
+  5    .softhouse/reviews/t47-probe/t47_extra.py
+  4    .softhouse/capture/pathb/provenance.py
+  4    .softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py
+  4    .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py
+  4    .softhouse/handoff/T58-transcription-audit.py
+  4    .softhouse/handoff/T61-promote-vectors.py
+  4    .softhouse/reviews/T84-evidence/src/exemption-demo.py
+  3    .softhouse/bin/ready-tasks.py
+  3    .softhouse/capture/actualactual/analysis/pathb-crosscheck.py
+  ... 122 file(s) carry at least one unguarded site in total
+
+================================================================================================
+T207's OWN TWO NAMED SITES (F-2) -- measure-other-sites.py on the money-delta path
+================================================================================================
+  .softhouse/capture/leapboundary/analysis/T175-red/measure-other-sites.py
+      line 42   json.loads  parse_float=YES
+      line 85   json.load   parse_float=NO
+      line 86   json.load   parse_float=NO
+  (absent: .softhouse/capture/leapboundary/analysis/T207/measure-other-sites-v2.py)
