@@ -1,0 +1,9 @@
+=== RUN   TestA2_24CorroborationPopulationProbe
+    a2_24_corroboration_population_probe_test.go:60: A2-24 PROBE MEASURED: vectors=48 injected_corroborations=48 refused=14 inadmissible=0
+    a2_24_corroboration_population_probe_test.go:62:   THIS BINARY (narrowed, A2-22): CorroborationsClaimed=34 RefusedCorroborationsClaimed=14 sum=48
+    a2_24_corroboration_population_probe_test.go:65:   counterfactuals: named=48 refusedNamed=62 unbacked=[monthend.reanchor]
+    a2_24_corroboration_population_probe_test.go:71:   REPORT LINE: kills carried by REFUSED vectors: 62, credited to NOTHING (14 corroboration claims likewise)
+    a2_24_corroboration_population_probe_test.go:71:   REPORT LINE: corroboration claims made by GRADED vectors: 34 (a further 14 are carried by REFUSED vectors and counted nowhere)
+--- PASS: TestA2_24CorroborationPopulationProbe (0.87s)
+PASS
+ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	1.101s
