@@ -22,9 +22,19 @@ echo "commit : $(git -C "$ROOT" rev-parse HEAD)"
 echo "engine : git grep -n -I -i -E  [git $(git --version | awk '{print $3}')]"
 echo
 echo "BASELINE, for comparison -- the instrument AS IT WAS BEFORE THIS REPAIR."
-echo "Reconstructed from the committed original at HEAD~ and run verbatim:"
-git -C "$ROOT" show HEAD:.softhouse/reviews/a2-33-dec2-rev5/sweep.sh > "$OUT/sweep-ORIGINAL.sh" 2>/dev/null \
-  || git -C "$ROOT" show HEAD~1:.softhouse/reviews/a2-33-dec2-rev5/sweep.sh > "$OUT/sweep-ORIGINAL.sh"
+# P-24: a baseline is a LITERAL SHA, never a moving ref.
+#
+# The first version of this line read `git show HEAD:...`. That was WRONG and it is worth
+# recording rather than quietly fixing: once the repair was committed, `HEAD:` resolved to the
+# REPAIRED file, so the leg labelled "ORIGINAL" silently began running the new instrument and
+# comparing it against itself. A moving baseline is the same family of defect this whole task
+# is about -- an artefact that reports something other than what its label claims -- and it
+# appeared inside the instrument built to catch that family. Pinned to the fork point instead.
+BASE=477dc2da0f9edf3922e7d29e689bc6473289befc      # == origin/main, MEASURED (P-71)
+echo "Recovered from the LITERAL sha $BASE (the measured fork point) and run verbatim:"
+git -C "$ROOT" show "$BASE:.softhouse/reviews/a2-33-dec2-rev5/sweep.sh" > "$OUT/sweep-ORIGINAL.sh" || exit 91
+echo "  sha256(original) = $(shasum -a 256 "$OUT/sweep-ORIGINAL.sh" | cut -d' ' -f1)"
+echo "  expected         = c076016e292186b8d320b8b7cbab34adc29502d4c54395eda0487551d0e35eb2"
 ( cd "$ROOT" && bash "$OUT/sweep-ORIGINAL.sh" REPO ) > "$OUT/00-baseline-original.txt" 2>&1
 rc=$?
 printf '  ORIGINAL   exit=%-3s  "(no hits)" lines=%-4s  hit lines=%s\n' "$rc" \

@@ -1,8 +1,18 @@
 {
- "lethal": [],
- "dormant": [],
+ "lethal": [
+  ".softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh",
+  ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh"
+ ],
+ "dormant": [
+  ".softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh",
+  ".softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh",
+  ".softhouse/capture/t238-failopen/instruments/60-multiline-sweep.py"
+ ],
  "unreproducible": [
-  ".softhouse/capture/t238-failopen/instruments/00-engines.sh"
+  ".softhouse/capture/t238-failopen/instruments/00-engines.sh",
+  ".softhouse/capture/t238-failopen/instruments/70-l1b-81-vs-86.sh",
+  ".softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh",
+  ".softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh"
  ],
  "suppressed": [
   [
@@ -27,6 +37,201 @@
   ]
  ],
  "detail": [
+  {
+   "file": ".softhouse/capture/lib/check_wire_float_roundtrip.py",
+   "violations": [
+    [
+     "C4",
+     0,
+     "no calibration on a known positive (P-72)"
+    ],
+    [
+     "C5",
+     0,
+     "engine not declared (P-33/P-53)"
+    ]
+   ]
+  },
+  {
+   "file": ".softhouse/capture/t116-familyb-promotion/src/run-harness-mutations-t116.sh",
+   "violations": [
+    [
+     "C4",
+     0,
+     "no calibration on a known positive (P-72)"
+    ],
+    [
+     "C5",
+     0,
+     "engine not declared (P-33/P-53)"
+    ]
+   ]
+  },
+  {
+   "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh",
+   "violations": [
+    [
+     "C2",
+     20,
+     "failure arm PRINTS instead of exiting: env | grep -c '^BASH_FUNC_grep' 2>/dev/null || echo \"BASH_FUNC_grep not exported\""
+    ],
+    [
+     "C3",
+     0,
+     "no corpus-reachability assertion anywhere in the file"
+    ],
+    [
+     "C4",
+     0,
+     "no calibration on a known positive (P-72)"
+    ]
+   ]
+  },
+  {
+   "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/01-escape-matrix.sh",
+   "violations": [
+    [
+     "C3",
+     0,
+     "no corpus-reachability assertion anywhere in the file"
+    ]
+   ]
+  },
+  {
+   "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh",
+   "violations": [
+    [
+     "C2",
+     18,
+     "failure arm PRINTS instead of exiting: echo \"  pattern $p ->\"; /usr/bin/grep -E -n \"$p\" \"$C\" | sed 's/^/      /' || echo \"      (no match)\""
+    ],
+    [
+     "C3",
+     0,
+     "no corpus-reachability assertion anywhere in the file"
+    ],
+    [
+     "C4",
+     0,
+     "no calibration on a known positive (P-72)"
+    ],
+    [
+     "C5",
+     0,
+     "engine not declared (P-33/P-53)"
+    ]
+   ]
+  },
+  {
+   "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/10-census.py",
+   "violations": [
+    [
+     "C3",
+     0,
+     "no corpus-reachability assertion anywhere in the file"
+    ],
+    [
+     "C4",
+     0,
+     "no calibration on a known positive (P-72)"
+    ],
+    [
+     "C5",
+     20,
+     "backslash-class under `git grep -E`, which reads it as a LITERAL and returns zero SILENTLY: git grep -E   : \\\\b is a LITERAL 'b'.            \\\\d \\\\s \\\\w also literal."
+    ],
+    [
+     "C5",
+     82,
+     "backslash-class under `git grep -E`, which reads it as a LITERAL and returns zero SILENTLY: (\"git grep -E (git ERE: \\\\b == literal b)\" if \"E\" in flat"
+    ]
+   ]
+  },
+  {
+   "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/11-census.py",
+   "violations": [
+    [
+     "C3",
+     0,
+     "no corpus-reachability assertion anywhere in the file"
+    ],
+    [
+     "C4",
+     0,
+     "no calibration on a known positive (P-72)"
+    ],
+    [
+     "C5",
+     18,
+     "backslash-class under `git grep -E`, which reads it as a LITERAL and returns zero SILENTLY: git grep -E        : \\\\b \\\\d \\\\s \\\\w ALL read as the LITERAL letter. VOID for escapes."
+    ]
+   ]
+  },
+  {
+   "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/12-sweep-census.py",
+   "violations": [
+    [
+     "C4",
+     0,
+     "no calibration on a known positive (P-72)"
+    ]
+   ]
+  },
+  {
+   "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/21-r11-recall-loss.sh",
+   "violations": [
+    [
+     "C3",
+     0,
+     "no corpus-reachability assertion anywhere in the file"
+    ],
+    [
+     "C4",
+     0,
+     "no calibration on a known positive (P-72)"
+    ],
+    [
+     "C5",
+     23,
+     "backslash-class under `git grep -E`, which reads it as a LITERAL and returns zero SILENTLY: echo -n \"    git grep -E -c '\\\\bmain\\\\b' repo-wide : \"; git grep -E -c -- '\\bmain\\b' 2>/de"
+    ]
+   ]
+  },
+  {
+   "file": ".softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh",
+   "violations": [
+    [
+     "C1",
+     7,
+     "dead absolute path: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39"
+    ],
+    [
+     "C2",
+     14,
+     "failure arm PRINTS instead of exiting: ( cd \"$WT\" && git grep -n -I -i -E \"$re\" -- . ) || echo \"   (no hits)\""
+    ],
+    [
+     "C2",
+     16,
+     "failure arm PRINTS instead of exiting: grep -n -i -E \"$re\" \"$MODE\" || echo \"   (no hits)\""
+    ],
+    [
+     "C3",
+     0,
+     "no corpus-reachability assertion anywhere in the file"
+    ],
+    [
+     "C4",
+     0,
+     "no calibration on a known positive (P-72)"
+    ],
+    [
+     "C5",
+     0,
+     "engine not declared (P-33/P-53)"
+    ]
+   ]
+  },
   {
    "file": ".softhouse/capture/t238-failopen/instruments/00-engines.sh",
    "violations": [
@@ -59,6 +264,181 @@
      "C5",
      77,
      "backslash-class under `git grep -E`, which reads it as a LITERAL and returns zero SILENTLY: echo \"  git grep -E : reads \\\\b as a LITERAL b and returns zero SILENTLY.\""
+    ]
+   ]
+  },
+  {
+   "file": ".softhouse/capture/t238-failopen/instruments/60-multiline-sweep.py",
+   "violations": [
+    [
+     "C2",
+     72,
+     "failure arm PRINTS instead of exiting: (\"ML-1  cd ... <newline> ... || echo\","
+    ]
+   ]
+  },
+  {
+   "file": ".softhouse/capture/t238-failopen/instruments/70-l1b-81-vs-86.sh",
+   "violations": [
+    [
+     "C1",
+     87,
+     "dead absolute path: /opt/homebrew"
+    ]
+   ]
+  },
+  {
+   "file": ".softhouse/conformance.sh",
+   "violations": [
+    [
+     "C4",
+     0,
+     "no calibration on a known positive (P-72)"
+    ],
+    [
+     "C5",
+     0,
+     "engine not declared (P-33/P-53)"
+    ]
+   ]
+  },
+  {
+   "file": ".softhouse/guards/check-ledger-invariants.sh",
+   "violations": [
+    [
+     "C3",
+     0,
+     "no corpus-reachability assertion anywhere in the file"
+    ],
+    [
+     "C4",
+     0,
+     "no calibration on a known positive (P-72)"
+    ],
+    [
+     "C5",
+     0,
+     "engine not declared (P-33/P-53)"
+    ]
+   ]
+  },
+  {
+   "file": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh",
+   "violations": [
+    [
+     "C1",
+     8,
+     "dead absolute path: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a356a016636abdd7e"
+    ],
+    [
+     "C2",
+     15,
+     "failure arm PRINTS instead of exiting: pat() { echo \"--- pattern: $1\"; git grep -n -i -E \"$1\" -- . || echo \"    (no hits)\"; }"
+    ],
+    [
+     "C4",
+     0,
+     "no calibration on a known positive (P-72)"
+    ],
+    [
+     "C5",
+     0,
+     "engine not declared (P-33/P-53)"
+    ]
+   ]
+  },
+  {
+   "file": ".softhouse/reviews/T138-evidence/r11-hygiene.sh",
+   "violations": [
+    [
+     "C4",
+     0,
+     "no calibration on a known positive (P-72)"
+    ],
+    [
+     "C5",
+     0,
+     "engine not declared (P-33/P-53)"
+    ]
+   ]
+  },
+  {
+   "file": ".softhouse/reviews/T158-compare-enumerators.sh",
+   "violations": [
+    [
+     "C4",
+     0,
+     "no calibration on a known positive (P-72)"
+    ],
+    [
+     "C5",
+     0,
+     "engine not declared (P-33/P-53)"
+    ]
+   ]
+  },
+  {
+   "file": ".softhouse/reviews/T158-rederive-sweep.py",
+   "violations": [
+    [
+     "C3",
+     0,
+     "no corpus-reachability assertion anywhere in the file"
+    ],
+    [
+     "C4",
+     0,
+     "no calibration on a known positive (P-72)"
+    ],
+    [
+     "C5",
+     0,
+     "engine not declared (P-33/P-53)"
+    ]
+   ]
+  },
+  {
+   "file": ".softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh",
+   "violations": [
+    [
+     "C1",
+     15,
+     "dead absolute path: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee"
+    ],
+    [
+     "C4",
+     0,
+     "no calibration on a known positive (P-72)"
+    ],
+    [
+     "C5",
+     0,
+     "engine not declared (P-33/P-53)"
+    ]
+   ]
+  },
+  {
+   "file": ".softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh",
+   "violations": [
+    [
+     "C1",
+     11,
+     "dead absolute path: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac008956278f2d6ea"
+    ],
+    [
+     "C3",
+     0,
+     "no corpus-reachability assertion anywhere in the file"
+    ],
+    [
+     "C5",
+     23,
+     "backslash-class under `git grep -E`, which reads it as a LITERAL and returns zero SILENTLY: echo \"-- git grep -E with \\\\b (T232/T234 claim: reads b literally, returns zero):\""
+    ],
+    [
+     "C5",
+     24,
+     "backslash-class under `git grep -E`, which reads it as a LITERAL and returns zero SILENTLY: cd \"$R\"; git grep -c -E '\\bledger\\b' -- .softhouse/vectors/ledger/LDG-01-manual-je-3leg-mi"
     ]
    ]
   }

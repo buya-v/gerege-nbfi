@@ -1,7 +1,7 @@
 T238 FAIL-OPEN CENSUS
-commit          : 000e16d07281907d73e2dedfd459bd6f1cc9c084
+commit          : eb0edf0cf37c3998dffa7d047326fafe13d04fde
 POPULATION, BOTH TERMS COUNTED (P-67):
-  tracked files in repository .............. 4984
+  tracked files in repository .............. 5022
   tracked .sh + .py (this task's dir excluded) 846
       .sh .................................. 368
       .py .................................. 478
@@ -9,24 +9,148 @@ POPULATION, BOTH TERMS COUNTED (P-67):
   carrying >=1 fail-open mechanism ......... 262
 
 ### MECHANISM TALLY over the 298 search instruments
-  M1_DEAD_ABSPATH        24 instruments
+  M1_DEAD_ABSPATH        69 instruments
   M2_SWALLOW             95 instruments
   M3_EMPTY_GLOB         150 instruments
   M4_EMPTY_FORLIST        4 instruments
   M5_NO_PIPEFAIL        171 instruments
   M6_MISSING_ENGINE      16 instruments
   M7_NO_SET_E           167 instruments
+  M8_ASSERT_WITHOUT_MEASURING    1 instruments
 
-### THE LETHAL INTERSECTION  M1 (dead path) AND M2 (failure arm PRINTS) : 9
+### THE LETHAL INTERSECTION  M1 (dead path) AND M2 (failure arm PRINTS) : 38
 ###   these are the instruments that can print a NEGATIVE they never measured
+  .softhouse/capture/actualactual/src/run-actualactual.sh
+      :89  DEAD PATH  /work
+      :113  DEAD PATH  /work
+      :91  SWALLOW    find /work/jar -name git.properties | head -1 | xargs cat 2>/dev/null || echo "NO git.properties"
+      :103  SWALLOW    BAD="$(grep -Eic 'ojdbc|oracle|mysql|mariadb' "$CPLIST" || true)"
+      :253  SWALLOW    MODE_LINES="$(grep -c "Initialized rounding mode for tenant" "$LOG" || true)"
+  .softhouse/capture/audit-t44/mathcontext/src/read-pathb-wiring.sh
+      :68  DEAD PATH  /tmp/t42j
+      :46  SWALLOW    cat BOOT-INF/classes/git.properties 2>/dev/null | grep -E "git.commit.id=|git.dirty|git.build.version" || echo "NO git.properties"
+      :73  SWALLOW    N_GMC="$(grep -c 'MoneyHelper.getMathContext' "$OUT" || true)"
+  .softhouse/capture/audit-t44/mathcontext/src/run-mathcontext.sh
+      :93  DEAD PATH  /work
+      :116  DEAD PATH  /work
+      :95  SWALLOW    find /work/jar -name git.properties | head -1 | xargs cat 2>/dev/null || echo "NO git.properties"
+      :107  SWALLOW    BAD="$(grep -Eic 'ojdbc|oracle|mysql|mariadb' "$CPLIST" || true)"
+  .softhouse/capture/audit-t44/mathcontext/src/run-mathcontext2.sh
+      :67  DEAD PATH  /work
+      :78  SWALLOW    mv "$CAPDIR/out/__cp.txt" "$CPLIST" 2>/dev/null || true
+      :85  SWALLOW    BAD="$(grep -Eic 'ojdbc|oracle|mysql|mariadb' "$CPLIST" || true)"
+  .softhouse/capture/audit-t44/rerun-periodratio/src/run-periodratio.sh
+      :100  DEAD PATH  /work
+      :124  DEAD PATH  /work
+      :102  SWALLOW    find /work/jar -name git.properties | head -1 | xargs cat 2>/dev/null || echo "NO git.properties"
+      :114  SWALLOW    BAD="$(grep -Eic 'ojdbc|oracle|mysql|mariadb' "$CPLIST" || true)"
+      :224  SWALLOW    MODE_LINES="$(grep -c "Initialized rounding mode for tenant" "$LOG" || true)"
+  .softhouse/capture/charges/bin/attest-t40.py
+      :154  DEAD PATH  /tmp/t40at
+      :156  DEAD PATH  /tmp/t40at
+      :179  SWALLOW    "|| true" % FIN)
+      :181  SWALLOW    "| grep -icE 'ojdbc|oracle-jdbc|mysql-connector|mariadb-java' || true" % FIN)
+  .softhouse/capture/charges/bin/attest.py
+      :137  DEAD PATH  /tmp/t36at
+      :139  DEAD PATH  /tmp/t36at
+      :163  SWALLOW    "|| true" % FIN)
+      :165  SWALLOW    "| grep -icE 'ojdbc|oracle-jdbc|mysql-connector|mariadb-java' || true" % FIN)
+  .softhouse/capture/mathcontext/src/read-pathb-wiring.sh
+      :68  DEAD PATH  /tmp/t42j
+      :46  SWALLOW    cat BOOT-INF/classes/git.properties 2>/dev/null | grep -E "git.commit.id=|git.dirty|git.build.version" || echo "NO git.properties"
+      :73  SWALLOW    N_GMC="$(grep -c 'MoneyHelper.getMathContext' "$OUT" || true)"
+  .softhouse/capture/mathcontext/src/run-mathcontext.sh
+      :93  DEAD PATH  /work
+      :116  DEAD PATH  /work
+      :95  SWALLOW    find /work/jar -name git.properties | head -1 | xargs cat 2>/dev/null || echo "NO git.properties"
+      :107  SWALLOW    BAD="$(grep -Eic 'ojdbc|oracle|mysql|mariadb' "$CPLIST" || true)"
+  .softhouse/capture/mathcontext/src/run-mathcontext2.sh
+      :67  DEAD PATH  /work
+      :78  SWALLOW    mv "$CAPDIR/out/__cp.txt" "$CPLIST" 2>/dev/null || true
+      :85  SWALLOW    BAD="$(grep -Eic 'ojdbc|oracle|mysql|mariadb' "$CPLIST" || true)"
+  .softhouse/capture/mathcontext/src/run-mathcontext3.sh
+      :89  DEAD PATH  /work
+      :108  DEAD PATH  /work
+      :91  SWALLOW    find /work/jar -name git.properties | head -1 | xargs cat 2>/dev/null || echo "NO git.properties"
+      :100  SWALLOW    BAD="$(grep -Eic 'ojdbc|oracle|mysql|mariadb' "$CPLIST" || true)"
+  .softhouse/capture/mathcontext/src/run-t50-tier1.sh
+      :67  DEAD PATH  /work
+      :116  DEAD PATH  /work
+      :69  SWALLOW    find /work/jar -name git.properties | head -1 | xargs cat 2>/dev/null || echo "NO git.properties"
+      :108  SWALLOW    BAD="$(grep -Eic 'ojdbc|oracle|mysql|mariadb' "$CPLIST" || true)"
+  .softhouse/capture/mathcontext/src/run-t50-tier2.sh
+      :67  DEAD PATH  /work
+      :116  DEAD PATH  /work
+      :69  SWALLOW    find /work/jar -name git.properties | head -1 | xargs cat 2>/dev/null || echo "NO git.properties"
+      :108  SWALLOW    BAD="$(grep -Eic 'ojdbc|oracle|mysql|mariadb' "$CPLIST" || true)"
+  .softhouse/capture/mathcontext/src/t46-assert-pathb-slot.sh
+      :73  DEAD PATH  /tmp/t46j
+      :138  SWALLOW    echo "verdict: $([ "$verdict" -eq 0 ] && echo PASS || echo FAIL)"
+  .softhouse/capture/pathb/t36/attest.py
+      :277  DEAD PATH  /tmp/t36at
+      :279  DEAD PATH  /tmp/t36at
+      :303  SWALLOW    "|| true" % FIN)
+      :305  SWALLOW    "| grep -icE 'ojdbc|oracle-jdbc|mysql-connector|mariadb-java' || true" % FIN)
+  .softhouse/capture/pathb/t36/preconditions.sh
+      :86  DEAD PATH  /tmp/t36pc
+      :88  DEAD PATH  /tmp/t36pc
+      :116  SWALLOW    env_lines=$(printf '%s\n' "$env_dump" | LC_ALL=C grep -c . || true)
+      :134  SWALLOW    jarlines=$(printf '%s\n' "$jarlist" | LC_ALL=C grep -c . || true)
+  .softhouse/capture/periodratio/src/run-periodratio.sh
+      :100  DEAD PATH  /work
+      :124  DEAD PATH  /work
+      :102  SWALLOW    find /work/jar -name git.properties | head -1 | xargs cat 2>/dev/null || echo "NO git.properties"
+      :114  SWALLOW    BAD="$(grep -Eic 'ojdbc|oracle|mysql|mariadb' "$CPLIST" || true)"
+      :224  SWALLOW    MODE_LINES="$(grep -c "Initialized rounding mode for tenant" "$LOG" || true)"
+  .softhouse/capture/periodratio/src/run-t46-periodratio.sh
+      :102  DEAD PATH  /work
+      :126  DEAD PATH  /work
+      :104  SWALLOW    find /work/jar -name git.properties | head -1 | xargs cat 2>/dev/null || echo "NO git.properties"
+      :116  SWALLOW    BAD="$(grep -Eic 'ojdbc|oracle|mysql|mariadb' "$CPLIST" || true)"
+      :244  SWALLOW    MODE_LINES="$(grep -c "Initialized rounding mode for tenant" "$LOG" || true)"
   .softhouse/capture/src/t169-red/red-drive-stderr-refusal.sh
       :10  DEAD PATH  /Users/buv/gerege-nbfi/.claude/worktrees/agent-af1f5b7aebc97911d/.softhouse/capture/t117-familyb/src/run-t117.sh
       :16  DEAD PATH  /Users/buv/gerege-nbfi/.claude/worktrees/agent-af1f5b7aebc97911d/.softhouse/capture/t117-familyb/src/CaptureT117.java
       :22  SWALLOW    ( [ -s "$ERR" ] && { printf 'RUN FAILED: stderr NOT empty:\n' >&2; cat "$ERR" >&2; exit 1; } || true )
       :27  SWALLOW    ( [ -s "$ERR" ] && { printf 'RUN FAILED: stderr NOT empty:\n' >&2; cat "$ERR" >&2; exit 1; } || true )
+  .softhouse/capture/t100-g8-rescope/src/run-t100.sh
+      :51  DEAD PATH  /work
+      :66  SWALLOW    [ -s "$ERR" ] && { printf 'RUN FAILED: stderr NOT empty:\n' >&2; cat "$ERR" >&2; exit 1; } || true
+  .softhouse/capture/t116-familyb-promotion/src/run-t116.sh
+      :59  DEAD PATH  /work
+      :74  SWALLOW    [ -s "$ERR" ] && { printf 'RUN FAILED: stderr NOT empty:\n' >&2; cat "$ERR" >&2; exit 1; } || true
+  .softhouse/capture/t117-familyb/src/run-t117-pass2.sh
+      :52  DEAD PATH  /work
+      :67  SWALLOW    [ -s "$ERR" ] && { printf 'RUN FAILED: stderr NOT empty:\n' >&2; cat "$ERR" >&2; exit 1; } || true
+  .softhouse/capture/t117-familyb/src/run-t117.sh
+      :52  DEAD PATH  /work
+      :67  SWALLOW    [ -s "$ERR" ] && { printf 'RUN FAILED: stderr NOT empty:\n' >&2; cat "$ERR" >&2; exit 1; } || true
+  .softhouse/capture/t159-review-t117/src/run-t159.sh
+      :52  DEAD PATH  /work
+      :67  SWALLOW    [ -s "$ERR" ] && { printf 'RUN FAILED: stderr NOT empty:\n' >&2; cat "$ERR" >&2; exit 1; } || true
+  .softhouse/capture/t219-g8-residual/src/run-t219-run2.sh
+      :53  DEAD PATH  /work
+      :68  SWALLOW    [ -s "$ERR" ] && { printf 'RUN FAILED: stderr NOT empty:\n' >&2; cat "$ERR" >&2; exit 1; } || true
+  .softhouse/capture/t219-g8-residual/src/run-t219-run3.sh
+      :53  DEAD PATH  /work
+      :68  SWALLOW    [ -s "$ERR" ] && { printf 'RUN FAILED: stderr NOT empty:\n' >&2; cat "$ERR" >&2; exit 1; } || true
+  .softhouse/capture/t219-g8-residual/src/run-t219.sh
+      :53  DEAD PATH  /work
+      :68  SWALLOW    [ -s "$ERR" ] && { printf 'RUN FAILED: stderr NOT empty:\n' >&2; cat "$ERR" >&2; exit 1; } || true
+  .softhouse/capture/t223-g8-region-predicate/src/run-t223.sh
+      :53  DEAD PATH  /work
+      :68  SWALLOW    [ -s "$ERR" ] && { printf 'RUN FAILED: stderr NOT empty:\n' >&2; cat "$ERR" >&2; exit 1; } || true
   .softhouse/capture/t223-g8-region-predicate/src/verify_merge_t223.sh
       :6  DEAD PATH  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a01b5f9f0ceec59f4
       :12  SWALLOW    git remote add up /Users/buv/gerege-nbfi 2>/dev/null || true
+  .softhouse/capture/t229-g8-site3/src/run-t229.sh
+      :53  DEAD PATH  /work
+      :68  SWALLOW    [ -s "$ERR" ] && { printf 'RUN FAILED: stderr NOT empty:\n' >&2; cat "$ERR" >&2; exit 1; } || true
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/bash5-matrix-container.sh
+      :65  DEAD PATH  /repo
+      :72  SWALLOW    cap() { local v; v="$(bash -c 'IFS= read -r v < <(printf "%s\n" CAP) 2>/dev/null; printf %s "${v:-}"' 2>/dev/null)"; [ "$v" = CAP ] && echo yes || ech
+      :100  SWALLOW    "$( [ "$wf" = 0 ] && echo 'the PRE-FIX bytes must ADMIT the forge — that is the defect this script exists to reproduce' || echo 'the POST-FIX bytes mu
+      :175  SWALLOW    printf '  %-42s %s -> exit=%s\n' "$label" "$( [ "$h" = "$PRE" ] && echo PRE-FIX || echo POST-FIX )" "$c"
   .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
       :8  DEAD PATH  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a356a016636abdd7e
       :15  SWALLOW    pat() { echo "--- pattern: $1"; git grep -n -i -E "$1" -- . || echo "    (no hits)"; }
@@ -41,10 +165,9 @@ POPULATION, BOTH TERMS COUNTED (P-67):
   .softhouse/reviews/T184-evidence/t184-vacuity2.sh
       :5  DEAD PATH  /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8
       :39  SWALLOW    n="$(printf "%s\n" "$out" | LC_ALL=C grep -ac "^CENSUS " || true)"
-  .softhouse/reviews/a2-33-dec2-rev5/sweep.sh
-      :7  DEAD PATH  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39
-      :14  SWALLOW    ( cd "$WT" && git grep -n -I -i -E "$re" -- . ) || echo "   (no hits)"
-      :16  SWALLOW    grep -n -i -E "$re" "$MODE" || echo "   (no hits)"
+  .softhouse/reviews/T84-evidence/src/run-t84.sh
+      :50  DEAD PATH  /work
+      :65  SWALLOW    [ -s "$ERR" ] && { printf 'RUN FAILED: stderr NOT empty:\n' >&2; cat "$ERR" >&2; exit 1; } || true
   .softhouse/reviews/a2-34-review-a2-15/check-money-and-additive.sh
       :4  DEAD PATH  /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac008956278f2d6ea
       :76  SWALLOW    b=$(git rev-parse "a072ecd:$p" 2>/dev/null || echo "<absent>")
@@ -57,16 +180,65 @@ POPULATION, BOTH TERMS COUNTED (P-67):
       :50  SWALLOW    local n; n=$(LC_ALL=C /usr/bin/grep -c -aF "$needle" "$LOG/$tag.txt" || true)
       :57  SWALLOW    local n; n=$(LC_ALL=C /usr/bin/grep -c -aF "$s" "$f" || true)
 
+### M8 ASSERT-WITHOUT-MEASURING -- `cd <dead> && search` then an UNCONDITIONAL claim
+###   the shape T239 found at r11-hygiene.sh:77. NOT a `|| echo` shape; no earlier
+###   mechanism in this census would have caught it.
+  .softhouse/reviews/T138-evidence/r11-hygiene.sh
+      :77  cd /tmp/T138-merge (DEAD) && search ... then :79 claims echo "   (searched the MERGED tree)"
+
 ### M1 DEAD-ABSPATH, ALL INSTRUMENTS (superset of T234's six)
+  .softhouse/capture/actualactual/src/run-actualactual.sh                        /work
+  .softhouse/capture/audit-t44/mathcontext/src/read-pathb-wiring.sh              /tmp/t42j
+  .softhouse/capture/audit-t44/mathcontext/src/run-mathcontext.sh                /work
+  .softhouse/capture/audit-t44/mathcontext/src/run-mathcontext2.sh               /work
+  .softhouse/capture/audit-t44/rerun-periodratio/src/run-periodratio.sh          /work
+  .softhouse/capture/charges/bin/attest-t40.py                                   /tmp/t40at
+  .softhouse/capture/charges/bin/attest.py                                       /tmp/t36at
+  .softhouse/capture/mathcontext/src/read-pathb-wiring.sh                        /tmp/t42j
+  .softhouse/capture/mathcontext/src/run-mathcontext.sh                          /work
+  .softhouse/capture/mathcontext/src/run-mathcontext2.sh                         /work
+  .softhouse/capture/mathcontext/src/run-mathcontext3.sh                         /work
+  .softhouse/capture/mathcontext/src/run-t50-tier1.sh                            /work
+  .softhouse/capture/mathcontext/src/run-t50-tier2.sh                            /work
+  .softhouse/capture/mathcontext/src/t46-assert-pathb-slot.sh                    /tmp/t46j
+  .softhouse/capture/pathb/t36/attest.py                                         /tmp/t36at
+  .softhouse/capture/pathb/t36/preconditions.sh                                  /tmp/t36pc
+  .softhouse/capture/periodratio/src/run-periodratio.sh                          /work
+  .softhouse/capture/periodratio/src/run-t46-periodratio.sh                      /work
+  .softhouse/capture/src/run-pass3b.sh                                           /work
+  .softhouse/capture/src/run-pass3c.sh                                           /work
+  .softhouse/capture/src/run-pass3d.sh                                           /work
+  .softhouse/capture/src/run-pass3e.sh                                           /work
+  .softhouse/capture/src/run-pass3f.sh                                           /work
+  .softhouse/capture/src/run-pass3g.sh                                           /work
+  .softhouse/capture/src/run-pass3h.sh                                           /work
+  .softhouse/capture/src/run-pass3i.sh                                           /work
   .softhouse/capture/src/t169-red/mutate-guards.sh                               /Users/buv/gerege-nbfi/.claude/worktrees/agent-af1f5b7aebc97911d/.softhouse/capture/lib
   .softhouse/capture/src/t169-red/red-drive-stderr-refusal.sh                    /Users/buv/gerege-nbfi/.claude/worktrees/agent-af1f5b7aebc97911d/.softhouse/capture/t117-familyb/src/CaptureT1
+  .softhouse/capture/src/t169-red/run-t169.sh                                    /work
+  .softhouse/capture/t100-g8-rescope/src/run-t100.sh                             /work
+  .softhouse/capture/t116-familyb-promotion/src/run-t116.sh                      /work
+  .softhouse/capture/t117-familyb/src/run-t117-pass2.sh                          /work
+  .softhouse/capture/t117-familyb/src/run-t117.sh                                /work
+  .softhouse/capture/t159-review-t117/src/run-t159.sh                            /work
+  .softhouse/capture/t219-g8-residual/src/run-t219-run2.sh                       /work
+  .softhouse/capture/t219-g8-residual/src/run-t219-run3.sh                       /work
+  .softhouse/capture/t219-g8-residual/src/run-t219.sh                            /work
+  .softhouse/capture/t223-g8-region-predicate/src/run-t223.sh                    /work
   .softhouse/capture/t223-g8-region-predicate/src/verify_merge_t223.sh           /Users/buv/gerege-nbfi/.claude/worktrees/agent-a01b5f9f0ceec59f4
+  .softhouse/capture/t229-g8-site3/src/run-t229.sh                               /work
   .softhouse/capture/t234-sweep-instrument-audit/instruments/20-rerun-dec2-sweeps.sh /Users/buv/gerege-nbfi/.claude/worktrees/agent-a71e695cfa5bea70b
+  .softhouse/capture/t83-nonamortizing/src/run-orderdep.sh                       /work
+  .softhouse/capture/t83-nonamortizing/src/run-t83.sh                            /work
   .softhouse/capture/tierA-a2/red-green-a2-15.sh                                 /Users/buv/gerege-nbfi/.softhouse/toolchain/gopath
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/bash5-matrix-container.sh /repo
+  .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/psub-dead-container.sh /repo
   .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/redgreen.sh /Users/buv/gerege-nbfi/.claude/worktrees/agent-a356a016636abdd7e
   .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh /Users/buv/gerege-nbfi/.claude/worktrees/agent-a356a016636abdd7e
   .softhouse/reviews/A2-11/enumerate-corpus.py                                   /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ac3d56d665ff7da
   .softhouse/reviews/A2-11/prove-a2-7-guards-are-falsifiable.py                  /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3ac3d56d665ff7da/.softhouse/capture/tierA-a2
+  .softhouse/reviews/T138-evidence/r11-hygiene.sh                                /tmp/T138-merge
+  .softhouse/reviews/T138-evidence/r14-g4fix.sh                                  /tmp/T138-g4fix; /tmp/T138-g4fix-blind; /tmp/T138-g4fix-nolc
   .softhouse/reviews/T184-evidence/t184-final.sh                                 /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8
   .softhouse/reviews/T184-evidence/t184-probe-green-catch.sh                     /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8
   .softhouse/reviews/T184-evidence/t184-probe-green-float.sh                     /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8
@@ -75,13 +247,15 @@ POPULATION, BOTH TERMS COUNTED (P-67):
   .softhouse/reviews/T184-evidence/t184-sweep.sh                                 /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8
   .softhouse/reviews/T184-evidence/t184-vacuity.sh                               /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8
   .softhouse/reviews/T184-evidence/t184-vacuity2.sh                              /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8
+  .softhouse/reviews/T84-evidence/src/run-orderdep2.sh                           /work
+  .softhouse/reviews/T84-evidence/src/run-t84.sh                                 /work
   .softhouse/reviews/a2-31-dec2-rev4/probe-i4builder-redgreen.sh                 /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee; /Users/buv/gerege-nbfi/.softhouse/toolchain/
   .softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh                              /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee
   .softhouse/reviews/a2-33-dec2-rev5/redgreen.sh                                 /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39
-  .softhouse/reviews/a2-33-dec2-rev5/sweep.sh                                    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39
   .softhouse/reviews/a2-34-review-a2-15/check-money-and-additive.sh              /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac008956278f2d6ea
   .softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh                       /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac008956278f2d6ea; /Users/buv/gerege-nbfi/.softhouse/toolchain/
   .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh                   /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac008956278f2d6ea
+  .softhouse/reviews/t21v2/run-probe2-attested.sh                                /work
 
 ### M6 MISSING-ENGINE (ugrep ABSENT / rg not visible to `bash script.sh` / no BSD grep -P)
   .softhouse/capture/t108-grep/capture-env.sh                                    6 site(s)

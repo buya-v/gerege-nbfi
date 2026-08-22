@@ -70,7 +70,29 @@ if [ "${CAL_N:-0}" -lt 1 ]; then
   echo "                  NO NEGATIVE FROM THIS RUN IS INTERPRETABLE (P-72)." >&2
   exit 92
 fi
-echo "SWEEP CALIBRATE: PASS — known positive '$CAL_RE' matched $CAL_N time(s)"
+echo "SWEEP CALIBRATE+: PASS — known positive '$CAL_RE' matched $CAL_N time(s)"
+
+# ---- ANTI-CALIBRATION.  Prove the engine does not FABRICATE, not only that it can find.
+# The driver measured at main 8275f8b that `git grep -E '\bmain\b'` MATCHED the line `bmainb`.
+# So the literal-backslash-b defect is not merely RECALL LOSS, which is all P-53 and P-12
+# record -- git grep -E can return a hit THAT IS NOT THERE. A positive-only calibration passes
+# happily on a fabricating engine, so "I got hits, so my rig works" is not a valid calibration.
+# The token is ASSEMBLED AT RUN TIME so that the literal string never appears in this file.
+# A known-negative that is written out verbatim would match its own source and abort every run --
+# the anti-calibration has to be absent from the corpus it is testing, including from itself.
+ANTI_RE="$(printf 'zzq%snoSUCHtokenzzq' 'T238')"
+if [ "$MODE" = "REPO" ]; then
+  ANTI_N=$(git grep -c -I -i -E "$ANTI_RE" -- . 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')
+else
+  ANTI_N=$(/usr/bin/grep -c -i -E "$ANTI_RE" "$MODE" 2>/dev/null); [ -n "$ANTI_N" ] || ANTI_N=0
+fi
+if [ "${ANTI_N:-0}" -gt 0 ]; then
+  echo "SWEEP ABORT (92): ANTI-CALIBRATION FAILED. '$ANTI_RE' matched $ANTI_N time(s)" >&2
+  echo "                  where it is KNOWN to be ABSENT. The engine is FABRICATING matches;" >&2
+  echo "                  every POSITIVE from this run is suspect, not only its negatives." >&2
+  exit 92
+fi
+echo "SWEEP CALIBRATE-: PASS — known negative matched 0 times (engine is not fabricating)"
 echo
 
 NPAT=0

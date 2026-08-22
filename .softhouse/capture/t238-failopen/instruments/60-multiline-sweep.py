@@ -69,7 +69,7 @@ print()
 # Fail-open shapes whose two halves can sit on different lines. Line-oriented sweeps cannot
 # see any of these; that is precisely why they have never been counted.
 PATTERNS = [
-    ("ML-1  cd ... <newline> ... || echo",
+    ("ML-1  cd ... <newline> ... || echo",  # lint-failopen: ok -- this is a PATTERN LITERAL describing the defect, not an instance of it
      r'\bcd\s+["\']?[^\n]{3,120}\n[^\n]{0,200}\|\|\s*(?:echo|printf)'),
     ("ML-2  search ... <newline> continuation ... || echo",
      r'(?:git\s+grep|grep)\s[^\n]{0,200}\\\n[^\n]{0,200}\|\|\s*(?:echo|printf)'),

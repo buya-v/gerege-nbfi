@@ -68,6 +68,16 @@
   "kind": "sh",
   "searches": 6,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     89,
+     "/work"
+    ],
+    [
+     113,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      91,
@@ -103,7 +113,7 @@
     ]
    ]
   },
-  "nmech": 3
+  "nmech": 4
  },
  {
   "file": ".softhouse/capture/audit-t44/analysis/T175-red/drive-red.sh",
@@ -208,6 +218,12 @@
   "kind": "sh",
   "searches": 2,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     68,
+     "/tmp/t42j"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      46,
@@ -231,13 +247,23 @@
     ]
    ]
   },
-  "nmech": 3
+  "nmech": 4
  },
  {
   "file": ".softhouse/capture/audit-t44/mathcontext/src/run-mathcontext.sh",
   "kind": "sh",
   "searches": 3,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     93,
+     "/work"
+    ],
+    [
+     116,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      95,
@@ -265,13 +291,19 @@
     ]
    ]
   },
-  "nmech": 3
+  "nmech": 4
  },
  {
   "file": ".softhouse/capture/audit-t44/mathcontext/src/run-mathcontext2.sh",
   "kind": "sh",
   "searches": 2,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     67,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      78,
@@ -299,7 +331,7 @@
     ]
    ]
   },
-  "nmech": 3
+  "nmech": 4
  },
  {
   "file": ".softhouse/capture/audit-t44/mathcontext/src/run-negative-tests.sh",
@@ -326,6 +358,16 @@
   "kind": "sh",
   "searches": 5,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     100,
+     "/work"
+    ],
+    [
+     124,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      102,
@@ -361,13 +403,23 @@
     ]
    ]
   },
-  "nmech": 3
+  "nmech": 4
  },
  {
   "file": ".softhouse/capture/charges/bin/attest-t40.py",
   "kind": "py",
   "searches": 3,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     154,
+     "/tmp/t40at"
+    ],
+    [
+     156,
+     "/tmp/t40at"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      179,
@@ -389,13 +441,23 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/charges/bin/attest.py",
   "kind": "py",
   "searches": 3,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     137,
+     "/tmp/t36at"
+    ],
+    [
+     139,
+     "/tmp/t36at"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      163,
@@ -417,7 +479,7 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/charges/bin/control.sh",
@@ -1112,6 +1174,12 @@
   "kind": "sh",
   "searches": 2,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     68,
+     "/tmp/t42j"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      46,
@@ -1135,13 +1203,23 @@
     ]
    ]
   },
-  "nmech": 3
+  "nmech": 4
  },
  {
   "file": ".softhouse/capture/mathcontext/src/run-mathcontext.sh",
   "kind": "sh",
   "searches": 3,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     93,
+     "/work"
+    ],
+    [
+     116,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      95,
@@ -1169,13 +1247,19 @@
     ]
    ]
   },
-  "nmech": 3
+  "nmech": 4
  },
  {
   "file": ".softhouse/capture/mathcontext/src/run-mathcontext2.sh",
   "kind": "sh",
   "searches": 2,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     67,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      78,
@@ -1203,13 +1287,23 @@
     ]
    ]
   },
-  "nmech": 3
+  "nmech": 4
  },
  {
   "file": ".softhouse/capture/mathcontext/src/run-mathcontext3.sh",
   "kind": "sh",
   "searches": 2,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     89,
+     "/work"
+    ],
+    [
+     108,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      91,
@@ -1231,7 +1325,7 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/mathcontext/src/run-negative-tests.sh",
@@ -1258,6 +1352,16 @@
   "kind": "sh",
   "searches": 5,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     67,
+     "/work"
+    ],
+    [
+     116,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      69,
@@ -1283,13 +1387,23 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/mathcontext/src/run-t50-tier2.sh",
   "kind": "sh",
   "searches": 5,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     67,
+     "/work"
+    ],
+    [
+     116,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      69,
@@ -1315,13 +1429,19 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/mathcontext/src/t46-assert-pathb-slot.sh",
   "kind": "sh",
   "searches": 3,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     73,
+     "/tmp/t46j"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      138,
@@ -1335,7 +1455,7 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/mathcontext/src/t46-negative-vacuity.sh",
@@ -1499,6 +1619,16 @@
   "kind": "py",
   "searches": 3,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     277,
+     "/tmp/t36at"
+    ],
+    [
+     279,
+     "/tmp/t36at"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      303,
@@ -1532,7 +1662,7 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/pathb/t36/emiloop-probe.sh",
@@ -1565,6 +1695,16 @@
   "kind": "sh",
   "searches": 8,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     86,
+     "/tmp/t36pc"
+    ],
+    [
+     88,
+     "/tmp/t36pc"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      116,
@@ -1622,7 +1762,7 @@
     ]
    ]
   },
-  "nmech": 4
+  "nmech": 5
  },
  {
   "file": ".softhouse/capture/pathb/t36/recapture.sh",
@@ -2349,6 +2489,16 @@
   "kind": "sh",
   "searches": 5,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     100,
+     "/work"
+    ],
+    [
+     124,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      102,
@@ -2384,13 +2534,23 @@
     ]
    ]
   },
-  "nmech": 3
+  "nmech": 4
  },
  {
   "file": ".softhouse/capture/periodratio/src/run-t46-periodratio.sh",
   "kind": "sh",
   "searches": 5,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     102,
+     "/work"
+    ],
+    [
+     126,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      104,
@@ -2430,13 +2590,19 @@
     ]
    ]
   },
-  "nmech": 3
+  "nmech": 4
  },
  {
   "file": ".softhouse/capture/src/run-pass3b.sh",
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     98,
+     "/work"
+    ]
+   ],
    "M3_EMPTY_GLOB": [
     [
      100,
@@ -2450,13 +2616,19 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/src/run-pass3c.sh",
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     124,
+     "/work"
+    ]
+   ],
    "M3_EMPTY_GLOB": [
     [
      126,
@@ -2470,13 +2642,19 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/src/run-pass3d.sh",
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     150,
+     "/work"
+    ]
+   ],
    "M3_EMPTY_GLOB": [
     [
      152,
@@ -2490,13 +2668,19 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/src/run-pass3e.sh",
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     154,
+     "/work"
+    ]
+   ],
    "M3_EMPTY_GLOB": [
     [
      156,
@@ -2510,13 +2694,19 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/src/run-pass3f.sh",
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     163,
+     "/work"
+    ]
+   ],
    "M3_EMPTY_GLOB": [
     [
      165,
@@ -2530,13 +2720,19 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/src/run-pass3g.sh",
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     163,
+     "/work"
+    ]
+   ],
    "M3_EMPTY_GLOB": [
     [
      165,
@@ -2550,13 +2746,19 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/src/run-pass3h.sh",
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     196,
+     "/work"
+    ]
+   ],
    "M3_EMPTY_GLOB": [
     [
      198,
@@ -2570,13 +2772,19 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/src/run-pass3i.sh",
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     234,
+     "/work"
+    ]
+   ],
    "M3_EMPTY_GLOB": [
     [
      236,
@@ -2590,7 +2798,7 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/src/run-rc6-rounddown-attestation.sh",
@@ -2684,6 +2892,12 @@
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     77,
+     "/work"
+    ]
+   ],
    "M3_EMPTY_GLOB": [
     [
      79,
@@ -2691,13 +2905,19 @@
     ]
    ]
   },
-  "nmech": 1
+  "nmech": 2
  },
  {
   "file": ".softhouse/capture/t100-g8-rescope/src/run-t100.sh",
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     51,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      66,
@@ -2711,7 +2931,7 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/t108-grep/capture-env.sh",
@@ -2889,6 +3109,12 @@
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     59,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      74,
@@ -2902,13 +3128,19 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/t117-familyb/src/run-t117-pass2.sh",
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     52,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      67,
@@ -2922,13 +3154,19 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/t117-familyb/src/run-t117.sh",
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     52,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      67,
@@ -2942,7 +3180,7 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/t131-grep/probe-commandv.sh",
@@ -3205,6 +3443,12 @@
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     52,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      67,
@@ -3218,7 +3462,7 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/t170-g8-rebuild/src/paragraphs_t170.py",
@@ -3272,6 +3516,12 @@
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     53,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      68,
@@ -3285,13 +3535,19 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/t219-g8-residual/src/run-t219-run3.sh",
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     53,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      68,
@@ -3305,13 +3561,19 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/t219-g8-residual/src/run-t219.sh",
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     53,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      68,
@@ -3325,13 +3587,19 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/t223-g8-region-predicate/src/run-t223.sh",
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     53,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      68,
@@ -3345,7 +3613,7 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/t223-g8-region-predicate/src/scope_table_t223.py",
@@ -3385,6 +3653,12 @@
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     53,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      68,
@@ -3398,7 +3672,7 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh",
@@ -3886,6 +4160,12 @@
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     46,
+     "/work"
+    ]
+   ],
    "M3_EMPTY_GLOB": [
     [
      48,
@@ -3899,13 +4179,19 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/t83-nonamortizing/src/run-t83.sh",
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     132,
+     "/work"
+    ]
+   ],
    "M3_EMPTY_GLOB": [
     [
      134,
@@ -3923,7 +4209,7 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/capture/t91/prove-guards.sh",
@@ -4584,6 +4870,12 @@
   "kind": "sh",
   "searches": 3,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     65,
+     "/repo"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      72,
@@ -4637,7 +4929,7 @@
     ]
    ]
   },
-  "nmech": 4
+  "nmech": 5
  },
  {
   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/prove-token-forgeable.sh",
@@ -4658,6 +4950,12 @@
   "kind": "sh",
   "searches": 3,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     77,
+     "/repo"
+    ]
+   ],
    "M3_EMPTY_GLOB": [
     [
      103,
@@ -4677,7 +4975,7 @@
     ]
    ]
   },
-  "nmech": 3
+  "nmech": 4
  },
  {
   "file": ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/readonly-sourced-edge.sh",
@@ -5464,6 +5762,18 @@
   "kind": "sh",
   "searches": 16,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     77,
+     "/tmp/T138-merge"
+    ]
+   ],
+   "M8_ASSERT_WITHOUT_MEASURING": [
+    [
+     77,
+     "cd /tmp/T138-merge (DEAD) && search ... then :79 claims echo \"   (searched the MERGED tree)\""
+    ]
+   ],
    "M3_EMPTY_GLOB": [
     [
      13,
@@ -5483,7 +5793,7 @@
     ]
    ]
   },
-  "nmech": 3
+  "nmech": 5
  },
  {
   "file": ".softhouse/reviews/T138-evidence/r12-grep.sh",
@@ -5534,6 +5844,40 @@
   "kind": "sh",
   "searches": 10,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     32,
+     "/tmp/T138-g4fix"
+    ],
+    [
+     33,
+     "/tmp/T138-g4fix"
+    ],
+    [
+     40,
+     "/tmp/T138-g4fix-blind"
+    ],
+    [
+     41,
+     "/tmp/T138-g4fix-blind"
+    ],
+    [
+     42,
+     "/tmp/T138-g4fix-blind"
+    ],
+    [
+     50,
+     "/tmp/T138-g4fix-nolc"
+    ],
+    [
+     51,
+     "/tmp/T138-g4fix-nolc"
+    ],
+    [
+     52,
+     "/tmp/T138-g4fix-nolc"
+    ]
+   ],
    "M3_EMPTY_GLOB": [
     [
      22,
@@ -5553,7 +5897,7 @@
     ]
    ]
   },
-  "nmech": 3
+  "nmech": 4
  },
  {
   "file": ".softhouse/reviews/T138-evidence/r14b-g4fix.sh",
@@ -7122,6 +7466,12 @@
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     46,
+     "/work"
+    ]
+   ],
    "M3_EMPTY_GLOB": [
     [
      48,
@@ -7135,13 +7485,19 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/reviews/T84-evidence/src/run-t84.sh",
   "kind": "sh",
   "searches": 1,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     50,
+     "/work"
+    ]
+   ],
    "M2_SWALLOW": [
     [
      65,
@@ -7161,7 +7517,7 @@
     ]
    ]
   },
-  "nmech": 3
+  "nmech": 4
  },
  {
   "file": ".softhouse/reviews/a2-31-dec2-rev4/probe-citations2.sh",
@@ -7282,22 +7638,12 @@
  {
   "file": ".softhouse/reviews/a2-33-dec2-rev5/sweep.sh",
   "kind": "sh",
-  "searches": 2,
+  "searches": 4,
   "mech": {
-   "M1_DEAD_ABSPATH": [
-    [
-     7,
-     "/Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39"
-    ]
-   ],
    "M2_SWALLOW": [
     [
-     14,
-     "( cd \"$WT\" && git grep -n -I -i -E \"$re\" -- . ) || echo \"   (no hits)\""
-    ],
-    [
-     16,
-     "grep -n -i -E \"$re\" \"$MODE\" || echo \"   (no hits)\""
+     110,
+     "echo \"SWEEP-RESULT: commit=$(git rev-parse --short HEAD 2>/dev/null || echo n/a) corpus_files=$NFILES patterns=$NPAT hit_lines=$NHIT calibration=PASS\""
     ]
    ],
    "M5_NO_PIPEFAIL": [
@@ -7313,7 +7659,7 @@
     ]
    ]
   },
-  "nmech": 4
+  "nmech": 3
  },
  {
   "file": ".softhouse/reviews/a2-34-review-a2-15/check-money-and-additive.sh",
@@ -7580,6 +7926,12 @@
   "kind": "sh",
   "searches": 2,
   "mech": {
+   "M1_DEAD_ABSPATH": [
+    [
+     50,
+     "/work"
+    ]
+   ],
    "M3_EMPTY_GLOB": [
     [
      52,
@@ -7593,7 +7945,7 @@
     ]
    ]
   },
-  "nmech": 2
+  "nmech": 3
  },
  {
   "file": ".softhouse/reviews/t21v2/t21v2-invariants.py",

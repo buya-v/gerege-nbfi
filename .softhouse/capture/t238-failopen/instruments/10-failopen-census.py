@@ -27,6 +27,20 @@ MECHANISMS DETECTED (each is a separate column; a file may carry several):
                      rely on here (measured: ugrep ABSENT, rg is a Claude-Code shell function
                      invisible to `bash script.sh`, BSD grep has no -P)
   M7  NO-SET-E       a `.sh` with no `set -e` -- every command's failure is advisory
+  M8  ASSERT-WITHOUT-MEASURING
+                     `cd <path> && <search>` followed by an UNCONDITIONAL echo that CLAIMS a
+                     search happened. When the cd fails the `&&` short-circuits, the search
+                     never runs, and the claim prints anyway.
+
+REVISION, 2026-08-22, AFTER A DRIVER CORRECTION MID-TASK
+--------------------------------------------------------
+The first version of M1 matched only `/Users|/home|/opt|/var` and therefore MISSED
+`.softhouse/reviews/T138-evidence/r11-hygiene.sh:77`, which hard-`cd`s into **`/tmp/T138-merge`**.
+T239 found that site independently. **My own recall instrument had a recall gap, which is
+precisely the P-72 lesson turned back on itself:** I stated a scope and did not test whether the
+scope was real. M1 now matches ANY absolute path in a `cd`, and M8 exists because r11-hygiene's
+shape -- `cd ... 2>/dev/null && search` then an unconditional "(searched the MERGED tree)" -- is
+NOT the `|| echo "(no hits)"` shape and no earlier mechanism would have caught it.
 
 SCOPE, stated per P-66/P-70: the corpus is EVERY tracked `.sh` and `.py` file in the repository
 at the commit printed below, EXCLUDING this task's own directory.  It is not a sample.
@@ -46,6 +60,14 @@ scripts = [f for f in allfiles
 
 # ---- mechanism detectors -------------------------------------------------
 RE_ABSPATH = re.compile(r'(?:^|[=\s"\'(])(/Users/[A-Za-z0-9._/-]{6,})')
+# M1b: ANY absolute path that is `cd`-ed into. Scoped to `cd` deliberately: a script that WRITES
+# to a not-yet-existing /tmp path is fine, but a script that CDs into one cannot reach its corpus.
+RE_DEAD_CD = re.compile(r'\bcd\s+["\']?(/[A-Za-z0-9._/-]{3,})')
+# M8: `cd ... && <search>` followed by an unconditional claim that a search happened.
+RE_CD_AND_SEARCH = re.compile(r'\bcd\s+["\']?(/[A-Za-z0-9._/-]{3,})[^\n]*&&')
+RE_SEARCH_CLAIM = re.compile(
+    r'\b(?:searched|swept|scanned|checked|no hits|no other|none found|nothing found|'
+    r'the (?:whole|merged|entire) (?:tree|repo))', re.I)
 RE_SWALLOW = re.compile(r'\|\|\s*(echo|true|:|printf)\b')
 RE_SEARCH  = re.compile(r'(git\s+grep|(?<![-\w./])e?grep\b|\brg\b|\bugrep\b|'
                         r'\bre\.(?:search|match|findall|finditer|compile)\(|git\s+ls-files)')
@@ -68,16 +90,37 @@ for f in scripts:
     is_sh = f.endswith(".sh")
     m = collections.OrderedDict()
 
-    # M1 dead absolute path
+    # M1 dead absolute path -- now including ANY absolute path that is cd-ed into
     dead = []
     for i, l in enumerate(lines, 1):
         if l.lstrip().startswith("#"):
             continue
-        for p in RE_ABSPATH.findall(l):
+        cands = list(RE_ABSPATH.findall(l)) + list(RE_DEAD_CD.findall(l))
+        for p in cands:
             p = p.rstrip('"\'`);,')
-            if not os.path.exists(p):
+            if not os.path.exists(p) and (i, p) not in dead:
                 dead.append((i, p))
     m["M1_DEAD_ABSPATH"] = dead
+
+    # M8 assert-without-measuring: `cd <dead abs> && <search>` then an unconditional claim
+    m8 = []
+    for i, l in enumerate(lines, 1):
+        if l.lstrip().startswith("#"):
+            continue
+        mm = RE_CD_AND_SEARCH.search(l)
+        if not mm:
+            continue
+        target = mm.group(1).rstrip('"\'`);,')
+        if os.path.exists(target):
+            continue
+        # look ahead a few lines for an UNCONDITIONAL claim that a search happened
+        for j in range(i, min(i + 5, len(lines))):
+            nxt = lines[j]
+            if nxt.lstrip().startswith(("echo", "printf")) and RE_SEARCH_CLAIM.search(nxt):
+                m8.append((i, "cd %s (DEAD) && search ... then :%d claims %s"
+                           % (target, j + 1, nxt.strip()[:80])))
+                break
+    m["M8_ASSERT_WITHOUT_MEASURING"] = m8
 
     # M2 swallow
     m["M2_SWALLOW"] = [(i, l.strip()[:150]) for i, l in enumerate(lines, 1)
@@ -137,7 +180,8 @@ for r in rows:
         tally[k] += 1
 print("### MECHANISM TALLY over the %d search instruments" % len(rows))
 for k in ["M1_DEAD_ABSPATH", "M2_SWALLOW", "M3_EMPTY_GLOB", "M4_EMPTY_FORLIST",
-          "M5_NO_PIPEFAIL", "M6_MISSING_ENGINE", "M7_NO_SET_E"]:
+          "M5_NO_PIPEFAIL", "M6_MISSING_ENGINE", "M7_NO_SET_E",
+          "M8_ASSERT_WITHOUT_MEASURING"]:
     print("  %-20s %4d instruments" % (k, tally[k]))
 print()
 
@@ -151,6 +195,15 @@ for r in sorted(lethal, key=lambda x: x["file"]):
         print("      :%s  DEAD PATH  %s" % (i, p))
     for i, l in r["mech"]["M2_SWALLOW"][:3]:
         print("      :%s  SWALLOW    %s" % (i, l))
+print()
+
+print("### M8 ASSERT-WITHOUT-MEASURING -- `cd <dead> && search` then an UNCONDITIONAL claim")
+print("###   the shape T239 found at r11-hygiene.sh:77. NOT a `|| echo` shape; no earlier")
+print("###   mechanism in this census would have caught it.")
+for r in sorted([r for r in rows if "M8_ASSERT_WITHOUT_MEASURING" in r["mech"]], key=lambda x: x["file"]):
+    print("  %s" % r["file"])
+    for i, d in r["mech"]["M8_ASSERT_WITHOUT_MEASURING"]:
+        print("      :%s  %s" % (i, d))
 print()
 
 print("### M1 DEAD-ABSPATH, ALL INSTRUMENTS (superset of T234's six)")

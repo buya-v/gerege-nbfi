@@ -35,6 +35,8 @@ SWEEPLIB_VERSION="T238.1"
 SWEEP_PATTERNS=0
 SWEEP_HITLINES=0
 SWEEP_CALIBRATED=no
+SWEEP_CALIB_POS=no
+SWEEP_CALIB_NEG=no
 
 _sw_die() { printf 'SWEEP ABORT (exit %s): %s\n' "$1" "$2" >&2; exit "$1"; }
 
@@ -79,8 +81,32 @@ sweep_calibrate() {
   if [ "${n:-0}" -lt 1 ]; then
     _sw_die 92 "CALIBRATION MISSED. Pattern '$re' found 0 in '$path', where it is KNOWN to be present. The engine, the pattern language or the corpus is broken; no negative from this run is interpretable."
   fi
-  SWEEP_CALIBRATED=yes
-  printf 'SWEEP CALIBRATE : PASS — known positive %s matched %s time(s) in %s\n' "$re" "$n" "$path"
+  SWEEP_CALIB_POS=yes
+  [ "${SWEEP_CALIB_NEG:-no}" = yes ] && SWEEP_CALIBRATED=yes
+  printf 'SWEEP CALIBRATE+: PASS — known positive %s matched %s time(s) in %s\n' "$re" "$n" "$path"
+}
+
+# sweep_anticalibrate <regex> <path>  — CALIBRATE ON A KNOWN NEGATIVE TOO.
+#
+# WHY THIS EXISTS, and it is not symmetry for its own sake. The driver measured, at main
+# 8275f8b, that `git grep -E '\bmain\b'` MATCHED THE LINE `bmainb`. So the literal-\b defect
+# is NOT merely recall loss, which is all P-53 and P-12 record: **git grep -E can FABRICATE a
+# hit that does not exist.** T238 reproduced this at 477dc2d — `git grep -nE '\bmain\b'` and
+# `git grep -nE 'bmainb'` returned BYTE-IDENTICAL output, and it was the decoy line, not the
+# true one (transcripts/00-engines.txt).
+#
+# The consequence is sharp: **"I got hits, so my rig works" is NOT a valid calibration.** A
+# positive-only calibration passes happily on a fabricating engine. An instrument must also
+# prove it returns ZERO for something it is KNOWN not to contain.
+sweep_anticalibrate() {
+  local re="$1" path="$2" n
+  n=$(git grep -c -I -i -E "$re" -- "$path" 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')
+  if [ "${n:-0}" -gt 0 ]; then
+    _sw_die 92 "ANTI-CALIBRATION FAILED. Pattern '$re' matched $n time(s) in '$path', where it is KNOWN to be ABSENT. The engine is FABRICATING matches; every positive from this run is suspect, not only its negatives."
+  fi
+  SWEEP_CALIB_NEG=yes
+  [ "${SWEEP_CALIB_POS:-no}" = yes ] && SWEEP_CALIBRATED=yes
+  printf 'SWEEP CALIBRATE-: PASS — known negative %s matched 0 times in %s\n' "$re" "$path"
 }
 
 # --------------------------------------------------------------------- the sweep
@@ -92,7 +118,7 @@ sweep_calibrate() {
 sweep_run() {
   local label="$1" re="$2"; shift 2
   [ "$SWEEP_CALIBRATED" = yes ] \
-    || _sw_die 92 "sweep_run called before sweep_calibrate. P-72: calibrate on a known positive before reporting any negative."
+    || _sw_die 92 "sweep_run called before BOTH calibrations. P-72 plus the fabrication finding: prove a known POSITIVE is found AND a known NEGATIVE is not, before reporting anything."
   SWEEP_PATTERNS=$((SWEEP_PATTERNS+1))
   printf '########## PATTERN %s :: %s\n' "$label" "$re"
   local out rc
