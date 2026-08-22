@@ -4,7 +4,35 @@ Written by the orchestrator at every checkpoint; read by the next fire of `/soft
 human) to see exactly where the factory paused. **The repo is the only memory** — never rely on an agent's
 session state.
 
-## Current state (local fire `20260822-140002`, oracle REACHABLE throughout, clean exit)
+## IN-FLIGHT — local fire `20260822-140002`, SECOND SESSION, oracle REACHABLE
+
+**THIS MANIFEST IS MID-FIRE AND WILL BE REWRITTEN AT EXIT.** If you are reading it, the previous fire
+session did NOT get to rewrite it — five workers were live and were killed with their driver. Treat every
+task below as `needs_retry`, not `in_progress`, and rescue WIP from the branches named.
+
+- **FIVE DISPATCHED at ba2d8ed**, worktree-isolated, `files_hint` proven pairwise disjoint before dispatch:
+
+| Task | Model | Branch | Holds (exclusive this fire) |
+|---|---|---|---|
+| `T251` | opus | `softhouse/T251-review-dec2-rev7` | `.softhouse/reviews/t251-dec2-rev7/` (docs; prepare-only, may NOT land rev 7) |
+| `T252` | opus | `softhouse/T252-failopen-counts` | `50-failopen-lint.py`, `capture/t252-tier3/`, **`.softhouse/conformance.sh`** |
+| `T241` | opus | `softhouse/T241-site3-formula` | `capture/t229-g8-site3/`, **`.softhouse/gates.md`** |
+| `T236` | sonnet | `softhouse/T236-cap9-quit` | **`.softhouse/capture/tierA-a2/`** |
+| `A2-23` | sonnet | `softhouse/A2-23-empty-context-dir` | **`nexus/internal/apps/loanschedule/conformance/`** |
+
+**Held back deliberately, and why:** `T250`, `T226`, `T235`, `T160`, `T192`, `T195` all contend for
+`conformance.sh` or `capture/lib/` with `T252`; `T164`/`T174` contend for `capture/tierA-a2/` with `T236`;
+`T145`'s `files_hint` is the whole of `.softhouse/capture/` and collides with three of the five. `A2-23` was
+the ONLY remaining READY task disjoint from all four opus workers.
+
+- **Vector store digest at dispatch:** `13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d`. Read it LIVE (P-61);
+  any BAR quoting `8968c559…` or `73c3ea7b…` is stale.
+- **G-14 permission, applied at dispatch:** recorded scope is **NOTHING BUT DEC-2 ITSELF** (driver decision,
+  CONFIRMED by `T249`'s independent re-derivation). Go under `nexus/` is permitted; amending DEC-2 is not.
+
+---
+
+## Previous state (local fire `20260822-140002`, first session, clean exit)
 
 - **Program**: `fineract-to-go-full-codebase` — **active**. Contexts **1 done / 18**. Tier 0 closed.
 - **Active run**: `2026-08-21-run2-tierA-gl-accounting-A2` — Tier A slice **A2**.
