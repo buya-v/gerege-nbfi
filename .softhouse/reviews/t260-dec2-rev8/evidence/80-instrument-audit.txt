@@ -1,0 +1,53 @@
+T260 — instrument audit (P-75 / P-80 / P-22 known-bad shapes)
+====================================================================================================
+instruments audited: 7
+
+  10-enumerate-citations.py  (117 lines)
+    controls present: negative control, exit-2 reserved for cannot-do-job
+    [*** CODE ***] L12 `|| true` fail-open: NO NETWORK, NO `cd`, NO `|| true`, NO `|| echo`. Every non-existence below is
+    [*** CODE ***] L12 `|| echo` fail-open: NO NETWORK, NO `cd`, NO `|| true`, NO `|| echo`. Every non-existence below is
+
+  15-p5-probe.py  (105 lines)
+    controls present: negative control, positive control, exit-2 reserved for cannot-do-job, uses str.count / exact substring
+    [*** CODE ***] L15 bare `grep` invocation: No `cd`. No `|| true`. No bare `grep`, no `rg` -- `python3 re` only (P-75).
+    [*** CODE ***] L15 `rg` invocation: No `cd`. No `|| true`. No bare `grep`, no `rg` -- `python3 re` only (P-75).
+    [*** CODE ***] L15 `|| true` fail-open: No `cd`. No `|| true`. No bare `grep`, no `rg` -- `python3 re` only (P-75).
+
+  20-verify-anchors.py  (306 lines)
+    controls present: negative control, positive control, exit-2 reserved for cannot-do-job, uses str.count / exact substring
+    [*** CODE ***] L65 bare `grep` invocation: NO NETWORK. NO `cd`. NO `|| true`, NO `|| echo`, NO bare `grep`, NO `rg`.
+    [*** CODE ***] L65 `rg` invocation: NO NETWORK. NO `cd`. NO `|| true`, NO `|| echo`, NO bare `grep`, NO `rg`.
+    [*** CODE ***] L65 `|| true` fail-open: NO NETWORK. NO `cd`. NO `|| true`, NO `|| echo`, NO bare `grep`, NO `rg`.
+    [*** CODE ***] L65 `|| echo` fail-open: NO NETWORK. NO `cd`. NO `|| true`, NO `|| echo`, NO bare `grep`, NO `rg`.
+
+  30-apply-revision-8.py  (1250 lines)
+    controls present: positive control, exit-2 reserved for cannot-do-job, classifies git-grep status, uses str.count / exact substring
+    [*** CODE ***] L34 bare `grep` invocation: > **function name plus a grep recipe** rather than a bare line range, or re-take every harness
+    [*** CODE ***] L40 bare `grep` invocation: > FU-A2-25-3)*: cite function name plus a grep recipe rather than a bare line range, or re-take
+    [*** CODE ***] L60 bare `grep` invocation: > `git grep -n -F '<the substring>' -- <path>`. **`-F`, never a bare `grep` and never `rg`
+    [*** CODE ***] L60 bare `grep` invocation: > `git grep -n -F '<the substring>' -- <path>`. **`-F`, never a bare `grep` and never `rg`
+    [*** CODE ***] L61 bare `grep` invocation: > (`P-75`); and `git grep` exits 1 on NO MATCH and >1 on ERROR, so a resolver must classify the
+    [*** CODE ***] L818 bare `grep` invocation: > `git grep -P '\\bP-5\\b' -- nexus/internal/apps/ledger` returns nothing (exit 1, a REAL measured
+    [*** CODE ***] L1089 bare `grep` invocation: > **⚠ REVISION 8: IT IS GONE.** `git grep -n -F 'records as not existing' -- .softhouse/conformance.sh`
+    [*** CODE ***] L1126 bare `grep` invocation: file, with a `git grep -n -F` recipe) and source-derived facts by **DERIVED** (§4.4.1's
+    [*** CODE ***] L60 `rg` invocation: > `git grep -n -F '<the substring>' -- <path>`. **`-F`, never a bare `grep` and never `rg`
+    [*** CODE ***] L818 `\b` inside a git-grep -E/-P pattern: > `git grep -P '\\bP-5\\b' -- nexus/internal/apps/ledger` returns nothing (exit 1, a REAL measured
+
+  50-red-drive.py  (282 lines)
+    controls present: negative control, exit-2 reserved for cannot-do-job, classifies git-grep status, uses str.count / exact substring
+    [*** CODE ***] L25 bare `grep` invocation: No `cd`. No `|| true`. No bare `grep`, no `rg`. Every subprocess result is
+    [*** CODE ***] L25 `rg` invocation: No `cd`. No `|| true`. No bare `grep`, no `rg`. Every subprocess result is
+    [*** CODE ***] L25 `|| true` fail-open: No `cd`. No `|| true`. No bare `grep`, no `rg`. Every subprocess result is
+    [*** CODE ***] L86 `|| true` fail-open: rc is CLASSIFIED by the caller; it is never coerced with `|| true`."""
+
+  55-real-t253-collision.py  (126 lines)
+    controls present: exit-2 reserved for cannot-do-job, classifies git-grep status
+    [*** CODE ***] L13 bare `grep` invocation: No `cd`, no `|| true`, no bare `grep`. Exit 0 = revision 8's citations hold
+    [*** CODE ***] L13 `|| true` fail-open: No `cd`, no `|| true`, no bare `grep`. Exit 0 = revision 8's citations hold
+
+  60-obligation-diff.py  (292 lines)
+    controls present: positive control, exit-2 reserved for cannot-do-job, classifies git-grep status, uses str.count / exact substring
+    [*** CODE ***] L27 bare `grep` invocation: No `cd`, no `|| true`, no bare `grep`. Exit 0 = no obligation moved;
+    [*** CODE ***] L27 `|| true` fail-open: No `cd`, no `|| true`, no bare `grep`. Exit 0 = no obligation moved;
+
+KNOWN-BAD SHAPES IN CODE (not prose): 27

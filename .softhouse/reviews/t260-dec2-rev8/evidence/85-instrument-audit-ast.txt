@@ -1,0 +1,32 @@
+T260 — instrument audit over EXECUTABLE CODE ONLY (strings + comments removed)
+====================================================================================================
+
+  10-enumerate-citations.py
+    subprocess used: False   reads .returncode: False
+    known-bad shapes in executable code: NONE
+
+  15-p5-probe.py
+    subprocess used: True   reads .returncode: False
+    known-bad shapes in executable code: NONE
+
+  20-verify-anchors.py
+    subprocess used: False   reads .returncode: False
+    known-bad shapes in executable code: NONE
+
+  30-apply-revision-8.py
+    subprocess used: False   reads .returncode: False
+    known-bad shapes in executable code: NONE
+
+  50-red-drive.py
+    subprocess used: True   reads .returncode: True
+    known-bad shapes in executable code: NONE
+
+  55-real-t253-collision.py
+    subprocess used: True   reads .returncode: True
+    known-bad shapes in executable code: NONE
+
+  60-obligation-diff.py
+    subprocess used: True   reads .returncode: True
+    known-bad shapes in executable code: NONE
+
+TOTAL known-bad shapes in EXECUTABLE code across all instruments: 0
