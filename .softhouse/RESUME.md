@@ -4,171 +4,191 @@ Written by the orchestrator at every checkpoint; read by the next fire of `/soft
 human) to see exactly where the factory paused. **The repo is the only memory** — never rely on an agent's
 session state.
 
-## Current state (local fire `20260822-080001` round 2, oracle REACHABLE throughout, clean exit)
+## Current state (local fire `20260822-000013`, oracle REACHABLE throughout, clean exit)
 
 - **Program**: `fineract-to-go-full-codebase` — **active**. Contexts **1 done / 18**. Tier 0 closed.
 - **Active run**: `2026-08-21-run2-tierA-gl-accounting-A2` — Tier A, slice **A2**.
-- **TEN DISPATCHED, TEN COMPLETED, TEN MERGED, ZERO LIVE AT EXIT.** No isolation violation; every branch
-  scope-checked by the driver on the **three-dot** diff before merge.
+- **THIRTEEN DISPATCHED, THIRTEEN COMPLETED, THIRTEEN MERGED, ZERO LIVE AT EXIT.** No isolation violation;
+  every branch scope-checked by the driver on the **three-dot** diff before merge.
 - **Oracle**: UP throughout. Pinned checkout `426a23544`. PostgreSQL only.
 
 **Driver-verified on merged `main` at exit** (re-run by the driver, not quoted from any worker):
 
 ```
 probe line PRESENT, and it reads: probe = up
-VERDICT: PASS (exit 0) — 43 parity vectors, 5664 cells compared
+VERDICT: PASS (exit 0) — 46 parity vectors, 7884 cells compared
          contract-refusal 4 · self-test 1 · refused 0 · inadmissible 0 · harness errors 0
          invariant violations 0 · invariant assertions 0 NOT RUN
-         kills named 103 money, 7 structural
+         invariant assertions 4 EXEMPTED BY A VECTOR (each one's reason printed in the run)
+         kills named 106 money, 7 structural
 --prove              23 passed, 0 failed
-ledger-invariants    exit 0
-go build 0 · go vet 0 · go test -count=1 ok (ledger, loanschedule, conformance)
+go build 0 · go vet 0 · go test -count=1 ok (loanschedule, conformance)
 gofmt -l             exactly contract.go   (expected, G-3)
-t36/attest.py        567e4cf0…             UNCHANGED — T180's whole deliverable
-vector store         ce821c638724237652b6b29627148d34b72fab3b   UNCHANGED
+vector store         73c3ea7b43dd75f04884072719a87fc8e1d255c1   (was ce821c63…)
          IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a user gate.
 ```
 
-**Merged this fire, all ten**: `T210`, `T176`, `T209` (wave 1a); `A2-21`, `A2-22`, `T212`, `T168`, `T162`,
-`T211`, `T180`.
+**Merged this fire, all thirteen** — wave 1: `A2-24`, `T214`, `T217`, `A2-25`, `T193`, `A2-26`, `T116`;
+wave 2: `T215`, `A2-27`, `T218`, `T220`, `A2-28`, `A2-29`.
 
 ---
 
-# HEADLINE 1: two claims this program has been repeating are now corrected
+# HEADLINE 1: the corpus moved for the first time in three fires — 43 parity vectors → 46
 
-**(a) `run_guards` invokes SEVEN guards, not six.** `RESUME.md`, the previous fire's headline **and the
-driver's own T209 brief** all said six. That count took only the `|| failed=1` arm and silently dropped
-`guard_graded_root_is_this_tree`, a **HARD** guard with an early-exit shape. Caught by **A2-21**.
+`T116` executed **G-8 option (a)**: three vectors captured fresh from the live oracle at 600.0 % / MNT 0.01.
+Two are family B and carry **exactly two** invariant exemptions each; **T100's proposed third
+(`balance_roll_forward`) was DROPPED because it holds unexempted**. The third vector is the amortizing cell
+**one repayment below the boundary**, promoted with **no exemption at all**, so the exemption cannot be read
+as "600 % is exempt". `report.go` now prints every exemption **with its full reason** — previously only a
+count appeared anywhere.
 
-**(b) "I-3 and I-4 went from ZERO enforcement to HARNESS-ENFORCED" is an OVERSTATEMENT.** Driver-verified
-from the guard's **own green-run output**: three of its four detection classes inspect an **empty
-population** —
+It also settled a contradiction rather than picking a side: the **T83-vs-T101/T112 dispute over whether
+`invariant_exemptions` is INERT was never a contradiction.** T83's demo ran on a **family-A** case whose own
+committed output reads `advanced == repaid == 1`, where every invariant already holds. "INERT" is correct
+*about family A*. Both records were right about different families.
 
-```
-NIL-COVERAGE — the SQL surface inspected 3955 string literals and found ZERO SQL DML statements of any
-kind under …/nexus. … the I-4 SQL classes (I4-DML, I3-SQL-BALANCE) are proven by this program's
---selftest and NOT by this tree.
-NIL-COVERAGE — zero mutating driver calls … class OPAQUE-SQL inspected an empty population. The Go
-module declares no database driver at all.
-```
+`T220` reviewed it independently and **APPROVED** — re-observing the oracle by two disjoint routes rather
+than auditing T116's rig. Its own from-scratch probe reproduces all three vectors **cell for cell (1269
+money cells, 0 mismatches)**, and T116's committed capture matches it on **1908 cells**.
 
-So enforcement is **live for the balance-identifier class** and **LATENT for SQL**. The guard says this
-itself — which is exactly why **T209**'s work to make `CANNOT-CATCH` reach a green run mattered. The two
-findings are the same story from opposite ends.
+# HEADLINE 2: family B's MECHANISM, and it changes what Buyan is being asked at G-8
 
-## HEADLINE 2: a fire can now be stopped
+`T220` found what `T116` explicitly could not. **Both sites driver-verified at `426a23544`:**
 
-`T211` made SIGTERM work. The driver **re-ran its probe on all three arms** rather than accepting its matrix:
+- `ProgressiveEMICalculator.java:1962` — `.divide(calculatedDaysInPeriod, mc).setScale(mc.getPrecision(),
+  mc.getRoundingMode())` consumes precision **19 as DECIMAL PLACES**.
+- `RepaymentPeriod.java:217` — `reduce(BigDecimal.ONE, BigDecimal::add)`, the **two-arg add, NO MathContext**.
 
-| arm | result |
-|---|---|
-| pre-fix, SIGTERM | trap **never ran**, 45.002 s to harness SIGKILL, LOCK **STRANDED**, child **ORPHANED** under pid 1 |
-| post-fix, SIGTERM | handler entered, driver tree of **6** stopped, no survivors, lock released, `rc=143` |
-| happy path, rc 0 **and** 7 | `driver exited rc=N` → `run_driver RETURNED rc=N` → `BODY COMPLETED NORMALLY` → lock released |
+So `rateFactorPlus1` carries **20 significant digits inside a precision-19 context**. Accumulated over n
+periods the EMI dips below half a minor unit at exactly the observed boundary — `n=103 → 0.005 → 0.01`,
+`n=104 → 0.004999999999999999999 → 0.00`. **An EMI of zero means nothing is ever repaid**, and the
+last-period fallback drops the whole residual into the final row as interest. **This is DEC-1's known
+`MathContext` double-sense producing a money outcome** — G-1 already named `:1962`/`:1979` as the only two
+such sites.
 
-It refuted its own brief three ways: **`wait` alone is insufficient** (a handler that RETURNS restarts the
-wait, hanging 20 s); **background+wait+exit still ORPHANS the child**, trading a stranded LOCK for an
-*unlocked* `claude` still writing to the repo — strictly worse, hence `stop_driver()`; and
-**`${pipestatus[1]}` dies** because `$pipestatus` holds one element after `wait`.
+**CONSEQUENCE: family B is NOT a property of "600 %" or of "n ≥ 104".** It is the EMI falling below half a
+minor unit, so **the boundary moves with principal, rate and term**. Every statement of G-8's region in
+`gates.md` is in rates and terms (MNT 0.23, MNT 2.91, MNT 5.01 @ n=1000, MNT 10.01 @ n=3000) — those
+describe **the cells that happened to be swept**, not the phenomenon. Options (b) and (c) would narrow the
+graded domain **by describing a region**, and a region described in the wrong variables cannot be narrowed
+correctly. → **`T223`** (and **`T219`**, which measures T159's figure).
 
-**Takes effect NEXT fire** — the merge renames the inode; pid 65843 ran the old bytes to the end.
+# HEADLINE 3: G-11 — rev 3 REJECTED, and holding `A2-15` was right
 
-## HEADLINE 3: "zero stranded" answered a narrower question than it was reported as answering
+The previous `RESUME.md` said `A2-15` was unblocked because rev 3 exists. **The driver held it** and sent
+`A2-25` at G-11's own stated unblocking condition instead. `A2-25` **REJECTED** revision 3 on four claims
+false about `main`, and its **F-3 vindicates the hold**: it authored the exact vector §5.2 **requirement 6**
+specifies — *the requirement that would have graded `A2-15`* — and ran it. It dies at **strict decode**
+(`unknown field "product_id"`) before either mandated refusal is reachable; `inadmissible` stays **0**.
+**Neither mandated refusal fires.** The only bytes that emit both are a loanschedule-shaped vector in a
+ledger costume — §5.1.1's own retracted defect. **The requirement written to close the vacuous-control hole
+re-opened it through its own text.** A dispatched `A2-15` would have hit an impossible instruction and
+improvised toward exactly that.
 
-The previous sweep asked `git status --porcelain` — **uncommitted** work. Re-confirmed: **0 dirty** across
-93 worktrees. The other half — **committed to a branch and never merged** — is **79 file-paths on 23
-branches**, concentrated in four. `T108`, `T109`, `T131`, `T22` are all recorded **`done`**, and
-`.softhouse/reviews/T131-review-of-T108.md` is **on `main` citing four paths that are not**. → **T214**.
+`A2-28` wrote **revision 4** addressing all seven items. **G-11 stays `OPEN — NOT RATIFIABLE`** until
+**`A2-31`** reviews rev 4 clean.
 
----
+# HEADLINE 4: G-12 raised and MEASURED in one fire — a SECOND SOURCE OF TRUTH
 
-## THE NEXT FIRE STARTS HERE
+`A2-26` found `acc_gl_journal_entry` carries `office_running_balance`. `CLAUDE.md` says balances are
+**derived, never written** *and* says **adopt Fineract's PostgreSQL schema** — the two instructions collide
+in that column. The driver raised **G-12** with **no recommendation deliberately**, because a cache and a
+second source of truth have nothing in common for the port.
 
-**16 tasks READY. 1 blocked (`T116`, on `T114` — which has NO ENTRY in `tasks.json` and can never resolve;
-re-scope or re-point it, it has been carried unresolved for several fires).**
+`A2-29` measured it. **It is a second source of truth.** Drift of **MNT 2,000,000.00** on the live oracle,
+surviving **four** organisation-wide recomputes, on rows Fineract itself flagged
+`is_running_balance_calculated = true`, **propagating into a freshly computed row**, and served at the
+contract boundary. The writer **seeds each incremental recompute from its own prior STORED output**.
+And **driver-verified**: `/glaccounts?fetchRunningBalance=true` is **HTTP 500 on PostgreSQL** —
+`GLAccountReadPlatformServiceImpl.java:130-131` uses MySQL-only `GROUP BY … DESC`, so **that
+contract-boundary reader has never worked on the only database this program permits**.
 
-1. **`A2-15` — now unblocked**, because `A2-21` delivered DEC-2 rev 3. Promote the A2 raw captures into
-   parity vectors. **This is the only READY task that would add a vector**, and no vector has been added for
-   two fires. Read §5.2 first: A2-21 added a **positive control** and a **required RED demonstration**
-   precisely so A2-15 cannot pass vacuously.
-2. **`T214`** — the 79 unmerged evidence paths. Prefer `git checkout <branch> -- <paths>` over merging
-   ancient branches. Do **not** delete any `softhouse/*` branch; they are currently the only copy.
-3. **`A2-24`** — adjudicate A2-22's self-flagged narrowing of `CorroborationsClaimed` (no independent
-   finding behind it; indistinguishable on today's store; two-line revert).
-4. **`T215`** — the probe covers one of **two** LOCK-exclusion sites; the sites moved to `:496`/`:517` after
-   T211's rewrite. **`T217`** — T211's own two follow-ups.
-5. Then `T193`, `T192`, `T195`, `T160`, `T207`, `T145`, `T164`, `T174`, `A2-23`, `T213`, `T216`.
-
-**`G-11` remains OPEN and NOT RATIFIABLE.** A2-21 delivered rev 3 and **correctly did not ratify it** — it
-is not authorised to. Ratification needs a further **independent** review passing clean.
+**Driver recommendation, Buyan may overrule:** **(a)** for behaviour without qualification — derive, never
+read those columns back — plus a **narrowed (b)** for storage: keep the columns at the DDL default, ship no
+recompute. **Against (c)**, which narrows the graded domain and is unnecessary. **Price, stated:** a
+table-level parity diff must **exclude** these columns, and that exclusion has to be written down.
 
 ---
 
 ## Corrections made against the DRIVER this fire — read before trusting its numbers
 
-**P-63 — the driver validates against TEXT instead of against the LIVE PROGRAM. Four times in one fire.**
+**P-67 — the driver certified a figure "EXACT" and propagated it to four files without measuring the
+denominator.** The claim *"three of its **four** detection classes inspect an empty population"* was the
+previous fire's HEADLINE 1(b). **The guard declares SEVEN classes** — `I3-FIELD-WRITE`, `I3-PKG-STATE`,
+`I3-SQL-BALANCE`, `I4-BUILDER`, `I4-DML`, `I6-HOLD-BALANCE`, `OPAQUE-SQL`. Origin: §4.4.1's *"four things
+the guard cannot see"* — four **blind spots** — read as four **classes**. Caught by `A2-25`; corrected in
+`program.json`, `patterns.md`, `tasks.json` and here. `A2-28` then went further: only **two** of the three
+NIL-COVERAGE sites actually fire, and it **refused to claim a corrected numerator for `I4-BUILDER`** because
+it had not established that population.
 
-1. A branch sweep that inspected **one file per branch** and reported it as the whole diff (20 files on
-   `T38-dec1-v7-pass2` alone). Caught by hand-checking a single branch. P-35 inside the check written to
-   find P-35.
-2. **"six guards"** pasted into the T209 brief from an old description. Corrected by A2-21.
-3. **"SCRATCH 337→337, 7 chain moves"** demanded of T212; truth at `cc33f7f` is **357→357 and 9**. T212
-   reported the discrepancy instead of tuning to hit the driver's number.
-4. A one-line regex that matched **line 172 of `fire-program.sh` — a COMMENT QUOTING T202's DELETED CODE** —
-   from which the driver briefly concluded T168 was wrong about SIGQUIT coverage. **T168 was right**;
-   `:202-206` set INT/TERM/HUP/QUIT on separate lines.
+**`T214` corrected the driver three times**: four coincidental basename hits, not three; *"the other 19
+branches need nothing"* is true of **paths** and over-claims for **content** — 10 novel same-path/
+different-content blobs, **four targeting `contract.go` or the DEC-1 ADR, which are ratified and frozen**,
+so landing them would have been a **gate bypass**, and it correctly did not; and **`T22` is not one of the
+four branches**.
 
-**P-64 — an INCONCLUSIVE run is indistinguishable from a RED one, and the default reading is wrong.** The
-driver's first happy-path check of T211 reported `LOCK PRESENT-STRANDED / DRIVER CHILD ORPHANED` and read
-exactly like a regression. It was **misconfigured** — `T211_FAKE_RC` unset, so the fake child slept its full
-300 s past the probe's 40 s ceiling and the arm never reached completion. **Before calling an arm red, prove
-the arm RAN.**
-
-**Also**: the driver removed `/private/tmp/t-merge` (detached, 5 commits ahead) **before** checking what was
-on it, then checked. No deliverable lost — all scratch test-merges from the P-24 rig, surviving as dangling
-objects. The check belonged first.
-
-## Corrections made against already-merged work
-
-- **T180 → T161**: T161's own prover asserted `attester == PRE-FIX` on the SIGKILL/POST-FIX row and **would
-  have failed on the fixed script for the right reason**. Corrected rather than left to rot.
-- **T168 → itself**: found the SIGQUIT omission a **second time**, in `restore_store()`'s re-entrancy guard.
-- **T176 → T169's framing**: chose "fix the generator" with a reason the brief did not supply —
-  `StackOverflowError` is an `Error`, not a `RuntimeException`, so the original handler **could never have
-  caught** the failure mode T159 exists to probe.
+**`A2-26`**: the driver's list of journal-entry observations was **7 of 9**.
+**`A2-27`**: the evidence path in its brief does not exist.
 
 ## STANDING INSTRUCTIONS
 
-- **Re-derive every figure from the live artefact at the moment of dispatch (P-63).** A number in
-  `tasks.json` is evidence of when it was true, not that it is true. Three of this fire's driver defects
-  were stale or mis-scoped figures.
-- **Before calling an arm RED, prove the arm RAN (P-64).** Check the probe's preconditions and ceilings
-  first; a run that measured nothing looks exactly like a failure.
-- **A regression probe must bind by CONTENT, not line number** — proven inside this fire. T211 moved
-  `run_driver` 237–291 → 356–474 and T210's probe, merged hours earlier, **still passed**.
-- The canonical vector-store digest is `git rev-parse HEAD:.softhouse/vectors` (**P-61**). Never
-  `find | shasum | shasum`. Publish any digest **with its recipe** (P-38).
-- **Verify a refusal by what it SAYS and what population SURVIVES, never by exit code (P-62)** —
-  `exit 2` is overloaded across unusable corpus, failed hard guard, unreachable oracle, wrong repo root,
-  and an I-3/I-4 violation.
+- **Before recording that a dependency, file, vector, guard or citation DOES NOT EXIST, state where you
+  looked (P-66/P-70).** Four claims this fire were true about a *search* and false about the *world*.
+  A sweep must also name its **scope** — the DEC-2 claim survived one FILE over precisely because every
+  previous sweep was scoped to the ADR.
+- **Use `python3 .softhouse/bin/ready-tasks.py`, not your eye on `tasks.json`.** Completed tasks are
+  archived into `.softhouse/runs/*.tasks.json`; edges pointing there resolve to nothing in the current file.
+- **Before certifying a ratio, count BOTH terms in the live artefact and say where you counted (P-67).**
+- **A measured claim has a shelf life shorter than a busy fire (P-69).** Census figures moved between two
+  workers *inside this fire* and neither was wrong. Stamp claims with the commit measured at.
+- **Ask "unreachable in WHICH observable?" (P-68).** A defect that cannot change the exit status can still
+  change every number a human reads.
+- **Re-derive every figure from the live artefact at the moment of dispatch (P-63).**
+- **Before calling an arm RED, prove the arm RAN (P-64).**
+- **A regression probe must bind by CONTENT, not line number** — `T215` and `T218` both hit drifted line
+  numbers this fire; T127's citations had moved twice.
+- The canonical vector-store digest is `git rev-parse HEAD:.softhouse/vectors` (**P-61**). Publish any
+  digest **with its recipe** (P-38).
+- **Verify a refusal by what it SAYS and what population SURVIVES, never by exit code (P-62).**
 - **Oracle-down is exit 2 AND a probe line actually PRINTED AND reading `down`** — test **presence** first.
-- **The shell's working directory persists between tool calls.** It has now bitten this program three times.
-- **Count the PROGRAMS before the votes (P-58).** `grep` here is a shell function re-execing as **ugrep with
-  `-I`**; `/usr/bin/grep` is BSD 2.6.0-FreeBSD. **And make any census distinguish live code from
-  commentary** — the driver's regex matched a comment quoting deleted code this fire.
-- **Never execute a promote or rewriter script from the repo root**, and a `/tmp` copy **cannot run** — they
-  derive `ROOT` from `__file__`, so a naive scratch test is a **null control** (P-36). Use a **sibling file
-  in the same directory** (T161's shape, adopted by T180).
+- **The shell's working directory persists between tool calls.**
+- **Never execute a promote or rewriter script from the repo root**, and a `/tmp` copy **cannot run** (P-36).
 - **The Go module root is `nexus/`**; `. .softhouse/bin/go-env.sh` from the repo root. Invoke the harness
   with **`bash`**, never `sh` (exit 3 = wrong-interpreter refusal). **Never `gofmt -w` `contract.go`** (G-3).
 - **Do not modify `.softhouse/bin/fire-program.sh` while a fire runs.** Merging is safe: git **renames**.
+  `T217`'s bounded push and 5 s stop grace take effect **next fire**.
+
+---
+
+## THE NEXT FIRE STARTS HERE
+
+**Run `python3 .softhouse/bin/ready-tasks.py` first.** It prints READY, dispatched, unresolved edges, and
+**open CONTRACT gates beside the ready list** — because dependency-ready and *permitted* are different
+questions, and this driver was conflating them.
+
+1. **`A2-31` — the G-11 unblocker.** Independent review of DEC-2 **rev 4**. Fourth revision; rev 1, 2 and 3
+   were all rejected, twice for the **same** defect class. It must also adjudicate `A2-28`'s **re-measure
+   gate** (P-69).
+2. **`A2-15` remains GATED** and must not be dispatched while G-11 is open. When it is dispatched, its brief
+   must carry **`A2-30`**'s five items — above all that **`glAccountType` is NOT a stable cell** (entry id 4
+   / GL 2 renders `ASSET` in `A2-088` and `INCOME` in `A2-320`, no entry edited).
+3. **`T223` + `T219`** — restate G-8's region in the variables the phenomenon actually has. **Do this before
+   options (b)/(c) are ever put to Buyan.**
+4. **`T222`** — no corpus-wide exemption tripwire; a decoration exemption is admissible today.
+5. **`T224`** — the retracted claim survives at `conformance.sh:1115-1116`, attached to the very guard whose
+   existence refutes it. **`T221`** — `T108.md` still states verbatim the claims its own merged review
+   disproved.
+6. Then `A2-29`'s residuals, `T145`, `T160`, `T164`, `T174`, `T192`, `T195`, `T207`, `T213`, `T216`, `A2-23`.
 
 ## What is NOT true, and must not be inferred from the green bar
 
-**Nothing grades the ledger's money.** The 43 passing vectors are `loanschedule`'s; **zero** touch a GL
-account, a mapping, a financial activity or a journal entry. **I-3/I-4 are checked in source for the
-balance-identifier class only — three of the guard's four detection classes inspect an EMPTY population,
-and the SQL classes are proven by `--selftest`, not by this tree.** `G-4`, `G-5`, `G-8`, `G-10` remain OPEN,
-and **`G-11` is OPEN and NOT RATIFIABLE**. **No vector was added this fire, and none has been added for two
-fires** — `A2-15` is the task that changes that. **Nothing was cut over, and nothing here authorises it.**
-The gate register at the top of `gates.md` is authoritative.
+**Nothing grades the ledger's money.** The 46 passing vectors are `loanschedule`'s; **zero** touch a GL
+account, a mapping, a financial activity or a journal entry. **`A2-26` established that the ledger corpus
+could not have supported a useful vector anyway**: every entry in it had exactly **two legs** and every
+amount was a **whole tugrik**, so "splits sum to the whole" and all minor-unit handling were graded by
+**nothing** — it captured 3- and 4-leg transactions with real minor units to fix that. **Two of the 46
+vectors have `principal_amortizes_to_zero` switched OFF**, legitimately and loudly, but the count is not
+"46 vectors all asserting every invariant". **G-4, G-5, G-8, G-10, G-12 are OPEN and G-11 is OPEN and NOT
+RATIFIABLE.** `A2-29` could not break the uncorrelated seed join and could not reach `LIMIT 10000`,
+multi-office, or the NULL predicate. `A2-28` did not establish `I4-BUILDER`'s population. **Nothing was cut
+over, and nothing here authorises it.** The gate register at the top of `gates.md` is authoritative.
