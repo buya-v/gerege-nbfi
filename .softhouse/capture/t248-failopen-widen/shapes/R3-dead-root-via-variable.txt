@@ -1,0 +1,10 @@
+#!/bin/bash
+# SHAPE R3 -- NOT DESIGNED AROUND. There is NO absolute path on the `cd` line at all: the dead
+# root arrives through a variable, so C1 has to catch the ASSIGNMENT and C2b has to catch a
+# `cd "$VAR"` with no literal in it. Root is /scratch, the wording is "nothing to report", and
+# the search is `git ls-files` rather than `git grep`.
+set -u
+CORPUS=/scratch/t248-absent-corpus
+cd "$CORPUS"
+git ls-files
+echo "nothing to report from the corpus"

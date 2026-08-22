@@ -1,0 +1,30 @@
+engine      : grep (BSD grep, GNU compatible) 2.6.0-FreeBSD   [calibrated: known positive HIT, known negative MISS]
+repo        : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9c36a94f97f3eb82
+HEAD        : 9b6c596c2b66769e7b7e7b5c2ca012b7f3df122a
+shipped from: HEAD:.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py
+
+shipped exit : 1      widened exit : 1
+
+=== 1. DETECTION SETS (every C1/C2 line either linter emitted)
+shipped detections: 20   widened detections: 22
+
+--- LOST (present in SHIPPED, absent from WIDENED). ANY line here falsifies additivity:
+   (none)
+
+--- GAINED (absent from SHIPPED, present in WIDENED):
+.softhouse/reviews/T138-evidence/r11-hygiene.sh	C1	77	dead absolute path: /tmp/T138-merge
+.softhouse/reviews/T138-evidence/r11-hygiene.sh	C2	79	UNCONDITIONAL print CLAIMS A MEASUREMENT after a `cd` at line 77 whose failure is swallowed -- it runs whether or not that directory was entered: echo "   (searched the MERGED tree)"
+
+=== 2. FRONTIER (the rows the conformance gate compares against its pin)
+--- /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t248-out-old.m4iVfOdy2U.fr	2026-08-22 19:36:14
++++ /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t248-out-new.xvCkJVAuQl.fr	2026-08-22 19:36:14
+@@ -1,5 +1,6 @@
+ FAILOPEN-FRONTIER TIER1 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+ FAILOPEN-FRONTIER TIER1 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
++FAILOPEN-FRONTIER TIER1 .softhouse/reviews/T138-evidence/r11-hygiene.sh
+ FAILOPEN-FRONTIER TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+ FAILOPEN-FRONTIER TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+ FAILOPEN-FRONTIER TIER2 .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+
+=== 3. VERDICT
+ADDITIVE -- zero detections lost; the frontier differs only by ADDED rows.

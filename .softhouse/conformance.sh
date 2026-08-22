@@ -1365,7 +1365,9 @@ guard_ledger_invariants() {
 #   (b) run the linter over the WHOLE tree, every run, and gate the FRONTIER for
 #       EQUALITY against a pin held here. Nothing that is admissible today
 #       becomes inadmissible, nothing inadmissible becomes admissible, and a
-#       TENTH instrument — or a swap that keeps the total at nine — refuses.
+#       instrument BEYOND the pinned set — or a swap that keeps the total the
+#       same — refuses. [T248: that set was nine when T243 wrote this and is TEN
+#       now; the count lives in FAILOPEN_PIN_FILE_LIST, never in this prose.]
 # (b) is what is implemented, and it is the same idiom as EXEMPTION_PIN_*
 # twenty lines up: a population that can drift in both directions is pinned by
 # IDENTITY, and moving it is a source edit a reviewer reads.
@@ -1387,8 +1389,36 @@ guard_ledger_invariants() {
 #     corpus" refusal and anything else is a crash; both refuse here.
 # NO PIPELINE ANYWHERE IN IT (P-57): the linter's output goes to a FILE and
 # every read below is a `sed`/`grep` over that file.
+#
+# T248 -- THE FRONTIER MOVED, AND THAT IS THE POINT. [P-76]
+#
+# The driver drove THIS guard red and it DID NOT FIRE. T243's red drive planted the shape
+# T238 wrote the rule FROM, so it proved the wiring and said nothing about the coverage.
+# The second confirmed live site of the class -- `.softhouse/reviews/T138-evidence/
+# r11-hygiene.sh:77-79`, the site T239 measured LIVE and the site that caused T238's brief
+# to be widened in the first place -- was flagged ZERO times, because its reassurance is an
+# UNCONDITIONAL echo on the next line rather than a `|| echo` arm, and because its dead path
+# is `/tmp/T138-merge` while C1 only ever watched four roots (/Users /home /opt /var --
+# MEASURED black-box, .softhouse/capture/t248-failopen-widen/transcripts/10-c1-characterise.txt).
+# BOTH halves had to move: widening C2 alone was measured to land r11-hygiene.sh on the
+# frontier at TIER 2, i.e. asserting "corpus reachable today" about a directory that has not
+# existed for days (transcript 20, variant V1).
+#
+# THE ROW BELOW IS NEWLY VISIBLE, NOT NEWLY INTRODUCED, and the difference matters:
+#   +TIER1 .softhouse/reviews/T138-evidence/r11-hygiene.sh
+# The file is unchanged and has been fail-open since T138. What changed is that the linter
+# can now see it. NOTHING was reclassified and NOTHING was lost -- the widening is proved
+# ADDITIVE by running the shipped linter and the widened one over the same tree and diffing
+# every detection (transcripts/30-additivity.txt: 20 detections -> 22, LOST = none).
+#
+# THE PIN REMAINS A FRONTIER, NOT AN AMNESTY. `sweep-ORIGINAL.sh` stays on it PERMANENTLY --
+# it is T238's preserved SPECIMEN of the defect and repairing it would destroy the evidence.
+# The other nine are unrepaired instruments in other tasks' frozen evidence directories, and
+# `r11-hygiene.sh` now joins them on exactly those terms: recorded, visible, and refusing to
+# grow. T248 did not touch any of the ten; that would be repairing files outside its scope.
 FAILOPEN_PIN_FILE_LIST="TIER1 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
 TIER1 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+TIER1 .softhouse/reviews/T138-evidence/r11-hygiene.sh
 TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
 TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
 TIER2 .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
@@ -1448,7 +1478,7 @@ guard_no_fail_open_instruments() {
   [ -n "$n" ] || n=0
 
   say "conformance: CENSUS fail-open instruments — inspected $corpus tracked .sh/.py file(s) under"
-  say "conformance:   $REPO_ROOT (git ls-files, whole repository); frontier $n, pinned at 9."
+  say "conformance:   $REPO_ROOT (git ls-files, whole repository); frontier $n, pinned at 10."
   say "conformance:   TIER1 = dead path AND a printing failure arm (fail-open, live). TIER2 = printing"
   say "conformance:   arm only, corpus reachable today. Both are pinned by PATH, not by count."
   if ! diff -u "$want" "$got" >"$out.diff" 2>&1; then

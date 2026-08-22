@@ -1,0 +1,7 @@
+#!/bin/sh
+# SHAPE R4 -- THE DRIVER'S OWN PROBE 1, which T243's wired guard did not detect AT ALL.
+# The dead path is under /nonexistent -- a root the shipped C1 could not see -- and it is not
+# reached with `cd` but with `git -C`. The reassurance is a classic `|| echo` arm, i.e. the
+# UNCHANGED C2a. So this isolates the C1 half: if C1 were still root-anchored, this stays
+# invisible no matter what happened to C2, which is exactly what the driver measured.
+git -C /nonexistent/worktree/agent-adeadbeefdeadbeef grep -n -E 'pattern' -- . || echo "   (no hits)"

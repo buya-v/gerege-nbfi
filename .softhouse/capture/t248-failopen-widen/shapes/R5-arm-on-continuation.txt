@@ -1,0 +1,11 @@
+#!/bin/bash
+# SHAPE R5 -- NOT DESIGNED AROUND, and it is a MEASURED RESIDUAL BLIND SPOT (see the handoff).
+# The reassurance is still an ARM of the failing construct -- the C2a shape -- but the `||` has
+# been moved onto a backslash continuation. C2a reads PHYSICAL lines and requires the search
+# and the `|| echo` to be on the SAME one, so the arm and the search never meet.
+# This is the same lesson as R4 one level down: the rule was written against a specimen whose
+# construct happened to fit on one line.
+set -u
+WT=/mnt/t248-continued-arm
+( cd "$WT" && git grep -n -I -i -E 'pattern' -- . ) \
+  || echo "   (no hits)"

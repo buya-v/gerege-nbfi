@@ -1,0 +1,49 @@
+T248 -- C1 CHARACTERISATION (black box, against the SHIPPED linter)
+repo      : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9c36a94f97f3eb82
+commit    : 9b6c596c2b66769e7b7e7b5c2ca012b7f3df122a
+linter    : .softhouse/capture/t238-failopen/instruments/50-failopen-lint.py (WORKING TREE)
+engine    : python3 re over the linter's stdout; subprocess list-argv, NO shell, NO pipe
+calibration: known POSITIVE flagged C1  = YES
+             known NEGATIVE flagged C1  = NO
+
+PROBE             C1?    TIER      WHAT IT TESTS
+----------------------------------------------------------------------------------------------------
+KNOWN-POSITIVE    YES    3         CALIBRATION: dead path under a root C1 is known to watch
+KNOWN-NEGATIVE    no     -         CALIBRATION: path that EXISTS right now
+root-tmp          YES    3         r11-hygiene.sh's ACTUAL dead path
+root-nonexistent  YES    3         the driver's probe-1 path
+root-Users        YES    3         dead under /Users
+root-home         YES    3         dead under /home
+root-opt          YES    3         dead under /opt
+root-var          YES    3         dead under /var
+root-srv          YES    3         dead under /srv
+root-data         YES    3         dead under /data
+root-mnt          YES    3         dead under /mnt
+root-private      YES    3         dead under /private (macOS real /tmp)
+root-scratch      YES    3         dead under an arbitrary root
+tail-short        YES    3         dead under a watched root, TAIL SHORTER THAN 6 CHARS
+tail-exactly6     YES    3         dead under a watched root, tail exactly 6 chars
+prefix-colon      no     -         watched root preceded by ':' (not in C1's lead-char class)
+prefix-equals     YES    3         watched root preceded by '=' (in C1's lead-char class)
+var-indirect      no     -         dead path reached through a VARIABLE, no literal in the line
+
+PLANTED LINES, verbatim:
+  KNOWN-POSITIVE    cd /Users/buv/gerege-nbfi/.claude/worktrees/agent-adeadbeefdeadbeef && git grep -n x -- .
+  KNOWN-NEGATIVE    cd /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9c36a94f97f3eb82 && git grep -n x -- .
+  root-tmp          cd /tmp/T138-merge 2>/dev/null && git grep -n x -- .
+  root-nonexistent  cd /nonexistent/worktree/agent-adeadbeefdeadbeef && git grep -n x -- .
+  root-Users        cd /Users/nobodyhere/deadpath12345 && git grep -n x -- .
+  root-home         cd /home/nobodyhere/deadpath12345 && git grep -n x -- .
+  root-opt          cd /opt/nobodyhere/deadpath12345 && git grep -n x -- .
+  root-var          cd /var/nobodyhere/deadpath12345 && git grep -n x -- .
+  root-srv          cd /srv/nobodyhere/deadpath12345 && git grep -n x -- .
+  root-data         cd /data/nobodyhere/deadpath12345 && git grep -n x -- .
+  root-mnt          cd /mnt/nobodyhere/deadpath12345 && git grep -n x -- .
+  root-private      cd /private/nobodyhere/deadpath12345 && git grep -n x -- .
+  root-scratch      cd /scratch/nobodyhere/deadpath12345 && git grep -n x -- .
+  tail-short        cd /Users/x12 && git grep -n x -- .
+  tail-exactly6     cd /Users/abcdef && git grep -n x -- .
+  prefix-colon      git grep -n x -- . | sed "s|^|:/Users/nobodyhere/deadpath12345|"
+  prefix-equals     D=/Users/nobodyhere/deadpath12345; git grep -n x -- . ; cd "$D"
+  var-indirect      WT="$HOME/gone/deadpath12345"; cd "$WT" && git grep -n x -- .
+

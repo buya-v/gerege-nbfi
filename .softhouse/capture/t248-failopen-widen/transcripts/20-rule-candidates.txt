@@ -1,0 +1,100 @@
+T248 -- CANDIDATE RULES, FALSE-POSITIVE COST MEASURED
+repo    : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9c36a94f97f3eb82
+commit  : 9b6c596c2b66769e7b7e7b5c2ca012b7f3df122a
+engine  : python3 re; git ls-files via list-argv subprocess; no grep, no pipe
+corpus  : 891 tracked .sh/.py
+calibration: POSITIVE r11-hygiene.sh flagged by C2b = YES ; NEGATIVE self flagged by C2b = NO
+
+=== V0 shipped        (C1 4-root  , C2a only)
+    inspected instruments: 39      TIER1 2   TIER2 7   TIER3 5   frontier 9
+      TIER2  .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+      TIER2  .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+      TIER1  .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+      TIER2  .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+      TIER2  .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
+      TIER2  .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+      TIER2  .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh
+      TIER2  .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh
+      TIER1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+
+=== V1 C2 widened only(C1 4-root  , C2a + C2b cd-only)
+    inspected instruments: 39      TIER1 2   TIER2 8   TIER3 5   frontier 10
+      TIER2  .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+      TIER2  .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+      TIER1  .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+      TIER2  .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+      TIER2  .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
+      TIER2  .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+      TIER2  .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh
+      TIER2  .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh
+      TIER1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+      TIER2  .softhouse/reviews/T138-evidence/r11-hygiene.sh  <-- MANDATORY SITE
+
+=== V2 C1 widened only(C1 any-path, C2a only)
+    inspected instruments: 39      TIER1 4   TIER2 5   TIER3 9   frontier 9
+      TIER2  .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+      TIER2  .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+      TIER1  .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+      TIER2  .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+      TIER2  .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
+      TIER2  .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+      TIER1  .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh
+      TIER1  .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh
+      TIER1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+
+=== V3 BOTH           (C1 any-path, C2a + C2b cd-only)
+    inspected instruments: 39      TIER1 5   TIER2 5   TIER3 8   frontier 10
+      TIER2  .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+      TIER2  .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+      TIER1  .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+      TIER2  .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+      TIER2  .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
+      TIER2  .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+      TIER1  .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh
+      TIER1  .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh
+      TIER1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+      TIER1  .softhouse/reviews/T138-evidence/r11-hygiene.sh  <-- MANDATORY SITE
+
+=== V4 BOTH + piped   (C1 any-path, C2a + C2b cd+piped)
+    inspected instruments: 39      TIER1 5   TIER2 7   TIER3 8   frontier 12
+      TIER2  .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+      TIER2  .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+      TIER1  .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+      TIER2  .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+      TIER2  .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
+      TIER2  .softhouse/capture/t239-r11-rerun/instruments/21-crosscheck.sh
+      TIER2  .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+      TIER1  .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh
+      TIER1  .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh
+      TIER1  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+      TIER1  .softhouse/reviews/T138-evidence/r11-hygiene.sh  <-- MANDATORY SITE
+      TIER2  .softhouse/reviews/a2-33-dec2-rev5/sweep.sh
+
+=== C2b DETAIL under V3 (the adopted candidate): every hit, with its swallowed construct
+  .softhouse/reviews/T138-evidence/r11-hygiene.sh
+      print:79   construct:77   [cd whose failure does not terminate]  echo "   (searched the MERGED tree)"
+
+=== C1 DETAIL: paths NEWLY visible under C1_WIDE that C1_SHIPPED could not see
+  .softhouse/capture/t238-failopen/instruments/40-red-drive.sh
+      :69   /tmp/t238-notarepo-XXXXXX
+      :79   /tmp/t238-emptyrepo-XXXXXX
+      :90   /tmp/t238-otherrepo-XXXXXX
+      :105  /tmp/t238-this-file-does-not-exist-
+  .softhouse/capture/t238-failopen/instruments/70-l1b-81-vs-86.sh
+      :19   /tmp/t238-l1b-XXXXXX
+      :88   /usr/local.
+  .softhouse/capture/t238-failopen/instruments/71-l1b-gitgrep-leg.sh
+      :21   /tmp/t238-l1b2-XXXXXX
+  .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh
+      :27   /tmp/x.tar
+      :35   /tmp/t239-red-index
+      :42   /tmp/t239-red-index
+  .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh
+      :15   /tmp/T138-merge
+      :27   /tmp/T138-merge
+  .softhouse/conformance.sh
+      :837  /contract/contract.go
+      :2466 /x/.softhouse/capture
+      :2470 /x/inspected
+  .softhouse/reviews/T138-evidence/r11-hygiene.sh
+      :77   /tmp/T138-merge

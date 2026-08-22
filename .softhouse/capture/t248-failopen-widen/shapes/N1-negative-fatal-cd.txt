@@ -1,0 +1,11 @@
+#!/bin/bash
+# NEGATIVE CONTROL N1 -- MUST NOT BE FLAGGED C2, AND MUST STAY OFF THE FRONTIER.
+# Same dead root as R2, same reassuring sentence, but the `cd` is FATAL. A script that stops
+# cannot print a false measurement. A rule that could not tell N1 from R2 would flag most of
+# the repository, so this is the negative half of the calibration: without it, "R2 fired"
+# would only prove the rule fires, not that it discriminates.
+# C1 does fire here (the path really is dead) -- that is TIER 3, unpinned, and correct.
+set -u
+cd /srv/t248-vendor-audit || exit 2
+git grep -n -E 'vendor' -- .
+echo "   (no hits)"
