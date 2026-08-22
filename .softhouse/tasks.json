@@ -9,7 +9,7 @@
   "tasks": [
     {
       "id": "T116",
-      "title": "G-8 option (a) — promote a FAMILY B parity vector with an explicit invariant exemption",
+      "title": "G-8 option (a) \u2014 promote a FAMILY B parity vector with an explicit invariant exemption",
       "status": "done",
       "executor": "agent",
       "model": "opus",
@@ -29,7 +29,7 @@
     },
     {
       "id": "T117",
-      "title": "Family B is measured at 29 cells and still UNCAUSED — probe whether it is a half-line in n",
+      "title": "Family B is measured at 29 cells and still UNCAUSED \u2014 probe whether it is a half-line in n",
       "status": "done",
       "executor": "agent",
       "model": "opus",
@@ -40,8 +40,8 @@
       "files_hint": [
         ".softhouse/capture/"
       ],
-      "description": "T101's suggested probe, carried forward by T112 as its follow-up 5 and unexecuted. Family B (600.0% p.a., MNT 0.01, n >= 104) is a GENUINE non-amortization that the Go port reproduces cell for cell — so 'match the oracle' and 'principal amortizes to zero' cannot both hold there by any amount of porting. Sweep 600.0% at n = 300..1000 and 600.0% at B = 2..5 against the live oracle to establish (i) whether family B is a half-line in n or a bounded island, and (ii) whether the failing principal can exceed ONE MINOR UNIT. (ii) is the number that matters: it is the last open question that could move the bound, and a family B confined to sub-minor-unit dust is a very different disclosure from one that is not. Register predictions BEFORE running the probe (P-9) and commit them first. Report the observation; decide nothing about the gate.",
-      "note": "Raised by the driver, local fire 20260821-080001, from T112 follow-up 5 / T101. NEEDS THE ORACLE — local-fire-only work. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md §1. || local fire 20260821-134344: DISPATCHED (wave 1), isolated worktree softhouse/T117-familyb-probe, model opus. NEEDS THE ORACLE - local-fire-only. Told to commit predictions FIRST (P-9), decide the can-it-exceed-one-minor-unit question in Decimal/integers never float (P-25), write only under .softhouse/capture/t117-familyb/, and check gates.md:978 before restating the A/B attribution the driver has had backwards three times. || local fire 20260821-134344: DONE on softhouse/T117-familyb-probe (5 commits, 39 files, 26,961 insertions). NOT MERGED pending T159. Driver verified scope itself: everything inside .softhouse/capture/t117-familyb/ plus handoff, NOTHING outside. P-9 CONTROL HOLDS BY COMMIT ORDER, driver-checked: a9a2e53 (predict) precedes f1ed3c4 (observe), be626d2 (predict) precedes 90882ba (observe). BOTH REGISTERED PREDICTIONS WERE REFUTED. HEADLINE: the failing principal EXCEEDS one minor unit -- 501 minor units = MNT 5.01 at 600%/n=1000, exceeding even the family-A record of MNT 2.91; 'sub-minor-unit dust' is dead; and NO UPPER BOUND IS ESTABLISHED because the largest failing principal tracks the largest term asked and nothing above n=1000 has ever been asked. Family B is neither a half-line nor an island but an interleaved band. NEW SHAPE THE RECORD DID NOT CONTAIN: three PARTIAL-shortfall cells at B=11. It corrected its OWN metric mid-task (classify_t117.py overstates the residual on the partial cells) and refused to edit the script that produced committed evidence, re-deriving in residual_census.py instead. Recorded PROVISIONALLY in gates.md marked UNREVIEWED-DO-NOT-CITE; the driver did NOT rewrite G-8 on an unreviewed report. || local fire 20260821-134344: APPROVED by T159 and MERGED. T159 re-derived every number from the RAW captures reading none of T117's analysis layer -- 102 checks, 100 exact, 0 fabrications, 2 scope imprecisions -- and 17/17 re-asked cells came back byte-identical under disjoint tenant ids. T117's central warning was VINDICATED: it said MNT 5.01 was the largest OBSERVED and not a bound because nobody had asked above n=1000; T159 asked, and the residual DOUBLED to MNT 10.01 at n=3000.",
+      "description": "T101's suggested probe, carried forward by T112 as its follow-up 5 and unexecuted. Family B (600.0% p.a., MNT 0.01, n >= 104) is a GENUINE non-amortization that the Go port reproduces cell for cell \u2014 so 'match the oracle' and 'principal amortizes to zero' cannot both hold there by any amount of porting. Sweep 600.0% at n = 300..1000 and 600.0% at B = 2..5 against the live oracle to establish (i) whether family B is a half-line in n or a bounded island, and (ii) whether the failing principal can exceed ONE MINOR UNIT. (ii) is the number that matters: it is the last open question that could move the bound, and a family B confined to sub-minor-unit dust is a very different disclosure from one that is not. Register predictions BEFORE running the probe (P-9) and commit them first. Report the observation; decide nothing about the gate.",
+      "note": "Raised by the driver, local fire 20260821-080001, from T112 follow-up 5 / T101. NEEDS THE ORACLE \u2014 local-fire-only work. || local fire 20260821-134344: P-5 triage \u2014 MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md \u00a71. || local fire 20260821-134344: DISPATCHED (wave 1), isolated worktree softhouse/T117-familyb-probe, model opus. NEEDS THE ORACLE - local-fire-only. Told to commit predictions FIRST (P-9), decide the can-it-exceed-one-minor-unit question in Decimal/integers never float (P-25), write only under .softhouse/capture/t117-familyb/, and check gates.md:978 before restating the A/B attribution the driver has had backwards three times. || local fire 20260821-134344: DONE on softhouse/T117-familyb-probe (5 commits, 39 files, 26,961 insertions). NOT MERGED pending T159. Driver verified scope itself: everything inside .softhouse/capture/t117-familyb/ plus handoff, NOTHING outside. P-9 CONTROL HOLDS BY COMMIT ORDER, driver-checked: a9a2e53 (predict) precedes f1ed3c4 (observe), be626d2 (predict) precedes 90882ba (observe). BOTH REGISTERED PREDICTIONS WERE REFUTED. HEADLINE: the failing principal EXCEEDS one minor unit -- 501 minor units = MNT 5.01 at 600%/n=1000, exceeding even the family-A record of MNT 2.91; 'sub-minor-unit dust' is dead; and NO UPPER BOUND IS ESTABLISHED because the largest failing principal tracks the largest term asked and nothing above n=1000 has ever been asked. Family B is neither a half-line nor an island but an interleaved band. NEW SHAPE THE RECORD DID NOT CONTAIN: three PARTIAL-shortfall cells at B=11. It corrected its OWN metric mid-task (classify_t117.py overstates the residual on the partial cells) and refused to edit the script that produced committed evidence, re-deriving in residual_census.py instead. Recorded PROVISIONALLY in gates.md marked UNREVIEWED-DO-NOT-CITE; the driver did NOT rewrite G-8 on an unreviewed report. || local fire 20260821-134344: APPROVED by T159 and MERGED. T159 re-derived every number from the RAW captures reading none of T117's analysis layer -- 102 checks, 100 exact, 0 fabrications, 2 scope imprecisions -- and 17/17 re-asked cells came back byte-identical under disjoint tenant ids. T117's central warning was VINDICATED: it said MNT 5.01 was the largest OBSERVED and not a bound because nobody had asked above n=1000; T159 asked, and the residual DOUBLED to MNT 10.01 at n=3000.",
       "carried_from": "2026-08-17-run1-harness-schedule-poc",
       "attempts": 1
     },
@@ -60,13 +60,13 @@
         ".softhouse/conformance.sh"
       ],
       "description": "T110's F-T110-1..5 and their shared root, to be scoped by T119's ruling. conformance.sh's guard_no_float_in_vectors enumerates the store with `find -name '*.json' -type f` (RECURSIVE, no symlink follow) while LoadStore reads ONE LEVEL DEEP and matches the suffix bytewise. The two therefore disagree about what the store contains and no check compares their counts. Measured consequences, all silent: a symlinked context directory is skipped entirely (F-1), a nested subdirectory is skipped (F-2), UPPER.JSON is not a vector (F-3), case-only case_id variants both grade at 43/5623 (F-4), and NFC vs NFD Unicode-normalisation variants both grade AND RENDER IDENTICALLY in the report at 44/5670 (F-5). Fix: an explicit file census that REFUSES any .json under the store root the harness did not load, plus a case_id charset rule ([A-Za-z0-9._-]; all 47 committed ids are ASCII). DRIVE EVERY LEG RED (P-22) and show the legitimate 42/5576 store is untouched.",
-      "note": "Raised by the driver, local fire 20260821-080001, from T110's F-T110-1..5. The census is the real fix - the individual five are symptoms of one disagreement. Sequence after T110+T119 and after T105 (same package). NEEDS THE ORACLE. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md §1. || local fire 20260821-054355: SUPERSEDED BY T154. Not dropped and not downgraded: T120, T132 and T143 are three views of ONE defect surface (the no-float guards + the store census) and their files_hint collide on .softhouse/conformance.sh and nexus/internal/apps/loanschedule/. Plan-gate rule 7 forbids concurrent workers on overlapping files_hint, and three agents independently rewriting the same guard would produce contradictory guards. T154 carries all three descriptions verbatim and is paired with reviewer T155.",
+      "note": "Raised by the driver, local fire 20260821-080001, from T110's F-T110-1..5. The census is the real fix - the individual five are symptoms of one disagreement. Sequence after T110+T119 and after T105 (same package). NEEDS THE ORACLE. || local fire 20260821-134344: P-5 triage \u2014 MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md \u00a71. || local fire 20260821-054355: SUPERSEDED BY T154. Not dropped and not downgraded: T120, T132 and T143 are three views of ONE defect surface (the no-float guards + the store census) and their files_hint collide on .softhouse/conformance.sh and nexus/internal/apps/loanschedule/. Plan-gate rule 7 forbids concurrent workers on overlapping files_hint, and three agents independently rewriting the same guard would produce contradictory guards. T154 carries all three descriptions verbatim and is paired with reviewer T155.",
       "carried_from": "2026-08-17-run1-harness-schedule-poc",
       "superseded_by": "T154"
     },
     {
       "id": "T132",
-      "title": "The no-float guards are bare grep — a money non-negotiable can silently pass",
+      "title": "The no-float guards are bare grep \u2014 a money non-negotiable can silently pass",
       "status": "superseded",
       "executor": "agent",
       "model": "opus",
@@ -79,13 +79,13 @@
         ".softhouse/conformance.sh"
       ],
       "description": "T108's F-T108-1, driver-confirmed at both call sites. conformance.sh:184 guard_no_float_in_vectors and :201 guard_no_float_in_harness use bare 'grep -Eq' with NEITHER LC_ALL=C NOR -a. Per T108's 360-cell matrix that means a vector file containing a float plus ONE INVALID BYTE BEFORE IT ON THE SAME LINE makes the float guard SILENTLY PASS - and this guards the first non-negotiable in CLAUDE.md, that money is integer minor units with no floating point anywhere. Apply the two-token fix ('LC_ALL=C grep -qaF' shape, per T108's exact replacement text in its handoff) at BOTH sites, and sweep conformance.sh and every rig for OTHER bare greps whose result is load-bearing (P-26: sweep the concept, not the sentence). DRIVE IT RED with a poisoned scratch vector before the fix and green after (P-22), and confirm the legitimate 42-vector store still gives PASS exit 0 / 5576 cells unchanged.",
-      "note": "Raised by the driver, local fire 20260821-080001, from T108's F-T108-1. Sequenced after T130 and T131, which hold conformance.sh and rule on latent-vs-live respectively. NEEDS THE ORACLE to re-run the harness. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md §1. || local fire 20260821-054355: SUPERSEDED BY T154. Not dropped and not downgraded: T120, T132 and T143 are three views of ONE defect surface (the no-float guards + the store census) and their files_hint collide on .softhouse/conformance.sh and nexus/internal/apps/loanschedule/. Plan-gate rule 7 forbids concurrent workers on overlapping files_hint, and three agents independently rewriting the same guard would produce contradictory guards. T154 carries all three descriptions verbatim and is paired with reviewer T155.",
+      "note": "Raised by the driver, local fire 20260821-080001, from T108's F-T108-1. Sequenced after T130 and T131, which hold conformance.sh and rule on latent-vs-live respectively. NEEDS THE ORACLE to re-run the harness. || local fire 20260821-134344: P-5 triage \u2014 MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md \u00a71. || local fire 20260821-054355: SUPERSEDED BY T154. Not dropped and not downgraded: T120, T132 and T143 are three views of ONE defect surface (the no-float guards + the store census) and their files_hint collide on .softhouse/conformance.sh and nexus/internal/apps/loanschedule/. Plan-gate rule 7 forbids concurrent workers on overlapping files_hint, and three agents independently rewriting the same guard would produce contradictory guards. T154 carries all three descriptions verbatim and is paired with reviewer T155.",
       "carried_from": "2026-08-17-run1-harness-schedule-poc",
       "superseded_by": "T154"
     },
     {
       "id": "T143",
-      "title": "M-3 — a float LITERAL is invisible to both no-float guards",
+      "title": "M-3 \u2014 a float LITERAL is invisible to both no-float guards",
       "status": "superseded",
       "executor": "agent",
       "model": "opus",
@@ -97,13 +97,13 @@
         "nexus/internal/apps/loanschedule/"
       ],
       "description": "T134's worst money row, driver-verified in its decisive limb: both guards inspect IDENTIFIERS, so a float literal (token.FLOAT) such as `rate := 0.036 / 12.0` builds, passes TestNoFloatInTheLoanScheduleTree, and takes conformance.sh to exit 0. This is a hole in the FIRST non-negotiable in CLAUDE.md. Fix is ~3 lines (walk the AST for token.FLOAT / token.IMAG in addition to the identifier check) and is currently FREE - T134 measured 0 float and 0 imaginary literals across the tree's 21 files. DRIVE IT RED with an injected literal and GREEN on the clean tree. Phrase the guard POSITIVELY (P-35) and make zero-files-inspected an error. Also fix M-5 if in scope: LoadStore reads only files inside a context dir, so for store-root JSON the defeatable shell guard is the only float check.",
-      "note": "Raised by the driver, local fire 20260821-080001, from T134 / T127 / T129. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md §1. || local fire 20260821-054355: SUPERSEDED BY T154. Not dropped and not downgraded: T120, T132 and T143 are three views of ONE defect surface (the no-float guards + the store census) and their files_hint collide on .softhouse/conformance.sh and nexus/internal/apps/loanschedule/. Plan-gate rule 7 forbids concurrent workers on overlapping files_hint, and three agents independently rewriting the same guard would produce contradictory guards. T154 carries all three descriptions verbatim and is paired with reviewer T155.",
+      "note": "Raised by the driver, local fire 20260821-080001, from T134 / T127 / T129. || local fire 20260821-134344: P-5 triage \u2014 MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md \u00a71. || local fire 20260821-054355: SUPERSEDED BY T154. Not dropped and not downgraded: T120, T132 and T143 are three views of ONE defect surface (the no-float guards + the store census) and their files_hint collide on .softhouse/conformance.sh and nexus/internal/apps/loanschedule/. Plan-gate rule 7 forbids concurrent workers on overlapping files_hint, and three agents independently rewriting the same guard would produce contradictory guards. T154 carries all three descriptions verbatim and is paired with reviewer T155.",
       "carried_from": "2026-08-17-run1-harness-schedule-poc",
       "superseded_by": "T154"
     },
     {
       "id": "T145",
-      "title": "The analysis layer decides money claims in binary floating point — 74 of 240 scripts",
+      "title": "The analysis layer decides money claims in binary floating point \u2014 74 of 240 scripts",
       "status": "pending",
       "executor": "agent",
       "model": "opus",
@@ -118,7 +118,7 @@
     },
     {
       "id": "T149",
-      "title": "Promote the HALF_UP/HALF_EVEN tie as a PARITY vector — the corpus has no vector carrying either answer",
+      "title": "Promote the HALF_UP/HALF_EVEN tie as a PARITY vector \u2014 the corpus has no vector carrying either answer",
       "status": "approved",
       "executor": "agent",
       "model": "opus",
@@ -131,7 +131,7 @@
         ".softhouse/capture/"
       ],
       "description": "THIS TASK CARRIES AN EXPLICIT PROMOTION MANDATE. T136's backlog item, and it is the cheapest real coverage this program can buy. Today REFUSE-02-half-even-ungraded.json makes HALF_EVEN a CONTRACT REFUSAL, so the graded corpus is not blind - but 0 of 46 vectors carry either tie answer, so nothing in the parity corpus would notice a port that inherited Fineract's stock HALF_EVEN default. That is precisely P-9, whose original instance took SOLVING for an exact tie to expose. The tie is already solved and measured live on both tenants: 1,162,502.50 x 0.018 = 20,925.045 -> HALF_UP 20925.05 (gerege), HALF_EVEN 20925.04 (default), request sha256 2a6621be..., and T136 established the two product rows differ in 89 columns by only `id`, so the mode is the sole cause. Capture from the live oracle only; synthesise nothing. Pair with an independent reviewer.",
-      "note": "Raised by the driver, local fire 20260821-080001, from T136 / T128. || local fire 20260821-134344: P-5 triage — MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md §1. || local fire 20260821-134344: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260821-134344: DONE on softhouse/T149-halfup-tie-vector (2 commits). REFUTED THE DRIVER'S OWN BRIEF and was right to: the brief's 'so nothing in the parity corpus would notice a HALF_EVEN port' is FALSE BY THREE VECTORS (T61-HE-A/B/C, mutation M7 over the 42-vector store: parity PASS 39 FAIL 3). The worker REFUSED to write the false sentence the brief required for the vector's note and wrote the accurate thing instead. Corrected at source this fire in obligations.md, RESUME.md and T147.md; recorded as pattern P-13 (patterns.md). LIVE RE-OBSERVATION REPRODUCED T136 EXACTLY, no disagreement: gerege 20925.05 / default 20925.04, 20 money cells diverging by exactly 1 minor unit each, 89 product columns differing only in id. PROMOTED, for a BETTER reason than the brief gave: T149-PATHB-TIE-1M162502pt50-12x21pt6pct.json is THE FIRST PARITY VECTOR IN THE STORE OBSERVED THROUGH THE RUNNING FINERACT SERVER -- all 42 others are the in-process Path A seam, and nothing had ever confirmed the Go port reproduces a live server response. It does: 88 graded cells, exact. Its counterfactual contains NO MODEL -- both arms are the oracle answering, one JVM, one input different. Getting a Path B capture past T76's PROMOTE NOTHING required taking it on product 9 (genuinely 30/360, not the canary's ACT/ACT product 11) and closing T76's [UNVERIFIED] on interestCalculationPeriodMethod by measurement: the 1.2M control returned BYTE-IDENTICAL to the committed B-01 capture and agrees with Path A vector P-MNT-1M2 in all 12 rows. RED/GREEN ASSERTED NOT PRINTED (prove-redgreen.sh exit 0): 42+M7 -> FAIL 3; 43+M7 -> FAIL 4 including T149-PATHB-TIE (RED); 43 unmutated -> PASS exit 0 (GREEN). CONFORMANCE probe=up, VERDICT PASS exit 0, parity 42 -> 43, 5664 cells graded, 0 invariant violations; green again after a P-24 scratch merge. nexus/ byte-identical to main. PostgreSQL-only re-verified live. || NOT MERGED. Held on softhouse/T149-halfup-tie-vector pending T153. The driver dispatched T149 without a paired reviewer -- its own plan-gate rule-1 violation -- and a promotion into the graded corpus may not enter main unreviewed. main stays at 42 parity vectors; the 43rd arrives with its review. || local fire 20260821-054355: REVIEWED BY T153 (MICRO-FIX -> APPROVED) AND MERGED. main moves 42 -> 43 parity vectors. The driver's plan-gate rule-1 violation is now CLOSED: the promotion entered main WITH its independent review, never without.",
+      "note": "Raised by the driver, local fire 20260821-080001, from T136 / T128. || local fire 20260821-134344: P-5 triage \u2014 MONEY-EXEMPT, stays LIVE. Carried into the Tier A run; see .softhouse/obligations.md \u00a71. || local fire 20260821-134344: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260821-134344: DONE on softhouse/T149-halfup-tie-vector (2 commits). REFUTED THE DRIVER'S OWN BRIEF and was right to: the brief's 'so nothing in the parity corpus would notice a HALF_EVEN port' is FALSE BY THREE VECTORS (T61-HE-A/B/C, mutation M7 over the 42-vector store: parity PASS 39 FAIL 3). The worker REFUSED to write the false sentence the brief required for the vector's note and wrote the accurate thing instead. Corrected at source this fire in obligations.md, RESUME.md and T147.md; recorded as pattern P-13 (patterns.md). LIVE RE-OBSERVATION REPRODUCED T136 EXACTLY, no disagreement: gerege 20925.05 / default 20925.04, 20 money cells diverging by exactly 1 minor unit each, 89 product columns differing only in id. PROMOTED, for a BETTER reason than the brief gave: T149-PATHB-TIE-1M162502pt50-12x21pt6pct.json is THE FIRST PARITY VECTOR IN THE STORE OBSERVED THROUGH THE RUNNING FINERACT SERVER -- all 42 others are the in-process Path A seam, and nothing had ever confirmed the Go port reproduces a live server response. It does: 88 graded cells, exact. Its counterfactual contains NO MODEL -- both arms are the oracle answering, one JVM, one input different. Getting a Path B capture past T76's PROMOTE NOTHING required taking it on product 9 (genuinely 30/360, not the canary's ACT/ACT product 11) and closing T76's [UNVERIFIED] on interestCalculationPeriodMethod by measurement: the 1.2M control returned BYTE-IDENTICAL to the committed B-01 capture and agrees with Path A vector P-MNT-1M2 in all 12 rows. RED/GREEN ASSERTED NOT PRINTED (prove-redgreen.sh exit 0): 42+M7 -> FAIL 3; 43+M7 -> FAIL 4 including T149-PATHB-TIE (RED); 43 unmutated -> PASS exit 0 (GREEN). CONFORMANCE probe=up, VERDICT PASS exit 0, parity 42 -> 43, 5664 cells graded, 0 invariant violations; green again after a P-24 scratch merge. nexus/ byte-identical to main. PostgreSQL-only re-verified live. || NOT MERGED. Held on softhouse/T149-halfup-tie-vector pending T153. The driver dispatched T149 without a paired reviewer -- its own plan-gate rule-1 violation -- and a promotion into the graded corpus may not enter main unreviewed. main stays at 42 parity vectors; the 43rd arrives with its review. || local fire 20260821-054355: REVIEWED BY T153 (MICRO-FIX -> APPROVED) AND MERGED. main moves 42 -> 43 parity vectors. The driver's plan-gate rule-1 violation is now CLOSED: the promotion entered main WITH its independent review, never without.",
       "carried_from": "2026-08-17-run1-harness-schedule-poc",
       "branch": "softhouse/T149-halfup-tie-vector"
     },
@@ -142,7 +142,7 @@
       "model": "opus",
       "target": "docs",
       "role": "analyst",
-      "title": "A2 behaviour extraction — chart of accounts, product-to-account mapping, financial activity accounts",
+      "title": "A2 behaviour extraction \u2014 chart of accounts, product-to-account mapping, financial activity accounts",
       "branch": "softhouse/A2-1-behaviour",
       "files_hint": [
         "docs/analysis/tierA-a2-behaviour.md"
@@ -158,7 +158,7 @@
       "model": "opus",
       "target": "docs",
       "role": "reviewer",
-      "title": "INDEPENDENT review of A2-1 — re-derive from source, do not read the author's conclusions first",
+      "title": "INDEPENDENT review of A2-1 \u2014 re-derive from source, do not read the author's conclusions first",
       "branch": "softhouse/A2-2-review-a2-1",
       "files_hint": [
         ".softhouse/reviews/"
@@ -192,7 +192,7 @@
       "model": "opus",
       "target": "docs",
       "role": "reviewer",
-      "title": "INDEPENDENT review of A2-3 — attack the capture rig, do not read it",
+      "title": "INDEPENDENT review of A2-3 \u2014 attack the capture rig, do not read it",
       "branch": "softhouse/A2-4-review-a2-3",
       "files_hint": [
         ".softhouse/reviews/"
@@ -215,7 +215,7 @@
         ".softhouse/reviews/"
       ],
       "dependencies": [],
-      "title": "INDEPENDENT review of T149 — the promoted vector is NOT on main and must not be merged until this passes",
+      "title": "INDEPENDENT review of T149 \u2014 the promoted vector is NOT on main and must not be merged until this passes",
       "description": "T149 promoted .softhouse/vectors/loanschedule/T149-PATHB-TIE-1M162502pt50-12x21pt6pct.json on branch softhouse/T149-halfup-tie-vector and it is DELIBERATELY UNMERGED: the driver dispatched T149 without a paired reviewer, which is a plan-gate rule-1 violation the driver committed, and a promotion into the graded corpus is exactly what may not go in unreviewed. THE VECTOR IS THE FIRST IN THE STORE OBSERVED THROUGH THE RUNNING FINERACT SERVER -- all 42 others come from the in-process Path A seam -- so it is also the first time anything has graded the Go port against a live server response. That is why it is worth reviewing rather than dropping. RE-DERIVE, do not read and agree. (a) Re-observe the tie live on tenant gerege and confirm 20925.05 vs default's 20925.04 yourself. (b) T149 claims the Path B transcription is TRUE because it took the vector on product 9 (genuinely 30/360) rather than the canary's ACT/ACT product 11, and that it closed T76's [UNVERIFIED] on interestCalculationPeriodMethod by measurement -- verify BOTH, since T76's PROMOTE NOTHING ruling is what this promotion had to get past. (c) Re-run prove-redgreen.sh and confirm the three arms (42+M7 -> FAIL 3; 43+M7 -> FAIL 4 including the new vector; 43 unmutated -> PASS). (d) Confirm the vector's note says something TRUE -- T149 refused to write the false sentence its brief demanded (see P-13, patterns.md), so check what it wrote instead. (e) Confirm nexus/ is byte-identical to main and DEC-1/contract.go untouched. Then re-run conformance on a P-24 SCRATCH MERGE into current main and report the parity count.",
       "note": "Raised by the driver, local fire 20260821-134344, to close its OWN plan-gate violation. NEEDS THE ORACLE. || local fire 20260821-054355: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260821-054355: DONE and MERGED on softhouse/T153-review-t149. VERDICT MICRO-FIX -> APPROVED; NO DEFECT IN ANY MONEY PATH. It RE-OBSERVED the tie live under its OWN request sha b126725a... and got responses BYTE-FOR-BYTE identical to T149's committed captures on both arms, and got a CLEANER counterfactual than T149 (same request bytes at the SAME product id 1 on both tenants). It did TWO CHECKS T149 NEVER DID: re-derived ALL TWELVE periods in exact rational arithmetic from the four declared inputs (12/12 + total agree, EMI 10858003), and checked transcription IN BOTH DIRECTIONS (0 mismatches, every unrecorded_fields cell verified genuinely absent). All three red/green arms reproduced, two byte-identically. SCOPE NOTE, AND IT IS THE DRIVER'S ERROR NOT THE WORKER'S: T153's files_hint was '.softhouse/reviews/' alone, but the brief ORDERED it to re-observe from the live oracle, which necessarily writes captures -- it wrote them to .softhouse/capture/pathb/t153/. The files_hint was too narrow for the task the driver commissioned. MICRO-FIX APPLIED BY THE DRIVER to the vector's _note and graded_against[0].evidence: two sentences claimed a tighter control than they held -- (1) 'differing in exactly one input' ignored that tenants.timezone_id ALSO differs (Asia/Kolkata vs Asia/Ulaanbaatar), inertness [UNVERIFIED] since testing it means WRITING to the shared oracle; (2) 'ICPM is the only remaining difference' ignored that the start year differs too (2024-01-01 vs 2026-01-01) -- T153 MEASURED the missing control and found 0 money-cell differences, so the conclusion survived and only the wording was wrong. T153's coverage caveat was also written ONTO the vector: it CANNOT DISCRIMINATE DAY COUNT (products 9, 11 and 1 all return digest 39f56dc2...), so FIXED_30_360 is TRUE but must never be read as coverage. DRIVER RE-RAN CONFORMANCE ON MERGED MAIN AFTER APPLYING THE MICRO-FIX: probe line PRESENT at line 1 reading 'up', VERDICT PASS exit 0, parity 43 PASS 0 FAIL, 5664 cells graded, 0 invariant violations, 0 assertions NOT RUN."
     },
@@ -231,7 +231,7 @@
         ".softhouse/capture/tierA-a2/"
       ],
       "dependencies": [],
-      "title": "A2 capture rig — the transport-failure handler cannot fire, and manifest verify is three kinds of blind",
+      "title": "A2 capture rig \u2014 the transport-failure handler cannot fire, and manifest verify is three kinds of blind",
       "description": "A2-4's D-2 and D-3, both P-22 class, both on main now and documented in .softhouse/capture/tierA-a2/DEFECTS-FOUND-BY-REVIEW.md. FIX BEFORE THE NEXT CAPTURE TASK USES THIS RIG. D-2 (the dangerous one): cap.sh's transport-failure handler is UNREACHABLE -- set -e terminates the shell at `code=$(curl ...)`, so rc=$?, the diagnostic and the `rm -f \"$OUT\"` never run. Driven against an unreachable endpoint, A STALE BODY AND STALE STATUS SURVIVE UNDER A FRESH captured-at-utc, which is exactly the artefact the rm -f exists to prevent. A capture rig that can silently present old bytes as newly observed is the worst failure mode available to this program. D-3: manifest.py verify (i) passes VACUOUSLY on empty input -- 'OK: 0 files match', exit 0; (ii) is NON-RECURSIVE, so a fabricated observation in out/<subdir>/ is laundered as verified; (iii) covers neither CAPTURE-PLAN.md (which carries all seven findings), nor the rig, nor itself -- the reviewer appended 'MNT rounds HALF_EVEN and money may be stored as float' to the analysis doc and verify stayed GREEN. DRIVE EVERY FIX RED BEFORE AND GREEN AFTER (P-22) and commit both transcripts. Make zero-files-inspected an ERROR, not a pass. Do NOT mutate any captured bytes under out/ -- they are immutable evidence and MANIFEST.sha256 covers them; extend coverage instead. Do NOT delete the attempt1-* artefacts: they are real oracle refusals whose RECIPES are false, and deleting evidence to make a rig look clean is worse than carrying it flagged.",
       "note": "Raised by the driver from A2-4's D-2/D-3, local fire 20260821-134344. || local fire 20260821-054355: DISPATCHED (wave 1), isolated worktree, model opus. || local fire 20260821-054355: DONE on softhouse/A2-5-capture-rig-fixes (9aceec1). SCOPE CLEAN -- every path under .softhouse/capture/tierA-a2/ plus its handoff, nothing else. IT FOUND A DEEPER ROOT CAUSE THAN THE BRIEF NAMED: the brief blamed the unreachable rm -f under set -e, but out/NAME.http was being stamped with a FRESH captured-at-utc BEFORE the request was issued -- THAT ordering, not the missing rm -f, is what turned an unreachable oracle into fake evidence. Nothing under out/ is now written until the exchange completes. It therefore DELIBERATELY DECLINED to restore the rm -f, arguing that deleting pre-existing MANIFEST-covered artefacts would destroy evidence and break the manifest on every failed retry; flagged as a deviation rather than done silently, and handed to A2-10 to adjudicate on merits. It also found a SECOND half nobody had named: run-*.sh are deliberately not set -e, so cap.sh exiting 1 was IGNORED and the next line cat-ed the stale body into the transcript AS AN OBSERVATION -- all 15 call sites now carry || exit 1. RED/GREEN provers read the real pre-fix bytes from immutable git blobs and refuse on sha mismatch (P-22 done properly): D-2 reproduced exactly (pre-fix exits 7 under /bin/sh, TRANSPORT FAILURE never printed, .http timestamp rewritten to today), post-fix handler fires in 32/32 shell x flag x curl-branch cases. D-3: seven attacks, all green pre-fix, all red post-fix. HONESTY, UNPROMPTED: it reports ONE new guard it COULD NOT DRIVE RED and shipped it LABELLED belt-and-braces rather than counted as coverage, and states it did NOT re-issue the 27 recipes against the oracle (that would create new observations). DRIVER-VERIFIED INDEPENDENTLY, not taken on report: zero paths under out/ req/ sql/ appear in the diff, and the manifest went 406 -> 430 with the original 406 lines a BYTE-IDENTICAL, SAME-ORDER PREFIX of the new file. || local fire 20260821-054355: REVIEWED BY A2-10 (MICRO-FIX) AND MERGED, micro-fix applied by the driver. A2-10 CONFIRMED ALL THREE OF A2-5's SELF-REPORTED DEVIATIONS IN A2-5's FAVOUR, by BUILDING the brief's prescription and running it rather than reasoning about it: the naive rm -f form exits 0 with a fresh .http, a stale body and a FABRICATED 000 status (handler still unreachable, every caller's || exit 1 silent), and even the CORRECT rm -f form STILL lands the stale-under-fresh artefact AND deletes manifest-covered evidence. A2-5 refused a prescribed fix for a better reason AND PROVED IT. The 'could not be driven red' guard turned out to be reachable after all (A2-10 drove it red by invoking manifest.py through a symlink in an otherwise-empty dir) -- but A2-5's label never counted it as coverage, which is the actual P-22 sin, so it was over-conservative, not wrong; upgraded to VERIFIED-REACHABLE. The '22-line' run-120 hunk was a --stat artefact: 11 modified lines rendered as 11 deletions + 11 insertions, each the identical || exit 1. THE DRIVER'S OWN PREMISE IN THE A2-10 BRIEF WAS THE MISREADING."
     },
@@ -253,7 +253,7 @@
     },
     {
       "id": "A2-7",
-      "title": "Capture the SEVEN missing mandatory GL accounts — the A2 corpus holds 2 of the 9 a loan mapping requires, and all 4 accounts it has are ASSET",
+      "title": "Capture the SEVEN missing mandatory GL accounts \u2014 the A2 corpus holds 2 of the 9 a loan mapping requires, and all 4 accounts it has are ASSET",
       "role": "test_writer",
       "executor": "agent",
       "model": "opus",
@@ -274,7 +274,7 @@
       "model": "opus",
       "status": "done",
       "dependencies": [],
-      "title": "The no-float guards, consolidated — a money non-negotiable can silently pass THREE different ways (T132 + T143 + T120)",
+      "title": "The no-float guards, consolidated \u2014 a money non-negotiable can silently pass THREE different ways (T132 + T143 + T120)",
       "files_hint": [
         ".softhouse/conformance.sh",
         "nexus/internal/apps/loanschedule/"
@@ -291,7 +291,7 @@
       "dependencies": [
         "T154"
       ],
-      "title": "INDEPENDENT review of T154 — attack the guards, do not read them and agree",
+      "title": "INDEPENDENT review of T154 \u2014 attack the guards, do not read them and agree",
       "files_hint": [
         ".softhouse/reviews/"
       ],
@@ -308,7 +308,7 @@
       "dependencies": [
         "A2-5"
       ],
-      "title": "A2 CODER — port the GL account model, product-to-account mapping resolution and financial activity accounts to Go",
+      "title": "A2 CODER \u2014 port the GL account model, product-to-account mapping resolution and financial activity accounts to Go",
       "files_hint": [
         "nexus/internal/apps/ledger/"
       ],
@@ -318,7 +318,7 @@
     },
     {
       "id": "A2-12",
-      "title": "A2-8 MICROFIX — apply A2-9's four non-money corrections (F-A inert ApplicableSlotName, F-B false PostgreSQL SUBSTRING claim, F-C unreproducible count of 27, F-D wrong commit attribution)",
+      "title": "A2-8 MICROFIX \u2014 apply A2-9's four non-money corrections (F-A inert ApplicableSlotName, F-B false PostgreSQL SUBSTRING claim, F-C unreproducible count of 27, F-D wrong commit attribution)",
       "role": "coder",
       "executor": "agent",
       "model": "opus",
@@ -344,7 +344,7 @@
       "dependencies": [
         "A2-8"
       ],
-      "title": "INDEPENDENT review of A2-8 — RE-DERIVE the mapping resolution from Fineract source, do not read the port",
+      "title": "INDEPENDENT review of A2-8 \u2014 RE-DERIVE the mapping resolution from Fineract source, do not read the port",
       "files_hint": [
         ".softhouse/reviews/"
       ],
@@ -360,7 +360,7 @@
       "dependencies": [
         "A2-5"
       ],
-      "title": "INDEPENDENT review of A2-5 — drive its new guards RED yourself; a rig that cannot fail is the defect it was sent to fix",
+      "title": "INDEPENDENT review of A2-5 \u2014 drive its new guards RED yourself; a rig that cannot fail is the defect it was sent to fix",
       "files_hint": [
         ".softhouse/reviews/"
       ],
@@ -374,7 +374,7 @@
       "model": "opus",
       "status": "done",
       "dependencies": [],
-      "title": "prove-redgreen.sh arm 1 has no EXIT trap — an interrupted run leaves the store SHORT and the next run reports a GREEN PASS 42",
+      "title": "prove-redgreen.sh arm 1 has no EXIT trap \u2014 an interrupted run leaves the store SHORT and the next run reports a GREEN PASS 42",
       "files_hint": [
         ".softhouse/capture/pathb/t149/"
       ],
@@ -391,7 +391,7 @@
       "dependencies": [
         "A2-7"
       ],
-      "title": "INDEPENDENT review of A2-7 — re-observe its captures and ATTACK the refutation that overturned the driver",
+      "title": "INDEPENDENT review of A2-7 \u2014 re-observe its captures and ATTACK the refutation that overturned the driver",
       "files_hint": [
         ".softhouse/reviews/",
         ".softhouse/capture/tierA-a2/"
@@ -419,7 +419,7 @@
     },
     {
       "id": "T158",
-      "title": "INDEPENDENT review of T156 — the EXIT-trap fix, and whether the sweep it reports is honest",
+      "title": "INDEPENDENT review of T156 \u2014 the EXIT-trap fix, and whether the sweep it reports is honest",
       "role": "reviewer",
       "executor": "agent",
       "model": "opus",
@@ -437,7 +437,7 @@
     },
     {
       "id": "T159",
-      "title": "INDEPENDENT review of T117 — attack the family-B sweep, especially the one-minor-unit answer",
+      "title": "INDEPENDENT review of T117 \u2014 attack the family-B sweep, especially the one-minor-unit answer",
       "role": "reviewer",
       "executor": "agent",
       "model": "opus",
@@ -455,7 +455,7 @@
     },
     {
       "id": "T160",
-      "title": "The store census refuses an INFLATED store and has no equivalent for a DEFLATED one — deletion is an unguarded route to a green PASS",
+      "title": "The store census refuses an INFLATED store and has no equivalent for a DEFLATED one \u2014 deletion is an unguarded route to a green PASS",
       "role": "coder",
       "executor": "agent",
       "model": "opus",
@@ -475,7 +475,7 @@
     },
     {
       "id": "T161",
-      "title": "A PROVER THAT CORRUPTS THE LIVE RIG IT IS PROVING — prove-f1.sh overwrites t36/attest.py with pre-fix bytes and has ZERO traps",
+      "title": "A PROVER THAT CORRUPTS THE LIVE RIG IT IS PROVING \u2014 prove-f1.sh overwrites t36/attest.py with pre-fix bytes and has ZERO traps",
       "role": "coder",
       "executor": "agent",
       "model": "opus",
@@ -492,7 +492,7 @@
     },
     {
       "id": "T162",
-      "title": "T61-mutations.py leaves rounding.go mutated on SIGTERM/SIGKILL — the loud half of the unguarded-mutator family",
+      "title": "T61-mutations.py leaves rounding.go mutated on SIGTERM/SIGKILL \u2014 the loud half of the unguarded-mutator family",
       "role": "coder",
       "executor": "agent",
       "model": "sonnet",
@@ -510,7 +510,7 @@
     },
     {
       "id": "T163",
-      "title": "resolve7.py rewrites money literals through float on the way to the ORACLE — 1200000.00 becomes 1200000.0 in the POSTed body",
+      "title": "resolve7.py rewrites money literals through float on the way to the ORACLE \u2014 1200000.00 becomes 1200000.0 in the POSTed body",
       "role": "coder",
       "executor": "agent",
       "model": "opus",
@@ -527,7 +527,7 @@
     },
     {
       "id": "T164",
-      "title": "analyze7.py's float guard is kept GREEN BY ITS OWN DOCSTRING — deleting parse_float from the code leaves it passing",
+      "title": "analyze7.py's float guard is kept GREEN BY ITS OWN DOCSTRING \u2014 deleting parse_float from the code leaves it passing",
       "role": "coder",
       "executor": "agent",
       "model": "opus",
@@ -545,7 +545,7 @@
     },
     {
       "id": "T165",
-      "title": "FindRepoRoot(\".\") makes the conformance binary resolve its repo from the CALLER's CWD — T154's F-3 frames this as safe and it is not",
+      "title": "FindRepoRoot(\".\") makes the conformance binary resolve its repo from the CALLER's CWD \u2014 T154's F-3 frames this as safe and it is not",
       "role": "coder",
       "executor": "agent",
       "model": "opus",
@@ -562,7 +562,7 @@
     },
     {
       "id": "T166",
-      "title": "THE NO-FLOAT GUARDS COVER ONLY loanschedule — A2-8's 6,065 lines of new money code are entirely unguarded",
+      "title": "THE NO-FLOAT GUARDS COVER ONLY loanschedule \u2014 A2-8's 6,065 lines of new money code are entirely unguarded",
       "role": "coder",
       "executor": "agent",
       "model": "opus",
@@ -580,7 +580,7 @@
     },
     {
       "id": "T167",
-      "title": "AN UNGUARDED IN-PLACE REWRITER OF THE RATIFIED DEC-1 ADR — and the sweep scored it 'guarded' because the word 'trap' appears in the prose it writes",
+      "title": "AN UNGUARDED IN-PLACE REWRITER OF THE RATIFIED DEC-1 ADR \u2014 and the sweep scored it 'guarded' because the word 'trap' appears in the prose it writes",
       "role": "coder",
       "executor": "agent",
       "model": "opus",
@@ -615,7 +615,7 @@
     },
     {
       "id": "T169",
-      "title": "The SHARED capture rig catches RuntimeException, not Throwable — so 'N asked / N observed / 0 errored' cannot distinguish 'none errored' from 'none asked that errors'",
+      "title": "The SHARED capture rig catches RuntimeException, not Throwable \u2014 so 'N asked / N observed / 0 errored' cannot distinguish 'none errored' from 'none asked that errors'",
       "role": "coder",
       "executor": "agent",
       "model": "opus",
@@ -633,7 +633,7 @@
     },
     {
       "id": "T170",
-      "title": "REBUILD G-8 in gates.md across the 25 sites T159 enumerated — including a sentence for the third outcome, where the oracle produces no schedule at all",
+      "title": "REBUILD G-8 in gates.md across the 25 sites T159 enumerated \u2014 including a sentence for the third outcome, where the oracle produces no schedule at all",
       "role": "spec_writer",
       "executor": "agent",
       "model": "opus",
@@ -651,7 +651,7 @@
     },
     {
       "id": "T171",
-      "title": "T154's 'fail-closed' characterization of fire-program.sh:224 is wrong and sits in MERGED evidence — correct it in nonnegotiable-guard-audit.md and patterns.md",
+      "title": "T154's 'fail-closed' characterization of fire-program.sh:224 is wrong and sits in MERGED evidence \u2014 correct it in nonnegotiable-guard-audit.md and patterns.md",
       "role": "coder",
       "executor": "agent",
       "model": "sonnet",
@@ -669,7 +669,7 @@
     },
     {
       "id": "T172",
-      "title": "fire-program.sh:224's LOCK pattern has no end anchor — it over-matches any path merely PREFIXED by .softhouse/LOCK",
+      "title": "fire-program.sh:224's LOCK pattern has no end anchor \u2014 it over-matches any path merely PREFIXED by .softhouse/LOCK",
       "role": "coder",
       "executor": "agent",
       "model": "sonnet",
@@ -720,7 +720,7 @@
     },
     {
       "id": "T175",
-      "title": "Two Python swallow sites make a money invariant and a float scan pass VACUOUSLY — t55-analyse.py:352 and t44_float_roundtrip.py:29",
+      "title": "Two Python swallow sites make a money invariant and a float scan pass VACUOUSLY \u2014 t55-analyse.py:352 and t44_float_roundtrip.py:29",
       "role": "coder",
       "executor": "agent",
       "model": "opus",
@@ -737,7 +737,7 @@
     },
     {
       "id": "T176",
-      "title": "build_harness_t159.py does not reproduce the committed CaptureT159.java — the evidence chain does not reproduce",
+      "title": "build_harness_t159.py does not reproduce the committed CaptureT159.java \u2014 the evidence chain does not reproduce",
       "role": "coder",
       "executor": "agent",
       "model": "sonnet",
@@ -754,7 +754,7 @@
     },
     {
       "id": "T177",
-      "title": "The oracle's StackOverflowError is not a function of the cell's inputs alone — (B=10001, n=3000) threw for T169 and was observed cleanly by T159",
+      "title": "The oracle's StackOverflowError is not a function of the cell's inputs alone \u2014 (B=10001, n=3000) threw for T169 and was observed cleanly by T159",
       "role": "analyst",
       "executor": "agent",
       "model": "opus",
@@ -772,7 +772,7 @@
     },
     {
       "id": "T178",
-      "title": "EIGHT more unguarded in-place rewriters — and t47_edit_4.py's anchors are LIVE in the ratified DEC-1 TODAY, while t47_edit_7.py targets the frozen contract.go",
+      "title": "EIGHT more unguarded in-place rewriters \u2014 and t47_edit_4.py's anchors are LIVE in the ratified DEC-1 TODAY, while t47_edit_7.py targets the frozen contract.go",
       "role": "coder",
       "executor": "agent",
       "model": "opus",
@@ -789,7 +789,7 @@
     },
     {
       "id": "T179",
-      "title": "Replace T156's regex guard-classifier with a parser-based check — it scored a file safe by the prose that file was writing, and its regex is engine-dependent",
+      "title": "Replace T156's regex guard-classifier with a parser-based check \u2014 it scored a file safe by the prose that file was writing, and its regex is engine-dependent",
       "role": "coder",
       "executor": "agent",
       "model": "opus",
@@ -807,7 +807,7 @@
     },
     {
       "id": "T180",
-      "title": "prove-f1.sh's overwrite of the live attester can be REMOVED, not merely made recoverable — a sibling file in the same directory reproduces the defect",
+      "title": "prove-f1.sh's overwrite of the live attester can be REMOVED, not merely made recoverable \u2014 a sibling file in the same directory reproduces the defect",
       "role": "coder",
       "executor": "agent",
       "model": "opus",
@@ -824,7 +824,7 @@
     },
     {
       "id": "T181",
-      "title": "Independent review of T178 — the eight unguarded in-place rewriters and the DEC-1 gate bypass",
+      "title": "Independent review of T178 \u2014 the eight unguarded in-place rewriters and the DEC-1 gate bypass",
       "role": "reviewer",
       "executor": "agent",
       "model": "opus",
@@ -845,7 +845,7 @@
     },
     {
       "id": "T182",
-      "title": "Independent review of T177 — is the StackOverflowError dependence actually ESTABLISHED, or only re-observed?",
+      "title": "Independent review of T177 \u2014 is the StackOverflowError dependence actually ESTABLISHED, or only re-observed?",
       "role": "reviewer",
       "executor": "agent",
       "model": "opus",
@@ -865,7 +865,7 @@
     },
     {
       "id": "T183",
-      "title": "Independent review of T179 — parser-based guard classifier and the re-derived unguarded population",
+      "title": "Independent review of T179 \u2014 parser-based guard classifier and the re-derived unguarded population",
       "role": "reviewer",
       "executor": "agent",
       "model": "opus",
@@ -885,7 +885,7 @@
     },
     {
       "id": "T184",
-      "title": "Independent review of T173 — are the newly wired guards actually on a path that executes, and non-vacuous?",
+      "title": "Independent review of T173 \u2014 are the newly wired guards actually on a path that executes, and non-vacuous?",
       "role": "reviewer",
       "executor": "agent",
       "model": "opus",
@@ -905,7 +905,7 @@
     },
     {
       "id": "T185",
-      "title": "Independent review of T175 — do the de-vacuumed checks now fail on what they used to swallow?",
+      "title": "Independent review of T175 \u2014 do the de-vacuumed checks now fail on what they used to swallow?",
       "role": "reviewer",
       "executor": "agent",
       "model": "opus",
@@ -1005,7 +1005,7 @@
     },
     {
       "id": "A2-13",
-      "title": "DRAFT DEC-2 — the frozen adapter contract for the GL/accounting bounded context, so the merged A2 ledger port can be graded at all",
+      "title": "DRAFT DEC-2 \u2014 the frozen adapter contract for the GL/accounting bounded context, so the merged A2 ledger port can be graded at all",
       "description": "See handoff brief. Draft only; the author does not ratify.",
       "agent_role": "spec_writer",
       "executor": "agent",
@@ -1027,7 +1027,7 @@
     },
     {
       "id": "A2-14",
-      "title": "INDEPENDENT review of A2-13's DEC-2 draft — re-derive the GL posting rules from Fineract source, do not read the author's conclusions first",
+      "title": "INDEPENDENT review of A2-13's DEC-2 draft \u2014 re-derive the GL posting rules from Fineract source, do not read the author's conclusions first",
       "description": "See handoff brief.",
       "agent_role": "reviewer",
       "executor": "agent",
@@ -1068,7 +1068,7 @@
     },
     {
       "id": "T190",
-      "title": "fire-program.sh:224's ONE genuinely live fail-open is unrelated to bytes — an empty DIRTY when git itself fails reads as 'clean'",
+      "title": "fire-program.sh:224's ONE genuinely live fail-open is unrelated to bytes \u2014 an empty DIRTY when git itself fails reads as 'clean'",
       "description": "T189 measured it and deliberately did not apply the fix, because fire-program.sh is the RUNNING wrapper of the fire that found it. Apply T189's already-red/green-driven hardening on a branch; it takes effect on the NEXT fire, because the running bash keeps reading the old inode. DIRTY=$(git status --porcelain | ... || true) yields an EMPTY DIRTY when git exits non-zero (rc=128 measured) and the guard silently concludes the tree is clean -- set -uo pipefail without -e, plus the || true, so nothing observes the failure. T189's proposed patch drops grep entirely in favour of git's own ':(exclude)' pathspec and checks git's rc; it was driven red and green on a production-shaped scratch repo INCLUDING T172's anchor regression. RE-DERIVE it, do not apply it on trust. CAVEAT T189 STATED ABOUT ITSELF: it drove the patch under bash, NOT zsh. Settle which shell the wrapper actually runs under and re-drive under that one.",
       "agent_role": "coder",
       "executor": "agent",
@@ -1088,7 +1088,7 @@
     },
     {
       "id": "T191",
-      "title": "THREE fail-OPEN pipefail sites in conformance.sh — and TWO of them are the no-float MONEY guards",
+      "title": "THREE fail-OPEN pipefail sites in conformance.sh \u2014 and TWO of them are the no-float MONEY guards",
       "description": "T188's sweep, driver-re-derived from the source before registering. conformance.sh:546 (FLOAT-SHAPED NUMBER in a vector) and :607 (FLOATING-POINT IDENTIFIER in Go) are both 'perl ... | LC_ALL=C grep -aEq ...'. grep -q exits 0 the MOMENT IT MATCHES; perl then takes EPIPE; set -o pipefail promotes the pipeline to non-zero; the enclosing if is therefore FALSE ON A FLOAT IT DID FIND. The guard behind the FIRST non-negotiable in CLAUDE.md goes silent exactly when it has something to say. :1287 (the false-violation check) is the third. Convert all three to a DRAINING form (grep -c and test the count, per P-57) and DRIVE EACH RED AND GREEN (P-22, P-50) -- a float must be caught both below and ABOVE the 64 KiB pipe-buffer threshold. Also add the missing selftest for the .claude/worktrees exclusion predicate in check_no_narrow_catch.py, BOTH DIRECTIONS (T188's F-1): the branch that decides what the lint may ignore is the one branch its own P-22 machinery cannot currently demonstrate. LATENT NOT LIVE, and do not overstate it: T188 measured the largest post-strip .go output at 44,941 B against a 65,024 B threshold, a 1.45x margin. A SECOND NECESSARY CONDITION T188 established and the driver's own earlier note missed: the consumer must be able to STOP EARLY, so a 400 KB single-line JSON does not reproduce it at all. Size your own repro; do not inherit a number.",
       "agent_role": "coder",
       "executor": "agent",
@@ -1150,7 +1150,7 @@
     },
     {
       "id": "T194",
-      "title": "P-35 INSIDE THE P-35 MACHINERY — the harness reads the census line's PRESENCE and never its NUMBERS, so a 0/0/0 stub is a PASS",
+      "title": "P-35 INSIDE THE P-35 MACHINERY \u2014 the harness reads the census line's PRESENCE and never its NUMBERS, so a 0/0/0 stub is a PASS",
       "description": "T184's FU-T184-1, driver-confirmed by reading _run_capture_guard in conformance.sh. The function tests 'census_lines -eq 0' -- the COUNT OF LINES matching ^CENSUS -- and never parses the figures on them. A guard replaced by a stub that prints 'CENSUS 0 files / 0 dirs' and exits 0 yields exit 0, VERDICT PASS (T184 verified this end to end). The comment directly above the test reads 'THE CENSUS LINE MUST BE PRESENT BEFORE ITS VALUE IS READ' -- and the value is never read. The selftest gate has the identical shape: 'cases' counts lines matching '^  -> exit ' so a stub printing ONE such line passes with 'selftest OK, 1 cases' where the real guard reports 5. So the machinery built to prove a guard is not silent proves only that it SPOKE, not that it INSPECTED ANYTHING. Fix: parse the census figures and require a floor that is DERIVED, not hard-coded -- a hard-coded floor becomes stale and then becomes a second silent pass. T184's own suggestion is worth weighing: the guards' P-35 enforcement lives inside the Python, which T173's FU-3 notes NOTHING HASHES, so consider whether the durable fix is to hash the guard scripts rather than to parse their output. DRIVE IT RED (P-22) with an actual stub and GREEN (P-50) with the real guards, and drive the SELFTEST-COUNT direction red too -- both gates have the defect, and fixing only the census one converts a known hole into a hidden one. NOTE T191 DOES NOT CLOSE THIS: different mechanism (T191 fixed EPIPE inversion, this is never-reading-the-value).",
       "agent_role": "coder",
       "executor": "agent",
@@ -1171,7 +1171,7 @@
     },
     {
       "id": "T195",
-      "title": "T184's two mechanical findings on T173 — the round-trip property is named more strongly than implemented, and the FROZEN/NEW split is invisible on a passing run",
+      "title": "T184's two mechanical findings on T173 \u2014 the round-trip property is named more strongly than implemented, and the FROZEN/NEW split is invisible on a passing run",
       "description": "T184 supplied both diffs UNAPPLIED because conformance.sh belonged to T191 at the time. Apply them, having re-derived each first. F1: the guard's property is byte-preservation under a PYTHON json.load/json.dumps round trip, NOT a binary-double one. Integer tokens go through int() and can never be flagged -- T184 measured 9007199254740993 and 12345678901234567890 passing the guard while a true binary-double round trip mangles both. The implementation is FAITHFUL to T163's defect model; it is the SENTENCE describing it that overstates the cover. This matters because INTEGER MINOR UNITS IS EXACTLY THE CLASS IT WAVES THROUGH, and because T186's merged ruling credits byte-preservation as the necessary-and-sufficient condition for a value to survive Fineract's one genuine Java double (ChargeRequest.java:41). T186 ruled on the PROPERTY; T184 measured that the IMPLEMENTATION does not carry it for integers. Do NOT silently widen the guard to close the gap -- T173 chose the weaker property deliberately, because a blanket ban would refuse the entire committed corpus and pin conformance at exit 2. Either correct the WORDING to match the implementation, or widen the implementation AND show the corpus still passes; say which you did and why. F2: the FROZEN/NEW split is invisible on a passing run because the line lacks the 'CENSUS ' prefix _run_capture_guard filters on, while T173's handoff claims it is 'printed by every conformance run' -- measured false, one word.",
       "agent_role": "coder",
       "executor": "agent",
@@ -1191,7 +1191,7 @@
     },
     {
       "id": "T196",
-      "title": "Apply T183's backstep fix to T179's classifier — --enforce FAILS OPEN on the three parameter-targeted rewriters, and the check PUNISHES the hardening idiom the program adopted",
+      "title": "Apply T183's backstep fix to T179's classifier \u2014 --enforce FAILS OPEN on the three parameter-targeted rewriters, and the check PUNISHES the hardening idiom the program adopted",
       "description": "T183 REJECTED T179 with three material findings and supplied a +25-line patch it wrote, TESTED and deliberately did NOT apply, on the correct ground that a fix the reviewer merges is a fix nobody reviewed. Apply it, having RE-DERIVED it first. D-1: T179 resolves a mutation's target from module constants only, so edit18/20/21 -- which write through 'def patch(path, pairs)' called as patch(P, ...) -- resolve to UNKNOWN, and --enforce EXITS 0 on a directory containing exactly those three, each an unguarded in-place truncation of the RATIFIED DEC-1 and two also of the FROZEN contract.go. The asymmetry is the tell and the argument for the fix: T179 ALREADY takes the mirror-image FORWARD interprocedural step for guards (indirectly_guarded_funcs); only the BACKWARD one is missing. D-3: import blindness reproduces -- a file whose mutation is local and whose guard lives in an IMPORTED module scores UNGUARDED and fires --enforce, so the check punishes the exact shared-t178_guard.py idiom T178 adopted and T187 extended across 25 files. That direction is the one that fires and it is the one T179 does not disclose. FIVE of the patch's repo-wide reclassifications are UNADJUDICATED -- adjudicate each individually and say which you accepted and why; do not apply them as a block. RE-TAKE THE POPULATION AGAINST POST-T187 MAIN before quoting any file count: T183 derived its numbers at a fork point taken BEFORE T187 merged and modified t41-probe, and said so against itself. THE COUNT ITSELF IS NOW SETTLED and you should not re-litigate it -- T187 and T183 derived it independently and BLIND, by execution and by static sweep respectively, and agreed exactly: 25 files, 20 DEC-1 + 7 contract.go, 2 writing both. Drive red and green (P-22, P-50) on SCRATCH COPIES ONLY; never execute a population script from the repo root; verify both frozen digests before and after.",
       "agent_role": "coder",
       "executor": "agent",
@@ -1213,7 +1213,7 @@
     },
     {
       "id": "A2-16",
-      "title": "DEC-2 revision 2 — resolve A2-14's three rejection-grade findings, chiefly that NO ledger vector is expressible against the frozen vector schema",
+      "title": "DEC-2 revision 2 \u2014 resolve A2-14's three rejection-grade findings, chiefly that NO ledger vector is expressible against the frozen vector schema",
       "description": "A2-14 REJECTED DEC-2 revision 1 ON SHAPE, not on honesty: it opened over thirty citations and every [VERIFIED] claim traced to real source at the exact cited line, G-9 was applied, G-10 was recorded and left UNDECIDED, default-deny is inherited, and no float is admitted anywhere Gerege owns the number. THE FACTUAL BASE SURVIVES -- do not re-do the research; resolve the shape. R-1: no ledger vector is expressible against the frozen schema. Expect.Kind is {schedule, refusal}; Expect.Sentinel must be one of the three CONTRACT sentinels, so section 4.9's oracle-faithful 404 -- this context's commonest graded output -- has no representation; StructuralCellFields() is a hard-coded closed set and admitCounterfactual rejects all six cells section 5 proposes. So EITHER the vector schema must be extended (which is real machinery, and section 5 must stop claiming otherwise) OR DEC-2 must grade something the schema can already express -- decide which, argue it, and note that extending the schema touches the harness that DEC-1's 43 vectors depend on, so any change must leave them passing. R-2: an empty ledger/ directory PASSES SILENTLY -- driver-measured on real main, exit 0 VERDICT PASS with the only occurrence of 'ledger' in the output being the no-float census line. conformance.sh:855 adds -context only when given an argument; vector.go:950-952 returns all contexts when the filter is empty. Correct the claim; the capability fatal that DOES hold fires on the REGISTRY ROWS, not the empty directory, and revision 1 presented them as interchangeable. R-3: prose and enumerated list contradict on whether the contract carries money -- the SAME DEFECT CLASS AS THE STILL-OPEN G-5 on DEC-1, so shipping it would knowingly repeat an open gate. A2-14's recommendation, which the driver endorses as a starting point but does not impose: KEEP the money and scope the no-amount property to the in-process seam it was actually derived from (ledger_inprocess_resolver, the one seam G-01 refuses). Also close section 9 item 10 with A2-14's F-A: ProductToGLAccountMappingWritePlatformServiceImpl.java:149-151 is 'case ACCRUAL_UPFRONT: // Fall Through' into ACCRUAL_PERIODIC, so the loan side writes the FULL accrual set while savings writes none; bears on G-03. AND STATE PLAINLY, where a reader cannot miss it, that NOTHING CURRENTLY GRADES THE LEDGER'S MONEY: no vectors, no schema to express one in, and no guard for I-3/I-4 -- run_guards invokes five guards, all about float, gofmt and exception scope. Section 8's claim that the guards cover the ledger tree is TRUE FOR FLOAT and WILL BE MISREAD as covering the append-only and derived-balance invariants. You are DRAFTING revision 2; you do not ratify it, and a further independent review follows.",
       "agent_role": "spec_writer",
       "executor": "agent",
@@ -1234,7 +1234,7 @@
     },
     {
       "id": "A2-17",
-      "title": "INDEPENDENT review of A2-16 — DEC-2 revision 2, and whether the EXTEND decision is machinery or a promise",
+      "title": "INDEPENDENT review of A2-16 \u2014 DEC-2 revision 2, and whether the EXTEND decision is machinery or a promise",
       "description": "A2-16 drafted DEC-2 revision 2 after A2-14 REJECTED revision 1 on shape. Re-derive; do not read A2-16's conclusions and agree. The load-bearing claim to attack is R-1's decision to EXTEND the vector schema with a second schema plus comparator: A2-16 argues option (b) is impossible because the intersection is EMPTY, and reports a FOURTH wall neither revision 1 nor A2-14 named (admit.go:517-519 requires a parity vector to expect a schedule while contract-refusal requires oracle.seam=='none', so an OBSERVED 404 has no vector class at all). Verify that fourth wall in the source. Then ask the question the document cannot ask itself: does revision 2 now DESCRIBE machinery that does not exist, which is the same defect A2-14 rejected revision 1 for, one level up? A2-16 also went PAST A2-14's R-3 recommendation, scoping G-07/G-08 per assertion rather than per seam on the ground that A2-150's db dump projects amount AND currency_code -- check that dump. And it CORRECTED TWO INHERITED default:-label errors about the savings helper -- verify both at 426a23544. Confirm the 'nothing grades the ledger' statement is genuinely unmissable and not merely present. Note A2-16's own two flags to the driver: that A2-15 is blocked on EIGHT preconditions in 5.3 none of which exists, and that anyone building 5.3's machinery via a fourth sentinel would need a DEC-1 amendment.",
       "agent_role": "reviewer",
       "executor": "agent",
@@ -1255,7 +1255,7 @@
     },
     {
       "id": "T197",
-      "title": "INDEPENDENT review of T194 — is the DERIVED floor actually derived, and does the selftest polarity gate hold?",
+      "title": "INDEPENDENT review of T194 \u2014 is the DERIVED floor actually derived, and does the selftest polarity gate hold?",
       "description": "T194 fixed two line-counting gates in conformance.sh that never read the values they counted. Attack the fix, do not read it and approve it. THE CENTRAL QUESTION: T194's census floor is derived per caller by `git ls-files` -- a different program from the guard's os.walk. Is that genuinely derived, or is it a hard-coded floor with an extra step? Construct the case where the two populations legitimately diverge (a file present and untracked; a file tracked and deleted; .gitignore; a submodule) and say what the gate does then -- fail-open, fail-closed, or wrong. The floor uses >= : establish whether the DEFLATION direction is actually caught, since T160 already records that the store census refuses an INFLATED store and has no equivalent for a DEFLATED one. Re-run T194's four RED arms yourself and confirm each exits 2 WITH NO PROBE LINE (a hard-guard failure, correctly not an oracle outage) -- and confirm the driver's reading that absence-of-probe-line is the right test. Verify T194's own admission that a stub fabricating figures at or above the floor with both polarities faked STILL PASSES, and judge whether FU-T194-1 is the right disposition or whether it should have blocked. Also check the selftest polarity gate cannot be satisfied by a stub printing one line of each polarity.",
       "agent_role": "reviewer",
       "executor": "agent",
@@ -1276,7 +1276,7 @@
     },
     {
       "id": "T198",
-      "title": "INDEPENDENT review of T196 — adjudicate its rejection of T183's patch, and its two open findings F-1 and F-2",
+      "title": "INDEPENDENT review of T196 \u2014 adjudicate its rejection of T183's patch, and its two open findings F-1 and F-2",
       "description": "T196 was sent to APPLY T183's tested patch and instead re-derived it, found a material defect IN THE PATCH, and shipped its own. That is either exactly right or an unreviewed substitution -- decide which. Re-derive T196's claim that T183's block keys by BARE PARAMETER NAME and unions call sites, so a helper called once with /tmp and once with the ratified DEC-1 scores SCRATCH/SANDBOX and DISAPPEARS FROM BOTH FINDING LISTS. If true, that is one harmless call site laundering a gate bypass and T196 is right; if false, T196 replaced a reviewed patch with an unreviewed one. Check T196's (function, parameter) keying with worst-case-wins does not itself introduce a new fail-open. Adjudicate the FIVE reclassifications independently of T196's adjudication. Verify the count 25/20/7/2 reproduces (it is settled -- confirm, do not re-litigate). THEN THE TWO OPEN FINDINGS, which matter more than the patch: F-1, --enforce is NOT wired into conformance.sh and reports 33 pre-existing TRUSTED-UNGUARDED sites in 27 files at main today, so wiring it turns conformance RED IMMEDIATELY -- is that a reason not to wire it, or the reason it was never wired? F-2, four unguarded truncations of the GOLDEN VECTOR STORE (T64/T58/T61/T74-promote-vectors.py) previously hidden as UNKNOWN -- confirm each of the four and rank the exposure. T196 also DELIBERATELY DID NOT FIX a SH_MUTATING_ARGV over-match on 2>&1, arguing tightening it is the fail-open direction; adjudicate that restraint.",
       "agent_role": "reviewer",
       "executor": "agent",
@@ -1297,7 +1297,7 @@
     },
     {
       "id": "T199",
-      "title": "INDEPENDENT review of T165 — the anchored repo root now decides the FROZEN CONTRACT DIGEST, so a defect here is a gate bypass",
+      "title": "INDEPENDENT review of T165 \u2014 the anchored repo root now decides the FROZEN CONTRACT DIGEST, so a defect here is a gate bypass",
       "description": "T165 established that FindRepoRoot('.') let the conformance binary resolve the graded repo from the caller's CWD, and that FOUR gates hang off it -- the graded corpus, the no-float census tree, the FROZEN DEC-1 contract.go digest (admit.go:79-80), and capture_ref resolution (admit.go:578). RE-DERIVE THE RED: build one binary from a tree carrying an unratified contract.go edit and show it exit 2 from its own tree and PASS from a sibling worktree. That is a fail-open on the flagship non-negotiable and T154's F-3 called it safe -- confirm F-3 is wrong, or defend it. THEN ATTACK THE FIX, WHICH NOW CARRIES THE GATE: ResolveRepoRoot anchors to the compiled-in source path via runtime.Caller with a bounded walk (first enclosing go.mod, module path asserted, dir asserted `nexus`, one step up, .softhouse/vectors REQUIRED there, never climbed past), with -repo-root / CONFORMANCE_REPO_ROOT overrides and NO CWD fallback. Ask: can the override reintroduce the defect? Does runtime.Caller survive -trimpath, a warm build cache, or a binary copied elsewhere -- T165 marked all three UNVERIFIED, so VERIFY THEM. Can a worktree still be graded against main's store by any route? T165 claims conformance.sh needed no change because build_binary cds to $NEXUS_DIR so the two roots agree BY CONSTRUCTION -- test that claim by invoking the harness from a foreign cwd. Confirm 43/5664/exit 0 and --prove 21/21 still hold, and that gofmt -l names exactly contract.go (expected G-3 state).",
       "agent_role": "reviewer",
       "executor": "agent",
@@ -1318,7 +1318,7 @@
     },
     {
       "id": "T200",
-      "title": "INDEPENDENT review of T190 — it changed T189's patch in three places and changed production behaviour in one",
+      "title": "INDEPENDENT review of T190 \u2014 it changed T189's patch in three places and changed production behaviour in one",
       "description": "T190 hardened fire-program.sh's DIRTY fail-open. It did NOT apply T189's patch on trust and gave three reasons; adjudicate each. (1) It claims deleting `|| true` alone would NOT have closed the fail-open, because under ZSH pipefail the RIGHTMOST non-zero status wins, so git rc=128 + filter rc=1 yields pipeline rc=1 -- byte-identical to a genuinely clean tree, which also yields rc=1. MEASURE THIS YOURSELF under /bin/zsh; it is the load-bearing claim and it is stronger than T189's own argument. (2) It claims T189's pathspec `-- . ':(exclude).softhouse/LOCK'` has a CWD-dependent fail-open of its own, silently dropping everything outside cwd from a subdirectory, including T172's LOCKED_STATE.md sibling -- reproduce it, then check T190's ':(top)' form from root AND subdir. (3) It claims T189's sentinel value logs 'rescued: committed the leftovers' while git is unreadable -- confirm the elif fixes it. THEN THE PART THAT NEEDS THE HARDEST LOOK, because T190 flagged it against itself: the new pathspec excludes .softhouse/LOCK in EVERY state, where the old grep excluded only its '?? ' shape. LOCK is now TRACKED in the real repo, so this is reachable in production. T190 judged it correct because the rescue's own `git add` already refuses LOCK in all states -- CONFIRM OR REFUTE THAT JUDGEMENT; it is the one place T190 asked to be checked. Verify the lock is released on all four exit paths including the new refusal branch and SIGINT. VERIFY THE SHELL FINDING INDEPENDENTLY (zsh 5.9, plist `/bin/zsh -lc`) -- a fix proven under the wrong interpreter proves nothing. Note T190's own top follow-up: fire-program.sh:250's rescue `git add -A -- .` is still cwd-relative.",
       "agent_role": "reviewer",
       "executor": "agent",
@@ -1361,7 +1361,7 @@
     },
     {
       "id": "T202",
-      "title": "THE UNFIXED TWIN twenty lines below T190's patch — fire-program.sh:262 reads a FAILING git as a CLEAN worktree and abandons the stranded work the sweep exists to rescue",
+      "title": "THE UNFIXED TWIN twenty lines below T190's patch \u2014 fire-program.sh:262 reads a FAILING git as a CLEAN worktree and abandons the stranded work the sweep exists to rescue",
       "description": "T200's new finding, and it is the same defect class T190 just closed, in the same function. `WD=$(git -C \"$W\" status --porcelain | wc -l | tr -d ' ')` -- when git fails, `wc -l` prints 0, the guard reads the worktree as CLEAN and silently `continue`s, ABANDONING EXACTLY THE STRANDED DELIVERABLES the comment above it was written for ('4,482 insertions stranded', the real 2026-08-18 incident). Unlike the DIRTY site, here the rc IS 128 and merely unread, so the repair is small. FIX IT, and fix T200's two companions in the same file: (T-b) fire-program.sh:250's rescue `git add -A -- .` is still CWD-RELATIVE and can log 'rescued:' having staged nothing -- now ASYMMETRIC with the :(top) status check directly above it, which is worse than before because the two disagree; (T-c) THE SIGNAL TRAP: T200 measured that the LOCK file is removed on SIGINT but ZSH RESUMES AFTER THE HANDLER, and it observed FIVE FURTHER TICKS RUNNING WITH THE LOCK DELETED, on SIGINT AND SIGTERM -- a fire continuing to work while holding no lock is how two orchestrators end up in one repo, which STEP 0 exists to prevent. SIGKILL strands the lock instead; say what each signal should do and make it do that. THE SHELL IS ZSH 5.9 (shebang #!/bin/zsh; the launchd plist runs `/bin/zsh -lc`; T190 and T200 both established this independently) -- DRIVE RED AND GREEN UNDER ZSH, and note that `bash -n` on this file EXITS 0 and is NOT a discriminator. KEEP T172's ANCHOR REGRESSION GREEN. Do NOT modify the live /Users/buv/gerege-nbfi/.softhouse/bin/fire-program.sh while a fire is running -- work in your worktree; the merge replaces the inode and takes effect next fire. T200 measured that zsh re-reads LARGE scripts incrementally and HIJACKED a running script by in-place rewrite at 15KB/30KB while rename never did, and this file is 16,438 B -- ABOVE that threshold -- so the in-place caution is load-bearing, not ceremonial.",
       "agent_role": "coder",
       "executor": "agent",
@@ -1381,7 +1381,7 @@
     },
     {
       "id": "T203",
-      "title": "THREE unguarded truncating rewriters of the GOLDEN VECTOR STORE — thirteen live parity vectors, and T196's repair scope was wrong about the fourth",
+      "title": "THREE unguarded truncating rewriters of the GOLDEN VECTOR STORE \u2014 thirteen live parity vectors, and T196's repair scope was wrong about the fourth",
       "description": "T196's F-2, with T198's correction applied. The backstep classifier unhid four vector-store writers previously scored UNKNOWN. T198 re-derived the exposure and found T196's 'each is a bare truncation' wording WRONG for one of them: T74-promote-vectors.py, T64-promote-vectors.py and T61-promote-vectors.py ARE bare truncations and between them threaten THIRTEEN LIVE PARITY VECTORS (rank 1 is T74 at six vectors); T58-promote-vectors.py HAS AN UNCONDITIONAL OVERWRITE REFUSAL AND CANNOT TRUNCATE. Guard the three that can; verify T58's refusal rather than assuming it and say what you measured. THIS IS THE FLAGSHIP EXPOSURE OF THE PROGRAM: the vector store is what EVERY parity claim rests on -- 43 vectors, 5664 cells, the entire basis for saying the Go port matches the reference oracle -- so an unguarded in-place rewriter of it is at least as serious as one targeting DEC-1, and these sat hidden as UNKNOWN until T196's fix made them visible. USE THE ESTABLISHED IDIOM: the shared-guard pattern T178 adopted and T187 extended across 25 files (.softhouse/reviews/t41-probe/, shared t178_guard-style module), which T196's D-3 fix now correctly scores as GUARDED through one import hop -- do not invent a new one. Locations: .softhouse/handoff/T74-promote-vectors.py, .softhouse/handoff/T61-promote-vectors.py, .softhouse/handoff/T58-promote-vectors.py, .softhouse/capture/t64-zeroprincipal/src/T64-promote-vectors.py. SAFETY, NON-NEGOTIABLE: NEVER EXECUTE A PROMOTE SCRIPT FROM THE REPO ROOT -- these truncate the live store. Scratch copies only, and verify the vector store is byte-identical before and after your work (count the vectors AND digest the tree), plus both frozen digests. DRIVE RED (P-22): show a scratch store truncated by the unguarded script. DRIVE GREEN (P-50): show the guard refusing, and the harness still at exit 0 / 43 parity vectors / 5664 cells afterwards. Then run --enforce and report whether these four now classify correctly.",
       "agent_role": "coder",
       "executor": "agent",
@@ -1404,7 +1404,7 @@
     },
     {
       "id": "A2-18",
-      "title": "DEC-2 P-8 — build the I-3/I-4 source guard that does not exist: nothing anywhere looks for a balance write path or an UPDATE/DELETE against the journal",
+      "title": "DEC-2 P-8 \u2014 build the I-3/I-4 source guard that does not exist: nothing anywhere looks for a balance write path or an UPDATE/DELETE against the journal",
       "role": "coder",
       "executor": "agent",
       "model": "opus",
@@ -1415,7 +1415,7 @@
       "files_hint": [
         ".softhouse/guards/"
       ],
-      "description": "DEC-2 rev 2 precondition P-8, and §5.3 states it is INDEPENDENT of P-1..P-5 and could be written today. The banner at the top of docs/adr/DEC-2-gl-accounting-adapter.md says it plainly: run_guards invokes exactly five guards and ALL FIVE are about floating point, gofmt and exception scope; NOTHING in this repository looks for a balance write path, or for an UPDATE/DELETE against acc_gl_journal_entry. I-3 (balances are derived, never written) and I-4 (append-only ledger) are CLAUDE.md non-negotiables with zero enforcement. Build the guard as a STANDALONE executable under .softhouse/guards/ — do NOT edit .softhouse/conformance.sh in this task (T201 holds that file this fire); wiring into run_guards is a separate follow-up you must specify but not perform.",
+      "description": "DEC-2 rev 2 precondition P-8, and \u00a75.3 states it is INDEPENDENT of P-1..P-5 and could be written today. The banner at the top of docs/adr/DEC-2-gl-accounting-adapter.md says it plainly: run_guards invokes exactly five guards and ALL FIVE are about floating point, gofmt and exception scope; NOTHING in this repository looks for a balance write path, or for an UPDATE/DELETE against acc_gl_journal_entry. I-3 (balances are derived, never written) and I-4 (append-only ledger) are CLAUDE.md non-negotiables with zero enforcement. Build the guard as a STANDALONE executable under .softhouse/guards/ \u2014 do NOT edit .softhouse/conformance.sh in this task (T201 holds that file this fire); wiring into run_guards is a separate follow-up you must specify but not perform.",
       "acceptance": null,
       "note": "DONE + MERGED 2a3eefd, fire 20260822-080001. DEC-2 P-8 BUILT AND PROVEN -- AND DELIBERATELY NOT WIRED IN, which the worker put in its own headline rather than letting the driver discover it: run_guards STILL invokes five guards, all float/gofmt/exception-scope, and the conformance transcript is BYTE-IDENTICAL before and after. That identity is simultaneously the proof it broke nothing AND the proof that I-3/I-4 REMAIN UNGRADED AT GRADE TIME. DEC-2 section 4.4.1 is still true as written; ratifying DEC-2 today still ratifies the gap. P-8 is now SATISFIABLE ON ONE EDIT, not satisfied. ARTEFACTS: .softhouse/guards/ledgerguard/main.go (1238 lines, go/parser AST, zero deps -- and it ARGUED the choice: a regex would fire inside comments, since the guard's own doc comment names acc_gl_journal_entry four times, and would mistake `a.Balance == 0` for an assignment); check-ledger-invariants.sh (the head: derives the floor with git ls-files, PARSES the census figure, requires both selftest polarities, --prove drives itself red); drive-red-ledger-invariants.sh. DETECTION SURFACE derived from DEC-2 4.4/4.4.1 with each class traced to a QUOTED SENTENCE: I3-FIELD-WRITE, I3-SQL-BALANCE (incl. the m_trial_balance populated-at-INSERT shape 4.4 names), I3-PKG-STATE, I4-DML, I4-BUILDER (4.4.1's 'any Go call that would emit one' -- db.Model(&JournalEntry{}).Delete() has no SQL text), I6-HOLD-BALANCE, OPAQUE-SQL. THREE ARGUED NON-DETECTIONS, and the first is the good one: INSERT into the journal is NOT flagged, because THAT ABSENCE IS APPEND-ONLY. PROOF: RED 8/8 classes planted in scratch copies of the REAL tree, each refused WITH THE EXPECTED CLASS ASSERTED -- the worker's own reasoning being that exit code alone would let a P-35 gate masquerade as a detection. Plus 15 selftest cases, 13 RED / 2 GREEN. GREEN: exit 0 on nexus/, 44 files / 5 packages / 498 funcs / 640 assignments / 3867 string literals / 4462 calls. P-35: five populations gated at zero, floor from a SECOND PROGRAM (WalkDir 44, git ls-files 44), and the head READS THE VALUE -- --prove shows it exits 1 on a stub printing 'inspected 0' with exit 0, which is T194's exact defect. DRIVER-RE-RAN BOTH on merged main: guard exit 0, --prove exit 0. HONEST NEGATIVES PRINTED ON EVERY RUN, not buried in the handoff: NIL-COVERAGE -- the tree has NO DB driver and NO SQL, so the SQL classes are proven by selftest and NOT by this tree; two measured OVER-MATCHES named in the census (the DML-verb test fires on English prose -- all 3 'DML' literals in nexus/ are message text -- and the hold matcher fires on TestPlaceholderDisjointnessHolds); CANNOT-CATCH -- dynamic SQL beyond the recognised call set, RENAMING A BALANCE DEFEATS THE GUARD (the surface is the name, there is no type checker), triggers/migrations/stored procs, I-5's semantic half, non-Go callers. WIRING SPECIFIED AND NOT PERFORMED, anchored ON TEXT rather than line numbers precisely because T201's edit was landing in the same file the same fire: two edits, verbatim in the handoff; run_guards maps any non-zero to EXIT_UNUSABLE so exit semantics need no change; cost 2.8 s; _run_capture_guard CANNOT be reused because it hardcodes .softhouse/capture/lib/$1. Routed as T208. IT ALSO CAUGHT A DRIVER DEFECT: it reported the circulated store digest 5d03795b... as unreproducible across four recipes. IT WAS RIGHT -- see P-61.",
       "contract_independent": true,
@@ -1424,7 +1424,7 @@
     },
     {
       "id": "A2-19",
-      "title": "SECOND independent review of DEC-2 revision 2 as it now stands post-micro-fix — the review whose verdict decides ratification",
+      "title": "SECOND independent review of DEC-2 revision 2 as it now stands post-micro-fix \u2014 the review whose verdict decides ratification",
       "role": "reviewer",
       "executor": "agent",
       "model": "opus",
@@ -1438,7 +1438,7 @@
       "files_hint": [
         ".softhouse/reviews/"
       ],
-      "description": "DEC-2 rev 2 carries: 'A further independent review must pass clean before the driver may ratify.' A2-17 WAS a review and returned MICRO-FIX, applying its own 7-line fix — so the document AS IT NOW STANDS has been reviewed by nobody. This is that review. Its verdict is what the driver acts on for ratification. Also adjudicate A2-17's sequencing recommendation (decide P-6/P-7 — the capabilities.json and PIN.json schema ids — BEFORE P-1..P-5).",
+      "description": "DEC-2 rev 2 carries: 'A further independent review must pass clean before the driver may ratify.' A2-17 WAS a review and returned MICRO-FIX, applying its own 7-line fix \u2014 so the document AS IT NOW STANDS has been reviewed by nobody. This is that review. Its verdict is what the driver acts on for ratification. Also adjudicate A2-17's sequencing recommendation (decide P-6/P-7 \u2014 the capabilities.json and PIN.json schema ids \u2014 BEFORE P-1..P-5).",
       "acceptance": null,
       "note": "MERGED, fire 20260822-080001. VERDICT REJECTED on DEC-2 rev 2. IT APPLIED NO MICRO-FIX, DELIBERATELY, so the document the driver holds is exactly what it reviewed -- no 'now unreviewed' caveat, which is the trap A2-17 walked into. P-59 CONFIRMED LIVE: `git diff main...` returned ZERO lines for BOTH already-merged upstream branches; it asserted non-emptiness first and switched to `git show`. F1 IS REJECTION-GRADE AND THE DRIVER REPRODUCED IT INDEPENDENTLY, from scratch, with its own probe vector: copy ANY loanschedule parity vector into .softhouse/vectors/ledger/, change ONLY case_id and context, and the harness reports 'VERDICT: PASS (exit 0) -- 44 parity vectors match the pinned reference oracle, 5711 cells compared', with the fake case listed as class=parity seam=path_a_embeddable PASS 47 cells. A2-19's numbers (44 / 5711) match the driver's EXACTLY. THE HEADLINE NUMBER THIS PROGRAM'S ENTIRE PARITY CLAIM RESTS ON IS INFLATABLE BY A FILE COPY AND TWO STRING EDITS -- and the inflated vector sits in ledger/ while grading a LOANSCHEDULE schedule, so it reads as GL coverage that does not exist. Cause is ONE line: `context` is constrained only to be non-empty and equal to its directory name (admit.go:115, :119-120). NO ALLOWLIST EXISTS. THE DOCUMENT'S ERROR: banner fact 2, section 8.1 fact 2 and A2-17's new section 4.10 text all assert 'No ledger vector CAN exist'. Section 5.1's own HEADING makes the TRUE and weaker claim -- not EXPRESSIBLE. Admission-impossibility is strictly stronger and it is FALSE. It rests on PC-3, A FALSE NEGATIVE: that control failed on two AUTHOR-CORRECTABLE defects (a non-contract sentinel; oracle.seam != none), not a structural wall -- P-50, the prover was never made falsifiable toward the FIX. A2-16 read a failing control as a wall; A2-17 re-derived the ARGUMENT but never re-ran the CORRECTED CONTROL. WHAT IT CONFIRMED, so silence is distinguishable from not looking: A2-17's micro-fix is CORRECT on its central purpose and its load-bearing claim re-measured (a true row ahead of its vector is exit 2 UNUSABLE, unfiltered AND under -context=loanschedule); section 5.4's retraction reproduced exactly; banner + 8.1 + 8.3 DO defuse the I-3/I-4 misreading. [VERIFIED] HIT RATE 62/64 = 96.9% on a FRESH sample across sections 2.1-9: all 47 Fineract citations HIT at the exact line; one DRIFT (conformance.sh:843-849, accurate at T191, shifted +95 by T194) and one WRONG (section 2.2 B-4 says 'three columns', it is two) -- both in-repo, neither a money claim. P-8 INDEPENDENCE CONFIRMED TRUE (source guard over the Go tree, consumes no vector or schema; target = 18 .go files, independently matching section 4.4.1's own '18') -- SO A2-18 IS CORRECTLY FOUNDED. ADJUDICATION OF A2-17's SEQUENCING RECOMMENDATION -- SPLIT: P-6 (capabilities.json) YES, a real ordering inversion, because section 5.4 step 2 cannot be obeyed without it (you cannot author even a `false` row without knowing which file it lives in); P-7 (PIN.json) NO -- its premise 'a second context implies a second pinned contract file' is CONTRADICTED BY section 1.1, since DEC-2 freezes no Go file and carries no PIN digest; re-scope P-7 to the dec1_revision question and move it AFTER P-1. A2-15 STAYS BLOCKED, and now for a SECOND independent reason: with F1 live, a promotion task pointed at ledger/ today would produce a green PASS 44 over a corpus grading nothing about the ledger.",
       "contract_independent": true,
@@ -1447,7 +1447,7 @@
     },
     {
       "id": "A2-20",
-      "title": "THE PARITY COUNT IS INFLATABLE BY A FILE COPY — `context` has no allowlist, so a loanschedule vector in ledger/ grades PASS 44",
+      "title": "THE PARITY COUNT IS INFLATABLE BY A FILE COPY \u2014 `context` has no allowlist, so a loanschedule vector in ledger/ grades PASS 44",
       "role": "coder",
       "executor": "agent",
       "model": "opus",
@@ -1465,7 +1465,7 @@
     },
     {
       "id": "A2-21",
-      "title": "DEC-2 revision 3 — retract the three false 'no ledger vector CAN exist' assertions, and make §5.2's spec more than non-regression",
+      "title": "DEC-2 revision 3 \u2014 retract the three false 'no ledger vector CAN exist' assertions, and make \u00a75.2's spec more than non-regression",
       "role": "analyst",
       "executor": "agent",
       "model": "opus",
@@ -1485,7 +1485,7 @@
     },
     {
       "id": "A2-22",
-      "title": "CounterfactualCoverage counts kills from REFUSED vectors — a refused vector silences UNBACKED",
+      "title": "CounterfactualCoverage counts kills from REFUSED vectors \u2014 a refused vector silences UNBACKED",
       "role": "coder",
       "executor": "agent",
       "model": "opus",
@@ -1502,7 +1502,7 @@
     },
     {
       "id": "T204",
-      "title": "T178's published 21/4 split is wrong in a committed artefact — correct it to 20/7/2 where the next fire will read it",
+      "title": "T178's published 21/4 split is wrong in a committed artefact \u2014 correct it to 20/7/2 where the next fire will read it",
       "role": "coder",
       "executor": "agent",
       "model": "sonnet",
@@ -1523,7 +1523,7 @@
     },
     {
       "id": "T205",
-      "title": "The T179 classifier scores a runtime-computed target UNKNOWN, and --enforce does not trip on UNKNOWN — this is why T57 and T8 were invisible",
+      "title": "The T179 classifier scores a runtime-computed target UNKNOWN, and --enforce does not trip on UNKNOWN \u2014 this is why T57 and T8 were invisible",
       "role": "coder",
       "executor": "agent",
       "model": "opus",
@@ -1565,12 +1565,12 @@
     },
     {
       "id": "T207",
-      "title": "t44_float_roundtrip_v2.py prints SUCCESSOR: PASS and exits 0 on a value-corrupted money literal — decide whether a float-derived predicate may reach a verdict",
+      "title": "t44_float_roundtrip_v2.py prints SUCCESSOR: PASS and exits 0 on a value-corrupted money literal \u2014 decide whether a float-derived predicate may reach a verdict",
       "role": "coder",
       "executor": "agent",
       "model": "opus",
       "target": "code",
-      "status": "pending",
+      "status": "in_progress",
       "attempts": 0,
       "dependencies": [
         "T185"
@@ -1580,12 +1580,12 @@
       ],
       "description": "T185's F-1, and T185 deliberately did NOT micro-fix it, correctly: the detector fires when a money literal IS value-corrupted by a float round-trip, but is never appended to `failures`, so the script prints 'SUCCESSOR: PASS' and exits 0 -- and the PASS banner is NEW IN THE SUCCESSOR, i.e. T175 introduced it. The reason it is a task and not a micro-fix: the file carries an explicit 'HAZARD CHARACTERISATION ONLY -- these floats never touch a verdict' statement, so making it fail puts a FLOAT-DERIVED PREDICATE ON A VERDICT PATH. That is a decision, not a repair. Decide it and argue it, applying T186's ratified enforcement boundary (oracle-facing wire admits major-unit decimal and is bound by BYTE-FIDELITY; the Go module's own surface refuses float absolutely; the stored vector must be integer minor units). ALSO IN SCOPE, same class: T185's F-2 (T175 added 8 json.load sites with no parse_float=, 193 -> 201, of which measure-other-sites.py:85,86 sit on the money-delta path that published '12/12 pairs, 772 deltas') and F-3 (measure-other-sites.py omits the cells() drop counter, so its published figure holds BY CORPUS LUCK, NOT BY CHECK -- 1,554 leaves, 1,554 kept, 0 dropped).",
       "acceptance": null,
-      "note": null,
+      "note": "dispatched local fire 20260822-000013 wave 1, worktree-isolated, branch softhouse/T207-*",
       "contract_independent": true
     },
     {
       "id": "T208",
-      "title": "Wire A2-18's ledger-invariant guard into run_guards — until this lands, I-3 and I-4 are enforced by nothing at grade time",
+      "title": "Wire A2-18's ledger-invariant guard into run_guards \u2014 until this lands, I-3 and I-4 are enforced by nothing at grade time",
       "role": "coder",
       "executor": "agent",
       "model": "opus",
@@ -1606,7 +1606,7 @@
     },
     {
       "id": "A2-23",
-      "title": "An EMPTY unknown-context directory is still silently ignored — the store-shape half of A2-20's fix",
+      "title": "An EMPTY unknown-context directory is still silently ignored \u2014 the store-shape half of A2-20's fix",
       "role": "coder",
       "executor": "agent",
       "model": "sonnet",
@@ -1625,7 +1625,7 @@
     },
     {
       "id": "T209",
-      "title": "CANNOT-CATCH never reaches any green run — the ledger guard's PASS text points at a block its own filter drops",
+      "title": "CANNOT-CATCH never reaches any green run \u2014 the ledger guard's PASS text points at a block its own filter drops",
       "role": "coder",
       "executor": "agent",
       "model": "sonnet",
@@ -1644,7 +1644,7 @@
     },
     {
       "id": "T210",
-      "title": "T172's anchor regression is FROZEN — it replays bytes T190 deleted, so it can no longer notice a live regression",
+      "title": "T172's anchor regression is FROZEN \u2014 it replays bytes T190 deleted, so it can no longer notice a live regression",
       "role": "coder",
       "executor": "agent",
       "model": "sonnet",
@@ -1663,7 +1663,7 @@
     },
     {
       "id": "T211",
-      "title": "SIGTERM cannot promptly stop a fire — zsh defers the trap until the foreground `claude` child exits, which is hours",
+      "title": "SIGTERM cannot promptly stop a fire \u2014 zsh defers the trap until the foreground `claude` child exits, which is hours",
       "role": "coder",
       "executor": "agent",
       "model": "opus",
@@ -1682,7 +1682,7 @@
     },
     {
       "id": "T212",
-      "title": "An --enforce run over a non-existent --file scores REFUSED-UNREADABLE and exits 0 — another way to pass without measuring anything",
+      "title": "An --enforce run over a non-existent --file scores REFUSED-UNREADABLE and exits 0 \u2014 another way to pass without measuring anything",
       "role": "coder",
       "executor": "agent",
       "model": "sonnet",
@@ -1701,12 +1701,12 @@
     },
     {
       "id": "T213",
-      "title": "84 stale agent worktrees have accumulated — the rescue sweep iterates every one of them on every fire",
+      "title": "84 stale agent worktrees have accumulated \u2014 the rescue sweep iterates every one of them on every fire",
       "role": "coder",
       "executor": "agent",
       "model": "sonnet",
       "target": "code",
-      "status": "pending",
+      "status": "in_progress",
       "attempts": 0,
       "dependencies": [
         "T202",
@@ -1717,7 +1717,7 @@
       ],
       "description": "Measured by the driver at the close of fire 20260822-080001: `git worktree list` shows 84 .claude/worktrees/agent-* entries accumulated across many fires. The driver swept all 84 for uncommitted work and found ZERO stranded -- so this is HYGIENE, not data loss, and must not be written up as though work were at risk. It still matters for two reasons: fire-program.sh's rescue sweep ITERATES EVERY WORKTREE on every fire (T202 rewrote that enumerator this fire, including the case where a failing `git worktree list` gave zero iterations indistinguishable from 'no worktrees'), so the cost grows without bound; and disk. Add pruning of MERGED, CLEAN agent worktrees to the wrapper, and be careful about the polarity: a worktree must be pruned ONLY if its branch is merged AND `git -C <w> status --porcelain -- :(top)` both SUCCEEDS and returns empty -- reading a FAILING git as 'clean' is precisely the T-a fail-open T190 and T202 just closed at fire-program.sh:224 and :262, and re-introducing it here would delete the stranded work the sweep exists to rescue. DRIVE RED (a dirty worktree, an unmerged branch, and an UNREADABLE gitdir must each survive pruning) and GREEN (a merged clean worktree is pruned) UNDER ZSH 5.9. Do NOT modify the live fire-program.sh while a fire runs; the merge replaces the inode and takes effect next fire.\n\n*** DRIVER CORRECTION, fire 20260822-080001 (measured, not suggested). THIS TASK'S OWN PREMISE WAS UNDER-SCOPED AND THE CORRECTION IS PART OF THE TASK. *** The sweep that produced 'ZERO stranded' asked `git status --porcelain` in each worktree -- i.e. it looked for UNCOMMITTED work only. That answer is correct and the driver re-confirmed it this fire: 0 dirty across all 93 worktrees. But it was REPORTED as though it settled the category 'is any work at risk', and it does not. The driver then asked the other half of the question -- content COMMITTED to a softhouse/* branch that never reached main -- and found **23 unmerged branches carrying 79 file-paths that exist on NO path on main**. Concentrated in four: T131-review-t108 (28), T108-grep-adjudication (28), rescued-agent-a353b03c0dea4dd41-20260818-200001 (15), T109-fork-point-digest-compare (8). All three named tasks are recorded **done**. Worse, `.softhouse/reviews/T131-review-of-T108.md` IS on main and CITES four of the absent paths (t131-grep/out/canary.txt, probe-extra-shapes.sh, run-bsd.sh, and the directory itself), so main carries a review pointing at evidence main does not have. THE DRIVER'S FIRST ATTEMPT AT THIS VERY MEASUREMENT WAS ITSELF DEFECTIVE -- a shell loop that inspected exactly ONE file per branch and reported it as the whole diff (20 files on T38-dec1-v7-pass2 alone); caught by spot-checking one branch by hand, which is P-35 again, inside the check written to find P-35. Consequence for YOU: removing a worktree does NOT delete its branch, so the 79 paths survive in refs either way and this is still HYGIENE -- but you must NOT repeat the 'ZERO stranded, nothing at risk' sentence, and you must not delete any softhouse/* BRANCH. Say which question your sweep asked. The unmerged-content half is T214's, not yours.",
       "acceptance": null,
-      "note": "premise corrected by the driver, fire 20260822-080001: 'zero stranded' covered uncommitted work only; 79 committed-but-unmerged paths found and split out to T214"
+      "note": "dispatched local fire 20260822-000013 wave 1, worktree-isolated, branch softhouse/T213-*"
     },
     {
       "id": "T214",
@@ -1826,7 +1826,7 @@
     },
     {
       "id": "A2-25",
-      "title": "INDEPENDENT review of DEC-2 revision 3 — the review G-11 names as its unblocking condition",
+      "title": "INDEPENDENT review of DEC-2 revision 3 \u2014 the review G-11 names as its unblocking condition",
       "status": "done",
       "executor": "agent",
       "model": "opus",
@@ -1845,7 +1845,7 @@
     },
     {
       "id": "A2-26",
-      "title": "Ledger-vector CAPTURE READINESS — measure what the A2 raw corpus can and cannot support, and capture the gap from the live oracle in RAW OBSERVED form only",
+      "title": "Ledger-vector CAPTURE READINESS \u2014 measure what the A2 raw corpus can and cannot support, and capture the gap from the live oracle in RAW OBSERVED form only",
       "status": "done",
       "executor": "agent",
       "model": "opus",
@@ -1863,7 +1863,7 @@
     },
     {
       "id": "A2-27",
-      "title": "A2-24's three findings, deliberately not applied because its verdict was APPROVED — the comment is confirmed wrong and the semantics are untested",
+      "title": "A2-24's three findings, deliberately not applied because its verdict was APPROVED \u2014 the comment is confirmed wrong and the semantics are untested",
       "status": "done",
       "executor": "agent",
       "model": "opus",
@@ -1899,7 +1899,7 @@
     },
     {
       "id": "A2-28",
-      "title": "DEC-2 revision 4 — A2-25's seven items, and re-measure against main at RATIFICATION time, not drafting time",
+      "title": "DEC-2 revision 4 \u2014 A2-25's seven items, and re-measure against main at RATIFICATION time, not drafting time",
       "status": "done",
       "executor": "agent",
       "model": "opus",
@@ -1917,7 +1917,7 @@
     },
     {
       "id": "A2-29",
-      "title": "G-12 — Fineract STORES a running balance on the journal entry; our non-negotiable says balances are DERIVED, never written",
+      "title": "G-12 \u2014 Fineract STORES a running balance on the journal entry; our non-negotiable says balances are DERIVED, never written",
       "status": "done",
       "executor": "agent",
       "model": "opus",
@@ -1970,7 +1970,7 @@
     },
     {
       "id": "T220",
-      "title": "INDEPENDENT review of T116's three promoted vectors — the money vectors landed unreviewed",
+      "title": "INDEPENDENT review of T116's three promoted vectors \u2014 the money vectors landed unreviewed",
       "status": "done",
       "executor": "agent",
       "model": "opus",
@@ -1982,14 +1982,14 @@
       "files_hint": [
         ".softhouse/reviews/t220-review-t116/"
       ],
-      "description": "Paired independent reviewer for T116. Registered by the driver, local fire 20260822-000013, on merging T116 — the pipeline's own plan gate requires every test_writer/coder task to have a paired reviewer, and three money vectors reached main without one.",
+      "description": "Paired independent reviewer for T116. Registered by the driver, local fire 20260822-000013, on merging T116 \u2014 the pipeline's own plan gate requires every test_writer/coder task to have a paired reviewer, and three money vectors reached main without one.",
       "note": "local fire 20260822-000013: DONE on softhouse/T220-review-t116 (8ed9bf1), merged. VERDICT APPROVED -- T116's three vectors and BOTH invariant exemptions are honest. IT DID NOT AUDIT T116's RIG; IT RE-OBSERVED THE ORACLE ITSELF, by two disjoint routes neither of which reads T116's output. (1) Its OWN capture: a probe written from scratch against the pinned seam, compiled and run in the pinned image (docker run --rm, no DB, no server, running containers untouched) -- reproduces all three vectors CELL FOR CELL, 1269 money cells, 0 mismatches; and T116's committed raw capture matches it on 1908 cells, so THAT CAPTURE IS REAL, NOT AUTHORED. (2) FROM THE PINNED SOURCE -- AND THIS IS THE HEADLINE, BECAUSE IT EXPLAINS FAMILY B, WHICH T116 EXPLICITLY COULD NOT. DRIVER-VERIFIED AT BOTH SITES, re-opened rather than accepted: ProgressiveEMICalculator.java:1962 ends '.divide(calculatedDaysInPeriod, mc).setScale(mc.getPrecision(), mc.getRoundingMode())', consuming precision 19 as DECIMAL PLACES; and RepaymentPeriod.java:217 is 'reduce(BigDecimal.ONE, BigDecimal::add)' -- the TWO-ARG add, NO MathContext. So rateFactorPlus1 carries 19 decimal places and TWENTY significant digits inside a PRECISION-19 context. Accumulated over n periods the EMI dips below half a minor unit at exactly the observed boundary: n=103 -> 0.005 -> 0.01; n=104 -> 0.004999999999999999999 -> 0.00. EMI ZERO MEANS NOTHING IS EVER REPAID, and calculateLastUnpaidRepaymentPeriodEMI's fallback drops the whole residual into the last row as interest -- the observed schedule exactly. Its probe confirmed the PREDICTED boundary (102/103 clean, 104/105/108 family B). THIS IS DEC-1's KNOWN MathContext DOUBLE-SENSE PRODUCING A MONEY OUTCOME -- G-1 already named :1962/:1979 as the only two such sites. EXEMPTIONS ATTACKED, NOT ARGUED: every cell the two exempted invariants read is a GRADED cell on both vectors, so an exemption cannot conceal a port divergence there -- and it did not leave that as reasoning, it ran TWO port mutations, T116's G8-FINAL-ROW-SETTLES-THE-BALANCE (green at 43, RED at 46, 4 cells each, 0 on the clean sibling) and ITS OWN G8-LAST-INSTALLMENT-GIVES-UP, BUILT SO BOTH EXEMPTED INVARIANTS STAY VIOLATED AND SILENCED -- still RED, on a one-minor-unit diff. That is the brief's hardest question ('can an exemption hide a real defect?') answered by construction. Exemptions emptied: exit 1, exactly 4 violations naming exactly the two. balance_roll_forward holds unexempted 47/47, so dropping T100's third was right. Store census: exemptions on exactly two files, two invariants each; N103 carries none and passes. TRIPWIRES ADJUDICATED AS CONSEQUENCES, NOT ADJUSTMENTS: 110->113 and 103->106 RECOMPUTED FROM THE STORE ITSELF; refused (62) and both structural counts unmoved, so 51 = 113-62 and 48 = 110-62. GATES CLEAN: contract.go absent from both T116 commits, no DEC-n amended, all 53 files at dec1_revision 12, contract-refusal still PASS 4, G-8 still OPEN with (b)/(c) untouched, prediction commit a strict ancestor carrying 0 files under out/. ONE FINDING, NOT A REJECTION -> T222.",
       "branch": "softhouse/T220-review-t116"
     },
     {
       "id": "T221",
       "title": "T108.md still states verbatim the three false claims T131's review corrected -- the corrections reached patterns.md and not the source",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "role": "coder",
@@ -2001,12 +2001,12 @@
         ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/"
       ],
       "description": "FOUND BY T218's sweep, local fire 20260822-000013 -- the same shape as T218 itself, one document further on, and only visible because T214 landed T108.md this fire. .softhouse/reviews/T131-review-of-T108.md is on main and its findings F-T131-1, F-T131-3 and F-T131-5 were applied to .softhouse/patterns.md (T218 verified that) but NEVER to T108.md, which still states the original FALSE claims VERBATIM. So main now carries a handoff asserting three things its own merged review disproved. Apply the three corrections TO T108.md. BIND BY CONTENT, NOT BY LINE NUMBER -- T218 found several of T127's line numbers had already drifted and T131's are older still. For each finding: quote what T131 says the text SAYS, locate it by content, and if the line number no longer points at the quoted text, SAY SO and land it by content. If you cannot find the quoted text, do NOT guess -- report it unapplicable and say what you searched for. DO NOT rewrite evidence to make a citation resolve (T114's standing ruling, T176's prohibition). A correction the reviewer AUTHORED is legitimate; anything beyond its findings is out of scope -- register a sixth defect, do not fix it. THEN FINISH THE SWEEP T218 STARTED, because two instances is a pattern and the population is now known: T214 landed 64 evidence paths this fire. For EVERY on-main review document, ask whether its corrections reached the file it reviews or only the downstream summary. Report the whole population and how you enumerated it -- 'not found' is a statement about the search, never about the world (P-66). Also carry T218's registered discrepancy: T127's replacement finding about charges/preconditions.sh is itself stale (T91's ea1b211/e626c2b converted both copies into call-throughs carrying the hardening), which conflicts with obligations.md's T133/T137/T148 row. Adjudicate it or say why you cannot. BAR: probe present and up, PASS exit 0, 46 parity vectors / 7884 cells, store 73c3ea7b43dd75f04884072719a87fc8e1d255c1 UNCHANGED (docs only).",
-      "note": "Registered by the driver, local fire 20260822-000013, from T218's sweep."
+      "note": "dispatched local fire 20260822-000013 wave 1, worktree-isolated, branch softhouse/T221-*"
     },
     {
       "id": "T222",
       "title": "The exemption MECHANISM has no corpus-wide tripwire -- a decoration exemption is admissible today",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "role": "coder",
@@ -2018,12 +2018,12 @@
         "nexus/internal/apps/loanschedule/conformance/"
       ],
       "description": "T220's single finding against T116, raised while APPROVING it. The kill counts have corpus-wide tripwires; THE EXEMPTION COUNT DOES NOT. admit.go checks only 'known invariant, non-empty reason', so TWO shapes are admissible today with nothing to catch them: a DECORATION exemption (an exemption on an invariant that would have held anyway -- it silences nothing, but it inflates the exempted count and teaches a reader the corpus is more exempted than it is), and an exemption PAIRED WITH unrecorded_fields WITHDRAWING THE SAME CELLS (which removes the cells from grading AND removes the invariant that would have noticed). The second is the dangerous one: T220 proved an exemption cannot hide a port divergence ONLY BECAUSE every cell the two exempted invariants read is a GRADED cell on those two vectors. That is a property of TODAY'S CORPUS, not of the mechanism. Pin the exemption count corpus-wide -- T220 says it costs one assertion. Then go further and make the DANGEROUS pairing detectable: an exemption whose invariant reads only cells that unrecorded_fields has withdrawn should be REFUSED, or at minimum reported by name. REQUIRED: drive each new check RED on a deliberately-bad input and show the run (P-22 -- a guard you have not seen fail is not a guard). State the population the check inspects, in the run output, in the shape guard_ledger_invariants uses ('NIL-COVERAGE -- inspected an empty population') -- a check that stops checking must say so in writing. DO NOT weaken or re-scope T116's two legitimate exemptions; they were independently re-derived and approved. If your check turns them RED, your check is wrong -- they are the positive control. BAR: probe present and up, PASS exit 0, 46 parity vectors / 7884 cells, 4 EXEMPTED BY A VECTOR, kills 106 money / 7 structural, store 73c3ea7b43dd75f04884072719a87fc8e1d255c1 UNCHANGED by you. RE-DERIVE these -- the corpus moved twice this fire (P-63).",
-      "note": "Registered by the driver, local fire 20260822-000013, from T220's approval of T116."
+      "note": "dispatched local fire 20260822-000013 wave 1, worktree-isolated, branch softhouse/T222-*"
     },
     {
       "id": "T223",
       "title": "G-8's region is stated in rates and terms; T220 proved the phenomenon is an EMI half-minor-unit floor -- restate it or the user is asked the wrong question",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "role": "analyst",
@@ -2035,12 +2035,12 @@
         ".softhouse/gates.md"
       ],
       "description": "T220's second carry-forward, and it bears on what BUYAN IS ASKED, which is why it is registered rather than folded into a note. The driver has recorded the MECHANISM in gates.md G-8 (setScale(mc.getPrecision()) at ProgressiveEMICalculator.java:1962 consuming 19 as DECIMAL PLACES, plus RepaymentPeriod.java:217's reduce(BigDecimal.ONE, BigDecimal::add) with NO MathContext -- both driver-verified at 426a23544 -- giving rateFactorPlus1 twenty significant digits inside a precision-19 context, so the EMI dips below half a minor unit and an EMI of zero repays nothing). WHAT THE DRIVER DID NOT DO is restate the REGION, because that needs measurement. FAMILY B IS NOT A PROPERTY OF '600%' OR OF 'n >= 104'. The boundary MOVES WITH PRINCIPAL, RATE AND TERM. Every statement of G-8's region in this file is in rates and terms -- MNT 0.23 over T83's grid, MNT 2.91 over the union, MNT 5.01 at n=1000, MNT 10.01 at n=3000 -- and those are descriptions of THE CELLS THAT HAPPEN TO HAVE BEEN SWEPT, not of the phenomenon. DERIVE THE BOUNDARY AS A PREDICATE over (principal, rate, term, minor-unit digits) from the mechanism, then TEST THE PREDICATE against the live oracle on cells NOBODY HAS SWEPT -- including at least one where the predicate says family B at a MODEST rate, because if that exists it is a far more important fact than anything at 600%. If the predicate is wrong, THAT is the finding; report it and do not tune the predicate to the cells you already have. This matters because options (b) and (c) would NARROW THE GRADED DOMAIN BY DESCRIBING A REGION, and a region described in the wrong variables cannot be narrowed correctly. Settle it BEFORE either option is put to a decision. Coordinate with T219, which is measuring T159's MNT 10.01-at-n-3000 figure in the same section -- if you and T219 disagree, say so explicitly rather than silently overwriting. You may NOT take options (b) or (c); they narrow the graded domain and are HARD USER GATES. Recommend only. BAR: probe present and up, PASS exit 0, 46/7884, store UNCHANGED (docs + raw captures only; nothing under .softhouse/vectors/ or nexus/).",
-      "note": "Registered by the driver, local fire 20260822-000013, from T220's closing recommendation."
+      "note": "dispatched local fire 20260822-000013 wave 1, worktree-isolated, branch softhouse/T223-*"
     },
     {
       "id": "T224",
       "title": "conformance.sh:1115-1116 still says DEC-2 records the I-3/I-4 guard as NOT EXISTING -- the guard's own comment carries the retracted claim",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "sonnet",
       "role": "coder",
@@ -2052,12 +2052,12 @@
         ".softhouse/conformance.sh"
       ],
       "description": "FOUND BY A2-28 while sweeping DEC-2 for the retracted claim, and correctly NOT fixed by it (harness file, outside an ADR-only scope). DRIVER-CONFIRMED at .softhouse/conformance.sh:1115-1116: guard_ledger_invariants' own header comment reads 'the I-3/I-4 SOURCE GUARD that DEC-2 4.4 requires and 4.4.1 RECORDS AS NOT EXISTING'. That is the claim DEC-2 rev 3 retracted and rev 4 swept out of the ADR -- surviving in the harness, in the comment attached to THE VERY GUARD WHOSE EXISTENCE REFUTES IT. This is the corrections-leak class (P-21/P-26/P-37) crossing a FILE BOUNDARY: rev 2 was rejected for corrections landing where named and not where restated, rev 3 was rejected for the same thing one section over, and here it is one FILE over. The sweep that found it was A2-28's, and the reason it survived is that every previous sweep was scoped to the ADR. FIX THE COMMENT to describe what the guard IS and what it CANNOT SEE, quoting the guard's own PASS text ('no violation is visible to a source-level guard over the Go tree', NOT 'the ledger tree is covered'). THEN DO THE SWEEP NOBODY HAS DONE: grep the WHOLE REPO -- not just the ADR, not just the harness -- for the negation of the corrected claim ('not checked', 'no such guard', 'does not exist', 'did not exist', 'nothing checks', 'no guard for either'). A2-28 ran exactly that pattern and found 17 hits INSIDE DEC-2 alone. Open every hit; a survivor is either a labelled retraction, a quotation, or a defect. Report the population and how you enumerated it. DO NOT touch guard LOGIC -- comments and prose only. If fixing a comment would require a behaviour change, STOP and report. BAR: probe present and up, PASS exit 0, 46 parity vectors / 7884 cells, store 73c3ea7b43dd75f04884072719a87fc8e1d255c1 UNCHANGED, run_guards still invokes SEVEN guards. RE-DERIVE these (P-63).",
-      "note": "Registered by the driver, local fire 20260822-000013, from A2-28's item-1 sweep. Driver-confirmed at conformance.sh:1115-1116."
+      "note": "dispatched local fire 20260822-000013 wave 1, worktree-isolated, branch softhouse/T224-*"
     },
     {
       "id": "A2-31",
-      "title": "INDEPENDENT review of DEC-2 revision 4 — G-11's unblocking condition, second attempt; and adjudicate the RE-MEASURE GATE",
-      "status": "pending",
+      "title": "INDEPENDENT review of DEC-2 revision 4 \u2014 G-11's unblocking condition, second attempt; and adjudicate the RE-MEASURE GATE",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "role": "reviewer",
@@ -2069,7 +2069,7 @@
         ".softhouse/reviews/a2-31-dec2-rev4/"
       ],
       "description": "G-11 states its unblocking condition verbatim and it has now been attempted twice: 'a further independent review passing CLEAN'. A2-25 reviewed rev 3 and REJECTED it on four claims false about main. A2-28 wrote rev 4 addressing all seven of A2-25's items. YOU ARE THE FURTHER INDEPENDENT REVIEW. You are NOT authorised to ratify; you return a verdict and the driver decides. READ A2-25's HANDOFF AND A2-28's HANDOFF FROM GIT, NOT DISK, and read them AFTER forming your own findings; say at what point you read each. THE HISTORY YOU ARE UP AGAINST, because it is the same defect three times: rev 1 REJECTED (A2-14, three shape findings). rev 2 -- A2-17 returned MICRO-FIX and applied its OWN fix, leaving that text reviewed by nobody; A2-19 then REJECTED rev 2. rev 3 REJECTED by A2-25, and its F-1 was A CORRECTION APPLIED WHERE NAMED AND MISSED WHERE RESTATED -- the same class that killed rev 2. A2-28 then found the SAME CLAIM surviving one FILE over, in conformance.sh:1115-1116. SO: SWEEP FOR CLAIMS, NOT SENTENCES, AND DO NOT SCOPE THE SWEEP TO THE ADR. SPECIFIC THINGS TO ATTACK. (1) A2-28 re-derived the guard and found only TWO of the three NIL-COVERAGE sites FIRE, and DID NOT ESTABLISH I4-BUILDER's population -- verify both, and verify it claimed no numerator it had not measured. (2) Requirement 6 was rewritten to demand a strict-decode load failure and split into 6a/6b. A2-25 MEASURED that the old requirement 6 could not be satisfied; MEASURE WHETHER THE NEW ONE CAN -- author the bytes and run them. This is the requirement that will grade A2-15, and it has now been wrong once. (3) A2-28 adopted F-8 and F-9, turning requirement 7's perturbation disjunction into a CONJUNCTION and adding P-10; check that requirement 7 can now be satisfied at all -- a requirement made too strong is as bad as one made vacuous. (4) Every [MEASURED ... at commit] stamp: check the stamp is real and the claim still holds at HEAD. ADJUDICATE A2-28's OWN RECOMMENDATION, which is the structural question: THE CENSUS FIGURES MOVED BETWEEN A2-25's RUN AND A2-28's RUN INSIDE ONE FIRE (4063->4074 literals, 658->659 statements) because T116 touched report.go, AND NEITHER WAS WRONG. A2-28 concludes stamps make staleness VISIBLE but cannot PREVENT it, so ratification needs a RE-MEASURE GATE. Decide whether that is right and what the gate should concretely be -- a document whose measured claims go stale between the review and the ratification cannot be ratified by a review alone. VERDICT: APPROVED (the driver may ratify) / MICRO-FIX (<=10 lines, mechanical only -- never a number, never a normative requirement, never a retraction's wording) / REJECTED with specifics. THE INCENTIVE, STATED SO YOU CAN DISCOUNT IT: a clean verdict unblocks A2-15, the ledger vector work, and the whole tierA-gl-accounting slice, and this is the fourth revision. THAT IS NOT A REASON TO APPROVE. A2-25 was told the same and rejected anyway; that is the standard. If you find nothing, STATE WHAT YOU CHECKED, so silence is distinguishable from not looking.",
-      "note": "Registered by the driver, local fire 20260822-000013, on merging A2-28. G-11 remains OPEN - NOT RATIFIABLE until this passes clean."
+      "note": "dispatched local fire 20260822-000013 wave 1, worktree-isolated, branch softhouse/A2-31-*"
     }
   ],
   "cross_corroboration": {
