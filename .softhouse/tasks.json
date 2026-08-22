@@ -2400,9 +2400,10 @@
    "dependencies": [
     "T216"
    ],
-   "status": "pending",
+   "status": "in_progress",
    "attempts": 0,
-   "note": "Found by the driver at merge of T216, local fire 20260822-060013, NOT by a worker -- the driver diffed the live selftest against the committed transcript while checking whether T216's fixture edit changed a test's meaning. T216 is CLEARED: the drift is T205's growth, not T216's edit."
+   "note": "dispatched wave 1, local fire 20260822-140002, isolation: worktree, forked from origin/main 9b6c596. Found by the driver at merge of T216, local fire 20260822-060013, NOT by a worker -- the driver diffed the live selftest against the committed transcript while checking whether T216's fixture edit changed a test's meaning. T216 is CLEARED: the drift is T205's growth, not T216's edit.",
+   "branch": "softhouse/T237-stale-selftest"
   },
   {
    "id": "T238",
@@ -2543,9 +2544,10 @@
    ],
    "context": "tier0-harness",
    "dependencies": [],
-   "status": "pending",
+   "status": "in_progress",
    "attempts": 0,
-   "note": "engine roster corrected in place by the driver, local fire 20260822-140002, per P-75 -- the sentence originally in this task was measured false AFTER the task was written. Raised by the DRIVER against ITS OWN correction, made in local fire 20260822-060013. Claim (5) -- that the ledger vectors were captured against tenant gerege -- was INFERRED by the driver, not measured; the reviewer must establish it from the committed capture artefacts."
+   "note": "dispatched wave 1, local fire 20260822-140002, isolation: worktree, forked from origin/main 9b6c596. engine roster corrected in place by the driver, local fire 20260822-140002, per P-75 -- the sentence originally in this task was measured false AFTER the task was written. Raised by the DRIVER against ITS OWN correction, made in local fire 20260822-060013. Claim (5) -- that the ledger vectors were captured against tenant gerege -- was INFERRED by the driver, not measured; the reviewer must establish it from the committed capture artefacts.",
+   "branch": "softhouse/T245-oracle-pin"
   },
   {
    "id": "T246",
@@ -2582,9 +2584,10 @@
    "dependencies": [
     "T246"
    ],
-   "status": "pending",
+   "status": "in_progress",
    "attempts": 0,
-   "note": "G-14's preparation task. Raised by the driver from T246's F-1 (HIGH), which T246 found while reviewing a DIFFERENT correction to the same document — the argument for independent review in one sentence. PREPARES revision 7; does not land it."
+   "note": "dispatched wave 1, local fire 20260822-140002, isolation: worktree, forked from origin/main 9b6c596. G-14's preparation task. Raised by the driver from T246's F-1 (HIGH), which T246 found while reviewing a DIFFERENT correction to the same document — the argument for independent review in one sentence. PREPARES revision 7; does not land it.",
+   "branch": "softhouse/T247-dec2-rev7"
   },
   {
    "id": "T248",
@@ -2603,14 +2606,15 @@
    "dependencies": [
     "T243"
    ],
-   "status": "pending",
+   "status": "in_progress",
    "attempts": 0,
-   "note": "Raised by the DRIVER from its own red-drive of T243's wiring. The generalisable lesson is item (4): a guard driven red only on the shape it was built from proves the WIRING, not the COVERAGE. Serialise against T226 and T235, which also hold conformance.sh."
+   "note": "dispatched wave 1, local fire 20260822-140002, isolation: worktree, forked from origin/main 9b6c596. Raised by the DRIVER from its own red-drive of T243's wiring. The generalisable lesson is item (4): a guard driven red only on the shape it was built from proves the WIRING, not the COVERAGE. Serialise against T226 and T235, which also hold conformance.sh.",
+   "branch": "softhouse/T248-failopen-widen"
   },
   {
    "id": "T249",
    "title": "INDEPENDENT re-derivation of the DRIVER's own G-14 SCOPE DECISION and of its ready-tasks.py patch — a gate scope was decided, and the instrument that contradicted it was rewritten, by the same actor in one fire",
-   "status": "pending",
+   "status": "in_progress",
    "executor": "agent",
    "model": "opus",
    "target": "docs",
@@ -2620,7 +2624,8 @@
    ],
    "contract_independent": true,
    "description": "The DRIVER decided a gate's scope and then rewrote the instrument that disagreed with it, both on local fire `20260822-140002`, at repo commit recorded in the handoff. That is precisely the arrangement this program does not trust -- it is why `T245` exists. **Re-derive; do not read the driver's paragraphs and agree with them.**\n\nWHAT THE DRIVER DID, in three parts:\n(A) **DECIDED** that `G-14` blocks nothing but DEC-2 itself -- specifically that it does NOT forbid writing Go under `nexus/` or storing contract-shaped vectors for `tierA-gl-accounting`. Recorded in `.softhouse/gates.md` under `### SCOPE DECIDED` at the end of the `## G-14` block, and in `.softhouse/program.json` `gates_pending[]` where G-14 gained `blocks`, `blocks_decided_by`, `blocks_reviewed_by`.\n(B) **CLAIMED** the contradicting sentence was HARDCODED at `.softhouse/bin/ready-tasks.py:125` and printed unconditionally for every open CONTRACT gate, reading no per-gate field.\n(C) **PATCHED** `ready-tasks.py` so it prints the gate's own recorded `blocks`, falling back to the old blanket text -- explicitly labelled an assumption -- only when a gate records no scope.\n\nTHE JOB:\n(1) **Re-derive (A) on the merits, from CLAUDE.md and from `T246`'s finding, NOT from the driver's reasoning.** The driver's stated test was: *does the pending correction change what a conformant implementation must DO?* Decide whether that is the RIGHT test, and whether it was applied honestly. The strongest argument AGAINST the driver, which you must engage rather than note: the G-11 prohibition existed because an unratified SHAPE must not be built on -- and a reader is instructed to read DEC-2's banner **before any other sentence**, so a false banner is not obviously a document a port may safely be built against. If you think the driver rationalised its way past a gate to keep the factory moving, **say so as a HIGH finding.** A driver deciding its own gate is scope is the exact shape this program has recorded failing.\n(2) **VERIFY (B) BY READING THE PRE-PATCH FILE, NOT THE POST-PATCH ONE.** The driver's claim is about code it has since rewritten. Recover the version as of `main` before this fire's driver commit (`git show <pre>:.softhouse/bin/ready-tasks.py`) and establish for yourself whether that sentence was in fact unconditional and field-blind, and whether **:125** is the true line number. **If the claim is right, say so and say where you looked; if the line number is off, that is P-33/P-70 and worth naming.**\n(3) **ADVERSARIALLY RE-DRIVE (C), on a shape the driver did NOT design the rule around -- this is a MANDATORY P-76 case and the task is widened because of it.** The driver drove exactly two arms: G-14 with `blocks` present, and a throwaway copy with `blocks` stripped. **Both are shapes it authored.** Drive at minimum: a gate whose `blocks` is present but EMPTY STRING; one whose `blocks` is whitespace only; one whose `blocks` is a non-string (number, null, list, dict -- `str(...)` will happily stringify several of those into a scope that reads authoritative); a gate where `blocks` says something that does NOT actually grant permission; and TWO open CONTRACT gates at once, which never existed when the code was written. **Report any input for which the tool prints a permissive-looking scope it should not.** A guard proved only on its author's example is a tautology with a transcript.\n(4) **Ask the question the patch does not answer: WHO MAY WRITE `blocks`?** Nothing checks that a gate's scope was decided by anyone competent, reviewed, or true -- the field is free text that a future worker could widen into a self-issued permission slip, and the resolver will print it as authoritative. That is the fail-OPEN class this program has named repeatedly (P-45). **Propose an enforcement; do NOT implement it in this task.**\n(5) **Check the register for a THIRD disagreeing copy.** The driver reconciled two sources (`gates.md`'s table and the resolver). `.softhouse/program.json`, `RESUME.md`, `DRIVER.STATE.json` and the `## G-14` prose block are further copies of the same proposition, and **P-73 has already fired twice on exactly this -- a gate asserted in three files and absent from the one called authoritative.** ENUMERATE the copies; do not sweep for them.\n\nSWEEP DISCIPLINE (P-75, measured, non-negotiable): in an agent shell `grep` and `rg` are SHELL FUNCTIONS. `grep` execs bundled ugrep 7.5.0 with six `--exclude-dir` flags silently prepended -- 33% recall on a measured fixture, exit 0, nothing saying anything was skipped. `rg` has NO binary: `rg P F` exits 127 but `rg P F | head` exits **0**. `git grep -E` MISSES true hits AND FABRICATES (`bmainb` matches `\\bmain\\b`), so 'I got hits, so my rig works' is not a calibration -- calibrate on a known POSITIVE **and a known NEGATIVE**. Use `/usr/bin/grep`, `git grep -P` (sound and available), or `python3 re`. `set -euo pipefail` in every script. `type grep` before you trust `grep`.\n\nSCOPE: `.softhouse/reviews/t249-g14-scope/` and your handoff, ONLY. **You may NOT edit `.softhouse/bin/ready-tasks.py`, `.softhouse/gates.md`, `.softhouse/program.json`, `docs/adr/`, `.softhouse/vectors/`, `nexus/` or `.softhouse/conformance.sh`** -- if the driver is wrong, your job is to prove it and hand the driver the correction, not to land it. A reviewer that edits the thing it reviews leaves the artefact reviewed by nobody (this program has recorded that failure by name: `A2-17`).\n\nBAR: your own review artefacts change no graded output, so the bar is the UNCHANGED bar. Run it and read it: probe line **PRESENT** (test PRESENCE first -- four exit-2 paths precede the probe, one of them a failed HARD money guard) and reading `up`; VERDICT PASS exit 0; loanschedule 46 parity / 7884 graded cells; ledger 4 parity / 2 oracle-refusal / 21 money cells; refused 0, inadmissible 0, harness errors 0, invariant violations 0, 0 NOT RUN; all 9 census pins == pinned. **Read the vector-store digest LIVE with `git rev-parse HEAD:.softhouse/vectors` and report it; do not expect a particular value** -- it has moved three times in two fires and a task that pins a dead digest either reports red on a green repo or mutates the money corpus to satisfy a stale sentence. Invoke the harness with `bash` (exit 3 = wrong interpreter); `. .softhouse/bin/go-env.sh` first.",
-   "note": "filed by the driver, local fire 20260822-140002, against ITSELF -- same reason T245 exists. The driver decided G-14's scope AND rewrote the instrument that contradicted it, in one fire, unreviewed."
+   "note": "dispatched wave 1, local fire 20260822-140002, isolation: worktree, forked from origin/main 9b6c596. filed by the driver, local fire 20260822-140002, against ITSELF -- same reason T245 exists. The driver decided G-14's scope AND rewrote the instrument that contradicted it, in one fire, unreviewed.",
+   "branch": "softhouse/T249-g14-scope"
   }
  ],
  "cross_corroboration": {
