@@ -33,6 +33,48 @@ none is claimed.** Any BAR pinning `8968c559…` or `73c3ea7b…` is stale; `13b
 
 ---
 
+# HEADLINE 0 (READ FIRST): TWO ORCHESTRATORS RAN OVER THIS REPO AT ONCE — AND THE FAULT WAS THIS DRIVER'S
+
+A **cloud catch-up fire took the lock at 12:10:00Z while this local fire had five workers live.** Both did
+real work; **both are preserved**; nothing was force-pushed or discarded.
+
+**The cloud's takeover reasoning was documented and locally sound.** The lock's `started_at` was **6 h 07 m**
+old (over the 6 h threshold) and **`HEAD` `2871f17` attested that fire `20260822-140002` "closed clean with
+zero live workers."** Both facts were true of the repo **as published**. Neither was true of the world.
+
+**The defect was this driver's:** it committed its lock refresh, its dispatch record and its in-flight
+`RESUME.md` — `5f27983`, `ba2d8ed`, `d6dd8d0` — and **never pushed them**, so the only evidence a second
+orchestrator could read said the opposite of the truth, and the staleness rule fired on a **live** session.
+
+**What it cost:** the cloud's `T253` and `T241` workers were killed with their sandbox and **their branches
+reached neither `origin` nor local — that WIP is GONE, not merely unpushed** [VERIFIED: `git ls-remote
+--heads origin` and `git branch --list`, both empty]. `T253`/`T254`/`T255` and `P-78` were each allocated
+**twice, with different content**.
+
+**What it was worth:** `T251` ran **twice, independently**, and the two reviews **agree on every load-bearing
+fact** — no obligation moved, the caution survives with the same denominator, `run_guards` is `:1504` — while
+their site lists are **COMPLEMENTARY**: the local pass found §4.4's lead paragraph (L804-805) and two §5.2
+sites; the cloud pass found **L821's ordinal** and **the fenced by-name enumeration at L854-861 that lists
+seven guards and omits `guard_no_fail_open_instruments`**. **Neither found the other's.** That is a reason to
+duplicate reviews **deliberately** — never a reason to tolerate a broken lock.
+
+**THE RULE (P-85): push the lock, the dispatch record and the in-flight manifest BEFORE spawning the first
+worker.** A `HEAD` that says "closed clean" while a session is live is an **active lie to the next
+orchestrator**.
+
+**Reconciliation applied:** IDs resolved in the cloud's favour (it published first) — this fire's
+`T254`/`T255`/`T256` → **`T257`/`T258`/`T259`**, and its `P-78`…`P-83` → **`P-79`…`P-84`**; `P-85` is the lock
+incident. **This fire's prepare-only `T253` was DROPPED**, superseded by the cloud's `T255` (**prepare AND
+LAND revision 8 in ONE fire**), which is the better design because the gap between preparing and landing is
+exactly where citations rot — its unique content was **folded into `T255`**, not filed as a competitor.
+**The cloud's `T253` is `needs_retry`, not `in_progress`** — nothing is happening. Its finding stands and is
+first-hand: **the harness cannot run on Linux**, which no Mac fire could have measured.
+
+**The cloud could not run the BAR at all.** Every conformance number in this manifest is from this local
+fire, against the live oracle, re-run on the final merged result.
+
+---
+
 # HEADLINE 1: DEC-2 REVISION 7 IS REJECTED. G-14 REMAINS OPEN AND NOTHING WAS RATIFIED
 
 `T251` was the independent review the driver committed to obtaining before ratifying. **It rejected the
@@ -163,18 +205,24 @@ under the new, stricter C6 rule**, which no arithmetic could have shown.
 unresolved edges, G-14 the only open contract gate**, carrying its own recorded scope
 (**NOTHING BUT DEC-2 ITSELF**), so Go under `nexus/` remains permitted.
 
-1. **`T253` — DEC-2 revision 7b.** Still the highest-value item: the last thing between G-14 and closure.
-   **Prepare-only; it may not land.** It must fix the citation-rot mechanism, not just the six hunks.
-2. **`T254`** — wire `manifest.py verify` into the automatic path. **Serialised after `T252` (merged), and
-   it contends with `T255` for `conformance.sh` — do not run both in one batch.**
-3. **`T255`** — the frontier cardinal restated in `t243-wiring/instruments/20-failopen-red-drive.sh` at
+1. **`T255` — prepare AND LAND DEC-2 revision 8 in ONE fire.** Highest-value item and the last thing
+   between G-14 and closure. **It must run on a host that can run the BAR — i.e. a LOCAL fire.** It now
+   carries **all sites from BOTH independent T251 reviews** (local: §4.4 L804-805 and two §5.2 sites; cloud:
+   L821's ordinal and the L854-861 enumeration), and it must **fix the citation-rot mechanism**, not just the
+   hunks. **Re-measure every line number at your own commit** — all of them were measured at `2871f17`.
+2. **`T253`** (`needs_retry`) — the harness cannot run on Linux: 10 non-portable `mktemp -t` sites kill it
+   before the probe, and `go-env.sh` hardcodes a Mac path. **Re-dispatch from scratch; the cloud's WIP is
+   gone.** Then **`T254`**, its independent review.
+3. **`T257`** — wire `manifest.py verify` into the automatic path (it was silently RED across two merges).
+   **Contends with `T258` and `T253` for `conformance.sh` — do not run them in one batch.**
+4. **`T258`** — the frontier cardinal restated in `t243-wiring/instruments/20-failopen-red-drive.sh` at
    `:74` and `:152` as **`all 9 rows`** when it is **11** (a live broken control arm), plus the **pinned but
    still BROKEN** TIER1B `rederive-provenance.sh`. **The pin is a FRONTIER, NOT AN AMNESTY.**
-4. **`T256`** — the verdict field that never consults its own predicate (P-78).
-5. Then `T250`, `T226`, `T235`, `T145` (denominator **438**), `T160`, `T164`, `T174`, `T192`, `T195`.
+5. **`T259`** — the verdict field that never consults its own predicate (P-79).
+6. Then `T250`, `T226`, `T235`, `T145` (denominator **438**), `T160`, `T164`, `T174`, `T192`, `T195`.
 
 **CONTENTION MAP for the next batch** — these overlap and must not be dispatched together:
-`conformance.sh` → `T254`, `T255`, `T226`, `T235`, `T160`, `T192`, `T195`.
+`conformance.sh` → `T253`, `T257`, `T258`, `T226`, `T235`, `T160`, `T192`, `T195`.
 `capture/lib/` → `T250`, `T195`. `capture/tierA-a2/` → `T164`, `T174`. `.softhouse/capture/` (whole) → `T145`.
 
 **Carried forward, unfixed, with scope stated:** `r11-hygiene.sh` remains **on the frontier and unrepaired**;
