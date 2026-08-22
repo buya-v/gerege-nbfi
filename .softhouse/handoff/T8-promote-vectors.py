@@ -11,10 +11,45 @@ never about the oracle -- and the arithmetic is emitted verbatim into each entry
 """
 import json
 import os
+import sys
 from decimal import Decimal, ROUND_HALF_UP
 from math import gcd
 
+# HARDENED BY T203 (22 August 2026) - P-22, P-48 rule 4.  This file REUSES the
+# shared store guard (`t203_store_guard.py`, T178's shape transposed to a
+# create-only store writer) and contains no copy of it.
+#
+# T203 FOUND THIS FILE, WHICH T196's F-2 AND T198's CORRECTION BOTH MISSED.
+# They named FOUR vector-store writers; this is a SIXTH, and it was a bare
+# truncation of the live store exactly as T74/T61/T64 were:
+#     OUT = os.path.join(ROOT, ".softhouse", "vectors", "loanschedule")
+#     with open(path, "w") as fh: json.dump(v, fh, ...)
+# with no authorisation, no existence check and no atomicity.  It is the
+# WIDEST-REACHING of the six: ELEVEN live parity vectors, including
+# `P-00-baseline-6x7pct.json`, the corpus baseline
+# (T203-evidence/T57-T8-EXPOSURE.txt).
+#
+# WHY THE CLASSIFIER DID NOT CATCH IT - the same runtime-computed-constant
+# fail-open documented at the head of `T57-promote-emi-vectors.py`: `OUT` is
+# `os.path.join(ROOT, ...)` with `ROOT` derived from `__file__` at runtime, so
+# T179's classifier scored the target UNKNOWN rather than TRUSTED, and
+# `--enforce` does not trip on UNKNOWN.
+#
+# The caller's own directory goes at the FRONT of sys.path so the module cannot
+# be shadowed from the cwd or the environment; a missing module fails CLOSED.
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import t203_store_guard as guard  # noqa: E402
+
+NAME = 'T8-promote-vectors'
+
+# Argv-only authorisation phrase - never an environment variable, for the
+# reason recorded in the guard module.  Authorises CREATING new vectors in the
+# live store; it does NOT authorise overwriting an existing one, and nothing
+# does.
+AUTHORISE_TOKEN = (
+    'I-AM-PROMOTING-T8-PASS3B-BASELINE-VECTORS-INTO-THE-LIVE-GOLDEN-VECTOR-STORE')
+
 CAP_REL = ".softhouse/capture/out/capture-prod3b-raw.json"
 OUT = os.path.join(ROOT, ".softhouse", "vectors", "loanschedule")
 CAP_SHA = "8d23c48fa13c04677b51bacdf07d101d6a061c79815d76b4983eccdbac945c79"
@@ -537,10 +572,14 @@ def main():
             if moved:
                 v["graded_against"] = kept
                 v["_note"] += STRUCTURAL_FALLBACK_NOTE + json.dumps(moved, ensure_ascii=False)
-        path = os.path.join(OUT, SLUG[case_id] + ".json")
-        with open(path, "w") as fh:
-            json.dump(v, fh, indent=2, ensure_ascii=False)
-            fh.write("\n")
+        # `json.dumps(..., indent=2, ensure_ascii=False) + "\n"` is byte-for-byte
+        # what `json.dump(v, fh, indent=2, ensure_ascii=False)` followed by
+        # `fh.write("\n")` produced; T203 proved the emitted bytes unchanged by
+        # promoting all 11 into an empty scratch store and comparing each against
+        # the live vector (arm G1, 11/11 identical).
+        path = guard.write_vector(
+            NAME, AUTHORISE_TOKEN, OUT, SLUG[case_id] + ".json",
+            json.dumps(v, indent=2, ensure_ascii=False) + "\n")
         written.append((case_id, path, len(v["expect"]["periods"]),
                         [(cf["id"], cf.get("kind", "money"), cf["margin_minor"])
                          for cf in v["graded_against"]]))
