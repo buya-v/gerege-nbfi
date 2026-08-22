@@ -31,9 +31,10 @@ Built by local fire `20260821-125942`.
 | **G-9** | PRODUCT | **CLOSED — DECIDED** | local fire `20260821-054355`, `chosen_by: agent`. Carries a `driver_error_correction`: the decision stands, the driver's stated *consequence* was false. | `## G-9 — CLOSED` |
 | **G-10** | ENGINEERING | **OPEN — driver recommends (c), Buyan may overrule** | Blocks nothing today. | `## G-10 — REFINED…` |
 | **G-11** | CONTRACT | **OPEN — NOT RATIFIABLE** | The driver, once DEC-2 rev 3 passes a review clean. `chosen_by: agent` is permitted here (CLAUDE.md makes DEC-n ratification agent-decidable); what is NOT permitted is ratifying rev 2. | `## G-11 — DEC-2 rev 2 REJECTED` |
+| **G-12** | ENGINEERING | **OPEN — measurement required first** | `A2-29` must measure before anyone recommends. Blocks nothing today. | `## G-12 — Fineract STORES a running balance on the entry` |
 
-**Open right now: G-4, G-5, G-8, G-10, G-11.** Of those, **G-4 and G-5 are hard `user` gates** (each amends a
-ratified DEC-n); **G-8 and G-10 block no work today** and the driver has recorded a recommendation on each.
+**Open right now: G-4, G-5, G-8, G-10, G-11, G-12.** Of those, **G-4 and G-5 are hard `user` gates** (each amends a
+ratified DEC-n); **G-8, G-10 and G-12 block no work today** and the driver has recorded a recommendation on each.
 
 ## Open
 
@@ -2444,3 +2445,50 @@ ledger-invariant guard this same fire.
 
 **No `user` gate was crossed to record this, and none is being asked for.** G-4, G-5, G-8 and G-10 are
 untouched.
+
+
+## G-12 — Fineract STORES a running balance on the entry, and our non-negotiable says balances are DERIVED
+
+| | |
+|---|---|
+| Gate class | ENGINEERING |
+| Task | `A2-29` (measurement), raised by `A2-26` |
+| Context | `tierA-gl-accounting` / slice `A2` |
+| Raised by | local fire `20260822-000013` |
+| State | **OPEN — measurement required before a recommendation.** Blocks nothing today. |
+
+**The finding.** `A2-26`'s DB dump — `.softhouse/capture/tierA-a2/out/A2-370-db-ledger-state.txt` — records
+that `acc_gl_journal_entry` carries **`office_running_balance`** and **`organization_running_balance`**.
+Fineract stores a balance **on the entry**.
+
+**Why it is a gate and not a bug report.** Two instructions in `CLAUDE.md` meet in this one column:
+
+- *"The ledger is double-entry and append-only. **Balances are derived, never written.**"*
+- *"Contract-first, schema-first, strangler … **adopt Fineract's PostgreSQL schema**."*
+
+So the reference oracle does the thing the port is forbidden to do, in a table the port is instructed to
+adopt. This is the **same shape as G-8** — "Fineract is the oracle" set against a stated invariant — and
+G-8's handling is the precedent: **measure the boundary first, then choose.**
+
+**What must be measured before any option is argued** (this is `A2-29`, and it is the whole point):
+
+1. Are those columns ever **READ** to serve a balance, or only written? Every reader in the pinned checkout
+   `426a23544`, cited.
+2. Do they reach any **contract-boundary** response, or are they purely internal? `A2-26` found them in a
+   `psql` dump — that is not the same as finding them in `/journalentries`.
+3. **Can the stored value DISAGREE with the derived sum?** A stored balance that always equals the derived
+   one is a **cache**; one that can drift is a **second source of truth**. The two cases have completely
+   different consequences for the port, and no option should be argued before this is known.
+
+**Options, not a closed list, and none is chosen yet:**
+
+- **(a)** The port derives balances and simply does not populate the columns — a schema-level divergence that
+  no contract-boundary cell exposes.
+- **(b)** The port writes them to keep the adopted schema byte-compatible for shadow-parity, while **never
+  reading** them — honouring *"derived"* in behaviour and *"schema-first"* in storage.
+- **(c)** Treat any vector cell exposing them as outside the graded domain. **This narrows the graded domain
+  and is therefore a HARD `user` gate** — recommendable, not takeable.
+
+**Blocks nothing today.** No `ledger` vector exists yet (G-11 is open), so no vector grades the column. The
+risk is that it becomes load-bearing silently once one does.
+
