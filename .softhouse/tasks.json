@@ -1989,7 +1989,7 @@
     {
       "id": "T221",
       "title": "T108.md still states verbatim the three false claims T131's review corrected -- the corrections reached patterns.md and not the source",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "role": "coder",
@@ -2001,7 +2001,7 @@
         ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/"
       ],
       "description": "FOUND BY T218's sweep, local fire 20260822-000013 -- the same shape as T218 itself, one document further on, and only visible because T214 landed T108.md this fire. .softhouse/reviews/T131-review-of-T108.md is on main and its findings F-T131-1, F-T131-3 and F-T131-5 were applied to .softhouse/patterns.md (T218 verified that) but NEVER to T108.md, which still states the original FALSE claims VERBATIM. So main now carries a handoff asserting three things its own merged review disproved. Apply the three corrections TO T108.md. BIND BY CONTENT, NOT BY LINE NUMBER -- T218 found several of T127's line numbers had already drifted and T131's are older still. For each finding: quote what T131 says the text SAYS, locate it by content, and if the line number no longer points at the quoted text, SAY SO and land it by content. If you cannot find the quoted text, do NOT guess -- report it unapplicable and say what you searched for. DO NOT rewrite evidence to make a citation resolve (T114's standing ruling, T176's prohibition). A correction the reviewer AUTHORED is legitimate; anything beyond its findings is out of scope -- register a sixth defect, do not fix it. THEN FINISH THE SWEEP T218 STARTED, because two instances is a pattern and the population is now known: T214 landed 64 evidence paths this fire. For EVERY on-main review document, ask whether its corrections reached the file it reviews or only the downstream summary. Report the whole population and how you enumerated it -- 'not found' is a statement about the search, never about the world (P-66). Also carry T218's registered discrepancy: T127's replacement finding about charges/preconditions.sh is itself stale (T91's ea1b211/e626c2b converted both copies into call-throughs carrying the hardening), which conflicts with obligations.md's T133/T137/T148 row. Adjudicate it or say why you cannot. BAR: probe present and up, PASS exit 0, 46 parity vectors / 7884 cells, store 73c3ea7b43dd75f04884072719a87fc8e1d255c1 UNCHANGED (docs only).",
-      "note": "dispatched local fire 20260822-000013 wave 1, worktree-isolated, branch softhouse/T221-*"
+      "note": "MERGED local fire 20260822-000013. Three F-T131 corrections applied to T108.md as labelled struck-not-deleted blocks, all located BY CONTENT (T131 gives no line numbers into T108.md; its only line numbers, patterns.md:645/:655, have BOTH drifted). CORRECTED THE DRIVER: the brief said T214 landed \"64 evidence paths\"; that is the ADDED-path count -- driver re-derived `git show --name-status --format= 0295422` = 64 A / 2 M. SWEEP POPULATION IS 134, NOT 64: 76 review .md under .softhouse/reviews/ PLUS 58 review-declaring docs under .softhouse/handoff/ -- and that second population HAS NEVER BEEN SWEPT, with 18 having no reviews/ counterpart at all. 32 review->target pairs tested, 102 SKIPPED and every group named (P-40). Register R-1..R-21 raised; R-1 is P1 (A2-2 F-1..F-5 never reached docs/analysis/tierA-a2-behaviour.md, 0 occurrences of \"A2-2\" in 82,888 bytes). F-T131-2/-4/-6 correctly NOT applied (out of scope) and registered as R-13/R-14."
     },
     {
       "id": "T222",
