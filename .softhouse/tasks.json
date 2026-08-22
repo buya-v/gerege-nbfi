@@ -2463,9 +2463,10 @@
     "T219",
     "T228"
    ],
-   "status": "pending",
-   "attempts": 0,
-   "note": "Raised by the driver from T219's declared gaps 7 and 8 plus its deliberate G-8-NOTICE decision. Serialised behind T228 because both touch gates.md."
+   "status": "in_progress",
+   "attempts": 1,
+   "note": "Raised by the driver from T219's declared gaps 7 and 8 plus its deliberate G-8-NOTICE decision. Serialised behind T228 because both touch gates.md. | DISPATCHED cloud catch-up fire 2026-08-22T12:00Z, worktree /home/user/wt/T241. ITS STATED BAR CANNOT BE MET ON THIS HOST: the reference oracle is unreachable (curl rc=7, no docker daemon, 5432 refused) AND conformance.sh currently exits 2 with no probe line on Linux (see T253). The task's SUBSTANCE is oracle-free — it re-derives from captured evidence already in the repo — so the work proceeds, but this branch MUST be BAR-verified and merged by a LOCAL (Mac) fire. The cloud fire will not merge it.",
+   "branch": "softhouse/T241-g8-evidence-hygiene"
   },
   {
    "id": "T242",
