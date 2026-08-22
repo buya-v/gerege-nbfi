@@ -1,0 +1,139 @@
+T176 — byte-for-byte reproduction proof, verbatim commands + output
+====================================================================
+
+Task: make .softhouse/capture/t159-review-t117/src/build_harness_t159.py reproduce the
+committed CaptureT159.java exactly (T169's finding: it previously did not -- two hunks,
+both inside the seam-call handler, were applied BY HAND to the committed file and never
+folded back into the generator).
+
+Outcome chosen: (1) the hand hunks were CORRECT and NECESSARY -- fixed the generator to
+emit them mechanically. See "## Which outcome and why" in the T176 handoff for the
+reasoning. The committed CaptureT159.java was NOT touched (T114's standing ruling): every
+run below writes to a SCRATCH path under /tmp/t176-verify-worktree/, never to the
+committed file's own path.
+
+Binaries named (P-58 discipline; `grep` in this shell is a function re-execing as ugrep
+7.5.0 with -I; none of the commands below is grep, so this is stated for completeness
+only): diff is BSD diff (macOS default), cmp is BSD cmp, shasum is Perl Digest::SHA
+shasum 6.04, wc/python3 are the system binaries on PATH. All commands below were run from
+this worktree: /Users/buv/gerege-nbfi/.claude/worktrees/agent-aac8b51c46dd4dd77
+
+Money-literal discipline: neither gencases_t159.py nor build_harness_t159.py calls
+json.load anywhere in this task's diff. gencases_t159.py only json.dump()s (writes); the
+one JSON read that matters for T159's own money discipline (rederive_t159.py parsing
+BigDecimal.toPlainString() as integer minor units, never as float) is unchanged by this
+task and out of T176's scope.
+
+
+STEP 1 -- confirm the case-list layer (gencases_t159.py) is ALREADY fully reproducible,
+so the defect T169 found is isolated to the seam-call handler and nothing else.
+
+Sibling copy `.t176_verify_gencases_t159.py` made in the SAME src/ directory as the live
+script (P-36 shape: a /tmp copy cannot resolve CAPTURE_ROOT via __file__-relative paths;
+T161 measured that a same-directory sibling does), with ONLY its three output paths
+redirected to /tmp/t176-verify-worktree/*.scratch.*; nothing else changed; the live
+gencases_t159.py was never executed by this step, only read as the template for the copy.
+
+$ python3 .t176_verify_gencases_t159.py > /tmp/t176-verify-worktree/gencases-console.txt 2>&1
+exit=0
+
+$ cat /tmp/t176-verify-worktree/gencases-console.txt
+{
+ "task": "T159",
+ "reviews": "T117",
+ "gate": "G-8",
+ "scrambleSeed": 20260980,
+ "caseCount": 47,
+ "legs": {
+  "TERM": 18,
+  "PRIN": 11,
+  "BAND": 14,
+  "REP": 4
+ },
+ "largestTermAsked": 3000,
+ "largestPrincipalAsked_minor": 1000001,
+ "predictedFamilyB": 27,
+ "predictedNotFamilyB": 20,
+ "decisiveCells": [
+  "T159-R600p0-N1200-B1001",
+  "T159-R600p0-N1500-B1001",
+  "T159-R600p0-N2000-B1001",
+  "T159-R600p0-N3000-B1001"
+ ]
+}
+
+$ diff -u .softhouse/capture/t159-review-t117/prediction-t159.json /tmp/t176-verify-worktree/prediction-t159.scratch.json > /tmp/t176-verify-worktree/diff-prediction.txt
+exit=0
+$ wc -l /tmp/t176-verify-worktree/diff-prediction.txt
+       0 /tmp/t176-verify-worktree/diff-prediction.txt
+
+$ diff -u /tmp/t159-cases.java /tmp/t176-verify-worktree/t159-cases.scratch.java > /tmp/t176-verify-worktree/diff-cases.txt
+exit=0
+$ wc -l /tmp/t176-verify-worktree/diff-cases.txt
+       0 /tmp/t176-verify-worktree/diff-cases.txt
+
+$ wc -c .softhouse/capture/t159-review-t117/prediction-t159.json /tmp/t176-verify-worktree/prediction-t159.scratch.json /tmp/t159-cases.java /tmp/t176-verify-worktree/t159-cases.scratch.java
+   19408 .softhouse/capture/t159-review-t117/prediction-t159.json
+   19408 /tmp/t176-verify-worktree/prediction-t159.scratch.json
+   15312 /tmp/t159-cases.java
+   15312 /tmp/t176-verify-worktree/t159-cases.scratch.java
+   69440 total
+
+RESULT: both diffs empty over non-trivial byte counts (P-35 -- these are not zero-byte
+comparisons). gencases_t159.py, run fresh from its committed source with only its output
+paths redirected, reproduces BOTH the committed prediction-t159.json AND the pre-existing
+/tmp/t159-cases.java exactly. The case-list layer was never the defect T169 found.
+
+Cleanup: the sibling copy was removed after this step (`rm
+.softhouse/capture/t159-review-t117/src/.t176_verify_gencases_t159.py`); it is not part of
+this commit.
+
+
+STEP 2 -- fix build_harness_t159.py, then prove the FIXED generator reproduces the
+committed CaptureT159.java byte for byte, writing only to a scratch path.
+
+build_harness_t159.py was edited in place (it is tooling, not evidence -- T114's ruling
+governs CaptureT159.java itself, which this step never writes to). The fix adds the two
+hand-applied hunks as a mechanical OLD_HANDLER -> NEW_HANDLER string replacement, applied
+after the existing case-swap/rename/WHY-paragraph transformations and before they are
+written out. See the script's own diff in this commit for the exact change.
+
+For this proof only, a sibling copy `.t176_verify_build_harness_t159.py` of the FIXED
+script was made in the same src/ directory (again the P-36/T161 shape), with its `OUT`
+constant redirected from the committed file's own path to
+`/tmp/t176-verify-worktree/CaptureT159.generated.java`. Everything else -- including
+reading `/tmp/t159-cases.java`, verified identical to a fresh run in STEP 1 -- is
+untouched.
+
+$ python3 .t176_verify_build_harness_t159.py > /tmp/t176-verify-worktree/build-harness-console.txt 2>&1
+exit=0
+$ cat /tmp/t176-verify-worktree/build-harness-console.txt
+wrote /tmp/t176-verify-worktree/CaptureT159.generated.java  (49 cases incl. 2 rig calibrations)
+
+$ diff -u .softhouse/capture/t159-review-t117/src/CaptureT159.java /tmp/t176-verify-worktree/CaptureT159.generated.java > /tmp/t176-verify-worktree/diff-CaptureT159.txt
+diff exit=0
+$ wc -l /tmp/t176-verify-worktree/diff-CaptureT159.txt
+       0 /tmp/t176-verify-worktree/diff-CaptureT159.txt
+
+$ wc -c .softhouse/capture/t159-review-t117/src/CaptureT159.java /tmp/t176-verify-worktree/CaptureT159.generated.java
+   48687 .softhouse/capture/t159-review-t117/src/CaptureT159.java
+   48687 /tmp/t176-verify-worktree/CaptureT159.generated.java
+   97374 total
+
+$ cmp .softhouse/capture/t159-review-t117/src/CaptureT159.java /tmp/t176-verify-worktree/CaptureT159.generated.java
+cmp exit=0
+
+$ shasum -a 256 .softhouse/capture/t159-review-t117/src/CaptureT159.java /tmp/t176-verify-worktree/CaptureT159.generated.java
+fecea4b2708c445bbe1418491eb79488b73d0e1497000a485b73fcc59690b09c  .softhouse/capture/t159-review-t117/src/CaptureT159.java
+fecea4b2708c445bbe1418491eb79488b73d0e1497000a485b73fcc59690b09c  /tmp/t176-verify-worktree/CaptureT159.generated.java
+
+RESULT: `diff -u` empty, `cmp` exit 0, byte counts equal (48687 = 48687, not zero), and
+sha256 digests IDENTICAL: fecea4b2708c445bbe1418491eb79488b73d0e1497000a485b73fcc59690b09c
+for both the committed CaptureT159.java and the freshly-generated scratch file. The FIXED
+build_harness_t159.py reproduces the committed evidence exactly. The committed
+CaptureT159.java was never opened for writing by any command in this task.
+
+Cleanup: the sibling copy `.t176_verify_build_harness_t159.py` and the entire
+/tmp/t176-verify-worktree/ scratch directory were removed after this proof was captured;
+neither is part of this commit. The only files changed by T176 are
+src/build_harness_t159.py (the generator fix) and this transcript plus the T176 handoff.
