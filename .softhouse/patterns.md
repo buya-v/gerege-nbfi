@@ -1735,6 +1735,51 @@ verification shows `parity vectors PASS 43`, `contract-refusal PASS 4`, and the 
 The generalisation worth keeping: **a check whose PASS and whose NOT-RUN are the same observable is not a
 check.** Ask of any verification — *if my setup had silently failed, would this look different?*
 
+### P-66. The readiness check resolved dependencies against ONE file and called the missing ones unresolvable — a task sat blocked for several fires on an edge that was never broken
+
+**Caught by the driver against itself, fire `20260822-000013`, during STEP 1.**
+
+`RESUME.md` had carried this line across several fires, and each fire acted on it:
+
+> *"1 blocked (`T116`, on `T114` — which has NO ENTRY in `tasks.json` and can never resolve; re-scope or
+> re-point it, it has been carried unresolved for several fires)."*
+
+`T114` is recorded **`done`** in `.softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json`, with its
+handoff at `.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T114.md` and its review at
+`.softhouse/reviews/T114-review-of-T112.md` — **both merged on `main` the whole time.**
+
+The mechanism is mundane and that is the point: **completed tasks are archived into
+`.softhouse/runs/<run-id>.tasks.json` and dropped from the current `tasks.json`.** Every readiness check
+this program ran resolved dependencies against the current file alone, so any edge pointing into a previous
+run resolved to *nothing* — and "not found" was read as **"cannot ever be found"** rather than as "I did not
+look there."
+
+**Measured across the whole graph when the resolver was finally written: SEVEN dependency edges in
+`tasks.json` point outside it, and ALL SEVEN resolve in the archive. Not one was ever missing.**
+
+What it cost: `T116` is **G-8 option (a)** — promote a family-B parity vector with an explicit invariant
+exemption. It is a **vector-adding** task under **DEC-1, which is ratified**, so it was runnable on every one
+of those fires and needed nothing from the blocked DEC-2 context. The program meanwhile recorded *"no vector
+has been added for two fires"* as though the cause were external.
+
+**The defect class is this program's most familiar one — a check that stops checking and says so
+nowhere** — but with a twist worth naming separately: here the check did not fall silent, it **spoke
+confidently about a domain it had not searched.** "NOT FOUND" is a statement about the search, never about
+the world. P-62 says a refusal and a null control share an observable; P-66 says **an absence and an
+unsearched region share one too.**
+
+**The fix is structural, not a correction to `RESUME.md`:** `.softhouse/bin/ready-tasks.py` resolves each
+edge against the current file *and* every archived run file, and prints **where each edge resolved** —
+`tasks.json`, which archive, or genuinely nowhere — so a future "resolves nowhere: NONE" line is a
+*measurement* rather than a default. It also prints dispatched tasks separately from ready ones (a task with
+no `branch` recorded is flagged as a suspected isolation violation), and prints any **OPEN CONTRACT gate**
+beside the ready list, because *dependency-ready* and *permitted* are different questions and this driver
+had been conflating them too.
+
+**Standing rule:** before recording that a dependency, a file, a vector or a citation *does not exist*,
+state **where you looked**. If the answer does not include every place the thing is kept, the finding is
+"I did not find it", and those are not the same claim.
+
 ### Run 2026-08-21-run2-tierA-gl-accounting-A2 — local fire `20260822-080001`, round 2 (ten workers, all ten merged)
 
 **Oracle REACHABLE throughout.** Pinned checkout `426a23544`. PostgreSQL only. **TEN DISPATCHED, TEN COMPLETED, TEN MERGED, ZERO LIVE AT EXIT.** No isolation violation; every branch scope-checked on the three-dot diff before merge.
