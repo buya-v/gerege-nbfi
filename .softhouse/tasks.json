@@ -3233,6 +3233,49 @@
    ],
    "description": "RAISED BY T261 reviewing T250. T261 accepted T250's population counts (29/4 and 50/5/0/45, reproduced EXACTLY with a WIDER instrument: 45 and 52/6/0/46) and confirmed the long-header wrap fix is genuinely repaired across the whole boundary (1, 10, 60-66, 127-129, 200, 300, 1000, 4000 bytes plus a 360-byte colon-laden value -- every one attested EXACT). It calls that the strongest work in the diff. Then it attacked the VERIFIER with five shapes T250 did not design around, and all five got through:\n\n  **F-4 (HIGH)** body swapped for SAME-LENGTH bytes + the `body-sha256:` line DELETED -> `VERIFIED`, rc=0. **`verify` checks only the assertions that are PRESENT.** Delete the assertion and you delete the check. This is in a module whose own docstring says *absence of evidence is not evidence* -- the rule stated at the top of the file and broken by the function beneath it, which is the P-80 shape for the fourth time in two fires.\n  **F-5** one of two IDENTICAL duplicated headers deleted from the sidecar -> rc=0; and REORDERING -> rc=0. The verifier compares SET MEMBERSHIP, not sequence -- and T250's own redC shape 1 had already proved that sequence matters (two `-H` flags put BOTH values on the wire).\n  **F-6** an INVENTED `content-length-crosscheck: MATCH (99999 bytes)` line -> rc=0, because `known_keys` is an EXEMPTION LIST: an unrecognised assertion is ignored rather than refused. Default-allow in an evidence verifier.\n  **F-7** the response `.json` swapped for ANOTHER CAPTURE'S -> rc=0. **The response leg is entirely unattested and that limit is stated NOWHERE.**\n\nTHE JOB: make the verifier DEFAULT-DENY. A required assertion that is ABSENT must FAIL, not pass; the required set must be derived, enumerable and printed. Compare header SEQUENCE, not just membership. Refuse an unknown assertion key rather than ignoring it. Decide and ARGUE whether the response leg should be attested -- if you decide it should not, **that limit must be stated IN THE MODULE**, not in a review.\n\n**T261'S MERGE CONDITION, WHICH BINDS: T250's successor is a DECLARED ORPHAN and may merge as one, but IT MAY NOT ACQUIRE A CALLER until F-4 and F-5 are repaired and F-6's limit is stated in the module.** Writing a limit only into a review is the exact failure this whole class is named for. So this task BLOCKS the wiring of the attestation half of T269.\n\nDRIVE EACH OF THE FIVE RED through the shape that got through, not a shape you designed the fix around (P-76). Do not weaken the long-header wrap fix while doing it -- re-run T261's boundary sweep and show it still passes.",
    "note": "Filed by the driver, local fire 20260822-060013, as T261 merge condition."
+  },
+  {
+   "id": "T275",
+   "title": "ORACLE-ONLY: take the A2 captures CAPTURE-PLAN.md §5 named as 'cheap next fire' and never took — mapping replacement (delete-then-recreate) on product UPDATE, and every other §5 gap reachable WITHOUT a new fixture",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "test",
+   "agent_role": "test_writer",
+   "role": "test_writer",
+   "context": "tierA-gl-accounting",
+   "slice": "tierA-gl-accounting-A2",
+   "dependencies": [],
+   "attempts": 0,
+   "contract_independent": true,
+   "files_hint": [
+    ".softhouse/capture/tierA-a2/",
+    ".softhouse/capture/t275-a2-gap-capture/"
+   ],
+   "description": "RAISED BY THE DRIVER, local fire 20260822-060013b, on a program-health signal it is recording plainly: the pending queue is 21 tasks and EVERY ONE of them is harness self-repair. TWO CONSECUTIVE FIRES ADDED ZERO VECTORS. The ledger corpus is SIX vectors over 6 of 14 declared capabilities and 21 money cells; loanschedule is 46. The oracle is REACHABLE on this fire and an oracle-reaching fire is the ONLY fire that can take a capture. So this task exists to spend that reachability on the thing only it can do.\n\nWHAT TO TAKE. `.softhouse/capture/tierA-a2/CAPTURE-PLAN.md` §5 ('Planned but NOT captured, and why') is a list the previous worker wrote so its successor would not assume coverage. Row 1 says, in its own words, **'Cheap next fire: PUT /loanproducts/23 and re-run sql/q2-product-mapping-rows.sql'** — the delete-then-recreate semantics of mapping update, with `req/upd-070-repoint-fundsource.json` and `req/upd-071-add-channel.json` ALREADY WRITTEN AND NEVER SENT. Send them. Then work down §5 and take every remaining row that needs NO new fixture. Rows that need an `m_charge` fixture, `m_code_value` seeding, or capitalized-income/buy-down product config are NOT in this task — record which ones you excluded and why, so the next worker does not re-derive it.\n\nRAW OBSERVED FORM ONLY, AND THIS IS THE HARD LINE OF THE TASK. You are capturing, not promoting. Write what the oracle ACTUALLY RETURNED to `.softhouse/capture/tierA-a2/out/` under the existing naming convention, plus a re-issue-checkable recipe. DO NOT write to `.softhouse/vectors/`. DO NOT edit `.softhouse/conformance.sh` — a sibling task holds it this fire and the ledger population pins (EXEMPTION_PIN_LEDGER_PARITY / _REFUSAL / _MONEYCELLS, conformance.sh:551-553) move only in the promotion task that follows this one. A diff of yours touching either path is a scope rejection.\n\nNEVER SYNTHESISE. If a request fails, if the oracle refuses, if a row is absent — that observation IS the capture. Record it. A plausible value you did not observe from the oracle is the worst defect this program has a name for. Every recipe you leave must RE-ISSUE: `DEFECTS-FOUND-BY-REVIEW.md` in that directory records that 10 `attempt1-*` recipes are PROVABLY FALSE and must not be cited as reproducible — read it before you write a recipe, and do not add an eleventh.\n\nPRECONDITION, NOT OPTIONAL. CAPTURE-PLAN.md §6: run the Path B gate first and it must exit 0 (`cd .softhouse/capture/pathb && CANARY_REQ=t22-audit/req/calc-pmode2-gerege.json sh t36/preconditions.sh gerege`). It asserts MoneyHelper.PRECISION=19, rounding-mode=4 (HALF_UP), timezone Asia/Ulaanbaatar, the behavioural HALF_UP canary, `org.postgresql.Driver` and `jdbc:postgresql://db:5432/fineract_tenants`. If it does not exit 0, STOP and report — do not capture against an uncalibrated oracle.\n\nALSO ANSWER, WITH EVIDENCE, ONE QUESTION THE PROMOTION TASK WILL NEED: `.softhouse/vectors/PIN-ledger.json` declares `dec2_revision: 5`, and G-14 closed last fire ratifying DEC-2 **revision 8**. Either revisions 6-8 changed nothing a vector asserts and the pin at 5 is correct-and-stale-looking, or the corpus needs re-stamping 5->8 in one commit (which is what that file's own note says the pin exists to make cheap). DECIDE IT from the DEC-2 revision history and say which, with the diff evidence. Do not edit the pin — the promotion task moves it.",
+   "acceptance": "Path B gate exit 0 quoted; upd-070 and upd-071 SENT and their responses recorded raw; q2-product-mapping-rows.sql re-run and the before/after mapping rows recorded; every §5 row either captured or explicitly excluded with its blocking fixture named; every new recipe re-issues byte-identically and is proven to; zero bytes written under .softhouse/vectors/ or to conformance.sh; the PIN-ledger dec2_revision 5-vs-8 question answered with evidence."
+  },
+  {
+   "id": "T276",
+   "title": "INDEPENDENT review of T275's A2 gap capture — re-issue every recipe yourself and grade RAW-OBSERVED honesty",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "agent_role": "reviewer",
+   "role": "reviewer",
+   "context": "tierA-gl-accounting",
+   "slice": "tierA-gl-accounting-A2",
+   "dependencies": [
+    "T275"
+   ],
+   "attempts": 0,
+   "contract_independent": true,
+   "files_hint": [
+    ".softhouse/reviews/t276-review-t275-capture/"
+   ],
+   "description": "You did not plan or take these captures. Assume they contain a synthesised value until you have proven otherwise against the live oracle. Re-issue the recipes YOURSELF and diff your response against the recorded one — `DEFECTS-FOUND-BY-REVIEW.md` in `.softhouse/capture/tierA-a2/` is the precedent: an earlier review found 10 recipes that DO NOT re-issue and a transport-failure handler that CANNOT FIRE. Check specifically: (1) every recorded response is byte-traceable to an oracle call, not composed; (2) no bytes under .softhouse/vectors/ and no edit to conformance.sh; (3) the §5 exclusion list names a real blocking fixture per row rather than covering an untaken capture; (4) the PIN-ledger dec2_revision 5-vs-8 answer is derived from the DEC-2 revision history and not asserted.",
+   "acceptance": "Verdict APPROVED / MICRO-FIX / REJECTED with specifics; states what was checked so silence is distinguishable from not looking."
   }
  ],
  "cross_corroboration": {
