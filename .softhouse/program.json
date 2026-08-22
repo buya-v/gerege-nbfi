@@ -1593,7 +1593,7 @@
         "driver self-caught: first T211 happy-path check was INCONCLUSIVE (misconfigured) and read as RED"
       ],
       "corrections_against_merged_work": [
-        "A2-21 on the record: 'I-3/I-4 harness-enforced' overstates -- 3 of 4 detection classes inspect an empty population",
+        "A2-21 on the record: 'I-3/I-4 harness-enforced' overstates -- [CORRECTED TWICE, and this entry is where BOTH corrections failed to land. As written it said '3 of 4'. DENOMINATOR: the guard declares SEVEN classes (I3-FIELD-WRITE, I3-PKG-STATE, I3-SQL-BALANCE, I4-BUILDER, I4-DML, I6-HOLD-BALANCE, OPAQUE-SQL) -- corrected as P-67 by A2-25 in the PREVIOUS fire, applied to four files, and NOT to this one. NUMERATOR: A2-31 MEASURED it as FOUR, not three -- I4-BUILDER's population under nexus/ is ZERO and, unlike the other empty classes, its emptiness is NOT ANNOUNCED (the guard prints two NIL-COVERAGE notices covering three classes; I4-BUILDER is silently empty). Driven both polarities by A2-31: its probe returns 3 on a /tmp tree with three builder verbs planted and the real ledgerguard REFUSES that tree [I4-BUILDER]; both return 0 on the real tree. TRUE STATEMENT: FOUR of SEVEN detection classes inspect an empty population. Driver-verified at merge, local fire 20260822-000013.]",
         "T180 on T161: T161's own prover asserted attester==PRE-FIX on the SIGKILL/POST-FIX row and would have failed on the fix",
         "driver on the previous fire: 'zero stranded' covered uncommitted work only; 79 committed-but-unmerged paths absent from main"
       ],
