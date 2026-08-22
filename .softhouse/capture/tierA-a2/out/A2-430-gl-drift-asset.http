@@ -1,0 +1,9 @@
+POST /glaccounts
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/a2-29-gl-drift-asset.json
+body-wire-bytes-artefact: A2-430-gl-drift-asset.req
+body-sha256: 3519981e99464f2b0b5f57ac4f754e8bddb2890dd44a09b66454841d5d1c66c1
+body-bytes: 299
+captured-at-utc: 2026-08-22T02:46:48Z

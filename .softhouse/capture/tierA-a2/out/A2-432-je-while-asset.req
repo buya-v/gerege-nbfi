@@ -1,0 +1,14 @@
+{
+  "officeId": 1,
+  "transactionDate": "01 July 2026",
+  "currencyCode": "MNT",
+  "comments": "A2-29 drift probe leg 1: posted while glCode 19929 is an ASSET",
+  "debits": [
+    {"glAccountId": 33, "amount": 1000000}
+  ],
+  "credits": [
+    {"glAccountId": 34, "amount": 1000000}
+  ],
+  "locale": "en",
+  "dateFormat": "dd MMMM yyyy"
+}

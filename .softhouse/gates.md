@@ -31,10 +31,13 @@ Built by local fire `20260821-125942`.
 | **G-9** | PRODUCT | **CLOSED — DECIDED** | local fire `20260821-054355`, `chosen_by: agent`. Carries a `driver_error_correction`: the decision stands, the driver's stated *consequence* was false. | `## G-9 — CLOSED` |
 | **G-10** | ENGINEERING | **OPEN — driver recommends (c), Buyan may overrule** | Blocks nothing today. | `## G-10 — REFINED…` |
 | **G-11** | CONTRACT | **OPEN — NOT RATIFIABLE** | The driver, once DEC-2 rev 3 passes a review clean. `chosen_by: agent` is permitted here (CLAUDE.md makes DEC-n ratification agent-decidable); what is NOT permitted is ratifying rev 2. | `## G-11 — DEC-2 rev 2 REJECTED` |
-| **G-12** | ENGINEERING | **OPEN — measurement required first** | `A2-29` must measure before anyone recommends. Blocks nothing today. | `## G-12 — Fineract STORES a running balance on the entry` |
+| **G-12** | ENGINEERING | **OPEN — MEASURED by `A2-29`; analyst recommends (a)+(b′), driver decides.** The stored balance is a **SECOND SOURCE OF TRUTH**, not a cache — made to disagree with the derived sum by **MNT 2,000,000.00** on the live oracle, surviving 4 recomputes, served through 2 REST endpoints flagged `computed: true`. | The driver, for (a). Option (c) would narrow the graded domain and stays a hard `user` gate. Blocks nothing today. | `## G-12 — MEASURED (A2-29)` — the LIVE block. `## G-12 — Fineract STORES a running balance on the entry` is the RAISING record only. |
 
 **Open right now: G-4, G-5, G-8, G-10, G-11, G-12.** Of those, **G-4 and G-5 are hard `user` gates** (each amends a
-ratified DEC-n); **G-8, G-10 and G-12 block no work today**. The driver has recorded a recommendation on **G-8 and G-10**; **G-12 has NO recommendation deliberately** — `A2-29` must measure whether the stored balance is a cache or a second source of truth before any option is argued, and a recommendation written before that measurement would be the guess this program keeps catching.
+ratified DEC-n); **G-8, G-10 and G-12 block no work today**. The driver has recorded a recommendation on **G-8 and G-10**.
+**G-12's measurement is now DONE** (`A2-29`, local fire `20260822-000013`) and it answered the question the
+driver deliberately refused to pre-judge: the stored balance is a **second source of truth, not a cache**.
+`A2-29` recommends; the driver decides. The recommendation is in `## G-12 — MEASURED (A2-29)` below.
 
 ## Open
 
@@ -2524,3 +2527,177 @@ G-8's handling is the precedent: **measure the boundary first, then choose.**
 **Blocks nothing today.** No `ledger` vector exists yet (G-11 is open), so no vector grades the column. The
 risk is that it becomes load-bearing silently once one does.
 
+
+---
+
+## G-12 — MEASURED (`A2-29`) — the stored running balance is a **SECOND SOURCE OF TRUTH**, not a cache
+
+| | |
+|---|---|
+| Gate class | ENGINEERING |
+| Task | `A2-29` (measurement), run `2026-08-21-run2-tierA-gl-accounting-A2`, branch `softhouse/A2-29-running-balance` |
+| Context | `tierA-gl-accounting` / slice `A2` |
+| Measured by | local fire `20260822-000013`, against the LIVE oracle (`{"status":"UP"}`) and pinned source `426a23544e8426a38ae43ae404670a0a7e85b9eb` |
+| State | **OPEN — measurement complete; analyst recommends, driver decides.** Blocks nothing today. |
+| Full workings | `.softhouse/reviews/a2-29-running-balance/MEASUREMENT.md` · captures `A2-401`–`A2-482` under `.softhouse/capture/tierA-a2/out/` |
+
+**This block supersedes the "no recommendation" state of the raising block above.** The raising block stays
+as the record of what was asked; this one records what was measured and what follows from it.
+
+### The headline
+
+`acc_gl_journal_entry.{office,organization}_running_balance` was **made to disagree with the derived sum by
+MNT 2,000,000.00** on the live reference oracle. The disagreement:
+
+- survived **four** organisation-wide recalculations;
+- was carried on rows Fineract itself flagged **`is_running_balance_calculated = true`** throughout;
+- **propagated into a freshly computed row**, because the recompute seeds from the previously *stored*
+  value rather than re-deriving;
+- was **served at the contract boundary** by `GET /journalentries/62?runningBalance=true`
+  (`"organizationRunningBalance":1500000.000000,"runningBalanceComputed":true`, where the derived balance is
+  **−500,000.00**) and by `GET /glaccounts/33?fetchRunningBalance=true`
+  (`"organizationRunningBalance":1500000`).
+
+[OBSERVED: `A2-441-db-after-retype-and-recompute.txt`, `A2-452-entry62-runningbalance.json`,
+`A2-453-glaccount33-fetchrunningbal.json`]
+
+### 1. Are the columns ever READ, or only written? — **READ, on three surfaces**
+
+| Reader | Cited | Kind |
+|---|---|---|
+| `JournalEntryReadPlatformServiceImpl.java:105-107,179-181` | `/journalentries?runningBalance=true` | **contract boundary**, `BigDecimal` |
+| `GLAccountReadPlatformServiceImpl.java:75,104` | `/glaccounts…?fetchRunningBalance=true` | **contract boundary**, read with **`rs.getLong`** — a `numeric(19,6)` truncated to an integer |
+| `GLAccountReadPlatformServiceImpl.java:129,203` | filters `is_running_balance_calculated = true` | internal |
+| **`JournalEntryRunningBalanceUpdateServiceImpl.java:110-116,134-141,194-200`** | **the WRITER seeds each incremental recompute from its own prior output** | **this is what makes it state rather than a projection** |
+| `0018_pentaho_reports_to_table.xml:153` (+ `0042`/`0044`) | `GeneralLedgerReport Table`, live as `stretchy_report` id **194**, `use_report = t` | `…as aftertxn` (**discarded**) and `office_running_balance is not null` (**gates a money cell's row set**) |
+| `JournalEntryRunningBalanceUpdateServiceImpl.java:72-73,93-94` | `MIN(entry_date WHERE not calculated)` — decides how far back a recompute reaches | internal |
+
+**And the columns are NOT on the JPA entity.** `JournalEntry.java` (`@Table("acc_gl_journal_entry")`)
+declares no field for either balance or the flag; `JournalEntryMapper.java:64-66` and
+`GlAccountMapper.java:54` mark them `@Mapping(ignore = true)`. On the ordinary posting path they are written
+by the DDL default (`NOT NULL DEFAULT 0.000000` / `false`, `0001_initial_schema.xml:163-171`, re-read live
+in `A2-473`) and by nothing else. The domain model does not know they exist.
+
+### 2. Do they reach a CONTRACT BOUNDARY? — **Yes, but every route is opt-in, degraded or inert**
+
+| Surface | Exposure | State on the permitted stack |
+|---|---|---|
+| `/journalentries?runningBalance=true` | all three fields | works; **ABSENT unless the parameter is set** [OBSERVED: `A2-406` vs `A2-404`] |
+| `/glaccounts/{id}?fetchRunningBalance=true` | organisation column | works, **truncated to an integer** [OBSERVED: `A2-409` → `4600000`] |
+| `/glaccounts?fetchRunningBalance=true` | organisation column | **HTTP 500 on PostgreSQL** — `GLAccountReadPlatformServiceImpl.java:127-131` emits `group by account_id desc`, MySQL-only syntax; the oracle's log says `PSQLException: ERROR: syntax error at or near "desc"` [OBSERVED: `A2-408`, `A2-455`] |
+| `GeneralLedgerReport Table` | predicate only | **admits 60 rows, excludes 0** (the column is `NOT NULL`); the report's own `openingbalance`/`cumulative_sum` cells are `SUM(…)` — **derived**, and `openingbalance` was re-derived independently as **548 954 942 minor units**, an exact match [OBSERVED: `A2-471`, `A2-472`, `A2-473`] |
+
+### 3. Can the stored value DISAGREE with the derived sum? — **Yes, four ways, one of which beats the recompute**
+
+Re-derivation is from scratch, in **integer minor units**, reproducing `calculateRunningBalance`'s sign rule
+(`:220-250`) in the writer's own `ORDER BY entry_date, id` (`:258,265`).
+Query: `sql/q5-a2-29-running-balance-drift.sql`.
+
+- **Back-dated entries — drift was ALREADY PRESENT before this task touched anything.** 6 of the 20 rows
+  flagged `calculated = true` disagreed by up to **MNT 1,200,000.00**, because a later posting dated earlier
+  invalidated an already-computed prefix [OBSERVED: `A2-410`]. Served as truth at the boundary
+  [OBSERVED: `A2-404`: `"organizationRunningBalance":5800000.000000,"runningBalanceComputed":true`, derived
+  `7,000,000.00`].
+- **A full recompute HEALED all 54 rows** [OBSERVED: `A2-420`, `A2-421`]. **Taken alone this would say
+  "cache", and that reading is wrong** — it only shows a recompute that reaches back far enough re-derives
+  correctly.
+- **Retype after compute BEAT the recompute.** The sign of every leg comes from
+  `acc_gl_account.classification_enum` **joined at recompute time** (`:225-242,256-257,263-264`), while the
+  job never revisits an entry older than the earliest uncalculated one (`:72-79`). On two accounts created
+  for the probe alone (glCode 19929 / 19930 — nothing in the corpus was retyped, gl 2 untouched): post while
+  ASSET → recompute → `PUT /glaccounts/33 {"type":4}` → recompute → post again → recompute. Entries 59 and
+  62 ended **200 000 000 minor units** away from derived, both flagged `calculated = true`. Entry 62 was
+  computed **fresh after the retype** and is still wrong, because the seed query primed it from entry 59's
+  stale value [OBSERVED: `A2-430`–`A2-441`]. The never-retyped control account agrees on every row.
+- **The office-scoped recompute leaves the two columns describing DIFFERENT ledgers.**
+  `updateOfficeRunningBalance` writes `office_running_balance` only and sets neither the flag nor the
+  organisation column (`:211`), where the org path sets all three (`:163-164`). Measured: entry 59 holding
+  `office = −1 000 000.00` and `organization = +1 000 000.00` **in a tenant with exactly one office**, where
+  the two are the same quantity by definition [OBSERVED: `A2-462`].
+- **A reversal, on its own, does NOT drift** [OBSERVED: `A2-460`, `A2-463`, `A2-464`: 60/60 agree]. It
+  *did* clear the retype drift — but only because the reversal entries happened to be dated on-or-before the
+  affected rows, which dragged the recompute's start date back. **The drift's lifetime is unbounded**;
+  nothing detects it, reports it, or bounds it.
+
+**Tried and could NOT break** (recorded as required, and not as evidence of correctness): the seed query's
+uncorrelated `je3` join (`:112,137`) — could not construct a wrong seed; its `LIMIT 10000` (`:113,138,197`)
+— a real source-derived hazard, **not demonstrable on a 60-row corpus, [UNVERIFIED]**; the report's
+`is not null` predicate — **unreachable**, the column is `NOT NULL`; multi-office behaviour — **UNMEASURED**,
+the tenant has one office and creating a second is a structural mutation to a shared oracle.
+
+### 4. The adopted-schema tension, stated rather than resolved silently
+
+Both instructions are in `CLAUDE.md` and they genuinely collide in this column:
+
+- *"The ledger is double-entry and append-only. **Balances are derived, never written.**"*
+- *"Contract-first, schema-first, strangler … **adopt Fineract's PostgreSQL schema**."*
+
+They do not collide as bluntly as the raising block feared, and the measurement is what shows why.
+**Fineract's own reference implementation does not treat this column as the ledger's balance.** The GL
+report derives (`SUM`), the balance is absent from `/journalentries` unless explicitly requested, the
+JPA entity does not carry it, and the list endpoint that serves it has never run on PostgreSQL. It is a
+**denormalised report accelerator, bolted on outside the domain model** — one that this measurement showed
+can be, and on this oracle already was, wrong.
+
+That reframes the collision. "Adopt Fineract's schema" is about the shape the two systems agree to store so
+that a shadow-parity diff is meaningful. It is not a licence to reproduce a defect. "Balances are derived,
+never written" is about where a *number the business relies on* comes from. **A column that Fineract itself
+neither trusts nor derives from is a storage-shape question, not a source-of-truth question** — provided
+nothing in the Go port ever reads it back.
+
+**What the tension really costs, named plainly rather than waved past:** if the port keeps the column and
+writes `0` while the reference oracle writes a computed number, then a row-level `pg_dump` / table diff of
+the two systems will differ on that column on every entry, for the whole shadow-parity window. Whoever runs
+the parity diff must exclude those columns explicitly, and that exclusion is itself a narrowing that has to
+be written down.
+
+### 5. Recommendation — `chosen_by: agent` for the part an agent may take, escalated for the part it may not
+
+**Recommend (a), combined with a narrowed form of (b). Recommend AGAINST (c).**
+
+- **Take (a) for behaviour, without qualification.** The Go port **derives** every balance from the
+  append-only entries and **never reads** `office_running_balance`, `organization_running_balance` or
+  `is_running_balance_calculated` for any purpose — not to serve a response, not to seed an incremental
+  computation, not in a report predicate. The measurement is decisive here: reading this column back is
+  precisely the mechanism by which the reference oracle poisoned a freshly computed row (§3, entry 62).
+  This is the non-negotiable, and it needs no gate.
+- **Take a narrowed (b) for storage: KEEP THE COLUMNS, WRITE THE DDL DEFAULT, NEVER RECOMPUTE.** The
+  adopted schema keeps `NOT NULL DEFAULT 0.000000` / `DEFAULT false` exactly as
+  `0001_initial_schema.xml:163-171` declares them, so Fineract's own DDL is unchanged and any Fineract
+  process pointed at the same database still starts. The port never runs a recompute and never ships an
+  equivalent of `ACCOUNTING_RUNNING_BALANCE_UPDATE`. This is cheap — the columns are already
+  default-populated on Fineract's own ORM path (§1), so "written by the default and nothing else" *is* a
+  faithful reproduction of what Fineract does between recomputes.
+  Rejected alternative, recorded: reproducing the recompute so the columns match byte-for-byte. That
+  imports the defect, imports the office-vs-organisation split, and imports the retype hazard, to make a
+  diff quieter. Not worth it.
+- **Reject (c), and do not take it.** Treating exposing cells as outside the graded domain narrows the
+  graded domain, which is a hard `user` gate — but more to the point it is not needed. The cells are
+  reachable only by opt-in query parameters (`runningBalance=true`, `fetchRunningBalance=true`) that no
+  vector need ever set, and one of the two routes is HTTP 500 on the only permitted database. **The right
+  instrument is a positive rule on capture, not a negative carve-out on grading.**
+
+### 6. What this implies for the ledger vector shape — for **G-11 / DEC-2**, not decided here
+
+`A2-29`'s scope excludes `.softhouse/vectors/` and `nexus/`. These are inputs to whoever holds G-11:
+
+1. **A ledger parity vector must not set `runningBalance=true` or `fetchRunningBalance=true`.** Any capture
+   that does is capturing a stale, oracle-internal accelerator, not a ledger fact.
+2. **If DEC-2 ever needs a balance cell, it must be DERIVED** — either summed from the entries in the vector
+   itself, or captured from a surface that derives (the `GeneralLedgerReport Table` `openingbalance` /
+   `cumulative_sum` cells are derived and were verified exact to the minor unit, `A2-472` / `A2-473`).
+3. **Freshness has no meaning to grade.** `runningBalanceComputed: true` was observed on rows wrong by
+   MNT 2,000,000.00. It is not a correctness signal and must never be treated as one.
+
+### 7. What `A2-29` is NOT authorised to do, and did not do
+
+No non-negotiable was changed. No vector was created, promoted or altered. Nothing under
+`.softhouse/vectors/` or `nexus/` was touched. The graded domain was not narrowed. Option (c) is
+**recommended against**, not taken. DEC-2 was not amended. `conformance.sh` was re-run and holds the bar:
+**PASS (exit 0) — 46 parity vectors, 7884 cells compared**, `probe = up`.
+
+**The oracle's state changed** and this is recorded so it is not mistaken for the state `A2-370` describes:
+2 new GL accounts (id 33 / glCode 19929, now INCOME after the probe retype; id 34 / glCode 19930,
+LIABILITY), 3 manual journal entries, 1 reversal, 1 retype, 6 running-balance recalculations. The tenant now
+has every entry flagged `calculated = true` with every stored balance equal to its derived sum
+[OBSERVED: `A2-464`, `A2-480`–`A2-482`].

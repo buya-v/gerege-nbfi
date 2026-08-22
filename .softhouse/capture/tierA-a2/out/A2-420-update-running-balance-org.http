@@ -1,0 +1,10 @@
+POST /journalentries?command=updateRunningBalance
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: a2-29-rb-org-0001
+Content-Type: application/json
+body-file: req/a2-29-update-running-balance-org.json
+body-wire-bytes-artefact: A2-420-update-running-balance-org.req
+body-sha256: ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356
+body-bytes: 3
+captured-at-utc: 2026-08-22T02:43:48Z
