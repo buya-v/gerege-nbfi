@@ -1,28 +1,30 @@
 # RESUME manifest — gerege-nbfi Fineract→Go migration
 
-## Current state — local fire `20260822-060013` CLOSED CLEAN
+## ⚠ IN FLIGHT — local fire `20260822-060013b` HAS SIX LIVE WORKERS AS OF THIS COMMIT
 
-- **Program**: `fineract-to-go-full-codebase` — **active**. Contexts **1 done / 17**. Tier 0 closed.
-- **Active run**: `2026-08-21-run2-tierA-gl-accounting-A2` — Tier A slice **A2**.
-- **TEN DISPATCHED, TEN COMPLETED, TEN MERGED, ZERO LIVE AT EXIT.** Five workers, five independent reviews.
-- **Oracle**: Fineract REACHABLE throughout at `https://localhost:8443`. PostgreSQL only. Pinned checkout
-  `426a23544`. No prohibited engine port open.
-- **`G-14` CLOSED — DEC-2 revision 8 RATIFIED.**
+**Do not read this HEAD as a closed fire.** Written and pushed BEFORE the first worker was spawned, which is
+the P-85 obligation: a HEAD saying "closed clean, zero live" while workers run is an active lie to the next
+orchestrator, and no lock-freshness rule can read through it.
 
-**Driver-run on the MERGE RESULT at exit — never quoted from a worker:**
+| task | role | branch | what |
+|---|---|---|---|
+| T273 | coder | softhouse/t273-* | the BAR's green depends on a 24-byte file in /tmp (HIGH, 4 confirmations) |
+| T268 | coder | softhouse/t268-* | R-VPA rule fails open — REFUSED in the body, GREEN in the exit code |
+| T274 | coder | softhouse/t274-* | T250's attestation verifier fails open four ways |
+| T264 | reviewer | softhouse/t264-* | independent review of the cloud fire's T241 branch (df0aed2) |
+| T265 | reviewer | softhouse/t265-* | independent re-derivation of the driver's own lock fix |
+| T275 | test_writer | softhouse/t275-* | **ORACLE-ONLY** — the A2 captures §5 called "cheap next fire" and never took |
 
-```
-probe line PRESENT (tested for presence first), and it reads: probe = up
-VERDICT: PASS (exit 0)   46 parity vectors · 7884 cells compared
-  LEDGER  4 parity · 2 oracle-refusal · 21 money cells
-  all census pins == pinned · 6/6 wrong ledger implementations KILLED through the harness
-  fail-open census  918 -> 996 tracked .sh/.py · frontier 11 == pinned 11 · NONE joined
-  vector store  13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d   UNMOVED ALL FIRE
-         IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a `user` gate.
-```
+**Lock**: taken by push-recency. Prior lock `released_at` non-null → free (STEP 0 rule 1).
+**Oracle**: REACHABLE, `https://localhost:8443`. Bar re-run by the driver at fire open: **PASS exit 0, probe
+line PRESENT and reads `up`, 46 parity vectors / 7884 cells**. That green was contingent on `/tmp` residue
+still being present on this un-rebooted host — which is exactly what T273 is dispatched to fix.
 
-**No vector was added this fire — none is claimed.** Read the digest live:
-`git rev-parse HEAD:.softhouse/vectors`.
+**Why a capture task exists this fire.** The pending queue was 21 tasks and every one was harness self-repair;
+two consecutive fires added zero vectors; the ledger corpus is 6 vectors / 21 money cells against
+loanschedule's 46. An oracle-reaching fire is the only fire that can capture, so this one spends it on that.
+T275 captures RAW ONLY — promotion into `.softhouse/vectors/ledger/` and the population pins at
+`conformance.sh:551-553` follow in a separate task, because T273 holds `conformance.sh` this fire.
 
 ---
 
