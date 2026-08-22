@@ -1,0 +1,47 @@
+live store baseline: 50 json files, digest 7b78b424a0f2e5ffea1e8e1530170550b239b1810adac70c0554d879986b05d3
+
+G1  NON-VACUITY: hardened promoter into an EMPTY scratch store
+  G1 T74 emit into empty scratch store           expect=rc=0 6 files identical   got=rc=0 6 files 6 identical PASS
+      byte-identical to the live vectors; no leftover temp files
+  G1 T61 emit into empty scratch store           expect=rc=0 3 files identical   got=rc=0 3 files 3 identical PASS
+      byte-identical to the live vectors; no leftover temp files
+  G1 T64 emit into empty scratch store           expect=rc=0 4 files identical   got=rc=0 4 files 4 identical PASS
+      byte-identical to the live vectors; no leftover temp files
+  G1 T58 emit into empty scratch store           expect=rc=0 16 files identical  got=rc=0 16 files 16 identical PASS
+      byte-identical to the live vectors; no leftover temp files
+  G1 T57 emit into empty scratch store           expect=rc=0 2 files identical   got=rc=0 2 files 2 identical PASS
+      byte-identical to the live vectors; no leftover temp files
+  G1 T8 emit into empty scratch store            expect=rc=0 11 files identical  got=rc=0 11 files 11 identical PASS
+      byte-identical to the live vectors; no leftover temp files
+  live store after G1: 50 json, digest UNMOVED
+
+G2  DEFAULT-DENY: live store, NEW filename, NO token
+  G2 live store + new name + no token            expect=rc=2, nothing created    got=rc=2, created=False      PASS
+      T203-G2: REFUSED (2): target store /Users/buv/gerege-nbfi/.claude/worktrees/agent-a4762772d2f0d5192/.softhouse/vectors/loanschedule is the LIVE GOLDEN-VECTOR STORE.  Every parity claim in this program - "the Go port matches the reference oracle" - is computed from these files by `.softhouse/conformance.sh`.  A truncated vector does not fail loudly; it silently changes what parity MEANS.
+G3  NO OVERRIDE: live store, EXISTING vector, WITH the token
+  G3 live store + existing vector + valid token  expect=rc=3, vector unchanged   got=rc=3, unchanged=True     PASS
+      T203-G3: REFUSED (3): target vector /Users/buv/gerege-nbfi/.claude/worktrees/agent-a4762772d2f0d5192/.softhouse/vectors/loanschedule/T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json ALREADY EXISTS.
+  live store after G2/G3: 50 json, digest UNMOVED
+
+G4  SCRATCH NEEDS NO TOKEN (T82's prover repoints VECTORS in-repo)
+  G4 scratch + new name + no token               expect=rc=0, written            got=rc=0, written=True       PASS
+      content sha e346432021b04179
+G5  NO OVERRIDE ANYWHERE: scratch + existing + valid token
+  G5 scratch + existing + valid token            expect=rc=3, unchanged          got=rc=3, unchanged=True     PASS
+      T203-G5: REFUSED (3): target vector /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-arms/scratch/fresh.json ALREADY EXISTS.
+G6  PATH TRAVERSAL out of the store
+  G6 filename '../escaped.json'                  expect=rc=2, no escape          got=rc=2, escaped=False      PASS
+      T203-G6: REFUSED (2): filename '../escaped.json' must be a bare basename with no path separators
+G7  DANGLING SYMLINK at the target is not followed
+  G7 dangling symlink target                     expect=rc=3, victim not created got=rc=3, victim=False       PASS
+      T203-G7: REFUSED (3): target vector /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-arms/scratch/dangling.json ALREADY EXISTS.
+G8  NO BARE assert: guard still refuses under `python3 -O`
+  G8 refusal survives python3 -O                 expect=rc=3, unchanged          got=rc=3, unchanged=True     PASS
+      T203-G8: REFUSED (3): target vector /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-arms/scratch/fresh.json ALREADY EXISTS.
+  G9 no leftover temp files in scratch store     expect=0                        got=0                        PASS
+      []
+
+live store AFTER ALL ARMS: 50 json files, digest 7b78b424a0f2e5ffea1e8e1530170550b239b1810adac70c0554d879986b05d3
+store UNMOVED: True
+
+ARMS: 14 inspected, 14 PASS, 0 FAIL

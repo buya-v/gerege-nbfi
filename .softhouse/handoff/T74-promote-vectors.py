@@ -55,6 +55,35 @@ import os
 import sys
 from math import gcd
 
+# HARDENED BY T203 (22 August 2026) - P-22, P-48 rule 4.  This file REUSES the
+# shared store guard (`t203_store_guard.py`, T178's shape transposed to a
+# create-only store writer).  It introduces no second guard shape and contains
+# no copy of the guard.  AS SHIPPED BY TASK T74 the write below was
+#     open(os.path.join(VECTORS, FILENAMES[cid]), "w").write(...)
+# against `VECTORS = .softhouse/vectors/loanschedule`, THE LIVE GOLDEN-VECTOR
+# STORE, with no authorisation, no existence check and no atomicity.
+# `open(p, "w")` is O_TRUNC: the vector was EMPTIED before a byte of
+# replacement was written.  MEASURED BY T203, not asserted: against a scratch
+# store seeded with sentinels at this script's own six target names the PRE-FIX
+# bytes exited 0 and DESTROYED ALL SIX.  See T203-evidence/RED-prefix.txt.
+# THE PROMOTION ITSELF DID NOT CHANGE - every emitted vector is byte-for-byte
+# T74's, which T203 measured on a scratch store (livebytes arm, 0 changed).
+# The caller's own directory goes at the FRONT of sys.path so the module cannot
+# be shadowed from the cwd or the environment; a missing module fails CLOSED.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import t203_store_guard as guard  # noqa: E402
+
+NAME = 'T74-promote-vectors'
+
+# The exact phrase that authorises CREATING new vectors in the live store.
+# Long, self-describing, argv-only - never an environment variable: an env var
+# is exported once in a wrapper, inherited by every child and then forgotten,
+# whereas an argv word must be retyped at every invocation and is recorded in
+# the process table.  It does NOT authorise overwriting an existing vector;
+# nothing does.
+AUTHORISE_TOKEN = (
+    'I-AM-PROMOTING-T74-GROUP-E-VECTORS-INTO-THE-LIVE-GOLDEN-VECTOR-STORE')
+
 VECTORS = ".softhouse/vectors/loanschedule"
 P3I_REF = ".softhouse/capture/out/capture-prod3i-raw.json"
 CF_REF = ".softhouse/capture/t74-multiplesof/out/t74-counterfactuals-pass3i.json"
@@ -524,8 +553,9 @@ def main():
             "invariant_exemptions": [],
         }
 
-        path = os.path.join(VECTORS, FILENAMES[cid])
-        open(path, "w").write(json.dumps(vec, indent=2, ensure_ascii=False) + "\n")
+        path = guard.write_vector(
+            NAME, AUTHORISE_TOKEN, VECTORS, FILENAMES[cid],
+            json.dumps(vec, indent=2, ensure_ascii=False) + "\n")
         print("wrote %s  (margin %s minor at period[%d].%s, %d/%d graded cells move)"
               % (path, worst["delta"], worst["row"], worst["field"],
                  cf["divergentCellCount"], cf["cells"]))

@@ -1,0 +1,177 @@
+T74-promote-vectors: REFUSED (3): target vector /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T74-canary/T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json ALREADY EXISTS.
+  Writing it would truncate it (O_TRUNC) before the replacement exists.
+  This refusal is unconditional and there is no flag that lifts it.  To re-promote
+  a vector, delete it deliberately in a reviewable commit first, or promote into a
+  scratch store and diff.  NOTHING was written.
+T74-promote-vectors: REFUSED (3): target vector /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T74-livebytes/T74-E-P4-precision-boundary-mnt4pt00-36x16pt8pct.json ALREADY EXISTS.
+  Writing it would truncate it (O_TRUNC) before the replacement exists.
+  This refusal is unconditional and there is no flag that lifts it.  To re-promote
+  a vector, delete it deliberately in a reviewable commit first, or promote into a
+  scratch store and diff.  NOTHING was written.
+T61-promote-vectors: REFUSED (3): target vector /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T61-canary/T61-HE-A-tie-quantization-1M000541pt50-6x21pt6pct.json ALREADY EXISTS.
+  Writing it would truncate it (O_TRUNC) before the replacement exists.
+  This refusal is unconditional and there is no flag that lifts it.  To re-promote
+  a vector, delete it deliberately in a reviewable commit first, or promote into a
+  scratch store and diff.  NOTHING was written.
+T61-promote-vectors: REFUSED (3): target vector /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T61-livebytes/T61-HE-A-tie-quantization-1M000541pt50-6x21pt6pct.json ALREADY EXISTS.
+  Writing it would truncate it (O_TRUNC) before the replacement exists.
+  This refusal is unconditional and there is no flag that lifts it.  To re-promote
+  a vector, delete it deliberately in a reviewable commit first, or promote into a
+  scratch store and diff.  NOTHING was written.
+T64-promote-vectors: REFUSED (3): target vector /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T64-canary/T64-ZP-A-zero-principal-mnt0pt28-56x21pt6pct.json ALREADY EXISTS.
+  Writing it would truncate it (O_TRUNC) before the replacement exists.
+  This refusal is unconditional and there is no flag that lifts it.  To re-promote
+  a vector, delete it deliberately in a reviewable commit first, or promote into a
+  scratch store and diff.  NOTHING was written.
+T64-promote-vectors: REFUSED (3): target vector /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T64-livebytes/T64-ZP-A-zero-principal-mnt0pt28-56x21pt6pct.json ALREADY EXISTS.
+  Writing it would truncate it (O_TRUNC) before the replacement exists.
+  This refusal is unconditional and there is no flag that lifts it.  To re-promote
+  a vector, delete it deliberately in a reviewable commit first, or promote into a
+  scratch store and diff.  NOTHING was written.
+T57-promote-emi-vectors: REFUSED (3): target vector /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T57-canary/P-EMI-6-1M014632-emi-smoothing-loop.json ALREADY EXISTS.
+  Writing it would truncate it (O_TRUNC) before the replacement exists.
+  This refusal is unconditional and there is no flag that lifts it.  To re-promote
+  a vector, delete it deliberately in a reviewable commit first, or promote into a
+  scratch store and diff.  NOTHING was written.
+T57-promote-emi-vectors: REFUSED (3): target vector /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T57-livebytes/P-EMI-6-1M014632-emi-smoothing-loop.json ALREADY EXISTS.
+  Writing it would truncate it (O_TRUNC) before the replacement exists.
+  This refusal is unconditional and there is no flag that lifts it.  To re-promote
+  a vector, delete it deliberately in a reviewable commit first, or promote into a
+  scratch store and diff.  NOTHING was written.
+T8-promote-vectors: REFUSED (3): target vector /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T8-canary/P-00-baseline-6x7pct.json ALREADY EXISTS.
+  Writing it would truncate it (O_TRUNC) before the replacement exists.
+  This refusal is unconditional and there is no flag that lifts it.  To re-promote
+  a vector, delete it deliberately in a reviewable commit first, or promote into a
+  scratch store and diff.  NOTHING was written.
+T8-promote-vectors: REFUSED (3): target vector /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T8-livebytes/P-00-baseline-6x7pct.json ALREADY EXISTS.
+  Writing it would truncate it (O_TRUNC) before the replacement exists.
+  This refusal is unconditional and there is no flag that lifts it.  To re-promote
+  a vector, delete it deliberately in a reviewable commit first, or promote into a
+  scratch store and diff.  NOTHING was written.
+MODE: GREEN
+live store baseline: 50 json files, digest 7b78b424a0f2e5ffea1e8e1530170550b239b1810adac70c0554d879986b05d3
+
+T74  .softhouse/handoff/T74-promote-vectors.py  (6 target names)
+      loaded from   : .softhouse/handoff/T74-promote-vectors.py
+  --- T74 / canary arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T74-canary
+      seeded        : 6 files
+      promoter exit : 3 | 3
+      DESTROYED     : 0  []
+      INTACT        : 6
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+      loaded from   : .softhouse/handoff/T74-promote-vectors.py
+  --- T74 / livebytes arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T74-livebytes
+      seeded        : 6 files
+      promoter exit : 3 | 3
+      DESTROYED     : 0  []
+      INTACT        : 6
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+
+T61  .softhouse/handoff/T61-promote-vectors.py  (3 target names)
+      loaded from   : .softhouse/handoff/T61-promote-vectors.py
+  --- T61 / canary arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T61-canary
+      seeded        : 3 files
+      promoter exit : 3 | 3
+      DESTROYED     : 0  []
+      INTACT        : 3
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+      loaded from   : .softhouse/handoff/T61-promote-vectors.py
+  --- T61 / livebytes arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T61-livebytes
+      seeded        : 3 files
+      promoter exit : 3 | 3
+      DESTROYED     : 0  []
+      INTACT        : 3
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+
+T64  .softhouse/capture/t64-zeroprincipal/src/T64-promote-vectors.py  (4 target names)
+      loaded from   : .softhouse/capture/t64-zeroprincipal/src/T64-promote-vectors.py
+  --- T64 / canary arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T64-canary
+      seeded        : 4 files
+      promoter exit : 3 | 3
+      DESTROYED     : 0  []
+      INTACT        : 4
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+      loaded from   : .softhouse/capture/t64-zeroprincipal/src/T64-promote-vectors.py
+  --- T64 / livebytes arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T64-livebytes
+      seeded        : 4 files
+      promoter exit : 3 | 3
+      DESTROYED     : 0  []
+      INTACT        : 4
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+
+T58  .softhouse/handoff/T58-promote-vectors.py  (3 target names)
+      loaded from   : .softhouse/handoff/T58-promote-vectors.py
+  --- T58 / canary arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T58-canary
+      seeded        : 3 files
+wrote P-LAT-Q0a-6x21pt6pct-1M2.json                               7 rows, 1 counterfactuals
+wrote P-LAT-MID-6x21pt6pct-mid-month-start.json                   7 rows, 1 counterfactuals
+      promoter exit : 1 | refusing to overwrite an existing vector: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T58-canary/P-DRIFT-A-drift-start28-disb31-6x21pt6pct.json
+      DESTROYED     : 0  []
+      INTACT        : 3
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+      loaded from   : .softhouse/handoff/T58-promote-vectors.py
+  --- T58 / livebytes arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T58-livebytes
+      seeded        : 3 files
+wrote P-LAT-Q0a-6x21pt6pct-1M2.json                               7 rows, 1 counterfactuals
+wrote P-LAT-MID-6x21pt6pct-mid-month-start.json                   7 rows, 1 counterfactuals
+      promoter exit : 1 | refusing to overwrite an existing vector: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T58-livebytes/P-DRIFT-A-drift-start28-disb31-6x21pt6pct.json
+      DESTROYED     : 0  []
+      INTACT        : 3
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+
+T57  .softhouse/handoff/T57-promote-emi-vectors.py  (2 target names)
+      loaded from   : .softhouse/handoff/T57-promote-emi-vectors.py
+  --- T57 / canary arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T57-canary
+      seeded        : 2 files
+      promoter exit : 3 | 3
+      DESTROYED     : 0  []
+      INTACT        : 2
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+      loaded from   : .softhouse/handoff/T57-promote-emi-vectors.py
+  --- T57 / livebytes arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T57-livebytes
+      seeded        : 2 files
+      promoter exit : 3 | 3
+      DESTROYED     : 0  []
+      INTACT        : 2
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+
+T8  .softhouse/handoff/T8-promote-vectors.py  (3 target names)
+      loaded from   : .softhouse/handoff/T8-promote-vectors.py
+  --- T8 / canary arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T8-canary
+      seeded        : 3 files
+      promoter exit : 3 | 3
+      DESTROYED     : 0  []
+      INTACT        : 3
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+      loaded from   : .softhouse/handoff/T8-promote-vectors.py
+  --- T8 / livebytes arm ---
+      scratch store : /private/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t203-green/T8-livebytes
+      seeded        : 3 files
+      promoter exit : 3 | 3
+      DESTROYED     : 0  []
+      INTACT        : 3
+      live store    : 50 json, digest UNMOVED 7b78b424a0f2e5ff
+
+==============================================================================
+SCRIPT TARGETS  CANARY arm             LIVE-BYTES arm        
+T74    6        destroyed=0   intact=6    destroyed=0   intact=6   
+T61    3        destroyed=0   intact=3    destroyed=0   intact=3   
+T64    4        destroyed=0   intact=4    destroyed=0   intact=4   
+T58    3        destroyed=0   intact=3    destroyed=0   intact=3   
+T57    2        destroyed=0   intact=2    destroyed=0   intact=2   
+T8     3        destroyed=0   intact=3    destroyed=0   intact=3   
+==============================================================================
+CANARY-arm destructions across all scripts: 0
+live store AFTER all arms: 50 json files, digest 7b78b424a0f2e5ffea1e8e1530170550b239b1810adac70c0554d879986b05d3
+LIVE STORE UNMOVED.

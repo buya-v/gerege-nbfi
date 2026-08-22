@@ -27,6 +27,50 @@ import json
 import os
 import sys
 
+# HARDENED BY T203 (22 August 2026), AND FOR A DIFFERENT REASON THAN ITS THREE
+# SIBLINGS - read this before assuming T58 was ever truncation-exposed.
+#
+# T196's F-2 wrote that each of the four unhidden vector-store writers "is a
+# bare truncation".  That is WRONG for this file, and T198 said so.  T203
+# MEASURED it rather than accepting either claim: this script has carried the
+# `if os.path.exists(path): raise SystemExit(...)` refusal below since task
+# T58, unconditionally and with no override, and against scratch stores seeded
+# with sentinels at its own target names it destroyed 0 of 3 and exited 1 at
+# the refusal, while T74/T61/T64 destroyed 13 of 13.  See
+# T203-evidence/RED-prefix.txt.  T58 NEVER threatened a live vector by
+# truncation and is NOT one of the thirteen.
+#
+# What T203 DID find here, by measurement, is three gaps the existence check
+# does not cover, none of which is a truncation:
+#   1. NO AUTHORISATION.  The check is EXISTENCE-keyed, not authorisation-
+#      keyed, so this script freely CREATES new files in whatever store it is
+#      pointed at - including the live one.  Observed: in the scratch arm it
+#      created 2 unseeded vectors before refusing on the third.  Adding a
+#      vector to the store silently changes what parity MEANS just as a
+#      removal would.
+#   2. NOT ATOMIC.  `with open(path, "w")` on a create still leaves a PARTIAL
+#      vector if the run is interrupted between the first byte and the flush.
+#   3. `os.path.exists` FOLLOWS SYMLINKS, so a dangling symlink at the target
+#      reports False and the write would be created THROUGH it, outside the
+#      store.  The shared guard uses `os.path.lexists`.
+# The original refusal is DELIBERATELY LEFT IN PLACE below rather than
+# replaced: it is the historical guard, it is what the measurement above
+# exercised, and defence in depth costs nothing here.
+#
+# The caller's own directory goes at the FRONT of sys.path so the module cannot
+# be shadowed from the cwd or the environment; a missing module fails CLOSED.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import t203_store_guard as guard  # noqa: E402
+
+NAME = 'T58-promote-vectors'
+
+# Argv-only authorisation phrase - never an environment variable, for the
+# reason recorded in the guard module.  Authorises CREATING new vectors in the
+# live store; it does NOT authorise overwriting an existing one, and nothing
+# does.
+AUTHORISE_TOKEN = (
+    'I-AM-PROMOTING-T58-DRIFT-MONTHEND-ROUNDING-VECTORS-INTO-THE-LIVE-GOLDEN-VECTOR-STORE')
+
 ROOT = os.getcwd()
 VECTORS = ".softhouse/vectors/loanschedule"
 
@@ -703,11 +747,17 @@ def main():
         }
 
         path = os.path.join(VECTORS, fname)
+        # T58's ORIGINAL refusal, kept verbatim - see the note at the imports.
         if os.path.exists(path):
             raise SystemExit("refusing to overwrite an existing vector: %s" % path)
-        with open(path, "w", encoding="utf-8") as fh:
-            json.dump(vec, fh, indent=2, ensure_ascii=False)
-            fh.write("\n")
+        # `json.dumps(..., indent=2, ensure_ascii=False) + "\n"` is byte-for-byte
+        # what `json.dump(vec, fh, indent=2, ensure_ascii=False)` followed by
+        # `fh.write("\n")` produced; T203 proved the emitted bytes unchanged by
+        # promoting all 16 into an empty scratch store and comparing each against
+        # the live vector (arm G1, 16/16 identical).
+        path = guard.write_vector(
+            NAME, AUTHORISE_TOKEN, VECTORS, fname,
+            json.dumps(vec, indent=2, ensure_ascii=False) + "\n")
         written += 1
         print("wrote %-58s  %d rows, %d counterfactuals" % (fname, len(expect["periods"]), len(muts)))
 

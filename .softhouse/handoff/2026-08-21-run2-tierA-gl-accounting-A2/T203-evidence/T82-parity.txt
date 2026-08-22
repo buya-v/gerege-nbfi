@@ -1,0 +1,11 @@
+day-count                        pre_rc=1 post_rc=1  IDENTICAL
+down-payment                     pre_rc=1 post_rc=1  IDENTICAL
+down-payment-enabled             pre_rc=1 post_rc=1  IDENTICAL
+repayment-every-absent           pre_rc=1 post_rc=1  IDENTICAL
+repayment-every-conflict         pre_rc=1 post_rc=1  IDENTICAL
+period-number-zero               pre_rc=1 post_rc=1  IDENTICAL
+period-number-bad                pre_rc=1 post_rc=1  IDENTICAL
+period-number-absent-payable     pre_rc=1 post_rc=1  IDENTICAL
+period-number-on-nonpayable      pre_rc=1 post_rc=1  IDENTICAL
+
+T82 modes inspected: 9 | identical: 9 | differing: 0

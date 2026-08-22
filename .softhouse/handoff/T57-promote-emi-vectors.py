@@ -22,6 +22,41 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 
 sys.path.insert(0, os.path.join(ROOT, ".softhouse", "capture", "emiloop"))
 from noloop_model import noloop_schedule, guard  # noqa: E402
 
+# HARDENED BY T203 (22 August 2026) - P-22, P-48 rule 4.  This file REUSES the
+# shared store guard (`t203_store_guard.py`, T178's shape transposed to a
+# create-only store writer) and contains no copy of it.
+#
+# T203 FOUND THIS FILE, WHICH T196's F-2 AND T198's CORRECTION BOTH MISSED.
+# They named FOUR vector-store writers; this is a FIFTH, and it was a bare
+# truncation of the live store exactly as T74/T61/T64 were:
+#     OUT = os.path.join(ROOT, ".softhouse", "vectors", "loanschedule")
+#     with open(path, "w") as fh: json.dump(v, fh, ...)
+# with no authorisation, no existence check and no atomicity.
+#
+# WHY THE CLASSIFIER DID NOT CATCH IT, WHICH IS THE REUSABLE LESSON.  T179's
+# classifier resolves a mutation target from module constants, and `OUT` here is
+# `os.path.join(ROOT, ...)` where `ROOT` is computed at RUNTIME from `__file__`.
+# The target therefore resolved to scope UNKNOWN, not TRUSTED - and `--enforce`
+# does not trip on UNKNOWN.  T196-1 closed this fail-open for targets arriving
+# as function PARAMETERS; the runtime-computed-constant case is still open, and
+# it hid a live-store truncator in plain sight.  MEASURED: `OUT` resolves to the
+# live store and both of this script's targets exist there today
+# (T203-evidence/T57-T8-EXPOSURE.txt).
+#
+# The caller's own directory goes at the FRONT of sys.path so the module cannot
+# be shadowed from the cwd or the environment; a missing module fails CLOSED.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import t203_store_guard as guard_store  # noqa: E402
+
+NAME = 'T57-promote-emi-vectors'
+
+# Argv-only authorisation phrase - never an environment variable, for the
+# reason recorded in the guard module.  Authorises CREATING new vectors in the
+# live store; it does NOT authorise overwriting an existing one, and nothing
+# does.
+AUTHORISE_TOKEN = (
+    'I-AM-PROMOTING-T57-EMI-SMOOTHING-VECTORS-INTO-THE-LIVE-GOLDEN-VECTOR-STORE')
+
 CAP_REL = ".softhouse/capture/out/capture-prod3c-raw.json"
 OUT = os.path.join(ROOT, ".softhouse", "vectors", "loanschedule")
 PIN = json.load(open(os.path.join(ROOT, ".softhouse", "vectors", "PIN.json")))
@@ -416,10 +451,14 @@ def build(case_id):
 def main():
     for case_id in PROMOTE:
         v = build(case_id)
-        path = os.path.join(OUT, SLUG[case_id] + ".json")
-        with open(path, "w") as fh:
-            json.dump(v, fh, indent=2, ensure_ascii=False)
-            fh.write("\n")
+        # `json.dumps(..., indent=2, ensure_ascii=False) + "\n"` is byte-for-byte
+        # what `json.dump(v, fh, indent=2, ensure_ascii=False)` followed by
+        # `fh.write("\n")` produced; T203 proved the emitted bytes unchanged by
+        # promoting both into an empty scratch store and comparing each against
+        # the live vector (arm G1, 2/2 identical).
+        path = guard_store.write_vector(
+            NAME, AUTHORISE_TOKEN, OUT, SLUG[case_id] + ".json",
+            json.dumps(v, indent=2, ensure_ascii=False) + "\n")
         print("%-18s %-52s rows=%d" % (case_id, os.path.basename(path), len(v["expect"]["periods"])))
         for cf in v["graded_against"]:
             print("    %-8s %-58s margin=%s"
