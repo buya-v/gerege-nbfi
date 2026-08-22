@@ -46,6 +46,15 @@ exec > >(tee -a "$LOG") 2>&1
 log() { print -r -- "[$(date +%H:%M:%S)] $*"; }
 log "fire start — repo=$REPO probe=$PROBE_ONLY force=$FORCE log=$LOG"
 
+# T213: the merged/clean worktree-prune classifier lives in its own file so
+# the T213 fixture harness can source the SAME code this fire runs, rather
+# than a reimplementation that could drift from it. `${0:A:h}` resolves
+# against the script's own path (before the `cd "$REPO"` below moves us),
+# so this works whether fire-program.sh was invoked with a relative or
+# absolute path.
+SCRIPT_DIR="${0:A:h}"
+source "$SCRIPT_DIR/lib-worktree-prune.zsh" || { log "FATAL: could not source lib-worktree-prune.zsh"; exit 1; }
+
 cd "$REPO" || { log "FATAL: repo not found"; exit 1; }
 
 # ---------------------------------------------------------------- preflight ---
@@ -630,16 +639,44 @@ fi
 # POLARITY: fail-CLOSED.
 WT_RAW=$(git worktree list --porcelain)
 WT_RC=$?
-local -a WT_PATHS; WT_PATHS=()
+local -a WT_PATHS WT_BRANCHES WT_LOCKED; WT_PATHS=(); WT_BRANCHES=(); WT_LOCKED=()
 if (( WT_RC != 0 )); then
   log "ERROR: worktree sweep could not enumerate worktrees (git worktree list rc=$WT_RC) — REFUSING to conclude there is nothing to rescue. Any worker deliverables still sitting in a linked worktree are UNVERIFIED; inspect them by hand."
 else
+  # T213: parse branch/detached/locked lines alongside `worktree` lines, in
+  # lockstep, so WT_BRANCHES[i]/WT_LOCKED[i] are always the branch/lock-state
+  # for WT_PATHS[i] — needed below by the prune sweep (T190/T202's rescue loop
+  # only ever needed the path). A `worktree` line always starts a new
+  # porcelain record, so it both flushes nothing (there's nothing to flush —
+  # each field just overwrites in place) and pushes a placeholder onto
+  # WT_BRANCHES/WT_LOCKED that a following `branch`/`detached`/`locked` line
+  # then fills in — leaving all three arrays the same length and aligned by
+  # construction, not by a second pass. `locked` is captured because
+  # fire-program's own live-agent worktrees carry it (measured on the live
+  # repo, T213 handoff) — a currently-running agent's worktree must never be
+  # a prune candidate regardless of what its branch looks like.
   local WT_LINE
   for WT_LINE in "${(@f)WT_RAW}"; do
-    [[ "$WT_LINE" == 'worktree '* ]] && WT_PATHS+=("${WT_LINE#worktree }")
+    if [[ "$WT_LINE" == 'worktree '* ]]; then
+      WT_PATHS+=("${WT_LINE#worktree }")
+      WT_BRANCHES+=("")
+      WT_LOCKED+=("")
+    elif [[ "$WT_LINE" == 'branch refs/heads/'* ]]; then
+      (( ${#WT_BRANCHES} > 0 )) && WT_BRANCHES[${#WT_BRANCHES}]="${WT_LINE#branch refs/heads/}"
+    elif [[ "$WT_LINE" == 'detached' ]]; then
+      (( ${#WT_BRANCHES} > 0 )) && WT_BRANCHES[${#WT_BRANCHES}]="(detached)"
+    elif [[ "$WT_LINE" == 'locked' ]]; then
+      (( ${#WT_LOCKED} > 0 )) && WT_LOCKED[${#WT_LOCKED}]="no reason given"
+    elif [[ "$WT_LINE" == 'locked '* ]]; then
+      (( ${#WT_LOCKED} > 0 )) && WT_LOCKED[${#WT_LOCKED}]="${WT_LINE#locked }"
+    fi
   done
   # entry 1 is the main tree, which the sweep above has already covered
-  (( ${#WT_PATHS} > 0 )) && WT_PATHS=("${(@)WT_PATHS[2,-1]}")
+  if (( ${#WT_PATHS} > 0 )); then
+    WT_PATHS=("${(@)WT_PATHS[2,-1]}")
+    WT_BRANCHES=("${(@)WT_BRANCHES[2,-1]}")
+    WT_LOCKED=("${(@)WT_LOCKED[2,-1]}")
+  fi
 fi
 
 for W in "${WT_PATHS[@]}"; do
@@ -683,6 +720,60 @@ for W in "${WT_PATHS[@]}"; do
 Committed by the orchestrator's worktree sweep. Completeness UNVERIFIED — no handoff was written. Treat as partial until re-reviewed." >/dev/null 2>&1
   log "rescued $WN -> $WB"
 done
+
+# T213: the sweep above walks EVERY worktree on EVERY fire, so its cost grows
+# without bound as merged worktrees pile up. The stored task description said
+# 84; the driver re-measured 36 at this task's dispatch (2026-08-22); this
+# worker re-measured again, later the same day, at 43 (`git worktree list |
+# grep -c "agent-"`, run from this worktree). Three different counts within
+# one day, on one fire — P-69: a measured count's shelf life is shorter than
+# a busy fire. Re-measure at read time; do not carry any of these numbers
+# forward as current.
+#
+# Prune the ones that are done with: MERGED into main AND CLEAN, both — plus
+# the two extra fail-closed guards `wt_prune_check` also enforces (never a
+# `locked` worktree; never the harness's own never-repurposed default branch
+# for that worktree) after both were needed to correctly classify live
+# worktrees found during this task's own testing — see lib-worktree-prune.zsh
+# for why. Reuses WT_PATHS/WT_BRANCHES/WT_LOCKED from the enumeration above
+# (main tree already excluded, aligned index-for-index). The decision itself
+# lives in wt_prune_check() (lib-worktree-prune.zsh) so it is fixture-tested
+# in isolation — see that file's header for the polarity discipline. This
+# loop's only job is to act on a PRUNE verdict; it does not re-derive one.
+#
+# `git worktree remove` (no --force) is itself a THIRD, independent clean
+# check — git refuses if it finds modifications we somehow missed, or if the
+# worktree is locked — so a race between our check and this call fails closed
+# too, not silently.
+local WT_PRUNED=0 WT_KEPT=0
+local i W BR WLK VERDICT VERDICT_RC RM_OUT RM_RC
+for (( i = 1; i <= ${#WT_PATHS}; i++ )); do
+  W="${WT_PATHS[$i]}"
+  BR="${WT_BRANCHES[$i]}"
+  WLK="${WT_LOCKED[$i]}"
+  VERDICT=$(wt_prune_check "$W" "$BR" main "$WLK")
+  VERDICT_RC=$?
+  if (( VERDICT_RC == 0 )); then
+    RM_OUT=$(git worktree remove "$W" 2>&1)
+    RM_RC=$?
+    if (( RM_RC == 0 )); then
+      log "pruned: removed worktree $W (branch $BR was merged into main, clean)"
+      if git branch -d "$BR" >/dev/null 2>&1; then
+        log "pruned: deleted merged branch $BR"
+      else
+        log "WARN: worktree $W removed but branch $BR could not be deleted (already gone, or checked out elsewhere) — harmless, branch is merged"
+      fi
+      WT_PRUNED=$((WT_PRUNED+1))
+    else
+      log "WARN: $W was classified PRUNE but 'git worktree remove' refused (rc=$RM_RC) — NOT pruned, left in place: $RM_OUT"
+      WT_KEPT=$((WT_KEPT+1))
+    fi
+  else
+    log "keep: $W — $VERDICT"
+    WT_KEPT=$((WT_KEPT+1))
+  fi
+done
+log "worktree prune sweep: pruned=$WT_PRUNED kept=$WT_KEPT"
 
 # RESUME.md must have been rewritten during this fire, or a fresh session resumes
 # from a stale manifest — worse than none, because it looks authoritative.
