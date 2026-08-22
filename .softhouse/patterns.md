@@ -1735,6 +1735,44 @@ verification shows `parity vectors PASS 43`, `contract-refusal PASS 4`, and the 
 The generalisation worth keeping: **a check whose PASS and whose NOT-RUN are the same observable is not a
 check.** Ask of any verification — *if my setup had silently failed, would this look different?*
 
+### P-67. The driver certified a figure as "EXACT" and propagated it to four files — the denominator was never measured
+
+**Caught by `A2-25` against the driver, fire `20260822-000013`.** Finding F-2 of its DEC-2 rev-3 review.
+
+The claim, which the previous fire made its **HEADLINE 1(b)** and this driver repeated:
+
+> *"three of its **four** detection classes inspect an empty population"*
+
+**The ledger guard declares SEVEN detection classes** — `I3-FIELD-WRITE`, `I3-PKG-STATE`,
+`I3-SQL-BALANCE`, `I4-BUILDER`, `I4-DML`, `I6-HOLD-BALANCE`, `OPAQUE-SQL` — and drives all seven RED in
+its 15-case selftest. `NIL-COVERAGE` fires on exactly three. **Driver-re-derived on the live file before
+accepting the finding:** seven class-name literals in `.softhouse/guards/ledgerguard/main.go`, three
+`NIL-COVERAGE` emissions at `:840`, `:847`, `:852`.
+
+**Where "four" came from:** §4.4.1 of DEC-2 states *"four things the guard cannot see"* — four **blind
+spots**, a different quantity entirely. `A2-21`'s own `Unverified` item 6 admits **it never opened
+`ledgerguard/main.go`**. So the number was a category confusion in the source document, and every reader
+downstream inherited it.
+
+**What the driver did with it.** It did not merely repeat the figure — it **certified** it. The fire
+report called the numbers "EXACT", and the claim was written into `program.json`'s cursor note,
+`RESUME.md` (twice), `patterns.md`, and `tasks.json`'s `A2-21` note. **The one thing nobody did was open
+the guard and count.** Three of those four files also carried the previous fire's *other* headline —
+`run_guards` invokes **seven** guards, not six — which was itself a miscount corrected only one fire
+earlier. **The same fire that corrected one uncounted denominator shipped another.**
+
+**Why it is worse than a typo.** The sentence is *epistemically* right and *quantitatively* wrong, so it
+reads as careful. It concedes a limitation, cites the guard's own output, and names the mechanism — every
+signal a reader uses to decide a claim has been checked. And it **understates** coverage in a place where
+understating sounds like rigour: "three of four" says the guard is 25% live; "three of seven" says 57%.
+A claim that flatters the speaker's caution gets less scrutiny than one that flatters their result.
+
+**P-63 said: re-derive every figure from the live artefact at the moment of dispatch. P-67 is the
+narrower, sharper form:** a figure with a **denominator** needs the denominator measured, not inherited.
+"Three of four" and "three of seven" share the numerator, the source, and the reasoning — and only one of
+them is a fact. **Before certifying a ratio, count both terms in the live artefact, and say where you
+counted.**
+
 ### P-66. The readiness check resolved dependencies against ONE file and called the missing ones unresolvable — a task sat blocked for several fires on an edge that was never broken
 
 **Caught by the driver against itself, fire `20260822-000013`, during STEP 1.**
@@ -1788,7 +1826,7 @@ state **where you looked**. If the answer does not include every place the thing
 
 - **What the independent workers caught — including four against the driver**:
   - **A2-21 → the driver**: `run_guards` invokes **SEVEN** guards, not six. `RESUME.md`, the fire headline and the driver's own T209 brief all said six — a count that took only the `|| failed=1` arm and silently dropped `guard_graded_root_is_this_tree`, a HARD guard with an early-exit shape.
-  - **A2-21 → the record**: *"I-3/I-4 went from ZERO enforcement to HARNESS-ENFORCED"* is an **overstatement**. Driver-verified from the guard's own green-run output: three of its four detection classes inspect an **empty population** — 3955 string literals scanned, zero SQL DML anywhere under `nexus`, and no database driver declared at all. `I4-DML` and `I3-SQL-BALANCE` are proven by `--selftest`, **not by this tree**.
+  - **A2-21 → the record**: *"I-3/I-4 went from ZERO enforcement to HARNESS-ENFORCED"* is an **overstatement**. Driver-verified from the guard's own green-run output: three of its **seven declared** detection classes inspect an **empty population** — 3955 string literals scanned, zero SQL DML anywhere under `nexus`, and no database driver declared at all. `I4-DML` and `I3-SQL-BALANCE` are proven by `--selftest`, **not by this tree**.
   - **T212 → the driver**: the brief demanded `SCRATCH 337→337` and 7 chain moves; truth at `cc33f7f` is **357→357 and 9**. It reported the discrepancy rather than tuning to hit the driver's figure, and proved polarity-neutrality the right way — byte-identical before/after runs.
   - **T180 → T161**: T161's own prover asserted `attester == PRE-FIX` on the SIGKILL/POST-FIX row, which would have failed on the fixed script *for the right reason*. Corrected rather than left to rot.
   - **T211 → its own brief**: `wait` alone is **not** sufficient (a handler that RETURNS restarts the wait, hanging 20s); background+wait+exit **still orphans the child**, trading a stranded LOCK for an *unlocked* `claude` still writing to the repo — strictly worse; and `${pipestatus[1]}` dies because `$pipestatus` holds one element after `wait`.
