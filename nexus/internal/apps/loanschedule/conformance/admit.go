@@ -265,7 +265,7 @@ func Admit(v *Vector, pin *Pin, repoRoot string) []string {
 	// violation the capture itself recorded, or it silences nothing and only moves
 	// a count. See that file's head comment for why this is a refusal rather than
 	// a report line.
-	problems = append(problems, admitExemptions(v)...)
+	problems = append(problems, admitExemptions(v, repoRoot)...)
 	return problems
 }
 

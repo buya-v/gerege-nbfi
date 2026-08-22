@@ -1,0 +1,79 @@
+T233 — PROPOSED PATCH TO .softhouse/vectors/README.md, NOT APPLIED.
+
+WHY IT IS NOT APPLIED. `.softhouse/vectors/README.md` is inside the vector tree,
+so any edit to it changes `git rev-parse HEAD:.softhouse/vectors`. T233's BAR
+requires that digest to read `73c3ea7b43dd75f04884072719a87fc8e1d255c1`
+UNCHANGED. The two instructions are not jointly satisfiable, and the same
+collision already stopped T222 (its F-5) and T230 (its F-3) — this is the THIRD
+task to defer the same three lines under the same unchanged BAR. Deferring it a
+fourth time will not close it: the SUCCESSOR TASK'S BAR MUST STATE THE NEW
+EXPECTED DIGEST, or the item is permanently unreachable. Applying this patch and
+committing produces exactly one changed file in the vector tree.
+
+Apply with:
+    git apply .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T233-vectors-README.patch
+
+The replacement text below is written against the bytes at `73c3ea7b…` and
+states, in order: the grounding rule; that three verdicts are INADMISSIBLE;
+that UNDETERMINED-ON-THE-RECORD is admitted and reported; and the citation
+requirement finding T222-F4 closed. All four are enforced in code TODAY and
+none of them is stated in the README.
+
+--- a/.softhouse/vectors/README.md
++++ b/.softhouse/vectors/README.md
+@@ -767,9 +767,42 @@
+
+-`invariant_exemptions` switches one off for one vector, with a reason that is
+-printed on every run. An invariant that cannot be switched off gets deleted the
+-first time a legitimate shape trips it, and a deleted invariant protects nothing.
++`invariant_exemptions` switches one off for one vector, with a reason that is
++printed on every run. An invariant that cannot be switched off gets deleted the
++first time a legitimate shape trips it, and a deleted invariant protects nothing.
++
++**An exemption is not free text, and three separate checks refuse one.** All of
++this is ENFORCED in `admit.go` / `exemption.go` and reported on every run; the
++list below is a description of the code, not an aspiration.
++
++1. **THE GROUNDING RULE.** An exemption is admissible only where **the reference
++   oracle ITSELF violates the invariant**. That is asserted, never assumed: the
++   exempted invariant is re-run against the schedule **this vector's own capture
++   recorded**, honouring this vector's `unrecorded_fields`, and must come back
++   `VIOLATED` there. Four verdicts:
++
++   | verdict | meaning | outcome |
++   |---|---|---|
++   | `GROUNDED` | the recorded schedule violates it | admissible |
++   | `UNDETERMINED-ON-THE-RECORD` | this vector's own `unrecorded_fields` withdrew a cell the invariant reads, so the record is **silent** | **admitted and REPORTED**, counted apart from `GROUNDED` because it is not evidence either way (finding T225-F1) |
++   | `DECORATION` | the invariant **holds outright** on the oracle's own numbers, with no assertion withheld | **INADMISSIBLE, exit 2** |
++   | `NOT-EVALUABLE` | the invariant has nothing to assert here at all, with nothing withdrawn | **INADMISSIBLE, exit 2** |
++
++   A fifth, `SCHEDULE-UNREADABLE` (the recorded rows do not parse into a
++   schedule), is also **INADMISSIBLE**. An exemption whose grounding nothing
++   could check is not an exemption that was checked.
++
++2. **THE CITATION** (finding T222-F4). The whole argument for admitting an
++   exemption is that **the oracle was observed to behave that way**, so the
++   exemption must cite the observation — and the harness **mints** the citation
++   rather than reading prose, so it can check that it RESOLVES. Three components,
++   all refused on failure: this vector's `provenance.capture_ref` must name a
++   committed capture artefact that **exists in this repository** and is non-empty;
++   its `provenance.capture_case_id` must **occur inside that artefact's bytes** (a
++   capture is a bundle, and a case id that names no case in it cites a page that
++   is not in the book); and the record's own sentence — the exempted invariant
++   re-run against the captured schedule — must be non-empty. **A hand-authored
++   vector therefore cannot exempt an invariant at all**, because it cites no
++   capture and has not observed the oracle. Every resolved citation is printed
++   with its artefact, its byte size and the offset the case id was found at.
++
++3. **THE PORT CONJUNCT.** The exempted invariant is ALSO run against the schedule
++   the **implementation returned**, and the result is printed beside every
++   exemption. It is **REPORTED, never refused** — a port that satisfies an
++   invariant the oracle violates has diverged, and a divergence is the cell diff's
++   finding, not a second admissibility verdict that could disagree with it.
++
++**The exemption counts are PINNED.** `.softhouse/conformance.sh` compares the
++run's exempted / declared / `GROUNDED` / `UNDETERMINED-ON-THE-RECORD` /
++`UNGROUNDED` figures against `EXEMPTION_PIN_*` **for equality**, so the corpus
++cannot drift in either direction — adding OR removing an exemption is exit 2
++until the pin is edited in the same commit. Promoting a vector that exempts an
++invariant means editing that pin, deliberately, where a reviewer sees it.

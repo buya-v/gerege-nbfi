@@ -294,6 +294,19 @@ func WriteReport(w io.Writer, s *Summary) {
 	p("    implementation reproduces it, because there the assertion would be a claim about the oracle")
 	p("    rather than about the port — and that is a graded-domain question, not a harness one. Every")
 	p("    exemption below is named, scoped to one vector, and carries its own reason in full.")
+	// BOTH CONJUNCTS ARE NOW ASSERTED, AND THE REPORT SAYS WHICH IS ASSERTED WHERE.
+	// The sentence above has claimed two conjuncts since T116-N1 while the harness
+	// asserted one; T222 raised that as F-3 and T230 as F-4, and both left it open.
+	p("    THAT SENTENCE HAS TWO CONJUNCTS AND BOTH ARE NOW ASSERTED, in different places and with")
+	p("    different consequences. (1) THE ORACLE CONJUNCT is decided OFFLINE, from the vector file")
+	p("    alone, in the EXEMPTION GROUNDING section below: the exempted invariant is re-run against the")
+	p("    schedule the CAPTURE recorded and must come back VIOLATED there, or the vector is refused.")
+	p("    (2) THE PORT CONJUNCT is a statement about THIS RUN and is measured in the PORT CONJUNCT")
+	p("    section below: the exempted invariant is run again, against the schedule THE IMPLEMENTATION")
+	p("    RETURNED, and what it said is printed beside every exemption here. It is REPORTED, never")
+	p("    refused — a port that satisfies an invariant the oracle violates has DIVERGED, and a")
+	p("    divergence is the cell diff's finding, not a second admissibility verdict that could disagree")
+	p("    with it. Until this run it was asserted by nothing, and the sentence above claimed it anyway.")
 	// The count comes from the SUMMARY, not from a second walk of the results
 	// (T220-N1). A number the report recomputes for itself is a number no test can
 	// pin, and this one is now a corpus-wide tripwire.
@@ -308,6 +321,22 @@ func WriteReport(w io.Writer, s *Summary) {
 				}
 				p("    %s — %s [EXEMPT]", r.CaseID, iv.Name)
 				p("        REASON: %s", iv.Detail)
+				switch {
+				case iv.PortConjunctUndetermined():
+					p("        PORT CONJUNCT: COULD NOT SAY — the implementation declared a placeholder on a")
+					p("            cell this invariant reads, so the returned schedule answers neither way.")
+					for _, na := range iv.PortNotAsserted {
+						p("            THE RUN COULD NOT SAY: %s", na)
+					}
+				case iv.PortConjunctReproduced():
+					p("        PORT CONJUNCT: REPRODUCED — the schedule the implementation RETURNED violates")
+					p("            this invariant too, which is the second half of the sentence above: %s",
+						iv.PortDetail)
+				default:
+					p("        PORT CONJUNCT: *** DIVERGED *** — the schedule the implementation RETURNED")
+					p("            reports %s for this invariant, so the port does NOT reproduce the oracle")
+					p("            behaviour this exemption exists for: %s", iv.PortObserved, iv.PortDetail)
+				}
 			}
 		}
 	}
@@ -358,6 +387,100 @@ func WriteReport(w io.Writer, s *Summary) {
 			for _, na := range u.NotAsserted {
 				p("            THE RECORD COULD NOT SAY: %s", na)
 			}
+		}
+	}
+	p("")
+
+	// FINDING T222-F4 — THE CITATION, PRINTED. See exemption.go's citation block.
+	//
+	// The grounding section above says the exemption is grounded IN THE RECORD.
+	// This one says WHICH record, and proves the harness opened it: the artefact,
+	// its size in bytes, the case id, and the byte offset the id was found at. A
+	// reason that cites nothing is an assertion; the numbers below could not have
+	// been produced without resolving the citation.
+	p("--- EXEMPTION CITATIONS (which observation each admissible exemption rests on) ---")
+	p("    An exemption's whole argument is that THE REFERENCE ORACLE WAS OBSERVED TO BEHAVE THIS WAY.")
+	p("    Its `reason` is free prose and always was; until finding T222-F4 was closed, nothing required")
+	p("    that prose to point at anything, so an OBSERVATION and an ASSERTION were indistinguishable to")
+	p("    this harness. The citation is MINTED by the harness, not read from the vector, and it is")
+	p("    refused in Admit unless all three components resolve: the committed capture ARTEFACT exists")
+	p("    in this repository and is non-empty; the capture CASE ID occurs inside that artefact's bytes")
+	p("    (a bundle citation that names no case in the bundle is a page that is not in the book); and")
+	p("    the RECORD'S OWN SENTENCE — the exempted invariant re-run against the captured schedule — is")
+	p("    non-empty. The byte offsets below are the proof the artefact was opened.")
+	switch {
+	case ec.Declared == 0:
+		p("    NIL-COVERAGE — no vector in this store exempts any invariant, so no citation was required")
+		p("    and none was minted. Stated rather than left as silence (P-35).")
+	case len(ec.Citations) == 0:
+		p("    NO CITATION WAS MINTED over %d declared exemption(s). Every one of them was refused on some")
+		p("    other ground before a citation was required — see the refusals above; this run has no")
+		p("    admissible exemption to cite.", ec.Declared)
+	default:
+		admissible := ec.Grounded + ec.Undetermined
+		p("    MINTED %d citation(s) for %d admissible exemption(s) (%d GROUNDED + %d "+
+			"UNDETERMINED-ON-THE-RECORD) out of %d declared.",
+			len(ec.Citations), admissible, ec.Grounded, ec.Undetermined, ec.Declared)
+		if len(ec.Citations) != admissible {
+			p("    *** THE CITATION WALK AND THE GROUNDING WALK DISAGREE: %d citation(s) for %d admissible",
+				len(ec.Citations), admissible)
+			p("    *** exemption(s). One of the two stopped counting; neither number is evidence.")
+		}
+		unresolved := 0
+		for _, c := range ec.Citations {
+			if !c.Resolved() {
+				unresolved++
+			}
+		}
+		p("    %d of %d RESOLVED in full; %d did not (each one's refusal is printed above and the vector",
+			len(ec.Citations)-unresolved, len(ec.Citations), unresolved)
+		p("    carrying it is INADMISSIBLE).")
+		for _, c := range ec.Citations {
+			p("        %s — %s [%s]", c.CaseID, c.Invariant, c.Verdict)
+			if c.CaseIDAt >= 0 {
+				p("            ARTEFACT: %s (%d bytes); CASE %s found at byte offset %d",
+					c.CaptureRef, c.ArtefactBytes, c.CaptureCaseID, c.CaseIDAt)
+			} else {
+				p("            ARTEFACT: %q (%d bytes); CASE %q *** DID NOT RESOLVE ***",
+					c.CaptureRef, c.ArtefactBytes, c.CaptureCaseID)
+			}
+			p("            THE RECORD SAYS: %s", c.Observation)
+		}
+	}
+	p("")
+
+	// FINDING T222-F3 / T230-F4 — THE PORT CONJUNCT, MEASURED.
+	//
+	// Printed whether or not anything diverged, with its own NIL-COVERAGE notice,
+	// because a guard that speaks only when it fires cannot be told apart from one
+	// that never ran (P-22, P-35) — and this one spent two tasks as prose saying
+	// it was not asserted at all.
+	pc := s.PortConjunct
+	p("--- PORT CONJUNCT (every exempted invariant re-run against the schedule THE IMPLEMENTATION RETURNED) ---")
+	p("    The exemption sentence has two conjuncts: the oracle violates the invariant, AND the")
+	p("    implementation reproduces it. The section above asserts the first, offline, and refuses when")
+	p("    it fails. This asserts the second, on THIS run's output, and REPORTS rather than refuses: a")
+	p("    port that SATISFIES an invariant the oracle violates has diverged from the oracle, which is a")
+	p("    parity finding the cell diff owns. Nothing in this section can fail a vector, and nothing in")
+	p("    it is a licence: DIVERGED here means the exemption is excusing a behaviour the port does not")
+	p("    actually have, which is worth a reader's attention even when every graded cell matched.")
+	if pc.Assertions == 0 {
+		p("    NIL-COVERAGE — no graded vector exempted any invariant on this run, so the port conjunct")
+		p("    had an empty population. It is stated rather than left as silence.")
+	} else {
+		p("    INSPECTED %d exempted assertion(s) on the graded vectors.", pc.Assertions)
+		p("    %d REPRODUCED (the returned schedule violates the exempted invariant too), %d DIVERGED, "+
+			"%d COULD NOT SAY.", pc.Reproduced, pc.Diverged, pc.Undetermined)
+		if !pc.Partitions() {
+			p("    *** THE CENSUS DOES NOT PARTITION: %d + %d + %d != %d inspected. It has stopped counting",
+				pc.Reproduced, pc.Diverged, pc.Undetermined, pc.Assertions)
+			p("    *** something, so none of these figures is evidence.")
+		}
+		for _, name := range pc.DivergedNames {
+			p("        DIVERGED: %s", name)
+		}
+		for _, name := range pc.UndeterminedNames {
+			p("        COULD NOT SAY: %s", name)
 		}
 	}
 	p("")
