@@ -72,22 +72,35 @@ be parked as an outage; fix the invocation and grade again. Codes: `.softhouse/v
 
 **CORRECTED 2026-08-22 by the `/softhouse-program` driver (local fire `20260822-060013`), at repo
 commit `c0be92b`.** The `Databases` row above previously named only `fineract_tenants` and
-`fineract_default` and **omitted `fineract_gerege` entirely** — although `fineract_gerege` is the
-tenant database the ledger parity vectors were captured from and is named in 74 tracked files under
-`.softhouse/`. Re-derived live, evidence in `.softhouse/capture/driver-20260822-060013/`.
+`fineract_default` and **omitted the string `fineract_gerege` entirely** — the tenant database the
+ledger parity vectors were captured from. Re-derived live, evidence in
+`.softhouse/capture/driver-20260822-060013/`.
+
+**RE-DERIVED INDEPENDENTLY BY T245** at repo commit `9b6c596`; evidence and re-runnable instrument in
+`.softhouse/reviews/t245-oracle-pin/`. The tenant table below is confirmed against
+`tenants ⋈ tenant_server_connections`, and the six ledger vectors are confirmed — from the committed
+capture artefacts and from the live rows, not by inference — to come from tenant `gerege`. **One
+narrowing:** the pre-edit file *did* name the **tenant** `gerege`, on 7 lines including a whole section
+headed *"The `gerege` tenant is the production-representative one"*; what was absent was the **database
+name**, and the tenant-count figures the driver cited were true at `c0be92b` and have since moved
+(P-69). Re-derive them rather than reading them:
+`git grep -F -l -a fineract_gerege HEAD -- .softhouse/ | wc -l`.
 
 | tenant id | identifier | name | timezone | database |
 |---|---|---|---|---|
 | 1 | `default` | Default Demo Tenant | **`Asia/Kolkata`** ⚠️ | `fineract_default` |
-| 2 | `gerege` | Gerege T22 Audit Tenant | **`Asia/Ulaanbaatar`** ✅ | `fineract_gerege` |
+| 2 | `gerege` | Gerege T22 Audit Tenant (Asia/Ulaanbaatar) | **`Asia/Ulaanbaatar`** ✅ | `fineract_gerege` |
 
 ⚠️ **The two tenants are in different time zones and tenant 1 is not one of ours.** CLAUDE.md permits
 exactly two zones, `Asia/Ulaanbaatar` (+08) and `Asia/Hovd` (+07), and hard-coded offsets nowhere.
 `Asia/Kolkata` is **+05:30**. A capture taken against tenant `default` because this file named its
 database and not the other one would be a capture at the wrong offset, and nothing downstream would
 say so. **State the tenant, not just the database, in every capture attestation.** Both tenants are in
-legitimate use across the corpus (`fineract_default` in 71 tracked files, `fineract_gerege` in 74) —
-the rule is not "never use `default`", it is **never leave which one unstated**.
+legitimate use across the corpus — `default` as the wrong-offset / `HALF_EVEN` **negative control** —
+so the rule is not "never use `default`", it is **never leave which one unstated**. Neither
+`.softhouse/vectors/PIN.json` nor `.softhouse/vectors/PIN-ledger.json` carries a tenant field today
+[VERIFIED: T245, repo commit `9b6c596`]; making that a graded, default-deny field is proposed in
+`.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T245.md` and is **not** implemented here.
 
 ### Driver assertions (asserted against the RUNNING container, not just config)
 
@@ -145,8 +158,19 @@ Rebuild the image after moving the pin: `/Users/buv/gerege-nbfi/.softhouse/bin/b
 |---|---|
 | Base URL | `https://localhost:8443/fineract-provider/api/v1` (self-signed TLS — `curl -k`) |
 | Auth | HTTP Basic `mifos:password` (verified: `GET /offices` → Head Office) |
-| Tenant header/param | `tenantIdentifier=default` |
-| Postgres | `psql -U root -d fineract_default` inside `fineract-db-1` |
+| Tenant | **`gerege`** — tenant 2, `Asia/Ulaanbaatar`, `HALF_UP`. Header `Fineract-Platform-TenantId: gerege`, or query param `tenantIdentifier=gerege`; **both return HTTP 200 on `GET /offices`** [VERIFIED: T245, live, repo commit `9b6c596`]. |
+| Postgres | **`psql -U root -d fineract_gerege`** inside `fineract-db-1` |
+| Tenant `default` | **negative control only** — the wrong-offset / `HALF_EVEN` arm. Its database `fineract_default` holds **0 GL accounts, 0 journal entries, 0 loans** [VERIFIED: T245, live, repo commit `9b6c596`], so a capture pointed there does not merely run at `+05:30`, it finds no ledger at all. |
+
+**CORRECTED 2026-08-22 by T245**, the independent review of the driver's own tenants correction above,
+measured at repo commit `9b6c596`. The `Tenant` and `Postgres` rows previously read
+`tenantIdentifier=default` and `psql -U root -d fineract_default`. That is not a record of a negative
+control — it is **the capture instruction**, in the file that says every capture must cite it, in the same
+file as (and ~60 lines below) a warning describing exactly that hazard. The fire that added the warning
+did not remove the instruction. T245 swept all 5,129 tracked files for a copyable
+instruction naming tenant `default`: **10 files carry one, and 9 of the 10 are deliberate negative
+controls** (the `t22-probe` / `t22-audit` arms, `t149`'s `HALF_EVEN` arm, `t246`'s population-scope
+control). **This file was the only prescriptive one.**
 
 ## ⚠️ Findings that affect vector capture (T8)
 
