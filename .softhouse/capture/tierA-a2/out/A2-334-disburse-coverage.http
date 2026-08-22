@@ -1,0 +1,9 @@
+POST /loans/7?command=disburse
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/a2-26-disburse.json
+body-wire-bytes-artefact: A2-334-disburse-coverage.req
+body-sha256: 713de4f98a157ea36b50d07b9dfff0736afac07089bdcf1fa4d8fd6b7a789429
+body-bytes: 133
+captured-at-utc: 2026-08-22T02:12:58Z

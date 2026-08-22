@@ -1,0 +1,9 @@
+POST /loans/7/transactions?command=goodwillCredit
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/a2-26-goodwill.json
+body-wire-bytes-artefact: A2-380-goodwill-credit.req
+body-sha256: b338320dfa92d5dacc081206f853e9d166e268b03c72b0223bd32b2c61d11c02
+body-bytes: 121
+captured-at-utc: 2026-08-22T02:23:26Z

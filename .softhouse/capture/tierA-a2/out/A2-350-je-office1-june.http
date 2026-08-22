@@ -1,0 +1,5 @@
+GET /journalentries?officeId=1&fromDate=01%20June%202026&toDate=30%20June%202026&locale=en&dateFormat=dd%20MMMM%20yyyy&limit=100
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+body: <none>
+captured-at-utc: 2026-08-22T02:21:19Z

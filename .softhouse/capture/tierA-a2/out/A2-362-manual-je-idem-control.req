@@ -1,0 +1,14 @@
+{
+  "officeId": 1,
+  "transactionDate": "02 June 2026",
+  "currencyCode": "MNT",
+  "comments": "A2-26 idempotency probe: this exact body is POSTed twice under one Idempotency-Key",
+  "debits": [
+    {"glAccountId": 16, "amount": 33333.33}
+  ],
+  "credits": [
+    {"glAccountId": 21, "amount": 33333.33}
+  ],
+  "locale": "en",
+  "dateFormat": "dd MMMM yyyy"
+}
