@@ -1,0 +1,82 @@
+============================================================
+S1 — PINNED PRESENT (the real repo). Must export the real GOROOT and stay SILENT.
+  stdout: GOROOT=[/Users/buv/gerege-nbfi/.softhouse/toolchain/go] GEREGE_GO_SOURCE=[pinned] which_go=[/Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go]
+  stderr: []
+  ASSERT OK   : sourcing returned 0
+  ASSERT OK   : SILENT on the happy path (BAR output is unperturbed)
+  ASSERT OK   : provenance recorded as pinned
+  ASSERT OK   : GOROOT points into the MAIN checkout's toolchain
+============================================================
+S2 — PINNED PRESENT, sourced FROM THIS WORKTREE. Must resolve the MAIN checkout.
+  worktree            : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a4590893136f25bc9
+  --git-common-dir    : /Users/buv/gerege-nbfi/.git
+  ASSERT OK   : a worktree resolved the MAIN checkout's shared toolchain, not its own empty one
+  ASSERT OK   : this worktree has NO toolchain of its own, so the git hop is load-bearing
+============================================================
+S3 — PINNED ABSENT, a `go` on PATH. OLD form vs NEW form.
+  --- OLD go-env.sh (the shipped defect) ---
+  stdout: GOROOT=[/Users/buv/gerege-nbfi/.softhouse/toolchain/go] GEREGE_GO_SOURCE=[<unset>] which_go=[/Users/buv/gerege-nbfi/.softhouse/toolchain/go/bin/go]
+  stderr: []
+  ASSERT OK   : RED REPRODUCED: OLD exports a hardcoded GOROOT for a path this checkout does not have
+  ASSERT OK   : RED REPRODUCED: OLD said NOTHING about it — this is the silence that becomes
+                'a HARD money guard did not compile' downstream
+  --- NEW go-env.sh ---
+  stdout: GOROOT=[<unset>] GEREGE_GO_SOURCE=[fallback-path] which_go=[/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t253-d2.yh4yy8Q0tw/fakebin/go]
+  stderr:
+    | go-env.sh: the PINNED Go toolchain was NOT found on this host.
+    | go-env.sh:   searched (needed <cand>/go/bin/go):
+    |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t253-d2.yh4yy8Q0tw/new/.softhouse/toolchain
+    |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t253-d2.yh4yy8Q0tw/new/.softhouse/bin/../../toolchain
+    | go-env.sh:   anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t253-d2.yh4yy8Q0tw/new/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+    | go-env.sh: FALLBACK IN EFFECT — using the `go` already on PATH:
+    | go-env.sh:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t253-d2.yh4yy8Q0tw/fakebin/go
+    | go-env.sh:   go version go0.0.0-FAKE test/arm64
+    | go-env.sh: THIS IS NOT THE PINNED TOOLCHAIN. It is announced, never silent.
+    | go-env.sh: Guards may build with it; VECTOR CAPTURE and any parity claim must
+    | go-env.sh: use the pinned toolchain. GEREGE_GO_SOURCE=fallback-path.
+  ASSERT OK   : GREEN: NEW exported NO GOROOT — nothing points at a directory that is not there
+  ASSERT OK   : GREEN: the substitution is ANNOUNCED
+  ASSERT OK   : GREEN: the announcement names the VERSION actually being used
+  ASSERT OK   : GREEN: the announcement names the BINARY actually being used
+  ASSERT OK   : GREEN: the announcement says so in as many words
+  ASSERT OK   : GREEN: provenance is machine-readable
+============================================================
+S4 — PINNED ABSENT and NO `go` anywhere. Must be loud and export nothing.
+  ASSERT OK   : CALIBRATION: /usr/bin:/bin contains no `go`, so S4 really is the no-toolchain case
+  stdout: GOROOT=[<unset>] GEREGE_GO_SOURCE=[absent] which_go=[<none>]
+  stderr:
+    | go-env.sh: the PINNED Go toolchain was NOT found on this host.
+    | go-env.sh:   searched (needed <cand>/go/bin/go):
+    |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t253-d2.yh4yy8Q0tw/new/.softhouse/toolchain
+    |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t253-d2.yh4yy8Q0tw/new/.softhouse/bin/../../toolchain
+    | go-env.sh:   anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t253-d2.yh4yy8Q0tw/new/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+    | go-env.sh: and there is NO `go` on PATH either. Nothing was exported.
+    | go-env.sh: The caller's own toolchain check will now refuse — that refusal is
+    | go-env.sh: correct and fail-closed. GEREGE_GO_SOURCE=absent.
+  ASSERT OK   : no GOROOT exported
+  ASSERT OK   : loud about total absence
+  ASSERT OK   : provenance = absent
+  ASSERT OK   : the caller's own `command -v go` check will now fire — refusal stays FAIL-CLOSED
+============================================================
+S5 — an INHERITED bogus GOROOT must be DROPPED, not passed along.
+  stderr:
+    | go-env.sh: dropping inherited GOROOT=/nonexistent/goroot — that directory does not exist.
+    | go-env.sh: the PINNED Go toolchain was NOT found on this host.
+    | go-env.sh:   searched (needed <cand>/go/bin/go):
+    |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t253-d2.yh4yy8Q0tw/new/.softhouse/toolchain
+    |     /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t253-d2.yh4yy8Q0tw/new/.softhouse/bin/../../toolchain
+    | go-env.sh:   anchor: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/t253-d2.yh4yy8Q0tw/new/.softhouse/bin (git rev-parse --git-common-dir rc=0)
+    | go-env.sh: FALLBACK IN EFFECT — using the `go` already on PATH:
+    | go-env.sh:   /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//t253-d2.yh4yy8Q0tw/fakebin/go
+    | go-env.sh:   go version go0.0.0-FAKE test/arm64
+    | go-env.sh: THIS IS NOT THE PINNED TOOLCHAIN. It is announced, never silent.
+    | go-env.sh: Guards may build with it; VECTOR CAPTURE and any parity claim must
+    | go-env.sh: use the pinned toolchain. GEREGE_GO_SOURCE=fallback-path.
+  ASSERT OK   : the bogus inherited GOROOT was dropped
+  ASSERT OK   : and the drop was announced
+============================================================
+S6 — sourced under `set -e`. Must NOT abort the caller (D1's failure mode, other route).
+  rc=0 stdout=[CALLER-STILL-ALIVE]
+  ASSERT OK   : the caller survived sourcing with no toolchain at all, under set -euo pipefail
+============================================================
+D2 RED-DRIVE: all assertions held.

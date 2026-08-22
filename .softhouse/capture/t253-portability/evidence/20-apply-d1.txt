@@ -1,0 +1,24 @@
+SELECTOR : every line matching \bmktemp\b in .softhouse/conformance.sh
+population (all mktemp sites)        : 10  [1481, 1482, 1483, 1484, 1831, 1855, 1930, 1945, 2003, 2004]
+rewritten (non-portable `-t NAME`)   : 10  [1481, 1482, 1483, 1484, 1831, 1855, 1930, 1945, 2003, 2004]
+  1481 - out="$(mktemp -t conformance-failopen)"      || return 1
+  1481 + out="$(mktemp "${TMPDIR:-/tmp}/conformance-failopen.XXXXXXXXXX")"      || return 1
+  1482 - json="$(mktemp -t conformance-failopen-json)" || return 1
+  1482 + json="$(mktemp "${TMPDIR:-/tmp}/conformance-failopen-json.XXXXXXXXXX")" || return 1
+  1483 - want="$(mktemp -t conformance-failopen-want)" || return 1
+  1483 + want="$(mktemp "${TMPDIR:-/tmp}/conformance-failopen-want.XXXXXXXXXX")" || return 1
+  1484 - got="$(mktemp -t conformance-failopen-got)"   || return 1
+  1484 + got="$(mktemp "${TMPDIR:-/tmp}/conformance-failopen-got.XXXXXXXXXX")"   || return 1
+  1831 - list="$(mktemp -t conformance-implist)" || return 1
+  1831 + list="$(mktemp "${TMPDIR:-/tmp}/conformance-implist.XXXXXXXXXX")" || return 1
+  1855 - out="$(mktemp -t conformance-wrongimpl)" || return 1
+  1855 + out="$(mktemp "${TMPDIR:-/tmp}/conformance-wrongimpl.XXXXXXXXXX")" || return 1
+  1930 - CONF_BIN="$(mktemp -t conformance)" || exit "$EXIT_UNUSABLE"
+  1930 + CONF_BIN="$(mktemp "${TMPDIR:-/tmp}/conformance.XXXXXXXXXX")" || exit "$EXIT_UNUSABLE"
+  1945 - report="$(mktemp -t conformance-report)" || exit "$EXIT_UNUSABLE"
+  1945 + report="$(mktemp "${TMPDIR:-/tmp}/conformance-report.XXXXXXXXXX")" || exit "$EXIT_UNUSABLE"
+  2003 - CONF_BIN="$(mktemp -t conformance)" || exit "$EXIT_UNUSABLE"
+  2003 + CONF_BIN="$(mktemp "${TMPDIR:-/tmp}/conformance.XXXXXXXXXX")" || exit "$EXIT_UNUSABLE"
+  2004 - CONF_TMP="$(mktemp -d -t conformance-prove)" || exit "$EXIT_UNUSABLE"
+  2004 + CONF_TMP="$(mktemp -d "${TMPDIR:-/tmp}/conformance-prove.XXXXXXXXXX")" || exit "$EXIT_UNUSABLE"
+REWROTE 10/10 site(s). Line count unchanged at 2618.
