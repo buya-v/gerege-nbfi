@@ -113,8 +113,18 @@ def main():
             gates = json.load(fh).get("gates_pending", [])
     except (IOError, ValueError):
         gates = []
+    # SELECTOR FAIL-OPEN, found by T249. `g.get("class") == "CONTRACT"` SILENTLY DROPS
+    # any gate carrying no `class` key at all -- and G-13 is exactly that shape
+    # [VERIFIED at HEAD: G-13 has class=None]. An unclassified gate that was OPEN would
+    # therefore be INVISIBLE here, which is the failure mode this whole section exists to
+    # prevent. Select CONTRACT gates, but count and SHOW unclassified open gates too
+    # rather than letting them vanish. See P-77.
+    def _is_open(g):
+        return "OPEN" in str(g.get("state", "")).upper()
     contract_open = [g for g in gates
-                     if g.get("class") == "CONTRACT" and "OPEN" in str(g.get("state", ""))]
+                     if g.get("class") == "CONTRACT" and _is_open(g)]
+    unclassified_open = [g for g in gates
+                         if not isinstance(g.get("class"), str) and _is_open(g)]
     print("\nOPEN CONTRACT GATES -- READY above is about DEPENDENCIES, not permission (%d)"
           % len(contract_open))
     if not contract_open:
@@ -131,7 +141,24 @@ def main():
         # authoritative register records "Blocks nothing today". Print what the gate
         # itself records; fall back to the conservative blanket text ONLY when the gate
         # has recorded no scope, and SAY that is what happened. See P-77.
-        blocks = str(g.get("blocks", "")).strip()
+        # FAIL-OPEN INTRODUCED BY THE DRIVER 2026-08-22 AND CAUGHT BY T249 THE SAME FIRE.
+        # This read `str(g.get("blocks", "")).strip()`, so the FIVE most likely encodings
+        # of "no value" -- None, False, 0, [], {} -- all stringify TRUTHY ("None",
+        # "False", "0", "[]", "{}"), suppressed the conservative fallback, and printed
+        # under "SCOPE RECORDED ON THIS GATE". `blocks: null` rendered as
+        # "SCOPE RECORDED ... None", which READS AS "nothing is blocked". The pre-patch
+        # code was fail-CLOSED; the patch made it fail-OPEN -- a fresh P-45 instance
+        # created in the very commit that filed P-77 about unenforced permission
+        # surfaces. Only a genuine non-empty STRING counts as a recorded scope; anything
+        # else falls back AND is reported as MALFORMED, because a malformed scope is a
+        # defect to surface, not a value to silently treat as absent.
+        raw = g.get("blocks", None)
+        blocks = raw.strip() if isinstance(raw, str) else ""
+        malformed = raw is not None and not isinstance(raw, str)
+        if malformed:
+            print("      => !! MALFORMED `blocks` ON THIS GATE: type %s, value %r."
+                  % (type(raw).__name__, raw))
+            print("         NOT treated as a recorded scope. Falling back to conservative.")
         if blocks:
             print("      => SCOPE RECORDED ON THIS GATE (program.json .blocks):")
             for line in textwrap.wrap(blocks, 84):
@@ -147,6 +174,13 @@ def main():
             print("         for this context until it closes. Raw observed capture IS permitted.")
             print("         The driver MUST decide this gate's real scope and record it in")
             print("         program.json gates_pending[].blocks rather than inherit this text.")
+
+    if unclassified_open:
+        print("\n  !! OPEN GATES WITH NO `class` KEY (%d) -- these are INVISIBLE to the"
+              % len(unclassified_open))
+        print("     CONTRACT selector above and could carry an unread prohibition:")
+        for g in unclassified_open:
+            print("       %s  %s" % (g.get("id"), str(g.get("state", ""))[:70]))
 
     print("\nDEPENDENCY EDGES THAT RESOLVE NOWHERE (%d)" % len(unresolved))
     if not unresolved:
