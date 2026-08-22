@@ -1,10 +1,10 @@
 {
  "holder": "local-fire-20260822-060013b",
- "host": "buyan-mac",
- "pid": 0,
+ "host": "Buyanmunkhs-Mac-mini",
+ "pid": 41796,
  "started_at": "2026-08-22T06:00:13Z",
- "heartbeat": "2026-08-22T06:00:13Z",
+ "heartbeat": "2026-08-22T14:13:26Z",
  "released_at": null,
- "note": "Freshness signal used: origin/main push recency. Prior lock read released_at non-null => FREE (rule 1).",
- "live_workers": 0
+ "note": "REPAIRED MID-FIRE on T265 F-4: this file previously carried host 'buyan-mac' (real hostname is Buyanmunkhs-Mac-mini) and pid 0, which DISABLED STEP 0 rule 4 TWICE -- a SIGKILL of this session would have cost the next fire the full 6h wait. Now carries the real host and the real claude pid, so a hard-killed fire is taken over immediately. Freshness signal remains origin/main push recency.",
+ "live_workers": 4
 }

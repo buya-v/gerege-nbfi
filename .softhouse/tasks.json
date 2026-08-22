@@ -2498,7 +2498,7 @@
   {
    "id": "T265",
    "title": "INDEPENDENT re-derivation of the DRIVER's own lock fix — it found the defect and fixed it in the same fire (the T245/T249 precedent)",
-   "status": "in_progress",
+   "status": "done",
    "executor": "agent",
    "model": "opus",
    "target": "docs",
@@ -2513,7 +2513,7 @@
    ],
    "contract_independent": true,
    "description": "On local fire 20260822-060013 the driver rewrote STEP 0 of `.claude/skills/softhouse-program/SKILL.md` and patched `.softhouse/bin/fire-program.sh`, replacing `started_at`-based staleness with PUSH-RECENCY on origin/main as the authoritative liveness signal, keeping `heartbeat` as corroboration only. The driver found the defect class and shipped the fix in ONE fire with no independent eye, which is exactly the shape T249 was filed for and confirmed as worth reviewing. REVIEW IT.\n\n(1) IS THE DIAGNOSIS RIGHT? The driver argues a heartbeat field is the WRONG fix because it is a thing somebody must remember to refresh (P-45, five recorded instances), while push-recency is DERIVED from doing the work. Attack that. The obvious counter is that a fire can legitimately think for over 6h WITHOUT pushing -- in which case push-recency declares a live holder dead, which is the SAME failure with the sign flipped. Work out whether that is reachable in practice given this driver's actual push cadence (read the git history and MEASURE the longest real gap between pushes by a single fire; state both terms). If it IS reachable, the fix is unsound as written and you must say so.\n(2) DRIVE IT RED. Construct the four STEP 0 cases -- released, held-and-pushing, genuinely stale, dead-pid -- and show the rule as written returns the right answer for each. A rule nobody has seen fail is unverified (P-22). Pay special attention to case 3: BOTH signals must be old, so a fresh clone with no local history must not misread it.\n(3) CHECK THE WRAPPER PATCH ACTUALLY PARSES AND STILL RELEASES. `.softhouse/bin/fire-program.sh` is what launchd runs twice a day; if the driver broke it, the program stops firing and nothing announces that. `zsh -n` is necessary and NOT sufficient -- check the release path and the trap still work, since a stranded LOCK costs the next fire six hours.\n(4) THE DRIVER MAY HAVE FIXED THE WRONG LAYER. P-85 says the incident's true cause was that the holder COMMITTED its lock refresh and dispatch record and NEVER PUSHED THEM -- so a heartbeat would have sat in the same unpushed commits and changed nothing. Judge whether the landed fix actually addresses that, or whether it addresses the more comfortable adjacent problem. Say so plainly if it is the latter.\n\nWRITE ONLY under `.softhouse/reviews/t265-review-lock-fix/`. You may NOT edit SKILL.md or fire-program.sh.",
-   "note": "dispatched by local fire 20260822-060013b in an isolated worktree; driver awaiting completion",
+   "note": "VERDICT MICRO-FIX at 422f517, and it is the strongest self-review this program has run. It CONFIRMED the diagnosis by measurement (at the cloud's 12:10:00Z takeover the tip was 19m27s old, so rule 2 fires and the incident does not happen; the three unpushed commits have NO push reflog entry, so a heartbeat in them would have changed nothing; rule 3 is provably a SUBSET of the rule it replaces). It measured the predicted counter-failure across 21 fires / 1382 commits / 338 pushes instead of arguing it: worst live-fire tip staleness 1.84h against a 6h threshold. THEN it found five defects the driver missed. DRIVER ACTED IMMEDIATELY ON F-4: the LOCK carried host 'buyan-mac' against a real hostname of Buyanmunkhs-Mac-mini, and pid 0 -- disabling rule 4 TWICE. Repaired mid-fire; rule 4 now verified live (host matches, pid 41796 alive). F-1/F-2/F-3/F-7 go to T279.",
    "branch": "softhouse/t265-review-lock-fix"
   },
   {
@@ -3326,6 +3326,50 @@
    ],
    "description": "Two parties now claim the seven cells (T264, then T277). You are the third and you import NEITHER of their instruments. Re-derive in integer minor units from the raw schedules. Then grade the thing that actually matters: is the RE-WORDED block TRUE ABOUT MAIN, on the whole domain it governs -- not just on the cells that motivated the edit? T264's finding against the cloud was precisely that a correction measured one of two laws and affirmed the other was sound without testing it on the domain it had just written. Do not let the fix repeat the defect it fixes. Check also that no float entered any instrument, that G-8's substance is unchanged, and that the re-bucketing instrument actually RE-RUNS rather than restating a transcribed table.",
    "acceptance": "Verdict APPROVED / MICRO-FIX / REJECTED with specifics; the seven cells re-derived independently; the re-worded law tested on its FULL domain, not only the exception set; states what was checked so silence is distinguishable from not looking."
+  },
+  {
+   "id": "T279",
+   "title": "T265's four blocking findings on the lock fix: the rules DO NOT PARTITION, rule 2 asks the wrong question, the WRAPPER never implements the rule, and the load-bearing obligation is unenforced",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "agent_role": "coder",
+   "role": "coder",
+   "context": "tier0-harness",
+   "slice": null,
+   "dependencies": [],
+   "attempts": 0,
+   "contract_independent": true,
+   "files_hint": [
+    ".claude/skills/softhouse-program/SKILL.md",
+    ".softhouse/bin/fire-program.sh",
+    ".softhouse/capture/t279-lock-partition/"
+   ],
+   "description": "The driver wrote the STEP 0 lock fix and reviewed nothing. T265 reviewed it and found four blockers. F-4 is ALREADY FIXED (the driver repaired its own LOCK mid-fire: real hostname, real pid, rule 4 driven live). These four are not.\n\nF-1 (HIGH) -- RULES 1-4 DO NOT PARTITION THE STATE SPACE. The state {released_at null, started_at < 6h, tip > 6h} matches NO rule and therefore has NO VERDICT. T265 measured that this is the state of EVERY 08:00 FIRE: 5 of 5 mornings had the published tip 7.5-12h old at fire start. So the most common start condition in the program falls through the decision table. T265's fix is a 3-line default arm 'anything else -> HELD'. Implement it, and verify by ENUMERATION that the four rules plus the default now cover every combination -- do not eyeball it.\n\nF-2 (HIGH) -- RULE 2 ASKS WHETHER SOMEBODY PUSHED, NEVER WHETHER THE HOLDER DID. The rule as written is `git log -1 --format=%ct origin/main` with no author test. T265 grades it FAIL-CLOSED (safety is preserved; the orchestrator merely idles) and that grading is correct -- but the OLD rule's guaranteed EVENTUAL TAKEOVER is gone, because the freshness term is refreshed by third parties and FOUR IDENTITIES push to this main. T265 measured that 16 OF 21 REAL FIRE STARTS would read a stranded lock as HELD, costing a local fire up to 6h and the cloud fire a full day. Fix it: %an-match the holder, or add an absolute started_at ceiling above which a lock is taken regardless. Choose ONE, state why, and measure the chosen fix against the same 21-fire history.\n\nF-3 (MED, and it is the one that makes the others academic) -- THE WRAPPER'S DECISION WAS NEVER PATCHED. `.softhouse/bin/fire-program.sh:139-151` still decides staleness on `/usr/bin/stat -f %m LOCK` -- FILE MTIME. T265 measured it reading 12.6 MINUTES for a lock stamped 8 HOURS ago: 38x off. So the ORACLE-REACHING FIRE, the only fire that can capture, does not implement the rule STEP 0 calls authoritative, while the patch's commit message reads as though it does (14 insertions, 0 deletions -- a comment and two JSON fields). Make the wrapper decide by push recency, or make it defer to the driver; either way the two must not disagree.\n\nF-7 (HIGH, process) -- THE OBLIGATION IS DISCLOSED AS LOAD-BEARING BUT NOT AS UNENFORCED. 'Push lock, dispatch record and in-flight RESUME.md BEFORE spawning the first worker' is the thing the whole design leans on, and it is a convention. T265 searched 165 tasks, obligations.md and .git/hooks (stock samples, core.hooksPath unset) and found NO enforcement and NONE FILED. This program's most repeated lesson, recorded five separate times, is that A GUARD THAT ONLY WORKS WHEN SOMEBODY REMEMBERS TO RUN IT ENFORCES NOTHING. T265 also found the mechanism: `git worktree add` runs the `post-checkout` hook -- a hook fires at the EXACT INSTANT the obligation must hold. Build it.\n\nAND THE EVIDENCE THAT F-7 IS NOT THEORETICAL, which the driver is recording against itself: THIS FIRE HALF-MISSED THE OBLIGATION 1h10m AFTER WRITING IT. LOCK pushed 21:57:45 and RESUME.md 21:58:08, both correctly before the first worktree at 21:58:42 -- but tasks.json, the MACHINE-READABLE dispatch record, was pushed at 22:00:23, 101 SECONDS AFTER the first worker spawned. At fe24419 all six tasks still read pending / branch null, so for 101 seconds `ready-tasks.py` run against origin would have offered all six as READY -- which is precisely the duplicate-dispatch input P-85 exists to prevent. Your hook must make that specific window impossible, not merely discouraged.\n\nNon-blocking, record but do not let them expand scope: F-5 (`kill -0` gives EPERM on another uid's live pid and the wrapper reads that as 'dead', falsifying its absolute claim that it can never make a live lock look free; driven with pid 1, rc=0) and F-6 (`%ct` can regress on a fast-forward of a stale branch; 0 occurrences in 756 first-parent commits, held by the driver's habit of real merge commits rather than by any rule).",
+   "acceptance": "Partition proven by ENUMERATION over the state space, not by inspection; F-2 fix chosen with a stated reason and measured against the same 21-fire history T265 used; wrapper and SKILL.md provably decide the SAME way (demonstrate on a case where mtime and push-recency disagree); a post-checkout hook that makes the 101-second window impossible, installed and driven RED then GREEN; F-5/F-6 recorded, not fixed."
+  },
+  {
+   "id": "T280",
+   "title": "INDEPENDENT review of T279 — the driver reviewing the driver's fix to the driver's fix; break the partition proof",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "agent_role": "reviewer",
+   "role": "reviewer",
+   "context": "tier0-harness",
+   "slice": null,
+   "dependencies": [
+    "T279"
+   ],
+   "attempts": 0,
+   "contract_independent": true,
+   "files_hint": [
+    ".softhouse/reviews/t280-review-t279/"
+   ],
+   "description": "This is the third layer of the same fix: driver wrote STEP 0, T265 found four blockers, T279 fixed them. Assume T279 introduced a fifth. Attack the PARTITION PROOF first -- an enumeration is only as good as the state space it enumerates over, so check the space itself is complete before checking the coverage. Then drive the post-checkout hook RED yourself: spawn a worktree with an unpushed dispatch record and confirm it actually refuses, because a hook that exists and does not fire is exactly the failure class this program has recorded five times. Verify the wrapper and SKILL.md agree on a case where file mtime and push recency DISAGREE -- construct that case, do not assume it. Confirm F-5 and F-6 were recorded and NOT silently fixed (scope creep in a lock protocol is its own hazard).",
+   "acceptance": "Verdict APPROVED / MICRO-FIX / REJECTED with specifics; the state space itself audited for completeness before the enumeration is graded; hook driven RED first-hand; wrapper/SKILL.md agreement demonstrated on a constructed disagreement case."
   }
  ],
  "cross_corroboration": {
