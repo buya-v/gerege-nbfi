@@ -1,0 +1,7 @@
+go: go version go1.26.6 darwin/arm64
+conformance.sh EXIT = 2   (3 would mean wrong interpreter; not seen if not 3)
+
+=== STEP 1 (P-83): probe line PRESENCE, before any value is read ===
+  lines containing 'probe = ' : 0
+  ABSENT -- the harness did not report contacting the reference oracle.
+  REFUSING to read a value out of a line that is not there. (P-83)

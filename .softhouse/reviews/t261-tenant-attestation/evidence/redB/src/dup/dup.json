@@ -1,0 +1,1 @@
+[{"id":1,"name":"Head Office","nameDecorated":"Head Office","externalId":"1","openingDate":[2009,1,1],"hierarchy":"."},{"id":2,"name":"T261 probe","nameDecorated":"....T261 probe","openingDate":[2026,1,1],"hierarchy":".2.","parentId":1,"parentName":"Head Office"}]

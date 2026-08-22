@@ -1,0 +1,56 @@
+T261 RED-DRIVE B -- attacking the detector
+oracle: https://localhost:8443/fineract-provider/api/v1   curl: curl 8.7.1
+
+capturing base artefacts from the LIVE oracle ...
+derived /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa1570a5ac5acb88a/.softhouse/reviews/t261-tenant-attestation/evidence/redB/src/post/post.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.OFkHhW/trace (1 send-header block(s))
+post                                         HTTP 403
+derived /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa1570a5ac5acb88a/.softhouse/reviews/t261-tenant-attestation/evidence/redB/src/dup/dup.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.FkreFW/trace (1 send-header block(s))
+dup                                          HTTP 200
+derived /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa1570a5ac5acb88a/.softhouse/reviews/t261-tenant-attestation/evidence/redB/src/colon/colon.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.3EvcS4/trace (1 send-header block(s))
+colon                                        HTTP 200
+derived /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa1570a5ac5acb88a/.softhouse/reviews/t261-tenant-attestation/evidence/redB/src/kcoll/kcoll.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.KNqBQ8/trace (1 send-header block(s))
+kcoll                                        HTTP 200
+derived /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa1570a5ac5acb88a/.softhouse/reviews/t261-tenant-attestation/evidence/redB/src/empty/empty.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.ZgpPRt/trace (1 send-header block(s))
+empty                                        HTTP 200
+
+--- CALIBRATION: untouched positive control must VERIFY ---
+  positive control VERIFIED rc=0
+
+--- ATTACKS (expect rc=1 MISMATCH or rc=2 REFUSED; rc=0 is a GAP) ---
+  [DETECTED] A1 duplicated header: one copy removed from sidecar        rc=1 (expected 1)
+            ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa1570a5ac5acb88a/.softhouse/reviews/t261-tenant-attestation/evidence/redB/a1/dup.http
+              sidecar OMITS a line that was sent: 'Fineract-Platform-TenantId: default'
+  [MISSED  ] A2 body swapped (same length) + body-sha256 line deleted   rc=0 (expected 1)  <-- GAP
+  [DETECTED] A3 body truncated + all three body assertions deleted      rc=1 (expected 1)
+            ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa1570a5ac5acb88a/.softhouse/reviews/t261-tenant-attestation/evidence/redB/a3/post.http
+              Content-Length SENT (108) != committed body artefact (54 bytes)
+  [MISSED  ] A4 sidecar header lines REORDERED vs the wire              rc=0 (expected 1)  <-- GAP
+  [DETECTED] A5 wire header named 'body-bytes' tampered in sidecar      rc=1 (expected 1)
+            ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa1570a5ac5acb88a/.softhouse/reviews/t261-tenant-attestation/evidence/redB/a5/kcoll.http
+              sidecar OMITS a line that was sent: 'body-bytes: 999999'
+  [MISSED  ] A6 invented 'content-length-crosscheck' line appended      rc=0 (expected 1)  <-- GAP
+  [DETECTED] A7 colon-bearing header value tampered in sidecar          rc=1 (expected 1)
+            ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa1570a5ac5acb88a/.softhouse/reviews/t261-tenant-attestation/evidence/redB/a7/colon.http
+              sidecar OMITS a line that was sent: 'X-T261-Note: alpha: beta; gamma'
+              sidecar ASSERTS a line that was NOT sent: 'X-T261-Note: alpha: DELTA; gamma'
+  [DETECTED] A8 sidecar header name case-folded                         rc=1 (expected 1)
+            ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa1570a5ac5acb88a/.softhouse/reviews/t261-tenant-attestation/evidence/redB/a8/post.http
+              sidecar OMITS a line that was sent: 'Fineract-Platform-TenantId: default'
+              sidecar ASSERTS a line that was NOT sent: 'fineract-platform-tenantid: default'
+  [DETECTED] A9 record swapped for a DIFFERENT real request's record    rc=1 (expected 1)
+            ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa1570a5ac5acb88a/.softhouse/reviews/t261-tenant-attestation/evidence/redB/a9/post.http
+              header-record digest MISMATCH: sidecar claims aecab7453a9eb1f4ed7efe6435e2cb8d9e52ad2e3b815cb8f17db0b52c269920, file is 955c34f8d8e9d239aee80dc992a376cb089859b4ff7bca3ecc298e19af22c583
+              sidecar OMITS a line that was sent: 'GET /fineract-provider/api/v1/offices HTTP/1.1'
+              sidecar OMITS a line that was sent: 'Fineract-Platform-TenantId: gerege'
+              sidecar ASSERTS a line that was NOT sent: 'POST /fineract-provider/api/v1/offices HTTP/1.1'
+              sidecar ASSERTS a line that was NOT sent: 'Content-Length: 108'
+  [MISSED  ] A10 RESPONSE body swapped for another capture's response   rc=0 (expected 1)  <-- GAP
+  [DETECTED] A11 request-headers-sha256 line deleted from sidecar       rc=1 (expected 1)
+            ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-aa1570a5ac5acb88a/.softhouse/reviews/t261-tenant-attestation/evidence/redB/a11/post.http
+              sidecar declares no `request-headers-sha256:`
+
+empty-tenant capture -- what the sidecar says when the tenant header is REMOVED by curl:
+   tenant line in sidecar : Fineract-Platform-TenantId: default
+   status                 : 200
+
+SCORE: 7 detected / 4 missed of 11 attacks

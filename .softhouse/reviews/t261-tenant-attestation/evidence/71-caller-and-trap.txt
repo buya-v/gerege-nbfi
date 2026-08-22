@@ -1,0 +1,28 @@
+=== (1) who calls oracle_send / wire_attestation, in T250's committed tree? ===
+  files walked in tree d2b5772                                  : 5345
+  files mentioning oracle_send/wire_attestation                 : 12
+      .softhouse/capture/lib/oracle_send.sh                                    x11  T250's own
+      .softhouse/capture/t250-tenant-attestation/instruments/20-redA-sidecar-tracks-the-send.sh x3   T250's own
+      .softhouse/capture/t250-tenant-attestation/instruments/30-redB-mismatch-detected.sh x4   T250's own
+      .softhouse/capture/t250-tenant-attestation/instruments/40-redC-shapes-not-designed-around.sh x9   T250's own
+      .softhouse/capture/t250-tenant-attestation/transcripts/10-population-FINAL.txt x2   T250's own
+      .softhouse/capture/t250-tenant-attestation/transcripts/11-selector-check-FINAL.txt x2   T250's own
+      .softhouse/capture/t250-tenant-attestation/transcripts/12-tenant-term-FINAL.txt x4   T250's own
+      .softhouse/capture/t250-tenant-attestation/transcripts/20-redA.txt       x2   T250's own
+      .softhouse/capture/t250-tenant-attestation/transcripts/30-redB.txt       x1   T250's own
+      .softhouse/capture/t250-tenant-attestation/transcripts/40-redC.txt       x5   T250's own
+      .softhouse/capture/t250-tenant-attestation/transcripts/99-FINAL-REMEASURE-NOTE.md x3   T250's own
+      .softhouse/handoff/T250-tenant-attestation.md                            x10  T250's own
+
+  mentions OUTSIDE the library itself and T250's own artefacts  : 0
+
+=== (2) does sourcing oracle_send.sh destroy the caller's EXIT trap? ===
+  CONTROL (library NOT sourced):
+      BODY-FINISHED
+      CALLER-CLEANUP-RAN
+  control OK -- an unsourced caller's EXIT trap DOES fire here.
+
+  TREATMENT (library sourced, one oracle_send call):
+      BODY-FINISHED
+  VERDICT: the caller's EXIT trap was DESTROYED by the sourced library --
+  the two arms differ by exactly the `. oracle_send.sh` line.
