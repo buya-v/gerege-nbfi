@@ -9,18 +9,65 @@
 # Discrimination: \b anchors so that P-5 does not match P-50/P-51 and vice
 # versa. The negative control below proves that anchoring actually bites.
 #
-# NOTE ON set -e: git grep exits 1 on "no match", which is the EXPECTED result
-# for the very row this probe exists to establish. Every git grep here is
-# therefore wrapped in `{ ...; } || true` so that a true negative is reported
-# as 0 rather than killing the script and looking like a crash.
+# ---------------------------------------------------------------------------
+# REPAIRED BY THE DRIVER, local fire 20260822-140002, after this script tripped
+# conformance.sh's fail-open guard as a NEW TIER2 instrument (frontier 10 -> 11)
+# on the merge of T251 at 6694a34.
+#
+# THE DEFECT, and it is the one this program keeps re-finding: `git grep` exits
+# 1 on NO MATCH and >1 on ERROR. The original wrapped every search in
+# `|| echo "  (none under nexus/)"` and `|| true`, so a bad pathspec, a broken
+# PCRE, or running outside a repo printed the SAME reassuring negative as a
+# genuine no-match — a negative the probe DID NOT MEASURE. That is the exact
+# shape the guard exists to catch, and it appeared in a script written to
+# enforce P-66 ("state where you looked"). Repaired, NOT suppressed: the
+# `# lint-failopen: ok` escape hatch would have silenced the detector while
+# leaving the script able to lie.
+#
+# Now every search classifies its own exit status: 0 = matched, 1 = a REAL
+# measured negative, >1 = an error that ABORTS rather than printing an absence.
+# ---------------------------------------------------------------------------
 set -euo pipefail
 
-cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd) || {
+  echo "FATAL: cannot resolve repo root from ${BASH_SOURCE[0]}" >&2; exit 2; }
+cd "$ROOT" || { echo "FATAL: cannot cd to $ROOT" >&2; exit 2; }
 
 PKG=nexus/internal/apps/ledger
 
-count() {  # count(pattern, pathspec) -> number of word-anchored occurrences
-  { git grep -h -o -P "$1" -- "$2" 2>/dev/null || true; } | wc -l | tr -d ' '
+# search(pattern, pathspec, extra-git-grep-args...) -> prints matches, or the
+# words NO MATCH, and NEVER conflates the two with an error.
+search() {
+  local pat="$1" path="$2"; shift 2
+  local out rc
+  set +e
+  out=$(git grep "$@" -P "$pat" -- "$path" 2>&1)
+  rc=$?
+  set -e
+  case "$rc" in
+    0) printf '%s\n' "$out" ;;
+    1) echo "NO MATCH [MEASURED: git grep exited 1 = no match, not an error]" ;;
+    *) echo "FATAL: git grep exited $rc searching $path for $pat — this is an ERROR," >&2
+       echo "       NOT an absence. Refusing to report a negative this probe did not measure." >&2
+       printf '%s\n' "$out" >&2
+       exit 2 ;;
+  esac
+}
+
+# count(pattern, pathspec) -> number of word-anchored occurrences. An error
+# aborts; it must never be rendered as the count 0.
+count() {
+  local pat="$1" path="$2" out rc
+  set +e
+  out=$(git grep -h -o -P "$pat" -- "$path" 2>&1)
+  rc=$?
+  set -e
+  case "$rc" in
+    0) printf '%s\n' "$out" | wc -l | tr -d ' ' ;;
+    1) echo 0 ;;
+    *) echo "FATAL: git grep exited $rc counting $pat in $path — an error is not a zero." >&2
+       exit 2 ;;
+  esac
 }
 
 echo "COMMIT: $(git rev-parse HEAD)"
@@ -46,8 +93,8 @@ echo "  UNanchored  P-5      = $(count 'P-5'      "$PKG")"
 echo
 
 echo "WIDER POPULATION — is P-5 named anywhere under nexus/ at all?"
-{ git grep -n -P '\bP-5\b' -- nexus || echo "  (none under nexus/)"; }
+search '\bP-5\b' nexus -n
 echo
 
 echo "AND where IS P-5 defined? (so 'not found' is anchored to a real referent)"
-{ git grep -n -P '\bP-5\b' -- docs/adr/DEC-2-gl-accounting-adapter.md || true; } | head -8
+search '\bP-5\b' docs/adr/DEC-2-gl-accounting-adapter.md -n | head -8

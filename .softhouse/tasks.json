@@ -1612,7 +1612,7 @@
       "executor": "agent",
       "model": "sonnet",
       "target": "code",
-      "status": "in_progress",
+      "status": "done",
       "attempts": 0,
       "dependencies": [
         "A2-20"
@@ -1622,7 +1622,7 @@
       ],
       "description": "A2-20's measured residual, which it deliberately did not fix and argued for leaving: `mkdir .softhouse/vectors/ledger/` with NO file in it still gives exit 0, PASS 43, 5664, with 'ledger' appearing once in the whole report (the Go-tree census line). A2-20's reasoning is sound as far as it goes -- a directory with no vector makes no CLAIM and cannot inflate a NUMBER -- and this task must not overturn it without argument. But the store-shape question is separate from the vector-admission question, and it is the same family as the defect A2-14 established and the driver had to retract a claim over: an empty .softhouse/vectors/ledger/ was MEASURED to pass silently, exit 0 VERDICT PASS, with 'ledger' appearing once in the output. Close it in StoreFileCensus, which is where store SHAPE lives, not in Admit, which is where vector ADMISSIBILITY lives -- and say which of the two any new check belongs to. DRIVE RED on an empty unknown directory and GREEN on the pristine store (exit 0, 43 parity, 5664 cells, probe present and up). Do NOT weaken A2-20's admission refusal; re-run its regression test.",
       "acceptance": null,
-      "note": "dispatched local fire 20260822-140002 (second session), worktree-isolated",
+      "note": "DONE, merged 6694a34. Check placed in StoreFileCensus (store SHAPE), not Admit (vector ADMISSIBILITY) \u2014 layer argument holds: an empty dir produces zero LoadVector calls so nothing ever reaches Admit. Driver re-derived the summary wording \"refusing the run (filepath.SkipDir)\": the code appends to problems AND returns SkipDir, so the run IS refused. Top-level-only scoping verified via the preceding strings.Contains(rel,\"/\") guard. Unregistered future schema fails CLOSED. A2-20 not overturned. A2-23 correctly refused its own STALE BAR (43/5664) and graded against live 46/7884. Case-only variant not drivable live on case-insensitive APFS \u2014 recorded honestly, covered by Go test.",
       "branch": "softhouse/A2-23-empty-context-dir"
     },
     {
