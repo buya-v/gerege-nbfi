@@ -1,0 +1,65 @@
+# T164 — DECLARATION REGISTER for json.load/loads call sites that do not carry parse_float=.
+#
+# Read and ENFORCED by guard-parse-float-ast.py. This is not an allowlist.
+#
+# FORMAT (6 pipe-separated fields; `#` starts a comment; blank lines ignored):
+#
+#   file | line | category | pinned source text | detail | reason
+#
+# WHY A REGISTER EXISTS AT ALL
+# ----------------------------
+# T207 ruled that "add parse_float" is sometimes the WRONG repair. A script whose job is
+# to REPRODUCE a target that loads without parse_float must keep loading the same way, or
+# it stops reproducing and its published figure becomes a claim about a tool that does not
+# exist. And T114 rules that a script which produced COMMITTED EVIDENCE is not edited in
+# place at all. Both cases need a way to be DECLARED. Neither may become a silent skip.
+#
+# HOW IT IS KEPT HONEST — every one of these is checked on every run
+# ------------------------------------------------------------------
+#   DEFAULT-DENY   a site absent from this file with no parse_float is a FAIL. An
+#                  unrecognised category is a REFUSAL (exit 2), not a skip.
+#   ENUMERABLE     every record below is printed in full on every run, with its
+#                  precondition outcome. There is no quiet entry.
+#   PINNED         field 4 is the exact stripped source of the line. If the line moves or
+#                  changes, the record stops matching and the guard REFUSES.
+#   STALE = ERROR  a record naming a site that does not exist, or a site that NOW carries
+#                  parse_float, is a REFUSAL. Records cannot rot into noise.
+#   PRECONDITIONED
+#     FROZEN-T114        detail = produced:<committed evidence path>. Valid ONLY while
+#                        the evidence exists AND the file's sha256 still equals the digest
+#                        MANIFEST.sha256 pins for it. Edit the file and the exemption dies
+#                        with it — you are then editing, so you must add parse_float.
+#     REPRODUCTION-T207  detail = reproduces:<path>:<line>. Valid ONLY while that target
+#                        still has a json.load/loads at that line and STILL LACKS
+#                        parse_float. Fix the target and the exemption dies.
+#
+# MATERIALITY, MEASURED NOT ASSUMED (T164, HEAD a71c140)
+# -------------------------------------------------------
+# For each record below, the documents the site can actually load were parsed and their
+# JSON-float leaves counted. The number is stated in the reason. A non-material omission
+# is still declared here rather than ignored — "it does not matter today" is a measurement
+# with a date on it, not a property.
+#
+# ---------------------------------------------------------------------------------------
+# T114-FROZEN: prove-mkreq7-guard-red.py produced RED-GREEN-A2-7-guards.txt, whose stdout
+# is committed byte-for-byte (16 assertions). It is also the file that CARRIED the blind
+# guard T164 replaces; its float arm is superseded by guard-parse-float-ast.py, and the
+# file itself is left byte-identical so its transcript stays re-derivable.
+prove-mkreq7-guard-red.py | 70 | FROZEN-T114 | body = json.loads(first[victim]) | produced:RED-GREEN-A2-7-guards.txt | sandbox-only; reads mkreq7.py's own generated bodies inside tempfile.mkdtemp. MEASURED: 12 generated bodies, 0 JSON-float leaves, so the omission is non-material today.
+prove-mkreq7-guard-red.py | 119 | FROZEN-T114 | body = json.load(open(out_p)) if os.path.exists(out_p) else {} | produced:RED-GREEN-A2-7-guards.txt | sandbox-only; reads the resolver sandbox output {"clientId": 1, "productId": 46}. MEASURED: 0 JSON-float leaves; no float leaf is constructible from that document.
+prove-mkreq7-guard-red.py | 126 | FROZEN-T114 | body = json.load(open(out_p)) | produced:RED-GREEN-A2-7-guards.txt | sandbox-only; same document as line 119. MEASURED: 0 JSON-float leaves.
+#
+# ---------------------------------------------------------------------------------------
+# T114-FROZEN and ALREADY SUPERSEDED: resolve7.py wrote the committed request body
+# req/a2-7-loan-220-resolved.json. SUPERSEDED.txt redirects resolve7.py -> resolve8.py,
+# and census-json-float-siblings.py enforces that the replacement is itself clean.
+# resolve8.py:101,265 both carry parse_float. This is A2-11's original P-25 finding; the
+# omission here IS material, which is exactly why the file was frozen and replaced rather
+# than patched.
+resolve7.py | 24 | FROZEN-T114 | body = json.load(open(tmpl)) | produced:req/a2-7-loan-220-resolved.json | MATERIAL: 117 req/*.json templates carry 11 JSON-float leaves (e.g. /debits/0/amount 100000.25). Frozen under T114; fixed in resolve8.py, redirected in SUPERSEDED.txt.
+resolve7.py | 25 | FROZEN-T114 | resp = json.load(open(observed)) | produced:req/a2-7-loan-220-resolved.json | MATERIAL: the 5 out/A2-21*.json observation files carry 12 JSON-float leaves (e.g. /principal 1200000.0). Frozen under T114; fixed in resolve8.py, redirected in SUPERSEDED.txt.
+#
+# ---------------------------------------------------------------------------------------
+# T114-FROZEN: verify-provenance-a2-15.py produced PROVENANCE-A2-15.txt. It also cannot be
+# run from this checkout at all — its ROOT is hard-coded to a retired worktree path.
+verify-provenance-a2-15.py | 24 | FROZEN-T114 | v = json.load(open(p)) | produced:PROVENANCE-A2-15.txt | reads .softhouse/vectors/ledger/*.json. MEASURED: 6 vectors, 0 JSON-float leaves — every promoted money cell is a STRING (amount_major_text, amount_minor), so no money value passes through a binary double here.
