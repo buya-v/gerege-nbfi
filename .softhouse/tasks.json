@@ -1343,10 +1343,11 @@
     "T199",
     "T197"
    ],
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
-   "note": "DISPATCHED fire 20260822-080001, worktree-isolated, model opus.",
-   "branch": "softhouse/T201-repo-root-bypass"
+   "note": "DONE + MERGED 54b15bb, fire 20260822-080001. Scope clean on the THREE-DOT diff (conformance.sh + own handoff only; the two-dot diff showed phantom reverts of the driver's own newer commits -- a fork-point artefact, not the worker's edit). DECISION: REFUSE OUTRIGHT, exit 2, before any other guard -- and the decisive fact is one T199 did not have: build_binary compiles from $NEXUS_DIR with no -trimpath, so the anchor IS $REPO_ROOT on every run this script performs, and the override can therefore only ever point grading AWAY from the guarded tree. Refusing forfeits NO capability. Accept-and-report-with-nonzero was rejected on the task's own stated test: an exit-code-only automation would read '43 vectors compared and something was wrong', which is false in BOTH halves. DRIVER-VERIFIED INDEPENDENTLY, not taken on report: CONFORMANCE_REPO_ROOT=/tmp now gives EXIT 2, ZERO probe lines and ZERO parity lines, naming both roots -- so it is unmisreadable as an oracle outage under the standing rule (absence of the probe line, not 'down'). (B) POLARITY ESTABLISHED BEFORE THE FIX, as instructed: greedy .* takes the LAST 'inspected N', and the fail-OPEN direction is real -- a guard that opened 7 of 320 files clears a floor of 320. The fail-CLOSED direction needs NO code change to fire, because the census line interpolates an absolute path and a checkout containing the token 'inspected 0' suffices. Fixed first-wins; live figures 320/57/44 unchanged. DRIVER-RE-RUN ON MERGED main: --prove 23 passed 0 failed (was 21); conformance exit 0, probe PRESENT reading up, 43 parity vectors / 5664 cells, 0 invariant violations; contract.go sha256 == PIN 0db73d4af996...e37f139. WORTH KEEPING: its neutered-guard mutant STILL exited 2 (empty stand-in root => no vectors), so an exit-code-only proof would have passed over a fully disabled guard -- caught only because the proof also demands the refusal NAME the divergence. Follow-ups registered by the worker: FU-T201-1 (-repo-root still outranks the anchor for any OTHER caller of the binary, latent), FU-T201-2 (census_inspected keeps only the first CENSUS line; a guard printing two has its second figure unchecked), FU-T201-3 (T194's residual stands -- a stub printing two '-> exit' lines, one per polarity, still passes the selftest gate).",
+   "branch": "softhouse/T201-repo-root-bypass",
+   "merged": "54b15bb"
   },
   {
    "id": "T202",
