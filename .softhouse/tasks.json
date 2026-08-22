@@ -823,7 +823,7 @@
    "executor": "agent",
    "model": "opus",
    "target": "docs",
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
    "dependencies": [
     "T178"
@@ -833,8 +833,9 @@
     ".softhouse/handoff/"
    ],
    "description": "INDEPENDENT review of T178. Re-derive; do not accept the author's conclusions. Read the upstream handoff from the BRANCH (git show <branch>:.softhouse/handoff/<run_id>/T178.md) and the diff with git diff main...<branch> (THREE DOTS, P-41). Drive the author's guard/probe yourself: a guard that was never driven RED is not shipped (P-22), a prover must be falsifiable toward the FIX as well as the defect (P-50), and a check that inspects zero items is an ERROR not a pass (P-35). Verdict APPROVED / MICRO-FIX (<=10 lines, mechanical, never a number) / REJECTED with specifics. If you find nothing, state what you checked so silence is distinguishable from not looking.",
-   "note": "DISPATCHED fire 20260822-080001, worktree-isolated, model opus.",
-   "branch": "softhouse/T181-review-t178"
+   "note": "MERGED, fire 20260822-080001. VERDICT MICRO-FIX (6 lines, exit 3 on an empty scan, no number moved). P-59 HIT IT EXACTLY AS BRIEFED AND IT HANDLED IT: three-dot returned 0 BYTES and read as clean, because for a merged branch `git merge-base main <branch>` IS the branch tip; it used the merge commit's parents (`git diff 72ca175^1...72ca175^2`) -> 181,003 bytes, 20 files, +2822/-96, and read the handoff from the branch. F-1 MAJOR, BY A THIRD INDEPENDENT METHOD: T178's published split 21 DEC-1 / 4 contract.go is WRONG; truth is 25 files / 20 DEC-1 / 7 contract.go / 2 both / 27 pairs -- matching the T187+T183 blind convergence EXACTLY, reached by reading the target from the guard constant that is the actual argument to the write path. THE TOTAL (25) IS CORRECT AND ONLY THE SPLIT IS WRONG, so NO FILE WENT UNHARDENED: a reporting defect, not a coverage defect. Two causes: (a) the prose CONTRADICTS T178's OWN COMMITTED TRANSCRIPT, which labels edit22.py as contract.go and sums to 20/5 -- T181 replayed T178's classifier on its own pinned fork point and got 20/5, never 21/4; (b) the classifier is single-valued with an ADR FALLBACK, so edit18.py/edit21.py, which genuinely patch BOTH artefacts, record as DEC-1 only. BOTH ERRORS UNDERSTATE contract.go, the higher-severity target. F-2 MAJOR, MICRO-FIXED: t178-guard-census.py globbed t47_edit_*.py only and EXITED 0 WHEN IT MATCHED NOTHING -- pointed at the unhardened t41 family (25 rewriters, 2 of them LIVE) it printed 'files measured 0' and exited 0. A P-35 violation inside the census machinery itself. Driven all three ways. F-4 IS WORTH MORE THAN ITS GRADE: T181's OWN first idiom detector scored 0/25 'guarded' via a line-break-brittle substring match -- T183's D-3 REPRODUCED ACCIDENTALLY IN THE REVIEWER'S OWN TOOL. Only driving the behaviour caught it; redone on the AST -> 25/25. VERIFIED SOUND: 89 cases / 8 scripts / 0 not-as-expected, driven from the guard's CONTRACT rather than T178's prover; GREEN reproduces AFTER_SHA256 exactly 8/8; all 8 BEFORE_SHA256 confirmed against 85 indexed historical versions; live bypass reproduced independently (t47_edit_4.py, no argv -> exit 0, 49dc8923 -> cabc2aeb, O_TRUNC 435,973 bytes -> 0); guard fails CLOSED. ATTRIBUTION SETTLED, neither task credited with the other's work: T178 closed the 8 t47 rewriters INCLUDING the live one, and FOUND BUT DID NOT CLOSE t41 edit2.py/edit10.py -- T187 closed those. USEFUL AND EASILY MISSED: `ls .softhouse/vectors/*.json` counts only 2 -- the store is NESTED and only `find` gives 50. COULD NOT CLOSE: six non-blob AFTER_SHA256 values; EXHAUSTIVENESS of the population (it relied on T183's whole-repo sweep rather than re-running it).",
+   "branch": "softhouse/T181-review-t178",
+   "merged": "6c78a62"
   },
   {
    "id": "T182",
@@ -1417,7 +1418,7 @@
    "executor": "agent",
    "model": "opus",
    "target": "docs",
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
    "dependencies": [
     "A2-16",
@@ -1428,9 +1429,84 @@
    ],
    "description": "DEC-2 rev 2 carries: 'A further independent review must pass clean before the driver may ratify.' A2-17 WAS a review and returned MICRO-FIX, applying its own 7-line fix — so the document AS IT NOW STANDS has been reviewed by nobody. This is that review. Its verdict is what the driver acts on for ratification. Also adjudicate A2-17's sequencing recommendation (decide P-6/P-7 — the capabilities.json and PIN.json schema ids — BEFORE P-1..P-5).",
    "acceptance": null,
-   "note": "DISPATCHED fire 20260822-080001, worktree-isolated, model opus.",
+   "note": "MERGED, fire 20260822-080001. VERDICT REJECTED on DEC-2 rev 2. IT APPLIED NO MICRO-FIX, DELIBERATELY, so the document the driver holds is exactly what it reviewed -- no 'now unreviewed' caveat, which is the trap A2-17 walked into. P-59 CONFIRMED LIVE: `git diff main...` returned ZERO lines for BOTH already-merged upstream branches; it asserted non-emptiness first and switched to `git show`. F1 IS REJECTION-GRADE AND THE DRIVER REPRODUCED IT INDEPENDENTLY, from scratch, with its own probe vector: copy ANY loanschedule parity vector into .softhouse/vectors/ledger/, change ONLY case_id and context, and the harness reports 'VERDICT: PASS (exit 0) -- 44 parity vectors match the pinned reference oracle, 5711 cells compared', with the fake case listed as class=parity seam=path_a_embeddable PASS 47 cells. A2-19's numbers (44 / 5711) match the driver's EXACTLY. THE HEADLINE NUMBER THIS PROGRAM'S ENTIRE PARITY CLAIM RESTS ON IS INFLATABLE BY A FILE COPY AND TWO STRING EDITS -- and the inflated vector sits in ledger/ while grading a LOANSCHEDULE schedule, so it reads as GL coverage that does not exist. Cause is ONE line: `context` is constrained only to be non-empty and equal to its directory name (admit.go:115, :119-120). NO ALLOWLIST EXISTS. THE DOCUMENT'S ERROR: banner fact 2, section 8.1 fact 2 and A2-17's new section 4.10 text all assert 'No ledger vector CAN exist'. Section 5.1's own HEADING makes the TRUE and weaker claim -- not EXPRESSIBLE. Admission-impossibility is strictly stronger and it is FALSE. It rests on PC-3, A FALSE NEGATIVE: that control failed on two AUTHOR-CORRECTABLE defects (a non-contract sentinel; oracle.seam != none), not a structural wall -- P-50, the prover was never made falsifiable toward the FIX. A2-16 read a failing control as a wall; A2-17 re-derived the ARGUMENT but never re-ran the CORRECTED CONTROL. WHAT IT CONFIRMED, so silence is distinguishable from not looking: A2-17's micro-fix is CORRECT on its central purpose and its load-bearing claim re-measured (a true row ahead of its vector is exit 2 UNUSABLE, unfiltered AND under -context=loanschedule); section 5.4's retraction reproduced exactly; banner + 8.1 + 8.3 DO defuse the I-3/I-4 misreading. [VERIFIED] HIT RATE 62/64 = 96.9% on a FRESH sample across sections 2.1-9: all 47 Fineract citations HIT at the exact line; one DRIFT (conformance.sh:843-849, accurate at T191, shifted +95 by T194) and one WRONG (section 2.2 B-4 says 'three columns', it is two) -- both in-repo, neither a money claim. P-8 INDEPENDENCE CONFIRMED TRUE (source guard over the Go tree, consumes no vector or schema; target = 18 .go files, independently matching section 4.4.1's own '18') -- SO A2-18 IS CORRECTLY FOUNDED. ADJUDICATION OF A2-17's SEQUENCING RECOMMENDATION -- SPLIT: P-6 (capabilities.json) YES, a real ordering inversion, because section 5.4 step 2 cannot be obeyed without it (you cannot author even a `false` row without knowing which file it lives in); P-7 (PIN.json) NO -- its premise 'a second context implies a second pinned contract file' is CONTRADICTED BY section 1.1, since DEC-2 freezes no Go file and carries no PIN digest; re-scope P-7 to the dec1_revision question and move it AFTER P-1. A2-15 STAYS BLOCKED, and now for a SECOND independent reason: with F1 live, a promotion task pointed at ledger/ today would produce a green PASS 44 over a corpus grading nothing about the ledger.",
    "contract_independent": true,
-   "branch": "softhouse/A2-19-review-dec2-rev2-second"
+   "branch": "softhouse/A2-19-review-dec2-rev2-second",
+   "merged": "0eb2f1e"
+  },
+  {
+   "id": "A2-20",
+   "title": "THE PARITY COUNT IS INFLATABLE BY A FILE COPY — `context` has no allowlist, so a loanschedule vector in ledger/ grades PASS 44",
+   "role": "coder",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [],
+   "files_hint": [
+    "nexus/internal/apps/loanschedule/conformance/"
+   ],
+   "description": "A2-19's F1, REPRODUCED INDEPENDENTLY BY THE DRIVER with its own probe vector before this task was written (P-42). Copy ANY loanschedule parity vector into .softhouse/vectors/ledger/, change ONLY case_id and context, and the harness reports 'VERDICT: PASS (exit 0) -- 44 parity vectors match the pinned reference oracle, 5711 cells compared' with the fake case listed class=parity seam=path_a_embeddable. A2-19's numbers and the driver's agree EXACTLY: 44 / 5711. This is the number every parity claim in this program rests on, and it is inflatable by `cp` plus two string edits -- and worse, the inflated vector sits in a ledger/ directory while grading a LOANSCHEDULE schedule, so it reads as GL coverage that does not exist. CAUSE, one line: `context` is constrained only to be non-empty and to equal its own directory name (admit.go:115, :119-120); NO ALLOWLIST EXISTS. Fix it so a context the harness has no comparator for cannot be admitted as parity. DRIVE RED with the driver's exact probe (copy P-00 into ledger/, rename case_id and context) and GREEN on the pristine store at 43/5664. THE 43 MUST STILL PASS, same cell count. Consider, and argue, whether the right refusal is at admission (unknown context) or at classification (a parity class whose comparator does not exist) -- they differ in what they say to whoever builds the ledger schema next.",
+   "acceptance": null,
+   "note": null
+  },
+  {
+   "id": "A2-21",
+   "title": "DEC-2 revision 3 — retract the three false 'no ledger vector CAN exist' assertions, and make §5.2's spec more than non-regression",
+   "role": "analyst",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [
+    "A2-20"
+   ],
+   "files_hint": [
+    "docs/adr/"
+   ],
+   "description": "A2-19's F1 and F2. (1) Banner fact 2, section 8.1 fact 2, and A2-17's section 4.10 text all assert 'No ledger vector CAN exist'. That is FALSE and driver-confirmed false. Section 5.1's own HEADING carries the TRUE, weaker claim -- no ledger vector is EXPRESSIBLE. Admission-impossibility is strictly stronger. It rested on PC-3, a FALSE NEGATIVE that failed on two author-correctable defects (a non-contract sentinel; oracle.seam != none), not a structural wall -- P-50, the prover was never made falsifiable toward the fix. Retract and restate at all three sites. (2) F2: section 5.2's five requirements -- the specification A2-15 is graded against -- are PURE NON-REGRESSION and are satisfiable by an extension that does NOTHING. Add a positive control and a required RED demonstration. (3) Apply A2-19's adjudication: P-6 (capabilities.json) moves BEFORE P-1..P-5 because section 5.4 step 2 cannot be obeyed without it; P-7 (PIN.json) does NOT, because its premise is contradicted by section 1.1 -- re-scope P-7 to the dec1_revision question and place it after P-1. (4) Fix the one WRONG citation A2-19 found: section 2.2 B-4 says 'three columns', it is two.",
+   "acceptance": null,
+   "note": null,
+   "contract_independent": true
+  },
+  {
+   "id": "A2-22",
+   "title": "CounterfactualCoverage counts kills from REFUSED vectors — a refused vector silences UNBACKED",
+   "role": "coder",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [],
+   "files_hint": [
+    "nexus/internal/apps/loanschedule/conformance/"
+   ],
+   "description": "A2-19's F3, raised not made. A REFUSED vector's kills are counted into CounterfactualCoverage: A2-19 measured UNBACKED going 1 -> 0 and kills 103 -> 104 on a store where the contributing vector was refused. A refusal is explicitly 'not a pass, not a failure', so it must not be able to BACK a capability. A2-19 could not close the blast radius across all classes and notes the live baseline shows 'refused 0', so the exposure is likely nil TODAY -- establish that first and say it, then fix. DRIVE RED and GREEN; the 43 must still pass at 5664 cells.",
+   "acceptance": null,
+   "note": null
+  },
+  {
+   "id": "T204",
+   "title": "T178's published 21/4 split is wrong in a committed artefact — correct it to 20/7/2 where the next fire will read it",
+   "role": "coder",
+   "executor": "agent",
+   "model": "sonnet",
+   "target": "docs",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [
+    "T181"
+   ],
+   "files_hint": [
+    ".softhouse/handoff/"
+   ],
+   "description": "T181's F-1. T178's prose publishes the unguarded-rewriter split as 21 DEC-1 / 4 contract.go. The truth -- settled by the T187/T183 BLIND convergence and reached a THIRD time by T181 via a different method (reading the target from the guard constant that is the actual argument to the write path) -- is 25 files / 20 DEC-1 / 7 contract.go / 2 both / 27 pairs. The TOTAL of 25 is correct and only the SPLIT is wrong, so no file went unhardened: this is a reporting defect, not a coverage defect, and the correction must say so rather than reading as a coverage scare. Note that BOTH of T178's errors UNDERSTATE contract.go, the higher-severity target, and that T178's prose contradicts ITS OWN COMMITTED TRANSCRIPT (which sums to 20/5). DO NOT re-litigate the population -- it is settled. Correct the number where a future fire will read it, cite the three converging derivations, and leave T178's transcript intact as evidence.",
+   "acceptance": null,
+   "note": null,
+   "contract_independent": true
   }
  ],
  "cross_corroboration": {
