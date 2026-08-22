@@ -27,19 +27,75 @@ Built by local fire `20260821-125942`.
 | **G-5** | ENGINEERING | **OPEN — HARD `user` GATE** | Buyan. Amends a **ratified** DEC-n. | `## G-5` |
 | **G-6** | PRODUCT | **CLOSED — ACCEPTED** | local fire `20260820-140000`, `chosen_by: agent`. Authorises **no cutover**. | `## G-6` |
 | **G-7** | — | **NEVER ALLOCATED** | — | The id was skipped. Nothing is missing; do not go looking for it. |
-| **G-8** | ENGINEERING | **OPEN** | Not yet asking for a decision. Options (b) and (c) would narrow the graded domain → hard `user` gate; (a) may not. | `## G-8 — TWO phenomena at the rounding floor…`. `## G-8-NOTICE` is SUPERSEDED history. |
+| **G-8** | ENGINEERING | **OPEN — REGION NOW MEASURED IN ITS OWN VARIABLES (`T223`). "600 % only" IS DEAD: family B OBSERVED at 36.0 % p.a.** | Not yet asking for a decision — **and options (b)/(c) MUST NOT be put to Buyan until `T229` characterises site 3**, because a region whose boundary is set by an uncharacterised rescue mechanism cannot be refused correctly. | `## G-8 — TWO phenomena at the rounding floor…` (rebuilt by `T223`). `## G-8-NOTICE` is SUPERSEDED history. |
 | **G-9** | PRODUCT | **CLOSED — DECIDED** | local fire `20260821-054355`, `chosen_by: agent`. Carries a `driver_error_correction`: the decision stands, the driver's stated *consequence* was false. | `## G-9 — CLOSED` |
 | **G-10** | ENGINEERING | **OPEN — driver recommends (c), Buyan may overrule** | Blocks nothing today. | `## G-10 — REFINED…` |
-| **G-11** | CONTRACT | **OPEN — NOT RATIFIABLE** | The driver, once DEC-2 rev 3 passes a review clean. `chosen_by: agent` is permitted here (CLAUDE.md makes DEC-n ratification agent-decidable); what is NOT permitted is ratifying rev 2. | `## G-11 — DEC-2 rev 2 REJECTED` |
+| **G-11** | CONTRACT | **OPEN — NOT RATIFIABLE. rev 4 REJECTED by `A2-31`, local fire `20260822-000013`. FOUR revisions, FOUR rejections.** | The driver, once a DEC-2 revision passes an independent review **clean**. `chosen_by: agent` is permitted here; ratifying an un-clean revision is not. **Rev 5 is `A2-32`.** | `## G-11 — rev 4 REJECTED (A2-31)` |
 | **G-12** | ENGINEERING | **OPEN — MEASURED by `A2-29`; analyst recommends (a)+(b′), driver decides.** The stored balance is a **SECOND SOURCE OF TRUTH**, not a cache — made to disagree with the derived sum by **MNT 2,000,000.00** on the live oracle, surviving 4 recomputes, served through 2 REST endpoints flagged `computed: true`. | The driver, for (a). Option (c) would narrow the graded domain and stays a hard `user` gate. Blocks nothing today. | `## G-12 — MEASURED (A2-29)` — the LIVE block. `## G-12 — Fineract STORES a running balance on the entry` is the RAISING record only. |
 
-**Open right now: G-4, G-5, G-8, G-10, G-11, G-12.** Of those, **G-4 and G-5 are hard `user` gates** (each amends a
+**Open right now: G-4, G-5, G-8, G-10, G-11, G-12.** *(Register refreshed by local fire `20260822-000013`.)* Of those, **G-4 and G-5 are hard `user` gates** (each amends a
 ratified DEC-n); **G-8, G-10 and G-12 block no work today**. The driver has recorded a recommendation on **G-8 and G-10**.
 **G-12's measurement is now DONE** (`A2-29`, local fire `20260822-000013`) and it answered the question the
 driver deliberately refused to pre-judge: the stored balance is a **second source of truth, not a cache**.
 `A2-29` recommends; the driver decides. The recommendation is in `## G-12 — MEASURED (A2-29)` below.
 
 ## Open
+
+## G-11 — rev 4 REJECTED (`A2-31`), local fire `20260822-000013` — **THE LIVE BLOCK**
+
+- **id**: G-11 · **class**: CONTRACT · **state**: **OPEN — NOT RATIFIABLE**
+- **context**: `tierA-gl-accounting` / slice `tierA-gl-accounting-A2`
+- **unblocking condition, verbatim and unchanged**: *a further independent review passing CLEAN*. **NOT MET.**
+
+**Four revisions, four rejections.** rev 1 (`A2-14`, three shape findings) · rev 2 (`A2-17` returned MICRO-FIX
+and applied its **own** fix, leaving that text reviewed by nobody; `A2-19` then REJECTED) · rev 3 (`A2-25`,
+four claims false about `main`) · **rev 4 (`A2-31`, two claims false about `main`)**.
+
+### What `A2-31` rejected on — neither is MICRO-FIX-eligible
+
+**F-1 — a `[VERIFIED]` claim that was FALSE AT ITS OWN STAMP.** `DEC-2:953-957` says, stamped
+`[VERIFIED by A2-28 at commit 2e97162]`, that the guard's head **drops** the CANNOT-CATCH block on the pass
+path. It does not — `A2-31`'s green run prints **all eight** limits. `T209` (`03e9094`, 09:18) closed
+`FU-T208-1` and **is an ancestor of** `2e97162` (10:34). So this is **not staleness**: it is `A2-25`'s F-4
+shape — *a caveat outliving its defect* — recurring **one revision later under a fresh stamp**.
+
+**F-2 — "three of its SEVEN detection classes inspected an empty population" is FOUR, measured.**
+`I4-BUILDER`'s population under `nexus/` is **zero**, and — unlike the other empty classes — **its emptiness
+is not announced**. Driven both polarities: `A2-31`'s probe returns 3 on a `/tmp` tree with three builder
+verbs planted and the real `ledgerguard` **refuses** that tree `[I4-BUILDER]`; both return 0 on the real
+tree. The ratio appears at **five** sites, the `I4-BUILDER` caveat travels to **one**, and §10 item 2 says
+*"The denominator is dropped"* when it is present at **all five** — a change log false about its own
+artefact, which is exactly what made `A2-25`'s F-1 rejection-grade. `A2-25` predicted this in its open item 4
+and declined to measure it; **the measurement costs one `go run`.**
+
+### What `A2-31` DISCHARGED — do not re-open these
+
+- **Requirement 6 is FIXED, and `A2-31` RAN it rather than reasoning about it.** 6a's BEFORE produces exactly
+  what it demands (`decode: json: unknown field "product_id"`, `inadmissible 0`, population intact at
+  46/4/1/7884); **6b emits both mandated refusals together**, `inadmissible 1`, parity unmoved.
+  **`A2-25`'s hardest finding is discharged.** `A2-31` claims nothing about 6a's AFTER, which needs machinery
+  that does not exist.
+- Baseline reproduces exactly; store and capture censuses exact at their stamps; **seven** guards; only two of
+  three NIL-COVERAGE arms fire (`A2-28` correct); **all 30** Fineract citations resolve **by content** at
+  `426a23544`; `A2-25`'s F-1/F-4/F-8/F-9 properly discharged; **no undisclosed new authorship** — unlike
+  `A2-17`, `A2-31` applied no fix of its own.
+
+### Three survivors OUTSIDE the ADR, none chargeable to `A2-28` — all driver-verified
+
+1. **`.softhouse/guards/ledgerguard/main.go` LINE 1** carries the retracted *"records as NOT EXISTING"*
+   claim — a **third file**, on line 1 of the guard that refutes it, **and `T224`'s sweep this same fire did
+   not name it**. → **`T227`**, whose real subject is *why a broad sweep missed a verbatim hit*.
+2. **`conformance.sh:1180`** prints the **closed** `FU-T208-1` on every run. → **`T227`**.
+3. **`program.json:1596`** still read *"3 of 4"* — **the driver's own file, and where BOTH corrections failed
+   to land**: P-67 fixed the denominator last fire and never reached this entry, and `A2-31` has now fixed the
+   numerator. **Corrected by the driver this fire.**
+
+### What unblocks it
+
+**`A2-32`** — DEC-2 **revision 5**, fixing exactly F-1 and F-2 **and sweeping for the CLAIM, not the
+sentence, across the whole repo** — then a further independent review passing clean. Rev 5 must author
+**nothing else**: new authorship beyond `A2-31`'s items is itself rejection-grade, which is how rev 2 died.
+
 
 ### G-1 · CONTRACT · ratify DEC-1 — **NOT YET ANSWERABLE**
 
