@@ -736,8 +736,23 @@
    "blocks": "NOTHING. No task is parked on this; the program continues past it.",
    "driver_recommendation": "ratify revision 6 once independently reviewed, chosen_by: agent, exactly as revision 5 was handled. Buyan may reverse.",
    "recorded_in": ".softhouse/gates.md",
-   "state": "OPEN — RAISED; DEC-2 revision 6 PREPARED by T244 (local fire 20260822-060013), NOT LANDED. Block PLACED in gates.md by the driver this fire, verbatim from T244 handoff §3, plus a register row and the Open-right-now line. THE REGISTER HAD BEEN DESYNCED: G-13 was asserted RAISED in program.json, RESUME.md and DRIVER.STATE.json while gates.md contained the string zero times (driver-verified, G-12 returning 7 as a positive control on the same instrument). Reconciled.",
-   "unblocked_by": "T246 — independent review of revision 6, re-deriving the reversal count against the live oracle. Then the driver ratifies chosen_by: agent, as it did revision 5. Buyan may reverse."
+   "state": "CLOSED — RATIFIED. DEC-2 revision 6 LANDED, local fire 20260822-060013. Prepared by T244, independently reviewed by T246 (ACCEPT, conditional on F-2 and F-3, both applied before landing), ratified by the driver chosen_by: agent per CLAUDE.md Answering gates. Buyan may reverse. Evidential reason only: 8 reversed originals + 8 reversing legs = 16 rows, 3 pairs, 6 transaction ids, re-derived by BOTH T244 (477dc2d) and T246 (f13bf4a). NO OBLIGATION MOVED. PIN-ledger.json correctly stays at 5.",
+   "unblocked_by": "T246 — independent review of revision 6, re-deriving the reversal count against the live oracle. Then the driver ratifies chosen_by: agent, as it did revision 5. Buyan may reverse.",
+   "closed_by": "local fire 20260822-060013 (/softhouse-program driver)",
+   "chosen_by": "agent"
+  },
+  {
+   "id": "G-14",
+   "class": "CONTRACT",
+   "task": "T246",
+   "context": "tierA-gl-accounting",
+   "title": "DEC-2's OPENING BANNER is FALSE, and it names the instrument that refutes it",
+   "state": "OPEN — RAISED by T246 (F-1, HIGH), local fire 20260822-060013",
+   "why": "DEC-2 opens with 'NOTHING GRADES THIS CONTEXT'S MONEY. NOTHING GRADES THIS CONTEXT AT ALL', under an instruction to read it before any other sentence. FALSE: the harness grades LEDGER 4 parity / 2 oracle-refusal / 21 money cells on every run. The banner's fact 1 cites `ls .softhouse/vectors/` as its own evidence, and re-running that exact command lists ledger/ holding six LDG-* files. THE BANNER NAMES THE INSTRUMENT THAT REFUTES IT. Seven sites (L3, L7, L10, L815, L819, L825, L2437) plus a third live falsehood at L87. Cause is P-69 at maximum blast radius: revision 5 was written 2h13m before A2-15 promoted the ledger vectors and DEC-2 has not been touched since.",
+   "asking_for": "A DEC-2 revision 7 correcting the banner, PREPARED and INDEPENDENTLY REVIEWED first, then driver ratification — the route G-13 took.",
+   "blocks": "NOTHING. But it is the first thing every reader of DEC-2 is instructed to read.",
+   "raised_by": "local fire 20260822-060013 (driver, on T246's F-1, after independently re-running the banner's own cited instrument)",
+   "recorded_in": ".softhouse/gates.md"
   }
  ],
  "history": [

@@ -32,9 +32,10 @@ Built by local fire `20260821-125942`.
 | **G-10** | ENGINEERING | **OPEN — driver recommends (c), Buyan may overrule** | Blocks nothing today. | `## G-10 — REFINED…` |
 | **G-11** | CONTRACT | **CLOSED — RATIFIED. DEC-2 revision 5 (`A2-32`) passed `A2-33`'s independent review CLEAN, local fire `20260822-140002`. Five revisions, four rejections, one ratification.** `chosen_by: agent` (driver), per CLAUDE.md § Answering gates. **Buyan may reverse it.** | Nothing — the gate is closed. **A ratified DEC-n may not be amended by an agent**; any change to DEC-2 from here is a fresh `user` gate. | `## G-11 — RATIFIED (rev 5, A2-33)` |
 | **G-12** | ENGINEERING | **OPEN — MEASURED by `A2-29`; analyst recommends (a)+(b′), driver decides.** The stored balance is a **SECOND SOURCE OF TRUTH**, not a cache — made to disagree with the derived sum by **MNT 2,000,000.00** on the live oracle, surviving 4 recomputes, served through 2 REST endpoints flagged `computed: true`. | The driver, for (a). Option (c) would narrow the graded domain and stays a hard `user` gate. Blocks nothing today. | `## G-12 — MEASURED (A2-29)` — the LIVE block. `## G-12 — Fineract STORES a running balance on the entry` is the RAISING record only. |
-| **G-13** | CONTRACT | **OPEN — RAISED; revision 6 PREPARED by `T244`, NOT LANDED.** DEC-2 §4.4's *evidential reason* for leaving `I-5` ungraded ("The A2 corpus contains no reversal") is **FALSE** — driver- and `T244`-measured on the live oracle: **8 reversed originals + 8 reversing legs = 16 rows, 3 pairs, 6 transaction ids**. **A SECOND SITE** (§9 item 13, lines 2568-2569) restates it in different words. **Nothing DEC-2 OBLIGES changes.** | An **independent review** of revision 6 re-deriving the count against the live oracle, then the driver ratifies `chosen_by: agent` as it did revision 5. **Blocks nothing today.** ⚠ **Whoever lands it must NOT bump `PIN-ledger.json`** (`admit.go:49-52`). | `## G-13 — DEC-2 §4.4's EVIDENTIAL REASON…` |
+| **G-13** | CONTRACT | **CLOSED — RATIFIED. DEC-2 revision 6 landed, local fire `20260822-060013`.** Prepared by `T244`, independently reviewed by `T246` (**ACCEPT**, conditional on F-2 and F-3, both applied before landing), ratified by the driver `chosen_by: agent` per CLAUDE.md § Answering gates. **Buyan may reverse it.** The evidential reason only: **8 reversed originals + 8 reversing legs = 16 rows, 3 pairs, 6 transaction ids**, re-derived by BOTH `T244` (`477dc2d`) and `T246` (`f13bf4a`). **No obligation moved.** | Nothing — the gate is closed. `PIN-ledger.json` correctly **stays at 5**; revision 6 changes no obligation and bumping it would either make all six ledger vectors inadmissible or move the vector-store digest (P-61). | `## G-13 — CLOSED, RATIFIED (rev 6)` |
+| **G-14** | CONTRACT | **OPEN — RAISED by `T246` (F-1, HIGH), local fire `20260822-060013`.** DEC-2's **OPENING BANNER** — under an instruction to *read this before any other sentence* — asserts *"NOTHING GRADES THIS CONTEXT'S MONEY. NOTHING GRADES THIS CONTEXT AT ALL"*. **FALSE.** The harness grades **LEDGER 4 parity / 2 oracle-refusal / 21 money cells** on every run. **The banner NAMES THE INSTRUMENT THAT REFUTES IT** (fact 1 cites `ls .softhouse/vectors/`, which now lists `ledger/` holding six `LDG-*` files). **Seven sites: L3, L7, L10, L815, L819, L825, L2437**, plus a third live falsehood at **L87** (*"until then A2-15 stays blocked"* — `A2-15` is `done`). | A DEC-2 **revision 7** PREPARED and INDEPENDENTLY REVIEWED, then driver ratification — the same route G-13 just took. **Blocks nothing today**, but it is the first thing every reader of DEC-2 is told to read. | `## G-14 — DEC-2's OPENING BANNER IS FALSE` |
 
-**Open right now: G-4, G-5, G-8, G-10, G-12, G-13.** *(**G-11 CLOSED — RATIFIED** by the driver, local fire `20260822-140002`, on `A2-33`'s clean independent review of DEC-2 rev 5.)* *(Register refreshed by local fire `20260822-000013`.)* Of those, **G-4 and G-5 are hard `user` gates** (each amends a
+**Open right now: G-4, G-5, G-8, G-10, G-12, G-14.** *(**G-13 CLOSED — RATIFIED**: DEC-2 revision 6 landed this fire on `T246`'s ACCEPT. **G-14 RAISED** by `T246`'s F-1 — DEC-2's opening banner is false.)* *(**G-11 CLOSED — RATIFIED** by the driver, local fire `20260822-140002`, on `A2-33`'s clean independent review of DEC-2 rev 5.)* *(Register refreshed by local fire `20260822-000013`.)* Of those, **G-4 and G-5 are hard `user` gates** (each amends a
 ratified DEC-n); **G-8, G-10 and G-12 block no work today**. The driver has recorded a recommendation on **G-8 and G-10**.
 **G-12's measurement is now DONE** (`A2-29`, local fire `20260822-000013`) and it answered the question the
 driver deliberately refused to pre-judge: the stored balance is a **second source of truth, not a cache**.
@@ -3740,7 +3741,16 @@ has every entry flagged `calculated = true` with every stored balance equal to i
 
 ## G-13 — DEC-2 §4.4's EVIDENTIAL REASON for leaving `I-5` ungraded is FALSE (revision 6 PREPARED by `T244`, NOT LANDED)
 
-- **id**: G-13 · **class**: CONTRACT · **state**: **OPEN — RAISED, revision 6 drafted and awaiting independent review**
+- **id**: G-13 · **class**: CONTRACT · **state**: **CLOSED — RATIFIED, revision 6 LANDED, local fire `20260822-060013`**
+
+> **⚠ CLOSED. Everything below this line is the RAISING record and is preserved as history.** `T246` reviewed
+> revision 6 independently and returned **ACCEPT**, conditional on `F-2` (an un-denominated *16 rows* clause —
+> replaced, because 60 of 60 rows carry the property and it therefore discriminates nothing) and `F-3` (the
+> landed text must carry a re-measure stamp at ratification time, not only `T244`'s drafting-time stamp).
+> **Both were applied before landing.** The driver ratified `chosen_by: agent` and re-ran the BAR on the
+> result: probe PRESENT and `up`, `VERDICT: PASS (exit 0)`, 46 parity / 7884 cells, LEDGER 4 / 2 / 21, all 9
+> census pins `== pinned`, **vector store `13b8342e…` UNMOVED and `PIN-ledger.json` still 5**. Buyan may reverse.
+> **`T246`'s F-1 is NOT closed by this** — it is a larger, independent defect in the same document and is now **G-14**.
 - **context**: `tierA-gl-accounting` / slice `tierA-gl-accounting-A2`
 - **raised**: local fire `20260822-060013`; revision 6 prepared by `T244`, local fire of 2026-08-22
 - **found_by**: `A2-15` (finding 4), confirmed by `A2-34`. **BOTH CORRECTLY DECLINED TO AMEND THE ADR**, and both should be credited with that restraint — `A2-15` recorded the corrected reason in CODE (`invariants.go`, `capabilities-ledger.json`) and left the ratified document alone.
@@ -3795,4 +3805,84 @@ Permission to land **DEC-2 revision 6**, changing the **evidential reason only**
 > gate was circulated in three driver-owned state files and never reached the one file the program calls
 > authoritative — a **`P-73`** instance (filed where the reader who needs it will not look), and the
 > second one found this fire. Reconciled here.
+
+
+
+---
+
+## G-14 — DEC-2's OPENING BANNER IS FALSE, AND IT NAMES THE INSTRUMENT THAT REFUTES IT
+
+- **id**: G-14 · **class**: CONTRACT · **state**: **OPEN — RAISED**
+- **context**: `tierA-gl-accounting` / slice `tierA-gl-accounting-A2`
+- **raised**: local fire `20260822-060013`, from `T246`'s **F-1 (HIGH)** while reviewing revision 6
+- **blocks**: **NOTHING.** No task is parked on it. But it is the first thing every reader of DEC-2 is instructed to read.
+
+### What was proven
+
+`docs/adr/DEC-2-gl-accounting-adapter.md` opens with a banner headed:
+
+> **⚠ NOTHING GRADES THIS CONTEXT'S MONEY. NOTHING GRADES THIS CONTEXT AT ALL.**
+> *Read this before any other sentence in this document, and before quoting any number out of it.*
+> … **Not one of them is currently checked by anything.** Four separate facts, each measured by this task, not reasoned:
+> 1. **No `ledger` vector exists.** `.softhouse/vectors/` holds `loanschedule/` and `_selftest/` and nothing else [VERIFIED by this task: `ls .softhouse/vectors/`].
+
+**Every part of that is now false, and fact 1 CITES THE COMMAND THAT DISPROVES IT.** Driver re-ran it:
+
+```
+$ ls .softhouse/vectors/
+PIN-ledger.json  PIN.json  README.md  _selftest  capabilities-ledger.json  capabilities.json  ledger  loanschedule
+
+$ ls .softhouse/vectors/ledger/
+LDG-01-manual-je-3leg-minor-units.json      LDG-04-header-account-accepted.json
+LDG-02-repayment-split-4leg-minor-units.json LDG-REFUSE-01-unbalanced-by-one-minor-unit.json
+LDG-03-overpayment-4leg-minor-units.json     LDG-REFUSE-02-manual-adjustments-not-permitted.json
+```
+
+and the harness prints, on **every** run — four separate times in this fire alone:
+
+```
+LEDGER parity vectors  = 4 == pinned 4
+LEDGER oracle-refusal  = 2 == pinned 2
+LEDGER money cells     = 21 == pinned 21
+```
+
+**Seven sites**, measured by `T246`: **L3, L7, L10, L815, L819, L825, L2437**. Plus a **third live falsehood**
+outside the banner at **L87** — *"until then `A2-15` (promote GL vectors) stays blocked"* — when `A2-15` is
+`done` and merged.
+
+### Why it happened, and why it is worth a gate rather than a tidy-up
+
+**`P-69` at maximum blast radius.** Revision 5 was written **2h13m before** `A2-15` promoted the six ledger
+vectors, and DEC-2 has not been touched since. Every sentence was true when written. The document has no
+mechanism that notices when the world moves underneath a claim it publishes as measured fact — and it placed
+the most perishable of those claims **where every reader is told to start**.
+
+It is a gate and not a fix because **DEC-2 revision 5 is RATIFIED** (G-11) and revision 6 has just been
+ratified on top of it; CLAUDE.md is explicit that *"a ratified DEC-n still cannot be amended by an agent
+without raising a gate"*. `T246` **reported this rather than fixing it**, correctly, and said so: writing that
+correction would have been an agent amending a ratified DEC-n without a gate.
+
+### What is being asked
+
+A DEC-2 **revision 7** that corrects the banner — and the three propositions the banner asserts as measured
+fact — to what is true at the commit it is landed at. **PREPARED and INDEPENDENTLY REVIEWED first**, exactly
+the route G-13 took this fire.
+
+### Scope warnings for whoever prepares it
+
+- **This is an EVIDENTIAL correction, like revision 6. If you find yourself changing an OBLIGATION, STOP** and
+  raise a separate, larger gate.
+- **Do NOT bump `PIN-ledger.json`** (still 5). `admit.go:49-52` compares vector-to-pin and never reads the ADR;
+  bumping the pin alone makes all six ledger vectors inadmissible, bumping both moves the vector-store digest
+  every BAR pins (P-61). Driven four ways by `T246`, including `pin6/vec6 → 0`, the direction `T244` did not drive.
+- **`T246`'s F-5 supplies the test for the status-header question** and it is better than the driver's own
+  framing: not *size* (a) vs (b), but **OWNERSHIP** — a proposition the ADR merely **transcribes** from a
+  register it does not own is a transcription repair governed by that register's gate; a proposition the ADR
+  **owns** needs a gate however small. Line **90** onward is substantive and must not be swept into a re-stamp.
+- Line numbers **80-88** for the status block (`T246`'s F-4 corrected `gates.md`, `program.json` and the driver's
+  own brief, all three of which said 78-85 or 78-87).
+
+> **RAISED BY THE DRIVER** on `T246`'s F-1, local fire `20260822-060013`, after independently re-running the
+> banner's own cited instrument. `T246` found it while reviewing a *different* correction to the same document —
+> which is the argument for independent review in one sentence.
 
