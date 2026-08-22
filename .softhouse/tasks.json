@@ -3075,7 +3075,7 @@
   {
    "id": "T268",
    "title": "T259's R-VPA rule FAILS OPEN: it prints REFUSED NIL COVERAGE in its body while its exit code says GREEN — the P-45 shape inside the eliminator",
-   "status": "in_review",
+   "status": "needs_retry",
    "executor": "agent",
    "model": "opus",
    "target": "code",
@@ -3086,14 +3086,14 @@
    "dependencies": [
     "T259"
    ],
-   "attempts": 0,
+   "attempts": 1,
    "files_hint": [
     ".softhouse/capture/t256-verdict-predicate/",
     ".softhouse/capture/t268-rvpa-failopen/"
    ],
    "contract_independent": true,
    "description": "RAISED BY T262 (F-1, HIGH) reviewing T259, and CONFIRMED live rather than theoretical. R-VPA gates nil coverage GLOBALLY at line 294 while MEASURING it PER FILE, so a two-file invocation -- which is the obvious next step for B-1 -- prints `REFUSED  NIL COVERAGE` in the body and still exits 0 GREEN. **A rule written to make a silent disagreement impossible to print is itself printing a refusal and reporting green.** That is the sixth-plus P-45 instance in this program and the second time this fire that an instrument broke the rule it was written to enforce (P-80).\n\nALSO FROM T262, same file:\n  F-2 (MED) FOUR error paths, not two. The two untested ones -- `raise SystemExit(str)` at lines 79 and 144 -- exit **1**, the code RESERVED FOR A MEASURED NEGATIVE. T259's handoff claim of two is FALSE. Conflating an error with a measured negative is exactly P-80, in the file that cites P-80.\n  F-3 (MED) 8 of 12 invented shapes MISSED SILENTLY: verdict as an object or a bare int; verdict key named `result` or `conclusion`; predicate `null`, `\"false\"`, or `0`; predicate in a nested list; row nested one level deeper; top-level array. Two shapes were caught ONLY by nil coverage and FLIP TO MISS WHEN BATCHED -- which is F-1 again, from the other side.\n\nTHE JOB: fix the global-vs-per-file gating so nil coverage on ANY file refuses; make all four error paths exit 2 and never 1; widen the selector to the missed shapes or state, per shape, why it is out of scope. DRIVE EACH RED THROUGH THE BATCHED ROUTE, not the single-file one -- the single-file route is what hid this. **THIS TASK BLOCKS WIRING (T269): an unwired rule that lies harms nothing, a WIRED one that lies is worse than no rule at all.**",
-   "note": "Committed 81eb16f. ROOT CAUSE reproduced first-hand before any edit: check_file printed 'REFUSED NIL COVERAGE' per file but recorded it NOWHERE, while the gate computed nil from rep.rows == 0 summed ACROSS THE BATCH -- so ONE populated file switched the refusal off for every other file. Three fixes, 23/23 red-green legs, each leg running the rule TWICE on identical inputs: pre-fix extracted by PINNED BLOB SHA 86f4285 (not HEAD:path, which would silently become the fixed file once committed) against the live file, passing only if BOTH exits match. It counted SIX error paths where its own handoff said two and the review said four, and marked the two it could not drive as UNVERIFIED. It measured F-3's widening against the real evidence BEFORE writing it, predicted zero count change, and got zero. T259's own 14-leg battery still 14/14. BAR PASS with the frontier re-measured at 11 == 11 with its files STAGED, because the census reads git ls-files and an unstaged run would not have seen them.",
+   "note": "Committed 81eb16f. ROOT CAUSE reproduced first-hand before any edit: check_file printed 'REFUSED NIL COVERAGE' per file but recorded it NOWHERE, while the gate computed nil from rep.rows == 0 summed ACROSS THE BATCH -- so ONE populated file switched the refusal off for every other file. Three fixes, 23/23 red-green legs, each leg running the rule TWICE on identical inputs: pre-fix extracted by PINNED BLOB SHA 86f4285 (not HEAD:path, which would silently become the fixed file once committed) against the live file, passing only if BOTH exits match. It counted SIX error paths where its own handoff said two and the review said four, and marked the two it could not drive as UNVERIFIED. It measured F-3's widening against the real evidence BEFORE writing it, predicted zero count change, and got zero. T259's own 14-leg battery still 14/14. BAR PASS with the frontier re-measured at 11 == 11 with its files STAGED, because the census reads git ls-files and an unstaged run would not have seen them. | REJECTED by T281. NOT MERGED -- the branch introduces a regression (an affirmative verdict over zero rows now reports GREEN where the pre-fix rule REFUSED). Retry dispatched at opus with T281's findings injected.",
    "branch": "softhouse/t268-rvpa-failopen"
   },
   {
@@ -3378,7 +3378,7 @@
   {
    "id": "T281",
    "title": "INDEPENDENT review of T268's R-VPA fail-open fix — attack the 23-leg battery, not the narrative",
-   "status": "in_progress",
+   "status": "done",
    "executor": "agent",
    "model": "opus",
    "target": "docs",
@@ -3396,7 +3396,8 @@
    ],
    "description": "T268 fixed a fail-open inside the eliminator built to catch fail-opens. Its proof is a 23-leg battery where each leg runs the rule twice -- pre-fix extracted by pinned blob sha 86f4285, and live -- passing only if both exits match. ATTACK THE BATTERY. (1) Confirm the pinned blob really is the pre-fix file and that the HEAD:path hazard T268 names is real. (2) Re-run all 23 legs yourself; then construct a 24th the battery does not cover and see whether the fixed rule still fails open. (3) T268 counted SIX error paths where its handoff said two and the review said four, driving four red and marking two UNVERIFIED -- verify the count is six and that the two undriven ones are genuinely read-only. (4) F-3 widened classification on four axes and was predicted to change no count on real evidence; check the prediction was made BEFORE the change and that the zero is a measured zero, not an unrun one. (5) Confirm T259's 14-leg battery is unmodified and still 14/14, and that the byte-pin legs still fire.",
    "acceptance": "All 23 legs re-run first-hand; at least one novel leg constructed and its result reported; the six-error-path count independently confirmed; verdict APPROVED / MICRO-FIX / REJECTED with specifics.",
-   "branch": "softhouse/t281-review-t268"
+   "branch": "softhouse/t281-review-t268",
+   "note": "VERDICT REJECTED at b4272ff, and it earned the rejection with the 24th leg the driver required. R1 (HIGH, BLOCKING) IS A REGRESSION INTRODUCED BY T268'S OWN F-3 WIDENING: walk_rows yields the FIRST inspectable dict and returns, and the widened is_inspectable is 'deliberately generous', so ANY accepted top-level key makes the DOCUMENT ROOT a row -- seen_rows=1 -- and guard #3 (nil coverage) can then NEVER FIRE on that file. Driven three ways, and the direction is the damning part: the PRE-FIX rule REFUSED all three, the FIXED rule reports GREEN. An affirmative verdict over nothing at all now passes. The 23-leg battery structurally CANNOT see this -- both nil fixtures are plain-empty, all twelve F-3 fixtures are populated, and NO LEG ANYWHERE ASKS WHETHER A REFUSAL WAS LOST. R2 (MED): F-2's headline 'none returns 1' is FALSE as measured -- three inputs exit 1 with no probe line via uncaught AttributeError -- and the root cause is exact: T268 enumerated error paths by GREPPING for 'return 2|RuleError|SystemExit', which can only find paths SOMEBODY WROTE. R3 (MED): void_acks is the F-1 shape one field over, in the same function -- incremented, printed as a tamper banner, summarised, and in NEITHER the gate expression NOR the probe line; driven exit 0 GREEN with the banner in the body. Everything else HELD and was re-run first-hand: the pin is correct (86f42859 == main == fe24419, 13969 bytes, defect verbatim), 23/23 legs reproduced with 0 field diffs, T259's battery 14/14 with byte-pins firing, F-3's zero is a MEASURED zero. It also drove the two paths T268 marked UNVERIFIED (both correct, exit 2), so the six-path count holds."
   },
   {
    "id": "T282",
@@ -3486,6 +3487,31 @@
    ],
    "description": "T273 repaired the defect that made every green bar on this Mac contingent on a 24-byte file in /tmp, and added guard_no_host_state_in_lint_corpus to conformance.sh (+222 lines, 0 deletions, pinned at 17 rows by path+assignment). conformance.sh grades everything else in this program, so a defect introduced here is worse than the one repaired. Attack in this order: (1) the NEW GUARD's selector is claimed to be a measured SUPERSET of the linter's population (71 vs 86, holes = 0) -- re-measure it and find a file the linter classifies that the selector misses, because a guard blind to part of its own corpus is the fail-open shape this program keeps finding; (2) the pin is 17 rows where the census was 18 pre-repair -- confirm the arithmetic is a MEASURED movement and not an adjustment to fit; (3) re-drive all three red arms, and construct a fourth the author did not; (4) confirm NO pin was moved to go green and the diff is genuinely pure insertion; (5) confirm the mktemp+trap fixture leaves NOTHING behind and that the instrument's output really is byte-identical; (6) re-run the bar yourself with the residue absent and confirm PASS with the probe line PRESENT.",
    "acceptance": "Selector superset claim independently re-measured; a fourth red arm constructed; pin movement shown to be measured; bar re-run with the residue absent; verdict APPROVED / MICRO-FIX / REJECTED with specifics."
+  },
+  {
+   "id": "T286",
+   "title": "T268 RETRY — repair the fail-open T268's own fix introduced, plus F-2's false claim and the void_acks twin",
+   "status": "in_progress",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "agent_role": "coder",
+   "role": "coder",
+   "context": "tier0-harness",
+   "slice": null,
+   "dependencies": [
+    "T281"
+   ],
+   "attempts": 0,
+   "contract_independent": true,
+   "branch": "softhouse/t286-t268-retry",
+   "files_hint": [
+    ".softhouse/capture/t256-verdict-predicate/",
+    ".softhouse/capture/t268-rvpa-failopen/",
+    ".softhouse/capture/t286-retry/"
+   ],
+   "description": "T268 fixed a fail-open and introduced another. T281 REJECTED it. This is the retry and it starts from T281's branch findings, not from T268's handoff.",
+   "acceptance": "R1/R2/R3 each driven RED on the T268 branch state and GREEN after; a lost-refusal leg class added to the battery; error paths enumerated by EXECUTION not by grep; no pin moved."
   }
  ],
  "cross_corroboration": {
