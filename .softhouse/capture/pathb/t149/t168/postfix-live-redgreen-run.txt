@@ -1,0 +1,14 @@
+=== arm 1 — store with this vector parked, + M7 (the premise) ===
+| `MONEY-QUANTIZATION-HALF-EVEN` (M7) | **KILLED** | 39 | 3 | T61-HE-A, T61-HE-B, T61-HE-C |
+=== arm 2 — full store + M7 (RED) ===
+| `MONEY-QUANTIZATION-HALF-EVEN` (M7) | **KILLED** | 39 | 4 | T149-PATHB-TIE, T61-HE-A, T61-HE-B, T61-HE-C |
+=== arm 3 — full store, unmutated (GREEN) ===
+    parity vectors          PASS 43   FAIL 0
+VERDICT: PASS (exit 0) — 43 parity vectors match the pinned reference oracle, 5664 cells compared.
+conformance exit=0
+
+arm sizes read back from the run: parked 42, full 43 (derived, not asserted)
+PROOF HOLDS: RED under HALF_EVEN, GREEN under HALF_UP, and the store WITHOUT this
+             vector was ALREADY red under HALF_EVEN — so this vector deepens that
+             coverage, it does not create it.
+store restored: 50 vector files, census identical to the pre-run census

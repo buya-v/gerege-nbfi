@@ -70,8 +70,22 @@ fail() { echo "PROOF FAILED: $*" >&2; exit 1; }
 
 # The census the trap compares: size and path of every JSON file under $STORE. `find`
 # over the whole tree rather than a list somebody maintains — an enumerator whose
-# misses are invisible is the same defect as a guard that cannot fail (P-40) — and an
-# EMPTY census is a refusal, never a silently-satisfied comparison.
+# misses are invisible is the same defect as a guard that cannot fail (P-40).
+#
+# T168 claim correction (T158 finding 1): an earlier version of this comment implied that
+# the "EMPTY census is a refusal" check below (at the `[ "$CENSUS_N" -gt 0 ]` guard) is
+# what stops this script from treating "restored" over a wiped store as a fact. It is
+# not, on any state a real run or crash produces. `[ -f "$VEC" ] || fail …` two lines
+# above ALWAYS fires first: $VEC is one `*.json` file under $STORE, so a store empty
+# enough to make the census below empty is already a store missing $VEC, which the
+# `-f` check refuses before store_census() is ever called. The protection against a
+# wiped store is real — it is just supplied by that earlier line, not this one. The
+# empty-census guard below is kept as defense-in-depth for a state the `-f` check does
+# not cover (e.g. $VEC present but every OTHER *.json under $STORE gone), not because it
+# is reachable in the "store went empty" scenario. [VERIFIED: T158 handoff §(v), finding
+# 1 — driven, not argued: wiping the store gives the `:94`-style message, and the
+# census-empty message was reached only by a contrived symlink construction no operator
+# or crash produces.]
 store_census() {
     find "$STORE" -type f -name '*.json' -print | LC_ALL=C sort | while IFS= read -r f; do
         printf '%s %s\n' "$(wc -c < "$f" | tr -d ' ')" "${f#"$REPO"/}"
@@ -91,17 +105,23 @@ if [ -e "$PARK" ]; then
         echo "RECOVERED: an earlier run left the store SHORT — $VEC restored from $PARK before starting"
     fi
 fi
+# T168: THIS is the line that actually refuses a wiped/short store on every realistic
+# state (see the corrected comment on store_census() above) — not the census-empty guard
+# a few lines down.
 [ -f "$VEC" ] || fail "the vector is not in the store: $VEC"
 
 CENSUS_BEFORE="$(store_census)"
 CENSUS_N="$(printf '%s\n' "$CENSUS_BEFORE" | grep -c '.')"
+# Defense-in-depth, not the primary guard (T168): unreachable via "the store is empty",
+# because that state already fails the `-f` check above. Kept for a state that check
+# does not cover.
 [ "$CENSUS_N" -gt 0 ] \
     || fail "the store census over $STORE is EMPTY — refusing, because 'restored' over nothing is not a fact"
 cp "$VEC" "$BACKUP" || fail "could not take the pre-park backup at $BACKUP"
 
 restore_store() {
     _st=$?
-    trap - EXIT INT TERM HUP          # never re-enter, whatever the handler itself does
+    trap - EXIT INT TERM HUP QUIT     # never re-enter, whatever the handler itself does
 
     if [ -e "$PARK" ] && [ ! -e "$VEC" ]; then
         mv "$PARK" "$VEC" || { echo "RESTORE FAILED: could not move $PARK back to $VEC" >&2; _st=1; }
@@ -139,9 +159,18 @@ restore_store() {
 trap restore_store EXIT
 # A signal trap that RETURNS would resume the script mid-proof. Each of these exits
 # with the conventional 128+signo, which is what fires the EXIT trap above.
+#
+# T168 — SIGQUIT (Ctrl-\, the same keyboard as Ctrl-C) is trapped explicitly here for a
+# reason none of the other three signals need spelled out: bash does NOT run the EXIT
+# trap on an UNTRAPPED SIGQUIT the way it does for SIGINT/SIGTERM/SIGHUP/SIGPIPE/SIGUSR1/
+# SIGALRM — SIGQUIT is one of the "core dump" signals bash special-cases, so leaving it
+# off this list does not just skip the friendly message, it skips restore_store()
+# entirely and strands the store exactly as SIGKILL does. Measured, not assumed: see
+# t168/red-sigquit-strands.txt (pre-fix) and t168/green-sigquit-restores.txt (post-fix).
 trap 'echo "INTERRUPTED (SIGINT) — restoring the store" >&2;  exit 130' INT
 trap 'echo "INTERRUPTED (SIGTERM) — restoring the store" >&2; exit 143' TERM
 trap 'echo "INTERRUPTED (SIGHUP) — restoring the store" >&2;  exit 129' HUP
+trap 'echo "INTERRUPTED (SIGQUIT) — restoring the store" >&2; exit 131' QUIT
 
 # --- arm 1: the store with this vector PARKED, mutated ----------------------------
 mv "$VEC" "$PARK" || fail "could not park the vector"
