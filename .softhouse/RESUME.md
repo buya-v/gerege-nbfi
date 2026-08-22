@@ -110,7 +110,7 @@ overwriting an existing vector.
 5. Then `T193`, `T192`, `T212`, `A2-23`, `T207`, `T145`, `T160`, `T164`, `T174`, `T176`, `T180`, `T195`,
    `T162`, `T168`.
 
-**19 tasks READY. 1 blocked (`T116`, on `T114` — which has NO ENTRY in `tasks.json` and can never resolve;
+**20 tasks READY. 1 blocked (`T116`, on `T114` — which has NO ENTRY in `tasks.json` and can never resolve;
 re-scope or re-point it).**
 
 **`A2-15` is NOT ready and the driver re-pointed its dependency this fire** — it computed as READY off the

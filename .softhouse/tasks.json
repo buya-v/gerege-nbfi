@@ -1691,6 +1691,26 @@
    "description": "T205's honest negative, reported against its own deliverable rather than left for a reviewer. A non-existent --file path scores REFUSED-UNREADABLE and the run exits 0. T205 notes it is COUNTED AND NAMED so it is not silent -- which is why this is a task and not a rejection -- but it is still a route to an --enforce run that passes having measured nothing, which is P-35's exact shape (a check inspecting zero items is an ERROR, not a pass) and the same family as T194's census defect and T181's F-2 (a census that globbed nothing and exited 0). Make an --enforce run whose inspected population is zero, for ANY reason, fail. DRIVE RED (a bad --file path, an empty --file list, a glob matching nothing) and GREEN (the real corpus, unchanged classifications). Preserve T205's polarity discipline: this is a fail-CLOSED change and must not perturb the 465-site sweep (SCRATCH must stay 337->337, and the 7 UNKNOWN->TRUSTED moves must not grow).",
    "acceptance": null,
    "note": null
+  },
+  {
+   "id": "T213",
+   "title": "84 stale agent worktrees have accumulated — the rescue sweep iterates every one of them on every fire",
+   "role": "coder",
+   "executor": "agent",
+   "model": "sonnet",
+   "target": "code",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [
+    "T202",
+    "T211"
+   ],
+   "files_hint": [
+    ".softhouse/bin/"
+   ],
+   "description": "Measured by the driver at the close of fire 20260822-080001: `git worktree list` shows 84 .claude/worktrees/agent-* entries accumulated across many fires. The driver swept all 84 for uncommitted work and found ZERO stranded -- so this is HYGIENE, not data loss, and must not be written up as though work were at risk. It still matters for two reasons: fire-program.sh's rescue sweep ITERATES EVERY WORKTREE on every fire (T202 rewrote that enumerator this fire, including the case where a failing `git worktree list` gave zero iterations indistinguishable from 'no worktrees'), so the cost grows without bound; and disk. Add pruning of MERGED, CLEAN agent worktrees to the wrapper, and be careful about the polarity: a worktree must be pruned ONLY if its branch is merged AND `git -C <w> status --porcelain -- :(top)` both SUCCEEDS and returns empty -- reading a FAILING git as 'clean' is precisely the T-a fail-open T190 and T202 just closed at fire-program.sh:224 and :262, and re-introducing it here would delete the stranded work the sweep exists to rescue. DRIVE RED (a dirty worktree, an unmerged branch, and an UNREADABLE gitdir must each survive pruning) and GREEN (a merged clean worktree is pruned) UNDER ZSH 5.9. Do NOT modify the live fire-program.sh while a fire runs; the merge replaces the inode and takes effect next fire.",
+   "acceptance": null,
+   "note": null
   }
  ],
  "cross_corroboration": {
