@@ -326,6 +326,32 @@ in the instrument) rather than the guard being worked around. Baseline
   The next capture task in a directory not frozen by T114 should adopt it; adopting it inside
   `tierA-a2/` means minting `cap11.sh`, which is T164's call, not mine.
 
+## 8b. Re-measurement at finish (P-69)
+
+Instruments re-run after commit, so they now measure a population that includes T250's own files.
+Every delta is this task's own artefacts; full accounting in
+`.softhouse/capture/t250-tenant-attestation/transcripts/99-FINAL-REMEASURE-NOTE.md`.
+
+| measure | start `a71c140` | finish `b4d170d` |
+|---|---|---|
+| TERM 1 | 29 | 33 |
+| TERM 2 | 4 | **5** — instrument `10-population.py` matches its OWN calibration fixture |
+| tenant senders / literal / derived | 50 / 5 / 0 | 56 / 9 / 0 |
+
+The self-match was **not** excluded. A self-exclusion would give the instrument a blind spot aimed at
+itself, which is the shape this task removes; the honest report is "5, of which 1 is the positive
+control". The +4 literal attesters are RED-DRIVE A's verbatim reproduction of the defective writer —
+a detector that failed to flag it would be failing at its job.
+
+**Instrument 12 UNDERSTATES the fix, stated plainly.** It detects attestation *by emission*;
+`oracle_send.sh` emits nothing and derives instead, so it is invisible to that instrument and sits in
+bucket D. "Attested DERIVED = 0" is a statement about what instrument 12 can see (P-66), not about
+the world. The derived sidecars exist under `evidence/`, each carrying `attestation-derivation:`.
+Backlog B-6: count derived attestations from that marker in the produced `.http` artefacts, not from
+emission sites in scripts.
+
+- **B-6 (LOW).** Instrument 12 cannot see a derived attestation; see above.
+
 ## 9. Pattern candidate
 
 **"Deriving an attestation from the variable you *sent* is not the same as deriving it from what

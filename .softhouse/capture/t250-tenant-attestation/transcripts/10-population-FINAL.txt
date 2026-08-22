@@ -1,0 +1,61 @@
+CALIBRATION: positive arm flagged 1/1, negative arm flagged 0/1
+             the two arms differ by exactly `$` -- instrument DISCRIMINATES
+
+SCOPE: git ls-files of /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd ; suffix .sh or .py
+tracked files                                : 5341
+  of which .sh or .py                        : 927
+  unreadable / missing on disk               : 0
+
+TERM 1  scripts that talk to the oracle AND write >=1 `Key: value` attestation line: 33
+    .softhouse/bin/build-oracle-image.sh
+    .softhouse/capture/actualactual/src/pathb-capture.sh
+    .softhouse/capture/charges/bin/attest-t40.py
+    .softhouse/capture/charges/bin/create-charges.sh
+    .softhouse/capture/charges/bin/create-charges2.sh
+    .softhouse/capture/charges/bin/t48-capture.sh
+    .softhouse/capture/charges/bin/t48-determinism.sh
+    .softhouse/capture/charges/bin/t51-capture.sh
+    .softhouse/capture/charges/bin/t51-capture2.sh
+    .softhouse/capture/charges/bin/t51-capture3.sh
+    .softhouse/capture/charges/bin/t51-capture4.sh
+    .softhouse/capture/charges/bin/t51-capture5.sh
+    .softhouse/capture/charges/bin/t51-capture6.sh
+    .softhouse/capture/charges/bin/t51-determinism.sh
+    .softhouse/capture/leapboundary/bin/t55-capture.sh
+    .softhouse/capture/lib/oracle_send.sh
+    .softhouse/capture/lib/wire_attestation.py
+    .softhouse/capture/pathb/t36/emiloop-probe.sh
+    .softhouse/capture/pathb/t99/prove-f5-legs.sh
+    .softhouse/capture/t244-dec2-rev6/rederive-reversals-part2.sh
+    .softhouse/capture/t244-dec2-rev6/rederive-reversals.sh
+    .softhouse/capture/t250-tenant-attestation/instruments/10-population.py
+    .softhouse/capture/t250-tenant-attestation/instruments/20-redA-sidecar-tracks-the-send.sh
+    .softhouse/capture/t91/t115-rerun-attacks.sh
+    .softhouse/capture/tierA-a2/cap.sh
+    .softhouse/capture/tierA-a2/cap10.sh
+    .softhouse/capture/tierA-a2/cap8.sh
+    .softhouse/capture/tierA-a2/cap9.sh
+    .softhouse/capture/tierA-a2/census-a2-26.py
+    .softhouse/capture/tierA-a2/prove-cap-transport-red.py
+    .softhouse/capture/tierA-a2/prove-quit-trap-cap9.py
+    .softhouse/reviews/A2-10-probe/adjudicate-rmf-counterfactual.sh
+    .softhouse/reviews/T138-evidence/r6-mf2.sh
+
+TERM 2  of those, scripts writing >=1 attestation line as a LITERAL while a
+        variable carrying that same value was IN SCOPE                          : 5
+    .softhouse/capture/t250-tenant-attestation/instruments/10-population.py
+        line 139   Fineract-Platform-TenantId: gerege   <- shadowed by $T (full-header)
+    .softhouse/capture/tierA-a2/cap.sh
+        line 97    Fineract-Platform-TenantId: gerege   <- shadowed by $T (full-header)
+        line 100   Content-Type: application/json   <- shadowed by $CT (full-header)
+    .softhouse/capture/tierA-a2/cap10.sh
+        line 113   Fineract-Platform-TenantId: gerege   <- shadowed by $T (full-header)
+        line 117   Content-Type: application/json   <- shadowed by $CT (full-header)
+    .softhouse/capture/tierA-a2/cap8.sh
+        line 116   Fineract-Platform-TenantId: gerege   <- shadowed by $T (full-header)
+        line 119   Content-Type: application/json   <- shadowed by $CT (full-header)
+    .softhouse/capture/tierA-a2/cap9.sh
+        line 95    Fineract-Platform-TenantId: gerege   <- shadowed by $T (full-header)
+        line 99    Content-Type: application/json   <- shadowed by $CT (full-header)
+
+RATE: 5 / 33
