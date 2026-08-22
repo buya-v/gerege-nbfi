@@ -1,0 +1,48 @@
+DEC-2 before: sha256 f02f7ff038afbf389bbd21a3fd40c55cc38cd88004e1833bded0f077f7957f44, 3039 lines
+
+  applied H-0 citation convention (discharges FU-A2-25-3, which revision 4 recorded and never performed)
+  applied H-1a banner headline and lead
+  applied H-1b banner fact 3 — the guard citation, now ANCHORED and DERIVED
+  applied H-1c banner fact 3 tail — add the no-vector-grades-I-3/I-4 sentence
+  applied H-1d banner — the §8-will-be-misread paragraph, completed
+  applied H-2 what ratifying bought — and THE CAUTION
+  applied H-3 status block
+  applied H-3b appended after the revision-5 change paragraph
+  applied H-4 §0 opening
+  applied H-5 §2.2 closing
+  applied H-5b §4.2
+  applied H-5c §4.4 lead paragraph — the 35th site (nine lines above H-7's cell)
+  applied H-6 §4.4 TODAY bullet
+  applied H-7 I-1 row, final cell only
+  applied H-8 I-2 row, final cell only
+  applied H-9 I-7 row, final cell only
+  applied C-2 the I-3 row's supporting citation (its 'Graded today?' answer is NO and stays NO)
+  applied H-10 the rule paragraph (both obligations carried forward verbatim)
+  applied C-3a §4.4.1 the guard enumeration — now DERIVED-FROM-SOURCE and COMPLETE (eight, not seven)
+  applied C-3b §4.4.1 'The seventh does'
+  applied H-11 §4.9(b) block quote
+  applied C-5 §5 heading — asserted the proposition H-12 retracts 26 lines below it
+  applied H-12 §5 baseline prose
+  applied C-9 the `go test` citation — a live stale site neither review enumerated
+  applied H-12b §5.1 scope note appended (the heading itself is NOT changed)
+  applied C-10a §5.2 heading — a present-tense state claim that revision 7 relies on and contradicts
+  applied C-10b §5.2 '(a) is adopted' — the machinery WAS built; requirements 1-7 UNCHANGED
+  applied H-13a §5.3 preconditions note (the TEN-ROW TABLE IS NOT TOUCHED)
+  applied H-13b §5.3 'Nine open, one landed'
+  applied C-11 the `-context` citation
+  applied H-14a §8.1 heading and preamble
+  applied H-14b §8.1 facts 1 and 2
+  applied H-14c §8.1 fact 3's guard citation
+  applied H-14d §8.1 fact 4 and the closing sentence
+  applied H-15a §8.2
+  applied H-15b §8.3 heading and first bullet
+  applied C-6/C-7 §8.3 second bullet — 'the seventh guard', twice
+  applied C-7b §8.3 second bullet closing sentence
+  applied C-12 the FU-A2-25-2 stale harness comment — GONE at this commit, and said so
+  applied H-16 §10 revision history — entries for 6, the rejected 7, and 8
+  applied H-16b §10 — the revision-5 entry no longer says 'this document'
+  applied C-13 NEXUS_DIR citation
+  applied C-14 CMD_PKG citation
+
+DEC-2 after:  sha256 09e456b887506288c642a595c8b4f39bdb7d34205a7cf5c8995b02057fab8164, 3542 lines
+APPLIED: 43 of 43 hunks.

@@ -556,3 +556,22 @@ nothing here moves them.**
 | mac T253b `conformance.sh` | `ae803297…`, **10 / 10**, 2 617 → 2 617 lines, net zero | `softhouse/T253b-harness-portability-mac` |
 | anchors resolving uniquely | **22 checkable + 3 literal (2 live, resolved by hand) = 25/25 hold** | `b334786` / `029439ba` |
 | table rows changed, whole document | **4 of 140**, last cell only | `b334786` |
+
+---
+
+## 12. POST-COMMIT BAR (P-66 — the pre-commit run's silence would have been about my search, not the tree)
+
+`evidence/96-bar-postcommit.log`, run after committing this review so my ten instruments are in
+`git ls-files` and therefore in the fail-open linter's population:
+
+* **inspected 928 tracked `.sh`/`.py`, up from 918** — i.e. all ten of my instruments **were**
+  inspected; the pre-commit figure was a statement about what was tracked, not about the tree.
+* **frontier 11, pinned at 11 — `frontier == pinned (all 11 rows, by path)`. None of my
+  instruments joined the frontier.** Both terms counted (`P-67`).
+* **probe line PRESENT** (L92 `probe = up`, L101 `oracle probe UP`), read before the value
+  (`P-83`); **`VERDICT: PASS (exit 0) — 46 parity vectors … 7884 cells`**, process exit **0**.
+
+Also committed as evidence: `35-applier-rederivation.txt` (43/43 hunks, output sha256
+`09e456b8…` identical to the landed blob) and `36-applier-refusal-red.txt` (one-space
+perturbation → `REFUSE … matched 0 times`, exit 1, nothing written) — the refusal T255 narrated
+and did not evidence.
