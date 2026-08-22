@@ -2420,9 +2420,9 @@
    "dependencies": [
     "T234"
    ],
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
-   "note": "Raised by the driver from T234's L-1/L-1b, with the headline RE-SCOPED after the driver re-derived it: the ratification is NOT affected, the reproducibility is. Do not let a worker turn this into a DEC-2 re-opening. | DISPATCHED wave 1 of local fire 20260822-060013 at main 477dc2d; worker told to MEASURE its own fork point (P-71 twice falsified), never assert it.",
+   "note": "Raised by the driver from T234's L-1/L-1b, with the headline RE-SCOPED after the driver re-derived it: the ratification is NOT affected, the reproducibility is. Do not let a worker turn this into a DEC-2 re-opening. | DISPATCHED wave 1 of local fire 20260822-060013 at main 477dc2d; worker told to MEASURE its own fork point (P-71 twice falsified), never assert it. | DONE and MERGED at 04312b3. Driver re-derived: the 34 `run` invocations are BYTE-IDENTICAL between original and repaired sweep.sh (34 == 34, list-equal), so the repair preserves the evidence; t184-census.sh line 4 is a bare `cd \"$W\"` to an ABSENT worktree with ZERO `set -e` in the file, confirming the fail-open. THREE MORE HIGH SITES: t184-census.sh and t184-sweep.sh print CONFIDENT WRONG NUMBERS rather than '(no hits)' (4 of 5 census figures moved silently), and T234's OWN re-runner 20-rerun-dec2-sweeps.sh is in the class it was built to detect. T234's L-1b characterisation FALSIFIED -- 86 under all four engines, 81 under none; a different corpus, not an engine divergence, which STRENGTHENS A2-33. CARRIED FORWARD: the linter is UNWIRED (P-45) because conformance.sh was held; handed to T243 with the call line in handoff section 8.",
    "branch": "softhouse/T238-failopen-dead-cd"
   },
   {
