@@ -1077,6 +1077,80 @@ guard_graded_root_is_this_tree() {
   return 1
 }
 
+# guard_ledger_invariants: the I-3/I-4 SOURCE GUARD that DEC-2 §4.4 requires and §4.4.1 records
+# as not existing — "balances are DERIVED, never written" (I-3) and "the ledger is append-only"
+# (I-4), both first-tier CLAUDE.md non-negotiables. A2-18 (commit 2a3eefd) BUILT and PROVED it
+# and deliberately did not wire it, because T201 held this file the same fire; T208 is that
+# wiring. Between those two commits the guard existed and enforced NOTHING at grade time, which
+# is the P-22 failure this program keeps finding: a guard that only fails when invoked by hand.
+#
+# WHY NOT _run_capture_guard. Measured, not assumed: that helper resolves its script under
+# "$REPO_ROOT/.softhouse/capture/lib/$1" (its first line), and this guard does not live there.
+# It also demands a caller-derived population floor and parses the census itself — machinery
+# this guard's own head already carries, and carries differently: the head derives its floor
+# from `git ls-files` (the index) while the guard walks the filesystem, two programs over one
+# population, and it PARSES the census figure rather than testing for its presence (T194).
+# Duplicating that here would give one census two graders that could disagree.
+#
+# EXIT SEMANTICS — NOTHING TO CHANGE, AND NOTHING WAS CHANGED. The head returns 0 clean, 1 on
+# refusal (a violation found, a census below its derived floor, no census at all, or a selftest
+# that did not show BOTH polarities), 2 unusable (no Go toolchain, guard source missing, guard
+# did not compile). run_guards maps ANY non-zero to failed=1 and then exits EXIT_UNUSABLE — the
+# correct reading: a failed HARD guard means no verdict is available, not a FAIL verdict.
+#
+# THIS IS NOW A MEMBER OF THE PRE-PROBE EXIT-2 FAMILY (lines 745-747, 1043-1044). It runs
+# BEFORE probe_oracle, so a ledger refusal exits 2 with the `reference oracle (…) probe = up|down`
+# line ABSENT — not `down`. Oracle-down is exit 2 AND a probe line PRESENT AND reading `down`;
+# test the line's PRESENCE first, or a balance write gets parked as an outage. Diagnosability on
+# that path is the head's job and it does it: on a refusal it dumps the guard's full output to
+# stderr — class, file and line — so the transcript says which invariant broke and where.
+#
+# IT IS NOT REACHED UNDER T201's REFUSAL, AND THAT IS DELIBERATE. guard_graded_root_is_this_tree
+# short-circuits with `exit` before this line, so a run whose CONFORMANCE_REPO_ROOT points away
+# still prints its eleven lines and nothing else. Correct: this guard's result would describe a
+# tree the run was not going to grade. T208 verified that after wiring rather than assuming it.
+#
+# COST: 2.8-2.9 s wall, measured twice by T208 on this host (2.776 s, 2.912 s), agreeing with
+# A2-18's 2.8 s — a `go build` of a dependency-free module, 15 selftest cases, one walk of
+# nexus/. It also adds 26 lines to a previously 172-line green transcript: 18 from the guard's
+# head (selftest, census, coverage and NIL-COVERAGE) and the 8 below.
+guard_ledger_invariants() {
+  local rc=0
+  bash "$REPO_ROOT/.softhouse/guards/check-ledger-invariants.sh" || rc=$?
+
+  # THE LIMITS MUST TRAVEL WITH THE VERDICT, AND ONE OF THEM DOES NOT ARRIVE ON ITS OWN.
+  #
+  # MEASURED BY T208, and it corrects A2-18's §7 as written. The guard binary prints a 33-line
+  # CANNOT-CATCH block on every one of ITS runs — but its head captures that output into a
+  # variable and, on the PASS path, re-prints only `^CENSUS ` and `^NIL-COVERAGE ` lines
+  # (check-ledger-invariants.sh:185). So:
+  #   * the two NIL-COVERAGE notices DO reach this transcript verbatim (this Go tree has no DB
+  #     driver and no SQL, so the I-4 SQL classes are proven by the guard's selftest and NOT by
+  #     this tree) — nothing was lost by wiring;
+  #   * the CANNOT-CATCH block does NOT — and did not standalone either, so wiring is not what
+  #     dropped it. On the REFUSAL path it survives, because the head warns every line that is
+  #     not a CENSUS line.
+  # The head's own PASS text ends "Read the CANNOT-CATCH block", and on a green run that block
+  # is not present anywhere in the output. That is a defect in the head; the head is A2-18's
+  # artefact and outside T208's scope, so it is RAISED as FU-T208-1, not fixed here.
+  #
+  # What IS in scope is refusing to let a green harness transcript carry this verdict without
+  # its limits — that is exactly how "the guards cover the ledger tree" becomes a false claim.
+  # THE TRADE, stated rather than taken silently: 8 lines on every run naming the load-bearing
+  # limits, against 33 for the full block. If 8 is judged too thin the fix is FU-T208-1, which
+  # puts the whole block back at its source — NOT a longer copy maintained in this file, where
+  # it would drift away from the guard it describes. Printed on BOTH paths, pass or fail.
+  say "conformance: ledger-invariants LIMITS (CANNOT-CATCH, condensed; the full 33-line block is"
+  say "conformance:   the cannotCatch const in .softhouse/guards/ledgerguard/main.go, which the"
+  say "conformance:   guard prints on every run and its head DROPS on the pass path — FU-T208-1):"
+  say "conformance:   the detection surface is the NAME, so RENAMING A BALANCE DEFEATS THIS GUARD;"
+  say "conformance:   dynamic SQL is caught only through the call set it recognises; triggers,"
+  say "conformance:   migrations and stored procedures are not walked at all; I-5's semantic half"
+  say "conformance:   and non-Go callers are not covered. A PASS here means 'no violation is visible"
+  say "conformance:   to a source-level guard over the Go tree', NOT 'the ledger tree is covered'."
+  return "$rc"
+}
+
 run_guards() {
   local failed=0
   # FIRST, and it SHORT-CIRCUITS rather than joining the `failed=1` tally the others use.
@@ -1097,6 +1171,7 @@ run_guards() {
   guard_gofmt                         || failed=1
   guard_no_float_in_capture_requests  || failed=1
   guard_no_narrow_catch_in_capture_rigs || failed=1
+  guard_ledger_invariants             || failed=1
   if [ "$failed" -ne 0 ]; then
     warn "conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass."
     exit "$EXIT_UNUSABLE"
