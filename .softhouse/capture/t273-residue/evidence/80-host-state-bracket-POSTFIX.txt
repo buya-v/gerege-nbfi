@@ -1,0 +1,52 @@
+### T273 — HOST-STATE BRACKET on the fail-open frontier
+  tree   : /Users/buv/gerege-nbfi/.claude/worktrees/agent-ad4264728c497493b
+  HEAD   : 9da1d87b6abf512ff255b9692cf09f6d1cbed139
+  linter : .softhouse/capture/t238-failopen/instruments/50-failopen-lint.py (executed UNMODIFIED, via runpy)
+  host   : nothing is created, moved or deleted by this instrument
+
+=== ARM: every out-of-repo path forced ABSENT ===
+  linter exit code            : 1
+  banner present              : True
+  out-of-repo existence checks: 58   (in-repo: 0)
+  frontier rows               : 11
+      TIER1 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+      TIER1 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+      TIER1 .softhouse/reviews/T138-evidence/r11-hygiene.sh
+      TIER1B .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+      TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+      TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+      TIER2 .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+      TIER2 .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
+      TIER2 .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+      TIER2 .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh
+      TIER2 .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh
+
+=== ARM: every out-of-repo path forced PRESENT ===
+  linter exit code            : 1
+  banner present              : True
+  out-of-repo existence checks: 66   (in-repo: 0)
+  frontier rows               : 10
+      TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+      TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+      TIER2 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+      TIER2 .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+      TIER2 .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
+      TIER2 .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+      TIER2 .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh
+      TIER2 .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh
+      TIER2 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+      TIER2 .softhouse/reviews/T138-evidence/r11-hygiene.sh
+
+### THE BRACKET
+  rows only in the PRESENT arm : 3
+      + TIER2 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+      + TIER2 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+      + TIER2 .softhouse/reviews/T138-evidence/r11-hygiene.sh
+  rows only in the ABSENT arm  : 4
+      - TIER1 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+      - TIER1 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+      - TIER1 .softhouse/reviews/T138-evidence/r11-hygiene.sh
+      - TIER1B .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+
+### VERDICT: THE FRONTIER MOVES WITH HOST STATE — 7 row(s) differ between the two
+### extremes. Each row above is a tier a race can still flip.

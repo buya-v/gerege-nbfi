@@ -16,6 +16,17 @@
 #       the BAR must refuse.
 #   R2  A NEW HOST-STATE SITE must be caught by the new guard. A literal /tmp assignment
 #       is planted in a repo-wide search instrument; the census must gain a '+' row.
+#   R4  THE DEFECT REINTRODUCED, host in the UNLUCKY state. 02-escape-matrix-fix.sh is
+#       restored to its pre-T273 bytes from the base revision. With the residue absent the
+#       old fail-open pin catches it, exactly as it did before T273.
+#   R5  THE DEFECT REINTRODUCED, host in the LUCKY state -- THE ARM THAT MATTERS. Same
+#       mutation, but the residue is CREATED first, so the host is in precisely the state
+#       that made every green bar before T273 green. The old fail-open pin sees TIER2 ==
+#       TIER2 and is satisfied. `guard_frontier_host_sensitivity` must still refuse,
+#       because the bracket asks what the tier would be at BOTH extremes of host state and
+#       does not care which one this machine happens to be in today. If R5 passes, the
+#       repair is reversible by anybody without the harness noticing -- which is the
+#       property T273 exists to remove.
 #   R3  THE '-' DIRECTION — the amnesty rule. One of the seventeen pinned sites is
 #       GENUINELY REPAIRED without touching the pin. The census must lose a row and the
 #       BAR must refuse, because a pin that keeps a row for a weakness that is gone has
@@ -25,6 +36,7 @@
 # deleted, which is the state a clean host is in; the point of the whole task is that
 # the verdict must no longer depend on it.
 set -u
+BASE="${1:-fe24419}"   # the revision holding the PRE-T273 bytes of the mutation target
 
 R="$(git rev-parse --show-toplevel)" || { echo "T273: not in a git work tree"; exit 2; }
 cd "$R" || { echo "T273: cannot enter $R"; exit 2; }
@@ -64,9 +76,18 @@ echo "  bash : $BASH_VERSION"
 echo "  date : $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
 echo
 
-bar() {   # bar <tag>  -- run the BAR with the residue ABSENT and report the four signals
+bar() {   # bar <tag> [lucky] -- run the BAR and report the four signals.
+          # Default host state is the residue ABSENT, which is what a clean host looks
+          # like. Passing `lucky` CREATES it first, reproducing the exact host state that
+          # made every pre-T273 green bar green.
   local tag="$1" log="$OUT/50-reddrive-$1.log" rc
-  rm -f /tmp/t234_matrix2.txt
+  if [ "${2:-}" = "lucky" ]; then
+    { printf 'x1y\nxdy\nx y\nxsy\nx_y\nxwy\n'; } >/tmp/t234_matrix2.txt
+    echo "  host state       : residue CREATED (the lucky state, 24 bytes)"
+  else
+    rm -f /tmp/t234_matrix2.txt
+    echo "  host state       : residue ABSENT (the clean-host state)"
+  fi
   bash "$R/.softhouse/conformance.sh" >"$log" 2>&1
   rc=$?
   echo "  BAR exit code    : $rc"
@@ -126,15 +147,45 @@ git checkout -- "$M3"
                 || echo "  => R3 NOT CAUGHT (exit $r3). The pin would quietly excuse a repaired site."
 echo
 
+# --- R4/R5: the repair itself reverted, in both host states -----------------
+git rev-parse --verify -q "$BASE^{commit}" >/dev/null || { echo "T273: no such revision: $BASE"; exit 2; }
+echo "=== R4 — 02-escape-matrix-fix.sh restored to its PRE-T273 bytes from $BASE, host UNLUCKY ==="
+git checkout "$BASE" -- "$M1" || exit 2
+echo "  line 6 now reads : $(LC_ALL=C sed -n '6p' "$M1")"
+bar r4-defect-reintroduced-unlucky
+r4=$?
+[ "$r4" -eq 2 ] && echo "  => R4 CAUGHT (exit 2)." || echo "  => R4 NOT CAUGHT (exit $r4)."
+echo
+
+echo "=== R5 — SAME reverted bytes, host in the LUCKY state (residue present) ==="
+echo "  This is the state every pre-T273 green bar was recorded in. The OLD pin is satisfied"
+echo "  by it. The bracket guard must refuse anyway."
+bar r5-defect-reintroduced-lucky lucky
+r5=$?
+frontier_ok=$(LC_ALL=C /usr/bin/grep -ac 'frontier == pinned' "$OUT/50-reddrive-r5-defect-reintroduced-lucky.log" ; :)
+delta_bad=$(LC_ALL=C /usr/bin/grep -ac 'HOST-SENSITIVE FRONTIER DELTA IS NOT THE PINNED DELTA' "$OUT/50-reddrive-r5-defect-reintroduced-lucky.log" ; :)
+echo "  old fail-open pin SATISFIED in this run? $([ "${frontier_ok:-0}" -ge 1 ] && echo YES || echo NO)"
+echo "  bracket guard REFUSED in this run?       $([ "${delta_bad:-0}" -ge 1 ] && echo YES || echo NO)"
+git checkout HEAD -- "$M1"
+if [ "$r5" -eq 2 ] && [ "${frontier_ok:-0}" -ge 1 ] && [ "${delta_bad:-0}" -ge 1 ]; then
+  echo "  => R5 CAUGHT BY THE NEW GUARD ALONE. The old pin saw nothing wrong; the bracket did."
+  r5ok=1
+else
+  echo "  => R5 DID NOT DISCRIMINATE (exit $r5). The repair would be silently reversible."
+  r5ok=0
+fi
+echo
+
 # --- restoration, VERIFIED --------------------------------------------------
 restore
 post_dirty="$(git status --porcelain -- "$M1" "$M3" | LC_ALL=C /usr/bin/grep -c '' || true)"
 echo "### RESTORED — mutation targets modified after restore: ${post_dirty:-0} (0 required)"
 echo "### residue /tmp/t234_matrix2.txt at exit: $([ -e /tmp/t234_matrix2.txt ] && echo PRESENT || echo ABSENT)"
-echo "### SUMMARY  R1=$r1  R2=$r2  R3=$r3   (2 = caught, anything else = a hole)"
-if [ "$r1" -eq 2 ] && [ "$r2" -eq 2 ] && [ "$r3" -eq 2 ] && [ "${post_dirty:-1}" -eq 0 ]; then
-  echo "### RED DRIVE: 3/3 CAUGHT, tree restored."
+echo "### SUMMARY  R1=$r1  R2=$r2  R3=$r3  R4=$r4  R5=$r5 (discriminated=$r5ok)   (2 = caught)"
+if [ "$r1" -eq 2 ] && [ "$r2" -eq 2 ] && [ "$r3" -eq 2 ] && [ "$r4" -eq 2 ] \
+   && [ "$r5" -eq 2 ] && [ "$r5ok" -eq 1 ] && [ "${post_dirty:-1}" -eq 0 ]; then
+  echo "### RED DRIVE: 5/5 CAUGHT, tree restored, residue absent at exit."
   exit 0
 fi
-echo "### RED DRIVE: NOT 3/3 — read the arms above."
+echo "### RED DRIVE: NOT 5/5 — read the arms above."
 exit 1
