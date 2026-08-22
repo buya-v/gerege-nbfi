@@ -1,0 +1,49 @@
+==============================================================================
+LEG 0 -- ENGINE DECLARATION (P-72: name the program that produced every reading)
+==============================================================================
+mktemp binary : /usr/bin/mktemp
+mktemp (GNU coreutils) 9.4
+bash          : 5.2.21(1)-release
+python3       : Python 3.11.15
+BSD mktemp    : ABSENT -- no BSD/BSD-alike mktemp on this host
+
+==============================================================================
+LEG 1 -- OLD FORM `mktemp -t NAME` DRIVEN RED on real GNU coreutils 9.4
+==============================================================================
+OK    1a old-form file  REFUSED as designed: mktemp: too few X's in template 'conformance-failopen'
+OK    1b old-form DIR   REFUSED as designed: mktemp: too few X's in template 'conformance-prove'
+OK    1c old-form 2 X's REFUSED (>=3 required, so 'sprinkle X's' is not the fix): mktemp: too few X's in template 'conformance-XX'
+OK    1d NEAR-MISS -t NAME.XXXXXXXXXX SUCCEEDS on GNU -> /tmp/conformance-nearmiss.LqW7fZxZIw
+      ^ this is why leg 3 exists: passing here says NOTHING about the BSD parse.
+
+==============================================================================
+LEG 2 -- NEW FORM "$dir/NAME.XXXXXXXXXX" DRIVEN GREEN across TMPDIR TYPES
+==============================================================================
+OK    2 TMPDIR unset              dir=[/tmp]  ->  /tmp/conformance-t253.aWtAUpxJ83
+OK    2 TMPDIR=/tmp               dir=[/tmp]  ->  /tmp/conformance-t253.NKKvRBYF7Q
+OK    2 TMPDIR=/tmp/  (macOS!)    dir=[/tmp]  ->  /tmp/conformance-t253.rJ689Covte
+OK    2 TMPDIR='' (empty)         dir=[/tmp]  ->  /tmp/conformance-t253.oK6pgTAszB
+OK    2 DIR form (-d) created a DIRECTORY -> /tmp/conformance-t253d.Ge3gHRl5BH
+OK    2 NEGATIVE CONTROL nonexistent dir correctly REFUSED: mktemp: failed to create file via template '/nonexistent-t253-10244/conformance.XXXXXXXXXX': No such file or directory
+
+==============================================================================
+LEG 3 -- OPTION-PARSE DISCRIMINATION, both optstrings, EXECUTED
+         (this executes the PARSE only -- BSD file creation is NOT executed here)
+==============================================================================
+  argv                                           GNU parse (t = flag)               BSD parse (t: = takes arg)
+  OLD  mktemp -t conformance-failopen            opts={'-t': ''} tmpl=['conformance-failopen'] opts={'-t': 'conformance-failopen'} tmpl=[]
+  NEW  mktemp /tmp/conformance.XXXXXXXXXX        opts={} tmpl=['/tmp/conformance-failopen.XXXXXXXXXX'] opts={} tmpl=['/tmp/conformance-failopen.XXXXXXXXXX']
+  NEW  mktemp -d /tmp/conformance.XXXXXXXXXX     opts={'-d': ''} tmpl=['/tmp/conformance-prove.XXXXXXXXXX'] opts={'-d': ''} tmpl=['/tmp/conformance-prove.XXXXXXXXXX']
+
+OK    3a OLD form: GNU sees TEMPLATE ['conformance-failopen'] (0 X's -> refused);
+      3a          BSD sees NO template and prefix='conformance-failopen' (accepted).
+      3a          THE TWO PARSERS DISAGREE. That is the whole defect, executed.
+OK    3b NEW file form: BOTH parsers agree -- opts={} template=['/tmp/conformance-failopen.XXXXXXXXXX']
+OK    3c NEW dir form: BOTH parsers agree -- opts={'-d': ''} template=['/tmp/conformance-prove.XXXXXXXXXX']
+OK    3d NEGATIVE CONTROL: `-t foo.XXXXXXXXXX` STILL disagrees (GNU tmpl=['foo.XXXXXXXXXX'], BSD tmpl=[])
+      3d           -- so leg 3's equality test is discriminating, not vacuous,
+      3d           and the 'just add X's after -t' patch is REFUSED here too.
+
+==============================================================================
+T253 D1 DRIVE: 14 OK, 0 FAIL
+==============================================================================

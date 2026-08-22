@@ -567,6 +567,58 @@ trap cleanup EXIT
 say()  { printf '%s\n' "$*"; }
 warn() { printf '%s\n' "$*" >&2; }
 
+# ---------------------------------------------------------------------------
+# PORTABLE SCRATCH FILES  [T253]
+#
+# THE DEFECT THIS REPLACES. Ten sites in this file called `mktemp -t NAME`. The
+# two mktemp implementations this program runs on parse that argument list
+# DIFFERENTLY, and the difference is in getopt's optstring:
+#
+#   BSD / macOS   `mktemp [-d] [-p tmpdir] [-q] [-t prefix] [-u] template ...`
+#                 -t CONSUMES the next word as its option-argument `prefix`,
+#                 then builds its own template from prefix + TMPDIR.
+#   GNU coreutils `mktemp [OPTION]... [TEMPLATE]`
+#                 -t takes NO argument (it is a deprecated FLAG); the next word
+#                 is the TEMPLATE, and "TEMPLATE must contain at least 3
+#                 consecutive 'X's in last component".
+#
+# So `mktemp -t conformance-failopen` SUCCEEDS on BSD and DIES on GNU with
+# `mktemp: too few X's in template 'conformance-failopen'`. The first such site
+# sat inside guard_no_fail_open_instruments, so on every Linux host the harness
+# died THERE -- before the oracle probe line was ever printed, and with no
+# verdict. The guard that could not run is the fail-open detector.
+#
+# THE FORM BELOW IS THE ONE BOTH MAN PAGES SPECIFY, not the one that merely
+# works here. `-t` is dropped entirely and a single positional template carries
+# the directory and ten X's. BSD mktemp(1) gives this shape as its own worked
+# example -- "The template may be any file name with some number of `Xs'
+# appended to it, for example /tmp/temp.XXXXXXXXXX" -- and GNU documents the
+# same positional TEMPLATE with a minimum of three X's, which ten clears. BSD
+# imposes no minimum. Neither parser can read the argument as anything but a
+# template, because there is no option letter in front of it.
+#
+# NOT EXECUTED ON BSD: there is no BSD host and no BSD mktemp binary in the CI
+# sandbox, so the BSD half is evidenced by its man page plus an EXECUTED getopt
+# parse of both optstrings, not by running it. See
+# .softhouse/capture/t253-portability/ (transcripts 00 and 10).
+#
+# TMPDIR handling: macOS always sets TMPDIR and always WITH A TRAILING SLASH
+# (/var/folders/.../T/), which would otherwise produce a `//` in every scratch
+# path, so the trailing slash is stripped -- and an empty result means the
+# stripped value was "/", which is restored rather than left blank.
+conf_tmpdir() {
+  local d="${TMPDIR:-/tmp}"
+  d="${d%/}"
+  [ -n "$d" ] || d=/
+  printf '%s' "$d"
+}
+# conf_mktemp   NAME  -> prints a fresh scratch FILE path
+# conf_mktemp_d NAME  -> prints a fresh scratch DIRECTORY path
+# Both fail (non-zero, nothing on stdout) exactly where `mktemp` itself would,
+# so every existing `|| return 1` / `|| exit "$EXIT_UNUSABLE"` arm is unchanged.
+conf_mktemp()   { mktemp    "$(conf_tmpdir)/$1.XXXXXXXXXX"; }
+conf_mktemp_d() { mktemp -d "$(conf_tmpdir)/$1.XXXXXXXXXX"; }
+
 usage() {
   # SELF-LOCATING. --help prints the header comment block, from line 2 down to the
   # line before the sentinel. It used to name a hard-coded range, and that range
@@ -1435,10 +1487,10 @@ guard_no_fail_open_instruments() {
     return 1
   fi
   local out json want got rc corpus n
-  out="$(mktemp -t conformance-failopen)"      || return 1
-  json="$(mktemp -t conformance-failopen-json)" || return 1
-  want="$(mktemp -t conformance-failopen-want)" || return 1
-  got="$(mktemp -t conformance-failopen-got)"   || return 1
+  out="$(conf_mktemp conformance-failopen)"      || return 1
+  json="$(conf_mktemp conformance-failopen-json)" || return 1
+  want="$(conf_mktemp conformance-failopen-want)" || return 1
+  got="$(conf_mktemp conformance-failopen-got)"   || return 1
 
   # The JSON is diverted to scratch. The linter's default destination is a
   # TRACKED file, and a harness that rewrote a tracked file on every graded run
@@ -1784,7 +1836,7 @@ gate_wrong_ledger_impls_die() {
     return 0
   fi
 
-  list="$(mktemp -t conformance-implist)" || return 1
+  list="$(conf_mktemp conformance-implist)" || return 1
   "$bin" -list-implementations >"$list" 2>&1
   # The wrong ones are exactly the rows the binary itself marks. Read from a
   # FILE with sed; no pipeline, no early-exiting consumer (P-57).
@@ -1808,7 +1860,7 @@ gate_wrong_ledger_impls_die() {
     return 1
   fi
 
-  out="$(mktemp -t conformance-wrongimpl)" || return 1
+  out="$(conf_mktemp conformance-wrongimpl)" || return 1
   for impl in $names; do
     "$bin" "-oracle-probe=$probe" "-ledger-impl=$impl" >"$out" 2>&1
     rc=$?
@@ -1883,7 +1935,7 @@ main_grade() {
   run_guards
 
   local probe rc
-  CONF_BIN="$(mktemp -t conformance)" || exit "$EXIT_UNUSABLE"
+  CONF_BIN="$(conf_mktemp conformance)" || exit "$EXIT_UNUSABLE"
   build_binary "$CONF_BIN"
 
   local args=()
@@ -1898,7 +1950,7 @@ main_grade() {
   # hazard. The full output is printed unmodified either way, so a reader loses
   # nothing but the interleaving of two streams that were already separate.
   local report
-  report="$(mktemp -t conformance-report)" || exit "$EXIT_UNUSABLE"
+  report="$(conf_mktemp conformance-report)" || exit "$EXIT_UNUSABLE"
 
   if [ "$self_test" = "1" ]; then
     say "conformance: SELF-TEST MODE — grading the harness, not a port. Not a conformance PASS."
@@ -1956,8 +2008,8 @@ prove() {
   # is the same mistake the census block above records at "fixing only the census one".
   guard_graded_root_is_this_tree || exit "$EXIT_UNUSABLE"
   local rc pass=0 fail=0 bin tmp
-  CONF_BIN="$(mktemp -t conformance)" || exit "$EXIT_UNUSABLE"
-  CONF_TMP="$(mktemp -d -t conformance-prove)" || exit "$EXIT_UNUSABLE"
+  CONF_BIN="$(conf_mktemp conformance)" || exit "$EXIT_UNUSABLE"
+  CONF_TMP="$(conf_mktemp_d conformance-prove)" || exit "$EXIT_UNUSABLE"
   bin="$CONF_BIN"; tmp="$CONF_TMP"
   build_binary "$bin"
 

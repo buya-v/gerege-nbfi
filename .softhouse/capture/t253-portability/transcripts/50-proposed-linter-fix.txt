@@ -1,0 +1,27 @@
+==============================================================================
+PROPOSED FIX for 50-failopen-lint.py  — PROVED HERE, APPLIED NOWHERE
+==============================================================================
+scratch file present on this host? False
+
+SHIPPED linter on the target : TIER1
+OK    1 reproduces the false positive that blocks the harness
+PATCHED linter on the target : TIER2
+OK    2 patched linter agrees with the PIN — C1 no longer fires
+
+WHOLE-TREE frontier rows: shipped 10, patched 10
+  LOST   (1): ['TIER1 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh']
+  GAINED (1): ['TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh']
+OK    3 STRICTLY the intended reclassification: one row moves TIER1 -> TIER2,
+        nothing else is lost and nothing else is gained.
+
+NEGATIVE CONTROL — a dead path the file READS but does not create: TIER1
+OK    4 still flagged TIER1. The patch exempts OWNERSHIP, not dead paths.
+SAME path, now CREATED via "$D"                                : TIER2
+OK    5 exempted from C1 once owned — and STILL on the frontier for its
+        `|| echo` arm, so ownership never hides the C2 defect.
+
+==============================================================================
+RESULT: ALL CHECKS PASS — patch is ready for T252 to land
+APPLIED: NOTHING. 50-failopen-lint.py is untouched on disk:
+  sha256 unchanged = 472f8112c73193c81fbf185983c33c7dc6b826890eaecd50ab922901c177b104
+==============================================================================

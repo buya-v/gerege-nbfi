@@ -1,0 +1,184 @@
+PRE-FIX BYTES from a6bec723fd0769d5c5b6349a375756d1104a7c73  (17 lines, sha256 b44f125f22b438d7…)
+POST-FIX file             /home/user/wt/T253/.softhouse/bin/go-env.sh
+host go on PATH           /usr/local/go/bin/go  ->  go version go1.24.7 linux/amd64
+pinned toolchain present? NO — absent on this host
+
+==============================================================================
+SHAPE 1 — RED. PRE-FIX bytes, sourced from this WORKTREE on this Linux host.
+==============================================================================
+SOURCE_RC=0
+GOROOT=[/Users/buv/gerege-nbfi/.softhouse/toolchain/go]
+GEREGE_GO_SOURCE=[<unset>]
+GOVERSION=[go: cannot find GOROOT directory: /Users/buv/gerege-nbfi/.softhouse/toolchain/go]
+---STDERR---
+OK    1 PRE-FIX poisons a WORKING go: GOROOT=/Users/buv/gerege-nbfi/.softhouse/toolchain/go
+OK    1 …and it did so SILENTLY — nothing on stderr said the toolchain was missing.
+
+==============================================================================
+SHAPE 2 — GREEN. POST-FIX, same worktree, same host, pinned toolchain ABSENT.
+==============================================================================
+SOURCE_RC=0
+GOROOT=[<unset>]
+GEREGE_GO_SOURCE=[substituted:/usr/local/go/bin/go]
+GOVERSION=[go version go1.24.7 linux/amd64]
+---STDERR---
+gerege go-env: THE PINNED GO TOOLCHAIN IS NOT ON THIS HOST.
+gerege go-env:   looked for an executable go/bin/go under, in order:
+gerege go-env:     /home/user/gerege-nbfi/.softhouse/toolchain   ABSENT
+gerege go-env:     /home/user/wt/T253/.softhouse/toolchain   ABSENT
+gerege go-env: SUBSTITUTING the go already on PATH:   /usr/local/go/bin/go
+gerege go-env:   go version go1.24.7 linux/amd64
+gerege go-env:   WHY: the pinned toolchain is gitignored and host-local, so it is absent on
+gerege go-env:   every host but the one it was installed on. Refusing here would make the
+gerege go-env:   harness unrunnable rather than safer — the compiler-absent refusals in
+gerege go-env:   check-ledger-invariants.sh and conformance.sh:load_toolchain still stand.
+gerege go-env:   GOROOT/GOPATH/GOCACHE/GOMODCACHE are deliberately NOT exported on this path;
+gerege go-env:   this go uses its own built-in GOROOT.
+gerege go-env: THIS IS A TOOLCHAIN SUBSTITUTION AND IT IS STATED, NOT HIDDEN. It is fine for
+gerege go-env:   building and for the source-level guards. It is NOT a pinned-toolchain run,
+gerege go-env:   and any PARITY claim must name the toolchain above. GEREGE_GO_STRICT=1
+gerege go-env:   refuses instead of substituting.
+OK    2 go RUNS: go version go1.24.7 linux/amd64
+OK    2 GOROOT is NOT exported on the fallback path (was the whole defect)
+OK    2 the substitution is STATED on stderr, not hidden
+OK    2 the notice NAMES THE VERSION it substituted
+OK    2 the notice states WHAT THE SUBSTITUTION DOES NOT LICENSE
+OK    2 GEREGE_GO_SOURCE is machine-readable: substituted:/usr/local/go/bin/go
+
+==============================================================================
+SHAPE 3 — THE WORKTREE RESOLUTION, driven for real: a toolchain that exists ONLY
+==============================================================================
+          in a MAIN checkout must be found from a WORKTREE of it.
+          (built in a throwaway repo — the real main checkout is NEVER written to)
+main checkout : /tmp/t253-goenv.Yc4HS5OH3T/main   (toolchain present)
+worktree      : /tmp/t253-goenv.Yc4HS5OH3T/wt (toolchain ABSENT — it is gitignored, exactly like production)
+confirmed: no toolchain inside the worktree
+SOURCE_RC=0
+GOROOT=[/tmp/t253-goenv.Yc4HS5OH3T/main/.softhouse/toolchain/go]
+GEREGE_GO_SOURCE=[pinned:/tmp/t253-goenv.Yc4HS5OH3T/main/.softhouse/toolchain]
+GOVERSION=[go version go9.9.9 PINNED-FAKE/t253]
+---STDERR---
+OK    3 FROM A WORKTREE it resolved the MAIN checkout's toolchain (git rev-parse --git-common-dir)
+OK    3 GOROOT=/tmp/t253-goenv.Yc4HS5OH3T/main/.softhouse/toolchain/go
+OK    3 GEREGE_GO_SOURCE=pinned:/tmp/t253-goenv.Yc4HS5OH3T/main/.softhouse/toolchain  — 'pinned', so no substitution notice
+OK    3 NO substitution notice on the pinned path — the notice is discriminating
+
+==============================================================================
+SHAPE 4 — TYPE DRIVE, not a string drive. The toolchain DIRECTORY exists but
+==============================================================================
+          go/bin/go does not. 'the directory is there' is not 'a compiler is there'.
+SOURCE_RC=0
+GOROOT=[<unset>]
+GEREGE_GO_SOURCE=[substituted:/usr/local/go/bin/go]
+GOVERSION=[go version go1.24.7 linux/amd64]
+---STDERR---
+gerege go-env: THE PINNED GO TOOLCHAIN IS NOT ON THIS HOST.
+gerege go-env:   looked for an executable go/bin/go under, in order:
+gerege go-env:     /tmp/t253-goenv.Yc4HS5OH3T/main/.softhouse/toolchain   ABSENT
+gerege go-env:     /tmp/t253-goenv.Yc4HS5OH3T/wt/.softhouse/toolchain   ABSENT
+gerege go-env: SUBSTITUTING the go already on PATH:   /usr/local/go/bin/go
+gerege go-env:   go version go1.24.7 linux/amd64
+gerege go-env:   WHY: the pinned toolchain is gitignored and host-local, so it is absent on
+gerege go-env:   every host but the one it was installed on. Refusing here would make the
+gerege go-env:   harness unrunnable rather than safer — the compiler-absent refusals in
+gerege go-env:   check-ledger-invariants.sh and conformance.sh:load_toolchain still stand.
+gerege go-env:   GOROOT/GOPATH/GOCACHE/GOMODCACHE are deliberately NOT exported on this path;
+gerege go-env:   this go uses its own built-in GOROOT.
+gerege go-env: THIS IS A TOOLCHAIN SUBSTITUTION AND IT IS STATED, NOT HIDDEN. It is fine for
+gerege go-env:   building and for the source-level guards. It is NOT a pinned-toolchain run,
+gerege go-env:   and any PARITY claim must name the toolchain above. GEREGE_GO_STRICT=1
+gerege go-env:   refuses instead of substituting.
+OK    4 a half-present toolchain is REJECTED (tested -x go/bin/go, not -d toolchain)
+OK    4 …and it fell back loudly instead of exporting a GOROOT with no compiler under it.
+
+==============================================================================
+SHAPE 5 — THE REJECTED ALTERNATIVE, still reachable: GEREGE_GO_STRICT=1.
+==============================================================================
+SOURCE_RC=2
+GOROOT=[<unset>]
+GEREGE_GO_SOURCE=[refused:strict]
+GOVERSION=[go version go1.24.7 linux/amd64]
+---STDERR---
+gerege go-env: THE PINNED GO TOOLCHAIN IS NOT ON THIS HOST.
+gerege go-env:   looked for an executable go/bin/go under, in order:
+gerege go-env:     /home/user/gerege-nbfi/.softhouse/toolchain   ABSENT
+gerege go-env:     /home/user/wt/T253/.softhouse/toolchain   ABSENT
+gerege go-env: GEREGE_GO_STRICT is set, so this is a REFUSAL and not a substitution.
+gerege go-env:   Nothing was exported. Install the pinned toolchain, or set GEREGE_TOOLCHAIN,
+gerege go-env:   or unset GEREGE_GO_STRICT to allow a STATED fallback to the go on PATH.
+OK    5 strict mode RETURNS 2 (a refusal, not a skip)
+OK    5 strict mode exported no GOROOT
+OK    5 strict mode says so in words
+OK    5 strict mode did NOT substitute
+
+==============================================================================
+SHAPE 6 — GEREGE_TOOLCHAIN override wins over everything.
+==============================================================================
+SOURCE_RC=0
+GOROOT=[/tmp/t253-goenv.Yc4HS5OH3T/main/.softhouse/toolchain/go]
+GEREGE_GO_SOURCE=[pinned:/tmp/t253-goenv.Yc4HS5OH3T/main/.softhouse/toolchain]
+GOVERSION=[go version go9.9.9 PINNED-FAKE/t253]
+---STDERR---
+OK    6 explicit GEREGE_TOOLCHAIN honoured
+
+==============================================================================
+SHAPE 7 — sourced from OUTSIDE any git repository. Must not crash, must fall back.
+==============================================================================
+SOURCE_RC=0
+GOROOT=[<unset>]
+GEREGE_GO_SOURCE=[substituted:/usr/local/go/bin/go]
+GOVERSION=[go version go1.24.7 linux/amd64]
+---STDERR---
+gerege go-env: THE PINNED GO TOOLCHAIN IS NOT ON THIS HOST.
+gerege go-env:   looked for an executable go/bin/go under, in order:
+gerege go-env:     /tmp/.softhouse/toolchain   ABSENT
+gerege go-env: SUBSTITUTING the go already on PATH:   /usr/local/go/bin/go
+gerege go-env:   go version go1.24.7 linux/amd64
+gerege go-env:   WHY: the pinned toolchain is gitignored and host-local, so it is absent on
+gerege go-env:   every host but the one it was installed on. Refusing here would make the
+gerege go-env:   harness unrunnable rather than safer — the compiler-absent refusals in
+gerege go-env:   check-ledger-invariants.sh and conformance.sh:load_toolchain still stand.
+gerege go-env:   GOROOT/GOPATH/GOCACHE/GOMODCACHE are deliberately NOT exported on this path;
+gerege go-env:   this go uses its own built-in GOROOT.
+gerege go-env: THIS IS A TOOLCHAIN SUBSTITUTION AND IT IS STATED, NOT HIDDEN. It is fine for
+gerege go-env:   building and for the source-level guards. It is NOT a pinned-toolchain run,
+gerege go-env:   and any PARITY claim must name the toolchain above. GEREGE_GO_STRICT=1
+gerege go-env:   refuses instead of substituting.
+OK    7 no git, no checkout: fell back cleanly, rc=0, go still usable
+
+==============================================================================
+SHAPE 8 — sourced from a DIFFERENT working directory than the script lives in.
+==============================================================================
+          ($PWD must not be able to decide which toolchain a script resolves)
+SOURCE_RC=0
+GOROOT=[/tmp/t253-goenv.Yc4HS5OH3T/main/.softhouse/toolchain/go]
+GEREGE_GO_SOURCE=[pinned:/tmp/t253-goenv.Yc4HS5OH3T/main/.softhouse/toolchain]
+GOVERSION=[go version go9.9.9 PINNED-FAKE/t253]
+---STDERR---
+OK    8 resolved from the SCRIPT's path, not from CWD (cwd was /)
+
+==============================================================================
+SHAPE 9 — TYPE DRIVE on the SHELL. /bin/sh here is dash, which has no BASH_SOURCE
+==============================================================================
+          and CANNOT PARSE ${BASH_SOURCE[0]}. The bash/zsh spellings are behind
+          eval for exactly this reason; a parse error here would be silent breakage.
+gerege go-env:   WHY: the pinned toolchain is gitignored and host-local, so it is absent on
+gerege go-env:   every host but the one it was installed on. Refusing here would make the
+gerege go-env:   harness unrunnable rather than safer — the compiler-absent refusals in
+gerege go-env:   check-ledger-invariants.sh and conformance.sh:load_toolchain still stand.
+gerege go-env:   GOROOT/GOPATH/GOCACHE/GOMODCACHE are deliberately NOT exported on this path;
+gerege go-env:   this go uses its own built-in GOROOT.
+gerege go-env: THIS IS A TOOLCHAIN SUBSTITUTION AND IT IS STATED, NOT HIDDEN. It is fine for
+gerege go-env:   building and for the source-level guards. It is NOT a pinned-toolchain run,
+gerege go-env:   and any PARITY claim must name the toolchain above. GEREGE_GO_STRICT=1
+gerege go-env:   refuses instead of substituting.
+SOURCE_RC=0
+/usr/local/go/bin/go
+OK    9 dash sources it cleanly (rc=0) — no 'Bad substitution'
+OK    9 no 'Bad substitution' from dash
+    dash said: dash: 1: Bad substitution
+OK    9 NEGATIVE CONTROL: bare ${BASH_SOURCE[0]} DOES break dash — the eval guard is load-bearing
+
+==============================================================================
+T253 D2 DRIVE: 24 OK, 0 FAIL
+==============================================================================
