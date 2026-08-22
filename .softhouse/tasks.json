@@ -1444,7 +1444,7 @@
    "executor": "agent",
    "model": "opus",
    "target": "code",
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
    "dependencies": [],
    "files_hint": [
@@ -1452,7 +1452,7 @@
    ],
    "description": "A2-19's F1, REPRODUCED INDEPENDENTLY BY THE DRIVER with its own probe vector before this task was written (P-42). Copy ANY loanschedule parity vector into .softhouse/vectors/ledger/, change ONLY case_id and context, and the harness reports 'VERDICT: PASS (exit 0) -- 44 parity vectors match the pinned reference oracle, 5711 cells compared' with the fake case listed class=parity seam=path_a_embeddable. A2-19's numbers and the driver's agree EXACTLY: 44 / 5711. This is the number every parity claim in this program rests on, and it is inflatable by `cp` plus two string edits -- and worse, the inflated vector sits in a ledger/ directory while grading a LOANSCHEDULE schedule, so it reads as GL coverage that does not exist. CAUSE, one line: `context` is constrained only to be non-empty and to equal its own directory name (admit.go:115, :119-120); NO ALLOWLIST EXISTS. Fix it so a context the harness has no comparator for cannot be admitted as parity. DRIVE RED with the driver's exact probe (copy P-00 into ledger/, rename case_id and context) and GREEN on the pristine store at 43/5664. THE 43 MUST STILL PASS, same cell count. Consider, and argue, whether the right refusal is at admission (unknown context) or at classification (a parity class whose comparator does not exist) -- they differ in what they say to whoever builds the ledger schema next.",
    "acceptance": null,
-   "note": "DISPATCHED fire 20260822-080001 batch 2, worktree-isolated.",
+   "note": "DONE + MERGED, fire 20260822-080001. THE HEADLINE NUMBER IS NO LONGER INFLATABLE, and the worker found a SECOND live form the brief did not name. RE-DERIVATION FIRST (P-46): admit.go:115 is `if v.Context == \"\"`, :119-120 the directory-equality check; a git grep of '\\.Context' across all nine non-test files, minus context.Context/MathContext/ContextFilter, returns ONLY those three plus a report field, the distinct-context list and a sort key. NONE constrains the value -- NO ALLOWLIST EXISTED ANYWHERE IN THE PACKAGE. RED-2, ITS OWN FINDING: the CONTRACT-REFUSAL form of the same attack was ALSO LIVE -- copy REFUSE-01 into ledger/ and the pre-fix binary gives exit 0, PASS, contract-refusal 4->5, cells 5664->5665. A2-19 and the driver had both only probed the PARITY form. DESIGN DECISION -- REFUSE AT ADMISSION, and the rejection of the alternative is a MEASUREMENT rather than a taste: a contract-refusal vector consults NO COMPARATOR AT ALL (oracle.seam == none, expectation derived from contract text), so a rule phrased 'the comparator for this class does not exist' is VACUOUS for exactly the form RED-2 proved live. It also noted 'cannot be graded' reads as a SKIP (exit 0, quieter report) whereas the correct outcome is Admit's existing one -- never a FAIL and never a skip, a defect in the corpus, exit 2. Also rejected a store-level context registry in capabilities.json/PIN.json, which is precisely the 'edit in five places' outcome the brief warned against. HOW A FUTURE CONTEXT IS ADDED -- IT IS NOT ADDED HERE: the set is a property of the SCHEMA (SchemaContexts() in vector.go, twenty lines from VectorSchemaV1). DEC-2 section 5.2 has already decided ledger arrives as a SECOND SCHEMA with its own comparator, so the ledger builder declares its contexts NEXT TO THAT COMPARATOR. admit.go:109-110 routes a non-loanschedule schema away; the new admit.go:139 stops a loanschedule vector wandering into another context's directory. One statement, both directions -- the ledger extension is no harder than before. DRIVER-VERIFIED INDEPENDENTLY, BOTH FORMS, with the driver's own probe vectors on merged main: DRIVER-F1-PROBE (parity) and DRIVER-F1-REFUSAL (contract-refusal) both INADMISSIBLE, counts fall back to 43/5664 and contract-refusal 4, exit 2 VERDICT UNUSABLE, and the refusal message names the 44/5711 history so the next reader learns why the rule exists. Pristine store re-verified: exit 0, probe up, 43 parity / 4 refusal / 5664 cells, inadmissible 0, invariant violations 0; store tree ce821c63... and contract.go 0db73d4a... both unmoved. NOTE ON THE DRIVER'S OWN VERIFICATION: its FIRST re-probe attempt graded ZERO vectors because a prior command had left the shell in nexus/ and the `cp` of the store silently failed -- a NULL CONTROL (P-36) that exited 2 and would have READ AS A REFUSAL. Caught by inspecting the intermediate counts rather than the exit code. This is the cwd-persistence hazard already in the standing instructions, hit again by the driver. RESIDUAL, MEASURED AND DELIBERATELY NOT FIXED (routed as A2-23): an EMPTY unknown-context directory (mkdir ledger/, no file) is still silently ignored -- exit 0, PASS 43. The worker's argument is sound: a directory with no vector makes no claim and cannot inflate a number; closing it is a store-shape check in StoreFileCensus, a different guard. A2-22 CONFIRMED UNBLOCKED: it did not touch CounterfactualCoverage or census.go; worst case is an append-vs-append conflict at EOF in store_integrity_test.go.",
    "branch": "softhouse/A2-20-context-allowlist"
   },
   {
@@ -1595,6 +1595,25 @@
    "acceptance": null,
    "note": "DISPATCHED fire 20260822-080001 batch 2, worktree-isolated.",
    "branch": "softhouse/T208-wire-ledger-guard"
+  },
+  {
+   "id": "A2-23",
+   "title": "An EMPTY unknown-context directory is still silently ignored — the store-shape half of A2-20's fix",
+   "role": "coder",
+   "executor": "agent",
+   "model": "sonnet",
+   "target": "code",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [
+    "A2-20"
+   ],
+   "files_hint": [
+    "nexus/internal/apps/loanschedule/conformance/"
+   ],
+   "description": "A2-20's measured residual, which it deliberately did not fix and argued for leaving: `mkdir .softhouse/vectors/ledger/` with NO file in it still gives exit 0, PASS 43, 5664, with 'ledger' appearing once in the whole report (the Go-tree census line). A2-20's reasoning is sound as far as it goes -- a directory with no vector makes no CLAIM and cannot inflate a NUMBER -- and this task must not overturn it without argument. But the store-shape question is separate from the vector-admission question, and it is the same family as the defect A2-14 established and the driver had to retract a claim over: an empty .softhouse/vectors/ledger/ was MEASURED to pass silently, exit 0 VERDICT PASS, with 'ledger' appearing once in the output. Close it in StoreFileCensus, which is where store SHAPE lives, not in Admit, which is where vector ADMISSIBILITY lives -- and say which of the two any new check belongs to. DRIVE RED on an empty unknown directory and GREEN on the pristine store (exit 0, 43 parity, 5664 cells, probe present and up). Do NOT weaken A2-20's admission refusal; re-run its regression test.",
+   "acceptance": null,
+   "note": null
   }
  ],
  "cross_corroboration": {
