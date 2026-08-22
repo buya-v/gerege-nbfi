@@ -2477,7 +2477,7 @@
   {
    "id": "T264",
    "title": "INDEPENDENT review of the cloud fire's T241 branch (df0aed2) — money-adjacent claims that have had NO reviewer",
-   "status": "in_progress",
+   "status": "done",
    "executor": "agent",
    "model": "opus",
    "target": "docs",
@@ -2492,7 +2492,7 @@
    ],
    "contract_independent": true,
    "description": "The cloud fire's T241 is COMPLETE and UNMERGED at origin/softhouse/T241-g8-evidence-hygiene @ df0aed2, and the cloud's own handoff says plainly that it HAS HAD NO INDEPENDENT REVIEWER. It edits `.softhouse/gates.md` (+108 lines) and adds ~21k lines of capture output. A DIFFERENT T241 was already merged locally at d20836e; the cloud's REACHES FURTHER. You are reviewing the CLOUD branch against merged main.\n\nRE-DERIVE, DO NOT READ. Its money-adjacent claims are the point: (a) the 120-of-296 re-bucketing -- recount it yourself from the source data and state both terms (P-67); (b) the claimed `gates.md:2283` failure -- go and read that line at YOUR commit and say whether the claim holds, since line numbers in this repo rot within a single fire (that is the entire subject of G-14); (c) whether anything it writes into gates.md alters a GATE CONCLUSION as opposed to the evidence beneath it -- a review artefact may correct evidence, it may NOT move a gate.\n\nHARD CHECKS: the vector-store digest must not move (read `git rev-parse HEAD:.softhouse/vectors` live and compare to 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d). G-8's region is a conservative superset resting on the unproven conjecture delta <= 1, and G-8 OPTIONS (b) AND (c) MUST NOT BE PUT TO BUYAN, unconditionally and with no expiry -- if the branch proposes them, that alone is a HIGH rejection. Confirm site3.py still reproduces its registered prediction.json BYTE-FOR-BYTE (the strict-ancestor falsifiability guarantee depends on it) and that nothing was retro-edited: `git diff --name-status main...origin/softhouse/T241-g8-evidence-hygiene`.\n\nIts instruments must survive P-75/P-80 -- the cloud's OWN census script was caught last fire using `grep -c || echo 0`, which collapses 'zero matches' and 'I broke' onto one printed zero, in a script written to enforce its own calibration rule. Check its instruments before its conclusions.\n\nGive the driver an actionable verdict: MERGE / MICRO-FIX / REJECT, and say what merging it would change about any gate. WRITE ONLY under `.softhouse/reviews/t264-review-cloud-t241/`. You may NOT edit the branch you review (A2-17).",
-   "note": "dispatched by local fire 20260822-060013b in an isolated worktree; driver awaiting completion",
+   "note": "VERDICT REJECTED at 406cfb0. Driver ADJUDICATED the mechanical half first-hand and it holds: `git merge-tree main df0aed2` gives CONFLICT in gates.md and add/add on the T241 handoff, and a RIVAL T241 (e0ac8d0, merged d20836e) is ALREADY ON MAIN making the opposite ruling on 2 of 3 items -- d20836e is NOT an ancestor of 8a5db63, so the cloud's last rule-6 test could not have seen it. DECISION: df0aed2 is NOT merged. Its two salvageable parts go to T277.",
    "branch": "softhouse/t264-review-cloud-t241"
   },
   {
@@ -3283,6 +3283,49 @@
    ],
    "description": "You did not plan or take these captures. Assume they contain a synthesised value until you have proven otherwise against the live oracle. Re-issue the recipes YOURSELF and diff your response against the recorded one — `DEFECTS-FOUND-BY-REVIEW.md` in `.softhouse/capture/tierA-a2/` is the precedent: an earlier review found 10 recipes that DO NOT re-issue and a transport-failure handler that CANNOT FIRE. Check specifically: (1) every recorded response is byte-traceable to an oracle call, not composed; (2) no bytes under .softhouse/vectors/ and no edit to conformance.sh; (3) the §5 exclusion list names a real blocking fixture per row rather than covering an untaken capture; (4) the PIN-ledger dec2_revision 5-vs-8 answer is derived from the DEC-2 revision history and not asserted.",
    "acceptance": "Verdict APPROVED / MICRO-FIX / REJECTED with specifics; states what was checked so silence is distinguishable from not looking."
+  },
+  {
+   "id": "T277",
+   "title": "SALVAGE from the rejected T241 branch: the corpus re-bucketing, and the FALSE shape law still live in main's gates.md at :2298",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "agent_role": "coder",
+   "role": "coder",
+   "context": "tier0-harness",
+   "slice": null,
+   "dependencies": [],
+   "attempts": 0,
+   "contract_independent": true,
+   "files_hint": [
+    ".softhouse/gates.md",
+    ".softhouse/capture/t277-shapelaw-salvage/"
+   ],
+   "description": "T264 REJECTED the cloud's T241 branch (df0aed2) and the driver upheld it: the branch does not merge (CONFLICT in gates.md, add/add on the handoff) and a RIVAL T241 already landed on main at e0ac8d0/d20836e making the opposite ruling on 2 of 3 items. So df0aed2 is dead. But T264 found TWO things in it that are real and ABSENT from main, and one of them is a live money-law defect on main TODAY.\n\nTHE DEFECT, and re-derive it yourself before you touch a character. `.softhouse/gates.md` around line 2298 states the shape of an UNRESCUED cell as:\n\n    last row EMI = E + B ;   TOTAL PRINCIPAL = max(0, B_minor - n*delta)\n    FULL family B    <=> delta >= 1 AND B_minor <= n*delta\n    PARTIAL family B <=> delta >= 1 AND n*delta < B_minor < (delta + 1/2)*n, repaying exactly B_minor - n*delta\n\nT264 measured that the `last row EMI = E + B` half holds 220/220 on the FACT-A domain, but that `TOTAL PRINCIPAL = max(0, B_minor - n*delta)` holds only 213 of 220. It FAILS on SEVEN cells -- all FACT-A-true, all delta = 1, ALL SATISFYING THE `FULL family B` ANTECEDENT, all of them repaying principal where the law says exactly zero. The named instance is `T159-R600p0-N2000-B999`, repaying 166 minor units against a predicted 0. T264 states it verified this from RAW SCHEDULES, bypassing every derived census.\n\nYOU MUST NOT TAKE THAT ON TRUST. Re-derive the seven cells yourself in INTEGER MINOR UNITS from the raw schedules, with your own instrument, importing neither T264's scripts nor the cloud's `rederive_t241.py`. If the seven do not reproduce, that is the finding and you say so plainly -- a law wrongly accused is as bad as a law wrongly trusted. If they DO reproduce, scope law (ii) to its exception set and re-word the block so it is TRUE ABOUT MAIN. T264 asserts the exception set is exactly gap 2 at `gates.md:1868` and that it is DISJOINT from the 76 delta=0 cells the cloud guessed at; check that too.\n\nSECOND SALVAGE ITEM: the corpus re-bucketing (176 hold / 120 fail; delta=0 contributing 0/113; FACT A 220/220 vs 0/76). T264 reproduced it cell-for-cell. Land the measurement on main with an instrument that RE-RUNS -- not a transcribed table. `A guard that only works when someone remembers to run it enforces nothing` is this program's most repeated lesson, recorded five times.\n\nSCOPE: `.softhouse/gates.md` and a new `.softhouse/capture/t277-shapelaw-salvage/`. Do NOT touch `.softhouse/conformance.sh` (held by T273 this fire), any ratified DEC-n, or `.softhouse/vectors/`. G-8's SUBSTANCE does not change -- T264 was explicit that merging would have changed nothing about it, and neither does this task.",
+   "acceptance": "The seven cells independently re-derived in integer minor units from raw schedules with a fresh instrument, and either reproduced (law re-scoped, block true about main) or refuted (with the measurement that refutes it); exception set checked against gap 2 at gates.md:1868 and against the 76 delta=0 cells; re-bucketing landed as a RE-RUNNABLE instrument; zero float anywhere; conformance.sh, DEC-n and vectors/ untouched."
+  },
+  {
+   "id": "T278",
+   "title": "INDEPENDENT review of T277 — re-derive the seven cells a THIRD time and grade whether the re-worded law is true about main",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "docs",
+   "agent_role": "reviewer",
+   "role": "reviewer",
+   "context": "tier0-harness",
+   "slice": null,
+   "dependencies": [
+    "T277"
+   ],
+   "attempts": 0,
+   "contract_independent": true,
+   "files_hint": [
+    ".softhouse/reviews/t278-review-t277/"
+   ],
+   "description": "Two parties now claim the seven cells (T264, then T277). You are the third and you import NEITHER of their instruments. Re-derive in integer minor units from the raw schedules. Then grade the thing that actually matters: is the RE-WORDED block TRUE ABOUT MAIN, on the whole domain it governs -- not just on the cells that motivated the edit? T264's finding against the cloud was precisely that a correction measured one of two laws and affirmed the other was sound without testing it on the domain it had just written. Do not let the fix repeat the defect it fixes. Check also that no float entered any instrument, that G-8's substance is unchanged, and that the re-bucketing instrument actually RE-RUNS rather than restating a transcribed table.",
+   "acceptance": "Verdict APPROVED / MICRO-FIX / REJECTED with specifics; the seven cells re-derived independently; the re-worded law tested on its FULL domain, not only the exception set; states what was checked so silence is distinguishable from not looking."
   }
  ],
  "cross_corroboration": {
