@@ -1,0 +1,53 @@
+gerege go-env: THE PINNED GO TOOLCHAIN IS NOT ON THIS HOST.
+gerege go-env:   looked for an executable go/bin/go under, in order:
+gerege go-env:     /home/user/gerege-nbfi/.softhouse/toolchain   ABSENT
+gerege go-env:     /home/user/wt/T254/.softhouse/toolchain   ABSENT
+gerege go-env: SUBSTITUTING the go already on PATH:   /usr/local/go/bin/go
+gerege go-env:   go version go1.24.7 linux/amd64
+gerege go-env:   WHY: the pinned toolchain is gitignored and host-local, so it is absent on
+gerege go-env:   every host but the one it was installed on. Refusing here would make the
+gerege go-env:   harness unrunnable rather than safer — the compiler-absent refusals in
+gerege go-env:   check-ledger-invariants.sh and conformance.sh:load_toolchain still stand.
+gerege go-env:   GOROOT/GOPATH/GOCACHE/GOMODCACHE are deliberately NOT exported on this path;
+gerege go-env:   this go uses its own built-in GOROOT.
+gerege go-env: THIS IS A TOOLCHAIN SUBSTITUTION AND IT IS STATED, NOT HIDDEN. It is fine for
+gerege go-env:   building and for the source-level guards. It is NOT a pinned-toolchain run,
+gerege go-env:   and any PARITY claim must name the toolchain above. GEREGE_GO_STRICT=1
+gerege go-env:   refuses instead of substituting.
+gerege go-env: THE PINNED GO TOOLCHAIN IS NOT ON THIS HOST.
+gerege go-env:   looked for an executable go/bin/go under, in order:
+gerege go-env:     /home/user/gerege-nbfi/.softhouse/toolchain   ABSENT
+gerege go-env:     /home/user/wt/T254/.softhouse/toolchain   ABSENT
+gerege go-env: SUBSTITUTING the go already on PATH:   /usr/local/go/bin/go
+gerege go-env:   go version go1.24.7 linux/amd64
+gerege go-env:   WHY: the pinned toolchain is gitignored and host-local, so it is absent on
+gerege go-env:   every host but the one it was installed on. Refusing here would make the
+gerege go-env:   harness unrunnable rather than safer — the compiler-absent refusals in
+gerege go-env:   check-ledger-invariants.sh and conformance.sh:load_toolchain still stand.
+gerege go-env:   GOROOT/GOPATH/GOCACHE/GOMODCACHE are deliberately NOT exported on this path;
+gerege go-env:   this go uses its own built-in GOROOT.
+gerege go-env: THIS IS A TOOLCHAIN SUBSTITUTION AND IT IS STATED, NOT HIDDEN. It is fine for
+gerege go-env:   building and for the source-level guards. It is NOT a pinned-toolchain run,
+gerege go-env:   and any PARITY claim must name the toolchain above. GEREGE_GO_STRICT=1
+gerege go-env:   refuses instead of substituting.
+conformance:
+conformance: THE FAIL-OPEN FRONTIER IS NOT THE PINNED FRONTIER (- pinned, + measured):
+@@ -1,8 +1,8 @@
++TIER1 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+ TIER1 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+ TIER1 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+ TIER1 .softhouse/reviews/T138-evidence/r11-hygiene.sh
+ TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+-TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+ TIER2 .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+ TIER2 .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
+ TIER2 .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+conformance:
+conformance: A '+' line is a NEW instrument that can print a negative it did not measure —
+conformance: repair it (T238's sweeplib.sh is the adoptable shape) rather than pinning it.
+conformance: A '-' line is an instrument that was REPAIRED or DELETED: that is good news, and
+conformance: the pin must lose the row IN THE SAME COMMIT, or the pin starts excusing a
+conformance: weakness that is no longer there.
+conformance: The pin is FAILOPEN_PIN_FILE_LIST in .softhouse/conformance.sh.
+conformance: EXIT 2 — no verdict is available. This is NOT a pass.
+conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.

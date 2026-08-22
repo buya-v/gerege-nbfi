@@ -1,0 +1,19 @@
+==============================================================================
+T254 BSD ARM — Apple shell_cmds mktemp.c, compiled and EXECUTED
+  GNU on this host: mktemp (GNU coreutils) 9.4
+==============================================================================
+OK    1a BSD optstring is "dp:qt:u" (t CARRIES a colon) — read from Apple source
+OK    2a BSD  ACCEPTS the old form  -> /tmp/conformance-failopen.XXXXx9hKTr
+OK    2b GNU  REFUSES the old form -> mktemp: too few X's in template 'conformance-failopen'
+OK    3 NEW form (file) accepted by BOTH — BSD:/tmp/t254-bsdproof.hwAye2CwHt/conf.XXXXS2Z9rG  GNU:/tmp/t254-bsdproof.hwAye2CwHt/conf.jGHI1DHjBN
+OK    3 NEW form (-d directory) accepted by BOTH — BSD:/tmp/t254-bsdproof.hwAye2CwHt/conf.XXXX1x46S0  GNU:/tmp/t254-bsdproof.hwAye2CwHt/conf.R633gaXlrm
+OK    4 NEGATIVE CONTROL: both still FAIL on a missing directory (BSD rc=1, GNU rc=1)
+OK    5 '-t NAME.XXXXXXXXXX' still DISAGREES: BSD keeps the literal X's (conf.XXXXXXXXXX.XXXXrXUXWg), GNU consumes them (conf.xZswn4vgVN)
+OK    6 TMPDIR unset      -> /tmp
+OK    6 TMPDIR plain      -> unchanged
+OK    6 TMPDIR trailing / -> stripped (/tmp/t254-bsdproof.hwAye2CwHt)
+OK    6 TMPDIR empty      -> /tmp
+OK    6 TMPDIR=/          -> / (restored, not blank)
+==============================================================================
+T254 BSD ARM: 12 OK, 0 FAIL
+==============================================================================
