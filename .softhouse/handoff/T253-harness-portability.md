@@ -174,7 +174,22 @@ Theirs exports no `GOROOT` but does not clear an inherited one, so it announces 
 
 **One thing the cloud did not state, and it changes the urgency:** the frontier **count is 11 in both arms** and the row **set is identical by path**. The harness pins by path, not by tier (`frontier == pinned (all 11 rows, by path)`), so this **does not move the frontier and does not fail the BAR on either host**. It is a defect in the recorded classification, not in the pin. Out of my `files_hint`; reported, not fixed.
 
-**The residual count: I measure 29 on main, not 30 and not six** (`evidence/60-hardcoded-toolchain-census.txt`). Selector stated first: tracked `*.sh`/`*.py` containing the literal `/Users/buv/gerege-nbfi/.softhouse/toolchain` — **29 of 921 runnable tracked files** (`git grep -F -l`, rc classified per P-80). `*.zsh`/`*.bash` searched separately, matched nothing (rc=1, a measured negative, not an error). Of those 29, `go-env.sh` was the one genuine live hardcode and is the one removed here; the other 28 are untouched and out of scope. Neither inherited figure reproduces exactly; a count of this kind is unfalsifiable without its selector, so all slices are printed.
+**The residual count — and it RECONCILES EXACTLY with the driver's 30 once the selectors are aligned.** (`evidence/60-hardcoded-toolchain-census.txt`.)
+
+I measured two different literals, because "hardcodes the Mac toolchain" is ambiguous between them and the number depends entirely on which you mean:
+
+| selector (tracked `*.sh`/`*.py`) | runnable | prose |
+|---|---|---|
+| `/Users/buv/gerege-nbfi/.softhouse/toolchain` (the toolchain dir) | 29 on `main` | 23 |
+| `/Users/buv/gerege-nbfi/.softhouse/bin/go-env.sh` (the activation path) | **29** | 7 |
+
+`*.zsh`/`*.bash` searched separately for both, matched nothing (`git grep` rc=1 — a measured negative, not an error; P-80).
+
+The driver's commit `8a5db63` says "30 … (29 besides go-env.sh)" under the **activation-path** selector. **My 29 is exactly that 29.** The reason mine does not say 30 is that my `go-env.sh` no longer contains the literal at all — its usage comment is now generic — so the file that used to be the 30th has removed itself from its own population. The two independent measurements agree precisely; only the denominator's membership changed, and it changed because of this task.
+
+So the corrected statement is: **the "30" is right, "six" was the undercount, and this task takes it to 29** — all of which are `reviews/`-heavy (`T155-probe` ×14, `T184-evidence` ×8) and out of my scope. The driver has filed them as **T256**.
+
+The driver also names a sharper one that is not an instrument at all: `reference-oracle.md:616` states the activation line as an absolute Mac path — prescriptive text in the pin file. I did not touch it; it is T256's.
 
 **A correction to my own instrument, left visible.** The census first asserted "go-env.sh is NO LONGER among them". Its own selector contradicted that and the selector was right: the Mac path still occurs in go-env.sh's *explanatory comment* and in the red-drive that *reproduces the old file deliberately*. Neither is a live hardcode — but a text search cannot tell the difference and mine should not have claimed it could.
 
