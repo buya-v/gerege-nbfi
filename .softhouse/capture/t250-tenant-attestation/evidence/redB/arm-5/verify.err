@@ -1,0 +1,4 @@
+ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-5/probe.http
+  body-sha256 MISMATCH against the artefact
+  body-bytes MISMATCH: sidecar says 46, artefact is 49
+  Content-Length SENT (46) != committed body artefact (49 bytes)

@@ -1,0 +1,2 @@
+ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redB/arm-6/probe.http
+  Content-Length SENT (9999) != committed body artefact (46 bytes)

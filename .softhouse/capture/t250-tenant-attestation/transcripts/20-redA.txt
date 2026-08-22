@@ -1,0 +1,57 @@
+== ARM 1 (RED expected): legacy literal writer ==
+--- legacy sidecar, tenant SENT = gerege ---
+GET /offices
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+body: <none>
+captured-at-utc: <fixed-for-diff>
+--- legacy sidecar, tenant SENT = default ---
+GET /offices
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+body: <none>
+captured-at-utc: <fixed-for-diff>
+legacy sidecars differ: 0  (0 = the defect, sidecar is blind)
+
+== ARM 2 (GREEN expected): derived-from-wire writer ==
+derived /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redA/derived/t-gerege.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.pVJ97H/trace (1 send-header block(s))
+t-gerege                                     HTTP 200
+derived /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redA/derived/t-default.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.Jfwxx9/trace (1 send-header block(s))
+t-default                                    HTTP 200
+--- derived sidecar, tenant SENT = gerege ---
+attestation-derivation: curl --trace-ascii; request headers AS SENT
+send-header-block 1 of 1
+GET /fineract-provider/api/v1/offices HTTP/1.1
+Host: localhost:8443
+User-Agent: curl/8.7.1
+Accept: */*
+Authorization: Basic <redacted sha256:2614d66f727c25bb>
+Fineract-Platform-TenantId: gerege
+request-headers-artefact: t-gerege.reqhdr
+request-headers-sha256: 25f7ea006970355353a372063fee30f0f1ce102d0da3011448a277a45d7c413e
+body: <none>
+captured-at-utc: 2026-08-22T12:58:01Z
+--- derived sidecar, tenant SENT = default ---
+attestation-derivation: curl --trace-ascii; request headers AS SENT
+send-header-block 1 of 1
+GET /fineract-provider/api/v1/offices HTTP/1.1
+Host: localhost:8443
+User-Agent: curl/8.7.1
+Accept: */*
+Authorization: Basic <redacted sha256:2614d66f727c25bb>
+Fineract-Platform-TenantId: default
+request-headers-artefact: t-default.reqhdr
+request-headers-sha256: 972e96740ce934b75c3074bd10d558eea6ec80b092ee0b0ed53af152b2f06598
+body: <none>
+captured-at-utc: 2026-08-22T12:58:01Z
+derived sidecars differ: 1  (1 = the sidecar tracks the send)
+
+== the tenant line each sidecar actually carries ==
+  legacy  arm: SENT gerege    SIDECAR SAYS gerege    -> TRUE 
+  legacy  arm: SENT default   SIDECAR SAYS gerege    -> FALSE
+  derived arm: SENT gerege    SIDECAR SAYS gerege    -> TRUE 
+  derived arm: SENT default   SIDECAR SAYS default   -> TRUE 
+
+RED-DRIVE A: PASS
+  legacy  writer -- tenant changed, sidecar did NOT (RED reproduced)
+  derived writer -- tenant changed, sidecar DID    (GREEN)

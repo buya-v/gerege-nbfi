@@ -1,0 +1,60 @@
+== SHAPE 1: the same header twice; $T holds only the FIRST ==
+derived /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redC/out/dup.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.q4fv1f/trace (1 send-header block(s))
+dup                                          HTTP 200
+  $T (what T245's `echo "$T"` would attest) : gerege
+  what the derived sidecar attests            : gerege AND default
+  oracle status                               : 200
+  independent re-read of the wire             : gerege AND default
+  OK: sidecar == wire.
+  AND: `echo "$T"` would have attested 'gerege', which is NOT what was
+       sent. T245's proposed item 2, taken alone, is DRIVEN RED by this shape.
+
+== SHAPE 2: curl's `-H "Name:"` removal syntax ==
+-- 2a: removal applied to a USER header that already has a value --
+derived /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redC/out/notremoved.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.fLfjO6/trace (1 send-header block(s))
+notremoved                                   HTTP 200
+  the derived sidecar attests        : gerege
+  MEASURED: the user's value SURVIVES. This file previously asserted the
+            opposite from reasoning; the assertion was wrong and is
+            corrected here. The sidecar is right either way, because it
+            reports the wire rather than anyone's model of curl.
+-- 2b: removal applied to a curl-GENERATED header (the discriminating case) --
+derived /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redC/out/removed.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.bC3h4L/trace (1 send-header block(s))
+removed                                      HTTP 200
+  oracle status                      : 200
+  --- the whole derived attestation ---
+      attestation-derivation: curl --trace-ascii; request headers AS SENT
+      send-header-block 1 of 1
+      GET /fineract-provider/api/v1/offices HTTP/1.1
+      Host: localhost:8443
+      Authorization: Basic <redacted sha256:2614d66f727c25bb>
+      Fineract-Platform-TenantId: gerege
+      request-headers-artefact: removed.reqhdr
+      request-headers-sha256: 6055d31591074f90184503e0306557609f8de74289eb3fc4761b29207bb4ee5d
+      body: <none>
+      captured-at-utc: 2026-08-22T12:59:55Z
+  OK: Accept and User-Agent are ABSENT from the attestation, because they
+      were absent from the wire. A rig that printed its own belief about
+      curl's default headers would have attested two headers never sent.
+  tenant still attested correctly    : gerege
+
+== SHAPE 3: a request BODY forged to look like a curl trace header block ==
+derived /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redC/out/inject.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.hE8jKn/trace (1 send-header block(s))
+inject                                       HTTP 400
+  oracle status                     : 400
+  the derived sidecar attests       : gerege
+  OK: the forged block in the body did NOT reach the attestation.
+  send-header blocks recorded       : 1
+  NOTE: inject.req renamed to inject.req.NOT-JSON-BY-DESIGN.txt -- it is an
+        intentionally malformed body and must not enter the graded *.req
+        population that conformance.sh's wire-float guard sweeps.
+
+== SHAPE 4: a long header value, to test trace-ascii block layout ==
+derived /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae8004395d41e0efd/.softhouse/capture/t250-tenant-attestation/instruments/../evidence/redC/out/longhdr.http from /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//oracle_send.H6A366/trace (1 send-header block(s))
+longhdr                                      HTTP 200
+  oracle status                     : 200
+  length of X-T250-Long as attested : 300  (sent: 300)
+  OK: a 300-byte header value survives trace parsing intact.
+  tenant still attested correctly   : gerege
+
+RED-DRIVE C: PASS -- all four shapes attested exactly what went on the wire.
