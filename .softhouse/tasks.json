@@ -739,14 +739,16 @@
    "role": "coder",
    "executor": "agent",
    "model": "sonnet",
-   "status": "pending",
+   "status": "in_progress",
    "dependencies": [
     "T169"
    ],
    "files_hint": [
     ".softhouse/capture/t159-review-t117/"
    ],
-   "description": "Raised by T169. Benign in substance -- two hunks were applied by hand -- but the generator does not reproduce the artefact it is supposed to generate, so the chain from recipe to committed evidence is broken and a future reader cannot re-derive CaptureT159.java. Make the generator reproduce the committed bytes exactly, or if the hand hunks were correct and the generator is wrong, say so and fix the generator to emit them. Prove it with a byte-for-byte diff of generated vs committed. Do NOT edit the committed CaptureT159.java to match a broken generator -- that would be repairing the evidence to fit the tool."
+   "description": "Raised by T169. Benign in substance -- two hunks were applied by hand -- but the generator does not reproduce the artefact it is supposed to generate, so the chain from recipe to committed evidence is broken and a future reader cannot re-derive CaptureT159.java. Make the generator reproduce the committed bytes exactly, or if the hand hunks were correct and the generator is wrong, say so and fix the generator to emit them. Prove it with a byte-for-byte diff of generated vs committed. Do NOT edit the committed CaptureT159.java to match a broken generator -- that would be repairing the evidence to fit the tool.",
+   "attempts": 1,
+   "note": "fire 20260822-080001 batch 1: dispatched worktree-isolated to branch softhouse/T176-t159-generator-reproduces; driver baseline on main cc33f7f = probe present/up, PASS exit 0, 43 parity, 5664 cells, vector tree ce821c63"
   },
   {
    "id": "T177",
@@ -1463,8 +1465,8 @@
    "executor": "agent",
    "model": "opus",
    "target": "docs",
-   "status": "pending",
-   "attempts": 0,
+   "status": "in_progress",
+   "attempts": 1,
    "dependencies": [
     "A2-20"
    ],
@@ -1473,7 +1475,7 @@
    ],
    "description": "A2-19's F1 and F2. (1) Banner fact 2, section 8.1 fact 2, and A2-17's section 4.10 text all assert 'No ledger vector CAN exist'. That is FALSE and driver-confirmed false. Section 5.1's own HEADING carries the TRUE, weaker claim -- no ledger vector is EXPRESSIBLE. Admission-impossibility is strictly stronger. It rested on PC-3, a FALSE NEGATIVE that failed on two author-correctable defects (a non-contract sentinel; oracle.seam != none), not a structural wall -- P-50, the prover was never made falsifiable toward the fix. Retract and restate at all three sites. (2) F2: section 5.2's five requirements -- the specification A2-15 is graded against -- are PURE NON-REGRESSION and are satisfiable by an extension that does NOTHING. Add a positive control and a required RED demonstration. (3) Apply A2-19's adjudication: P-6 (capabilities.json) moves BEFORE P-1..P-5 because section 5.4 step 2 cannot be obeyed without it; P-7 (PIN.json) does NOT, because its premise is contradicted by section 1.1 -- re-scope P-7 to the dec1_revision question and place it after P-1. (4) Fix the one WRONG citation A2-19 found: section 2.2 B-4 says 'three columns', it is two.",
    "acceptance": null,
-   "note": null,
+   "note": "fire 20260822-080001 batch 1: dispatched worktree-isolated to branch softhouse/A2-21-dec2-rev3; driver baseline on main cc33f7f = probe present/up, PASS exit 0, 43 parity, 5664 cells, vector tree ce821c63",
    "contract_independent": true
   },
   {
@@ -1483,15 +1485,15 @@
    "executor": "agent",
    "model": "opus",
    "target": "code",
-   "status": "pending",
-   "attempts": 0,
+   "status": "in_progress",
+   "attempts": 1,
    "dependencies": [],
    "files_hint": [
     "nexus/internal/apps/loanschedule/conformance/"
    ],
    "description": "A2-19's F3, raised not made. A REFUSED vector's kills are counted into CounterfactualCoverage: A2-19 measured UNBACKED going 1 -> 0 and kills 103 -> 104 on a store where the contributing vector was refused. A refusal is explicitly 'not a pass, not a failure', so it must not be able to BACK a capability. A2-19 could not close the blast radius across all classes and notes the live baseline shows 'refused 0', so the exposure is likely nil TODAY -- establish that first and say it, then fix. DRIVE RED and GREEN; the 43 must still pass at 5664 cells.",
    "acceptance": null,
-   "note": null
+   "note": "fire 20260822-080001 batch 1: dispatched worktree-isolated to branch softhouse/A2-22-refused-vector-coverage; driver baseline on main cc33f7f = probe present/up, PASS exit 0, 43 parity, 5664 cells, vector tree ce821c63"
   },
   {
    "id": "T204",
@@ -1623,8 +1625,8 @@
    "executor": "agent",
    "model": "sonnet",
    "target": "code",
-   "status": "pending",
-   "attempts": 0,
+   "status": "in_progress",
+   "attempts": 1,
    "dependencies": [
     "T208"
    ],
@@ -1633,7 +1635,7 @@
    ],
    "description": "T208's FU-T208-1, found while wiring A2-18's guard and correctly raised rather than fixed (out of T208's scope). check-ledger-invariants.sh:185 filters its pass path to '^CENSUS |^NIL-COVERAGE ', while the guard's own PASS text says 'Read the CANNOT-CATCH block and the NIL-COVERAGE lines before quoting this as coverage'. The CANNOT-CATCH block is therefore ABSENT FROM EVERY GREEN RUN -- and was absent standalone too, so wiring dropped nothing; the head already did. This matters because the limits are what stop 'the guards cover the ledger tree' becoming the false claim DEC-2's banner exists to prevent, and the load-bearing one is that RENAMING A BALANCE DEFEATS THE GUARD (the surface is the name; there is no type checker). Fix it AT SOURCE in the guard head rather than growing T208's 8-line condensation in conformance.sh, where it would drift -- that is T208's own recommendation and the driver endorses it. Weigh the transcript cost honestly (T208 measured 33 lines vs its 8-line condensation, ~19% of a 198-line transcript) and say what you chose. DRIVE RED and GREEN; the harness must stay at exit 0 / 43 parity / 5664 cells / probe present and up.",
    "acceptance": null,
-   "note": null
+   "note": "fire 20260822-080001 batch 1: dispatched worktree-isolated to branch softhouse/T209-cannot-catch-reaches-green; driver baseline on main cc33f7f = probe present/up, PASS exit 0, 43 parity, 5664 cells, vector tree ce821c63"
   },
   {
    "id": "T210",
@@ -1642,8 +1644,8 @@
    "executor": "agent",
    "model": "sonnet",
    "target": "test",
-   "status": "pending",
-   "attempts": 0,
+   "status": "in_progress",
+   "attempts": 1,
    "dependencies": [
     "T202"
    ],
@@ -1652,7 +1654,7 @@
    ],
    "description": "T202's caveat, measured not guessed: the committed t172-probe scripts replay `line224` bytes that T190 DELETED, and `grep -c` for the probe's pattern in the current fire-program.sh returns ZERO. The probe still passes -- against bytes that no longer exist. That is a regression test that has silently stopped testing, which is this program's single most recurring failure class (P-22: a control that cannot fail is worse than none, because it is believed; P-35: a check inspecting zero items is an ERROR, not a pass). Re-point it at the CURRENT anchor, and make it FAIL LOUDLY if its pattern ever matches zero times again rather than passing vacuously. DRIVE RED (mutate the live anchor, probe must fail) and GREEN (unmutated, probe passes) UNDER ZSH 5.9 -- the shebang is #!/bin/zsh and the launchd plist runs `/bin/zsh -lc`; note that `bash -n` exits 0 on this file and is NOT a discriminator.",
    "acceptance": null,
-   "note": null
+   "note": "fire 20260822-080001 batch 1: dispatched worktree-isolated to branch softhouse/T210-anchor-regression-unfreeze; driver baseline on main cc33f7f = probe present/up, PASS exit 0, 43 parity, 5664 cells, vector tree ce821c63"
   },
   {
    "id": "T211",
@@ -1661,8 +1663,8 @@
    "executor": "agent",
    "model": "opus",
    "target": "code",
-   "status": "pending",
-   "attempts": 0,
+   "status": "in_progress",
+   "attempts": 1,
    "dependencies": [
     "T202"
    ],
@@ -1671,7 +1673,7 @@
    ],
    "description": "T202's top backlog item, deliberately not bundled with three unrelated repairs while a fire was live -- the right call, and now it is its own task. T202 MEASURED that zsh defers a trap until the current FOREGROUND CHILD exits (29.88 s behind a 30 s child). The fire's foreground child is `claude`, which runs for HOURS, and launchd stops a job with SIGTERM-then-SIGKILL. THE CONSEQUENCE IS THAT THE SIGKILL STRAND IS THE NORMAL OUTCOME OF STOPPING A FIRE, NOT THE EXOTIC ONE -- and the cost is a 6-hour lock park that blocks the next fire under STEP 0. The fix T202 named: restructure run_driver to background the child and `wait`, so the trap can run. THIS IS THE LIVE WRAPPER: do NOT modify /Users/buv/gerege-nbfi/.softhouse/bin/fire-program.sh while a fire runs; work in your worktree, and note the merge REPLACES THE INODE (the driver verified git renames rather than rewriting in place, 7913849 -> 8134531 this fire) so it takes effect next fire. DRIVE RED AND GREEN UNDER ZSH 5.9 through the real launchd shape (`/bin/zsh -lc`), with a python spawner giving the subject its own session and DEFAULT signal dispositions -- T202 recorded P-55 against its own first probe, which backgrounded the subject from a non-job-control zsh and thereby SIG_IGNed INT/QUIT in the child, making zsh appear to ignore SIGINT. Keep T202's lock_holder_is_dead() recovery and T172's anchor regression green.",
    "acceptance": null,
-   "note": null
+   "note": "fire 20260822-080001 batch 1: dispatched worktree-isolated to branch softhouse/T211-sigterm-prompt-stop; driver baseline on main cc33f7f = probe present/up, PASS exit 0, 43 parity, 5664 cells, vector tree ce821c63"
   },
   {
    "id": "T212",
@@ -1680,8 +1682,8 @@
    "executor": "agent",
    "model": "sonnet",
    "target": "code",
-   "status": "pending",
-   "attempts": 0,
+   "status": "in_progress",
+   "attempts": 1,
    "dependencies": [
     "T205"
    ],
@@ -1690,7 +1692,7 @@
    ],
    "description": "T205's honest negative, reported against its own deliverable rather than left for a reviewer. A non-existent --file path scores REFUSED-UNREADABLE and the run exits 0. T205 notes it is COUNTED AND NAMED so it is not silent -- which is why this is a task and not a rejection -- but it is still a route to an --enforce run that passes having measured nothing, which is P-35's exact shape (a check inspecting zero items is an ERROR, not a pass) and the same family as T194's census defect and T181's F-2 (a census that globbed nothing and exited 0). Make an --enforce run whose inspected population is zero, for ANY reason, fail. DRIVE RED (a bad --file path, an empty --file list, a glob matching nothing) and GREEN (the real corpus, unchanged classifications). Preserve T205's polarity discipline: this is a fail-CLOSED change and must not perturb the 465-site sweep (SCRATCH must stay 337->337, and the 7 UNKNOWN->TRUSTED moves must not grow).",
    "acceptance": null,
-   "note": null
+   "note": "fire 20260822-080001 batch 1: dispatched worktree-isolated to branch softhouse/T212-enforce-zero-population; driver baseline on main cc33f7f = probe present/up, PASS exit 0, 43 parity, 5664 cells, vector tree ce821c63"
   },
   {
    "id": "T213",
@@ -1708,9 +1710,28 @@
    "files_hint": [
     ".softhouse/bin/"
    ],
-   "description": "Measured by the driver at the close of fire 20260822-080001: `git worktree list` shows 84 .claude/worktrees/agent-* entries accumulated across many fires. The driver swept all 84 for uncommitted work and found ZERO stranded -- so this is HYGIENE, not data loss, and must not be written up as though work were at risk. It still matters for two reasons: fire-program.sh's rescue sweep ITERATES EVERY WORKTREE on every fire (T202 rewrote that enumerator this fire, including the case where a failing `git worktree list` gave zero iterations indistinguishable from 'no worktrees'), so the cost grows without bound; and disk. Add pruning of MERGED, CLEAN agent worktrees to the wrapper, and be careful about the polarity: a worktree must be pruned ONLY if its branch is merged AND `git -C <w> status --porcelain -- :(top)` both SUCCEEDS and returns empty -- reading a FAILING git as 'clean' is precisely the T-a fail-open T190 and T202 just closed at fire-program.sh:224 and :262, and re-introducing it here would delete the stranded work the sweep exists to rescue. DRIVE RED (a dirty worktree, an unmerged branch, and an UNREADABLE gitdir must each survive pruning) and GREEN (a merged clean worktree is pruned) UNDER ZSH 5.9. Do NOT modify the live fire-program.sh while a fire runs; the merge replaces the inode and takes effect next fire.",
+   "description": "Measured by the driver at the close of fire 20260822-080001: `git worktree list` shows 84 .claude/worktrees/agent-* entries accumulated across many fires. The driver swept all 84 for uncommitted work and found ZERO stranded -- so this is HYGIENE, not data loss, and must not be written up as though work were at risk. It still matters for two reasons: fire-program.sh's rescue sweep ITERATES EVERY WORKTREE on every fire (T202 rewrote that enumerator this fire, including the case where a failing `git worktree list` gave zero iterations indistinguishable from 'no worktrees'), so the cost grows without bound; and disk. Add pruning of MERGED, CLEAN agent worktrees to the wrapper, and be careful about the polarity: a worktree must be pruned ONLY if its branch is merged AND `git -C <w> status --porcelain -- :(top)` both SUCCEEDS and returns empty -- reading a FAILING git as 'clean' is precisely the T-a fail-open T190 and T202 just closed at fire-program.sh:224 and :262, and re-introducing it here would delete the stranded work the sweep exists to rescue. DRIVE RED (a dirty worktree, an unmerged branch, and an UNREADABLE gitdir must each survive pruning) and GREEN (a merged clean worktree is pruned) UNDER ZSH 5.9. Do NOT modify the live fire-program.sh while a fire runs; the merge replaces the inode and takes effect next fire.\n\n*** DRIVER CORRECTION, fire 20260822-080001 (measured, not suggested). THIS TASK'S OWN PREMISE WAS UNDER-SCOPED AND THE CORRECTION IS PART OF THE TASK. *** The sweep that produced 'ZERO stranded' asked `git status --porcelain` in each worktree -- i.e. it looked for UNCOMMITTED work only. That answer is correct and the driver re-confirmed it this fire: 0 dirty across all 93 worktrees. But it was REPORTED as though it settled the category 'is any work at risk', and it does not. The driver then asked the other half of the question -- content COMMITTED to a softhouse/* branch that never reached main -- and found **23 unmerged branches carrying 79 file-paths that exist on NO path on main**. Concentrated in four: T131-review-t108 (28), T108-grep-adjudication (28), rescued-agent-a353b03c0dea4dd41-20260818-200001 (15), T109-fork-point-digest-compare (8). All three named tasks are recorded **done**. Worse, `.softhouse/reviews/T131-review-of-T108.md` IS on main and CITES four of the absent paths (t131-grep/out/canary.txt, probe-extra-shapes.sh, run-bsd.sh, and the directory itself), so main carries a review pointing at evidence main does not have. THE DRIVER'S FIRST ATTEMPT AT THIS VERY MEASUREMENT WAS ITSELF DEFECTIVE -- a shell loop that inspected exactly ONE file per branch and reported it as the whole diff (20 files on T38-dec1-v7-pass2 alone); caught by spot-checking one branch by hand, which is P-35 again, inside the check written to find P-35. Consequence for YOU: removing a worktree does NOT delete its branch, so the 79 paths survive in refs either way and this is still HYGIENE -- but you must NOT repeat the 'ZERO stranded, nothing at risk' sentence, and you must not delete any softhouse/* BRANCH. Say which question your sweep asked. The unmerged-content half is T214's, not yours.",
    "acceptance": null,
-   "note": null
+   "note": "premise corrected by the driver, fire 20260822-080001: 'zero stranded' covered uncommitted work only; 79 committed-but-unmerged paths found and split out to T214"
+  },
+  {
+   "id": "T214",
+   "title": "79 file-paths are committed to unmerged softhouse/* branches and exist on NO path on main -- three tasks marked done have evidence main does not carry",
+   "role": "coder",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [],
+   "files_hint": [
+    ".softhouse/capture/",
+    ".softhouse/reviews/"
+   ],
+   "description": "MEASURED BY THE DRIVER, fire 20260822-080001, while doing worktree hygiene -- and the measurement was re-done because THE DRIVER'S FIRST VERSION OF IT WAS WRONG (a shell loop that inspected one file per branch and reported it as the whole diff; the same P-35 shape the check existed to find). Re-derive the numbers yourself; do not inherit them.\n\nFINDING: 23 softhouse/* branches are ahead of main. Across them, **79 file-paths exist on the branch and on NO path on main** (checked by exact path AND by basename against every path in `git ls-tree -r main`; the three basename hits were coincidental -- README.md, .gitignore, drive-red.sh). Concentrated in four branches: softhouse/T131-review-t108 (28 of 30 files absent), softhouse/T108-grep-adjudication (28 of 30), softhouse/rescued-agent-a353b03c0dea4dd41-20260818-200001 (15 of 16), softhouse/T109-fork-point-digest-compare (8 of 19). The other 19 branches are fully represented on main (0 absent) and need nothing.\n\nWHY IT MATTERS, and this is the part to verify first: **T108, T109, T131 and T22 are all recorded `done`** in .softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json -- T131's note even names its branch and its two commits (188cdb2 + 2e97837). And `.softhouse/reviews/T131-review-of-T108.md` IS on main and CITES four of the absent paths by name (.softhouse/capture/t131-grep/, out/canary.txt, probe-extra-shapes.sh, run-bsd.sh). So main carries a merged review document pointing at evidence main does not have. A future reader cannot re-derive it. That is the evidence chain broken, which is the same class as T176's non-reproducing generator, not a filesystem detail.\n\nWHAT TO DO. (1) Re-derive the 79 independently and say how; if your number differs from 79, YOURS WINS and say so. (2) For each of the four branches decide, WITH EVIDENCE, whether the content was DELIBERATELY abandoned or ACCIDENTALLY not merged -- read the branch's handoff and the on-main documents that cite it. A doc on main citing a path is strong evidence the omission was accidental. (3) For the accidental ones, land the missing evidence on main. Prefer `git checkout <branch> -- <paths>` for the specific absent evidence paths over merging an ancient branch wholesale: these branches fork from old merge-bases and a full merge would drag unrelated regressions. Say which you chose and why. (4) Do NOT delete any softhouse/* branch -- the branches are currently the only copy, and T213 is separately instructed not to touch them. (5) If a branch's content is genuinely superseded, record THAT in writing at the citing document, so the dangling citation stops being dangling either way.\n\nDO NOT rewrite or 'repair' any committed evidence file to make a citation resolve -- that is repairing the evidence to fit the record (T114's standing ruling, and T176's prohibition). Land the real bytes or document the supersession.\n\nThe bar: driver-verified on main at cc33f7f -- probe line present and up, PASS exit 0, 43 parity vectors, 5664 cells, vector tree ce821c638724237652b6b29627148d34b72fab3b. Landing evidence files must not move any of it. If it does, stop and report.",
+   "acceptance": null,
+   "note": "raised by the driver, local fire 20260822-080001, from the worktree-hygiene sweep; splits the committed-but-unmerged half out of T213",
+   "contract_independent": true
   }
  ],
  "cross_corroboration": {
