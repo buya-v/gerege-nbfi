@@ -1141,9 +1141,10 @@
       "dependencies": [
         "T191"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "attempts": 0,
-      "note": "raised by T186 (FU-2), local fire 20260821-125942. Serialised behind T191 -- both edit conformance.sh."
+      "note": "raised by T186 (FU-2), local fire 20260821-125942. Serialised behind T191 -- both edit conformance.sh. | DISPATCHED local fire 20260822-000013 wave 1, worktree-isolated, forked from main ee2c532.",
+      "branch": "softhouse/T193-request-body-guard"
     },
     {
       "id": "T194",
@@ -1723,7 +1724,7 @@
       "executor": "agent",
       "model": "opus",
       "target": "code",
-      "status": "pending",
+      "status": "in_progress",
       "attempts": 0,
       "dependencies": [],
       "files_hint": [
@@ -1732,8 +1733,9 @@
       ],
       "description": "MEASURED BY THE DRIVER, fire 20260822-080001, while doing worktree hygiene -- and the measurement was re-done because THE DRIVER'S FIRST VERSION OF IT WAS WRONG (a shell loop that inspected one file per branch and reported it as the whole diff; the same P-35 shape the check existed to find). Re-derive the numbers yourself; do not inherit them.\n\nFINDING: 23 softhouse/* branches are ahead of main. Across them, **79 file-paths exist on the branch and on NO path on main** (checked by exact path AND by basename against every path in `git ls-tree -r main`; the three basename hits were coincidental -- README.md, .gitignore, drive-red.sh). Concentrated in four branches: softhouse/T131-review-t108 (28 of 30 files absent), softhouse/T108-grep-adjudication (28 of 30), softhouse/rescued-agent-a353b03c0dea4dd41-20260818-200001 (15 of 16), softhouse/T109-fork-point-digest-compare (8 of 19). The other 19 branches are fully represented on main (0 absent) and need nothing.\n\nWHY IT MATTERS, and this is the part to verify first: **T108, T109, T131 and T22 are all recorded `done`** in .softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json -- T131's note even names its branch and its two commits (188cdb2 + 2e97837). And `.softhouse/reviews/T131-review-of-T108.md` IS on main and CITES four of the absent paths by name (.softhouse/capture/t131-grep/, out/canary.txt, probe-extra-shapes.sh, run-bsd.sh). So main carries a merged review document pointing at evidence main does not have. A future reader cannot re-derive it. That is the evidence chain broken, which is the same class as T176's non-reproducing generator, not a filesystem detail.\n\nWHAT TO DO. (1) Re-derive the 79 independently and say how; if your number differs from 79, YOURS WINS and say so. (2) For each of the four branches decide, WITH EVIDENCE, whether the content was DELIBERATELY abandoned or ACCIDENTALLY not merged -- read the branch's handoff and the on-main documents that cite it. A doc on main citing a path is strong evidence the omission was accidental. (3) For the accidental ones, land the missing evidence on main. Prefer `git checkout <branch> -- <paths>` for the specific absent evidence paths over merging an ancient branch wholesale: these branches fork from old merge-bases and a full merge would drag unrelated regressions. Say which you chose and why. (4) Do NOT delete any softhouse/* branch -- the branches are currently the only copy, and T213 is separately instructed not to touch them. (5) If a branch's content is genuinely superseded, record THAT in writing at the citing document, so the dangling citation stops being dangling either way.\n\nDO NOT rewrite or 'repair' any committed evidence file to make a citation resolve -- that is repairing the evidence to fit the record (T114's standing ruling, and T176's prohibition). Land the real bytes or document the supersession.\n\nThe bar: driver-verified on main at cc33f7f -- probe line present and up, PASS exit 0, 43 parity vectors, 5664 cells, vector tree ce821c638724237652b6b29627148d34b72fab3b. Landing evidence files must not move any of it. If it does, stop and report.",
       "acceptance": null,
-      "note": "raised by the driver, local fire 20260822-080001, from the worktree-hygiene sweep; splits the committed-but-unmerged half out of T213",
-      "contract_independent": true
+      "note": "raised by the driver, local fire 20260822-080001, from the worktree-hygiene sweep; splits the committed-but-unmerged half out of T213 | DISPATCHED local fire 20260822-000013 wave 1, worktree-isolated, forked from main ee2c532.",
+      "contract_independent": true,
+      "branch": "softhouse/T214-unmerged-evidence"
     },
     {
       "id": "T215",
@@ -1761,7 +1763,7 @@
       "executor": "agent",
       "model": "opus",
       "target": "code",
-      "status": "pending",
+      "status": "in_progress",
       "attempts": 0,
       "dependencies": [
         "A2-22"
@@ -1771,7 +1773,8 @@
       ],
       "description": "SELF-FLAGGED BY A2-22 IN ITS OWN FOLLOW-UPS, which is why this is a review task and not a rejection. A2-22's graded finding was that CounterfactualCoverage credits kills from REFUSED vectors; that is closed, driver-verified, and correct. While there it ALSO narrowed CorroborationsClaimed to graded vectors 'on the same reasoning, but with no independent finding behind it'. Both counts are 0 on the committed store, so TODAY the narrowed and un-narrowed versions are INDISTINGUISHABLE -- which is precisely the condition under which a change cannot be validated by the harness and must be argued from semantics instead. A2-22 says it is a two-line revert.\n\nYou are an INDEPENDENT reviewer. Do not read A2-22's conclusion and agree with it. Decide, from the source and from what a corroboration MEANS in this harness, whether a REFUSED vector may corroborate. The parallel to kills is suggestive but not binding: a kill is a claim the vector DISCRIMINATES, whereas a corroboration may be a weaker claim that survives refusal. Argue it from the definitions in the registry, not from symmetry.\n\nConstruct a store where the two versions DIFFER (A2-22 showed how -- blind a seam so vectors refuse) and show what each reports. A change you cannot make differ is a change you cannot test; if you genuinely cannot construct a divergence, say so and recommend the revert on the ground that an untestable narrowing is not worth carrying.\n\nVerdict: APPROVED (keep the narrowing, with the semantic argument recorded) / REVERT (two lines) / REJECTED with specifics. Bar: probe present and up, PASS exit 0, 43 parity vectors, 5664 cells, kills named 103 money / 7 structural. Report a refusal by what it SAYS and what population SURVIVES, never by exit code (P-62).",
       "acceptance": null,
-      "note": "raised by the driver, fire 20260822-080001, from A2-22's own self-flagged follow-up"
+      "note": "raised by the driver, fire 20260822-080001, from A2-22's own self-flagged follow-up | DISPATCHED local fire 20260822-000013 wave 1, worktree-isolated, forked from main ee2c532.",
+      "branch": "softhouse/A2-24-corroborations-adjudication"
     },
     {
       "id": "T216",
@@ -1800,7 +1803,7 @@
       "executor": "agent",
       "model": "sonnet",
       "target": "code",
-      "status": "pending",
+      "status": "in_progress",
       "attempts": 0,
       "dependencies": [
         "T211"
@@ -1810,12 +1813,13 @@
       ],
       "description": "RAISED BY T211 against its own delivered fix, which is the right place for them. T211 made SIGTERM stop a fire promptly (driver-verified: pre-fix 45.002s and a stranded lock; post-fix handler entry in ~10ms, tree stopped, lock released, rc=143). These are the two edges it left.\n\n(1) UNBOUNDED `git push` IN release_lock. A hang there is now the LAST remaining way a stop can exceed launchd's grace period and still end in SIGKILL. T211 was careful about the severity and you must be too: THE LOCAL LOCK FILE IS ALREADY REMOVED BEFORE THE PUSH, so this is NOT a lock-safety risk -- the next fire is not blocked either way. It is a shutdown-latency issue. Do not write it up as a lock hazard. Bound it (timeout + fail-closed logging), and DRIVE IT RED by making the push hang.\n\n(2) DRIVER_STOP_GRACE_SECS DEFAULT OF 3s IS UNCALIBRATED. T211 chose 3s against a `/bin/sleep` stand-in, not against a real `claude`. If a real claude needs longer to die on SIGTERM, stop_driver escalates to SIGKILL early and the driver loses the chance to checkpoint -- which is the exact work-destroying outcome the whole T211 fix exists to prevent, reintroduced at a shorter timescale. MEASURE how long a real claude takes to exit on SIGTERM and set the default from the measurement. Say what you measured, how many trials, and the spread. If you cannot get a real claude to measure, say so and DO NOT invent a number.\n\nCONSTRAINTS. Do NOT modify .softhouse/bin/fire-program.sh while a fire is running -- work in your worktree; the merge renames the inode so it takes effect next fire (T200 verified this does not hijack a running zsh script). Keep T202's lock_holder_is_dead() green (7 cases). Keep T211's matrix green: re-run .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/run-case.zsh on the pre/post/happy arms -- the driver used exactly that and it is committed and re-runnable. NOTE the happy-path arm needs T211_FAKE_RC set, or the fake child sleeps 300s and hits the 40s ceiling, producing an INCONCLUSIVE result that reads exactly like a red -- the driver hit this. Keep T210's LOCK-exclusion probe green. Drive everything under zsh 5.9 through `/bin/zsh -lc` with a spawner giving its own session and DEFAULT dispositions (P-55); `bash -n` is NOT a discriminator on this file.\n\nBar: probe present and up, PASS exit 0, 43 parity vectors, 5664 cells.",
       "acceptance": null,
-      "note": "raised by the driver, fire 20260822-080001, from T211's own follow-ups"
+      "note": "raised by the driver, fire 20260822-080001, from T211's own follow-ups | DISPATCHED local fire 20260822-000013 wave 1, worktree-isolated, forked from main ee2c532.",
+      "branch": "softhouse/T217-release-lock-followups"
     },
     {
       "id": "A2-25",
       "title": "INDEPENDENT review of DEC-2 revision 3 — the review G-11 names as its unblocking condition",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "role": "reviewer",
@@ -1828,12 +1832,13 @@
       ],
       "description": "G-11 is OPEN - NOT RATIFIABLE and states its own unblocking condition verbatim: 'A2-20 (close the context hole), then A2-21 (DEC-2 revision 3), then a further independent review passing CLEAN.' A2-20 and A2-21 are both done and merged. You are that further independent review. You are NOT authorised to ratify DEC-2; you produce a verdict, the driver ratifies or does not. Registered by local fire 20260822-000013.",
       "contract_independent": false,
-      "note": "Registered by the driver, fire 20260822-000013, as the named unblocking condition for G-11. Until it passes clean, A2-15 (promote ledger parity vectors + Go under nexus/internal/apps/ledger/) is work against an UNRATIFIED contract and must not run."
+      "note": "Registered by the driver, fire 20260822-000013, as the named unblocking condition for G-11. Until it passes clean, A2-15 (promote ledger parity vectors + Go under nexus/internal/apps/ledger/) is work against an UNRATIFIED contract and must not run. | DISPATCHED local fire 20260822-000013 wave 1, worktree-isolated, forked from main ee2c532.",
+      "branch": "softhouse/A2-25-dec2-rev3-review"
     },
     {
       "id": "A2-26",
       "title": "Ledger-vector CAPTURE READINESS — measure what the A2 raw corpus can and cannot support, and capture the gap from the live oracle in RAW OBSERVED form only",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "role": "test_writer",
@@ -1845,7 +1850,8 @@
       ],
       "description": "Registered by local fire 20260822-000013 as the oracle-reaching work that is legitimate while G-11 (DEC-2 ratification) is OPEN. See dispatch brief. RAW OBSERVED FORM ONLY - you may not write anything under .softhouse/vectors/ or nexus/, because the vector SHAPE for the ledger context is exactly what G-11 is deciding.",
       "contract_independent": true,
-      "note": "Registered by the driver, fire 20260822-000013."
+      "note": "Registered by the driver, fire 20260822-000013. | DISPATCHED local fire 20260822-000013 wave 1, worktree-isolated, forked from main ee2c532.",
+      "branch": "softhouse/A2-26-ledger-capture-readiness"
     }
   ],
   "cross_corroboration": {
