@@ -78,7 +78,8 @@
       "tier0-harness-schedule-poc"
     ],
     "parked_contexts": [],
-    "note": "Local fire 20260822-080001 ROUND 2 (oracle REACHABLE throughout). TEN DISPATCHED, TEN COMPLETED, TEN MERGED, ZERO LIVE AT EXIT. Merged: T210, T176, T209, A2-21, A2-22, T212, T168, T162, T211, T180. HEADLINE 1 -- TWO CLAIMS THIS PROGRAM HAS BEEN REPEATING ARE NOW CORRECTED. (a) run_guards invokes SEVEN guards, not six; RESUME.md, the previous fire's headline AND the driver's own T209 brief all said six, a count that took only the '|| failed=1' arm and dropped guard_graded_root_is_this_tree, a HARD guard. Caught by A2-21. (b) 'I-3/I-4 went from ZERO enforcement to HARNESS-ENFORCED' is an OVERSTATEMENT: driver-verified from the guard's own green output, THREE OF ITS SEVEN DECLARED DETECTION CLASSES INSPECT AN EMPTY POPULATION [DENOMINATOR CORRECTED by A2-25, fire 20260822-000013; the driver certified FOUR and propagated it to four files without ever opening the guard -- see P-67] -- 3955 string literals scanned, zero SQL DML anywhere under nexus, no database driver declared at all. I4-DML and I3-SQL-BALANCE are proven by --selftest and NOT by this tree. Enforcement is LIVE for the balance-identifier class and LATENT for SQL. HEADLINE 2 -- A FIRE CAN NOW BE STOPPED. T211 made SIGTERM work: the driver re-ran its probe on all three arms rather than accepting the matrix -- PRE-FIX trap never ran, 45.002s to harness SIGKILL, LOCK STRANDED, child ORPHANED under pid 1; POST-FIX handler entered, driver tree of six stopped, lock released, rc=143; HAPPY PATH rc=0 and rc=7 both propagate to BODY COMPLETED NORMALLY. It also refuted its own brief three ways: `wait` alone is insufficient, background+wait+exit STILL ORPHANS the child (trading a stranded lock for an UNLOCKED claude still writing to the repo -- worse), and ${pipestatus[1]} dies after wait. HEADLINE 3 -- 'ZERO STRANDED' ANSWERED A NARROWER QUESTION THAN IT WAS REPORTED AS ANSWERING. The previous sweep asked git status --porcelain, i.e. UNCOMMITTED work (re-confirmed: 0 dirty). The other half -- committed to a branch, never merged -- is 79 FILE-PATHS ON 23 BRANCHES, concentrated in four; T108/T109/T131/T22 are all recorded done, and .softhouse/reviews/T131-review-of-T108.md is ON MAIN citing four paths that are NOT. Registered T214. FOUR MEASUREMENT DEFECTS BY THE DRIVER ITSELF, all withdrawn in the record (P-63): a branch sweep that inspected one file per branch; two stale numbers pasted into worker briefs without re-derivation ('six guards'; 'SCRATCH 337', corrected by T212 to 357/9); and a regex that matched a COMMENT QUOTING DELETED CODE, from which it briefly concluded T168 was wrong -- it was not. Plus P-64: the driver's first happy-path check of T211 read as RED and was INCONCLUSIVE (T211_FAKE_RC unset, fake child slept past the ceiling). NO VECTORS ADDED and that is correct -- no capture task ran; store digest unchanged at ce821c63. G-11 remains OPEN and NOT RATIFIABLE: A2-21 delivered DEC-2 rev 3 and correctly did NOT ratify it; it needs a further independent review passing clean. Next fire starts at A2-15 (now unblocked by A2-21), then T214, A2-24, T215, T193, T192."
+    "note": "Local fire 20260822-000013 (oracle REACHABLE throughout). THIRTEEN DISPATCHED, THIRTEEN COMPLETED, THIRTEEN MERGED, ZERO LIVE AT EXIT. Wave 1: A2-24, T214, T217, A2-25, T193, A2-26, T116. Wave 2: T215, A2-27, T218, T220, A2-28, A2-29. HEADLINE 1 -- THE CORPUS MOVED FOR THE FIRST TIME IN THREE FIRES: 43 parity vectors -> 46, 5664 -> 7884 cells, kills 103 -> 106 money, store ce821c63 -> 73c3ea7b43dd75f04884072719a87fc8e1d255c1. T116 executed G-8 OPTION (a); T220 independently re-derived it by two disjoint routes (its own from-scratch probe in the pinned image: 1269 money cells, 0 mismatches; T116's capture matches on 1908 cells) and APPROVED. Two family-B vectors carry exactly two exemptions each, T100's proposed THIRD was DROPPED because it holds unexempted, and the third vector is the amortizing cell ONE REPAYMENT BELOW THE BOUNDARY with NO exemption at all so the exemption cannot be read as '600% is exempt'. report.go now prints every exemption WITH ITS FULL REASON. T116 also settled the T83-vs-T101/T112 'is invariant_exemptions INERT' dispute: it was NEVER a contradiction -- T83's demo ran on a FAMILY-A case where every invariant already holds, so INERT is correct ABOUT FAMILY A; both records were right about different families. HEADLINE 2 -- FAMILY B'S MECHANISM, FOUND BY T220, DRIVER-VERIFIED AT BOTH SITES, AND IT CHANGES WHAT BUYAN IS ASKED AT G-8. ProgressiveEMICalculator.java:1962 consumes mc.getPrecision()=19 as DECIMAL PLACES via setScale; RepaymentPeriod.java:217 is reduce(BigDecimal.ONE, BigDecimal::add) with NO MathContext. So rateFactorPlus1 carries TWENTY significant digits inside a PRECISION-19 context, the EMI dips below half a minor unit at exactly the observed boundary (n=103 -> 0.005 -> 0.01; n=104 -> 0.004999999999999999999 -> 0.00), AN EMI OF ZERO REPAYS NOTHING, and the last-period fallback dumps the residual into the final row as interest. THIS IS DEC-1's KNOWN MathContext DOUBLE-SENSE PRODUCING A MONEY OUTCOME. CONSEQUENCE: family B is NOT a property of '600%' or 'n>=104' -- it is an EMI half-minor-unit floor, so THE BOUNDARY MOVES WITH PRINCIPAL, RATE AND TERM, and every statement of G-8's region in gates.md is in rates and terms. Options (b)/(c) would narrow the graded domain BY DESCRIBING A REGION and must not be put to Buyan until T223/T219 restate it. HEADLINE 3 -- G-11: REV 3 REJECTED, AND HOLDING A2-15 WAS RIGHT. The previous RESUME said A2-15 was unblocked; the driver held it and sent A2-25 at G-11's own stated unblocking condition instead. A2-25 REJECTED rev 3 on four claims false about main, and its F-3 vindicates the hold: it authored the exact vector 5.2 REQUIREMENT 6 specifies -- THE REQUIREMENT THAT WOULD HAVE GRADED A2-15 -- and it DIES AT STRICT DECODE before either mandated refusal is reachable, inadmissible stays 0, NEITHER REFUSAL FIRES. The only bytes emitting both are a loanschedule vector in a ledger costume, i.e. 5.1.1's own retracted defect. THE REQUIREMENT WRITTEN TO CLOSE THE VACUOUS-CONTROL HOLE RE-OPENED IT THROUGH ITS OWN TEXT. A2-28 wrote rev 4 addressing all seven items; G-11 STAYS OPEN - NOT RATIFIABLE until A2-31 reviews it clean. HEADLINE 4 -- G-12 RAISED AND MEASURED IN ONE FIRE. A2-26 found acc_gl_journal_entry carries office_running_balance, colliding CLAUDE.md's 'balances are derived, never written' with 'adopt Fineract's PostgreSQL schema'. The driver raised it with NO RECOMMENDATION DELIBERATELY. A2-29 measured: SECOND SOURCE OF TRUTH, NOT A CACHE -- drift of MNT 2,000,000.00 survived FOUR organisation-wide recomputes, sat on rows flagged is_running_balance_calculated=true, PROPAGATED INTO A FRESHLY COMPUTED ROW, and reached the contract boundary; the writer SEEDS EACH RECOMPUTE FROM ITS OWN PRIOR STORED OUTPUT. DRIVER-VERIFIED: /glaccounts?fetchRunningBalance=true is HTTP 500 ON POSTGRESQL because GLAccountReadPlatformServiceImpl.java:130-131 uses MySQL-only 'GROUP BY ... DESC' -- THAT CONTRACT-BOUNDARY READER HAS NEVER WORKED ON THE ONLY DATABASE THIS PROGRAM PERMITS. Driver recommends (a) for behaviour plus a NARROWED (b) for storage, against (c); price stated -- a table-level parity diff must EXCLUDE these columns and that exclusion must be written down. FOUR CORRECTIONS AGAINST THE DRIVER, all recorded: P-67 -- it CERTIFIED 'three of its FOUR detection classes' as EXACT and propagated it to four files without ever counting the denominator; THE GUARD DECLARES SEVEN CLASSES, and the origin is 4.4.1's 'four things the guard cannot see' -- four BLIND SPOTS -- read as four CLASSES (caught by A2-25; A2-28 then found only TWO of three NIL-COVERAGE sites fire and REFUSED to claim a corrected numerator for I4-BUILDER). T214 corrected it three times (four coincidental basename hits not three; 'the other 19 branches need nothing' is true of PATHS and over-claims for CONTENT, with 10 novel blobs of which FOUR target contract.go or the DEC-1 ADR so landing them would have been A GATE BYPASS; and T22 is not one of the four branches). A2-26: the brief's JE list was 7 OF 9. A2-27: the evidence path in its brief does not exist. NEW PATTERNS: P-66 (dependencies resolve in run ARCHIVES -- T116 was never blocked and sat idle for several fires on a false 'can never resolve'; seven edges point outside tasks.json and ALL SEVEN resolve), P-67, P-68 (a run that graded NOTHING reported every capability backed -- 'latent' was true of the exit code and false of the report), P-69 (a measured claim went stale BETWEEN TWO WORKERS INSIDE ONE FIRE and neither was wrong; stamps make staleness visible but cannot prevent it, so ratification needs a RE-MEASURE GATE), P-70 (four ways a SEARCH RESULT was stated as a WORLD FACT). Tooling: .softhouse/bin/ready-tasks.py resolves edges against archives and prints WHERE each resolved, plus open CONTRACT gates beside the ready list; the skill's STEP 1 patched. NEXT FIRE STARTS AT A2-31 (G-11), then T223+T219 (restate G-8's region), T222, T224, T221. A2-15 REMAINS GATED.",
+    "last_fire": "20260822-000013"
   },
   "contexts": [
     {
@@ -1598,6 +1599,56 @@
       ],
       "uat": "PASS -- conformance exit 0, probe present and up, 43 parity vectors / 5664 cells, contract-refusal 4, self-test 1, refused 0, inadmissible 0, harness errors 0, invariant violations 0, kills 103 money + 7 structural; --prove 23/23; ledger guard exit 0; go build 0, go vet 0, go test -count=1 ok; gofmt -l exactly contract.go (G-3); vector store ce821c638724237652b6b29627148d34b72fab3b UNCHANGED (no capture task ran)",
       "cutover": "NONE. Nothing here authorises one."
+    },
+    {
+      "run_id": "2026-08-21-run2-tierA-gl-accounting-A2",
+      "fire": "local 20260822-000013",
+      "context": "tierA-gl-accounting",
+      "slice": "tierA-gl-accounting-A2",
+      "tasks_dispatched": 13,
+      "tasks_merged": 13,
+      "live_at_exit": 0,
+      "isolation_violations": 0,
+      "vectors_before": 43,
+      "vectors_after": 46,
+      "cells_before": 5664,
+      "cells_after": 7884,
+      "store_before": "ce821c638724237652b6b29627148d34b72fab3b",
+      "store_after": "73c3ea7b43dd75f04884072719a87fc8e1d255c1",
+      "uat": "PASS exit 0 — 46 parity vectors / 7884 cells; --prove 23/23; build/vet/test clean; gofmt -l exactly contract.go (G-3)",
+      "reviewer_catches": [
+        "A2-25 REJECTED DEC-2 rev 3 on four claims false about main; its F-3 MEASURED that requirement 6 — which would have graded A2-15 — cannot be satisfied on the bytes it specifies",
+        "T220 found family B's MECHANISM (setScale(19) as decimal places + a no-MathContext add), which T116 could not, and APPROVED T116 after re-deriving 1269 money cells with 0 mismatches",
+        "A2-27 refused to adopt A2-24's archived probe — six t.Fatal* are preconditions, the measurement is never asserted, and it passes on the revert",
+        "A2-29 reported that a full recompute healed all 54 drifted rows, 'which alone would have been the wrong conclusion', then beat the recompute with retype-after-compute",
+        "T215 caught its own first draft: a census a defect could shrink out of (2→1) instead of failing",
+        "T217 corrected its own brief — rm -f $LOCK precedes the push, so it was never a lock-safety hazard",
+        "A2-28 refused to claim a corrected numerator for I4-BUILDER because it had not established that population"
+      ],
+      "driver_errors_withdrawn": [
+        "P-67: certified 'three of its FOUR detection classes' as EXACT and propagated it to four files; the guard declares SEVEN",
+        "T214: four coincidental basename hits not three; 'the other 19 branches need nothing' over-claims for content; T22 is not one of the four branches",
+        "A2-26: the brief's journal-entry list was 7 of 9",
+        "A2-27: the evidence path in its brief does not exist"
+      ],
+      "gates": {
+        "raised": [
+          "G-12"
+        ],
+        "measured": [
+          "G-12"
+        ],
+        "still_open": [
+          "G-4",
+          "G-5",
+          "G-8",
+          "G-10",
+          "G-11",
+          "G-12"
+        ],
+        "crossed": []
+      },
+      "cutover": "none — and nothing here authorises any"
     }
   ],
   "database": {
