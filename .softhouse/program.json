@@ -710,6 +710,21 @@
       "what_A2_19_confirmed": "47/47 Fineract citations hit at their exact lines; overall [VERIFIED] hit rate 62/64 = 96.9% with one drift and one wrong, neither a money claim; section 5.4's retraction reproduced exactly; banner + 8.1 + 8.3 DO defuse the I-3/I-4 misreading; and P-8 is GENUINELY INDEPENDENT of P-1..P-5, which is what licensed A2-18 to build the ledger-invariant guard the same fire.",
       "raised_by": "local fire 20260822-080001 (A2-19, driver-reproduced)",
       "recorded_in": ".softhouse/gates.md"
+    },
+    {
+      "id": "G-12",
+      "class": "ENGINEERING",
+      "state": "OPEN — measurement required before a recommendation",
+      "context": "tierA-gl-accounting",
+      "slice": "tierA-gl-accounting-A2",
+      "task": "A2-29",
+      "title": "Fineract STORES a running balance on the journal entry; our non-negotiable says balances are DERIVED, never written",
+      "evidence": "A2-26 DB dump .softhouse/capture/tierA-a2/out/A2-370-db-ledger-state.txt: acc_gl_journal_entry carries office_running_balance and organization_running_balance.",
+      "why_it_matters": "CLAUDE.md: 'The ledger is double-entry and append-only. Balances are derived, never written.' AND 'adopt Fineract's PostgreSQL schema.' Those two instructions meet in this column, and the reference oracle does the thing the port is forbidden to do. Same shape as G-8 -- the oracle set against a stated invariant.",
+      "blocks": "Nothing today. No ledger vector exists yet (G-11), so no vector grades the column.",
+      "what_must_be_measured_first": "Whether the columns are ever READ to serve a balance or only written; whether they reach any contract-boundary response or are purely internal; and whether the stored value can DISAGREE with the derived sum. A stored balance that always equals the derived one is a CACHE; one that can drift is a second source of truth, and the two have completely different consequences for the port.",
+      "raised_by": "A2-26, local fire 20260822-000013",
+      "recorded_in": ".softhouse/gates.md"
     }
   ],
   "history": [
