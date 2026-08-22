@@ -7,8 +7,8 @@
   bash <abs path>, cwd=$HOME                                 exit=2 stdout_bytes=0 proof_rows=0 
   direct exec (shebang), cwd=rig dir                         exit=2 stdout_bytes=0 proof_rows=0 
   sh <abs path> (undocumented form)                          exit=2 stdout_bytes=0 proof_rows=0 
-  zsh <abs path> (undocumented form)                         exit=2 stdout_bytes=0 proof_rows=0 
-  piped: bash < script (no $0 path)                          exit=2 stdout_bytes=0 proof_rows=0 
+  zsh <abs path> (undocumented form)                         exit=2 stdout_bytes=0 proof_rows=0  [CORRECTION -- M-3, T127-review-of-T109.md sec4 F-3, applied by T218: this row does NOT discriminate -- the fixed rig refuses the CORRECT pin under zsh too (`set -- $fork_line` does not word-split in zsh), a regression T109 introduced. Do not read this exit=2 as evidence the wrong-pin check works under zsh.]
+  piped: bash < script (no $0 path)                          exit=2 stdout_bytes=0 proof_rows=0
   --- the stderr of the last form, to show what a $0-less invocation does ---
   2| FATAL: THE PINNED BASELINE IS NOT THE FORK POINT — a digest moved.
   2|        file:      .softhouse/capture/src/run-pass3i.sh
@@ -19,7 +19,7 @@
   2|        pass it — but the bytes it holds for this file are NOT the pre-T82 bytes every
   2|        COUNTERPROOF row is supposed to run against. The overwhelmingly likely cause is a
 
-################ LEG B — CORRECT PIN, SAME FORMS ################
+################ LEG B — CORRECT PIN, 3 OF THE 10 FORMS [CORRECTED -- M-3, T127-review-of-T109.md sec4, applied by T218: header previously read "SAME FORMS", which overclaimed -- only 3 of the 10 LEG A forms were re-run here] ################
   bash <abs path>, cwd=repo root                             exit=0 stdout_bytes=46573 proof_rows=4 T82 guard proofs: 25 as expected, 0 not as expected ==============================================================================
   bash <bare name>, cwd=rig dir                              exit=0 stdout_bytes=46573 proof_rows=4 T82 guard proofs: 25 as expected, 0 not as expected ==============================================================================
   bash <abs path>, cwd=/tmp                                  exit=0 stdout_bytes=46573 proof_rows=4 T82 guard proofs: 25 as expected, 0 not as expected ==============================================================================
