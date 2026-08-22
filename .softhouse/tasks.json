@@ -495,7 +495,7 @@
    "executor": "agent",
    "model": "sonnet",
    "target": "code",
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
    "dependencies": [
     "T161"
@@ -504,7 +504,7 @@
     ".softhouse/handoff/"
    ],
    "description": "RAISED BY T156 as follow-up F-2. .softhouse/handoff/T61-mutations.py:265,289-291 wraps its mutation in a `finally` that covers SIGINT but NOT SIGTERM and not SIGKILL, so a killed driver leaves nexus/.../rounding.go MUTATED IN THE WORKING TREE. T156 classified this as the BENIGN half of the family because it fails LOUDLY -- a mutated rounding.go breaks the build or reds the conformance run rather than producing a quiet green. CONFIRM THAT CLASSIFICATION BEFORE ACTING ON IT, and if it is right, say so and fix it anyway: loud is not the same as harmless when the file it strands is a MONEY path (rounding is the first non-negotiable), and a developer who sees an unexplained red may `git checkout` the file and lose an unrelated local change. Extend the coverage to SIGTERM/SIGHUP, add start-up detection for the SIGKILL case, and DRIVE IT RED (P-22) on a scratch copy. Depends on T161 so the two unguarded-mutator fixes land in one coherent order and reuse ONE restore shape rather than three -- the P-26 lesson is that this family is the concept, not the sentence.",
-   "note": "fire 20260822-080001 batch 1b: dispatched worktree-isolated to softhouse/T162-mutator-sigterm-coverage; unguarded-mutator family (T162/T168/T180) run concurrently, each told to reuse T161's restore shape and report divergence for driver reconciliation at merge"
+   "note": "fire 20260822-080001: DONE+MERGED on softhouse/T162-mutator-sigterm-coverage (1aac40d). Scope clean; zero nexus/ paths in the diff and rounding.go clean on main after merge -- which matters, since stranding that file IS the defect. RE-CHECKED THE CLASSIFICATION INSTEAD OF INHERITING IT, which is what the brief asked and is the part most workers skip: it hand-applied M7's exact patch to rounding.go in a throwaway clone and ran a fresh conformance over it, confirming a mutated rounding.go reliably reds at PASS 39 FAIL 4 / VERDICT FAIL exit 1. So T156's BENIGN call is CORRECT -- and it fixed it anyway on the brief's reasoning, that loud is not harmless when the stranded artefact is the rounding implementation. Built: SIGTERM/SIGHUP handlers raising into the existing finally; a git-blob-pinned, atomically-written in-flight marker so a SIGKILLed run self-heals on the NEXT invocation; read-back-after-write verification on every restore. Reused T161's restore shape rather than inventing a third (P-26). TWO DIVERGENCES MEASURED AND DECLARED for driver reconciliation against T168/T180: (1) no foreground/background restructuring needed because CPython interrupts a blocked subprocess.run promptly -- MEASURED 0.052s vs T161's 8.8s bash deferral; (2) no directory census needed, the target is exactly two statically-named Go files. Avoided the P-55 trap explicitly with start_new_session=True. All four signals driven pre/post fix, plus the idempotent no-op branch and three fail-closed refusal branches."
   },
   {
    "id": "T163",
