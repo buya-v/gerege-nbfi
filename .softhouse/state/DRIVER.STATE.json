@@ -1,67 +1,70 @@
 {
  "squad": "DRIVER",
- "fire": "local 20260822-060013",
- "host": "Buyanmunkhs-Mac-mini",
- "current_item": "run 2026-08-21-run2-tierA-gl-accounting-A2 — 6 dispatched, 6 completed, 6 merged, 0 live at exit",
- "step": "clean exit",
- "exit_reason": "wave 2 complete; every dispatched worker awaited and merged",
- "oracle": "UP throughout — probe line PRESENT and reading 'up' on every driver re-run",
- "verified_by_driver_on_merged_main_at_exit": {
-  "probe_line": "PRESENT, reads: probe = up",
+ "fire": "local 20260822-140002 (args stamp 2026-08-22T06:00:13Z)",
+ "step": "STEP 3 — wave 1 dispatched, awaiting workers. NEVER exit with live workers.",
+ "main_at_dispatch": "9b6c596",
+ "main_now": "ccfe69e",
+ "oracle": "REACHABLE — probe line PRESENT and reads up, verified by the driver on main at 9b6c596",
+ "baseline_bar_on_main": {
   "verdict": "PASS (exit 0)",
-  "loanschedule": {
-   "parity": 46,
-   "contract_refusal": 4,
-   "self_test": 1,
-   "cells_graded": 7884,
-   "cells_ungraded": 93
-  },
-  "ledger": {
-   "parity": 4,
-   "oracle_refusal": 2,
-   "money_cells": 21
-  },
+  "probe": "PRESENT, up",
+  "loanschedule": "46 parity / 7884 graded cells",
+  "ledger": "4 parity / 2 oracle-refusal / 21 money cells",
   "refused": 0,
   "inadmissible": 0,
   "harness_errors": 0,
   "invariant_violations": 0,
-  "assertions_not_run": 0,
-  "census_pins": "4/4/4/0/0 == pinned AND LEDGER 0/4/2/21 == pinned",
-  "prove": "23 passed, 0 failed",
-  "go_build": 0,
-  "go_vet": 0,
-  "go_test": "ok",
-  "gofmt_l": "exactly nexus/internal/apps/loanschedule/contract/contract.go (expected, G-3)",
-  "vector_store_digest": "8968c559fa613e8642ab030bd0a029c17d147054",
-  "vector_store_digest_previous": "73c3ea7b43dd75f04884072719a87fc8e1d255c1"
+  "not_run": 0,
+  "census_pins": "all 9 == pinned",
+  "vector_store_digest": "13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d (git rev-parse HEAD:.softhouse/vectors — P-61 canonical recipe)"
  },
- "vectors_added_this_fire": 6,
- "merged": [
-  "T216",
-  "T234",
-  "T219",
-  "A2-15",
-  "A2-34",
-  "T228"
+ "live_workers": [
+  {
+   "task": "T247",
+   "branch": "softhouse/T247-dec2-rev7",
+   "model": "opus",
+   "what": "PREPARE DEC-2 rev 7 for the false banner (G-14). MUST NOT LAND IT. Caution must survive."
+  },
+  {
+   "task": "T248",
+   "branch": "softhouse/T248-failopen-widen",
+   "model": "opus",
+   "what": "P-76 gap. Characterise C1's real matching rule BEFORE widening C2. r11-hygiene.sh is a MANDATORY red-drive case."
+  },
+  {
+   "task": "T245",
+   "branch": "softhouse/T245-oracle-pin",
+   "model": "opus",
+   "what": "INDEPENDENT check of the driver's own reference-oracle.md correction. Claim (5) was INFERRED, not measured."
+  },
+  {
+   "task": "T249",
+   "branch": "softhouse/T249-g14-scope",
+   "model": "opus",
+   "what": "INDEPENDENT re-derivation of the driver's OWN G-14 scope decision and ready-tasks.py patch. Filed by the driver against itself."
+  },
+  {
+   "task": "T237",
+   "branch": "softhouse/T237-stale-selftest",
+   "model": "sonnet",
+   "what": "Stale committed transcript (P-69 at close range). Regenerate BY RUNNING, and say what would notice next time."
+  }
  ],
- "live_workers_at_exit": 0,
- "next_action": "Run python3 .softhouse/bin/ready-tasks.py. Highest value: T242 (the harness prints a FALSE coverage sentence every run — driver re-derived gl 16 = 16 entries against the live oracle — and hides 2 of 8 not-graded rows), then T243 (FOURTH P-45: a green conformance.sh run executes none of the six wrong ledger implementations), then T244 (prepare DEC-2 rev 6, do NOT land it; G-13 raised).",
+ "held_deliberately": {
+  "T226": "holds conformance.sh — serialised behind T248",
+  "T235": "holds conformance.sh — serialised behind T248",
+  "T241": "writes gates.md, which the driver also writes at exit — wave 2"
+ },
+ "driver_work_landed_this_fire": [
+  "9b6c596 — G-14 SCOPE DECIDED (blocks nothing but DEC-2 itself); ready-tasks.py patched to read per-gate .blocks instead of hardcoding one scope for a whole gate CLASS; both arms driven; T249 filed against the driver; T245's falsified P-75 engine roster corrected in place.",
+  "4805f0b — P-77 filed, closing the live pointer the resolver comment opened in the same fire.",
+  "ccfe69e — wave 1 marked in_progress with branches."
+ ],
+ "next_action": "Await all five workers. For each: verify the branch actually has a commit (git log --oneline main..<branch>), scope-check with THREE-DOT git diff main...<branch> against files_hint, re-run the BAR on the MERGE RESULT (never quote a worker's bar), then merge. Then wave 2: T241, then T226/T235 serialised after T248 lands.",
  "blocked_on": null,
- "gate_pending": "G-13 RAISED this fire — DEC-2 rev 5 §4.4's evidential reason for leaving I-5 ungraded is false (8 reversal rows measured live). It BLOCKS NOTHING; no task is parked on it. G-2, G-3, G-4, G-5, G-6, G-8, G-9, G-10, G-11, G-12 unchanged.",
  "open_questions": [
-  "P-71 has now been stated two ways and BOTH are falsified. Do not state a third rule — measure the fork point per worker.",
-  "T230's merged rework serves NO committed vector (UNDETERMINED-ON-THE-RECORD = 0 store-wide). Unused, not unwired. Decide whether it stays.",
-  "delta = I1q - E is UNMEASURED, so (delta+1/2)*n cannot be evaluated. That, not 'site 3 is uncharacterised', is what blocks G-8 options (b)/(c).",
-  "A user-gate prohibition written with an EXPIRY CONDITION had silently expired (G-8, caught by T228). Are there others?"
+  "G-14 scope decision is DECIDED but NOT independently reviewed — T249 is live and may reject it.",
+  "P-77 is filed but NOT reviewed; T249 covers it."
  ],
- "driver_corrections_against_itself": [
-  "P-71 SECOND CORRECTION — both fork-point rules falsified; told all four wave-1 workers 8611e754, all four measured 2d41838.",
-  "The brief's 'promoting a vector WILL move EXEMPTION_PIN_*' is FALSE (A2-15).",
-  "Circulated d1f74ae and 32c80d6, neither reachable from main (A2-34 F-1 HIGH, rediscovered by T228). Cause: git commit --amend on a merge commit.",
-  "A commit message containing backticks EXECUTED `git commit --amend`; the defect occurred inside the sentence describing the defect. P-74.",
-  "T219's files_hint omitted .softhouse/capture/ although its task required live-oracle measurement.",
-  "T216's stored BAR was stale (43/5664); corrected to 46/7884 at dispatch.",
-  "T234's headline overstated the A2-33 fail-open as undermining a RATIFIED decision; re-derived and re-scoped."
- ],
- "cutover": "NONE. Nothing this fire authorises one. Cutover remains a hard user gate."
+ "gate_pending": "G-4, G-5 (hard user gates), G-8, G-10, G-12, G-14. G-14 now records blocks: nothing but DEC-2 itself."
 }
