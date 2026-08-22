@@ -1,58 +1,19 @@
 {
  "squad": "2026-08-21-run2-tierA-gl-accounting-A2",
- "written_by": "local fire 20260821-054355 (/softhouse-program driver)",
- "written_at": "2026-08-21 (end of fire)",
- "supersedes": "the version written by fire 20260821-134344, which still recorded softhouse/A2-8-ledger-port as HELD UNMERGED. That is NO LONGER TRUE -- A2-12 carried A2-8 in and T166 (its merge precondition) landed. A stale manifest is worse than none; this rewrite exists because the next fire would have acted on it.",
+ "fire": "20260822-080001-round2",
+ "exited_cleanly": true,
  "live_workers_at_exit": 0,
- "current_item": "Tier A slice A2 (GL accounting) -- port merged; this fire spent itself on the harness/evidence integrity backlog that guards it",
- "step": "eight workers dispatched, eight completed, eight merged; zero live at exit; no isolation violation, no scope breach",
- "branches_merged_this_fire": [
-  "T173",
-  "T175",
-  "T177",
-  "T178",
-  "T179",
-  "T170",
-  "T171",
-  "T172"
- ],
- "branches_held_unmerged": {},
- "driver_work_not_on_any_branch": [
-  "e93afc9 -- fixed TWO defects in T173's guards found by running the harness on real merged main (P-56 walk scope, P-57 pipefail inversion). Driven red AND green. Under independent review as T188.",
-  "nonnegotiable-guard-audit.md addendum -- restricting the scope of T171's fail-open claim after the driver's own measurement contradicted its premise. Adjudicated by T189."
- ],
- "verified_on_merged_main_at_exit": {
-  "conformance": "exit 0, probe line PRESENT and reading up, 43 parity vectors / 5664 cells, invariant violations 0",
-  "go": "build 0, vet 0, test 0; gofmt -l names exactly contract.go (expected, G-3)",
-  "anchors": "DEC-1 49dc8923... and contract.go 0db73d4a... unmoved"
- },
- "pending_tasks": [
-  "T116",
-  "T145",
-  "T160",
-  "T162",
-  "T164",
-  "T165",
-  "T168",
-  "T174",
-  "T176",
-  "T180",
-  "T181",
-  "T182",
-  "T183",
-  "T184",
-  "T185",
-  "T186",
-  "T187",
-  "T188",
-  "T189"
- ],
- "next_action": "T187 first -- a LIVE gate bypass. Then T188, T189, T186, T165, T174, T176, T180, T160, T164, T162, T168, T145, and the paired reviewers T181-T185. T116 stays parked behind T177's re-scoping.",
+ "current_item": "run 2026-08-21-run2-tierA-gl-accounting-A2, slice A2 \u2014 10 dispatched, 10 merged",
+ "step": "batch complete, merged, UAT green, postmortem written",
+ "branch": "main",
+ "next_action": "A2-15 (now unblocked by A2-21) \u2014 the only READY task that adds a vector; then T214, A2-24, T215, T217",
  "blocked_on": null,
- "gate_pending": null,
+ "gate_pending": "G-11 OPEN and NOT RATIFIABLE \u2014 DEC-2 rev 3 delivered by A2-21, needs an independent review passing clean; G-4, G-5, G-8, G-10 OPEN, none blocking",
  "open_questions": [
-  "The grep invalid-byte direction is UNSETTLED (2 positives, 2 negatives, a third uncharacterised NUL mode). Do not cite either direction as established until T189.",
-  "gates.md still carries TWO ## G-8 headings; the NOTICE block is marked SUPERSEDED but not merged into the rebuilt section.",
-  "The A2 ledger port is still graded by NO parity vector -- the 43 are loanschedule's."
- ]
+  "T116 depends on T114, which has NO ENTRY in tasks.json and can never resolve \u2014 re-scope or re-point",
+  "A2-22 narrowed CorroborationsClaimed with no independent finding behind it (A2-24)",
+  "79 committed-but-unmerged evidence paths absent from main (T214)"
+ ],
+ "uat": "PASS \u2014 conformance exit 0, probe present and up, 43 parity / 5664 cells; --prove 23/23; ledger guard 0; go build/vet/test clean; gofmt -l exactly contract.go; vector store ce821c63 UNCHANGED",
+ "written_at": "2026-08-22"
 }

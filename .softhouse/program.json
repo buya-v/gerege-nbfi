@@ -78,7 +78,7 @@
    "tier0-harness-schedule-poc"
   ],
   "parked_contexts": [],
-  "note": "Local fire 20260822-080001 (oracle REACHABLE throughout). ELEVEN DISPATCHED, ELEVEN COMPLETED, ELEVEN MERGED, ZERO LIVE AT EXIT. TWO DEFECTS THE GREEN BAR WAS ACTIVELY HIDING ARE CLOSED. (1) THE HEADLINE PARITY NUMBER WAS INFLATABLE BY A FILE COPY: A2-19 found it, the DRIVER REPRODUCED IT INDEPENDENTLY with its own probe vector before writing the repair task, and A2-20 closed it -- copying any loanschedule vector into vectors/ledger/ and editing two strings gave 'VERDICT: PASS (exit 0) -- 44 parity vectors ... 5711 cells'. A2-20 then found a SECOND live form (contract-refusal, 4->5) that neither A2-19 nor the driver had probed. Both now INADMISSIBLE, driver-verified. (2) I-3 AND I-4 WENT FROM ZERO ENFORCEMENT TO HARNESS-ENFORCED: A2-18 built the guard and honestly refused to claim coverage it had not wired in; T208 wired it, and run_guards now invokes SIX guards. The driver planted an UPDATE acc_gl_journal_entry in a throwaway worktree and the HARNESS went red at exit 2 with ZERO probe lines. THE VECTOR-STORE EXPOSURE WAS THREE TIMES THE BRIEF'S ESTIMATE: T203 found SIX truncating rewriters reaching 26 of the 43 parity vectors including the corpus baseline P-00 (brief said four/thirteen); T206 found a SEVENTH that CAN truncate and that a live vector had been hand-edited since promotion, so a re-run would silently REGRESS content; T205 narrowed the root cause to partial-chaining plus setdefault in the classifier. All seven now refuse, create-only, driver-verified. THREE CORRECTIONS AGAINST ALREADY-MERGED WORK (T181 on T178's split, T208 on A2-18's own artefact, T205 on T203's stated mechanism) AND TWO AGAINST THE DRIVER ITSELF: P-61, the driver circulated a store digest whose recipe embedded file paths so it changed value with the caller's cwd -- two workers reported it unreproducible and BOTH WERE RIGHT; and P-62, the driver's first verification of A2-20 was a NULL CONTROL that exited 2 and would have read as a refusal. DEC-2 rev 2 REJECTED by A2-19 and recorded as G-11 -- NOT RATIFIABLE. Next fire starts at A2-21, then A2-22, T209, T210, T193, T192."
+  "note": "Local fire 20260822-080001 ROUND 2 (oracle REACHABLE throughout). TEN DISPATCHED, TEN COMPLETED, TEN MERGED, ZERO LIVE AT EXIT. Merged: T210, T176, T209, A2-21, A2-22, T212, T168, T162, T211, T180. HEADLINE 1 -- TWO CLAIMS THIS PROGRAM HAS BEEN REPEATING ARE NOW CORRECTED. (a) run_guards invokes SEVEN guards, not six; RESUME.md, the previous fire's headline AND the driver's own T209 brief all said six, a count that took only the '|| failed=1' arm and dropped guard_graded_root_is_this_tree, a HARD guard. Caught by A2-21. (b) 'I-3/I-4 went from ZERO enforcement to HARNESS-ENFORCED' is an OVERSTATEMENT: driver-verified from the guard's own green output, THREE OF ITS FOUR DETECTION CLASSES INSPECT AN EMPTY POPULATION -- 3955 string literals scanned, zero SQL DML anywhere under nexus, no database driver declared at all. I4-DML and I3-SQL-BALANCE are proven by --selftest and NOT by this tree. Enforcement is LIVE for the balance-identifier class and LATENT for SQL. HEADLINE 2 -- A FIRE CAN NOW BE STOPPED. T211 made SIGTERM work: the driver re-ran its probe on all three arms rather than accepting the matrix -- PRE-FIX trap never ran, 45.002s to harness SIGKILL, LOCK STRANDED, child ORPHANED under pid 1; POST-FIX handler entered, driver tree of six stopped, lock released, rc=143; HAPPY PATH rc=0 and rc=7 both propagate to BODY COMPLETED NORMALLY. It also refuted its own brief three ways: `wait` alone is insufficient, background+wait+exit STILL ORPHANS the child (trading a stranded lock for an UNLOCKED claude still writing to the repo -- worse), and ${pipestatus[1]} dies after wait. HEADLINE 3 -- 'ZERO STRANDED' ANSWERED A NARROWER QUESTION THAN IT WAS REPORTED AS ANSWERING. The previous sweep asked git status --porcelain, i.e. UNCOMMITTED work (re-confirmed: 0 dirty). The other half -- committed to a branch, never merged -- is 79 FILE-PATHS ON 23 BRANCHES, concentrated in four; T108/T109/T131/T22 are all recorded done, and .softhouse/reviews/T131-review-of-T108.md is ON MAIN citing four paths that are NOT. Registered T214. FOUR MEASUREMENT DEFECTS BY THE DRIVER ITSELF, all withdrawn in the record (P-63): a branch sweep that inspected one file per branch; two stale numbers pasted into worker briefs without re-derivation ('six guards'; 'SCRATCH 337', corrected by T212 to 357/9); and a regex that matched a COMMENT QUOTING DELETED CODE, from which it briefly concluded T168 was wrong -- it was not. Plus P-64: the driver's first happy-path check of T211 read as RED and was INCONCLUSIVE (T211_FAKE_RC unset, fake child slept past the ceiling). NO VECTORS ADDED and that is correct -- no capture task ran; store digest unchanged at ce821c63. G-11 remains OPEN and NOT RATIFIABLE: A2-21 delivered DEC-2 rev 3 and correctly did NOT ratify it; it needs a further independent review passing clean. Next fire starts at A2-15 (now unblocked by A2-21), then T214, A2-24, T215, T193, T192."
  },
  "contexts": [
   {
@@ -1539,6 +1539,48 @@
    },
    "gates": "G-11 RAISED and recorded (DEC-2 rev 2 REJECTED, NOT RATIFIABLE -- not a user gate; ratification is agent-decidable but the clean-review condition is unmet). G-4, G-5, G-8, G-10 untouched. NO user gate crossed.",
    "not_true": "NOTHING WAS CUT OVER. The 43 passing vectors are loanschedule's; ZERO grade the ledger's money. I-3/I-4 are now CHECKED IN SOURCE, which is not the same as GRADED against the oracle -- there is still no ledger vector and no schema to express one in."
+  },
+  {
+   "fire": "20260822-080001-round2",
+   "run_id": "2026-08-21-run2-tierA-gl-accounting-A2",
+   "context": "tierA-gl-accounting",
+   "slice": "tierA-gl-accounting-A2",
+   "tasks_dispatched": 10,
+   "tasks_merged": 10,
+   "tasks_live_at_exit": 0,
+   "merged": [
+    "T210",
+    "T176",
+    "T209",
+    "A2-21",
+    "A2-22",
+    "T212",
+    "T168",
+    "T162",
+    "T211",
+    "T180"
+   ],
+   "raised": [
+    "T214",
+    "T215",
+    "T216",
+    "T217",
+    "A2-24"
+   ],
+   "corrections_against_the_driver": [
+    "A2-21: run_guards invokes SEVEN guards, not six -- the driver had circulated six into a worker brief",
+    "T212: SCRATCH is 357->357 with 9 chain moves, not the 337/7 the driver's brief demanded",
+    "driver self-caught: branch sweep inspected one file per branch and reported it as the whole diff",
+    "driver self-caught: regex matched a comment quoting deleted code; briefly and wrongly concluded T168 was wrong",
+    "driver self-caught: first T211 happy-path check was INCONCLUSIVE (misconfigured) and read as RED"
+   ],
+   "corrections_against_merged_work": [
+    "A2-21 on the record: 'I-3/I-4 harness-enforced' overstates -- 3 of 4 detection classes inspect an empty population",
+    "T180 on T161: T161's own prover asserted attester==PRE-FIX on the SIGKILL/POST-FIX row and would have failed on the fix",
+    "driver on the previous fire: 'zero stranded' covered uncommitted work only; 79 committed-but-unmerged paths absent from main"
+   ],
+   "uat": "PASS -- conformance exit 0, probe present and up, 43 parity vectors / 5664 cells, contract-refusal 4, self-test 1, refused 0, inadmissible 0, harness errors 0, invariant violations 0, kills 103 money + 7 structural; --prove 23/23; ledger guard exit 0; go build 0, go vet 0, go test -count=1 ok; gofmt -l exactly contract.go (G-3); vector store ce821c638724237652b6b29627148d34b72fab3b UNCHANGED (no capture task ran)",
+   "cutover": "NONE. Nothing here authorises one."
   }
  ],
  "database": {
