@@ -27,6 +27,7 @@ Run it from the repo root.
 import json
 import glob
 import os
+import textwrap
 import sys
 
 TERMINAL = {"done", "approved", "merged"}
@@ -122,8 +123,30 @@ def main():
         print("  %s  %s" % (g.get("id"), g.get("state")))
         print("      context %s / slice %s" % (g.get("context"), g.get("slice")))
         print("      %s" % str(g.get("title", ""))[:100])
-        print("      => no task may write Go under nexus/ or store a CONTRACT-SHAPED vector")
-        print("         for this context until it closes. Raw observed capture IS permitted.")
+        # A gate's SCOPE is a property of that gate, not of its class. Until 2026-08-22
+        # the two lines below were printed UNCONDITIONALLY for every open CONTRACT gate,
+        # which silently asserted the G-11 prohibition (contract UNRATIFIED, shape under
+        # negotiation) over gates that block nothing of the kind -- e.g. G-14, a
+        # stale-evidence correction to an ALREADY-RATIFIED DEC-2, for which gates.md's
+        # authoritative register records "Blocks nothing today". Print what the gate
+        # itself records; fall back to the conservative blanket text ONLY when the gate
+        # has recorded no scope, and SAY that is what happened. See P-77.
+        blocks = str(g.get("blocks", "")).strip()
+        if blocks:
+            print("      => SCOPE RECORDED ON THIS GATE (program.json .blocks):")
+            for line in textwrap.wrap(blocks, 84):
+                print("         %s" % line)
+            if g.get("blocks_decided_by"):
+                print("         [decided by: %s]" % g["blocks_decided_by"])
+            if g.get("blocks_reviewed_by"):
+                print("         [reviewed by: %s]" % g["blocks_reviewed_by"])
+        else:
+            print("      => NO SCOPE RECORDED ON THIS GATE. Falling back to the CONSERVATIVE")
+            print("         default, which is an assumption and not a measurement:")
+            print("         no task may write Go under nexus/ or store a CONTRACT-SHAPED vector")
+            print("         for this context until it closes. Raw observed capture IS permitted.")
+            print("         The driver MUST decide this gate's real scope and record it in")
+            print("         program.json gates_pending[].blocks rather than inherit this text.")
 
     print("\nDEPENDENCY EDGES THAT RESOLVE NOWHERE (%d)" % len(unresolved))
     if not unresolved:

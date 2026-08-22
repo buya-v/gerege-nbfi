@@ -3886,3 +3886,38 @@ the route G-13 took this fire.
 > banner's own cited instrument. `T246` found it while reviewing a *different* correction to the same document —
 > which is the argument for independent review in one sentence.
 
+
+### SCOPE DECIDED — local fire `20260822-140002`. The machine resolver and this register DISAGREED, and the machine was wrong.
+
+**Decided by the driver, `chosen_by: agent`, ENGINEERING per CLAUDE.md § Answering gates. Buyan may reverse.**
+
+The previous fire left a boxed note refusing to act on `ready-tasks.py`'s printed inference that G-14 means
+*"no task may write Go under `nexus/` or store a CONTRACT-SHAPED vector for this context until it closes"*,
+and asked the next fire to settle it explicitly rather than let a default park Tier A. **Settled: G-14
+blocks NOTHING but DEC-2 itself**, which is what the `blocks:` line four screens up has said since the gate
+was raised.
+
+**The resolver was not reasoning about G-14 at all.** That sentence was **hardcoded** at
+`.softhouse/bin/ready-tasks.py:125` and printed for **every** open CONTRACT gate unconditionally — it read no
+per-gate field, so it could not have distinguished this gate from any other. It encodes the **G-11**
+situation, where DEC-2 was **UNRATIFIED** and its *shape* was the thing under negotiation, so anything that
+consumed or shaped the contract genuinely had to wait. G-14 is not that.
+
+**The test applied** — *does the pending correction change what a conformant implementation must DO?* **No.**
+`T246` established the banner is false **in its ground**, not wrong in any normative clause: no field, no
+rounding rule, no obligation, no graded cell moves. Blocking every Tier-A Go write on it would park a tier
+over a sentence.
+
+**What G-14 still does block:** any amendment to DEC-2 other than the prepare-only route `T247` is on, and
+`T247` may not land its own revision.
+
+**The instrument is fixed, not just the reading.** `ready-tasks.py` now prints the gate's **own** recorded
+scope from `program.json` `gates_pending[].blocks`, and when a gate records none it prints the conservative
+default **while saying out loud that it is an assumption and not a measurement**, and tells the driver to
+decide and record the real scope. Driven **both ways** before commit: the positive arm (G-14, scope present)
+prints the recorded scope; a **negative control** with `blocks` stripped from a throwaway copy prints the
+fallback. A guard proved only on the shape it was designed around is P-76's tautology-with-a-transcript.
+
+**Filed `T249` for an INDEPENDENT re-derivation of this scope decision AND of the resolver patch**, because
+the driver found this, decided it, and fixed the instrument all in one fire — the same reason `T245` exists.
+Recorded in `program.json` as `blocks_reviewed_by: T249 (PENDING) — NOT independently checked yet`.
