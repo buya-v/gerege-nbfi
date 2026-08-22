@@ -34,7 +34,7 @@ Built by local fire `20260821-125942`.
 | **G-12** | ENGINEERING | **OPEN — measurement required first** | `A2-29` must measure before anyone recommends. Blocks nothing today. | `## G-12 — Fineract STORES a running balance on the entry` |
 
 **Open right now: G-4, G-5, G-8, G-10, G-11, G-12.** Of those, **G-4 and G-5 are hard `user` gates** (each amends a
-ratified DEC-n); **G-8, G-10 and G-12 block no work today** and the driver has recorded a recommendation on each.
+ratified DEC-n); **G-8, G-10 and G-12 block no work today**. The driver has recorded a recommendation on **G-8 and G-10**; **G-12 has NO recommendation deliberately** — `A2-29` must measure whether the stored balance is a cache or a second source of truth before any option is argued, and a recommendation written before that measurement would be the guess this program keeps catching.
 
 ## Open
 
