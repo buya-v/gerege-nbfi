@@ -1366,9 +1366,9 @@
    "dependencies": [
     "T200"
    ],
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
-   "note": "DISPATCHED fire 20260822-080001, worktree-isolated, model opus.",
+   "note": "DONE + MERGED, fire 20260822-080001. ALL THREE OF T200's FINDINGS REPRODUCED, ONE WORSE THAN REPORTED, AND IT FOUND THREE MORE. LIVE FILE UNTOUCHED as instructed -- it recorded the running file's inode 7913849 / 16438 B / sha cc5d125b unchanged at exit, and did not read or write the live LOCK. THE DRIVER CHECKED THE MERGE ITSELF: inode moved 7913849 -> 8134531, i.e. git RENAMED rather than rewriting in place, which is the path T200 measured as safe for a running zsh script above the ~15KB incremental-reread threshold. T-a CONFIRMED: corrupt gitdir in a REAL linked worktree gives bare `git status` rc=128, the pipeline rc=128, WD=[0], worktree silently skipped, handoff.md ABANDONED. AND IT FOUND THE ENUMERATOR ONE LINE ABOVE HAS THE SAME DEFECT -- a failing `git worktree list` gave zero iterations indistinguishable from 'no worktrees' (P-35), which T200 did NOT flag. Fixing that removed awk/tail and stopped $(...) splitting paths with spaces, WHICH EXPOSED A THIRD BUG its own matrix caught: a space in a worktree name makes an invalid git ref, so the sweep logged 'rescuing to ...' and rescued NOTHING. T-b CONFIRMED from tools/deep/: :(top) status printed both stranded deliverables, `git add` staged nothing, HEAD did not move, and the guard STILL logged 'rescued:'. Now :(top)-anchored with both rcs checked. T-c CONFIRMED AND WORSE: T200 saw 5 lock-less ticks; T202 measured the fire releasing its lock at TICK 2 and then running ALL 38 REMAINING TICKS and exiting rc=0 -- REPORTING SUCCESS. Two dispositions T200 never tested: SIGQUIT IS IGNORED OUTRIGHT BY ZSH (a fire cannot be stopped with it), and SIGHUP terminated safely but with a misleading rc=1. THE REFRAMING FINDING, and it changes what the fix is FOR: zsh DEFERS A TRAP UNTIL THE CURRENT FOREGROUND CHILD EXITS -- 29.88 s behind a 30 s child, measured. The fire's foreground child is `claude`, running for HOURS, and launchd stops with SIGTERM-then-SIGKILL. So THE SIGKILL STRAND IS THE NORMAL OUTCOME OF STOPPING A FIRE, not the exotic one, and the 6-hour lock park is the real cost. That made out-of-process recovery (lock_holder_is_dead(), fail-closed in all five legs) the highest-value part of the fix and made a `kill -TERM 0` group sweep unnecessary. PROOF BY MUTANT-KILLING MATRICES, NOT DEMONSTRATIONS (P-50): T-a 45 checks / 3 mutants killed; T-b 100 checks / 3 mutants killed -- ITS OWN FIRST VERSION PASSED TWO OF THEM, a P-50 hole in its own prover, which it closed and reported; lock recovery 20 checks / 2 mutants killed INCLUDING ONE THAT WOULD STEAL A LIVE HOLDER'S LOCK. Post-fix signals INT/TERM/HUP/QUIT -> 130/143/129/131, lock absent, ZERO ticks after release. T172 ANCHOR REGRESSION GREEN BOTH WAYS -- with a caveat worth acting on: the committed t172-probe replays `line224` bytes T190 DELETED, and grep -c for its pattern in the current file returns 0, so it is a FROZEN regression that could no longer notice a live one. Routed as T210. A METHOD CORRECTION IT REPORTED AGAINST ITSELF: its first signal driver backgrounded the subject from a non-job-control zsh, which SIG_IGNs INT/QUIT in the child and made zsh LOOK like it ignores SIGINT -- P-55 reproduced in its own probe. All final numbers come from a python spawner giving the subject its own session and default dispositions, as launchd does. `bash -n` was not used as evidence anywhere. TOP BACKLOG ITEM, deliberately not bundled: SIGTERM STILL CANNOT PROMPTLY STOP A FIRE -- needs run_driver restructured to background + wait, which it judged too risky to bundle with three unrelated repairs WHILE A FIRE IS LIVE. Routed as T211.",
    "branch": "softhouse/T202-fireprogram-twin"
   },
   {
@@ -1582,7 +1582,7 @@
    "executor": "agent",
    "model": "opus",
    "target": "code",
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
    "dependencies": [
     "A2-18",
@@ -1593,7 +1593,7 @@
    ],
    "description": "A2-18 built and proved the I-3/I-4 source guard DEC-2 section 5.3 P-8 requires, and deliberately did NOT wire it in, because T201 held conformance.sh the same fire. The consequence A2-18 stated against itself and which must not be softened: run_guards still invokes five guards, all about float/gofmt/exception-scope, so 'balances are derived' and 'append-only' -- two CLAUDE.md non-negotiables -- are enforced by NOTHING at grade time, and the conformance transcript being byte-identical before and after A2-18 is the proof of exactly that. The wiring specification is verbatim in .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-18.md, ANCHORED ON TEXT rather than line numbers because T201's merge moved them: add a guard_ledger_invariants shim above run_guards and a `guard_ledger_invariants || failed=1` call after guard_no_narrow_catch_in_capture_rigs. run_guards maps any non-zero to EXIT_UNUSABLE so exit semantics need no change. Do NOT reuse _run_capture_guard -- A2-18 measured that it hardcodes .softhouse/capture/lib/$1. RE-DERIVE the insertion point against post-T201 conformance.sh rather than trusting the anchor text, DRIVE RED (a planted violation must now turn the HARNESS red, not just the standalone guard) and GREEN (43 parity vectors / 5664 cells / exit 0 / probe present and up). Cost measured at 2.8 s. Carry A2-18's NIL-COVERAGE and CANNOT-CATCH notices through to the harness output -- a guard whose limits stop being printed when it is wired in is the P-22 failure this program keeps finding.",
    "acceptance": null,
-   "note": "DISPATCHED fire 20260822-080001 batch 2, worktree-isolated.",
+   "note": "DONE + MERGED, fire 20260822-080001. run_guards NOW INVOKES SIX GUARDS and the sixth is neither float, gofmt nor exception scope. A2-18's statement against itself -- 'byte-identical before and after ... and the proof that I-3/I-4 remain ungraded at grade time' -- IS NO LONGER TRUE. DEC-2 section 5.3 P-8 is SATISFIED, not merely satisfiable. TWO CLAUDE.md NON-NEGOTIABLES WENT FROM ZERO ENFORCEMENT TO HARNESS-ENFORCED THIS FIRE. 75 insertions, 0 deletions -- purely additive. IT RE-DERIVED THE INSERTION POINT AS INSTRUCTED AND BOTH OF A2-18's FIGURES WERE STALE: sha 201e7a53 -> 3ebe1072, run_guards line 938 -> 1080 (T201 added ~142 lines above it the same fire). The ANCHOR TEXT survived intact, which is exactly why A2-18 anchored on text rather than line numbers. _run_capture_guard correctly not reused -- verified it hardcodes .softhouse/capture/lib/$1, plus a second reason A2-18 had not given: it would give one census two graders that could disagree with the head's git ls-files floor. T201 SHORT-CIRCUIT CHECKED RATHER THAN ASSUMED: CONFORMANCE_REPO_ROOT pointing away still gives exit 2, eleven stderr lines, zero stdout, ZERO ledger-invariants mentions -- the short-circuit is an `exit`, not a `return`, so a sixth guard cannot reopen it. DRIVER-VERIFIED INDEPENDENTLY on merged main, in a throwaway worktree, with the driver's own planted violation: a single new file containing `UPDATE acc_gl_journal_entry SET amount_minor = 0` turns THE HARNESS red -- exit 2, [I4-DML] naming the file and column, and ZERO probe lines printed. That last part matters: this is now the SIXTH pre-probe exit-2 path, so a balance write CANNOT be parked as an oracle outage under the standing rule (test the probe line's PRESENCE first, then its value). GREEN re-verified by the driver: exit 0, probe PRESENT reading up, 43 parity / 5664 cells, invariant violations 0. --prove 23 passed 0 failed before and after (unchanged as expected -- --prove bypasses run_guards). Cost 2.776 s / 2.912 s. IT CORRECTED A2-18 ON ITS OWN ARTEFACT: NIL-COVERAGE survives into the harness verbatim, but CANNOT-CATCH DOES NOT -- and did not standalone either. The head filters to '^CENSUS |^NIL-COVERAGE ' on the pass path while its own PASS text says 'Read the CANNOT-CATCH block', pointing at a block absent from every green run. WIRING DROPPED NOTHING; THE HEAD ALREADY DID. Out of T208's scope, so raised as FU-T208-1 and routed as T209; meanwhile it printed an 8-line condensation naming the load-bearing limit (RENAMING A BALANCE STILL DEFEATS THIS GUARD) and stated the 8-vs-33-line trade explicitly rather than choosing silently. It also guarded against silently neutering the guard: the wrapper captures rc BEFORE the say lines, since `return $?` after them would have returned 0 always.",
    "branch": "softhouse/T208-wire-ledger-guard"
   },
   {
@@ -1612,6 +1612,63 @@
     "nexus/internal/apps/loanschedule/conformance/"
    ],
    "description": "A2-20's measured residual, which it deliberately did not fix and argued for leaving: `mkdir .softhouse/vectors/ledger/` with NO file in it still gives exit 0, PASS 43, 5664, with 'ledger' appearing once in the whole report (the Go-tree census line). A2-20's reasoning is sound as far as it goes -- a directory with no vector makes no CLAIM and cannot inflate a NUMBER -- and this task must not overturn it without argument. But the store-shape question is separate from the vector-admission question, and it is the same family as the defect A2-14 established and the driver had to retract a claim over: an empty .softhouse/vectors/ledger/ was MEASURED to pass silently, exit 0 VERDICT PASS, with 'ledger' appearing once in the output. Close it in StoreFileCensus, which is where store SHAPE lives, not in Admit, which is where vector ADMISSIBILITY lives -- and say which of the two any new check belongs to. DRIVE RED on an empty unknown directory and GREEN on the pristine store (exit 0, 43 parity, 5664 cells, probe present and up). Do NOT weaken A2-20's admission refusal; re-run its regression test.",
+   "acceptance": null,
+   "note": null
+  },
+  {
+   "id": "T209",
+   "title": "CANNOT-CATCH never reaches any green run — the ledger guard's PASS text points at a block its own filter drops",
+   "role": "coder",
+   "executor": "agent",
+   "model": "sonnet",
+   "target": "code",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [
+    "T208"
+   ],
+   "files_hint": [
+    ".softhouse/guards/"
+   ],
+   "description": "T208's FU-T208-1, found while wiring A2-18's guard and correctly raised rather than fixed (out of T208's scope). check-ledger-invariants.sh:185 filters its pass path to '^CENSUS |^NIL-COVERAGE ', while the guard's own PASS text says 'Read the CANNOT-CATCH block and the NIL-COVERAGE lines before quoting this as coverage'. The CANNOT-CATCH block is therefore ABSENT FROM EVERY GREEN RUN -- and was absent standalone too, so wiring dropped nothing; the head already did. This matters because the limits are what stop 'the guards cover the ledger tree' becoming the false claim DEC-2's banner exists to prevent, and the load-bearing one is that RENAMING A BALANCE DEFEATS THE GUARD (the surface is the name; there is no type checker). Fix it AT SOURCE in the guard head rather than growing T208's 8-line condensation in conformance.sh, where it would drift -- that is T208's own recommendation and the driver endorses it. Weigh the transcript cost honestly (T208 measured 33 lines vs its 8-line condensation, ~19% of a 198-line transcript) and say what you chose. DRIVE RED and GREEN; the harness must stay at exit 0 / 43 parity / 5664 cells / probe present and up.",
+   "acceptance": null,
+   "note": null
+  },
+  {
+   "id": "T210",
+   "title": "T172's anchor regression is FROZEN — it replays bytes T190 deleted, so it can no longer notice a live regression",
+   "role": "coder",
+   "executor": "agent",
+   "model": "sonnet",
+   "target": "test",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [
+    "T202"
+   ],
+   "files_hint": [
+    ".softhouse/reviews/"
+   ],
+   "description": "T202's caveat, measured not guessed: the committed t172-probe scripts replay `line224` bytes that T190 DELETED, and `grep -c` for the probe's pattern in the current fire-program.sh returns ZERO. The probe still passes -- against bytes that no longer exist. That is a regression test that has silently stopped testing, which is this program's single most recurring failure class (P-22: a control that cannot fail is worse than none, because it is believed; P-35: a check inspecting zero items is an ERROR, not a pass). Re-point it at the CURRENT anchor, and make it FAIL LOUDLY if its pattern ever matches zero times again rather than passing vacuously. DRIVE RED (mutate the live anchor, probe must fail) and GREEN (unmutated, probe passes) UNDER ZSH 5.9 -- the shebang is #!/bin/zsh and the launchd plist runs `/bin/zsh -lc`; note that `bash -n` exits 0 on this file and is NOT a discriminator.",
+   "acceptance": null,
+   "note": null
+  },
+  {
+   "id": "T211",
+   "title": "SIGTERM cannot promptly stop a fire — zsh defers the trap until the foreground `claude` child exits, which is hours",
+   "role": "coder",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [
+    "T202"
+   ],
+   "files_hint": [
+    ".softhouse/bin/fire-program.sh"
+   ],
+   "description": "T202's top backlog item, deliberately not bundled with three unrelated repairs while a fire was live -- the right call, and now it is its own task. T202 MEASURED that zsh defers a trap until the current FOREGROUND CHILD exits (29.88 s behind a 30 s child). The fire's foreground child is `claude`, which runs for HOURS, and launchd stops a job with SIGTERM-then-SIGKILL. THE CONSEQUENCE IS THAT THE SIGKILL STRAND IS THE NORMAL OUTCOME OF STOPPING A FIRE, NOT THE EXOTIC ONE -- and the cost is a 6-hour lock park that blocks the next fire under STEP 0. The fix T202 named: restructure run_driver to background the child and `wait`, so the trap can run. THIS IS THE LIVE WRAPPER: do NOT modify /Users/buv/gerege-nbfi/.softhouse/bin/fire-program.sh while a fire runs; work in your worktree, and note the merge REPLACES THE INODE (the driver verified git renames rather than rewriting in place, 7913849 -> 8134531 this fire) so it takes effect next fire. DRIVE RED AND GREEN UNDER ZSH 5.9 through the real launchd shape (`/bin/zsh -lc`), with a python spawner giving the subject its own session and DEFAULT signal dispositions -- T202 recorded P-55 against its own first probe, which backgrounded the subject from a non-job-control zsh and thereby SIG_IGNed INT/QUIT in the child, making zsh appear to ignore SIGINT. Keep T202's lock_holder_is_dead() recovery and T172's anchor regression green.",
    "acceptance": null,
    "note": null
   }
