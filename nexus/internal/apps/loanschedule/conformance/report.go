@@ -328,10 +328,17 @@ func WriteReport(w io.Writer, s *Summary) {
 	p("--- EXEMPTION GROUNDING (every exemption re-run against the schedule ITS OWN VECTOR recorded) ---")
 	p("    An exemption is admissible only where the REFERENCE ORACLE ITSELF violates the invariant. That")
 	p("    is asserted, not assumed: each exempted invariant is re-run against the vector's own recorded")
-	p("    schedule, honouring that vector's unrecorded_fields, and must come back VIOLATED there. An")
-	p("    exemption on an invariant that HOLDS silences nothing and only inflates the count above; one")
-	p("    whose every cell the same vector withdrew from grading removes the cells AND the check that")
-	p("    would have noticed. Both are INADMISSIBLE, refused in Admit, never a warning.")
+	p("    schedule, honouring that vector's unrecorded_fields, and must come back VIOLATED there. This")
+	p("    section reports the ORACLE conjunct only; whether the PORT reproduces the oracle's behaviour is")
+	p("    a grading-time question and nothing here asserts it. Three verdicts are INADMISSIBLE, refused")
+	p("    in Admit and never a warning: DECORATION (the invariant holds OUTRIGHT on the oracle's own")
+	p("    numbers, with no assertion withheld, so the exemption silences nothing and only inflates the")
+	p("    count above), NOT-EVALUABLE (the invariant has nothing to assert here at all, with nothing")
+	p("    withdrawn) and SCHEDULE-UNREADABLE (the recorded rows do not parse into a schedule). A fourth,")
+	p("    UNDETERMINED-ON-THE-RECORD, is REPORTED AND ADMITTED: this vector's own unrecorded_fields")
+	p("    withdrew a cell the invariant reads, so the record is SILENT — which is not evidence against")
+	p("    the exemption, and refusing it would kill a legitimate vector for a gap in the CAPTURE")
+	p("    (finding T225-F1). It is counted apart from GROUNDED because it is not evidence either way.")
 	if ec.Declared == 0 {
 		p("    NIL-COVERAGE — no vector in this store exempts any invariant, so the exemption-grounding")
 		p("    check inspected an empty population. It inspected %d loaded vector(s) to find that out.",
@@ -341,8 +348,16 @@ func WriteReport(w io.Writer, s *Summary) {
 			"declaration(s) examined.", ec.VectorsInspected, ec.VectorsExempting, ec.Declared)
 		p("    %d GROUNDED (the recorded schedule VIOLATES the exempted invariant), %d UNGROUNDED.",
 			ec.Grounded, ec.Ungrounded)
+		p("    %d UNDETERMINED-ON-THE-RECORD (a cell the invariant reads was never recorded; admitted, "+
+			"not evidence).", ec.Undetermined)
 		for _, name := range ec.UngroundedNames {
 			p("        UNGROUNDED: %s", name)
+		}
+		for _, u := range ec.UndeterminedExemptions {
+			p("        UNDETERMINED: %s", u.Name)
+			for _, na := range u.NotAsserted {
+				p("            THE RECORD COULD NOT SAY: %s", na)
+			}
 		}
 	}
 	p("")
