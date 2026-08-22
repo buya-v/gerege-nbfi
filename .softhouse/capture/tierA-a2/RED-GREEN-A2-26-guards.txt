@@ -1,0 +1,78 @@
+
+===== G1 GREEN: mkreq-a2-26.sh verify on the real tree =====
+OK   a2-26-admit-p22.json == prod-060-cash-with-channel-override.json apart from shortName+name
+OK   a2-26-admit-p23.json == prod-061-cash-no-override.json apart from shortName+name
+OK   a2-26-admit-p24.json == prod-062-map-header-account.json apart from shortName+name
+OK   a2-26-admit-p27.json == prod-067-duplicate-channel.json apart from shortName+name
+OK   a2-26-admit-p28.json == prod-069-accrual-complete.json apart from shortName+name
+OK   a2-26-admit-p46.json == a2-7-prod-210-cash-nine-mandatory.json apart from shortName+name
+exit 0 as expected
+
+===== G1 RED: change ONE GL account id in an emitted body (16 -> 2, the retyped account) =====
+OK   a2-26-admit-p22.json == prod-060-cash-with-channel-override.json apart from shortName+name
+OK   a2-26-admit-p23.json == prod-061-cash-no-override.json apart from shortName+name
+OK   a2-26-admit-p24.json == prod-062-map-header-account.json apart from shortName+name
+OK   a2-26-admit-p27.json == prod-067-duplicate-channel.json apart from shortName+name
+OK   a2-26-admit-p28.json == prod-069-accrual-complete.json apart from shortName+name
+FAIL a2-26-admit-p46.json differs from a2-7-prod-210-cash-nine-mandatory.json beyond shortName+name
+24c24
+<   "fundSourceAccountId": 2,
+---
+>   "fundSourceAccountId": 16,
+exit non-zero as expected -- G1 detects an altered GL account id
+
+===== G1 RED 2: change a NUMBER that is not an account id (principal 1200000 -> 1200001) =====
+OK   a2-26-admit-p22.json == prod-060-cash-with-channel-override.json apart from shortName+name
+OK   a2-26-admit-p23.json == prod-061-cash-no-override.json apart from shortName+name
+OK   a2-26-admit-p24.json == prod-062-map-header-account.json apart from shortName+name
+OK   a2-26-admit-p27.json == prod-067-duplicate-channel.json apart from shortName+name
+OK   a2-26-admit-p28.json == prod-069-accrual-complete.json apart from shortName+name
+FAIL a2-26-admit-p46.json differs from a2-7-prod-210-cash-nine-mandatory.json beyond shortName+name
+6c6
+<   "principal": 1200001,
+---
+>   "principal": 1200000,
+exit non-zero as expected -- G1 detects an altered money literal
+
+===== G1 GREEN again: the tree is restored =====
+OK   a2-26-admit-p22.json == prod-060-cash-with-channel-override.json apart from shortName+name
+OK   a2-26-admit-p23.json == prod-061-cash-no-override.json apart from shortName+name
+OK   a2-26-admit-p24.json == prod-062-map-header-account.json apart from shortName+name
+OK   a2-26-admit-p27.json == prod-067-duplicate-channel.json apart from shortName+name
+OK   a2-26-admit-p28.json == prod-069-accrual-complete.json apart from shortName+name
+OK   a2-26-admit-p46.json == a2-7-prod-210-cash-nine-mandatory.json apart from shortName+name
+exit 0 as expected
+
+===== G2 GREEN: census-a2-26.py accounts for every file under out/ =====
+ACCOUNTING: 600 classified + 0 skipped == 600 total ? True
+
+===== G2 RED: run the same census over a COPY of out/ carrying one unrecognised file =====
+exit non-zero as expected
+11:--- SKIPPED FILES (reason given for every one) ---
+12-    A2-999-smuggled.dat: extension not one of .http/.json/.status/.req/.txt -- NOT a product of cap.sh or cap8.sh
+13-
+14---- STATUS HISTOGRAM over HTTP observations ---
+305:ACCOUNTING: 600 classified + 1 skipped == 601 total ? True
+NOTE: the file is NAMED in the skipped list with a reason -- it is not swallowed.
+     That is the whole difference from the enumerator this census replaces.
+
+===== G2 RED 2: an UNPARSEABLE body is a class, not a drop -- and it is FATAL =====
+exit non-zero as expected
+21:    UNPARSEABLE-JSON: JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 3 (char 2): 1
+the broken body is REPORTED by name, not skipped
+
+===== G2 RED 3: the arithmetic identity ALONE cannot fail -- proving why the exit code is stricter =====
+The 'classified + skipped == total' identity is TRUE in every red run above, because
+an unrecognised file lands in the skipped list and the sum still balances. That identity is
+therefore NOT a tripwire (P-29). The refusal is keyed on the skipped list being
+NON-EMPTY, which is what the two red runs above actually exercised.
+/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//a226prove.6VplHt/census.red:305:ACCOUNTING: 600 classified + 1 skipped == 601 total ? True
+/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//a226prove.6VplHt/census.red2:310:ACCOUNTING: 603 classified + 0 skipped == 603 total ? True
+
+===== G3 RED: cap9.sh with no Idempotency-Key must refuse =====
+exit non-zero as expected; it said:
+REFUSING: cap9.sh exists to send an Idempotency-Key and none was given. A probe that sends no key proves nothing about idempotency.
+and it wrote NOTHING under out/ -- checked, not assumed
+
+===== RESULT =====
+all three guards went green, then red, then green

@@ -1,0 +1,10 @@
+POST /journalentries
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Idempotency-Key: a2-26-idem-probe-0000000000000002
+Content-Type: application/json
+body-file: req/a2-26-manual-je-idem.json
+body-wire-bytes-artefact: A2-362-manual-je-idem-control.req
+body-sha256: c0d6c106910625e8217793065869348c3067a5071e39a553f9e60cac497bd4b2
+body-bytes: 359
+captured-at-utc: 2026-08-22T02:16:47Z

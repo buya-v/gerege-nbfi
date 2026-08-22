@@ -1,0 +1,305 @@
+====================================================================================================
+A2-26 CORPUS CENSUS -- .softhouse/capture/tierA-a2/out/
+====================================================================================================
+files under out/ (recursive)      : 600
+files accounted for by a class    : 600
+files SKIPPED (listed below)      : 0
+observation ids                   : 190
+    HTTP-OBSERVATION         186
+    PSQL-DUMP                4
+
+--- SKIPPED FILES (reason given for every one) ---
+    (none -- every file under out/ fell into a class)
+
+--- STATUS HISTOGRAM over HTTP observations ---
+    HTTP 200: 122
+    HTTP 400: 33
+    HTTP 403: 21
+    HTTP 404: 10
+
+--- PARSE RESULTS (an unparseable body is a CLASS, not a drop) ---
+    n/a (no body leg): 4
+    ok: 186
+
+--- ENDPOINT HISTOGRAM (method + path family) ---
+      7  DELETE /glaccounts/{id}
+      1  GET /financialactivityaccounts
+      1  GET /financialactivityaccounts/template
+      2  GET /glaccounts
+      1  GET /glaccounts/template
+     21  GET /glaccounts/{id}
+     18  GET /journalentries
+      1  GET /journalentries/{id}
+      1  GET /loanproducts
+      1  GET /loanproducts/template
+      8  GET /loanproducts/{id}
+      3  GET /loans/{id}
+      7  POST /financialactivityaccounts
+     37  POST /glaccounts
+      7  POST /journalentries
+      1  POST /journalentries/a28f573f34c7
+     30  POST /loanproducts
+      6  POST /loans
+     13  POST /loans/{id}
+      8  POST /loans/{id}/transactions
+      1  PUT /financialactivityaccounts/{id}
+      9  PUT /glaccounts/{id}
+      2  PUT /loanproducts/{id}
+      4  psql (SQL dump, see sql/)
+
+====================================================================================================
+JOURNAL-ENTRY OBSERVATIONS -- enumerated by ENDPOINT, not by remembered id
+====================================================================================================
+count: 27
+
+### A2-087-journalentries-loan1   [GET /journalentries?loanId=1&limit=50]  HTTP 200
+    totalFilteredRecords = 2   rows returned = 2
+    txn L1: rows=2  DEBIT total=1200000.000000  CREDIT total=1200000.000000  both-sides=True  balanced=True
+        je#1    DEBIT  gl 4   code 10201  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Loan Portfolio  entity=LOAN/1 date=[2026, 2, 1] reversed=False
+        je#2    CREDIT gl 16  code 10300  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Fund Source Alternate  entity=LOAN/1 date=[2026, 2, 1] reversed=False
+
+### A2-088-journalentries-loan2   [GET /journalentries?loanId=2&limit=50]  HTTP 200
+    totalFilteredRecords = 2   rows returned = 2
+    txn L2: rows=2  DEBIT total=1200000.000000  CREDIT total=1200000.000000  both-sides=True  balanced=True
+        je#3    DEBIT  gl 4   code 10201  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Loan Portfolio  entity=LOAN/2 date=[2026, 2, 1] reversed=False
+        je#4    CREDIT gl 2   code 10100  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Fund Source  entity=LOAN/2 date=[2026, 2, 1] reversed=False
+
+### A2-091c-journalentries-loan4   [GET /journalentries?loanId=4&limit=50]  HTTP 200
+    totalFilteredRecords = 2   rows returned = 2
+    txn L4: rows=2  DEBIT total=1200000.000000  CREDIT total=1200000.000000  both-sides=True  balanced=True
+        je#6    DEBIT  gl 1   code 10000  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Assets  entity=LOAN/4 date=[2026, 2, 1] reversed=False
+        je#7    CREDIT gl 2   code 10100  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Fund Source  entity=LOAN/4 date=[2026, 2, 1] reversed=False
+
+### A2-223-je-after-disburse   [GET /journalentries?loanId=5&limit=50]  HTTP 200
+    totalFilteredRecords = 2   rows returned = 2
+    txn L11: rows=2  DEBIT total=1200000.000000  CREDIT total=1200000.000000  both-sides=True  balanced=True
+        je#11   DEBIT  gl 4   code 10201  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Loan Portfolio  entity=LOAN/5 date=[2026, 2, 1] reversed=False
+        je#12   CREDIT gl 16  code 10300  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Fund Source Alternate  entity=LOAN/5 date=[2026, 2, 1] reversed=False
+
+### A2-227-je-after-repayment   [GET /journalentries?loanId=5&limit=50]  HTTP 200
+    totalFilteredRecords = 4   rows returned = 4
+    txn L11: rows=2  DEBIT total=1200000.000000  CREDIT total=1200000.000000  both-sides=True  balanced=True
+        je#11   DEBIT  gl 4   code 10201  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Loan Portfolio  entity=LOAN/5 date=[2026, 2, 1] reversed=False
+        je#12   CREDIT gl 16  code 10300  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Fund Source Alternate  entity=LOAN/5 date=[2026, 2, 1] reversed=False
+    txn L14: rows=2  DEBIT total=200000.000000  CREDIT total=200000.000000  both-sides=True  balanced=True
+        je#14   CREDIT gl 4   code 10201  ASSET      amount='200000.000000' scale=6 ccy=MNT dp=2 minor=20000000  Loan Portfolio  entity=LOAN/5 date=[2026, 3, 1] reversed=False
+        je#15   DEBIT  gl 16  code 10300  ASSET      amount='200000.000000' scale=6 ccy=MNT dp=2 minor=20000000  Fund Source Alternate  entity=LOAN/5 date=[2026, 3, 1] reversed=False
+
+### A2-229-je-after-writeoff   [GET /journalentries?loanId=5&limit=80]  HTTP 200
+    totalFilteredRecords = 4   rows returned = 4
+    txn L11: rows=2  DEBIT total=1200000.000000  CREDIT total=1200000.000000  both-sides=True  balanced=True
+        je#11   DEBIT  gl 4   code 10201  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Loan Portfolio  entity=LOAN/5 date=[2026, 2, 1] reversed=False
+        je#12   CREDIT gl 16  code 10300  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Fund Source Alternate  entity=LOAN/5 date=[2026, 2, 1] reversed=False
+    txn L14: rows=2  DEBIT total=200000.000000  CREDIT total=200000.000000  both-sides=True  balanced=True
+        je#14   CREDIT gl 4   code 10201  ASSET      amount='200000.000000' scale=6 ccy=MNT dp=2 minor=20000000  Loan Portfolio  entity=LOAN/5 date=[2026, 3, 1] reversed=False
+        je#15   DEBIT  gl 16  code 10300  ASSET      amount='200000.000000' scale=6 ccy=MNT dp=2 minor=20000000  Fund Source Alternate  entity=LOAN/5 date=[2026, 3, 1] reversed=False
+
+### A2-231-je-after-recovery   [GET /journalentries?loanId=5&limit=80]  HTTP 200
+    totalFilteredRecords = 4   rows returned = 4
+    txn L11: rows=2  DEBIT total=1200000.000000  CREDIT total=1200000.000000  both-sides=True  balanced=True
+        je#11   DEBIT  gl 4   code 10201  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Loan Portfolio  entity=LOAN/5 date=[2026, 2, 1] reversed=False
+        je#12   CREDIT gl 16  code 10300  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Fund Source Alternate  entity=LOAN/5 date=[2026, 2, 1] reversed=False
+    txn L14: rows=2  DEBIT total=200000.000000  CREDIT total=200000.000000  both-sides=True  balanced=True
+        je#14   CREDIT gl 4   code 10201  ASSET      amount='200000.000000' scale=6 ccy=MNT dp=2 minor=20000000  Loan Portfolio  entity=LOAN/5 date=[2026, 3, 1] reversed=False
+        je#15   DEBIT  gl 16  code 10300  ASSET      amount='200000.000000' scale=6 ccy=MNT dp=2 minor=20000000  Fund Source Alternate  entity=LOAN/5 date=[2026, 3, 1] reversed=False
+
+### A2-233-je-after-writeoff   [GET /journalentries?loanId=5&limit=80]  HTTP 200
+    totalFilteredRecords = 6   rows returned = 6
+    txn L11: rows=2  DEBIT total=1200000.000000  CREDIT total=1200000.000000  both-sides=True  balanced=True
+        je#11   DEBIT  gl 4   code 10201  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Loan Portfolio  entity=LOAN/5 date=[2026, 2, 1] reversed=False
+        je#12   CREDIT gl 16  code 10300  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Fund Source Alternate  entity=LOAN/5 date=[2026, 2, 1] reversed=False
+    txn L14: rows=2  DEBIT total=200000.000000  CREDIT total=200000.000000  both-sides=True  balanced=True
+        je#14   CREDIT gl 4   code 10201  ASSET      amount='200000.000000' scale=6 ccy=MNT dp=2 minor=20000000  Loan Portfolio  entity=LOAN/5 date=[2026, 3, 1] reversed=False
+        je#15   DEBIT  gl 16  code 10300  ASSET      amount='200000.000000' scale=6 ccy=MNT dp=2 minor=20000000  Fund Source Alternate  entity=LOAN/5 date=[2026, 3, 1] reversed=False
+    txn L15: rows=2  DEBIT total=1000000.000000  CREDIT total=1000000.000000  both-sides=True  balanced=True
+        je#16   DEBIT  gl 13  code 50100  EXPENSE    amount='1000000.000000' scale=6 ccy=MNT dp=2 minor=100000000  Losses Written Off  entity=LOAN/5 date=[2026, 4, 1] reversed=False
+        je#17   CREDIT gl 4   code 10201  ASSET      amount='1000000.000000' scale=6 ccy=MNT dp=2 minor=100000000  Loan Portfolio  entity=LOAN/5 date=[2026, 4, 1] reversed=False
+
+### A2-235-je-after-recovery   [GET /journalentries?loanId=5&limit=80]  HTTP 200
+    totalFilteredRecords = 8   rows returned = 8
+    txn L11: rows=2  DEBIT total=1200000.000000  CREDIT total=1200000.000000  both-sides=True  balanced=True
+        je#11   DEBIT  gl 4   code 10201  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Loan Portfolio  entity=LOAN/5 date=[2026, 2, 1] reversed=False
+        je#12   CREDIT gl 16  code 10300  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Fund Source Alternate  entity=LOAN/5 date=[2026, 2, 1] reversed=False
+    txn L14: rows=2  DEBIT total=200000.000000  CREDIT total=200000.000000  both-sides=True  balanced=True
+        je#14   CREDIT gl 4   code 10201  ASSET      amount='200000.000000' scale=6 ccy=MNT dp=2 minor=20000000  Loan Portfolio  entity=LOAN/5 date=[2026, 3, 1] reversed=False
+        je#15   DEBIT  gl 16  code 10300  ASSET      amount='200000.000000' scale=6 ccy=MNT dp=2 minor=20000000  Fund Source Alternate  entity=LOAN/5 date=[2026, 3, 1] reversed=False
+    txn L15: rows=2  DEBIT total=1000000.000000  CREDIT total=1000000.000000  both-sides=True  balanced=True
+        je#16   DEBIT  gl 13  code 50100  EXPENSE    amount='1000000.000000' scale=6 ccy=MNT dp=2 minor=100000000  Losses Written Off  entity=LOAN/5 date=[2026, 4, 1] reversed=False
+        je#17   CREDIT gl 4   code 10201  ASSET      amount='1000000.000000' scale=6 ccy=MNT dp=2 minor=100000000  Loan Portfolio  entity=LOAN/5 date=[2026, 4, 1] reversed=False
+    txn L16: rows=2  DEBIT total=50000.000000  CREDIT total=50000.000000  both-sides=True  balanced=True
+        je#18   DEBIT  gl 16  code 10300  ASSET      amount='50000.000000' scale=6 ccy=MNT dp=2 minor=5000000  Fund Source Alternate  entity=LOAN/5 date=[2026, 5, 1] reversed=False
+        je#19   CREDIT gl 11  code 40400  INCOME     amount='50000.000000' scale=6 ccy=MNT dp=2 minor=5000000  Recoveries  entity=LOAN/5 date=[2026, 5, 1] reversed=False
+
+### A2-320-je-loan2-retype-visibility   [GET /journalentries?loanId=2&limit=50]  HTTP 200
+    totalFilteredRecords = 2   rows returned = 2
+    txn L2: rows=2  DEBIT total=1200000.000000  CREDIT total=1200000.000000  both-sides=True  balanced=True
+        je#3    DEBIT  gl 4   code 10201  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Loan Portfolio  entity=LOAN/2 date=[2026, 2, 1] reversed=False
+        je#4    CREDIT gl 2   code 10100  INCOME     amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Fund Source  entity=LOAN/2 date=[2026, 2, 1] reversed=False
+
+### A2-321-je-loan4-retype-visibility   [GET /journalentries?loanId=4&limit=50]  HTTP 200
+    totalFilteredRecords = 2   rows returned = 2
+    txn L4: rows=2  DEBIT total=1200000.000000  CREDIT total=1200000.000000  both-sides=True  balanced=True
+        je#6    DEBIT  gl 1   code 10000  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Assets  entity=LOAN/4 date=[2026, 2, 1] reversed=False
+        je#7    CREDIT gl 2   code 10100  INCOME     amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Fund Source  entity=LOAN/4 date=[2026, 2, 1] reversed=False
+
+### A2-322-je-loan5-control   [GET /journalentries?loanId=5&limit=80]  HTTP 200
+    totalFilteredRecords = 8   rows returned = 8
+    txn L11: rows=2  DEBIT total=1200000.000000  CREDIT total=1200000.000000  both-sides=True  balanced=True
+        je#11   DEBIT  gl 4   code 10201  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Loan Portfolio  entity=LOAN/5 date=[2026, 2, 1] reversed=False
+        je#12   CREDIT gl 16  code 10300  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Fund Source Alternate  entity=LOAN/5 date=[2026, 2, 1] reversed=False
+    txn L14: rows=2  DEBIT total=200000.000000  CREDIT total=200000.000000  both-sides=True  balanced=True
+        je#14   CREDIT gl 4   code 10201  ASSET      amount='200000.000000' scale=6 ccy=MNT dp=2 minor=20000000  Loan Portfolio  entity=LOAN/5 date=[2026, 3, 1] reversed=False
+        je#15   DEBIT  gl 16  code 10300  ASSET      amount='200000.000000' scale=6 ccy=MNT dp=2 minor=20000000  Fund Source Alternate  entity=LOAN/5 date=[2026, 3, 1] reversed=False
+    txn L15: rows=2  DEBIT total=1000000.000000  CREDIT total=1000000.000000  both-sides=True  balanced=True
+        je#16   DEBIT  gl 13  code 50100  EXPENSE    amount='1000000.000000' scale=6 ccy=MNT dp=2 minor=100000000  Losses Written Off  entity=LOAN/5 date=[2026, 4, 1] reversed=False
+        je#17   CREDIT gl 4   code 10201  ASSET      amount='1000000.000000' scale=6 ccy=MNT dp=2 minor=100000000  Loan Portfolio  entity=LOAN/5 date=[2026, 4, 1] reversed=False
+    txn L16: rows=2  DEBIT total=50000.000000  CREDIT total=50000.000000  both-sides=True  balanced=True
+        je#18   DEBIT  gl 16  code 10300  ASSET      amount='50000.000000' scale=6 ccy=MNT dp=2 minor=5000000  Fund Source Alternate  entity=LOAN/5 date=[2026, 5, 1] reversed=False
+        je#19   CREDIT gl 11  code 40400  INCOME     amount='50000.000000' scale=6 ccy=MNT dp=2 minor=5000000  Recoveries  entity=LOAN/5 date=[2026, 5, 1] reversed=False
+
+### A2-323-je-entry4-single   [GET /journalentries/4]  HTTP 200
+    totalFilteredRecords = None   rows returned = 0
+    NO ROWS -- records no money cell at all
+
+### A2-335-je-after-disburse-coverage   [GET /journalentries?loanId=7&limit=80]  HTTP 200
+    totalFilteredRecords = 4   rows returned = 4
+    txn L21: rows=2  DEBIT total=1200000.000000  CREDIT total=1200000.000000  both-sides=True  balanced=True
+        je#25   DEBIT  gl 4   code 10201  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Loan Portfolio  entity=LOAN/7 date=[2026, 2, 1] reversed=False
+        je#26   CREDIT gl 16  code 10300  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Fund Source Alternate  entity=LOAN/7 date=[2026, 2, 1] reversed=False
+    txn L23: rows=2  DEBIT total=15000.000000  CREDIT total=15000.000000  both-sides=True  balanced=True
+        je#27   CREDIT gl 9   code 40200  INCOME     amount='15000.000000' scale=6 ccy=MNT dp=2 minor=1500000  Income From Fees  entity=LOAN/7 date=[2026, 2, 1] reversed=False
+        je#28   DEBIT  gl 16  code 10300  ASSET      amount='15000.000000' scale=6 ccy=MNT dp=2 minor=1500000  Fund Source Alternate  entity=LOAN/7 date=[2026, 2, 1] reversed=False
+
+### A2-338-je-after-repayment-coverage   [GET /journalentries?loanId=7&limit=80]  HTTP 200
+    totalFilteredRecords = 8   rows returned = 8
+    txn L21: rows=2  DEBIT total=1200000.000000  CREDIT total=1200000.000000  both-sides=True  balanced=True
+        je#25   DEBIT  gl 4   code 10201  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Loan Portfolio  entity=LOAN/7 date=[2026, 2, 1] reversed=False
+        je#26   CREDIT gl 16  code 10300  ASSET      amount='1200000.000000' scale=6 ccy=MNT dp=2 minor=120000000  Fund Source Alternate  entity=LOAN/7 date=[2026, 2, 1] reversed=False
+    txn L23: rows=2  DEBIT total=15000.000000  CREDIT total=15000.000000  both-sides=True  balanced=True
+        je#27   CREDIT gl 9   code 40200  INCOME     amount='15000.000000' scale=6 ccy=MNT dp=2 minor=1500000  Income From Fees  entity=LOAN/7 date=[2026, 2, 1] reversed=False
+        je#28   DEBIT  gl 16  code 10300  ASSET      amount='15000.000000' scale=6 ccy=MNT dp=2 minor=1500000  Fund Source Alternate  entity=LOAN/7 date=[2026, 2, 1] reversed=False
+    txn L25: rows=4  DEBIT total=300000.000000  CREDIT total=300000.000000  both-sides=True  balanced=True
+        je#29   CREDIT gl 4   code 10201  ASSET      amount='270450.580000' scale=6 ccy=MNT dp=2 minor=27045058  Loan Portfolio  entity=LOAN/7 date=[2026, 3, 1] reversed=False
+        je#30   CREDIT gl 8   code 40100  INCOME     amount='22049.420000' scale=6 ccy=MNT dp=2 minor=2204942  Interest On Loans  entity=LOAN/7 date=[2026, 3, 1] reversed=False
+        je#31   CREDIT gl 10  code 40300  INCOME     amount='7500.000000' scale=6 ccy=MNT dp=2 minor=750000  Income From Penalties  entity=LOAN/7 date=[2026, 3, 1] reversed=False
+        je#32   DEBIT  gl 16  code 10300  ASSET      amount='300000.000000' scale=6 ccy=MNT dp=2 minor=30000000  Fund Source Alternate  entity=LOAN/7 date=[2026, 3, 1] reversed=False
+
+### A2-343-manual-je-3leg   [POST /journalentries]  HTTP 200
+    totalFilteredRecords = None   rows returned = 0
+    NO ROWS -- records no money cell at all
+
+### A2-344-manual-je-unbalanced   [POST /journalentries]  HTTP 403
+    totalFilteredRecords = None   rows returned = 0
+    NO ROWS -- records no money cell at all
+
+### A2-345-manual-je-header   [POST /journalentries]  HTTP 200
+    totalFilteredRecords = None   rows returned = 0
+    NO ROWS -- records no money cell at all
+
+### A2-346-manual-je-nomanual   [POST /journalentries]  HTTP 403
+    totalFilteredRecords = None   rows returned = 0
+    NO ROWS -- records no money cell at all
+
+### A2-347-je-manual-readback   [GET /journalentries?transactionId=a28f573f34c7&limit=50]  HTTP 200
+    totalFilteredRecords = 3   rows returned = 3
+    txn a28f573f34c7: rows=3  DEBIT total=125000.620000  CREDIT total=125000.620000  both-sides=True  balanced=True
+        je#45   DEBIT  gl 16  code 10300  ASSET      amount='100000.250000' scale=6 ccy=MNT dp=2 minor=10000025  Fund Source Alternate  entity=None/None date=[2026, 6, 1] reversed=False
+        je#46   DEBIT  gl 17  code 10400  ASSET      amount='25000.370000' scale=6 ccy=MNT dp=2 minor=2500037  Disabled Asset  entity=None/None date=[2026, 6, 1] reversed=False
+        je#47   CREDIT gl 21  code 99008  LIABILITY  amount='125000.620000' scale=6 ccy=MNT dp=2 minor=12500062  Liability Under Asset  entity=None/None date=[2026, 6, 1] reversed=False
+
+### A2-348-je-reverse   [POST /journalentries/a28f573f34c7?command=reverse]  HTTP 200
+    totalFilteredRecords = None   rows returned = 0
+    NO ROWS -- records no money cell at all
+
+### A2-349-je-manual-after-reverse   [GET /journalentries?transactionId=a28f573f34c7&limit=50]  HTTP 200
+    totalFilteredRecords = 3   rows returned = 3
+    txn a28f573f34c7: rows=3  DEBIT total=125000.620000  CREDIT total=125000.620000  both-sides=True  balanced=True
+        je#45   DEBIT  gl 16  code 10300  ASSET      amount='100000.250000' scale=6 ccy=MNT dp=2 minor=10000025  Fund Source Alternate  entity=None/None date=[2026, 6, 1] reversed=True
+        je#46   DEBIT  gl 17  code 10400  ASSET      amount='25000.370000' scale=6 ccy=MNT dp=2 minor=2500037  Disabled Asset  entity=None/None date=[2026, 6, 1] reversed=True
+        je#47   CREDIT gl 21  code 99008  LIABILITY  amount='125000.620000' scale=6 ccy=MNT dp=2 minor=12500062  Liability Under Asset  entity=None/None date=[2026, 6, 1] reversed=True
+
+### A2-350-je-office1-june   [GET /journalentries?officeId=1&fromDate=01%20June%202026&toDate=30%20June%202026&locale=en&dateFormat=dd%20MMMM%20yyyy&limit=100]  HTTP 200
+    totalFilteredRecords = 20   rows returned = 20
+    txn a28f54bfdaf3: rows=3  DEBIT total=125000.550000  CREDIT total=125000.550000  both-sides=True  balanced=True
+        je#33   DEBIT  gl 16  code 10300  ASSET      amount='100000.250000' scale=6 ccy=MNT dp=2 minor=10000025  Fund Source Alternate  entity=None/None date=[2026, 6, 1] reversed=True
+        je#34   DEBIT  gl 17  code 10400  ASSET      amount='25000.300000' scale=6 ccy=MNT dp=2 minor=2500030  Disabled Asset  entity=None/None date=[2026, 6, 1] reversed=True
+        je#35   CREDIT gl 21  code 99008  LIABILITY  amount='125000.550000' scale=6 ccy=MNT dp=2 minor=12500055  Liability Under Asset  entity=None/None date=[2026, 6, 1] reversed=True
+    txn a28f54c099f7: rows=2  DEBIT total=100000.250000  CREDIT total=100000.250000  both-sides=True  balanced=True
+        je#36   DEBIT  gl 1   code 10000  ASSET      amount='100000.250000' scale=6 ccy=MNT dp=2 minor=10000025  Assets  entity=None/None date=[2026, 6, 1] reversed=False
+        je#37   CREDIT gl 21  code 99008  LIABILITY  amount='100000.250000' scale=6 ccy=MNT dp=2 minor=10000025  Liability Under Asset  entity=None/None date=[2026, 6, 1] reversed=False
+    txn a28f54c1db73: rows=3  DEBIT total=125000.550000  CREDIT total=125000.550000  both-sides=True  balanced=True
+        je#38   CREDIT gl 16  code 10300  ASSET      amount='100000.250000' scale=6 ccy=MNT dp=2 minor=10000025  Fund Source Alternate  entity=None/None date=[2026, 6, 1] reversed=False
+        je#39   CREDIT gl 17  code 10400  ASSET      amount='25000.300000' scale=6 ccy=MNT dp=2 minor=2500030  Disabled Asset  entity=None/None date=[2026, 6, 1] reversed=False
+        je#40   DEBIT  gl 21  code 99008  LIABILITY  amount='125000.550000' scale=6 ccy=MNT dp=2 minor=12500055  Liability Under Asset  entity=None/None date=[2026, 6, 1] reversed=False
+    txn a28f55a1af0f: rows=2  DEBIT total=33333.330000  CREDIT total=33333.330000  both-sides=True  balanced=True
+        je#41   DEBIT  gl 16  code 10300  ASSET      amount='33333.330000' scale=6 ccy=MNT dp=2 minor=3333333  Fund Source Alternate  entity=None/None date=[2026, 6, 2] reversed=False
+        je#42   CREDIT gl 21  code 99008  LIABILITY  amount='33333.330000' scale=6 ccy=MNT dp=2 minor=3333333  Liability Under Asset  entity=None/None date=[2026, 6, 2] reversed=False
+    txn a28f55a289cf: rows=2  DEBIT total=33333.330000  CREDIT total=33333.330000  both-sides=True  balanced=True
+        je#43   DEBIT  gl 16  code 10300  ASSET      amount='33333.330000' scale=6 ccy=MNT dp=2 minor=3333333  Fund Source Alternate  entity=None/None date=[2026, 6, 2] reversed=False
+        je#44   CREDIT gl 21  code 99008  LIABILITY  amount='33333.330000' scale=6 ccy=MNT dp=2 minor=3333333  Liability Under Asset  entity=None/None date=[2026, 6, 2] reversed=False
+    txn a28f573f34c7: rows=3  DEBIT total=125000.620000  CREDIT total=125000.620000  both-sides=True  balanced=True
+        je#45   DEBIT  gl 16  code 10300  ASSET      amount='100000.250000' scale=6 ccy=MNT dp=2 minor=10000025  Fund Source Alternate  entity=None/None date=[2026, 6, 1] reversed=True
+        je#46   DEBIT  gl 17  code 10400  ASSET      amount='25000.370000' scale=6 ccy=MNT dp=2 minor=2500037  Disabled Asset  entity=None/None date=[2026, 6, 1] reversed=True
+        je#47   CREDIT gl 21  code 99008  LIABILITY  amount='125000.620000' scale=6 ccy=MNT dp=2 minor=12500062  Liability Under Asset  entity=None/None date=[2026, 6, 1] reversed=True
+    txn a28f573ffb9b: rows=2  DEBIT total=100000.250000  CREDIT total=100000.250000  both-sides=True  balanced=True
+        je#48   DEBIT  gl 1   code 10000  ASSET      amount='100000.250000' scale=6 ccy=MNT dp=2 minor=10000025  Assets  entity=None/None date=[2026, 6, 1] reversed=False
+        je#49   CREDIT gl 21  code 99008  LIABILITY  amount='100000.250000' scale=6 ccy=MNT dp=2 minor=10000025  Liability Under Asset  entity=None/None date=[2026, 6, 1] reversed=False
+    txn a28f57412abb: rows=3  DEBIT total=125000.620000  CREDIT total=125000.620000  both-sides=True  balanced=True
+        je#50   CREDIT gl 16  code 10300  ASSET      amount='100000.250000' scale=6 ccy=MNT dp=2 minor=10000025  Fund Source Alternate  entity=None/None date=[2026, 6, 1] reversed=False
+        je#51   CREDIT gl 17  code 10400  ASSET      amount='25000.370000' scale=6 ccy=MNT dp=2 minor=2500037  Disabled Asset  entity=None/None date=[2026, 6, 1] reversed=False
+        je#52   DEBIT  gl 21  code 99008  LIABILITY  amount='125000.620000' scale=6 ccy=MNT dp=2 minor=12500062  Liability Under Asset  entity=None/None date=[2026, 6, 1] reversed=False
+
+### A2-360-manual-je-idem-first   [POST /journalentries]  HTTP 200
+    totalFilteredRecords = None   rows returned = 0
+    NO ROWS -- records no money cell at all
+
+### A2-361-manual-je-idem-repeat   [POST /journalentries]  HTTP 200
+    totalFilteredRecords = None   rows returned = 0
+    NO ROWS -- records no money cell at all
+
+### A2-362-manual-je-idem-control   [POST /journalentries]  HTTP 200
+    totalFilteredRecords = None   rows returned = 0
+    NO ROWS -- records no money cell at all
+
+### A2-363-je-office1-2june   [GET /journalentries?officeId=1&fromDate=02%20June%202026&toDate=02%20June%202026&locale=en&dateFormat=dd%20MMMM%20yyyy&limit=100]  HTTP 200
+    totalFilteredRecords = 4   rows returned = 4
+    txn a28f55a1af0f: rows=2  DEBIT total=33333.330000  CREDIT total=33333.330000  both-sides=True  balanced=True
+        je#41   DEBIT  gl 16  code 10300  ASSET      amount='33333.330000' scale=6 ccy=MNT dp=2 minor=3333333  Fund Source Alternate  entity=None/None date=[2026, 6, 2] reversed=False
+        je#42   CREDIT gl 21  code 99008  LIABILITY  amount='33333.330000' scale=6 ccy=MNT dp=2 minor=3333333  Liability Under Asset  entity=None/None date=[2026, 6, 2] reversed=False
+    txn a28f55a289cf: rows=2  DEBIT total=33333.330000  CREDIT total=33333.330000  both-sides=True  balanced=True
+        je#43   DEBIT  gl 16  code 10300  ASSET      amount='33333.330000' scale=6 ccy=MNT dp=2 minor=3333333  Fund Source Alternate  entity=None/None date=[2026, 6, 2] reversed=False
+        je#44   CREDIT gl 21  code 99008  LIABILITY  amount='33333.330000' scale=6 ccy=MNT dp=2 minor=3333333  Liability Under Asset  entity=None/None date=[2026, 6, 2] reversed=False
+
+balanced double-entry transaction groups observed: 40
+
+====================================================================================================
+MONEY CELLS ELSEWHERE IN THE CORPUS (generic scan, every non-JE parsed body)
+====================================================================================================
+  A2-083a-approve-loan1                          HTTP 200    3 cells: changes.principal=1200000, changes.netDisbursalAmount=1200000.000000, changes.approvedLoanAmount=1200000
+  A2-083b-approve-loan2                          HTTP 200    3 cells: changes.principal=1200000, changes.netDisbursalAmount=1200000.000000, changes.approvedLoanAmount=1200000
+  A2-083c-approve-loan3                          HTTP 200    3 cells: changes.principal=1200000, changes.netDisbursalAmount=1200000.000000, changes.approvedLoanAmount=1200000
+  A2-091a-approve-loan4                          HTTP 200    3 cells: changes.principal=1200000, changes.netDisbursalAmount=1200000.000000, changes.approvedLoanAmount=1200000
+  A2-209c-loanproducts-template                  HTTP 200   18 cells: chargeOptions[0].amount=15000.000000, chargeOptions[1].amount=9000.000000, chargeOptions[2].amount=2500.000000, chargeOptions[3].amount=1.234500, chargeOptions[4].amount=1.234500, chargeOptions[5].amount=0.500000, chargeOptions[6].amount=1.234500, chargeOptions[7].amount=1.234500, chargeOptions[8].amount=3.750000, chargeOptions[9].amount=3.750000, chargeOptions[10].amount=1.234500, chargeOptions[11].amount=7000.000000 ... (+6 more)
+  A2-211-read-product-nine-mandatory             HTTP 200    3 cells: principal=1200000.000000, interestRatePerPeriod=0.000000, principalThresholdForLastInstallment=0.00
+  A2-212-read-product22-channel-override         HTTP 200    3 cells: principal=1200000.000000, interestRatePerPeriod=0.000000, principalThresholdForLastInstallment=0.00
+  A2-213-read-product28-accrual                  HTTP 200    3 cells: principal=1200000.000000, interestRatePerPeriod=0.000000, principalThresholdForLastInstallment=0.00
+  A2-225b-loan-state-after-refusals              HTTP 200   33 cells: principal=1200000.000000, approvedPrincipal=1200000.000000, proposedPrincipal=1200000.000000, netDisbursalAmount=1200000.000000, interestRatePerPeriod=0.000000, summary.principalDisbursed=1200000.000000, summary.principalAdjustments=0.000000, summary.principalPaid=0.000000, summary.principalWrittenOff=0.000000, summary.principalOutstanding=1200000.000000, summary.principalOverdue=1200000.000000, summary.interestCharged=0.000000 ... (+21 more)
+  A2-241-read-product-after-accrual-switch       HTTP 200    3 cells: principal=1200000.000000, interestRatePerPeriod=0.000000, principalThresholdForLastInstallment=0.00
+  A2-243-read-product-after-no-rule-change       HTTP 200    3 cells: principal=1200000.000000, interestRatePerPeriod=0.000000, principalThresholdForLastInstallment=0.00
+  A2-250-loanproducts-list                       HTTP 200   84 cells: [0].principal=1200000.000000, [0].interestRatePerPeriod=21.600000, [0].principalThresholdForLastInstallment=0.00, [1].principal=1200000.000000, [1].interestRatePerPeriod=21.600000, [1].principalThresholdForLastInstallment=0.00, [2].principal=1200000.000000, [2].interestRatePerPeriod=21.600000, [2].principalThresholdForLastInstallment=0.00, [3].principal=1200000.000000, [3].interestRatePerPeriod=21.600000, [3].principalThresholdForLastInstallment=0.00 ... (+72 more)
+  A2-302-loanproduct22-readback-today            HTTP 200    3 cells: principal=1200000.000000, interestRatePerPeriod=0.000000, principalThresholdForLastInstallment=0.00
+  A2-303-loanproduct46-readback-today            HTTP 200    3 cells: principal=1200000.000000, interestRatePerPeriod=0.000000, principalThresholdForLastInstallment=0.00
+  A2-331-prod-coverage-readback                  HTTP 200    3 cells: principal=1200000.000000, interestRatePerPeriod=12.000000, principalThresholdForLastInstallment=0.00
+  A2-336-loan-state-after-disburse               HTTP 200  206 cells: principal=1200000.000000, approvedPrincipal=1200000.000000, proposedPrincipal=1200000.000000, netDisbursalAmount=1185000.000000, interestRatePerPeriod=12.000000, summary.principalDisbursed=1200000.000000, summary.principalAdjustments=0.000000, summary.principalPaid=0.000000, summary.principalWrittenOff=0.000000, summary.principalOutstanding=1200000.000000, summary.principalOverdue=1200000.000000, summary.interestCharged=42348.240000 ... (+194 more)
+  A2-339-loan-state-after-repayment              HTTP 200  214 cells: principal=1200000.000000, approvedPrincipal=1200000.000000, proposedPrincipal=1200000.000000, netDisbursalAmount=1185000.000000, interestRatePerPeriod=12.000000, summary.principalDisbursed=1200000.000000, summary.principalAdjustments=0.000000, summary.principalPaid=270450.580000, summary.principalWrittenOff=0.000000, summary.principalOutstanding=929549.420000, summary.principalOverdue=929549.420000, summary.interestCharged=42348.240000 ... (+202 more)
+
+====================================================================================================
+PSQL DUMPS -- the class the earlier enumerator swallowed
+====================================================================================================
+  A2-019-db-glaccount-rows: 11 lines, 1221 bytes
+  A2-072-db-product-mapping-rows: 63 lines, 11430 bytes
+  A2-150-db-final-state: 81 lines, 8102 bytes
+  A2-370-db-ledger-state: 170 lines, 29284 bytes
+
+ACCOUNTING: 600 classified + 0 skipped == 600 total ? True
+UNPARSEABLE bodies: 0

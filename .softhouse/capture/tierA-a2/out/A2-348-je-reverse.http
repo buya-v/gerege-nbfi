@@ -1,0 +1,9 @@
+POST /journalentries/a28f573f34c7?command=reverse
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/a2-26-je-reverse.json
+body-wire-bytes-artefact: A2-348-je-reverse.req
+body-sha256: 9f0f8f5393635c83b0a2569f1160fca043a6e9591b10a039c62d1d3cce7e9b86
+body-bytes: 103
+captured-at-utc: 2026-08-22T02:21:19Z

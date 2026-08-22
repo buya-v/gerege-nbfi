@@ -1,0 +1,9 @@
+POST /journalentries
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/a2-26-manual-je-unbalanced-one-minor-unit.json
+body-wire-bytes-artefact: A2-344-manual-je-unbalanced.req
+body-sha256: 15b82c1c363e03e4e4b9f2a84e4743e313302de5f9b2a968ccfcc3a118fc9860
+body-bytes: 354
+captured-at-utc: 2026-08-22T02:21:18Z

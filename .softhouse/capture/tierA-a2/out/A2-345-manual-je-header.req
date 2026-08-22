@@ -1,0 +1,14 @@
+{
+  "officeId": 1,
+  "transactionDate": "01 June 2026",
+  "currencyCode": "MNT",
+  "comments": "A2-26 manual journal entry: debit leg points at gl 1, a HEADER account",
+  "debits": [
+    {"glAccountId": 1, "amount": 100000.25}
+  ],
+  "credits": [
+    {"glAccountId": 21, "amount": 100000.25}
+  ],
+  "locale": "en",
+  "dateFormat": "dd MMMM yyyy"
+}
