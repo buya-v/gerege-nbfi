@@ -2258,3 +2258,35 @@ the concept, not the sentence; P-72 is what stops "I widened my terms" from bein
 `\b` on an inflected stem, and a `\b` the engine does not implement, are both exactly that.
 **P-33** — a tool claim names the binary, the version and the invocation: `-E` and `-P` are different
 languages, and `grep` on `PATH` may be neither.
+
+
+## P-74 — an unescaped backtick in a `git commit -m "..."` message EXECUTES; it has now silently deleted a word and silently amended a commit
+
+**Caught by `A2-34` (F-A2-34-1, HIGH) and independently by `T228`, local fire `20260822-060013`, both against the driver.**
+
+This project's commit messages are full of prose like ``a `user` gate`` and ``the driver ran `git commit --amend` ``. Written inside a **double-quoted** shell string, a backtick pair is **command substitution**. The shell runs it. Twice in one fire:
+
+1. `git commit -m "... a `user` gate."` -> the shell tried to run `user`, printed `command not found: user`, substituted **empty string**, and committed the sentence as *"a  gate."* The word vanished from the permanent record. Noticed only because the driver happened to grep its own message afterwards.
+2. `git commit -m "... the driver ran `git commit --amend` on the merge commit ..."` -> **the shell EXECUTED `git commit --amend`.** That amended the just-created merge commit, minting a new sha and folding in whatever was staged, and the driver's actual `git commit` then reported *"nothing to commit, working tree clean"*. The registrations landed inside a merge commit whose message does not mention them.
+
+**And the second one happened inside the sentence describing the first.** The message being written was an explanation of how amending a commit orphans a circulated sha — and writing it orphaned a circulated sha.
+
+**The damage is the orphaned sha, not the message.** `git commit --amend` **mints a new commit object**. In this fire that produced two pairs of commits with **byte-identical trees and identical parents**, 15 seconds apart, one of each pair unreachable from `main`:
+
+```
+d1f74ae  merge A2-15   tree 90514b2f...   NOT on main   <- circulated in 2 worker prompts,
+d76594a  merge A2-15   tree 90514b2f...   on main          tasks.json, program.json, a commit msg
+32c80d6  merge A2-34   tree ...           NOT on main
+7fdcc9e  merge A2-34   tree ...           on main
+```
+
+No measurement was invalidated — the trees are identical — but **every recorded reference pointed at an object no ref reaches**, and the driver had already handed one of them to two live workers as a BAR anchor. `A2-34` caught it by running `git merge-base --is-ancestor d1f74ae main` instead of trusting the number it was given.
+
+**The duties:**
+1. **Never use `git commit -m` for a message containing a backtick.** Write the message to a file with a quoted heredoc (`<<'EOF'`, quoted so the shell expands nothing) and use `git commit -F`. This applies to `git merge -m` too.
+2. **Do not amend a commit whose sha you have already circulated.** Add a follow-up commit instead. A sha in a worker prompt, a task note or `program.json` is a published reference.
+3. **Verify a sha is reachable before recording it**: `git merge-base --is-ancestor <sha> main`. Existing and being on the branch are different questions — `git cat-file -e` answers the wrong one.
+4. **`main` is not quiescent during a wave** (`T228`): it moved under a worker between its `git log main` and its `git merge main`. **Report the sha you MERGED, never the one you LOOKED AT.**
+
+Related: **P-71** (fork points, measured not asserted), **P-69** (a measured claim has a short shelf life), **P-66/P-70** (state where you looked).
+

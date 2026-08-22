@@ -1,42 +1,67 @@
 {
-  "squad": "DRIVER",
-  "fire": "local 20260822-060013",
-  "host": "Buyanmunkhs-Mac-mini",
-  "current_item": "run 2026-08-21-run2-tierA-gl-accounting-A2 -- wave 1 dispatched, awaiting all four",
-  "step": "wave 1 in flight",
-  "dispatch_commit": "8611e754",
-  "oracle": "UP -- probe line PRESENT and reading 'up', driver-verified at 2d41838",
-  "baseline_verified_by_driver_at": "2d41838",
-  "baseline": {
-    "probe_line": "PRESENT, reads: probe = up",
-    "verdict": "PASS (exit 0)",
-    "parity_vectors": 46,
-    "cells": 7884,
-    "inadmissible": 0,
-    "harness_errors": 0,
-    "invariant_violations": 0,
-    "exempted": 4,
-    "grounded": 4,
-    "ungrounded": 0,
-    "undetermined": 0,
-    "go_build": 0,
-    "go_vet": 0,
-    "go_test": "ok",
-    "gofmt_l": "exactly nexus/internal/apps/loanschedule/contract/contract.go (expected, G-3)",
-    "vector_store_digest": "73c3ea7b43dd75f04884072719a87fc8e1d255c1"
+ "squad": "DRIVER",
+ "fire": "local 20260822-060013",
+ "host": "Buyanmunkhs-Mac-mini",
+ "current_item": "run 2026-08-21-run2-tierA-gl-accounting-A2 — 6 dispatched, 6 completed, 6 merged, 0 live at exit",
+ "step": "clean exit",
+ "exit_reason": "wave 2 complete; every dispatched worker awaited and merged",
+ "oracle": "UP throughout — probe line PRESENT and reading 'up' on every driver re-run",
+ "verified_by_driver_on_merged_main_at_exit": {
+  "probe_line": "PRESENT, reads: probe = up",
+  "verdict": "PASS (exit 0)",
+  "loanschedule": {
+   "parity": 46,
+   "contract_refusal": 4,
+   "self_test": 1,
+   "cells_graded": 7884,
+   "cells_ungraded": 93
   },
-  "wave_1": [
-    {"id": "A2-15", "model": "opus", "branch": "softhouse/A2-15-ledger-parity-vectors", "what": "promote the A2 raw captures into the FIRST ledger parity vectors; extend the harness to grade a second bounded context"},
-    {"id": "T234", "model": "opus", "branch": "softhouse/T234-sweep-instrument-audit", "what": "audit every committed sweep instrument for engine-dependent escapes and RE-RUN the voided ones"},
-    {"id": "T219", "model": "opus", "branch": "softhouse/T219-g8-residual-measurement", "what": "re-derive T159's MNT 10.01-at-n-3000 residual by measurement against the live oracle"},
-    {"id": "T216", "model": "sonnet", "branch": "softhouse/T216-quit-trap-tail", "what": "close T168's named QUIT-trap tail; decide the classifier fixture rather than edit it blindly"}
-  ],
-  "next_action": "await all four; scope-check each branch on the THREE-DOT diff (git diff --stat main...<branch>) against files_hint; re-run conformance on merged main after every merge batch, never quote a worker's numbers; then dispatch wave 2 -- A2-34 (the registered reviewer of A2-15), T228 (gates.md, serialised behind T219), T226 (conformance.sh, serialised behind A2-15).",
-  "blocked_on": null,
-  "open_questions": [
-    "Does T230's grounding rework actually fit A2-15's real glAccountType exclusion? T230 marked this [UNVERIFIED] on its own side; A2-15 must discharge it.",
-    "A2-15 will move EXEMPTION_PIN_* and the vector-store digest. The new digest must be propagated into every BAR-carrying document -- which is exactly T235's structural complaint about P-61."
-  ],
-  "gate_pending": null,
-  "no_vector_added_yet_this_fire": true
+  "ledger": {
+   "parity": 4,
+   "oracle_refusal": 2,
+   "money_cells": 21
+  },
+  "refused": 0,
+  "inadmissible": 0,
+  "harness_errors": 0,
+  "invariant_violations": 0,
+  "assertions_not_run": 0,
+  "census_pins": "4/4/4/0/0 == pinned AND LEDGER 0/4/2/21 == pinned",
+  "prove": "23 passed, 0 failed",
+  "go_build": 0,
+  "go_vet": 0,
+  "go_test": "ok",
+  "gofmt_l": "exactly nexus/internal/apps/loanschedule/contract/contract.go (expected, G-3)",
+  "vector_store_digest": "8968c559fa613e8642ab030bd0a029c17d147054",
+  "vector_store_digest_previous": "73c3ea7b43dd75f04884072719a87fc8e1d255c1"
+ },
+ "vectors_added_this_fire": 6,
+ "merged": [
+  "T216",
+  "T234",
+  "T219",
+  "A2-15",
+  "A2-34",
+  "T228"
+ ],
+ "live_workers_at_exit": 0,
+ "next_action": "Run python3 .softhouse/bin/ready-tasks.py. Highest value: T242 (the harness prints a FALSE coverage sentence every run — driver re-derived gl 16 = 16 entries against the live oracle — and hides 2 of 8 not-graded rows), then T243 (FOURTH P-45: a green conformance.sh run executes none of the six wrong ledger implementations), then T244 (prepare DEC-2 rev 6, do NOT land it; G-13 raised).",
+ "blocked_on": null,
+ "gate_pending": "G-13 RAISED this fire — DEC-2 rev 5 §4.4's evidential reason for leaving I-5 ungraded is false (8 reversal rows measured live). It BLOCKS NOTHING; no task is parked on it. G-2, G-3, G-4, G-5, G-6, G-8, G-9, G-10, G-11, G-12 unchanged.",
+ "open_questions": [
+  "P-71 has now been stated two ways and BOTH are falsified. Do not state a third rule — measure the fork point per worker.",
+  "T230's merged rework serves NO committed vector (UNDETERMINED-ON-THE-RECORD = 0 store-wide). Unused, not unwired. Decide whether it stays.",
+  "delta = I1q - E is UNMEASURED, so (delta+1/2)*n cannot be evaluated. That, not 'site 3 is uncharacterised', is what blocks G-8 options (b)/(c).",
+  "A user-gate prohibition written with an EXPIRY CONDITION had silently expired (G-8, caught by T228). Are there others?"
+ ],
+ "driver_corrections_against_itself": [
+  "P-71 SECOND CORRECTION — both fork-point rules falsified; told all four wave-1 workers 8611e754, all four measured 2d41838.",
+  "The brief's 'promoting a vector WILL move EXEMPTION_PIN_*' is FALSE (A2-15).",
+  "Circulated d1f74ae and 32c80d6, neither reachable from main (A2-34 F-1 HIGH, rediscovered by T228). Cause: git commit --amend on a merge commit.",
+  "A commit message containing backticks EXECUTED `git commit --amend`; the defect occurred inside the sentence describing the defect. P-74.",
+  "T219's files_hint omitted .softhouse/capture/ although its task required live-oracle measurement.",
+  "T216's stored BAR was stale (43/5664); corrected to 46/7884 at dispatch.",
+  "T234's headline overstated the A2-33 fail-open as undermining a RATIFIED decision; re-derived and re-scoped."
+ ],
+ "cutover": "NONE. Nothing this fire authorises one. Cutover remains a hard user gate."
 }
