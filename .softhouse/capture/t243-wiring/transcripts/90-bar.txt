@@ -1,0 +1,80 @@
+commit         : 693c768d752df7a475938df3e4fa3cd72b138e18
+fork point     : 693c768d752df7a475938df3e4fa3cd72b138e18
+origin/main    : 8e8d65da2883cb5274aad0f82a220e7061176e59
+vector store   : 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d
+
+conformance.sh exit  : 0
+ledger-invariants:   8. TESTS ARE INSPECTED, NOT EXEMPTED. A _test.go file that assigns a balance field as a
+conformance: CENSUS fail-open instruments — inspected 881 tracked .sh/.py file(s) under
+conformance:   /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab2488891c1ff496e (git ls-files, whole repository); frontier 9, pinned at 9.
+conformance:   frontier == pinned (all 9 rows, by path).
+conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+REFUSE-01-actual-actual-u... contract-refusal none        PASS              1        0  
+REFUSE-02-half-even-ungraded contract-refusal none        PASS              1        0  
+REFUSE-03-annual-fixed303... contract-refusal none        PASS              1        0  
+REFUSE-04-disbursement-af... contract-refusal none        PASS              1        0  
+        the count above, so a run with NO implementation registered — 0 cells compared — printed
+        is inadmissible, because a rig that silently rounded it would grade the port against a
+--- INVARIANT ASSERTIONS DELIBERATELY EXEMPTED BY A VECTOR (the vector says why, here) ---
+    schedule the CAPTURE recorded and must come back VIOLATED there, or the vector is refused.
+    refused — a port that satisfies an invariant the oracle violates has DIVERGED, and a
+        REASON: GATE G-8, FAMILY B, EXEMPTED BECAUSE THE REFERENCE ORACLE GENUINELY DOES NOT AMORTIZE THIS SHAPE -- not because the port is being excused. The oracle advances 1 minor unit and its own principal column repays 0: every repayment row carries principal 0.00 and its totalPrincipalAmount reads 0.00. The Go port reproduces that CELL FOR CELL (0 divergent cells over this vector's graded money cells, measured; see graded_against evidence), so there is no port-vs-oracle divergence for this invariant to arbitrate: asserting it here would be asserting that the ORACLE is wrong, which is a graded-domain amendment and a hard `user` gate (G-8 options (b) and (c)), not a check the harness may make on its own authority. THE EXEMPTION IS SCOPED TO THIS ONE CAPTURED SHAPE. It is NOT a statement that 600.0 % p.a. is exempt: the sibling vector T116-G8-CLEAN-N103, one repayment shorter at the same rate and the same principal, amortizes normally and carries NO exemption at all.
+        REASON: GATE G-8, FAMILY B, EXEMPTED BECAUSE THE REFERENCE ORACLE GENUINELY DOES NOT AMORTIZE THIS SHAPE -- not because the port is being excused. The oracle advances 1 minor unit and its own principal column repays 0: every repayment row carries principal 0.00 and its totalPrincipalAmount reads 0.00. The Go port reproduces that CELL FOR CELL (0 divergent cells over this vector's graded money cells, measured; see graded_against evidence), so there is no port-vs-oracle divergence for this invariant to arbitrate: asserting it here would be asserting that the ORACLE is wrong, which is a graded-domain amendment and a hard `user` gate (G-8 options (b) and (c)), not a check the harness may make on its own authority. THE EXEMPTION IS SCOPED TO THIS ONE CAPTURED SHAPE. It is NOT a statement that 600.0 % p.a. is exempt: the sibling vector T116-G8-CLEAN-N103, one repayment shorter at the same rate and the same principal, amortizes normally and carries NO exemption at all.
+    a grading-time question and nothing here asserts it. Three verdicts are INADMISSIBLE, refused
+    (finding T225-F1). It is counted apart from GROUNDED because it is not evidence either way.
+    4 GROUNDED (the recorded schedule VIOLATES the exempted invariant), 0 UNGROUNDED.
+    refused in Admit unless all three components resolve: the committed capture ARTEFACT exists
+    MINTED 4 citation(s) for 4 admissible exemption(s) (4 GROUNDED + 0 UNDETERMINED-ON-THE-RECORD) out of 4 declared.
+        T116-G8-FAMB-N104 — principal_portions_sum_to_disbursed [GROUNDED]
+        T116-G8-FAMB-N104 — principal_amortizes_to_zero [GROUNDED]
+        T116-G8-FAMB-N108 — principal_portions_sum_to_disbursed [GROUNDED]
+        T116-G8-FAMB-N108 — principal_amortizes_to_zero [GROUNDED]
+--- INVARIANT ASSERTIONS THAT COULD NOT RUN (a cell the capture never recorded) ---
+    ledger parity           PASS 4    FAIL 0
+    ledger oracle-refusal   PASS 2    FAIL 0   (an HTTP status and error code the ORACLE returned
+    ledger inadmissible     0
+    ledger harness errors   0
+    ledger cells compared   70 graded, of which 21 are MONEY cells in int64 minor units
+    ledger citations        12 PART-TWO resolutions over the loaded corpus: 1 ARTEFACT-BYTES,
+          inadmissible today (A2-314, 403). An accrual vector needs a NEW accrual product on
+    parity vectors          PASS 46   FAIL 0
+    contract-refusal        PASS 4    FAIL 0   (derived from the ratified contract, NOT oracle-observed)
+    self-test fixtures      PASS 1    FAIL 0   (hand-authored; EXCLUDED from the parity count)
+    refused                 0   (no discriminating vector / seam blind — not a pass, not a failure)
+    inadmissible            0
+    harness errors          0
+    cells compared          7884 graded, 93 ungraded (never recorded by the capture)
+    invariant violations    0
+    invariant assertions    0 NOT RUN (a cell nobody observed; listed above, never inferred)
+    invariant assertions    4 EXEMPTED BY A VECTOR (switched off on purpose; each one's reason is listed above)
+VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+conformance:   exemption census READ: exempted assertions (graded) = 4 == pinned 4
+conformance:   exemption census READ: declared exemptions (loaded) = 4 == pinned 4
+conformance:   exemption census READ: GROUNDED                     = 4 == pinned 4
+conformance:   exemption census READ: UNDETERMINED-ON-THE-RECORD   = 0 == pinned 0
+conformance:   exemption census READ: UNGROUNDED                   = 0 == pinned 0
+conformance:   exemption census READ: LEDGER declared exemptions   = 0 == pinned 0
+conformance:   exemption census READ: LEDGER parity vectors        = 4 == pinned 4
+conformance:   exemption census READ: LEDGER oracle-refusal vector = 2 == pinned 2
+conformance:   exemption census READ: LEDGER money cells compared  = 21 == pinned 21
+conformance: CENSUS wrong ledger implementations — discovered 6 registered as DELIBERATELY
+conformance:   KILLED  ledger-wrong-code-ignored — exit 1, ledger parity FAIL 4 + oracle-refusal FAIL 0
+conformance:   KILLED  ledger-wrong-header-refusing — exit 1, ledger parity FAIL 1 + oracle-refusal FAIL 0
+conformance:   KILLED  ledger-wrong-manual-permission-ignored — exit 1, ledger parity FAIL 0 + oracle-refusal FAIL 1
+conformance:   KILLED  ledger-wrong-netting-totals — exit 1, ledger parity FAIL 4 + oracle-refusal FAIL 0
+conformance:   KILLED  ledger-wrong-split-drift — exit 1, ledger parity FAIL 2 + oracle-refusal FAIL 0
+conformance:   KILLED  ledger-wrong-truncating — exit 1, ledger parity FAIL 4 + oracle-refusal FAIL 0
+conformance:   all 6 wrong ledger implementations DIED through this harness, not by hand.
+
+--prove exit         : 0
+PROOFS: 23 passed, 0 failed
+
+go build exit        : 0
+go vet exit          : 0
+go test exit         : 0
+ok  	github.com/gerege/nexus/internal/apps/ledger	0.467s
+ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	3.525s
+ok  	github.com/gerege/nexus/internal/apps/loanschedule	7.956s
+ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	73.707s
+gofmt -l             :
+    internal/apps/loanschedule/contract/contract.go

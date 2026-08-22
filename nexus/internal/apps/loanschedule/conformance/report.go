@@ -830,6 +830,26 @@ func writeLedgerSection(p func(string, ...any), s *Summary) {
 		l.DeclaredExemptions)
 	p("                                        INADMISSIBLE, so this figure is pinned at 0 by")
 	p("                                        conformance.sh and both directions of drift are gated)")
+	// PART TWO OF THE CITATION, CENSUSED ON EVERY RUN. [T243, from A2-34 F-3]
+	// A2-34 found part two resolving BY FILE NAME on three of these citations --
+	// a branch that reads ZERO bytes of the artefact and compares two fields of
+	// one vector to each other -- and nothing in the report said so, because a
+	// check that cannot fail reports "pass". The classes are printed whatever
+	// they are; FILE-NAME-ONLY is pinned by identity in ledger admit.go and both
+	// directions of drift refuse.
+	p("    ledger citations        %d PART-TWO resolutions over the loaded corpus: %d ARTEFACT-BYTES,",
+		len(l.Citations), l.CitationsByBytes)
+	p("                            %d HTTP-SIDECAR, %d FILE-NAME-ONLY (pinned %d), %d UNRESOLVED.",
+		l.CitationsBySide, l.CitationsNameOnly, ledgerconf.CitationNameOnlyPinCount(), l.CitationsUnres)
+	p("                            FILE-NAME-ONLY reads NO byte of the artefact: it checks that the ref")
+	p("                            this vector wrote contains the case id this vector wrote. It is not")
+	p("                            evidence about the artefact, it is pinned by (case_id, field) in")
+	p("                            ledger/conformance/admit.go, and a fourth is INADMISSIBLE.")
+	for _, c := range l.Citations {
+		if c.Mode == ledgerconf.CitationByNameOnly {
+			p("                            FILE-NAME-ONLY: %s %s -> %s", c.VectorCaseID, c.Field, c.Ref)
+		}
+	}
 	p("")
 
 	// THE NOT-GRADED BLOCK IS NOT WRITTEN HERE ANY MORE. It used to be sixteen

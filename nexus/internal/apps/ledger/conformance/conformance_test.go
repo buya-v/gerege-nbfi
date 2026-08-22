@@ -1,6 +1,8 @@
 package conformance
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"os"
 	"path/filepath"
 	"strings"
@@ -297,6 +299,143 @@ func TestCitationsMustResolve(t *testing.T) {
 		v.Provenance.RerunInvariant = "   "
 		if reasons := Admit(&v, opts); !containsSubstring(reasons, "rerun_invariant is empty") {
 			t.Fatalf("a citation with no re-run sentence was admitted: %v", reasons)
+		}
+	})
+}
+
+// TestPartTwoOfTheCitationCanFail is T243, closing A2-34's F-3.
+//
+// A2-34's charge was that part two RESOLVES TAUTOLOGICALLY: on LDG-01/02/03 the
+// capture_case_id occurs only in the artefact's own file name, which the
+// citation itself supplied, so the check "passes without demonstrating
+// anything". The decision recorded in admit.go is to KEEP part two and pin its
+// weakest branch. That decision is only honest if part two can be made to FAIL,
+// in both of the two directions it now gates, and if the argument for keeping it
+// is itself demonstrated rather than asserted. All three are asserted here.
+func TestPartTwoOfTheCitationCanFail(t *testing.T) {
+	vs, opts := loadCommitted(t)
+
+	// The measurement the whole decision rests on, re-derived here so it cannot
+	// go stale silently: exactly the pinned population resolves by name alone,
+	// and it is not the whole corpus.
+	var nameOnly, total int
+	for _, v := range vs {
+		for _, cr := range CitationResolutions(v, opts.RepoRoot) {
+			total++
+			if cr.Mode == CitationByNameOnly {
+				nameOnly++
+			}
+		}
+	}
+	if total == 0 {
+		t.Fatal("zero citations classified, so every assertion below is vacuous")
+	}
+	if nameOnly != CitationNameOnlyPinCount() {
+		t.Fatalf("%d citations resolve FILE-NAME-ONLY and admit.go pins %d",
+			nameOnly, CitationNameOnlyPinCount())
+	}
+	if nameOnly == total {
+		t.Fatalf("all %d citations resolve by file name, so the classification separates nothing", total)
+	}
+
+	// DIRECTION 1 — INFLATION. A name-only citation that is not on the pin is
+	// INADMISSIBLE. The vector is unchanged except for its case_id, so the only
+	// thing that differs from the admitted control is pin membership.
+	t.Run("an_unpinned_file_name_only_citation_is_refused", func(t *testing.T) {
+		var subject *Vector
+		for _, v := range vs {
+			for _, cr := range CitationResolutions(v, opts.RepoRoot) {
+				if cr.Mode == CitationByNameOnly && cr.Field == "provenance.capture_ref" {
+					subject = v
+				}
+			}
+		}
+		if subject == nil {
+			t.Skip("no file-name-only citation in the corpus; nothing to assert")
+		}
+		if reasons := Admit(subject, opts); len(reasons) != 0 {
+			t.Fatalf("CONTROL: the pinned vector is not admitted, so the test below proves "+
+				"nothing about the pin: %v", reasons)
+		}
+		v := *subject
+		v.CaseID = "LDG-99-NOT-ON-THE-PIN"
+		if reasons := Admit(&v, opts); !containsSubstring(reasons, "BY FILE NAME ONLY") {
+			t.Fatalf("an unpinned file-name-only citation was admitted: %v", reasons)
+		}
+	})
+
+	// DIRECTION 2 — DEFLATION. A pin that no longer describes the corpus is a
+	// sentence nothing checks, and it is reported.
+	t.Run("a_stale_pin_is_reported", func(t *testing.T) {
+		loaded := map[string]bool{}
+		var res []CitationResolution
+		for _, v := range vs {
+			loaded[v.CaseID] = true
+			for _, cr := range CitationResolutions(v, opts.RepoRoot) {
+				res = append(res, cr)
+			}
+		}
+		if stale := StaleCitationPins(res, loaded); len(stale) != 0 {
+			t.Fatalf("CONTROL: the committed corpus already has stale pins: %v", stale)
+		}
+		// Now claim the same citations resolved a STRONGER way. Every pinned row
+		// must be reported, or the deflation arm is decoration.
+		strong := make([]CitationResolution, 0, len(res))
+		for _, cr := range res {
+			if cr.Mode == CitationByNameOnly {
+				cr.Mode = CitationBySidecar
+			}
+			strong = append(strong, cr)
+		}
+		stale := StaleCitationPins(strong, loaded)
+		if len(stale) != CitationNameOnlyPinCount() {
+			t.Fatalf("%d stale pins reported, wanted %d", len(stale), CitationNameOnlyPinCount())
+		}
+	})
+
+	// THE ARGUMENT FOR KEEPING PART TWO, DEMONSTRATED RATHER THAN ASSERTED.
+	// Point a citation at a DIFFERENT artefact and give it that artefact's
+	// CORRECT sha256. The digest check is fully satisfied. Only part two
+	// notices, so "the sha256 makes part two redundant" is false.
+	t.Run("a_mis_cited_artefact_with_a_correct_digest_is_caught_only_by_part_two", func(t *testing.T) {
+		var subject *Vector
+		for _, v := range vs {
+			if v.Provenance.CaptureRef != "" {
+				subject = v
+				break
+			}
+		}
+		if subject == nil {
+			t.Fatal("no vector carries a capture_ref")
+		}
+		// A real artefact from the same capture directory that is NOT this
+		// vector's, chosen by walking the store's own citations.
+		var otherRef string
+		for _, v := range vs {
+			if v.Provenance.CaptureRef != "" && v.Provenance.CaptureRef != subject.Provenance.CaptureRef &&
+				!strings.Contains(v.Provenance.CaptureRef, subject.Provenance.CaptureCaseID) {
+				otherRef = v.Provenance.CaptureRef
+				break
+			}
+		}
+		if otherRef == "" {
+			t.Fatal("no second artefact to mis-cite")
+		}
+		raw, err := os.ReadFile(filepath.Join(opts.RepoRoot, otherRef))
+		if err != nil {
+			t.Fatalf("reading %s: %v", otherRef, err)
+		}
+		sum := sha256.Sum256(raw)
+		v := *subject
+		v.Provenance.CaptureRef = otherRef
+		v.Provenance.CaptureSHA256 = hex.EncodeToString(sum[:])
+		reasons := Admit(&v, opts)
+		if containsSubstring(reasons, "has changed since the vector") {
+			t.Fatalf("the digest check fired, so this case does not isolate part two: %v", reasons)
+		}
+		if !containsSubstring(reasons, "occurs neither in the bytes of") {
+			t.Fatalf("a citation naming the WRONG artefact with the RIGHT digest was admitted, so "+
+				"part two IS redundant and the decision in admit.go is wrong: %v", reasons)
 		}
 	})
 }

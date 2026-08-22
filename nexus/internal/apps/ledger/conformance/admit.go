@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 )
 
@@ -179,9 +180,9 @@ func Admit(v *Vector, opts Options) []string {
 			"no contract-derived class: a ledger vector that was not observed from the oracle has no "+
 			"home here", v.Provenance.Kind)
 	}
-	bad = append(bad, citationReasons(opts.RepoRoot, "provenance.capture_ref",
+	bad = append(bad, citationReasons(opts.RepoRoot, v.CaseID, "provenance.capture_ref",
 		v.Provenance.CaptureRef, v.Provenance.CaptureSHA256, v.Provenance.CaptureCaseID)...)
-	bad = append(bad, citationReasons(opts.RepoRoot, "provenance.request_capture_ref",
+	bad = append(bad, citationReasons(opts.RepoRoot, v.CaseID, "provenance.request_capture_ref",
 		v.Provenance.RequestCaptureRef, v.Provenance.RequestCaptureSHA256,
 		v.Provenance.RequestCaptureCaseID)...)
 	if strings.TrimSpace(v.Provenance.RerunInvariant) == "" {
@@ -381,7 +382,10 @@ func Admit(v *Vector, opts Options) []string {
 // system, which no honest capture can do; requiring it in the sidecar checks the
 // thing that is actually checkable -- that the artefact this vector names is the
 // one the capture rig filed under that id.
-func citationReasons(repoRoot, field, ref, wantDigest, caseID string) []string {
+//
+// AND THE FILE-NAME BRANCH IS NOW GATED RATHER THAN SILENTLY ALLOWED. See
+// citationMode and citationNameOnlyPin below [T243, closing A2-34's F-3].
+func citationReasons(repoRoot, vectorCaseID, field, ref, wantDigest, caseID string) []string {
 	var out []string
 	add := func(f string, a ...any) { out = append(out, fmt.Sprintf(f, a...)) }
 	if strings.TrimSpace(ref) == "" {
@@ -423,21 +427,223 @@ func citationReasons(repoRoot, field, ref, wantDigest, caseID string) []string {
 		add("provenance.capture_case_id is empty, so nothing ties %s to a capture case", field)
 		return out
 	}
-	if strings.Contains(string(raw), caseID) {
+	switch citationMode(repoRoot, ref, caseID) {
+	case CitationByBytes, CitationBySidecar:
 		return out
-	}
-	// Fall back to the .http sidecar beside the artefact.
-	base := strings.TrimSuffix(abs, filepath.Ext(abs))
-	base = strings.TrimSuffix(base, ".req")
-	side, serr := os.ReadFile(base + ".http")
-	if serr == nil && strings.Contains(string(side), caseID) {
-		return out
-	}
-	if strings.Contains(filepath.Base(abs), caseID) {
+	case CitationByNameOnly:
+		if _, pinned := citationNameOnlyPin[citationPinKey(vectorCaseID, field)]; pinned {
+			return out
+		}
+		add("%s %q resolves PART TWO of its citation BY FILE NAME ONLY: the capture_case_id %q occurs "+
+			"in neither the artefact's bytes nor the .http sidecar beside it, only in the artefact's "+
+			"own file name -- which this citation SUPPLIED. That branch reads ZERO bytes of the "+
+			"artefact: it compares two fields of this vector to each other, and it passes whenever the "+
+			"ref was spelled from the case id, which is how every ref in this store is spelled. It is "+
+			"therefore not evidence that the artefact answers to the case id, and it may not arrive "+
+			"silently. Either file the id into the .http sidecar at capture time -- the rig can, the "+
+			"oracle cannot -- or add this (case_id, field) pair to citationNameOnlyPin in admit.go "+
+			"with its reason, which is a source edit a reviewer reads. A2-34 F-3, closed by T243",
+			field, ref, caseID)
 		return out
 	}
 	add("provenance.capture_case_id %q occurs neither in the bytes of %s (%q), nor in the .http sidecar "+
 		"beside it, nor in its file name. The citation names an artefact that does not answer to the "+
 		"case id it claims", caseID, field, ref)
+	return out
+}
+
+// ---------------------------------------------------------------------------
+// PART TWO OF THE CITATION: HOW IT RESOLVED, AND THE FRONTIER OF ITS WEAKEST
+// BRANCH.  [T243, closing A2-34's F-3]
+// ---------------------------------------------------------------------------
+//
+// THE FINDING. A2-34 reported that part two of T233's three-part citation
+// "resolves by FILE NAME" on LDG-01/02/03's response artefacts, so the check
+// "passes without demonstrating anything". T243 re-measured all TWELVE citations
+// in the committed store and the finding holds, with one refinement worth
+// having: it is the THIRD branch (file name), not the first (bytes), that
+// carries those three -- the id is not in the response bytes at all.
+//
+//	LDG-01 capture_ref  A2-347-je-manual-readback.json           bytes NO  sidecar NO  name YES
+//	LDG-02 capture_ref  A2-338-je-after-repayment-coverage.json  bytes NO  sidecar NO  name YES
+//	LDG-03 capture_ref  A2-383-je-after-overpay.json             bytes NO  sidecar NO  name YES
+//	LDG-04 capture_ref  A2-390-db-ledger-state-a2-15.json        bytes YES
+//	the other eight citations                                    sidecar YES
+//
+// THE DECISION, AND THE ARGUMENT FOR IT. Part two is KEPT, not retired, and its
+// weakest branch is CLASSIFIED, COUNTED, PRINTED and PINNED.
+//
+//  1. RETIRING IT WOULD LOSE A PROPERTY THE SHA256 DOES NOT CARRY. The digest
+//     answers "are these the bytes this vector transcribed?". It cannot answer
+//     "is this artefact the capture case the vector NAMES?", because a citation
+//     that points at a DIFFERENT artefact and records THAT artefact's correct
+//     digest satisfies the digest check completely. Part two is the only thing
+//     that notices, and T243 drove exactly that case red through
+//     conformance.sh before writing this paragraph. The two checks answer
+//     different questions and neither subsumes the other, so "the sha256 makes
+//     part two redundant" is FALSE.
+//
+//  2. BUT THE FILE-NAME BRANCH IS NOT A CHECK ON THE ARTEFACT. It reads none of
+//     the artefact's bytes. It asks whether the ref string contains the case_id
+//     string -- two fields of the same vector, written by the same author in
+//     the same edit -- and in this store every ref is spelled
+//     "<capture dir>/out/<case-id><ext>", so that branch cannot fail for any
+//     citation written the ordinary way. That is the tautology A2-34 named, and
+//     leaving it as an unmarked third alternative lets a name-only citation
+//     arrive silently and be read as though it had resolved against bytes.
+//
+//  3. SO: name-only stays admissible ONLY for the pinned three, is refused for
+//     anything else, and the population is printed on every run. BOTH
+//     directions are gated -- a fourth name-only citation is INADMISSIBLE
+//     (inflation), and a pinned one that starts resolving some stronger way is
+//     a FATAL telling the author to delete the stale pin (deflation). The pin
+//     is by (case_id, field) IDENTITY, not by count, so a swap that leaves the
+//     total at three is caught too.
+//
+// WHY NOT SIMPLY REFUSE ALL THREE AND BE DONE WITH IT. Because that would make
+// three of the four ledger PARITY vectors inadmissible over a gap in the
+// CAPTURE RIG, not a defect in the vectors: the rig writes the case id into the
+// .http sidecar for a request and not for a readback response. The repair
+// belongs in the rig at the next capture. Until then the frontier is three, it
+// is named in source with its reason, and it cannot grow without a source edit.
+//
+// LIMIT OF THIS CLASSIFICATION, MEASURED AND STATED (P-66). CitationBySidecar
+// counts as stronger than name-only because it reads a SECOND file, one the rig
+// wrote. It is not uniformly strong: on the six `.req` citations the id occurs
+// in the sidecar only inside a `body-wire-bytes-artefact: <case-id>.req` line,
+// which is itself a file name, one file over. That is still a second artefact
+// attesting the link rather than a vector agreeing with itself -- which is the
+// line drawn here -- but it is weaker than CitationByBytes, and this comment is
+// where a reader finds that out instead of assuming otherwise.
+
+// CitationMode records HOW part two of a capture citation resolved. It is a
+// property of the RUN, not of the vector file, so it is recomputed every run.
+type CitationMode string
+
+const (
+	// CitationByBytes: the case id occurs in the artefact's own bytes.
+	CitationByBytes CitationMode = "ARTEFACT-BYTES"
+	// CitationBySidecar: the case id occurs in the .http sidecar beside it.
+	CitationBySidecar CitationMode = "HTTP-SIDECAR"
+	// CitationByNameOnly: the case id occurs ONLY in the artefact's own file
+	// name, which the citation itself supplied. ZERO bytes of the artefact were
+	// read to reach this verdict.
+	CitationByNameOnly CitationMode = "FILE-NAME-ONLY"
+	// CitationUnresolved: it occurs in none of the three, or the artefact could
+	// not be read. citationReasons refuses the vector.
+	CitationUnresolved CitationMode = "UNRESOLVED"
+)
+
+// CitationResolution is one citation and the way it resolved on this run.
+type CitationResolution struct {
+	VectorCaseID string
+	Field        string
+	Ref          string
+	CaseID       string
+	Mode         CitationMode
+}
+
+// citationNameOnlyPin is the FRONTIER: the (vector case_id, provenance field)
+// pairs whose part two is permitted to resolve by file name alone, each with
+// its reason. Adding a row is a source edit; see the block above.
+var citationNameOnlyPin = map[string]string{
+	citationPinKey("LDG-01-manual-je-3leg-minor-units", "provenance.capture_ref"): "" +
+		"A2-347-je-manual-readback.json is a GET /journalentries response body: the oracle emitted it " +
+		"and cannot know our case id, and the rig's .http sidecar for a readback records the request " +
+		"line but not the id. A rig gap, not a vector defect",
+	citationPinKey("LDG-02-repayment-split-4leg-minor-units", "provenance.capture_ref"): "" +
+		"A2-338-je-after-repayment-coverage.json: same shape, same rig gap as LDG-01",
+	citationPinKey("LDG-03-overpayment-4leg-minor-units", "provenance.capture_ref"): "" +
+		"A2-383-je-after-overpay.json: same shape, same rig gap as LDG-01",
+}
+
+func citationPinKey(vectorCaseID, field string) string { return vectorCaseID + "|" + field }
+
+// CitationNameOnlyPinCount is the pinned population of file-name-only
+// resolutions. conformance.sh needs no tenth census pin for it: the equality is
+// gated inside this package, in both directions.
+func CitationNameOnlyPinCount() int { return len(citationNameOnlyPin) }
+
+// citationMode classifies one citation's part two. It is the SINGLE definition
+// used both by the admissibility refusal and by the census, so the figure the
+// report prints and the rule that refuses cannot drift apart.
+func citationMode(repoRoot, ref, caseID string) CitationMode {
+	if strings.TrimSpace(ref) == "" || caseID == "" || filepath.IsAbs(ref) {
+		return CitationUnresolved
+	}
+	abs := filepath.Join(repoRoot, ref)
+	raw, err := os.ReadFile(abs)
+	if err != nil {
+		return CitationUnresolved
+	}
+	if strings.Contains(string(raw), caseID) {
+		return CitationByBytes
+	}
+	base := strings.TrimSuffix(abs, filepath.Ext(abs))
+	base = strings.TrimSuffix(base, ".req")
+	if side, serr := os.ReadFile(base + ".http"); serr == nil && strings.Contains(string(side), caseID) {
+		return CitationBySidecar
+	}
+	if strings.Contains(filepath.Base(abs), caseID) {
+		return CitationByNameOnly
+	}
+	return CitationUnresolved
+}
+
+// CitationResolutions classifies both of a vector's citations.
+func CitationResolutions(v *Vector, repoRoot string) []CitationResolution {
+	return []CitationResolution{{
+		VectorCaseID: v.CaseID,
+		Field:        "provenance.capture_ref",
+		Ref:          v.Provenance.CaptureRef,
+		CaseID:       v.Provenance.CaptureCaseID,
+		Mode:         citationMode(repoRoot, v.Provenance.CaptureRef, v.Provenance.CaptureCaseID),
+	}, {
+		VectorCaseID: v.CaseID,
+		Field:        "provenance.request_capture_ref",
+		Ref:          v.Provenance.RequestCaptureRef,
+		CaseID:       v.Provenance.RequestCaptureCaseID,
+		Mode: citationMode(repoRoot, v.Provenance.RequestCaptureRef,
+			v.Provenance.RequestCaptureCaseID),
+	}}
+}
+
+// StaleCitationPins returns a reason for every pinned name-only citation that
+// did NOT resolve name-only on this run, over the vectors actually loaded. This
+// is the DEFLATION direction: a pin that no longer describes the corpus excuses
+// a weakness that is not there, and the harness says so rather than quietly
+// agreeing with itself.
+//
+// A pinned vector that is ABSENT from this run is deliberately NOT reported
+// here. A missing ledger vector is caught, loudly and by count, by
+// EXEMPTION_PIN_LEDGER_PARITY in conformance.sh; duplicating that refusal here
+// would make a context-filtered run look like a stale pin.
+func StaleCitationPins(res []CitationResolution, loaded map[string]bool) []string {
+	var out []string
+	seen := map[string]CitationMode{}
+	for _, r := range res {
+		seen[citationPinKey(r.VectorCaseID, r.Field)] = r.Mode
+	}
+	keys := make([]string, 0, len(citationNameOnlyPin))
+	for k := range citationNameOnlyPin {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	for _, k := range keys {
+		caseID := k
+		if i := strings.Index(k, "|"); i >= 0 {
+			caseID = k[:i]
+		}
+		if !loaded[caseID] {
+			continue
+		}
+		if m, ok := seen[k]; !ok || m != CitationByNameOnly {
+			out = append(out, fmt.Sprintf(
+				"citationNameOnlyPin carries %q, but part two of that citation resolved %s on this "+
+					"run, not FILE-NAME-ONLY. The pin excuses a weakness that is no longer there: "+
+					"DELETE that row from admit.go. A pin nothing needs is a sentence nothing checks",
+				k, m))
+		}
+	}
 	return out
 }

@@ -1,0 +1,61 @@
+T243 RED DRIVE 2 — T238's fail-open linter, through conformance.sh
+commit : 693c768d752df7a475938df3e4fa3cd72b138e18
+
+==================================================================
+CONTROL 0 — the wired harness over the pristine tree. The linter
+runs, censuses the WHOLE repository, and its frontier equals the pin.
+==================================================================
+  exit=0
+  OK   [control0] found (1): CENSUS fail-open instruments
+  OK   [control0] found (1): frontier == pinned (all 9 rows, by path).
+  OK   [control0] found (1): VERDICT: PASS (exit 0)
+  OK   [control0] exit 0
+
+==================================================================
+THE PLANT — a genuinely fail-open sweep, and its behaviour MEASURED
+before it is put in front of the harness. If this stanza did not
+show exit 0 over a negative it never measured, the refusal below
+would be a lint opinion rather than a demonstrated defect.
+==================================================================
+  the planted file, verbatim:
+    | #!/bin/sh
+    | # A DELIBERATELY FAIL-OPEN SWEEP planted by T243 RED DRIVE 2. Removed by the
+    | # script that plants it; it must never be committed.
+    | WT=/Users/buv/gerege-nbfi/.claude/worktrees/agent-ab2488891c1ff496e/.claude/worktrees/agent-T243-DELETED-LONG-AGO
+    | for re in 'MinorUnits' 'DoubleEntryBalances'; do
+    |   echo "--- pattern: $re"
+    |   ( cd "$WT" && git grep -n -I -E "$re" -- . ) || echo "   (no hits)"
+    | done
+  the planted sweep, run on its own: exit=0
+  '(no hits)' lines it printed: 2
+  hit lines it printed        : 4
+  OK   [plant] exit 0 while reaching NO corpus — this is the fail-OPEN shape, measured, not asserted
+
+==================================================================
+RED — the same graded run, with the planted instrument tracked.
+==================================================================
+  exit=2
+  OK   [RED] found (1): THE FAIL-OPEN FRONTIER IS NOT THE PINNED FRONTIER
+  OK   [RED] found (1): planted-failopen-sweep.sh
+  OK   [RED] found (1): a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+  OK   [RED] exit 2
+  --- the frontier diff the harness printed: ---
+conformance: THE FAIL-OPEN FRONTIER IS NOT THE PINNED FRONTIER (- pinned, + measured):
++TIER1 .softhouse/capture/t243-wiring/evidence/planted-failopen-sweep.sh
+
+  AND IT REFUSED BEFORE GRADING: the guard tally runs ahead of the
+  reference-oracle probe, so no verdict was computed over a tree whose
+  instruments cannot be trusted.
+  OK   [RED] no verdict line at all on the refused run
+
+==================================================================
+GREEN AGAIN — remove the plant; the same command goes back to PASS.
+==================================================================
+  exit=0
+  OK   [GREEN] found (1): frontier == pinned (all 9 rows, by path).
+  OK   [GREEN] found (1): VERDICT: PASS (exit 0)
+  OK   [GREEN] exit 0
+
+==================================================================
+RED DRIVE 2: 13 passed, 0 failed
+==================================================================
