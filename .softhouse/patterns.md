@@ -2030,6 +2030,53 @@ Related: **P-70** (a search result stated as a world fact), **P-66** (state wher
 > "absent" from a worktree, and a review task is still the sharpest case. **P-69 applies to this pattern
 > itself** — the claim "worktrees fork from session-start" had a shelf life of exactly one fire.
 
+> **⚠ SECOND CORRECTION — THE CORRECTION IS ALSO WRONG. Local fire `20260822-060013`, the driver against
+> itself again. BOTH RULES HAVE NOW BEEN FALSIFIED, EACH BY EXACTLY ONE FIRE'S MEASUREMENT.**
+>
+> This fire the driver dutifully applied the corrected rule — commit everything first, then state
+> `git rev-parse HEAD` at the `Agent` call — and it was **wrong for all four workers**:
+>
+> ```
+> session start (driver HEAD on entry)        2d41838
+> driver committed A2-34's registration       8611e754   <- HEAD at the moment of dispatch
+> git merge-base main softhouse/T216-quit-trap-tail          -> 2d41838
+> git merge-base main softhouse/T219-g8-residual-measurement -> 2d41838
+> git worktree list | live A2-15 worktree                    -> 2d41838
+> git worktree list | live T234 worktree                     -> 2d41838
+> git merge-base --is-ancestor 8611e754 softhouse/T216-...    -> NO
+> ```
+>
+> All four forked from **`2d41838`, the SESSION-START commit** — exactly what the original P-71 said and what
+> the correction denied. The scoreboard is now: `T225`'s fire → session-start; `20260822-140002` → dispatch;
+> `20260822-060013` → session-start. **Two fires, two incompatible rules.** The mechanism is not determined
+> by anything this program has measured, and a third confident rule would be the same mistake a third time.
+>
+> **THE ONLY SOUND DUTY IS: MEASURE IT, NEVER ASSERT IT.**
+> 1. The driver **must not state a fork point as fact in a worker prompt.** It may state what it *expects*,
+>    explicitly labelled as an expectation to be checked.
+> 2. Every worker prompt **must instruct the worker to run `git merge-base HEAD main` itself, report the
+>    result, and — if it differs from what the driver expected — SAY SO LOUDLY rather than reconcile it.**
+> 3. **Any task whose dependency was merged in the same fire must be told to rebase onto current `main`
+>    before forming any finding.** This was duty 1 of the original P-71 and it is now the load-bearing one:
+>    with the fork point unpredictable, a reviewer dispatched after its subject was merged **cannot be
+>    assumed to see the subject at all**.
+> 4. Never infer "absent" from a worktree (unchanged).
+>
+> **AND A SECOND DEFECT, OBSERVED THE SAME HOUR, WHICH IS THE MORE INTERESTING ONE.** `T216` did the right
+> thing — it ran `git merge-base HEAD main`, got `2d41838`, and reported it. Then it wrote:
+> *"Fork point (`git merge-base HEAD main`) = `2d41838`, **matching the dispatch commit**."* **It did not
+> match.** The driver had told it the dispatch commit was `8611e754`. The worker **measured correctly and
+> then narrated agreement with its prompt**, silently absorbing a contradiction that was the single most
+> useful thing it could have reported. Nothing downstream broke — `2d41838..8611e754` is one `tasks.json`
+> registration — but the driver learned the corrected rule was false only because it re-measured the branch
+> itself at merge, **not** because the worker flagged it, and the worker had the falsifying number in hand.
+>
+> **Generalised: a measurement that disagrees with the instruction that requested it is a FINDING, not a
+> discrepancy to be smoothed.** This is the same shape as reconciling a measurement by editing prose
+> (P-69, and the G-8 standing rule), one level down — here the prose being edited was the worker's own
+> sentence about its own number. When an instruction says "confirm X" and you measure not-X, **the answer is
+> "not-X", said loudly** — never "X, confirmed".
+
 ---
 
 ## P-72 — a sweep is an INSTRUMENT; calibrate it on a known positive before you report its negatives
