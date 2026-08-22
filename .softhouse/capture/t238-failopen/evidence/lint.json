@@ -1,0 +1,66 @@
+{
+ "lethal": [],
+ "dormant": [],
+ "unreproducible": [
+  ".softhouse/capture/t238-failopen/instruments/00-engines.sh"
+ ],
+ "suppressed": [
+  [
+   ".softhouse/capture/t238-failopen/instruments/00-engines.sh",
+   15,
+   "these absolute paths are the SUBJECT of the probe, not its corpus; the"
+  ],
+  [
+   ".softhouse/capture/t238-failopen/instruments/00-engines.sh",
+   28,
+   "reporting ABSENCE is this line's purpose"
+  ],
+  [
+   ".softhouse/capture/t238-failopen/instruments/00-engines.sh",
+   29,
+   "reporting ABSENCE is this line's purpose"
+  ],
+  [
+   ".softhouse/capture/t238-failopen/instruments/00-engines.sh",
+   30,
+   "reporting ABSENCE is this line's purpose"
+  ]
+ ],
+ "detail": [
+  {
+   "file": ".softhouse/capture/t238-failopen/instruments/00-engines.sh",
+   "violations": [
+    [
+     "C1",
+     17,
+     "dead absolute path: /opt/homebrew/bin/grep"
+    ],
+    [
+     "C1",
+     18,
+     "dead absolute path: /opt/homebrew/bin/ugrep"
+    ],
+    [
+     "C1",
+     19,
+     "dead absolute path: /opt/homebrew/bin/rg"
+    ],
+    [
+     "C3",
+     0,
+     "no corpus-reachability assertion anywhere in the file"
+    ],
+    [
+     "C5",
+     56,
+     "backslash-class under `git grep -E`, which reads it as a LITERAL and returns zero SILENTLY: o=$(git grep -n -E '\\bmain\\b' -- \"$CAL\" 2>&1 | tr '\\n' ' ');   r \"git grep -nE      \\\\bmai"
+    ],
+    [
+     "C5",
+     77,
+     "backslash-class under `git grep -E`, which reads it as a LITERAL and returns zero SILENTLY: echo \"  git grep -E : reads \\\\b as a LITERAL b and returns zero SILENTLY.\""
+    ]
+   ]
+  }
+ ]
+}

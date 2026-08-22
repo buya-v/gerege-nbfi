@@ -1,0 +1,37 @@
+T238 MULTI-LINE SWEEP
+commit      : 162dddbc4abd302277baf76976f5a50ffae6988b
+corpus      : 1262 tracked .sh/.py/.md files
+engine      : python3 re, DOTALL|IGNORECASE, whole-file
+CALIBRATION : PASS — the split known positive IS found multi-line; line-oriented control finds it: False
+              (the control MUST be False, else the calibration proves nothing)
+
+########## ML-1  cd ... <newline> ... || echo
+##########   regex: \bcd\s+["\']?[^\n]{3,120}\n[^\n]{0,200}\|\|\s*(?:echo|printf)
+   .softhouse/reviews/T138-evidence/r4-guards-red.sh:13  cd "$C" && git archive HEAD) | tar -x -C "$X" / [ -d "$X/.git" ] && echo "UNEXPECTED: the export is a git repo" || echo
+   multi-line-ONLY matches: 1
+
+########## ML-2  search ... <newline> continuation ... || echo
+##########   regex: (?:git\s+grep|grep)\s[^\n]{0,200}\\\n[^\n]{0,200}\|\|\s*(?:echo|printf)
+   MEASURED ZERO (engine ran over 1262 files and matched nothing spanning a newline)
+   multi-line-ONLY matches: 0
+
+########## ML-3  a `||` arm on its OWN line following a search
+##########   regex: (?:git\s+grep|grep)\s[^\n]{0,200}\n\s*\|\|\s*(?:echo|printf|true|:)
+   MEASURED ZERO (engine ran over 1262 files and matched nothing spanning a newline)
+   multi-line-ONLY matches: 0
+
+########## ML-4  for-in-command-substitution spanning a newline
+##########   regex: for\s+\w+\s+in\s+\$\([^\n)]{0,200}\n[^)]{0,200}\)
+   MEASURED ZERO (engine ran over 1262 files and matched nothing spanning a newline)
+   multi-line-ONLY matches: 0
+
+########## ML-5  closure claim split across a newline
+##########   regex: (?:population\s+is\s+closed|no\s+other\s+(?:site|instance|occurrence)\s+exists|does\s+not\s+exist\s+anywhere)
+   MEASURED ZERO (engine ran over 1262 files and matched nothing spanning a newline)
+   multi-line-ONLY matches: 0
+
+==================================================================
+MULTILINE-RESULT: commit=162dddb corpus=1262 patterns=5 multiline_only_matches=1 calibration=PASS
+
+READ THIS CAREFULLY. A multi-line-ONLY match is one whose matched text CONTAINS a newline.
+No line-oriented sweep in this program -- and that is all of them -- could have found one.

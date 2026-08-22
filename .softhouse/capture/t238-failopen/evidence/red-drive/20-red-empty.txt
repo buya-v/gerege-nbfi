@@ -1,0 +1,1 @@
+SWEEP ABORT (91): /private/tmp/t238-emptyrepo-7bOsEm tracks ZERO files. A sweep over nothing proves nothing (P-35).

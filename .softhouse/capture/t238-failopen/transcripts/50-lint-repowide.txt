@@ -1,0 +1,29 @@
+T238 FAIL-OPEN LINT
+commit    : 162dddbc4abd302277baf76976f5a50ffae6988b
+corpus    : 850 tracked .sh/.py; 19 are repo-wide search instruments
+scope     : whole repository
+
+FAIL-level violations (C1 dead path / C2 reassuring failure arm): 6 instrument(s)
+  .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+      C2  :20  failure arm PRINTS instead of exiting: env | grep -c '^BASH_FUNC_grep' 2>/dev/null || echo "BASH_FUNC_grep not exported"
+  .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+      C2  :18  failure arm PRINTS instead of exiting: echo "  pattern $p ->"; /usr/bin/grep -E -n "$p" "$C" | sed 's/^/      /' || echo "      (no match)"
+  .softhouse/capture/t238-failopen/instruments/00-engines.sh
+      C1  :15  dead absolute path: /opt/homebrew/bin/grep
+      C1  :16  dead absolute path: /opt/homebrew/bin/ugrep
+      C1  :17  dead absolute path: /opt/homebrew/bin/rg
+      C2  :26  failure arm PRINTS instead of exiting: printf '%-34s %s\n' "command -v grep"  "$(command -v grep  || echo '<<NOT FOUND>>')"
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+      C1  :8  dead absolute path: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a356a016636abdd7e
+      C2  :15  failure arm PRINTS instead of exiting: pat() { echo "--- pattern: $1"; git grep -n -i -E "$1" -- . || echo "    (no hits)"; }
+  .softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh
+      C1  :15  dead absolute path: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee
+  .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+      C1  :11  dead absolute path: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac008956278f2d6ea
+
+ADVISORY (C3 no corpus assertion / C4 no calibration / C5 engine): 18 instrument(s)
+  C3 : 10 instrument(s)
+  C4 : 15 instrument(s)
+  C5 : 15 instrument(s)
+
+LINT: FAIL — 6 instrument(s) can emit a negative they did not measure.

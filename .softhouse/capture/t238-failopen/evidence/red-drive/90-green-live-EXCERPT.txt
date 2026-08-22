@@ -1,0 +1,60 @@
+T238 GREEN RUN -- HEAD/TAIL EXCERPT + INTEGRITY DIGEST
+
+The full body was 4.9 MB and is deliberately NOT committed. The repaired instrument is
+RE-RUNNABLE -- which is the entire point of the repair -- so the body regenerates with:
+    bash .softhouse/reviews/a2-33-dec2-rev5/sweep.sh REPO
+FULL per-pattern hit counts for all 34 patterns ARE committed, in
+    90-green-per-pattern-counts.txt
+
+=== sha256 of the full body as produced at this commit ===
+efbfcc5c7251e4dba0046f43a5e54eabc885d49cb551a319b0f3bea6e518f593  90-green-live.txt
+
+=== FIRST 40 LINES ===
+SWEEP ROOT   : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5701d0a384315ff8
+SWEEP COMMIT : 162dddbc4abd302277baf76976f5a50ffae6988b
+SWEEP CORPUS : 5000 tracked files
+SWEEP ENGINE : git grep -n -I -i -E   [git 2.50.1]
+SWEEP ENGINE NB: this engine does NOT implement \b \d \s \w. A2-33 audited every
+               pattern below for those escapes and none uses one. Do not add one.
+SWEEP CALIBRATE: PASS — known positive 'a2-33' matched 60 time(s)
+
+########## PATTERN F2-01 :: three of (its |the |them|these )?(seven|7|four|4)
+.softhouse/capture/mathcontext/analysis/controls.py:4:Every expectation below is TRANSCRIBED with file:line, never computed here.  Three of the four
+.softhouse/capture/t100-g8-rescope/CORRECTIONS-T112.md:54:- **F-3** — the exit-code caveat was false for three of the four exemption-demo variants.
+.softhouse/capture/t170-g8-rebuild/out/claim-units-t170.json:3386:   "text": "**How to read the exit codes of those four runs \u2014 three of the four ARE this finding, and must not"
+.softhouse/capture/t170-g8-rebuild/out/claim-units-t170.json:3488:   "text": "was false for three of the four and taught the reader to discount an honest signal \u2014 T101 F-3. The"
+.softhouse/capture/t170-g8-rebuild/out/claim-units-t170.json:3500:   "text": "is that three of the four exit codes now agree with them instead of being waved away."
+.softhouse/capture/t170-g8-rebuild/out/paragraph-units-t170.json:1064:   "text": "**How to read the exit codes of those four runs \u2014 three of the four ARE this finding, and must not be discounted.** `Summary.ExitCode()` returns **1** as soon as `ParityFail + ContractFail + SelfTestFail > 0 || InvariantViolations > 0`, **before it ever inspects `FatalReasons`** [VERIFIED by T112 at `nexus/internal/apps/loanschedule/conformance/grade.go:154-160` on current `main`]. So:"
+.softhouse/capture/t170-g8-rebuild/out/paragraph-units-t170.json:1082:   "text": "[VERIFIED by T112 from T100's own committed run record `out/exemption-demo-t100.json`: exit codes **1 / 2 / 1 / 1** with `parityFail` 1 / 0 / 1 / 1 and `invariantViolations` 2 / 0 / 0 / 0, in that file's own order \u2014 `FAMILY-B-NO-EXEMPTION`, `FAMILY-B-WITH-EXEMPTION`, `FAMILY-A-NO-EXEMPTION`, `FAMILY-A-WITH-EXEMPTION`; T101 reproduced all four runs independently on `main`'s current port and got the same codes.] An earlier revision said *each* variant's exit code had \"nothing to do with G-8\". That was false for three of the four and taught the reader to discount an honest signal \u2014 T101 F-3. The **case outcome** and the invariant statuses in the table above remain the measurement; what changes is that three of the four exit codes now agree with them instead of being waved away."
+.softhouse/capture/t234-sweep-instrument-audit/evidence/census.json:27144:   "pattern": "3 of 4\\|three of four",
+.softhouse/capture/t234-sweep-instrument-audit/evidence/census.json:27146:   "src": "[VERIFIED: `grep -n '3 of 4\\|three of four' .softhouse/program.json` \u2192 three lines, `:81`, `:1394`"
+.softhouse/capture/t234-sweep-instrument-audit/evidence/census.json:45844:   "pattern": "3 of 4\\|three of four",
+.softhouse/capture/t234-sweep-instrument-audit/evidence/census.json:45846:   "src": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md:313:[VERIFIED: `grep -n '3 of 4\\|three of four' .softhouse/program.json` \u2192 three lines, `:81`, `:1394`"
+.softhouse/capture/t234-sweep-instrument-audit/evidence/census.json:45855:   "pattern": "3 of 4\\|three of four",
+.softhouse/capture/t234-sweep-instrument-audit/evidence/census.json:45857:   "src": ".softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T227.md:313:[VERIFIED: `grep -n '3 of 4\\|three of four' .softhouse/program.json` \u2192 three lines, `:81`, `:1394`"
+.softhouse/capture/t234-sweep-instrument-audit/evidence/multiline-only-hits.json:3450:  "text": "not existing' \\\\n  'record[s]? .{0,25}as not existing' \\\\n  '4\\.4\\.1 (records|record)'\\n\\nsweep \"R3 \u2014 'three of its FOUR detection classes' (P-67; the guard"
+.softhouse/capture/t234-sweep-instrument-audit/evidence/sound-sweep-HEAD.json:4238:   "not existing' \\\\n  'record[s]? .{0,25}as not existing' \\\\n  '4\\.4\\.1 (records|record)'\\n\\nsweep \"R3 \u2014 'three of its FOUR detection classes' (P-67; the guard"
+.softhouse/capture/t74-multiplesof/T82-guard-proofs/SWEEP.txt:458:    292  and `ZP-D` (72/36), **three of the four promoted vectors**.
+.softhouse/gates.md:116:**F-2 — "three of its SEVEN detection classes inspected an empty population" is FOUR, measured.**
+.softhouse/gates.md:1952:**How to read the exit codes of those four runs — three of the four ARE this finding, and must not
+.softhouse/gates.md:1971:was false for three of the four and taught the reader to discount an honest signal — T101 F-3. The
+.softhouse/gates.md:1973:is that three of the four exit codes now agree with them instead of being waved away.
+.softhouse/gates.md:2922:  never folded in. **Three of the seven are PARTIAL-shape cells — the shape the port has never been
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T101.md:53:  that has nothing to do with G-8"* is false for **three of the four** variants: `ExitCode()` returns
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T114.md:40:| **F-3** the exit-code caveat | **applied** `gates.md:1213-1231` | `grade.go:154-160` re-read: `FatalReasons` first touched at `:158`, after the `:155` branch; the recorded codes are 1/2/1/1, so three of four exits **are** the G-8 finding |
+.softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T68.md:292:  and `ZP-D` (72/36), **three of the four promoted vectors**.
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-12.md:531:which is out of scope for me to edit in any case. Three of the four A2-9 findings are also
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-21.md:110:  the guard cannot see**, and I gave the fourth its own emphasis: **three of its four detection
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md:137:— *"three of four"*, 75 % of the guard unexercised — should be *three of seven*, ≈ 43 %.
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md:142:inside one sentence: *"states **four things it cannot see**, including that **three of its four
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md:520:- **FU-A2-25-1** — the *"three of its four detection classes"* figure is wrong in
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-25.md:559:**"three of four detection classes"** figure is a wrong denominator asserted as measurement and
+.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-28.md:403:- **FU-A2-28-1 — the "three of four detection classes" figure is still wrong in four driver-owned
+
+=== LAST 6 LINES ===
+nexus/internal/apps/loanschedule/conformance/reporoot.go:36:// refusal into a green run, and the green run said nothing at all about which
+nexus/internal/apps/loanschedule/conformance/report.go:25:		p("    Grading the HARNESS, not an implementation. A green run here means the harness works.")
+nexus/internal/apps/loanschedule/conformance/report.go:766:		// that a reader of a green run needs, and it is exactly the fact G-11's
+
+==================================================================
+SWEEP-RESULT: commit=162dddb corpus_files=5000 patterns=34 hit_lines=17354 calibration=PASS

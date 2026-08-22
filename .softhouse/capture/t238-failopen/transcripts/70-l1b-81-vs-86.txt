@@ -1,0 +1,45 @@
+T238 -- L-1b: THE 81 vs 86 DIVERGENCE
+commit        : 162dddbc4abd302277baf76976f5a50ffae6988b
+
+=== 0. IS THE REV-4 CORPUS RECOVERABLE? ===
+  YES. 1b6b3cf:docs/adr/DEC-2-gl-accounting-adapter.md -> 2842 lines, sha256:
+    ce734f9c89e54be5fa3b07d8ddb833df8eaa5f17f8e24ce0ff00564ecf821a92  /tmp/t238-l1b-zyhXDC/rev4.md
+
+=== 1. VERIFY A2-33'S OWN AUDIT CLAIM: 'no \b, \d, \s or \w in ANY pattern' ===
+  patterns declared           : 34
+  patterns using \b \d \s \w  : 0
+  >>> A2-33's audit claim VERIFIED at this commit. The ERE-vs-PCRE escape defect
+  >>> (P-53 / P-12) CANNOT be the cause of the divergence. That was T234's implicit
+  >>> hypothesis and it is now excluded by measurement.
+
+=== 2. RE-MEASURE: unique rev-4 lines hit by all 34 patterns, per engine ===
+    (A2-33 reported: git grep = 81, ugrep = 86)
+  patterns extracted for replay: 34
+
+  BSD grep -n -i -E            patterns=34  engine_errors=0   UNIQUE LINES = 86
+  BSD grep -n -E (no -i)       patterns=34  engine_errors=0   UNIQUE LINES = 64
+  perl PCRE //i                patterns=34  engine_errors=0   UNIQUE LINES = 86
+  perl PCRE // (no i)          patterns=34  engine_errors=0   UNIQUE LINES = 64
+
+  ugrep                      UNMEASURABLE -- ugrep is ABSENT from this machine.
+                             (transcripts/00-engines.txt: not on PATH, not in /opt/homebrew,
+                              not in /usr/local. A2-33's ugrep leg cannot be re-run here.)
+
+=== 3. WHAT THE COMMITTED ARTEFACTS DO AND DO NOT RECORD ===
+  sweep-recall-calibration-gitgrep.txt declares:
+     engine  : git version 2.50.1 (Apple Git-155)      [DECLARED]
+     flags   : git grep -n -I -i -E                    [DECLARED]
+  sweep-recall-calibration-ugrep.txt declares:
+     engine  : (nothing -- no version string anywhere in the file)   [NOT DECLARED]
+     flags   : (nothing)                                            [NOT DECLARED]
+  Instrument that computed either number:
+     .softhouse/capture/t234-sweep-instrument-audit/evidence/census.json
+     .softhouse/reviews/a2-33-dec2-rev5/sweep-recall-calibration-gitgrep.txt
+     .softhouse/reviews/a2-33-dec2-rev5/sweep-recall-calibration-ugrep.txt
+     ^^ these are the two TRANSCRIPTS and T234's census index. NO SCRIPT computes it.
+
+=== 4. VERDICT ===
+  See the handoff. In one line: the git-grep leg is re-derivable and the ugrep leg is not,
+  because the ugrep transcript records neither its engine version nor its flags nor its
+  command -- which is P-72 corollary 2 exactly: a sweep whose commands were not committed
+  cannot be audited, only believed.

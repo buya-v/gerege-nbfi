@@ -12,6 +12,8 @@ CAL=".softhouse/capture/t238-failopen/evidence/engine-calibration-corpus.txt"
 
 echo "=== 1. BINARIES, AS A SCRIPT SEES THEM ==="
 printf '%-34s %s\n' "uname" "$(uname -srm)"
+# lint-failopen: ok -- these absolute paths are the SUBJECT of the probe, not its corpus; the
+# whole point of the loop is to report which of them are ABSENT. Suppressing C1 on this line.
 for e in /usr/bin/grep /opt/homebrew/bin/grep /usr/local/bin/grep \
          /opt/homebrew/bin/ugrep /usr/local/bin/ugrep \
          /opt/homebrew/bin/rg /usr/local/bin/rg /usr/bin/perl; do
@@ -23,9 +25,9 @@ printf '%-34s %s\n' "perl" "$(perl -e 'print "perl $]"')"
 
 echo
 echo "=== 2. WHAT IS ON \$PATH FOR A SCRIPT ==="
-printf '%-34s %s\n' "command -v grep"  "$(command -v grep  || echo '<<NOT FOUND>>')"
-printf '%-34s %s\n' "command -v ugrep" "$(command -v ugrep || echo '<<NOT FOUND>>')"
-printf '%-34s %s\n' "command -v rg"    "$(command -v rg    || echo '<<NOT FOUND>>')"
+printf '%-34s %s\n' "command -v grep"  "$(command -v grep  || echo '<<NOT FOUND>>')"   # lint-failopen: ok -- reporting ABSENCE is this line's purpose
+printf '%-34s %s\n' "command -v ugrep" "$(command -v ugrep || echo '<<NOT FOUND>>')"   # lint-failopen: ok -- reporting ABSENCE is this line's purpose
+printf '%-34s %s\n' "command -v rg"    "$(command -v rg    || echo '<<NOT FOUND>>')"   # lint-failopen: ok -- reporting ABSENCE is this line's purpose
 echo "PATH=$PATH"
 
 echo

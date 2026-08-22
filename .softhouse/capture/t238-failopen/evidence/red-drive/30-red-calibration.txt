@@ -1,0 +1,9 @@
+SWEEP ROOT   : /private/tmp/t238-otherrepo-3SbhGU
+SWEEP COMMIT : 1787af63a957e4c0b098018863f07a4ff3dbd2dc
+SWEEP CORPUS : 1 tracked files
+SWEEP ENGINE : git grep -n -I -i -E   [git 2.50.1]
+SWEEP ENGINE NB: this engine does NOT implement \b \d \s \w. A2-33 audited every
+               pattern below for those escapes and none uses one. Do not add one.
+SWEEP ABORT (92): CALIBRATION MISSED. 'a2-33' matched 0 times where it is KNOWN present.
+                  The engine, the pattern language or the corpus is broken.
+                  NO NEGATIVE FROM THIS RUN IS INTERPRETABLE (P-72).

@@ -1,0 +1,78 @@
+DRIVER EXIT=0
+T238 RED/GREEN DRIVE OF .softhouse/reviews/a2-33-dec2-rev5/sweep.sh
+commit : 162dddbc4abd302277baf76976f5a50ffae6988b
+engine : git grep -n -I -i -E  [git 2.50.1]
+
+BASELINE, for comparison -- the instrument AS IT WAS BEFORE THIS REPAIR.
+Reconstructed from the committed original at HEAD~ and run verbatim:
+  ORIGINAL   exit=0    "(no hits)" lines=34    hit lines=34
+  >>> exit 0 with 34 reassurances and zero measurements. THAT is the defect.
+
+==================================================================
+RED 1 -- CORPUS UNREACHABLE. Run from a directory that is not a git work tree.
+  exit status ............ 90   (expected 90)
+  "(no hits)" lines ...... 0   (expected 0 -- a fail-closed instrument NEVER prints one)
+  RESULT ................. PASS
+  --- output ---
+  | SWEEP ABORT (90): not inside a git work tree; cannot reach a corpus.
+
+==================================================================
+RED 2 -- CORPUS REACHABLE BUT EMPTY. A git repo that tracks ZERO files.
+  exit status ............ 91   (expected 91)
+  "(no hits)" lines ...... 0   (expected 0 -- a fail-closed instrument NEVER prints one)
+  RESULT ................. PASS
+  --- output ---
+  | SWEEP ABORT (91): /private/tmp/t238-emptyrepo-7bOsEm tracks ZERO files. A sweep over nothing proves nothing (P-35).
+
+==================================================================
+RED 3 -- CALIBRATION MISSES. A real, NON-EMPTY repo that simply does not contain the known positive.
+  exit status ............ 92   (expected 92)
+  "(no hits)" lines ...... 0   (expected 0 -- a fail-closed instrument NEVER prints one)
+  RESULT ................. PASS
+  --- output ---
+  | SWEEP ROOT   : /private/tmp/t238-otherrepo-3SbhGU
+  | SWEEP COMMIT : 1787af63a957e4c0b098018863f07a4ff3dbd2dc
+  | SWEEP CORPUS : 1 tracked files
+  | SWEEP ENGINE : git grep -n -I -i -E   [git 2.50.1]
+  | SWEEP ENGINE NB: this engine does NOT implement \b \d \s \w. A2-33 audited every
+  |                pattern below for those escapes and none uses one. Do not add one.
+  | SWEEP ABORT (92): CALIBRATION MISSED. 'a2-33' matched 0 times where it is KNOWN present.
+  |                   The engine, the pattern language or the corpus is broken.
+
+==================================================================
+RED 4 -- SINGLE-FILE MODE pointed at a file that does not exist.
+  exit status ............ 90   (expected 90)
+  "(no hits)" lines ...... 0   (expected 0 -- a fail-closed instrument NEVER prints one)
+  RESULT ................. PASS
+  --- output ---
+  | SWEEP ABORT (90): target file does not exist: /tmp/t238-this-file-does-not-exist-61247.txt
+
+==================================================================
+GREEN -- THE REAL CORPUS. The instrument must exit 0 AND FIND THE KNOWN POSITIVE.
+  exit status ............ 0   (expected 0)
+  patterns run ........... 34   (expected 34 -- byte-identical to the original set)
+  "(no hits)" lines ...... 0   (expected 0 -- the string is GONE from the instrument)
+  MEASURED ZERO lines .... 0   (an HONEST zero: the engine ran and matched nothing)
+  hit lines .............. 17355
+  --- header + trailer ---
+  | SWEEP ROOT   : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5701d0a384315ff8
+  | SWEEP COMMIT : 162dddbc4abd302277baf76976f5a50ffae6988b
+  | SWEEP CORPUS : 5000 tracked files
+  | SWEEP ENGINE : git grep -n -I -i -E   [git 2.50.1]
+  | SWEEP ENGINE NB: this engine does NOT implement \b \d \s \w. A2-33 audited every
+  |                pattern below for those escapes and none uses one. Do not add one.
+  | SWEEP CALIBRATE: PASS — known positive 'a2-33' matched 60 time(s)
+  | 
+  | ...
+  | 
+  | ==================================================================
+  | SWEEP-RESULT: commit=162dddb corpus_files=5000 patterns=34 hit_lines=17354 calibration=PASS
+
+==================================================================
+SUMMARY
+  ORIGINAL  : exit 0, 34 x '(no hits)', 0 hit lines, NOTHING MEASURED  -> FAIL-OPEN
+  REPAIRED  : 90 / 91 / 92 / 90 on the four unreachable-corpus paths   -> FAIL-CLOSED
+  REPAIRED  : exit 0 with 34 patterns and 17355 hit lines on the live corpus -> IT WORKS
+  The string '(no hits)' no longer exists in the instrument at all.
+
+[exited with code 0]

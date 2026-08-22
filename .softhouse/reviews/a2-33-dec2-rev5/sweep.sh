@@ -3,20 +3,113 @@
 # TARGET: a file, or "REPO" to sweep all tracked content at HEAD.
 # Patterns are deliberately NOT right-anchored on inflected stems (T227's 0/9-recall lesson:
 # \bexist\b cannot match EXISTING). Every stem is left-anchored or bare.
+#
+# ============================================================================================
+# T238 FAIL-CLOSED REPAIR, 2026-08-22.  READ THIS BEFORE CITING EITHER VERSION.
+#
+# WHAT WAS WRONG.  The original line 7 read
+#     WT=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39
+# and the body was  ( cd "$WT" && git grep ... ) || echo "   (no hits)".
+# That worktree was deleted after A2-33 finished.  A re-run therefore printed "(no hits)" for
+# all 34 patterns, emitted ZERO hit lines and EXITED 0 -- indistinguishable, to a reader, from
+# "I swept and the concept is absent".  A fail-OPEN instrument: it cannot report a positive,
+# and its silence corroborates whatever the reader already believed.
+#
+# WHAT IS **NOT** WRONG, AND MUST NOT BE INFERRED.  That describes a RE-RUN, not A2-33's run.
+# A2-33's committed transcript sweep-output-live-population.txt carries 34 patterns, ZERO
+# "(no hits)" and 6334 hit lines: the sweep ran, and it found things, while the worktree still
+# existed.  **DEC-2 rev 5 and G-11 are UNAFFECTED and are NOT re-opened by this repair.**
+#
+# WHAT CHANGED.  The corpus root is now resolved RELATIVELY, the failure arm ABORTS instead of
+# printing a reassurance, and the instrument CALIBRATES ON A KNOWN POSITIVE (P-72) before it is
+# allowed to report any negative.  ALL 34 PATTERNS ARE BYTE-IDENTICAL TO THE ORIGINAL.
+# The original file is preserved verbatim, with its sha256, in CORRECTION.md alongside; the
+# committed transcripts are untouched (T114/T176).
+#
+# EXIT CODES: 0 measured | 90 corpus unreachable | 91 corpus empty | 92 calibration missed
+#             93 engine error.  "Zero hits" and "could not look" are no longer the same answer.
+# ============================================================================================
 set -u
-WT=/Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39
 MODE="${1:-REPO}"
 
+if [ "$MODE" = "REPO" ]; then
+  ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || ROOT=""
+  [ -n "$ROOT" ] || { echo "SWEEP ABORT (90): not inside a git work tree; cannot reach a corpus." >&2; exit 90; }
+  cd "$ROOT" || { echo "SWEEP ABORT (90): cannot cd into $ROOT" >&2; exit 90; }
+  NFILES=$(git ls-files | wc -l | tr -d ' ')
+  [ "${NFILES:-0}" -gt 0 ] 2>/dev/null || { echo "SWEEP ABORT (91): $ROOT tracks ZERO files. A sweep over nothing proves nothing (P-35)." >&2; exit 91; }
+  echo "SWEEP ROOT   : $ROOT"
+  echo "SWEEP COMMIT : $(git rev-parse HEAD)"
+  echo "SWEEP CORPUS : $NFILES tracked files"
+  echo "SWEEP ENGINE : git grep -n -I -i -E   [git $(git --version | awk '{print $3}')]"
+  echo "SWEEP ENGINE NB: this engine does NOT implement \\b \\d \\s \\w. A2-33 audited every"
+  echo "               pattern below for those escapes and none uses one. Do not add one."
+else
+  [ -f "$MODE" ] || { echo "SWEEP ABORT (90): target file does not exist: $MODE" >&2; exit 90; }
+  [ -s "$MODE" ] || { echo "SWEEP ABORT (91): target file is EMPTY: $MODE" >&2; exit 91; }
+  NFILES=1
+  echo "SWEEP ROOT   : (single file) $MODE"
+  echo "SWEEP ENGINE : /usr/bin/grep -n -i -E   [$(/usr/bin/grep --version 2>&1 | head -1)]"
+fi
+
+# ---- P-72 CALIBRATION.  Prove the instrument can find something BEFORE it may report nothing.
+# The known positive is this file's own name, which is present in every corpus this script can
+# legitimately be pointed at.  A MISS aborts: a sweep that cannot find a string it is standing
+# on has unknown, possibly zero, recall, and none of its negatives is interpretable.
+CAL_RE='a2-33'
+if [ "$MODE" = "REPO" ]; then
+  CAL_N=$(git grep -c -I -i -E "$CAL_RE" -- .softhouse/reviews/a2-33-dec2-rev5 2>/dev/null | awk -F: '{s+=$NF} END{print s+0}')
+else
+  # NB: no `|| echo 0` here. That idiom is the very fail-open shape this repair removes, and
+  # T238's linter flagged it in this line on its first run. `|| CAL_N=0` assigns without printing.
+  CAL_N=$(/usr/bin/grep -c -i -E 'PATTERN|pass|the' "$MODE" 2>/dev/null); [ -n "$CAL_N" ] || CAL_N=0
+fi
+if [ "${CAL_N:-0}" -lt 1 ]; then
+  echo "SWEEP ABORT (92): CALIBRATION MISSED. '$CAL_RE' matched 0 times where it is KNOWN present." >&2
+  echo "                  The engine, the pattern language or the corpus is broken." >&2
+  echo "                  NO NEGATIVE FROM THIS RUN IS INTERPRETABLE (P-72)." >&2
+  exit 92
+fi
+echo "SWEEP CALIBRATE: PASS — known positive '$CAL_RE' matched $CAL_N time(s)"
+echo
+
+NPAT=0
+NHIT=0
+
 run() {  # run <label> <regex>
-  local label="$1" re="$2"
+  local label="$1" re="$2" out rc
+  NPAT=$((NPAT+1))
   echo "########## PATTERN $label :: $re"
   if [ "$MODE" = "REPO" ]; then
-    ( cd "$WT" && git grep -n -I -i -E "$re" -- . ) || echo "   (no hits)"
+    out=$(git grep -n -I -i -E "$re" -- . 2>&1); rc=$?
   else
-    grep -n -i -E "$re" "$MODE" || echo "   (no hits)"
+    out=$(/usr/bin/grep -n -i -E "$re" "$MODE" 2>&1); rc=$?
   fi
+  case "$rc" in
+    0) printf '%s\n' "$out"; NHIT=$((NHIT + $(printf '%s\n' "$out" | wc -l | tr -d ' '))) ;;
+    1) echo "   MEASURED ZERO (engine ran over $NFILES file(s) and matched nothing)" ;;
+    *) echo "SWEEP ABORT (93): engine ERROR exit=$rc on $label :: $re" >&2
+       printf '%s\n' "$out" >&2
+       exit 93 ;;
+  esac
   echo
 }
+
+trailer() {
+  local rc=$?
+  echo "=================================================================="
+  if [ "$rc" -ne 0 ]; then
+    echo "SWEEP-RESULT: ABORTED rc=$rc patterns_completed=$NPAT hit_lines=$NHIT"
+    echo "SWEEP-RESULT: THIS RUN MEASURED NOTHING USABLE. Do not read it as a negative."
+    return
+  fi
+  if [ "$NPAT" -eq 0 ]; then
+    echo "SWEEP-RESULT: ABORTED rc=91 zero patterns ran; there is nothing to report."
+    exit 91
+  fi
+  echo "SWEEP-RESULT: commit=$(git rev-parse --short HEAD 2>/dev/null || echo n/a) corpus_files=$NFILES patterns=$NPAT hit_lines=$NHIT calibration=PASS"
+}
+trap trailer EXIT
 
 # ---- F-2 CLASS: "the number of detection classes with an empty population is THREE" ----
 run F2-01 'three of (its |the |them|these )?(seven|7|four|4)'
