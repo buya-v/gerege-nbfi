@@ -1,12 +1,12 @@
 {
   "program_id": "fineract-to-go-full-codebase",
-  "goal": "Port the complete Fineract codebase to Go behind the frozen adapter contract, one bounded context per run, continuously, until every context below is done. Ratified 17 August 2026 — supersedes the Minimum-Portable-Core-only scope.",
+  "goal": "Port the complete Fineract codebase to Go behind the frozen adapter contract, one bounded context per run, continuously, until every context below is done. Ratified 17 August 2026 \u2014 supersedes the Minimum-Portable-Core-only scope.",
   "status": "active",
   "driver": "/softhouse-program",
   "oracle": {
     "source_checkout": "/Users/buv/fineract",
     "pinned_commit": "426a23544",
-    "note": "Commit measured 17 Aug 2026 [VERIFIED: git log -1 in that checkout]. T1 of run 1 re-pins it into .softhouse/reference-oracle.md together with the running-instance connection facts. LOC figures below are measured from THIS checkout (find+wc over src/main/**.java) — re-measure if the pin moves.",
+    "note": "Commit measured 17 Aug 2026 [VERIFIED: git log -1 in that checkout]. T1 of run 1 re-pins it into .softhouse/reference-oracle.md together with the running-instance connection facts. LOC figures below are measured from THIS checkout (find+wc over src/main/**.java) \u2014 re-measure if the pin moves.",
     "status": "UP",
     "verified_at": "2026-08-18T07:31Z",
     "fineract_commit": "426a23544e8426a38ae43ae404670a0a7e85b9eb",
@@ -14,7 +14,7 @@
     "jvm": "Zulu 21.0.11+10-LTS",
     "base_url": "https://localhost:8443/fineract-provider/api/v1",
     "facts_file": ".softhouse/reference-oracle.md",
-    "driver_assertion": "org.postgresql.Driver / jdbc:postgresql:// — PASSED against running container",
+    "driver_assertion": "org.postgresql.Driver / jdbc:postgresql:// \u2014 PASSED against running container",
     "prohibited_engines": "none (0 ojdbc/oracle.jdbc/mysql/mariadb jar entries, no :1521 listener)",
     "image_digest": "sha256:e596339626bfca2b07d10fc294197c59118343423fd362f89f5f18ccd270459a",
     "commit_attestation": "the image jar's own BOOT-INF/classes/git.properties carries git.commit.id=426a23544e8426a38ae43ae404670a0a7e85b9eb with git.dirty=false [VERIFIED by the T18 audit] - build-attested, not self-reported",
@@ -51,7 +51,7 @@
       "reaches_reference_oracle": false,
       "role": "Catch-up when the Mac was off: source analysis, DEC/spec drafts, Tier-C gap audit, Tier-D corpus mining. Parks vector/conformance work as oracle_unreachable."
     },
-    "mutual_exclusion": ".softhouse/LOCK — repo-level lock, pushed so both fires see it. A fire finding a lock under 6h old exits without dispatching. Stale locks (>6h) are taken over."
+    "mutual_exclusion": ".softhouse/LOCK \u2014 repo-level lock, pushed so both fires see it. A fire finding a lock under 6h old exits without dispatching. Stale locks (>6h) are taken over."
   },
   "policy": {
     "one_context_per_run": true,
@@ -78,7 +78,7 @@
       "tier0-harness-schedule-poc"
     ],
     "parked_contexts": [],
-    "note": "Local fire 20260822-000013 (oracle REACHABLE throughout). THIRTEEN DISPATCHED, THIRTEEN COMPLETED, THIRTEEN MERGED, ZERO LIVE AT EXIT. Wave 1: A2-24, T214, T217, A2-25, T193, A2-26, T116. Wave 2: T215, A2-27, T218, T220, A2-28, A2-29. HEADLINE 1 -- THE CORPUS MOVED FOR THE FIRST TIME IN THREE FIRES: 43 parity vectors -> 46, 5664 -> 7884 cells, kills 103 -> 106 money, store ce821c63 -> 73c3ea7b43dd75f04884072719a87fc8e1d255c1. T116 executed G-8 OPTION (a); T220 independently re-derived it by two disjoint routes (its own from-scratch probe in the pinned image: 1269 money cells, 0 mismatches; T116's capture matches on 1908 cells) and APPROVED. Two family-B vectors carry exactly two exemptions each, T100's proposed THIRD was DROPPED because it holds unexempted, and the third vector is the amortizing cell ONE REPAYMENT BELOW THE BOUNDARY with NO exemption at all so the exemption cannot be read as '600% is exempt'. report.go now prints every exemption WITH ITS FULL REASON. T116 also settled the T83-vs-T101/T112 'is invariant_exemptions INERT' dispute: it was NEVER a contradiction -- T83's demo ran on a FAMILY-A case where every invariant already holds, so INERT is correct ABOUT FAMILY A; both records were right about different families. HEADLINE 2 -- FAMILY B'S MECHANISM, FOUND BY T220, DRIVER-VERIFIED AT BOTH SITES, AND IT CHANGES WHAT BUYAN IS ASKED AT G-8. ProgressiveEMICalculator.java:1962 consumes mc.getPrecision()=19 as DECIMAL PLACES via setScale; RepaymentPeriod.java:217 is reduce(BigDecimal.ONE, BigDecimal::add) with NO MathContext. So rateFactorPlus1 carries TWENTY significant digits inside a PRECISION-19 context, the EMI dips below half a minor unit at exactly the observed boundary (n=103 -> 0.005 -> 0.01; n=104 -> 0.004999999999999999999 -> 0.00), AN EMI OF ZERO REPAYS NOTHING, and the last-period fallback dumps the residual into the final row as interest. THIS IS DEC-1's KNOWN MathContext DOUBLE-SENSE PRODUCING A MONEY OUTCOME. CONSEQUENCE: family B is NOT a property of '600%' or 'n>=104' -- it is an EMI half-minor-unit floor, so THE BOUNDARY MOVES WITH PRINCIPAL, RATE AND TERM, and every statement of G-8's region in gates.md is in rates and terms. Options (b)/(c) would narrow the graded domain BY DESCRIBING A REGION and must not be put to Buyan until T223/T219 restate it. HEADLINE 3 -- G-11: REV 3 REJECTED, AND HOLDING A2-15 WAS RIGHT. The previous RESUME said A2-15 was unblocked; the driver held it and sent A2-25 at G-11's own stated unblocking condition instead. A2-25 REJECTED rev 3 on four claims false about main, and its F-3 vindicates the hold: it authored the exact vector 5.2 REQUIREMENT 6 specifies -- THE REQUIREMENT THAT WOULD HAVE GRADED A2-15 -- and it DIES AT STRICT DECODE before either mandated refusal is reachable, inadmissible stays 0, NEITHER REFUSAL FIRES. The only bytes emitting both are a loanschedule vector in a ledger costume, i.e. 5.1.1's own retracted defect. THE REQUIREMENT WRITTEN TO CLOSE THE VACUOUS-CONTROL HOLE RE-OPENED IT THROUGH ITS OWN TEXT. A2-28 wrote rev 4 addressing all seven items; G-11 STAYS OPEN - NOT RATIFIABLE until A2-31 reviews it clean. HEADLINE 4 -- G-12 RAISED AND MEASURED IN ONE FIRE. A2-26 found acc_gl_journal_entry carries office_running_balance, colliding CLAUDE.md's 'balances are derived, never written' with 'adopt Fineract's PostgreSQL schema'. The driver raised it with NO RECOMMENDATION DELIBERATELY. A2-29 measured: SECOND SOURCE OF TRUTH, NOT A CACHE -- drift of MNT 2,000,000.00 survived FOUR organisation-wide recomputes, sat on rows flagged is_running_balance_calculated=true, PROPAGATED INTO A FRESHLY COMPUTED ROW, and reached the contract boundary; the writer SEEDS EACH RECOMPUTE FROM ITS OWN PRIOR STORED OUTPUT. DRIVER-VERIFIED: /glaccounts?fetchRunningBalance=true is HTTP 500 ON POSTGRESQL because GLAccountReadPlatformServiceImpl.java:130-131 uses MySQL-only 'GROUP BY ... DESC' -- THAT CONTRACT-BOUNDARY READER HAS NEVER WORKED ON THE ONLY DATABASE THIS PROGRAM PERMITS. Driver recommends (a) for behaviour plus a NARROWED (b) for storage, against (c); price stated -- a table-level parity diff must EXCLUDE these columns and that exclusion must be written down. FOUR CORRECTIONS AGAINST THE DRIVER, all recorded: P-67 -- it CERTIFIED 'three of its FOUR detection classes' as EXACT and propagated it to four files without ever counting the denominator; THE GUARD DECLARES SEVEN CLASSES, and the origin is 4.4.1's 'four things the guard cannot see' -- four BLIND SPOTS -- read as four CLASSES (caught by A2-25; A2-28 then found only TWO of three NIL-COVERAGE sites fire and REFUSED to claim a corrected numerator for I4-BUILDER). T214 corrected it three times (four coincidental basename hits not three; 'the other 19 branches need nothing' is true of PATHS and over-claims for CONTENT, with 10 novel blobs of which FOUR target contract.go or the DEC-1 ADR so landing them would have been A GATE BYPASS; and T22 is not one of the four branches). A2-26: the brief's JE list was 7 OF 9. A2-27: the evidence path in its brief does not exist. NEW PATTERNS: P-66 (dependencies resolve in run ARCHIVES -- T116 was never blocked and sat idle for several fires on a false 'can never resolve'; seven edges point outside tasks.json and ALL SEVEN resolve), P-67, P-68 (a run that graded NOTHING reported every capability backed -- 'latent' was true of the exit code and false of the report), P-69 (a measured claim went stale BETWEEN TWO WORKERS INSIDE ONE FIRE and neither was wrong; stamps make staleness visible but cannot prevent it, so ratification needs a RE-MEASURE GATE), P-70 (four ways a SEARCH RESULT was stated as a WORLD FACT). Tooling: .softhouse/bin/ready-tasks.py resolves edges against archives and prints WHERE each resolved, plus open CONTRACT gates beside the ready list; the skill's STEP 1 patched. NEXT FIRE STARTS AT A2-31 (G-11), then T223+T219 (restate G-8's region), T222, T224, T221. A2-15 REMAINS GATED.",
+    "note": "Local fire 20260822-000013 SECOND PASS (oracle REACHABLE throughout). EIGHT DISPATCHED, EIGHT COMPLETED, EIGHT MERGED, ZERO LIVE AT EXIT. Wave 1: A2-31, T223, T222, T224, T221, T213, T207. Wave 2: T225. Plus A2-30 executed inline by the driver. HEADLINE 1 -- G-8: \"600 %% ONLY\" IS DEAD. T223 restated the region as a predicate in its own variables and OBSERVED family B at 36.0 %% p.a. The phenomenon is bounded by ~MNT n/200 whatever the rate; what keeps it out of a real product is the TERM, not the rate. Prediction committed BEFORE the capture (c2771fb, strict ancestor), 7 of 7 confirmed. HEADLINE 2 -- G-11: rev 4 REJECTED by A2-31. FOUR revisions, FOUR rejections. But A2-25 HARDEST finding (requirement 6 unsatisfiable) is DISCHARGED -- A2-31 RAN it. Rev 5 is A2-32. HEADLINE 3 -- T222 was MERGED AND THEN REJECTED by its own reviewer T225, which found the failure T222 could not find by construction: the grounding rule REFUSES A LEGITIMATE EXEMPTION (measured, parity 46->45, INADMISSIBLE exit 2). main is GREEN today; the defect is LATENT and lands directly on A2-15. Rework is T230. HEADLINE 4 -- P-71: AGENT WORKTREES FORK FROM SESSION-START HEAD, NOT CURRENT main. T225 caught it against the driver; the artefact it was sent to review was ABSENT from the tree it was handed. THE DRIVER WAS CORRECTED FIVE TIMES: T221 (64 is the ADDED-path count, and the review-corrections population is 134 not 64); T213 (the briefed two-condition prune rule would have removed a LIVE worker worktree); T207 (the \"240 scripts\" denominator is dead, it is 438); A2-31 (program.json own \"3 of 4\" is FOUR of SEVEN, where BOTH corrections failed to land); T225 (the dispatch fork point). Bar UNCHANGED and driver-re-verified after every merge: probe PRESENT and up, PASS exit 0, 46 parity vectors, 7884 cells, 0 inadmissible, 0 invariant violations, 4 EXEMPTED, 4 GROUNDED 0 UNGROUNDED, --prove 23/0, store 73c3ea7b UNCHANGED. NO VECTOR WAS ADDED THIS FIRE and none was claimed.",
     "last_fire": "20260822-000013"
   },
   "contexts": [
@@ -131,7 +131,7 @@
     {
       "id": "tierA-gl-accounting",
       "tier": "A",
-      "title": "General Ledger / accounting — double-entry posting, chart of accounts, journal entries, accruals, product-account mapping",
+      "title": "General Ledger / accounting \u2014 double-entry posting, chart of accounts, journal entries, accruals, product-account mapping",
       "fineract_paths": [
         "fineract-accounting",
         "fineract-provider/src/main/java/org/apache/fineract/accounting/journalentry",
@@ -271,7 +271,7 @@
     {
       "id": "tierA-loan-lifecycle",
       "tier": "A",
-      "title": "Loan account lifecycle — disbursement, repayment, penalties, rescheduling, write-off, delinquency",
+      "title": "Loan account lifecycle \u2014 disbursement, repayment, penalties, rescheduling, write-off, delinquency",
       "fineract_paths": [
         "fineract-loan",
         "fineract-provider/src/main/java/org/apache/fineract/portfolio/loanaccount"
@@ -283,7 +283,7 @@
         "tierA-loan-product-schedule"
       ],
       "status": "pending",
-      "main_loc_note": "66,375 + 39,871 [VERIFIED: measured]. LARGEST context — must be split across several runs by sub-behavior (disbursement | repayment allocation | penalties/charges application | rescheduling | write-off/delinquency). A single plan over all of it will exhaust every worker.",
+      "main_loc_note": "66,375 + 39,871 [VERIFIED: measured]. LARGEST context \u2014 must be split across several runs by sub-behavior (disbursement | repayment allocation | penalties/charges application | rescheduling | write-off/delinquency). A single plan over all of it will exhaust every worker.",
       "run_id": null,
       "cutover_gate": true,
       "notes": "Split mandatory. 679 + ~380 files.",
@@ -292,7 +292,7 @@
     {
       "id": "tierA-charges-rates-tax",
       "tier": "A",
-      "title": "Charges, rates, tax — including VAT / e-Barimt tie-in",
+      "title": "Charges, rates, tax \u2014 including VAT / e-Barimt tie-in",
       "fineract_paths": [
         "fineract-charge",
         "fineract-rates",
@@ -309,13 +309,13 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "3,694 + 1,926 + 2,262 + 947 + 1,089 + 415 [VERIFIED: measured]. Mongolian VAT / e-Barimt is additive, not a Fineract port — spec it, do not invent parity vectors for it.",
+      "notes": "3,694 + 1,926 + 2,262 + 947 + 1,089 + 415 [VERIFIED: measured]. Mongolian VAT / e-Barimt is additive, not a Fineract port \u2014 spec it, do not invent parity vectors for it.",
       "analysis_ready": true
     },
     {
       "id": "tierA-cob-batch",
       "tier": "A",
-      "title": "Close-of-business batch — daily accrual/aging/posting, idempotency, restart-after-failure",
+      "title": "Close-of-business batch \u2014 daily accrual/aging/posting, idempotency, restart-after-failure",
       "fineract_paths": [
         "fineract-cob",
         "fineract-provider/src/main/java/org/apache/fineract/cob",
@@ -357,7 +357,7 @@
     {
       "id": "tierB-savings-deposits",
       "tier": "B",
-      "title": "Savings / deposits / recurring deposits / interest rate charts — ported DISABLED",
+      "title": "Savings / deposits / recurring deposits / interest rate charts \u2014 ported DISABLED",
       "fineract_paths": [
         "fineract-savings",
         "fineract-provider/src/main/java/org/apache/fineract/portfolio/savings",
@@ -372,7 +372,7 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "activation_gate": "user — deposit-taking activation requires FRC / Bank of Mongolia licensing sign-off. Ships behind a config flag defaulting to OFF. Never render deposits as insured/protected/guaranteed.",
+      "activation_gate": "user \u2014 deposit-taking activation requires FRC / Bank of Mongolia licensing sign-off. Ships behind a config flag defaulting to OFF. Never render deposits as insured/protected/guaranteed.",
       "notes": "25,331 + 31,890 + 3,729 + 960 [VERIFIED: measured]. Split by run: savings account lifecycle | interest posting | recurring/fixed deposits | rate charts.",
       "analysis_ready": true
     },
@@ -427,7 +427,7 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "3,748 test LOC — good vector density.",
+      "notes": "3,748 test LOC \u2014 good vector density.",
       "analysis_ready": true
     },
     {
@@ -464,7 +464,7 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "6,203 + 3,209 [VERIFIED: measured]. Member share capital feeds the compliance-spine capital figure — reconcile against the native GL.",
+      "notes": "6,203 + 3,209 [VERIFIED: measured]. Member share capital feeds the compliance-spine capital figure \u2014 reconcile against the native GL.",
       "analysis_ready": true
     },
     {
@@ -484,7 +484,7 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "Pledged-collateral hold math: holds alter available only, never posted balance. This is the exact defect that failed adversarial review twice on the sister project — force the sign when re-deriving.",
+      "notes": "Pledged-collateral hold math: holds alter available only, never posted balance. This is the exact defect that failed adversarial review twice on the sister project \u2014 force the sign when re-deriving.",
       "analysis_ready": true
     },
     {
@@ -515,13 +515,13 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": true,
-      "notes": "Names are ovog / patronymic / given name — a diff introducing first_name/last_name is a rejection. National ID validated structurally, 10 chars. Match on registration number, never on name. Split by run; clients and groups are separate slices.",
+      "notes": "Names are ovog / patronymic / given name \u2014 a diff introducing first_name/last_name is a rejection. National ID validated structurally, 10 chars. Match on registration number, never on name. Split by run; clients and groups are separate slices.",
       "analysis_ready": true
     },
     {
       "id": "tierC-platform-map-first",
       "tier": "C",
-      "title": "Platform layer — MAP onto Nexus, port only demonstrated gaps",
+      "title": "Platform layer \u2014 MAP onto Nexus, port only demonstrated gaps",
       "fineract_paths": [
         "fineract-core",
         "fineract-security",
@@ -573,7 +573,7 @@
       "status": "pending",
       "run_id": null,
       "cutover_gate": false,
-      "notes": "~321k test LOC. Runs OPPORTUNISTICALLY — whenever a Tier A/B context is planned, its slice of this corpus is mined in the same run's test_writer task. Kept as a distinct context so residual suites are not forgotten. Never ported one-for-one into Go tests.",
+      "notes": "~321k test LOC. Runs OPPORTUNISTICALLY \u2014 whenever a Tier A/B context is planned, its slice of this corpus is mined in the same run's test_writer task. Kept as a distinct context so residual suites are not forgotten. Never ported one-for-one into Go tests.",
       "analysis_ready": true
     }
   ],
@@ -656,14 +656,15 @@
       "class": "ENGINEERING",
       "task": "T75",
       "context": "tier0-harness-schedule-poc",
-      "state": "OPEN",
+      "state": "OPEN - REGION NOW MEASURED IN ITS OWN VARIABLES (T223). Options (b)/(c) MUST NOT be put to Buyan until T229 characterises site 3.",
       "title": "A graded-domain shape where the reference oracle does not amortize principal to zero",
       "why": "T75 registered a prediction, committed it, then ran a calibrated probe on the pinned image (calibrations reproduced T64-ZP-A/B cell-for-cell, zero input diffs): MNT 0.01 / 6 x 21.6% at MinorUnitDigits=2, entirely inside the graded domain with no multiples-of input, makes the oracle emit a schedule whose balance column never reaches zero - 0.01 on every row including the last. The Go port returns 0. Same at 0.02/6, 0.01/12, 0.01/56; clean at 0.03 and above. This sets 'Fineract is the oracle' against the stated principal_amortizes_to_zero invariant, and conformance is green only because NO VECTOR COVERS THE REGION.",
       "asking_for": "Nothing yet. T83 must re-capture independently and measure the exact boundary first. Then: (a) promote a parity vector with an explicit invariant exemption; (b) refuse the region from the graded domain; or (c) diverge deliberately. (b) and (c) amend the graded domain and are therefore a hard user gate.",
-      "blocks": "Nothing today.",
+      "blocks": "Options (b) and (c) are BLOCKED on T229 (characterise site 3). A region whose boundary is set by an uncharacterised rescue mechanism cannot be refused correctly, and narrowing the graded domain is a HARD user gate.",
       "driver_recommendation": "Prefer (a): it keeps the oracle authoritative, makes the divergence measured and visible rather than defined away, and may be reachable without spending a DEC-n amendment if the vector schema's existing invariant_exemptions mechanism covers it. Check that before assuming.",
       "raised_by": "local fire 20260820-170001 (T75, during its approval of T74)",
-      "recorded_in": ".softhouse/gates.md"
+      "recorded_in": ".softhouse/gates.md",
+      "measured_region": "T223, local fire 20260822-000013, predicate held 7 FOR 7 against the live oracle with the prediction committed at c2771fb, a STRICT ANCESTOR of the capture. \"600 %% only\" IS DEAD: family B OBSERVED at 36.0 %% p.a. (MNT 0.50, n=1324; n=1323 clean), and 300 %%/MNT 0.02 shows BAND structure (clean n=500, family B n=800, clean n=1200) predicted before measurement. REGION IN ITS OWN VARIABLES: term enters only as (1+r)^n vs 10^19 giving n* ~= 19/log10(1+r), A PROPERTY OF THE RATE ALONE; principal enters only as resonance (B*r on a half-minor-unit boundary, which EXPLAINS why all 20 family-B principals are odd) and as a rescue ceiling B_minor <~ n/2. DECISION-RELEVANT: the failing disbursement is bounded by ~MNT n/200 WHATEVER THE RATE; at n <= 360 that is ~MNT 1.80. WHAT KEEPS THIS OUT OF A REAL PRODUCT IS THE TERM, NOT THE RATE. T223 ALSO CORRECTED T220: a THIRD load-bearing site (checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods :1258-1308 + EmiAdjustment) rescues cells and sets the failing-principal ceiling, so a predicate on :1962 + :217 ALONE IS WRONG. T223 recorded where its own predicate fails BEFORE probing: 971/1035 cells matched, all 64 misses are site-3 rescues, and the classification rule fails outright on T159-R600p0-N1000-B801."
     },
     {
       "id": "G-9",
@@ -687,7 +688,7 @@
       "class": "ENGINEERING",
       "context": "tierA-gl-accounting",
       "slice": "tierA-gl-accounting-A2",
-      "state": "OPEN — driver recommends, Buyan may overrule",
+      "state": "OPEN \u2014 driver recommends, Buyan may overrule",
       "title": "The oracle holds product mappings whose GL account was retyped underneath them, reports them without complaint, and will not re-create them",
       "evidence": "A2-7 capture A2-214: re-sending the mapping the oracle ITSELF accepted as product 23 now returns 403, because GL account 2 was retyped ASSET->INCOME underneath FIVE live product mappings. The oracle carries the state, serves it without error, and refuses to reproduce it.",
       "why_it_matters": "GET /loanproducts/{id} returns {id, name, glCode} per slot and NO type or usage at all, so THE READ-BACK STRUCTURALLY CANNOT REVEAL THE INCONSISTENCY. Any Go port graded on a vector captured from one of those five products would be graded against a state the oracle would reject if asked to build it again. This is not a bug to fix in Fineract; it is a question about what the PORT should do.",
@@ -700,22 +701,23 @@
     {
       "id": "G-11",
       "class": "CONTRACT",
-      "state": "OPEN - NOT RATIFIABLE",
+      "state": "OPEN - NOT RATIFIABLE (rev 4 REJECTED by A2-31, local fire 20260822-000013)",
       "context": "tierA-gl-accounting",
       "slice": "tierA-gl-accounting-A2",
-      "title": "DEC-2 revision 2 is REJECTED and must not be ratified",
+      "title": "DEC-2 is NOT RATIFIABLE \u2014 revisions 1, 2, 3 and 4 have all been REJECTED",
       "why_not_a_user_gate": "CLAUDE.md makes DEC-n ratification AGENT-decidable once the contract passes an independent review CLEAN. This entry records that the condition has NOT been met, so a later fire reading 'agent-decidable' does not ratify on that basis alone. Buyan retains veto either way.",
-      "review_history": "A2-14 REJECTED rev 1 (three shape findings). A2-17 returned MICRO-FIX on rev 2 and applied its OWN 7-line fix, leaving the document reviewed by nobody. A2-19 reviewed rev 2 post-micro-fix, applied NO fix deliberately, and REJECTED it.",
+      "review_history": "A2-14 REJECTED rev 1 (three shape findings). A2-17 returned MICRO-FIX on rev 2 and applied its OWN 7-line fix, leaving the document reviewed by nobody; A2-19 then REJECTED rev 2. A2-25 REJECTED rev 3 on four claims false about main, its F-1 being a correction applied where NAMED and missed where RESTATED -- the same class that killed rev 2. A2-28 wrote rev 4. A2-31 REJECTED rev 4 on two claims false about main: F-1, a [VERIFIED by A2-28 at commit 2e97162] claim that the guard head DROPS the CANNOT-CATCH block on the pass path -- it does not, all eight limits print, and T209 (03e9094) closed FU-T208-1 and IS AN ANCESTOR of 2e97162, so this is a caveat outliving its defect under a FRESH stamp, not staleness. F-2, \"three of its SEVEN detection classes inspected an empty population\" is FOUR, measured -- I4-BUILDER population under nexus/ is zero and its emptiness is NOT announced; the ratio appears at FIVE sites, the caveat travels to ONE, and section 10 item 2 claims \"The denominator is dropped\" when it is present at all five.",
       "rejection_grade_finding": "DEC-2 asserts in three places (banner fact 2, section 8.1 fact 2, A2-17's new section 4.10 text) that 'no ledger vector CAN exist'. FALSE. Section 5.1's own heading carries the true, weaker claim -- not EXPRESSIBLE. DRIVER-REPRODUCED INDEPENDENTLY with its own probe vector before the repair task was written: copy any loanschedule parity vector into .softhouse/vectors/ledger/, change ONLY case_id and context, and the harness reports 'VERDICT: PASS (exit 0) -- 44 parity vectors match the pinned reference oracle, 5711 cells compared'. A2-19's figures and the driver's agree EXACTLY: 44/5711. Cause is one line: context is constrained only to be non-empty and equal its own directory name (admit.go:115, :119-120); NO ALLOWLIST EXISTS. The strong claim rested on control PC-3, a FALSE NEGATIVE that failed on two author-correctable defects rather than a structural wall (P-50).",
-      "what_unblocks_it": "A2-20 (close the context hole), then A2-21 (DEC-2 revision 3), then a further independent review passing CLEAN.",
+      "what_unblocks_it": "A2-32 (DEC-2 revision 5, fixing EXACTLY A2-31 F-1 and F-2 and sweeping for the CLAIM not the sentence across the WHOLE REPO), then a further independent review passing CLEAN.",
       "what_A2_19_confirmed": "47/47 Fineract citations hit at their exact lines; overall [VERIFIED] hit rate 62/64 = 96.9% with one drift and one wrong, neither a money claim; section 5.4's retraction reproduced exactly; banner + 8.1 + 8.3 DO defuse the I-3/I-4 misreading; and P-8 is GENUINELY INDEPENDENT of P-1..P-5, which is what licensed A2-18 to build the ledger-invariant guard the same fire.",
       "raised_by": "local fire 20260822-080001 (A2-19, driver-reproduced)",
-      "recorded_in": ".softhouse/gates.md"
+      "recorded_in": ".softhouse/gates.md",
+      "what_A2_31_discharged": "Requirement 6 IS FIXED and A2-31 RAN it rather than reasoning: 6a BEFORE produces exactly what it demands (decode: json: unknown field \"product_id\", inadmissible 0, population intact 46/4/1/7884); 6b emits BOTH mandated refusals together, inadmissible 1, parity unmoved. A2-25 hardest finding is discharged. Also confirmed clean: baseline reproduces exactly; seven guards; only two of three NIL-COVERAGE arms fire (A2-28 correct); ALL 30 Fineract citations resolve BY CONTENT at 426a23544; no undisclosed new authorship."
     },
     {
       "id": "G-12",
       "class": "ENGINEERING",
-      "state": "OPEN — MEASURED by A2-29; driver recommends (a)+narrowed(b), Buyan may overrule",
+      "state": "OPEN \u2014 MEASURED by A2-29; driver recommends (a)+narrowed(b), Buyan may overrule",
       "context": "tierA-gl-accounting",
       "slice": "tierA-gl-accounting-A2",
       "task": "A2-29",
@@ -1247,7 +1249,7 @@
         "T89: an attestation certifying, in T78's name, a number T78 never produced",
         "T84: G-8 has a SECOND family that genuinely does not amortize; invariant_exemptions is NOT inert; the region reaches MNT 1.09 at n=360"
       ],
-      "corpus": "42 parity vectors / 5576 graded cells — unchanged this fire (no capture task promoted; T83 and T80 both promoted nothing by design)",
+      "corpus": "42 parity vectors / 5576 graded cells \u2014 unchanged this fire (no capture task promoted; T83 and T80 both promoted nothing by design)",
       "verification_on_merged_main": "gofmt -l = contract.go only; go build/vet/test 0/0/0; conformance PASS exit 0, 42 parity, 5576 cells, 0 invariant violations, 0 NOT RUN; sh -> exit 3, zero verdict tokens",
       "gates": "G-8 rewritten on main as two phenomena, state OPEN. G-4 and G-5 remain OPEN (both are wording-only amendments to a RATIFIED DEC-1, which this driver does not cross). No gate was crossed.",
       "new_patterns": [
@@ -1292,7 +1294,7 @@
       "context": "tierA-gl-accounting",
       "slice": "tierA-gl-accounting-A2",
       "date": "2026-08-21",
-      "status": "active — slice A2 analysis+capture+rig complete, coder A2-8 ready, T154 held for review",
+      "status": "active \u2014 slice A2 analysis+capture+rig complete, coder A2-8 ready, T154 held for review",
       "workers_dispatched": 7,
       "workers_completed": 7,
       "workers_live_at_exit": 0,
@@ -1305,7 +1307,7 @@
         "A2-7"
       ],
       "held_unmerged": [
-        "T154 — pending its reviewer T155"
+        "T154 \u2014 pending its reviewer T155"
       ],
       "reviewer_catches": [
         "T153 -> T149: MICRO-FIX; two sentences claimed a tighter control than they held. It MEASURED the missing control (0 money-cell differences) so both conclusions survived and only the wording fell. Re-observed the tie live, byte-for-byte identical to T149's captures, with a cleaner counterfactual, and re-derived all twelve periods in exact rational arithmetic.",
@@ -1397,7 +1399,7 @@
         "T161 and T163 each found a vacuous arm in their OWN instrument and reported it.",
         "Driver's own error recorded: a probe of T169's lint that was wrongly scoped, and a conformance run launched with cwd in nexus/ returning exit 127 -> P-52."
       ],
-      "uat": "PASS — probe up, exit 0, 43 parity, 5664 cells, 0 invariant violations; build 0, vet 0, tests ok",
+      "uat": "PASS \u2014 probe up, exit 0, 43 parity, 5664 cells, 0 invariant violations; build 0, vet 0, tests ok",
       "guard_coverage_change": "no-float census: 24 Go files under loanschedule -> 5 packages / 42 Go files / 165 import specs under nexus, recursive; math package banned via go/parser",
       "new_patterns": [
         "P-49 test the MERGE not the branches",
@@ -1417,7 +1419,7 @@
         "T179",
         "T180"
       ],
-      "cutover": "none — not authorised, not attempted"
+      "cutover": "none \u2014 not authorised, not attempted"
     },
     {
       "fire": "20260821-054355",
@@ -1434,7 +1436,7 @@
         "T172"
       ],
       "driver_fixes": [
-        "e93afc9 — two defects in T173's merged guards, found on the merge, driven red and green"
+        "e93afc9 \u2014 two defects in T173's merged guards, found on the merge, driven red and green"
       ],
       "tasks_raised": [
         "T186 money as major-unit decimal on the capture wire",
@@ -1615,14 +1617,14 @@
       "cells_after": 7884,
       "store_before": "ce821c638724237652b6b29627148d34b72fab3b",
       "store_after": "73c3ea7b43dd75f04884072719a87fc8e1d255c1",
-      "uat": "PASS exit 0 — 46 parity vectors / 7884 cells; --prove 23/23; build/vet/test clean; gofmt -l exactly contract.go (G-3)",
+      "uat": "PASS exit 0 \u2014 46 parity vectors / 7884 cells; --prove 23/23; build/vet/test clean; gofmt -l exactly contract.go (G-3)",
       "reviewer_catches": [
-        "A2-25 REJECTED DEC-2 rev 3 on four claims false about main; its F-3 MEASURED that requirement 6 — which would have graded A2-15 — cannot be satisfied on the bytes it specifies",
+        "A2-25 REJECTED DEC-2 rev 3 on four claims false about main; its F-3 MEASURED that requirement 6 \u2014 which would have graded A2-15 \u2014 cannot be satisfied on the bytes it specifies",
         "T220 found family B's MECHANISM (setScale(19) as decimal places + a no-MathContext add), which T116 could not, and APPROVED T116 after re-deriving 1269 money cells with 0 mismatches",
-        "A2-27 refused to adopt A2-24's archived probe — six t.Fatal* are preconditions, the measurement is never asserted, and it passes on the revert",
+        "A2-27 refused to adopt A2-24's archived probe \u2014 six t.Fatal* are preconditions, the measurement is never asserted, and it passes on the revert",
         "A2-29 reported that a full recompute healed all 54 drifted rows, 'which alone would have been the wrong conclusion', then beat the recompute with retype-after-compute",
-        "T215 caught its own first draft: a census a defect could shrink out of (2→1) instead of failing",
-        "T217 corrected its own brief — rm -f $LOCK precedes the push, so it was never a lock-safety hazard",
+        "T215 caught its own first draft: a census a defect could shrink out of (2\u21921) instead of failing",
+        "T217 corrected its own brief \u2014 rm -f $LOCK precedes the push, so it was never a lock-safety hazard",
         "A2-28 refused to claim a corrected numerator for I4-BUILDER because it had not established that population"
       ],
       "driver_errors_withdrawn": [
@@ -1648,7 +1650,40 @@
         ],
         "crossed": []
       },
-      "cutover": "none — and nothing here authorises any"
+      "cutover": "none \u2014 and nothing here authorises any"
+    },
+    {
+      "fire": "20260822-000013 (second pass)",
+      "run_id": "2026-08-21-run2-tierA-gl-accounting-A2",
+      "context": "tierA-gl-accounting / slice A2 + tier0-harness",
+      "dispatched": 8,
+      "completed": 8,
+      "merged": 8,
+      "live_at_exit": 0,
+      "tasks": [
+        "A2-31",
+        "T223",
+        "T222",
+        "T224",
+        "T221",
+        "T213",
+        "T207",
+        "T225",
+        "A2-30 (driver, inline)"
+      ],
+      "reviewer_catches": [
+        "A2-31 REJECTED DEC-2 rev 4 (two claims false about main); G-11 NOT MET; found a THIRD file carrying the retracted claim that T224's sweep missed the same fire",
+        "T225 REJECTED T222 AFTER MERGE -- the grounding rule refuses a legitimate exemption (measured 46->45, inadmissible exit 2); its one-builder pin passed under two mutations",
+        "T213 refuted the driver's two-condition prune rule -- it would have pruned a LIVE worker's worktree",
+        "T207 killed the driver's '240 scripts' denominator (actual 438) and proved 'add parse_float' is the WRONG repair at two sites",
+        "T221 corrected the driver's 64-path figure and found a 58-document review population nobody had ever swept"
+      ],
+      "uat": "PASS exit 0, 46 parity vectors / 7884 cells, probe PRESENT and up, driver-re-verified after every merge",
+      "vectors_added": 0,
+      "gates": "G-11 rev 4 REJECTED (rev 5 = A2-32). G-8 region MEASURED; options (b)/(c) BLOCKED on T229. G-12 unchanged. Nothing cut over.",
+      "new_patterns": [
+        "P-71 \u2014 agent worktrees fork from session-start HEAD, not current main"
+      ]
     }
   ],
   "database": {
@@ -1660,7 +1695,7 @@
       "MariaDB (docker-compose-mariadb*.yml)"
     ],
     "go_driver": "github.com/jackc/pgx/v5",
-    "money_columns": "bigint minor units — never float/double precision/real/money",
+    "money_columns": "bigint minor units \u2014 never float/double precision/real/money",
     "terminology": "'The oracle' in this program means the Fineract REFERENCE IMPLEMENTATION (.softhouse/reference-oracle.md), never Oracle Database."
   }
 }
