@@ -185,7 +185,7 @@ func TestExemptionMustBeGroundedInARecordedViolation(t *testing.T) {
 		if err != nil || len(loadErrs) != 0 {
 			t.Fatalf("LoadStore(pristine): %v / %v", err, loadErrs)
 		}
-		c := InspectExemptions(vectors)
+		c := InspectExemptions(vectors, repoRoot(t))
 		if c.Declared == 0 {
 			t.Fatal("the committed store declares ZERO exemptions, so this whole test inspects an empty " +
 				"population and every assertion in it is vacuous")
@@ -220,7 +220,7 @@ func TestExemptionMustBeGroundedInARecordedViolation(t *testing.T) {
 		if lerr != nil || len(loadErrs) != 0 {
 			t.Fatalf("the fixture store does not even load: %v / %v", lerr, loadErrs)
 		}
-		c := InspectExemptions(vectors)
+		c := InspectExemptions(vectors, repoRoot(t))
 		if c.Declared != 5 {
 			t.Fatalf("the fixture was meant to raise the declared exemptions to 5; it reads %d", c.Declared)
 		}
@@ -296,7 +296,7 @@ func TestExemptionMustBeGroundedInARecordedViolation(t *testing.T) {
 		}
 		// The fixture withdraws a cell; it adds no exemption. The exemption it
 		// makes undetermined is one T116 committed.
-		c := InspectExemptions(vectors)
+		c := InspectExemptions(vectors, repoRoot(t))
 		if c.Declared != 4 {
 			t.Fatalf("the fixture must not change the number of exemptions; declared %d", c.Declared)
 		}
@@ -611,7 +611,7 @@ func TestExemptionGroundingStatesItsPopulation(t *testing.T) {
 		if lerr != nil {
 			t.Fatalf("LoadStore: %v", lerr)
 		}
-		if c := InspectExemptions(vectors); c.Declared != 0 {
+		if c := InspectExemptions(vectors, repoRoot(t)); c.Declared != 0 {
 			t.Fatalf("the fixture still declares %d exemption(s)", c.Declared)
 		}
 		s := selfTestRun(t, store)
@@ -683,7 +683,7 @@ func TestExemptionCountIsPinnedCorpusWide(t *testing.T) {
 	if err != nil || len(loadErrs) != 0 {
 		t.Fatalf("LoadStore(pristine): %v / %v", err, loadErrs)
 	}
-	c := InspectExemptions(vectors)
+	c := InspectExemptions(vectors, repoRoot(t))
 	if c.Declared != 4 || c.Grounded != 4 || c.VectorsExempting != 2 {
 		t.Errorf("store census: %d declared / %d grounded / %d vectors exempting, want 4 / 4 / 2",
 			c.Declared, c.Grounded, c.VectorsExempting)
@@ -1019,7 +1019,7 @@ func TestExemptionGroundingRefusesAnUnreadableSchedule(t *testing.T) {
 				t.Errorf("%s: an exemption nothing could check must be inadmissible", g.Invariant)
 			}
 		}
-		problems := admitExemptions(v)
+		problems := admitExemptions(v, repoRoot(t))
 		if len(problems) != 2 {
 			t.Fatalf("expected both exemptions refused, got %d problem(s): %v", len(problems), problems)
 		}
@@ -1082,4 +1082,500 @@ func TestUnclassifiedGroundingStatusIsRefusedNotPassed(t *testing.T) {
 		}
 	}
 	t.Logf("default arm: %s", problems[0])
+}
+
+// ===========================================================================
+// FINDING T222-F4 — AN EXEMPTION'S REASON IS FREE TEXT AND CITED NOTHING.
+// ===========================================================================
+//
+// T230 ranked this as the load-bearing hole left in the mechanism, and it is:
+// every sentence the harness prints about an exemption rests on the claim THE
+// ORACLE WAS OBSERVED TO BEHAVE THIS WAY, and until CiteExemption existed the
+// only thing asked of the sentence making that claim was that it be non-empty.
+// An OBSERVATION and an ASSERTION were indistinguishable to this harness.
+//
+// Every subtest below is driven RED against a fixture, and t233OldCiteRule — the
+// admissibility rule EXACTLY as it stood before this change — is run SIDE BY SIDE
+// on the same fixture, so "the old rule admitted this" is MEASURED and not
+// asserted. That is T230's method (TestT230_TheOldCountOnlyPin) and it is the only
+// way to tell a new guard from a new comment.
+
+// t233OldCiteRule is admitExemptions AS IT STOOD BEFORE the citation existed:
+// a known invariant name, a non-empty reason, and the grounding refusals. It is
+// kept verbatim in shape so that each RED below can show what the old rule said
+// about the very same bytes.
+func t233OldCiteRule(v *Vector) []string {
+	var problems []string
+	for _, ex := range v.InvariantExemptions {
+		if !knownInvariant(ex.Invariant) {
+			problems = append(problems, fmt.Sprintf("invariant_exemptions names unknown invariant %q", ex.Invariant))
+		}
+		if strings.TrimSpace(ex.Reason) == "" {
+			problems = append(problems, fmt.Sprintf("invariant_exemptions for %q carries no reason", ex.Invariant))
+		}
+	}
+	return append(problems, refuseUngroundedExemptions(CheckExemptionGrounding(v))...)
+}
+
+// loadOneVector loads a single vector file out of a store copy.
+func loadOneVector(t *testing.T, storeDir, contextDir, name string) *Vector {
+	t.Helper()
+	vectors, loadErrs, err := LoadStore(storeDir, "")
+	if err != nil || len(loadErrs) != 0 {
+		t.Fatalf("LoadStore(%s): %v / %v", storeDir, err, loadErrs)
+	}
+	want := filepath.Join(contextDir, name)
+	for _, v := range vectors {
+		if v.Path == want {
+			return v
+		}
+	}
+	t.Fatalf("%s not found in the store copy (%d vectors loaded)", want, len(vectors))
+	return nil
+}
+
+// writeSelfTestVector writes one hand-authored fixture into a store copy's
+// _selftest/ directory, from a decoded map.
+func writeSelfTestVector(t *testing.T, storeDir, name string, m map[string]any) string {
+	t.Helper()
+	path := filepath.Join(storeDir, SelfTestDir, name)
+	var buf bytes.Buffer
+	enc := json.NewEncoder(&buf)
+	enc.SetEscapeHTML(false)
+	enc.SetIndent("", "  ")
+	if err := enc.Encode(m); err != nil {
+		t.Fatalf("encode %s: %v", path, err)
+	}
+	if err := os.WriteFile(path, buf.Bytes(), 0o644); err != nil {
+		t.Fatalf("WriteFile %s: %v", path, err)
+	}
+	return path
+}
+
+// readSelfTestVector decodes the committed self-test fixture out of a store copy.
+func readSelfTestVector(t *testing.T, storeDir, name string) map[string]any {
+	t.Helper()
+	path := filepath.Join(storeDir, SelfTestDir, name)
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("ReadFile %s: %v", path, err)
+	}
+	dec := json.NewDecoder(bytes.NewReader(raw))
+	dec.UseNumber()
+	var m map[string]any
+	if derr := dec.Decode(&m); derr != nil {
+		t.Fatalf("decode %s: %v", path, derr)
+	}
+	return m
+}
+
+func TestExemptionMustCiteAnObservation(t *testing.T) {
+	pristine := storeRoot(t)
+	root := repoRoot(t)
+
+	// ANTI-VACUITY FIRST (P-64). Every refusal below would look the same if the
+	// citation check simply refused everything, and the same again if the corpus
+	// carried no exemption to cite. So: the committed corpus mints a citation for
+	// every admissible exemption, and every one of them RESOLVES — artefact,
+	// case id inside the artefact's bytes, and the record's own sentence.
+	t.Run("the_committed_store_mints_a_resolved_citation_for_every_exemption", func(t *testing.T) {
+		vectors, loadErrs, err := LoadStore(pristine, "")
+		if err != nil || len(loadErrs) != 0 {
+			t.Fatalf("LoadStore(pristine): %v / %v", err, loadErrs)
+		}
+		c := InspectExemptions(vectors, root)
+		if c.Declared == 0 {
+			t.Fatal("the committed store declares ZERO exemptions: this whole test inspects an empty " +
+				"population and every assertion in it is vacuous")
+		}
+		admissible := c.Grounded + c.Undetermined
+		if len(c.Citations) != admissible {
+			t.Fatalf("%d citation(s) minted for %d admissible exemption(s): the citation walk and the "+
+				"grounding walk disagree, so one of them stopped counting",
+				len(c.Citations), admissible)
+		}
+		for _, cite := range c.Citations {
+			if !cite.Resolved() {
+				t.Errorf("%s — %s: citation did not resolve (%+v)", cite.CaseID, cite.Invariant, cite)
+				continue
+			}
+			if cite.ArtefactBytes <= 0 || cite.CaseIDAt < 0 || cite.Observation == "" {
+				t.Errorf("%s — %s: citation claims to resolve but carries no measurement: %+v",
+					cite.CaseID, cite.Invariant, cite)
+			}
+			t.Logf("CITED %s — %s: %s (%d bytes), case %s @ byte %d",
+				cite.CaseID, cite.Invariant, cite.CaptureRef, cite.ArtefactBytes,
+				cite.CaptureCaseID, cite.CaseIDAt)
+		}
+	})
+
+	// RED 1 — THE CITATION RESOLVES TO A FILE BUT NOT TO AN OBSERVATION.
+	//
+	// A Path A capture is a BUNDLE of many cases. admitParityProvenance requires
+	// capture_case_id to be non-empty and NEVER OPENS THE FILE LOOKING FOR IT, so a
+	// case id naming a case that is not in the bundle it cites was admissible: the
+	// exemption's reason describes an observation, the vector points at a real
+	// artefact, and nothing in that artefact is the observation.
+	t.Run("RED_the_citation_names_a_case_that_is_not_in_the_artefact", func(t *testing.T) {
+		store := copyStore(t, pristine)
+		editVector(t, store, fambN104File, func(t *testing.T, m map[string]any) {
+			prov, ok := m["provenance"].(map[string]any)
+			if !ok {
+				t.Fatal("vector has no provenance object")
+			}
+			if prov["capture_case_id"] != "T116-FAMB-R600p0-N104-B1" {
+				t.Fatalf("fixture expects the committed capture_case_id; found %v", prov["capture_case_id"])
+			}
+			prov["capture_case_id"] = "T116-FAMB-R600p0-N999-B1"
+		})
+
+		v := loadOneVector(t, store, "loanschedule", fambN104File)
+
+		// THE OLD RULE, ON THESE EXACT BYTES.
+		if old := t233OldCiteRule(v); len(old) != 0 {
+			t.Fatalf("the pre-T233 rule already refused this fixture (%v), so the RED below would not be "+
+				"evidence about the citation", old)
+		}
+		t.Log("OLD RULE: 0 problems — the fixture is admissible, the exemption is GROUNDED, and the " +
+			"citation points at a case that is not in the bundle it names")
+
+		problems := admitExemptions(v, root)
+		if len(problems) != 2 {
+			t.Fatalf("expected both of this vector's exemptions to be refused for the citation; got %d: %v",
+				len(problems), problems)
+		}
+		joined := strings.Join(problems, "\n")
+		for _, want := range []string{
+			"THE CITATION DOES NOT RESOLVE TO AN OBSERVATION",
+			`"T116-FAMB-R600p0-N999-B1"`,
+			"does not occur anywhere in the 128710 bytes",
+			".softhouse/capture/t116-familyb-promotion/out/capture-t116-raw.json",
+			"a reason that cites nothing is an ASSERTION",
+		} {
+			if !strings.Contains(joined, want) {
+				t.Errorf("the refusal does not say %q.\n%s", want, joined)
+			}
+		}
+		t.Logf("NEW RULE refused:\n%s", joined)
+
+		// AND ON THE PATH THAT RUNS (P-45): the whole harness, not the function.
+		s := selfTestRun(t, store)
+		detail := inadmissibleDetail(t, s, "T116-G8-FAMB-N104")
+		if !strings.Contains(detail, "THE CITATION DOES NOT RESOLVE TO AN OBSERVATION") {
+			t.Errorf("the RUN did not refuse it for the citation:\n%s", detail)
+		}
+		if s.Inadmissible != 1 {
+			t.Errorf("inadmissible = %d, want 1", s.Inadmissible)
+		}
+	})
+
+	// RED 2 — A HAND-AUTHORED VECTOR EXEMPTS AN INVARIANT ON THE ORACLE'S BEHALF.
+	//
+	// THIS IS THE SHAPE FINDING T222-F4 IS ACTUALLY ABOUT, and nothing anywhere in
+	// this harness could see it. admitParityProvenance — the only code that has
+	// ever asked a vector to cite a capture — runs on ClassParity ONLY. A self-test
+	// fixture carries capture_ref "" by construction (it is hand-authored and must
+	// say so), so a hand-authored file could switch off a property invariant with a
+	// reason describing the reference oracle's behaviour, and the run output would
+	// print that reason under the heading "the REFERENCE ORACLE ITSELF violates the
+	// invariant" over numbers NOBODY EVER OBSERVED.
+	t.Run("RED_a_hand_authored_vector_exempts_an_invariant_on_the_oracles_behalf", func(t *testing.T) {
+		const fixtureName = "SELFTEST-T233-uncited-exemption.json"
+		store := copyStore(t, pristine)
+		m := readSelfTestVector(t, store, "SELFTEST-01-two-period-zero-rate.json")
+		m["case_id"] = "SELFTEST-T233-UNCITED"
+		m["title"] = "T233 fixture: a HAND-AUTHORED vector that exempts an invariant with prose about " +
+			"the reference oracle. It has never seen the oracle."
+
+		// Make the hand-authored schedule VIOLATE two invariants, so the exemptions
+		// below are GROUNDED and the RED is about the CITATION and nothing else. A
+		// DECORATION would be refused one check earlier and would prove nothing.
+		periods := periodsOf(t, m)
+		last, ok := periods[len(periods)-1].(map[string]any)
+		if !ok {
+			t.Fatal("the last period is not an object")
+		}
+		last["outstanding_principal_minor"] = "1"
+		last["outstanding_principal_major_text"] = "0.01"
+
+		addExemption(t, m, InvPrincipalAmortizes,
+			"GATE G-8 SHAPE: the REFERENCE ORACLE GENUINELY DOES NOT AMORTIZE THIS SHAPE. The final "+
+				"row's outstanding balance is 1 minor unit because the loan was never repaid. Prose "+
+				"indistinguishable from the two committed exemptions — and this file has never seen "+
+				"the oracle.")
+		addExemption(t, m, InvBalanceRollForward,
+			"GATE G-8 SHAPE, same reason: the oracle's own balance column carries the residue forward.")
+		writeSelfTestVector(t, store, fixtureName, m)
+
+		v := loadOneVector(t, store, SelfTestDir, fixtureName)
+		if v.Provenance.CaptureRef != "" {
+			t.Fatalf("the fixture must cite no capture; it cites %q", v.Provenance.CaptureRef)
+		}
+
+		groundings := CheckExemptionGrounding(v)
+		if len(groundings) != 2 {
+			t.Fatalf("expected 2 grounding verdicts, got %d", len(groundings))
+		}
+		for _, g := range groundings {
+			if !g.Grounded() {
+				t.Fatalf("%s is %s, not GROUNDED: this fixture would be refused one check earlier and "+
+					"the citation RED would prove nothing", g.Invariant, g.Status)
+			}
+		}
+
+		// THE OLD RULE, ON THESE EXACT BYTES.
+		if old := t233OldCiteRule(v); len(old) != 0 {
+			t.Fatalf("the pre-T233 rule already refused this fixture (%v)", old)
+		}
+		t.Log("OLD RULE: 0 problems — a HAND-AUTHORED file switches off two property invariants with " +
+			"prose about the reference oracle, and the pre-T233 harness admits it")
+
+		problems := admitExemptions(v, root)
+		// FOUR refusals, not two, and they are FOUR DISTINCT FACTS rather than a
+		// derived echo: this file cites no ARTEFACT and it names no OBSERVATION
+		// within one, and both are true of each of its two exemptions. A hand-authored
+		// vector fails both components of the citation because it has neither.
+		if len(problems) != 4 {
+			t.Fatalf("expected two citation refusals per exemption (no artefact, no observation); got %d: %v",
+				len(problems), problems)
+		}
+		joined := strings.Join(problems, "\n")
+		for _, want := range []string{
+			"THIS VECTOR CITES NO CAPTURE AT ALL",
+			"provenance.capture_ref is empty",
+			"has not observed the oracle, so it may not exempt an invariant ON THE ORACLE'S BEHALF",
+			"THIS VECTOR NAMES NO OBSERVATION",
+			"provenance.capture_case_id is empty",
+			"cites the book and not the page",
+			"finding T222-F4",
+		} {
+			if !strings.Contains(joined, want) {
+				t.Errorf("the refusal does not say %q.\n%s", want, joined)
+			}
+		}
+		t.Logf("NEW RULE refused:\n%s", joined)
+
+		// AND ON THE PATH THAT RUNS (P-45).
+		s := selfTestRun(t, store)
+		detail := inadmissibleDetail(t, s, "SELFTEST-T233-UNCITED")
+		if !strings.Contains(detail, "THIS VECTOR CITES NO CAPTURE AT ALL") {
+			t.Errorf("the RUN did not refuse it for the citation:\n%s", detail)
+		}
+	})
+
+	// RED 3 — THE GENERATED HALF OF THE CITATION IS EMPTY.
+	//
+	// The third component is the one no author can write: the exempted invariant's
+	// own sentence about the schedule the capture recorded. An empty one means the
+	// invariant returned a verdict with no words behind it, and a citation whose
+	// generated half is blank is a citation to nothing. Driven directly, because
+	// no committed invariant produces it and inventing a vector that did would be
+	// testing the fixture rather than the arm.
+	t.Run("RED_the_records_own_sentence_is_empty", func(t *testing.T) {
+		v := loadOneVector(t, copyStore(t, pristine), "loanschedule", fambN104File)
+		g := ExemptionGrounding{
+			Invariant: InvPrincipalAmortizes,
+			Status:    ExemptionGrounded,
+			Observed:  InvariantViolated,
+			Detail:    "", // the arm under test
+		}
+		cite, problems := CiteExemption(v, g, root)
+		if len(problems) != 1 {
+			t.Fatalf("expected exactly one refusal for the empty record sentence; got %d: %v",
+				len(problems), problems)
+		}
+		if !strings.Contains(problems[0], "could not mint the RECORD's own") {
+			t.Errorf("the refusal does not name the defect: %s", problems[0])
+		}
+		if cite.Resolved() {
+			t.Error("a citation with no record sentence reports itself RESOLVED")
+		}
+		// The other two components DID resolve, which is what makes this arm
+		// independent rather than a derived echo of a missing artefact.
+		if cite.ArtefactBytes <= 0 || cite.CaseIDAt < 0 {
+			t.Errorf("the artefact and case id should still have resolved: %+v", cite)
+		}
+		t.Logf("refused: %s", problems[0])
+	})
+
+	// RED 4 — THE ARTEFACT ITSELF DOES NOT RESOLVE. Driven on a store copy whose
+	// cited capture path is real-looking and absent.
+	t.Run("RED_the_cited_artefact_does_not_exist", func(t *testing.T) {
+		store := copyStore(t, pristine)
+		editVector(t, store, fambN104File, func(t *testing.T, m map[string]any) {
+			prov := m["provenance"].(map[string]any)
+			prov["capture_ref"] = ".softhouse/capture/t116-familyb-promotion/out/capture-t116-NOPE.json"
+			// The committed sha256 is of the real artefact and would raise a second,
+			// unrelated refusal from admitParityProvenance; clear it so this RED is
+			// about the citation.
+			prov["capture_sha256"] = ""
+		})
+		v := loadOneVector(t, store, "loanschedule", fambN104File)
+		problems := admitExemptions(v, root)
+		joined := strings.Join(problems, "\n")
+		if !strings.Contains(joined, "does not resolve to a file in this repository") {
+			t.Fatalf("the citation refusal did not fire:\n%s", joined)
+		}
+		t.Logf("refused:\n%s", joined)
+	})
+}
+
+// ===========================================================================
+// THE PORT CONJUNCT — finding T222-F3, re-raised by T230 as its F-4.
+// ===========================================================================
+//
+// The report has claimed since T116-N1 that an exemption "is admissible only for a
+// shape where the REFERENCE ORACLE ITSELF violates the invariant AND THE
+// IMPLEMENTATION REPRODUCES IT". exemption.go asserts the first conjunct and
+// refuses when it fails. THE SECOND WAS ASSERTED BY NOTHING — T222 raised it, T230
+// re-raised it and made the omission explicit in the report's prose instead of
+// closing it. This drives the closure.
+
+// t233DivergentImpl wraps a ScheduleGenerator and forces every schedule's LAST row
+// to outstanding principal 0 — which makes principal_amortizes_to_zero HOLD on the
+// returned schedule while the ORACLE's own recorded schedule still violates it.
+// That is precisely the shape the port conjunct exists to name: an exemption
+// excusing a behaviour the port does not have.
+type t233DivergentImpl struct{ inner contract.ScheduleGenerator }
+
+func (d t233DivergentImpl) Generate(ctx context.Context, req contract.GenerateRequest) (contract.Schedule, error) {
+	got, err := d.inner.Generate(ctx, req)
+	if err != nil || len(got.Periods) == 0 {
+		return got, err
+	}
+	got.Periods[len(got.Periods)-1].OutstandingPrincipalMinor = 0
+	return got, nil
+}
+
+// PlaceholderCells forwards the wrapped generator's placeholders unchanged, so
+// this fixture differs from the replay implementation in exactly one respect.
+func (d t233DivergentImpl) PlaceholderCells(req contract.GenerateRequest) PlaceholderCells {
+	if pr, ok := d.inner.(PlaceholderReporter); ok {
+		return pr.PlaceholderCells(req)
+	}
+	return PlaceholderCells{}
+}
+
+func TestPortConjunctIsMeasuredAndReported(t *testing.T) {
+	pristine := storeRoot(t)
+
+	// GREEN, AND ANTI-VACUOUS. The committed corpus exempts four assertions and the
+	// replay implementation reproduces the oracle exactly, so all four must come
+	// back REPRODUCED — and the population must not be zero, or every assertion
+	// below is about an empty set.
+	t.Run("the_committed_corpus_reproduces_every_exempted_invariant", func(t *testing.T) {
+		s := selfTestRun(t, pristine)
+		pc := s.PortConjunct
+		if pc.Assertions == 0 {
+			t.Fatal("the port conjunct inspected ZERO exempted assertions: this test is vacuous")
+		}
+		if pc.Assertions != s.InvariantsExempted {
+			t.Fatalf("the port conjunct inspected %d assertion(s) but the summary counts %d exempted: "+
+				"the two walks disagree", pc.Assertions, s.InvariantsExempted)
+		}
+		if !pc.Partitions() {
+			t.Fatalf("%d + %d + %d != %d inspected", pc.Reproduced, pc.Diverged, pc.Undetermined, pc.Assertions)
+		}
+		if pc.Diverged != 0 || pc.Undetermined != 0 {
+			t.Fatalf("committed corpus: %d DIVERGED %v, %d COULD NOT SAY %v",
+				pc.Diverged, pc.DivergedNames, pc.Undetermined, pc.UndeterminedNames)
+		}
+		out := render(s)
+		if !strings.Contains(out, "--- PORT CONJUNCT (every exempted invariant re-run against the schedule "+
+			"THE IMPLEMENTATION RETURNED) ---") {
+			t.Error("the report does not print the port-conjunct section")
+		}
+		if !strings.Contains(out, "PORT CONJUNCT: REPRODUCED") {
+			t.Error("the exempted section does not print the port-side verdict beside each exemption")
+		}
+		t.Logf("%d exempted assertion(s): %d REPRODUCED, %d DIVERGED, %d COULD NOT SAY",
+			pc.Assertions, pc.Reproduced, pc.Diverged, pc.Undetermined)
+	})
+
+	// RED — A PORT THAT SATISFIES AN INVARIANT THE ORACLE VIOLATES.
+	//
+	// Before this change the harness said NOTHING about this: the exempted
+	// invariant was never run against the returned schedule at all, and the
+	// EXEMPT result carried the vector's reason and no observation. The assertion
+	// below is that the divergence is NAMED — reported, never refused, because a
+	// divergence is the cell diff's finding and a second admissibility verdict
+	// could only disagree with it.
+	t.Run("RED_the_port_satisfies_an_invariant_the_oracle_violates", func(t *testing.T) {
+		inner, _, err := NewReplayImplementation(pristine, "")
+		if err != nil {
+			t.Fatalf("NewReplayImplementation: %v", err)
+		}
+		s := mustRun(t, Options{
+			RepoRoot: repoRoot(t), StoreRoot: pristine,
+			Implementation:     t233DivergentImpl{inner: inner},
+			ImplementationName: "t233-divergent", SelfTestMode: true,
+		})
+		pc := s.PortConjunct
+		if pc.Assertions != 4 {
+			t.Fatalf("expected the 4 committed exempted assertions; inspected %d", pc.Assertions)
+		}
+		if pc.Diverged != 2 {
+			t.Fatalf("expected 2 DIVERGED (principal_amortizes_to_zero on both family-B vectors); got %d "+
+				"(reproduced %d, could-not-say %d)", pc.Diverged, pc.Reproduced, pc.Undetermined)
+		}
+		if !pc.Partitions() {
+			t.Fatalf("%d + %d + %d != %d", pc.Reproduced, pc.Diverged, pc.Undetermined, pc.Assertions)
+		}
+		joined := strings.Join(pc.DivergedNames, "\n")
+		for _, want := range []string{
+			"T116-G8-FAMB-N104 — principal_amortizes_to_zero",
+			"T116-G8-FAMB-N108 — principal_amortizes_to_zero",
+			"the schedule THE IMPLEMENTATION RETURNED reports HOLD",
+		} {
+			if !strings.Contains(joined, want) {
+				t.Errorf("the census does not name %q.\n%s", want, joined)
+			}
+		}
+		out := render(s)
+		if !strings.Contains(out, "PORT CONJUNCT: *** DIVERGED ***") {
+			t.Error("the exempted section does not flag the divergence beside the exemption")
+		}
+		if !strings.Contains(out, "2 DIVERGED") {
+			t.Error("the census line does not report 2 DIVERGED")
+		}
+
+		// AND IT IS REPORTED, NOT REFUSED: the port conjunct may not turn a vector
+		// INADMISSIBLE, and the EXEMPTED invariant may not become a violation. The
+		// divergence itself is the cell diff's finding and it is reported there.
+		if s.Inadmissible != 0 {
+			t.Errorf("the port conjunct made %d vector(s) INADMISSIBLE; it must only report", s.Inadmissible)
+		}
+		// THE EXEMPTED ASSERTIONS STAYED EXEMPT. This mutation DOES produce invariant
+		// violations — balance_roll_forward is NOT exempted on these vectors and the
+		// forced final balance breaks it, which is the ordinary machinery working. What
+		// must NOT happen is the EXEMPTED invariant contributing one: an exemption that
+		// can still fail its vector is not an exemption. Asserted by NAME, because a
+		// bare count of 2 cannot tell the two situations apart.
+		var violated []string
+		exemptedStayedExempt := 0
+		for _, r := range s.Results {
+			for _, iv := range r.Invariants {
+				if iv.Status == InvariantViolated {
+					violated = append(violated, r.CaseID+" — "+iv.Name)
+				}
+				if iv.Status == InvariantExempted {
+					exemptedStayedExempt++
+				}
+			}
+		}
+		if exemptedStayedExempt != 4 {
+			t.Errorf("%d assertion(s) are still EXEMPT, want 4", exemptedStayedExempt)
+		}
+		for _, v := range violated {
+			if strings.Contains(v, InvPrincipalAmortizes) || strings.Contains(v, InvPrincipalSum) {
+				t.Errorf("an EXEMPTED invariant contributed a violation: %s", v)
+			}
+		}
+		if len(violated) == 0 {
+			t.Error("the fixture produced no invariant violation at all, so the assertion that the " +
+				"EXEMPTED ones contributed none is vacuous")
+		}
+		t.Logf("violations raised by the mutation (none of them exempted): %v", violated)
+		t.Logf("DIVERGED:\n%s", joined)
+	})
 }

@@ -50,6 +50,62 @@ type InvariantResult struct {
 	// the whole reason the fix for finding T58-N2 is not a quiet relaxation:
 	// a check that stops checking says so, out loud, in the report.
 	NotAsserted []string
+
+	// PortObserved and PortDetail are THE SECOND CONJUNCT, and they are set on an
+	// EXEMPT result and on nothing else (finding T222-F3; T230's F-4; the tail
+	// T233 was sent to close).
+	//
+	// The report has claimed since T116-N1 that an exemption "is admissible only
+	// for a shape where the REFERENCE ORACLE ITSELF violates the invariant AND THE
+	// IMPLEMENTATION REPRODUCES IT". exemption.go asserts the first conjunct,
+	// offline, against the schedule the CAPTURE recorded, and refuses when it
+	// fails. The second conjunct was asserted NOWHERE: it was left to the cell
+	// diff, which is sufficient only while every cell the exemption reads happens
+	// to be a graded cell on that vector - a property of TODAY'S CORPUS, which is
+	// the exact shape of complaint T220 raised about the first conjunct.
+	//
+	// So: when an invariant is exempted, run it ANYWAY against the schedule THE
+	// IMPLEMENTATION RETURNED, and record what it said there. The exemption still
+	// stands - the result's Status is EXEMPT and nothing here can fail a vector.
+	//
+	// REPORTED, NEVER REFUSED, and the asymmetry is deliberate:
+	//   - the ORACLE conjunct is decidable OFFLINE from the vector file alone, so
+	//     failing it is an ADMISSIBILITY defect in the store (exit 2);
+	//   - the PORT conjunct is a statement about a RUN. A port that SATISFIES an
+	//     invariant the oracle violates has diverged from the oracle, and a
+	//     divergence is a PARITY finding that the cell diff owns. Refusing here
+	//     would give one divergence two graders that can disagree, and would make
+	//     an exemption - whose whole purpose is to let a legitimate shape through -
+	//     into a second way for that shape to be rejected.
+	//
+	// PortObserved is empty on every non-EXEMPT result. On an EXEMPT one it is the
+	// invariant's real status on the returned schedule, and PortDetail its sentence.
+	PortObserved InvariantStatus
+	PortDetail   string
+
+	// PortNotAsserted are the assertions the invariant could not make on the
+	// RETURNED schedule because the IMPLEMENTATION declared a placeholder there.
+	// Non-empty only in self-test replay mode; a real port computes every cell.
+	PortNotAsserted []string
+}
+
+// PortConjunctReproduced reports whether the schedule the implementation returned
+// VIOLATES the exempted invariant too - i.e. whether the port reproduces the
+// oracle behaviour the exemption exists for.
+//
+// It is only meaningful on an EXEMPT result, and it is false when the port could
+// not say (a placeholder withdrew a cell the invariant reads), because "could not
+// say" is not "reproduced" - finding T58-N2, which this program has now applied at
+// three levels.
+func (r InvariantResult) PortConjunctReproduced() bool {
+	return r.Status == InvariantExempted && r.PortObserved == InvariantViolated &&
+		len(r.PortNotAsserted) == 0
+}
+
+// PortConjunctUndetermined reports whether the RETURNED schedule could not answer
+// the exempted invariant at all.
+func (r InvariantResult) PortConjunctUndetermined() bool {
+	return r.Status == InvariantExempted && len(r.PortNotAsserted) > 0
 }
 
 // PlaceholderCells names the cells of the schedule under grading that the
@@ -198,10 +254,20 @@ func CheckInvariants(v *Vector, got contract.Schedule, ph PlaceholderCells) []In
 	var out []InvariantResult
 	for _, name := range AllInvariants() {
 		if reason, ok := exempt[name]; ok {
+			// THE PORT CONJUNCT. The invariant is switched off for grading - it
+			// cannot fail this vector - but it is still RUN against the schedule the
+			// implementation returned, and what it said is carried on the result and
+			// printed. See InvariantResult.PortObserved for why this is reported and
+			// not refused. An invariant this harness does not know never reaches
+			// here: admitExemptions refuses an unknown one before grading.
+			port := runInvariant(name, v, got, ph)
 			out = append(out, InvariantResult{
-				Name:   name,
-				Status: InvariantExempted,
-				Detail: reason,
+				Name:            name,
+				Status:          InvariantExempted,
+				Detail:          reason,
+				PortObserved:    port.Status,
+				PortDetail:      port.Detail,
+				PortNotAsserted: port.NotAsserted,
 			})
 			continue
 		}

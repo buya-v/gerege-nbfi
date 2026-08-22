@@ -131,6 +131,13 @@ type Summary struct {
 	// apart from one that never ran (P-22, P-35).
 	ExemptionCensus ExemptionCensus
 
+	// PortConjunct is the SECOND half of the admissibility sentence the report has
+	// printed since T116-N1 — "…the reference oracle itself violates the invariant
+	// AND THE IMPLEMENTATION REPRODUCES IT" — measured at grading time instead of
+	// merely claimed. See InvariantResult.PortObserved. It counts the GRADED
+	// population, like InvariantsExempted, because it is a statement about a run.
+	PortConjunct PortConjunctCensus
+
 	// InvariantAssertionsNotRun counts the individual invariant assertions that
 	// could NOT be made because a cell they read was never observed (finding
 	// T58-N2). It is reported next to the violation count and printed in full in
@@ -459,7 +466,7 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 	// It is the LOADED vectors — the same set Admit runs over — because an
 	// exemption's grounding is a property of the file and does not depend on
 	// whether the vector was graded, refused or errored.
-	s.ExemptionCensus = InspectExemptions(vectors)
+	s.ExemptionCensus = InspectExemptions(vectors, opts.RepoRoot)
 
 	for _, v := range vectors {
 		r := gradeVector(ctx, v, pin, registry, opts)
@@ -474,6 +481,7 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 			}
 			if iv.Status == InvariantExempted {
 				s.InvariantsExempted++
+				s.PortConjunct.Add(r.CaseID, iv)
 			}
 			s.InvariantAssertionsNotRun += len(iv.NotAsserted)
 		}
@@ -822,4 +830,79 @@ func ContextsIn(vectors []*Vector) string {
 		}
 	}
 	return strings.Join(out, ", ")
+}
+
+// PortConjunctCensus is the SECOND conjunct of the exemption sentence, measured.
+//
+// THE SENTENCE, in report.go's own words since T116-N1: an exemption "is
+// admissible only for a shape where the REFERENCE ORACLE ITSELF violates the
+// invariant AND THE IMPLEMENTATION REPRODUCES IT". exemption.go asserts the first
+// half offline and REFUSES when it fails. The second half was asserted by nothing
+// at all — T222 raised it as F-3, T230 re-raised it as F-4 and made the omission
+// explicit in the report's prose rather than closing it. This closes it.
+//
+// It is a REPORT, not a refusal: see InvariantResult.PortObserved for the argument.
+// The numbers PARTITION the exempted assertions on the graded vectors, and the
+// report asserts that partition rather than trusting it.
+type PortConjunctCensus struct {
+	// Assertions is every EXEMPT invariant result on a graded vector — the same
+	// population Summary.InvariantsExempted counts, walked once.
+	Assertions int
+
+	// Reproduced: the schedule the implementation returned VIOLATES the exempted
+	// invariant too. The port does what the oracle was observed to do, so the
+	// exemption is excusing a real reproduced behaviour and not covering a diff.
+	Reproduced int
+
+	// Diverged: the returned schedule does NOT violate it. The port and the oracle
+	// disagree about the very behaviour this exemption exists for. Named, because
+	// a count without the name is the number a reader has to take on trust.
+	Diverged int
+
+	// Undetermined: the implementation declared a placeholder on a cell the
+	// invariant reads, so the RUN could not say either. Only reachable in self-test
+	// replay mode. Counted apart from Reproduced for the same reason
+	// UNDETERMINED-ON-THE-RECORD is counted apart from GROUNDED (finding T58-N2):
+	// "could not say" is not evidence in either direction.
+	Undetermined int
+
+	// DivergedNames and UndeterminedNames render each one as
+	// "<case_id> — <invariant>: <what the returned schedule said>".
+	DivergedNames     []string
+	UndeterminedNames []string
+}
+
+// Add folds one EXEMPT invariant result into the census. It ignores anything that
+// is not EXEMPT, so the population can only ever be the exempted assertions.
+func (p *PortConjunctCensus) Add(caseID string, iv InvariantResult) {
+	if iv.Status != InvariantExempted {
+		return
+	}
+	p.Assertions++
+	switch {
+	case iv.PortConjunctUndetermined():
+		p.Undetermined++
+		p.UndeterminedNames = append(p.UndeterminedNames,
+			fmt.Sprintf("%s — %s: the implementation declared a placeholder on a cell this invariant "+
+				"reads, so the RUN could not say either", caseID, iv.Name))
+	case iv.PortConjunctReproduced():
+		p.Reproduced++
+	default:
+		p.Diverged++
+		detail := iv.PortDetail
+		if strings.TrimSpace(detail) == "" {
+			detail = "(the invariant returned no detail)"
+		}
+		p.DivergedNames = append(p.DivergedNames,
+			fmt.Sprintf("%s — %s: the ORACLE's own recorded schedule VIOLATES this invariant (that is why "+
+				"the exemption is admissible), but the schedule THE IMPLEMENTATION RETURNED reports %s: %s",
+				caseID, iv.Name, iv.PortObserved, detail))
+	}
+}
+
+// Partitions reports whether the three outcomes account for every assertion
+// inspected. The report asserts this rather than assuming it: a census whose parts
+// do not sum to its whole has stopped counting something.
+func (p PortConjunctCensus) Partitions() bool {
+	return p.Reproduced+p.Diverged+p.Undetermined == p.Assertions
 }

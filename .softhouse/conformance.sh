@@ -417,6 +417,59 @@ ORACLE_HEALTH_URL="${CONFORMANCE_ORACLE_HEALTH_URL:-https://localhost:8443/finer
 
 EXIT_UNUSABLE=2
 
+# ---------------------------------------------------------------------------
+# THE EXEMPTION CENSUS PIN  [T233, from T222's F-1 and T230's F-1]
+# ---------------------------------------------------------------------------
+# An `invariant_exemptions` entry switches a property invariant OFF for one vector.
+# The Go report has counted them since T220-N1 and split them GROUNDED /
+# UNDETERMINED-ON-THE-RECORD / UNGROUNDED since T230. NOTHING GATED EITHER NUMBER.
+# The Go binary exits 0 whenever every declared exemption is admissible, and
+# "admissible" says nothing about HOW MANY there are — so the corpus could drift in
+# EITHER DIRECTION without a single number moving in anything that decides a
+# verdict:
+#
+#   INFLATION  — a fifth exemption arrives, is individually grounded, and the
+#                exempted count that this program quotes as evidence about how much
+#                of the corpus is CHECKED silently rises. That is finding T220-N1's
+#                actual complaint, one level up from the shape T222 closed.
+#   DEFLATION  — an exemption (or the vector carrying it) is deleted and the count
+#                silently FALLS. Nothing notices, because both of the harness's
+#                enumerators walk WHAT IS THERE and therefore agree about what is
+#                not. This is the T160 shape exactly; see the census discussion in
+#                that task and in T233's handoff.
+#
+# THE PIN IS AN EQUALITY, NOT A FLOOR AND NOT A CAP, because only an equality
+# closes both directions. The corpus is allowed to grow and shrink — it just has to
+# do so in a commit that also edits this file, where a reviewer sees the two
+# together. That is the whole mechanism: an EXPECTED value, committed APART from
+# the thing it describes, compared for EQUALITY, fail-closed when the figure it
+# needs is absent.
+#
+# WHY IT LIVES HERE AND NOT IN THE STORE. `.softhouse/vectors/PIN.json` is the
+# natural home for a pin ABOUT THE VECTORS, and T160 proposes it for the store
+# manifest. It is the wrong home for THIS pin for two reasons. (1) These figures
+# are not properties of the vector FILES: GROUNDED / UNDETERMINED is a classification
+# the HARNESS computes, and the classification itself changes when the harness does
+# — T230 introduced UNDETERMINED-ON-THE-RECORD, which would have forced a
+# vector-tree edit for a pure harness change. (2) PIN.json is inside
+# `.softhouse/vectors/`, so a pin about the exemption corpus and the exemption
+# corpus would live in one tree; the point of an expected value is that it is
+# committed somewhere the thing it describes cannot take it down with it.
+#
+# WHY IT IS NOT A CAP INSIDE THE GO BINARY. exemption.go's doctrine block settles
+# that: a hard cap in the binary refuses legitimate corpus growth at RUN time, for
+# everybody, including the promoter who is deliberately adding one. A pin in the
+# harness script refuses only the run that did not also update the pin.
+#
+# P-45: this is read by `gate_exemption_census`, which `main_grade` calls on the
+# path `bash .softhouse/conformance.sh` actually executes — NOT from `go test`,
+# which conformance.sh never invokes.
+EXEMPTION_PIN_EXEMPTED=4
+EXEMPTION_PIN_DECLARED=4
+EXEMPTION_PIN_GROUNDED=4
+EXEMPTION_PIN_UNDETERMINED=0
+EXEMPTION_PIN_UNGROUNDED=0
+
 # Scratch paths are script-global, not function-local: an EXIT trap fires after the
 # function that created them has returned, so a `local` would be out of scope by
 # then and `set -u` would abort the cleanup.
@@ -1231,6 +1284,133 @@ run_guards() {
 }
 
 # ---------------------------------------------------------------------------
+# gate_exemption_census: the exemption figures the report prints are COMPARED,
+# not merely printed.  [T233 — T222 F-1, T230 F-1]
+# ---------------------------------------------------------------------------
+# Argument: a file holding the graded run's whole output. A FILE and not a pipe,
+# deliberately — every read below is a `sed`/`grep` over that file, so there is no
+# early-exiting consumer for `set -o pipefail` to invert (P-57, which cost this
+# harness a guard that reported "NO CENSUS LINE" about line 1).
+#
+# FAIL-CLOSED, in the three ways this program has learned to demand:
+#   * a figure that is ABSENT is an ERROR, never a 0 and never a skip. A missing
+#     line means the report changed shape and this gate is no longer reading what it
+#     thinks it is reading;
+#   * a figure that matches MORE THAN ONE line is an ERROR, because "the value" of
+#     an ambiguous match is whichever line sed reached last, and that is not a
+#     measurement (T201/T197-F-1, the same defect one census over);
+#   * the gate PRINTS WHAT IT COMPARED on the way past, every run, pass or fail. A
+#     guard that speaks only when it fires cannot be told apart from one that never
+#     ran (P-22, P-35).
+#
+# It returns 0 on agreement and 1 on any disagreement; main_grade turns that into
+# EXIT_UNUSABLE, because a run whose corpus is not the pinned corpus has not graded
+# the thing the pin describes and its PASS is not about that corpus.
+_census_field() {
+  # $1 = report file, $2 = sed expression yielding one figure per matching line.
+  # Prints every match, one per line. Reads a FILE; no pipeline.
+  LC_ALL=C sed -n "$2" "$1"
+}
+
+_census_one() {
+  # $1 = report file, $2 = sed expr, $3 = human name of the figure.
+  # Prints the figure on stdout and returns 0 only when EXACTLY ONE line matched.
+  local hits n
+  hits="$(_census_field "$1" "$2")"
+  if [ -z "$hits" ]; then
+    warn "conformance: the exemption census gate could not find the $3 figure in the run's report."
+    warn "conformance: an absent figure is an ERROR, not a zero: the report has changed shape and this"
+    warn "conformance: gate is no longer reading the number it names."
+    return 1
+  fi
+  n="$(printf '%s\n' "$hits" | LC_ALL=C grep -ac .)"
+  if [ "$n" -ne 1 ]; then
+    warn "conformance: the exemption census gate matched $n lines for the $3 figure; it requires exactly 1."
+    warn "conformance: an ambiguous match has no value — whichever line came last is not a measurement."
+    warn "$hits"
+    return 1
+  fi
+  printf '%s' "$hits"
+  return 0
+}
+
+gate_exemption_census() {
+  local report="$1"
+  local exempted declared grounded ungrounded undetermined nil_cov rc=0
+
+  # THE NIL-COVERAGE ARM IS A REAL CORPUS STATE, NOT AN ABSENT LINE. When the store
+  # declares no exemption at all the report prints the NIL-COVERAGE notice and no
+  # INSPECTED line, so the four grounding figures are legitimately 0 — and the gate
+  # must still COMPARE them, because a pin of 4 over a corpus that lost every
+  # exemption is exactly the deflation this gate exists to catch.
+  nil_cov="$(LC_ALL=C grep -ac '^    NIL-COVERAGE — no vector in this store exempts any invariant' "$report" || true)"
+  [ -n "$nil_cov" ] || nil_cov=0
+
+  if [ "$nil_cov" -gt 0 ]; then
+    declared=0; grounded=0; ungrounded=0; undetermined=0
+    say "conformance:   exemption census: the report declares NIL-COVERAGE — this store exempts nothing."
+  else
+    declared="$(_census_one "$report" \
+      's/^ *INSPECTED [0-9][0-9]* loaded vector(s); [0-9][0-9]* of them exempt at least one invariant; \([0-9][0-9]*\) exemption declaration(s) examined\.$/\1/p' \
+      'declared-exemptions')" || rc=1
+    grounded="$(_census_one "$report" \
+      's/^ *\([0-9][0-9]*\) GROUNDED (the recorded schedule VIOLATES the exempted invariant), [0-9][0-9]* UNGROUNDED\.$/\1/p' \
+      'GROUNDED')" || rc=1
+    ungrounded="$(_census_one "$report" \
+      's/^ *[0-9][0-9]* GROUNDED (the recorded schedule VIOLATES the exempted invariant), \([0-9][0-9]*\) UNGROUNDED\.$/\1/p' \
+      'UNGROUNDED')" || rc=1
+    undetermined="$(_census_one "$report" \
+      's/^ *\([0-9][0-9]*\) UNDETERMINED-ON-THE-RECORD (a cell the invariant reads was never recorded.*$/\1/p' \
+      'UNDETERMINED-ON-THE-RECORD')" || rc=1
+  fi
+
+  exempted="$(_census_one "$report" \
+    's/^ *invariant assertions  *\([0-9][0-9]*\) EXEMPTED BY A VECTOR.*$/\1/p' \
+    'EXEMPTED-BY-A-VECTOR')" || rc=1
+
+  if [ "$rc" -ne 0 ]; then
+    warn "conformance: the exemption census gate could not READ the corpus it is meant to compare."
+    warn "conformance: EXIT 2. A figure this gate cannot read is not a figure it may pass."
+    return 1
+  fi
+
+  # THE COMPARISON. Equality on every figure, both directions, each stated.
+  local ok=1
+  _cmp() { # $1 name, $2 observed, $3 pinned
+    if [ "$2" -eq "$3" ]; then
+      say "conformance:   exemption census READ: $1 = $2 == pinned $3"
+    else
+      ok=0
+      warn "conformance:   exemption census MISMATCH: $1 = $2, but this file pins $3."
+    fi
+  }
+  _cmp "exempted assertions (graded)" "$exempted"     "$EXEMPTION_PIN_EXEMPTED"
+  _cmp "declared exemptions (loaded)" "$declared"     "$EXEMPTION_PIN_DECLARED"
+  _cmp "GROUNDED                    " "$grounded"     "$EXEMPTION_PIN_GROUNDED"
+  _cmp "UNDETERMINED-ON-THE-RECORD  " "$undetermined" "$EXEMPTION_PIN_UNDETERMINED"
+  _cmp "UNGROUNDED                  " "$ungrounded"   "$EXEMPTION_PIN_UNGROUNDED"
+
+  if [ "$ok" -ne 1 ]; then
+    warn "conformance:"
+    warn "conformance: THE EXEMPTION CORPUS IS NOT THE PINNED CORPUS. Every figure above is an EQUALITY"
+    warn "conformance: because the corpus can drift in BOTH directions and neither direction moved a"
+    warn "conformance: number that decided a verdict before this gate existed: an added exemption"
+    warn "conformance: inflates the count this program quotes as evidence of how much is CHECKED"
+    warn "conformance: (finding T220-N1), and a deleted one deflates it with nothing to notice, because"
+    warn "conformance: both of the harness's enumerators walk what is THERE and so agree about what is"
+    warn "conformance: not (the T160 shape)."
+    warn "conformance:"
+    warn "conformance: If the change is DELIBERATE, edit EXEMPTION_PIN_* at the top of this file IN THE"
+    warn "conformance: SAME COMMIT as the vector that moved it, so a reviewer sees both. Do not"
+    warn "conformance: regenerate the pin from the store: a pin derived from the thing it describes is a"
+    warn "conformance: tautology that passes by construction."
+    warn "conformance: EXIT 2 — no verdict is available. This is NOT a pass."
+    return 1
+  fi
+  return 0
+}
+
+# ---------------------------------------------------------------------------
 # Reference-oracle probe
 # ---------------------------------------------------------------------------
 # Read-only, and it must stay read-only: do NOT restart, recreate or reconfigure
@@ -1270,9 +1450,20 @@ main_grade() {
   local args=()
   [ -n "$context" ] && args+=("-context=$context")
 
+  # THE REPORT IS CAPTURED TO A FILE AND THEN PRINTED, rather than streamed. Two
+  # reasons, and the second is the load-bearing one. (1) gate_exemption_census has
+  # to READ the figures the report prints, and a figure nobody reads is not a gate
+  # (T194's rule, one census over). (2) It must NOT be a pipeline: `"$CONF_BIN" |
+  # tee` would hand `$?` to tee, and any `grep -q`-shaped consumer under
+  # `set -o pipefail` poisons the status of the producer (P-57). A file has neither
+  # hazard. The full output is printed unmodified either way, so a reader loses
+  # nothing but the interleaving of two streams that were already separate.
+  local report
+  report="$(mktemp -t conformance-report)" || exit "$EXIT_UNUSABLE"
+
   if [ "$self_test" = "1" ]; then
     say "conformance: SELF-TEST MODE — grading the harness, not a port. Not a conformance PASS."
-    "$CONF_BIN" -self-test "${args[@]+"${args[@]}"}"
+    "$CONF_BIN" -self-test "${args[@]+"${args[@]}"}" >"$report" 2>&1
     rc=$?
   else
     probe="$(probe_oracle)"
@@ -1281,9 +1472,21 @@ main_grade() {
       warn "conformance: the reference oracle is UNREACHABLE."
       warn "conformance: conformance reports EXIT 2, not a false PASS, and 2 never becomes 0."
     fi
-    "$CONF_BIN" "-oracle-probe=$probe" "${args[@]+"${args[@]}"}"
+    "$CONF_BIN" "-oracle-probe=$probe" "${args[@]+"${args[@]}"}" >"$report" 2>&1
     rc=$?
   fi
+  cat "$report"
+
+  # THE CENSUS GATE RUNS WHATEVER THE BINARY SAID, and it can only make a verdict
+  # WORSE. On an already-failing run its refusal is folded into the existing exit;
+  # on a PASSING run it is the whole point, because the drift it catches is
+  # invisible to every check the binary makes — each exemption individually
+  # admissible, the population wrong.
+  if ! gate_exemption_census "$report"; then
+    rm -f "$report"
+    return "$EXIT_UNUSABLE"
+  fi
+  rm -f "$report"
   return "$rc"
 }
 
