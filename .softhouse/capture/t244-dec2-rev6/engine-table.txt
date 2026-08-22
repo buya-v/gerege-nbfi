@@ -1,0 +1,93 @@
+root      : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5202f4ca25d93a9b
+HEAD      : 6e22eed6cb3b58ccff067febb78d1f06d0481bf6
+measured  : 2026-08-22T09:46:46Z UTC
+fixture   : .softhouse/capture/t244-dec2-rev6/engine-fixture.txt
+--- fixture bytes ---
+cat: illegal option -- A
+usage: cat [-belnstuv] [file ...]
+
+################ PART 1 — presence of each engine ################
+ugrep        command -v -> (nothing)
+ug           command -v -> (nothing)
+rg           command -v -> (nothing)
+grep         command -v -> /usr/bin/grep
+ggrep        command -v -> (nothing)
+pcre2grep    command -v -> (nothing)
+
+PATH entries searched:
+    /usr/local/bin
+    /System/Cryptexes/App/usr/bin
+    /usr/bin
+    /bin
+    /usr/sbin
+    /sbin
+    /var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin
+    /var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin
+    /var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin
+    /pkg/env/global/bin
+    /Users/buv/.local/bin
+    /opt/homebrew/bin
+    /Applications/Docker.app/Contents/Resources/bin
+
+Is there an ugrep/rg BINARY anywhere on PATH? (type -a, resolving functions)
+  type -a ugrep : .softhouse/capture/t244-dec2-rev6/engine-table.sh: line 44: type: ugrep: not found 
+  type -a rg    : .softhouse/capture/t244-dec2-rev6/engine-table.sh: line 45: type: rg: not found 
+  type -a grep  : grep is /usr/bin/grep 
+
+################ PART 2 — the \bmain\b discrimination test ################
+TRUE POSITIVE = line 1 only.  FABRICATION = line 2 matched.
+
+git grep -E                  rc=0
+    .softhouse/capture/t244-dec2-rev6/engine-fixture.txt:2:bmainb
+
+git grep -P                  rc=0
+    .softhouse/capture/t244-dec2-rev6/engine-fixture.txt:1:x main y
+
+git grep (basic)             rc=0
+    .softhouse/capture/t244-dec2-rev6/engine-fixture.txt:1:x main y
+
+/usr/bin/grep -E (BSD)       rc=0
+    1:x main y
+
+/usr/bin/grep (basic)        rc=0
+    1:x main y
+
+/usr/bin/grep -P             rc=2
+    grep: invalid option -- P
+    usage: grep [-abcdDEFGHhIiJLlMmnOopqRSsUVvwXxZz] [-A num] [-B num] [-C[num]]
+    	[-e pattern] [-f file] [--binary-files=value] [--color=when]
+    	[--context[=num]] [--directories=action] [--label] [--line-buffered]
+    	[--null] [pattern] [file ...]
+
+python3 re:
+    1:x main y
+
+################ PART 3 — CALIBRATE ON A KNOWN NEGATIVE (driver's point 1) ################
+A sweep that only ever checks a known POSITIVE cannot detect a FABRICATING engine.
+Known negative: \bzzznotpresent\b must match NOTHING in the fixture.
+git grep -E  (neg ctrl)      rc=1
+    (no output)
+
+BSD grep -E  (neg ctrl)      rc=1
+    (no output)
+
+
+################ PART 4 — DOES THIS AFFECT MY OWN SWEEP? ################
+My PASS-1 patterns, checked for ANY backslash escape (the defect's trigger):
+    95:  'corpus contains no revers'
+    96:  'contains no revers'
+    97:  'no revers'
+    98:  'without a revers'
+    99:  'never .{0,20}revers'
+    100:  'lack[s]? .{0,20}revers'
+    101:  'absent.{0,40}revers'
+    102:  'revers.{0,40}(absent|missing|not captured|not observed|not present)'
+    103:  '(no|zero|nothing).{0,60}revers'
+    104:  'revers.{0,60}(no capture|not captured|no vector|nothing to grade)'
+    105:  'ErrNoDiscriminatingVector'
+    106:  'retired by one capture'
+
+Count of backslashes in the PASS-1 pattern block:
+2
+(the file-level count includes $(...) shell syntax and the header comment;
+ what matters is whether any PASS-1 REGEX contains a backslash class such as \b \d \s \w)
