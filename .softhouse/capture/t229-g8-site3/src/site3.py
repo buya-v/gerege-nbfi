@@ -2,6 +2,76 @@
 """
 T229 — SITE 3's rescue condition, DERIVED FROM THE PINNED SOURCE, not fitted to any cell.
 
+*********************************************************************************************
+*** T241 CORRECTION, added at a LATER commit than the rest of this file. READ THIS FIRST. ***
+*********************************************************************************************
+
+ONE SENTENCE OF THIS FILE IS FALSE, AND ITS OUTPUT FIELD `predictedTotalInterestMinor` IS WRONG
+ON EVERY CELL THAT REPAYS ANY PRINCIPAL AT ALL.
+
+    THE FALSE CLAIM (docstring, THE LAW, last line; and the value of
+    `predictedTotalInterestMinor`):        TOTAL INTEREST = n*E + B  for any unrescued cell
+    THE CORRECT FORM:                      TOTAL INTEREST = n*E + B - (principal repaid)
+
+`n*E + B` IS NOT THE TOTAL INTEREST. IT IS THE TOTAL REPAYMENT. Only the LABEL is wrong; the
+quantity is right and this file's derivation of it is right. On the G-8 shape there are no fees
+and no penalties, so each row's `total` is `interest + principal`, and by this file's OWN S3.1 and
+S3.5 the total column is `(n-1)*E + (E + B) = n*E + B`. Subtracting the principal column gives the
+interest column. **The corrected form is a consequence of steps this file already derived**, not a
+new mechanism, and it needed no new measurement.
+
+WHY THE ERROR SURVIVED THE PROBE THAT WAS DESIGNED TO CATCH IT: on a FULL family-B cell the
+principal repaid is 0, so the two formulas COINCIDE. The error is invisible on exactly the shape
+T229 was hunting.
+
+NOTHING IS EDITED BELOW — no line of T229's text is removed or reworded, no value this file
+computes is changed, and no output key is added or renamed, so `python3 src/site3.py
+src/cells-t229.json` still reproduces the committed `../prediction.json` BYTE FOR BYTE (T241
+verified this before and after adding these comments). That is deliberate: `prediction.json` is
+the REGISTERED prediction whose strict-ancestor commit is the falsifiability guarantee
+(`29ed78c` prediction  ->  `bb35cc8` capture), and silently improving the instrument would destroy
+the thing this directory exists to preserve (T114's ruling, T176's prohibition). The correction is
+therefore a LABELLED annotation, and the field below still emits the WRONG number by design.
+**A reader must apply the correction; the file will not apply it for them.**
+
+WHICH MEASUREMENT ESTABLISHES IT, AND AT WHICH COMMIT:
+
+  * T219's live oracle capture, committed at `6eacc06` in
+    `.softhouse/capture/t219-g8-residual/out/capture-t219-raw.json.gz`:
+        T219-R600p0-N3000-B3001 : n=3000, E=1500, B=3001, principal repaid = 1
+                                  n*E + B = 4503001   OBSERVED total interest = 4503000
+        T219-R600p0-N3000-B4499 : n=3000, E=2249, B=4499, principal repaid = 1499
+                                  n*E + B = 6751499   OBSERVED total interest = 6750000
+    In both cases `n*E + B` equals the OBSERVED TOTAL REPAYMENT exactly (4503001 and 6751499), and
+    the overstatement of interest equals the principal repaid exactly.
+
+  * **AND T229's OWN CAPTURE ALREADY CONTAINED THREE COUNTEREXAMPLES**, committed at `bb35cc8` in
+    `../out/capture-t229-raw.json.gz` — B201 (overstates by 1), B251 (by 51), B299 (by 99).
+    T229's own `classify_t229.py` COMPUTED the check and wrote
+    `"P2_totalInterestEqualsNEplusB": false` for all three into `../out/classify-t229.json`. It was
+    not read, because the `verdict` field in `classify_t229.py` is a function of the observed
+    OUTCOME and the observed PRINCIPAL only and never consults P2 — so all three were reported
+    "AS PREDICTED". The refutation was measured, printed and committed on the same day as the
+    claim. **This is a P-69 instance in its purest form: the evidence was not missing, it was
+    unread.**
+
+RE-DERIVED INDEPENDENTLY BY T241 from the raw captured rows (not transcribed from T219, whose
+handoff warns that transcription is how this section acquires its defects). The re-derivation is
+committed beside this file as `rederive_total_interest_t241.py`; it re-reads the `.gz` captures,
+sums the interest and principal COLUMNS, cross-checks them against the reported totals, asserts the
+per-row `total == interest + principal` identity, and exits non-zero if any leg fails. T241's
+figures AGREE with T219's on both named cells.
+
+MATERIALITY: **LOW, and it must not be inflated.** This field affects NO verdict anywhere.
+`classify_t229.py` grades on outcome and principal; no gate conclusion, no vector, no promoted
+figure and no region boundary is computed from `predictedTotalInterestMinor`. `.softhouse/gates.md`
+already carries the CORRECT form under *THE LAW*, so the LIVE text was right and only this
+committed instrument was wrong — the reverse of the usual direction, which is why it was easy to
+miss. Nothing about G-8's region, its conservative superset `B_minor < 1.5*n`, or the standing
+prohibition on putting options (b)/(c) to Buyan is touched by this correction.
+
+*********************************** END T241 CORRECTION *************************************
+
 NO FLOATING POINT ANYWHERE (P-25). Every value on a decision path is `int` minor units,
 `fractions.Fraction`, or `decimal.Decimal` under an explicit Context. There is no `float()` call
 and no float literal on any decision path in this file.
@@ -148,6 +218,13 @@ And the shape of an UNRESCUED cell follows from S3.1 + S3.4:
                                                              and it repays exactly B_minor-n*delta
       => delta = 0                                      => the last row repays the WHOLE principal
     TOTAL INTEREST = n*E + B  for any unrescued cell.
+    *** T241 CORRECTION — THE LINE DIRECTLY ABOVE IS FALSE AND IS KEPT VERBATIM AS THE RECORD.
+        n*E + B is the TOTAL REPAYMENT.  TOTAL INTEREST = n*E + B - (principal repaid), i.e.
+        n*E + B - max(0, B_minor - n*delta) on an unrescued cell, which is n*E + B only when the
+        principal repaid is 0 (FULL family B).  Established by T219's capture at 6eacc06 (B3001,
+        B4499) and by THIS DIRECTORY'S OWN capture at bb35cc8 (B201, B251, B299); re-derived
+        independently in rederive_total_interest_t241.py.  See the T241 CORRECTION banner at the
+        top of this docstring.  Affects no verdict. ***
 """
 
 import datetime
@@ -207,6 +284,13 @@ def predict(rate_str: str, n: int, b_minor: int, minor_digits: int = 2,
         "site3Rescues": rescue,
         "predictedOutcome": outcome,
         "predictedTotalPrincipalMinor": principal,
+        # *** T241 CORRECTION — THIS FIELD IS WRONG AND IS DELIBERATELY LEFT WRONG. ***
+        # `n * e + b_minor` is the TOTAL REPAYMENT, not the total interest. The correct value is
+        # `n * e + b_minor - principal`, and the two coincide only when `principal == 0`
+        # (FULL family B). It is NOT fixed here because this file must keep reproducing the
+        # registered `../prediction.json` byte for byte; fixing it would silently rewrite a
+        # committed prediction (T114/T176). Do not read this field. Affects no verdict — nothing
+        # in classify_t229.py's `verdict` consults it. See the banner at the top of this file.
         "predictedTotalInterestMinor": (None if outcome == "RESCUED_BY_SITE3"
                                         else n * e + b_minor),
         "predictedLastRowTotalMinor": (None if outcome == "RESCUED_BY_SITE3" else e + b_minor),

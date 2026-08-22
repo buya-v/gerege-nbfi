@@ -1,0 +1,5720 @@
+{
+ "gatesFile": ".softhouse/gates.md",
+ "sections": {
+  "G-8-NOTICE": {
+   "claimUnits": 222,
+   "endLine": 3562,
+   "lines": 222,
+   "notScopeBearing": 160,
+   "rows": [
+    {
+     "absLine": 3341,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "## G-8-NOTICE (SUPERSEDED \u2014 historical record; the LIVE G-8 section is above) \u2014 local fire `20260821-134344`: T117's measurement moves the bound. **REVIEWED \u2014 T159 APPROVED; the number then DOUBLED; T170 has since APPLIED all of this to the G-8 write-up above.**"
+    },
+    {
+     "absLine": 3343,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> **T241 \u2014 WHERE THE CURRENT RECORD LIVES, added at the head so nobody has to hunt for it. ONE pointer,"
+    },
+    {
+     "absLine": 3347,
+     "nets": [
+      "R1 states the largest residual",
+      "R10 names a term"
+     ],
+     "text": "> **The current records, all at n = 3000, all measured by T219 at `6eacc06`:** largest unamortized residual"
+    },
+    {
+     "absLine": 3348,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "> **MNT 30.00** (`B3001`, `B4499`), largest FULL family-B residual **MNT 29.99** (`B2999`), largest failing"
+    },
+    {
+     "absLine": 3349,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "> disbursement **MNT 44.99** (`B4499`). **And the axis this block labels its figures with is the wrong one:**"
+    },
+    {
+     "absLine": 3350,
+     "nets": [
+      "R7 states the region in its own variables"
+     ],
+     "text": "> the residual is `min(B_minor, n\u00b7\u03b4)` \u2014 a function of the **PRINCIPAL**, capped by the term. T219 tripled the"
+    },
+    {
+     "absLine": 3352,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "> above for the current state. **T241 decided against annotating each of the six `MNT 10.01` sites"
+    },
+    {
+     "absLine": 3353,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> individually** \u2014 a pointer at the head is navigation and corrupts nothing, whereas interleaving present-tense"
+    },
+    {
+     "absLine": 3359,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> the superseded figure that is a genuine SITE lies **strictly below this pointer**; every occurrence"
+    },
+    {
+     "absLine": 3362,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> sentence doing the counting moves every time you edit that sentence.** So this pointer states a"
+    },
+    {
+     "absLine": 3363,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> boundary instead of a number: **count only below it.** The general form of that lesson, which is"
+    },
+    {
+     "absLine": 3364,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> worth more than the count was: **re-measure after your LAST edit, not your first, and never publish"
+    },
+    {
+     "absLine": 3367,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "**Status of this block, as of T170: SUPERSEDED BY THE SECTION ABOVE, and kept as the record of how the"
+    },
+    {
+     "absLine": 3369,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "PARTIAL split of family B, the MNT 10.01-at-n=3000 residual, the enlarged rate/term/principal domain, and"
+    },
+    {
+     "absLine": 3380,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "(APPROVED), and **the rebuild the STANDING RULE requires has since been done, by T170.**"
+    },
+    {
+     "absLine": 3382,
+     "nets": [
+      "R11 universal / cardinality quantifier",
+      "R12 a disposition or an imperative"
+     ],
+     "text": "### The headline as T117 reported it \u2014 SUPERSEDED BY T159 IN THE UPDATE BELOW; every figure here is T117's"
+    },
+    {
+     "absLine": 3384,
+     "nets": [
+      "R6 states a bound or a ceiling"
+     ],
+     "text": "**The failing principal EXCEEDS one minor unit, and no upper bound is established.**"
+    },
+    {
+     "absLine": 3386,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R4 quotes a figure in minor units",
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "- Largest unamortized residual observed: **501 minor units = MNT 5.01**, at 600.0 % / n = 1000 \u2014 1000 rows"
+    },
+    {
+     "absLine": 3387,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "of `principal \"0.00\"`, balance frozen at 5.01 for 83 years, MNT 2,505.01 of scheduled interest, principal"
+    },
+    {
+     "absLine": 3388,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "never repaid."
+    },
+    {
+     "absLine": 3388,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "That also exceeds the whole-corpus **family-A** record of MNT 2.91."
+    },
+    {
+     "absLine": 3389,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "measured MNT 10.01 at n = 3000 \u2014 see the UPDATE below."
+    },
+    {
+     "absLine": 3389,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "MNT 5.01 is T117's figure, not the record.]**"
+    },
+    {
+     "absLine": 3393,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "- **No bound.** The first failing term grows with the principal (B \u2264 51 fails at n=108; B=101 at 250; B=501"
+    },
+    {
+     "absLine": 3394,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "at 1000; **B \u2265 1001 clean at all five terms T117 asked** \u2014 *and B = 1001 is family B at n = 3000, which"
+    },
+    {
+     "absLine": 3396,
+     "nets": [
+      "R2 states the largest failing principal/disbursement"
+     ],
+     "text": "Because the largest failing principal **tracks the"
+    },
+    {
+     "absLine": 3397,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "largest term asked**, and nothing above n = 1000 has ever been asked, **MNT 5.01 is the largest OBSERVED,"
+    },
+    {
+     "absLine": 3398,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "not a bound.** T159 has been sent to ask beyond n = 1000 specifically to test whether this is a real trend"
+    },
+    {
+     "absLine": 3405,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "T117 reports that `gates.md`'s claim \"on every family-B cell it sums to 0.00\" is falsified by three partial"
+    },
+    {
+     "absLine": 3406,
+     "nets": [
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "cells (B=11, n \u2208 {108,121,150}, principal column summing to 5, 4 and 2 minor units against an 11-minor-unit"
+    },
+    {
+     "absLine": 3410,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "*\"On every family-B cell **measured so far** it sums to **0.00** against a **0.01** disbursement\"*."
+    },
+    {
+     "absLine": 3431,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "stood when the block was written, and **T170's rebuild moved every line in G-8**."
+    },
+    {
+     "absLine": 3438,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "nothing about the gate, touched no vector, and did not go near them."
+    },
+    {
+     "absLine": 3443,
+     "nets": [
+      "R11 universal / cardinality quantifier",
+      "R12 a disposition or an imperative"
+     ],
+     "text": "### UPDATE \u2014 T159 reviewed T117, APPROVED it, and then DOUBLED the headline by asking the question T117 said nobody had asked"
+    },
+    {
+     "absLine": 3447,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "T159 re-derived every one of T117's figures from the **raw captures**, reading none of its analysis layer:"
+    },
+    {
+     "absLine": 3451,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "including the MNT 5.01 cell and all three partials."
+    },
+    {
+     "absLine": 3453,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "**Then it asked past n = 1000, which T117 had flagged as the reason its own number was not a bound.**"
+    },
+    {
+     "absLine": 3457,
+     "nets": [
+      "R1 states the largest residual",
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "| largest unamortized residual | **MNT 5.01** at n = 1000 | **MNT 10.01** at n = 3000 |"
+    },
+    {
+     "absLine": 3460,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| scheduled interest | MNT 2,505.01 | **MNT 15,010.01** |"
+    },
+    {
+     "absLine": 3464,
+     "nets": [
+      "R10 names a term",
+      "R13 names a measured cell"
+     ],
+     "text": "**`T159-R600p0-N3000-B1001` reports `totalPrincipalAmount 0.00`. And n = 3000 is simply the largest term"
+    },
+    {
+     "absLine": 3468,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term",
+      "R12 a disposition or an imperative"
+     ],
+     "text": "> ~~**Any disclosure of G-8 must state the residual WITH ITS TERM \u2014 \"MNT 10.01 at n = 3000\" \u2014 and must still"
+    },
+    {
+     "absLine": 3469,
+     "nets": [
+      "R6 states a bound or a ceiling"
+     ],
+     "text": "> say it is the largest OBSERVED and not a bound.** Two independent workers have now raised this ceiling by"
+    },
+    {
+     "absLine": 3470,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "> asking a larger term, and neither found a limit. Writing \"MNT 10.01\" without its term would repeat, one"
+    },
+    {
+     "absLine": 3474,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> It was **TRUE WHEN WRITTEN** and every restatement in this program obeyed it \u2014 correctly \u2014 and was wrong"
+    },
+    {
+     "absLine": 3475,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> anyway. **This is the only line in this block that is not a report but an IMPERATIVE**, and that is why it"
+    },
+    {
+     "absLine": 3476,
+     "nets": [
+      "R11 universal / cardinality quantifier",
+      "R12 a disposition or an imperative"
+     ],
+     "text": "> alone is struck while every figure around it stands. The `(SUPERSEDED \u2014 historical record)` header"
+    },
+    {
+     "absLine": 3477,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "> disclaims a *claim*; it cannot disclaim a `must`, because a reader who lands here by search reads a"
+    },
+    {
+     "absLine": 3486,
+     "nets": [
+      "R7 states the region in its own variables"
+     ],
+     "text": "> **The residual of an unrescued family-B cell is `min(B_minor, n\u00b7\u03b4)` \u2014 a fact about the PRINCIPAL, capped"
+    },
+    {
+     "absLine": 3487,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "> by the term.** T219 tripled the record *at T159's own term, n = 3000*, by asking a bigger principal, which"
+    },
+    {
+     "absLine": 3490,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "> > **Any disclosure of G-8 must state the residual with the variable it is a FUNCTION of \u2014 the"
+    },
+    {
+     "absLine": 3491,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "> > PRINCIPAL \u2014 and not merely with the term, and must still say it is the largest OBSERVED and not a"
+    },
+    {
+     "absLine": 3492,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "> > bound.** The current figure is **MNT 30.00**, at n = 3000, over the principals asked to date"
+    },
+    {
+     "absLine": 3493,
+     "nets": [
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "> > (largest asked: 4499 minor units). Quoting *any* of these figures without naming the principals swept"
+    },
+    {
+     "absLine": 3508,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "> *\"**It is not monotone**: `(B=10001, n=2000)` dies while `(B=10001, n=3000)` succeeds, so this is not a"
+    },
+    {
+     "absLine": 3511,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "> state \u2014 warm-up / JIT tier / `-Xss` \u2014 not of the cell's inputs**: from a cold JVM, `(B=10001, n=3000)`"
+    },
+    {
+     "absLine": 3512,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "> threw **33 of 33** times and `(B=10001, n=2000)` **9 of 9**; from attempt 5 inside a JVM neither throws."
+    },
+    {
+     "absLine": 3520,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "> dispatch brief on this and it is worth stating here, because the two are one digit apart: the MNT 10.01"
+    },
+    {
+     "absLine": 3521,
+     "nets": [
+      "R4 quotes a figure in minor units",
+      "R13 names a measured cell"
+     ],
+     "text": "> residual is **B = 1001 minor units** (`T159-R600p0-N3000-B1001`); the cell that throws is"
+    },
+    {
+     "absLine": 3523,
+     "nets": [
+      "R5 states or uses the total-interest / n.E+B identity",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> cell from **9 cold starts: 9 observed, 0 threw**, `totalInterestAmount 15010.01` every time."
+    },
+    {
+     "absLine": 3546,
+     "nets": [
+      "R6 states a bound or a ceiling"
+     ],
+     "text": "as a floor rather than a ceiling and re-sweeping the file for the concept (P-26/P-37)."
+    },
+    {
+     "absLine": 3546,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "T170 re-derived every"
+    },
+    {
+     "absLine": 3548,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**T170 decided nothing**: options (b) and (c) remain hard `user` gates"
+    }
+   ],
+   "scopeBearing": 62,
+   "startLine": 3341
+  },
+  "LIVE": {
+   "claimUnits": 2179,
+   "endLine": 3168,
+   "lines": 2136,
+   "notScopeBearing": 1464,
+   "rows": [
+    {
+     "absLine": 1042,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "of T112 \u2014 **re-derived every load-bearing number in this section from scratch and all of it"
+    },
+    {
+     "absLine": 1045,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "scope audit from scratch, 117 rows, 6 fail, **every failure a scope or disposition statement and"
+    },
+    {
+     "absLine": 1047,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "rule below), **T117** (measured family B past n = 1000, moved the residual to MNT 5.01 at n = 1000"
+    },
+    {
+     "absLine": 1049,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term",
+      "R12 a disposition or an imperative"
+     ],
+     "text": "review of T117 \u2014 APPROVED, then asked past n = 1000 and **doubled** the residual to **MNT 10.01 at"
+    },
+    {
+     "absLine": 1050,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "n = 3000**, found the fourth partial cell, detonated the shared rig's `RuntimeException` handler,"
+    },
+    {
+     "absLine": 1055,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "sites it found itself, split every family-B sentence into FULL and PARTIAL, added the THIRD"
+    },
+    {
+     "absLine": 1058,
+     "nets": [
+      "R9 names an annual rate",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "and **measured family B at 36.0 % p.a. and at 300.0 % \u2014 killing \"600 % only\"**; restated the region"
+    },
+    {
+     "absLine": 1060,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "pinned source, registered it in an ancestor commit, measured it live, and **FALSIFIED T223's"
+    },
+    {
+     "absLine": 1061,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R6 states a bound or a ceiling",
+      "R13 names a measured cell"
+     ],
+     "text": "ceiling by measurement** \u2014 `T229-R600p0-N200-B299` is family B at MNT 2.99 where this section said"
+    },
+    {
+     "absLine": 1062,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "MNT 1.00 was the limit; **deliberately edited nothing here** and left the five falsified sentences"
+    },
+    {
+     "absLine": 1064,
+     "nets": [
+      "R6 states a bound or a ceiling"
+     ],
+     "text": "corrections, replaced the ceiling and the prose that reasoned from it, added the *SITE 3,"
+    },
+    {
+     "absLine": 1068,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "and not of the term, then **TRIPLED it at T159's own term** \u2014 MNT 30.00 at n = 3000, with no"
+    },
+    {
+     "absLine": 1070,
+     "nets": [
+      "R6 states a bound or a ceiling",
+      "R7 states the region in its own variables",
+      "R10 names a term"
+     ],
+     "text": "the `(\u03b4 + \u00bd)\u00b7n` ceiling at n = 3000 as well as at n = 200; and re-observed the three PROMOTED"
+    },
+    {
+     "absLine": 1071,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "vectors against the live oracle), **T241** (evidence hygiene only, **no measurement of the oracle"
+    },
+    {
+     "absLine": 1072,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "and no new figure in this section**: annotated \u2014 never rewrote \u2014 T229's committed `site3.py`,"
+    },
+    {
+     "absLine": 1073,
+     "nets": [
+      "R5 states or uses the total-interest / n.E+B identity"
+     ],
+     "text": "whose `TOTAL INTEREST = n\u00b7E + B` is false on any cell that repays principal; re-derived T219's two"
+    },
+    {
+     "absLine": 1075,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "registered prediction P2 had been measured, printed, committed and never read**; rebuilt the"
+    },
+    {
+     "absLine": 1080,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "superseded `## G-8-NOTICE` block** while leaving every figure in it untouched)"
+    },
+    {
+     "absLine": 1082,
+     "nets": [
+      "R11 universal / cardinality quantifier",
+      "R12 a disposition or an imperative"
+     ],
+     "text": "- **state**: **OPEN** \u2014 blocks nothing today. T112 fixed the write-up, T122 fixed two sentences in"
+    },
+    {
+     "absLine": 1084,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "restated the region as a predicate and measured family B at two rates other than 600 %**, and"
+    },
+    {
+     "absLine": 1085,
+     "nets": [
+      "R6 states a bound or a ceiling"
+     ],
+     "text": "**T229 characterised the rescue site and falsified T223's ceiling \u2014 the corrected figure is three"
+    },
+    {
+     "absLine": 1088,
+     "nets": [
+      "R7 states the region in its own variables"
+     ],
+     "text": "**The region this file can state is CONSERVATIVE ONLY** (`B_minor < 1.5\u00b7n`, a superset), and"
+    },
+    {
+     "absLine": 1089,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "**options (b) and (c) still must not be put to Buyan** \u2014 see *SITE 3, CHARACTERISED* below."
+    },
+    {
+     "absLine": 1098,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "commit that landed this section**, so this is now the only G-8 write-up in this file."
+    },
+    {
+     "absLine": 1107,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "clone: the merged file carries exactly ONE `## G-8` heading, and the only surviving mentions of the"
+    },
+    {
+     "absLine": 1117,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "disposition that the author had already reversed and never swept (P-21 by a third route), and \u2014 the"
+    },
+    {
+     "absLine": 1120,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "no row carries a non-zero principal \u2026 principal MNT 0.01, no other principal has produced a"
+    },
+    {
+     "absLine": 1121,
+     "nets": [
+      "R10 names a term",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "family-B cell \u2026 nothing above n = 250 has ever been asked\"*, and the partial shape, 20 distinct"
+    },
+    {
+     "absLine": 1122,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "principals and terms to n = 3000 falsified all of it."
+    },
+    {
+     "absLine": 1124,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "and is the one to guard against next: nobody wrote anything wrong."
+    },
+    {
+     "absLine": 1125,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "is a standing claim about every future measurement, and it fails silently the day somebody asks a"
+    },
+    {
+     "absLine": 1129,
+     "nets": [
+      "R9 names an annual rate",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> *\"annual rate **600.0 % \u2014 and no other rate has ever produced a family-B cell**\"* was a correct"
+    },
+    {
+     "absLine": 1132,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> then asking the oracle cells nobody had swept** \u2014 not by another sweep of the same neighbourhood."
+    },
+    {
+     "absLine": 1138,
+     "nets": [
+      "R6 states a bound or a ceiling"
+     ],
+     "text": "> T231 applied it.** The sentence *\"the failing disbursement is bounded by roughly `n/2` minor units \u2026"
+    },
+    {
+     "absLine": 1139,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "> about **MNT 1.80** at `n \u2264 360`\"* was **not** an unscoped report of a sweep. It was exactly what the"
+    },
+    {
+     "absLine": 1142,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term",
+      "R13 names a measured cell"
+     ],
+     "text": "> counterexample is `T229-R600p0-N200-B299` \u2014 **MNT 2.99 failing at n = 200, where the sentence said"
+    },
+    {
+     "absLine": 1143,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> nothing above MNT 1.00 could fail.**"
+    },
+    {
+     "absLine": 1147,
+     "nets": [
+      "R8 makes a claim about \u03b4",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> (`\u03b4 = I\u2081q \u2212 E`) to zero because the pre-rescue instalment `E` had never been measured. A derived"
+    },
+    {
+     "absLine": 1148,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> predicate inherits every unmeasured quantity it is built on, **and states the result with the"
+    },
+    {
+     "absLine": 1154,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "> not measure is a conjecture the conclusion rests on, and it must be named next to the conclusion \u2014"
+    },
+    {
+     "absLine": 1158,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "> and it must not be read as an omission.**"
+    },
+    {
+     "absLine": 1161,
+     "nets": [
+      "R1 states the largest residual",
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "> *\"the largest unamortized residual is **MNT 10.01 at n = 3000**\"* was **not** unscoped: this file"
+    },
+    {
+     "absLine": 1162,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> insisted, in bold, that the figure be *\"stated with its term, always\"*, and every restatement of it"
+    },
+    {
+     "absLine": 1164,
+     "nets": [
+      "R7 states the region in its own variables"
+     ],
+     "text": "> named the wrong variable.** The residual is `min(B_minor, n\u00b7\u03b4)`: the principal is what it is a fact"
+    },
+    {
+     "absLine": 1165,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> about and the term is only the cap. T117 and T159 topped out at principals of 501 and 1001 minor"
+    },
+    {
+     "absLine": 1172,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> wrong axis** \u2014 and it is the most durable of the three, because every remedy the section had"
+    },
+    {
+     "absLine": 1174,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> got one; nobody asked *\"is the term the variable this number depends on?\"*, and the file's own law,"
+    },
+    {
+     "absLine": 1180,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> contradicts is a defect even when every number in it is right. And the test that catches it is the"
+    },
+    {
+     "absLine": 1185,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "grep for the sentence you are changing \u2014 a rebuild, claim by claim, of what every sentence"
+    },
+    {
+     "absLine": 1191,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "attestation; a stale one is a claim made in the name of tasks that never made it."
+    },
+    {
+     "absLine": 1192,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "3. **Sweep for the concept, never for the wording** (P-21 / P-26) \u2014 including your own change of"
+    },
+    {
+     "absLine": 1195,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**A site list handed to you by a reviewer is a starting point, never the sweep** \u2014 T129"
+    },
+    {
+     "absLine": 1198,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "4. **Exact arithmetic only, including for display** (P-25). Any number re-derived for this section is"
+    },
+    {
+     "absLine": 1212,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "[VERIFIED by T100 at `nexus/internal/apps/loanschedule/contract/contract.go:1163-1170`: *\"are graded"
+    },
+    {
+     "absLine": 1216,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "sums to `0.00` and nothing is repaid, and the **PARTIAL** shape, in which it sums to a non-zero"
+    },
+    {
+     "absLine": 1218,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "T159; **every family-B sentence written before them describes the full shape only**, and the two are"
+    },
+    {
+     "absLine": 1227,
+     "nets": [
+      "R4 quotes a figure in minor units",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "| last row's interest | `0.00` | `0.01` **only where the disbursement is 1 minor unit** (150 of the 209 cells); 19 distinct values across the full shape, and `0.11` / `0.12` / `0.14` / `13.32` on the four partial shapes |"
+    },
+    {
+     "absLine": 1229,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "| `totalOutstandingAmount` | `0` | `0` on all 209 \u2014 **so this field does not discriminate** |"
+    },
+    {
+     "absLine": 1230,
+     "nets": [
+      "R4 quotes a figure in minor units",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "| forcing the oracle's own balance `Memo` to recompute | balance goes to **`0.00`** | **does not move** \u2014 but measured on **3** of the 29 record cells only, all at 1 minor unit; **UNMEASURED** on all 180 cells T117 and T159 added, and on every partial cell |"
+    },
+    {
+     "absLine": 1231,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "| the Go port | **diverges**, on exactly one cell per case | **reproduces it cell for cell \u2014 no divergence at all** on the **29** record cells (T84's 22, T100's 1 through the real grader, and T101's re-grade of all 29); **UNMEASURED** on all 180 cells T117 and T159 added, and never on a partial cell |"
+    },
+    {
+     "absLine": 1232,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R9 names an annual rate",
+      "R10 names a term",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "| `invariant_exemptions` as a remedy | **inert** \u2014 the failure is a cell diff | **decisive** \u2014 the failure is purely invariant \u2014 **established on ONE full cell** (600.0 % / MNT 0.01 / n = 108). On a partial cell nobody has checked whether the port even reproduces the oracle, so \"purely invariant\" is **unmeasured** there |"
+    },
+    {
+     "absLine": 1233,
+     "nets": [
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "| measured at | **11** of the 12 annual rates swept (all but 600.0 %), `3 \u2264 n \u2264 600`, **312 cells** | **THREE** annual rates \u2014 600.0 % (**215** cells, `104 \u2264 n \u2264 3000`, principals 1 \u2026 **4499** minor), **36.0 %** (**3** cells: n = 1324 and 1500 at principal 50 minor, and n = 1400 at principal 150 minor) and **300.0 %** (1 cell, n = 800, principal 2 minor) \u2014 **219 cells**. *This row read \"**one** annual rate (600.0 %) \u2026 209 cells\" until T223 measured the other two rates against the live oracle, \"209 / 2 / 1 \u2014 212 cells\" until T229 added four more, and \"**212** cells \u2026 principals 1 \u2026 **1001** minor \u2014 216 cells\" until T219 added three at 600.0 % / n = 3000 (`2999`, `3001`, `4499`).* |"
+    },
+    {
+     "absLine": 1239,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**all 209 family-B cells and all 312 family-A cells were re-derived again, in integer minor units"
+    },
+    {
+     "absLine": 1247,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "must not be read as the union.** Every **\"209\"** below is T170's re-derivation over the **seven**"
+    },
+    {
+     "absLine": 1253,
+     "nets": [
+      "R9 names an annual rate",
+      "R13 names a measured cell"
+     ],
+     "text": "| **T223** | **3** | 3 | `T223-R36p0-N1324-B50`, `T223-R36p0-N1500-B50` (36.0 %, 50 minor), `T223-R300p0-N800-B2` (300.0 %, 2 minor) |"
+    },
+    {
+     "absLine": 1254,
+     "nets": [
+      "R9 names an annual rate",
+      "R10 names a term",
+      "R13 names a measured cell"
+     ],
+     "text": "| **T229** | **4** | 4 | `T229-R600p0-N200-B201`, `-B251`, `-B299` (600.0 %, n = 200 \u2014 all **PARTIAL**) and `T229-R36p0-N1400-B150` (36.0 %, 150 minor \u2014 **FULL**) |"
+    },
+    {
+     "absLine": 1257,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "shapes T170's 190 does not contain \u2014 T223's three are at rates the seven captures never asked at all,"
+    },
+    {
+     "absLine": 1258,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "and T229's three 600.0 % cells are at principals **201, 251 and 299**, none of which appears in the"
+    },
+    {
+     "absLine": 1259,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "principal list below [VERIFIED by T231 against that list; the four T229 cells re-derived by T231 in"
+    },
+    {
+     "absLine": 1265,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**Every row of that table holds on every cell of its family in the FOUR RECORD captures (T83, T84,"
+    },
+    {
+     "absLine": 1273,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "sum to the disbursed amount?* \u2014 is **untouched** by any of this [re-derived by T170 over all 1,035"
+    },
+    {
+     "absLine": 1274,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "cases; every family-B cell fails it and every family-A cell passes it]."
+    },
+    {
+     "absLine": 1276,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**What was found originally.** T75 registered a prediction, committed it, and only then ran a"
+    },
+    {
+     "absLine": 1278,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R9 names an annual rate"
+     ],
+     "text": "Result: **MNT 0.01 / 6 \u00d7 21.6 % at `MinorUnitDigits = 2` \u2014"
+    },
+    {
+     "absLine": 1280,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "schedule whose balance column never reaches zero, `0.01` on every row including the last, while the"
+    },
+    {
+     "absLine": 1281,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "Go port returns `0`.** That shape is **family A** [VERIFIED by T112's own re-classification of the"
+    },
+    {
+     "absLine": 1283,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "MNT 0.01** \u2014 has a REPAYMENT principal column summing to 1 minor unit against a 1-minor-unit"
+    },
+    {
+     "absLine": 1284,
+     "nets": [
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "disbursement, and a last row still carrying 1 minor unit outstanding."
+    },
+    {
+     "absLine": 1285,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "the *neighbouring* cell `T100-FAMA-R21p6-N6-B2` (MNT 0.02), which is also family A but is not the"
+    },
+    {
+     "absLine": 1286,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "The claim was always true \u2014 only its citation was to"
+    },
+    {
+     "absLine": 1296,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "because the port agrees with the oracle \u2014 both emit a schedule that never repays the loan.** A"
+    },
+    {
+     "absLine": 1298,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**That sentence is measured on the 29 record cells only** \u2014 all of them full"
+    },
+    {
+     "absLine": 1305,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R9 names an annual rate",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "promotion, which covers **two FULL family-B cells at 600.0 % / MNT 0.01 and nothing else.** So the"
+    },
+    {
+     "absLine": 1306,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "green bar is *still* not evidence against this finding: **214 of the 216 known family-B cells, every"
+    },
+    {
+     "absLine": 1307,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "PARTIAL cell, and all 312 family-A cells remain uncovered.** That is precisely the blind spot the"
+    },
+    {
+     "absLine": 1317,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "which is why **a count in this section must name the run that produced it.**]"
+    },
+    {
+     "absLine": 1330,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "This matters to the gate and not only to the write-up."
+    },
+    {
+     "absLine": 1331,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "the graded domain, and a graded domain that can express only \"amortizes\" and \"does not amortize\""
+    },
+    {
+     "absLine": 1336,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "all and an `error` of `java.lang.StackOverflowError: null` \u2014 `T159-R600p0-N2000-B10001` and"
+    },
+    {
+     "absLine": 1337,
+     "nets": [
+      "R13 names a measured cell",
+      "R14 carries a verification stamp"
+     ],
+     "text": "`T159-R600p0-N3000-B100001` [VERIFIED by T170 by extraction from the raw"
+    },
+    {
+     "absLine": 1343,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "[VERIFIED by T170 from the same captured frames; the source reading of `:1183` / `:1211-1212` /"
+    },
+    {
+     "absLine": 1351,
+     "nets": [
+      "R4 quotes a figure in minor units",
+      "R10 names a term",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "- **Cold start throws every time.** The disputed cell (B = 10001 minor units, n = 3000) as the"
+    },
+    {
+     "absLine": 1353,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "detonation (B = 10001, n = 2000): **9 JVMs, 0 observed, 9 threw** [T177,"
+    },
+    {
+     "absLine": 1356,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "observed at **attempt 5** and never flips back \u2014 **7 of 7** independent default-flag JVMs, and in"
+    },
+    {
+     "absLine": 1358,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "warming need not be the same cell: 50 prior calls on a different, never-throwing cell buys the"
+    },
+    {
+     "absLine": 1362,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "transition **never happens** \u2014 8 attempts, 8 throws."
+    },
+    {
+     "absLine": 1366,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "`(B=10001, n=2000)` dies while `(B=10001, n=3000)` succeeds\"* sentence in the NOTICE block at the"
+    },
+    {
+     "absLine": 1376,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> dependence is only meaningful **relative to a pinned JVM state**, and a once-per-cell probe pins"
+    },
+    {
+     "absLine": 1377,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> nothing. This matters practically, because cold-start-per-cell is the design T177 itself"
+    },
+    {
+     "absLine": 1379,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "- **T159 and T169 never disagreed about the oracle.** T177 replayed T159's committed case list in"
+    },
+    {
+     "absLine": 1380,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "T159's committed order: the only two cells that threw are exactly the two that threw in T159's"
+    },
+    {
+     "absLine": 1385,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "**G-8's headline number is NOT at risk from this, and the two cells must not be confused.** The"
+    },
+    {
+     "absLine": 1386,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "MNT 10.01 residual \u2014 **T159's figure, superseded as the record by T219's MNT 30.00 at the same term,"
+    },
+    {
+     "absLine": 1387,
+     "nets": [
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "but still the correct residual of this particular cell** \u2014 belongs to **B = 1001 minor units** at"
+    },
+    {
+     "absLine": 1388,
+     "nets": [
+      "R10 names a term",
+      "R13 names a measured cell"
+     ],
+     "text": "n = 3000 (`T159-R600p0-N3000-B1001`)."
+    },
+    {
+     "absLine": 1391,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "`0.00`, 19 non-zero principal rows [VERIFIED by T170 by extraction from T159's raw capture, where"
+    },
+    {
+     "absLine": 1393,
+     "nets": [
+      "R5 states or uses the total-interest / n.E+B identity",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "cell from **9 cold starts: 9 observed, 0 threw**, with `totalInterestAmount 15010.01` on all 16 of"
+    },
+    {
+     "absLine": 1400,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "not carry the field at all \u2014 it records `error`, `errorCause` and `errorStackTop` only, so the"
+    },
+    {
+     "absLine": 1408,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> and the \"rises\" reading only holds if 8400 is compared to 4683 rather than to the 5119 it started"
+    },
+    {
+     "absLine": 1416,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "> stack size cannot leave a true depth bit-identical \u2014 **invariance under a variable that must move"
+    },
+    {
+     "absLine": 1419,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "**What is NOT known about the third outcome, and must not be filled in:**"
+    },
+    {
+     "absLine": 1422,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "(B = 10001, n = 3000), (B = 10001, n = 2000) and (B = 1001, n = 3000) \u2014 plus a warm-up control at"
+    },
+    {
+     "absLine": 1423,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "(B = 10001, n = 200) and a one-pass replay of T159's 24-cell prefix."
+    },
+    {
+     "absLine": 1424,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "any **other** committed capture in this program is affected is `[UNVERIFIED]` \u2014 T177 did not"
+    },
+    {
+     "absLine": 1426,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "- **The exact `-Xss` boundary.** Measured only that 4m throws and 8m observes, 2 JVMs each; the"
+    },
+    {
+     "absLine": 1427,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "`[UNVERIFIED]`"
+    },
+    {
+     "absLine": 1429,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "`[UNVERIFIED]`"
+    },
+    {
+     "absLine": 1431,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "`[UNVERIFIED]`"
+    },
+    {
+     "absLine": 1432,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "- **Whether the Go port must reproduce it.** T177 offers, explicitly **as a reasoned inference and"
+    },
+    {
+     "absLine": 1434,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "`[UNVERIFIED]`"
+    },
+    {
+     "absLine": 1442,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**An older capture's \"0 errored\" is therefore not evidence that nothing threw.**"
+    },
+    {
+     "absLine": 1450,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "A cell is family A when **all** of these hold, and they were checked on every cell claimed below:"
+    },
+    {
+     "absLine": 1453,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "2. the REPAYMENT rows' `principal` column still **sums exactly to the disbursed amount** \u2014 in every"
+    },
+    {
+     "absLine": 1468,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "writes nothing to the running reference-oracle container or its PostgreSQL database"
+    },
+    {
+     "absLine": 1469,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "[VERIFIED by T122 at `src/run-t83.sh:5-10`; the seam source is pinned by `cmp` against the pinned"
+    },
+    {
+     "absLine": 1473,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "report is CONFIRMED\" below an independent confirmation rather than a restatement [VERIFIED by T140"
+    },
+    {
+     "absLine": 1494,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "T140 re-derived the 12-of-12 byte-identity and the tenant-id disjointness independently \u2014 only the"
+    },
+    {
+     "absLine": 1498,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "principal swept contiguously in minor units from 1 past the boundary (1..27 minor), every cell"
+    },
+    {
+     "absLine": 1504,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "21.6, 36.0, 48.0, 96.0, 300.0}** and terms up to **n = 600**, principals 1..100 000 minor."
+    },
+    {
+     "absLine": 1509,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "21.6 % / n=6 / MNT 0.02, 3.6 % / n=360 / MNT 1.09, 0.12 % / n=600 / MNT 2.91 \u2014 all three fail, all"
+    },
+    {
+     "absLine": 1512,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "### The boundary table \u2014 MEASURED BY T83, over T83's grid only"
+    },
+    {
+     "absLine": 1515,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**This table describes 4 rates \u00d7 8 terms and nothing"
+    },
+    {
+     "absLine": 1517,
+     "nets": [
+      "R2 states the largest failing principal/disbursement"
+     ],
+     "text": "the largest failing principal by more than an order of magnitude."
+    },
+    {
+     "absLine": 1521,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 21.6 | 2 | 1..5 | 5 | none | **1** (MNT 0.01) | yes |"
+    },
+    {
+     "absLine": 1522,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 21.6 | 3 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |"
+    },
+    {
+     "absLine": 1523,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 21.6 | 4 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |"
+    },
+    {
+     "absLine": 1524,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 21.6 | 6 | 1..6 | 6 | **2** (MNT 0.02) | **3** (MNT 0.03) | yes |"
+    },
+    {
+     "absLine": 1525,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 21.6 | 12 | 1..9 | 9 | **5** (MNT 0.05) | **6** (MNT 0.06) | yes |"
+    },
+    {
+     "absLine": 1526,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 21.6 | 24 | 1..13 | 13 | **9** (MNT 0.09) | **10** (MNT 0.10) | yes |"
+    },
+    {
+     "absLine": 1527,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 21.6 | 36 | 1..17 | 17 | **13** (MNT 0.13) | **14** (MNT 0.14) | yes |"
+    },
+    {
+     "absLine": 1528,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 21.6 | 56 | 1..21 | 21 | **17** (MNT 0.17) | **18** (MNT 0.18) | yes |"
+    },
+    {
+     "absLine": 1529,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 7.0 | 2 | 1..5 | 5 | none | **1** (MNT 0.01) | yes |"
+    },
+    {
+     "absLine": 1530,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 7.0 | 3 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |"
+    },
+    {
+     "absLine": 1531,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 7.0 | 4 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |"
+    },
+    {
+     "absLine": 1532,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 7.0 | 6 | 1..6 | 6 | **2** (MNT 0.02) | **3** (MNT 0.03) | yes |"
+    },
+    {
+     "absLine": 1533,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 7.0 | 12 | 1..9 | 9 | **5** (MNT 0.05) | **6** (MNT 0.06) | yes |"
+    },
+    {
+     "absLine": 1534,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 7.0 | 24 | 1..15 | 15 | **11** (MNT 0.11) | **12** (MNT 0.12) | yes |"
+    },
+    {
+     "absLine": 1535,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 7.0 | 36 | 1..20 | 20 | **16** (MNT 0.16) | **17** (MNT 0.17) | yes |"
+    },
+    {
+     "absLine": 1536,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 7.0 | 56 | 1..27 | 27 | **23** (MNT 0.23) | **24** (MNT 0.24) | yes |"
+    },
+    {
+     "absLine": 1537,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 16.8 | 2 | 1..5 | 5 | none | **1** (MNT 0.01) | yes |"
+    },
+    {
+     "absLine": 1538,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 16.8 | 3 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |"
+    },
+    {
+     "absLine": 1539,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 16.8 | 4 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |"
+    },
+    {
+     "absLine": 1540,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 16.8 | 6 | 1..6 | 6 | **2** (MNT 0.02) | **3** (MNT 0.03) | yes |"
+    },
+    {
+     "absLine": 1541,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 16.8 | 12 | 1..9 | 9 | **5** (MNT 0.05) | **6** (MNT 0.06) | yes |"
+    },
+    {
+     "absLine": 1542,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 16.8 | 24 | 1..14 | 14 | **10** (MNT 0.10) | **11** (MNT 0.11) | yes |"
+    },
+    {
+     "absLine": 1543,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 16.8 | 36 | 1..18 | 18 | **14** (MNT 0.14) | **15** (MNT 0.15) | yes |"
+    },
+    {
+     "absLine": 1544,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 16.8 | 56 | 1..23 | 23 | **19** (MNT 0.19) | **20** (MNT 0.20) | yes |"
+    },
+    {
+     "absLine": 1545,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 36.0 | 2 | 1..5 | 5 | none | **1** (MNT 0.01) | yes |"
+    },
+    {
+     "absLine": 1546,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 36.0 | 3 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |"
+    },
+    {
+     "absLine": 1547,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 36.0 | 4 | 1..5 | 5 | **1** (MNT 0.01) | **2** (MNT 0.02) | yes |"
+    },
+    {
+     "absLine": 1548,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 36.0 | 6 | 1..6 | 6 | **2** (MNT 0.02) | **3** (MNT 0.03) | yes |"
+    },
+    {
+     "absLine": 1549,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 36.0 | 12 | 1..8 | 8 | **4** (MNT 0.04) | **5** (MNT 0.05) | yes |"
+    },
+    {
+     "absLine": 1550,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 36.0 | 24 | 1..12 | 12 | **8** (MNT 0.08) | **9** (MNT 0.09) | yes |"
+    },
+    {
+     "absLine": 1551,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 36.0 | 36 | 1..14 | 14 | **10** (MNT 0.10) | **11** (MNT 0.11) | yes |"
+    },
+    {
+     "absLine": 1552,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "| 36.0 | 56 | 1..17 | 17 | **13** (MNT 0.13) | **14** (MNT 0.14) | yes |"
+    },
+    {
+     "absLine": 1554,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "**T75's report is CONFIRMED and is a strict subset of this.** MNT 0.01/6, 0.02/6, 0.01/12 and"
+    },
+    {
+     "absLine": 1555,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R4 quotes a figure in minor units",
+      "R9 names an annual rate"
+     ],
+     "text": "0.01/56 at 21.6 % all fail; **MNT 0.03 through MNT 0.06 \u2014 3..6 minor units, which is the entire"
+    },
+    {
+     "absLine": 1556,
+     "nets": [
+      "R9 names an annual rate",
+      "R10 names a term",
+      "R14 carries a verification stamp"
+     ],
+     "text": "range swept above the boundary at that shape \u2014 are clean at 21.6 % / n = 6** [VERIFIED by T112 from"
+    },
+    {
+     "absLine": 1558,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "clean, and nothing larger was asked."
+    },
+    {
+     "absLine": 1561,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "**21.6 % is not load-bearing for family A** \u2014 family A exists at **11 of the 12** annual rates"
+    },
+    {
+     "absLine": 1562,
+     "nets": [
+      "R9 names an annual rate",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "swept: every rate from 0.12 % to 300.0 %, and **NOT at 600.0 %**, where every failing cell is"
+    },
+    {
+     "absLine": 1565,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "read \"family A exists at **all 12** rates swept\", which asserted family A at precisely the rate"
+    },
+    {
+     "absLine": 1568,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "`patterns.md` records [T101 F-1; **independently re-measured by T112** over all 687 swept cells of"
+    },
+    {
+     "absLine": 1570,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "36.0, 48.0, 96.0, 300.0} \u2014 **eleven** \u2014 and family A at 600.0 % is the **empty set**]. Across T83's"
+    },
+    {
+     "absLine": 1572,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "**empty at n = 2** at all four rates T83 tested, and grows with the term."
+    },
+    {
+     "absLine": 1574,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "### The port divergence, family A only \u2014 ONE CELL PER CASE"
+    },
+    {
+     "absLine": 1577,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "nothing else**: **198 divergent cells over T83's 198 failing cases** [T83, `out/port-vs-oracle.json`;"
+    },
+    {
+     "absLine": 1579,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "the port refused nothing], plus **111 further divergent cases** in T84's own family-A sweep."
+    },
+    {
+     "absLine": 1581,
+     "nets": [
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "exactly one diff \u2014 `row 360 outstanding_principal_minor: expected 109 minor units, got 0`**"
+    },
+    {
+     "absLine": 1598,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "`0 == 0` when every EMI quantizes to zero [T75];"
+    },
+    {
+     "absLine": 1602,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "the **same method** through a plain setter that invalidates nothing;"
+    },
+    {
+     "absLine": 1603,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "- the only three readers of `getOutstandingLoanBalance()` in the calculator are `:617`, `:1180`"
+    },
+    {
+     "absLine": 1606,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "**The driver's candidate site is REFUTED** [T83, re-verified by T84 and again by T100]:"
+    },
+    {
+     "absLine": 1608,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "balance and therefore can never populate the LAST period's memo."
+    },
+    {
+     "absLine": 1610,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "### The mechanism is also OBSERVED, not only read \u2014 family A only"
+    },
+    {
+     "absLine": 1616,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**`0.00`**; 4 of 4 clean controls unmoved; path identity true on all 9."
+    },
+    {
+     "absLine": 1620,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "MNT 1,200,000 loan) unmoved; path identity true on all 7; `paidPrincipal` restored on all 7."
+    },
+    {
+     "absLine": 1635,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "over all 1,035 cases of the seven committed captures: every family-B cell fails this test, every"
+    },
+    {
+     "absLine": 1637,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "was written when only one shape had been seen."
+    },
+    {
+     "absLine": 1641,
+     "nets": [
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "Where the disbursement is 1 minor unit \u2014 150 of the"
+    },
+    {
+     "absLine": 1644,
+     "nets": [
+      "R11 universal / cardinality quantifier",
+      "R14 carries a verification stamp"
+     ],
+     "text": "constant at `1.50` across all 1,400 rows and whose `totalPrincipalAmount` is `0.00` [VERIFIED by"
+    },
+    {
+     "absLine": 1656,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "| shape (600.0 %) | disbursed | amortized | **residual** | `totalPrincipalAmount` | balance column | last row's interest |"
+    },
+    {
+     "absLine": 1658,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "| n = 108, B = 11 minor | 11 | **5** | **6** | `0.05` | `0.11` \u2192 `0.06` | `0.11` |"
+    },
+    {
+     "absLine": 1659,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "| n = 121, B = 11 minor | 11 | **4** | **7** | `0.04` | `0.11` \u2192 `0.07` | `0.12` |"
+    },
+    {
+     "absLine": 1660,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "| n = 150, B = 11 minor | 11 | **2** | **9** | `0.02` | `0.11` \u2192 `0.09` | `0.14` |"
+    },
+    {
+     "absLine": 1661,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "| n = 2000, B = 999 minor | 999 | **166** | **833** | `1.66` | `9.99` \u2192 `8.33` | `13.32` |"
+    },
+    {
+     "absLine": 1662,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "| **n = 200, B = 201 minor** (T229) | 201 | **1** | **200** | `0.01` | `2.01` \u2192 `2.00` | `3.00` |"
+    },
+    {
+     "absLine": 1663,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "| **n = 200, B = 251 minor** (T229) | 251 | **51** | **200** | `0.51` | `2.51` \u2192 `2.00` | `3.25` |"
+    },
+    {
+     "absLine": 1664,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "| **n = 200, B = 299 minor** (T229) | 299 | **99** | **200** | `0.99` | `2.99` \u2192 `2.00` | `3.49` |"
+    },
+    {
+     "absLine": 1674,
+     "nets": [
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "before the oracle was asked.** T229 registered \"family B PARTIAL, repaying 1 / 51 / 99 minor units\""
+    },
+    {
+     "absLine": 1676,
+     "nets": [
+      "R4 quotes a figure in minor units",
+      "R7 states the region in its own variables",
+      "R8 makes a claim about \u03b4",
+      "R10 names a term"
+     ],
+     "text": "`B_minor \u2212 n\u00b7\u03b4` with `\u03b4 = 1` and `n = 200`, which is why all three leave **exactly 200 minor units**"
+    },
+    {
+     "absLine": 1677,
+     "nets": [
+      "R6 states a bound or a ceiling",
+      "R13 names a measured cell"
+     ],
+     "text": "**`T229-R600p0-N200-B299` is the cell that falsified the ceiling this section carried**"
+    },
+    {
+     "absLine": 1678,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "\u2014 MNT 2.99 failing at n = 200, where the old text said nothing above MNT 1.00 could fail \u2014 and it is"
+    },
+    {
+     "absLine": 1679,
+     "nets": [
+      "R6 states a bound or a ceiling"
+     ],
+     "text": "why the ceiling paragraph in *THE REGION* below had to be rewritten."
+    },
+    {
+     "absLine": 1680,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "residual on record; that is `3000` minor units \u2014 MNT 30.00 \u2014 at n = 3000** [T219; this sentence read"
+    },
+    {
+     "absLine": 1681,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "*\"that is still MNT 10.01 at n = 3000\"* until T219 measured a larger one at that same term, and both"
+    },
+    {
+     "absLine": 1682,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "figures are family-B cells at 600.0 %]."
+    },
+    {
+     "absLine": 1682,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "**And no claim is made that MNT 2.99 is the"
+    },
+    {
+     "absLine": 1683,
+     "nets": [
+      "R2 states the largest failing principal/disbursement"
+     ],
+     "text": "largest failing disbursement at a short term** \u2014 T231 did not sweep for that and does not know, and"
+    },
+    {
+     "absLine": 1684,
+     "nets": [
+      "R10 names a term",
+      "R11 universal / cardinality quantifier",
+      "R14 carries a verification stamp"
+     ],
+     "text": "**neither did T219, which asked nothing at n = 200 at all** `[UNVERIFIED]`."
+    },
+    {
+     "absLine": 1686,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**On all 209 family-B cells the unamortized residual equals the final row's `balance` exactly, and"
+    },
+    {
+     "absLine": 1689,
+     "nets": [
+      "R11 universal / cardinality quantifier",
+      "R14 carries a verification stamp"
+     ],
+     "text": "\u2014 4 of 4, `totalOutstandingAmount` `0` on every one** [VERIFIED by T231 by extraction], so it is now"
+    },
+    {
+     "absLine": 1691,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "report** `[UNVERIFIED by T231 for T223's three \u2014 T231 did not open T223's capture]`."
+    },
+    {
+     "absLine": 1694,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "all full shape, all at a 1-minor-unit disbursement, and it is **unmeasured on every partial cell,"
+    },
+    {
+     "absLine": 1695,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "on all 180 cells T117 and T159 added, and on all seven T223 and T229 added.**"
+    },
+    {
+     "absLine": 1706,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "**66**. But it is now **wider in term** \u2014 family A's failing cells run `3 \u2264 n \u2264 600` and family B's"
+    },
+    {
+     "absLine": 1707,
+     "nets": [
+      "R2 states the largest failing principal/disbursement",
+      "R4 quotes a figure in minor units",
+      "R10 names a term"
+     ],
+     "text": "run `104 \u2264 n \u2264 3000` \u2014 and **wider in the largest failing principal**: **4499 minor units"
+    },
+    {
+     "absLine": 1708,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "(MNT 44.99)** against family A's **291 minor units (MNT 2.91)** [the four T170 figures re-derived by"
+    },
+    {
+     "absLine": 1710,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "the distinct-principal count from 20 to 22** \u2014 it added 50 minor at 36.0 % and 2 minor at 300.0 %,"
+    },
+    {
+     "absLine": 1713,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "> **THE LARGEST FAILING PRINCIPAL FIGURE IN THIS PARAGRAPH WAS `1001 minor units (MNT 10.01)` UNTIL"
+    },
+    {
+     "absLine": 1714,
+     "nets": [
+      "R12 a disposition or an imperative",
+      "R13 names a measured cell"
+     ],
+     "text": "> T219, AND IT IS SUPERSEDED BY MEASUREMENT, NOT BY ARGUMENT.** `T219-R600p0-N3000-B4499` is a live"
+    },
+    {
+     "absLine": 1715,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R4 quotes a figure in minor units",
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "> family-B PARTIAL cell at **4499 minor units \u2014 MNT 44.99** \u2014 disbursed at 600.0 % over n = 3000,"
+    },
+    {
+     "absLine": 1716,
+     "nets": [
+      "R4 quotes a figure in minor units",
+      "R14 carries a verification stamp"
+     ],
+     "text": "> repaying 1499 and leaving 3000 minor units outstanding [VERIFIED by T219 by extraction in integer"
+    },
+    {
+     "absLine": 1718,
+     "nets": [
+      "R2 states the largest failing principal/disbursement"
+     ],
+     "text": "> supersedes T159's figure as the largest failing principal and it does NOT supersede T159's"
+    },
+    {
+     "absLine": 1721,
+     "nets": [
+      "R1 states the largest residual"
+     ],
+     "text": "> principal\" and \"largest unamortized residual\" stopped being the same number the moment T229"
+    },
+    {
+     "absLine": 1723,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "> paragraph is about the **principal**; the residual is **MNT 30.00**."
+    },
+    {
+     "absLine": 1730,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> minor. **\"Odd\" was never the law; \"lands on a half-minor-unit boundary\" is**, and at r = 1/2"
+    },
+    {
+     "absLine": 1737,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "- annual rate \u2014 **THREE rates have now produced a family-B cell: 600.0 %, 36.0 % and 300.0 %**"
+    },
+    {
+     "absLine": 1738,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "[T223, measured against the live reference oracle: `T223-R36p0-N1324-B50` and"
+    },
+    {
+     "absLine": 1739,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R9 names an annual rate",
+      "R13 names a measured cell"
+     ],
+     "text": "`T223-R36p0-N1500-B50` at **36.0 % p.a.**, MNT 0.50, and `T223-R300p0-N800-B2` at **300.0 %**,"
+    },
+    {
+     "absLine": 1740,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "MNT 0.02 \u2014 each emits exactly n REPAYMENT rows, every one `principal 0.00`,"
+    },
+    {
+     "absLine": 1744,
+     "nets": [
+      "R9 names an annual rate",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> **CORRECTED BY T223.** This bullet read *\"annual rate **600.0 % \u2014 and no other rate has ever"
+    },
+    {
+     "absLine": 1747,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> a sentence with no scope on it standing as a claim about every future measurement. It failed the"
+    },
+    {
+     "absLine": 1751,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "> **The rest of this bullet is UNCHANGED AND STILL CORRECT** \u2014 T84's 300.0 % cells really are all"
+    },
+    {
+     "absLine": 1752,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "> clean, and the predicate below says why: at 300.0 % the region does not start until far above"
+    },
+    {
+     "absLine": 1753,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "> **n = 260**, the largest term T84 asked. T223 found it at **n = 800** and confirmed **n = 500 and"
+    },
+    {
+     "absLine": 1754,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "> n = 1200 clean** at the same shape. **The old sentence and the new measurement do not conflict;"
+    },
+    {
+     "absLine": 1757,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "T84 swept 300.0 %"
+    },
+    {
+     "absLine": 1758,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "with B = 2 at n = 100, 150, **170\u2026204 contiguously**, 220 and 260 \u2014 **41 cells, all clean** \u2014 and"
+    },
+    {
+     "absLine": 1759,
+     "nets": [
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "300.0 % with B = 1 at six terms up to n = 260 (n = 100, 150, 175, 196, 220, 260): the 300 %"
+    },
+    {
+     "absLine": 1760,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "failures are **family A** (their principal column sums) [VERIFIED by T100's re-classification of"
+    },
+    {
+     "absLine": 1761,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "T84's raw capture: 6 family-A cells at 300.0 %, 0 family-B."
+    },
+    {
+     "absLine": 1762,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "committed `.gz` captures: **the largest n asked at 300.0 % is 260 for both principals**, not 204 \u2014"
+    },
+    {
+     "absLine": 1763,
+     "nets": [
+      "R10 names a term",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "204 is the top of the *contiguous* run only, and an earlier revision said \"B = 2 through n = 204\","
+    },
+    {
+     "absLine": 1764,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "The 41 B = 2 cells cover 39 distinct n; n = 175 and n = 196 were"
+    },
+    {
+     "absLine": 1766,
+     "nets": [
+      "R4 quotes a figure in minor units",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "- principal: **20 distinct values, every one ODD**, from **1 to 1001 minor units** \u2014"
+    },
+    {
+     "absLine": 1771,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "rates \u2014 `50` at 36.0 % and `2` at 300.0 % \u2014 for 22 distinct values**; **T229 then added 4 more \u2014"
+    },
+    {
+     "absLine": 1772,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "`201`, `251` and `299` at 600.0 % and `150` at 36.0 % \u2014 for 26 distinct values**, verified by T231"
+    },
+    {
+     "absLine": 1773,
+     "nets": [
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "against the list above; **T219 then added 3 more, all at 600.0 % and all at n = 3000 \u2014"
+    },
+    {
+     "absLine": 1775,
+     "nets": [
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "moves from 1001 to 4499 minor units**]."
+    },
+    {
+     "absLine": 1776,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R4 quotes a figure in minor units",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "*\"principal MNT 0.01 (1 minor unit) \u2014 no other"
+    },
+    {
+     "absLine": 1779,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "> **\"EVERY ONE ODD\" IS SUPERSEDED, AND BY AN EXPLANATION RATHER THAN A COUNTEREXAMPLE \u2014 T223.**"
+    },
+    {
+     "absLine": 1780,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "> All 20 principals measured at 600.0 % are odd, and T223's two new ones \u2014 **50** and **2** \u2014 are"
+    },
+    {
+     "absLine": 1781,
+     "nets": [
+      "R9 names an annual rate",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> **even**. The odd-ness was never a property of the principal: at 600.0 % the per-period rate"
+    },
+    {
+     "absLine": 1782,
+     "nets": [
+      "R7 states the region in its own variables"
+     ],
+     "text": "> factor is exactly `1/2`, so `B_minor \u00d7 r` lands on a half-minor-unit rounding boundary **iff"
+    },
+    {
+     "absLine": 1783,
+     "nets": [
+      "R7 states the region in its own variables",
+      "R9 names an annual rate"
+     ],
+     "text": "> `B_minor` is odd**. At 36.0 % (`r = 0.03`) that condition reads `B_minor \u2261 50 (mod 100)`, and at"
+    },
+    {
+     "absLine": 1784,
+     "nets": [
+      "R7 states the region in its own variables",
+      "R9 names an annual rate"
+     ],
+     "text": "> 300.0 % (`r = 1/4`) it reads `B_minor \u2261 2 (mod 4)`. **The law is the resonance condition below;"
+    },
+    {
+     "absLine": 1791,
+     "nets": [
+      "R7 states the region in its own variables"
+     ],
+     "text": "> sweeping: `201`, `251` and `299` are **odd**, so at `r = 1/2` each puts `B_minor \u00d7 r` on a"
+    },
+    {
+     "absLine": 1793,
+     "nets": [
+      "R9 names an annual rate",
+      "R10 names a term",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> `r = 0.03`** \u2014 a second even family-B principal at 36.0 %, at a term (n = 1400) nobody had asked."
+    },
+    {
+     "absLine": 1794,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "> **The condition was used to predict and the oracle agreed on 4 of 4.** [VERIFIED by T231 by"
+    },
+    {
+     "absLine": 1796,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "- repayment counts: **`104 \u2264 n \u2264 3000`**. Family B has been observed at terms across that whole"
+    },
+    {
+     "absLine": 1797,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "range \u2014 **but NOT at every term in it**; there are measured clean gaps inside otherwise-contiguous"
+    },
+    {
+     "absLine": 1800,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R9 names an annual rate"
+     ],
+     "text": "600.0 % / MNT 0.01: T84 measured 104\u2026121 contiguously plus 150 and 200 (22 cells, of which"
+    },
+    {
+     "absLine": 1801,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "n = 108 and n = 120 were measured twice, once in each of its two probes, agreeing); T100 added"
+    },
+    {
+     "absLine": 1802,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "n = 122 and n = 250."
+    },
+    {
+     "absLine": 1802,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "At **n = 103** that shape is **clean** [T84; re-measured by T100; n-set and"
+    },
+    {
+     "absLine": 1809,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "**n = 1000** [term set extracted by T170 from the two raw `.gz` captures]."
+    },
+    {
+     "absLine": 1812,
+     "nets": [
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "- **T223** added **3** at two new rates \u2014 36.0 % at `n \u2208 {1324, 1500}` and 300.0 % at `n = 800`."
+    },
+    {
+     "absLine": 1813,
+     "nets": [
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "- **T229** added **4** \u2014 600.0 % at **`n = 200`** (principals 201, 251, 299) and 36.0 % at"
+    },
+    {
+     "absLine": 1814,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "**`n = 1400`** (principal 150). **Both terms are inside `104 \u2264 n \u2264 3000`, so the range above does"
+    },
+    {
+     "absLine": 1815,
+     "nets": [
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "not move; what moved is the PRINCIPAL at a short term** \u2014 `n = 200` at 600.0 % was previously"
+    },
+    {
+     "absLine": 1816,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "known family B only at MNT 0.01, and it is now measured family B at MNT 2.01, 2.51 and 2.99."
+    },
+    {
+     "absLine": 1817,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "- **The old sentence *\"Nothing above n = 250 has ever been asked at the family-B shape\"* is"
+    },
+    {
+     "absLine": 1818,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "false.** It has been asked to **n = 3000**, and it is family B there."
+    },
+    {
+     "absLine": 1818,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "**n = 3000 is simply the"
+    },
+    {
+     "absLine": 1824,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "at n = 1000 while B = 601, 701, 751, 901 and 999 are clean at the same term, and B = 1001 is"
+    },
+    {
+     "absLine": 1825,
+     "nets": [
+      "R10 names a term",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "clean at n = 1200, 1500 and 2000 and only turns family B at n = 3000."
+    },
+    {
+     "absLine": 1826,
+     "nets": [
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "**The `B = 801` half of that is now explained** \u2014 site 3's rescue condition gives `\u03b4 = 1`,"
+    },
+    {
+     "absLine": 1829,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "clean** `[UNVERIFIED]`."
+    },
+    {
+     "absLine": 1831,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "`\u03b4` depends on the pre-rescue instalment, which nothing in this program measures."
+    },
+    {
+     "absLine": 1833,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "T84's largest n **anywhere** is **600**, at 0.12 % \u2014 `T84B-XL-R0p12-N600-B291` \u2014 and its largest"
+    },
+    {
+     "absLine": 1834,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R9 names an annual rate"
+     ],
+     "text": "n at 600.0 % / MNT 0.01 is **200**."
+    },
+    {
+     "absLine": 1843,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "added, and nobody has graded it on a PARTIAL cell at all.** That matters more than it looks: \"the"
+    },
+    {
+     "absLine": 1845,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "than as a port defect, and on the partial shape it is simply **unmeasured** `[UNVERIFIED]`."
+    },
+    {
+     "absLine": 1850,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "unmoved at n = 104, 108, 120, all at a 1-minor-unit disbursement, while the family-A control in the"
+    },
+    {
+     "absLine": 1852,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**Order-dependence has never been tested on a partial cell, nor on any"
+    },
+    {
+     "absLine": 1853,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "of the 180 new cells** `[UNVERIFIED]`."
+    },
+    {
+     "absLine": 1859,
+     "nets": [
+      "R12 a disposition or an imperative",
+      "R14 carries a verification stamp"
+     ],
+     "text": "for it.** `[UNVERIFIED]` A candidate mechanism must now also explain the **partial** shape \u2014 one"
+    },
+    {
+     "absLine": 1860,
+     "nets": [
+      "R10 names a term",
+      "R12 a disposition or an imperative"
+     ],
+     "text": "non-zero principal row, on the last period \u2014 and must explain why B = 801 is family B at n = 1000"
+    },
+    {
+     "absLine": 1865,
+     "nets": [
+      "R7 states the region in its own variables"
+     ],
+     "text": "> max(0, B_minor \u2212 n\u00b7\u03b4)`, which predicted the amount repaid on three partial cells before they were"
+    },
+    {
+     "absLine": 1867,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "> `[UNVERIFIED]` is (i) the `B = 601 \u2026 999` half of the sentence above, and (ii) **a second"
+    },
+    {
+     "absLine": 1869,
+     "nets": [
+      "R11 universal / cardinality quantifier",
+      "R13 names a measured cell"
+     ],
+     "text": "> `T229-R600p0-N200-B199` live, reduce the balance where every model here says it is frozen. See"
+    },
+    {
+     "absLine": 1873,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "is measured at **36.0 % p.a.** (MNT 0.50, n = 1324 and n = 1500) and at **300.0 %** (MNT 0.02,"
+    },
+    {
+     "absLine": 1874,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "n = 800), against the live reference oracle, from a predicate registered in an ancestor commit."
+    },
+    {
+     "absLine": 1875,
+     "nets": [
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "The old sentence \u2014 *\"Every family-B cell ever measured is **600.0 %** and at `n \u2265 104`\"* \u2014 is"
+    },
+    {
+     "absLine": 1877,
+     "nets": [
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "already answered by T117/T159** (20 distinct principals from 1 to 1001 minor units), and T223 adds"
+    },
+    {
+     "absLine": 1879,
+     "nets": [
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "from 1 to 4499 minor units.**"
+    },
+    {
+     "absLine": 1880,
+     "nets": [
+      "R9 names an annual rate",
+      "R10 names a term",
+      "R11 universal / cardinality quantifier",
+      "R14 carries a verification stamp"
+     ],
+     "text": "- **Whether it exists BELOW n = 104 at 600.0 %.** Still `[UNVERIFIED]` \u2014 nothing T223 did touches it,"
+    },
+    {
+     "absLine": 1881,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "and the predicate below says it should not: at 600.0 % the region's lower edge is where the"
+    },
+    {
+     "absLine": 1882,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "instalment first quantizes below the first period's interest, and that is n = 104."
+    },
+    {
+     "absLine": 1883,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "- **Whether it terminates.** It does **not** terminate anywhere anyone has looked: n = 3000 fails,"
+    },
+    {
+     "absLine": 1884,
+     "nets": [
+      "R10 names a term",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "and **nothing above n = 3000 has been asked**."
+    },
+    {
+     "absLine": 1884,
+     "nets": [
+      "R1 states the largest residual"
+     ],
+     "text": "The largest unamortized residual rose from"
+    },
+    {
+     "absLine": 1885,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "MNT 0.01 to **MNT 5.01 at n = 1000** (T117) to **MNT 10.01 at n = 3000** (T159) to"
+    },
+    {
+     "absLine": 1886,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term",
+      "R14 carries a verification stamp"
+     ],
+     "text": "**MNT 30.00, still at n = 3000** (T219). `[UNVERIFIED]`"
+    },
+    {
+     "absLine": 1887,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "> **THE CAUSAL HALF OF THIS BULLET IS FALSIFIED BY MEASUREMENT \u2014 T219.** It read *\"each time"
+    },
+    {
+     "absLine": 1889,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "> larger term at all** \u2014 it asked n = 3000, exactly T159's term \u2014 and tripled the residual by"
+    },
+    {
+     "absLine": 1891,
+     "nets": [
+      "R7 states the region in its own variables",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> `min(B_minor, n\u00b7\u03b4)`; the term enters only as the **cap**, and T159 had used one third of the"
+    },
+    {
+     "absLine": 1893,
+     "nets": [
+      "R4 quotes a figure in minor units",
+      "R8 makes a claim about \u03b4",
+      "R10 names a term"
+     ],
+     "text": "> each worker asked a bigger principal, and n = 3000 with \u03b4 = 1 caps it at 3000 minor units.**"
+    },
+    {
+     "absLine": 1901,
+     "nets": [
+      "R8 makes a claim about \u03b4",
+      "R10 names a term",
+      "R14 carries a verification stamp"
+     ],
+     "text": "> n = 3000 has been asked and no `\u03b4 \u2265 2` cell has ever been constructed** `[UNVERIFIED]`."
+    },
+    {
+     "absLine": 1903,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "`[UNVERIFIED]`"
+    },
+    {
+     "absLine": 1905,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "`[UNVERIFIED]`"
+    },
+    {
+     "absLine": 1906,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "- **`MinorUnitDigits \u2260 2`, and Path B / REST.** Not measured, by anyone. `[UNVERIFIED]`"
+    },
+    {
+     "absLine": 1910,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "36.0 % and `2` at 300.0 % are even family-B principals (T223), and `150` at 36.0 % is a third"
+    },
+    {
+     "absLine": 1911,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**\"Odd\" was only ever the resonance condition's shadow at `r = 1/2`.** What is still"
+    },
+    {
+     "absLine": 1912,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "`[UNVERIFIED]` is the *converse*: no principal of either parity has been **shown safe** at an"
+    },
+    {
+     "absLine": 1923,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "short-circuits the **outcome**, not the computation [VERIFIED by T100 at those lines]; T83's earlier"
+    },
+    {
+     "absLine": 1932,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "| | **family B** (600.0 % / MNT 0.01 / n = 108) | **family A** (3.6 % / MNT 1.09 / n = 360) |"
+    },
+    {
+     "absLine": 1945,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "exists, on the family T83 never sampled."
+    },
+    {
+     "absLine": 1946,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R9 names an annual rate",
+      "R10 names a term",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "600.0 % / MNT 0.01 / n = 108, and the port has never been graded on a PARTIAL cell.** On a partial"
+    },
+    {
+     "absLine": 1949,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "`invariant_exemptions` cannot touch \u2014 is **not known** `[UNVERIFIED]`."
+    },
+    {
+     "absLine": 1950,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "option (a) must name the shape it covers.** And per T177, a capture that promotes a cell must also"
+    },
+    {
+     "absLine": 1961,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "**How to read the exit codes of those four runs \u2014 three of the four ARE this finding, and must not"
+    },
+    {
+     "absLine": 1964,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "`FatalReasons`** [VERIFIED by T112 at `nexus/internal/apps/loanschedule/conformance/grade.go:154-160`"
+    },
+    {
+     "absLine": 1973,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "That is an artefact of grading one vector in isolation and says nothing about either family."
+    },
+    {
+     "absLine": 1975,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "[VERIFIED by T112 from T100's own committed run record `out/exemption-demo-t100.json`: exit codes"
+    },
+    {
+     "absLine": 1979,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "got the same codes.] An earlier revision said *each* variant's exit code had \"nothing to do with G-8\"."
+    },
+    {
+     "absLine": 1986,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "family A at 21.6 % / MNT 0.01 / n = 6), `.softhouse/reviews/T84-evidence/proposed-vector-family2-{no-exemption,with-exemption}.json`"
+    },
+    {
+     "absLine": 1989,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "> **SUPERSEDED FOR FAMILY B \u2014 updated by local fire `20260822-000013` on merging `T116`, which flagged"
+    },
+    {
+     "absLine": 1993,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R9 names an annual rate"
+     ],
+     "text": "> oracle at 600.0 % / MNT 0.01 \u2014"
+    },
+    {
+     "absLine": 1997,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "> boundary**, promoted with **no exemption at all**, so the exemption cannot be read as \"600 % is"
+    },
+    {
+     "absLine": 2008,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "> **G-8 itself stays OPEN.** Option (a) is now executed for family B; options **(b)** and **(c)** narrow"
+    },
+    {
+     "absLine": 2020,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": ">   `getPrecision()` = **19** is consumed as **decimal places**. [VERIFIED]"
+    },
+    {
+     "absLine": 2023,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": ">   \u2014 the **two-argument `add`, with NO MathContext**. [VERIFIED]"
+    },
+    {
+     "absLine": 2027,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "> boundary: `n=103 \u2192 0.005 \u2192 0.01`, `n=104 \u2192 0.004999999999999999999 \u2192 0.00`. **An EMI of zero means"
+    },
+    {
+     "absLine": 2028,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> nothing is ever repaid**, and `calculateLastUnpaidRepaymentPeriodEMI`'s fallback drops the whole"
+    },
+    {
+     "absLine": 2033,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> named `:1962` and `:1979` as *\"the only two such sites in main code, both on the per-period rate"
+    },
+    {
+     "absLine": 2036,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "> **CONSEQUENCE FOR WHAT BUYAN IS BEING ASKED.** Family B is **NOT** a property of \"600 %\" or of"
+    },
+    {
+     "absLine": 2037,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "> \"n \u2265 104\". It is **the EMI falling below half a minor unit**, so *the boundary moves with principal,"
+    },
+    {
+     "absLine": 2040,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "> on that boundary**; they do not bound it. This must be settled before options (b) or (c) \u2014 each of"
+    },
+    {
+     "absLine": 2063,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "**[VERIFIED by T223 by re-opening both files.]** `:1962`'s text occurs **twice** in that file, also"
+    },
+    {
+     "absLine": 2072,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "the only reason a cell whose instalment sits at or below the first period's interest can still"
+    },
+    {
+     "absLine": 2073,
+     "nets": [
+      "R6 states a bound or a ceiling",
+      "R14 carries a verification stamp"
+     ],
+     "text": "amortize, and **it is what puts a ceiling on the failing principal.** **[VERIFIED by T223 by reading"
+    },
+    {
+     "absLine": 2083,
+     "nets": [
+      "R7 states the region in its own variables",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "- `I\u2081 = B_minor \u00b7 r` \u2014 the **exact** first-period interest, never rounded;"
+    },
+    {
+     "absLine": 2091,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "| `E_q > I\u2081` | **not family B** \u2014 every period leaves `E_q \u2212 I\u2081 > 0` for principal, so the loan amortizes, however slowly |"
+    },
+    {
+     "absLine": 2093,
+     "nets": [
+      "R7 states the region in its own variables",
+      "R9 names an annual rate",
+      "R10 names a term",
+      "R12 a disposition or an imperative"
+     ],
+     "text": "| `E_q < I\u2081` | **FAMILY B**, unless the third site rescues it. **The rescue condition is `B_minor > \u230an/2\u230b` \u2227 `a > \u03b4`** \u2014 see *SITE 3, CHARACTERISED* below for `\u03b4` and `a`. **This row read *\"which needs both `B_minor > \u230an/2\u230b` and `2\u00b7B_minor \u2265 n`\"* until T231. That second conjunct is this same condition with `\u03b4` forced to 0, and it is FALSIFIED BY MEASUREMENT \u2014 T229 asked the live oracle three cells it predicted rescued (`B201`, `B251`, `B299` at 600.0 % / n = 200) and the oracle rescued none of them** |"
+    },
+    {
+     "absLine": 2098,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "every n**, by `I\u2081\u00b7(1+r)^\u2212n / (1 \u2212 (1+r)^\u2212n)` \u2014 an excess that decays **geometrically in n**."
+    },
+    {
+     "absLine": 2100,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "- **The TERM enters only through `(1+r)^n` against `10^19`.** The boundary term scales as"
+    },
+    {
+     "absLine": 2102,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "program has swept that is 600 % \u2192 ~108 \u00b7 300 % \u2192 ~196 \u00b7 96 % \u2192 ~568 \u00b7 48 % \u2192 ~970 \u00b7 36 % \u2192 ~1480 \u00b7"
+    },
+    {
+     "absLine": 2103,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "21.6 % \u2192 ~2452 \u00b7 7 % \u2192 ~7519. **This is an ORDER, not the boundary**: the sign and size of the"
+    },
+    {
+     "absLine": 2104,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "accumulated 19-digit error decide the last few periods, which is why the measured edge at 600 % is"
+    },
+    {
+     "absLine": 2106,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "- **The PRINCIPAL enters twice, and neither time as a magnitude.** Once as **resonance** \u2014 `I\u2081` must"
+    },
+    {
+     "absLine": 2107,
+     "nets": [
+      "R7 states the region in its own variables"
+     ],
+     "text": "land on a half-minor-unit boundary, which at `r = 1/2` is exactly \"`B_minor` odd\", at `r = 0.03` is"
+    },
+    {
+     "absLine": 2108,
+     "nets": [
+      "R7 states the region in its own variables"
+     ],
+     "text": "`B_minor \u2261 50 (mod 100)`, and at `r = 1/4` is `B_minor \u2261 2 (mod 4)`."
+    },
+    {
+     "absLine": 2109,
+     "nets": [
+      "R6 states a bound or a ceiling",
+      "R7 states the region in its own variables",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**rescue ceiling**, which is **`(\u03b4 + \u00bd)\u00b7n` minor units** and depends on the rate only through `\u03b4`."
+    },
+    {
+     "absLine": 2110,
+     "nets": [
+      "R6 states a bound or a ceiling",
+      "R7 states the region in its own variables"
+     ],
+     "text": "**This bullet's second half read *\"rescue threshold `B_minor \u2273 n/2`, \u2026 a ceiling that does not"
+    },
+    {
+     "absLine": 2111,
+     "nets": [
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "depend on the rate at all \u2014 and which is the same `\u2248 n/2 minor units` law this file already"
+    },
+    {
+     "absLine": 2112,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "records for family A at 0.12 %\"* until T231."
+    },
+    {
+     "absLine": 2113,
+     "nets": [
+      "R7 states the region in its own variables",
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "`(\u03b4 + \u00bd)\u00b7n`, not `n/2`; and **the family-A resemblance was a numerical coincidence at `\u03b4 = 0`, not"
+    },
+    {
+     "absLine": 2114,
+     "nets": [
+      "R4 quotes a figure in minor units",
+      "R10 names a term"
+     ],
+     "text": "a shared law** \u2014 family A's 59 / 118 / 176 / 234 / 291 minor units at n = 120 / 240 / 360 / 480 /"
+    },
+    {
+     "absLine": 2117,
+     "nets": [
+      "R6 states a bound or a ceiling"
+     ],
+     "text": "**Nothing about family A is evidence about this ceiling and"
+    },
+    {
+     "absLine": 2118,
+     "nets": [
+      "R6 states a bound or a ceiling",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "nothing about this ceiling is evidence about family A.**"
+    },
+    {
+     "absLine": 2121,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "FALSIFIED BY MEASUREMENT.**"
+    },
+    {
+     "absLine": 2124,
+     "nets": [
+      "R6 states a bound or a ceiling"
+     ],
+     "text": "> *\"The failing disbursement is bounded by roughly **`n/2` minor units** \u2014 i.e. **MNT `n/200`** \u2014"
+    },
+    {
+     "absLine": 2125,
+     "nets": [
+      "R6 states a bound or a ceiling",
+      "R10 names a term"
+     ],
+     "text": "> whatever the rate. At any term a real Mongolian NBFI product would carry (`n \u2264 360`) that ceiling"
+    },
+    {
+     "absLine": 2126,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "> is about **MNT 1.80**. A family-B cell at an ordinary loan amount would need a term of order"
+    },
+    {
+     "absLine": 2127,
+     "nets": [
+      "R7 states the region in its own variables"
+     ],
+     "text": "> `2 \u00d7 B_minor` periods: MNT 1,000,000 would need **~200,000,000 monthly repayments**.\"*"
+    },
+    {
+     "absLine": 2129,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term",
+      "R13 names a measured cell"
+     ],
+     "text": "> **`T229-R600p0-N200-B299` is a live, observed family-B cell at MNT 2.99 with n = 200, where that"
+    },
+    {
+     "absLine": 2130,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R4 quotes a figure in minor units",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> text says nothing above MNT 1.00 can fail.** It repays 99 of its 299 minor units over 200"
+    },
+    {
+     "absLine": 2131,
+     "nets": [
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "> instalments and leaves 200 minor units unamortized. Two more of the same kind were measured in the"
+    },
+    {
+     "absLine": 2132,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "> same run \u2014 `B201` (repays 1 of 201) and `B251` (repays 51 of 251). **[VERIFIED by T231 by"
+    },
+    {
+     "absLine": 2137,
+     "nets": [
+      "R6 states a bound or a ceiling",
+      "R7 states the region in its own variables",
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "The failing disbursement is bounded by **`(\u03b4 + \u00bd)\u00b7n` minor units**, where `\u03b4 = I\u2081q \u2212 E` is the"
+    },
+    {
+     "absLine": 2138,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**`\u03b4` has never been observed above 1**,"
+    },
+    {
+     "absLine": 2139,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R6 states a bound or a ceiling",
+      "R7 states the region in its own variables",
+      "R8 makes a claim about \u03b4",
+      "R10 names a term"
+     ],
+     "text": "and **at `\u03b4 = 1` the ceiling is `1.5\u00b7n` minor units \u2014 MNT `0.015\u00b7n`, so MNT 5.40 at n = 360, three"
+    },
+    {
+     "absLine": 2140,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "times the MNT 1.80 this file carried.** A family-B cell at an ordinary loan amount would need"
+    },
+    {
+     "absLine": 2141,
+     "nets": [
+      "R4 quotes a figure in minor units",
+      "R7 states the region in its own variables"
+     ],
+     "text": "`2\u00b7B_minor < 3n`: MNT 1,000,000 is 100,000,000 minor units, so it would need **at least 66,666,667"
+    },
+    {
+     "absLine": 2142,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "monthly repayments \u2014 about 5.6 million years** [exact integer arithmetic: `n > 2\u00b7100,000,000 / 3`]."
+    },
+    {
+     "absLine": 2145,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "realistic loan amount can fail\" still holds by a factor of about **185,000** at n = 360 \u2014 MNT 5.40"
+    },
+    {
+     "absLine": 2148,
+     "nets": [
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "rests on **two** things that are not proven: the predicate is incomplete (below), and **`\u03b4 \u2264 1` is a"
+    },
+    {
+     "absLine": 2149,
+     "nets": [
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "conjecture over 296 corpus cells plus 9 probe cells, with no argument that `\u03b4 = 2` is impossible**."
+    },
+    {
+     "absLine": 2150,
+     "nets": [
+      "R6 states a bound or a ceiling",
+      "R7 states the region in its own variables",
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "**If a `\u03b4 \u2265 2` cell exists the ceiling is not `1.5\u00b7n` and this paragraph is wrong again.**"
+    },
+    {
+     "absLine": 2152,
+     "nets": [
+      "R7 states the region in its own variables"
+     ],
+     "text": "> **THE `(\u03b4 + \u00bd)\u00b7n` CEILING IS NOW MEASURED AT A SECOND TERM, FIFTEEN TIMES THE FIRST \u2014 T219.** At"
+    },
+    {
+     "absLine": 2153,
+     "nets": [
+      "R7 states the region in its own variables",
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "> 600.0 % / **n = 3000** the law puts the boundary at `1.5\u00b7n = 4500` minor units. Observed:"
+    },
+    {
+     "absLine": 2154,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "> **`T219-R600p0-N3000-B4499` is family B and `T219-R600p0-N3000-B4501` amortizes** \u2014 the second"
+    },
+    {
+     "absLine": 2157,
+     "nets": [
+      "R6 states a bound or a ceiling"
+     ],
+     "text": "> ceiling scales linearly in `n` as the law says.** It is **still not a proof**, and it does not"
+    },
+    {
+     "absLine": 2158,
+     "nets": [
+      "R8 makes a claim about \u03b4",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> touch `\u03b4 \u2264 1`: every T219 cell has `\u03b4 \u2208 {0, 1}`, and T219 registered in advance that it chose no"
+    },
+    {
+     "absLine": 2159,
+     "nets": [
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "> cell to look for `\u03b4 \u2265 2`. **A confirmation at one more term is not the missing argument.**"
+    },
+    {
+     "absLine": 2162,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "> from MNT 10.01 to **MNT 30.00 at n = 3000, without asking a larger term** \u2014 is what the same law"
+    },
+    {
+     "absLine": 2163,
+     "nets": [
+      "R6 states a bound or a ceiling",
+      "R10 names a term"
+     ],
+     "text": "> predicts, and it is a reminder that this ceiling is generous: at n = 3000 it permits a failing"
+    },
+    {
+     "absLine": 2164,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "> disbursement of MNT 44.99, and one was measured."
+    },
+    {
+     "absLine": 2177,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T223-R36p0-N1323-B50` | 36.0 | 1323 | 50 | 2 / **2** | 50 of 50 | clean, **as predicted** |"
+    },
+    {
+     "absLine": 2178,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T223-R36p0-N1324-B50` | 36.0 | **1324** | 50 | 1 / **1** | **0 of 50** | **FAMILY B, as predicted** |"
+    },
+    {
+     "absLine": 2179,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T223-R36p0-N1500-B50` | 36.0 | 1500 | 50 | 1 / **1** | **0 of 50** | **FAMILY B, as predicted** |"
+    },
+    {
+     "absLine": 2180,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T223-R300p0-N500-B2` | 300.0 | 500 | 2 | 1 / **1** | 2 of 2 | clean, **as predicted** |"
+    },
+    {
+     "absLine": 2181,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T223-R300p0-N800-B2` | 300.0 | **800** | 2 | 0 / **0** | **0 of 2** | **FAMILY B, as predicted** |"
+    },
+    {
+     "absLine": 2182,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T223-R300p0-N1200-B2` | 300.0 | 1200 | 2 | 1 / **1** | 2 of 2 | clean, **as predicted** |"
+    },
+    {
+     "absLine": 2183,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T223-R21p6-N3000-B250` | 21.6 | 3000 | 250 | 5 / **5** | 250 of 250 | clean, **as predicted** |"
+    },
+    {
+     "absLine": 2185,
+     "nets": [
+      "R9 names an annual rate",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**Every one of the seven is on ground nobody had swept**: no rate but 600.0 % had ever been asked"
+    },
+    {
+     "absLine": 2186,
+     "nets": [
+      "R9 names an annual rate",
+      "R10 names a term",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "above n = 600, 300.0 % had never been asked above n = 260, and 36.0 % had never been asked above"
+    },
+    {
+     "absLine": 2187,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "n = 600."
+    },
+    {
+     "absLine": 2193,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R9 names an annual rate",
+      "R13 names a measured cell"
+     ],
+     "text": "1. **\"Family B is a 600 % phenomenon\" is dead.** `T223-R36p0-N1324-B50` is **MNT 0.50 at 36.0 % p.a."
+    },
+    {
+     "absLine": 2194,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "\u2014 an ordinary Mongolian NBFI consumer rate** \u2014 emitting 1,324 repayment rows every one of them"
+    },
+    {
+     "absLine": 2198,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "accident.** At 300.0 % / MNT 0.02 the oracle is **clean at n = 500, family B at n = 800, and clean"
+    },
+    {
+     "absLine": 2199,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "again at n = 1200**."
+    },
+    {
+     "absLine": 2199,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "T117 discovered this band structure at 600 %; T223 predicted it at a new rate"
+    },
+    {
+     "absLine": 2206,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "reproduces the oracle's period-1 instalment on **971 of 1,035** comparable cells; **all 64 misses"
+    },
+    {
+     "absLine": 2209,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "committed cell \u2014 `T159-R600p0-N1000-B801`**, where the rescue threshold says \"rescued\" and the"
+    },
+    {
+     "absLine": 2212,
+     "nets": [
+      "R12 a disposition or an imperative",
+      "R13 names a measured cell"
+     ],
+     "text": "- **`T159-R600p0-N1000-B801` IS NOW CLOSED \u2014 T229.** With the rescue condition stated correctly,"
+    },
+    {
+     "absLine": 2213,
+     "nets": [
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "`\u03b4 = 1` and `a = \u230a801/1000 + \u00bd\u230b = 1`, so `a > \u03b4` is **false**, **no rescue**, family B \u2014 which is"
+    },
+    {
+     "absLine": 2215,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**It was never a defect"
+    },
+    {
+     "absLine": 2220,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "supplies and nobody has verified \u2014 and `E` is what `\u03b4` is computed from."
+    },
+    {
+     "absLine": 2221,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "the corrected law on the other 63 misses, and makes no claim about them** `[UNVERIFIED]`."
+    },
+    {
+     "absLine": 2222,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "particular the standing question *\"why is `B = 801` family B at n = 1000 while `B = 601`, `701`,"
+    },
+    {
+     "absLine": 2224,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "the `801` half and **T231 computed neither `\u03b4` nor `a` for the other five** `[UNVERIFIED]`."
+    },
+    {
+     "absLine": 2227,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "- **It says nothing about the THIRD OUTCOME**, nothing about the **Go port** (T223 graded no port),"
+    },
+    {
+     "absLine": 2228,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "and nothing about `MinorUnitDigits \u2260 2`, Path B / REST, other day-count conventions, or any rate it"
+    },
+    {
+     "absLine": 2239,
+     "nets": [
+      "R6 states a bound or a ceiling"
+     ],
+     "text": "## SITE 3, CHARACTERISED \u2014 the rescue law, and the ceiling it actually implies (T229, registered before probing and then MEASURED)"
+    },
+    {
+     "absLine": 2241,
+     "nets": [
+      "R6 states a bound or a ceiling"
+     ],
+     "text": "**This block exists because the ceiling this section carried until T231 was three times too tight,"
+    },
+    {
+     "absLine": 2243,
+     "nets": [
+      "R6 states a bound or a ceiling"
+     ],
+     "text": "is what puts a ceiling on the failing principal; it did not finish reverse-engineering the site, and"
+    },
+    {
+     "absLine": 2244,
+     "nets": [
+      "R7 states the region in its own variables"
+     ],
+     "text": "the placeholder it used \u2014 `2\u00b7B_minor \u2265 n` \u2014 is the real condition with one term deleted."
+    },
+    {
+     "absLine": 2256,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "`B + n\u00b7E \u2212 n\u00b7E = B`, in integer minor units, for **every** `n` and however far `E` sits below `I\u2081`."
+    },
+    {
+     "absLine": 2257,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**MEASURED, not only derived: on"
+    },
+    {
+     "absLine": 2258,
+     "nets": [
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "183 of 183 `\u03b4 \u2265 1` stuck cells across the whole committed corpus, and on all four unrescued T229"
+    },
+    {
+     "absLine": 2263,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "`B150` at 36.0 %: 154 \u2212 4 = 150]."
+    },
+    {
+     "absLine": 2273,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "re-open the Fineract source; the source citations here are T229's** `[UNVERIFIED by T231]`."
+    },
+    {
+     "absLine": 2278,
+     "nets": [
+      "R7 states the region in its own variables",
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "quantized HALF_UP to whole minor units, `\u03b4 = I\u2081q \u2212 E`, and `a = \u230aB_minor/n + \u00bd\u230b`:"
+    },
+    {
+     "absLine": 2281,
+     "nets": [
+      "R7 states the region in its own variables"
+     ],
+     "text": "SITE 3 RESCUES  \u27fa  B_minor > \u230an/2\u230b  \u2227  a > \u03b4           [T229's combined form: 2\u00b7B_minor \u2265 (2\u03b4+1)\u00b7n]"
+    },
+    {
+     "absLine": 2284,
+     "nets": [
+      "R7 states the region in its own variables"
+     ],
+     "text": "**T223's rule is exactly this law with `\u03b4` forced to 0** \u2014 `a > 0 \u27fa 2\u00b7B_minor \u2265 n` \u2014 which is"
+    },
+    {
+     "absLine": 2285,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "precisely why it failed outright on `T159-R600p0-N1000-B801` and why it predicted \"rescued\" for three"
+    },
+    {
+     "absLine": 2287,
+     "nets": [
+      "R7 states the region in its own variables",
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "edge \u2014 `2\u00b7B_minor = n` with `\u03b4 = 0`, where the conjunction refuses and the combined form permits."
+    },
+    {
+     "absLine": 2288,
+     "nets": [
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "`\u03b4 = 0` is the `E_q = I\u2081` row of the predicate table above, which is not family B at all, so the edge"
+    },
+    {
+     "absLine": 2289,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "[VERIFIED by T231 by integer arithmetic; it is T231's own"
+    },
+    {
+     "absLine": 2295,
+     "nets": [
+      "R7 states the region in its own variables"
+     ],
+     "text": "last row EMI = E + B ;   TOTAL PRINCIPAL = max(0, B_minor \u2212 n\u00b7\u03b4)"
+    },
+    {
+     "absLine": 2296,
+     "nets": [
+      "R7 states the region in its own variables",
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "FULL family B    \u27fa \u03b4 \u2265 1 \u2227 B_minor \u2264 n\u00b7\u03b4"
+    },
+    {
+     "absLine": 2297,
+     "nets": [
+      "R7 states the region in its own variables",
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "PARTIAL family B \u27fa \u03b4 \u2265 1 \u2227 n\u00b7\u03b4 < B_minor < (\u03b4 + \u00bd)\u00b7n , repaying exactly B_minor \u2212 n\u00b7\u03b4"
+    },
+    {
+     "absLine": 2301,
+     "nets": [
+      "R5 states or uses the total-interest / n.E+B identity"
+     ],
+     "text": "interest, which is `n\u00b7E + B \u2212 principal`: `B201` 200\u00b7100 + 201 \u2212 1 = 20200 \u00b7 `B251`"
+    },
+    {
+     "absLine": 2303,
+     "nets": [
+      "R5 states or uses the total-interest / n.E+B identity"
+     ],
+     "text": "four match the captured `totalInterestAmount` exactly.]"
+    },
+    {
+     "absLine": 2309,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**Every cell asked EXACTLY ONE TIME, nothing"
+    },
+    {
+     "absLine": 2315,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T229-R600p0-N200-B301` | 600.0 | 200 | 301 | RESCUED | amortizes, spread over 12 rows | **as registered** |"
+    },
+    {
+     "absLine": 2316,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T229-R600p0-N200-B303` | 600.0 | 200 | 303 | RESCUED | amortizes, spread over 12 rows | **as registered** |"
+    },
+    {
+     "absLine": 2317,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T229-R36p0-N1400-B2150` | 36.0 | 1400 | 2150 | RESCUED | amortizes, spread over 128 rows | **as registered** |"
+    },
+    {
+     "absLine": 2318,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T229-R600p0-N200-B201` | 600.0 | 200 | 201 | family B PARTIAL, repays **1** | **1 of 201** | **as registered** |"
+    },
+    {
+     "absLine": 2319,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T229-R600p0-N200-B251` | 600.0 | 200 | 251 | family B PARTIAL, repays **51** | **51 of 251** | **as registered** |"
+    },
+    {
+     "absLine": 2320,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T229-R600p0-N200-B299` | 600.0 | 200 | 299 | family B PARTIAL, repays **99** | **99 of 299** | **as registered** |"
+    },
+    {
+     "absLine": 2321,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T229-R36p0-N1400-B150` | 36.0 | 1400 | 150 | family B FULL, repays **0** | **0 of 150** | **as registered** |"
+    },
+    {
+     "absLine": 2322,
+     "nets": [
+      "R12 a disposition or an imperative",
+      "R13 names a measured cell"
+     ],
+     "text": "| `T229-R600p0-N200-B199` | 600.0 | 200 | 199 | family B FULL | **amortizes** \u2014 13 stuck rows, then a tail | **REFUTED** |"
+    },
+    {
+     "absLine": 2323,
+     "nets": [
+      "R12 a disposition or an imperative",
+      "R13 names a measured cell"
+     ],
+     "text": "| `T229-R36p0-N1400-B1450` | 36.0 | 1400 | 1450 | family B PARTIAL, repays 50 | **amortizes** over 148 rows | **REFUTED** |"
+    },
+    {
+     "absLine": 2330,
+     "nets": [
+      "R7 states the region in its own variables",
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "600.0 % / n = 200 the law puts it at `B_minor = 1.5\u00b7n = 300`. Observed: **`299` is family B, `301`"
+    },
+    {
+     "absLine": 2331,
+     "nets": [
+      "R7 states the region in its own variables",
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "amortizes.** **T219 repeated this at 600.0 % / n = 3000, where the law puts it at `1.5\u00b7n = 4500`:"
+    },
+    {
+     "absLine": 2337,
+     "nets": [
+      "R6 states a bound or a ceiling"
+     ],
+     "text": "These are **T229's own residuals**, and the conservative ceiling above depends on all three:"
+    },
+    {
+     "absLine": 2344,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "**`[UNVERIFIED \u2014 whether the"
+    },
+    {
+     "absLine": 2346,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "the pre-rescue instalment; the seam emits only the final schedule, and on a rescued cell row 1 is"
+    },
+    {
+     "absLine": 2348,
+     "nets": [
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "2. **Seven corpus cells reduce the balance by a path this model does not contain.** All at `\u03b4 = 1`,"
+    },
+    {
+     "absLine": 2349,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "all partially amortizing where the shape law says zero: `T117P2-R600p0-N108-B11` (5 of 11),"
+    },
+    {
+     "absLine": 2351,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "`T159-R600p0-N2000-B999` (166 of 999)."
+    },
+    {
+     "absLine": 2351,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "**And `T229-R600p0-N200-B199`'s observed schedule is the"
+    },
+    {
+     "absLine": 2353,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "tail across rows 14\u202626, then a zero-EMI tail [VERIFIED by T231 by extraction: 13 zero-principal"
+    },
+    {
+     "absLine": 2354,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "**`[UNVERIFIED \u2014 the"
+    },
+    {
+     "absLine": 2357,
+     "nets": [
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "3. **`\u03b4 \u2264 1` is a CONJECTURE, not a result.** It holds on all **296** corpus stuck cells"
+    },
+    {
+     "absLine": 2359,
+     "nets": [
+      "R6 states a bound or a ceiling",
+      "R7 states the region in its own variables",
+      "R14 carries a verification stamp"
+     ],
+     "text": "**The conservative ceiling `1.5\u00b7n` depends on it entirely.** **`[UNVERIFIED \u2014 that"
+    },
+    {
+     "absLine": 2360,
+     "nets": [
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "No `\u03b4 \u2265 2` cell was constructed and there is no argument that none exists."
+    },
+    {
+     "absLine": 2365,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "only *that* site 3 fires, never what instalment it lands on, and both refuted cells came back with a"
+    },
+    {
+     "absLine": 2366,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "zero-EMI tail the law says nothing about; **the over-amortization edge of `hasLessEmiDifference` is"
+    },
+    {
+     "absLine": 2369,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**the FULL and PARTIAL family-B shapes of the G-8 shape only** \u2014 no claim about the THIRD OUTCOME, the"
+    },
+    {
+     "absLine": 2377,
+     "nets": [
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "- **A CONSERVATIVE region is stateable today.** Conditional on `\u03b4 \u2264 1`, the failing principal is"
+    },
+    {
+     "absLine": 2378,
+     "nets": [
+      "R6 states a bound or a ceiling",
+      "R7 states the region in its own variables"
+     ],
+     "text": "bounded by **`B_minor < 1.5\u00b7n`**."
+    },
+    {
+     "absLine": 2379,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "refuses every failing cell and some clean ones too."
+    },
+    {
+     "absLine": 2383,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "`T219-R600p0-N3000-B1999`**), and one minor unit is exactly the resolution the boundary lives at."
+    },
+    {
+     "absLine": 2386,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "- **Options (b) and (c) still MUST NOT be put to Buyan**, and the reason has changed. It is no longer"
+    },
+    {
+     "absLine": 2387,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "*\"a rescue mechanism nobody has characterised\"*; it is now two named and much smaller gaps \u2014 **a"
+    },
+    {
+     "absLine": 2389,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "graded domain is a hard `user` gate stated **as a region**, and the only region this file can state"
+    },
+    {
+     "absLine": 2390,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "is conservative-only."
+    },
+    {
+     "absLine": 2390,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**T229 and T231 decided nothing, recommended nothing, and pre-implemented"
+    },
+    {
+     "absLine": 2391,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "nothing.**"
+    },
+    {
+     "absLine": 2395,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "## THE RESIDUAL RECORD, RE-MEASURED \u2014 the record moved at a term nobody had to enlarge (T219, registered before probing and then MEASURED)"
+    },
+    {
+     "absLine": 2398,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "reported under the wrong variable, and no amount of re-reading could establish that \u2014 only asking"
+    },
+    {
+     "absLine": 2399,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "the oracle could.** T219 was sent to reconcile *\"MNT 10.01 at n = 3000\"* against the corpus T116"
+    },
+    {
+     "absLine": 2410,
+     "nets": [
+      "R7 states the region in its own variables"
+     ],
+     "text": "residual = B_minor \u2212 max(0, B_minor \u2212 n\u00b7\u03b4) = min(B_minor, n\u00b7\u03b4)"
+    },
+    {
+     "absLine": 2413,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "\u2014 **a function of the PRINCIPAL asked, capped by `n\u00b7\u03b4`.** The term enters only as the cap."
+    },
+    {
+     "absLine": 2415,
+     "nets": [
+      "R8 makes a claim about \u03b4",
+      "R10 names a term"
+     ],
+     "text": "**At n = 3000 with \u03b4 = 1 the cap is"
+    },
+    {
+     "absLine": 2416,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "3000 minor units \u2014 MNT 30.00 \u2014 and T159's cell used one third of it.** So the record should be"
+    },
+    {
+     "absLine": 2423,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**Run 1 asked every cell EXACTLY"
+    },
+    {
+     "absLine": 2426,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "from **T229's committed `site3.py`, unmodified**; nothing was fitted to any cell."
+    },
+    {
+     "absLine": 2428,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "| cell (600.0 %) | n | B minor | registered | **OBSERVED** | repaid | **residual** | verdict |"
+    },
+    {
+     "absLine": 2430,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T219-R600p0-N103-B1` | 103 | 1 | clean, last row carries all principal | clean, one principal row (the last) | 1 of 1 | 0 | **as registered** |"
+    },
+    {
+     "absLine": 2431,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T219-R600p0-N104-B1` | 104 | 1 | family B FULL | family B FULL | 0 of 1 | 1 | **as registered** |"
+    },
+    {
+     "absLine": 2432,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T219-R600p0-N108-B1` | 108 | 1 | family B FULL | family B FULL | 0 of 1 | 1 | **as registered** |"
+    },
+    {
+     "absLine": 2433,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T219-R600p0-N3000-B1001` | 3000 | 1001 | family B FULL, repays 0 | family B FULL | 0 of 1001 | **1001** | **as registered \u2014 CONTROL, reproduces T159** |"
+    },
+    {
+     "absLine": 2434,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T219-R600p0-N3000-B2999` | 3000 | 2999 | family B FULL, repays 0 | family B FULL | 0 of 2999 | **2999** | **as registered** |"
+    },
+    {
+     "absLine": 2435,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T219-R600p0-N3000-B3001` | 3000 | 3001 | family B PARTIAL, repays **1** | family B PARTIAL | **1** of 3001 | **3000** | **as registered** |"
+    },
+    {
+     "absLine": 2436,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T219-R600p0-N3000-B4499` | 3000 | 4499 | family B PARTIAL, repays **1499** | family B PARTIAL | **1499** of 4499 | **3000** | **as registered** |"
+    },
+    {
+     "absLine": 2437,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "| `T219-R600p0-N3000-B4501` | 3000 | 4501 | **RESCUED** \u2014 amortizes | amortizes, 19 principal rows | 4501 of 4501 | 0 | **as registered** (run 3) |"
+    },
+    {
+     "absLine": 2438,
+     "nets": [
+      "R12 a disposition or an imperative",
+      "R13 names a measured cell"
+     ],
+     "text": "| `T219-R600p0-N3000-B1999` | 3000 | 1999 | family B FULL, repays 0 | **amortizes**, 19 principal rows | 1999 of 1999 | 0 | **REFUTED** (run 3) |"
+    },
+    {
+     "absLine": 2446,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "1. **THE LARGEST UNAMORTIZED RESIDUAL IS `3000` MINOR UNITS \u2014 MNT 30.00 \u2014 AT n = 3000.** Two cells"
+    },
+    {
+     "absLine": 2447,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "reach it, `T219-R600p0-N3000-B3001` and `T219-R600p0-N3000-B4499`, and both leave exactly `n\u00b7\u03b4`"
+    },
+    {
+     "absLine": 2448,
+     "nets": [
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "with `\u03b4 = 1`, which is the cap the law names."
+    },
+    {
+     "absLine": 2449,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "**MNT 29.99** (`B2999`). **MNT 10.01 is superseded as the record and T159's MEASUREMENT IS NOT"
+    },
+    {
+     "absLine": 2450,
+     "nets": [
+      "R4 quotes a figure in minor units",
+      "R12 a disposition or an imperative"
+     ],
+     "text": "SUPERSEDED**: T219 re-asked T159's exact cell under a new tenant id and got 1001 minor units"
+    },
+    {
+     "absLine": 2451,
+     "nets": [
+      "R5 states or uses the total-interest / n.E+B identity"
+     ],
+     "text": "unamortized, 3000 of 3000 rows at zero principal and `totalInterestAmount 15010.01` \u2014 T159's"
+    },
+    {
+     "absLine": 2457,
+     "nets": [
+      "R7 states the region in its own variables",
+      "R12 a disposition or an imperative"
+     ],
+     "text": "term is sane**; the actual protection is that `B_minor` must sit under `(\u03b4 + \u00bd)\u00b7n`, which is a"
+    },
+    {
+     "absLine": 2459,
+     "nets": [
+      "R7 states the region in its own variables"
+     ],
+     "text": "3. **THE `(\u03b4 + \u00bd)\u00b7n` CEILING IS NOW MEASURED AT A SECOND TERM, FIFTEEN TIMES THE FIRST.** T229"
+    },
+    {
+     "absLine": 2460,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "landed the boundary within one minor unit at n = 200 (`299` family B, `301` amortizes, law says"
+    },
+    {
+     "absLine": 2461,
+     "nets": [
+      "R7 states the region in its own variables",
+      "R10 names a term"
+     ],
+     "text": "`1.5\u00b7n = 300`)."
+    },
+    {
+     "absLine": 2461,
+     "nets": [
+      "R7 states the region in its own variables",
+      "R10 names a term"
+     ],
+     "text": "At **n = 3000** the law says `1.5\u00b7n = 4500`; observed **`4499` is family B and"
+    },
+    {
+     "absLine": 2464,
+     "nets": [
+      "R7 states the region in its own variables"
+     ],
+     "text": "`B_minor < 1.5\u00b7n` and does not prove it** \u2014 see the gaps below."
+    },
+    {
+     "absLine": 2468,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "`T219-R600p0-N3000-B1999` was registered **family B FULL** and **amortizes**."
+    },
+    {
+     "absLine": 2469,
+     "nets": [
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "supplied `E = 999`, giving `\u03b4 = 1` and `a = 1`, so `a > \u03b4` is false and the law says no rescue."
+    },
+    {
+     "absLine": 2471,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "cell** \u2014 `T229-R600p0-N200-B199` and `T229-R36p0-N1400-B1450` are the other two, and all three are"
+    },
+    {
+     "absLine": 2475,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "the law vindicated.** `[UNVERIFIED \u2014 whether the pre-rescue E for B1999 was 999 or 1000."
+    },
+    {
+     "absLine": 2489,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "| `T116-G8-CLEAN-nonexempt-mnt0pt01-103x600pct` | 600.0 % / MNT 0.01 / n = 103, **no exemption** | **729** | **0** |"
+    },
+    {
+     "absLine": 2490,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "| `T116-G8-FAMB-nonamortizing-mnt0pt01-104x600pct` | 600.0 % / MNT 0.01 / n = 104, 2 exemptions | **736** | **0** |"
+    },
+    {
+     "absLine": 2491,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "| `T116-G8-FAMB-nonamortizing-mnt0pt01-108x600pct` | 600.0 % / MNT 0.01 / n = 108, 2 exemptions | **764** | **0** |"
+    },
+    {
+     "absLine": 2502,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "So: **n = 103 clean, n = 104 and n = 108 family B, at 600.0 % / MNT 0.01 \u2014 which is what this"
+    },
+    {
+     "absLine": 2504,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "the predicate accounts for all three without being asked to: at n = 103 the emulated instalment is"
+    },
+    {
+     "absLine": 2505,
+     "nets": [
+      "R8 makes a claim about \u03b4",
+      "R10 names a term"
+     ],
+     "text": "`E = 1 = I\u2081q`, so `\u03b4 = 0` and the last row carries the whole principal; at n = 104 and n = 108"
+    },
+    {
+     "absLine": 2506,
+     "nets": [
+      "R7 states the region in its own variables",
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "`E = 0` against `I\u2081q = 1`, so `\u03b4 = 1` and `B_minor = 1 \u2264 n\u00b7\u03b4` \u2014 FULL family B."
+    },
+    {
+     "absLine": 2511,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "`T219-R600p0-N3000-B1999` and `T219-R600p0-N3000-B4501`, the two cells whose verdicts are marked"
+    },
+    {
+     "absLine": 2516,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "- **Run 2 applied T177's measured warm-up recipe \u2014 50 prior seam calls on a never-throwing cell \u2014"
+    },
+    {
+     "absLine": 2518,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "threw.] **T177 measured that recipe at 3/3 on the (B = 10001, n = 3000) cell; it did not"
+    },
+    {
+     "absLine": 2519,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "generalise to these two.** T219's warm-up cell was the ZP-A shape at **n = 56**, and T177's was at"
+    },
+    {
+     "absLine": 2520,
+     "nets": [
+      "R10 names a term",
+      "R12 a disposition or an imperative"
+     ],
+     "text": "**n = 200**; whether the warm-up must be *deep in n* to compile the recursive path is"
+    },
+    {
+     "absLine": 2521,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "`[UNVERIFIED \u2014 T219 did not vary it, and this is a one-run observation against T177's, not a"
+    },
+    {
+     "absLine": 2524,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "is not a production setting and no parity claim rests on it**; it was used only to establish"
+    },
+    {
+     "absLine": 2527,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "every residual quoted above comes from run 1, at default flags."
+    },
+    {
+     "absLine": 2539,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "**unmeasured** `[UNVERIFIED]` \u2014 and `B3001` and `B4499` are PARTIAL, the shape on which \"the port"
+    },
+    {
+     "absLine": 2540,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "agrees with the oracle\" has **never** been checked at all."
+    },
+    {
+     "absLine": 2542,
+     "nets": [
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "- **It asked ONE rate \u2014 600.0 % \u2014 and one new term, n = 3000.** It is not evidence about 36.0 %,"
+    },
+    {
+     "absLine": 2543,
+     "nets": [
+      "R9 names an annual rate",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "300.0 %, or any unswept rate, and it says nothing about whether the residual at a *different* term"
+    },
+    {
+     "absLine": 2544,
+     "nets": [
+      "R10 names a term",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "`n\u00b7\u03b4` was measured at n = 3000 and at no other term."
+    },
+    {
+     "absLine": 2545,
+     "nets": [
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "- **It did not hunt for `\u03b4 \u2265 2`, and finding none is NOT evidence that none exists.** T219 registered"
+    },
+    {
+     "absLine": 2546,
+     "nets": [
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "Every cell it observed has `\u03b4 \u2208 {0, 1}`, which adds 8 cells to a conjecture that"
+    },
+    {
+     "absLine": 2547,
+     "nets": [
+      "R6 states a bound or a ceiling"
+     ],
+     "text": "**The conservative ceiling still rests entirely on"
+    },
+    {
+     "absLine": 2548,
+     "nets": [
+      "R8 makes a claim about \u03b4",
+      "R14 carries a verification stamp"
+     ],
+     "text": "`\u03b4 \u2264 1`** `[UNVERIFIED]`."
+    },
+    {
+     "absLine": 2549,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "- **It did not model the rescued branch.** On `B4501` the registered claim was only *that* the cell"
+    },
+    {
+     "absLine": 2552,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "- **It says nothing about `MinorUnitDigits \u2260 2`, Path B / REST, other day-count conventions, other"
+    },
+    {
+     "absLine": 2555,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "remains T229's `[UNVERIFIED by T219]`."
+    },
+    {
+     "absLine": 2558,
+     "nets": [
+      "R5 states or uses the total-interest / n.E+B identity"
+     ],
+     "text": "*\"TOTAL INTEREST = n*E + B for any unrescued cell\"*. **That is false on a PARTIAL cell**:"
+    },
+    {
+     "absLine": 2559,
+     "nets": [
+      "R5 states or uses the total-interest / n.E+B identity"
+     ],
+     "text": "`B3001` observed `4503000` against `n\u00b7E + B = 4503001`, and `B4499` observed `6750000` against"
+    },
+    {
+     "absLine": 2560,
+     "nets": [
+      "R5 states or uses the total-interest / n.E+B identity"
+     ],
+     "text": "The correct form is `n\u00b7E + B \u2212 principal`, which is **already what this file states**"
+    },
+    {
+     "absLine": 2568,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "> **agrees with T219 to the minor unit**: `B3001` \u2014 n = 3000, E = 1500, B = 3001, principal"
+    },
+    {
+     "absLine": 2569,
+     "nets": [
+      "R5 states or uses the total-interest / n.E+B identity",
+      "R10 names a term"
+     ],
+     "text": "> repaid 1, `n\u00b7E + B = 4503001`, observed interest **4503000**; `B4499` \u2014 n = 3000, E = 2249,"
+    },
+    {
+     "absLine": 2570,
+     "nets": [
+      "R5 states or uses the total-interest / n.E+B identity"
+     ],
+     "text": "> B = 4499, principal repaid 1499, `n\u00b7E + B = 6751499`, observed interest **6750000**. In both"
+    },
+    {
+     "absLine": 2571,
+     "nets": [
+      "R5 states or uses the total-interest / n.E+B identity"
+     ],
+     "text": "> cases `n\u00b7E + B` is the observed **total repayment** exactly, and the overstatement of interest"
+    },
+    {
+     "absLine": 2572,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> is exactly the principal repaid. **So the quantity was never wrong; only its LABEL was.**"
+    },
+    {
+     "absLine": 2573,
+     "nets": [
+      "R5 states or uses the total-interest / n.E+B identity"
+     ],
+     "text": "> `n\u00b7E + B` is total repayment, and total interest is `n\u00b7E + B \u2212 principal` \u2014 which follows from"
+    },
+    {
+     "absLine": 2579,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "> `\"P2_totalInterestEqualsNEplusB\": false` for `T229-R600p0-N200-B201`, `-B251` and `-B299` \u2014"
+    },
+    {
+     "absLine": 2580,
+     "nets": [
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "> overstating by 1, 51 and 99 minor units. All three were reported **\"AS PREDICTED\"**, because"
+    },
+    {
+     "absLine": 2582,
+     "nets": [
+      "R11 universal / cardinality quantifier",
+      "R12 a disposition or an imperative"
+     ],
+     "text": "> only and never consults P2. **Registered prediction P2's third conjunct was therefore REFUTED at"
+    },
+    {
+     "absLine": 2583,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> capture time and the refutation was never surfaced**: T241 searched the whole repository for"
+    },
+    {
+     "absLine": 2585,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> gate text and no review** \u2014 only in the two classifiers and their JSON. The evidence was not"
+    },
+    {
+     "absLine": 2586,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> missing; it was **unread**. **P2's other two conjuncts stand on every unrescued cell checked, so"
+    },
+    {
+     "absLine": 2590,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "> design: it must keep reproducing the registered `prediction.json` byte for byte, and T241"
+    },
+    {
+     "absLine": 2596,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "> conclusion, and it must not be inflated into one.**"
+    },
+    {
+     "absLine": 2601,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> `invariant_exemptions` is INERT was never a contradiction.** T83's demonstration ran on"
+    },
+    {
+     "absLine": 2603,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> A**, where every invariant already holds and the FAIL is a cell diff. \"INERT\" is correct *about family"
+    },
+    {
+     "absLine": 2613,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "in the sweep is MNT 0.23)\"*."
+    },
+    {
+     "absLine": 2618,
+     "nets": [
+      "R2 states the largest failing principal/disbursement",
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "largest failing principal is **MNT 0.23**, at 7.0 % / n = 56 [re-derived by T112 from T83's raw"
+    },
+    {
+     "absLine": 2620,
+     "nets": [
+      "R9 names an annual rate",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "- **Over the union of every cell T83, T84 and T100 have swept** (687 cells; 12 rates from 0.12 % to"
+    },
+    {
+     "absLine": 2621,
+     "nets": [
+      "R2 states the largest failing principal/disbursement",
+      "R3 quotes a money figure in MNT",
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "600.0 %; n from 1 to 600): the largest failing principal is **MNT 2.91**, at 0.12 % / n = 600"
+    },
+    {
+     "absLine": 2623,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "measured MNT 2.92 clean at the same shape; both re-derived again by T112 from the raw captures,"
+    },
+    {
+     "absLine": 2624,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "**The two absolute figures are the statement \u2014 MNT 0.23 over T83's grid,"
+    },
+    {
+     "absLine": 2625,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "MNT 2.91 over the union, a ratio of 291 \u00f7 23 = 12.65\u00d7.** An earlier revision wrote \"**11.6\u00d7** the"
+    },
+    {
+     "absLine": 2626,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "That multiple was taken against a *different* denominator \u2014 the \"below MNT 0.25\" bound"
+    },
+    {
+     "absLine": 2628,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "every mention of MNT 0.25, leaving a ratio whose denominator the reader could no longer find."
+    },
+    {
+     "absLine": 2629,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "**MNT 2.91 is a FAMILY-A figure over"
+    },
+    {
+     "absLine": 2632,
+     "nets": [
+      "R1 states the largest residual",
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "two captures asked, the largest of which is 1001 minor units \u2014 the largest unamortized residual is"
+    },
+    {
+     "absLine": 2633,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "MNT 10.01 AT n = 3000.** **That domain qualifier is T219's correction and it is the whole of the"
+    },
+    {
+     "absLine": 2634,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "correction: the number below is right, and it was reported as if `n = 3000` were the binding"
+    },
+    {
+     "absLine": 2636,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "n = 3000 the record is now MNT 30.00 \u2014 see *THE RESIDUAL RECORD, RE-MEASURED* below, and read"
+    },
+    {
+     "absLine": 2638,
+     "nets": [
+      "R4 quotes a figure in minor units",
+      "R9 names an annual rate",
+      "R13 names a measured cell"
+     ],
+     "text": "exactly.** The cell \u2014 `T159-R600p0-N3000-B1001`, 600.0 %, a disbursement of 1001 minor units,"
+    },
+    {
+     "absLine": 2639,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**3000** REPAYMENT rows every one of them `principal \"0.00\"`, `totalPrincipalAmount 0.00`,"
+    },
+    {
+     "absLine": 2640,
+     "nets": [
+      "R5 states or uses the total-interest / n.E+B identity"
+     ],
+     "text": "balance frozen at `10.01` from `2024-02-01` to `2274-01-01`, and `totalInterestAmount 15010.01`"
+    },
+    {
+     "absLine": 2641,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "[VERIFIED by T170 by extraction from `capture-t159-raw.json.gz` in integer minor units: disbursed"
+    },
+    {
+     "absLine": 2643,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "balance value across all 3000 rows]."
+    },
+    {
+     "absLine": 2643,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "It is a **family-B** cell, not the 0.12 % family-A one."
+    },
+    {
+     "absLine": 2644,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "- **State it with its term AND with the principals asked at that term.** The figure was MNT 0.01"
+    },
+    {
+     "absLine": 2645,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "while only n \u2264 250 had been asked, **MNT 5.01 at n = 1000** once T117 asked"
+    },
+    {
+     "absLine": 2646,
+     "nets": [
+      "R13 names a measured cell"
+     ],
+     "text": "(`T117P2-R600p0-N1000-B501` \u2014 501 minor disbursed, 1000 rows of `principal \"0.00\"`,"
+    },
+    {
+     "absLine": 2647,
+     "nets": [
+      "R5 states or uses the total-interest / n.E+B identity",
+      "R14 carries a verification stamp"
+     ],
+     "text": "`totalInterestAmount 2505.01`, balance frozen at `5.01` to `2107-05-01` [VERIFIED by T170 the"
+    },
+    {
+     "absLine": 2648,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "same way]), and **MNT 10.01 at n = 3000** once T159 asked."
+    },
+    {
+     "absLine": 2649,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "> **THE SENTENCE THAT STOOD HERE IS FALSIFIED \u2014 T219.** It read *\"The residual doubled when the"
+    },
+    {
+     "absLine": 2653,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> not enough, because the term is only the cap; **the principals asked are what the figure is"
+    },
+    {
+     "absLine": 2654,
+     "nets": [
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "> actually a fact about**, and T117 and T159 topped out at 501 and 1001 minor units"
+    },
+    {
+     "absLine": 2656,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "- **MNT 10.01 was the largest OBSERVED residual over the principals then asked, and it was NEVER A"
+    },
+    {
+     "absLine": 2658,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "the current figure is **MNT 30.00 at n = 3000**, below. n = 3000 is still simply the largest"
+    },
+    {
+     "absLine": 2659,
+     "nets": [
+      "R6 states a bound or a ceiling"
+     ],
+     "text": "**Three independent workers have now raised this ceiling and none found a"
+    },
+    {
+     "absLine": 2662,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "one level up, exactly the error the MNT 0.23 / MNT 2.91 restatement above was written to"
+    },
+    {
+     "absLine": 2664,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "- **MNT 1.09 fails at 3.6 % p.a. over n = 360 \u2014 an ordinary 30-year monthly term at an ordinary"
+    },
+    {
+     "absLine": 2665,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "rate** [T84; **re-measured by T100**, `T100-FAMA-R3p6-N360-B109`, with MNT 1.10 clean beside it]."
+    },
+    {
+     "absLine": 2666,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "This is not sub-MNT dust and must not be described as such."
+    },
+    {
+     "absLine": 2668,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "- The region **grows as the term lengthens and as the rate falls**: at 0.12 % the largest failing"
+    },
+    {
+     "absLine": 2669,
+     "nets": [
+      "R4 quotes a figure in minor units",
+      "R10 names a term"
+     ],
+     "text": "principal runs 59, 118, 176, 234, 291 minor units at n = 120, 240, 360, 480, 600 \u2014 i.e. \u2248 n/2"
+    },
+    {
+     "absLine": 2671,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "[T100's re-derivation, `out/largest-failing.json`; every one of those bracketed by a measured clean"
+    },
+    {
+     "absLine": 2673,
+     "nets": [
+      "R6 states a bound or a ceiling"
+     ],
+     "text": "- **This `\u2248 n/2` is FAMILY A, and it is NOT the same law as family B's rescue ceiling. Do not"
+    },
+    {
+     "absLine": 2675,
+     "nets": [
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "`\u2248 n/2 minor units` law this file already records for family A\"* \u2014 and that link is now"
+    },
+    {
+     "absLine": 2676,
+     "nets": [
+      "R6 states a bound or a ceiling",
+      "R7 states the region in its own variables",
+      "R8 makes a claim about \u03b4",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**struck**: family B's ceiling is `(\u03b4 + \u00bd)\u00b7n`, and it coincides with `n/2` only at `\u03b4 = 0` \u2014"
+    },
+    {
+     "absLine": 2677,
+     "nets": [
+      "R8 makes a claim about \u03b4",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "while **the only `\u03b4` T229 reports on a family-B cell is `\u03b4 = 1`**."
+    },
+    {
+     "absLine": 2679,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "where they are measured; nothing about them is evidence about family B."
+    },
+    {
+     "absLine": 2682,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "only MNT, only DAYS_30/DAYS_360, only MONTHS/1, only a single disbursement on the schedule start"
+    },
+    {
+     "absLine": 2683,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "date, no down payment, no charges, both multiples-of inputs null, only `(19, HALF_UP)`."
+    },
+    {
+     "absLine": 2685,
+     "nets": [
+      "R9 names an annual rate",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "600.0} \u2014 out of a continuum; nothing between 3.6 % and 7.0 %, nothing between 96 % and 300 %,"
+    },
+    {
+     "absLine": 2686,
+     "nets": [
+      "R9 names an annual rate",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "nothing above 600 %, nothing at or below 0 %."
+    },
+    {
+     "absLine": 2686,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**T117 and T159 added no new rate: every one of their"
+    },
+    {
+     "absLine": 2687,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "180 family-B cells is at 600.0 %.**"
+    },
+    {
+     "absLine": 2690,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "read *\"No term above n = 600 has ever been asked\"*."
+    },
+    {
+     "absLine": 2691,
+     "nets": [
+      "R9 names an annual rate",
+      "R10 names a term",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**n = 3000**, at 600.0 % only, and family B is still there. **The conclusion \u2014 that the measurement"
+    },
+    {
+     "absLine": 2692,
+     "nets": [
+      "R6 states a bound or a ceiling"
+     ],
+     "text": "establishes no upper bound on the failing principal over the graded domain as a whole \u2014 is now"
+    },
+    {
+     "absLine": 2695,
+     "nets": [
+      "R9 names an annual rate",
+      "R10 names a term",
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "term at all.** Above `n = 600` nothing has been asked at any rate but 600.0 %, and nothing at all"
+    },
+    {
+     "absLine": 2696,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "has been asked above `n = 3000`."
+    },
+    {
+     "absLine": 2699,
+     "nets": [
+      "R2 states the largest failing principal/disbursement"
+     ],
+     "text": "fail \u2014 still holds over everything swept to date: the largest failing disbursement anywhere in the"
+    },
+    {
+     "absLine": 2700,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R4 quotes a figure in minor units",
+      "R13 names a measured cell"
+     ],
+     "text": "record is **4499 minor units, MNT 44.99** (`T219-R600p0-N3000-B4499`), leaving the largest"
+    },
+    {
+     "absLine": 2701,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "unamortized residual on record, **3000 minor units, MNT 30.00**."
+    },
+    {
+     "absLine": 2703,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "\"MNT 0.23\" before T84 asked, \"MNT 2.91\" before T117 asked, \"MNT 5.01\" before T159 asked and"
+    },
+    {
+     "absLine": 2704,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "\"MNT 10.01\" before T219 asked."
+    },
+    {
+     "absLine": 2704,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R4 quotes a figure in minor units"
+     ],
+     "text": "**This figure read `1001 minor units, MNT 10.01` until T219, and it"
+    },
+    {
+     "absLine": 2706,
+     "nets": [
+      "R6 states a bound or a ceiling",
+      "R7 states the region in its own variables"
+     ],
+     "text": "**22,000\u00d7** on the disbursement, and the *mechanism* argument \u2014 the `(\u03b4 + \u00bd)\u00b7n` ceiling below \u2014 is"
+    },
+    {
+     "absLine": 2707,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "what actually carries the conclusion; this sweep figure never did."
+    },
+    {
+     "absLine": 2709,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "## The closed form \u2014 TESTED AND FALSIFIED outside the sampled grid"
+    },
+    {
+     "absLine": 2711,
+     "nets": [
+      "R7 states the region in its own variables"
+     ],
+     "text": "T83 registered *\"fails iff `B_minor \u00d7 a(r,n) < 0.5`\"*, where `a(r,n) = r/(1\u2212(1+r)^\u2212n)` and"
+    },
+    {
+     "absLine": 2714,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "held on all 32 shapes, 106 of 106 registered predictions, 0 refuted [`check-prediction.py`, exit 0,"
+    },
+    {
+     "absLine": 2718,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "T83's own 330 cells it holds **330 of 330**; over all 342 non-calibration cells of T84's two"
+    },
+    {
+     "absLine": 2721,
+     "nets": [
+      "R9 names an annual rate",
+      "R10 names a term"
+     ],
+     "text": "family-B cell** \u2014 600.0 % / B = 1 / n \u2265 104 \u2014 where the closed form predicts CLEAN (the exact gap"
+    },
+    {
+     "absLine": 2722,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "`B\u00b7a \u2212 \u00bd` is positive: `+2.429e-19` at n = 104, falling to `+3.025e-36` at n = 200) and the oracle"
+    },
+    {
+     "absLine": 2724,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "family-B cells OF THE FOUR RECORD CAPTURES** \u2014 and **NOT** on the four at **n = 104, 105 and 106**,"
+    },
+    {
+     "absLine": 2725,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**Every \"29\" and every \"25 of 29\" in this"
+    },
+    {
+     "absLine": 2728,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "`[UNVERIFIED]`."
+    },
+    {
+     "absLine": 2732,
+     "nets": [
+      "R10 names a term",
+      "R14 carries a verification stamp"
+     ],
+     "text": "explanation for n = 104\u2026106 `[UNVERIFIED]`."
+    },
+    {
+     "absLine": 2736,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "decision path, P-25) over all 29 family-B cells of the four committed raw captures \u2014 **and over"
+    },
+    {
+     "absLine": 2737,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "those only; the 180 cells T117 and T159 added are not in this evaluation**."
+    },
+    {
+     "absLine": 2738,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "n=104 `+2.4293e-19` = 2.43 ulp (two cells, `T84B-NSW-R600p0-N104-B1` and `T100-FAMB-R600p0-N104-B1`,"
+    },
+    {
+     "absLine": 2739,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "agreeing); n=105 `+1.6195e-19` = 1.62 ulp; n=106 `+1.0797e-19` = 1.08 ulp; then n=107 `+7.1979e-20`"
+    },
+    {
+     "absLine": 2740,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "= 0.72 ulp and everything above it strictly smaller, down to n=250 `+4.7441e-45`."
+    },
+    {
+     "absLine": 2741,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "strictly positive on all 29 and strictly decreasing across the 22 distinct n, so the ulp crossing is"
+    },
+    {
+     "absLine": 2742,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "**between n = 106 and n = 107** and is crossed exactly once. An earlier revision stated the sub-ulp"
+    },
+    {
+     "absLine": 2746,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "**What the failure at n = 104\u2026106 means for the open question of family B's cause.** Family B's"
+    },
+    {
+     "absLine": 2747,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "mechanism is still `[UNVERIFIED]` and this narrows what may be assumed about it:"
+    },
+    {
+     "absLine": 2750,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "refuted at the region's first three terms.** At n = 104 the residual is more than **two** units in"
+    },
+    {
+     "absLine": 2753,
+     "nets": [
+      "R10 names a term",
+      "R12 a disposition or an imperative"
+     ],
+     "text": "simple exhaustion of significant digits, and any candidate mechanism must explain n = 104, 105 and"
+    },
+    {
+     "absLine": 2756,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "region starts at n = 104 (n = 102 and n = 103 are measured clean at the same shape); the sub-ulp"
+    },
+    {
+     "absLine": 2757,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "condition starts at n = 107."
+    },
+    {
+     "absLine": 2761,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "cells, not the explanation of the family**, and it must not be used to argue that family B is"
+    },
+    {
+     "absLine": 2763,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "rather than by caution: the residual reaches MNT 30.00 at n = 3000** [T219; it read"
+    },
+    {
+     "absLine": 2764,
+     "nets": [
+      "R3 quotes a money figure in MNT",
+      "R10 names a term"
+     ],
+     "text": "*\"MNT 10.01 at n = 3000\"* until T219 measured a larger one at the same term], and the closed form was"
+    },
+    {
+     "absLine": 2765,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "never evaluated at those terms at all."
+    },
+    {
+     "absLine": 2765,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "The next worker on family B should start at **n = 104**,"
+    },
+    {
+     "absLine": 2779,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "`B\u00b7a \u2212 \u00bd` at those shapes is strictly **positive** and of order 1e-20 (`+4.799e-20` at n = 108), so"
+    },
+    {
+     "absLine": 2789,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "prediction scripts**, and this is exactly what that gap costs \u2014 the script graded nothing, and its"
+    },
+    {
+     "absLine": 2802,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "script must fix these FIRST, in a new pass with new ids, and must not silently re-emit into the"
+    },
+    {
+     "absLine": 2811,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "`float()` is a sort key over annual-rate *labels* only \u2014 no money value is converted, and no"
+    },
+    {
+     "absLine": 2813,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "directory, produced a variant differing **only** in that one key (`fractions.Fraction(str(...))`"
+    },
+    {
+     "absLine": 2824,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "number is affected:** every count prints *before* the crash, and the committed"
+    },
+    {
+     "absLine": 2832,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "future re-runner will read as \"the check failed\" when it means \"there was nothing to report\"."
+    },
+    {
+     "absLine": 2842,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "on a PARTIAL family-B cell, because the port has never been graded on one.** Scope any decision to"
+    },
+    {
+     "absLine": 2843,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "one family *and to one shape*; a vector for one says nothing about the other."
+    },
+    {
+     "absLine": 2844,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "behind any promotion must also record the JVM state it was taken in."
+    },
+    {
+     "absLine": 2847,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "**graded-domain amendment**. Four things it must now account for, none of which existed when this"
+    },
+    {
+     "absLine": 2851,
+     "nets": [
+      "R7 states the region in its own variables",
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "principal below **`(\u03b4 + \u00bd)\u00b7n` minor units** \u2014 **`1.5\u00b7n`, conditional on the unproven `\u03b4 \u2264 1`.**"
+    },
+    {
+     "absLine": 2855,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "option (b) draft written today would refuse a superset \u2014 every failing cell plus some clean ones"
+    },
+    {
+     "absLine": 2862,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "It used to read *\"no term beyond n = 600 has been asked\"*; terms have since been asked to"
+    },
+    {
+     "absLine": 2863,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "**n = 3000** and family B is still there, with a larger residual each time somebody asked \u2014"
+    },
+    {
+     "absLine": 2866,
+     "nets": [
+      "R10 names a term",
+      "R11 universal / cardinality quantifier",
+      "R13 names a measured cell"
+     ],
+     "text": "`T219-R600p0-N3000-B4499`, because n = 3000 was already inside every band anyone had drawn.**"
+    },
+    {
+     "absLine": 2867,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "~~The other half \u2014 **family B has been seen at only one rate** \u2014 is unchanged and still true.~~"
+    },
+    {
+     "absLine": 2868,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "**THAT HALF IS NOW FALSE TOO \u2014 T223 measured family B at 36.0 % and at 300.0 %.** So a refusal"
+    },
+    {
+     "absLine": 2871,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "draft must be written in those terms or it will refuse the wrong cells."
+    },
+    {
+     "absLine": 2875,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "drafted in a graded domain that can express only \"amortizes\" and \"does not amortize\" will"
+    },
+    {
+     "absLine": 2881,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "the port does *today, ungraded, on family A only* \u2014 **on the 29 record family-B cells the port"
+    },
+    {
+     "absLine": 2882,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "emits the same non-amortizing schedule the oracle does, so there is nothing to diverge from and"
+    },
+    {
+     "absLine": 2884,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "added, and on every partial cell, **the port has never been graded**, so whether (c) describes them"
+    },
+    {
+     "absLine": 2885,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "is **unknown** `[UNVERIFIED]`."
+    },
+    {
+     "absLine": 2890,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**decided none, recommended none, and pre-implemented none**; they attach only the measurement and"
+    },
+    {
+     "absLine": 2891,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**T223 measured a new region and restated it; it decided nothing, promoted no vector,"
+    },
+    {
+     "absLine": 2893,
+     "nets": [
+      "R6 states a bound or a ceiling"
+     ],
+     "text": "falsified this section's ceiling by measurement, promoted no vector, graded no port, and"
+    },
+    {
+     "absLine": 2900,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "and it too decided nothing, recommended nothing, promoted no vector, graded no port and left"
+    },
+    {
+     "absLine": 2908,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "recommendation on (b) or (c) and changes nothing about them: the region this file may state is"
+    },
+    {
+     "absLine": 2909,
+     "nets": [
+      "R7 states the region in its own variables",
+      "R8 makes a claim about \u03b4"
+     ],
+     "text": "still the conservative superset `B_minor < 1.5\u00b7n`, still resting on the unproven `\u03b4 \u2264 1`, and"
+    },
+    {
+     "absLine": 2910,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "options (b) and (c) still must not be put to Buyan.**"
+    },
+    {
+     "absLine": 2912,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "block, and it moved nothing about the gate's substance; T114, T122, T129, T140, T170 and T231 likewise"
+    },
+    {
+     "absLine": 2913,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "touched only the prose."
+    },
+    {
+     "absLine": 2914,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "edited nothing in it** \u2014 T117, T159 and T229 all refused to edit `gates.md` because this STANDING"
+    },
+    {
+     "absLine": 2918,
+     "nets": [
+      "R11 universal / cardinality quantifier",
+      "R12 a disposition or an imperative"
+     ],
+     "text": "**This roster is the section's own non-decision attestation, so it must name every"
+    },
+    {
+     "absLine": 2930,
+     "nets": [
+      "R6 states a bound or a ceiling"
+     ],
+     "text": ">   ceiling was restated in any of those, **T231 did not find it and cannot say it is absent** \u2014"
+    },
+    {
+     "absLine": 2931,
+     "nets": [
+      "R6 states a bound or a ceiling"
+     ],
+     "text": ">   P-70. **T223's follow-up 1, \"sweep the `n/2` ceiling concept OUTSIDE this section\", is still"
+    },
+    {
+     "absLine": 2938,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> - **It graded nothing.** No port run, no capture, no vector. Every \"the port does X\" sentence in"
+    },
+    {
+     "absLine": 2948,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "blocks**: nothing today \u2014 no vector covers either family and the conformance run is exit 0 without"
+    },
+    {
+     "absLine": 2959,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "one** diff each, always the final row's `outstanding_principal_minor`, and all **29** family-B"
+    },
+    {
+     "absLine": 2964,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "that no vector covers **and that nobody has graded against the port at all**, so they cannot be"
+    },
+    {
+     "absLine": 2970,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "never folded in."
+    },
+    {
+     "absLine": 2970,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**Three of the seven are PARTIAL-shape cells \u2014 the shape the port has never been"
+    },
+    {
+     "absLine": 2980,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "its own run \u2014 **a corpus count in this section must name the run it came from**]."
+    },
+    {
+     "absLine": 2982,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "reference oracle only through this health probe.**"
+    },
+    {
+     "absLine": 3006,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> are the captures, and **every count in this section is derived from them**. The plain"
+    },
+    {
+     "absLine": 3008,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> **extracts**, retaining only the cases cited in `T84-review-t83.md`. They are strict,"
+    },
+    {
+     "absLine": 3009,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> content-identical **subsets**: no id in an extract is absent from its `.gz`, and every id present"
+    },
+    {
+     "absLine": 3010,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "> in both is byte-identical under a canonical dump [VERIFIED independently by T129 and again by"
+    },
+    {
+     "absLine": 3015,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "> faithful excerpt of it [VERIFIED by T140 under `run-t84.sh:109`'s own recipe,"
+    },
+    {
+     "absLine": 3019,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> non-sub-ulp exceptions against the true **29** and **4**, and nothing about the run looks wrong,"
+    },
+    {
+     "absLine": 3023,
+     "nets": [
+      "R10 names a term"
+     ],
+     "text": "> n = {104, 105, 108, 120, 121, 122, 150, 200, 250}, of which n = 104 twice and n = 105 give the 3"
+    },
+    {
+     "absLine": 3026,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "> [T170 hit this warning too and obeyed it: every T170 figure is derived from the `.gz` where a `.gz`"
+    },
+    {
+     "absLine": 3041,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "(56-row sentence-by-sentence scope table; all 29 family-B cells re-graded through the real"
+    },
+    {
+     "absLine": 3042,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "`conformance.Run` on `main`'s current port for 25,751 graded cells and 0 cell diffs; all 312"
+    },
+    {
+     "absLine": 3050,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "T112 measured nothing new against the reference oracle: every number it added or changed was"
+    },
+    {
+     "absLine": 3058,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "**re-derived every load-bearing number in this section \u2014 all of it reproduced**: 687 / 312 / 29 /"
+    },
+    {
+     "absLine": 3059,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "346, all ten discriminator rows on 341 of 341 cells, the 11-of-12 rate split, MNT 0.23 / MNT 2.91 /"
+    },
+    {
+     "absLine": 3060,
+     "nets": [
+      "R3 quotes a money figure in MNT"
+     ],
+     "text": "12.65\u00d7 / MNT 1.09, 761-with-0-diffs and 2525-with-1-diff, 198 divergent cells one per case, 106/106"
+    },
+    {
+     "absLine": 3061,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "predictions, 330/330 and 320-held/22-refuted/0-ties, both canonical digests, and **every** Fineract"
+    },
+    {
+     "absLine": 3071,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "T122 contacted the reference oracle **not at all** and measured nothing new against it:"
+    },
+    {
+     "absLine": 3081,
+     "nets": [
+      "R12 a disposition or an imperative"
+     ],
+     "text": "file the branch must not touch)."
+    },
+    {
+     "absLine": 3084,
+     "nets": [
+      "R14 carries a verification stamp"
+     ],
+     "text": "[VERIFIED by T122 against `main@79a67d1`, by T129 against `main@fdcdf09` and `main@e35ea7b`, and by"
+    },
+    {
+     "absLine": 3094,
+     "nets": [
+      "R9 names an annual rate"
+     ],
+     "text": "300.0 % domain, the twelve `T84-RP-*` partner positions and the two capture-extract digests were all"
+    },
+    {
+     "absLine": 3120,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "java processes under `out/{pilot,matrixA,matrixB,matrixC}/raw/`, every `out/ANALYSIS-*.txt`"
+    },
+    {
+     "absLine": 3126,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "`src/extract_t170.py` (every figure T170 carries into this section, re-derived **by extraction** in"
+    },
+    {
+     "absLine": 3133,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "the only thing it executed against this repository's own tooling was `bash .softhouse/conformance.sh`"
+    },
+    {
+     "absLine": 3134,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "(exit 0, 43 parity vectors, 5664 cells), and every G-8 number it wrote came out of the committed"
+    },
+    {
+     "absLine": 3146,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "derivation, with every source citation **bound by the text matched, not by line number**),"
+    },
+    {
+     "absLine": 3162,
+     "nets": [
+      "R11 universal / cardinality quantifier"
+     ],
+     "text": "minor units** (STANDING RULE 4 and 5 \u2014 the `.gz`, never a plain-`.json` extract, and no float on any"
+    }
+   ],
+   "scopeBearing": 715,
+   "startLine": 1033
+  }
+ }
+}
