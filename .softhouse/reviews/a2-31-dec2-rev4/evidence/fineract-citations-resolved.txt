@@ -1,0 +1,291 @@
+pinned checkout HEAD: 426a23544e8426a38ae43ae404670a0a7e85b9eb
+
+===== AccountingConstants.java  lines 37-62
+----- resolved to: fineract-core/src/main/java/org/apache/fineract/accounting/common/AccountingConstants.java
+      public enum CashAccountsForLoan {
+  
+          FUND_SOURCE(1), //
+          LOAN_PORTFOLIO(2), //
+          INTEREST_ON_LOANS(3), //
+          INCOME_FROM_FEES(4), //
+          INCOME_FROM_PENALTIES(5), //
+          LOSSES_WRITTEN_OFF(6), //
+          TRANSFERS_SUSPENSE(10), //
+          OVERPAYMENT(11), //
+          INCOME_FROM_RECOVERY(12), //
+          GOODWILL_CREDIT(13), //
+          INCOME_FROM_CHARGE_OFF_INTEREST(14), //
+          INCOME_FROM_CHARGE_OFF_FEES(15), //
+          CHARGE_OFF_EXPENSE(16), //
+          CHARGE_OFF_FRAUD_EXPENSE(17), //
+          INCOME_FROM_CHARGE_OFF_PENALTY(18), //
+          INCOME_FROM_GOODWILL_CREDIT_INTEREST(19), //
+          INCOME_FROM_GOODWILL_CREDIT_FEES(20), //
+          INCOME_FROM_GOODWILL_CREDIT_PENALTY(21), //
+          CLASSIFICATION_INCOME(22), //
+          DEFERRED_INCOME_LIABILITY(23), //
+          INCOME_FROM_DISCOUNT_FEE(24), //
+          FEES_RECEIVABLE(25), //
+          PENALTIES_RECEIVABLE(26), //
+          ;
+
+===== AccountingConstants.java  lines 39-39
+----- resolved to: fineract-core/src/main/java/org/apache/fineract/accounting/common/AccountingConstants.java
+          FUND_SOURCE(1), //
+
+===== AccountingConstants.java  lines 48-48
+----- resolved to: fineract-core/src/main/java/org/apache/fineract/accounting/common/AccountingConstants.java
+          GOODWILL_CREDIT(13), //
+
+===== AccountingConstants.java  lines 439-445
+----- resolved to: fineract-core/src/main/java/org/apache/fineract/accounting/common/AccountingConstants.java
+          ASSET_TRANSFER(100, "assetTransfer", GLAccountType.ASSET), //
+          LIABILITY_TRANSFER(200, "liabilityTransfer", GLAccountType.LIABILITY), //
+          CASH_AT_MAINVAULT(101, "cashAtMainVault", GLAccountType.ASSET), //
+          CASH_AT_TELLER(102, "cashAtTeller", GLAccountType.ASSET), //
+          OPENING_BALANCES_TRANSFER_CONTRA(300, "openingBalancesTransferContra", GLAccountType.EQUITY), //
+          ASSET_FUND_SOURCE(103, "fundSource", GLAccountType.ASSET), //
+          PAYABLE_DIVIDENDS(201, "payableDividends", GLAccountType.LIABILITY); //
+
+===== AccountingConstants.java  lines 95-122
+----- resolved to: fineract-core/src/main/java/org/apache/fineract/accounting/common/AccountingConstants.java
+      public enum AccrualAccountsForLoan {
+  
+          FUND_SOURCE(1), //
+          LOAN_PORTFOLIO(2), //
+          INTEREST_ON_LOANS(3), //
+          INCOME_FROM_FEES(4), //
+          INCOME_FROM_PENALTIES(5), //
+          LOSSES_WRITTEN_OFF(6), //
+          INTEREST_RECEIVABLE(7), //
+          FEES_RECEIVABLE(8), //
+          PENALTIES_RECEIVABLE(9), //
+          TRANSFERS_SUSPENSE(10), //
+          OVERPAYMENT(11), //
+          INCOME_FROM_RECOVERY(12), //
+          GOODWILL_CREDIT(13), //
+          INCOME_FROM_CHARGE_OFF_INTEREST(14), //
+          INCOME_FROM_CHARGE_OFF_FEES(15), //
+          CHARGE_OFF_EXPENSE(16), //
+          CHARGE_OFF_FRAUD_EXPENSE(17), //
+          INCOME_FROM_CHARGE_OFF_PENALTY(18), //
+          INCOME_FROM_GOODWILL_CREDIT_INTEREST(19), //
+          INCOME_FROM_GOODWILL_CREDIT_FEES(20), //
+          INCOME_FROM_GOODWILL_CREDIT_PENALTY(21), //
+          INCOME_FROM_CAPITALIZATION(22), //
+          DEFERRED_INCOME_LIABILITY(23), //
+          BUY_DOWN_EXPENSE(24), //
+          INCOME_FROM_BUY_DOWN(25), //
+          ;
+
+===== AccountingProcessorHelper.java  lines 1185-1216
+----- resolved to: fineract-provider/src/main/java/org/apache/fineract/accounting/journalentry/service/AccountingProcessorHelper.java
+      public GLAccount getLinkedGLAccountForLoanProduct(final Long loanProductId, final int accountMappingTypeId, final Long paymentTypeId) {
+          GLAccount glAccount;
+          if (isOrganizationAccount(accountMappingTypeId)) {
+              FinancialActivityAccount financialActivityAccount = this.financialActivityAccountRepository
+                      .findByFinancialActivityTypeWithNotFoundDetection(accountMappingTypeId);
+              glAccount = financialActivityAccount.getGlAccount();
+          } else {
+              ProductToGLAccountMapping accountMapping = this.accountMappingRepository.findCoreProductToFinAccountMapping(loanProductId,
+                      PortfolioProductType.LOAN.getValue(), accountMappingTypeId);
+  
+              /****
+               * Get more specific mapping for FUND source accounts (based on payment channels). Note that fund source
+               * placeholder ID would be same for both cash and accrual accounts
+               ***/
+              if (accountMappingTypeId == CashAccountsForLoan.FUND_SOURCE.getValue()) {
+                  final ProductToGLAccountMapping paymentChannelSpecificAccountMapping = this.accountMappingRepository
+                          .findByProductIdAndProductTypeAndFinancialAccountTypeAndPaymentTypeId(loanProductId,
+                                  PortfolioProductType.LOAN.getValue(), accountMappingTypeId, paymentTypeId);
+                  if (paymentChannelSpecificAccountMapping != null) {
+                      accountMapping = paymentChannelSpecificAccountMapping;
+                  }
+              }
+  
+              if (accountMapping == null) {
+                  throw new ProductToGLAccountMappingNotFoundException(PortfolioProductType.LOAN, loanProductId,
+                          AccrualAccountsForLoan.fromInt(accountMappingTypeId).toString());
+  
+              }
+              glAccount = accountMapping.getGlAccount();
+          }
+          return glAccount;
+      }
+
+===== AccountingProcessorHelper.java  lines 1199-1206
+----- resolved to: fineract-provider/src/main/java/org/apache/fineract/accounting/journalentry/service/AccountingProcessorHelper.java
+              if (accountMappingTypeId == CashAccountsForLoan.FUND_SOURCE.getValue()) {
+                  final ProductToGLAccountMapping paymentChannelSpecificAccountMapping = this.accountMappingRepository
+                          .findByProductIdAndProductTypeAndFinancialAccountTypeAndPaymentTypeId(loanProductId,
+                                  PortfolioProductType.LOAN.getValue(), accountMappingTypeId, paymentTypeId);
+                  if (paymentChannelSpecificAccountMapping != null) {
+                      accountMapping = paymentChannelSpecificAccountMapping;
+                  }
+              }
+
+===== AccountingProcessorHelper.java  lines 1213-1213
+----- resolved to: fineract-provider/src/main/java/org/apache/fineract/accounting/journalentry/service/AccountingProcessorHelper.java
+              glAccount = accountMapping.getGlAccount();
+
+===== AccountingProcessorHelper.java  lines 1218-1238
+----- resolved to: fineract-provider/src/main/java/org/apache/fineract/accounting/journalentry/service/AccountingProcessorHelper.java
+      private GLAccount getLinkedGLAccountForLoanCharges(final Long loanProductId, final int accountMappingTypeId, final Long chargeId) {
+          ProductToGLAccountMapping accountMapping = this.accountMappingRepository.findCoreProductToFinAccountMapping(loanProductId,
+                  PortfolioProductType.LOAN.getValue(), accountMappingTypeId);
+          /*****
+           * Get more specific mappings for Charges and penalties (based on the actual charge /penalty coupled with the
+           * loan product). Note the income from fees and income from penalties placeholder ID would be the same for both
+           * cash and accrual based accounts
+           *****/
+  
+          // Check for charge-specific mappings for all account types (not just income accounts)
+          // This allows charge-specific GL account mappings for debit accounts as well
+          if (chargeId != null) {
+              final ProductToGLAccountMapping chargeSpecificAccountMapping = this.accountMappingRepository
+                      .findProductIdAndProductTypeAndFinancialAccountTypeAndChargeId(loanProductId, PortfolioProductType.LOAN.getValue(),
+                              accountMappingTypeId, chargeId);
+              if (chargeSpecificAccountMapping != null) {
+                  accountMapping = chargeSpecificAccountMapping;
+              }
+          }
+          return accountMapping.getGlAccount();
+      }
+
+===== AccountingProcessorHelper.java  lines 1340-1342
+----- resolved to: fineract-provider/src/main/java/org/apache/fineract/accounting/journalentry/service/AccountingProcessorHelper.java
+      private boolean isOrganizationAccount(final int accountMappingTypeId) {
+          return FinancialActivity.fromInt(accountMappingTypeId) != null;
+      }
+
+===== AccountingProcessorHelper.java  lines 1024-1027
+----- resolved to: fineract-provider/src/main/java/org/apache/fineract/accounting/journalentry/service/AccountingProcessorHelper.java
+          if (accountMapping == null) {
+              throw new ProductToGLAccountMappingNotFoundException(PortfolioProductType.WORKING_CAPITAL_LOAN, workingCapitalLoanProductId,
+                      CashAccountsForLoan.fromInt(accountMappingTypeId).toString());
+          }
+
+===== AccountingProcessorHelper.java  lines 1208-1211
+----- resolved to: fineract-provider/src/main/java/org/apache/fineract/accounting/journalentry/service/AccountingProcessorHelper.java
+              if (accountMapping == null) {
+                  throw new ProductToGLAccountMappingNotFoundException(PortfolioProductType.LOAN, loanProductId,
+                          AccrualAccountsForLoan.fromInt(accountMappingTypeId).toString());
+  
+
+===== AccountingProcessorHelper.java  lines 1337-1337
+----- resolved to: fineract-provider/src/main/java/org/apache/fineract/accounting/journalentry/service/AccountingProcessorHelper.java
+          return accountMapping.getGlAccount();
+
+===== AccountingProcessorHelper.java  lines 1026-1026
+----- resolved to: fineract-provider/src/main/java/org/apache/fineract/accounting/journalentry/service/AccountingProcessorHelper.java
+                      CashAccountsForLoan.fromInt(accountMappingTypeId).toString());
+
+===== AccountingProcessorHelper.java  lines 1210-1210
+----- resolved to: fineract-provider/src/main/java/org/apache/fineract/accounting/journalentry/service/AccountingProcessorHelper.java
+                          AccrualAccountsForLoan.fromInt(accountMappingTypeId).toString());
+
+===== GLAccountReadPlatformServiceImpl.java  lines 214-222
+----- resolved to: fineract-accounting/src/main/java/org/apache/fineract/accounting/glaccount/service/GLAccountReadPlatformServiceImpl.java
+      public List<GLAccountData> retrieveAllEnabledDetailGLAccounts(final GLAccountType accountType) {
+          return retrieveAllGLAccounts(accountType.getValue(), null, GLAccountUsage.DETAIL.getValue(), null, false,
+                  new JournalEntryAssociationParametersData());
+      }
+  
+      @Override
+      public List<GLAccountData> retrieveAllEnabledDetailGLAccounts() {
+          return retrieveAllGLAccounts(null, null, GLAccountUsage.DETAIL.getValue(), null, false,
+                  new JournalEntryAssociationParametersData());
+
+===== GLAccountWritePlatformServiceJpaRepositoryImpl.java  lines 151-159
+----- resolved to: fineract-accounting/src/main/java/org/apache/fineract/accounting/glaccount/service/GLAccountWritePlatformServiceJpaRepositoryImpl.java
+               * a detail account cannot be changed to a header account if transactions are already logged against it
+               **/
+              if (changesOnly.containsKey(GLAccountJsonInputParams.USAGE.getValue()) && glAccount.isHeaderAccount()) {
+                  final boolean journalEntriesForAccountExist = this.glJournalEntryRepository
+                          .exists((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(GL_ACCOUNT).get("id"), glAccountId));
+                  if (journalEntriesForAccountExist) {
+                      throw new GLAccountInvalidUpdateException(GlAccountInvalidUpdateReason.TRANSANCTIONS_LOGGED, glAccountId);
+                  }
+              }
+
+===== JournalEntry.java  lines 79-79
+----- resolved to: integration-tests/src/test/java/org/apache/fineract/integrationtests/common/accounting/JournalEntry.java
+
+===== JournalEntry.java  lines 91-91
+----- resolved to: integration-tests/src/test/java/org/apache/fineract/integrationtests/common/accounting/JournalEntry.java
+
+===== JournalEntryRepository.java  lines 61-61
+----- resolved to: fineract-accounting/src/main/java/org/apache/fineract/accounting/journalentry/domain/JournalEntryRepository.java
+                         SUM(je.amount)
+
+===== LoanProductDataValidator.java  lines 744-744
+----- resolved to: fineract-provider/src/main/java/org/apache/fineract/portfolio/loanproduct/serialization/LoanProductDataValidator.java
+              baseDataValidator.reset().parameter(LoanProductAccountingParams.CHARGE_OFF_EXPENSE.getValue()).value(chargeOffExpenseAccountId)
+
+===== PortfolioProductType.java  lines 26-31
+----- resolved to: fineract-core/src/main/java/org/apache/fineract/portfolio/PortfolioProductType.java
+      LOAN(1, "productType.loan"), //
+      SAVING(2, "productType.saving"), //
+      CLIENT(5, "productType.client"), //
+      PROVISIONING(3, "productType.provisioning"), //
+      SHARES(4, "productType.shares"), //
+      WORKING_CAPITAL_LOAN(6, "productType.workingCapitalLoan"); //
+
+===== PortfolioProductType.java  lines 51-59
+----- resolved to: fineract-core/src/main/java/org/apache/fineract/portfolio/PortfolioProductType.java
+          return switch (v) {
+              case 1 -> LOAN;
+              case 2 -> SAVING;
+              case 3 -> CLIENT;
+              case 4 -> PROVISIONING;
+              case 5 -> SHARES;
+              case 6 -> WORKING_CAPITAL_LOAN;
+              default -> null;
+          };
+
+===== ProductToGLAccountMappingWritePlatformServiceImpl.java  lines 149-151
+----- resolved to: fineract-provider/src/main/java/org/apache/fineract/accounting/productaccountmapping/service/ProductToGLAccountMappingWritePlatformServiceImpl.java
+              case ACCRUAL_UPFRONT:
+                  // Fall Through
+              case ACCRUAL_PERIODIC:
+
+===== ProductToGLAccountMappingWritePlatformServiceImpl.java  lines 410-411
+----- resolved to: fineract-provider/src/main/java/org/apache/fineract/accounting/productaccountmapping/service/ProductToGLAccountMappingWritePlatformServiceImpl.java
+          if (accountingRuleChanged) {
+              this.deserializer.validateForLoanProductCreate(command.json());
+
+===== ProgressiveLoanScheduleGenerator.java  lines 83-83
+----- resolved to: fineract-progressive-loan/src/main/java/org/apache/fineract/portfolio/loanaccount/loanschedule/domain/ProgressiveLoanScheduleGenerator.java
+          return LoanSchedulePlan.from(generate(mc, loanApplicationTerms, null, null));
+
+===== SavingsProductToGLAccountMappingHelper.java  lines 192-193
+----- resolved to: fineract-accounting/src/main/java/org/apache/fineract/accounting/producttoaccountmapping/service/SavingsProductToGLAccountMappingHelper.java
+              case ACCRUAL_UPFRONT:
+              break;
+
+===== UpdateTrialBalanceDetailsTasklet.java  lines 81-81
+----- resolved to: fineract-accounting/src/main/java/org/apache/fineract/accounting/glaccount/jobs/updatetrialbalancedetails/UpdateTrialBalanceDetailsTasklet.java
+              tb.setClosingBalance((BigDecimal) row[5]);
+
+===== 0001_initial_schema.xml  lines 98-110
+----- resolved to: fineract-loan-origination/src/main/resources/db/changelog/tenant/module/loanorigination/parts/0001_initial_schema.xml
+          </preConditions>
+          <insert tableName="m_code_value">
+              <column name="code_id" valueComputed="(SELECT id FROM m_code WHERE code_name = 'LoanOriginatorType')"/>
+              <column name="code_value" value="PLATFORM"/>
+              <column name="order_position" valueNumeric="4"/>
+              <column name="is_active" valueBoolean="true"/>
+              <column name="is_mandatory" valueBoolean="false"/>
+          </insert>
+      </changeSet>
+  
+      <!-- Create Codes for Channel Type -->
+      <changeSet id="loan-origination-006" author="fineract">
+          <preConditions onFail="MARK_RAN">
+
+===== 0001_initial_schema.xml  lines 119-121
+----- resolved to: fineract-loan-origination/src/main/resources/db/changelog/tenant/module/loanorigination/parts/0001_initial_schema.xml
+      </changeSet>
+  
+      <!-- Create Code Values for Channel Type -->
+
