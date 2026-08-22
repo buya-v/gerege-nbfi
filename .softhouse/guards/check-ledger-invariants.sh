@@ -187,6 +187,38 @@ check_census() {
   done
   say "ledger-invariants:   census figure READ: inspected $inspected >= $floor tracked by git (floor DERIVED, not pinned)"
 
+  # T209 (FU-T208-1). This head's own PASS text, three lines below, says "Read the CANNOT-CATCH
+  # block ... before quoting this as coverage" — but until this fix, the grep two lines above
+  # this comment kept only `^CENSUS `/`^NIL-COVERAGE ` and dropped the block it just told the
+  # reader to read. T208 found the block absent from every green run and named the fix: widen
+  # the filter, AT SOURCE, so the head stops filtering out the one thing it tells the reader to
+  # go read. Not fixed by growing the 8-line condensation `.softhouse/conformance.sh` carries
+  # meanwhile (FU-T208-1's own recommendation, endorsed) — that would be a second copy of the
+  # same 33 lines, maintained by hand, free to drift from the `cannotCatch` const it condenses.
+  #
+  # ONLY ON THE PASS PATH ($rc = 0). The refusal branch three lines below already dumps every
+  # line of $out that is not `^CENSUS ` — CANNOT-CATCH included — so it was never the gap T208
+  # found (T208 §3 measured it surviving red runs; only PASS dropped it). Gating on $rc keeps
+  # this fix to exactly the identified hole instead of printing the block twice on a refusal.
+  #
+  # Extracted STRUCTURALLY, not by content, so this survives an edit to the const's wording:
+  # `ledgerguard/main.go`'s cannotCatch block is the one paragraph whose first line starts
+  # `CANNOT-CATCH ` and whose every continuation line is indented; the guard's next line after it
+  # (`clean: ...`, flush left) ends it. Reads to EOF regardless — no `head`, no early `exit`
+  # inside the awk program — so this adds no member of the P-57 rule-1 EPIPE family under
+  # `set -o pipefail`.
+  if [ "$rc" -eq 0 ]; then
+    printf '%s\n' "$out" | LC_ALL=C awk '
+      $0 ~ /^CANNOT-CATCH / { grab = 1 }
+      grab {
+        if ($0 !~ /^CANNOT-CATCH / && $0 !~ /^[ \t]/) { grab = 0; next }
+        print
+      }
+    ' | while IFS= read -r line; do
+      say "ledger-invariants: $line"
+    done
+  fi
+
   if [ "$rc" -ne 0 ]; then
     warn "ledger-invariants: the guard REFUSED:"
     warn "$(printf '%s\n' "$out" | LC_ALL=C grep -av '^CENSUS ')"
