@@ -1,0 +1,1684 @@
+repo root : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9cbb3a58ac676f1a
+DEC-2     : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9cbb3a58ac676f1a/docs/adr/DEC-2-gl-accounting-adapter.md  (247075 bytes)
+engine    : python3 3.9.6 re
+
+DEC-2 lines: 3031
+
+=== CALIBRATION ===
+  known POSITIVE site 1 'The A2 corpus contains no reversal' -> lines [823]
+  known POSITIVE site 2 'no reversal appears'                -> lines [2568]
+  known NEGATIVE 'ZZZ-NOSUCH-T246-NEGATIVE'                  -> []  (MUST be [])
+  known POSITIVE in a HIDDEN file, read directly by python -> True  (MUST be True)
+
+=== PASS 1 — EXHAUSTIVE: every 'revers' stem in DEC-2, with line numbers ===
+  lines containing the stem 'revers' (case-insensitive): 9
+  total occurrences of the stem                        : 15
+
+  L271   …`.softhouse/gates-proposed-answers.md`). Buyan may reverse it at any time before cutover.…
+
+  L380   …  `@Column` list is `currency_code`, `transaction_id`, the four `*_transaction_id`, `reversed`,…
+
+  L822   …rom application code | **NO — STRUCTURAL ONLY.** "No update ever happened" is not observable from a capture. Partial exception: a reversal is observable *as a row*, because the table carries a `reversed` flag [VERIFIED BY A2-13 from `JournalEntry.java:79`, NOT RE-OPENED HERE]. | **NO BY A VECTOR — AND BOT…
+  L822   … happened" is not observable from a capture. Partial exception: a reversal is observable *as a row*, because the table carries a `reversed` flag [VERIFIED BY A2-13 from `JournalEntry.java:79`, NOT RE-OPENED HERE]. | **NO BY A VECTOR — AND BOTH OF THE SOURCE GUARD'S I-4 ARMS INSPECTED AN EMPTY POPULATION H…
+
+  L823   …| **I-5** | Corrections are reversing entries | A correction adds a leg pair; it never mutates one | **UNGRADED TODAY.** The A2 corpus contains no reversal: `A2-150`'s journal dump does not project `rever…
+  L823   …ctions are reversing entries | A correction adds a leg pair; it never mutates one | **UNGRADED TODAY.** The A2 corpus contains no reversal: `A2-150`'s journal dump does not project `reversed` or `reversal_id` and its six rows are three ordinary pairs [VERIFIED by this task]; A2-8's grading table lists no …
+  L823   …eg pair; it never mutates one | **UNGRADED TODAY.** The A2 corpus contains no reversal: `A2-150`'s journal dump does not project `reversed` or `reversal_id` and its six rows are three ordinary pairs [VERIFIED by this task]; A2-8's grading table lists no reversal grading [VERIFIED BY A2-8, NOT RE-OPENED HE…
+  L823   …ver mutates one | **UNGRADED TODAY.** The A2 corpus contains no reversal: `A2-150`'s journal dump does not project `reversed` or `reversal_id` and its six rows are three ordinary pairs [VERIFIED by this task]; A2-8's grading table lists no reversal grading [VERIFIED BY A2-8, NOT RE-OPENED HERE]. Refused w…
+  L823   …ject `reversed` or `reversal_id` and its six rows are three ordinary pairs [VERIFIED by this task]; A2-8's grading table lists no reversal grading [VERIFIED BY A2-8, NOT RE-OPENED HERE]. Refused with `ErrNoDiscriminatingVector`; retired by one capture. §9 item 13. | **NO.** Nothing to grade, and nothing t…
+
+  L870   …- a correction path that mutates a leg instead of adding a reversing pair (that is **I-5**).…
+
+  L2304  …- **Journal-entry writing, reversal, and the sign convention** — slice **A1**. DEC-2 resolves…
+
+  L2436  …  about savings, shares, working-capital loans, charges, reversals, holds, or nineteen of the…
+
+  L2568  …13. **Whether the A2 corpus can grade a reversal.** It cannot today: no reversal appears, and the…
+  L2568  …13. **Whether the A2 corpus can grade a reversal.** It cannot today: no reversal appears, and the…
+
+  L2569  …    committed journal dump does not project the reversal columns. §4.4 I-5.…
+
+=== PASS 2 — MULTI-LINE (re.DOTALL), the CLAIM not the sentence ===
+  [no-reversal-in-corpus] DEC-2 matches: 2
+     L823   spans_newline=False  A2 corpus contains no revers
+     L823   spans_newline=False  A2-150`'s journal dump does not project `reversed` or `reversal_id` and its six rows are three ordinary pairs [VERIFIED by this task]; A2-8's grading table lists no revers
+
+  [no-reversal-appears] DEC-2 matches: 1
+     L2568  spans_newline=False  no reversal appear
+
+  [reversal-none/never] DEC-2 matches: 1
+     L823   spans_newline=False  reversing entries | A correction adds a leg pair; it never
+
+  [dump-no-project] DEC-2 matches: 3
+     L823   spans_newline=False  journal dump does not project
+     L1952  spans_newline=True  journalentries` at all without a separate source: `A2-26` observed the identical row rendering `ASSET` in one capture and `INCOME` in another with every other cell byte-identical and no entry edited, because the field pr
+     L2569  spans_newline=False  journal dump does not project
+
+  [contains-no-reversal] DEC-2 matches: 1
+     L823   spans_newline=False  contains no revers
+
+=== PASS 3 — REPO-WIDE over TRACKED files (git ls-files), same claims ===
+  tracked files walked: 5088
+  files skipped (unreadable/oversize): 0
+
+  [no-reversal-in-corpus] repo-wide matches: 648
+     .softhouse/RESUME.md:189  corpus contains no revers
+     .softhouse/capture/driver-20260822-060013/FINDINGS.md:27  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/engine-table.txt:77  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/line823-verbatim.txt:1  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/line823-verbatim.txt:1  A2-150`'s journal dump does not project `reversed` or `reversal_id` and its six rows are three ordinary pairs [VERIFIED by this task]; A2-8's grading table lists no revers
+     .softhouse/capture/t244-dec2-rev6/mlsweep.py:67  corpus[\s\S]{0,60}?no[\s\S]{0,30}?revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:20  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:21  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:22  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:31  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:32  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:33  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:34  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:35  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:36  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:37  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:38  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:39  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:40  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:41  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:42  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:43  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:44  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:45  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:46  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:48  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:50  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:51  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:51  A2-348 reversed --- PATTERN: contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:54  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:55  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:56  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:57  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:58  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:59  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:60  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:61  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:62  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:63  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:64  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:65  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:66  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:67  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:68  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:69  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:70  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:71  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:72  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:73  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:75  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:77  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:78  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:79  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:80  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:81  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:82  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:83  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:84  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:89  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:90  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:91  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:93  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:96  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:97  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:97  A2-348 reversed --- PATTERN: no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:101  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:102  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:103  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:104  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:105  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:106  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:107  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:108  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:109  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:110  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:111  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:112  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:113  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:114  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:115  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:116  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:117  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:118  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:119  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:120  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:122  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:124  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:125  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:126  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:127  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:128  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:129  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:130  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:131  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:133  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:135  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:139  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:143  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:144  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:146  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:147  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:148  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:149  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:150  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:151  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:152  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:153  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:158  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:159  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:160  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:161  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:164  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:166  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:168  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:169  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:170  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:171  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:172  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:173  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:174  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:182  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:184  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:186  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:188  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:191  A2 corpus contains **no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:192  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:194  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:195  corpus promotes no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:233  corpus[\s\S]{0,60}?no[\s\S]{0,30}?revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:242  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:243  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:244  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:245  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:246  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:247  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:248  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:249  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:250  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:251  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:252  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:253  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:254  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:255  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:256  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:257  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:258  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:259  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:260  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:262  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:264  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:266  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:267  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:268  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:269  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:270  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:271  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:272  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:273  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:275  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:277  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:281  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:285  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:286  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:288  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:289  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:290  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:291  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:292  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:293  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:294  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:295  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:300  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:301  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:302  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:304  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:307  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:310  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:311  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:312  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:313  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:314  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:315  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:316  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:317  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:319  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:321  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:325  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:329  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:330  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:332  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:333  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:334  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:335  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:343  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:347  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:349  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:353  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:361  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:363  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:365  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:367  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:368  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:369  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:370  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:371  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:372  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:373  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:380  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:382  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:384  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:386  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:388  A2 corpus contains **no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:391  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:392  corpus promotes no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:394  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:397  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:398  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:399  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:400  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:401  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:402  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:403  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:410  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:479  capture exists"* to *"no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:481  A2-8`'s grading table lists no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:482  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:488  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:490  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:491  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:492  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:493  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:495  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:498  corpus[\s\S]{0,60}?no[\s\S]{0,30}?revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:500  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:503  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:512  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:514  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:523  A2 corpus contains **no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:532  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:536  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:538  corpus promotes no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:555  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:581  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:585  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:680  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:721  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:722  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:723  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:724  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:730  capture/t244-dec2-rev6 --- MULTILINE PATTERN: corpus[\s\S]{0,60}?no[\s\S]{0,30}?revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:734  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:735  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:736  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:737  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:739  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:740  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:741  A2-8's grading table still lists no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:743  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:744  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:745  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:746  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:747  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:748  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:749  corpus[\s\S]{0,60}?no[\s\S]{0,30}?revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:750  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:751  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:752  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:753  corpus contains **no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:754  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:756  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:757  corpus promotes no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:840  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:841  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:842  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:843  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:845  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:846  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:847  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:849  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:851  A2 corpus contains **no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:852  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:853  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:854  corpus promotes no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:858  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:859  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:860  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:868  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:882  A2 corpus contains **no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:899  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:900  corpus promotes no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:922  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:923  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:924  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:925  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:926  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:927  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:928  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:929  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:930  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:931  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:932  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:933  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:934  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:935  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:936  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:937  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:941  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:943  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:945  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:946  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:947  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:948  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:964  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:967  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:968  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:969  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:970  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:971  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:972  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:973  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:974  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:982  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:985  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:986  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:987  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:988  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:989  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1005  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1037  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1040  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1041  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1042  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1043  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1044  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1046  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1047  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1055  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1058  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1059  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1060  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1061  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1062  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1078  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1110  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1157  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1160  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1161  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1162  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1163  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1164  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1166  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1167  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1175  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1176  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1177  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1184  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1187  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1196  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1197  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1198  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1199  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1200  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1201  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1202  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1203  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1204  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1205  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1206  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1207  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1208  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1209  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1210  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1211  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1212  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1234  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1235  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1236  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1237  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1238  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1239  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1240  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1241  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1242  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1243  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1244  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1245  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1246  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1247  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1249  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1251  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1252  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1253  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1254  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1267  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1288  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1309  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1335  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1338  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1339  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1340  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1341  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1352  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1353  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1377  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1378  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1387  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1396  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1397  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1398  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1399  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1400  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1401  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1402  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1403  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1411  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1413  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1414  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1415  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1416  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1417  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1419  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1420  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1421  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1423  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1426  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1427  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1429  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1431  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1432  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1433  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1434  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1435  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1436  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1437  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1438  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1439  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1440  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1441  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1442  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1443  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1444  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1445  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1446  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1450  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1452  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1454  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1455  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1456  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1457  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1473  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1476  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1477  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1478  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1479  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1480  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1481  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1482  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1483  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1491  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1494  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1495  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1496  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1497  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1498  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1514  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1546  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1549  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1550  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1551  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1552  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1553  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1554  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1555  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1556  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1564  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1567  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1568  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1569  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1570  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1571  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1587  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1619  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1666  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1669  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1670  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1671  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1672  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1673  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1674  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1675  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1676  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1684  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1685  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1686  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1693  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1696  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1705  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1706  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1707  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1708  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1709  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1710  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1711  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1712  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1713  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1714  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1715  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1716  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1717  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1718  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1719  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1720  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1721  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1743  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1744  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1745  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1746  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1747  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1748  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1749  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1750  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1751  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1752  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1753  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1754  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1755  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1756  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1758  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1760  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1761  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1762  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1763  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1776  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1797  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1818  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1844  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1847  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1848  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1849  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1850  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1861  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1862  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1886  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1887  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1896  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1927  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1928  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1929  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1930  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1931  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1932  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1933  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1934  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1941  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1942  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1943  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1950  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1953  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1954  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1955  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1956  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1957  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1958  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1959  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1960  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1961  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1966  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1967  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1970  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1972  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1973  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1974  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1975  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1976  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1978  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1982  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1983  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:27  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:28  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:29  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:48  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:6  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:25  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:27  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:32  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:33  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:34  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:41  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:45  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:46  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:47  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:54  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:57  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:57  A2-348 reversed --- PATTERN: contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:61  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:67  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:68  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:69  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:78  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:83  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:84  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:85  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:93  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:97  A2 corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:97  A2-348 reversed --- PATTERN: no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:2  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:67  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:68  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:69  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:70  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:71  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:72  corpus contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:95  corpus contains no revers
+     .softhouse/capture/tierA-a2/CENSUS-A2-26.txt:210  A2-348-je-reverse [POST /journalentries/a28f573f34c7?command=reverse] HTTP 200 totalFilteredRecords = None rows returned = 0 NO ROWS -- records no money cell at all ### A2-349-je-manual-after-revers
+     .softhouse/gates.md:35  A2 corpus contains no revers
+     .softhouse/gates.md:3757  A2 corpus contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-13.md:193  A2 corpus contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-15-handoff.md:467  A2 corpus contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-transcripts/BAR-conformance-FINAL.txt:447  A2 corpus contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-transcripts/RD1-plant-a-row-APPEARS.txt:447  A2 corpus contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-transcripts/RD2-remove-a-row-DISAPPEARS.txt:441  A2 corpus contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-transcripts/RD4-account-activity-TRACKS-THE-STORE.txt:447  A2 corpus contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:177  capture exists"* to *"no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:196  A2-8`'s grading table lists no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:230  A2 corpus contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:230  A2-150`'s journal dump does not project `reversed` or `reversal_id` and its six rows are three ordinary pairs [VERIFIED by this task]; A2-8's grading table lists no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:231  A2 corpus contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:231  A2-8's grading table still lists no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:326  A2 corpus contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:421  corpus contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:430  corpus contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:455  corpus contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:579  corpus contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:580  corpus contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:581  corpus contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:601  A2 corpus contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:608  A2 corpus contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:653  corpus[\s\S]{0,60}?no[\s\S]{0,30}?revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:777  corpus contains no revers
+     .softhouse/program.json:732  corpus contains no revers
+     .softhouse/reviews/a2-34-review-a2-15/REVIEW.md:788  A2 corpus contains **no revers
+     .softhouse/tasks.json:2514  corpus contains no revers
+     .softhouse/tasks.json:2514  corpus contains no revers
+     .softhouse/vectors/capabilities-ledger.json:89  A2 corpus contains no revers
+     docs/adr/DEC-2-gl-accounting-adapter.md:823  A2 corpus contains no revers
+     docs/adr/DEC-2-gl-accounting-adapter.md:823  A2-150`'s journal dump does not project `reversed` or `reversal_id` and its six rows are three ordinary pairs [VERIFIED by this task]; A2-8's grading table lists no revers
+     nexus/internal/apps/ledger/conformance/invariants.go:38  A2 corpus contains no revers
+     nexus/internal/apps/ledger/conformance/invariants.go:47  corpus promotes no revers
+
+  [no-reversal-appears] repo-wide matches: 27
+     .softhouse/capture/t244-dec2-rev6/line2568-2569-verbatim.txt:1  no reversal appear
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:193  no reversal appear
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:238  no reversal appear
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:390  no reversal appear
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:476  no reversal appear
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:479  no reversal capture exist
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:484  no reversal appear
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:494  no reversal appear
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:533  no reversal appear
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:48  no revers' 'contains no revers' 'no reversal appear
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:58  no revers|no reversal appear
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:59  no revers|no reversal appear
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:66  no revers|no reversal appear
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:68  no revers|no reversal appear
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:97  NO LONGER TRUE: A2-348 reversed --- PATTERN: no reversal appear
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:104  no reversal appear
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:109  no reversal appear
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:153  no reversal appear
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:177  no reversal capture exist
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:231  no reversal capture has been PROMOTED to a vector, not that none exist
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:240  no reversal appear
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:243  no reversal + appear
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:436  no revers|no reversal appear
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:453  no reversal appear
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:602  no reversal appear
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:777  no revers`, `contains no revers`, `no reversal appear
+     docs/adr/DEC-2-gl-accounting-adapter.md:2568  no reversal appear
+
+  [reversal-none/never] repo-wide matches: 74
+     .softhouse/capture/t170-g8-rebuild/out/claim-units-t170.json:320  reversed and never
+     .softhouse/capture/t170-g8-rebuild/out/paragraph-units-t170.json:74  reversed and never
+     .softhouse/capture/t244-dec2-rev6/engine-table.txt:77  revers' 96: 'contains no revers' 97: 'no revers' 98: 'without a revers' 99: 'never
+     .softhouse/capture/t244-dec2-rev6/line823-verbatim.txt:1  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:50  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:74  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:96  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:121  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:163  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:192  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:199  revers' --- PATTERN: never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:263  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:306  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:389  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:410  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:482  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:483  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:532  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:555  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:581  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:582  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:680  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:721  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:722  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:724  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:830  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:835  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:942  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:984  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1057  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1186  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1191  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1195  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1408  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1409  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1410  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1426  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1430  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1451  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1493  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1566  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1695  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1700  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1704  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1952  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1968  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1969  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1982  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:40  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:56  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:77  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:96  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:115  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:119  reversing entries | A correction adds a leg pair; it never
+     .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:95  revers' 'contains no revers' 'no revers' 'without a revers' 'never
+     .softhouse/capture/tierA-a2/CENSUS-A2-26.txt:158  reversed=False ### A2-323-je-entry4-single [GET /journalentries/4] HTTP 200 totalFilteredRecords = None
+     .softhouse/capture/tierA-a2/CENSUS-A2-26.txt:185  reversed=False ### A2-343-manual-je-3leg [POST /journalentries] HTTP 200 totalFilteredRecords = None
+     .softhouse/capture/tierA-a2/CENSUS-A2-26.txt:208  reversed=False ### A2-348-je-reverse [POST /journalentries/a28f573f34c7?command=reverse] HTTP 200 totalFilteredRecords = None
+     .softhouse/capture/tierA-a2/CENSUS-A2-26.txt:250  reversed=False ### A2-360-manual-je-idem-first [POST /journalentries] HTTP 200 totalFilteredRecords = None
+     .softhouse/capture/tierA-a2/run-330-a2-26-manual-and-reversal.sh:11  reversing entries" # "balances are derived, never
+     .softhouse/gates.md:1109  reversed and never
+     .softhouse/guards/ledgerguard/main.go:286  REVERSING ENTRIES: append a new balanced pair, never
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-13.md:312  reversal** — it cannot; none
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T228-handoff.md:318  reversed and never
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:230  reversing entries | A correction adds a leg pair; it never
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:231  reversing entries | A correction adds a leg pair; it never
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:231  reversal capture has been PROMOTED to a vector, not that none
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:231  reversal: the six `LDG-*` files are the whole ledger corpus and none
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:248  reversal + capture has been PROMOTED to a vector, and (b) a snapshot cannot separate *"flags and adds"* from + *"flags and rewrites"*, so I-5's NEVER
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:635  Reverse`, "never
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:635  reversing" about a JVM step, or "never
+     .softhouse/runs/2026-08-17-run1-harness-schedule-poc.tasks.json:2511  reverse of its case_id order - M5 now red on exactly one sub-test where it was red on none
+     docs/adr/DEC-2-gl-accounting-adapter.md:823  reversing entries | A correction adds a leg pair; it never
+     docs/analysis/progressive-schedule-behavior.md:1065  reverse on the way out; never
+
+  [dump-no-project] repo-wide matches: 32
+     .softhouse/capture/t244-dec2-rev6/line2568-2569-verbatim.txt:2  journal dump does not project
+     .softhouse/capture/t244-dec2-rev6/line823-verbatim.txt:1  journal dump does not project
+     .softhouse/capture/t244-dec2-rev6/rederive-reversals-part2.sh:19  journal_entry where reversal_id is not null);" Q "select count(*) from acc_gl_journal_entry where id in (select reversal_id from acc_gl_journal_entry where reversal_id is not null);" echo echo "--- Q1
+     .softhouse/capture/t244-dec2-rev6/rederive-reversals-part2.txt:7  journal_entry where id in (select reversal_id from acc_gl_journal_entry where reversal_id is not null); 8 --- Q10 those reversing legs, project
+     .softhouse/capture/t244-dec2-rev6/rederive-reversals.sh:41  journal_entry where reversed = true or reversal_id is not null;" Q "select count(*) from acc_gl_journal_entry where reversed = true or reversal_id is not null;" echo echo "--- Q5 the rows themselves (
+     .softhouse/capture/t244-dec2-rev6/rederive-reversals.txt:20  journal_entry where reversal_id is not null; 8 --- Q4 UNION: rows participating in a reversal either way --- SQL: select count(*) from acc_gl_journal_entry where reversed = true or reversal_id is not 
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:45  dump does not even project
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:90  dump does not even project
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:184  dump does not even project
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:239  journal dump does not project
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:477  journal dump does not project
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:485  journal dump does not project
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:495  dump does not even project
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:503  dump does not even project
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:504  dump does not project
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:534  journal dump does not project
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:585  dump does not even project
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:723  dump does not even project
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:906  journal dump does not project
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:916  journal dump does not project
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-13.md:193  dump does not even project
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-13.md:313  dump does not project
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:154  journal dump does not project
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:230  journal dump does not project
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:241  journal dump does not project
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:608  dump does not even project
+     .softhouse/reviews/a2-34-review-a2-15/REVIEW.md:788  journal dump does > not project
+     docs/adr/DEC-2-gl-accounting-adapter.md:823  journal dump does not project
+     docs/adr/DEC-2-gl-accounting-adapter.md:1952  journalentries` at all without a separate source: `A2-26` observed the identical row rendering `ASSET` in one capture and `INCOME` in another with every other cell byte-identical and no entry edited, 
+     docs/adr/DEC-2-gl-accounting-adapter.md:2569  journal dump does not project
+     docs/analysis/progressive-schedule-behavior.md:1126  dumped on the last period and a reallocation pass) — not analyzed in depth here since the project
+     nexus/internal/apps/ledger/conformance/vector.go:372  journal-entry row rendering // ASSET in A2-088 (2026-08-21) and INCOME in A2-320 (2026-08-22), every // other cell byte-identical, six diff lines all inside glAccountType, WITH // NO ENTRY EDITED — be
+
+  [contains-no-reversal] repo-wide matches: 826
+     .softhouse/RESUME.md:189  contains no revers
+     .softhouse/capture/driver-20260822-060013/FINDINGS.md:27  contains no revers
+     .softhouse/capture/t244-dec2-rev6/engine-table.txt:77  contains no revers
+     .softhouse/capture/t244-dec2-rev6/engine-table.txt:78  contains no revers
+     .softhouse/capture/t244-dec2-rev6/line823-verbatim.txt:1  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:20  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:21  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:22  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:31  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:32  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:33  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:34  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:35  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:36  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:37  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:38  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:39  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:40  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:41  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:42  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:43  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:44  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:45  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:46  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:48  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:50  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:51  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:53  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:54  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:55  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:56  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:57  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:58  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:59  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:60  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:61  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:62  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:63  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:64  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:65  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:66  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:67  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:68  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:69  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:70  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:71  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:72  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:73  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:75  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:76  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:77  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:78  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:79  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:80  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:81  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:82  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:83  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:84  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:85  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:86  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:87  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:88  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:89  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:90  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:91  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:93  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:95  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:96  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:97  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:101  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:102  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:103  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:104  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:105  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:106  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:107  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:108  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:109  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:110  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:111  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:112  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:113  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:114  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:115  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:116  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:117  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:118  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:119  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:120  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:122  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:123  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:124  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:125  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:126  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:127  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:128  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:129  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:130  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:131  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:133  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:135  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:139  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:143  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:144  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:145  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:146  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:147  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:148  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:149  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:150  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:151  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:152  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:153  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:154  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:155  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:156  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:157  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:158  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:159  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:160  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:161  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:162  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:164  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:166  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:168  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:169  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:170  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:171  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:172  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:173  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:174  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:175  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:177  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:178  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:179  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:182  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:184  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:186  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:188  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:190  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:192  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:194  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:242  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:243  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:244  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:245  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:246  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:247  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:248  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:249  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:250  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:251  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:252  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:253  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:254  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:255  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:256  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:257  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:258  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:259  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:260  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:262  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:264  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:265  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:266  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:267  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:268  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:269  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:270  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:271  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:272  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:273  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:275  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:277  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:281  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:285  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:286  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:287  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:288  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:289  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:290  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:291  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:292  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:293  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:294  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:295  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:296  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:297  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:298  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:299  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:300  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:301  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:302  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:304  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:305  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:307  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:310  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:311  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:312  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:313  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:314  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:315  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:316  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:317  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:319  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:321  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:325  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:329  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:330  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:331  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:332  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:333  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:334  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:335  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:343  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:345  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:347  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:349  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:353  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:354  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:356  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:357  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:361  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:362  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:363  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:365  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:367  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:368  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:369  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:370  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:371  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:372  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:373  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:374  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:376  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:377  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:378  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:380  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:382  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:384  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:386  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:387  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:391  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:394  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:397  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:398  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:399  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:400  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:401  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:402  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:403  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:404  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:407  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:408  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:409  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:410  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:482  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:488  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:490  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:491  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:492  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:493  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:495  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:496  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:500  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:503  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:512  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:514  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:522  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:532  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:536  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:555  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:581  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:585  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:680  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:721  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:722  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:723  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:724  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:734  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:735  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:736  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:737  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:739  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:740  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:743  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:744  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:745  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:746  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:747  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:748  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:750  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:751  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:752  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:754  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:756  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:761  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:762  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:763  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:764  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:765  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:766  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:767  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:768  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:769  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:770  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:771  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:772  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:773  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:774  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:775  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:776  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:777  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:778  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:780  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:781  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:831  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:840  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:841  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:842  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:843  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:845  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:846  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:847  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:849  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:852  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:853  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:858  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:859  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:860  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:868  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:881  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:899  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:920  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:922  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:923  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:924  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:925  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:926  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:927  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:928  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:929  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:930  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:931  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:932  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:933  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:934  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:935  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:936  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:937  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:941  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:943  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:944  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:945  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:946  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:947  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:948  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:964  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:966  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:967  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:968  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:969  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:970  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:971  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:972  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:973  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:974  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:975  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:976  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:977  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:978  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:982  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:983  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:985  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:986  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:987  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:988  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:989  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1005  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1007  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1037  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1040  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1041  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1042  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1043  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1044  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1046  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1047  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1048  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1049  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1050  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1051  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1055  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1056  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1058  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1059  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1060  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1061  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1062  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1078  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1080  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1110  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1157  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1160  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1161  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1162  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1163  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1164  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1166  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1167  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1168  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1169  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1170  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1171  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1175  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1176  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1177  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1180  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1184  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1185  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1187  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1196  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1197  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1198  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1199  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1200  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1201  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1202  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1203  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1204  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1205  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1206  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1207  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1208  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1209  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1210  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1211  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1212  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1213  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1214  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1215  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1216  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1217  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1218  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1219  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1220  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1221  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1222  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1223  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1224  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1225  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1226  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1227  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1228  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1229  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1230  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1231  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1232  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1233  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1234  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1235  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1236  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1237  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1238  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1239  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1240  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1241  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1242  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1243  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1244  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1245  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1246  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1247  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1249  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1250  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1251  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1252  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1253  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1254  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1267  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1269  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1288  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1309  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1335  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1338  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1339  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1340  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1341  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1352  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1353  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1355  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1356  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1357  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1358  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1371  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1373  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1374  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1377  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1378  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1387  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1391  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1396  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1397  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1398  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1399  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1400  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1401  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1402  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1403  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1404  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1405  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1406  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1407  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1411  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1412  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1413  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1414  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1415  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1416  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1417  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1418  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1419  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1420  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1421  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1423  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1425  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1426  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1427  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1429  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1431  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1432  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1433  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1434  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1435  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1436  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1437  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1438  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1439  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1440  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1441  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1442  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1443  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1444  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1445  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1446  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1450  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1452  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1453  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1454  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1455  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1456  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1457  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1473  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1475  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1476  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1477  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1478  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1479  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1480  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1481  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1482  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1483  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1484  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1485  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1486  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1487  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1491  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1492  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1494  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1495  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1496  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1497  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1498  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1514  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1516  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1546  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1549  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1550  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1551  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1552  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1553  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1554  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1555  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1556  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1557  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1558  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1559  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1560  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1564  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1565  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1567  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1568  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1569  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1570  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1571  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1587  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1589  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1619  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1666  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1669  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1670  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1671  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1672  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1673  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1674  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1675  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1676  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1677  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1678  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1679  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1680  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1684  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1685  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1686  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1689  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1693  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1694  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1696  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1705  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1706  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1707  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1708  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1709  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1710  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1711  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1712  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1713  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1714  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1715  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1716  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1717  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1718  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1719  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1720  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1721  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1722  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1723  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1724  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1725  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1726  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1727  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1728  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1729  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1730  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1731  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1732  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1733  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1734  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1735  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1736  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1737  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1738  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1739  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1740  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1741  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1742  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1743  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1744  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1745  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1746  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1747  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1748  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1749  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1750  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1751  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1752  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1753  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1754  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1755  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1756  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1758  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1759  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1760  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1761  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1762  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1763  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1776  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1778  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1797  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1818  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1844  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1847  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1848  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1849  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1850  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1861  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1862  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1864  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1865  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1866  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1867  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1880  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1881  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1882  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1883  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1886  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1887  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1896  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1900  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1927  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1928  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1929  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1930  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1931  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1932  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1933  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1934  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1935  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1936  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1937  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1938  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1940  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1941  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1942  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1943  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1946  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1950  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1951  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1953  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1954  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1955  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1956  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1957  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1958  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1959  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1960  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1961  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1962  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1963  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1964  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1965  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1966  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1967  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1970  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1971  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1972  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1973  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1974  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1975  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1976  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1977  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1978  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1979  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1982  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-output.txt:1983  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:27  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:28  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:29  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:48  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:48  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:58  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:59  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:66  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh:68  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:6  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:25  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:27  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:32  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:33  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:34  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:41  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:45  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:46  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:47  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:54  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:57  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:59  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:61  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:66  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:67  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:68  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:69  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:72  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:74  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:78  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:82  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:83  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:84  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:85  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:88  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:93  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:95  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt:97  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:2  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:67  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:68  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:69  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:70  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:71  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:72  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:95  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:96  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:121  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:123  contains no revers
+     .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh:125  contains no revers
+     .softhouse/gates.md:35  contains no revers
+     .softhouse/gates.md:3757  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-13.md:193  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-15-handoff.md:467  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-transcripts/BAR-conformance-FINAL.txt:447  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-transcripts/RD1-plant-a-row-APPEARS.txt:447  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-transcripts/RD2-remove-a-row-DISAPPEARS.txt:441  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-transcripts/RD4-account-activity-TRACKS-THE-STORE.txt:447  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:230  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:231  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:326  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:421  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:430  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:436  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:455  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:528  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:579  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:580  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:581  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:601  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:608  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:643  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:777  contains no revers
+     .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md:777  contains no revers
+     .softhouse/program.json:732  contains no revers
+     .softhouse/reviews/a2-34-review-a2-15/bar-and-oracle.sh:73  contains no revers
+     .softhouse/tasks.json:2514  contains no revers
+     .softhouse/tasks.json:2514  contains no revers
+     .softhouse/vectors/capabilities-ledger.json:89  contains no revers
+     docs/adr/DEC-2-gl-accounting-adapter.md:823  contains no revers
+     nexus/internal/apps/ledger/conformance/invariants.go:38  contains no revers
+
+=== PASS 3 CALIBRATION: site1 in repo-wide result -> True (MUST be True)
+=== PASS 3 CALIBRATION: site2 in repo-wide result -> True (MUST be True)
+
+=== END — all calibrations passed ===

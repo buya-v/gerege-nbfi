@@ -1,0 +1,40 @@
+engine: python3 3.9.6 re
+tracked files walked: 5088
+
+RAW matches: LIVE=20  EVIDENCE/TRANSCRIPT=1469  TOTAL=1489
+
+=== LIVE artefacts — these are the ones that could mislead a reader ===
+  .softhouse/RESUME.md:189   [contains-no-reversal]  contains no revers
+  .softhouse/gates.md:35   [contains-no-reversal]  contains no revers
+  .softhouse/gates.md:3757   [contains-no-reversal]  contains no revers
+  .softhouse/program.json:732   [contains-no-reversal]  contains no revers
+  .softhouse/tasks.json:2514   [contains-no-reversal]  contains no revers
+  .softhouse/vectors/capabilities-ledger.json:89   [contains-no-reversal]  contains no revers
+  docs/adr/DEC-2-gl-accounting-adapter.md:823   [contains-no-reversal]  contains no revers
+  docs/adr/DEC-2-gl-accounting-adapter.md:2568   [no-reversal-appears]  no reversal appear
+  nexus/internal/apps/ledger/conformance/invariants.go:38   [contains-no-reversal]  contains no revers
+  nexus/internal/apps/ledger/conformance/invariants.go:47   [no-reversal-in-corpus]  corpus promotes no revers
+
+  DISTINCT LIVE (file,line) sites: 10
+
+=== EVIDENCE/TRANSCRIPT files, counted by file (not listed line by line) ===
+   1315  .softhouse/capture/t244-dec2-rev6/sweep-output.txt
+     54  .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.txt
+     39  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T244-handoff.md
+     20  .softhouse/capture/t244-dec2-rev6/sweep-stale-reversal-reason.sh
+     18  .softhouse/capture/t244-dec2-rev6/sweep-reverify-sound-engines.sh
+      3  .softhouse/capture/t244-dec2-rev6/engine-table.txt
+      2  .softhouse/capture/driver-20260822-060013/FINDINGS.md
+      2  .softhouse/capture/t244-dec2-rev6/line823-verbatim.txt
+      2  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-13.md
+      2  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-15-handoff.md
+      2  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-transcripts/BAR-conformance-FINAL.txt
+      2  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-transcripts/RD1-plant-a-row-APPEARS.txt
+      2  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-transcripts/RD2-remove-a-row-DISAPPEARS.txt
+      2  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T242-transcripts/RD4-account-activity-TRACKS-THE-STORE.txt
+      1  .softhouse/capture/t244-dec2-rev6/line2568-2569-verbatim.txt
+      1  .softhouse/capture/t244-dec2-rev6/mlsweep.py
+      1  .softhouse/reviews/a2-34-review-a2-15/REVIEW.md
+      1  .softhouse/reviews/a2-34-review-a2-15/bar-and-oracle.sh
+
+=== CALIBRATION OK: both known sites landed in LIVE ===

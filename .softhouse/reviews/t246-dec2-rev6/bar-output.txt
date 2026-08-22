@@ -1,0 +1,111 @@
+repo root : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9cbb3a58ac676f1a
+
+=== 0. STAMPS ===
+HEAD              : f13bf4af24934544117b4b19bf8df1b2d4b28563
+branch            : softhouse/T246-review-dec2-rev6
+origin/main       : f13bf4af24934544117b4b19bf8df1b2d4b28563
+merge-base        : f13bf4af24934544117b4b19bf8df1b2d4b28563
+vector store tree : 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d
+loanschedule tree : ee2461724df0d91fb66b33eee63c5f29211823f4
+ledger tree       : e1fe9af9105d58af3d990b1d3314bbcb23ada9f8
+
+go: go version go1.26.6 darwin/arm64
+
+=== 1. CONFORMANCE (bash, never sh) ===
+conformance exit = 0
+
+--- PROBE LINE: test PRESENCE first (four exit-2 paths precede it) ---
+  conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
+      oracle probe    UP
+
+--- VERDICT ---
+  VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+
+--- corpus lines ---
+  ledger-invariants:   8. TESTS ARE INSPECTED, NOT EXEMPTED. A _test.go file that assigns a balance field as a
+          the count above, so a run with NO implementation registered — 0 cells compared — printed
+      money cells whose wire text is over-scaled and declared as such: 0 (T17-F5; an UNDECLARED one
+          is inadmissible, because a rig that silently rounded it would grade the port against a
+  --- INVARIANT ASSERTIONS DELIBERATELY EXEMPTED BY A VECTOR (the vector says why, here) ---
+          REASON: GATE G-8, FAMILY B, EXEMPTED BECAUSE THE REFERENCE ORACLE GENUINELY DOES NOT AMORTIZE THIS SHAPE -- not because the port is being excused. The oracle advances 1 minor unit and its own principal column repays 0: every repayment row carries principal 0.00 and its totalPrincipalAmount reads 0.00. The Go port reproduces that CELL FOR CELL (0 divergent cells over this vector's graded money cells, measured; see graded_against evidence), so there is no port-vs-oracle divergence for this invariant to arbitrate: asserting it here would be asserting that the ORACLE is wrong, which is a graded-domain amendment and a hard `user` gate (G-8 options (b) and (c)), not a check the harness may make on its own authority. THE EXEMPTION IS SCOPED TO THIS ONE CAPTURED SHAPE. It is NOT a statement that 600.0 % p.a. is exempt: the sibling vector T116-G8-CLEAN-N103, one repayment shorter at the same rate and the same principal, amortizes normally and carries NO exemption at all.
+          REASON: GATE G-8, FAMILY B, EXEMPTED BECAUSE THE REFERENCE ORACLE GENUINELY DOES NOT AMORTIZE THIS SHAPE -- not because the port is being excused. The oracle advances 1 minor unit and its own principal column repays 0: every repayment row carries principal 0.00 and its totalPrincipalAmount reads 0.00. The Go port reproduces that CELL FOR CELL (0 divergent cells over this vector's graded money cells, measured; see graded_against evidence), so there is no port-vs-oracle divergence for this invariant to arbitrate: asserting it here would be asserting that the ORACLE is wrong, which is a graded-domain amendment and a hard `user` gate (G-8 options (b) and (c)), not a check the harness may make on its own authority. THE EXEMPTION IS SCOPED TO THIS ONE CAPTURED SHAPE. It is NOT a statement that 600.0 % p.a. is exempt: the sibling vector T116-G8-CLEAN-N103, one repayment shorter at the same rate and the same principal, amortizes normally and carries NO exemption at all.
+      (finding T225-F1). It is counted apart from GROUNDED because it is not evidence either way.
+      4 GROUNDED (the recorded schedule VIOLATES the exempted invariant), 0 UNGROUNDED.
+      MINTED 4 citation(s) for 4 admissible exemption(s) (4 GROUNDED + 0 UNDETERMINED-ON-THE-RECORD) out of 4 declared.
+          T116-G8-FAMB-N104 — principal_portions_sum_to_disbursed [GROUNDED]
+          T116-G8-FAMB-N104 — principal_amortizes_to_zero [GROUNDED]
+          T116-G8-FAMB-N108 — principal_portions_sum_to_disbursed [GROUNDED]
+          T116-G8-FAMB-N108 — principal_amortizes_to_zero [GROUNDED]
+  --- INVARIANT ASSERTIONS THAT COULD NOT RUN (a cell the capture never recorded) ---
+  --- LEDGER (tierA-gl-accounting) — SECOND SCHEMA, SECOND COMPARATOR, SEPARATE COUNTS ---
+      ledger inadmissible     0
+      ledger harness errors   0
+      ledger cells compared   70 graded, of which 21 are MONEY cells in int64 minor units
+      WHAT A GREEN LEDGER SECTION DOES **NOT** MEAN — printed every run, not only when it fails.
+            WHY NOT: NOT GRADED BY ANY VECTOR IN THIS STORE. The four parity vectors assert a
+            inadmissible today (A2-314, 403). An accrual vector needs a NEW accrual product on
+      parity vectors          PASS 46   FAIL 0
+      inadmissible            0
+      harness errors          0
+      cells compared          7884 graded, 93 ungraded (never recorded by the capture)
+      recorded, never graded  0 rate factors (TRANSCRIBED-ROUNDED), 0 declared over-scaled money cells
+      invariant violations    0
+      invariant assertions    0 NOT RUN (a cell nobody observed; listed above, never inferred)
+      invariant assertions    4 EXEMPTED BY A VECTOR (switched off on purpose; each one's reason is listed above)
+  VERDICT: PASS (exit 0) — 46 parity vectors match the pinned reference oracle, 7884 cells compared.
+  conformance:   exemption census READ: GROUNDED                     = 4 == pinned 4
+  conformance:   exemption census READ: UNGROUNDED                   = 0 == pinned 0
+  conformance:   exemption census READ: LEDGER declared exemptions   = 0 == pinned 0
+  conformance:   exemption census READ: LEDGER parity vectors        = 4 == pinned 4
+  conformance:   exemption census READ: LEDGER oracle-refusal vector = 2 == pinned 2
+  conformance:   exemption census READ: LEDGER money cells compared  = 21 == pinned 21
+
+--- census pins ---
+  conformance:   census figure READ: inspected 398 >= 398 tracked by git (floor DERIVED, not pinned)
+  conformance:   census figure READ: inspected 63 >= 63 tracked by git (floor DERIVED, not pinned)
+  ledger-invariants:   census figure READ: inspected 56 >= 56 tracked by git (floor DERIVED, not pinned)
+      no-float census         6 Go packages / 56 Go files / 120099 tokens / 249 import specs inspected under nexus (recursive)
+                              census root walked: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9cbb3a58ac676f1a/nexus
+  conformance:   exemption census READ: exempted assertions (graded) = 4 == pinned 4
+  conformance:   exemption census READ: declared exemptions (loaded) = 4 == pinned 4
+  conformance:   exemption census READ: GROUNDED                     = 4 == pinned 4
+  conformance:   exemption census READ: UNDETERMINED-ON-THE-RECORD   = 0 == pinned 0
+  conformance:   exemption census READ: UNGROUNDED                   = 0 == pinned 0
+  conformance:   exemption census READ: LEDGER declared exemptions   = 0 == pinned 0
+  conformance:   exemption census READ: LEDGER parity vectors        = 4 == pinned 4
+  conformance:   exemption census READ: LEDGER oracle-refusal vector = 2 == pinned 2
+  conformance:   exemption census READ: LEDGER money cells compared  = 21 == pinned 21
+
+=== 2. --prove ===
+prove exit = 0
+  PROOF OK   exit 0 (wanted 0)   D-5: an unrecorded money cell costs the CELL, not the vector
+  PROOF OK   exit 1 (wanted 1)   T9-F5: a one-minor-unit perturbation of a PARITY vector goes red
+  PROOF OK   exit 1 (wanted 1)   T9-F5: a DATE cell of a PARITY vector goes red, naming the row and both dates
+  PROOF OK   exit 2 (wanted 2)   T9-F1a: a POPULATED non-money cell withdrawn from grading is inadmissible
+  PROOF OK   exit 2 (wanted 2)   T9-F1b: a structural kill naming a cell the vector withdrew is inadmissible
+  PROOF OK   exit 2/0       T9-F1b: withdrawn cells STOP backing the kill; recorded ones still back it
+  PROOF OK   exit 0/0       T58-N2/T60: a withdrawn cell an invariant reads is NOT RUN, not a HOLD and not a VIOLATION
+  PROOF OK   T201/T199-D1: CONFORMANCE_REPO_ROOT cannot move the graded tree — RED on a diverged root (exit 2, not 0), GREEN on its own
+  PROOF OK   T201/T197-F-1: the census figure is the FIRST 'inspected N' — new [320 57 7 320 57 ] vs the shipped greedy [320 57 320 7 0 ]
+  PROOFS: 23 passed, 0 failed
+
+=== 3. GO ===
+go build ./...   : 0
+   (lines of output; 0 = clean)
+go vet ./...     : 0
+   (lines of output; 0 = clean)
+go test -count=1 : exit 0
+  ok  	github.com/gerege/nexus/internal/apps/ledger	0.569s
+  ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	5.090s
+  ok  	github.com/gerege/nexus/internal/apps/loanschedule	8.717s
+  ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	74.915s
+
+gofmt -l (MUST be exactly contract.go — NEVER gofmt -w it, G-3):
+  internal/apps/loanschedule/contract/contract.go
+
+=== 4. THE STORE MUST BE UNCHANGED ===
+vector store tree AFTER : 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d
+git status of protected paths (MUST be empty):
+  (end)
+
+full transcripts: /tmp/t246-conf.txt /tmp/t246-prove.txt /tmp/t246-test.txt
