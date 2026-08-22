@@ -1,0 +1,11 @@
+TIER1 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+TIER1 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+TIER1 .softhouse/reviews/T138-evidence/r11-hygiene.sh
+TIER1B .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+TIER2 .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+TIER2 .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
+TIER2 .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+TIER2 .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh
+TIER2 .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh
