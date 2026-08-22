@@ -623,6 +623,111 @@ func TestStoreFileCensus(t *testing.T) {
 				"nothing accounts for everything, which is the vacuous pass this check exists not to be")
 		}
 	})
+
+	// A2-23 — THE STORE-SHAPE HALF OF A2-20's FIX.
+	//
+	// A2-20 closed the VECTOR-ADMISSION half of this defect: a FILE declaring an
+	// unknown context is refused at Admit (admit.go:139, the
+	// "not a context this harness grades" message). A2-20 measured, and left
+	// standing as a residual, that `mkdir .softhouse/vectors/ledger/` WITH
+	// NOTHING IN IT still gave exit 0, VERDICT PASS: nothing ever reaches Admit
+	// for an empty directory, because LoadStore's own loop over that directory's
+	// entries (vector.go's LoadStore) produces zero iterations when os.ReadDir
+	// returns zero files, so no vector is loaded, no LoadError is recorded, and
+	// the directory itself is unaccounted for anywhere the harness looks.
+	//
+	// The four sub-tests below drive that gap RED on four different SHAPES —
+	// three of them new (empty, dotfile-only, README-only) and the fourth
+	// (nested empty) already covered by a PRE-EXISTING rule, which the
+	// sub-test's own name and assertion say plainly. A fifth is the P-72
+	// negative control: a KNOWN context directory that happens to be empty must
+	// NOT be refused, or the census would make it impossible to promote the
+	// first vector of a brand-new context. A sixth drives a TYPE this task's
+	// rule was not built around — a directory name differing from a known
+	// context only by letter case.
+	t.Run("A2-23_unknown_empty_top_level_directory_is_refused", func(t *testing.T) {
+		refuses(t, func(t *testing.T, dir string) {
+			if err := os.MkdirAll(filepath.Join(dir, "A2-23-unknown-empty"), 0o755); err != nil {
+				t.Fatalf("MkdirAll: %v", err)
+			}
+		}, "STORE ROOT", "A2-23-unknown-empty", "not a context ANY schema grades")
+	})
+
+	t.Run("A2-23_unknown_directory_holding_only_a_dotfile_is_refused", func(t *testing.T) {
+		refuses(t, func(t *testing.T, dir string) {
+			write(t, filepath.Join(dir, "A2-23-unknown-dotfile", ".gitkeep"), "")
+		}, "STORE ROOT", "A2-23-unknown-dotfile", "not a context ANY schema grades")
+	})
+
+	t.Run("A2-23_unknown_directory_holding_only_a_README_is_refused", func(t *testing.T) {
+		refuses(t, func(t *testing.T, dir string) {
+			write(t, filepath.Join(dir, "A2-23-unknown-readme", "README.md"), "# not a vector\n")
+		}, "STORE ROOT", "A2-23-unknown-readme", "not a context ANY schema grades")
+	})
+
+	// THIS SHAPE WAS ALREADY COVERED BEFORE A2-23, AND THIS SUB-TEST SAYS SO
+	// RATHER THAN CLAIMING CREDIT FOR IT. A nested EMPTY directory inside a
+	// KNOWN context directory is caught by the PRE-EXISTING "directory INSIDE a
+	// context directory" rule (T154/T120), which fires on the WalkDir directory
+	// NODE itself and is unconditional on the directory's contents — so it was
+	// never blind to emptiness the way the top-level check was. Included to
+	// discharge the P-76 duty to drive a shape not built around this task's own
+	// rule; the assertion below is the OLD nested-directory message, not the
+	// new unknown-context-directory one, which is how the sub-test proves the
+	// rule did not need to change for this shape.
+	t.Run("A2-23_nested_empty_directory_was_already_refused_by_a_pre_existing_rule", func(t *testing.T) {
+		refuses(t, func(t *testing.T, dir string) {
+			if err := os.MkdirAll(filepath.Join(dir, "loanschedule", "A2-23-nested-empty"), 0o755); err != nil {
+				t.Fatalf("MkdirAll: %v", err)
+			}
+		}, "directory INSIDE a context directory", "loanschedule/A2-23-nested-empty")
+	})
+
+	// THE NEGATIVE CONTROL (P-72): a KNOWN context directory that happens to be
+	// EMPTY must NOT be refused by the new check — only an UNKNOWN name is a
+	// defect. Without this row, the three RED sub-tests above could be passing
+	// because the census now refuses every empty directory, known or not, and
+	// that would make the corpus impossible to grow into: promoting the first
+	// vector of a brand-new context always starts from an empty directory.
+	t.Run("A2-23_a_known_context_directory_left_empty_is_not_flagged_as_unknown", func(t *testing.T) {
+		dir := copyStore(t, pristine)
+		if err := os.RemoveAll(filepath.Join(dir, "ledger")); err != nil {
+			t.Fatalf("RemoveAll: %v", err)
+		}
+		if err := os.MkdirAll(filepath.Join(dir, "ledger"), 0o755); err != nil {
+			t.Fatalf("MkdirAll: %v", err)
+		}
+		if _, _, err := LoadStore(dir, ""); err != nil {
+			t.Fatalf("LoadStore refused a store whose only defect is an EMPTY KNOWN context "+
+				"directory, which is not a defect the new check exists to report: %v", err)
+		}
+	})
+
+	// A P-76 TYPE PROBE: a directory named "LEDGER" (uppercase) is a case-only
+	// variant of the real context "ledger" and must still be refused as
+	// UNKNOWN, matching the exact-case rule storeRootNonVectorFiles already
+	// states for root-level FILES ("on a case-insensitive filesystem the two
+	// names address one file, and on a case-sensitive one they address two").
+	// Built from scratch (t.TempDir, not copyStore) rather than alongside a
+	// real "ledger" directory, because MEASURED LIVE on this host (macOS,
+	// default APFS) `mkdir .softhouse/vectors/LEDGER` alongside an existing
+	// `ledger/` fails outright with "File exists" — the filesystem itself is
+	// case-insensitive and will not hold both names as distinct entries, so a
+	// fixture that tried to create both would never reach the code under test.
+	// A second .json is planted in a genuinely-known context purely so the
+	// census's own anti-vacuity floor ("a census over no files is an error",
+	// tested above) does not fire first and mask the assertion this sub-test
+	// exists to make.
+	t.Run("A2-23_case_variant_of_a_known_context_name_is_still_unknown", func(t *testing.T) {
+		dir := t.TempDir()
+		write(t, filepath.Join(dir, "loanschedule", "A2-23-seenjson-anchor.json"), "{}")
+		write(t, filepath.Join(dir, "LEDGER", "README.md"), "# not a vector\n")
+		if _, _, err := LoadStore(dir, ""); err == nil {
+			t.Fatal("LoadStore accepted a store whose only ledger-shaped directory is \"LEDGER\" " +
+				"(uppercase): the known-context check must be exact-case, matching the exact-case " +
+				"rule this file already states for root-level files")
+		}
+	})
 }
 
 // THE DEFECT THIS GUARDS (A2-19 finding F1; reproduced independently by the
