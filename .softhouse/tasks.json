@@ -939,7 +939,7 @@
   },
   {
    "id": "T187",
-   "title": "THE POPULATION IS 27, NOT 9 -- .softhouse/reviews/t41-probe/ holds 21 more unguarded in-place rewriters of the RATIFIED DEC-1, two of them LIVE today",
+   "title": "THE POPULATION IS 27, NOT 9 -- .softhouse/reviews/t41-probe/ holds 21 more unguarded in-place rewriters of the RATIFIED DEC-1, two of them LIVE today [CORRECTED by T204/T181, fire 20260822-080001: the SETTLED population is 25 files -- 20 targeting DEC-1, 7 targeting contract.go, 2 targeting both (27 pairs) -- converged BLIND by T187 (execution) and T183 (static sweep) and reached a third time by T181 (guard-constant read). The '21' in this title was a MENTION count, not a write-target count. The TOTAL was never in question and no file went unhardened: a reporting defect, not a coverage defect.]",
    "role": "coder",
    "executor": "agent",
    "model": "opus",
@@ -1499,7 +1499,7 @@
    "executor": "agent",
    "model": "sonnet",
    "target": "docs",
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
    "dependencies": [
     "T181"
@@ -1509,7 +1509,7 @@
    ],
    "description": "T181's F-1. T178's prose publishes the unguarded-rewriter split as 21 DEC-1 / 4 contract.go. The truth -- settled by the T187/T183 BLIND convergence and reached a THIRD time by T181 via a different method (reading the target from the guard constant that is the actual argument to the write path) -- is 25 files / 20 DEC-1 / 7 contract.go / 2 both / 27 pairs. The TOTAL of 25 is correct and only the SPLIT is wrong, so no file went unhardened: this is a reporting defect, not a coverage defect, and the correction must say so rather than reading as a coverage scare. Note that BOTH of T178's errors UNDERSTATE contract.go, the higher-severity target, and that T178's prose contradicts ITS OWN COMMITTED TRANSCRIPT (which sums to 20/5). DO NOT re-litigate the population -- it is settled. Correct the number where a future fire will read it, cite the three converging derivations, and leave T178's transcript intact as evidence.",
    "acceptance": null,
-   "note": "DISPATCHED fire 20260822-080001 batch 2, worktree-isolated.",
+   "note": "DONE + MERGED, fire 20260822-080001. Corrected by ANNOTATION ONLY -- a top-of-file banner plus two inline [CORRECTED -- T204] blockquotes -- leaving T178's original transcript BYTE-IDENTICAL below the banner, so it survives as the evidence that T178's PROSE (21/4) diverged from T178's OWN TOOL (transcript sums to 20/5). Diff is pure additions (+31/-0). SWEEP NAMED ITS PROGRAM (P-33/P-58): LC_ALL=C /usr/bin/grep -a -rn, the explicit BSD 2.6.0-FreeBSD path rather than the shell's ugrep re-exec, broad pass over .softhouse docs nexus then narrowed then file-by-file over this run's handoff directory. Exactly ONE in-scope file carried the wrong split (T178.md, two sentences); all other hits were confirmed false positives (unrelated DEC-1-revision handoffs, capture-case ids like B21, the interest figure 21.6%). IT FOUND TWO MORE CARRIERS AND CORRECTLY REFUSED TO TOUCH THEM, both outside its .softhouse/handoff/-only scope guard and both DRIVER-OWNED: tasks.json (T187's task title) and program.json (a tasks_raised line). THE DRIVER CORRECTED BOTH ITSELF this fire, in the same annotate-don't-rewrite style. That is the scope guard working as designed -- the worker held its boundary and routed the rest rather than widening its diff. Digests verified unchanged before, after AND post-commit, using the git tree hash per P-61 and explicitly NEVER find|shasum: vectors ce821c638724237652b6b29627148d34b72fab3b, contract.go 0db73d4af996...e37f139. No promote or rewriter script executed -- none needed.",
    "contract_independent": true,
    "branch": "softhouse/T204-correct-t178-split"
   },
