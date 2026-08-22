@@ -2026,3 +2026,163 @@ Related: **P-70** (a search result stated as a world fact), **P-66** (state wher
 > need BEFORE dispatching, not after**. Duties 2 and 3 above are unaffected and still in force: never infer
 > "absent" from a worktree, and a review task is still the sharpest case. **P-69 applies to this pattern
 > itself** — the claim "worktrees fork from session-start" had a shelf life of exactly one fire.
+
+---
+
+## P-72 — a sweep is an INSTRUMENT; calibrate it on a known positive before you report its negatives
+
+**Raised by `T227`, local fire `20260822-140002`, which could not write it — `patterns.md` was outside its
+`files_hint` (`FU-T227-1`). Written by `T232` in the same fire, which re-measured every figure below at
+`90c21d6` rather than transcribing T227's, and found one mechanism T227 did not name.**
+
+### The incident
+
+`T224` was dispatched to do two things: fix one live restatement of DEC-2's retracted *"They are not
+checked. No guard for either exists"* claim — handed to it **by line number**, at
+`.softhouse/conformance.sh:1115-1116` — and then sweep the repository for the rest. It fixed the named
+site, ran nine terms, and closed with:
+
+> *"no fourth or fifth surviving live assertion of the claim exists in this repository outside the two
+> fixed here [VERIFIED by the sweep above; scope and method stated so the claim is checkable rather than
+> taken on trust]"*
+> [VERIFIED: `T224.md:164-167`.]
+
+A survivor was sitting on **line 1 of the guard's own source**, and had been since `A2-18` wrote it:
+
+```go
+// Command ledgerguard is the source-level guard that DEC-2 §4.4.1 records as NOT EXISTING.
+```
+
+[VERIFIED: `git show 90c21d6:.softhouse/guards/ledgerguard/main.go | sed -n 1p` — i.e. present in T224's
+**own** tree, at T224's **own** fork point. This is not a P-71 worktree artefact.]
+
+### The measurement — recall on a known positive, both directions
+
+T232 re-ran T224's nine stated terms at `90c21d6` against two targets. For the two `\b` terms it used
+**PCRE (`git grep -P`)**, the reading most generous to T224.
+
+| target | of T224's 9 terms, how many hit |
+|---|---|
+| `ledgerguard/main.go:1` — the survivor it missed | **0 of 9** |
+| `conformance.sh:1115-1116` — **the site T224 had just fixed** | **0 of 9** |
+
+The second row is the finding. **T224's sweep had zero recall on the one positive it already held.** The
+hit it fixed was handed to it by the brief; the instrument could never have found it. It then reported the
+population closed. A search whose measured recall on the instance in your hand is zero licenses nothing
+about the instances that are not.
+
+The terms were not *silent* — they were **loud about the wrong lines**. T1 (`not checked`) returned two
+hits inside `main.go` itself, at `:476` and `:816`, both about an unrelated parse failure; T3 and T8
+returned four lines of `conformance.sh`, at `:731`, `:1348`, `:1778`, `:1780`. So `main.go` **entered
+T224's population and was triaged out whole**. Controls that do hit: bare `not existing` finds `main.go:1`
+and `conformance.sh:1116`; an unanchored forward-proximity net finds `main.go:1` and `:8`.
+[All VERIFIED by T232 at `90c21d6`.]
+
+### Two mechanisms, both one character wide
+
+**Mechanism 1 — a word-boundary anchor on an INFLECTED STEM.** T224's widest net was `\bnot exist\b` and
+its proximity net anchored `\bexist\b`. A trailing `\b` demands a non-word character after `exist`; in
+`NOT EXISTING` the next character is `I`. So `existing`, `exists`, `existed`, `existence` were outside the
+net **by construction** — and the claim's most natural nominalised spelling is exactly *"records as not
+exist**ing**"*. Dropping the single trailing `\b` converts both misses into hits. Repo-wide cost at
+`90c21d6` under PCRE: `\bnot exist\b` → **172 files**, `\bnot exist` → **178**. English states absence
+with a gerund at least as often as with a finite verb. **Anchor the LEFT of a stem if you must; never the
+right.**
+
+**Mechanism 2 — `git grep -E` does not implement `\b` at all, and says nothing.** T227 did not name this;
+T232 measured it. On this platform `git grep -E` treats `\b` as the **literal character `b`**:
+
+```
+git grep -c -E  'balance column'  90c21d6 -- …/main.go   ->  14
+git grep -c -E '\balance column'  90c21d6 -- …/main.go   ->  14      <- IDENTICAL: \b == literal b
+git grep -c -P '\balance column'  90c21d6 -- …/main.go   ->   0      <- real word boundary, correctly misses
+git grep -c -E  'Command'         90c21d6 -- …/main.go   ->   1
+git grep -c -E '\bCommand'        90c21d6 -- …/main.go   ->   0      <- 'bCommand' matches nothing
+```
+
+So under `git grep -E`, T224's **widest net** `\bnot exist\b` compiles to a search for the literal string
+`bnot existb`, and at `90c21d6` it matches **0 files in the entire repository** — against **172** for the
+same pattern under `-P` and **178** for the unanchored form. **Exit 1, no error, no warning.** The term
+that reads as the broadest in the list is the only one that could never match anything.
+[VERIFIED: T232, `git version 2.50.1 (Apple Git-155)`, darwin/arm64. **`[UNVERIFIED]` on GNU/Linux**, where
+glibc's `regcomp` supports `\b` as an extension and `git grep -E` may well behave differently — which is
+itself the point: **a regex metacharacter is a claim about an ENGINE (P-33)**, and this one changes meaning
+between `git grep -E`, `git grep -P`, and the `grep` on `PATH` — which on this machine is not GNU grep at
+all but **`ugrep 7.5.0`**, and *does* honour `\b` in ERE.]
+
+### Why it is worse than a typo
+
+A typo produces a hit list that looks wrong. This produces a hit list that looks **thorough**. T224 did
+everything the process asks for: it widened its terms (it added five, citing **P-26** — sweep the concept,
+not the sentence), it stated its population (~150 files), it declared what it had not opened (**P-40**),
+and it scoped its conclusion in writing. Every visible signal of rigour was present. The one unperformed
+step was the only one that measures anything: **point the instrument at something you already know is
+there.** Widening a list of surface strings does not convert it into a search for a claim — and a handoff
+that presents the widening as if it had is how a zero-recall sweep acquires the authority to close a
+population.
+
+### The rule
+
+> **Before a sweep may support the sentence "the population is closed", it must be run against at least
+> one instance of the target that is already KNOWN to exist — normally the very hit the task was
+> dispatched to fix — and that run must be SHOWN to hit. A sweep that cannot find the defect already in
+> your hand has unknown, possibly zero, recall, and its silence about the rest of the tree is not
+> evidence.**
+
+Three corollaries, each independently load-bearing in this incident:
+
+1. **Calibrate on a known positive, and publish the calibration.** This is the procedure **P-66/P-70** were
+   missing. P-66 says *state your scope*; **P-72 says test whether your scope is real.** A stated scope and
+   a working instrument are different claims, and T224 supplied the first while failing the second.
+2. **Commit the COMMANDS, not a description of them.** T224's handoff records its nine terms as **prose**
+   (`T224.md:78-90`: *"8. Added: `\bnot exist\b` without `does`/`did` … 9. Added: a combined-proximity
+   search for `guard`/`invariant`/`ledger`/`I-3`/`I-4` near `exist`/`checked`…"*) and **not one executable
+   command** — no engine, no flags, no direction for the proximity net. So the sweep is **unreproducible**:
+   T227 could only transcribe what the prose describes and had to mark T224's literal commands
+   `[UNVERIFIED]`, and T232 had to *choose* an engine to re-measure under — the choice that turned out to
+   decide whether the widest term matched 172 files or zero. **A sweep whose commands were not committed
+   cannot be audited, only believed.** `A2-31` did this right: its `probe-sweep.sh` and its captured
+   `sweep-output.txt` are both in the tree, which is why its nets are checkable and its unanchored
+   `records as not existing` demonstrably hit.
+3. **Never right-anchor an inflected stem, and triage per LINE, not per FILE.** `main.go` was *inside*
+   T224's population — surfaced by an unrelated `not checked` at `:816` — and was dismissed as a file. The
+   per-file question ("is this file about the claim?") answered *no*; the per-line question at `:1`, never
+   asked, answers *yes*.
+
+### The floor no regex reaches
+
+T227 found a **second** live copy of the same claim **one paragraph over**, at `ledgerguard/main.go:13`:
+
+> *"and §4.4.1 lists, item by item, what nothing in the repository looks for:"*
+
+That is the identical retracted claim, in the present tense, ten lines below line 1. It was named by
+nobody, flagged by no term in any sweep in this chain, and found **only because T227 was reading the whole
+file it had been sent to fix one line of**. It contains **no inflection of "exist" whatsoever**
+[VERIFIED: T232 — `sed -n 13p` at `90c21d6` piped to `grep -c -i exist` → **0**]. Widening the pattern by
+one character rescues line 1 and does nothing for line 13. **A concept has a floor that pattern-widening
+cannot reach**, and below that floor the only instrument is reading. Corollary for triage: when a file is
+already open because one line in it is wrong, read the file.
+
+### The open tail — do not read this pattern as closed
+
+**`FU-T227-2` is open.** Every sweep in this chain — T224's, A2-31's, T227's own, and T232's
+re-measurement above — is **line-oriented**. T224's own site is the proof that this matters: the claim
+straddles a line break (`§4.4.1 records` on `:1115` / `# as not existing` on `:1116`), and T232 measured
+that `:1115` contains no inflection of `exist` and `:1116` contains no `guard`
+[VERIFIED at `90c21d6`], so **even the corrected, unanchored forward-proximity net misses it** — only the
+mirror direction happens to hit. A multi-line matcher (`perl -0777`, or `git grep` with context joined
+before matching) **has never been run against this claim.** The single-character fix in Mechanism 1
+narrows the gap; it does not close it. Anyone citing P-72 as evidence that the retracted-claim population
+is now clean is committing **P-70** with a better instrument.
+
+### Related
+
+**P-66 / P-70** — "not found" is a statement about the search; P-72 supplies the missing procedure.
+**P-40** — count and state what you skipped; T224 did this and it was still not enough, because a declared
+skip is honest about *coverage* and silent about *recall*. **P-67 / P-69** — measure both terms, in the
+live artefact, at the moment of use; here the unmeasured term was the instrument itself. **P-26** — sweep
+the concept, not the sentence; P-72 is what stops "I widened my terms" from being self-certifying.
+**P-22 / P-36** — a control that cannot fire is worse than none, because it is believed; a right-anchored
+`\b` on an inflected stem, and a `\b` the engine does not implement, are both exactly that.
+**P-33** — a tool claim names the binary, the version and the invocation: `-E` and `-P` are different
+languages, and `grep` on `PATH` may be neither.
