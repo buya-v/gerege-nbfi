@@ -279,6 +279,38 @@ func (r *CapabilityRegistry) CounterfactualCoverage(vectors []*Vector) (map[stri
 	return covered, uncovered
 }
 
+// RefusalFor is THE refusal predicate for a whole vector: does this harness
+// decline to grade it, and on what ground.
+//
+// It exists because there were two answers to that question and only one of them
+// was ever consulted twice. gradeVector asked Assess and then GradedDomain,
+// inline, and decided the OUTCOME; every other reader of "is this vector
+// refused?" — the coverage report above all — had to re-derive it or, as the
+// coverage report did, not derive it at all (finding A2-19 F3). One predicate,
+// one answer, and a caller that cannot accidentally consult half of it.
+//
+// It deliberately does NOT re-check admissibility. That needs the pin and the
+// repo root, and it is a different question: an inadmissible file is not a vector
+// at all, whereas a refused vector is a well-formed vector this corpus cannot
+// grade. Callers filter inadmissible separately, as Run does.
+//
+// The order matches gradeVector's normative precedence: the capability
+// obstruction is reported before the request one, because a seam that cannot see
+// something is a stronger obstruction than a value nobody has promoted a vector
+// for, and the two must not disagree about which comes first depending on who
+// asked.
+func (r *CapabilityRegistry) RefusalFor(v *Vector) CapabilityVerdict {
+	if verdict := r.Assess(v.Oracle.Seam, v.CapabilitiesRequired); !verdict.Gradeable {
+		return verdict
+	}
+	if v.Expect.Kind == "schedule" {
+		if ok, why := GradedDomain(v); !ok {
+			return CapabilityVerdict{Reason: ReasonUngradedRequest, Detail: why}
+		}
+	}
+	return CapabilityVerdict{Gradeable: true}
+}
+
 // Assess answers whether a vector's required capabilities can be graded against
 // a capture from its seam.
 //
