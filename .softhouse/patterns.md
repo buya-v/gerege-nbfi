@@ -1773,6 +1773,68 @@ narrower, sharper form:** a figure with a **denominator** needs the denominator 
 them is a fact. **Before certifying a ratio, count both terms in the live artefact, and say where you
 counted.**
 
+### P-68. A run that graded NOTHING reported every capability backed — and "latent" was true of the exit code, not the report
+
+**`A2-27`, fire `20260822-000013`, re-classifying a finding it inherited.** `A2-24` had recorded that
+`OutcomeError` vectors entering the graded population was **latent only**, on the reasoning that the single
+reachable cause already makes the run fatal. `A2-27` measured it instead of inheriting it, and the
+classification was wrong in the half that matters.
+
+On the pre-fix bytes with `Implementation == nil` — **the standing state of `impl_hook.go` until a port is
+registered** — the harness printed:
+
+```
+51 errored · ZERO cells compared · 113 kills credited (106 money, 7 structural) · uncovered=[]
+```
+
+**A run that compared nothing claimed every capability backed.** "Latent" was true of the **exit code** and
+false of the **report** — and the report is what a reader believes.
+
+**The general rule:** when a finding is dismissed as unreachable, ask *unreachable in which observable?* A
+defect that cannot change the exit status can still change every number a human reads. This is **P-62's
+family** — exit code and diagnostic disagreeing — arriving from the opposite direction: there the exit code
+was overloaded, here it was the only thing anyone checked.
+
+### P-69. The measured claim went stale between the review and the revision — inside a single fire
+
+**`A2-28`, fire `20260822-000013`.** `A2-25` reviewed DEC-2 rev 3 and recorded the guard's census as
+`4063 literals / 658 statements`. `A2-28`, writing rev 4 hours later in the same fire, measured
+`4074 / 659`. **Neither was wrong.** `T116` had touched `report.go` in between.
+
+Three of rev 3's four *rejected* claims were likewise **true when written** — they went stale because the
+harness moved underneath them. So the ADR's defect was not carelessness; it was **drafting-time measurement
+presented as ratification-time fact**.
+
+`A2-28` adopted the obvious remedy — stamp every measured claim `[MEASURED … at commit <sha>]` — and then
+said the thing worth keeping: **stamps make staleness VISIBLE but cannot PREVENT it.** A document whose
+measured claims can go stale between the review and the ratification **cannot be ratified by a review
+alone**; it needs a **re-measure gate at the moment of ratification**.
+
+Generalisation beyond ADRs: **any artefact that certifies a measurement has a shelf life, and the shelf life
+is shorter than a busy fire.** If a fire can move the tree ten times, a claim measured at the start of it is
+not evidence at the end of it.
+
+### P-70. "Latent", "not promoted", "can never resolve", "no guard exists" — four ways this program stated a search result as a world fact, in one fire
+
+Collected because they landed together and share one shape. Each was a **true statement about where
+somebody looked**, recorded as a **false statement about what exists**:
+
+| The claim | Where it was actually true | What was really the case |
+|---|---|---|
+| `T114` "has NO ENTRY in `tasks.json` and can never resolve" | true *of `tasks.json`* | `done` in the run-1 archive, handoff and review both on `main` — **P-66** |
+| G-8 family B "Prepared and **NOT promoted**" | true *of four draft files* | true of the drafts, false of the shape — `T116` promoted three vectors |
+| `OutcomeError` vectors are "**latent** only" | true *of the exit code* | false of the report — **P-68** |
+| DEC-2 §8.3 "They are not checked. **No guard for either exists**" | true *when written* | `T208` wired the guard; and the claim survived one FILE over, in `conformance.sh:1115-1116`, attached to **the very guard whose existence refutes it** |
+
+The last row is the sharpest: **every sweep for that claim had been scoped to the ADR**, so the copy living
+in the harness was invisible to all of them — including the sweep written specifically to catch restatements.
+
+**Standing rule, now enforced in the skill's STEP 1 and in `ready-tasks.py`:** before recording that a
+dependency, a file, a vector, a guard or a citation **does not exist**, **state where you looked.** If the
+answer does not include every place the thing is kept, the finding is *"I did not find it"* — and those are
+not the same claim. A sweep must also name its **scope**, because a sweep scoped to one file cannot support a
+conclusion about the repository.
+
 ### P-66. The readiness check resolved dependencies against ONE file and called the missing ones unresolvable — a task sat blocked for several fires on an edge that was never broken
 
 **Caught by the driver against itself, fire `20260822-000013`, during STEP 1.**
