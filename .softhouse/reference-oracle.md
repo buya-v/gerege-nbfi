@@ -65,8 +65,29 @@ be parked as an outage; fix the invocation and grade again. Codes: `.softhouse/v
 | Image | `postgres:18.3` |
 | Compose profile | `docker-compose-postgresql.yml` → `config/docker/compose/postgresql.yml` |
 | Host port | `localhost:5432` |
-| Databases | `fineract_tenants`, `fineract_default` |
-| Schema size | 281 tables in `fineract_default.public` |
+| Databases | `fineract_tenants` (registry, 6 tables), `fineract_default` (281), **`fineract_gerege` (281)** |
+| Schema size | 281 tables in `public` — the same in `fineract_default` and `fineract_gerege` |
+
+### Tenants — READ THIS BEFORE YOU CAPTURE ANYTHING
+
+**CORRECTED 2026-08-22 by the `/softhouse-program` driver (local fire `20260822-060013`), at repo
+commit `c0be92b`.** The `Databases` row above previously named only `fineract_tenants` and
+`fineract_default` and **omitted `fineract_gerege` entirely** — although `fineract_gerege` is the
+tenant database the ledger parity vectors were captured from and is named in 74 tracked files under
+`.softhouse/`. Re-derived live, evidence in `.softhouse/capture/driver-20260822-060013/`.
+
+| tenant id | identifier | name | timezone | database |
+|---|---|---|---|---|
+| 1 | `default` | Default Demo Tenant | **`Asia/Kolkata`** ⚠️ | `fineract_default` |
+| 2 | `gerege` | Gerege T22 Audit Tenant | **`Asia/Ulaanbaatar`** ✅ | `fineract_gerege` |
+
+⚠️ **The two tenants are in different time zones and tenant 1 is not one of ours.** CLAUDE.md permits
+exactly two zones, `Asia/Ulaanbaatar` (+08) and `Asia/Hovd` (+07), and hard-coded offsets nowhere.
+`Asia/Kolkata` is **+05:30**. A capture taken against tenant `default` because this file named its
+database and not the other one would be a capture at the wrong offset, and nothing downstream would
+say so. **State the tenant, not just the database, in every capture attestation.** Both tenants are in
+legitimate use across the corpus (`fineract_default` in 71 tracked files, `fineract_gerege` in 74) —
+the rule is not "never use `default`", it is **never leave which one unstated**.
 
 ### Driver assertions (asserted against the RUNNING container, not just config)
 
