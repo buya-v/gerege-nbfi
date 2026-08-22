@@ -157,6 +157,70 @@ git -c user.name="Buyan" -c user.email="buya.vol@gmail.com" commit -q -m "softho
 git push -q origin main 2>/dev/null || log "WARN: could not push lock — cloud fire may not see it"
 
 LOCK_RELEASED=0
+
+# T217 — bound release_lock's `git push`. Before this, the push at the end of
+# release_lock had no timeout: a hung remote could keep release_lock from
+# RETURNING forever. Established by reading the code (not assumed): the LOCAL
+# lock file is removed by `rm -f "$LOCK"`, the first statement below, BEFORE
+# any git call — so a hung push is never a lock-safety problem; STEP 0's
+# preflight reads that file, and it is already gone. What a hung push DOES
+# threaten is the exit path itself: `release_lock` runs either at the tail of
+# a normal run (the `trap release_lock EXIT`) or from `on_signal`, which calls
+# `exit $rc` only AFTER `release_lock` returns. A push that never returns
+# means `on_signal` never reaches its `exit`, so the whole point of T211 — the
+# handler completing inside launchd's SIGTERM->SIGKILL grace — is undone by
+# this one call, and the fire is SIGKILLed anyway (which also kills any
+# still-running `git push`/ssh child, since it is the wrapper itself that
+# dies, not just the driver tree).
+# FAILURE MODE ACCEPTED: the remote may not see the release promptly (or at
+# all, if the push was going to fail anyway) — the CLOUD fire's view of the
+# lock can lag by up to GIT_PUSH_TIMEOUT_SECS. That is strictly better than
+# today's unbounded hang, and it never re-strands the LOCAL lock, which is the
+# one STEP 0 on THIS host actually checks.
+# FAILURE MODE PROTECTED AGAINST: a hung push keeping a signal handler (or the
+# EXIT trap) alive past launchd's grace, turning a clean T211 stop back into a
+# SIGKILL — the exact regression this follow-up exists to close.
+GIT_PUSH_TIMEOUT_SECS="${GIT_PUSH_TIMEOUT_SECS:-10}"
+
+# Run `git push` in the background and give it at most GIT_PUSH_TIMEOUT_SECS
+# of wall clock. If it is still running at the deadline, TERM then KILL the
+# WHOLE tree it spawned (git push forks git-remote-https/ssh; killing only the
+# top pid can leave those running) — reusing driver_tree's generic ps-snapshot
+# walk, defined further down. That is safe to call from here even though it
+# textually appears later: every top-level statement in this script (function
+# definitions included) runs in order before any CALL to release_lock can
+# happen — release_lock is only reached via `trap … EXIT` or `on_signal`,
+# both registered after driver_tree's own definition has already executed.
+# Never blocks longer than the bound; always returns.
+git_push_bounded() {
+  local desc=$1; shift
+  git push -q "$@" >/dev/null 2>&1 &
+  local job=$!
+  local waited=0
+  while (( waited < GIT_PUSH_TIMEOUT_SECS )) && kill -0 "$job" 2>/dev/null; do
+    /bin/sleep 1
+    (( waited++ ))
+  done
+  if kill -0 "$job" 2>/dev/null; then
+    log "WARN: git push ($desc) still running after ${GIT_PUSH_TIMEOUT_SECS}s — killing it so the caller can return; the LOCAL lock file is already gone, only the remote's view of the release may lag"
+    local -a tree
+    if driver_tree "$job"; then
+      tree=("${DRIVER_TREE[@]}")
+    else
+      tree=("$job")
+    fi
+    kill -TERM "${tree[@]}" 2>/dev/null
+    /bin/sleep 1
+    kill -KILL "${tree[@]}" 2>/dev/null
+    wait "$job" 2>/dev/null
+    return 1
+  fi
+  wait "$job"
+  local rc=$?
+  (( rc != 0 )) && log "WARN: git push ($desc) failed rc=$rc"
+  return $rc
+}
+
 release_lock() {
   (( LOCK_RELEASED )) && return
   cd "$REPO" || return
@@ -166,7 +230,7 @@ release_lock() {
   git add -A -- "$LOCK" >/dev/null 2>&1
   git diff --cached --quiet && { log "lock already released"; return; }
   git -c user.name="Buyan" -c user.email="buya.vol@gmail.com" commit -q -m "softhouse: release local fire lock ($STAMP)" >/dev/null 2>&1
-  git push -q origin main 2>/dev/null || log "WARN: could not push lock release"
+  git_push_bounded "release lock" origin main
   log "lock released"
 }
 
@@ -208,8 +272,28 @@ release_lock() {
 # [waittrap-matrix.txt, cell bg/exit]. That would trade a stranded LOCK for an
 # unlocked `claude` still writing to the repo — strictly worse. Killing the
 # tree is the half of the fix that makes the prompt exit safe.
+#
+# T217 — DRIVER_STOP_GRACE_SECS CALIBRATED AGAINST A REAL `claude`, not a
+# `/bin/sleep` stand-in. T211 chose 3s against a fake child that dies
+# instantly, which cannot answer "how long does claude itself take to exit on
+# SIGTERM" by construction. Measured directly: the real binary at
+# $HOME/.local/bin/claude, `-p` (headless), `--model haiku`, own session,
+# default signal dispositions, SIGTERM delivered mid-request (4 trials, 3–7s
+# into a call that runs ~9–10s end to end) — SIGTERM-to-exit was 0.826s,
+# 1.055s, 1.141s, 1.156s, 1.194s, 2.591s (n=6, mean ~1.16s, max 2.591s); a
+# separate cluster of 3 trials with SIGTERM delivered at 0.2–0.5s (still in
+# startup, before the model call) exited in 0.162–0.208s. No trial hung.
+# [VERIFIED: this run, .softhouse/reviews/t217-probe/calibrate-grace-out.txt]
+# Set to 5s — roughly 2x the observed max (2.591s), not merely clearing it —
+# because the measured trials are a single-turn, tool-free `-p` call on one
+# machine on one day; a real fire's `claude` is running `/softhouse-program`
+# with Bash/Edit tool calls and possibly MCP connections, which this
+# calibration did NOT exercise and could plausibly add shutdown latency
+# (extra child processes, open sockets) beyond what a bare text completion
+# shows [UNVERIFIED for that heavier shape — see handoff]. Still overridable
+# by environment without editing this file.
 DRIVER_JOB_PID=0
-DRIVER_STOP_GRACE_SECS="${DRIVER_STOP_GRACE_SECS:-3}"
+DRIVER_STOP_GRACE_SECS="${DRIVER_STOP_GRACE_SECS:-5}"
 typeset -ga DRIVER_TREE; DRIVER_TREE=()
 
 # Fills DRIVER_TREE with $1 and every descendant, parents before children.
@@ -308,9 +392,10 @@ stop_driver() {
 # T211 — the handler now STOPS THE DRIVER FIRST, then releases the lock.
 # That order is the point: the lock exists to keep two orchestrators out of one
 # repo, so releasing it while `claude` is still alive opens exactly the window
-# it was written to close. Stopping first costs DRIVER_STOP_GRACE_SECS (3s by
-# default) against launchd's ~20s SIGTERM->SIGKILL grace, and against the 6h a
-# stranded lock costs the next fire.
+# it was written to close. Stopping first costs DRIVER_STOP_GRACE_SECS (5s by
+# default, T217-calibrated against a real `claude` — see the constant's own
+# comment above) against launchd's ~20s SIGTERM->SIGKILL grace, and against
+# the 6h a stranded lock costs the next fire.
 on_signal() {
   local sig=$1 rc=$2
   log "SIG$sig received — stopping the driver, releasing the lock and TERMINATING (rc=$rc). A fire must never keep working after its lock is gone."

@@ -1,0 +1,8 @@
+[1787364943.329414000] SUBJECT pid=84575 pgid=84575 sid=0
+[1787364943.342396000] LOCK present at start = YES
+[1787364943.352693000] READY
+[1787364943.364217000] invoking driver (chain iteration 1/1)
+[1787364943.375036000] background-task wait ceiling: disabled (CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0)
+[1787364943.399491000] driver job pid=84592 — backgrounded; the wrapper now sits in `wait`, so a SIGTERM is handled in a fraction of a second instead of waiting out the driver
+INIT session t211-fake
+TOOL Bash :: {"command":"echo t211"}

@@ -1,0 +1,14 @@
+[1787364951.319092000] SUBJECT pid=84636 pgid=84636 sid=0
+[1787364951.333100000] LOCK present at start = YES
+[1787364951.343033000] READY
+[1787364951.353046000] invoking driver (chain iteration 1/1)
+[1787364951.363346000] background-task wait ceiling: disabled (CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0)
+[1787364951.387036000] driver job pid=84653 — backgrounded; the wrapper now sits in `wait`, so a SIGTERM is handled in a fraction of a second instead of waiting out the driver
+INIT session t211-fake
+TOOL Bash :: {"command":"echo t211"}
+[1787364951.832615000] raw event stream: /tmp/t211-scratch/logs/fire-T211.jsonl
+[1787364951.843414000] driver exited rc=0
+[1787364951.853450000] run_driver RETURNED rc=0
+[1787364951.863840000] BODY COMPLETED NORMALLY
+[1787364953.314682000] WARN: git push (release lock) failed rc=128
+[1787364953.325383000] lock released
