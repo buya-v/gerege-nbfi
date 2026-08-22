@@ -1,8 +1,8 @@
 {
-  "holder": "none",
-  "host": "-",
+  "holder": "local-fire-20260822-060013",
+  "host": "buyan-mac",
   "pid": 0,
-  "started_at": null,
-  "released_at": "2026-08-22T-local-fire-20260822-140002-exit",
-  "note": "RELEASED. Two orchestrators held this lock on 2026-08-22 (see program.json incidents LOCK-2026-08-22 and patterns.md P-85). The local fire 20260822-140002 second session exited clean with zero live workers; the cloud catch-up fire's own workers were killed with its sandbox and their branches reached neither origin nor local. NEXT HOLDER: push your lock refresh and dispatch record BEFORE spawning the first worker — an unpushed in-flight state is invisible to the other fire, and the 6h staleness rule will then fire on a live session."
+  "started_at": "2026-08-22T06:00:13Z",
+  "released_at": null,
+  "note": "LOCAL fire, oracle REACHABLE. Per P-85: pushing lock+dispatch record BEFORE spawning any worker."
 }
