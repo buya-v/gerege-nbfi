@@ -1,0 +1,29 @@
+######## A1 -- a VALUE-LOSSY literal planted. Does the detector FIRE, and does it FAIL?
+  exit=0
+  --- detector lines:
+      literals whose float VALUE != the decimal : 1 of 2
+      VALUE-lossy examples:
+    T175 SUCCESSOR: PASS -- 1 of 1 files scanned, 0 skipped, 2 distinct literals inspected.
+  AS PREDICTED   VALUE-lossy literals DETECTED (detector not vacuous): 1
+  *** NOT AS PREDICTED  exit status when a money literal IS value-corrupted: expected 1 got 0
+
+######## A2 -- valid JSON, ZERO bare float literals (P-35 empty-sample)
+  AS PREDICTED   exit on parsed-but-zero-literals: 1
+
+######## A3 -- an UNREADABLE file (chmod 000): swallowed, or named?
+  AS PREDICTED   exit with 1 unreadable file present: 1
+  AS PREDICTED   unreadable file NAMED in skip register: 1
+      UNSCANNED  /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.yX4cKgjXNo/a3/locked.json
+                 PermissionError: [Errno 13] Permission denied: '/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.yX4cKgjXNo/a3/locked.json'
+
+######## A4 -- a DIRECTORY matching the glob
+  AS PREDICTED   exit with a directory in the glob: 1
+  AS PREDICTED   directory NAMED: 1
+
+######## A5 -- BINARY / UTF-16 file
+  AS PREDICTED   exit with a UTF-16 file: 1
+      UNSCANNED  /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.yX4cKgjXNo/a5/utf16.json
+                 UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+
+######## RESULT
+  DIVERGENCE FOUND
