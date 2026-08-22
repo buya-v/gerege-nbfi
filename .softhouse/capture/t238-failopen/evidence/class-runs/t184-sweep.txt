@@ -1,0 +1,50 @@
+.softhouse/reviews/T184-evidence/t184-sweep.sh: line 4: cd: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ae0f13a1bbf7c82f8: No such file or directory
+=== A. grep -q inside a pipeline (the P-57 EPIPE shape) in the T173 block (conformance.sh 670-815)
+13:    # `grep -c`, NOT `grep -q` — AND THE REASON IS THE MONEY NON-NEGOTIABLE ITSELF.
+14:    # `grep -q` exits 0 the instant it MATCHES. The upstream `perl` is then writing
+23:    # reproduce it, because `grep -q` on one line cannot stop before EOF.)
+96:    # `grep -c`, NOT `grep -q`, for exactly the reason spelled out in
+97:    # guard_no_float_in_vectors above: `grep -q` stops at the first match, `perl` dies of
+
+=== B. fail-open shapes in the T173 block
+33:            | LC_ALL=C grep -acE '[-0-9][0-9]*\.[0-9]|[0-9][eE][-+]?[0-9]')" || true
+110:            | LC_ALL=C grep -acE '\bfloat(32|64)\b|\bbig\.Float\b|\bcomplex(64|128)\b|\b(Parse|Format|Append)Float\b')" || true
+119:  pkgs="$(find "$NEXUS_DIR" -name '*.go' -type f | sed 's|/[^/]*$||' | sort -u | LC_ALL=C grep -ac '' || true)"
+
+=== C. every '|| true' in the T173 block, with what it masks
+33:            | LC_ALL=C grep -acE '[-0-9][0-9]*\.[0-9]|[0-9][eE][-+]?[0-9]')" || true
+110:            | LC_ALL=C grep -acE '\bfloat(32|64)\b|\bbig\.Float\b|\bcomplex(64|128)\b|\b(Parse|Format|Append)Float\b')" || true
+119:  pkgs="$(find "$NEXUS_DIR" -name '*.go' -type f | sed 's|/[^/]*$||' | sort -u | LC_ALL=C grep -ac '' || true)"
+
+=== D. swallowed exceptions in the two guard scripts
+.softhouse/capture/lib/check_wire_float_roundtrip.py:60:request body that is not a request body.  Nothing is swallowed into an `except: continue`
+.softhouse/capture/lib/check_wire_float_roundtrip.py:250:            except Exception as e:                                  # named, never swallowed
+.softhouse/capture/lib/check_wire_float_roundtrip.py:305:        except Exception as e:                                  # named, never swallowed
+.softhouse/capture/lib/check_wire_float_roundtrip.py:328:        except Exception as e:                                  # named, never swallowed
+
+=== E. 'pass' / 'continue' as an exception body
+1:60:request body that is not a request body.  Nothing is swallowed into an `except: continue`
+11:307-            continue
+15:330-            continue
+
+=== F. does anything in the T173 block redirect stderr away?
+
+=== G. bare 'grep -q' ANYWHERE that pipes from printf of a large var (whole file)
+1666:    [ "$got" = "$want" ] && printf '%s' "$out" | LC_ALL=C grep -aqF -- "$needle" && ok=1
+1776:     && printf '%s' "$out8" | LC_ALL=C grep -aq 'self-test fixtures      PASS 1' \
+1777:     && printf '%s' "$out8" | LC_ALL=C grep -aq 'parity vectors          PASS 0' \
+1778:     && printf '%s' "$out8" | LC_ALL=C grep -aq 'SELF-TEST FIXTURE' \
+1779:     && printf '%s' "$out8" | LC_ALL=C grep -aq 'EXCLUDED from the parity count' \
+1780:     && printf '%s' "$out8" | LC_ALL=C grep -aq 'NOT a conformance PASS'; then
+1974:  printf '%s' "$out19a" | LC_ALL=C grep -aq 'WITHDRAWS from grading' || ok19=0
+1975:  printf '%s' "$out19a" | LC_ALL=C grep -aq 'P-02' || ok19=0
+1982:  printf '%s' "$out19b" | LC_ALL=C grep -aq 'killed by MONTHEND-CONTINUE-FROM-CLAMPED-DAY' || ok19=0
+1986:  printf '%s' "$out19b" | LC_ALL=C grep -aqE 'parity vectors +PASS [0-9]+ +FAIL 0' || ok19=0
+2085:    printf '%s' "$out20" | LC_ALL=C grep -aqF -- \
+2088:    printf '%s' "$out20" | LC_ALL=C grep -aqE 'invariant assertions +[1-9][0-9]* NOT RUN' || note20 \
+2093:    printf '%s' "$out20c" | LC_ALL=C grep -aqE 'principal_amortizes_to_zero +hold [1-9][0-9]* +violated 0' || note20 \
+2152:    printf '%s\n' "$out" | LC_ALL=C grep -aqF 'CONFORMANCE_REPO_ROOT IS SET AND POINTS AWAY FROM THIS HARNESS' \
+2154:    if printf '%s\n' "$out" | LC_ALL=C grep -aqE '^conformance: CENSUS '; then
+2161:    printf '%s\n' "$out" | LC_ALL=C grep -aqF 'names THIS tree' \
+2163:    printf '%s\n' "$out" | LC_ALL=C grep -aqF 'SELF-TEST PASS' \
+   (count: 17)

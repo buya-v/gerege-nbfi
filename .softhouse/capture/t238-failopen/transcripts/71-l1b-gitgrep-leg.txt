@@ -1,0 +1,17 @@
+T238 -- L-1b DECIDING TEST: what does git grep ACTUALLY return on the rev-4 blob?
+corpus : rev4.md, 2842 lines, sha256 ce734f9c89e54be5fa3b07d8ddb833df8eaa5f17f8e24ce0ff00564ecf821a92
+flags  : exactly as declared in sweep-recall-calibration-gitgrep.txt
+
+  git grep -n -I -i -E  (declared)   patterns=34  UNIQUE LINES = 86
+  git grep -n -I -E     (no -i)      patterns=34  UNIQUE LINES = 64
+  git grep -n -I -i -P  (PCRE)       patterns=34  UNIQUE LINES = 86
+
+REFERENCE, from instrument 70 on the identical blob:
+  BSD grep -n -i -E   = 86      perl PCRE //i = 86      (case-sensitive: 64 / 64)
+A2-33 REPORTED:  git grep = 81      ugrep = 86
+
+=== VERDICT ===
+If git grep returns 86 above, H2 holds: all four engines agree on the rev-4 BLOB, the
+engines never diverged, and A2-33's 81 was measured over a DIFFERENT CORPUS -- almost
+certainly the ADR as it sat in its own worktree rather than the committed rev-4 blob.
+In that case the 'engine divergence' T234 flagged IS NOT AN ENGINE DIVERGENCE AT ALL.

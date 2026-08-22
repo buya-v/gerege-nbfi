@@ -1,0 +1,57 @@
+=== 1. BINARIES, AS A SCRIPT SEES THEM ===
+uname                              Darwin 25.5.0 arm64
+/usr/bin/grep                      grep (BSD grep, GNU compatible) 2.6.0-FreeBSD
+/opt/homebrew/bin/grep             ABSENT
+/usr/local/bin/grep                ABSENT
+/opt/homebrew/bin/ugrep            ABSENT
+/usr/local/bin/ugrep               ABSENT
+/opt/homebrew/bin/rg               ABSENT
+/usr/local/bin/rg                  ABSENT
+/usr/bin/perl                      
+git                                git version 2.50.1 (Apple Git-155)
+perl                               perl 5.034001
+
+=== 2. WHAT IS ON $PATH FOR A SCRIPT ===
+command -v grep                    /usr/bin/grep
+command -v ugrep                   <<NOT FOUND>>
+command -v rg                      <<NOT FOUND>>
+PATH=/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Users/buv/.local/bin:/opt/homebrew/bin:/Applications/Docker.app/Contents/Resources/bin
+
+=== 3. THE rg SHIM — ripgrep IS NOT A SYSTEM BINARY HERE ===
+In the agent's OWN shell, 'rg' resolves to a FUNCTION installed by a Claude Code shell snapshot
+that re-execs the 'claude' binary with ARGV0=rg. A committed script run as 'bash script.sh'
+does NOT inherit that function. Measured:
+  plain bash -c : rg NOT FOUND (exit 127 if invoked)
+  plain bash -c : rg --version exit=127
+
+=== 4. P-72 CALIBRATION ON A KNOWN POSITIVE ===
+--- corpus: .softhouse/capture/t238-failopen/evidence/engine-calibration-corpus.txt ---
+     1	the main branch was measured
+     2	the bmainb literal is a decoy for engines that read backslash-b as a letter
+     3	the population is closed and no other
+     4	site exists anywhere in this repository
+
+GROUND TRUTH, by construction of that file:
+  a WORKING word-boundary engine matches line 1 ONLY  -> count 1
+  an engine that reads \b as a literal 'b' matches line 2 ONLY -> count 1, DIFFERENT LINE
+  So the DISCRIMINATOR is not the count. It is WHICH LINE.
+
+  /usr/bin/grep -nE  \bmain\b                    exit=0    1:the main branch was measured 
+  /usr/bin/grep -nE  bmainb                      exit=0    2:the bmainb literal is a decoy for engines that read backslash-b as a letter 
+  /usr/bin/grep -nP  \bmain\b                    exit=0    grep: invalid option -- P
+  git grep -nE      \bmain\b                     exit=0    .softhouse/capture/t238-failopen/evidence/engine-calibration-corpus.txt:2:the bmainb literal is a decoy for engines that read backslash-b as a letter 
+  git grep -nE      bmainb                       exit=0    .softhouse/capture/t238-failopen/evidence/engine-calibration-corpus.txt:2:the bmainb literal is a decoy for engines that read backslash-b as a letter 
+  git grep -nP      \bmain\b                     exit=0    .softhouse/capture/t238-failopen/evidence/engine-calibration-corpus.txt:1:the main branch was measured 
+  perl -0777 -ne    \bmain\b                     exit=0    the main branch was measured|
+  ugrep -nE          \bmain\b                    exit=n/a  <<ugrep ABSENT from this machine>>
+
+=== 5. THE MULTI-LINE AXIS — every sweep in this program has been LINE-ORIENTED ===
+The corpus contains one claim SPLIT ACROSS A NEWLINE (lines 3-4).
+  git grep  (line-oriented)                      exit=0    <<EMPTY -- MISSED>>
+  perl -0777 (multi-line)                        exit=0    HIT
+
+=== 6. VERDICT ===
+Engines available TO A COMMITTED SCRIPT on this machine: /usr/bin/grep (BSD), git grep, perl.
+  ugrep : ABSENT.  ripgrep : present ONLY as a Claude-Code shell function, not to 'bash script.sh'.
+  grep -P : DOES NOT EXIST (BSD grep, exit 2 'invalid option').
+  git grep -E : reads \b as a LITERAL b and returns zero SILENTLY.

@@ -1,0 +1,45 @@
+T238 FAIL-OPEN LINT
+commit    : eb0edf0cf37c3998dffa7d047326fafe13d04fde
+corpus    : 858 tracked .sh/.py; 25 are repo-wide search instruments
+scope     : whole repository
+
+### TIER 1 — FAIL-OPEN, LIVE  (C1 dead path AND C2 reassuring failure arm) : 2
+###   measured behaviour of this tier: exit 0, prints a negative, measured nothing
+  .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+      C1  :7  dead absolute path: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5244bad2b6814a39
+      C2  :14  failure arm PRINTS instead of exiting: ( cd "$WT" && git grep -n -I -i -E "$re" -- . ) || echo "   (no hits)"
+      C2  :16  failure arm PRINTS instead of exiting: grep -n -i -E "$re" "$MODE" || echo "   (no hits)"
+  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+      C1  :8  dead absolute path: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a356a016636abdd7e
+      C2  :15  failure arm PRINTS instead of exiting: pat() { echo "--- pattern: $1"; git grep -n -i -E "$1" -- . || echo "    (no hits)"; }
+
+### TIER 2 — FAIL-OPEN-CAPABLE  (C2 only; corpus reachable TODAY) : 3
+###   one deleted directory away from Tier 1
+  .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+      C2  :20  failure arm PRINTS instead of exiting: env | grep -c '^BASH_FUNC_grep' 2>/dev/null || echo "BASH_FUNC_grep not exported"
+  .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+      C2  :18  failure arm PRINTS instead of exiting: echo "  pattern $p ->"; /usr/bin/grep -E -n "$p" "$C" | sed 's/^/      /' || echo "      (no match)"
+  .softhouse/capture/t238-failopen/instruments/60-multiline-sweep.py
+      C2  :72  failure arm PRINTS instead of exiting: ("ML-1  cd ... <newline> ... || echo",
+
+### TIER 3 — UNREPRODUCIBLE, but FAILS CLOSED  (C1 only) : 4
+###   safe to re-run -- it exits non-zero -- but its conclusion can never be re-checked
+  .softhouse/capture/t238-failopen/instruments/00-engines.sh                   :17  dead absolute path: /opt/homebrew/bin/grep
+  .softhouse/capture/t238-failopen/instruments/00-engines.sh                   :18  dead absolute path: /opt/homebrew/bin/ugrep
+  .softhouse/capture/t238-failopen/instruments/00-engines.sh                   :19  dead absolute path: /opt/homebrew/bin/rg
+  .softhouse/capture/t238-failopen/instruments/70-l1b-81-vs-86.sh              :87  dead absolute path: /opt/homebrew
+  .softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh                            :15  dead absolute path: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a3fcb4c7f1ea451ee
+  .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh                 :11  dead absolute path: /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac008956278f2d6ea
+
+### ADVISORY (C3 no corpus assertion / C4 no calibration / C5 engine undeclared)
+  C3 : 11 instrument(s)
+  C4 : 16 instrument(s)
+  C5 : 16 instrument(s)
+
+### SUPPRESSIONS IN FORCE (every one is listed; they never go quiet) : 4
+  .softhouse/capture/t238-failopen/instruments/00-engines.sh             :15  these absolute paths are the SUBJECT of the probe, not its corpus; the
+  .softhouse/capture/t238-failopen/instruments/00-engines.sh             :28  reporting ABSENCE is this line's purpose
+  .softhouse/capture/t238-failopen/instruments/00-engines.sh             :29  reporting ABSENCE is this line's purpose
+  .softhouse/capture/t238-failopen/instruments/00-engines.sh             :30  reporting ABSENCE is this line's purpose
+
+LINT: FAIL — 5 instrument(s) can emit a negative they did not measure (2 live, 3 dormant).

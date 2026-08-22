@@ -1,0 +1,61 @@
+scratch corpus : /tmp/t238-pr4-oZ6AUN
+engines        : /usr/bin/grep BSD 2.6.0-FreeBSD | git 2.50.1 | perl 5.034001
+
+
+==================================================================
+M5 -- SWALLOWED PRODUCER. The idiom is committed at reviews/T184-evidence/t184-sweep.sh:6
+==================================================================
+  sed -n '670,815p' .softhouse/conformance.sh | grep -n 'grep -[a-z]*q' || echo '   none'
+
+-- (a) the file EXISTS and contains the target: a TRUE POSITIVE
+   exit=0  output=32:a grep -q here/
+
+-- (b) the file DOES NOT EXIST: sed fails, the pipeline's exit is grep's, the || fires
+   exit=0  output=   none/
+   >>> IDENTICAL SHAPE TO A TRUE NEGATIVE. exit 0. No dead cd was involved.
+   >>> M5 CONFIRMED: a swallowed producer is a fail-OPEN mechanism in its own right.
+
+-- (c) the same idiom WITH pipefail, which is what fixes it
+   exit=1  (non-zero: the producer failure now propagates)
+
+==================================================================
+M3 -- EMPTY GLOB. A glob that matches nothing is passed through LITERALLY by the shell.
+==================================================================
+-- (a) glob matches: TRUE POSITIVE
+   exit=0  out=corpus/a.md
+-- (b) glob matches NOTHING (wrong extension): the literal 'corpus/*.txt' is passed to grep
+   exit=0  out=grep: corpus/*.txt: No such file or directory
+   (no hits)
+   >>> with the || arm, exit 0 and '(no hits)'. M3 CONFIRMED.
+
+==================================================================
+M4 -- EMPTY FOR-LIST. 'for f in $(producer)' over an empty producer runs the body ZERO times.
+==================================================================
+-- (a) producer yields files
+   iterations=1  -> the sweep reports on 1 file(s)
+-- (b) producer yields NOTHING
+   iterations=0  -> the sweep reports on 0 file(s), prints its summary, EXITS 0
+   >>> 'I checked 0 files and found 0 problems' is indistinguishable from 'I checked
+   >>> everything and it is clean' unless the DENOMINATOR is printed and asserted.
+   >>> M4 CONFIRMED.
+
+==================================================================
+M6 -- MISSING ENGINE. ugrep is ABSENT here; rg is a Claude-Code shell function a script
+==================================================================
+     cannot see. A command-not-found under a || arm is a fail-OPEN.
+   ugrep ...    || echo   exit=0  out=   (no hits)
+   rg ...       || echo   exit=0  out=   (no hits)
+   grep -P ...  || echo   exit=0  out=   (no hits)
+   >>> THREE engines, THREE identical '(no hits)' at exit 0, over a corpus that CONTAINS
+   >>> the string. M6 CONFIRMED, and it needs no dead path at all.
+
+==================================================================
+PR-4 VERDICT
+==================================================================
+PR-4 predicted at least ONE fail-open mechanism that is not a dead worktree path.
+MEASURED: FOUR -- M3 empty glob, M4 empty for-list, M5 swallowed producer, M6 missing engine.
+PR-4 CONFIRMED. The class is not the dead cd; the dead cd is one entry point to it.
+
+THE INVARIANT ALL FOUR VIOLATE, and the one a fix must restore:
+  AN INSTRUMENT MUST NOT BE ABLE TO EMIT A NEGATIVE IT DID NOT MEASURE.
+  Equivalently: 'zero hits' and 'zero corpus' and 'no engine' must have DIFFERENT exit codes.
