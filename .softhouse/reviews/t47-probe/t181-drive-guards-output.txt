@@ -1,0 +1,114 @@
+INTEGRITY BEFORE  DEC-1       49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab
+INTEGRITY BEFORE  contract.go 0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139
+
+historical committed versions indexed: 85
+
+script          case                       expect   got      target bytes
+--------------------------------------------------------------------------------------------
+t47_edit_2.py   C1 no argv                 2        2        -
+t47_edit_2.py   C2 target no token         2        2        -
+t47_edit_2.py   C3 wrong token             2        2        -
+t47_edit_2.py   C4 REAL artefact           2        2        unchanged
+t47_edit_2.py   C5 copy of CURRENT         3        3        unchanged
+t47_edit_2.py   C6 inside repo tree        2        2        -
+t47_edit_2.py   G1 GREEN                   0        0        CHANGED
+t47_edit_2.py   G1 result                  dcb04d14 dcb04d14 AFTER match=True
+t47_edit_2.py   G2 GREEN under -O          0        0        CHANGED
+t47_edit_2.py   G3 rerun (post-edit)       3        3        unchanged
+t47_edit_2.py   G4 dry-run                 0        0        unchanged
+t47_edit_2.py   C7 guard deleted           !=0      1        ImportError
+t47_edit_3.py   C1 no argv                 2        2        -
+t47_edit_3.py   C2 target no token         2        2        -
+t47_edit_3.py   C3 wrong token             2        2        -
+t47_edit_3.py   C4 REAL artefact           2        2        unchanged
+t47_edit_3.py   C5 copy of CURRENT         3        3        unchanged
+t47_edit_3.py   C6 inside repo tree        2        2        -
+t47_edit_3.py   G1 GREEN                   0        0        CHANGED
+t47_edit_3.py   G1 result                  5bbf7efb 5bbf7efb AFTER match=True
+t47_edit_3.py   G2 GREEN under -O          0        0        CHANGED
+t47_edit_3.py   G3 rerun (post-edit)       3        3        unchanged
+t47_edit_3.py   G4 dry-run                 0        0        unchanged
+t47_edit_3.py   C7 guard deleted           !=0      1        ImportError
+t47_edit_4.py   C1 no argv                 2        2        -
+t47_edit_4.py   C2 target no token         2        2        -
+t47_edit_4.py   C3 wrong token             2        2        -
+t47_edit_4.py   C4 REAL artefact           2        2        unchanged
+t47_edit_4.py   C5 copy of CURRENT         3        3        unchanged
+t47_edit_4.py   C6 inside repo tree        2        2        -
+t47_edit_4.py   G1 GREEN                   0        0        CHANGED
+t47_edit_4.py   G1 result                  9385f907 9385f907 AFTER match=True
+t47_edit_4.py   G2 GREEN under -O          0        0        CHANGED
+t47_edit_4.py   G3 rerun (post-edit)       3        3        unchanged
+t47_edit_4.py   G4 dry-run                 0        0        unchanged
+t47_edit_4.py   C7 guard deleted           !=0      1        ImportError
+t47_edit_4c.py  C1 no argv                 2        2        -
+t47_edit_4c.py  C2 target no token         2        2        -
+t47_edit_4c.py  C3 wrong token             2        2        -
+t47_edit_4c.py  C4 REAL artefact           2        2        unchanged
+t47_edit_4c.py  C5 copy of CURRENT         3        3        unchanged
+t47_edit_4c.py  C6 inside repo tree        2        2        -
+t47_edit_4c.py  G1 GREEN                   0        0        CHANGED
+t47_edit_4c.py  G1 result                  7b14fa36 7b14fa36 AFTER match=True
+t47_edit_4c.py  G2 GREEN under -O          0        0        CHANGED
+t47_edit_4c.py  G3 rerun (post-edit)       3        3        unchanged
+t47_edit_4c.py  G4 dry-run                 0        0        unchanged
+t47_edit_4c.py  C7 guard deleted           !=0      1        ImportError
+t47_edit_5.py   C1 no argv                 2        2        -
+t47_edit_5.py   C2 target no token         2        2        -
+t47_edit_5.py   C3 wrong token             2        2        -
+t47_edit_5.py   C4 REAL artefact           2        2        unchanged
+t47_edit_5.py   C5 copy of CURRENT         3        3        unchanged
+t47_edit_5.py   C6 inside repo tree        2        2        -
+t47_edit_5.py   G1 GREEN                   0        0        CHANGED
+t47_edit_5.py   G1 result                  e0b1a30d e0b1a30d AFTER match=True
+t47_edit_5.py   G2 GREEN under -O          0        0        CHANGED
+t47_edit_5.py   G3 rerun (post-edit)       3        3        unchanged
+t47_edit_5.py   G4 dry-run                 0        0        unchanged
+t47_edit_5.py   C7 guard deleted           !=0      1        ImportError
+t47_edit_6.py   C1 no argv                 2        2        -
+t47_edit_6.py   C2 target no token         2        2        -
+t47_edit_6.py   C3 wrong token             2        2        -
+t47_edit_6.py   C4 REAL artefact           2        2        unchanged
+t47_edit_6.py   C5 copy of CURRENT         3        3        unchanged
+t47_edit_6.py   C6 inside repo tree        2        2        -
+t47_edit_6.py   G1 GREEN                   0        0        CHANGED
+t47_edit_6.py   G1 result                  be252dba be252dba AFTER match=True
+t47_edit_6.py   G2 GREEN under -O          0        0        CHANGED
+t47_edit_6.py   G3 rerun (post-edit)       3        3        unchanged
+t47_edit_6.py   G4 dry-run                 0        0        unchanged
+t47_edit_6.py   C7 guard deleted           !=0      1        ImportError
+t47_edit_7.py   C1 no argv                 2        2        -
+t47_edit_7.py   C2 target no token         2        2        -
+t47_edit_7.py   C3 wrong token             2        2        -
+t47_edit_7.py   C4 REAL artefact           2        2        unchanged
+t47_edit_7.py   C5 copy of CURRENT         3        3        unchanged
+t47_edit_7.py   C6 inside repo tree        2        2        -
+t47_edit_7.py   G1 GREEN                   0        0        CHANGED
+t47_edit_7.py   G1 result                  5cac5f0f 5cac5f0f AFTER match=True
+t47_edit_7.py   G2 GREEN under -O          0        0        CHANGED
+t47_edit_7.py   G3 rerun (post-edit)       3        3        unchanged
+t47_edit_7.py   G4 dry-run                 0        0        unchanged
+t47_edit_7.py   C7 guard deleted           !=0      1        ImportError
+t47_edit_7.py   C8 .go suffix (G-3)        2        2        unchanged
+t47_edit_8.py   C1 no argv                 2        2        -
+t47_edit_8.py   C2 target no token         2        2        -
+t47_edit_8.py   C3 wrong token             2        2        -
+t47_edit_8.py   C4 REAL artefact           2        2        unchanged
+t47_edit_8.py   C5 copy of CURRENT         3        3        unchanged
+t47_edit_8.py   C6 inside repo tree        2        2        -
+t47_edit_8.py   G1 GREEN                   0        0        CHANGED
+t47_edit_8.py   G1 result                  9e5c8c36 9e5c8c36 AFTER match=True
+t47_edit_8.py   G2 GREEN under -O          0        0        CHANGED
+t47_edit_8.py   G3 rerun (post-edit)       3        3        unchanged
+t47_edit_8.py   G4 dry-run                 0        0        unchanged
+t47_edit_8.py   C7 guard deleted           !=0      1        ImportError
+--------------------------------------------------------------------------------------------
+
+INTEGRITY AFTER   DEC-1       49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab  UNCHANGED
+INTEGRITY AFTER   contract.go 0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139  UNCHANGED
+
+scripts driven                 : 8
+cases run                      : 89
+cases NOT AS EXPECTED          : 0
+GREEN reproduced AFTER exactly : 8 of 8
+BEFORE_SHA256 IS a committed blob: 8 of 8

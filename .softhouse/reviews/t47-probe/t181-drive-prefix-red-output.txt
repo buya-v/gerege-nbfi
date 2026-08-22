@@ -1,0 +1,32 @@
+REPO INTEGRITY BEFORE  DEC-1       49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab
+REPO INTEGRITY BEFORE  contract.go 0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139
+
+pre-fix bytes from immutable fork point dfa1bfa96084a2175f0d89d0a401a8c105d9a35f
+
+script          case                           exit   moved?    sha256 before -> after
+----------------------------------------------------------------------------------------------------
+t47_edit_2.py   RED-B current artefact         1      no        49dc8923 -> 49dc8923
+t47_edit_2.py   RED-C interrupt at O_TRUNC     1      no        435973 bytes -> 435973 bytes
+t47_edit_3.py   RED-B current artefact         1      no        49dc8923 -> 49dc8923
+t47_edit_3.py   RED-C interrupt at O_TRUNC     1      no        435973 bytes -> 435973 bytes
+t47_edit_4.py   RED-B current artefact         0      YES       49dc8923 -> cabc2aeb   <<< LIVE GATE BYPASS
+t47_edit_4.py   RED-C interrupt at O_TRUNC     -2     YES       435973 bytes -> 0 bytes   <<< TRUNCATED TO ZERO
+t47_edit_4c.py  RED-B current artefact         1      no        49dc8923 -> 49dc8923
+t47_edit_4c.py  RED-C interrupt at O_TRUNC     1      no        435973 bytes -> 435973 bytes
+t47_edit_5.py   RED-B current artefact         1      no        49dc8923 -> 49dc8923
+t47_edit_5.py   RED-C interrupt at O_TRUNC     1      no        435973 bytes -> 435973 bytes
+t47_edit_6.py   RED-B current artefact         1      no        49dc8923 -> 49dc8923
+t47_edit_6.py   RED-C interrupt at O_TRUNC     1      no        435973 bytes -> 435973 bytes
+t47_edit_7.py   RED-B current artefact         1      no        0db73d4a -> 0db73d4a
+t47_edit_7.py   RED-C interrupt at O_TRUNC     1      no        151885 bytes -> 151885 bytes
+t47_edit_8.py   RED-B current artefact         1      no        49dc8923 -> 49dc8923
+t47_edit_8.py   RED-C interrupt at O_TRUNC     1      no        435973 bytes -> 435973 bytes
+----------------------------------------------------------------------------------------------------
+
+REPO INTEGRITY AFTER   DEC-1       49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab  UNCHANGED
+REPO INTEGRITY AFTER   contract.go 0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139  UNCHANGED
+
+scripts driven                    : 8
+LIVE against CURRENT artefact     : 1  ['t47_edit_4.py']
+inert against CURRENT artefact    : 7  ['t47_edit_2.py', 't47_edit_3.py', 't47_edit_4c.py', 't47_edit_5.py', 't47_edit_6.py', 't47_edit_7.py', 't47_edit_8.py']
+truncated to 0 bytes on interrupt : 1  ['t47_edit_4.py']
