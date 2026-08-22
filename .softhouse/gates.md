@@ -1644,6 +1644,36 @@ family A at 21.6 % / MNT 0.01 / n = 6), `.softhouse/reviews/T84-evidence/propose
 > reachable this way** — an invariant exemption cannot cure a **parity** diff, and `T116` re-measured
 > that it stays `FAIL` unchanged under the exemption.
 >
+> **THE MECHANISM, FOUND BY `T220` AND DRIVER-VERIFIED IN THE PINNED SOURCE — this changes what G-8 is
+> asking.** `T116` reproduced family B but could not explain it. `T220` did, from
+> `426a23544e8426a38ae43ae404670a0a7e85b9eb`, and the driver re-opened both sites rather than accepting
+> the citation:
+>
+> - `ProgressiveEMICalculator.java:1962` — `rateFactorByRepaymentPeriod` ends
+>   `.divide(calculatedDaysInPeriod, mc).setScale(mc.getPrecision(), mc.getRoundingMode())`, so
+>   `getPrecision()` = **19** is consumed as **decimal places**. [VERIFIED]
+> - `RepaymentPeriod.java:217` — `calculateRateFactorPlus1` is
+>   `interestPeriods.stream().map(InterestPeriod::getRateFactor).reduce(BigDecimal.ONE, BigDecimal::add)`
+>   — the **two-argument `add`, with NO MathContext**. [VERIFIED]
+>
+> So `rateFactorPlus1` carries 19 decimal places and **20 significant digits inside a precision-19
+> context**. Accumulated over n periods the EMI dips below half a minor unit at exactly the observed
+> boundary: `n=103 → 0.005 → 0.01`, `n=104 → 0.004999999999999999999 → 0.00`. **An EMI of zero means
+> nothing is ever repaid**, and `calculateLastUnpaidRepaymentPeriodEMI`'s fallback drops the whole
+> residual into the final row as interest — which is the observed schedule exactly. `T220`'s independent
+> probe confirmed the predicted boundary (102/103 clean; 104/105/108 family B).
+>
+> **This is DEC-1's known `MathContext` double-sense producing a money outcome.** G-1's record already
+> named `:1962` and `:1979` as *"the only two such sites in main code, both on the per-period rate
+> factor"*. Family B is what that ambiguity does when it is allowed to run.
+>
+> **CONSEQUENCE FOR WHAT BUYAN IS BEING ASKED.** Family B is **NOT** a property of "600 %" or of
+> "n ≥ 104". It is **the EMI falling below half a minor unit**, so *the boundary moves with principal,
+> rate and term*. Any statement of G-8's region in terms of a rate or a term length is a description of
+> the cells that happen to have been swept, not of the phenomenon. The promoted vectors pin **two points
+> on that boundary**; they do not bound it. This must be settled before options (b) or (c) — each of
+> which would narrow the graded domain by describing a region — are put to a decision.
+
 > Two records this supersedes rather than contradicts: **the T83-vs-T101/T112 contradiction over whether
 > `invariant_exemptions` is INERT was never a contradiction.** T83's demonstration ran on
 > `T83-SW-R21p6-N6-B1`, whose own committed output reads `advanced == repaid == 1` — that is **family
