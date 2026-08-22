@@ -600,7 +600,7 @@
    "executor": "agent",
    "model": "sonnet",
    "target": "code",
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
    "dependencies": [
     "T167"
@@ -609,7 +609,7 @@
     ".softhouse/capture/pathb/t149/"
    ],
    "description": "RAISED BY T158 as finding 2 -- the ONE of nine attack states where T156's fix did not hold. Measured by T158: SIGQUIT (Ctrl-backslash) is not caught by the EXIT/INT/TERM/HUP trap, exits -3 with NO restore message, and strands the store exactly as SIGKILL does; SIGPIPE/USR1/ALRM DO run the EXIT trap. Only T156's start-up recovery catches it, so A CONFORMANCE RUN IN BETWEEN IS THE SILENT GREEN -- the defect T156 was sent to close, reachable through one more signal. T158 named a two-line fix and deliberately did not apply it (reviewer remit). Apply it, add SIGQUIT to the trap list, and DRIVE IT RED (P-22) on a scratch store: show pre-fix SIGQUIT strands and post-fix restores. P-26 -- sweep the concept: audit EVERY trap in .softhouse/ for the same signal-list omission rather than fixing this one site, and COUNT WHAT YOU SKIPPED (P-40). Note T158's separate correction while you are in this file: the empty-census refusal at :98 is pre-empted by the `[ -f \"$VEC\" ] || fail` at :94 on every realistic state, so the protection is real but comes from a DIFFERENT LINE than the handoff headlines -- fix the claim, not the code.",
-   "note": "fire 20260822-080001 batch 1b: dispatched worktree-isolated to softhouse/T168-sigquit-trap-sweep; unguarded-mutator family (T162/T168/T180) run concurrently, each told to reuse T161's restore shape and report divergence for driver reconciliation at merge"
+   "note": "fire 20260822-080001: DONE+MERGED on softhouse/T168-sigquit-trap-sweep (52cf716). Scope clean. Worker had to be RESUMED by the driver: it ended its turn waiting on a background child, which does not survive the turn, and its branch had NO COMMIT at that point -- the driver told it to commit first, then finish. Worth noting as a live instance of the skill's 'never exit with live workers' hazard occurring one level down. DELIVERED ALL THREE ITEMS. (1) SIGQUIT added to prove-redgreen.sh, and it found the SAME omission a SECOND time in restore_store()'s re-entrancy guard. Red: pre-fix SIGQUIT strands, script exit -3, vector gone, and THE NEXT RUN REPORTS A GREEN PASS 42/5576 -- the silent green the whole task exists to kill. Green: exit 131, vector back, PASS 43/5664. (2) P-26 concept sweep with real P-40 accounting: 30 candidate files under two independent grep programs (ugrep 7.5.0 and BSD grep 2.6.0-FreeBSD, byte-identical), of which 8 build a genuine multi-signal trap -- 1 fixed, 4 already carried QUIT, 3 SKIPPED UNDER THIS FIRE'S SCOPE GUARD AND NAMED RATHER THAN DROPPED (tierA-a2/cap.sh, tierA-a2/cap8.sh, t179-guard-classifier/fixtures/green_real_trap.sh) -> T216. Also declared what it did NOT sweep (nexus/ Go signal handling, .md-embedded code). (3) The :94-vs-:98 claim corrected in the comment, both guards left functionally unchanged. *** DRIVER ERROR AGAINST T168, WITHDRAWN. *** The driver re-derived the sweep and thought fire-program.sh lacked QUIT, contradicting T168. T168 WAS RIGHT: fire-program.sh:202-206 sets INT/TERM/HUP/QUIT on separate lines and the driver's one-line regex matched line 172 -- A COMMENT QUOTING T202's OLD `trap release_lock EXIT INT TERM` CODE. The driver's grep matched history, not the program. Third driver measurement defect this fire."
   },
   {
    "id": "T169",
@@ -1772,6 +1772,26 @@
    "description": "SELF-FLAGGED BY A2-22 IN ITS OWN FOLLOW-UPS, which is why this is a review task and not a rejection. A2-22's graded finding was that CounterfactualCoverage credits kills from REFUSED vectors; that is closed, driver-verified, and correct. While there it ALSO narrowed CorroborationsClaimed to graded vectors 'on the same reasoning, but with no independent finding behind it'. Both counts are 0 on the committed store, so TODAY the narrowed and un-narrowed versions are INDISTINGUISHABLE -- which is precisely the condition under which a change cannot be validated by the harness and must be argued from semantics instead. A2-22 says it is a two-line revert.\n\nYou are an INDEPENDENT reviewer. Do not read A2-22's conclusion and agree with it. Decide, from the source and from what a corroboration MEANS in this harness, whether a REFUSED vector may corroborate. The parallel to kills is suggestive but not binding: a kill is a claim the vector DISCRIMINATES, whereas a corroboration may be a weaker claim that survives refusal. Argue it from the definitions in the registry, not from symmetry.\n\nConstruct a store where the two versions DIFFER (A2-22 showed how -- blind a seam so vectors refuse) and show what each reports. A change you cannot make differ is a change you cannot test; if you genuinely cannot construct a divergence, say so and recommend the revert on the ground that an untestable narrowing is not worth carrying.\n\nVerdict: APPROVED (keep the narrowing, with the semantic argument recorded) / REVERT (two lines) / REJECTED with specifics. Bar: probe present and up, PASS exit 0, 43 parity vectors, 5664 cells, kills named 103 money / 7 structural. Report a refusal by what it SAYS and what population SURVIVES, never by exit code (P-62).",
    "acceptance": null,
    "note": "raised by the driver, fire 20260822-080001, from A2-22's own self-flagged follow-up"
+  },
+  {
+   "id": "T216",
+   "title": "Three multi-signal traps still lack QUIT -- the tail T168 named rather than dropped",
+   "role": "coder",
+   "executor": "agent",
+   "model": "sonnet",
+   "target": "code",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [
+    "T168"
+   ],
+   "files_hint": [
+    ".softhouse/capture/tierA-a2/",
+    ".softhouse/reviews/t179-guard-classifier/fixtures/"
+   ],
+   "description": "T168's P-40 accounting, honoured. T168 swept every multi-signal trap under .softhouse/ for the SIGQUIT omission, fixed its own site, found 4 already covered, and SKIPPED 3 that still carry the live gap because another worker held those paths during fire 20260822-080001. It named all three rather than letting the sweep silently narrow -- which is the behaviour P-40 exists to produce. Close the tail.\n\nTHE THREE SITES, each `trap ... EXIT HUP INT TERM` with no QUIT:\n  .softhouse/capture/tierA-a2/cap.sh   -- leaks a mktemp scratch dir on SIGQUIT\n  .softhouse/capture/tierA-a2/cap8.sh  -- same\n  .softhouse/reviews/t179-guard-classifier/fixtures/green_real_trap.sh -- a fixture on a *-never-run* path\n\nMATERIALITY IS LOW AND YOU SHOULD SAY SO. None of these strands a VECTOR the way prove-redgreen.sh did; they leak a temp directory, and the third is a fixture. Do not write this up as though a money path were at risk -- T168 did not, and inflating it would be its own defect. The reason to do it anyway is that a signal-list omission is a CONCEPT (P-26), and a family fixed at 5 of 8 sites is a family that grows back.\n\nTHINK ABOUT THE FIXTURE BEFORE YOU EDIT IT. green_real_trap.sh is a FIXTURE for the guard classifier -- its trap list may be part of what the classifier is being tested against, in which case changing it changes the test's meaning. Check what reads it. If adding QUIT would alter a classification, DO NOT add it; report that instead. This is the more interesting half of the task.\n\nDRIVE RED and GREEN per site, or state why a site cannot be driven and what you did instead. Re-run T168's sweep afterwards and report the new census (it should be 8 of 8, or say why not). Two independent grep programs, named (P-58) -- the interactive `grep` here is a shell function re-execing as ugrep -I, /usr/bin/grep is BSD 2.6.0-FreeBSD. AND BEWARE THE DRIVER'S OWN MISTAKE ON THIS EXACT SWEEP: its one-line regex matched a COMMENT QUOTING OLD CODE and it briefly concluded fire-program.sh lacked QUIT when lines 202-206 set it. Make your census distinguish live code from commentary, and say how.\n\nDo NOT modify .softhouse/bin/fire-program.sh. Bar: probe present and up, PASS exit 0, 43 parity vectors, 5664 cells.",
+   "acceptance": null,
+   "note": "raised by the driver, fire 20260822-080001, from T168's own P-40 skip accounting"
   }
  ],
  "cross_corroboration": {
