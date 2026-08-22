@@ -1746,7 +1746,7 @@
       "executor": "agent",
       "model": "sonnet",
       "target": "test",
-      "status": "pending",
+      "status": "in_progress",
       "attempts": 0,
       "dependencies": [
         "T210"
@@ -1756,7 +1756,8 @@
       ],
       "description": "RAISED AND MEASURED BY THE DRIVER while verifying T210, in a throwaway worktree, before T210 was merged. T210 is GOOD work and was approved -- it did exactly what its brief named, and its zero-match guard is real. This is the half its brief did not name.\n\nMEASUREMENT, reproduce it before trusting it: `.softhouse/bin/fire-program.sh` carries the LOCK-exclusion pathspec at TWO sites --\n  :313  DIRTY=$(git status --porcelain -- ':(top)' ':(top,exclude).softhouse/LOCK')     <- the DETECT path\n  :334  git add -A -- ':(top)' ':(top,exclude).softhouse/LOCK'                          <- the STAGE path\nT210's check-lock-exclusion-anchor.sh binds ANCHOR_PATTERN='DIRTY=\\$\\(git status --porcelain', which matches :313 only. The driver mutated ONLY :334 to \"...exclude).softhouse/LOCK*'\" and re-ran the probe against the mutated file: BOTH CHECKS PASSED, VERDICT PASS, exit 0. The probe cannot see it.\n\nWHY IT IS THE MORE DANGEROUS HALF. A widened pathspec at :334 makes `git add -A` skip every LOCK-PREFIXED SIBLING at stage time -- e.g. .softhouse/LOCKED_STATE.md -- so the checkpoint would run, report success, and SILENTLY FAIL TO COMMIT state files. That is the exact 'work destroyed because it was never committed' hazard STEP 5.5 of the softhouse-program skill exists to prevent, and the 2026-08-18 17:22 incident that stranded 4,482 insertions is the precedent. A defect on the DETECT path makes a fire noisy; a defect on the STAGE path makes it lose work quietly.\n\nWHAT TO DO. (1) Reproduce the driver's mutation and confirm the green -- if it does NOT reproduce, say so and stop; yours wins. (2) Extend the probe to cover the STAGE site too. (3) PREFER A POPULATION RULE OVER A SECOND HARD-CODED ANCHOR: enumerate every occurrence of the LOCK-exclusion pathspec in the target and assert each one is well-formed, so a THIRD site added later is covered on the day it appears rather than needing a T216. If you hard-code two anchors instead, say why the population rule was rejected. (4) Keep T210's zero-match error and add an equivalent for the population form -- a run that enumerates ZERO sites is an ERROR, not a pass (P-35). DRIVE RED at BOTH sites independently and GREEN unmutated, under zsh 5.9; `bash -n` is NOT a discriminator here.\n\nDo NOT modify .softhouse/bin/fire-program.sh -- a fire runs from it, and T211 owns it this fire; mutate scratch copies only. Hardcode /usr/bin/grep as T210 did (P-58): the interactive `grep` is a shell function re-execing as ugrep -I.\n\nBar: probe line present and up, PASS exit 0, 43 parity vectors, 5664 cells.\n\n*** UPDATE FROM T211, WHICH MERGED AFTER THIS TASK WAS WRITTEN. *** T211 rewrote run_driver and MOVED IT (237-291 -> 356-474), so the two LOCK-exclusion sites are now at :496 (DIRTY detect) and :517 (git add -A stage), not :313/:334. The driver re-ran T210's probe against the rewritten wrapper and it STILL PASSES -- because T210 bound by CONTENT rather than line number. Take the lesson: bind by content. T211's own recommended anchor is `wait \"$DRIVER_JOB_PID\"` (2 occurrences), and it committed a re-runnable BEHAVIOURAL binding at .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/run-case.zsh which the driver used to verify all three arms -- prefer extending that shape over a fourth bespoke grep probe if it fits.",
       "acceptance": null,
-      "note": "raised by the driver, fire 20260822-080001, from independent verification of T210 rather than from T210's own report"
+      "note": "raised by the driver, fire 20260822-080001, from independent verification of T210 rather than from T210's own report | DISPATCHED local fire 20260822-000013 wave 2.",
+      "branch": "softhouse/T215-lock-exclusion-second-site"
     },
     {
       "id": "A2-24",
@@ -1863,7 +1864,7 @@
     {
       "id": "A2-27",
       "title": "A2-24's three findings, deliberately not applied because its verdict was APPROVED — the comment is confirmed wrong and the semantics are untested",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "role": "coder",
@@ -1875,12 +1876,13 @@
         "nexus/internal/apps/loanschedule/conformance/"
       ],
       "description": "A2-24 returned APPROVED and therefore correctly applied NOTHING. Its three findings are still live. F1 -- DRIVER-CONFIRMED INDEPENDENTLY, do not re-litigate, just fix it: grade.go:120 reads 'CounterfactualsNamed is how many wrong implementations the GRADED vectors...' while grade.go:155 still reads 'CorroborationsClaimed is how many cross-check claims the ADMISSIBLE vectors make'. Both are incremented at :457/:458, AFTER the refusal return at :447/:448, so both count GRADED vectors and the second comment is false. A2-24 calls this the tell that the corroboration half of 9f32bbf rode along without its own reasoning -- the neighbouring comment WAS updated and this one was not. F2 IS THE SUBSTANTIVE ONE: with A2-22's narrowing REVERTED, `go test ./... -count=1` is ALL GREEN. Nothing in the suite pins the population, so the semantics A2-24 just argued for are held in place by nobody. A2-24 archived a probe ready to adopt at .softhouse/reviews/A2-24-evidence/corroboration-population-probe_test.go.txt -- READ IT, but do not adopt it unexamined: it was written by the reviewer whose verdict it would now defend. Make the test FAIL on the revert and pass on HEAD, and show both runs. F3 -- OutcomeError vectors still enter the graded population. A2-24 reached this independently and it corroborates A2-22's follow-up 3. It is LATENT ONLY: the single reachable cause already makes the run fatal. Decide whether latent-but-unreachable is worth closing or worth documenting, and say which you chose and why -- do not close it silently either way. BAR: probe line PRESENT and up, PASS exit 0, 43 parity vectors (or whatever T116 leaves it at -- RE-DERIVE, do not inherit), vector store digest UNCHANGED by you. Invoke with bash, never sh. Never gofmt -w contract.go (G-3).",
-      "note": "Registered by the driver, local fire 20260822-000013, on merging A2-24. F1 driver-confirmed at nexus/internal/apps/loanschedule/conformance/grade.go:120 vs :155."
+      "note": "Registered by the driver, local fire 20260822-000013, on merging A2-24. F1 driver-confirmed at nexus/internal/apps/loanschedule/conformance/grade.go:120 vs :155. | DISPATCHED local fire 20260822-000013 wave 2.",
+      "branch": "softhouse/A2-27-corroboration-followups"
     },
     {
       "id": "T218",
       "title": "T127's five micro-fixes to T109.md are appliable for the first time -- T109.md ships uncorrected beside the review that corrects it",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "sonnet",
       "role": "coder",
@@ -1892,12 +1894,13 @@
         ".softhouse/handoff/2026-08-17-run1-harness-schedule-poc/"
       ],
       "description": "T214's top follow-up, and it only became actionable when T214 landed the file. .softhouse/reviews/T127-review-of-T109.md is on main and issues LINE-NUMBERED micro-fixes M-1/M-3/M-5/M-6/M-7 into .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T109.md and into every-invocation.txt. Until T214 both targets were ABSENT from main, so for several fires main carried a review whose corrections could not be applied to anything. They are now present and STILL UNCORRECTED. APPLY THE FIVE, but note the hazard that makes this a real task and not a chore: T127's micro-fixes are LINE-NUMBERED against a file that has sat unmerged since the run-1 archive. A regression probe must bind by CONTENT, not line number -- proven inside this program when T211 moved run_driver 237-291 to 356-474 and a line-bound probe merged hours earlier still passed. VERIFY EACH FIX LANDS AT THE SITE T127 MEANT by re-reading what T127 says the text SAYS, not by trusting its line number. If a line number no longer points at the quoted text, say so and land it by content. DO NOT rewrite evidence to make a citation resolve -- T114's standing ruling and T176's prohibition. A micro-fix T127 specifies is a correction the reviewer authored; anything beyond its five is out of scope. If a sixth defect is visible, REGISTER it, do not fix it. Then sweep for the same shape: any other on-main review issuing corrections into a file T214 has just landed. BAR: probe present and up, PASS exit 0, vector store digest UNCHANGED by you (docs only).",
-      "note": "Registered by the driver, local fire 20260822-000013, from T214's follow-ups on merging it."
+      "note": "Registered by the driver, local fire 20260822-000013, from T214's follow-ups on merging it. | DISPATCHED local fire 20260822-000013 wave 2.",
+      "branch": "softhouse/T218-t127-microfixes"
     },
     {
       "id": "A2-28",
       "title": "DEC-2 revision 4 — A2-25's seven items, and re-measure against main at RATIFICATION time, not drafting time",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "role": "analyst",
@@ -1909,12 +1912,13 @@
         "docs/adr/DEC-2-gl-accounting-adapter.md"
       ],
       "description": "A2-25 REJECTED revision 3 and listed EXHAUSTIVELY what would make it clean, explicitly so this is ONE revision and not two. Apply all seven. 1. Delete or correct 8.3's 'They are not checked. No guard for either exists' (line 1941) -- and SWEEP 8.3's WHOLE BULLET FOR THE SAME CLAIM RATHER THAN THE SAME SENTENCE. This is the defect class that got rev 2 rejected and it survived into rev 3; a third occurrence would be the third fire in a row. 2. Replace the denominator in 'three of its FOUR detection classes' at lines 815, 1886, 1935, 2097. THE GUARD DECLARES SEVEN CLASSES -- I3-FIELD-WRITE, I3-PKG-STATE, I3-SQL-BALANCE, I4-BUILDER, I4-DML, I6-HOLD-BALANCE, OPAQUE-SQL -- driver-re-derived on the live file. Prefer stating the NUMERATOR WITH THE CLASSES NAMED (I4-DML, I3-SQL-BALANCE, OPAQUE-SQL) and dropping the denominator. Note the origin so it cannot recur: 4.4.1 says 'four things the guard cannot see' -- four BLIND SPOTS, a different quantity from four CLASSES. See P-67. 3. REWRITE 5.2 REQUIREMENT 6's BEFORE SO THE BYTES IT SPECIFIES CAN PRODUCE THE EVIDENCE IT DEMANDS -- this is the most important of the seven, because requirement 6 is one of the two requirements that will grade A2-15. A2-25 MEASURED that it cannot be satisfied: the specified vector dies at strict decode (unknown field product_id) before either mandated refusal is reachable. Do not paper over it by loosening the evidence; make the BEFORE bytes and the AFTER bytes genuinely be the same bytes, or restructure the requirement so BEFORE and AFTER are separately achievable and say so. A2-25 judges the AFTER half STRONG and genuinely falsifiable -- KEEP IT. It confirmed the harness can distinguish 43 from 44 today, and that a builder filing ledger vectors as class:parity without a separate counter WILL show 44 and be caught. 4. Retract or re-scope 5.4's F3 caveat: A2-22 fixed the defect (capability.go:262-278) and shipped TestLiveStoreRefusedVectorBlastRadius. 5. Re-take 4.4.1's quoted guard transcript (census figures have all moved) and the ~15 stale admit.go / vector.go / grade.go / capability.go / conformance.sh line citations in A2-25's F-6. EVERY ONE IS SUBSTANTIVELY TRUE -- this is a FRESHNESS defect, not a fabrication, and must be described as such -- but a ratifier cannot check a citation that does not resolve. 6. Fix 5.2 requirement 1's '43 vector files': the directory holds 47 (the 4 refusal vectors are the second falsification shape 5.1.1 records). RE-COUNT IT YOURSELF -- T116 may have moved it this fire. 7. Weigh F-8 and F-9: requirement 7 can be satisfied WITH NO MONEY COMPARISON AT ALL, and it demands a mechanism 5.3's preconditions do not provide. NOT IN DISPUTE, AND YOU MAY NOT RE-LITIGATE: the 5.1.1 retraction is correct and its figures exact; the five legs of 5.1 hold; run_guards invokes seven guards; 2.2 B-4's correction and its load-bearing claim are both right. A2-25's standing recommendation, adopted: RE-MEASURE EVERY CLAIM ABOUT MAIN AT THE MOMENT OF RATIFICATION, NOT THE MOMENT OF DRAFTING. Three of rev 3's four false claims were TRUE WHEN WRITTEN and went stale because the harness moved underneath them. Mark every measured claim with the commit it was measured at. YOU ARE NOT AUTHORISED TO RATIFY DEC-2 AND MUST NOT CLAIM TO. G-11 needs a further independent review passing clean after you. Scope: docs/adr/DEC-2-gl-accounting-adapter.md + your handoff. NOTHING ELSE -- no Go, no harness, no vectors, no contract.go, no DEC-1.",
-      "note": "Registered by the driver, local fire 20260822-000013, on merging A2-25's REJECTED verdict. G-11 remains OPEN - NOT RATIFIABLE."
+      "note": "Registered by the driver, local fire 20260822-000013, on merging A2-25's REJECTED verdict. G-11 remains OPEN - NOT RATIFIABLE. | DISPATCHED local fire 20260822-000013 wave 2.",
+      "branch": "softhouse/A2-28-dec2-rev4"
     },
     {
       "id": "A2-29",
       "title": "G-12 — Fineract STORES a running balance on the journal entry; our non-negotiable says balances are DERIVED, never written",
-      "status": "pending",
+      "status": "in_progress",
       "executor": "agent",
       "model": "opus",
       "role": "analyst",
@@ -1927,7 +1931,8 @@
         ".softhouse/gates.md"
       ],
       "description": "RAISED BY A2-26 FROM A DB DUMP, local fire 20260822-000013. acc_gl_journal_entry carries office_running_balance and organization_running_balance -- Fineract STORES A BALANCE ON THE ENTRY. CLAUDE.md's non-negotiable is 'The ledger is double-entry and append-only. Balances are derived, NEVER WRITTEN.' So the reference oracle does the thing the port is forbidden to do. This is the SAME SHAPE AS G-8 -- 'Fineract is the oracle' set against a stated invariant -- and G-8's handling is the precedent: measure the boundary first, then choose, and note that options which narrow the graded domain are HARD USER GATES. MEASURE BEFORE RECOMMENDING. (a) Are those columns ever READ to serve a balance, or only written? Find every reader in the pinned checkout at 426a23544 and cite it. (b) Are they part of any CONTRACT-BOUNDARY response, or purely internal? A2-26 found them in a psql dump -- check whether /journalentries or any report surfaces them. (c) Does the value ever DISAGREE with the derived sum, and can you make it disagree? A stored balance that always equals the derived one is a CACHE; one that can drift is a second source of truth, and the two cases have completely different consequences for the port. This is the measurement that decides the gate -- do not skip it because it is the hard one. THEN raise the gate properly in .softhouse/gates.md with options and a recommendation, and update the GATE REGISTER TABLE AT THE TOP, which is authoritative when a section heading and the table disagree. Options to consider, not a closed list: (a) the port derives balances and simply does not populate the columns, accepting a schema-level divergence that no contract-boundary cell exposes; (b) the port writes them to keep the adopted PostgreSQL schema byte-compatible for shadow-parity, while NEVER READING them -- which honours 'derived' in behaviour and 'schema-first' in storage; (c) treat any vector cell that exposes them as outside the graded domain -- WHICH NARROWS THE GRADED DOMAIN AND IS THEREFORE A HARD USER GATE you may recommend but not take. NOTE THE ADOPTED-SCHEMA TENSION EXPLICITLY: CLAUDE.md says 'adopt Fineract's PostgreSQL schema' AND says balances are never written. Those two instructions meet in this column. Say so plainly rather than resolving it silently in one direction. You are NOT authorised to change a non-negotiable or the graded domain. Recommend; the driver decides what it may, and escalates the rest.",
-      "note": "Registered by the driver, local fire 20260822-000013, from A2-26's DB dump A2-370-db-ledger-state.txt."
+      "note": "Registered by the driver, local fire 20260822-000013, from A2-26's DB dump A2-370-db-ledger-state.txt. | DISPATCHED local fire 20260822-000013 wave 2.",
+      "branch": "softhouse/A2-29-running-balance"
     },
     {
       "id": "A2-30",
@@ -1962,6 +1967,24 @@
       ],
       "description": "T116's third follow-up. The driver reconciled the 'Prepared and NOT promoted' block on merging T116 (family B is now PROMOTED; 46 vectors), but T116 also flagged T159's MNT 10.01-at-n-3000 residual figure as needing reconciling and the driver did NOT do that one -- it is a MEASUREMENT, and reconciling a measurement by editing prose is exactly what this program forbids. T117 moved the family-B residual to MNT 5.01 at n=1000; T159 reviewed T117, APPROVED, then asked past n=1000 and DOUBLED the residual to MNT 10.01 at n=3000. T116 has now promoted family-B vectors at n=104 and n=108 at 600.0%/MNT 0.01. DETERMINE, BY MEASUREMENT AGAINST THE LIVE ORACLE, whether the residual bound as stated is still correct, and whether the promoted vectors sit where G-8's prose says the region is. Re-derive T159's figure independently before deciding whether it needs changing -- it may be perfectly correct and merely need its domain named, which is the correction T101 F-8 already made once to the MNT 0.23 claim in this same section. If the figure is right, say so and name the domain it holds over; do not edit it. If it is wrong, correct it AND say which task's measurement it supersedes. DO NOT edit any measurement to agree with another document -- measure. SCOPE: .softhouse/gates.md's G-8 section and your handoff. Do NOT touch the promoted vectors, the harness or nexus/. BAR: probe present and up, PASS exit 0, 46 parity vectors / 7884 cells, store 73c3ea7b43dd75f04884072719a87fc8e1d255c1 UNCHANGED by you.",
       "note": "Registered by the driver, local fire 20260822-000013, from T116's follow-up 3. The driver reconciled the promotion text and deliberately left this one to measurement."
+    },
+    {
+      "id": "T220",
+      "title": "INDEPENDENT review of T116's three promoted vectors — the money vectors landed unreviewed",
+      "status": "in_progress",
+      "executor": "agent",
+      "model": "opus",
+      "role": "reviewer",
+      "target": "test",
+      "dependencies": [
+        "T116"
+      ],
+      "files_hint": [
+        ".softhouse/reviews/t220-review-t116/"
+      ],
+      "description": "Paired independent reviewer for T116. Registered by the driver, local fire 20260822-000013, on merging T116 — the pipeline's own plan gate requires every test_writer/coder task to have a paired reviewer, and three money vectors reached main without one.",
+      "note": "Registered by the driver, local fire 20260822-000013. | DISPATCHED local fire 20260822-000013 wave 2.",
+      "branch": "softhouse/T220-review-t116"
     }
   ],
   "cross_corroboration": {
