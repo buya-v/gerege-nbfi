@@ -2619,3 +2619,37 @@ suspect** — and when a tool never consults the record at all, it is not disagr
 > substring, reporting every arm as permissive; and grepping lowercase `` no `class` KEY `` against output
 > reading uppercase **`` NO `class` KEY ``** reported a working guard as vacuous. **Both were the probe, not
 > the code.** A probe must be calibrated to *discriminate*, not merely to match.
+
+> **P-76 ADDENDUM, proposed by `T248` and adopted by the driver, local fire `20260822-140002`
+> (merge `fb9c18b`). `T248` left it as text in its handoff because `patterns.md` was outside its scope —
+> correctly; this is the driver landing it.**
+>
+> **A rule's blind spots live in its POPULATION SELECTOR as much as in its conditions.**
+>
+> `T248` was sent to widen a guard's *conditions*. Measuring first — as instructed — it found the real
+> defect one level up: **`RE_REPOWIDE`, the corpus selector, was itself blind.** Its shape R4,
+> `git -C DIR grep … || echo "(no hits)"`, **satisfied BOTH of the linter's conditions and was still never
+> inspected**, because the selector never put it in front of them. A condition cannot fire on a file the
+> selector never selects, and every red drive aimed at the conditions will pass while the hole stays open.
+>
+> **So: before you trust your conditions, check your selector.** Ask what the instrument *could not have
+> seen*, not only what it decided. This is `P-35` ("a check that inspected zero items is not a pass")
+> generalised from *zero* to *the wrong population* — the count is non-zero and reassuring, and the item you
+> needed was never a candidate.
+>
+> Two further measured lessons from the same task, both worth carrying:
+>
+> - **Characterise before you widen.** `T248` was told to establish C1's real matching rule before touching
+>   C2, and it paid: C1 was a **four-root allow-list** (`/Users`, `/home`, `/opt`, `/var`), so `/tmp`,
+>   `/nonexistent`, `/srv`, `/data`, `/mnt`, `/private` and `/scratch` were all invisible. **Widening C2
+>   alone would have placed `r11-hygiene.sh` on the frontier at TIER 2, whose printed meaning is "corpus
+>   reachable today" — a false statement about a directory gone for days.** The fix would have *created* a
+>   new false claim while closing a true one. Both halves had to move.
+> - **A widening must be proved STRICTLY ADDITIVE**, by running the shipped and the widened instrument over
+>   the same tree and showing detections gained with **LOST = none** (here 20 → 22). A widening that
+>   silently drops a prior detection is a regression wearing the word "improvement". And a pin that moves
+>   must be justified as **NEWLY VISIBLE, not NEWLY INTRODUCED** — `T248` moved the frontier 9 → 10 rows and
+>   said which it was.
+> - **Negative controls are not optional even for vocabulary.** `T248`'s own reassurance word-list, bare
+>   `zero` / `above` / `empty`, matched a **section header** and would have promoted a file to TIER 1 **on
+>   non-evidence**. The instrument that catches false reassurance can itself be falsely reassured.
