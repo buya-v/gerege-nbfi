@@ -1,7 +1,7 @@
 {
  "squad": "DRIVER",
  "fire": "local 20260822-140002 (args stamp 2026-08-22T06:00:13Z)",
- "step": "EXIT — clean. 5 dispatched, 5 completed, 5 merged, ZERO live at exit.",
+ "step": "EXIT \u2014 clean. 5 dispatched, 5 completed, 5 merged, ZERO live at exit.",
  "main_at_exit": "91c43bb",
  "oracle": "REACHABLE throughout. Probe line PRESENT and reading up on every driver bar run.",
  "final_bar_on_merged_main": {
@@ -15,22 +15,22 @@
   "invariant_violations": 0,
   "not_run": 0,
   "census_pins": "all 9 == pinned",
-  "failopen_frontier": "10 == pinned 10 (moved 9 -> 10 by T248, NEWLY VISIBLE not newly introduced)",
-  "vector_store_digest": "13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d — UNMOVED all fire",
+  "failopen_frontier": "11 == pinned 11 (9 -> 10 by T248; 10 -> 11 by T252's C6, which reads CONTROL FLOW not vocabulary. The driver separately repaired p5-probe.sh, removing a row, so the two movements were independent and were reconciled by RUNNING the merge result, never by arithmetic. NEWLY VISIBLE, not newly introduced. THE PIN IS A FRONTIER, NOT AN AMNESTY \u2014 TIER1B rederive-provenance.sh is pinned and still BROKEN; T255 carries it.)",
+  "vector_store_digest": "13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d \u2014 UNMOVED all fire",
   "caveat": "PASS means 'matches the reference oracle on captured vectors, within the graded domain'. IT DOES NOT MEAN SAFE TO CUT OVER."
  },
  "live_workers": [],
  "next_fire_starts_here": [
-  "T251 — INDEPENDENT review of DEC-2 revision 7 (PREPARED by T247, merged fc36f0c, landed nothing). THE HIGHEST-VALUE ITEM: it is the last thing between G-14 and closure, and the driver has committed not to ratify without it.",
-  "T252 — T248's two unfixed findings: a probable third live fail-open site whose false claims are COUNTS not sentences, and TIER 3's label asserting 'fails closed' while nothing verifies it.",
-  "T250 — T245's F-2: capture-script tenant attestation is a hard-coded literal, so the sidecar cannot disagree with the run it documents.",
-  "T226, T235, T252, T250 — SERIALISE: all hold conformance.sh or the capture lib.",
+  "T251 \u2014 INDEPENDENT review of DEC-2 revision 7 (PREPARED by T247, merged fc36f0c, landed nothing). THE HIGHEST-VALUE ITEM: it is the last thing between G-14 and closure, and the driver has committed not to ratify without it.",
+  "T252 \u2014 T248's two unfixed findings: a probable third live fail-open site whose false claims are COUNTS not sentences, and TIER 3's label asserting 'fails closed' while nothing verifies it.",
+  "T250 \u2014 T245's F-2: capture-script tenant attestation is a hard-coded literal, so the sidecar cannot disagree with the run it documents.",
+  "T226, T235, T252, T250 \u2014 SERIALISE: all hold conformance.sh or the capture lib.",
   "T241 (gates.md), T236, then T145 / T160 / T164 / T174 / T192 / T195 / A2-23."
  ],
  "open_questions": [
   "G-14 scope decision: DECIDED by the driver and CONFIRMED by T249's independent re-derivation. The gate itself is still OPEN pending rev-7 review (T251) and ratification.",
   "P-77 is filed and amended with T249's fail-open finding, but P-77 itself has had no independent review beyond T249's pass over the patch."
  ],
- "gate_pending": "G-4, G-5 (hard user gates — each amends a ratified DEC-n), G-8, G-10, G-12, G-14. G-8/G-10/G-12/G-14 block no porting work today.",
+ "gate_pending": "G-4, G-5 (hard user gates \u2014 each amends a ratified DEC-n), G-8, G-10, G-12, G-14. G-8/G-10/G-12/G-14 block no porting work today.",
  "blocked_on": null
 }

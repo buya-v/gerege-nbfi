@@ -2653,3 +2653,98 @@ suspect** — and when a tool never consults the record at all, it is not disagr
 > - **Negative controls are not optional even for vocabulary.** `T248`'s own reassurance word-list, bare
 >   `zero` / `above` / `empty`, matched a **section header** and would have promoted a file to TIER 1 **on
 >   non-evidence**. The instrument that catches false reassurance can itself be falsely reassured.
+
+### Run 2026-08-21-run2-tierA-gl-accounting-A2 — local fire `20260822-140002`, SECOND SESSION (five workers, all five merged)
+
+- **What worked**: five workers dispatched in one batch after proving their `files_hint` **pairwise
+  disjoint** — `T252` held `conformance.sh`, `T241` held `gates.md`, `T236` held `capture/tierA-a2/`,
+  `A2-23` held the Go conformance package, `T251` held only its own reviews dir. Six other READY tasks
+  (`T250`, `T226`, `T235`, `T160`, `T192`, `T195`, `T164`, `T174`, `T145`) were **held back for contention
+  and the reason recorded**, not silently skipped. Zero merge conflicts across five merges.
+
+- **What the independent reviewer caught**: `T251` **REJECTED DEC-2 revision 7**, the artefact not the work.
+  Two HIGH findings, both re-derived by the driver before acceptance: rev 7 **corrects three stale line
+  numbers with three that are already stale** (`run_guards` is `:1504` not `:1474`; `guard_ledger_invariants`
+  `:1524` not `:1494` — `T248`'s merge grew `conformance.sh` by 30 lines *after* `T247` measured), and a
+  **35th site**, §4.4's own lead paragraph *"none of them can be graded today"*, sitting **nine lines above**
+  the bullet rev 7 corrects to *"YES, SINCE A2-15"*. It **confirmed no obligation moved** (H-10's BEFORE
+  byte-identical to the live ADR) and **the caution survives with both terms counted** (14 declared, 6
+  graded, 8 out by name). **G-14 stays OPEN; nothing was ratified.**
+
+- **Vectors added / contexts at parity**: **none, and none claimed.** The vector-store digest
+  `13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d` was **UNMOVED across all five merges** — verified live at each
+  BAR (P-61). No task this fire touched the money corpus.
+
+- **Claims marked UNVERIFIED / carried forward**: `T252`'s C6 **inherits `RE_REPOWIDE` unchanged**, so a
+  non-fatal dead `cd` in a file with no `git grep` is still invisible — **recorded as a limit, not
+  discovered later as a defect**. `T236` did not re-verify numeric-signal trap coverage (`trap … 2 15 1 3`);
+  still zero **by inheritance, not by its own sweep**. `A2-23`'s case-only variant (`LEDGER` vs `ledger`)
+  **could not be driven live** on this host's case-insensitive APFS — said so rather than papering over it.
+
+- **Verifier**: driver-run on the **merge result** after every merge, never quoted from a worker —
+  probe line PRESENT and `up` · **VERDICT PASS (exit 0)** · loanschedule **46 parity / 7884 graded cells** ·
+  LEDGER **4 parity + 2 oracle-refusal / 21 money cells** · refused 0 · inadmissible 0 · harness errors 0 ·
+  invariant violations 0 · **0 NOT RUN** · all 9 census pins == pinned · fail-open frontier **11 == pinned
+  11** · `go build`/`vet`/`test` green · `gofmt -l` **exactly** `contract.go`.
+
+- **Backlog carried forward**: `T253` (DEC-2 rev 7b + the citation-rot mechanism), `T254` (wire
+  `manifest.py verify`), `T255` (the restated frontier cardinal + the unrepaired TIER1B pin), `T256` (the
+  verdict field that never consults its own predicate).
+
+#### New knowledge
+
+**P-78 — EVIDENCE NOT MISSING, UNREAD. A recorded predicate that no summary consults.**
+`T241` found, and the driver verified directly at `capture/t229-g8-site3/out/classify-t229.json`, that
+`T229`'s own capture records `P2_totalInterestEqualsNEplusB: false` on **five** rows — and **three of them
+(`B201`, `B251`, `B299`) carry `verdict: "AS PREDICTED"`.** Two others carry `REFUTED`, so the field is not
+constant: it computes something, and that something **never consults P2**. The refutation of a *registered
+prediction* was **measured, printed and committed on the same day**, and appears in no handoff, gate text or
+review. This is not the familiar defect of evidence never gathered. It is **P-45 moved one layer out**: the
+guard did not fail to run — it ran, wrote its answer down, and the summary line above it said the opposite.
+**When you register a prediction, grep for who READS it, not just who WRITES it.** Carried by `T256`.
+
+**P-79 — A CORRECTED CARDINAL ROTS IN EVERY PLACE IT WAS RESTATED. The count is the same defect as the line number.**
+`T248` moved the fail-open frontier 9 → 10 and corrected it **where it is NAMED** (`conformance.sh`) but not
+**where it is RESTATED**. `T252` found `capture/t243-wiring/instruments/20-failopen-red-drive.sh` still
+asserting `frontier == pinned (all 9 rows, by path)` in **two live `want_line` checks** — an instrument that
+would now fail on its own control arm. Meanwhile `T251` found `T247`'s revision 7 **replacing three stale
+line numbers with three already stale**, whose worst property is that the dead ones **resolve to
+plausible-looking `warn` strings**, so a reader following one is **MISLED RATHER THAN STOPPED**. Same defect,
+two currencies. **The fix is never the new number — it is to make the second site READ the first** (derive
+the count from the pin; bind citations by CONTENT with the line number a non-normative hint). A task that
+changes the 9 to an 11 and leaves the copy has bought one cycle. `T253` and `T255` carry the two halves.
+
+**P-80 — THE FAIL-OPEN GUARD CAUGHT THREE WORKERS' OWN INSTRUMENTS IN ONE FIRE, INCLUDING TWO WRITTEN TO ENFORCE THE VERY RULE THEY BROKE.**
+`T251`'s `p5-probe.sh` — written to enforce **P-66, "state where you looked"** — wrapped every search in
+`|| echo "  (none under nexus/)"` and `|| true`. **`git grep` exits 1 on NO MATCH and >1 on ERROR**, so a bad
+pathspec printed the same reassuring absence as a genuine no-match. `T241`'s census script collapsed
+`grep -c || echo 0`, putting "zero matches" and "I broke" onto one printed zero. `T252`'s own linter caught
+**three of its own instruments**, including five `|| echo "(not printed)"` arms **in the instrument written
+to expose that class**. **All repaired, none suppressed** — the linter's `# lint-failopen: ok --` escape
+hatch would have silenced the detector while leaving the script able to lie. **Writing the rule does not
+immunise you against it; only the guard does.**
+
+**P-81 — A PROPOSED FIX CAN BE MEASURED INERT, AND THAT IS A RESULT WORTH THE TOKENS.**
+The driver briefed `T252` that "a count is a claim too" and to consider a numeric-claim detector. `T252`
+**built it and measured it**: 14 count shapes into `RE_REASSURE`, **frontier 10 → 10, GAINED 0, LOST 0, the
+target site still invisible.** It was **not rejected for noise — it produces none.** It failed for two
+*independent* reasons: the print predicate is shell-only while the claim is a python `print(`, and the
+association window is 3 code lines while the claim is **110 lines downstream**. **A vocabulary was the wrong
+AXIS, not the wrong wordlist** — the close came from `C6`, which reads **control flow** and never words.
+**Build the driver's suggestion, measure it, and report the zero.** A worker that had simply implemented the
+brief would have shipped a detector that detects nothing and called it a widening.
+
+**P-82 — TWO INDEPENDENT MOVEMENTS OF ONE PINNED NUMBER RECONCILE BY RUNNING, NEVER BY ARITHMETIC.**
+`T252` forked at `2871f17` and its `C6` **added** a frontier row; the driver, separately and later,
+**repaired `p5-probe.sh` on main and removed one**. Neither could see the other. The merged pin agreed at
+**11** — but that was **established by running the BAR on the merge result**, not by computing 10 + 1. The
+same run also proved the repaired probe is **not detected even under the new, stricter C6 rule**, which no
+arithmetic could have told anyone.
+
+**P-83 — "EXIT 2 WITH NO PROBE LINE" IS THE GUARD WORKING. READ THE ABSENCE, NOT THE VALUE.**
+The first BAR after merging `A2-23` exited 2 with **no probe line printed at all**. Under the rule as it
+stands that is emphatically **not** an oracle outage — four exit-2 paths precede the probe, and a failed
+HARD guard is one of them. The cause was `p5-probe.sh`, merged minutes earlier, moving the frontier 10 → 11.
+**This fire is the first time that rule was exercised in anger, and it held**: nothing was parked, the
+violation was repaired, and the run went green. Had the driver read `probe != up` as trivially true because
+nothing printed, it would have parked live vector work as somebody else's server being down.
