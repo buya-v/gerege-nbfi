@@ -1,0 +1,19 @@
+T207 t44_float_roundtrip_v3 --selftest
+
+  OK     1200000.00                 P2=True (want True ) P3=False(want False) residue=0.00         MNT stored to 2 dp; observed in the corpus
+  OK     1200000.000000             P2=True (want True ) P3=False(want False) residue=0.000000     exactly what DECIMAL(19,6) emits (T186 A4)
+  OK     0.10                       P2=True (want True ) P3=False(want False) residue=0.00         ten mongo
+  OK     21.6                       P2=False(want False) P3=False(want False) residue=0.0          the corpus's only real rate literal
+  OK     1162502.5                  P2=False(want False) P3=False(want False) residue=0.0          the T149/T153 half-cent TIE probe principal
+  OK     13158.1                    P2=False(want False) P3=False(want False) residue=0.0          from t44_float_roundtrip-output.txt
+  OK     1234567890123.456789       P2=True (want True ) P3=True (want True ) residue=0.000011     an ordinary numeric(19,6) value, 19 sig digits
+  OK     9999999999999.999999       P2=True (want True ) P3=True (want True ) residue=0.000001     numeric(19,6) near its own maximum
+  OK     12345678901234567890.12    P2=True (want True ) P3=True (want True ) residue=-890.12      past binary64; T163 measured residue -890.12
+  OK     9007199254740993.00        P2=True (want True ) P3=True (want True ) residue=-1.00        2**53+1: the textbook binary64 cliff
+
+  cases                    : 10
+  cases that fired P2      : 7
+  cases that fired P3      : 4
+
+SELFTEST OK -- 10 cases, 4 fire the value gate, 3 fire only the text predicate.
+Both directions exercised, and P2 and P3 are shown to be DIFFERENT predicates.

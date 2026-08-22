@@ -1,0 +1,58 @@
+T207 -- SCRATCH SUCCESSOR to T175-red/measure-other-sites.py  (T185 F-2 + F-3)
+root: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a4aaeba76a779881c
+
+================================================================================================
+SITE  capture/charges/bin/t46-exacttext.py:108   `except json.JSONDecodeError: continue`
+================================================================================================
+  raw capture files it would consider : 57
+  files it would SILENTLY SKIP        : 0
+  VERDICT: LOAD-BEARING on the no-float non-negotiable (this is the tool that
+           closes T44-X1 and its docstring claims 'identity is proved, not
+           asserted'); DROPS 0 file(s) TODAY, over a population of 57 file(s).
+
+================================================================================================
+SITE  leapboundary/analysis/t55-prior-capture-assessment.py:103   `except Exception: pass`
+================================================================================================
+  Run TWICE. LEG A reproduces the target's own `json.load(fh)` (no parse_float),
+  which is what the committed 772 figure means. LEG B is the same tool with
+  `parse_float=str`. Any figure that differs between the legs was float-dependent.
+
+  ---- LEG A : json.load(fh) ----
+    POPULATION INSPECTED   : 12 pair(s) over 12 distinct capture file(s)
+    pairs compared                      : 12
+    money deltas CONSIDERED             : 772
+    money deltas SWALLOWED / excluded   : 0
+    F-3  cells() MONEYISH-leaf drop counter (absent from the committed tool):
+      TRUE MONEYISH leaves in the corpus  : 1554
+      leaves cells() HANDS to the loop    : 1554
+      SILENTLY DROPPED before any delta   : 0
+      files carrying a bare JSON NUMBER (int)   : 0 of 12  
+      files carrying a bare JSON NUMBER (float) : 0 of 12  
+
+  ---- LEG B : json.load(fh, parse_float=str) ----
+    POPULATION INSPECTED   : 12 pair(s) over 12 distinct capture file(s)
+    pairs compared                      : 12
+    money deltas CONSIDERED             : 772
+    money deltas SWALLOWED / excluded   : 0
+    F-3  cells() MONEYISH-leaf drop counter (absent from the committed tool):
+      TRUE MONEYISH leaves in the corpus  : 1554
+      leaves cells() HANDS to the loop    : 1554
+      SILENTLY DROPPED before any delta   : 0
+      files carrying a bare JSON NUMBER (int)   : 0 of 12  
+      files carrying a bare JSON NUMBER (float) : 0 of 12  
+
+  ---- LEG A vs LEG B : which published number MOVES? ----
+    pairs compared             A=12     B=12     same
+    money deltas CONSIDERED    A=772    B=772    same
+    MONEYISH leaves total      A=1554   B=1554   same
+    MONEYISH leaves kept       A=1554   B=1554   same
+    money deltas SWALLOWED     A=0      B=0      same
+    MONEYISH leaves DROPPED    A=0      B=0      same
+
+    NO published figure moves. The committed 'pairs 12 / deltas 772 / swallowed 0'
+    survives the fix -- and now survives it BY MEASUREMENT rather than by the
+    corpus happening to store every money cell as a JSON string (T185 F-3).
+
+================================================================================================
+T207 measure-other-sites-v2: no finding. Population inspected and stated above;
+this establishes ONLY what the two named sites drop on THIS tree, at THIS commit.

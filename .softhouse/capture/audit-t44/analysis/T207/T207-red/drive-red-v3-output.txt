@@ -1,0 +1,191 @@
+T207 red/green battery -- widened scratch copy of T175-red/drive-red.sh
+  root      : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a4aaeba76a779881c
+  commit    : 90c21d6
+  python    : Python 3.9.6 (default, May 22 2026, 11:13:45) 
+  scratch   : /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.m3JveSoR4w
+
+======== LEG 0 (T175) -- the original's committed recipe still reproduces, so every leg is anchored ========
+  AS PREDICTED      the original re-run is BYTE-IDENTICAL to its committed output
+  and the ORIGINAL has NO verdict machinery at all -- the PASS banner is NEW in _v2:
+  AS PREDICTED      occurrences of PASS or FAIL anywhere in the ORIGINAL's source: 0
+  AS PREDICTED      occurrences of sys.exit / def main in the ORIGINAL's source: 0
+  AS PREDICTED      occurrences of the word 'fail' in the ORIGINAL's committed transcript: 0
+  AS PREDICTED      occurrences of the PASS banner in _v2's source: 1
+  AS PREDICTED      occurrences of failures.append in the ORIGINAL / in _v2: 0-5
+  AS PREDICTED      occurrences of lossy_value INSIDE a failures.append in _v2 (T185 F-1, the defect): 0
+
+======== LEG V-RED (W1) -- a VALUE-CORRUPTED money literal: the defect T185 raised as F-1 ========
+    planted: /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/tmp.m3JveSoR4w/corrupt/PLANTED-value-corrupt.json
+  every literal below is a legal numeric(19,6) value -- the shape Fineract's own
+  LoanProductRelatedDetail.java:61-62 (scale=6, precision=19) permits it to emit:
+    | {
+    |   "periods": [
+    |     {"period": 1, "principalDue": 1234567890123.456789, "interestDue": 1200000.000000},
+    |     {"period": 2, "principalDue": 9999999999999.999999, "interestDue": 0.10}
+    |   ],
+    |   "totalPrincipalDisbursed": 9007199254740993.00,
+    |   "currency": {"code": "MNT", "decimalPlaces": 2}
+    | }
+  --- _v2 (the COMMITTED successor), same input:
+  AS PREDICTED      _v2 exit status on a VALUE-CORRUPTED corpus (the DEFECT: it passes): 0
+  AS PREDICTED      _v2 DID detect it and print it under VALUE-lossy: 1
+  AS PREDICTED      _v2 nevertheless prints the PASS banner: 1
+  --- _v2's own words, verbatim:
+    |   literals whose float VALUE != the decimal : 3 of 5
+    | T175 SUCCESSOR: PASS -- 1 of 1 files scanned, 0 skipped, 5 distinct literals inspected.
+  --- v3, same input:
+  AS PREDICTED      v3 exit status on a VALUE-CORRUPTED corpus (must REFUSE): 1
+  AS PREDICTED      v3 prints no PASS banner: 0
+  AS PREDICTED      v3 NAMES the corrupted literals and their residues: 1
+  --- v3's verdict block, verbatim:
+    |   VALUE-CORRUPTED MONEY LITERALS -- each of these is read as a DIFFERENT AMOUNT
+    |   by any consumer that parses this capture through a binary double:
+    |         '1234567890123.456789'  ->  1234567890123.4568         residue 0.000011   (1 occurrence(s))
+    |         '9999999999999.999999'  ->  10000000000000.0           residue 0.000001   (1 occurrence(s))
+    |          '9007199254740993.00'  ->  9007199254740992.0         residue -1.00   (1 occurrence(s))
+    |   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    | 
+    | T207 v3: FAILED -- 1 breach(es):
+    |   FAIL  3 of 5 distinct literal(s) CHANGE VALUE under a binary-double round trip, across 3 occurrence(s). The capture wire is float-shaped, so this corpus can no longer be consumed by any float-shaped reader without corrupting money. Largest residue: 1.00.
+
+======== LEG V-GREEN (W2, P-50) -- v3 PASSES the legitimate corpus, with figures UNCHANGED ========
+  AS PREDICTED      v3 exit status on the charges-only corpus: 0
+  AS PREDICTED      v2 vs v3 agree on 'distinct bare non-integer literals': 245
+  AS PREDICTED      v2 vs v3 agree on 'total occurrences': 9122
+  AS PREDICTED      v2 vs v3 agree on 'max decimal scale seen': 6
+  --- v3's headline figures on the legitimate corpus:
+    |   files REQUESTED     : 92
+    |   files PARSED        : 92
+    |   files SKIPPED       : 0      <-- t44_float_roundtrip.py:29 discarded these silently
+    |   distinct bare non-integer literals : 245
+    |   total occurrences                  : 9122
+    |   literals whose float repr() != the text   : 41 of 245   [REPORTED, NOT GATED -- see below]
+    |   literals whose float VALUE != the decimal : 0 of 245   [*** THIS IS THE GATE ***]
+    | T207 v3: NO VALUE CORRUPTION DETECTED -- 92 of 92 files scanned, 0 skipped, 245 distinct literals inspected.
+
+======== LEG T (W3) -- TEXT-loss must NOT gate: 41 text-lossy literals and v3 still exits 0 ========
+  AS PREDICTED      text-lossy literals in the legitimate corpus (must be > 0 or this leg proves nothing): 41
+  AS PREDICTED      v3's verdict on that same corpus: 1
+  AS PREDICTED      v3 states WHY text-loss does not fail, on every run: 1
+
+======== LEG S (T175 LEG 1/3/5, re-run) -- v3 keeps every skip behaviour _v2 introduced ========
+  AS PREDICTED      v3 on the real corpus (18 unparseable, unacknowledged): 1
+  AS PREDICTED      files v3 NAMES as unscanned: 18
+  AS PREDICTED      v3 with --expect-skips 18: 0
+  AS PREDICTED      v3 with a WRONG --expect-skips 17: 1
+  AS PREDICTED      v3 on a glob matching NOTHING (P-35): 1
+  --- and the 245/9122 figures are unchanged from the original's:
+    |   distinct bare non-integer literals : 245
+    |   total occurrences                  : 9122
+
+======== LEG X (W4) -- v3's own --selftest, and its counts asserted ========
+  AS PREDICTED      v3 --selftest exit status: 0
+  AS PREDICTED      selftest cases that fire the VALUE gate (a zero here means the gate is unfalsifiable): 4
+  AS PREDICTED      selftest cases that fire the TEXT predicate: 7
+    | T207 t44_float_roundtrip_v3 --selftest
+    | 
+    |   OK     1200000.00                 P2=True (want True ) P3=False(want False) residue=0.00         MNT stored to 2 dp; observed in the corpus
+    |   OK     1200000.000000             P2=True (want True ) P3=False(want False) residue=0.000000     exactly what DECIMAL(19,6) emits (T186 A4)
+    |   OK     0.10                       P2=True (want True ) P3=False(want False) residue=0.00         ten mongo
+    |   OK     21.6                       P2=False(want False) P3=False(want False) residue=0.0          the corpus's only real rate literal
+    |   OK     1162502.5                  P2=False(want False) P3=False(want False) residue=0.0          the T149/T153 half-cent TIE probe principal
+    |   OK     13158.1                    P2=False(want False) P3=False(want False) residue=0.0          from t44_float_roundtrip-output.txt
+    |   OK     1234567890123.456789       P2=True (want True ) P3=True (want True ) residue=0.000011     an ordinary numeric(19,6) value, 19 sig digits
+    |   OK     9999999999999.999999       P2=True (want True ) P3=True (want True ) residue=0.000001     numeric(19,6) near its own maximum
+    |   OK     12345678901234567890.12    P2=True (want True ) P3=True (want True ) residue=-890.12      past binary64; T163 measured residue -890.12
+    |   OK     9007199254740993.00        P2=True (want True ) P3=True (want True ) residue=-1.00        2**53+1: the textbook binary64 cliff
+    | 
+    |   cases                    : 10
+    |   cases that fired P2      : 7
+    |   cases that fired P3      : 4
+    | 
+    | SELFTEST OK -- 10 cases, 4 fire the value gate, 3 fire only the text predicate.
+    | Both directions exercised, and P2 and P3 are shown to be DIFFERENT predicates.
+
+======== LEG D-GREEN (W5) -- F-3's cells() drop counter on the REAL corpus ========
+  AS PREDICTED      measure-other-sites-v2 exit status on the real tree: 0
+  AS PREDICTED      it publishes the same 12 pairs T175 did: 2
+  AS PREDICTED      it publishes the same 772 deltas T175 did: 2
+  AS PREDICTED      it now also prints the drop counter T175 omitted: 2
+  --- LEG A vs LEG B (does removing the float hazard move any published number?):
+    |   ---- LEG A vs LEG B : which published number MOVES? ----
+    |     pairs compared             A=12     B=12     same
+    |     money deltas CONSIDERED    A=772    B=772    same
+    |     MONEYISH leaves total      A=1554   B=1554   same
+    |     MONEYISH leaves kept       A=1554   B=1554   same
+    |     money deltas SWALLOWED     A=0      B=0      same
+    |     MONEYISH leaves DROPPED    A=0      B=0      same
+    | 
+
+======== LEG D-RED (W5) -- the SAME counter, on a planted root whose money leaves are BARE NUMBERS ========
+  AS PREDICTED      measure-other-sites-v2 exit status on the planted root (must REFUSE): 1
+  AS PREDICTED      it reports a NONZERO drop and says so LOUDLY: 1
+  AS PREDICTED      it states NIL-COVERAGE for the empty t46 population it was handed: 1
+  --- the planted run's LEG A drop block, verbatim:
+    |   ---- LEG A : json.load(fh) ----
+    |     (pair absent, not counted: T48B-PUREB T48B-PUREB-p3 vs T48B-PUREB-p4)
+    |     (pair absent, not counted: T48B-PUREB T48B-PUREB-p7 vs T48B-PUREB-p3)
+    |     (pair absent, not counted: T48B-YEAR T48B-YEAR-p7 vs T48B-YEAR-p4)
+    |     (pair absent, not counted: T48B-YEAR T48B-YEAR-p3 vs T48B-YEAR-p4)
+    |     (pair absent, not counted: T48B-YEAR T48B-YEAR-p7 vs T48B-YEAR-p3)
+    |     (pair absent, not counted: T48B-QTR T48B-QTR-p7 vs T48B-QTR-p4)
+    |     (pair absent, not counted: T48B-QTR T48B-QTR-p3 vs T48B-QTR-p4)
+    |     (pair absent, not counted: T48B-QTR T48B-QTR-p7 vs T48B-QTR-p3)
+    |     (pair absent, not counted: T48B-B03SHAPE x B04SHAPE T48B-B03SHAPE-p7 vs T48B-B04SHAPE-p4)
+    |     (pair absent, not counted: T48B-B03SHAPE x B04SHAPE T48B-B03SHAPE-p3 vs T48B-B04SHAPE-p4)
+    |     (pair absent, not counted: T48B-B03SHAPE T48B-B03SHAPE-p7 vs T48B-B03SHAPE-p3)
+    |     POPULATION INSPECTED   : 1 pair(s) over 2 distinct capture file(s)
+    |     pairs compared                      : 1
+    |     money deltas CONSIDERED             : 0
+    |     money deltas SWALLOWED / excluded   : 0
+    |     F-3  cells() MONEYISH-leaf drop counter (absent from the committed tool):
+    |       TRUE MONEYISH leaves in the corpus  : 6
+    |       leaves cells() HANDS to the loop    : 0
+    |       SILENTLY DROPPED before any delta   : 6
+    |       *** DROPPED  .softhouse/capture/actualactual/pathb/out/T48B-PUREB-p7-exact.json  plan.totalPrincipalDisbursed  (python float)  1162502.5
+    |       *** DROPPED  .softhouse/capture/actualactual/pathb/out/T48B-PUREB-p7-exact.json  row0.interestDue  (python float)  13158.1
+    |       *** DROPPED  .softhouse/capture/actualactual/pathb/out/T48B-PUREB-p7-exact.json  row0.principalDue  (python float)  1200000.0
+    |       *** DROPPED  .softhouse/capture/actualactual/pathb/out/T48B-PUREB-p4-exact.json  plan.totalPrincipalDisbursed  (python float)  1162502.51
+    |       *** DROPPED  .softhouse/capture/actualactual/pathb/out/T48B-PUREB-p4-exact.json  row0.interestDue  (python float)  13158.11
+    |       *** DROPPED  .softhouse/capture/actualactual/pathb/out/T48B-PUREB-p4-exact.json  row0.principalDue  (python float)  1200000.01
+    |       *** 6 MONEYISH leaf/leaves were DISCARDED BY cells() BEFORE the delta
+    |       *** loop ran. Every 'money deltas CONSIDERED' figure above is therefore
+    |       *** a count over a NARROWED population, and the published 772 would be
+    |       *** an UNDERSTATEMENT of the corpus, not a measurement of it.
+    |       files carrying a bare JSON NUMBER (int)   : 2 of 2  ['.softhouse/capture/actualactual/pathb/out/T48B-PUREB-p4-exact.json', '.softhouse/capture/actualactual/pathb/out/T48B-PUREB-p7-exact.json']
+    |       files carrying a bare JSON NUMBER (float) : 2 of 2  ['.softhouse/capture/actualactual/pathb/out/T48B-PUREB-p4-exact.json', '.softhouse/capture/actualactual/pathb/out/T48B-PUREB-p7-exact.json']
+    | 
+    |   ---- LEG B : json.load(fh, parse_float=str) ----
+    |   ---- LEG A vs LEG B : which published number MOVES? ----
+    |     pairs compared             A=1      B=1      same
+    |     money deltas CONSIDERED    A=0      B=3      *** MOVED ***
+    |     MONEYISH leaves total      A=6      B=6      same
+    |     MONEYISH leaves kept       A=0      B=6      *** MOVED ***
+    |     money deltas SWALLOWED     A=0      B=0      same
+    |     MONEYISH leaves DROPPED    A=6      B=0      *** MOVED ***
+    | 
+    |     3 published figure(s) MOVE once the float hazard is removed: money deltas CONSIDERED, MONEYISH leaves kept, MONEYISH leaves DROPPED
+    |     The committed measure-other-sites-output.txt is therefore WRONG about them.
+    | 
+    | ================================================================================================
+    | T207 measure-other-sites-v2: FINDINGS -- 3
+    |   FINDING  t46-exacttext site: considered 0 files
+    |   FINDING  LEG A: cells() dropped 6 MONEYISH leaf/leaves
+    |   FINDING  figures moved between legs: money deltas CONSIDERED, MONEYISH leaves kept, MONEYISH leaves DROPPED
+  --- and its findings:
+    | T207 measure-other-sites-v2: FINDINGS -- 3
+    |   FINDING  t46-exacttext site: considered 0 files
+    |   FINDING  LEG A: cells() dropped 6 MONEYISH leaf/leaves
+    |   FINDING  figures moved between legs: money deltas CONSIDERED, MONEYISH leaves kept, MONEYISH leaves DROPPED
+  NOTE: the committed T175-red/measure-other-sites.py has NO drop counter at all, so on
+  this same planted root it reports 'money deltas CONSIDERED : 0' and exits 0 in silence:
+  AS PREDICTED      the COMMITTED tool's exit status on the planted root (the F-3 defect): 0
+  AS PREDICTED      the COMMITTED tool counts MONEYISH LEAVES anywhere: 0
+  AS PREDICTED      the COMMITTED tool's own delta count on a pair that differs in EVERY money cell: 0
+  ^ 1 pair compared, every money cell different, 0 deltas counted, exit 0, no word said.
+    |   pairs compared                      : 1
+    |   money deltas CONSIDERED             : 0
+    |   money deltas SWALLOWED / excluded   : 0
+
+======== VERDICT ========
+  ALL LEGS AS PREDICTED

@@ -1,0 +1,15 @@
+T207 -- T185's table, RE-RUN with T207's counter (P-33 second program, P-69 drift)
+
+  rev            sha             .py    sites   NO p_f  files w/  files w/
+                               files                      a call     a gap
+  dfa1bfa        dfa1bfa         344      302      193       171       103
+  fecea5f        fecea5f         353      312      201       176       107
+  1672d85        1672d85         389      323      211       184       114
+  HEAD           90c21d6         438      344      224       196       122
+
+  every .py file at dfa1bfa (dfa1bfa) was parsed; 0 not inspected.
+  every .py file at fecea5f (fecea5f) was parsed; 0 not inspected.
+  every .py file at 1672d85 (1672d85) was parsed; 0 not inspected.
+  every .py file at HEAD (90c21d6) was parsed; 0 not inspected.
+
+[exited with code 0]
