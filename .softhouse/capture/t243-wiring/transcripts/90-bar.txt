@@ -1,11 +1,11 @@
-commit         : 693c768d752df7a475938df3e4fa3cd72b138e18
-fork point     : 693c768d752df7a475938df3e4fa3cd72b138e18
+commit         : 6875cd7d949df31d5de371b7b5e1b5ba4d3931f3
+fork point     : 8e8d65da2883cb5274aad0f82a220e7061176e59
 origin/main    : 8e8d65da2883cb5274aad0f82a220e7061176e59
 vector store   : 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d
 
 conformance.sh exit  : 0
 ledger-invariants:   8. TESTS ARE INSPECTED, NOT EXEMPTED. A _test.go file that assigns a balance field as a
-conformance: CENSUS fail-open instruments — inspected 881 tracked .sh/.py file(s) under
+conformance: CENSUS fail-open instruments — inspected 891 tracked .sh/.py file(s) under
 conformance:   /Users/buv/gerege-nbfi/.claude/worktrees/agent-ab2488891c1ff496e (git ls-files, whole repository); frontier 9, pinned at 9.
 conformance:   frontier == pinned (all 9 rows, by path).
 conformance: reference oracle (https://localhost:8443/fineract-provider/actuator/health) probe = up
@@ -72,9 +72,9 @@ PROOFS: 23 passed, 0 failed
 go build exit        : 0
 go vet exit          : 0
 go test exit         : 0
-ok  	github.com/gerege/nexus/internal/apps/ledger	0.467s
-ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	3.525s
-ok  	github.com/gerege/nexus/internal/apps/loanschedule	7.956s
-ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	73.707s
+ok  	github.com/gerege/nexus/internal/apps/ledger	0.375s
+ok  	github.com/gerege/nexus/internal/apps/ledger/conformance	3.122s
+ok  	github.com/gerege/nexus/internal/apps/loanschedule	7.974s
+ok  	github.com/gerege/nexus/internal/apps/loanschedule/conformance	71.837s
 gofmt -l             :
     internal/apps/loanschedule/contract/contract.go
