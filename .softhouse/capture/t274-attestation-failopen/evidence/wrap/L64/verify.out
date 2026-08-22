@@ -1,0 +1,17 @@
+REQUIRED ASSERTIONS (13), DERIVED FROM THE WIRE RECORD -- not read off the sidecar, which is the artefact under suspicion:
+  request-headers-artefact
+  request-headers-sha256
+  body
+  response-headers-artefact
+  response-headers-sha256
+  response-status-line
+  response-artefact
+  response-sha256
+  response-bytes
+  response-content-length-crosscheck
+  response-status-crosscheck
+  response-status-artefact
+  captured-at-utc
+VERBATIM WIRE LINES REQUIRED, IN ORDER AND WITH MULTIPLICITY: 8
+RESPONSE LEG: ATTESTED (schema 2) -- headers record digest, final status line, status file, body digest and byte count
+VERIFIED /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7f55872c72c498c7/.softhouse/capture/t274-attestation-failopen/evidence/wrap/L64/L64.http against /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7f55872c72c498c7/.softhouse/capture/t274-attestation-failopen/evidence/wrap/L64/L64.reqhdr and /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7f55872c72c498c7/.softhouse/capture/t274-attestation-failopen/evidence/wrap/L64/L64.resphdr

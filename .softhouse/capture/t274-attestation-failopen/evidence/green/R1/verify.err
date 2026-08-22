@@ -1,0 +1,11 @@
+ATTESTATION MISMATCH -- /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7f55872c72c498c7/.softhouse/capture/t274-attestation-failopen/evidence/green/R1/probe.http
+  REQUIRED assertion ABSENT: `body-sha256:` -- absence of the assertion is not absence of the thing asserted
+  sidecar OMITS a line the wire record and the committed artefacts derive (expected at line 15): 'body-sha256: 4f2089da7cb70aa9ce1f3557ba442ee2d98367874548afa83831d1b5953204ec'
+  sidecar has 26 lines; re-derivation yields 27
+--- re-derived (expected) vs sidecar (actual) ---
+  --- re-derived
+  +++ probe.http
+  @@ -14,3 +14,2 @@
+   body-wire-bytes-artefact: probe.req
+  -body-sha256: 4f2089da7cb70aa9ce1f3557ba442ee2d98367874548afa83831d1b5953204ec
+   body-bytes: 46

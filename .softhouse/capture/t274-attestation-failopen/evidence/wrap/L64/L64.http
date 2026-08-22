@@ -1,0 +1,23 @@
+attestation-derivation: curl --trace-ascii; request headers AS SENT
+attestation-schema: 2
+send-header-block 1 of 1
+GET /fineract-provider/api/v1/offices HTTP/1.1
+Host: localhost:8443
+User-Agent: curl/8.7.1
+Accept: */*
+Authorization: Basic <redacted sha256:2614d66f727c25bb>
+Fineract-Platform-TenantId: default
+X-T274-Long: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+request-headers-artefact: L64.reqhdr
+request-headers-sha256: 6e142f164d5c0c28f4c35f2a2122c0492bc8803e484bf022ef1bd0faba1b4f76
+body: <none>
+response-headers-artefact: L64.resphdr
+response-headers-sha256: bf1d8fda2a9a60e609b8ee1cec0ebeca15d64e9957497604f0e243b7f4e8f6f9
+response-status-line: HTTP/1.1 200
+response-artefact: L64.json
+response-sha256: ab2f53e6ca5572da6bcdeb71cdf026d571afa3311780040d642ce3b94696d0f4
+response-bytes: 264
+response-content-length-crosscheck: MATCH (264 bytes)
+response-status-crosscheck: MATCH (200)
+response-status-artefact: L64.status
+captured-at-utc: 2026-08-22T14:27:07Z

@@ -1,0 +1,13 @@
+{
+  "_what": "The pin for .softhouse/capture/lib/attest_population.py -- the ratchet that stops a NEW capture sidecar being committed without a derivation line.",
+  "_measured": "T274, 2026-08-22, on branch softhouse/t274-attestation-failopen. 333 tracked *.http sidecars: 73 DERIVED (18 of them schema 2), 231 LEGACY, 29 excluded as declared tampered evidence.",
+  "_legacy_is_not_wrong": "231 legacy sidecars are UNATTESTED BY THIS RIG, not proven false. 226 of them are the tierA-a2 corpus the vector store cites; T245 established their tenant by three independent routes from database contents. They were written by the cap*.sh chain, which is the rig T250 replaced. Re-capturing them through oracle_send is a separate oracle-bound task, not a condition of this pin.",
+  "_the_pin_is_a_ratchet": "legacy_sidecars may never RISE. If it FALLS -- because a capture was re-taken through oracle_send -- the pin must lose the difference IN THE SAME COMMIT, or it starts excusing a weakness that is no longer there. Same discipline as FAILOPEN_PIN_FILE_LIST in conformance.sh.",
+  "_exclusions": "A directory excludes itself by containing a file named ATTEST-TAMPERED-EVIDENCE. Exclusions are PRINTED on every run and must appear below, so one cannot be created quietly. These three hold artefacts the T274 red-drives tampered on purpose; t250arms/arm-4 is a legacy-shaped forgery whose entire point is to carry no provenance line.",
+  "legacy_sidecars": 231,
+  "tampered_evidence_dirs": [
+    ".softhouse/capture/t274-attestation-failopen/evidence/green",
+    ".softhouse/capture/t274-attestation-failopen/evidence/red",
+    ".softhouse/capture/t274-attestation-failopen/evidence/t250arms"
+  ]
+}

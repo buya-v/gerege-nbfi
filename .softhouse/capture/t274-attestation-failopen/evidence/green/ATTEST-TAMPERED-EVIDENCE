@@ -1,0 +1,5 @@
+This directory holds artefacts that were TAMPERED ON PURPOSE by the T274
+red-drives. They are evidence of an attack, not captures. `attest_population.py`
+excludes this directory from the sidecar census and PRINTS the exclusion; the
+directory must appear in `.softhouse/capture/lib/attest_population_pin.json` or
+the census FAILS. See ../../instruments/ and the T274 handoff.
