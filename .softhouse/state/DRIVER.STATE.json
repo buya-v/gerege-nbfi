@@ -5,7 +5,7 @@
   "run_id": "2026-08-21-run2-tierA-gl-accounting-A2",
   "oracle": "REACHABLE https://localhost:8443/fineract-provider/actuator/health (given by wrapper, not re-probed)",
   "postgres": "localhost:5432",
-  "fork_point_for_this_fires_worktrees": "8f0edeb",
+  "fork_point_for_this_fires_worktrees": "wave 1 forked 33d19a6; wave 2 forked 8f193b5 -- BOTH are HEAD-at-dispatch, NOT session start (8f0edeb). P-71 corrected this fire.",
   "main_at_dispatch": "33d19a6",
   "prior_fire_finding": {
     "what": "fire 20260822-080001 dispatched wave 1 (A2-32, T230, T229, T227) at 12:09:27+0800 and hit the session limit at 12:12:45+0800, rc=1. All four workers were killed ~3 minutes after dispatch.",
@@ -14,12 +14,49 @@
     "session_limit_reset": "1pm Asia/Ulaanbaatar; this fire starts 14:00 UTB with a fresh budget."
   },
   "live_workers": [
-    {"task": "A2-32", "branch": "softhouse/A2-32-dec2-rev5", "model": "opus", "target": "docs", "files": ["docs/adr/DEC-2-gl-accounting-adapter.md"], "goal": "DEC-2 rev 5 — A2-31 F-1 and F-2 ONLY"},
-    {"task": "T230", "branch": "softhouse/T230-rework-t222-grounding", "model": "opus", "target": "code", "files": ["nexus/internal/apps/loanschedule/conformance/"], "goal": "rework T222 on T225 F-1/F-2/F-3/F-5; unblocks A2-15"},
-    {"task": "T229", "branch": "softhouse/T229-g8-rescue-site3", "model": "opus", "target": "docs", "files": [".softhouse/gates.md", ".softhouse/capture/"], "goal": "characterise G-8 rescue site 3; blocks G-8 options (b)/(c)"},
-    {"task": "T227", "branch": "softhouse/T227-retracted-claim-third-file", "model": "opus", "target": "code", "files": [".softhouse/guards/ledgerguard/", ".softhouse/conformance.sh"], "goal": "third-file retracted claim + WHY T224's sweep missed a verbatim hit"}
+    {
+      "task": "A2-33",
+      "branch": "softhouse/A2-33-review-dec2-rev5",
+      "model": "opus",
+      "target": "docs",
+      "files": [
+        ".softhouse/reviews/a2-33-dec2-rev5/"
+      ],
+      "goal": "INDEPENDENT review of DEC-2 rev 5 -- the ONLY path to closing G-11; four revisions rejected so far"
+    },
+    {
+      "task": "T231",
+      "branch": "softhouse/T231-g8-section-rebuild",
+      "model": "opus",
+      "target": "docs",
+      "files": [
+        ".softhouse/gates.md"
+      ],
+      "goal": "rebuild G-8 section; gates.md shows Buyan a ceiling T229 measured wrong by 3x (MNT 1.80 stated vs 5.40 at n=360)"
+    },
+    {
+      "task": "T232",
+      "branch": "softhouse/T232-pattern-p72-sweep-calibration",
+      "model": "opus",
+      "target": "docs",
+      "files": [
+        ".softhouse/patterns.md"
+      ],
+      "goal": "write P-72 -- calibrate a sweep on a known positive"
+    },
+    {
+      "task": "T233",
+      "branch": "softhouse/T233-exemption-citation-gate",
+      "model": "opus",
+      "target": "code",
+      "files": [
+        "nexus/internal/apps/loanschedule/conformance/",
+        ".softhouse/vectors/README.md"
+      ],
+      "goal": "T222 F-4: exemption reason need cite no capture; neither exemption count is gated"
+    }
   ],
-  "next_action": "AWAIT all four. Do not exit with a live worker (they die with the session). Then: scope-check each on the THREE-DOT diff, adjudicate, merge in dependency order, re-run conformance on merged main, update program.json + RESUME.md, push.",
+  "next_action": "AWAIT all four of wave 2. Then scope-check on THREE-DOT diffs, merge, re-run conformance on merged main, and IF A2-33 APPROVES CLEAN the driver may ratify G-11 (agent-decidable per CLAUDE.md) -- which unblocks A2-15 and the tierA-gl-accounting slice. Then rewrite RESUME.md and program.json and push.",
   "baseline_bar": {
     "verdict": "PASS exit 0",
     "parity_vectors": 46,
@@ -33,6 +70,20 @@
     "vector_store": "73c3ea7b43dd75f04884072719a87fc8e1d255c1",
     "note": "MUST be re-run by the driver on merged main, never quoted from a worker."
   },
-  "gates_open": ["G-4", "G-5", "G-8", "G-10", "G-11", "G-12"],
-  "blocked_on_gate": "A2-15 is gated on G-11 and practically on T230"
+  "gates_open": [
+    "G-4",
+    "G-5",
+    "G-8",
+    "G-10",
+    "G-11",
+    "G-12"
+  ],
+  "blocked_on_gate": "A2-15 is gated on G-11 and practically on T230",
+  "wave1_result": "ALL FOUR MERGED, driver-verified on merged main 7fd5568: probe PRESENT and up, PASS exit 0, 46 parity / 7884 cells, 0 inadmissible, 0 invariant violations, 4 EXEMPTED, 4 GROUNDED / 0 UNGROUNDED / 0 UNDETERMINED, --prove 23/0, build/vet/test green, gofmt -l exactly contract.go, store 73c3ea7b43dd75f04884072719a87fc8e1d255c1 UNCHANGED. NO VECTOR ADDED and none claimed.",
+  "driver_self_corrections_this_fire": [
+    "P-67 in patterns.md: the pattern about an unmeasured DENOMINATOR had itself shipped an unmeasured NUMERATOR. Four of seven, not three. Caught by A2-32 against the driver. FIXED.",
+    "tasks.json certified 'three of the ledger guard's SEVEN classes ... is EXACT' as driver-verified. It is FOUR. FIXED.",
+    "P-71 said worktrees fork from the SESSION-START commit. FALSIFIED this fire: all four wave-1 worktrees forked from 33d19a6, HEAD at DISPATCH. The driver had told all four workers their fork point was 8f0edeb -- wrong for every one of them, harmless only because the two commits differ by one note. CORRECTED in patterns.md.",
+    "A2-32 flagged T227's conformance.sh target as wider than briefed and at :1187 not :1180. ADJUDICATED: T227 had already handled the wider 25-line block. Flag CLOSED, no action."
+  ]
 }
