@@ -33,6 +33,14 @@ python parser: ast     shell parser: NONE (refusal path)
                              T156 regex says GUARDED=False (expected False)  OK
                              why: no try/finally, context manager or live handler encloses this call
 
+  red_runtime_root.py        parser=UNGUARDED                  expected=UNGUARDED                  OK
+                             T156 regex says GUARDED=False (expected False)  OK
+                             why: no try/finally, context manager or live handler encloses this call
+
+  chain_scratch_discard.py   parser=UNGUARDED                  expected=UNGUARDED                  OK
+                             T156 regex says GUARDED=False (expected False)  OK
+                             why: no try/finally, context manager or live handler encloses this call
+
   red_prose_guard.sh         parser=REFUSED-SHELL-NO-PARSER    expected=REFUSED-SHELL-NO-PARSER    OK
                              T156 regex says GUARDED=True
 
@@ -41,5 +49,7 @@ python parser: ast     shell parser: NONE (refusal path)
 
   DISAGREEMENT CHECK on shape (a): T156=GUARDED, parser=UNGUARDED -> OK
   OVER-BROADNESS CHECK: 5/5 green fixtures classified as guarded/atomic -> OK
+  T205 DIFFERENTIAL: runtime-ROOT store write=TRUSTED/UNGUARDED (chain=True, tags=STORE) vs unresolved param=UNKNOWN -> OK
+  T205 POLARITY (injected SCRATCH chain fragment must be DISCARDED): injection-live=True site=UNKNOWN/UNGUARDED -> OK
 
-SELFTEST PASSED — 8 python cases, 2 shell refusals, both directions asserted
+SELFTEST PASSED — 10 python cases, 2 shell refusals, both directions asserted
