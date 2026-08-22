@@ -9,6 +9,18 @@
 # Shows check-lock-exclusion-anchor.sh FAILS LOUDLY (nonzero exit) against
 # the mutated copy.
 #
+# NOTE (T215): this NEEDLE/REPLACEMENT string substitution mutates BOTH
+# LOCK-exclusion sites at once (the fragment is byte-identical at both).
+# Since the T215 extension, this now surfaces as TWO named per-site
+# "matched the census but the pathspec argument is not the exact expected
+# token" failures rather than the original single "zero-match" verdict --
+# the underlying property (FAILS LOUDLY, nonzero exit) is unchanged and
+# still what this script checks. For a mutation that is isolated to ONE
+# site only, naming that ONE site while the other reports clean, see
+# run-red-demo-site1.sh (DETECT only) and run-red-demo-site2.sh (STAGE
+# only) in this same directory -- the latter reproduces the exact gap T215
+# was raised to close.
+#
 # Sibling-file shape (T161's measured trap): fire-program.sh itself does
 # NOT derive its repo root from $0/__file__ -- verified by grepping the
 # live file for '0:A' and '__file__'/'BASH_SOURCE', zero matches; REPO is
