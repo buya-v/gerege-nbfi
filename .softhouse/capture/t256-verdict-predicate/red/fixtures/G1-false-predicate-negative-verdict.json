@@ -1,0 +1,6 @@
+{
+ "_shape": "GREEN CONTROL. A false predicate under a REFUTED verdict is agreement, not disagreement. Proves R-VPA is not 'any false predicate is red'.",
+ "trials": [
+  {"id": "SCRATCH-G1", "P7_lastRowExcessEqualsB": false, "verdict": "REFUTED"}
+ ]
+}

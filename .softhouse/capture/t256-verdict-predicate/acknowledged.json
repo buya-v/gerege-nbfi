@@ -1,0 +1,54 @@
+{
+  "_about": [
+    "T259. A labelled acknowledgement that a committed classification row records a FALSE",
+    "predicate under an AFFIRMATIVE verdict, and why that is not being fixed by editing the",
+    "evidence. An acknowledgement NEVER silences the checker -- the disagreement is printed on",
+    "every run either way. It changes the exit code only.",
+    "",
+    "PINNED TO BYTES. Each block names the sha256 of the file it acknowledges. Edit one byte of",
+    "that file and the whole block goes VOID, is reported VOID, and the rows go RED. That is",
+    "T114/T176 ('anything that produced COMMITTED EVIDENCE is superseded, NEVER edited in place')",
+    "enforced by the instrument instead of by discipline."
+  ],
+  "acknowledgements": [
+    {
+      "file": ".softhouse/capture/t229-g8-site3/out/classify-t229.json",
+      "sha256": "f831736f07f1a6fecd4ee69b5a1de8dac0abcae89210f997e72526070f62821a",
+      "gitBlobAtT259": "2f740a8bd064fae24bb80a3e1da439dd73c2f72b",
+      "producedBy": ".softhouse/capture/t229-g8-site3/src/classify_t229.py at bb35cc8",
+      "gradedProposition": "classify_t229.py's `verdict` is a function of exactly TWO things, re-read from source at HEAD a71c140 (lines beginning `pp = p[\"predictedTotalPrincipalMinor\"]`): the observed OUTCOME family versus `predictedOutcome`, and `observedPrincipalMinor == predictedTotalPrincipalMinor`. Those are precisely the two graded columns of PREDICTION.md section 2's nine-cell table. It therefore means 'THE CELL TABLE ROW HELD' and NOTHING MORE. It does not cover P1..P6, which are computed after it (P2) or not computed at all (P1, P3, P4, P5). The field's name does not say this; nothing in the directory said it before T259.",
+      "rows": [
+        {
+          "id": "T229-R600p0-N200-B201",
+          "predicate": "P2_totalInterestEqualsNEplusB",
+          "disposition": "PREDICATE-AS-REGISTERED-WAS-WRONG; VERDICT STANDS",
+          "reason": "P2's third conjunct as registered ('totalInterestAmount = n*E + B') is arithmetically wrong: n*E + B is the total REPAYMENT column, not the interest column. The recorded false is a correct measurement of an incorrect claim. The cell-table proposition the verdict grades did hold: predictedOutcome FAMILY_B_PARTIAL == observed, and predicted principal 1 == observed 1.",
+          "correctedBy": "totalInterest == n*E + B - principalRepaid. Re-derived independently in rederive_counts_t259.py: observed 20200 == 200*100 + 201 - 1. HOLDS.",
+          "correctionRecordedAt": "PREDICTION.md section 2 P2 and src/site3.py, in-place *** T241 CORRECTION *** banners, merged d20836e"
+        },
+        {
+          "id": "T229-R600p0-N200-B251",
+          "predicate": "P2_totalInterestEqualsNEplusB",
+          "disposition": "PREDICATE-AS-REGISTERED-WAS-WRONG; VERDICT STANDS",
+          "reason": "As B201. Cell-table proposition held: FAMILY_B_PARTIAL == observed, predicted principal 51 == observed 51.",
+          "correctedBy": "observed 25200 == 200*125 + 251 - 51. HOLDS.",
+          "correctionRecordedAt": "PREDICTION.md section 2 P2 and src/site3.py, merged d20836e"
+        },
+        {
+          "id": "T229-R600p0-N200-B299",
+          "predicate": "P2_totalInterestEqualsNEplusB",
+          "disposition": "PREDICATE-AS-REGISTERED-WAS-WRONG; VERDICT STANDS",
+          "reason": "As B201. Cell-table proposition held: FAMILY_B_PARTIAL == observed, predicted principal 99 == observed 99.",
+          "correctedBy": "observed 30000 == 200*149 + 299 - 99. HOLDS.",
+          "correctionRecordedAt": "PREDICTION.md section 2 P2 and src/site3.py, merged d20836e"
+        }
+      ],
+      "_notAcknowledgedAndWhy": [
+        "The other two rows recording P2_totalInterestEqualsNEplusB=false -- T229-R600p0-N200-B199",
+        "and T229-R36p0-N1400-B1450 -- carry verdict REFUTED and so are not disagreements at all.",
+        "They need no acknowledgement and deliberately have none. Stated here so a later reader",
+        "does not mistake their absence for an oversight (P-66/P-70)."
+      ]
+    }
+  ]
+}

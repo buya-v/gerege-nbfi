@@ -1,0 +1,6 @@
+{
+ "_shape": "A boolean whose intent nobody recorded. The verdict here is NEGATIVE, so there is no disagreement -- this leg isolates the unclassified-key refusal on its own.",
+ "trials": [
+  {"id": "SCRATCH-X2", "sanityCheckHeld": false, "verdict": "REFUTED"}
+ ]
+}
