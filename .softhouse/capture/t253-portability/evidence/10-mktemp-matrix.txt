@@ -1,0 +1,36 @@
+host   : Darwin 25.5.0 arm64
+mktemp : /usr/bin/mktemp
+TMPDIR : [/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/]
+image  : postgres:16 -> mktemp (GNU coreutils) 9.7
+------------------------------------------------------------
+### D1 RED: the OLD form, `mktemp -t NAME`
+BSD  OLD-file  rc=0  out=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/conformance-failopen.xcxnLHGZAg
+  ASSERT OK   : BSD accepts the old form — THIS IS WHY THE DEFECT IS INVISIBLE ON THIS MAC (rc=0 as required)
+GNU  OLD-file  rc=1  out=mktemp: too few X's in template ‘conformance-failopen’
+  ASSERT OK   : GNU REFUSES the old form — this is the Linux kill (RED) (rc=1, non-zero as required)
+BSD  OLD-dir   rc=0  out=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T/conformance-prove.o7wHD2nBpm
+  ASSERT OK   : BSD accepts the old -d form (rc=0 as required)
+GNU  OLD-dir   rc=1  out=mktemp: too few X's in template ‘conformance-prove’
+  ASSERT OK   : GNU REFUSES the old -d form (RED) (rc=1, non-zero as required)
+------------------------------------------------------------
+### D1 GREEN: the NEW form, an explicit template ending in 10 Xs
+BSD  NEW-file  rc=0  out=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//conformance-failopen.qqm7O4VcOU
+  ASSERT OK   : BSD accepts the new form (rc=0 as required)
+  note: BSD path produced = /var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//conformance-failopen.qqm7O4VcOU
+  note: it is a real regular file — the doubled slash from a trailing-slash TMPDIR is harmless
+GNU  NEW-file  rc=0  out=/tmp/conformance-failopen.1UIdNVAejG
+  ASSERT OK   : GNU accepts the new form (GREEN) (rc=0 as required)
+BSD  NEW-dir   rc=0  out=/var/folders/yq/v_3qz_8j31j7__tyfj090p8m0000gn/T//conformance-prove.39bOir3Mym
+  ASSERT OK   : BSD accepts the new -d form (rc=0 as required)
+GNU  NEW-dir   rc=0  out=/tmp/conformance-prove.HXDI0MfnIq
+  ASSERT OK   : GNU accepts the new -d form (GREEN) (rc=0 as required)
+------------------------------------------------------------
+### CROSS-CHECK: TMPDIR is still honoured by the new form (the property -t supplied)
+GNU  TMPDIR-set rc=0  out=/var/tmp/conformance-x.HGyQmFlShX
+  ASSERT OK   : GNU: new form succeeds with TMPDIR set (rc=0 as required)
+  ASSERT OK   : GNU new form landed under TMPDIR (/var/tmp/conformance-x.HGyQmFlShX)
+GNU  TMPDIR-unset rc=0  out=/tmp/conformance-y.qrGFKXJbV1
+  ASSERT OK   : GNU: new form succeeds with TMPDIR unset (the Linux default) (rc=0 as required)
+  ASSERT OK   : GNU new form fell back to /tmp (/tmp/conformance-y.qrGFKXJbV1)
+------------------------------------------------------------
+MATRIX: all assertions held. OLD form is BSD-only; NEW form is portable on both arms.

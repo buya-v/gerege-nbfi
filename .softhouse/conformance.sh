@@ -1478,10 +1478,10 @@ guard_no_fail_open_instruments() {
     return 1
   fi
   local out json want got rc corpus n
-  out="$(mktemp -t conformance-failopen)"      || return 1
-  json="$(mktemp -t conformance-failopen-json)" || return 1
-  want="$(mktemp -t conformance-failopen-want)" || return 1
-  got="$(mktemp -t conformance-failopen-got)"   || return 1
+  out="$(mktemp "${TMPDIR:-/tmp}/conformance-failopen.XXXXXXXXXX")"      || return 1
+  json="$(mktemp "${TMPDIR:-/tmp}/conformance-failopen-json.XXXXXXXXXX")" || return 1
+  want="$(mktemp "${TMPDIR:-/tmp}/conformance-failopen-want.XXXXXXXXXX")" || return 1
+  got="$(mktemp "${TMPDIR:-/tmp}/conformance-failopen-got.XXXXXXXXXX")"   || return 1
 
   # The JSON is diverted to scratch. The linter's default destination is a
   # TRACKED file, and a harness that rewrote a tracked file on every graded run
@@ -1828,7 +1828,7 @@ gate_wrong_ledger_impls_die() {
     return 0
   fi
 
-  list="$(mktemp -t conformance-implist)" || return 1
+  list="$(mktemp "${TMPDIR:-/tmp}/conformance-implist.XXXXXXXXXX")" || return 1
   "$bin" -list-implementations >"$list" 2>&1
   # The wrong ones are exactly the rows the binary itself marks. Read from a
   # FILE with sed; no pipeline, no early-exiting consumer (P-57).
@@ -1852,7 +1852,7 @@ gate_wrong_ledger_impls_die() {
     return 1
   fi
 
-  out="$(mktemp -t conformance-wrongimpl)" || return 1
+  out="$(mktemp "${TMPDIR:-/tmp}/conformance-wrongimpl.XXXXXXXXXX")" || return 1
   for impl in $names; do
     "$bin" "-oracle-probe=$probe" "-ledger-impl=$impl" >"$out" 2>&1
     rc=$?
@@ -1927,7 +1927,7 @@ main_grade() {
   run_guards
 
   local probe rc
-  CONF_BIN="$(mktemp -t conformance)" || exit "$EXIT_UNUSABLE"
+  CONF_BIN="$(mktemp "${TMPDIR:-/tmp}/conformance.XXXXXXXXXX")" || exit "$EXIT_UNUSABLE"
   build_binary "$CONF_BIN"
 
   local args=()
@@ -1942,7 +1942,7 @@ main_grade() {
   # hazard. The full output is printed unmodified either way, so a reader loses
   # nothing but the interleaving of two streams that were already separate.
   local report
-  report="$(mktemp -t conformance-report)" || exit "$EXIT_UNUSABLE"
+  report="$(mktemp "${TMPDIR:-/tmp}/conformance-report.XXXXXXXXXX")" || exit "$EXIT_UNUSABLE"
 
   if [ "$self_test" = "1" ]; then
     say "conformance: SELF-TEST MODE — grading the harness, not a port. Not a conformance PASS."
@@ -2000,8 +2000,8 @@ prove() {
   # is the same mistake the census block above records at "fixing only the census one".
   guard_graded_root_is_this_tree || exit "$EXIT_UNUSABLE"
   local rc pass=0 fail=0 bin tmp
-  CONF_BIN="$(mktemp -t conformance)" || exit "$EXIT_UNUSABLE"
-  CONF_TMP="$(mktemp -d -t conformance-prove)" || exit "$EXIT_UNUSABLE"
+  CONF_BIN="$(mktemp "${TMPDIR:-/tmp}/conformance.XXXXXXXXXX")" || exit "$EXIT_UNUSABLE"
+  CONF_TMP="$(mktemp -d "${TMPDIR:-/tmp}/conformance-prove.XXXXXXXXXX")" || exit "$EXIT_UNUSABLE"
   bin="$CONF_BIN"; tmp="$CONF_TMP"
   build_binary "$bin"
 

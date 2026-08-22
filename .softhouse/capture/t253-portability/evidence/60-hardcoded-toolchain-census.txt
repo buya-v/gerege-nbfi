@@ -1,0 +1,109 @@
+SELECTOR : tracked files (git ls-files), literal '/Users/buv/gerege-nbfi'
+POPULATION (all tracked files)            : 5222
+  of which runnable (.sh/.py)             : 921
+  of which prose/evidence (.md/.txt/...)  : 3380
+
+=== the Mac toolchain dir  /Users/buv/gerege-nbfi/.softhouse/toolchain ===
+  matched  : 53 of 5222 tracked files
+  RUNNABLE : 30 of 921 runnable files  <-- the ones that actually break off-Mac
+  prose    : 23 of 3380 prose files     <-- historical observations, not defects
+      RUNNABLE .softhouse/bin/go-env.sh
+      RUNNABLE .softhouse/capture/pathb/t149/grade-scratch-store.sh
+      RUNNABLE .softhouse/capture/t100-g8-rescope/src/exemption_demo_t100.py
+      RUNNABLE .softhouse/capture/t116-familyb-promotion/src/counterfactuals_t116.py
+      RUNNABLE .softhouse/capture/t243-wiring/instruments/10-wrongimpl-red-drive.sh
+      RUNNABLE .softhouse/capture/t243-wiring/instruments/20-failopen-red-drive.sh
+      RUNNABLE .softhouse/capture/t243-wiring/instruments/30-citation-red-drive.sh
+      RUNNABLE .softhouse/capture/t243-wiring/instruments/90-bar.sh
+      RUNNABLE .softhouse/capture/t244-dec2-rev6/bar.sh
+      RUNNABLE .softhouse/capture/t253-portability/instruments/30-d2-red-drive.sh
+      RUNNABLE .softhouse/capture/t61-halfeven/src/run-counterfactuals.py
+      RUNNABLE .softhouse/capture/t64-zeroprincipal/src/run-counterfactuals.py
+      RUNNABLE .softhouse/capture/t66-unrecognized-interest/gotest.sh
+      RUNNABLE .softhouse/capture/t83-nonamortizing/src/run-exemption-demo.py
+      RUNNABLE .softhouse/capture/t83-nonamortizing/src/run-port.py
+      RUNNABLE .softhouse/capture/tierA-a2/red-green-a2-15.sh
+      RUNNABLE .softhouse/handoff/T61-mutations.py
+      RUNNABLE .softhouse/handoff/T61-sweep/run-sweep.py
+      RUNNABLE .softhouse/reviews/T135-evidence/f2-canary-digests.sh
+      RUNNABLE .softhouse/reviews/T135-evidence/f2-prefix-pins.sh
+      RUNNABLE .softhouse/reviews/T84-evidence/src/exemption-demo.py
+      RUNNABLE .softhouse/reviews/T84-evidence/src/run-port.py
+      RUNNABLE .softhouse/reviews/a2-31-dec2-rev4/probe-i4builder-redgreen.sh
+      RUNNABLE .softhouse/reviews/a2-34-review-a2-15/bar-and-oracle.sh
+      RUNNABLE .softhouse/reviews/a2-34-review-a2-15/red-drive-a2-34.sh
+      RUNNABLE .softhouse/reviews/a2-34-review-a2-15/red-drive-b-a2-34.sh
+      RUNNABLE .softhouse/reviews/a2-34-review-a2-15/red-drive-c-a2-34.sh
+      RUNNABLE .softhouse/reviews/a2-34-review-a2-15/run-bar.sh
+      RUNNABLE .softhouse/reviews/t249-g14-scope/run-bar.sh
+      RUNNABLE .softhouse/reviews/t251-dec2-rev7/run-conformance.sh
+
+=== the Mac go-env.sh path /Users/buv/gerege-nbfi/.softhouse/bin/go-env.sh ===
+  matched  : 36 of 5222 tracked files
+  RUNNABLE : 29 of 921 runnable files  <-- the ones that actually break off-Mac
+  prose    : 7 of 3380 prose files     <-- historical observations, not defects
+      RUNNABLE .softhouse/capture/t154-nofloat/drive-leg2.sh
+      RUNNABLE .softhouse/capture/t154-nofloat/drive-leg3.sh
+      RUNNABLE .softhouse/capture/t219-g8-residual/src/bar-t219.sh
+      RUNNABLE .softhouse/capture/t239-r11-rerun/instruments/90-bar.sh
+      RUNNABLE .softhouse/handoff/T8-run-conformance.sh
+      RUNNABLE .softhouse/reviews/T155-probe/prove-ii-literals.sh
+      RUNNABLE .softhouse/reviews/T155-probe/prove-iii-census.sh
+      RUNNABLE .softhouse/reviews/T155-probe/prove-iiib-binary-direct.sh
+      RUNNABLE .softhouse/reviews/T155-probe/prove-ix-sweep-and-help.sh
+      RUNNABLE .softhouse/reviews/T155-probe/prove-v-census-counts.sh
+      RUNNABLE .softhouse/reviews/T155-probe/prove-vi-build-test-prove.sh
+      RUNNABLE .softhouse/reviews/T155-probe/prove-vii-residual-attacks.sh
+      RUNNABLE .softhouse/reviews/T155-probe/prove-viii-compiles-on-main.sh
+      RUNNABLE .softhouse/reviews/T155-probe/prove-x-removal-and-failclosed.sh
+      RUNNABLE .softhouse/reviews/T155-probe/prove-xi-microfix.sh
+      RUNNABLE .softhouse/reviews/T155-probe/prove-xii-perl-microfix.sh
+      RUNNABLE .softhouse/reviews/T155-probe/prove-xiii-deflation.sh
+      RUNNABLE .softhouse/reviews/T155-probe/rerun-t154-provers-postmerge.sh
+      RUNNABLE .softhouse/reviews/T155-probe/run-conformance.sh
+      RUNNABLE .softhouse/reviews/T184-evidence/t184-final.sh
+      RUNNABLE .softhouse/reviews/T184-evidence/t184-probe-green-catch.sh
+      RUNNABLE .softhouse/reviews/T184-evidence/t184-probe-green-float.sh
+      RUNNABLE .softhouse/reviews/T184-evidence/t184-probe-red-catch.sh
+      RUNNABLE .softhouse/reviews/T184-evidence/t184-probe-red-float.sh
+      RUNNABLE .softhouse/reviews/T184-evidence/t184-run.sh
+      RUNNABLE .softhouse/reviews/T184-evidence/t184-vacuity.sh
+      RUNNABLE .softhouse/reviews/T184-evidence/t184-vacuity2.sh
+      RUNNABLE .softhouse/reviews/t246-dec2-rev6/bar.sh
+      RUNNABLE .softhouse/reviews/t246-dec2-rev6/drive-pin-red.sh
+
+=== ANY absolute /Users/buv/gerege-nbfi path ===
+  matched  : 495 of 5222 tracked files
+  RUNNABLE : 126 of 921 runnable files  <-- the ones that actually break off-Mac
+  prose    : 361 of 3380 prose files     <-- historical observations, not defects
+  other    : 8  ['.softhouse/capture/bar-baseline-20260822-060013.log', '.softhouse/capture/t247-dec2-rev7/bar-9b6c596.log', '.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/run-matrix.zsh', '.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T211-probe/setup-scratch.zsh', '.softhouse/launchd/mn.gerege.nbfi.softhouse-program.plist', '.softhouse/reviews/t202-probe/setup-scratch.zsh', '.softhouse/reviews/t217-probe/T211-reverify/setup-scratch.zsh', '.softhouse/reviews/t251-dec2-rev7/conformance-2871f17.log']
+
+=== HEADLINE, stated with its selector ===
+  RUNNABLE tracked files hardcoding the Mac toolchain OR the Mac go-env.sh path
+  (union, deduplicated) : 59 of 921 runnable tracked files
+  Any of these, executed on another host, resolves a path that is not there.
+
+  CORRECTION TO MY OWN FIRST DRAFT, kept rather than quietly edited out:
+  this note used to read '.softhouse/bin/go-env.sh is NO LONGER among them'.
+  Its own selector says otherwise and the selector is right. Two files match
+  the literal WITHOUT being live hardcodes, and a text search cannot tell the
+  difference — only a reader can:
+    .softhouse/bin/go-env.sh                                 — the path survives
+      ONLY inside the comment that documents the defect that was removed. The
+      executable part derives its toolchain and hardcodes nothing.
+    .softhouse/capture/t253-portability/instruments/30-d2-red-drive.sh — it
+      REPRODUCES the old file verbatim in order to drive it red. The hardcode
+      is the specimen, not the defect.
+  So: 59 matched, of which 2 are T253b artefacts, leaving 57 live hardcodes.
+
+  BASELINE ON `main` (pre-T253b), same literal, `git grep -F -l ... -- '*.sh' '*.py'`,
+  rc classified per P-80: 29 files. Of those 29, go-env.sh was a GENUINE live
+  hardcode and is the one this task removed; the other 28 are untouched and
+  out of scope. `*.zsh`/`*.bash` were searched separately and matched NOTHING
+  (git grep rc=1, a measured negative, not an error).
+
+  I was handed the figures 'six' and 'thirty' and told to trust neither.
+  Neither is reproduced exactly by this selector. 'Thirty' is within one of
+  the runnable count and is the closer of the two; 'six' is not close to any
+  slice measured here. A count of this kind is meaningless without the
+  selector that produced it, which is why every slice above is printed.
