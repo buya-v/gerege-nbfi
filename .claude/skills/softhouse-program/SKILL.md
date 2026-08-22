@@ -26,7 +26,53 @@ It changes **nothing** about correctness: every gate, every reviewer, every vect
 Logs: `~/Library/Logs/gerege-nbfi/fire-*.log`. Probe the environment without running anything: `.softhouse/bin/fire-program.sh --probe`.
 
 ## STEP 0 — Pre-flight (read, never assume)
-0. **Take the lock.** Read `.softhouse/LOCK`. If it exists and `started_at` is under 6 h old and it is not yours, print it and **exit** — never run two orchestrators over one repo. Otherwise write it (`holder`, `host`, `pid`, `started_at`) and delete it before you finish. The local wrapper does this for you and pushes it so the cloud fire sees it; a hand-run must honour it too.
+0. **Take the lock — and read the RIGHT freshness signal.** The lock lives at `.softhouse/LOCK`. If it is
+   held and live and not yours, print it and **exit** — never run two orchestrators over one repo. Otherwise
+   write it (`holder`, `host`, `pid`, `started_at`, `heartbeat`) and delete it before you finish. The local
+   wrapper does this for you and pushes it; a hand-run must honour it too.
+
+   **`started_at` IS NOT A FRESHNESS SIGNAL, AND READING IT AS ONE HAS ALREADY CAUSED A DOUBLE-HOLDER
+   INCIDENT** (2026-08-22, P-85). A timestamp stamped once at fire start cannot distinguish *"the holder died
+   five hours ago"* from *"the holder has been working for five hours."* Raising the 6 h threshold trades one
+   failure for the other; it does not fix it. On that day a local fire opened a **second session that reused
+   the same fire id and the same `started_at`**, so a live holder wore a six-hour-old timestamp, a cloud fire
+   correctly applied the rule as written, and four worker branches were killed with its sandbox.
+
+   **THE AUTHORITATIVE FRESHNESS SIGNAL IS THE HOLDER'S MOST RECENT PUSH TO `origin/main`:**
+
+   ```
+   git fetch origin
+   git log -1 --format=%ct origin/main        # seconds since epoch of the newest published commit
+   ```
+
+   **Why this and not a heartbeat field:** a heartbeat is a thing somebody must remember to refresh, and this
+   program has recorded the same lesson five times over — `manifest.py verify`, `t44_float_roundtrip_v3`,
+   T173's float guard, `guard_ledger_invariants` — **a guard that only works when someone remembers to run it
+   enforces nothing** (P-45). Push recency is *derived from doing the work*, not maintained beside it, so it
+   cannot silently fall behind the truth. The 2026-08-22 incident is exactly this: the holder **did** commit
+   its lock refresh, its dispatch record and its in-flight manifest (`5f27983`, `ba2d8ed`, `d6dd8d0`) — and
+   **never pushed them**, so the only evidence the other orchestrator could read said the opposite of the
+   truth. A `heartbeat` field would have been in those same unpushed commits and would have changed nothing.
+
+   **The test, in order:**
+   1. `released_at` is non-null → **free**. Take it.
+   2. `origin/main`'s newest commit is under 6 h old **and** `released_at` is null → **HELD, WHATEVER
+      `started_at` SAYS.** Print it and exit. A holder that is pushing is a holder that is alive.
+   3. Both `started_at` and the newest `origin/main` commit are over 6 h old → **stale**. Take it over, and
+      say in your first commit message which signal you used and what it read.
+   4. The lock names a `pid` on **this** host and that pid is gone → **dead holder**, take over immediately
+      regardless of age. (The local wrapper already does this; it is why a hard-killed local fire does not
+      cost the next fire six hours.)
+
+   **`heartbeat` is written and refreshed as well** — cheap, and it disambiguates a fire that is thinking
+   hard between pushes — but it is corroboration, never the primary. **If `heartbeat` and push-recency
+   disagree, believe push-recency**, because the field can be stale for the same reason the incident
+   happened.
+
+   **AND THE OBLIGATION THAT ACTUALLY PREVENTS THIS (P-85), which no lock design can substitute for: push
+   your lock, your dispatch record and your in-flight `RESUME.md` BEFORE you spawn the first worker.** A
+   `HEAD` that says *"closed clean, zero live workers"* while five are running is an **active lie to the next
+   orchestrator**, and no freshness rule can read through it.
 1. `git status` — if dirty, commit `.softhouse/` state only; never stash worker WIP.
 2. `git pull --ff-only` — a scheduled fire may be a fresh clone/session; the repo is the only memory.
 3. Read `CLAUDE.md`, `.softhouse/patterns.md`, `.softhouse/program.json`, `.softhouse/tasks.json`, `.softhouse/RESUME.md`, `.softhouse/state/*.STATE.json`, `.softhouse/gates.md`, newest `.softhouse/runs/*.json`.

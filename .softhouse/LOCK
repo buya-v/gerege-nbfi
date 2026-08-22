@@ -1,8 +1,11 @@
 {
-  "holder": "local-fire-20260822-060013",
-  "host": "buyan-mac",
-  "pid": 0,
-  "started_at": "2026-08-22T06:00:13Z",
-  "released_at": null,
-  "note": "LOCAL fire, oracle REACHABLE. Per P-85: pushing lock+dispatch record BEFORE spawning any worker."
+ "holder": "local-fire-20260822-060013",
+ "host": "buyan-mac",
+ "pid": 0,
+ "started_at": "2026-08-22T06:00:13Z",
+ "released_at": null,
+ "note": "LOCAL fire, oracle REACHABLE. FIVE WORKERS LIVE. Per P-85 the lock and dispatch record were pushed BEFORE the first spawn. STEP 0 was rewritten this fire: do NOT judge this lock by started_at -- check whether origin/main has a recent commit. It does, because this fire pushes as it works.",
+ "heartbeat": "2026-08-22T07:05:00Z",
+ "heartbeat_note": "CORROBORATION ONLY. The authoritative liveness signal is the newest commit on origin/main (git log -1 --format=%ct origin/main). If they disagree, believe push-recency.",
+ "live_workers": 5
 }

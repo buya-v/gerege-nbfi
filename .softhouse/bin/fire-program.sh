@@ -150,12 +150,26 @@ if [[ -f "$LOCK" ]] && (( ! FORCE )); then
   fi
 fi
 
+# P-85 / STEP 0. `started_at` is stamped once and is NOT a freshness signal: it
+# cannot tell "the holder died five hours ago" from "the holder has been working
+# for five hours." On 2026-08-22 a second session reused this fire's id AND its
+# started_at, so a LIVE holder wore a six-hour-old timestamp, the cloud fire
+# applied the 6h rule exactly as written, and four worker branches died with its
+# sandbox. `heartbeat` is written here so the field EXISTS from the first
+# instant a lock is held -- but it is corroboration only. The AUTHORITATIVE
+# freshness signal is the holder's most recent push to origin/main
+# (`git log -1 --format=%ct origin/main`), because push recency is DERIVED from
+# doing the work rather than maintained beside it, and so cannot silently fall
+# behind the truth the way a remembered field can (P-45, five recorded times).
+# If heartbeat and push-recency ever disagree, believe push-recency.
 cat > "$LOCK" <<EOF
 {
   "holder": "local-launchd",
   "host": "$(hostname -s)",
   "pid": $$,
   "started_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "heartbeat": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "heartbeat_note": "CORROBORATION ONLY. The authoritative liveness signal is the newest commit on origin/main; see STEP 0 of the softhouse-program skill.",
   "log": "$LOG",
   "oracle": "$ORACLE_STATUS",
   "postgres": "$PG_STATUS"
