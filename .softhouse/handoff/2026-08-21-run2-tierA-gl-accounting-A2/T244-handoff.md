@@ -51,8 +51,21 @@ c0be92b tasks.json: restore 1-space indent (the previous commit reformatted the 
 a1b531a wave 1 dispatched (T242, T244, T238, T239) — driver bar green at 477dc2d
 ```
 
-This is **RESUME's standing instruction confirmed again**: *"`main` is NOT quiescent during a wave."*
-`T228` watched it move mid-task; so did I. **Report the sha you MERGED, not the one you LOOKED AT** —
+**AND THEN IT MOVED A SECOND TIME.** Measured once more at the very end of the task:
+
+```
+origin/main  477dc2da…  (my setup, 09:20Z)
+origin/main  8275f8b4…  (mid-task, 09:31Z)
+origin/main  4c97dee3…  (task end)          <-- THREE DISTINCT VALUES IN ONE TASK
+merge-base   477dc2da…  (unchanged throughout)
+```
+
+This is **RESUME's standing instruction confirmed again, and harder than it is currently written**:
+*"`main` is NOT quiescent during a wave."* It is not merely non-quiescent, it moved **twice in roughly
+forty minutes**. **Any worker that measures its fork point once at setup and quotes it at the end is
+quoting a stale number** — the fork point itself is stable (it is a property of the branch), but
+`origin/main` is not, and the two are easy to conflate. `T228` watched it move mid-task; so did I,
+twice. **Report the sha you MERGED, not the one you LOOKED AT** —
 everything below is stamped at **`477dc2d`**, and the driver must re-verify at whatever `main` is when
 this merges.
 
