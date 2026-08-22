@@ -13,50 +13,8 @@
     "defect": "The prior fire violated the skill's own rule: 'Only dispatch what you have the budget to see through.' It dispatched four opus workers on a session that had minutes left. Cost: one full fire of throughput, no output.",
     "session_limit_reset": "1pm Asia/Ulaanbaatar; this fire starts 14:00 UTB with a fresh budget."
   },
-  "live_workers": [
-    {
-      "task": "A2-33",
-      "branch": "softhouse/A2-33-review-dec2-rev5",
-      "model": "opus",
-      "target": "docs",
-      "files": [
-        ".softhouse/reviews/a2-33-dec2-rev5/"
-      ],
-      "goal": "INDEPENDENT review of DEC-2 rev 5 -- the ONLY path to closing G-11; four revisions rejected so far"
-    },
-    {
-      "task": "T231",
-      "branch": "softhouse/T231-g8-section-rebuild",
-      "model": "opus",
-      "target": "docs",
-      "files": [
-        ".softhouse/gates.md"
-      ],
-      "goal": "rebuild G-8 section; gates.md shows Buyan a ceiling T229 measured wrong by 3x (MNT 1.80 stated vs 5.40 at n=360)"
-    },
-    {
-      "task": "T232",
-      "branch": "softhouse/T232-pattern-p72-sweep-calibration",
-      "model": "opus",
-      "target": "docs",
-      "files": [
-        ".softhouse/patterns.md"
-      ],
-      "goal": "write P-72 -- calibrate a sweep on a known positive"
-    },
-    {
-      "task": "T233",
-      "branch": "softhouse/T233-exemption-citation-gate",
-      "model": "opus",
-      "target": "code",
-      "files": [
-        "nexus/internal/apps/loanschedule/conformance/",
-        ".softhouse/vectors/README.md"
-      ],
-      "goal": "T222 F-4: exemption reason need cite no capture; neither exemption count is gated"
-    }
-  ],
-  "next_action": "AWAIT all four of wave 2. Then scope-check on THREE-DOT diffs, merge, re-run conformance on merged main, and IF A2-33 APPROVES CLEAN the driver may ratify G-11 (agent-decidable per CLAUDE.md) -- which unblocks A2-15 and the tierA-gl-accounting slice. Then rewrite RESUME.md and program.json and push.",
+  "live_workers": [],
+  "next_action": "Fire complete. Next fire: run ready-tasks.py, then dispatch A2-15 WITH a paired independent reviewer (plan-gate rule 1), plus T234/T228/T235.",
   "baseline_bar": {
     "verdict": "PASS exit 0",
     "parity_vectors": 46,
@@ -85,5 +43,16 @@
     "tasks.json certified 'three of the ledger guard's SEVEN classes ... is EXACT' as driver-verified. It is FOUR. FIXED.",
     "P-71 said worktrees fork from the SESSION-START commit. FALSIFIED this fire: all four wave-1 worktrees forked from 33d19a6, HEAD at DISPATCH. The driver had told all four workers their fork point was 8f0edeb -- wrong for every one of them, harmless only because the two commits differ by one note. CORRECTED in patterns.md.",
     "A2-32 flagged T227's conformance.sh target as wider than briefed and at :1187 not :1180. ADJUDICATED: T227 had already handled the wider 25-line block. Flag CLOSED, no action."
-  ]
+  ],
+  "exit": {
+    "clean": true,
+    "live_workers_at_exit": 0,
+    "dispatched": 8,
+    "completed": 8,
+    "merged": 8,
+    "gate_closed": "G-11 RATIFIED (DEC-2 rev 5, A2-33 clean independent review). chosen_by: agent. Buyan may reverse.",
+    "vectors_added": 0,
+    "final_verified_head": "see git log; bar re-run by the driver on merged main after every merge batch",
+    "next_fire_first_task": "A2-15 -- promote the A2 raw captures into PARITY vectors. Both blockers cleared this fire. Nothing in the 46-vector corpus grades a GL account."
+  }
 }
