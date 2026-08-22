@@ -1,17 +1,48 @@
 {
-  "squad": "driver",
-  "fire": "20260821-054355",
+  "fire": "local 20260822-000013",
+  "host": "Buyanmunkhs-Mac-mini",
   "run_id": "2026-08-21-run2-tierA-gl-accounting-A2",
-  "step": "EXITED CLEANLY -- eight dispatched, eight completed, eight merged, zero live at exit",
-  "merged": ["T173","T175","T177","T178","T179","T170","T171","T172"],
-  "driver_fixes": ["e93afc9 -- two defects in T173's merged guards (P-56 walk scope, P-57 pipefail inversion), both driven red and green", "nonnegotiable-guard-audit.md addendum -- the fail-open direction is NOT settled"],
-  "raised": ["T186","T187","T188","T189"],
-  "integrity_anchors_at_exit": {
-    "docs/adr/DEC-1-schedule-generator-adapter.md": "49dc89231ccf0615aa59603f2858025b0d489d48f0bf88df5b122f6c9cc7c9ab",
-    "nexus/internal/apps/loanschedule/contract/contract.go": "0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139",
-    "note": "Unmoved before, during and after all eight merges. Re-measure at the start of the next fire; T187 exists because 21 scripts can still move the first one."
+  "context": "tierA-gl-accounting",
+  "slice": "tierA-gl-accounting-A2",
+  "exit_reason": "work complete for this fire; every dispatched worker awaited, reviewed and merged; no worker left live",
+  "oracle": "REACHABLE throughout at https://localhost:8443/fineract-provider — PostgreSQL only",
+  "dispatched": 13,
+  "merged": 13,
+  "live_at_exit": 0,
+  "isolation_violations": 0,
+  "verified_on_merged_main_by_the_driver": {
+    "probe_line": "PRESENT and reads: probe = up",
+    "verdict": "PASS (exit 0) — 46 parity vectors, 7884 cells compared",
+    "contract_refusal": 4,
+    "self_test": 1,
+    "refused": 0,
+    "inadmissible": 0,
+    "harness_errors": 0,
+    "invariant_violations": 0,
+    "invariant_assertions_not_run": 0,
+    "invariant_assertions_exempted_by_a_vector": 4,
+    "kills_named": "106 money, 7 structural",
+    "prove": "23 passed, 0 failed",
+    "go_build": 0,
+    "go_vet": 0,
+    "go_test": "ok (loanschedule, conformance) at -count=1",
+    "gofmt_l": "exactly contract.go (G-3, expected)",
+    "vector_store": "73c3ea7b43dd75f04884072719a87fc8e1d255c1",
+    "recipe": "git rev-parse HEAD:.softhouse/vectors (P-61)",
+    "what_it_does_not_mean": "NOT safe to cut over. Cutover is a hard user gate."
   },
-  "next_action": "T187 first (live gate bypass, 21 unguarded rewriters of the ratified DEC-1, two live today, three disagreeing counts to reconcile), then T188, T189, T186, T165, T174, T176, T180. T116 stays parked behind T177's re-scoping.",
+  "next_action": "Run python3 .softhouse/bin/ready-tasks.py, then dispatch A2-31 (independent review of DEC-2 rev 4 — G-11's stated unblocking condition, fourth attempt).",
   "blocked_on": null,
-  "gate_pending": null
+  "gate_pending": ["G-4", "G-5", "G-8", "G-10", "G-11", "G-12"],
+  "hard_user_gates": ["G-4", "G-5"],
+  "do_not_dispatch": {
+    "A2-15": "GATED. G-11 is OPEN — NOT RATIFIABLE. A2-15 writes contract-shaped ledger vectors and Go under nexus/internal/apps/ledger/, i.e. work against an unratified contract. A2-25 measured that DEC-2 §5.2 requirement 6 — the requirement that would grade it — cannot be satisfied on the bytes it specifies. When it is finally dispatched, its brief must carry A2-30's five items, above all that glAccountType is NOT a stable cell."
+  },
+  "open_questions": [
+    "A2-28 did not establish I4-BUILDER's population and claimed no corrected numerator for it.",
+    "A2-29 could not break the uncorrelated seed join, and could not reach LIMIT 10000, multi-office, or the NULL predicate.",
+    "T217's stop-grace calibration used a tool-free single-turn claude, not a fire's tool-using agentic session.",
+    "A2-26 marks product 24's header-account slot unverified — the 403 names ONE slot because the validator throws rather than accumulates.",
+    "G-8's region is still stated in rates and terms; T220 proved the phenomenon is an EMI half-minor-unit floor whose boundary moves with principal, rate and term. T223/T219 must restate it BEFORE options (b)/(c) are put to Buyan."
+  ]
 }
