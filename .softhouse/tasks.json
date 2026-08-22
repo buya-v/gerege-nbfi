@@ -1520,7 +1520,7 @@
    "executor": "agent",
    "model": "opus",
    "target": "code",
-   "status": "in_progress",
+   "status": "done",
    "attempts": 1,
    "dependencies": [
     "T203"
@@ -1530,7 +1530,7 @@
    ],
    "description": "T203's F-2, and it is the ROOT CAUSE of T203's F-1 rather than a separate defect: targets computed as os.path.join(ROOT, ...) with a RUNTIME ROOT resolve to UNKNOWN, and --enforce does not trip on UNKNOWN. That is why T57-promote-emi-vectors.py and T8-promote-vectors.py -- between them 13 of the 43 live parity vectors, including the corpus baseline P-00 -- were invisible to T196 AND T198 AND the classifier. T196-1 closed the FUNCTION PARAMETER case; the RUNTIME-COMPUTED-CONSTANT case is still open. Note the polarity carefully before choosing the fix: UNKNOWN currently fails OPEN (hides), while T203 measured that T58 was flagged UNGUARDED as a FALSE POSITIVE which fails CLOSED (cries wolf) -- the two directions want different remedies and conflating them is how this class keeps recurring. DRIVE RED on T57/T8's own shape and GREEN on the real corpus; report the classification of all six promote rewriters before and after.",
    "acceptance": null,
-   "note": "DISPATCHED fire 20260822-080001 batch 2, worktree-isolated.",
+   "note": "DONE + MERGED, fire 20260822-080001. IT NARROWED T203's DIAGNOSIS RATHER THAN ACCEPTING IT. T203 said 'runtime-computed constants do not resolve' -- TRUE BUT INCOMPLETE. The real mechanism is TWO things in ConstResolver: (1) `partial` DID NOT CHAIN -- T196-2's second pass harvests a Name only when it is already in self.consts, so a name whose only evidence is itself partial contributed nothing; (2) `setdefault` BLOCKED THE UPGRADE -- pass one had already claimed `path` with the one literal it contains, '.json', so the consts lookup in pass two never ran on it. EITHER ALONE explains why T74/T61/T64/T58 were caught and T57/T8 were not: the caught four have VECTORS = '.softhouse/vectors/loanschedule' which RESOLVES, and their path assignment has no literal for pass one to claim. T57/T8 differ by exactly ONE os.path.join(ROOT, ...). RED: --enforce on T57's and T8's own pre-hardening shape ALONE, current classifier -> EXIT 0, both sites filed under 'could not be resolved'. Two bare truncations of the live golden vector store, INVISIBLE. After: exit 1, both TRUSTED tags=STORE. Before/after across all six pre-hardening blobs: the four already-caught unchanged, T57 and T8 move UNKNOWN/no-tag -> TRUSTED (STORE); --enforce names 4 before, 6 after. POLARITY KEPT APART EXACTLY AS BRIEFED, and this is the part that makes it trustworthy: Fix 1 (fail-CLOSED) consults the transitive fragment closure ONLY on UNKNOWN and honours it ONLY when TRUSTED -- a chain probe returning SCRATCH is DISCARDED. Repo-wide over 465 common sites: 7 moved, ALL UNKNOWN->TRUSTED, SCRATCH 337->337, NOTHING EXCUSED. Fix 2 is opt-in (--enforce-unknown). Fix 3 prints ENFORCE-DISCLOSURE on stderr, its reasoning being that the report already LISTED those sites but the ENFORCEMENT BOUNDARY was silent, and that silence is what let T57/T8 through. IT DELIBERATELY DID NOT FIX the os.path.exists-refusal blindness behind T203's T58 false positive, on the correct ground that it is the fail-CLOSED direction and mixing a relaxation into a fail-open fix is how widenings get smuggled in. FALSE-POSITIVE POPULATIONS MEASURED, NOT ESTIMATED, as instructed: created by Fix 1, ZERO of 7 -- all seven hand-read at 100%, every one an os.path.join(<runtime root>, '.softhouse/capture/...') write, with ONE WEAK ROW NAMED AGAINST ITSELF (t83-nonamortizing/src/run-exemption-demo.py:232, tagged only by TARGET_RX's generic /out/). A blanket --enforce-on-UNKNOWN would create 76 sites in 57 files, which is why it stays opt-in. GREEN falsifiable both ways: AST throughout, never substring matching (the trap T181 fell into and reported against itself). Two new fixtures including a DIFFERENTIAL check -- a runtime-ROOT write must be TRUSTED WHILE a genuinely unresolved parameter stays UNKNOWN, so a chain widened until everything is TRUSTED FAILS -- and a POLARITY check that injects a SCRATCH fragment. Three mutants driven, three caught; the faithful one reports SCRATCH/SANDBOX, the exact fail-open. HONEST NEGATIVES: it COULD NOT construct an ordinary source shape driving the SCRATCH-discard branch -- the pre-existing scratch propagation dominates it -- so that branch is proven by WHITE-BOX INJECTION, not a natural fixture, and it says so rather than implying otherwise. Cross-module mutation targets remain UNKNOWN. A non-existent --file path scores REFUSED-UNREADABLE and exits 0: counted and named, not silent, but another way an --enforce run can pass without measuring anything -- routed as T212. Cost +8% CPU on a full sweep (25.65s -> 27.64s user). It also observed, correctly and unprompted, that a git TREE HASH carries no cwd -- which is the whole point of P-61.",
    "contract_independent": true,
    "branch": "softhouse/T205-classifier-unknown"
   },
@@ -1669,6 +1669,25 @@
     ".softhouse/bin/fire-program.sh"
    ],
    "description": "T202's top backlog item, deliberately not bundled with three unrelated repairs while a fire was live -- the right call, and now it is its own task. T202 MEASURED that zsh defers a trap until the current FOREGROUND CHILD exits (29.88 s behind a 30 s child). The fire's foreground child is `claude`, which runs for HOURS, and launchd stops a job with SIGTERM-then-SIGKILL. THE CONSEQUENCE IS THAT THE SIGKILL STRAND IS THE NORMAL OUTCOME OF STOPPING A FIRE, NOT THE EXOTIC ONE -- and the cost is a 6-hour lock park that blocks the next fire under STEP 0. The fix T202 named: restructure run_driver to background the child and `wait`, so the trap can run. THIS IS THE LIVE WRAPPER: do NOT modify /Users/buv/gerege-nbfi/.softhouse/bin/fire-program.sh while a fire runs; work in your worktree, and note the merge REPLACES THE INODE (the driver verified git renames rather than rewriting in place, 7913849 -> 8134531 this fire) so it takes effect next fire. DRIVE RED AND GREEN UNDER ZSH 5.9 through the real launchd shape (`/bin/zsh -lc`), with a python spawner giving the subject its own session and DEFAULT signal dispositions -- T202 recorded P-55 against its own first probe, which backgrounded the subject from a non-job-control zsh and thereby SIG_IGNed INT/QUIT in the child, making zsh appear to ignore SIGINT. Keep T202's lock_holder_is_dead() recovery and T172's anchor regression green.",
+   "acceptance": null,
+   "note": null
+  },
+  {
+   "id": "T212",
+   "title": "An --enforce run over a non-existent --file scores REFUSED-UNREADABLE and exits 0 — another way to pass without measuring anything",
+   "role": "coder",
+   "executor": "agent",
+   "model": "sonnet",
+   "target": "code",
+   "status": "pending",
+   "attempts": 0,
+   "dependencies": [
+    "T205"
+   ],
+   "files_hint": [
+    ".softhouse/reviews/t179-guard-classifier/"
+   ],
+   "description": "T205's honest negative, reported against its own deliverable rather than left for a reviewer. A non-existent --file path scores REFUSED-UNREADABLE and the run exits 0. T205 notes it is COUNTED AND NAMED so it is not silent -- which is why this is a task and not a rejection -- but it is still a route to an --enforce run that passes having measured nothing, which is P-35's exact shape (a check inspecting zero items is an ERROR, not a pass) and the same family as T194's census defect and T181's F-2 (a census that globbed nothing and exited 0). Make an --enforce run whose inspected population is zero, for ANY reason, fail. DRIVE RED (a bad --file path, an empty --file list, a glob matching nothing) and GREEN (the real corpus, unchanged classifications). Preserve T205's polarity discipline: this is a fail-CLOSED change and must not perturb the 465-site sweep (SCRATCH must stay 337->337, and the 7 UNKNOWN->TRUSTED moves must not grow).",
    "acceptance": null,
    "note": null
   }
