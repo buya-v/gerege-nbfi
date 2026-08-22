@@ -1,0 +1,5 @@
+=== PRE (cap9.sh, pinned git blob, UNTOUCHED by this task) -- expect RED (leak) ===
+--- PRE  cap9.sh (blob e0a4d3221390)              exit=-3 leaked-dirs=['cap9.AayuzU'] => RED (LEAKED)
+=== POST (cap10.sh, live on-disk successor) -- expect GREEN (no leak) ===
+--- POST cap10.sh (live on-disk)                  exit=1 leaked-dirs=[] => GREEN (CLEANED)
+RESULT: cap9.sh leaks under real SIGQUIT (RED), cap10.sh does not (GREEN).
