@@ -2654,6 +2654,44 @@ suspect** — and when a tool never consults the record at all, it is not disagr
 >   `zero` / `above` / `empty`, matched a **section header** and would have promoted a file to TIER 1 **on
 >   non-evidence**. The instrument that catches false reassurance can itself be falsely reassured.
 
+---
+
+## P-78 — A revision whose CONTENT is line citations into a MOVING file must be PREPARED AND LANDED IN ONE FIRE
+
+**Found by:** `T251` (C-1, HIGH), cloud catch-up fire 2026-08-22T12:00Z, re-derived by the driver at `66b7453`.
+
+`T247` prepared **DEC-2 revision 7** to fix `G-14` — a gate raised precisely because DEC-2's banner carried
+**stale evidence**. `T247` re-measured all 46 line assertions, shipped a `verify-line-numbers.py`, and
+correctly landed nothing. Then `main` moved **four merges** under it, and `T248`'s `c13e9d8` added **+30
+lines above `run_guards`**. By the commit where revision 7 would have landed, its freshly *"RE-MEASURED"*
+citations were **already stale**: `run_guards` drafted at `1474-1500`, actually `1504-1530`.
+
+**The fix for a stale-evidence gate had itself gone stale before it could land.** That is `G-14` re-enacted
+inside the repair of `G-14`.
+
+**The rule.** *Prepare-then-review-then-land* is sound for a **normative** change, whose truth does not
+depend on where any line sits. It is **unsound for an EVIDENTIAL one whose propositions ARE coordinates into
+a file other tasks are editing.** For those:
+
+- **Re-measure LAST**, immediately before the commit that lands, never at drafting time.
+- **Re-run the line verifier on the commit you are about to land** and require **exit 0** — not on your fork
+  point, and not on the commit you drafted against.
+- **Prepare and land in the SAME fire.** Handing a prepared revision to a later fire hands it a *different
+  file*.
+- Where the citation can be a **NAME instead of an ordinal or a line number, use the name.** `T251`'s C-2 and
+  C-4 are both ordinal defects: `guard_ledger_invariants` is the **seventh invoked** and the **sixth
+  tallied**, and rev 7 replaced one silently-wrong ordinal with another. **An ordinal used as an identifier
+  goes wrong silently; a name goes wrong loudly.**
+
+**Corollary, and it is the expensive half.** A **two-fire program** — one host that can run the BAR and one
+that cannot — cannot split *prepare* from *land* across the two for this class of change. The cloud fire may
+**review** such a revision (a review is a claim about a commit, and it stamps that commit); it may not
+**prepare** one for a local fire to land.
+
+> **MERGE NOTE — these six patterns were renumbered on landing.** They were written as `P-78`…`P-83` by
+> the local fire `20260822-140002`, which did not know a cloud catch-up fire was running over the same repo
+> and had already published a different **`P-78`** (above). Renumbered to **`P-79`…`P-84`**; the cloud's
+> `P-78` keeps its number. **The collision is itself the subject of `P-85`.**
 ### Run 2026-08-21-run2-tierA-gl-accounting-A2 — local fire `20260822-140002`, SECOND SESSION (five workers, all five merged)
 
 - **What worked**: five workers dispatched in one batch after proving their `files_hint` **pairwise
@@ -2693,7 +2731,7 @@ suspect** — and when a tool never consults the record at all, it is not disagr
 
 #### New knowledge
 
-**P-78 — EVIDENCE NOT MISSING, UNREAD. A recorded predicate that no summary consults.**
+**P-79 — EVIDENCE NOT MISSING, UNREAD. A recorded predicate that no summary consults.**
 `T241` found, and the driver verified directly at `capture/t229-g8-site3/out/classify-t229.json`, that
 `T229`'s own capture records `P2_totalInterestEqualsNEplusB: false` on **five** rows — and **three of them
 (`B201`, `B251`, `B299`) carry `verdict: "AS PREDICTED"`.** Two others carry `REFUTED`, so the field is not
@@ -2703,7 +2741,7 @@ review. This is not the familiar defect of evidence never gathered. It is **P-45
 guard did not fail to run — it ran, wrote its answer down, and the summary line above it said the opposite.
 **When you register a prediction, grep for who READS it, not just who WRITES it.** Carried by `T256`.
 
-**P-79 — A CORRECTED CARDINAL ROTS IN EVERY PLACE IT WAS RESTATED. The count is the same defect as the line number.**
+**P-80 — A CORRECTED CARDINAL ROTS IN EVERY PLACE IT WAS RESTATED. The count is the same defect as the line number.**
 `T248` moved the fail-open frontier 9 → 10 and corrected it **where it is NAMED** (`conformance.sh`) but not
 **where it is RESTATED**. `T252` found `capture/t243-wiring/instruments/20-failopen-red-drive.sh` still
 asserting `frontier == pinned (all 9 rows, by path)` in **two live `want_line` checks** — an instrument that
@@ -2714,7 +2752,7 @@ two currencies. **The fix is never the new number — it is to make the second s
 the count from the pin; bind citations by CONTENT with the line number a non-normative hint). A task that
 changes the 9 to an 11 and leaves the copy has bought one cycle. `T253` and `T255` carry the two halves.
 
-**P-80 — THE FAIL-OPEN GUARD CAUGHT THREE WORKERS' OWN INSTRUMENTS IN ONE FIRE, INCLUDING TWO WRITTEN TO ENFORCE THE VERY RULE THEY BROKE.**
+**P-81 — THE FAIL-OPEN GUARD CAUGHT THREE WORKERS' OWN INSTRUMENTS IN ONE FIRE, INCLUDING TWO WRITTEN TO ENFORCE THE VERY RULE THEY BROKE.**
 `T251`'s `p5-probe.sh` — written to enforce **P-66, "state where you looked"** — wrapped every search in
 `|| echo "  (none under nexus/)"` and `|| true`. **`git grep` exits 1 on NO MATCH and >1 on ERROR**, so a bad
 pathspec printed the same reassuring absence as a genuine no-match. `T241`'s census script collapsed
@@ -2724,7 +2762,7 @@ to expose that class**. **All repaired, none suppressed** — the linter's `# li
 hatch would have silenced the detector while leaving the script able to lie. **Writing the rule does not
 immunise you against it; only the guard does.**
 
-**P-81 — A PROPOSED FIX CAN BE MEASURED INERT, AND THAT IS A RESULT WORTH THE TOKENS.**
+**P-82 — A PROPOSED FIX CAN BE MEASURED INERT, AND THAT IS A RESULT WORTH THE TOKENS.**
 The driver briefed `T252` that "a count is a claim too" and to consider a numeric-claim detector. `T252`
 **built it and measured it**: 14 count shapes into `RE_REASSURE`, **frontier 10 → 10, GAINED 0, LOST 0, the
 target site still invisible.** It was **not rejected for noise — it produces none.** It failed for two
@@ -2734,17 +2772,48 @@ AXIS, not the wrong wordlist** — the close came from `C6`, which reads **contr
 **Build the driver's suggestion, measure it, and report the zero.** A worker that had simply implemented the
 brief would have shipped a detector that detects nothing and called it a widening.
 
-**P-82 — TWO INDEPENDENT MOVEMENTS OF ONE PINNED NUMBER RECONCILE BY RUNNING, NEVER BY ARITHMETIC.**
+**P-83 — TWO INDEPENDENT MOVEMENTS OF ONE PINNED NUMBER RECONCILE BY RUNNING, NEVER BY ARITHMETIC.**
 `T252` forked at `2871f17` and its `C6` **added** a frontier row; the driver, separately and later,
 **repaired `p5-probe.sh` on main and removed one**. Neither could see the other. The merged pin agreed at
 **11** — but that was **established by running the BAR on the merge result**, not by computing 10 + 1. The
 same run also proved the repaired probe is **not detected even under the new, stricter C6 rule**, which no
 arithmetic could have told anyone.
 
-**P-83 — "EXIT 2 WITH NO PROBE LINE" IS THE GUARD WORKING. READ THE ABSENCE, NOT THE VALUE.**
+**P-84 — "EXIT 2 WITH NO PROBE LINE" IS THE GUARD WORKING. READ THE ABSENCE, NOT THE VALUE.**
 The first BAR after merging `A2-23` exited 2 with **no probe line printed at all**. Under the rule as it
 stands that is emphatically **not** an oracle outage — four exit-2 paths precede the probe, and a failed
 HARD guard is one of them. The cause was `p5-probe.sh`, merged minutes earlier, moving the frontier 10 → 11.
 **This fire is the first time that rule was exercised in anger, and it held**: nothing was parked, the
 violation was repaired, and the run went green. Had the driver read `probe != up` as trivially true because
 nothing printed, it would have parked live vector work as somebody else's server being down.
+
+
+**P-85 — TWO ORCHESTRATORS HELD THE LOCK AT ONCE, AND THE CAUSE WAS AN UNPUSHED IN-FLIGHT STATE.**
+On 2026-08-22 the local fire `20260822-140002` ran a second session from 06:00:13Z with five live workers,
+while the cloud catch-up fire **took the same lock at 12:10:00Z** and dispatched its own. The cloud's
+reasoning was **documented and locally sound**: the lock's `started_at` was 6 h 07 m old (over the 6 h
+threshold) and **`HEAD` `2871f17` attested that fire `20260822-140002` "closed clean with zero live
+workers."** Both facts were true of the repo **as published**. Neither was true of the world.
+
+**The defect was the local driver's, and it is a `STEP 5.5` violation in spirit:** it committed its lock
+refresh, its dispatch record and its in-flight `RESUME.md` **and never pushed them**. `5f27983`, `ba2d8ed`
+and `d6dd8d0` sat local for the whole fire, so **the only evidence a second orchestrator could read said the
+opposite of the truth** — and the staleness rule then fired on a *live* session. Worse, `HEAD` still carried
+the previous session's "closed clean" checkpoint, which the cloud correctly read as an attestation.
+
+**What it cost:** the cloud's `T253` and `T241` workers were killed with their sandbox and **their branches
+never reached the remote — that WIP is gone, not merely unpushed** [VERIFIED: `git ls-remote --heads origin`
+and `git branch --list`, both empty]. Three task IDs (`T253`, `T254`, `T255`) and one pattern number (`P-78`)
+were **allocated twice with different content**.
+
+**What it was worth:** the duplicated `T251` produced **two independent reviews of one artefact**, which
+**agreed on every load-bearing fact** — no obligation moved, the caution survives with the same denominator,
+`run_guards` is `:1504` — and whose site lists were **complementary**: the local pass found §4.4's lead
+paragraph and two §5.2 sites; the cloud pass found `L821`'s ordinal and the fenced enumeration at `L854-861`
+that lists seven guards and omits `guard_no_fail_open_instruments`. **Neither found the other's.** Accidental
+redundancy on a document that had already survived two passes was **not** wasted effort — but that is a
+reason to duplicate reviews **deliberately**, never a reason to tolerate a broken lock.
+
+**THE RULE: push the lock, the dispatch record and the in-flight manifest IMMEDIATELY, before the first
+worker is spawned.** An orchestrator's in-flight state is worthless to the other fire until it is pushed, and
+a `HEAD` that says "closed clean" while a session is live is an **active lie to the next orchestrator**.

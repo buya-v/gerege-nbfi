@@ -70,7 +70,7 @@
     "park_after_retries": true,
     "gate_scope": "A gate on a CONTRACT blocks work that CONSUMES the contract (any coder task, anything under the go_target), not work that produces knowledge the decision needs anyway. While tier0 is blocked_on_gate, every other context is READY-FOR-ANALYSIS: analyst behaviour extraction from pinned source, test-corpus mining into capture plans, RAW observed vector capture on an oracle-reaching fire, and the Tier-C gap audit may all proceed. Contract-shaped storage, Go code, and amending the gated DEC-n may not. An open gate must never mean an idle factory."
   },
-  "cursor": "tierA-gl-accounting (slice A2) + tier0-harness \u2014 DEC-2 revision 7 REJECTED by T251's independent review; G-14 REMAINS OPEN and nothing was ratified. Five workers dispatched, five merged, zero live at exit. Vector store UNMOVED all fire.",
+  "cursor": "tierA-gl-accounting (slice A2) + tier0-harness \u2014 DEC-2 revision 7 REJECTED by TWO independent reviews (local ff9c893, cloud bf04272) whose findings AGREE and whose site lists are COMPLEMENTARY; G-14 REMAINS OPEN and nothing was ratified. Local fire 20260822-140002 (2nd session): 5 dispatched, 5 merged, 0 live at exit, vector store UNMOVED. Revision 8 is T255, prepare-AND-LAND in ONE fire on a host that can run the BAR. LOCK INCIDENT: two orchestrators ran over this repo at once (P-85) because the local fire never pushed its in-flight state; the cloud's T253/T241 worker branches were killed and are GONE.",
   "contexts": [
     {
       "id": "tier0-harness-schedule-poc",
@@ -756,7 +756,8 @@
       "recorded_in": ".softhouse/gates.md",
       "blocks_decided_by": "driver, local fire 20260822-140002",
       "blocks_reviewed_by": "T249 (DONE, merged bfde578) \u2014 verdict MICRO-FIX. The SCOPE DECISION was CONFIRMED CORRECT by independent re-derivation, and by a route the driver did not state: the banner errs PESSIMISTICALLY, so no direction of that error licenses Go that a corrected banner would forbid; the harm is epistemic, not normative, and the remedy is a briefing not a prohibition. T249 explicitly did NOT find the driver rationalised past a gate. The PATCH was rejected as FAIL-OPEN and the driver fixed it at 925fdfc, red-driven nine ways.",
-      "closure_route": "Revision 7 PREPARED by T247 (merged fc36f0c, landed NOTHING). AWAITING INDEPENDENT REVIEW = T251, filed and dependency-ready. The driver has committed NOT to ratify without it. Route is prepare -> independent review -> driver ratification, the same one G-13 took."
+      "closure_route": "Revision 7 PREPARED by T247 (merged fc36f0c, landed NOTHING). AWAITING INDEPENDENT REVIEW = T251, filed and dependency-ready. The driver has committed NOT to ratify without it. Route is prepare -> independent review -> driver ratification, the same one G-13 took.",
+      "review_history": "| T251 (INDEPENDENT, cloud catch-up fire 2026-08-22T12:00Z, branch softhouse/T251-dec2-rev7-review at 015801e): VERDICT MICRO-FIX. NO OBLIGATION MOVED -- the load-bearing check the gate exists to protect PASSES. But revision 7 is NOT LANDABLE AS DRAFTED: 3 HIGH corrections, three of which the DRIVER re-derived itself at 66b7453 rather than quoting the reviewer. Rev 7's own 're-measured' conformance.sh citations were already stale (T248's c13e9d8 moved run_guards +30 lines), and two unenumerated sites survive that no wording sweep can reach: L821's 'seventh guard' inside the very table rev 7 rewrites, and a fenced by-name guard enumeration at L854-861 that omits guard_no_fail_open_instruments. T255 filed to prepare AND LAND revision 8 IN ONE FIRE. THE DRIVER DID NOT RATIFY. G-14 STAYS OPEN."
     }
   ],
   "history": [
@@ -1918,5 +1919,19 @@
     "go_driver": "github.com/jackc/pgx/v5",
     "money_columns": "bigint minor units \u2014 never float/double precision/real/money",
     "terminology": "'The oracle' in this program means the Fineract REFERENCE IMPLEMENTATION (.softhouse/reference-oracle.md), never Oracle Database."
-  }
+  },
+  "incidents": [
+    {
+      "id": "LOCK-2026-08-22",
+      "what": "Two orchestrators held .softhouse/LOCK simultaneously.",
+      "local_fire": "20260822-140002 second session, started 06:00:13Z, five live workers",
+      "cloud_fire": "cloud catch-up, took the lock 12:10:00Z",
+      "cloud_reasoning_was_defensible": "lock started_at was 6h07m old (>6h threshold) AND HEAD 2871f17 attested the fire closed clean with zero live workers. Both true of the repo AS PUBLISHED; neither true of the world.",
+      "root_cause": "The LOCAL driver committed its lock refresh, dispatch record and in-flight RESUME.md and NEVER PUSHED them (5f27983, ba2d8ed, d6dd8d0 stayed local all fire), so the only evidence a second orchestrator could read said the opposite of the truth.",
+      "cost": "Cloud T253 and T241 workers killed with the sandbox; their branches reached NEITHER origin NOR local, so that WIP is GONE. Three task IDs (T253/T254/T255) and one pattern number (P-78) allocated twice with different content.",
+      "benefit": "The duplicated T251 produced TWO independent reviews that AGREED on every load-bearing fact and whose site lists were COMPLEMENTARY \u2014 neither found the other's sites. A reason to duplicate reviews DELIBERATELY, never a reason to tolerate a broken lock.",
+      "rule": "Push the lock, the dispatch record and the in-flight manifest BEFORE spawning the first worker. A HEAD that says 'closed clean' while a session is live is an active lie to the next orchestrator.",
+      "pattern": "P-85"
+    }
+  ]
 }
