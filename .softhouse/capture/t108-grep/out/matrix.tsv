@@ -1,0 +1,361 @@
+shape	tool	locale	flags	pattern	expected	got	exit	verdict	stderr
+s01-ff-same-line-before	bsd	utf8C	-c	TARGET	1	0	1	SILENT-MISS	<none>
+s01-ff-same-line-before	bsd	utf8C	-ac	TARGET	1	0	1	SILENT-MISS	<none>
+s01-ff-same-line-before	bsd	utf8enUS	-c	TARGET	1	0	1	SILENT-MISS	<none>
+s01-ff-same-line-before	bsd	utf8enUS	-ac	TARGET	1	0	1	SILENT-MISS	<none>
+s01-ff-same-line-before	bsd	posixC	-c	TARGET	1	1	0	OK	<none>
+s01-ff-same-line-before	bsd	posixC	-ac	TARGET	1	1	0	OK	<none>
+s01-ff-same-line-before	ccfn	utf8C	-c	TARGET	1	<empty>	1	OTHER	<none>
+s01-ff-same-line-before	ccfn	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s01-ff-same-line-before	ccfn	utf8enUS	-c	TARGET	1	<empty>	1	OTHER	<none>
+s01-ff-same-line-before	ccfn	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s01-ff-same-line-before	ccfn	posixC	-c	TARGET	1	<empty>	1	OTHER	<none>
+s01-ff-same-line-before	ccfn	posixC	-ac	TARGET	1	1	0	OK	<none>
+s01-ff-same-line-before	ugrepGI	utf8C	-c	TARGET	1	<empty>	1	OTHER	<none>
+s01-ff-same-line-before	ugrepGI	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s01-ff-same-line-before	ugrepGI	utf8enUS	-c	TARGET	1	<empty>	1	OTHER	<none>
+s01-ff-same-line-before	ugrepGI	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s01-ff-same-line-before	ugrepGI	posixC	-c	TARGET	1	<empty>	1	OTHER	<none>
+s01-ff-same-line-before	ugrepGI	posixC	-ac	TARGET	1	1	0	OK	<none>
+s01-ff-same-line-before	ugrepG	utf8C	-c	TARGET	1	1	0	OK	<none>
+s01-ff-same-line-before	ugrepG	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s01-ff-same-line-before	ugrepG	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s01-ff-same-line-before	ugrepG	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s01-ff-same-line-before	ugrepG	posixC	-c	TARGET	1	1	0	OK	<none>
+s01-ff-same-line-before	ugrepG	posixC	-ac	TARGET	1	1	0	OK	<none>
+s02-ff-same-line-after	bsd	utf8C	-c	TARGET	1	1	0	OK	<none>
+s02-ff-same-line-after	bsd	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s02-ff-same-line-after	bsd	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s02-ff-same-line-after	bsd	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s02-ff-same-line-after	bsd	posixC	-c	TARGET	1	1	0	OK	<none>
+s02-ff-same-line-after	bsd	posixC	-ac	TARGET	1	1	0	OK	<none>
+s02-ff-same-line-after	ccfn	utf8C	-c	TARGET	1	<empty>	1	OTHER	<none>
+s02-ff-same-line-after	ccfn	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s02-ff-same-line-after	ccfn	utf8enUS	-c	TARGET	1	<empty>	1	OTHER	<none>
+s02-ff-same-line-after	ccfn	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s02-ff-same-line-after	ccfn	posixC	-c	TARGET	1	<empty>	1	OTHER	<none>
+s02-ff-same-line-after	ccfn	posixC	-ac	TARGET	1	1	0	OK	<none>
+s02-ff-same-line-after	ugrepGI	utf8C	-c	TARGET	1	<empty>	1	OTHER	<none>
+s02-ff-same-line-after	ugrepGI	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s02-ff-same-line-after	ugrepGI	utf8enUS	-c	TARGET	1	<empty>	1	OTHER	<none>
+s02-ff-same-line-after	ugrepGI	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s02-ff-same-line-after	ugrepGI	posixC	-c	TARGET	1	<empty>	1	OTHER	<none>
+s02-ff-same-line-after	ugrepGI	posixC	-ac	TARGET	1	1	0	OK	<none>
+s02-ff-same-line-after	ugrepG	utf8C	-c	TARGET	1	1	0	OK	<none>
+s02-ff-same-line-after	ugrepG	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s02-ff-same-line-after	ugrepG	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s02-ff-same-line-after	ugrepG	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s02-ff-same-line-after	ugrepG	posixC	-c	TARGET	1	1	0	OK	<none>
+s02-ff-same-line-after	ugrepG	posixC	-ac	TARGET	1	1	0	OK	<none>
+s03-ff-other-line-earlier	bsd	utf8C	-c	TARGET	1	1	0	OK	<none>
+s03-ff-other-line-earlier	bsd	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s03-ff-other-line-earlier	bsd	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s03-ff-other-line-earlier	bsd	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s03-ff-other-line-earlier	bsd	posixC	-c	TARGET	1	1	0	OK	<none>
+s03-ff-other-line-earlier	bsd	posixC	-ac	TARGET	1	1	0	OK	<none>
+s03-ff-other-line-earlier	ccfn	utf8C	-c	TARGET	1	<empty>	1	OTHER	<none>
+s03-ff-other-line-earlier	ccfn	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s03-ff-other-line-earlier	ccfn	utf8enUS	-c	TARGET	1	<empty>	1	OTHER	<none>
+s03-ff-other-line-earlier	ccfn	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s03-ff-other-line-earlier	ccfn	posixC	-c	TARGET	1	<empty>	1	OTHER	<none>
+s03-ff-other-line-earlier	ccfn	posixC	-ac	TARGET	1	1	0	OK	<none>
+s03-ff-other-line-earlier	ugrepGI	utf8C	-c	TARGET	1	<empty>	1	OTHER	<none>
+s03-ff-other-line-earlier	ugrepGI	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s03-ff-other-line-earlier	ugrepGI	utf8enUS	-c	TARGET	1	<empty>	1	OTHER	<none>
+s03-ff-other-line-earlier	ugrepGI	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s03-ff-other-line-earlier	ugrepGI	posixC	-c	TARGET	1	<empty>	1	OTHER	<none>
+s03-ff-other-line-earlier	ugrepGI	posixC	-ac	TARGET	1	1	0	OK	<none>
+s03-ff-other-line-earlier	ugrepG	utf8C	-c	TARGET	1	1	0	OK	<none>
+s03-ff-other-line-earlier	ugrepG	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s03-ff-other-line-earlier	ugrepG	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s03-ff-other-line-earlier	ugrepG	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s03-ff-other-line-earlier	ugrepG	posixC	-c	TARGET	1	1	0	OK	<none>
+s03-ff-other-line-earlier	ugrepG	posixC	-ac	TARGET	1	1	0	OK	<none>
+s04-ff-other-line-later-eof	bsd	utf8C	-c	TARGET	1	1	0	OK	<none>
+s04-ff-other-line-later-eof	bsd	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s04-ff-other-line-later-eof	bsd	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s04-ff-other-line-later-eof	bsd	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s04-ff-other-line-later-eof	bsd	posixC	-c	TARGET	1	1	0	OK	<none>
+s04-ff-other-line-later-eof	bsd	posixC	-ac	TARGET	1	1	0	OK	<none>
+s04-ff-other-line-later-eof	ccfn	utf8C	-c	TARGET	1	<empty>	1	OTHER	<none>
+s04-ff-other-line-later-eof	ccfn	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s04-ff-other-line-later-eof	ccfn	utf8enUS	-c	TARGET	1	<empty>	1	OTHER	<none>
+s04-ff-other-line-later-eof	ccfn	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s04-ff-other-line-later-eof	ccfn	posixC	-c	TARGET	1	<empty>	1	OTHER	<none>
+s04-ff-other-line-later-eof	ccfn	posixC	-ac	TARGET	1	1	0	OK	<none>
+s04-ff-other-line-later-eof	ugrepGI	utf8C	-c	TARGET	1	<empty>	1	OTHER	<none>
+s04-ff-other-line-later-eof	ugrepGI	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s04-ff-other-line-later-eof	ugrepGI	utf8enUS	-c	TARGET	1	<empty>	1	OTHER	<none>
+s04-ff-other-line-later-eof	ugrepGI	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s04-ff-other-line-later-eof	ugrepGI	posixC	-c	TARGET	1	<empty>	1	OTHER	<none>
+s04-ff-other-line-later-eof	ugrepGI	posixC	-ac	TARGET	1	1	0	OK	<none>
+s04-ff-other-line-later-eof	ugrepG	utf8C	-c	TARGET	1	1	0	OK	<none>
+s04-ff-other-line-later-eof	ugrepG	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s04-ff-other-line-later-eof	ugrepG	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s04-ff-other-line-later-eof	ugrepG	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s04-ff-other-line-later-eof	ugrepG	posixC	-c	TARGET	1	1	0	OK	<none>
+s04-ff-other-line-later-eof	ugrepG	posixC	-ac	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	bsd	utf8C	-c	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	bsd	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	bsd	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	bsd	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	bsd	posixC	-c	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	bsd	posixC	-ac	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	ccfn	utf8C	-c	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	ccfn	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	ccfn	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	ccfn	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	ccfn	posixC	-c	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	ccfn	posixC	-ac	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	ugrepGI	utf8C	-c	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	ugrepGI	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	ugrepGI	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	ugrepGI	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	ugrepGI	posixC	-c	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	ugrepGI	posixC	-ac	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	ugrepG	utf8C	-c	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	ugrepG	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	ugrepG	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	ugrepG	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	ugrepG	posixC	-c	TARGET	1	1	0	OK	<none>
+s05-ff-eof-no-trailing-newline	ugrepG	posixC	-ac	TARGET	1	1	0	OK	<none>
+s06-e2-same-line-before	bsd	utf8C	-c	TARGET	1	0	1	SILENT-MISS	<none>
+s06-e2-same-line-before	bsd	utf8C	-ac	TARGET	1	0	1	SILENT-MISS	<none>
+s06-e2-same-line-before	bsd	utf8enUS	-c	TARGET	1	0	1	SILENT-MISS	<none>
+s06-e2-same-line-before	bsd	utf8enUS	-ac	TARGET	1	0	1	SILENT-MISS	<none>
+s06-e2-same-line-before	bsd	posixC	-c	TARGET	1	1	0	OK	<none>
+s06-e2-same-line-before	bsd	posixC	-ac	TARGET	1	1	0	OK	<none>
+s06-e2-same-line-before	ccfn	utf8C	-c	TARGET	1	<empty>	1	OTHER	<none>
+s06-e2-same-line-before	ccfn	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s06-e2-same-line-before	ccfn	utf8enUS	-c	TARGET	1	<empty>	1	OTHER	<none>
+s06-e2-same-line-before	ccfn	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s06-e2-same-line-before	ccfn	posixC	-c	TARGET	1	<empty>	1	OTHER	<none>
+s06-e2-same-line-before	ccfn	posixC	-ac	TARGET	1	1	0	OK	<none>
+s06-e2-same-line-before	ugrepGI	utf8C	-c	TARGET	1	<empty>	1	OTHER	<none>
+s06-e2-same-line-before	ugrepGI	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s06-e2-same-line-before	ugrepGI	utf8enUS	-c	TARGET	1	<empty>	1	OTHER	<none>
+s06-e2-same-line-before	ugrepGI	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s06-e2-same-line-before	ugrepGI	posixC	-c	TARGET	1	<empty>	1	OTHER	<none>
+s06-e2-same-line-before	ugrepGI	posixC	-ac	TARGET	1	1	0	OK	<none>
+s06-e2-same-line-before	ugrepG	utf8C	-c	TARGET	1	1	0	OK	<none>
+s06-e2-same-line-before	ugrepG	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s06-e2-same-line-before	ugrepG	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s06-e2-same-line-before	ugrepG	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s06-e2-same-line-before	ugrepG	posixC	-c	TARGET	1	1	0	OK	<none>
+s06-e2-same-line-before	ugrepG	posixC	-ac	TARGET	1	1	0	OK	<none>
+s07-e2-other-line-later-eof	bsd	utf8C	-c	TARGET	1	1	0	OK	<none>
+s07-e2-other-line-later-eof	bsd	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s07-e2-other-line-later-eof	bsd	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s07-e2-other-line-later-eof	bsd	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s07-e2-other-line-later-eof	bsd	posixC	-c	TARGET	1	1	0	OK	<none>
+s07-e2-other-line-later-eof	bsd	posixC	-ac	TARGET	1	1	0	OK	<none>
+s07-e2-other-line-later-eof	ccfn	utf8C	-c	TARGET	1	<empty>	1	OTHER	<none>
+s07-e2-other-line-later-eof	ccfn	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s07-e2-other-line-later-eof	ccfn	utf8enUS	-c	TARGET	1	<empty>	1	OTHER	<none>
+s07-e2-other-line-later-eof	ccfn	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s07-e2-other-line-later-eof	ccfn	posixC	-c	TARGET	1	<empty>	1	OTHER	<none>
+s07-e2-other-line-later-eof	ccfn	posixC	-ac	TARGET	1	1	0	OK	<none>
+s07-e2-other-line-later-eof	ugrepGI	utf8C	-c	TARGET	1	<empty>	1	OTHER	<none>
+s07-e2-other-line-later-eof	ugrepGI	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s07-e2-other-line-later-eof	ugrepGI	utf8enUS	-c	TARGET	1	<empty>	1	OTHER	<none>
+s07-e2-other-line-later-eof	ugrepGI	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s07-e2-other-line-later-eof	ugrepGI	posixC	-c	TARGET	1	<empty>	1	OTHER	<none>
+s07-e2-other-line-later-eof	ugrepGI	posixC	-ac	TARGET	1	1	0	OK	<none>
+s07-e2-other-line-later-eof	ugrepG	utf8C	-c	TARGET	1	1	0	OK	<none>
+s07-e2-other-line-later-eof	ugrepG	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s07-e2-other-line-later-eof	ugrepG	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s07-e2-other-line-later-eof	ugrepG	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s07-e2-other-line-later-eof	ugrepG	posixC	-c	TARGET	1	1	0	OK	<none>
+s07-e2-other-line-later-eof	ugrepG	posixC	-ac	TARGET	1	1	0	OK	<none>
+s08-e280-truncated-3byte-eof	bsd	utf8C	-c	TARGET	1	1	0	OK	<none>
+s08-e280-truncated-3byte-eof	bsd	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s08-e280-truncated-3byte-eof	bsd	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s08-e280-truncated-3byte-eof	bsd	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s08-e280-truncated-3byte-eof	bsd	posixC	-c	TARGET	1	1	0	OK	<none>
+s08-e280-truncated-3byte-eof	bsd	posixC	-ac	TARGET	1	1	0	OK	<none>
+s08-e280-truncated-3byte-eof	ccfn	utf8C	-c	TARGET	1	<empty>	1	OTHER	<none>
+s08-e280-truncated-3byte-eof	ccfn	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s08-e280-truncated-3byte-eof	ccfn	utf8enUS	-c	TARGET	1	<empty>	1	OTHER	<none>
+s08-e280-truncated-3byte-eof	ccfn	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s08-e280-truncated-3byte-eof	ccfn	posixC	-c	TARGET	1	<empty>	1	OTHER	<none>
+s08-e280-truncated-3byte-eof	ccfn	posixC	-ac	TARGET	1	1	0	OK	<none>
+s08-e280-truncated-3byte-eof	ugrepGI	utf8C	-c	TARGET	1	<empty>	1	OTHER	<none>
+s08-e280-truncated-3byte-eof	ugrepGI	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s08-e280-truncated-3byte-eof	ugrepGI	utf8enUS	-c	TARGET	1	<empty>	1	OTHER	<none>
+s08-e280-truncated-3byte-eof	ugrepGI	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s08-e280-truncated-3byte-eof	ugrepGI	posixC	-c	TARGET	1	<empty>	1	OTHER	<none>
+s08-e280-truncated-3byte-eof	ugrepGI	posixC	-ac	TARGET	1	1	0	OK	<none>
+s08-e280-truncated-3byte-eof	ugrepG	utf8C	-c	TARGET	1	1	0	OK	<none>
+s08-e280-truncated-3byte-eof	ugrepG	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s08-e280-truncated-3byte-eof	ugrepG	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s08-e280-truncated-3byte-eof	ugrepG	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s08-e280-truncated-3byte-eof	ugrepG	posixC	-c	TARGET	1	1	0	OK	<none>
+s08-e280-truncated-3byte-eof	ugrepG	posixC	-ac	TARGET	1	1	0	OK	<none>
+s09-nul-other-line	bsd	utf8C	-c	TARGET	1	1	0	OK	<none>
+s09-nul-other-line	bsd	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s09-nul-other-line	bsd	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s09-nul-other-line	bsd	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s09-nul-other-line	bsd	posixC	-c	TARGET	1	1	0	OK	<none>
+s09-nul-other-line	bsd	posixC	-ac	TARGET	1	1	0	OK	<none>
+s09-nul-other-line	ccfn	utf8C	-c	TARGET	1	<empty>	1	OTHER	<none>
+s09-nul-other-line	ccfn	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s09-nul-other-line	ccfn	utf8enUS	-c	TARGET	1	<empty>	1	OTHER	<none>
+s09-nul-other-line	ccfn	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s09-nul-other-line	ccfn	posixC	-c	TARGET	1	<empty>	1	OTHER	<none>
+s09-nul-other-line	ccfn	posixC	-ac	TARGET	1	1	0	OK	<none>
+s09-nul-other-line	ugrepGI	utf8C	-c	TARGET	1	<empty>	1	OTHER	<none>
+s09-nul-other-line	ugrepGI	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s09-nul-other-line	ugrepGI	utf8enUS	-c	TARGET	1	<empty>	1	OTHER	<none>
+s09-nul-other-line	ugrepGI	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s09-nul-other-line	ugrepGI	posixC	-c	TARGET	1	<empty>	1	OTHER	<none>
+s09-nul-other-line	ugrepGI	posixC	-ac	TARGET	1	1	0	OK	<none>
+s09-nul-other-line	ugrepG	utf8C	-c	TARGET	1	1	0	OK	<none>
+s09-nul-other-line	ugrepG	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s09-nul-other-line	ugrepG	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s09-nul-other-line	ugrepG	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s09-nul-other-line	ugrepG	posixC	-c	TARGET	1	1	0	OK	<none>
+s09-nul-other-line	ugrepG	posixC	-ac	TARGET	1	1	0	OK	<none>
+s10-nul-same-line	bsd	utf8C	-c	TARGET	1	1	0	OK	<none>
+s10-nul-same-line	bsd	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s10-nul-same-line	bsd	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s10-nul-same-line	bsd	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s10-nul-same-line	bsd	posixC	-c	TARGET	1	1	0	OK	<none>
+s10-nul-same-line	bsd	posixC	-ac	TARGET	1	1	0	OK	<none>
+s10-nul-same-line	ccfn	utf8C	-c	TARGET	1	<empty>	1	OTHER	<none>
+s10-nul-same-line	ccfn	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s10-nul-same-line	ccfn	utf8enUS	-c	TARGET	1	<empty>	1	OTHER	<none>
+s10-nul-same-line	ccfn	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s10-nul-same-line	ccfn	posixC	-c	TARGET	1	<empty>	1	OTHER	<none>
+s10-nul-same-line	ccfn	posixC	-ac	TARGET	1	1	0	OK	<none>
+s10-nul-same-line	ugrepGI	utf8C	-c	TARGET	1	<empty>	1	OTHER	<none>
+s10-nul-same-line	ugrepGI	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s10-nul-same-line	ugrepGI	utf8enUS	-c	TARGET	1	<empty>	1	OTHER	<none>
+s10-nul-same-line	ugrepGI	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s10-nul-same-line	ugrepGI	posixC	-c	TARGET	1	<empty>	1	OTHER	<none>
+s10-nul-same-line	ugrepGI	posixC	-ac	TARGET	1	1	0	OK	<none>
+s10-nul-same-line	ugrepG	utf8C	-c	TARGET	1	1	0	OK	<none>
+s10-nul-same-line	ugrepG	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s10-nul-same-line	ugrepG	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s10-nul-same-line	ugrepG	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s10-nul-same-line	ugrepG	posixC	-c	TARGET	1	1	0	OK	<none>
+s10-nul-same-line	ugrepG	posixC	-ac	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	bsd	utf8C	-c	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	bsd	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	bsd	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	bsd	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	bsd	posixC	-c	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	bsd	posixC	-ac	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	ccfn	utf8C	-c	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	ccfn	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	ccfn	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	ccfn	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	ccfn	posixC	-c	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	ccfn	posixC	-ac	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	ugrepGI	utf8C	-c	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	ugrepGI	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	ugrepGI	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	ugrepGI	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	ugrepGI	posixC	-c	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	ugrepGI	posixC	-ac	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	ugrepG	utf8C	-c	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	ugrepG	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	ugrepG	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	ugrepG	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	ugrepG	posixC	-c	TARGET	1	1	0	OK	<none>
+s11-clean-valid-utf8	ugrepG	posixC	-ac	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	bsd	utf8C	-c	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	bsd	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	bsd	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	bsd	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	bsd	posixC	-c	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	bsd	posixC	-ac	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	ccfn	utf8C	-c	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	ccfn	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	ccfn	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	ccfn	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	ccfn	posixC	-c	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	ccfn	posixC	-ac	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	ugrepGI	utf8C	-c	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	ugrepGI	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	ugrepGI	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	ugrepGI	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	ugrepGI	posixC	-c	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	ugrepGI	posixC	-ac	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	ugrepG	utf8C	-c	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	ugrepG	utf8C	-ac	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	ugrepG	utf8enUS	-c	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	ugrepG	utf8enUS	-ac	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	ugrepG	posixC	-c	TARGET	1	1	0	OK	<none>
+s12-clean-pure-ascii	ugrepG	posixC	-ac	TARGET	1	1	0	OK	<none>
+t80-exact-repro	bsd	utf8C	-c	^  PASS	3	3	0	OK	<none>
+t80-exact-repro	bsd	utf8C	-ac	^  PASS	3	3	0	OK	<none>
+t80-exact-repro	bsd	utf8enUS	-c	^  PASS	3	3	0	OK	<none>
+t80-exact-repro	bsd	utf8enUS	-ac	^  PASS	3	3	0	OK	<none>
+t80-exact-repro	bsd	posixC	-c	^  PASS	3	3	0	OK	<none>
+t80-exact-repro	bsd	posixC	-ac	^  PASS	3	3	0	OK	<none>
+t80-exact-repro	ccfn	utf8C	-c	^  PASS	3	<empty>	1	OTHER	<none>
+t80-exact-repro	ccfn	utf8C	-ac	^  PASS	3	3	0	OK	<none>
+t80-exact-repro	ccfn	utf8enUS	-c	^  PASS	3	<empty>	1	OTHER	<none>
+t80-exact-repro	ccfn	utf8enUS	-ac	^  PASS	3	3	0	OK	<none>
+t80-exact-repro	ccfn	posixC	-c	^  PASS	3	<empty>	1	OTHER	<none>
+t80-exact-repro	ccfn	posixC	-ac	^  PASS	3	3	0	OK	<none>
+t80-exact-repro	ugrepGI	utf8C	-c	^  PASS	3	<empty>	1	OTHER	<none>
+t80-exact-repro	ugrepGI	utf8C	-ac	^  PASS	3	3	0	OK	<none>
+t80-exact-repro	ugrepGI	utf8enUS	-c	^  PASS	3	<empty>	1	OTHER	<none>
+t80-exact-repro	ugrepGI	utf8enUS	-ac	^  PASS	3	3	0	OK	<none>
+t80-exact-repro	ugrepGI	posixC	-c	^  PASS	3	<empty>	1	OTHER	<none>
+t80-exact-repro	ugrepGI	posixC	-ac	^  PASS	3	3	0	OK	<none>
+t80-exact-repro	ugrepG	utf8C	-c	^  PASS	3	3	0	OK	<none>
+t80-exact-repro	ugrepG	utf8C	-ac	^  PASS	3	3	0	OK	<none>
+t80-exact-repro	ugrepG	utf8enUS	-c	^  PASS	3	3	0	OK	<none>
+t80-exact-repro	ugrepG	utf8enUS	-ac	^  PASS	3	3	0	OK	<none>
+t80-exact-repro	ugrepG	posixC	-c	^  PASS	3	3	0	OK	<none>
+t80-exact-repro	ugrepG	posixC	-ac	^  PASS	3	3	0	OK	<none>
+t80-exact-repro	bsd	utf8C	-c	unbound variable	1	0	1	SILENT-MISS	<none>
+t80-exact-repro	bsd	utf8C	-ac	unbound variable	1	0	1	SILENT-MISS	<none>
+t80-exact-repro	bsd	utf8enUS	-c	unbound variable	1	0	1	SILENT-MISS	<none>
+t80-exact-repro	bsd	utf8enUS	-ac	unbound variable	1	0	1	SILENT-MISS	<none>
+t80-exact-repro	bsd	posixC	-c	unbound variable	1	1	0	OK	<none>
+t80-exact-repro	bsd	posixC	-ac	unbound variable	1	1	0	OK	<none>
+t80-exact-repro	ccfn	utf8C	-c	unbound variable	1	<empty>	1	OTHER	<none>
+t80-exact-repro	ccfn	utf8C	-ac	unbound variable	1	1	0	OK	<none>
+t80-exact-repro	ccfn	utf8enUS	-c	unbound variable	1	<empty>	1	OTHER	<none>
+t80-exact-repro	ccfn	utf8enUS	-ac	unbound variable	1	1	0	OK	<none>
+t80-exact-repro	ccfn	posixC	-c	unbound variable	1	<empty>	1	OTHER	<none>
+t80-exact-repro	ccfn	posixC	-ac	unbound variable	1	1	0	OK	<none>
+t80-exact-repro	ugrepGI	utf8C	-c	unbound variable	1	<empty>	1	OTHER	<none>
+t80-exact-repro	ugrepGI	utf8C	-ac	unbound variable	1	1	0	OK	<none>
+t80-exact-repro	ugrepGI	utf8enUS	-c	unbound variable	1	<empty>	1	OTHER	<none>
+t80-exact-repro	ugrepGI	utf8enUS	-ac	unbound variable	1	1	0	OK	<none>
+t80-exact-repro	ugrepGI	posixC	-c	unbound variable	1	<empty>	1	OTHER	<none>
+t80-exact-repro	ugrepGI	posixC	-ac	unbound variable	1	1	0	OK	<none>
+t80-exact-repro	ugrepG	utf8C	-c	unbound variable	1	1	0	OK	<none>
+t80-exact-repro	ugrepG	utf8C	-ac	unbound variable	1	1	0	OK	<none>
+t80-exact-repro	ugrepG	utf8enUS	-c	unbound variable	1	1	0	OK	<none>
+t80-exact-repro	ugrepG	utf8enUS	-ac	unbound variable	1	1	0	OK	<none>
+t80-exact-repro	ugrepG	posixC	-c	unbound variable	1	1	0	OK	<none>
+t80-exact-repro	ugrepG	posixC	-ac	unbound variable	1	1	0	OK	<none>
+t80-exact-repro	bsd	utf8C	-c	PRECONDITIONS BREACHED	0	0	1	OK	<none>
+t80-exact-repro	bsd	utf8C	-ac	PRECONDITIONS BREACHED	0	0	1	OK	<none>
+t80-exact-repro	bsd	utf8enUS	-c	PRECONDITIONS BREACHED	0	0	1	OK	<none>
+t80-exact-repro	bsd	utf8enUS	-ac	PRECONDITIONS BREACHED	0	0	1	OK	<none>
+t80-exact-repro	bsd	posixC	-c	PRECONDITIONS BREACHED	0	0	1	OK	<none>
+t80-exact-repro	bsd	posixC	-ac	PRECONDITIONS BREACHED	0	0	1	OK	<none>
+t80-exact-repro	ccfn	utf8C	-c	PRECONDITIONS BREACHED	0	<empty>	1	OTHER	<none>
+t80-exact-repro	ccfn	utf8C	-ac	PRECONDITIONS BREACHED	0	0	1	OK	<none>
+t80-exact-repro	ccfn	utf8enUS	-c	PRECONDITIONS BREACHED	0	<empty>	1	OTHER	<none>
+t80-exact-repro	ccfn	utf8enUS	-ac	PRECONDITIONS BREACHED	0	0	1	OK	<none>
+t80-exact-repro	ccfn	posixC	-c	PRECONDITIONS BREACHED	0	<empty>	1	OTHER	<none>
+t80-exact-repro	ccfn	posixC	-ac	PRECONDITIONS BREACHED	0	0	1	OK	<none>
+t80-exact-repro	ugrepGI	utf8C	-c	PRECONDITIONS BREACHED	0	<empty>	1	OTHER	<none>
+t80-exact-repro	ugrepGI	utf8C	-ac	PRECONDITIONS BREACHED	0	0	1	OK	<none>
+t80-exact-repro	ugrepGI	utf8enUS	-c	PRECONDITIONS BREACHED	0	<empty>	1	OTHER	<none>
+t80-exact-repro	ugrepGI	utf8enUS	-ac	PRECONDITIONS BREACHED	0	0	1	OK	<none>
+t80-exact-repro	ugrepGI	posixC	-c	PRECONDITIONS BREACHED	0	<empty>	1	OTHER	<none>
+t80-exact-repro	ugrepGI	posixC	-ac	PRECONDITIONS BREACHED	0	0	1	OK	<none>
+t80-exact-repro	ugrepG	utf8C	-c	PRECONDITIONS BREACHED	0	0	1	OK	<none>
+t80-exact-repro	ugrepG	utf8C	-ac	PRECONDITIONS BREACHED	0	0	1	OK	<none>
+t80-exact-repro	ugrepG	utf8enUS	-c	PRECONDITIONS BREACHED	0	0	1	OK	<none>
+t80-exact-repro	ugrepG	utf8enUS	-ac	PRECONDITIONS BREACHED	0	0	1	OK	<none>
+t80-exact-repro	ugrepG	posixC	-c	PRECONDITIONS BREACHED	0	0	1	OK	<none>
+t80-exact-repro	ugrepG	posixC	-ac	PRECONDITIONS BREACHED	0	0	1	OK	<none>

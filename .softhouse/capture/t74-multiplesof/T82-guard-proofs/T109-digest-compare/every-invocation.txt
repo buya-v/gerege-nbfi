@@ -1,0 +1,28 @@
+################ LEG A — WRONG-BUT-VALID PIN (main's tip 6d2a1e90f534a6b0252e8f4d2c0f27fd3fb65e18) ################
+  bash <abs path>, cwd=repo root                             exit=2 stdout_bytes=0 proof_rows=0 
+  bash <rel path>, cwd=repo root                             exit=2 stdout_bytes=0 proof_rows=0 
+  bash <bare name>, cwd=rig dir                              exit=2 stdout_bytes=0 proof_rows=0 
+  bash ./<name>, cwd=rig dir                                 exit=2 stdout_bytes=0 proof_rows=0 
+  bash <abs path>, cwd=/tmp                                  exit=2 stdout_bytes=0 proof_rows=0 
+  bash <abs path>, cwd=$HOME                                 exit=2 stdout_bytes=0 proof_rows=0 
+  direct exec (shebang), cwd=rig dir                         exit=2 stdout_bytes=0 proof_rows=0 
+  sh <abs path> (undocumented form)                          exit=2 stdout_bytes=0 proof_rows=0 
+  zsh <abs path> (undocumented form)                         exit=2 stdout_bytes=0 proof_rows=0 
+  piped: bash < script (no $0 path)                          exit=2 stdout_bytes=0 proof_rows=0 
+  --- the stderr of the last form, to show what a $0-less invocation does ---
+  2| FATAL: THE PINNED BASELINE IS NOT THE FORK POINT — a digest moved.
+  2|        file:      .softhouse/capture/src/run-pass3i.sh
+  2|        expected:  d84ec7bf9888baa1b1fa3f75be679af982ae7435c4aa2e1edbb06f999084e0d3   (pinned in /Users/buv/gerege-nbfi/.claude/worktrees/agent-a7aa8927c30980e67/.softhouse/capture/t74-multiplesof/T82-guard-proofs/FORK-POINT-SHA)
+  2|        observed:  3ca0d3f6380a74d32c8bca000f8587724927b4b55eb0c51b8e64be7cefe2a519   (extracted from commit 6d2a1e90f534a6b0252e8f4d2c0f27fd3fb65e18)
+  2| 
+  2|        The commit pinned as `commit` exists and is reachable, so the four T102 refusals
+  2|        pass it — but the bytes it holds for this file are NOT the pre-T82 bytes every
+  2|        COUNTERPROOF row is supposed to run against. The overwhelmingly likely cause is a
+
+################ LEG B — CORRECT PIN, SAME FORMS ################
+  bash <abs path>, cwd=repo root                             exit=0 stdout_bytes=46573 proof_rows=4 T82 guard proofs: 25 as expected, 0 not as expected ==============================================================================
+  bash <bare name>, cwd=rig dir                              exit=0 stdout_bytes=46573 proof_rows=4 T82 guard proofs: 25 as expected, 0 not as expected ==============================================================================
+  bash <abs path>, cwd=/tmp                                  exit=0 stdout_bytes=46573 proof_rows=4 T82 guard proofs: 25 as expected, 0 not as expected ==============================================================================
+
+pin restored byte-identical:
+  yes

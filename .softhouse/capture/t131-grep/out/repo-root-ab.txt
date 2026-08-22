@@ -1,0 +1,21 @@
+T131 F-T131-2 -- the A/B at the IDENTICAL start point (repo root ".").
+Same string, same start point, same moment; two tools; opposite answers.
+
+--- ARM 1: the Bash-tool `grep` (shell function -> embedded ugrep, -I + --ignore-files)
+$ cd /Users/buv/gerege-nbfi && grep -rl 'T131_WORKTREE_CANARY_<x>' .
+exit=1
+(no output)
+
+--- ARM 2: BSD /usr/bin/grep, both hardening tokens, same start point
+$ cd /Users/buv/gerege-nbfi && LC_ALL=C command grep -arl 'T131_WORKTREE_CANARY_<x>' .
+./.claude/worktrees/agent-a266e9c0ed65d4219/.softhouse/capture/t131-grep/out/canary.txt
+./.claude/worktrees/agent-a266e9c0ed65d4219/.softhouse/reviews/T131-review-of-T108.md
+exit=0
+
+Both hits lie under .claude/worktrees/, which repo-root .gitignore excludes.
+ARM 2 took >120s over the 135 MB tree and had to be backgrounded; ARM 1 returned
+"not found" fast.  THE FAST WRONG ANSWER IS THE DANGEROUS ONE.
+
+NOTE the second hit: it is this review itself, which quotes the canary string.
+So the sweep an auditor would run to find restatements of a claim is exactly the
+sweep that cannot see them.
