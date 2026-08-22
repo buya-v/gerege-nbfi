@@ -2477,7 +2477,7 @@
   {
    "id": "T264",
    "title": "INDEPENDENT review of the cloud fire's T241 branch (df0aed2) — money-adjacent claims that have had NO reviewer",
-   "status": "pending",
+   "status": "in_progress",
    "executor": "agent",
    "model": "opus",
    "target": "docs",
@@ -2492,12 +2492,13 @@
    ],
    "contract_independent": true,
    "description": "The cloud fire's T241 is COMPLETE and UNMERGED at origin/softhouse/T241-g8-evidence-hygiene @ df0aed2, and the cloud's own handoff says plainly that it HAS HAD NO INDEPENDENT REVIEWER. It edits `.softhouse/gates.md` (+108 lines) and adds ~21k lines of capture output. A DIFFERENT T241 was already merged locally at d20836e; the cloud's REACHES FURTHER. You are reviewing the CLOUD branch against merged main.\n\nRE-DERIVE, DO NOT READ. Its money-adjacent claims are the point: (a) the 120-of-296 re-bucketing -- recount it yourself from the source data and state both terms (P-67); (b) the claimed `gates.md:2283` failure -- go and read that line at YOUR commit and say whether the claim holds, since line numbers in this repo rot within a single fire (that is the entire subject of G-14); (c) whether anything it writes into gates.md alters a GATE CONCLUSION as opposed to the evidence beneath it -- a review artefact may correct evidence, it may NOT move a gate.\n\nHARD CHECKS: the vector-store digest must not move (read `git rev-parse HEAD:.softhouse/vectors` live and compare to 13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d). G-8's region is a conservative superset resting on the unproven conjecture delta <= 1, and G-8 OPTIONS (b) AND (c) MUST NOT BE PUT TO BUYAN, unconditionally and with no expiry -- if the branch proposes them, that alone is a HIGH rejection. Confirm site3.py still reproduces its registered prediction.json BYTE-FOR-BYTE (the strict-ancestor falsifiability guarantee depends on it) and that nothing was retro-edited: `git diff --name-status main...origin/softhouse/T241-g8-evidence-hygiene`.\n\nIts instruments must survive P-75/P-80 -- the cloud's OWN census script was caught last fire using `grep -c || echo 0`, which collapses 'zero matches' and 'I broke' onto one printed zero, in a script written to enforce its own calibration rule. Check its instruments before its conclusions.\n\nGive the driver an actionable verdict: MERGE / MICRO-FIX / REJECT, and say what merging it would change about any gate. WRITE ONLY under `.softhouse/reviews/t264-review-cloud-t241/`. You may NOT edit the branch you review (A2-17).",
-   "note": "Filed by the driver, local fire 20260822-060013."
+   "note": "dispatched by local fire 20260822-060013b in an isolated worktree; driver awaiting completion",
+   "branch": "softhouse/t264-review-cloud-t241"
   },
   {
    "id": "T265",
    "title": "INDEPENDENT re-derivation of the DRIVER's own lock fix — it found the defect and fixed it in the same fire (the T245/T249 precedent)",
-   "status": "pending",
+   "status": "in_progress",
    "executor": "agent",
    "model": "opus",
    "target": "docs",
@@ -2512,7 +2513,8 @@
    ],
    "contract_independent": true,
    "description": "On local fire 20260822-060013 the driver rewrote STEP 0 of `.claude/skills/softhouse-program/SKILL.md` and patched `.softhouse/bin/fire-program.sh`, replacing `started_at`-based staleness with PUSH-RECENCY on origin/main as the authoritative liveness signal, keeping `heartbeat` as corroboration only. The driver found the defect class and shipped the fix in ONE fire with no independent eye, which is exactly the shape T249 was filed for and confirmed as worth reviewing. REVIEW IT.\n\n(1) IS THE DIAGNOSIS RIGHT? The driver argues a heartbeat field is the WRONG fix because it is a thing somebody must remember to refresh (P-45, five recorded instances), while push-recency is DERIVED from doing the work. Attack that. The obvious counter is that a fire can legitimately think for over 6h WITHOUT pushing -- in which case push-recency declares a live holder dead, which is the SAME failure with the sign flipped. Work out whether that is reachable in practice given this driver's actual push cadence (read the git history and MEASURE the longest real gap between pushes by a single fire; state both terms). If it IS reachable, the fix is unsound as written and you must say so.\n(2) DRIVE IT RED. Construct the four STEP 0 cases -- released, held-and-pushing, genuinely stale, dead-pid -- and show the rule as written returns the right answer for each. A rule nobody has seen fail is unverified (P-22). Pay special attention to case 3: BOTH signals must be old, so a fresh clone with no local history must not misread it.\n(3) CHECK THE WRAPPER PATCH ACTUALLY PARSES AND STILL RELEASES. `.softhouse/bin/fire-program.sh` is what launchd runs twice a day; if the driver broke it, the program stops firing and nothing announces that. `zsh -n` is necessary and NOT sufficient -- check the release path and the trap still work, since a stranded LOCK costs the next fire six hours.\n(4) THE DRIVER MAY HAVE FIXED THE WRONG LAYER. P-85 says the incident's true cause was that the holder COMMITTED its lock refresh and dispatch record and NEVER PUSHED THEM -- so a heartbeat would have sat in the same unpushed commits and changed nothing. Judge whether the landed fix actually addresses that, or whether it addresses the more comfortable adjacent problem. Say so plainly if it is the latter.\n\nWRITE ONLY under `.softhouse/reviews/t265-review-lock-fix/`. You may NOT edit SKILL.md or fire-program.sh.",
-   "note": "Filed by the driver, local fire 20260822-060013."
+   "note": "dispatched by local fire 20260822-060013b in an isolated worktree; driver awaiting completion",
+   "branch": "softhouse/t265-review-lock-fix"
   },
   {
    "id": "T266",
@@ -3073,7 +3075,7 @@
   {
    "id": "T268",
    "title": "T259's R-VPA rule FAILS OPEN: it prints REFUSED NIL COVERAGE in its body while its exit code says GREEN — the P-45 shape inside the eliminator",
-   "status": "pending",
+   "status": "in_progress",
    "executor": "agent",
    "model": "opus",
    "target": "code",
@@ -3091,7 +3093,8 @@
    ],
    "contract_independent": true,
    "description": "RAISED BY T262 (F-1, HIGH) reviewing T259, and CONFIRMED live rather than theoretical. R-VPA gates nil coverage GLOBALLY at line 294 while MEASURING it PER FILE, so a two-file invocation -- which is the obvious next step for B-1 -- prints `REFUSED  NIL COVERAGE` in the body and still exits 0 GREEN. **A rule written to make a silent disagreement impossible to print is itself printing a refusal and reporting green.** That is the sixth-plus P-45 instance in this program and the second time this fire that an instrument broke the rule it was written to enforce (P-80).\n\nALSO FROM T262, same file:\n  F-2 (MED) FOUR error paths, not two. The two untested ones -- `raise SystemExit(str)` at lines 79 and 144 -- exit **1**, the code RESERVED FOR A MEASURED NEGATIVE. T259's handoff claim of two is FALSE. Conflating an error with a measured negative is exactly P-80, in the file that cites P-80.\n  F-3 (MED) 8 of 12 invented shapes MISSED SILENTLY: verdict as an object or a bare int; verdict key named `result` or `conclusion`; predicate `null`, `\"false\"`, or `0`; predicate in a nested list; row nested one level deeper; top-level array. Two shapes were caught ONLY by nil coverage and FLIP TO MISS WHEN BATCHED -- which is F-1 again, from the other side.\n\nTHE JOB: fix the global-vs-per-file gating so nil coverage on ANY file refuses; make all four error paths exit 2 and never 1; widen the selector to the missed shapes or state, per shape, why it is out of scope. DRIVE EACH RED THROUGH THE BATCHED ROUTE, not the single-file one -- the single-file route is what hid this. **THIS TASK BLOCKS WIRING (T269): an unwired rule that lies harms nothing, a WIRED one that lies is worse than no rule at all.**",
-   "note": "Filed by the driver, local fire 20260822-060013, as a MERGE CONDITION set by an independent review."
+   "note": "dispatched by local fire 20260822-060013b in an isolated worktree; driver awaiting completion",
+   "branch": "softhouse/t268-rvpa-failopen"
   },
   {
    "id": "T269",
@@ -3169,7 +3172,7 @@
   {
    "id": "T273",
    "title": "THE BAR'S GREEN DEPENDS ON A 24-BYTE FILE IN /tmp — clear it and the harness exits 2 with NO probe line",
-   "status": "pending",
+   "status": "in_progress",
    "executor": "agent",
    "model": "opus",
    "target": "code",
@@ -3186,7 +3189,8 @@
     ".softhouse/capture/t273-residue/"
    ],
    "description": "RAISED by the cloud T253, ADJUDICATED by T254b (F-1, HIGH), and then DRIVER-VERIFIED FIRST-HAND ON MERGED MAIN at 5316013. This is not a report. The driver ran it both ways:\n\n  rm -f /tmp/t234_matrix2.txt  ->  bash .softhouse/conformance.sh  ->  EXIT 2, PROBE LINE COUNT 0,\n                                   'a HARD guard failed. EXIT 2 -- no verdict is available.'\n  restore the file            ->  bash .softhouse/conformance.sh  ->  PASS exit 0, probe = up,\n                                   frontier 11 == pinned 11\n\nThe file is 24 bytes. Its content is six lines of the form x<char>y. **IT IS CREATED BY LINE 7 OF THE VERY INSTRUMENT WHOSE FAIL-OPEN TIER DEPENDS ON IT** -- `C1` calls `/tmp/t234_matrix2.txt` dead while line 7 creates it -- so the harness is green if and only if that instrument HAS ALREADY BEEN RUN ON THIS HOST.\n\nWHY THIS IS HIGH AND NOT A CURIOSITY:\n  (1) **macOS clears /tmp on reboot.** The next fire after Buyan restarts this Mac gets EXIT 2 WITH NO PROBE LINE. That is the single most dangerous signal in this program: it is ambiguous between 'the corpus is unusable', 'the harness never started', and 'a HARD guard failed'. A driver that read it as an ORACLE OUTAGE would park all live vector work as somebody else's server being down. P-83 exists because this program already had to correct that exact rule, and today it earned its keep -- the driver read the ABSENCE of the line, not its value, and parked nothing.\n  (2) **Every green bar this program has recorded on this Mac was contingent on that residue.** The bar is NOT reproducible from a clean checkout on a clean host. That is a reproducibility defect in the instrument that grades everything else.\n  (3) **T254b settled a disagreement between the two T253 implementations in the CLOUD's favour, and the driver is recording that the Mac author was WRONG.** The Mac author said the residue effect 'fails no BAR -- a classification defect, not a frontier defect', reasoning that the frontier COUNT and PATH-SET are identical in both arms and the harness pins BY PATH. T254b measured that the pin ALSO CARRIES THE TIER TOKEN, so a TIER2->TIER1 flip fails it even with count 11 == 11 and an identical path set. **The cloud's refusal to move the pin or weaken the guard to make its own bar green is VINDICATED** -- it had an invisible route to green and did not take it.\n\nTHE JOB:\n(1) Make the TIER classification depend on NOTHING OUTSIDE THE REPO. A fail-open tier that reads host filesystem residue is itself a fail-open: the classification is decided by state no reviewer can see and no commit records. Derive it from the tree, or make the instrument create its own fixture DETERMINISTICALLY in a temp dir it owns and removes.\n(2) **DRIVE IT RED THROUGH THE ROUTE THAT BROKE**: clear the residue, run the BAR, and show it now passes -- and separately show the guard STILL FAILS on a genuine TIER regression, so the fix removed the host-dependence WITHOUT removing the detection. A fix that makes the guard green unconditionally is strictly worse than the defect.\n(3) THE PIN IS A FRONTIER, NOT AN AMNESTY. If the repair removes a row from FAILOPEN_PIN_FILE_LIST, the pin must lose that row IN THE SAME COMMIT -- conformance.sh says so itself: a '-' line means the pin has started excusing a weakness that is no longer there.\n(4) SWEEP FOR THE CLASS (P-26): enumerate every other instrument whose behaviour depends on state outside the repo -- /tmp, $HOME, an env var, a previously-run sibling. State BOTH TERMS (P-67) and where you looked (P-66/P-70). The driver expects this is not the only one.\n\nPRE-EXISTING ON MAIN, NOT CAUSED BY T253b -- T254b verified unmodified main fails identically, which is why it did not gate the merge. Evidence: .softhouse/capture/t253-portability/DRIVER-VERIFIED-residue-cleared-exit2.log",
-   "note": "Filed by the driver, local fire 20260822-060013, from a first-hand two-way measurement on merged main. | INDEPENDENTLY CONFIRMED A FOURTH TIME by T261 (F-11, HIGH), which proved it by controlled removal in its own worktree and called the BAR verdict \"non-deterministic and cross-worktree coupled\". Four independent confirmations: cloud T253, T254b, T261, and the driver first-hand on merged main."
+   "note": "dispatched by local fire 20260822-060013b in an isolated worktree; driver awaiting completion",
+   "branch": "softhouse/t273-tmp-residue"
   },
   {
    "id": "T272",
@@ -3214,7 +3218,7 @@
   {
    "id": "T274",
    "title": "T250's attestation VERIFIER fails open four ways — it checks only the assertions that are PRESENT, in a module whose docstring says absence of evidence is not evidence",
-   "status": "pending",
+   "status": "in_progress",
    "executor": "agent",
    "model": "opus",
    "target": "code",
@@ -3232,12 +3236,13 @@
     ".softhouse/capture/t274-attestation-failopen/"
    ],
    "description": "RAISED BY T261 reviewing T250. T261 accepted T250's population counts (29/4 and 50/5/0/45, reproduced EXACTLY with a WIDER instrument: 45 and 52/6/0/46) and confirmed the long-header wrap fix is genuinely repaired across the whole boundary (1, 10, 60-66, 127-129, 200, 300, 1000, 4000 bytes plus a 360-byte colon-laden value -- every one attested EXACT). It calls that the strongest work in the diff. Then it attacked the VERIFIER with five shapes T250 did not design around, and all five got through:\n\n  **F-4 (HIGH)** body swapped for SAME-LENGTH bytes + the `body-sha256:` line DELETED -> `VERIFIED`, rc=0. **`verify` checks only the assertions that are PRESENT.** Delete the assertion and you delete the check. This is in a module whose own docstring says *absence of evidence is not evidence* -- the rule stated at the top of the file and broken by the function beneath it, which is the P-80 shape for the fourth time in two fires.\n  **F-5** one of two IDENTICAL duplicated headers deleted from the sidecar -> rc=0; and REORDERING -> rc=0. The verifier compares SET MEMBERSHIP, not sequence -- and T250's own redC shape 1 had already proved that sequence matters (two `-H` flags put BOTH values on the wire).\n  **F-6** an INVENTED `content-length-crosscheck: MATCH (99999 bytes)` line -> rc=0, because `known_keys` is an EXEMPTION LIST: an unrecognised assertion is ignored rather than refused. Default-allow in an evidence verifier.\n  **F-7** the response `.json` swapped for ANOTHER CAPTURE'S -> rc=0. **The response leg is entirely unattested and that limit is stated NOWHERE.**\n\nTHE JOB: make the verifier DEFAULT-DENY. A required assertion that is ABSENT must FAIL, not pass; the required set must be derived, enumerable and printed. Compare header SEQUENCE, not just membership. Refuse an unknown assertion key rather than ignoring it. Decide and ARGUE whether the response leg should be attested -- if you decide it should not, **that limit must be stated IN THE MODULE**, not in a review.\n\n**T261'S MERGE CONDITION, WHICH BINDS: T250's successor is a DECLARED ORPHAN and may merge as one, but IT MAY NOT ACQUIRE A CALLER until F-4 and F-5 are repaired and F-6's limit is stated in the module.** Writing a limit only into a review is the exact failure this whole class is named for. So this task BLOCKS the wiring of the attestation half of T269.\n\nDRIVE EACH OF THE FIVE RED through the shape that got through, not a shape you designed the fix around (P-76). Do not weaken the long-header wrap fix while doing it -- re-run T261's boundary sweep and show it still passes.",
-   "note": "Filed by the driver, local fire 20260822-060013, as T261 merge condition."
+   "note": "dispatched by local fire 20260822-060013b in an isolated worktree; driver awaiting completion",
+   "branch": "softhouse/t274-attestation-failopen"
   },
   {
    "id": "T275",
    "title": "ORACLE-ONLY: take the A2 captures CAPTURE-PLAN.md §5 named as 'cheap next fire' and never took — mapping replacement (delete-then-recreate) on product UPDATE, and every other §5 gap reachable WITHOUT a new fixture",
-   "status": "pending",
+   "status": "in_progress",
    "executor": "agent",
    "model": "opus",
    "target": "test",
@@ -3253,7 +3258,9 @@
     ".softhouse/capture/t275-a2-gap-capture/"
    ],
    "description": "RAISED BY THE DRIVER, local fire 20260822-060013b, on a program-health signal it is recording plainly: the pending queue is 21 tasks and EVERY ONE of them is harness self-repair. TWO CONSECUTIVE FIRES ADDED ZERO VECTORS. The ledger corpus is SIX vectors over 6 of 14 declared capabilities and 21 money cells; loanschedule is 46. The oracle is REACHABLE on this fire and an oracle-reaching fire is the ONLY fire that can take a capture. So this task exists to spend that reachability on the thing only it can do.\n\nWHAT TO TAKE. `.softhouse/capture/tierA-a2/CAPTURE-PLAN.md` §5 ('Planned but NOT captured, and why') is a list the previous worker wrote so its successor would not assume coverage. Row 1 says, in its own words, **'Cheap next fire: PUT /loanproducts/23 and re-run sql/q2-product-mapping-rows.sql'** — the delete-then-recreate semantics of mapping update, with `req/upd-070-repoint-fundsource.json` and `req/upd-071-add-channel.json` ALREADY WRITTEN AND NEVER SENT. Send them. Then work down §5 and take every remaining row that needs NO new fixture. Rows that need an `m_charge` fixture, `m_code_value` seeding, or capitalized-income/buy-down product config are NOT in this task — record which ones you excluded and why, so the next worker does not re-derive it.\n\nRAW OBSERVED FORM ONLY, AND THIS IS THE HARD LINE OF THE TASK. You are capturing, not promoting. Write what the oracle ACTUALLY RETURNED to `.softhouse/capture/tierA-a2/out/` under the existing naming convention, plus a re-issue-checkable recipe. DO NOT write to `.softhouse/vectors/`. DO NOT edit `.softhouse/conformance.sh` — a sibling task holds it this fire and the ledger population pins (EXEMPTION_PIN_LEDGER_PARITY / _REFUSAL / _MONEYCELLS, conformance.sh:551-553) move only in the promotion task that follows this one. A diff of yours touching either path is a scope rejection.\n\nNEVER SYNTHESISE. If a request fails, if the oracle refuses, if a row is absent — that observation IS the capture. Record it. A plausible value you did not observe from the oracle is the worst defect this program has a name for. Every recipe you leave must RE-ISSUE: `DEFECTS-FOUND-BY-REVIEW.md` in that directory records that 10 `attempt1-*` recipes are PROVABLY FALSE and must not be cited as reproducible — read it before you write a recipe, and do not add an eleventh.\n\nPRECONDITION, NOT OPTIONAL. CAPTURE-PLAN.md §6: run the Path B gate first and it must exit 0 (`cd .softhouse/capture/pathb && CANARY_REQ=t22-audit/req/calc-pmode2-gerege.json sh t36/preconditions.sh gerege`). It asserts MoneyHelper.PRECISION=19, rounding-mode=4 (HALF_UP), timezone Asia/Ulaanbaatar, the behavioural HALF_UP canary, `org.postgresql.Driver` and `jdbc:postgresql://db:5432/fineract_tenants`. If it does not exit 0, STOP and report — do not capture against an uncalibrated oracle.\n\nALSO ANSWER, WITH EVIDENCE, ONE QUESTION THE PROMOTION TASK WILL NEED: `.softhouse/vectors/PIN-ledger.json` declares `dec2_revision: 5`, and G-14 closed last fire ratifying DEC-2 **revision 8**. Either revisions 6-8 changed nothing a vector asserts and the pin at 5 is correct-and-stale-looking, or the corpus needs re-stamping 5->8 in one commit (which is what that file's own note says the pin exists to make cheap). DECIDE IT from the DEC-2 revision history and say which, with the diff evidence. Do not edit the pin — the promotion task moves it.",
-   "acceptance": "Path B gate exit 0 quoted; upd-070 and upd-071 SENT and their responses recorded raw; q2-product-mapping-rows.sql re-run and the before/after mapping rows recorded; every §5 row either captured or explicitly excluded with its blocking fixture named; every new recipe re-issues byte-identically and is proven to; zero bytes written under .softhouse/vectors/ or to conformance.sh; the PIN-ledger dec2_revision 5-vs-8 question answered with evidence."
+   "acceptance": "Path B gate exit 0 quoted; upd-070 and upd-071 SENT and their responses recorded raw; q2-product-mapping-rows.sql re-run and the before/after mapping rows recorded; every §5 row either captured or explicitly excluded with its blocking fixture named; every new recipe re-issues byte-identically and is proven to; zero bytes written under .softhouse/vectors/ or to conformance.sh; the PIN-ledger dec2_revision 5-vs-8 question answered with evidence.",
+   "branch": "softhouse/t275-a2-gap-capture",
+   "note": "dispatched by local fire 20260822-060013b in an isolated worktree; driver awaiting completion"
   },
   {
    "id": "T276",
