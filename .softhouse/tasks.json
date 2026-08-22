@@ -1053,11 +1053,12 @@
    ],
    "context": "tierA-gl-accounting",
    "dependencies": [
-    "A2-16"
+    "A2-21",
+    "A2-20"
    ],
    "status": "pending",
    "attempts": 0,
-   "note": "blocked until DEC-2 exists and has passed independent review -- a vector cannot be admitted against a contract that does not exist. G-10 is OPEN and its driver recommendation (c) is a PRECONDITION on which products may be promoted from. | BLOCKED: DEC-2 rev 1 was REJECTED by A2-14. No vector may be promoted against a rejected contract. Now depends on A2-16 (rev 2) instead of A2-13/A2-14."
+   "note": "BLOCKED, and the dependency was RE-POINTED by the driver at fire 20260822-080001 because it computed as READY and was NOT. Its old dependency A2-16 is done, but A2-16 produced DEC-2 rev 2 -- which A2-19 REJECTED this fire (gate G-11: NOT RATIFIABLE). Promoting vectors against a rejected contract is exactly what section 0 of that document exists to prevent. NOW DEPENDS ON A2-21 (DEC-2 rev 3) and A2-20 (done). A2-15 IS BLOCKED FOR TWO INDEPENDENT REASONS, and both must clear: (1) DEC-2 section 5.3's eight preconditions P-1..P-8 -- of which only P-8 now exists (built by A2-18, wired by T208 this fire); there is still NO ledger vector schema, NO expectation shape for an oracle-faithful refusal, and NO comparator. (2) Until A2-20 landed this fire, a promotion task pointed at ledger/ would have produced a green PASS 44 over a corpus grading nothing about the ledger -- A2-19 measured it and the driver reproduced it independently. Reason (2) is now CLOSED; reason (1) is not. SEQUENCING RULING FROM A2-19, to be honoured by whoever plans this: P-6 (capabilities.json schema id) must be decided BEFORE P-1..P-5, because DEC-2 section 5.4 step 2 cannot be obeyed without it -- you cannot author even a `false` capability row without knowing which file it lives in. P-7 (PIN.json) must NOT be sequenced first: its premise, that a second context implies a second pinned contract file, is contradicted by section 1.1, since DEC-2 freezes no Go file and carries no PIN digest. Re-scope P-7 to the dec1_revision question and place it after P-1."
   },
   {
    "id": "T190",

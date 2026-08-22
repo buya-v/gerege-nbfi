@@ -4,143 +4,173 @@ Written by the orchestrator at every checkpoint; read by the next fire of `/soft
 human) to see exactly where the factory paused. **The repo is the only memory** — never rely on an agent's
 session state.
 
-## Current state (local fire `20260821-125942`, 4th of the day, oracle REACHABLE throughout, clean exit)
+## Current state (local fire `20260822-080001`, oracle REACHABLE throughout, clean exit)
 
 - **Program**: `fineract-to-go-full-codebase` — **active**. Contexts **1 done / 18**. Tier 0 closed.
 - **Active run**: `2026-08-21-run2-tierA-gl-accounting-A2` — Tier A, slice **A2**.
-- **TEN DISPATCHED, TEN COMPLETED, TEN MERGED, ZERO LIVE AT EXIT.** No isolation violation; every
-  branch's scope checked by the driver before merge.
-- **Oracle**: UP throughout. Pinned checkout `426a23544`. PostgreSQL only.
+- **ELEVEN DISPATCHED, ELEVEN COMPLETED, ELEVEN MERGED, ZERO LIVE AT EXIT.** No isolation violation;
+  every branch's scope checked by the driver on the **three-dot** diff before merge.
+- **Oracle**: UP throughout. Pinned checkout `426a23544`. PostgreSQL only, **asserted not assumed** —
+  see the fire-log row in `.softhouse/reference-oracle.md`.
 
 **Driver-verified on merged `main` at exit** (re-run by the driver, not quoted from any worker):
 
 ```
 probe line PRESENT, and it reads: probe = up
 VERDICT: PASS (exit 0) — 43 parity vectors, 5664 cells compared
-         contract-refusal 4 · self-test 1 · inadmissible 0 · harness errors 0
-         invariant violations 0
+         contract-refusal 4 · self-test 1 · refused 0 · inadmissible 0 · harness errors 0
+         invariant violations 0 · invariant assertions 0 NOT RUN
+--prove              23 passed, 0 failed
+ledger-invariants    exit 0   (NEW THIS FIRE — see below)
 go build 0 · go vet 0 · go test ok (ledger, loanschedule, conformance)
-DEC-1 49dc8923… and contract.go 0db73d4a… UNMOVED before, during and after every merge
+gofmt -l             exactly contract.go   (expected, G-3)
+contract.go          0db73d4a…e37f139  == PIN
+vector store         ce821c638724237652b6b29627148d34b72fab3b  (git tree hash), 50 files
          IT DOES NOT MEAN SAFE TO CUT OVER. Cutover is a user gate.
 ```
 
-**Merged this fire, all ten**: `T189`, `T188`, `T182`, `T186`, `A2-13` (batch 1); `T187`, `T191`,
-`T184`, `T183`, `A2-14` (batch 2).
+**Merged this fire, all eleven**: `T201`, `A2-19`, `T203`, `T181`, `T185`, `A2-18`, `T202` (batch 1);
+`T204`, `A2-20`, `T208`, `T206`, `T205` (batch 2).
 
 ---
 
-# THE HEADLINE: a contested count settled by two BLIND derivations agreeing exactly
+# HEADLINE 1: the number this whole program quotes was inflatable by a file copy
 
-Three prior counts of the unguarded-rewriter population disagreed (T178: 25 as 21+4; the driver's
-grep: 21+8; T179: 22 as 17+5). The driver dispatched **T187 and T183 in parallel**, each required to
-state its own counting rule, each **forbidden to read the other's branch**. They used different
-methods — **T187 by EXECUTING all 29 scripts** against scratch copies, **T183 by a whole-repo static
-sweep** of 386 Python files / 280 write sites — and reached:
+`A2-19` measured it. **The driver reproduced it independently, with its own probe vector, before writing
+the repair task.** Copy any loanschedule parity vector into `.softhouse/vectors/ledger/`, change **only**
+`case_id` and `context`:
 
-| | files | DEC-1 | contract.go | both |
-|---|---|---|---|---|
-| **T187** | **25** | **20** | **7** | **2** |
-| **T183** | **25** | **20** | **7** | **2** (27 pairs) |
+```
+DRIVER-F1-PROBE   parity   path_a_e...   PASS   47 cells
+VERDICT: PASS (exit 0) — 44 parity vectors match the pinned reference oracle, 5711 cells compared.
+```
 
-They also independently agreed on *why every prior count differed*: T179's 22 misses **exactly**
-`edit18/20/21`, whose write target is a helper **parameter**; T178's 25 total is right and its 21/4
-**split** is wrong (assigned by filename, not target — `edit22.py` targets `contract.go`); the
-driver's 21/8 was a **mention** count, separated from 20 by one file, `leakgrep.py`, **which performs
-no write at all**. Neither adjusted toward the other. **Do not re-litigate this number.**
+A2-19's figures and the driver's agree exactly: **44 / 5711**. Cause: `context` was constrained only to be
+non-empty and to equal its own directory name (`admit.go:115`, `:119-120`). **No allowlist existed.** Worse
+than inflation — the fake sat in `ledger/` while grading a *loanschedule* schedule, so it read as **GL
+coverage that does not exist**.
 
-## THE SECOND HEADLINE: the no-float MONEY guards were failing OPEN
+`A2-20` closed it, and **found a second live form neither A2-19 nor the driver had probed**: the
+**contract-refusal** shape (4→5, 5664→5665). Both now `INADMISSIBLE`, exit 2, driver-verified, and the
+refusal message names the 44/5711 history so the next reader learns why the rule exists.
 
-`conformance.sh:546` (float in a vector) and `:607` (float64 in Go) — the guards enforcing the **first
-non-negotiable in `CLAUDE.md`** — were `perl … | grep -aEq`. `grep -q` exits 0 **the moment it
-matches**, `perl` dies of EPIPE, `pipefail` promotes the pipeline to non-zero, and the enclosing `if`
-reads **FALSE on a float it did find**. Plus `:1290`. **All three fixed (T191), 24/24 red-green arms.**
+**Residual, measured and deliberately not fixed** → `A2-23`: an **empty** unknown-context directory is
+still silently ignored. A2-20's argument is sound — a directory with no vector makes no claim — but it is a
+store-*shape* question, and it belongs in `StoreFileCensus`, not `Admit`.
 
-**Latent, not live** — and T191 is explicit that a green run afterwards is not evidence one ever was.
-It measured the threshold **per producer/consumer pair** on this host (perl 64,776 B; bash builtin
-`printf` 65,549 B), establishing that inheriting T188's single number would have been wrong for both.
+## HEADLINE 2: I-3 and I-4 went from ZERO enforcement to harness-enforced
 
-## THE THIRD HEADLINE: two REJECTED verdicts, both on already-merged work
+This morning `run_guards` invoked **five** guards, all about float, `gofmt` and exception scope, and
+**nothing anywhere looked for a balance write path or an `UPDATE`/`DELETE` against the journal** — while
+*"balances are derived, never written"* and *"the ledger is append-only"* are first-tier `CLAUDE.md`
+non-negotiables.
 
-- **T183 REJECTED T179.** `--enforce` **exits 0** on a directory holding the three parameter-targeted
-  rewriters — each an unguarded truncation of the ratified DEC-1, two also of the frozen
-  `contract.go`. And **D-3: it punishes the exact shared-guard idiom T178 adopted and T187 extended
-  across 25 files**, because a guard living in an *imported* module scores UNGUARDED. Repair: **T196**
-  (T183's +25-line patch is written and tested but **deliberately unapplied** — a fix the reviewer
-  merges is a fix nobody reviewed).
-- **A2-14 REJECTED DEC-2 rev 1.** **On SHAPE, not on honesty** — every `[VERIFIED]` traced to real
-  source at the exact cited line, G-9 applied, **G-10 recorded and left UNDECIDED (no gate crossed)**.
-  Repair: **A2-16**. The ADR now carries a **DO-NOT-RATIFY banner**.
+`A2-18` built the guard (AST, not regex — a regex fires inside the guard's own doc comment) and
+**deliberately did not wire it in**, stating against itself that its byte-identical transcript was *"the
+proof that I-3/I-4 remain ungraded at grade time."* `T208` wired it. `run_guards` now invokes **six**.
 
-**Both rejections are recorded on the rejected task's own `tasks.json` entry.** A merged task marked
-`done` that carries a rejected verdict must say so, or the next fire trusts it.
+**Driver-verified independently:** a planted `UPDATE acc_gl_journal_entry` in a throwaway worktree turns
+**the harness** red — exit 2, `[I4-DML]` naming file and column, and **zero probe lines printed**. That
+last part is load-bearing: this is the **sixth pre-probe exit-2 path**, so a balance write cannot be parked
+as an oracle outage.
+
+**Do not overstate it.** I-3/I-4 are now **checked in source**. That is not **graded against the oracle**.
+There is still no `ledger` vector and no schema to express one in.
+
+## HEADLINE 3: the vector-store exposure was three times the brief's estimate
+
+| | brief said | truth |
+|---|---|---|
+| truncating rewriters | 4 | **7** (T203 found 6, T206 found the 7th) |
+| live parity vectors at risk | 13 | **26**, including `P-00`, the corpus baseline |
+
+`T206` also found the 7th's live target **had been hand-edited since promotion**, so a re-run would
+silently **regress content**, not merely truncate. `T205` narrowed the root cause — not "runtime constants
+don't resolve" as T203 stated, but **`partial` not chaining** *and* **`setdefault` blocking the upgrade**.
+
+All seven refuse, **create-only** — driver-verified: no token, flag or environment variable can authorise
+overwriting an existing vector.
 
 ---
 
 ## THE NEXT FIRE STARTS HERE
 
-1. **`A2-16` — DEC-2 revision 2.** The blocker is **R-1: no `ledger` vector is expressible against the
-   frozen schema.** `Expect.Kind ∈ {schedule, refusal}`; `Expect.Sentinel` must be one of three
-   *contract* sentinels, so §4.9's oracle-faithful **404 — this context's commonest graded output —
-   has no representation**; `StructuralCellFields()` is a closed set and `admitCounterfactual` rejects
-   all six cells §5 proposes. Either extend the schema (**real machinery**, and it must leave DEC-1's
-   43 vectors passing) or grade what the schema already expresses. **A2-15 is BLOCKED behind it.**
-2. **`T194` — P-35 inside the P-35 machinery.** `_run_capture_guard` tests the **presence** of a
-   `^CENSUS` line and **never parses its numbers**; a stub printing `0/0/0` and exiting 0 yields
-   **exit 0, VERDICT PASS**. Driver-confirmed by reading the function. The comment above the test even
-   says *"must be present before its value is read"* — and the value is never read.
-3. **`T196`** — apply T183's backstep patch; **adjudicate its 5 repo-wide reclassifications
-   individually**, and **re-take the file count against post-T187 `main`** (T183 forked before T187
-   merged and said so against itself).
-4. **`T190`** — `fire-program.sh`'s one genuinely live fail-open: `DIRTY=$(git status --porcelain | …
-   || true)` is **empty when git itself fails** (rc=128 measured) and the guard concludes "clean".
-   T189 drove the fix red/green and **did not apply it** — it is this fire's running wrapper.
-5. Then **`T192`** (14 fail-closed sites, before the corpus reaches ~135 vectors), **`T193`** (42 of
-   43 parity vectors descend from `capture-prod3*` bodies **no guard inspects**), **`T195`**,
-   `T165`, `T174`, `T176`, `T180`, `T160`, `T164`, `T162`, `T168`, `T145`, and reviewers `T181`,
-   `T185`. `T116` stays parked behind T177's re-scoping.
+1. **`A2-21` — DEC-2 revision 3.** Retract the three false *"no `ledger` vector CAN exist"* assertions
+   (banner fact 2, §8.1 fact 2, A2-17's §4.10 text); §5.1's own heading has the true, weaker claim —
+   not **expressible**. Give §5.2 a spec that is more than non-regression (today it is satisfiable by an
+   extension that does nothing). Apply A2-19's split ruling: **P-6 before P-1…P-5; P-7 NOT** — P-7's
+   premise is contradicted by §1.1. Fix §2.2's "three columns" (it is two).
+2. **`A2-22`** — `CounterfactualCoverage` counts kills from **REFUSED** vectors. Establish the live blast
+   radius first (baseline shows `refused 0`, so likely nil today) and **say it**, then fix.
+3. **`T209`** — the ledger guard's `CANNOT-CATCH` block **reaches no green run**; its own head filters it
+   out while its PASS text tells you to read it. Fix at source, not by growing T208's condensation.
+4. **`T210`** — T172's anchor regression is **frozen**: it replays bytes T190 deleted, so it can no longer
+   notice a live regression. **`T211`** — SIGTERM cannot promptly stop a fire (zsh defers the trap behind
+   the hours-long `claude` child), so **the SIGKILL strand is the normal outcome, not the exotic one**.
+5. Then `T193`, `T192`, `T212`, `A2-23`, `T207`, `T145`, `T160`, `T164`, `T174`, `T176`, `T180`, `T195`,
+   `T162`, `T168`.
+
+**19 tasks READY. 1 blocked (`T116`, on `T114` — which has NO ENTRY in `tasks.json` and can never resolve;
+re-scope or re-point it).**
+
+**`A2-15` is NOT ready and the driver re-pointed its dependency this fire** — it computed as READY off the
+done `A2-16`, but A2-16 produced **DEC-2 rev 2, which A2-19 rejected**. It now depends on `A2-21`. Of
+DEC-2 §5.3's eight preconditions **only P-8 exists**; there is still no ledger schema, no refusal
+expectation shape, no comparator.
 
 ---
 
-## Four claims the driver made and had overturned — read before trusting this file
+## Corrections made against the DRIVER this fire — read before trusting its numbers
 
-1. **"An empty `ledger/` cannot pass silently."** Repeated from A2-13 **as fact in a merge commit**.
-   A2-14 disputed it; the driver **measured it** — empty `.softhouse/vectors/ledger/`, harness run
-   unfiltered *as `conformance.sh` actually invokes it* — **exit 0, VERDICT PASS**, with "ledger"
-   appearing once in the whole output, in the no-float census line. **False.**
-2. **The three-dot diff instruction** (P-41) was given to five reviewers whose subjects were **already
-   merged**, where it returns **empty** and reads as clean. → **P-59**, caught by T182.
-3. **A2-14's worktree forked from a PARENT of the A2-13 merge**, so the document it was sent to review
-   **did not exist in its tree** while its brief said "forked from current main". → **P-60**.
-4. **P-55's worked example** was refuted by T189: the mechanism was never seekable-vs-pipe in BSD grep.
+1. **P-61 — the driver circulated a broken digest.** It put the vector-store digest `5d03795b…` in five
+   briefs with the recipe in only one. `T185` and `A2-18` both reported it unreproducible; the driver had
+   reproduced it three times and could have dismissed them. **They were right.** The recipe hashes
+   `shasum`'s *output lines*, which contain the **file paths**, so the same 50 byte-identical files give
+   `5d03795b…` from a relative `find` and `ec72cc0b…` from an absolute one. Every worker ran at a different
+   path. **Both had already reported the correct canonical answer — the git tree hash `ce821c63…` — inside
+   the report telling the driver its number was broken.** In force: `git rev-parse HEAD:.softhouse/vectors`.
+2. **P-62 — the driver's first verification of A2-20 was a NULL CONTROL.** A prior command left the shell
+   in `nexus/`, the store copy silently failed, and the run graded **zero vectors** and exited 2 — which is
+   exactly what a correct refusal looks like. Caught only by reading the counts, not the exit code.
+
+## Corrections made against already-merged work
+
+- **`T181` on `T178`:** the published split **21/4 is wrong**; truth **20 / 7 / 2 of 25**. The **total was
+  always right, so no file went unhardened** — a *reporting* defect. `T204` corrected it by annotation;
+  the driver corrected the two carriers in its own files (`tasks.json`, `program.json`).
+- **`T208` on `A2-18`:** `CANNOT-CATCH` never reached a green run — and did not standalone either, so
+  wiring dropped nothing; the head already did.
+- **`T205` on `T203`:** the stated mechanism was true but incomplete.
+- **`T185` on `T145`'s premise:** T134's *"74 of 240"* denominator **no longer exists**. Truth on `main`:
+  **389 `.py` files, 323 call sites, 211 lacking `parse_float`, in 114 files. T145 starts from 211/114.**
 
 ## STANDING INSTRUCTIONS
 
-- **Count the PROGRAMS before you count the votes (P-58, NEW).** `grep` on this host is a **shell
-  function** re-execing as **ugrep with `-I`**; `/usr/bin/grep` is BSD 2.6.0-FreeBSD. The four-way
-  dispute was **one program measured twice** against another measured twice. **`-a` and `LC_ALL=C` are
-  both load-bearing, against different programs.**
-- **A post-merge reviewer sees an EMPTY three-dot diff (P-59, NEW).** Assert the diff is non-empty
-  **before** reviewing; if the subject is merged, use `git show -m <merge>` or the merge-base form.
-- **A worktree forks when CREATED, not when the prompt is written (P-60, NEW).** Never assert the fork
-  point in a brief; tell the worker to establish it and to treat an absent artefact as a **STOP**.
-- **Test the merge WHERE IT RUNS, not in a scratch tree (P-56).** It bit **three** workers' own provers
-  this fire; each recorded it against itself.
-- **Under `pipefail`, never `| grep -q` or `| head` (P-57)** — and **polarity is the diagnosis**:
-  fail-open sites hide defects, fail-closed ones only cry wolf.
-- **`git diff main...branch` — THREE DOTS while unmerged (P-41), and see P-59 after.**
-- **The Go module root is `nexus/`**; `. .softhouse/bin/go-env.sh` from the repo root.
-- **Invoke the harness with `bash`, never `sh`.** Oracle-down is exit 2 **AND a probe line actually
-  PRINTED AND reading `down`** — test **presence** first.
-- **Never `gofmt -w` `contract.go`** (G-3). **Ship no guard you have not driven RED (P-22)**; a prover
-  must be falsifiable toward the **FIX** too (P-50). **Quote by extraction (P-46).**
-- **The shell's working directory persists between tool calls** — the driver ran a merge in the
-  Fineract checkout this fire because a prior command had `cd`'d there.
+- **The canonical vector-store digest is `git rev-parse HEAD:.softhouse/vectors` (P-61).** Never
+  `find | shasum | shasum` — a tree hash carries no cwd. Publish any digest **with its recipe** (P-38).
+- **Verify a refusal by what it SAYS and what population SURVIVES, never by exit code (P-62)** — an empty
+  input refuses with the same code. `exit 2` is deliberately overloaded: unusable corpus, failed hard
+  guard, unreachable oracle, wrong repo root, and **now an I-3/I-4 violation**.
+- **Oracle-down is exit 2 AND a probe line actually PRINTED AND reading `down`** — test **presence** first.
+- **The shell's working directory persists between tool calls.** It has now bitten this program twice.
+- **A post-merge reviewer sees an EMPTY three-dot diff (P-59)** — assert non-empty first, then use
+  `git show -m <merge>` or the merge-base form. It fired on **three** reviewers this fire; all three
+  handled it.
+- **Count the PROGRAMS before the votes (P-58).** `grep` here is a shell function re-execing as **ugrep
+  with `-I`**; `/usr/bin/grep` is BSD 2.6.0-FreeBSD. `-a` and `LC_ALL=C` are load-bearing against
+  *different* programs.
+- **Never execute a promote or rewriter script from the repo root** — and a `/tmp` copy **cannot run**,
+  because they derive `ROOT` from `__file__`. A naive scratch test is a **null control** (P-36).
+- **The Go module root is `nexus/`**; `. .softhouse/bin/go-env.sh` from the repo root. Invoke the harness
+  with **`bash`**, never `sh` (exit 3 = wrong-interpreter refusal). **Never `gofmt -w` `contract.go`** (G-3).
+- **Do not modify `.softhouse/bin/fire-program.sh` while a fire runs.** Merging is safe: git **renames**
+  (driver-verified, inode `7913849` → `8134531`), which T200 measured as not hijacking a running zsh script.
 
 ## What is NOT true, and must not be inferred from the green bar
 
-**Nothing grades the ledger's money.** A2-14 established it plainly: no vectors, **no schema to express
-one in**, and **no guard for `I-3`/`I-4`** — `run_guards` invokes five guards, all about float, `gofmt`
-and exception scope. DEC-2 §8's claim that the guards cover the ledger tree is **true for float** and
-**will be misread** as covering the append-only and derived-balance invariants. The 43 passing vectors
-are `loanschedule`'s. **`G-4`, `G-5`, `G-8`, `G-10` remain OPEN**; `G-4` and `G-5` are hard `user`
-gates (each amends a ratified DEC-n). The gate register at the top of `gates.md` is authoritative.
+**Nothing grades the ledger's money.** The 43 passing vectors are `loanschedule`'s; **zero** touch a GL
+account, a mapping, a financial activity or a journal entry. I-3/I-4 are now **checked in source** — that
+is not **graded against the oracle**. `G-4`, `G-5`, `G-8`, `G-10` remain OPEN, and **`G-11` is new: DEC-2
+rev 2 is REJECTED and must not be ratified.** G-11 is *not* a `user` gate — ratification is agent-decidable
+— but the clean-review condition is unmet, so no fire may ratify on that clause alone. **Nothing was cut
+over, and nothing here authorises it.** The gate register at the top of `gates.md` is authoritative.

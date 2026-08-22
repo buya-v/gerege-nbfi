@@ -1,0 +1,26 @@
+{
+  "squad": "tierA-gl-accounting-A2",
+  "run_id": "2026-08-21-run2-tierA-gl-accounting-A2",
+  "written_by": "local fire 20260822-080001",
+  "current_item": "none in flight",
+  "step": "fire closed cleanly; 11 dispatched, 11 completed, 11 merged, 0 live at exit",
+  "branch": "main",
+  "next_action": "A2-21 (DEC-2 revision 3), then A2-22, T209, T210/T211, then T193/T192/T212/A2-23/T207 and the T145 family",
+  "blocked_on": "nothing. 19 tasks READY.",
+  "open_questions": [
+    "T116 depends on T114, which has NO ENTRY in tasks.json and can never resolve — re-scope or re-point it.",
+    "A2-15 stays blocked: of DEC-2 section 5.3's eight preconditions only P-8 exists (A2-18 built it, T208 wired it). No ledger vector schema, no refusal expectation shape, no comparator.",
+    "A2-19's sequencing ruling to honour when A2-15 is eventually planned: P-6 (capabilities.json) BEFORE P-1..P-5; P-7 (PIN.json) NOT — its premise is contradicted by DEC-2 section 1.1."
+  ],
+  "gate_pending": "G-11 — DEC-2 rev 2 REJECTED, NOT RATIFIABLE. Not a user gate (ratification is agent-decidable) but the clean-review condition is unmet. G-4, G-5, G-8, G-10 remain open; none crossed.",
+  "verified_at_exit": {
+    "conformance": "exit 0, probe line PRESENT reading up, 43 parity / 4 contract-refusal / 1 self-test, refused 0, inadmissible 0, harness errors 0, 5664 cells, invariant violations 0, invariant assertions 0 NOT RUN",
+    "prove": "23 passed, 0 failed",
+    "ledger_invariants_guard": "exit 0 (wired into run_guards this fire; run_guards now invokes SIX guards)",
+    "go": "build 0, vet 0, test ok (ledger, loanschedule, conformance); gofmt -l names exactly contract.go (expected, G-3)",
+    "contract_go_sha256": "0db73d4af996737d2f1a33c6d6aa4ac6cc35a33fbae57afbeb0d81e67e37f139",
+    "vector_store_tree": "ce821c638724237652b6b29627148d34b72fab3b",
+    "vector_files": 50
+  },
+  "not_true": "Nothing was cut over. The 43 vectors are loanschedule's; zero grade the ledger's money. I-3/I-4 are CHECKED IN SOURCE, which is not GRADED against the oracle."
+}
