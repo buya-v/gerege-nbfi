@@ -45,10 +45,12 @@
 >    violation is visible to a source-level guard over the Go tree"*, **not** *"the ledger tree is
 >    covered"*; the detection surface is the **name**, so renaming a balance defeats it; and it
 >    prints two `NIL-COVERAGE` lines because this Go tree declares **no database driver and contains
->    no SQL at all**, so **three of the guard's seven declared detection classes — `I4-DML`,
->    `I3-SQL-BALANCE` and `OPAQUE-SQL` — inspected an EMPTY population** and are proven by the
->    guard's own self-test and by **nothing in this repository**. §4.4.1 carries the correction, the
->    class names and the limits.
+>    no SQL at all**, so **four of the guard's declared detection classes — `I3-SQL-BALANCE`,
+>    `I4-BUILDER`, `I4-DML` and `OPAQUE-SQL` — inspected an EMPTY population** and are proven by the
+>    guard's own self-test and by **nothing in this repository**. **`I4-BUILDER`'s emptiness is the
+>    one the guard does NOT announce**, and it is MEASURED, both polarities, by `A2-32` — revision 4
+>    said *"three"* here and recorded `I4-BUILDER` as `[UNVERIFIED]`. §4.4.1 carries the retraction,
+>    the class names, the measurement and the limits.
 > 4. **The "PASS 46" everybody quotes is `loanschedule`'s.** All **46** promoted parity vectors are
 >    in the `loanschedule/` directory [MEASURED by `A2-28` at commit `2e97162`; store tree
 >    `73c3ea7b43dd75f04884072719a87fc8e1d255c1`]. **Zero of them touch a GL account, a mapping, a
@@ -75,14 +77,23 @@
 > exists. Ratification is not coverage, and this document must never be cited as though it were.
 
 
-**Status: DRAFT (revision 4), 22 August 2026, drafted by task `A2-28`. NOT RATIFIED. `A2-28` is NOT
-AUTHORISED to ratify it and does not.** **Revision 3 (`A2-21`) was REJECTED** by independent review
-(`A2-25`); **revision 2 (`A2-16`) was REJECTED** before it by `A2-19`; **revision 1 (`A2-13`) was
-REJECTED** before that by `A2-14` (local fire `20260821-125942`). Gate **G-11 remains OPEN — NOT
-RATIFIABLE** in `.softhouse/gates.md` and `.softhouse/program.json`. **Ratification requires a
-FURTHER independent review passing clean AFTER revision 4** under standing policy **P-2**; until
-then `A2-15` (promote GL vectors) stays blocked, and §5.3 names work that must land before `A2-15`
-could succeed even against a ratified contract.
+**Status: DRAFT (revision 5), 22 August 2026, drafted by task `A2-32`. NOT RATIFIED. `A2-32` is NOT
+AUTHORISED to ratify it and does not.** **Revision 4 (`A2-28`) was REJECTED** by independent review
+(`A2-31`) on two findings, **both of them claims this document made about `main` that were false**;
+**revision 3 (`A2-21`) was REJECTED** before it by `A2-25`; **revision 2 (`A2-16`) by `A2-19`**; and
+**revision 1 (`A2-13`) by `A2-14`** (local fire `20260821-125942`). **Four revisions, four
+rejections.** Gate **G-11 remains OPEN — NOT RATIFIABLE** in `.softhouse/gates.md` and
+`.softhouse/program.json`. **Ratification requires a FURTHER independent review passing clean AFTER
+revision 5** under standing policy **P-2**; until then `A2-15` (promote GL vectors) stays blocked,
+and §5.3 names work that must land before `A2-15` could succeed even against a ratified contract.
+
+**Revision 5 changes exactly two things and nothing else** — `A2-31`'s F-1 (§4.4.1's `FU-T208-1`
+parenthetical, which was false at its own `[VERIFIED]` stamp) and `A2-31`'s F-2 (the empty-population
+numerator, which is FOUR and not three). **Both were swept for the CLAIM rather than the sentence,
+across the whole repository**, because a correction landing where a reviewer NAMED it and not where
+the document RESTATES it is the defect class that has now rejected this document three times. §10's
+revision-5 entry lists every site each correction landed at, and `A2-32`'s handoff carries the sweep
+population, the method, and what it skipped.
 
 > ### ⚠ MEASUREMENT FRESHNESS — the rule revision 4 adopts, and the reason it exists
 >
@@ -808,7 +819,7 @@ columns**, because the difference between them is the whole of finding R-1:
 | **I-1** | Debits equal credits | For every transaction, `Σ debit legs == Σ credit legs`, compared as `int64` minor units | **YES.** `A2-235`'s eight legs: debits `120,000,000 + 20,000,000 + 100,000,000 + 5,000,000 = 245,000,000` minor units, credits the same [the eight `"amount":` tokens RE-VERIFIED by this task from the raw bytes; the total matches A2-8's stated 245,000,000]. `A2-150`'s six rows are three balanced pairs at 120,000,000 each [VERIFIED by this task from the dump, lines 65-70]. | **NO.** §5 — no admissible vector can carry a money cell, or any `ledger` cell. |
 | **I-2** | Splits sum to whole | `whole == Σ splits`, `int64` minor units | **YES.** `120,000,000 = 20,000,000 + 100,000,000` — disbursed principal against repayment plus write-off [re-derived by this task from the same legs]. | **NO.** Same reason. |
 | **I-3** | Balances are DERIVED, never written | No write path to any balance column exists in the Go tree | **NO — STRUCTURAL ONLY.** A vector is a snapshot of oracle output; it cannot observe the *absence* of a write path. Gradeable only by a source-level guard over the Go tree. And the oracle is **not** a positive example: `m_trial_balance.closing_balance` is a written, stored, **unsigned** sum wearing a balance's name [VERIFIED BY A2-2's re-derivation of `UpdateTrialBalanceDetailsTasklet.java:81` reading `JournalEntryRepository.java:61`, NOT RE-OPENED HERE]. It is deliberately **not ported** (§7). | **NO BY A VECTOR — AND, SINCE REVISION 2, YES BY A SOURCE GUARD, PARTIALLY.** Revision 2 said *"no such guard exists"*; that was true when written and is **stale**. `guard_ledger_invariants` (built by `A2-18`, **wired** by `T208`) is the seventh guard `run_guards` invokes and it walks the Go tree for a write path to a balance [VERIFIED by `A2-28` at commit `2e97162`: `.softhouse/conformance.sh:1152-1187` defines it, `:1209` invokes it; MEASURED: `invariant violations 0`]. **Its limits are load-bearing and §4.4.1 states them** — the detection surface is the NAME, so renaming a balance defeats it. **⚠ GATE G-12 IS OPEN ON THIS EXACT INVARIANT AND DEC-2 DOES NOT RESOLVE IT.** `A2-26` observed that `acc_gl_journal_entry` carries **`office_running_balance`** and **`organization_running_balance`** — the reference oracle **stores** a balance on the entry, in a table `CLAUDE.md` separately instructs the port to adopt [raised as **G-12**, `.softhouse/gates.md`; `A2-29` must measure whether those columns are ever READ, whether they reach a contract-boundary response, and whether the stored value can disagree with the derived sum, **before** any option is argued]. This row states the Go-side obligation only. **Nothing in DEC-2 decides what the port does with those two columns, and a ratifier must not read this row as having decided it.** |
-| **I-4** | The ledger is append-only | No `UPDATE`/`DELETE` against `acc_gl_journal_entry` from application code | **NO — STRUCTURAL ONLY.** "No update ever happened" is not observable from a capture. Partial exception: a reversal is observable *as a row*, because the table carries a `reversed` flag [VERIFIED BY A2-13 from `JournalEntry.java:79`, NOT RE-OPENED HERE]. | **NO BY A VECTOR — AND THE SOURCE GUARD'S I-4 ARM INSPECTED AN EMPTY POPULATION HERE.** The same `guard_ledger_invariants` looks for DML against the journal table, but its own two `NIL-COVERAGE` lines say this Go tree contains **no SQL and declares no database driver**, so the `I-4` DML classes are proven by the guard's self-test and **not** by this tree [MEASURED by `A2-28` at commit `2e97162` from the unfiltered run: *"zero mutating driver calls … class OPAQUE-SQL inspected an empty population"*]. **P-35: a check that inspected zero items is not a pass**, and the guard says so itself rather than leaving it to be inferred. |
+| **I-4** | The ledger is append-only | No `UPDATE`/`DELETE` against `acc_gl_journal_entry` from application code | **NO — STRUCTURAL ONLY.** "No update ever happened" is not observable from a capture. Partial exception: a reversal is observable *as a row*, because the table carries a `reversed` flag [VERIFIED BY A2-13 from `JournalEntry.java:79`, NOT RE-OPENED HERE]. | **NO BY A VECTOR — AND BOTH OF THE SOURCE GUARD'S I-4 ARMS INSPECTED AN EMPTY POPULATION HERE.** The same `guard_ledger_invariants` looks for DML against the journal table, but its own two `NIL-COVERAGE` lines say this Go tree contains **no SQL and declares no database driver**, so the `I-4` DML classes (`I4-DML`, and `I3-SQL-BALANCE` with it) are proven by the guard's self-test and **not** by this tree [MEASURED by `A2-28` at commit `2e97162` from the unfiltered run: *"zero mutating driver calls … class OPAQUE-SQL inspected an empty population"*]. **The guard's OTHER `I-4` arm, `I4-BUILDER` — the query-builder/ORM form of the same violation — likewise inspected an EMPTY population, and unlike the SQL classes the guard does NOT announce it** [MEASURED by `A2-32` at commit `33d19a6`, both polarities; §4.4.1's revision-5 retraction. Revision 4 wrote *"THE SOURCE GUARD'S I-4 ARM"*, singular, and recorded `I4-BUILDER` as `[UNVERIFIED]`]. **So NEITHER form of I-4 detection is exercised by this tree at all.** **P-35: a check that inspected zero items is not a pass** — and the guard says so itself for the SQL classes, while saying nothing at all about `I4-BUILDER`. |
 | **I-5** | Corrections are reversing entries | A correction adds a leg pair; it never mutates one | **UNGRADED TODAY.** The A2 corpus contains no reversal: `A2-150`'s journal dump does not project `reversed` or `reversal_id` and its six rows are three ordinary pairs [VERIFIED by this task]; A2-8's grading table lists no reversal grading [VERIFIED BY A2-8, NOT RE-OPENED HERE]. Refused with `ErrNoDiscriminatingVector`; retired by one capture. §9 item 13. | **NO.** Nothing to grade, and nothing to grade it with. |
 | **I-6** | Holds are postings and alter `available` only, never posted `balance` | — | **OUT OF THE CONTRACT DOMAIN.** No hold concept exists in A2's three tables. Refused with `ErrUnsupportedConfiguration`. | **N/A.** |
 | **I-7** | `Idempotency-Key` on every money-movement POST | — | **NOT APPLICABLE TO THIS CONTRACT, and that must be said rather than assumed.** DEC-2's surface exposes no HTTP endpoint and moves no money; it is a value computation. The obligation is real and lands on **A1** (the posting engine) and on the adapter's HTTP layer. A `ledger` conformance PASS says nothing whatever about it. | **N/A** — and note that today there is no `ledger` conformance PASS to say nothing with. |
@@ -891,26 +902,31 @@ guard is falsifiable in the direction of the fix and not only in the direction o
 it derives its file-count floor from `git ls-files` rather than pinning it, so a shrinking
 population is a refusal rather than a quiet pass.
 
-**THE GUARD DECLARES SEVEN DETECTION CLASSES, AND THREE OF THEM INSPECTED AN EMPTY POPULATION IN
-THIS TREE.** [VERIFIED by `A2-28` at commit `2e97162`: `.softhouse/guards/ledgerguard/main.go`,
-`Class: "…"` literals enumerated and de-duplicated; the three `NIL-COVERAGE` emission sites read at
-`:840`, `:847` and `:852`; MEASURED from the live run, in which the first two fire and the third
-does not.]
+**FOUR OF THE GUARD'S DECLARED DETECTION CLASSES INSPECTED AN EMPTY POPULATION IN THIS TREE —
+`I3-SQL-BALANCE`, `I4-BUILDER`, `I4-DML` AND `OPAQUE-SQL`.** [The class enumeration is VERIFIED by
+`A2-28` at commit `2e97162` and re-derived by `A2-32` at commit `33d19a6`:
+`.softhouse/guards/ledgerguard/main.go`, `Class: "…"` literals enumerated and de-duplicated — eight
+literals at `:268`, `:286`, `:303`, `:500`, `:580`, `:596`, `:669`, `:680`, seven distinct classes;
+the three `NIL-COVERAGE` emission sites read at `:840`, `:847` and `:852`; MEASURED from the live
+run, in which the first two fire and the third does not. `I4-BUILDER`'s empty population is MEASURED
+by `A2-32` — see the retraction below.]
 
 | class | population in this tree | source of the finding |
 |---|---|---|
 | `I3-FIELD-WRITE` | non-empty — 306 write targets inspected | the tree |
 | `I3-PKG-STATE` | non-empty | the tree |
 | `I3-SQL-BALANCE` | **EMPTY** — zero SQL DML literals | `--selftest` only |
-| `I4-BUILDER` | **not established** — see below | — |
+| `I4-BUILDER` | **EMPTY** — zero query-builder/ORM mutating calls; **the guard does NOT announce this one** | `--selftest` only |
 | `I4-DML` | **EMPTY** — zero SQL DML literals | `--selftest` only |
 | `I6-HOLD-BALANCE` | non-empty by an over-match the guard itself names | the tree, weakly |
 | `OPAQUE-SQL` | **EMPTY** — zero mutating driver calls | `--selftest` only |
 
-**The numerator is three and the classes are named, because naming them is checkable and a
-denominator is not.** The three that inspected an empty population are **`I4-DML`**,
-**`I3-SQL-BALANCE`** and **`OPAQUE-SQL`**, and the guard says so itself, in two `NIL-COVERAGE`
-lines quoted verbatim [MEASURED by `A2-28` at commit `2e97162`]:
+**The numerator is FOUR and the classes are named, because naming them is checkable and a
+denominator is not.** The four that inspected an empty population are **`I3-SQL-BALANCE`**,
+**`I4-BUILDER`**, **`I4-DML`** and **`OPAQUE-SQL`**. **The guard announces only the first, third and
+fourth of them itself**, in two `NIL-COVERAGE` lines quoted verbatim [MEASURED by `A2-28` at commit
+`2e97162`; `A2-32` re-read both lines on its own green run at `33d19a6` — same two lines, same three
+classes named, with the literal count moved exactly as the census box above warns it will]:
 
 ```
 ledger-invariants: NIL-COVERAGE — the SQL surface inspected 4074 string literals and found ZERO SQL
@@ -921,7 +937,45 @@ ledger-invariants: NIL-COVERAGE — zero mutating driver calls (Exec/ExecContext
   declares no database driver at all.
 ```
 
-**Two honest qualifications, and neither is asserted as a figure.**
+**The fourth empty class is `I4-BUILDER`, and the guard says NOTHING about it — that silence is the
+whole reason four revisions and the driver all missed it.** `OPAQUE-SQL`'s emptiness is announced by a
+`NIL-COVERAGE` line; `I4-BUILDER`'s is not announced by anything. A reader who counts the empty
+classes off the transcript, as three revisions and the driver did, will count three.
+
+> **⚠ RETRACTION, revision 5 — revision 4 said the numerator was THREE and recorded `I4-BUILDER`'s
+> population as `[UNVERIFIED]`. IT IS FOUR, and this is `A2-31`'s F-2.**
+>
+> **MEASURED, both polarities** [VERIFIED by `A2-32` at commit `33d19a6`; independently measured
+> first by `A2-31` at `90c21d6`, agreeing]. `I4-BUILDER` fires on an `*ast.CallExpr` whose
+> `calleeName` matches `mutatingCallRe`
+> (`^(Update|Updates|UpdateAll|UpdateOne|UpdateMany|Delete|DeleteAll|DeleteOne|DeleteMany|Del|Remove|Truncate|Save|Upsert|SetColumn|Set)$`,
+> `.softhouse/guards/ledgerguard/main.go:151`, applied at `:593-596`), so **its population is the set
+> of such calls under `nexus/`** — exactly the analogue of `OPAQUE-SQL`'s population, which the guard
+> itself declares empty by the same criterion. `A2-32`'s probe copies that regex, `calleeName`
+> (`:406-418`) and `prunedDirs` (`:161`) verbatim and walks the same root:
+>
+> | arm | probe: `I4-BUILDER` population | the REAL `ledgerguard` binary |
+> |---|---|---|
+> | **GREEN** — the real `nexus/` tree | **0** | `clean: … across 47 Go files in 5 packages`, no `I4-BUILDER` finding |
+> | **RED** — a `/tmp` scratch copy with three builder verbs planted against a `journalEntry` | **3** (`Update`, `Delete`, `Save`) | `REFUSED …` with `[I4-BUILDER]` three times |
+>
+> **The control that makes the zero a measurement rather than a broken probe:** the probe's own
+> file and call censuses — `47` Go files, `5045` calls — reproduce the guard's own `CENSUS
+> ledger-invariants` line on the same tree **to the digit**. It is walking the guard's population,
+> not some other one. **P-22 / P-50: a detector nobody has seen fire is not a detector, and this one
+> was driven both ways.**
+>
+> **Why this was reject-grade and not a quibble.** *"Three of seven"* reads as 57 % of the guard
+> live; the measured figure is 43 %. **The arithmetic had flipped to flattering the result** — the
+> exact hazard `P-67` names one box below, in the same subsection, about the same number. `A2-25`
+> predicted the outcome in writing (*"it plausibly does not — which would make the true figure four
+> of seven"*), `A2-28` recorded it `[UNVERIFIED]` at ONE site and shipped the uncorrected numerator
+> as a measured fact at four others, and `A2-31` took the measurement, which costs one `go run`.
+> **An `[UNVERIFIED]` tag at one site does not travel to the other five; only a corrected figure
+> does.**
+
+**One honest qualification about the classes that are NOT empty, and it is not asserted as a
+figure.**
 
 - **A third `NIL-COVERAGE` arm exists and did not fire** (`main.go:852`, for `I6-HOLD-BALANCE`),
   because the guard counted **one** hold-named function. That one is
@@ -929,10 +983,8 @@ ledger-invariants: NIL-COVERAGE — zero mutating driver calls (Exec/ExecContext
   *"the property **holds**"* which **the guard's own `CANNOT-CATCH` block names as over-match (ii)**
   [MEASURED from the live transcript]. So `I6-HOLD-BALANCE`'s population is non-empty **only by that
   over-match**, and I-6 is not meaningfully exercised on this tree either.
-- **`I4-BUILDER`'s population was NOT established by this task** and may well be empty, which would
-  make the true figure four of seven rather than three. `A2-25` raised the same doubt and likewise
-  declined to assert a corrected numerator. **This document states the three the guard reports and
-  no more** [UNVERIFIED: whether `I4-BUILDER` inspects a non-empty population in this tree].
+  So `I3-FIELD-WRITE` and `I3-PKG-STATE` are the only classes with a genuinely non-empty population
+  on this tree.
 
 > **⚠ WHERE THE "FOUR" IN REVISION 3 CAME FROM — recorded so it cannot recur (this is `P-67`).**
 > Revisions 1–3 said *"three of its **four** detection classes"*, at four separate sites, and §8.1
@@ -951,11 +1003,15 @@ ledger-invariants: NIL-COVERAGE — zero mutating driver calls (Exec/ExecContext
 > ratio is not.
 
 **FOUR THINGS IT CANNOT SEE, and a ratifier who quotes the PASS without them has been misled.** The
-guard prints these itself, condensed, on every run [VERIFIED by `A2-28` at commit `2e97162`:
-`conformance.sh:1180-1186` is the condensed copy; the full 33-line block is the `cannotCatch` const
-in `.softhouse/guards/ledgerguard/main.go`, which the guard's own head DROPS on the pass path —
-`FU-T208-1`]. **These are BLIND SPOTS, not detection classes; the two counts are unrelated and
-conflating them is what §8.1 got wrong for three revisions:**
+guard prints these itself **in full, on every run, pass or fail — a ratifier's own green transcript
+carries them** [VERIFIED by `A2-32` at commit `33d19a6` from its own unfiltered green run: the
+`cannotCatch` const in `.softhouse/guards/ledgerguard/main.go` reaches the transcript as
+`ledger-invariants: CANNOT-CATCH — the honest limits of this guard, printed on every run, pass or
+fail:` followed by all **eight** numbered limits, on a run whose verdict is `PASS (exit 0)`;
+`.softhouse/guards/check-ledger-invariants.sh:210-219` is the `awk` block that re-emits the paragraph
+on the pass path, gated on `rc = 0`, added by `T209`. `.softhouse/conformance.sh` additionally prints
+a separate 8-line condensation of the same limits]. **These are BLIND SPOTS, not detection classes;
+the two counts are unrelated and conflating them is what §8.1 got wrong for three revisions:**
 
 1. **The detection surface is the NAME. Renaming a balance defeats the guard.**
 2. **Dynamic SQL is caught only through the call set it recognises**; triggers, migrations and
@@ -967,11 +1023,41 @@ conflating them is what §8.1 got wrong for three revisions:**
    exercised**, and the guard says so instead of counting it as clean. Its detection of real ledger
    SQL is proven by its self-test and by nothing in this repository.
 
+> **⚠ RETRACTION, revision 5 — revision 4 said the guard's own head DROPPED this block on the pass
+> path, cited `FU-T208-1` as an OPEN follow-up, and stamped the whole parenthetical `[VERIFIED by
+> A2-28 at commit 2e97162]`. IT WAS FALSE AT ITS OWN STAMP, and it is `A2-31`'s F-1.**
+>
+> **What is true.** `T209` — commit `03e9094`, *"widen the ledger guard head's PASS-path filter so
+> CANNOT-CATCH reaches green (FU-T208-1)"* — **closed** `FU-T208-1`, and `03e9094` is an **ANCESTOR**
+> of `2e97162` [VERIFIED by `A2-32`: `git merge-base --is-ancestor 03e9094 2e97162` exits 0;
+> `03e9094` is dated `2026-08-22 09:18:26 +0800` and `2e97162` `2026-08-22 10:34:50 +0800`, so the
+> fix was on the tree **one hour and sixteen minutes before revision 4's own fork point**]. The block
+> reaches every green run and `A2-31` and `A2-32` each measured it independently on their own
+> unfiltered transcripts.
+>
+> **So this was not staleness. It was an unchecked inference wearing a measurement's stamp** — and it
+> is precisely the class `A2-25`'s F-4 rejected one revision earlier: *a caveat that outlived its
+> defect*. The stamp made it worse, not better, because the document's headline discipline is that a
+> stamped claim was re-derived at that commit. **P-21, P-26, P-37; and P-69 — a stamp certifies WHEN
+> a claim was taken, never THAT it was taken.**
+>
+> **`FU-T208-1` is CLOSED and this document no longer cites it as open anywhere.** The retracted
+> claim survives OUTSIDE this document, in `.softhouse/conformance.sh` — **one PRINTED line and a
+> 25-line comment block whose entire premise `T209` invalidated** [MEASURED by `A2-32` at `33d19a6`:
+> the printed line is `:1187`; the stale comment claims are at `:1163` (*"one of them does not
+> arrive on its own"*), `:1166-1168` (the head *"re-prints only `^CENSUS ` and `^NIL-COVERAGE `"*,
+> citing a line that has itself moved), `:1172`, `:1176`, `:1177` (*"RAISED as FU-T208-1, not fixed
+> here"*) and `:1182` (*"the fix is FU-T208-1"*). `A2-31` named the printed line only; `T209`'s own
+> handoff recorded the comment as stale and did not touch it]. It is **not this document's to fix**,
+> is routed as `T227` (`A2-31`'s FU-A2-31-2), and the widening is recorded in §10's revision-5 entry
+> and in `A2-32`'s handoff. A ratifier reading a transcript today will see the true block and that
+> one false printed line together — the false line is the harness's, not this ADR's.
+
 **So the normative requirement in the table above is now SATISFIED IN PART: a source-level guard
 runs, it is falsifiable, and its blast radius is a source-level Go tree that contains no SQL.**
 The correct reading of this whole subsection is: *DEC-2 obliges I-3 and I-4, names the only
 mechanism that could enforce them, and that mechanism now exists over the Go tree while
-`I4-DML`, `I3-SQL-BALANCE` and `OPAQUE-SQL` wait for a tree with a database in it.* Anyone who
+`I3-SQL-BALANCE`, `I4-BUILDER`, `I4-DML` and `OPAQUE-SQL` wait for a tree with a database in it.* Anyone who
 ratifies this document ratifies that residue along with it, knowingly. §5.3 **P-8 is accordingly
 marked LANDED**, and what replaces it is narrower.
 
@@ -1953,7 +2039,7 @@ schedules against.
 | **4th** | **P-5** | **Money cells** — `int64` minor-unit **strings**, paired with the oracle's own emitted characters as a transcription cross-check only | §4.3, T186 (c); required for `I-1`/`I-2` to be gradeable at all | P-1, P-4 |
 | **5th** | **P-9** | **NEW in revision 3.** The `ledger` schema must **declare its own contexts** and the store must refuse a vector whose `context` is not one its schema, comparator and capabilities belong to | §5.1.1 — without this the parity count itself is not context-safe, which is how `43` became `44`. **`A2-20` has discharged the `loanschedule` half** (`SchemaContexts()`, `vector.go:31-81`; `admit.go:139-147`); the obligation transfers to the second schema, which is not written | P-1, P-4 |
 | **5th** | **P-10** | **NEW in revision 4.** A **mechanism that actually RUNS a named wrong implementation and shows it going red** — either a `ledger` implementation registered under a name and selected with the binary's `-impl` flag (`registry.go:34` `Register`, `Lookup`), or a mutation harness. **`graded_against` is a DECLARATIVE record and does not execute anything** [VERIFIED by `A2-28` at commit `2e97162`: `vector.go:542-…`; admission validates the declaration's shape only] | `A2-25` F-9. §5.2 requirement 7's matrix demands **RED against the named wrong implementation** and §8.2 tells `A2-15` it cannot start without the preconditions — but no precondition named the mechanism that cell needs. **Without this, the bottom-left cell is satisfiable by writing a JSON row**, which is P-22 in the one place §5.2 was written to close it | P-1, P-4, P-5 |
-| **—** | **P-8** | **LANDED.** The **`I-3`/`I-4` source guard** §4.4.1 requires | **Built by `A2-18`, wired by `T208`**; it runs on every invocation and `A2-28` measured `invariant violations 0` at commit `2e97162`. Its four residual **blind spots** are §4.4.1's, and **three of its seven declared detection classes — `I4-DML`, `I3-SQL-BALANCE`, `OPAQUE-SQL` — inspected an empty population** in this tree (**P-35**). *Blind spots and detection classes are different quantities; conflating them is what §4.4.1's P-67 box records.* | **independent of all the above — that independence is what licensed it to be built first** |
+| **—** | **P-8** | **LANDED.** The **`I-3`/`I-4` source guard** §4.4.1 requires | **Built by `A2-18`, wired by `T208`**; it runs on every invocation and `A2-28` measured `invariant violations 0` at commit `2e97162`. Its four residual **blind spots** are §4.4.1's, and **four of its declared detection classes — `I3-SQL-BALANCE`, `I4-BUILDER`, `I4-DML`, `OPAQUE-SQL` — inspected an empty population** in this tree (**P-35**); revision 4 said *"three … of seven"* here and `A2-32` MEASURED `I4-BUILDER`'s population as zero. *Blind spots and detection classes are different quantities; conflating them is what §4.4.1's P-67 box records.* | **independent of all the above — that independence is what licensed it to be built first** |
 
 **Nine open, one landed.** P-6, P-1, P-7, P-2, P-3, P-4, P-5, P-9 and **P-10** remain; **P-8 is
 done** and is kept in the table with its residue rather than deleted, so that a later reader can tell
@@ -2262,10 +2348,13 @@ The banner at the head of this document says this. It is repeated here, at the e
 what a ratifier reads last and because revision 1's §8 said something adjacent that a reader will
 merge with it.
 
-**Four facts. Each was RE-MEASURED by `A2-28` at commit `2e97162`, and each carries that stamp** —
-because revision 3 introduced this list as *"Four facts, each measured by this task"* while fact 3
-contained a figure nobody had ever measured (`A2-25` F-2; §4.4.1's `P-67` box). **A heading that
-asserts measurement is a claim, and it is checked here.**
+**Four facts. Each was RE-MEASURED by `A2-28` at commit `2e97162`, and fact 3's numerator was
+RE-MEASURED AGAIN by `A2-32` at commit `33d19a6`; each carries the stamp of the task that took it.**
+Revision 3 introduced this list as *"Four facts, each measured by this task"* while fact 3 contained
+a figure nobody had ever measured (`A2-25` F-2; §4.4.1's `P-67` box) — **and revision 4 rewrote this
+heading to promise the fix while fact 3 still carried an unmeasured numerator** (`A2-31` F-2). **A
+heading that asserts measurement is a claim; it has now been wrong twice in this exact slot, and it
+is checked here.**
 
 1. **Zero `ledger` vectors exist.** The store's only context directories are `loanschedule/` and
    `_selftest/`.
@@ -2280,8 +2369,9 @@ asserts measurement is a claim, and it is checked here.**
    the retraction, the cause (a positive control that was a false negative — **P-50**), and the fact
    that `A2-20` has since closed the hole. It is restated here rather than reworded because a silent
    downgrade would hide that a green `PASS 44` ever happened.
-3. **A source guard for `I-3` and `I-4` now RUNS, and THREE OF ITS SEVEN DECLARED DETECTION CLASSES
-   — `I4-DML`, `I3-SQL-BALANCE` and `OPAQUE-SQL` — inspected an EMPTY population in this tree.**
+3. **A source guard for `I-3` and `I-4` now RUNS, and FOUR OF ITS DECLARED DETECTION CLASSES
+   — `I3-SQL-BALANCE`, `I4-BUILDER`, `I4-DML` and `OPAQUE-SQL` — inspected an EMPTY population in
+   this tree.**
    `run_guards` invokes **seven** guards, not five; the seventh is `guard_ledger_invariants`
    [`.softhouse/conformance.sh:1152-1187` defines it, `:1209` invokes it], built by `A2-18` and
    wired by `T208`, and `A2-28` measured `invariant violations 0` at commit `2e97162`.
@@ -2290,10 +2380,18 @@ asserts measurement is a claim, and it is checked here.**
    three other sites, under a heading claiming each fact was measured. The guard declares SEVEN**
    — `I3-FIELD-WRITE`, `I3-PKG-STATE`, `I3-SQL-BALANCE`, `I4-BUILDER`, `I4-DML`, `I6-HOLD-BALANCE`,
    `OPAQUE-SQL` [VERIFIED by `A2-28` at commit `2e97162` from
-   `.softhouse/guards/ledgerguard/main.go`] — **and the "four" was the guard's count of BLIND SPOTS,
-   read as a count of classes** (`A2-25` F-2; §4.4.1 records the mechanism as **P-67**). The
-   numerator **three** was and is right; the denominator was never measured. **Revision 4 names the
-   three and drops the ratio, because a named list is checkable and a ratio is not.** What the guard
+   `.softhouse/guards/ledgerguard/main.go`, re-derived by `A2-32` at `33d19a6`] — **and the "four"
+   was the guard's count of BLIND SPOTS, read as a count of classes** (`A2-25` F-2; §4.4.1 records
+   the mechanism as **P-67**).
+   **⚠ RETRACTION, revision 5: the NUMERATOR was wrong too, and revision 4 shipped it in this slot
+   under the heading it had just rewritten to promise the opposite.** Revision 4 said *"THREE of its
+   SEVEN"* and recorded `I4-BUILDER`'s population as `[UNVERIFIED]` at one site in §4.4.1 while
+   asserting the uncorrected three as a measured fact at four others, this one included. **It is
+   FOUR** — `I4-BUILDER`'s population under `nexus/` is **zero**, MEASURED in both polarities by
+   `A2-32` at `33d19a6` (and first by `A2-31` at `90c21d6`), with the real `ledgerguard` binary as
+   the control (`A2-31` F-2; §4.4.1 carries the measurement). **Revision 5 names the four and drops
+   the ratio, because a named list is checkable and a ratio is not** — the remedy §4.4.1 prescribed
+   in revision 4 and did not apply to itself. What the guard
    does **not** buy: the detection surface is the **name**, so renaming a balance defeats it;
    triggers, migrations and stored procedures are not walked; `I-5`'s semantic half and non-Go
    callers are uncovered; and the `I-4` SQL classes found **zero** SQL DML literals and **zero**
@@ -2342,8 +2440,9 @@ misreading of it.
   **Revision 3 corrects revision 2's "and for nothing else", which was true when written**: the
   seventh guard exists now (§4.4.1). **It does not make the ledger covered** — its own transcript
   says a PASS means *"no violation is visible to a source-level guard over the Go tree"*, not *"the
-  ledger tree is covered"*, and **three of its seven declared detection classes — `I4-DML`,
-  `I3-SQL-BALANCE`, `OPAQUE-SQL` — inspected an empty population here**. The float and `gofmt`
+  ledger tree is covered"*, and **four of its declared detection classes — `I3-SQL-BALANCE`,
+  `I4-BUILDER`, `I4-DML`, `OPAQUE-SQL` — inspected an empty population here** (revision 4 said
+  *"three … of seven"*; `I4-BUILDER` is MEASURED empty by `A2-32` — §4.4.1). The float and `gofmt`
   warning is unchanged and still the point: T166 widened both roots to the Go module root,
   re-verified by `A2-28` at commit `2e97162` (§4.4), and `A2-28`'s own unfiltered run printed
   `covered: nexus/internal/apps/ledger` in the no-float census [MEASURED by `A2-28` at commit
@@ -2469,17 +2568,19 @@ own additions: **item 14 is a read not taken, not an unclosable gap**, and is la
 13. **Whether the A2 corpus can grade a reversal.** It cannot today: no reversal appears, and the
     committed journal dump does not project the reversal columns. §4.4 I-5.
 
-**Revision 4 adds two, and CLOSES one:**
+**Revision 4 added two and CLOSED one; revision 5 CLOSES another (item 14) and adds none:**
 
-14. **NEW — whether `I4-BUILDER` inspects a non-empty population in this Go tree.** §4.4.1 states
-    that **three** of the guard's seven detection classes inspected an empty population, and names
-    them, because those three are what the guard's own `NIL-COVERAGE` lines report. **`I4-BUILDER`
-    was not established either way** by `A2-28`, and it plausibly is empty too — which would make
-    the true figure four of seven. `A2-25` reached the same doubt and likewise declined to assert a
-    corrected numerator. **No numerator beyond the guard's own three is claimed anywhere in this
-    document.** Closing it is a read of `ledgerguard/main.go`'s builder detector against the tree
-    and is cheap; it was not done here because `A2-28`'s budget went to the seven `A2-25` items.
-    §4.4.1.
+14. ~~**NEW — whether `I4-BUILDER` inspects a non-empty population in this Go tree.**~~
+    **CLOSED in revision 5, by MEASUREMENT, and the answer was the one `A2-25` and `A2-28` both
+    suspected: it is EMPTY.** `A2-31` measured it at `90c21d6` and `A2-32` re-measured it
+    independently at `33d19a6`; both drove the probe in **both polarities** against the real
+    `ledgerguard` binary, and both read `0` on the real tree. **The corrected figure is FOUR
+    classes, not three, and it is now stated at every site that carries it** — banner fact 3,
+    §4.4 I-4, §4.4.1, §5.3's P-8 row, §8.1 fact 3, §8.3 and §10 (`A2-31` F-2). **`I4-BUILDER` is the
+    one empty class the guard does NOT announce**, which is why three revisions and the driver
+    counted three: they counted off the transcript. `A2-28` was right to refuse to assert a
+    numerator it had not measured, and wrong to leave the unmeasured one standing at four other
+    sites. §4.4.1.
 15. **NEW, and it is an OPEN GATE rather than a gap — G-12.** `acc_gl_journal_entry` carries
     `office_running_balance` and `organization_running_balance`: **the reference oracle stores a
     balance on the entry**, while `CLAUDE.md`'s first-tier non-negotiable says balances are derived
@@ -2502,7 +2603,74 @@ own additions: **item 14 is a read not taken, not an unclosable gap**, and is la
 
 ## 10. Revision history
 
-- **Revision 4 (this document)** — DRAFT, task `A2-28`, 22 August 2026, forked from `main` at
+- **Revision 5 (this document)** — DRAFT, task `A2-32`, 22 August 2026, worktree at **`33d19a6`**.
+  **NOT RATIFIED; `A2-32` is NOT AUTHORISED to ratify it and does not, and says so in the status
+  block, the banner and here.** Gate **G-11 stays OPEN — NOT RATIFIABLE** until a **further
+  independent review passes clean AFTER revision 5**. Drafted in response to `A2-31`'s **REJECTION**
+  of revision 4. **Analyst task: no Go was written into `nexus/`; `nexus/`, `.softhouse/vectors/`,
+  `.softhouse/conformance.sh`, `.softhouse/guards/`, `capabilities.json`, `PIN.json`, `contract.go`
+  and DEC-1 were all untouched.** `git rev-parse HEAD:.softhouse/vectors` =
+  `73c3ea7b43dd75f04884072719a87fc8e1d255c1`, **unchanged**. The `I4-BUILDER` probe is a throwaway
+  program under `/tmp`; a copy is committed under the task's handoff directory as evidence and is
+  not part of the module or the harness.
+
+  **Revision 5 changes EXACTLY the two things `A2-31` found, and deliberately nothing else.**
+  Revision 2 was rejected in part because its reviewer applied its own unreviewed fix; new
+  authorship beyond the reviewer's items is itself a defect, so a third issue found during this
+  revision's sweep is **registered as a follow-up, not fixed** (see `A2-32`'s handoff).
+
+  1. **`A2-31` F-1 — §4.4.1's `FU-T208-1` parenthetical CORRECTED, and the caveat that outlived its
+     defect REMOVED.** Revision 4 stated, under `[VERIFIED by A2-28 at commit 2e97162]`, that the
+     guard's own head **DROPS** the `CANNOT-CATCH` block on the pass path. **It does not, and it did
+     not at that commit**: `T209` (`03e9094`) closed `FU-T208-1` and is an **ANCESTOR** of `2e97162`
+     by one hour sixteen minutes. **The claim was FALSE AT ITS OWN STAMP** — not stale, which is the
+     distinction that makes it `A2-25`'s F-4 class recurring one revision later. **Landed at ONE
+     site inside this document** — §4.4.1's `FOUR THINGS IT CANNOT SEE` paragraph, rewritten to the
+     measured truth and followed by a labelled revision-5 retraction box. **The whole-repo sweep
+     found no second live site inside this document**; the surviving copies are in
+     `.softhouse/conformance.sh`'s condensation header, which is **not this document's to fix** and
+     is routed as `T227` (`A2-31` FU-A2-31-2). **`A2-32` measured that file as carrying the claim in
+     ONE PRINTED LINE PLUS A 25-LINE COMMENT BLOCK, not the single line `A2-31` named** — see
+     `A2-32`'s handoff; that widening is reported to `T227`, not acted on here.
+  2. **`A2-31` F-2 — the empty-population numerator CORRECTED from THREE to FOUR, with the classes
+     NAMED and the denominator DROPPED, at EVERY site that carries the claim.** `I4-BUILDER`'s
+     population under `nexus/` is **zero**, MEASURED in both polarities by `A2-31` at `90c21d6` and
+     independently re-measured by `A2-32` at `33d19a6`, with the real `ledgerguard` binary as the
+     control and the guard's own `CENSUS` line as the proof that the probe walks the guard's
+     population. The four are **`I3-SQL-BALANCE`, `I4-BUILDER`, `I4-DML`** and **`OPAQUE-SQL`**.
+     **`I4-BUILDER` is the one empty class the guard does NOT announce**, which is why three
+     revisions and the driver counted three off the transcript.
+
+     **The NINE sites the correction landed at, listed because the last revision's change log was
+     false about its own artefact and that is what made this rejection-grade. `A2-31` named FIVE;
+     the other four are restatements of the same claim in different words, and finding them was the
+     point of sweeping for the CLAIM rather than the sentence:**
+
+     | # | site | what it said in revision 4 | named by `A2-31`? |
+     |---|---|---|---|
+     | 1 | **Banner, item 3** | *"three of the guard's **seven** declared detection classes"* | yes |
+     | 2 | **§4.4, `I-4` row** | *"THE SOURCE GUARD'S `I-4` ARM"*, singular, with `I4-BUILDER` unmentioned | **no** |
+     | 3 | **§4.4.1, headline** | *"THE GUARD DECLARES SEVEN DETECTION CLASSES, AND THREE OF THEM …"* | yes |
+     | 4 | **§4.4.1, class table** | `I4-BUILDER` → *"**not established** — see below"* | **no** |
+     | 5 | **§4.4.1, numerator paragraph + qualification bullet** | *"The numerator is three"*; `I4-BUILDER` `[UNVERIFIED]` | **no** |
+     | 6 | **§4.4.1, *"the correct reading of this whole subsection"*** | the three-class wait-list, `I4-BUILDER` omitted | **no** |
+     | 7 | **§5.3, `P-8` row** | *"three of its **seven** declared detection classes"* | yes |
+     | 8 | **§8.1, fact 3** (and its heading) | *"THREE OF ITS SEVEN DECLARED DETECTION CLASSES"*, under a heading promising each fact was re-measured | yes |
+     | 9 | **§8.3, guard bullet** | *"three of its **seven** declared detection classes"* | yes |
+
+     **Plus two records that asserted the claim rather than restating it, both corrected in place
+     with labelled notes:** **§9 item 14** (*"whether `I4-BUILDER` inspects a non-empty population"*)
+     is **CLOSED by measurement**; and **§10's revision-4 entry, item 2**, which said *"REPLACED at
+     all four sites"* when there were **five** and *"The denominator is dropped"* when it was
+     **present at all five** — corrected inline rather than reworded, so the false statement and its
+     correction are both readable.
+
+     **The denominator is genuinely dropped this time**, at all nine sites: the text names the four
+     classes and does not divide by seven. The count `seven` survives only where it is a
+     **standalone measured fact about the guard** — §4.4.1's `[VERIFIED]` enumeration, §8.1 fact 3's
+     revision-4 retraction, and the `P-67` box — never as the denominator of a ratio.
+
+- **Revision 4** — DRAFT, task `A2-28`, 22 August 2026, forked from `main` at
   **`2e97162`**. **NOT RATIFIED; `A2-28` is NOT AUTHORISED to ratify it and does not, and says so
   in the status block, the banner and here.** Gate **G-11 stays OPEN — NOT RATIFIABLE** until a
   **further independent review passes clean AFTER revision 4**. Drafted in response to `A2-25`'s
@@ -2544,6 +2712,27 @@ own additions: **item 14 is a read not taken, not an unclosable gap**, and is la
      over-match the guard itself names**, and **`I4-BUILDER`'s population was not established**
      `[UNVERIFIED]`, which is why no corrected numerator is claimed beyond the three the guard
      reports.
+
+     > **⚠ CORRECTION, revision 5 — TWO OF THE SENTENCES IMMEDIATELY ABOVE WERE FALSE ABOUT THE
+     > DOCUMENT THEY DESCRIBE, and that is `A2-31`'s F-2 in its sharpest form. They are left in place
+     > and corrected here rather than reworded, for the same reason §5.1.1 restates rather than
+     > rewords.**
+     >
+     > 1. ***"REPLACED at all four sites"* — there were FIVE.** Revision 4 carried the ratio at the
+     >    banner (item 3), §4.4.1's headline, §5.3's P-8 row, §8.1 fact 3 and §8.3. The `A2-25` F-2
+     >    site list was four; the document's own count was never taken.
+     > 2. ***"The denominator is dropped"* — IT WAS NOT DROPPED AT ANY OF THE FIVE.** Every one of
+     >    them read *"three of its **seven** …"*. §4.4.1 **prescribed** the remedy in its own `P-67`
+     >    box (*"state a numerator with the members NAMED, and drop the denominator"*) and did not
+     >    apply it to its own headline a few dozen lines above. **P-26.**
+     >
+     > **A change log that lists a site as corrected while the artefact still carries it is exactly
+     > `A2-25`'s F-1, which was the rejection-grade finding on revision 3** — there it was `A2-21`'s
+     > change log listing §8.3 as corrected while §8.3's tail survived. **Third fire.** And the
+     > numerator was wrong as well: **it is FOUR, not three** — `I4-BUILDER` is empty, MEASURED
+     > (§4.4.1's revision-5 retraction). **Revision 5 states the four with the classes NAMED and NO
+     > DENOMINATOR at NINE sites — the five it named plus four it did not — and corrects §9 item 14
+     > and this entry as well, each listed in the revision-5 entry below.**
   3. **`A2-25` F-3 — §5.2 requirement 6's BEFORE REWRITTEN, and this was the most important of the
      seven.** Requirement 6 is one of two requirements that will grade `A2-15`, and **it could not
      be satisfied on the bytes it specified**: the `gerege.ledger.vector/v1` file it names dies at
