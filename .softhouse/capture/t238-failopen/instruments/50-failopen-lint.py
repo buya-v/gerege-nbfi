@@ -44,6 +44,9 @@ WHAT IT CHECKS -- the properties, not the spellings
                                    negative is reported
   C5  ENGINE DECLARED              P-33/P-53: name the engine; and never use \\b \\d \\s \\w
                                    under `git grep -E`, which reads them as literals
+  C6  CORPUS ENTRY IS FATAL       [T252] an instrument must not ENTER an absolute directory
+                                   that does not exist and then carry on. Alone among these,
+                                   C6 reads CONTROL FLOW and never words.
 
 SCOPE (P-66/P-70): every tracked .sh/.py in the repository. Exit 0 = clean, 1 = violations,
 2 = the linter could not reach its own corpus (it fails closed too).
@@ -105,6 +108,71 @@ the new rules still match. Nothing that was inadmissible becomes admissible.
   instruments; every extra frontier row is a source edit in `conformance.sh` for a human to
   read, so a rule that flags narration is a rule that gets pinned away. WHY NOT A TIGHTER ONE:
   because a tighter one is exactly what shipped, and it missed the site that motivated the task.
+
+T252 -- A COUNT IS A CLAIM TOO, AND THE TIER THAT DECLARED SAFETY AND TESTED NOTHING
+-------------------------------------------------------------------------------------
+T248 reported a PROBABLE third live site and did not confirm it. It is confirmed. RUN, not
+read: `.softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh` exits **0**, prints
+`PROMOTED CELLS SWEPT: 0   NOT BYTE-PRESENT / ARITHMETIC FAIL: 0`, and reached no corpus at
+all -- its `R=` worktree was pruned days ago, its `cd "$R"` at :24 runs under `set -u` with
+no `-e` and no `||`, and its own P-72 calibration line printed an EMPTY count and did not
+stop it (.softhouse/capture/t252-tier3/transcripts/10-verify-third-site.txt).
+
+WHY THE OBVIOUS FIX IS THE WRONG ONE, MEASURED RATHER THAN ARGUED. T252's brief proposed a
+NUMERIC-CLAIM detector: every widening so far keys on reassuring English, and `0` printed by
+an instrument that never reached its corpus is indistinguishable from `0` measured honestly.
+The observation is right. The implementation of it is inert. Fourteen count shapes were added
+to RE_REASSURE and the linter re-run over the whole tree (transcripts/20-numeric-vocab-probe):
+
+    frontier 10 -> 10.  GAINED 0.  LOST 0.  The confirmed site: STILL INVISIBLE.
+
+It was not rejected for noise -- it produced none. It buys literally nothing, for two reasons
+that are INDEPENDENT of each other, so neither rests on the other being right:
+  (a) RE_UNCOND_PRINT is `^\s*(?:echo|printf)` -- SHELL ONLY. The false count is emitted by
+      `print(...)` inside a `python3 - <<'PY'` heredoc. The line is never offered to any
+      vocabulary, so no vocabulary can be widened enough to reach it. (17 shell prints, 12
+      python prints in that one file -- both terms, P-67.)
+  (b) C2B_WINDOW is 3 code lines. The `cd` is at :24 and the false count at :142 -- 110 code
+      lines apart, 36x the window, with `python3 - "$R" <<'PY'` at :34 breaking the
+      association long before it.
+Widening the window to 110 lines would associate a `cd` with everything a script ever prints,
+which is not a rule, and widening the print predicate to any language's print without an
+association rule is worse. A vocabulary is the wrong AXIS, not the wrong wordlist.
+
+  C6 -- CORPUS ENTRY IS NON-FATAL. The rule that does close it reads CONTROL FLOW and never
+  words at all: a file that ENTERS an absolute directory that does not exist NOW -- `cd`,
+  `pushd`, `git -C`, `--git-dir=`, `--work-tree=`, whether written as a literal or reached
+  through a variable assigned a literal absolute path earlier in the same file -- and whose
+  entry does not terminate it, is fail-open. Not "prints a reassuring sentence"; not "prints
+  a suspicious number". EVERYTHING it prints after that line is printed about a directory it
+  never entered, in whatever words, in whatever language, at whatever distance.
+
+  Termination is ESTABLISHED, never assumed, by exactly two things, both checkable:
+    * `errexit` in force at that line -- `set -e`, `set -euo pipefail`, `set -o errexit` --
+      tracked forward through `set +e` so a disabled shell option cannot be read as a
+      protection; or
+    * a fatal arm ON the entry line: `|| exit`, `|| return`, `|| die`, `|| _sw_die`, `|| {`.
+  Everything else is non-fatal and is flagged. The `XXX`-is-a-mktemp-template and the
+  file-OWNS-the-path filters are inherited from C1 unchanged, so a `mkdir -p D && cd D` is
+  scratch here exactly as it is there.
+
+TIER 3'S LABEL SAID "FAILS CLOSED" AND NOTHING EVER CHECKED IT. [the P-45 shape, one level up]
+The old header read: `TIER 3 -- UNREPRODUCIBLE, but FAILS CLOSED ... safe to re-run -- it
+exits non-zero`. That is an assertion about runtime behaviour, made about every member of the
+tier, by a classifier that never checked it for any file -- and for one member it was simply
+FALSE, which is how this task started. A tier that DECLARES safety and TESTS nothing is a
+fail-open wearing the word "closed", and it is the more dangerous kind because it is the
+sentence a reviewer stops reading at.
+
+Both halves of the remedy are applied, because either alone is weaker:
+  * C6 makes part of the label EARN itself -- "no dead path is entered non-fatally" is now
+    a checked property, and every TIER 3 row prints WHICH of the three checkable grounds it
+    rests on (errexit / fatal-entry / no-dead-entry);
+  * the label stops claiming the part that is still unchecked. C6 watches corpus ENTRY. It
+    does not model every route to a false negative, so the header no longer says "fails
+    closed" or "exits non-zero" about anything. An honest "termination not verified" is
+    worth more than a false "fails closed" -- the weaker true statement over the stronger
+    unverified one, which is this program's standing rule.
 """
 import os
 import re
@@ -128,7 +196,7 @@ import subprocess
 #     # lint-failopen: ok -- <reason>
 # The marker suppresses that ONE line. It is deliberately verbose so it cannot be used lazily,
 # and every use is listed in the report so suppressions stay visible.
-SEVERITY_FAIL = {"C2"}
+SEVERITY_FAIL = {"C2", "C6"}
 RE_SUPPRESS = re.compile(r'#\s*lint-failopen:\s*ok\s*--\s*(\S.*)')
 ROOT = subprocess.run(["git", "rev-parse", "--show-toplevel"],
                       capture_output=True, text=True).stdout.strip()
@@ -163,6 +231,31 @@ RE_ABSPATH_LOC = re.compile(
     r'\s*["\']?(/[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)+)')
 # A path the instrument CREATES or DELETES is its own scratch, not the corpus it reads.
 RE_OWNED_HEAD = r'(?:>>?|\brm\b|\bmkdir\b|\btouch\b|\btee\b|\bmktemp\b)\s*(?:-\S+\s+)*["\']?'
+
+# --- C6 [T252] --------------------------------------------------------------
+# CORPUS ENTRY, and whether failing to make it stops the script.
+#
+# C1 asks "is this path dead?". C6 asks the question C1 never did: "and does the file NOTICE?"
+# Those are different questions and the second one is the one TIER 3's old label answered
+# without checking. Nothing below looks at a single word of output -- deliberately, because
+# the site that motivated this rule prints its false claim as a COUNT, in python, 110 code
+# lines downstream, and no vocabulary and no window reaches it (transcripts/20).
+RE_ENTER = re.compile(
+    r'(?:^|[;&|(]\s*|&&\s*|\bthen\s+|\bdo\s+)(cd|pushd)\s+([^\s;&|)]+)'
+    r'|\b(git)\s+-C\s+([^\s;&|)]+)'
+    r'|(--git-dir|--work-tree)=([^\s;&|)]+)')
+# A literal absolute path assigned to a NAME. This is the hop the site needs: the dead path is
+# declared at :11 and entered at :24 through `"$R"`, and a rule that only reads the entry line
+# sees a variable and stops. Single-assignment, literal RHS, first wins -- deliberately the
+# narrowest resolution that reaches the specimen, because a fuller shell evaluator inside a
+# linter is a second thing that can be wrong.
+RE_ASSIGN_ABS = re.compile(
+    r'^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)=["\']?(/[A-Za-z0-9._/-]+)')
+RE_VAR_REF = re.compile(r'^\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?(/[A-Za-z0-9._/-]*)?$')
+# TERMINATION, ESTABLISHED RATHER THAN ASSUMED -- exactly two grounds, both checkable.
+RE_FATAL_ARM = re.compile(r'\|\|\s*(?:exit|return|die|_sw_die|\{)')
+RE_ERREXIT_ON = re.compile(r'^\s*set\s+(?:-[a-zA-Z]*e[a-zA-Z]*(?:\s|$)|-o\s+errexit\b)')
+RE_ERREXIT_OFF = re.compile(r'^\s*set\s+(?:\+[a-zA-Z]*e[a-zA-Z]*(?:\s|$)|\+o\s+errexit\b)')
 
 # THE CORPUS SELECTOR, AND THE THIRD BLIND SPOT T248's RED DRIVE FOUND.
 #
@@ -278,8 +371,91 @@ def _dead_paths(line, txt):
     return out
 
 
+def _abs_assignments(code):
+    """NAME -> literal absolute path, from single literal assignments. First wins.
+
+    A name assigned twice is dropped rather than guessed at: if the linter cannot say WHICH
+    literal is in force at the entry, it must not report a dead entry it has not established.
+    """
+    seen = {}
+    dup = set()
+    for _i, l in code:
+        m = RE_ASSIGN_ABS.match(l)
+        if not m:
+            continue
+        name, val = m.group(1), m.group(2).rstrip('"\'`);,.')
+        if name in seen and seen[name] != val:
+            dup.add(name)
+        seen.setdefault(name, val)
+    for name in dup:
+        seen.pop(name, None)
+    return seen
+
+
+def _resolve_entry(tok, assigns):
+    """`/lit`, `"$R"`, `$R`, `"${R}"`, `"$R/sub"` -> an absolute literal, or None."""
+    t = tok.strip().strip('"\'').rstrip(';')
+    if not t:
+        return None
+    if t.startswith("/"):
+        return t
+    m = RE_VAR_REF.match(t)
+    if m and m.group(1) in assigns:
+        return assigns[m.group(1)] + (m.group(2) or "")
+    return None
+
+
+def _errexit_at(code):
+    """{line_no: bool} -- is errexit in force when this code line runs?
+
+    Tracked FORWARD through `set +e`, because a shell option that was turned back off is not
+    a protection and reading the file for the string `set -e` alone would call it one.
+    """
+    state = {}
+    on = False
+    for i, l in code:
+        state[i] = on
+        if RE_ERREXIT_ON.match(l):
+            on = True
+        elif RE_ERREXIT_OFF.match(l):
+            on = False
+    return state
+
+
+def _dead_entries(code, txt, assigns, errexit, only_nonfatal=True):
+    """[(line_no, verb, path, declared_at)] -- entries into a dead absolute dir that do NOT stop.
+
+    Inherits C1's two measured filters unchanged: an `XXX` literal is a mktemp TEMPLATE, and a
+    path the file itself creates or deletes is scratch rather than corpus -- so `mkdir -p D &&
+    cd D` is exempt here for exactly the reason it is exempt there.
+    """
+    out = []
+    decl = {}
+    for i, l in code:
+        m = RE_ASSIGN_ABS.match(l)
+        if m and m.group(1) in assigns:
+            decl.setdefault(m.group(1), i)
+    for i, l in code:
+        if only_nonfatal and (RE_FATAL_ARM.search(l) or errexit.get(i)):
+            continue                              # the entry TERMINATES: established, not assumed
+        for m in RE_ENTER.finditer(l):
+            g = [x for x in m.groups() if x is not None]
+            if len(g) != 2:
+                continue
+            verb, tok = g
+            p = _resolve_entry(tok, assigns)
+            if not p or "XXX" in p or os.path.exists(p):
+                continue
+            if re.search(RE_OWNED_HEAD + re.escape(p), txt):
+                continue
+            vm = RE_VAR_REF.match(tok.strip().strip('"\'').rstrip(';'))
+            out.append((i, verb, p, decl.get(vm.group(1)) if vm else None))
+    return out
+
+
 viol = []
 suppressed = []
+T3_GROUND = {}
 inspected = 0
 for f in files:
     if f == SELF:
@@ -371,6 +547,34 @@ for f in files:
                           "was entered: %s" % (a + 1, l.strip()[:110])))
                 break
 
+    # C6 [T252] -- ENTERS A DEAD DIRECTORY AND CARRIES ON.
+    #
+    # No vocabulary, no window, no print predicate. If the file enters a directory that is not
+    # there and does not stop, then EVERY line it prints afterwards -- sentence, count, table,
+    # empty section, shell or python -- is about a place it never went. Confirmed live on
+    # rederive-provenance.sh: exit 0, `NOT BYTE-PRESENT / ARITHMETIC FAIL: 0`, corpus never
+    # reached (transcripts/10-verify-third-site.txt).
+    _assigns = _abs_assignments(code)
+    _errex = _errexit_at(code)
+    # THE GROUND ON WHICH A TIER 3 ROW WILL REST, recorded HERE where the evidence exists.
+    # The old TIER 3 header asserted "fails closed / it exits non-zero" for every member and
+    # nothing computed it. This is the computation, and it is reported per row.
+    _all_entries = _dead_entries(code, txt, _assigns, _errex, only_nonfatal=False)
+    if any(_errex.values()):
+        T3_GROUND[f] = "errexit in force (`set -e`) at the dead-path lines"
+    elif _all_entries:
+        T3_GROUND[f] = ("every dead-path ENTRY terminates -- fatal arm (`|| exit`/`die`) "
+                        "on line(s) %s" % ",".join(str(i) for i, _, _, _ in _all_entries))
+    else:
+        T3_GROUND[f] = ("no dead path is in a position that ENTERS it -- narration, a probe "
+                        "list, or an env var, not a corpus this file reads")
+    for i, verb, dp, decl in _dead_entries(code, txt, _assigns, _errex):
+        where = (" (declared at line %d)" % decl) if decl else ""
+        v.append(("C6", i,
+                  "ENTERS a directory that does not exist and CARRIES ON -- no errexit in "
+                  "force and no fatal arm, so everything printed after this line is printed "
+                  "about a corpus never reached: `%s` -> %s%s" % (verb, dp, where)))
+
     # C3/C4/C5 -- advisory properties
     if not RE_CORPUS_ASSERT.search(txt):
         v.append(("C3", 0, "no corpus-reachability assertion anywhere in the file"))
@@ -391,8 +595,14 @@ def has(v, c):
 
 lethal = [(f, v) for f, v in viol if has(v, "C1") and has(v, "C2")]
 dormant = [(f, v) for f, v in viol if has(v, "C2") and not has(v, "C1")]
-unrepro = [(f, v) for f, v in viol if has(v, "C1") and not has(v, "C2")]
-fails = lethal + dormant
+# TIER 1B [T252]. A file already on the frontier as TIER1/TIER2 stays where it is -- C6 is
+# ADDITIVE evidence about it, never a reclassification -- so this tier is exactly the files
+# C6 makes visible that nothing else did.
+entering = [(f, v) for f, v in viol if has(v, "C6")
+            and not (has(v, "C1") and has(v, "C2"))
+            and not (has(v, "C2") and not has(v, "C1"))]
+unrepro = [(f, v) for f, v in viol if has(v, "C1") and not has(v, "C2") and not has(v, "C6")]
+fails = lethal + dormant + entering
 
 print("T238 FAIL-OPEN LINT")
 print("commit    : %s" % HEAD)
@@ -418,12 +628,44 @@ for f, v in sorted(dormant):
             print("      %s  :%s  %s" % (c, i, m))
 print()
 
-print("### TIER 3 — UNREPRODUCIBLE, but FAILS CLOSED  (C1 only) : %d" % len(unrepro))
-print("###   safe to re-run -- it exits non-zero -- but its conclusion can never be re-checked")
+print("### TIER 1B — ENTERS A CORPUS THAT IS NOT THERE AND CARRIES ON  (C6) : %d" % len(entering))
+print("###   [T252] the fail-open whose false claim is a COUNT, not a sentence. This tier is")
+print("###   found by CONTROL FLOW, not vocabulary: no output words are read at all, so the")
+print("###   claim's distance, phrasing and even its LANGUAGE are irrelevant to it.")
+for f, v in sorted(entering):
+    print("  %s" % f)
+    for c, i, m in v:
+        if c == "C6":
+            print("      %s  :%s  %s" % (c, i, m))
+print()
+
+# TIER 3, RELABELLED. [T252]
+#
+# It used to read "UNREPRODUCIBLE, but FAILS CLOSED ... safe to re-run -- it exits non-zero".
+# That is a claim about runtime behaviour, asserted over every member of the tier, by a
+# classifier that checked it for none of them -- and for one member it was FALSE. Half of it
+# is now CHECKED (C6: no dead path is entered non-fatally); the other half is WITHDRAWN
+# rather than restated, because this linter still does not model a file's exit code.
+# BOTH TERMS (P-67): the files and the dead-path findings inside them are DIFFERENT numbers,
+# which is why quoting either alone misleads. Measured at 2871f17, before C6: 5 files / 7
+# findings (00-engines.sh alone carries three). After C6 moved the confirmed site out to
+# TIER 1B: 4 files / 6 findings.
+_t3_findings = sum(1 for _f, _v in unrepro for c, _i, _m in _v if c == "C1")
+print("### TIER 3 — UNREPRODUCIBLE: dead path, no reassuring arm, no non-fatal dead ENTRY")
+print("###   : %d file(s) / %d dead-path finding(s)" % (len(unrepro), _t3_findings))
+print("###   WHAT IS CHECKED: the path is dead (C1); nothing here PRINTS reassurance (no C2);")
+print("###   and no dead path is ENTERED without terminating (no C6). The bracket on each row")
+print("###   names which of those grounds it actually rests on.")
+print("###   WHAT IS **NOT** CHECKED, AND IS NO LONGER CLAIMED: that these files exit non-zero.")
+print("###   This label read 'but FAILS CLOSED' until T252 and NOTHING verified it for any file,")
+print("###   ever; for one member it was false. 'Termination not verified' is the weaker TRUE")
+print("###   statement, and it replaces the stronger unverified one.")
 for f, v in sorted(unrepro):
+    print("  %s" % f)
+    print("      GROUND: %s" % T3_GROUND.get(f, "NOT CLASSIFIED"))
     for c, i, m in v:
         if c == "C1":
-            print("  %-76s :%s  %s" % (f, i, m))
+            print("      %s  :%s  %s" % (c, i, m))
 print()
 
 print("### ADVISORY (C3 no corpus assertion / C4 no calibration / C5 engine undeclared)")
@@ -449,7 +691,8 @@ if suppressed:
 # of the JSON below so that the gate consumes the SAME BYTES a human reads, and
 # so that a linter which died before finishing emits no frontier at all instead
 # of a stale file that still parses.
-for _t, _f in sorted([("TIER1", f) for f, _ in lethal] + [("TIER2", f) for f, _ in dormant]):
+for _t, _f in sorted([("TIER1", f) for f, _ in lethal] + [("TIER2", f) for f, _ in dormant]
+                     + [("TIER1B", f) for f, _ in entering]):
     print("FAILOPEN-FRONTIER %s %s" % (_t, _f))
 print()
 
@@ -463,14 +706,17 @@ print()
 JSON_OUT = os.environ.get("FAILOPEN_LINT_JSON") or \
     ".softhouse/capture/t238-failopen/evidence/lint.json"
 json.dump({"lethal": [f for f, _ in lethal], "dormant": [f for f, _ in dormant],
+           "entering": [f for f, _ in entering],
            "unreproducible": [f for f, _ in unrepro],
+           "unreproducible_ground": {f: T3_GROUND.get(f, "NOT CLASSIFIED") for f, _ in unrepro},
            "suppressed": suppressed,
            "detail": [{"file": f, "violations": v} for f, v in viol]},
           open(JSON_OUT, "w"), indent=1)
 
 if fails:
     print("LINT: FAIL — %d instrument(s) can emit a negative they did not measure "
-          "(%d live, %d dormant)." % (len(fails), len(lethal), len(dormant)))
+          "(%d live, %d dormant, %d entering-a-corpus-that-is-not-there)."
+          % (len(fails), len(lethal), len(dormant), len(entering)))
     sys.exit(1)
 print("LINT: PASS — no instrument in scope can emit a negative it did not measure.")
 sys.exit(0)

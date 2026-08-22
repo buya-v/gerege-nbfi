@@ -1,0 +1,49 @@
+T252 -- STRICT-ADDITIVITY PROOF FOR C6
+commit         : 2871f175ed6606d1f7b091e31c180917f3a3ff82
+fork point     : 2871f175ed6606d1f7b091e31c180917f3a3ff82
+shipped linter : HEAD:.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py  (25795 bytes)
+widened linter : working tree (40083 bytes)
+
+### DETECTIONS  (file, code, line) triples out of each run's JSON `detail`
+  SHIPPED : 84 detections, exit 1
+  WIDENED : 87 detections, exit 1
+
+  LOST    : 0   <-- MUST BE ZERO. A widening that drops a prior detection is a
+                     regression disguised as an improvement.
+      (none -- every triple the shipped linter reported, the widened one reports)
+
+  GAINED  : 3
+      +  C6   :14    .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+      +  C6   :77    .softhouse/reviews/T138-evidence/r11-hygiene.sh
+      +  C6   :24    .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+
+### FRONTIER  (the FAILOPEN-FRONTIER rows -- the exact bytes conformance.sh consumes)
+  SHIPPED : 10 rows
+  WIDENED : 11 rows
+  LOST    : 0
+  GAINED  : 1
+      + TIER1B .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+
+### THE PINNED INSTRUMENTS -- did any of them MOVE? (the pin is a FRONTIER, not an AMNESTY)
+  TIER1  -> TIER1   SAME  .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+  TIER1  -> TIER1   SAME  .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+  TIER1  -> TIER1   SAME  .softhouse/reviews/T138-evidence/r11-hygiene.sh
+  TIER2  -> TIER2   SAME  .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+  TIER2  -> TIER2   SAME  .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+  TIER2  -> TIER2   SAME  .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+  TIER2  -> TIER2   SAME  .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
+  TIER2  -> TIER2   SAME  .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+  TIER2  -> TIER2   SAME  .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh
+  TIER2  -> TIER2   SAME  .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh
+  pinned rows that MOVED: 0  (must be 0 -- T252 may not repair or reclassify a pinned
+                           instrument, and sweep-ORIGINAL.sh is a SPECIMEN, not an
+                           instrument, so it stays on the frontier permanently)
+
+### TIER 3, BOTH TERMS (P-67)
+  WIDENED : 4 file(s) / 6 dead-path finding(s)
+      .softhouse/capture/t238-failopen/instruments/00-engines.sh               [no dead path is in a position that ENTERS it -- narration, a]
+      .softhouse/capture/t238-failopen/instruments/70-l1b-81-vs-86.sh          [no dead path is in a position that ENTERS it -- narration, a]
+      .softhouse/capture/t243-wiring/instruments/20-failopen-red-drive.sh      [errexit in force (`set -e`) at the dead-path lines]
+      .softhouse/reviews/a2-31-dec2-rev4/probe-sweep.sh                        [every dead-path ENTRY terminates -- fatal arm (`|| exit`/`di]
+
+VERDICT: STRICTLY ADDITIVE (LOST = none, no pinned row moved)
