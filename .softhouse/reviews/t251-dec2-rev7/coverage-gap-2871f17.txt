@@ -1,0 +1,26 @@
+CALIBRATION
+  POSITIVE L828 -> match (correct)
+  NEGATIVE L817 -> no match (correct)
+
+=== CLAIM-SHAPED LINES IN SPANS T247's LIST NEVER EXAMINES ===
+(neither an edit site nor on the HISTORY list)
+
+  L804   [L802 4.4 The double-entry invariants: which are GRADEABLE, and wh]
+        Most of the project's ledger invariants cannot be graded by a `ledger` vector, and **none of them
+
+  L823   [L802 4.4 The double-entry invariants: which are GRADEABLE, and wh]
+        | **I-5** | Corrections are reversing entries | A correction adds a leg pair; it never mutates one | **PARTLY — AND REVISION 6 CORRECTS THE REASON REVISIONS 1-5 GAVE, WHICH WAS FALSE WHEN REVISION 5 W
+
+  L1726  [L1726 5.2 The decision: EXTEND the machinery — and DEC-2 grades no]
+        ### 5.2 The decision: EXTEND the machinery — and DEC-2 grades nothing until it exists
+
+  L1739  [L1726 5.2 The decision: EXTEND the machinery — and DEC-2 grades no]
+        **(a) is adopted. The machinery is named, it is not built here, and this document does not pretend
+
+  L1900  [L1726 5.2 The decision: EXTEND the machinery — and DEC-2 grades no]
+        relabelled-vector shape and it grades nothing about the ledger. Its purpose is narrow and
+
+  L2238  [L2227 5.5 The `graded_against` requirement, restated with its true]
+        corpus of nothing but structural kills would grade no amount at all, and the harness prints exactly
+
+TOTAL uncovered claim-shaped lines: 6

@@ -1,0 +1,16 @@
+=== T236 calibration (P-72): fixture = /tmp/t236-calib/{positive,negative_hasquit,commentary}.sh ===
+positive.sh:        trap cleanup EXIT HUP INT TERM        (real statement, MUST match)
+negative_hasquit.sh: trap cleanup EXIT HUP INT TERM QUIT   (real statement, already has QUIT — a superstring of positive.sh, the exact P-72 substring trap — MUST also match, distinctly)
+commentary.sh:       # comment: trap cleanup EXIT HUP INT TERM (old code, not live)   (MUST NOT match — trap is not the first token on the line)
+
+--- engine 1: /usr/bin/grep -rn -E '^[[:space:]]*trap[[:space:]]' ---
+/tmp/t236-calib/negative_hasquit.sh:1:trap cleanup EXIT HUP INT TERM QUIT
+/tmp/t236-calib/positive.sh:1:trap cleanup EXIT HUP INT TERM
+
+--- engine 2: git grep -nP '^\s*trap\s' (run inside a throwaway /tmp/t236-calib-repo git repo) ---
+negative_hasquit.sh:1:trap cleanup EXIT HUP INT TERM QUIT
+positive.sh:1:trap cleanup EXIT HUP INT TERM
+
+Both engines: 2/2 true positives matched (positive.sh AND negative_hasquit.sh, so the instrument
+discriminates presence of a trap STATEMENT, not presence of QUIT), commentary.sh correctly
+excluded by both. Calibration OK (P-72) before the real sweep.

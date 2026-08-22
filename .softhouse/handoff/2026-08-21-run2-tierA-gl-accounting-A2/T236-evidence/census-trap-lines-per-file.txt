@@ -1,0 +1,84 @@
+=== .softhouse/bin/fire-program.sh (5 anchored trap-statement lines) ===
+  415: trap 'on_signal INT  130' INT
+  416: trap 'on_signal TERM 143' TERM
+  417: trap 'on_signal HUP  129' HUP
+  418: trap 'on_signal QUIT 131' QUIT
+  419: trap release_lock EXIT
+=== .softhouse/capture/audit-t44/analysis/T207/T207-red/drive-red-v3.sh (1 anchored trap-statement lines) ===
+  60: trap 'rm -rf "$SCRATCH"' EXIT
+=== .softhouse/capture/pathb/t149/prove-exit-trap.py (0 anchored trap-statement lines) ===
+=== .softhouse/capture/pathb/t149/prove-redgreen.sh (6 anchored trap-statement lines) ===
+  124:     trap - EXIT INT TERM HUP QUIT     # never re-enter, whatever the handler itself does
+  159: trap restore_store EXIT
+  170: trap 'echo "INTERRUPTED (SIGINT) — restoring the store" >&2;  exit 130' INT
+  171: trap 'echo "INTERRUPTED (SIGTERM) — restoring the store" >&2; exit 143' TERM
+  172: trap 'echo "INTERRUPTED (SIGHUP) — restoring the store" >&2;  exit 129' HUP
+  173: trap 'echo "INTERRUPTED (SIGQUIT) — restoring the store" >&2; exit 131' QUIT
+=== .softhouse/capture/pathb/t80/prove-f1-recovery.py (0 anchored trap-statement lines) ===
+=== .softhouse/capture/pathb/t80/prove-f1-sandbox-run.sh (1 anchored trap-statement lines) ===
+  34: trap cleanup EXIT INT TERM HUP QUIT PIPE
+=== .softhouse/capture/pathb/t80/prove-f1.sh (7 anchored trap-statement lines) ===
+  259:   trap - EXIT INT TERM HUP QUIT PIPE
+  307: trap f1_guard_exit EXIT
+  323: trap 'echo "INTERRUPTED (SIGINT) — restoring the rig" >&2;  exit 130' INT
+  324: trap 'echo "INTERRUPTED (SIGTERM) — restoring the rig" >&2; exit 143' TERM
+  325: trap 'echo "INTERRUPTED (SIGHUP) — restoring the rig" >&2;  exit 129' HUP
+  326: trap 'echo "INTERRUPTED (SIGQUIT) — restoring the rig" >&2; exit 131' QUIT
+  327: trap 'echo "INTERRUPTED (SIGPIPE) — restoring the rig" >&2; exit 141' PIPE
+=== .softhouse/capture/pathb/t99/prove-f5-legs.sh (0 anchored trap-statement lines) ===
+=== .softhouse/capture/pathb/t99/prove-p24-postmerge.sh (0 anchored trap-statement lines) ===
+=== .softhouse/capture/t154-nofloat/drive-leg2.sh (1 anchored trap-statement lines) ===
+  32: trap 'rm -rf "$TMP"' EXIT
+=== .softhouse/capture/t243-wiring/instruments/20-failopen-red-drive.sh (1 anchored trap-statement lines) ===
+  43: trap cleanup EXIT          # P-54: the tree is restored on EVERY exit path, not just the happy one
+=== .softhouse/capture/t91/prove-guards.sh (1 anchored trap-statement lines) ===
+  32: trap 'rm -rf "$S"' EXIT
+=== .softhouse/capture/t91/shell-invariance.sh (1 anchored trap-statement lines) ===
+  64: trap 'rm -rf "$INVDIR"' EXIT
+=== .softhouse/capture/t91/t151-drive-g67.sh (1 anchored trap-statement lines) ===
+  37: trap 'rm -rf "$S"' EXIT
+=== .softhouse/capture/t91/t151-merge-check.sh (2 anchored trap-statement lines) ===
+  24: trap 'rm -rf "$W"' EXIT
+  76: trap 'rm -rf "$W" "$W-main"' EXIT
+=== .softhouse/capture/tierA-a2/cap.sh (1 anchored trap-statement lines) ===
+  65: trap 'rm -rf "$TMPD"' EXIT HUP INT TERM QUIT
+=== .softhouse/capture/tierA-a2/cap8.sh (1 anchored trap-statement lines) ===
+  67: trap 'rm -rf "$TMPD"' EXIT HUP INT TERM QUIT
+=== .softhouse/capture/tierA-a2/cap9.sh (1 anchored trap-statement lines) ===
+  49: trap 'rm -rf "$TMPD"' EXIT HUP INT TERM
+=== .softhouse/capture/tierA-a2/prove-a2-26-guards-red.sh (1 anchored trap-statement lines) ===
+  25: trap 'rm -rf "$TMP"' EXIT HUP INT TERM QUIT
+=== .softhouse/capture/tierA-a2/prove-quit-trap-a226.py (0 anchored trap-statement lines) ===
+=== .softhouse/capture/tierA-a2/prove-quit-trap-cap.py (1 anchored trap-statement lines) ===
+  7:     trap 'rm -rf "$TMPD"' EXIT HUP INT TERM
+=== .softhouse/conformance.sh (1 anchored trap-statement lines) ===
+  565: trap cleanup EXIT
+=== .softhouse/guards/drive-red-ledger-invariants.sh (1 anchored trap-statement lines) ===
+  42: trap 'rm -rf "$WORK"' EXIT
+=== .softhouse/handoff/2026-08-17-run1-harness-schedule-poc/T113-evidence/interpreter-matrix.sh (1 anchored trap-statement lines) ===
+  208: trap 'rm -f "$NOIFS" "$BENV" "$SEEIFS"' EXIT
+=== .softhouse/handoff/T61-mutations.py (0 anchored trap-statement lines) ===
+=== .softhouse/reviews/T158-bash-signal-semantics.py (0 anchored trap-statement lines) ===
+=== .softhouse/reviews/T158-drive-followups.py (1 anchored trap-statement lines) ===
+  7:      trap anywhere.  T156 read the shape; this DRIVES it.  The interruption is timed
+=== .softhouse/reviews/T158-drive-t156-refusals.py (0 anchored trap-statement lines) ===
+=== .softhouse/reviews/T158-drive-untrapped-signals.py (0 anchored trap-statement lines) ===
+=== .softhouse/reviews/T188-probe/drive-t188.sh (1 anchored trap-statement lines) ===
+  29: trap cleanup EXIT
+=== .softhouse/reviews/T191-probe/drive-t191.sh (1 anchored trap-statement lines) ===
+  29: trap 'rm -rf "$TMP"' EXIT
+=== .softhouse/reviews/a2-33-dec2-rev5/sweep.sh (1 anchored trap-statement lines) ===
+  134: trap trailer EXIT
+=== .softhouse/reviews/t179-guard-classifier/fixtures/green_real_trap.sh (1 anchored trap-statement lines) ===
+  7: trap 'mv /tmp/x.bak .softhouse/vectors/t179-fixture-never-run/case.json' EXIT INT TERM HUP QUIT
+=== .softhouse/reviews/t179-guard-classifier/fixtures/red_prose_guard.py (0 anchored trap-statement lines) ===
+=== .softhouse/reviews/t202-probe/orphan-heartbeat.py (1 anchored trap-statement lines) ===
+  16: trap "on_sig" TERM
+=== .softhouse/reviews/t202-probe/patch.py (5 anchored trap-statement lines) ===
+  128: trap 'on_signal INT  130' INT
+  129: trap 'on_signal TERM 143' TERM
+  130: trap 'on_signal HUP  129' HUP
+  131: trap 'on_signal QUIT 131' QUIT
+  132: trap release_lock EXIT
+=== .softhouse/reviews/t47-probe/t167-redprobe.py (0 anchored trap-statement lines) ===
+=== .softhouse/reviews/t47-probe/t47_edit_1.py (0 anchored trap-statement lines) ===

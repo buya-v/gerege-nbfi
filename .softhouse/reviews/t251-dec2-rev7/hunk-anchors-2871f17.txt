@@ -1,0 +1,27 @@
+COMMIT: 2871f175ed6606d1f7b091e31c180917f3a3ff82
+hunks found: 18
+
+  H-1    DRIFT  L3-73 does NOT match the quoted BEFORE
+         live : "> # ⚠ NOTHING GRADES THIS CONTEXT'S MONEY. NOTHING GRADES THIS CONTEXT AT ALL. > > **Read this before any other sentence in this document, and before "
+         quoted: "> # ⚠ NOTHING GRADES THIS CONTEXT'S MONEY. NOTHING GRADES THIS CONTEXT AT ALL. > > **Read this before any other sentence in this document, and before "
+  H-2    OK     L75-77 matches byte-for-byte (ws-normalised)
+  H-3    OK     L80-88 matches byte-for-byte (ws-normalised)
+  H-3b   SKIP   no explicit line span in the hunk title
+  H-4    OK     L247-253 matches byte-for-byte (ws-normalised)
+  H-5    OK     L458-461 matches byte-for-byte (ws-normalised)
+  H-5b   DRIFT  L711-711 does NOT match the quoted BEFORE
+         live : 'is expressible is a separate question, answered no in §5.'
+         quoted: 'vacuous predicate is one nothing could fail; these two can be failed, by any vector carrying a money cell, and the admission rule must evaluate them o'
+  H-6    OK     L813-815 matches byte-for-byte (ws-normalised)
+  H-7    SKIP   BEFORE is a partial quote (abbreviated, or a table cell)
+  H-8    SKIP   BEFORE is a partial quote (abbreviated, or a table cell)
+  H-9    SKIP   BEFORE is a partial quote (abbreviated, or a table cell)
+  H-10   OK     L827-830 matches byte-for-byte (ws-normalised)
+  H-11   OK     L1304-1311 matches byte-for-byte (ws-normalised)
+  H-12   OK     L1449-1452 matches byte-for-byte (ws-normalised)
+  H-12b  SKIP   no fenced BEFORE block (AFTER-only / append-only hunk)
+  H-13   OK     L2023-2024 matches byte-for-byte (ws-normalised)
+  H-14   SKIP   no fenced BEFORE block (AFTER-only / append-only hunk)
+  H-15   SKIP   no fenced BEFORE block (AFTER-only / append-only hunk)
+
+SUMMARY: 11 checked, 9 match, 2 DRIFTED, 7 not mechanically checkable

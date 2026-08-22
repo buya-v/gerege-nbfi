@@ -1,0 +1,38 @@
+T252 -- CONFORMANCE-ROUTE RED DRIVE FOR THE MOVED FRONTIER PIN
+commit : 2871f175ed6606d1f7b091e31c180917f3a3ff82
+plant  : .softhouse/capture/t252-tier3/evidence/conf-red-scratch/planted-c6-failopen.sh
+dead   : /nonexistent/t252/conformance-red-drive   exists now? False
+
+### PLANT VISIBLE TO `git ls-files` (the linter's corpus selector): 1/1
+
+### RED -- `bash .softhouse/conformance.sh` with the plant in the tree
+  exit = 2
+  exit is 2 (no verdict available)               YES
+  names the FRONTIER refusal                     YES
+  names the PLANTED path                         YES
+  shows it as an ADDED row (`+`)                 YES
+  classifies the plant TIER1B (C6, not C1/C2)    YES
+  does NOT print a PASS verdict                  YES
+
+  the refusal, verbatim:
+    | conformance: THE FAIL-OPEN FRONTIER IS NOT THE PINNED FRONTIER (- pinned, + measured):
+    | +TIER1B .softhouse/capture/t252-tier3/evidence/conf-red-scratch/planted-c6-failopen.sh
+    | conformance: EXIT 2 — no verdict is available. This is NOT a pass.
+    | conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass.
+
+### GREEN -- the plant removed, the SAME command run again
+  cleanup: scratch exists False, still in ls-files 0
+  exit = 0
+  exit is 0                                      YES
+  VERDICT: PASS present                          YES
+  frontier == pinned, ELEVEN rows                YES
+  census line reads `pinned at 11`               YES
+  (i) the PIN LITERAL in conformance.sh carries the TIER1B row YES
+  (ii) the harness asserts frontier == pinned this run YES
+
+    | conformance:   /Users/buv/gerege-nbfi/.claude/worktrees/agent-ac0d36c41d55ef40c (git ls-files, whole repository); frontier 11, pinned at 11.
+    | conformance:   frontier == pinned (all 11 rows, by path).
+    | INADMISSIBLE, so this figure is pinned at 0 by
+    | conformance:   WRONG from the binary's own -list-implementations; pinned at
+
+RED/GREEN THROUGH THE ROUTE THAT RUNS IT: BOTH ARMS AS EXPECTED

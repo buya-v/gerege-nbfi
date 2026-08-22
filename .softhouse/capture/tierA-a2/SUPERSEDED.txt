@@ -40,3 +40,22 @@ cap.sh -> cap8.sh
 # oracle assigns a fresh id each run — so the frozen copy is a RECORD OF WHAT WAS DONE,
 # not a re-runnable derivation.  Re-run the v8 recipe, never this one.
 run-220-a2-7-runtime.sh -> run-220-a2-7-runtime-v8.sh
+
+# --- T236: cap9.sh:49's scratch-dir trap has no QUIT (T216's P-40 residual, named and
+# left in T216 rather than fixed unilaterally on a site it wasn't asked to close) ---
+# `trap 'rm -rf "$TMPD"' EXIT HUP INT TERM` — Ctrl-\ / SIGQUIT during a capture leaks the
+# mktemp scratch dir under /tmp.  LOW materiality: the trap only governs an ABORTED
+# exchange, and by cap9.sh's own design nothing is written under out/ until the exchange
+# completes, so no committed byte anywhere depends on this line.  T236 VERIFIED (not
+# assumed) that editing cap9.sh in place was unsafe by this rig's OWN mechanism:
+# MANIFEST.sha256 pins cap9.sh's exact bytes as part of "the rig" (manifest.py's own
+# stated scope, extended by A2-5/D-3(iii) specifically to catch an undeclared change to
+# a script that produced evidence) — confirmed by direct sha256 comparison, not merely
+# by convention. Committed evidence cap9.sh produced: the A2-300 series, 175 manifest
+# entries under out/ (out/A2-300 .. out/A2-463, the Idempotency-Key-bearing captures).
+# NOTE: this redirect is NOT read by census-json-float-siblings.py (that census enforces
+# only the P-25 float-defect population) — it is a plain documentation redirect for the
+# QUIT-trap concept, not an enforced allowlist entry. cap10.sh's only change from cap9.sh
+# is `QUIT` appended to the trap's signal list; every other line is carried over
+# verbatim.
+cap9.sh -> cap10.sh

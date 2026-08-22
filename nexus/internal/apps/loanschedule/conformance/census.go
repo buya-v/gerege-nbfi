@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+
+	ledgerconf "github.com/gerege/nexus/internal/apps/ledger/conformance"
 )
 
 // THE STORE FILE CENSUS — the two enumerators of the vector store must agree,
@@ -189,6 +191,45 @@ func sortedKeysOfPaths(m map[string][]string) []string {
 	return out
 }
 
+// knownStoreContextDirs returns the complete set of TOP-LEVEL directory names
+// the vector store may contain — the UNION of every schema's own
+// SchemaContexts().
+//
+// THIS IS A DIFFERENT LIST FROM EITHER SCHEMA'S OWN ADMISSIBILITY LIST, AND
+// DELIBERATELY SO. A vector's `context` field is checked against ITS OWN
+// schema's SchemaContexts() at admission (admit.go here; ledger's own admit.go
+// for the second schema) — that is a statement about what ONE schema's vectors
+// may claim, and `ledger` is correctly ABSENT from this package's own
+// SchemaContexts()/IsSchemaContext (store_integrity_test.go's
+// TestUnknownContextIsInadmissible asserts exactly that). But a bare directory
+// sitting at the store root belongs to the STORE, not to one schema, and the
+// store legitimately holds both `loanschedule` (this schema) and `ledger` (the
+// second schema, DEC-2 §5.2) side by side. A shape check that consulted only
+// this package's SchemaContexts() would refuse the committed store outright —
+// `ledger/` is real, populated, and correct. So the shape check below reads
+// BOTH lists and unions them; it is a property of the STORE, computed from the
+// two schemas that are allowed to write into it, not a property either schema
+// asserts alone.
+func knownStoreContextDirs() map[string]bool {
+	known := make(map[string]bool)
+	for _, c := range SchemaContexts() {
+		known[c] = true
+	}
+	for _, c := range ledgerconf.SchemaContexts() {
+		known[c] = true
+	}
+	return known
+}
+
+func sortedContextNames(known map[string]bool) []string {
+	out := make([]string, 0, len(known))
+	for c := range known {
+		out = append(out, c)
+	}
+	sort.Strings(out)
+	return out
+}
+
 // StoreFileCensus requires every `.json` under storeRoot to be accounted for.
 //
 // accountedErrs are the files LoadStore already reported as load errors; they
@@ -205,6 +246,33 @@ func sortedKeysOfPaths(m map[string][]string) []string {
 //   - A DIRECTORY inside a context directory. LoadStore cannot reach it, so
 //     anything in it is silently ungraded — including a vector somebody believes
 //     they promoted.
+//   - A TOP-LEVEL DIRECTORY whose name is not a context ANY schema grades
+//     (knownStoreContextDirs — the union of every schema's SchemaContexts()).
+//     THIS IS A2-23, closing A2-20's stated residual. A2-20 put the check for a
+//     VECTOR declaring an unknown context in Admit (admit.go:139) — correctly,
+//     because that check is about what a FILE CLAIMS. It deliberately left one
+//     shape alone: `mkdir .softhouse/vectors/junk/` with nothing inside. Nothing
+//     ever reaches Admit for an empty directory — LoadStore's loop over that
+//     directory's entries (vector.go's LoadStore) simply produces zero
+//     iterations — so no vector is loaded, no LoadError is recorded, and
+//     nothing claims the directory. Before this check, WalkDir's own `d.IsDir()`
+//     branch returned nil unconditionally for any TOP-LEVEL directory, so the
+//     directory itself was invisible to the census too: exit 0, PASS, the
+//     unknown directory named nowhere in the report. [MEASURED, this task: see
+//     the handoff's red-drive section.] A2-20's argument that an empty
+//     directory "makes no CLAIM and cannot inflate a NUMBER" is correct and is
+//     NOT being overturned — this check does not exist because a number moved.
+//     It exists because the STORE'S SHAPE — which directories exist under the
+//     root — is a fact this program should be able to state from the census
+//     alone, the same way it already states the symlink and nested-directory
+//     facts, and until this check a `.softhouse/vectors/<garbage>/` could sit
+//     in the tree forever with nothing ever naming it. It fires on the
+//     directory NODE, so it also refuses a non-empty unknown directory (dotfile
+//     only, README only, or actual `.json` files) — for those, Admit's own
+//     check already refused the run for a related but distinct reason (the file
+//     CLAIMS an unrecognised context); this check refuses it independently,
+//     for the directory's NAME, and the two refusals are allowed to both be
+//     true of the same store at once.
 //   - A `.json` (matched case-INSENSITIVELY) that no vector claims. This is the
 //     rule that does the work: UPPER.JSON, a nested vector, a store-root file,
 //     and anything reachable only through a symlink all land here.
@@ -254,6 +322,11 @@ func StoreFileCensus(storeRoot string, loaded []*Vector, accountedErrs []LoadErr
 	for _, n := range storeRootNonVectorFiles {
 		allowedRoot[n] = true
 	}
+	// A2-23: the STORE-SHAPE list — every top-level directory name any schema
+	// recognises — computed once, outside the walk, so its cost is independent
+	// of how many directories the store happens to hold.
+	knownContexts := knownStoreContextDirs()
+	knownContextsSorted := sortedContextNames(knownContexts)
 
 	var problems []string
 	seenJSON := 0
@@ -285,6 +358,30 @@ func StoreFileCensus(storeRoot string, loaded []*Vector, accountedErrs []LoadErr
 					"%q is a directory INSIDE a context directory. The store is exactly two levels — "+
 						"<root>/<context>/<vector>.json — and LoadStore reads one level down, so nothing "+
 						"below here is ever loaded or graded", rel))
+				return filepath.SkipDir
+			}
+			// A2-23: a TOP-LEVEL directory whose name is not a context any
+			// schema grades. Checked on the directory NODE ITSELF, before
+			// looking at what (if anything) it contains — an empty directory,
+			// one holding only a dotfile or a README, and one holding actual
+			// `.json` files are all the same shape defect from here: a
+			// directory under the store root that nothing in this program
+			// claims. Fires whether or not the directory is empty, which is
+			// the point: LoadStore's own loop over an unknown directory's
+			// entries produces nothing to claim it (zero files -> zero
+			// vectors, zero LoadErrors) whenever the directory holds no
+			// `.json`, so without this check on the NODE the directory itself
+			// was invisible to every part of the harness that has ever run.
+			if !knownContexts[d.Name()] {
+				problems = append(problems, fmt.Sprintf(
+					"%q at the STORE ROOT is a directory whose name is not a context ANY schema grades "+
+						"(known: %s). This is a STORE-SHAPE defect, checked independently of whatever the "+
+						"directory contains: LoadStore treats every top-level directory as a context "+
+						"whatever its name, and if it holds no `.json` file — empty, or holding only a "+
+						"dotfile or a README — LoadStore produces no vector and no LoadError for it, so "+
+						"nothing else in this program ever names it. It sits in the store unaccounted for "+
+						"forever unless this refuses the run",
+					rel, strings.Join(knownContextsSorted, ", ")))
 				return filepath.SkipDir
 			}
 			return nil

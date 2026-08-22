@@ -1366,8 +1366,12 @@ guard_ledger_invariants() {
 #       EQUALITY against a pin held here. Nothing that is admissible today
 #       becomes inadmissible, nothing inadmissible becomes admissible, and a
 #       instrument BEYOND the pinned set — or a swap that keeps the total the
-#       same — refuses. [T248: that set was nine when T243 wrote this and is TEN
-#       now; the count lives in FAILOPEN_PIN_FILE_LIST, never in this prose.]
+#       same — refuses. [T248: that set was nine when T243 wrote this and became
+#       TEN. T252 made it ELEVEN. The count lives in FAILOPEN_PIN_FILE_LIST and
+#       in the `say` line below, never in this prose — and the ONE place a stale
+#       copy of it is known to survive is named in the T252 block at the bottom
+#       of this comment, because "not found" would be a statement about my
+#       search rather than about the tree (P-66/P-70).]
 # (b) is what is implemented, and it is the same idiom as EXEMPTION_PIN_*
 # twenty lines up: a population that can drift in both directions is pinned by
 # IDENTITY, and moving it is a source edit a reviewer reads.
@@ -1416,9 +1420,48 @@ guard_ledger_invariants() {
 # The other nine are unrepaired instruments in other tasks' frozen evidence directories, and
 # `r11-hygiene.sh` now joins them on exactly those terms: recorded, visible, and refusing to
 # grow. T248 did not touch any of the ten; that would be repairing files outside its scope.
+#
+# T252 -- THE FRONTIER IS ELEVEN, AND THE ELEVENTH IS A CONFIRMED LIVE FAIL-OPEN. [P-76]
+#
+# T248 reported a PROBABLE third live site and left the hedge unresolved. T252 resolved it by
+# RUNNING it rather than reading it (.softhouse/capture/t252-tier3/transcripts/10-verify-third-
+# site.txt): `.softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh` exits **0**, prints
+# `PROMOTED CELLS SWEPT: 0   NOT BYTE-PRESENT / ARITHMETIC FAIL: 0`, and reached no corpus at
+# all -- its worktree was pruned, its `cd "$R"` at :24 runs under `set -u` with no `-e` and no
+# `||`, and its own P-72 calibration printed an EMPTY count and did not stop it. This row is
+# therefore NEWLY VISIBLE, NOT NEWLY INTRODUCED, exactly as r11-hygiene.sh was: the file is
+# unchanged and has been fail-open since its worktree died. What changed is that the linter
+# can now see it.
+#   +TIER1B .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+#
+# WHY A NEW TIER RATHER THAN A WIDER VOCABULARY. Its false claim is a COUNT, not a sentence,
+# and the obvious remedy -- teaching RE_REASSURE to recognise count shapes -- was BUILT AND
+# MEASURED and is INERT: frontier 10 -> 10, GAINED 0, LOST 0, site still invisible
+# (transcripts/20-numeric-vocab-probe.txt). It fails for two independent reasons: the print
+# predicate is shell-only and the claim is a python `print(`, and the association window is 3
+# code lines while the claim is 110 code lines downstream. C6 keys on CONTROL FLOW instead --
+# entering a directory that is not there and not stopping -- and reads no output words at all,
+# which is why it also catches a claim whose type is an EMPTY JSON LIST (red drive R7).
+#
+# ADDITIVE, PROVEN THE WAY T248 PROVED IT (transcripts/30-additivity.txt): shipped and widened
+# linter over the same tree, detections keyed on (file, code, line) out of each run's JSON.
+# 83 -> 86 detections, **LOST = none**, frontier 10 -> 11 rows, LOST = none. NO PINNED ROW
+# MOVED -- all ten were re-checked tier-for-tier and every one is unchanged. C6 additionally
+# fires on sweep-ORIGINAL.sh:14 and r11-hygiene.sh:77, which is corroboration rather than
+# reclassification: both stay TIER1 because a file already on the frontier is never moved by
+# new evidence about it.
+#
+# A STALE COPY OF THE OLD COUNT SURVIVES, AND IT IS NAMED HERE RATHER THAN LEFT TO BE FOUND.
+# `.softhouse/capture/t243-wiring/instruments/20-failopen-red-drive.sh:74,152` assert
+# `frontier == pinned (all 9 rows, by path).` That instrument has been wrong since T248 moved
+# the frontier to ten -- T248 corrected the number where it is NAMED (this file) and not where
+# it is RESTATED, which is the P-66 defect at program scale. T252 does not repair it: that
+# file is outside T252's scope and repairing another task's instrument unasked is the error
+# this program keeps punishing. It is recorded in T252's handoff as a follow-up.
 FAILOPEN_PIN_FILE_LIST="TIER1 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
 TIER1 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
 TIER1 .softhouse/reviews/T138-evidence/r11-hygiene.sh
+TIER1B .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
 TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
 TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
 TIER2 .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
@@ -1478,9 +1521,10 @@ guard_no_fail_open_instruments() {
   [ -n "$n" ] || n=0
 
   say "conformance: CENSUS fail-open instruments — inspected $corpus tracked .sh/.py file(s) under"
-  say "conformance:   $REPO_ROOT (git ls-files, whole repository); frontier $n, pinned at 10."
-  say "conformance:   TIER1 = dead path AND a printing failure arm (fail-open, live). TIER2 = printing"
-  say "conformance:   arm only, corpus reachable today. Both are pinned by PATH, not by count."
+  say "conformance:   $REPO_ROOT (git ls-files, whole repository); frontier $n, pinned at 11."
+  say "conformance:   TIER1 = dead path AND a printing failure arm (fail-open, live). TIER1B = enters a"
+  say "conformance:   directory that is not there and carries on, whatever it prints afterwards. TIER2 ="
+  say "conformance:   printing arm only, corpus reachable today. All are pinned by PATH, not by count."
   if ! diff -u "$want" "$got" >"$out.diff" 2>&1; then
     warn "conformance:"
     warn "conformance: THE FAIL-OPEN FRONTIER IS NOT THE PINNED FRONTIER (- pinned, + measured):"

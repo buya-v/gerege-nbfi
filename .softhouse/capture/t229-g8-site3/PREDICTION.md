@@ -1,5 +1,42 @@
 # T229 — SITE 3's rescue condition, DERIVED, and registered BEFORE the live probe
 
+> ### *** T241 CORRECTION, added at a LATER commit. Read before quoting anything below. ***
+>
+> **Not one word of T229's registered text has been removed or reworded.** This banner and the two
+> in-place `*** T241 CORRECTION ***` notes (at the `TOTAL INTEREST` line of §1 and at **P2** in §2)
+> are the only additions. The registered text is still readable in full, and the original file is
+> in history at commit `29ed78c` — a **strict ancestor** of the capture commit `bb35cc8`, so the
+> falsifiability guarantee this file exists to carry is intact.
+>
+> **What is wrong:** this file, and `src/site3.py`, state `TOTAL INTEREST = n·E + B` for an
+> unrescued cell. **`n·E + B` is the TOTAL REPAYMENT, not the total interest.** The correct form is
+> `n·E + B − (principal repaid)`; the two coincide only when the principal repaid is 0, i.e. on a
+> **FULL** family-B cell. The error is therefore invisible on exactly the shape T229 was hunting.
+>
+> **Registered prediction P2 was REFUTED on three of T229's own cells, and this was never reported.**
+> `src/classify_t229.py` computed the check and wrote `"P2_totalInterestEqualsNEplusB": false` into
+> `out/classify-t229.json` for `T229-R600p0-N200-B201`, `-B251` and `-B299` at capture time
+> (`bb35cc8`). Its `verdict` field is a function of the observed outcome and the observed principal
+> only and never consults P2, so all three were reported **"AS PREDICTED"**. T241 searched the whole
+> repository for `P2_totalInterestEqualsNEplusB` and found it in **no handoff, no gate text and no
+> review** — only in the two classifiers and their JSON output. **The refutation was measured,
+> printed and committed on the same day as the claim, and went unread for the whole interval.**
+> T219 later hit the same defect from outside, on `B3001` and `B4499` (capture at `6eacc06`).
+>
+> **P2's other two conjuncts STAND** — `total` of row 1 `= E` and `total` of the last row `= E + B`
+> held on every unrescued cell T241 checked, so **FACT A itself is unharmed**. Only the third
+> conjunct's *label* is wrong, and the corrected form follows from FACT A rather than replacing it:
+> the total column sums to `(n−1)·E + (E + B) = n·E + B`, and on the G-8 shape (no fees, no
+> penalties) the interest column is that sum minus the principal column.
+>
+> **Materiality: LOW, and it must not be inflated.** No verdict, gate conclusion, region boundary,
+> vector or promoted figure depends on it. `.softhouse/gates.md` already carries the correct form.
+> Nothing here touches G-8's conservative superset `B_minor < 1.5·n`, the unproven `δ ≤ 1`
+> conjecture, or the standing prohibition on putting options (b)/(c) to Buyan.
+>
+> Re-derived independently by T241 from the raw `.gz` rows, not transcribed:
+> `src/rederive_total_interest_t241.py` (exit 0). T241's figures agree with T219's.
+
 **Registered BEFORE any live observation exists.** This file, `prediction.json`, `src/site3.py` and
 `src/cells-t229.json` are committed in a commit that is a **strict ancestor** of the commit carrying
 `out/capture-t229-raw.json.gz`. If that ancestry does not hold, this prediction is worthless and
@@ -92,6 +129,11 @@ last row EMI       = E + B
 last row interest  = min( I₁q + (n−1)·δ ,  E + B )              (S3.4: the deficit carries)
 TOTAL PRINCIPAL    = max(0, B_minor − n·δ)
 TOTAL INTEREST     = n·E + B
+*** T241 CORRECTION — the line directly above is FALSE and is kept verbatim as the record.
+    n·E + B is the TOTAL REPAYMENT.  TOTAL INTEREST = n·E + B − (principal repaid)
+                                                    = n·E + B − max(0, B_minor − n·δ).
+    Falsified by B201/B251/B299 in T229's OWN capture (bb35cc8) and by B3001/B4499 in
+    T219's (6eacc06).  Affects no verdict.  See the banner at the top of this file. ***
 ```
 
 so
@@ -142,6 +184,14 @@ MNT 7.00 at n = 1400) says that cell cannot fail. This law says it fails, and sa
 - **P2** — on every unrescued cell, `total` of REPAYMENT row 1 = `E`, `total` of the last REPAYMENT
   row = `E + B`, and `totalInterestAmount` = `n·E + B`. **This is the direct observable of FACT A**:
   the last row's excess over the penultimate row IS the disbursement, exactly.
+  - > *** T241 CORRECTION — **P2's THIRD CONJUNCT WAS REFUTED, ON T229'S OWN CELLS, AND NOBODY
+    > READ IT.*** `out/classify-t229.json` records `"P2_totalInterestEqualsNEplusB": false` for
+    > `T229-R600p0-N200-B201`, `-B251` and `-B299`; all three were nonetheless reported
+    > **"AS PREDICTED"**, because `classify_t229.py`'s `verdict` consults only the outcome and the
+    > principal. `totalInterestAmount` is `n·E + B − (principal repaid)`; `n·E + B` is the total
+    > **repayment**. **The first two conjuncts STAND on every unrescued cell checked, so FACT A is
+    > unharmed** — the corrected form is a consequence of FACT A, not a replacement for it.
+    > Affects no verdict. See the banner at the top of this file. ***
 - **P3** — on every unrescued cell, `totalPrincipalAmount` = `max(0, B − n·δ)` **exactly**.
 - **P4** — on the RESCUED cells the instalment of row 1 is **strictly greater** than `E` above, and
   `totalPrincipalAmount` = the full disbursement.

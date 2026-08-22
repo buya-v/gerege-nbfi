@@ -1,0 +1,60 @@
+T252 -- C6 RED DRIVE
+commit : 2871f175ed6606d1f7b091e31c180917f3a3ff82
+dead   : /nonexistent/t252/no-such-corpus   exists now? False
+
+### PLANTED AND VISIBLE TO THE LINTER'S OWN CORPUS SELECTOR (`git ls-files`)
+  planted: 13   visible: 13   <-- BOTH TERMS (P-67); if these differ the drive is void
+
+### RESULTS  (C6 = did the new rule fire? expected vs measured)
+  id   EXPECT   C6?      VERDICT   what it tests
+  R1   FIRE     FIRED    OK        pushd -- a builtin C6 was not written from
+           C6 :3 ENTERS a directory that does not exist and CARRIES ON -- no errexit in force and no fatal arm, so everything printed after this line is printed about 
+  R2   FIRE     FIRED    OK        git -C DIR -- the entry is an ARGUMENT to a program, not a shell builtin
+           C6 :3 ENTERS a directory that does not exist and CARRIES ON -- no errexit in force and no fatal arm, so everything printed after this line is printed about 
+  R3   FIRE     FIRED    OK        --work-tree=DIR -- the entry is a FLAG
+           C6 :3 ENTERS a directory that does not exist and CARRIES ON -- no errexit in force and no fatal arm, so everything printed after this line is printed about 
+  R4   FIRE     FIRED    OK        cd "${V}/sub" -- brace form, through a variable, with a subpath
+           C6 :4 ENTERS a directory that does not exist and CARRIES ON -- no errexit in force and no fatal arm, so everything printed after this line is printed about 
+  R5   FIRE     FIRED    OK        TYPE: errexit is a STATE THAT CHANGES. `set -e` then `set +e` then cd.
+           C6 :5 ENTERS a directory that does not exist and CARRIES ON -- no errexit in force and no fatal arm, so everything printed after this line is printed about 
+  R6   FIRE     FIRED    OK        `|| true` -- has the swallowing syntax, is NOT fatal
+           C6 :3 ENTERS a directory that does not exist and CARRIES ON -- no errexit in force and no fatal arm, so everything printed after this line is printed about 
+  R7   FIRE     FIRED    OK        TYPE: the CLAIM is an EMPTY STRUCTURED VALUE -- no sentence, no count, no words
+           C6 :3 ENTERS a directory that does not exist and CARRIES ON -- no errexit in force and no fatal arm, so everything printed after this line is printed about 
+  G1   quiet    quiet    OK        the red string PLUS a fatal arm (`|| exit 1`) -- P-72: green CONTAINS red
+  G2   quiet    quiet    OK        the red string PLUS errexit in force -- P-72: green CONTAINS red
+  G3   quiet    quiet    OK        the file OWNS the path (`mkdir -p` then cd) -- scratch, not corpus
+  G4   quiet    quiet    OK        the path EXISTS (/tmp) -- a dead-path rule must not fire on a live path
+  G5   quiet    quiet    OK        NARRATION: the dead `cd` is inside an echo, not executed
+  L1   quiet    quiet    OK        KNOWN LIMIT: same dead `cd`, but the file is NOT a repo-wide search instrument, so the POPULATION SELECTOR never offers it to any rule
+
+  rows wrong: 0   (must be 0)
+
+### DOES EACH RED ROW REACH THE FRONTIER? (a detection that changes no tier is not a gate)
+  R1   on frontier: True    in TIER 1B: True 
+  R2   on frontier: True    in TIER 1B: True 
+  R3   on frontier: True    in TIER 1B: True 
+  R4   on frontier: True    in TIER 1B: True 
+  R5   on frontier: True    in TIER 1B: True 
+  R6   on frontier: True    in TIER 1B: True 
+  R7   on frontier: True    in TIER 1B: True 
+  G1   on frontier: False   in TIER 1B: False
+  G2   on frontier: False   in TIER 1B: False
+  G3   on frontier: False   in TIER 1B: False
+  G4   on frontier: False   in TIER 1B: False
+  G5   on frontier: False   in TIER 1B: False
+  L1   on frontier: False   in TIER 1B: False
+
+### THE KNOWN LIMIT, STATED AS A LIMIT (P-66/P-70: this is a statement about the rule)
+  L1 carries the SAME non-fatal dead `cd` as R7 and C6 does not fire, because the file
+  contains no `git grep` / `git ls-files` / `grep -r` and RE_REPOWIDE therefore never
+  admits it. That is T248's own P-76 addendum -- a rule's blind spots live in its
+  POPULATION SELECTOR as much as in its conditions -- and C6 inherits that selector
+  unchanged. It is recorded here as the next widening, not discovered later as a defect.
+  L1 in linter output at all: False
+
+### LINTER EXIT WITH THE RED FILES PLANTED: 1  (1 = violations found)
+### CLEANUP -- nothing planted may survive; a tracked red file would break the pin
+  scratch dir exists : False
+  still in ls-files  : 0
+  git status residue : ''

@@ -1,0 +1,44 @@
+T252 -- IS A NUMERIC-CLAIM DETECTOR THE FIX?
+commit  : 2871f175ed6606d1f7b091e31c180917f3a3ff82
+linter  : .softhouse/capture/t238-failopen/instruments/50-failopen-lint.py (the version in the WORKING TREE)
+subject : .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+
+### V0 -- BASELINE: what the shipped (T248) linter says about the confirmed site
+  frontier rows            : 11
+  lines mentioning subject : 2
+    .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+    FAILOPEN-FRONTIER TIER1B .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+  classified as            : TIER 3
+  on the frontier?         : YES
+
+### V1 -- ADD THE NUMERIC VOCABULARY TO RE_REASSURE, CHANGE NOTHING ELSE
+  numeric alternatives added: 14
+  frontier rows  V0 -> V1   : 11 -> 11
+  frontier GAINED           : 0
+  frontier LOST             : 0
+  does V1 see the subject?  : YES
+  lines mentioning subject  : 2
+    .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+    FAILOPEN-FRONTIER TIER1B .softhouse/reviews/a2-34-review-a2-15/rederive-provenance.sh
+
+### V2 -- WHY. Two INDEPENDENT structural blocks, measured against the subject file.
+  (a) THE PRINT PREDICATE IS SHELL-ONLY
+      RE_UNCOND_PRINT = ^\s*(?:echo|printf)\b
+      subject :142  print(f"\n    PROMOTED CELLS SWEPT: {total}   NOT BYTE-PRESENT / ARITHMETIC FAIL: {bad}")
+      matches RE_UNCOND_PRINT? : NO  <-- the line is never even offered to the vocabulary
+      subject's print statements: 17 shell echo/printf, 12 python print( -- BOTH TERMS (P-67)
+      of the 12 python print( lines, how many carry a COUNT the reader will believe:
+          :141 print(f"    {'OK ' if ok else '***'} refusal.{k} = {needle[:70]!r}  grep -aF in RESP={c} in 
+          :142 print(f"\n    PROMOTED CELLS SWEPT: {total}   NOT BYTE-PRESENT / ARITHMETIC FAIL: {bad}")
+
+  (b) THE ASSOCIATION WINDOW IS THREE CODE LINES
+      C2B_WINDOW = 3
+      subject `cd` lines            : [24]
+      subject false-count line(s)   : [142]
+      distance                      : 118 physical lines, 110 CODE lines
+      inside a window of 3?         : NO -- 36x too far
+      first line that BREAKS the association (neither a print nor a search): :34  python3 - "$R" <<'PY'
+
+### CONCLUSION OF THIS PROBE -- read V1 and V2 together
+  V1 is the direct test of the brief's own proposal and V2 explains its result
+  structurally, so neither rests on the other.
