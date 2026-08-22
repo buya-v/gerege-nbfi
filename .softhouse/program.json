@@ -695,6 +695,21 @@
    "blocks": "Nothing today. A2-8 must be TOLD about it, which its brief now does.",
    "raised_by": "A2-7 (capture A2-214), local fire 20260821-054355",
    "recorded_in": ".softhouse/gates.md"
+  },
+  {
+   "id": "G-11",
+   "class": "CONTRACT",
+   "state": "OPEN - NOT RATIFIABLE",
+   "context": "tierA-gl-accounting",
+   "slice": "tierA-gl-accounting-A2",
+   "title": "DEC-2 revision 2 is REJECTED and must not be ratified",
+   "why_not_a_user_gate": "CLAUDE.md makes DEC-n ratification AGENT-decidable once the contract passes an independent review CLEAN. This entry records that the condition has NOT been met, so a later fire reading 'agent-decidable' does not ratify on that basis alone. Buyan retains veto either way.",
+   "review_history": "A2-14 REJECTED rev 1 (three shape findings). A2-17 returned MICRO-FIX on rev 2 and applied its OWN 7-line fix, leaving the document reviewed by nobody. A2-19 reviewed rev 2 post-micro-fix, applied NO fix deliberately, and REJECTED it.",
+   "rejection_grade_finding": "DEC-2 asserts in three places (banner fact 2, section 8.1 fact 2, A2-17's new section 4.10 text) that 'no ledger vector CAN exist'. FALSE. Section 5.1's own heading carries the true, weaker claim -- not EXPRESSIBLE. DRIVER-REPRODUCED INDEPENDENTLY with its own probe vector before the repair task was written: copy any loanschedule parity vector into .softhouse/vectors/ledger/, change ONLY case_id and context, and the harness reports 'VERDICT: PASS (exit 0) -- 44 parity vectors match the pinned reference oracle, 5711 cells compared'. A2-19's figures and the driver's agree EXACTLY: 44/5711. Cause is one line: context is constrained only to be non-empty and equal its own directory name (admit.go:115, :119-120); NO ALLOWLIST EXISTS. The strong claim rested on control PC-3, a FALSE NEGATIVE that failed on two author-correctable defects rather than a structural wall (P-50).",
+   "what_unblocks_it": "A2-20 (close the context hole), then A2-21 (DEC-2 revision 3), then a further independent review passing CLEAN.",
+   "what_A2_19_confirmed": "47/47 Fineract citations hit at their exact lines; overall [VERIFIED] hit rate 62/64 = 96.9% with one drift and one wrong, neither a money claim; section 5.4's retraction reproduced exactly; banner + 8.1 + 8.3 DO defuse the I-3/I-4 misreading; and P-8 is GENUINELY INDEPENDENT of P-1..P-5, which is what licensed A2-18 to build the ledger-invariant guard the same fire.",
+   "raised_by": "local fire 20260822-080001 (A2-19, driver-reproduced)",
+   "recorded_in": ".softhouse/gates.md"
   }
  ],
  "history": [

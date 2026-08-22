@@ -30,8 +30,9 @@ Built by local fire `20260821-125942`.
 | **G-8** | ENGINEERING | **OPEN** | Not yet asking for a decision. Options (b) and (c) would narrow the graded domain → hard `user` gate; (a) may not. | `## G-8 — TWO phenomena at the rounding floor…`. `## G-8-NOTICE` is SUPERSEDED history. |
 | **G-9** | PRODUCT | **CLOSED — DECIDED** | local fire `20260821-054355`, `chosen_by: agent`. Carries a `driver_error_correction`: the decision stands, the driver's stated *consequence* was false. | `## G-9 — CLOSED` |
 | **G-10** | ENGINEERING | **OPEN — driver recommends (c), Buyan may overrule** | Blocks nothing today. | `## G-10 — REFINED…` |
+| **G-11** | CONTRACT | **OPEN — NOT RATIFIABLE** | The driver, once DEC-2 rev 3 passes a review clean. `chosen_by: agent` is permitted here (CLAUDE.md makes DEC-n ratification agent-decidable); what is NOT permitted is ratifying rev 2. | `## G-11 — DEC-2 rev 2 REJECTED` |
 
-**Open right now: G-4, G-5, G-8, G-10.** Of those, **G-4 and G-5 are hard `user` gates** (each amends a
+**Open right now: G-4, G-5, G-8, G-10, G-11.** Of those, **G-4 and G-5 are hard `user` gates** (each amends a
 ratified DEC-n); **G-8 and G-10 block no work today** and the driver has recorded a recommendation on each.
 
 ## Open
@@ -2393,3 +2394,53 @@ and option (a) remains T116's.
   silently fixed.
 - The driver's A/B attribution was **right** this time — checked by T159, after being wrong three times
   previously.
+
+
+## G-11 — DEC-2 revision 2 is REJECTED and MUST NOT BE RATIFIED
+
+**Raised and recorded by local fire `20260822-080001`. Class CONTRACT. State: OPEN — NOT RATIFIABLE.**
+
+This is **not** a hard `user` gate. Under `CLAUDE.md` § *Answering gates*, **DEC-n ratification is
+agent-decidable** once the contract passes an independent review **clean** — the driver ratifies, records the
+rationale, and proceeds, with Buyan retaining veto. This entry exists to record that the condition **has not
+been met**, so that a later fire reading "agent-decidable" does not ratify on that basis alone.
+
+**Review history, which is the whole point of the entry:**
+
+| Review | Verdict | What it left behind |
+|---|---|---|
+| `A2-14` on rev 1 | **REJECTED** | three shape findings |
+| `A2-17` on rev 2 | **MICRO-FIX** | applied its **own** 7-line fix — so the document then stood **reviewed by nobody** |
+| `A2-19` on rev 2 post-micro-fix | **REJECTED** | applied **no** fix, deliberately, so the document the driver holds is exactly what was reviewed |
+
+**The rejection-grade finding, driver-reproduced independently before it was written up.** DEC-2 asserts in
+three places — banner fact 2, §8.1 fact 2, and A2-17's new §4.10 text — that *"no `ledger` vector CAN
+exist."* **That is false.** §5.1's own *heading* carries the true and weaker claim: no `ledger` vector is
+**expressible**. Admission-impossibility is strictly stronger, and it fails.
+
+Copy any `loanschedule` parity vector into `.softhouse/vectors/ledger/`, change **only** `case_id` and
+`context`, and the harness reports:
+
+```
+VERDICT: PASS (exit 0) — 44 parity vectors match the pinned reference oracle, 5711 cells compared.
+```
+
+`A2-19`'s figures and the driver's own independent probe agree **exactly**: 44 / 5711. The cause is one line
+— `context` is constrained only to be non-empty and to equal its own directory name (`admit.go:115`,
+`:119-120`); **no allowlist exists.** The strong claim rested on control **PC-3**, which was a **false
+negative**: it failed on two *author-correctable* defects, not a structural wall (**P-50** — the prover was
+never made falsifiable toward the fix). `A2-16` read a failing control as a wall; `A2-17` re-derived the
+*argument* but never re-ran the *corrected control*.
+
+**What unblocks G-11:** `A2-20` (close the `context` hole), then `A2-21` (DEC-2 revision 3 — retract the
+three false assertions, and give §5.2 a specification that is more than non-regression), then a further
+independent review passing **clean**.
+
+**What A2-19 CONFIRMED, so this is not read as a document without merit:** 47 of 47 Fineract citations hit at
+their exact cited lines (overall `[VERIFIED]` hit rate **62/64 = 96.9%**, one drift and one wrong, neither a
+money claim); §5.4's retraction reproduced exactly; the banner, §8.1 and §8.3 **do** defuse the I-3/I-4
+misreading; and **P-8 is genuinely independent of P-1…P-5**, which is what licensed `A2-18` to build the
+ledger-invariant guard this same fire.
+
+**No `user` gate was crossed to record this, and none is being asked for.** G-4, G-5, G-8 and G-10 are
+untouched.
