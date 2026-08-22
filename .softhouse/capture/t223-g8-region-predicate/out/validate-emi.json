@@ -1,0 +1,651 @@
+{
+ "counts": {
+  "compared": 1035,
+  "emi_match": 971,
+  "emi_mismatch": 64,
+  "errored": 2,
+  "n_lt_2_skipped": 3
+ },
+ "mismatches": [
+  {
+   "bMinor": 28,
+   "capture": "t117",
+   "emiRaw": "0.008062228678434892122",
+   "id": "P-CAL-ZPB",
+   "n": 55,
+   "observedEmiMinor": 2,
+   "predictedEmiMinor": 1,
+   "rate": "21.6"
+  },
+  {
+   "bMinor": 28,
+   "capture": "t117p2",
+   "emiRaw": "0.008062228678434892122",
+   "id": "P-CAL-ZPB",
+   "n": 55,
+   "observedEmiMinor": 2,
+   "predictedEmiMinor": 1,
+   "rate": "21.6"
+  },
+  {
+   "bMinor": 1000001,
+   "capture": "t117p2",
+   "emiRaw": "5000.004999999999995",
+   "id": "T117P2-R600p0-N150-B1000001",
+   "n": 150,
+   "observedEmiMinor": 506667,
+   "predictedEmiMinor": 500000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 501,
+   "capture": "t117p2",
+   "emiRaw": "2.504999999999999999",
+   "id": "T117P2-R600p0-N108-B501",
+   "n": 108,
+   "observedEmiMinor": 253,
+   "predictedEmiMinor": 250,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 1000001,
+   "capture": "t117p2",
+   "emiRaw": "5000.004999999999979",
+   "id": "T117P2-R600p0-N1000-B1000001",
+   "n": 1000,
+   "observedEmiMinor": 501000,
+   "predictedEmiMinor": 500000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 120000001,
+   "capture": "t117p2",
+   "emiRaw": "600000.0049999999998",
+   "id": "T117P2-R600p0-N108-B120000001",
+   "n": 108,
+   "observedEmiMinor": 61111111,
+   "predictedEmiMinor": 60000000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 120000001,
+   "capture": "t117p2",
+   "emiRaw": "600000.0049999999975",
+   "id": "T117P2-R600p0-N1000-B120000001",
+   "n": 1000,
+   "observedEmiMinor": 60120000,
+   "predictedEmiMinor": 60000000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 1000001,
+   "capture": "t117p2",
+   "emiRaw": "5000.004999999999993",
+   "id": "T117P2-R600p0-N250-B1000001",
+   "n": 250,
+   "observedEmiMinor": 504000,
+   "predictedEmiMinor": 500000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 10001,
+   "capture": "t117p2",
+   "emiRaw": "50.00499999999999995",
+   "id": "T117P2-R600p0-N250-B10001",
+   "n": 250,
+   "observedEmiMinor": 5040,
+   "predictedEmiMinor": 5000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 1000001,
+   "capture": "t117p2",
+   "emiRaw": "5000.004999999999992",
+   "id": "T117P2-R600p0-N121-B1000001",
+   "n": 121,
+   "observedEmiMinor": 502793,
+   "predictedEmiMinor": 500000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 1001,
+   "capture": "t117p2",
+   "emiRaw": "5.004999999999999982",
+   "id": "T117P2-R600p0-N1000-B1001",
+   "n": 1000,
+   "observedEmiMinor": 501,
+   "predictedEmiMinor": 500,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 120000001,
+   "capture": "t117p2",
+   "emiRaw": "600000.0049999999993",
+   "id": "T117P2-R600p0-N150-B120000001",
+   "n": 150,
+   "observedEmiMinor": 60800000,
+   "predictedEmiMinor": 60000000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 100000001,
+   "capture": "t117p2",
+   "emiRaw": "500000.0049999999995",
+   "id": "T117P2-R600p0-N150-B100000001",
+   "n": 150,
+   "observedEmiMinor": 50666667,
+   "predictedEmiMinor": 50000000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 100,
+   "capture": "t117p2",
+   "emiRaw": "0.4999999999999999995",
+   "id": "T117P2-R600p0-N150-B100",
+   "n": 150,
+   "observedEmiMinor": 51,
+   "predictedEmiMinor": 50,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 501,
+   "capture": "t117p2",
+   "emiRaw": "2.504999999999999997",
+   "id": "T117P2-R600p0-N121-B501",
+   "n": 121,
+   "observedEmiMinor": 254,
+   "predictedEmiMinor": 250,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 100000001,
+   "capture": "t117p2",
+   "emiRaw": "500000.0049999999998",
+   "id": "T117P2-R600p0-N250-B100000001",
+   "n": 250,
+   "observedEmiMinor": 50400000,
+   "predictedEmiMinor": 50000000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 101,
+   "capture": "t117p2",
+   "emiRaw": "0.5049999999999999996",
+   "id": "T117P2-R600p0-N150-B101",
+   "n": 150,
+   "observedEmiMinor": 51,
+   "predictedEmiMinor": 50,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 1001,
+   "capture": "t117p2",
+   "emiRaw": "5.004999999999999992",
+   "id": "T117P2-R600p0-N121-B1001",
+   "n": 121,
+   "observedEmiMinor": 508,
+   "predictedEmiMinor": 500,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 100000,
+   "capture": "t117p2",
+   "emiRaw": "499.9999999999999995",
+   "id": "T117P2-R600p0-N150-B100000",
+   "n": 150,
+   "observedEmiMinor": 50667,
+   "predictedEmiMinor": 50000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 501,
+   "capture": "t117p2",
+   "emiRaw": "2.504999999999999997",
+   "id": "T117P2-R600p0-N250-B501",
+   "n": 250,
+   "observedEmiMinor": 252,
+   "predictedEmiMinor": 250,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 10001,
+   "capture": "t117p2",
+   "emiRaw": "50.00499999999999994",
+   "id": "T117P2-R600p0-N150-B10001",
+   "n": 150,
+   "observedEmiMinor": 5067,
+   "predictedEmiMinor": 5000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 100001,
+   "capture": "t117p2",
+   "emiRaw": "500.0049999999999994",
+   "id": "T117P2-R600p0-N150-B100001",
+   "n": 150,
+   "observedEmiMinor": 50667,
+   "predictedEmiMinor": 50000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 1001,
+   "capture": "t117p2",
+   "emiRaw": "5.004999999999999999",
+   "id": "T117P2-R600p0-N108-B1001",
+   "n": 108,
+   "observedEmiMinor": 505,
+   "predictedEmiMinor": 500,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 100001,
+   "capture": "t117p2",
+   "emiRaw": "500.0049999999999999",
+   "id": "T117P2-R600p0-N108-B100001",
+   "n": 108,
+   "observedEmiMinor": 50926,
+   "predictedEmiMinor": 50000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 100001,
+   "capture": "t117p2",
+   "emiRaw": "500.0049999999999998",
+   "id": "T117P2-R600p0-N250-B100001",
+   "n": 250,
+   "observedEmiMinor": 50400,
+   "predictedEmiMinor": 50000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 100000001,
+   "capture": "t117p2",
+   "emiRaw": "500000.0049999999979",
+   "id": "T117P2-R600p0-N1000-B100000001",
+   "n": 1000,
+   "observedEmiMinor": 50100000,
+   "predictedEmiMinor": 50000000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 501,
+   "capture": "t117p2",
+   "emiRaw": "2.504999999999999997",
+   "id": "T117P2-R600p0-N150-B501",
+   "n": 150,
+   "observedEmiMinor": 253,
+   "predictedEmiMinor": 250,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 100001,
+   "capture": "t117p2",
+   "emiRaw": "500.0049999999999992",
+   "id": "T117P2-R600p0-N121-B100001",
+   "n": 121,
+   "observedEmiMinor": 50279,
+   "predictedEmiMinor": 50000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 10001,
+   "capture": "t117p2",
+   "emiRaw": "50.00499999999999992",
+   "id": "T117P2-R600p0-N121-B10001",
+   "n": 121,
+   "observedEmiMinor": 5029,
+   "predictedEmiMinor": 5000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 100000001,
+   "capture": "t117p2",
+   "emiRaw": "500000.0049999999998",
+   "id": "T117P2-R600p0-N108-B100000001",
+   "n": 108,
+   "observedEmiMinor": 50925926,
+   "predictedEmiMinor": 50000000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 10001,
+   "capture": "t117p2",
+   "emiRaw": "50.00499999999999978",
+   "id": "T117P2-R600p0-N1000-B10001",
+   "n": 1000,
+   "observedEmiMinor": 5010,
+   "predictedEmiMinor": 5000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 10000,
+   "capture": "t117p2",
+   "emiRaw": "49.99999999999999995",
+   "id": "T117P2-R600p0-N250-B10000",
+   "n": 250,
+   "observedEmiMinor": 5039,
+   "predictedEmiMinor": 5000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 101,
+   "capture": "t117p2",
+   "emiRaw": "0.5049999999999999993",
+   "id": "T117P2-R600p0-N121-B101",
+   "n": 121,
+   "observedEmiMinor": 51,
+   "predictedEmiMinor": 50,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 101,
+   "capture": "t117p2",
+   "emiRaw": "0.5049999999999999995",
+   "id": "T117P2-R600p0-N108-B101",
+   "n": 108,
+   "observedEmiMinor": 51,
+   "predictedEmiMinor": 50,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 120000001,
+   "capture": "t117p2",
+   "emiRaw": "600000.0049999999990",
+   "id": "T117P2-R600p0-N121-B120000001",
+   "n": 121,
+   "observedEmiMinor": 60335255,
+   "predictedEmiMinor": 60000000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 100000,
+   "capture": "t117p2",
+   "emiRaw": "499.9999999999999995",
+   "id": "T117P2-R600p0-N250-B100000",
+   "n": 250,
+   "observedEmiMinor": 50400,
+   "predictedEmiMinor": 50000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 1000001,
+   "capture": "t117p2",
+   "emiRaw": "5000.004999999999998",
+   "id": "T117P2-R600p0-N108-B1000001",
+   "n": 108,
+   "observedEmiMinor": 509259,
+   "predictedEmiMinor": 500000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 10001,
+   "capture": "t117p2",
+   "emiRaw": "50.00499999999999996",
+   "id": "T117P2-R600p0-N108-B10001",
+   "n": 108,
+   "observedEmiMinor": 5093,
+   "predictedEmiMinor": 5000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 100000001,
+   "capture": "t117p2",
+   "emiRaw": "500000.0049999999993",
+   "id": "T117P2-R600p0-N121-B100000001",
+   "n": 121,
+   "observedEmiMinor": 50279378,
+   "predictedEmiMinor": 50000000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 100001,
+   "capture": "t117p2",
+   "emiRaw": "500.0049999999999981",
+   "id": "T117P2-R600p0-N1000-B100001",
+   "n": 1000,
+   "observedEmiMinor": 50100,
+   "predictedEmiMinor": 50000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 1000,
+   "capture": "t117p2",
+   "emiRaw": "4.999999999999999995",
+   "id": "T117P2-R600p0-N250-B1000",
+   "n": 250,
+   "observedEmiMinor": 504,
+   "predictedEmiMinor": 500,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 1000,
+   "capture": "t117p2",
+   "emiRaw": "4.999999999999999995",
+   "id": "T117P2-R600p0-N150-B1000",
+   "n": 150,
+   "observedEmiMinor": 506,
+   "predictedEmiMinor": 500,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 1001,
+   "capture": "t117p2",
+   "emiRaw": "5.004999999999999994",
+   "id": "T117P2-R600p0-N250-B1001",
+   "n": 250,
+   "observedEmiMinor": 502,
+   "predictedEmiMinor": 500,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 1001,
+   "capture": "t117p2",
+   "emiRaw": "5.004999999999999995",
+   "id": "T117P2-R600p0-N150-B1001",
+   "n": 150,
+   "observedEmiMinor": 507,
+   "predictedEmiMinor": 500,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 120000001,
+   "capture": "t117p2",
+   "emiRaw": "600000.0049999999996",
+   "id": "T117P2-R600p0-N250-B120000001",
+   "n": 250,
+   "observedEmiMinor": 60480000,
+   "predictedEmiMinor": 60000000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 10000,
+   "capture": "t117p2",
+   "emiRaw": "49.99999999999999995",
+   "id": "T117P2-R600p0-N150-B10000",
+   "n": 150,
+   "observedEmiMinor": 5067,
+   "predictedEmiMinor": 5000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 28,
+   "capture": "t159",
+   "emiRaw": "0.008062228678434892122",
+   "id": "P-CAL-ZPB",
+   "n": 55,
+   "observedEmiMinor": 2,
+   "predictedEmiMinor": 1,
+   "rate": "21.6"
+  },
+  {
+   "bMinor": 1001,
+   "capture": "t159",
+   "emiRaw": "5.004999999999999983",
+   "id": "T159-R600p0-N1200-B1001",
+   "n": 1200,
+   "observedEmiMinor": 501,
+   "predictedEmiMinor": 500,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 1001,
+   "capture": "t159",
+   "emiRaw": "5.004999999999999987",
+   "id": "T159-R600p0-N1500-B1001",
+   "n": 1500,
+   "observedEmiMinor": 501,
+   "predictedEmiMinor": 500,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 10001,
+   "capture": "t159",
+   "emiRaw": "50.00499999999999982",
+   "id": "T159-R600p0-N1200-B10001",
+   "n": 1200,
+   "observedEmiMinor": 5003,
+   "predictedEmiMinor": 5000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 10001,
+   "capture": "t159",
+   "emiRaw": "50.00499999999999988",
+   "id": "T159-R600p0-N1500-B10001",
+   "n": 1500,
+   "observedEmiMinor": 5003,
+   "predictedEmiMinor": 5000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 901,
+   "capture": "t159",
+   "emiRaw": "4.504999999999999982",
+   "id": "T159-R600p0-N1000-B901",
+   "n": 1000,
+   "observedEmiMinor": 451,
+   "predictedEmiMinor": 450,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 10001,
+   "capture": "t159",
+   "emiRaw": "50.00499999999999949",
+   "id": "T159-R600p0-N3000-B10001",
+   "n": 3000,
+   "observedEmiMinor": 5003,
+   "predictedEmiMinor": 5000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 601,
+   "capture": "t159",
+   "emiRaw": "3.004999999999999988",
+   "id": "T159-R600p0-N1000-B601",
+   "n": 1000,
+   "observedEmiMinor": 301,
+   "predictedEmiMinor": 300,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 999,
+   "capture": "t159",
+   "emiRaw": "4.994999999999999978",
+   "id": "T159-R600p0-N1000-B999",
+   "n": 1000,
+   "observedEmiMinor": 500,
+   "predictedEmiMinor": 499,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 1000001,
+   "capture": "t159",
+   "emiRaw": "5000.004999999999950",
+   "id": "T159-R600p0-N3000-B1000001",
+   "n": 3000,
+   "observedEmiMinor": 500175,
+   "predictedEmiMinor": 500000,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 751,
+   "capture": "t159",
+   "emiRaw": "3.754999999999999985",
+   "id": "T159-R600p0-N1000-B751",
+   "n": 1000,
+   "observedEmiMinor": 376,
+   "predictedEmiMinor": 375,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 701,
+   "capture": "t159",
+   "emiRaw": "3.504999999999999986",
+   "id": "T159-R600p0-N1000-B701",
+   "n": 1000,
+   "observedEmiMinor": 351,
+   "predictedEmiMinor": 350,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 1001,
+   "capture": "t159",
+   "emiRaw": "5.004999999999999965",
+   "id": "T159-R600p0-N2000-B1001",
+   "n": 2000,
+   "observedEmiMinor": 501,
+   "predictedEmiMinor": 500,
+   "rate": "600.0"
+  },
+  {
+   "bMinor": 28,
+   "capture": "t83",
+   "emiRaw": "0.008062228678434892122",
+   "id": "P-CAL-ZPB",
+   "n": 55,
+   "observedEmiMinor": 2,
+   "predictedEmiMinor": 1,
+   "rate": "21.6"
+  },
+  {
+   "bMinor": 28,
+   "capture": "t84",
+   "emiRaw": "0.008062228678434892122",
+   "id": "P-CAL-ZPB",
+   "n": 55,
+   "observedEmiMinor": 2,
+   "predictedEmiMinor": 1,
+   "rate": "21.6"
+  },
+  {
+   "bMinor": 28,
+   "capture": "t84b",
+   "emiRaw": "0.008062228678434892122",
+   "id": "P-CAL-ZPB",
+   "n": 55,
+   "observedEmiMinor": 2,
+   "predictedEmiMinor": 1,
+   "rate": "21.6"
+  },
+  {
+   "bMinor": 28,
+   "capture": "t100",
+   "emiRaw": "0.008062228678434892122",
+   "id": "P-CAL-ZPB",
+   "n": 55,
+   "observedEmiMinor": 2,
+   "predictedEmiMinor": 1,
+   "rate": "21.6"
+  },
+  {
+   "bMinor": 28,
+   "capture": "t116",
+   "emiRaw": "0.008062228678434892122",
+   "id": "P-CAL-ZPB",
+   "n": 55,
+   "observedEmiMinor": 2,
+   "predictedEmiMinor": 1,
+   "rate": "21.6"
+  }
+ ]
+}

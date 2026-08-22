@@ -1,0 +1,47 @@
+{
+ "task": "T223",
+ "gate": "G-8",
+ "registeredBeforeObservation": true,
+ "oracle": "Fineract reference implementation, pinned 426a23544e8426a38ae43ae404670a0a7e85b9eb, Path A embeddable seam. Oracle Database is a prohibited product and appears nowhere in this work.",
+ "mathContext": {"precision": 19, "roundingMode": "HALF_UP", "roundingModeOrdinal": 4},
+ "shape": {
+  "repaymentFrequency": 1,
+  "repaymentFrequencyType": "MONTHS",
+  "interestMethod": "DECLINING_BALANCE",
+  "daysInMonth": "DAYS_30",
+  "daysInYear": "DAYS_360",
+  "currencyCode": "MNT",
+  "currencyDecimalPlaces": 2,
+  "scheduleGenerationStartDate": "2024-01-01",
+  "disbursementDate": "2024-01-01",
+  "downPaymentEnabled": false,
+  "currencyInMultiplesOf": null,
+  "installmentAmountInMultiplesOf": null,
+  "fixedLength": null
+ },
+ "predicate": "E_q > I1 -> not family B; E_q == I1 -> not family B; E_q < I1 -> family B unless (B_minor > floor(n/2) AND 2*B_minor >= n)",
+ "cells": [
+  {"id": "T223-R36p0-N1323-B50", "annualRate": "36.0", "n": 1323, "bMinor": 50,
+   "predictedEmiQuantizedMinor": 2, "i1ExactMinor": "3/2", "predictedFamilyB": false},
+  {"id": "T223-R36p0-N1324-B50", "annualRate": "36.0", "n": 1324, "bMinor": 50,
+   "predictedEmiQuantizedMinor": 1, "i1ExactMinor": "3/2", "predictedFamilyB": true},
+  {"id": "T223-R36p0-N1500-B50", "annualRate": "36.0", "n": 1500, "bMinor": 50,
+   "predictedEmiQuantizedMinor": 1, "i1ExactMinor": "3/2", "predictedFamilyB": true},
+  {"id": "T223-R300p0-N500-B2", "annualRate": "300.0", "n": 500, "bMinor": 2,
+   "predictedEmiQuantizedMinor": 1, "i1ExactMinor": "1/2", "predictedFamilyB": false},
+  {"id": "T223-R300p0-N800-B2", "annualRate": "300.0", "n": 800, "bMinor": 2,
+   "predictedEmiQuantizedMinor": 0, "i1ExactMinor": "1/2", "predictedFamilyB": true},
+  {"id": "T223-R300p0-N1200-B2", "annualRate": "300.0", "n": 1200, "bMinor": 2,
+   "predictedEmiQuantizedMinor": 1, "i1ExactMinor": "1/2", "predictedFamilyB": false},
+  {"id": "T223-R21p6-N3000-B250", "annualRate": "21.6", "n": 3000, "bMinor": 250,
+   "predictedEmiQuantizedMinor": 5, "i1ExactMinor": "9/2", "predictedFamilyB": false}
+ ],
+ "calibrations": [
+  {"id": "P-CAL-ZPA", "mustReproduce": "T64-ZP-A", "annualRate": "21.6", "n": 56, "bMinor": 28},
+  {"id": "P-CAL-ZPB", "mustReproduce": "T64-ZP-B", "annualRate": "21.6", "n": 55, "bMinor": 28}
+ ],
+ "knownIncompleteness": [
+  "The emulated instalment reproduces the oracle's period-1 instalment on 971 of 1035 comparable committed cells; the 64 misses are all site-3 (checkAndAdjustEmiIfNeededOnRelatedRepaymentPeriods) rescues.",
+  "The classification rule is known to FAIL on T159-R600p0-N1000-B801: site 3's threshold says rescued, the oracle emitted family B. Recorded in advance."
+ ]
+}
