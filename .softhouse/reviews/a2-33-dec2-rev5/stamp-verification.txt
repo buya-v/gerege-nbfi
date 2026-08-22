@@ -1,0 +1,75 @@
+###############################################################
+## AT THE STAMPED COMMIT 33d19a6 (what rev 5 claims it measured)
+###############################################################
+--- Class literals: rev5 claims :268 :286 :303 :500 :580 :596 :669 :680 (eight, seven distinct)
+268:			Class: "I4-DML",
+286:					Class: "I3-SQL-BALANCE",
+303:					Class: "I3-SQL-BALANCE",
+500:						Class: "I3-PKG-STATE",
+580:						Class: "OPAQUE-SQL",
+596:						Class: "I4-BUILDER",
+669:		Class: "I3-FIELD-WRITE",
+680:			Class: "I6-HOLD-BALANCE",
+    distinct: 7
+
+--- NIL-COVERAGE emission: rev5 claims :840 :847 :852
+840:		fmt.Printf("NIL-COVERAGE — the SQL surface inspected %d string literals and found ZERO SQL DML "+
+847:		fmt.Printf("NIL-COVERAGE — zero mutating driver calls (Exec/ExecContext/SendBatch/CopyFrom/" +
+852:		fmt.Printf("NIL-COVERAGE — zero hold-named functions exist under this root, so class " +
+
+--- mutatingCallRe: rev5 claims :151 ; applied at :593-596
+148:// mutatingCallRe is the query-builder / ORM verb set: a Go method name that means "unmake a
+151:var mutatingCallRe = regexp.MustCompile(`^(Update|Updates|UpdateAll|UpdateOne|UpdateMany|Delete|DeleteAll|DeleteOne|DeleteMany|Del|Remove|Truncate|Save|Upsert|SetColumn|Set)$`)
+593:			if mutatingCallRe.MatchString(name) {
+
+--- calleeName: rev5 claims :406-418
+406:func calleeName(fun ast.Expr) string {
+
+--- prunedDirs: rev5 claims :161
+161:var prunedDirs = map[string]bool{".git": true, "vendor": true, "node_modules": true}
+
+--- check-ledger-invariants.sh awk block: rev5 claims :210-219
+     1	  # inside the awk program — so this adds no member of the P-57 rule-1 EPIPE family under
+     2	  # `set -o pipefail`.
+     3	  if [ "$rc" -eq 0 ]; then
+     4	    printf '%s\n' "$out" | LC_ALL=C awk '
+     5	      $0 ~ /^CANNOT-CATCH / { grab = 1 }
+     6	      grab {
+     7	        if ($0 !~ /^CANNOT-CATCH / && $0 !~ /^[ \t]/) { grab = 0; next }
+     8	        print
+     9	      }
+    10	    ' | while IFS= read -r line; do
+    11	      say "ledger-invariants: $line"
+    12	    done
+    13	  fi
+    14	
+
+--- conformance.sh: rev5 claims printed line :1187, stale comment :1163 :1166-1168 :1172 :1176 :1177 :1182
+  1163:   # THE LIMITS MUST TRAVEL WITH THE VERDICT, AND ONE OF THEM DOES NOT ARRIVE ON ITS OWN.
+  1166:   # CANNOT-CATCH block on every one of ITS runs — but its head captures that output into a
+  1167:   # variable and, on the PASS path, re-prints only `^CENSUS ` and `^NIL-COVERAGE ` lines
+  1168:   # (check-ledger-invariants.sh:185). So:
+  1172:   #   * the CANNOT-CATCH block does NOT — and did not standalone either, so wiring is not what
+  1176:   # is not present anywhere in the output. That is a defect in the head; the head is A2-18's
+  1177:   # artefact and outside T208's scope, so it is RAISED as FU-T208-1, not fixed here.
+  1182:   # limits, against 33 for the full block. If 8 is judged too thin the fix is FU-T208-1, which
+  1187:   say "conformance:   guard prints on every run and its head DROPS on the pass path — FU-T208-1):"
+
+###############################################################
+## AT THE REVIEW HEAD 8f193b5 (A2-25's re-measure rule)
+###############################################################
+--- Class literals now:
+280:			Class: "I4-DML", 298:					Class: "I3-SQL-BALANCE", 315:					Class: "I3-SQL-BALANCE", 512:						Class: "I3-PKG-STATE", 592:						Class: "OPAQUE-SQL", 608:						Class: "I4-BUILDER", 681:		Class: "I3-FIELD-WRITE", 692:			Class: "I6-HOLD-BALANCE", 
+--- NIL-COVERAGE now:
+852:		fmt.Printf("NIL-COVERAGE — the SQL surface inspected %
+859:		fmt.Printf("NIL-COVERAGE — zero mutating driver calls 
+864:		fmt.Printf("NIL-COVERAGE — zero hold-named functions e
+--- mutatingCallRe now: 163
+--- calleeName now: 418
+--- prunedDirs now: 173
+--- conformance.sh: does the FALSE printed line still exist at HEAD?
+    ABSENT at HEAD
+--- conformance.sh: is FU-T208-1 still cited as OPEN at HEAD?
+1177:  # either, so wiring was not what dropped it. T208 raised that as FU-T208-1 rather than fixing
+1181:  # ⚠ CORRECTION (T227, 22 August 2026). FU-T208-1 IS CLOSED — T209 (commit 03e9094) widened
+1186:  # below still named FU-T208-1 as an available fix and still said the head "DROPS" the block

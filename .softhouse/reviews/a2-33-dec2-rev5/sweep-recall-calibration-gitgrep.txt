@@ -1,0 +1,23 @@
+git grep engine: git version 2.50.1 (Apple Git-155)
+flags: git grep -n -I -i -E   (no \b, \d, \s or \w in ANY pattern above)
+unique rev4 lines hit by git grep:       81
+
+=== RECALL of the 15 ground-truth F-2 lines + 2 F-1 lines ===
+  rev4 line 48  HIT
+  rev4 line 811  HIT
+  rev4 line 894  HIT
+  rev4 line 905  HIT
+  rev4 line 910  HIT
+  rev4 line 932  HIT
+  rev4 line 935  HIT
+  rev4 line 974  HIT
+  rev4 line 1956  HIT
+  rev4 line 2283  HIT
+  rev4 line 2284  HIT
+  rev4 line 2345  HIT
+  rev4 line 2474  HIT
+  rev4 line 2531  HIT
+  rev4 line 2544  HIT
+  rev4 line 956  HIT
+  rev4 line 957  HIT
+MISSES=0

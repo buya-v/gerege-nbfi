@@ -1,0 +1,104 @@
+package main
+
+// A2-33 independent probe. Written from scratch for this review; the three constants below are
+// transcribed from .softhouse/guards/ledgerguard/main.go at THIS review's HEAD and the transcription
+// is proven by reproducing the guard's own CENSUS figures (files, packages, calls) to the digit.
+
+import (
+	"fmt"
+	"go/ast"
+	"go/parser"
+	"go/token"
+	"io/fs"
+	"os"
+	"path/filepath"
+	"regexp"
+	"sort"
+	"strings"
+)
+
+var mutatingCallRe = regexp.MustCompile(`^(Update|Updates|UpdateAll|UpdateOne|UpdateMany|Delete|DeleteAll|DeleteOne|DeleteMany|Del|Remove|Truncate|Save|Upsert|SetColumn|Set)$`)
+var mutatingExecRe = regexp.MustCompile(`^(Exec|ExecContext|SendBatch|CopyFrom|Prepare|PrepareContext)$`)
+var prunedDirs = map[string]bool{".git": true, "vendor": true, "node_modules": true}
+
+func calleeName(fun ast.Expr) string {
+	switch t := fun.(type) {
+	case *ast.Ident:
+		return t.Name
+	case *ast.SelectorExpr:
+		return t.Sel.Name
+	case *ast.ParenExpr:
+		return calleeName(t.X)
+	case *ast.IndexExpr:
+		return calleeName(t.X)
+	}
+	return ""
+}
+
+func main() {
+	root := os.Args[1]
+	files, calls := 0, 0
+	pkgs := map[string]bool{}
+	builder := []string{}
+	execs := []string{}
+	fset := token.NewFileSet()
+	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if d.IsDir() {
+			if prunedDirs[d.Name()] {
+				return filepath.SkipDir
+			}
+			return nil
+		}
+		if !strings.HasSuffix(path, ".go") {
+			return nil
+		}
+		files++
+		rel, _ := filepath.Rel(root, path)
+		rel = filepath.ToSlash(rel)
+		pkgs[filepath.ToSlash(filepath.Dir(rel))] = true
+		src, e := os.ReadFile(path)
+		if e != nil {
+			return e
+		}
+		f, e := parser.ParseFile(fset, path, src, parser.ParseComments)
+		if e != nil {
+			return e
+		}
+		ast.Inspect(f, func(n ast.Node) bool {
+			ce, ok := n.(*ast.CallExpr)
+			if !ok {
+				return true
+			}
+			calls++
+			name := calleeName(ce.Fun)
+			p := fset.Position(ce.Pos())
+			if mutatingCallRe.MatchString(name) {
+				builder = append(builder, fmt.Sprintf("%s  %s:%d:%d", name, rel, p.Line, p.Column))
+			}
+			if mutatingExecRe.MatchString(name) {
+				execs = append(execs, fmt.Sprintf("%s  %s:%d:%d", name, rel, p.Line, p.Column))
+			}
+			return true
+		})
+		return nil
+	})
+	if err != nil {
+		fmt.Println("WALK ERROR:", err)
+		os.Exit(2)
+	}
+	sort.Strings(builder)
+	sort.Strings(execs)
+	fmt.Printf("A2-33 PROBE root=%s\n", root)
+	fmt.Printf("A2-33 CALIBRATION  files=%d packages=%d calls=%d   (must equal the guard's CENSUS line)\n", files, len(pkgs), calls)
+	fmt.Printf("A2-33 I4-BUILDER population (mutatingCallRe matches) = %d\n", len(builder))
+	for _, b := range builder {
+		fmt.Println("   BUILDER-CALL", b)
+	}
+	fmt.Printf("A2-33 OPAQUE-SQL population (mutatingExecRe matches) = %d   (guard publishes this as the '(N mutating)' figure)\n", len(execs))
+	for _, e := range execs {
+		fmt.Println("   EXEC-CALL", e)
+	}
+}
