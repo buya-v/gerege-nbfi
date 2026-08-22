@@ -1971,7 +1971,7 @@
     {
       "id": "T220",
       "title": "INDEPENDENT review of T116's three promoted vectors — the money vectors landed unreviewed",
-      "status": "in_progress",
+      "status": "done",
       "executor": "agent",
       "model": "opus",
       "role": "reviewer",
@@ -1983,7 +1983,7 @@
         ".softhouse/reviews/t220-review-t116/"
       ],
       "description": "Paired independent reviewer for T116. Registered by the driver, local fire 20260822-000013, on merging T116 — the pipeline's own plan gate requires every test_writer/coder task to have a paired reviewer, and three money vectors reached main without one.",
-      "note": "Registered by the driver, local fire 20260822-000013. | DISPATCHED local fire 20260822-000013 wave 2.",
+      "note": "local fire 20260822-000013: DONE on softhouse/T220-review-t116 (8ed9bf1), merged. VERDICT APPROVED -- T116's three vectors and BOTH invariant exemptions are honest. IT DID NOT AUDIT T116's RIG; IT RE-OBSERVED THE ORACLE ITSELF, by two disjoint routes neither of which reads T116's output. (1) Its OWN capture: a probe written from scratch against the pinned seam, compiled and run in the pinned image (docker run --rm, no DB, no server, running containers untouched) -- reproduces all three vectors CELL FOR CELL, 1269 money cells, 0 mismatches; and T116's committed raw capture matches it on 1908 cells, so THAT CAPTURE IS REAL, NOT AUTHORED. (2) FROM THE PINNED SOURCE -- AND THIS IS THE HEADLINE, BECAUSE IT EXPLAINS FAMILY B, WHICH T116 EXPLICITLY COULD NOT. DRIVER-VERIFIED AT BOTH SITES, re-opened rather than accepted: ProgressiveEMICalculator.java:1962 ends '.divide(calculatedDaysInPeriod, mc).setScale(mc.getPrecision(), mc.getRoundingMode())', consuming precision 19 as DECIMAL PLACES; and RepaymentPeriod.java:217 is 'reduce(BigDecimal.ONE, BigDecimal::add)' -- the TWO-ARG add, NO MathContext. So rateFactorPlus1 carries 19 decimal places and TWENTY significant digits inside a PRECISION-19 context. Accumulated over n periods the EMI dips below half a minor unit at exactly the observed boundary: n=103 -> 0.005 -> 0.01; n=104 -> 0.004999999999999999999 -> 0.00. EMI ZERO MEANS NOTHING IS EVER REPAID, and calculateLastUnpaidRepaymentPeriodEMI's fallback drops the whole residual into the last row as interest -- the observed schedule exactly. Its probe confirmed the PREDICTED boundary (102/103 clean, 104/105/108 family B). THIS IS DEC-1's KNOWN MathContext DOUBLE-SENSE PRODUCING A MONEY OUTCOME -- G-1 already named :1962/:1979 as the only two such sites. EXEMPTIONS ATTACKED, NOT ARGUED: every cell the two exempted invariants read is a GRADED cell on both vectors, so an exemption cannot conceal a port divergence there -- and it did not leave that as reasoning, it ran TWO port mutations, T116's G8-FINAL-ROW-SETTLES-THE-BALANCE (green at 43, RED at 46, 4 cells each, 0 on the clean sibling) and ITS OWN G8-LAST-INSTALLMENT-GIVES-UP, BUILT SO BOTH EXEMPTED INVARIANTS STAY VIOLATED AND SILENCED -- still RED, on a one-minor-unit diff. That is the brief's hardest question ('can an exemption hide a real defect?') answered by construction. Exemptions emptied: exit 1, exactly 4 violations naming exactly the two. balance_roll_forward holds unexempted 47/47, so dropping T100's third was right. Store census: exemptions on exactly two files, two invariants each; N103 carries none and passes. TRIPWIRES ADJUDICATED AS CONSEQUENCES, NOT ADJUSTMENTS: 110->113 and 103->106 RECOMPUTED FROM THE STORE ITSELF; refused (62) and both structural counts unmoved, so 51 = 113-62 and 48 = 110-62. GATES CLEAN: contract.go absent from both T116 commits, no DEC-n amended, all 53 files at dec1_revision 12, contract-refusal still PASS 4, G-8 still OPEN with (b)/(c) untouched, prediction commit a strict ancestor carrying 0 files under out/. ONE FINDING, NOT A REJECTION -> T222.",
       "branch": "softhouse/T220-review-t116"
     },
     {
@@ -2002,6 +2002,40 @@
       ],
       "description": "FOUND BY T218's sweep, local fire 20260822-000013 -- the same shape as T218 itself, one document further on, and only visible because T214 landed T108.md this fire. .softhouse/reviews/T131-review-of-T108.md is on main and its findings F-T131-1, F-T131-3 and F-T131-5 were applied to .softhouse/patterns.md (T218 verified that) but NEVER to T108.md, which still states the original FALSE claims VERBATIM. So main now carries a handoff asserting three things its own merged review disproved. Apply the three corrections TO T108.md. BIND BY CONTENT, NOT BY LINE NUMBER -- T218 found several of T127's line numbers had already drifted and T131's are older still. For each finding: quote what T131 says the text SAYS, locate it by content, and if the line number no longer points at the quoted text, SAY SO and land it by content. If you cannot find the quoted text, do NOT guess -- report it unapplicable and say what you searched for. DO NOT rewrite evidence to make a citation resolve (T114's standing ruling, T176's prohibition). A correction the reviewer AUTHORED is legitimate; anything beyond its findings is out of scope -- register a sixth defect, do not fix it. THEN FINISH THE SWEEP T218 STARTED, because two instances is a pattern and the population is now known: T214 landed 64 evidence paths this fire. For EVERY on-main review document, ask whether its corrections reached the file it reviews or only the downstream summary. Report the whole population and how you enumerated it -- 'not found' is a statement about the search, never about the world (P-66). Also carry T218's registered discrepancy: T127's replacement finding about charges/preconditions.sh is itself stale (T91's ea1b211/e626c2b converted both copies into call-throughs carrying the hardening), which conflicts with obligations.md's T133/T137/T148 row. Adjudicate it or say why you cannot. BAR: probe present and up, PASS exit 0, 46 parity vectors / 7884 cells, store 73c3ea7b43dd75f04884072719a87fc8e1d255c1 UNCHANGED (docs only).",
       "note": "Registered by the driver, local fire 20260822-000013, from T218's sweep."
+    },
+    {
+      "id": "T222",
+      "title": "The exemption MECHANISM has no corpus-wide tripwire -- a decoration exemption is admissible today",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "role": "coder",
+      "target": "code",
+      "dependencies": [
+        "T220"
+      ],
+      "files_hint": [
+        "nexus/internal/apps/loanschedule/conformance/"
+      ],
+      "description": "T220's single finding against T116, raised while APPROVING it. The kill counts have corpus-wide tripwires; THE EXEMPTION COUNT DOES NOT. admit.go checks only 'known invariant, non-empty reason', so TWO shapes are admissible today with nothing to catch them: a DECORATION exemption (an exemption on an invariant that would have held anyway -- it silences nothing, but it inflates the exempted count and teaches a reader the corpus is more exempted than it is), and an exemption PAIRED WITH unrecorded_fields WITHDRAWING THE SAME CELLS (which removes the cells from grading AND removes the invariant that would have noticed). The second is the dangerous one: T220 proved an exemption cannot hide a port divergence ONLY BECAUSE every cell the two exempted invariants read is a GRADED cell on those two vectors. That is a property of TODAY'S CORPUS, not of the mechanism. Pin the exemption count corpus-wide -- T220 says it costs one assertion. Then go further and make the DANGEROUS pairing detectable: an exemption whose invariant reads only cells that unrecorded_fields has withdrawn should be REFUSED, or at minimum reported by name. REQUIRED: drive each new check RED on a deliberately-bad input and show the run (P-22 -- a guard you have not seen fail is not a guard). State the population the check inspects, in the run output, in the shape guard_ledger_invariants uses ('NIL-COVERAGE -- inspected an empty population') -- a check that stops checking must say so in writing. DO NOT weaken or re-scope T116's two legitimate exemptions; they were independently re-derived and approved. If your check turns them RED, your check is wrong -- they are the positive control. BAR: probe present and up, PASS exit 0, 46 parity vectors / 7884 cells, 4 EXEMPTED BY A VECTOR, kills 106 money / 7 structural, store 73c3ea7b43dd75f04884072719a87fc8e1d255c1 UNCHANGED by you. RE-DERIVE these -- the corpus moved twice this fire (P-63).",
+      "note": "Registered by the driver, local fire 20260822-000013, from T220's approval of T116."
+    },
+    {
+      "id": "T223",
+      "title": "G-8's region is stated in rates and terms; T220 proved the phenomenon is an EMI half-minor-unit floor -- restate it or the user is asked the wrong question",
+      "status": "pending",
+      "executor": "agent",
+      "model": "opus",
+      "role": "analyst",
+      "target": "docs",
+      "dependencies": [
+        "T220"
+      ],
+      "files_hint": [
+        ".softhouse/gates.md"
+      ],
+      "description": "T220's second carry-forward, and it bears on what BUYAN IS ASKED, which is why it is registered rather than folded into a note. The driver has recorded the MECHANISM in gates.md G-8 (setScale(mc.getPrecision()) at ProgressiveEMICalculator.java:1962 consuming 19 as DECIMAL PLACES, plus RepaymentPeriod.java:217's reduce(BigDecimal.ONE, BigDecimal::add) with NO MathContext -- both driver-verified at 426a23544 -- giving rateFactorPlus1 twenty significant digits inside a precision-19 context, so the EMI dips below half a minor unit and an EMI of zero repays nothing). WHAT THE DRIVER DID NOT DO is restate the REGION, because that needs measurement. FAMILY B IS NOT A PROPERTY OF '600%' OR OF 'n >= 104'. The boundary MOVES WITH PRINCIPAL, RATE AND TERM. Every statement of G-8's region in this file is in rates and terms -- MNT 0.23 over T83's grid, MNT 2.91 over the union, MNT 5.01 at n=1000, MNT 10.01 at n=3000 -- and those are descriptions of THE CELLS THAT HAPPEN TO HAVE BEEN SWEPT, not of the phenomenon. DERIVE THE BOUNDARY AS A PREDICATE over (principal, rate, term, minor-unit digits) from the mechanism, then TEST THE PREDICATE against the live oracle on cells NOBODY HAS SWEPT -- including at least one where the predicate says family B at a MODEST rate, because if that exists it is a far more important fact than anything at 600%. If the predicate is wrong, THAT is the finding; report it and do not tune the predicate to the cells you already have. This matters because options (b) and (c) would NARROW THE GRADED DOMAIN BY DESCRIBING A REGION, and a region described in the wrong variables cannot be narrowed correctly. Settle it BEFORE either option is put to a decision. Coordinate with T219, which is measuring T159's MNT 10.01-at-n-3000 figure in the same section -- if you and T219 disagree, say so explicitly rather than silently overwriting. You may NOT take options (b) or (c); they narrow the graded domain and are HARD USER GATES. Recommend only. BAR: probe present and up, PASS exit 0, 46/7884, store UNCHANGED (docs + raw captures only; nothing under .softhouse/vectors/ or nexus/).",
+      "note": "Registered by the driver, local fire 20260822-000013, from T220's closing recommendation."
     }
   ],
   "cross_corroboration": {
