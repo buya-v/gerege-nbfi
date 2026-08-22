@@ -2817,3 +2817,127 @@ reason to duplicate reviews **deliberately**, never a reason to tolerate a broke
 **THE RULE: push the lock, the dispatch record and the in-flight manifest IMMEDIATELY, before the first
 worker is spawned.** An orchestrator's in-flight state is worthless to the other fire until it is pushed, and
 a `HEAD` that says "closed clean" while a session is live is an **active lie to the next orchestrator**.
+
+---
+
+**P-86 — THE PATTERN IDS THEMSELVES ROTTED, IN THE FILE THAT NAMES THE ROT.**
+*Local fire `20260822-060013`. This is `P-80` applied to `P-80`.*
+
+`RESUME.md`'s STANDING INSTRUCTIONS block cited **`P-78`…`P-83`** with the meanings that belong to
+**`P-79`…`P-84`** — off by one across six patterns. The cause is recorded fifteen lines above them in this
+very file: the merge note at `patterns.md:2691` says those six *"were renumbered on landing"* because a cloud
+fire had already published a different `P-78`. **The renumbering was applied to `patterns.md` and never to
+`RESUME.md`'s restatement of it** — the corrected cardinal rotted in the place it was restated, which is
+`P-80` verbatim, committed inside the manifest that teaches `P-80`.
+
+**The driver then propagated it into all ten worker prompts of the next fire**, so this fire's handoffs and
+commit messages cite shifted ids: what they call `P-83` (*read the probe line's presence, not its value*) is
+**`P-84`**; what they call `P-80` (*`git grep` exits 1 on no-match but >1 on error*) is part of **`P-81`**;
+`P-79` → **`P-80`**, `P-78` → **`P-79`**, `P-81` → **`P-82`**, `P-82` → **`P-83`**.
+
+**Materiality is LOW, and the reason is the useful half.** **Not one worker was misdirected**, because every
+prompt wrote out the **full rule text** beside the id rather than the id alone. The number was decoration; the
+sentence carried the instruction. Had the prompts said *"apply P-83"* and stopped, ten agents would have
+applied the wrong rule and the fire's evidence would be unsound.
+
+**THE RULE, and it is `P-80`'s own corollary turned on this file: an ID IS A CARDINAL. Never restate a
+pattern id in a second document — make the second site NAME THE RULE, or cite the id AND its sentence
+together so a shifted number is self-correcting.** An id used as an identifier goes wrong silently, exactly
+as `C-4` established for ordinals in `DEC-2`. **Prefer the name over the number** — the same conclusion,
+reached independently, one layer out.
+
+---
+
+**P-87 — A DELIBERATE COLLISION IS A TEST INSTRUMENT. SCHEDULE THE THING THAT WILL BREAK YOUR FIX, IN THE SAME FIRE.**
+*Local fire `20260822-060013`.*
+
+The driver dispatched `T253` (which edits `conformance.sh`) and `T255` (whose DEC-2 citations are **line
+numbers into `conformance.sh`**) into the **same fire, on purpose**, and told `T255` so in its brief. Three
+consecutive passes had shipped stale line numbers, each claiming to have re-measured; the failure mode was
+invisible because nothing moved the file between measuring and landing.
+
+**The collision converted an assertion into a measurement.** `T255` did not merely reason that anchors resist
+rot — it ran `conformance.sh` **straight out of the rival `T253` branch** and measured: **anchors exit 0,
+line numbers 4 of 4 MOVED, including `:1300`, the definition row that had survived every prior pass.**
+`T260` then reproduced it under **both** `T253` implementations and found something neither author had: at
+the **untouched merge-base**, the line-number checker is already **3 of 4 MOVED** — *a wired line-number gate
+would have been RED on `main` before `T253` touched anything.*
+
+**THE RULE: when a fix claims robustness against change, schedule the change that would break it INTO THE
+SAME FIRE, and tell the worker it is coming.** Robustness proved against a hypothetical is a claim;
+robustness proved against a live concurrent diff is a measurement. The corollary is a merge-order fact:
+`T254b` quantified that landing the rival diff first would have rotted **10 citations / 5 ranges / 17 line
+numbers — 100%** — so the collision also *decided the merge order*, which no amount of reading could have.
+
+---
+
+**P-88 — THE GREEN BAR DEPENDED ON A 24-BYTE FILE IN `/tmp`, AND FOUR INDEPENDENT PARTIES FOUND IT BEFORE THE DRIVER RAN IT.**
+*Local fire `20260822-060013`.*
+
+`rm -f /tmp/t234_matrix2.txt` → `bash .softhouse/conformance.sh` → **EXIT 2, probe-line count 0, "a HARD guard
+failed."** Restore the file → **PASS, `probe = up`, frontier 11 == pinned 11.** The file is created by
+**line 7 of the very instrument whose fail-open TIER depends on it**, so the harness is green **if and only
+if that instrument has already been run on this host**.
+
+Three consequences, in rising order of seriousness. **macOS clears `/tmp` on reboot**, so the first fire after
+a restart gets the program's most dangerous signal. **Every green bar recorded on this Mac was contingent on
+that residue** — the bar was not reproducible from a clean checkout on a clean host, and the bar is the
+instrument that grades everything else. And **the classification was decided by state no reviewer can see and
+no commit records**: a fail-open TIER that reads host filesystem residue is itself a fail-open.
+
+**`P-84` earned its keep the same hour.** The driver read the **ABSENCE** of the probe line rather than its
+value, and parked nothing. Under the rule as it stood two fires ago, this would have parked every live vector
+task as *somebody else's server being down*.
+
+**It also settled an author dispute in the loser's favour.** The Mac author called the effect *"a
+classification defect, not a frontier defect"* because the frontier COUNT and PATH-SET are identical and the
+harness pins **by path**. `T254b` measured that **the pin also carries the TIER token**, so a TIER2→TIER1 flip
+fails it anyway. **The cloud author's refusal to move the pin to make its own bar green is vindicated: it had
+an invisible route to green and did not take it.**
+
+**THE RULE: an instrument's verdict must depend on nothing outside the repo.** `/tmp`, `$HOME`, an env var, a
+previously-run sibling — each makes the verdict unreproducible and uninspectable. And **when a guard's tier
+can be flipped by host state, the guard is not measuring the property; it is measuring the host.**
+
+---
+
+**P-89 — THREE ARTEFACTS SHIPPED WIRED TO NOTHING IN ONE FIRE, AND ALL THREE SAID SO UNPROMPTED. THE FIX IS A FILED TASK, NOT A SENTENCE.**
+*Local fire `20260822-060013`.*
+
+`T164`'s AST float guard, `T259`'s R-VPA rule and `T250`'s derived attestation were each **wired to nothing**
+on landing — the sixth, seventh and eighth recorded instances of `P-45` in this program, each inside an
+artefact **written to remove `P-45`**. The cause was the scope guard working correctly: `conformance.sh` was
+held by `T253` and none of the three would cross it.
+
+**All three declared it themselves, without being asked**, and labelled it backlog rather than completion.
+That is the behaviour to keep. But **three independent reviewers converged on the same condition**, and
+`T262` phrased it best by turning `T259`'s own argument back on it: **"PROSE DOES NOT FIRE ON THE NEXT
+FIRE."** A limit written into a handoff, a review, or a `## Backlog` heading is invisible to the scheduler.
+
+**THE RULE: an unwired guard MAY merge — holding it is often worse, since `T164`'s alternative was leaving
+the BLIND grep as the only guard on disk — but ONLY against a FILED, DISPATCHABLE TASK with an owner, a
+dependency edge, and a red-drive requirement.** The driver filed `T268`…`T274` **before** merging the
+branches, not after. **A declared orphan is acceptable; a silent one is not** — and `T261` sharpened it
+further: an orphan **may not acquire a caller** until the fail-opens in it are repaired, because wiring a
+liar is strictly worse than leaving it unwired.
+
+---
+
+**P-90 — THE REVIEWER MEASURED THE AUTHOR'S DENOMINATOR AND FOUND THE PROOF COVERED ONE FIFTH OF THE DOCUMENT.**
+*Local fire `20260822-060013`, `T260` over `T255`.*
+
+`T255` proved *no obligation moved* by byte-identity over a list of sections it **chose**. `T260` did not
+re-run that proof — it **measured the proof's own coverage**: **18.2% of lines / 20.1% of characters.** Four
+fifths of a ratified contract rested on a modal-sentence diff **structurally blind to obligations phrased
+without a modal verb**, and `T255` had itself flagged that blindness without measuring its extent.
+
+`T260` then closed the gap by a route the author had not used: an **exhaustive table-cell census** — **140
+rows before, 140 after, 0 removed, 0 added, exactly 4 changed, last cell only** — plus a section-identity map
+**derived from headings rather than chosen**, a 219-sentence non-modal predicate against the author's 87
+modal lines with **all 14 losses adjudicated by hand**, and an applier re-derivation reproducing the landed
+blob **byte-for-byte**. The verdict survived. **The proof did not.**
+
+**THE RULE: when an author proves a negative over a population, the reviewer's first question is not "is the
+proof sound?" but "WHAT FRACTION OF THE WORLD DOES THIS POPULATION COVER?"** A sound proof over a chosen
+fifth is a sound proof about a fifth. This is `P-67` (count both terms) raised to apply to **the evidence
+itself**, not just to the claim — and it is how a `RATIFY` verdict is earned rather than granted.

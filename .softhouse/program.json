@@ -70,7 +70,7 @@
   "park_after_retries": true,
   "gate_scope": "A gate on a CONTRACT blocks work that CONSUMES the contract (any coder task, anything under the go_target), not work that produces knowledge the decision needs anyway. While tier0 is blocked_on_gate, every other context is READY-FOR-ANALYSIS: analyst behaviour extraction from pinned source, test-corpus mining into capture plans, RAW observed vector capture on an oracle-reaching fire, and the Tier-C gap audit may all proceed. Contract-shaped storage, Go code, and amending the gated DEC-n may not. An open gate must never mean an idle factory."
  },
- "cursor": "tierA-gl-accounting (slice A2) + tier0-harness — DEC-2 revision 7 REJECTED by TWO independent reviews (local ff9c893, cloud bf04272) whose findings AGREE and whose site lists are COMPLEMENTARY; G-14 REMAINS OPEN and nothing was ratified. Local fire 20260822-140002 (2nd session): 5 dispatched, 5 merged, 0 live at exit, vector store UNMOVED. Revision 8 is T255, prepare-AND-LAND in ONE fire on a host that can run the BAR. LOCK INCIDENT: two orchestrators ran over this repo at once (P-85) because the local fire never pushed its in-flight state; the cloud's T253/T241 worker branches were killed and are GONE.",
+ "cursor": "G-14 CLOSED, DEC-2 revision 8 RATIFIED and landed. 10/10 dispatched-completed-merged, 0 live at exit, store digest UNMOVED, BAR green on the merge result. Next fire: T273 (the BAR green depends on a /tmp file -- HIGH, four independent confirmations), T268/T274 (fail-opens inside two new guards, both BLOCK wiring), then T269 wires the four unwired artefacts once conformance.sh is free.",
  "contexts": [
   {
    "id": "tier0-harness-schedule-poc",
@@ -1925,6 +1925,68 @@
    "headline_finding": "THE BAR HARNESS CANNOT RUN ON LINUX. conformance.sh exits 2 with NO probe line — the softhouse-program decision table's 'dangerous' exit-2 shape, a harness failure that parks nothing. Ten mktemp -t sites GNU rejects (the first inside the FAIL-OPEN guard, so the fail-open detector is the guard that cannot run) and a hardcoded /Users/buv GOROOT that makes guard_ledger_invariants — a MONEY guard — report DID NOT COMPILE off Buyan's Mac. Fixed on branch, Mac-safety confirmed by compiling Apple's own mktemp.c (12/0).",
    "gates": "G-14 REMAINS OPEN. The driver did NOT ratify. Both independent T251 reviews (cloud and local, run concurrently and unaware of each other) agree: NO OBLIGATION MOVED, but revision 7 ships already-stale line numbers and misses sites — G-14's own stale-evidence defect re-enacted inside its fix. G-4 and G-5 remain hard user gates. G-8 options (b)/(c) must not be put to Buyan.",
    "vector_store_digest": "13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d — UNMOVED by every worker, re-read live at each finish."
+  },
+  {
+   "fire": "local-20260822-060013",
+   "host": "Buyan's Mac",
+   "oracle": "REACHABLE throughout (Fineract, PostgreSQL)",
+   "context": "tierA-gl-accounting (slice A2) + tier0-harness",
+   "dispatched": 10,
+   "completed": 10,
+   "merged": 10,
+   "live_at_exit": 0,
+   "workers": [
+    "T255",
+    "T253b",
+    "T250",
+    "T259",
+    "T164"
+   ],
+   "reviews": [
+    "T260 RATIFY",
+    "T254b MERGE/REJECT per candidate",
+    "T261 MICRO-FIX",
+    "T262 MICRO-FIX",
+    "T263 MICRO-FIX"
+   ],
+   "gate_closed": "G-14 — DEC-2 revision 8 RATIFIED on T260 clean independent review",
+   "tasks_filed": [
+    "T256",
+    "T264",
+    "T265",
+    "T268",
+    "T269",
+    "T270",
+    "T271",
+    "T272",
+    "T273",
+    "T274"
+   ],
+   "bar_at_exit": {
+    "verdict": "PASS exit 0",
+    "probe_line": "PRESENT, reads up",
+    "parity_vectors": 46,
+    "cells": 7884,
+    "failopen_frontier": "11 == pinned 11",
+    "failopen_census": "918 -> 996 tracked .sh/.py; NONE joined the frontier",
+    "census_pins": "all matched",
+    "store_digest": "13b8342e4e8e6633fb3088818f8cff7fd4c0eb7d (UNMOVED ALL FIRE)",
+    "run_by": "the driver, on the MERGE RESULT, never quoted from a worker"
+   },
+   "vectors_added": 0,
+   "driver_errors_recorded": [
+    "Acted on RESUME.md \"T253 branch GONE\" without fetching -- true when measured, stale when acted on (P-69). Cost a duplicate worker; salvaged as deliberate peer review.",
+    "Mislabelled every dispatch as \"T251 C-1..C-8\"; T251 issued C-1..C-6. C-7/C-8 were the driver own labels attributed to the reviewer. Caught by T260.",
+    "Propagated an off-by-one pattern-id block into all ten worker prompts (P-86). No worker misdirected -- the full rule text travelled beside every id.",
+    "Expected only a Mac could settle the BSD mktemp arm; the cloud settled it from Linux by compiling Apple own mktemp.c."
+   ],
+   "new_patterns": [
+    "P-86",
+    "P-87",
+    "P-88",
+    "P-89",
+    "P-90"
+   ]
   }
  ],
  "database": {

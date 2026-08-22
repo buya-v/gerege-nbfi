@@ -1,11 +1,9 @@
 {
- "holder": "local-fire-20260822-060013",
- "host": "buyan-mac",
+ "holder": "none",
+ "host": "-",
  "pid": 0,
- "started_at": "2026-08-22T06:00:13Z",
- "released_at": null,
- "note": "LOCAL fire, oracle REACHABLE. FIVE WORKERS LIVE. Per P-85 the lock and dispatch record were pushed BEFORE the first spawn. STEP 0 was rewritten this fire: do NOT judge this lock by started_at -- check whether origin/main has a recent commit. It does, because this fire pushes as it works.",
- "heartbeat": "2026-08-22T07:05:00Z",
- "heartbeat_note": "CORROBORATION ONLY. The authoritative liveness signal is the newest commit on origin/main (git log -1 --format=%ct origin/main). If they disagree, believe push-recency.",
- "live_workers": 5
+ "started_at": null,
+ "released_at": "2026-08-22T-local-fire-20260822-060013-exit",
+ "note": "RELEASED. Fire 20260822-060013 closed clean: 10 dispatched, 10 completed, 10 merged, ZERO live at exit. G-14 CLOSED (DEC-2 rev 8 RATIFIED). Vector store UNMOVED all fire. NOTE FOR THE NEXT HOLDER: judge a lock by PUSH RECENCY on origin/main, not by started_at -- STEP 0 was rewritten this fire and passed its first live test the same day.",
+ "live_workers": 0
 }

@@ -2152,7 +2152,7 @@
   {
    "id": "T250",
    "title": "The capture scripts' tenant attestation is a HARD-CODED LITERAL, not evidence — a sidecar that cannot disagree with the run it documents (T245 F-2)",
-   "status": "in_review",
+   "status": "merged",
    "executor": "agent",
    "model": "opus",
    "target": "code",
@@ -2166,7 +2166,11 @@
    "note": "filed from T245's F-2 (MEDIUM), local fire 20260822-140002. | DISPATCHED local fire 20260822-060013 at c0e88c6, worktree-isolated, opus. | COMPLETE, purely additive (130 files, 0 modified). Population CORRECTED 3 -> 4 (cap10.sh has the identical defect and is the NEWEST link, minted after two audits). Larger finding: 50 scripts send a tenant, 5 attest it, 0 attest it derived, 45 attest NOTHING. OracleStamp.tenant NOT implemented, refused on measured grounds (both pins live inside the pinned vectors tree; 59 vectors, 0 with a tenant field). Successor has no caller -- P-45 shape, labelled backlog not completion. In review at T261.",
    "branch": "softhouse/T250-tenant-attestation",
    "attempts": 1,
-   "tip": "d2b5772"
+   "tip": "d2b5772",
+   "review": {
+    "task": "T261",
+    "verdict": "MICRO-FIX"
+   }
   },
   {
    "id": "T251",
@@ -2402,7 +2406,7 @@
   {
    "id": "T261",
    "title": "INDEPENDENT review of T250 — the capture sidecar attestation fix.",
-   "status": "in_progress",
+   "status": "done",
    "executor": "agent",
    "model": "opus",
    "target": "docs",
@@ -3101,7 +3105,8 @@
    "context": "tier0-harness",
    "slice": null,
    "dependencies": [
-    "T268"
+    "T268",
+    "T274"
    ],
    "attempts": 0,
    "files_hint": [
@@ -3181,7 +3186,7 @@
     ".softhouse/capture/t273-residue/"
    ],
    "description": "RAISED by the cloud T253, ADJUDICATED by T254b (F-1, HIGH), and then DRIVER-VERIFIED FIRST-HAND ON MERGED MAIN at 5316013. This is not a report. The driver ran it both ways:\n\n  rm -f /tmp/t234_matrix2.txt  ->  bash .softhouse/conformance.sh  ->  EXIT 2, PROBE LINE COUNT 0,\n                                   'a HARD guard failed. EXIT 2 -- no verdict is available.'\n  restore the file            ->  bash .softhouse/conformance.sh  ->  PASS exit 0, probe = up,\n                                   frontier 11 == pinned 11\n\nThe file is 24 bytes. Its content is six lines of the form x<char>y. **IT IS CREATED BY LINE 7 OF THE VERY INSTRUMENT WHOSE FAIL-OPEN TIER DEPENDS ON IT** -- `C1` calls `/tmp/t234_matrix2.txt` dead while line 7 creates it -- so the harness is green if and only if that instrument HAS ALREADY BEEN RUN ON THIS HOST.\n\nWHY THIS IS HIGH AND NOT A CURIOSITY:\n  (1) **macOS clears /tmp on reboot.** The next fire after Buyan restarts this Mac gets EXIT 2 WITH NO PROBE LINE. That is the single most dangerous signal in this program: it is ambiguous between 'the corpus is unusable', 'the harness never started', and 'a HARD guard failed'. A driver that read it as an ORACLE OUTAGE would park all live vector work as somebody else's server being down. P-83 exists because this program already had to correct that exact rule, and today it earned its keep -- the driver read the ABSENCE of the line, not its value, and parked nothing.\n  (2) **Every green bar this program has recorded on this Mac was contingent on that residue.** The bar is NOT reproducible from a clean checkout on a clean host. That is a reproducibility defect in the instrument that grades everything else.\n  (3) **T254b settled a disagreement between the two T253 implementations in the CLOUD's favour, and the driver is recording that the Mac author was WRONG.** The Mac author said the residue effect 'fails no BAR -- a classification defect, not a frontier defect', reasoning that the frontier COUNT and PATH-SET are identical in both arms and the harness pins BY PATH. T254b measured that the pin ALSO CARRIES THE TIER TOKEN, so a TIER2->TIER1 flip fails it even with count 11 == 11 and an identical path set. **The cloud's refusal to move the pin or weaken the guard to make its own bar green is VINDICATED** -- it had an invisible route to green and did not take it.\n\nTHE JOB:\n(1) Make the TIER classification depend on NOTHING OUTSIDE THE REPO. A fail-open tier that reads host filesystem residue is itself a fail-open: the classification is decided by state no reviewer can see and no commit records. Derive it from the tree, or make the instrument create its own fixture DETERMINISTICALLY in a temp dir it owns and removes.\n(2) **DRIVE IT RED THROUGH THE ROUTE THAT BROKE**: clear the residue, run the BAR, and show it now passes -- and separately show the guard STILL FAILS on a genuine TIER regression, so the fix removed the host-dependence WITHOUT removing the detection. A fix that makes the guard green unconditionally is strictly worse than the defect.\n(3) THE PIN IS A FRONTIER, NOT AN AMNESTY. If the repair removes a row from FAILOPEN_PIN_FILE_LIST, the pin must lose that row IN THE SAME COMMIT -- conformance.sh says so itself: a '-' line means the pin has started excusing a weakness that is no longer there.\n(4) SWEEP FOR THE CLASS (P-26): enumerate every other instrument whose behaviour depends on state outside the repo -- /tmp, $HOME, an env var, a previously-run sibling. State BOTH TERMS (P-67) and where you looked (P-66/P-70). The driver expects this is not the only one.\n\nPRE-EXISTING ON MAIN, NOT CAUSED BY T253b -- T254b verified unmodified main fails identically, which is why it did not gate the merge. Evidence: .softhouse/capture/t253-portability/DRIVER-VERIFIED-residue-cleared-exit2.log",
-   "note": "Filed by the driver, local fire 20260822-060013, from a first-hand two-way measurement on merged main."
+   "note": "Filed by the driver, local fire 20260822-060013, from a first-hand two-way measurement on merged main. | INDEPENDENTLY CONFIRMED A FOURTH TIME by T261 (F-11, HIGH), which proved it by controlled removal in its own worktree and called the BAR verdict \"non-deterministic and cross-worktree coupled\". Four independent confirmations: cloud T253, T254b, T261, and the driver first-hand on merged main."
   },
   {
    "id": "T272",
@@ -3205,6 +3210,29 @@
    ],
    "description": "T254b reviewed BOTH T253 implementations and returned a per-artefact verdict. The Mac conformance.sh is MERGED (net zero lines). Its go-env.sh is MICRO-FIX, and the recipe is specific:\n\n  base = the merged Mac go-env.sh\n  KEEP  its stale-GOROOT drop (Mac :153-156)\n  GRAFT the cloud's GEREGE_GO_STRICT arm (cloud :159-167) and its richer GEREGE_GO_SOURCE value\n\nWHY EACH HALF. **F-3 HIGH, reproduced by T254b:** the cloud's go-env.sh KEEPS A STALE `GOROOT`, so the `go` it announces exits 2 with `cannot find GOROOT directory` -- and the error prints INSIDE ITS OWN 'SUBSTITUTING' banner, while that banner asserts the go 'uses its own built-in GOROOT'. The Mac version unsets it and returns rc 0. **The Mac's criticism of its peer is true and, T254b says, UNDERSTATED.** **F-6 MED:** grafting GEREGE_GO_STRICT is SAFE -- T254b verified both consumers use `set -u -o pipefail` and NOT `set -e`, so the strict arm's non-zero path cannot abort a caller. The strict arm is worth having because it makes the REJECTED alternative (hard refusal on an absent toolchain) reachable as CONFIG rather than requiring a patch.\n\n**F-8 LOW, and record it rather than quietly fixing it:** the Mac author's stated `set -e` premise is FACTUALLY WRONG for the actual consumers. Its DECISIVE premise -- that refusal buys silence, not safety, because both consumers source the file and then run their own `command -v go` regardless -- was verified TRUE by T254b reading both consumers. So the decision stands on a sound reason and a bad one; correct the bad one in the comment rather than leaving a false justification in the tree.\n\nDRIVE IT RED: with the toolchain moved aside, show (a) default = announced fallback that actually RUNS, (b) GEREGE_GO_STRICT=1 = loud refusal, (c) a stale inherited GOROOT is dropped in both modes. Then re-run the FULL BAR on this host -- T254b lists 'the grafted go-env.sh re-BARed after landing' as something it COULD NOT VERIFY, so that is yours. Probe-line PRESENCE before value (P-83).",
    "note": "Filed by the driver, local fire 20260822-060013, from T254b's explicit merge recipe."
+  },
+  {
+   "id": "T274",
+   "title": "T250's attestation VERIFIER fails open four ways — it checks only the assertions that are PRESENT, in a module whose docstring says absence of evidence is not evidence",
+   "status": "pending",
+   "executor": "agent",
+   "model": "opus",
+   "target": "code",
+   "agent_role": "coder",
+   "role": "coder",
+   "context": "tier0-harness",
+   "slice": null,
+   "dependencies": [
+    "T250"
+   ],
+   "attempts": 0,
+   "contract_independent": true,
+   "files_hint": [
+    ".softhouse/capture/lib/",
+    ".softhouse/capture/t274-attestation-failopen/"
+   ],
+   "description": "RAISED BY T261 reviewing T250. T261 accepted T250's population counts (29/4 and 50/5/0/45, reproduced EXACTLY with a WIDER instrument: 45 and 52/6/0/46) and confirmed the long-header wrap fix is genuinely repaired across the whole boundary (1, 10, 60-66, 127-129, 200, 300, 1000, 4000 bytes plus a 360-byte colon-laden value -- every one attested EXACT). It calls that the strongest work in the diff. Then it attacked the VERIFIER with five shapes T250 did not design around, and all five got through:\n\n  **F-4 (HIGH)** body swapped for SAME-LENGTH bytes + the `body-sha256:` line DELETED -> `VERIFIED`, rc=0. **`verify` checks only the assertions that are PRESENT.** Delete the assertion and you delete the check. This is in a module whose own docstring says *absence of evidence is not evidence* -- the rule stated at the top of the file and broken by the function beneath it, which is the P-80 shape for the fourth time in two fires.\n  **F-5** one of two IDENTICAL duplicated headers deleted from the sidecar -> rc=0; and REORDERING -> rc=0. The verifier compares SET MEMBERSHIP, not sequence -- and T250's own redC shape 1 had already proved that sequence matters (two `-H` flags put BOTH values on the wire).\n  **F-6** an INVENTED `content-length-crosscheck: MATCH (99999 bytes)` line -> rc=0, because `known_keys` is an EXEMPTION LIST: an unrecognised assertion is ignored rather than refused. Default-allow in an evidence verifier.\n  **F-7** the response `.json` swapped for ANOTHER CAPTURE'S -> rc=0. **The response leg is entirely unattested and that limit is stated NOWHERE.**\n\nTHE JOB: make the verifier DEFAULT-DENY. A required assertion that is ABSENT must FAIL, not pass; the required set must be derived, enumerable and printed. Compare header SEQUENCE, not just membership. Refuse an unknown assertion key rather than ignoring it. Decide and ARGUE whether the response leg should be attested -- if you decide it should not, **that limit must be stated IN THE MODULE**, not in a review.\n\n**T261'S MERGE CONDITION, WHICH BINDS: T250's successor is a DECLARED ORPHAN and may merge as one, but IT MAY NOT ACQUIRE A CALLER until F-4 and F-5 are repaired and F-6's limit is stated in the module.** Writing a limit only into a review is the exact failure this whole class is named for. So this task BLOCKS the wiring of the attestation half of T269.\n\nDRIVE EACH OF THE FIVE RED through the shape that got through, not a shape you designed the fix around (P-76). Do not weaken the long-header wrap fix while doing it -- re-run T261's boundary sweep and show it still passes.",
+   "note": "Filed by the driver, local fire 20260822-060013, as T261 merge condition."
   }
  ],
  "cross_corroboration": {
