@@ -67,6 +67,8 @@ elif mode == "parent-term":                  # `kill <pid>` from another shell
     os.kill(ppid, signal.SIGTERM); sys.exit(0)
 elif mode == "parent-hup":                   # the terminal was closed
     os.kill(ppid, signal.SIGHUP); sys.exit(0)
+elif mode == "parent-quit":                  # T168: Ctrl-\ — the signal bash does NOT
+    os.kill(ppid, signal.SIGQUIT); sys.exit(0)  # run the EXIT trap for unless it is trapped
 elif mode == "parent-int-hang":              # interrupted while the driver keeps running
     os.kill(ppid, signal.SIGINT); time.sleep(30)
 elif mode == "kill9":                        # unmaskable: no trap can catch this
@@ -83,6 +85,8 @@ CASES = [
     ("pgrp-int", "SIGINT to the process group (a terminal Ctrl-C)"),
     ("parent-term", "SIGTERM to the script (`kill <pid>`)"),
     ("parent-hup", "SIGHUP to the script (terminal closed)"),
+    ("parent-quit", "SIGQUIT to the script (Ctrl-\\) — T168: bash skips the EXIT trap "
+                     "for this one unless it is trapped explicitly"),
     ("parent-int-hang", "SIGINT while the driver is STILL RUNNING"),
     ("exit3", "driver exits 3 — an ordinary error, no signal"),
     ("kill9", "SIGKILL to the script — no trap can catch this"),

@@ -56,7 +56,7 @@ apart, and came back byte-identical both times.
 | `promote-vector.py` | transcribes the vector. Reads with `parse_float=str` throughout — Path B emits money as bare JSON numbers on the wire. |
 | `grade-scratch-store.sh` | grades a candidate in a scratch store before it goes near the real one. **Not** a conformance verdict; every verdict this task reports came from `bash .softhouse/conformance.sh`. |
 | `prove-redgreen.sh` | the three arms of the discrimination proof, with assertions rather than printed numbers. **[T156]** It now restores the store from a `trap` on every exit path, verifies the restore instead of assuming it, and derives every arm size at runtime instead of asserting 42/43. |
-| `prove-exit-trap.py` | **[T156]** drives that trap RED against the real pre-fix bytes of `prove-redgreen.sh`, read from an immutable git blob, over six interruption classes in a throwaway sandbox. Never touches the real store. |
+| `prove-exit-trap.py` | **[T156, extended T168]** drives that trap RED against the real pre-fix bytes of `prove-redgreen.sh`, read from an immutable git blob, over seven interruption classes (T168 added SIGQUIT) in a throwaway sandbox. Never touches the real store. |
 | `t156-sweep-unguarded-mutators.py` | **[T156]** the P-26 sweep for the same shape elsewhere under `.softhouse/`, printing what it could not have covered. |
 | `t156-p24-scratch-merge.sh` | **[T156]** re-runs all three artefacts on a scratch merge into *current* `main`, because an assertion about the post-merge state can only be tested by merging (P-24). |
 
@@ -87,6 +87,19 @@ filenames still carry `42`/`43` because the promoted vector's own `_note` cites
 grades whatever it finds — measured on a scratch copy, deleting exactly that file gives
 `VERDICT: PASS (exit 0) — 42 parity vectors ... 5576 cells compared`, exit 0, no warning.
 The fix and the six interruption classes it was driven red against are in `t156/`.
+
+**[T168] SIGQUIT (Ctrl-\) defeated T156's trap, one of nine attack states T158's
+independent review drove against the fixed script.** Bash does not run the `EXIT` trap
+for an untrapped `SIGQUIT` the way it does for `SIGINT`/`SIGTERM`/`SIGHUP` — measured by
+T158, not assumed — so a `Ctrl-\` stranded the store exactly as `SIGKILL` does, and only
+T156's start-up recovery caught it: a `conformance.sh` run in between reported a silent
+green. `QUIT` is now in the trap list; `prove-exit-trap.py` was extended with a
+`parent-quit` case (now seven interruption classes) and both transcripts are in
+`t168/`. T158 also found the "EMPTY census is a refusal" guard in `prove-redgreen.sh`
+can never actually fire — `[ -f "$VEC" ] || fail` two lines above it already refuses on
+every realistic wiped-store state — so the protection is real but the comment
+attributing it to the census check was wrong; the comments in `prove-redgreen.sh` are
+corrected, not the guard.
 
 The driver **asserts** each of those, it does not print them beside a prose expectation —
 that shape is the defect T136 recorded as F-2 in this very tree.
