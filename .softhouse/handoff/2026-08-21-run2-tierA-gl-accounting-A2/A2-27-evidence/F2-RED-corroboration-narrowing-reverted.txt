@@ -1,0 +1,11 @@
+=== RUN   TestCorroborationsAreScopedToTheGradedPopulation
+    coverage_refusal_test.go:533: store: 51 vectors, 51 injected claims, 14 refused -> expect 37 credited, 14 shed
+    coverage_refusal_test.go:537: corroborations credited to a run that compared nothing for them: got 51, want 37 (37 graded + 14 refused, of 51 injected). A corroboration is a SUPPORT number and this report scopes support to what the run actually compared (A2-22, adjudicated A2-24).
+    coverage_refusal_test.go:548: CorroborationsClaimed + RefusedCorroborationsClaimed = 65, want 51: the two counts must PARTITION the corpus, not overlap it. Before A2-22 the refused branch counted and then fell through into the credited one, so the shed count was a SUBSET of the credited count and the report line describing them was false.
+    coverage_refusal_test.go:554: the narrowing does not bite: 51 of 51 injected claims are credited even though 14 vectors were refused. On a store where a blinded seam refuses everything this rule would print 0 cells compared beside 51 corroboration claims.
+    coverage_refusal_test.go:568: the rendered report does not carry the true sentence "corroboration claims made by GRADED vectors: 37 (a further 14 are carried by REFUSED vectors and 0 by HARNESS-ERROR vectors, counted nowhere)". Reported line(s):
+        corroboration claims made by GRADED vectors: 51 (a further 14 are carried by REFUSED vectors and 0 by HARNESS-ERROR vectors, counted nowhere)
+--- FAIL: TestCorroborationsAreScopedToTheGradedPopulation (1.73s)
+FAIL
+FAIL	github.com/gerege/nexus/internal/apps/loanschedule/conformance	2.119s
+FAIL

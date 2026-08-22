@@ -141,6 +141,31 @@ type Summary struct {
 	RefusedCounterfactualsNamed  int
 	RefusedCorroborationsClaimed int
 
+	// ErroredCounterfactualsNamed and ErroredCorroborationsClaimed are the same
+	// disclosure for HARNESS-ERROR vectors, and they close finding A2-22-F3 /
+	// A2-24-F3 rather than merely noting it (A2-27).
+	//
+	// A HARNESS-ERROR vector is the STRONGEST case of "graded nothing": a refusal
+	// at least decided that this vector cannot discriminate, whereas an error
+	// means the harness could not complete the vector at all. It was nevertheless
+	// entering the graded population, because the loop below skipped only
+	// INADMISSIBLE and REFUSED. That is not merely latent. It is reachable through
+	// the ordinary public API — Options.Implementation == nil, which is the
+	// standing state of cmd/conformance/impl_hook.go until a port is registered —
+	// and MEASURED on the committed store it read:
+	//
+	//	results 51 · errored 51 · CELLS COMPARED 0
+	//	counterfactuals named by GRADED vectors: 113 (106 money, 7 structural)
+	//	UNBACKED in_graded_domain claims: (none)
+	//
+	// A run that compared nothing claimed 113 kills and reported every capability
+	// backed. That is exactly the A2-19 F3 shape the refused half of this struct
+	// was written to stop — less evidence, quieter report — reached by the other
+	// door. The run is exit 2 either way, so no exit code moves; what moves is the
+	// sentence a reader takes away from a fatal run.
+	ErroredCounterfactualsNamed  int
+	ErroredCorroborationsClaimed int
+
 	// MoneyKills and StructuralKills split CounterfactualsNamed by kind, and the
 	// report prints them separately (driver finding D-4). Merging them would let a
 	// store of nothing but structural kills read as though it graded amounts —
@@ -152,8 +177,38 @@ type Summary struct {
 	RateFactorsRecorded int
 	OverScaledCells     int
 
-	// CorroborationsClaimed is how many cross-check claims the admissible vectors
-	// make. Every one is scoped to the columns its source actually prints.
+	// CorroborationsClaimed is how many cross-check claims the GRADED vectors
+	// make — the same population as CounterfactualsNamed, and FOR ITS OWN REASON,
+	// not by symmetry with it. The two claims do not even have the same
+	// truth-conditions: a counterfactual asserts DISCRIMINATION and its antecedent
+	// is grading, so a refusal leaves it unrealised; a corroboration asserts
+	// something about the RECORD ("a named second source printed these columns for
+	// this row kind and agreed"), it is validated offline at admission
+	// (admitCorroborations), and none of the five refusal reasons impugns it. A
+	// refused vector's corroboration is still TRUE.
+	//
+	// It is nevertheless scoped to the graded population, because this report
+	// scopes by POLARITY rather than by truth: hazard disclosures take the WIDEST
+	// population (RateFactorsRecorded and OverScaledCells are accumulated in
+	// gradeVector before any early return, so a refused vector still contributes
+	// them), and SUPPORT counts take the NARROWEST. A corroboration exists only to
+	// make the corpus look better attested — it can never make it look worse — so
+	// it is support, and support is scoped to what the run actually compared.
+	//
+	// The case that settles it: on a store where one blinded seam refuses
+	// everything, the wide rule prints "cells compared: 0" and a corroboration
+	// count of the WHOLE CORPUS in the same report. A cross-check of columns that
+	// were never compared to anything is the limiting case of the
+	// confidence-nobody-measured that finding T17-F2 exists to prevent.
+	//
+	// The claims shed by REFUSED vectors are in RefusedCorroborationsClaimed and
+	// by ERRORED vectors in ErroredCorroborationsClaimed; both are printed whether
+	// or not they are zero, so nothing is hidden and the store-quality reader can
+	// still recover the corpus total by adding them. Every claim is scoped to the
+	// columns its source actually prints. (A2-22 narrowed it; A2-24 adjudicated
+	// and approved it; A2-27 corrected this comment, which still said "admissible"
+	// and was the tell that the corroboration half had ridden along without its
+	// own reasoning.)
 	CorroborationsClaimed int
 
 	// UncoveredGradedCapabilities are capabilities marked in_graded_domain for
@@ -430,8 +485,19 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 	// failure": it says no discriminating vector exists here, or the seam is blind
 	// to the behaviour. A vector that graded nothing kills nothing.
 	//
-	// The counts it sheds are RECORDED, in RefusedCounterfactualsNamed and
-	// RefusedCorroborationsClaimed, and printed by the report whether they are
+	// HARNESS-ERROR IS SHED FOR THE SAME REASON (finding A2-22-F3 / A2-24-F3,
+	// closed by A2-27). This loop used to skip only INADMISSIBLE and REFUSED, so a
+	// vector the harness could not complete AT ALL still credited its kills, its
+	// corroborations and its capability coverage. If "a vector that graded nothing
+	// kills nothing" is the rule, an errored vector is its strongest instance: a
+	// refusal is at least a decision about the vector, an error is the absence of
+	// one. Measured before the fix, with Options.Implementation nil: 51 errored
+	// vectors, 0 cells compared, and the report still read "counterfactuals named
+	// by GRADED vectors: 113" with no UNBACKED claim.
+	//
+	// The counts it sheds are RECORDED, in RefusedCounterfactualsNamed /
+	// RefusedCorroborationsClaimed and ErroredCounterfactualsNamed /
+	// ErroredCorroborationsClaimed, and printed by the report whether they are
 	// zero or not. A number that silently disappears is a number nobody can audit,
 	// and this fix must not be the thing that hides the next refusal.
 	//
@@ -446,6 +512,10 @@ func Run(ctx context.Context, opts Options) (*Summary, error) {
 		case OutcomeRefused:
 			s.RefusedCounterfactualsNamed += len(v.GradedAgainst)
 			s.RefusedCorroborationsClaimed += len(v.Provenance.CorroboratedBy)
+			continue
+		case OutcomeError:
+			s.ErroredCounterfactualsNamed += len(v.GradedAgainst)
+			s.ErroredCorroborationsClaimed += len(v.Provenance.CorroboratedBy)
 			continue
 		}
 		graded = append(graded, v)

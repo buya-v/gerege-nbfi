@@ -113,6 +113,13 @@ func WriteReport(w io.Writer, s *Summary) {
 	// that today's exposure is nil rather than merely unmeasured.
 	p("    kills carried by REFUSED vectors: %d, credited to NOTHING (%d corroboration claims likewise)",
 		s.RefusedCounterfactualsNamed, s.RefusedCorroborationsClaimed)
+	p("    kills carried by HARNESS-ERROR vectors: %d, credited to NOTHING (%d corroboration claims "+
+		"likewise)", s.ErroredCounterfactualsNamed, s.ErroredCorroborationsClaimed)
+	p("        An errored vector is the strongest case of \"graded nothing\": a refusal is at least a")
+	p("        decision about the vector, an error is the absence of one. Before A2-27 these credited")
+	p("        the count above, so a run with NO implementation registered — 0 cells compared — printed")
+	p("        113 kills and no UNBACKED claim at all. Reachable, not hypothetical: it is the standing")
+	p("        state of cmd/conformance/impl_hook.go until a port is registered (finding A2-22-F3).")
 	p("        A refusal is not a pass and not a failure: it says no discriminating vector exists here, or")
 	p("        the seam is blind to the behaviour. A vector that graded nothing kills nothing, so its named")
 	p("        kills do not enter the count above and do not remove a capability from the UNBACKED list.")
@@ -190,7 +197,14 @@ func WriteReport(w io.Writer, s *Summary) {
 	p("    harness refuses any vector claiming corroboration a source cannot give, and prints the gap here")
 	p("    so that a partial match is never read as a whole-row match.")
 	p("    corroboration claims made by GRADED vectors: %d (a further %d are carried by REFUSED vectors "+
-		"and counted nowhere)", s.CorroborationsClaimed, s.RefusedCorroborationsClaimed)
+		"and %d by HARNESS-ERROR vectors, counted nowhere)",
+		s.CorroborationsClaimed, s.RefusedCorroborationsClaimed, s.ErroredCorroborationsClaimed)
+	p("        The claim itself SURVIVES a refusal — a corroboration is a fact about the RECORD, checked")
+	p("        offline at admission, and no refusal reason impugns it. It is scoped to the graded")
+	p("        population anyway, because this report scopes by POLARITY: hazards (rate factors,")
+	p("        over-scaled cells) take the widest population, SUPPORT takes the narrowest, and a")
+	p("        corroboration can only ever make the corpus look better attested. Add the numbers above to")
+	p("        recover the corpus total; none of them is ever hidden (A2-22, adjudicated A2-24).")
 	for _, src := range AttestationSources() {
 		p("    %s — %s", src.ID, src.Citation)
 		for _, rk := range src.RowKinds() {
