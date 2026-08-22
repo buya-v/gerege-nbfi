@@ -2086,9 +2086,9 @@
       "dependencies": [
         "T222"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "attempts": 0,
-      "note": "Paired reviewer for T222, required by the pipeline's every-coder-gets-a-reviewer rule."
+      "note": "dispatched local fire 20260822-000013 wave 2, worktree-isolated"
     }
   ],
   "cross_corroboration": {
