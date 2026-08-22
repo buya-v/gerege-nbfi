@@ -1,0 +1,67 @@
+=== A: LINE-LEVEL — names >=2 of {I4-DML, I3-SQL-BALANCE, OPAQUE-SQL} and NOT I4-BUILDER ===
+2704:      **`I3-SQL-BALANCE`** and **`OPAQUE-SQL`**. **The denominator is dropped**, because a named list
+
+=== B: PARAGRAPH-LEVEL — same test over blank-line-delimited paragraphs ===
+--- PARAGRAPH 143 ---
+```
+ledger-invariants: NIL-COVERAGE — the SQL surface inspected 4074 string literals and found ZERO SQL
+  DML statements of any kind under …/nexus. This tree contains no SQL: the I-4 SQL classes (I4-DML,
+  I3-SQL-BALANCE) are proven by this program's --selftest and NOT by this tree. …
+ledger-invariants: NIL-COVERAGE — zero mutating driver calls (Exec/ExecContext/SendBatch/CopyFrom/
+  Prepare) exist under this root, so class OPAQUE-SQL inspected an empty population. The Go module
+  declares no database driver at all.
+```
+
+
+=== C: any 'empty population' / 'inspected...empty' line WITHOUT I4-BUILDER on it ===
+905:**FOUR OF THE GUARD'S DECLARED DETECTION CLASSES INSPECTED AN EMPTY POPULATION IN THIS TREE —
+925:denominator is not.** The four that inspected an empty population are **`I3-SQL-BALANCE`**,
+936:  Prepare) exist under this root, so class OPAQUE-SQL inspected an empty population. The Go module
+986:  So `I3-FIELD-WRITE` and `I3-PKG-STATE` are the only classes with a genuinely non-empty population
+1020:4. **The `I-4` SQL classes inspected an empty population in THIS tree** — the `NIL-COVERAGE` lines
+2703:     `2e97162`; the three that inspected an **empty population** are **`I4-DML`**,
+2916:       inspected an EMPTY population in this tree** — no SQL, no database driver, two `NIL-COVERAGE`
+
+=== D: paragraph-level version of C ===
+--- PARAGRAPH 143 ---
+```
+ledger-invariants: NIL-COVERAGE — the SQL surface inspected 4074 string literals and found ZERO SQL
+  DML statements of any kind under …/nexus. This tree contains no SQL: the I-4 SQL classes (I4-DML,
+  I3-SQL-BALANCE) are proven by this program's --selftest and NOT by this tree. …
+ledger-invariants: NIL-COVERAGE — zero mutating driver calls (Exec/ExecContext/SendBatch/CopyFrom/
+  Prepare) exist under this root, so class OPAQUE-SQL inspected an empty population. The Go module
+  declares no database driver at all.
+```
+
+--- PARAGRAPH 147 ---
+- **A third `NIL-COVERAGE` arm exists and did not fire** (`main.go:852`, for `I6-HOLD-BALANCE`),
+  because the guard counted **one** hold-named function. That one is
+  `nexus/internal/apps/ledger/slots_test.go:187 TestPlaceholderDisjointnessHolds` — an over-match on
+  *"the property **holds**"* which **the guard's own `CANNOT-CATCH` block names as over-match (ii)**
+  [MEASURED from the live transcript]. So `I6-HOLD-BALANCE`'s population is non-empty **only by that
+  over-match**, and I-6 is not meaningfully exercised on this tree either.
+  So `I3-FIELD-WRITE` and `I3-PKG-STATE` are the only classes with a genuinely non-empty population
+  on this tree.
+
+--- PARAGRAPH 150 ---
+1. **The detection surface is the NAME. Renaming a balance defeats the guard.**
+2. **Dynamic SQL is caught only through the call set it recognises**; triggers, migrations and
+   stored procedures are not walked at all.
+3. **`I-5`'s semantic half and non-Go callers are not covered.**
+4. **The `I-4` SQL classes inspected an empty population in THIS tree** — the `NIL-COVERAGE` lines
+   above report zero SQL DML literals and zero mutating driver calls, because the Go module declares
+   no database driver. **P-35 applies exactly: a class that inspected zero items has not been
+   exercised**, and the guard says so instead of counting it as clean. Its detection of real ledger
+   SQL is proven by its self-test and by nothing in this repository.
+
+--- PARAGRAPH 368 ---
+  1. **`A2-19` F1 RETRACTED at all three sites — the rejection-grade finding (§5.1.1, banner item 2,
+     §8.1 fact 2, §4.10).** Revision 2's *"no `ledger` vector **CAN** exist"* / *"can be admitted at
+     all"* was **FALSE**, and it failed in the **unsafe** direction: a relabelled `loanschedule`
+     parity vector — two string edits, `case_id` and `context` — was **admitted, graded and counted**
+     at **`VERDICT: PASS (exit 0) — 44 parity vectors … 5711 cells`**, against 43 / 5664 without it;
+     a relabelled `contract-refusal` vector likewise passed, moving 4 → 5 and 5664 → 5665.
+     **Reproduced twice independently to identical figures** — by `A2-19`, and by the driver on
+     `main`'s own bytes. The true and weaker claim, which §5.1's own heading already carried, is
+     **inexpressibility**, and that is what the document now says. **New §5.1.1** records wha
+

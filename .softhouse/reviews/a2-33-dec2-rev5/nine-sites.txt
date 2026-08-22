@@ -1,0 +1,60 @@
+=== SITE 1  banner item 3 ===
+>    prints two `NIL-COVERAGE` lines because this Go tree declares **no database driver and contains
+>    no SQL at all**, so **four of the guard's declared detection classes — `I3-SQL-BALANCE`,
+>    `I4-BUILDER`, `I4-DML` and `OPAQUE-SQL` — inspected an EMPTY population** and are proven by the
+>    guard's own self-test and by **nothing in this repository**. **`I4-BUILDER`'s emptiness is the
+>    one the guard does NOT announce**, and it is MEASURED, both polarities, by `A2-32` — revision 4
+>    said *"three"* here and recorded `I4-BUILDER` as `[UNVERIFIED]`. §4.4.1 carries the retraction,
+
+=== SITE 2  §4.4 I-4 row (head) ===
+| **I-4** | The ledger is append-only | No `UPDATE`/`DELETE` against `acc_gl_journal_entry` from application code | **NO — STRUCTURAL ONLY.** "No update ever happened" is not observable from a capture. Partial exception: a reversal is observable *as a row*, because the table carries a `reversed` flag [VERIFIED BY A2-13 from `JournalEntry.java:79`, NOT RE-OPENED HERE]. | **NO BY A VECTOR — AND BOTH OF THE SOURCE GUARD'S I-4 ARMS INSPECTED AN EMPTY POPULATION HERE.** The same `guard_ledger_invariants` looks for DML a
+
+=== SITE 3  §4.4.1 headline ===
+**FOUR OF THE GUARD'S DECLARED DETECTION CLASSES INSPECTED AN EMPTY POPULATION IN THIS TREE —
+`I3-SQL-BALANCE`, `I4-BUILDER`, `I4-DML` AND `OPAQUE-SQL`.** [The class enumeration is VERIFIED by
+
+=== SITE 4  §4.4.1 class table row ===
+| class | population in this tree | source of the finding |
+|---|---|---|
+| `I3-FIELD-WRITE` | non-empty — 306 write targets inspected | the tree |
+| `I3-PKG-STATE` | non-empty | the tree |
+| `I3-SQL-BALANCE` | **EMPTY** — zero SQL DML literals | `--selftest` only |
+| `I4-BUILDER` | **EMPTY** — zero query-builder/ORM mutating calls; **the guard does NOT announce this one** | `--selftest` only |
+| `I4-DML` | **EMPTY** — zero SQL DML literals | `--selftest` only |
+| `I6-HOLD-BALANCE` | non-empty by an over-match the guard itself names | the tree, weakly |
+
+=== SITE 5  numerator para + bullet ===
+**The numerator is FOUR and the classes are named, because naming them is checkable and a
+denominator is not.** The four that inspected an empty population are **`I3-SQL-BALANCE`**,
+**`I4-BUILDER`**, **`I4-DML`** and **`OPAQUE-SQL`**. **The guard announces only the first, third and
+fourth of them itself**, in two `NIL-COVERAGE` lines quoted verbatim [MEASURED by `A2-28` at commit
+`2e97162`; `A2-32` re-read both lines on its own green run at `33d19a6` — same two lines, same three
+  [MEASURED from the live transcript]. So `I6-HOLD-BALANCE`'s population is non-empty **only by that
+  over-match**, and I-6 is not meaningfully exercised on this tree either.
+  So `I3-FIELD-WRITE` and `I3-PKG-STATE` are the only classes with a genuinely non-empty population
+  on this tree.
+
+=== SITE 6  'correct reading' wait-list ===
+`I3-SQL-BALANCE`, `I4-BUILDER`, `I4-DML` and `OPAQUE-SQL` wait for a tree with a database in it.* Anyone who
+ratifies this document ratifies that residue along with it, knowingly. §5.3 **P-8 is accordingly
+marked LANDED**, and what replaces it is narrower.
+
+**One inherited claim this draft CORRECTS rather than repeats.** A2-8's follow-up **F-1** records
+that `conformance.sh`'s hard guards were scoped to `loanschedule`, so a float in
+`nexus/internal/apps/ledger/` would leave the harness green. **That was true when A2-8 wrote it
+
+=== SITE 7  §5.3 P-8 row ===
+| **—** | **P-8** | **LANDED.** The **`I-3`/`I-4` source guard** §4.4.1 requires | **Built by `A2-18`, wired by `T208`**; it runs on every invocation and `A2-28` measured `invariant violations 0` at commit `2e97162`. Its four residual **blind spots** are §4.4.1's, and **four of its declared detection classes — `I3-SQL-BALANCE`, `I4-BUILDER`, `I4-DML`, `OPAQUE-SQL` — inspected an empty population** in this tree (**P-35**); revision 4 said *"three … of seven"* here and `A2-32` MEASURED `I4-BUILDER`'s population as ze
+
+=== SITE 8  §8.1 fact 3 ===
+3. **A source guard for `I-3` and `I-4` now RUNS, and FOUR OF ITS DECLARED DETECTION CLASSES
+   — `I3-SQL-BALANCE`, `I4-BUILDER`, `I4-DML` and `OPAQUE-SQL` — inspected an EMPTY population in
+   this tree.**
+   `run_guards` invokes **seven** guards, not five; the seventh is `guard_ledger_invariants`
+
+=== SITE 9  §8.3 guard bullet ===
+  says a PASS means *"no violation is visible to a source-level guard over the Go tree"*, not *"the
+  ledger tree is covered"*, and **four of its declared detection classes — `I3-SQL-BALANCE`,
+  `I4-BUILDER`, `I4-DML`, `OPAQUE-SQL` — inspected an empty population here** (revision 4 said
+  *"three … of seven"*; `I4-BUILDER` is MEASURED empty by `A2-32` — §4.4.1). The float and `gofmt`
+  warning is unchanged and still the point: T166 widened both roots to the Go module root,
