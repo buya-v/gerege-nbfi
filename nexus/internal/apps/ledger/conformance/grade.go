@@ -314,6 +314,22 @@ type Summary struct {
 	// the loanschedule four.
 	DeclaredExemptions int
 
+	// Citations is every capture citation in the loaded corpus with the way its
+	// PART TWO resolved on this run, and CitationsNameOnly is the size of its
+	// weakest class: the resolutions that read ZERO bytes of the artefact and
+	// compare two fields of one vector to each other.
+	//
+	// IT IS COUNTED AND PRINTED FOR THE SAME REASON DeclaredExemptions IS. A2-34
+	// found part two resolving tautologically on three of these citations and
+	// nothing in the run said so, because the check reported only pass/fail and
+	// a check that cannot fail reports pass. The population is now visible on
+	// every run and pinned by IDENTITY in admit.go, in both directions.
+	Citations         []CitationResolution
+	CitationsByBytes  int
+	CitationsBySide   int
+	CitationsNameOnly int
+	CitationsUnres    int
+
 	// NotGraded is this context's account of its own coverage gaps, DERIVED from
 	// the capability registry on every run rather than hand-written beside it.
 	//
@@ -437,6 +453,39 @@ func Run(opts Options) *Summary {
 			}
 		}
 	}
+
+	// --- PART TWO OF THE CITATION: the census and both directions of its pin --
+	//
+	// Counted over every LOADED vector, not only the graded ones. The question
+	// "how much of this corpus's provenance rests on a check that reads no
+	// artefact bytes" is a question about the CORPUS, and an inadmissible vector
+	// is still in it. (Kills are the opposite case and are credited only from a
+	// graded vector, a few lines up -- deliberately, and for the opposite
+	// reason: a kill is a claim about grading that happened.)
+	loaded := make(map[string]bool, len(vectors))
+	for _, v := range vectors {
+		loaded[v.CaseID] = true
+	}
+	for _, v := range vectors {
+		for _, cr := range CitationResolutions(v, opts.RepoRoot) {
+			s.Citations = append(s.Citations, cr)
+			switch cr.Mode {
+			case CitationByBytes:
+				s.CitationsByBytes++
+			case CitationBySidecar:
+				s.CitationsBySide++
+			case CitationByNameOnly:
+				s.CitationsNameOnly++
+			default:
+				s.CitationsUnres++
+			}
+		}
+	}
+	// DEFLATION. Inflation -- a name-only citation that is not pinned -- is
+	// refused per vector by Admit and shows up as INADMISSIBLE. This is the
+	// other direction, and it has no per-vector home because the thing that is
+	// wrong is the PIN.
+	s.Fatal = append(s.Fatal, StaleCitationPins(s.Citations, loaded)...)
 	return s
 }
 

@@ -207,11 +207,31 @@ if suppressed:
         print("  %-70s :%s  %s" % (f, i, why))
     print()
 
+# THE FRONTIER, IN A SHAPE A GATE CAN READ.  [T243 -- wiring, additive]
+#
+# conformance.sh compares this set against a pin held in conformance.sh, in BOTH
+# directions, on every graded run. It is printed on stdout rather than read out
+# of the JSON below so that the gate consumes the SAME BYTES a human reads, and
+# so that a linter which died before finishing emits no frontier at all instead
+# of a stale file that still parses.
+for _t, _f in sorted([("TIER1", f) for f, _ in lethal] + [("TIER2", f) for f, _ in dormant]):
+    print("FAILOPEN-FRONTIER %s %s" % (_t, _f))
+print()
+
+# THE JSON DESTINATION IS OVERRIDABLE.  [T243 -- wiring, additive]
+#
+# Default unchanged, so every T238 transcript re-runs identically. It has to be
+# overridable because conformance.sh now runs this linter on EVERY graded run,
+# and a harness that rewrites a tracked file each time it grades would dirty the
+# working tree it is grading -- which is a defect of exactly the kind this
+# program keeps finding, one level up from the one this linter detects.
+JSON_OUT = os.environ.get("FAILOPEN_LINT_JSON") or \
+    ".softhouse/capture/t238-failopen/evidence/lint.json"
 json.dump({"lethal": [f for f, _ in lethal], "dormant": [f for f, _ in dormant],
            "unreproducible": [f for f, _ in unrepro],
            "suppressed": suppressed,
            "detail": [{"file": f, "violations": v} for f, v in viol]},
-          open(".softhouse/capture/t238-failopen/evidence/lint.json", "w"), indent=1)
+          open(JSON_OUT, "w"), indent=1)
 
 if fails:
     print("LINT: FAIL — %d instrument(s) can emit a negative they did not measure "

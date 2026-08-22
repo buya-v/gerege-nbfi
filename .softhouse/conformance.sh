@@ -1338,6 +1338,139 @@ guard_ledger_invariants() {
   return "$rc"
 }
 
+# ---------------------------------------------------------------------------
+# guard_no_fail_open_instruments: T238's FAIL-OPEN LINTER, WIRED.
+#   [T243, closing T238 handoff §8 item 1 — which would otherwise have been the
+#    FIFTH instance of P-45 in this program]
+# ---------------------------------------------------------------------------
+# T238 built a three-tier linter for the fail-OPEN dead-`cd` class and could not
+# wire it, because this file was held by T243 and T226. It shipped saying so:
+# "Nobody may cite it as an enforced control until it is wired." This is the
+# wiring, and the guard below is DRIVEN RED through this route before it is
+# claimed — a planted fail-open instrument turns a graded run to EXIT 2, and
+# removing it turns the run back green (transcript:
+# .softhouse/capture/t243-wiring/transcripts/20-failopen-red-drive.txt).
+#
+# WHY NOT T238's OWN CALL LINE, `python3 …/50-failopen-lint.py || return 1`.
+# Because MEASURED at 693c768 the linter exits 1 on the tree it shipped into:
+# NINE instruments are on its frontier, two Tier-1 and seven Tier-2. Wiring the
+# refusal literally would make every graded run in this program EXIT 2 until
+# nine files across four other tasks' FROZEN EVIDENCE directories were edited,
+# and one of them must never be repaired at all —
+# `evidence/red-drive/sweep-ORIGINAL.sh` is T238's preserved SPECIMEN of the
+# defect, pinned by a literal sha256 that its own red drive asserts (P-24).
+# Two ways out were available and only one is honest:
+#   (a) narrow the linter's scope until it goes green — that is weakening a gate
+#       to make the wiring easy, and it is forbidden;
+#   (b) run the linter over the WHOLE tree, every run, and gate the FRONTIER for
+#       EQUALITY against a pin held here. Nothing that is admissible today
+#       becomes inadmissible, nothing inadmissible becomes admissible, and a
+#       TENTH instrument — or a swap that keeps the total at nine — refuses.
+# (b) is what is implemented, and it is the same idiom as EXEMPTION_PIN_*
+# twenty lines up: a population that can drift in both directions is pinned by
+# IDENTITY, and moving it is a source edit a reviewer reads.
+#
+# THE PIN IS ALREADY EVIDENCE. T238's committed `evidence/lint.json` records
+# THREE Tier-2 instruments. There are SEVEN. Five arrived with T239 in the same
+# fire, after T238's measurement and before this wiring, and nothing noticed —
+# which is the drift this gate exists to stop, observed once before it was
+# switched on.
+#
+# FAIL-CLOSED, three ways, because this guard is about instruments that emit a
+# negative they did not measure and it must not be one:
+#   * the linter's own BANNER must be present in the output. A `cd` that failed,
+#     a python that was not there, a linter that was deleted — all of those give
+#     an empty or foreign output, and an empty frontier would otherwise read as
+#     "no fail-open instruments", the exact reading this whole class produces;
+#   * the linter's CORPUS line must report a non-zero file count (P-35);
+#   * the linter's exit code must be 0 or 1. 2 is its own "could not reach the
+#     corpus" refusal and anything else is a crash; both refuse here.
+# NO PIPELINE ANYWHERE IN IT (P-57): the linter's output goes to a FILE and
+# every read below is a `sed`/`grep` over that file.
+FAILOPEN_PIN_FILE_LIST="TIER1 .softhouse/capture/t238-failopen/evidence/red-drive/sweep-ORIGINAL.sh
+TIER1 .softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/A2-32-evidence/sweep.sh
+TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/00-engine-baseline.sh
+TIER2 .softhouse/capture/t234-sweep-instrument-audit/instruments/02-escape-matrix-fix.sh
+TIER2 .softhouse/capture/t239-r11-rerun/instruments/00-engines.sh
+TIER2 .softhouse/capture/t239-r11-rerun/instruments/10-population.sh
+TIER2 .softhouse/capture/t239-r11-rerun/instruments/31-coverage.sh
+TIER2 .softhouse/capture/t239-r11-rerun/instruments/50-red-drive.sh
+TIER2 .softhouse/capture/t239-r11-rerun/instruments/51-run-r11-verbatim.sh"
+
+guard_no_fail_open_instruments() {
+  local lint="$REPO_ROOT/.softhouse/capture/t238-failopen/instruments/50-failopen-lint.py"
+  if [ ! -f "$lint" ]; then
+    warn "conformance: THE FAIL-OPEN LINTER IS ABSENT: $lint"
+    warn "conformance: it is wired into this guard, so its absence is a refusal and never a pass."
+    return 1
+  fi
+  local out json want got rc corpus n
+  out="$(mktemp -t conformance-failopen)"      || return 1
+  json="$(mktemp -t conformance-failopen-json)" || return 1
+  want="$(mktemp -t conformance-failopen-want)" || return 1
+  got="$(mktemp -t conformance-failopen-got)"   || return 1
+
+  # The JSON is diverted to scratch. The linter's default destination is a
+  # TRACKED file, and a harness that rewrote a tracked file on every graded run
+  # would dirty the tree it is grading.
+  ( cd "$REPO_ROOT" && FAILOPEN_LINT_JSON="$json" python3 "$lint" ) >"$out" 2>&1
+  rc=$?
+
+  if ! LC_ALL=C grep -aqF 'T238 FAIL-OPEN LINT' "$out"; then
+    warn "conformance: the fail-open linter produced no banner (exit $rc). It did not run, or did not"
+    warn "conformance: finish. An empty frontier from a linter that never ran reads exactly like a"
+    warn "conformance: clean tree, which is the defect this guard exists to refuse."
+    LC_ALL=C sed -n '1,12p' "$out" >&2
+    rm -f "$out" "$json" "$want" "$got"
+    return 1
+  fi
+  if [ "$rc" -ne 0 ] && [ "$rc" -ne 1 ]; then
+    warn "conformance: the fail-open linter exited $rc, which is neither its clean (0) nor its"
+    warn "conformance: violations (1) code. 2 is its own corpus refusal; anything else is a crash."
+    LC_ALL=C sed -n '1,12p' "$out" >&2
+    rm -f "$out" "$json" "$want" "$got"
+    return 1
+  fi
+  corpus="$(LC_ALL=C sed -n 's/^corpus    : \([0-9][0-9]*\) tracked.*$/\1/p' "$out")"
+  [ -n "$corpus" ] || corpus=0
+  if [ "$corpus" -lt 1 ]; then
+    warn "conformance: the fail-open linter reports a corpus of $corpus tracked .sh/.py files."
+    warn "conformance: a linter that inspects nothing passes everything. This is an ERROR, not a pass."
+    rm -f "$out" "$json" "$want" "$got"
+    return 1
+  fi
+
+  LC_ALL=C sed -n 's/^FAILOPEN-FRONTIER //p' "$out" >"$got.raw"
+  LC_ALL=C sort "$got.raw" >"$got"
+  printf '%s\n' "$FAILOPEN_PIN_FILE_LIST" >"$want.raw"
+  LC_ALL=C sort "$want.raw" >"$want"
+  n="$(LC_ALL=C grep -ac '' "$got" || true)"
+  [ -n "$n" ] || n=0
+
+  say "conformance: CENSUS fail-open instruments — inspected $corpus tracked .sh/.py file(s) under"
+  say "conformance:   $REPO_ROOT (git ls-files, whole repository); frontier $n, pinned at 9."
+  say "conformance:   TIER1 = dead path AND a printing failure arm (fail-open, live). TIER2 = printing"
+  say "conformance:   arm only, corpus reachable today. Both are pinned by PATH, not by count."
+  if ! diff -u "$want" "$got" >"$out.diff" 2>&1; then
+    warn "conformance:"
+    warn "conformance: THE FAIL-OPEN FRONTIER IS NOT THE PINNED FRONTIER (- pinned, + measured):"
+    LC_ALL=C sed -n '3,60p' "$out.diff" >&2
+    warn "conformance:"
+    warn "conformance: A '+' line is a NEW instrument that can print a negative it did not measure —"
+    warn "conformance: repair it (T238's sweeplib.sh is the adoptable shape) rather than pinning it."
+    warn "conformance: A '-' line is an instrument that was REPAIRED or DELETED: that is good news, and"
+    warn "conformance: the pin must lose the row IN THE SAME COMMIT, or the pin starts excusing a"
+    warn "conformance: weakness that is no longer there."
+    warn "conformance: The pin is FAILOPEN_PIN_FILE_LIST in .softhouse/conformance.sh."
+    warn "conformance: EXIT 2 — no verdict is available. This is NOT a pass."
+    rm -f "$out" "$out.diff" "$json" "$want" "$want.raw" "$got" "$got.raw"
+    return 1
+  fi
+  say "conformance:   frontier == pinned (all $n rows, by path)."
+  rm -f "$out" "$out.diff" "$json" "$want" "$want.raw" "$got" "$got.raw"
+  return 0
+}
+
 run_guards() {
   local failed=0
   # FIRST, and it SHORT-CIRCUITS rather than joining the `failed=1` tally the others use.
@@ -1359,6 +1492,7 @@ run_guards() {
   guard_no_float_in_capture_requests  || failed=1
   guard_no_narrow_catch_in_capture_rigs || failed=1
   guard_ledger_invariants             || failed=1
+  guard_no_fail_open_instruments      || failed=1
   if [ "$failed" -ne 0 ]; then
     warn "conformance: a HARD guard failed. EXIT 2 — no verdict is available. This is NOT a pass."
     exit "$EXIT_UNUSABLE"
@@ -1557,6 +1691,135 @@ gate_exemption_census() {
 }
 
 # ---------------------------------------------------------------------------
+# gate_wrong_ledger_impls_die: THE SIX WRONG LEDGER IMPLEMENTATIONS, WIRED.
+#   [T243, closing A2-34's F-7 — the FOURTH instance of P-45 in this program]
+# ---------------------------------------------------------------------------
+# A2-15 registered six DELIBERATELY WRONG ledger implementations so that a
+# `graded_against` row would be EXECUTABLE rather than a sentence (DEC-2 §5.2
+# requirement 7, precondition P-10). A2-34 confirmed all six die — and then
+# found that they die only when the Go binary is driven BY HAND:
+#
+#   $ bash .softhouse/conformance.sh --ledger-impl ledger-wrong-truncating
+#   conformance: unknown option --ledger-impl
+#
+# `-ledger-impl` is a flag on the BINARY, this script never passed it, and this
+# script never runs `go test` either — so `TestEveryWrongImplementationIsKilled`
+# was equally unreachable from here. A GREEN RUN OF THIS HARNESS EXECUTED NONE
+# OF THE SIX. P-45: a guard that only fails when invoked by hand enforces
+# nothing. This gate is that route, and it has been driven red through itself
+# (.softhouse/capture/t243-wiring/transcripts/10-wrongimpl-red-drive.txt).
+#
+# WHAT IT ASSERTS, AND WHY EACH PART IS THERE
+#   * THE POPULATION IS DISCOVERED, NOT LISTED. The names come from the binary's
+#     own `-list-implementations`, so a seventh wrong implementation is executed
+#     the day it is registered and cannot be forgotten here. The COUNT is pinned
+#     (both directions), so a wrong implementation that is DELETED — the way a
+#     kill quietly stops being backed — refuses instead of shrinking the loop.
+#   * EACH ONE MUST EXIT 1, not merely "non-zero". 2 is this harness's unusable
+#     code: an implementation that made the run refuse for some unrelated reason
+#     would satisfy "non-zero" while killing nothing (P-62 — assert the
+#     diagnostic, never the code alone).
+#   * THE KILL MUST LAND IN THE LEDGER HALF. `ledger parity FAIL` plus
+#     `ledger oracle-refusal FAIL` must be >= 1. Without this a wrong LEDGER
+#     implementation could be "killed" by an unrelated loanschedule failure and
+#     the gate would still be green. Note that the six are NOT alike here:
+#     ledger-wrong-manual-permission-ignored passes all four parity vectors and
+#     dies on an ORACLE-REFUSAL vector alone, which is why the sum is what is
+#     asserted and not the parity count.
+#   * THE BANNER MUST NAME IT. The report's "THIS IS A DELIBERATELY WRONG
+#     IMPLEMENTATION" line proves the flag was actually honoured rather than
+#     ignored, which is the failure mode that would make every arm below pass
+#     against the CORRECT implementation.
+#   * THE ANTI-NO-OP CONTROL IS THE RUN ITSELF. This gate is called only after
+#     the graded run has already been performed with the CORRECT implementation,
+#     so "these implementations always go red" and "everything goes red" are
+#     distinguished by the verdict this run is about to return.
+#
+# COST: six extra in-process gradings of the committed store, measured at about
+# 1.3 s each on this host, and no contact with the reference oracle beyond the
+# probe this run already made. NOT RUN in self-test mode (the ledger half does
+# not run at all there) and NOT RUN when the probe says the oracle is down (the
+# run is already refusing; a gate that manufactured a second verdict out of that
+# would be reading its own refusal as evidence). Both skips SAY SO.
+EXEMPTION_PIN_LEDGER_WRONGIMPLS=6
+
+gate_wrong_ledger_impls_die() {
+  local bin="$1" probe="$2"
+  local list out names n bad=0 impl rc kills banner pfail rfail
+
+  if [ "$probe" != "up" ]; then
+    say "conformance: wrong-ledger-implementation gate NOT RUN: the reference oracle probe reads"
+    say "conformance:   '$probe', so this run is already refusing and every arm below would go red"
+    say "conformance:   for that reason instead of for the one it tests. Nothing is claimed."
+    return 0
+  fi
+
+  list="$(mktemp -t conformance-implist)" || return 1
+  "$bin" -list-implementations >"$list" 2>&1
+  # The wrong ones are exactly the rows the binary itself marks. Read from a
+  # FILE with sed; no pipeline, no early-exiting consumer (P-57).
+  names="$(LC_ALL=C sed -n 's/^\([a-z0-9-][a-z0-9-]*\)   \[-ledger-impl\] DELIBERATELY WRONG:.*$/\1/p' "$list")"
+  n=0
+  for impl in $names; do n=$((n + 1)); done
+  say "conformance: CENSUS wrong ledger implementations — discovered $n registered as DELIBERATELY"
+  say "conformance:   WRONG from the binary's own -list-implementations; pinned at"
+  say "conformance:   $EXEMPTION_PIN_LEDGER_WRONGIMPLS."
+  if [ "$n" -ne "$EXEMPTION_PIN_LEDGER_WRONGIMPLS" ]; then
+    warn "conformance: WRONG-IMPLEMENTATION POPULATION $n, PINNED $EXEMPTION_PIN_LEDGER_WRONGIMPLS."
+    warn "conformance: An added one must be executed here in the same commit that registers it; a"
+    warn "conformance: DELETED one silently withdraws a kill that vectors still cite. Both directions"
+    warn "conformance: move EXEMPTION_PIN_LEDGER_WRONGIMPLS in .softhouse/conformance.sh, deliberately."
+    warn "conformance: THE REPORT ABOVE MAY CARRY THE BINARY'S OWN 'VERDICT: PASS (exit 0)' LINE. IT IS"
+    warn "conformance: WITHDRAWN BY THIS GATE. That line is the BINARY's verdict over the corpus; this"
+    warn "conformance: gate runs after it, like gate_exemption_census, and can only make a verdict"
+    warn "conformance: worse. The verdict of the RUN is this one, and it is EXIT 2."
+    warn "conformance: EXIT 2 — no verdict is available. This is NOT a pass."
+    rm -f "$list"
+    return 1
+  fi
+
+  out="$(mktemp -t conformance-wrongimpl)" || return 1
+  for impl in $names; do
+    "$bin" "-oracle-probe=$probe" "-ledger-impl=$impl" >"$out" 2>&1
+    rc=$?
+    banner=0
+    LC_ALL=C grep -aqF 'THIS IS A DELIBERATELY WRONG IMPLEMENTATION' "$out" && banner=1
+    pfail="$(LC_ALL=C sed -n 's/^ *ledger parity  *PASS [0-9][0-9]*  *FAIL \([0-9][0-9]*\)$/\1/p' "$out")"
+    rfail="$(LC_ALL=C sed -n 's/^ *ledger oracle-refusal  *PASS [0-9][0-9]*  *FAIL \([0-9][0-9]*\).*$/\1/p' "$out")"
+    [ -n "$pfail" ] || pfail=0
+    [ -n "$rfail" ] || rfail=0
+    kills=$((pfail + rfail))
+    if [ "$rc" -eq 1 ] && [ "$banner" -eq 1 ] && [ "$kills" -ge 1 ]; then
+      say "conformance:   KILLED  $impl — exit 1, ledger parity FAIL $pfail + oracle-refusal FAIL $rfail"
+    else
+      bad=1
+      warn "conformance:   SURVIVED $impl — exit $rc (wanted 1), wrong-implementation banner $banner"
+      warn "conformance:            (wanted 1), ledger FAILs $kills (wanted >= 1)."
+      LC_ALL=C sed -n 's/^\( *ledger \(parity\|oracle-refusal\|inadmissible\|harness errors\).*\)$/\1/p' "$out" >&2
+    fi
+  done
+  rm -f "$list" "$out"
+
+  if [ "$bad" -ne 0 ]; then
+    warn "conformance:"
+    warn "conformance: A DELIBERATELY WRONG LEDGER IMPLEMENTATION SURVIVED THE CORPUS."
+    warn "conformance: Every ledger vector's graded_against row claims a wrong implementation it can"
+    warn "conformance: kill. One that survives means the corpus no longer discriminates: the claim is"
+    warn "conformance: still written down and is no longer true. Either the vector that backed the kill"
+    warn "conformance: was weakened, or the wrong implementation stopped being wrong. Do not 'fix' this"
+    warn "conformance: by deleting the implementation — that removes the evidence, not the defect."
+    warn "conformance: THE REPORT ABOVE MAY CARRY THE BINARY'S OWN 'VERDICT: PASS (exit 0)' LINE. IT IS"
+    warn "conformance: WITHDRAWN BY THIS GATE. That line is the BINARY's verdict over the corpus; this"
+    warn "conformance: gate runs after it, like gate_exemption_census, and can only make a verdict"
+    warn "conformance: worse. The verdict of the RUN is this one, and it is EXIT 2."
+    warn "conformance: EXIT 2 — no verdict is available. This is NOT a pass."
+    return 1
+  fi
+  say "conformance:   all $n wrong ledger implementations DIED through this harness, not by hand."
+  return 0
+}
+
+# ---------------------------------------------------------------------------
 # Reference-oracle probe
 # ---------------------------------------------------------------------------
 # Read-only, and it must stay read-only: do NOT restart, recreate or reconfigure
@@ -1633,6 +1896,20 @@ main_grade() {
     return "$EXIT_UNUSABLE"
   fi
   rm -f "$report"
+
+  # THE SIX WRONG LEDGER IMPLEMENTATIONS, EXECUTED ON THE AUTOMATIC PATH.
+  # Placed AFTER the graded run for two reasons: the run above is this gate's
+  # anti-no-op control (it is the CORRECT implementation going green over the
+  # same corpus), and the probe it measured is the one passed on, so no arm
+  # below asserts a reachability this run did not observe. Like the census gate,
+  # it can only make a verdict WORSE.
+  if [ "$self_test" = "1" ]; then
+    say "conformance: wrong-ledger-implementation gate NOT RUN: this is SELF-TEST mode, in which the"
+    say "conformance:   ledger half is not graded at all, so there is nothing for a wrong ledger"
+    say "conformance:   implementation to fail. Nothing is claimed about the six."
+  elif ! gate_wrong_ledger_impls_die "$CONF_BIN" "$probe"; then
+    return "$EXIT_UNUSABLE"
+  fi
   return "$rc"
 }
 
