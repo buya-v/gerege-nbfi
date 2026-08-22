@@ -1,0 +1,82 @@
+########## SUBJECT = pre-fix (trap bytes extracted from the file) ##########
+--- sending SIGINT to pid 92406 (own session, default dispositions) ---
+subject rc                = 0
+LOCK after                = absent
+release_lock ran          = YES
+TICKS AFTER RELEASE       = 38   <-- work done while holding NO lock
+reached BODY COMPLETED    = YES
+transcript                = /tmp/t202/spawn-pre-INT.txt
+
+--- sending SIGTERM to pid 92834 (own session, default dispositions) ---
+subject rc                = 0
+LOCK after                = absent
+release_lock ran          = YES
+TICKS AFTER RELEASE       = 38   <-- work done while holding NO lock
+reached BODY COMPLETED    = YES
+transcript                = /tmp/t202/spawn-pre-TERM.txt
+
+--- sending SIGHUP to pid 92990 (own session, default dispositions) ---
+subject rc                = 1
+LOCK after                = absent
+release_lock ran          = YES
+TICKS AFTER RELEASE       = 0   <-- work done while holding NO lock
+reached BODY COMPLETED    = no
+transcript                = /tmp/t202/spawn-pre-HUP.txt
+
+--- sending SIGQUIT to pid 93031 (own session, default dispositions) ---
+subject rc                = 0
+LOCK after                = absent
+release_lock ran          = YES
+TICKS AFTER RELEASE       = 0   <-- work done while holding NO lock
+reached BODY COMPLETED    = YES
+transcript                = /tmp/t202/spawn-pre-QUIT.txt
+
+--- sending SIGKILL to pid 93558 (own session, default dispositions) ---
+subject rc                = -9
+LOCK after                = PRESENT-STRANDED
+release_lock ran          = NO
+TICKS AFTER RELEASE       = 0   <-- work done while holding NO lock
+reached BODY COMPLETED    = no
+transcript                = /tmp/t202/spawn-pre-KILL.txt
+
+########## SUBJECT = post-fix (trap bytes extracted from the file) ##########
+--- sending SIGINT to pid 93578 (own session, default dispositions) ---
+subject rc                = 130  (128+2, killed by signal 2)
+LOCK after                = absent
+release_lock ran          = YES
+TICKS AFTER RELEASE       = 0   <-- work done while holding NO lock
+reached BODY COMPLETED    = no
+transcript                = /tmp/t202/spawn-post-INT.txt
+
+--- sending SIGTERM to pid 93608 (own session, default dispositions) ---
+subject rc                = 143  (128+15, killed by signal 15)
+LOCK after                = absent
+release_lock ran          = YES
+TICKS AFTER RELEASE       = 0   <-- work done while holding NO lock
+reached BODY COMPLETED    = no
+transcript                = /tmp/t202/spawn-post-TERM.txt
+
+--- sending SIGHUP to pid 93646 (own session, default dispositions) ---
+subject rc                = 129  (128+1, killed by signal 1)
+LOCK after                = absent
+release_lock ran          = YES
+TICKS AFTER RELEASE       = 0   <-- work done while holding NO lock
+reached BODY COMPLETED    = no
+transcript                = /tmp/t202/spawn-post-HUP.txt
+
+--- sending SIGQUIT to pid 93676 (own session, default dispositions) ---
+subject rc                = 131  (128+3, killed by signal 3)
+LOCK after                = absent
+release_lock ran          = YES
+TICKS AFTER RELEASE       = 0   <-- work done while holding NO lock
+reached BODY COMPLETED    = no
+transcript                = /tmp/t202/spawn-post-QUIT.txt
+
+--- sending SIGKILL to pid 93706 (own session, default dispositions) ---
+subject rc                = -9
+LOCK after                = PRESENT-STRANDED
+release_lock ran          = NO
+TICKS AFTER RELEASE       = 0   <-- work done while holding NO lock
+reached BODY COMPLETED    = no
+transcript                = /tmp/t202/spawn-post-KILL.txt
+

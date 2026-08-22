@@ -1,0 +1,84 @@
+[08:41:11] fire start — repo=/tmp/t202/e2e/repo probe=0 force=0 log=/tmp/t202/e2e/logs/fire-20260822-084111.log
+[08:41:11] WARN: fineract source missing at /tmp/t202/nonexistent-fineract — source analysis will be blocked
+[08:41:11] postgres: reachable at localhost:5432
+[08:41:12] docker: running (29.6.2)
+[08:41:12] reference oracle (Fineract): UNREACHABLE at https://127.0.0.1:1/none
+There is no tracking information for the current branch.
+Please specify which branch you want to merge with.
+See git-pull(1) for details.
+
+    git pull <remote> <branch>
+
+If you wish to set tracking information for this branch you can do so with:
+
+    git branch --set-upstream-to=<remote>/<branch> main
+
+[08:41:12] WARN: git pull --ff-only failed; continuing on local state
+[08:41:12] WARN: could not push lock — cloud fire may not see it
+[08:41:12] invoking driver (chain iteration 1/1)
+[08:41:12] background-task wait ceiling: disabled (CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0)
+INIT session fake
+RESULT success :: fake driver done
+[08:41:13] raw event stream: /tmp/t202/e2e/logs/fire-20260822-084111.jsonl
+[08:41:13] driver exited rc=0
+[08:41:13] WARN: exit-protocol violation — driver left uncommitted work:
+ M .softhouse/RESUME.md
+?? T999-handoff.md
+[08:41:13] rescued: committed the leftovers so the next fire can see them
+fatal: invalid gitfile format: /private/tmp/t202/e2e/wt-bad/.git
+[08:41:13] ERROR: worktree sweep could not read git status for /private/tmp/t202/e2e/wt-bad (rc=128) — REFUSING to treat it as clean. NOT rescued, because git is not answering there; treat anything inside it as UNVERIFIED and inspect it by hand.
+[08:41:13] WARN: worktree wt-good left 1 uncommitted path(s) — rescuing to softhouse/rescued-wt-good-20260822-084111
+[08:41:13] rescued wt-good -> softhouse/rescued-wt-good-20260822-084111
+[08:41:13] WARN: could not push after exit-protocol guard
+[08:41:14] chain: stopping — no runnable work left (program complete or all remaining work is a user gate)
+[08:41:14] chain finished after 1 iteration(s)
+[08:41:14] WARN: could not push lock release
+[08:41:14] lock released
+===== wrapper rc=0 =====
+===== log =====
+[08:41:11] fire start — repo=/tmp/t202/e2e/repo probe=0 force=0 log=/tmp/t202/e2e/logs/fire-20260822-084111.log
+[08:41:11] WARN: fineract source missing at /tmp/t202/nonexistent-fineract — source analysis will be blocked
+[08:41:11] postgres: reachable at localhost:5432
+[08:41:12] docker: running (29.6.2)
+[08:41:12] reference oracle (Fineract): UNREACHABLE at https://127.0.0.1:1/none
+There is no tracking information for the current branch.
+Please specify which branch you want to merge with.
+See git-pull(1) for details.
+
+    git pull <remote> <branch>
+
+If you wish to set tracking information for this branch you can do so with:
+
+    git branch --set-upstream-to=<remote>/<branch> main
+
+[08:41:12] WARN: git pull --ff-only failed; continuing on local state
+[08:41:12] WARN: could not push lock — cloud fire may not see it
+[08:41:12] invoking driver (chain iteration 1/1)
+[08:41:12] background-task wait ceiling: disabled (CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0)
+INIT session fake
+RESULT success :: fake driver done
+[08:41:13] raw event stream: /tmp/t202/e2e/logs/fire-20260822-084111.jsonl
+[08:41:13] driver exited rc=0
+[08:41:13] WARN: exit-protocol violation — driver left uncommitted work:
+ M .softhouse/RESUME.md
+?? T999-handoff.md
+[08:41:13] rescued: committed the leftovers so the next fire can see them
+fatal: invalid gitfile format: /private/tmp/t202/e2e/wt-bad/.git
+[08:41:13] ERROR: worktree sweep could not read git status for /private/tmp/t202/e2e/wt-bad (rc=128) — REFUSING to treat it as clean. NOT rescued, because git is not answering there; treat anything inside it as UNVERIFIED and inspect it by hand.
+[08:41:13] WARN: worktree wt-good left 1 uncommitted path(s) — rescuing to softhouse/rescued-wt-good-20260822-084111
+[08:41:13] rescued wt-good -> softhouse/rescued-wt-good-20260822-084111
+[08:41:13] WARN: could not push after exit-protocol guard
+[08:41:14] chain: stopping — no runnable work left (program complete or all remaining work is a user gate)
+[08:41:14] chain finished after 1 iteration(s)
+[08:41:14] WARN: could not push lock release
+[08:41:14] lock released
+===== main-tree state =====
+42ddcd9 softhouse: release local fire lock (20260822-084111)
+ed91a1d softhouse: rescue uncommitted deliverables left by fire 20260822-084111 (exit-protocol violation)
+88c6800 driver work
+c8c5ac3 softhouse: local fire lock (20260822-084111)
+-- still uncommitted:
+===== rescue branches =====
++ softhouse/rescued-wt-good-20260822-084111
+===== LOCK present? =====
+absent
