@@ -1,34 +1,34 @@
-     837  ########## PATTERN F2-01 :: three of (its |the |them|these )?(seven|7|four|4)
-      84  ########## PATTERN F2-02 :: (^|[^0-9])3 of (7|4|seven|four)
-      59  ########## PATTERN F2-03 :: three of them
-     595  ########## PATTERN F2-04 :: empty population
-     654  ########## PATTERN F2-05 :: inspect.{0,40}empty
-    2460  ########## PATTERN F2-06 :: numerator
-    2603  ########## PATTERN F2-07 :: denominator
+     868  ########## PATTERN F2-01 :: three of (its |the |them|these )?(seven|7|four|4)
+      90  ########## PATTERN F2-02 :: (^|[^0-9])3 of (7|4|seven|four)
+      62  ########## PATTERN F2-03 :: three of them
+     600  ########## PATTERN F2-04 :: empty population
+     658  ########## PATTERN F2-05 :: inspect.{0,40}empty
+    2463  ########## PATTERN F2-06 :: numerator
+    2608  ########## PATTERN F2-07 :: denominator
      641  ########## PATTERN F2-08 :: i4.?builder
      840  ########## PATTERN F2-09 :: nil.?coverage
-     773  ########## PATTERN F2-10 :: detection class
-     126  ########## PATTERN F2-11 :: not established
+     783  ########## PATTERN F2-10 :: detection class
+     129  ########## PATTERN F2-11 :: not established
        5  ########## PATTERN F2-12 :: i.?4 arm
-     623  ########## PATTERN F2-13 :: three .{0,80}(class|detect)
-     632  ########## PATTERN F2-14 :: (57|43|25) ?%|57 per ?cent|43 per ?cent
+     633  ########## PATTERN F2-13 :: three .{0,80}(class|detect)
+     633  ########## PATTERN F2-14 :: (57|43|25) ?%|57 per ?cent|43 per ?cent
       36  ########## PATTERN F2-15 :: (three|3|four|4) declared
-     169  ########## PATTERN F2-16 :: declared detection
-    3043  ########## PATTERN F2-17 :: the (three|four)( that| classes| of them)?
+     172  ########## PATTERN F2-16 :: declared detection
+    3060  ########## PATTERN F2-17 :: the (three|four)( that| classes| of them)?
      342  ########## PATTERN F2-18 :: i3.?sql.?balance
      308  ########## PATTERN F2-19 :: i4.?dml
      392  ########## PATTERN F2-20 :: opaque.?sql
-      31  ########## PATTERN F2-21 :: selftest only|--selftest. only|self-test and .{0,20}nothing
-      39  ########## PATTERN F2-22 :: guard is (25|43|57)|% live|per ?cent live
+      34  ########## PATTERN F2-21 :: selftest only|--selftest. only|self-test and .{0,20}nothing
+      42  ########## PATTERN F2-22 :: guard is (25|43|57)|% live|per ?cent live
      469  ########## PATTERN F1-01 :: fu.?t208.?1|t208.?1
       65  ########## PATTERN F1-02 :: cannot.?catch.{0,100}(drop|swallow|filter|omit|strip|suppress|absent|not present|never|does not|doesn.t)
-     153  ########## PATTERN F1-03 :: (drop|swallow|filter|omit|strip|suppress|absent|never|does not arrive|doesn.t arrive).{0,100}cannot.?catch
-     306  ########## PATTERN F1-04 :: head drop
-     352  ########## PATTERN F1-05 :: pass.?path|pass path
-      32  ########## PATTERN F1-06 :: not present anywhere
-      37  ########## PATTERN F1-07 :: absent from every
-     305  ########## PATTERN F1-08 :: never reach
-      12  ########## PATTERN F1-09 :: does not arrive|do not arrive|doesn.t arrive
-      56  ########## PATTERN F1-10 :: only .{0,12}\^?census
-      65  ########## PATTERN F1-11 :: condensed copy|redundant restatement|8.line condensation|eight.line condensation
-     210  ########## PATTERN F1-12 :: green run
+     154  ########## PATTERN F1-03 :: (drop|swallow|filter|omit|strip|suppress|absent|never|does not arrive|doesn.t arrive).{0,100}cannot.?catch
+     310  ########## PATTERN F1-04 :: head drop
+     356  ########## PATTERN F1-05 :: pass.?path|pass path
+      35  ########## PATTERN F1-06 :: not present anywhere
+      40  ########## PATTERN F1-07 :: absent from every
+     308  ########## PATTERN F1-08 :: never reach
+      18  ########## PATTERN F1-09 :: does not arrive|do not arrive|doesn.t arrive
+      59  ########## PATTERN F1-10 :: only .{0,12}\^?census
+      69  ########## PATTERN F1-11 :: condensed copy|redundant restatement|8.line condensation|eight.line condensation
+     219  ########## PATTERN F1-12 :: green run

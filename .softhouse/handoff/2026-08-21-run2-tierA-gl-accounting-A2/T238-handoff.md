@@ -240,6 +240,8 @@ which is how an auditor invokes it — not by hand.
 
 ```
 BASELINE  the ORIGINAL, recovered from the LITERAL sha 477dc2da and run verbatim:
+          sha256(original) = c076016e292186b8d320b8b7cbab34adc29502d4c54395eda0487551d0e35eb2
+          expected         = c076016e292186b8d320b8b7cbab34adc29502d4c54395eda0487551d0e35eb2
           exit=0    "(no hits)" lines=34    hit lines=34    -> NOTHING MEASURED
 
 RED 1  not a git work tree                   exit 90   "(no hits)" lines 0   PASS
@@ -248,13 +250,18 @@ RED 3  calibration misses the known positive exit 92   "(no hits)" lines 0   PAS
 RED 4  single-file mode, target absent       exit 90   "(no hits)" lines 0   PASS
 
 GREEN  the live corpus                       exit 0
-       34 patterns · 5000 tracked files · 17354 hit lines
-       SWEEP CALIBRATE+: PASS — known positive matched 60 time(s)
-       SWEEP CALIBRATE-: PASS — known negative matched 0 times
+       34 patterns run · 5022 tracked files · 17502 hit lines
+       "(no hits)" lines 0     <-- the string no longer exists in the instrument
+       SWEEP CALIBRATE+: PASS — known positive 'a2-33' matched 73 time(s)
+       SWEEP CALIBRATE-: PASS — known negative matched 0 times (engine is not fabricating)
+       SWEEP-RESULT: corpus_files=5022 patterns=34 hit_lines=17501 calibration=PASS
 ```
 
-All 34 patterns return a **non-zero** hit count on the live corpus
-(`evidence/red-drive/90-green-per-pattern-counts.txt`) — **no pattern in the set is dead.**
+The baseline sha256 **matches the original byte-for-byte**, so the leg labelled *"ORIGINAL"* is
+provably the original.
+
+All 34 patterns return a **non-zero** hit count on the live corpus — **patterns with zero hits: 0**
+(`evidence/red-drive/90-green-per-pattern-counts.txt`). **No pattern in the set is dead.**
 
 **ALL 34 PATTERNS ARE BYTE-IDENTICAL TO THE ORIGINAL.** The `^run ` lines of the original and the
 repaired file both sha256 to `6895b1bf930023c1e05a72be564e5aaa7b0f70e9806d88a5e6784e92ec0e3cac`.
@@ -266,7 +273,7 @@ against itself. That is **P-24** (a baseline is a literal sha, never a moving re
 same family as the defect this task exists to fix: *an artefact reporting something other than what
 its label claims*, appearing inside the instrument built to catch that family. Pinned to `477dc2da`.
 
-The green hit count (17,354) is **not** comparable with A2-33's 6,334: the corpus has grown and now
+The green hit count (17,502) is **not** comparable with A2-33's 6,334: the corpus has grown and now
 contains T238's own transcripts, which quote these patterns.
 
 ---
