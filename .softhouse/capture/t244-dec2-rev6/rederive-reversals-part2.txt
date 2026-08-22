@@ -1,0 +1,63 @@
+resolved root  : /Users/buv/gerege-nbfi/.claude/worktrees/agent-a5202f4ca25d93a9b
+git HEAD       : 477dc2da0f9edf3922e7d29e689bc6473289befc
+measured at    : 2026-08-22T09:23:01Z UTC
+oracle health  : {"status":"UP","groups":["liveness","readiness"]}
+
+--- Q9  the REVERSING legs: rows whose id is pointed AT by some reversal_id ---
+SQL: select count(*) from acc_gl_journal_entry where id in (select reversal_id from acc_gl_journal_entry where reversal_id is not null);
+8
+
+--- Q10  those reversing legs, projected ---
+ id | account_id | transaction_id | reversed | reversal_id | type_enum |     amount     | entry_date | manual_entry |                                                    description                                                    
+----+------------+----------------+----------+-------------+-----------+----------------+------------+--------------+-------------------------------------------------------------------------------------------------------------------
+ 38 |         16 | a28f54c1db73   | f        |             |         1 |  100000.250000 | 2026-06-01 | t            | A2-26 reversal probe: the ledger is append-only, a correction is a reversing entry
+ 39 |         17 | a28f54c1db73   | f        |             |         1 |   25000.300000 | 2026-06-01 | t            | A2-26 reversal probe: the ledger is append-only, a correction is a reversing entry
+ 40 |         21 | a28f54c1db73   | f        |             |         2 |  125000.550000 | 2026-06-01 | t            | A2-26 reversal probe: the ledger is append-only, a correction is a reversing entry
+ 50 |         16 | a28f57412abb   | f        |             |         1 |  100000.250000 | 2026-06-01 | t            | A2-26 reversal probe: the ledger is append-only, a correction is a reversing entry
+ 51 |         17 | a28f57412abb   | f        |             |         1 |   25000.370000 | 2026-06-01 | t            | A2-26 reversal probe: the ledger is append-only, a correction is a reversing entry
+ 52 |         21 | a28f57412abb   | f        |             |         2 |  125000.620000 | 2026-06-01 | t            | A2-26 reversal probe: the ledger is append-only, a correction is a reversing entry
+ 63 |         33 | a28f614e0263   | f        |             |         1 | 1000000.000000 | 2026-07-01 | t            | A2-29 / G-12 reversal probe: does a reversing entry keep the stored running balance in step with the derived sum?
+ 64 |         34 | a28f614e0263   | f        |             |         2 | 1000000.000000 | 2026-07-01 | t            | A2-29 / G-12 reversal probe: does a reversing entry keep the stored running balance in step with the derived sum?
+(8 rows)
+
+
+--- Q11  TOTAL reversal-related population: originals UNION reversing legs ---
+SQL: originals(reversed or reversal_id not null) UNION legs(id in reversal_id set)
+16
+
+--- Q12  PAIRING: does each original's reversing leg carry the SAME amount and the OPPOSITE type_enum? ---
+ orig_id | orig_type |  orig_amount   | rev_id | rev_type |   rev_amount   | amount_equal | type_flipped 
+---------+-----------+----------------+--------+----------+----------------+--------------+--------------
+      33 |         2 |  100000.250000 |     38 |        1 |  100000.250000 | t            | t
+      34 |         2 |   25000.300000 |     39 |        1 |   25000.300000 | t            | t
+      35 |         1 |  125000.550000 |     40 |        2 |  125000.550000 | t            | t
+      45 |         2 |  100000.250000 |     50 |        1 |  100000.250000 | t            | t
+      46 |         2 |   25000.370000 |     51 |        1 |   25000.370000 | t            | t
+      47 |         1 |  125000.620000 |     52 |        2 |  125000.620000 | t            | t
+      59 |         2 | 1000000.000000 |     63 |        1 | 1000000.000000 | t            | t
+      60 |         1 | 1000000.000000 |     64 |        2 | 1000000.000000 | t            | t
+(8 rows)
+
+
+--- Q13  did any original row get MUTATED instead of reversed? (I-5's actual obligation) ---
+rows where lastmodified_date > created_date, among reversal participants:
+ id | created_date | lastmodified_date | was_modified 
+----+--------------+-------------------+--------------
+ 33 |              |                   | 
+ 34 |              |                   | 
+ 35 |              |                   | 
+ 38 |              |                   | 
+ 39 |              |                   | 
+ 40 |              |                   | 
+ 45 |              |                   | 
+ 46 |              |                   | 
+ 47 |              |                   | 
+ 50 |              |                   | 
+ 51 |              |                   | 
+ 52 |              |                   | 
+ 59 |              |                   | 
+ 60 |              |                   | 
+ 63 |              |                   | 
+ 64 |              |                   | 
+(16 rows)
+
