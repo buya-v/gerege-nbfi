@@ -350,3 +350,152 @@ Transcript in the handoff.
 > in particular the 30 `attempt1-*` files listed in `FLAGGED-NOT-REPRODUCIBLE.txt`, which are
 > real oracle bytes with false recipes and are not citable. No captured byte under `out/`,
 > `req/` or `sql/` was altered by A2-5; its 406 manifest lines are unchanged.
+
+---
+
+## 7. T275 addendum — §5 worked down, and §5's own framing corrected
+
+Worker **T275**, local fire `20260822-060013b`, branch `softhouse/t275-a2-gap-capture`. Path B gate
+`t36/preconditions.sh gerege` exit **0**, all 23 assertions, quoted in the handoff. Same pinned
+oracle (`426a23544e…`), same tenant `gerege`, same `MathContext(19, HALF_UP)`, PostgreSQL 18.3.
+
+**Nothing here is promoted.** No file was written to `.softhouse/vectors/` and `.softhouse/conformance.sh`
+was not touched. New captures are the `A2-5xx` series; new recipes are `run-500`, `run-514`, `run-520`,
+`run-540`, `mkreq-t275.py`, `capsql.sh`, `sql/q8-*`, `sql/q9-*`, `t275-mapping-diff.py`,
+`prove-t275-reissue.py`.
+
+### 7.1 §5 row 1 — CAPTURED, and the row's own title is REFUTED
+
+`req/upd-070-repoint-fundsource.json` and `req/upd-071-add-channel.json` were sent, unmodified, for
+the first time. §5 called the behaviour **"delete-then-recreate"**. On every path this fire could
+reach, **it is not**. `sql/q2-product-mapping-rows.sql` could not have seen this: it does not select
+`m.id`, and "updated in place" and "deleted and reinserted" are identical in its projection.
+`sql/q8-t275-mapping-ids.sql` selects the primary key first, and `max(id)` over the whole table as an
+independent witness — a recreate consumes identity values even when the row count does not move.
+
+| capture | request | mapping-row identity observed |
+|---|---|---|
+| `A2-500` | *(pre-state)* | product 23 = ids **12–21**; generic `FUND_SOURCE` = id **12** → GL 2; no channel row; table `max(id)` **94** |
+| `A2-502/503` | `PUT {fundSourceAccountId:16}` | **id 12 SURVIVES**, `gl_account_id` 2→16, `max(id)` still **94** — **UPDATE IN PLACE** |
+| `A2-505/506` | `PUT paymentChannel[pt2→16]` | new row **95** appended; ids 12–21 untouched |
+| `A2-508/509` | `PUT {description}` — no accounting parameter at all | **11 ids in, 11 ids out, zero churn** |
+| `A2-510/511` | `PUT paymentChannel[]` (empty array) | row **95 DELETED**, nothing recreated, `max(id)` back to **94** |
+| `A2-514/515` | re-add the channel | new row **96** (id 95 is **not** reused) |
+| `A2-516/517` | **byte-identical body re-sent** | **zero churn** — id 96 survives, `max(id)` still 96 |
+| `A2-518/519` | `PUT paymentChannel[pt2→**17**]` — same key, new account | **id 96 SURVIVES**, `gl_account_id` 16→17 |
+
+**The rule the oracle actually follows is reconcile-by-key.** A generic slot is updated in place. A
+list entry whose key is already present is updated in place. A row is deleted only when its key
+**leaves** the list. An update carrying no accounting parameter disturbs no mapping at all, so
+replacement is scoped to the payload and is not a property of the update command.
+
+A port written to §5's title — rebuild the mapping set on every product save — would churn every
+`acc_product_mapping.id` on every save and diverge from the oracle on identity, while looking correct
+in any projection that omits the key. That is precisely the divergence this capture exists to prevent.
+
+**One wire-form finding, separate from the identity one.** `A2-516` re-sent a byte-identical body
+against state that already satisfied it, and the response still reported the field as changed:
+
+```
+{"resourceId":23,"changes":{"locale":"en","paymentChannelToFundSourceMappings":"[{\"paymentTypeId\":2,\"fundSourceAccountId\":16}]"}}
+```
+
+So `changes` is **not** a delta for this field — it is an echo of what was submitted, serialised as a
+**JSON string, not a JSON array**. A port returning a true delta, or returning an array, diverges on
+the wire on the ordinary retry path.
+
+### 7.2 §5 row 2 (charge dimension) — CAPTURED. §5's stated blocker was already false.
+
+§5: *"needs an `m_charge` fixture; none exists on `gerege`."* Measured at this fire and committed as
+`out/A2-520-db-fixtures.txt`: **18 active LOAN charges exist**, 16 fee and 2 penalty, seeded by the
+T40/T48/T51 Path B fires. No fixture was created by T275. The third resolution dimension is now
+exercised: before this fire the corpus had **zero** `acc_product_mapping` rows with `charge_id` set;
+it now has seven.
+
+| capture | probe | oracle |
+|---|---|---|
+| `A2-522/528` | fee charge 1 → GL 11, penalty charge 6 → GL 8, both attached | **200**, product 56, rows **107** (`fat=5, charge=6, gl=8`) and **108** (`fat=4, charge=1, gl=11`) |
+| `A2-524` | fee override naming charge 2, **not attached to the product** | **200** — row 119 persisted. **No attachment check.** |
+| `A2-525` | penalty override on a **fee** charge, fee override on a **penalty** charge | **200** — rows 130, 131. **`is_penalty` is not checked against the mapping key.** |
+| `A2-526` | fee override → GL 13, an **EXPENSE** account | **403** `error.msg.incomeAccountId.invalid.account.type` |
+| `A2-527` | **two** fee overrides for the **same** `chargeId`, different accounts | **200** — rows **152** and **153**, both `fat=4, charge=1` |
+
+A charge-scoped row carries the **same** `financial_account_type` as the generic slot it overrides
+(`4` = fees, `5` = penalties); only `charge_id` distinguishes them. Resolution therefore has to
+discriminate on a nullable column, exactly as the payment-type dimension does.
+
+`A2-527` is the charge-dimension twin of §4.1. The duplicate is accepted and persisted here too, so
+the "created happily, detonates at resolution" hazard is **not specific to payment types**. Whether it
+detonates identically at resolution is **not captured** — see 7.5.
+
+`A2-526`'s message, verbatim, is a wire-form finding in its own right:
+
+```
+Passed in GLAccount incomeAccountId with Id 13maps to the account Losses Written Off of type EXPENSE,
+the expected account type was one among [4, 2]
+```
+
+Two things a port must not tidy. **`13maps`** — the missing space is in the oracle's own string.
+And **`[4, 2]`** — the accepted types for an *income* mapping are INCOME **and LIABILITY**, so this
+slot admits a liability account.
+
+**Identity burn.** `A2-526` was refused, and the refusal still consumed `m_product_loan` id **59** and
+`acc_product_mapping` ids **132–141** — visible as gaps between products 58 and 60 in
+`out/A2-528-db-mapping-after-charge-dimension.txt`. Same class as §4.8's note on `A2-bad-045`.
+
+### 7.3 §5 rows 3–5 (reason mappings) — the fixture-free half CAPTURED
+
+A **dangling** reason id needs no fixture by definition; the fixture is what would make an id
+*resolve*. Both sides probed, both with an expense account and with a non-expense one, so the
+**order** of the two rules is observed rather than assumed.
+
+| capture | probe | oracle |
+|---|---|---|
+| `A2-540` | `writeOffReasonCodeValueId: 999999`, expense GL 13 | **400** `validation.msg.writeoffreason.invalid` — *"Write-off reason with ID 999999 does not exist"*, `parameterName: writeOffReasonsToExpenseMappings`, `args: []` |
+| `A2-541` | same id, **GL 9 (INCOME)** — both rules violated | **400** with **both errors, accumulated**, the **account error first**: `validation.msg.glaccount.not.found` — *"GL Account with ID 9 does not exist or is not an Expense GL account"*, `parameterName: expenseAccountId` — then the reason error |
+| `A2-542` | `chargeOffReasonCodeValueId: 999999`, expense GL 13 | **400** `validation.msg.chargeoffreason.invalid` — *"Charge-off reason with ID 999999 does not exist"*, `parameterName: chargeOffReasonToExpenseAccountMappings` |
+| `A2-543` | same id, GL 9 | **400**, both errors, same order as `A2-541` |
+
+**Validation is accumulating, not short-circuiting.** A port that returns the first failure returns a
+one-element `errors` array where the oracle returns two.
+
+**§3 row 15 is now closed on both halves.** The DDL half:
+`acc_product_mapping.charge_off_reason_id`, `.capitalized_income_classification_id` and
+`.buydown_fee_classification_id` each carry an FK to `m_code_value`; **`write_off_reason_id` carries
+none** [`out/A2-520-db-fixtures.txt`]. The behavioural half: the application check fires first on
+**both** sides, so the FK asymmetry never surfaces on this path — and on the write-off side that
+application check is the **only** referential integrity there is.
+
+**§3 row 16 is closed.** *"must be an Expense GL account"* is real, and its message **conflates**
+absence with wrong type under a single code, `validation.msg.glaccount.not.found`. A port that
+distinguishes "no such account" from "wrong type" diverges on the wire even when both refuse.
+
+Zero rows persisted from any group-C probe: `write_off_reason_id` and `charge_off_reason_id` are both
+still `NULL` on every row of `acc_product_mapping` [`out/A2-544-db-mapping-after-reason-probes.txt`].
+
+### 7.4 §5 rows STILL EXCLUDED, each with its blocker MEASURED rather than inherited
+
+| §5 row | still blocked on | measured this fire |
+|---|---|---|
+| charge-off / write-off reason mappings that **RESOLVE** | `m_code_value` seeding | `m_code` **26 `WriteOffReasons`** and **39 `ChargeOffReasons`** exist with **0** values each; 22 code values exist in total, none under either code |
+| `financial_account_type` collision keys **22 / 24 / 25** (cash vs accrual) | capitalized-income / buy-down product config, which itself needs `m_code_value` | `m_code` **40 `capitalized_income_transaction_classification`** and **41 `buydown_fee_transaction_classification`** exist with **0** values each; both mapping columns FK `m_code_value`, so the rows are unreachable until they are seeded |
+| savings / shares mapping keys | **not a fixture blocker — a policy one** | out of slice (A2 is loans) and deposit-taking activation is prohibited for the ratified NBFI licence (CLAUDE.md). Unchanged by this fire. |
+
+Seeding `m_code_value` is a **write to reference data**, not a capture, and it is the first thing the
+next oracle-reaching fire should do if it wants the resolving cases: two `POST /codes/26/codevalues`
+and two `POST /codes/39/codevalues` unblock rows 3–5 of §5 completely, and codes 40/41 unblock the
+collision keys.
+
+### 7.5 What T275 did NOT establish — read this before citing 7.1 or 7.2
+
+- **Whether a payment-type KEY CHANGE (not a value change) reuses the row.** Every list probe here
+  held `paymentTypeId` at 2. A body moving an entry from payment type 2 to payment type 1 was not sent.
+- **Multi-entry list reconciliation.** Every list sent carried at most one entry.
+- **The ACCRUAL product path.** All group-A and group-B products are `accounting_type` 2 (CASH).
+- **Whether the duplicate charge mapping of `A2-527` detonates at resolution** the way the duplicate
+  channel of §4.1 did. That needs a loan, a disbursement and a charge to fall due on product 60 —
+  a runtime capture, not a configuration one. It is the single highest-value follow-up here.
+- **`deleteAll` is in the source and was not observed firing.**
+  `ProductToGLAccountMappingHelper.java:417/440` does call `deleteAll` / `delete` on the channel
+  collection. This fire observed the *outcome* on four inputs; it did not observe the *mechanism*, and
+  nothing above should be read as a claim about which JPA call ran.

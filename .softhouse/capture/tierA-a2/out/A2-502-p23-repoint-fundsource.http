@@ -1,0 +1,9 @@
+PUT /loanproducts/23
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+Content-Type: application/json
+body-file: req/upd-070-repoint-fundsource.json
+body-wire-bytes-artefact: A2-502-p23-repoint-fundsource.req
+body-sha256: 602a2261be0316411c21113eeae810b18803985976105c4520403c2e28e2b42c
+body-bytes: 44
+captured-at-utc: 2026-08-22T14:08:15Z

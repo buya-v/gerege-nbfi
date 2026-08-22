@@ -1,0 +1,5 @@
+GET /loanproducts/56
+Fineract-Platform-TenantId: gerege
+Authorization: Basic <mifos:password>
+body: <none>
+captured-at-utc: 2026-08-22T14:10:50Z
