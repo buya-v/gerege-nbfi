@@ -1,0 +1,44 @@
+=== CALIBRATION (fail-closed) ===
+known-FALSE 1=0                              [MUST be 0]       0
+population size                              [expect 16]       16
+
+=== THE MUTATION CLAIM ===
+rows with last_modified_on_utc > created_on_utc                16
+rows with last_modified_on_utc = created_on_utc                0
+rows with either UTC column NULL                               0
+rows with legacy created_date NOT null                         0
+rows with legacy lastmodified_date NOT null                    0
+
+=== And the SAME question over the WHOLE table, for scope (P-66) ===
+all rows                                                       60
+all rows with last_modified_on_utc > created_on_utc            60
+
+=== per-row detail ===
+id|tx|reversed|created_on_utc|last_modified_on_utc|modified_after_insert
+33|a28f54bfdaf3|true|2026-08-22 02:14:18.828822+00|2026-08-22 02:43:48.451787+00|true
+34|a28f54bfdaf3|true|2026-08-22 02:14:18.829996+00|2026-08-22 02:43:48.451898+00|true
+35|a28f54bfdaf3|true|2026-08-22 02:14:18.830827+00|2026-08-22 02:43:48.452027+00|true
+38|a28f54c1db73|false|2026-08-22 02:14:20.139349+00|2026-08-22 02:43:48.452356+00|true
+39|a28f54c1db73|false|2026-08-22 02:14:20.140959+00|2026-08-22 02:43:48.452468+00|true
+40|a28f54c1db73|false|2026-08-22 02:14:20.14198+00|2026-08-22 02:43:48.452573+00|true
+45|a28f573f34c7|true|2026-08-22 02:21:17.833274+00|2026-08-22 02:43:48.452682+00|true
+46|a28f573f34c7|true|2026-08-22 02:21:17.834941+00|2026-08-22 02:43:48.452809+00|true
+47|a28f573f34c7|true|2026-08-22 02:21:17.835766+00|2026-08-22 02:43:48.452941+00|true
+50|a28f57412abb|false|2026-08-22 02:21:19.117628+00|2026-08-22 02:43:48.453272+00|true
+51|a28f57412abb|false|2026-08-22 02:21:19.119147+00|2026-08-22 02:43:48.453385+00|true
+52|a28f57412abb|false|2026-08-22 02:21:19.120252+00|2026-08-22 02:43:48.4535+00|true
+59|a28f605fcdeb|true|2026-08-22 02:46:49.145749+00|2026-08-22 02:49:46.989199+00|true
+60|a28f605fcdeb|true|2026-08-22 02:46:49.147855+00|2026-08-22 02:49:46.989349+00|true
+63|a28f614e0263|false|2026-08-22 02:49:25.256109+00|2026-08-22 02:49:46.989486+00|true
+64|a28f614e0263|false|2026-08-22 02:49:25.258129+00|2026-08-22 02:49:46.989623+00|true
+
+=== double-entry balance per reversal-participating transaction, in MINOR UNITS (int) ===
+tx|legs|debit_minor|credit_minor|balanced
+a28f54bfdaf3|3|12500055|12500055|true
+a28f54c1db73|3|12500055|12500055|true
+a28f573f34c7|3|12500062|12500062|true
+a28f57412abb|3|12500062|12500062|true
+a28f605fcdeb|2|100000000|100000000|true
+a28f614e0263|2|100000000|100000000|true
+
+=== END ===

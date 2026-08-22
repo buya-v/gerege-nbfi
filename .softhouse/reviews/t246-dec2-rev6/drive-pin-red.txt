@@ -1,0 +1,35 @@
+source tree: /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9cbb3a58ac676f1a
+go: go version go1.26.6 darwin/arm64
+scratch: /tmp/t246-pin-red
+
+=== P-22 RED/GREEN matrix ===
+GREEN    pin=5 vectors=5  ->  T246PROBE inspected=6 inadmissible=0 dec2_reasons=0 pin=5
+            OK (wanted inadmissible=0)
+
+RED-A    pin=6 vectors=5  ->  T246PROBE inspected=6 inadmissible=6 dec2_reasons=6 pin=6
+            T246PROBE reason LDG-01-manual-je-3leg-minor-units :: dec2_revision 5 but the store pins 6
+            T246PROBE reason LDG-02-repayment-split-4leg-minor-units :: dec2_revision 5 but the store pins 6
+            T246PROBE reason LDG-03-overpayment-4leg-minor-units :: dec2_revision 5 but the store pins 6
+            T246PROBE reason LDG-04-header-account-accepted :: dec2_revision 5 but the store pins 6
+            T246PROBE reason LDG-REFUSE-01-unbalanced-by-one-minor-unit :: dec2_revision 5 but the store pins 6
+            T246PROBE reason LDG-REFUSE-02-manual-adjustments-not-permitted :: dec2_revision 5 but the store pins 6
+            OK (wanted inadmissible=6)
+
+RED-B    pin=5 vectors=6  ->  T246PROBE inspected=6 inadmissible=6 dec2_reasons=6 pin=5
+            T246PROBE reason LDG-01-manual-je-3leg-minor-units :: dec2_revision 6 but the store pins 5
+            T246PROBE reason LDG-02-repayment-split-4leg-minor-units :: dec2_revision 6 but the store pins 5
+            T246PROBE reason LDG-03-overpayment-4leg-minor-units :: dec2_revision 6 but the store pins 5
+            T246PROBE reason LDG-04-header-account-accepted :: dec2_revision 6 but the store pins 5
+            T246PROBE reason LDG-REFUSE-01-unbalanced-by-one-minor-unit :: dec2_revision 6 but the store pins 5
+            T246PROBE reason LDG-REFUSE-02-manual-adjustments-not-permitted :: dec2_revision 6 but the store pins 5
+            OK (wanted inadmissible=6)
+
+GREEN2   pin=6 vectors=6  ->  T246PROBE inspected=6 inadmissible=0 dec2_reasons=0 pin=6
+            OK (wanted inadmissible=0)
+
+=== CONTROL: does ANY Go source read the ADR file? ===
+  docs/adr matches under nexus/: 1
+    /Users/buv/gerege-nbfi/.claude/worktrees/agent-a9cbb3a58ac676f1a/nexus/internal/apps/loanschedule/contract/contract.go:7:// (docs/adr/DEC-1-schedule-generator-adapter.md). It is the strangler boundary
+  DEC-2-gl-accounting matches under nexus/ and conformance.sh: 0
+
+=== ALL FOUR SCENARIOS BEHAVED AS PREDICTED ===

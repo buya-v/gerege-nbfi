@@ -1,0 +1,23 @@
+=== 'The A2 corpus contains no reversal' — occurrences per revision blob ===
+  rev1           e2decab   site1=1  site2=1  known-negative=0 (MUST be 0)
+  rev1-banner    e2decab   site1=1  site2=1  known-negative=0 (MUST be 0)
+  rev2           09074ea   site1=1  site2=1  known-negative=0 (MUST be 0)
+  rev2-microfix  f39a65d   site1=1  site2=1  known-negative=0 (MUST be 0)
+  rev3           ead328a   site1=1  site2=1  known-negative=0 (MUST be 0)
+  rev4           1b6b3cf   site1=1  site2=1  known-negative=0 (MUST be 0)
+  rev5           cab9e82   site1=1  site2=1  known-negative=0 (MUST be 0)
+  HEAD           HEAD      site1=1  site2=1  known-negative=0 (MUST be 0)
+
+=== when did each site FIRST appear? ===
+  site1 first commit: e18fe5b DEC-2 draft: the GL/accounting adapter contract (revision 1, NOT ratified)
+  site2 first commit: e18fe5b DEC-2 draft: the GL/accounting adapter contract (revision 1, NOT ratified)
+
+=== the reversal capture that falsified them — when was it committed? ===
+  A2-348: aae501b A2-26: raw-only ledger capture readiness -- census, G-10(c) admissibility, 40 new observations
+  A2-460: 2c11bf9 A2-29: G-12 MEASURED — the stored running balance is a SECOND SOURCE OF TRUTH
+
+=== DEC-2 last touched / ledger vectors landed (the P-69 window) ===
+  DEC-2 rev5      cab9e82  2026-08-22 14:24:56 +0800  A2-32: DEC-2 revision 5 — A2-31's two rejection-grade findings, and nothing else
+  ledger vectors  1325e8b  2026-08-22 16:37:56 +0800  A2-15: promote the first SIX ledger vectors and grade a SECOND bounded context
+
+=== END ===
