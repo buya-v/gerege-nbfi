@@ -1068,7 +1068,16 @@ regulatory sign-off and licence facts are equally untouched and are not in Run 1
   and not of the term, then **TRIPLED it at T159's own term** — MNT 30.00 at n = 3000, with no
   larger term asked than T159 asked; reproduced T159's record cell exactly as a control; measured
   the `(δ + ½)·n` ceiling at n = 3000 as well as at n = 200; and re-observed the three PROMOTED
-  vectors against the live oracle)
+  vectors against the live oracle), **T241** (evidence hygiene only, **no measurement of the oracle
+  and no new figure in this section**: annotated — never rewrote — T229's committed `site3.py`,
+  whose `TOTAL INTEREST = n·E + B` is false on any cell that repays principal; re-derived T219's two
+  counterexamples independently and **found three more in T229's OWN capture, where the refutation of
+  registered prediction P2 had been measured, printed, committed and never read**; rebuilt the
+  STANDING RULE 1 scope table over the whole live section — **2,129 claim units, 693 scope-bearing,
+  0 failures on the moved-figure population**, measured at `2871f17` BEFORE this edit as the rule
+  requires, instrument and output at
+  `.softhouse/handoff/2026-08-21-run2-tierA-gl-accounting-A2/T241-evidence/` — and **struck the one live IMPERATIVE inside the
+  superseded `## G-8-NOTICE` block** while leaving every figure in it untouched)
 - **context**: tier0-harness-schedule-poc / loan-schedule
 - **state**: **OPEN** — blocks nothing today. T112 fixed the write-up, T122 fixed two sentences in
   T112's fix, T170 rebuilt the family-B half after T117 and T159 moved the measurement, **T223
@@ -2553,6 +2562,38 @@ the predicate accounts for all three without being asked to: at n = 103 the emul
   **The defect is in `.softhouse/capture/t229-g8-site3/src/site3.py`, not in this section**, and it
   is out of T219's scope to edit. **It affects no verdict here** — the classifier compares principal
   and outcome, not that field.
+  > **DISCHARGED BY T241 — ANNOTATED, NOT REWRITTEN, and it turned out to be a P-69 instance rather
+  > than a transcription slip.** T241 re-derived both counterexamples independently from the raw
+  > `.gz` rows (`.softhouse/capture/t229-g8-site3/src/rederive_total_interest_t241.py`, exit 0) and
+  > **agrees with T219 to the minor unit**: `B3001` — n = 3000, E = 1500, B = 3001, principal
+  > repaid 1, `n·E + B = 4503001`, observed interest **4503000**; `B4499` — n = 3000, E = 2249,
+  > B = 4499, principal repaid 1499, `n·E + B = 6751499`, observed interest **6750000**. In both
+  > cases `n·E + B` is the observed **total repayment** exactly, and the overstatement of interest
+  > is exactly the principal repaid. **So the quantity was never wrong; only its LABEL was.**
+  > `n·E + B` is total repayment, and total interest is `n·E + B − principal` — which follows from
+  > `site3.py`'s own S3.1/S3.5 plus "no fees, no penalties on the G-8 shape", so it needed no new
+  > mechanism and no new measurement.
+  >
+  > **AND T229's OWN CAPTURE ALREADY CONTAINED THREE COUNTEREXAMPLES, MEASURED AND COMMITTED THE
+  > SAME DAY AS THE CLAIM.** `out/classify-t229.json` at `bb35cc8` records
+  > `"P2_totalInterestEqualsNEplusB": false` for `T229-R600p0-N200-B201`, `-B251` and `-B299` —
+  > overstating by 1, 51 and 99 minor units. All three were reported **"AS PREDICTED"**, because
+  > `classify_t229.py`'s `verdict` is a function of the observed outcome and the observed principal
+  > only and never consults P2. **Registered prediction P2's third conjunct was therefore REFUTED at
+  > capture time and the refutation was never surfaced**: T241 searched the whole repository for
+  > `P2_totalInterestEqualsNEplusB` (`git grep -P`, two engines) and found it in **no handoff, no
+  > gate text and no review** — only in the two classifiers and their JSON. The evidence was not
+  > missing; it was **unread**. **P2's other two conjuncts stand on every unrescued cell checked, so
+  > FACT A is unharmed.**
+  >
+  > **The instrument is annotated, not corrected.** `site3.py` still emits the wrong number, by
+  > design: it must keep reproducing the registered `prediction.json` byte for byte, and T241
+  > verified that it still does, before and after annotating. Fixing it silently would rewrite a
+  > prediction whose strict-ancestor commit (`29ed78c` → `bb35cc8`) is the entire falsifiability
+  > guarantee (T114/T176). **Nothing in this section changes**: the corrected form has been the LIVE
+  > text since T231's re-derivation above, which computes it on `B201`/`B251`/`B299`/`B150` and
+  > matches all four. **This affects NO verdict, no vector, no region boundary and no gate
+  > conclusion, and it must not be inflated into one.**
 
 ---
 
@@ -2845,7 +2886,7 @@ day-count.
 
 **(b) and (c) both amend the graded domain, which is a change to a ratified DEC-n — a hard `user`
 gate no agent may cross.** Buyan decides. T83, T84, T100, T101, T112, **T114, T122, T129, T140,
-T170, T223, T229, T231 and T219** have each handled them and
+T170, T223, T229, T231, T219 and T241** have each handled them and
 **decided none, recommended none, and pre-implemented none**; they attach only the measurement and
 the scoping. **T223 measured a new region and restated it; it decided nothing, promoted no vector,
 graded no port, and left `.softhouse/vectors` byte-unchanged. T229 characterised the rescue site,
@@ -2859,7 +2900,14 @@ and the causal prose that depended on them, and added the seventh mechanism to t
 and it too decided nothing, recommended nothing, promoted no vector, graded no port and left
 `.softhouse/vectors` byte-unchanged at the same digest. It makes NO recommendation on (b) or (c),
 and its measurement STRENGTHENS the case that neither may be put to Buyan yet: the failing region
-just got three times wider at a term this file had already declared measured.**
+just got three times wider at a term this file had already declared measured.
+T241 is evidence hygiene and NOTHING ELSE: it contacted the reference oracle not at all, ran no
+probe, promoted no vector, graded no port, wrote no Go, moved no figure in this section, and left
+`.softhouse/vectors` byte-unchanged. It annotated a committed instrument, struck one imperative in
+the superseded history block, and rebuilt the STANDING RULE 1 scope table. **It makes NO
+recommendation on (b) or (c) and changes nothing about them: the region this file may state is
+still the conservative superset `B_minor < 1.5·n`, still resting on the unproven `δ ≤ 1`, and
+options (b) and (c) still must not be put to Buyan.**
 T112's whole mandate was the write-up: it corrected sentences and deleted a superseded
 block, and it moved nothing about the gate's substance; T114, T122, T129, T140, T170 and T231 likewise
 touched only the prose. **T117, T159, T169, T177 and T229 measured for this gate and deliberately
@@ -3292,6 +3340,30 @@ why trap (3) requires the Go port to carry classification **on the entry**.
 
 ## G-8-NOTICE (SUPERSEDED — historical record; the LIVE G-8 section is above) — local fire `20260821-134344`: T117's measurement moves the bound. **REVIEWED — T159 APPROVED; the number then DOUBLED; T170 has since APPLIED all of this to the G-8 write-up above.**
 
+> **T241 — WHERE THE CURRENT RECORD LIVES, added at the head so nobody has to hunt for it. ONE pointer,
+> deliberately, and NOT ONE FIGURE BELOW IS CHANGED.** Every measurement in this block is correct over the
+> domain it names and is kept exactly as written; the block is the *exhibit* for how the record moved and
+> for the STANDING RULE's seventh mechanism, so revising it would destroy the thing it is kept for.
+> **The current records, all at n = 3000, all measured by T219 at `6eacc06`:** largest unamortized residual
+> **MNT 30.00** (`B3001`, `B4499`), largest FULL family-B residual **MNT 29.99** (`B2999`), largest failing
+> disbursement **MNT 44.99** (`B4499`). **And the axis this block labels its figures with is the wrong one:**
+> the residual is `min(B_minor, n·δ)` — a function of the **PRINCIPAL**, capped by the term. T219 tripled the
+> record **without asking a larger term at all.** Read *THE RESIDUAL RECORD, RE-MEASURED* in the LIVE section
+> above for the current state. **T241 decided against annotating each of the six `MNT 10.01` sites
+> individually** — a pointer at the head is navigation and corrupts nothing, whereas interleaving present-tense
+> corrections through a historical record would leave a later reader unable to tell what T117 and T159
+> actually wrote. **One line in this block is a different matter and IS struck below: an imperative, not a
+> report.**
+>
+> **NOTE FOR ANY LATER CENSUS OF THIS BLOCK, AND IT IS DELIBERATELY COUNT-FREE.** Every occurrence of
+> the superseded figure that is a genuine SITE lies **strictly below this pointer**; every occurrence
+> **inside this pointer is navigation about those sites, not a restatement of them.** T241 first wrote
+> a count here and had to correct it twice inside one task — **a count of a file that includes the
+> sentence doing the counting moves every time you edit that sentence.** So this pointer states a
+> boundary instead of a number: **count only below it.** The general form of that lesson, which is
+> worth more than the count was: **re-measure after your LAST edit, not your first, and never publish
+> a figure whose subject includes the text stating it.**
+
 **Status of this block, as of T170: SUPERSEDED BY THE SECTION ABOVE, and kept as the record of how the
 measurement moved.** Everything in it that was still true has been folded into G-8 itself — the FULL vs
 PARTIAL split of family B, the MNT 10.01-at-n=3000 residual, the enlarged rate/term/principal domain, and
@@ -3393,10 +3465,34 @@ including the MNT 5.01 cell and all three partials.
 T159 asked.** The residual **doubled when the term tripled**, and it doubled *because someone asked a bigger
 question*, not because a boundary was found.
 
-> **Any disclosure of G-8 must state the residual WITH ITS TERM — "MNT 10.01 at n = 3000" — and must still
+> ~~**Any disclosure of G-8 must state the residual WITH ITS TERM — "MNT 10.01 at n = 3000" — and must still
 > say it is the largest OBSERVED and not a bound.** Two independent workers have now raised this ceiling by
 > asking a larger term, and neither found a limit. Writing "MNT 10.01" without its term would repeat, one
-> level up, exactly the error T117 was sent to correct.
+> level up, exactly the error T117 was sent to correct.~~
+>
+> **STRUCK BY T241, AND STRUCK RATHER THAN DELETED, BECAUSE IT IS THE EVIDENCE FOR HOW THIS HAPPENS.**
+> It was **TRUE WHEN WRITTEN** and every restatement in this program obeyed it — correctly — and was wrong
+> anyway. **This is the only line in this block that is not a report but an IMPERATIVE**, and that is why it
+> alone is struck while every figure around it stands. The `(SUPERSEDED — historical record)` header
+> disclaims a *claim*; it cannot disclaim a `must`, because a reader who lands here by search reads a
+> standing instruction and follows it. Leaving a live imperative inside a history block is not preserving
+> history; **adding a pointer does not corrupt a historical record, and leaving a live imperative does.**
+> [T228 reached this same line from its own sweep at `617b8ea`, declined to touch the block, and handed
+> this line to T241 with the same recommendation; T241 reached it independently via the STANDING RULE 1
+> rebuild and concurs.]
+>
+> **THE CONCLUSION SURVIVES, BY A STRONGER ROUTE THAN THE ONE GIVEN HERE.** "Do not quote the residual
+> bare" is right. The GROUND was wrong: the term is not the variable the residual is a function of.
+> **The residual of an unrescued family-B cell is `min(B_minor, n·δ)` — a fact about the PRINCIPAL, capped
+> by the term.** T219 tripled the record *at T159's own term, n = 3000*, by asking a bigger principal, which
+> this line's reasoning says is impossible. So the corrected instruction is **stronger, not weaker**:
+>
+> > **Any disclosure of G-8 must state the residual with the variable it is a FUNCTION of — the
+> > PRINCIPAL — and not merely with the term, and must still say it is the largest OBSERVED and not a
+> > bound.** The current figure is **MNT 30.00**, at n = 3000, over the principals asked to date
+> > (largest asked: 4499 minor units). Quoting *any* of these figures without naming the principals swept
+> > repeats the error one level up — which is exactly what the struck text warned about, and exactly what
+> > the struck text itself then did.
 
 ### THREE THINGS NOBODY HAD RECORDED, and the first one needs a sentence G-8 does not have
 
